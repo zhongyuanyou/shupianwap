@@ -1,6 +1,6 @@
 # DGG
 
-
+查看[中文文档][cn]
 
 ## QuickStart
 
@@ -31,3 +31,4 @@ $ npm stop
 
 
 [egg]: https://eggjs.org
+[cn]: http://172.16.0.25/dgg-platform/egg-nuxt/blob/master/README.zh-CN.md

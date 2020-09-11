@@ -1,16 +1,3 @@
-<div style="text-align:center">
-	<img src="docs/assets/egg-banner.png" />
-</div>
-
-[![NPM version](https://img.shields.io/npm/v/egg.svg?style=flat-square)](https://npmjs.org/package/egg)
-[![NPM quality](http://npm.packagequality.com/shield/egg.svg?style=flat-square)](http://packagequality.com/#?package=egg)
-[![NPM download](https://img.shields.io/npm/dm/egg.svg?style=flat-square)](https://npmjs.org/package/egg)
-
-[![Continuous Integration](https://github.com/eggjs/egg/workflows/Continuous%20integration/badge.svg)](https://github.com/eggjs/egg/actions?query=branch%3Amaster)
-[![Test coverage](https://img.shields.io/codecov/c/github/eggjs/egg.svg?style=flat-square)](https://codecov.io/gh/eggjs/egg)
-[![Known Vulnerabilities](https://snyk.io/test/npm/egg/badge.svg?style=flat-square)](https://snyk.io/test/npm/egg)
-[![Open Collective backers and sponsors](https://img.shields.io/opencollective/all/eggjs?style=flat-square)](https://opencollective.com/eggjs)
-
 ## 特性
 
 - 内置多进程管理

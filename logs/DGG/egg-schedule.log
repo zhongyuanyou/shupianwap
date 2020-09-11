@@ -2095,3 +2095,17 @@
 2020-09-11 15:43:54,171 INFO 12488 [Timer] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js next time will execute after 60000ms at 2020-09-11 15:44:54.171
 2020-09-11 15:43:54,171 INFO 17676 [Job#15998102341712646018257794412] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js executing by app
 2020-09-11 15:43:54,172 INFO 17676 [Job#15998102341712646018257794412] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js execute succeed, used 1ms. 
+2020-09-11 15:44:54,172 INFO 17676 [Job#15998102941722652018378460113] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js executing by app
+2020-09-11 15:44:54,173 INFO 17676 [Job#15998102941722652018378460113] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js execute succeed, used 0ms. 
+2020-09-11 15:44:54,172 INFO 12488 [Timer] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js next time will execute after 60000ms at 2020-09-11 15:45:54.172
+2020-09-11 15:45:54,173 INFO 17676 [Job#15998103541732658018459280014] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js executing by app
+2020-09-11 15:45:54,174 INFO 17676 [Job#15998103541732658018459280014] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js execute succeed, used 1ms. 
+2020-09-11 15:45:54,173 INFO 12488 [Timer] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js next time will execute after 60000ms at 2020-09-11 15:46:54.173
+2020-09-11 15:46:54,174 INFO 17676 [Job#15998104141742664018512560515] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js executing by app
+2020-09-11 15:46:54,174 INFO 17676 [Job#15998104141742664018512560515] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js execute succeed, used 0ms. 
+2020-09-11 15:46:54,174 INFO 12488 [Timer] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js next time will execute after 60000ms at 2020-09-11 15:47:54.174
+2020-09-11 15:47:54,174 INFO 17676 [Job#15998104741742670018522398616] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js executing by app
+2020-09-11 15:47:54,174 INFO 17676 [Job#15998104741742670018522398616] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js execute succeed, used 0ms. 
+2020-09-11 15:47:54,174 INFO 12488 [Timer] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js next time will execute after 60000ms at 2020-09-11 15:48:54.174
+2020-09-11 15:48:54,176 INFO 17676 [Job#15998105341752676018663727717] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js executing by app
+2020-09-11 15:48:54,176 INFO 17676 [Job#15998105341752676018663727717] E:\gongzuo\DGG\node_modules\egg-logrotator\app\schedule\rotate_by_size.js execute succeed, used 0ms. 
