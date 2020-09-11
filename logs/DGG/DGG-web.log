@@ -1,0 +1,2469 @@
+2020-09-10 11:07:05,949 ERROR 4376 [-/127.0.0.1/-/5ms GET /user] nodejs.TypeError: Cannot read property 'user' of undefined
+    at UserController.list (E:\gongzuo\DGG\app\controller\user.js:7:26)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+
+pid: 4376
+hostname: PC-20200426AHDN
+
+2020-09-10 11:07:24,197 ERROR 4376 [-/127.0.0.1/-/1ms GET /user?id=12] nodejs.TypeError: Cannot read property 'user' of undefined
+    at UserController.list (E:\gongzuo\DGG\app\controller\user.js:7:26)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+
+pid: 4376
+hostname: PC-20200426AHDN
+
+2020-09-10 11:07:51,629 ERROR 4376 [-/127.0.0.1/-/1ms GET /user?id=12] nodejs.TypeError: Cannot read property 'user' of undefined
+    at UserController.list (E:\gongzuo\DGG\app\controller\user.js:7:26)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+
+pid: 4376
+hostname: PC-20200426AHDN
+
+2020-09-10 15:57:06,189 ERROR 17424 [-/127.0.0.1/-/8ms GET /user?id=345] nodejs.SyntaxError: Unexpected number in JSON at position 4
+    at JSON.parse (<anonymous>)
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+
+pid: 17424
+hostname: PC-20200426AHDN
+
+2020-09-10 15:57:21,231 ERROR 17424 [-/127.0.0.1/-/2ms GET /user?id=345] nodejs.SyntaxError: Unexpected number in JSON at position 4
+    at JSON.parse (<anonymous>)
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+
+pid: 17424
+hostname: PC-20200426AHDN
+
+2020-09-10 15:58:56,858 ERROR 14020 [-/127.0.0.1/-/5ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 14020
+hostname: PC-20200426AHDN
+
+2020-09-10 15:59:46,318 ERROR 14020 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 14020
+hostname: PC-20200426AHDN
+
+2020-09-10 15:59:47,062 ERROR 14020 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 14020
+hostname: PC-20200426AHDN
+
+2020-09-10 15:59:47,558 ERROR 16040 [-/127.0.0.1/-/9ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+Error: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 16040
+hostname: PC-20200426AHDN
+
+2020-09-10 15:59:47,980 ERROR 16040 [-/127.0.0.1/-/2ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+Error: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 16040
+hostname: PC-20200426AHDN
+
+2020-09-10 15:59:48,324 ERROR 16040 [-/127.0.0.1/-/2ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+Error: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 16040
+hostname: PC-20200426AHDN
+
+2020-09-10 15:59:48,484 ERROR 16040 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+Error: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 16040
+hostname: PC-20200426AHDN
+
+2020-09-10 15:59:48,667 ERROR 16040 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+Error: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 16040
+hostname: PC-20200426AHDN
+
+2020-09-10 15:59:49,019 ERROR 16040 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+Error: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 16040
+hostname: PC-20200426AHDN
+
+2020-09-10 15:59:49,196 ERROR 16040 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+Error: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 16040
+hostname: PC-20200426AHDN
+
+2020-09-10 15:59:49,356 ERROR 16040 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+Error: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 16040
+hostname: PC-20200426AHDN
+
+2020-09-10 15:59:49,495 ERROR 16040 [-/127.0.0.1/-/2ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+Error: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 16040
+hostname: PC-20200426AHDN
+
+2020-09-10 15:59:49,661 ERROR 16040 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+Error: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 16040
+hostname: PC-20200426AHDN
+
+2020-09-10 15:59:54,694 ERROR 16040 [-/127.0.0.1/-/0ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+Error: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 16040
+hostname: PC-20200426AHDN
+
+2020-09-10 16:04:18,934 ERROR 17480 [-/127.0.0.1/-/8ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17480
+hostname: PC-20200426AHDN
+
+2020-09-10 16:04:19,307 ERROR 17480 [-/127.0.0.1/-/2ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17480
+hostname: PC-20200426AHDN
+
+2020-09-10 16:04:19,917 ERROR 17480 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17480
+hostname: PC-20200426AHDN
+
+2020-09-10 16:04:20,428 ERROR 17480 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17480
+hostname: PC-20200426AHDN
+
+2020-09-10 16:04:20,643 ERROR 17480 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17480
+hostname: PC-20200426AHDN
+
+2020-09-10 16:04:20,775 ERROR 17480 [-/127.0.0.1/-/4ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17480
+hostname: PC-20200426AHDN
+
+2020-09-10 16:05:27,702 ERROR 17480 [-/127.0.0.1/-/2ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17480
+hostname: PC-20200426AHDN
+
+2020-09-10 16:05:28,310 ERROR 17480 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17480
+hostname: PC-20200426AHDN
+
+2020-09-10 16:05:29,225 ERROR 16988 [-/127.0.0.1/-/10ms GET /user?id=345] nodejs.Error: non-error thrown: [object Object]
+    at Object.app.context.onerror (E:\gongzuo\DGG\node_modules\koa-onerror\index.js:39:24)
+    at onerror (E:\gongzuo\DGG\node_modules\koa\lib\application.js:165:32)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 16988
+hostname: PC-20200426AHDN
+
+2020-09-10 16:05:29,389 ERROR 16988 [-/127.0.0.1/-/2ms GET /user?id=345] nodejs.Error: non-error thrown: [object Object]
+    at Object.app.context.onerror (E:\gongzuo\DGG\node_modules\koa-onerror\index.js:39:24)
+    at onerror (E:\gongzuo\DGG\node_modules\koa\lib\application.js:165:32)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 16988
+hostname: PC-20200426AHDN
+
+2020-09-10 16:05:29,541 ERROR 16988 [-/127.0.0.1/-/2ms GET /user?id=345] nodejs.Error: non-error thrown: [object Object]
+    at Object.app.context.onerror (E:\gongzuo\DGG\node_modules\koa-onerror\index.js:39:24)
+    at onerror (E:\gongzuo\DGG\node_modules\koa\lib\application.js:165:32)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 16988
+hostname: PC-20200426AHDN
+
+2020-09-10 16:05:32,477 ERROR 16988 [-/127.0.0.1/-/14ms GET /user?id=345] nodejs.Error: non-error thrown: [object Object]
+    at Object.app.context.onerror (E:\gongzuo\DGG\node_modules\koa-onerror\index.js:39:24)
+    at onerror (E:\gongzuo\DGG\node_modules\koa\lib\application.js:165:32)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 16988
+hostname: PC-20200426AHDN
+
+2020-09-10 16:18:26,649 ERROR 16988 [-/127.0.0.1/-/2ms GET /user?id=345] nodejs.Error: non-error thrown: [object Object]
+    at Object.app.context.onerror (E:\gongzuo\DGG\node_modules\koa-onerror\index.js:39:24)
+    at onerror (E:\gongzuo\DGG\node_modules\koa\lib\application.js:165:32)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 16988
+hostname: PC-20200426AHDN
+
+2020-09-10 16:22:54,842 ERROR 16408 [-/127.0.0.1/-/7ms GET /user?id=345] nodejs.TypeError: ctx.warn is not a function
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:18:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 16408
+hostname: PC-20200426AHDN
+
+2020-09-10 16:22:55,762 ERROR 16408 [-/127.0.0.1/-/0ms GET /user?id=345] nodejs.TypeError: ctx.warn is not a function
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:18:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 16408
+hostname: PC-20200426AHDN
+
+2020-09-10 16:22:56,644 ERROR 16408 [-/127.0.0.1/-/0ms GET /user?id=345] nodejs.TypeError: ctx.warn is not a function
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:18:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 16408
+hostname: PC-20200426AHDN
+
+2020-09-10 16:23:28,651 ERROR 17064 [-/127.0.0.1/-/6ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17064
+hostname: PC-20200426AHDN
+
+2020-09-10 16:23:29,186 ERROR 17064 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17064
+hostname: PC-20200426AHDN
+
+2020-09-10 16:23:29,850 ERROR 17064 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17064
+hostname: PC-20200426AHDN
+
+2020-09-10 16:23:30,361 ERROR 17064 [-/127.0.0.1/-/0ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17064
+hostname: PC-20200426AHDN
+
+2020-09-10 16:23:30,850 ERROR 17064 [-/127.0.0.1/-/0ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17064
+hostname: PC-20200426AHDN
+
+2020-09-10 16:23:31,033 ERROR 17064 [-/127.0.0.1/-/0ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17064
+hostname: PC-20200426AHDN
+
+2020-09-10 16:23:31,210 ERROR 17064 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17064
+hostname: PC-20200426AHDN
+
+2020-09-10 16:23:31,361 ERROR 17064 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17064
+hostname: PC-20200426AHDN
+
+2020-09-10 16:23:31,507 ERROR 17064 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17064
+hostname: PC-20200426AHDN
+
+2020-09-10 16:23:32,674 ERROR 17064 [-/127.0.0.1/-/0ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
+    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17064
+hostname: PC-20200426AHDN
+
+2020-09-10 16:23:49,599 WARN 14668 [-/127.0.0.1/-/5ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 14668
+hostname: PC-20200426AHDN
+
+2020-09-10 16:23:53,049 WARN 14668 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 14668
+hostname: PC-20200426AHDN
+
+2020-09-10 16:24:17,448 WARN 14668 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 14668
+hostname: PC-20200426AHDN
+
+2020-09-10 16:24:19,432 WARN 12564 [-/127.0.0.1/-/5ms GET /user?id=345] 出错啦
+2020-09-10 16:24:19,616 WARN 12564 [-/127.0.0.1/-/0ms GET /user?id=345] 出错啦
+2020-09-10 17:31:35,288 WARN 13796 [-/127.0.0.1/-/6ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 13796
+hostname: PC-20200426AHDN
+
+2020-09-10 17:31:35,850 WARN 13796 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+ENOENTError: ENOENT: no such file or directory, open 'E:\gongzuo\DGG\logs\DGG\egg-wb.log'
+errno: -4058
+code: "ENOENT"
+syscall: "open"
+path: "E:\\gongzuo\\DGG\\logs\\DGG\\egg-wb.log"
+name: "ENOENTError"
+pid: 13796
+hostname: PC-20200426AHDN
+
+2020-09-10 17:32:47,432 ERROR 11776 [-/127.0.0.1/-/5ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11776
+hostname: PC-20200426AHDN
+
+2020-09-10 17:32:47,825 ERROR 11776 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11776
+hostname: PC-20200426AHDN
+
+2020-09-10 17:32:48,946 ERROR 11776 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11776
+hostname: PC-20200426AHDN
+
+2020-09-10 17:32:49,866 ERROR 11776 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11776
+hostname: PC-20200426AHDN
+
+2020-09-10 17:33:36,192 ERROR 11776 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11776
+hostname: PC-20200426AHDN
+
+2020-09-10 17:34:29,443 ERROR 11776 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11776
+hostname: PC-20200426AHDN
+
+2020-09-10 17:35:03,836 ERROR 11776 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11776
+hostname: PC-20200426AHDN
+
+2020-09-10 17:35:05,223 ERROR 13972 [-/127.0.0.1/-/5ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 13972
+hostname: PC-20200426AHDN
+
+2020-09-10 17:35:05,392 ERROR 13972 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 13972
+hostname: PC-20200426AHDN
+
+2020-09-10 17:35:05,544 ERROR 13972 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 13972
+hostname: PC-20200426AHDN
+
+2020-09-10 17:35:05,690 ERROR 13972 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 13972
+hostname: PC-20200426AHDN
+
+2020-09-10 17:35:07,098 ERROR 13972 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 13972
+hostname: PC-20200426AHDN
+
+2020-09-10 17:35:24,893 ERROR 13972 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 13972
+hostname: PC-20200426AHDN
+
+2020-09-10 17:35:25,361 ERROR 13972 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 13972
+hostname: PC-20200426AHDN
+
+2020-09-10 17:35:26,853 ERROR 13300 [-/127.0.0.1/-/5ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 13300
+hostname: PC-20200426AHDN
+
+2020-09-10 17:35:27,417 ERROR 13300 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 13300
+hostname: PC-20200426AHDN
+
+2020-09-10 17:35:27,592 ERROR 13300 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 13300
+hostname: PC-20200426AHDN
+
+2020-09-10 17:35:27,736 ERROR 13300 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 13300
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:38,946 ERROR 11768 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:39,473 ERROR 11768 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:39,907 ERROR 11768 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:40,072 ERROR 11768 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:40,248 ERROR 11768 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:40,400 ERROR 11768 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:40,559 ERROR 11768 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:40,712 ERROR 11768 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:40,880 ERROR 11768 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:41,025 ERROR 11768 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:42,227 ERROR 11768 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:43,250 ERROR 11768 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:43,432 ERROR 11768 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:43,592 ERROR 11768 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:43,768 ERROR 11768 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:44,097 ERROR 11768 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:44,263 ERROR 11768 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:44,426 ERROR 11768 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:44,720 ERROR 11768 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:44,879 ERROR 11768 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:45,040 ERROR 11768 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:45,224 ERROR 11768 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:37:51,094 ERROR 11768 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:38:03,991 ERROR 11768 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11768
+hostname: PC-20200426AHDN
+
+2020-09-10 17:38:38,314 ERROR 17144 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17144
+hostname: PC-20200426AHDN
+
+2020-09-10 17:38:38,464 ERROR 17144 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17144
+hostname: PC-20200426AHDN
+
+2020-09-10 17:38:38,633 ERROR 17144 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17144
+hostname: PC-20200426AHDN
+
+2020-09-10 17:38:39,448 ERROR 17144 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17144
+hostname: PC-20200426AHDN
+
+2020-09-10 17:38:40,509 ERROR 17144 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17144
+hostname: PC-20200426AHDN
+
+2020-09-10 17:39:11,124 ERROR 17144 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17144
+hostname: PC-20200426AHDN
+
+2020-09-10 17:39:13,177 ERROR 4004 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4004
+hostname: PC-20200426AHDN
+
+2020-09-10 17:39:13,475 ERROR 4004 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4004
+hostname: PC-20200426AHDN
+
+2020-09-10 17:39:13,641 ERROR 4004 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4004
+hostname: PC-20200426AHDN
+
+2020-09-10 17:41:47,426 ERROR 17252 [-/127.0.0.1/-/7ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17252
+hostname: PC-20200426AHDN
+
+2020-09-10 17:41:48,090 ERROR 17252 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17252
+hostname: PC-20200426AHDN
+
+2020-09-10 17:41:48,409 ERROR 17252 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17252
+hostname: PC-20200426AHDN
+
+2020-09-10 17:41:48,560 ERROR 17252 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17252
+hostname: PC-20200426AHDN
+
+2020-09-10 17:41:48,705 ERROR 17252 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17252
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:35,051 ERROR 4544 [-/127.0.0.1/-/8ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:35,545 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:36,016 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:36,216 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:36,352 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:36,511 ERROR 4544 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:36,672 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:38,041 ERROR 4544 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:38,473 ERROR 4544 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:38,632 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:38,760 ERROR 4544 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:38,920 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:39,354 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:39,528 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:39,659 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:39,808 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:39,943 ERROR 4544 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:40,104 ERROR 4544 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:40,256 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:40,384 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:40,536 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:40,696 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:40,847 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:41,016 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:41,159 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:41,311 ERROR 4544 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:41,447 ERROR 4544 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:41,576 ERROR 4544 [-/127.0.0.1/-/2ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:41,736 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:41,895 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:42:43,142 ERROR 4544 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 17:44:54,476 ERROR 4544 [-/127.0.0.1/-/113851ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4544
+hostname: PC-20200426AHDN
+
+2020-09-10 18:29:25,507 ERROR 15212 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15212
+hostname: PC-20200426AHDN
+
+2020-09-10 18:29:26,885 ERROR 15212 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15212
+hostname: PC-20200426AHDN
+
+2020-09-10 18:29:35,504 ERROR 15212 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15212
+hostname: PC-20200426AHDN
+
+2020-09-10 18:29:36,674 ERROR 14772 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14772
+hostname: PC-20200426AHDN
+
+2020-09-10 18:29:36,853 ERROR 14772 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14772
+hostname: PC-20200426AHDN
+
+2020-09-10 18:29:37,010 ERROR 14772 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14772
+hostname: PC-20200426AHDN
+
+2020-09-10 18:29:37,316 ERROR 14772 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14772
+hostname: PC-20200426AHDN
+
+2020-09-10 18:29:37,859 ERROR 14772 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14772
+hostname: PC-20200426AHDN
+
+2020-09-10 18:29:38,026 ERROR 14772 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14772
+hostname: PC-20200426AHDN
+
+2020-09-10 18:29:38,195 ERROR 14772 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14772
+hostname: PC-20200426AHDN
+
+2020-09-10 18:30:25,947 ERROR 14772 [-/127.0.0.1/-/2ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14772
+hostname: PC-20200426AHDN
+
+2020-09-10 18:30:26,458 ERROR 14772 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14772
+hostname: PC-20200426AHDN
+
+2020-09-10 18:30:26,885 ERROR 14772 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14772
+hostname: PC-20200426AHDN
+
+2020-09-10 18:30:27,082 ERROR 14772 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14772
+hostname: PC-20200426AHDN
+
+2020-09-10 18:30:27,242 ERROR 14772 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14772
+hostname: PC-20200426AHDN
+
+2020-09-10 18:32:42,741 ERROR 15708 [-/127.0.0.1/-/7ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15708
+hostname: PC-20200426AHDN
+
+2020-09-10 18:32:43,355 ERROR 15708 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15708
+hostname: PC-20200426AHDN
+
+2020-09-10 18:32:43,571 ERROR 15708 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15708
+hostname: PC-20200426AHDN
+
+2020-09-10 18:32:44,771 ERROR 14784 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14784
+hostname: PC-20200426AHDN
+
+2020-09-10 18:32:46,207 ERROR 14784 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14784
+hostname: PC-20200426AHDN
+
+2020-09-10 18:33:54,278 ERROR 14784 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14784
+hostname: PC-20200426AHDN
+
+2020-09-10 18:34:39,165 ERROR 15080 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15080
+hostname: PC-20200426AHDN
+
+2020-09-10 18:34:39,731 ERROR 15080 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15080
+hostname: PC-20200426AHDN
+
+2020-09-10 18:34:39,923 ERROR 15080 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15080
+hostname: PC-20200426AHDN
+
+2020-09-10 18:34:40,073 ERROR 15080 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15080
+hostname: PC-20200426AHDN
+
+2020-09-10 18:34:40,241 ERROR 15080 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15080
+hostname: PC-20200426AHDN
+
+2020-09-10 18:34:40,410 ERROR 15080 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15080
+hostname: PC-20200426AHDN
+
+2020-09-10 18:34:40,594 ERROR 15080 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15080
+hostname: PC-20200426AHDN
+
+2020-09-10 18:34:41,178 ERROR 15080 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15080
+hostname: PC-20200426AHDN
+
+2020-09-10 18:34:41,410 ERROR 15080 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15080
+hostname: PC-20200426AHDN
+
+2020-09-10 18:34:41,593 ERROR 15080 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15080
+hostname: PC-20200426AHDN
+
+2020-09-10 18:37:02,614 ERROR 15580 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15580
+hostname: PC-20200426AHDN
+
+2020-09-10 18:37:03,037 ERROR 15580 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15580
+hostname: PC-20200426AHDN
+
+2020-09-10 18:37:03,225 ERROR 15580 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15580
+hostname: PC-20200426AHDN
+
+2020-09-10 18:37:03,378 ERROR 15580 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15580
+hostname: PC-20200426AHDN
+
+2020-09-10 18:37:03,513 ERROR 15580 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15580
+hostname: PC-20200426AHDN
+
+2020-09-10 18:37:04,462 ERROR 15580 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15580
+hostname: PC-20200426AHDN
+
+2020-09-10 18:37:06,172 ERROR 15580 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15580
+hostname: PC-20200426AHDN
+
+2020-09-10 18:37:13,735 ERROR 15580 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15580
+hostname: PC-20200426AHDN
+
+2020-09-10 18:37:14,178 ERROR 15580 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15580
+hostname: PC-20200426AHDN
+
+2020-09-10 18:37:14,347 ERROR 15580 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15580
+hostname: PC-20200426AHDN
+
+2020-09-10 18:37:15,887 ERROR 16916 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError: Cannot read property 'loglist' of undefined
+    at LoggerController.list (E:\gongzuo\DGG\app\controller\logger.js:7:37)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+
+pid: 16916
+hostname: PC-20200426AHDN
+
+2020-09-10 18:39:13,928 ERROR 8444 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 8444
+hostname: PC-20200426AHDN
+
+2020-09-10 18:39:23,944 ERROR 8444 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 8444
+hostname: PC-20200426AHDN
+
+2020-09-10 18:39:24,530 ERROR 8444 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 8444
+hostname: PC-20200426AHDN
+
+2020-09-10 18:39:53,820 ERROR 16820 [-/127.0.0.1/-/7ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 16820
+hostname: PC-20200426AHDN
+
+2020-09-10 18:39:53,993 ERROR 16820 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 16820
+hostname: PC-20200426AHDN
+
+2020-09-10 18:40:07,956 ERROR 4324 [-/127.0.0.1/-/8ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4324
+hostname: PC-20200426AHDN
+
+2020-09-10 18:40:10,008 ERROR 4324 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4324
+hostname: PC-20200426AHDN
+
+2020-09-10 18:40:10,408 ERROR 4324 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4324
+hostname: PC-20200426AHDN
+
+2020-09-10 18:40:10,576 ERROR 4324 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4324
+hostname: PC-20200426AHDN
+
+2020-09-10 18:40:10,721 ERROR 4324 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4324
+hostname: PC-20200426AHDN
+
+2020-09-10 18:40:10,865 ERROR 4324 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 4324
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:02,978 ERROR 15496 [-/127.0.0.1/-/7ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15496
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:03,136 ERROR 15496 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15496
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:03,295 ERROR 15496 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15496
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:03,769 ERROR 15496 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15496
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:03,952 ERROR 15496 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15496
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:24,572 ERROR 15496 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15496
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:25,003 ERROR 15496 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15496
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:25,208 ERROR 15496 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15496
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:25,386 ERROR 15496 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15496
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:25,528 ERROR 15496 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15496
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:26,445 ERROR 14572 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14572
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:27,297 ERROR 14572 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14572
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:28,324 ERROR 14572 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14572
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:29,573 ERROR 14572 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14572
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:53,291 ERROR 14572 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14572
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:54,852 ERROR 15288 [-/127.0.0.1/-/7ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:55,345 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:55,512 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:55,664 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:55,818 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:55,970 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:56,112 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:56,280 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:56,408 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:56,576 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:45:59,664 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:00,113 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:00,305 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:00,609 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:00,791 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:00,913 ERROR 15288 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:01,088 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:01,257 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:01,424 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:01,592 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:01,793 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:02,305 ERROR 15288 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:02,488 ERROR 15288 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:02,640 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:02,784 ERROR 15288 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:02,953 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:03,104 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:03,283 ERROR 15288 [-/127.0.0.1/-/2ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:03,416 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:03,576 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:03,737 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:03,896 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:04,017 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:04,186 ERROR 15288 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:04,344 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:04,553 ERROR 15288 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:05,009 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:05,465 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:05,728 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:05,920 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:06,209 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:06,417 ERROR 15288 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:06,602 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:06,953 ERROR 15288 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:07,321 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:07,656 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:16,196 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:16,626 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:16,792 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:46:16,961 ERROR 15288 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 15288
+hostname: PC-20200426AHDN
+
+2020-09-10 18:47:17,443 ERROR 11296 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11296
+hostname: PC-20200426AHDN
+
+2020-09-10 18:47:17,625 ERROR 11296 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11296
+hostname: PC-20200426AHDN
+
+2020-09-10 18:47:17,823 ERROR 11296 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11296
+hostname: PC-20200426AHDN
+
+2020-09-10 18:47:17,985 ERROR 11296 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11296
+hostname: PC-20200426AHDN
+
+2020-09-10 18:47:18,152 ERROR 11296 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11296
+hostname: PC-20200426AHDN
+
+2020-09-10 18:48:47,869 ERROR 11296 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11296
+hostname: PC-20200426AHDN
+
+2020-09-10 18:48:48,257 ERROR 11296 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11296
+hostname: PC-20200426AHDN
+
+2020-09-10 18:58:45,124 ERROR 17800 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17800
+hostname: PC-20200426AHDN
+
+2020-09-10 18:59:00,247 ERROR 17800 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17800
+hostname: PC-20200426AHDN
+
+2020-09-10 18:59:00,711 ERROR 17800 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17800
+hostname: PC-20200426AHDN
+
+2020-09-10 18:59:00,919 ERROR 17800 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 17800
+hostname: PC-20200426AHDN
+
+2020-09-10 19:06:47,618 ERROR 14500 [-/127.0.0.1/-/6ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14500
+hostname: PC-20200426AHDN
+
+2020-09-10 19:06:48,574 ERROR 14500 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14500
+hostname: PC-20200426AHDN
+
+2020-09-10 19:06:48,758 ERROR 14500 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14500
+hostname: PC-20200426AHDN
+
+2020-09-10 19:06:48,893 ERROR 14500 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14500
+hostname: PC-20200426AHDN
+
+2020-09-10 19:09:03,616 ERROR 5752 [-/127.0.0.1/-/7ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 5752
+hostname: PC-20200426AHDN
+
+2020-09-10 19:09:05,323 ERROR 5752 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 5752
+hostname: PC-20200426AHDN
+
+2020-09-10 19:09:26,115 ERROR 5752 [-/127.0.0.1/-/1ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 5752
+hostname: PC-20200426AHDN
+
+2020-09-10 19:09:26,589 ERROR 5752 [-/127.0.0.1/-/0ms GET /logger] nodejs.TypeError [ERR_INVALID_ARG_TYPE]: The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type undefined
+    at Function.byteLength (buffer.js:515:11)
+    at respond (E:\gongzuo\DGG\node_modules\koa\lib\application.js:272:25)
+    at handleResponse (E:\gongzuo\DGG\node_modules\koa\lib\application.js:166:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 5752
+hostname: PC-20200426AHDN
+
