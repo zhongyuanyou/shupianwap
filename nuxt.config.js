@@ -1,6 +1,9 @@
 'use strict';
 module.exports = {
+  // 关键配置(切勿覆盖和删除)
+  telemetry: false,
   srcDir: 'client/',
+  // end
   css: [],
   head: {
     titleTemplate: '%s',

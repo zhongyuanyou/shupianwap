@@ -1,5 +1,5 @@
 'use strict';
 module.exports = app => {
   const { router, controller } = app;
-  router.get('/api/logger', controller.logger.list);
+  router.get('/api/demo', controller.demo.list);
 };

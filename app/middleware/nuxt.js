@@ -3,13 +3,13 @@ const { Nuxt, Builder } = require('nuxt');
 const config = require('../../nuxt.config');
 module.exports = (options, app) => {
   // 实例化Nuxt对象,导入Nuxt项目相关配置
-  const nuxtRender = new Nuxt(config);
+  const nuxt = new Nuxt(config);
   // 获取当前的开发环境
   const isDev = process.env.NODE_ENV !== 'production';
   // 如果是开发环境
   if (isDev) {
     // 构建项目
-    new Builder(nuxtRender).build();
+    new Builder(nuxt).build();
   }
   return async function(ctx, next) {
     let flag = false;
@@ -30,9 +30,11 @@ module.exports = (options, app) => {
       ctx.res.on('close', resolve);
       ctx.res.on('finish', resolve);
       // 使用Nuxt进行渲染页面
-      nuxtRender.render(req, res, promise => {
-        promise.then(resolve).catch(reject);
-      });
+      try {
+        nuxt.render(req, res);
+      } catch (e) {
+        reject(e);
+      }
     });
   };
 };

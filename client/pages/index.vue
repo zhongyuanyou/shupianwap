@@ -17,9 +17,10 @@
       }
     },
     async asyncData({ $axios }){
-      const res= await $axios.get('http://127.0.0.1:7001/api/user',{
+      const res= await $axios.get('http://127.0.0.1:7001/api/demo',{
+        headers: {'x-cache-control':'cache'},
         params:{
-          id:new Date().getTime()
+          id:'12121'
         }
       })
       if(res.status===200){

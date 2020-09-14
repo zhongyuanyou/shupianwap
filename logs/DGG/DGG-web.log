@@ -1,5 +1,5 @@
 2020-09-10 11:07:05,949 ERROR 4376 [-/127.0.0.1/-/5ms GET /user] nodejs.TypeError: Cannot read property 'user' of undefined
-    at UserController.list (E:\gongzuo\DGG\app\controller\user.js:7:26)
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:7:26)
     at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
     at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
     at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
@@ -14,7 +14,7 @@ pid: 4376
 hostname: PC-20200426AHDN
 
 2020-09-10 11:07:24,197 ERROR 4376 [-/127.0.0.1/-/1ms GET /user?id=12] nodejs.TypeError: Cannot read property 'user' of undefined
-    at UserController.list (E:\gongzuo\DGG\app\controller\user.js:7:26)
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:7:26)
     at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
     at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
     at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
@@ -29,7 +29,7 @@ pid: 4376
 hostname: PC-20200426AHDN
 
 2020-09-10 11:07:51,629 ERROR 4376 [-/127.0.0.1/-/1ms GET /user?id=12] nodejs.TypeError: Cannot read property 'user' of undefined
-    at UserController.list (E:\gongzuo\DGG\app\controller\user.js:7:26)
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:7:26)
     at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
     at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
     at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
@@ -45,14 +45,14 @@ hostname: PC-20200426AHDN
 
 2020-09-10 15:57:06,189 ERROR 17424 [-/127.0.0.1/-/8ms GET /user?id=345] nodejs.SyntaxError: Unexpected number in JSON at position 4
     at JSON.parse (<anonymous>)
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:16:29)
 
 pid: 17424
 hostname: PC-20200426AHDN
 
 2020-09-10 15:57:21,231 ERROR 17424 [-/127.0.0.1/-/2ms GET /user?id=345] nodejs.SyntaxError: Unexpected number in JSON at position 4
     at JSON.parse (<anonymous>)
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:16:29)
 
 pid: 17424
 hostname: PC-20200426AHDN
@@ -198,56 +198,56 @@ pid: 16040
 hostname: PC-20200426AHDN
 
 2020-09-10 16:04:18,934 ERROR 17480 [-/127.0.0.1/-/8ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:16:29)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17480
 hostname: PC-20200426AHDN
 
 2020-09-10 16:04:19,307 ERROR 17480 [-/127.0.0.1/-/2ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:16:29)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17480
 hostname: PC-20200426AHDN
 
 2020-09-10 16:04:19,917 ERROR 17480 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:16:29)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17480
 hostname: PC-20200426AHDN
 
 2020-09-10 16:04:20,428 ERROR 17480 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:16:29)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17480
 hostname: PC-20200426AHDN
 
 2020-09-10 16:04:20,643 ERROR 17480 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:16:29)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17480
 hostname: PC-20200426AHDN
 
 2020-09-10 16:04:20,775 ERROR 17480 [-/127.0.0.1/-/4ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:16:29)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17480
 hostname: PC-20200426AHDN
 
 2020-09-10 16:05:27,702 ERROR 17480 [-/127.0.0.1/-/2ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:16:29)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17480
 hostname: PC-20200426AHDN
 
 2020-09-10 16:05:28,310 ERROR 17480 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'toString' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:16:29)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:16:29)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17480
@@ -294,91 +294,91 @@ pid: 16988
 hostname: PC-20200426AHDN
 
 2020-09-10 16:22:54,842 ERROR 16408 [-/127.0.0.1/-/7ms GET /user?id=345] nodejs.TypeError: ctx.warn is not a function
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:18:11)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:18:11)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 16408
 hostname: PC-20200426AHDN
 
 2020-09-10 16:22:55,762 ERROR 16408 [-/127.0.0.1/-/0ms GET /user?id=345] nodejs.TypeError: ctx.warn is not a function
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:18:11)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:18:11)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 16408
 hostname: PC-20200426AHDN
 
 2020-09-10 16:22:56,644 ERROR 16408 [-/127.0.0.1/-/0ms GET /user?id=345] nodejs.TypeError: ctx.warn is not a function
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:18:11)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:18:11)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 16408
 hostname: PC-20200426AHDN
 
 2020-09-10 16:23:28,651 ERROR 17064 [-/127.0.0.1/-/6ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:19:14)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17064
 hostname: PC-20200426AHDN
 
 2020-09-10 16:23:29,186 ERROR 17064 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:19:14)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17064
 hostname: PC-20200426AHDN
 
 2020-09-10 16:23:29,850 ERROR 17064 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:19:14)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17064
 hostname: PC-20200426AHDN
 
 2020-09-10 16:23:30,361 ERROR 17064 [-/127.0.0.1/-/0ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:19:14)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17064
 hostname: PC-20200426AHDN
 
 2020-09-10 16:23:30,850 ERROR 17064 [-/127.0.0.1/-/0ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:19:14)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17064
 hostname: PC-20200426AHDN
 
 2020-09-10 16:23:31,033 ERROR 17064 [-/127.0.0.1/-/0ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:19:14)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17064
 hostname: PC-20200426AHDN
 
 2020-09-10 16:23:31,210 ERROR 17064 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:19:14)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17064
 hostname: PC-20200426AHDN
 
 2020-09-10 16:23:31,361 ERROR 17064 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:19:14)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17064
 hostname: PC-20200426AHDN
 
 2020-09-10 16:23:31,507 ERROR 17064 [-/127.0.0.1/-/1ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:19:14)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17064
 hostname: PC-20200426AHDN
 
 2020-09-10 16:23:32,674 ERROR 17064 [-/127.0.0.1/-/0ms GET /user?id=345] nodejs.TypeError: Cannot read property 'warn' of undefined
-    at UserService.list (E:\gongzuo\DGG\app\service\user.js:19:14)
+    at UserService.list (E:\gongzuo\DGG\app\service\demo.js:19:14)
     at process._tickCallback (internal/process/next_tick.js:68:7)
 
 pid: 17064
@@ -2467,3 +2467,1331 @@ hostname: PC-20200426AHDN
 pid: 5752
 hostname: PC-20200426AHDN
 
+2020-09-11 16:39:25,952 ERROR 19140 [-/127.0.0.1/-/3ms GET /api/user?id=1599813565943] nodejs.TypeError: Cannot read property 'number' of undefined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:8:21)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 19140
+hostname: PC-20200426AHDN
+
+2020-09-11 16:40:59,295 ERROR 19140 [-/127.0.0.1/-/0ms GET /api/user?id=1599813659290] nodejs.TypeError: Cannot read property 'number' of undefined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:8:21)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 19140
+hostname: PC-20200426AHDN
+
+2020-09-11 16:41:13,473 ERROR 19140 [-/127.0.0.1/-/1ms GET /api/user?id=1599813673466] nodejs.TypeError: Cannot read property 'number' of undefined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:8:21)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 19140
+hostname: PC-20200426AHDN
+
+2020-09-11 16:41:14,778 ERROR 19140 [-/127.0.0.1/-/0ms GET /api/user?id=1599813674773] nodejs.TypeError: Cannot read property 'number' of undefined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:8:21)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 19140
+hostname: PC-20200426AHDN
+
+2020-09-11 16:41:15,046 ERROR 19140 [-/127.0.0.1/-/0ms GET /api/user?id=1599813675042] nodejs.TypeError: Cannot read property 'number' of undefined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:8:21)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 19140
+hostname: PC-20200426AHDN
+
+2020-09-11 16:41:15,383 ERROR 19140 [-/127.0.0.1/-/0ms GET /api/user?id=1599813675377] nodejs.TypeError: Cannot read property 'number' of undefined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:8:21)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 19140
+hostname: PC-20200426AHDN
+
+2020-09-11 16:41:15,563 ERROR 19140 [-/127.0.0.1/-/1ms GET /api/user?id=1599813675560] nodejs.TypeError: Cannot read property 'number' of undefined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:8:21)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 19140
+hostname: PC-20200426AHDN
+
+2020-09-11 16:41:15,728 ERROR 19140 [-/127.0.0.1/-/0ms GET /api/user?id=1599813675724] nodejs.TypeError: Cannot read property 'number' of undefined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:8:21)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 19140
+hostname: PC-20200426AHDN
+
+2020-09-11 16:41:15,883 ERROR 19140 [-/127.0.0.1/-/1ms GET /api/user?id=1599813675878] nodejs.TypeError: Cannot read property 'number' of undefined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:8:21)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 19140
+hostname: PC-20200426AHDN
+
+2020-09-11 16:41:16,024 ERROR 19140 [-/127.0.0.1/-/0ms GET /api/user?id=1599813676018] nodejs.TypeError: Cannot read property 'number' of undefined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:8:21)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 19140
+hostname: PC-20200426AHDN
+
+2020-09-11 18:11:59,962 ERROR 6880 [-/127.0.0.1/-/2ms GET /api/user?id=1599819119953] nodejs.TypeError: validate is not a function
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:13:5)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 6880
+hostname: PC-20200426AHDN
+
+2020-09-11 18:12:27,793 ERROR 6880 [-/127.0.0.1/-/1ms GET /api/user?id=1599819147784] nodejs.TypeError: validate is not a function
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:13:5)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 6880
+hostname: PC-20200426AHDN
+
+2020-09-11 18:12:28,408 ERROR 6880 [-/127.0.0.1/-/0ms GET /api/user?id=1599819148404] nodejs.TypeError: validate is not a function
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:13:5)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 6880
+hostname: PC-20200426AHDN
+
+2020-09-11 18:12:29,994 ERROR 6880 [-/127.0.0.1/-/0ms GET /api/user?id=1599819149989] nodejs.TypeError: validate is not a function
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:13:5)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 6880
+hostname: PC-20200426AHDN
+
+2020-09-11 18:13:46,854 ERROR 4952 [-/127.0.0.1/-/2ms GET /api/user?id=1599819226844] nodejs.TypeError: this.validate is not a function
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:13:10)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 4952
+hostname: PC-20200426AHDN
+
+2020-09-11 18:16:46,021 WARN 19740 [-/127.0.0.1/-/2ms GET /api/user?id=1599819406014] nodejs.UnprocessableEntityError: Validation Failed
+    at Object.throw (E:\gongzuo\DGG\node_modules\koa\lib\context.js:97:11)
+    at Object.validate (E:\gongzuo\DGG\node_modules\egg-validate\app\extend\context.js:14:17)
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:14:9)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+message: "Validation Failed"
+code: "invalid_param"
+errors: [{"message":"required","field":"id","code":"missing_field"}]
+pid: 19740
+hostname: PC-20200426AHDN
+
+2020-09-11 18:17:18,361 WARN 19740 [-/127.0.0.1/-/1ms GET /api/user?id=1599819438357] nodejs.UnprocessableEntityError: Validation Failed
+    at Object.throw (E:\gongzuo\DGG\node_modules\koa\lib\context.js:97:11)
+    at Object.validate (E:\gongzuo\DGG\node_modules\egg-validate\app\extend\context.js:14:17)
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:14:9)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+message: "Validation Failed"
+code: "invalid_param"
+errors: [{"message":"required","field":"id","code":"missing_field"}]
+pid: 19740
+hostname: PC-20200426AHDN
+
+2020-09-11 18:17:19,801 WARN 19740 [-/127.0.0.1/-/1ms GET /api/user?id=1599819439797] nodejs.UnprocessableEntityError: Validation Failed
+    at Object.throw (E:\gongzuo\DGG\node_modules\koa\lib\context.js:97:11)
+    at Object.validate (E:\gongzuo\DGG\node_modules\egg-validate\app\extend\context.js:14:17)
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:14:9)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+message: "Validation Failed"
+code: "invalid_param"
+errors: [{"message":"required","field":"id","code":"missing_field"}]
+pid: 19740
+hostname: PC-20200426AHDN
+
+2020-09-14 11:04:20,447 ERROR 11544 [-/undefined/-/5814ms GET /__webpack_hmr/client] nodejs.ECONNRESETError: read ECONNRESET
+    at TCP.onStreamRead (internal/stream_base_commons.js:111:27)
+errno: "ECONNRESET"
+code: "ECONNRESET"
+syscall: "read"
+headerSent: true
+name: "ECONNRESETError"
+pid: 11544
+hostname: PC-20200426AHDN
+
+2020-09-14 13:44:57,057 ERROR 11040 [-/127.0.0.1/-/2ms GET /api/demo?id=1212] nodejs.ReferenceError: pwd is not defined
+    at Helper.cacheKey (E:\gongzuo\DGG\app\extend\helper.js:6:15)
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:6:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+
+pid: 11040
+hostname: PC-20200426AHDN
+
+2020-09-14 13:51:53,056 ERROR 11260 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:6:44)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11260
+hostname: PC-20200426AHDN
+
+2020-09-14 13:52:57,755 ERROR 14216 [-/127.0.0.1/-/2ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:6:44)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14216
+hostname: PC-20200426AHDN
+
+2020-09-14 13:56:48,085 ERROR 14420 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:6:33)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14420
+hostname: PC-20200426AHDN
+
+2020-09-14 13:56:49,680 ERROR 14420 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:6:33)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 14420
+hostname: PC-20200426AHDN
+
+2020-09-14 13:58:19,523 ERROR 11244 [-/127.0.0.1/-/2ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:6:33)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11244
+hostname: PC-20200426AHDN
+
+2020-09-14 13:58:44,692 ERROR 11244 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:6:33)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11244
+hostname: PC-20200426AHDN
+
+2020-09-14 14:09:12,915 ERROR 10144 [-/127.0.0.1/-/2ms GET /api/demo?id=1212] nodejs.ReferenceError: app is not defined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:7:23)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:12:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 10144
+hostname: PC-20200426AHDN
+
+2020-09-14 14:09:13,833 ERROR 10144 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.ReferenceError: app is not defined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:7:23)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:12:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 10144
+hostname: PC-20200426AHDN
+
+2020-09-14 14:09:14,494 ERROR 10144 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.ReferenceError: app is not defined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:7:23)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:12:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 10144
+hostname: PC-20200426AHDN
+
+2020-09-14 14:09:25,676 ERROR 10144 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.ReferenceError: app is not defined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:7:23)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:12:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 10144
+hostname: PC-20200426AHDN
+
+2020-09-14 14:09:27,168 ERROR 10144 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.ReferenceError: app is not defined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:7:23)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:12:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 10144
+hostname: PC-20200426AHDN
+
+2020-09-14 14:09:28,302 ERROR 10144 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.ReferenceError: app is not defined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:7:23)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:12:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 10144
+hostname: PC-20200426AHDN
+
+2020-09-14 14:09:28,839 ERROR 10144 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.ReferenceError: app is not defined
+    at UserController.list (E:\gongzuo\DGG\app\controller\demo.js:7:23)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\egg-core\lib\utils\index.js:44:21)
+    at Object.classControllerMiddleware (E:\gongzuo\DGG\node_modules\egg-core\lib\loader\mixin\controller.js:87:20)
+    at Object.callFn (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\utils.js:12:21)
+    at wrappedController (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\egg_router.js:322:18)
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at next (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:45:18)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:190:18
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:44:32)
+    at E:\gongzuo\DGG\node_modules\@eggjs\router\node_modules\koa-compose\index.js:36:12
+    at dispatch (E:\gongzuo\DGG\node_modules\@eggjs\router\lib\router.js:195:33)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:12:11)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 10144
+hostname: PC-20200426AHDN
+
+2020-09-14 14:10:59,038 ERROR 12664 [-/127.0.0.1/-/2ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:6:27)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 12664
+hostname: PC-20200426AHDN
+
+2020-09-14 14:11:01,099 ERROR 12664 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:6:27)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 12664
+hostname: PC-20200426AHDN
+
+2020-09-14 14:52:22,707 ERROR 14612 [-/127.0.0.1/-/27346ms GET /api/demo?id=1212] nodejs.MaxRetriesPerRequestError: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
+    at Socket.<anonymous> (E:\gongzuo\DGG\node_modules\_ioredis@4.17.3@ioredis\built\redis\event_handler.js:172:37)
+    at Object.onceWrapper (events.js:286:20)
+    at Socket.emit (events.js:198:13)
+    at Socket.EventEmitter.emit (domain.js:448:20)
+    at TCP._handle.close (net.js:607:12)
+
+pid: 14612
+hostname: PC-20200426AHDN
+
+2020-09-14 14:52:22,710 ERROR 14612 [-/127.0.0.1/-/23103ms GET /api/demo?id=1212] nodejs.MaxRetriesPerRequestError: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
+    at Socket.<anonymous> (E:\gongzuo\DGG\node_modules\_ioredis@4.17.3@ioredis\built\redis\event_handler.js:172:37)
+    at Object.onceWrapper (events.js:286:20)
+    at Socket.emit (events.js:198:13)
+    at Socket.EventEmitter.emit (domain.js:448:20)
+    at TCP._handle.close (net.js:607:12)
+status: 500
+pid: 14612
+hostname: PC-20200426AHDN
+
+2020-09-14 14:57:40,178 ERROR 9480 [-/127.0.0.1/-/3ms GET /api/demo?id=1212] nodejs.SyntaxError: Unexpected token o in JSON at position 1
+    at JSON.parse (<anonymous>)
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:14:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 9480
+hostname: PC-20200426AHDN
+
+2020-09-14 14:58:24,569 ERROR 12208 [-/127.0.0.1/-/3ms GET /api/demo?id=1212] nodejs.SyntaxError: Unexpected token o in JSON at position 1
+    at JSON.parse (<anonymous>)
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:15:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 12208
+hostname: PC-20200426AHDN
+
+2020-09-14 15:33:48,624 ERROR 7456 [-/127.0.0.1/-/26527ms GET /api/demo?id=1212] nodejs.MaxRetriesPerRequestError: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
+    at Socket.<anonymous> (E:\gongzuo\DGG\node_modules\_ioredis@4.17.3@ioredis\built\redis\event_handler.js:172:37)
+    at Object.onceWrapper (events.js:286:20)
+    at Socket.emit (events.js:198:13)
+    at Socket.EventEmitter.emit (domain.js:448:20)
+    at TCP._handle.close (net.js:607:12)
+
+pid: 7456
+hostname: PC-20200426AHDN
+
+2020-09-14 15:34:42,225 ERROR 7456 [-/127.0.0.1/-/80128ms GET /api/demo?id=1212] nodejs.MaxRetriesPerRequestError: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
+    at Socket.<anonymous> (E:\gongzuo\DGG\node_modules\_ioredis@4.17.3@ioredis\built\redis\event_handler.js:172:37)
+    at Object.onceWrapper (events.js:286:20)
+    at Socket.emit (events.js:198:13)
+    at Socket.EventEmitter.emit (domain.js:448:20)
+    at TCP._handle.close (net.js:607:12)
+
+pid: 7456
+hostname: PC-20200426AHDN
+
+2020-09-14 15:34:42,226 ERROR 7456 [-/undefined/-/41675ms GET /api/demo] nodejs.MaxRetriesPerRequestError: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
+    at Socket.<anonymous> (E:\gongzuo\DGG\node_modules\_ioredis@4.17.3@ioredis\built\redis\event_handler.js:172:37)
+    at Object.onceWrapper (events.js:286:20)
+    at Socket.emit (events.js:198:13)
+    at Socket.EventEmitter.emit (domain.js:448:20)
+    at TCP._handle.close (net.js:607:12)
+
+pid: 7456
+hostname: PC-20200426AHDN
+
+2020-09-14 15:34:42,226 ERROR 7456 [-/127.0.0.1/-/14837ms GET /api/demo] nodejs.MaxRetriesPerRequestError: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
+    at Socket.<anonymous> (E:\gongzuo\DGG\node_modules\_ioredis@4.17.3@ioredis\built\redis\event_handler.js:172:37)
+    at Object.onceWrapper (events.js:286:20)
+    at Socket.emit (events.js:198:13)
+    at Socket.EventEmitter.emit (domain.js:448:20)
+    at TCP._handle.close (net.js:607:12)
+
+pid: 7456
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:31,404 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:31,406 ERROR 11096 [-/127.0.0.1/-/3ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:33,942 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:33,943 ERROR 11096 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:38,845 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:38,846 ERROR 11096 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:39,191 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:39,192 ERROR 11096 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:39,565 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:39,566 ERROR 11096 [-/127.0.0.1/-/2ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:39,865 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:39,866 ERROR 11096 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:40,174 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:40,175 ERROR 11096 [-/127.0.0.1/-/2ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:40,507 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:40,508 ERROR 11096 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:40,846 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:40,847 ERROR 11096 [-/127.0.0.1/-/3ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:41,191 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:41,192 ERROR 11096 [-/127.0.0.1/-/2ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:41,500 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:41,501 ERROR 11096 [-/127.0.0.1/-/2ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:41,832 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:41,834 ERROR 11096 [-/127.0.0.1/-/3ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:42,214 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:42,215 ERROR 11096 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:42,534 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:42,535 ERROR 11096 [-/127.0.0.1/-/2ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:50,815 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:50,816 ERROR 11096 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:51,920 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:51,921 ERROR 11096 [-/127.0.0.1/-/2ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:58,040 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:58,041 ERROR 11096 [-/127.0.0.1/-/2ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:58,462 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:58,463 ERROR 11096 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:58,878 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:58,880 ERROR 11096 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:59,245 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:59,246 ERROR 11096 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:59,830 ERROR 11096 [-/127.0.0.1/-/0ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'get' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:8:35)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\app\middleware\nuxt.js:24:20
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at E:\gongzuo\DGG\node_modules\egg-development\app\middleware\egg_loader_trace.js:9:56
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at i18n (E:\gongzuo\DGG\node_modules\egg-i18n\app\middleware\i18n.js:13:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at dta (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\dta.js:12:12)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xframe (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xframe.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at xssProtection (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\xssProtection.js:7:11)
+    at dispatch (E:\gongzuo\DGG\node_modules\koa-compose\index.js:42:32)
+    at nosniff (E:\gongzuo\DGG\node_modules\egg-security\lib\middlewares\nosniff.js:8:11)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:38:59,831 ERROR 11096 [-/127.0.0.1/-/1ms GET /api/demo?id=1212] nodejs.TypeError: Cannot read property 'set' of undefined
+    at dggCache (E:\gongzuo\DGG\app\middleware\dggCache.js:23:23)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+pid: 11096
+hostname: PC-20200426AHDN
+
+2020-09-14 15:44:13,510 ERROR 1824 [-/127.0.0.1/-/28861ms GET /api/demo?id=1212] nodejs.MaxRetriesPerRequestError: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
+    at Socket.<anonymous> (E:\gongzuo\DGG\node_modules\_ioredis@4.17.3@ioredis\built\redis\event_handler.js:172:37)
+    at Object.onceWrapper (events.js:286:20)
+    at Socket.emit (events.js:198:13)
+    at Socket.EventEmitter.emit (domain.js:448:20)
+    at TCP._handle.close (net.js:607:12)
+
+pid: 1824
+hostname: PC-20200426AHDN
+
+2020-09-14 15:45:07,097 ERROR 1824 [-/127.0.0.1/-/82449ms GET /api/demo?id=1212] nodejs.MaxRetriesPerRequestError: Reached the max retries per request limit (which is 20). Refer to "maxRetriesPerRequest" option for details.
+    at Socket.<anonymous> (E:\gongzuo\DGG\node_modules\_ioredis@4.17.3@ioredis\built\redis\event_handler.js:172:37)
+    at Object.onceWrapper (events.js:286:20)
+    at Socket.emit (events.js:198:13)
+    at Socket.EventEmitter.emit (domain.js:448:20)
+    at TCP._handle.close (net.js:607:12)
+
+pid: 1824
+hostname: PC-20200426AHDN
+
+2020-09-14 15:51:52,056 INFO 10612 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 15:52:47,872 INFO 14692 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 15:53:33,375 INFO 15280 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 15:56:54,010 INFO 15324 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:16:07,395 INFO 15540 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:21:06,939 INFO 15620 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:25:57,823 INFO 15976 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:26:39,820 INFO 11096 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:27:35,982 INFO 15152 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:34:27,525 INFO 13580 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:35:37,140 INFO 15292 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:36:56,741 INFO 16044 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:37:41,818 INFO 15456 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:42:37,755 INFO 15280 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:43:42,187 INFO 6116 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:46:14,856 INFO 7052 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:46:56,869 INFO 16328 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:47:14,762 INFO 16308 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:47:41,837 INFO 14008 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:48:22,140 INFO 4116 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:48:35,932 INFO 13692 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:48:56,661 INFO 10484 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:50:02,422 INFO 3340 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:51:07,886 INFO 15876 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:52:20,314 INFO 15244 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:52:58,768 INFO 9748 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:53:23,269 INFO 16316 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:53:57,423 INFO 13884 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:55:17,102 INFO 13232 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:55:41,373 INFO 16160 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:57:15,542 INFO 15968 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:57:50,838 INFO 6808 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 16:58:03,497 INFO 6128 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 17:15:55,368 INFO 15736 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 17:17:53,731 INFO 14852 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 17:20:05,389 INFO 16000 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 17:31:31,392 INFO 17276 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 17:37:01,703 INFO 16716 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 17:38:07,648 INFO 2524 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs
+2020-09-14 17:39:23,411 INFO 13580 [egg-logview] mount log E:\gongzuo\DGG\logs at http://127.0.0.1:7001/__logs

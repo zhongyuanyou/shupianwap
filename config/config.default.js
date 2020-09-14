@@ -16,7 +16,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1599699446500_2481';
 
   // 在此处添加中间件配置
-  config.middleware = [ 'nuxt' ];
+  config.middleware = [ 'nuxt', 'dggCache' ];
   // 关闭跨域校验(注意:默认开启的话,跨域调用API必须进行token校验)
   config.security = {
     csrf: false,
@@ -28,6 +28,28 @@ module.exports = appInfo => {
     // 设置日志文件需要切割的大小(kb为单位),超过配置大小(2GB),就会进行切割
     // 设置了按文件大小切割后,按时间切割的日子文件将不生效,都会安装文件大小切割
     maxFileSize: 2 * 1024 * 1024 * 1024,
+  };
+  // redis集群配置
+  config.redis = {
+    client: {// 可以配置多Redis节点
+      host: '127.0.0.1', // IP地址
+      port: '6379', // 端口号
+      family: 'root', // 用户名
+      password: '', // 用户密码
+      db: 0, // 数据库名称,redis默认16个数据库0-16
+      weakDependent: true,
+    },
+    // redis集群配置
+    // client: {
+    // cluster: true, // 是否启动集群
+    // nodes: [{// 可以配置多Redis节点
+    //   host: '127.0.0.1', // IP地址
+    //   port: '6379', // 端口号
+    //   family: 'root', // 用户名
+    //   password: '', // 用户密码
+    //   db: 'db', // 数据库名称,redis默认16个数据库0-16
+    // }],
+    // },
   };
   // 在此处添加个人配置
   const userConfig = {
