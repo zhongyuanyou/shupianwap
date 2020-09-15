@@ -16,7 +16,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1599699446500_2481';
 
   // 在此处添加中间件配置
-  config.middleware = [ 'nuxt', 'dggCache' ];
+  config.middleware = [ 'nuxt', 'errFilter', 'dggCache' ];
   // 关闭跨域校验(注意:默认开启的话,跨域调用API必须进行token校验)
   config.security = {
     csrf: false,

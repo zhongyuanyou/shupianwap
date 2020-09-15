@@ -20,9 +20,10 @@ module.exports = () => {
     const body = ctx.body;
     if (!body) return;
     // 响应时走的业务逻辑
-    // 我们队需要缓存的数据进行redis缓存
-    await ctx.service.redis.set(cacheKey, body, 60 * 60 * 24);// 缓存时间以S为单位
+    // 我们对需要缓存的数据进行redis缓存(正常数据才缓存)
+    if (ctx.status === 200 && body.code === 200) {
+      await ctx.service.redis.set(cacheKey, body, 60 * 60 * 24);
+    }// 缓存时间以S为单位
     ctx.body = body;
-
   };
 };

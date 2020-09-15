@@ -20,7 +20,7 @@
       const res= await $axios.get('http://127.0.0.1:7001/api/demo',{
         headers: {'x-cache-control':'cache'},
         params:{
-          id:'12121'
+          id:'1212'
         }
       })
       if(res.status===200){
