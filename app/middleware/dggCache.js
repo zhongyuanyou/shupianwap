@@ -19,11 +19,11 @@ module.exports = () => {
     await next();
     const body = ctx.body;
     if (!body) return;
-    // 响应时走的业务逻辑
+    // 响应时走的业务逻辑(先响应请求,再缓存数据,不让缓存阻塞响应时间)
+    ctx.body = body;
     // 我们对需要缓存的数据进行redis缓存(正常数据才缓存)
     if (ctx.status === 200 && body.code === 200) {
-      await ctx.service.redis.set(cacheKey, body, 60 * 60 * 24);
-    }// 缓存时间以S为单位
-    ctx.body = body;
+      ctx.service.redis.set(cacheKey, body, 60 * 60 * 24);
+    }// 缓存时间以S为单位(注意此处未用await,因为不需要等待存储结果)
   };
 };

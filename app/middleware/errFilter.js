@@ -6,6 +6,9 @@ module.exports = (option, app) => {
   return async function errFilter(ctx, next) {
     try {
       await next();
+      if (ctx.status === 404 && !ctx.body) {
+        ctx.helper.fail({ ctx, code: 404, res: ctx.helper.errorCode[404] });
+      }
     } catch (err) {
       const error = app.config.env === 'prod' ? '服务器错误,请联系管理员' : String(err);
       ctx.helper.fail({ ctx, code: 500, res: error });
