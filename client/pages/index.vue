@@ -24,7 +24,7 @@
         }
       })
       if(res.status===200){
-        return { ServerData:res.data.userList }
+        return { ServerData:res.data.data.userList }
       }
     }
   }

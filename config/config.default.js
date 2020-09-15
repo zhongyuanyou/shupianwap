@@ -26,7 +26,7 @@ module.exports = appInfo => {
       path.join(appInfo.root, 'logs', appInfo.name, 'DGG-web.log'),
     ],
     // 设置日志文件需要切割的大小(kb为单位),超过配置大小(2GB),就会进行切割
-    // 设置了按文件大小切割后,按时间切割的日子文件将不生效,都会安装文件大小切割
+    // 设置了按文件大小切割后,按时间切割的日志文件的配置将不生效,都会安装文件大小切割
     maxFileSize: 2 * 1024 * 1024 * 1024,
   };
   // redis集群配置
