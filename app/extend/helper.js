@@ -1,5 +1,9 @@
 'use strict';
 const Crypto = require('crypto');
+const _moment = require('moment');
+
+_moment.locale('zh-cn'); // 使用中文
+
 module.exports = {
   // redis缓存加密的key
   cacheKey(method, path, query) {
@@ -48,5 +52,10 @@ module.exports = {
         error: res,
       },
     };
+  },
+  // 时间处理插件
+  moment(date) {
+    const dateInit = _moment(date);
+    return dateInit;
   },
 };

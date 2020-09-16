@@ -21,7 +21,10 @@ module.exports = appInfo => {
     },
   };
   // 在此处添加中间件配置
-  config.middleware = [ 'nuxt', 'errFilter', 'dggCache' ];
+  config.middleware = [ 'nuxt', 'gzip', 'errFilter', 'dggCache' ];
+  config.gzip = {
+    threshold: 1024, // 小于 1k 的响应体不压缩
+  };
   // 关闭跨域校验(注意:默认开启的话,跨域调用API必须进行token校验)
   config.security = {
     csrf: false,
