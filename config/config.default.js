@@ -52,9 +52,7 @@ module.exports = appInfo => {
     // },
   };
   // 在此处添加个人配置
-  const userConfig = {
-    // myAppName: 'egg',
-  };
+  const userConfig = {};
 
   return {
     ...config,

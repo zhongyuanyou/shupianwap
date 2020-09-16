@@ -10,7 +10,7 @@ class UserController extends Controller {
     };
     // 参数校验
     const valiErrors = app.validator.validate(rules, ctx.query);
-    // 假如参数校验未通过
+    // 参数校验未通过
     if (valiErrors) {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
       return;

@@ -15,7 +15,8 @@ module.exports = appInfo => {
 
   // 在此处添加个人配置
   const userConfig = {
-    // myAppName: 'egg',
+    // redis默认缓存数据的时长(S秒),产线环境24小时
+    redisCacheTime: 60 * 60 * 24,
   };
 
   return {

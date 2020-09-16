@@ -1,5 +1,5 @@
 'use strict';
-module.exports = () => {
+module.exports = (options, app) => {
   return async function dggCache(ctx, next) {
     // 判断是否需要缓存
     if (ctx.header['x-cache-control'] !== 'cache') {
@@ -23,7 +23,7 @@ module.exports = () => {
     ctx.body = body;
     // 我们对需要缓存的数据进行redis缓存(正常数据才缓存)
     if (ctx.status === 200 && body.code === 200) {
-      ctx.service.redis.set(cacheKey, body, 60 * 60 * 24);
+      ctx.service.redis.set(cacheKey, body, app.config.redisCacheTime);
     }// 缓存时间以S为单位(注意此处未用await,因为不需要等待存储结果)
   };
 };
