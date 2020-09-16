@@ -1,9 +1,22 @@
 'use strict';
 const Service = require('egg').Service;
+const qs = require('querystring');
 
 class DemoService extends Service {
   async list(id) {
-    return { id, userList: [{ name: '唐牧', age: 18 }, { name: '马莉', age: 21 }] };
+    const { ctx } = this;
+    const queryString = qs.stringify({
+      pageNumber: 1,
+      pageSize: 10,
+      teamId: id,
+    });
+    const result = await ctx.curl(`http://yapi.dgg.cn/mock/9/api/user?${queryString}`, {
+      // 自动解析 JSON response
+      dataType: 'json',
+      // 3 秒超时
+      timeout: 3000,
+    });
+    return result;
   }
 }
 module.exports = DemoService;

@@ -17,7 +17,14 @@ class UserController extends Controller {
     }
     // 参数校验通过,正常响应
     const result = await service.demo.list(ctx.query.id);
-    ctx.helper.success({ ctx, code: 200, res: result });
+    if (result.status) {
+      ctx.helper.success({ ctx, code: 200, res: {
+        userList: result.data.data.userList,
+        total: result.data.data.total,
+      } });
+    } else {
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
+    }
   }
 }
 module.exports = UserController;

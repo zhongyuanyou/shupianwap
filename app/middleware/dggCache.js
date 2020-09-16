@@ -10,11 +10,14 @@ module.exports = (options, app) => {
     const cacheKey = ctx.helper.cacheKey(ctx.method, ctx.path, ctx.query);
     let cacheData = null;
     cacheData = await ctx.service.redis.get(cacheKey);
+    console.log(cacheData);
     // 对需要缓存的接口进行缓存命中
-    if (cacheData) {
+    if (cacheData != null) {
       // 命中缓存直接响应缓存数据
       ctx.body = cacheData;
+      return;
     }
+    console.log(1);
     // 假如未命中缓存,进入路由句柄逻辑
     await next();
     const body = ctx.body;

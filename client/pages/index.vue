@@ -19,7 +19,7 @@
       <div class="test">
         <ul>
           <li v-for="(item, index) in ServerData" :key="index">
-            {{ `我叫${item.name},今年${item.age}岁啦！` }}
+            {{ `我叫${item.username},我出生日期是${item.accessTime}！` }}
           </li>
         </ul>
       </div>
