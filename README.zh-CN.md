@@ -24,6 +24,7 @@ $ open http://localhost:7001/
 ### 正式环境部署
 
 ```bash
+$ npm build
 $ npm start
 $ npm stop
 ```

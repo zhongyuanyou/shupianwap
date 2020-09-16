@@ -1,13 +1,11 @@
 <template>
-    <div>用户</div>
+  <div>用户</div>
 </template>
 
 <script>
-    export default {
-        name: "user"
-    }
+export default {
+  name: 'User',
+}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -14,7 +14,7 @@ describe('test/app/controller/home.test.js', () => {
   it('should GET /', () => {
     return app.httpRequest()
       .get('/')
-      .expect('hi, egg')
+      // .expect('hi, egg') 因为加入了Nuxt.js,所以响应内容不再是'hi, egg'
       .expect(200);
   });
 });
