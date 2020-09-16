@@ -13,7 +13,7 @@
 
 查看 [Egg 文档][egg] 更多细节.
 
-### 运行测试环境
+### 开发环境
 
 ```bash
 $ npm i
@@ -21,11 +21,27 @@ $ npm run dev
 $ open http://localhost:7001/
 ```
 
-### 正式环境部署
+### 测试环境部署
 
 ```bash
 $ npm build
 $ npm start
+$ npm stop
+```
+
+### 预发布环境部署
+
+```bash
+$ npm build:release
+$ npm start:release
+$ npm stop
+```
+
+### 正式环境部署
+
+```bash
+$ npm build:production
+$ npm start:production
 $ npm stop
 ```
 

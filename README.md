@@ -16,11 +16,27 @@ $ npm run dev
 $ open http://localhost:7001/
 ```
 
-### Deploy
+### Testing
 
 ```bash
 $ npm build
 $ npm start
+$ npm stop
+```
+
+### Release
+
+```bash
+$ npm build:release
+$ npm start:release
+$ npm stop
+```
+
+### Deploy
+
+```bash
+$ npm build:production
+$ npm start:production
 $ npm stop
 ```
 
