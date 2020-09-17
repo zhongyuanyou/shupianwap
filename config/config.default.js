@@ -40,7 +40,7 @@ module.exports = appInfo => {
   // redis集群配置
   config.redis = {
     client: {// 可以配置多Redis节点
-      host: '127.0.0.1', // IP地址
+      host: '192.168.254.211', // IP地址
       port: '6379', // 端口号
       family: 'root', // 用户名
       password: '', // 用户密码
