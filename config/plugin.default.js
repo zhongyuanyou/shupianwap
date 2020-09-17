@@ -12,4 +12,9 @@ module.exports = {
     enable: true,
     package: 'egg-redis',
   },
+  // 使用eureka-client接入eureka server
+  eureka: {
+    enable: true,
+    package: 'egg-eureka-plugin',
+  },
 };

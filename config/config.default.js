@@ -1,6 +1,23 @@
 'use strict';
 
 const path = require('path');
+// 获取本机IP
+function getIPAdress() {
+  const interfaces = require('os').networkInterfaces();
+  for (const devName in interfaces) {
+    const iface = interfaces[devName];
+    for (let i = 0; i < iface.length; i++) {
+      const alias = iface[i];
+      if (
+        alias.family === 'IPv4' &&
+        alias.address !== '127.0.0.1' &&
+        !alias.internal
+      ) {
+        return alias.address;
+      }
+    }
+  }
+}
 
 /**
  * @param {Egg.EggAppInfo} appInfo app info
@@ -58,6 +75,70 @@ module.exports = appInfo => {
     //   db: 'db', // 数据库名称,redis默认16个数据库0-16
     // }],
     // },
+  };
+  // 熔断配置
+  config.circuitBreaker = {
+    timeout: 30000, // If our function takes longer than 30 seconds, trigger a failure
+    errorThresholdPercentage: 50, // When 50% of requests fail, trip the breaker
+    resetTimeout: 30000, // After 30 seconds, try again.
+  };
+  // 多进程增强模式apiclient配置
+  config.apiClient = {
+    // 通过egg apiclient 完成对微服务信息的订阅功能
+    subMap: {
+      // 自定义foo，作为在service中获取订阅信息的key值
+      foo: {
+        // bar 是你需要订阅的微服务的vipAddress，一般和app name相同
+        // 填写后agent会在registryUpdated事件触发时更新微服务实例信息，并发布给各个follwer
+        dataId: 'bar',
+      },
+    },
+  };
+  // eureka配置
+  config.eureka = {
+    client: {
+      // instance信息不是必须的，如果你清楚知道自己将要部署的服务信息，可以自行填写，
+      // 如果是部署在docker中，需要自行填写，
+      // 否则，应用会读取服务器信息以及egg应用的启动信息自动填写配置
+      instance: {
+        instanceId: `${getIPAdress()}:7001`,
+        app: 'chips-wap',
+        hostName: getIPAdress(),
+        ipAddr: getIPAdress(),
+        // preferIpAddress: true, // default is false and host will be used.
+        // homePageUrl: 'http://127.0.0.1:7001/info',
+        statusPageUrl: `http://${getIPAdress()}:7001/info`,
+        // healthCheckUrl: 'http://127.0.0.1:7001/info',
+        port: {
+          $: 7001,
+          '@enabled': 'true',
+        },
+        // Important, otherwise spring-apigateway cannot find instance of node-rest
+        vipAddress: 'chips-wap',
+        // secureVipAddress: 'chips-wap',
+        dataCenterInfo: {
+          '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+          name: 'MyOwn',
+        },
+      },
+      eureka: {
+        fetchRegistry: true,
+        host: '192.168.254.27',
+        port: 39817,
+        servicePath: '/eureka/apps/',
+        // serviceUrls: {
+        //   default: [
+        //     'http://127.0.0.1:3000/eureka/apps/',
+        //     'http://127.0.0.2:3000/eureka/apps/',
+        //   ],
+        // },
+        ssl: false,
+        useDns: false,
+        fetchMetadata: false,
+        preferIpAddress: true,
+        // maxRetries: 0,
+      },
+    },
   };
   // 在此处添加个人配置
   const userConfig = {};

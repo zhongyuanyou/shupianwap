@@ -39,7 +39,7 @@ export default {
   },
   async asyncData({ $axios }) {
     const res = await $axios.get(API.demo.userList, {
-      headers: { 'x-cache-control': 'cache' },
+      // headers: { 'x-cache-control': 'cache' },
       params: {
         id: '1212',
       },

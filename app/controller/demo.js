@@ -8,6 +8,7 @@ class UserController extends Controller {
     const rules = {
       id: { type: 'id', required: true },
     };
+    console.log(ctx);
     // 参数校验
     const valiErrors = app.validator.validate(rules, ctx.query);
     // 参数校验未通过
