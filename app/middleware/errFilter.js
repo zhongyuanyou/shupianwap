@@ -10,6 +10,7 @@ module.exports = (option, app) => {
         ctx.helper.fail({ ctx, code: 404, res: ctx.helper.errorCode[404] });
       }
     } catch (err) {
+      ctx.logger.error(err);
       const error = app.config.env === 'prod' ? '服务器错误,请联系管理员' : String(err);
       ctx.helper.fail({ ctx, code: 500, res: error });
     }

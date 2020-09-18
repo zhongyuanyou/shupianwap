@@ -31,6 +31,12 @@ module.exports = appInfo => {
 
   // 用于cookie签名密钥，应更改为您自己的密钥并保持安全
   config.keys = appInfo.name + '_1599699446500_2481';
+  config.cluster = {
+    listen: {
+      port: 7001,
+      hostname: '127.0.0.1', // 不建议设置 hostname 为 '0.0.0.0'，它将允许来自外部网络和来源的连接，请在知晓风险的情况下使用
+    },
+  };
   // 在此处添加中间件配置
   config.middleware = [ 'nuxt', 'gzip', 'errFilter', 'dggCache' ];
   config.gzip = {
