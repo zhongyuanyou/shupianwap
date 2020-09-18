@@ -75,13 +75,13 @@ module.exports = appInfo => {
     // }],
     // },
   };
-  // 熔断配置
+  // eureka网管熔断配置
   config.circuitBreaker = {
-    timeout: 30000, // If our function takes longer than 30 seconds, trigger a failure
-    errorThresholdPercentage: 50, // When 50% of requests fail, trip the breaker
-    resetTimeout: 30000, // After 30 seconds, try again.
+    timeout: 30000, // 超时时长
+    errorThresholdPercentage: 50, // 50%的请求失败,则熔断连接
+    resetTimeout: 30000, // 重试间隔时长(时间段后再试一次)
   };
-  // 多进程增强模式apiclient配置
+  // eureka网管多进程增强模式apiclient配置
   config.apiClient = {
     // 通过egg apiclient 完成对微服务信息的订阅功能
     subMap: {
@@ -100,21 +100,16 @@ module.exports = appInfo => {
       // 如果是部署在docker中，需要自行填写，
       // 否则，应用会读取服务器信息以及egg应用的启动信息自动填写配置
       instance: {
-        instanceId: `${getIPAdress()}:7001`,
+        instanceId: `${getIPAdress()}:7001`, // 本地IP和端口
         app: 'chips-wap',
-        hostName: getIPAdress(),
-        ipAddr: getIPAdress(),
-        // preferIpAddress: true, // default is false and host will be used.
-        // homePageUrl: 'http://127.0.0.1:7001/info',
-        statusPageUrl: `http://${getIPAdress()}:7001/info`,
-        // healthCheckUrl: 'http://127.0.0.1:7001/info',
+        hostName: getIPAdress(), // 本机IP
+        ipAddr: getIPAdress(), // 本机IP
+        statusPageUrl: `http://${getIPAdress()}:7001/info`, // 状态页面(判断心跳)
         port: {
           $: 7001,
           '@enabled': 'true',
         },
-        // Important, otherwise spring-apigateway cannot find instance of node-rest
         vipAddress: 'chips-wap',
-        // secureVipAddress: 'chips-wap',
         dataCenterInfo: {
           '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
           name: 'MyOwn',
@@ -122,20 +117,13 @@ module.exports = appInfo => {
       },
       eureka: {
         fetchRegistry: true,
-        host: '192.168.254.27',
-        port: 39817,
-        servicePath: '/eureka/apps/',
-        // serviceUrls: {
-        //   default: [
-        //     'http://127.0.0.1:3000/eureka/apps/',
-        //     'http://127.0.0.2:3000/eureka/apps/',
-        //   ],
-        // },
+        host: '192.168.254.27', // eureka服务器地址
+        port: 39817, // eureka服务器端口
+        servicePath: '/eureka/apps/', // eureka服务器地址
         ssl: false,
         useDns: false,
         fetchMetadata: false,
         preferIpAddress: true,
-        // maxRetries: 0,
       },
     },
   };
