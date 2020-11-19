@@ -103,7 +103,7 @@ module.exports = {
         ],
     },
     loading: { color: "#fff" },
-    css: [],
+    css: ["~assets/css/reset.css"],
     plugins: [
         { src: "@/plugins/axios", ssr: true },
         { src: "@/plugins/router", ssr: false },

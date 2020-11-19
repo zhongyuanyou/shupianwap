@@ -1,14 +1,18 @@
 <template>
   <div class="demo-page">
-    <div class="modle-item"><h5>组件测试</h5></div>
+    <div class="modle-item">
+      <TabCurve></TabCurve>
+    </div>
   </div>
 </template>
 
 <script>
-import Http from '~/api/eureka'
+import TabCurve from '@/components/tab/TabCurve'
 export default {
   name: 'Test',
-  components: {},
+  components: {
+    TabCurve,
+  },
   methods: {},
 }
 </script>
