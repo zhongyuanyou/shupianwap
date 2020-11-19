@@ -23,17 +23,17 @@
           </li>
         </ul>
       </div>
-      <van-button type="primary" @click="handlerGetPageData()"
-        >GET获取数据Demo</van-button
+      <sp-button type="primary" @click="handlerGetPageData()"
+        >GET获取数据Demo</sp-button
       >
-      <van-button type="primary" @click="handlerPostPageData()"
-        >POST提交数据Demo</van-button
+      <sp-button type="primary" @click="handlerPostPageData()"
+        >POST提交数据Demo</sp-button
       >
     </div>
   </div>
 </template>
 <script>
-import { Button } from 'vant'
+import { Button } from '@chipspc/vant-dgg'
 import Logo from '~/components/Logo.vue'
 import Demo from '~/api/demo'
 export default {

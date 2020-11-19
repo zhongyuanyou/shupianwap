@@ -1,12 +1,12 @@
 <template>
   <div>
     <h5>网管调用</h5>
-    <van-button type="primary" @click="handleGetEureka()">网管调用</van-button>
+    <sp-button type="primary" @click="handleGetEureka()">网管调用</sp-button>
   </div>
 </template>
 
 <script>
-import { Button } from 'vant'
+import { Button } from '@chipspc/vant-dgg'
 import Http from '~/api/eureka'
 export default {
   name: 'Eureka',

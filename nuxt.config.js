@@ -8,9 +8,9 @@ const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV;
 const baseUrl = BASE[DGG_SERVER_ENV].baseURL;
 const bablePlugin = [
   [ 'import', {
-    libraryName: 'vant',
+    libraryName: '@chipspc/vant-dgg',
     style: name => `${name}/style/less`,
-  }, 'vant' ],
+  }, '@chipspc/vant-dgg' ],
 ];
 if (NODE_ENV === 'production') {
   bablePlugin.push('transform-remove-console');
