@@ -1,10 +1,16 @@
 <template>
-  <div>我的测试文件</div>
+  <div>
+    <MsgItem />
+  </div>
 </template>
 
 <script>
+import MsgItem from '~/components/msg/MsgItem'
 export default {
   name: 'Zky',
+  components: {
+    MsgItem,
+  },
 }
 </script>
 
