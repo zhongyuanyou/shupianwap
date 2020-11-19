@@ -6,8 +6,6 @@ class DemoService extends Service {
   async list(id) {
     const { ctx } = this;
     const queryString = qs.stringify({
-      pageNumber: 1,
-      pageSize: 10,
       teamId: id,
     });
     const result = await ctx.curl(`http://yapi.dgg.cn/mock/9/api/user?${queryString}`, {

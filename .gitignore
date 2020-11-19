@@ -12,5 +12,5 @@ run/
 *.un~
 typings/
 .nyc_output/
-/app/middleware/errFilter.js
-/app/middleware/cache.js
+.nuxt/
+.github/

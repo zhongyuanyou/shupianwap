@@ -1,7 +1,6 @@
 import qs from 'qs'
 const BASE = require('~/config/index.js')
 const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
-
 export default function ({ $axios, redirect }) {
   // 设置基本URL
   if (process.server) {
@@ -20,6 +19,7 @@ export default function ({ $axios, redirect }) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
+      config.headers.sysCode = 'zdm-api'
       return config
     },
     (error) => {

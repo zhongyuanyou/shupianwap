@@ -16,7 +16,9 @@
 ### 开发环境
 
 ```bash
+// 安装
 $ npm i
+// 开发
 $ npm run dev
 $ open http://localhost:7001/
 ```
@@ -24,7 +26,10 @@ $ open http://localhost:7001/
 ### 测试环境部署
 
 ```bash
+// 客户端编译
 $ npm build
+
+// node服务端
 $ npm start
 $ npm stop
 ```
@@ -32,7 +37,10 @@ $ npm stop
 ### 预发布环境部署
 
 ```bash
+// 客户端编译
 $ npm build:release
+
+// node服务端
 $ npm start:release
 $ npm stop
 ```
@@ -40,7 +48,10 @@ $ npm stop
 ### 正式环境部署
 
 ```bash
+// 客户端编译
 $ npm build:production
+
+// node服务端
 $ npm start:production
 $ npm stop
 ```

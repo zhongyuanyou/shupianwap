@@ -1,13 +1,16 @@
 'use strict';
+
+const path = require('path');
+
+const BASE = require('./client/config/index.js');
 const NODE_ENV = process.env.NODE_ENV;
+const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV;
+const baseUrl = BASE[DGG_SERVER_ENV].baseURL;
 const bablePlugin = [
-  [
-    'import',
-    {
-      libraryName: 'mand-mobile',
-      libraryDirectory: 'components',
-    },
-  ],
+  [ 'import', {
+    libraryName: 'vant',
+    style: name => `${name}/style/less`,
+  }, 'vant' ],
 ];
 if (NODE_ENV === 'production') {
   bablePlugin.push('transform-remove-console');
@@ -103,17 +106,32 @@ module.exports = {
     { src: '@/plugins/dgg-md', ssr: false },
   ],
   buildModules: [ '@nuxtjs/eslint-module' ],
-  modules: [ '@nuxtjs/axios', '@nuxtjs/style-resources' ],
-  styleResources: {
-    stylus: [ '@/assets/theme.custom.styl' ],
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/proxy',
+    '@nuxtjs/style-resources',
+  ],
+  axios: {
+    proxy: true,
   },
-  // axios: { proxy: true },
+  proxy: {
+    '/api': {
+      target: baseUrl, // 只代理了client的请求,没有代理Server端
+      secure: false,
+      changeOrigin: true, // 表示是否跨域
+      logLevel: 'debug',
+      // 如果不想将所有接口都指向/api目录，就需要进行如下配置
+      pathRewrite: {
+        '^/api': '/', // 把 /api 替换成 /
+      },
+    },
+  },
   build: {
-    transpile: [ /mand-mobile/ ],
+    transpile: [ /vant.*?less/ ],
     postcss: {
       plugins: {
         'postcss-pxtorem': {
-          rootValue: 100,
+          rootValue: 50,
           minPixelValue: 2,
           propWhiteList: [],
         },
@@ -124,6 +142,17 @@ module.exports = {
     },
     babel: {
       plugins: bablePlugin,
+    },
+    loaders: {
+      less: {// VantUI 定制主题配置
+        javascriptEnabled: true, // 开启 Less 行内 JavaScript 支持
+        modifyVars: {
+          hack: `true; @import "${path.join(
+            __dirname,
+            './client/assets/styles/vant.var.less'
+          )}";`,
+        },
+      },
     },
     extend(config, ctx) {
       if (ctx.isDev && ctx.isClient) {

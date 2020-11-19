@@ -23,14 +23,19 @@
           </li>
         </ul>
       </div>
-      <md-button type="primary" round>Primary & Round</md-button>
+      <van-button type="primary" @click="handlerGetPageData()"
+        >GET获取数据Demo</van-button
+      >
+      <van-button type="primary" @click="handlerPostPageData()"
+        >POST提交数据Demo</van-button
+      >
     </div>
   </div>
 </template>
 <script>
-import { Button } from 'mand-mobile'
+import { Button } from 'vant'
 import Logo from '~/components/Logo.vue'
-import API from '~/api'
+import Demo from '~/api/demo'
 export default {
   name: 'Index',
   components: {
@@ -38,14 +43,21 @@ export default {
     Logo,
   },
   async asyncData({ $axios }) {
-    const res = await $axios.get(API.demo.userList, {
-      headers: { 'x-cache-control': 'cache' },
-      params: {
-        id: '1212',
-      },
-    })
-    if (res.code === 200) {
-      return { ServerData: res.data.userList }
+    try {
+      const res = await Demo.queryDemoList(
+        { $axios },
+        {
+          id: '1212',
+          pageNumber: 1,
+          pageSize: 10,
+        },
+        'cache'
+      )
+      if (res.code === 200) {
+        return { ServerData: res.data.userList }
+      }
+    } catch (e) {
+      console.log(e)
     }
   },
   data() {
@@ -53,10 +65,29 @@ export default {
       ServerData: [],
     }
   },
+  methods: {
+    async handlerGetPageData() {
+      const res = await Demo.queryDemoList(this, {
+        id: '1212',
+        pageNumber: 1,
+        pageSize: 10,
+      })
+      if (res.code === 200) {
+        this.ServerData = res.data.userList
+      }
+    },
+    async handlerPostPageData() {
+      const res = await Demo.addDemoData(this, {
+        id: '1212',
+      })
+      if (res.code === 200) {
+        this.ServerData = res.data.userList
+      }
+    },
+  },
 }
 </script>
-<style lang="stylus" scoped>
-
+<style lang="less" scoped>
 .container {
   margin: 0 auto;
   min-height: 100vh;
@@ -71,26 +102,25 @@ export default {
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   display: block;
   font-weight: 300;
-  font-size: 100px;
+  font-size: 50px;
   color: #35495e;
   letter-spacing: 1px;
 }
 
 .subtitle {
   font-weight: 300;
-  font-size: 42px;
-  color: color-primary;
+  font-size: 21px;
   word-spacing: 5px;
-  padding-bottom: 15px;
+  padding-bottom: 7px;
   transform: scale(0.5);
 }
 
 .links {
-  padding-top: 15px;
+  padding-top: 7px;
 }
 
-.test{
-  font-size : 32px;
-  margin-bottom : 32px;
+.test {
+  font-size: 16px;
+  margin-bottom: 16px;
 }
 </style>
