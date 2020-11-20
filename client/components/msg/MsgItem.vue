@@ -1,19 +1,33 @@
 <template>
-  <div class="delete">
+  <div class="msg_item">
     <div class="slider">
       <div
-        class="content"
+        class="slider_con"
         :style="deleteSlider"
         @touchstart="touchStart"
         @touchmove="touchMove"
         @touchend="touchEnd"
-      ></div>
-      <div ref="btns" class="btns">
+      >
+        <div class="slider_con_avatar"></div>
+        <div class="slider_con_content">
+          <div class="slider_con_content_top">
+            <div class="name_dep">
+              {{ info.name }}<span>{{ info.department }}</span>
+            </div>
+            <div class="time">{{ info.time }}</div>
+          </div>
+          <div class="slider_con_content_txt">
+            {{ info.content }}
+          </div>
+        </div>
+      </div>
+      <div ref="btns" class="slider_btns">
         <div
           v-for="(item, index) in btns"
           :key="index"
-          class="btns_item"
+          class="slider_btns_item"
           :style="{ backgroundColor: item.bgColor, color: item.txtColor }"
+          @click="handleClick(item)"
         >
           {{ item.title }}
         </div>
@@ -33,15 +47,25 @@ export default {
             title: '删除',
             txtColor: '#fff',
             bgColor: 'red',
-            fn: () => {},
+            fn: () => {
+              alert(111)
+            },
           },
           {
             title: '编辑',
             txtColor: '#333',
             bgColor: '#f5f5f5',
-            fn: () => {},
+            fn: () => {
+              alert(222)
+            },
           },
         ]
+      },
+    },
+    info: {
+      type: Object,
+      default: () => {
+        return {}
       },
     },
   },
@@ -107,6 +131,11 @@ export default {
         }
       }
     },
+    handleClick(item) {
+      // 点击按钮
+      item.fn()
+      this.deleteSlider = 'transform:translateX(0px)'
+    },
   },
 }
 </script>
@@ -116,37 +145,92 @@ export default {
   width: 100%;
   height: 148px;
   position: relative;
-  user-select: none;
-  .content {
+  &_con {
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
-    background: green;
+    height: 148px;
+    background: #fff;
     z-index: 100;
     //    设置过渡动画
     transition: 0.3s;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    &_avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50px;
+      background-color: #f5f5f5;
+      margin-left: 40px;
+    }
+    &_content {
+      display: flex;
+      flex: 1;
+      background-color: #fff;
+      height: 148px;
+      margin-left: 32px;
+      padding: 38px 40px 38px 0;
+      border-bottom: 1px solid #f4f4f4;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-direction: column;
+      &_top {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-direction: row;
+        .name_dep {
+          font-size: 32px;
+          font-weight: bold;
+          color: #222;
+          display: flex;
+          justify-content: flex-start;
+          align-items: flex-start;
+          span {
+            font-size: 24px;
+            color: #999;
+            margin-left: 12px;
+            font-weight: normal;
+          }
+        }
+        .time {
+          display: flex;
+          justify-content: flex-start;
+          align-items: flex-start;
+          font-size: 22px;
+          color: #999;
+        }
+        .txt {
+          width: 100%;
+          font-size: 24px;
+          color: #999;
+        }
+      }
+    }
   }
-  .btns {
+  &_btns {
     position: absolute;
-    height: 148px;
     right: 0;
     top: 0;
+    bottom: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-direction: row;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
     &_item {
       width: 120px;
-      height: 148px;
       text-align: center;
       font-size: 16px;
       line-height: 148px;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
   }
 }
