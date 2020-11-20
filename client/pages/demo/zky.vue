@@ -1,15 +1,15 @@
 <template>
   <div>
-    <MsgItem />
+    <CitySelect />
   </div>
 </template>
 
 <script>
-import MsgItem from '~/components/msg/MsgItem'
+import CitySelect from '~/components/coupletSelected/CitySelect'
 export default {
   name: 'Zky',
   components: {
-    MsgItem,
+    CitySelect,
   },
 }
 </script>
