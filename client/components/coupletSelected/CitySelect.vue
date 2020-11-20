@@ -4,9 +4,6 @@
     position="bottom"
     class="popup"
     :close-on-popstate="true"
-    :closeable="true"
-    title-type="center"
-    :title="hehe"
     @close="closePopup"
   >
     <!-- S 头部 -->
