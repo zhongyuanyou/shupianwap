@@ -1,7 +1,7 @@
 <template>
   <!-- tab 切换组件     -->
   <div class="tab-curve">
-    <ul>
+    <ul class="tab-curve-list">
       <li v-for="(item, index) in tabList" :key="index">{{ item.label }}</li>
     </ul>
   </div>
@@ -36,8 +36,9 @@ export default {
 
 <style lang="less" scoped>
 .tab-curve {
-  li {
-    // list-style: none;
+  &-list {
+    display: flex;
+    // font-size: 22px;
   }
 }
 </style>
