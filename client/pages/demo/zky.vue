@@ -4,7 +4,7 @@
     {{ JSON.stringify(cityData) }}
     <CitySelect :show.sync="show" :city-data="cityData" @select="select" />
     <div style="width: 100%; height: 300px">
-      <CoupleSelect :city-data="city" />
+      <CoupleSelect :city-data="city" @select="coupleSelect" />
     </div>
   </div>
 </template>
@@ -36,6 +36,9 @@ export default {
     },
     select(data) {
       this.cityData = data
+    },
+    coupleSelect(data) {
+      console.log(data)
     },
   },
 }

@@ -62,12 +62,11 @@
           >
             {{ item.name }}
           </p>
-          <div v-show="hasRegion(item)" class="check_con">
+          <div v-show="hasRegion(item) && pIndex != 0" class="check_con">
             <sp-icon name="success" color="#4974F5" size="0.2rem" />
           </div>
-          <div v-show="!hasRegion(item)" class="blur_con"></div>
+          <div v-show="!hasRegion(item) && pIndex != 0" class="blur_con"></div>
         </div>
-        {{ JSON.stringify(selectData) }}
       </div>
     </div>
     <!--E 区导航-->
@@ -101,7 +100,10 @@ export default {
   computed: {
     hasRegion() {
       return function (item) {
-        return this.selectData[2].regions.includes(item)
+        const status = this.selectData[2].regions.some((row) => {
+          return row.name === item.name && row.code === item.code
+        })
+        return status
       }
     },
   },
@@ -153,6 +155,7 @@ export default {
         this.rIndex = 0
         this.selectData = arr
       }
+      this.$emit('select', this.selectData)
     },
     handleCity(item, index) {
       // 点击市
@@ -167,6 +170,7 @@ export default {
         this.rIndex = 0
         this.selectData = arr
       }
+      this.$emit('select', this.selectData)
     },
     handleRegion(item, index) {
       // 点击区
@@ -177,7 +181,7 @@ export default {
       }
       // this.selectData[2].regions = arr
       this.$set(this.selectData, 2, arr)
-      console.log('selectData', arr)
+      this.$emit('select', this.selectData)
     },
   },
 }
