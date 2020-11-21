@@ -25,10 +25,25 @@ export default {
   },
   props: {
     selectList: {
+      // 需要渲染的选择列表
       type: Array,
       required: true,
       default() {
         return []
+      },
+    },
+    isShowAll: {
+      // 是否全部展示
+      type: Boolean,
+      default() {
+        return false
+      },
+    },
+    isSelectMore: {
+      // 是否多选
+      type: Boolean,
+      default() {
+        return false
       },
     },
   },
@@ -47,6 +62,8 @@ export default {
       if (val.length > 4) {
         // 如果renderArr的长度超过了4层则当前渲染只显示4层
         this.currentRenderArr = val.slice(0, 4)
+      } else {
+        this.currentRenderArr = val
       }
     },
   },
@@ -56,21 +73,46 @@ export default {
     }
   },
   methods: {
-    showAll() {
-      // 显示所有的数据
-      this.currentRenderArr = this.renderArr
-    },
     selectFilter(item) {
       // 选择某一个筛选项
-      const _index = this.activeItems.findIndex((_item) => _item.id === item.id)
-      if (_index) {
+      if (this.isSelectMore) {
+        // 是否多选
+        const _index = this.activeItems.findIndex(
+          (_item) => _item.id === item.id
+        )
+        if (_index > -1) {
+          this.activeItems.splice(_index, 1)
+          this.$emit('cancelItem', item, this.activeItems)
+        } else {
+          this.activeItems.push(item)
+          this.$emit('selectItems', item, this.activeItems)
+        }
+      } else {
+        this.activeItems = [item]
       }
-      this.activeItems.push(item)
     },
     isActive(id) {
       const _index = this.activeItems.findIndex((item) => item.id === id)
       // eslint-disable-next-line
       return _index > -1 ? true : false
+    },
+    showAll() {
+      // 对外函数
+      // ui设计规定更多筛选里面初始只显示4层，多出来的隐藏
+      // 显示所有的数据
+      this.currentRenderArr = this.renderArr
+    },
+    hideMore() {
+      // 对外函数
+      // 隐藏多余的部分
+      if (this.renderArr.length > 4) {
+        this.currentRenderArr = this.renderArr.slice(0, 4)
+      }
+    },
+    clearSelect() {
+      // 对外函数
+      // 清除所有的选中项
+      this.activeItems = []
     },
   },
 }
