@@ -12,17 +12,30 @@
     <!-- S 内容 -->
     <div class="popup_con">
       <!--被选中的省市显示区域-->
-      <div v-show="selectList.length" class="popup_con_select">
+      <div v-if="selectList.length" class="popup_con_select">
         <div
           v-for="(item, index) in selectList"
           :key="index"
-          style="color: #4974f5"
+          :style="{
+            color:
+              selectList.length === 1
+                ? '#4974f5'
+                : step == index
+                ? '#4974f5'
+                : '#222',
+          }"
           class="popup_con_select_item"
+          @click="changeCity(item, index)"
         >
           {{ item.name }}
         </div>
       </div>
-      <sp-index-bar :index-list="indexList">
+      <sp-index-bar
+        :index-list="indexList"
+        highlight-color="#4974F5"
+        :sticky="false"
+        class="popup_con_bar"
+      >
         <div v-for="(item, index) in city" :key="index">
           <!-- S 索引标题 -->
           <sp-index-anchor
@@ -47,7 +60,47 @@
               class="cell"
               @click="select(cItem, index)"
             >
-              {{ cItem.name }}
+              <p
+                class="title"
+                :style="{
+                  color: selectList.length
+                    ? step == 0
+                      ? selectList[0] && selectList[0].code == cItem.code
+                        ? '#4974F5'
+                        : '#222'
+                      : selectList[1] && selectList[1].code == cItem.code
+                      ? '#4974F5'
+                      : '#222'
+                    : '#222',
+                  fontWeight: selectList.length
+                    ? step == 0
+                      ? selectList[0] && selectList[0].code == cItem.code
+                        ? 'bold'
+                        : 'normal'
+                      : selectList[1] && selectList[1].code == cItem.code
+                      ? 'bold'
+                      : 'normal'
+                    : 'normal',
+                }"
+              >
+                {{ cItem.name }}
+              </p>
+              <div>
+                <sp-icon
+                  v-show="
+                    selectList.length &&
+                    ((step == 0 &&
+                      selectList[0] &&
+                      selectList[0].code == cItem.code) ||
+                      (step == 1 &&
+                        selectList[1] &&
+                        selectList[1].code == cItem.code))
+                  "
+                  name="success"
+                  color="#4974F5"
+                  size="0.3rem"
+                />
+              </div>
             </div>
           </div>
           <!-- E 热门城市 -->
@@ -71,9 +124,9 @@
 </template>
 
 <script>
-import { Popup, IndexAnchor, IndexBar } from '@chipspc/vant-dgg'
+import { Popup, IndexAnchor, IndexBar, Icon } from '@chipspc/vant-dgg'
 import pyjs from 'js-pinyin'
-import Header from '~/components/coupletSelected/components/Header'
+import Header from '~/components/areaSelected/components/Header'
 import city from '~/utils/city'
 export default {
   name: 'CitySelect',
@@ -81,6 +134,7 @@ export default {
     SpPopup: Popup,
     SpIndexAnchor: IndexAnchor,
     SpIndexBar: IndexBar,
+    SpIcon: Icon,
     Header,
   },
   props: {
@@ -88,6 +142,13 @@ export default {
       type: Boolean,
       default: () => {
         return false
+      },
+    },
+    cityData: {
+      // 被选中的值
+      type: Array,
+      default: () => {
+        return []
       },
     },
   },
@@ -136,8 +197,9 @@ export default {
           },
         ],
       },
-      selectList: [], // 已选中的省市数据集合
+      selectList: this.cityData || [], // 已选中的省市数据集合
       step: 0, // 操作步骤
+      focusInfo: null, // 已经数据中当前聚焦的数据
     }
   },
   computed: {
@@ -150,6 +212,9 @@ export default {
       handler(newVal, oldVal) {
         if (newVal === oldVal) return
         this.visible = this.show
+        this.step = 0
+        this.clear()
+        this.initCity(this.cityList)
       },
       immediate: true,
     },
@@ -204,16 +269,23 @@ export default {
       this.$emit('update:show', false)
       this.visible = false
     },
+    clear() {
+      // 清除数据
+      this.city = []
+      this.cityArr = []
+      this.pyCitys = []
+      this.indexList = []
+    },
     select(item, index) {
       // 选择城市
       const arr = this.selectList
       if (this.step === 0) {
-        arr[0] = item
-        this.city = []
+        this.clear()
+        if (!arr.length || item !== arr[0]) {
+          arr[0] = item
+          arr.length = 1
+        }
         this.selectList = arr
-        this.cityArr = []
-        this.pyCitys = []
-        this.indexList = []
         this.initCity(item.children)
         // 设置步骤
         this.step++
@@ -225,8 +297,18 @@ export default {
       this.selectList = arr
       this.step = 0
       this.$emit('select', this.selectList)
-      this.selectList = []
       this.closePopup()
+    },
+    changeCity(item, index) {
+      // 切换省市
+      this.step = index
+      this.clear()
+      if (index === 0) {
+        // 若点击到省
+        this.initCity(this.cityList)
+      } else {
+        this.initCity(this.selectList[0].children)
+      }
     },
   },
 }
@@ -246,6 +328,24 @@ export default {
     overflow-y: scroll;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    padding: 0;
+    &_bar {
+      padding: 0;
+      .title_con {
+        height: 69px;
+        line-height: 74px;
+        padding: 0;
+        /deep/ .sp-index-anchor {
+          padding-left: 40px;
+        }
+      }
+      /deep/ .sp-index-bar__sidebar {
+        span {
+          font-size: 19px;
+          margin-bottom: 31px;
+        }
+      }
+    }
     &_select {
       display: flex;
       justify-content: flex-start;
@@ -256,12 +356,8 @@ export default {
       &_item {
         font-size: 28px;
         font-weight: bold;
+        margin-right: 64px;
       }
-    }
-    .title_con {
-      height: 69px;
-      line-height: 74px;
-      padding-left: 8px;
     }
     .hot_title {
       color: #999;
@@ -275,9 +371,15 @@ export default {
     .cell {
       height: 74px;
       line-height: 74px;
-      color: #222;
-      font-size: 28px;
-      padding-left: 40px;
+      padding: 0 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-direction: row;
+      .title {
+        color: #222;
+        font-size: 28px;
+      }
     }
     &_hot {
       padding: 0 54px 36px 40px;
