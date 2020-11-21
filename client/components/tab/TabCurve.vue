@@ -1,56 +1,68 @@
 <template>
   <!-- tab 切换组件     -->
-  <div class="tab-curve">
-    <ul class="tab-curve-list">
-      <li
-        v-for="(item, index) in tabList"
-        :key="index"
-        :style="{ 'margin-right': right + 'rem' }"
-        @click="selectItem(item, index)"
-      >
-        <span :class="[index === curentItem ? 'tab-curve-active' : '']">{{
-          item.label
-        }}</span>
-        <div class="svg-content">
-          <svg
-            t="1605860024129"
-            class="icon"
-            viewBox="0 0 1024 1024"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            p-id="2014"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            width="24"
-            height="24"
+  <div>
+    <sp-sticky v-if="needFixed" @scroll="scrollHandle" :offset-top="offsetTop">
+      <div class="tab-curve" :class="[isFixed ? 'fixed-tab' : '']">
+        <ul class="tab-curve-list">
+          <li
+            v-for="(item, index) in tabList"
+            :key="index"
+            :style="{ 'margin-right': right + 'rem' }"
+            @click="selectItem(item, index)"
           >
-            <path
-              d="M74.28352 307.456a77.1072 77.1072 0 0 0-34.048 7.936 69.4016 69.4016 0 0 0-32 95.744 569.9072 569.9072 0 0 0 1007.872 4.352 69.3504 69.3504 0 0 0-31.488-96 76.4672 76.4672 0 0 0-100.608 29.952 417.8944 417.8944 0 0 1-743.424-3.328 74.9312 74.9312 0 0 0-66.304-38.656"
-              p-id="2015"
-              fill="#4974F5"
-            ></path>
-          </svg>
-          <svg
-            t="1605860024129"
-            class="icon svg-with"
-            viewBox="0 0 1024 1024"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            p-id="2014"
-            width="24"
-            height="24"
-          >
-            <path
-              d="M74.28352 307.456a77.1072 77.1072 0 0 0-34.048 7.936 69.4016 69.4016 0 0 0-32 95.744 569.9072 569.9072 0 0 0 1007.872 4.352 69.3504 69.3504 0 0 0-31.488-96 76.4672 76.4672 0 0 0-100.608 29.952 417.8944 417.8944 0 0 1-743.424-3.328 74.9312 74.9312 0 0 0-66.304-38.656"
-              p-id="2015"
-              fill="#fff"
-            ></path>
-          </svg>
-        </div>
-      </li>
-    </ul>
+            <span :class="[index === curentItem ? 'tab-curve-active' : '']">{{
+              item.label
+            }}</span>
+            <div class="svg-content">
+              <my-icon
+                class="my-icon"
+                name="tab_ic_act"
+                size="0.5rem"
+                color="#4974f5"
+              ></my-icon>
+              <my-icon
+                class="my-icon icon-white"
+                name="tab_ic_act"
+                size="0.5rem"
+                color="#ffffff"
+              ></my-icon>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </sp-sticky>
+    <div v-else class="tab-curve">
+      <ul class="tab-curve-list">
+        <li
+          v-for="(item, index) in tabList"
+          :key="index"
+          :style="{ 'margin-right': right + 'rem' }"
+          @click="selectItem(item, index)"
+        >
+          <span :class="[index === curentItem ? 'tab-curve-active' : '']">{{
+            item.label
+          }}</span>
+          <div class="svg-content">
+            <my-icon
+              class="my-icon"
+              name="tab_ic_act"
+              size="0.5rem"
+              color="#4974f5"
+            ></my-icon>
+            <my-icon
+              class="my-icon icon-white"
+              name="tab_ic_act"
+              size="0.5rem"
+              color="#ffffff"
+            ></my-icon>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 <script>
+import { Sticky } from '@chipspc/vant-dgg'
 export default {
   name: 'TabCurve',
   props: {
@@ -66,16 +78,33 @@ export default {
       type: Number,
       default: 0.56,
     },
+    // 是否需要吸顶功能
+    needFixed: {
+      type: Boolean,
+      default: true,
+    },
+    // 吸顶时与顶部的距离
+    offsetTop: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
       curentItem: 0,
+      isFixed: false, // 是否触发了吸顶
     }
+  },
+  components: {
+    [Sticky.name]: Sticky,
   },
   methods: {
     selectItem(item, index) {
       this.curentItem = index
       this.$emit('selectTabHandle', item)
+    },
+    scrollHandle(data) {
+      this.isFixed = data.isFixed
     },
   },
 }
@@ -84,6 +113,7 @@ export default {
 <style lang="less" scoped>
 .tab-curve {
   width: 100%;
+  background-color: #fff;
   &-list {
     display: flex;
     flex-wrap: nowrap;
@@ -91,7 +121,7 @@ export default {
     height: 104px;
     overflow-x: auto;
     overflow-y: hidden;
-    padding-top: 40px;
+    padding-top: 37px;
     padding-left: 40px;
     -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
@@ -128,6 +158,13 @@ export default {
     }
   }
 }
+.fixed-tab {
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.04);
+  .tab-curve-list {
+    height: 112px;
+    padding-top: 44px;
+  }
+}
 .svg-content {
   display: none;
   overflow: hidden;
@@ -136,13 +173,13 @@ export default {
   width: 50px;
   height: 50px;
   margin: -6px auto 0;
-  svg {
+  .my-icon {
     position: absolute;
     left: 0;
     top: 0;
   }
   //   forwards infinite
-  .svg-with {
+  .icon-white {
     animation: action 0.2s linear forwards;
     background-color: #fff;
     transform-origin: center top;

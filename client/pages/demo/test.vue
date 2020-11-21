@@ -6,7 +6,6 @@
         @selectTabHandle="selectTabHandle"
       ></TabCurve>
     </div>
-    <my-icon name="shop_ic_open" size="0.68rem" color="#000"></my-icon>
   </div>
 </template>
 
@@ -19,6 +18,7 @@ export default {
   },
   data() {
     return {
+      isFixed: false,
       tabList: [
         {
           label: '公司',
@@ -62,6 +62,9 @@ export default {
 <style lang="less" scoped>
 .demo-page {
   width: 100%;
+  min-height: 3000px;
+  padding-top: 300px;
+  background-color: red;
   .modle-item {
     width: 100%;
     // padding: 0 40px;
