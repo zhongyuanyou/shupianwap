@@ -12,7 +12,7 @@
 <script>
 import CitySelect from '~/components/areaSelected/AreaSelect'
 import CoupleSelect from '~/components/coupleSelected/CoupleSelect'
-import city from '~/utils/city'
+import { city } from '~/utils/city'
 export default {
   name: 'Zky',
   components: {

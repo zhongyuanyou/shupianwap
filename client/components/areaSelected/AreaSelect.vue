@@ -127,7 +127,7 @@
 import { Popup, IndexAnchor, IndexBar, Icon } from '@chipspc/vant-dgg'
 import pyjs from 'js-pinyin'
 import Header from '~/components/areaSelected/components/Header'
-import city from '~/utils/city'
+import { cityCopy } from '~/utils/city'
 export default {
   name: 'CitySelect',
   components: {
@@ -204,7 +204,7 @@ export default {
   },
   computed: {
     cityList() {
-      return city
+      return cityCopy
     },
   },
   watch: {
