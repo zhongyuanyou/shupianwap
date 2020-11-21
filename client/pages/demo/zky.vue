@@ -2,7 +2,7 @@
   <div>
     <button @click="showPopup">显示</button>
     {{ JSON.stringify(cityData) }}
-    <CitySelect :show.sync="show" @select="select" />
+    <CitySelect :show.sync="show" :city-data="cityData" @select="select" />
   </div>
 </template>
 
