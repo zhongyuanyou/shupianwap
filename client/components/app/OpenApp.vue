@@ -1,7 +1,13 @@
 <template>
   <div v-if="$store.state.app.isShowOpenApp" class="open-app">
     <div class="closeApp" @click="closeOpenApp">
-      <sp-icon class-prefix="sp-iconfont" name="close1" />
+      <client-only>
+        <my-icon
+          name="notify_ic_close1"
+          size="0.56rem"
+          color="rgba(0, 0, 0, 0.4)"
+        ></my-icon>
+      </client-only>
     </div>
     <img class="sp-icon-img" src="" alt="" />
     <div class="desc">
@@ -86,7 +92,7 @@ export default {
     top: 0;
     height: 56px;
     width: 56px;
-    background-color: rgba(0, 0, 0, 0.4);
+    /*background-color: rgba(0, 0, 0, 0.4);*/
     align-items: normal;
   }
   .sp-iconfont {

@@ -2,8 +2,8 @@
   <div class="demo-page">
     <div class="modle-item">
       <TabCurve
+        :tab-list="tabList"
         @selectTabHandle="selectTabHandle"
-        :tabList="tabList"
       ></TabCurve>
     </div>
   </div>
@@ -18,6 +18,7 @@ export default {
   },
   data() {
     return {
+      isFixed: false,
       tabList: [
         {
           label: '公司',
@@ -61,6 +62,9 @@ export default {
 <style lang="less" scoped>
 .demo-page {
   width: 100%;
+  min-height: 3000px;
+  padding-top: 300px;
+  background-color: red;
   .modle-item {
     width: 100%;
     // padding: 0 40px;
