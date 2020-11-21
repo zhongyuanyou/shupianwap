@@ -4,7 +4,7 @@
     <br />
     <InstallApp />
     <br />
-    <SelectCheckBox :selectList="selectList" />
+    <SelectCheckBox :select-list="selectList" />
   </div>
 </template>
 

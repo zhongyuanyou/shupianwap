@@ -44,11 +44,11 @@ export default {
       this.renderArr = chunkArr(val, 4)
     },
     renderArr(val) {
-      if(val.length > 4) {
+      if (val.length > 4) {
         // 如果renderArr的长度超过了4层则当前渲染只显示4层
         this.currentRenderArr = val.slice(0, 4)
       }
-    }
+    },
   },
   mounted() {
     if (this.selectList.length) {
@@ -62,10 +62,8 @@ export default {
     },
     selectFilter(item) {
       // 选择某一个筛选项
-      let _index
-      _index = this.activeItems.findIndex((_item) => _item.id === item.id)
-      if(_index) {
-
+      const _index = this.activeItems.findIndex((_item) => _item.id === item.id)
+      if (_index) {
       }
       this.activeItems.push(item)
     },
