@@ -1,5 +1,5 @@
 <template>
-  <div class="open-app" v-if="$store.state.app.isShowOpenApp">
+  <div v-if="$store.state.app.isShowOpenApp" class="open-app">
     <div class="closeApp" @click="closeOpenApp">
       <sp-icon class-prefix="sp-iconfont" name="close1" />
     </div>

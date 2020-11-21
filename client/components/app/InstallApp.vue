@@ -14,15 +14,10 @@ export default {
   mixins: [openapp],
   data() {
     return {
-      isIOS: false,
       thisType: 'installapp',
     }
   },
-  mounted() {
-    this.isIOS =
-      !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) ||
-      !!navigator.userAgent.match(/UCBrowser/g)
-  },
+  mounted() {},
 }
 </script>
 

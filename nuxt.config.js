@@ -4,8 +4,7 @@ const path = require("path");
 
 const BASE = require("./client/config/index.js");
 const NODE_ENV = process.env.NODE_ENV;
-const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV;
-const baseUrl = BASE[DGG_SERVER_ENV].baseURL;
+const baseUrl = BASE.baseURL;
 const bablePlugin = [
     [
         "import",
