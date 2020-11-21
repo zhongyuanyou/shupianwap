@@ -1,7 +1,7 @@
 const development = require('./config.development')
 const release = require('./config.release')
 const production = require('./config.production')
-
+const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
 const BASE = {
   // 开发、测试环境
   development,
@@ -10,5 +10,4 @@ const BASE = {
   // 生产环境
   production,
 }
-
-module.exports = BASE
+module.exports = BASE[DGG_SERVER_ENV]

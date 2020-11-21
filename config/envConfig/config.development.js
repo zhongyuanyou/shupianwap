@@ -103,7 +103,7 @@ module.exports = appInfo => {
         name: 'MyOwn',
       },
       metadata: {
-        version: '1.1',
+        version: '1.4',
       },
     },
     eureka: {
