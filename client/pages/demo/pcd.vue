@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-20 09:56:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-21 14:38:31
+ * @LastEditTime: 2020-11-21 15:34:49
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/demo/pcd.vue
 -->
@@ -32,6 +32,9 @@
     <sp-button class="btn" type="primary" @click="handleAppInstallBtn"
       >app下载推荐框调用</sp-button
     >
+    <div class="m-t-10">
+      <ServiceSelect> </ServiceSelect>
+    </div>
   </div>
 </template>
 
@@ -41,6 +44,7 @@ import ImgAuthDialog from '@/components/imgAuth/ImgAuthDialog'
 import ImgAuthDialogFn from '@/components/imgAuth'
 import RecommendDialog from '@/components/RecommendDialog'
 import InstallAppDialog from '@/components/app/InstallAppDialog'
+import ServiceSelect from '@/components/serviceSelected/ServiceSelect'
 export default {
   name: 'Test',
   components: {
@@ -48,6 +52,7 @@ export default {
     ImgAuthDialog,
     RecommendDialog,
     InstallAppDialog,
+    ServiceSelect,
   },
   data() {
     return {
@@ -92,6 +97,9 @@ export default {
   }
   .btn {
     margin: 20px;
+  }
+  .m-t-10 {
+    margin-top: 10px;
   }
 }
 </style>
