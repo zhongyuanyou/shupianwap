@@ -10,9 +10,17 @@
     <SelectCheckBox
       ref="selectCheckBox"
       :select-list="selectList"
+      :gutter="12"
       :is-select-more="false"
       @cancelItem="cancelItem"
       @selectItems="selectItems"
+      @selectAllItems="selectAllItems"
+    />
+    <br />
+    <PriceFilter
+      :price-list="priceList"
+      @minInput="minInput"
+      @maxInput="maxInput"
     />
   </div>
 </template>
@@ -21,12 +29,14 @@
 import OpenApp from '@/components/app/OpenApp'
 import InstallApp from '@/components/app/InstallApp'
 import SelectCheckBox from '@/components/filters/SelectCheckBox'
+import PriceFilter from '@/components/filters/PriceFilter'
 export default {
   name: 'xyg',
   components: {
     OpenApp,
     InstallApp,
     SelectCheckBox,
+    PriceFilter,
   },
   data() {
     return {
@@ -112,6 +122,28 @@ export default {
           name: '科技信息',
         },
       ],
+      priceList: [
+        {
+          name: '1万以下',
+          id: '1',
+        },
+        {
+          name: '1-2万',
+          id: '2',
+        },
+        {
+          name: '2-5万',
+          id: '3',
+        },
+        {
+          name: '5-10万',
+          id: '4',
+        },
+        {
+          name: '10万以上',
+          id: '5',
+        },
+      ],
     }
   },
   methods: {
@@ -124,6 +156,10 @@ export default {
     clearSelect() {
       this.$refs.selectCheckBox.clearSelect()
     },
+    selectAllItems(item) {
+      // 点击不限按钮
+      console.log(item)
+    },
     cancelItem(item, items) {
       // 取消的选项
       console.log(item, items)
@@ -131,6 +167,14 @@ export default {
     selectItems(item, items) {
       // 选中的选项，返回当前选中项和所有的选中项
       console.log(item, items)
+    },
+    minInput(val) {
+      // 最小输入框
+      console.log(val)
+    },
+    maxInput(val) {
+      // 最大输入框
+      console.log(val)
     },
   },
 }
