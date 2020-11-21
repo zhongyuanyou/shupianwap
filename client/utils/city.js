@@ -6,10 +6,30 @@ const city = [
       {
         name: '成都',
         code: 'cd',
+        children: [
+          {
+            name: '青羊区',
+            code: 'qyq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
+        ],
       },
       {
         name: '遂宁',
         code: 'sn',
+        children: [
+          {
+            name: '船山区',
+            code: 'csq',
+          },
+          {
+            name: '安居区',
+            code: 'ajq',
+          },
+        ],
       },
     ],
   },
@@ -18,12 +38,32 @@ const city = [
     code: 'gd',
     children: [
       {
-        name: '成都',
-        code: 'cd',
+        name: '深圳',
+        code: 'sz',
+        children: [
+          {
+            name: '龙华区',
+            code: 'lhq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
+        ],
       },
       {
         name: '遂宁',
         code: 'sn',
+        children: [
+          {
+            name: '船山区',
+            code: 'csq',
+          },
+          {
+            name: '安居区',
+            code: 'ajq',
+          },
+        ],
       },
     ],
   },
@@ -34,10 +74,30 @@ const city = [
       {
         name: '成都',
         code: 'cd',
+        children: [
+          {
+            name: '青羊区',
+            code: 'qyq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
+        ],
       },
       {
         name: '遂宁',
         code: 'sn',
+        children: [
+          {
+            name: '船山区',
+            code: 'csq',
+          },
+          {
+            name: '安居区',
+            code: 'ajq',
+          },
+        ],
       },
     ],
   },
@@ -48,10 +108,30 @@ const city = [
       {
         name: '成都',
         code: 'cd',
+        children: [
+          {
+            name: '青羊区',
+            code: 'qyq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
+        ],
       },
       {
         name: '遂宁',
         code: 'sn',
+        children: [
+          {
+            name: '船山区',
+            code: 'csq',
+          },
+          {
+            name: '安居区',
+            code: 'ajq',
+          },
+        ],
       },
     ],
   },
@@ -62,10 +142,30 @@ const city = [
       {
         name: '成都',
         code: 'cd',
+        children: [
+          {
+            name: '青羊区',
+            code: 'qyq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
+        ],
       },
       {
         name: '遂宁',
         code: 'sn',
+        children: [
+          {
+            name: '船山区',
+            code: 'csq',
+          },
+          {
+            name: '安居区',
+            code: 'ajq',
+          },
+        ],
       },
     ],
   },
@@ -76,52 +176,30 @@ const city = [
       {
         name: '成都',
         code: 'cd',
+        children: [
+          {
+            name: '青羊区',
+            code: 'qyq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
+        ],
       },
       {
         name: '遂宁',
         code: 'sn',
-      },
-    ],
-  },
-  {
-    name: '台湾',
-    code: 'tw',
-    children: [
-      {
-        name: '成都',
-        code: 'cd',
-      },
-      {
-        name: '遂宁',
-        code: 'sn',
-      },
-    ],
-  },
-  {
-    name: '台湾',
-    code: 'tw',
-    children: [
-      {
-        name: '成都',
-        code: 'cd',
-      },
-      {
-        name: '遂宁',
-        code: 'sn',
-      },
-    ],
-  },
-  {
-    name: '台湾',
-    code: 'tw',
-    children: [
-      {
-        name: '成都',
-        code: 'cd',
-      },
-      {
-        name: '遂宁',
-        code: 'sn',
+        children: [
+          {
+            name: '船山区',
+            code: 'csq',
+          },
+          {
+            name: '安居区',
+            code: 'ajq',
+          },
+        ],
       },
     ],
   },
