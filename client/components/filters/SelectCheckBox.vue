@@ -1,11 +1,21 @@
 <template>
   <div class="select-checkbox">
-    <sp-row v-for="(arr, index) in currentRenderArr" :key="index" gutter="12">
-      <sp-col v-for="(item, _index) in arr" :key="_index" span="6"
+    <sp-row
+      v-for="(arr, index) in currentRenderArr"
+      :key="index"
+      :gutter="gutter"
+    >
+      <sp-col
+        v-for="(item, _index) in arr"
+        :key="_index"
+        span="6"
+        :style="{
+          visibility: item.id ? 'visible' : 'hidden',
+        }"
         ><div
           class="select-item"
           :class="{ active: isActive(item.id) }"
-          @click="selectFilter(item)"
+          @click="selectFilter(item, isActive(item.id))"
         >
           {{ item.name }}
         </div></sp-col
@@ -17,6 +27,7 @@
 <script>
 import { Col, Row } from '@chipspc/vant-dgg'
 import chunkArr from '@/utils/chunkArr'
+import clone from '@/utils/clone'
 export default {
   name: 'SelectCheckBox',
   components: {
@@ -24,6 +35,13 @@ export default {
     [Row.name]: Row,
   },
   props: {
+    gutter: {
+      // 每个选项的间距
+      type: Number,
+      default() {
+        return 12
+      },
+    },
     selectList: {
       // 需要渲染的选择列表
       type: Array,
@@ -46,6 +64,13 @@ export default {
         return false
       },
     },
+    isShowAllOption: {
+      // 是否显示不限这个选项
+      type: Boolean,
+      default() {
+        return true
+      },
+    },
   },
   data() {
     return {
@@ -56,7 +81,11 @@ export default {
   },
   watch: {
     selectList(val) {
-      this.renderArr = chunkArr(val, 4)
+      const arr = clone(val, true)
+      if (this.isShowAllOption) {
+        arr.unshift({ name: '不限', id: 'all' })
+      }
+      this.renderArr = this.handleRenderArr(chunkArr(arr, 4))
     },
     renderArr(val) {
       if (val.length > 4) {
@@ -69,12 +98,25 @@ export default {
   },
   mounted() {
     if (this.selectList.length) {
-      this.renderArr = chunkArr(this.selectList, 4)
+      const arr = clone(this.selectList, true)
+      if (this.isShowAllOption) {
+        arr.unshift({ name: '不限', id: 'all' })
+      }
+      this.renderArr = this.handleRenderArr(chunkArr(arr, 4))
     }
   },
   methods: {
-    selectFilter(item) {
+    selectFilter(item, active) {
       // 选择某一个筛选项
+      if (!this.isSelectMore && active) {
+        // 禁止重复选择
+        return
+      }
+      if (item.id === 'all') {
+        this.activeItems = [item]
+        this.$emit('selectAllItems', item)
+        return
+      }
       if (this.isSelectMore) {
         // 是否多选
         const _index = this.activeItems.findIndex(
@@ -89,7 +131,18 @@ export default {
         }
       } else {
         this.activeItems = [item]
+        this.$emit('selectItems', item, this.activeItems)
       }
+    },
+    handleRenderArr(arr) {
+      const len = arr[arr.length - 1].length
+      if (len < 4) {
+        // 如果数组最后一个元素的长度小于4个则用空对象填满
+        while (arr[arr.length - 1].length < 4) {
+          arr[arr.length - 1].push({ id: undefined, name: undefined })
+        }
+      }
+      return arr
     },
     isActive(id) {
       const _index = this.activeItems.findIndex((item) => item.id === id)
@@ -121,7 +174,7 @@ export default {
 <style lang="less" scoped>
 .select-checkbox {
   /*width: 100%;*/
-  padding: 0 40px;
+  /*padding: 0 40px;*/
   .select-item {
     height: 64px;
     text-align: center;
