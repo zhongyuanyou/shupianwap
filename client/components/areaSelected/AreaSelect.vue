@@ -126,7 +126,7 @@
 <script>
 import { Popup, IndexAnchor, IndexBar, Icon } from '@chipspc/vant-dgg'
 import pyjs from 'js-pinyin'
-import Header from '~/components/coupletSelected/components/Header'
+import Header from '~/components/areaSelected/components/Header'
 import city from '~/utils/city'
 export default {
   name: 'CitySelect',

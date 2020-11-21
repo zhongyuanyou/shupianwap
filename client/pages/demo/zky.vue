@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import CitySelect from '~/components/coupletSelected/CitySelect'
+import CitySelect from '~/components/areaSelected/AreaSelect'
 export default {
   name: 'Zky',
   components: {
