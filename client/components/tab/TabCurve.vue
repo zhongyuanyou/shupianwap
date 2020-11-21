@@ -3,9 +3,9 @@
   <div class="tab-curve">
     <ul class="tab-curve-list">
       <li
-        :style="{ 'margin-right': right + 'rem' }"
         v-for="(item, index) in tabList"
         :key="index"
+        :style="{ 'margin-right': right + 'rem' }"
         @click="selectItem(item, index)"
       >
         <span :class="[index === curentItem ? 'tab-curve-active' : '']">{{

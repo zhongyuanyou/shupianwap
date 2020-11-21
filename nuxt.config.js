@@ -108,6 +108,7 @@ module.exports = {
         { src: "@/plugins/axios", ssr: true },
         { src: "@/plugins/router", ssr: false },
         { src: "@/plugins/dgg-md", ssr: false },
+        { src: "@/plugins/my-icon", ssr: false },
     ],
     buildModules: ["@nuxtjs/eslint-module"],
     modules: ["@nuxtjs/axios", "@nuxtjs/proxy", "@nuxtjs/style-resources"],

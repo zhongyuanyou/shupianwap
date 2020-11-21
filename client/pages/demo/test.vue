@@ -2,10 +2,11 @@
   <div class="demo-page">
     <div class="modle-item">
       <TabCurve
+        :tab-list="tabList"
         @selectTabHandle="selectTabHandle"
-        :tabList="tabList"
       ></TabCurve>
     </div>
+    <my-icon name="shop_ic_open" size="0.68rem" color="#000"></my-icon>
   </div>
 </template>
 
