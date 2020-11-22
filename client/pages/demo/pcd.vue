@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-20 09:56:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-21 15:34:49
+ * @LastEditTime: 2020-11-22 21:31:24
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/demo/pcd.vue
 -->
@@ -33,7 +33,7 @@
       >app下载推荐框调用</sp-button
     >
     <div class="m-t-10">
-      <ServiceSelect> </ServiceSelect>
+      <ServiceSelect @select="handleSelect"> </ServiceSelect>
     </div>
   </div>
 </template>
@@ -70,6 +70,9 @@ export default {
     },
     handleDialogClosed() {
       console.log('触发关闭！')
+    },
+    handleSelect(selectedData) {
+      console.log('selectedData:', selectedData)
     },
     handleImgAuthBtn() {
       // 方法一： 通过组件调用
