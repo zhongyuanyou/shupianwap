@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-21 15:13:44
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-22 22:08:28
+ * @LastEditTime: 2020-11-23 08:56:15
  * @Description: file content
  * @FilePath: /chips-wap/client/components/serviceSelected/ServiceSelect.vue
 -->
@@ -269,8 +269,8 @@ export default {
   }
   .fixed-half-opacity {
     pointer-events: none;
-    height: 10.667vw;
-    margin-top: -10.667vw;
+    height: 80px;
+    margin-top: -80px;
     z-index: 0;
     background-image: linear-gradient(180deg, hsla(0, 0%, 100%, 0), #fff);
   }
