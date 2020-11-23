@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-20 10:17:36
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-20 16:48:15
+ * @LastEditTime: 2020-11-23 08:47:08
  * @Description: file content
  * @FilePath: /chips-wap/client/components/imgAuth/ImgAuthDialog.vue
 -->
@@ -33,6 +33,10 @@ function getElement(selector) {
 
 export default {
   name: 'ImgAuthDialog',
+  components: {
+    [Dialog.Component.name]: Dialog.Component,
+    ImgAuthInput,
+  },
   model: {
     prop: 'show',
     event: 'update',
@@ -56,11 +60,6 @@ export default {
       type: String,
       default: 'body',
     },
-  },
-
-  components: {
-    [Dialog.Component.name]: Dialog.Component,
-    ImgAuthInput,
   },
   data() {
     return {

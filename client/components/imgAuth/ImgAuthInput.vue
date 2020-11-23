@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-20 10:16:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-20 15:19:53
+ * @LastEditTime: 2020-11-23 08:47:39
  * @Description: file content
- * @FilePath: /chips-wap/client/components/ImgAuto/ImgAuthInput.vue
+ * @FilePath: /chips-wap/client/components/imgAuth/ImgAuthInput.vue
 -->
 
 <template>
@@ -31,6 +31,11 @@ import { Field, CellGroup, Loading } from '@chipspc/vant-dgg'
 
 export default {
   name: 'ImgAuthInput',
+  components: {
+    [CellGroup.name]: CellGroup,
+    [Field.name]: Field,
+    [Loading.name]: Loading,
+  },
   model: {
     prop: 'value',
     event: 'input',
@@ -41,11 +46,7 @@ export default {
       default: '',
     },
   },
-  components: {
-    [CellGroup.name]: CellGroup,
-    [Field.name]: Field,
-    [Loading.name]: Loading,
-  },
+
   data() {
     return {
       text: '',

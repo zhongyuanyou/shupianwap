@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-21 09:58:16
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-21 14:30:23
+ * @LastEditTime: 2020-11-23 08:45:04
  * @Description: file content
  * @FilePath: /chips-wap/client/components/RecommendDialog.vue
 -->
@@ -11,11 +11,11 @@
   <div class="recommend-dialog">
     <sp-popup
       v-model="visible"
-      v-bind="$attrs"
-      v-on="$listeners"
       position="center"
       class="recommend-dialog_wrap"
       :closeable="false"
+      v-bind="$attrs"
+      v-on="$listeners"
     >
       <div class="recommend-dialog-content">
         <div class="recommend-dialog-content_body">
@@ -38,7 +38,11 @@
 import { Popup, Button } from '@chipspc/vant-dgg'
 
 export default {
-  name: 'recommend-dialog',
+  name: 'RecommendDialog',
+  components: {
+    [Popup.name]: Popup,
+    [Button.name]: Button,
+  },
   model: {
     prop: 'show',
     event: 'update',
@@ -50,10 +54,6 @@ export default {
     },
   },
 
-  components: {
-    [Popup.name]: Popup,
-    [Button.name]: Button,
-  },
   data() {
     return {}
   },
