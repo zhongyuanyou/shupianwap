@@ -114,6 +114,7 @@ export default {
 .tab-curve {
   width: 100%;
   background-color: #fff;
+  font-size: 24px;
   &-list {
     display: flex;
     flex-wrap: nowrap;

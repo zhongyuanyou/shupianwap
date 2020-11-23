@@ -71,6 +71,7 @@ export default {
   background: #ffffff;
   padding: 16px 40px;
   box-sizing: border-box;
+  font-size: 24px;
   .input-box {
     display: flex;
     align-items: center;

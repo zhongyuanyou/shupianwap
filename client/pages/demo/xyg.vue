@@ -1,9 +1,7 @@
 <template>
   <div>
     <OpenApp />
-    <br />
     <InstallApp />
-    <br />
     <button @click="showAll">全部</button>
     <button @click="hideMore">隐藏</button>
     <button @click="clearSelect">清除所有选项</button>
@@ -208,4 +206,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+button {
+  font-size: 28px;
+}
+</style>
