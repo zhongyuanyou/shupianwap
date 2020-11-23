@@ -102,7 +102,7 @@ module.exports = {
         ],
     },
     loading: { color: "#fff" },
-    css: ["~assets/css/reset.css"],
+    css: ["~assets/css/reset.css", "~assets/styles/reset-vant.css"],
     plugins: [
         { src: "@/plugins/axios", ssr: true },
         { src: "@/plugins/router", ssr: false },

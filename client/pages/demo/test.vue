@@ -1,13 +1,13 @@
 <template>
   <div class="demo-page">
     <div class="modle-item">
+      <Search></Search>
+    </div>
+    <div class="modle-item">
       <TabCurve
         :tab-list="tabList"
         @selectTabHandle="selectTabHandle"
       ></TabCurve>
-    </div>
-    <div class="modle-item">
-      <Search></Search>
     </div>
   </div>
 </template>
@@ -68,7 +68,6 @@ export default {
 .demo-page {
   width: 100%;
   min-height: 3000px;
-  padding-top: 300px;
   background-color: pink;
   .modle-item {
     width: 100%;
