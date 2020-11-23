@@ -1,5 +1,8 @@
 <template>
-  <div class="search-content">
+  <div
+    class="search-content"
+    :style="{ backgroundColor: 'rgba(255,255,255,' + opacity + ')' }"
+  >
     <slot name="left"></slot>
     <div class="input-box">
       <slot name="center"></slot>
@@ -36,6 +39,11 @@ export default {
       type: Number,
       default: 0.35,
     },
+    // 背景透明度
+    opacity: {
+      type: Number,
+      default: 1,
+    },
   },
   data() {
     return {
@@ -68,10 +76,11 @@ export default {
   align-items: center;
   width: 100%;
   height: 128px;
-  background: #ffffff;
   padding: 16px 40px;
   box-sizing: border-box;
   font-size: 24px;
+  position: relative;
+  z-index: 1;
   .input-box {
     display: flex;
     align-items: center;
