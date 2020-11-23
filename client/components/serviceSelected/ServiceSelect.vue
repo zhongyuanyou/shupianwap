@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-21 15:13:44
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-22 21:29:30
+ * @LastEditTime: 2020-11-22 22:08:28
  * @Description: file content
  * @FilePath: /chips-wap/client/components/serviceSelected/ServiceSelect.vue
 -->
@@ -55,64 +55,76 @@ export default {
     [TreeSelect.name]: TreeSelect,
     [Icon.name]: Icon,
   },
-  props: {},
+  props: {
+    items: {
+      type: Array,
+      default() {
+        return [
+          {
+            text: '不限',
+            id: '0',
+            className: 'my-class',
+            children: [
+              {
+                text: '不限',
+                id: -1,
+              },
+            ],
+          },
+          {
+            text: '工商服务',
+            id: '1',
+            className: 'my-class',
+            children: [
+              {
+                text: '不限',
+                id: -1,
+              },
+              {
+                text: '有限公司注册',
+                id: 1,
+              },
+              {
+                text: '外资公司注册',
+                id: 2,
+                disabled: true,
+              },
+              {
+                text: '印章',
+                id: 3,
+              },
+              {
+                text: '公司地址变更',
+                id: 4,
+              },
+            ],
+          },
+          {
+            text: '会计财税',
+            id: '2',
+            className: 'my-class',
+            children: [],
+          },
+          {
+            text: '知产服务',
+            id: '3',
+            className: 'my-class',
+            children: [],
+          },
+        ]
+      },
+    },
+    activeData: {
+      type: Array,
+      default() {
+        return initSelectData
+      },
+    },
+  },
   data() {
     return {
       active: 0,
       activeIds: [-1],
-      items: [
-        {
-          text: '不限',
-          id: '0',
-          className: 'my-class',
-          children: [
-            {
-              text: '不限',
-              id: -1,
-            },
-          ],
-        },
-        {
-          text: '工商服务',
-          id: '1',
-          className: 'my-class',
-          children: [
-            {
-              text: '不限',
-              id: -1,
-            },
-            {
-              text: '有限公司注册',
-              id: 1,
-            },
-            {
-              text: '外资公司注册',
-              id: 2,
-              disabled: true,
-            },
-            {
-              text: '印章',
-              id: 3,
-            },
-            {
-              text: '公司地址变更',
-              id: 4,
-            },
-          ],
-        },
-        {
-          text: '会计财税',
-          id: '2',
-          className: 'my-class',
-          children: [],
-        },
-        {
-          text: '知产服务',
-          id: '3',
-          className: 'my-class',
-          children: [],
-        },
-      ],
       selectData: initSelectData,
     }
   },
@@ -129,6 +141,23 @@ export default {
       return this.items[this.active].children
     },
   },
+  watch: {
+    activeData: {
+      handler(newVal, odlVal) {
+        if (newVal === odlVal) return
+        this.selectData = newVal
+        this.items.forEach((item, index) => {
+          if (this.selectData[0].id === item.id) {
+            this.active = index
+          }
+        })
+      },
+      immediate: true,
+    },
+    selectData(newVal) {
+      this.$emit('select', [...newVal])
+    },
+  },
 
   mounted() {},
   methods: {
@@ -138,7 +167,7 @@ export default {
       this.$set(this.selectData, 0, { id: navItem.id, text: navItem.text })
       this.$set(this.selectData, 1, { services: [this.childrenList[0]] })
 
-      this.$emit('select', [...this.selectData])
+      //   this.$emit('select', [...this.selectData])
     },
     handleClickItem(item = {}) {
       console.log('item:', item)
@@ -159,7 +188,7 @@ export default {
 
       this.$set(this.selectData, 1, { services })
 
-      this.$emit('select', [...this.selectData])
+      //   this.$emit('select', [...this.selectData])
     },
   },
 }
