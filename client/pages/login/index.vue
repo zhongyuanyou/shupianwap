@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-23 16:18:22
+ * @LastEditTime: 2020-11-23 17:07:23
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
@@ -15,10 +15,12 @@
     <div class="body">
       <div class="title">手机快捷登录</div>
       <div class="subtitle">未注册过的手机号将自动创建薯片账号</div>
-      <sp-form validate-first class="tel-login-form" @submit="onSubmit">
+      <sp-form validate-first class="login-form" @submit="onSubmit">
+        <!-- 手机登录 -->
         <sp-field
           v-model="loginForm.tel"
           type="tel"
+          class="end-btn-cell"
           name="telephone"
           clearable
           placeholder="请输入手机号"
@@ -38,6 +40,46 @@
           placeholder="请输入验证码"
           :rules="[{ required: true, message: '请填写验证码' }]"
         />
+        <!-- 账户登录 -->
+        <sp-field
+          v-model="loginForm.account"
+          type="tel"
+          name="account"
+          clearable
+          placeholder="请输入手机号"
+          :rules="[{ required: true, message: '请填写手机号' }]"
+        />
+        <sp-field
+          v-model="loginForm.password"
+          :type="passwordFieldType"
+          class="end-btn-cell"
+          name="password"
+          clearable
+          placeholder="请输入密码"
+          :rules="[{ required: true, message: '请填写密码' }]"
+        >
+          <template #button>
+            <sp-button
+              class="see-password-btn"
+              native-type="button"
+              @click="handleSwitchLookPassword"
+            >
+              <my-icon
+                v-if="passwordFieldType === 'password'"
+                name="login_ic_dislook"
+                size=""
+                color="#CCCCCC"
+              />
+              <my-icon
+                v-if="passwordFieldType === 'text'"
+                name="login_ic_look"
+                size="0.24rem"
+                color="#CCCCCC"
+              />
+            </sp-button>
+          </template>
+        </sp-field>
+
         <sp-field name="checkbox" class="protocol-field">
           <template #input>
             <sp-checkbox v-model="loginForm.readed" shape="round" />
@@ -96,14 +138,21 @@ export default {
       loginForm: {
         tel: '',
         authCode: '',
+        account: '',
+        password: '',
         readed: false,
       },
+      passwordFieldType: 'password', // text
       loginType: 'telephone', // account
     }
   },
   methods: {
     onSubmit(values) {
       console.log('submit', values)
+    },
+    handleSwitchLookPassword() {
+      this.passwordFieldType =
+        this.passwordFieldType === 'password' ? 'text' : 'password'
     },
   },
 }
@@ -148,7 +197,7 @@ export default {
       line-height: 30px;
       margin-top: 28px;
     }
-    .tel-login-form {
+    .login-form {
       margin-top: 48px;
       .code-btn {
         border: none;
@@ -158,12 +207,15 @@ export default {
           font-size: 32px;
         }
       }
+      .see-password-btn {
+        border: none;
+      }
       /deep/.sp-cell {
         padding: 32px 0;
         &::after {
           left: 0;
         }
-        &:first-child {
+        &.end-btn-cell {
           padding: 6px 0;
         }
         &.protocol-field {
@@ -228,6 +280,9 @@ export default {
     justify-content: center;
     align-items: center;
     margin-top: 36px;
+    & > div {
+      font-size: 12px;
+    }
     .switch-btn {
       border: none;
       height: 25px;
@@ -235,6 +290,7 @@ export default {
       color: @subtitle-text-color;
       /deep/.sp-button__text {
         font-size: 26px;
+        line-height: 1em;
       }
     }
     .vertical-line {
