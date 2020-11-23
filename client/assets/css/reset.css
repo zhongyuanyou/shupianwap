@@ -225,3 +225,35 @@ svg {
 * {
     box-sizing: border-box;
 }
+
+
+
+/* 清除默认样式 */
+a {
+    text-decoration: none;
+}
+
+button {
+    outline: none;
+    border: none;
+}
+
+input,
+textarea {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    /*清除IOS上面点击时出现阴影的现象*/
+}
+
+input,
+select::-ms-expand {
+    display: none;
+}
+
+input,
+select,
+textarea {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+}
