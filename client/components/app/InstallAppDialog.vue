@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-21 11:21:49
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-21 14:33:41
+ * @LastEditTime: 2020-11-23 08:46:12
  * @Description: file content
  * @FilePath: /chips-wap/client/components/app/InstallAppDialog.vue
 -->
@@ -32,6 +32,11 @@ import openapp from '@/mixins/openapp'
 
 export default {
   name: 'InstallAppDialog',
+  components: {
+    [Button.name]: Button,
+    RecommendDialog,
+  },
+  mixins: [openapp],
   model: {
     prop: 'show',
     event: 'update',
@@ -42,11 +47,7 @@ export default {
       default: false,
     },
   },
-  mixins: [openapp],
-  components: {
-    [Button.name]: Button,
-    RecommendDialog,
-  },
+
   data() {
     return {
       thisType: 'installapp',
