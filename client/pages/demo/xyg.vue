@@ -22,21 +22,36 @@
       @minInput="minInput"
       @maxInput="maxInput"
     />
+    <br />
+    <BottomConfirm />
+    <br />
+    <sp-datetime-picker
+      v-model="currentDate"
+      type="date"
+      title="自定义列排序"
+      :columns-order="['month', 'day', 'year']"
+      :formatter="formatter"
+    />
   </div>
 </template>
 
 <script>
+import { DatetimePicker } from '@chipspc/vant-dgg'
 import OpenApp from '@/components/app/OpenApp'
 import InstallApp from '@/components/app/InstallApp'
 import SelectCheckBox from '@/components/filters/SelectCheckBox'
 import PriceFilter from '@/components/filters/PriceFilter'
+import BottomConfirm from '@/components/filters/BottomConfirm'
+
 export default {
   name: 'xyg',
   components: {
     OpenApp,
     InstallApp,
     SelectCheckBox,
+    [DatetimePicker.name]: DatetimePicker,
     PriceFilter,
+    BottomConfirm,
   },
   data() {
     return {
@@ -122,6 +137,7 @@ export default {
           name: '科技信息',
         },
       ],
+      currentDate: new Date(),
       priceList: [
         {
           name: '1万以下',
@@ -147,6 +163,18 @@ export default {
     }
   },
   methods: {
+    formatter(type, val) {
+      if (type === 'year') {
+        return val + '年'
+      }
+      if (type === 'month') {
+        return val + '月'
+      }
+      if (type === 'day') {
+        return val + '日'
+      }
+      return val
+    },
     showAll() {
       this.$refs.selectCheckBox.showAll()
     },
