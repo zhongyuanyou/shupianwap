@@ -1,7 +1,7 @@
 <template>
   <!-- tab 切换组件     -->
   <div>
-    <sp-sticky v-if="needFixed" @scroll="scrollHandle" :offset-top="offsetTop">
+    <sp-sticky v-if="needFixed" :offset-top="offsetTop" @scroll="scrollHandle">
       <div class="tab-curve" :class="[isFixed ? 'fixed-tab' : '']">
         <ul class="tab-curve-list">
           <li
@@ -65,6 +65,9 @@
 import { Sticky } from '@chipspc/vant-dgg'
 export default {
   name: 'TabCurve',
+  components: {
+    [Sticky.name]: Sticky,
+  },
   props: {
     // tab 列表
     tabList: {
@@ -94,9 +97,6 @@ export default {
       curentItem: 0,
       isFixed: false, // 是否触发了吸顶
     }
-  },
-  components: {
-    [Sticky.name]: Sticky,
   },
   methods: {
     selectItem(item, index) {
