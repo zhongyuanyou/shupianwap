@@ -87,6 +87,7 @@ export default {
       font-family: PingFang SC;
       border: none;
       font-size: 30px;
+      color: #1a1a1a;
       &::placeholder {
         color: #999999;
       }
