@@ -71,6 +71,7 @@ export default {
   background: #ffffff;
   padding: 16px 40px;
   box-sizing: border-box;
+  font-size: 24px;
   .input-box {
     display: flex;
     align-items: center;
@@ -87,6 +88,7 @@ export default {
       font-family: PingFang SC;
       border: none;
       font-size: 30px;
+      color: #1a1a1a;
       &::placeholder {
         color: #999999;
       }
