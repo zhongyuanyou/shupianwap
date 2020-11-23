@@ -42,7 +42,7 @@ import PriceFilter from '@/components/filters/PriceFilter'
 import BottomConfirm from '@/components/filters/BottomConfirm'
 
 export default {
-  name: 'xyg',
+  name: 'Xyg',
   components: {
     OpenApp,
     InstallApp,
