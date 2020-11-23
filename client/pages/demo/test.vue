@@ -1,17 +1,7 @@
 <template>
   <div class="demo-page">
     <div class="modle-item">
-      <Search>
-        <template v-slot:left>
-          <span>X</span>
-        </template>
-        <template v-slot:center>
-          <span>city</span>
-        </template>
-        <template v-slot:right>
-          <span>取消</span>
-        </template>
-      </Search>
+      <Search></Search>
     </div>
     <div class="modle-item">
       <TabCurve
