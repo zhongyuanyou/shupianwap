@@ -1,24 +1,31 @@
 <!--
  * @Author: xiao pu
- * @Date: 2020-11-23 10:18:38
+ * @Date: 2020-11-23 17:22:12
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-23 18:51:48
+ * @LastEditTime: 2020-11-23 20:35:24
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/login/index.vue
+ * @FilePath: /chips-wap/client/pages/login/register.vue
 -->
 <template>
-  <div class="login">
+  <div class="register">
     <div class="head">
-      <my-icon name="login_ic_clear" size="0.2rem" color="#1A1A1A"></my-icon>
-      <sp-button class="register">注册</sp-button>
+      <sp-row>
+        <sp-col span="3">
+          <my-icon
+            class="close-btn"
+            name="login_ic_clear"
+            size="0.2rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </sp-col>
+        <sp-col span="18"><h2 class="page-title">注册账号</h2></sp-col>
+      </sp-row>
     </div>
     <div class="body">
-      <div class="title">手机快捷登录</div>
-      <div class="subtitle">未注册过的手机号将自动创建薯片账号</div>
-      <sp-form validate-first class="login-form" @submit="onSubmit">
+      <sp-form validate-first class="register-form" @submit="onSubmit">
         <!-- 手机登录 -->
         <sp-field
-          v-model="loginForm.tel"
+          v-model="registerForm.tel"
           type="tel"
           class="end-btn-cell"
           name="telephone"
@@ -33,29 +40,20 @@
           </template>
         </sp-field>
         <sp-field
-          v-model="loginForm.authCode"
+          v-model="registerForm.authCode"
           type="number"
           name="authCode"
           clearable
           placeholder="请输入验证码"
           :rules="[{ required: true, message: '请填写验证码' }]"
         />
-        <!-- 账户登录 -->
         <sp-field
-          v-model="loginForm.account"
-          type="tel"
-          name="account"
-          clearable
-          placeholder="请输入手机号"
-          :rules="[{ required: true, message: '请填写手机号' }]"
-        />
-        <sp-field
-          v-model="loginForm.password"
+          v-model="registerForm.password"
           :type="passwordFieldType"
           class="end-btn-cell"
           name="password"
           clearable
-          placeholder="请输入密码"
+          placeholder="请输入新密码(6-15位数字/字母/标点符号)"
           :rules="[{ required: true, message: '请填写密码' }]"
         >
           <template #button>
@@ -82,12 +80,12 @@
 
         <sp-field name="checkbox" class="protocol-field">
           <template #input>
-            <sp-checkbox v-model="loginForm.readed" shape="round" />
+            <sp-checkbox v-model="registerForm.readed" shape="round" />
           </template>
           <template #extra>
             <span class="protocol"
-              >我已阅读并同意 <a>《薯片用户服务协议》</a>和
-              <a>《薯片隐 私协议》</a></span
+              >为保障您的个人隐私权益，请点击同意按钮前认真阅读下方协议：
+              <a>《薯片用户服务协议》</a>和 <a>《薯片隐 私协议》</a></span
             >
           </template>
         </sp-field>
@@ -97,19 +95,15 @@
             type="info"
             class="submit-wrap__btn"
             native-type="submit"
+            :disabled="true"
           >
-            立即登录
+            注册
           </sp-button>
         </div>
       </sp-form>
     </div>
     <div class="footer">
-      <div v-if="loginType === 'telephone'">
-        <sp-button class="switch-btn" native-type="button">
-          账号密码登录
-        </sp-button>
-      </div>
-      <div v-else>
+      <div>
         <sp-button class="switch-btn" native-type="button">
           手机快捷登录
         </sp-button>
@@ -123,11 +117,13 @@
 </template>
 
 <script>
-import { Form, Button, Field, Checkbox } from '@chipspc/vant-dgg'
+import { Col, Row, Form, Button, Field, Checkbox } from '@chipspc/vant-dgg'
 
 export default {
   name: 'Login',
   components: {
+    [Col.name]: Col,
+    [Row.name]: Row,
     [Button.name]: Button,
     [Form.name]: Form,
     [Field.name]: Field,
@@ -135,15 +131,13 @@ export default {
   },
   data() {
     return {
-      loginForm: {
+      registerForm: {
         tel: '',
         authCode: '',
-        account: '',
         password: '',
         readed: false,
       },
       passwordFieldType: 'password', // text
-      loginType: 'telephone', // account
     }
   },
   methods: {
@@ -163,22 +157,24 @@ export default {
 @subtitle-text-color: #999999;
 @hint-text-color: #cccccc;
 
-.login {
+.register {
+  /deep/div {
+    font-size: 24px;
+  }
   .head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 0 30px;
     width: 100%;
     height: 88px;
-    .register {
-      color: #1a1a1a;
-      font-weight: 400;
-      line-height: 36px;
-      border: 0;
-      /deep/.sp-button__text {
-        font-size: 32px;
-      }
+    padding: 24px 30px;
+    .close-btn {
+      line-height: 40px;
+    }
+    .page-title {
+      font-size: 36px;
+      font-weight: bold;
+      color: @title-text-color;
+      line-height: 40px;
+      text-align: center;
     }
   }
   .body {
@@ -197,7 +193,7 @@ export default {
       line-height: 30px;
       margin-top: 28px;
     }
-    .login-form {
+    .register-form {
       margin-top: 48px;
       .code-btn {
         border: none;
@@ -260,12 +256,14 @@ export default {
       }
       .submit-wrap {
         margin-top: 68px;
+        /deep/.sp-button--disabled {
+          opacity: 0.4;
+        }
         &__btn {
           width: 630px;
           height: 96px;
           background: #4974f5;
           border-radius: 12px;
-
           font-weight: bold;
           color: #ffffff;
           /deep/.sp-button__text {
