@@ -39,28 +39,23 @@ export default {
       default: () => {
         return [
           {
-            icon:
-              'http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp',
-            name: '工商平台',
+            icon: require('~/assets/temporary/home/home_ic_busi_x1.5.png'),
+            name: '工商平台工商平台工商平台',
           },
           {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/135931/4/3281/5598/5efbf2c0Edbdc82c7/ed9861b4ddfb9f30.png.webp',
+            icon: require('~/assets/temporary/home/home_ic_ac_x1.5.png'),
             name: '会计财税',
           },
           {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/140012/8/1804/3641/5efbf318E38bd5dad/0db99d859ab16ce9.png.webp',
+            icon: require('~/assets/temporary/home/home_ic_ip_x1.5.png'),
             name: '知识产权',
           },
           {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
+            icon: require('~/assets/temporary/home/home_ic_web_x1.5.png'),
             name: 'IT软件',
           },
           {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/116602/7/11200/3796/5efbf375Ebba41029/f07cc166f368fa05.png.webp',
+            icon: require('~/assets/temporary/home/home_ic_law_x1.5.png'),
             name: '法律平台',
           },
         ]
@@ -74,6 +69,26 @@ export default {
           {
             icon:
               'http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp',
+            name: '工商平台工商平台工商平台',
+          },
+          {
+            icon:
+              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/135931/4/3281/5598/5efbf2c0Edbdc82c7/ed9861b4ddfb9f30.png.webp',
+            name: '会计财税',
+          },
+          {
+            icon:
+              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/140012/8/1804/3641/5efbf318E38bd5dad/0db99d859ab16ce9.png.webp',
+            name: '知识产权',
+          },
+          {
+            icon:
+              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
+            name: '知识产权',
+          },
+          {
+            icon:
+              'http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp',
             name: '工商平台',
           },
           {
@@ -93,53 +108,63 @@ export default {
           },
           {
             icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
+              'http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp',
+            name: '工商平台',
+          },
+          {
+            icon:
+              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/135931/4/3281/5598/5efbf2c0Edbdc82c7/ed9861b4ddfb9f30.png.webp',
+            name: '会计财税',
+          },
+          {
+            icon:
+              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/140012/8/1804/3641/5efbf318E38bd5dad/0db99d859ab16ce9.png.webp',
             name: '知识产权',
           },
           {
             icon:
               '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
             name: '知识产权',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
-            name: 'IT软件',
           },
           {
             icon:
               'http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp',
             name: '工商平台',
+          },
+          {
+            icon:
+              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/135931/4/3281/5598/5efbf2c0Edbdc82c7/ed9861b4ddfb9f30.png.webp',
+            name: '会计财税',
+          },
+          {
+            icon:
+              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/140012/8/1804/3641/5efbf318E38bd5dad/0db99d859ab16ce9.png.webp',
+            name: '知识产权',
+          },
+          {
+            icon:
+              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
+            name: '知识产权',
+          },
+          {
+            icon:
+              'http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp',
+            name: '工商平台',
+          },
+          {
+            icon:
+              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/135931/4/3281/5598/5efbf2c0Edbdc82c7/ed9861b4ddfb9f30.png.webp',
+            name: '会计财税',
+          },
+          {
+            icon:
+              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/140012/8/1804/3641/5efbf318E38bd5dad/0db99d859ab16ce9.png.webp',
+            name: '知识产权',
+          },
+          {
+            icon:
+              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
+            name: '知识产权',
           },
         ]
       },
@@ -188,11 +213,12 @@ export default {
         }
         span {
           font-size: 24px;
-          line-height: 24px;
+          line-height: 26px;
           font-family: PingFang SC;
           font-weight: bold;
           color: #222222;
-          margin-top: 20px;
+          margin-top: 19px;
+          .textOverflow(1);
         }
       }
     }
@@ -240,12 +266,13 @@ export default {
           }
           span {
             font-size: 24px;
-            line-height: 24px;
+            line-height: 26px;
             font-family: PingFang SC;
             font-weight: bold;
             color: #222222;
-            margin-top: 20px;
+            margin-top: 19px;
             white-space: nowrap;
+            .textOverflow(1);
           }
         }
       }
