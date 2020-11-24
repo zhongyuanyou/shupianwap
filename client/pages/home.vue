@@ -1,20 +1,23 @@
 <template>
   <div class="page-content">
     <!-- S 搜索 + 大banner -->
-    <search-banner></search-banner>
+    <SearchBanner />
     <!-- E 搜索 + 大banner -->
     <!-- S 金刚区nav -->
-    <home-nav></home-nav>
+    <HomeNav />
     <!-- E 金刚区nav -->
     <!-- S 轮播banner -->
-    <SwiperBanner></SwiperBanner>
+    <SwiperBanner />
     <!-- E 轮播banner -->
     <!-- S 帮我找服务 -->
-    <Help></Help>
+    <Help />
     <!-- E 帮我找服务 -->
     <!-- S 限时特惠 -->
-    <Preferential></Preferential>
+    <Preferential />
     <!-- E 限时特惠 -->
+    <!-- S 资讯精选 -->
+    <Information />
+    <!-- E 资讯精选 -->
     <div style="min-height: 3000px"></div>
   </div>
 </template>
@@ -25,6 +28,7 @@ import HomeNav from '@/components/home/HomeNav'
 import SwiperBanner from '@/components/home/SwiperBanner'
 import Help from '@/components/home/Help'
 import Preferential from '@/components/home/Preferential'
+import Information from '@/components/home/Information'
 export default {
   name: 'Home',
   components: {
@@ -33,6 +37,7 @@ export default {
     SwiperBanner,
     Help,
     Preferential,
+    Information,
   },
   data() {
     return {}
@@ -43,5 +48,6 @@ export default {
 <style lang="less" scoped>
 .page-content {
   max-width: 1000px;
+  overflow: hidden;
 }
 </style>

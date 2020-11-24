@@ -2,7 +2,7 @@
   <div class="preferential-centent">
     <TabCurve
       :tab-list="tabBtn"
-      :needFixed="false"
+      :need-fixed="false"
       @selectTabHandle="selectTabHandle"
     ></TabCurve>
     <div class="scroll-centent">

@@ -163,7 +163,7 @@ export default {
           font-family: PingFang SC;
           font-weight: bold;
           color: #222222;
-          line-height: 32px;
+          line-height: 34px;
           .textOverflow(1);
         }
         p {
@@ -172,7 +172,7 @@ export default {
           font-weight: 400;
           color: #999999;
           line-height: 24px;
-          margin-top: 8px;
+          margin-top: 7px;
           .textOverflow(1);
         }
       }
