@@ -134,7 +134,7 @@ module.exports = {
           rootValue: 100,
           minPixelValue: 2,
           propWhiteList: [],
-          exclude: '/node_modules|floder_name/i',
+          exclude: /(node_modules)/,
         },
       },
       preset: {

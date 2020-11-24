@@ -110,7 +110,7 @@ export default {
   },
   methods: {
     back() {
-      Toast('返回')
+      this.$router.back()
     },
     complaintList() {
       this.$router.push('./complaintList')
