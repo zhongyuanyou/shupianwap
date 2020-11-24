@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import CitySelect from '~/components/areaSelected/AreaSelect'
-import CoupleSelect from '~/components/coupleSelected/CoupleSelect'
+import CitySelect from '~/components/common/areaSelected/AreaSelect'
+import CoupleSelect from '~/components/common/coupleSelected/CoupleSelect'
 import { city } from '~/utils/city'
 export default {
   name: 'Zky',

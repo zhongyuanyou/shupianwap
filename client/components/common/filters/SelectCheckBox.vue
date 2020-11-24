@@ -26,8 +26,8 @@
 
 <script>
 import { Col, Row } from '@chipspc/vant-dgg'
-import chunkArr from '@/utils/chunkArr'
-import clone from '@/utils/clone'
+import chunkArr from '~/utils/chunkArr'
+import clone from '~/utils/clone'
 export default {
   name: 'SelectCheckBox',
   components: {

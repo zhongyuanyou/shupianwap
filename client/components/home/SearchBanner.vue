@@ -27,7 +27,7 @@
 
 <script>
 import { Sticky } from '@chipspc/vant-dgg'
-import Search from '@/components/search/Search'
+import Search from '@/components/common/search/Search'
 export default {
   components: {
     [Sticky.name]: Sticky,
@@ -37,7 +37,7 @@ export default {
     return {
       bigBanner:
         'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1606113647248&di=9b32aeb7bfb9ef1085ce1e18e72ac28f&imgtype=0&src=http%3A%2F%2Fpic.616pic.com%2Fbg_w1180%2F00%2F22%2F41%2FXXZu5GvQAH.jpg',
-      scollPercentage: 138,
+      scollPercentage: 120, // 滚动多少距离，搜索栏背景色渐变
       opacity: 0,
     }
   },

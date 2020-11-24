@@ -1,16 +1,27 @@
 <template>
   <!--S 搜索框-->
   <div class="search_input_con">
-    <div class="con">
-      <my-icon name="sear_ic_sear" size="0.28rem" color="#999" />
-      <input
-        v-model="keywords"
-        type="text"
-        placeholder="请输入搜索内容"
-        @input="inputChange"
-      />
+    <div class="search_input_con_lf">
+      <div v-if="left" @click="handleLeft">
+        <my-icon name="nav_ic_back" size="0.33rem" color="#1a1a1a" />
+      </div>
+      <div
+        class="con"
+        :style="{
+          width: left ? '5.04rem' : '5.68rem',
+          marginLeft: left ? '0.32rem' : '0',
+        }"
+      >
+        <my-icon name="sear_ic_sear" size="0.28rem" color="#999" />
+        <input
+          v-model="keywords"
+          type="text"
+          placeholder="请输入搜索内容"
+          @input="inputChange"
+        />
+      </div>
     </div>
-    <p class="cancel">取消</p>
+    <p class="cancel" @click="handleLeft">取消</p>
   </div>
   <!--E 搜索框-->
 </template>
@@ -18,15 +29,26 @@
 <script>
 export default {
   name: 'Header',
-  data() {
-    return {
-      keywords: '',
-    }
+  props: {
+    left: {
+      type: Boolean,
+      default: () => {
+        return false
+      },
+    },
+    keywords: {
+      type: String,
+      default: '',
+    },
   },
   methods: {
     inputChange() {
       // input改变事件
       this.$emit('inputChange', this.keywords)
+    },
+    handleLeft() {
+      // 点击返回按钮
+      this.$router.back()
     },
   },
 }
@@ -43,38 +65,44 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  .con {
-    width: 568px;
-    height: 96px;
-    background: #ffffff;
-    border: 1px solid #cdcdcd;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
-    border-radius: 8px;
+  background-color: #fff;
+  &_lf {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: row;
-    padding: 0 27px;
-    input {
-      width: 100%;
-      height: 92px;
-      text-indent: 15px;
-      border: none;
-      font-size: 30px;
-      color: #1a1a1a;
-      font-weight: bold;
-      &:focus {
-        outline: none;
+    .con {
+      height: 96px;
+      background: #ffffff;
+      border: 1px solid #cdcdcd;
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
+      border-radius: 8px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: row;
+      padding: 0 27px;
+      input {
+        width: 100%;
+        height: 92px;
+        text-indent: 15px;
+        border: none;
+        font-size: 30px;
+        color: #1a1a1a;
+        font-weight: bold;
+        &:focus {
+          outline: none;
+        }
+        //去除点击时候的背景色
+        -webkit-tap-highlight-color: rgba(255, 0, 0, 0);
       }
-      //去除点击时候的背景色
-      -webkit-tap-highlight-color: rgba(255, 0, 0, 0);
-    }
-    //修改input-placeholder样式
-    ::-webkit-input-placeholder {
-      font-size: 30px;
-      font-family: PingFang SC;
-      font-weight: bold;
-      color: #999999;
+      //修改input-placeholder样式
+      ::-webkit-input-placeholder {
+        font-size: 30px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #999999;
+      }
     }
   }
   .cancel {
