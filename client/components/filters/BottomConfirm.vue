@@ -53,5 +53,8 @@ export default {
     text-align: center;
     line-height: 96px;
   }
+  .iconfont-box {
+    text-align: center;
+  }
 }
 </style>

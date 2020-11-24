@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="default-layout">
     <nuxt />
   </div>
 </template>
@@ -15,6 +15,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+  height: 100%;
 }
 
 *,
@@ -51,5 +52,8 @@ html {
 .button--grey:hover {
   color: #fff;
   background-color: #35495e;
+}
+.default-layout {
+  height: 100%;
 }
 </style>

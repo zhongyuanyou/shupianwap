@@ -26,13 +26,9 @@
 </template>
 
 <script>
-import { Icon } from '@chipspc/vant-dgg'
 import openapp from '@/mixins/openapp'
 export default {
   name: 'OpenApp',
-  components: {
-    [Icon.name]: Icon,
-  },
   mixins: [openapp],
   data() {
     return {
