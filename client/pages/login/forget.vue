@@ -1,13 +1,14 @@
 <!--
  * @Author: xiao pu
- * @Date: 2020-11-23 17:22:12
+ * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-24 09:47:45
+ * @LastEditTime: 2020-11-24 11:46:59
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/login/register.vue
+ * @FilePath: /chips-wap/client/pages/login/forget.vue
 -->
+
 <template>
-  <div class="register">
+  <div class="forget">
     <div class="head">
       <sp-row>
         <sp-col span="3">
@@ -18,72 +19,62 @@
             color="#1A1A1A"
           ></my-icon>
         </sp-col>
-        <sp-col span="18"><h2 class="page-title">注册账号</h2></sp-col>
+        <sp-col span="18"><h2 class="page-title">找回密码</h2></sp-col>
       </sp-row>
     </div>
     <div class="body">
-      <sp-form validate-first class="register-form" @submit="onSubmit">
+      <sp-form validate-first class="form" @submit="onSubmit">
         <sp-field
-          v-model="registerForm.tel"
+          v-model="forgetForm.tel"
           type="tel"
+          clear-trigger="always"
           class="end-btn-cell"
           name="telephone"
           clearable
           placeholder="请输入手机号"
+          max-length="11"
+          @input="handleTelInput"
         >
           <template #button>
-            <sp-button class="code-btn" native-type="button">
+            <sp-button
+              class="code-btn"
+              native-type="button"
+              :disabled="!isValidTel"
+              @click="handleCodeBtnClick"
+            >
               获取验证码
             </sp-button>
           </template>
         </sp-field>
         <sp-field
-          v-model="registerForm.authCode"
+          v-model="forgetForm.authCode"
           type="number"
+          clear-trigger="always"
           name="authCode"
           clearable
           placeholder="请输入验证码"
+          max-length="6"
+          @input="handleCodeInput"
         />
         <sp-field
-          v-model="registerForm.password"
-          :type="passwordFieldType"
-          class="end-btn-cell"
-          name="password"
+          v-model="forgetForm.newPassword"
+          type="password"
+          clear-trigger="always"
+          name="newPassword"
           clearable
           placeholder="请输入新密码(6-15位数字/字母/标点符号)"
+          @input="handleNewPasswordInput"
         >
-          <template #button>
-            <sp-button
-              class="see-password-btn"
-              native-type="button"
-              @click="handleSwitchLookPassword"
-            >
-              <my-icon
-                v-if="passwordFieldType === 'password'"
-                name="login_ic_dislook"
-                size="0.24rem"
-                color="#CCCCCC"
-              />
-              <my-icon
-                v-if="passwordFieldType === 'text'"
-                name="login_ic_look"
-                size="0.24rem"
-                color="#CCCCCC"
-              />
-            </sp-button>
-          </template>
         </sp-field>
-
-        <sp-field name="checkbox" class="protocol-field">
-          <template #input>
-            <sp-checkbox v-model="registerForm.readed" shape="round" />
-          </template>
-          <template #extra>
-            <span class="protocol"
-              >为保障您的个人隐私权益，请点击同意按钮前认真阅读下方协议：
-              <a>《薯片用户服务协议》</a>和 <a>《薯片隐 私协议》</a></span
-            >
-          </template>
+        <sp-field
+          v-model="forgetForm.confirmPassword"
+          type="password"
+          clear-trigger="always"
+          name="confirmPassword"
+          clearable
+          placeholder="确认新密码"
+          @input="handleConfirmPasswordInput"
+        >
         </sp-field>
         <div class="submit-wrap">
           <sp-button
@@ -91,9 +82,9 @@
             type="info"
             class="submit-wrap__btn"
             native-type="submit"
-            :disabled="true"
+            :disabled="!isValidSubmit"
           >
-            注册
+            重置密码
           </sp-button>
         </div>
       </sp-form>
@@ -113,7 +104,9 @@
 </template>
 
 <script>
-import { Col, Row, Form, Button, Field, Checkbox } from '@chipspc/vant-dgg'
+import { Col, Row, Form, Button, Field, Toast } from '@chipspc/vant-dgg'
+
+import { checkPhone, checkPassword, checkAuthCode } from '@/utils/check.js'
 
 export default {
   name: 'Login',
@@ -123,26 +116,62 @@ export default {
     [Button.name]: Button,
     [Form.name]: Form,
     [Field.name]: Field,
-    [Checkbox.name]: Checkbox,
   },
   data() {
     return {
-      registerForm: {
+      forgetForm: {
         tel: '',
         authCode: '',
-        password: '',
-        readed: false,
+        newPassword: '',
+        confirmPassword: '',
       },
-      passwordFieldType: 'password', // text
+      isValidTel: false, // 电话号码的有效性
+      isValidSubmit: false,
     }
   },
   methods: {
+    handleTelInput(value) {
+      this.isValidTel = checkPhone(value)
+      this.forgetForm.tel = value
+      this.checkFormData('tel')
+    },
+    handleCodeInput(value) {
+      this.forgetForm.authCode = value
+      this.checkFormData()
+    },
+    handleNewPasswordInput(value) {
+      this.forgetForm.newPassword = value
+      this.checkFormData()
+    },
+    handleConfirmPasswordInput(value) {
+      this.forgetForm.confirmPassword = value
+      this.checkFormData()
+    },
+    handleCodeBtnClick() {
+      // 获取验证码
+      console.log('handleCodeBtnClick tel:', this.forgetForm.tel)
+      Toast('验证码已发送！')
+    },
+    checkFormData(excludeItem) {
+      const { tel, authCode, newPassword, confirmPassword } = this.forgetForm
+      const isValid = Object.keys(this.forgetForm).every((key) => {
+        if (key === excludeItem) return true
+        switch (key) {
+          case 'tel':
+            return checkPhone(tel)
+          case 'authCode':
+            return checkAuthCode(authCode)
+          case 'newPassword':
+            // 至少6-15个字符，至少1个大写字母，1个小写字母和1个数字
+            return checkPassword(newPassword)
+          case 'confirmPassword':
+            return confirmPassword === newPassword
+        }
+      })
+      this.isValidSubmit = isValid
+    },
     onSubmit(values) {
       console.log('submit', values)
-    },
-    handleSwitchLookPassword() {
-      this.passwordFieldType =
-        this.passwordFieldType === 'password' ? 'text' : 'password'
     },
   },
 }
@@ -153,7 +182,7 @@ export default {
 @subtitle-text-color: #999999;
 @hint-text-color: #cccccc;
 
-.register {
+.forget {
   /deep/div {
     font-size: 24px;
   }
@@ -174,23 +203,8 @@ export default {
     }
   }
   .body {
-    padding: 58px 60px 0;
-    .title {
-      font-size: 48px;
-      font-weight: bold;
-      color: #1a1a1a;
-      line-height: 52px;
-      color: @title-text-color;
-    }
-    .subtitle {
-      font-size: 26px;
-      font-weight: 400;
-      color: @subtitle-text-color;
-      line-height: 30px;
-      margin-top: 28px;
-    }
-    .register-form {
-      margin-top: 48px;
+    padding: 48px 60px 0;
+    .form {
       .code-btn {
         border: none;
         font-weight: 400;
@@ -199,9 +213,7 @@ export default {
           font-size: 32px;
         }
       }
-      .see-password-btn {
-        border: none;
-      }
+
       /deep/.sp-cell {
         padding: 32px 0;
         &::after {
@@ -210,22 +222,7 @@ export default {
         &.end-btn-cell {
           padding: 6px 0;
         }
-        &.protocol-field {
-          padding: 68px 0 0;
-          &::after {
-            display: none;
-          }
-          .sp-field__control--custom {
-            min-height: auto;
-          }
-          .protocol {
-            padding-left: 16px;
-            font-size: 26px;
-            font-weight: 400;
-            color: @subtitle-text-color;
-            line-height: 30px;
-          }
-        }
+
         .sp-field__control {
           line-height: 36px;
           font-size: 32px;
@@ -237,7 +234,6 @@ export default {
           line-height: 24px;
           box-sizing: content-box;
           color: @hint-text-color;
-          // background-color: transparent;
           font-family: 'iconfont' !important;
           font-size: 0.16rem;
           font-style: normal;

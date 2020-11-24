@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-23 18:51:48
+ * @LastEditTime: 2020-11-24 09:47:23
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
@@ -24,7 +24,6 @@
           name="telephone"
           clearable
           placeholder="请输入手机号"
-          :rules="[{ required: true, message: '请填写手机号' }]"
         >
           <template #button>
             <sp-button class="code-btn" native-type="button">
@@ -38,7 +37,6 @@
           name="authCode"
           clearable
           placeholder="请输入验证码"
-          :rules="[{ required: true, message: '请填写验证码' }]"
         />
         <!-- 账户登录 -->
         <sp-field
@@ -47,7 +45,6 @@
           name="account"
           clearable
           placeholder="请输入手机号"
-          :rules="[{ required: true, message: '请填写手机号' }]"
         />
         <sp-field
           v-model="loginForm.password"
@@ -56,7 +53,6 @@
           name="password"
           clearable
           placeholder="请输入密码"
-          :rules="[{ required: true, message: '请填写密码' }]"
         >
           <template #button>
             <sp-button

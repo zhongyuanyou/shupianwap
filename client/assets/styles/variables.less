@@ -1,0 +1,10 @@
+// 多行文字隐藏
+.textOverflow(@num) {
+    -webkit-line-clamp: @num; // 超过多少行 以 ... 形式展示
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    overflow: hidden;
+    white-space: normal;
+}
