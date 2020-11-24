@@ -18,6 +18,9 @@
     <!-- S 资讯精选 -->
     <Information />
     <!-- E 资讯精选 -->
+    <!-- S 热门服务 -->
+    <HotServe />
+    <!-- E 热门服务 -->
     <div style="min-height: 3000px"></div>
   </div>
 </template>
@@ -29,6 +32,7 @@ import SwiperBanner from '@/components/home/SwiperBanner'
 import Help from '@/components/home/Help'
 import Preferential from '@/components/home/Preferential'
 import Information from '@/components/home/Information'
+import HotServe from '@/components/home/HotServe'
 export default {
   name: 'Home',
   components: {
@@ -38,6 +42,7 @@ export default {
     Help,
     Preferential,
     Information,
+    HotServe,
   },
   data() {
     return {}
