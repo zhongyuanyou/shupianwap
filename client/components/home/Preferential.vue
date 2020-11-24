@@ -91,11 +91,12 @@ export default {
     },
   },
   data() {
-    return {
-      selectTabHandle(data) {
-        console.log(data)
-      },
-    }
+    return {}
+  },
+  methods: {
+    selectTabHandle(data) {
+      console.log(data)
+    },
   },
 }
 </script>

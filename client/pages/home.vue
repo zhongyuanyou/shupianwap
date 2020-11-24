@@ -21,6 +21,9 @@
     <!-- S 热门服务 -->
     <HotServe />
     <!-- E 热门服务 -->
+    <!-- S 推荐服务 -->
+    <Recommend />
+    <!-- E 推荐服务 -->
     <div style="min-height: 3000px"></div>
   </div>
 </template>
@@ -33,6 +36,7 @@ import Help from '@/components/home/Help'
 import Preferential from '@/components/home/Preferential'
 import Information from '@/components/home/Information'
 import HotServe from '@/components/home/HotServe'
+import Recommend from '@/components/home/Recommend'
 export default {
   name: 'Home',
   components: {
@@ -43,6 +47,7 @@ export default {
     Preferential,
     Information,
     HotServe,
+    Recommend,
   },
   data() {
     return {}
