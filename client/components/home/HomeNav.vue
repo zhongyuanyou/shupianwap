@@ -39,23 +39,23 @@ export default {
       default: () => {
         return [
           {
-            icon: require('~/assets/temporary/home_ic_busi@1,5x.png'),
+            icon: require('~/assets/temporary/home/home_ic_busi_x1.5.png'),
             name: '工商平台',
           },
           {
-            icon: require('~/assets/temporary/home_ic_ac@1,5x.png'),
+            icon: require('~/assets/temporary/home/home_ic_ac_x1.5.png'),
             name: '会计财税',
           },
           {
-            icon: require('~/assets/temporary/home_ic_ip@1,5x.png'),
+            icon: require('~/assets/temporary/home/home_ic_ip_x1.5.png'),
             name: '知识产权',
           },
           {
-            icon: require('~/assets/temporary/home_ic_web@1,5x.png'),
+            icon: require('~/assets/temporary/home/home_ic_web_x1.5.png'),
             name: 'IT软件',
           },
           {
-            icon: require('~/assets/temporary/home_ic_law@1,5x.png'),
+            icon: require('~/assets/temporary/home/home_ic_law_x1.5.png'),
             name: '法律平台',
           },
         ]
