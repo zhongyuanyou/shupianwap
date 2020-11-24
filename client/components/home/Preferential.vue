@@ -2,7 +2,7 @@
   <div class="preferential-centent">
     <TabCurve
       :tab-list="tabBtn"
-      :needFixed="false"
+      :need-fixed="false"
       @selectTabHandle="selectTabHandle"
     ></TabCurve>
     <div class="scroll-centent">
@@ -91,11 +91,12 @@ export default {
     },
   },
   data() {
-    return {
-      selectTabHandle(data) {
-        console.log(data)
-      },
-    }
+    return {}
+  },
+  methods: {
+    selectTabHandle(data) {
+      console.log(data)
+    },
   },
 }
 </script>

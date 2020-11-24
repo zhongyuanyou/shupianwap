@@ -1,7 +1,5 @@
 <template>
-  <div class="iconfont-box">
-    <i class="iconfont" :class="classes" :style="styles">{{ iconCode }}</i>
-  </div>
+  <i class="iconfont" :class="classes" :style="styles">{{ iconCode }}</i>
 </template>
 
 <script>
@@ -59,7 +57,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @import '../../../assets/icons/iconfont.css';
-.iconfont-box {
+.iconfont {
   font-size: 24px;
 }
 </style>

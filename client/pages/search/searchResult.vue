@@ -11,7 +11,7 @@
     </Search>
     <!--E搜索框-->
     <!--S筛选栏-->
-    <sp-work-tabs v-model="active" animated>
+    <sp-work-tabs v-model="active">
       <sp-work-tab title="企业服务"></sp-work-tab>
       <sp-work-tab title="资产交易"></sp-work-tab>
     </sp-work-tabs>
