@@ -96,6 +96,9 @@ export default {
       this.timer = setInterval(this.swiperHandle, 5000)
     },
   },
+  beforeDestroy() {
+    clearInterval(this.timer)
+  },
 }
 </script>
 
