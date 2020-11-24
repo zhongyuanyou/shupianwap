@@ -22,7 +22,7 @@
 
 <script>
 import { WorkTabs, WorkTab } from '@chipspc/vant-dgg'
-import Search from '@/components/search/Search'
+import Search from '@/components/common/search/Search'
 import serveGoods from '@/components/list/serveGoods'
 export default {
   name: 'SearchResult',

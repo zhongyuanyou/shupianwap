@@ -10,7 +10,7 @@
 
 <script>
 import { DropdownMenu, DropdownItem } from '@chipspc/vant-dgg'
-import InstallApp from '@/components/app/InstallApp'
+import InstallApp from '@/components/common/app/InstallApp'
 export default {
   name: 'ServeGoods',
   components: {
