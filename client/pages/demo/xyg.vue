@@ -30,6 +30,8 @@
       :columns-order="['month', 'day', 'year']"
       :formatter="formatter"
     />
+    <br />
+    <goods-item />
   </div>
 </template>
 
@@ -40,6 +42,7 @@ import InstallApp from '@/components/common/app/InstallApp'
 import SelectCheckBox from '@/components/common/filters/SelectCheckBox'
 import PriceFilter from '@/components/common/filters/PriceFilter'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
+import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 
 export default {
   name: 'Xyg',
@@ -50,6 +53,7 @@ export default {
     [DatetimePicker.name]: DatetimePicker,
     PriceFilter,
     BottomConfirm,
+    GoodsItem,
   },
   data() {
     return {
