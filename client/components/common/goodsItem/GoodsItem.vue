@@ -62,10 +62,7 @@ export default {
       font-weight: bold;
       color: #222222;
       line-height: 38px;
-      word-break: break-all;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
+      .textOverflow(2);
       overflow: hidden;
       margin-top: 36px;
       margin-bottom: 12px;
@@ -77,9 +74,7 @@ export default {
       color: #222222;
       line-height: 32px;
       margin-bottom: 12px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      .textOverflow(1);
     }
     .tags {
       display: inherit;
