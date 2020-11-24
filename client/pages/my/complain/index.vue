@@ -29,7 +29,7 @@
             v-for="(item, index) in types"
             :key="index"
             :class="
-              item.type === type
+              selectTypes.includes(item.type)
                 ? 'complaint-type-content-item complaint-type-content-item-active'
                 : 'complaint-type-content-item'
             "
@@ -42,7 +42,7 @@
         <textarea
           v-model="desc"
           class="complaint-content-textarea"
-          placeholder="请你填写反馈"
+          placeholder="请描述您的问题，有助于快速处理您的反馈额~(最少10个字符)"
           maxlength="200"
         />
         <span class="complaint-content-label">{{ desc.length }}/200</span>
@@ -58,9 +58,17 @@
             @oversize="onOversize"
           />
         </div>
+        <!-- <my-icon name="upload_ic_img" size="0.56rem" color="#CCCCCC"></my-icon> -->
       </div>
       <sp-bottombar safe-area-inset-bottom>
-        <sp-bottombar-button type="primary" text="提交" @click="submit" />
+        <sp-bottombar-button
+          type="primary"
+          text="提交"
+          :disabled="
+            !(desc.length > 10 && selectTypes.length > 0) ? true : false
+          "
+          @click="submit"
+        />
       </sp-bottombar>
     </div>
   </div>
@@ -85,7 +93,8 @@ export default {
   },
   data() {
     return {
-      type: 1, // 吐槽类型type
+      selectTypes: [], // 吐槽类型type
+      multipleChoice: false, // 是否可多选
       types: [
         {
           name: '体验问题',
@@ -113,14 +122,34 @@ export default {
       this.$router.back()
     },
     complaintList() {
-      this.$router.push('./list')
+      this.$router.push('/my/complain/list')
     },
     changeType(type) {
-      this.type = type
+      if (this.multipleChoice) {
+        // 多选
+        if (!this.selectTypes.includes(type)) {
+          this.selectTypes.push(type)
+        } else {
+          this.selectTypes.splice(
+            this.selectTypes.findIndex((item) => item === type),
+            1
+          )
+        }
+      } else if (!this.selectTypes.includes(type)) {
+        this.selectTypes = [type]
+      } else {
+        this.selectTypes = []
+      }
     },
+    // 提交
     submit() {
-      console.log('提交')
+      if (this.desc.length < 10) {
+        Toast.fail('描述问题为必填，长度为10-200个字')
+      } else if (!this.selectTypes.length > 0) {
+        Toast.fail('请选择反馈或建议的类型')
+      }
     },
+    // 限制图片大小
     onOversize(file) {
       Toast('文件大小不能超过20M')
     },
