@@ -14,9 +14,9 @@
     </div>
     <div class="information-content">
       <div
-        class="information-item"
         v-for="(item, index) in informationData"
         :key="index"
+        class="information-item"
       >
         <div class="text-box">
           <p v-if="index !== 0">{{ item.describe }}</p>
@@ -100,7 +100,6 @@ export default {
     height: 228px;
     margin-top: 29px;
     display: flex;
-    display: flex;
     flex-flow: column wrap;
     justify-content: space-between;
     .information-item {
@@ -148,6 +147,7 @@ export default {
         display: flex;
         width: 63.7%;
         height: 106px;
+        overflow: hidden;
         background: #f8f8f8;
         > .text-box {
           display: flex;
