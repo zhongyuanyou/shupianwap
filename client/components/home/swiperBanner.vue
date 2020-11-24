@@ -48,6 +48,8 @@ export default {
 <style scoped lang="less">
 .swiper-bn {
   width: 100%;
+  height: 231px;
+  overflow: hidden;
   margin-bottom: 65px;
   .swiper-box {
     display: block;
