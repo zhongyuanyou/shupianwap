@@ -12,7 +12,7 @@
     </ul>
     <div class="hot-list">
       <a
-        v-for="(item, index) in hotListData"
+        v-for="(item, index) in labelBtn[currentItem].data"
         :key="index"
         href="javascript:void(0);"
       >
@@ -34,40 +34,86 @@ export default {
           {
             name: '热门服务',
             code: '1',
+            data: [
+              {
+                name: '老板必看1',
+                title: '有限公司注册1',
+                describe: '7天内可交付1',
+              },
+              {
+                name: '老板必看',
+                title: '有限公司注册',
+                describe: '7天内可交付',
+              },
+              {
+                name: '老板必看',
+                title: '有限公司注册',
+                describe: '7天内可交付',
+              },
+            ],
           },
           {
             name: '今日必看',
             code: '2',
+            data: [
+              {
+                name: '老板必看2',
+                title: '有限公司注册2',
+                describe: '7天内可交付2',
+              },
+              {
+                name: '老板必看',
+                title: '有限公司注册',
+                describe: '7天内可交付',
+              },
+              {
+                name: '老板必看',
+                title: '有限公司注册',
+                describe: '7天内可交付',
+              },
+            ],
           },
           {
             name: '刚需捡漏',
             code: '3',
+            data: [
+              {
+                name: '老板必看3',
+                title: '有限公司注册3',
+                describe: '7天内可交付3',
+              },
+              {
+                name: '老板必看',
+                title: '有限公司注册',
+                describe: '7天内可交付',
+              },
+              {
+                name: '老板必看',
+                title: '有限公司注册',
+                describe: '7天内可交付',
+              },
+            ],
           },
           {
             name: '限时特惠',
             code: '4',
-          },
-        ]
-      },
-    },
-    hotListData: {
-      type: Array,
-      default: () => {
-        return [
-          {
-            name: '老板必看老板必看',
-            title: '有限公司注册老板必看',
-            describe: '7天内可交付老板必看',
-          },
-          {
-            name: '老板必看',
-            title: '有限公司注册',
-            describe: '7天内可交付',
-          },
-          {
-            name: '老板必看',
-            title: '有限公司注册',
-            describe: '7天内可交付',
+            data: [
+              {
+                name: '老板必看4',
+                title: '有限公司4',
+                describe: '7天内可交付4',
+              },
+              {
+                name: '老板必看',
+                title: '有限公司注册',
+                describe: '7天内可交付',
+              },
+              {
+                name: '老板必看',
+                title: '有限公司注册',
+                describe: '7天内可交付',
+              },
+            ],
           },
         ]
       },
@@ -82,6 +128,9 @@ export default {
   mounted() {
     this.timer = setInterval(this.swiperHandle, 5000)
   },
+  beforeDestroy() {
+    clearInterval(this.timer)
+  },
   methods: {
     swiperHandle() {
       if (this.currentItem + 1 < this.labelBtn.length) {
@@ -95,9 +144,6 @@ export default {
       this.currentItem = index
       this.timer = setInterval(this.swiperHandle, 5000)
     },
-  },
-  beforeDestroy() {
-    clearInterval(this.timer)
   },
 }
 </script>
