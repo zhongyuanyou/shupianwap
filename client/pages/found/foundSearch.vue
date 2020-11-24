@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import FoundHeader from '~/pages/found/components/common/FoundHeader'
+import FoundHeader from '~/components/found/common/FoundHeader'
 export default {
   name: 'FoundSearch',
   components: { FoundHeader },

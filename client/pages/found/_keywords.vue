@@ -1,13 +1,13 @@
 <template>
   <div>
     <!--S 搜索-->
-    <FoundHeader />
+    <FoundHeader :left="true" />
     <!--E 搜索-->
   </div>
 </template>
 
 <script>
-import FoundHeader from '~/pages/found/components/common/FoundHeader'
+import FoundHeader from '~/components/found/common/FoundHeader'
 export default {
   name: 'Keywords',
   components: {

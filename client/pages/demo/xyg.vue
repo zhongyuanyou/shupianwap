@@ -35,11 +35,11 @@
 
 <script>
 import { DatetimePicker } from '@chipspc/vant-dgg'
-import OpenApp from '@/components/app/OpenApp'
-import InstallApp from '@/components/app/InstallApp'
-import SelectCheckBox from '@/components/filters/SelectCheckBox'
-import PriceFilter from '@/components/filters/PriceFilter'
-import BottomConfirm from '@/components/filters/BottomConfirm'
+import OpenApp from '@/components/common/app/OpenApp'
+import InstallApp from '@/components/common/app/InstallApp'
+import SelectCheckBox from '@/components/common/filters/SelectCheckBox'
+import PriceFilter from '@/components/common/filters/PriceFilter'
+import BottomConfirm from '@/components/common/filters/BottomConfirm'
 
 export default {
   name: 'Xyg',

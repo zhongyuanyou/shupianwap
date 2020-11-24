@@ -22,7 +22,7 @@
 
 <script>
 import { WorkTab, WorkTabs } from '@chipspc/vant-dgg'
-import Con from '~/pages/found/components/found/Cons'
+import Con from '~/components/found/found/Cons'
 export default {
   name: 'Index',
   components: {

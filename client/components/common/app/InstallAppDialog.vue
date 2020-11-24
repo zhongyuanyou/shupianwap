@@ -26,9 +26,9 @@
 
 <script>
 import { Button } from '@chipspc/vant-dgg'
-import RecommendDialog from '@/components/RecommendDialog'
+import RecommendDialog from '~/components/RecommendDialog'
 
-import openapp from '@/mixins/openapp'
+import openapp from '~/mixins/openapp'
 
 export default {
   name: 'InstallAppDialog',

@@ -43,7 +43,7 @@
 <script>
 import Vue from 'vue'
 import { Swipe, SwipeItem, Lazyload } from '@chipspc/vant-dgg'
-import CardItem from '~/components/cardItem/CardItem'
+import CardItem from '~/components/common/cardItem/CardItem'
 Vue.use(Lazyload)
 export default {
   name: 'Con',
