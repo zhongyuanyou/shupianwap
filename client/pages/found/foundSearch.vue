@@ -1,13 +1,7 @@
 <template>
   <div class="search">
     <!--S 搜索框-->
-    <div class="search_input_con">
-      <div class="con">
-        <my-icon name="sear_ic_sear" size="0.28rem" color="#999" />
-        <input type="text" placeholder="请输入搜索内容" v-model="keywords" />
-      </div>
-      <p class="cancel">取消</p>
-    </div>
+    <FoundHeader @inputChange="inputChange" />
     <!--E 搜索框-->
     <!--S 内容-->
     <div class="search_con">
@@ -22,6 +16,7 @@
             v-for="(item, index) in historySearch"
             :key="index"
             class="has_history_con_item"
+            @click="handleClick(item)"
           >
             {{ item }}
           </div>
@@ -33,14 +28,27 @@
         <p>没有任何搜索历史</p>
       </div>
       <!--E 无搜索历史-->
+      <!--S 搜索检索-->
+      <div v-show="keywords" class="keyword" @click="handleClick(keywords)">
+        <p>
+          搜索"<span>{{ keywords }}</span
+          >"
+        </p>
+        <div>
+          <my-icon name="shop_ic_next" color="#ccc" size="0.25rem" />
+        </div>
+      </div>
+      <!--E 搜索检索-->
     </div>
     <!--E 内容-->
   </div>
 </template>
 
 <script>
+import FoundHeader from '~/pages/found/components/common/FoundHeader'
 export default {
   name: 'FoundSearch',
+  components: { FoundHeader },
   data() {
     return {
       historySearch: [
@@ -50,8 +58,18 @@ export default {
         '小规模记账',
         '纳税人代理记账',
       ], // 搜索历史
-      keywords: '', // 搜索索引关键字
+      keywords: '', // 搜索检索关键字
     }
+  },
+  methods: {
+    handleClick(keywords) {
+      // 带参跳转到搜索结果页
+      this.$router.push(`/found/${keywords}`)
+    },
+    inputChange(data) {
+      // input改变事件
+      this.keywords = data
+    },
   },
 }
 </script>
@@ -59,58 +77,6 @@ export default {
 <style lang="less" scoped>
 .search {
   padding: 0 40px;
-  &_input_con {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: row;
-    padding: 16px 40px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    .con {
-      width: 568px;
-      height: 96px;
-      background: #ffffff;
-      border: 1px solid #cdcdcd;
-      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
-      border-radius: 8px;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      flex-direction: row;
-      padding: 0 27px;
-      input {
-        width: 100%;
-        height: 92px;
-        text-indent: 15px;
-        border: none;
-        font-size: 30px;
-        color: #1a1a1a;
-        font-weight: bold;
-        &:focus {
-          outline: none;
-        }
-        //去除点击时候的背景色
-        -webkit-tap-highlight-color: rgba(255, 0, 0, 0);
-      }
-      //修改input-placeholder样式
-      ::-webkit-input-placeholder {
-        font-size: 30px;
-        font-family: PingFang SC;
-        font-weight: bold;
-        color: #999999;
-      }
-    }
-    .cancel {
-      font-size: 32px;
-      font-family: PingFang SC;
-      font-weight: bold;
-      color: #1a1a1a;
-      line-height: 44px;
-    }
-  }
   &_con {
     margin-top: 128px;
     display: flex;
@@ -161,6 +127,24 @@ export default {
           text-align: center;
           line-height: 64px;
           margin-top: 16px;
+        }
+      }
+    }
+    .keyword {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-direction: row;
+      height: 102px;
+      border-bottom: 1px solid #f4f4f4;
+      p {
+        font-size: 30px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #1a1a1a;
+        span {
+          color: #4974f5;
         }
       }
     }
