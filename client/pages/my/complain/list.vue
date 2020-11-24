@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="complaintList">
     <sp-top-nav-bar title="反馈进度" ellipsis @on-click-left="back">
       <template #left>
         <div>
@@ -17,9 +17,16 @@
         <sp-cell
           v-for="(item, index) in complaintList"
           :key="index"
+          title-class="complaintList-item-title"
+          value-class="complaintList-item-value"
+          label-class="complaintList-item-label"
           :title="item.title"
+          :label="item.createdTime"
           is-link
+          center
+          border
           :value="item.status"
+          :to="{ path: './' + item.id }"
         />
       </sp-list>
     </sp-pull-refresh>
@@ -101,4 +108,50 @@ export default {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.complaintList {
+  /deep/.sp-cell {
+    padding: 32px 40px;
+    line-height: auto;
+    &::after {
+      border-bottom: 1px solid #f4f4f4;
+      left: 40px;
+      right: 40px;
+    }
+  }
+  &-item {
+    &-title {
+      font-size: 32px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #1a1a1a;
+      flex: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    &-value {
+      width: 130px;
+      font-size: 26px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #999999;
+      flex: none;
+    }
+    &-label {
+      font-size: 22px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #999999;
+      margin-top: 1px;
+    }
+  }
+  /deep/.sp-cell__right-icon {
+    color: #cccccc;
+    margin-left: 12px;
+    // &::before {
+    //   font-size: 26px;
+    // }
+  }
+}
+</style>

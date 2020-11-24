@@ -156,7 +156,6 @@ export default {
         margin-right: 14px;
       }
       > span {
-        padding-top: 2px;
         display: flex;
         flex-direction: column;
         strong {
@@ -164,7 +163,7 @@ export default {
           font-family: PingFang SC;
           font-weight: bold;
           color: #222222;
-          line-height: 28px;
+          line-height: 34px;
           .textOverflow(1);
         }
         p {
@@ -172,8 +171,8 @@ export default {
           font-family: PingFang SC;
           font-weight: 400;
           color: #999999;
-          line-height: 22px;
-          margin-top: 13px;
+          line-height: 24px;
+          margin-top: 7px;
           .textOverflow(1);
         }
       }
