@@ -1,0 +1,205 @@
+<template>
+  <div class="information-moudle">
+    <div class="titel-btn">
+      <strong>资讯精选</strong>
+      <a href="javascript:void(0);">
+        <my-icon
+          class="my-icon"
+          name="home_ic_change"
+          size="0.24rem"
+          color="#4974F5"
+        ></my-icon
+        >换一换</a
+      >
+    </div>
+    <div class="information-content">
+      <div
+        class="information-item"
+        v-for="(item, index) in informationData"
+        :key="index"
+      >
+        <div class="text-box">
+          <p v-if="index !== 0">{{ item.describe }}</p>
+          <h6>{{ item.title }}</h6>
+        </div>
+        <div class="img-label">
+          <strong>{{ item.label }}</strong>
+          <img :src="item.url" alt="" />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    informationData: {
+      type: Array,
+      default: () => {
+        return [
+          {
+            label: '工商政策',
+            title: '创发最低是梦创发最低是梦',
+            describe: '优选前100好店',
+            url: require('~/assets/temporary/home/bn.png'),
+          },
+          {
+            label: '工商政策',
+            title: '创发最低0元原来不是梦',
+            describe: '优选前100好店',
+            url: require('~/assets/temporary/home/bn.png'),
+          },
+          {
+            label: '工商政策',
+            title: '创发最低0元原来不是梦',
+            describe: '优选前100好店',
+            url: require('~/assets/temporary/home/bn.png'),
+          },
+        ]
+      },
+    },
+  },
+  methods: {},
+}
+</script>
+
+<style scoped lang="less">
+.information-moudle {
+  font-size: 24px;
+  width: 100%;
+  padding: 32px 40px 32px 40px;
+  box-sizing: border-box;
+  overflow: hidden;
+  .titel-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    strong {
+      font-size: 40px;
+      line-height: 44px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #1a1a1a;
+    }
+    a {
+      display: flex;
+      align-items: center;
+      font-size: 24px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #4974f5;
+      vertical-align: middle;
+      .my-icon {
+        margin-right: 11px;
+      }
+    }
+  }
+  .information-content {
+    width: 100%;
+    height: 228px;
+    margin-top: 29px;
+    display: flex;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-between;
+    .information-item {
+      border-radius: 8px;
+      overflow: hidden;
+      &:nth-child(1) {
+        position: relative;
+        width: 34%;
+        height: 228px;
+        margin-right: 16px;
+        border-radius: 0px 8px 8px 8px;
+        &::after {
+          content: '';
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          left: 0;
+          top: 0;
+          background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), #000000);
+        }
+        h6 {
+          position: absolute;
+          left: 0;
+          bottom: 24px;
+          z-index: 2;
+          font-size: 28px;
+          font-family: PingFang SC;
+          font-weight: bold;
+          color: #ffffff;
+          padding: 0 24px 0 24px;
+          .textOverflow(4);
+        }
+        > .img-label {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+      }
+      &:not(:first-child) {
+        display: flex;
+        width: 63.7%;
+        height: 106px;
+        background: #f8f8f8;
+        > .text-box {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          flex: 1;
+          padding: 19px;
+          > p {
+            font-size: 22px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #555555;
+            line-height: 26px;
+            .textOverflow(1);
+          }
+          > h6 {
+            font-size: 28px;
+            font-family: PingFang SC;
+            font-weight: bold;
+            color: #222222;
+            line-height: 34px;
+            .textOverflow(1);
+          }
+        }
+        > .img-label {
+          position: relative;
+          width: 140px;
+          height: 100%;
+        }
+      }
+      strong {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 2;
+        font-size: 20px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #ffffff;
+        height: 40px;
+        padding: 0 8px;
+        background: #a06d42;
+      }
+      &:nth-child(2) strong {
+        background: #718981;
+      }
+      &:nth-child(3) strong {
+        background: #b5a17e;
+      }
+    }
+  }
+}
+</style>

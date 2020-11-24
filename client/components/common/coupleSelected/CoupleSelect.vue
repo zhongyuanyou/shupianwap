@@ -70,6 +70,7 @@
       </div>
     </div>
     <!--E 区导航-->
+    <div class="fix_shadow"></div>
   </div>
 </template>
 
@@ -178,6 +179,14 @@ export default {
       const arr = this.selectData[2]
       if (!arr.regions || !arr.regions.includes(item)) {
         arr.regions.push(item)
+      } else {
+        let index = -1
+        arr.regions.forEach((row, i) => {
+          if (row.name === item.name && row.code === item.code) {
+            index = i
+          }
+        })
+        arr.regions.splice(index, 1)
       }
       // this.selectData[2].regions = arr
       this.$set(this.selectData, 2, arr)
@@ -193,8 +202,18 @@ export default {
   height: 100%;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: row;
+  position: relative;
+  .fix_shadow {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 84px;
+    background: linear-gradient(0deg, #ffffff, rgba(255, 255, 255, 0));
+  }
   &_province {
     width: 162px;
     height: 100%;
@@ -250,8 +269,9 @@ export default {
       height: 28px;
       border-radius: 4px;
       border: 2px solid #3072f6;
-      text-align: center;
-      line-height: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .blur_con {
       width: 28px;
