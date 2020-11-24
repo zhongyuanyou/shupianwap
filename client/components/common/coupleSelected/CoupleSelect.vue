@@ -70,6 +70,7 @@
       </div>
     </div>
     <!--E 区导航-->
+    <div class="fix_shadow"></div>
   </div>
 </template>
 
@@ -203,6 +204,16 @@ export default {
   justify-content: flex-start;
   align-items: flex-start;
   flex-direction: row;
+  position: relative;
+  .fix_shadow {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 84px;
+    background: linear-gradient(0deg, #ffffff, rgba(255, 255, 255, 0));
+  }
   &_province {
     width: 162px;
     height: 100%;
