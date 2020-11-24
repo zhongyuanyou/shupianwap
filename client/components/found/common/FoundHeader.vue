@@ -2,7 +2,7 @@
   <!--S 搜索框-->
   <div class="search_input_con">
     <div class="search_input_con_lf">
-      <div v-if="left">
+      <div v-if="left" @click="handleLeft">
         <my-icon name="nav_ic_back" size="0.33rem" color="#1a1a1a" />
       </div>
       <div
@@ -21,7 +21,7 @@
         />
       </div>
     </div>
-    <p class="cancel">取消</p>
+    <p class="cancel" @click="handleLeft">取消</p>
   </div>
   <!--E 搜索框-->
 </template>
@@ -36,16 +36,19 @@ export default {
         return false
       },
     },
-  },
-  data() {
-    return {
-      keywords: '',
-    }
+    keywords: {
+      type: String,
+      default: '',
+    },
   },
   methods: {
     inputChange() {
       // input改变事件
       this.$emit('inputChange', this.keywords)
+    },
+    handleLeft() {
+      // 点击返回按钮
+      this.$router.back()
     },
   },
 }
@@ -62,6 +65,7 @@ export default {
   top: 0;
   left: 0;
   right: 0;
+  background-color: #fff;
   &_lf {
     display: flex;
     justify-content: flex-start;
