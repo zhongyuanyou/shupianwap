@@ -41,11 +41,11 @@
 
 <script>
 import { Button, Toast } from '@chipspc/vant-dgg'
-import ImgAuthDialog from '@/components/imgAuth/ImgAuthDialog'
-import ImgAuthDialogFn from '@/components/imgAuth'
+import ImgAuthDialog from '@/components/common/imgAuth/ImgAuthDialog'
+import ImgAuthDialogFn from '@/components/common/imgAuth'
 import RecommendDialog from '@/components/RecommendDialog'
-import InstallAppDialog from '@/components/app/InstallAppDialog'
-import ServiceSelect from '@/components/serviceSelected/ServiceSelect'
+import InstallAppDialog from '@/components/common/app/InstallAppDialog'
+import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
 export default {
   name: 'Test',
   components: {

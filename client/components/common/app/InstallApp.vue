@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import openapp from '@/mixins/openapp'
+import openapp from '~/mixins/openapp'
 export default {
   name: 'InstallApp',
   mixins: [openapp],

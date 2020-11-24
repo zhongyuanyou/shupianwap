@@ -1,6 +1,7 @@
 <template>
   <div class="page-content">
-    <SearchBanner></SearchBanner>
+    <search-banner></search-banner>
+    <home-nav></home-nav>
     <div style="height: 5.52rem; background-color: red">占位</div>
     <div style="height: 3000px">占位</div>
   </div>
@@ -8,10 +9,12 @@
 
 <script>
 import SearchBanner from '@/components/home/SearchBanner'
+import HomeNav from '@/components/home/HomeNav'
 export default {
   name: 'Home',
   components: {
     SearchBanner,
+    HomeNav,
   },
   data() {
     return {}
@@ -21,6 +24,6 @@ export default {
 </script>
 <style lang="less" scoped>
 .page-content {
-  font-size: 24px;
+  max-width: 1000px;
 }
 </style>

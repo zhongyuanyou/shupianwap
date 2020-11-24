@@ -1,5 +1,8 @@
 <template>
-  <div class="activity-bn">
+  <div
+    class="activity-bn"
+    :style="{ height: bigBanner ? '5.52rem' : '1.28rem' }"
+  >
     <img v-if="bigBanner" :src="bigBanner" alt="" />
     <sp-sticky @scroll="searchHandle">
       <Search
@@ -24,7 +27,7 @@
 
 <script>
 import { Sticky } from '@chipspc/vant-dgg'
-import Search from '@/components/search/Search'
+import Search from '@/components/common/search/Search'
 export default {
   components: {
     [Sticky.name]: Sticky,
@@ -57,6 +60,7 @@ export default {
 
 <style scoped lang="less">
 .activity-bn {
+  font-size: 24px;
   position: relative;
   width: 100%;
   img {

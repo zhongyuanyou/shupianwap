@@ -2,7 +2,7 @@
  * @Author: Level
  * @Date: 2020-11-23 09:56:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-23 08:39:23
+ * @LastEditTime: 2020-11-23 15:47:04
  * @Description: complaint
  * @FilePath: /chips-wap/client/pages/my/add-complaint.vue
 -->
@@ -50,7 +50,13 @@
       <div class="complaint-image">
         <div class="complaint-image-title">上传照片</div>
         <div class="complaint-image-upload">
-          <sp-uploader v-model="uploader" />
+          <sp-uploader
+            v-model="uploader"
+            upload-text="点击上传"
+            :max-count="3"
+            :max-size="20 * 1024 * 1024"
+            @oversize="onOversize"
+          />
         </div>
       </div>
       <sp-bottombar safe-area-inset-bottom>
@@ -107,13 +113,16 @@ export default {
       Toast('返回')
     },
     complaintList() {
-      Toast('反馈进度')
+      this.$router.push('./complaintList')
     },
     changeType(type) {
       this.type = type
     },
     submit() {
       console.log('提交')
+    },
+    onOversize(file) {
+      Toast('文件大小不能超过20M')
     },
   },
 }
@@ -134,10 +143,11 @@ export default {
       color: #1a1a1a;
     }
     &-content {
-      margin-top: 30px;
-      height: 64px;
-      overflow-x: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
       &-item {
+        margin-top: 30px;
         height: 64px;
         line-height: 64px;
         display: block;
@@ -149,9 +159,8 @@ export default {
         font-weight: 400;
         color: #555555;
         padding: 0px 20px;
-        float: left;
-        & + & {
-          margin-left: 24px;
+        &:not(:last-child) {
+          margin-right: 24px;
         }
         &-active {
           background: rgba(73, 116, 245, 0.1);
@@ -176,6 +185,15 @@ export default {
       color: #1a1a1a;
       line-height: 42px;
       padding: 28px 10px;
+      vertical-align: baseline;
+      caret-color: #1a1a1a;
+      &::-webkit-input-placeholder {
+        font-size: 28px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #cccccc;
+        line-height: 42px;
+      }
     }
     &-label {
       position: absolute;
@@ -192,11 +210,53 @@ export default {
   }
   &-image {
     &-title {
-      margin: 17px 0px 30px 0px;
+      margin: 17px 0px 24px 0px;
       font-size: 32px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #1a1a1a;
+    }
+    &-upload {
+      /deep/.sp-uploader__upload {
+        width: 140px;
+        height: 140px;
+        background: #ffffff;
+        border: 1px solid #cdcdcd;
+        border-radius: 8px;
+        &-icon {
+          color: #cccccc;
+          font-size: 56px;
+        }
+        &-text {
+          font-size: 24px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          color: #999999;
+        }
+      }
+      /deep/.sp-uploader__preview-image {
+        width: 140px;
+        height: 140px;
+        border-radius: 8px;
+      }
+      /deep/.sp-uploader__preview {
+        margin: 0 32px 20px 0;
+      }
+      /deep/.sp-uploader__preview-delete-icon {
+        font-size: 40px;
+        font-weight: 500;
+        top: -4px;
+        right: -4px;
+      }
+      /deep/.sp-uploader__preview-delete {
+        width: 32px;
+        height: 32px;
+        top: -12px;
+        right: -12px;
+        background: #000000;
+        opacity: 0.6;
+        border-radius: 32px;
+      }
     }
   }
 }
