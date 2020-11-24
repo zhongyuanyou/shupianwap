@@ -61,7 +61,7 @@ export default {
         },
       ],
       loading: false,
-      finished: false,
+      finished: true, // 默认false
       refreshing: false,
     }
   },
