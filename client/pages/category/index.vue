@@ -32,8 +32,14 @@
           class="category_con_rt_item"
         >
           <p class="category_con_rt_item_title">{{ item.title }}</p>
-          <div v-for="(cItem, cIndex) in item.child" :key="cIndex" class="">
-            {{ cItem.title }}
+          <div class="item_con">
+            <div
+              v-for="(cItem, cIndex) in item.children"
+              :key="cIndex"
+              class="item_con_child"
+            >
+              {{ cItem.title }}
+            </div>
           </div>
         </div>
       </div>
@@ -273,6 +279,28 @@ export default {
           font-family: PingFang SC;
           font-weight: bold;
           color: #222222;
+        }
+        .item_con {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          flex-direction: row;
+          flex-wrap: wrap;
+          &_child {
+            height: 60px;
+            background: #ffffff;
+            border: 1px solid #cdcdcd;
+            border-radius: 4px;
+            text-align: center;
+            line-height: 60px;
+            font-size: 24px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #555555;
+            padding: 0 20px;
+            margin-top: 32px;
+            margin-right: 32px;
+          }
         }
       }
     }
