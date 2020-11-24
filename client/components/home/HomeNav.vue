@@ -40,7 +40,7 @@ export default {
         return [
           {
             icon: require('~/assets/temporary/home/home_ic_busi_x1.5.png'),
-            name: '工商平台',
+            name: '工商平台工商平台工商平台',
           },
           {
             icon: require('~/assets/temporary/home/home_ic_ac_x1.5.png'),
@@ -69,7 +69,7 @@ export default {
           {
             icon:
               'http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp',
-            name: '工商平台',
+            name: '工商平台工商平台工商平台',
           },
           {
             icon:
@@ -213,11 +213,12 @@ export default {
         }
         span {
           font-size: 24px;
-          line-height: 24px;
+          line-height: 26px;
           font-family: PingFang SC;
           font-weight: bold;
           color: #222222;
-          margin-top: 20px;
+          margin-top: 19px;
+          .textOverflow(1);
         }
       }
     }
@@ -265,12 +266,13 @@ export default {
           }
           span {
             font-size: 24px;
-            line-height: 24px;
+            line-height: 26px;
             font-family: PingFang SC;
             font-weight: bold;
             color: #222222;
-            margin-top: 20px;
+            margin-top: 19px;
             white-space: nowrap;
+            .textOverflow(1);
           }
         }
       }
