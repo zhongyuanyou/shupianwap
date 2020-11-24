@@ -113,7 +113,7 @@ export default {
       this.$router.back()
     },
     complaintList() {
-      this.$router.push('./complaintList')
+      this.$router.push('./list')
     },
     changeType(type) {
       this.type = type
@@ -131,11 +131,14 @@ export default {
 <style lang="less" scoped>
 .complaint {
   width: 100%;
+  /deep/.sp-top-nav-bar__right {
+    font-size: 28px;
+  }
   &-box {
     padding: 0px 40px 30px 40px;
   }
   &-type {
-    padding-top: 40px;
+    padding-top: 36px;
     &-title {
       font-size: 32px;
       font-family: PingFang SC;
@@ -147,7 +150,7 @@ export default {
       flex-wrap: wrap;
       justify-content: flex-start;
       &-item {
-        margin-top: 30px;
+        margin-top: 26px;
         height: 64px;
         line-height: 64px;
         display: block;
@@ -184,7 +187,7 @@ export default {
       font-weight: 400;
       color: #1a1a1a;
       line-height: 42px;
-      padding: 28px 10px;
+      padding: 28px 25px;
       vertical-align: baseline;
       caret-color: #1a1a1a;
       &::-webkit-input-placeholder {
@@ -210,7 +213,7 @@ export default {
   }
   &-image {
     &-title {
-      margin: 17px 0px 24px 0px;
+      margin: 6px 0px 10px 0px;
       font-size: 32px;
       font-family: PingFang SC;
       font-weight: bold;
@@ -257,6 +260,14 @@ export default {
         opacity: 0.6;
         border-radius: 32px;
       }
+    }
+  }
+  /deep/.sp-bottombar {
+    height: 96px;
+    padding: 32px 40px;
+    &-button {
+      height: 96px;
+      font-family: PingFang SC;
     }
   }
 }
