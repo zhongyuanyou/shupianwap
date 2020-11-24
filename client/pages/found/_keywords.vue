@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--S 搜索-->
-    <FoundHeader />
+    <FoundHeader :left="true" />
     <!--E 搜索-->
   </div>
 </template>

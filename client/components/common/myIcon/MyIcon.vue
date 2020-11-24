@@ -58,7 +58,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '../../assets/icons/iconfont.css';
+@import '../../../assets/icons/iconfont.css';
 .iconfont-box {
   font-size: 24px;
 }

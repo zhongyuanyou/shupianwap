@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import TabCurve from '@/components/tab/TabCurve'
-import Search from '@/components/search/Search'
+import TabCurve from '@/components/common/tab/TabCurve'
+import Search from '@/components/common/search/Search'
 export default {
   name: 'Test',
   components: {

@@ -27,7 +27,7 @@
 
 <script>
 import { Sticky } from '@chipspc/vant-dgg'
-import Search from '@/components/search/Search'
+import Search from '@/components/common/search/Search'
 export default {
   components: {
     [Sticky.name]: Sticky,

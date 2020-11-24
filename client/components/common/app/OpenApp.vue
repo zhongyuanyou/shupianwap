@@ -27,7 +27,7 @@
 
 <script>
 import { Icon } from '@chipspc/vant-dgg'
-import openapp from '@/mixins/openapp'
+import openapp from '~/mixins/openapp'
 export default {
   name: 'OpenApp',
   components: {
