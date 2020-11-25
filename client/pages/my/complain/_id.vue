@@ -1,11 +1,13 @@
 <template>
   <div class="detail">
-    <sp-top-nav-bar ellipsis title="进度详情">
-      <template #left>
-        <sp-icon name="arrow-left" size="20" @click="back" />
-        <sp-icon name="cross" size="20" @click="back" />
-      </template>
-    </sp-top-nav-bar>
+    <sp-sticky>
+      <sp-top-nav-bar ellipsis title="进度详情">
+        <template #left>
+          <sp-icon name="arrow-left" size="20" @click="back" />
+          <sp-icon name="cross" size="20" @click="back" />
+        </template>
+      </sp-top-nav-bar>
+    </sp-sticky>
     <div class="detail-content">
       <div class="detail-content-complain">
         <div class="detail-content-complain-title">
@@ -63,6 +65,7 @@ import {
   Icon,
   Image,
   ImagePreview,
+  Sticky,
 } from '@chipspc/vant-dgg'
 export default {
   name: 'ComplaintDetail',
@@ -72,6 +75,7 @@ export default {
     [Icon.name]: Icon,
     [Image.name]: Image,
     [ImagePreview.name]: ImagePreview,
+    [Sticky.name]: Sticky,
   },
   data() {
     return {

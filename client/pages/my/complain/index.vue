@@ -8,19 +8,21 @@
 -->
 <template>
   <div class="complaint">
-    <sp-top-nav-bar
-      title="我要吐槽"
-      right-text="反馈进度"
-      ellipsis
-      @on-click-right="complaintList"
-      @on-click-left="back"
-    >
-      <template #left>
-        <div>
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-        </div>
-      </template>
-    </sp-top-nav-bar>
+    <sp-sticky>
+      <sp-top-nav-bar
+        title="我要吐槽"
+        right-text="反馈进度"
+        ellipsis
+        @on-click-right="complaintList"
+        @on-click-left="back"
+      >
+        <template #left>
+          <div>
+            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          </div>
+        </template>
+      </sp-top-nav-bar>
+    </sp-sticky>
     <div class="complaint-box">
       <div class="complaint-type">
         <p class="complaint-type-title">请选择反馈或建议的类型</p>
@@ -90,6 +92,7 @@ import {
   TopNavBar,
   Uploader,
   Bottombar,
+  Sticky,
   BottombarButton,
 } from '@chipspc/vant-dgg'
 export default {
@@ -100,6 +103,7 @@ export default {
     [Uploader.name]: Uploader,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
+    [Sticky.name]: Sticky,
   },
   data() {
     return {
@@ -252,7 +256,7 @@ export default {
   }
   &-image {
     &-title {
-      margin: 6px 0px 10px 0px;
+      margin: 6px 0px 26px 0px;
       font-size: 32px;
       font-family: PingFang SC;
       font-weight: bold;

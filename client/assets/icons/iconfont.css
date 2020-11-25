@@ -295,3 +295,9 @@
 .upload_ic_img:before {
   content: "\e618";
 }
+.notify_ic_tel:before {
+  content: "\e679";
+}
+.per_ic_addressr:before {
+  content: "\e6b2";
+}
