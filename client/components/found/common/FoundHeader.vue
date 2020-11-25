@@ -2,7 +2,7 @@
   <!--S 搜索框-->
   <div class="search_input_con">
     <div class="search_input_con_lf">
-      <div v-if="left" @click="handleLeft" class="icon">
+      <div v-if="left" class="icon" @click="handleLeft">
         <my-icon name="nav_ic_back" size="0.33rem" color="#1a1a1a" />
       </div>
       <div

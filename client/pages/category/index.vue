@@ -18,15 +18,14 @@
     <div class="category_con">
       <!--S 左侧导航栏-->
       <div class="category_con_lf">
-        <div class="category_con_lf_container">
-          <ul ref="l_list">
+        <div ref="l_list" class="category_con_lf_container">
+          <ul>
             <li
               v-for="(item, index) in navList"
               :key="index"
               ref="l_item"
-              :style="{ color: TabNavList === index ? '#008489' : '#222' }"
               class="category_con_lf_container_item"
-              @click="selectNav(index, index)"
+              @click="handleClick(index)"
             >
               {{ item.title }}
             </li>
@@ -36,11 +35,11 @@
       <!--E 左侧导航栏-->
       <!--S 右侧内容区-->
       <div ref="rightMenu" class="category_con_rt">
-        <div class="category_con_rt_container">
-          <ul ref="r_list">
+        <div ref="r_list" class="category_con_rt_container">
+          <ul>
             <li
               v-for="(item, index) in navList"
-              ref="good"
+              ref="r_item"
               :key="index"
               class="right_item proList"
             >
@@ -197,83 +196,39 @@ export default {
         'https://img.yzcdn.cn/vant/cat.jpeg',
         'https://img.yzcdn.cn/vant/cat.jpeg',
       ],
-      arr: [0],
-      scrollY: 0, // 定义的Y滚动轴及初始值
-      TabNavList: 0, // 左右联动取值
-      isScroll: false,
-      flag: true,
+      heightList: [], // 高度集合
     }
   },
   mounted() {
     this.$nextTick(() => {
-      // this._initScroll()
-      // this._getHeight()
+      this._initScroll()
+      this._getHeight()
     })
   },
   methods: {
     inputChange() {},
-    selectNav(item, index) {
-      // this.flag = false
-      // this.TabNavList = index // 左右联动取值
-      // this.rgt.scrollToElement(this.$refs.good[index], 100, 0, 0)
-      // setTimeout(() => {
-      //   this.flag = true
-      // }, 100)
+    _getHeight() {
+      // 获取内容区中的每一块的高度
+      const rItems = this.$refs.r_item
+      const hList = []
+      rItems.forEach((item) => {
+        hList.push(item.clientHeight)
+      })
+      // 将右侧内容区所有模块的高度集合在数组中
+      this.heightList = hList
     },
     _initScroll() {
       this.left = new Better(this.$refs.l_list, {
-        click: true,
-        probeType: 3,
-      })
-      this.rgt = new Better(this.$refs.r_list, {
         probeType: 3,
         click: true,
       })
-      this.rgt.on('scroll', (res) => {
-        if (this.flag) {
-          this.scrollY = Math.abs(res.y) + 16 // 页面内有一个16像素的顶部状态栏
-          for (let i = 0; i < this.arr.length; i++) {
-            if (this.scrollY > this.arr[i] && this.scrollY < this.arr[i + 1]) {
-              this.TabNavList = i - 1 // 左右联动取值
-              // console.log(this.navList[this.TabNavList].gcName) // 取出元素的gcName
-              this.isScroll = true
-              // document.getElementById(this.TabNavList).scrollIntoView()
-              this.left.scrollToElement(
-                this.$refs.l_list,
-                100,
-                0,
-                this.TabNavList * 60
-              )
-            }
-          }
-        }
-      })
-      this.left.on('scroll', (res) => {
-        if (this.flag) {
-          this.scrollY = Math.abs(res.y) + 16
-          this.left.scrollToElement(
-            this.$refs.l_list[this.TabNavList],
-            100,
-            0,
-            0
-          )
-        }
+      this.right = new Better(this.$refs.r_list, {
+        probeType: 3,
+        click: true,
       })
     },
-    _getHeight() {
-      const rightItems = this.$refs.r_list.getElementsByClassName('proList')
-      setTimeout(() => {
-        // 根据betterScroll定义滚动
-        if (rightItems && rightItems.length > 0) {
-          let height = 0
-          this.arr.push(height)
-          for (let i = 0; i < rightItems.length; i++) {
-            const item = rightItems[i]
-            height += item.clientHeight
-            this.arr.push(height)
-          }
-        }
-      }, 600)
+    handleClick(index) {
+      this.right.scrollTo(0, -this.heightList[index], 400)
     },
   },
 }

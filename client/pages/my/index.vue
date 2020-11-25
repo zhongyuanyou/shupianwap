@@ -12,31 +12,31 @@
     <div class="my_btns">
       <div class="my_btns_item">
         <div class="my_btns_item_icon">
-          <my-icon name="per_ic_entrust" size="0.36rem" />
+          <my-icon name="per_ic_entrust" size="0.36rem" color="#4974F5" />
         </div>
         <div class="my_btns_item_con">委托出售</div>
       </div>
       <div class="my_btns_item">
         <div class="my_btns_item_icon">
-          <my-icon name="per_ic_cooperation" size="0.36rem" />
+          <my-icon name="per_ic_cooperation" size="0.36rem" color="#FE8C29" />
         </div>
         <div class="my_btns_item_con">我要合作</div>
       </div>
       <div class="my_btns_item">
         <div class="my_btns_item_icon">
-          <my-icon name="per_ic_help" size="0.36rem" />
+          <my-icon name="per_ic_help" size="0.36rem" color="#00B365" />
         </div>
         <div class="my_btns_item_con">帮助中心</div>
       </div>
       <div class="my_btns_item">
         <div class="my_btns_item_icon">
-          <my-icon name="per_ic_debunk" size="0.36rem" />
+          <my-icon name="per_ic_debunk" size="0.36rem" color="#10BBB8" />
         </div>
         <div class="my_btns_item_con">我要吐槽</div>
       </div>
       <div class="my_btns_item">
         <div class="my_btns_item_icon">
-          <my-icon name="per_ic_about" size="0.36rem" />
+          <my-icon name="per_ic_about" size="0.36rem" color="#4974F5" />
         </div>
         <div class="my_btns_item_con no_line">关于我们</div>
       </div>
@@ -122,8 +122,10 @@ export default {
       padding-left: 40px;
       &_icon {
         width: 0.36rem;
-        text-align: center;
         height: 107px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
       .no_line {
         border-bottom: none;
