@@ -36,9 +36,9 @@ export default {
             code: '1',
             data: [
               {
-                name: '老板必看1',
-                title: '有限公司注册1',
-                describe: '7天内可交付1',
+                name: '老板必看1老板必看1老板必看1',
+                title: '有限公司注册1老板必看1老板必看1',
+                describe: '7天内可交付1老板必看1老板必看1',
               },
               {
                 name: '老板必看',
@@ -205,7 +205,7 @@ export default {
       height: 144px;
       display: flex;
       flex-direction: column;
-      padding: 21px 22px 22px 24px;
+      padding: 19px 22px 20px 24px;
       background: #f8f8f8;
       border-radius: 8px;
       > span {
@@ -213,7 +213,7 @@ export default {
         font-family: PingFang SC;
         font-weight: bold;
         color: #ad4935;
-        line-height: 28px;
+        line-height: 32px;
         .textOverflow(1);
       }
       > strong {
@@ -221,8 +221,8 @@ export default {
         font-family: PingFang SC;
         font-weight: bold;
         color: #222222;
-        line-height: 34px;
-        margin-top: 10px;
+        line-height: 38px;
+        margin-top: 6px;
         .textOverflow(1);
       }
       > p {
@@ -230,8 +230,8 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #555555;
-        line-height: 26px;
-        margin-top: 6px;
+        line-height: 32px;
+        margin-top: 3px;
         .textOverflow(1);
       }
     }

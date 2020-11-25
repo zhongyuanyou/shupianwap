@@ -9,27 +9,30 @@
     <!-- S 头部 -->
     <Header @closePopup="closePopup" />
     <!-- E 头部 -->
-    <!-- S 内容 -->
-    <div class="popup_con">
-      <!--被选中的省市显示区域-->
-      <div v-if="selectList.length" class="popup_con_select">
-        <div
-          v-for="(item, index) in selectList"
-          :key="item.code"
-          :style="{
-            color:
-              selectList.length === 1
-                ? '#4974f5'
-                : step == index
-                ? '#4974f5'
-                : '#222',
-          }"
-          class="popup_con_select_item"
-          @click="changeCity(item, index)"
-        >
-          {{ item.name }}
-        </div>
+    <div v-if="selectList.length" class="select">
+      <div
+        v-for="(item, index) in selectList"
+        :key="item.code"
+        :style="{
+          color:
+            selectList.length === 1
+              ? '#4974f5'
+              : step == index
+              ? '#4974f5'
+              : '#222',
+        }"
+        class="select_item"
+        @click="changeCity(item, index)"
+      >
+        {{ item.name }}
       </div>
+    </div>
+    <!-- S 内容 -->
+    <div
+      class="popup_con"
+      :style="{ top: selectList.length ? '2.06rem' : '1.32rem' }"
+    >
+      <!--被选中的省市显示区域-->
       <sp-index-bar
         :index-list="indexList"
         highlight-color="#4974F5"
@@ -319,10 +322,28 @@ export default {
   height: 1067px;
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
+  .select {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    padding-left: 40px;
+    height: 74px;
+    background-color: #fff;
+    position: absolute;
+    top: 132px;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    &_item {
+      font-size: 28px;
+      font-weight: bold;
+      margin-right: 64px;
+    }
+  }
   &_con {
     position: absolute;
     left: 0;
-    top: 132px;
     right: 0;
     bottom: 0;
     overflow-y: scroll;
@@ -344,19 +365,6 @@ export default {
           font-size: 19px;
           margin-bottom: 31px;
         }
-      }
-    }
-    &_select {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      flex-direction: row;
-      padding-left: 40px;
-      margin-bottom: 24px;
-      &_item {
-        font-size: 28px;
-        font-weight: bold;
-        margin-right: 64px;
       }
     }
     .hot_title {

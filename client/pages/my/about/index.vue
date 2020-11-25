@@ -1,19 +1,10 @@
 <template>
   <div class="wrapper">
-    <sp-top-nav-bar
-      title="关于我们"
-      left-arrow
-      ellipsis
-      @on-click-left="onClickLeft"
-    >
-      <template #left>
-        <sp-icon class-prefix="sp-iconfont" name="specialreturn2" />
-      </template>
-    </sp-top-nav-bar>
+    <Header title="关于我们" @leftClickFuc="onClickLeft" />
     <div class="contentBg">
       <div class="content">
         <div class="iconBg">
-          <div class="icon"></div>
+          <img :src="icon" alt="" />
         </div>
         <span class="versionText">当前版本：V 1.2</span>
       </div>
@@ -35,6 +26,8 @@
 
 <script>
 import { TopNavBar, Icon, Cell, CellGroup } from '@chipspc/vant-dgg'
+import Header from '@/components/common/my/header/header'
+
 export default {
   // layout: 'default',
   name: 'About',
@@ -43,10 +36,13 @@ export default {
     [Icon.name]: Icon,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
+    Header,
   },
   props: {},
   data() {
-    return {}
+    return {
+      icon: require('~/assets/temporary/home/notify_img_logo@1,5x.png'),
+    }
   },
   computed: {},
   watch: {},
@@ -97,11 +93,6 @@ export default {
         align-items: center;
         justify-content: center;
         margin: 0 auto;
-        .icon {
-          width: 104px;
-          height: 100px;
-          background: #ffffff;
-        }
       }
       .versionText {
         width: 191px;
