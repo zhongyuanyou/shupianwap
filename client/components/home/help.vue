@@ -14,24 +14,22 @@
       <a href="javascript:void(0);">免费帮找</a>
     </div>
     <div class="help-moudle-bottom">
-      <a href="javascript:void(0);">
+      <a v-for="item in 2" :key="item" href="javascript:void(0);">
         <img
           src="http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp"
           alt=""
         />
         <span>
-          <strong>服务榜单</strong>
+          <strong>
+            <span>服务榜单</span>
+            <my-icon
+              class="my-icon"
+              name="list_ic_next"
+              size="0.2rem"
+              color="#333333"
+            ></my-icon>
+          </strong>
           <p>跟榜选服务,更灵活</p>
-        </span>
-      </a>
-      <a href="javascript:void(0);">
-        <img
-          src="http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp"
-          alt=""
-        />
-        <span>
-          <strong>内容待定</strong>
-          <p>直播“卖人”你见过吗</p>
         </span>
       </a>
     </div>
@@ -159,12 +157,19 @@ export default {
         display: flex;
         flex-direction: column;
         strong {
-          font-size: 28px;
-          font-family: PingFang SC;
-          font-weight: bold;
-          color: #222222;
-          line-height: 34px;
-          .textOverflow(1);
+          display: flex;
+          align-items: center;
+          span {
+            font-size: 28px;
+            font-family: PingFang SC;
+            font-weight: bold;
+            color: #222222;
+            line-height: 36px;
+            .textOverflow(1);
+          }
+          .my-icon {
+            margin-left: 10px;
+          }
         }
         p {
           font-size: 22px;
@@ -172,7 +177,7 @@ export default {
           font-weight: 400;
           color: #999999;
           line-height: 24px;
-          margin-top: 7px;
+          margin-top: 6px;
           .textOverflow(1);
         }
       }
