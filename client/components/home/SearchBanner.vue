@@ -6,6 +6,7 @@
     <img v-if="bigBanner" :src="bigBanner" alt="" />
     <sp-sticky @scroll="searchHandle">
       <Search
+        ref="searchRef"
         :icon-left="0.24"
         :opacity="opacity"
         placeholder="搜索您想找的服务"

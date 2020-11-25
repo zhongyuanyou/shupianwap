@@ -3,7 +3,7 @@
     <!-- S 推荐模块tab -->
     <TabCurve
       v-model="curentItem"
-      :offset-top="64"
+      :offset-top="offsetTop"
       :tab-list="tabBtn"
       :need-fixed="true"
       :right="0.54"
@@ -94,18 +94,22 @@ export default {
   data() {
     return {
       curentItem: 0,
+      offsetTop: 0,
     }
+  },
+  mounted() {
+    try {
+      this.offsetTop = this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight // 获取兄弟组件搜索栏的高度
+    } catch (error) {}
   },
   methods: {
     // 选项卡选择某项
-    selectTabHandle(data) {
-      console.log(data)
-      this.$refs.recomRef.swipeTo(data.code)
+    selectTabHandle({ index }) {
+      this.$refs.recomRef.swipeTo(index)
     },
     // 切换轮播
     onChange(index) {
       this.curentItem = index
-      console.log(index)
     },
     preventTouch(e) {
       e.stopImmediatePropagation() // 阻止冒泡
@@ -129,6 +133,9 @@ export default {
     display: flex;
     li {
       margin-right: 12px;
+      &:last-child {
+        margin-right: 40px;
+      }
       a {
         display: flex;
         flex-direction: column;
