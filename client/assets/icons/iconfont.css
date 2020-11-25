@@ -1,11 +1,12 @@
 @font-face {
-  font-family: 'iconfont';  /* project id 2213614 */
-  src: url('//at.alicdn.com/t/font_2213614_t1c9dgz6dce.eot');
-  src: url('//at.alicdn.com/t/font_2213614_t1c9dgz6dce.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_2213614_t1c9dgz6dce.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_2213614_t1c9dgz6dce.woff') format('woff'),
-  url('//at.alicdn.com/t/font_2213614_t1c9dgz6dce.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_2213614_t1c9dgz6dce.svg#iconfont') format('svg');
+    font-family: 'iconfont';
+    /* project id 2213614 */
+    src: url('//at.alicdn.com/t/font_2213614_nbozl0n6rro.eot');
+    src: url('//at.alicdn.com/t/font_2213614_nbozl0n6rro.eot?#iefix') format('embedded-opentype'),
+        url('//at.alicdn.com/t/font_2213614_nbozl0n6rro.woff2') format('woff2'),
+        url('//at.alicdn.com/t/font_2213614_nbozl0n6rro.woff') format('woff'),
+        url('//at.alicdn.com/t/font_2213614_nbozl0n6rro.ttf') format('truetype'),
+        url('//at.alicdn.com/t/font_2213614_nbozl0n6rro.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -14,6 +15,90 @@
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.per_ic_debunk:before {
+    content: "\e6c8";
+}
+
+.per_ic_cooperation:before {
+    content: "\e6c9";
+}
+
+.per_ic_about:before {
+    content: "\e6ca";
+}
+
+.per_ic_help:before {
+    content: "\e6cb";
+}
+
+.per_ic_entrust:before {
+    content: "\e6cc";
+}
+
+.details_ic_time:before {
+    content: "\e6c7";
+}
+
+.details_ic_Completed:before {
+    content: "\e6c4";
+}
+
+.details_ic_Unpaid:before {
+    content: "\e6c5";
+}
+
+.details_ic_sigh:before {
+    content: "\e6c6";
+}
+
+.command_img_cover:before {
+    content: "\e61b";
+}
+
+.per_ic_ID:before {
+    content: "\e6c3";
+}
+
+.upload_ic_img:before {
+    content: "\e618";
+}
+
+.per_ic_edit:before {
+    content: "\e6b7";
+}
+
+.per_ic_set:before {
+    content: "\e6b3";
+}
+
+.notify_ic_tel:before {
+    content: "\e679";
+}
+
+.per_ic_addressr:before {
+    content: "\e6b2";
+}
+
+.per_ic_path:before {
+    content: "\e6b1";
+}
+
+.per_ic_customer:before {
+    content: "\e6af";
+}
+
+.search_ic_re:before {
+    content: "\e678";
+}
+
+.search_ic_hot:before {
+    content: "\e677";
+}
+
+.search_ic_deleted:before {
+    content: "\e673";
 }
 
 .shop_ic_next:before {
@@ -290,8 +375,4 @@
 
 .tabbar_ic_msg:before {
     content: "\e635";
-}
-
-.upload_ic_img:before {
-  content: "\e618";
 }

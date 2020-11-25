@@ -154,13 +154,13 @@ export default {
           flex-direction: column;
           justify-content: space-between;
           flex: 1;
-          padding: 19px;
+          padding: 16px 19px 16px 19px;
           > p {
             font-size: 22px;
             font-family: PingFang SC;
             font-weight: 400;
             color: #555555;
-            line-height: 26px;
+            line-height: 32px;
             .textOverflow(1);
           }
           > h6 {
@@ -168,7 +168,7 @@ export default {
             font-family: PingFang SC;
             font-weight: bold;
             color: #222222;
-            line-height: 34px;
+            line-height: 38px;
             .textOverflow(1);
           }
         }

@@ -21,7 +21,7 @@
         />
         <span>
           <strong>
-            <span>服务榜单</span>
+            <span>服务榜单服务榜单服务榜单</span>
             <my-icon
               class="my-icon"
               name="list_ic_next"
@@ -29,7 +29,7 @@
               color="#333333"
             ></my-icon>
           </strong>
-          <p>跟榜选服务,更灵活</p>
+          <p>跟榜选服务,更灵活更灵活更灵活更灵活</p>
         </span>
       </a>
     </div>
@@ -164,7 +164,7 @@ export default {
             font-family: PingFang SC;
             font-weight: bold;
             color: #222222;
-            line-height: 36px;
+            line-height: 38px;
             .textOverflow(1);
           }
           .my-icon {
@@ -176,8 +176,8 @@ export default {
           font-family: PingFang SC;
           font-weight: 400;
           color: #999999;
-          line-height: 24px;
-          margin-top: 6px;
+          line-height: 28px;
+          margin-top: 4px;
           .textOverflow(1);
         }
       }

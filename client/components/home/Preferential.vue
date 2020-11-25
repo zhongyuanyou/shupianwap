@@ -181,7 +181,7 @@ export default {
             padding: 0 23px 25px 23px;
             > strong {
               font-size: 28px;
-              line-height: 34px;
+              line-height: 38px;
               font-family: PingFang SC;
               font-weight: bold;
               color: #ffffff;
@@ -193,8 +193,8 @@ export default {
               font-weight: 400;
               color: #ffffff;
               opacity: 0.6;
-              line-height: 24px;
-              margin-top: 11px;
+              line-height: 32px;
+              margin-top: 5px;
               .textOverflow(1);
             }
           }
