@@ -9,21 +9,15 @@
 
 <template>
   <div class="planner">
-    <div class="head">
-      <sp-row>
-        <sp-col span="3">
-          <sp-button class="back-btn">
-            <my-icon
-              class=""
-              name="nav_ic_back"
-              size="0.4rem"
-              color="#1A1A1A"
-            ></my-icon>
-          </sp-button>
-        </sp-col>
-        <sp-col span="18"><h2 class="page-title">我的规划师</h2></sp-col>
-      </sp-row>
-    </div>
+    <sp-sticky>
+      <sp-top-nav-bar title="我的规划师" ellipsis @on-click-left="back">
+        <template #left>
+          <div>
+            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          </div>
+        </template>
+      </sp-top-nav-bar>
+    </sp-sticky>
     <div class="body">
       <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
         <sp-list
@@ -41,12 +35,12 @@
                     width="0.8rem"
                     height="0.8rem"
                     fit="cover"
-                    src="https://img.yzcdn.cn/vant/cat.jpeg"
+                    src="https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/images/EeisYyx7HZ.jpg"
                   />
                 </div>
                 <div class="item_detail">
                   <h4>
-                    <span class="name">黄橙橙</span>
+                    <span class="name">周文韬</span>
                     <span class="title">
                       <span class="title-content">
                         <i class="icon exclusive_icon"></i>
@@ -75,7 +69,7 @@
                 <sp-button round class="contact-btn"
                   ><my-icon
                     class=""
-                    name="notify_ic_chat"
+                    name="notify_ic_tel"
                     size="0.32rem"
                     color="#4974F5"
                 /></sp-button>
@@ -85,7 +79,6 @@
         </sp-list>
       </sp-pull-refresh>
     </div>
-    <div class="footer"></div>
   </div>
 </template>
 
@@ -98,10 +91,12 @@ import {
   Cell,
   Image,
   Tag,
+  Sticky,
+  TopNavBar,
 } from '@chipspc/vant-dgg'
 
 export default {
-  name: 'Login',
+  name: 'Planner',
   components: {
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
@@ -109,6 +104,8 @@ export default {
     [Cell.name]: Cell,
     [Image.name]: Image,
     [Tag.name]: Tag,
+    [Sticky.name]: Sticky,
+    [TopNavBar.name]: TopNavBar,
   },
   data() {
     return {
@@ -119,6 +116,9 @@ export default {
     }
   },
   methods: {
+    back() {
+      this.$router.back()
+    },
     onLoad() {
       setTimeout(() => {
         if (this.refreshing) {
@@ -157,31 +157,6 @@ export default {
 .planner {
   height: 100%;
   overflow-y: scroll;
-  /deep/div {
-    font-size: 24px;
-  }
-  .head {
-    position: sticky;
-    top: 0;
-    padding: 0 30px;
-    width: 100%;
-    height: 88px;
-    padding: 24px 30px;
-    background-color: #fff;
-    z-index: 100;
-    .back-btn {
-      line-height: 40px;
-      height: 40px;
-      border: none;
-    }
-    .page-title {
-      font-size: 36px;
-      font-weight: bold;
-      color: @title-text-color;
-      line-height: 40px;
-      text-align: center;
-    }
-  }
   .body {
     padding: 0;
     /deep/.sp-cell {
@@ -191,6 +166,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      align-items: flex-end;
       .left {
         display: flex;
       }
@@ -251,15 +227,17 @@ export default {
         }
       }
       &_contact {
+        width: 160px;
         .contact-btn {
           width: 64px;
           height: 64px;
           background: #ebf3ff;
+          &:last-child {
+            float: right;
+          }
         }
       }
     }
-  }
-  .footer {
   }
   .icon {
     display: inline-block;

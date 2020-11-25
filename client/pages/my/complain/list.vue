@@ -1,12 +1,14 @@
 <template>
   <div class="complaintList">
-    <sp-top-nav-bar title="反馈进度" ellipsis @on-click-left="back">
-      <template #left>
-        <div>
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-        </div>
-      </template>
-    </sp-top-nav-bar>
+    <sp-sticky>
+      <sp-top-nav-bar title="反馈进度" ellipsis @on-click-left="back">
+        <template #left>
+          <div>
+            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          </div>
+        </template>
+      </sp-top-nav-bar>
+    </sp-sticky>
     <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <sp-list
         v-model="loading"
@@ -41,6 +43,7 @@ import {
   TopNavBar,
   PullRefresh,
   Cell,
+  Sticky,
 } from '@chipspc/vant-dgg'
 export default {
   name: 'ComplaintList',
@@ -50,6 +53,7 @@ export default {
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
     [Cell.name]: Cell,
+    [Sticky.name]: Sticky,
   },
   data() {
     return {

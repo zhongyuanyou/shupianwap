@@ -1,16 +1,6 @@
 <template>
   <div class="wrapper">
-    <sp-top-nav-bar
-      :title="titles[type]"
-      left-arrow
-      ellipsis
-      class="navBarClass"
-      @on-click-left="onClickLeft"
-    >
-      <template #left>
-        <sp-icon class-prefix="sp-iconfont" name="specialreturn2" />
-      </template>
-    </sp-top-nav-bar>
+    <Header :title="titles[type]" @leftClickFuc="onClickLeft" />
     <div class="textDiv">
       <span class="spanClass"> {{ text }}</span>
     </div>
@@ -19,11 +9,13 @@
 
 <script>
 import { TopNavBar, Icon } from '@chipspc/vant-dgg'
+import Header from '@/components/common/my/header/header'
 export default {
   name: 'Agreement',
   components: {
     [TopNavBar.name]: TopNavBar,
     [Icon.name]: Icon,
+    Header,
   },
   props: {},
   data() {
