@@ -4,8 +4,6 @@
     <div class="contentBg">
       <div class="content">
         <div class="iconBg">
-          <!-- <div class="icon"></div> -->
-          <!-- <my-icon name="notify_img_logo" color="#ccc" size="1rem" /> -->
           <img :src="icon" alt="" />
         </div>
         <span class="versionText">当前版本：V 1.2</span>
@@ -95,11 +93,6 @@ export default {
         align-items: center;
         justify-content: center;
         margin: 0 auto;
-        .icon {
-          width: 104px;
-          height: 100px;
-          background: #ffffff;
-        }
       }
       .versionText {
         width: 191px;
