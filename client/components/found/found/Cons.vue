@@ -1,48 +1,64 @@
 <template>
   <div class="con">
     <!--S banner-->
-    <div class="con_banner">
-      <sp-swipe :autoplay="3000" class="con_banner_list" @change="onChange">
-        <sp-swipe-item
-          v-for="(image, index) in images"
-          :key="index"
-          class="con_banner_list_item"
-        >
-          <img v-lazy="image" class="con_banner_list_item_img" />
-        </sp-swipe-item>
-        <template #indicator>
-          <div class="custom-indicator">
-            <div
-              v-for="(item, index) in images"
-              :key="index"
-              :class="[
-                'custom-indicator_item',
-                { active_item: current === index },
-              ]"
-            ></div>
-          </div>
-        </template>
-      </sp-swipe>
-    </div>
-    <!--E banner-->
-    <!--S 列表-->
-    <div class="con_list">
-      <div v-for="(item, index) in cardList" :key="index">
-        <CardItem
-          :favour="item"
-          :image="item.images"
-          :layout="item.layout || false"
-          @click="handleClick(item, index)"
-        />
+    <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <div class="con_banner">
+        <sp-swipe :autoplay="3000" class="con_banner_list" @change="onChange">
+          <sp-swipe-item
+            v-for="(image, index) in images"
+            :key="index"
+            class="con_banner_list_item"
+          >
+            <img v-lazy="image" class="con_banner_list_item_img" />
+          </sp-swipe-item>
+          <template #indicator>
+            <div class="custom-indicator">
+              <div
+                v-for="(item, index) in images"
+                :key="index"
+                :class="[
+                  'custom-indicator_item',
+                  { active_item: current === index },
+                ]"
+              ></div>
+            </div>
+          </template>
+        </sp-swipe>
       </div>
-    </div>
+      <!--E banner-->
+      <!--S 列表-->
+      <div class="con_list">
+        <sp-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <sp-cell v-for="(item, index) in cardList" :key="index">
+            <CardItem
+              :favour="item"
+              :image="item.images"
+              :layout="item.layout || false"
+              @click="handleClick(item, index)"
+            />
+          </sp-cell>
+        </sp-list>
+      </div>
+    </sp-pull-refresh>
     <!--E 列表-->
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
-import { Swipe, SwipeItem, Lazyload } from '@chipspc/vant-dgg'
+import {
+  Swipe,
+  SwipeItem,
+  Lazyload,
+  PullRefresh,
+  List,
+  Cell,
+} from '@chipspc/vant-dgg'
 import CardItem from '~/components/common/cardItem/CardItem'
 Vue.use(Lazyload)
 export default {
@@ -50,6 +66,9 @@ export default {
   components: {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
+    [PullRefresh.name]: PullRefresh,
+    [List.name]: List,
+    [Cell.name]: Cell,
     CardItem,
   },
   data() {
@@ -59,6 +78,9 @@ export default {
         'https://img.yzcdn.cn/vant/apple-2.jpg',
       ],
       current: 0,
+      refreshing: false,
+      loading: false,
+      finished: false,
       cardList: [
         {
           title: '豪华车销量冠军几无悬念，宝马凭什么撼动奥迪王座？',
@@ -105,12 +127,21 @@ export default {
       // 点击
       this.$router.push('/found/detail')
     },
+    onRefresh() {
+      setTimeout(() => {
+        this.refreshing = false
+      }, 2000)
+    },
+    onLoad() {},
   },
 }
 </script>
 
 <style lang="less" scoped>
 .con {
+  /deep/.sp-cell {
+    padding: 40px 32px;
+  }
   &_banner {
     display: flex;
     justify-content: center;

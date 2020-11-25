@@ -23,9 +23,11 @@
         </ul>
       </div>
       <!-- E 可滚动导航 -->
-      <div class="scroll-box">
+      <!-- S 自定义滚动条 -->
+      <div v-if="scrollNavList.length > 10" class="scroll-box">
         <span><i :style="{ left: scroLeft + '%' }"></i></span>
       </div>
+      <!-- E 自定义滚动条 -->
     </nav>
   </div>
 </template>
@@ -213,11 +215,11 @@ export default {
         }
         span {
           font-size: 24px;
-          line-height: 26px;
+          line-height: 32px;
           font-family: PingFang SC;
           font-weight: bold;
           color: #222222;
-          margin-top: 19px;
+          margin-top: 16px;
           .textOverflow(1);
         }
       }
@@ -266,11 +268,11 @@ export default {
           }
           span {
             font-size: 24px;
-            line-height: 26px;
+            line-height: 32px;
             font-family: PingFang SC;
             font-weight: bold;
             color: #222222;
-            margin-top: 19px;
+            margin-top: 16px;
             white-space: nowrap;
             .textOverflow(1);
           }

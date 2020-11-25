@@ -10,7 +10,7 @@
             :style="{ 'margin-right': right + 'rem' }"
             @click="selectItem(item, index)"
           >
-            <span :class="[index === curentItem ? 'tab-curve-active' : '']">{{
+            <span :class="[index === curent ? 'tab-curve-active' : '']">{{
               item.label
             }}</span>
             <div class="svg-content">
@@ -39,7 +39,7 @@
           :style="{ 'margin-right': right + 'rem' }"
           @click="selectItem(item, index)"
         >
-          <span :class="[index === curentItem ? 'tab-curve-active' : '']">{{
+          <span :class="[index === curent ? 'tab-curve-active' : '']">{{
             item.label
           }}</span>
           <div class="svg-content">
@@ -68,7 +68,17 @@ export default {
   components: {
     [Sticky.name]: Sticky,
   },
+  model: {
+    prop: 'curentItem',
+  },
   props: {
+    // 当前选中项
+    curentItem: {
+      type: Number,
+      default: () => {
+        return 0
+      },
+    },
     // tab 列表
     tabList: {
       type: Array,
@@ -94,13 +104,22 @@ export default {
   },
   data() {
     return {
-      curentItem: 0,
       isFixed: false, // 是否触发了吸顶
     }
   },
+  computed: {
+    curent: {
+      get() {
+        return this.curentItem
+      },
+      set(newVal) {
+        return newVal
+      },
+    },
+  },
   methods: {
     selectItem(item, index) {
-      this.curentItem = index
+      this.curent = index
       this.$emit('selectTabHandle', item)
     },
     scrollHandle(data) {

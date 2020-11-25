@@ -67,9 +67,9 @@ export default {
 
 <style lang="less" scoped>
 .card_item {
-  margin: 32px 40px 0 40px;
-  border-bottom: 1px solid #f4f4f4;
-  padding-bottom: 32px;
+  .sp-cell {
+    padding: 40px 32px;
+  }
   &_bot {
     display: flex;
     justify-content: space-between;
@@ -85,7 +85,7 @@ export default {
     }
   }
   .normal_img {
-    width: 670px;
+    width: 100%;
     height: 378px;
     border-radius: 8px;
     margin-top: 33px;
