@@ -1,6 +1,7 @@
 <template>
   <div class="preferential-centent">
     <TabCurve
+      v-model="curentItem"
       :tab-list="tabBtn"
       :need-fixed="false"
       @selectTabHandle="selectTabHandle"
@@ -91,7 +92,9 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      curentItem: 0,
+    }
   },
   methods: {
     selectTabHandle(data) {

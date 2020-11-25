@@ -1,7 +1,11 @@
 <template>
   <!-- tab 切换组件     -->
   <div>
-    <sp-sticky v-if="needFixed" :offset-top="offsetTop" @scroll="scrollHandle">
+    <sp-sticky
+      v-if="needFixed"
+      :offset-top="offsetTop - 1"
+      @scroll="scrollHandle"
+    >
       <div class="tab-curve" :class="[isFixed ? 'fixed-tab' : '']">
         <ul class="tab-curve-list">
           <li
@@ -10,7 +14,7 @@
             :style="{ 'margin-right': right + 'rem' }"
             @click="selectItem(item, index)"
           >
-            <span :class="[index === curent ? 'tab-curve-active' : '']">{{
+            <span :class="[index === visible ? 'tab-curve-active' : '']">{{
               item.label
             }}</span>
             <div class="svg-content">
@@ -39,7 +43,7 @@
           :style="{ 'margin-right': right + 'rem' }"
           @click="selectItem(item, index)"
         >
-          <span :class="[index === curent ? 'tab-curve-active' : '']">{{
+          <span :class="[index === visible ? 'tab-curve-active' : '']">{{
             item.label
           }}</span>
           <div class="svg-content">
@@ -70,6 +74,7 @@ export default {
   },
   model: {
     prop: 'curentItem',
+    event: 'update',
   },
   props: {
     // 当前选中项
@@ -108,20 +113,22 @@ export default {
     }
   },
   computed: {
-    curent: {
+    visible: {
       get() {
         return this.curentItem
       },
-      set(newVal) {
-        return newVal
+      set(val) {
+        this.$emit('update', val)
       },
     },
   },
   methods: {
+    // 选择某项
     selectItem(item, index) {
-      this.curent = index
-      this.$emit('selectTabHandle', item)
+      this.visible = index
+      this.$emit('selectTabHandle', { ...item, index })
     },
+    // 滚动事件
     scrollHandle(data) {
       this.isFixed = data.isFixed
     },

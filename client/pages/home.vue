@@ -1,7 +1,7 @@
 <template>
   <div class="page-content">
     <!-- S 搜索 + 大banner -->
-    <SearchBanner />
+    <SearchBanner ref="searchBannerRef" />
     <!-- E 搜索 + 大banner -->
     <!-- S 金刚区nav -->
     <HomeNav />
