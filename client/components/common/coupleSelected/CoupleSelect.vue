@@ -52,6 +52,7 @@
           v-for="(item, index) in coupleData[pIndex].children[cIndex].children"
           :key="index"
           class="couple_region_item"
+          :class="{ 'couple_region_item-radio': !multiple }"
           @click="handleRegion(item, index)"
         >
           <p
@@ -87,6 +88,11 @@ export default {
       default: () => {
         return []
       },
+    },
+    // 是否多选
+    multiple: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {
@@ -178,8 +184,15 @@ export default {
       this.rIndex = index
       const arr = this.selectData[2]
       if (!arr.regions || !arr.regions.includes(item)) {
-        arr.regions.push(item)
+        // 单选
+        if (!this.multiple) {
+          arr.regions = [item]
+        } else {
+          arr.regions.push(item)
+        }
       } else {
+        // 单选
+        if (!this.multiple) return
         let index = -1
         arr.regions.forEach((row, i) => {
           if (row.name === item.name && row.code === item.code) {
@@ -213,6 +226,7 @@ export default {
     width: 100%;
     height: 84px;
     background: linear-gradient(0deg, #ffffff, rgba(255, 255, 255, 0));
+    pointer-events: none;
   }
   &_province {
     width: 162px;
@@ -247,6 +261,7 @@ export default {
     overflow-y: scroll;
     height: 100%;
     background-color: #fff;
+
     &_item {
       width: calc(100vw - 402px);
       height: 84px;
@@ -262,6 +277,12 @@ export default {
       }
       &:first-child {
         margin-top: 28px;
+      }
+    }
+    &_item-radio {
+      .check_con,
+      .blur_con {
+        border: none !important;
       }
     }
     .check_con {

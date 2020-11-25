@@ -24,7 +24,6 @@
     <!-- S 推荐服务 -->
     <Recommend />
     <!-- E 推荐服务 -->
-    <div style="min-height: 3000px"></div>
   </div>
 </template>
 

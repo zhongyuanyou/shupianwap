@@ -52,13 +52,23 @@
         <div class="complaint-image-upload">
           <sp-uploader
             v-model="uploader"
-            upload-text="点击上传"
             :max-count="3"
             :max-size="20 * 1024 * 1024"
             @oversize="onOversize"
-          />
+          >
+            <template>
+              <div class="complaint-image-upload-add">
+                <my-icon
+                  class="complaint-image-upload-add-img"
+                  name="upload_ic_img"
+                  size="0.56rem"
+                  color="#CCCCCC"
+                ></my-icon>
+                <p class="complaint-image-upload-add-text">点击上传</p>
+              </div>
+            </template>
+          </sp-uploader>
         </div>
-        <!-- <my-icon name="upload_ic_img" size="0.56rem" color="#CCCCCC"></my-icon> -->
       </div>
       <sp-bottombar safe-area-inset-bottom>
         <sp-bottombar-button
@@ -249,6 +259,26 @@ export default {
       color: #1a1a1a;
     }
     &-upload {
+      &-add {
+        text-align: center;
+        width: 140px;
+        height: 140px;
+        background: #ffffff;
+        border: 1px solid #cdcdcd;
+        border-radius: 8px;
+        &-img {
+          position: relative;
+          top: -18px;
+        }
+        &-text {
+          font-size: 24px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          color: #999999;
+          position: relative;
+          top: -30px;
+        }
+      }
       /deep/.sp-uploader__upload {
         width: 140px;
         height: 140px;
