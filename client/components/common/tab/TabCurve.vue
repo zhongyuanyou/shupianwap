@@ -1,11 +1,7 @@
 <template>
   <!-- tab 切换组件     -->
   <div>
-    <sp-sticky
-      v-if="needFixed"
-      :offset-top="offsetTop - 1"
-      @scroll="scrollHandle"
-    >
+    <sp-sticky v-if="needFixed" :offset-top="offsetTop" @scroll="scrollHandle">
       <div class="tab-curve" :class="[isFixed ? 'fixed-tab' : '']">
         <ul class="tab-curve-list">
           <li

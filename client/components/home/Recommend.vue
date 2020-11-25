@@ -2,8 +2,9 @@
   <div class="recommend-moudle">
     <!-- S 推荐模块tab -->
     <TabCurve
+      ref="tabCurveRef"
       v-model="curentItem"
-      :offset-top="offsetTop"
+      :offset-top="searchDomHeight"
       :tab-list="tabBtn"
       :need-fixed="true"
       :right="0.54"
@@ -94,13 +95,20 @@ export default {
   data() {
     return {
       curentItem: 0,
-      offsetTop: 0,
+      searchDomHeight: 0,
     }
   },
   mounted() {
     try {
-      this.offsetTop = this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight // 获取兄弟组件搜索栏的高度
-    } catch (error) {}
+      this.searchDomHeight = this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight // 获取吸顶头部搜索栏的高度
+      const tabCurveDomHeight = this.$refs.tabCurveRef.$el.clientHeight // 获取吸顶头部tab栏高度
+      this.listOffsetTop =
+        this.$refs.recomRef.$el.offsetTop -
+        this.searchDomHeight -
+        tabCurveDomHeight // 推荐列表距离顶部的距离 - 搜索栏高度 - tab栏高度 （用于切换tab重置列表滚动位置）
+    } catch (error) {
+      console.log(error)
+    }
   },
   methods: {
     // 选项卡选择某项
@@ -109,6 +117,12 @@ export default {
     },
     // 切换轮播
     onChange(index) {
+      console.log(this.$refs.tabCurveRef.isFixed)
+      if (this.$refs.tabCurveRef.isFixed) {
+        this.$nextTick(() => {
+          document.documentElement.scrollTop = this.listOffsetTop
+        })
+      }
       this.curentItem = index
     },
     preventTouch(e) {
