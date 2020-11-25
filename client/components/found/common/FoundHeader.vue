@@ -2,7 +2,7 @@
   <!--S 搜索框-->
   <div class="search_input_con">
     <div class="search_input_con_lf">
-      <div v-if="left" @click="handleLeft">
+      <div v-if="left" @click="handleLeft" class="icon">
         <my-icon name="nav_ic_back" size="0.33rem" color="#1a1a1a" />
       </div>
       <div
@@ -14,7 +14,7 @@
       >
         <my-icon name="sear_ic_sear" size="0.28rem" color="#999" />
         <input
-          v-model="keywords"
+          v-model="keyword"
           type="text"
           placeholder="请输入搜索内容"
           @input="inputChange"
@@ -41,10 +41,15 @@ export default {
       default: '',
     },
   },
+  data() {
+    return {
+      keyword: this.keywords,
+    }
+  },
   methods: {
     inputChange() {
       // input改变事件
-      this.$emit('inputChange', this.keywords)
+      this.$emit('inputChange', this.keyword)
     },
     handleLeft() {
       // 点击返回按钮
@@ -71,6 +76,13 @@ export default {
     justify-content: flex-start;
     align-items: center;
     flex-direction: row;
+    .icon {
+      height: 96px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: column;
+    }
     .con {
       height: 96px;
       background: #ffffff;
