@@ -117,10 +117,10 @@ export default {
     },
     // 切换轮播
     onChange(index) {
-      console.log(this.$refs.tabCurveRef.isFixed)
       if (this.$refs.tabCurveRef.isFixed) {
         this.$nextTick(() => {
           document.documentElement.scrollTop = this.listOffsetTop
+          document.body.scrollTop = this.listOffsetTop
         })
       }
       this.curentItem = index
@@ -134,7 +134,7 @@ export default {
 
 <style scoped lang="less">
 .scroll-recom {
-  padding: 16px 0 32px 40px;
+  padding: 22px 0 32px 40px;
   display: flex;
   overflow-x: auto;
   overflow-y: hidden;
