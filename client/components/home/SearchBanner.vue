@@ -8,11 +8,13 @@
       <Search
         ref="searchRef"
         :icon-left="0.24"
+        :disabled="true"
         :opacity="opacity"
         placeholder="搜索您想找的服务"
+        @clickInputHandle="clickInputHandle"
       >
         <template v-slot:center>
-          <div class="city-box">
+          <div class="city-box" @click="swichCityHandle">
             <span class="current-city">成都</span>
             <my-icon
               name="sear_ic_open"
@@ -54,6 +56,14 @@ export default {
       if (this.bigBanner) {
         this.opacity = scrollTop / this.scollPercentage
       }
+    },
+    // 选择城市
+    swichCityHandle() {
+      this.$router.push('/city/choiceCity')
+    },
+    // 搜索框点击
+    clickInputHandle() {
+      //   this.$router.push('/city/choiceCity')
     },
   },
 }

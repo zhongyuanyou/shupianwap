@@ -3,13 +3,13 @@
     <Header title="问题解答" @leftClickFuc="onClickLeft" />
     <div class="titleDiv divClass">
       <my-icon name="per_ic_about" class="iconClass" />
-      <span class="spanClass">{{ title }}</span>
+      <span>{{ title }}</span>
     </div>
     <div class="answerDiv">
       <my-icon name="per_ic_about" class="iconClass" />
       <div class="divClass">
-        <span class="spanClass">{{ answer }}</span>
-        <a :href="url" class="urlClass spanClass">{{ url }}</a>
+        <span>{{ answer }}</span>
+        <a :href="url" class="urlClass">{{ url }}</a>
       </div>
     </div>
   </div>
@@ -43,7 +43,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .wrapper {
-  .spanClass {
+  span,
+  a {
     font-size: 32px;
     font-family: PingFang SC;
     // display: inline-block;
