@@ -14,13 +14,18 @@
         :style="{ marginLeft: iconLeft + 'rem' }"
       ></my-icon>
       <input
+        v-if="!disabled"
         v-model="value"
-        type="text"
+        :type="type"
         :placeholder="placeholder"
         @input="searchInputHandle"
         @blur="searchBlurHandle"
         @focus="searchFocusHandle"
       />
+      <!-- s 禁用输入框时，隐藏真实输入款，模拟一个输入框 -->
+      <span v-else class="imitate-input" @click="clickInputHandle">{{
+        placeholder
+      }}</span>
     </div>
     <slot name="right"></slot>
   </div>
@@ -44,6 +49,16 @@ export default {
       type: Number,
       default: 1,
     },
+    // 输入框类型
+    type: {
+      type: String,
+      default: 'search',
+    },
+    // 是否禁用输入
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -62,6 +77,10 @@ export default {
     // 触焦 事件
     searchFocusHandle() {
       this.$emit('searchFocusHandle')
+    },
+    // 点击 事件
+    clickInputHandle() {
+      this.$emit('clickInputHandle')
     },
     // 清除输入内容
     clearInputValue() {
@@ -98,9 +117,25 @@ export default {
       border: none;
       font-size: 30px;
       color: #1a1a1a;
+      &::-webkit-search-cancel-button {
+        -webkit-appearance: none; //此处去掉默认的小×
+      }
+      &[disabled='disabled'] {
+        background-color: #fff;
+      }
       &::placeholder {
         color: #999999;
       }
+    }
+    .imitate-input {
+      flex: 1;
+      font-size: 30px;
+      font-weight: bold;
+      font-family: PingFang SC;
+      border: none;
+      font-size: 30px;
+      color: #1a1a1a;
+      color: #999999;
     }
     .search-icon {
       margin-right: 17px;
