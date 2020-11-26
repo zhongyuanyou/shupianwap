@@ -114,7 +114,10 @@ export default {
       console.log(2)
     },
     onServiceTouch() {
-      console.log(3)
+      this.$router.push({
+        path: '/my/help/questions',
+        query: { type: 1 },
+      })
     },
     beforeChange(index) {
       console.log('index', index)
