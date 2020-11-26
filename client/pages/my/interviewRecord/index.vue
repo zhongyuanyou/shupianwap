@@ -31,7 +31,7 @@
                     width="0.8rem"
                     height="0.8rem"
                     fit="cover"
-                    :src="item.url"
+                    :src="item.avatar"
                   />
                 </div>
                 <div class="item-info_detail">
@@ -64,18 +64,13 @@
               <div class="right item-info_contact">
                 <sp-button round class="contact-btn"
                   ><my-icon
-                    class=""
                     name="notify_ic_chat"
                     size="0.32rem"
                     color="#4974F5"
                 /></sp-button>
 
-                <sp-button round class="contact-btn"
-                  ><my-icon
-                    class=""
-                    name="notify_ic_tel"
-                    size="0.32rem"
-                    color="#4974F5"
+                <sp-button round class="contact-btn" @click="tel(item.phone)"
+                  ><my-icon name="notify_ic_tel" size="0.32rem" color="#4974F5"
                 /></sp-button>
                 <sp-tag
                   v-if="item.status === 1 || item.status === 2"
@@ -152,6 +147,15 @@ export default {
     scanDetail(id) {
       this.$router.push('/planner/' + id)
     },
+    // 打电话
+    tel(number) {
+      // if (this.isdggapp) {
+      //   this.$appFn.callPhone(number, (res) => {})
+      // } else {
+      //   window.location.href = 'tel:' + number
+      // }
+      window.location.href = 'tel:' + number
+    },
     // 取消面谈
     cancelInterview(id) {
       console.log('取消面谈：' + id)
@@ -167,7 +171,7 @@ export default {
           const itemObj = {
             id: i,
             name: '石爱停',
-            url:
+            avatar:
               'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/images/ZAsSZ8zwXb.jpg',
             time: '2020-09-19 14:00',
             address: '顶呱呱成都政企服务中心',
@@ -175,6 +179,7 @@ export default {
             status: i < 1 ? 1 : i > 1 && i < 3 ? 2 : 0,
             cancelTime: '2020年9月20日',
             completeTime: '2020年9月20日',
+            phone: '13628009206',
           }
           this.list.push(itemObj)
         }
