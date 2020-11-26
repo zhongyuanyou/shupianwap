@@ -9,7 +9,7 @@
             :key="index"
             class="con_banner_list_item"
           >
-            <img v-lazy="image" class="con_banner_list_item_img" />
+            <sp-image height="2.58rem" fit="cover" :src="image" />
           </sp-swipe-item>
           <template #indicator>
             <div class="custom-indicator">
@@ -58,6 +58,7 @@ import {
   PullRefresh,
   List,
   Cell,
+  Image,
 } from '@chipspc/vant-dgg'
 import CardItem from '~/components/common/cardItem/CardItem'
 Vue.use(Lazyload)
@@ -69,6 +70,7 @@ export default {
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
     [Cell.name]: Cell,
+    [Image.name]: Image,
     CardItem,
   },
   data() {
@@ -157,11 +159,6 @@ export default {
         width: 100%;
         height: 258px;
         background-color: #f8f8f8;
-        img {
-          width: 100%;
-          height: 258px;
-          background-size: auto;
-        }
       }
       .custom-indicator {
         position: absolute;
