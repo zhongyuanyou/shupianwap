@@ -1,3 +1,11 @@
+<!--
+ * @Author: ma liang
+ * @Date: 2020-11-22 10:13:23
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-11-26 10:13:23
+ * @Description: Search
+ * @FilePath: /chips-wap/client/components/common/search/Search.vue
+-->
 <template>
   <div
     class="search-content"
@@ -15,7 +23,7 @@
       ></my-icon>
       <input
         v-if="!disabled"
-        v-model="value"
+        v-model="visible"
         :type="type"
         :placeholder="placeholder"
         @input="searchInputHandle"
@@ -34,7 +42,16 @@
 <script>
 export default {
   name: 'Search',
+  model: {
+    props: 'value',
+    event: 'valChangeHandle',
+  },
   props: {
+    // 输入框绑定的值
+    value: {
+      type: String,
+      default: '',
+    },
     placeholder: {
       type: String,
       default: '请输入城市名称',
@@ -60,31 +77,38 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      value: '',
-    }
+  computed: {
+    visible: {
+      get() {
+        return this.value
+      },
+      set(val) {
+        // 值变化
+        this.$emit('valChangeHandle', val)
+      },
+    },
   },
   methods: {
     // input 事件
-    searchInputHandle() {
-      this.$emit('searchInputHandle', this.value)
+    searchInputHandle(e) {
+      this.$emit('searchInputHandle', e)
     },
     // 失焦 事件
-    searchBlurHandle() {
-      this.$emit('searchBlurHandle')
+    searchBlurHandle(e) {
+      console.log(e)
+      this.$emit('searchBlurHandle', e)
     },
     // 触焦 事件
-    searchFocusHandle() {
-      this.$emit('searchFocusHandle')
+    searchFocusHandle(e) {
+      console.log(e)
+      this.$emit('searchFocusHandle', e)
     },
     // 点击 事件
     clickInputHandle() {
       this.$emit('clickInputHandle')
     },
-    // 清除输入内容
-    clearInputValue() {
-      this.value = ''
+    searchChangeHandle() {
+      console.log(this.value)
     },
   },
 }

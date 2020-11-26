@@ -14,7 +14,7 @@
         @clickInputHandle="clickInputHandle"
       >
         <template v-slot:center>
-          <div class="city-box">
+          <div class="city-box" @click="swichCityHandle">
             <span class="current-city">成都</span>
             <my-icon
               name="sear_ic_open"
@@ -57,9 +57,13 @@ export default {
         this.opacity = scrollTop / this.scollPercentage
       }
     },
+    // 选择城市
+    swichCityHandle() {
+      this.$router.push('/city/choiceCity')
+    },
     // 搜索框点击
     clickInputHandle() {
-      this.$router.push('/city/choiceCity')
+      //   this.$router.push('/city/choiceCity')
     },
   },
 }
