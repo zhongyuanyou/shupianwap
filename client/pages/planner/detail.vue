@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-25 20:05:19
+ * @LastEditTime: 2020-11-26 10:57:42
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/detail.vue
 -->
@@ -107,58 +107,26 @@
           </div>
         </div>
       </div>
-      <div v-if="!list || !list.length" class="recommend">
+      <div v-if="recommendList && recommendList.length" class="recommend">
         <h3 class="recommend__title">为您推荐</h3>
         <div class="recommend-list">
-          <sp-cell v-for="item in recommendList" :key="item" class="item-wrap">
-            <div class="item">
-              <div class="left">
-                <div class="item_avatar">
-                  <sp-image
-                    width="1.6rem"
-                    height="1.6rem"
-                    fit="cover"
-                    src="https://img.yzcdn.cn/vant/cat.jpeg"
-                  />
-                </div>
-                <div class="item_detail">
-                  <h4>
-                    <span class="item_detail--name">黄橙橙</span>
-                  </h4>
-
-                  <p class="item_detail--address">
-                    顶呱呱·跳伞塔·桃源办公中心.一楼
-                  </p>
-                  <div class="item_detail--tag-list">
-                    <sp-tag color="#F8F8F8" text-color="#999999"
-                      >服务标杆</sp-tag
-                    >
-                    <sp-tag color="#F8F8F8" text-color="#999999"
-                      >态度真诚热情</sp-tag
-                    >
-                  </div>
-                  <div class="item_detail--data">
-                    <div class="data-item">
-                      <h5>95</h5>
-                      <p>历史成交</p>
-                    </div>
-                    <div class="vertical-line"></div>
-                    <div class="data-item">
-                      <h5>4.9</h5>
-                      <p>用户评价</p>
-                    </div>
-                    <div class="vertical-line"></div>
-                    <div class="data-item">
-                      <h5>154</h5>
-                      <p>薯片分</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </sp-cell>
+          <GoodsItem
+            v-for="item in recommendList"
+            :key="item"
+            class="item-wrap"
+          />
         </div>
       </div>
+    </div>
+    <div class="footer">
+      <sp-bottombar safe-area-inset-bottom>
+        <sp-bottombar-button
+          type="primary"
+          text="电话联系"
+          @click="handleCall"
+        />
+        <sp-bottombar-button type="info" text="在线联系" @click="handleIM" />
+      </sp-bottombar>
     </div>
   </div>
 </template>
@@ -172,13 +140,13 @@ import {
   NavSearch,
   Toast,
   PullRefresh,
-  List,
-  Cell,
   Image,
   Tag,
+  Bottombar,
+  BottombarButton,
 } from '@chipspc/vant-dgg'
 
-// import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
+import GoodsItem from '@/components/planner/GoodsItem'
 
 import { city } from '@/utils/city'
 
@@ -188,13 +156,14 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
-    [List.name]: List,
-    [Cell.name]: Cell,
     [Image.name]: Image,
     [Tag.name]: Tag,
     [NavSearch.name]: NavSearch,
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
+    [Bottombar.name]: Bottombar,
+    [BottombarButton.name]: BottombarButton,
+    GoodsItem,
   },
   data() {
     return {
@@ -216,6 +185,12 @@ export default {
     },
     onClickRight() {
       console.log('nav onClickRight')
+    },
+    handleCall() {
+      console.log('call ')
+    },
+    handleIM() {
+      console.log('IM ')
     },
     getList() {
       this.loading = true
@@ -396,6 +371,15 @@ export default {
       }
     }
   }
+  .footer {
+    /deep/.sp-bottombar {
+      z-index: 100;
+      .sp-button--info {
+        background-color: #24ae68;
+        border: 1px solid #24ae68;
+      }
+    }
+  }
   .recommend {
     &__title {
       padding: 0 40px;
@@ -406,85 +390,8 @@ export default {
       margin-bottom: 6px;
     }
   }
-  .icon {
-    display: inline-block;
-    background-repeat: no-repeat;
-    background-size: cover;
-    vertical-align: middle;
-  }
   .item-wrap {
     padding: 40px;
-  }
-  .item {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    .left {
-      display: flex;
-      align-items: flex-start;
-      flex: 1;
-    }
-    &_avatar {
-      img {
-        border-radius: 4px;
-      }
-    }
-    &_detail {
-      padding-left: 34px;
-      h4 {
-        display: flex;
-      }
-      &--name {
-        font-size: 32px;
-        font-weight: bold;
-        color: @title-text-color;
-        line-height: 36px;
-        margin-right: 16px;
-      }
-      &--address {
-        max-width: 330px;
-        font-size: 24px;
-        font-weight: 400;
-        color: @title-text-color;
-        line-height: 28px;
-        margin-top: 20px;
-        .textOverflow(1);
-      }
-      &--tag-list {
-        margin-top: 12px;
-        line-height: 1;
-        font-size: 22px;
-      }
-      &--data {
-        display: flex;
-        margin-top: 20px;
-        .data-item {
-          font-weight: 400;
-          padding: 0 30px;
-          &:first-child {
-            padding-left: 0;
-          }
-          &:last-child {
-            padding-right: 0;
-          }
-          h5 {
-            font-size: 36px;
-            font-family: Bebas;
-            color: #222222;
-            line-height: 40px;
-          }
-          p {
-            margin-top: 8px;
-            font-size: 24px;
-            color: #999999;
-            line-height: 28px;
-          }
-        }
-        .vertical-line {
-          .vertical-line(@height:70px; @bgColor:#E5E5E5; @skewX:-15deg;);
-        }
-      }
-    }
   }
 }
 </style>
