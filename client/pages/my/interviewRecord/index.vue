@@ -25,18 +25,18 @@
           >
             <div class="item-info">
               <div class="left">
-                <div class="item-info_avatar">
+                <div class="item-info_avatar" @click="scanDetail(item.id)">
                   <sp-image
                     round
                     width="0.8rem"
                     height="0.8rem"
                     fit="cover"
-                    src="https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/images/ZAsSZ8zwXb.jpg"
+                    :src="item.url"
                   />
                 </div>
                 <div class="item-info_detail">
                   <h4>
-                    <span class="name">石爱停</span>
+                    <span class="name">{{ item.name }}</span>
                     <span class="title">
                       <span class="title-content">
                         <i class="icon gold_icon"></i>
@@ -44,9 +44,11 @@
                       </span>
                     </span>
                   </h4>
-                  <p>面谈时间：<span>2020-09-19 14:00</span></p>
+                  <p>
+                    面谈时间：<span>{{ item.time }}</span>
+                  </p>
                   <p class="address">
-                    面谈地点：<span>顶呱呱成都政企服务中心</span
+                    面谈地点：<span>{{ item.address }}</span
                     ><my-icon
                       class="address_icon"
                       name="per_ic_addressr"
@@ -54,7 +56,9 @@
                       color="#4974F5"
                     />
                   </p>
-                  <p>面谈方式：<span>到访面谈</span></p>
+                  <p>
+                    面谈方式：<span>{{ item.type }}</span>
+                  </p>
                 </div>
               </div>
               <div class="right item-info_contact">
@@ -73,14 +77,32 @@
                     size="0.32rem"
                     color="#4974F5"
                 /></sp-button>
-                <sp-tag color="#F8F8F8" text-color="#999999">已完成</sp-tag>
+                <sp-tag
+                  v-if="item.status === 1 || item.status === 2"
+                  color="#F8F8F8"
+                  text-color="#999999"
+                  >{{
+                    item.status === 1
+                      ? '已完成'
+                      : item.status === 2
+                      ? '已取消'
+                      : ''
+                  }}</sp-tag
+                >
               </div>
             </div>
             <div class="item-status">
-              <sp-button v-if="index < 2" plain type="default"
+              <sp-button
+                v-if="item.status === 0"
+                plain
+                type="default"
+                @click="cancelInterview(item.id)"
                 >取消面谈</sp-button
               >
-              <span v-else>您在2020年9月20日已取消面谈</span>
+              <span v-else-if="item.status === 2"
+                >您在{{ item.cancelTime }}已取消面谈</span
+              >
+              <span v-else>您在{{ item.completeTime }}已完成面谈</span>
             </div>
           </sp-cell>
         </sp-list>
@@ -126,6 +148,14 @@ export default {
     back() {
       this.$router.back()
     },
+    // 查看规划师详情
+    scanDetail(id) {
+      this.$router.push('/planner/' + id)
+    },
+    // 取消面谈
+    cancelInterview(id) {
+      console.log('取消面谈：' + id)
+    },
     onLoad() {
       setTimeout(() => {
         if (this.refreshing) {
@@ -134,7 +164,19 @@ export default {
         }
 
         for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
+          const itemObj = {
+            id: i,
+            name: '石爱停',
+            url:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/images/ZAsSZ8zwXb.jpg',
+            time: '2020-09-19 14:00',
+            address: '顶呱呱成都政企服务中心',
+            type: '到访面谈',
+            status: i < 1 ? 1 : i > 1 && i < 3 ? 2 : 0,
+            cancelTime: '2020年9月20日',
+            completeTime: '2020年9月20日',
+          }
+          this.list.push(itemObj)
         }
         this.loading = false
 
@@ -267,7 +309,7 @@ export default {
             width: 64px;
             height: 64px;
             background: #ebf3ff;
-            &:last-child {
+            &:not(:first-child) {
               float: right;
             }
           }
