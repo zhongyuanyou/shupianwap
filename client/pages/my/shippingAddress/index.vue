@@ -7,7 +7,13 @@
       ellipsis
       :fixed="true"
       @on-click-left="onClickLeft"
-    />
+    >
+      <template #left>
+        <div>
+          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
+        </div>
+      </template>
+    </sp-top-nav-bar>
     <!--E 头部-->
     <!--S 内容-->
     <div class="address_con">

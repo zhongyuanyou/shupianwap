@@ -3,11 +3,15 @@
     <!--S 导航-->
     <sp-top-nav-bar ellipsis :fixed="true">
       <template #left>
-        <sp-icon name="arrow-left" size="20" @click="back" />
+        <div @click="back">
+          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+        </div>
       </template>
 
       <template #right>
-        <my-icon name="nav_ic_share" size="0.3rem" />
+        <div>
+          <my-icon name="nav_ic_share" size="0.35rem" />
+        </div>
       </template>
     </sp-top-nav-bar>
     <!--E 导航-->
