@@ -2,12 +2,12 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 09:35:10
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-26 10:17:31
+ * @LastEditTime: 2020-11-26 14:44:29
  * @Description: file content
- * @FilePath: /chips-wap/client/components/planner/GoodsItem.vue
+ * @FilePath: /chips-wap/client/components/planner/GoodsPro.vue
 -->
 <template>
-  <a href="javascript:void(0);" class="goods-item">
+  <a href="javascript:void(0);" class="goods-pro">
     <div class="goods-lable-img">
       <span class="lable">急售</span>
       <img src="https://img.yzcdn.cn/vant/cat.jpeg" alt="" />
@@ -39,7 +39,7 @@
 
 <script>
 export default {
-  name: 'GoodsItem',
+  name: 'GoodsPro',
   data() {
     return {}
   },
@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.goods-item {
+.goods-pro {
   font-size: 24px;
   width: 100%;
   padding: 32px 0;

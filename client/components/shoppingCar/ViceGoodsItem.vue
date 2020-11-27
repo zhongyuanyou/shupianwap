@@ -1,0 +1,159 @@
+<!--
+ * @Author: xiao pu
+ * @Date: 2020-11-26 16:40:55
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-11-27 10:09:44
+ * @Description: file content
+ * @FilePath: /chips-wap/client/components/shoppingCar/ViceGoodsItem.vue
+-->
+<template>
+  <div class="vice-goods-item">
+    <div class="vice-goods-item__left">
+      <span class="vice-goods-item__lable">急售</span>
+      <img
+        class="vice-goods-item__img"
+        src="https://img.yzcdn.cn/vant/cat.jpeg"
+        alt=""
+      />
+    </div>
+    <div class="vice-goods-item__right">
+      <div class="vice-goods-item__name-price">
+        <strong class="vice-goods-item__name">400电话 </strong>
+        <span class="vice-goods-item__unit-price">100元</span>
+      </div>
+      <div class="vice-goods-item__descript">
+        <span>4000962540</span>
+      </div>
+      <div class="vice-goods-item__total-price">
+        <span class="vice-goods-item__price">
+          <span class="vice-goods-item__price-value">11350</span>
+          <span class="vice-goods-item__price-unit">元</span>
+        </span>
+        <span class="vice-goods-item__count">x2</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { Button } from '@chipspc/vant-dgg'
+
+export default {
+  name: 'ViceGoodsItem',
+  components: {
+    [Button.name]: Button,
+  },
+  data() {
+    return {
+      checked: false,
+      goodsCount: 1,
+    }
+  },
+  methods: {},
+}
+</script>
+
+<style lang="less" scoped>
+.vice-goods-item {
+  font-size: 24px;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  color: #222222;
+  &__left {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-right: 32px;
+    &::before {
+      content: '';
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      background: rgba(0, 0, 0, 0.16);
+    }
+  }
+  &__right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  &__img {
+    width: 100%;
+    height: 100%;
+  }
+  &__lable {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    font-size: 22px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #ffffff;
+    height: 44px;
+    padding: 0 12px;
+    background: #ec5330;
+    border-radius: 8px 0px 8px 0px;
+  }
+
+  &__name-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-weight: bold;
+  }
+  &__name {
+    font-size: 32px;
+    line-height: 42px;
+    margin-top: -4px;
+    .textOverflow(2);
+  }
+  &__unit-price {
+    font-size: 22px;
+  }
+  &__descript {
+    font-size: 22px;
+    font-weight: 400;
+    color: #222222;
+    line-height: 26px;
+    margin-top: 10px;
+  }
+
+  &__total-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 26px;
+    line-height: 36px;
+  }
+  &__price {
+    display: flex;
+    align-items: baseline;
+    &-value {
+      font-size: 36px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #ec5330;
+    }
+    &-unit {
+      font-size: 22px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #ec5330;
+    }
+  }
+  &__count {
+    font-size: 22px;
+    font-weight: bold;
+    color: #222222;
+    line-height: 26px;
+  }
+}
+</style>

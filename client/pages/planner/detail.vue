@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-26 10:57:42
+ * @LastEditTime: 2020-11-26 14:45:11
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/detail.vue
 -->
@@ -110,7 +110,7 @@
       <div v-if="recommendList && recommendList.length" class="recommend">
         <h3 class="recommend__title">为您推荐</h3>
         <div class="recommend-list">
-          <GoodsItem
+          <GoodsPro
             v-for="item in recommendList"
             :key="item"
             class="item-wrap"
@@ -146,7 +146,7 @@ import {
   BottombarButton,
 } from '@chipspc/vant-dgg'
 
-import GoodsItem from '@/components/planner/GoodsItem'
+import GoodsPro from '@/components/planner/GoodsPro'
 
 import { city } from '@/utils/city'
 
@@ -163,7 +163,7 @@ export default {
     [DropdownItem.name]: DropdownItem,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
-    GoodsItem,
+    GoodsPro,
   },
   data() {
     return {
