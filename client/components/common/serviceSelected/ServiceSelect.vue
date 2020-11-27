@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-21 15:13:44
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-23 09:04:03
+ * @LastEditTime: 2020-11-27 16:18:55
  * @Description: file content
- * @FilePath: /chips-wap/client/components/serviceSelected/ServiceSelect.vue
+ * @FilePath: /chips-wap/client/components/common/serviceSelected/ServiceSelect.vue
 -->
 <template>
   <div class="service-select">
@@ -46,6 +46,8 @@
 
 <script>
 import { TreeSelect, Icon } from '@chipspc/vant-dgg'
+import clone from '@/utils/clone'
+import objectDiff from '@/utils/objectDiff'
 
 const initSelectData = [{}, { services: [] }]
 
@@ -144,8 +146,22 @@ export default {
   watch: {
     activeData: {
       handler(newVal, odlVal) {
-        if (newVal === odlVal) return
-        this.selectData = newVal
+        if (objectDiff.diffOwnProperties(newVal, odlVal).changed === 'equal') {
+          return
+        }
+
+        if (
+          objectDiff.diffOwnProperties(newVal, this.selectData).changed ===
+          'equal'
+        ) {
+          return
+        }
+
+        if (!Array.isArray(newVal) || !newVal[0]) {
+          this.selectData = clone(initSelectData, true)
+        } else {
+          this.selectData = clone(newVal, true)
+        }
         this.items.forEach((item, index) => {
           if (this.selectData[0].id === item.id) {
             this.active = index
@@ -154,8 +170,9 @@ export default {
       },
       immediate: true,
     },
+
     selectData(newVal) {
-      this.$emit('select', [...newVal])
+      this.$emit('select', clone(newVal, true))
     },
   },
 
