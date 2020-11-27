@@ -1,12 +1,3 @@
-<!--
- * @Author: xiao pu
- * @Date: 2020-11-24 14:29:26
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-24 17:10:05
- * @Description: file content
- * @FilePath: /chips-wap/client/pages/my/planner.vue
--->
-
 <template>
   <div class="planner">
     <sp-sticky>
@@ -26,16 +17,16 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <sp-cell v-for="item in list" :key="item">
+          <sp-cell v-for="(item, index) in list" :key="index">
             <div class="item">
               <div class="left">
-                <div class="item_avatar">
+                <div class="item_avatar" @click="scanDetail(item.id)">
                   <sp-image
                     round
                     width="0.8rem"
                     height="0.8rem"
                     fit="cover"
-                    src="https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/images/EeisYyx7HZ.jpg"
+                    :src="item.avatar"
                   />
                 </div>
                 <div class="item_detail">
@@ -49,10 +40,14 @@
                       </span>
                     </span>
                   </h4>
-                  <p>成交案例：38</p>
+                  <p>成交案例：{{ item.dealNum }}</p>
                   <div class="tag-list">
-                    <sp-tag color="#F0F2F5" text-color="#5C7499"
-                      >服务标杆</sp-tag
+                    <sp-tag
+                      v-for="(tag, tagIndex) in item.tags"
+                      :key="tagIndex"
+                      color="#F0F2F5"
+                      text-color="#5C7499"
+                      >{{ tag }}</sp-tag
                     >
                   </div>
                 </div>
@@ -66,7 +61,7 @@
                     color="#4974F5"
                 /></sp-button>
 
-                <sp-button round class="contact-btn"
+                <sp-button round class="contact-btn" @click="tel(item.phone)"
                   ><my-icon
                     class=""
                     name="notify_ic_tel"
@@ -119,6 +114,19 @@ export default {
     back() {
       this.$router.back()
     },
+    // 查看规划师详情
+    scanDetail(id) {
+      this.$router.push('/planner/' + id)
+    },
+    // 打电话
+    tel(number) {
+      // if (this.isdggapp) {
+      //   this.$appFn.callPhone(number, (res) => {})
+      // } else {
+      //   window.location.href = 'tel:' + number
+      // }
+      window.location.href = 'tel:' + number
+    },
     onLoad() {
       setTimeout(() => {
         if (this.refreshing) {
@@ -127,7 +135,16 @@ export default {
         }
 
         for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
+          const itemObj = {
+            id: i,
+            name: '周文韬',
+            avatar:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/images/EeisYyx7HZ.jpg',
+            dealNum: 58,
+            tags: ['服务标杆'],
+            phone: '13628009206',
+          }
+          this.list.push(itemObj)
         }
         this.loading = false
 

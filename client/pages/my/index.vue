@@ -3,7 +3,15 @@
     <!--S 顶部-->
     <div class="my_tp">
       <div class="my_tp_info">
-        <img src="https://img.yzcdn.cn/vant/cat.jpeg" @click="handleAvatar" />
+        <sp-image
+          round
+          width="1.06rem"
+          height="1.06rem"
+          fit="cover"
+          class="my_tp_info_img"
+          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          @click="handleAvatar"
+        />
         <p class="txt">{{ hasLogin ? '欢迎你，181****123' : '登录/注册' }}</p>
       </div>
     </div>
@@ -43,17 +51,20 @@
     </div>
     <!--S 按钮区-->
     <!--S 退出登录-->
-    <div v-if="hasLogin" class="exit_btn">退出登录</div>
+    <div class="exit_btn">
+      <sp-button v-if="hasLogin" type="default">退出登录</sp-button>
+    </div>
     <!--E 退出登录-->
   </div>
 </template>
 
 <script>
-import { Button } from '@chipspc/vant-dgg'
+import { Button, Image } from '@chipspc/vant-dgg'
 export default {
   name: 'Index',
   components: {
     [Button.name]: Button,
+    [Image.name]: Image,
   },
   data() {
     return {
@@ -91,7 +102,7 @@ export default {
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      img {
+      &_img {
         width: 106px;
         height: 106px;
         border-radius: 53px;
@@ -147,14 +158,9 @@ export default {
   .exit_btn {
     margin: 65px 24px 0 24px;
     height: 80px;
-    background: #ffffff;
-    border: 1px solid #cdcdcd;
-    text-align: center;
-    line-height: 80px;
-    font-size: 28px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #1a1a1a;
+    /deep/ .sp-button {
+      width: 100%;
+    }
   }
 }
 </style>

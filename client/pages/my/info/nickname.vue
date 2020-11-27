@@ -3,13 +3,18 @@
     <!--S 头部-->
     <sp-top-nav-bar
       :title="'昵称'"
-      left-arrow
       ellipsis
       :fixed="true"
       :right-text="'保存'"
       @on-click-left="onClickLeft"
       @on-click-right="onClickRight"
-    />
+    >
+      <template #left>
+        <div>
+          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
+        </div>
+      </template>
+    </sp-top-nav-bar>
     <!--E 头部-->
     <!--S 内容-->
     <div class="nickname_con">

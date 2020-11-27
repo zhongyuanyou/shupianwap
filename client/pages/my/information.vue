@@ -7,7 +7,13 @@
       ellipsis
       :fixed="true"
       @on-click-left="onClickLeft"
-    />
+    >
+      <template #left>
+        <div>
+          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
+        </div>
+      </template>
+    </sp-top-nav-bar>
     <!--E 头部-->
     <!--S 内容-->
     <div class="information_con">
@@ -24,7 +30,14 @@
           <div class="cell">
             <p class="title">头像</p>
             <div class="right_icon">
-              <img src="https://img.yzcdn.cn/vant/cat.jpeg" class="avatar" />
+              <sp-image
+                round
+                width="0.88rem"
+                height="0.88rem"
+                fit="cover"
+                class="avatar"
+                src="https://img.yzcdn.cn/vant/cat.jpeg"
+              />
               <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
             </div>
           </div>
@@ -95,7 +108,7 @@
 </template>
 
 <script>
-import { TopNavBar, Cell, Uploader } from '@chipspc/vant-dgg'
+import { TopNavBar, Cell, Uploader, Image } from '@chipspc/vant-dgg'
 import ImgSelected from '~/components/my/information/ImgSelected'
 import SexSelected from '~/components/my/information/SexSelected'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
@@ -106,6 +119,7 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [Cell.name]: Cell,
     [Uploader.name]: Uploader,
+    [Image.name]: Image,
     ImgSelected,
     SexSelected,
     AreaSelect,
@@ -200,9 +214,6 @@ export default {
           align-items: center;
           flex-direction: row;
           .avatar {
-            width: 88px;
-            height: 88px;
-            border-radius: 50%;
             margin-right: 16px;
           }
           .txt {

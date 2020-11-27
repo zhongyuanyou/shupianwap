@@ -28,7 +28,7 @@
           center
           border
           :value="item.status"
-          :to="{ path: './' + item.id }"
+          :to="{ path: '/my/complain/' + item.id }"
         />
       </sp-list>
     </sp-pull-refresh>

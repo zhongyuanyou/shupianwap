@@ -1,3 +1,11 @@
+<!--
+ * @Author: ma liang
+ * @Date: 2020-11-22 10:13:23
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-11-26 10:13:23
+ * @Description: Search
+ * @FilePath: /chips-wap/client/components/common/search/Search.vue
+-->
 <template>
   <div
     class="search-content"
@@ -14,13 +22,18 @@
         :style="{ marginLeft: iconLeft + 'rem' }"
       ></my-icon>
       <input
-        v-model="value"
-        type="text"
+        v-if="!disabled"
+        v-model="visible"
+        :type="type"
         :placeholder="placeholder"
         @input="searchInputHandle"
         @blur="searchBlurHandle"
         @focus="searchFocusHandle"
       />
+      <!-- s 禁用输入框时，隐藏真实输入款，模拟一个输入框 -->
+      <span v-else class="imitate-input" @click="clickInputHandle">{{
+        placeholder
+      }}</span>
     </div>
     <slot name="right"></slot>
   </div>
@@ -29,7 +42,16 @@
 <script>
 export default {
   name: 'Search',
+  model: {
+    props: 'value',
+    event: 'valChangeHandle',
+  },
   props: {
+    // 输入框绑定的值
+    value: {
+      type: String,
+      default: '',
+    },
     placeholder: {
       type: String,
       default: '请输入城市名称',
@@ -44,28 +66,49 @@ export default {
       type: Number,
       default: 1,
     },
+    // 输入框类型
+    type: {
+      type: String,
+      default: 'search',
+    },
+    // 是否禁用输入
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
-  data() {
-    return {
-      value: '',
-    }
+  computed: {
+    visible: {
+      get() {
+        return this.value
+      },
+      set(val) {
+        // 值变化
+        this.$emit('valChangeHandle', val)
+      },
+    },
   },
   methods: {
     // input 事件
-    searchInputHandle() {
-      this.$emit('searchInputHandle', this.value)
+    searchInputHandle(e) {
+      this.$emit('searchInputHandle', e)
     },
     // 失焦 事件
-    searchBlurHandle() {
-      this.$emit('searchBlurHandle')
+    searchBlurHandle(e) {
+      console.log(e)
+      this.$emit('searchBlurHandle', e)
     },
     // 触焦 事件
-    searchFocusHandle() {
-      this.$emit('searchFocusHandle')
+    searchFocusHandle(e) {
+      console.log(e)
+      this.$emit('searchFocusHandle', e)
     },
-    // 清除输入内容
-    clearInputValue() {
-      this.value = ''
+    // 点击 事件
+    clickInputHandle() {
+      this.$emit('clickInputHandle')
+    },
+    searchChangeHandle() {
+      console.log(this.value)
     },
   },
 }
@@ -98,9 +141,25 @@ export default {
       border: none;
       font-size: 30px;
       color: #1a1a1a;
+      &::-webkit-search-cancel-button {
+        -webkit-appearance: none; //此处去掉默认的小×
+      }
+      &[disabled='disabled'] {
+        background-color: #fff;
+      }
       &::placeholder {
         color: #999999;
       }
+    }
+    .imitate-input {
+      flex: 1;
+      font-size: 30px;
+      font-weight: bold;
+      font-family: PingFang SC;
+      border: none;
+      font-size: 30px;
+      color: #1a1a1a;
+      color: #999999;
     }
     .search-icon {
       margin-right: 17px;

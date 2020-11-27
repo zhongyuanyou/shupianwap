@@ -4,12 +4,22 @@
       <p class="title">
         <span v-if="favour.hot" class="hot">热门</span>{{ favour.title }}
       </p>
-      <img v-if="image && image.src" :src="image.src" class="normal_img" />
+      <sp-image
+        v-if="image && image.src"
+        height="3.78rem"
+        radius="0.08rem"
+        fit="cover"
+        class="normal_img"
+        :src="image.src"
+      />
       <div class="card_item_bot">
         <p class="card_item_bot_lf">
           {{ favour.name }}<span>{{ favour.time }}</span>
         </p>
-        <div class="hot_con"></div>
+        <div class="hot_con">
+          <my-icon name="news_ic_heat" color="#fff" size="0.17rem" />
+          <p class="num">{{ favour.value }}</p>
+        </div>
       </div>
     </div>
     <div v-else class="space_item">
@@ -22,16 +32,30 @@
         </p>
       </div>
       <div class="space_img_con">
-        <div :class="['hot_con', 'hot_con_pos']"></div>
-        <img :src="image.src" class="space_img" />
+        <div :class="['hot_con', 'hot_con_pos']">
+          <my-icon name="news_ic_heat" color="#fff" size="0.17rem" />
+          <p class="num">{{ favour.value }}</p>
+        </div>
+        <sp-image
+          v-if="image && image.src"
+          width="2.48rem"
+          height="1.8rem"
+          radius="0.08rem"
+          fit="cover"
+          :src="image.src"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { Image } from '@chipspc/vant-dgg'
 export default {
   name: 'CardItem',
+  components: {
+    [Image.name]: Image,
+  },
   props: {
     favour: {
       type: Object,
@@ -85,9 +109,6 @@ export default {
     }
   }
   .normal_img {
-    width: 100%;
-    height: 378px;
-    border-radius: 8px;
     margin-top: 33px;
   }
   .space_item {
@@ -138,15 +159,12 @@ export default {
   }
   .space_img_con {
     position: relative;
-    .space_img {
-      width: 248px;
-      height: 180px;
-      border-radius: 8px;
-    }
+    height: 180px;
     .hot_con_pos {
       position: absolute;
       right: 12px;
       bottom: 12px;
+      z-index: 5;
     }
   }
   .hot_con {
@@ -159,6 +177,13 @@ export default {
     justify-content: center;
     align-items: center;
     flex-direction: row;
+    .num {
+      font-size: 20px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #fff;
+      margin-left: 10px;
+    }
   }
 }
 </style>

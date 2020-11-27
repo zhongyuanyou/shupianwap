@@ -3,11 +3,15 @@
     <!--S 导航-->
     <sp-top-nav-bar ellipsis :fixed="true">
       <template #left>
-        <sp-icon name="arrow-left" size="20" @click="back" />
+        <div @click="back">
+          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+        </div>
       </template>
 
       <template #right>
-        <my-icon name="nav_ic_share" size="0.3rem" />
+        <div>
+          <my-icon name="nav_ic_share" size="0.35rem" />
+        </div>
       </template>
     </sp-top-nav-bar>
     <!--E 导航-->
@@ -18,7 +22,11 @@
       <!--S 账号信息-->
       <div class="detail_con_info">
         <div class="detail_con_info_logo_con">
-          <img
+          <sp-image
+            round
+            width="0.88rem"
+            height="0.88rem"
+            fit="cover"
             class="detail_con_info_logo_con_logo"
             src="https://img.yzcdn.cn/vant/apple-1.jpg"
           />
@@ -62,12 +70,13 @@
 </template>
 
 <script>
-import { TopNavBar, Icon } from '@chipspc/vant-dgg'
+import { TopNavBar, Icon, Image } from '@chipspc/vant-dgg'
 export default {
   name: 'Detail',
   components: {
     [TopNavBar.name]: TopNavBar,
     [Icon.name]: Icon,
+    [Image.name]: Image,
   },
   data() {
     return {
@@ -107,11 +116,6 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        &_logo {
-          width: 88px;
-          height: 88px;
-          border-radius: 50%;
-        }
       }
       &_content {
         display: flex;
