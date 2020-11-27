@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { TopNavBar, Sticky } from '@chipspc/vant-dgg'
+import { TopNavBar } from '@chipspc/vant-dgg'
 import Banner from '~/components/detail/Banner'
 import Title from '~/components/detail/Title'
 import Basic from '~/components/detail/Basic'
@@ -43,7 +43,6 @@ export default {
   name: 'DetailTemplate',
   components: {
     [TopNavBar.name]: TopNavBar,
-    [Sticky.name]: Sticky,
     Banner,
     Title,
     Basic,
