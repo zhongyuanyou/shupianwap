@@ -75,7 +75,7 @@
             <li>杭州</li>
           </ul>
         </div>
-        <div v-for="(item, index) in cityList" :key="index">
+        <div v-for="(item, index) in nweCityList" :key="index">
           <sp-index-anchor :index="item.letter">{{
             item.letter
           }}</sp-index-anchor>
@@ -93,6 +93,7 @@
 <script>
 import { Sticky, IndexBar, IndexAnchor, Cell } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
+import getPosition from '~/utils/position'
 export default {
   name: 'ChoiceCity',
   components: {
@@ -347,15 +348,29 @@ export default {
           ext1: '湖北省/武汉市',
         },
       ],
+      nweCityList: [],
       indexList: ['热'],
       searchDomHeight: 0, // 头部高度
     }
   },
   created() {
-    this.cityList = this.getBrands(this.cityList)
-    console.log(this.cityList)
+    this.nweCityList = this.getBrands(this.cityList)
+    console.log(this.nweCityList)
   },
   mounted() {
+    // 定位城市
+    getPosition()
+      .then((res) => {
+        console.log(res)
+        const city = res.city
+        const isHas = this.cityList.find(
+          (item) => item.name.indexOf(city.substr(0, city.length - 1)) !== -1
+        )
+        console.log(isHas)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     try {
       this.searchDomHeight = this.$refs.searchRef.$el.clientHeight
     } catch (e) {}
