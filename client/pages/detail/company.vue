@@ -1,19 +1,15 @@
 <template>
   <div class="company">
-    <!--S banner-->
-    <Banner :images="info.images" />
-    <!--S banner-->
-    <!--S 第一版-->
-    <!--E 第一版-->
+    <DetailTemplate :info="info"></DetailTemplate>
   </div>
 </template>
 
 <script>
-import Banner from '~/components/detail/Banner'
+import DetailTemplate from '~/components/detail/DetailTemplate'
 export default {
   name: 'Company',
   components: {
-    Banner,
+    DetailTemplate,
   },
   data() {
     return {
@@ -22,6 +18,23 @@ export default {
           'https://img.yzcdn.cn/vant/apple-1.jpg',
           'https://img.yzcdn.cn/vant/apple-2.jpg',
           'https://img.yzcdn.cn/vant/cat.jpeg',
+        ],
+        tags: ['公司干净', '无债权债务'],
+        title: '深圳区块科技技术有限公司，优质老店2字商标名字',
+        money: '25.00',
+        planners: [
+          {
+            name: '黄成',
+            avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
+          },
+          {
+            name: '黄成',
+            avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
+          },
+          {
+            name: '黄成',
+            avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
+          },
         ],
       },
     }
