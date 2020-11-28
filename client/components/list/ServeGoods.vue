@@ -25,6 +25,7 @@
     </sp-dropdown-menu>
     <install-app ref="installApp" />
     <sp-list
+      v-show="listShow"
       v-model="loading"
       :finished="finished"
       :style="{
@@ -44,6 +45,7 @@
       <goods-item />
       <goods-item />
     </sp-list>
+    <Subscribe v-show="!listShow" />
   </div>
 </template>
 
@@ -53,6 +55,7 @@ import InstallApp from '@/components/common/app/InstallApp'
 import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import GoodsItem from '@/components/common/goodsItem/GoodsItem'
+import Subscribe from '@/components/list/Subscribe'
 
 export default {
   name: 'ServeGoods',
@@ -64,9 +67,11 @@ export default {
     ServiceSelect,
     BottomConfirm,
     InstallApp,
+    Subscribe,
   },
   data() {
     return {
+      listShow: true,
       loading: false,
       finished: false,
       selectValue: 0,
@@ -243,6 +248,9 @@ export default {
     font-size: 28px;
     font-family: PingFang SC;
     font-weight: bold;
+  }
+  .subscribe {
+    padding: 40px;
   }
 }
 </style>
