@@ -93,7 +93,6 @@
 <script>
 import { Sticky, IndexBar, IndexAnchor, Cell } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
-import getPosition from '~/utils/position'
 export default {
   name: 'ChoiceCity',
   components: {
@@ -355,22 +354,24 @@ export default {
   },
   created() {
     this.nweCityList = this.getBrands(this.cityList)
-    console.log(this.nweCityList)
   },
   mounted() {
+    // console.log(this.$store.dispatch)
+    // this.$store.commit('POSITION_CITY', this.cityList)
+    // console.log(this.$store.state.city)
     // 定位城市
-    getPosition()
-      .then((res) => {
-        console.log(res)
-        const city = res.city
-        const isHas = this.cityList.find(
-          (item) => item.name.indexOf(city.substr(0, city.length - 1)) !== -1
-        )
-        console.log(isHas)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    // getPosition()
+    //   .then((res) => {
+    //     console.log(res)
+    //     const city = res.city
+    //     const isHas = this.cityList.find(
+    //       (item) => item.name.indexOf(city.substr(0, city.length - 1)) !== -1
+    //     )
+    //     console.log(isHas)
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
     try {
       this.searchDomHeight = this.$refs.searchRef.$el.clientHeight
     } catch (e) {}
