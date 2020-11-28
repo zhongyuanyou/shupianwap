@@ -26,7 +26,7 @@
     </div>
     <SelectCheckBox
       ref="selectCheckBox"
-      :select-list="priceList"
+      :select-list="priceList ? priceList : []"
       :gutter="12"
       :is-select-more="false"
       @cancelItem="cancelItem"

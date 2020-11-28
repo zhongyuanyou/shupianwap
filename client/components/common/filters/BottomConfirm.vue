@@ -56,5 +56,8 @@ export default {
   .iconfont-box {
     text-align: center;
   }
+  .reset-btn {
+    font-size: 24px;
+  }
 }
 </style>
