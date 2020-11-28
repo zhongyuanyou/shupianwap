@@ -29,12 +29,12 @@
     </sp-sticky>
     <!-- S 当前选择的城市 -->
     <div class="current-city">
-      <strong>成都</strong>
+      <strong>{{ currentCity }}</strong>
       <span>当前选择</span>
     </div>
     <!-- S 当前定位城市 -->
     <div class="position-city">
-      <div v-if="!stadusType" class="no-position">
+      <div v-if="!positionStatus" class="no-position">
         <my-icon
           name="toast_ic_remind"
           size="0.32rem"
@@ -43,11 +43,11 @@
         <span>无法定位到当前城市</span>
       </div>
       <div v-else class="position-success">
-        <strong>洛阳</strong>
+        <strong>{{ positionCityName }}</strong>
         <span>GPS定位</span>
-        <p v-if="stadusType === 1">未开通服务</p>
+        <p v-if="positionStatus === 1">未开通服务</p>
       </div>
-      <a href="javascript:void(0);">重新定位</a>
+      <a href="javascript:void(0);" @click="positionCity">重新定位</a>
     </div>
     <!-- S 城市列表 -->
     <div>
@@ -83,6 +83,7 @@
             v-for="(key, val) in item.data"
             :key="val"
             :title="key.cityName"
+            @click="chooseCity(key)"
           />
         </div>
       </sp-index-bar>
@@ -92,6 +93,7 @@
 
 <script>
 import { Sticky, IndexBar, IndexAnchor, Cell } from '@chipspc/vant-dgg'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import Search from '@/components/common/search/Search'
 export default {
   name: 'ChoiceCity',
@@ -104,7 +106,6 @@ export default {
   },
   data() {
     return {
-      stadusType: 2, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
       cityList: [
         {
           code: 'COMPANY_ALL',
@@ -352,31 +353,28 @@ export default {
       searchDomHeight: 0, // 头部高度
     }
   },
+  computed: {
+    ...mapState({
+      currentCity: (state) => state.city.currentCity.name, // 当前选择的城市
+      positionCityName: (state) => state.city.positionCityName, // 当前定位城市
+      positionStatus: (state) => state.city.positionStatus, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
+    }),
+  },
   created() {
     this.nweCityList = this.getBrands(this.cityList)
   },
   mounted() {
-    // console.log(this.$store.dispatch)
-    // this.$store.commit('POSITION_CITY', this.cityList)
-    // console.log(this.$store.state.city)
-    // 定位城市
-    // getPosition()
-    //   .then((res) => {
-    //     console.log(res)
-    //     const city = res.city
-    //     const isHas = this.cityList.find(
-    //       (item) => item.name.indexOf(city.substr(0, city.length - 1)) !== -1
-    //     )
-    //     console.log(isHas)
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
     try {
       this.searchDomHeight = this.$refs.searchRef.$el.clientHeight
     } catch (e) {}
   },
   methods: {
+    ...mapActions({
+      POSITION_CITY: 'city/POSITION_CITY',
+    }),
+    ...mapMutations({
+      SET_CITY: 'city/SET_CITY',
+    }),
     // 格式化城市数据
     getBrands(data) {
       // 临时对象
@@ -419,6 +417,18 @@ export default {
         return
       }
       return resultArray
+    },
+    // 定位城市
+    positionCity() {
+      this.POSITION_CITY(this.cityList)
+    },
+    // 选择城市
+    chooseCity(data) {
+      this.SET_CITY({
+        code: data.code,
+        name: data.cityName,
+      })
+      this.$router.back()
     },
     // 返回页面
     clooseHandle() {

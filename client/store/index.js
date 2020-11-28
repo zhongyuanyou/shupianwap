@@ -6,17 +6,8 @@
  * @Description: In User Settings Edit
  * @FilePath: /chips-wap/client/store/index.js
  */
-import Vue from 'vue'
-import Vuex from 'vuex'
-import city from './module/city'
-Vue.use(Vuex)
-const store = () =>
-  new Vuex.Store({
-    state: {},
-    mutations: {},
-    actions: {},
-    modules: {
-      city,
-    },
-  })
-export default store
+export const state = () => ({})
+
+export const mutations = {}
+
+export const actions = {}

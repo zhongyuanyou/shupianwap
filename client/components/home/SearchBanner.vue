@@ -32,7 +32,7 @@
 
 <script>
 import { Sticky } from '@chipspc/vant-dgg'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import Search from '@/components/common/search/Search'
 export default {
   components: {
@@ -307,7 +307,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
+    ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
     }),
     // 滚动改变搜索栏透明度
