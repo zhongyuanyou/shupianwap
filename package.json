@@ -13,6 +13,7 @@
     "autoprefixer": "^9.7.6",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "better-scroll": "^2.0.5",
+    "cookie-universal-nuxt": "^2.1.4",
     "cross-env": "^7.0.2",
     "egg": "^2.15.1",
     "egg-eureka-pro": "^0.0.1",
