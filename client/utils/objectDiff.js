@@ -2,12 +2,16 @@
  * @Author: xiao pu
  * @Date: 2020-11-27 15:34:18
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-27 16:16:10
+ * @LastEditTime: 2020-11-28 10:15:13
  * @Description: file content
  * @FilePath: /chips-wap/client/utils/objectDiff.js
+ * @reference：https://github.com/NV/objectDiff.js
  */
 
+// 参考文档：https://github.com/NV/objectDiff.js
+
 /**
+ * @description 对比两个对象是否键值对相等，原型连上的也会对比
  * @param {Object} a
  * @param {Object} b
  * @return {Object}
@@ -98,6 +102,7 @@ function diff(a, b) {
 }
 
 /**
+ * @description 对比两个对象是否键值对相等，只比对自身属性，不比对原型链上的
  * @param {Object} a
  * @param {Object} b
  * @return {Object}
@@ -110,6 +115,7 @@ function diffOwnProperties(a, b) {
     }
   }
 
+  // 针对异常参数 a, b  为 null和undefind 情况处理
   if (a == null || b == null) {
     return {
       changed: 'object change',
