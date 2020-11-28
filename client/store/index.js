@@ -10,4 +10,16 @@ export const state = () => ({})
 
 export const mutations = {}
 
-export const actions = {}
+export const actions = {
+  nuxtServerInit({ commit }, { app }) {
+    // 从缓存的cookies获取城市信息
+    const currentCity = app.$cookies.get('currentCity')
+    const positionCityName = app.$cookies.get('positionCityName')
+    const positionStatus = app.$cookies.get('positionStatus')
+    if (currentCity && positionCityName && positionStatus) {
+      commit('city/SET_CITY', currentCity)
+      commit('city/SET_POSITION_CITY', positionCityName)
+      commit('city/SET_POSITION_STATUS', positionStatus)
+    }
+  },
+}

@@ -113,7 +113,13 @@ module.exports = {
         { src: "@/plugins/my-icon", ssr: true },
     ],
     buildModules: ["@nuxtjs/eslint-module"],
-    modules: ["@nuxtjs/axios", "@nuxtjs/proxy", "@nuxtjs/style-resources"],
+    modules: [
+        "@nuxtjs/axios",
+        "@nuxtjs/proxy",
+        "@nuxtjs/style-resources",
+        "cookie-universal-nuxt",
+        ["cookie-universal-nuxt", { parseJSON: true }],
+    ],
     axios: {
         proxy: true,
     },

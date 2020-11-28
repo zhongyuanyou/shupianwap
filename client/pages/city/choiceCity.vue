@@ -420,7 +420,10 @@ export default {
     },
     // 定位城市
     positionCity() {
-      this.POSITION_CITY(this.cityList)
+      this.POSITION_CITY({
+        type: 'rest',
+        cityList: this.cityList,
+      })
     },
     // 选择城市
     chooseCity(data) {

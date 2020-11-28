@@ -303,7 +303,10 @@ export default {
   mounted() {
     // 定位
     if (!this.cityName) {
-      this.POSITION_CITY(this.cityList)
+      this.POSITION_CITY({
+        type: 'init',
+        cityList: this.cityList,
+      })
     }
   },
   methods: {
