@@ -3,7 +3,7 @@
     <div class="subscribe-title">
       <client-only>
         <my-icon
-          name="toast_ic_remind"
+          name="per_ic_about"
           size="0.28rem"
           color="rgba(216, 216, 216, 1)"
         ></my-icon>
