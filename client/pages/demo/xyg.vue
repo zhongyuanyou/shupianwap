@@ -32,6 +32,8 @@
     />
     <br />
     <goods-item />
+    <br />
+    <Subscribe />
   </div>
 </template>
 
@@ -43,6 +45,7 @@ import SelectCheckBox from '@/components/common/filters/SelectCheckBox'
 import PriceFilter from '@/components/common/filters/PriceFilter'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import GoodsItem from '@/components/common/goodsItem/GoodsItem'
+import Subscribe from '@/components/list/Subscribe'
 
 export default {
   name: 'Xyg',
@@ -54,6 +57,7 @@ export default {
     PriceFilter,
     BottomConfirm,
     GoodsItem,
+    Subscribe,
   },
   data() {
     return {

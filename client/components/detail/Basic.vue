@@ -1,0 +1,100 @@
+<template>
+  <div class="basic">
+    <p class="basic_title">基本信息</p>
+    <div class="basic_offer">
+      <div class="user">
+        <sp-image
+          fit="cover"
+          width="0.38rem"
+          height="0.38rem"
+          src="https://img.yzcdn.cn/vant/cat.jpeg"
+        /><span>186***2232 等10人已出价</span>
+      </div>
+      <sp-button plain type="primary" size="small">去出价</sp-button>
+    </div>
+    <div class="open_app">
+      <div class="open_app_lf">
+        <sp-image
+          fit="cover"
+          width="0.57rem"
+          height="0.57rem"
+          src="https://img.yzcdn.cn/vant/cat.jpeg"
+        />
+        <span>薯片招人APP</span>
+      </div>
+      <sp-button type="primary" size="small">立即打开</sp-button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { Image, Button } from '@chipspc/vant-dgg'
+export default {
+  name: 'Basic',
+  components: {
+    [Image.name]: Image,
+    [Button.name]: Button,
+  },
+}
+</script>
+
+<style lang="less" scoped>
+.basic {
+  padding: 47px 40px 40px 40px;
+  background-color: #fff;
+  border-bottom: 24px solid #f8f8f8;
+  &_title {
+    font-size: 40px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #1a1a1a;
+    line-height: 52px;
+  }
+  &_offer {
+    height: 86px;
+    background-color: rgba(235, 243, 255, 0.5);
+    border-radius: 4px;
+    margin-top: 47px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    padding: 0 16px;
+    .user {
+      height: 86px;
+      font-size: 28px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #1a1a1a;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: row;
+      span {
+        margin-left: 19px;
+      }
+    }
+  }
+  .open_app {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 62px;
+    &_lf {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: row;
+      span {
+        margin-left: 24px;
+        font-size: 32px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #1a1a1a;
+        line-height: 64px;
+      }
+    }
+  }
+}
+</style>

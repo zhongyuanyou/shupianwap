@@ -141,28 +141,26 @@ export default {
     },
     open(index) {
       // 打开下拉选择框
-      console.log('open', index)
+      console.log(index)
       if (index === 0) {
         this.currentSelectActiveData = this.activeData
       }
     },
-    close(index) {
+    close() {
       console.log(123)
       // 关闭下拉选择框
-      if (index === 1 && this.selectValue !== 0) {
+      if (this.selectValue !== 0) {
         // 给下拉标题增加选中
         this.dropDownDom[1].classList.add('active')
       } else {
         this.dropDownDom[1].classList.remove('active')
       }
-      if (index === 0) {
-        this.activeData = this.currentSelectActiveData
-        this.currentSelectActiveData = null
-        if (this.activeData.length) {
-          this.dropDownDom[0].classList.add('active')
-        } else {
-          this.dropDownDom[0].classList.remove('active')
-        }
+      this.activeData = this.currentSelectActiveData
+      this.currentSelectActiveData = null
+      if (this.activeData.length) {
+        this.dropDownDom[0].classList.add('active')
+      } else {
+        this.dropDownDom[0].classList.remove('active')
       }
     },
     onLoad() {

@@ -49,8 +49,12 @@ export default {
     width: 100%;
     height: 520px;
     background-color: #999;
+    overflow: hidden;
     position: relative;
     /deep/ .sp-swipe-item {
+      height: 520px;
+    }
+    /deep/ .sp-image {
       height: 520px;
     }
     .custom-indicator {
