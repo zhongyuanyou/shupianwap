@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-28 10:07:24
+ * @LastEditTime: 2020-11-28 16:55:41
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -11,7 +11,11 @@
     class="goods-item"
     :class="{ 'goods-item--disable': status === 'offShelf' }"
   >
-    <sp-swipe-cell :disabled="status === 'offShelf'">
+    <sp-swipe-cell
+      ref="swipeCell"
+      :disabled="status === 'offShelf'"
+      :before-close="beforeClose"
+    >
       <div class="goods-item__content">
         <div class="goods-item__content-line-bottom sp-hairline--bottom">
           <div class="goods-item__main">
@@ -38,12 +42,14 @@
             type="primary"
             text="移入关注"
             class="goods-item__operation-attention"
+            @click="handleAttention"
           />
           <sp-button
             square
             type="danger"
             text="删除"
             class="goods-item__operation-delete"
+            @click="handleDetele"
           />
         </div>
       </template>
@@ -87,6 +93,29 @@ export default {
   methods: {
     handleChange(value) {
       console.log('handleChange:', value)
+    },
+    // position 为关闭时点击的位置
+    // instance 为对应的 SwipeCell 实例
+    beforeClose({ position, instance }) {
+      console.log('position:', position)
+      switch (position) {
+        case 'left':
+        case 'cell':
+          instance.close()
+          break
+        case 'outside':
+        case 'right':
+          break
+      }
+    },
+    handleDetele() {
+      console.log('handleDetele')
+      this.$emit('operation', { type: 'detele', item: {} })
+    },
+    handleAttention() {
+      console.log('handleAttention')
+      // this.$refs.swipeCell.close()
+      this.$emit('operation', { type: 'attention', item: {} })
     },
   },
 }

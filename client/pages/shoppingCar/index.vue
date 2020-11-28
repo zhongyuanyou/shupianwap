@@ -2,13 +2,14 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-27 14:38:53
+ * @LastEditTime: 2020-11-28 17:31:19
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
 
 <template>
   <div class="shopping-car">
+    <GoodsPopup ref="goodsPopup" />
     <div class="head">
       <sp-top-nav-bar
         title="购物车"
@@ -21,7 +22,7 @@
           <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
         </template>
         <template #right>
-          <span>管理</span>
+          <span>{{ shoppingCarStatus === 'edit' ? '完成' : '管理' }}</span>
         </template>
       </sp-top-nav-bar>
     </div>
@@ -40,7 +41,10 @@
               :key="item"
               class="shopping-car__goods-item"
             >
-              <GoodsItem :status="index === 1 ? 'offShelf' : 'sale'" />
+              <GoodsItem
+                :status="index === 1 ? 'offShelf' : 'sale'"
+                @operation="handleItemOperation"
+              />
             </div>
           </sp-list>
         </sp-pull-refresh>
@@ -56,36 +60,24 @@
         </div>
       </div>
     </div>
-    <div class="footer">
-      <sp-bottombar safe-area-inset-bottom>
-        <sp-bottombar-button type="primary" text="电话联系" />
-        <sp-bottombar-button type="info" text="在线联系" />
-      </sp-bottombar>
+    <div class="footer sp-hairline--top">
+      <Bottombar :status="shoppingCarStatus" />
     </div>
   </div>
 </template>
 
 <script>
-import {
-  TopNavBar,
-  Button,
-  DropdownMenu,
-  DropdownItem,
-  NavSearch,
-  Toast,
-  PullRefresh,
-  List,
-  Cell,
-  Image,
-  Tag,
-  Bottombar,
-  BottombarButton,
-} from '@chipspc/vant-dgg'
+import { TopNavBar, Button, Toast, PullRefresh, List } from '@chipspc/vant-dgg'
 
 import GoodsPro from '@/components/planner/GoodsPro'
 import GoodsItem from '@/components/shoppingCar/GoodsItem'
+import Bottombar from '@/components/shoppingCar/Bottombar'
+import GoodsPopup from '@/components/shoppingCar/GoodsPopup'
 
-import { city } from '@/utils/city'
+const shoppingCarStatusList = {
+  completed: '完成',
+  edit: '编辑',
+}
 
 export default {
   name: 'ShoppingCar',
@@ -94,16 +86,10 @@ export default {
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
-    [Cell.name]: Cell,
-    [Image.name]: Image,
-    [Tag.name]: Tag,
-    [NavSearch.name]: NavSearch,
-    [DropdownMenu.name]: DropdownMenu,
-    [DropdownItem.name]: DropdownItem,
-    [Bottombar.name]: Bottombar,
-    [BottombarButton.name]: BottombarButton,
+    GoodsPopup,
     GoodsPro,
     GoodsItem,
+    Bottombar,
   },
   data() {
     return {
@@ -112,6 +98,7 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
+      shoppingCarStatus: 'completed', // edit: 编辑
     }
   },
   computed: {},
@@ -124,6 +111,8 @@ export default {
     },
     onClickRight() {
       console.log('nav onClickRight')
+      this.shoppingCarStatus =
+        this.shoppingCarStatus === 'completed' ? 'edit' : 'completed'
     },
     getList() {
       this.loading = true
@@ -154,12 +143,29 @@ export default {
     onRefresh() {
       // 清空列表数据
       this.finished = false
-
       // 重新加载数据
       // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
       this.onLoad()
     },
+    handleItemOperation(value = {}) {
+      const { type, item } = value
+      console.log('type:', type)
+      switch (type) {
+        case 'detele':
+          this.deteleItem(item)
+          break
+        case 'attention':
+          this.attentionItem(item)
+          break
+      }
+    },
+    deteleItem(item) {
+      this.$refs.goodsPopup.open('detele').then(() => {
+        console.log('发起请求')
+      })
+    },
+    attentionItem() {},
   },
 }
 </script>
@@ -220,13 +226,6 @@ export default {
   }
   .footer {
     flex: 128px 0 0;
-    /deep/.sp-bottombar {
-      z-index: 100;
-      .sp-button--info {
-        background-color: #24ae68;
-        border: 1px solid #24ae68;
-      }
-    }
   }
   .recommend {
     &__title {
