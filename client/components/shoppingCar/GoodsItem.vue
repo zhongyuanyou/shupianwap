@@ -2,16 +2,16 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-27 15:06:46
+ * @LastEditTime: 2020-11-28 10:07:24
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
 <template>
-  <div class="goods-item">
-    <sp-swipe-cell
-      :disabled="status === 'offShelf'"
-      :class="{ 'goods-item--disable': status === 'offShelf' }"
-    >
+  <div
+    class="goods-item"
+    :class="{ 'goods-item--disable': status === 'offShelf' }"
+  >
+    <sp-swipe-cell :disabled="status === 'offShelf'">
       <div class="goods-item__content">
         <div class="goods-item__content-line-bottom sp-hairline--bottom">
           <div class="goods-item__main">
@@ -32,9 +32,28 @@
         </div>
       </div>
       <template #right>
-        <sp-button square text="删除" type="danger" class="delete-button" />
+        <div class="goods-item__operation">
+          <sp-button
+            square
+            type="primary"
+            text="移入关注"
+            class="goods-item__operation-attention"
+          />
+          <sp-button
+            square
+            type="danger"
+            text="删除"
+            class="goods-item__operation-delete"
+          />
+        </div>
       </template>
     </sp-swipe-cell>
+    <div
+      v-if="status === 'offShelf'"
+      class="goods-item--disable-tip flex-c-c flex-c-a-c"
+    >
+      <span class="division-line">·</span>
+    </div>
   </div>
 </template>
 
@@ -74,6 +93,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.flex-c-c {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.flex-c-a-c {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .goods-item--disable {
   filter: grayscale(100%);
   position: relative;
@@ -86,7 +117,40 @@ export default {
     bottom: 0;
     display: block;
     background-color: rgba(255, 255, 255, 0.8);
-    z-index: 1000;
+    z-index: 10;
+  }
+  &-tip {
+    position: absolute;
+    left: 116px;
+    top: 52px;
+    width: 120px;
+    height: 120px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    font-weight: 400;
+    color: #ffffff;
+    z-index: 11;
+    &::before {
+      content: '已下架';
+      font-size: 24px;
+    }
+    &::after {
+      content: 'off shelf';
+      font-size: 18px;
+    }
+  }
+  .division-line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    line-height: 12px;
+    &::before,
+    &::after {
+      content: '';
+      .horizontal-line(@width:30px; @bgColor:#ffffff;);
+      margin: 0 4px;
+    }
   }
 }
 
@@ -115,6 +179,20 @@ export default {
     padding-left: 0;
     &-line--top {
       padding: 32px 0;
+    }
+  }
+  &__operation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    font-weight: 400;
+    color: #ffffff;
+    height: 100%;
+    &-attention,
+    &-delete {
+      width: 120px;
+      height: 100%;
     }
   }
   /deep/.sp-hairline--top {

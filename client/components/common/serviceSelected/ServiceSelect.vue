@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-21 15:13:44
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-27 16:18:55
+ * @LastEditTime: 2020-11-28 11:47:37
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/serviceSelected/ServiceSelect.vue
 -->
@@ -180,7 +180,7 @@ export default {
   methods: {
     handleClickNav(navIndex) {
       console.log('navIndex:', navIndex)
-      const navItem = (this.items && this.items[0]) || {}
+      const navItem = (this.items && this.items[navIndex]) || {}
       this.$set(this.selectData, 0, { id: navItem.id, text: navItem.text })
       this.$set(this.selectData, 1, { services: [this.childrenList[0]] })
 
