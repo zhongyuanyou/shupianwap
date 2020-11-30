@@ -25,6 +25,10 @@ export default {
         return isColor(value)
       },
     },
+    bgColor: {
+      type: String,
+      default: '',
+    },
     size: {
       validator(value) {
         return /^(\.|\d+\.)?\d+(px|rem)$/.test(value)
@@ -44,11 +48,17 @@ export default {
       const style = {}
       const size = !!this.size
       const color = !!this.color
+      const bgColor = !!this.bgColor
       if (size) {
         style.fontSize = this.size
       }
       if (color) {
         style.color = this.color
+      }
+      if (bgColor) {
+        style.backgroundImage = this.bgColor
+        style['-webkit-background-clip'] = 'text'
+        style.color = 'transparent'
       }
       return style
     },

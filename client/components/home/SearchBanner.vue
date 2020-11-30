@@ -325,7 +325,7 @@ export default {
     },
     // 搜索框点击
     clickInputHandle() {
-      //   this.$router.push('/city/choiceCity')
+      this.$router.push('/search')
     },
   },
 }
