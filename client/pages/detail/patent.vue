@@ -1,5 +1,5 @@
 <template>
-  <div class="company">
+  <div>
     <DetailTemplate :info="info"></DetailTemplate>
   </div>
 </template>
@@ -7,7 +7,7 @@
 <script>
 import DetailTemplate from '~/components/detail/DetailTemplate'
 export default {
-  name: 'Company',
+  name: 'Patent',
   components: {
     DetailTemplate,
   },
@@ -24,15 +24,15 @@ export default {
         money: '25.00',
         planners: [
           {
-            name: '黄成',
+            name: '专利',
             avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
           },
           {
-            name: '黄成',
+            name: '专利',
             avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
           },
           {
-            name: '黄成',
+            name: '专利',
             avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
           },
         ],
@@ -45,11 +45,7 @@ export default {
       },
     }
   },
-  methods: {},
 }
 </script>
 
-<style lang="less" scoped>
-.company {
-}
-</style>
+<style scoped></style>

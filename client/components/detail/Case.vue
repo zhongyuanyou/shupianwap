@@ -11,12 +11,16 @@
       </div>
       <div class="case_evaluate">
         <p>22.5元</p>
-        <sp-rate
-          v-model="value"
-          size="0.24rem"
-          :readonly="true"
-          color="#FF624F"
-        />
+        <div class="score">
+          <sp-rate
+            v-model="value"
+            size="0.24rem"
+            :readonly="true"
+            color="#FF624F"
+            void-color="#bbb"
+          />
+          <span>{{ value }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -31,7 +35,7 @@ export default {
   },
   data() {
     return {
-      value: 3,
+      value: 3.5,
     }
   },
 }
@@ -41,6 +45,7 @@ export default {
 .case {
   background-color: #fff;
   padding: 47px 40px 37px 40px;
+  border-bottom: 24px solid #f8f8f8;
   &_title {
     font-size: 40px;
     font-family: PingFang SC;
@@ -90,6 +95,20 @@ export default {
     font-family: PingFang SC;
     font-weight: bold;
     color: #ec5330;
+    .score {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      flex-direction: row;
+      span {
+        font-size: 26px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #ff624f;
+        margin-left: 16px;
+        vertical-align: bottom;
+      }
+    }
   }
 }
 </style>

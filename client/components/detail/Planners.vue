@@ -33,7 +33,7 @@
             size="0.32rem"
             color="#4974F5"
         /></sp-button>
-        <sp-button round class="contact-btn"
+        <sp-button round class="contact-btn" @click="handleTel"
           ><my-icon
             class=""
             name="notify_ic_tel"
@@ -61,6 +61,11 @@ export default {
           planners: [],
         }
       },
+    },
+  },
+  methods: {
+    handleTel() {
+      window.location.href = 'tel://18116757032'
     },
   },
 }
