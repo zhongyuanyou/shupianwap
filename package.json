@@ -64,7 +64,7 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "pre": "yarn --registry https://registry.npm.taobao.org || cnpm install || npm install --registry https://registry.npm.taobao.org ",
+    "pre": "yarn || cnpm install || npm install --registry https://registry.npm.taobao.org ",
     "dev": "cross-env DGG_SERVER_ENV=development egg-bin dev",
     "dev:release": "cross-env DGG_SERVER_ENV=release egg-bin dev",
     "dev:production": "cross-env DGG_SERVER_ENV=production egg-bin dev",
