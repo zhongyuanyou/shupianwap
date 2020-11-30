@@ -1,7 +1,13 @@
 <template>
   <div class="search-page">
     <sp-sticky>
-      <Search ref="searchRef" :icon-left="0.24" placeholder="请输入搜索内容">
+      <Search
+        ref="searchRef"
+        v-model="value"
+        :icon-left="0.24"
+        placeholder="请输入搜索内容"
+        @searchKeydownHandle="searchKeydownHandle"
+      >
         <template v-slot:right>
           <a class="cloose-btn" href="javascript:void(0);" @click="clooseHandle"
             >取消</a
@@ -10,17 +16,22 @@
       </Search>
     </sp-sticky>
     <!-- S 搜索历史 -->
-    <div class="search-moudle search-history">
+    <div v-if="historyData.length" class="search-moudle search-history">
       <div>
         <strong>搜索历史</strong>
         <my-icon
           name="search_ic_deleted"
           size="0.32rem"
           color="#CCCCCC"
+          @click.native="removeHistory"
         ></my-icon>
       </div>
       <ul>
-        <li v-for="item in historyData" :key="item">
+        <li
+          v-for="(item, index) in historyData"
+          :key="index"
+          @click="keyClickHandle(item)"
+        >
           <a href="javascript:void(0);">{{ item }}</a>
         </li>
       </ul>
@@ -30,18 +41,33 @@
     <div class="search-moudle search-need">
       <div>
         <strong>猜您需要</strong>
-        <my-icon name="search_ic_re" size="0.32rem" color="#CCCCCC"></my-icon>
+        <my-icon
+          name="search_ic_re"
+          size="0.32rem"
+          color="#CCCCCC"
+          @click="refreshKeywords"
+        ></my-icon>
       </div>
-      <ul>
-        <li v-for="item in searchTop" :key="item">
+      <ul class="search-top">
+        <li
+          v-for="(item, index) in searchTop"
+          :key="index + item"
+          @click="keyClickHandle(item)"
+        >
           <my-icon
-            name="news_ic_heat"
+            name="search_ic_hot"
             size="0.24rem"
-            bgColor="linear-gradient(0deg, #FB5B44 0%, #FE8878 100%);"
+            bg-color="linear-gradient(0deg, #FB5B44 0%, #FE8878 100%)"
           ></my-icon>
           <a href="javascript:void(0);">{{ item }}</a>
         </li>
-        <li v-for="item in searchRec" :key="item">
+      </ul>
+      <ul class="search-btm">
+        <li
+          v-for="(item, index) in searchRec"
+          :key="index"
+          @click="keyClickHandle(item)"
+        >
           <a href="javascript:void(0);">{{ item }}</a>
         </li>
       </ul>
@@ -53,7 +79,11 @@
         <strong>热搜词</strong>
       </div>
       <ul>
-        <li v-for="(item, index) in searchHot" :key="index">
+        <li
+          v-for="(item, index) in searchHot"
+          :key="index"
+          @click="keyClickHandle(item.keywords)"
+        >
           <span>{{ index + 1 }}</span>
           <p>{{ item.keywords }}</p>
           <i>{{ item.count }}</i>
@@ -75,20 +105,18 @@ export default {
   },
   data() {
     return {
-      historyData: [
-        '猜您需要',
-        '账目干净',
-        '成立三年',
-        '小规模记账',
-        '纳税人代理记账',
-      ],
-      searchTop: ['预约上门服务', '找规划师', '成立三年'],
+      value: '',
+      historyData: [],
+      searchTop: ['预约上门服务', '找规划师', '成立三年', '成立三年'],
       searchRec: [
         '科技公司',
         '账目干净',
         '成立三年',
         '小规模记账',
         '纳税人代理记账',
+        '纳税人代理记账',
+        '纳税人',
+        '纳税人',
       ],
       searchHot: [
         {
@@ -134,15 +162,55 @@ export default {
       ],
     }
   },
+  mounted() {
+    this.historyData = this.$cookies.get('searchHistory')
+      ? this.$cookies.get('searchHistory')
+      : []
+  },
   methods: {
     // 取消
     clooseHandle() {
       this.$router.back()
     },
-    // 搜索框内容变化
-    valChangeHandle(val) {
-      console.log(val)
+    keyClickHandle(val) {
+      this.value = val
+      this.searchKeydownHandle()
     },
+    // 搜索前添加历史记录
+    searchKeydownHandle() {
+      const historyList = this.$cookies.get('searchHistory')
+        ? this.$cookies.get('searchHistory')
+        : []
+      const isHave = historyList.findIndex((val) => {
+        return val === this.value
+      })
+      if (isHave !== -1) {
+        historyList.splice(isHave, 1)
+      }
+      historyList.unshift(this.value)
+      if (historyList.length > 16) {
+        historyList.pop()
+      }
+      this.$cookies.set('searchHistory', historyList, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7, // 过期时间
+      })
+      if (this.value) {
+        this.$router.push({
+          path: '/search/searchResult',
+          query: {
+            keywords: this.value,
+          },
+        })
+      }
+    },
+    // 清除搜索历史
+    removeHistory() {
+      this.$cookies.remove('searchHistory')
+      this.historyData = []
+    },
+    // 刷新搜索词
+    refreshKeywords() {},
   },
 }
 </script>
@@ -184,6 +252,7 @@ export default {
         margin: 16px 16px 0 0;
         background: #f9f9f9;
         text-align: center;
+        .textOverflow(1);
         > a {
           font-size: 24px;
           font-family: PingFang SC;
@@ -193,10 +262,21 @@ export default {
       }
     }
   }
-
+  .search-history > ul {
+    max-height: 172px;
+    overflow: hidden;
+  }
   .search-need {
     padding-top: 32px;
     padding-bottom: 0;
+    .search-top {
+      max-height: 86px;
+      overflow: hidden;
+    }
+    .search-btm {
+      max-height: 172px;
+      overflow: hidden;
+    }
   }
   .search-hot {
     padding-top: 56px;

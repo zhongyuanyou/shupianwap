@@ -97,28 +97,26 @@ export default {
       font-weight: bold;
       color: #222222;
       line-height: 42px;
-      margin-top: -4px;
+      margin-top: -5px;
       .textOverflow(2);
       .pro-lable {
         display: inline-block;
         position: relative;
-        top: 4px;
+        top: 5px;
         margin-right: 8px;
         background-color: #ec5330;
         border-radius: 4px;
         overflow: hidden;
-        height: 32px;
+        line-height: 32px;
         > i {
           position: relative;
-          top: -8px;
           font-style: inherit;
-          height: 32px;
           display: inline-flex;
           align-items: center;
           padding: 0 7px;
+          line-height: 32px;
           color: #fff;
           font-size: 20px;
-          line-height: 16px;
           font-family: PingFang SC;
           color: #ffffff;
         }
@@ -135,7 +133,6 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #5c7499;
-        height: 28px;
         background: #f0f2f5;
         border-radius: 4px;
         padding: 0 6px;
