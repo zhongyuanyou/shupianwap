@@ -4,7 +4,6 @@
       <sp-top-nav-bar ellipsis title="进度详情">
         <template #left>
           <sp-icon name="arrow-left" size="20" @click="back" />
-          <sp-icon name="cross" size="20" @click="back" />
         </template>
       </sp-top-nav-bar>
     </sp-sticky>
