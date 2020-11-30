@@ -29,6 +29,7 @@
         @input="searchInputHandle"
         @blur="searchBlurHandle"
         @focus="searchFocusHandle"
+        @keydown="searchKeydownHandle"
       />
       <!-- s 禁用输入框时，隐藏真实输入款，模拟一个输入框 -->
       <span v-else class="imitate-input" @click="clickInputHandle">{{
@@ -95,20 +96,21 @@ export default {
     },
     // 失焦 事件
     searchBlurHandle(e) {
-      console.log(e)
       this.$emit('searchBlurHandle', e)
     },
     // 触焦 事件
     searchFocusHandle(e) {
-      console.log(e)
       this.$emit('searchFocusHandle', e)
     },
     // 点击 事件
     clickInputHandle() {
       this.$emit('clickInputHandle')
     },
-    searchChangeHandle() {
-      console.log(this.value)
+    // 回车 事件
+    searchKeydownHandle(e) {
+      if (e.keyCode === 13) {
+        this.$emit('searchKeydownHandle', e)
+      }
     },
   },
 }

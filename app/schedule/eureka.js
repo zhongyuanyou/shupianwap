@@ -2,7 +2,7 @@
 module.exports = app => {
   return {
     schedule: {
-      interval: '20s', // 20秒间隔
+      interval: '10s', // 20秒间隔
       type: 'worker', // 每台机器上只有一个 worker 会执行这个定时任务，每次执行定时任务的 worker 的选择是随机的。
       immediate: true, // 启动时立即执行一次
     },

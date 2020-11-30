@@ -15,7 +15,9 @@
       <sp-work-tab title="企业服务">
         <serveGoods />
       </sp-work-tab>
-      <sp-work-tab title="资产交易"></sp-work-tab>
+      <sp-work-tab title="资产交易">
+        <JyGoods />
+      </sp-work-tab>
     </sp-work-tabs>
 
     <!--E筛选栏-->
@@ -26,6 +28,7 @@
 import { WorkTabs, WorkTab } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import serveGoods from '@/components/list/serveGoods'
+import JyGoods from '@/components/list/JyGoods'
 export default {
   name: 'SearchResult',
   components: {
@@ -33,6 +36,7 @@ export default {
     [WorkTabs.name]: WorkTabs,
     [WorkTab.name]: WorkTab,
     serveGoods,
+    JyGoods,
     // [Badge.name]: Badge,
   },
   data() {

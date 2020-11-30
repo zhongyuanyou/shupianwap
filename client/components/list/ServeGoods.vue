@@ -23,7 +23,7 @@
         @close="close(1)"
       />
     </sp-dropdown-menu>
-    <install-app ref="installApp" />
+    <install-app v-show="listShow" ref="installApp" />
     <sp-list
       v-show="listShow"
       v-model="loading"
@@ -127,10 +127,6 @@ export default {
       dropDownMenuHeight -
       topHeight +
       'px'
-    /* this.dropDownDom = [].slice.apply(
-      null,
-      document.querySelectorAll('.dropdownItem')
-    ) */
     this.$nextTick(() => {
       this.dropDownDom = [].slice.call(
         document.querySelectorAll('.dropdownItem')
@@ -189,15 +185,19 @@ export default {
       this.$refs.item.toggle()
     },
     concatStr(val) {
-      let str = ''
+      /* let str = ''
       str = val[0].text
       if (val[1] && val[1].services && val[1].services.length) {
         val[1].services.forEach((item) => {
           str += ','
           str += item.text
         })
+      } */
+      if (val[1] && val[1].services && val[1].services.length > 1) {
+        this.dropdownTitle1 = '多选'
+      } else if (val[1] && val[1].services && val[1].services.length === 1) {
+        this.dropdownTitle1 = val[1].services[0].text
       }
-      this.dropdownTitle1 = str
     },
   },
 }
@@ -250,7 +250,7 @@ export default {
     font-weight: bold;
   }
   .subscribe {
-    padding: 40px;
+    padding: 0 40px;
   }
 }
 </style>
