@@ -1,0 +1,80 @@
+<template>
+  <div class="check-box-list">
+    <sp-checkbox-group v-model="result">
+      <sp-cell-group>
+        <sp-cell
+          v-for="(item, index) in list"
+          :key="index"
+          :title="`${item.title}`"
+          :label="`售价: ${item.price}`"
+          clickable
+          @click="toggle(index)"
+        >
+          <template #right-icon>
+            <sp-checkbox ref="checkboxes" :name="item" />
+          </template>
+        </sp-cell>
+      </sp-cell-group>
+    </sp-checkbox-group>
+    <div class="submit">
+      <sp-button type="danger" block round @click="onSubmit()">
+        确认选择
+      </sp-button>
+    </div>
+  </div>
+</template>
+<script>
+import {
+  Checkbox,
+  CheckboxGroup,
+  Cell,
+  CellGroup,
+  Button,
+} from '@chipspc/vant-dgg'
+export default {
+  components: {
+    [Checkbox.name]: Checkbox,
+    [CheckboxGroup.name]: CheckboxGroup,
+    [Cell.name]: Cell,
+    [CellGroup.name]: CellGroup,
+    [Button.name]: Button,
+  },
+  props: {
+    list: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+  },
+  data() {
+    return {
+      result: [],
+    }
+  },
+  methods: {
+    toggle(index) {
+      this.$refs.checkboxes[index].toggle()
+    },
+    onSubmit() {
+      // 提交选择信息
+      console.log(this.result)
+    },
+  },
+}
+</script>
+<style lang="less" scoped>
+.check-box-list {
+  position: relative;
+  padding: 0 42px 0 40px;
+  /deep/.sp-cell__label {
+    color: #ec5330 !important;
+  }
+  .submit {
+    width: 85%;
+    position: fixed;
+    z-index: 20;
+    bottom: 15px;
+  }
+}
+</style>
