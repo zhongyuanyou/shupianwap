@@ -14,13 +14,13 @@
       <div class="need_item_rt">
         <p class="title">成都市网络信息科技有限公司</p>
         <div class="label">
-          <span v-for="(item, index) in label" :key="index">{{
-            `${item}${index == label.length - 1 ? '' : '|'}`
+          <span v-for="(lItem, index) in label" :key="index">{{
+            `${lItem}${index == label.length - 1 ? '' : '|'}`
           }}</span>
         </div>
         <div class="tags">
-          <div v-for="(item, index) in tags" :key="index" class="tags_item">
-            {{ item }}
+          <div v-for="(tItem, index) in tags" :key="index" class="tags_item">
+            {{ tItem }}
           </div>
         </div>
         <p class="money">4.25元</p>
