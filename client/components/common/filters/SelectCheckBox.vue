@@ -88,7 +88,7 @@ export default {
       this.renderArr = this.handleRenderArr(chunkArr(arr, 4))
     },
     renderArr(val) {
-      if (val.length > 4) {
+      if (val.length > 4 && !this.isShowAll) {
         // 如果renderArr的长度超过了4层则当前渲染只显示4层
         this.currentRenderArr = val.slice(0, 4)
       } else {
