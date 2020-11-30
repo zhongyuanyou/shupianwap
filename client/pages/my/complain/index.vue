@@ -174,6 +174,7 @@ export default {
 <style lang="less" scoped>
 .complaint {
   width: 100%;
+  padding-bottom: 160px;
   /deep/.sp-top-nav-bar__right {
     font-size: 28px;
   }
