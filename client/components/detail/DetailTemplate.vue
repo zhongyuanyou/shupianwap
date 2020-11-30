@@ -36,6 +36,9 @@
     <!--S 第七板块 常见问题-->
     <Question :info="{ ...info }" />
     <!--E 第七板块 常见问题-->
+    <!--S 第八板块 成功案例-->
+    <Case :info="{ ...info }" />
+    <!--E 第八板块 成功案例-->
     <sp-bottombar safe-area-inset-bottom>
       <sp-bottombar-button type="info" :text="text1"> </sp-bottombar-button>
       <sp-bottombar-button type="primary" :text="text2"> </sp-bottombar-button>
@@ -60,6 +63,7 @@ import Commitment from '~/components/detail/Commitment'
 import Planners from '~/components/detail/Planners'
 import Dynamic from '~/components/detail/Dynamic'
 import Question from '~/components/detail/Question'
+import Case from '~/components/detail/Case'
 export default {
   name: 'DetailTemplate',
   components: {
@@ -77,6 +81,7 @@ export default {
     Planners,
     Dynamic,
     Question,
+    Case,
   },
   props: {
     info: {
