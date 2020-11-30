@@ -1,6 +1,9 @@
 <template>
   <div class="demo-page">
     <div class="modle-item">
+      <Search></Search>
+    </div>
+    <div class="modle-item">
       <TabCurve
         :tab-list="tabList"
         @selectTabHandle="selectTabHandle"
@@ -10,11 +13,13 @@
 </template>
 
 <script>
-import TabCurve from '@/components/tab/TabCurve'
+import TabCurve from '@/components/common/tab/TabCurve'
+import Search from '@/components/common/search/Search'
 export default {
   name: 'Test',
   components: {
     TabCurve,
+    Search,
   },
   data() {
     return {
@@ -63,8 +68,7 @@ export default {
 .demo-page {
   width: 100%;
   min-height: 3000px;
-  padding-top: 300px;
-  background-color: red;
+  background-color: pink;
   .modle-item {
     width: 100%;
     // padding: 0 40px;

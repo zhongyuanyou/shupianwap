@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-21 09:58:16
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-21 14:30:23
+ * @LastEditTime: 2020-11-23 09:52:21
  * @Description: file content
  * @FilePath: /chips-wap/client/components/RecommendDialog.vue
 -->
@@ -11,22 +11,23 @@
   <div class="recommend-dialog">
     <sp-popup
       v-model="visible"
-      v-bind="$attrs"
-      v-on="$listeners"
       position="center"
       class="recommend-dialog_wrap"
       :closeable="false"
+      v-bind="$attrs"
+      v-on="$listeners"
     >
       <div class="recommend-dialog-content">
         <div class="recommend-dialog-content_body">
           <slot name="default"> 当前内容为空</slot>
         </div>
         <div class="recommend-dialog-content_foot">
-          <sp-button
-            round
-            class="close-btn"
-            icon="cross"
-            @click="hanleClose"
+          <sp-button round class="close-btn" @click="hanleClose"
+            ><my-icon
+              name="popup_ic_closeb"
+              size="0.76rem"
+              color="rgba(255, 255, 255, 1)"
+            ></my-icon
           ></sp-button>
         </div>
       </div>
@@ -38,7 +39,11 @@
 import { Popup, Button } from '@chipspc/vant-dgg'
 
 export default {
-  name: 'recommend-dialog',
+  name: 'RecommendDialog',
+  components: {
+    [Popup.name]: Popup,
+    [Button.name]: Button,
+  },
   model: {
     prop: 'show',
     event: 'update',
@@ -50,10 +55,6 @@ export default {
     },
   },
 
-  components: {
-    [Popup.name]: Popup,
-    [Button.name]: Button,
-  },
   data() {
     return {}
   },
@@ -95,6 +96,7 @@ export default {
         width: 76px;
         height: 76px;
         color: #ffffff;
+        border: none;
         background-color: transparent;
       }
     }

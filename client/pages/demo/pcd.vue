@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-20 09:56:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-21 14:38:31
+ * @LastEditTime: 2020-11-23 08:39:23
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/demo/pcd.vue
 -->
@@ -32,15 +32,20 @@
     <sp-button class="btn" type="primary" @click="handleAppInstallBtn"
       >app下载推荐框调用</sp-button
     >
+    <div class="m-t-10">
+      <ServiceSelect :active-data="activeData" @select="handleSelect">
+      </ServiceSelect>
+    </div>
   </div>
 </template>
 
 <script>
 import { Button, Toast } from '@chipspc/vant-dgg'
-import ImgAuthDialog from '@/components/imgAuth/ImgAuthDialog'
-import ImgAuthDialogFn from '@/components/imgAuth'
+import ImgAuthDialog from '@/components/common/imgAuth/ImgAuthDialog'
+import ImgAuthDialogFn from '@/components/common/imgAuth'
 import RecommendDialog from '@/components/RecommendDialog'
-import InstallAppDialog from '@/components/app/InstallAppDialog'
+import InstallAppDialog from '@/components/common/app/InstallAppDialog'
+import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
 export default {
   name: 'Test',
   components: {
@@ -48,12 +53,29 @@ export default {
     ImgAuthDialog,
     RecommendDialog,
     InstallAppDialog,
+    ServiceSelect,
   },
   data() {
     return {
       show: false,
       showRecommendDialog: false,
       showInstallAppDialog: false,
+      activeData: [
+        { text: '工商服务', id: '1' },
+        {
+          services: [
+            {
+              text: '有限公司注册',
+              id: 1,
+            },
+            {
+              text: '外资公司注册',
+              id: 2,
+              disabled: true,
+            },
+          ],
+        },
+      ],
     }
   },
   methods: {
@@ -65,6 +87,9 @@ export default {
     },
     handleDialogClosed() {
       console.log('触发关闭！')
+    },
+    handleSelect(selectedData) {
+      console.log('selectedData:', selectedData)
     },
     handleImgAuthBtn() {
       // 方法一： 通过组件调用
@@ -92,6 +117,9 @@ export default {
   }
   .btn {
     margin: 20px;
+  }
+  .m-t-10 {
+    margin-top: 10px;
   }
 }
 </style>

@@ -102,7 +102,10 @@ module.exports = {
         ],
     },
     loading: { color: "#fff" },
-    css: ["~assets/css/reset.css"],
+    css: ["~assets/css/reset.css", "~assets/styles/reset-vant.css"],
+    styleResources: {
+        less: "~/assets/styles/variables.less",
+    },
     plugins: [
         { src: "@/plugins/axios", ssr: true },
         { src: "@/plugins/router", ssr: false },
@@ -110,7 +113,13 @@ module.exports = {
         { src: "@/plugins/my-icon", ssr: true },
     ],
     buildModules: ["@nuxtjs/eslint-module"],
-    modules: ["@nuxtjs/axios", "@nuxtjs/proxy", "@nuxtjs/style-resources"],
+    modules: [
+        "@nuxtjs/axios",
+        "@nuxtjs/proxy",
+        "@nuxtjs/style-resources",
+        "cookie-universal-nuxt",
+        ["cookie-universal-nuxt", { parseJSON: true }],
+    ],
     axios: {
         proxy: true,
     },
@@ -134,7 +143,7 @@ module.exports = {
                     rootValue: 100,
                     minPixelValue: 2,
                     propWhiteList: [],
-                    exclude: "/node_modules|floder_name/i",
+                    exclude: /(node_modules)/,
                 },
             },
             preset: {

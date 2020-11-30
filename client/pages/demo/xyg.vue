@@ -1,9 +1,7 @@
 <template>
   <div>
     <OpenApp />
-    <br />
     <InstallApp />
-    <br />
     <button @click="showAll">全部</button>
     <button @click="hideMore">隐藏</button>
     <button @click="clearSelect">清除所有选项</button>
@@ -22,21 +20,44 @@
       @minInput="minInput"
       @maxInput="maxInput"
     />
+    <br />
+    <BottomConfirm />
+    <br />
+    <sp-datetime-picker
+      v-model="currentDate"
+      type="date"
+      title="自定义列排序"
+      :columns-order="['month', 'day', 'year']"
+      :formatter="formatter"
+    />
+    <br />
+    <goods-item />
+    <br />
+    <Subscribe />
   </div>
 </template>
 
 <script>
-import OpenApp from '@/components/app/OpenApp'
-import InstallApp from '@/components/app/InstallApp'
-import SelectCheckBox from '@/components/filters/SelectCheckBox'
-import PriceFilter from '@/components/filters/PriceFilter'
+import { DatetimePicker } from '@chipspc/vant-dgg'
+import OpenApp from '@/components/common/app/OpenApp'
+import InstallApp from '@/components/common/app/InstallApp'
+import SelectCheckBox from '@/components/common/filters/SelectCheckBox'
+import PriceFilter from '@/components/common/filters/PriceFilter'
+import BottomConfirm from '@/components/common/filters/BottomConfirm'
+import GoodsItem from '@/components/common/goodsItem/GoodsItem'
+import Subscribe from '@/components/list/Subscribe'
+
 export default {
-  name: 'xyg',
+  name: 'Xyg',
   components: {
     OpenApp,
     InstallApp,
     SelectCheckBox,
+    [DatetimePicker.name]: DatetimePicker,
     PriceFilter,
+    BottomConfirm,
+    GoodsItem,
+    Subscribe,
   },
   data() {
     return {
@@ -122,6 +143,7 @@ export default {
           name: '科技信息',
         },
       ],
+      currentDate: new Date(),
       priceList: [
         {
           name: '1万以下',
@@ -147,6 +169,18 @@ export default {
     }
   },
   methods: {
+    formatter(type, val) {
+      if (type === 'year') {
+        return val + '年'
+      }
+      if (type === 'month') {
+        return val + '月'
+      }
+      if (type === 'day') {
+        return val + '日'
+      }
+      return val
+    },
     showAll() {
       this.$refs.selectCheckBox.showAll()
     },
@@ -180,4 +214,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+button {
+  font-size: 28px;
+}
+</style>

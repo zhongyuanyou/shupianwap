@@ -1,0 +1,189 @@
+<template>
+  <div class="card_item" @click="handleClick">
+    <div v-if="!layout || !image">
+      <p class="title">
+        <span v-if="favour.hot" class="hot">热门</span>{{ favour.title }}
+      </p>
+      <sp-image
+        v-if="image && image.src"
+        height="3.78rem"
+        radius="0.08rem"
+        fit="cover"
+        class="normal_img"
+        :src="image.src"
+      />
+      <div class="card_item_bot">
+        <p class="card_item_bot_lf">
+          {{ favour.name }}<span>{{ favour.time }}</span>
+        </p>
+        <div class="hot_con">
+          <my-icon name="news_ic_heat" color="#fff" size="0.17rem" />
+          <p class="num">{{ favour.value }}</p>
+        </div>
+      </div>
+    </div>
+    <div v-else class="space_item">
+      <div class="space_item_lf">
+        <p :class="['title', 'space_title']">
+          <span v-if="favour.hot" class="hot">热门</span>{{ favour.title }}
+        </p>
+        <p class="space_lf">
+          {{ favour.name }}<span>{{ favour.time }}</span>
+        </p>
+      </div>
+      <div class="space_img_con">
+        <div :class="['hot_con', 'hot_con_pos']">
+          <my-icon name="news_ic_heat" color="#fff" size="0.17rem" />
+          <p class="num">{{ favour.value }}</p>
+        </div>
+        <sp-image
+          v-if="image && image.src"
+          width="2.48rem"
+          height="1.8rem"
+          radius="0.08rem"
+          fit="cover"
+          :src="image.src"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { Image } from '@chipspc/vant-dgg'
+export default {
+  name: 'CardItem',
+  components: {
+    [Image.name]: Image,
+  },
+  props: {
+    favour: {
+      type: Object,
+      default: () => {
+        return {
+          title: '',
+          icon: '',
+          value: 0,
+        }
+      },
+    },
+    image: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+    layout: {
+      type: Boolean,
+      default: () => {
+        return false
+      },
+    },
+  },
+  methods: {
+    handleClick() {
+      // 点击
+      this.$emit('click')
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped>
+.card_item {
+  .sp-cell {
+    padding: 40px 32px;
+  }
+  &_bot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 33px;
+    &_lf {
+      font-size: 22px;
+      color: #999;
+      span {
+        margin-left: 21px;
+      }
+    }
+  }
+  .normal_img {
+    margin-top: 33px;
+  }
+  .space_item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: row;
+    &_lf {
+      height: 180px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-direction: column;
+      .space_lf {
+        font-size: 22px;
+        color: #999;
+        line-height: 42px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        span {
+          margin-left: 21px;
+        }
+      }
+    }
+  }
+  .title {
+    color: #333;
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 46px;
+    font-family: PingFang SC;
+    .hot {
+      padding: 0 7px;
+      height: 32px;
+      background: #fa5741;
+      border-radius: 3px;
+      font-size: 22px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #ffffff;
+      margin-right: 10px;
+      line-height: 46px;
+      vertical-align: bottom;
+    }
+  }
+  .space_title {
+    width: 381px;
+  }
+  .space_img_con {
+    position: relative;
+    height: 180px;
+    .hot_con_pos {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      z-index: 5;
+    }
+  }
+  .hot_con {
+    width: 84px;
+    height: 38px;
+    border-radius: 19px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    .num {
+      font-size: 20px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #fff;
+      margin-left: 10px;
+    }
+  }
+}
+</style>
