@@ -58,10 +58,14 @@
             @change="handleStepperChange"
           />
         </div>
-        <div class="sku-service-resource">
+        <div class="sku-service-group">
           <SkuServiceRow :sku-row="{ k: '服务资源' }">
-            <div class="sku-service-resource-wrap">
-              <sp-cell class="sku-service-resource__item" is-link>
+            <div class="sku-service-resource">
+              <sp-cell
+                class="sku-service-resource__item"
+                is-link
+                @click="handleResourceClick('address')"
+              >
                 <template #title>
                   <span class="sku-service-resource__item-title"
                     >注册地址：</span
@@ -94,13 +98,48 @@
               </sp-cell>
             </div>
           </SkuServiceRow>
+          <div class="sku-service-add sp-hairline--bottom">
+            <div class="sku-service-add__title">增值服务</div>
+            <div class="sku-service-add__item">
+              <SkuServiceRow
+                class="sku-service-add__sub-row"
+                :sku-row="sku.tree[2]"
+                :is-sub="true"
+              >
+              </SkuServiceRow>
+              <SkuServiceRow
+                class="sku-service-add__sub-row"
+                :sku-row="sku.tree[2]"
+                :is-sub="true"
+              >
+              </SkuServiceRow>
+            </div>
+          </div>
         </div>
       </template>
-      <template #extra-sku-group="{}">
-        <!-- <div>额外的sku</div> -->
-      </template>
+
       <template #sku-stepper="{}">
         <div></div>
+      </template>
+      <template #sku-actions="{ skuEventBus }"
+        ><div class="sku-service-actions">
+          <sp-button
+            class="sku-service-actions__car-btn"
+            size="large"
+            type="warning"
+          >
+            加入购物车
+          </sp-button>
+          <!-- 直接触发 sku 内部事件，通过内部事件执行 onBuyClicked 回调 -->
+          <sp-button
+            class="sku-service-actions__buy-btn"
+            size="large"
+            type="danger"
+            @click="skuEventBus.$emit('sku:buy')"
+          >
+            立即购买
+          </sp-button>
+        </div>
       </template>
     </sp-sku>
   </div>
@@ -201,6 +240,29 @@ export default {
               },
             ],
           },
+          {
+            k: '极速办理',
+            k_s: 's3',
+            k_id: '3',
+            v: [
+              {
+                id: '1',
+                name: '3天以内完成￥100.00',
+              },
+              {
+                id: '2',
+                name: '5天以内完成￥80.00',
+              },
+              {
+                id: '3',
+                name: '7天以内完成￥60.00',
+              },
+              {
+                id: '4',
+                name: '10天以内完成￥50.00',
+              },
+            ],
+          },
         ],
         list: [
           {
@@ -272,6 +334,9 @@ export default {
     handleStepperChange(event) {
       this.$emit('stepper-change', event)
     },
+    handleResourceClick(type) {
+      console.log('handleResourceClick type:', type)
+    },
   },
 }
 </script>
@@ -322,9 +387,8 @@ export default {
   &-stepper-wrap {
     padding: 32px 0;
   }
+
   &-resource {
-    &-wrap {
-    }
     &__item {
       height: 72px;
       background: #f8f8f8;
@@ -359,6 +423,41 @@ export default {
       &-operation--placehodler {
         color: #999999;
       }
+    }
+  }
+  &-add {
+    padding-top: 30px;
+    &__title {
+      font-size: 28px;
+      font-weight: bold;
+      color: #222222;
+      line-height: 32px;
+    }
+    &__item {
+    }
+    &__sub-row {
+      padding: 30px 0 24px 0;
+    }
+  }
+  &-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffffff;
+    line-height: 36px;
+    &__car-btn {
+      width: 327px;
+      height: 100px;
+      background-color: #fe8c29;
+      border-radius: 8px;
+    }
+    &__buy-btn {
+      width: 327px;
+      height: 100px;
+      background: #ec5330;
+      border-radius: 8px;
     }
   }
 }

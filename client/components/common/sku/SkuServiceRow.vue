@@ -2,36 +2,28 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 15:10:43
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-01 16:55:21
+ * @LastEditTime: 2020-12-01 19:41:50
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/sku/SkuServiceRow.vue
 -->
 <template>
-  <div
-    class="sku-service-row sp-hairline--bottom"
-    :class="{ 'sp-hairline--bottom': !isSub }"
-  >
-    <div v-if="!isSub" class="sku-service-row__title">
-      <span>{{ skuRow.k }}</span>
-      <span class="sku-service-row__collapse-btn">展示全部</span>
-    </div>
-    <div v-else class="sku-service-row__sub-title">
-      <span>{{ skuRow.k }}</span>
-      <span class="sku-service-row__collapse-btn">展示全部</span>
-    </div>
-    <div
-      class="sku-service-row__wrap"
-      :class="{ 'sku-service-row__collapse': false }"
-    >
-      <slot name="default">
-        <template v-for="item of skuRow.v">
-          <SkuServiceRowItem
-            :key="item.id"
-            :sku-value="item"
-            @sku-select="handleSelect"
-          />
-        </template>
-      </slot>
+  <div class="sku-service-row" :class="{ 'sp-hairline--bottom': !isSub }">
+    <div :class="{ 'sku-service-row-sub': isSub }">
+      <div class="sku-service-row__title">
+        <span>{{ skuRow.k }}</span>
+      </div>
+
+      <div class="sku-service-row__wrap">
+        <slot name="default">
+          <template v-for="item of skuRow.v">
+            <SkuServiceRowItem
+              :key="item.id"
+              :sku-value="item"
+              @sku-select="handleSelect"
+            />
+          </template>
+        </slot>
+      </div>
     </div>
   </div>
 </template>
@@ -103,22 +95,24 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 26px;
-    font-weight: 500;
-    color: #555555;
-    line-height: 30px;
   }
-  &__collapse-btn {
-    font-size: 24px;
-    font-weight: 400;
-    color: #4974f5;
-    line-height: 28px;
-  }
-  .sku-service-row__wrap {
+  &__wrap {
     margin: 30px -16px 0 0;
   }
   /deep/.sku-service-row-item {
     margin: 0 16px 16px 0;
+  }
+
+  &-sub {
+    .sku-service-row__title {
+      font-size: 26px;
+      font-weight: 500;
+      color: #555555;
+      line-height: 30px;
+    }
+    .sku-service-row__wrap {
+      margin: 24px -16px 0 0;
+    }
   }
 }
 </style>
