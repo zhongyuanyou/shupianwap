@@ -32,8 +32,10 @@ export default {
       keywords: '',
       list: [
         {
-          title: '天津小学何时招生？这个区暂缓随迁 子女入学登记家长速看',
-          content: '你觉得在一个战斗中，究竟聪明人和疯子谁会 赢？',
+          title:
+            '天津小学何时招生？这个区暂缓随迁 子女入学登记家长速看这个区暂缓随迁 子女入学登记家长速看',
+          content:
+            '你觉得在一个战斗中，究竟聪明人和疯子谁会赢你觉得在一个战斗中，究竟聪明人和疯子谁会赢？',
           name: '成都薯片',
           avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
           img: 'https://img.yzcdn.cn/vant/cat.jpeg',

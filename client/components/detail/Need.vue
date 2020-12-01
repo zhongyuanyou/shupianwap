@@ -12,7 +12,9 @@
         />
       </div>
       <div class="need_item_rt">
-        <p class="title">成都市网络信息科技有限公司</p>
+        <p class="title">
+          成都市网络信息科技有限公司成都市网络信息科技有限公司网络信息科技有限公司
+        </p>
         <div class="label">
           <span v-for="(lItem, index) in label" :key="index">{{
             `${lItem}${index == label.length - 1 ? '' : '|'}`
@@ -84,14 +86,16 @@ export default {
         font-family: PingFang SC;
         font-weight: bold;
         color: #222222;
-        line-height: 32px;
+        margin-top: -6px;
+        line-height: 44px;
+        .textOverflow(2);
       }
       .label {
         display: flex;
         justify-content: flex-start;
         align-items: center;
         flex-direction: row;
-        margin-top: 7px;
+        margin-top: 2px;
         span {
           font-size: 22px;
           font-family: PingFang SC;

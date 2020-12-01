@@ -20,7 +20,9 @@
             />
           </div>
           <div class="swipe_item_con_rt">
-            <p class="title">西南地区 一般纳税人，个人</p>
+            <p class="title">
+              西南地区 一般纳税人，个人西南地区 一般纳税人，个人
+            </p>
             <div class="swipe_item_con_rt_bot">
               <p class="money">45.28元</p>
               <p class="province">四川省</p>
@@ -128,6 +130,7 @@ export default {
         font-weight: bold;
         color: #222222;
         line-height: 40px;
+        .textOverflow(2);
       }
       &_bot {
         display: flex;
