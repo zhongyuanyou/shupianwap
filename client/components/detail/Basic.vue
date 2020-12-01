@@ -1,6 +1,7 @@
 <template>
   <div class="basic">
     <p class="basic_title">基本信息</p>
+    <slot name="basic"></slot>
     <div class="basic_offer">
       <div class="user">
         <sp-image
