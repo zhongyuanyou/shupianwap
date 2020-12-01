@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-28 17:00:32
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-28 17:35:45
+ * @LastEditTime: 2020-11-30 09:25:20
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsPopup.vue
 -->
@@ -34,7 +34,7 @@ const popupConfigList = {
 }
 
 export default {
-  name: 'GoodsItem',
+  name: 'GoodsPopup',
   components: {
     [CenterPopup.name]: CenterPopup,
   },
@@ -57,6 +57,11 @@ export default {
       promiseStatusOperation.reject()
     },
 
+    /* *
+     * @descript 外部可直接调用此方法，打开弹出框
+     * @param {string} type 弹框的类型(attention:关注，detele:删除)
+     * @returns {promise}
+     */
     open(type) {
       promiseStatusOperation = {}
       this.popupConfig = popupConfigList[type] || {}

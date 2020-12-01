@@ -81,6 +81,7 @@ export default {
     },
     handleSkuOpen() {
       console.log('handleSkuOpen')
+      this.$emit('operation', { type: 'openSku' })
     },
   },
 }

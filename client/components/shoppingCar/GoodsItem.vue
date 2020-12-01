@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-28 16:55:41
+ * @LastEditTime: 2020-11-30 10:19:55
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -11,6 +11,7 @@
     class="goods-item"
     :class="{ 'goods-item--disable': status === 'offShelf' }"
   >
+    <SkuService v-model="show" />
     <sp-swipe-cell
       ref="swipeCell"
       :disabled="status === 'offShelf'"
@@ -25,7 +26,7 @@
               class="goods-item__check"
               @change="handleChange"
             ></sp-checkbox>
-            <MainGoodsItem />
+            <MainGoodsItem @operation="handleOperation" />
           </div>
 
           <div v-for="i in 2" :key="i" class="goods-item__vice">
@@ -68,6 +69,7 @@ import { SwipeCell, Card, Button, Checkbox } from '@chipspc/vant-dgg'
 
 import MainGoodsItem from './MainGoodsItem'
 import ViceGoodsItem from './ViceGoodsItem'
+import SkuService from '@/components/common/sku/SkuService'
 
 export default {
   name: 'GoodsItem',
@@ -78,6 +80,7 @@ export default {
     [Checkbox.name]: Checkbox,
     MainGoodsItem,
     ViceGoodsItem,
+    SkuService,
   },
   props: {
     status: {
@@ -88,14 +91,13 @@ export default {
   data() {
     return {
       checked: false,
+      show: false,
     }
   },
   methods: {
     handleChange(value) {
       console.log('handleChange:', value)
     },
-    // position 为关闭时点击的位置
-    // instance 为对应的 SwipeCell 实例
     beforeClose({ position, instance }) {
       console.log('position:', position)
       switch (position) {
@@ -116,6 +118,14 @@ export default {
       console.log('handleAttention')
       // this.$refs.swipeCell.close()
       this.$emit('operation', { type: 'attention', item: {} })
+    },
+    handleOperation(value = {}) {
+      const { type } = value
+      switch (type) {
+        case 'openSku':
+          this.show = true
+          break
+      }
     },
   },
 }
