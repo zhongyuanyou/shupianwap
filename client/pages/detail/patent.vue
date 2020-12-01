@@ -1,5 +1,5 @@
 <template>
-  <div class="company">
+  <div class="patent">
     <DetailTemplate :info="info">
       <div slot="basic" class="company_info">
         <div class="item">企业行业：<span>工程类</span></div>
@@ -15,7 +15,7 @@
 <script>
 import DetailTemplate from '~/components/detail/DetailTemplate'
 export default {
-  name: 'Company',
+  name: 'Patent',
   components: {
     DetailTemplate,
   },
@@ -32,15 +32,15 @@ export default {
         money: '25.00',
         planners: [
           {
-            name: '黄成',
+            name: '专利',
             avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
           },
           {
-            name: '黄成',
+            name: '专利',
             avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
           },
           {
-            name: '黄成',
+            name: '专利',
             avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
           },
         ],
@@ -53,12 +53,11 @@ export default {
       },
     }
   },
-  methods: {},
 }
 </script>
 
 <style lang="less" scoped>
-.company {
+.patent {
   &_info {
     width: 100%;
     display: flex;

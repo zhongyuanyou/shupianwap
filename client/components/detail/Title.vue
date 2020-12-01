@@ -13,7 +13,9 @@
       <div class="title_tags_remind">降价提醒</div>
     </div>
     <p class="title_btitle">{{ info.title }}</p>
-    <div class="imp_remind">重要提醒</div>
+    <div class="imp_remind">
+      <i class="icon certificates_icon"></i><span>重要提醒</span>
+    </div>
     <p class="money">{{ info.money }}元</p>
   </div>
 </template>
@@ -40,6 +42,17 @@ export default {
   padding: 36px 40px 39px 40px;
   background-color: #ffffff;
   border-bottom: 24px solid #f8f8f8;
+  .icon {
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-size: cover;
+    vertical-align: middle;
+  }
+  .certificates_icon {
+    width: 40px;
+    height: 28px;
+    background-image: url('~assets/images/planner/per_img_certificates.png');
+  }
   &_tags {
     width: 100%;
     display: flex;
@@ -86,7 +99,13 @@ export default {
     font-family: PingFang SC;
     font-weight: 400;
     color: #222222;
-    line-height: 44px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    span {
+      margin-left: 9px;
+    }
   }
   .money {
     font-size: 52px;

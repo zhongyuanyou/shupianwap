@@ -20,6 +20,9 @@ export default {
     height: 110px;
     line-height: 110px;
     padding: 0 40px;
+    font-weight: 500;
+    color: #1a1a1a;
+    font-size: 28px;
     /deep/ .sp-cell__title {
       font-size: 28px;
       font-family: PingFang SC;

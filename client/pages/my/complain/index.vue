@@ -174,6 +174,7 @@ export default {
 <style lang="less" scoped>
 .complaint {
   width: 100%;
+  padding-bottom: 160px;
   /deep/.sp-top-nav-bar__right {
     font-size: 28px;
   }
@@ -233,6 +234,7 @@ export default {
       padding: 28px 25px;
       vertical-align: baseline;
       caret-color: #1a1a1a;
+      resize: none;
       &::-webkit-input-placeholder {
         font-size: 28px;
         font-family: PingFang SC;

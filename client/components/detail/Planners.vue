@@ -18,6 +18,7 @@
         <div class="info">
           <div class="info_tp">
             <p class="name">{{ item.name }}</p>
+            <i class="icon gold_icon"></i>
           </div>
           <div class="info_bot">
             <span class="num">221</span
@@ -33,7 +34,7 @@
             size="0.32rem"
             color="#4974F5"
         /></sp-button>
-        <sp-button round class="contact-btn"
+        <sp-button round class="contact-btn" @click="handleTel"
           ><my-icon
             class=""
             name="notify_ic_tel"
@@ -63,6 +64,11 @@ export default {
       },
     },
   },
+  methods: {
+    handleTel() {
+      window.location.href = 'tel://18116757032'
+    },
+  },
 }
 </script>
 
@@ -72,6 +78,18 @@ export default {
   padding: 48px 40px 56px 40px;
   background-color: #fff;
   border-bottom: 24px solid #f8f8f8;
+  .icon {
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-size: cover;
+    vertical-align: middle;
+  }
+  .gold_icon {
+    width: 114px;
+    height: 28px;
+    background-image: url('~assets/images/planner/per_img_gold.png');
+    margin-left: 12px;
+  }
   &_title {
     font-size: 40px;
     font-family: PingFang SC;

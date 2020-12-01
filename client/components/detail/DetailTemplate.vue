@@ -19,8 +19,13 @@
     <Title :info="{ ...info }" />
     <!--E 第一板块-->
     <!--S 第二板块 基本信息-->
-    <Basic :info="{ ...info }" />
+    <Basic :info="{ ...info }">
+      <div slot="basic">
+        <slot name="basic"></slot>
+      </div>
+    </Basic>
     <!--E 第二板块 基本信息-->
+    <slot name="qualification"></slot>
     <!--S 第三板块 评估报告-->
     <Report :info="{ ...info }" />
     <!--E 第三板块 评估报告-->
@@ -36,6 +41,15 @@
     <!--S 第七板块 常见问题-->
     <Question :info="{ ...info }" />
     <!--E 第七板块 常见问题-->
+    <!--S 第八板块 成功案例-->
+    <Case :info="{ ...info }" />
+    <!--E 第八板块 成功案例-->
+    <!--S 第九板块 同类推荐-->
+    <Recommend :info="{ ...info }" />
+    <!--E 第九板块 同类推荐-->
+    <!--S 第十板块 猜你需要-->
+    <Need :info="{ ...info }" />
+    <!--E 第十板块 猜你需要-->
     <sp-bottombar safe-area-inset-bottom>
       <sp-bottombar-button type="info" :text="text1"> </sp-bottombar-button>
       <sp-bottombar-button type="primary" :text="text2"> </sp-bottombar-button>
@@ -60,6 +74,9 @@ import Commitment from '~/components/detail/Commitment'
 import Planners from '~/components/detail/Planners'
 import Dynamic from '~/components/detail/Dynamic'
 import Question from '~/components/detail/Question'
+import Case from '~/components/detail/Case'
+import Recommend from '~/components/detail/Recommend'
+import Need from '~/components/detail/Need'
 export default {
   name: 'DetailTemplate',
   components: {
@@ -77,6 +94,9 @@ export default {
     Planners,
     Dynamic,
     Question,
+    Case,
+    Recommend,
+    Need,
   },
   props: {
     info: {

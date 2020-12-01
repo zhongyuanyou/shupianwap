@@ -1,30 +1,22 @@
 <template>
-  <div class="serveGoods">
-    <sp-dropdown-menu ref="dropDownMenu">
-      <sp-dropdown-item
-        ref="item"
-        title-class="dropdownItem"
-        :title="dropdownTitle1"
-        @open="open(0)"
-        @close="close(0)"
-      >
-        <ServiceSelect :active-data="activeData" @select="handleSelect" />
-        <BottomConfirm
-          @resetFilters="resetFilters"
-          @confirmFilters="confirmFilters"
-        />
-      </sp-dropdown-item>
-      <sp-dropdown-item
-        v-model="selectValue"
-        :title="dropdownTitle2"
-        title-class="dropdownItem"
-        :options="option"
-        @open="open(1)"
-        @close="close(1)"
-      />
-    </sp-dropdown-menu>
-    <install-app ref="installApp" />
+  <div class="jyGoods">
+    <sp-tabs
+      ref="spTabs"
+      title-active-color="#4974F5"
+      title-inactive-color="#222"
+      line-width="0"
+      @click="clickTabs"
+    >
+      <sp-tab
+        v-for="(item, index) in tabItems"
+        :key="index"
+        :title="item.name"
+      ></sp-tab>
+    </sp-tabs>
+    <jy-filters ref="dropDownMenu" />
+    <install-app v-show="listShow" ref="installApp" />
     <sp-list
+      v-show="listShow"
       v-model="loading"
       :finished="finished"
       :style="{
@@ -44,160 +36,93 @@
       <goods-item />
       <goods-item />
     </sp-list>
+    <Subscribe
+      v-show="!listShow"
+      title="新上商品通知"
+      desc="填写手机号,相关商品上架第一时间通知"
+    />
   </div>
 </template>
 
 <script>
-import { DropdownMenu, DropdownItem, List } from '@chipspc/vant-dgg'
+import { List, Tabs, Tab } from '@chipspc/vant-dgg'
 import InstallApp from '@/components/common/app/InstallApp'
-import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
-import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import GoodsItem from '@/components/common/goodsItem/GoodsItem'
+import Subscribe from '@/components/list/Subscribe'
+import JyFilters from '@/components/list/JyFilters'
 
 export default {
-  name: 'ServeGoods',
+  name: 'JyGoods',
   components: {
     GoodsItem,
-    [DropdownMenu.name]: DropdownMenu,
-    [DropdownItem.name]: DropdownItem,
     [List.name]: List,
-    ServiceSelect,
-    BottomConfirm,
     InstallApp,
+    Subscribe,
+    JyFilters,
+    [Tabs.name]: Tabs,
+    [Tab.name]: Tab,
   },
   data() {
     return {
+      listShow: true,
       loading: false,
       finished: false,
-      selectValue: 0,
-      dropdownTitle1: '全部服务',
-      dropdownTitle2: '默认排序',
       maxHeight: 0,
-      activeData: [
-        { text: '工商服务', id: '1' },
+      tabItems: [
         {
-          services: [
-            {
-              text: '有限公司注册',
-              id: 1,
-            },
-            {
-              text: '外资公司注册',
-              id: 2,
-              disabled: true,
-            },
-          ],
+          name: '公司',
+          code: 11111,
         },
-      ],
-      option: [
-        { text: '默认排序', value: 0 },
-        { text: '销量从高到低', value: 1 },
-        { text: '销量从低到高', value: 2 },
-        { text: '价格从高到低', value: 3 },
-        { text: '价格从低到高', value: 4 },
-      ],
-      dropDownDom: null,
-      currentSelectActiveData: null,
-      currentDropDownDom: null, // 当前触发的下拉框dom
+        {
+          name: '专利',
+          code: 2222,
+        },
+        {
+          name: '商标',
+          code: 333,
+        },
+        {
+          name: '资质',
+          code: 4444,
+        },
+      ], // tab栏数据
     }
   },
-  watch: {
-    selectValue(val) {
-      this.dropdownTitle2 = this.option[val].text
-    },
-    activeData(val) {
-      if (val.length === 0) {
-        this.dropDownDom[0].classList.remove('active')
-      }
-    },
-  },
   mounted() {
-    // console.log(this.$el.getBoundingClientRect())
     const installAPPHeight = this.$refs.installApp.$el.clientHeight
     const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
     const topHeight = this.$el.getBoundingClientRect().top
+    const spTabsHeight = this.$refs.spTabs.$el.clientHeight
     this.maxHeight =
       document.body.clientHeight -
       installAPPHeight -
       dropDownMenuHeight -
+      spTabsHeight -
       topHeight +
       'px'
-    /* this.dropDownDom = [].slice.apply(
-      null,
-      document.querySelectorAll('.dropdownItem')
-    ) */
-    this.$nextTick(() => {
-      this.dropDownDom = [].slice.call(
-        document.querySelectorAll('.dropdownItem')
-      )
-    })
   },
   methods: {
-    handleSelect(val) {
-      // 分类选择
-      console.log(val)
-      this.activeData = val
-      // this.currentSelectActiveData = val
-    },
-    open(index) {
-      // 打开下拉选择框
-      console.log(index)
-      if (index === 0) {
-        this.currentSelectActiveData = this.activeData
-      }
-    },
-    close() {
-      console.log(123)
-      // 关闭下拉选择框
-      if (this.selectValue !== 0) {
-        // 给下拉标题增加选中
-        this.dropDownDom[1].classList.add('active')
-      } else {
-        this.dropDownDom[1].classList.remove('active')
-      }
-      this.activeData = this.currentSelectActiveData
-      this.currentSelectActiveData = null
-      if (this.activeData.length) {
-        this.dropDownDom[0].classList.add('active')
-      } else {
-        this.dropDownDom[0].classList.remove('active')
-      }
-    },
     onLoad() {
       console.log(1)
     },
-    resetFilters() {
-      // 重置分类筛选
-      this.activeData = []
-    },
-    confirmFilters() {
-      // 确认筛选
-      console.log('this.activeData', this.activeData)
-      if (this.activeData && this.activeData.length) {
-        this.currentSelectActiveData = this.activeData
-        this.concatStr(this.activeData)
-      } else {
-        this.dropdownTitle1 = '全部服务'
-      }
-      this.$refs.item.toggle()
-    },
-    concatStr(val) {
-      let str = ''
-      str = val[0].text
-      if (val[1] && val[1].services && val[1].services.length) {
-        val[1].services.forEach((item) => {
-          str += ','
-          str += item.text
-        })
-      }
-      this.dropdownTitle1 = str
+    clickTabs(name, title) {
+      console.log(name, title)
     },
   },
 }
 </script>
 
 <style lang="less" scoped>
-.serveGoods {
+.jyGoods {
+  /deep/.sp-tab {
+    font-weight: bold;
+    font-size: 30px;
+    padding: 0 40px;
+  }
+  /deep/.sp-tabs__wrap--scrollable .sp-tabs__nav--complete {
+    padding-left: 0;
+    padding-right: 0;
+  }
   /deep/.dropdownItem {
     &.active {
       font-weight: bold;
@@ -209,12 +134,8 @@ export default {
     height: 80px;
     box-shadow: none;
     padding: 0 40px;
-  }
-  /deep/.sp-dropdown-menu__item {
-    margin-right: 80px;
-    &:last-child {
-      margin-right: 0;
-    }
+    border-bottom: 1px solid #f4f4f4;
+    border-top: 1px solid #f4f4f4;
   }
   /deep/.sp-cell {
     padding: 18px 40px;
@@ -222,8 +143,20 @@ export default {
       margin-bottom: 40px;
     }
   }
+  /deep/.sp-dropdown-menu__title {
+    font-size: 28px;
+    font-family: PingFang SC;
+    font-weight: 400;
+    color: #222222;
+    &.moreText {
+      &::after {
+        right: 6px;
+      }
+    }
+  }
   /deep/.sp-dropdown-menu__title--active {
     font-weight: bold;
+    color: #4974f5;
   }
   .goods-content {
     overflow-x: hidden;
@@ -241,6 +174,12 @@ export default {
     font-size: 28px;
     font-family: PingFang SC;
     font-weight: bold;
+  }
+  /deep/.sp-tabs--line .sp-tabs__wrap {
+    height: 94px;
+  }
+  .subscribe {
+    padding: 0 40px;
   }
 }
 </style>
