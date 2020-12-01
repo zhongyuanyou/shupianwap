@@ -61,6 +61,7 @@ export default {
     font-weight: bold;
     color: #1a1a1a;
     line-height: 36px;
+    .textOverflow(2);
   }
   .content {
     font-size: 24px;
@@ -69,6 +70,7 @@ export default {
     font-weight: 400;
     color: #222222;
     line-height: 24px;
+    .textOverflow(2);
   }
   &_tp {
     display: flex;
