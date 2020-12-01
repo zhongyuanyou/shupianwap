@@ -7,7 +7,7 @@
         @on-click-right="onClickRight"
       >
         <template #left>
-          <sp-icon class-prefix="sp-iconfont" name="specialreturn2" />
+          <sp-icon class-prefix="sp-iconfont" name="specialreturn" />
         </template>
         <template #title>
           <sp-nav-search
@@ -25,67 +25,74 @@
       <sp-dropdown-menu>
         <!-- 搜索前4位 -->
         <sp-dropdown-item
-          v-model="value1"
+          ref="isShowBeforFour"
           title-class=""
-          :title="dropdownTitle1"
+          :title="dropdownBeforFour"
         >
           <div class="select-phone">
             <SelectCheckbox
-              ref="foruDigitList"
-              :select-list="foruDigitList1"
+              ref="beforForuList"
+              :select-list="beforForuList"
               :gutter="12"
               :is-select-more="false"
-              @cancelItem="cancelItem"
-              @selectItems="selectItems"
-              @selectAllItems="selectAllItems"
+              @selectItems="selectBeforFour"
+              @selectAllItems="selectAllBeforForu"
             />
           </div>
           <BottomConfirm
-            @resetFilters="resetFilters"
-            @confirmFilters="confirmFilters"
+            @resetFilters="resetBeforForu"
+            @confirmFilters="confirmBeforForu"
           />
         </sp-dropdown-item>
         <!-- 搜索后4位 -->
         <sp-dropdown-item
-          v-model="value1"
+          ref="isShowLastFour"
           title-class=""
-          :title="dropdownTitle2"
+          :title="dropdownLastFour"
         >
           <div class="select-phone">
             <SelectCheckbox
-              ref="foruDigitList"
-              :select-list="foruDigitList1"
+              ref="lastForuList"
+              :select-list="lastForuList"
               :gutter="12"
               :is-select-more="false"
-              @cancelItem="cancelItem"
-              @selectItems="selectItems2"
-              @selectAllItems="selectAllItems"
+              @selectItems="selectLastForu"
+              @selectAllItems="selectAllLastForu"
             />
           </div>
-          <BottomConfirm />
+          <BottomConfirm
+            @resetFilters="resetLastForu"
+            @confirmFilters="confirmLastForu"
+          />
         </sp-dropdown-item>
         <!-- 选择价格区间 -->
         <sp-dropdown-item
+          ref="isShowPrice"
           v-model="value1"
           title-class=""
-          :title="dropdownTitle3"
+          :title="dropdownPrice"
         >
           <div class="select-price">
             <PriceFilter
+              ref="PriceFilter"
               :price-list="priceList"
               @minInput="minInput"
               @maxInput="maxInput"
               @selectItems="selectedPrices"
+              @selectAllItems="selectedAllPrices"
             />
           </div>
-          <BottomConfirm @confirmFilters="confirmFilters2" />
+          <BottomConfirm
+            @resetFilters="resetPrice"
+            @confirmFilters="confirmPrice"
+          />
         </sp-dropdown-item>
         <!-- 排序 -->
-        <sp-dropdown-item v-model="sortValue" :options="option2" />
+        <sp-dropdown-item v-model="sortValue" :options="option" />
       </sp-dropdown-menu>
     </div>
     <div class="result-phone">
-      <CheckboxList :list="list" />
+      <CheckboxList :list="checkbosList" />
     </div>
   </div>
 </template>
@@ -122,11 +129,11 @@ export default {
       searchValue: null,
       sortValue: 'a',
       activeNames: ['1'],
-      dropdownTitle1: '前四位',
-      dropdownTitle2: '后四位',
-      dropdownTitle3: '价格',
+      dropdownBeforFour: '前四位',
+      dropdownLastFour: '后四位',
+      dropdownPrice: '价格',
       value1: 0,
-      option2: [
+      option: [
         { text: '默认排序', value: 'a' },
         { text: '按照价格从低到高', value: 'b' },
         { text: '按照价格从高到低', value: 'c' },
@@ -154,7 +161,7 @@ export default {
           id: '5',
         },
       ],
-      foruDigitList1: [
+      beforForuList: [
         {
           name: 'AAB*',
           id: '1',
@@ -176,7 +183,7 @@ export default {
           id: '5',
         },
       ],
-      foruDigitList2: [
+      lastForuList: [
         {
           name: 'AAB*',
           id: '1',
@@ -198,7 +205,7 @@ export default {
           id: '5',
         },
       ],
-      list: [
+      checkbosList: [
         { title: '4008886662', price: '10000' },
         { title: '4008886663', price: '10000' },
         { title: '4008886664', price: '10000' },
@@ -213,15 +220,12 @@ export default {
     }
   },
   methods: {
-    showPopup() {
-      this.show = true
-    },
     onClickRight() {
-      // 左侧按钮事件
+      // 右侧搜索
       Toast('按钮')
     },
     onClickLeft() {
-      // 右侧按钮
+      //  左侧返回
       Toast('返回')
     },
     minInput(val) {
@@ -232,37 +236,55 @@ export default {
       // 最大输入框
       console.log(val)
     },
-    cancelItem(item, items) {
-      this.$emit('cancelItem', item, items)
-    },
-    selectItems(item, items) {
-      // 选中前四位
-      this.dropdownTitle1 = item.name
-      this.$emit('selectItems', item, items)
-    },
-    selectItems2(item, items) {
-      // 选择后四位
-      this.dropdownTitle2 = item.name
-      this.$emit('selectItems', item, items)
-    },
-    selectAllItems(item) {
-      this.$emit('selectAllItems', item)
-    },
-    resetFilters() {
-      // 重置
-      alert('重置')
-    },
-    confirmFilters() {
-      // 确认
-      alert('确定')
-    },
-    confirmFilters2() {
-      // 确认价格
 
-      alert('确定价格')
+    selectAllBeforForu(item, items) {
+      // 选择不限
+      this.dropdownBeforFour = item.name
+    },
+    selectAllLastForu(item, items) {
+      this.dropdownLastFour = item.name
+    },
+    selectedAllPrices(item, items) {
+      this.dropdownPrice = item.name
+    },
+    selectBeforFour(item, items) {
+      // 选中前四位标题显示
+      this.dropdownBeforFour = item.name
+    },
+    selectLastForu(item, items) {
+      // 选择后四位标题显示
+      this.dropdownLastFour = item.name
     },
     selectedPrices(val) {
-      this.dropdownTitle3 = val.name
+      // 选择价格标题显示
+      this.dropdownPrice = val.name
+    },
+    resetBeforForu() {
+      // 重置前四位
+      this.dropdownBeforFour = '前四位'
+      this.$refs.beforForuList.clearSelect()
+    },
+    confirmBeforForu() {
+      // 确认前四位
+      this.$refs.isShowBeforFour.toggle()
+    },
+    resetLastForu() {
+      // 重置后四位
+      this.dropdownLastFour = '后四位'
+      this.$refs.lastForuList.clearSelect()
+    },
+    confirmLastForu() {
+      // 确认后四位
+      this.$refs.isShowLastFour.toggle()
+    },
+    resetPrice() {
+      // 重置价格
+      this.dropdownPrice = '价格'
+      this.$refs.PriceFilter.clearInput()
+    },
+    confirmPrice() {
+      // 确认价格
+      this.$refs.isShowPrice.toggle()
     },
   },
 }
