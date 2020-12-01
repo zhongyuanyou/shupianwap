@@ -19,7 +19,11 @@
     <Title :info="{ ...info }" />
     <!--E 第一板块-->
     <!--S 第二板块 基本信息-->
-    <Basic :info="{ ...info }" />
+    <Basic :info="{ ...info }">
+      <div slot="basic">
+        <slot name="basic"></slot>
+      </div>
+    </Basic>
     <!--E 第二板块 基本信息-->
     <slot name="qualification"></slot>
     <!--S 第三板块 评估报告-->

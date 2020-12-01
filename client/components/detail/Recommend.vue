@@ -8,7 +8,7 @@
         /></span>
       </div>
     </div>
-    <sp-swipe :loop="false" :width="327.5" :show-indicators="false">
+    <sp-swipe :loop="false" :width="315.5" :show-indicators="false">
       <sp-swipe-item v-for="(item, index) in info.req" :key="index">
         <div class="swipe_item_con">
           <div class="swipe_item_con_img">
@@ -84,10 +84,7 @@ export default {
   }
   /deep/ .sp-swipe {
     margin-top: 39px;
-    display: flex;
-  }
-  /deep/ .sp-swipe__track {
-    display: flex;
+    padding-right: 40px;
   }
   /deep/ .sp-swipe-item {
     width: 100%;
@@ -96,10 +93,17 @@ export default {
     justify-content: flex-start;
     align-items: center;
     flex-direction: row;
-    padding-left: 40px;
+    padding-left: 20px;
+    &:first-child {
+      padding-left: 40px;
+    }
+    &:last-child {
+      justify-content: flex-end;
+      padding-right: 40px;
+    }
   }
   .swipe_item_con {
-    width: 100%;
+    width: 591px;
     height: 224px;
     background: #ffffff;
     border: 1px solid rgba(205, 205, 205, 0.5);

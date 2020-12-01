@@ -71,15 +71,30 @@ export default {
         return true
       },
     },
+    selfActiveItem: {
+      // 需要激活的筛选项
+      type: Array,
+      default() {
+        return []
+      },
+    },
   },
   data() {
     return {
       renderArr: [], // 需要渲染的数据
-      activeItems: [], // 可以激活的筛选项数组
+      activeItems: [], // 激活的筛选项数组
       currentRenderArr: [], // 当前渲染的数据
+      isShowAllBtn: false, // 是否需要显示全部按钮
+      selfIsShowAll: false, // 内部属性，是否显示了全部数据
     }
   },
   watch: {
+    selfActiveItem(val) {
+      console.log('selfActiveItem', val)
+      if (val) {
+        this.activeItems = val
+      }
+    },
     selectList(val) {
       const arr = clone(val, true)
       if (this.isShowAllOption) {
@@ -91,18 +106,27 @@ export default {
       if (val.length > 4 && !this.isShowAll) {
         // 如果renderArr的长度超过了4层则当前渲染只显示4层
         this.currentRenderArr = val.slice(0, 4)
+        // this.isShowAllBtn = true
+        this.$emit('isShowBtnHandle', true, this)
       } else {
+        // this.isShowAllBtn = false
         this.currentRenderArr = val
+        this.$emit('isShowBtnHandle', false, this)
       }
     },
   },
   mounted() {
+    // 初始化筛选列表
     if (this.selectList.length) {
       const arr = clone(this.selectList, true)
       if (this.isShowAllOption) {
         arr.unshift({ name: '不限', id: 'all' })
       }
       this.renderArr = this.handleRenderArr(chunkArr(arr, 4))
+    }
+    // 初始化激活筛选项
+    if (this.selfActiveItem && this.selfActiveItem.length) {
+      this.activeItems = this.selfActiveItem
     }
   },
   methods: {
@@ -114,11 +138,14 @@ export default {
       }
       if (item.id === 'all') {
         this.activeItems = [item]
-        this.$emit('selectAllItems', item)
+        this.$emit('selectItems', item, this.activeItems)
         return
       }
       if (this.isSelectMore) {
         // 是否多选
+        if (this.activeItems.length && this.activeItems[0].id === 'all') {
+          this.activeItems = []
+        }
         const _index = this.activeItems.findIndex(
           (_item) => _item.id === item.id
         )
@@ -127,10 +154,12 @@ export default {
           this.$emit('cancelItem', item, this.activeItems)
         } else {
           this.activeItems.push(item)
+          console.log('selectItems', item, this.activeItems)
           this.$emit('selectItems', item, this.activeItems)
         }
       } else {
         this.activeItems = [item]
+        console.log('selectItems', item, this.activeItems)
         this.$emit('selectItems', item, this.activeItems)
       }
     },
@@ -154,6 +183,7 @@ export default {
       // ui设计规定更多筛选里面初始只显示4层，多出来的隐藏
       // 显示所有的数据
       this.currentRenderArr = this.renderArr
+      this.selfIsShowAll = true
     },
     hideMore() {
       // 对外函数
@@ -161,6 +191,7 @@ export default {
       if (this.renderArr.length > 4) {
         this.currentRenderArr = this.renderArr.slice(0, 4)
       }
+      this.selfIsShowAll = false
     },
     clearSelect() {
       // 对外函数
