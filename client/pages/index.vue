@@ -41,6 +41,7 @@ import HotServe from '@/components/home/HotServe'
 import Recommend from '@/components/home/Recommend'
 import FiexdBtn from '@/components/home/FiexdBtn'
 export default {
+  layout: 'nav',
   name: 'Home',
   components: {
     SearchBanner,
@@ -63,5 +64,8 @@ export default {
 .page-content {
   max-width: 1000px;
   overflow: hidden;
+  /deep/ .sp-sticky--fixed {
+    max-width: 1000px;
+  }
 }
 </style>
