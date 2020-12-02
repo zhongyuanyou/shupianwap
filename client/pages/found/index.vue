@@ -24,6 +24,7 @@
 import { WorkTab, WorkTabs } from '@chipspc/vant-dgg'
 import Con from '~/components/found/found/Cons'
 export default {
+  layout: 'nav',
   name: 'Index',
   components: {
     [WorkTab.name]: WorkTab,
