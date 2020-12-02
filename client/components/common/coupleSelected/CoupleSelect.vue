@@ -123,7 +123,6 @@ export default {
   },
   watch: {
     backData(newVal) {
-      console.log('newVal', newVal)
       if (newVal.length) {
         this.selectData = newVal
         this.initData(newVal)
