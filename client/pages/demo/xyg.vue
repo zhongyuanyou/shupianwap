@@ -15,7 +15,7 @@
       @selectAllItems="selectAllItems"
     />
     <br />
-    <PriceFilter
+    <price-filter-components
       :price-list="priceList"
       @minInput="minInput"
       @maxInput="maxInput"
@@ -42,7 +42,7 @@ import { DatetimePicker } from '@chipspc/vant-dgg'
 import OpenApp from '@/components/common/app/OpenApp'
 import InstallApp from '@/components/common/app/InstallApp'
 import SelectCheckBox from '@/components/common/filters/SelectCheckBox'
-import PriceFilter from '@/components/common/filters/PriceFilter'
+import PriceFilterComponents from '@/components/common/filters/PriceFilterComponents'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
@@ -54,7 +54,7 @@ export default {
     InstallApp,
     SelectCheckBox,
     [DatetimePicker.name]: DatetimePicker,
-    PriceFilter,
+    PriceFilterComponents,
     BottomConfirm,
     GoodsItem,
     Subscribe,

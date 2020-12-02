@@ -132,8 +132,13 @@ export default {
   methods: {
     selectFilter(item, active) {
       // 选择某一个筛选项
-      if (!this.isSelectMore && active) {
+      // if (!this.isSelectMore && active) {
+      if (active) {
         // 禁止重复选择
+        const _index = this.activeItems.findIndex(
+          (_item) => _item.id === item.id
+        )
+        this.activeItems.splice(_index, 1)
         return
       }
       if (item.id === 'all') {

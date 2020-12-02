@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 15:10:43
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-01 19:41:50
+ * @LastEditTime: 2020-12-02 08:50:29
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/sku/SkuServiceRow.vue
 -->
@@ -80,7 +80,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.sku-service-row {
+@module-name: .sku-service-row;
+
+@{module-name} {
   padding: 32px 0px;
   &__title {
     display: flex;
@@ -104,13 +106,13 @@ export default {
   }
 
   &-sub {
-    .sku-service-row__title {
+    @{module-name}__title {
       font-size: 26px;
       font-weight: 500;
       color: #555555;
       line-height: 30px;
     }
-    .sku-service-row__wrap {
+    @{module-name}__wrap {
       margin: 24px -16px 0 0;
     }
   }

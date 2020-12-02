@@ -98,7 +98,7 @@
               </sp-cell>
             </div>
           </SkuServiceRow>
-          <div class="sku-service-add sp-hairline--bottom">
+          <div class="sku-service-add">
             <div class="sku-service-add__title">增值服务</div>
             <div class="sku-service-add__item">
               <SkuServiceRow
@@ -121,8 +121,8 @@
       <template #sku-stepper="{}">
         <div></div>
       </template>
-      <template #sku-actions="{ skuEventBus }"
-        ><div class="sku-service-actions">
+      <template #sku-actions="{ skuEventBus }">
+        <div class="sku-service-actions sp-hairline--top">
           <sp-button
             class="sku-service-actions__car-btn"
             size="large"
@@ -434,9 +434,10 @@ export default {
       line-height: 32px;
     }
     &__item {
+      padding: 30px 0 10px;
     }
     &__sub-row {
-      padding: 30px 0 24px 0;
+      padding: 0 0 14px 0;
     }
   }
   &-actions {
@@ -447,6 +448,7 @@ export default {
     font-weight: bold;
     color: #ffffff;
     line-height: 36px;
+    padding: 24px 0;
     &__car-btn {
       width: 327px;
       height: 100px;
