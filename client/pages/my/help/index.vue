@@ -1,240 +1,386 @@
 <template>
-  <div class="wrapper">
-    <Header title="帮助中心" @leftClickFuc="onClickLeft" />
-    <div class="hiDiv">
-      <div class="hiSpanDiv">
-        <span>Hi，您好 </span>
-        <span>我们随时为您服务</span>
-      </div>
+  <div class="help-page">
+    <sp-sticky>
+      <Header ref="headerRef" title="帮助中心" @leftClickFuc="onClickLeft" />
+    </sp-sticky>
+    <div class="help-bn">
+      <img src="" alt="" />
     </div>
-    <div class="bottomDiv">
-      <div class="searchDiv">
+    <div class="hele-centent">
+      <div class="func-list">
+        <div>
+          <img src="" alt="" />
+          <span>修改登录密码</span>
+        </div>
+        <div>
+          <img src="" alt="" />
+          <span>实名认证</span>
+        </div>
+        <div>
+          <img src="" alt="" />
+          <span>免打扰设置</span>
+        </div>
+        <div>
+          <img src="" alt="" />
+          <span>我要吐槽</span>
+        </div>
+      </div>
+      <div class="search-content">
+        <strong>更多服务</strong>
         <sp-search
-          v-model="searchText"
+          v-model="keywords"
+          shape="round"
           placeholder="搜索您遇到的问题"
-          class="search"
         />
       </div>
-      <div class="classificationDiv">
-        <sp-tabs
-          class="tabs"
-          line-width="16px"
-          line-height="3px"
-          title-active-color="#4974F5"
-          :before-change="beforeChange"
+      <div class="tab-content">
+        <sp-sticky
+          :class="{ isBorder: isFixed }"
+          :offset-top="headHeight - 0.5"
+          @scroll="searchHandle"
         >
-          <sp-tab v-for="(item, index) in classificationList" :key="index">
-            <template #title>
-              <span class="tabClass">{{ item }}</span>
-            </template>
-          </sp-tab>
-        </sp-tabs>
-      </div>
-      <div class="listDiv">
-        <sp-cell-group>
-          <sp-cell
-            v-for="(item, index) in classificationList"
-            :key="index"
-            center
-            is-link
-            class="cellClass"
-            @click="onServiceTouch"
-          >
-            <template #title>
-              <span class="custom-title">{{ item + index }}</span>
-            </template>
-          </sp-cell>
-        </sp-cell-group>
-      </div>
-      <div class="bottomCallDiv">
-        <button class="callButton" @click="callClick">
-          <sp-icon name="phone-o" size="25" /> 致电
-        </button>
-        <button class="keFuButton" @click="keFuClick">在线客服</button>
+          <sp-work-tabs v-model="active" @click="tabsClickHandle">
+            <sp-work-tab
+              v-for="(item, index) in tabData"
+              :key="index"
+              :title="item.title"
+              :name="item.code"
+            ></sp-work-tab>
+          </sp-work-tabs>
+        </sp-sticky>
+        <div class="problem-list">
+          <ul>
+            <li v-for="(item, index) in problemList" :key="index">
+              <span>{{ item.text + index }}</span>
+              <my-icon
+                name="order_ic_listnext"
+                size="0.21rem"
+                color="#CCCCCC"
+              ></my-icon>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
+    <sp-bottombar safe-area-inset-bottom>
+      <sp-bottombar-icon icon="phone-o" text="致电" />
+      <sp-bottombar-button type="primary" text="在线客服" />
+    </sp-bottombar>
+    <div class="empty-box"></div>
   </div>
 </template>
 
 <script>
 import {
-  TopNavBar,
-  Icon,
-  Cell,
-  CellGroup,
-  Button,
   Search,
-  Tab,
-  Tabs,
+  WorkTab,
+  WorkTabs,
+  Bottombar,
+  BottombarButton,
+  BottombarIcon,
+  Sticky,
 } from '@chipspc/vant-dgg'
 import Header from '@/components/common/my/header/header'
-
 export default {
   name: 'Help',
   components: {
-    [TopNavBar.name]: TopNavBar,
-    [Icon.name]: Icon,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [Button.name]: Button,
-    [Search.name]: Search,
-    [Tab.name]: Tab,
-    [Tabs.name]: Tabs,
     Header,
+    [Sticky.name]: Sticky,
+    [Search.name]: Search,
+    [WorkTab.name]: WorkTab,
+    [WorkTabs.name]: WorkTabs,
+    [Bottombar.name]: Bottombar,
+    [BottombarButton.name]: BottombarButton,
+    [BottombarIcon.name]: BottombarIcon,
   },
-  props: {},
   data() {
     return {
-      searchText: '',
-      classificationList: [
-        '热搜问题',
-        '活动类',
-        '订单类',
-        '支付类',
-        '售后类',
-        '售后类',
-        '售后类',
-        '售后类',
-        '售后类',
+      keywords: '',
+      active: 0,
+      isFixed: false,
+      headHeight: 0,
+      tabData: [
+        {
+          title: '热搜问题',
+          code: 'a',
+        },
+        {
+          title: '活动类',
+          code: 'b',
+        },
+        {
+          title: '订单类',
+          code: 'c',
+        },
+        {
+          title: '支付类',
+          code: 'd',
+        },
+        {
+          title: '售后类',
+          code: 'e',
+        },
+        {
+          title: '其它类',
+          code: 'f',
+        },
+      ],
+      problemList: [
+        {
+          id: '1',
+          text:
+            '公司注册需要哪些资料？公司注册需要哪些资料？公司注册需要哪些资料？公司注册需要哪些资料？',
+        },
+        {
+          id: '2',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '3',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '4',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '5',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '6',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '7',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '8',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '9',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '1',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '1',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '1',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '1',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '1',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '1',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '1',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '1',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '1',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '1',
+          text: '公司注册需要哪些资料？',
+        },
+        {
+          id: '1',
+          text: '公司注册需要哪些资料？abc',
+        },
       ],
     }
   },
-  computed: {},
-  watch: {},
-  created() {},
-  mounted() {},
+  mounted() {
+    this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
+  },
   methods: {
     onClickLeft() {
       this.$router.back(-1)
     },
-    callClick() {
-      console.log(1)
+    tabsClickHandle(name, title) {
+      console.log(name, title)
     },
-    keFuClick() {
-      console.log(2)
-    },
-    onServiceTouch() {
-      this.$router.push({
-        path: '/my/help/questions',
-        query: { type: 1 },
-      })
-    },
-    beforeChange(index) {
-      console.log('index', index)
-      return true
+    searchHandle({ isFixed }) {
+      this.isFixed = isFixed
     },
   },
 }
 </script>
 <style lang="less" scoped>
-.wrapper {
-  .hiDiv {
-    width: 750px;
+.help-page {
+  width: 100%;
+  .help-bn {
+    width: 100%;
     height: 320px;
     background: #4974f5;
+  }
+  .hele-centent {
     position: relative;
-    .hiSpanDiv {
-      position: absolute;
-      top: 96px;
-      left: 70px;
-      // bottom: 114px;
-      // width: 365px;
-      // height: 110px;
-      span {
-        display: block;
-        font-size: 46px;
+    z-index: 2;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 24px 24px 0px 0px;
+    margin-top: -20px;
+    padding-top: 52px;
+    .func-list {
+      display: flex;
+      padding: 0 40px;
+      margin-bottom: 63px;
+      > div {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        > img {
+          width: 48px;
+          height: 48px;
+          background: #c2c2c2;
+        }
+        > span {
+          font-size: 24px;
+          font-family: PingFang SC;
+          font-weight: bold;
+          color: #1a1a1a;
+          margin-top: 24px;
+        }
+      }
+    }
+    .search-content {
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+      margin-bottom: 20px;
+      > strong {
+        font-size: 40px;
         font-family: PingFang SC;
         font-weight: bold;
-        color: #ffffff;
-        line-height: 66px;
+        color: #222222;
+        margin-right: 24px;
+      }
+    }
+    /deep/ .sp-search {
+      flex: 1;
+      padding: 0;
+    }
+    /deep/ .sp-icon {
+      color: #999999;
+    }
+    /deep/ .sp-search .sp-cell {
+      padding: 8px 16px 8px 0;
+    }
+    /deep/ .sp-field__control {
+      &::placeholder {
+        font-size: 28px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #cccccc;
       }
     }
   }
-  .bottomDiv {
-    width: 750px;
-    height: 905px;
-    background: #ffffff;
-    border-radius: 24px 24px 0px 0px;
-    position: absolute;
-    margin-top: -20px;
-    .searchDiv {
-      width: 100%;
-      height: 136px;
-      // background-color: blue;
-      display: flex;
-      align-items: center;
-      .search {
-        width: 100%;
-        border-radius: 100%;
+  .tab-content {
+    /deep/ .sp-work-tabs__nav {
+      padding-left: 8px;
+    }
+    .isBorder {
+      /deep/ .sp-work-tabs__wrap {
+        border-bottom: none;
       }
     }
-    .classificationDiv {
-      width: 100%;
+    /deep/ .sp-work-tabs__wrap {
       height: 100px;
-      // background-color: red;
-      display: flex;
-      align-items: center;
-      .tabs {
-        width: 100%;
-      }
-      .tabClass {
-        font-size: 32px;
-        font-family: PingFang SC;
-        font-weight: bold;
-        // color: #4974f5;
-      }
+      padding-right: 8px;
+      border-bottom: 1px solid #f4f4f4;
     }
-    .bottomCallDiv {
-      // background-color: red;
-      position: absolute;
-      bottom: 0px;
-      width: 100%;
-      height: 160px;
+    /deep/ .sp-work-tab {
+      padding: 0 32px;
+      padding-top: 29px;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      button {
+      .sp-work-tab__text {
+        font-size: 32px;
+        line-height: 32px;
         font-family: PingFang SC;
         font-weight: bold;
-      }
-      .keFuButton {
-        width: 574px;
-        height: 96px;
-        background: #4974f5;
-        border-radius: 8px;
-        color: #ffffff;
-        font-size: 32px;
-      }
-      .callButton {
-        width: 100px;
-        height: 96px;
-        background: #ffffff;
-        // color: #ffffff;-
-        border-radius: 8px;
-        color: #1a1a1a;
-        font-size: 24px;
-      }
-    }
-    .keFuButtonDiv {
-      width: 574px;
-      height: 96px;
-    }
-    .listDiv {
-      background-color: red;
-      width: 100%;
-      height: 470px;
-      margin-top: 45px;
-      overflow: scroll;
-      .custom-title {
-        font-size: 32px;
-        font-family: PingFang SC;
-        font-weight: 400;
         color: #222222;
-        line-height: 44px;
       }
-      .cellClass {
-        height: 72px;
+    }
+    /deep/ .sp-work-tabs__nav .sp-work-tab {
+      &:last-child {
+        padding-right: 40px !important;
       }
+    }
+    /deep/ .sp-work-tabs__line {
+      width: 32px;
+      height: 6px;
+      background: #4974f5;
+      border-radius: 3px;
+      bottom: 14px;
+    }
+    /deep/ .sp-work-tab--active .sp-work-tab__text {
+      color: #4974f5;
+    }
+  }
+  .problem-list {
+    width: 100%;
+    padding: 22px 40px;
+    ul {
+      display: flex;
+      flex-direction: column;
+      > li {
+        height: 74px;
+        display: flex;
+        align-items: center;
+        > span {
+          font-size: 32px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          color: #222222;
+          flex: 1;
+          margin-right: 20px;
+          .textOverflow(1);
+        }
+      }
+    }
+  }
+  /deep/ .sp-bottombar {
+    z-index: 3;
+    padding: 32px 40px;
+  }
+  /deep/ .sp-icon-phone-o {
+    color: #1a1a1a;
+    font-weight: bold;
+  }
+  .empty-box {
+    display: block;
+    width: 100%;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+    &::after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 140px;
     }
   }
 }

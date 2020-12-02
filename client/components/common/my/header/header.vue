@@ -1,14 +1,16 @@
 <template>
-  <sp-top-nav-bar
-    :title="title"
-    left-arrow
-    ellipsis
-    @on-click-left="onLeftClick"
-  >
-    <template #left>
-      <sp-icon class-prefix="sp-iconfont" name="specialreturn2" />
-    </template>
-  </sp-top-nav-bar>
+  <div class="my-head">
+    <sp-top-nav-bar
+      :title="title"
+      left-arrow
+      ellipsis
+      @on-click-left="onLeftClick"
+    >
+      <template #left>
+        <sp-icon class-prefix="sp-iconfont" name="specialreturn2" />
+      </template>
+    </sp-top-nav-bar>
+  </div>
 </template>
 
 <script>
@@ -40,6 +42,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.wrapper {
+.my-head {
+  /deep/ .sp-iconfont {
+    font-size: 40px;
+  }
 }
 </style>
