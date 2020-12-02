@@ -235,7 +235,9 @@ export default {
       // 点击区
       this.rIndex = index
       const arr = this.selectData[2]
-      if (!arr.regions || !arr.regions.includes(item)) {
+      if (item.name === '不限') {
+        arr.regions = [{ name: '不限', code: '' }]
+      } else if (!arr.regions || !arr.regions.includes(item)) {
         // 单选
         if (!this.multiple) {
           arr.regions = [item]
