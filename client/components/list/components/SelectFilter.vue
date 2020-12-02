@@ -36,6 +36,7 @@ import { DropdownItem } from '@chipspc/vant-dgg'
 import SelectCheckBox from '@/components/common/filters/SelectCheckBox'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import clone from '~/utils/clone'
+import addRemoveClass from '@/mixins/addRemoveClass'
 export default {
   name: 'SelectFilter',
   components: {
@@ -43,6 +44,7 @@ export default {
     SelectCheckBox,
     BottomConfirm,
   },
+  mixins: [addRemoveClass],
   props: {
     filterData: {
       type: Object,
@@ -53,7 +55,7 @@ export default {
   },
   data() {
     return {
-      moreTextCss: '', // 用来控制样式的显示
+      moreTextCss: 'jyDropdownFilter', // 用来控制样式的显示
       dropdownTitle: '',
       isSelectMore: false,
       selectList: [],

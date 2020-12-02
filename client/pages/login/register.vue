@@ -2,47 +2,33 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 17:22:12
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-24 09:47:45
+ * @LastEditTime: 2020-12-02 19:41:38
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/register.vue
 -->
 <template>
   <div class="register">
     <div class="head">
-      <sp-row>
-        <sp-col span="3">
-          <my-icon
-            class="close-btn"
-            name="login_ic_clear"
-            size="0.2rem"
-            color="#1A1A1A"
-          ></my-icon>
-        </sp-col>
-        <sp-col span="18"><h2 class="page-title">注册账号</h2></sp-col>
-      </sp-row>
+      <sp-top-nav-bar ellipsis title="注册账号" @on-click-left="onClickLeft">
+        <template #left>
+          <my-icon name="login_ic_clear" size="0.4rem" color="#1A1A1A" />
+        </template>
+      </sp-top-nav-bar>
     </div>
     <div class="body">
       <sp-form validate-first class="register-form" @submit="onSubmit">
-        <sp-field
+        <PhoneField
+          key="tel"
           v-model="registerForm.tel"
-          type="tel"
-          class="end-btn-cell"
-          name="telephone"
-          clearable
-          placeholder="请输入手机号"
-        >
-          <template #button>
-            <sp-button class="code-btn" native-type="button">
-              获取验证码
-            </sp-button>
-          </template>
-        </sp-field>
+          @input="handleTelInput"
+        />
         <sp-field
           v-model="registerForm.authCode"
           type="number"
           name="authCode"
           clearable
           placeholder="请输入验证码"
+          @input="handleAuthCodeInput"
         />
         <sp-field
           v-model="registerForm.password"
@@ -51,6 +37,7 @@
           name="password"
           clearable
           placeholder="请输入新密码(6-15位数字/字母/标点符号)"
+          @input="handlePasswordInput"
         >
           <template #button>
             <sp-button
@@ -74,24 +61,19 @@
           </template>
         </sp-field>
 
-        <sp-field name="checkbox" class="protocol-field">
-          <template #input>
-            <sp-checkbox v-model="registerForm.readed" shape="round" />
-          </template>
-          <template #extra>
-            <span class="protocol"
-              >为保障您的个人隐私权益，请点击同意按钮前认真阅读下方协议：
-              <a>《薯片用户服务协议》</a>和 <a>《薯片隐 私协议》</a></span
-            >
-          </template>
-        </sp-field>
+        <ProtocolField
+          v-model="registerForm.readed"
+          class="protocol-field"
+          descript="为保障您的个人隐私权益，请点击同意按钮前认真阅读下方协议："
+          @change="handleProtocolChange"
+        />
         <div class="submit-wrap">
           <sp-button
             block
             type="info"
             class="submit-wrap__btn"
             native-type="submit"
-            :disabled="true"
+            :disabled="!isValidSubmit"
           >
             注册
           </sp-button>
@@ -100,11 +82,19 @@
     </div>
     <div class="footer">
       <div>
-        <sp-button class="switch-btn" native-type="button">
+        <sp-button
+          class="switch-btn"
+          native-type="button"
+          @click="handleClick('telLogin')"
+        >
           手机快捷登录
         </sp-button>
         <i class="vertical-line"></i>
-        <sp-button class="switch-btn" native-type="button">
+        <sp-button
+          class="switch-btn"
+          native-type="button"
+          @click="handleClick('forget')"
+        >
           忘记密码
         </sp-button>
       </div>
@@ -113,17 +103,22 @@
 </template>
 
 <script>
-import { Col, Row, Form, Button, Field, Checkbox } from '@chipspc/vant-dgg'
+import { TopNavBar, Form, Button, Field, Checkbox } from '@chipspc/vant-dgg'
+import PhoneField from '@/components/login/PhoneField'
+import ProtocolField from '@/components/login/ProtocolField'
+
+import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
 
 export default {
-  name: 'Login',
+  name: 'Register',
   components: {
-    [Col.name]: Col,
-    [Row.name]: Row,
+    [TopNavBar.name]: TopNavBar,
     [Button.name]: Button,
     [Form.name]: Form,
     [Field.name]: Field,
     [Checkbox.name]: Checkbox,
+    PhoneField,
+    ProtocolField,
   },
   data() {
     return {
@@ -134,15 +129,64 @@ export default {
         readed: false,
       },
       passwordFieldType: 'password', // text
+      isValidSubmit: false,
     }
   },
   methods: {
+    onClickLeft() {
+      console.log('close')
+    },
     onSubmit(values) {
       console.log('submit', values)
+    },
+    handleTelInput(valueObj = {}) {
+      console.log('handleTelInput:', valueObj)
+      const { value, valid } = valueObj
+      this.registerForm.tel = value
+      // !valid && this.loginToast('手机号码有误')
+      this.checkFormData()
+    },
+    handleAuthCodeInput(value) {
+      this.registerForm.authCode = value
+      this.checkFormData()
+    },
+    handlePasswordInput(value) {
+      this.registerForm.password = value
+      this.checkFormData()
+    },
+    handleProtocolChange(value) {
+      console.log('handleProtocolChange:', value)
     },
     handleSwitchLookPassword() {
       this.passwordFieldType =
         this.passwordFieldType === 'password' ? 'text' : 'password'
+    },
+    handleClick(type) {
+      switch (type) {
+        case 'telLogin':
+          this.$router.push({ name: 'login' })
+          break
+        case 'forget':
+          this.$router.push({ name: 'login-forget' })
+          break
+      }
+    },
+    // 数据验证
+    checkFormData(excludeItem) {
+      const { tel, authCode, password } = this.registerForm
+      const isValid = Object.keys(this.registerForm).every((key) => {
+        if (key === excludeItem) return true
+        switch (key) {
+          case 'tel':
+            return checkPhone(tel)
+          case 'authCode':
+            return checkAuthCode(authCode)
+          case 'password':
+            // 至少6-15个字符，至少1个大写字母，1个小写字母和1个数字
+            return checkPassword(password)
+        }
+      })
+      this.isValidSubmit = isValid
     },
   },
 }
@@ -154,24 +198,10 @@ export default {
 @hint-text-color: #cccccc;
 
 .register {
-  /deep/div {
-    font-size: 24px;
-  }
   .head {
-    padding: 0 30px;
-    width: 100%;
-    height: 88px;
-    padding: 24px 30px;
-    .close-btn {
-      line-height: 40px;
-    }
-    .page-title {
-      font-size: 36px;
-      font-weight: bold;
-      color: @title-text-color;
-      line-height: 40px;
-      text-align: center;
-    }
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
   .body {
     padding: 58px 60px 0;
@@ -203,28 +233,12 @@ export default {
         border: none;
       }
       /deep/.sp-cell {
-        padding: 32px 0;
+        display: flex;
+        align-items: center;
+        height: 100px;
+        padding: 0;
         &::after {
           left: 0;
-        }
-        &.end-btn-cell {
-          padding: 6px 0;
-        }
-        &.protocol-field {
-          padding: 68px 0 0;
-          &::after {
-            display: none;
-          }
-          .sp-field__control--custom {
-            min-height: auto;
-          }
-          .protocol {
-            padding-left: 16px;
-            font-size: 26px;
-            font-weight: 400;
-            color: @subtitle-text-color;
-            line-height: 30px;
-          }
         }
         .sp-field__control {
           line-height: 36px;
@@ -266,6 +280,10 @@ export default {
             font-size: 32px;
           }
         }
+      }
+      .protocol-field {
+        padding: 68px 0 0;
+        height: auto;
       }
     }
   }

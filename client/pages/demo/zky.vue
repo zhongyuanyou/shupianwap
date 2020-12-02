@@ -8,6 +8,7 @@
         @select="coupleSelect"
       />
     </div>
+    <div @click="clear">清空</div>
   </div>
 </template>
 
@@ -54,6 +55,9 @@ export default {
     },
     coupleSelect(data) {
       console.log(data)
+    },
+    clear() {
+      this.backData = []
     },
   },
 }

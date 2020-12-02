@@ -121,6 +121,21 @@ export default {
       }
     },
   },
+  watch: {
+    backData(newVal) {
+      if (newVal.length) {
+        this.selectData = newVal
+        this.initData(newVal)
+      } else {
+        this.selectData = [
+          { name: '全国', code: '' },
+          { name: '不限', code: '' },
+          { regions: new Array({ name: '不限', code: '' }) },
+        ]
+        this.initData(this.selectData)
+      }
+    },
+  },
   mounted() {
     const list = this.cityData
     list.unshift({
@@ -220,7 +235,12 @@ export default {
       // 点击区
       this.rIndex = index
       const arr = this.selectData[2]
-      if (!arr.regions || !arr.regions.includes(item)) {
+      if (item.name === '不限') {
+        arr.regions = [{ name: '不限', code: '' }]
+      } else if (
+        !arr.regions ||
+        !this.checkHas(arr.regions, item.name, item.code)
+      ) {
         // 单选
         if (!this.multiple) {
           arr.regions = [item]
@@ -241,6 +261,39 @@ export default {
       // this.selectData[2].regions = arr
       this.$set(this.selectData, 2, arr)
       this.$emit('select', this.selectData)
+    },
+    checkHas(arr, name, code) {
+      const isHas = arr.some((item) => {
+        return item.name === name && item.code === code
+      })
+      return isHas
+    },
+    clear() {
+      this.selectData = this.selectData = [
+        { name: '全国', code: '' },
+        { name: '不限', code: '' },
+        { regions: new Array({ name: '不限', code: '' }) },
+      ]
+      this.$emit('clear', this.selectData)
+    },
+    initData(newVal) {
+      this.cityData.forEach((item, index) => {
+        if (item.name === newVal[0].name && item.code === newVal[0].code) {
+          this.pIndex = index
+        }
+      })
+      this.cityData[this.pIndex].children.forEach((item, index) => {
+        if (item.name === newVal[1].name && item.code === newVal[1].code) {
+          this.cIndex = index
+        }
+      })
+      this.cityData[this.pIndex].children[this.cIndex].children.forEach(
+        (item, index) => {
+          if (item.name === newVal[2].name && item.code === newVal[2].code) {
+            this.rIndex = index
+          }
+        }
+      )
     },
   },
 }

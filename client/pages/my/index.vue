@@ -30,7 +30,7 @@
         </div>
         <div class="my_btns_item_con">我要合作</div>
       </div>
-      <div class="my_btns_item">
+      <div class="my_btns_item" @click="$router.push('/my/help')">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_help" size="0.36rem" color="#00B365" />
         </div>

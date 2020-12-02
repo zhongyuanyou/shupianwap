@@ -123,13 +123,16 @@ export default {
     padding-left: 0;
     padding-right: 0;
   }
-  /deep/.dropdownItem {
+  /deep/.jyDropdownFilter {
     &.active {
       font-weight: bold;
       color: #4974f5;
     }
   }
   /*height: calc(100% - 200px);*/
+  /deep/.sp-dropdown-item__content {
+    max-height: 100%;
+  }
   /deep/.sp-dropdown-menu__bar {
     height: 80px;
     box-shadow: none;

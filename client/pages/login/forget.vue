@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-24 11:46:59
+ * @LastEditTime: 2020-12-02 19:17:31
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/forget.vue
 -->
@@ -10,48 +10,25 @@
 <template>
   <div class="forget">
     <div class="head">
-      <sp-row>
-        <sp-col span="3">
-          <my-icon
-            class="close-btn"
-            name="login_ic_clear"
-            size="0.2rem"
-            color="#1A1A1A"
-          ></my-icon>
-        </sp-col>
-        <sp-col span="18"><h2 class="page-title">找回密码</h2></sp-col>
-      </sp-row>
+      <sp-top-nav-bar ellipsis title="找回密码" @on-click-left="onClickLeft">
+        <template #left>
+          <my-icon name="login_ic_clear" size="0.4rem" color="#1A1A1A" />
+        </template>
+      </sp-top-nav-bar>
     </div>
     <div class="body">
       <sp-form validate-first class="form" @submit="onSubmit">
-        <sp-field
+        <PhoneField
+          key="tel"
           v-model="forgetForm.tel"
-          type="tel"
-          clear-trigger="always"
-          class="end-btn-cell"
-          name="telephone"
-          clearable
-          placeholder="请输入手机号"
-          max-length="11"
           @input="handleTelInput"
-        >
-          <template #button>
-            <sp-button
-              class="code-btn"
-              native-type="button"
-              :disabled="!isValidTel"
-              @click="handleCodeBtnClick"
-            >
-              获取验证码
-            </sp-button>
-          </template>
-        </sp-field>
+        />
         <sp-field
           v-model="forgetForm.authCode"
           type="number"
+          clearable
           clear-trigger="always"
           name="authCode"
-          clearable
           placeholder="请输入验证码"
           max-length="6"
           @input="handleCodeInput"
@@ -91,12 +68,12 @@
     </div>
     <div class="footer">
       <div>
-        <sp-button class="switch-btn" native-type="button">
+        <sp-button class="switch-btn" @click="handleClick('telLogin')">
           手机快捷登录
         </sp-button>
         <i class="vertical-line"></i>
-        <sp-button class="switch-btn" native-type="button">
-          忘记密码
+        <sp-button class="switch-btn" @click="handleClick('accountLogin')">
+          账号快捷登录
         </sp-button>
       </div>
     </div>
@@ -104,18 +81,19 @@
 </template>
 
 <script>
-import { Col, Row, Form, Button, Field, Toast } from '@chipspc/vant-dgg'
+import { TopNavBar, Form, Button, Field, Toast } from '@chipspc/vant-dgg'
+import PhoneField from '@/components/login/PhoneField'
 
 import { checkPhone, checkPassword, checkAuthCode } from '@/utils/check.js'
 
 export default {
   name: 'Login',
   components: {
-    [Col.name]: Col,
-    [Row.name]: Row,
+    [TopNavBar.name]: TopNavBar,
     [Button.name]: Button,
     [Form.name]: Form,
     [Field.name]: Field,
+    PhoneField,
   },
   data() {
     return {
@@ -125,13 +103,15 @@ export default {
         newPassword: '',
         confirmPassword: '',
       },
-      isValidTel: false, // 电话号码的有效性
       isValidSubmit: false,
     }
   },
   methods: {
-    handleTelInput(value) {
-      this.isValidTel = checkPhone(value)
+    onClickLeft() {
+      console.log('close')
+    },
+    handleTelInput(valueObj = {}) {
+      const { value, valid } = valueObj
       this.forgetForm.tel = value
       this.checkFormData('tel')
     },
@@ -173,6 +153,21 @@ export default {
     onSubmit(values) {
       console.log('submit', values)
     },
+    handleClick(type) {
+      switch (type) {
+        case 'telLogin':
+          this.$router.push({ name: 'login' })
+          break
+        case 'accountLogin':
+          this.$router.push({
+            name: 'login',
+            query: {
+              loginType: 'account',
+            },
+          })
+          break
+      }
+    },
   },
 }
 </script>
@@ -183,9 +178,6 @@ export default {
 @hint-text-color: #cccccc;
 
 .forget {
-  /deep/div {
-    font-size: 24px;
-  }
   .head {
     padding: 0 30px;
     width: 100%;
@@ -215,9 +207,13 @@ export default {
       }
 
       /deep/.sp-cell {
-        padding: 32px 0;
+        display: flex;
+        align-items: center;
+        height: 100px;
+        padding: 0;
         &::after {
           left: 0;
+          right: 0;
         }
         &.end-btn-cell {
           padding: 6px 0;
