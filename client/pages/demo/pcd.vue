@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-20 09:56:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-23 08:39:23
+ * @LastEditTime: 2020-11-27 16:05:21
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/demo/pcd.vue
 -->
@@ -32,6 +32,9 @@
     <sp-button class="btn" type="primary" @click="handleAppInstallBtn"
       >app下载推荐框调用</sp-button
     >
+    <sp-button class="btn" type="primary" @click="handleObjDiffBtn"
+      >object diff调用</sp-button
+    >
     <div class="m-t-10">
       <ServiceSelect :active-data="activeData" @select="handleSelect">
       </ServiceSelect>
@@ -46,6 +49,9 @@ import ImgAuthDialogFn from '@/components/common/imgAuth'
 import RecommendDialog from '@/components/RecommendDialog'
 import InstallAppDialog from '@/components/common/app/InstallAppDialog'
 import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
+
+import objectDiff from '@/utils/objectDiff'
+
 export default {
   name: 'Test',
   components: {
@@ -102,6 +108,11 @@ export default {
     },
     handleAppInstallBtn() {
       this.showInstallAppDialog = !this.showInstallAppDialog
+    },
+    handleObjDiffBtn() {
+      console.log(
+        objectDiff.diffOwnProperties({ x: 1, y: [1] }, { x: 1, y: [12] })
+      )
     },
   },
 }
