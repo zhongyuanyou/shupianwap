@@ -1,6 +1,10 @@
 <template>
-  <div :class="{ 'fixed-head': fixed }" :style="{ height: headHeight }">
-    <div class="my-head" :style="{ height: headHeight }">
+  <div
+    v-if="isShow"
+    :class="{ 'fixed-head': fixed }"
+    :style="{ height: headHeight }"
+  >
+    <div class="my-head" :class="headClass" :style="{ height: headHeight }">
       <div class="slot-left">
         <slot name="left">
           <my-icon
@@ -40,6 +44,16 @@ export default {
       type: Boolean,
       default: () => true,
     },
+    // 自定义类名
+    headClass: {
+      type: String,
+      default: () => '',
+    },
+  },
+  data() {
+    return {
+      isShow: true,
+    }
   },
   computed: {
     headHeight() {
@@ -48,9 +62,6 @@ export default {
       }
       return this.height
     },
-  },
-  mounted() {
-    console.log(typeof this.height)
   },
   methods: {
     onLeftClick() {
@@ -66,6 +77,7 @@ export default {
   align-items: center;
   background-color: #fff;
   font-size: 24px;
+  box-shadow: 0px 1px 0px 0px #f4f4f4;
   .slot-left {
     display: flex;
     position: absolute;
