@@ -225,6 +225,9 @@ export default {
   }
   /deep/.sp-cell {
     padding: 18px 40px;
+    &::after {
+      display: none;
+    }
     &:last-child {
       margin-bottom: 40px;
     }

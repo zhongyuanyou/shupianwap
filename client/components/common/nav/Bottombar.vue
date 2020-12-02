@@ -11,11 +11,11 @@
             class="my-icon"
             :name="item.iconName"
             size="0.4rem"
-            :color="index === active ? iconColorActive : iconColorDefault"
+            :color="item.path === active ? iconColorActive : iconColorDefault"
           ></my-icon>
           <span
             :style="{
-              color: index === active ? iconColorActive : iconColorDefault,
+              color: item.path === active ? iconColorActive : iconColorDefault,
             }"
             >{{ item.name }}</span
           >
@@ -30,7 +30,7 @@ export default {
   name: 'Bottombar',
   data() {
     return {
-      active: 0,
+      active: 'home',
       iconColorDefault: '#999999',
       iconColorActive: '#4974F5',
       tabBarData: [
@@ -42,24 +42,52 @@ export default {
         {
           name: '发现',
           iconName: 'tabbar_ic_news',
-          path: '/',
+          path: '/found',
         },
         {
           name: '消息',
           iconName: 'tabbar_ic_msg',
-          path: '/',
+          path: '',
         },
         {
           name: '我的',
           iconName: 'tabbar_ic_personal',
-          path: '/',
+          path: '/my',
         },
       ],
     }
   },
+  watch: {
+    $route(to, from) {
+      const path =
+        this.$route.path === '/' ||
+        this.$route.path === '/examples' ||
+        this.$route.path === '/tools'
+          ? '/'
+          : this.$route.path
+      this.active = path
+    },
+  },
+  created() {
+    const path =
+      this.$route.path === '/' ||
+      this.$route.path === '/examples' ||
+      this.$route.path === '/tools'
+        ? '/'
+        : this.$route.path
+    this.active = path
+  },
   methods: {
-    pageJump(item, index) {
-      this.active = index
+    pageJump(item) {
+      const path =
+        this.$route.path === '/' ||
+        this.$route.path === '/examples' ||
+        this.$route.path === '/tools'
+          ? '/'
+          : this.$route.path
+      if (path === item.path) {
+        return
+      }
       this.$router.replace({
         path: item.path,
       })

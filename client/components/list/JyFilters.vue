@@ -283,6 +283,31 @@ export default {
           ],
           isSelects: false,
         },
+        {
+          title: '地区',
+          isSelects: true,
+        },
+        {
+          title: '排序',
+          filters: [
+            {
+              id: '1',
+              name: '综合排序',
+            },
+            {
+              id: '2',
+              name: '最新发布',
+            },
+            {
+              id: '3',
+              name: '科技信息',
+            },
+            {
+              id: '4',
+              name: '价格从低到高',
+            },
+          ],
+        },
       ]
       res.forEach((item) => {
         if (item.title === '地区') {

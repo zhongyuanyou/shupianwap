@@ -4,7 +4,7 @@
     <TabCurve
       ref="tabCurveRef"
       v-model="curentItem"
-      :offset-top="searchDomHeight"
+      :offset-top="searchDomHeight - 0.5"
       :tab-list="tabBtn"
       :need-fixed="true"
       :right="0.54"

@@ -112,7 +112,7 @@ export default {
       this.echoData.activeItems = []
     },
     selectItems(item, items) {
-      console.log(item, items)
+      // console.log(item, items)
       this.echoData.activeItems = items
       this.echoData.minValue = ''
       this.echoData.maxValue = ''
@@ -135,5 +135,6 @@ export default {
 .price-content {
   width: 100%;
   padding: 50px 40px 54px 40px;
+  border-bottom: 1px solid #cdcdcd;
 }
 </style>
