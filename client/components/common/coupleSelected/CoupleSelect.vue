@@ -213,6 +213,8 @@ export default {
 .couple {
   width: 100%;
   height: 100%;
+  min-height: 200px;
+  max-height: 400px;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
