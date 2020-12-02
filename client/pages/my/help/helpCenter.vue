@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <Header title="帮助中心" @leftClickFuc="onClickLeft" />
+    <Header title="帮助中心" />
     <sp-search
       v-model="searchText"
       placeholder="搜索您遇到的问题"
@@ -24,7 +24,7 @@
         </template>
       </sp-cell>
     </sp-cell-group>
-    <div v-if="isShowNoFind" class="noFindDiv">
+    <div v-if="!list.length" class="noFindDiv">
       <div>
         <img :src="img" alt="" />
       </div>
@@ -69,7 +69,6 @@ export default {
         '回答',
       ],
       img: require('~/assets/temporary/home/notify_img_logo@1,5x.png'),
-      isShowNoFind: false,
     }
   },
   computed: {},
@@ -83,9 +82,6 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    onClickLeft() {
-      this.$router.back(-1)
-    },
     onServiceTouch() {
       //   console.log(111)
       this.$router.push({
