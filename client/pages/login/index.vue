@@ -4,7 +4,7 @@
  * @LastEditors: Please set LastEditors
  * @LastEditTime: 2020-11-24 09:47:23
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/login/index.vue
+ * @FilePath: /chips-wap/client/pages/login/commodityConsultation.vue
 -->
 <template>
   <div class="login">

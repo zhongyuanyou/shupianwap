@@ -4,7 +4,7 @@
  * @LastEditors: Please set LastEditors
  * @LastEditTime: 2020-11-28 17:31:19
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
+ * @FilePath: /chips-wap/client/pages/shoppingCar/commodityConsultation.vue
 -->
 
 <template>
