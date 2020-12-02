@@ -135,5 +135,6 @@ export default {
 .price-content {
   width: 100%;
   padding: 50px 40px 54px 40px;
+  border-bottom: 1px solid #cdcdcd;
 }
 </style>

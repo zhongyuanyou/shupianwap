@@ -56,12 +56,6 @@
 </template>
 
 <script>
-/**
- *
- * 回显数据
- * 提交数据
- * 重置筛选
- * */
 import { DropdownItem } from '@chipspc/vant-dgg'
 import SelectCheckBox from '@/components/common/filters/SelectCheckBox'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'

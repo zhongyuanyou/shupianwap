@@ -159,12 +159,12 @@ export default {
           this.$emit('cancelItem', item, this.activeItems)
         } else {
           this.activeItems.push(item)
-          console.log('selectItems', item, this.activeItems)
+          // console.log('selectItems', item, this.activeItems)
           this.$emit('selectItems', item, this.activeItems)
         }
       } else {
         this.activeItems = [item]
-        console.log('selectItems', item, this.activeItems)
+        // console.log('selectItems', item, this.activeItems)
         this.$emit('selectItems', item, this.activeItems)
       }
     },
