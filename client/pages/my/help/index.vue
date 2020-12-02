@@ -1,9 +1,7 @@
 <template>
   <div class="help-page">
     <!-- S 头部 -->
-    <sp-sticky>
-      <Header ref="headerRef" title="帮助中心" @leftClickFuc="onClickLeft" />
-    </sp-sticky>
+    <Header ref="headerRef" title="帮助中心" />
     <!-- E 头部 -->
     <!-- S 广告位 -->
     <div class="help-bn">
@@ -94,7 +92,7 @@ import {
   BottombarIcon,
   Sticky,
 } from '@chipspc/vant-dgg'
-import Header from '@/components/common/my/header/header'
+import Header from '@/components/common/head/header'
 export default {
   name: 'Help',
   components: {
@@ -228,10 +226,6 @@ export default {
     this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
   },
   methods: {
-    // 返回上一页
-    onClickLeft() {
-      this.$router.back(-1)
-    },
     // tab切换
     tabsClickHandle(name, title) {
       console.log(name, title)

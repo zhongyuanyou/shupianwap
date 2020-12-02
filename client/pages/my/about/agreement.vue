@@ -9,7 +9,7 @@
 
 <script>
 import { TopNavBar, Icon } from '@chipspc/vant-dgg'
-import Header from '@/components/common/my/header/header'
+import Header from '@/components/common/head/header'
 export default {
   name: 'Agreement',
   components: {
