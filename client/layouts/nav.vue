@@ -2,6 +2,7 @@
   <div class="nav-layout">
     <nuxt />
     <Bottombar />
+    <div class="nav-placeholder"></div>
   </div>
 </template>
 <script>
@@ -15,11 +16,17 @@ export default {
 <style lang="less" scoped>
 .nav-layout {
   height: 100%;
-}
-.nav-layout::after {
-  content: '';
-  display: block;
-  width: 100%;
-  height: 98px;
+  & .nav-placeholder {
+    display: block;
+    width: 100%;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+    &::after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 98px;
+    }
+  }
 }
 </style>
