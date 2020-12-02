@@ -278,7 +278,6 @@ export default {
       this.rgt.on('scroll', (res) => {
         if (this.flag) {
           this.scrollY = Math.abs(res.y) + 64
-          console.log('scrollY', this.scrollY)
           for (let i = 0; i < this.arr.length; i++) {
             if (this.scrollY > this.arr[i] && this.scrollY < this.arr[i + 1]) {
               this.TabNavList = i - 1 // 左右联动取值
@@ -287,10 +286,8 @@ export default {
                 this.$refs.l_list,
                 100,
                 0,
-                this.TabNavList * 62
+                this.TabNavList * 65
               )
-            } else {
-              console.log(222222)
             }
           }
         }
