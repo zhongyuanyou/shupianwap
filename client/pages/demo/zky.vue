@@ -2,7 +2,11 @@
   <div>
     <CitySelect :show.sync="show" :city-data="cityData" @select="select" />
     <div style="width: 100%; height: 300px">
-      <CoupleSelect :city-data="city" @select="coupleSelect" />
+      <CoupleSelect
+        :city-data="city"
+        :back-data="backData"
+        @select="coupleSelect"
+      />
     </div>
   </div>
 </template>
@@ -21,6 +25,19 @@ export default {
     return {
       show: false,
       cityData: [],
+      backData: [
+        {
+          name: '四川',
+          code: 'sc',
+        },
+        {
+          name: '遂宁',
+          code: 'sn',
+        },
+        {
+          regions: [{ name: '船山区', code: 'csq' }],
+        },
+      ],
     }
   },
   computed: {

@@ -94,6 +94,13 @@ export default {
       type: Boolean,
       default: true,
     },
+    // 回显数据
+    backData: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
   data() {
     return {
@@ -133,11 +140,41 @@ export default {
       ],
     })
     this.coupleData = list
-    this.selectData = [
-      { name: '全国', code: '' },
-      { name: '不限', code: '' },
-      { regions: new Array({ name: '不限', code: '' }) },
-    ]
+    if (this.backData.length) {
+      this.selectData = this.backData
+      this.cityData.forEach((item, index) => {
+        if (
+          item.name === this.backData[0].name &&
+          item.code === this.backData[0].code
+        ) {
+          this.pIndex = index
+        }
+      })
+      this.cityData[this.pIndex].children.forEach((item, index) => {
+        if (
+          item.name === this.backData[1].name &&
+          item.code === this.backData[1].code
+        ) {
+          this.cIndex = index
+        }
+      })
+      this.cityData[this.pIndex].children[this.cIndex].children.forEach(
+        (item, index) => {
+          if (
+            item.name === this.backData[2].name &&
+            item.code === this.backData[2].code
+          ) {
+            this.rIndex = index
+          }
+        }
+      )
+    } else {
+      this.selectData = [
+        { name: '全国', code: '' },
+        { name: '不限', code: '' },
+        { regions: new Array({ name: '不限', code: '' }) },
+      ]
+    }
   },
   methods: {
     handleProvince(item, index) {
