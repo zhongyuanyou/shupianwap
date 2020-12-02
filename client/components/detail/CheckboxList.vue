@@ -65,16 +65,25 @@ export default {
 </script>
 <style lang="less" scoped>
 .check-box-list {
-  position: relative;
-  padding: 0 42px 0 40px;
-  /deep/.sp-cell__label {
-    color: #ec5330 !important;
+  // 列表内容样式
+  // position: relative;
+  // padding: 0 8px 0 9px;
+  .sp-cell {
+    padding: 31px 40px 31px 40px;
+    /deep/.sp-cell__label {
+      color: #ec5330 !important;
+      // padding: 31px 8px 31px 9px;
+    }
   }
+  .sp-cell:first-child {
+    padding-top: 7px;
+  }
+
   .submit {
     width: 85%;
     position: fixed;
-    z-index: 20;
     bottom: 15px;
+    right: 7.5%;
   }
 }
 </style>

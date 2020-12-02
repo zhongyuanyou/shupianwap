@@ -2,7 +2,6 @@
   <div class="select-address">
     <div class="top">
       <sp-top-nav-bar
-        padding
         @on-click-left="onClickLeft"
         @on-click-right="onClickRight"
       >
@@ -21,7 +20,7 @@
         <template #right> 搜索 </template>
       </sp-top-nav-bar>
     </div>
-    <div class="dropdown-item">
+    <div class="dropdown-list">
       <sp-dropdown-menu>
         <!-- 选择价格区间 -->
         <sp-dropdown-item
@@ -36,6 +35,7 @@
               @minInput="minInput"
               @maxInput="maxInput"
               @selectItems="selectedPrice"
+              @selectAllItems="selectAllPrice"
             />
           </div>
           <BottomConfirm
@@ -45,6 +45,10 @@
         </sp-dropdown-item>
         <sp-dropdown-item v-model="valueSearch" :options="option" />
       </sp-dropdown-menu>
+      <div class="select-list">
+        <!-- 搜索结果列表 -->
+        <AddressList :list="addressList" />
+      </div>
     </div>
   </div>
 </template>
@@ -59,6 +63,7 @@ import {
 } from '@chipspc/vant-dgg'
 import PriceFilter from '@/components/common/filters/PriceFilter'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
+import AddressList from '@/components/detail/AddressList'
 export default {
   components: {
     [TopNavBar.name]: TopNavBar,
@@ -69,12 +74,12 @@ export default {
     [DropdownMenu.name]: DropdownMenu,
     PriceFilter,
     BottomConfirm,
+    AddressList,
   },
   data() {
     return {
       searchValue: null,
       dropdownPriceTitle: '价格',
-
       valueSearch: 0,
       option: [
         { text: '全部商品', value: 0 },
@@ -103,6 +108,23 @@ export default {
           id: '5',
         },
       ],
+      addressList: [
+        {
+          title: '四川省成都市武侯区科华南路1号',
+          attribute: ['属性', '属性', '属性'],
+          price: 10000,
+        },
+        {
+          title: '四川省成都市武侯区科华南路1号',
+          attribute: ['属性', '属性', '属性'],
+          price: 10000,
+        },
+        {
+          title: '四川省成都市武侯区科华南路1号',
+          attribute: ['属性', '属性', '属性'],
+          price: 10000,
+        },
+      ],
     }
   },
   methods: {
@@ -122,6 +144,10 @@ export default {
       // 最大输入框
       console.log(val)
     },
+    selectAllPrice(item) {
+      // 选择不限显示标题
+      this.dropdownPriceTitle = item.name
+    },
     selectedPrice(val) {
       // 修改选中价格区间标题显示
       this.dropdownPriceTitle = val.name
@@ -138,4 +164,27 @@ export default {
   },
 }
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.select-address {
+  .top {
+    padding: 16px 0 4px 0;
+    /deep/.sp-top-nav-bar__title {
+      // 搜索框样式
+      margin: 0 144px 0 104px;
+      /deep/.search {
+        width: 502px;
+      }
+    }
+    /deep/.sp-top-nav-bar__right {
+      // 右边搜索样式
+      font-size: 32px;
+      color: #1a1a1a;
+      padding: 0 42px 0 41px;
+    }
+    /deep/.sp-top-nav-bar__left {
+      // 左边返回样式
+      padding-right: 0px;
+    }
+  }
+}
+</style>

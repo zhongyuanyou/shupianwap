@@ -2,7 +2,6 @@
   <div class="select-phone">
     <div class="top">
       <sp-top-nav-bar
-        padding
         @on-click-left="onClickLeft"
         @on-click-right="onClickRight"
       >
@@ -21,12 +20,12 @@
         <template #right> 搜索 </template>
       </sp-top-nav-bar>
     </div>
-    <div class="item">
+    <div class="dropdown-list">
       <sp-dropdown-menu>
         <!-- 搜索前4位 -->
         <sp-dropdown-item
           ref="isShowBeforFour"
-          title-class=""
+          title-class="title-style"
           :title="dropdownBeforFour"
         >
           <div class="select-phone">
@@ -47,7 +46,7 @@
         <!-- 搜索后4位 -->
         <sp-dropdown-item
           ref="isShowLastFour"
-          title-class=""
+          title-class="title-style"
           :title="dropdownLastFour"
         >
           <div class="select-phone">
@@ -68,8 +67,7 @@
         <!-- 选择价格区间 -->
         <sp-dropdown-item
           ref="isShowPrice"
-          v-model="value1"
-          title-class=""
+          title-class="title-style"
           :title="dropdownPrice"
         >
           <div class="select-price">
@@ -88,7 +86,11 @@
           />
         </sp-dropdown-item>
         <!-- 排序 -->
-        <sp-dropdown-item v-model="sortValue" :options="option" />
+        <sp-dropdown-item
+          v-model="sortValue"
+          title-class="title-style"
+          :options="option"
+        />
       </sp-dropdown-menu>
     </div>
     <div class="result-phone">
@@ -127,12 +129,12 @@ export default {
   data() {
     return {
       searchValue: null,
-      sortValue: 'a',
-      activeNames: ['1'],
+      // activeNames: ['1'],
       dropdownBeforFour: '前四位',
       dropdownLastFour: '后四位',
       dropdownPrice: '价格',
-      value1: 0,
+      sortValue: 'a',
+
       option: [
         { text: '默认排序', value: 'a' },
         { text: '按照价格从低到高', value: 'b' },
@@ -292,18 +294,39 @@ export default {
 <style lang="less" scoped>
 .select-phone {
   .top {
-    /deep/.search {
-      width: 100%;
+    padding: 16px 0 0 0;
+    /deep/.sp-top-nav-bar__title {
+      // 搜索框样式
+      margin: 0 144px 0 104px;
+      /deep/.search {
+        width: 502px;
+      }
+    }
+    /deep/.sp-top-nav-bar__right {
+      // 右边搜索样式
+      font-size: 32px;
+      color: #1a1a1a;
+      padding: 0 42px 0 41px;
+    }
+    /deep/.sp-top-nav-bar__left {
+      // 左边返回样式
+      padding-right: 0px;
     }
   }
-  .item {
-    .select-phone {
-      padding: 32px 40px 64px 40px;
+  .dropdown-list {
+    // 下拉样式
+    /deep/.sp-dropdown-menu__bar {
+      /deep/.sp-dropdown-menu__item:last-child {
+        padding-right: 40px;
+      }
     }
-    .select-price {
-      padding: 32px 40px 64px 40px;
-      border-bottom: 1px solid #cdcdcd;
-    }
+  }
+  /deep/.title-style {
+    color: #222222;
+    font-size: 28px;
+  }
+  /deep/.select-phone {
+    padding: 32px 40px;
   }
 }
 </style>
