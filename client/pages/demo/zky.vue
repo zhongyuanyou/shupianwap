@@ -8,6 +8,7 @@
         @select="coupleSelect"
       />
     </div>
+    <div @click="clear">清空</div>
   </div>
 </template>
 
@@ -25,7 +26,19 @@ export default {
     return {
       show: false,
       cityData: [],
-      backData: [],
+      backData: [
+        {
+          name: '四川',
+          code: 'sc',
+        },
+        {
+          name: '遂宁',
+          code: 'sn',
+        },
+        {
+          regions: [{ name: '船山区', code: 'csq' }],
+        },
+      ],
     }
   },
   computed: {
@@ -42,6 +55,9 @@ export default {
     },
     coupleSelect(data) {
       console.log(data)
+    },
+    clear() {
+      this.backData = []
     },
   },
 }
