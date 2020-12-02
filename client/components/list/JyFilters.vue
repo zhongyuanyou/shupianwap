@@ -33,10 +33,6 @@
 
 <script>
 import { DropdownMenu, DropdownItem, List } from '@chipspc/vant-dgg'
-// import SelectFilter from './components/SelectFilter'
-// import AreaFilter from './components/AreaFilter'
-// import MoreFilter from './components/MoreFilter'
-// import PriceFilter from './components/PriceFilter'
 import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 
@@ -228,35 +224,27 @@ export default {
           ],
         },
         {
-          title: '行业2',
+          title: '价格',
           filters: [
             {
               id: '1',
-              name: '科技信息',
+              name: '1万以下',
             },
             {
               id: '2',
-              name: '科技信息',
+              name: '1-2万',
             },
             {
               id: '3',
-              name: '科技信息',
+              name: '2-5万',
             },
             {
               id: '4',
-              name: '科技信息',
+              name: '5-10万',
             },
             {
               id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
+              name: '10万以上',
             },
           ],
           isSelects: false,
