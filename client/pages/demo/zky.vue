@@ -25,19 +25,7 @@ export default {
     return {
       show: false,
       cityData: [],
-      backData: [
-        {
-          name: '四川',
-          code: 'sc',
-        },
-        {
-          name: '遂宁',
-          code: 'sn',
-        },
-        {
-          regions: [{ name: '船山区', code: 'csq' }],
-        },
-      ],
+      backData: [],
     }
   },
   computed: {

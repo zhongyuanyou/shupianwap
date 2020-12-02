@@ -135,6 +135,7 @@ module.exports = (appInfo) => {
     const userConfig = {
         // redis默认缓存数据的时长(S秒),产线环境24小时,开发环境1小时
         redisCacheTime: 60 * 60,
+        baseUrl: '',
     };
     return {
         config,

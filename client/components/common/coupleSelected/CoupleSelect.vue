@@ -121,6 +121,36 @@ export default {
       }
     },
   },
+  watch: {
+    backData(newVal) {
+      if (newVal.length) {
+        this.selectData = newVal
+        this.cityData.forEach((item, index) => {
+          if (item.name === newVal[0].name && item.code === newVal[0].code) {
+            this.pIndex = index
+          }
+        })
+        this.cityData[this.pIndex].children.forEach((item, index) => {
+          if (item.name === newVal[1].name && item.code === newVal[1].code) {
+            this.cIndex = index
+          }
+        })
+        this.cityData[this.pIndex].children[this.cIndex].children.forEach(
+          (item, index) => {
+            if (item.name === newVal[2].name && item.code === newVal[2].code) {
+              this.rIndex = index
+            }
+          }
+        )
+      } else {
+        this.selectData = [
+          { name: '全国', code: '' },
+          { name: '不限', code: '' },
+          { regions: new Array({ name: '不限', code: '' }) },
+        ]
+      }
+    },
+  },
   mounted() {
     const list = this.cityData
     list.unshift({
@@ -241,6 +271,14 @@ export default {
       // this.selectData[2].regions = arr
       this.$set(this.selectData, 2, arr)
       this.$emit('select', this.selectData)
+    },
+    clear() {
+      this.selectData = this.selectData = [
+        { name: '全国', code: '' },
+        { name: '不限', code: '' },
+        { regions: new Array({ name: '不限', code: '' }) },
+      ]
+      this.$emit('clear', this.selectData)
     },
   },
 }
