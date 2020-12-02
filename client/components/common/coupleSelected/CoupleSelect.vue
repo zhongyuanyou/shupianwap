@@ -237,7 +237,10 @@ export default {
       const arr = this.selectData[2]
       if (item.name === '不限') {
         arr.regions = [{ name: '不限', code: '' }]
-      } else if (!arr.regions || !arr.regions.includes(item)) {
+      } else if (
+        !arr.regions ||
+        !this.checkHas(arr.regions, item.name, item.code)
+      ) {
         // 单选
         if (!this.multiple) {
           arr.regions = [item]
@@ -258,6 +261,12 @@ export default {
       // this.selectData[2].regions = arr
       this.$set(this.selectData, 2, arr)
       this.$emit('select', this.selectData)
+    },
+    checkHas(arr, name, code) {
+      const isHas = arr.some((item) => {
+        return item.name === name && item.code === code
+      })
+      return isHas
     },
     clear() {
       this.selectData = this.selectData = [
