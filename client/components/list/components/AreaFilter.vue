@@ -12,7 +12,11 @@
         maxHeight: maxHeight,
       }"
     >
-      <couple-select :city-data="city" @select="coupleSelect" />
+      <couple-select
+        :city-data="city"
+        :back-data="activeItems"
+        @select="coupleSelect"
+      />
     </div>
     <BottomConfirm
       @resetFilters="resetFilters"
@@ -27,6 +31,7 @@ import CoupleSelect from '~/components/common/coupleSelected/CoupleSelect'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import { city } from '~/utils/city'
 import clone from '~/utils/clone'
+import addRemoveClass from '@/mixins/addRemoveClass'
 export default {
   name: 'AreaFilter',
   components: {
@@ -34,6 +39,7 @@ export default {
     [DropdownItem.name]: DropdownItem,
     BottomConfirm,
   },
+  mixins: [addRemoveClass],
   props: {
     filterData: {
       type: Object,
@@ -45,7 +51,7 @@ export default {
   data() {
     return {
       city,
-      moreTextCss: '',
+      moreTextCss: 'jyDropdownFilter',
       dropdownTitle: '',
       activeItems: [], // 默认激活的
       saveActiveItems: [], // 存储的筛选项数据
@@ -73,12 +79,22 @@ export default {
   },
   methods: {
     coupleSelect(item) {
+      // 选择项
       console.log(item)
+      this.activeItems = item
     },
-    resetFilters() {},
-    confirmFilters() {},
     open() {},
-    close() {},
+    close() {
+      this.activeItems = clone(this.saveActiveItems, true)
+    },
+    resetFilters() {
+      this.activeItems = []
+    },
+    confirmFilters() {
+      // 确认筛选
+      this.saveActiveItems = clone(this.activeItems, true)
+      this.$refs.item.toggle()
+    },
   },
 }
 </script>

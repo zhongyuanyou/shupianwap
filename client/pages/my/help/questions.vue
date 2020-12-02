@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <Header title="问题解答" @leftClickFuc="onClickLeft" />
+    <Header title="问题解答" />
     <div class="titleDiv divClass">
       <my-icon name="per_ic_about" class="iconClass" />
       <span>{{ title }}</span>
@@ -34,11 +34,7 @@ export default {
   watch: {},
   created() {},
   mounted() {},
-  methods: {
-    onClickLeft() {
-      this.$router.back(-1)
-    },
-  },
+  methods: {},
 }
 </script>
 <style lang="less" scoped>

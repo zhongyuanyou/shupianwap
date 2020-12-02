@@ -36,6 +36,7 @@
           v-model="keywords"
           shape="round"
           placeholder="搜索您遇到的问题"
+          @focus="$router.push('/my/help/helpCenter')"
         />
       </div>
       <!-- E 搜索 -->
@@ -59,7 +60,11 @@
         <!-- S 列表 -->
         <div class="problem-list">
           <ul>
-            <li v-for="(item, index) in problemList" :key="index">
+            <li
+              v-for="(item, index) in problemList"
+              :key="index"
+              @click="$router.push('/my/help/questions')"
+            >
               <span>{{ item.text + index }}</span>
               <my-icon
                 name="order_ic_listnext"
