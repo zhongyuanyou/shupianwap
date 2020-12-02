@@ -212,14 +212,11 @@ export default {
 <style lang="less" scoped>
 .couple {
   width: 100%;
-  height: 100%;
-  min-height: 200px;
-  max-height: 400px;
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex-direction: row;
+  overflow: hidden;
   position: relative;
+  max-height: 400px;
+  min-height: 200px;
   .fix_shadow {
     position: absolute;
     left: 0;
@@ -231,10 +228,14 @@ export default {
     pointer-events: none;
   }
   &_province {
+    display: block;
     width: 162px;
-    height: 100%;
-    overflow-y: scroll;
     background-color: #f0f0f0;
+    overflow: hidden;
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     &_item {
       height: 84px;
       text-align: center;
@@ -250,9 +251,12 @@ export default {
   }
   &_city {
     width: 240px;
-    height: 100%;
-    overflow-y: scroll;
     background-color: #f8f8f8;
+    overflow: hidden;
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
   &_city::-webkit-scrollbar {
     display: none;
@@ -260,10 +264,12 @@ export default {
   &_region {
     display: flex;
     flex: 1;
-    overflow-y: scroll;
-    height: 100%;
     background-color: #fff;
-
+    overflow: hidden;
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     &_item {
       width: calc(100vw - 402px);
       height: 84px;
