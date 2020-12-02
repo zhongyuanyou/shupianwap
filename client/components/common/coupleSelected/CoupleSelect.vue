@@ -123,31 +123,17 @@ export default {
   },
   watch: {
     backData(newVal) {
+      console.log('newVal', newVal)
       if (newVal.length) {
         this.selectData = newVal
-        this.cityData.forEach((item, index) => {
-          if (item.name === newVal[0].name && item.code === newVal[0].code) {
-            this.pIndex = index
-          }
-        })
-        this.cityData[this.pIndex].children.forEach((item, index) => {
-          if (item.name === newVal[1].name && item.code === newVal[1].code) {
-            this.cIndex = index
-          }
-        })
-        this.cityData[this.pIndex].children[this.cIndex].children.forEach(
-          (item, index) => {
-            if (item.name === newVal[2].name && item.code === newVal[2].code) {
-              this.rIndex = index
-            }
-          }
-        )
+        this.initData(newVal)
       } else {
         this.selectData = [
           { name: '全国', code: '' },
           { name: '不限', code: '' },
           { regions: new Array({ name: '不限', code: '' }) },
         ]
+        this.initData(this.selectData)
       }
     },
   },
@@ -279,6 +265,25 @@ export default {
         { regions: new Array({ name: '不限', code: '' }) },
       ]
       this.$emit('clear', this.selectData)
+    },
+    initData(newVal) {
+      this.cityData.forEach((item, index) => {
+        if (item.name === newVal[0].name && item.code === newVal[0].code) {
+          this.pIndex = index
+        }
+      })
+      this.cityData[this.pIndex].children.forEach((item, index) => {
+        if (item.name === newVal[1].name && item.code === newVal[1].code) {
+          this.cIndex = index
+        }
+      })
+      this.cityData[this.pIndex].children[this.cIndex].children.forEach(
+        (item, index) => {
+          if (item.name === newVal[2].name && item.code === newVal[2].code) {
+            this.rIndex = index
+          }
+        }
+      )
     },
   },
 }
