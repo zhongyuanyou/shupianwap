@@ -112,7 +112,7 @@ export default {
       this.echoData.activeItems = []
     },
     selectItems(item, items) {
-      console.log(item, items)
+      // console.log(item, items)
       this.echoData.activeItems = items
       this.echoData.minValue = ''
       this.echoData.maxValue = ''

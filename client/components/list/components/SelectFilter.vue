@@ -95,7 +95,7 @@ export default {
       this.selectCheckBoxVue = _this
     },
     selectItems(item, items) {
-      console.log(item, items)
+      // console.log(item, items)
       this.activeItems = items
       if (!this.filterData.isSelects) {
         // 当该筛选框是单选时，点选了某个筛选项时，需要关闭筛选框

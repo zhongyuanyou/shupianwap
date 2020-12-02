@@ -90,7 +90,7 @@ export default {
   },
   watch: {
     selfActiveItem(val) {
-      console.log('selfActiveItem', val)
+      // console.log('selfActiveItem', val)
       if (val) {
         this.activeItems = val
       }

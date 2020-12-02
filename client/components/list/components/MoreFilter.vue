@@ -314,37 +314,6 @@ export default {
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
         this.dropdownTitle = val.title
-        // this.selectList = val.filters
-        // this.selectList = [
-        //   {
-        //     id: '1',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '2',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '3',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '4',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '5',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '6',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '7',
-        //     name: '科技信息',
-        //   },
-        // ]
       }
     },
   },
@@ -378,7 +347,7 @@ export default {
       })
     },
     close() {
-      console.log('close')
+      // console.log('close')
       // 如果关闭需要将默认筛选数据和保存的筛选数据同步，防止在选择了筛选项后没有点确定直接关闭筛选下拉框
       this.saveActiveItems.forEach((item, index) => {
         this.$set(this.activeItems, index, item)
