@@ -6,19 +6,23 @@
     @open="open"
     @close="close"
   >
-    <select-check-box
-      ref="selectCheckBox"
-      :select-list="selectList"
-      :gutter="12"
-      :is-show-all="true"
-      :is-select-more="isSelectMore"
+    <div
+      class="select-content"
       :style="{
         maxHeight: maxHeight,
       }"
-      @cancelItem="cancelItem"
-      @selectItems="selectItems"
-      @selectAllItems="selectAllItems"
-    />
+    >
+      <select-check-box
+        ref="selectCheckBox"
+        :select-list="selectList"
+        :gutter="12"
+        :is-show-all="true"
+        :is-select-more="isSelectMore"
+        :self-active-item="activeItems"
+        @selectItems="selectItems"
+        @isShowBtnHandle="isShowBtnHandle"
+      />
+    </div>
     <BottomConfirm
       v-if="isSelectMore"
       @resetFilters="resetFilters"
@@ -31,6 +35,8 @@
 import { DropdownItem } from '@chipspc/vant-dgg'
 import SelectCheckBox from '@/components/common/filters/SelectCheckBox'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
+import clone from '~/utils/clone'
+import addRemoveClass from '@/mixins/addRemoveClass'
 export default {
   name: 'SelectFilter',
   components: {
@@ -38,6 +44,7 @@ export default {
     SelectCheckBox,
     BottomConfirm,
   },
+  mixins: [addRemoveClass],
   props: {
     filterData: {
       type: Object,
@@ -48,10 +55,13 @@ export default {
   },
   data() {
     return {
-      moreTextCss: '', // 用来控制样式的显示
+      moreTextCss: 'jyDropdownFilter', // 用来控制样式的显示
       dropdownTitle: '',
       isSelectMore: false,
       selectList: [],
+      selectCheckBoxVue: null, // 筛选栏的实例
+      activeItems: [], // 默认激活的
+      saveActiveItems: [], // 存储的筛选项数据
     }
   },
   computed: {
@@ -80,24 +90,36 @@ export default {
   },
   methods: {
     open() {},
-    close() {},
-    cancelItem() {},
+    close() {
+      this.activeItems = clone(this.saveActiveItems, true)
+    },
+    isShowBtnHandle(_flag, _this) {
+      this.selectCheckBoxVue = _this
+    },
     selectItems(item, items) {
-      console.log(item, items)
+      // console.log(item, items)
+      this.activeItems = items
+      if (!this.filterData.isSelects) {
+        // 当该筛选框是单选时，点选了某个筛选项时，需要关闭筛选框
+        this.confirmFilters()
+      }
     },
-    selectAllItems() {},
     resetFilters() {
-      this.$refs.selectCheckBox.clearSelect()
+      this.selectCheckBoxVue.clearSelect()
+      this.activeItems = []
     },
-    confirmFilters() {},
+    confirmFilters() {
+      // 确认筛选
+      this.saveActiveItems = clone(this.activeItems, true)
+      this.$refs.item.toggle()
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
-.select-checkbox {
+.select-content {
   padding: 54px 40px;
-  /*min-height: 528px;*/
   border-bottom: 1px solid rgba(205, 205, 205, 1);
   overflow-x: hidden;
   overflow-y: scroll;

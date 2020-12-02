@@ -94,6 +94,13 @@ export default {
       type: Boolean,
       default: true,
     },
+    // 回显数据
+    backData: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
   data() {
     return {
@@ -111,6 +118,21 @@ export default {
           return row.name === item.name && row.code === item.code
         })
         return status
+      }
+    },
+  },
+  watch: {
+    backData(newVal) {
+      if (newVal.length) {
+        this.selectData = newVal
+        this.initData(newVal)
+      } else {
+        this.selectData = [
+          { name: '全国', code: '' },
+          { name: '不限', code: '' },
+          { regions: new Array({ name: '不限', code: '' }) },
+        ]
+        this.initData(this.selectData)
       }
     },
   },
@@ -133,11 +155,41 @@ export default {
       ],
     })
     this.coupleData = list
-    this.selectData = [
-      { name: '全国', code: '' },
-      { name: '不限', code: '' },
-      { regions: new Array({ name: '不限', code: '' }) },
-    ]
+    if (this.backData.length) {
+      this.selectData = this.backData
+      this.cityData.forEach((item, index) => {
+        if (
+          item.name === this.backData[0].name &&
+          item.code === this.backData[0].code
+        ) {
+          this.pIndex = index
+        }
+      })
+      this.cityData[this.pIndex].children.forEach((item, index) => {
+        if (
+          item.name === this.backData[1].name &&
+          item.code === this.backData[1].code
+        ) {
+          this.cIndex = index
+        }
+      })
+      this.cityData[this.pIndex].children[this.cIndex].children.forEach(
+        (item, index) => {
+          if (
+            item.name === this.backData[2].name &&
+            item.code === this.backData[2].code
+          ) {
+            this.rIndex = index
+          }
+        }
+      )
+    } else {
+      this.selectData = [
+        { name: '全国', code: '' },
+        { name: '不限', code: '' },
+        { regions: new Array({ name: '不限', code: '' }) },
+      ]
+    }
   },
   methods: {
     handleProvince(item, index) {
@@ -183,7 +235,12 @@ export default {
       // 点击区
       this.rIndex = index
       const arr = this.selectData[2]
-      if (!arr.regions || !arr.regions.includes(item)) {
+      if (item.name === '不限') {
+        arr.regions = [{ name: '不限', code: '' }]
+      } else if (
+        !arr.regions ||
+        !this.checkHas(arr.regions, item.name, item.code)
+      ) {
         // 单选
         if (!this.multiple) {
           arr.regions = [item]
@@ -205,6 +262,39 @@ export default {
       this.$set(this.selectData, 2, arr)
       this.$emit('select', this.selectData)
     },
+    checkHas(arr, name, code) {
+      const isHas = arr.some((item) => {
+        return item.name === name && item.code === code
+      })
+      return isHas
+    },
+    clear() {
+      this.selectData = this.selectData = [
+        { name: '全国', code: '' },
+        { name: '不限', code: '' },
+        { regions: new Array({ name: '不限', code: '' }) },
+      ]
+      this.$emit('clear', this.selectData)
+    },
+    initData(newVal) {
+      this.cityData.forEach((item, index) => {
+        if (item.name === newVal[0].name && item.code === newVal[0].code) {
+          this.pIndex = index
+        }
+      })
+      this.cityData[this.pIndex].children.forEach((item, index) => {
+        if (item.name === newVal[1].name && item.code === newVal[1].code) {
+          this.cIndex = index
+        }
+      })
+      this.cityData[this.pIndex].children[this.cIndex].children.forEach(
+        (item, index) => {
+          if (item.name === newVal[2].name && item.code === newVal[2].code) {
+            this.rIndex = index
+          }
+        }
+      )
+    },
   },
 }
 </script>
@@ -212,12 +302,11 @@ export default {
 <style lang="less" scoped>
 .couple {
   width: 100%;
-  height: 100%;
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex-direction: row;
+  overflow: hidden;
   position: relative;
+  max-height: 400px;
+  min-height: 200px;
   .fix_shadow {
     position: absolute;
     left: 0;
@@ -229,10 +318,14 @@ export default {
     pointer-events: none;
   }
   &_province {
+    display: block;
     width: 162px;
-    height: 100%;
-    overflow-y: scroll;
     background-color: #f0f0f0;
+    overflow: hidden;
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     &_item {
       height: 84px;
       text-align: center;
@@ -248,9 +341,12 @@ export default {
   }
   &_city {
     width: 240px;
-    height: 100%;
-    overflow-y: scroll;
     background-color: #f8f8f8;
+    overflow: hidden;
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
   &_city::-webkit-scrollbar {
     display: none;
@@ -258,10 +354,12 @@ export default {
   &_region {
     display: flex;
     flex: 1;
-    overflow-y: scroll;
-    height: 100%;
     background-color: #fff;
-
+    overflow: hidden;
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     &_item {
       width: calc(100vw - 402px);
       height: 84px;

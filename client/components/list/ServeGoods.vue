@@ -117,7 +117,6 @@ export default {
     },
   },
   mounted() {
-    // console.log(this.$el.getBoundingClientRect())
     const installAPPHeight = this.$refs.installApp.$el.clientHeight
     const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
     const topHeight = this.$el.getBoundingClientRect().top
@@ -212,6 +211,9 @@ export default {
     }
   }
   /*height: calc(100% - 200px);*/
+  /deep/.sp-dropdown-item__content {
+    max-height: 100%;
+  }
   /deep/.sp-dropdown-menu__bar {
     height: 80px;
     box-shadow: none;
@@ -225,6 +227,9 @@ export default {
   }
   /deep/.sp-cell {
     padding: 18px 40px;
+    &::after {
+      display: none;
+    }
     &:last-child {
       margin-bottom: 40px;
     }

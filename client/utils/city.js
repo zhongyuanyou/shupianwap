@@ -15,6 +15,100 @@ export const city = [
             name: '武侯区',
             code: 'whq',
           },
+          {
+            name: '青羊区',
+            code: 'qyq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
+          {
+            name: '青羊区',
+            code: 'qyq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
+          {
+            name: '青羊区',
+            code: 'qyq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
+        ],
+      },
+      {
+        name: '成都',
+        code: 'cd',
+        children: [
+          {
+            name: '青羊区',
+            code: 'qyq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
+        ],
+      },
+      {
+        name: '成都',
+        code: 'cd',
+        children: [
+          {
+            name: '青羊区',
+            code: 'qyq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
+        ],
+      },
+      {
+        name: '成都',
+        code: 'cd',
+        children: [
+          {
+            name: '青羊区',
+            code: 'qyq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
+        ],
+      },
+      {
+        name: '成都',
+        code: 'cd',
+        children: [
+          {
+            name: '青羊区',
+            code: 'qyq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
+        ],
+      },
+      {
+        name: '成都',
+        code: 'cd',
+        children: [
+          {
+            name: '青羊区',
+            code: 'qyq',
+          },
+          {
+            name: '武侯区',
+            code: 'whq',
+          },
         ],
       },
       {

@@ -56,16 +56,11 @@
 </template>
 
 <script>
-/**
- *
- * 回显数据
- * 提交数据
- * 重置筛选
- * */
 import { DropdownItem } from '@chipspc/vant-dgg'
 import SelectCheckBox from '@/components/common/filters/SelectCheckBox'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import clone from '~/utils/clone'
+import addRemoveClass from '@/mixins/addRemoveClass'
 export default {
   name: 'MoreFilter',
   components: {
@@ -73,6 +68,7 @@ export default {
     SelectCheckBox,
     BottomConfirm,
   },
+  mixins: [addRemoveClass],
   props: {
     filterData: {
       type: Object,
@@ -83,7 +79,7 @@ export default {
   },
   data() {
     return {
-      moreTextCss: '',
+      moreTextCss: 'jyDropdownFilter',
       dropdownTitle: '',
       children: [
         {
@@ -317,40 +313,29 @@ export default {
     },
   },
   watch: {
+    activeItems(val) {
+      const arr = val.flat(1)
+      if (arr.length === 1) {
+        this.dropdownTitle = arr[0].name
+        this.addClass('active')
+      } else if (arr.length > 1) {
+        this.dropdownTitle = '多选'
+        this.addClass('active')
+      } else if (arr.length === 0) {
+        this.removeClass('moreText')
+        this.removeClass('active')
+        this.dropdownTitle = this.filterData.title
+      }
+      // 如果筛选名字个数超过了4个那么需要加样式
+      if (this.dropdownTitle.length >= 4) {
+        this.addClass('moreText')
+      } else {
+        this.removeClass('moreText')
+      }
+    },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
         this.dropdownTitle = val.title
-        // this.selectList = val.filters
-        // this.selectList = [
-        //   {
-        //     id: '1',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '2',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '3',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '4',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '5',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '6',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '7',
-        //     name: '科技信息',
-        //   },
-        // ]
       }
     },
   },
@@ -384,17 +369,14 @@ export default {
       })
     },
     close() {
-      console.log('close')
+      // console.log('close')
       // 如果关闭需要将默认筛选数据和保存的筛选数据同步，防止在选择了筛选项后没有点确定直接关闭筛选下拉框
-      this.saveActiveItems.forEach((item, index) => {
-        this.$set(this.activeItems, index, item)
-      })
+      this.activeItems = clone(this.saveActiveItems, true)
     },
     selectItems(_item, _items, _index) {
       // 选择详细，参数选择的item，选择的所有items，下标index
-      this.selectValueArray[_index] = _items
+      // this.selectValueArray[_index] = _items
       this.$set(this.activeItems, _index, _items)
-      // this.activeItems[_index] = _items
     },
     resetFilters() {
       // 重置所有筛选选项

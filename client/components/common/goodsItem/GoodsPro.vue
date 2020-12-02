@@ -91,23 +91,23 @@ export default {
     display: flex;
     flex-direction: column;
     .goods-name {
-      display: flex;
       font-size: 32px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #222222;
       line-height: 42px;
-      margin-top: -5px;
+      margin-top: -3px;
       .textOverflow(2);
       .pro-lable {
         display: inline-block;
         position: relative;
-        top: 5px;
+        top: -2px;
         margin-right: 8px;
         background-color: #ec5330;
         border-radius: 4px;
         overflow: hidden;
         line-height: 32px;
+        vertical-align: middle;
         > i {
           position: relative;
           font-style: inherit;

@@ -1,7 +1,7 @@
 <template>
   <div class="trademark">
     <DetailTemplate :info="info">
-      <div slot="basic" class="company_info">
+      <div slot="basic" class="trademark_info">
         <div class="item">企业行业：<span>工程类</span></div>
         <div class="item">经营时间：<span>3年以上</span></div>
         <div class="item">注册资本：<span>1000万</span></div>
