@@ -5,7 +5,7 @@
     <!-- e 头部分 -->
     <!-- s 内容 -->
     <div class="content-main">
-      <div class="content" v-for="(item, index) of ContentList" :key="index">
+      <div v-for="(item, index) of ContentList" :key="index" class="content">
         <div class="content-title">{{ item }}</div>
         <my-icon
           name="notify_ic_next"
