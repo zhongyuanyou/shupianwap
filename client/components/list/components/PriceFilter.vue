@@ -33,6 +33,7 @@ import { DropdownItem } from '@chipspc/vant-dgg'
 import PriceFilterComponents from '@/components/common/filters/PriceFilterComponents'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import clone from '~/utils/clone'
+import addRemoveClass from '@/mixins/addRemoveClass'
 export default {
   name: 'PriceFilter',
   components: {
@@ -40,6 +41,7 @@ export default {
     BottomConfirm,
     PriceFilterComponents,
   },
+  mixins: [addRemoveClass],
   props: {
     filterData: {
       type: Object,
@@ -50,7 +52,7 @@ export default {
   },
   data() {
     return {
-      moreTextCss: '', // 用来控制样式的显示
+      moreTextCss: 'jyDropdownFilter', // 用来控制样式的显示
       dropdownTitle: '',
       isSelectMore: false,
       selectList: [], // 展示筛选数据
@@ -78,6 +80,7 @@ export default {
     },
   },
   watch: {
+    echoData(val) {},
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
         this.dropdownTitle = val.title
