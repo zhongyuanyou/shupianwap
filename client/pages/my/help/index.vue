@@ -1,12 +1,17 @@
 <template>
   <div class="help-page">
+    <!-- S 头部 -->
     <sp-sticky>
       <Header ref="headerRef" title="帮助中心" @leftClickFuc="onClickLeft" />
     </sp-sticky>
+    <!-- E 头部 -->
+    <!-- S 广告位 -->
     <div class="help-bn">
       <img src="" alt="" />
     </div>
+    <!-- E 广告位 -->
     <div class="hele-centent">
+      <!-- S 功能 -->
       <div class="func-list">
         <div>
           <img src="" alt="" />
@@ -25,6 +30,8 @@
           <span>我要吐槽</span>
         </div>
       </div>
+      <!-- E 功能 -->
+      <!-- S 搜索 -->
       <div class="search-content">
         <strong>更多服务</strong>
         <sp-search
@@ -33,7 +40,9 @@
           placeholder="搜索您遇到的问题"
         />
       </div>
+      <!-- E 搜索 -->
       <div class="tab-content">
+        <!-- S tab -->
         <sp-sticky
           :class="{ isBorder: isFixed }"
           :offset-top="headHeight - 0.5"
@@ -48,6 +57,8 @@
             ></sp-work-tab>
           </sp-work-tabs>
         </sp-sticky>
+        <!-- E tab -->
+        <!-- S 列表 -->
         <div class="problem-list">
           <ul>
             <li v-for="(item, index) in problemList" :key="index">
@@ -60,12 +71,15 @@
             </li>
           </ul>
         </div>
+        <!-- E 列表 -->
       </div>
     </div>
+    <!-- S footer -->
     <sp-bottombar safe-area-inset-bottom>
       <sp-bottombar-icon icon="phone-o" text="致电" />
       <sp-bottombar-button type="primary" text="在线客服" />
     </sp-bottombar>
+    <!-- E footer -->
     <div class="empty-box"></div>
   </div>
 </template>
@@ -214,12 +228,15 @@ export default {
     this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
   },
   methods: {
+    // 返回上一页
     onClickLeft() {
       this.$router.back(-1)
     },
+    // tab切换
     tabsClickHandle(name, title) {
       console.log(name, title)
     },
+    // 监听滚动吸顶
     searchHandle({ isFixed }) {
       this.isFixed = isFixed
     },
