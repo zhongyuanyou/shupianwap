@@ -19,7 +19,7 @@
         placeholder="最大"
         type="number"
         input-align="center"
-        maxlength="9"
+        maxlength="8"
         :formatter="formatter"
         @input="maxInput"
       />
@@ -29,9 +29,8 @@
       :select-list="priceList ? priceList : []"
       :gutter="12"
       :is-select-more="false"
-      @cancelItem="cancelItem"
+      :self-active-item="activeItems"
       @selectItems="selectItems"
-      @selectAllItems="selectAllItems"
     />
   </div>
 </template>
@@ -40,7 +39,7 @@
 import { Field } from '@chipspc/vant-dgg'
 import SelectCheckBox from './SelectCheckBox'
 export default {
-  name: 'PriceFilter',
+  name: 'PriceFilterComponents',
   components: {
     [Field.name]: Field,
     SelectCheckBox,
@@ -52,12 +51,46 @@ export default {
         return []
       },
     },
+    echoData: {
+      type: Object,
+      default() {
+        return {
+          minPrice: '',
+          maxPrice: '',
+          activeItems: [],
+        }
+      },
+    },
   },
   data() {
     return {
       minPrice: '', // 最小价格
       maxPrice: '', // 最大价格
+      activeItems: [],
     }
+  },
+  watch: {
+    echoData(val) {
+      console.log('echoData', val)
+      this.minPrice = val.minValue
+      this.maxPrice = val.maxValue
+      this.activeItems = val.activeItems
+    },
+    minPrice(val) {
+      val && this.$refs.selectCheckBox.clearSelect()
+    },
+    maxPrice(val) {
+      val && this.$refs.selectCheckBox.clearSelect()
+    },
+  },
+  mounted() {
+    if (this.echoData) {
+      this.minPrice = this.echoData.minPrice
+      this.maxPrice = this.echoData.maxPrice
+      this.activeItems = this.echoData.activeItems
+    }
+    // 将实例抛出去
+    this.$emit('emitSelf', this)
   },
   methods: {
     clearInput() {
@@ -82,7 +115,8 @@ export default {
       this.$emit('cancelItem', item, items)
     },
     selectItems(item, items) {
-      console.log(item, items)
+      this.minPrice = ''
+      this.maxPrice = ''
       this.$emit('selectItems', item, items)
     },
     selectAllItems(item) {

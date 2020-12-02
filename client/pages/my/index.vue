@@ -61,6 +61,7 @@
 <script>
 import { Button, Image } from '@chipspc/vant-dgg'
 export default {
+  layout: 'nav',
   name: 'Index',
   components: {
     [Button.name]: Button,

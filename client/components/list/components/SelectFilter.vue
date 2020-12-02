@@ -67,36 +67,6 @@ export default {
       if (val && JSON.stringify(val) !== '{}') {
         this.dropdownTitle = val.title
         this.selectList = val.filters
-        // this.selectList = [
-        //   {
-        //     id: '1',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '2',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '3',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '4',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '5',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '6',
-        //     name: '科技信息',
-        //   },
-        //   {
-        //     id: '7',
-        //     name: '科技信息',
-        //   },
-        // ]
         this.isSelectMore = val.isSelects
       }
     },

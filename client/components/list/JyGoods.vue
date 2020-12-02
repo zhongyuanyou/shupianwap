@@ -137,7 +137,7 @@ export default {
     border-bottom: 1px solid #f4f4f4;
     border-top: 1px solid #f4f4f4;
   }
-  /deep/.sp-cell {
+  .sort-filter /deep/.sp-cell {
     padding: 18px 40px;
     &:last-child {
       margin-bottom: 40px;
