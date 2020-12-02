@@ -26,7 +26,7 @@
 
 <script>
 import { TopNavBar, Icon, Cell, CellGroup } from '@chipspc/vant-dgg'
-import Header from '@/components/common/my/header/header'
+import Header from '@/components/common/head/header'
 
 export default {
   // layout: 'default',

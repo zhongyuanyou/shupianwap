@@ -36,7 +36,7 @@
 
 <script>
 import { Search, Cell, CellGroup } from '@chipspc/vant-dgg'
-import Header from '@/components/common/my/header/header'
+import Header from '@/components/common/head/header'
 export default {
   name: 'HelpCenter',
   components: {
