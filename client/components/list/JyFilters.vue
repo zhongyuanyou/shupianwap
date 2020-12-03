@@ -27,6 +27,7 @@
       v-for="(item, index) in filters"
       :key="index"
       :filter-data="item"
+      @activeItem="activeItem"
     ></component>
   </sp-dropdown-menu>
 </template>
@@ -96,6 +97,9 @@ export default {
     })
   },
   methods: {
+    activeItem(data, index) {
+      console.log(data, index)
+    },
     handleSelect(val) {
       // 分类选择
       console.log(val)

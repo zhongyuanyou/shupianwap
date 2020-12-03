@@ -7,7 +7,7 @@
 <script>
 import commodityConsultation from '@/components/common/commodityConsultation/commodityConsultation'
 export default {
-  components: {
+  component: {
     commodityConsultation,
   },
 }

@@ -1,10 +1,15 @@
 <template>
   <div class="jyGoods">
     <sp-tabs
+      v-if="isShowTabs"
       ref="spTabs"
       title-active-color="#4974F5"
       title-inactive-color="#222"
       line-width="0"
+      :ellipsis="false"
+      :class="{
+        lowFive: tabItems.length <= 5,
+      }"
       @click="clickTabs"
     >
       <sp-tab
@@ -62,6 +67,29 @@ export default {
     [Tabs.name]: Tabs,
     [Tab.name]: Tab,
   },
+  props: {
+    isShowTabs: {
+      // 是否显示tabs业态栏
+      type: Boolean,
+      default() {
+        return true
+      },
+    },
+    initListData: {
+      // 初始化列表数据，仅做初始化的时候用或是在进行条件搜索的时候用
+      type: Array,
+      default() {
+        return []
+      },
+    },
+    typeCode: {
+      // 业态类型
+      type: String,
+      default() {
+        return '公司交易'
+      },
+    },
+  },
   data() {
     return {
       listShow: true,
@@ -70,19 +98,19 @@ export default {
       maxHeight: 0,
       tabItems: [
         {
-          name: '公司',
+          name: '公司交易',
           code: 11111,
         },
         {
-          name: '专利',
+          name: '专利交易',
           code: 2222,
         },
         {
-          name: '商标',
+          name: '商标交易',
           code: 333,
         },
         {
-          name: '资质',
+          name: '资质交易',
           code: 4444,
         },
       ], // tab栏数据
@@ -92,7 +120,9 @@ export default {
     const installAPPHeight = this.$refs.installApp.$el.clientHeight
     const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
     const topHeight = this.$el.getBoundingClientRect().top
-    const spTabsHeight = this.$refs.spTabs.$el.clientHeight
+    const spTabsHeight = this.$refs.spTabs
+      ? this.$refs.spTabs.$el.clientHeight
+      : 0
     this.maxHeight =
       document.body.clientHeight -
       installAPPHeight -
@@ -119,14 +149,20 @@ export default {
     font-size: 30px;
     padding: 0 40px;
   }
+  /deep/.sp-tabs {
+    border-bottom: 1px solid #f4f4f4;
+  }
   /deep/.sp-tabs__wrap--scrollable .sp-tabs__nav--complete {
     padding-left: 0;
     padding-right: 0;
   }
   /deep/.jyDropdownFilter {
     &.active {
-      font-weight: bold;
-      color: #4974f5;
+      font-weight: bold !important;
+      color: #4974f5 !important;
+      &:after {
+        border-color: transparent transparent #4974f5 #4974f5 !important;
+      }
     }
   }
   /*height: calc(100% - 200px);*/
@@ -136,30 +172,45 @@ export default {
   /deep/.sp-dropdown-menu__bar {
     height: 80px;
     box-shadow: none;
-    padding: 0 40px;
+    margin: 0 30px;
+    margin-left: -8px;
     border-bottom: 1px solid #f4f4f4;
-    border-top: 1px solid #f4f4f4;
+    /*border-top: 1px solid #f4f4f4;*/
+    .sp-dropdown-menu__item {
+      text-align: right;
+      justify-content: flex-end;
+    }
+    /deep/.sp-dropdown-menu__title {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      line-height: 80px;
+      padding: 0 28px;
+      font-size: 28px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #222222;
+      &:after {
+        right: 0;
+        top: 50%;
+        /*transform: rotate(-45deg);*/
+      }
+      &.moreText {
+        &::after {
+          right: 6px;
+        }
+      }
+    }
+    /deep/.sp-dropdown-menu__title--active {
+      font-weight: bold;
+      color: #4974f5;
+    }
   }
   .sort-filter /deep/.sp-cell {
     padding: 18px 40px;
     &:last-child {
       margin-bottom: 40px;
     }
-  }
-  /deep/.sp-dropdown-menu__title {
-    font-size: 28px;
-    font-family: PingFang SC;
-    font-weight: 400;
-    color: #222222;
-    &.moreText {
-      &::after {
-        right: 6px;
-      }
-    }
-  }
-  /deep/.sp-dropdown-menu__title--active {
-    font-weight: bold;
-    color: #4974f5;
   }
   .goods-content {
     overflow-x: hidden;
@@ -183,6 +234,18 @@ export default {
   }
   .subscribe {
     padding: 0 40px;
+  }
+  /deep/.lowFive {
+    /deep/.sp-tabs__nav {
+      /deep/.sp-tab {
+        &:first-child {
+          justify-content: flex-start;
+        }
+        &:nth-last-child(2) {
+          justify-content: flex-end;
+        }
+      }
+    }
   }
 }
 </style>
