@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-25 15:00:30
+ * @LastEditTime: 2020-12-03 13:53:16
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -10,19 +10,7 @@
 <template>
   <div class="list">
     <div class="head">
-      <sp-row>
-        <sp-col span="3">
-          <sp-button class="back-btn">
-            <my-icon
-              class=""
-              name="nav_ic_back"
-              size="0.4rem"
-              color="#1A1A1A"
-            ></my-icon>
-          </sp-button>
-        </sp-col>
-        <sp-col span="18"><h2 class="page-title">在线直选规划师</h2></sp-col>
-      </sp-row>
+      <Header title="在线直选规划师" @leftClickFuc="onClickLeft" />
     </div>
     <div class="body">
       <sp-cell class="search">
@@ -34,11 +22,7 @@
             placeholder="请输入业务或规划师姓名"
           >
             <template #left-icon>
-              <my-icon
-                name="sear_ic_sear"
-                size="0.4rem"
-                color="#999999"
-              ></my-icon>
+              <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
             </template>
           </sp-nav-search>
           <sp-dropdown-menu class="search__dropdown">
@@ -200,7 +184,6 @@
                 <div class="item_contact">
                   <sp-button round class="contact-btn"
                     ><my-icon
-                      class=""
                       name="notify_ic_chat"
                       size="0.32rem"
                       color="#4974F5"
@@ -208,8 +191,7 @@
 
                   <sp-button round class="contact-btn"
                     ><my-icon
-                      class=""
-                      name="notify_ic_chat"
+                      name="notify_ic_tel"
                       size="0.32rem"
                       color="#4974F5"
                   /></sp-button>
@@ -240,6 +222,7 @@ import {
 } from '@chipspc/vant-dgg'
 
 import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
+import Header from '@/components/common/head/header'
 
 import { city } from '@/utils/city'
 
@@ -257,6 +240,7 @@ export default {
     [NavSearch.name]: NavSearch,
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
+    Header,
     CoupleSelect,
   },
   data() {
@@ -282,6 +266,9 @@ export default {
     },
   },
   methods: {
+    onClickLeft() {
+      console.log('返回')
+    },
     coupleSelect(data) {
       console.log(data)
     },
@@ -329,26 +316,6 @@ export default {
     font-size: 24px;
   }
   .head {
-    position: sticky;
-    top: 0;
-    padding: 0 30px;
-    width: 100%;
-    height: 88px;
-    padding: 24px 30px;
-    background-color: #fff;
-    z-index: 100;
-    .back-btn {
-      line-height: 40px;
-      height: 40px;
-      border: none;
-    }
-    .page-title {
-      font-size: 36px;
-      font-weight: bold;
-      color: @title-text-color;
-      line-height: 40px;
-      text-align: center;
-    }
   }
   .body {
     padding: 0;
@@ -394,11 +361,6 @@ export default {
         right: 0;
       }
     }
-    // /deep/.sp-list {
-    //   .sp-cell {
-    //     padding: 40px;
-    //   }
-    // }
   }
   .recommend {
     &__title {

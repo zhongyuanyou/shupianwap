@@ -5,6 +5,9 @@
       title-active-color="#4974F5"
       title-inactive-color="#222"
       line-width="0"
+      :class="{
+        lowFive: tabItems.length <= 5,
+      }"
       @click="clickTabs"
     >
       <sp-tab
@@ -125,8 +128,11 @@ export default {
   }
   /deep/.jyDropdownFilter {
     &.active {
-      font-weight: bold;
-      color: #4974f5;
+      font-weight: bold !important;
+      color: #4974f5 !important;
+      &:after {
+        border-color: transparent transparent #4974f5 #4974f5 !important;
+      }
     }
   }
   /*height: calc(100% - 200px);*/
@@ -136,30 +142,45 @@ export default {
   /deep/.sp-dropdown-menu__bar {
     height: 80px;
     box-shadow: none;
-    padding: 0 40px;
+    margin: 0 30px;
+    margin-left: -8px;
     border-bottom: 1px solid #f4f4f4;
     border-top: 1px solid #f4f4f4;
+    .sp-dropdown-menu__item {
+      text-align: right;
+      justify-content: flex-end;
+    }
+    /deep/.sp-dropdown-menu__title {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      line-height: 80px;
+      padding: 0 28px;
+      font-size: 28px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #222222;
+      &:after {
+        right: 0;
+        top: 50%;
+        /*transform: rotate(-45deg);*/
+      }
+      &.moreText {
+        &::after {
+          right: 6px;
+        }
+      }
+    }
+    /deep/.sp-dropdown-menu__title--active {
+      font-weight: bold;
+      color: #4974f5;
+    }
   }
   .sort-filter /deep/.sp-cell {
     padding: 18px 40px;
     &:last-child {
       margin-bottom: 40px;
     }
-  }
-  /deep/.sp-dropdown-menu__title {
-    font-size: 28px;
-    font-family: PingFang SC;
-    font-weight: 400;
-    color: #222222;
-    &.moreText {
-      &::after {
-        right: 6px;
-      }
-    }
-  }
-  /deep/.sp-dropdown-menu__title--active {
-    font-weight: bold;
-    color: #4974f5;
   }
   .goods-content {
     overflow-x: hidden;
@@ -183,6 +204,18 @@ export default {
   }
   .subscribe {
     padding: 0 40px;
+  }
+  /deep/.lowFive {
+    /deep/.sp-tabs__nav {
+      /deep/.sp-tab {
+        &:first-child {
+          justify-content: flex-start;
+        }
+        &:nth-last-child(2) {
+          justify-content: flex-end;
+        }
+      }
+    }
   }
 }
 </style>

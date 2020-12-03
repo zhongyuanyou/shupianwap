@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-21 15:13:44
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-28 11:47:37
+ * @LastEditTime: 2020-12-03 16:18:16
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/serviceSelected/ServiceSelect.vue
 -->
@@ -171,9 +171,9 @@ export default {
       immediate: true,
     },
 
-    selectData(newVal) {
-      this.$emit('select', clone(newVal, true))
-    },
+    // selectData(newVal) {
+    //   this.$emit('select', clone(newVal, true))
+    // },
   },
 
   mounted() {},
@@ -184,7 +184,7 @@ export default {
       this.$set(this.selectData, 0, { id: navItem.id, text: navItem.text })
       this.$set(this.selectData, 1, { services: [this.childrenList[0]] })
 
-      //   this.$emit('select', [...this.selectData])
+      this.$emit('select', clone(this.selectData, true))
     },
     handleClickItem(item = {}) {
       console.log('item:', item)
@@ -205,7 +205,7 @@ export default {
 
       this.$set(this.selectData, 1, { services })
 
-      //   this.$emit('select', [...this.selectData])
+      this.$emit('select', clone(this.selectData, true))
     },
   },
 }

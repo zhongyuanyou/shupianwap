@@ -29,12 +29,16 @@ export default {
     position: relative;
     width: 160px;
     height: 160px;
+    min-width: 160px;
+    min-height: 160px;
     background: #f8f8f8;
     border-radius: 4px;
     margin: 40px 32px 0 40px;
     .goods-img {
       width: 160px;
       height: 160px;
+      min-width: 160px;
+      min-height: 160px;
     }
     .tag {
       position: absolute;
@@ -53,7 +57,7 @@ export default {
   .goods-right {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: calc(100% - 52px);
     padding-right: 52px;
     overflow: hidden;
     h3 {

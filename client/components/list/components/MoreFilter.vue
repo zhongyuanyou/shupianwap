@@ -327,11 +327,11 @@ export default {
         this.dropdownTitle = this.filterData.title
       }
       // 如果筛选名字个数超过了4个那么需要加样式
-      if (this.dropdownTitle.length >= 4) {
+      /* if (this.dropdownTitle.length >= 4) {
         this.addClass('moreText')
       } else {
         this.removeClass('moreText')
-      }
+      } */
     },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {

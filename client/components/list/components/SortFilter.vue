@@ -48,9 +48,9 @@ export default {
   },
   data() {
     return {
-      moreTextCss: 'jyDropdownFilter active',
+      moreTextCss: 'jyDropdownFilter',
       dropdownTitle: '',
-      selectValue: null,
+      selectValue: {},
       option: [],
       sortfilterDom: null,
     }
@@ -59,13 +59,14 @@ export default {
     selectValue(val) {
       if (val) {
         this.dropdownTitle = val.name
+        this.moreTextCss = 'jyDropdownFilter active'
         // 如果文字大于4个字需要添加样式
-        if (val.name.length >= 4) {
+        /* if (val.name.length >= 4) {
           this.moreTextCss.indexOf('moreText') === -1 &&
             (this.moreTextCss += ' moreText')
         } else {
           this.moreTextCss = this.moreTextCss.split(' ').splice(0, 2).join(' ')
-        }
+        } */
       }
     },
     filterData(val) {
@@ -97,7 +98,7 @@ export default {
     initOption(data) {
       this.dropdownTitle = data.title
       this.option = data.filters
-      this.selectValue = this.option[0]
+      // this.selectValue = this.option[0]
     },
   },
 }
