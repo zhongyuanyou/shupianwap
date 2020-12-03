@@ -80,7 +80,31 @@ export default {
     },
   },
   watch: {
-    echoData(val) {},
+    echoData: {
+      deep: true,
+      handler(val) {
+        const minValue = val.minValue
+        const maxValue = val.maxValue
+        const activeItems = val.activeItems
+        if (activeItems.length) {
+          this.dropdownTitle = activeItems[0].name
+          this.addClass('active')
+        } else if (activeItems.length === 0 && (minValue || maxValue)) {
+          this.dropdownTitle = Number(minValue) + '-' + Number(maxValue)
+          this.addClass('active')
+        } else {
+          this.dropdownTitle = this.filterData.title
+          this.removeClass('moreText')
+          this.removeClass('active')
+        }
+        // 如果筛选名字个数超过了4个那么需要加样式
+        /* if (this.dropdownTitle.length >= 4) {
+          this.addClass('moreText')
+        } else {
+          this.removeClass('moreText')
+        } */
+      },
+    },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
         this.dropdownTitle = val.title
@@ -106,6 +130,7 @@ export default {
     },
     minInput(val) {
       // this.minValue = val
+      console.log(val)
       this.echoData.minValue = val
       this.echoData.activeItems = []
     },

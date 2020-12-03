@@ -3,7 +3,7 @@
     <sp-dropdown-menu ref="dropDownMenu">
       <sp-dropdown-item
         ref="item"
-        title-class="dropdownItem"
+        :title-class="moreTextCss[0]"
         :title="dropdownTitle1"
         @open="open(0)"
         @close="close(0)"
@@ -17,7 +17,7 @@
       <sp-dropdown-item
         v-model="selectValue"
         :title="dropdownTitle2"
-        title-class="dropdownItem"
+        :title-class="moreTextCss[1]"
         :options="option"
         @open="open(1)"
         @close="close(1)"
@@ -56,6 +56,7 @@ import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
+import clone from '~/utils/clone'
 
 export default {
   name: 'ServeGoods',
@@ -77,6 +78,7 @@ export default {
       selectValue: 0,
       dropdownTitle1: '全部服务',
       dropdownTitle2: '默认排序',
+      moreTextCss: ['dropdownItem', 'dropdownItem'],
       maxHeight: 0,
       activeData: [
         { text: '工商服务', id: '1' },
@@ -101,9 +103,7 @@ export default {
         { text: '价格从高到低', value: 3 },
         { text: '价格从低到高', value: 4 },
       ],
-      dropDownDom: null,
-      currentSelectActiveData: null,
-      currentDropDownDom: null, // 当前触发的下拉框dom
+      saveActiveData: [],
     }
   },
   watch: {
@@ -111,9 +111,13 @@ export default {
       this.dropdownTitle2 = this.option[val].text
     },
     activeData(val) {
-      if (val.length === 0) {
-        this.dropDownDom[0].classList.remove('active')
+      console.log('12313')
+      if (val.length) {
+        this.addClass('active', 0)
+      } else {
+        this.removeClass('active', 0)
       }
+      this.concatStr(val)
     },
   },
   mounted() {
@@ -126,43 +130,24 @@ export default {
       dropDownMenuHeight -
       topHeight +
       'px'
-    this.$nextTick(() => {
-      this.dropDownDom = [].slice.call(
-        document.querySelectorAll('.dropdownItem')
-      )
-    })
   },
   methods: {
     handleSelect(val) {
       // 分类选择
       console.log(val)
       this.activeData = val
-      // this.currentSelectActiveData = val
     },
-    open(index) {
-      // 打开下拉选择框
-      console.log('open', index)
-      if (index === 0) {
-        this.currentSelectActiveData = this.activeData
-      }
-    },
+    open(index) {},
     close(index) {
-      console.log(123)
       // 关闭下拉选择框
       if (index === 1 && this.selectValue !== 0) {
         // 给下拉标题增加选中
-        this.dropDownDom[1].classList.add('active')
+        this.addClass('active', 1)
       } else {
-        this.dropDownDom[1].classList.remove('active')
+        this.removeClass('active', 1)
       }
       if (index === 0) {
-        this.activeData = this.currentSelectActiveData
-        this.currentSelectActiveData = null
-        if (this.activeData.length) {
-          this.dropDownDom[0].classList.add('active')
-        } else {
-          this.dropDownDom[0].classList.remove('active')
-        }
+        this.activeData = clone(this.saveActiveData)
       }
     },
     onLoad() {
@@ -175,28 +160,55 @@ export default {
     confirmFilters() {
       // 确认筛选
       console.log('this.activeData', this.activeData)
-      if (this.activeData && this.activeData.length) {
-        this.currentSelectActiveData = this.activeData
-        this.concatStr(this.activeData)
-      } else {
-        this.dropdownTitle1 = '全部服务'
-      }
+      this.saveActiveData = clone(this.activeData)
       this.$refs.item.toggle()
     },
     concatStr(val) {
-      /* let str = ''
-      str = val[0].text
-      if (val[1] && val[1].services && val[1].services.length) {
-        val[1].services.forEach((item) => {
-          str += ','
-          str += item.text
-        })
-      } */
+      // 处理筛选头部的展示
+      console.log('sad', val)
+      if (!val.length) {
+        this.dropdownTitle1 = '全部服务'
+        return
+      }
       if (val[1] && val[1].services && val[1].services.length > 1) {
         this.dropdownTitle1 = '多选'
-      } else if (val[1] && val[1].services && val[1].services.length === 1) {
-        this.dropdownTitle1 = val[1].services[0].text
+      } else if (
+        val[1] &&
+        val[1].services &&
+        val[1].services.length === 1 &&
+        val[1].services[0]
+      ) {
+        if (val[0].text === '不限') {
+          this.dropdownTitle1 = '不限'
+        } else {
+          this.dropdownTitle1 = val[0].text + '-' + val[1].services[0].text
+        }
+      } else if (
+        !val[1] ||
+        !val[1].services ||
+        !val[1].services.length ||
+        (!val[1].services[0] && val[0])
+      ) {
+        this.dropdownTitle1 = val[0].text
       }
+    },
+    addClass(className, index) {
+      this.moreTextCss[index].indexOf(className) === -1 &&
+        // (this.moreTextCss[index] = this.moreTextCss[index] + ' ' + className)
+        this.$set(
+          this.moreTextCss,
+          index,
+          this.moreTextCss[index] + ' ' + className
+        )
+    },
+    removeClass(className, index) {
+      const arr = this.moreTextCss[index].split(' ')
+      const _index = arr.findIndex((item) => item === className)
+      if (_index !== -1) {
+        arr.splice(_index, 1)
+      }
+      // this.moreTextCss[index] = arr.join(' ')
+      this.$set(this.moreTextCss, index, arr.join(' '))
     },
   },
 }
@@ -248,6 +260,9 @@ export default {
     .sp-tree-select__nav .sp-sidebar-item {
       padding: 30px 0 30px 40px;
     }
+  }
+  /deep/.fixed-half-opacity {
+    border-bottom: 1px solid #cdcdcd;
   }
   /deep/.sp-dropdown-item__option--active {
     font-size: 28px;

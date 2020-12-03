@@ -73,6 +73,26 @@ export default {
     },
   },
   watch: {
+    activeItems(val) {
+      const arr = val
+      if (arr.length === 1) {
+        this.dropdownTitle = arr[0].name
+        this.addClass('active')
+      } else if (arr.length > 1) {
+        this.dropdownTitle = '多选'
+        this.addClass('active')
+      } else if (arr.length === 0) {
+        this.removeClass('moreText')
+        this.removeClass('active')
+        this.dropdownTitle = this.filterData.title
+      }
+      // 如果筛选名字个数超过了4个那么需要加样式
+      if (this.dropdownTitle.length >= 4) {
+        this.addClass('moreText')
+      } else {
+        this.removeClass('moreText')
+      }
+    },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
         this.dropdownTitle = val.title
