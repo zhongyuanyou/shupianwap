@@ -7,7 +7,7 @@
     "declarations": true
   },
   "dependencies": {
-    "@chipspc/vant-dgg": "^2.21.4",
+    "@chipspc/vant-dgg": "^2.21.5",
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/style-resources": "^1.0.0",
     "autoprefixer": "^9.7.6",
@@ -75,7 +75,7 @@
     "start:release": "cross-env DGG_SERVER_ENV=release egg-scripts start --daemon --title=egg-server-DGG",
     "start:production": "cross-env DGG_SERVER_ENV=production egg-scripts start --daemon --title=egg-server-DGG",
     "stop": "egg-scripts stop --title=egg-server-DGG",
-    "debug": "egg-bin debug",
+    "debug": "cross-env DGG_SERVER_ENV=development egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",

@@ -119,6 +119,7 @@ export default {
     confirmFilters() {
       // 确认筛选
       this.saveActiveItems = clone(this.activeItems, true)
+      this.$emit('activeItem', this.activeItems, 'areaFilter')
       this.$refs.item.toggle()
     },
   },
