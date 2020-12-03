@@ -22,15 +22,15 @@ class DictController extends Controller {
       return;
     }
     // 参数校验通过,正常响应
-    const { pageNumber = 10, pageSize = 1, id } = ctx.query;
-    const { status, data } = await service.curl.curlAll('/nk/dict/v1/find_list.do', {
-      method: 'GET',
-      data: {
-        pageNumber,
-        pageSize,
-        teamId: id,
-      },
-    });
+    // const { pageNumber = 10, pageSize = 1, id } = ctx.query;
+    // const { status, data } = await service.curl.curlAll('/nk/dict/v1/find_list.do', {
+    //   method: 'GET',
+    //   data: {
+    //     pageNumber,
+    //     pageSize,
+    //     teamId: id,
+    //   },
+    // });
   }
 }
 
