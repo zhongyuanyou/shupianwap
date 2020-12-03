@@ -2,28 +2,25 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-26 14:45:11
+ * @LastEditTime: 2020-12-03 14:00:00
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/planner/detail.vue
+ * @FilePath: /chips-wap/client/pages/planner/_id.vue
 -->
 
 <template>
   <div class="detail">
     <div class="head">
-      <sp-top-nav-bar
-        title="规划师"
-        left-arrow
-        ellipsis
-        @on-click-left="onClickLeft"
-        @on-click-right="onClickRight"
-      >
-        <template #left>
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
-        </template>
+      <Header title="规划师">
         <template #right>
-          <my-icon name="nav_ic_share" size="0.4rem" color="#1A1A1A" />
+          <my-icon
+            class="head__icon-share"
+            name="nav_ic_share"
+            size="0.4rem"
+            color="#1A1A1A"
+            @click.native="onClickRight"
+          />
         </template>
-      </sp-top-nav-bar>
+      </Header>
     </div>
     <div class="body">
       <div class="detail-content">
@@ -146,6 +143,7 @@ import {
   BottombarButton,
 } from '@chipspc/vant-dgg'
 
+import Header from '@/components/common/head/header'
 import GoodsPro from '@/components/planner/GoodsPro'
 
 import { city } from '@/utils/city'
@@ -163,6 +161,7 @@ export default {
     [DropdownItem.name]: DropdownItem,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
+    Header,
     GoodsPro,
   },
   data() {
@@ -243,9 +242,9 @@ export default {
   height: 100%;
   overflow-y: scroll;
   .head {
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    &__icon-share {
+      margin-right: 40px;
+    }
   }
   .body {
     padding: 0;
