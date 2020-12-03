@@ -102,7 +102,7 @@ module.exports = {
         ],
     },
     loading: { color: "#fff" },
-    css: ["~assets/css/reset.css", "~assets/styles/reset-vant.css"],
+    css: ["~assets/css/reset.css", "~assets/icons/iconfont.css","~assets/styles/reset-vant.css"],
     styleResources: {
         less: "~/assets/styles/variables.less",
     },
