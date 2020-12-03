@@ -49,6 +49,7 @@ export default {
   },
   data() {
     return {
+      // 存储选择的结果
       result: [],
     }
   },
@@ -66,8 +67,6 @@ export default {
 <style lang="less" scoped>
 .check-box-list {
   // 列表内容样式
-  // position: relative;
-  // padding: 0 8px 0 9px;
   .sp-cell {
     padding: 31px 40px 31px 40px;
     /deep/.sp-cell__label {

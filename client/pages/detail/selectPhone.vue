@@ -21,80 +21,96 @@
       </sp-top-nav-bar>
     </div>
     <div class="dropdown-list">
-      <sp-dropdown-menu>
-        <!-- 搜索前4位 -->
-        <sp-dropdown-item
-          ref="isShowBeforFour"
-          title-class="title-style"
-          :title="dropdownBeforFour"
-        >
-          <div class="select-phone">
-            <SelectCheckbox
-              ref="beforForuList"
-              :select-list="beforForuList"
-              :gutter="12"
-              :is-select-more="false"
-              @selectItems="selectBeforFour"
-              @selectAllItems="selectAllBeforForu"
+      <sp-sticky>
+        <sp-dropdown-menu>
+          <!-- 搜索前4位 -->
+          <sp-dropdown-item
+            ref="isShowBeforFour"
+            :title-class="dropdownBeforFour != '前四位' ? 'title-style' : ''"
+            :title="dropdownBeforFour"
+          >
+            <div class="select-phone">
+              <SelectCheckbox
+                ref="beforForuList"
+                :select-list="beforForuList"
+                :gutter="12"
+                :is-select-more="false"
+                @selectItems="selectBeforFour"
+                @selectAllItems="selectAllBeforForu"
+              />
+            </div>
+            <BottomConfirm
+              @resetFilters="resetBeforForu"
+              @confirmFilters="confirmBeforForu"
             />
-          </div>
-          <BottomConfirm
-            @resetFilters="resetBeforForu"
-            @confirmFilters="confirmBeforForu"
-          />
-        </sp-dropdown-item>
-        <!-- 搜索后4位 -->
-        <sp-dropdown-item
-          ref="isShowLastFour"
-          title-class="title-style"
-          :title="dropdownLastFour"
-        >
-          <div class="select-phone">
-            <SelectCheckbox
-              ref="lastForuList"
-              :select-list="lastForuList"
-              :gutter="12"
-              :is-select-more="false"
-              @selectItems="selectLastForu"
-              @selectAllItems="selectAllLastForu"
+          </sp-dropdown-item>
+          <!-- 搜索后4位 -->
+          <sp-dropdown-item
+            ref="isShowLastFour"
+            :title-class="dropdownLastFour != '后四位' ? 'title-style' : ''"
+            :title="dropdownLastFour"
+          >
+            <div class="select-phone">
+              <SelectCheckbox
+                ref="lastForuList"
+                :select-list="lastForuList"
+                :gutter="12"
+                :is-select-more="false"
+                @selectItems="selectLastForu"
+                @selectAllItems="selectAllLastForu"
+              />
+            </div>
+            <BottomConfirm
+              @resetFilters="resetLastForu"
+              @confirmFilters="confirmLastForu"
             />
-          </div>
-          <BottomConfirm
-            @resetFilters="resetLastForu"
-            @confirmFilters="confirmLastForu"
-          />
-        </sp-dropdown-item>
-        <!-- 选择价格区间 -->
-        <sp-dropdown-item
-          ref="isShowPrice"
-          title-class="title-style"
-          :title="dropdownPrice"
-        >
-          <div class="select-price">
-            <PriceFilter
-              ref="PriceFilter"
-              :price-list="priceList"
-              @minInput="minInput"
-              @maxInput="maxInput"
-              @selectItems="selectedPrices"
-              @selectAllItems="selectedAllPrices"
+          </sp-dropdown-item>
+          <!-- 选择价格区间 -->
+          <sp-dropdown-item
+            ref="isShowPrice"
+            :title-class="dropdownPrice != '价格' ? 'title-style' : ''"
+            :title="dropdownPrice"
+          >
+            <div class="select-price">
+              <PriceFilter
+                ref="PriceFilter"
+                :price-list="priceList"
+                @minInput="minInput"
+                @maxInput="maxInput"
+                @selectItems="selectedPrices"
+                @selectAllItems="selectedAllPrices"
+              />
+            </div>
+            <BottomConfirm
+              @resetFilters="resetPrice"
+              @confirmFilters="confirmPrice"
             />
-          </div>
-          <BottomConfirm
-            @resetFilters="resetPrice"
-            @confirmFilters="confirmPrice"
+          </sp-dropdown-item>
+          <!-- 排序 -->
+          <sp-dropdown-item
+            v-model="sortValue"
+            :title-class="sortValue > 0 ? 'title-style' : ''"
+            :options="option"
           />
-        </sp-dropdown-item>
-        <!-- 排序 -->
-        <sp-dropdown-item
-          v-model="sortValue"
-          title-class="title-style"
-          :options="option"
-        />
-      </sp-dropdown-menu>
+        </sp-dropdown-menu>
+      </sp-sticky>
     </div>
-    <div class="result-phone">
-      <CheckboxList :list="checkbosList" />
+    <div class="result-List">
+      <!-- 搜索结果列表 -->
+      <sp-pull-refresh
+        v-model="refreshing"
+        success-text="刷新成功"
+        @refresh="onRefresh"
+      >
+        <sp-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <CheckboxList :list="checkboxList" />
+        </sp-list>
+      </sp-pull-refresh>
     </div>
   </div>
 </template>
@@ -107,6 +123,9 @@ import {
   DropdownMenu,
   DropdownItem,
   Checkbox,
+  Sticky,
+  PullRefresh,
+  List,
 } from '@chipspc/vant-dgg'
 import PriceFilter from '@/components/common/filters/PriceFilter'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
@@ -121,6 +140,9 @@ export default {
     [Icon.name]: Icon,
     [DropdownItem.name]: DropdownItem,
     [DropdownMenu.name]: DropdownMenu,
+    [Sticky.name]: Sticky,
+    [PullRefresh.name]: PullRefresh,
+    [List.name]: List,
     PriceFilter,
     BottomConfirm,
     SelectCheckbox,
@@ -129,16 +151,22 @@ export default {
   data() {
     return {
       searchValue: null,
-      // activeNames: ['1'],
       dropdownBeforFour: '前四位',
       dropdownLastFour: '后四位',
       dropdownPrice: '价格',
-      sortValue: 'a',
-
+      sortValue: 0,
+      loading: false,
+      finished: false,
+      refreshing: false,
+      //  选择后标题样式
+      titleBeforFour: false,
+      titleLastFour: false,
+      titlePrice: false,
+      titleSort: false,
       option: [
-        { text: '默认排序', value: 'a' },
-        { text: '按照价格从低到高', value: 'b' },
-        { text: '按照价格从高到低', value: 'c' },
+        { text: '默认排序', value: 0 },
+        { text: '按照价格从低到高', value: 1 },
+        { text: '按照价格从高到低', value: 2 },
       ],
 
       priceList: [
@@ -207,7 +235,7 @@ export default {
           id: '5',
         },
       ],
-      checkbosList: [
+      checkboxList: [
         { title: '4008886662', price: '10000' },
         { title: '4008886663', price: '10000' },
         { title: '4008886664', price: '10000' },
@@ -222,9 +250,37 @@ export default {
     }
   },
   methods: {
+    onLoad() {
+      // 加载更多请求
+      setTimeout(() => {
+        if (this.refreshing) {
+          this.checkboxList = []
+          this.refreshing = false
+        }
+        for (let i = 0; i < 10; i++) {
+          this.checkboxList.push(this.checkboxList.length + 1)
+        }
+        this.loading = false
+
+        // 停止加载的条件
+        if (this.checkboxList.length >= 40) {
+          this.finished = true
+        }
+      }, 1000)
+    },
+    onRefresh() {
+      // 刷新发送请求
+      console.log('刷新请求')
+      // 清空列表数据
+      this.finished = false
+      // 重新加载数据
+      // 将 loading 设置为 true，表示处于加载状态
+      this.loading = true
+      this.onLoad()
+    },
     onClickRight() {
       // 右侧搜索
-      Toast('按钮')
+      Toast('搜索')
     },
     onClickLeft() {
       //  左侧返回
@@ -297,8 +353,8 @@ export default {
     padding: 16px 0 0 0;
     /deep/.sp-top-nav-bar__title {
       // 搜索框样式
-      margin: 0 144px 0 104px;
-      /deep/.search {
+      margin: 0 144px 4px 104px;
+      .search {
         width: 502px;
       }
     }
@@ -316,17 +372,25 @@ export default {
   .dropdown-list {
     // 下拉样式
     /deep/.sp-dropdown-menu__bar {
-      /deep/.sp-dropdown-menu__item:last-child {
+      .sp-dropdown-menu__item:last-child {
         padding-right: 40px;
       }
     }
   }
   /deep/.title-style {
-    color: #222222;
+    // 下拉选择显示标题样式
+    color: #4974f5;
     font-size: 28px;
+    font-weight: 600;
   }
-  /deep/.select-phone {
+  .select-phone {
     padding: 32px 40px;
+  }
+  .select-price {
+    padding: 56px 40px 84px 40px;
+  }
+  .result-List {
+    padding-bottom: 94px;
   }
 }
 </style>
