@@ -36,14 +36,7 @@
       offset="30"
       @load="onLoad"
     >
-      <goods-item />
-      <goods-item />
-      <goods-item />
-      <goods-item />
-      <goods-item />
-      <goods-item />
-      <goods-item />
-      <goods-item />
+      <goods-item v-for="(item, index) in listData" :key="index" />
     </sp-list>
     <Subscribe v-show="!listShow" />
   </div>
@@ -70,6 +63,15 @@ export default {
     InstallApp,
     Subscribe,
   },
+  props: {
+    initListData: {
+      // 初始化列表数据，仅做初始化的时候用或是在进行条件搜索的时候用
+      type: Array,
+      default() {
+        return []
+      },
+    },
+  },
   data() {
     return {
       listShow: true,
@@ -80,6 +82,7 @@ export default {
       dropdownTitle2: '默认排序',
       moreTextCss: ['dropdownItem', 'dropdownItem'],
       maxHeight: 0,
+      listData: [],
       activeData: [
         { text: '工商服务', id: '1' },
         {
@@ -130,6 +133,7 @@ export default {
       dropDownMenuHeight -
       topHeight +
       'px'
+    this.listData = [1, 2, 3, 4, 5, 6, 7, 8, 9]
   },
   methods: {
     handleSelect(val) {
@@ -152,6 +156,9 @@ export default {
     },
     onLoad() {
       console.log(1)
+      const arr = new Array(10).fill(2)
+      this.listData = [...this.listData, ...arr]
+      this.loading = false
     },
     resetFilters() {
       // 重置分类筛选
