@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-02 19:11:55
+ * @LastEditTime: 2020-12-03 11:24:50
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/login/commodityConsultation.vue
+ * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
 <template>
   <div class="login">
@@ -261,15 +261,15 @@ export default {
     loginToast(
       message = '',
       className = 'toast',
-      icon = 'like-o',
-      duration = 1000
+      icon = 'search_ic_remind',
+      duration = 0
     ) {
       Toast({
         duration,
         className,
         message,
         icon, // 图标有点烦人
-        iconPrefix: 'iconfont',
+        iconPrefix: 'spiconfont',
         getContainer: () => {
           return this.$refs.loginBody
         },

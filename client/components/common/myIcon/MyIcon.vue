@@ -1,5 +1,5 @@
 <template>
-  <i class="iconfont" :class="classes" :style="styles">{{ iconCode }}</i>
+  <i :class="classes" :style="styles">{{ iconCode }}</i>
 </template>
 
 <script>
@@ -9,6 +9,8 @@ const isColor = (value) => {
   const rgbReg = /^[rR][gG][bB]\(\s*((25[0-5]|2[0-4]\d|1?\d{1,2})\s*,\s*){2}(25[0-5]|2[0-4]\d|1?\d{1,2})\s*\)$/
   return colorReg.test(value) || rgbaReg.test(value) || rgbReg.test(value)
 }
+
+const classPrefix = 'spiconfont'
 
 export default {
   name: 'MyIcon',
@@ -42,7 +44,7 @@ export default {
   },
   computed: {
     classes() {
-      return this.name
+      return `${classPrefix} ${classPrefix}-${this.name}`
     },
     styles() {
       const style = {}
@@ -66,8 +68,8 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import '../../../assets/icons/iconfont.css';
-.iconfont {
+// @import '../../../assets/icons/iconfont.css';
+.spiconfont {
   font-size: 24px;
 }
 </style>

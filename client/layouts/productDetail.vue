@@ -1,7 +1,7 @@
 <template>
   <div class="productDetail-layouts">
     <nuxt />
-    <commodityConsultation safe-area-inset-bottom />
+    <commodityConsultation />
   </div>
 </template>
 <script>

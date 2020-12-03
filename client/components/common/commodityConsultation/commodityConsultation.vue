@@ -36,25 +36,29 @@ export default {
 <style lang="less" scoped>
 .commodityConsult {
   width: 100vw;
-  height: 148px;
   background-color: #fff;
+  padding-top: 148px;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
   &-containner {
     position: fixed;
     bottom: 0px;
     left: 0px;
     width: 100vw;
-    height: 148px;
     padding-left: 40px;
     padding-right: 40px;
     background-color: #fff;
     display: flex;
     justify-content: space-between;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
     &-userInfo {
       height: 80px;
       line-height: 80px;
       margin-top: 34px;
       display: flex;
       justify-content: space-between;
+      padding-bottom: 34px;
       &-name {
         margin-left: 25px;
         p {
@@ -86,6 +90,7 @@ export default {
       display: flex;
       justify-content: flex-end;
       padding-top: 24px;
+      padding-bottom: 24px;
       /deep/ button {
         height: 100px;
         line-height: 100px;
