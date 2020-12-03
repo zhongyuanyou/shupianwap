@@ -57,6 +57,19 @@ export default {
   data() {
     return {}
   },
+  mounted() {
+    // function req(num) {
+    //   return new Promise((resolve, reject) => {
+    //     setTimeout(() => {
+    //       resolve(num)
+    //     }, 1000)
+    //   })
+    // }
+    // const asd = req(123)
+    // console.log(asd)
+
+    this.$axios.get('/chips-wap/service/nk/home/v1/get_home.do')
+  },
   methods: {},
 }
 </script>
