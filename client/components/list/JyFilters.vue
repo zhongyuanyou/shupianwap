@@ -14,7 +14,7 @@
       />
     </sp-dropdown-item>
     <sp-dropdown-item
-      v-model="selectValue"
+      v-module="selectValue"
       :title="dropdownTitle2"
       title-class="dropdownItem"
       :options="option"

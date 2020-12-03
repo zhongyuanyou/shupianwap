@@ -5,11 +5,47 @@
 'use strict';
 const Controller = require('egg').Controller;
 const { Get, Prefix } = require('egg-shell-decorators');
+const getInformation = async function(service, api, locationCode, categoryCode, fn) {
+  // 请求分类下的广告数据
+  const getBanner = service.curl.curlGet(`${api}/crisps-cms-web-api/nk/app/advertising/v1/find_advertising.do`, {
+    method: 'GET',
+    data: {
+      locationCode,
+    },
+  });
+  // 请求分类下的列表数据
+  const getList = service.curl.curlGet(`${api}/crisps-cms-web-api/nk/app/content/v1/find_page.do`, {
+    method: 'GET',
+    data: {
+      categoryCode,
+      type: '资讯',
+      limit: 10,
+      page: 1,
+      platformCode: '薯片',
+    },
+  });
+  const reqAll = [ getBanner, getList ];
+  try {
+    const initAllRes = await Promise.all(reqAll);
+    console.log(initAllRes);
+    fn();
+  } catch (error) {
+    console.log(error);
+  }
+};
+const getValiErrors = function(app, ctx, rules, data) {
+  // 参数校验
+  const valiErrors = app.validator.validate(rules, data);
+  // 参数校验未通过
+  if (valiErrors) {
+    ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+    return;
+  }
+};
+@Prefix('/nk/information/v1')
 
-@Prefix('/nk/information')
-
-class foundController extends Controller {
-  @Get('/v1/home')
+class FoundController extends Controller {
+  @Get('/home')
   async home() {
     // 获取首屏数据，不需要传参
     const { ctx, service } = this;
@@ -19,39 +55,16 @@ class foundController extends Controller {
       data: {},
     });
     let categoryList = null;
-    // 获取到分类数据后默认请求第一个分类下的广告数据
-    const getBanner = service.curl.curlGet(`${ctx.app.config.baseUrl}/crisps-cms-web-api/nk/app/advertising/v1/find_advertising.do`, {
-      method: 'GET',
-      data: {
-        locationCode: categoryList[0].code,
-      },
-    });
-    // 获取到分类数据后默认请求第一个分类下的列表数据
-    const getList = service.curl.curlGet(`${ctx.app.config.baseUrl}/crisps-cms-web-api/nk/app/content/v1/find_page.do`, {
-      method: 'GET',
-      data: {
-        categoryCode: categoryList[0].code,
-        type: '资讯',
-        limit: 10,
-        page: 1,
-        platformCode: '薯片',
-      },
-    });
     if (status === 200 && data.code === 200) {
       // 若获取分类请求正常返回数据
       categoryList = data.records;
-      const reqAll = [ getBanner, getList ];
-      try {
-        const initAllRes = await Promise.all(reqAll);
-        console.log(initAllRes);
-      } catch (error) {
-        console.log(error);
-      }
-
+      await getInformation(service, ctx.app.config.baseUrl, categoryList[0].code, categoryList[0].code, () => {
+        console.log('11');
+      });
     }
   }
 
-  @Get('/v1/list')
+  @Get('/list')
   async list() {
     // 获取资讯列表
     const { ctx, service, app } = this;
@@ -62,13 +75,7 @@ class foundController extends Controller {
       limit: { type: 'number', required: true },
       page: { type: 'number', required: true },
     };
-    // 参数校验
-    const valiErrors = app.validator.validate(rules, ctx.query);
-    // 参数校验未通过
-    if (valiErrors) {
-      ctx.helper.fail({ ctx, code: 422, res: valiErrors });
-      return;
-    }
+    getValiErrors(app, ctx, rules, ctx.query);
     // 参数校验通过,正常响应
     const { limit = 10, page = 1, categoryCode, keyword } = ctx.query;
     const { status, data } = await service.curl.curlGet(`${ctx.app.config.baseUrl}/crisps-cms-web-api/nk/app/content/v1/find_page.do`, {
@@ -89,10 +96,44 @@ class foundController extends Controller {
     }
   }
 
-  @Get('/v1/detail')
+  @Get('/detail')
   async detail() {
     // 获取资讯详情
+    const { ctx, service, app } = this;
+    const rules = {
+      id: { type: 'string', required: false },
+    };
+    getValiErrors(app, ctx, rules, ctx.query);
+    // 参数校验通过,正常响应
+    const { id } = ctx.query;
+    const { status, data } = await service.curl.curlGet(`${ctx.app.config.baseUrl}/crisps-cms-web-api/nk/app/content/v1/find_detail.do`, {
+      method: 'GET',
+      data: {
+        id,
+      },
+    });
+    if (status === 200 && data.code === 200) {
+      ctx.helper.success({ ctx, code: 200, res: {
+        info: data.data.info,
+      } });
+    }
+  }
+
+  @Get('/banner_information')
+  async information() {
+    // 获取每个分类第一屏
+    const { ctx, service, app } = this;
+    const rules = {
+      categoryCode: { type: 'string', required: true },
+      locationCode: { type: 'string', required: true },
+    };
+    getValiErrors(app, ctx, rules, ctx.query);
+    // 参数校验通过,正常响应
+    const { categoryCode, locationCode } = ctx.query;
+    await getInformation(service, ctx.app.config.baseUrl, locationCode, categoryCode, () => {
+      console.log('11');
+    });
   }
 }
 
-module.exports = foundController;
+module.exports = FoundController;
