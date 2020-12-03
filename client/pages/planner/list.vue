@@ -26,9 +26,13 @@
             </template>
           </sp-nav-search>
           <sp-dropdown-menu class="search__dropdown">
-            <sp-dropdown-item ref="item" class="search__dropdown-regoin">
+            <sp-dropdown-item
+              ref="item"
+              :title-class="regions != '区域' ? 'title-style' : ''"
+              class="search__dropdown-regoin"
+            >
               <template #title>
-                <span>区域</span>
+                <span>{{ regions }}</span>
               </template>
               <CoupleSelect
                 :multiple="false"
@@ -38,6 +42,7 @@
             </sp-dropdown-item>
             <sp-dropdown-item
               v-model="search.scoreSort"
+              :title-class="search.scoreSort > 0 ? 'title-style' : ''"
               class="search__dropdown-sort"
               :options="option"
             />
@@ -48,7 +53,7 @@
         <sp-list
           v-model="loading"
           :finished="finished"
-          finished-text="没有更多了"
+          :finished-text="list.length > 0 ? '没有更多了' : ''"
           @load="onLoad"
         >
           <template v-if="list && list.length">
@@ -250,6 +255,7 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
+      regions: '区域',
       search: { keywords: '', scoreSort: 0 },
       option: [
         { text: '薯片分从高到底', value: 0 },
@@ -271,6 +277,10 @@ export default {
     },
     coupleSelect(data) {
       console.log(data)
+      if (data[2].regions.length) {
+        this.regions = data[2].regions[0].name
+        this.$refs.item.toggle()
+      }
     },
     onLoad() {
       setTimeout(() => {
@@ -359,6 +369,11 @@ export default {
       &::after {
         left: 0;
         right: 0;
+      }
+      /deep/.title-style {
+        //下拉标题样式
+        color: red;
+        font-weight: 600;
       }
     }
   }
