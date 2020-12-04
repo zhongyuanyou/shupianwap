@@ -372,7 +372,8 @@ export default {
       }
       /deep/.title-style {
         //下拉标题样式
-        color: red;
+        color: #4974f5;
+        font-size: 13px;
         font-weight: 600;
       }
     }
