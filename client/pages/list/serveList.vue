@@ -1,7 +1,12 @@
 <template>
   <div class="serve-list">
     <!--S搜索框-->
-    <Search placeholder="请输入搜索内容">
+    <Search
+      v-model="searchText"
+      placeholder="请输入搜索内容"
+      @searchKeydownHandle="searchKeydownHandle"
+      @searchInputHandle="searchInputHandle"
+    >
       <div slot="left" class="nav-back">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
@@ -13,7 +18,10 @@
     </Search>
     <!--E搜索框-->
     <!--S筛选栏-->
-    <serveGoods :init-list-data="serveGoodsListData" />
+    <serveGoods
+      :init-list-data="serveGoodsListData"
+      :search-text="searchText"
+    />
     <!--E筛选栏-->
   </div>
 </template>
@@ -22,6 +30,8 @@
 import { WorkTabs, WorkTab, Badge } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import serveGoods from '@/components/list/serveGoods'
+import searchList from '@/mixins/searchList'
+
 export default {
   name: 'ServeList',
   components: {
@@ -31,10 +41,19 @@ export default {
     serveGoods,
     [Badge.name]: Badge,
   },
+  mixins: [searchList],
   data() {
     return {
       serveGoodsListData: [], // 服务商品列表数据
+      searchText: '',
+      formData: {
+        page: 1,
+        size: 10,
+      },
     }
+  },
+  mounted() {
+    this.reqType = 'serve'
   },
 }
 </script>
