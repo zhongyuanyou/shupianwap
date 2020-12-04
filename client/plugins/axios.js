@@ -18,7 +18,7 @@ export default function ({ $axios, redirect }) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
-      config.headers.sysCode = 'zdm-api'
+      config.headers.sysCode = 'zky-api'
       return config
     },
     (error) => {

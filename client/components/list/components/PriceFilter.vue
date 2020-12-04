@@ -153,6 +153,7 @@ export default {
     },
     confirmFilters() {
       this.saveEchoData = clone(this.echoData, true)
+      this.$emit('activeItem', this.echoData, 'priceFilter')
       this.$refs.item.toggle()
     },
   },

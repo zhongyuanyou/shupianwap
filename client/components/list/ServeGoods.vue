@@ -36,7 +36,7 @@
       offset="30"
       @load="onLoad"
     >
-      <goods-item v-for="(item, index) in listData" :key="index" />
+      <goods-item v-for="(item, index) in serveGoodsListData" :key="index" />
     </sp-list>
     <Subscribe v-show="!listShow" />
   </div>
@@ -50,6 +50,7 @@ import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
 import clone from '~/utils/clone'
+import searchList from '@/mixins/searchList'
 
 export default {
   name: 'ServeGoods',
@@ -63,6 +64,7 @@ export default {
     InstallApp,
     Subscribe,
   },
+  mixins: [searchList],
   props: {
     initListData: {
       // 初始化列表数据，仅做初始化的时候用或是在进行条件搜索的时候用
@@ -71,9 +73,19 @@ export default {
         return []
       },
     },
+    searchText: {
+      type: String,
+      default() {
+        return ''
+      },
+    },
   },
   data() {
     return {
+      formData: {
+        page: 1,
+        limit: 10,
+      },
       listShow: true,
       loading: false,
       finished: false,
@@ -82,7 +94,7 @@ export default {
       dropdownTitle2: '默认排序',
       moreTextCss: ['dropdownItem', 'dropdownItem'],
       maxHeight: 0,
-      listData: [],
+      serveGoodsListData: [],
       activeData: [
         { text: '工商服务', id: '1' },
         {
@@ -110,11 +122,13 @@ export default {
     }
   },
   watch: {
+    initListData(val) {
+      this.serveGoodsListData = clone(val)
+    },
     selectValue(val) {
       this.dropdownTitle2 = this.option[val].text
     },
     activeData(val) {
-      console.log('12313')
       if (val.length) {
         this.addClass('active', 0)
       } else {
@@ -133,7 +147,7 @@ export default {
       dropDownMenuHeight -
       topHeight +
       'px'
-    this.listData = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    this.reqType = 'serve'
   },
   methods: {
     handleSelect(val) {
@@ -157,7 +171,7 @@ export default {
     onLoad() {
       console.log(1)
       const arr = new Array(10).fill(2)
-      this.listData = [...this.listData, ...arr]
+      this.serveGoodsListData = [...this.serveGoodsListData, ...arr]
       this.loading = false
     },
     resetFilters() {

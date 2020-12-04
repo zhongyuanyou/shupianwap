@@ -1,33 +1,11 @@
 <template>
   <sp-dropdown-menu>
-    <!--<sp-dropdown-item
-      ref="item"
-      title-class="dropdownItem"
-      :title="dropdownTitle1"
-      @open="open(0)"
-      @close="close(0)"
-    >
-      <ServiceSelect :active-data="activeData" @select="handleSelect" />
-      <BottomConfirm
-        @resetFilters="resetFilters"
-        @confirmFilters="confirmFilters"
-      />
-    </sp-dropdown-item>
-    <sp-dropdown-item
-      v-module="selectValue"
-      :title="dropdownTitle2"
-      title-class="dropdownItem"
-      :options="option"
-      @open="open(1)"
-      @close="close(1)"
-    />-->
-    <!--<SelectFilter />-->
     <component
       :is="item.componentName"
       v-for="(item, index) in filters"
       :key="index"
       :filter-data="item"
-      @activeItem="activeItem"
+      @activeItem="filterItem"
     ></component>
   </sp-dropdown-menu>
 </template>
@@ -82,77 +60,15 @@ export default {
         { text: '价格从低到高', value: 4 },
       ],
       filterData: [],
-      dropDownDom: null,
-      currentSelectActiveData: null,
-      currentDropDownDom: null, // 当前触发的下拉框dom
     }
   },
   watch: {},
   mounted() {
     this.getFiterData()
-    this.$nextTick(() => {
-      this.dropDownDom = [].slice.call(
-        document.querySelectorAll('.dropdownItem')
-      )
-    })
   },
   methods: {
-    activeItem(data, index) {
-      console.log(data, index)
-    },
-    handleSelect(val) {
-      // 分类选择
-      console.log(val)
-      this.activeData = val
-      // this.currentSelectActiveData = val
-    },
-    open(index) {
-      // 打开下拉选择框
-      console.log('open', index)
-      if (index === 0) {
-        this.currentSelectActiveData = this.activeData
-      }
-    },
-    close(index) {
-      console.log(123)
-      // 关闭下拉选择框
-      if (index === 1 && this.selectValue !== 0) {
-        // 给下拉标题增加选中
-        this.dropDownDom[1].classList.add('active')
-      } else {
-        this.dropDownDom[1].classList.remove('active')
-      }
-      if (index === 0) {
-        this.activeData = this.currentSelectActiveData
-        this.currentSelectActiveData = null
-        if (this.activeData.length) {
-          this.dropDownDom[0].classList.add('active')
-        } else {
-          this.dropDownDom[0].classList.remove('active')
-        }
-      }
-    },
-    resetFilters() {
-      // 重置分类筛选
-      this.activeData = []
-    },
-    confirmFilters() {
-      // 确认筛选
-      console.log('this.activeData', this.activeData)
-      if (this.activeData && this.activeData.length) {
-        this.currentSelectActiveData = this.activeData
-        this.concatStr(this.activeData)
-      } else {
-        this.dropdownTitle1 = '全部服务'
-      }
-      this.$refs.item.toggle()
-    },
-    concatStr(val) {
-      if (val[1] && val[1].services && val[1].services.length > 1) {
-        this.dropdownTitle1 = '多选'
-      } else if (val[1] && val[1].services && val[1].services.length === 1) {
-        this.dropdownTitle1 = val[1].services[0].text
-      }
+    filterItem(data, filrerName) {
+      console.log(data, filrerName)
     },
     getFiterData() {
       /* const res = [
