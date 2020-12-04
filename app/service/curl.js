@@ -1,33 +1,5 @@
 'use strict';
 const Service = require('egg').Service;
-function errMessage(err) {
-  switch (err.code) {
-    case 'ECONNRESET':
-      return {
-        code: '501',
-        message: '服务端主动断开 socket 连接，导致 HTTP 请求链路异常',
-        data: '服务端主动断开 socket 连接，导致 HTTP 请求链路异常',
-      };
-    case 'ECONNREFUSED':
-      return {
-        code: '406',
-        message: '请求的 url 所属 IP 或者端口无法连接成功,请确保IP或者端口设置正确',
-        data: '请求的 url 所属 IP 或者端口无法连接成功,请确保IP或者端口设置正确',
-      };
-    case 'ENOTFOUND':
-      return {
-        code: '404',
-        message: `${err.path}域名不存在`,
-        data: '服务响应超时',
-      };
-    default:
-      return {
-        code: '504',
-        message: '服务响应超时',
-        data: '服务响应超时',
-      };
-  }
-}
 class CurlService extends Service {
   /**
      * 调用curlGet服务API（HTTP）
@@ -55,7 +27,7 @@ class CurlService extends Service {
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);
-        resolve(errMessage(err));
+        resolve(ctx.helper.errMessage(err));
       }
     });
   }
@@ -86,7 +58,7 @@ class CurlService extends Service {
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);
-        resolve(errMessage(err));
+        resolve(ctx.helper.errMessage(err));
       }
     });
   }
@@ -124,7 +96,7 @@ class CurlService extends Service {
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);
-        resolve(errMessage(err));
+        resolve(ctx.helper.errMessage(err));
       }
     });
 

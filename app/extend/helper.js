@@ -118,4 +118,37 @@ module.exports = {
     const serverUrl = this.getServerPath(ins);
     return serverUrl;
   },
+  /**
+   * 将Egg的curl错误提示转换为项目统一的标准错误对象。
+   * @param {Object} err  错误对象。
+   * @return {Object}  错误信息对象。例如:{code: '404',message: '域名不存在',data: '域名不存在',}。
+   */
+  errMessage(err) {
+    switch (err.code) {
+      case 'ECONNRESET':
+        return {
+          code: '501',
+          message: '服务端主动断开 socket 连接，导致 HTTP 请求链路异常',
+          data: '服务端主动断开 socket 连接，导致 HTTP 请求链路异常',
+        };
+      case 'ECONNREFUSED':
+        return {
+          code: '406',
+          message: '请求的 url 所属 IP 或者端口无法连接成功,请确保IP或者端口设置正确',
+          data: '请求的 url 所属 IP 或者端口无法连接成功,请确保IP或者端口设置正确',
+        };
+      case 'ENOTFOUND':
+        return {
+          code: '404',
+          message: `${err.path}域名不存在`,
+          data: `${err.path}域名不存在`,
+        };
+      default:
+        return {
+          code: '404',
+          message: `${err.path}域名不存在`,
+          data: `${err.path}域名不存在`,
+        };
+    }
+  },
 };
