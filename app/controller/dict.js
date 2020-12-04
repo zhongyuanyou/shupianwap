@@ -43,7 +43,7 @@ class DictController extends Controller {
     const { ctx, service, app } = this;
     // 定义参数校验规则
     const rules = {
-      code: { type: 'string', required: true },
+      codes: { type: 'string', required: true },
     };
     // 参数校验
     const valiErrors = app.validator.validate(rules, ctx.query);
@@ -53,7 +53,7 @@ class DictController extends Controller {
       return;
     }
     // 参数校验通过,正常响应
-    const { code } = ctx.query;
+    const { codes } = ctx.query;
     const sysCode = app.config.apiClient.APPID[0];
     const host = ctx.helper.getUrl(sysCode);
     const address = contentApi.dataDicts;
@@ -61,7 +61,7 @@ class DictController extends Controller {
     const { status, data } = await service.curl.curlAll(url, {
       method: 'GET',
       data: {
-        code,
+        codes,
       },
     });
     if (status === 200 && data.code === 200) {
