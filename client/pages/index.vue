@@ -58,17 +58,14 @@ export default {
     return {}
   },
   mounted() {
-    // function req(num) {
-    //   return new Promise((resolve, reject) => {
-    //     setTimeout(() => {
-    //       resolve(num)
-    //     }, 1000)
-    //   })
-    // }
-    // const asd = req(123)
-    // console.log(asd)
-
-    this.$axios.get('/chips-wap/service/nk/home/v1/get_home.do')
+    const data = {
+      locationCodeList: ['123'],
+      fixedNavCategoryCode: 'a',
+      fixedNavPlatformCode: 'a',
+      rollNavCategoryCode: 'a',
+      rollNavPlatformCode: 'a',
+    }
+    this.$axios.post('/chips-wap/service/nk/home/v1/get_home.do', data)
   },
   methods: {},
 }

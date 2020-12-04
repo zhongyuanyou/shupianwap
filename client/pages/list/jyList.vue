@@ -1,7 +1,12 @@
 <template>
   <div class="jy-list">
     <!--S搜索框-->
-    <Search placeholder="请输入搜索内容">
+    <Search
+      v-model="searchText"
+      placeholder="请输入搜索内容"
+      @searchKeydownHandle="searchKeydownHandle"
+      @searchInputHandle="searchInputHandle"
+    >
       <div slot="left" class="nav-back">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
@@ -13,9 +18,10 @@
     </Search>
     <!--E搜索框-->
     <jy-goods
-      :init-list-data="serveGoodsListData"
+      :init-list-data="jyGoodsListData"
       :is-show-tabs="false"
       :type-code="typeCode"
+      :search-text="searchText"
     />
   </div>
 </template>
@@ -24,6 +30,7 @@
 import { WorkTabs, WorkTab, Badge } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import JyGoods from '@/components/list/JyGoods'
+import searchList from '@/mixins/searchList'
 
 export default {
   name: 'JyList',
@@ -34,11 +41,20 @@ export default {
     JyGoods,
     [Badge.name]: Badge,
   },
+  mixins: [searchList],
   data() {
     return {
-      serveGoodsListData: [], // 服务商品列表数据
+      jyGoodsListData: [], // 服务商品列表数据
       typeCode: '公司交易',
+      searchText: '',
+      formData: {
+        page: 1,
+        limit: 10,
+      },
     }
+  },
+  mounted() {
+    this.reqType = 'jy'
   },
 }
 </script>

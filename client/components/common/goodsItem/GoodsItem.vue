@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-item">
+  <div class="goods-item" @click="jumpUrl">
     <div class="goods-item-left">
       <img src="" alt="" class="goods-img" />
       <span class="tag">急售</span>
@@ -16,6 +16,37 @@
 <script>
 export default {
   name: 'GoodsItem',
+  props: {
+    itemType: {
+      type: Object,
+      default() {
+        return {
+          type: 'serve',
+          classify: 'wd',
+        }
+      },
+    },
+    itemData: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
+  },
+  data() {
+    return {}
+  },
+  methods: {
+    jumpUrl() {
+      if (this.itemType.type === 'serve') {
+        this.$router.push('/detail/serviceDetails')
+      } else {
+        this.$router.push(
+          `/detail/${this.itemType.classify}/${this.itemData.id}`
+        )
+      }
+    },
+  },
 }
 </script>
 

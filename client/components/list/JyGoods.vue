@@ -32,14 +32,11 @@
       offset="30"
       @load="onLoad"
     >
-      <goods-item />
-      <goods-item />
-      <goods-item />
-      <goods-item />
-      <goods-item />
-      <goods-item />
-      <goods-item />
-      <goods-item />
+      <goods-item
+        v-for="(item, index) in jyGoodsListData"
+        :key="index"
+        :item-type="itemType"
+      />
     </sp-list>
     <Subscribe
       v-show="!listShow"
@@ -55,6 +52,8 @@ import InstallApp from '@/components/common/app/InstallApp'
 import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
 import JyFilters from '@/components/list/JyFilters'
+import searchList from '@/mixins/searchList'
+import clone from '~/utils/clone'
 
 export default {
   name: 'JyGoods',
@@ -67,6 +66,7 @@ export default {
     [Tabs.name]: Tabs,
     [Tab.name]: Tab,
   },
+  mixins: [searchList],
   props: {
     isShowTabs: {
       // 是否显示tabs业态栏
@@ -89,6 +89,21 @@ export default {
         return '公司交易'
       },
     },
+    searchText: {
+      type: String,
+      default() {
+        return ''
+      },
+    },
+    itemType: {
+      type: Object,
+      default() {
+        return {
+          type: 'jy',
+          classify: 'wd',
+        }
+      },
+    },
   },
   data() {
     return {
@@ -96,6 +111,11 @@ export default {
       loading: false,
       finished: false,
       maxHeight: 0,
+      formData: {
+        page: 1,
+        limit: 10,
+      },
+      jyGoodsListData: [],
       tabItems: [
         {
           name: '公司交易',
@@ -116,6 +136,11 @@ export default {
       ], // tab栏数据
     }
   },
+  watch: {
+    initListData(val) {
+      this.jyGoodsListData = clone(val)
+    },
+  },
   mounted() {
     const installAPPHeight = this.$refs.installApp.$el.clientHeight
     const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
@@ -130,10 +155,14 @@ export default {
       spTabsHeight -
       topHeight +
       'px'
+    this.reqType = 'jy'
   },
   methods: {
     onLoad() {
       console.log(1)
+      const arr = new Array(10).fill(2)
+      this.jyGoodsListData = [...this.jyGoodsListData, ...arr]
+      this.loading = false
     },
     clickTabs(name, title) {
       console.log(name, title)

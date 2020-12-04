@@ -23,6 +23,7 @@
       ></my-icon>
       <input
         v-if="!disabled"
+        ref="inputRef"
         v-model="visible"
         :type="type"
         :placeholder="placeholder"
@@ -109,6 +110,7 @@ export default {
     // 回车 事件
     searchKeydownHandle(e) {
       if (e.keyCode === 13) {
+        this.$refs.inputRef.blur()
         this.$emit('searchKeydownHandle', e)
       }
     },
