@@ -105,6 +105,7 @@ export default {
     return {
       searchValue: null,
       dropdownPriceTitle: '价格',
+      priceTitle: '价格',
       valueSearch: 0,
       loading: false,
       finished: false,
@@ -190,16 +191,16 @@ export default {
       // 加载更多请求
       setTimeout(() => {
         if (this.refreshing) {
-          this.checkboxList = []
+          this.addressList = []
           this.refreshing = false
         }
         for (let i = 0; i < 10; i++) {
-          this.checkboxList.push(this.checkboxList.length + 1)
+          this.addressList.push(this.addressList.length + 1)
         }
         this.loading = false
 
         // 停止加载的条件
-        if (this.checkboxList.length >= 40) {
+        if (this.addressList.length >= 40) {
           this.finished = true
         }
       }, 1000)
@@ -232,7 +233,7 @@ export default {
     },
     selectAllPrice(item) {
       // 选择不限显示标题
-      this.dropdownPriceTitle = item.name
+      this.priceTitle = item.name
     },
     selectedPrice(val) {
       // 修改选中价格区间标题显示
@@ -241,11 +242,13 @@ export default {
     resetFilters() {
       // 价格区间重置
       this.dropdownPriceTitle = '价格'
+      this.priceTitle = '价格'
       this.$refs.PriceFilter.clearInput()
     },
     confirmFilters() {
       // 价格区间确认
       this.$refs.isShowPrice.toggle()
+      this.dropdownPriceTitle = this.price
     },
   },
 }
@@ -275,8 +278,7 @@ export default {
   /deep/.title-style {
     // 下拉选择显示标题样式
     color: #4974f5;
-    font-size: 28px;
-    font-weight: 600;
+    font-size: 26px;
   }
   .select-price {
     padding: 56px 40px 84px 40px;

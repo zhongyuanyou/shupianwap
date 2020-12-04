@@ -154,6 +154,9 @@ export default {
       dropdownBeforFour: '前四位',
       dropdownLastFour: '后四位',
       dropdownPrice: '价格',
+      beforFour: '前四位',
+      lastFour: '后四位',
+      price: '价格',
       sortValue: 0,
       loading: false,
       finished: false,
@@ -270,7 +273,6 @@ export default {
     },
     onRefresh() {
       // 刷新发送请求
-      console.log('刷新请求')
       // 清空列表数据
       this.finished = false
       // 重新加载数据
@@ -297,52 +299,58 @@ export default {
 
     selectAllBeforForu(item, items) {
       // 选择不限
-      this.dropdownBeforFour = item.name
+      this.beforFour = item.name
     },
     selectAllLastForu(item, items) {
-      this.dropdownLastFour = item.name
+      this.lastFour = item.name
     },
     selectedAllPrices(item, items) {
-      this.dropdownPrice = item.name
+      this.price = item.name
     },
     selectBeforFour(item, items) {
       // 选中前四位标题显示
-      this.dropdownBeforFour = item.name
+      this.beforFour = item.name
     },
     selectLastForu(item, items) {
       // 选择后四位标题显示
-      this.dropdownLastFour = item.name
+      this.lastFour = item.name
     },
     selectedPrices(val) {
       // 选择价格标题显示
-      this.dropdownPrice = val.name
+      this.price = val.name
     },
     resetBeforForu() {
       // 重置前四位
       this.dropdownBeforFour = '前四位'
+      this.beforFour = '前四位'
       this.$refs.beforForuList.clearSelect()
     },
     confirmBeforForu() {
       // 确认前四位
       this.$refs.isShowBeforFour.toggle()
+      this.dropdownBeforFour = this.beforFour
     },
     resetLastForu() {
       // 重置后四位
       this.dropdownLastFour = '后四位'
+      this.lastFour = '后四位'
       this.$refs.lastForuList.clearSelect()
     },
     confirmLastForu() {
       // 确认后四位
       this.$refs.isShowLastFour.toggle()
+      this.dropdownLastFour = this.lastFour
     },
     resetPrice() {
       // 重置价格
       this.dropdownPrice = '价格'
+      this.price = '价格'
       this.$refs.PriceFilter.clearInput()
     },
     confirmPrice() {
       // 确认价格
       this.$refs.isShowPrice.toggle()
+      this.dropdownPrice = this.price
     },
   },
 }
@@ -380,8 +388,7 @@ export default {
   /deep/.title-style {
     // 下拉选择显示标题样式
     color: #4974f5;
-    font-size: 28px;
-    font-weight: 600;
+    font-size: 26px;
   }
   .select-phone {
     padding: 32px 40px;
