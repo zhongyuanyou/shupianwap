@@ -115,7 +115,7 @@ export default {
         return {}
       },
     },
-    type: {
+    detailType: {
       type: String,
       default: () => {
         return '1'
