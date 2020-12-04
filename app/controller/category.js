@@ -27,9 +27,9 @@ class CategoryController extends Controller {
       return;
     }
     // 获取广告数据，若有locationCode的情况下
-    const getAdvertising = service.curl.curlGet(`${ctx.app.config.baseUrl}/crisps-cms-web-api/nk/app/advertising/v1/find_advertising.do`,
+    const getAdvertising = await service.curl.curlPost(`${ctx.app.config.baseUrl}/crisps-cms-web-api/nk/app/advertising/v1/find_advertising.do`,
       {
-        method: 'GET',
+        method: 'POST',
         data: {
           locationCode: ctx.query.locationCode,
         },

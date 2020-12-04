@@ -11,17 +11,18 @@ class CurlService extends Service {
     return new Promise(async resolve => {
       const { ctx } = this;
       if (!url) {
-        return { ctx, code: 202, res: '缺少后端服务请求API路径' };
+        resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
       }
       try {
+        ctx.headers['X-User-Agent'] = '4b43c3f3-d817-4576-95b1-ad8519a2f14e';
         const result = await ctx.curl(url, {
           // 必须指定 method
           method: 'GET',
           // 默认将网管处理后的headers给后端服务
           headers: ctx.headers,
-          data: params,
           // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
           dataType: 'json',
+          data: params,
           timeout: 10 * 1000,
         });
         resolve(result);
@@ -42,17 +43,18 @@ class CurlService extends Service {
     return new Promise(async resolve => {
       const { ctx } = this;
       if (!url) {
-        return { ctx, code: 202, res: '缺少后端服务请求API路径' };
+        resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
       }
       try {
+        ctx.headers['X-User-Agent'] = '4b43c3f3-d817-4576-95b1-ad8519a2f14e';
         const result = await ctx.curl(url, {
           // 必须指定 method
           method: 'POST',
           // 默认将网管处理后的headers给后端服务
           headers: ctx.headers,
-          data,
           // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
           dataType: 'json',
+          data,
           timeout: 10 * 1000,
         });
         resolve(result);
@@ -73,23 +75,24 @@ class CurlService extends Service {
     return new Promise(async resolve => {
       const { ctx } = this;
       if (!url) {
-        return { ctx, code: 202, res: '缺少后端服务请求API路径' };
+        resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
       }
       try {
+        ctx.headers['X-User-Agent'] = '4b43c3f3-d817-4576-95b1-ad8519a2f14e';
         const {
           // 必须指定 method
           method = 'GET',
           // 默认将网管处理后的headers给后端服务
           headers = ctx.headers,
-          data = {},
           // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
           dataType = 'json',
+          data = {},
           timeout = 10 * 1000,
         } = options;
         const result = await ctx.curl(url, {
           method,
-          data,
           dataType,
+          data,
           headers,
           timeout,
         });
