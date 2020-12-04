@@ -29,7 +29,7 @@
     </sp-sticky>
     <!-- S 当前选择的城市 -->
     <div class="current-city">
-      <strong>{{ currentCity ? currentCity : '定位中' }}</strong>
+      <strong>{{ currentCity }}</strong>
       <span>当前选择</span>
     </div>
     <!-- S 当前定位城市 -->
@@ -43,8 +43,8 @@
         <span>无法定位到当前城市</span>
       </div>
       <div v-else class="position-success">
-        <strong>{{ positionCityName ? positionCityName : '定位中' }}</strong>
-        <span v-if="positionCityName">GPS定位</span>
+        <strong>{{ positionCityName }}</strong>
+        <span>GPS定位</span>
         <p v-if="positionStatus === 1">未开通服务</p>
       </div>
       <a href="javascript:void(0);" @click="positionCity">重新定位</a>
