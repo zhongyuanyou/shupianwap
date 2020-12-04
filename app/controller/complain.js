@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-04 13:53:30
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-04 14:43:11
+ * @LastEditTime: 2020-12-04 16:54:15
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/complain.js
  */
@@ -10,8 +10,9 @@
 "use strict";
 const Controller = require("egg").Controller;
 const { Get, Post, Prefix } = require("egg-shell-decorators");
+const { contentApi } = require("./../../config/serveApi/index");
 
-const getValiErrors = function (app, ctx, rules, data) {
+function getValiErrors(app, ctx, rules, data) {
   // 参数校验
   const valiErrors = app.validator.validate(rules, data);
   // 参数校验未通过
@@ -20,9 +21,15 @@ const getValiErrors = function (app, ctx, rules, data) {
     return true;
   }
   return false;
-};
+}
 
-const cmsTestUrl = "https://dchipswg.dgg.net:443";
+function getComplainUrl(app, ctx, urlKey) {
+  const sysCode = app.config.apiClient.APPID[0];
+  const host = ctx.helper.getUrl(sysCode);
+  const address = contentApi[urlKey];
+  const url = `${host}/${address}`;
+  return url;
+}
 
 @Prefix("/yk/complain/v1")
 class ComplainController extends Controller {
@@ -43,11 +50,9 @@ class ComplainController extends Controller {
 
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
 
-    const { status, data } = await service.curl.curlPost(
-      //   `${ctx.app.config.baseUrl}/crisps-cms-web-api/nk/app/feedback/v1/add.do`,
-      `${cmsTestUrl}/crisps-cms-web-api/nk/app/feedback/v1/add.do`,
-      ctx.request.body
-    );
+    const url = getComplainUrl(app, ctx, "feedbackAdd");
+
+    const { status, data } = await service.curl.curlPost(url, ctx.request.body);
 
     if (status === 200 && data.code === 200) {
       ctx.helper.success({
@@ -74,10 +79,36 @@ class ComplainController extends Controller {
     };
     if (getValiErrors(app, ctx, rules, ctx.query)) return;
 
-    const { status, data = {} } = await service.curl.curlGet(
-      `${ctx.app.config.baseUrl}`, // todo 后台Java地址没有确定
-      ctx.query
-    );
+    const url = getComplainUrl(app, ctx, "feedbackDetail");
+    const { status, data = {} } = await service.curl.curlGet(url, ctx.query);
+    if (status === 200 && data.code === 200) {
+      ctx.helper.success({
+        ctx,
+        code: 200,
+        res: data.data || {},
+      });
+      return;
+    }
+    ctx.helper.fail({
+      ctx,
+      code: status,
+      res: data,
+      detailMessage: data.message || "请求失败",
+    });
+  }
+
+  @Get("/list.do")
+  async list() {
+    const { ctx, service, app } = this;
+    const rules = {
+      userId: { type: "string", required: true },
+      page: { type: "number", required: true },
+      limit: { type: "number", required: true },
+    };
+    if (getValiErrors(app, ctx, rules, ctx.query)) return;
+
+    const url = getComplainUrl(app, ctx, "feedbackList");
+    const { status, data = {} } = await service.curl.curlGet(url, ctx.query);
     if (status === 200 && data.code === 200) {
       ctx.helper.success({
         ctx,
