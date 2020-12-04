@@ -20,7 +20,7 @@ class CategoryController extends Controller {
       isRecommend: { type: 'number', required: true }, // 1:需要推荐分类 0:不需要推荐分类
     };
     // 参数校验
-    const valiErrors = app.validator.validate(rules, ctx.query);
+    const valiErrors = app.validator.validate(rules, ctx.request.body);
     // 参数校验未通过
     if (valiErrors) {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });

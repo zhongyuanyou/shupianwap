@@ -321,6 +321,9 @@ export default {
     },
     // 选择城市
     swichCityHandle() {
+      if (!this.cityName) {
+        return
+      }
       this.$router.push('/city/choiceCity')
     },
     // 搜索框点击

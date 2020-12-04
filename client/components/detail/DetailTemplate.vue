@@ -25,7 +25,13 @@
     <!--S 第二板块 基本信息-->
     <Basic :info="{ ...info }">
       <div slot="basic">
-        <slot name="basic"></slot>
+        <div class="company_info">
+          <div class="item">企业行业：<span>工程类</span></div>
+          <div class="item">经营时间：<span>3年以上</span></div>
+          <div class="item">注册资本：<span>1000万</span></div>
+          <div class="item">企业类型：<span>有限责任公司</span></div>
+          <div class="item">注册资本：<span>小规模纳税人</span></div>
+        </div>
       </div>
     </Basic>
     <!--E 第二板块 基本信息-->
@@ -109,6 +115,12 @@ export default {
         return {}
       },
     },
+    type: {
+      type: String,
+      default: () => {
+        return '1'
+      },
+    },
   },
   data() {
     return {
@@ -146,6 +158,29 @@ export default {
   padding-bottom: 144px;
   /deep/ .sp-hairline--bottom::after {
     border-bottom: none;
+  }
+}
+.company {
+  &_info {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 15px;
+    .item {
+      min-width: 50%;
+      max-width: 100%;
+      font-size: 30px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #999999;
+      margin-top: 32px;
+      span {
+        color: #1a1a1a;
+      }
+    }
   }
 }
 </style>

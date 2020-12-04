@@ -32,7 +32,11 @@
       offset="30"
       @load="onLoad"
     >
-      <goods-item v-for="(item, index) in jyGoodsListData" :key="index" />
+      <goods-item
+        v-for="(item, index) in jyGoodsListData"
+        :key="index"
+        :item-type="itemType"
+      />
     </sp-list>
     <Subscribe
       v-show="!listShow"
@@ -89,6 +93,15 @@ export default {
       type: String,
       default() {
         return ''
+      },
+    },
+    itemType: {
+      type: Object,
+      default() {
+        return {
+          type: 'jy',
+          classify: 'wd',
+        }
       },
     },
   },

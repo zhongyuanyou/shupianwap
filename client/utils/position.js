@@ -12,24 +12,7 @@ export default () => {
       // 不支持
       getCityInfoToIp()
     }
-    // 获取用户的地理位置。使用它需要得到用户的授权
-    function agreeObtainLocation() {
-      const option = {
-        enableHighAccuracy: true,
-        timeout: Infinity,
-        maximumAge: 0,
-      }
-      navigator.geolocation.getCurrentPosition(geoSuccess, geoError, option)
-    }
-    // 同意授权
-    function geoSuccess(event) {
-      const longAndlat = `${event.coords.longitude},${event.coords.latitude}` // 经纬度
-      getCityInfo(longAndlat)
-    }
-    // 拒绝授权
-    function geoError(event) {
-      getCityInfoToIp()
-    }
+
     // 调用高德服务，根据经纬度，获取城市信息
     function getCityInfo(longAndlat) {
       axios
@@ -50,6 +33,7 @@ export default () => {
           reject(err)
         })
     }
+
     // 调用高德服务，根据ip获取城市信息
     function getCityInfoToIp() {
       axios
@@ -68,6 +52,41 @@ export default () => {
         .catch((err) => {
           reject(err)
         })
+    }
+
+    // 定位成功
+    function geoSuccess(event) {
+      const longAndlat = `${event.coords.longitude},${event.coords.latitude}` // 经纬度
+      getCityInfo(longAndlat)
+    }
+
+    // 定位失败
+    function showError(error) {
+      getCityInfoToIp()
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          console.log('定位失败,用户拒绝请求地理定位')
+          break
+        case error.POSITION_UNAVAILABLE:
+          console.log('定位失败,位置信息是不可用')
+          break
+        case error.TIMEOUT:
+          console.log('定位失败,请求获取用户位置超时')
+          break
+        case error.UNKNOWN_ERROR:
+          console.log('定位失败,定位系统失效')
+          break
+      }
+    }
+
+    // 获取用户的地理位置。使用它需要得到用户的授权
+    function agreeObtainLocation() {
+      const option = {
+        enableHighAccuracy: true,
+        timeout: 5000, // 超时时间
+        maximumAge: 0,
+      }
+      navigator.geolocation.getCurrentPosition(geoSuccess, showError, option)
     }
   })
 }
