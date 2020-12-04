@@ -27,7 +27,7 @@
         </span>
         <span class="original-price">4,510元</span>
       </div>
-      <div class="recommend">
+      <div v-if="false" class="recommend">
         <span>荐</span>
         <p>卖家急售，公司干净，无否认卖家急售，公司干净，无否认</p>
       </div>
@@ -162,10 +162,12 @@ export default {
       }
     }
     .goods-price {
+      flex: 1;
       display: flex;
-      align-items: baseline;
       margin-top: 16px;
-      line-height: 36px;
+      line-height: 18px;
+      align-items: flex-end;
+      vertical-align: middle;
       .sales-proce {
         display: flex;
         align-items: baseline;

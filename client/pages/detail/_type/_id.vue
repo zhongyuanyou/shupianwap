@@ -1,6 +1,6 @@
 <template>
   <div class="company">
-    <DetailTemplate :info="info" :type="$route.params.type" />
+    <DetailTemplate :info="info" :detailType="$route.params.type" />
   </div>
 </template>
 

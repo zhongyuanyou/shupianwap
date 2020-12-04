@@ -69,7 +69,8 @@ export const actions = {
           name: '成都',
         })
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err)
         // 定位失败，设置默认城市为成都
         commit('SET_POSITION_CITY', '')
         commit('SET_POSITION_STATUS', 0)
