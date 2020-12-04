@@ -131,6 +131,9 @@
                 fit="cover"
                 src="https://img.yzcdn.cn/vant/cat.jpeg"
               />
+              <!-- ../../assets/images/search-null.png -->
+              <!-- :src="require('../../assets/images/search-null.png')" -->
+
               <div class="no-data__descript">抱歉，未搜索到对应的规划师</div>
               <div class="no-data__tip">换个条件试试</div>
             </div>
@@ -372,9 +375,12 @@ export default {
       }
       /deep/.title-style {
         //下拉标题样式
+
+        font-size: 32px;
+        font-family: PingFang SC;
+        font-weight: bold;
         color: #4974f5;
-        font-size: 13px;
-        font-weight: 600;
+        line-height: 28px;
       }
     }
   }
