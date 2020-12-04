@@ -84,7 +84,7 @@ export default {
     return {
       formData: {
         page: 1,
-        size: 10,
+        limit: 10,
       },
       listShow: true,
       loading: false,
@@ -147,7 +147,6 @@ export default {
       dropDownMenuHeight -
       topHeight +
       'px'
-    // this.serveGoodsListData = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     this.reqType = 'serve'
   },
   methods: {

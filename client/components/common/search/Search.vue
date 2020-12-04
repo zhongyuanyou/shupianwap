@@ -22,6 +22,7 @@
         :style="{ marginLeft: iconLeft + 'rem' }"
       ></my-icon>
       <input
+        ref="inputRef"
         v-if="!disabled"
         v-model="visible"
         :type="type"
@@ -109,6 +110,7 @@ export default {
     // 回车 事件
     searchKeydownHandle(e) {
       if (e.keyCode === 13) {
+        this.$refs.inputRef.blur()
         this.$emit('searchKeydownHandle', e)
       }
     },

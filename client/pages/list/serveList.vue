@@ -48,7 +48,7 @@ export default {
       searchText: '',
       formData: {
         page: 1,
-        size: 10,
+        limit: 10,
       },
     }
   },

@@ -88,7 +88,12 @@ module.exports = appInfo => {
   };
   // eureka中后端API节点集群的实例名称
   config.apiClient = {
-    APPID: [ 'dgg-tac-msgsenter-channel', 'DGG.TAC.MSGCENTER.PUSH' ],
+    APPID: [
+      // cms实例名称
+      'crisps-cms-web-api',
+      //  产品中心实例名称
+      'crisps-product-center-api',
+    ],
   };
   // eureka相关配置
   config.eureka = {
@@ -114,10 +119,17 @@ module.exports = appInfo => {
         version: '1.5',
       },
     },
+    requestMiddleware: (requestOpts, done) => {
+      requestOpts.auth = {
+        user: 'crisps-cloud',
+        password: 'DE4BFECA0F89836730B8AB8804022004',
+      };
+      done(requestOpts);
+    },
     eureka: {
       servicePath: '/eureka/apps/',
-      host: '192.168.254.27',
-      port: 39817,
+      host: '192.168.254.226',
+      port: 8861,
     },
   };
   // 配置定时器的日志

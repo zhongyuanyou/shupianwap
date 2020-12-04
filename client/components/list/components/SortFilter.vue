@@ -93,6 +93,7 @@ export default {
     selectCell(item, index) {
       // console.log(item, index)
       this.selectValue = item
+      this.$emit('activeItem', this.selectValue, 'sortFilter')
       this.$refs.item.toggle()
     },
     initOption(data) {

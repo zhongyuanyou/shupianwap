@@ -100,7 +100,7 @@ export default {
       maxHeight: 0,
       formData: {
         page: 1,
-        size: 10,
+        limit: 10,
       },
       jyGoodsListData: [],
       tabItems: [
@@ -142,7 +142,6 @@ export default {
       spTabsHeight -
       topHeight +
       'px'
-    // this.jyGoodsListData = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     this.reqType = 'jy'
   },
   methods: {
