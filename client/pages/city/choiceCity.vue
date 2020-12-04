@@ -51,13 +51,16 @@
     </div>
     <!-- S 城市列表 -->
     <div>
-      <div class="city-btn-list">
+      <div v-if="cityHistory.length" class="city-btn-list">
         <span>历史选择</span>
         <ul>
-          <li>成都</li>
-          <li>洛阳</li>
-          <li>杭州</li>
-          <li>杭州</li>
+          <li
+            v-for="(item, index) in cityHistory"
+            :key="index"
+            @click="chooseCity(item)"
+          >
+            {{ item.cityName }}
+          </li>
         </ul>
       </div>
       <sp-index-bar
@@ -65,7 +68,7 @@
         highlight-color="#4974F5"
         :index-list="indexList"
       >
-        <div class="city-btn-list">
+        <div v-if="false" class="city-btn-list">
           <sp-index-anchor index="热">热门城市</sp-index-anchor>
           <ul>
             <li>成都</li>
@@ -106,6 +109,7 @@ export default {
   },
   data() {
     return {
+      cityHistory: [],
       cityList: [
         {
           code: 'COMPANY_ALL',
@@ -349,7 +353,7 @@ export default {
         },
       ],
       nweCityList: [],
-      indexList: ['热'],
+      indexList: [],
       searchDomHeight: 0, // 头部高度
     }
   },
@@ -366,6 +370,9 @@ export default {
   mounted() {
     try {
       this.searchDomHeight = this.$refs.searchRef.$el.clientHeight
+      this.cityHistory = this.$cookies.get('cityHistory')
+        ? this.$cookies.get('cityHistory')
+        : []
     } catch (e) {}
   },
   methods: {
@@ -427,6 +434,26 @@ export default {
     },
     // 选择城市
     chooseCity(data) {
+      const historyList = this.$cookies.get('cityHistory')
+        ? this.$cookies.get('cityHistory')
+        : []
+      const isHave = historyList.findIndex((item) => {
+        return item.code === data.code
+      })
+      if (isHave !== -1) {
+        historyList.splice(isHave, 1)
+      }
+      historyList.unshift({
+        code: data.code,
+        cityName: data.cityName,
+      })
+      if (historyList.length > 6) {
+        historyList.pop()
+      }
+      this.$cookies.set('cityHistory', historyList, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 99999, // 过期时间
+      })
       this.SET_CITY({
         code: data.code,
         name: data.cityName,
