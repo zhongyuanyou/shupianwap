@@ -11,6 +11,7 @@ const { bigDataApi } = require('./module/bigData'); // 大数据
 const { contentApi } = require('./module/content'); // CMS内容
 const { productApi } = require('./module/product'); // 产品中心
 const { userApi } = require('./module/user'); // 用户中心
+const { iesApi } = require('./module/ies'); // 智企
 
 module.exports = {
   algorithmApi,
@@ -18,4 +19,5 @@ module.exports = {
   contentApi,
   productApi,
   userApi,
+  iesApi,
 };
