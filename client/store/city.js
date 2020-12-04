@@ -29,7 +29,7 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
   },
-  // 设置当前定位城市
+  // 设置当前定位状态
   SET_POSITION_STATUS(state, num) {
     state.positionStatus = num
     this.$cookies.set('positionStatus', state.positionStatus, {

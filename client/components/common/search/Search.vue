@@ -22,8 +22,8 @@
         :style="{ marginLeft: iconLeft + 'rem' }"
       ></my-icon>
       <input
-        ref="inputRef"
         v-if="!disabled"
+        ref="inputRef"
         v-model="visible"
         :type="type"
         :placeholder="placeholder"

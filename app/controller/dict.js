@@ -24,7 +24,7 @@ class DictController extends Controller {
     const sysCode = app.config.apiClient.APPID[0];
     const host = ctx.helper.getUrl(sysCode);
     const address = contentApi.dataDict;
-    const url = `${host}/${sysCode}${address}`;
+    const url = `${host}/${address}`;
     const { status, data } = await service.curl.curlAll(url, {
       method: 'GET',
       data: {
@@ -43,7 +43,7 @@ class DictController extends Controller {
     const { ctx, service, app } = this;
     // 定义参数校验规则
     const rules = {
-      code: { type: 'array', required: true },
+      code: { type: 'string', required: true },
     };
     // 参数校验
     const valiErrors = app.validator.validate(rules, ctx.query);
@@ -54,10 +54,10 @@ class DictController extends Controller {
     }
     // 参数校验通过,正常响应
     const { code } = ctx.query;
-    const sysCode = ctx.config.apiClient.APPID[0];
+    const sysCode = app.config.apiClient.APPID[0];
     const host = ctx.helper.getUrl(sysCode);
     const address = contentApi.dataDicts;
-    const url = `${host}/${sysCode}${address}`;
+    const url = `${host}/${address}`;
     const { status, data } = await service.curl.curlAll(url, {
       method: 'GET',
       data: {
