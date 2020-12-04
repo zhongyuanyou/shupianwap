@@ -66,6 +66,30 @@ export default {
     },
   },
   watch: {
+    activeItems(val) {
+      const arr = val
+      if (val.length === 0) {
+        this.removeClass('moreText')
+        this.removeClass('active')
+        this.dropdownTitle = this.filterData.title
+      } else if (arr[2].regions.length === 0) {
+        this.dropdownTitle = arr[0].name + '-' + arr[1].name
+        this.addClass('active')
+      } else if (arr[2].regions.length === 1) {
+        this.dropdownTitle =
+          arr[0].name + '-' + arr[1].name + arr[2].regions.name
+        this.addClass('active')
+      } else if (arr[2].regions.length > 1) {
+        this.dropdownTitle = '多选'
+        this.addClass('active')
+      }
+      // 如果筛选名字个数超过了4个那么需要加样式
+      /* if (this.dropdownTitle.length >= 4) {
+        this.addClass('moreText')
+      } else {
+        this.removeClass('moreText')
+      } */
+    },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
         this.dropdownTitle = val.title
@@ -81,7 +105,9 @@ export default {
     coupleSelect(item) {
       // 选择项
       console.log(item)
-      this.activeItems = item
+      item.forEach((_item, index) => {
+        this.$set(this.activeItems, index, _item)
+      })
     },
     open() {},
     close() {
@@ -93,6 +119,7 @@ export default {
     confirmFilters() {
       // 确认筛选
       this.saveActiveItems = clone(this.activeItems, true)
+      this.$emit('activeItem', this.activeItems, 'areaFilter')
       this.$refs.item.toggle()
     },
   },
@@ -103,5 +130,12 @@ export default {
 .area-content {
   overflow-x: hidden;
   overflow-y: scroll;
+  .couple {
+    min-height: 533px;
+    max-height: 533px;
+  }
+}
+.bottom-confirm {
+  border-top: 1px solid #cdcdcd;
 }
 </style>
