@@ -45,7 +45,7 @@ const getValiErrors = function(app, ctx, rules, data) {
 @Prefix('/nk/information/v1')
 
 class FoundController extends Controller {
-  @Get('/home')
+  @Get('/home.do')
   async home() {
     // 获取首屏数据，不需要传参
     const { ctx, service } = this;
@@ -64,7 +64,7 @@ class FoundController extends Controller {
     }
   }
 
-  @Get('/list')
+  @Get('/list.do')
   async list() {
     // 获取资讯列表
     const { ctx, service, app } = this;
@@ -90,13 +90,12 @@ class FoundController extends Controller {
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: {
         records: data.records,
-        total: data.data.total,
-        currentPage: data.data.currentPage,
+        totalCount: data.data.totalCount,
       } });
     }
   }
 
-  @Get('/detail')
+  @Get('/detail.do')
   async detail() {
     // 获取资讯详情
     const { ctx, service, app } = this;
@@ -114,12 +113,21 @@ class FoundController extends Controller {
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: {
-        info: data.data.info,
+        title: data.data.title,
+        newsReadAll: data.data.newsReadAll,
+        createTime: data.data.createTime,
+        createrName: data.data.createrName,
+        createrAvatar: data.data.createrAvatar,
+        subtitle: data.data.subtitle,
+        content: data.data.content,
+        seoDescription: data.data.seoDescription,
+        seoKeywords: data.data.seoKeywords,
+        seoTitle: data.data.seoTitle,
       } });
     }
   }
 
-  @Get('/banner_information')
+  @Get('/banner_information.do')
   async information() {
     // 获取每个分类第一屏
     const { ctx, service, app } = this;
