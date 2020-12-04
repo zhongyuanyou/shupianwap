@@ -20,6 +20,8 @@ class CurlService extends Service {
           method: 'GET',
           // 默认将网管处理后的headers给后端服务
           headers: ctx.headers,
+          // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
+          dataType: 'json',
           data: params,
           timeout: 10 * 1000,
         });
@@ -50,6 +52,8 @@ class CurlService extends Service {
           method: 'POST',
           // 默认将网管处理后的headers给后端服务
           headers: ctx.headers,
+          // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
+          dataType: 'json',
           data,
           timeout: 10 * 1000,
         });
@@ -80,11 +84,14 @@ class CurlService extends Service {
           method = 'GET',
           // 默认将网管处理后的headers给后端服务
           headers = ctx.headers,
+          // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
+          dataType = 'json',
           data = {},
           timeout = 10 * 1000,
         } = options;
         const result = await ctx.curl(url, {
           method,
+          dataType,
           data,
           headers,
           timeout,
