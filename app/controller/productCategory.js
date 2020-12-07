@@ -27,18 +27,14 @@ class ProductCategoryController extends Controller {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
       return;
     }
-    const sysCode = app.config.apiClient.APPID[0];
-    const host = ctx.helper.getUrl(sysCode);
-    const address = contentApi.dataDict;
-    const url = `${host}/${address}`;
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
     // 获取广告数据，若有locationCode的情况下
-    const getAdvertising = await service.curl.curlPost(`${url}/crisps-cms-web-api/nk/app/advertising/v1/find_advertising.do`,
-      {
-        method: 'POST',
-        data: {
-          locationCode: ctx.query.locationCode,
-        },
-      });
+    const getAdvertising = await service.curl.curlPost(url, {
+      method: 'POST',
+      data: {
+        locationCode: ctx.query.locationCode,
+      },
+    });
     // 参数校验通过,正常响应
     if (ctx.query.locationCode) {
       // 若有locationCode参数，则需获取广告数据
