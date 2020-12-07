@@ -14,8 +14,6 @@ class CurlService extends Service {
         resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
       }
       try {
-        // 忽略fegin校验条件
-        ctx.headers['X-User-Agent'] = '4b43c3f3-d817-4576-95b1-ad8519a2f14e';
         const result = await ctx.curl(url, {
           // 必须指定 method
           method: 'GET',
@@ -47,8 +45,6 @@ class CurlService extends Service {
         resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
       }
       try {
-        // 忽略fegin校验条件
-        ctx.headers['X-User-Agent'] = '4b43c3f3-d817-4576-95b1-ad8519a2f14e';
         const result = await ctx.curl(url, {
           // 必须指定 method
           method: 'POST',
@@ -82,8 +78,6 @@ class CurlService extends Service {
         resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
       }
       try {
-        // 忽略fegin校验条件
-        ctx.headers['X-User-Agent'] = '4b43c3f3-d817-4576-95b1-ad8519a2f14e';
         const {
           // 必须指定 method
           method = 'GET',

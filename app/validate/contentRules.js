@@ -15,6 +15,6 @@ module.exports = {
     };
     // 参数校验
     const valiErrors = app.validator.validate(rules, ctx.query);
-    return valiErrors
-  }
-}
+    return valiErrors;
+  },
+};
