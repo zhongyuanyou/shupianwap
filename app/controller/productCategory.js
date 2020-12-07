@@ -8,7 +8,7 @@ const Controller = require('egg').Controller;
 const { Post, Prefix } = require('egg-shell-decorators');
 const { contentApi } = require('./../../config/serveApi/index');
 
-@Prefix('/nk/category')
+@Prefix('/nk/productCategory')
 
 class ProductCategoryController extends Controller {
   @Post('/v1/product_category.do')
