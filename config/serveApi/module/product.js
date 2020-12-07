@@ -6,4 +6,6 @@
  * @FilePath: /chips-wap/config/envConfig/serveApi/module/product.js
  * */
 "use strict";
-module.exports.productApi = {};
+module.exports.productApi = {
+  getServeList: '/nk/product/service/v1/search.do', // 服务产品列表
+};
