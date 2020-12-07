@@ -10,7 +10,7 @@ class DictController extends Controller {
   async queryCmsCode() {
     const { ctx, service, app } = this;
     // 参数校验
-    const valiErrors = app.validator.validate(rules.queryCmsCode, ctx.query);
+    const valiErrors = rules.queryCmsCode(this);
     // 参数校验未通过
     if (valiErrors) {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
@@ -18,10 +18,12 @@ class DictController extends Controller {
     }
     // 参数校验通过,正常响应
     const { code } = ctx.query;
-    const sysCode = app.config.apiClient.APPID[0];
-    const host = ctx.helper.getUrl(sysCode);
-    const address = contentApi.dataDict;
-    const url = `${host}/${address}`;
+    // 获取到请求地址
+    const url = ctx.helper.assembleUrl(
+      app.config.apiClient.APPID[0],
+      contentApi.dataDict
+    );
+    // 发送httpClient请求
     const { status, data } = await service.curl.curlAll(url, {
       method: 'GET',
       data: {
@@ -39,7 +41,7 @@ class DictController extends Controller {
   async queryCmsCodes() {
     const { ctx, service, app } = this;
     // 参数校验
-    const valiErrors = app.validator.validate(rules.queryCmsCodes, ctx.query);
+    const valiErrors = rules.queryCmsCodes(this);
     // 参数校验未通过
     if (valiErrors) {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
@@ -47,10 +49,12 @@ class DictController extends Controller {
     }
     // 参数校验通过,正常响应
     const { codes } = ctx.query;
-    const sysCode = app.config.apiClient.APPID[0];
-    const host = ctx.helper.getUrl(sysCode);
-    const address = contentApi.dataDicts;
-    const url = `${host}/${address}`;
+    // 获取到请求地址
+    const url = ctx.helper.assembleUrl(
+      app.config.apiClient.APPID[0],
+      contentApi.dataDicts
+    );
+    // 发送httpClient请求
     const { status, data } = await service.curl.curlAll(url, {
       method: 'GET',
       data: {

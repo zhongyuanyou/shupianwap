@@ -8,9 +8,9 @@ const rules = require('./../validate/resources');
 class ResourcesController extends Controller {
     @Post('/v1/zq_subscribe.do')
   async zqSubscribe() {
-    const { ctx, service, app } = this;
+    const { ctx, service } = this;
     // 参数校验
-    const valiErrors = app.validator.validate(rules.zqSubscribe, ctx.request.body);
+    const valiErrors = rules.zqSubscribe(this);
     // 参数校验未通过
     if (valiErrors) {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });

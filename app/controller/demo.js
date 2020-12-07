@@ -21,8 +21,8 @@ class UserController extends Controller {
     }
     // 参数校验通过,正常响应
     const { pageNumber = 10, pageSize = 1, id } = ctx.query;
-    const { status, data } = await service.curl.curlAll('http://yapi.dgg.cn/mock/9/api/user', {
-      method: 'GET',
+    const { status, data } = await service.curl.curlAll('http://172.16.136.109:7001/service/nk/login/v1/logout.do', {
+      method: 'get',
       data: {
         pageNumber,
         pageSize,
