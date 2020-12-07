@@ -5,5 +5,8 @@
  * @Description: 产品中心api地址
  * @FilePath: /chips-wap/config/envConfig/serveApi/module/product.js
  * */
-"use strict";
-module.exports.productApi = {};
+'use strict';
+module.exports.productApi = {
+  //  获取服务产品详情
+  scProductDetail: '/nk/product/service/v1/search.do',
+};
