@@ -1,6 +1,7 @@
+'use strict';
 const Controller = require('egg').Controller;
 const { Get, Prefix } = require('egg-shell-decorators');
-const { contentApi } = require('./../../../config/serveApi/index');
+const { contentApi } = require('./../../config/serveApi/index');
 @Prefix('/yk/content')
 class ContentListController extends Controller {
   @Get('/v1/content_list.do')
