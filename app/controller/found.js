@@ -61,7 +61,7 @@ class FoundController extends Controller {
     if (status === 200 && data.code === 200) {
       // 若获取分类请求正常返回数据
       categoryList = data.records;
-      const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.advertising);
+      const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
       const listApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
       await getInformation(service, bannerApi, listApi, categoryList[0].code, categoryList[0].code, () => {
         console.log('11');
@@ -145,7 +145,7 @@ class FoundController extends Controller {
     getValiErrors(app, ctx, rules, ctx.query);
     // 参数校验通过,正常响应
     const { categoryCode, locationCode } = ctx.query;
-    const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.advertising);
+    const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
     const listApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
     await getInformation(service, bannerApi, listApi, locationCode, categoryCode, () => {
       console.log('11');

@@ -10,7 +10,7 @@ const { contentApi } = require('./../../config/serveApi/index');
 
 @Prefix('/nk/category')
 
-class CategoryController extends Controller {
+class ProductCategoryController extends Controller {
   @Post('/v1/product_category.do')
   async category() {
     // 查询产品分类
@@ -46,4 +46,4 @@ class CategoryController extends Controller {
   }
 }
 
-module.exports = CategoryController;
+module.exports = ProductCategoryController;
