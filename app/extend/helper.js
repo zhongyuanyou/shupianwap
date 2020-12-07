@@ -165,10 +165,9 @@ module.exports = {
      * @param.path: String 请求路径
      * @return {String}  完整的api接口
      */
-    assembleUrl(index = 0, path = "") {
-        const { ctx, app } = this;
-        const sysCode = app.config.apiClient.APPID[index];
+    assembleUrl(sysCode = null, path = "") {
+        const { ctx } = this;
         const host = ctx.helper.getUrl(sysCode);
-        return (url = `${host}/${path}`);
+        return `${host}${path}`;
     },
 };

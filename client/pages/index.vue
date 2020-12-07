@@ -59,7 +59,7 @@ export default {
   },
   mounted() {
     const data = {
-      locationCodeList: ['123'],
+      locationCodeList: ['adp100121'],
       fixedNavCategoryCode: 'a',
       fixedNavPlatformCode: 'a',
       rollNavCategoryCode: 'a',
