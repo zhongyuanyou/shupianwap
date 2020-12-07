@@ -6,6 +6,7 @@
 
 const Controller = require('egg').Controller;
 const { Post, Prefix } = require('egg-shell-decorators');
+const { contentApi } = require('./../../config/serveApi/index');
 
 @Prefix('/nk/category')
 
@@ -26,8 +27,12 @@ class CategoryController extends Controller {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
       return;
     }
+    const sysCode = app.config.apiClient.APPID[0];
+    const host = ctx.helper.getUrl(sysCode);
+    const address = contentApi.dataDict;
+    const url = `${host}/${address}`;
     // 获取广告数据，若有locationCode的情况下
-    const getAdvertising = await service.curl.curlPost(`${ctx.app.config.baseUrl}/crisps-cms-web-api/nk/app/advertising/v1/find_advertising.do`,
+    const getAdvertising = await service.curl.curlPost(`${url}/crisps-cms-web-api/nk/app/advertising/v1/find_advertising.do`,
       {
         method: 'POST',
         data: {

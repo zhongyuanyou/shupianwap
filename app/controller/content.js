@@ -6,10 +6,10 @@ const { getContentListValidate } = require('../validate/contentRules');
 @Prefix('/yk/content')
 class ContentController extends Controller {
   @Get('/v1/content_list.do')
-  async getContentList () {
+  async getContentList() {
     const { ctx, service, app } = this;
     // 定义参数校验规则
-    const valiErrors = getContentListValidate(this)
+    const valiErrors = getContentListValidate(this);
     // 参数校验未通过
     if (valiErrors) {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
@@ -18,8 +18,8 @@ class ContentController extends Controller {
     const sysCode = app.config.apiClient.APPID[0];
     const address = contentApi.findPage;
     const url = ctx.helper.assembleUrl(sysCode, address);
-    ctx.query.limit = ctx.query.limit ? ctx.query.limit : 10
-    ctx.query.page = ctx.query.page ? ctx.query.page : 10
+    ctx.query.limit = ctx.query.limit ? ctx.query.limit : 10;
+    ctx.query.page = ctx.query.page ? ctx.query.page : 10;
     const { status, data } = await service.curl.curlAll(url, {
       method: 'GET',
       data: ctx.query,
@@ -33,4 +33,4 @@ class ContentController extends Controller {
   }
 }
 
-module.exports = ContentController
+module.exports = ContentController;
