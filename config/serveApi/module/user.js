@@ -6,4 +6,10 @@
  * @FilePath: /chips-wap/config/envConfig/serveApi/module/user.js
  * */
 "use strict";
-module.exports.userApi = {};
+module.exports.userApi = {
+  login: "/nk/api/auth/v1/login.do",
+  logout: "/nk/api/auth/v1/login_out.do",
+  verifySmsCode: "/nk/api/sms/v1/verify_sms_code.do",
+  register: "/nk/api/register/v1/register_user.do",
+  reset: "/nk/api/account/v1/reset_password_by_user_id.do",
+};

@@ -15,4 +15,7 @@ module.exports.contentApi = {
   feedbackDetail: "/nk/app/feedback/v1/detail.do", // 吐槽详情
   feedbackList: "/nk/app/feedback/v1/find_page.do", // 吐槽列表
   findPage: '/nk/app/content/v1/find_page.do',// 获取内容列表
+  shoppingCarList: '/yk/shoppingCart/find_list.do', // 购物车列表
+  shoppingCarAdd:'/yk/shoppingCart/add.do', // 购物车商品数量的修改
+  shoppingCarUpdate:'/yk/shoppingCart/update_cart', // 购物车商品的删除等操作
 };
