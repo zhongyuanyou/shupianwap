@@ -3,6 +3,7 @@ const Service = require('egg').Service;
 const { contentApi } = require('../../../config/serveApi/index');
 class InformationService extends Service {
   async list(limit, page) {
+    // 列表
     return new Promise(async resolve => {
       const { ctx, app } = this;
       const sysCode = app.config.apiClient.APPID[0];
@@ -26,6 +27,7 @@ class InformationService extends Service {
     });
   }
   async detail(id) {
+    // 详情
     return new Promise(async resolve => {
       const { ctx, app } = this;
       const sysCode = app.config.apiClient.APPID[0];
