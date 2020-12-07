@@ -85,7 +85,7 @@ class AddressController extends Controller {
       data: params,
     });
     if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data });
+      ctx.helper.success({ ctx, code: 200, res: data.data || {} });
     }
   }
 
@@ -104,7 +104,7 @@ class AddressController extends Controller {
       },
     });
     if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data });
+      ctx.helper.success({ ctx, code: 200, res: data.data || [] });
     }
   }
 
@@ -123,7 +123,7 @@ class AddressController extends Controller {
       },
     });
     if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data });
+      ctx.helper.success({ ctx, code: 200, res: data.data || {} });
     }
   }
 
@@ -143,7 +143,7 @@ class AddressController extends Controller {
       data: params,
     });
     if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data });
+      ctx.helper.success({ ctx, code: 200, res: data.data || {} });
     }
   }
 }

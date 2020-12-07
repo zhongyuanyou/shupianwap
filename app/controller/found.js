@@ -6,6 +6,7 @@
 const Controller = require('egg').Controller;
 const { Get, Prefix } = require('egg-shell-decorators');
 const { contentApi } = require('./../../config/serveApi/index');
+const { infoList, infoDetail, screenData } = require('../validate/found')
 let information_class = null; // 资讯分类
 let information_banner = null; // 资讯banner
 let information_list = null; // 资讯列表
@@ -92,7 +93,7 @@ class FoundController extends Controller {
       });
     if (status === 200 && data.code === 200) {
       // 若获取分类请求正常返回数据
-      information_class = data.data;
+      information_class = data.data || [];
       const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
       const listApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
       await getInformation(service, bannerApi, listApi, information_class[0].code, information_class[0].code, ctx, true);
@@ -103,14 +104,7 @@ class FoundController extends Controller {
   async list() {
     // 获取资讯列表
     const { ctx, service, app } = this;
-    // 定义参数校验规则
-    const rules = {
-      categoryCode: { type: 'string', required: false },
-      keyword: { type: 'string', required: false },
-      limit: { type: 'number', required: true },
-      page: { type: 'number', required: true },
-    };
-    getValiErrors(app, ctx, rules, ctx.query);
+    getValiErrors(app, ctx, infoList, ctx.query);
     // 参数校验通过,正常响应
     const { limit = 10, page = 1, categoryCode, keyword } = ctx.query;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
@@ -125,7 +119,7 @@ class FoundController extends Controller {
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: {
-        records: data.records,
+        information_list: data.data || [],
         totalCount: data.data.totalCount,
       } });
     }
@@ -135,10 +129,7 @@ class FoundController extends Controller {
   async detail() {
     // 获取资讯详情
     const { ctx, service, app } = this;
-    const rules = {
-      id: { type: 'string', required: false },
-    };
-    getValiErrors(app, ctx, rules, ctx.query);
+    getValiErrors(app, ctx, infoDetail, ctx.query);
     // 参数校验通过,正常响应
     const { id } = ctx.query;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoDetail);
@@ -149,18 +140,7 @@ class FoundController extends Controller {
       },
     });
     if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: {
-        title: data.data.title,
-        newsReadAll: data.data.newsReadAll,
-        createTime: data.data.createTime,
-        createrName: data.data.createrName,
-        createrAvatar: data.data.createrAvatar,
-        subtitle: data.data.subtitle,
-        content: data.data.content,
-        seoDescription: data.data.seoDescription,
-        seoKeywords: data.data.seoKeywords,
-        seoTitle: data.data.seoTitle,
-      } });
+      ctx.helper.success({ ctx, code: 200, res: data.data});
     }
   }
 
@@ -168,11 +148,7 @@ class FoundController extends Controller {
   async information() {
     // 获取每个分类第一屏
     const { ctx, service, app } = this;
-    const rules = {
-      categoryCode: { type: 'string', required: true },
-      locationCode: { type: 'string', required: true },
-    };
-    getValiErrors(app, ctx, rules, ctx.query);
+    getValiErrors(app, ctx, screenData, ctx.query);
     // 参数校验通过,正常响应
     const { categoryCode, locationCode } = ctx.query;
     const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
