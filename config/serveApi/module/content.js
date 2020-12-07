@@ -20,4 +20,5 @@ module.exports.contentApi = {
     firstScreen: '/crisps-cms-web-api/nk/app/category/v1/detail.do', // 获取首屏数据
     advertising: '/crisps-cms-web-api/nk/app/advertising/v1/find_advertising.do', // 广告
     infoList: '/crisps-cms-web-api/nk/app/content/v1/find_page.do', // 资讯列表
+    infoDetail: '/crisps-cms-web-api/nk/app/content/v1/find_detail.do', // 资讯详情
 };

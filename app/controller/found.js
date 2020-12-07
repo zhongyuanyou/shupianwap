@@ -83,10 +83,7 @@ class FoundController extends Controller {
     getValiErrors(app, ctx, rules, ctx.query);
     // 参数校验通过,正常响应
     const { limit = 10, page = 1, categoryCode, keyword } = ctx.query;
-    const sysCode = app.config.apiClient.APPID[0];
-    const host = ctx.helper.getUrl(sysCode);
-    const address = '/crisps-cms-web-api/nk/app/content/v1/find_page.do';
-    const url = `${host}/${address}`;
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
     const { status, data } = await service.curl.curlGet(url, {
       method: 'GET',
       data: {
@@ -114,10 +111,7 @@ class FoundController extends Controller {
     getValiErrors(app, ctx, rules, ctx.query);
     // 参数校验通过,正常响应
     const { id } = ctx.query;
-    const sysCode = app.config.apiClient.APPID[0];
-    const host = ctx.helper.getUrl(sysCode);
-    const address = '/crisps-cms-web-api/nk/app/content/v1/find_detail.do';
-    const url = `${host}/${address}`;
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoDetail);
     const { status, data } = await service.curl.curlGet(url, {
       method: 'GET',
       data: {
@@ -151,10 +145,8 @@ class FoundController extends Controller {
     getValiErrors(app, ctx, rules, ctx.query);
     // 参数校验通过,正常响应
     const { categoryCode, locationCode } = ctx.query;
-    const sysCode = app.config.apiClient.APPID[0];
-    const host = ctx.helper.getUrl(sysCode);
-    const bannerApi = `${host}/crisps-cms-web-api/nk/app/advertising/v1/find_advertising.do`;
-    const listApi = `${host}/crisps-cms-web-api/nk/app/content/v1/find_page.do`;
+    const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.advertising);
+    const listApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
     await getInformation(service, bannerApi, listApi, locationCode, categoryCode, () => {
       console.log('11');
     });
