@@ -11,4 +11,6 @@ module.exports.contentApi = {
   dataDict: '/nk/dict/v1/find_list.do',
   //  查询多个数据字典多个编码下子节点(只查询一级)
   dataDicts: '/nk/dict/v1/find_list_by_codes.do',
+  // 获取内容列表
+  findPage: '/nk/app/content/v1/find_page.do',
 };
