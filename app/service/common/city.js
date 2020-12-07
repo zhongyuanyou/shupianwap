@@ -1,45 +1,38 @@
 "use strict";
 const Service = require("egg").Service;
 const { contentApi } = require("../../../config/serveApi/index");
-class bannerService extends Service {
+class siteService extends Service {
     /**
-     * 获取广告列表服务API（HTTP）
-     * @locationCodeList { Array } locationCodeList 广告编码
+     * 获取城市列表服务API（HTTP）
+     * @locationCodeList { String } cityName 市名称，模糊匹配
      * @return { Object } 返回请求结果数据
      */
-    async getAdList(locationCodeList = []) {
+    async getCityList(cityName = "") {
         return new Promise(async (resolve) => {
             const { ctx, app } = this;
-            const adUrl = ctx.helper.assembleUrl(
+            const url = ctx.helper.assembleUrl(
                 app.config.apiClient.APPID[0],
-                contentApi.findAdList
+                contentApi.findCityList
             );
             try {
                 ctx.headers["X-User-Agent"] =
                     "4b43c3f3-d817-4576-95b1-ad8519a2f14e";
-                const result = await ctx.curl(adUrl, {
+                const result = await ctx.curl(url, {
                     // 必须指定 method
-                    method: "POST",
+                    method: "GET",
                     // 默认将网管处理后的headers给后端服务
                     headers: ctx.headers,
                     // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
                     dataType: "json",
                     data: {
-                        locationCodeList,
+                        cityName,
                     },
                     timeout: 10 * 1000,
                 });
-                const advertising = {};
-                // 广告数据处理
-                if (result.data.code === 200) {
-                    result.data.data.forEach((item) => {
-                        advertising[item.locationCode] = item;
-                    });
-                }
                 resolve({
                     code: result.data.code,
                     message: result.data.message,
-                    data: advertising,
+                    data: result.data.data.cityList || [],
                 });
             } catch (err) {
                 ctx.logger.error(err);
@@ -48,4 +41,4 @@ class bannerService extends Service {
         });
     }
 }
-module.exports = bannerService;
+module.exports = siteService;

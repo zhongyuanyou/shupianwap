@@ -1,23 +1,23 @@
 "use strict";
 const Service = require("egg").Service;
-const { contentApi } = require("../../../config/serveApi/index");
-class bannerService extends Service {
+const { productApi } = require("../../../config/serveApi/index");
+class tradingProduct extends Service {
     /**
-     * 获取广告列表服务API（HTTP）
-     * @locationCodeList { Array } locationCodeList 广告编码
+     * 获取交易推荐商品列表服务API（HTTP）
+     * @locationCodeList { Array } ids 产品id集合
      * @return { Object } 返回请求结果数据
      */
-    async getAdList(locationCodeList = []) {
+    async recommendList(ids = []) {
         return new Promise(async (resolve) => {
             const { ctx, app } = this;
-            const adUrl = ctx.helper.assembleUrl(
-                app.config.apiClient.APPID[0],
-                contentApi.findAdList
+            const url = ctx.helper.assembleUrl(
+                app.config.apiClient.APPID[1],
+                productApi.getTradingListToIds
             );
             try {
                 ctx.headers["X-User-Agent"] =
                     "4b43c3f3-d817-4576-95b1-ad8519a2f14e";
-                const result = await ctx.curl(adUrl, {
+                const result = await ctx.curl(url, {
                     // 必须指定 method
                     method: "POST",
                     // 默认将网管处理后的headers给后端服务
@@ -25,21 +25,14 @@ class bannerService extends Service {
                     // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
                     dataType: "json",
                     data: {
-                        locationCodeList,
+                        ids,
                     },
                     timeout: 10 * 1000,
                 });
-                const advertising = {};
-                // 广告数据处理
-                if (result.data.code === 200) {
-                    result.data.data.forEach((item) => {
-                        advertising[item.locationCode] = item;
-                    });
-                }
                 resolve({
                     code: result.data.code,
                     message: result.data.message,
-                    data: advertising,
+                    data: result.data.data || [],
                 });
             } catch (err) {
                 ctx.logger.error(err);
@@ -48,4 +41,4 @@ class bannerService extends Service {
         });
     }
 }
-module.exports = bannerService;
+module.exports = tradingProduct;
