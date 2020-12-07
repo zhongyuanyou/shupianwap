@@ -5,29 +5,26 @@
 'use strict';
 const Controller = require('egg').Controller;
 const { Get, Prefix } = require('egg-shell-decorators');
-const getInformation = async function(service, api, locationCode, categoryCode, fn) {
+const { contentApi } = require('./../../config/serveApi/index');
+const getInformation = async function(service, bannerApi, listApi, locationCode, categoryCode, fn) {
   // 请求分类下的广告数据
-  const getBanner = service.curl.curlGet(
-    `${api}/crisps-cms-web-api/nk/app/advertising/v1/find_advertising.do`,
-    {
-      method: 'GET',
-      data: {
-        locationCode,
-      },
-    });
+  const getBanner = service.curl.curlGet(bannerApi, {
+    method: 'GET',
+    data: {
+      locationCode,
+    },
+  });
   // 请求分类下的列表数据
-  const getList = service.curl.curlGet(
-    `${api}/crisps-cms-web-api/nk/app/content/v1/find_page.do`,
-    {
-      method: 'GET',
-      data: {
-        categoryCode,
-        type: '资讯',
-        limit: 10,
-        page: 1,
-        platformCode: '薯片',
-      },
-    });
+  const getList = service.curl.curlGet(listApi, {
+    method: 'GET',
+    data: {
+      categoryCode,
+      type: '资讯',
+      limit: 10,
+      page: 1,
+      platformCode: '薯片',
+    },
+  });
   const reqAll = [ getBanner, getList ];
   try {
     const initAllRes = await Promise.all(reqAll);
@@ -52,11 +49,11 @@ class FoundController extends Controller {
   @Get('/v1/home.do')
   async home() {
     // 获取首屏数据，不需要传参
-    const { ctx, service } = this;
+    const { ctx, app, service } = this;
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.firstScreen);
     // 获取分类
     const { status, data } = await service.curl.curlGet(
-      `${ctx.app.config.baseUrl}/crisps-cms-web-api/nk/app/category/v1/detail.do`,
-      {
+      url, {
         method: 'GET',
         data: {},
       });
@@ -64,7 +61,9 @@ class FoundController extends Controller {
     if (status === 200 && data.code === 200) {
       // 若获取分类请求正常返回数据
       categoryList = data.records;
-      await getInformation(service, ctx.app.config.baseUrl, categoryList[0].code, categoryList[0].code, () => {
+      const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
+      const listApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
+      await getInformation(service, bannerApi, listApi, categoryList[0].code, categoryList[0].code, () => {
         console.log('11');
       });
     }
@@ -84,17 +83,16 @@ class FoundController extends Controller {
     getValiErrors(app, ctx, rules, ctx.query);
     // 参数校验通过,正常响应
     const { limit = 10, page = 1, categoryCode, keyword } = ctx.query;
-    const { status, data } = await service.curl.curlGet(
-      `${ctx.app.config.baseUrl}/crisps-cms-web-api/nk/app/content/v1/find_page.do`,
-      {
-        method: 'GET',
-        data: {
-          limit,
-          page,
-          categoryCode,
-          keyword,
-        },
-      });
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
+    const { status, data } = await service.curl.curlGet(url, {
+      method: 'GET',
+      data: {
+        limit,
+        page,
+        categoryCode,
+        keyword,
+      },
+    });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: {
         records: data.records,
@@ -113,14 +111,13 @@ class FoundController extends Controller {
     getValiErrors(app, ctx, rules, ctx.query);
     // 参数校验通过,正常响应
     const { id } = ctx.query;
-    const { status, data } = await service.curl.curlGet(
-      `${ctx.app.config.baseUrl}/crisps-cms-web-api/nk/app/content/v1/find_detail.do`,
-      {
-        method: 'GET',
-        data: {
-          id,
-        },
-      });
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoDetail);
+    const { status, data } = await service.curl.curlGet(url, {
+      method: 'GET',
+      data: {
+        id,
+      },
+    });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: {
         title: data.data.title,
@@ -148,7 +145,9 @@ class FoundController extends Controller {
     getValiErrors(app, ctx, rules, ctx.query);
     // 参数校验通过,正常响应
     const { categoryCode, locationCode } = ctx.query;
-    await getInformation(service, ctx.app.config.baseUrl, locationCode, categoryCode, () => {
+    const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
+    const listApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
+    await getInformation(service, bannerApi, listApi, locationCode, categoryCode, () => {
       console.log('11');
     });
   }

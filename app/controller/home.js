@@ -8,6 +8,7 @@
 "use strict";
 
 const Controller = require("egg").Controller;
+const { contentApi } = require("../../config/serveApi/index");
 const { Get, Prefix, Post } = require("egg-shell-decorators");
 
 /**
@@ -34,40 +35,32 @@ class homeController extends Controller {
             return;
         }
         // 获取广告
-        const findBanner = service.curl.curlPost(
-            "/crisps-cms-web-api/nk/app/advertising/v1/find_advertising_list.do",
-            {
-                method: "POST",
-                data: {
-                    locationCodeList: ctx.query.locationCodeList,
-                },
-            }
+        const findBanner = service.common.banner.getAdList(
+            ctx.query.locationCodeList
         );
         const includeField = "id,imageUrl,name,url,wapRoute"; // 字段筛选过滤
+        const navUrl = ctx.helper.assembleUrl(
+            app.config.apiClient.APPID[0],
+            contentApi.findAdList
+        );
         // 获取固定导航数据
-        const findFixedNav = service.curl.curlGet(
-            "/crisps-cms-web-api/nk/app/navigation/v1/find_page.do",
-            {
-                method: "GET",
-                data: {
-                    categoryCode: ctx.query.fixedNavCategoryCode,
-                    platformCode: ctx.query.fixedNavPlatformCode,
-                    includeField,
-                },
-            }
-        );
+        const findFixedNav = service.curl.curlGet(navUrl, {
+            method: "GET",
+            data: {
+                categoryCode: ctx.query.fixedNavCategoryCode,
+                platformCode: ctx.query.fixedNavPlatformCode,
+                includeField,
+            },
+        });
         // 获取滚动导航数据
-        const findRollNav = service.curl.curlGet(
-            "/crisps-cms-web-api/nk/app/navigation/v1/find_page.do",
-            {
-                method: "GET",
-                data: {
-                    categoryCode: ctx.query.rollNavCategoryCode,
-                    platformCode: ctx.query.rollNavPlatformCode,
-                    includeField,
-                },
-            }
-        );
+        const findRollNav = service.curl.curlGet(navUrl, {
+            method: "GET",
+            data: {
+                categoryCode: ctx.query.rollNavCategoryCode,
+                platformCode: ctx.query.rollNavPlatformCode,
+                includeField,
+            },
+        });
         const reqArr = [findBanner, findFixedNav, findRollNav];
         try {
             const resData = await Promise.all(reqArr);

@@ -6,6 +6,7 @@
 
 const Controller = require('egg').Controller;
 const { Get, Post, Prefix } = require('egg-shell-decorators');
+const { userApi } = require('./../../config/serveApi/index');
 const getValiErrors = function(app, ctx, rules, data) {
   // 参数校验
   const valiErrors = app.validator.validate(rules, data);
@@ -53,24 +54,26 @@ class MyController extends Controller {
       area,
       avatar,
     } = ctx.request.body;
-    const { status, data } = await service.curl.curlPost(
-      `${ctx.app.config.baseUrl}/user-auth/yk/user/v1/update_user_info.do`,
-      {
-        method: 'POST',
-        data: {
-          userId,
-          type,
-          no,
-          nickName,
-          fullName,
-          sex,
-          phone,
-          birthday,
-          email,
-          area,
-          avatar,
-        },
-      });
+    const sysCode = app.config.apiClient.APPID[0];
+    const host = ctx.helper.getUrl(sysCode);
+    const address = userApi.updateInfo;
+    const url = `${host}/${address}`;
+    const { status, data } = await service.curl.curlPost(url, {
+      method: 'POST',
+      data: {
+        userId,
+        type,
+        no,
+        nickName,
+        fullName,
+        sex,
+        phone,
+        birthday,
+        email,
+        area,
+        avatar,
+      },
+    });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: {
       } });
@@ -89,15 +92,17 @@ class MyController extends Controller {
     getValiErrors(app, ctx, rules, ctx.query);
     // 参数校验通过,正常响应
     const { userId, token } = ctx.request.body;
-    const { status, data } = await service.curl.curlGet(
-      `${ctx.app.config.baseUrl}/user-auth/nk/api/user/v1/find_user_by_id.do`,
-      {
-        method: 'GET',
-        data: {
-          userId,
-          token,
-        },
-      }
+    const sysCode = app.config.apiClient.APPID[0];
+    const host = ctx.helper.getUrl(sysCode);
+    const address = userApi.dataInfo;
+    const url = `${host}/${address}`;
+    const { status, data } = await service.curl.curlGet(url, {
+      method: 'GET',
+      data: {
+        userId,
+        token,
+      },
+    }
     );
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: {
