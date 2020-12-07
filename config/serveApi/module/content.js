@@ -14,4 +14,5 @@ module.exports.contentApi = {
   feedbackAdd: "/nk/app/feedback/v1/add.do", // 添加吐槽
   feedbackDetail: "/nk/app/feedback/v1/detail.do", // 吐槽详情
   feedbackList: "/nk/app/feedback/v1/find_page.do", // 吐槽列表
+  findPage: '/nk/app/content/v1/find_page.do',// 获取内容列表
 };
