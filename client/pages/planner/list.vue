@@ -72,12 +72,14 @@
           </sp-top-nav-bar>
           <div class="search">
             <sp-nav-search
+              ref="searchVal"
               v-model="search.keywords"
+              v-myFocus
               border
               special-label
               placeholder="请输入业务或规划师姓名"
-              @focus="focSearch"
-              @keyup.enter="onkeyup"
+              @focus="searchVal()"
+              @search="enterSearch"
             >
               <template #left-icon>
                 <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
@@ -294,6 +296,19 @@ export default {
     Header,
     CoupleSelect,
   },
+  directives: {
+    myFocus: {
+      // 指令的定义
+      inserted(el) {
+        let inputDom = el
+        if (el.tagName !== 'INPUT') {
+          inputDom = el.querySelector('input')
+        }
+        inputDom && inputDom.focus()
+        console.log(el.querySelector('input').tagName === 'INPUT')
+      },
+    },
+  },
   data() {
     return {
       list: [],
@@ -364,9 +379,16 @@ export default {
     onClickPopupLeft() {
       this.popupShow = false
     },
-    onkeyup() {
-      // 键盘事件发送请求
-      console.log('键盘事件')
+    enterSearch() {
+      // 确认发送请求
+      if (this.search.keywords) {
+        console.log(this.search.keywords)
+        this.popupShow = false
+        Toast(`√  共找到43471个规划师`)
+      }
+    },
+    searchVal() {
+      console.log(123)
     },
   },
 }
