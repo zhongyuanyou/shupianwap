@@ -20,6 +20,7 @@
             border
             special-label
             placeholder="请输入业务或规划师姓名"
+            @focus="focSearch"
           >
             <template #left-icon>
               <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
@@ -49,6 +50,42 @@
           </sp-dropdown-menu>
         </div>
       </sp-cell>
+      <!-- 搜索弹框 -->
+      <div class="popup">
+        <sp-popup
+          ref="popupShut"
+          v-model="popupShow"
+          position="right"
+          :style="{ height: '100%', width: '100%' }"
+        >
+          <sp-top-nav-bar :title="'在线直选规划师'" left-arrow ellipsis>
+            <template #left>
+              <sp-icon
+                class="back-icon"
+                name="specialreturn2"
+                size="0.4rem"
+                color="#1A1A1A"
+                class-prefix="sp-iconfont"
+                @click="onClickPopupLeft"
+              />
+            </template>
+          </sp-top-nav-bar>
+          <div class="search">
+            <sp-nav-search
+              v-model="search.keywords"
+              border
+              special-label
+              placeholder="请输入业务或规划师姓名"
+              @focus="focSearch"
+              @keyup.enter="onkeyup"
+            >
+              <template #left-icon>
+                <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
+              </template>
+            </sp-nav-search>
+          </div>
+        </sp-popup>
+      </div>
       <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
         <sp-list
           v-model="loading"
@@ -227,6 +264,9 @@ import {
   Cell,
   Image,
   Tag,
+  Popup,
+  TopNavBar,
+  Icon,
 } from '@chipspc/vant-dgg'
 
 import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
@@ -248,6 +288,9 @@ export default {
     [NavSearch.name]: NavSearch,
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
+    [Popup.name]: Popup,
+    [TopNavBar.name]: TopNavBar,
+    [Icon.name]: Icon,
     Header,
     CoupleSelect,
   },
@@ -258,6 +301,7 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
+      popupShow: false,
       regions: '区域',
       search: { keywords: '', scoreSort: 0 },
       option: [
@@ -278,6 +322,7 @@ export default {
     onClickLeft() {
       console.log('返回')
     },
+
     coupleSelect(data) {
       console.log(data)
       if (data[2].regions.length) {
@@ -312,6 +357,16 @@ export default {
       // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
       this.onLoad()
+    },
+    focSearch() {
+      this.popupShow = true
+    },
+    onClickPopupLeft() {
+      this.popupShow = false
+    },
+    onkeyup() {
+      // 键盘事件发送请求
+      console.log('键盘事件')
     },
   },
 }
@@ -375,12 +430,27 @@ export default {
       }
       /deep/.title-style {
         //下拉标题样式
-
         font-size: 32px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #4974f5;
         line-height: 28px;
+      }
+    }
+    /deep/.popup {
+      .sp-top-nav-bar {
+        font-weight: 400;
+        border-bottom: 1px solid #f4f4f4;
+        .sp-top-nav-bar__title {
+          font-size: 36px;
+          font-family: PingFang SC;
+          font-weight: bold;
+          color: #1a1a1a;
+        }
+      }
+
+      .search {
+        padding: 0.16rem 0.4rem;
       }
     }
   }
