@@ -31,7 +31,7 @@ class MyController extends Controller {
     getValiErrors(app, ctx, updateInfo, ctx.request.body);
     // 参数校验通过,正常响应
     const {
-      userId,
+      id,
       type,
       no,
       nickName,
@@ -47,7 +47,7 @@ class MyController extends Controller {
     const { status, data } = await service.curl.curlPost(url, {
       method: 'POST',
       data: {
-        userId,
+        id,
         type,
         no,
         nickName,
