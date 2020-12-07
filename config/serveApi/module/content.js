@@ -17,4 +17,5 @@ module.exports.contentApi = {
     findPage: "/nk/app/content/v1/find_page.do", // 获取内容列表
     findAdList: "/nk/app/advertising/v1/find_advertising_list.do", // 获取广告列表
     findNav: "/nk/app/navigation/v1/find_page.do", // 获取导航列表
+    findCategoryDetail: '/nk/app/category/v1/detail.do', // 根据编号查询分类
 };
