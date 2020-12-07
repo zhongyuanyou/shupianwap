@@ -2,13 +2,14 @@
  * @Author: xiao pu
  * @Date: 2020-12-03 15:34:31
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-04 10:43:09
+ * @LastEditTime: 2020-12-07 10:40:48
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/login.js
  */
 "use strict";
 const Controller = require("egg").Controller;
 const { Get, Post, Prefix } = require("egg-shell-decorators");
+const { userApi } = require("./../../config/serveApi/index");
 
 const getValiErrors = function (app, ctx, rules, data) {
   // 参数校验
@@ -37,10 +38,8 @@ class LoginController extends Controller {
 
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
 
-    const { status, data } = await service.curl.curlPost(
-      `${ctx.app.config.baseUrl}/user-auth/nk/api/auth/v1/login.do`,
-      ctx.request.body
-    );
+    const url = this.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.login);
+    const { status, data } = await service.curl.curlPost(url, ctx.request.body);
 
     if (status === 200 && data.code === 200) {
       ctx.helper.success({
@@ -60,10 +59,8 @@ class LoginController extends Controller {
     };
     if (getValiErrors(app, ctx, rules, ctx.query)) return;
 
-    const { status, data } = await service.curl.curlGet(
-      `${ctx.app.config.baseUrl}/user-auth/nk/api/auth/v1/login_out.do`,
-      ctx.query
-    );
+    const url = this.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.logout);
+    const { status, data } = await service.curl.curlGet(url, ctx.query);
     if (status === 200 && data.code === 200) {
       ctx.helper.success({
         ctx,
@@ -95,10 +92,11 @@ class LoginController extends Controller {
     } = ctx.request.body;
 
     // 先验证手机的验证码
-    const verifySmsResult = await service.curl.curlPost(
-      `${ctx.app.config.baseUrl}/nk/api/sms/v1/verify_sms_code.do`,
-      { smsCode, phone: account }
-    );
+    const verifyUrl = this.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.verifySmsCode);
+    const verifySmsResult = await service.curl.curlPost(verifyUrl, {
+      smsCode,
+      phone: account,
+    });
 
     // todo 异常处理是否得当
     if (
@@ -116,13 +114,13 @@ class LoginController extends Controller {
     }
 
     // 用户注册
-    const {
-      status,
-      data = {},
-    } = await service.curl.curlPost(
-      `${ctx.app.config.baseUrl}/nk/api/register/v1/register_user.do`,
-      { account, password, accountType, userType }
-    );
+    const registerUrl = this.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.register);
+    const { status, data = {} } = await service.curl.curlPost(registerUrl, {
+      account,
+      password,
+      accountType,
+      userType,
+    });
 
     if (status === 200 || data.code === 200) {
       ctx.helper.success({
@@ -146,8 +144,9 @@ class LoginController extends Controller {
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
 
     // 密码重置
+    const url = this.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.reset);
     const { status, data = {} } = await service.curl.curlPost(
-      `${ctx.app.config.baseUrl}/nk/api/account/v1/reset_password_by_user_id.do`,
+      url,
       ctx.request.body
     );
 

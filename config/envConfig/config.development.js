@@ -93,6 +93,8 @@ module.exports = appInfo => {
       'crisps-cms-web-api',
       //  产品中心实例名称
       'crisps-product-center-api',
+      // 用户中心
+      'crisps-auth-center-api',
     ],
   };
   // eureka相关配置

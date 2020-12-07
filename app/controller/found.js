@@ -50,7 +50,7 @@ class FoundController extends Controller {
   async home() {
     // 获取首屏数据，不需要传参
     const { ctx, app, service } = this;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.firstScreen);
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findCategoryDetail);
     // 获取分类
     const { status, data } = await service.curl.curlGet(
       url, {

@@ -10,6 +10,7 @@
 "use strict";
 const Controller = require("egg").Controller;
 const { Get, Post, Prefix } = require("egg-shell-decorators");
+const { contentApi } = require("./../../config/serveApi/index");
 
 function getValiErrors(app, ctx, rules, data) {
   // 参数校验
@@ -29,17 +30,32 @@ class ShoppingCarController extends Controller {
     const { ctx, service, app } = this;
     // 定义参数校验规则
     const rules = {
-      userId: { type: "string", required: false },
+      userId: { type: "string", required: true },
       limit: { type: "number", required: true },
       page: { type: "number", required: true },
     };
 
     if (getValiErrors(app, ctx, rules, ctx.query)) return;
-
+    const listUrl = this.helper.assembleUrl(
+      app.config.apiClient.APPID[0],
+      contentApi.shoppingCarList
+    );
     const { status, data } = await service.curl.curlGet(
-      `${ctx.app.config.baseUrl}`, // todo 后台Java地址没有确定
+      listUrl,
       ctx.request.body
     );
+
+    if (status !== 200 || data.code !== 200) {
+      ctx.helper.fail({
+        ctx,
+        code: status,
+        res: data,
+        detailMessage: data.message || "请求失败",
+      });
+      return;
+    }
+
+    // TODO 根据list里面的sku的id, 还需要查询产品中心，相关的sku值，获取 图片，名字，价格等
 
     if (status === 200 && data.code === 200) {
       ctx.helper.success({
@@ -57,21 +73,30 @@ class ShoppingCarController extends Controller {
     });
   }
 
-  @Post("/update.do")
-  async update() {
+  @Post("/add.do")
+  async add() {
     const { ctx, service, app } = this;
     const rules = {
-      id: {
+      serviceList: {
         type: "array",
-        itemType: "string",
-        required: true,
+        itemType: "object",
+        required: false,
+        rules: {
+          shopMerId: { type: "string" },
+          skuId: { type: "string" },
+          userId: { type: "string" },
+        },
       },
-      type: [1, 2], // （1:关注 2:删除）
+      goodsNumber: { type: "number" },
     };
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
 
+    const url = this.helper.assembleUrl(
+      app.config.apiClient.APPID[0],
+      contentApi.shoppingCarAdd
+    );
     const { status, data = {} } = await service.curl.curlPost(
-      `${ctx.app.config.baseUrl}`, // todo 后台Java地址没有确定
+      url,
       ctx.request.body
     );
     if (status === 200 && data.code === 200) {
@@ -90,20 +115,25 @@ class ShoppingCarController extends Controller {
     });
   }
 
-  @Get("/attr_list.do")
-  async attrList() {
+  @Get("/update.do")
+  async update() {
     const { ctx, service, app } = this;
     const rules = {
       id: {
         type: "string",
         required: true,
       },
+      type: ["update", "remove", "updateSkuItem", "select"], // update-修改商品数量  remove-将商品从购物车移除 updateSkuItem-修改商品sku属性 select 选中
     };
-    if (getValiErrors(app, ctx, rules, ctx.query)) return;
+    if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
 
-    const { status, data = {} } = await service.curl.curlGet(
-      `${ctx.app.config.baseUrl}`, // todo 后台Java地址没有确定
-      ctx.query
+    const url = this.helper.assembleUrl(
+      app.config.apiClient.APPID[0],
+      contentApi.shoppingCarUpdate
+    );
+    const { status, data = {} } = await service.curl.curlPost(
+      url,
+      ctx.request.body
     );
     if (status === 200 && data.code === 200) {
       ctx.helper.success({
