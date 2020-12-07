@@ -2,18 +2,15 @@
 const Controller = require('egg').Controller;
 const { Get, Prefix } = require('egg-shell-decorators');
 const { contentApi } = require('./../../config/serveApi/index');
+const rules = require('./../validate/dict');
 
 @Prefix('/nk/dict')
 class DictController extends Controller {
   @Get('/v1/cms_code.do')
   async queryCmsCode() {
     const { ctx, service, app } = this;
-    // 定义参数校验规则
-    const rules = {
-      code: { type: 'string', required: true },
-    };
     // 参数校验
-    const valiErrors = app.validator.validate(rules, ctx.query);
+    const valiErrors = app.validator.validate(rules.queryCmsCode, ctx.query);
     // 参数校验未通过
     if (valiErrors) {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
@@ -41,12 +38,8 @@ class DictController extends Controller {
   @Get('/v1/cms_codes.do')
   async queryCmsCodes() {
     const { ctx, service, app } = this;
-    // 定义参数校验规则
-    const rules = {
-      codes: { type: 'string', required: true },
-    };
     // 参数校验
-    const valiErrors = app.validator.validate(rules, ctx.query);
+    const valiErrors = app.validator.validate(rules.queryCmsCodes, ctx.query);
     // 参数校验未通过
     if (valiErrors) {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
