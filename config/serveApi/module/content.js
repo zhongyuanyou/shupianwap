@@ -5,10 +5,13 @@
  * @Description: CMS内容服务api地址
  * @FilePath: /chips-wap/config/envConfig/serveApi/module/content.js
  * */
-'use strict';
+"use strict";
 module.exports.contentApi = {
   //  查询单个数据字典多个编码下子节点(只查询一级)
-  dataDict: '/nk/dict/v1/find_list.do',
+  dataDict: "/nk/dict/v1/find_list.do",
   //  查询多个数据字典多个编码下子节点(只查询一级)
-  dataDicts: '/nk/dict/v1/find_list_by_codes.do',
+  dataDicts: "/nk/dict/v1/find_list_by_codes.do",
+  feedbackAdd: "/nk/app/feedback/v1/add.do", // 添加吐槽
+  feedbackDetail: "/nk/app/feedback/v1/detail.do", // 吐槽详情
+  feedbackList: "/nk/app/feedback/v1/find_page.do", // 吐槽列表
 };
