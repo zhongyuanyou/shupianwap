@@ -9,8 +9,9 @@ export default () => {
       // 支持
       agreeObtainLocation()
     } else {
-      // 不支持
-      getCityInfoToIp()
+      // 不支持,定位失败
+      reject(new Error('定位失败，当前浏览器不支持GPS定位'))
+      //   getCityInfoToIp()
     }
 
     // 调用高德服务，根据经纬度，获取城市信息
@@ -62,20 +63,26 @@ export default () => {
 
     // 定位失败
     function showError(error) {
-      getCityInfoToIp()
+      //   getCityInfoToIp()
       switch (error.code) {
         case error.PERMISSION_DENIED:
-          console.log('定位失败,用户拒绝请求地理定位')
+          reject(
+            new Error(
+              '定位失败，用户拒绝请求地理定位或因非https的站点被浏览器安全策略阻止'
+            )
+          )
           break
         case error.POSITION_UNAVAILABLE:
-          console.log('定位失败,位置信息是不可用')
+          reject(new Error('定位失败，位置信息是不可用'))
           break
         case error.TIMEOUT:
-          console.log('定位失败,请求获取用户位置超时')
+          reject(new Error('定位失败，请求获取用户位置超时'))
           break
         case error.UNKNOWN_ERROR:
-          console.log('定位失败,定位系统失效')
+          reject(new Error('定位失败，定位系统失效'))
           break
+        default:
+          reject(new Error('定位失败，未知异常'))
       }
     }
 

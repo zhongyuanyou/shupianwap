@@ -193,7 +193,7 @@ export default {
       }
       this.$cookies.set('searchHistory', historyList, {
         path: '/',
-        maxAge: 60 * 60 * 24 * 7, // 过期时间
+        maxAge: 60 * 60 * 24 * 99999, // 过期时间
       })
       if (this.value) {
         this.$router.push({

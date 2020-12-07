@@ -16,10 +16,8 @@ export const actions = {
     const currentCity = app.$cookies.get('currentCity')
     const positionCityName = app.$cookies.get('positionCityName')
     const positionStatus = app.$cookies.get('positionStatus')
-    if (currentCity && positionCityName && positionStatus) {
-      commit('city/SET_CITY', currentCity)
-      commit('city/SET_POSITION_CITY', positionCityName)
-      commit('city/SET_POSITION_STATUS', positionStatus)
-    }
+    commit('city/SET_CITY', currentCity || {})
+    commit('city/SET_POSITION_CITY', positionCityName || '')
+    commit('city/SET_POSITION_STATUS', positionStatus || null)
   },
 }
