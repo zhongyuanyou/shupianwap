@@ -11,6 +11,8 @@ module.exports.contentApi = {
     dataDict: "/nk/dict/v1/find_list.do",
     //  查询多个数据字典多个编码下子节点(只查询一级)
     dataDicts: "/nk/dict/v1/find_list_by_codes.do",
+    //  查询多个数据字典多个编码下子节点(查多级)
+    dataDictsTier: "/nk/dict/find_dict_tier.do",
     feedbackAdd: "/nk/app/feedback/v1/add.do", // 添加吐槽
     feedbackDetail: "/nk/app/feedback/v1/detail.do", // 吐槽详情
     feedbackList: "/nk/app/feedback/v1/find_page.do", // 吐槽列表
