@@ -6,7 +6,7 @@
 
 const Controller = require('egg').Controller;
 const { Post, Prefix } = require('egg-shell-decorators');
-const { contentApi } = require('./../../config/serveApi/index');
+const { productApi, contentApi } = require('./../../config/serveApi/index');
 
 @Prefix('/nk/productCategory')
 
@@ -27,17 +27,63 @@ class ProductCategoryController extends Controller {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
       return;
     }
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
+    const advertisingUrl = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
     // 获取广告数据，若有locationCode的情况下
-    const getAdvertising = await service.curl.curlPost(url, {
+    const getAdvertising = service.curl.curlPost(advertisingUrl, {
       method: 'POST',
+      // 默认将网管处理后的headers给后端服务
+      headers: ctx.headers,
+      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
+      dataType: 'json',
       data: {
         locationCode: ctx.query.locationCode,
       },
     });
-    // 参数校验通过,正常响应
-    if (ctx.query.locationCode) {
-      // 若有locationCode参数，则需获取广告数据
+    // 获取产品分类
+    const getClassification = service.common.category.getProductCategory('PRO_CLASS_TYPE_SERVICE');
+
+    const reqAll = [ getClassification, getAdvertising ];
+    try {
+      const resData = await Promise.all(reqAll);
+      let categoryList = []; // 产品分类集合
+      const recommendData = []; // 广告数据
+      // 产品分类总和
+      if (
+        resData[0].data.code === 200 &&
+        resData[0].data.data &&
+        Array.isArray(resData[0].data.data)
+      ) {
+        const cData = resData[0].data.data;
+        // 获取到所有一级分类
+        categoryList = cData.filter(item => {
+          return item.level === 1;
+        });
+        // 为每一个一级分类对象添加子级分类集合变量children
+        categoryList.forEach(item => {
+          item.children = [];
+        });
+        for (let i = 0; i < cData.length; i++) {
+          for (let j = 0; j < categoryList.length; j++) {
+            if (cData[i].level === 2 && cData[i].parentId === categoryList[j].id) {
+              categoryList[j].children.push(cData[i]);
+            }
+          }
+        }
+      }
+
+      // 广告数据
+      console.log('广告数据', resData[1]);
+      ctx.helper.success({
+        ctx,
+        code: 200,
+        res: {
+          categoryList,
+          recommendData,
+        },
+      });
+    } catch (err) {
+      ctx.logger.error(err);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
 }
