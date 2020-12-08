@@ -6,7 +6,6 @@
 
 const Controller = require('egg').Controller;
 const { Post, Prefix } = require('egg-shell-decorators');
-const { productApi, contentApi } = require('./../../config/serveApi/index');
 
 @Prefix('/nk/productCategory')
 
@@ -27,18 +26,8 @@ class ProductCategoryController extends Controller {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
       return;
     }
-    const advertisingUrl = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
     // 获取广告数据，若有locationCode的情况下
-    const getAdvertising = service.curl.curlPost(advertisingUrl, {
-      method: 'POST',
-      // 默认将网管处理后的headers给后端服务
-      headers: ctx.headers,
-      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-      dataType: 'json',
-      data: {
-        locationCode: ctx.query.locationCode,
-      },
-    });
+    const getAdvertising = service.common.banner.getAdList([ 'ad10026' ]);
     // 获取产品分类
     const getClassification = service.common.category.getProductCategory('PRO_CLASS_TYPE_SERVICE');
 
@@ -46,7 +35,7 @@ class ProductCategoryController extends Controller {
     try {
       const resData = await Promise.all(reqAll);
       let categoryList = []; // 产品分类集合
-      const recommendData = []; // 广告数据
+      let recommendData = []; // 广告数据
       // 产品分类总和
       if (
         resData[0].data.code === 200 &&
@@ -72,7 +61,13 @@ class ProductCategoryController extends Controller {
       }
 
       // 广告数据
-      console.log('广告数据', resData[1]);
+      if (
+        resData[0].code === 200 &&
+        resData[0].data &&
+        Array.isArray(resData[0].data)
+      ) {
+        recommendData = resData[0].data;
+      }
       ctx.helper.success({
         ctx,
         code: 200,
