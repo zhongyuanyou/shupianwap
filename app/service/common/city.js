@@ -40,5 +40,28 @@ class cityService extends Service {
             }
         });
     }
+
+  /**
+   * 获取所有地区数据（get）
+   * @return { Object } 返回请求结果数据
+   */
+  async getCityList() {
+    return new Promise(async resolve => {
+      const { ctx, app, service } = this;
+      const sysCode = app.config.apiClient.APPID[0];
+      const address = contentApi.dataDictsTier;
+      const url = ctx.helper.assembleUrl(sysCode, address);
+      if (!url) {
+        resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
+      }
+      try {
+        const result = await service.curl.curlGet(url, {code: '2147483647'});
+        resolve(result);
+      } catch (err) {
+        ctx.logger.error(err);
+        resolve(ctx.helper.errMessage(err));
+      }
+    });
+  }
 }
 module.exports = cityService;
