@@ -39,6 +39,11 @@ class getJyFiltersService extends Service {
             return item.code === 'CONDITION-JY-GS-DQ'
           })
           gs_dq.children = res[1].data.data
+          gs_dq.children.unshift({
+            name: '全国',
+            code: res[1].data.data[0].pcode,
+            children: [],
+          })
           result.code = 200
           result.data = res[0].data.data
         } else {
