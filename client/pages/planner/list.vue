@@ -50,44 +50,8 @@
           </sp-dropdown-menu>
         </div>
       </sp-cell>
-      <!-- 搜索弹框 -->
-      <div class="popup">
-        <sp-popup
-          ref="popupShut"
-          v-model="popupShow"
-          position="right"
-          :style="{ height: '100%', width: '100%' }"
-        >
-          <sp-top-nav-bar :title="'在线直选规划师'" left-arrow ellipsis>
-            <template #left>
-              <sp-icon
-                class="back-icon"
-                name="specialreturn2"
-                size="0.4rem"
-                color="#1A1A1A"
-                class-prefix="sp-iconfont"
-                @click="onClickPopupLeft"
-              />
-            </template>
-          </sp-top-nav-bar>
-          <div class="search">
-            <sp-nav-search
-              ref="searchVal"
-              v-model="search.keywords"
-              v-myFocus
-              border
-              special-label
-              placeholder="请输入业务或规划师姓名"
-              @focus="searchVal()"
-              @search="enterSearch"
-            >
-              <template #left-icon>
-                <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
-              </template>
-            </sp-nav-search>
-          </div>
-        </sp-popup>
-      </div>
+      <SearchPopup ref="SearchPopup" @enterData="enterData" />
+
       <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
         <sp-list
           v-model="loading"
@@ -168,11 +132,8 @@
               <sp-image
                 class="no-data__icon"
                 fit="cover"
-                src="https://img.yzcdn.cn/vant/cat.jpeg"
+                :src="require('../../assets/images/search-null.png')"
               />
-              <!-- ../../assets/images/search-null.png -->
-              <!-- :src="require('../../assets/images/search-null.png')" -->
-
               <div class="no-data__descript">抱歉，未搜索到对应的规划师</div>
               <div class="no-data__tip">换个条件试试</div>
             </div>
@@ -266,14 +227,12 @@ import {
   Cell,
   Image,
   Tag,
-  Popup,
-  TopNavBar,
   Icon,
 } from '@chipspc/vant-dgg'
 
 import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
 import Header from '@/components/common/head/header'
-
+import SearchPopup from '@/components/planner/SearchPopup'
 import { city } from '@/utils/city'
 
 export default {
@@ -290,24 +249,10 @@ export default {
     [NavSearch.name]: NavSearch,
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
-    [Popup.name]: Popup,
-    [TopNavBar.name]: TopNavBar,
     [Icon.name]: Icon,
     Header,
     CoupleSelect,
-  },
-  directives: {
-    myFocus: {
-      // 指令的定义
-      inserted(el) {
-        let inputDom = el
-        if (el.tagName !== 'INPUT') {
-          inputDom = el.querySelector('input')
-        }
-        inputDom && inputDom.focus()
-        console.log(el.querySelector('input').tagName === 'INPUT')
-      },
-    },
+    SearchPopup,
   },
   data() {
     return {
@@ -316,7 +261,6 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
-      popupShow: false,
       regions: '区域',
       search: { keywords: '', scoreSort: 0 },
       option: [
@@ -337,7 +281,6 @@ export default {
     onClickLeft() {
       console.log('返回')
     },
-
     coupleSelect(data) {
       console.log(data)
       if (data[2].regions.length) {
@@ -367,28 +310,17 @@ export default {
     onRefresh() {
       // 清空列表数据
       this.finished = false
-
       // 重新加载数据
       // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
       this.onLoad()
     },
     focSearch() {
-      this.popupShow = true
+      this.$refs.SearchPopup.focSearch()
     },
-    onClickPopupLeft() {
-      this.popupShow = false
-    },
-    enterSearch() {
-      // 确认发送请求
-      if (this.search.keywords) {
-        console.log(this.search.keywords)
-        this.popupShow = false
-        Toast(`√  共找到43471个规划师`)
-      }
-    },
-    searchVal() {
-      console.log(123)
+    enterData(data) {
+      //  获取子组件异步结果
+      console.log(data)
     },
   },
 }
@@ -457,22 +389,6 @@ export default {
         font-weight: bold;
         color: #4974f5;
         line-height: 28px;
-      }
-    }
-    /deep/.popup {
-      .sp-top-nav-bar {
-        font-weight: 400;
-        border-bottom: 1px solid #f4f4f4;
-        .sp-top-nav-bar__title {
-          font-size: 36px;
-          font-family: PingFang SC;
-          font-weight: bold;
-          color: #1a1a1a;
-        }
-      }
-
-      .search {
-        padding: 0.16rem 0.4rem;
       }
     }
   }
