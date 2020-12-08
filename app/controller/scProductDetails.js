@@ -1,13 +1,13 @@
 'use strict';
 const Controller = require('egg').Controller;
-const { Get, Prefix } = require('egg-shell-decorators');
+const { Post, Prefix } = require('egg-shell-decorators');
 const { productApi } = require('./../../config/serveApi/index');
 const rules = require('./../validate/scProductDetails');
 
 @Prefix('/nk/sc_product')
 class ScProductDetailsController extends Controller {
   // 获取服务产品详情
-  @Get('/v1/detail.do')
+  @Post('/v1/detail.do')
   async getScProductDetail() {
     const { ctx, service, app } = this;
     // 参数校验
@@ -23,15 +23,7 @@ class ScProductDetailsController extends Controller {
       productApi.scProductDetail
     );
     // 发送httpClient请求
-    const scProParams = Object.assign({}, ctx.query);
-    delete scProParams.commodityId;
-    const { status, data } = await service.curl.curlAll(url, {
-      method: 'POST',
-      data: {
-        start: 1,
-        limit: 10,
-      },
-    });
+    const { status, data } = await service.curl.curlPost(url, ctx.request.body);
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data });
     } else {

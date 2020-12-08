@@ -13,7 +13,7 @@ module.exports = {
       commodityId: { type: 'string', required: false }, // 商品ID（用于分享时的产品查看）
     };
     // 参数校验
-    const valiErrors = app.validator.validate(rules, ctx.query);
+    const valiErrors = app.validator.validate(rules, ctx.request.body);
     return valiErrors;
   },
 };

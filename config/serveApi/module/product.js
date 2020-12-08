@@ -7,6 +7,7 @@
  * */
 'use strict';
 module.exports.productApi = {
-  //  获取服务产品详情
-  scProductDetail: '/nk/product/service/v1/search.do',
+  getServeList: '/nk/product/service/v1/search.do', // 服务产品列表
+  getJyServeList: '/nk/product/trading/v1/serarch.do', // 交易产品列表
+  scProductDetail: '/nk/product/service/v1/detail.do', //  获取服务产品详情
 };
