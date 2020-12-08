@@ -10,8 +10,8 @@
         <template #left>
           <sp-icon
             class="back-icon"
-            name="specialreturn2"
-            size="0.4rem"
+            name="specialreturn"
+            size="0.39rem"
             color="#1A1A1A"
             class-prefix="sp-iconfont"
             @click="onClickPopupLeft"
@@ -94,6 +94,7 @@ export default {
       }
       const data = '异步请求结果数据'
       this.$emit('enterData', data)
+      this.search.keywords = ''
     },
   },
 }
@@ -102,12 +103,15 @@ export default {
 .popup {
   /deep/.sp-top-nav-bar {
     font-weight: 400;
-    border-bottom: 1px solid #f4f4f4;
     .sp-top-nav-bar__title {
       font-size: 36px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #1a1a1a;
+    }
+    .sp-top-nav-bar__left {
+      font-weight: 300;
+      margin-left: 8px;
     }
   }
   /deep/.sp-field__control {
