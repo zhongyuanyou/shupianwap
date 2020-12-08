@@ -97,6 +97,9 @@ class FoundController extends Controller {
       const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
       const listApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
       await getInformation(service, bannerApi, listApi, information_class[0].code, information_class[0].code, ctx, true);
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
 
@@ -122,6 +125,9 @@ class FoundController extends Controller {
         information_list: data.data || [],
         totalCount: data.data.totalCount,
       } });
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
 
@@ -141,6 +147,9 @@ class FoundController extends Controller {
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data});
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
 

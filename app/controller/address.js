@@ -86,6 +86,9 @@ class AddressController extends Controller {
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
 
@@ -105,6 +108,9 @@ class AddressController extends Controller {
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || [] });
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
 
@@ -124,6 +130,9 @@ class AddressController extends Controller {
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
 
@@ -144,6 +153,9 @@ class AddressController extends Controller {
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
 }
