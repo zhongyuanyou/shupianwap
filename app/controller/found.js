@@ -7,27 +7,21 @@ const Controller = require('egg').Controller;
 const { Get, Prefix } = require('egg-shell-decorators');
 const { contentApi } = require('./../../config/serveApi/index');
 const { infoList, infoDetail, screenData } = require('../validate/found');
-let information_class = null; // 资讯分类
-let information_banner = null; // 资讯banner
-let information_list = null; // 资讯列表
+let information_class = []; // 资讯分类
+let information_banner = []; // 资讯banner
+let information_list = []; // 资讯列表
 const getInformation = async function(service, bannerApi, listApi, locationCode, categoryCode, ctx, isInit) {
   // 请求分类下的广告数据
   const getBanner = service.curl.curlGet(bannerApi, {
-    method: 'GET',
-    data: {
-      locationCode,
-    },
+    locationCode,
   });
   // 请求分类下的列表数据
   const getList = service.curl.curlGet(listApi, {
-    method: 'GET',
-    data: {
-      categoryCode,
-      type: '资讯',
-      limit: 10,
-      page: 1,
-      platformCode: '薯片',
-    },
+    categoryCode,
+    type: '资讯',
+    limit: 10,
+    page: 1,
+    platformCode: '薯片',
   });
   const reqAll = [ getBanner, getList ];
   try {
@@ -86,20 +80,14 @@ class FoundController extends Controller {
     // 获取分类
     const { status, data } = await service.curl.curlGet(
       url, {
-        method: 'GET',
-        // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-        dataType: 'json',
-        data: {
-          code: ctx.query.code,
-        },
+        code: 'con100000',
       });
     if (status === 200 && data.code === 200) {
       // 若获取分类请求正常返回数据
-      information_class = data.data || [];
-      console.log('list', data);
-      // const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
-      // const listApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
-      // await getInformation(service, bannerApi, listApi, information_class[0].code, information_class[0].code, ctx, true);
+      information_class = data.data.childrenList || [];
+      const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
+      const listApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findPage);
+      await getInformation(service, bannerApi, listApi, information_class[0].code, information_class[0].code, ctx, true);
     } else {
       ctx.logger.error(status, data);
       ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
@@ -113,17 +101,12 @@ class FoundController extends Controller {
     getValiErrors(app, ctx, infoList, ctx.query);
     // 参数校验通过,正常响应
     const { limit = 10, page = 1, categoryCode, keyword } = ctx.query;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findPage);
     const { status, data } = await service.curl.curlGet(url, {
-      method: 'GET',
-      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-      dataType: 'json',
-      data: {
-        limit,
-        page,
-        categoryCode,
-        keyword,
-      },
+      limit,
+      page,
+      categoryCode,
+      keyword,
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: {
@@ -145,12 +128,7 @@ class FoundController extends Controller {
     const { id } = ctx.query;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoDetail);
     const { status, data } = await service.curl.curlGet(url, {
-      method: 'GET',
-      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-      dataType: 'json',
-      data: {
-        id,
-      },
+      id,
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data });
