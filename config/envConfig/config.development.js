@@ -100,7 +100,7 @@ module.exports = appInfo => {
   // eureka相关配置
   config.eureka = {
     instance: {
-      app: 'chips-wap',
+      app: 'crisps-app-wap-bff-api',
       instanceId: `${getIPAdress()}:7001`, // 本地IP和端口
       hostName: getIPAdress(),
       ipAddr: getIPAdress(),
@@ -111,10 +111,9 @@ module.exports = appInfo => {
       homePageUrl: null,
       statusPageUrl: `http://${getIPAdress()}:7001/`, // 状态页面(判断心跳),
       healthCheckUrl: null,
-      vipAddress: 'chips-wap',
+      vipAddress: 'crisps-app-wap-bff-api',
       dataCenterInfo: {
-        '@class':
-                    'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+        '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
         name: 'MyOwn',
       },
       metadata: {

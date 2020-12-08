@@ -4,6 +4,7 @@ const { Post, Prefix } = require('egg-shell-decorators');
 const { contentApi } = require('./../../config/serveApi/index');
 const rules = require('./../validate/dict');
 
+
 @Prefix('/nk/goodslist')
 class ContentController extends Controller {
   @Post('/v1/get_serve_list.do')
@@ -40,22 +41,9 @@ class ContentController extends Controller {
       resArrs.push(goodsList)
       if (ctx.request.body.needTypes === 1) {
         // 需要返回分类筛选参数
-        // 获取到请求地址
-        const url = ctx.helper.assembleUrl(
-          app.config.apiClient.APPID[0],
-          contentApi.dataDict
-        );
-        // 查询服务产品排序字典
-        const dict = service.curl.curlAll(url, {
-          method: 'GET',
-          data: {
-            code: 'CONDITION-QF-SORT',
-          },
-        });
-        resArrs.push(dict)
-        // 查询分类接口
-        // const classify = service
-        // resArrs.push(classify)
+        // 查询服务列表筛选项包括分类和排序列表
+        const serveFilters = service.getServeFilters.getServeFilters()
+        resArrs.push(serveFilters)
       }
       const data = await Promise.all(resArrs)
       if(data[0].status === 200 && data[0].data.code === 200) {
@@ -65,15 +53,12 @@ class ContentController extends Controller {
       }
       if (ctx.request.body.needTypes === 1) {
         // 需要返回筛选数据
-        if(data[1] && data[1].status === 200 && data[1].data.code === 200) {
-          resBody.sortFilter = data[1].data.data
-        } else {
-          resBody.sortFilter = {}
-        }
-        if(data[2] && data[2].status === 200 && data[2].data.code === 200) {
-          resBody.typeData = data[1].data.data
+        if(data[1] && data[1].code === 200) {
+          resBody.typeData = data[1].data[0]
+          resBody.sortFilter = data[1].data[1]
         } else {
           resBody.typeData = {}
+          resBody.sortFilter = {}
         }
       }
       if (JSON.stringify(resBody.goods) === '{}' && JSON.stringify(resBody.typeData) === '{}') {
@@ -117,7 +102,7 @@ class ContentController extends Controller {
       if (ctx.request.body.needTypes === 1) {
         // 需要返回分类筛选参数
         // 查询字典
-        const dict = service.getJyFilters.getGetJyFilters();
+        const dict = service.getJyFilters.getJyFilters();
         resArrs.push(dict)
       }
       const data = await Promise.all(resArrs)
@@ -128,13 +113,14 @@ class ContentController extends Controller {
         resBody.goods = {}
       }
       if (ctx.request.body.needTypes === 1) {
-        if(data[1].status === 200 && data[1].data.code === 200) {
-          resBody.typeData = data[1].data.data
+        // 需要返回筛选项
+        if(data[1].code === 200) {
+          resBody.filters = data[1].data
         } else {
-          resBody.typeData = {}
+          resBody.filters = {}
         }
       }
-      if (JSON.stringify(resBody.goods) === '{}' && JSON.stringify(resBody.typeData) === '{}') {
+      if (JSON.stringify(resBody.goods) === '{}' && JSON.stringify(resBody.filters) === '{}') {
         ctx.logger.error(data[0].status, data[1].status, resBody);
         ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
       } else {

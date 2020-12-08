@@ -49,7 +49,7 @@ class AddressController extends Controller {
       id = null,
     } = ctx.request.body;
     const ads = id ? userApi.updateShippingAddress : userApi.newShippingAddress;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], ads);
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2], ads);
     const params = id ? {
       userId,
       contactName,
@@ -82,10 +82,15 @@ class AddressController extends Controller {
     };
     const { status, data } = await service.curl.curlPost(url, {
       method: 'POST',
+      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
+      dataType: 'json',
       data: params,
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
 
@@ -96,15 +101,20 @@ class AddressController extends Controller {
     getValiErrors(app, ctx, listShippingAddress, ctx.query);
     // 参数校验通过,正常响应
     const { userId, limit, page } = ctx.query;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], userApi.listShippingAddress);
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.listShippingAddress);
     const { status, data } = await service.curl.curlGet(url, {
       method: 'GET',
+      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
+      dataType: 'json',
       data: {
         userId,
       },
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || [] });
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
 
@@ -115,15 +125,20 @@ class AddressController extends Controller {
     getValiErrors(app, ctx, detailShippingAddress, ctx.query);
     // 参数校验通过,正常响应
     const { id } = ctx.query;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], userApi.detailShippingAddress);
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.detailShippingAddress);
     const { status, data } = await service.curl.curlGet(url, {
       method: 'GET',
+      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
+      dataType: 'json',
       data: {
         id,
       },
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
 
@@ -135,15 +150,20 @@ class AddressController extends Controller {
     getValiErrors(app, ctx, statusShippingAddress, ctx.request.body);
     // 参数校验通过,正常响应
     const { id, userId = null } = ctx.request.body;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0],
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2],
       userId ? userApi.delShippingAddress : userApi.defaultShippingAddress);
     const params = userId ? { id } : { id, userId };
     const { status, data } = await service.curl.curlGet(url, {
       method: 'GET',
+      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
+      dataType: 'json',
       data: params,
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
 }

@@ -23,7 +23,7 @@ const getBannerList = async (ctx, service, locationCodeList) => {
 // 获取资讯列表
 const getInfoList = async (ctx, service, { limit, page }) => {
     try {
-        return await service.common.information.list(limit, page);
+        return await service.common.content.list({ limit, page });
     } catch (error) {
         ctx.logger.error(error);
     }
@@ -90,25 +90,19 @@ class homeController extends Controller {
         );
         // 获取固定导航数据
         const findFixedNav = service.curl.curlGet(navUrl, {
-            method: "GET",
-            data: {
-                categoryCode: ctx.request.body.fixedNavCategoryCode,
-                platformCode: ctx.request.body.fixedNavPlatformCode,
-                limit: ctx.request.body.fixedLimit,
-                page: ctx.request.body.fixedPage,
-                includeField,
-            },
+            categoryCode: ctx.request.body.fixedNavCategoryCode,
+            platformCode: ctx.request.body.fixedNavPlatformCode,
+            limit: ctx.request.body.fixedLimit,
+            page: ctx.request.body.fixedPage,
+            includeField,
         });
         // 获取滚动导航数据
         const findRollNav = service.curl.curlGet(navUrl, {
-            method: "GET",
-            data: {
-                categoryCode: ctx.request.body.rollNavCategoryCode,
-                platformCode: ctx.request.body.rollNavPlatformCode,
-                limit: ctx.request.body.rollLimit,
-                page: ctx.request.body.rollPage,
-                includeField,
-            },
+            categoryCode: ctx.request.body.rollNavCategoryCode,
+            platformCode: ctx.request.body.rollNavPlatformCode,
+            limit: ctx.request.body.rollLimit,
+            page: ctx.request.body.rollPage,
+            includeField,
         });
         const reqArr = [findBanner, findFixedNav, findRollNav];
         try {

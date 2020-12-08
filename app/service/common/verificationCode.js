@@ -6,7 +6,7 @@ class CodeService extends Service {
     // 获取验证码
     return new Promise(async resolve => {
       const { ctx, app } = this;
-      const sysCode = app.config.apiClient.APPID[0];
+      const sysCode = app.config.apiClient.APPID[2];
       const address = userApi.getSmsCode;
       const url = ctx.helper.assembleUrl(sysCode, address);
       if (!url) {
@@ -16,6 +16,7 @@ class CodeService extends Service {
         const res = await ctx.curl(url, {
           method: 'POST',
           dataType: 'json',
+          headers: ctx.headers,
           data: { phone, userId, userType, msgTemplateCode },
           timeout: 10 * 1000,
         });
@@ -30,7 +31,7 @@ class CodeService extends Service {
     // 校验验证码
     return new Promise(async resolve => {
       const { ctx, app } = this;
-      const sysCode = app.config.apiClient.APPID[0];
+      const sysCode = app.config.apiClient.APPID[2];
       const address = userApi.verifySmsCode;
       const url = ctx.helper.assembleUrl(sysCode, address);
       if (!url) {
@@ -39,6 +40,7 @@ class CodeService extends Service {
       try {
         const res = await ctx.curl(url, {
           method: 'POST',
+          headers: ctx.headers,
           dataType: 'json',
           data: { phone, userId, userType, smsCode },
           timeout: 10 * 1000,
@@ -54,7 +56,7 @@ class CodeService extends Service {
     // 获取图形验证码
     return new Promise(async resolve => {
       const { ctx, app } = this;
-      const sysCode = app.config.apiClient.APPID[0];
+      const sysCode = app.config.apiClient.APPID[2];
       const address = userApi.imgCode;
       const url = ctx.helper.assembleUrl(sysCode, address);
       if (!url) {
@@ -64,6 +66,7 @@ class CodeService extends Service {
         const res = await ctx.curl(url, {
           method: 'GET',
           dataType: 'json',
+          headers: ctx.headers,
           data: {},
           timeout: 10 * 1000,
         });
@@ -78,7 +81,7 @@ class CodeService extends Service {
     // 校验图形验证码
     return new Promise(async resolve => {
       const { ctx, app } = this;
-      const sysCode = app.config.apiClient.APPID[0];
+      const sysCode = app.config.apiClient.APPID[2];
       const address = userApi.verifyImgCode;
       const url = ctx.helper.assembleUrl(sysCode, address);
       if (!url) {
@@ -88,6 +91,7 @@ class CodeService extends Service {
         const res = await ctx.curl(url, {
           method: 'GET',
           dataType: 'json',
+          headers: ctx.headers,
           data: { verifyCode },
           timeout: 10 * 1000,
         });
