@@ -4,6 +4,7 @@ const { Post, Prefix } = require('egg-shell-decorators');
 const { contentApi } = require('./../../config/serveApi/index');
 const rules = require('./../validate/dict');
 
+
 @Prefix('/nk/goodslist')
 class ContentController extends Controller {
   @Post('/v1/get_serve_list.do')
@@ -117,7 +118,7 @@ class ContentController extends Controller {
       if (ctx.request.body.needTypes === 1) {
         // 需要返回分类筛选参数
         // 查询字典
-        const dict = service.getJyFilters.getGetJyFilters();
+        const dict = service.getJyFilters.getJyFilters();
         resArrs.push(dict)
       }
       const data = await Promise.all(resArrs)
@@ -128,13 +129,14 @@ class ContentController extends Controller {
         resBody.goods = {}
       }
       if (ctx.request.body.needTypes === 1) {
-        if(data[1].status === 200 && data[1].data.code === 200) {
-          resBody.typeData = data[1].data.data
+        // 需要返回筛选项
+        if(data[1].code === 200) {
+          resBody.filters = data[1].data
         } else {
-          resBody.typeData = {}
+          resBody.filters = {}
         }
       }
-      if (JSON.stringify(resBody.goods) === '{}' && JSON.stringify(resBody.typeData) === '{}') {
+      if (JSON.stringify(resBody.goods) === '{}' && JSON.stringify(resBody.filters) === '{}') {
         ctx.logger.error(data[0].status, data[1].status, resBody);
         ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
       } else {

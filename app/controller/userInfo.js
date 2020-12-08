@@ -43,9 +43,11 @@ class MyController extends Controller {
       area,
       avatar,
     } = ctx.request.body;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], userApi.updateInfo);
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.updateInfo);
     const { status, data } = await service.curl.curlPost(url, {
       method: 'POST',
+      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
+      dataType: 'json',
       data: {
         id,
         type,
@@ -61,8 +63,10 @@ class MyController extends Controller {
       },
     });
     if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: {
-      } });
+      ctx.helper.success({ ctx, code: 200, res: data.data || {} });
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
 
@@ -73,17 +77,22 @@ class MyController extends Controller {
     // 参数校验
     getValiErrors(app, ctx, dataInfo, ctx.query);
     // 参数校验通过,正常响应
-    const { id } = ctx.request.body;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], userApi.dataInfo);
+    const { id } = ctx.query;
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.dataInfo);
     const { status, data } = await service.curl.curlGet(url, {
       method: 'GET',
+      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
+      dataType: 'json',
       data: {
         id,
       },
     }
     );
     if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data });
+      ctx.helper.success({ ctx, code: 200, res: data.data || {} });
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常111！' });
     }
   }
 }
