@@ -39,6 +39,7 @@ class CurlService extends Service {
    * @return { Object } 返回请求结果数据
    */
   curlPost(url = '', data = {}) {
+    console.log('remote Url :', url);
     return new Promise(async resolve => {
       const { ctx } = this;
       if (!url) {
@@ -49,7 +50,10 @@ class CurlService extends Service {
           // 必须指定 method
           method: 'POST',
           // 默认将网管处理后的headers给后端服务
-          headers: ctx.headers,
+          headers: {
+            'content-type': 'application/json',
+            'content-length': 200,
+          },
           // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
           dataType: 'json',
           data,
@@ -72,6 +76,7 @@ class CurlService extends Service {
    * @return { Object } 返回请求结果数据
    */
   async curlAll(url = '', options = {}) {
+    console.log('remote Url :', url);
     return new Promise(async resolve => {
       const { ctx } = this;
       if (!url) {
