@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-08 19:35:16
+ * @LastEditTime: 2020-12-08 20:23:16
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
@@ -97,7 +97,7 @@
             type="info"
             class="submit-wrap__btn"
             native-type="submit"
-            :class="{ 'submit-wrap--disabled': !isValidSubmit }"
+            :class="{ 'submit-wrap__btn--disabled': !isValidSubmit }"
           >
             立即登录
           </sp-button>
@@ -258,9 +258,13 @@ export default {
 
       const dataJson = {
         phone: isPhoneVerify ? this.loginForm.tel : this.loginForm.account,
-        password,
-        smsCode: authCode,
       }
+      if (isPhoneVerify) {
+        Object.assign(dataJson, { password })
+      } else {
+        Object.assign(dataJson, { smsCode: authCode })
+      }
+
       const params = {
         accountChannel: isPhoneVerify ? 'AUTH_PHONE_VERIFY' : 'AUTH_PHONE_PWD',
         userType: 'ORDINARY_USER',
@@ -302,6 +306,7 @@ export default {
             !readed && (errorObject = { key, message: '请勾选同意协议' })
             break
         }
+        // 发现一处验证不通过，就调出for 循环
         if (errorObject) {
           break
         }
@@ -399,12 +404,7 @@ export default {
       }
       .submit-wrap {
         margin-top: 68px;
-        &--disabled {
-          opacity: 0.4;
-        }
-        /deep/.sp-button--disabled {
-          opacity: 0.4;
-        }
+
         &__btn {
           width: 630px;
           height: 96px;
@@ -416,6 +416,9 @@ export default {
           /deep/.sp-button__text {
             font-size: 32px;
           }
+        }
+        &__btn--disabled {
+          opacity: 0.4;
         }
       }
       .protocol-field {

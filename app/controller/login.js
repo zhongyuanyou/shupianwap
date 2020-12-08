@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-03 15:34:31
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-08 18:55:58
+ * @LastEditTime: 2020-12-08 20:33:04
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/login.js
  */
@@ -97,7 +97,7 @@ class LoginController extends Controller {
     // 获取资讯详情
     const { ctx, service, app } = this;
     const rules = {
-      account: { type: "string", required: true },
+      phone: { type: "string", required: true },
       smsCode: { type: "string", required: true },
       password: { type: "string", required: true },
       client: { type: "string", required: true },
@@ -106,15 +106,30 @@ class LoginController extends Controller {
     };
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
 
+    const {
+      phone,
+      password,
+      smsCode,
+      userType,
+      client,
+      platformType,
+    } = ctx.request.body;
     // 调用java接口的登录接口，进行注册 登录，一把梭
     const registerUrl = ctx.helper.assembleUrl(
       app.config.apiClient.APPID[2],
       userApi.login
     );
-    const { status, data = {} } = await service.curl.curlPost(
-      registerUrl,
-      ctx.request.body
-    );
+    const { status, data = {} } = await service.curl.curlPost(registerUrl, {
+      dataJson: {
+        phone,
+        password,
+        smsCode,
+      },
+      userType,
+      client,
+      platformType,
+      accountChannel: "AUTH_PHONE_VERIFY",
+    });
 
     if (status === 200 && data.code === 200) {
       ctx.helper.success({
