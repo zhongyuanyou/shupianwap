@@ -10,7 +10,7 @@ class getJyFiltersService extends Service {
     return new Promise(async resolve => {
       const { ctx, app, service } = this;
       const sysCode = app.config.apiClient.APPID[0];
-      const address = contentApi.dataDicts;
+      const address = contentApi.dataDict;
       const url = ctx.helper.assembleUrl(sysCode, address);
       if (!url) {
         resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
