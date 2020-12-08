@@ -1,18 +1,18 @@
 "use strict";
 const Service = require("egg").Service;
 const { contentApi } = require("../../../config/serveApi/index");
-class siteService extends Service {
+class cityService extends Service {
     /**
-     * 获取城市列表服务API（HTTP）
+     * 获取站点列表服务API（HTTP）
      * @locationCodeList { String } cityName 市名称，模糊匹配
      * @return { Object } 返回请求结果数据
      */
-    async getCityList(cityName = "") {
+    async getSiteList(cityName = "") {
         return new Promise(async (resolve) => {
             const { ctx, app } = this;
             const url = ctx.helper.assembleUrl(
                 app.config.apiClient.APPID[0],
-                contentApi.findCityList
+                contentApi.findSiteList
             );
             try {
                 ctx.headers["X-User-Agent"] =
@@ -41,4 +41,4 @@ class siteService extends Service {
         });
     }
 }
-module.exports = siteService;
+module.exports = cityService;
