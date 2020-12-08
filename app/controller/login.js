@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-03 15:34:31
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-07 10:40:48
+ * @LastEditTime: 2020-12-08 18:55:58
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/login.js
  */
@@ -37,8 +37,13 @@ class LoginController extends Controller {
     };
 
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
+    Object.assign(ctx.header, { sysCode: "crisps-app" });
+    Object.assign(ctx.headers, { sysCode: "crisps-app" });
+    const url = ctx.helper.assembleUrl(
+      app.config.apiClient.APPID[2],
+      userApi.login
+    );
 
-    const url = this.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.login);
     const { status, data } = await service.curl.curlPost(url, ctx.request.body);
 
     if (status === 200 && data.code === 200) {
@@ -47,7 +52,14 @@ class LoginController extends Controller {
         code: 200,
         res: data.data,
       });
+      return;
     }
+    ctx.helper.fail({
+      ctx,
+      code: data.code || status,
+      res: data.data || {},
+      detailMessage: data.message || "请求失败",
+    });
   }
 
   @Get("/logout.do")
@@ -59,15 +71,25 @@ class LoginController extends Controller {
     };
     if (getValiErrors(app, ctx, rules, ctx.query)) return;
 
-    const url = this.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.logout);
+    const url = ctx.helper.assembleUrl(
+      app.config.apiClient.APPID[2],
+      userApi.logout
+    );
     const { status, data } = await service.curl.curlGet(url, ctx.query);
     if (status === 200 && data.code === 200) {
       ctx.helper.success({
         ctx,
         code: 200,
-        res: {},
+        res: data.data,
       });
+      return;
     }
+    ctx.helper.fail({
+      ctx,
+      code: status,
+      res: data,
+      detailMessage: data.message || "请求失败",
+    });
   }
 
   @Post("/register.do")
@@ -78,51 +100,23 @@ class LoginController extends Controller {
       account: { type: "string", required: true },
       smsCode: { type: "string", required: true },
       password: { type: "string", required: true },
-      accountType: { type: "string", required: true },
+      client: { type: "string", required: true },
+      platformType: { type: "string", required: true },
       userType: { type: "string", required: true },
     };
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
-    // 参数校验通过,正常响应
-    const {
-      account,
-      smsCode,
-      password,
-      accountType,
-      userType,
-    } = ctx.request.body;
 
-    // 先验证手机的验证码
-    const verifyUrl = this.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.verifySmsCode);
-    const verifySmsResult = await service.curl.curlPost(verifyUrl, {
-      smsCode,
-      phone: account,
-    });
+    // 调用java接口的登录接口，进行注册 登录，一把梭
+    const registerUrl = ctx.helper.assembleUrl(
+      app.config.apiClient.APPID[2],
+      userApi.login
+    );
+    const { status, data = {} } = await service.curl.curlPost(
+      registerUrl,
+      ctx.request.body
+    );
 
-    // todo 异常处理是否得当
-    if (
-      !verifySmsResult ||
-      verifySmsResult.status !== 200 ||
-      !verifySmsResult.data ||
-      verifySmsResult.data.code !== 200
-    ) {
-      ctx.helper.fail({
-        ctx,
-        code: 422,
-        res: verifySmsResult.data.message || "验证码有误",
-      });
-      return;
-    }
-
-    // 用户注册
-    const registerUrl = this.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.register);
-    const { status, data = {} } = await service.curl.curlPost(registerUrl, {
-      account,
-      password,
-      accountType,
-      userType,
-    });
-
-    if (status === 200 || data.code === 200) {
+    if (status === 200 && data.code === 200) {
       ctx.helper.success({
         ctx,
         code: 200,
@@ -130,6 +124,12 @@ class LoginController extends Controller {
       });
       return;
     }
+    ctx.helper.fail({
+      ctx,
+      code: data.code || status,
+      res: data || {},
+      detailMessage: data.message || "请求失败",
+    });
   }
 
   @Post("/reset.do")
@@ -144,7 +144,10 @@ class LoginController extends Controller {
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
 
     // 密码重置
-    const url = this.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.reset);
+    const url = ctx.helper.assembleUrl(
+      app.config.apiClient.APPID[2],
+      userApi.reset
+    );
     const { status, data = {} } = await service.curl.curlPost(
       url,
       ctx.request.body
@@ -160,8 +163,47 @@ class LoginController extends Controller {
     }
     ctx.helper.fail({
       ctx,
-      code: status,
-      res: data,
+      code: data.code || status,
+      res: data || {},
+      detailMessage: data.message || "请求失败",
+    });
+  }
+
+  @Get("/smsCode")
+  async smsCode() {
+    const { ctx, service, app } = this;
+    const rules = {
+      phone: { type: "string", required: true },
+      type: ["login", "register", "reset"],
+    };
+    if (getValiErrors(app, ctx, rules, ctx.query)) return;
+
+    const { phone, type } = ctx.query;
+    const msgTemplateCode = {
+      login: "SMS_TMP_LOGIN",
+      register: "SMS_TMP_LOGIN",
+      reset: "USER_FORGET_PASS",
+    }[type];
+
+    const { status, data } = await service.common.verificationCode.getSmsCode(
+      phone,
+      null,
+      null,
+      msgTemplateCode
+    );
+
+    if (status === 200 && data.code === 200) {
+      ctx.helper.success({
+        ctx,
+        code: 200,
+        res: data.data || {},
+      });
+      return;
+    }
+    ctx.helper.fail({
+      ctx,
+      code: data.code || status,
+      res: data || {},
       detailMessage: data.message || "请求失败",
     });
   }

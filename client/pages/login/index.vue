@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-03 11:24:50
+ * @LastEditTime: 2020-12-08 19:35:16
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
@@ -36,6 +36,7 @@
             key="tel"
             v-model="loginForm.tel"
             @input="handleTelInput"
+            @clicked="handleClickCodeBtn"
           />
           <sp-field
             key="authCode"
@@ -96,7 +97,7 @@
             type="info"
             class="submit-wrap__btn"
             native-type="submit"
-            :disabled="!isValidSubmit"
+            :class="{ 'submit-wrap--disabled': !isValidSubmit }"
           >
             立即登录
           </sp-button>
@@ -147,6 +148,7 @@ import {
 import ProtocolField from '@/components/login/ProtocolField'
 import PhoneField from '@/components/login/PhoneField'
 
+import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
 
 export default {
@@ -178,6 +180,13 @@ export default {
   methods: {
     onSubmit(values) {
       console.log('submit', values)
+      const error = this.checkFormData()
+      if (error) {
+        const { message } = error
+        this.loginToast(message)
+        return
+      }
+      this.login()
     },
     handleSwitchLookPassword() {
       this.passwordFieldType =
@@ -186,14 +195,23 @@ export default {
     onClickLeft() {
       console.log('关闭')
     },
+    handleClickCodeBtn(isValidTel) {
+      if (!isValidTel) {
+        this.loginToast('手机号码有误')
+        return
+      }
+      this.loginToast('验证码已发送')
+    },
     handleProtocolChange(value) {
       console.log('handleProtocolChange:', value)
+      this.loginForm.readed = value
+      this.checkFormData()
     },
     handleTelInput(valueObj = {}) {
       console.log('handleTelInput:', valueObj)
       const { value, valid } = valueObj
       this.loginForm.tel = value
-      !valid && this.loginToast('手机号码有误')
+      this.checkFormData()
     },
     handleAuthCodeInput(value) {
       this.loginForm.authCode = value
@@ -233,36 +251,72 @@ export default {
       }
     },
 
-    // 数据验证
-    checkFormData(excludeItem) {
+    async login() {
+      const isPhoneVerify = this.loginType === 'telephone'
+
       const { tel, authCode, account, password } = this.loginForm
+
+      const dataJson = {
+        phone: isPhoneVerify ? this.loginForm.tel : this.loginForm.account,
+        password,
+        smsCode: authCode,
+      }
+      const params = {
+        accountChannel: isPhoneVerify ? 'AUTH_PHONE_VERIFY' : 'AUTH_PHONE_PWD',
+        userType: 'ORDINARY_USER',
+        client: 'COMDIC_TERMINAL_WAP',
+        platformType: 'COMDIC_PLATFORM_CRISPS',
+        dataJson,
+      }
+      const data = await auth.login({ axios: this.$axios }, params)
+    },
+
+    // 数据验证
+    checkFormData() {
+      const { tel, authCode, account, password, readed } = this.loginForm
       const keysList =
         this.loginType === 'telephone'
-          ? ['tel', 'authCode']
-          : ['account', 'password']
-      const isValid = keysList.every((key) => {
-        if (key === excludeItem) return true
+          ? ['tel', 'authCode', 'readed']
+          : ['account', 'password', 'readed']
+
+      let errorObject = null
+      for (const key of keysList) {
         switch (key) {
           case 'tel':
-            return checkPhone(tel)
+            !checkPhone(tel) && (errorObject = { key, message: '手机号码有误' })
+            break
           case 'authCode':
-            return checkAuthCode(authCode)
+            !checkAuthCode(authCode) &&
+              (errorObject = { key, message: '验证码有误' })
+            break
           case 'account':
-            return checkPhone(account)
+            !checkPhone(account) &&
+              (errorObject = { key, message: '手机号码有误' })
+            break
           case 'password':
             // 至少6-15个字符，至少1个大写字母，1个小写字母和1个数字
-            return checkPassword(password)
+            // checkPassword(password) &&
+            //   (errorObject = { key, message: '密码格式有误' })
+            break
+          case 'readed':
+            !readed && (errorObject = { key, message: '请勾选同意协议' })
+            break
         }
-      })
+        if (errorObject) {
+          break
+        }
+      }
+      const isValid = !errorObject
       this.isValidSubmit = isValid
+      return errorObject
     },
 
     // 自定义提示框
     loginToast(
       message = '',
       className = 'toast',
-      icon = 'search_ic_remind',
-      duration = 0
+      icon = 'toast_ic_remind',
+      duration = 1000
     ) {
       Toast({
         duration,
@@ -308,14 +362,6 @@ export default {
     }
     .login-form {
       margin-top: 48px;
-      .code-btn {
-        border: none;
-        font-weight: 400;
-        color: #999999;
-        .sp-button__text {
-          font-size: 32px;
-        }
-      }
       .see-password-btn {
         border: none;
       }
@@ -353,6 +399,9 @@ export default {
       }
       .submit-wrap {
         margin-top: 68px;
+        &--disabled {
+          opacity: 0.4;
+        }
         /deep/.sp-button--disabled {
           opacity: 0.4;
         }
@@ -413,11 +462,18 @@ export default {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
+    align-items: center;
     min-width: 390px;
     max-width: 440px;
     min-height: 92px;
     max-height: 130px;
     box-sizing: border-box;
+    .sp-toast__icon {
+      font-size: 40px;
+    }
+    .sp-toast__text {
+      margin: 0 0 0 18px;
+    }
   }
 }
 </style>
