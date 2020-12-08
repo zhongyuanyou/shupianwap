@@ -87,8 +87,6 @@ class FoundController extends Controller {
     const { status, data } = await service.curl.curlGet(
       url, {
         method: 'GET',
-        // 默认将网管处理后的headers给后端服务
-        headers: ctx.headers,
         // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
         dataType: 'json',
         data: {
@@ -118,8 +116,6 @@ class FoundController extends Controller {
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
     const { status, data } = await service.curl.curlGet(url, {
       method: 'GET',
-      // 默认将网管处理后的headers给后端服务
-      headers: ctx.headers,
       // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
       dataType: 'json',
       data: {
@@ -150,8 +146,6 @@ class FoundController extends Controller {
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoDetail);
     const { status, data } = await service.curl.curlGet(url, {
       method: 'GET',
-      // 默认将网管处理后的headers给后端服务
-      headers: ctx.headers,
       // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
       dataType: 'json',
       data: {

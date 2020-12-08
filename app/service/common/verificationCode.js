@@ -16,6 +16,7 @@ class CodeService extends Service {
         const res = await ctx.curl(url, {
           method: 'POST',
           dataType: 'json',
+          headers: ctx.headers,
           data: { phone, userId, userType, msgTemplateCode },
           timeout: 10 * 1000,
         });
@@ -39,6 +40,7 @@ class CodeService extends Service {
       try {
         const res = await ctx.curl(url, {
           method: 'POST',
+          headers: ctx.headers,
           dataType: 'json',
           data: { phone, userId, userType, smsCode },
           timeout: 10 * 1000,
@@ -64,6 +66,7 @@ class CodeService extends Service {
         const res = await ctx.curl(url, {
           method: 'GET',
           dataType: 'json',
+          headers: ctx.headers,
           data: {},
           timeout: 10 * 1000,
         });
@@ -88,6 +91,7 @@ class CodeService extends Service {
         const res = await ctx.curl(url, {
           method: 'GET',
           dataType: 'json',
+          headers: ctx.headers,
           data: { verifyCode },
           timeout: 10 * 1000,
         });

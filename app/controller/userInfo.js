@@ -46,8 +46,6 @@ class MyController extends Controller {
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.updateInfo);
     const { status, data } = await service.curl.curlPost(url, {
       method: 'POST',
-      // 默认将网管处理后的headers给后端服务
-      headers: ctx.headers,
       // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
       dataType: 'json',
       data: {
@@ -83,8 +81,6 @@ class MyController extends Controller {
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.dataInfo);
     const { status, data } = await service.curl.curlGet(url, {
       method: 'GET',
-      // 默认将网管处理后的headers给后端服务
-      headers: ctx.headers,
       // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
       dataType: 'json',
       data: {

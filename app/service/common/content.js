@@ -2,7 +2,7 @@
 const Service = require('egg').Service;
 const { contentApi } = require('../../../config/serveApi/index');
 class InformationService extends Service {
-  async list(limit, page) {
+  async list(info = {}) {
     // 列表
     return new Promise(async resolve => {
       const { ctx, app } = this;
@@ -17,7 +17,7 @@ class InformationService extends Service {
           method: 'GET',
           dataType: 'json',
           headers: ctx.headers,
-          data: { limit, page },
+          data: info,
           timeout: 10 * 1000,
         });
         resolve(res);
