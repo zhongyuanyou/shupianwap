@@ -237,7 +237,7 @@ export default {
     },
     selectedPrice(val) {
       // 修改选中价格区间标题显示
-      this.dropdownPriceTitle = val.name
+      this.priceTitle = val.name
     },
     resetFilters() {
       // 价格区间重置
@@ -248,7 +248,7 @@ export default {
     confirmFilters() {
       // 价格区间确认
       this.$refs.isShowPrice.toggle()
-      this.dropdownPriceTitle = this.price
+      this.dropdownPriceTitle = this.priceTitle
     },
   },
 }
@@ -277,8 +277,10 @@ export default {
   }
   /deep/.title-style {
     // 下拉选择显示标题样式
-    color: #4974f5;
     font-size: 26px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #4974f5;
   }
   .select-price {
     padding: 56px 40px 84px 40px;

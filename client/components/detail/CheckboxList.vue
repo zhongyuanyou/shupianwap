@@ -17,7 +17,7 @@
       </sp-cell-group>
     </sp-checkbox-group>
     <div class="submit">
-      <sp-button type="danger" block round @click="onSubmit()">
+      <sp-button color="#4974F5" block @click="onSubmit()">
         确认选择
       </sp-button>
     </div>
@@ -79,10 +79,14 @@ export default {
   }
 
   .submit {
-    width: 85%;
     position: fixed;
-    bottom: 15px;
-    right: 7.5%;
+    bottom: 24px;
+    right: 40px;
+    /deep/.sp-button {
+      width: 670px;
+      height: 104px;
+      border-radius: 8px;
+    }
   }
 }
 </style>

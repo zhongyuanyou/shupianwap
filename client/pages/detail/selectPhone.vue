@@ -387,8 +387,10 @@ export default {
   }
   /deep/.title-style {
     // 下拉选择显示标题样式
-    color: #4974f5;
     font-size: 26px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #4974f5;
   }
   .select-phone {
     padding: 32px 40px;
