@@ -9,7 +9,7 @@ module.exports = (options, app) => {
     // 如果是开发环境
     if (isDev) {
         // 构建项目
-        // new Builder(nuxt).build();
+        new Builder(nuxt).build();
     }
     return async function (ctx, next) {
         let flag = false;
