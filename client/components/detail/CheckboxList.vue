@@ -77,11 +77,12 @@ export default {
   .sp-cell:first-child {
     padding-top: 7px;
   }
-
   .submit {
     position: fixed;
-    bottom: 24px;
-    right: 40px;
+    bottom: 0px;
+    padding: 10px 40px 24px;
+    width: 100%;
+    background-color: #fff;
     /deep/.sp-button {
       width: 670px;
       height: 104px;

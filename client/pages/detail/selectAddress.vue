@@ -6,7 +6,7 @@
         @on-click-right="onClickRight"
       >
         <template #left>
-          <sp-icon class-prefix="sp-iconfont" name="specialreturn2" />
+          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
         </template>
         <template #title>
           <sp-nav-search
@@ -15,6 +15,13 @@
             placeholder="请输入您想注册的地址"
             class="search"
           >
+            <template #left-icon>
+              <my-icon
+                name="sear_ic_sear"
+                size="0.4rem"
+                color="#999999"
+              ></my-icon>
+            </template>
           </sp-nav-search>
         </template>
         <template #right> 搜索 </template>
@@ -257,22 +264,31 @@ export default {
 .select-address {
   .top {
     padding: 16px 0 0 0;
+    /deep/.iconfont {
+      font-weight: 400;
+    }
     /deep/.sp-top-nav-bar__title {
       // 搜索框样式
       margin: 0 144px 4px 104px;
       .search {
         width: 502px;
+        .sp-field__control {
+          font-size: 30px;
+        }
+      }
+      /deep/.sp-top-nav-bar__right {
+        // 右边搜索样式
+        font-size: 32px;
+        color: #1a1a1a;
+        padding: 0 42px;
+      }
+      /deep/.sp-top-nav-bar__left {
+        // 左边返回样式
+        padding: 0px 32px;
       }
     }
-    /deep/.sp-top-nav-bar__right {
-      // 右边搜索样式
-      font-size: 32px;
-      color: #1a1a1a;
-      padding: 0 42px 0 41px;
-    }
-    /deep/.sp-top-nav-bar__left {
-      // 左边返回样式
-      padding-right: 0px;
+    /deep/.sp-hairline--bottom::after {
+      border-bottom-width: 0;
     }
   }
   /deep/.title-style {
@@ -286,7 +302,7 @@ export default {
     padding: 56px 40px 84px 40px;
   }
   .result-list {
-    padding-bottom: 94px;
+    padding-bottom: 130px;
   }
 }
 </style>

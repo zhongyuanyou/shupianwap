@@ -6,7 +6,7 @@
         @on-click-right="onClickRight"
       >
         <template #left>
-          <sp-icon class-prefix="sp-iconfont" name="specialreturn" />
+          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
         </template>
         <template #title>
           <sp-nav-search
@@ -15,6 +15,13 @@
             placeholder="请输入您喜欢的号码"
             class="search"
           >
+            <template #left-icon>
+              <my-icon
+                name="sear_ic_sear"
+                size="0.4rem"
+                color="#999999"
+              ></my-icon>
+            </template>
           </sp-nav-search>
         </template>
         <template #right> 搜索 </template>
@@ -23,48 +30,6 @@
     <div class="dropdown-list">
       <sp-sticky>
         <sp-dropdown-menu>
-          <!-- 搜索前4位 -->
-          <sp-dropdown-item
-            ref="isShowBeforFour"
-            :title-class="dropdownBeforFour != '前四位' ? 'title-style' : ''"
-            :title="dropdownBeforFour"
-          >
-            <div class="select-phone">
-              <SelectCheckbox
-                ref="beforForuList"
-                :select-list="beforForuList"
-                :gutter="12"
-                :is-select-more="false"
-                @selectItems="selectBeforFour"
-                @selectAllItems="selectAllBeforForu"
-              />
-            </div>
-            <BottomConfirm
-              @resetFilters="resetBeforForu"
-              @confirmFilters="confirmBeforForu"
-            />
-          </sp-dropdown-item>
-          <!-- 搜索后4位 -->
-          <sp-dropdown-item
-            ref="isShowLastFour"
-            :title-class="dropdownLastFour != '后四位' ? 'title-style' : ''"
-            :title="dropdownLastFour"
-          >
-            <div class="select-phone">
-              <SelectCheckbox
-                ref="lastForuList"
-                :select-list="lastForuList"
-                :gutter="12"
-                :is-select-more="false"
-                @selectItems="selectLastForu"
-                @selectAllItems="selectAllLastForu"
-              />
-            </div>
-            <BottomConfirm
-              @resetFilters="resetLastForu"
-              @confirmFilters="confirmLastForu"
-            />
-          </sp-dropdown-item>
           <!-- 选择价格区间 -->
           <sp-dropdown-item
             ref="isShowPrice"
@@ -129,7 +94,6 @@ import {
 } from '@chipspc/vant-dgg'
 import PriceFilter from '@/components/common/filters/PriceFilter'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
-import SelectCheckbox from '@/components/common/filters/SelectCheckBox'
 import CheckboxList from '@/components/detail/CheckboxList'
 export default {
   name: 'SelectPhone',
@@ -145,17 +109,12 @@ export default {
     [List.name]: List,
     PriceFilter,
     BottomConfirm,
-    SelectCheckbox,
     CheckboxList,
   },
   data() {
     return {
       searchValue: null,
-      dropdownBeforFour: '前四位',
-      dropdownLastFour: '后四位',
       dropdownPrice: '价格',
-      beforFour: '前四位',
-      lastFour: '后四位',
       price: '价格',
       sortValue: 0,
       loading: false,
@@ -166,12 +125,6 @@ export default {
       titleLastFour: false,
       titlePrice: false,
       titleSort: false,
-      option: [
-        { text: '默认排序', value: 0 },
-        { text: '按照价格从低到高', value: 1 },
-        { text: '按照价格从高到低', value: 2 },
-      ],
-
       priceList: [
         {
           name: '1万以下',
@@ -194,49 +147,10 @@ export default {
           id: '5',
         },
       ],
-      beforForuList: [
-        {
-          name: 'AAB*',
-          id: '1',
-        },
-        {
-          name: 'AACC',
-          id: '2',
-        },
-        {
-          name: 'AADD',
-          id: '3',
-        },
-        {
-          name: 'AAAC',
-          id: '4',
-        },
-        {
-          name: 'AABE',
-          id: '5',
-        },
-      ],
-      lastForuList: [
-        {
-          name: 'AAB*',
-          id: '1',
-        },
-        {
-          name: 'AACC',
-          id: '2',
-        },
-        {
-          name: 'AADD',
-          id: '3',
-        },
-        {
-          name: 'AAAC',
-          id: '4',
-        },
-        {
-          name: 'AABE',
-          id: '5',
-        },
+      option: [
+        { text: '默认排序', value: 0 },
+        { text: '按照价格从低到高', value: 1 },
+        { text: '按照价格从高到低', value: 2 },
       ],
       checkboxList: [
         { title: '4008886662', price: '10000' },
@@ -281,7 +195,7 @@ export default {
       this.onLoad()
     },
     onClickRight() {
-      // 右侧搜索
+      // 搜索
       Toast('搜索')
     },
     onClickLeft() {
@@ -296,50 +210,12 @@ export default {
       // 最大输入框
       console.log(val)
     },
-
-    selectAllBeforForu(item, items) {
-      // 选择不限
-      this.beforFour = item.name
-    },
-    selectAllLastForu(item, items) {
-      this.lastFour = item.name
-    },
     selectedAllPrices(item, items) {
       this.price = item.name
-    },
-    selectBeforFour(item, items) {
-      // 选中前四位标题显示
-      this.beforFour = item.name
-    },
-    selectLastForu(item, items) {
-      // 选择后四位标题显示
-      this.lastFour = item.name
     },
     selectedPrices(val) {
       // 选择价格标题显示
       this.price = val.name
-    },
-    resetBeforForu() {
-      // 重置前四位
-      this.dropdownBeforFour = '前四位'
-      this.beforFour = '前四位'
-      this.$refs.beforForuList.clearSelect()
-    },
-    confirmBeforForu() {
-      // 确认前四位
-      this.$refs.isShowBeforFour.toggle()
-      this.dropdownBeforFour = this.beforFour
-    },
-    resetLastForu() {
-      // 重置后四位
-      this.dropdownLastFour = '后四位'
-      this.lastFour = '后四位'
-      this.$refs.lastForuList.clearSelect()
-    },
-    confirmLastForu() {
-      // 确认后四位
-      this.$refs.isShowLastFour.toggle()
-      this.dropdownLastFour = this.lastFour
     },
     resetPrice() {
       // 重置价格
@@ -359,22 +235,31 @@ export default {
 .select-phone {
   .top {
     padding: 16px 0 0 0;
+    /deep/.iconfont {
+      font-weight: 400;
+    }
     /deep/.sp-top-nav-bar__title {
       // 搜索框样式
       margin: 0 144px 4px 104px;
       .search {
         width: 502px;
+        .sp-field__control {
+          font-size: 30px;
+        }
       }
     }
     /deep/.sp-top-nav-bar__right {
       // 右边搜索样式
       font-size: 32px;
       color: #1a1a1a;
-      padding: 0 42px 0 41px;
+      padding: 0 42px;
     }
     /deep/.sp-top-nav-bar__left {
       // 左边返回样式
-      padding-right: 0px;
+      padding: 0px 32px;
+    }
+    /deep/.sp-hairline--bottom::after {
+      border-bottom-width: 0;
     }
   }
   .dropdown-list {
@@ -399,7 +284,7 @@ export default {
     padding: 56px 40px 84px 40px;
   }
   .result-List {
-    padding-bottom: 94px;
+    padding-bottom: 130px;
   }
 }
 </style>
