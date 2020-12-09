@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 17:22:12
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-08 20:37:49
+ * @LastEditTime: 2020-12-09 13:44:41
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/register.vue
 -->
@@ -20,6 +20,7 @@
         <PhoneField
           key="tel"
           v-model="registerForm.tel"
+          sms-code-type="register"
           @input="handleTelInput"
           @clicked="handleClickCodeBtn"
         />

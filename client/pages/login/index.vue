@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-08 20:23:16
+ * @LastEditTime: 2020-12-09 09:38:39
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
@@ -260,9 +260,9 @@ export default {
         phone: isPhoneVerify ? this.loginForm.tel : this.loginForm.account,
       }
       if (isPhoneVerify) {
-        Object.assign(dataJson, { password })
-      } else {
         Object.assign(dataJson, { smsCode: authCode })
+      } else {
+        Object.assign(dataJson, { password })
       }
 
       const params = {

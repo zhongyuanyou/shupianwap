@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 14:23:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-08 19:32:59
+ * @LastEditTime: 2020-12-09 11:16:49
  * @Description: file content
  * @FilePath: /chips-wap/client/components/login/PhoneField.vue
 -->
@@ -34,6 +34,7 @@
 <script>
 import { Field, Button } from '@chipspc/vant-dgg'
 
+import { auth } from '@/api'
 import { checkPhone } from '@/utils/check.js'
 
 const DURATION = 60
@@ -57,6 +58,10 @@ export default {
       type: String,
       default: 'codeBtn', //
     },
+    smsCodeType: {
+      type: String,
+      default: 'login', // login：登录； register: 注册， reset: 重置
+    },
     // duration: {
     //   type: Number,
     //   default: 60,
@@ -68,6 +73,7 @@ export default {
       isValidTel: false,
       codeBtnText: '获取验证码',
       duration: DURATION,
+      timer: null,
     }
   },
   computed: {
@@ -93,19 +99,16 @@ export default {
         return
       }
       // 获取验证码
-      this.startInterval()
+      this.startInterval() && this.sendSmsCode()
     },
 
     startInterval() {
       // 说明计时器没有结束
-      if (this.codeBtnText !== '获取验证码') return
+      if (this.codeBtnText !== '获取验证码') return false
       this.codeBtnText = `${this.duration}s后`
-      let timer = setInterval(() => {
+      this.timer = setInterval(() => {
         if (this.duration <= 0) {
-          clearInterval(timer)
-          timer = null
-          this.codeBtnText = '获取验证码'
-          this.duration = DURATION
+          this.closeInterval()
           return
         }
 
@@ -114,9 +117,31 @@ export default {
       }, 1000)
 
       this.$once('hook:beforeDestroy', () => {
-        clearInterval(timer)
-        timer = null
+        this.closeInterval()
       })
+      return true
+    },
+
+    closeInterval() {
+      clearInterval(this.timer)
+      this.timer = null
+      this.codeBtnText = '获取验证码'
+      this.duration = DURATION
+    },
+
+    async sendSmsCode() {
+      if (!this.smsCodeType) return console.error('smsCode发送失败,缺少type!')
+      const params = {
+        phone: this.tel,
+        type: this.smsCodeType,
+      }
+      try {
+        const data = await auth.smsCode({ axios: this.$axios }, params)
+        return data
+      } catch (error) {
+        console.log('验证码发送失败：', error)
+        this.closeInterval()
+      }
     },
   },
 }
