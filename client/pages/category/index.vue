@@ -232,6 +232,7 @@ export default {
         color: #555555;
         text-align: center;
         line-height: 124px;
+        .textOverflow(1);
       }
     }
     &_rt {

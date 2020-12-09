@@ -59,7 +59,10 @@ class ProductCategoryController extends Controller {
           }
         }
       }
-
+      // 筛选没有子级分类的产品分类
+      categoryList = categoryList.filter(item => {
+        return item.children.length;
+      });
       // 广告数据
       if (
         resData[0].code === 200 &&
