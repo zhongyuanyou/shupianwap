@@ -20,7 +20,7 @@
       <aside ref="l_list" class="category_con_lf">
         <ul>
           <li
-            v-for="(item, index) in navList"
+            v-for="(item, index) in categoryList"
             ref="l_item"
             :key="index"
             class="category_con_lf_item"
@@ -29,7 +29,7 @@
             }"
             @click="handleClick(index)"
           >
-            {{ item.title }}
+            {{ item.name }}
           </li>
         </ul>
       </aside>
@@ -38,19 +38,19 @@
       <section ref="r_list" class="category_con_rt">
         <div>
           <div
-            v-for="(item, index) in navList"
+            v-for="(item, index) in categoryList"
             :key="index"
             ref="good"
             class="proList"
           >
-            <div class="title">{{ item.title }}</div>
+            <div class="title">{{ item.name }}</div>
             <div class="item_con">
               <div
                 v-for="(cItem, cIndex) in item.children"
                 :key="cIndex"
                 class="item_con_child"
               >
-                {{ cItem.title }}
+                {{ cItem.name }}
               </div>
             </div>
           </div>
@@ -64,189 +64,13 @@
 
 <script>
 import Better from 'better-scroll'
+import { category } from '@/api'
 export default {
   name: 'Index',
   data() {
     return {
       keywords: '',
-      navList: [
-        {
-          title: '热门推荐',
-          children: [
-            { title: '二级导航-1-1' },
-            { title: '二级导航-1-2' },
-            { title: '二级导航-1-3' },
-          ],
-        },
-        {
-          title: '一级导航-2',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-3',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-4',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-5',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-6',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-7',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-8',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-9',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-10',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-11',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-12',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-13',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-14',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-15',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-15',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-15',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-15',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-15',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-15',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-15',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-        {
-          title: '一级导航-15',
-          children: [
-            { title: '二级导航-2-1' },
-            { title: '二级导航-2-2' },
-            { title: '二级导航-2-3' },
-          ],
-        },
-      ], // 全局列表
+      categoryList: [], // 产品分类
       req: [
         'https://img.yzcdn.cn/vant/cat.jpeg',
         'https://img.yzcdn.cn/vant/cat.jpeg',
@@ -256,6 +80,9 @@ export default {
       TabNavList: 0, // 左右联动取值
       flag: true,
     }
+  },
+  created() {
+    this.getCategoryList()
   },
   mounted() {
     this.$nextTick(() => {
@@ -316,6 +143,14 @@ export default {
       setTimeout(() => {
         this.flag = true
       }, 100)
+    },
+    async getCategoryList() {
+      // 获取产品分类集合
+      const params = {
+        isRecommend: 0,
+      }
+      const data = await category.home({ axios: this.$axios }, params)
+      this.categoryList = data.categoryList
     },
   },
 }
