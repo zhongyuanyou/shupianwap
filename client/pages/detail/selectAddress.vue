@@ -37,7 +37,7 @@
             :title="dropdownPriceTitle"
           >
             <div class="select-price">
-              <PriceFilter
+              <PriceFilterComponents
                 ref="PriceFilter"
                 :price-list="priceList"
                 @minInput="minInput"
@@ -90,7 +90,7 @@ import {
   List,
   PullRefresh,
 } from '@chipspc/vant-dgg'
-import PriceFilter from '@/components/common/filters/PriceFilter'
+import PriceFilterComponents from '@/components/common/filters/PriceFilterComponents'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import AddressList from '@/components/detail/AddressList'
 export default {
@@ -104,7 +104,7 @@ export default {
     [Sticky.name]: Sticky,
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
-    PriceFilter,
+    PriceFilterComponents,
     BottomConfirm,
     AddressList,
   },

@@ -105,7 +105,6 @@ export default {
     font-weight: 400;
     .sp-top-nav-bar__title {
       font-size: 36px;
-      font-family: PingFang SC;
       font-weight: bold;
       color: #1a1a1a;
     }
@@ -120,7 +119,7 @@ export default {
   }
 
   .search {
-    padding: 0.16rem 0.4rem;
+    padding: 16px 40px;
   }
 }
 </style>
