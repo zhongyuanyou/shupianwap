@@ -18,6 +18,7 @@ module.exports = app => {
     const headers = req.ctx.headers;
     // 忽略fegin校验条件
     headers['X-User-Agent'] = '4b43c3f3-d817-4576-95b1-ad8519a2f14e';
+    headers['Content-Type'] = 'application/json';
     req.args.headers = headers;
   });
 };
