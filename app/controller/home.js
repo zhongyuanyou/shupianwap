@@ -61,11 +61,11 @@ class homeController extends Controller {
         // 定义参数校验规则
         const rules = {
             locationCodeList: { type: "array", required: true }, // 广告编码
-            fixedNavCategoryCode: { type: "string", required: true }, // 固定导航分类编码
+            fixedNavCategoryCode: { type: "string", required: true }, // 固定导航分类code
             fixedNavPlatformCode: { type: "string", required: true }, // 固定导航平台code
             fixedLimit: { type: "integer", required: true }, // 固定导航每页条数
             fixedPage: { type: "integer", required: true }, // 固定导航当前页
-            rollNavCategoryCode: { type: "string", required: true }, // 滚动导航分类编码
+            rollNavCategoryCode: { type: "string", required: true }, // 滚动导航分类code
             rollNavPlatformCode: { type: "string", required: true }, // 滚动导航平台code
             rollLimit: { type: "integer", required: true }, // 滚动导航每页条数
             rollPage: { type: "integer", required: true }, // 滚动导航当前页
@@ -148,6 +148,9 @@ class homeController extends Controller {
             infoLimit: { type: "integer", required: true }, // 资讯每页数量
             infoPage: { type: "integer", required: true }, // 资讯当前页
             recomAdCode: { type: "string", required: true }, // 推商品模块广告位code
+            categoryCode: { type: "string", required: false }, // 查询资讯的分类code
+            platformCode: { type: "string", required: true }, // 查询资讯的平台code
+            terminalCode: { type: "string", required: true }, // 查询资讯的终端code
         };
         // 参数校验
         const valiErrors = app.validator.validate(rules, ctx.request.body);
@@ -168,6 +171,9 @@ class homeController extends Controller {
         const findInformation = getInfoList(ctx, service, {
             limit: ctx.request.body.infoLimit,
             page: ctx.request.body.infoPage,
+            categoryCode: ctx.request.body.categoryCode,
+            platformCode: ctx.request.body.platformCode,
+            terminalCode: ctx.request.body.terminalCode,
         });
 
         // 获取推荐列表数据
@@ -256,12 +262,15 @@ class homeController extends Controller {
      * 查询资讯列表
      */
     @Get("/v1/find_info_list.do")
-    async findCity() {
+    async findInfo() {
         const { ctx, service, app } = this;
         // 定义参数校验规则
         const rules = {
             limit: { type: "integer", required: true }, // 每页条数
             page: { type: "integer", required: true }, // 当前页
+            categoryCode: { type: "string", required: false }, // 查询资讯的分类code
+            platformCode: { type: "string", required: true }, // 查询资讯的平台code
+            terminalCode: { type: "string", required: true }, // 查询资讯的终端code
         };
         // 参数校验
         const valiErrors = app.validator.validate(rules, ctx.request.query);
@@ -274,6 +283,9 @@ class homeController extends Controller {
             const resData = await getInfoList(ctx, service, {
                 limit: ctx.query.limit,
                 page: ctx.query.page,
+                categoryCode: ctx.request.body.categoryCode,
+                platformCode: ctx.request.body.platformCode,
+                terminalCode: ctx.request.body.terminalCode,
             });
             ctx.helper.success({
                 ctx,
