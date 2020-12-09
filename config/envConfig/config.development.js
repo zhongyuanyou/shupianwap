@@ -94,7 +94,8 @@ module.exports = appInfo => {
       //  产品中心实例名称
       'crisps-product-center-api',
       // 用户中心
-      'crisps-auth-center-api',
+      'crisps-auth-center-api', // 鉴权
+      'crisps-user-center-api', // 用户
     ],
   };
   // eureka相关配置
@@ -117,7 +118,7 @@ module.exports = appInfo => {
         name: 'MyOwn',
       },
       metadata: {
-        version: '1.5',
+        version: '1.1',
       },
     },
     requestMiddleware: (requestOpts, done) => {
