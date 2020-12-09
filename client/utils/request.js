@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-08 10:50:07
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-08 11:11:51
+ * @LastEditTime: 2020-12-09 15:21:12
  * @Description: file content
  * @FilePath: /chips-wap/client/utils/request.js
  */
@@ -18,7 +18,7 @@ import Qs from 'qs'
  * @param {string} config.url 请求地址
  * @param {Object} config.params 请求参数，注：无论post或者get 都用params传参
  * @param {Object} config.extraConfig  针对请求的去其他配置 如cancelToken，headers
- * @param {string} config.method 请求方法 默认 get请求
+ * @param {function} callback 自定义处理方式，传入的值 data, resolve, reject
  * @returns {Promise}
  *
  * @example
@@ -33,13 +33,10 @@ import Qs from 'qs'
  *
  *
  */
-export function request({
-  axios,
-  url,
-  params,
-  extraConfig = {},
-  method = 'get',
-}) {
+export function request(
+  { axios, url, params, extraConfig = {}, method = 'get' },
+  callback
+) {
   return new Promise((resolve, reject) => {
     if (!axios) {
       reject(new Error('axios 为空'))
@@ -50,6 +47,10 @@ export function request({
     axios[method](url, params, extraConfig)
       .then((data) => {
         console.log('request promise', data)
+        if (typeof callback === 'function') {
+          callback(data, resolve, reject)
+          return
+        }
         if (data) {
           if (data.code === 200) {
             resolve(data.data)

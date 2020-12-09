@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 13:53:13
+ * @LastEditTime: 2020-12-09 15:39:23
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/forget.vue
 -->
@@ -178,7 +178,9 @@ export default {
         this.loginToast(message)
         return
       }
-      this.reset()
+      this.reset().then(() => {
+        this.$router.replace({ name: 'login' })
+      })
     },
     handleClick(type) {
       switch (type) {
@@ -197,14 +199,19 @@ export default {
     },
 
     async reset() {
-      const { tel, authCode, newPassword } = this.forgetForm
-      const params = {
-        phone: tel,
-        smsCode: authCode,
-        newPassword,
-        userType: 'ORDINARY_USER',
+      try {
+        const { tel, authCode, newPassword } = this.forgetForm
+        const params = {
+          phone: tel,
+          smsCode: authCode,
+          newPassword,
+          userType: 'ORDINARY_USER',
+        }
+        const data = await auth.reset({ axios: this.$axios }, params)
+        return data
+      } catch (error) {
+        this.loginToast(error.message)
       }
-      const data = await auth.reset({ axios: this.$axios }, params)
     },
     // 自定义提示框
     loginToast(
