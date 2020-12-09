@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-02 19:17:31
+ * @LastEditTime: 2020-12-08 20:03:18
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/forget.vue
 -->
@@ -16,12 +16,13 @@
         </template>
       </sp-top-nav-bar>
     </div>
-    <div class="body">
+    <div ref="body" class="body">
       <sp-form validate-first class="form" @submit="onSubmit">
         <PhoneField
           key="tel"
           v-model="forgetForm.tel"
           @input="handleTelInput"
+          @clicked="handleCodeBtnClick"
         />
         <sp-field
           v-model="forgetForm.authCode"
@@ -59,7 +60,7 @@
             type="info"
             class="submit-wrap__btn"
             native-type="submit"
-            :disabled="!isValidSubmit"
+            :class="{ 'submit-wrap__btn--disabled': !isValidSubmit }"
           >
             重置密码
           </sp-button>
@@ -84,10 +85,11 @@
 import { TopNavBar, Form, Button, Field, Toast } from '@chipspc/vant-dgg'
 import PhoneField from '@/components/login/PhoneField'
 
+import { auth } from '@/api'
 import { checkPhone, checkPassword, checkAuthCode } from '@/utils/check.js'
 
 export default {
-  name: 'Login',
+  name: 'Forget',
   components: {
     [TopNavBar.name]: TopNavBar,
     [Button.name]: Button,
@@ -113,7 +115,7 @@ export default {
     handleTelInput(valueObj = {}) {
       const { value, valid } = valueObj
       this.forgetForm.tel = value
-      this.checkFormData('tel')
+      this.checkFormData()
     },
     handleCodeInput(value) {
       this.forgetForm.authCode = value
@@ -127,31 +129,55 @@ export default {
       this.forgetForm.confirmPassword = value
       this.checkFormData()
     },
-    handleCodeBtnClick() {
-      // 获取验证码
-      console.log('handleCodeBtnClick tel:', this.forgetForm.tel)
-      Toast('验证码已发送！')
+    handleCodeBtnClick(isValidTel) {
+      console.log(isValidTel)
+      if (!isValidTel) {
+        this.loginToast('手机号码有误')
+        return
+      }
+      this.loginToast('验证码已发送')
     },
-    checkFormData(excludeItem) {
+    checkFormData() {
       const { tel, authCode, newPassword, confirmPassword } = this.forgetForm
-      const isValid = Object.keys(this.forgetForm).every((key) => {
-        if (key === excludeItem) return true
+      const keysList = Object.keys(this.forgetForm) || []
+
+      let errorObject = null
+      for (const key of keysList) {
         switch (key) {
           case 'tel':
-            return checkPhone(tel)
+            !checkPhone(tel) && (errorObject = { key, message: '手机号码有误' })
+            break
           case 'authCode':
-            return checkAuthCode(authCode)
+            !checkAuthCode(authCode) &&
+              (errorObject = { key, message: '验证码有误' })
+            break
           case 'newPassword':
             // 至少6-15个字符，至少1个大写字母，1个小写字母和1个数字
-            return checkPassword(newPassword)
+            // checkPassword(newPassword) &&
+            //   (errorObject = { key, message: '密码格式有误' })
+            break
           case 'confirmPassword':
-            return confirmPassword === newPassword
+            confirmPassword !== newPassword &&
+              (errorObject = { key, message: '两次输入的密码不一致' })
+            break
         }
-      })
+        if (errorObject) {
+          break
+        }
+      }
+      const isValid = !errorObject
       this.isValidSubmit = isValid
+      return errorObject
     },
     onSubmit(values) {
       console.log('submit', values)
+      const error = this.checkFormData()
+      if (error) {
+        const { message } = error
+        this.loginToast(message)
+        return
+      }
+      this.reset()
     },
     handleClick(type) {
       switch (type) {
@@ -167,6 +193,34 @@ export default {
           })
           break
       }
+    },
+
+    async reset() {
+      const { tel, authCode, newPassword } = this.forgetForm
+      const params = {
+        phone: tel,
+        smsCode: authCode,
+        newPassword,
+      }
+      const data = await auth.reset({ axios: this.$axios }, params)
+    },
+    // 自定义提示框
+    loginToast(
+      message = '',
+      className = 'toast',
+      icon = 'toast_ic_remind',
+      duration = 1000
+    ) {
+      Toast({
+        duration,
+        className,
+        message,
+        icon, // 图标有点烦人
+        iconPrefix: 'spiconfont',
+        getContainer: () => {
+          return this.$refs.body
+        },
+      })
     },
   },
 }
@@ -244,9 +298,6 @@ export default {
       }
       .submit-wrap {
         margin-top: 68px;
-        /deep/.sp-button--disabled {
-          opacity: 0.4;
-        }
         &__btn {
           width: 630px;
           height: 96px;
@@ -257,6 +308,9 @@ export default {
           /deep/.sp-button__text {
             font-size: 32px;
           }
+        }
+        &__btn--disabled {
+          opacity: 0.4;
         }
       }
     }
@@ -285,6 +339,32 @@ export default {
       height: 27px;
       background-color: #f4f4f4;
       vertical-align: middle;
+    }
+  }
+
+  // 提示框样式
+  /deep/.toast {
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    font-size: 32px;
+    line-height: 36px;
+    font-weight: bold;
+    color: #ffffff;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    min-width: 390px;
+    max-width: 440px;
+    min-height: 92px;
+    max-height: 130px;
+    box-sizing: border-box;
+    .sp-toast__icon {
+      font-size: 40px;
+    }
+    .sp-toast__text {
+      margin: 0 0 0 18px;
     }
   }
 }

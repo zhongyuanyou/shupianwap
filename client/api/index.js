@@ -1,5 +1,8 @@
 import demo from './demo'
-// 咨询信息
+import auth from './auth'
+
+export { auth }
 export default {
   demo,
+  auth,
 }

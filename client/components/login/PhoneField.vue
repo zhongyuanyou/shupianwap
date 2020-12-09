@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 14:23:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-02 19:50:14
+ * @LastEditTime: 2020-12-08 19:32:59
  * @Description: file content
  * @FilePath: /chips-wap/client/components/login/PhoneField.vue
 -->
@@ -22,7 +22,7 @@
       <sp-button
         class="code-btn"
         native-type="button"
-        :disabled="!isValidTel"
+        :class="{ 'code-btn--disabled': !isValidTel }"
         @click="handleCodeBtnClick"
       >
         {{ codeBtnText }}
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { Field, Button, Toast } from '@chipspc/vant-dgg'
+import { Field, Button } from '@chipspc/vant-dgg'
 
 import { checkPhone } from '@/utils/check.js'
 
@@ -86,9 +86,13 @@ export default {
       this.tel = value
       this.$emit('input', { value, valid: this.isValidTel })
     },
+
     handleCodeBtnClick() {
+      this.$emit('clicked', this.isValidTel)
+      if (!this.isValidTel) {
+        return
+      }
       // 获取验证码
-      Toast('验证码已发送！')
       this.startInterval()
     },
 
@@ -131,6 +135,9 @@ export default {
     .sp-button__text {
       font-size: 32px;
     }
+  }
+  .code-btn--disabled {
+    opacity: 0.4;
   }
 }
 /deep/.sp-cell {
