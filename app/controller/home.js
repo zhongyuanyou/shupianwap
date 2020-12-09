@@ -34,7 +34,7 @@ const getRecommendProList = async (ctx, service, recomAdCode) => {
     try {
         const ids = [123, 456, 789]; // 推荐商品id 暂时写死
         const getRecomPro = service.common.tradingProduct.recommendList(ids);
-        const adList = service.common.banner.getAdList(recomAdCode);
+        const adList = service.common.banner.getAdList([recomAdCode]);
 
         const resData = await Promise.all([adList, getRecomPro]);
         let recommendData = {};
@@ -157,7 +157,7 @@ class homeController extends Controller {
             return;
         }
         // 获取站点
-        const findCity = service.common.city.getCityList();
+        const findCity = service.common.city.getSiteList();
         // 获取广告
         const findBanner = getBannerList(
             ctx,
@@ -236,7 +236,7 @@ class homeController extends Controller {
         }
         // 获取站点
         try {
-            const resData = await service.common.city.getCityList(
+            const resData = await service.common.city.getSiteList(
                 ctx.query.cityName
             );
             ctx.helper.success({
