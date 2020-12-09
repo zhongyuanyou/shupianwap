@@ -23,4 +23,5 @@ module.exports.userApi = {
   getSmsCode: '/nk/api/sms/v1/send_sms_code.do', // 获取短信验证码
   imgCode: '/nk/api/auth/getVerifyCode.do', // 获取图形验证码
   verifyImgCode: '/nk/api/auth/verifyCode.do', // 校验图形验证码
+  userConfig: '/nk/api/user/v1/find_config_by_code.do', // 用户配置规则
 };

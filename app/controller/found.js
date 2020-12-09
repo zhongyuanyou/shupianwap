@@ -26,7 +26,6 @@ const getInformation = async function(service, bannerApi, listApi, locationCode,
   const reqAll = [ getBanner, getList ];
   try {
     const initAllRes = await Promise.all(reqAll);
-    console.log('initAllRes', initAllRes);
     // 广告数据处理
     if (
       initAllRes[0].data.code === 200 &&
@@ -94,7 +93,7 @@ class FoundController extends Controller {
       information_class = childList;
       const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
       const listApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findPage);
-      await getInformation(service, bannerApi, listApi, new Array(information_class[0].code), information_class[0].code, ctx, true);
+      await getInformation(service, bannerApi, listApi, new Array('ad100026'), information_class[0].code, ctx, true);
     } else {
       ctx.logger.error(status, data);
       ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
@@ -151,10 +150,10 @@ class FoundController extends Controller {
     const { ctx, service, app } = this;
     getValiErrors(app, ctx, screenData, ctx.query);
     // 参数校验通过,正常响应
-    const { categoryCode, locationCode } = ctx.query;
+    const { categoryCode } = ctx.query;
     const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
     const listApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoList);
-    await getInformation(service, bannerApi, listApi, locationCode, categoryCode, ctx, false);
+    await getInformation(service, bannerApi, listApi, new Array('ad100026'), categoryCode, ctx, false);
   }
 }
 
