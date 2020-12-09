@@ -107,11 +107,13 @@ export default {
         confirmPassword: '',
       },
       isValidSubmit: false,
+      redirect: this.$route.query.redirect || '/', // 登录后需要跳转的地址
     }
   },
   methods: {
     onClickLeft() {
       console.log('close')
+      this.$router.replace(this.redirect)
     },
     handleTelInput(valueObj = {}) {
       const { value, valid } = valueObj
@@ -179,19 +181,26 @@ export default {
         return
       }
       this.reset().then(() => {
-        this.$router.replace({ name: 'login' })
+        this.$router.replace({
+          name: 'login',
+          query: { redirect: this.redirect },
+        })
       })
     },
     handleClick(type) {
       switch (type) {
         case 'telLogin':
-          this.$router.push({ name: 'login' })
+          this.$router.replace({
+            name: 'login',
+            query: { redirect: this.redirect },
+          })
           break
         case 'accountLogin':
-          this.$router.push({
+          this.$router.replace({
             name: 'login',
             query: {
               loginType: 'account',
+              redirect: this.redirect,
             },
           })
           break

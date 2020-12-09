@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 16:06:53
+ * @LastEditTime: 2020-12-09 16:24:21
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
@@ -175,7 +175,7 @@ export default {
       isValidSubmit: false,
       passwordFieldType: 'password', // text：明文
       loginType: this.$route.query.loginType || 'telephone', // account: 账户登录； telephone：手机快捷登录
-      redirect: this.$route.query.redirect, // 登录后需要跳转的地址
+      redirect: this.$route.query.redirect || '/', // 登录后需要跳转的地址
     }
   },
   computed: {},
@@ -192,7 +192,7 @@ export default {
         return
       }
       this.login().then(() => {
-        this.$router.push(this.redirect || '/')
+        this.$router.push(this.redirect)
       })
     },
     handleSwitchLookPassword() {
@@ -201,6 +201,7 @@ export default {
     },
     onClickLeft() {
       console.log('关闭')
+      this.$router.push(this.redirect)
     },
     handleClickCodeBtn(isValidTel) {
       if (!isValidTel) {
@@ -243,10 +244,16 @@ export default {
           this.loginType = 'telephone'
           break
         case 'forget':
-          this.$router.push({ name: 'login-forget' })
+          this.$router.replace({
+            name: 'login-forget',
+            query: { redirect: this.redirect },
+          })
           break
         case 'register':
-          this.$router.replace({ name: 'login-register' })
+          this.$router.replace({
+            name: 'login-register',
+            query: { redirect: this.redirect },
+          })
           break
       }
       this.loginForm = {

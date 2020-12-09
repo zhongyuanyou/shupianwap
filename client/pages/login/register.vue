@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 17:22:12
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 15:22:56
+ * @LastEditTime: 2020-12-09 16:31:42
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/register.vue
 -->
@@ -142,6 +142,7 @@ export default {
       },
       passwordFieldType: 'password', // text
       isValidSubmit: false,
+      redirect: this.$route.query.redirect || '/', // 登录后需要跳转的地址
     }
   },
   methods: {
@@ -150,6 +151,7 @@ export default {
     }),
     onClickLeft() {
       console.log('close')
+      this.$router.replace(this.redirect)
     },
     handleClickCodeBtn(isValidTel) {
       if (!isValidTel) {
@@ -168,7 +170,7 @@ export default {
       }
       this.register().then(() => {
         // 登录后 从哪里来到哪里去
-        this.$router.back(-1)
+        this.$router.push(this.redirect)
       })
     },
     handleTelInput(valueObj = {}) {
@@ -197,10 +199,16 @@ export default {
     handleClick(type) {
       switch (type) {
         case 'telLogin':
-          this.$router.push({ name: 'login' })
+          this.$router.replace({
+            name: 'login',
+            query: { redirect: this.redirect },
+          })
           break
         case 'forget':
-          this.$router.push({ name: 'login-forget' })
+          this.$router.replace({
+            name: 'login-forget',
+            query: { redirect: this.redirect },
+          })
           break
       }
     },

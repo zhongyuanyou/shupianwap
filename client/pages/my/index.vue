@@ -12,7 +12,9 @@
           src="https://img.yzcdn.cn/vant/cat.jpeg"
           @click="handleAvatar"
         />
-        <p class="txt">{{ hasLogin ? '欢迎你，181****123' : '登录/注册' }}</p>
+        <p class="txt" @click="handleClickLogin">
+          {{ hasLogin ? '欢迎你，181****123' : '登录/注册' }}
+        </p>
       </div>
     </div>
     <!--E 顶部-->
@@ -69,7 +71,7 @@ export default {
   },
   data() {
     return {
-      hasLogin: true, // 是否登录
+      hasLogin: false, // 是否登录
     }
   },
   methods: {
@@ -80,6 +82,13 @@ export default {
       } else {
         this.$router.push('/my/information')
       }
+    },
+    handleClickLogin() {
+      if (this.hasLogin) return
+      this.$router.push({
+        name: 'login',
+        query: { redirect: this.$route.fullPath },
+      })
     },
   },
 }
