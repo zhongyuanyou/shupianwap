@@ -16,9 +16,10 @@ class ContentController extends Controller {
       start: { type: 'number', required: true },
       limit: { type: 'number', required: true },
       needTypes: { type: 'number', required: true }, // 是否需要分类数据，0不需要，1需要
-      showClient: { type: 'string', required: true }, // 展示终端code
-      orderBy: { type: 'string', required: false }, // 排序方式（DEFAULT_SORT默认排序、SALES_SORT销量排序、REFERENCE_PRICE_SORT参考价格排序）
-      isAsc: { type: 'boolean', required: false }, // 是否正序
+      showClient: { type: 'string', required: false }, // 展示终端code
+      sortBy: {type: 'string', required: false}, // 排序CONDITION-QF-SORT-MR：默认排序，CONDITION-QF-SORT-XLDG：按销量从低到高，CONDITION-QF-SORT-XLGD：按销量从高到低，CONDITION-QF-SORT-JGDG:按价格从低到高,CONDITION-QF-SORT-JGGD:按价格从高到低,
+      // orderBy: { type: 'string', required: false }, // 排序方式（DEFAULT_SORT默认排序、SALES_SORT销量排序、REFERENCE_PRICE_SORT参考价格排序）
+      // isAsc: { type: 'boolean', required: false }, // 是否正序
       classCodes: { type: 'string', required: false }, // 分类code   多个英文逗号分隔
       areaCodes: { type: 'string', required: false }, // 城市code  多个英文逗号分隔
       needTag: { type: 'boolean', required: false }, // 是否展示标签
