@@ -39,7 +39,6 @@ class CurlService extends Service {
    * @return { Object } 返回请求结果数据
    */
   curlPost(url = '', data = {}) {
-    console.log('remote Url :', url);
     return new Promise(async resolve => {
       const { ctx } = this;
       if (!url) {
