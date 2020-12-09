@@ -28,26 +28,32 @@
     </div>
     <div class="body">
       <div class="shopping-car__content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
-          <sp-list
-            v-model="loading"
-            class="shopping-car__goods"
-            finished-text="没有更多了"
-            :finished="finished"
-            @load="onLoad"
-          >
-            <div
-              v-for="(item, index) in list"
-              :key="item"
-              class="shopping-car__goods-item"
+        <div v-if="false">
+          <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+            <sp-list
+              v-model="loading"
+              class="shopping-car__goods"
+              finished-text="没有更多了"
+              :finished="finished"
+              @load="onLoad"
             >
-              <GoodsItem
-                :status="index === 1 ? 'offShelf' : 'sale'"
-                @operation="handleItemOperation"
-              />
-            </div>
-          </sp-list>
-        </sp-pull-refresh>
+              <div
+                v-for="(item, index) in list"
+                :key="item"
+                class="shopping-car__goods-item"
+              >
+                <GoodsItem
+                  :status="index === 1 ? 'offShelf' : 'sale'"
+                  @operation="handleItemOperation"
+                />
+              </div>
+            </sp-list>
+          </sp-pull-refresh>
+        </div>
+
+        <div v-else>
+          <ShoppingCarNull />
+        </div>
       </div>
       <div v-if="recommendList && recommendList.length" class="recommend">
         <h3 class="recommend__title">为您推荐</h3>
@@ -73,6 +79,7 @@ import GoodsPro from '@/components/planner/GoodsPro'
 import GoodsItem from '@/components/shoppingCar/GoodsItem'
 import Bottombar from '@/components/shoppingCar/Bottombar'
 import GoodsPopup from '@/components/shoppingCar/GoodsPopup'
+import ShoppingCarNull from '@/components/shoppingCar/ShoppingCarNull'
 
 const shoppingCarStatusList = {
   completed: '完成',
@@ -90,6 +97,7 @@ export default {
     GoodsPro,
     GoodsItem,
     Bottombar,
+    ShoppingCarNull,
   },
   data() {
     return {

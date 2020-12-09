@@ -18,11 +18,7 @@
           skuEventBus,
           selectedSku,
           selectedSkuComb, -->
-      <template
-        #sku-header="{
-          price,
-        }"
-      >
+      <template #sku-header="{ price }">
         <div class="sku-service-header sp-hairline--bottom">
           <sp-image
             fit="cover"
