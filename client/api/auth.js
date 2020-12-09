@@ -9,7 +9,7 @@
 
 'use strict'
 
-import { CHIPS_WAP_BASE_URL } from './constant'
+import { CHIPS_WAP_BASE_URL } from '../config/constant'
 
 import { request } from '@/utils/request'
 
