@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 17:22:12
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-02 19:41:38
+ * @LastEditTime: 2020-12-08 20:37:49
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/register.vue
 -->
@@ -15,12 +15,13 @@
         </template>
       </sp-top-nav-bar>
     </div>
-    <div class="body">
+    <div ref="body" class="body">
       <sp-form validate-first class="register-form" @submit="onSubmit">
         <PhoneField
           key="tel"
           v-model="registerForm.tel"
           @input="handleTelInput"
+          @clicked="handleClickCodeBtn"
         />
         <sp-field
           v-model="registerForm.authCode"
@@ -73,7 +74,7 @@
             type="info"
             class="submit-wrap__btn"
             native-type="submit"
-            :disabled="!isValidSubmit"
+            :class="{ 'submit-wrap__btn--disabled': !isValidSubmit }"
           >
             注册
           </sp-button>
@@ -103,10 +104,18 @@
 </template>
 
 <script>
-import { TopNavBar, Form, Button, Field, Checkbox } from '@chipspc/vant-dgg'
+import {
+  TopNavBar,
+  Form,
+  Button,
+  Field,
+  Checkbox,
+  Toast,
+} from '@chipspc/vant-dgg'
 import PhoneField from '@/components/login/PhoneField'
 import ProtocolField from '@/components/login/ProtocolField'
 
+import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
 
 export default {
@@ -136,14 +145,27 @@ export default {
     onClickLeft() {
       console.log('close')
     },
+    handleClickCodeBtn(isValidTel) {
+      if (!isValidTel) {
+        this.loginToast('手机号码有误')
+        return
+      }
+      this.loginToast('验证码已发送')
+    },
     onSubmit(values) {
       console.log('submit', values)
+      const error = this.checkFormData()
+      if (error) {
+        const { message } = error
+        this.loginToast(message)
+        return
+      }
+      this.register()
     },
     handleTelInput(valueObj = {}) {
       console.log('handleTelInput:', valueObj)
       const { value, valid } = valueObj
       this.registerForm.tel = value
-      // !valid && this.loginToast('手机号码有误')
       this.checkFormData()
     },
     handleAuthCodeInput(value) {
@@ -156,6 +178,8 @@ export default {
     },
     handleProtocolChange(value) {
       console.log('handleProtocolChange:', value)
+      this.registerForm.readed = value
+      this.checkFormData()
     },
     handleSwitchLookPassword() {
       this.passwordFieldType =
@@ -171,22 +195,74 @@ export default {
           break
       }
     },
+    // TODO 注册
+    async register() {
+      const { tel, authCode, password } = this.registerForm
+      const params = {
+        phone: tel,
+        password,
+        smsCode: authCode,
+        userType: 'ORDINARY_USER',
+        client: 'COMDIC_TERMINAL_WAP',
+        platformType: 'COMDIC_PLATFORM_CRISPS',
+      }
+      try {
+        const data = await auth.register({ axios: this.$axios }, params)
+      } catch (error) {
+        this.loginToast(error && error.message)
+      }
+    },
     // 数据验证
     checkFormData(excludeItem) {
-      const { tel, authCode, password } = this.registerForm
-      const isValid = Object.keys(this.registerForm).every((key) => {
-        if (key === excludeItem) return true
+      const { tel, authCode, password, readed } = this.registerForm
+
+      const keysList = Object.keys(this.registerForm) || []
+      let errorObject = null
+      for (const key of keysList) {
         switch (key) {
           case 'tel':
-            return checkPhone(tel)
+            !checkPhone(tel) && (errorObject = { key, message: '手机号码有误' })
+            break
           case 'authCode':
-            return checkAuthCode(authCode)
+            !checkAuthCode(authCode) &&
+              (errorObject = { key, message: '验证码有误' })
+            break
           case 'password':
             // 至少6-15个字符，至少1个大写字母，1个小写字母和1个数字
-            return checkPassword(password)
+            // checkPassword(password) &&
+            //   (errorObject = { key, message: '密码格式有误' })
+            break
+          case 'readed':
+            !readed && (errorObject = { key, message: '请勾选同意协议' })
+            break
         }
-      })
+        // 发现一处验证不通过，就调出for 循环
+        if (errorObject) {
+          break
+        }
+      }
+      const isValid = !errorObject
       this.isValidSubmit = isValid
+      return errorObject
+    },
+
+    // 自定义提示框
+    loginToast(
+      message = '',
+      className = 'toast',
+      icon = 'toast_ic_remind',
+      duration = 1000
+    ) {
+      Toast({
+        duration,
+        className,
+        message,
+        icon, // 图标有点烦人
+        iconPrefix: 'spiconfont',
+        getContainer: () => {
+          return this.$refs.body
+        },
+      })
     },
   },
 }
@@ -266,9 +342,7 @@ export default {
       }
       .submit-wrap {
         margin-top: 68px;
-        /deep/.sp-button--disabled {
-          opacity: 0.4;
-        }
+
         &__btn {
           width: 630px;
           height: 96px;
@@ -279,6 +353,9 @@ export default {
           /deep/.sp-button__text {
             font-size: 32px;
           }
+        }
+        &__btn--disabled {
+          opacity: 0.4;
         }
       }
       .protocol-field {
@@ -311,6 +388,31 @@ export default {
       height: 27px;
       background-color: #f4f4f4;
       vertical-align: middle;
+    }
+  }
+  // 提示框样式
+  /deep/.toast {
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    font-size: 32px;
+    line-height: 36px;
+    font-weight: bold;
+    color: #ffffff;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    min-width: 390px;
+    max-width: 440px;
+    min-height: 92px;
+    max-height: 130px;
+    box-sizing: border-box;
+    .sp-toast__icon {
+      font-size: 40px;
+    }
+    .sp-toast__text {
+      margin: 0 0 0 18px;
     }
   }
 }
