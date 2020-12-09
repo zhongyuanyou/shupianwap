@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-03 15:34:31
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-08 20:33:04
+ * @LastEditTime: 2020-12-09 13:56:16
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/login.js
  */
@@ -37,7 +37,6 @@ class LoginController extends Controller {
     };
 
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
-    Object.assign(ctx.header, { sysCode: "crisps-app" });
     Object.assign(ctx.headers, { sysCode: "crisps-app" });
     const url = ctx.helper.assembleUrl(
       app.config.apiClient.APPID[2],
@@ -75,6 +74,7 @@ class LoginController extends Controller {
       app.config.apiClient.APPID[2],
       userApi.logout
     );
+    Object.assign(ctx.headers, { sysCode: "crisps-app" });
     const { status, data } = await service.curl.curlGet(url, ctx.query);
     if (status === 200 && data.code === 200) {
       ctx.helper.success({
@@ -119,6 +119,7 @@ class LoginController extends Controller {
       app.config.apiClient.APPID[2],
       userApi.login
     );
+    Object.assign(ctx.headers, { sysCode: "crisps-app" });
     const { status, data = {} } = await service.curl.curlPost(registerUrl, {
       dataJson: {
         phone,
@@ -160,9 +161,10 @@ class LoginController extends Controller {
 
     // 密码重置
     const url = ctx.helper.assembleUrl(
-      app.config.apiClient.APPID[2],
+      app.config.apiClient.APPID[3],
       userApi.reset
     );
+    Object.assign(ctx.headers, { sysCode: "crisps-app" });
     const { status, data = {} } = await service.curl.curlPost(
       url,
       ctx.request.body
@@ -184,7 +186,7 @@ class LoginController extends Controller {
     });
   }
 
-  @Get("/smsCode")
+  @Get("/smsCode.do")
   async smsCode() {
     const { ctx, service, app } = this;
     const rules = {
@@ -200,10 +202,11 @@ class LoginController extends Controller {
       reset: "USER_FORGET_PASS",
     }[type];
 
+    Object.assign(ctx.headers, { sysCode: "crisps-app", 'Content-Type': 'application/json' });
     const { status, data } = await service.common.verificationCode.getSmsCode(
       phone,
       null,
-      null,
+      "ORDINARY_USER",
       msgTemplateCode
     );
 

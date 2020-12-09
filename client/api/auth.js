@@ -2,12 +2,14 @@
  * @Author: xiao pu
  * @Date: 2020-12-08 10:39:44
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-08 16:15:32
+ * @LastEditTime: 2020-12-09 13:49:02
  * @Description: file content
  * @FilePath: /chips-wap/client/api/auth.js
  */
 
 'use strict'
+
+import { CHIPS_WAP_BASE_URL } from './constant'
 
 import { request } from '@/utils/request'
 
@@ -17,7 +19,7 @@ const auth = {
       axios,
       params,
       method: 'post',
-      url: '/chips-wap/service/nk/login/v1/login.do',
+      url: CHIPS_WAP_BASE_URL + '/nk/login/v1/login.do',
     })
   },
 
@@ -26,7 +28,7 @@ const auth = {
       axios,
       params,
       method: 'post',
-      url: '/chips-wap/service/nk/login/v1/register.do',
+      url: CHIPS_WAP_BASE_URL + '/nk/login/v1/register.do',
     })
   },
 
@@ -35,7 +37,7 @@ const auth = {
       axios,
       params,
       method: 'get',
-      url: '/chips-wap/service/nk/login/v1/logout.do',
+      url: CHIPS_WAP_BASE_URL + '/nk/login/v1/logout.do',
     })
   },
 
@@ -43,8 +45,8 @@ const auth = {
     return request({
       axios,
       params,
-      method: 'get',
-      url: '/chips-wap/service/nk/login/v1/reset.do',
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/nk/login/v1/reset.do',
     })
   },
 
@@ -53,7 +55,7 @@ const auth = {
       axios,
       params,
       method: 'get',
-      url: '/chips-wap/service/nk/login/v1/smsCode.do',
+      url: CHIPS_WAP_BASE_URL + '/nk/login/v1/smsCode.do',
     })
   },
 }

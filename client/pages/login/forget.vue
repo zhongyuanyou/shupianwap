@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-08 20:03:18
+ * @LastEditTime: 2020-12-09 13:53:13
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/forget.vue
 -->
@@ -21,6 +21,7 @@
         <PhoneField
           key="tel"
           v-model="forgetForm.tel"
+          sms-code-type="reset"
           @input="handleTelInput"
           @clicked="handleCodeBtnClick"
         />
@@ -201,6 +202,7 @@ export default {
         phone: tel,
         smsCode: authCode,
         newPassword,
+        userType: 'ORDINARY_USER',
       }
       const data = await auth.reset({ axios: this.$axios }, params)
     },
