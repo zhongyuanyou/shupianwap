@@ -31,6 +31,34 @@ class ContentController extends Controller {
       ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
+
+  @Get('/v1/content_detail.do')
+  async getContentDetail() {
+    // 获取内容详情
+    const { ctx, service, app } = this;
+    const rules = {
+      id: { type: 'string', required: true }, // 内容id
+    };
+    // 参数校验
+    const valiErrors = app.validator.validate(rules, ctx.query);
+    // 参数校验未通过
+    if (valiErrors) {
+      ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+      return;
+    }
+    const { id } = ctx.query;
+    const { status, data } = await service.common.content.detail(id);
+    if (status === 200 && data.code === 200) {
+      ctx.helper.success({
+        ctx,
+        code: 200,
+        res: data.data,
+      });
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
+    }
+  }
 }
 
 module.exports = ContentController;
