@@ -27,14 +27,15 @@ class ProductCategoryController extends Controller {
       return;
     }
     // 获取广告数据，若有locationCode的情况下
-    const getAdvertising = service.common.banner.getAdList([ 'ad10026' ]);
+    const getAdvertising = service.common.banner.getAdList([ 'ad100026' ]);
     // 获取产品分类
     const getClassification = service.common.category.getProductCategory('PRO_CLASS_TYPE_SERVICE');
 
     const reqAll = [ getClassification, getAdvertising ];
     try {
       const resData = await Promise.all(reqAll);
-      let categoryList = []; // 产品分类集合
+      let cList = []; // 产品分类集合
+      let categoryList = [];
       let recommendData = []; // 广告数据
       // 产品分类总和
       if (
@@ -44,32 +45,32 @@ class ProductCategoryController extends Controller {
       ) {
         const cData = resData[0].data.data;
         // 获取到所有一级分类
-        categoryList = cData.filter(item => {
+        cList = cData.filter(item => {
           return item.level === 1;
         });
         // 为每一个一级分类对象添加子级分类集合变量children
-        categoryList.forEach(item => {
+        cList.forEach(item => {
           item.children = [];
         });
         for (let i = 0; i < cData.length; i++) {
-          for (let j = 0; j < categoryList.length; j++) {
-            if (cData[i].level === 2 && cData[i].parentId === categoryList[j].id) {
-              categoryList[j].children.push(cData[i]);
+          for (let j = 0; j < cList.length; j++) {
+            if (cData[i].level === 2 && cData[i].parentId === cList[j].id) {
+              cList[j].children.push(cData[i]);
             }
           }
         }
       }
       // 筛选没有子级分类的产品分类
-      categoryList = categoryList.filter(item => {
+      categoryList = cList.filter(item => {
         return item.children.length;
       });
       // 广告数据
       if (
-        resData[0].code === 200 &&
-        resData[0].data &&
-        Array.isArray(resData[0].data)
+        resData[1].code === 200 &&
+        resData[1].data &&
+        Array.isArray(resData[1].data)
       ) {
-        recommendData = resData[0].data;
+        recommendData = resData[1].data;
       }
       ctx.helper.success({
         ctx,
