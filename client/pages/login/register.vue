@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 17:22:12
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 13:44:41
+ * @LastEditTime: 2020-12-09 15:22:56
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/register.vue
 -->
@@ -105,6 +105,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 import {
   TopNavBar,
   Form,
@@ -143,6 +145,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      setUserInfo: 'user/SET_USER',
+    }),
     onClickLeft() {
       console.log('close')
     },
@@ -161,7 +166,10 @@ export default {
         this.loginToast(message)
         return
       }
-      this.register()
+      this.register().then(() => {
+        // 登录后 从哪里来到哪里去
+        this.$router.back(-1)
+      })
     },
     handleTelInput(valueObj = {}) {
       console.log('handleTelInput:', valueObj)
@@ -209,6 +217,9 @@ export default {
       }
       try {
         const data = await auth.register({ axios: this.$axios }, params)
+        if (data != null) this.setUserInfo(data) // 注册成功后，返回的也是登录信息，所以也存
+
+        return data
       } catch (error) {
         this.loginToast(error && error.message)
       }

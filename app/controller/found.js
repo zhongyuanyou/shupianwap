@@ -132,10 +132,10 @@ class FoundController extends Controller {
     getValiErrors(app, ctx, infoDetail, ctx.query);
     // 参数校验通过,正常响应
     const { id } = ctx.query;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.infoDetail);
-    const { status, data } = await service.curl.curlGet(url, {
+    const params = {
       id,
-    });
+    };
+    const { status, data } = await service.common.content.detail(params);
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data });
     } else {

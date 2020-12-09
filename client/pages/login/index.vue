@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 09:38:39
+ * @LastEditTime: 2020-12-09 16:06:53
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
@@ -144,6 +144,7 @@ import {
   Checkbox,
   Toast,
 } from '@chipspc/vant-dgg'
+import { mapMutations } from 'vuex'
 
 import ProtocolField from '@/components/login/ProtocolField'
 import PhoneField from '@/components/login/PhoneField'
@@ -174,10 +175,14 @@ export default {
       isValidSubmit: false,
       passwordFieldType: 'password', // text：明文
       loginType: this.$route.query.loginType || 'telephone', // account: 账户登录； telephone：手机快捷登录
+      redirect: this.$route.query.redirect, // 登录后需要跳转的地址
     }
   },
   computed: {},
   methods: {
+    ...mapMutations({
+      setUserInfo: 'user/SET_USER',
+    }),
     onSubmit(values) {
       console.log('submit', values)
       const error = this.checkFormData()
@@ -186,7 +191,9 @@ export default {
         this.loginToast(message)
         return
       }
-      this.login()
+      this.login().then(() => {
+        this.$router.push(this.redirect || '/')
+      })
     },
     handleSwitchLookPassword() {
       this.passwordFieldType =
@@ -239,7 +246,7 @@ export default {
           this.$router.push({ name: 'login-forget' })
           break
         case 'register':
-          this.$router.push({ name: 'login-register' })
+          this.$router.replace({ name: 'login-register' })
           break
       }
       this.loginForm = {
@@ -253,9 +260,7 @@ export default {
 
     async login() {
       const isPhoneVerify = this.loginType === 'telephone'
-
       const { tel, authCode, account, password } = this.loginForm
-
       const dataJson = {
         phone: isPhoneVerify ? this.loginForm.tel : this.loginForm.account,
       }
@@ -272,7 +277,14 @@ export default {
         platformType: 'COMDIC_PLATFORM_CRISPS',
         dataJson,
       }
-      const data = await auth.login({ axios: this.$axios }, params)
+      try {
+        const data = await auth.login({ axios: this.$axios }, params)
+        console.log(data)
+        if (data != null) this.setUserInfo(data)
+        return data
+      } catch (error) {
+        this.loginForm(error.message)
+      }
     },
 
     // 数据验证
