@@ -27,7 +27,7 @@ class InformationService extends Service {
       }
     });
   }
-  async detail(id) {
+  async detail(params = {}) {
     // 详情
     return new Promise(async resolve => {
       const { ctx, app } = this;
@@ -42,7 +42,7 @@ class InformationService extends Service {
           method: 'GET',
           dataType: 'json',
           headers: ctx.headers,
-          data: { id },
+          data: params,
           timeout: 10 * 1000,
         });
         resolve(res);
