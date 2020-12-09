@@ -8,33 +8,33 @@
 "use strict";
 
 const Controller = require("egg").Controller;
-const { Get, Prefix } = require("egg-shell-decorators");
+const { Post, Prefix } = require("egg-shell-decorators");
 
 // 获取文章列表
 const getarticleList = async (ctx, service, params) => {
     try {
         return await service.common.content.list(params);
-    } catch (error) {
-        ctx.logger.error(error);
+    } catch (err) {
+        ctx.logger.error(err);
     }
 };
 
 @Prefix("/nk/help")
 class helpController extends Controller {
-    @Get("/v1/find_help_data.do")
+    @Post("/v1/find_help_data.do")
     async findInit() {
         const { ctx, service, app } = this;
         let rules = {
             findType: { type: "integer", required: true, min: 0, max: 1 }, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
         };
         // 参数校验
-        const firstValiErrors = app.validator.validate(rules, ctx.query);
+        const firstValiErrors = app.validator.validate(rules, ctx.request.body);
         // 参数校验未通过
         if (firstValiErrors) {
             ctx.helper.fail({ ctx, code: 422, res: valiErrors });
             return;
         }
-        if (ctx.query.findType === 0) {
+        if (ctx.request.body.findType === 0) {
             // 定义页面初始化参数校验规则
             rules = {
                 locationCode: { type: "string", required: true }, // 广告位code
@@ -43,7 +43,7 @@ class helpController extends Controller {
                 page: { type: "integer", required: true }, // 查询文章的当前页
             };
         }
-        if (ctx.query.findType === 1) {
+        if (ctx.request.body.findType === 1) {
             // 检索查询文章
             rules = {
                 categoryCode: { type: "string", required: true }, // 分类code筛选文章
@@ -53,20 +53,20 @@ class helpController extends Controller {
             };
         }
         // 参数校验
-        const valiErrors = app.validator.validate(rules, ctx.query);
+        const valiErrors = app.validator.validate(rules, ctx.request.body);
         // 参数校验未通过
         if (valiErrors) {
             ctx.helper.fail({ ctx, code: 422, res: valiErrors });
             return;
         }
         // 只查询文章列表
-        if (ctx.query.findType === 1) {
+        if (ctx.request.body.findType === 1) {
             try {
-                const articleResData = await getarticleList({
-                    categoryCode: ctx.query.categoryCode,
-                    limit: ctx.query.limit,
-                    page: ctx.query.page,
-                    keyword: ctx.query.keyword,
+                const articleResData = await getarticleList(ctx, service, {
+                    categoryCode: ctx.request.body.categoryCode,
+                    limit: ctx.request.body.limit,
+                    page: ctx.request.body.page,
+                    keyword: ctx.request.body.keyword,
                 });
                 if (articleResData.data.code === 200) {
                     ctx.helper.success({
@@ -86,10 +86,11 @@ class helpController extends Controller {
         }
 
         // 获取帮助中心广告
-        const adData = service.common.banner.getAdList(ctx.query.locationCode);
+        const params = [ctx.request.body.locationCode];
+        const adData = service.common.banner.getAdList(params);
         // 获取帮助中心分类
         const categoryData = service.common.category.getCategoryDetail(
-            ctx.query.code
+            ctx.request.body.code
         );
         const reqArr = [adData, categoryData];
         try {
@@ -101,14 +102,14 @@ class helpController extends Controller {
                 adListData = resData[0].data || [];
             }
             if (resData[1].data.code === 200) {
-                categoryList = resData[1].data.data || [];
+                categoryList = resData[1].data.data.childrenList || [];
             }
             if (categoryList.length) {
                 // 获取文章列表
-                const articleRes = await getarticleList({
+                const articleRes = await getarticleList(ctx, service, {
                     categoryCode: categoryList[0].code,
-                    limit: ctx.query.limit,
-                    page: ctx.query.page,
+                    limit: ctx.request.body.limit,
+                    page: ctx.request.body.page,
                 });
                 if (articleRes.data.code === 200) {
                     articleData.rows = articleRes.data.data.rows;
