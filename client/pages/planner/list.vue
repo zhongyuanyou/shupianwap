@@ -20,15 +20,20 @@
             border
             special-label
             placeholder="请输入业务或规划师姓名"
+            @focus="focSearch"
           >
             <template #left-icon>
               <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
             </template>
           </sp-nav-search>
           <sp-dropdown-menu class="search__dropdown">
-            <sp-dropdown-item ref="item" class="search__dropdown-regoin">
+            <sp-dropdown-item
+              ref="item"
+              :title-class="regions != '区域' ? 'title-style' : ''"
+              class="search__dropdown-regoin"
+            >
               <template #title>
-                <span>区域</span>
+                <span>{{ regions }}</span>
               </template>
               <CoupleSelect
                 :multiple="false"
@@ -38,17 +43,20 @@
             </sp-dropdown-item>
             <sp-dropdown-item
               v-model="search.scoreSort"
+              :title-class="search.scoreSort > 0 ? 'title-style' : ''"
               class="search__dropdown-sort"
               :options="option"
             />
           </sp-dropdown-menu>
         </div>
       </sp-cell>
+      <SearchPopup ref="SearchPopup" @enterData="enterData" />
+
       <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
         <sp-list
           v-model="loading"
           :finished="finished"
-          finished-text="没有更多了"
+          :finished-text="list.length > 0 ? '没有更多了' : ''"
           @load="onLoad"
         >
           <template v-if="list && list.length">
@@ -124,7 +132,7 @@
               <sp-image
                 class="no-data__icon"
                 fit="cover"
-                src="https://img.yzcdn.cn/vant/cat.jpeg"
+                :src="require('../../assets/images/search-null.png')"
               />
               <div class="no-data__descript">抱歉，未搜索到对应的规划师</div>
               <div class="no-data__tip">换个条件试试</div>
@@ -219,11 +227,12 @@ import {
   Cell,
   Image,
   Tag,
+  Icon,
 } from '@chipspc/vant-dgg'
 
 import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
 import Header from '@/components/common/head/header'
-
+import SearchPopup from '@/components/planner/SearchPopup'
 import { city } from '@/utils/city'
 
 export default {
@@ -240,8 +249,10 @@ export default {
     [NavSearch.name]: NavSearch,
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
+    [Icon.name]: Icon,
     Header,
     CoupleSelect,
+    SearchPopup,
   },
   data() {
     return {
@@ -250,6 +261,7 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
+      regions: '区域',
       search: { keywords: '', scoreSort: 0 },
       option: [
         { text: '薯片分从高到底', value: 0 },
@@ -271,6 +283,10 @@ export default {
     },
     coupleSelect(data) {
       console.log(data)
+      if (data[2].regions.length) {
+        this.regions = data[2].regions[0].name
+        this.$refs.item.toggle()
+      }
     },
     onLoad() {
       setTimeout(() => {
@@ -294,11 +310,17 @@ export default {
     onRefresh() {
       // 清空列表数据
       this.finished = false
-
       // 重新加载数据
       // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
       this.onLoad()
+    },
+    focSearch() {
+      this.$refs.SearchPopup.focSearch()
+    },
+    enterData(data) {
+      //  获取子组件异步结果
+      console.log(data)
     },
   },
 }
@@ -359,6 +381,14 @@ export default {
       &::after {
         left: 0;
         right: 0;
+      }
+      /deep/.title-style {
+        //下拉标题样式
+        font-size: 32px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #4974f5;
+        line-height: 28px;
       }
     }
   }
