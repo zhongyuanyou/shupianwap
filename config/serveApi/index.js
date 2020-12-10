@@ -13,13 +13,15 @@ const { productApi } = require("./module/product"); // 产品中心
 const { userApi } = require("./module/user"); // 用户中心
 const { iesApi } = require("./module/ies"); // 智企
 const { dashunApi } = require("./module/enterpriseDashun"); // 企大顺
+const { merchantApi } = require("./module/merchant"); // 商户中心
 
 module.exports = {
-    algorithmApi,
-    bigDataApi,
-    contentApi,
-    productApi,
-    userApi,
-    iesApi,
-    dashunApi,
+  algorithmApi,
+  bigDataApi,
+  contentApi,
+  productApi,
+  userApi,
+  iesApi,
+  dashunApi,
+  merchantApi,
 };
