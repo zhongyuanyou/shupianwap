@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-28 17:31:19
+ * @LastEditTime: 2020-12-09 22:01:18
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/shoppingCar/commodityConsultation.vue
+ * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
 
 <template>
@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from 'vuex'
 import { TopNavBar, Button, Toast, PullRefresh, List } from '@chipspc/vant-dgg'
 
 import GoodsPro from '@/components/planner/GoodsPro'
@@ -109,7 +110,11 @@ export default {
       shoppingCarStatus: 'completed', // edit: 编辑
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user.userInfo,
+    }),
+  },
   created() {
     this.getList()
   },

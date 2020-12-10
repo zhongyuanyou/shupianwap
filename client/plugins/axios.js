@@ -1,4 +1,5 @@
 import qs from 'qs'
+import { saveAxiosInstance } from '@/utils/request'
 const BASE = require('~/config/index.js')
 export default function ({ $axios, redirect }) {
   // 设置基本URL
@@ -50,4 +51,5 @@ export default function ({ $axios, redirect }) {
       redirect('/500')
     }
   })
+  saveAxiosInstance($axios)
 }
