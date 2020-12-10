@@ -21,7 +21,7 @@
     <sp-work-tabs v-model="active">
       <sp-work-tab title="企业服务">
         <serveGoods
-          :init-list-data="serveGoodsListData"
+          :init-service-data="serveGoodsListData"
           :search-text="searchText"
         />
       </sp-work-tab>
@@ -39,6 +39,7 @@ import Search from '@/components/common/search/Search'
 import serveGoods from '@/components/list/serveGoods'
 import JyGoods from '@/components/list/JyGoods'
 import searchList from '@/mixins/searchList'
+import { goods } from '@/api/index'
 export default {
   name: 'SearchResult',
   components: {
@@ -53,22 +54,14 @@ export default {
   data() {
     return {
       formData: {
-        page: 1,
-        size: 10,
+        start: 1,
+        limit: 10,
+        needTypes: 1,
       },
       searchText: '',
       active: 0,
-      value1: 0,
-      value2: 0,
-      option: [
-        { text: '默认排序', value: 0 },
-        { text: '销量从高到低', value: 1 },
-        { text: '销量从低到高', value: 2 },
-        { text: '价格从高到低', value: 3 },
-        { text: '价格从低到高', value: 4 },
-      ],
-      serveGoodsListData: [], // 服务商品列表数据
-      jyGoodsListData: [], // 交易商品列表数据
+      serveGoodsListData: {}, // 服务商品列表数据
+      jyGoodsListData: {}, // 交易商品列表数据
     }
   },
   watch: {
@@ -77,8 +70,20 @@ export default {
       this.reqType = val === 0 ? 'serve' : 'jy'
     },
   },
-  mounted() {},
-  methods: {},
+  mounted() {
+    this.getInitServeData()
+  },
+  methods: {
+    getInitServeData() {
+      goods
+        .searchServeGoodsList({ axios: this.$axios }, this.formData)
+        .then((data) => {
+          console.log(data)
+          this.serveGoodsListData = data
+        })
+        .catch()
+    },
+  },
 }
 </script>
 

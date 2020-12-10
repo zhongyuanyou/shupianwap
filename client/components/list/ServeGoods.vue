@@ -8,7 +8,11 @@
         @open="open(0)"
         @close="close(0)"
       >
-        <ServiceSelect :active-data="activeData" @select="handleSelect" />
+        <ServiceSelect
+          :active-data="activeData"
+          :items="typeData"
+          @select="handleSelect"
+        />
         <BottomConfirm
           @resetFilters="resetFilters"
           @confirmFilters="confirmFilters"
@@ -66,11 +70,11 @@ export default {
   },
   mixins: [searchList],
   props: {
-    initListData: {
+    initServiceData: {
       // 初始化列表数据，仅做初始化的时候用或是在进行条件搜索的时候用
-      type: Array,
+      type: Object,
       default() {
-        return []
+        return {}
       },
     },
     searchText: {
@@ -95,35 +99,24 @@ export default {
       moreTextCss: ['dropdownItem', 'dropdownItem'],
       maxHeight: 0,
       serveGoodsListData: [],
-      activeData: [
-        { text: '工商服务', id: '1' },
-        {
-          services: [
-            {
-              text: '有限公司注册',
-              id: 1,
-            },
-            {
-              text: '外资公司注册',
-              id: 2,
-              disabled: true,
-            },
-          ],
-        },
-      ],
-      option: [
-        { text: '默认排序', value: 0 },
-        { text: '销量从高到低', value: 1 },
-        { text: '销量从低到高', value: 2 },
-        { text: '价格从高到低', value: 3 },
-        { text: '价格从低到高', value: 4 },
-      ],
+      activeData: [],
+      option: [],
       saveActiveData: [],
+      typeData: [],
     }
   },
   watch: {
-    initListData(val) {
-      this.serveGoodsListData = clone(val)
+    initServiceData(val) {
+      // 商品列表
+      this.serveGoodsListData = clone(val.goods.records)
+      // 排序筛选
+      val.sortFilter.forEach((item) => {
+        this.option.push({
+          text: item.name,
+          value: item.code,
+        })
+      })
+      this.typeData = clone(val.typeData)
     },
     selectValue(val) {
       this.dropdownTitle2 = this.option[val].text

@@ -291,7 +291,7 @@ class homeController extends Controller {
                 ctx,
                 code: 200,
                 res: {
-                    cityList: resData.data.data.rows,
+                    infoList: resData.data.data.rows,
                     total: resData.data.data.total,
                     currentPage: resData.data.data.currentPage,
                     totalPage: resData.data.data.totalPage,
