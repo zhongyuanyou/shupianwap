@@ -1,3 +1,4 @@
+import { goods } from '@/api/index'
 export default {
   data() {
     return {
@@ -8,12 +9,17 @@ export default {
     getServeList() {},
     getJyList() {},
     searchKeydownHandle() {
-      console.log('this.searchText', this.searchText)
-      console.log('formData', this.formData)
-      console.log('reqType', this.reqType)
+      // console.log('this.searchText', this.searchText)
+      // console.log('formData', this.formData)
+      // console.log('reqType', this.reqType)
       if (this.reqType === 'serve') {
         console.log('serveGoodsListData', this.serveGoodsListData)
-        this.serveGoodsListData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        goods
+          .searchServeGoodsList({ axios: this.$axios }, this.formData)
+          .then((data) => {
+            console.log(data)
+            this.serveGoodsListData = data
+          })
       } else {
         console.log('jyGoodsListData', this.jyGoodsListData)
         this.jyGoodsListData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -27,4 +33,5 @@ export default {
       // console.log('jyGoodsListData', this.jyGoodsListData)
     },
   },
+  mounted() {},
 }
