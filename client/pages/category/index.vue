@@ -81,14 +81,15 @@ export default {
       flag: true,
     }
   },
-  created() {
-    this.getCategoryList()
-  },
+  // created() {
+  //   this.getCategoryList()
+  // },
   mounted() {
     this.$nextTick(() => {
       this._initScroll()
       this._getHeight()
     })
+    this.getCategoryList()
   },
   methods: {
     inputChange() {},

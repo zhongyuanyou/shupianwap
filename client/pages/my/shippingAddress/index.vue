@@ -28,8 +28,9 @@
           <div class="address_con_list_item">
             <div class="address_con_list_item_lf">
               <div class="info">
-                {{ item.name }}<span class="tel">{{ item.tel }}</span
-                ><span v-if="index === 0" class="default">默认</span>
+                <div class="name">{{ item.createUserName }}</div>
+                <div class="tel">{{ item.phone }}</div>
+                <span v-if="index === 0" class="default">默认</span>
               </div>
               <div class="address">{{ item.address }}</div>
             </div>
@@ -94,6 +95,8 @@ import {
   Bottombar,
   BottombarButton,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import { userInfo } from '@/api'
 export default {
   name: 'Index',
   components: {
@@ -106,104 +109,21 @@ export default {
   },
   data() {
     return {
-      addressList: [
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-      ],
+      addressList: [],
       popupStatus: false,
       Field6: {
         type: 'functional',
         title: '确定删除收货地址吗？',
       },
     }
+  },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userInfo.userId || null,
+    }),
+  },
+  mounted() {
+    this.getShippingAddressList()
   },
   methods: {
     onClickLeft() {},
@@ -216,7 +136,17 @@ export default {
       this.$router.push('/my/shippingAddress/add/1')
     },
     handleEdit(item) {
-      this.$router.push('/my/shippingAddress/edit/1')
+      // 编辑收货地址
+      this.$router.push(`/my/shippingAddress/edit/${item.id}`)
+    },
+    async getShippingAddressList() {
+      // 获取收货地址列表
+      const params = {
+        // userId: this.userId,
+        userId: '607967121787221432',
+      }
+      const data = await userInfo.addressList({ axios: this.$axios }, params)
+      this.addressList = data
     },
   },
 }
@@ -286,8 +216,18 @@ export default {
             line-height: 44px;
             font-size: 30px;
             margin-top: 30px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: row;
+            .name {
+              max-width: 140px;
+              .textOverflow(1);
+            }
             .tel {
+              max-width: 220px;
               margin-left: 93px;
+              .textOverflow(1);
             }
             .default {
               margin-left: 11px;

@@ -34,7 +34,6 @@ class ProductCategoryController extends Controller {
     const reqAll = [ getClassification, getAdvertising ];
     try {
       const resData = await Promise.all(reqAll);
-      let cList = []; // 产品分类集合
       let categoryList = [];
       let recommendData = []; // 广告数据
       // 产品分类总和
@@ -45,23 +44,23 @@ class ProductCategoryController extends Controller {
       ) {
         const cData = resData[0].data.data;
         // 获取到所有一级分类
-        cList = cData.filter(item => {
+        categoryList = cData.filter(item => {
           return item.level === 1;
         });
         // 为每一个一级分类对象添加子级分类集合变量children
-        cList.forEach(item => {
+        categoryList.forEach(item => {
           item.children = [];
         });
         for (let i = 0; i < cData.length; i++) {
-          for (let j = 0; j < cList.length; j++) {
-            if (cData[i].level === 2 && cData[i].parentId === cList[j].id) {
-              cList[j].children.push(cData[i]);
+          for (let j = 0; j < categoryList.length; j++) {
+            if (cData[i].level === 2 && cData[i].parentId === categoryList[j].id) {
+              categoryList[j].children.push(cData[i]);
             }
           }
         }
       }
       // 筛选没有子级分类的产品分类
-      categoryList = cList.filter(item => {
+      categoryList = categoryList.filter(item => {
         return item.children.length;
       });
       // 广告数据

@@ -104,6 +104,13 @@ export default {
         }
       },
     },
+    isChangeTab: {
+      // 顶层tab服务资源和交易资源发生了改变需要清空筛选项
+      type: String,
+      default() {
+        return ''
+      },
+    },
   },
   data() {
     return {
@@ -137,6 +144,10 @@ export default {
     }
   },
   watch: {
+    isChangeTab() {
+      this.formData.sortBy = ''
+      this.formData.classCodes = ''
+    },
     initListData(val) {
       this.jyGoodsListData = clone(val)
     },
@@ -156,6 +167,7 @@ export default {
       topHeight +
       'px'
     this.reqType = 'jy'
+    this.$emit('goodsList', 'jy', this)
   },
   methods: {
     onLoad() {

@@ -29,10 +29,44 @@ const getInfoList = async (ctx, service, { limit, page }) => {
     }
 };
 
-// 获取交易推荐商品列表+广告
+// 获取推荐商品列表+广告
 const getRecommendProList = async (ctx, service, recomAdCode) => {
     try {
         const ids = [123, 456, 789]; // 推荐商品id 暂时写死
+        // 定义参数校验规则
+        const rules = {
+            userId: { type: "string", required: false }, // 用户id
+            deviceId: { type: "string", required: true }, // 设备ID（用户唯一标识）
+            formatId: { type: "string", required: false }, // 业态ID（首页等场景不需传，如其他场景能获取到必传）
+            areaCode: { type: "string", required: true }, // 区域编码
+            sceneId: { type: "string", required: true }, // 场景ID
+            storeId: { type: "string", required: false }, // 商户ID(首页等场景不需传，如其他场景能获取到必传)
+            productId: { type: "string", required: false }, // 产品ID（首页等场景不需传，如其他场景能获取到必传）
+            productType: { type: "string", required: false }, // 产品一级类别（首页等场景不需传，如其他场景能获取到必传）
+            title: { type: "string", required: false }, // 产品名称（产品详情页传、咨询页等）
+            maxsize: { type: "integer", required: true }, // 要求推荐产品的数量
+            platform: { type: "string", required: true }, // 平台（app,m,pc）
+        };
+        // 参数校验
+        const valiErrors = app.validator.validate(rules, ctx.request.body);
+        // 参数校验未通过
+        if (valiErrors) {
+            ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+            return;
+        }
+        const params = {
+            userId: ctx.request.body.userId,
+            deviceId: ctx.request.body.deviceId,
+            areaCode: ctx.request.body.areaCode,
+            sceneId: ctx.request.body.sceneId,
+            maxsize: ctx.request.body.maxsize,
+        };
+        // 获取推荐产品
+        const findRecom = await service.common.recom.getRecomProductIdList(
+            params
+        );
+        console.log(88, findRecom);
+
         const getRecomPro = service.common.tradingProduct.recommendList(ids);
         const adList = service.common.banner.getAdList([recomAdCode]);
 
@@ -291,7 +325,7 @@ class homeController extends Controller {
                 ctx,
                 code: 200,
                 res: {
-                    cityList: resData.data.data.rows,
+                    infoList: resData.data.data.rows,
                     total: resData.data.data.total,
                     currentPage: resData.data.data.currentPage,
                     totalPage: resData.data.data.totalPage,
@@ -306,20 +340,56 @@ class homeController extends Controller {
     /**
      * 查询推荐列表
      */
-    @Get("/v1/find_recom_list.do")
+    @Post("/v1/find_recom_list.do")
     async findRecomList() {
         const { ctx, service, app } = this;
         // 定义参数校验规则
         const rules = {
-            recomAdCode: { type: "string", required: false }, // 推商品模块广告位code
+            userId: { type: "string", required: false }, // 用户id
+            deviceId: { type: "string", required: true }, // 设备ID（用户唯一标识）
+            formatId: { type: "string", required: false }, // 业态ID（首页等场景不需传，如其他场景能获取到必传）
+            areaCode: { type: "string", required: true }, // 区域编码
+            sceneId: { type: "string", required: true }, // 场景ID
+            storeId: { type: "string", required: false }, // 商户ID(首页等场景不需传，如其他场景能获取到必传)
+            productId: { type: "string", required: false }, // 产品ID（首页等场景不需传，如其他场景能获取到必传）
+            productType: { type: "string", required: false }, // 产品一级类别（首页等场景不需传，如其他场景能获取到必传）
+            title: { type: "string", required: false }, // 产品名称（产品详情页传、咨询页等）
+            // maxsize: { type: "integer", required: true }, // 要求推荐产品的数量
+            platform: { type: "string", required: true }, // 平台（app,m,pc）
         };
         // 参数校验
-        const valiErrors = app.validator.validate(rules, ctx.request.query);
+        const valiErrors = app.validator.validate(rules, ctx.request.body);
         // 参数校验未通过
         if (valiErrors) {
             ctx.helper.fail({ ctx, code: 422, res: valiErrors });
             return;
         }
+        const params = {
+            userId: ctx.request.body.userId,
+            deviceId: ctx.request.body.deviceId,
+            areaCode: ctx.request.body.areaCode,
+            sceneId: ctx.request.body.sceneId,
+            maxsize: ctx.request.body.maxsize,
+        };
+        // 获取推荐产品
+        const findRecom = await service.common.recom.getRecomProductIdList(
+            params
+        );
+        console.log(88, findRecom);
+
+        ctx.body = findRecom;
+        return;
+        // 定义参数校验规则
+        // const rules = {
+        //     recomAdCode: { type: "string", required: false }, // 推商品模块广告位code
+        // };
+        // // 参数校验
+        // const valiErrors = app.validator.validate(rules, ctx.request.query);
+        // // 参数校验未通过
+        // if (valiErrors) {
+        //     ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+        //     return;
+        // }
         try {
             const resData = await getRecommendProList(
                 ctx,

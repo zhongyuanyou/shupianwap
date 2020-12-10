@@ -28,6 +28,17 @@ class ContentController extends Controller {
       keywords: { type: 'string', required: false }, // 搜索关键词
       screenAttrIds: { type: 'array', required: false }, // 筛选标签集合
     };
+    for(const k in ctx.request.body) {
+      const val = ctx.request.body[k]
+      if(val === 'undefined' ||
+        val === undefined ||
+        val === null ||
+        val === 'null' ||
+        val === ''
+      ) {
+        delete ctx.request.body[k]
+      }
+    }
     // 参数校验
     const valiErrors = app.validator.validate(rules, ctx.request.body);
     // 参数校验未通过
@@ -88,6 +99,17 @@ class ContentController extends Controller {
       searchKey: { type: 'string', required: false }, // 搜索关键词
       fieldList: { type: 'array', required: false},
     };
+    for(const k in ctx.request.body) {
+      const val = ctx.request.body[k]
+      if(val === 'undefined' ||
+        val === undefined ||
+        val === null ||
+        val === 'null' ||
+        val === ''
+      ) {
+        delete ctx.request.body[k]
+      }
+    }
     // 参数校验
     const valiErrors = app.validator.validate(rules, ctx.request.body);
     // 参数校验未通过

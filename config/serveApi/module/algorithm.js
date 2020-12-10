@@ -6,4 +6,6 @@
  * @FilePath: /chips-wap/config/envConfig/serveApi/module/algorithm.js
  * */
 "use strict";
-module.exports.algorithmApi = {};
+module.exports.algorithmApi = {
+    productRecom: "/recommendInfo/productRecom.do",
+};
