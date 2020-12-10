@@ -354,8 +354,10 @@ class homeController extends Controller {
             productId: { type: "string", required: false }, // 产品ID（首页等场景不需传，如其他场景能获取到必传）
             productType: { type: "string", required: false }, // 产品一级类别（首页等场景不需传，如其他场景能获取到必传）
             title: { type: "string", required: false }, // 产品名称（产品详情页传、咨询页等）
-            // maxsize: { type: "integer", required: true }, // 要求推荐产品的数量
+            maxsize: { type: "integer", required: true }, // 要求推荐产品的数量
             platform: { type: "string", required: true }, // 平台（app,m,pc）
+            limit: { type: "integer", required: true }, // 分页条数
+            page: { type: "integer", required: true }, // 当前页
         };
         // 参数校验
         const valiErrors = app.validator.validate(rules, ctx.request.body);
@@ -375,9 +377,18 @@ class homeController extends Controller {
         const findRecom = await service.common.recom.getRecomProductIdList(
             params
         );
-        console.log(88, findRecom);
+        if (findRecom.code === 200) {
+            const start = (ctx.request.body.page - 1) * ctx.request.body.limit;
+            const end = ctx.request.body.page * ctx.request.body.limit;
+            console.log(start, ctx.request.body.page * end);
+            const pagetionList = findRecom.data.productInfoList.slice(
+                start,
+                end
+            );
+            console.log(pagetionList);
+            ctx.body = pagetionList;
+        }
 
-        ctx.body = findRecom;
         return;
         // 定义参数校验规则
         // const rules = {
