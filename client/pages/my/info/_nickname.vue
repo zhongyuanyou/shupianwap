@@ -19,7 +19,7 @@
     <!--S 内容-->
     <div class="nickname_con">
       <div class="nickname_con_item">
-        <input v-model="name" placeholder="请输入您的昵称" type="text" />
+        <input v-model="nickname" placeholder="请输入您的昵称" type="text" />
         <div class="nickname_con_item_close" @click="clear">
           <my-icon name="pay_ic_fail" size="0.32rem" color="#ccc" />
         </div>
@@ -31,6 +31,8 @@
 
 <script>
 import { TopNavBar } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import { userInfo } from '@/api'
 export default {
   name: 'NickName',
   components: {
@@ -38,17 +40,29 @@ export default {
   },
   data() {
     return {
-      name: '逆风而行',
+      nickname: '',
     }
+  },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userInfo.userId || null,
+    }),
+  },
+  mounted() {
+    this.nickname = this.$route.params.nickname
   },
   methods: {
     onClickLeft() {
       // 点击返回
       this.$router.back()
     },
-    onClickRight() {
+    async onClickRight() {
       // 点击保存
-      this.$router.push('/my/information')
+      // this.$router.push('/my/information')
+      const params = {
+        id: this.userId,
+      }
+      const res = await userInfo.update({ axios: this.$axios }, {})
     },
     clear() {
       // 清除昵称

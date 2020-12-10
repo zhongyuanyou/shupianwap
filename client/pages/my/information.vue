@@ -16,7 +16,7 @@
     </sp-top-nav-bar>
     <!--E 头部-->
     <!--S 内容-->
-    <div class="information_con">
+    <div v-if="info" class="information_con">
       <div class="information_con_tp">
         <div class="avatar_con">
           <sp-uploader
@@ -45,7 +45,7 @@
         <div class="cell" @click="handleClick(2)">
           <p class="title">昵称</p>
           <div class="right_icon">
-            <p class="txt">{{ info.nickName || '' }}</p>
+            <p class="txt">{{ info.nickName || '未设置' }}</p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
         </div>
@@ -53,7 +53,7 @@
           <p class="title">生日</p>
           <div class="right_icon">
             <p class="txt">
-              {{ info.birthday || '' }}
+              {{ info.birthday || '未设置' }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
@@ -61,7 +61,7 @@
         <div class="cell" @click="handleClick(4)">
           <p class="title">性别</p>
           <div class="right_icon">
-            <p class="txt">{{ info.sex || '' }}</p>
+            <p class="txt">{{ info.sex === 1 ? '男' : '女' || '未设置' }}</p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
         </div>
@@ -143,7 +143,7 @@ export default {
       userId: (state) => state.user.userInfo.userId || null,
     }),
   },
-  created() {
+  mounted() {
     if (this.userId) {
       this.getUserInfo()
     }
@@ -159,7 +159,7 @@ export default {
     },
     handleClick(val) {
       if (val === 2) {
-        this.$router.push('/my/info/nickname')
+        this.$router.push(`/my/info/${this.info.nickName}`)
       } else if (val === 5) {
         this.$router.push('/my/info/email')
       } else if (val === 4) {
@@ -187,7 +187,6 @@ export default {
       }
       const data = await userInfo.info({ axios: this.$axios }, params)
       this.info = data
-      console.log('info', this.info)
     },
   },
 }

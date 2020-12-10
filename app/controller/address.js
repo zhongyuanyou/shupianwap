@@ -57,6 +57,7 @@ class AddressController extends Controller {
       addressProvince,
       addressCity,
       addressArea,
+      defaultAddress: ctx.request.body.defaultAddress,
       address,
       postcode,
       ext1,
@@ -127,18 +128,17 @@ class AddressController extends Controller {
     }
   }
 
-  @Post('/v1/del_default_address')
-  async status() {
-    // 删除或将收货地址设为默认
+  @Get('/v1/del_address')
+  async del() {
+    // 删除收货地址
     const { ctx, service, app } = this;
     // 定义参数校验规则
     getValiErrors(app, ctx, statusShippingAddress, ctx.request.body);
     // 参数校验通过,正常响应
-    const { id, userId = null } = ctx.request.body;
+    const { id } = ctx.query;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3],
-      userId ? userApi.delShippingAddress : userApi.defaultShippingAddress);
-    const params = userId ? { id } : { id, userId };
-    const { status, data } = await service.curl.curlGet(url, params);
+      userApi.delShippingAddress);
+    const { status, data } = await service.curl.curlGet(url, { id });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
     } else {

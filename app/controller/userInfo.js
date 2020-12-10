@@ -31,31 +31,13 @@ class MyController extends Controller {
     getValiErrors(app, ctx, updateInfo, ctx.request.body);
     // 参数校验通过,正常响应
     const {
-      id,
       type,
-      no,
-      nickName,
-      fullName,
-      sex,
-      phone,
-      birthday,
-      email,
-      area,
-      avatar,
+      value,
     } = ctx.request.body;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], userApi.updateInfo);
     const { status, data } = await service.curl.curlPost(url, {
-      id,
       type,
-      no,
-      nickName,
-      fullName,
-      sex,
-      phone,
-      birthday,
-      email,
-      area,
-      avatar,
+      value,
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
