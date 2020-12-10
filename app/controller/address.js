@@ -49,7 +49,7 @@ class AddressController extends Controller {
       id = null,
     } = ctx.request.body;
     const ads = id ? userApi.updateShippingAddress : userApi.newShippingAddress;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2], ads);
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], ads);
     const params = id ? {
       userId,
       contactName,
@@ -80,12 +80,7 @@ class AddressController extends Controller {
       ext4,
       ext5,
     };
-    const { status, data } = await service.curl.curlPost(url, {
-      method: 'POST',
-      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-      dataType: 'json',
-      data: params,
-    });
+    const { status, data } = await service.curl.curlPost(url, params);
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
     } else {
@@ -100,15 +95,10 @@ class AddressController extends Controller {
     const { ctx, service, app } = this;
     getValiErrors(app, ctx, listShippingAddress, ctx.query);
     // 参数校验通过,正常响应
-    const { userId, limit, page } = ctx.query;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.listShippingAddress);
+    const { userId } = ctx.query;
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], userApi.listShippingAddress);
     const { status, data } = await service.curl.curlGet(url, {
-      method: 'GET',
-      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-      dataType: 'json',
-      data: {
-        userId,
-      },
+      userId,
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || [] });
@@ -118,21 +108,16 @@ class AddressController extends Controller {
     }
   }
 
-  @Get('/v1/shipping_address_info')
+  @Get('/v1/shipping_address_info.do')
   async info() {
     // 查询收货地址详情
     const { ctx, service, app } = this;
     getValiErrors(app, ctx, detailShippingAddress, ctx.query);
     // 参数校验通过,正常响应
     const { id } = ctx.query;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.detailShippingAddress);
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], userApi.detailShippingAddress);
     const { status, data } = await service.curl.curlGet(url, {
-      method: 'GET',
-      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-      dataType: 'json',
-      data: {
-        id,
-      },
+      id,
     });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
@@ -150,15 +135,10 @@ class AddressController extends Controller {
     getValiErrors(app, ctx, statusShippingAddress, ctx.request.body);
     // 参数校验通过,正常响应
     const { id, userId = null } = ctx.request.body;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2],
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3],
       userId ? userApi.delShippingAddress : userApi.defaultShippingAddress);
     const params = userId ? { id } : { id, userId };
-    const { status, data } = await service.curl.curlGet(url, {
-      method: 'GET',
-      // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-      dataType: 'json',
-      data: params,
-    });
+    const { status, data } = await service.curl.curlGet(url, params);
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
     } else {

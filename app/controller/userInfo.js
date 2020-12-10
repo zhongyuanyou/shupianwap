@@ -43,7 +43,7 @@ class MyController extends Controller {
       area,
       avatar,
     } = ctx.request.body;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.updateInfo);
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], userApi.updateInfo);
     const { status, data } = await service.curl.curlPost(url, {
       id,
       type,
@@ -73,7 +73,7 @@ class MyController extends Controller {
     getValiErrors(app, ctx, dataInfo, ctx.query);
     // 参数校验通过,正常响应
     const { id } = ctx.query;
-    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[2], userApi.dataInfo);
+    const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], userApi.dataInfo);
     const { status, data } = await service.curl.curlGet(url, {
       id,
     }

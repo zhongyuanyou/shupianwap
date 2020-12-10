@@ -45,7 +45,7 @@
         <div class="cell" @click="handleClick(2)">
           <p class="title">昵称</p>
           <div class="right_icon">
-            <p class="txt">逆风而行</p>
+            <p class="txt">{{ info.nickName || '' }}</p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
         </div>
@@ -53,13 +53,7 @@
           <p class="title">生日</p>
           <div class="right_icon">
             <p class="txt">
-              {{
-                birthday
-                  ? `${birthday.getFullYear()}-${
-                      birthday.getMonth() + 1
-                    }-${birthday.getDate()}`
-                  : '未设置'
-              }}
+              {{ info.birthday || '' }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
@@ -67,7 +61,7 @@
         <div class="cell" @click="handleClick(4)">
           <p class="title">性别</p>
           <div class="right_icon">
-            <p class="txt">{{ sex }}</p>
+            <p class="txt">{{ info.sex || '' }}</p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
         </div>
@@ -76,7 +70,7 @@
         <div class="cell" @click="handleClick(5)">
           <p class="title">电子邮箱</p>
           <div class="right_icon">
-            <p class="txt">未设置</p>
+            <p class="txt">{{ info.email || '未设置' }}</p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
         </div>
@@ -84,7 +78,11 @@
           <p class="title">所在地区</p>
           <div class="right_icon">
             <p class="txt">
-              {{ area.length ? `${area[0].name} ${area[1].name}` : '未设置' }}
+              {{
+                info.province
+                  ? info.province + ' ' + info.city + ' ' + info.district
+                  : '未设置'
+              }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
@@ -109,10 +107,12 @@
 
 <script>
 import { TopNavBar, Cell, Uploader, Image } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import ImgSelected from '~/components/my/information/ImgSelected'
 import SexSelected from '~/components/my/information/SexSelected'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
 import BirthdaySelected from '~/components/my/information/BirthdaySelected'
+import { userInfo } from '@/api'
 export default {
   name: 'Information',
   components: {
@@ -135,6 +135,17 @@ export default {
       area: [], // 地区
       birthday: '', // 生日
       uploader: [],
+      info: null, // 用户信息
+    }
+  },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userInfo.userId || null,
+    }),
+  },
+  created() {
+    if (this.userId) {
+      this.getUserInfo()
     }
   },
   methods: {
@@ -168,6 +179,16 @@ export default {
       this.birthday = val
     },
     onOversize() {},
+    async getUserInfo() {
+      // 获取用户信息
+      // 获取用户信息
+      const params = {
+        id: this.userId,
+      }
+      const data = await userInfo.info({ axios: this.$axios }, params)
+      this.info = data
+      console.log('info', this.info)
+    },
   },
 }
 </script>

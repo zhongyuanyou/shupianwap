@@ -13,7 +13,7 @@
           @click="handleAvatar"
         />
         <p class="txt" @click="handleClickLogin">
-          {{ hasLogin ? '欢迎你，181****123' : '登录/注册' }}
+          {{ info ? '欢迎你，' + info.fullName || '' : '登录/注册' }}
         </p>
       </div>
     </div>
@@ -54,7 +54,7 @@
     <!--S 按钮区-->
     <!--S 退出登录-->
     <div class="exit_btn">
-      <sp-button v-if="hasLogin" type="default">退出登录</sp-button>
+      <sp-button v-if="info" type="default">退出登录</sp-button>
     </div>
     <!--E 退出登录-->
   </div>
@@ -62,6 +62,8 @@
 
 <script>
 import { Button, Image } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import { userInfo } from '@/api'
 export default {
   layout: 'nav',
   name: 'Index',
@@ -71,24 +73,42 @@ export default {
   },
   data() {
     return {
-      hasLogin: false, // 是否登录
+      info: null, // 用户信息
+    }
+  },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userInfo.userId || null,
+    }),
+  },
+  created() {
+    if (this.userId) {
+      this.getUserInfo()
     }
   },
   methods: {
     handleAvatar() {
       // 点击头像
-      if (!this.hasLogin) {
+      if (!this.info) {
         this.$router.push('/login')
       } else {
         this.$router.push('/my/information')
       }
     },
     handleClickLogin() {
-      if (this.hasLogin) return
+      if (this.info) return
       this.$router.push({
         name: 'login',
         query: { redirect: this.$route.fullPath },
       })
+    },
+    async getUserInfo() {
+      // 获取用户信息
+      const params = {
+        id: this.userId,
+      }
+      const data = await userInfo.info({ axios: this.$axios }, params)
+      this.info = data
     },
   },
 }
