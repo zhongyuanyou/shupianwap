@@ -26,7 +26,7 @@ class CategoryController extends Controller {
     }
   }
   @Get('/v1/get_product_category.do')
-  async getJyProductCategory() {
+  async getProductCategory() {
     // 获取产品的分类
     const { ctx, service, app } = this;
     try {

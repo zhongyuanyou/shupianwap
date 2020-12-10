@@ -78,6 +78,14 @@ export default {
       },
     },
     searchText: {
+      // 搜索框内容
+      type: String,
+      default() {
+        return ''
+      },
+    },
+    isChangeTab: {
+      // 顶层tab服务资源和交易资源发生了改变需要清空筛选项
       type: String,
       default() {
         return ''
@@ -89,11 +97,15 @@ export default {
       formData: {
         page: 1,
         limit: 10,
+        needTypes: 0,
+        sortBy: '',
+        classCodes: '',
+        keywords: '',
       },
       listShow: true,
       loading: false,
       finished: false,
-      selectValue: 0,
+      selectValue: '',
       dropdownTitle1: '全部服务',
       dropdownTitle2: '默认排序',
       moreTextCss: ['dropdownItem', 'dropdownItem'],
@@ -106,6 +118,11 @@ export default {
     }
   },
   watch: {
+    isChangeTab() {
+      this.selectValue = ''
+      this.formData.sortBy = ''
+      this.formData.classCodes = ''
+    },
     initServiceData(val) {
       // 商品列表
       this.serveGoodsListData = clone(val.goods.records)
@@ -116,6 +133,7 @@ export default {
           value: item.code,
         })
       })
+      // 分类数据
       this.typeData = clone(val.typeData)
     },
     selectValue(val) {
@@ -141,6 +159,7 @@ export default {
       topHeight +
       'px'
     this.reqType = 'serve'
+    this.$emit('goodsList', 'serve', this)
   },
   methods: {
     handleSelect(val) {
@@ -224,6 +243,7 @@ export default {
       // this.moreTextCss[index] = arr.join(' ')
       this.$set(this.moreTextCss, index, arr.join(' '))
     },
+    resetAllSelect() {},
   },
 }
 </script>
