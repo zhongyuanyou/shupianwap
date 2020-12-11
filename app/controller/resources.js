@@ -1,3 +1,8 @@
+/**
+ * @Description: 本模块用于表单资源提交
+ * @author zhaoDongMing
+ * @date
+ */
 'use strict';
 const Controller = require('egg').Controller;
 const { Post, Prefix } = require('egg-shell-decorators');
