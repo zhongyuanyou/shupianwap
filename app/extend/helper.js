@@ -139,10 +139,8 @@ module.exports = {
       case 'ECONNREFUSED':
         return {
           code: '406',
-          message:
-                        '请求的 url 所属 IP 或者端口无法连接成功,请确保IP或者端口设置正确',
-          data:
-                        '请求的 url 所属 IP 或者端口无法连接成功,请确保IP或者端口设置正确',
+          message: '请求的 url 所属 IP 或者端口无法连接成功,请确保IP或者端口设置正确',
+          data: '请求的 url 所属 IP 或者端口无法连接成功,请确保IP或者端口设置正确',
         };
       case 'ENOTFOUND':
         return {
