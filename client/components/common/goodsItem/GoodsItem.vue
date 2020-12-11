@@ -5,10 +5,13 @@
       <span class="tag">急售</span>
     </div>
     <div class="goods-right">
-      <h3>全国地区 外资公司注册</h3>
-      <p>累计服务10000家外资企业</p>
+      <h3>{{ itemData.name }}</h3>
+      <p>{{ itemData.productDescription }}</p>
       <div class="tags"><span>极速办理</span><span>极速办理</span></div>
-      <div class="price-sales"><span>3000元</span><span>销量 6000</span></div>
+      <div class="price-sales">
+        <span>{{ itemData.referencePrice }}元</span
+        ><span>销量 {{ itemData.salesSum }}</span>
+      </div>
     </div>
   </div>
 </template>

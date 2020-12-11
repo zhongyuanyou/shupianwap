@@ -18,7 +18,21 @@ export default {
           .searchServeGoodsList({ axios: this.$axios }, this.formData)
           .then((data) => {
             console.log(data)
-            this.serveGoodsListData = data
+            this.serveGoodsListData = [
+              ...this.serveGoodsListData,
+              ...data.goods.records,
+            ]
+            if (data.goods.records.length > 0) {
+              this.formData.start += 1
+              this.loading = false
+            } else {
+              this.finished = true
+            }
+            if (this.serveGoodsListData.length === 0) {
+              this.listShow = false
+            } else {
+              this.listShow = true
+            }
           })
       } else {
         console.log('jyGoodsListData', this.jyGoodsListData)
