@@ -14,6 +14,6 @@ module.exports = {
   // 分类首屏数据校验规则
   screenData: {
     categoryCode: { type: 'string', required: true },
-    locationCode: { type: 'string', required: true },
+    locationCode: { type: 'string', required: false },
   },
 };

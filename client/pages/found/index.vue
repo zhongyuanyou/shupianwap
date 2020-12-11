@@ -18,7 +18,10 @@
         :key="item.code"
         :title="item.name"
       >
-        <Con />
+        <Con
+          :information_banner="information_banner"
+          :information_list="information_list"
+        />
       </sp-work-tab>
     </sp-work-tabs>
     <!--E tab-->
@@ -64,9 +67,18 @@ export default {
     this.information_list = this.homeData.information_list
   },
   methods: {
-    onClick(name, title) {
+    async onClick(index, title) {
       // 点击tab标签
-      console.log(name, title)
+      const categoryCode = this.information_class[index].code
+      const params = {
+        categoryCode,
+      }
+      const res = await this.$axios.get(foundApi.screenRequest, params)
+      if (res.code === 200) {
+        this.information_banner = res.data.information_banner
+        this.information_list = res.data.information_list
+      }
+      console.log('res', res)
     },
   },
 }

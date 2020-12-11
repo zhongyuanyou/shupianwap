@@ -1,10 +1,16 @@
 <template>
   <div class="page-content">
     <!-- S 搜索 + 大banner -->
-    <SearchBanner ref="searchBannerRef" />
+    <SearchBanner
+      ref="searchBannerRef"
+      :fiexd-banner-data="initData.fiexdBannerData"
+    />
     <!-- E 搜索 + 大banner -->
     <!-- S 金刚区nav -->
-    <HomeNav />
+    <HomeNav
+      :fiexd-nav="initData.fiexdNavData"
+      :roll-nav="initData.rollNavData"
+    />
     <!-- E 金刚区nav -->
     <!-- S 轮播banner -->
     <SwiperBanner />
@@ -68,23 +74,33 @@ export default {
     redirect,
     error,
   }) {
+    const fiexdAdCode = 'ad100064' // 顶部固定banner的code
+    const rollAdCode = 'ad100056' // 导航下方轮播banner code
     // 首屏请求导航和广告的参数
     const initReqParams = {
-      locationCodeList: ['ad100064'], // 广告位code
+      locationCodeList: [fiexdAdCode, rollAdCode], // 广告位code列表
       rollPage: 1, // 滚动导航当前页
-      rollLimit: 20, // 滚动导航每页条数
+      rollLimit: 1000, // 滚动导航每页条数
       fixedPage: 1, // 固定导航当前页
       fixedLimit: 5, // 固定导航每页条数
-      fixedNavCategoryCode: 'nav100020', // 固定导航分类code
-      fixedNavPlatformCode: 'CRISPS', // 固定导航平台code
-      rollNavCategoryCode: 'nav100020', // 滚动导航分类code
-      rollNavPlatformCode: 'CRISPS', // 滚动导航平台code
+      fixedNavCategoryCode: 'nav065140', // 固定导航分类code
+      fixedNavPlatformCode: 'COMDIC_PLATFORM_CRISPS', // 固定导航平台code
+      rollNavCategoryCode: 'nav000888', // 滚动导航分类code
+      rollNavPlatformCode: 'COMDIC_PLATFORM_CRISPS', // 滚动导航平台code
     }
-    let initData = {}
+    const initData = {
+      fiexdBannerData: [], // 固定广告
+      rollBannerData: [], // 轮播广告
+      fiexdNavData: [], // 固定导航
+      rollNavData: [], // 滚动导航
+    }
     try {
       const res = await $axios.post(homeApi.initRequest, initReqParams)
       if (res.code === 200) {
-        initData = res.data
+        initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
+        initData.rollBannerData = res.data.advertising[rollAdCode] || []
+        initData.fiexdNavData = res.data.fixedNavList || []
+        initData.rollNavData = res.data.rollNavList || []
       }
     } catch (error) {}
     return {

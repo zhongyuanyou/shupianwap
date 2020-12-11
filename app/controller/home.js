@@ -72,7 +72,8 @@ class homeController extends Controller {
             service,
             ctx.request.body.locationCodeList
         );
-        const includeField = "id,imageUrl,name,url,wapRoute"; // 字段筛选过滤
+        const includeField =
+            "id,imageUrl,navigationImageUrl,name,url,wapRoute,navigationImageUrl,navigationWay,executionParameters"; // 字段筛选过滤
         const navUrl = ctx.helper.assembleUrl(
             app.config.apiClient.APPID[0],
             contentApi.findNav
@@ -101,15 +102,17 @@ class homeController extends Controller {
             let rollNavList = []; // 滚动导航数据
             // 广告数据处理
             if (resData[0].code === 200) {
-                advertising = resData[0].data;
+                Object.keys(resData[0].data).forEach((key) => {
+                    advertising[key] = resData[0].data[key].sortMaterialList;
+                });
             }
             // 固定导航数据处理
             if (resData[1].data.code === 200) {
-                fixedNavList = resData[1].data.data;
+                fixedNavList = resData[1].data.data.rows;
             }
             // 滚动导航数据处理
             if (resData[2].data.code === 200) {
-                rollNavList = resData[2].data.data;
+                rollNavList = resData[2].data.data.rows;
             }
             ctx.helper.success({
                 ctx,
