@@ -68,6 +68,39 @@ class DictController extends Controller {
       ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
+
+  @Get('/v1/cms_code_tier.do')
+  async queryCmsCodesTier() {
+    // 查询字典，返回该字典下所有层级
+    const { ctx, service, app } = this;
+    // 参数校验
+    const valiErrors = rules.queryCmsCodeTier(this);
+    // 参数校验未通过
+    if (valiErrors) {
+      ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+      return;
+    }
+    // 参数校验通过,正常响应
+    const { code } = ctx.query;
+    // 获取到请求地址
+    const url = ctx.helper.assembleUrl(
+      app.config.apiClient.APPID[0],
+      contentApi.dataDictsTier
+    );
+    // 发送httpClient请求
+    const { status, data } = await service.curl.curlAll(url, {
+      method: 'GET',
+      data: {
+        code,
+      },
+    });
+    if (status === 200 && data.code === 200) {
+      ctx.helper.success({ ctx, code: 200, res: data.data });
+    } else {
+      ctx.logger.error(status, data);
+      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
+    }
+  }
 }
 
 module.exports = DictController;
