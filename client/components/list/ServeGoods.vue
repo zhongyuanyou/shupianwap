@@ -11,6 +11,7 @@
         <ServiceSelect
           :active-data="activeData"
           :items="typeData"
+          value="code"
           @select="handleSelect"
         />
         <BottomConfirm
@@ -24,6 +25,7 @@
         :title-class="moreTextCss[1]"
         :options="option"
         @open="open(1)"
+        @change="selectDropdown"
         @close="close(1)"
       />
     </sp-dropdown-menu>
@@ -40,7 +42,11 @@
       offset="30"
       @load="onLoad"
     >
-      <goods-item v-for="(item, index) in serveGoodsListData" :key="index" />
+      <goods-item
+        v-for="(item, index) in serveGoodsListData"
+        :key="index"
+        :item-data="item"
+      />
     </sp-list>
     <Subscribe v-show="!listShow" />
   </div>
@@ -84,18 +90,11 @@ export default {
         return ''
       },
     },
-    isChangeTab: {
-      // 顶层tab服务资源和交易资源发生了改变需要清空筛选项
-      type: String,
-      default() {
-        return ''
-      },
-    },
   },
   data() {
     return {
       formData: {
-        page: 1,
+        start: 2,
         limit: 10,
         needTypes: 0,
         sortBy: '',
@@ -118,10 +117,9 @@ export default {
     }
   },
   watch: {
-    isChangeTab() {
-      this.selectValue = ''
-      this.formData.sortBy = ''
-      this.formData.classCodes = ''
+    searchText(val) {
+      this.formData.keywords = val
+      this.initGoodsList()
     },
     initServiceData(val) {
       // 商品列表
@@ -135,9 +133,6 @@ export default {
       })
       // 分类数据
       this.typeData = clone(val.typeData)
-    },
-    selectValue(val) {
-      this.dropdownTitle2 = this.option[val].text
     },
     activeData(val) {
       if (val.length) {
@@ -162,6 +157,14 @@ export default {
     this.$emit('goodsList', 'serve', this)
   },
   methods: {
+    selectDropdown(val) {
+      const option = this.option.filter((item) => {
+        return item.value === val
+      })
+      this.dropdownTitle2 = option.text
+      this.formData.sortBy = val
+      this.initGoodsList()
+    },
     handleSelect(val) {
       // 分类选择
       console.log(val)
@@ -182,9 +185,9 @@ export default {
     },
     onLoad() {
       console.log(1)
-      const arr = new Array(10).fill(2)
-      this.serveGoodsListData = [...this.serveGoodsListData, ...arr]
-      this.loading = false
+      // const arr = new Array(10).fill(2)
+      // this.serveGoodsListData = [...this.serveGoodsListData, ...arr]
+      this.searchKeydownHandle()
     },
     resetFilters() {
       // 重置分类筛选
@@ -194,11 +197,42 @@ export default {
       // 确认筛选
       console.log('this.activeData', this.activeData)
       this.saveActiveData = clone(this.activeData)
+      this.formData.classCodes = this.typeDataHandle()
+      this.initGoodsList()
       this.$refs.item.toggle()
+    },
+    typeDataHandle() {
+      // 处理选择的分类数据
+      let strCode
+      if (this.saveActiveData.length === 0) {
+        strCode = ''
+      } else if (
+        this.saveActiveData[1].services[0].code === -1 &&
+        this.saveActiveData[0].code === -1
+      ) {
+        // 父选项和子选择项都为不限
+        strCode = ''
+      } else if (this.saveActiveData[1].services[0].code === -1) {
+        strCode = this.saveActiveData[0].code
+      } else {
+        strCode = []
+        this.saveActiveData[1].services.forEach((item) => {
+          strCode.push(item.code)
+        })
+        strCode = strCode.join(',')
+      }
+      return strCode
+    },
+    initGoodsList() {
+      // 获取初始数据
+      this.formData.start = 1
+      this.serveGoodsListData = []
+      this.loading = true
+      this.finished = false
+      this.searchKeydownHandle()
     },
     concatStr(val) {
       // 处理筛选头部的展示
-      console.log('sad', val)
       if (!val.length) {
         this.dropdownTitle1 = '全部服务'
         return

@@ -21,7 +21,6 @@
         <serveGoods
           :init-service-data="serveGoodsListData"
           :search-text="formData.searchText"
-          :is-change-tab="reqType"
           @goodsList="getTabVue"
         />
       </sp-work-tab>
@@ -29,7 +28,6 @@
         <JyGoods
           :init-list-data="jyGoodsListData"
           :search-text="formData.searchText"
-          :is-change-tab="reqType"
           @goodsList="getTabVue"
         />
       </sp-work-tab>
@@ -105,6 +103,7 @@ export default {
         // 那么在切换列表的时候需要重新请求数据
         this.tabVues[this.reqType].searchKeydownHandle()
       }
+      this.isInput = false
     },
   },
   mounted() {
@@ -115,16 +114,7 @@ export default {
     getInitServeData() {
       // 获取服务列表需要的数据
       goods
-        .searchServeGoodsList(
-          { axios: this.$axios },
-          {
-            start: 1,
-            limit: 10,
-            sortBy: 'CONDITION-QF-SORT-MR',
-            searchText: '',
-            needTypes: 1,
-          }
-        )
+        .searchServeGoodsList({ axios: this.$axios }, this.formData)
         .then((data) => {
           console.log(data)
           this.serveGoodsListData = data
