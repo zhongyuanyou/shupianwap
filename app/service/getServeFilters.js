@@ -5,12 +5,16 @@ const { contentApi } = require('./../../config/serveApi/index');
 function categoryHandle(arr) {
   let arr1 = []
   let arr2 = []
+  // 找出层级为1的分类
   arr1 = arr.filter((item) => {
     return item.level === 1
   })
+  // 找出层级为2的分类
   arr2 = arr.filter((item) => {
     return item.level === 2
   })
+  // Todo 2级分类需要添加不限数据
+
   arr1.forEach((item) => {
     item.children = arr2.filter((i) => {
       return item.id === i.parentId

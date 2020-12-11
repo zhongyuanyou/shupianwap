@@ -21,7 +21,7 @@
     <div class="address_con">
       <sp-form class="address_con_tp">
         <sp-field
-          v-model="ruleForm.name"
+          v-model="ruleForm.createUserName"
           center
           label="联系人"
           placeholder="请填写收货人姓名"
@@ -33,7 +33,7 @@
           </template>
         </sp-field>
         <sp-field
-          v-model="ruleForm.tel"
+          v-model="ruleForm.phone"
           center
           type="number"
           label="手机号"
@@ -56,7 +56,7 @@
           </template>
         </sp-field>
         <sp-field
-          v-model="ruleForm.detailedAddress"
+          v-model="ruleForm.address"
           center
           label="详细地址"
           placeholder="请填写详细地址"
@@ -65,7 +65,7 @@
       </sp-form>
       <div class="address_con_bot">
         <p class="address_con_bot_title">设为默认地址</p>
-        <sp-switch v-model="ruleForm.default" inactive-color="#dddddd" />
+        <sp-switch v-model="ruleForm.defaultAddress" inactive-color="#dddddd" />
       </div>
     </div>
     <!--E 内容-->
@@ -100,6 +100,7 @@ import {
   BottombarButton,
 } from '@chipspc/vant-dgg'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
+import { userInfo } from '@/api'
 export default {
   name: 'Id',
   components: {
@@ -117,11 +118,11 @@ export default {
   data() {
     return {
       ruleForm: {
-        name: '',
-        tel: '',
+        createUserName: '',
+        phone: '',
         address: '',
         detailedAddress: '',
-        default: false,
+        defaultAddress: 0,
       },
       show: false, // 地区选择弹窗显示隐藏状态
       popupStatus: false, // 删除确认框显示隐藏状态
@@ -129,6 +130,11 @@ export default {
         type: 'functional',
         title: '确定删除收货地址吗？',
       },
+    }
+  },
+  mounted() {
+    if (this.$route.params.type === 'edit') {
+      this.getAddressDetail()
     }
   },
   methods: {
@@ -153,6 +159,15 @@ export default {
       if (this.$route.params.type === 'edit') {
         this.popupStatus = true
       }
+    },
+    async getAddressDetail() {
+      // 获取地址详情
+      const params = {
+        id: this.$route.params.id,
+      }
+      const data = await userInfo.addressDetail({ axios: this.$axios }, params)
+      this.ruleForm = data
+      console.log('dataaa', data)
     },
   },
 }

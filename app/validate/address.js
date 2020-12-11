@@ -20,8 +20,8 @@ module.exports = {
   // 查询收货地址列表校验规则
   listShippingAddress: {
     userId: { type: 'string', required: true }, // 用户id
-    limit: { type: 'string', required: true }, // 每页显示条数
-    page: { type: 'string', required: true }, // 当前页
+    limit: { type: 'string', required: false }, // 每页显示条数
+    page: { type: 'string', required: false }, // 当前页
   },
   // 查询收货地址详情校验规则
   detailShippingAddress: {

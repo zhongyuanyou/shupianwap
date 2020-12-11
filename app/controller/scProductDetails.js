@@ -166,7 +166,32 @@ class ScProductDetailsController extends Controller {
       productApi.getServiceResource
     );
     // 获取到上架产品组的产品和产品对应的站点code
-    const { status, data } = await service.curl.curlPost(url, ctx.request.body);
+    const {
+      classCode,
+      searchKey,
+      goodsNo,
+      goodsPriceStart,
+      goodsPriceEnd,
+      fieldList = [],
+      withFieldFlg,
+      orderBy,
+      isAsc,
+      page = 1,
+      limit = 10,
+    } = ctx.request.body;
+    const { status, data } = await service.curl.curlPost(url, {
+      classCode,
+      searchKey,
+      goodsNo,
+      goodsPriceStart,
+      goodsPriceEnd,
+      fieldList,
+      withFieldFlg,
+      orderBy,
+      isAsc,
+      start: page,
+      limit,
+    });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data });
     } else {

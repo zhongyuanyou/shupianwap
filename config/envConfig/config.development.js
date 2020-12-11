@@ -94,7 +94,11 @@ module.exports = appInfo => {
       //  产品中心实例名称
       'crisps-product-center-api',
       // 用户中心
-      'crisps-auth-center-api',
+      'crisps-auth-center-api', // 鉴权
+      'crisps-user-center-api', // 用户
+      'crm-biz', // 企大顺
+      // 商户中心
+      'merchant-center-manager',
     ],
   };
   // eureka相关配置
@@ -113,11 +117,12 @@ module.exports = appInfo => {
       healthCheckUrl: null,
       vipAddress: 'crisps-app-wap-bff-api',
       dataCenterInfo: {
-        '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+        '@class':
+                    'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
         name: 'MyOwn',
       },
       metadata: {
-        version: '1.5',
+        version: '1.1',
       },
     },
     requestMiddleware: (requestOpts, done) => {
@@ -146,8 +151,8 @@ module.exports = appInfo => {
   };
   // 在此处添加个人配置
   const userConfig = {
-    // redis默认缓存数据的时长(S秒),缓存五分钟
-    redisCacheTime: 60 * 5,
+    // redis默认缓存数据的时长(S秒),产线环境24小时,开发环境1小时
+    redisCacheTime: 60 * 60,
     baseUrl: '',
   };
   return {

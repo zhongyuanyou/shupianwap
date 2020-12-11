@@ -13,7 +13,7 @@ module.exports.userApi = {
   register: "/nk/api/register/v1/register_user.do",
   reset: "/nk/api/account/v1/reset_password_by_user_id.do",
   updateInfo: "/yk/user/v1/update_user_by_type.do", // 修改用户信息
-  dataInfo: "/nk/api/user/v1/find_user_by_no.do", // 查询用户信息
+  dataInfo: "/nk/api/user/v1/find_user_by_id.do", // 查询用户信息
   updateShippingAddress: "/yk/api/profile/v1/update_user_address.do", // 编辑收货地址
   newShippingAddress: "/yk/api/profile/v1/save_user_address.do", // 新增收货地址
   listShippingAddress: "/yk/api/profile/v1/find_shopping_address_list.do", // 收货地址列表

@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-28 17:31:19
+ * @LastEditTime: 2020-12-09 22:01:18
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/shoppingCar/commodityConsultation.vue
+ * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
 
 <template>
@@ -28,26 +28,32 @@
     </div>
     <div class="body">
       <div class="shopping-car__content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
-          <sp-list
-            v-model="loading"
-            class="shopping-car__goods"
-            finished-text="没有更多了"
-            :finished="finished"
-            @load="onLoad"
-          >
-            <div
-              v-for="(item, index) in list"
-              :key="item"
-              class="shopping-car__goods-item"
+        <div v-if="false">
+          <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+            <sp-list
+              v-model="loading"
+              class="shopping-car__goods"
+              finished-text="没有更多了"
+              :finished="finished"
+              @load="onLoad"
             >
-              <GoodsItem
-                :status="index === 1 ? 'offShelf' : 'sale'"
-                @operation="handleItemOperation"
-              />
-            </div>
-          </sp-list>
-        </sp-pull-refresh>
+              <div
+                v-for="(item, index) in list"
+                :key="item"
+                class="shopping-car__goods-item"
+              >
+                <GoodsItem
+                  :status="index === 1 ? 'offShelf' : 'sale'"
+                  @operation="handleItemOperation"
+                />
+              </div>
+            </sp-list>
+          </sp-pull-refresh>
+        </div>
+
+        <div v-else>
+          <ShoppingCarNull />
+        </div>
       </div>
       <div v-if="recommendList && recommendList.length" class="recommend">
         <h3 class="recommend__title">为您推荐</h3>
@@ -67,12 +73,14 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from 'vuex'
 import { TopNavBar, Button, Toast, PullRefresh, List } from '@chipspc/vant-dgg'
 
 import GoodsPro from '@/components/planner/GoodsPro'
 import GoodsItem from '@/components/shoppingCar/GoodsItem'
 import Bottombar from '@/components/shoppingCar/Bottombar'
 import GoodsPopup from '@/components/shoppingCar/GoodsPopup'
+import ShoppingCarNull from '@/components/shoppingCar/ShoppingCarNull'
 
 const shoppingCarStatusList = {
   completed: '完成',
@@ -90,6 +98,7 @@ export default {
     GoodsPro,
     GoodsItem,
     Bottombar,
+    ShoppingCarNull,
   },
   data() {
     return {
@@ -101,7 +110,11 @@ export default {
       shoppingCarStatus: 'completed', // edit: 编辑
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user.userInfo,
+    }),
+  },
   created() {
     this.getList()
   },

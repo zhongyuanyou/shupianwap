@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 17:22:12
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-08 20:37:49
+ * @LastEditTime: 2020-12-09 16:31:42
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/register.vue
 -->
@@ -20,6 +20,7 @@
         <PhoneField
           key="tel"
           v-model="registerForm.tel"
+          sms-code-type="register"
           @input="handleTelInput"
           @clicked="handleClickCodeBtn"
         />
@@ -104,6 +105,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 import {
   TopNavBar,
   Form,
@@ -139,11 +142,16 @@ export default {
       },
       passwordFieldType: 'password', // text
       isValidSubmit: false,
+      redirect: this.$route.query.redirect || '/', // 登录后需要跳转的地址
     }
   },
   methods: {
+    ...mapMutations({
+      setUserInfo: 'user/SET_USER',
+    }),
     onClickLeft() {
       console.log('close')
+      this.$router.replace(this.redirect)
     },
     handleClickCodeBtn(isValidTel) {
       if (!isValidTel) {
@@ -160,7 +168,10 @@ export default {
         this.loginToast(message)
         return
       }
-      this.register()
+      this.register().then(() => {
+        // 登录后 从哪里来到哪里去
+        this.$router.push(this.redirect)
+      })
     },
     handleTelInput(valueObj = {}) {
       console.log('handleTelInput:', valueObj)
@@ -188,10 +199,16 @@ export default {
     handleClick(type) {
       switch (type) {
         case 'telLogin':
-          this.$router.push({ name: 'login' })
+          this.$router.replace({
+            name: 'login',
+            query: { redirect: this.redirect },
+          })
           break
         case 'forget':
-          this.$router.push({ name: 'login-forget' })
+          this.$router.replace({
+            name: 'login-forget',
+            query: { redirect: this.redirect },
+          })
           break
       }
     },
@@ -208,6 +225,9 @@ export default {
       }
       try {
         const data = await auth.register({ axios: this.$axios }, params)
+        if (data != null) this.setUserInfo(data) // 注册成功后，返回的也是登录信息，所以也存
+
+        return data
       } catch (error) {
         this.loginToast(error && error.message)
       }

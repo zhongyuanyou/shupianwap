@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-08 20:03:18
+ * @LastEditTime: 2020-12-09 15:39:23
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/forget.vue
 -->
@@ -21,6 +21,7 @@
         <PhoneField
           key="tel"
           v-model="forgetForm.tel"
+          sms-code-type="reset"
           @input="handleTelInput"
           @clicked="handleCodeBtnClick"
         />
@@ -106,11 +107,13 @@ export default {
         confirmPassword: '',
       },
       isValidSubmit: false,
+      redirect: this.$route.query.redirect || '/', // 登录后需要跳转的地址
     }
   },
   methods: {
     onClickLeft() {
       console.log('close')
+      this.$router.replace(this.redirect)
     },
     handleTelInput(valueObj = {}) {
       const { value, valid } = valueObj
@@ -177,18 +180,27 @@ export default {
         this.loginToast(message)
         return
       }
-      this.reset()
+      this.reset().then(() => {
+        this.$router.replace({
+          name: 'login',
+          query: { redirect: this.redirect },
+        })
+      })
     },
     handleClick(type) {
       switch (type) {
         case 'telLogin':
-          this.$router.push({ name: 'login' })
+          this.$router.replace({
+            name: 'login',
+            query: { redirect: this.redirect },
+          })
           break
         case 'accountLogin':
-          this.$router.push({
+          this.$router.replace({
             name: 'login',
             query: {
               loginType: 'account',
+              redirect: this.redirect,
             },
           })
           break
@@ -196,13 +208,19 @@ export default {
     },
 
     async reset() {
-      const { tel, authCode, newPassword } = this.forgetForm
-      const params = {
-        phone: tel,
-        smsCode: authCode,
-        newPassword,
+      try {
+        const { tel, authCode, newPassword } = this.forgetForm
+        const params = {
+          phone: tel,
+          smsCode: authCode,
+          newPassword,
+          userType: 'ORDINARY_USER',
+        }
+        const data = await auth.reset({ axios: this.$axios }, params)
+        return data
+      } catch (error) {
+        this.loginToast(error.message)
       }
-      const data = await auth.reset({ axios: this.$axios }, params)
     },
     // 自定义提示框
     loginToast(

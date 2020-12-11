@@ -6,7 +6,7 @@ class CodeService extends Service {
     // 获取验证码
     return new Promise(async resolve => {
       const { ctx, app } = this;
-      const sysCode = app.config.apiClient.APPID[2];
+      const sysCode = app.config.apiClient.APPID[3];
       const address = userApi.getSmsCode;
       const url = ctx.helper.assembleUrl(sysCode, address);
       if (!url) {

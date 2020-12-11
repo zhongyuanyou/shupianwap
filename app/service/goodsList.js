@@ -18,7 +18,30 @@ class goodsListService extends Service {
       }
       try {
         let params = JSON.parse(JSON.stringify(data))
+        switch(params.sortBy) {
+          case 'CONDITION-QF-SORT-MR':
+            params.orderBy = 'DEFAULT_SORT' // 默认排序
+            params.isAsc = true
+            break
+          case 'CONDITION-QF-SORT-XLDG': // 按销量从低到高
+            params.orderBy = 'SALES_SORT' // 销量排序
+            params.isAsc = true // 默认排序
+            break
+          case 'CONDITION-QF-SORT-XLGD': // 按销量从高到低
+            params.orderBy = 'SALES_SORT' // 销量排序
+            params.isAsc = false
+            break
+          case 'CONDITION-QF-SORT-JGDG': // 按价格从低到高
+            params.orderBy = 'REFERENCE_PRICE_SORT' // 价格排序
+            params.isAsc = true
+            break
+          case 'CONDITION-QF-SORT-JGGD': // 按价格从高到低
+            params.orderBy = 'REFERENCE_PRICE_SORT' // 价格排序
+            params.isAsc = false
+            break
+        }
         delete params.needTypes
+        delete params.sortBy
         const result = await service.curl.curlPost(url, params);
         resolve(result);
       } catch (err) {

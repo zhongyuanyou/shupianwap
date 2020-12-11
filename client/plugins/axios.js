@@ -1,4 +1,5 @@
 import qs from 'qs'
+import { saveAxiosInstance } from '@/utils/request'
 const BASE = require('~/config/index.js')
 export default function ({ $axios, redirect }) {
   // 设置基本URL
@@ -18,7 +19,8 @@ export default function ({ $axios, redirect }) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
-      config.headers.sysCode = 'zky-api'
+      config.headers.sysCode = 'pcd-api'
+      config.headers['X-Req-UserId'] = ['7950560027311669248']
       return config
     },
     (error) => {
@@ -49,4 +51,5 @@ export default function ({ $axios, redirect }) {
       redirect('/500')
     }
   })
+  saveAxiosInstance($axios)
 }

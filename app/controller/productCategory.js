@@ -27,14 +27,14 @@ class ProductCategoryController extends Controller {
       return;
     }
     // 获取广告数据，若有locationCode的情况下
-    const getAdvertising = service.common.banner.getAdList([ 'ad10026' ]);
+    const getAdvertising = service.common.banner.getAdList([ 'ad100026' ]);
     // 获取产品分类
     const getClassification = service.common.category.getProductCategory('PRO_CLASS_TYPE_SERVICE');
 
     const reqAll = [ getClassification, getAdvertising ];
     try {
       const resData = await Promise.all(reqAll);
-      let categoryList = []; // 产品分类集合
+      let categoryList = [];
       let recommendData = []; // 广告数据
       // 产品分类总和
       if (
@@ -59,14 +59,17 @@ class ProductCategoryController extends Controller {
           }
         }
       }
-
+      // 筛选没有子级分类的产品分类
+      categoryList = categoryList.filter(item => {
+        return item.children.length;
+      });
       // 广告数据
       if (
-        resData[0].code === 200 &&
-        resData[0].data &&
-        Array.isArray(resData[0].data)
+        resData[1].code === 200 &&
+        resData[1].data &&
+        Array.isArray(resData[1].data)
       ) {
-        recommendData = resData[0].data;
+        recommendData = resData[1].data;
       }
       ctx.helper.success({
         ctx,

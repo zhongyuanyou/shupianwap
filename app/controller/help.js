@@ -41,6 +41,8 @@ class helpController extends Controller {
                 code: { type: "string", required: true }, // 获取分类列表选项的code
                 limit: { type: "integer", required: true }, // 查询文章的每页条数
                 page: { type: "integer", required: true }, // 查询文章的当前页
+                platformCode: { type: "string", required: true }, // 查询文章的平台code
+                terminalCode: { type: "string", required: true }, // 查询文章的终端code
             };
         }
         if (ctx.request.body.findType === 1) {
@@ -50,6 +52,8 @@ class helpController extends Controller {
                 limit: { type: "integer", required: true }, // 查询文章的每页条数
                 page: { type: "integer", required: true }, // 查询文章的当前页
                 keyword: { type: "string", required: false }, // 关键词搜索文章
+                platformCode: { type: "string", required: true }, // 查询文章的平台code
+                terminalCode: { type: "string", required: true }, // 查询文章的终端code
             };
         }
         // 参数校验
@@ -66,6 +70,8 @@ class helpController extends Controller {
                     categoryCode: ctx.request.body.categoryCode,
                     limit: ctx.request.body.limit,
                     page: ctx.request.body.page,
+                    platformCode: ctx.request.body.platformCode,
+                    terminalCode: ctx.request.body.terminalCode,
                     keyword: ctx.request.body.keyword,
                 });
                 if (articleResData.data.code === 200) {
@@ -102,7 +108,9 @@ class helpController extends Controller {
                 adListData = resData[0].data || [];
             }
             if (resData[1].data.code === 200) {
-                categoryList = resData[1].data.data.childrenList || [];
+                categoryList = resData[1].data.data
+                    ? resData[1].data.data.childrenList
+                    : [];
             }
             if (categoryList.length) {
                 // 获取文章列表
@@ -110,6 +118,8 @@ class helpController extends Controller {
                     categoryCode: categoryList[0].code,
                     limit: ctx.request.body.limit,
                     page: ctx.request.body.page,
+                    platformCode: ctx.request.body.platformCode,
+                    terminalCode: ctx.request.body.terminalCode,
                 });
                 if (articleRes.data.code === 200) {
                     articleData.rows = articleRes.data.data.rows;
