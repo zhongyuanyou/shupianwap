@@ -2,29 +2,37 @@
   <div class="nav-content">
     <nav>
       <!-- S 固定导航 -->
-      <ul v-if="fixedNavList && fixedNavList.length" class="fixed-nav">
-        <li v-for="(item, index) in fixedNavList" :key="index">
-          <a href="javascript:void(0);">
-            <img :src="item.icon" alt="" />
+      <ul v-if="fiexdNav && fiexdNav.length" class="fixed-nav">
+        <li v-for="(item, index) in fiexdNav" :key="index">
+          <a v-if="item.navigationWay === 2" :href="jumpHandle(item)">
+            <img :src="item.navigationImageUrl" alt="" />
             <span>{{ item.name }}</span>
           </a>
+          <nuxt-link v-else :to="jumpHandle(item)">
+            <img :src="item.navigationImageUrl" alt="" />
+            <span>{{ item.name }}</span>
+          </nuxt-link>
         </li>
       </ul>
       <!-- E 固定导航 -->
       <!-- S 可滚动导航 -->
       <div ref="refScroll" class="scroll-centent" @scroll="scrollHandle">
-        <ul v-if="scrollNavList && scrollNavList.length" class="scroll-nav">
-          <li v-for="(item, index) in scrollNavList" :key="index">
-            <a href="javascript:void(0);">
-              <img :src="item.icon" alt="" />
+        <ul v-if="rollNav && rollNav.length" class="scroll-nav">
+          <li v-for="(item, index) in rollNav" :key="index">
+            <a v-if="item.navigationWay === 2" :href="jumpHandle(item)">
+              <img :src="item.navigationImageUrl" alt="" />
               <span>{{ item.name }}</span>
             </a>
+            <nuxt-link v-else :to="jumpHandle(item)">
+              <img :src="item.navigationImageUrl" alt="" />
+              <span>{{ item.name }}</span>
+            </nuxt-link>
           </li>
         </ul>
       </div>
       <!-- E 可滚动导航 -->
       <!-- S 自定义滚动条 -->
-      <div v-if="scrollNavList.length > 10" class="scroll-box">
+      <div v-if="rollNav.length > 10" class="scroll-box">
         <span><i :style="{ left: scroLeft + '%' }"></i></span>
       </div>
       <!-- E 自定义滚动条 -->
@@ -36,139 +44,17 @@
 export default {
   props: {
     // 固定导航
-    fixedNavList: {
+    fiexdNav: {
       type: Array,
       default: () => {
-        return [
-          {
-            icon: require('~/assets/temporary/home/home_ic_busi_x1.5.png'),
-            name: '工商平台工商平台工商平台',
-          },
-          {
-            icon: require('~/assets/temporary/home/home_ic_ac_x1.5.png'),
-            name: '会计财税',
-          },
-          {
-            icon: require('~/assets/temporary/home/home_ic_ip_x1.5.png'),
-            name: '知识产权',
-          },
-          {
-            icon: require('~/assets/temporary/home/home_ic_web_x1.5.png'),
-            name: 'IT软件',
-          },
-          {
-            icon: require('~/assets/temporary/home/home_ic_law_x1.5.png'),
-            name: '法律平台',
-          },
-        ]
+        return []
       },
     },
     // 滚动导航
-    scrollNavList: {
+    rollNav: {
       type: Array,
       default: () => {
-        return [
-          {
-            icon:
-              'http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp',
-            name: '工商平台工商平台工商平台',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/135931/4/3281/5598/5efbf2c0Edbdc82c7/ed9861b4ddfb9f30.png.webp',
-            name: '会计财税',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/140012/8/1804/3641/5efbf318E38bd5dad/0db99d859ab16ce9.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              'http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp',
-            name: '工商平台',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/135931/4/3281/5598/5efbf2c0Edbdc82c7/ed9861b4ddfb9f30.png.webp',
-            name: '会计财税',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/140012/8/1804/3641/5efbf318E38bd5dad/0db99d859ab16ce9.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              'http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp',
-            name: '工商平台',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/135931/4/3281/5598/5efbf2c0Edbdc82c7/ed9861b4ddfb9f30.png.webp',
-            name: '会计财税',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/140012/8/1804/3641/5efbf318E38bd5dad/0db99d859ab16ce9.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              'http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp',
-            name: '工商平台',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/135931/4/3281/5598/5efbf2c0Edbdc82c7/ed9861b4ddfb9f30.png.webp',
-            name: '会计财税',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/140012/8/1804/3641/5efbf318E38bd5dad/0db99d859ab16ce9.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              'http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp',
-            name: '工商平台',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/135931/4/3281/5598/5efbf2c0Edbdc82c7/ed9861b4ddfb9f30.png.webp',
-            name: '会计财税',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/140012/8/1804/3641/5efbf318E38bd5dad/0db99d859ab16ce9.png.webp',
-            name: '知识产权',
-          },
-          {
-            icon:
-              '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/129215/21/5978/3618/5efbf344Ebec23ae8/59712d986b10bb0a.png.webp',
-            name: '知识产权',
-          },
-        ]
+        return []
       },
     },
   },
@@ -188,6 +74,27 @@ export default {
       const scrollLeft = this.$refs.refScroll.scrollLeft // 容器滚动距离
       const scroLeft = Math.floor((scrollLeft / this.canScrollWidth) * 100) // 计算导航容器滚动百分比
       this.scroLeft = scroLeft / 2
+    },
+    jumpHandle(item) {
+      let url = ''
+      switch (item.navigationWay) {
+        // 跳转内链
+        case 1:
+          url = item.wapRoute
+          break
+        // 跳转外链
+        case 2:
+          url = item.url
+          break
+        // 跳转图片链接
+        case 3:
+          url = '/404'
+          break
+        default:
+          url = item.url
+          break
+      }
+      return url
     },
   },
 }

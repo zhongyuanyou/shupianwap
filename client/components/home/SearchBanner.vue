@@ -1,9 +1,17 @@
 <template>
   <div
     class="activity-bn"
-    :style="{ height: bigBanner ? '5.52rem' : '1.28rem' }"
+    :style="{ height: fiexdBannerData.length ? '5.52rem' : '1.28rem' }"
   >
-    <img v-if="bigBanner" :src="bigBanner" alt="" />
+    <a
+      v-if="fiexdBannerData.length"
+      :href="fiexdBannerData[0].materialList[0].materialLink"
+    >
+      <img
+        :src="fiexdBannerData[0].materialList[0].materialUrl"
+        :alt="fiexdBannerData[0].materialList[0].materialName"
+      />
+    </a>
     <sp-sticky @scroll="searchHandle">
       <Search
         ref="searchRef"
@@ -39,10 +47,16 @@ export default {
     [Sticky.name]: Sticky,
     Search,
   },
+  props: {
+    fiexdBannerData: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+  },
   data() {
     return {
-      bigBanner:
-        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1606113647248&di=9b32aeb7bfb9ef1085ce1e18e72ac28f&imgtype=0&src=http%3A%2F%2Fpic.616pic.com%2Fbg_w1180%2F00%2F22%2F41%2FXXZu5GvQAH.jpg',
       scollPercentage: 120, // 滚动多少距离，搜索栏背景色渐变
       opacity: 0,
       cityList: [
@@ -296,7 +310,7 @@ export default {
   },
   created() {
     // 存在banner大图，设置搜索栏透明度
-    if (!this.bigBanner) {
+    if (!this.fiexdBannerData.length) {
       this.opacity = 1
     }
   },
@@ -315,7 +329,7 @@ export default {
     }),
     // 滚动改变搜索栏透明度
     searchHandle({ scrollTop }) {
-      if (this.bigBanner) {
+      if (this.fiexdBannerData.length) {
         this.opacity = scrollTop / this.scollPercentage
       }
     },
