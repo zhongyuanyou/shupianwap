@@ -362,7 +362,8 @@ class homeController extends Controller {
                     limit: ctx.request.body.limit, // 每页条数
                 });
                 if (res.data.code === 200) {
-                    productData.goodsList = ras.data.data || [];
+                    productData.goodsList =
+                        res.data.data.length || res.data.data.records;
                 }
             }
 
