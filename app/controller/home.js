@@ -39,45 +39,6 @@ const getJyproList = async (ctx, service, params) => {
     }
 };
 
-// 获取推荐商品列表+广告
-const getRecommendProList = async (ctx, service, recomAdCode) => {
-    try {
-        const ids = [123, 456, 789]; // 推荐商品id 暂时写死
-        // 定义参数校验规则
-        const rules = {
-            userId: { type: "string", required: false }, // 用户id
-            deviceId: { type: "string", required: true }, // 设备ID（用户唯一标识）
-            formatId: { type: "string", required: false }, // 业态ID（首页等场景不需传，如其他场景能获取到必传）
-            areaCode: { type: "string", required: true }, // 区域编码
-            sceneId: { type: "string", required: true }, // 场景ID
-            storeId: { type: "string", required: false }, // 商户ID(首页等场景不需传，如其他场景能获取到必传)
-            productId: { type: "string", required: false }, // 产品ID（首页等场景不需传，如其他场景能获取到必传）
-            productType: { type: "string", required: false }, // 产品一级类别（首页等场景不需传，如其他场景能获取到必传）
-            title: { type: "string", required: false }, // 产品名称（产品详情页传、咨询页等）
-            maxsize: { type: "integer", required: true }, // 要求推荐产品的数量
-            platform: { type: "string", required: true }, // 平台（app,m,pc）
-        };
-        // 参数校验
-        const valiErrors = app.validator.validate(rules, ctx.request.body);
-        // 参数校验未通过
-        if (valiErrors) {
-            ctx.helper.fail({ ctx, code: 422, res: valiErrors });
-            return;
-        }
-        const params = {
-            userId: ctx.request.body.userId,
-            deviceId: ctx.request.body.deviceId,
-            areaCode: ctx.request.body.areaCode,
-            sceneId: ctx.request.body.sceneId,
-            maxsize: ctx.request.body.maxsize,
-        };
-
-        return recommendData;
-    } catch (error) {
-        ctx.logger.error(error);
-    }
-};
-
 @Prefix("/nk/home")
 class homeController extends Controller {
     /**
@@ -263,7 +224,7 @@ class homeController extends Controller {
             }
 
             // 从算法部获取到推荐产品id失败
-            if (!recommendData.length) {
+            if (!recommendData.goodsList.length) {
                 // 查询产品中心交易资源搜索接口，返回搜索的产品列表作为推荐数据返给前端
                 const res = await getJyproList(ctx, service, {
                     classCode: ctx.request.body.productType, // 产品类别
@@ -442,7 +403,7 @@ class homeController extends Controller {
                 }
             }
             // 从算法部获取到推荐产品id失败
-            if (!productData.length && ctx.request.body.page === 1) {
+            if (!productData.goodsList.length && ctx.request.body.page === 1) {
                 // 查询产品中心交易资源搜索接口，返回搜索的产品列表作为推荐数据返给前端
                 const res = await getJyproList(ctx, service, {
                     classCode: ctx.request.body.productType, // 产品类别
