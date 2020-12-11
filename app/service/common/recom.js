@@ -30,7 +30,7 @@ class cityService extends Service {
                     resolve(cacheProductIds);
                 } else {
                     const url = ctx.helper.assembleUrl(
-                        app.config.apiClient.APPID[5],
+                        app.config.apiClient.APPID[6],
                         algorithmApi.productRecom
                     );
                     const result = await service.curl.curlPost(url, params);
@@ -42,8 +42,8 @@ class cityService extends Service {
                             result.data,
                             overdueTime
                         );
-                        resolve(result.data);
                     }
+                    resolve(result.data);
                 }
             } catch (err) {
                 ctx.logger.error(err);

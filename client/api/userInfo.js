@@ -40,5 +40,14 @@ const userInfo = {
       url: CHIPS_WAP_BASE_URL + '/yk/address/v1/shipping_address_info.do',
     })
   },
+  updateAddress({ axios }, params) {
+    // 编辑收货地址
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/yk/address/v1/add_shipping_address.do',
+    })
+  },
 }
 export default userInfo
