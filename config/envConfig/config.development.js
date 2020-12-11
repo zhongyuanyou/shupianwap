@@ -97,6 +97,8 @@ module.exports = (appInfo) => {
             "crisps-auth-center-api", // 鉴权
             "crisps-user-center-api", // 用户
             "crm-biz", // 企大顺
+            // 商户中心
+            'merchant-center-manager',
         ],
     };
     // eureka相关配置
