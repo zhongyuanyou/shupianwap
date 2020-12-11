@@ -126,7 +126,7 @@ class homeController extends Controller {
         }
     }
     /**
-     * 查询首页非首屏数据（站点、广告、资讯、推荐交易商品）
+     * 查询首页非首屏数据（站点、广告、资讯）
      */
     @Post("/v1/get_home_asyn_data.do")
     async findHomeAsynData() {
@@ -136,14 +136,12 @@ class homeController extends Controller {
             locationCodeList: { type: "array", required: true }, // 广告编码
             infoLimit: { type: "integer", required: true }, // 资讯每页数量
             infoPage: { type: "integer", required: true }, // 资讯当前页
-            recomAdCode: { type: "string", required: true }, // 推商品模块广告位code
             categoryCode: { type: "string", required: false }, // 查询资讯的分类code
             platformCode: { type: "string", required: true }, // 查询资讯的平台code
             terminalCode: { type: "string", required: true }, // 查询资讯的终端code
         };
-        const nweRules = Object.assign(rules, productRules);
         // 参数校验
-        const valiErrors = app.validator.validate(nweRules, ctx.request.body);
+        const valiErrors = app.validator.validate(rules, ctx.request.body);
         // 参数校验未通过
         if (valiErrors) {
             ctx.helper.fail({ ctx, code: 422, res: valiErrors });
@@ -169,26 +167,12 @@ class homeController extends Controller {
             terminalCode: ctx.request.body.terminalCode,
         });
 
-        const params = {
-            userId: ctx.request.body.userId, // 用户id
-            deviceId: ctx.request.body.deviceId, // 设备id
-            areaCode: ctx.request.body.areaCode, // 区域code
-            sceneId: ctx.request.body.sceneId, // 场景ID
-            productType: ctx.request.body.productType, // 需要推荐的产品类别
-            maxsize: ctx.request.body.maxsize, // 要要推荐产品的数量
-        };
-        // 获取推荐产品ids
-        const getRecomList = service.common.recom.getRecomProductIdList(params);
-
-        const reqArr = [findCity, findBanner, findInformation, getRecomList];
+        const reqArr = [findCity, findBanner, findInformation];
         try {
             const resData = await Promise.all(reqArr);
             let cityList = []; // 站点数据
             let advertising = {}; // 广告数据
             let information = {}; // 资讯数据
-            let recommendData = {
-                goodsList: [],
-            }; // 推荐数据
             // 站点数据处理
             if (resData[0].code === 200) {
                 cityList = resData[0].data;
@@ -204,39 +188,7 @@ class homeController extends Controller {
                 information.currentPage = resData[2].data.data.currentPage;
                 information.totalPage = resData[2].data.data.totalPage;
             }
-            // 从算法部获取到推荐产品id成功
-            if (resData[3].code === 200) {
-                // 根据前台的分页参数，动态选取一部分id
-                const start =
-                    (ctx.request.body.page - 1) * ctx.request.body.limit;
-                const end = ctx.request.body.page * ctx.request.body.limit;
-                const pagetionList = resData[3].data.productInfoList.slice(
-                    start,
-                    end
-                );
-                // 根据 ids 调用产中心 查询 交易资源详情-批量
-                const getRecomPro = await service.common.tradingProduct.recommendList(
-                    pagetionList
-                );
-                if (getRecomPro.code === 200) {
-                    recommendData.goodsList = getRecomPro.data || [];
-                }
-            }
 
-            // 从算法部获取到推荐产品id失败
-            if (!recommendData.goodsList.length) {
-                // 查询产品中心交易资源搜索接口，返回搜索的产品列表作为推荐数据返给前端
-                const res = await getJyproList(ctx, service, {
-                    classCode: ctx.request.body.productType, // 产品类别
-                    start: ctx.request.body.page, // 当前页
-                    limit: ctx.request.body.limit, // 每页条数
-                });
-                if (res.data.code === 200) {
-                    recommendData.goodsList = ras.data.data || [];
-                }
-            }
-            recommendData.adData = advertising[ctx.request.body.recomAdCode]; // 组装广告推荐数据
-            delete advertising[ctx.request.body.recomAdCode];
             ctx.helper.success({
                 ctx,
                 code: 200,
@@ -244,7 +196,6 @@ class homeController extends Controller {
                     cityList,
                     advertising,
                     information,
-                    recommendData,
                 },
             });
         } catch (error) {
