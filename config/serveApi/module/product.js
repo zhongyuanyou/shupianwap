@@ -9,7 +9,6 @@
 module.exports.productApi = {
   productDetail: '/nk/product/service/v1/detail.do', // 产品详情
   productDetails: '/nk/product/service/v1/details.do', // 批量获取产品详情
-  productDetails: '/nk/product/service/v1/details.do', // 产品详情
   serviceItemList: '/nk/service_item/v1/search.do', // 服务项目集合
   serviceItemDetails: '/nk/service_item/v1/get_details.do', // 服务项目集合
   goodsDetail: '/nk/product/service/goods/v1/get_detail.do', // 商品详情

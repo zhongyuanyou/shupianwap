@@ -2,14 +2,14 @@
  * @Author: xiao pu
  * @Date: 2020-11-21 15:13:44
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-03 16:18:16
+ * @LastEditTime: 2020-12-11 11:27:44
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/serviceSelected/ServiceSelect.vue
 -->
 <template>
   <div class="service-select">
     <sp-tree-select
-      :items="items"
+      :items="formatItems"
       :active-id.sync="activeIds"
       :main-active-index.sync="active"
       @click-nav="handleClickNav"
@@ -122,47 +122,83 @@ export default {
         return initSelectData
       },
     },
+    label: {
+      type: String,
+      default: 'name',
+    },
+    value: {
+      type: String,
+      default: 'id',
+    },
   },
   data() {
     return {
       active: 0,
-      activeIds: [-1],
+      activeIds: [],
       selectData: initSelectData,
     }
   },
   computed: {
+    formatItems() {
+      if (!Array.isArray(this.items)) return []
+
+      return this.items.map((item) => {
+        const children = Array.isArray(item.children)
+          ? clone(item.children, true)
+          : []
+        children.unshift({
+          [this.value]: -1,
+          [this.label]: '不限',
+        })
+        return {
+          id: item[this.value],
+          text: item[this.label],
+          [this.value]: item[this.value],
+          [this.label]: item[this.label],
+          children,
+        }
+      })
+    },
     childrenList() {
       if (
-        !Array.isArray(this.items) ||
-        !this.items[this.active] ||
-        !Array.isArray(this.items[this.active].children)
+        !Array.isArray(this.formatItems) ||
+        !this.formatItems[this.active] ||
+        !Array.isArray(this.formatItems[this.active].children)
       ) {
         return []
       }
 
-      return this.items[this.active].children
+      return this.formatItems[this.active].children.map((item) => ({
+        id: item[this.value],
+        text: item[this.label],
+        [this.value]: item[this.value],
+        [this.label]: item[this.label],
+      }))
     },
   },
   watch: {
     activeData: {
       handler(newVal, odlVal) {
+        console.log('1')
         if (objectDiff.diffOwnProperties(newVal, odlVal).changed === 'equal') {
           return
         }
-
+        console.log('2')
         if (
           objectDiff.diffOwnProperties(newVal, this.selectData).changed ===
           'equal'
         ) {
           return
         }
-
+        console.log('3')
         if (!Array.isArray(newVal) || !newVal[0]) {
           this.selectData = clone(initSelectData, true)
+          console.log('4')
         } else {
           this.selectData = clone(newVal, true)
+          console.log('5')
         }
-        this.items.forEach((item, index) => {
+        this.formatItems.forEach((item, index) => {
           if (this.selectData[0].id === item.id) {
             this.active = index
           }
@@ -171,17 +207,37 @@ export default {
       immediate: true,
     },
 
-    // selectData(newVal) {
-    //   this.$emit('select', clone(newVal, true))
-    // },
+    formatItems: {
+      handler(newVal) {
+        if (newVal) {
+          // 没有选择默认 选第一个
+          if (this.selectData[0].id == null) {
+            const navItem = (this.formatItems && this.formatItems[0]) || {}
+            this.$set(this.selectData, 0, {
+              id: navItem.id,
+              text: navItem.text,
+              [this.value]: navItem.id,
+              [this.label]: navItem.text,
+            })
+            // this.$set(this.selectData, 1, { services: [this.childrenList[0]] })
+          }
+        }
+      },
+      immediate: true,
+    },
   },
 
   mounted() {},
   methods: {
     handleClickNav(navIndex) {
       console.log('navIndex:', navIndex)
-      const navItem = (this.items && this.items[navIndex]) || {}
-      this.$set(this.selectData, 0, { id: navItem.id, text: navItem.text })
+      const navItem = (this.formatItems && this.formatItems[navIndex]) || {}
+      this.$set(this.selectData, 0, {
+        id: navItem.id,
+        text: navItem.text,
+        [this.value]: navItem.id,
+        [this.label]: navItem.text,
+      })
       this.$set(this.selectData, 1, { services: [this.childrenList[0]] })
 
       this.$emit('select', clone(this.selectData, true))

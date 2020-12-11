@@ -71,7 +71,7 @@
     <!--E 内容-->
     <!--S 底部-->
     <sp-bottombar safe-area-inset-bottom>
-      <sp-bottombar-button type="primary" :text="'保存'" />
+      <sp-bottombar-button type="primary" :text="'保存'" @click="handleSave" />
     </sp-bottombar>
     <!--E 底部-->
     <!--S 地址选择-->
@@ -157,7 +157,8 @@ export default {
     onClickRight() {
       // 点击右边文字按钮
       if (this.$route.params.type === 'edit') {
-        this.popupStatus = true
+        // 执行删除
+        // this.popupStatus = true
       }
     },
     async getAddressDetail() {
@@ -168,6 +169,21 @@ export default {
       const data = await userInfo.addressDetail({ axios: this.$axios }, params)
       this.ruleForm = data
       console.log('dataaa', data)
+    },
+    handleSave() {
+      // 保存
+      if (this.$route.params.type === 'edit') {
+        this.saveEdit()
+      }
+    },
+    async saveEdit() {
+      // 保存编辑内容
+      const params = {
+        ...this.ruleForm,
+      }
+      console.log('params', params)
+      const data = await userInfo.updateAddress({ axios: this.$axios }, params)
+      console.log('data', data)
     },
   },
 }

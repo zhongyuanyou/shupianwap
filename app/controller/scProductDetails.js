@@ -1,3 +1,8 @@
+/**
+ * @Description: 本模块用于服务商品详情各项数据查询
+ * @author zhaoDongMing
+ * @date
+*/
 'use strict';
 const Controller = require('egg').Controller;
 const { Post, Get, Prefix } = require('egg-shell-decorators');
@@ -85,7 +90,7 @@ class ScProductDetailsController extends Controller {
       ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
-  // 获取站点数据（当前产品可以销售的城市）
+  // 获取服务产品站点数据（当前产品可以销售的城市）
   @Get('/v1/site_list.do')
   async getScProductSiteList() {
     const { ctx, service, app } = this;

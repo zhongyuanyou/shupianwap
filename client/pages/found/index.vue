@@ -11,8 +11,13 @@
       :is-nav-tab="true"
       :need-content="false"
       :sticky="true"
+      @click="onClick"
     >
-      <sp-work-tab v-for="(item, index) in tabs" :key="index" :title="item">
+      <sp-work-tab
+        v-for="item in information_class"
+        :key="item.code"
+        :title="item.name"
+      >
         <Con />
       </sp-work-tab>
     </sp-work-tabs>
@@ -23,6 +28,7 @@
 <script>
 import { WorkTab, WorkTabs } from '@chipspc/vant-dgg'
 import Con from '~/components/found/found/Cons'
+import { foundApi } from '@/api'
 export default {
   layout: 'nav',
   name: 'Index',
@@ -31,11 +37,37 @@ export default {
     [WorkTabs.name]: WorkTabs,
     Con,
   },
+  async asyncData({ $axios }) {
+    try {
+      let homeData = {}
+      const params = {}
+      const res = await $axios.get(foundApi.initRequest, params)
+      if (res.code === 200) {
+        homeData = res.data
+      }
+      return {
+        homeData,
+      }
+    } catch (err) {}
+  },
   data() {
     return {
       activeTab: 0,
-      tabs: ['推荐', '知识', '新闻', '活动', '行情', '快报'],
+      information_class: [], // 产品分类
+      information_banner: [], // 广告数据
+      information_list: [], // 资讯列表
     }
+  },
+  mounted() {
+    this.information_class = this.homeData.information_class
+    this.information_banner = this.homeData.information_banner
+    this.information_list = this.homeData.information_list
+  },
+  methods: {
+    onClick(name, title) {
+      // 点击tab标签
+      console.log(name, title)
+    },
   },
 }
 </script>
