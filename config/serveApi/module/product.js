@@ -20,4 +20,6 @@ module.exports.productApi = {
   getJyServeList: '/nk/product/trading/v1/serarch.do', // 交易产品列表
   getTradingListToIds: '/nk/product/trading/v1/get_details.do', // ids获取交易推荐产品列表
   getClassificationList: '/nk/classification/v1/search.do', // 产品分类列表
+  getProGroupByPutAway: '/nk/product/service/v1/pro_group_by_put_away.do', // 产品组所有上架产品列表
+  getServiceResource: '/nk/product/service_resource/v1/search.do', // 获取服务资源
 };
