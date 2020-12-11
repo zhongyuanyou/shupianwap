@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-04 10:54:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-10 20:30:23
+ * @LastEditTime: 2020-12-11 16:48:07
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/planner.js
  */
@@ -72,20 +72,16 @@ class PlannerController extends Controller {
     }
 
     // 先查询列表
-    const listUrl = ctx.helper.assembleUrl(
-      app.config.apiClient.APPID[4],
-      merchantApi.list
-    );
-    const listParams = {
-      searchKey: plannerName,
+    if (sort) Object.assign(listParams, { [sort.sortType]: sort.value });
+    const listResult = await service.planner.getPlannerList({
+      plannerName,
       regionDto,
       mchUserIds,
       status,
+      sort,
       limit,
-      start: page,
-    };
-    if (sort) Object.assign(listParams, { [sort.sortType]: sort.value });
-    const listResult = await service.curl.curlPost(listUrl, listParams);
+      page,
+    });
     if (listResult.status !== 200 || listResult.data.code !== 200) {
       ctx.helper.fail({
         ctx,
@@ -100,33 +96,47 @@ class PlannerController extends Controller {
     const listRecords = listData.records || [];
 
     // 办公地址
-    const addressUrl = ctx.helper.assembleUrl(
-      app.config.apiClient.APPID[4],
-      merchantApi.addressList
-    );
     const addressIds = listRecords.map((item) => item.officeAddressId);
-    // const addressResultPromise = service.curl.curlPost(addressUrl,addressIds);
+    const addressResultPromise = service.planner.getAddressList({ addressIds });
     // 标签
-    const categoryUrl = ctx.helper.assembleUrl(
-      app.config.apiClient.APPID[4],
-      merchantApi.categoryList
-    );
     const listMchUserIds = listRecords.map((item) => item.mchUserId);
-    // const categoryResultPromise = service.curl.curlPost(categoryUrl, {
-    //   mchUserIds: listMchUserIds,
-    // });
+    const categoryResultPromise = service.planner.getCategoryList({
+      mchUserIds: listMchUserIds,
+    });
 
-    // // TODO再并发请求 照片，规划师的标签， 办公地点等
-    // const [addressResult, categoryResult] = await Promise.all([addressResultPromise, categoryResultPromise]);
+    // // TODO再并发请求 照片
+    const [addressResult, categoryResult] = await Promise.all([
+      addressResultPromise,
+      categoryResultPromise,
+    ]);
 
-    if (listResult.status === 200 && listResult.data.code === 200) {
+    if (
+      addressResult.status === 200 &&
+      addressResult.data.code === 200 &&
+      categoryResult.status === 200 &&
+      categoryResult.data.code === 200
+    ) {
+      const adRes = addressResult.data.data || [];
+      const tagRes = categoryResult.data.data || [];
+      const res = service.planner.mergeAdTagImgTolist(
+        listRecords,
+        adRes,
+        tagRes
+      );
       ctx.helper.success({
         ctx,
         code: 200,
-        res: listResult.data.data,
+        res,
       });
       return;
     }
+
+    ctx.helper.fail({
+      ctx,
+      code: 500,
+      res: {},
+      detailMessage: "请求失败",
+    });
   }
 
   @Get("/detail.do")
@@ -139,7 +149,7 @@ class PlannerController extends Controller {
     const { id } = ctx.query;
     // 查询详情
     const detailUrl = ctx.helper.assembleUrl(
-      app.config.apiClient.APPID[4],
+      app.config.apiClient.APPID[5],
       merchantApi.detail
     );
     const detailResultPromise = service.curl.curlGet(detailUrl, {
@@ -148,39 +158,48 @@ class PlannerController extends Controller {
 
     // 积分排名查询
     const rankUrl = ctx.helper.assembleUrl(
-      app.config.apiClient.APPID[4],
+      app.config.apiClient.APPID[5],
       merchantApi.rank
     );
     const rankResultPromise = await service.curl.curlPost(rankUrl, {
       mchUserId: id,
     });
 
-    const [detailResult, rankResult] = await Promise.all([
+    const categoryResultPromise = service.planner.getCategoryList({
+      mchUserIds: [id],
+    });
+
+    const [detailResult, rankResult, categoryResult] = await Promise.all([
       detailResultPromise,
       rankResultPromise,
+      categoryResultPromise,
     ]);
 
-    // TODO 请求头像图片接口(前端统一规则)  与  标签接口(唐建)目前没有
+    // TODO 请求头像图片接口(前端统一规则)
     if (
       detailResult.status === 200 &&
       detailResult.data.code === 200 &&
       rankResult.status === 200 &&
-      rankResult.data.code === 200
+      rankResult.data.code === 200 &&
+      categoryResult.status === 200 &&
+      categoryResult.data.code === 200
     ) {
+      const detailRes = detailResult.data.data || {};
+      const rankRes = rankResult.data.data || {};
+      const categoryRes = categoryResult.data.data || {};
+      const tagList = categoryRes[0].tagNameList;
+
       ctx.helper.success({
         ctx,
         code: 200,
-        res: Object.assign({}, detailResult.data.data, rankResult.data.data),
+        res: Object.assign({}, detailRes, rankRes, { tagList }),
       });
       return;
     }
     ctx.helper.fail({
       ctx,
       code: 500,
-      res: {
-        detailResult: detailResult.data,
-        rankResult: rankResult.data.data,
-      },
+      res: {},
       detailMessage: "请求失败",
     });
   }
@@ -196,7 +215,7 @@ class PlannerController extends Controller {
     const { id, sensitiveInfoType = "MCH_USER" } = ctx.query;
     // 查询详情
     const sensitiveUrl = ctx.helper.assembleUrl(
-      app.config.apiClient.APPID[4],
+      app.config.apiClient.APPID[5],
       merchantApi.sensitiveInfo
     );
     const { data, status } = await service.curl.curlPost(sensitiveUrl, {
