@@ -41,12 +41,13 @@ class AddressController extends Controller {
       addressArea,
       address,
       postcode,
+      defaultAddress,
       ext1,
       ext2,
       ext3,
       ext4,
       ext5,
-      id = null,
+      id,
     } = ctx.request.body;
     const ads = id ? userApi.updateShippingAddress : userApi.newShippingAddress;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], ads);
@@ -57,7 +58,7 @@ class AddressController extends Controller {
       addressProvince,
       addressCity,
       addressArea,
-      defaultAddress: ctx.request.body.defaultAddress,
+      defaultAddress,
       address,
       postcode,
       ext1,
@@ -73,6 +74,7 @@ class AddressController extends Controller {
       addressProvince,
       addressCity,
       addressArea,
+      defaultAddress,
       address,
       postcode,
       ext1,

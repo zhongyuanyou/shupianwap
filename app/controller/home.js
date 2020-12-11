@@ -9,6 +9,7 @@
 
 const Controller = require("egg").Controller;
 const { contentApi } = require("../../config/serveApi/index");
+const { productRules } = require("../validate/home");
 const { Get, Prefix, Post } = require("egg-shell-decorators");
 
 // 获取广告列表
@@ -33,61 +34,6 @@ const getInfoList = async (ctx, service, { limit, page }) => {
 const getJyproList = async (ctx, service, params) => {
     try {
         return await service.goodsList.getJyGoodsList(params);
-    } catch (error) {
-        ctx.logger.error(error);
-    }
-};
-
-// 获取推荐商品列表+广告
-const getRecommendProList = async (ctx, service, recomAdCode) => {
-    try {
-        const ids = [123, 456, 789]; // 推荐商品id 暂时写死
-        // 定义参数校验规则
-        const rules = {
-            userId: { type: "string", required: false }, // 用户id
-            deviceId: { type: "string", required: true }, // 设备ID（用户唯一标识）
-            formatId: { type: "string", required: false }, // 业态ID（首页等场景不需传，如其他场景能获取到必传）
-            areaCode: { type: "string", required: true }, // 区域编码
-            sceneId: { type: "string", required: true }, // 场景ID
-            storeId: { type: "string", required: false }, // 商户ID(首页等场景不需传，如其他场景能获取到必传)
-            productId: { type: "string", required: false }, // 产品ID（首页等场景不需传，如其他场景能获取到必传）
-            productType: { type: "string", required: false }, // 产品一级类别（首页等场景不需传，如其他场景能获取到必传）
-            title: { type: "string", required: false }, // 产品名称（产品详情页传、咨询页等）
-            maxsize: { type: "integer", required: true }, // 要求推荐产品的数量
-            platform: { type: "string", required: true }, // 平台（app,m,pc）
-        };
-        // 参数校验
-        const valiErrors = app.validator.validate(rules, ctx.request.body);
-        // 参数校验未通过
-        if (valiErrors) {
-            ctx.helper.fail({ ctx, code: 422, res: valiErrors });
-            return;
-        }
-        const params = {
-            userId: ctx.request.body.userId,
-            deviceId: ctx.request.body.deviceId,
-            areaCode: ctx.request.body.areaCode,
-            sceneId: ctx.request.body.sceneId,
-            maxsize: ctx.request.body.maxsize,
-        };
-        // 获取推荐产品
-        const findRecom = await service.common.recom.getRecomProductIdList(
-            params
-        );
-        console.log(88, findRecom);
-
-        const getRecomPro = service.common.tradingProduct.recommendList(ids);
-        const adList = service.common.banner.getAdList([recomAdCode]);
-
-        const resData = await Promise.all([adList, getRecomPro]);
-        let recommendData = {};
-        if (resData[0].code === 200) {
-            recommendData.adList = resData[0].data;
-        }
-        if (resData[1].code === 200) {
-            recommendData.adList = resData[1].data;
-        }
-        return recommendData;
     } catch (error) {
         ctx.logger.error(error);
     }
@@ -180,7 +126,7 @@ class homeController extends Controller {
         }
     }
     /**
-     * 查询首页非首屏数据（站点、广告、资讯、推荐交易商品）
+     * 查询首页非首屏数据（站点、广告、资讯）
      */
     @Post("/v1/get_home_asyn_data.do")
     async findHomeAsynData() {
@@ -190,7 +136,6 @@ class homeController extends Controller {
             locationCodeList: { type: "array", required: true }, // 广告编码
             infoLimit: { type: "integer", required: true }, // 资讯每页数量
             infoPage: { type: "integer", required: true }, // 资讯当前页
-            recomAdCode: { type: "string", required: true }, // 推商品模块广告位code
             categoryCode: { type: "string", required: false }, // 查询资讯的分类code
             platformCode: { type: "string", required: true }, // 查询资讯的平台code
             terminalCode: { type: "string", required: true }, // 查询资讯的终端code
@@ -204,6 +149,9 @@ class homeController extends Controller {
         }
         // 获取站点
         const findCity = service.common.city.getSiteList();
+
+        let locationCodeList = ctx.request.body.locationCodeList;
+        locationCodeList.push(ctx.request.body.recomAdCode);
         // 获取广告
         const findBanner = getBannerList(
             ctx,
@@ -219,20 +167,12 @@ class homeController extends Controller {
             terminalCode: ctx.request.body.terminalCode,
         });
 
-        // 获取推荐列表数据
-        const getRecomList = getRecommendProList(
-            ctx,
-            service,
-            ctx.request.body.recomAdCode
-        );
-
-        const reqArr = [findCity, findBanner, findInformation, getRecomList];
+        const reqArr = [findCity, findBanner, findInformation];
         try {
             const resData = await Promise.all(reqArr);
             let cityList = []; // 站点数据
             let advertising = {}; // 广告数据
             let information = {}; // 资讯数据
-            let recommendData = {}; // 推荐数据
             // 站点数据处理
             if (resData[0].code === 200) {
                 cityList = resData[0].data;
@@ -248,8 +188,7 @@ class homeController extends Controller {
                 information.currentPage = resData[2].data.data.currentPage;
                 information.totalPage = resData[2].data.data.totalPage;
             }
-            // 资讯数据处理
-            recommendData = resData[3];
+
             ctx.helper.success({
                 ctx,
                 code: 200,
@@ -257,7 +196,6 @@ class homeController extends Controller {
                     cityList,
                     advertising,
                     information,
-                    recommendData,
                 },
             });
         } catch (error) {
@@ -354,34 +292,23 @@ class homeController extends Controller {
         const { ctx, service, app } = this;
         // 定义参数校验规则
         const rules = {
-            userId: { type: "string", required: false }, // 用户id
-            deviceId: { type: "string", required: true }, // 设备ID（用户唯一标识）
-            formatId: { type: "string", required: false }, // 业态ID（首页等场景不需传，如其他场景能获取到必传）
-            areaCode: { type: "string", required: true }, // 区域编码
-            sceneId: { type: "string", required: true }, // 场景ID
-            storeId: { type: "string", required: false }, // 商户ID(首页等场景不需传，如其他场景能获取到必传)
-            productId: { type: "string", required: false }, // 产品ID（首页等场景不需传，如其他场景能获取到必传）
-            productType: { type: "string", required: false }, // 产品一级类别（首页等场景不需传，如其他场景能获取到必传）
-            title: { type: "string", required: false }, // 产品名称（产品详情页传、咨询页等）
-            maxsize: { type: "integer", required: true }, // 要求推荐产品的数量
-            platform: { type: "string", required: true }, // 平台（app,m,pc）
-            limit: { type: "integer", required: true }, // 分页条数
-            page: { type: "integer", required: true }, // 当前页
             locationCode: { type: "string", required: true }, // 查询广告的位置code
         };
+        const nweRules = Object.assign(rules, productRules);
         // 参数校验
-        const valiErrors = app.validator.validate(rules, ctx.request.body);
+        const valiErrors = app.validator.validate(nweRules, ctx.request.body);
         // 参数校验未通过
         if (valiErrors) {
             ctx.helper.fail({ ctx, code: 422, res: valiErrors });
             return;
         }
         const params = {
-            userId: ctx.request.body.userId,
-            deviceId: ctx.request.body.deviceId,
-            areaCode: ctx.request.body.areaCode,
-            sceneId: ctx.request.body.sceneId,
-            maxsize: ctx.request.body.maxsize,
+            userId: ctx.request.body.userId, // 用户id
+            deviceId: ctx.request.body.deviceId, // 设备id
+            areaCode: ctx.request.body.areaCode, // 区域code
+            sceneId: ctx.request.body.sceneId, // 场景ID
+            maxsize: ctx.request.body.maxsize, // 要要推荐产品的数量
+            productType: ctx.request.body.productType, // 需要推荐的产品类别
         };
         try {
             // 获取推荐产品ids
@@ -403,7 +330,6 @@ class homeController extends Controller {
             let productData = {
                 goodsList: [],
             }; // 推荐数据
-
             // 获取广告数据成功
             if (ctx.request.body.page === 1 && resArr[1].code === 200) {
                 productData.adData = resArr[1].data;
@@ -428,7 +354,7 @@ class homeController extends Controller {
                 }
             }
             // 从算法部获取到推荐产品id失败
-            if (!productData.length && ctx.request.body.page === 1) {
+            if (!productData.goodsList.length && ctx.request.body.page === 1) {
                 // 查询产品中心交易资源搜索接口，返回搜索的产品列表作为推荐数据返给前端
                 const res = await getJyproList(ctx, service, {
                     classCode: ctx.request.body.productType, // 产品类别
@@ -436,7 +362,8 @@ class homeController extends Controller {
                     limit: ctx.request.body.limit, // 每页条数
                 });
                 if (res.data.code === 200) {
-                    productData.goodsList = ras.data.data || [];
+                    productData.goodsList =
+                        res.data.data.length || res.data.data.records;
                 }
             }
 

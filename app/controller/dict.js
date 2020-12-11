@@ -1,9 +1,15 @@
+/**
+ * @Description: 本模块用于数据字典查询
+ * @author zhaoDongMing
+ * @date
+ */
 'use strict';
 const Controller = require('egg').Controller;
 const { Get, Prefix } = require('egg-shell-decorators');
 const { contentApi } = require('./../../config/serveApi/index');
 const rules = require('./../validate/dict');
 
+// 查询数据字典
 @Prefix('/nk/dict')
 class DictController extends Controller {
   @Get('/v1/cms_code.do')

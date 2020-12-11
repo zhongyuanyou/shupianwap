@@ -5,7 +5,8 @@
  * @Description: 算法api地址
  * @FilePath: /chips-wap/config/envConfig/serveApi/module/algorithm.js
  * */
-"use strict";
+'use strict';
 module.exports.algorithmApi = {
-    productRecom: "/recommendInfo/productRecom.do",
+  productRecom: '/recommendInfo/productRecom.do',
+  plannerRecom: '/recommendInfo/plannerRecom.do', // 规划师推荐
 };
