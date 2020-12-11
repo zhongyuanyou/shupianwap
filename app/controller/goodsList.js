@@ -1,6 +1,6 @@
 'use strict';
 const Controller = require('egg').Controller;
-const { Post, Prefix } = require('egg-shell-decorators');
+const { Post, Get, Prefix } = require('egg-shell-decorators');
 const { contentApi } = require('./../../config/serveApi/index');
 const rules = require('./../validate/dict');
 
@@ -69,8 +69,8 @@ class ContentController extends Controller {
           resBody.typeData = data[1].data[0]
           resBody.sortFilter = data[1].data[1]
         } else {
-          resBody.typeData = {}
-          resBody.sortFilter = {}
+          resBody.typeData = []
+          resBody.sortFilter = []
         }
       }
       if (JSON.stringify(resBody.goods) === '{}' && JSON.stringify(resBody.typeData) === '{}') {

@@ -179,6 +179,7 @@ export default {
     clickTabs(name, title) {
       console.log(name, title)
     },
+    resetAllSelect() {},
   },
 }
 </script>

@@ -29,6 +29,15 @@ const getInfoList = async (ctx, service, { limit, page }) => {
     }
 };
 
+// 交易资源搜索
+const getJyproList = async (ctx, service, params) => {
+    try {
+        return await service.goodsList.getJyGoodsList(params);
+    } catch (error) {
+        ctx.logger.error(error);
+    }
+};
+
 // 获取推荐商品列表+广告
 const getRecommendProList = async (ctx, service, recomAdCode) => {
     try {
@@ -354,8 +363,11 @@ class homeController extends Controller {
             productId: { type: "string", required: false }, // 产品ID（首页等场景不需传，如其他场景能获取到必传）
             productType: { type: "string", required: false }, // 产品一级类别（首页等场景不需传，如其他场景能获取到必传）
             title: { type: "string", required: false }, // 产品名称（产品详情页传、咨询页等）
-            // maxsize: { type: "integer", required: true }, // 要求推荐产品的数量
+            maxsize: { type: "integer", required: true }, // 要求推荐产品的数量
             platform: { type: "string", required: true }, // 平台（app,m,pc）
+            limit: { type: "integer", required: true }, // 分页条数
+            page: { type: "integer", required: true }, // 当前页
+            locationCode: { type: "string", required: true }, // 查询广告的位置code
         };
         // 参数校验
         const valiErrors = app.validator.validate(rules, ctx.request.body);
@@ -371,36 +383,68 @@ class homeController extends Controller {
             sceneId: ctx.request.body.sceneId,
             maxsize: ctx.request.body.maxsize,
         };
-        // 获取推荐产品
-        const findRecom = await service.common.recom.getRecomProductIdList(
-            params
-        );
-        console.log(88, findRecom);
-
-        ctx.body = findRecom;
-        return;
-        // 定义参数校验规则
-        // const rules = {
-        //     recomAdCode: { type: "string", required: false }, // 推商品模块广告位code
-        // };
-        // // 参数校验
-        // const valiErrors = app.validator.validate(rules, ctx.request.query);
-        // // 参数校验未通过
-        // if (valiErrors) {
-        //     ctx.helper.fail({ ctx, code: 422, res: valiErrors });
-        //     return;
-        // }
         try {
-            const resData = await getRecommendProList(
-                ctx,
-                service,
-                ctx.request.query.recomAdCode
+            // 获取推荐产品ids
+            const findRecom = service.common.recom.getRecomProductIdList(
+                params
             );
+            let reqArr = [findRecom];
+            // 若用户查询的是第一页，需返回广告数据
+            if (ctx.request.body.page === 1) {
+                // 查询广告
+                const findBanner = getBannerList(ctx, service, [
+                    ctx.request.body.locationCode,
+                ]);
+                reqArr.push(findBanner);
+            }
+
+            const resArr = await Promise.all(reqArr);
+
+            let productData = {
+                goodsList: [],
+            }; // 推荐数据
+
+            // 获取广告数据成功
+            if (ctx.request.body.page === 1 && resArr[1].code === 200) {
+                productData.adData = resArr[1].data;
+            }
+
+            // 从算法部获取到推荐产品id成功
+            if (resArr[0].code === 200) {
+                // 根据前台的分页参数，动态选取一部分id
+                const start =
+                    (ctx.request.body.page - 1) * ctx.request.body.limit;
+                const end = ctx.request.body.page * ctx.request.body.limit;
+                const pagetionList = resArr[0].data.productInfoList.slice(
+                    start,
+                    end
+                );
+                // 根据 ids 调用产中心 查询 交易资源详情-批量
+                const getRecomPro = await service.common.tradingProduct.recommendList(
+                    pagetionList
+                );
+                if (getRecomPro.code === 200) {
+                    productData.goodsList = getRecomPro.data || [];
+                }
+            }
+            // 从算法部获取到推荐产品id失败
+            if (!productData.length && ctx.request.body.page === 1) {
+                // 查询产品中心交易资源搜索接口，返回搜索的产品列表作为推荐数据返给前端
+                const res = await getJyproList(ctx, service, {
+                    classCode: ctx.request.body.productType, // 产品类别
+                    start: ctx.request.body.page, // 当前页
+                    limit: ctx.request.body.limit, // 每页条数
+                });
+                if (res.data.code === 200) {
+                    productData.goodsList = ras.data.data || [];
+                }
+            }
+
             ctx.helper.success({
                 ctx,
                 code: 200,
                 res: {
-                    recommendData: resData,
+                    recommendData: productData,
                 },
             });
         } catch (error) {
