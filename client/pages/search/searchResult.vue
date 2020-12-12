@@ -15,19 +15,21 @@
       </div>
     </Search>
     <!--E搜索框-->
-    <!--S筛选栏-->
+    <!--S筛选栏 :lazy-render="false"-->
     <sp-work-tabs v-model="active">
       <sp-work-tab title="企业服务">
         <serveGoods
           :init-service-data="serveGoodsListData"
           :search-text="formData.searchText"
+          :req-type="reqType"
           @goodsList="getTabVue"
         />
       </sp-work-tab>
       <sp-work-tab title="资产交易">
         <JyGoods
-          :init-list-data="jyGoodsListData"
+          :init-jy-data="jyGoodsListData"
           :search-text="formData.searchText"
+          :req-type="reqType"
           @goodsList="getTabVue"
         />
       </sp-work-tab>
@@ -75,6 +77,7 @@ export default {
         start: 1,
         limit: 10,
         needTypes: 1,
+        needGoodsList: 0,
         searchText: '',
       },
       currentInputText: '',
@@ -101,18 +104,26 @@ export default {
       if (this.isInput) {
         // 如果在当前列表进行了搜索框搜索，
         // 那么在切换列表的时候需要重新请求数据
-        this.tabVues[this.reqType].searchKeydownHandle()
+        setTimeout(() => {
+          // 将事件放到事件栈底
+          this.tabVues[this.reqType] &&
+            this.tabVues[this.reqType].initGoodsList()
+        }, 0)
       }
       this.isInput = false
     },
   },
   mounted() {
-    this.getInitServeData()
+    this.getInitData()
+    if (this.$route.query.keywords) {
+      this.formData.searchText = this.$route.query.keywords
+      this.currentInputText = this.$route.query.keywords
+    }
   },
   methods: {
     // 获取初始化数据
-    getInitServeData() {
-      // 获取服务列表需要的数据
+    getInitData() {
+      // 获取服务列表需要的筛选数据
       goods
         .searchServeGoodsList({ axios: this.$axios }, this.formData)
         .then((data) => {
@@ -129,10 +140,24 @@ export default {
       const type = this.reqType === 'serve' ? 'jy' : 'serve'
       this.tabVues[type] && this.tabVues[type].resetAllSelect()
       this.isInput = true
+      // 处理存储路由的query
+      const query = this.$router.history.current.query
+      const path = this.$router.history.current.path // 对象的拷
+      const newQuery = JSON.parse(JSON.stringify(query))
+      newQuery.keywords = this.formData.searchText
+      this.$router.replace({ path, query: newQuery })
     },
     searchInputHandle() {},
     getTabVue(key, val) {
-      this.tabVues[key] = val
+      // 存储服务和交易列表的vue实例
+      if (key === 'jy' && !this.tabVues[key]) {
+        this.tabVues[key] = val
+        this.$nextTick(() => {
+          this.tabVues[key].searchKeydownHandle()
+        })
+      } else {
+        this.tabVues[key] = val
+      }
     },
     clickInputHandle() {
       // 打开搜索页

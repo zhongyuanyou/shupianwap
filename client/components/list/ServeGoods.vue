@@ -76,6 +76,13 @@ export default {
   },
   mixins: [searchList],
   props: {
+    reqType: {
+      // 搜索结果页的顶部tab类型
+      type: String,
+      default() {
+        return ''
+      },
+    },
     initServiceData: {
       // 初始化列表数据，仅做初始化的时候用或是在进行条件搜索的时候用
       type: Object,
@@ -97,6 +104,7 @@ export default {
         start: 2,
         limit: 10,
         needTypes: 0,
+        needGoodsList: 1,
         sortBy: '',
         classCodes: '',
         keywords: '',
@@ -118,12 +126,13 @@ export default {
   },
   watch: {
     searchText(val) {
+      console.log(1111111)
       this.formData.keywords = val
-      this.initGoodsList()
+      if (this.reqType === 'serve') {
+        this.initGoodsList()
+      }
     },
     initServiceData(val) {
-      // 商品列表
-      this.serveGoodsListData = clone(val.goods.records)
       // 排序筛选
       val.sortFilter.forEach((item) => {
         this.option.push({
@@ -135,7 +144,7 @@ export default {
       this.typeData = clone(val.typeData)
     },
     activeData(val) {
-      if (val.length) {
+      if (this.saveActiveData.length && this.saveActiveData[0].code !== -1) {
         this.addClass('active', 0)
       } else {
         this.removeClass('active', 0)
@@ -144,17 +153,21 @@ export default {
     },
   },
   mounted() {
-    const installAPPHeight = this.$refs.installApp.$el.clientHeight
-    const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
-    const topHeight = this.$el.getBoundingClientRect().top
-    this.maxHeight =
-      document.body.clientHeight -
-      installAPPHeight -
-      dropDownMenuHeight -
-      topHeight +
-      'px'
-    this.reqType = 'serve'
+    this.$nextTick(() => {
+      const installAPPHeight = this.$refs.installApp.$el.clientHeight
+      const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
+      const topHeight = this.$el.getBoundingClientRect().top
+      this.maxHeight =
+        document.body.clientHeight -
+        installAPPHeight -
+        dropDownMenuHeight -
+        topHeight +
+        'px'
+    })
     this.$emit('goodsList', 'serve', this)
+    // console.log('this.searchText', this.searchText)
+    this.formData.keywords = this.searchText
+    this.initGoodsList()
   },
   methods: {
     selectDropdown(val) {
@@ -173,7 +186,7 @@ export default {
     open(index) {},
     close(index) {
       // 关闭下拉选择框
-      if (index === 1 && this.selectValue !== 0) {
+      if (index === 1 && this.selectValue !== this.option[0].value) {
         // 给下拉标题增加选中
         this.addClass('active', 1)
       } else {
@@ -246,7 +259,7 @@ export default {
         val[1].services[0]
       ) {
         if (val[0].text === '不限') {
-          this.dropdownTitle1 = '不限'
+          this.dropdownTitle1 = '全部服务'
         } else {
           this.dropdownTitle1 = val[0].text + '-' + val[1].services[0].text
         }
@@ -277,7 +290,16 @@ export default {
       // this.moreTextCss[index] = arr.join(' ')
       this.$set(this.moreTextCss, index, arr.join(' '))
     },
-    resetAllSelect() {},
+    resetAllSelect() {
+      this.saveActiveData = []
+      this.activeData = []
+      this.formData.sortBy = ''
+      this.formData.classCodes = ''
+      this.formData.start = 1
+      this.removeClass('active', 1)
+      this.selectValue = this.option[0].value
+      this.dropdownTitle1 = '全部服务'
+    },
   },
 }
 </script>
