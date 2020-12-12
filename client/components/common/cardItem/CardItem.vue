@@ -14,11 +14,11 @@
       />
       <div class="card_item_bot">
         <p class="card_item_bot_lf">
-          {{ favour.name }}<span>{{ favour.time }}</span>
+          {{ favour.createrName }}<span>{{ favour.createTime }}</span>
         </p>
         <div class="hot_con">
           <my-icon name="news_ic_heat" color="#fff" size="0.17rem" />
-          <p class="num">{{ favour.value }}</p>
+          <p class="num">{{ favour.newsReadAll }}</p>
         </div>
       </div>
     </div>
@@ -28,13 +28,13 @@
           <span v-if="favour.hot" class="hot">热门</span>{{ favour.title }}
         </p>
         <p class="space_lf">
-          {{ favour.name }}<span>{{ favour.time }}</span>
+          {{ favour.createrName }}<span>{{ favour.createTime }}</span>
         </p>
       </div>
       <div class="space_img_con">
         <div :class="['hot_con', 'hot_con_pos']">
           <my-icon name="news_ic_heat" color="#fff" size="0.17rem" />
-          <p class="num">{{ favour.value }}</p>
+          <p class="num">{{ favour.newsReadAll }}</p>
         </div>
         <sp-image
           v-if="image && image.src"
@@ -109,6 +109,7 @@ export default {
     }
   }
   .normal_img {
+    width: 100%;
     margin-top: 33px;
   }
   .space_item {

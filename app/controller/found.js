@@ -18,10 +18,8 @@ const getInformation = async function(service, bannerApi, listApi, locationCode,
   // 请求分类下的列表数据
   const getList = service.curl.curlGet(listApi, {
     categoryCode,
-    type: '资讯',
     limit: 10,
     page: 1,
-    platformCode: '薯片',
   });
   const reqAll = [ getBanner, getList ];
   try {

@@ -43,6 +43,36 @@ class goodsListService extends Service {
         delete params.needTypes
         delete params.sortBy
         const result = await service.curl.curlPost(url, params);
+        // console.log(result)
+        let arr = []
+        result.data.data.records.forEach((item) => {
+          let {
+            id,
+            name,
+            salesSum,
+            classCode,
+            className,
+            referencePrice,
+            tags,
+            clientDetails,
+            productDescription,
+            productNo,
+          } = item
+          // todo referencePrice金额需要转换成元，在这里是分
+          arr.push({
+            id,
+            name,
+            salesSum,
+            classCode,
+            className,
+            referencePrice,
+            tags,
+            clientDetails,
+            productDescription,
+            productNo,
+          })
+        })
+        result.data.data.records = arr;
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);

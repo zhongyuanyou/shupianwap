@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-21 15:13:44
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-11 11:27:44
+ * @LastEditTime: 2020-12-11 18:09:54
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/serviceSelected/ServiceSelect.vue
 -->
@@ -141,8 +141,9 @@ export default {
   computed: {
     formatItems() {
       if (!Array.isArray(this.items)) return []
-
-      return this.items.map((item) => {
+      const cloneItem = clone(this.items, true)
+      cloneItem.unshift({ [this.value]: -1, [this.label]: '不限' })
+      return cloneItem.map((item) => {
         const children = Array.isArray(item.children)
           ? clone(item.children, true)
           : []
@@ -192,7 +193,7 @@ export default {
         }
         console.log('3')
         if (!Array.isArray(newVal) || !newVal[0]) {
-          this.selectData = clone(initSelectData, true)
+          this.resetSelectData()
           console.log('4')
         } else {
           this.selectData = clone(newVal, true)
@@ -212,14 +213,7 @@ export default {
         if (newVal) {
           // 没有选择默认 选第一个
           if (this.selectData[0].id == null) {
-            const navItem = (this.formatItems && this.formatItems[0]) || {}
-            this.$set(this.selectData, 0, {
-              id: navItem.id,
-              text: navItem.text,
-              [this.value]: navItem.id,
-              [this.label]: navItem.text,
-            })
-            // this.$set(this.selectData, 1, { services: [this.childrenList[0]] })
+            this.resetSelectData()
           }
         }
       },
@@ -262,6 +256,17 @@ export default {
       this.$set(this.selectData, 1, { services })
 
       this.$emit('select', clone(this.selectData, true))
+    },
+
+    resetSelectData() {
+      const navItem = (this.formatItems && this.formatItems[0]) || {}
+      this.$set(this.selectData, 0, {
+        id: navItem.id,
+        text: navItem.text,
+        [this.value]: navItem.id,
+        [this.label]: navItem.text,
+      })
+      this.$set(this.selectData, 1, { services: [this.childrenList[0]] })
     },
   },
 }
