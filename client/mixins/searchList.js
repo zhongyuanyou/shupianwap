@@ -14,20 +14,24 @@ export default {
           .searchServeGoodsList({ axios: this.$axios }, this.formData)
           .then((data) => {
             console.log(data)
-            this.serveGoodsListData = [
-              ...this.serveGoodsListData,
-              ...data.goods.records,
-            ]
-            if (data.goods.records.length > 0) {
-              this.formData.start += 1
-              this.loading = false
+            if (JSON.stringify(data.goods) !== '{}') {
+              this.serveGoodsListData = [
+                ...this.serveGoodsListData,
+                ...data.goods.records,
+              ]
+              if (data.goods.records.length < 10) {
+                this.finished = true
+              } else {
+                this.formData.start += 1
+                this.loading = false
+              }
+              if (this.serveGoodsListData.length === 0) {
+                this.listShow = false
+              } else {
+                this.listShow = true
+              }
             } else {
-              this.finished = true
-            }
-            if (this.serveGoodsListData.length === 0) {
-              this.listShow = false
-            } else {
-              this.listShow = true
+              // todo 提示没有数据
             }
           })
       } else {
