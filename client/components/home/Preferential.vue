@@ -11,7 +11,7 @@
         <li v-for="(item, index) in tabBtn[curentItem].tabData" :key="index">
           <a :href="item.materialList[0].materialLink">
             <div class="label-num">
-              <span class="label">缺字段</span>
+              <span class="label">抢购中</span>
               <span class="num">缺字段人购买</span>
             </div>
             <div class="text-content">

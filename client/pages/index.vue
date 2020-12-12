@@ -22,7 +22,7 @@
     <Preferential :init-data="asyncData.preferential" />
     <!-- E 限时特惠 -->
     <!-- S 资讯精选 -->
-    <Information />
+    <Information :info-data="asyncData.information" />
     <!-- E 资讯精选 -->
     <!-- S 热门服务 -->
     <HotServe />
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '../config/constant'
+import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
 import { homeApi } from '@/api'
 import SearchBanner from '@/components/home/SearchBanner'
 import HomeNav from '@/components/home/HomeNav'
