@@ -16,3 +16,6 @@ const CHIPS_APP_SERVICE_PREFIX = ''
 
 export const CHIPS_WAP_BASE_URL = `/${CHIPS_WAP_INSTANCE_NAME}/${CHIPS_WAP_SERVICE_PREFIX}` // 使用网关调用路径的规则：项目实例名 / 自己服务路径前缀
 export const CHIPS_APP_BASE_URL = `/${CHIPS_APP_INSTANCE_NAME}/${CHIPS_APP_SERVICE_PREFIX}` // 使用网关调用路径的规则：项目实例名 / 自己服务路径前缀
+
+export const CHIPS_PLATFORM_CODE = 'COMDIC_PLATFORM_CRISPS' // 薯片平台code
+export const WAP_TERMINAL_CODE = 'COMDIC_TERMINAL_WAP' // WAP终端code

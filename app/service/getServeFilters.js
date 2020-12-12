@@ -42,18 +42,17 @@ class getServeFiltersService extends Service {
           resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
         }
         // 查询服务产品排序字典
-        const sortDict = service.curl.curlGet(url, {code: 'CONDITION-QF-SORT'});
-        const serviceCategory = service.common.category.getProductCategory('PRO_CLASS_TYPE_SERVICE');
-        const res = await Promise.all([serviceCategory, sortDict])
+        const sortDict = await service.curl.curlGet(url, {code: 'CONDITION-QF-SORT'});
+        const serviceCategory = await service.common.category.getProductCategory('PRO_CLASS_TYPE_SERVICE');
         if (
-          res[0].status === 200 &&
-          res[1].status === 200 &&
-          res[0].data.code === 200 &&
-          res[1].data.code === 200
+          sortDict.status === 200 &&
+          serviceCategory.status === 200 &&
+          sortDict.data.code === 200 &&
+          serviceCategory.data.code === 200
         ) {
           // 处理服务分类，重组数据
-          const arr = categoryHandle(res[0].data.data)
-          result.data = [arr, res[1].data.data]
+          const arr = categoryHandle(serviceCategory.data.data)
+          result.data = [arr, sortDict.data.data]
           result.code = 200
         } else {
           result.data = []

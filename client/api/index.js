@@ -5,9 +5,12 @@ import userInfo from './userInfo'
 import { homeApi } from './home' // 首页相关接口
 import goods from './goods'
 import { foundApi } from './found'
+import { publicApi } from './public'
+
 export { auth, shoppingCar }
 export { category }
 export { userInfo }
 export { goods }
 export { homeApi }
 export { foundApi }
+export { publicApi }

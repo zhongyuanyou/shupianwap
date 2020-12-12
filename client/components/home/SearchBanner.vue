@@ -7,10 +7,7 @@
       v-if="fiexdBannerData.length"
       :href="fiexdBannerData[0].materialList[0].materialLink"
     >
-      <img
-        :src="fiexdBannerData[0].materialList[0].materialUrl"
-        :alt="fiexdBannerData[0].materialList[0].materialName"
-      />
+      <img :src="fiexdBannerData[0].materialList[0].materialUrl" alt="" />
     </a>
     <sp-sticky @scroll="searchHandle">
       <Search
