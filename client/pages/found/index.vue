@@ -1,31 +1,32 @@
 <template>
   <div class="found">
     <!--S tab-->
-    <sp-work-tabs
-      v-model="activeTab"
-      title-inactive-color="#222"
-      title-active-color="#1a1a1a"
-      line-width="0.32rem"
-      line-height="0.06rem"
-      :mask="true"
-      :is-nav-tab="true"
-      :need-content="false"
-      :sticky="true"
-      @click="onClick"
-    >
-      <sp-work-tab
-        v-for="item in information_class"
-        :key="item.code"
-        :title="item.name"
+    <div v-if="information_class && information_class.length">
+      <sp-work-tabs
+        v-model="activeTab"
+        title-inactive-color="#222"
+        title-active-color="#1a1a1a"
+        line-width="0.32rem"
+        line-height="0.06rem"
+        :mask="true"
+        :is-nav-tab="true"
+        :need-content="false"
+        :sticky="true"
+        @click="onClick"
       >
-        <Con
-          ref="con"
-          :banner="information_banner"
-          :list="information_list"
-          :category-code="categoryCode"
-        />
-      </sp-work-tab>
-    </sp-work-tabs>
+        <sp-work-tab
+          v-for="item in information_class"
+          :key="item.code"
+          :title="item.name"
+        >
+          <Con
+            :banner="information_banner"
+            :list="information_list"
+            :category-code="categoryCode"
+          />
+        </sp-work-tab>
+      </sp-work-tabs>
+    </div>
     <!--E tab-->
   </div>
 </template>
@@ -66,7 +67,9 @@ export default {
   },
   mounted() {
     this.information_class = this.homeData.information_class
-    this.categoryCode = this.information_class[0].code
+    this.categoryCode = this.information_class.length
+      ? this.information_class[0].code
+      : ''
     this.information_banner = this.homeData.information_banner
     this.information_list = this.homeData.information_list
   },
