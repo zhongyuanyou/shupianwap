@@ -7,7 +7,7 @@
 const Controller = require('egg').Controller;
 const { Post, Get, Prefix } = require('egg-shell-decorators');
 const { productApi, contentApi } = require('./../../config/serveApi/index');
-const rules = require('./../validate/scProductDetails');
+const rules = require('../validate/scProduct');
 
 @Prefix('/nk/sc_product')
 class ScProductDetailsController extends Controller {
