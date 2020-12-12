@@ -36,10 +36,6 @@
 import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
 import { homeApi } from '@/api'
 export default {
-  model: {
-    prop: 'infoData',
-    event: 'update',
-  },
   props: {
     infoData: {
       type: Array,
