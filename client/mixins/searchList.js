@@ -1,17 +1,13 @@
 import { goods } from '@/api/index'
 export default {
-  data() {
-    return {
-      reqType: 'serve', // 搜索的产品类型
-    }
-  },
   methods: {
     getServeList() {},
     getJyList() {},
     searchKeydownHandle() {
       // console.log('this.searchText', this.searchText)
       // console.log('formData', this.formData)
-      // console.log('reqType', this.reqType)
+      console.log('reqType', this.reqType)
+      console.log(2222)
       if (this.reqType === 'serve') {
         console.log('serveGoodsListData', this.serveGoodsListData)
         goods

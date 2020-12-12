@@ -152,9 +152,7 @@ class homeController extends Controller {
         }
         // 获取站点
         const findCity = service.common.city.getSiteList();
-
-        let locationCodeList = ctx.request.body.locationCodeList;
-        locationCodeList.push(ctx.request.body.recomAdCode);
+        console.log(ctx.request.body.locationCodeList);
         // 获取广告
         const findBanner = getBannerList(
             ctx,
@@ -173,6 +171,7 @@ class homeController extends Controller {
         const reqArr = [findCity, findBanner, findInformation];
         try {
             const resData = await Promise.all(reqArr);
+            console.log(resData[0].code, resData[1].code, resData[2].data.code);
             let cityList = []; // 站点数据
             let advertising = {}; // 广告数据
             let information = {}; // 资讯数据
@@ -186,10 +185,7 @@ class homeController extends Controller {
             }
             // 资讯数据处理
             if (resData[2].data.code === 200) {
-                information.rows = resData[2].data.data.rows || [];
-                information.total = resData[2].data.data.total;
-                information.currentPage = resData[2].data.data.currentPage;
-                information.totalPage = resData[2].data.data.totalPage;
+                information = resData[2].data.data.rows || [];
             }
 
             ctx.helper.success({
@@ -275,10 +271,7 @@ class homeController extends Controller {
                 ctx,
                 code: 200,
                 res: {
-                    infoList: resData.data.data.rows,
-                    total: resData.data.data.total,
-                    currentPage: resData.data.data.currentPage,
-                    totalPage: resData.data.data.totalPage,
+                    infoList: resData.data.data.rows || [],
                 },
             });
         } catch (error) {

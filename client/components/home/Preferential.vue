@@ -6,19 +6,19 @@
       :need-fixed="false"
       @selectTabHandle="selectTabHandle"
     ></TabCurve>
-    <div class="scroll-centent">
+    <div ref="rollRef" class="scroll-centent">
       <ul>
-        <li v-for="(item, index) in tabData" :key="index">
-          <a href="javascript:void(0);">
+        <li v-for="(item, index) in tabBtn[curentItem].tabData" :key="index">
+          <a :href="item.materialList[0].materialLink">
             <div class="label-num">
-              <span class="label">{{ item.label }}</span>
-              <span class="num">{{ item.num }}人已购买</span>
+              <span class="label">缺字段</span>
+              <span class="num">缺字段人购买</span>
             </div>
             <div class="text-content">
-              <strong>{{ item.title }}</strong>
-              <p>{{ item.describe }}</p>
+              <strong>{{ item.materialList[0].materialName }}</strong>
+              <p>暂缺字段</p>
             </div>
-            <img :src="item.url" alt="" />
+            <img :src="item.materialList[0].materialUrl" alt="" />
           </a>
         </li>
       </ul>
@@ -28,24 +28,16 @@
 
 <script>
 import TabCurve from '@/components/common/tab/TabCurve'
+import { publicApi } from '@/api'
 export default {
   components: {
     TabCurve,
   },
   props: {
-    tabBtn: {
+    initData: {
       type: Array,
       default: () => {
-        return [
-          {
-            label: '限时特惠',
-            code: '1',
-          },
-          {
-            label: '内容待定',
-            code: '2',
-          },
-        ]
+        return []
       },
     },
     tabData: {
@@ -94,11 +86,40 @@ export default {
   data() {
     return {
       curentItem: 0,
+      tabBtn: [
+        {
+          label: '限时特惠',
+          code: 'ad100026',
+          tabData: [],
+        },
+        {
+          label: '内容待定',
+          code: 'ad100055',
+          tabData: [],
+        },
+      ],
     }
   },
+  watch: {
+    initData(arr) {
+      this.tabBtn[0].tabData = arr
+    },
+  },
   methods: {
-    selectTabHandle(data) {
-      console.log(data)
+    selectTabHandle({ code, index }) {
+      this.$refs.rollRef.scrollLeft = 0
+      // 切换tab请求数据
+      if (!this.tabBtn[index].tabData.length) {
+        this.$axios
+          .post(publicApi.findAdvertising, {
+            locationCodeList: [code],
+          })
+          .then((res) => {
+            if (res.code === 200) {
+              this.tabBtn[index].tabData = res.data[code].sortMaterialList
+            }
+          })
+      }
     },
   },
 }

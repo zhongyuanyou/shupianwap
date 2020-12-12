@@ -68,6 +68,13 @@ export default {
   },
   mixins: [searchList],
   props: {
+    reqType: {
+      // 搜索结果页的顶部tab类型
+      type: String,
+      default() {
+        return ''
+      },
+    },
     isShowTabs: {
       // 是否显示tabs业态栏
       type: Boolean,
@@ -75,11 +82,11 @@ export default {
         return true
       },
     },
-    initListData: {
-      // 初始化列表数据，仅做初始化的时候用或是在进行条件搜索的时候用
-      type: Array,
+    initJyData: {
+      // 初始化的交易数据，包括所有的筛选数据
+      type: Object,
       default() {
-        return []
+        return {}
       },
     },
     typeCode: {
@@ -152,21 +159,25 @@ export default {
       this.jyGoodsListData = clone(val)
     },
   },
+  activated() {
+    console.log(12312312)
+  },
   mounted() {
-    const installAPPHeight = this.$refs.installApp.$el.clientHeight
-    const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
-    const topHeight = this.$el.getBoundingClientRect().top
-    const spTabsHeight = this.$refs.spTabs
-      ? this.$refs.spTabs.$el.clientHeight
-      : 0
-    this.maxHeight =
-      document.body.clientHeight -
-      installAPPHeight -
-      dropDownMenuHeight -
-      spTabsHeight -
-      topHeight +
-      'px'
-    this.reqType = 'jy'
+    this.$nextTick(() => {
+      const installAPPHeight = this.$refs.installApp.$el.clientHeight
+      const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
+      const topHeight = this.$el.getBoundingClientRect().top
+      const spTabsHeight = this.$refs.spTabs
+        ? this.$refs.spTabs.$el.clientHeight
+        : 0
+      this.maxHeight =
+        document.body.clientHeight -
+        installAPPHeight -
+        dropDownMenuHeight -
+        spTabsHeight -
+        topHeight +
+        'px'
+    })
     this.$emit('goodsList', 'jy', this)
   },
   methods: {
@@ -180,6 +191,7 @@ export default {
       console.log(name, title)
     },
     resetAllSelect() {},
+    initGoodsList() {},
   },
 }
 </script>
@@ -193,6 +205,9 @@ export default {
   }
   /deep/.sp-tabs {
     border-bottom: 1px solid #f4f4f4;
+    .sp-tabs__line {
+      display: none;
+    }
   }
   /deep/.sp-tabs__wrap--scrollable .sp-tabs__nav--complete {
     padding-left: 0;
@@ -277,16 +292,12 @@ export default {
   .subscribe {
     padding: 0 40px;
   }
-  /deep/.lowFive {
-    /deep/.sp-tabs__nav {
-      /deep/.sp-tab {
-        &:first-child {
-          justify-content: flex-start;
-        }
-        &:nth-last-child(2) {
-          justify-content: flex-end;
-        }
-      }
+  /deep/.lowFive /deep/.sp-tabs__nav /deep/.sp-tab {
+    &:first-child {
+      justify-content: flex-start;
+    }
+    &:nth-last-child(2) {
+      justify-content: flex-end;
     }
   }
 }

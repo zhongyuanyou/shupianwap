@@ -13,9 +13,14 @@
       </div>
       <a href="javascript:void(0);">免费帮找</a>
     </div>
-    <div class="help-moudle-bottom">
-      <a v-for="item in 2" :key="item" href="javascript:void(0);">
-        <img
+    <div v-if="helpBannerData.length" class="help-moudle-bottom">
+      <a
+        v-for="(item, index) in helpBannerData"
+        :key="index"
+        :href="item.materialList[0].materialLink"
+      >
+        <img class="img" :src="item.materialList[0].materialUrl" alt="" />
+        <!-- <img
           src="http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp"
           alt=""
         />
@@ -30,7 +35,7 @@
             ></my-icon>
           </strong>
           <p>跟榜选服务,更灵活更灵活更灵活更灵活</p>
-        </span>
+        </span> -->
       </a>
     </div>
   </div>
@@ -38,6 +43,14 @@
 
 <script>
 export default {
+  props: {
+    helpBannerData: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+  },
   data() {
     return {}
   },
@@ -139,12 +152,16 @@ export default {
       flex: 1;
       display: flex;
       align-items: center;
-      padding: 32px 24px;
+      //   padding: 32px 24px;
       height: 128px;
       background: #ffffff;
-      border: 1px solid #cdcdcd;
-      box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
-      border-radius: 8px;
+      //   border: 1px solid #cdcdcd;
+      //   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+      //   border-radius: 8px;
+      .img {
+        width: 100%;
+        height: 100%;
+      }
       &:nth-child(1) {
         margin-right: 16px;
       }
