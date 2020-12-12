@@ -2,8 +2,8 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 22:01:18
- * @Description: file content
+ * @LastEditTime: 2020-12-12 14:01:29
+ * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
 
@@ -11,59 +11,66 @@
   <div class="shopping-car">
     <GoodsPopup ref="goodsPopup" />
     <div class="head">
-      <sp-top-nav-bar
-        title="购物车"
-        left-arrow
-        ellipsis
-        @on-click-left="onClickLeft"
-        @on-click-right="onClickRight"
-      >
+      <Header title="购物车" class="head-nav">
         <template #left>
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
+          <my-icon
+            name="nav_ic_back"
+            size="0.4rem"
+            color="#1A1A1A"
+            class="head__icon-back"
+            @click="onClickLeft"
+          />
         </template>
         <template #right>
-          <span>{{ shoppingCarStatus === 'edit' ? '完成' : '管理' }}</span>
+          <span class="head__operation" @click="onClickRight">{{
+            shoppingCarStatus === 'edit' ? '完成' : '管理'
+          }}</span>
         </template>
-      </sp-top-nav-bar>
+      </Header>
     </div>
     <div class="body">
       <div class="shopping-car__content">
-        <div v-if="false">
-          <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
-            <sp-list
-              v-model="loading"
-              class="shopping-car__goods"
-              finished-text="没有更多了"
-              :finished="finished"
-              @load="onLoad"
+        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+          <sp-list
+            v-model="loading"
+            class="shopping-car__goods"
+            error-text="请求失败，点击重新加载"
+            :error.sync="error"
+            :finished="finished"
+            @load="onLoad"
+          >
+            <div
+              v-for="(item, index) in list"
+              :key="item"
+              class="shopping-car__goods-item"
             >
-              <div
-                v-for="(item, index) in list"
-                :key="item"
-                class="shopping-car__goods-item"
-              >
-                <GoodsItem
-                  :status="index === 1 ? 'offShelf' : 'sale'"
-                  @operation="handleItemOperation"
-                />
-              </div>
-            </sp-list>
-          </sp-pull-refresh>
-        </div>
-
-        <div v-else>
-          <ShoppingCarNull />
-        </div>
+              <GoodsItem
+                :status="index === 1 ? 'offShelf' : 'sale'"
+                :commodity-data="item"
+                @operation="handleItemOperation"
+              />
+            </div>
+            <template #finished>
+              <span v-if="list && list.length">没有更多了</span>
+              <ShoppingCarNull v-else />
+            </template>
+          </sp-list>
+        </sp-pull-refresh>
       </div>
-      <div v-if="recommendList && recommendList.length" class="recommend">
+      <!-- 推荐列表 -->
+      <div class="recommend">
         <h3 class="recommend__title">为您推荐</h3>
-        <div class="recommend-list">
+        <div
+          v-if="recommendList && recommendList.length"
+          class="recommend-list"
+        >
           <GoodsPro
             v-for="item in recommendList"
             :key="item"
             class="item-wrap"
           />
         </div>
+        <sp-loading v-else />
       </div>
     </div>
     <div class="footer sp-hairline--top">
@@ -74,13 +81,23 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import { TopNavBar, Button, Toast, PullRefresh, List } from '@chipspc/vant-dgg'
+import {
+  TopNavBar,
+  Button,
+  Toast,
+  PullRefresh,
+  List,
+  Loading,
+} from '@chipspc/vant-dgg'
+import Header from '@/components/common/head/header'
 
 import GoodsPro from '@/components/planner/GoodsPro'
 import GoodsItem from '@/components/shoppingCar/GoodsItem'
 import Bottombar from '@/components/shoppingCar/Bottombar'
 import GoodsPopup from '@/components/shoppingCar/GoodsPopup'
 import ShoppingCarNull from '@/components/shoppingCar/ShoppingCarNull'
+
+import { shoppingCar } from '@/api'
 
 const shoppingCarStatusList = {
   completed: '完成',
@@ -94,19 +111,29 @@ export default {
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
+    [Loading.name]: Loading,
+    Header,
     GoodsPopup,
     GoodsPro,
     GoodsItem,
     Bottombar,
     ShoppingCarNull,
   },
+  async asyncData({ store }) {
+    const userId = store.state.user.userInfo.userId || '123456'
+    try {
+      const data = await shoppingCar.list({ userId })
+      return { asyncData: data }
+    } catch (error) {}
+  },
   data() {
     return {
       list: [],
       recommendList: [],
-      loading: false,
-      finished: false,
       refreshing: false,
+      loading: false,
+      error: false,
+      finished: false,
       shoppingCarStatus: 'completed', // edit: 编辑
     }
   },
@@ -116,7 +143,7 @@ export default {
     }),
   },
   created() {
-    this.getList()
+    this.getRecommendList()
   },
   methods: {
     onClickLeft() {
@@ -127,31 +154,30 @@ export default {
       this.shoppingCarStatus =
         this.shoppingCarStatus === 'completed' ? 'edit' : 'completed'
     },
-    getList() {
-      this.loading = true
-      setTimeout(() => {
-        for (let i = 0; i < 5; i++) {
-          this.recommendList.push(this.recommendList.length + 1)
-        }
-        this.loading = false
-      }, 1000)
-    },
+
     onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 2; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        this.loading = false
-
-        if (!this.list.length || this.list.length >= 4) {
+      setTimeout(() => {}, 1000)
+      this.getList()
+        .then((data) => {
+          if (this.refreshing) {
+            this.list = []
+            this.refreshing = false
+          }
+          this.loading = false
           this.finished = true
-        }
-      }, 1000)
+
+          this.list = data
+          // for (let i = 0; i < 2; i++) {
+          // this.list.push(this.list.length + 1)
+          // }
+          // if (!this.list.length || this.list.length >= 4) {
+          //   this.finished = true
+          // }
+        })
+        .catch(() => {
+          this.error = true
+          this.loading = false
+        })
     },
     onRefresh() {
       // 清空列表数据
@@ -179,6 +205,28 @@ export default {
       })
     },
     attentionItem() {},
+
+    // 请求购物车列表
+    async getList() {
+      try {
+        const userId = this.userInfo.userId || '123456'
+        let data = await shoppingCar.list({ userId })
+        console.log(data)
+        if (!Array.isArray(data)) data = []
+        return data
+      } catch (error) {
+        console.error('getList:', error)
+        return Promise.reject(error)
+      }
+    },
+
+    getRecommendList() {
+      setTimeout(() => {
+        for (let i = 0; i < 5; i++) {
+          this.recommendList.push(this.recommendList.length + 1)
+        }
+      }, 50000)
+    },
   },
 }
 </script>
@@ -223,9 +271,14 @@ export default {
   display: flex;
   flex-direction: column;
   .head {
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    &__icon-back {
+      padding-left: 32px;
+    }
+    &__operation {
+      padding-right: 40px;
+      font-size: 28px;
+      font-weight: bold;
+    }
   }
   .body {
     flex: 1;
