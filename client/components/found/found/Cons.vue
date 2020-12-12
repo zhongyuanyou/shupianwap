@@ -34,7 +34,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <sp-cell v-for="(item, index) in information_list" :key="index">
+          <sp-cell v-for="(item, index) in list" :key="index">
             <CardItem
               :favour="item"
               :image="item.imageUrl ? { src: item.imageUrl } : null"
@@ -74,13 +74,13 @@ export default {
     CardItem,
   },
   props: {
-    information_banner: {
+    banner: {
       type: Array,
       default: () => {
         return []
       },
     },
-    information_list: {
+    list: {
       type: Array,
       default: () => {
         return []

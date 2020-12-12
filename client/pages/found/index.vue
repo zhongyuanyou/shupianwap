@@ -18,10 +18,7 @@
         :key="item.code"
         :title="item.name"
       >
-        <Con
-          :information_banner="information_banner"
-          :information_list="information_list"
-        />
+        <Con :banner="information_banner" :list="information_list" />
       </sp-work-tab>
     </sp-work-tabs>
     <!--E tab-->
