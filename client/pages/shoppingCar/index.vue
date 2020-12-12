@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-12 14:01:29
+ * @LastEditTime: 2020-12-12 17:21:59
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -177,6 +177,12 @@ export default {
         .catch(() => {
           this.error = true
           this.loading = false
+          for (let i = 0; i < 2; i++) {
+            this.list.push(this.list.length + 1)
+          }
+          if (!this.list.length || this.list.length >= 4) {
+            this.finished = true
+          }
         })
     },
     onRefresh() {
