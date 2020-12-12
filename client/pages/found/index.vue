@@ -18,7 +18,12 @@
         :key="item.code"
         :title="item.name"
       >
-        <Con :banner="information_banner" :list="information_list" />
+        <Con
+          ref="con"
+          :banner="information_banner"
+          :list="information_list"
+          :category-code="categoryCode"
+        />
       </sp-work-tab>
     </sp-work-tabs>
     <!--E tab-->
@@ -56,26 +61,27 @@ export default {
       information_class: [], // 产品分类
       information_banner: [], // 广告数据
       information_list: [], // 资讯列表
+      categoryCode: '', // code码
     }
   },
   mounted() {
     this.information_class = this.homeData.information_class
+    this.categoryCode = this.information_class[0].code
     this.information_banner = this.homeData.information_banner
     this.information_list = this.homeData.information_list
   },
   methods: {
     async onClick(index, title) {
       // 点击tab标签
-      const categoryCode = this.information_class[index].code
+      this.categoryCode = this.information_class[index].code
       const params = {
-        categoryCode,
+        categoryCode: this.categoryCode,
       }
-      const res = await this.$axios.get(foundApi.screenRequest, params)
+      const res = await this.$axios.get(foundApi.screenRequest, { params })
       if (res.code === 200) {
         this.information_banner = res.data.information_banner
         this.information_list = res.data.information_list
       }
-      console.log('res', res)
     },
   },
 }

@@ -1,11 +1,7 @@
 <template>
   <div class="keyword">
     <!--S 搜索-->
-    <FoundHeader
-      :left="true"
-      :keywords="this.$route.params.keywords"
-      @inputChange="inputChange"
-    />
+    <FoundHeader :left="true" :keywords="keywords" @inputChange="inputChange" />
     <!--E 搜索-->
     <!--S 内容-->
     <div class="keyword_con">
@@ -21,6 +17,7 @@
 <script>
 import FoundHeader from '~/components/found/common/FoundHeader'
 import Item from '~/components/found/search/Item'
+import { foundApi } from '@/api'
 export default {
   name: 'Keywords',
   components: {
@@ -29,7 +26,7 @@ export default {
   },
   data() {
     return {
-      keywords: '',
+      keywords: this.$route.params.keywords, // 资讯搜索关键字
       list: [
         {
           title:
@@ -48,11 +45,30 @@ export default {
           avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
           time: '1天前',
         },
-      ],
+      ], // 通过关键字查询的资讯列表
+      limit: 10, // 每页显示条数
+      page: 1, // 当前页
     }
   },
+  mounted() {
+    this.getInfoList()
+  },
   methods: {
-    inputChange() {},
+    inputChange() {
+      this.getInfoList()
+    },
+    async getInfoList() {
+      // 获取资讯列表
+      const params = {
+        keyword: this.keywords,
+        limit: this.limit,
+        page: this.page,
+      }
+      const res = await this.$axios.get(foundApi.infoList, { params })
+      if (res.code === 200) {
+        this.list = res.data.information_list
+      }
+    },
   },
 }
 </script>
