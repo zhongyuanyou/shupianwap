@@ -2,19 +2,21 @@
   <div class="company-registry">
     <sp-top-nav-bar
       title="公司注册"
-      left-arrow
-      background="#F2F2F2"
+      background="#FFFFFF"
+      title-color="#1A1A1A"
       ellipsis
       @on-click-left="onClickLeft"
     >
-      <template #right>
-        <sp-icon name="specialreturn2" size="18" />
-      </template>
+      <div slot="left" class="nav-back">
+        <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
+      </div>
     </sp-top-nav-bar>
     <div class="banner">
-      <sp-swipe class="my-swipe" :autoplay="3000" indicator-color="#e6e6e6">
+      <sp-swipe class="my-swipe" :autoplay="3000" :show-indicators="false">
         <sp-swipe-item v-for="(image, index) in images" :key="index">
-          <sp-image :src="image" fit="contain" />
+          <nuxt-link :to="{ name: image.url }">
+            <sp-image :src="require(`../../assets/` + image.img)" fit="cover"
+          /></nuxt-link>
         </sp-swipe-item>
       </sp-swipe>
     </div>
@@ -52,8 +54,11 @@ export default {
   data() {
     return {
       images: [
-        'https://img.yzcdn.cn/vant/apple-1.jpg',
-        'https://img.yzcdn.cn/vant/apple-2.jpg',
+        {
+          code: 1,
+          url: '',
+          img: 'spreadImages/home/busi_img_gscsbanner01.jpg',
+        },
       ],
     }
   },
@@ -67,17 +72,18 @@ export default {
 <style lang="less" scoped>
 .company-registry {
   .banner {
-  }
-  /deep/.my-swipe .sp-swipe-item {
-    color: #fff;
-    font-size: 20px;
-    line-height: 150px;
-    text-align: center;
-    // background-color: #39a9ed;
-    img {
-      width: 100%;
-      height: 244px;
+    /deep/.my-swipe .sp-swipe-item {
+      color: #fff;
+      font-size: 20px;
+      height: 392px;
+      text-align: center;
+      img {
+        width: 100%;
+        height: 392px;
+      }
     }
+  }
+  .precontract {
   }
 }
 </style>
