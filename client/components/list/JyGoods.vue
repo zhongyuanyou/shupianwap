@@ -10,7 +10,7 @@
       :class="{
         lowFive: tabItems.length <= 5,
       }"
-      @click="clickTabs"
+      @change="changeTabs"
     >
       <sp-tab
         v-for="(item, index) in tabItems"
@@ -54,6 +54,7 @@ import Subscribe from '@/components/list/Subscribe'
 import JyFilters from '@/components/list/JyFilters'
 import searchList from '@/mixins/searchList'
 import clone from '~/utils/clone'
+import { goods } from '@/api/index'
 
 export default {
   name: 'JyGoods',
@@ -134,8 +135,11 @@ export default {
       finished: false,
       maxHeight: 0,
       formData: {
-        page: 1,
+        start: 1,
         limit: 10,
+        needTypes: 1,
+        classCode: '',
+        dictCode: '',
       },
       jyGoodsListData: [],
     }
@@ -169,6 +173,10 @@ export default {
         'px'
     })
     this.$emit('goodsList', 'jy', this)
+    // 默认请求的数据
+    this.formData.classCode = this.tabItems[0].ext2
+    this.formData.dictCode = this.tabItems[0].code
+    this.initGoodsList()
   },
   methods: {
     onLoad() {
@@ -177,11 +185,22 @@ export default {
       this.jyGoodsListData = [...this.jyGoodsListData, ...arr]
       this.loading = false
     },
-    clickTabs(name, title) {
-      console.log(name, title)
+    changeTabs(name, title) {
+      console.log(this.tabItems[name])
+      this.formData.classCode = this.tabItems[name]
+      this.formData.dictCode = this.tabItems[name]
     },
     resetAllSelect() {},
-    initGoodsList() {},
+    initGoodsList() {
+      goods
+        .searchJyGoodsList({ axios: this.$axios }, this.formData)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
   },
 }
 </script>

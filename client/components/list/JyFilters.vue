@@ -170,7 +170,7 @@ export default {
           isSelects: false,
         },
         {
-          title: '行业3',
+          title: '行业',
           filters: [
             {
               id: '1',

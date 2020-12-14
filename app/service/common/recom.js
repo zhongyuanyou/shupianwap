@@ -22,11 +22,15 @@ class cityService extends Service {
         return new Promise(async (resolve) => {
             const { ctx, app, service } = this;
             try {
+                const key =
+                    params.deviceId +
+                    params.userId +
+                    params.areaCode +
+                    params.productType +
+                    params.formatId;
                 // 通过用户唯一标识从redis获取推荐产品ids
-                const cacheProductIds = await service.redis.get(
-                    params.deviceId
-                );
-                if (cacheProductIds) {
+                const cacheProductIds = await service.redis.get(key);
+                if (cacheProductIds && cacheProductIds.code === 200) {
                     resolve(cacheProductIds);
                 } else {
                     const url = ctx.helper.assembleUrl(
@@ -37,11 +41,7 @@ class cityService extends Service {
                     if (result.data.code === 200) {
                         const overdueTime = 60 * 60; // 过期时间(1小时)
                         // 缓存数据
-                        service.redis.set(
-                            params.deviceId,
-                            result.data,
-                            overdueTime
-                        );
+                        service.redis.set(key, result.data, overdueTime);
                     }
                     resolve(result.data);
                 }

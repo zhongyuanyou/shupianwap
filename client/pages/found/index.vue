@@ -67,9 +67,10 @@ export default {
   },
   mounted() {
     this.information_class = this.homeData.information_class
-    this.categoryCode = this.information_class.length
-      ? this.information_class[0].code
-      : ''
+    this.categoryCode =
+      this.information_class && this.information_class.length
+        ? this.information_class[0].code
+        : ''
     this.information_banner = this.homeData.information_banner
     this.information_list = this.homeData.information_list
   },

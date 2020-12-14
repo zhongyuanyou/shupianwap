@@ -97,9 +97,9 @@ class ContentController extends Controller {
       start: { type: 'number', required: true },
       limit: { type: 'number', required: true },
       needTypes: { type: 'number', required: true }, // 是否需要分类数据，0不需要，1需要
-      needGoodsList: { type: 'number', required: true }, // 是否需要商品列表数据，0不需要，1需要
-      sort: { type: 'number', required: false }, // 排序 1.综合排序（默认）  2.最新发布  3.按价格从高到低  4.按价格从低到高
-      classCode: { type: 'string', required: true }, // 产品分类
+      sortBy: { type: 'number', required: false }, // 排序 1.综合排序（默认）  2.最新发布  3.按价格从高到低  4.按价格从低到高
+      classCode: { type: 'string', required: true }, // 产品分类编码
+      dictCode: { type: 'string', required: true }, // 字典编码
       withFieldDetail: { type: 'string', required: false }, // 字段详情标志,0不需要字段详情(默认) 1需要字段详情
       searchKey: { type: 'string', required: false }, // 搜索关键词
       fieldList: { type: 'array', required: false},
@@ -130,7 +130,7 @@ class ContentController extends Controller {
       if (ctx.request.body.needTypes === 1) {
         // 需要返回分类筛选参数
         // 查询字典
-        const dict = service.getJyFilters.getJyFilters();
+        const dict = service.getJyFilters.getJyFilters(ctx.request.body.dictCode, ctx.request.body.classCode);
         resArrs.push(dict)
       }
       const data = await Promise.all(resArrs)
