@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-04 10:54:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-11 16:48:07
+ * @LastEditTime: 2020-12-14 10:01:04
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/planner.js
  */
@@ -118,11 +118,12 @@ class PlannerController extends Controller {
     ) {
       const adRes = addressResult.data.data || [];
       const tagRes = categoryResult.data.data || [];
-      const res = service.planner.mergeAdTagImgTolist(
+      const resRecords = service.planner.mergeAdTagImgTolist(
         listRecords,
         adRes,
         tagRes
       );
+      const res = Object.assign(listData, { records: resRecords });
       ctx.helper.success({
         ctx,
         code: 200,
