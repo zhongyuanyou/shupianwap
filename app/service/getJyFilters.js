@@ -22,8 +22,9 @@ class getJyFiltersService extends Service {
         }
         const jyFilters = service.curl.curlGet(url, {code: 'CONDITION-JY'});
         const cityList = service.common.city.getCityList();
-        const res = await Promise.all([jyFilters, cityList])
-        ctx.logger.info(res)
+        const gshyCategory = service.common.category.getProductCategory({code: 'FL20201207080003',productTypeCode: 'PRO_CLASS_TYPE_SERVICE'}); // 公司的行业筛选项
+        const res = await Promise.all([jyFilters, cityList, gshyCategory])
+        ctx.logger.info(res[2])
         if (
           res[0].status === 200 &&
           res[1].status === 200 &&
@@ -56,6 +57,12 @@ class getJyFiltersService extends Service {
       }
     });
   }
+}
+// 获取所有的交易筛选项
+function getAllJyFilter() {
+
+}
+function resetJyFilter() {
 
 }
 module.exports = getJyFiltersService;

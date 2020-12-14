@@ -48,14 +48,14 @@ class cityService extends Service {
   async getCityList() {
     return new Promise(async resolve => {
       const { ctx, app, service } = this;
-      const sysCode = app.config.apiClient.APPID[0];
-      const address = contentApi.dataDictsTier;
-      const url = ctx.helper.assembleUrl(sysCode, address);
-      if (!url) {
-        resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
-      }
       try {
-        const result = await service.curl.curlGet(url, {code: '2147483647'});
+        const sysCode = app.config.apiClient.APPID[0];
+        const address = contentApi.dataDictsTier;
+        const url = ctx.helper.assembleUrl(sysCode, address);
+        if (!url) {
+          resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
+        }
+        const result = await service.curl.curlGet(url, {code: 'PRO_TRADING_GOODS_TYPE'});
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);

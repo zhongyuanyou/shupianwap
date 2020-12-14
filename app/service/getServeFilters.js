@@ -43,7 +43,7 @@ class getServeFiltersService extends Service {
         }
         // 查询服务产品排序字典
         const sortDict = await service.curl.curlGet(url, {code: 'CONDITION-QF-SORT'});
-        const serviceCategory = await service.common.category.getProductCategory('PRO_CLASS_TYPE_SERVICE');
+        const serviceCategory = await service.common.category.getProductCategory({productTypeCode: 'PRO_CLASS_TYPE_SERVICE'});
         if (
           sortDict.status === 200 &&
           serviceCategory.status === 200 &&

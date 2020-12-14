@@ -98,6 +98,7 @@ class goodsListService extends Service {
       try {
         let params = JSON.parse(JSON.stringify(data))
         delete params.needTypes
+        delete params.needGoodsList
         const result = await service.curl.curlPost(url, params);
         resolve(result);
       } catch (err) {

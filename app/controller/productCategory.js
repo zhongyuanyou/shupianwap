@@ -29,7 +29,7 @@ class ProductCategoryController extends Controller {
     // 获取广告数据，若有locationCode的情况下
     const getAdvertising = service.common.banner.getAdList([ 'ad100026' ]);
     // 获取产品分类
-    const getClassification = service.common.category.getProductCategory('PRO_CLASS_TYPE_SERVICE');
+    const getClassification = service.common.category.getProductCategory({productTypeCode: 'PRO_CLASS_TYPE_SERVICE'});
 
     const reqAll = [ getClassification, getAdvertising ];
     try {
