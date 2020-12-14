@@ -14,7 +14,7 @@
     <!--   banner -->
     <Banner :images="info.images" />
     <!--   BasicInfo(基本信息)-->
-    <BasicInfo :data="info.basicInfo" />
+    <BasicInfo :base-data="scProductDetailData.baseData" />
     <!--    服务项目-->
     <ServiceItems :data="info.serviceItems" />
     <!--    服务详情-->
@@ -44,6 +44,7 @@ import ServiceItems from '~/components/detail/service/ServiceItems'
 import ServiceInfo from '~/components/detail/service/ServiceInfo'
 import Planners from '~/components/detail/Planners'
 import Need from '~/components/detail/Need'
+import { productDetailsApi } from '~/api'
 export default {
   name: 'ServiceDetails',
   components: {
@@ -57,10 +58,26 @@ export default {
     Planners,
     Need,
   },
+  async asyncData({ $axios, params }) {
+    try {
+      const res = await $axios.post(productDetailsApi.scProductDetail, {
+        productId: params.id,
+      })
+      if (res.code === 200) {
+        console.log(res.data)
+        return { scProductDetailData: res.data }
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  },
   layout: 'productDetail',
   data() {
     return {
       opacity: 0,
+      scProductDetailData: {
+        baseData: {},
+      },
       info: {
         images: [
           'https://img.yzcdn.cn/vant/cat.jpeg',

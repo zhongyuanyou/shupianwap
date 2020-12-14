@@ -4,20 +4,21 @@ const path = require('path');
 function getIPAdress() {
   const interfaces = require('os').networkInterfaces();
   for (const devName in interfaces) {
-    const iface = interfaces[devName];
-    for (let i = 0; i < iface.length; i++) {
-      const alias = iface[i];
-      if (
-        alias.family === 'IPv4' &&
-                alias.address !== '127.0.0.1' &&
-                !alias.internal
-      ) {
-        return alias.address;
+    if (!devName.includes('Npcap')) {
+      const iface = interfaces[devName];
+      for (let i = 0; i < iface.length; i++) {
+        const alias = iface[i];
+        if (
+          alias.family === 'IPv4' &&
+            alias.address !== '127.0.0.1' &&
+            !alias.internal
+        ) {
+          return alias.address;
+        }
       }
     }
   }
 }
-
 module.exports = appInfo => {
   /**
      * built-in config
@@ -124,7 +125,7 @@ module.exports = appInfo => {
         name: 'MyOwn',
       },
       metadata: {
-        version: '1.0',
+        version: '2.2',
       },
     },
     requestMiddleware: (requestOpts, done) => {
