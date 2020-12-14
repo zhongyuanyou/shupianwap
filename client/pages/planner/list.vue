@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-14 14:37:28
+ * @LastEditTime: 2020-12-14 20:56:05
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -10,9 +10,10 @@
 <template>
   <div class="list">
     <div class="head">
-      <Header title="在线直选规划师" @leftClickFuc="onClickLeft" />
+      <Header title="在线直选规划师" />
     </div>
     <div class="body">
+      <SearchPopup ref="searchPopup" @onSearch="handleKeywordsSearch" />
       <sp-cell class="search">
         <div>
           <sp-nav-search
@@ -20,7 +21,7 @@
             border
             special-label
             class="search__input"
-            placeholder="请输入业务或规划师姓名"
+            placeholder="请输入规划师姓名"
             @focus="handleSearchFocus"
           >
             <template #left-icon>
@@ -30,7 +31,9 @@
           <sp-dropdown-menu class="search__dropdown">
             <sp-dropdown-item
               ref="item"
-              :title-class="regions != '区域' ? 'title-style' : ''"
+              :title-class="
+                regions != '区域' ? 'sp-dropdown-menu__title--selected ' : ''
+              "
               class="search__dropdown-regoin"
             >
               <template #title>
@@ -43,16 +46,17 @@
               />
             </sp-dropdown-item>
             <sp-dropdown-item
-              v-model="search.scoreSort"
-              :title-class="search.scoreSort > 0 ? 'title-style' : ''"
+              v-model="search.sortId"
+              :title-class="
+                search.sortId > 0 ? 'sp-dropdown-menu__title--selected' : ''
+              "
               class="search__dropdown-sort"
-              :options="option"
+              :options="sortOption"
+              @change="handleSortChange"
             />
           </sp-dropdown-menu>
         </div>
       </sp-cell>
-      <SearchPopup ref="SearchPopup" @enterData="enterData" />
-
       <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
         <sp-list
           v-model="loading"
@@ -70,26 +74,21 @@
               />
             </sp-cell>
           </template>
-          <template v-else>
+          <template v-else-if="!loading">
             <div class="no-data">
               <sp-image
                 class="no-data__icon"
                 fit="cover"
                 :src="require('../../assets/images/search-null.png')"
               />
-              <div class="no-data__descript">抱歉，未搜索到对应的规划师</div>
-              <div class="no-data__tip">换个条件试试</div>
+              <template v-if="!error">
+                <div class="no-data__descript">抱歉，未搜索到对应的规划师</div>
+                <div class="no-data__tip">换个条件试试</div>
+              </template>
             </div>
           </template>
         </sp-list>
       </sp-pull-refresh>
-      <div v-if="!list || !list.length" class="recommend">
-        <h3 class="recommend__title">为你推荐规划师</h3>
-        <div class="recommend-list">
-          <sp-cell v-for="item in recommendList" :key="item" class="item-wrap">
-          </sp-cell>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -116,6 +115,51 @@ import { city } from '@/utils/city'
 
 import { planner } from '@/api'
 
+const SORT_CONFIG = [
+  {
+    type: 'pointSort', // 排序类型
+    sortValue: 1, // 升序
+    text: '薯片分从高到底',
+    value: 0,
+  },
+  {
+    type: 'pointSort',
+    sortValue: 2, // 降序
+    text: '薯片分从底到高',
+    value: 1,
+  },
+  {
+    type: 'reputationSort',
+    sortValue: 1, // 升序
+    text: '客户评价分从高到低',
+    value: 2,
+  },
+  {
+    type: 'reputationSort',
+    sortValue: 2, // 降序
+    text: '客户评价分从低到高',
+    value: 3,
+  },
+  {
+    type: 'payNumSort',
+    sortValue: 1, // 升序
+    text: '成交量从高到低',
+    value: 4,
+  },
+  {
+    type: 'payNumSort',
+    sortValue: 2, // 降序
+    text: '成交量从低到高',
+    value: 5,
+  },
+]
+
+const DEFAULT_PAGE = {
+  limit: 10,
+  page: 1,
+  totalCount: 0,
+}
+
 export default {
   name: 'List',
   components: {
@@ -135,37 +179,37 @@ export default {
   },
   data() {
     return {
-      search: { keywords: '', scoreSort: 0 },
-      option: [
-        { text: '薯片分从高到底', value: 0 },
-        { text: '客户评价分从高到低', value: 1 },
-        { text: '成交量从高到低', value: 2 },
-        { text: '价格从高到低', value: 3 },
-        { text: '价格从低到高', value: 4 },
-      ],
+      search: {
+        keywords: '',
+        sortId: 0,
+      },
+      sortOption: SORT_CONFIG,
       regions: '区域',
       refreshing: false,
       loading: false,
       error: false,
       finished: false,
-      page: {
-        limit: 10,
-        page: 1,
-        totalCount: 0,
-      },
+      pageOption: DEFAULT_PAGE,
       list: [],
-      recommendList: [],
     }
   },
   computed: {
     city() {
       return city
     },
+    formatSearch() {
+      const { sortId, keywords } = this.search
+      const matched =
+        this.sortOption.find((item) => item.value === sortId) || SORT_CONFIG[0]
+      const sort = {
+        sortType: matched.type,
+        value: matched.sortValue,
+      }
+
+      return { sort, plannerName: keywords }
+    },
   },
   methods: {
-    onClickLeft() {
-      console.log('返回')
-    },
     coupleSelect(data) {
       console.log(data)
       if (data[2].regions.length) {
@@ -173,37 +217,46 @@ export default {
         this.$refs.item.toggle()
       }
     },
+    handleSortChange(value) {
+      console.log(value)
+      // 触发 formatSearch 计算
+      this.search.sortId = value
+      this.handleSearch()
+    },
     onLoad() {
-      this.getList()
+      let currentPage = this.pageOption.page
+      if (!this.refreshing && this.list.length && currentPage >= 1) {
+        currentPage += 1
+      } else if (this.refreshing) {
+        this.pageOption = DEFAULT_PAGE
+        currentPage = 1
+      }
+      this.getList(currentPage)
         .then((data) => {
-          if (this.refreshing) {
-            this.list = []
-            this.refreshing = false
-          }
+          console.log(data)
           this.loading = false
-          if (this.list.length >= this.page.totalCount) {
+          if (this.list.length >= this.pageOption.totalCount) {
             this.finished = true
           }
         })
         .catch(() => {
+          console.log('sdf')
           this.error = true
           this.loading = false
         })
     },
     onRefresh() {
-      // 清空列表数据
       this.finished = false
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
       this.onLoad()
     },
     handleSearchFocus() {
-      this.$refs.SearchPopup.focSearch()
+      this.$refs.searchPopup.openSearchPopup()
     },
-    enterData(data) {
-      //  获取子组件异步结果
-      console.log(data)
+    handleKeywordsSearch(data = {}) {
+      const { keywords } = data
+      this.search.keywords = keywords
+      this.handleSearch()
     },
 
     handleOperation(value = {}) {
@@ -218,19 +271,32 @@ export default {
       }
     },
 
-    async getList() {
-      const { limit, page } = this.page
-      const params = { limit, page }
+    handleSearch() {
+      this.refreshing = true
+      this.onRefresh()
+    },
+
+    async getList(currentPage) {
+      const { limit } = this.pageOption
+      const { sort, plannerName } = this.formatSearch
+      const params = { sort, plannerName, limit, page: currentPage }
       try {
         const data = await planner.list(params)
         console.log(data)
+        if (this.refreshing) {
+          this.list = []
+          this.refreshing = false
+        }
         if (data) {
           const { limit, currentPage = 1, totalCount = 0, records = [] } = data
-          this.page = { limit, totalCount, page: currentPage }
+          this.pageOption = { limit, totalCount, page: currentPage }
           this.list.push(...records)
         }
         return data
       } catch (error) {
+        if (this.refreshing) {
+          this.refreshing = false
+        }
         console.error('getList:', error)
         return Promise.reject(error)
       }
@@ -287,9 +353,18 @@ export default {
           &--active {
             color: @main-color;
           }
-          & > div {
+          .sp-ellipsis {
             font-size: 26px;
             font-weight: 400;
+          }
+        }
+        // 选中的样式
+        .sp-dropdown-menu__title--selected {
+          color: #4974f5;
+          line-height: 28px;
+          .sp-ellipsis {
+            font-weight: bold;
+            font-size: 32px;
           }
         }
       }
@@ -297,24 +372,6 @@ export default {
         left: 0;
         right: 0;
       }
-      /deep/.title-style {
-        //下拉标题样式
-        font-size: 32px;
-        font-family: PingFang SC;
-        font-weight: bold;
-        color: #4974f5;
-        line-height: 28px;
-      }
-    }
-  }
-  .recommend {
-    &__title {
-      padding: 0 40px;
-      font-size: 40px;
-      font-weight: bold;
-      color: @title-text-color;
-      line-height: 44px;
-      margin-bottom: 6px;
     }
   }
 

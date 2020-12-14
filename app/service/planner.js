@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-11 14:34:53
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-11 17:05:34
+ * @LastEditTime: 2020-12-14 14:59:48
  * @Description: file content
  * @FilePath: /chips-wap/app/service/planner.js
  */
@@ -74,9 +74,9 @@ class goodsListService extends Service {
         const result = await service.curl.curlPost(url, {
           // TODO: 测试
           mchUserIds: ["607990864366434868", "607990967445645276"],
-          // mchUserIds: mchUserIds,
+          // mchUserIds,
           statusParamCode: "ENABLE", // 查询状态码 DISABLE禁用 ，ENABLE启用，默认查询所有
-          limit: mchUserIds.length * 3, // 做多差 3条
+          limit: mchUserIds.length * 3, // 做多查 3条
           start: 1,
         });
 
@@ -91,7 +91,12 @@ class goodsListService extends Service {
         const formateData = mchUserIds.map((id) => {
           const tagNameList = recodes.reduce((accumulator, current) => {
             const { mchUserId, firstTypeName } = current; // 获取 第一类的名字
-            if (id === mchUserId && !accumulator.include(firstTypeName)) {
+            // 正式逻辑
+            // if (id === mchUserId && !accumulator.includes(firstTypeName)) {
+            //   accumulator.push(firstTypeName);
+            // }
+            //TODO 测试逻辑
+            if (!accumulator.includes(firstTypeName)) {
               accumulator.push(firstTypeName);
             }
             return accumulator;

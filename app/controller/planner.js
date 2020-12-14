@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-04 10:54:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-14 10:01:04
+ * @LastEditTime: 2020-12-14 17:14:46
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/planner.js
  */
@@ -70,23 +70,22 @@ class PlannerController extends Controller {
     if (userId) {
       mchUserIds = ["607991207963818368"];
     }
-
-    // 先查询列表
-    if (sort) Object.assign(listParams, { [sort.sortType]: sort.value });
-    const listResult = await service.planner.getPlannerList({
+    const listParams = {
       plannerName,
       regionDto,
       mchUserIds,
       status,
-      sort,
       limit,
       page,
-    });
+      sort,
+    };
+    // 先查询列表
+    const listResult = await service.planner.getPlannerList(listParams);
     if (listResult.status !== 200 || listResult.data.code !== 200) {
       ctx.helper.fail({
         ctx,
         code: listResult.status,
-        res: data,
+        res: listResult.data,
         detailMessage: listResult.data.message || "请求失败",
       });
       return;
