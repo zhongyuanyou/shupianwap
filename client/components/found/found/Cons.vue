@@ -34,7 +34,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <sp-cell v-for="(item, index) in list" :key="index">
+          <sp-cell v-for="(item, index) in infoList" :key="index">
             <CardItem
               :favour="item"
               :image="item.imageUrl ? { src: item.imageUrl } : null"
@@ -61,6 +61,7 @@ import {
   Image,
 } from '@chipspc/vant-dgg'
 import CardItem from '~/components/common/cardItem/CardItem'
+import { foundApi } from '@/api'
 Vue.use(Lazyload)
 export default {
   name: 'Con',
@@ -86,6 +87,10 @@ export default {
         return []
       },
     },
+    categoryCode: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -97,41 +102,9 @@ export default {
       refreshing: false,
       loading: false,
       finished: false,
-      cardList: [
-        {
-          title: '豪华车销量冠军几无悬念，宝马凭什么撼动奥迪王座？',
-          icon: 'good-job-o',
-          value: 25,
-          activeClass: '',
-          hot: true,
-          name: '成都顶呱呱',
-          time: '25分钟前',
-          images: {
-            src: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          },
-        },
-        {
-          title: '豪华车销量冠军几无悬念，宝马凭什么撼动奥迪王座？',
-          icon: 'good-job-o',
-          value: 25,
-          activeClass: '',
-          hot: true,
-          name: '成都顶呱呱',
-          time: '25分钟前',
-        },
-        {
-          title: '理性过剩，信息同质化，创业者如何培养超级创造力？',
-          icon: 'good-job-o',
-          value: 25,
-          activeClass: '',
-          layout: true,
-          name: '成都顶呱呱',
-          time: '25分钟前',
-          images: {
-            src: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          },
-        },
-      ],
+      limit: 10, // 每页显示条数
+      page: 1, // 当前页
+      infoList: this.list, // 资讯列表
     }
   },
   methods: {
@@ -141,14 +114,31 @@ export default {
     },
     handleClick(item, index) {
       // 点击
-      this.$router.push('/found/detail')
+      this.$router.push(`/found/detail/${item.id}`)
     },
     onRefresh() {
       setTimeout(() => {
         this.refreshing = false
       }, 2000)
     },
-    onLoad() {},
+    async onLoad() {
+      // 上滑加载更多资讯列表
+      const page = this.page++
+      const params = {
+        categoryCode: this.categoryCode,
+        limit: this.limit,
+        page,
+      }
+      const res = await this.$axios.get(foundApi.infoList, { params })
+      if (res.code === 200) {
+        if (res.data.information_list.length < res.data.totalCount) {
+          this.loading = false
+          this.infoList = this.infoList.concat(res.data.information_list)
+        } else {
+          this.finished = true
+        }
+      }
+    },
   },
 }
 </script>

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-26 19:44:09
+ * @LastEditTime: 2020-12-12 15:44:38
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/MainGoodsItem.vue
 -->
@@ -10,19 +10,19 @@
   <div class="main-goods-item">
     <div class="goods-lable-img">
       <span class="lable">急售</span>
-      <img src="https://img.yzcdn.cn/vant/cat.jpeg" alt="" />
+      <img alt="img" :src="mainData.img" />
     </div>
     <div class="goods-info">
-      <strong class="goods-name">
-        成都**科技有限科技有限科技有限科技有限科技有限科技有限科技有限</strong
-      >
+      <strong class="goods-name"> {{ mainData.name }}</strong>
       <div class="goods-sku">
         <sp-tag
           color="#F8F8F8"
           text-color="#999999"
           size="large"
           @click="handleSkuOpen"
-          >武侯区;无注册地址<my-icon
+        >
+          {{ formatPropList }}
+          <my-icon
             name="shop_ic_open"
             size="0.14rem"
             color="#999999"
@@ -32,17 +32,19 @@
       </div>
       <div class="goods-price">
         <span class="sales-price">
-          <span class="big-value">11350</span>
+          <span class="big-value">{{ mainData.price }}</span>
           <span class="unit">元</span>
         </span>
         <sp-stepper
           v-model="goodsCount"
           integer
           step="1"
-          min="0"
-          max="8"
           button-size="0.40rem"
           input-width="0.80rem"
+          min="1"
+          :max="mainData.maxNum"
+          :async-change="true"
+          @change="handleCountChange"
         />
       </div>
     </div>
@@ -69,11 +71,36 @@ export default {
     [Tag.name]: Tag,
     [Stepper.name]: Stepper,
   },
+  props: {
+    mainData: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
+  },
   data() {
     return {
       checked: false,
       goodsCount: 1,
     }
+  },
+  computed: {
+    formatPropList() {
+      const propList = this.mainData.propList
+      if (!Array.isArray(propList)) return ''
+      return propList.reduce((accumulator, item) => {
+        const { name } = item || {}
+        if (name) accumulator += `;${name}`
+        return accumulator
+      }, '')
+    },
+  },
+  watch: {
+    'mainData.goodsNumber'(newVal, oldVal) {
+      if (newVal === oldVal) return
+      this.goodsCount = newVal || 0
+    },
   },
   methods: {
     handleChange(value) {
@@ -82,6 +109,15 @@ export default {
     handleSkuOpen() {
       console.log('handleSkuOpen')
       this.$emit('operation', { type: 'openSku' })
+    },
+    handleCountChange(value) {
+      if (this.goodsCount === value) return
+      // TODO异步校验
+      this.goodsCount = value
+      console.log('handleCountChange value:', value)
+
+      // 人为修改,通知父组件
+      this.$emit('operation', { type: 'count', value: this.goodsCount })
     },
   },
 }

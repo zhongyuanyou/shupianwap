@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-30 10:19:55
+ * @LastEditTime: 2020-12-12 17:09:55
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -20,18 +20,25 @@
       <div class="goods-item__content">
         <div class="goods-item__content-line-bottom sp-hairline--bottom">
           <div class="goods-item__main">
-            <sp-checkbox
+            <AsyncCheckbox
               v-model="checked"
               icon-size="0.32rem"
               class="goods-item__check"
-              @change="handleChange"
-            ></sp-checkbox>
-            <MainGoodsItem @operation="handleOperation" />
+              @change="handleAsyncCheckboxChange"
+            >
+            </AsyncCheckbox>
+            <MainGoodsItem
+              :main-data="commodityData.productVo"
+              @operation="handleOperation"
+            />
           </div>
-
-          <div v-for="i in 2" :key="i" class="goods-item__vice">
+          <div
+            v-for="serviceVo of commodityData.serviceVoList"
+            :key="serviceVo.id"
+            class="goods-item__vice"
+          >
             <div class="goods-item__vice-line--top sp-hairline--top">
-              <ViceGoodsItem />
+              <ViceGoodsItem :vice-data="serviceVo" />
             </div>
           </div>
         </div>
@@ -70,6 +77,7 @@ import { SwipeCell, Card, Button, Checkbox } from '@chipspc/vant-dgg'
 import MainGoodsItem from './MainGoodsItem'
 import ViceGoodsItem from './ViceGoodsItem'
 import SkuService from '@/components/common/sku/SkuService'
+import AsyncCheckbox from '@/components/common/checkbox/AsyncCheckbox'
 
 export default {
   name: 'GoodsItem',
@@ -81,11 +89,18 @@ export default {
     MainGoodsItem,
     ViceGoodsItem,
     SkuService,
+    AsyncCheckbox,
   },
   props: {
     status: {
       type: String,
       default: 'sale', // offShelf：下架
+    },
+    commodityData: {
+      type: Object,
+      default() {
+        return {}
+      },
     },
   },
   data() {
@@ -94,9 +109,10 @@ export default {
       show: false,
     }
   },
+  computed() {},
   methods: {
-    handleChange(value) {
-      console.log('handleChange:', value)
+    handleAsyncCheckboxChange(value) {
+      console.log('handleAsyncCheckboxChange:', value)
     },
     beforeClose({ position, instance }) {
       console.log('position:', position)
@@ -119,11 +135,14 @@ export default {
       // this.$refs.swipeCell.close()
       this.$emit('operation', { type: 'attention', item: {} })
     },
-    handleOperation(value = {}) {
-      const { type } = value
+    handleOperation(data = {}) {
+      const { type, value } = data
       switch (type) {
         case 'openSku':
           this.show = true
+          break
+        case 'count':
+          this.$emit('operation', { type: 'count', value })
           break
       }
     },

@@ -41,6 +41,7 @@ class goodsListService extends Service {
             break
         }
         delete params.needTypes
+        delete params.needGoodsList
         delete params.sortBy
         const result = await service.curl.curlPost(url, params);
         // console.log(result)

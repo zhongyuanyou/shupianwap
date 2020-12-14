@@ -16,6 +16,7 @@ class ContentController extends Controller {
       start: { type: 'number', required: true },
       limit: { type: 'number', required: true },
       needTypes: { type: 'number', required: true }, // 是否需要分类数据，0不需要，1需要
+      needGoodsList: { type: 'number', required: true }, // 是否需要商品列表数据，0不需要，1需要
       showClient: { type: 'string', required: false }, // 展示终端code
       sortBy: {type: 'string', required: false}, // 排序CONDITION-QF-SORT-MR：默认排序，CONDITION-QF-SORT-XLDG：按销量从低到高，CONDITION-QF-SORT-XLGD：按销量从高到低，CONDITION-QF-SORT-JGDG:按价格从低到高,CONDITION-QF-SORT-JGGD:按价格从高到低,
       // orderBy: { type: 'string', required: false }, // 排序方式（DEFAULT_SORT默认排序、SALES_SORT销量排序、REFERENCE_PRICE_SORT参考价格排序）
@@ -48,9 +49,11 @@ class ContentController extends Controller {
     }
     try {
       let resArrs = []
-      // 请求商品数据
-      const goodsList = service.goodsList.getServeGoodsList(ctx.request.body);
-      resArrs.push(goodsList)
+      if (ctx.request.body.needGoodsList === 1) {
+        // 请求商品数据
+        const goodsList = service.goodsList.getServeGoodsList(ctx.request.body);
+        resArrs.push(goodsList)
+      }
       if (ctx.request.body.needTypes === 1) {
         // 需要返回分类筛选参数
         // 查询服务列表筛选项包括分类和排序列表
@@ -58,16 +61,19 @@ class ContentController extends Controller {
         resArrs.push(serveFilters)
       }
       const data = await Promise.all(resArrs)
-      if(data[0].status === 200 && data[0].data.code === 200) {
-        resBody.goods = data[0].data.data
-      } else {
-        resBody.goods = {}
+      if (ctx.request.body.needGoodsList === 1) {
+        if(data[0].status === 200 && data[0].data.code === 200) {
+          resBody.goods = data[0].data.data
+        } else {
+          resBody.goods = {}
+        }
       }
       if (ctx.request.body.needTypes === 1) {
         // 需要返回筛选数据
-        if(data[1] && data[1].code === 200) {
-          resBody.typeData = data[1].data[0]
-          resBody.sortFilter = data[1].data[1]
+        const _index = ctx.request.body.needGoodsList === 0 ? 0 : 1
+        if(data[_index] && data[_index].code === 200) {
+          resBody.typeData = data[_index].data[0]
+          resBody.sortFilter = data[_index].data[1]
         } else {
           resBody.typeData = []
           resBody.sortFilter = []

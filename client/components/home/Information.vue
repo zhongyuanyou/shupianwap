@@ -2,7 +2,7 @@
   <div class="information-moudle">
     <div class="titel-btn">
       <strong>资讯精选</strong>
-      <a href="javascript:void(0);">
+      <a @click="updateInfo">
         <my-icon
           class="my-icon"
           name="home_ic_change"
@@ -14,17 +14,18 @@
     </div>
     <div class="information-content">
       <div
-        v-for="(item, index) in informationData"
+        v-for="(item, index) in infoList"
         :key="index"
         class="information-item"
+        @click="jumpPage(item.id)"
       >
         <div class="text-box">
-          <p v-if="index !== 0">{{ item.describe }}</p>
+          <p v-if="index !== 0">{{ item.description }}</p>
           <h6>{{ item.title }}</h6>
         </div>
         <div class="img-label">
           <strong>{{ item.label }}</strong>
-          <img :src="item.url" alt="" />
+          <img :src="item.jumpImageUrl" alt="" />
         </div>
       </div>
     </div>
@@ -32,35 +33,66 @@
 </template>
 
 <script>
+import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
+import { homeApi } from '@/api'
 export default {
   props: {
-    informationData: {
+    infoData: {
       type: Array,
       default: () => {
-        return [
-          {
-            label: '工商政策',
-            title: '创发最低是梦创发最低是梦',
-            describe: '优选前100好店',
-            url: require('~/assets/temporary/home/bn.png'),
-          },
-          {
-            label: '工商政策',
-            title: '创发最低0元原来不是梦',
-            describe: '优选前100好店',
-            url: require('~/assets/temporary/home/bn.png'),
-          },
-          {
-            label: '工商政策',
-            title: '创发最低0元原来不是梦',
-            describe: '优选前100好店',
-            url: require('~/assets/temporary/home/bn.png'),
-          },
-        ]
+        return []
       },
     },
   },
-  methods: {},
+  data() {
+    return {
+      infoParams: {
+        limit: 3, // 每页条数
+        page: 1, // 当前页
+        platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
+        terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
+        categoryCode: '', // 查询资讯的分类code
+      },
+    }
+  },
+  computed: {
+    infoList: {
+      get() {
+        return this.infoData
+      },
+      set(newVal) {
+        newVal.forEach((item, index) => {
+          this.$set(this.infoData, index, item)
+        })
+      },
+    },
+  },
+  methods: {
+    // 跳转资讯详情
+    jumpPage(id) {
+      this.$router.push({
+        path: `/found/detail/${id}`,
+      })
+    },
+    // 换一换
+    updateInfo() {
+      this.infoParams.page += 1
+      this.$axios
+        .get(homeApi.findInfo, {
+          params: this.infoParams,
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            if (!res.data.infoList.length) {
+              this.infoParams.page = 0
+              this.updateInfo()
+              return
+            }
+            this.infoList = res.data.infoList
+          }
+        })
+    },
+  },
 }
 </script>
 

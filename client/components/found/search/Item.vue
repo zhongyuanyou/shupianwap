@@ -1,35 +1,35 @@
 <template>
-  <div class="item">
-    <div v-if="info.img">
+  <div class="item" @click="handleClick">
+    <div v-if="info.imageUrl">
       <div class="item_tp">
         <div class="item_tp_lf">
           <div class="title">{{ info.title }}</div>
-          <div class="content">{{ info.content }}</div>
+          <div class="content">{{ info.description }}</div>
         </div>
         <div class="item_tp_rt">
-          <img :src="info.img" />
+          <img :src="info.imageUrl" />
         </div>
       </div>
       <div class="item_bot">
         <div class="item_bot_lf">
-          <img class="avatar" :src="info.avatar" />
-          <p class="name">{{ info.name }}</p>
+          <img class="avatar" :src="info.imageUrl" />
+          <p class="name">{{ info.updaterName }}</p>
         </div>
         <div class="item_bot_rt">
-          {{ info.time }}
+          {{ info.updateTime }}
         </div>
       </div>
     </div>
     <div v-else>
       <div class="title">{{ info.title }}</div>
-      <div class="content">{{ info.content }}</div>
+      <div class="content">{{ info.description }}</div>
       <div :class="['item_bot', 'item_bot_copy']">
         <div class="item_bot_lf">
-          <img class="avatar" :src="info.avatar" />
-          <p class="name">{{ info.name }}</p>
+          <img class="avatar" :src="info.imageUrl" />
+          <p class="name">{{ info.updaterName }}</p>
         </div>
         <div class="item_bot_rt">
-          {{ info.time }}
+          {{ info.updateTime }}
         </div>
       </div>
     </div>
@@ -45,6 +45,12 @@ export default {
       default: () => {
         return {}
       },
+    },
+  },
+  methods: {
+    handleClick() {
+      // 点击跳转详情
+      this.$router.push(`/found/detail/${this.info.id}`)
     },
   },
 }
