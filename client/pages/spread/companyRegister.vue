@@ -34,7 +34,7 @@ import {
   Lazyload,
   Image,
 } from '@chipspc/vant-dgg'
-import Card from '@/components/businessHome/card.vue'
+import Card from '@/components/spread/registerRegister/Card.vue'
 
 export default {
   name: 'CompanyRegistry',
