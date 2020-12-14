@@ -15,7 +15,9 @@
       <sp-swipe class="my-swipe" :autoplay="3000" :show-indicators="false">
         <sp-swipe-item v-for="(image, index) in images" :key="index">
           <nuxt-link :to="{ name: image.url }">
-            <sp-image :src="require(`../../assets/` + image.img)" fit="cover"
+            <sp-image
+              :src="require(`../../../assets/` + image.img)"
+              fit="cover"
           /></nuxt-link>
         </sp-swipe-item>
       </sp-swipe>
@@ -70,7 +72,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.company-registry {
+companyRegister .company-registry {
   .banner {
     /deep/.my-swipe .sp-swipe-item {
       color: #fff;

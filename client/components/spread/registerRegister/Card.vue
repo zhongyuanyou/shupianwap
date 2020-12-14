@@ -12,7 +12,7 @@
         :border="false"
         arrow-direction="down"
         title="单元格"
-        @click="show = true"
+        @click="downShow = true"
       >
         <!-- <template #default> 56646 </template> -->
       </sp-cell>
@@ -22,7 +22,7 @@
         @select="onSelect"
       />
       <div class="input-phone">
-        <sp-cell-group @click="focus()">
+        <sp-cell-group @click="focus = verificationShow = true">
           <sp-field
             v-model="phoneValue"
             label="手机号"
@@ -44,6 +44,9 @@
             </template>
           </sp-field>
         </div>
+      </div>
+      <div class="button">
+        <sp-button type="primary" block size="small">主要按钮</sp-button>
       </div>
     </div>
   </div>
@@ -84,7 +87,7 @@ export default {
     onSelect(item) {
       // 默认情况下点击选项时不会自动收起
       // 可以通过 close-on-click-action 属性开启自动收起
-      this.show = false
+      this.downShow = false
       this.selectValue = item.name
       Toast(item.name)
     },
@@ -97,7 +100,6 @@ export default {
     margin: 8px auto;
     border-radius: 8px;
     width: 670px;
-    height: 519px;
     background-color: #fff;
     display: block;
     position: relative;
