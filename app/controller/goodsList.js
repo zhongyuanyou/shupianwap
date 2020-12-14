@@ -130,7 +130,7 @@ class ContentController extends Controller {
       if (ctx.request.body.needTypes === 1) {
         // 需要返回分类筛选参数
         // 查询字典
-        const dict = service.getJyFilters.getJyFilters(ctx.request.body.dictCode);
+        const dict = service.getJyFilters.getJyFilters(ctx.request.body.dictCode, ctx.request.body.classCode);
         resArrs.push(dict)
       }
       const data = await Promise.all(resArrs)
