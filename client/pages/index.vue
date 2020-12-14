@@ -4,6 +4,7 @@
     <SearchBanner
       ref="searchBannerRef"
       :fiexd-banner-data="initData.fiexdBannerData"
+      :city-data="asyncData.cityData"
     />
     <!-- E 搜索 + 大banner -->
     <!-- S 金刚区nav -->
@@ -115,6 +116,7 @@ export default {
         locationCodeList: [], // 广告编码
       },
       asyncData: {
+        cityData: [], // 站点列表
         preferential: [], // 限时特惠
         information: [], // 资讯精选
         rotationAd: {}, // 热门服务
@@ -827,6 +829,7 @@ export default {
               ],
             },
           }
+          this.asyncData.cityData = data.data.cityList
           this.asyncData.preferential =
             data.data.advertising[this.preferentialCode].sortMaterialList
           this.asyncData.information = data.data.information

@@ -19,8 +19,7 @@ export default function ({ $axios, redirect }) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
-      config.headers.sysCode = 'pcd-api'
-      config.headers['X-Req-UserId'] = ['7950560027311669248']
+      config.headers.sysCode = 'zdm-api'
       return config
     },
     (error) => {

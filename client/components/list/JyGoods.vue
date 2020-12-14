@@ -68,6 +68,13 @@ export default {
   },
   mixins: [searchList],
   props: {
+    tabItems: {
+      // 可选业态数组数据
+      type: Array,
+      default() {
+        return []
+      },
+    },
     reqType: {
       // 搜索结果页的顶部tab类型
       type: String,
@@ -103,6 +110,7 @@ export default {
       },
     },
     itemType: {
+      // 商品列表的类型
       type: Object,
       default() {
         return {
@@ -130,24 +138,6 @@ export default {
         limit: 10,
       },
       jyGoodsListData: [],
-      tabItems: [
-        {
-          name: '公司交易',
-          code: 11111,
-        },
-        {
-          name: '专利交易',
-          code: 2222,
-        },
-        {
-          name: '商标交易',
-          code: 333,
-        },
-        {
-          name: '资质交易',
-          code: 4444,
-        },
-      ], // tab栏数据
     }
   },
   watch: {

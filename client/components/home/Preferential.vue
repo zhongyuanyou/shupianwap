@@ -116,7 +116,9 @@ export default {
           })
           .then((res) => {
             if (res.code === 200) {
-              this.tabBtn[index].tabData = res.data[code].sortMaterialList
+              this.tabBtn[index].tabData = res.data[code]
+                ? res.data[code].sortMaterialList
+                : []
             }
           })
       }
