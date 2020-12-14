@@ -4,7 +4,7 @@
     <TabCurve
       ref="tabCurveRef"
       v-model="curentItem"
-      :offset-top="searchDomHeight - 0.5"
+      :offset-top="searchDomHeight"
       :tab-list="tabBtn"
       :need-fixed="true"
       :right="0.54"
@@ -50,6 +50,7 @@
 
 <script>
 import { Swipe, swipeItem } from '@chipspc/vant-dgg'
+import { homeApi } from '@/api'
 import TabCurve from '@/components/common/tab/TabCurve'
 import GoodsPro from '@/components/common/goodsItem/GoodsPro'
 export default {
@@ -67,26 +68,56 @@ export default {
           {
             label: '公司',
             code: '0',
+            formatId: 'FL20201207080003',
+            limit: 10,
+            page: 1,
+            locationCode: 'ad100126',
+            goodsList: [],
           },
           {
             label: '商标',
             code: '1',
+            formatId: 'FL20201207080003',
+            limit: 10,
+            page: 1,
+            locationCode: 'ad100126',
+            goodsList: [],
           },
           {
             label: '专利',
             code: '2',
+            formatId: 'FL20201207080003',
+            limit: 10,
+            page: 1,
+            locationCode: 'ad100126',
+            goodsList: [],
           },
           {
             label: '新媒',
             code: '3',
+            formatId: 'FL20201207080003',
+            limit: 10,
+            page: 1,
+            locationCode: 'ad100126',
+            goodsList: [],
           },
           {
             label: '资质',
             code: '4',
+            formatId: 'FL20201207080003',
+            limit: 10,
+            page: 1,
+            locationCode: 'ad100126',
+            goodsList: [],
           },
           {
             label: '网店',
             code: '5',
+            formatId: 'FL20201207080003',
+            limit: 10,
+            page: 1,
+            locationCode: 'ad100126',
+            goodsList: [],
           },
         ]
       },
@@ -96,16 +127,41 @@ export default {
     return {
       curentItem: 0,
       searchDomHeight: 0,
+      params: {
+        userId: '', // 用户id
+        deviceId: '0022ef1a-f685-469a-93a8-5409892207a2', // 设备ID（用户唯一标识）
+        areaCode: '', // 区域编码
+        sceneId: 'app-mainye-01', // 场景ID
+        maxsize: 100, // 要求推荐产品的数量
+        platform: 'APP', // 平台（app,m,pc）
+        formatId: 'FL20201211085219', // 产品类别
+        limit: 0, // 分页条数
+        page: 0, // 当前页
+        locationCode: '', // 查询广告的位置code
+      },
+    }
+  },
+  computed: {
+    cityCode() {
+      return this.$store.state.city.currentCity.code
+    },
+  },
+  watch: {
+    cityCode(newVal) {
+      this.params.areaCode = newVal
+      this.findRecomList()
+    },
+  },
+  created() {
+    if (process.client && this.cityCode) {
+      this.params.areaCode = this.cityCode
+      this.findRecomList()
     }
   },
   mounted() {
     try {
-      this.searchDomHeight = this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight // 获取吸顶头部搜索栏的高度
-      const tabCurveDomHeight = this.$refs.tabCurveRef.$el.clientHeight // 获取吸顶头部tab栏高度
-      this.listOffsetTop =
-        this.$refs.recomRef.$el.offsetTop -
-        this.searchDomHeight -
-        tabCurveDomHeight // 推荐列表距离顶部的距离 - 搜索栏高度 - tab栏高度 （用于切换tab重置列表滚动位置）
+      this.searchDomHeight =
+        this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
     } catch (error) {
       console.log(error)
     }
@@ -119,14 +175,40 @@ export default {
     onChange(index) {
       if (this.$refs.tabCurveRef.isFixed) {
         this.$nextTick(() => {
-          document.documentElement.scrollTop = this.listOffsetTop
-          document.body.scrollTop = this.listOffsetTop
+          const tabCurveDomHeight = this.$refs.tabCurveRef.$el.clientHeight // 获取吸顶头部tab栏高度
+          this.listOffsetTop =
+            this.$refs.recomRef.$el.offsetTop -
+            this.searchDomHeight -
+            tabCurveDomHeight // 推荐列表距离顶部的距离 - 搜索栏高度 - tab栏高度 （用于切换tab重置列表滚动位置）
+          document.documentElement.scrollTop = this.listOffsetTop + 1
+          document.body.scrollTop = this.listOffsetTop + 1
         })
       }
       this.curentItem = index
     },
     preventTouch(e) {
       e.stopImmediatePropagation() // 阻止冒泡
+    },
+    // 查询推荐商品
+    findRecomList() {
+      this.params.formatId = this.tabBtn[this.curentItem].formatId
+      this.params.limit = this.tabBtn[this.curentItem].limit
+      this.params.page = this.tabBtn[this.curentItem].page
+      this.params.locationCode = this.tabBtn[this.curentItem].locationCode
+      console.log(this.params)
+      this.$axios.post(homeApi.findRecomList, this.params).then((res) => {
+        console.log(11, res)
+        if (res.code === 200) {
+          this.tabBtn[this.curentItem].adData =
+            res.data.adData[
+              this.tabBtn[this.curentItem].locationCode
+            ].sortMaterialList
+          this.tabBtn[this.curentItem].goodsList = this.tabBtn[
+            this.curentItem
+          ].goodsList.concat(res.data.goodsList)
+          console.log(this.tabBtn[this.curentItem])
+        }
+      })
     },
   },
 }

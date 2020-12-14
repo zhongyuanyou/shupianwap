@@ -305,6 +305,7 @@ class homeController extends Controller {
             sceneId: ctx.request.body.sceneId, // 场景ID
             maxsize: ctx.request.body.maxsize, // 要要推荐产品的数量
             productType: ctx.request.body.productType, // 需要推荐的产品类别
+            formatId: ctx.request.body.formatId, // 产品三级类别,没有三级类别用二级类别
         };
         try {
             // 获取推荐产品ids
@@ -324,13 +325,13 @@ class homeController extends Controller {
             const resArr = await Promise.all(reqArr);
 
             let productData = {
+                describe: "",
                 goodsList: [],
             }; // 推荐数据
             // 获取广告数据成功
             if (ctx.request.body.page === 1 && resArr[1].code === 200) {
                 productData.adData = resArr[1].data;
             }
-
             // 从算法部获取到推荐产品id成功
             if (resArr[0].code === 200) {
                 // 根据前台的分页参数，动态选取一部分id
@@ -347,6 +348,7 @@ class homeController extends Controller {
                 );
                 if (getRecomPro.code === 200) {
                     productData.goodsList = getRecomPro.data || [];
+                    productData.describe = "推荐";
                 }
             }
             // 从算法部获取到推荐产品id失败
@@ -360,15 +362,14 @@ class homeController extends Controller {
                 if (res.data.code === 200) {
                     productData.goodsList =
                         res.data.data.length || res.data.data.records;
+                    productData.describe = "搜索";
                 }
             }
 
             ctx.helper.success({
                 ctx,
                 code: 200,
-                res: {
-                    recommendData: productData,
-                },
+                res: productData,
             });
         } catch (error) {
             ctx.logger.error(error);
