@@ -96,9 +96,32 @@ class goodsListService extends Service {
         resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
       }
       try {
+        // 1.综合排序（默认）  2.最新发布  3.按价格从高到低  4.按价格从低到高
         let params = JSON.parse(JSON.stringify(data))
+        switch(params.sortBy) {
+          case 1:
+            // 综合排序（默认）
+            params.orderBy = 'DEFAULT_SORT' // 默认排序
+            params.isAsc = true // 升序排序
+            break
+          case 2:
+            // 最新发布
+            params.orderBy = 'CREATE_TIME_SORT'
+            params.isAsc = false // 降序排序
+            break
+          case 3:
+            // 按价格从高到低
+            params.orderBy = 'PRICE_SORT'
+            params.isAsc = false
+            break
+          case 4:
+            // 按价格从低到高
+            params.orderBy = 'PRICE_SORT'
+            params.isAsc = true
+            break
+        }
         delete params.needTypes
-        delete params.needGoodsList
+        delete params.dictCode
         const result = await service.curl.curlPost(url, params);
         resolve(result);
       } catch (err) {

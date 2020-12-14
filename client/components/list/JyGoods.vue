@@ -178,7 +178,7 @@ export default {
       this.loading = false
     },
     clickTabs(name, title) {
-      console.log(name, title)
+      console.log(this.tabItems[name])
     },
     resetAllSelect() {},
     initGoodsList() {},
