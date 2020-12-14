@@ -73,7 +73,6 @@ export default {
   },
   watch: {
     cityData(arr) {
-      console.log(123, arr)
       // 初始化定位
       if (arr.length && !this.cityName) {
         this.POSITION_CITY({

@@ -130,6 +130,7 @@ export default {
   created() {
     if (process.client) {
       // 获取城市列表
+      console.log(77, homeApi.findSiteList)
       this.$axios.get(homeApi.findSiteList).then((res) => {
         console.log(res)
         if (res.code === 200) {
