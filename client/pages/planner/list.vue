@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-03 13:53:16
+ * @LastEditTime: 2020-12-14 14:37:28
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -19,8 +19,9 @@
             v-model="search.keywords"
             border
             special-label
+            class="search__input"
             placeholder="请输入业务或规划师姓名"
-            @focus="focSearch"
+            @focus="handleSearchFocus"
           >
             <template #left-icon>
               <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
@@ -55,76 +56,18 @@
       <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
         <sp-list
           v-model="loading"
+          error-text="请求失败，点击重新加载"
+          :error.sync="error"
           :finished="finished"
           :finished-text="list.length > 0 ? '没有更多了' : ''"
           @load="onLoad"
         >
           <template v-if="list && list.length">
-            <sp-cell v-for="item in list" :key="item">
-              <div class="item">
-                <div class="left">
-                  <div class="item_avatar">
-                    <sp-image
-                      width="1.2rem"
-                      height="1.6rem"
-                      fit="cover"
-                      src="https://img.yzcdn.cn/vant/cat.jpeg"
-                    />
-                  </div>
-                  <div class="item_detail">
-                    <h4>
-                      <span class="item_detail--name">黄橙橙</span>
-                    </h4>
-
-                    <p class="item_detail--address">
-                      顶呱呱·跳伞塔·桃源办公中心.一楼
-                    </p>
-                    <div class="item_detail--tag-list">
-                      <sp-tag color="#F8F8F8" text-color="#999999"
-                        >服务标杆</sp-tag
-                      >
-                      <sp-tag color="#F8F8F8" text-color="#999999"
-                        >态度真诚热情</sp-tag
-                      >
-                    </div>
-                    <div class="item_detail--data">
-                      <div class="data-item">
-                        <h5>95</h5>
-                        <p>历史成交</p>
-                      </div>
-                      <div class="vertical-line"></div>
-                      <div class="data-item">
-                        <h5>4.9</h5>
-                        <p>用户评价</p>
-                      </div>
-                      <div class="vertical-line"></div>
-                      <div class="data-item">
-                        <h5>154</h5>
-                        <p>薯片分</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="right">
-                  <div class="item_contact">
-                    <sp-button round class="contact-btn"
-                      ><my-icon
-                        class=""
-                        name="notify_ic_chat"
-                        size="0.32rem"
-                        color="#4974F5"
-                    /></sp-button>
-
-                    <sp-button round class="contact-btn"
-                      ><my-icon
-                        class=""
-                        name="notify_ic_chat"
-                        size="0.32rem"
-                        color="#4974F5"
-                    /></sp-button>
-                  </div>
-                </div>
-              </div>
+            <sp-cell v-for="item in list" :key="item.mchUserId">
+              <PlannerSearchItem
+                :item-data="item"
+                @operation="handleOperation"
+              />
             </sp-cell>
           </template>
           <template v-else>
@@ -144,68 +87,6 @@
         <h3 class="recommend__title">为你推荐规划师</h3>
         <div class="recommend-list">
           <sp-cell v-for="item in recommendList" :key="item" class="item-wrap">
-            <div class="item">
-              <div class="left">
-                <div class="item_avatar">
-                  <sp-image
-                    width="1.2rem"
-                    height="1.6rem"
-                    fit="cover"
-                    src="https://img.yzcdn.cn/vant/cat.jpeg"
-                  />
-                </div>
-                <div class="item_detail">
-                  <h4>
-                    <span class="item_detail--name">黄橙橙</span>
-                  </h4>
-
-                  <p class="item_detail--address">
-                    顶呱呱·跳伞塔·桃源办公中心.一楼
-                  </p>
-                  <div class="item_detail--tag-list">
-                    <sp-tag color="#F8F8F8" text-color="#999999"
-                      >服务标杆</sp-tag
-                    >
-                    <sp-tag color="#F8F8F8" text-color="#999999"
-                      >态度真诚热情</sp-tag
-                    >
-                  </div>
-                  <div class="item_detail--data">
-                    <div class="data-item">
-                      <h5>95</h5>
-                      <p>历史成交</p>
-                    </div>
-                    <div class="vertical-line"></div>
-                    <div class="data-item">
-                      <h5>4.9</h5>
-                      <p>用户评价</p>
-                    </div>
-                    <div class="vertical-line"></div>
-                    <div class="data-item">
-                      <h5>154</h5>
-                      <p>薯片分</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="right">
-                <div class="item_contact">
-                  <sp-button round class="contact-btn"
-                    ><my-icon
-                      name="notify_ic_chat"
-                      size="0.32rem"
-                      color="#4974F5"
-                  /></sp-button>
-
-                  <sp-button round class="contact-btn"
-                    ><my-icon
-                      name="notify_ic_tel"
-                      size="0.32rem"
-                      color="#4974F5"
-                  /></sp-button>
-                </div>
-              </div>
-            </div>
           </sp-cell>
         </div>
       </div>
@@ -215,8 +96,6 @@
 
 <script>
 import {
-  Row,
-  Col,
   Button,
   DropdownMenu,
   DropdownItem,
@@ -227,19 +106,19 @@ import {
   Cell,
   Image,
   Tag,
-  Icon,
 } from '@chipspc/vant-dgg'
 
 import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
 import Header from '@/components/common/head/header'
 import SearchPopup from '@/components/planner/SearchPopup'
+import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
 import { city } from '@/utils/city'
+
+import { planner } from '@/api'
 
 export default {
   name: 'List',
   components: {
-    [Row.name]: Row,
-    [Col.name]: Col,
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
@@ -249,19 +128,13 @@ export default {
     [NavSearch.name]: NavSearch,
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
-    [Icon.name]: Icon,
     Header,
     CoupleSelect,
     SearchPopup,
+    PlannerSearchItem,
   },
   data() {
     return {
-      list: [],
-      recommendList: [],
-      loading: false,
-      finished: false,
-      refreshing: false,
-      regions: '区域',
       search: { keywords: '', scoreSort: 0 },
       option: [
         { text: '薯片分从高到底', value: 0 },
@@ -270,6 +143,18 @@ export default {
         { text: '价格从高到低', value: 3 },
         { text: '价格从低到高', value: 4 },
       ],
+      regions: '区域',
+      refreshing: false,
+      loading: false,
+      error: false,
+      finished: false,
+      page: {
+        limit: 10,
+        page: 1,
+        totalCount: 0,
+      },
+      list: [],
+      recommendList: [],
     }
   },
   computed: {
@@ -289,23 +174,21 @@ export default {
       }
     },
     onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          // this.list.push(this.list.length + 1)
-          this.recommendList.push(this.list.length + 1)
-        }
-        this.list = []
-        this.loading = false
-
-        if (!this.list.length || this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
+      this.getList()
+        .then((data) => {
+          if (this.refreshing) {
+            this.list = []
+            this.refreshing = false
+          }
+          this.loading = false
+          if (this.list.length >= this.page.totalCount) {
+            this.finished = true
+          }
+        })
+        .catch(() => {
+          this.error = true
+          this.loading = false
+        })
     },
     onRefresh() {
       // 清空列表数据
@@ -315,12 +198,42 @@ export default {
       this.loading = true
       this.onLoad()
     },
-    focSearch() {
+    handleSearchFocus() {
       this.$refs.SearchPopup.focSearch()
     },
     enterData(data) {
       //  获取子组件异步结果
       console.log(data)
+    },
+
+    handleOperation(value = {}) {
+      const { type, data } = value
+      switch (type) {
+        case 'IM':
+          console.log('发起IM')
+          break
+        case 'tel':
+          console.log('想打电话：', data)
+          break
+      }
+    },
+
+    async getList() {
+      const { limit, page } = this.page
+      const params = { limit, page }
+      try {
+        const data = await planner.list(params)
+        console.log(data)
+        if (data) {
+          const { limit, currentPage = 1, totalCount = 0, records = [] } = data
+          this.page = { limit, totalCount, page: currentPage }
+          this.list.push(...records)
+        }
+        return data
+      } catch (error) {
+        console.error('getList:', error)
+        return Promise.reject(error)
+      }
     },
   },
 }
@@ -334,9 +247,6 @@ export default {
 .list {
   height: 100%;
   overflow-y: scroll;
-  /deep/div {
-    font-size: 24px;
-  }
   .head {
   }
   .body {
@@ -345,11 +255,16 @@ export default {
       position: sticky;
       top: -30px;
       z-index: 10;
-      padding: 16px 40px;
-      /deep/.sp-field__control {
-        font-size: 30px;
-        font-weight: bold;
+      padding: 0 40px;
+      &__input {
+        height: 96px;
+        margin: 16px 0;
+        /deep/.sp-field__control {
+          font-size: 30px;
+          font-weight: bold;
+        }
       }
+
       /deep/.sp-dropdown-menu {
         &__bar {
           box-shadow: none;
@@ -402,101 +317,11 @@ export default {
       margin-bottom: 6px;
     }
   }
-  .icon {
-    display: inline-block;
-    background-repeat: no-repeat;
-    background-size: cover;
-    vertical-align: middle;
-  }
+
   .item-wrap {
     padding: 40px;
   }
-  .item {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    .left {
-      display: flex;
-      align-items: flex-start;
-      flex: 1;
-    }
-    .right {
-      position: relative;
-      flex: 100px 0 1;
-    }
-    &_avatar {
-      img {
-        border-radius: 4px;
-      }
-    }
-    &_detail {
-      padding-left: 34px;
-      h4 {
-        display: flex;
-      }
-      &--name {
-        font-size: 32px;
-        font-weight: bold;
-        color: @title-text-color;
-        line-height: 36px;
-        margin-right: 16px;
-      }
-      &--address {
-        max-width: 330px;
-        font-size: 24px;
-        font-weight: 400;
-        color: @title-text-color;
-        line-height: 28px;
-        margin-top: 20px;
-        .textOverflow(1);
-      }
-      &--tag-list {
-        margin-top: 12px;
-        line-height: 1;
-        font-size: 22px;
-      }
-      &--data {
-        display: flex;
-        margin-top: 20px;
-        .data-item {
-          font-weight: 400;
-          padding: 0 30px;
-          &:first-child {
-            padding-left: 0;
-          }
-          &:last-child {
-            padding-right: 0;
-          }
-          h5 {
-            font-size: 36px;
-            font-family: Bebas;
-            color: #222222;
-            line-height: 40px;
-          }
-          p {
-            margin-top: 8px;
-            font-size: 24px;
-            color: #999999;
-            line-height: 28px;
-          }
-        }
-        .vertical-line {
-          .vertical-line(@height:70px; @bgColor:#E5E5E5; @skewX:-15deg;);
-        }
-      }
-    }
-    &_contact {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 150px;
-      .contact-btn {
-        width: 64px;
-        height: 64px;
-        background: #ebf3ff;
-      }
-    }
-  }
+
   .no-data {
     display: flex;
     flex-direction: column;

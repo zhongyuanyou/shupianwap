@@ -7,7 +7,7 @@
 const Controller = require('egg').Controller;
 const { Post, Get, Prefix } = require('egg-shell-decorators');
 const { productApi, contentApi } = require('./../../config/serveApi/index');
-const rules = require('./../validate/scProductDetails');
+const rules = require('../validate/scProduct');
 
 @Prefix('/nk/sc_product')
 class ScProductDetailsController extends Controller {
@@ -36,7 +36,56 @@ class ScProductDetailsController extends Controller {
     const { status, data } = await service.curl.curlPost(detailUrl, scProParams);
     if (status === 200 && data.code === 200) {
       // 假如不需要加载服务项目,直接返回产品详情
-      ctx.helper.success({ ctx, code: 200, res: data.data });
+      const {
+        id, // 产品id
+        productNo, // 产品编号
+        name, // 产品名称
+        classId, // 分类id
+        className, // 分类名称
+        productGroupId, // 产品组id
+        areaCode, // 城市
+        referencePrice, // 参考价格（元）
+        productDescription, // 产品说明
+        attrs, // 产品属性（集合）
+        tags, // 标签集合
+        operating, // 运营信息
+        clientDetails, // 运营信息客户端详情
+        skuAttrs, // sku属性
+      } = data.data;
+      const operatingData = {
+        showName: operating.showName, // 前端展示名称
+        slogan: operating.slogan, // 广告语
+        sloganUrl: operating.sloganUrl, // 广告语链接
+        productDescribe: operating.productDescribe, // 产品说明
+        shopRestrictionNumber: operating.shopRestrictionNumber,
+        title: operating.title, // 标题
+        keywords: operating.keywords, // 关键词
+        description: operating.description, // 关键词描述
+        defaultSales: operating.defaultSales, // 基础销量(整数)
+        actualSales: operating.actualSales, // 实际销量(整数)
+        defaultViews: operating.defaultViews, // 基础浏览量
+        actualViews: operating.actualViews, // 实际浏览量(整数)
+        recommendedAttributes: operating.recommendedAttributes, // 前端展示名称
+      }; // 运营信息
+      const baseData = {
+        baseData: {// 基本信息
+          id,
+          productNo,
+          name,
+          classId,
+          className,
+          productGroupId,
+          areaCode,
+          referencePrice,
+          productDescription,
+        },
+        attrs,
+        tags,
+        operating: operatingData,
+        clientDetails,
+        skuAttrs,
+      };
+      ctx.helper.success({ ctx, code: 200, res: baseData });
     } else {
       ctx.logger.error(status, data);
       ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });

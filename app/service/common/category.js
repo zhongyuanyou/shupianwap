@@ -40,10 +40,11 @@ class categoryService extends Service {
     });
   }
 
-  async getProductCategory(productTypeCode) {
+  async getProductCategory(object) {
     // 获取产品分类列表
     return new Promise(async resolve => {
       const { ctx, app } = this;
+      const { code , productTypeCode } = object
       const url = ctx.helper.assembleUrl(
         app.config.apiClient.APPID[1],
         productApi.getClassificationList
@@ -61,6 +62,7 @@ class categoryService extends Service {
           dataType: 'json',
           data: {
             productTypeCode,
+            code
           },
           timeout: 10 * 1000,
         });

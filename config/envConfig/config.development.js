@@ -4,20 +4,21 @@ const path = require('path');
 function getIPAdress() {
   const interfaces = require('os').networkInterfaces();
   for (const devName in interfaces) {
-    const iface = interfaces[devName];
-    for (let i = 0; i < iface.length; i++) {
-      const alias = iface[i];
-      if (
-        alias.family === 'IPv4' &&
-                alias.address !== '127.0.0.1' &&
-                !alias.internal
-      ) {
-        return alias.address;
+    if (!devName.includes('Npcap')) {
+      const iface = interfaces[devName];
+      for (let i = 0; i < iface.length; i++) {
+        const alias = iface[i];
+        if (
+          alias.family === 'IPv4' &&
+            alias.address !== '127.0.0.1' &&
+            !alias.internal
+        ) {
+          return alias.address;
+        }
       }
     }
   }
 }
-
 module.exports = appInfo => {
   /**
      * built-in config
@@ -29,6 +30,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1599699446500_2481';
   config.cluster = {
     listen: {
+      host: '0.0.0.0',
       port: 7001,
     },
   };
@@ -123,7 +125,7 @@ module.exports = appInfo => {
         name: 'MyOwn',
       },
       metadata: {
-        version: '1.1',
+        version: '2.2',
       },
     },
     requestMiddleware: (requestOpts, done) => {
@@ -152,8 +154,8 @@ module.exports = appInfo => {
   };
   // 在此处添加个人配置
   const userConfig = {
-    // redis默认缓存数据的时长(S秒),产线环境24小时,开发环境1小时
-    redisCacheTime: 60 * 60,
+    // redis默认缓存数据的时长(S秒)5分钟
+    redisCacheTime: 60 * 5,
     baseUrl: '',
   };
   return {

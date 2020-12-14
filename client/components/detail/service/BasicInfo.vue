@@ -1,6 +1,6 @@
 <template>
   <div class="basic">
-    <h1 class="basic-name">公司注册，公司转让</h1>
+    <h1 class="basic-name">{{ baseData.name }}</h1>
     <div class="basic-label">
       <a href="javascript:void(0)">1对1服务</a>
       <a href="javascript:void(0)">视频看房</a>
@@ -20,6 +20,18 @@
 <script>
 export default {
   name: 'BasicInfo',
+  props: {
+    baseData: {
+      type: Object,
+      required: true,
+      default: () => {
+        return {}
+      },
+    },
+  },
+  data() {
+    return {}
+  },
 }
 </script>
 

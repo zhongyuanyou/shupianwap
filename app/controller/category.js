@@ -33,6 +33,7 @@ class CategoryController extends Controller {
       // 定义参数校验规则
       const rules = {
         productTypeCode: { type: 'string', required: true }, // 产品类型
+        code: { type: 'string', required: false }, // 产品类型
       };
       // 参数校验
       const valiErrors = app.validator.validate(rules, ctx.query);
@@ -41,7 +42,7 @@ class CategoryController extends Controller {
         ctx.helper.fail({ ctx, code: 422, res: valiErrors });
         return;
       }
-      const {status, data} = await service.common.category.getProductCategory(ctx.query.productTypeCode);
+      const {status, data} = await service.common.category.getProductCategory(ctx.query);
       // 成功之后的响应
       if (status === 200 && data.code === 200) {
         ctx.helper.success({ ctx, code: 200, res: data });

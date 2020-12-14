@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-12 15:34:40
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-12 16:37:13
+ * @LastEditTime: 2020-12-14 09:28:23
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/checkbox/AsyncCheckbox.vue
 -->
@@ -10,7 +10,7 @@
 <template>
   <sp-checkbox
     class="async-checkbox"
-    :value="checked"
+    :value="checkedVal"
     v-bind="$attrs"
     v-on="$listeners"
     @change="handleChange"
@@ -49,7 +49,7 @@ export default {
   },
   data() {
     return {
-      checked: false,
+      checkedVal: false,
     }
   },
   computed: {},
@@ -58,7 +58,7 @@ export default {
       handler(newVal, oldVal) {
         console.log(newVal, oldVal)
         if (newVal === oldVal) return
-        this.checked = newVal
+        this.checkedVal = newVal
       },
       immediate: true,
     },
@@ -70,9 +70,9 @@ export default {
 
     handleClick(event) {
       //   console.log('handleClick:', event)
-      const lastValue = this.checked
+      const lastValue = this.checkedVal
       if (!this.asyncChange) {
-        this.checked = !lastValue
+        this.checkedVal = !lastValue
         this.$emit('update', !lastValue)
       }
       this.$emit('change', !lastValue)

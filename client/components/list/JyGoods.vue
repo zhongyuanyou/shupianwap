@@ -10,7 +10,7 @@
       :class="{
         lowFive: tabItems.length <= 5,
       }"
-      @click="clickTabs"
+      @change="changeTabs"
     >
       <sp-tab
         v-for="(item, index) in tabItems"
@@ -54,6 +54,7 @@ import Subscribe from '@/components/list/Subscribe'
 import JyFilters from '@/components/list/JyFilters'
 import searchList from '@/mixins/searchList'
 import clone from '~/utils/clone'
+import { goods } from '@/api/index'
 
 export default {
   name: 'JyGoods',
@@ -68,6 +69,13 @@ export default {
   },
   mixins: [searchList],
   props: {
+    tabItems: {
+      // 可选业态数组数据
+      type: Array,
+      default() {
+        return []
+      },
+    },
     reqType: {
       // 搜索结果页的顶部tab类型
       type: String,
@@ -103,6 +111,7 @@ export default {
       },
     },
     itemType: {
+      // 商品列表的类型
       type: Object,
       default() {
         return {
@@ -126,28 +135,13 @@ export default {
       finished: false,
       maxHeight: 0,
       formData: {
-        page: 1,
+        start: 1,
         limit: 10,
+        needTypes: 1,
+        classCode: '',
+        dictCode: '',
       },
       jyGoodsListData: [],
-      tabItems: [
-        {
-          name: '公司交易',
-          code: 11111,
-        },
-        {
-          name: '专利交易',
-          code: 2222,
-        },
-        {
-          name: '商标交易',
-          code: 333,
-        },
-        {
-          name: '资质交易',
-          code: 4444,
-        },
-      ], // tab栏数据
     }
   },
   watch: {
@@ -179,6 +173,10 @@ export default {
         'px'
     })
     this.$emit('goodsList', 'jy', this)
+    // 默认请求的数据
+    this.formData.classCode = this.tabItems[0].ext2
+    this.formData.dictCode = this.tabItems[0].code
+    this.initGoodsList()
   },
   methods: {
     onLoad() {
@@ -187,11 +185,22 @@ export default {
       this.jyGoodsListData = [...this.jyGoodsListData, ...arr]
       this.loading = false
     },
-    clickTabs(name, title) {
-      console.log(name, title)
+    changeTabs(name, title) {
+      console.log(this.tabItems[name])
+      this.formData.classCode = this.tabItems[name]
+      this.formData.dictCode = this.tabItems[name]
     },
     resetAllSelect() {},
-    initGoodsList() {},
+    initGoodsList() {
+      goods
+        .searchJyGoodsList({ axios: this.$axios }, this.formData)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
   },
 }
 </script>

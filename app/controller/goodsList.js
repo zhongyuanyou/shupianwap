@@ -19,8 +19,6 @@ class ContentController extends Controller {
       needGoodsList: { type: 'number', required: true }, // 是否需要商品列表数据，0不需要，1需要
       showClient: { type: 'string', required: false }, // 展示终端code
       sortBy: {type: 'string', required: false}, // 排序CONDITION-QF-SORT-MR：默认排序，CONDITION-QF-SORT-XLDG：按销量从低到高，CONDITION-QF-SORT-XLGD：按销量从高到低，CONDITION-QF-SORT-JGDG:按价格从低到高,CONDITION-QF-SORT-JGGD:按价格从高到低,
-      // orderBy: { type: 'string', required: false }, // 排序方式（DEFAULT_SORT默认排序、SALES_SORT销量排序、REFERENCE_PRICE_SORT参考价格排序）
-      // isAsc: { type: 'boolean', required: false }, // 是否正序
       classCodes: { type: 'string', required: false }, // 分类code   多个英文逗号分隔
       areaCodes: { type: 'string', required: false }, // 城市code  多个英文逗号分隔
       needTag: { type: 'boolean', required: false }, // 是否展示标签
@@ -99,8 +97,9 @@ class ContentController extends Controller {
       start: { type: 'number', required: true },
       limit: { type: 'number', required: true },
       needTypes: { type: 'number', required: true }, // 是否需要分类数据，0不需要，1需要
-      sort: { type: 'number', required: false }, // 排序 1.综合排序（默认）  2.最新发布  3.按价格从高到低  4.按价格从低到高
-      classCode: { type: 'string', required: true }, // 产品分类
+      sortBy: { type: 'number', required: false }, // 排序 1.综合排序（默认）  2.最新发布  3.按价格从高到低  4.按价格从低到高
+      classCode: { type: 'string', required: true }, // 产品分类编码
+      dictCode: { type: 'string', required: true }, // 字典编码
       withFieldDetail: { type: 'string', required: false }, // 字段详情标志,0不需要字段详情(默认) 1需要字段详情
       searchKey: { type: 'string', required: false }, // 搜索关键词
       fieldList: { type: 'array', required: false},
@@ -131,11 +130,11 @@ class ContentController extends Controller {
       if (ctx.request.body.needTypes === 1) {
         // 需要返回分类筛选参数
         // 查询字典
-        const dict = service.getJyFilters.getJyFilters();
+        const dict = service.getJyFilters.getJyFilters(ctx.request.body.dictCode, ctx.request.body.classCode);
         resArrs.push(dict)
       }
       const data = await Promise.all(resArrs)
-      console.log(data)
+      // console.log(data)
       if(data[0].status === 200 && data[0].data.code === 200) {
         resBody.goods = data[0].data.data
       } else {
