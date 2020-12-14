@@ -47,17 +47,16 @@ class AddressController extends Controller {
       ext3,
       ext4,
       ext5,
-      id,
     } = ctx.request.body;
-    const ads = id ? userApi.updateShippingAddress : userApi.newShippingAddress;
+    const ads = ctx.request.body.id ? userApi.updateShippingAddress : userApi.newShippingAddress;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], ads);
-    const params = id ? {
+    const params = ctx.request.body.id ? {
       userId,
       contactName,
       phone,
-      addressProvince,
-      addressCity,
-      addressArea,
+      province: addressProvince,
+      city: addressCity,
+      area: addressArea,
       defaultAddress,
       address,
       postcode,
@@ -66,14 +65,14 @@ class AddressController extends Controller {
       ext3,
       ext4,
       ext5,
-      id,
+      id: ctx.request.body.id,
     } : {
       userId,
       contactName,
       phone,
-      addressProvince,
-      addressCity,
-      addressArea,
+      province: addressProvince,
+      city: addressCity,
+      area: addressArea,
       defaultAddress,
       address,
       postcode,

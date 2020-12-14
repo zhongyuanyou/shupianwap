@@ -8,14 +8,14 @@
   >
     <div class="popup_tp">
       <div
-        :class="['popup_tp_item', { active_item: sex === '男' }]"
-        @click="handleClick('男')"
+        :class="['popup_tp_item', { active_item: sex === 1 }]"
+        @click="handleClick(1)"
       >
         男
       </div>
       <div
-        :class="['popup_tp_item', 'no_line', { active_item: sex === '女' }]"
-        @click="handleClick('女')"
+        :class="['popup_tp_item', 'no_line', { active_item: sex === 2 }]"
+        @click="handleClick(2)"
       >
         女
       </div>
@@ -39,10 +39,8 @@ export default {
       },
     },
     sex: {
-      type: String,
-      default: () => {
-        return '男'
-      },
+      type: Number,
+      default: 1,
     },
   },
   data() {

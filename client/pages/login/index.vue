@@ -287,6 +287,8 @@ export default {
       try {
         const data = await auth.login({ axios: this.$axios }, params)
         console.log(data)
+        // 缓存用户信息
+        sessionStorage.userInfo = JSON.stringify(data)
         if (data != null) this.setUserInfo(data)
         return data
       } catch (error) {

@@ -6,6 +6,7 @@ import { homeApi } from './home' // 首页相关接口
 import goods from './goods'
 import { foundApi } from './found'
 import { publicApi } from './public'
+import { userApi } from './user'
 
 export { auth, shoppingCar }
 export { category }
@@ -14,3 +15,4 @@ export { goods }
 export { homeApi }
 export { foundApi }
 export { publicApi }
+export { userApi }
