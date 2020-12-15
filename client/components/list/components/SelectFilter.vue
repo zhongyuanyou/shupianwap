@@ -14,6 +14,7 @@
     >
       <select-check-box
         ref="selectCheckBox"
+        :is-show-all-option="false"
         :select-list="selectList"
         :gutter="12"
         :is-show-all="true"
@@ -84,7 +85,7 @@ export default {
       } else if (arr.length === 0) {
         this.removeClass('moreText')
         this.removeClass('active')
-        this.dropdownTitle = this.filterData.title
+        this.dropdownTitle = this.filterData.name
       }
       // 如果筛选名字个数超过了4个那么需要加样式
       if (this.dropdownTitle.length >= 4) {
@@ -95,7 +96,7 @@ export default {
     },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
-        this.dropdownTitle = val.title
+        this.dropdownTitle = val.name
         this.selectList = val.filters
         this.isSelectMore = val.isSelects
       }
@@ -103,8 +104,8 @@ export default {
   },
   mounted() {
     if (this.filterData && JSON.stringify(this.filterData) !== '{}') {
-      this.dropdownTitle = this.filterData.title
-      this.selectList = this.filterData.filters
+      this.dropdownTitle = this.filterData.name
+      this.selectList = this.filterData.children
       this.isSelectMore = this.filterData.isSelects
     }
   },

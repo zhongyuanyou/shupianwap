@@ -127,7 +127,9 @@ export default {
     this.getShippingAddressList()
   },
   methods: {
-    onClickLeft() {},
+    onClickLeft() {
+      this.$router.back()
+    },
     handleDel(item) {
       // 删除
       this.popupStatus = true

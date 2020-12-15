@@ -128,7 +128,7 @@ export default {
         this.initData(newVal)
       } else {
         this.selectData = [
-          { name: '全国', code: '' },
+          { name: '全国', code: this.coupleData[0].code },
           { name: '不限', code: '' },
           { regions: new Array({ name: '不限', code: '' }) },
         ]
@@ -137,11 +137,10 @@ export default {
     },
   },
   mounted() {
+    this.$emit('initThis', this)
     const list = this.cityData
-    list.unshift({
-      name: '全国',
-      code: '',
-      children: [
+    if (list[0].name === '全国') {
+      list[0].children = [
         {
           name: '不限',
           code: '',
@@ -152,8 +151,25 @@ export default {
             },
           ],
         },
-      ],
-    })
+      ]
+    } else {
+      list.unshift({
+        name: '全国',
+        code: '',
+        children: [
+          {
+            name: '不限',
+            code: '',
+            children: [
+              {
+                name: '不限',
+                code: '',
+              },
+            ],
+          },
+        ],
+      })
+    }
     this.coupleData = list
     if (this.backData.length) {
       this.selectData = this.backData

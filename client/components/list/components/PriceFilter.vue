@@ -15,6 +15,7 @@
       <price-filter-components
         :price-list="selectList"
         :echo-data="echoData"
+        :is-show-all-option="false"
         @minInput="minInput"
         @maxInput="maxInput"
         @selectItems="selectItems"
@@ -93,7 +94,7 @@ export default {
           this.dropdownTitle = Number(minValue) + '-' + Number(maxValue)
           this.addClass('active')
         } else {
-          this.dropdownTitle = this.filterData.title
+          this.dropdownTitle = this.filterData.name
           this.removeClass('moreText')
           this.removeClass('active')
         }
@@ -107,16 +108,16 @@ export default {
     },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
-        this.dropdownTitle = val.title
-        this.selectList = val.filters
+        this.dropdownTitle = val.name
+        this.selectList = val.children
         this.isSelectMore = val.isSelects
       }
     },
   },
   mounted() {
     if (this.filterData && JSON.stringify(this.filterData) !== '{}') {
-      this.dropdownTitle = this.filterData.title
-      this.selectList = this.filterData.filters
+      this.dropdownTitle = this.filterData.name
+      this.selectList = this.filterData.children
       this.isSelectMore = this.filterData.isSelects
     }
   },
@@ -152,8 +153,18 @@ export default {
       this.echoData.minValue = ''
     },
     confirmFilters() {
+      let emitData = {}
       this.saveEchoData = clone(this.echoData, true)
-      this.$emit('activeItem', this.echoData, 'priceFilter')
+      if (this.echoData.maxValue || this.echoData.minValue) {
+        emitData.maxValue = this.echoData.maxValue
+        emitData.minValue = this.echoData.minValue
+      } else if (this.echoData.activeItems.length) {
+        emitData.minValue = this.echoData.activeItems[0].ext2.split('-')[0]
+        emitData.maxValue = this.echoData.activeItems[0].ext2.split('-')[1]
+      } else {
+        emitData = ''
+      }
+      this.$emit('activeItem', emitData, 'priceFilter')
       this.$refs.item.toggle()
     },
   },

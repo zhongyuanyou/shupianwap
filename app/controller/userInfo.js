@@ -60,6 +60,7 @@ class MyController extends Controller {
       id,
     }
     );
+    console.log('数据', data);
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
     } else {

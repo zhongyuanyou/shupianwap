@@ -51,15 +51,19 @@ async function getTypeJyFilter(dictCode, classCode) {
           let gs_dq = res[0].data.data.find((item) => {
             return item.code === 'CONDITION-JY-GS-DQ'
           })
-          // 找到行业选项
-          let gs_hy = res[0].data.data.find((item) => {
-            return item.code === 'CONDITION-JY-GS-HY'
-          })
           gs_dq.children = res[1].data.data; // 将地区数据和筛选合并
           gs_dq.children.unshift({ // 为地区数据添加全国选项
             name: '全国',
             code: res[1].data.data[0].pcode,
             children: [],
+          })
+          // 找到行业选项
+          let gs_hy = res[0].data.data.find((item) => {
+            return item.code === 'CONDITION-JY-GS-HY'
+          })
+          res[2].data.data.unshift({
+            name: '不限',
+            id: 'all',
           })
           gs_hy.children = res[2].data.data; // 将行业数据与筛选合并
           result.data = res[0].data.data
@@ -83,6 +87,10 @@ async function getTypeJyFilter(dictCode, classCode) {
           let zy_hy = res[0].data.data.find((item) => {
             return item.code === 'CONDITION-JY-ZY-HY'
           })
+          res[1].data.data.unshift({
+            name: '不限',
+            id: 'all',
+          })
           zy_hy.children = res[1].data.data
           result.data = res[0].data.data
           result.code = 200
@@ -103,6 +111,10 @@ async function getTypeJyFilter(dictCode, classCode) {
         if (_flag) {
           let sb_fl = res[0].data.data.find((item) => {
             return item.code === 'CONDITION-JY-SB-FL'
+          })
+          res[1].data.data.unshift({
+            name: '不限',
+            id: 'all',
           })
           sb_fl.children = res[1].data.data
           result.data = res[0].data.data
@@ -128,13 +140,17 @@ async function getTypeJyFilter(dictCode, classCode) {
           let sb_fl = res[0].data.data.find((item) => {
             return item.code === 'CONDITION-JY-ZZ-LB'
           })
-          // 找到类别选项
+          // 找到更多选项
           let sb_gd = res[0].data.data.find((item) => {
             return item.code === 'CONDITION-JY-ZZ-GD'
           })
           // 找到更多选项下的地区选项
           let sb_gd_dq = sb_gd.children.find((item) => {
             return item.code === 'CONDITION-JY-ZZ-GD-DQ'
+          })
+          res[1].data.data.unshift({
+            name: '不限',
+            id: 'all',
           })
           sb_fl.children = res[1].data.data
           sb_gd_dq.children = res[2].data.data

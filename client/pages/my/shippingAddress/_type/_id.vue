@@ -183,6 +183,7 @@ export default {
       }
       const data = await userInfo.addressDetail({ axios: this.$axios }, params)
       this.ruleForm = data
+      this.ruleForm.defaultAddress = !!this.ruleForm.defaultAddress
     },
     handleSave() {
       // 保存

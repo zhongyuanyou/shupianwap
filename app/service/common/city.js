@@ -55,7 +55,7 @@ class cityService extends Service {
         if (!url) {
           resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
         }
-        const result = await service.curl.curlGet(url, {code: 'PRO_TRADING_GOODS_TYPE'});
+        const result = await service.curl.curlGet(url, {code: '2147483647'});
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);
