@@ -177,8 +177,14 @@ export default {
     },
     confirmFilters() {
       // 确认筛选
+      let emitData = []
       this.saveActiveItems = clone(this.activeItems, true)
-      this.$emit('activeItem', this.activeItems, 'moreFilter')
+      this.saveActiveItems.forEach((item) => {
+        if (item.length) {
+          emitData = [...emitData, ...item]
+        }
+      })
+      this.$emit('activeItem', emitData, 'moreFilter')
       this.$refs.item.toggle()
     },
   },

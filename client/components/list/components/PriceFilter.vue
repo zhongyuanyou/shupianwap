@@ -153,8 +153,18 @@ export default {
       this.echoData.minValue = ''
     },
     confirmFilters() {
+      let emitData = {}
       this.saveEchoData = clone(this.echoData, true)
-      this.$emit('activeItem', this.echoData, 'priceFilter')
+      if (this.echoData.maxValue || this.echoData.minValue) {
+        emitData.maxValue = this.echoData.maxValue
+        emitData.minValue = this.echoData.minValue
+      } else if (this.echoData.activeItems.length) {
+        emitData.minValue = this.echoData.activeItems[0].ext2.split('-')[0]
+        emitData.maxValue = this.echoData.activeItems[0].ext2.split('-')[1]
+      } else {
+        emitData = ''
+      }
+      this.$emit('activeItem', emitData, 'priceFilter')
       this.$refs.item.toggle()
     },
   },
