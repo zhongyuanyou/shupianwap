@@ -14,6 +14,7 @@
     >
       <select-check-box
         ref="selectCheckBox"
+        :is-show-all-option="false"
         :select-list="selectList"
         :gutter="12"
         :is-show-all="true"
@@ -104,7 +105,7 @@ export default {
   mounted() {
     if (this.filterData && JSON.stringify(this.filterData) !== '{}') {
       this.dropdownTitle = this.filterData.name
-      this.selectList = this.filterData.filters
+      this.selectList = this.filterData.children
       this.isSelectMore = this.filterData.isSelects
     }
   },

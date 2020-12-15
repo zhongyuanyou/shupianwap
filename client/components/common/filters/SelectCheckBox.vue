@@ -215,8 +215,8 @@ export default {
     height: 64px;
     text-align: center;
     line-height: 64px;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 14px;
+    padding-right: 14px;
     background-color: rgba(248, 248, 248, 1);
     font-size: 24px;
     font-family: PingFang SC;

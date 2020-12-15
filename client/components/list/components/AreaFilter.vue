@@ -16,6 +16,7 @@
         :city-data="filterData.children"
         :back-data="activeItems"
         @select="coupleSelect"
+        @initThis="getCoupleSelectVue"
       />
     </div>
     <BottomConfirm
@@ -53,6 +54,7 @@ export default {
       dropdownTitle: '',
       activeItems: [], // 默认激活的
       saveActiveItems: [], // 存储的筛选项数据
+      coupleSelectVue: null, // 地区筛选的组件
     }
   },
   computed: {
@@ -113,12 +115,16 @@ export default {
     },
     resetFilters() {
       this.activeItems = []
+      this.coupleSelectVue.clear()
     },
     confirmFilters() {
       // 确认筛选
       this.saveActiveItems = clone(this.activeItems, true)
       this.$emit('activeItem', this.activeItems, 'areaFilter')
       this.$refs.item.toggle()
+    },
+    getCoupleSelectVue(_this) {
+      this.coupleSelectVue = _this
     },
   },
 }
