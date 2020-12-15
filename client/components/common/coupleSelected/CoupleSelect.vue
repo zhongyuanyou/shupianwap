@@ -138,10 +138,8 @@ export default {
   },
   mounted() {
     const list = this.cityData
-    list.unshift({
-      name: '全国',
-      code: '',
-      children: [
+    if (list[0].name === '全国') {
+      list[0].children = [
         {
           name: '不限',
           code: '',
@@ -152,8 +150,25 @@ export default {
             },
           ],
         },
-      ],
-    })
+      ]
+    } else {
+      list.unshift({
+        name: '全国',
+        code: '',
+        children: [
+          {
+            name: '不限',
+            code: '',
+            children: [
+              {
+                name: '不限',
+                code: '',
+              },
+            ],
+          },
+        ],
+      })
+    }
     this.coupleData = list
     if (this.backData.length) {
       this.selectData = this.backData

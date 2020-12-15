@@ -80,7 +80,11 @@
           <p class="title">所在地区</p>
           <div class="right_icon">
             <p class="txt">
-              {{ info.province ? info.province + ' ' + info.city : '未设置' }}
+              {{
+                info.province
+                  ? info.province + ' ' + info.city + ' ' + info.district
+                  : '未设置'
+              }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
@@ -168,10 +172,10 @@ export default {
     },
     handleClick(val) {
       if (val === 2) {
-        this.$router.push(`/my/info/${this.info.nickName}`)
+        this.$router.push(`/my/info/nickname/${this.info.nickName}`)
       } else if (val === 5) {
         console.log(this.info)
-        this.$router.push(`/my/info/${this.info.email}`)
+        this.$router.push(`/my/info/email/${this.info.email}`)
       } else if (val === 4) {
         this.sexShow = true
       } else if (val === 6) {
@@ -180,11 +184,16 @@ export default {
         this.birthShow = true
       }
     },
-    select(data) {
+    async select(data) {
       // 地区选择
       this.info.province = data[0].name
       this.info.city = data[1].name
       this.area = data
+      const params = {
+        type: 5,
+        value: `${this.info.province},${this.info.city},船山区`,
+      }
+      await userInfo.update({ axios: this.$axios }, params)
     },
     GMTToStr(time) {
       const date = new Date(time)

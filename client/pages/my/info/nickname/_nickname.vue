@@ -32,7 +32,7 @@
 <script>
 import { TopNavBar } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { userInfo } from '@/api'
+import { userInfo } from '~/api'
 export default {
   name: 'NickName',
   components: {

@@ -105,7 +105,16 @@ export default {
       limit: 10, // 每页显示条数
       page: 1, // 当前页
       infoList: this.list, // 资讯列表
+      bannerList: this.banner, // 广告集合
     }
+  },
+  watch: {
+    banner(newVal) {
+      this.bannerList = newVal
+    },
+    list(newVal) {
+      this.infoList = newVal
+    },
   },
   methods: {
     onChange(index) {

@@ -36,7 +36,8 @@
 
 <script>
 import { TopNavBar, Toast } from '@chipspc/vant-dgg'
-import { checkEmail } from '@/utils/check'
+import { checkEmail } from '~/utils/check'
+import { userInfo } from '~/api'
 export default {
   name: 'Email',
   components: {
@@ -49,14 +50,30 @@ export default {
       emailRight: false, // 邮箱格式是否正确
     }
   },
+  mounted() {
+    this.email = this.$route.params.email
+  },
   methods: {
     onClickLeft() {
       // 点击返回
       this.$router.back()
     },
-    onClickRight() {
+    async onClickRight() {
       // 点击保存
-      this.$router.push('/my/information')
+      if (!this.emailRight) {
+        Toast({
+          message: '请输入有效邮箱号码',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+        return
+      }
+      const params = {
+        type: 4,
+        value: this.email,
+      }
+      await userInfo.update({ axios: this.$axios }, params)
+      this.$router.back()
     },
     clear() {
       // 清除昵称

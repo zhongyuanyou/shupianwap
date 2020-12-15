@@ -140,6 +140,7 @@ class AddressController extends Controller {
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3],
       userApi.delShippingAddress);
     const { status, data } = await service.curl.curlGet(url, { id });
+    console.log('详情detail', data);
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
     } else {
