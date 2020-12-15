@@ -1,5 +1,8 @@
 <template>
-  <div class="banner">
+  <div
+    class="banner"
+    :style="isshow == true ? { height: '9.75rem' } : { height: '8.71rem' }"
+  >
     <!--    第一层-->
     <div class="banner-top">
       <sp-swipe :autoplay="3000" indicator-color="white">
@@ -37,12 +40,18 @@
       <div class="banner-bottom-text">为您定制稅筹方案，可降低成本40%-90%</div>
       <!--      表单-->
       <div class="banner-bottom-form">
-        <sp-cell is-link arrow-direction="down" @click="showPopup">
-          <template #title>
-            <span class="custom-title">选择资质类型</span>
-          </template>
-        </sp-cell>
-        <sp-popup v-model="show" position="bottom">内容</sp-popup>
+        <sp-cell
+          is-link
+          title="选择税务类型"
+          arrow-direction="down"
+          @click="show = true"
+        />
+        <sp-action-sheet
+          v-model="show"
+          :actions="actions"
+          cancel-text="取消"
+          close-on-click-action
+        />
         <div class="banner-bottom-form-div">
           <span>手机号</span>
           <input
@@ -63,9 +72,7 @@
             >获取验证码</a
           >
         </div>
-        <a href="javascript:;">
-          <button class="banner-bottom-form-button">咨询获取节税方案</button>
-        </a>
+        <button class="banner-bottom-form-button">咨询获取节税方案</button>
         <div class="banner-bottom-form-lastdiv">
           今日已提供方案：<span>126</span>份
         </div>
@@ -75,26 +82,27 @@
 </template>
 
 <script>
-import { Swipe, SwipeItem, Cell, Popup } from '@chipspc/vant-dgg'
+import { Swipe, SwipeItem, ActionSheet, Cell } from '@chipspc/vant-dgg'
 export default {
   name: 'BannerVue',
   components: {
     [Swipe.name]: Swipe,
-    [Cell.name]: Cell,
-    [Popup.name]: Popup,
     [SwipeItem.name]: SwipeItem,
+    [ActionSheet.name]: ActionSheet,
+    [Cell.name]: Cell,
   },
   data() {
     return {
       images: [
-        require('../../../assets/spreadImages/tax/busi_img_swchbanner1.jpg'),
-        require('../../../assets/spreadImages/tax/busi_img_swchbanner2.jpg'),
+        require('~/assets/spreadImages/tax/busi_img_swchbanner1.jpg'),
+        require('~/assets/spreadImages/tax/busi_img_swchbanner2.jpg'),
       ],
       show: false,
       isshow: false,
       active: 1,
       bigfont: { big: true },
       smallfont: { small: true },
+      actions: [{ name: '选项一' }, { name: '选项二' }, { name: '选项三' }],
     }
   },
 
@@ -109,17 +117,19 @@ export default {
       this.isshow = true
     },
     send(e) {
-      let i = 59
-      e.target.innerHTML = i + 's'
-      const time = setInterval(() => {
-        if (i >= 0) {
-          e.target.innerHTML = i + 's'
-          i--
-        } else {
-          e.target.innerHTML = '获取验证码'
-          clearInterval(time)
-        }
-      }, 1000)
+      if (e.target.innerHTML === '获取验证码') {
+        let i = 59
+        e.target.innerHTML = i + 's'
+        const time = setInterval(() => {
+          if (i > 0) {
+            i--
+            e.target.innerHTML = i + 's'
+          } else {
+            e.target.innerHTML = '获取验证码'
+            clearInterval(time)
+          }
+        }, 1000)
+      }
     },
   },
 }
@@ -127,7 +137,6 @@ export default {
 
 <style scoped lang="less">
 .banner {
-  height: 1009px;
   position: relative;
   &-top {
     width: 750px;
@@ -215,14 +224,16 @@ export default {
         margin-top: 32px;
         color: #ffffff;
         font-size: 32px;
+        padding: 0;
       }
       &-lastdiv {
         font-size: 26px;
         font-family: PingFang SC;
-        font-weight: 400;
+        font-weight: bold;
         color: #555555;
-        width: 280px;
-        margin: 24px 155px 31px;
+        margin: 24px 0 32px;
+        display: flex;
+        justify-content: center;
         > span {
           display: inline-block;
           color: #4974f5;
@@ -231,18 +242,16 @@ export default {
     }
   }
 }
-/deep/ .custom-title {
-  font-size: 28px;
-  font-family: PingFang SC;
-  font-weight: 400;
-  color: #1a1a1a;
-}
 /deep/ .sp-cell {
   width: 590px;
   height: 80px;
   background: #f8f8f8;
   border-radius: 2px;
   line-height: 40px;
+  font-size: 28px;
+  font-family: PingFang SC;
+  font-weight: 400;
+  color: #1a1a1a;
 }
 a {
   font-size: 28px;
