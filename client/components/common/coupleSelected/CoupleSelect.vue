@@ -128,7 +128,7 @@ export default {
         this.initData(newVal)
       } else {
         this.selectData = [
-          { name: '全国', code: '' },
+          { name: '全国', code: this.coupleData[0].code },
           { name: '不限', code: '' },
           { regions: new Array({ name: '不限', code: '' }) },
         ]
