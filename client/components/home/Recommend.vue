@@ -18,38 +18,57 @@
       @change="onChange"
     >
       <sp-swipe-item v-for="(item, index) in tabBtn" :key="index">
-        <!-- S 推荐内容滚动区 -->
-        <div
-          class="scroll-recom"
-          @touchstart="preventTouch"
-          @touchmove="preventTouch"
-        >
-          <ul>
-            <li v-for="(m, i) in tabBtn" :key="i">
-              <a href="javascript:void(0);">
-                <strong>精选好评好赞精选好评好赞</strong>
-                <p>TOP 10精选好评好赞</p>
-                <img
-                  src="http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp"
-                  alt=""
-                />
-              </a>
-            </li>
-          </ul>
+        <div v-if="index === curentItem">
+          <!-- S 推荐内容滚动区 -->
+          <div
+            v-if="item.adData.length"
+            class="scroll-recom"
+            @touchstart="preventTouch"
+            @touchmove="preventTouch"
+          >
+            <ul>
+              <li v-for="(key, v) in item.adData" :key="v">
+                <a
+                  v-if="key.materialList.length"
+                  :href="key.materialList[0].materialLink"
+                >
+                  <img
+                    class="recom-img"
+                    :src="key.materialList[0].materialUrl"
+                    alt=""
+                  />
+                </a>
+              </li>
+            </ul>
+          </div>
+          <!-- E 推荐内容滚动区 -->
+          <!-- S 推荐商品列表 -->
+          <div class="goods-list">
+            <GoodsPro
+              v-for="(goodsitem, sub) in item.goodsList"
+              :key="sub"
+              :goods-data="goodsitem"
+            />
+          </div>
+          <!-- E 推荐商品列表 -->
         </div>
-        <!-- E 推荐内容滚动区 -->
-        <!-- S 推荐商品列表 -->
-        <div class="goods-list">
-          <GoodsPro v-for="e in 10" :key="e" />
-        </div>
-        <!-- E 推荐商品列表 -->
+        <div v-else class="plashold" :style="{ height: height }"></div>
       </sp-swipe-item>
     </sp-swipe>
+    <div class="loading-content">
+      <sp-loading
+        v-show="loading && !tabBtn[curentItem].noMore"
+        size="20px"
+        color="#4974f5"
+        >正在加载...</sp-loading
+      >
+      <p v-if="tabBtn[curentItem].noMore" class="no-data">没有更多了</p>
+    </div>
   </div>
 </template>
 
 <script>
-import { Swipe, swipeItem } from '@chipspc/vant-dgg'
+import { Swipe, swipeItem, Loading } from '@chipspc/vant-dgg'
 import { homeApi } from '@/api'
 import TabCurve from '@/components/common/tab/TabCurve'
 import GoodsPro from '@/components/common/goodsItem/GoodsPro'
@@ -57,74 +76,81 @@ export default {
   components: {
     [Swipe.name]: Swipe,
     [swipeItem.name]: swipeItem,
+    [Loading.name]: Loading,
     TabCurve,
     GoodsPro,
   },
-  props: {
-    tabBtn: {
-      type: Array,
-      default: () => {
-        return [
-          {
-            label: '公司',
-            code: '0',
-            formatId: 'FL20201207080003',
-            limit: 10,
-            page: 1,
-            locationCode: 'ad100126',
-            goodsList: [],
-          },
-          {
-            label: '商标',
-            code: '1',
-            formatId: 'FL20201207080003',
-            limit: 10,
-            page: 1,
-            locationCode: 'ad100126',
-            goodsList: [],
-          },
-          {
-            label: '专利',
-            code: '2',
-            formatId: 'FL20201207080003',
-            limit: 10,
-            page: 1,
-            locationCode: 'ad100126',
-            goodsList: [],
-          },
-          {
-            label: '新媒',
-            code: '3',
-            formatId: 'FL20201207080003',
-            limit: 10,
-            page: 1,
-            locationCode: 'ad100126',
-            goodsList: [],
-          },
-          {
-            label: '资质',
-            code: '4',
-            formatId: 'FL20201207080003',
-            limit: 10,
-            page: 1,
-            locationCode: 'ad100126',
-            goodsList: [],
-          },
-          {
-            label: '网店',
-            code: '5',
-            formatId: 'FL20201207080003',
-            limit: 10,
-            page: 1,
-            locationCode: 'ad100126',
-            goodsList: [],
-          },
-        ]
-      },
-    },
-  },
   data() {
     return {
+      tabBtn: [
+        {
+          label: '公司',
+          code: '0',
+          formatId: 'FL20201207080003',
+          limit: 5,
+          page: 1,
+          locationCode: 'ad100126',
+          adData: [],
+          goodsList: [],
+          noMore: false,
+        },
+        {
+          label: '商标',
+          code: '1',
+          formatId: 'FL20201207080003',
+          limit: 5,
+          page: 1,
+          locationCode: 'ad100126',
+          adData: [],
+          goodsList: [],
+          noMore: false,
+        },
+        {
+          label: '专利',
+          code: '2',
+          formatId: 'FL20201207080003',
+          limit: 5,
+          page: 1,
+          locationCode: 'ad100126',
+          adData: [],
+          goodsList: [],
+          noMore: false,
+        },
+        {
+          label: '新媒',
+          code: '3',
+          formatId: 'FL20201207080003',
+          limit: 5,
+          page: 1,
+          locationCode: 'ad100126',
+          adData: [],
+          goodsList: [],
+          noMore: false,
+        },
+        {
+          label: '资质',
+          code: '4',
+          formatId: 'FL20201207080003',
+          limit: 5,
+          page: 1,
+          locationCode: 'ad100126',
+          adData: [],
+          goodsList: [],
+          noMore: false,
+        },
+        {
+          label: '网店',
+          code: '5',
+          formatId: 'FL20201207080003',
+          limit: 5,
+          page: 1,
+          locationCode: 'ad100126',
+          adData: [],
+          goodsList: [],
+          noMore: false,
+        },
+      ],
+      loading: false,
       curentItem: 0,
       searchDomHeight: 0,
       params: {
@@ -139,6 +165,7 @@ export default {
         page: 0, // 当前页
         locationCode: '', // 查询广告的位置code
       },
+      height: '',
     }
   },
   computed: {
@@ -149,30 +176,50 @@ export default {
   watch: {
     cityCode(newVal) {
       this.params.areaCode = newVal
-      this.findRecomList()
+      this.findRecomList(this.curentItem)
     },
   },
   created() {
     if (process.client && this.cityCode) {
-      this.params.areaCode = this.cityCode
-      this.findRecomList()
+      this.findRecomList(this.curentItem)
     }
   },
   mounted() {
     try {
       this.searchDomHeight =
         this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
+      const h =
+        document.documentElement.clientHeight || document.body.clientHeight // 获取屏幕视口高度
+      this.height = h + 'px'
+      window.addEventListener('scroll', this.handleScroll, true) // 监听滚动
     } catch (error) {
       console.log(error)
     }
   },
   methods: {
+    handleScroll() {
+      const pageScrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop // 滚动条距离顶部的位置
+      const pageScrollHeight = document.body.scrollHeight // 页面文档的总高度
+      const pageClientHeight = document.body.clientHeight + 1 // 页面视口的高度
+      // 监听页面是否滚动到底部加载更多数据
+      if (Math.ceil(pageScrollTop + pageClientHeight) >= pageScrollHeight) {
+        if (!this.loading && !this.tabBtn[this.curentItem].noMore) {
+          this.loading = true
+          this.tabBtn[this.curentItem].page += 1
+          this.findRecomList(this.curentItem, 'more')
+        }
+      }
+    },
     // 选项卡选择某项
     selectTabHandle({ index }) {
       this.$refs.recomRef.swipeTo(index)
     },
     // 切换轮播
     onChange(index) {
+      this.switchHandle(index)
       if (this.$refs.tabCurveRef.isFixed) {
         this.$nextTick(() => {
           const tabCurveDomHeight = this.$refs.tabCurveRef.$el.clientHeight // 获取吸顶头部tab栏高度
@@ -186,27 +233,46 @@ export default {
       }
       this.curentItem = index
     },
+    switchHandle(index) {
+      // 切换没有数据时加载数据
+      if (
+        !this.tabBtn[index].goodsList.length &&
+        !this.tabBtn[index].adData.length
+      ) {
+        this.findRecomList(index)
+      }
+    },
     preventTouch(e) {
       e.stopImmediatePropagation() // 阻止冒泡
     },
     // 查询推荐商品
-    findRecomList() {
-      this.params.formatId = this.tabBtn[this.curentItem].formatId
-      this.params.limit = this.tabBtn[this.curentItem].limit
-      this.params.page = this.tabBtn[this.curentItem].page
-      this.params.locationCode = this.tabBtn[this.curentItem].locationCode
-      console.log(this.params)
+    findRecomList(index, type = 'init') {
+      console.log(index)
+      if (!this.params.areaCode) {
+        this.params.areaCode = this.cityCode
+      }
+      this.params.formatId = this.tabBtn[index].formatId
+      this.params.limit = this.tabBtn[index].limit
+      this.params.page = this.tabBtn[index].page
+      if (type !== 'more') {
+        this.params.locationCode = this.tabBtn[index].locationCode
+      }
       this.$axios.post(homeApi.findRecomList, this.params).then((res) => {
-        console.log(11, res)
+        console.log(index, res.data.goodsList)
+        if (!res.data.goodsList.length) {
+          this.tabBtn[index].noMore = true
+          return
+        }
         if (res.code === 200) {
-          this.tabBtn[this.curentItem].adData =
-            res.data.adData[
-              this.tabBtn[this.curentItem].locationCode
-            ].sortMaterialList
-          this.tabBtn[this.curentItem].goodsList = this.tabBtn[
-            this.curentItem
-          ].goodsList.concat(res.data.goodsList)
-          console.log(this.tabBtn[this.curentItem])
+          const obj = {
+            goodsList: this.tabBtn[index].goodsList.concat(res.data.goodsList),
+          }
+          if (type !== 'more') {
+            obj.adData =
+              res.data.adData[this.tabBtn[index].locationCode].sortMaterialList
+          }
+          this.$set(this.tabBtn, index, Object.assign(this.tabBtn[index], obj))
+          this.loading = false
         }
       })
     },
@@ -238,34 +304,38 @@ export default {
         position: relative;
         width: 262px;
         height: 144px;
-        background: #ffffff;
-        border: 1px solid #cdcdcd;
-        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
-        border-radius: 8px;
-        padding: 26px 32px 0 32px;
-        > strong {
-          font-size: 28px;
-          font-family: PingFang SC;
-          font-weight: bold;
-          color: #222222;
-          line-height: 38px;
-          .textOverflow(1);
-        }
-        > p {
-          font-size: 24px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #555555;
-          line-height: 34px;
-          margin-top: 4px;
-          .textOverflow(1);
-        }
-        > img {
-          width: 40px;
-          height: 40px;
-          position: absolute;
-          right: 12px;
-          bottom: 12px;
+        // background: #ffffff;
+        // border: 1px solid #cdcdcd;
+        // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+        // border-radius: 8px;
+        // padding: 26px 32px 0 32px;
+        // > strong {
+        //   font-size: 28px;
+        //   font-family: PingFang SC;
+        //   font-weight: bold;
+        //   color: #222222;
+        //   line-height: 38px;
+        //   .textOverflow(1);
+        // }
+        // > p {
+        //   font-size: 24px;
+        //   font-family: PingFang SC;
+        //   font-weight: 400;
+        //   color: #555555;
+        //   line-height: 34px;
+        //   margin-top: 4px;
+        //   .textOverflow(1);
+        // }
+        // > img {
+        //   width: 40px;
+        //   height: 40px;
+        //   position: absolute;
+        //   right: 12px;
+        //   bottom: 12px;
+        // }
+        .recom-img {
+          width: 100%;
+          height: 100%;
         }
       }
     }
@@ -281,6 +351,16 @@ export default {
     width: 100%;
     height: 1px;
     background: #f4f4f4;
+  }
+}
+.loading-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  .no-data {
+    font-size: 24px;
+    color: #333;
   }
 }
 </style>
