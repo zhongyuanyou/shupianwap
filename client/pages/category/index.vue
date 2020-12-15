@@ -38,7 +38,7 @@
       <section ref="r_list" class="category_con_rt">
         <div>
           <div class="swiper">
-            <div class="proList swiper_con" v-if="recommendData.length">
+            <div v-if="recommendData.length" class="proList swiper_con">
               <sp-swipe
                 class="my-swipe"
                 :autoplay="3000"
