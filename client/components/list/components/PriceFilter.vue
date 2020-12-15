@@ -15,6 +15,7 @@
       <price-filter-components
         :price-list="selectList"
         :echo-data="echoData"
+        :is-show-all-option="false"
         @minInput="minInput"
         @maxInput="maxInput"
         @selectItems="selectItems"
@@ -108,7 +109,7 @@ export default {
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
         this.dropdownTitle = val.name
-        this.selectList = val.filters
+        this.selectList = val.children
         this.isSelectMore = val.isSelects
       }
     },
@@ -116,7 +117,7 @@ export default {
   mounted() {
     if (this.filterData && JSON.stringify(this.filterData) !== '{}') {
       this.dropdownTitle = this.filterData.name
-      this.selectList = this.filterData.filters
+      this.selectList = this.filterData.children
       this.isSelectMore = this.filterData.isSelects
     }
   },

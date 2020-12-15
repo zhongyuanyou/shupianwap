@@ -14,7 +14,7 @@
     >
       <div v-for="(item, index) in children" :key="index" class="more-item">
         <div class="more-item__title">
-          <h2>{{ item.title }}</h2>
+          <h2>{{ item.name }}</h2>
           <div v-if="isShowBtn[index]" @click="showAllList(index)">
             全部
             <div
@@ -31,7 +31,8 @@
           </div>
         </div>
         <select-check-box
-          :select-list="item.filters"
+          :is-show-all-option="false"
+          :select-list="item.children"
           :gutter="12"
           :is-select-more="item.isSelects"
           :self-active-item="activeItems[index]"
@@ -81,222 +82,7 @@ export default {
     return {
       moreTextCss: 'jyDropdownFilter',
       dropdownTitle: '',
-      children: [
-        {
-          title: '行业类型',
-          filters: [
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-          ],
-          isSelects: false,
-        },
-        {
-          title: '行业类型2',
-          filters: [
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-          ],
-          isSelects: true,
-        },
-        {
-          title: '行业类型3',
-          filters: [
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-          ],
-          isSelects: false,
-        },
-      ],
+      children: [],
       isShowBtn: [], // 对应的筛选栏是否显示全部按钮
       selectBoxVue: [], // 存储所有的选择栏vue实例
       selectValueArray: [], // 所选择的数据
@@ -336,13 +122,14 @@ export default {
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
         this.dropdownTitle = val.name
+        this.children = val.children
       }
     },
   },
   mounted() {
     if (this.filterData && JSON.stringify(this.filterData) !== '{}') {
       this.dropdownTitle = this.filterData.name
-      // this.selectList = this.filterData.filters
+      this.children = this.filterData.children
     }
   },
   methods: {

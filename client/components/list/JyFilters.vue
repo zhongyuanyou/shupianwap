@@ -215,6 +215,9 @@ export default {
         } else {
           item.isSelects = false
         }
+        if (item.ctx4 && item.ctx4.indexOf('FL') !== -1) {
+          item.needAllOption = true
+        }
         if (item.code === 'CONDITION-JY-GS-DQ') {
           // 地区组件
           item.componentName = 'AreaFilter'

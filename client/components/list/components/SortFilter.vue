@@ -3,7 +3,6 @@
     ref="item"
     :title="dropdownTitle"
     :title-class="moreTextCss"
-    @open="open"
     @close="close"
   >
     <div class="sort-content">
@@ -81,11 +80,6 @@ export default {
     }
   },
   methods: {
-    open() {
-      if (this.sortfilterDom) {
-        this.sortfilterDom = document.querySelector('.sortfilter')
-      }
-    },
     close() {},
     isActive(item) {
       return item.id === this.selectValue.id
@@ -98,7 +92,12 @@ export default {
     },
     initOption(data) {
       this.dropdownTitle = data.name
-      this.option = data.filters
+      data.children.forEach((item, _index) => {
+        this.option.push({
+          name: item.name,
+          id: _index + 1,
+        })
+      })
       // this.selectValue = this.option[0]
     },
   },
