@@ -18,7 +18,7 @@
         :title="item.name"
       ></sp-tab>
     </sp-tabs>
-    <jy-filters ref="dropDownMenu" />
+    <jy-filters ref="dropDownMenu" :filter-data="jyFilterData" />
     <install-app v-show="listShow" ref="installApp" />
     <sp-list
       v-show="listShow"
@@ -141,6 +141,7 @@ export default {
         classCode: '',
         dictCode: '',
       },
+      jyFilterData: [],
       jyGoodsListData: [],
     }
   },
@@ -152,9 +153,6 @@ export default {
     initListData(val) {
       this.jyGoodsListData = clone(val)
     },
-  },
-  activated() {
-    console.log(12312312)
   },
   mounted() {
     this.$nextTick(() => {
@@ -196,6 +194,9 @@ export default {
         .searchJyGoodsList({ axios: this.$axios }, this.formData)
         .then((res) => {
           console.log(res)
+          if (JSON.stringify(res.filters) !== '{}') {
+            this.jyFilterData = res.filters
+          }
         })
         .catch((err) => {
           console.log(err)

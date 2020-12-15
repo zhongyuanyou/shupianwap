@@ -93,7 +93,7 @@ export default {
           this.dropdownTitle = Number(minValue) + '-' + Number(maxValue)
           this.addClass('active')
         } else {
-          this.dropdownTitle = this.filterData.title
+          this.dropdownTitle = this.filterData.name
           this.removeClass('moreText')
           this.removeClass('active')
         }
@@ -107,7 +107,7 @@ export default {
     },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
-        this.dropdownTitle = val.title
+        this.dropdownTitle = val.name
         this.selectList = val.filters
         this.isSelectMore = val.isSelects
       }
@@ -115,7 +115,7 @@ export default {
   },
   mounted() {
     if (this.filterData && JSON.stringify(this.filterData) !== '{}') {
-      this.dropdownTitle = this.filterData.title
+      this.dropdownTitle = this.filterData.name
       this.selectList = this.filterData.filters
       this.isSelectMore = this.filterData.isSelects
     }

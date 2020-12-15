@@ -126,7 +126,6 @@ export default {
   },
   watch: {
     searchText(val) {
-      console.log(1111111)
       this.formData.keywords = val
       if (this.reqType === 'serve') {
         this.initGoodsList()
@@ -186,7 +185,11 @@ export default {
     open(index) {},
     close(index) {
       // 关闭下拉选择框
-      if (index === 1 && this.selectValue !== this.option[0].value) {
+      if (
+        index === 1 &&
+        this.option.length &&
+        this.selectValue !== this.option[0].value
+      ) {
         // 给下拉标题增加选中
         this.addClass('active', 1)
       } else {

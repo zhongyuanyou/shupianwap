@@ -13,7 +13,7 @@
       }"
     >
       <couple-select
-        :city-data="city"
+        :city-data="filterData.children"
         :back-data="activeItems"
         @select="coupleSelect"
       />
@@ -29,7 +29,6 @@
 import { DropdownItem } from '@chipspc/vant-dgg'
 import CoupleSelect from '~/components/common/coupleSelected/CoupleSelect'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
-import { city } from '~/utils/city'
 import clone from '~/utils/clone'
 import addRemoveClass from '@/mixins/addRemoveClass'
 export default {
@@ -44,13 +43,12 @@ export default {
     filterData: {
       type: Object,
       default() {
-        return null
+        return {}
       },
     },
   },
   data() {
     return {
-      city,
       moreTextCss: 'jyDropdownFilter',
       dropdownTitle: '',
       activeItems: [], // 默认激活的
@@ -71,7 +69,7 @@ export default {
       if (val.length === 0) {
         this.removeClass('moreText')
         this.removeClass('active')
-        this.dropdownTitle = this.filterData.title
+        this.dropdownTitle = this.filterData.name
       } else if (arr[2].regions.length === 0) {
         this.dropdownTitle = arr[0].name + '-' + arr[1].name
         this.addClass('active')
@@ -92,13 +90,13 @@ export default {
     },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
-        this.dropdownTitle = val.title
+        this.dropdownTitle = val.name
       }
     },
   },
   mounted() {
     if (this.filterData && JSON.stringify(this.filterData) !== '{}') {
-      this.dropdownTitle = this.filterData.title
+      this.dropdownTitle = this.filterData.name
     }
   },
   methods: {

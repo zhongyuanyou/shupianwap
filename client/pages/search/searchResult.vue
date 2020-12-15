@@ -126,24 +126,33 @@ export default {
     // 获取初始化数据
     getInitData() {
       // 获取服务列表需要的筛选数据
-      goods
+      const a = goods
         .searchServeGoodsList({ axios: this.$axios }, this.formData)
-        .then((data) => {
-          console.log(data)
-          this.serveGoodsListData = data
+        .then((result) => result)
+        .catch((e) => {
+          if (e.code !== 200) {
+            console.log(e)
+          }
         })
-        .catch()
-      dict
+      const b = dict
         .findCmsCode({ axios: this.$axios }, { code: 'CONDITION-JY' })
-        .then((data) => {
-          console.log('dict', data)
-          this.jyTypesData = data.filter((item) => {
+        .then((result) => result)
+        .catch((e) => {
+          if (e.code !== 200) {
+            console.log(e)
+          }
+        })
+      Promise.all([a, b]).then((res) => {
+        console.log('getInitDatares', res)
+        if (res[0]) {
+          this.serveGoodsListData = res[0]
+        }
+        if (res[1]) {
+          this.jyTypesData = res[1].filter((item) => {
             return /[公司｜专利｜商标｜资质]/.test(item.name)
           })
-        })
-        .catch((err) => {
-          console.log('err', err)
-        })
+        }
+      })
     },
     searchKeydownHandle() {
       // 点击搜索按钮
