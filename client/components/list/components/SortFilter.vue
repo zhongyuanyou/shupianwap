@@ -97,7 +97,7 @@ export default {
       this.$refs.item.toggle()
     },
     initOption(data) {
-      this.dropdownTitle = data.title
+      this.dropdownTitle = data.name
       this.option = data.filters
       // this.selectValue = this.option[0]
     },

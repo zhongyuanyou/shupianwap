@@ -324,7 +324,7 @@ export default {
       } else if (arr.length === 0) {
         this.removeClass('moreText')
         this.removeClass('active')
-        this.dropdownTitle = this.filterData.title
+        this.dropdownTitle = this.filterData.name
       }
       // 如果筛选名字个数超过了4个那么需要加样式
       /* if (this.dropdownTitle.length >= 4) {
@@ -335,13 +335,13 @@ export default {
     },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
-        this.dropdownTitle = val.title
+        this.dropdownTitle = val.name
       }
     },
   },
   mounted() {
     if (this.filterData && JSON.stringify(this.filterData) !== '{}') {
-      this.dropdownTitle = this.filterData.title
+      this.dropdownTitle = this.filterData.name
       // this.selectList = this.filterData.filters
     }
   },

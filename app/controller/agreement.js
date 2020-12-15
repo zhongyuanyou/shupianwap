@@ -14,7 +14,7 @@ class AgreementController extends Controller {
         includeField: 'title,content,id', // 需要后端返回的数据
       });
       if (status === 200 && data.code === 200) {
-        ctx.helper.success({ ctx, code: 200, res: contentList.data.data});
+        ctx.helper.success({ ctx, code: 200, res: data.data});
       } else {
         ctx.helper.fail({ ctx, code: 500, res: data.message });
       }
