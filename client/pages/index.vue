@@ -64,9 +64,9 @@ export default {
     FiexdBtn,
   },
   async asyncData({ $axios }) {
-    const fiexdAdCode = 'ad100064' // 顶部固定banner的code
-    const rollAdCode = 'ad100056' // 导航下方轮播banner code
-    const helpAdCode = 'ad100056' // 帮我找下方banner code
+    const fiexdAdCode = '' // 顶部固定banner的code
+    const rollAdCode = 'ad100130' // 导航下方轮播banner code
+    const helpAdCode = 'ad100130' // 帮我找下方banner code
     // 首屏请求导航和广告的参数
     const initReqParams = {
       locationCodeList: [fiexdAdCode, rollAdCode], // 广告位code列表
@@ -88,6 +88,7 @@ export default {
     }
     try {
       const res = await $axios.post(homeApi.initRequest, initReqParams)
+      console.log(77, res)
       if (res.code === 200) {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
         initData.rollBannerData = res.data.advertising[rollAdCode] || []

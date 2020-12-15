@@ -289,6 +289,8 @@ class homeController extends Controller {
         // 定义参数校验规则
         const rules = {
             locationCode: { type: "string", required: false }, // 查询广告的位置code
+            dictionaryCode: { type: "string", required: false }, // 查询数据字典的code
+            findType: { type: "integer", required: true }, // 查询类型：0：初始查询广告+数据字典+推荐商品  1：查询广告+推荐商品 2：只查推荐商品
         };
         const nweRules = Object.assign(rules, productRules);
         // 参数校验
@@ -298,16 +300,16 @@ class homeController extends Controller {
             ctx.helper.fail({ ctx, code: 422, res: valiErrors });
             return;
         }
-        const params = {
-            userId: ctx.request.body.userId, // 用户id
-            deviceId: ctx.request.body.deviceId, // 设备id
-            areaCode: ctx.request.body.areaCode, // 区域code
-            sceneId: ctx.request.body.sceneId, // 场景ID
-            maxsize: ctx.request.body.maxsize, // 要要推荐产品的数量
-            productType: ctx.request.body.productType, // 需要推荐的产品类别
-            formatId: ctx.request.body.formatId, // 产品三级类别,没有三级类别用二级类别
-        };
         try {
+            const params = {
+                userId: ctx.request.body.userId, // 用户id
+                deviceId: ctx.request.body.deviceId, // 设备id
+                areaCode: ctx.request.body.areaCode, // 区域code
+                sceneId: ctx.request.body.sceneId, // 场景ID
+                maxsize: ctx.request.body.maxsize, // 要要推荐产品的数量
+                productType: ctx.request.body.productType, // 需要推荐的产品类别
+                formatId: ctx.request.body.formatId, // 产品三级类别,没有三级类别用二级类别
+            };
             // 获取推荐产品ids
             const findRecom = service.common.recom.getRecomProductIdList(
                 params
@@ -321,7 +323,16 @@ class homeController extends Controller {
                 ]);
                 reqArr.push(findBanner);
             }
-
+            if (ctx.request.body.dictionaryCode) {
+                const sysCode = app.config.apiClient.APPID[0];
+                const dict = contentApi.dataDict; // 查询字典
+                const dictUrl = ctx.helper.assembleUrl(sysCode, dict);
+                const jyFilters = service.curl.curlGet(dictUrl, {
+                    code: ctx.request.body.dictionaryCode,
+                });
+                // 查询数据字典
+                reqArr.push(jyFilters);
+            }
             const resArr = await Promise.all(reqArr);
 
             let productData = {
@@ -332,6 +343,15 @@ class homeController extends Controller {
             if (ctx.request.body.page === 1 && resArr[1].code === 200) {
                 productData.adData = resArr[1].data;
             }
+            // 获取字典数据成功
+            if (
+                ctx.request.body.dictionaryCode &&
+                resArr[2].status === 200 &&
+                resArr[2].data.code === 200
+            ) {
+                productData.dictData = resArr[2].data.data;
+            }
+
             // 从算法部获取到推荐产品id成功
             if (resArr[0].code === 200) {
                 // 根据前台的分页参数，动态选取一部分id
