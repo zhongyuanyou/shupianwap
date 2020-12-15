@@ -2,12 +2,12 @@
  * @Author: xiao pu
  * @Date: 2020-12-14 10:48:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-14 14:27:03
+ * @LastEditTime: 2020-12-15 10:54:24
  * @Description: file content
  * @FilePath: /chips-wap/client/components/planner/PlannerSearchItem.vue
 -->
 <template>
-  <div class="planner-search-item">
+  <div class="planner-search-item" @click.stop="handleClick('detail')">
     <div class="left">
       <div class="planner-search-item_avatar">
         <sp-image
@@ -57,11 +57,11 @@
     </div>
     <div class="right">
       <div class="planner-search-item_contact">
-        <sp-button round class="contact-btn" @click="handleClick('IM')"
+        <sp-button round class="contact-btn" @click.stop="handleClick('IM')"
           ><my-icon name="notify_ic_chat" size="0.32rem" color="#4974F5"
         /></sp-button>
 
-        <sp-button round class="contact-btn" @click="handleClick('tel')"
+        <sp-button round class="contact-btn" @click.stop="handleClick('tel')"
           ><my-icon name="notify_ic_tel" size="0.32rem" color="#4974F5"
         /></sp-button>
       </div>
@@ -106,6 +106,9 @@ export default {
           break
         case 'tel':
           data = await this.getTel()
+          break
+        case 'detail':
+          data = { mchUserId: this.itemData.mchUserId }
           break
       }
       if (data) {

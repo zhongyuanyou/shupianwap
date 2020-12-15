@@ -119,8 +119,12 @@ export default {
     },
     confirmFilters() {
       // 确认筛选
+      let emitData = null
       this.saveActiveItems = clone(this.activeItems, true)
-      this.$emit('activeItem', this.activeItems, 'areaFilter')
+      if (this.activeItems[0].name !== '全国') {
+        emitData = this.activeItems
+      }
+      this.$emit('activeItem', emitData, 'areaFilter')
       this.$refs.item.toggle()
     },
     getCoupleSelectVue(_this) {

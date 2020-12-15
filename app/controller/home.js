@@ -288,7 +288,7 @@ class homeController extends Controller {
         const { ctx, service, app } = this;
         // 定义参数校验规则
         const rules = {
-            locationCode: { type: "string", required: true }, // 查询广告的位置code
+            locationCode: { type: "string", required: false }, // 查询广告的位置code
         };
         const nweRules = Object.assign(rules, productRules);
         // 参数校验

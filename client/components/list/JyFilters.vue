@@ -3,9 +3,10 @@
     <component
       :is="item.componentName"
       v-for="(item, index) in filters"
+      :ref="item.name"
       :key="index"
       :filter-data="item"
-      @activeItem="filterItem"
+      @activeItem="getFilterHandle"
     ></component>
   </sp-dropdown-menu>
 </template>
@@ -68,6 +69,7 @@ export default {
         { text: '价格从高到低', value: 3 },
         { text: '价格从低到高', value: 4 },
       ],
+      filterItem: {},
     }
   },
   watch: {
@@ -78,8 +80,9 @@ export default {
   },
   mounted() {},
   methods: {
-    filterItem(data, filrerName) {
+    getFilterHandle(data, filrerName) {
       console.log(data, filrerName)
+      this.$set(this.filterItem, filrerName, data)
     },
     resetFilterData(filter) {
       /* const res = [
@@ -215,9 +218,6 @@ export default {
         } else {
           item.isSelects = false
         }
-        if (item.ctx4 && item.ctx4.indexOf('FL') !== -1) {
-          item.needAllOption = true
-        }
         if (item.code === 'CONDITION-JY-GS-DQ') {
           // 地区组件
           item.componentName = 'AreaFilter'
@@ -240,6 +240,9 @@ export default {
         }
       })
       this.filters = filter
+      this.$nextTick(() => {
+        console.log(this.$refs)
+      })
     },
   },
 }

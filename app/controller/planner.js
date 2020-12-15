@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-04 10:54:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-14 17:14:46
+ * @LastEditTime: 2020-12-15 09:51:06
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/planner.js
  */

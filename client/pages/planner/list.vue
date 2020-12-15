@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-14 20:56:05
+ * @LastEditTime: 2020-12-15 16:02:05
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -30,19 +30,21 @@
           </sp-nav-search>
           <sp-dropdown-menu class="search__dropdown">
             <sp-dropdown-item
-              ref="item"
+              ref="regionsDropdownItem"
               :title-class="
-                regions != '区域' ? 'sp-dropdown-menu__title--selected ' : ''
+                search.region.name != '区域'
+                  ? 'sp-dropdown-menu__title--selected '
+                  : ''
               "
               class="search__dropdown-regoin"
             >
               <template #title>
-                <span>{{ regions }}</span>
+                <span>{{ search.region.name }}</span>
               </template>
               <CoupleSelect
                 :multiple="false"
-                :city-data="city"
-                @select="coupleSelect"
+                :city-data="regionsOption"
+                @select="handleRegionsSelect"
               />
             </sp-dropdown-item>
             <sp-dropdown-item
@@ -94,6 +96,8 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
+
 import {
   Button,
   DropdownMenu,
@@ -111,9 +115,8 @@ import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
 import Header from '@/components/common/head/header'
 import SearchPopup from '@/components/planner/SearchPopup'
 import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
-import { city } from '@/utils/city'
 
-import { planner } from '@/api'
+import { planner, dict } from '@/api'
 
 const SORT_CONFIG = [
   {
@@ -182,9 +185,13 @@ export default {
       search: {
         keywords: '',
         sortId: 0,
+        region: {
+          name: '区域',
+          code: '',
+        },
       },
       sortOption: SORT_CONFIG,
-      regions: '区域',
+      regionsOption: [],
       refreshing: false,
       loading: false,
       error: false,
@@ -194,28 +201,50 @@ export default {
     }
   },
   computed: {
-    city() {
-      return city
-    },
+    ...mapState({
+      currentCity: (state) => state.city.currentCity,
+    }),
     formatSearch() {
-      const { sortId, keywords } = this.search
+      const { sortId, keywords, region } = this.search
       const matched =
         this.sortOption.find((item) => item.value === sortId) || SORT_CONFIG[0]
       const sort = {
         sortType: matched.type,
         value: matched.sortValue,
       }
+      const code = region.name === '区域' ? this.currentCity.code : region.code
+      const regionDto = {
+        codeState: region.name === '区域' ? 2 : 3,
+        regions: [code],
+      }
+      // const regionDto = {
+      //   codeState: 1,
+      //   regions: ['110000'],
+      // }
 
-      return { sort, plannerName: keywords }
+      return { sort, plannerName: keywords, regionDto }
     },
   },
+  created() {
+    if (process && process.client) {
+      this.uPGetRegion()
+    }
+  },
   methods: {
-    coupleSelect(data) {
+    ...mapMutations({
+      SET_CITY: 'city/SET_CITY',
+    }),
+    handleRegionsSelect(data) {
       console.log(data)
-      if (data[2].regions.length) {
-        this.regions = data[2].regions[0].name
-        this.$refs.item.toggle()
+      // TODO 测试
+      if (this.currentCity.code !== data[0].code) return
+      const { code, name } = data[1]
+      this.search.region = {
+        code,
+        name,
       }
+      this.$refs.regionsDropdownItem.toggle()
+      this.handleSearch()
     },
     handleSortChange(value) {
       console.log(value)
@@ -268,6 +297,10 @@ export default {
         case 'tel':
           console.log('想打电话：', data)
           break
+        case 'detail':
+          console.log('看看详情：', data)
+          this.$router.push({ name: 'planner-id', query: data })
+          break
       }
     },
 
@@ -275,11 +308,19 @@ export default {
       this.refreshing = true
       this.onRefresh()
     },
+    // 统一平台 调用
+    uPGetRegion() {
+      // 浏览器上逻辑
+      const { code } = this.currentCity || {}
+      this.getRegionList(code)
+      // TODO app 上获取code
+      // this.SET_CITY({code, name}) // 设置当前的定位到vuex中
+    },
 
     async getList(currentPage) {
       const { limit } = this.pageOption
-      const { sort, plannerName } = this.formatSearch
-      const params = { sort, plannerName, limit, page: currentPage }
+      const { sort, plannerName, regionDto } = this.formatSearch
+      const params = { sort, plannerName, regionDto, limit, page: currentPage }
       try {
         const data = await planner.list(params)
         console.log(data)
@@ -291,6 +332,7 @@ export default {
           const { limit, currentPage = 1, totalCount = 0, records = [] } = data
           this.pageOption = { limit, totalCount, page: currentPage }
           this.list.push(...records)
+          Toast(`共找到${totalCount}个规划师`)
         }
         return data
       } catch (error) {
@@ -298,6 +340,24 @@ export default {
           this.refreshing = false
         }
         console.error('getList:', error)
+        return Promise.reject(error)
+      }
+    },
+
+    // 获取区域数据
+    async getRegionList(code) {
+      try {
+        const data = await dict.findCmsTier({ axios: this.$axios }, { code })
+        console.log(data)
+        this.regionsOption = [
+          {
+            ...this.currentCity,
+            children: Array.isArray(data) ? data : [],
+          },
+        ]
+        return data
+      } catch (error) {
+        console.error('getRegionList:', error)
         return Promise.reject(error)
       }
     },
@@ -341,7 +401,7 @@ export default {
           padding: 0 20px;
           justify-content: flex-start;
           &:first-child {
-            flex-basis: 150px;
+            flex-basis: 200px;
           }
           &:last-child {
             margin-left: 40px;
