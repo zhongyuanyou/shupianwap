@@ -103,7 +103,7 @@ export default {
       loading: false,
       finished: false,
       limit: 10, // 每页显示条数
-      page: 1, // 当前页
+      page: 2, // 当前页
       infoList: this.list, // 资讯列表
       bannerList: this.banner, // 广告集合
     }
@@ -140,7 +140,7 @@ export default {
       }
       const res = await this.$axios.get(foundApi.infoList, { params })
       if (res.code === 200) {
-        if (res.data.information_list.length < res.data.totalCount) {
+        if (res.data.information_list.length) {
           this.loading = false
           this.infoList = this.infoList.concat(res.data.information_list)
         } else {

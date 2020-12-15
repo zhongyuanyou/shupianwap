@@ -42,6 +42,7 @@
             :key="index"
             ref="good"
             class="proList"
+            @click="handleItem(item)"
           >
             <div class="title">{{ item.name }}</div>
             <div class="item_con">
@@ -85,10 +86,6 @@ export default {
   //   this.getCategoryList()
   // },
   mounted() {
-    this.$nextTick(() => {
-      this._initScroll()
-      this._getHeight()
-    })
     this.getCategoryList()
   },
   methods: {
@@ -114,7 +111,7 @@ export default {
                 this.$refs.l_list,
                 100,
                 0,
-                this.TabNavList * 65
+                this.TabNavList * 68
               )
             }
           }
@@ -152,6 +149,35 @@ export default {
       }
       const data = await category.home({ axios: this.$axios }, params)
       this.categoryList = data.categoryList
+      this.$nextTick(() => {
+        this._initScroll()
+        this._getHeight()
+      })
+    },
+    handleItem(item) {
+      // 点击每一个二级分类
+      const categoryData = []
+      categoryData[0] = {
+        code: item.code,
+        id: item.id,
+        name: item.name,
+        text: item.name,
+      }
+      categoryData[1] = {
+        services: [],
+      }
+      if (item.children.length) {
+        item.children.forEach((cItem) => {
+          categoryData[1].services.push({
+            code: cItem.code,
+            id: cItem.id,
+            name: cItem.name,
+            text: cItem.name,
+          })
+        })
+      }
+      sessionStorage.categoryData = JSON.stringify(categoryData)
+      this.$router.push('/list/serveList')
     },
   },
 }

@@ -3,7 +3,7 @@
     <sp-top-nav-bar special-layout :placeholder="true" fixed>
       <template #title>
         <sp-work-tabs
-          v-model="active"
+          v-model="activeTab"
           mask
           title-active-color="#222"
           @click="onClickTap"
@@ -64,8 +64,6 @@ export default {
       information_banner: [], // 广告数据
       information_list: [], // 资讯列表
       categoryCode: '', // code码
-      active: 2,
-      tabs: [1, 2, 3, 4, 5, 6, 7, 8],
     }
   },
   mounted() {
@@ -88,6 +86,8 @@ export default {
   },
   methods: {
     async onClickTap(index, title) {
+      // 切换按钮回滚到顶部
+      window.scrollTo(0, 0)
       // 点击tab标签
       this.categoryCode = this.information_class[index].code
       const params = {
