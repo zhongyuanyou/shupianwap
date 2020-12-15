@@ -37,12 +37,32 @@
       <!--S 二级分类区域-->
       <section ref="r_list" class="category_con_rt">
         <div>
+          <div class="swiper">
+            <div class="proList swiper_con" v-if="recommendData.length">
+              <sp-swipe
+                class="my-swipe"
+                :autoplay="3000"
+                indicator-color="white"
+                :show-indicators="false"
+              >
+                <sp-swipe-item
+                  v-for="(item, index) of recommendData"
+                  :key="index"
+                >
+                  <sp-image
+                    fit="contain"
+                    class="swipe_img"
+                    :src="item.materialList[0].materialUrl"
+                  />
+                </sp-swipe-item>
+              </sp-swipe>
+            </div>
+          </div>
           <div
             v-for="(item, index) in categoryList"
             :key="index"
             ref="good"
             class="proList"
-            @click="handleItem(item)"
           >
             <div class="title">{{ item.name }}</div>
             <div class="item_con">
@@ -50,6 +70,7 @@
                 v-for="(cItem, cIndex) in item.children"
                 :key="cIndex"
                 class="item_con_child"
+                @click="handleItem(item)"
               >
                 {{ cItem.name }}
               </div>
@@ -65,13 +86,20 @@
 
 <script>
 import Better from 'better-scroll'
+import { Swipe, SwipeItem, Image } from '@chipspc/vant-dgg'
 import { category } from '@/api'
 export default {
   name: 'Index',
+  components: {
+    [Swipe.name]: Swipe,
+    [SwipeItem.name]: SwipeItem,
+    [Image.name]: Image,
+  },
   data() {
     return {
       keywords: '',
       categoryList: [], // 产品分类
+      recommendData: [], // 广告数据
       req: [
         'https://img.yzcdn.cn/vant/cat.jpeg',
         'https://img.yzcdn.cn/vant/cat.jpeg',
@@ -80,6 +108,7 @@ export default {
       scrollY: 0,
       TabNavList: 0, // 左右联动取值
       flag: true,
+      categoryData: [], // 当前点击的分类相关数据
     }
   },
   // created() {
@@ -149,6 +178,7 @@ export default {
       }
       const data = await category.home({ axios: this.$axios }, params)
       this.categoryList = data.categoryList
+      this.recommendData = data.recommendData
       this.$nextTick(() => {
         this._initScroll()
         this._getHeight()
@@ -166,6 +196,7 @@ export default {
       categoryData[1] = {
         services: [],
       }
+      this.categoryData = categoryData
       if (item.children.length) {
         item.children.forEach((cItem) => {
           categoryData[1].services.push({
@@ -272,6 +303,24 @@ export default {
       overflow-y: scroll;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
+      .swiper {
+        height: 164px;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 8px;
+        &_con {
+          padding-top: 16px;
+        }
+      }
+      .my-swipe .sp-swipe-item {
+        color: #fff;
+        text-align: center;
+        background-color: #f8f8f8;
+        .swipe_img {
+          width: 100%;
+          height: 100%;
+        }
+      }
       .proList {
         padding-top: 48px;
         .title {

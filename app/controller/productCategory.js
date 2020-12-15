@@ -27,9 +27,9 @@ class ProductCategoryController extends Controller {
       return;
     }
     // 获取广告数据，若有locationCode的情况下
-    const getAdvertising = service.common.banner.getAdList([ 'ad100026' ]);
+    const getAdvertising = service.common.banner.getAdList([ 'ad100129' ]);
     // 获取产品分类
-    const getClassification = service.common.category.getProductCategory({productTypeCode: 'PRO_CLASS_TYPE_SERVICE'});
+    const getClassification = service.common.category.getProductCategory({ productTypeCode: 'PRO_CLASS_TYPE_SERVICE' });
 
     const reqAll = [ getClassification, getAdvertising ];
     try {
@@ -64,12 +64,12 @@ class ProductCategoryController extends Controller {
         return item.children.length;
       });
       // 广告数据
+      console.log('广告数据', resData[1]);
       if (
         resData[1].code === 200 &&
-        resData[1].data &&
-        Array.isArray(resData[1].data)
+        resData[1].data
       ) {
-        recommendData = resData[1].data;
+        recommendData = resData[1].data.ad100129.sortMaterialList;
       }
       ctx.helper.success({
         ctx,
