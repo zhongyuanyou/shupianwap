@@ -137,6 +137,7 @@ export default {
     },
   },
   mounted() {
+    this.$emit('initThis', this)
     const list = this.cityData
     if (list[0].name === '全国') {
       list[0].children = [
