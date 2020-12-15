@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-14 09:17:10
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-14 09:17:10
+ * @LastEditTime: 2020-12-15 16:03:30
  * @Description: file content
  * @FilePath: /chips-wap/client/api/planner.js
  */
@@ -33,6 +33,19 @@ const planner = {
       params,
       method: 'post',
       url: CHIPS_WAP_BASE_URL + '/nk/planner/v1/list.do',
+    })
+  },
+
+  /**
+   * @description 规划师详情接口
+   * @param {Object} params 请求参数
+   * @param {string} params.id 规划师id
+   * @returns {promise}
+   */
+  detail(params) {
+    return request({
+      params,
+      url: CHIPS_WAP_BASE_URL + '/nk/planner/v1/detail.do',
     })
   },
 
