@@ -25,6 +25,18 @@
     <div class="precontract">
       <Card />
     </div>
+    <div class="introduction">
+      <h5>服务介绍</h5>
+      <Registerlist />
+    </div>
+    <div class="norm">
+      <h5>办理标准</h5>
+      <Standard />
+    </div>
+    <!-- S注册公司准备工作-平台优势 -->
+    <!-- <div class="register-ready"></div> -->
+    <RegisterReady />
+    <!-- E注册公司准备工作-平台优势 -->
   </div>
 </template>
 <script>
@@ -39,6 +51,9 @@ import {
   Image,
 } from '@chipspc/vant-dgg'
 import Card from '@/components/spread/registerRegister/Card.vue'
+import Registerlist from '@/components/spread/registerRegister/Registerlist.vue'
+import Standard from '@/components/spread/registerRegister/standard.vue'
+import RegisterReady from '@/components/spread/registerRegister/RegisterReady'
 
 export default {
   name: 'CompanyRegistry',
@@ -51,7 +66,10 @@ export default {
     [SwipeItem.name]: SwipeItem,
     [Lazyload.name]: Lazyload,
     [Image.name]: Image,
+    RegisterReady,
     Card,
+    Registerlist,
+    Standard,
   },
   data() {
     return {
@@ -72,7 +90,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-companyRegister .company-registry {
+.company-registry {
+  // -------
+  padding-bottom: 600px;
   .banner {
     /deep/.my-swipe .sp-swipe-item {
       color: #fff;
@@ -85,7 +105,19 @@ companyRegister .company-registry {
       }
     }
   }
-  .precontract {
+  .introduction {
+    padding: 63px 42px 0 42px;
+    h5 {
+      font-size: 40px;
+      margin-bottom: 36px;
+    }
+  }
+  .norm {
+    padding: 63px 42px 64px 42px;
+    h5 {
+      font-size: 40px;
+      margin-bottom: 36px;
+    }
   }
 }
 </style>

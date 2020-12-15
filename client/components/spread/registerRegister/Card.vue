@@ -14,7 +14,6 @@
         title="单元格"
         @click="downShow = true"
       >
-        <!-- <template #default> 56646 </template> -->
       </sp-cell>
       <sp-action-sheet
         v-model="downShow"
@@ -47,6 +46,35 @@
       </div>
       <div class="button">
         <sp-button type="primary" block size="small">主要按钮</sp-button>
+      </div>
+      <div class="flow">
+        <span
+          ><my-icon
+            class-prefix="sp-iconfont"
+            name="details_ic_Completed"
+            size="14px"
+            color="#00B365"
+          />
+          流程透明</span
+        >
+        <span
+          ><my-icon
+            class-prefix="sp-iconfont"
+            size="14px"
+            color="#00B365"
+            name="details_ic_Completed"
+          />
+          信息安全</span
+        >
+        <span
+          ><my-icon
+            class-prefix="sp-iconfont"
+            size="14px"
+            color="#00B365"
+            name="details_ic_Completed"
+          />
+          平台服务</span
+        >
       </div>
     </div>
   </div>
@@ -179,6 +207,24 @@ export default {
         font-size: 28px;
         font-weight: 400;
         color: #4974f5;
+      }
+    }
+    /deep/ .button {
+      .sp-button {
+        padding: 44px 0;
+        width: 594px;
+      }
+    }
+    /deep/.flow {
+      font-size: 26px;
+      color: #555555;
+      font-weight: 400;
+      display: flex;
+      justify-content: space-between;
+      padding: 34px 19px 0 19px;
+      .sp-iconfont::before {
+        // size: 26px;
+        // color: red;
       }
     }
   }
