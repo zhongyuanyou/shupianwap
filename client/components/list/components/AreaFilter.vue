@@ -13,7 +13,7 @@
       }"
     >
       <couple-select
-        :city-data="city"
+        :city-data="filterData.children"
         :back-data="activeItems"
         @select="coupleSelect"
       />
@@ -29,7 +29,6 @@
 import { DropdownItem } from '@chipspc/vant-dgg'
 import CoupleSelect from '~/components/common/coupleSelected/CoupleSelect'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
-import { city } from '~/utils/city'
 import clone from '~/utils/clone'
 import addRemoveClass from '@/mixins/addRemoveClass'
 export default {
@@ -44,13 +43,12 @@ export default {
     filterData: {
       type: Object,
       default() {
-        return null
+        return {}
       },
     },
   },
   data() {
     return {
-      city,
       moreTextCss: 'jyDropdownFilter',
       dropdownTitle: '',
       activeItems: [], // 默认激活的

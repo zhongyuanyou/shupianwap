@@ -51,15 +51,15 @@ async function getTypeJyFilter(dictCode, classCode) {
           let gs_dq = res[0].data.data.find((item) => {
             return item.code === 'CONDITION-JY-GS-DQ'
           })
-          // 找到行业选项
-          let gs_hy = res[0].data.data.find((item) => {
-            return item.code === 'CONDITION-JY-GS-HY'
-          })
           gs_dq.children = res[1].data.data; // 将地区数据和筛选合并
           gs_dq.children.unshift({ // 为地区数据添加全国选项
             name: '全国',
             code: res[1].data.data[0].pcode,
             children: [],
+          })
+          // 找到行业选项
+          let gs_hy = res[0].data.data.find((item) => {
+            return item.code === 'CONDITION-JY-GS-HY'
           })
           gs_hy.children = res[2].data.data; // 将行业数据与筛选合并
           result.data = res[0].data.data
