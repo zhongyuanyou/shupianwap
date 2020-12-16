@@ -18,14 +18,14 @@
     </div>
     <!--E 省导航-->
     <!--S 市导航-->
-    <div class="couple_city">
+    <div :class="['couple_city', { flex_city: isLocation }]">
       <div
         v-if="coupleData && coupleData[pIndex] && coupleData[pIndex].children"
       >
         <div
           v-for="(item, index) in coupleData[pIndex].children"
           :key="index"
-          class="couple_province_item"
+          class="couple_province_item flex_item"
           :style="{
             color: cIndex == index ? '#4974F5' : '#222',
             fontWeight: cIndex == index ? 'bold' : 'normal',
@@ -39,7 +39,7 @@
     </div>
     <!--E 市导航-->
     <!--S 区导航-->
-    <div class="couple_region">
+    <div v-if="!isLocation" class="couple_region">
       <div
         v-if="
           coupleData &&
@@ -63,10 +63,16 @@
           >
             {{ item.name }}
           </p>
-          <div v-show="hasRegion(item) && pIndex != 0" class="check_con">
+          <div
+            v-show="item.name !== '不限' && hasRegion(item) && pIndex != 0"
+            class="check_con"
+          >
             <sp-icon name="success" color="#4974F5" size="0.2rem" />
           </div>
-          <div v-show="!hasRegion(item) && pIndex != 0" class="blur_con"></div>
+          <div
+            v-show="item.name !== '不限' && !hasRegion(item) && pIndex != 0"
+            class="blur_con"
+          ></div>
         </div>
       </div>
     </div>
@@ -101,6 +107,13 @@ export default {
         return []
       },
     },
+    // 是否是具体定位城市的数据
+    isLocation: {
+      type: Boolean,
+      default: () => {
+        return false
+      },
+    },
   },
   data() {
     return {
@@ -127,11 +140,18 @@ export default {
         this.selectData = newVal
         this.initData(newVal)
       } else {
-        this.selectData = [
-          { name: '全国', code: this.coupleData[0].code },
-          { name: '不限', code: '' },
-          { regions: new Array({ name: '不限', code: '' }) },
-        ]
+        if (this.isLocation) {
+          this.selectData = [
+            { name: '全国', code: this.coupleData[0].code },
+            { name: '不限', code: '' },
+          ]
+        } else {
+          this.selectData = [
+            { name: '全国', code: this.coupleData[0].code },
+            { name: '不限', code: '' },
+            { regions: new Array({ name: '不限', code: '' }) },
+          ]
+        }
         this.initData(this.selectData)
       }
     },
@@ -189,19 +209,42 @@ export default {
           this.cIndex = index
         }
       })
-      this.cityData[this.pIndex].children[this.cIndex].children.forEach(
-        (item, index) => {
-          if (
-            item.name === this.backData[2].name &&
-            item.code === this.backData[2].code
-          ) {
-            this.rIndex = index
+      if (!this.isLocation) {
+        this.cityData[this.pIndex].children[this.cIndex].children.forEach(
+          (item, index) => {
+            if (
+              item.name === this.backData[2].name &&
+              item.code === this.backData[2].code
+            ) {
+              this.rIndex = index
+            }
           }
+        )
+      }
+      // 若用户有选择数据后，再进入组件时判断当前对应的省市区是否包含不限选项
+      if (this.cityData[this.pIndex].children[0].name !== '不限') {
+        this.cityData[this.pIndex].children.unshift({ name: '不限', code: '' })
+        this.cIndex += 1
+      }
+      if (!this.isLocation) {
+        if (
+          this.cityData[this.pIndex].children[this.cIndex].children[0].name !==
+          '不限'
+        ) {
+          this.cityData[this.pIndex].children[this.cIndex].children.unshift({
+            name: '不限',
+            code: '',
+          })
         }
-      )
+      }
+    } else if (this.isLocation) {
+      this.selectData = [
+        { name: '全国', code: this.coupleData[0].code },
+        { name: '不限', code: '' },
+      ]
     } else {
       this.selectData = [
-        { name: '全国', code: '' },
+        { name: '全国', code: this.coupleData[0].code },
         { name: '不限', code: '' },
         { regions: new Array({ name: '不限', code: '' }) },
       ]
@@ -221,16 +264,26 @@ export default {
           arr[1] = { name: '不限', code: '' }
           arr[2] = { regions: [{ name: '不限', code: '' }] }
         } else {
+          if (this.coupleData[index].children[0].name !== '不限') {
+            this.coupleData[index].children.unshift({
+              name: '不限',
+              code: '',
+              children: [{ name: '不限', code: '' }],
+            })
+          }
           const { name, code } = this.coupleData[this.pIndex].children[0]
           arr[1] = { name, code }
-          arr[2] = { regions: [] }
+          arr[2] = { regions: [{ name: '不限', code: '' }] }
         }
 
         this.cIndex = 0
         this.rIndex = 0
         this.selectData = arr
       }
-      this.$emit('select', this.selectData)
+      this.$emit(
+        'select',
+        this.isLocation ? this.selectData.slice(0, 2) : this.selectData
+      )
     },
     handleCity(item, index) {
       // 点击市
@@ -239,13 +292,27 @@ export default {
       // 赋值省数据
       const { name, code } = item
       if (arr.length === 1 || (arr[1].name !== name && arr[1].code !== code)) {
+        if (!this.isLocation) {
+          if (
+            this.coupleData[this.pIndex].children[index].children[0].name !==
+            '不限'
+          ) {
+            this.coupleData[this.pIndex].children[index].children.unshift({
+              name: '不限',
+              code: '',
+            })
+          }
+        }
         // 若初次选择市数据或者切换了市数据
         arr[1] = { name, code }
-        arr[2] = { regions: [] }
+        arr[2] = { regions: [{ name: '不限', code: '' }] }
         this.rIndex = 0
         this.selectData = arr
       }
-      this.$emit('select', this.selectData)
+      this.$emit(
+        'select',
+        this.isLocation ? this.selectData.slice(0, 2) : this.selectData
+      )
     },
     handleRegion(item, index) {
       // 点击区
@@ -253,26 +320,28 @@ export default {
       const arr = this.selectData[2]
       if (item.name === '不限') {
         arr.regions = [{ name: '不限', code: '' }]
-      } else if (
-        !arr.regions ||
-        !this.checkHas(arr.regions, item.name, item.code)
-      ) {
-        // 单选
-        if (!this.multiple) {
-          arr.regions = [item]
-        } else {
-          arr.regions.push(item)
-        }
       } else {
-        // 单选
-        if (!this.multiple) return
-        let index = -1
-        arr.regions.forEach((row, i) => {
-          if (row.name === item.name && row.code === item.code) {
-            index = i
+        if (arr.regions[0].name === '不限') {
+          arr.regions.shift()
+        }
+        if (!arr.regions || !this.checkHas(arr.regions, item.name, item.code)) {
+          // 单选
+          if (!this.multiple) {
+            arr.regions = [item]
+          } else {
+            arr.regions.push(item)
           }
-        })
-        arr.regions.splice(index, 1)
+        } else {
+          // 单选
+          if (!this.multiple) return
+          let index = -1
+          arr.regions.forEach((row, i) => {
+            if (row.name === item.name && row.code === item.code) {
+              index = i
+            }
+          })
+          arr.regions.splice(index, 1)
+        }
       }
       // this.selectData[2].regions = arr
       this.$set(this.selectData, 2, arr)
@@ -303,13 +372,15 @@ export default {
           this.cIndex = index
         }
       })
-      this.cityData[this.pIndex].children[this.cIndex].children.forEach(
-        (item, index) => {
-          if (item.name === newVal[2].name && item.code === newVal[2].code) {
-            this.rIndex = index
+      if (!this.isLocation) {
+        this.cityData[this.pIndex].children[this.cIndex].children.forEach(
+          (item, index) => {
+            if (item.name === newVal[2].name && item.code === newVal[2].code) {
+              this.rIndex = index
+            }
           }
-        }
-      )
+        )
+      }
     },
   },
 }
@@ -366,6 +437,15 @@ export default {
   }
   &_city::-webkit-scrollbar {
     display: none;
+  }
+  .flex_city {
+    display: flex;
+    flex: 1;
+    .flex_item {
+      width: calc(100vw - 162px);
+      text-align: left;
+      padding-left: 40px;
+    }
   }
   &_region {
     display: flex;

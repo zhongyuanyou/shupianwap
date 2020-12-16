@@ -52,6 +52,7 @@ export default {
     },
     select(data) {
       this.cityData = data
+      console.log('返回的数据', data)
     },
     coupleSelect(data) {
       console.log(data)
