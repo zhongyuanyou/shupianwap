@@ -360,6 +360,9 @@ export default {
             }
           })
           arr.regions.splice(index, 1)
+          if (!arr.regions.length) {
+            arr.regions = [{ name: '不限', code: '' }]
+          }
         }
       }
       // this.selectData[2].regions = arr

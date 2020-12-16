@@ -211,6 +211,9 @@ export default {
       this.ruleForm.defaultAddress = this.ruleForm.defaultAddress ? 1 : 0
       const params = {
         ...this.ruleForm,
+        addressProvince: this.areaList[0].name,
+        addressCity: this.areaList[1].name,
+        addressArea: '船山区',
         userId: '607991414122247048',
       }
       try {
