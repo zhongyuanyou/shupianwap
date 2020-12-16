@@ -119,13 +119,38 @@ export default {
     },
     confirmFilters() {
       // 确认筛选
-      let emitData = null
       this.saveActiveItems = clone(this.activeItems, true)
-      if (this.activeItems[0].name !== '全国') {
-        emitData = this.activeItems
-      }
+      const emitData = this.resultHandle()
       this.$emit('activeItem', emitData, 'areaFilter')
       this.$refs.item.toggle()
+    },
+    resultHandle() {
+      // 处理结果
+      let emitData = {
+        fieldCode: 'registration_area',
+        fieldValue: [],
+        matchType: 'MATCH_TYPE_MULTI',
+      }
+      if (this.activeItems[0].name === '全国') {
+        // 当省级为全国时，就不必去对地区进行筛选搜索
+        emitData = ''
+      } else if (this.activeItems[1].name === '不限') {
+        // 当市级为不限时，直接将省级code给筛选项
+        emitData.fieldValue.push(this.activeItems[0].code)
+      } else if (
+        this.activeItems[2].regions.length &&
+        this.activeItems[2].regions[0].name === '不限'
+      ) {
+        // 当区级为不限时，直接将市级code给筛选项
+        emitData.fieldValue.push(this.activeItems[1].code)
+      } else if (this.activeItems[2].regions.length) {
+        this.activeItems[2].regions.forEach((item) => {
+          emitData.fieldValue.push(item.code)
+        })
+      } else {
+        emitData = ''
+      }
+      return emitData
     },
     getCoupleSelectVue(_this) {
       this.coupleSelectVue = _this
