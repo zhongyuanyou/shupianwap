@@ -238,7 +238,7 @@ export default {
         /*transform: rotateX(180deg);*/
         div {
           display: inline;
-          .tab_ic_all_n {
+          .spiconfont-tab_ic_all_n {
             margin-left: 12px;
           }
           &.show_all {

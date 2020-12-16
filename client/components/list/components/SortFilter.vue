@@ -92,12 +92,14 @@ export default {
     },
     initOption(data) {
       this.dropdownTitle = data.name
+      const arr = []
       data.children.forEach((item, _index) => {
-        this.option.push({
+        arr.push({
           name: item.name,
           id: _index + 1,
         })
       })
+      this.option = arr
       // this.selectValue = this.option[0]
     },
     resetFilters() {
