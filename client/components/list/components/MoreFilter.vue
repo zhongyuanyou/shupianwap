@@ -177,15 +177,31 @@ export default {
     },
     confirmFilters() {
       // 确认筛选
-      let emitData = []
+
       this.saveActiveItems = clone(this.activeItems, true)
-      this.saveActiveItems.forEach((item) => {
-        if (item.length) {
-          emitData = [...emitData, ...item]
-        }
-      })
+      const emitData = this.resultHandle()
       this.$emit('activeItem', emitData, 'moreFilter')
       this.$refs.item.toggle()
+    },
+    resultHandle() {
+      // 处理结果
+      const filterKeyValArr = []
+      this.saveActiveItems.forEach((item) => {
+        const emitData = {
+          fieldCode: '',
+          fieldValue: [],
+          matchType: 'MATCH_TYPE_MULTI',
+        }
+        if (item.length) {
+          item.forEach((_item) => {
+            emitData.fieldCode = _item.ext1
+            // 像地区这种ext2没有值，就需要去取字典上面的code
+            emitData.fieldValue.push(_item.ext2 ? _item.ext2 : _item.code)
+          })
+          filterKeyValArr.push(emitData)
+        }
+      })
+      return filterKeyValArr
     },
   },
 }

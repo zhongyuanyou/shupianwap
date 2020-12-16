@@ -153,19 +153,36 @@ export default {
       this.echoData.minValue = ''
     },
     confirmFilters() {
-      let emitData = {}
       this.saveEchoData = clone(this.echoData, true)
+      const emitData = this.resultHandle()
+      this.$emit('activeItem', emitData, 'priceFilter')
+      this.$refs.item.toggle()
+    },
+    resultHandle() {
+      // 处理结果
+      let emitData = {
+        fieldCode: this.filterData.children[0].ext1,
+        fieldValue: {
+          start: '',
+          end: '',
+        },
+        matchType: 'MATCH_TYPE_RANGE',
+      }
       if (this.echoData.maxValue || this.echoData.minValue) {
-        emitData.maxValue = this.echoData.maxValue
-        emitData.minValue = this.echoData.minValue
+        // 如果有
+        emitData.fieldValue.start = Number(this.echoData.minValue)
+        emitData.fieldValue.end = Number(this.echoData.maxValue)
       } else if (this.echoData.activeItems.length) {
-        emitData.minValue = this.echoData.activeItems[0].ext2.split('-')[0]
-        emitData.maxValue = this.echoData.activeItems[0].ext2.split('-')[1]
+        emitData.fieldValue.start = Number(
+          this.echoData.activeItems[0].ext2.split('-')[0]
+        )
+        emitData.fieldValue.end = Number(
+          this.echoData.activeItems[0].ext2.split('-')[1]
+        )
       } else {
         emitData = ''
       }
-      this.$emit('activeItem', emitData, 'priceFilter')
-      this.$refs.item.toggle()
+      return emitData
     },
   },
 }
