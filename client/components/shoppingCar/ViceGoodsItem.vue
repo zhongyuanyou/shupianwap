@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:55
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-15 19:50:48
+ * @LastEditTime: 2020-12-16 19:21:40
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/ViceGoodsItem.vue
 -->
@@ -34,7 +34,9 @@
       </div>
       <div class="vice-goods-item__total-price">
         <span class="vice-goods-item__price">
-          <span class="vice-goods-item__price-value">11350</span>
+          <span class="vice-goods-item__price-value">{{
+            viceData.price != null ? `${viceData.price}` : '--'
+          }}</span>
           <span class="vice-goods-item__price-unit">元</span>
         </span>
         <span class="vice-goods-item__count">{{

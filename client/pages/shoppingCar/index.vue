@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-16 16:25:33
+ * @LastEditTime: 2020-12-16 20:30:37
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -124,7 +124,7 @@ export default {
     ShoppingCarNull,
   },
   async asyncData({ store }) {
-    const userId = store.state.user.userInfo.userId || '123456'
+    const userId = store.state.user.userInfo.userId || '1234567'
     try {
       const data = await shoppingCar.list({ userId })
       return { asyncData: data }
@@ -167,7 +167,10 @@ export default {
     },
   },
   created() {
-    this.getRecommendList()
+    if (process && process.client) {
+      this.postUpdate({ type: 'init' })
+      this.getRecommendList()
+    }
   },
   methods: {
     onClickLeft() {
@@ -216,6 +219,9 @@ export default {
         case 'detele':
           this.deteleItem(cartId, data)
           break
+        case 'deteleAll':
+          this.deteleAllItem()
+          break
         case 'attention':
           this.attentionItem(cartId, data)
           break
@@ -232,9 +238,36 @@ export default {
     },
     // 删除列表
     deteleItem(cartId, data) {
-      this.$refs.goodsPopup.open('detele').then(() => {
-        console.log('发起请求')
-      })
+      this.$refs.goodsPopup
+        .open('detele')
+        .then(() => {
+          console.log('发起请求')
+          console.log('countOperation:', cartId, data)
+          cartId = '' + cartId
+          return this.postUpdate({ cartId, type: 'remove' })
+        })
+        .then(() => {
+          const cartArray = cartId.split(',')
+          cartArray.forEach((item) => {
+            const index = this.currentSelectedCartIds.indexOf(item)
+            console.log('index', index)
+            index > -1 && this.currentSelectedCartIds.splice(index, 1)
+          })
+
+          this.list = this.list.filter((item) => {
+            return !cartArray.includes(item.cartId)
+          })
+        })
+    },
+
+    // 全删除
+    deteleAllItem() {
+      if (this.currentSelectedCartIds.length === 0) {
+        Toast('请选择需要删除的商品')
+        return
+      }
+      const cartId = this.currentSelectedCartIds.join(',')
+      this.deteleItem(cartId)
     },
 
     // 关注列表
@@ -247,9 +280,7 @@ export default {
     },
     // 选择
     async selectItem(cartId, data = {}) {
-      console.log(cartId, data)
       cartId = '' + cartId
-
       const { value } = data
       try {
         const data = await this.postUpdate({ cartId, type: 'select', value })
@@ -269,19 +300,42 @@ export default {
         }
 
         this.list = this.list.map((item) => {
-          let shopIsSelected = false
+          let shopIsSelected = item.shopIsSelected
           cartArray.includes(item.cartId) && (shopIsSelected = value)
           return { ...item, shopIsSelected }
         })
       } catch (error) {}
     },
     // 数量操作
-    countOperation(cartId, data) {},
+    async countOperation(cartId, data) {
+      console.log('countOperation:', cartId, data)
+      cartId = '' + cartId
+      const { value } = data
+      try {
+        const data = await this.postUpdate({ cartId, type: 'updateNum', value })
+        const cartArray = cartId.split(',')
+        cartArray.forEach((item) => {
+          !this.currentSelectedCartIds.includes(item) &&
+            this.currentSelectedCartIds.push(cartId)
+        })
+
+        this.list = this.list.map((item) => {
+          let goodsNumber = item.goodsNumber
+          // 增加数量， 减少数量， 默认选中
+          let shopIsSelected = item.shopIsSelected
+          if (cartArray.includes(item.cartId)) {
+            goodsNumber = value
+            shopIsSelected = true
+          }
+          return { ...item, goodsNumber, shopIsSelected }
+        })
+      } catch (error) {}
+    },
 
     // 请求购物车列表
     async getList() {
       try {
-        const userId = this.userInfo.userId || '123456'
+        const userId = this.userInfo.userId || '1234567'
         let data = await shoppingCar.list({ userId })
         console.log(data)
         if (!Array.isArray(data)) data = []
@@ -306,7 +360,8 @@ export default {
       let params = {}
       switch (type) {
         case 'updateNum':
-          params = { goodsNumber: value }
+          // 增加数量， 减少数量， 默认选中
+          params = { goodsNumber: value, selectFlag: 1 }
           break
         case 'remove':
           break
@@ -316,10 +371,13 @@ export default {
         case 'select':
           params = { selectFlag: +value } // 将boolean转换为数字（1：选中 ,0：取消选中）
           break
+        case 'init':
+          // TODO id, createrId 为空
+          params = { id: '12233', createrId: '324' }
       }
       try {
         this.updateLoading = true
-        const userId = this.userInfo.userId || '123456'
+        const userId = this.userInfo.userId || '1234567'
         const defalutParams = {
           id: cartId,
           createrId: userId,
@@ -327,7 +385,9 @@ export default {
         }
         let data = await shoppingCar.update({ ...defalutParams, ...params })
         console.log(data)
-        if (!Array.isArray(data)) data = []
+        data = data || {}
+        const { total, totalCount } = data
+        this.bottomData = { ...this.bottomData, totalAmount: total, totalCount }
         this.updateLoading = false
         return data
       } catch (error) {
