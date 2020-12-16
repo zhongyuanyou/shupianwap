@@ -19,7 +19,7 @@ export default function ({ $axios, redirect, app }) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
-      config.headers.sysCode = 'zky-api'
+      config.headers.sysCode = 'zdm-api'
       if (app.$cookies.get('token')) {
         config.headers['x-auth-token'] = app.$cookies.get('token')
       }

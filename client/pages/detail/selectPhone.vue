@@ -95,6 +95,7 @@ import {
 import PriceFilterComponents from '@/components/common/filters/PriceFilterComponents'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import CheckboxList from '@/components/detail/CheckboxList'
+// import { productDetailsApi } from '~/api'
 export default {
   name: 'SelectPhone',
   components: {
@@ -111,6 +112,9 @@ export default {
     BottomConfirm,
     CheckboxList,
   },
+  // asyncData({ $axios, params }) {
+  //   $axios.get()
+  // },
   data() {
     return {
       searchValue: null,

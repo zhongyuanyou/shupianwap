@@ -17,9 +17,10 @@
     <BasicInfo
       :base-data="scProductDetailData.baseData"
       :operating-data="scProductDetailData.operating"
+      :tags-data="scProductDetailData.tags"
     />
     <!--    服务项目-->
-    <ServiceItems :data="info.serviceItems" />
+    <ServiceItems :normal-item-list-data="scProductDetailData.normalItemList" />
     <!--    服务详情-->
     <ServiceInfo :client-details-data="scProductDetailData.clientDetails" />
     <!--    推荐规划师-->
@@ -62,9 +63,18 @@ export default {
     Need,
   },
   async asyncData({ $axios, params }) {
+    console.log(12121)
     try {
       const res = await $axios.post(productDetailsApi.scProductDetail, {
         productId: params.id,
+        serviceItem: 'true',
+        showClient: 'COMDIC_TERMINAL_WAP',
+        needServiceItem: true,
+        needOperating: 'true',
+        needRefConfig: 'true',
+        needSkuAttr: 'true',
+        needAttr: 'true',
+        needTag: 'true',
       })
       if (res.code === 200) {
         console.log(res.data)
@@ -81,11 +91,12 @@ export default {
       scProductDetailData: {
         baseData: {},
         attrs: [],
-        tags: [],
-        operating: [],
+        tags: {},
+        operating: {},
         clientDetails: {},
         refConfig: [],
         skuAttrs: [],
+        normalItemList: [],
       },
       info: {
         images: [

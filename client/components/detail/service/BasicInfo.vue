@@ -2,18 +2,18 @@
   <div class="basic">
     <h1 class="basic-name">{{ baseData.name }}</h1>
     <div class="basic-label">
-      <a href="javascript:void(0)">1对1服务</a>
-      <a href="javascript:void(0)">视频看房</a>
-      <a href="javascript:void(0)">视频看房</a>
+      <a v-for="tag in proSalesTag" :key="tag.id" href="javascript:void(0)">{{
+        tag.name
+      }}</a>
     </div>
     <div class="basic-describe">
       {{ baseData.productDescription }}
     </div>
     <div class="basic-price">
-      <em>{{ baseData.referencePrice }}<span>起</span></em>
-      <i
-        >销量 <span>{{ saleMum }}</span></i
-      >
+      <div>{{ baseData.referencePrice }}<span>起</span></div>
+      <p>
+        销量 <span>{{ saleMum }}</span>
+      </p>
     </div>
   </div>
 </template>
@@ -36,6 +36,10 @@ export default {
         return {}
       },
     },
+    tagsData: {
+      type: Object,
+      default: () => {},
+    },
   },
   data() {
     return {}
@@ -46,6 +50,9 @@ export default {
         Number(this.operatingData.defaultSales) +
         Number(this.operatingData.actualSales)
       )
+    },
+    proSalesTag() {
+      return this.tagsData.PRO_SALES_TAG ? this.tagsData.PRO_SALES_TAG : []
     },
   },
 }
@@ -68,7 +75,11 @@ export default {
     margin-bottom: 29px;
     a {
       display: inline-block;
-      padding: 5px 8px;
+      width: 103px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 5px 0px;
       background: #f0f2f5;
       border-radius: 4px;
       font-size: 22px;
@@ -79,22 +90,24 @@ export default {
     }
   }
   &-describe {
+    height: 76px;
     font-size: 26px;
     font-weight: 400;
     color: #999999;
     line-height: 38px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
   &-price {
-    margin-top: 53px;
+    margin-top: 50px;
     font-style: normal;
     display: flex;
     justify-content: space-between;
     line-height: 52px;
-    i,
-    em {
-      font-style: normal;
-    }
-    em {
+    p,
+    div {
       font-size: 44px;
       font-weight: bold;
       color: #ec5330;
@@ -103,9 +116,8 @@ export default {
         margin-left: 8px;
       }
     }
-    i {
+    p {
       font-size: 24px;
-      font-family: PingFang SC;
       font-weight: 400;
       color: #999999;
     }

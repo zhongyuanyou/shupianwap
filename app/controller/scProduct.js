@@ -50,7 +50,7 @@ class ScProductDetailsController extends Controller {
         attrs = [], // 产品属性（集合）
         tags = [], // 标签集合
         operating, // 运营信息
-        clientDetails = [{}], // 运营信息客户端详情
+        clientDetails, // 运营信息客户端详情
         skuAttrs, // sku属性
         normalItemList, // 基本服务项
         specialItemList, // 增值服务项
@@ -71,13 +71,63 @@ class ScProductDetailsController extends Controller {
         actualViews: operating.actualViews, // 实际浏览量(整数)
         recommendedAttributes: operating.recommendedAttributes, // 前端展示名称
       }; // 运营信息
-      // 获取服务项
+      /** todo:* 获取服务项***/
+      // 获取到基础服务的ID
+      const serviceItemIds = [];
+      normalItemList.forEach(item => {
+        serviceItemIds.push(item.serviceItemId);
+      });
       // 获取到请求的Url
       const serviceItemUrl = ctx.helper.assembleUrl(
         app.config.apiClient.APPID[1],
-        productApi.productDetail
+        productApi.serviceItemDetails
       );
-      // 产品基本信息
+      const serviceItemResult = await ctx.service.curl.curlPost(serviceItemUrl, {
+        ids: serviceItemIds,
+      });
+      let normalItemArr = [];
+      if (serviceItemResult.status === 200 && serviceItemResult.data.code === 200) {
+        normalItemArr = serviceItemResult.data.data;
+      }
+      /** todo:获取产品标签****/
+      const tagsObj = {};
+      // 获取到各类型的标签ID
+      tags.forEach(item => {
+        if (tagsObj[item.tagType]) {
+          tagsObj[item.tagType].push(item.tagId);
+        } else {
+          tagsObj[item.tagType] = [];
+        }
+      });
+      // 根据各个类型去查询每个类型对应的标签信息
+      // 获取到请求的Url
+      const tagUrl = ctx.helper.assembleUrl(
+        app.config.apiClient.APPID[1],
+        productApi.tagSearch
+      );
+      const tagsPromiseAll = [];
+      for (const tag in tagsObj) {
+        tagsPromiseAll.push(new Promise(async (resolve, reject) => {
+          try {
+            const result = await ctx.service.curl.curlPost(tagUrl, {
+              tagType: tag,
+              tagIds: tagsObj[tag],
+            });
+            resolve({ key: tag, result });
+          } catch (err) {
+            reject(err);
+          }
+        }));
+      }
+      const tagsResult = await Promise.all(tagsPromiseAll);
+      const tagArr = {};
+      tagsResult.forEach(item => {
+        tagArr[item.key] = [];
+        if (item.result.status === 200 && item.result.data.code === 200) {
+          tagArr[item.key] = item.result.data.data.records;
+        }
+      });
+      /** todo:产品基本信息***/
       const baseData = {
         baseData: {
           // 基本信息
@@ -92,11 +142,11 @@ class ScProductDetailsController extends Controller {
           productDescription,
         },
         attrs,
-        tags,
+        tags: tagArr,
         operating: operatingData,
         clientDetails: clientDetails ? clientDetails[0] : {},
         skuAttrs,
-        normalItemList, // 基本服务项
+        normalItemList: normalItemArr, // 基本服务项
         specialItemList, // 增值服务项
         serviceGoodsClassList, // 产品关联服务资源分类
       };

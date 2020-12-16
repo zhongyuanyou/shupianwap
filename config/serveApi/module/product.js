@@ -22,4 +22,5 @@ module.exports.productApi = {
   getClassificationList: '/nk/classification/v1/search.do', // 产品分类列表
   getProGroupByPutAway: '/nk/product/service/v1/pro_group_by_put_away.do', // 产品组所有上架产品列表
   getServiceResource: '/nk/product/service_resource/v1/search.do', // 获取服务资源
+  tagSearch: '/nk/tag/v1/search.do', // 查询标签
 };
