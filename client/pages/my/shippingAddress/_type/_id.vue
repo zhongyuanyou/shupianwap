@@ -82,6 +82,7 @@
       v-model="popupStatus"
       :field="Field6"
       button-type="confirm"
+      @confirm="confirm"
     />
     <!--E 弹框-->
   </div>
@@ -173,7 +174,7 @@ export default {
       // 点击右边文字按钮
       if (this.$route.params.type === 'edit') {
         // 执行删除
-        // this.popupStatus = true
+        this.popupStatus = true
       }
     },
     async getAddressDetail() {
@@ -211,8 +212,8 @@ export default {
       this.ruleForm.defaultAddress = this.ruleForm.defaultAddress ? 1 : 0
       const params = {
         ...this.ruleForm,
-        addressProvince: this.areaList[0].name,
-        addressCity: this.areaList[1].name,
+        addressProvince: this.areaList.length ? this.areaList[0].name : '',
+        addressCity: this.areaList.length > 1 ? this.areaList[1].name : '',
         addressArea: '船山区',
         userId: '607991414122247048',
       }
@@ -221,6 +222,18 @@ export default {
         this.$router.back()
       } catch (err) {
         console.log('出错咯')
+      }
+    },
+    async confirm() {
+      // 确定删除
+      try {
+        const params = {
+          id: this.ruleForm.id,
+        }
+        await userInfo.delAddress({ axios: this.$axios }, params)
+        this.$router.back()
+      } catch (err) {
+        console.log(err)
       }
     },
   },

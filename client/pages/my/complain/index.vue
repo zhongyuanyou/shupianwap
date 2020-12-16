@@ -31,7 +31,7 @@
             v-for="(item, index) in types"
             :key="index"
             :class="
-              selectTypes.includes(item.type)
+              formData.feedbackTypeId === item.type
                 ? 'complaint-type-content-item complaint-type-content-item-active'
                 : 'complaint-type-content-item'
             "
@@ -42,12 +42,14 @@
       </div>
       <div class="complaint-content">
         <textarea
-          v-model="desc"
+          v-model="formData.content"
           class="complaint-content-textarea"
           placeholder="请描述您的问题，有助于快速处理您的反馈额~(最少10个字符)"
           maxlength="200"
         />
-        <span class="complaint-content-label">{{ desc.length }}/200</span>
+        <span class="complaint-content-label"
+          >{{ formData.content.length }}/200</span
+        >
       </div>
       <div class="complaint-image">
         <div class="complaint-image-title">上传照片</div>
@@ -77,7 +79,9 @@
           type="primary"
           text="提交"
           :disabled="
-            !(desc.length > 10 && selectTypes.length > 0) ? true : false
+            formData.content.length < 10 || formData.feedbackTypeId === ''
+              ? true
+              : false
           "
           @click="submit"
         />
@@ -95,6 +99,7 @@ import {
   Sticky,
   BottombarButton,
 } from '@chipspc/vant-dgg'
+import { complain } from '~/api'
 export default {
   name: 'AddComplaint',
   components: {
@@ -129,6 +134,15 @@ export default {
       ],
       desc: '',
       uploader: [],
+      formData: {
+        content: '', // 内容
+        feedbackTypeId: '', // 吐槽类型
+        userId: '607991414122247048', // 用户id
+        terminalCode: 'adadasdasd', // 终端编码
+        terminalName: 'dadasd', // 终端名称
+        platformCode: 'adasdad', // 平台编码
+        platformName: 'asdasdas', // 平台名称
+      },
     }
   },
   methods: {
@@ -139,28 +153,48 @@ export default {
       this.$router.push('/my/complain/list')
     },
     changeType(type) {
-      if (this.multipleChoice) {
-        // 多选
-        if (!this.selectTypes.includes(type)) {
-          this.selectTypes.push(type)
-        } else {
-          this.selectTypes.splice(
-            this.selectTypes.findIndex((item) => item === type),
-            1
-          )
-        }
-      } else if (!this.selectTypes.includes(type)) {
-        this.selectTypes = [type]
-      } else {
-        this.selectTypes = []
-      }
+      // if (this.multipleChoice) {
+      //   // 多选
+      //   if (!this.selectTypes.includes(type)) {
+      //     this.selectTypes.push(type)
+      //   } else {
+      //     this.selectTypes.splice(
+      //       this.selectTypes.findIndex((item) => item === type),
+      //       1
+      //     )
+      //   }
+      // } else if (!this.selectTypes.includes(type)) {
+      //   this.selectTypes = [type]
+      // } else {
+      //   this.selectTypes = []
+      // }
+      this.formData.feedbackTypeId = type
+      console.log(this.formData)
     },
     // 提交
-    submit() {
-      if (this.desc.length < 10) {
+    async submit() {
+      if (this.formData.content.length < 10) {
         Toast.fail('描述问题为必填，长度为10-200个字')
-      } else if (!this.selectTypes.length > 0) {
+      } else if (this.formData.feedbackTypeId === '') {
         Toast.fail('请选择反馈或建议的类型')
+      } else {
+        try {
+          const params = {
+            ...this.formData,
+          }
+          const data = await complain.add({ axios: this.$axios }, params)
+          this.formData = {
+            content: '', // 内容
+            feedbackTypeId: '', // 吐槽类型
+            userId: '607991414122247048', // 用户id
+            terminalCode: 'adadasdasd', // 终端编码
+            terminalName: 'dadasd', // 终端名称
+            platformCode: 'adasdad', // 平台编码
+            platformName: 'asdasdas', // 平台名称
+          }
+        } catch (err) {
+          console.log(err)
+        }
       }
     },
     // 限制图片大小

@@ -78,13 +78,11 @@ export default {
   },
   computed: {
     ...mapState({
-      userId: (state) => state.user.userInfo.userId || null,
+      userId: (state) => state.user.userInfo.userId,
     }),
   },
-  created() {
-    if (this.userId) {
-      this.getUserInfo()
-    }
+  mounted() {
+    this.getUserInfo()
   },
   methods: {
     handleAvatar() {

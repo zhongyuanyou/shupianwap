@@ -1,7 +1,7 @@
 import qs from 'qs'
 import { saveAxiosInstance } from '@/utils/request'
 const BASE = require('~/config/index.js')
-export default function ({ $axios, redirect }) {
+export default function ({ $axios, redirect, app }) {
   // 设置基本URL
   if (process.server) {
     $axios.defaults.baseURL = BASE.baseURL
@@ -19,11 +19,12 @@ export default function ({ $axios, redirect }) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
-      config.headers.sysCode = 'zdm-api'
-      if (sessionStorage.userInfo) {
-        config.headers['x-auth-token'] = JSON.parse(
-          sessionStorage.userInfo
-        ).token
+      config.headers.sysCode = 'zky-api'
+      if (app.$cookies.get('token')) {
+        config.headers['x-auth-token'] = app.$cookies.get('token')
+      }
+      if (app.$cookies.get('userId')) {
+        config.headers['X-Req-UserId'] = app.$cookies.get('userId')
       }
       return config
     },
