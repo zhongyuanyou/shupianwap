@@ -14,11 +14,14 @@
     <!--   banner -->
     <Banner :images="info.images" />
     <!--   BasicInfo(基本信息)-->
-    <BasicInfo :base-data="scProductDetailData.baseData" />
+    <BasicInfo
+      :base-data="scProductDetailData.baseData"
+      :operating-data="scProductDetailData.operating"
+    />
     <!--    服务项目-->
     <ServiceItems :data="info.serviceItems" />
     <!--    服务详情-->
-    <ServiceInfo />
+    <ServiceInfo :client-details-data="scProductDetailData.clientDetails" />
     <!--    推荐规划师-->
     <div class="planners-box">
       <Planners :info="info" />
@@ -68,7 +71,7 @@ export default {
         return { scProductDetailData: res.data }
       }
     } catch (err) {
-      console.log(err)
+      console.log('错误信息：', err)
     }
   },
   layout: 'productDetail',
@@ -77,6 +80,12 @@ export default {
       opacity: 0,
       scProductDetailData: {
         baseData: {},
+        attrs: [],
+        tags: [],
+        operating: [],
+        clientDetails: {},
+        refConfig: [],
+        skuAttrs: [],
       },
       info: {
         images: [

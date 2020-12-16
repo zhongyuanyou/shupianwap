@@ -22,6 +22,16 @@ module.exports = appInfo => {
   config.siteFile = {
     '/favicon.ico': fs.readFileSync(path.join(__dirname, './../client/static/favicon.ico')),
   };
+  // add http_proxy to httpclient
+  if (process.env.http_proxy) {
+    config.httpclient = {
+      request: {
+        enableProxy: true,
+        rejectUnauthorized: false,
+        proxy: process.env.http_proxy,
+      },
+    };
+  }
   return {
     ...config,
     ...userConfig,

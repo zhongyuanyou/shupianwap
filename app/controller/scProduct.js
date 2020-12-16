@@ -2,7 +2,7 @@
  * @Description: 本模块用于服务商品详情各项数据查询
  * @author zhaoDongMing
  * @date
-*/
+ */
 'use strict';
 const Controller = require('egg').Controller;
 const { Post, Get, Prefix } = require('egg-shell-decorators');
@@ -29,11 +29,12 @@ class ScProductDetailsController extends Controller {
     );
     // 发送httpClient请求
     const scProParams = Object.assign({}, ctx.request.body);
-    // 删除商品ID
-    delete scProParams.commodityId;
     // 删除是否加载服务项目
     delete scProParams.serviceItem;
-    const { status, data } = await service.curl.curlPost(detailUrl, scProParams);
+    const { status, data } = await service.curl.curlPost(
+      detailUrl,
+      scProParams
+    );
     if (status === 200 && data.code === 200) {
       // 假如不需要加载服务项目,直接返回产品详情
       const {
@@ -46,11 +47,14 @@ class ScProductDetailsController extends Controller {
         areaCode, // 城市
         referencePrice, // 参考价格（元）
         productDescription, // 产品说明
-        attrs, // 产品属性（集合）
-        tags, // 标签集合
+        attrs = [], // 产品属性（集合）
+        tags = [], // 标签集合
         operating, // 运营信息
-        clientDetails, // 运营信息客户端详情
+        clientDetails = [{}], // 运营信息客户端详情
         skuAttrs, // sku属性
+        normalItemList, // 基本服务项
+        specialItemList, // 增值服务项
+        serviceGoodsClassList, // 产品关联服务资源分类
       } = data.data;
       const operatingData = {
         showName: operating.showName, // 前端展示名称
@@ -67,8 +71,16 @@ class ScProductDetailsController extends Controller {
         actualViews: operating.actualViews, // 实际浏览量(整数)
         recommendedAttributes: operating.recommendedAttributes, // 前端展示名称
       }; // 运营信息
+      // 获取服务项
+      // 获取到请求的Url
+      const serviceItemUrl = ctx.helper.assembleUrl(
+        app.config.apiClient.APPID[1],
+        productApi.productDetail
+      );
+      // 产品基本信息
       const baseData = {
-        baseData: {// 基本信息
+        baseData: {
+          // 基本信息
           id,
           productNo,
           name,
@@ -82,8 +94,11 @@ class ScProductDetailsController extends Controller {
         attrs,
         tags,
         operating: operatingData,
-        clientDetails,
+        clientDetails: clientDetails ? clientDetails[0] : {},
         skuAttrs,
+        normalItemList, // 基本服务项
+        specialItemList, // 增值服务项
+        serviceGoodsClassList, // 产品关联服务资源分类
       };
       ctx.helper.success({ ctx, code: 200, res: baseData });
     } else {
@@ -178,7 +193,8 @@ class ScProductDetailsController extends Controller {
             siteList[item.code] = item;
           });
           // 将全国地区存储到站点对象中
-          siteList[cityListResult.data.data.national.code] = cityListResult.data.data.national;
+          siteList[cityListResult.data.data.national.code] =
+            cityListResult.data.data.national;
           cityList = siteList;
           // 默认缓存站点数据一个小时
           ctx.service.redis.set('cityList', siteList, 60 * 60);

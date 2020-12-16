@@ -49,10 +49,7 @@ class CurlService extends Service {
           // 必须指定 method
           method: 'POST',
           // 默认将网管处理后的headers给后端服务
-          headers: {
-            'content-type': 'application/json',
-            'content-length': 200,
-          },
+          headers: ctx.headers,
           // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
           dataType: 'json',
           data,

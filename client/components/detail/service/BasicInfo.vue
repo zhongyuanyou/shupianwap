@@ -7,12 +7,13 @@
       <a href="javascript:void(0)">视频看房</a>
     </div>
     <div class="basic-describe">
-      公司注册是开始创业的第一步，
-      根据《中华人民共和国公司法》规定，注册公司时需要依法向......
+      {{ baseData.productDescription }}
     </div>
     <div class="basic-price">
-      <em>45.00元<span>起</span></em>
-      <i>销量 <span>5678</span></i>
+      <em>{{ baseData.referencePrice }}<span>起</span></em>
+      <i
+        >销量 <span>{{ saleMum }}</span></i
+      >
     </div>
   </div>
 </template>
@@ -28,9 +29,24 @@ export default {
         return {}
       },
     },
+    operatingData: {
+      type: Object,
+      required: true,
+      default: () => {
+        return {}
+      },
+    },
   },
   data() {
     return {}
+  },
+  computed: {
+    saleMum() {
+      return (
+        Number(this.operatingData.defaultSales) +
+        Number(this.operatingData.actualSales)
+      )
+    },
   },
 }
 </script>
