@@ -29,6 +29,7 @@
         <JyGoods
           :init-jy-data="jyGoodsListData"
           :search-text="formData.searchText"
+          :tab-items="jyTypesData"
           :req-type="reqType"
           @goodsList="getTabVue"
         />
@@ -60,7 +61,7 @@ import Search from '@/components/common/search/Search'
 import serveGoods from '@/components/list/serveGoods'
 import JyGoods from '@/components/list/JyGoods'
 // import searchList from '@/mixins/searchList'
-import { goods } from '@/api/index'
+import { goods, dict } from '@/api/index'
 export default {
   name: 'SearchResult',
   components: {
@@ -85,6 +86,7 @@ export default {
       active: 0,
       serveGoodsListData: {}, // 服务商品列表数据
       jyGoodsListData: {}, // 交易商品列表数据
+      jyTypesData: [], // 交易业态数据
       reqType: 'serve',
       tabVues: {}, // 两个列表实例
       isInput: false, // 判断是否进行过输入框搜索
@@ -124,14 +126,33 @@ export default {
     // 获取初始化数据
     getInitData() {
       // 获取服务列表需要的筛选数据
-      goods
+      const a = goods
         .searchServeGoodsList({ axios: this.$axios }, this.formData)
-        .then((data) => {
-          console.log(data)
-          this.serveGoodsListData = data
+        .then((result) => result)
+        .catch((e) => {
+          if (e.code !== 200) {
+            console.log(e)
+          }
         })
-        .catch()
-      // todo 获取交易商品数据
+      const b = dict
+        .findCmsCode({ axios: this.$axios }, { code: 'CONDITION-JY' })
+        .then((result) => result)
+        .catch((e) => {
+          if (e.code !== 200) {
+            console.log(e)
+          }
+        })
+      Promise.all([a, b]).then((res) => {
+        console.log('getInitDatares', res)
+        if (res[0]) {
+          this.serveGoodsListData = res[0]
+        }
+        if (res[1]) {
+          this.jyTypesData = res[1].filter((item) => {
+            return /[公司｜专利｜商标｜资质]/.test(item.name)
+          })
+        }
+      })
     },
     searchKeydownHandle() {
       // 点击搜索按钮

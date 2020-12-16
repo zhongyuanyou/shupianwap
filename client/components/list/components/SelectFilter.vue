@@ -14,6 +14,7 @@
     >
       <select-check-box
         ref="selectCheckBox"
+        :is-show-all-option="false"
         :select-list="selectList"
         :gutter="12"
         :is-show-all="true"
@@ -84,7 +85,7 @@ export default {
       } else if (arr.length === 0) {
         this.removeClass('moreText')
         this.removeClass('active')
-        this.dropdownTitle = this.filterData.title
+        this.dropdownTitle = this.filterData.name
       }
       // 如果筛选名字个数超过了4个那么需要加样式
       if (this.dropdownTitle.length >= 4) {
@@ -95,7 +96,7 @@ export default {
     },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
-        this.dropdownTitle = val.title
+        this.dropdownTitle = val.name
         this.selectList = val.filters
         this.isSelectMore = val.isSelects
       }
@@ -103,8 +104,8 @@ export default {
   },
   mounted() {
     if (this.filterData && JSON.stringify(this.filterData) !== '{}') {
-      this.dropdownTitle = this.filterData.title
-      this.selectList = this.filterData.filters
+      this.dropdownTitle = this.filterData.name
+      this.selectList = this.filterData.children
       this.isSelectMore = this.filterData.isSelects
     }
   },
@@ -131,8 +132,34 @@ export default {
     confirmFilters() {
       // 确认筛选
       this.saveActiveItems = clone(this.activeItems, true)
-      this.$emit('activeItem', this.activeItems, 'selectFilter')
+      const emitData = this.resultHandle()
+      this.$emit('activeItem', emitData, 'selectFilter')
       this.$refs.item.toggle()
+    },
+    resultHandle() {
+      // 处理结果
+      // debugger
+      const fieldCode =
+        this.filterData.ext3 === '1'
+          ? this.filterData.ext1
+          : this.activeItems[0].ext1
+      let emitData = {
+        fieldCode,
+        fieldValue: [],
+        matchType: 'MATCH_TYPE_MULTI',
+      }
+      if (this.activeItems.length && this.activeItems[0].name === '不限') {
+        emitData = ''
+      } else if (this.activeItems.length) {
+        // 如果该筛选项是产品分类查询出来的，value需要取code，如果不是则需要取ext2
+        const _flag = this.filterData.ext3 === '1'
+        this.activeItems.forEach((item) => {
+          emitData.fieldValue.push(_flag ? item.code : item.ext2)
+        })
+      } else {
+        emitData = ''
+      }
+      return emitData
     },
   },
 }

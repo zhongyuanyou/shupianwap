@@ -10,7 +10,7 @@
       :class="{
         lowFive: tabItems.length <= 5,
       }"
-      @click="clickTabs"
+      @change="changeTabs"
     >
       <sp-tab
         v-for="(item, index) in tabItems"
@@ -18,7 +18,11 @@
         :title="item.name"
       ></sp-tab>
     </sp-tabs>
-    <jy-filters ref="dropDownMenu" />
+    <jy-filters
+      ref="dropDownMenu"
+      :filter-data="jyFilterData"
+      @activeItem="getFilterHandle"
+    />
     <install-app v-show="listShow" ref="installApp" />
     <sp-list
       v-show="listShow"
@@ -54,6 +58,7 @@ import Subscribe from '@/components/list/Subscribe'
 import JyFilters from '@/components/list/JyFilters'
 import searchList from '@/mixins/searchList'
 import clone from '~/utils/clone'
+import { goods } from '@/api/index'
 
 export default {
   name: 'JyGoods',
@@ -68,6 +73,13 @@ export default {
   },
   mixins: [searchList],
   props: {
+    tabItems: {
+      // 可选业态数组数据
+      type: Array,
+      default() {
+        return []
+      },
+    },
     reqType: {
       // 搜索结果页的顶部tab类型
       type: String,
@@ -103,6 +115,7 @@ export default {
       },
     },
     itemType: {
+      // 商品列表的类型
       type: Object,
       default() {
         return {
@@ -126,28 +139,15 @@ export default {
       finished: false,
       maxHeight: 0,
       formData: {
-        page: 1,
+        start: 1,
         limit: 10,
+        needTypes: 1,
+        classCode: '',
+        dictCode: '',
       },
+      jyFilterData: [],
       jyGoodsListData: [],
-      tabItems: [
-        {
-          name: '公司交易',
-          code: 11111,
-        },
-        {
-          name: '专利交易',
-          code: 2222,
-        },
-        {
-          name: '商标交易',
-          code: 333,
-        },
-        {
-          name: '资质交易',
-          code: 4444,
-        },
-      ], // tab栏数据
+      filterItem: {},
     }
   },
   watch: {
@@ -158,9 +158,6 @@ export default {
     initListData(val) {
       this.jyGoodsListData = clone(val)
     },
-  },
-  activated() {
-    console.log(12312312)
   },
   mounted() {
     this.$nextTick(() => {
@@ -179,19 +176,41 @@ export default {
         'px'
     })
     this.$emit('goodsList', 'jy', this)
+    // 默认请求的数据
+    this.formData.classCode = this.tabItems[0].ext4
+    this.formData.dictCode = this.tabItems[0].code
+    this.initGoodsList()
   },
   methods: {
+    getFilterHandle(data, filrerName) {
+      // 获取筛选项数据
+      this.$set(this.filterItem, filrerName, data)
+    },
     onLoad() {
       console.log(1)
       const arr = new Array(10).fill(2)
       this.jyGoodsListData = [...this.jyGoodsListData, ...arr]
       this.loading = false
     },
-    clickTabs(name, title) {
-      console.log(name, title)
+    changeTabs(name, title) {
+      console.log(this.tabItems[name])
+      this.formData.classCode = this.tabItems[name]
+      this.formData.dictCode = this.tabItems[name]
     },
     resetAllSelect() {},
-    initGoodsList() {},
+    initGoodsList() {
+      goods
+        .searchJyGoodsList({ axios: this.$axios }, this.formData)
+        .then((res) => {
+          console.log(res)
+          if (JSON.stringify(res.filters) !== '{}') {
+            this.jyFilterData = res.filters
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
   },
 }
 </script>

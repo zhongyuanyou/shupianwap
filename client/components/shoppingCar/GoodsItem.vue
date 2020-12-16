@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-12 17:09:55
+ * @LastEditTime: 2020-12-12 17:33:29
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -66,13 +66,15 @@
       v-if="status === 'offShelf'"
       class="goods-item--disable-tip flex-c-c flex-c-a-c"
     >
+      <span class="goods-item--disable-tip__zh">已下架</span>
       <span class="division-line">·</span>
+      <span class="goods-item--disable-tip__en">off shelf</span>
     </div>
   </div>
 </template>
 
 <script>
-import { SwipeCell, Card, Button, Checkbox } from '@chipspc/vant-dgg'
+import { SwipeCell, Card, Button } from '@chipspc/vant-dgg'
 
 import MainGoodsItem from './MainGoodsItem'
 import ViceGoodsItem from './ViceGoodsItem'
@@ -85,7 +87,6 @@ export default {
     [SwipeCell.name]: SwipeCell,
     [Card.name]: Card,
     [Button.name]: Button,
-    [Checkbox.name]: Checkbox,
     MainGoodsItem,
     ViceGoodsItem,
     SkuService,
@@ -113,6 +114,8 @@ export default {
   methods: {
     handleAsyncCheckboxChange(value) {
       console.log('handleAsyncCheckboxChange:', value)
+      // TODO 异步处理
+      this.checked = value
     },
     beforeClose({ position, instance }) {
       console.log('position:', position)
@@ -188,11 +191,11 @@ export default {
     font-weight: 400;
     color: #ffffff;
     z-index: 11;
-    &::before {
+    &__zh {
       content: '已下架';
       font-size: 24px;
     }
-    &::after {
+    &__en {
       content: 'off shelf';
       font-size: 18px;
     }

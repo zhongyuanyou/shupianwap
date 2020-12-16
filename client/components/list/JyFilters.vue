@@ -3,9 +3,10 @@
     <component
       :is="item.componentName"
       v-for="(item, index) in filters"
+      :ref="item.name"
       :key="index"
       :filter-data="item"
-      @activeItem="filterItem"
+      @activeItem="getFilterHandle"
     ></component>
   </sp-dropdown-menu>
 </template>
@@ -14,6 +15,7 @@
 import { DropdownMenu, DropdownItem, List } from '@chipspc/vant-dgg'
 import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
+import clone from '~/utils/clone'
 
 export default {
   name: 'JyFilters',
@@ -28,6 +30,14 @@ export default {
     MoreFilter: () => import('./components/MoreFilter'), // 更多筛选组件
     PriceFilter: () => import('./components/PriceFilter'), // 价格筛选组件
     SortFilter: () => import('./components/SortFilter'), // 排序筛选组件
+  },
+  props: {
+    filterData: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
   },
   data() {
     return {
@@ -59,51 +69,23 @@ export default {
         { text: '价格从高到低', value: 3 },
         { text: '价格从低到高', value: 4 },
       ],
-      filterData: [],
+      filterItem: {},
     }
   },
-  watch: {},
-  mounted() {
-    this.getFiterData()
-  },
-  methods: {
-    filterItem(data, filrerName) {
-      console.log(data, filrerName)
+  watch: {
+    filterData(val) {
+      // 处理筛选项
+      this.resetFilterData(clone(val))
     },
-    getFiterData() {
+  },
+  mounted() {},
+  methods: {
+    getFilterHandle(data, filrerName) {
+      console.log(data, filrerName)
+      this.$emit('activeItem', data, filrerName)
+    },
+    resetFilterData(filter) {
       /* const res = [
-        {
-          title: '地区',
-          filters: null,
-          isSelects: true,
-        },
-        {
-          title: '价格',
-          filters: null,
-          isSelects: false,
-        },
-        {
-          title: '行业',
-          filters: null,
-          isSelects: false,
-        },
-        {
-          title: '更多',
-          children: [
-            {
-              title: '行业类型',
-              filters: null,
-              isSelects: false,
-            },
-          ],
-        },
-        {
-          title: '排序',
-          filters: null,
-          isSelects: true,
-        },
-      ] */
-      const res = [
         {
           title: '更多',
           children: [
@@ -170,7 +152,7 @@ export default {
           isSelects: false,
         },
         {
-          title: '行业3',
+          title: '行业',
           filters: [
             {
               id: '1',
@@ -228,21 +210,39 @@ export default {
             },
           ],
         },
-      ]
-      res.forEach((item) => {
-        if (item.title === '地区') {
+      ] */
+      filter.forEach((item) => {
+        if (item.code === 'CONDITION-JY-SB-FL') {
+          // 商标下的分类筛选项是多选项
+          item.isSelects = true
+        } else {
+          item.isSelects = false
+        }
+        if (item.code === 'CONDITION-JY-GS-DQ') {
+          // 地区组件
           item.componentName = 'AreaFilter'
-        } else if (item.title === '价格') {
+        } else if (item.name === '价格') {
           item.componentName = 'PriceFilter'
-        } else if (item.title === '排序') {
+        } else if (item.name === '排序') {
           item.componentName = 'SortFilter'
-        } else if (item.title === '更多') {
+        } else if (item.name === '更多') {
           item.componentName = 'MoreFilter'
+          item.children.forEach((item) => {
+            if (item.code === 'JY-GS-GD-FDZC') {
+              // 附带资产是多选项
+              item.isSelects = true
+            } else {
+              item.isSelects = false
+            }
+          })
         } else {
           item.componentName = 'SelectFilter'
         }
       })
-      this.filters = res
+      this.filters = filter
+      this.$nextTick(() => {
+        console.log(this.$refs)
+      })
     },
   },
 }

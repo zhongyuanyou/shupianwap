@@ -1,38 +1,36 @@
 <template>
-  <div class="found">
-    <!--S tab-->
-    <div v-if="information_class && information_class.length">
-      <sp-work-tabs
-        v-model="activeTab"
-        title-inactive-color="#222"
-        title-active-color="#1a1a1a"
-        line-width="0.32rem"
-        line-height="0.06rem"
-        :mask="true"
-        :is-nav-tab="true"
-        :need-content="false"
-        :sticky="true"
-        @click="onClick"
-      >
-        <sp-work-tab
-          v-for="item in information_class"
-          :key="item.code"
-          :title="item.name"
+  <div>
+    <sp-top-nav-bar special-layout :placeholder="true" fixed>
+      <template #title>
+        <sp-work-tabs
+          v-model="activeTab"
+          mask
+          title-active-color="#222"
+          @click="onClickTap"
         >
-          <Con
-            :banner="information_banner"
-            :list="information_list"
-            :category-code="categoryCode"
-          />
-        </sp-work-tab>
-      </sp-work-tabs>
-    </div>
-    <!--E tab-->
+          <sp-work-tab
+            v-for="item in information_class"
+            :key="item.code"
+            :title="item.name"
+            :need-content="false"
+          >
+          </sp-work-tab>
+        </sp-work-tabs>
+      </template>
+      <template #right>
+        <sp-icon name="search" size="20" @click="onClickRight" />
+      </template>
+    </sp-top-nav-bar>
+    <Con
+      :banner="information_banner"
+      :list="information_list"
+      :category-code="categoryCode"
+    />
   </div>
 </template>
 
 <script>
-import { WorkTab, WorkTabs } from '@chipspc/vant-dgg'
+import { WorkTab, WorkTabs, Icon, TopNavBar, Toast } from '@chipspc/vant-dgg'
 import Con from '~/components/found/found/Cons'
 import { foundApi } from '@/api'
 export default {
@@ -41,6 +39,9 @@ export default {
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
+    [Icon.name]: Icon,
+    [TopNavBar.name]: TopNavBar,
+    [Toast.name]: Toast,
     Con,
   },
   async asyncData({ $axios }) {
@@ -49,7 +50,7 @@ export default {
       const params = {}
       const res = await $axios.get(foundApi.initRequest, params)
       if (res.code === 200) {
-        homeData = res.data
+        homeData = res.data || {}
       }
       return {
         homeData,
@@ -66,15 +67,27 @@ export default {
     }
   },
   mounted() {
-    this.information_class = this.homeData.information_class
-    this.categoryCode = this.information_class.length
-      ? this.information_class[0].code
-      : ''
-    this.information_banner = this.homeData.information_banner
-    this.information_list = this.homeData.information_list
+    this.information_class =
+      this.homeData && this.homeData.information_class
+        ? this.homeData.information_class
+        : []
+    this.categoryCode =
+      this.information_class && this.information_class.length
+        ? this.information_class[0].code
+        : ''
+    this.information_banner =
+      this.homeData && this.homeData.information_banner
+        ? this.homeData.information_banner
+        : []
+    this.information_list =
+      this.homeData && this.homeData.information_list
+        ? this.homeData.information_list
+        : []
   },
   methods: {
-    async onClick(index, title) {
+    async onClickTap(index, title) {
+      // 切换按钮回滚到顶部
+      window.scrollTo(0, 0)
       // 点击tab标签
       this.categoryCode = this.information_class[index].code
       const params = {
@@ -85,6 +98,9 @@ export default {
         this.information_banner = res.data.information_banner
         this.information_list = res.data.information_list
       }
+    },
+    onClickRight() {
+      this.$router.push('/found/foundSearch')
     },
   },
 }

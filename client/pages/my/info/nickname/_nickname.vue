@@ -32,7 +32,7 @@
 <script>
 import { TopNavBar } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { userInfo } from '@/api'
+import { userInfo } from '~/api'
 export default {
   name: 'NickName',
   components: {
@@ -60,9 +60,11 @@ export default {
       // 点击保存
       // this.$router.push('/my/information')
       const params = {
-        id: this.userId,
+        type: 1,
+        value: this.nickname,
       }
-      const res = await userInfo.update({ axios: this.$axios }, {})
+      await userInfo.update({ axios: this.$axios }, params)
+      this.$router.back()
     },
     clear() {
       // 清除昵称

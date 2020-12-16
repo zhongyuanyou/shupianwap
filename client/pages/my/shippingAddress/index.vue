@@ -28,9 +28,9 @@
           <div class="address_con_list_item">
             <div class="address_con_list_item_lf">
               <div class="info">
-                <div class="name">{{ item.createUserName }}</div>
+                <div class="name">{{ item.contactName }}</div>
                 <div class="tel">{{ item.phone }}</div>
-                <span v-if="index === 0" class="default">默认</span>
+                <span v-if="item.defaultAddress" class="default">默认</span>
               </div>
               <div class="address">{{ item.address }}</div>
             </div>
@@ -59,7 +59,7 @@
               text="删除"
               type="danger"
               class="handle_btn"
-              @click="handleDel(item)"
+              @click="handleDel(item, index)"
             />
           </template>
         </sp-swipe-cell>
@@ -81,6 +81,7 @@
       v-model="popupStatus"
       :field="Field6"
       button-type="confirm"
+      @confirm="confirm"
     />
     <!--E 弹框-->
   </div>
@@ -109,12 +110,14 @@ export default {
   },
   data() {
     return {
-      addressList: [],
+      addressList: [], // 收货地址列表
       popupStatus: false,
+      addressIndex: '', // 选中的收货地址下标
       Field6: {
         type: 'functional',
         title: '确定删除收货地址吗？',
       },
+      addressId: '', // 被选中的收货地址id
     }
   },
   computed: {
@@ -126,9 +129,12 @@ export default {
     this.getShippingAddressList()
   },
   methods: {
-    onClickLeft() {},
+    onClickLeft() {
+      this.$router.back()
+    },
     handleDel(item) {
       // 删除
+      this.addressId = item.id
       this.popupStatus = true
     },
     handleNew() {
@@ -143,10 +149,18 @@ export default {
       // 获取收货地址列表
       const params = {
         // userId: this.userId,
-        userId: '607967121787221432',
+        userId: '607991414122247048',
       }
       const data = await userInfo.addressList({ axios: this.$axios }, params)
       this.addressList = data
+    },
+    async confirm() {
+      // 确认删除
+      const params = {
+        id: this.addressId,
+      }
+      await userInfo.delAddress({ axios: this.$axios }, params)
+      await this.getShippingAddressList()
     },
   },
 }

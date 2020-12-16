@@ -141,6 +141,7 @@ export default {
     font-weight: bold;
     line-height: 46px;
     font-family: PingFang SC;
+    .textOverflow(2);
     .hot {
       padding: 0 7px;
       height: 32px;

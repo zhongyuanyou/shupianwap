@@ -21,7 +21,7 @@
     <div class="address_con">
       <sp-form class="address_con_tp">
         <sp-field
-          v-model="ruleForm.createUserName"
+          v-model="ruleForm.contactName"
           center
           label="联系人"
           placeholder="请填写收货人姓名"
@@ -41,7 +41,7 @@
         >
         </sp-field>
         <sp-field
-          v-model="ruleForm.address"
+          v-model="areaTxt"
           center
           readonly
           label="收货地区"
@@ -75,7 +75,7 @@
     </sp-bottombar>
     <!--E 底部-->
     <!--S 地址选择-->
-    <AreaSelect :show.sync="show" />
+    <AreaSelect :show.sync="show" :city-data="areaList" @select="select" />
     <!--E 地址选择-->
     <!--S 弹框-->
     <sp-center-popup
@@ -99,6 +99,7 @@ import {
   Bottombar,
   BottombarButton,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
 import { userInfo } from '@/api'
 export default {
@@ -118,10 +119,9 @@ export default {
   data() {
     return {
       ruleForm: {
-        createUserName: '',
+        contactName: '',
         phone: '',
         address: '',
-        detailedAddress: '',
         defaultAddress: 0,
       },
       show: false, // 地区选择弹窗显示隐藏状态
@@ -130,7 +130,14 @@ export default {
         type: 'functional',
         title: '确定删除收货地址吗？',
       },
+      areaList: [], // 地区集合
+      areaTxt: '', // 地区字符串
     }
+  },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userInfo.userId || null,
+    }),
   },
   mounted() {
     if (this.$route.params.type === 'edit') {
@@ -150,6 +157,14 @@ export default {
       }
       alert('需跳转到app的地址定位页面')
     },
+    select(data) {
+      // 选择地址
+      this.areaList = data
+      data.forEach((item) => {
+        this.areaTxt += item.name
+      })
+      console.log(data)
+    },
     handleAddress() {
       // 点击收货地址显示弹窗
       this.show = true
@@ -168,22 +183,45 @@ export default {
       }
       const data = await userInfo.addressDetail({ axios: this.$axios }, params)
       this.ruleForm = data
-      console.log('dataaa', data)
+      this.ruleForm.defaultAddress = !!this.ruleForm.defaultAddress
     },
     handleSave() {
       // 保存
       if (this.$route.params.type === 'edit') {
         this.saveEdit()
+        return
       }
+      this.saveNew()
     },
     async saveEdit() {
       // 保存编辑内容
+      this.ruleForm.defaultAddress = this.ruleForm.defaultAddress ? 1 : 0
       const params = {
         ...this.ruleForm,
       }
-      console.log('params', params)
-      const data = await userInfo.updateAddress({ axios: this.$axios }, params)
-      console.log('data', data)
+      try {
+        await userInfo.updateAddress({ axios: this.$axios }, params)
+        this.$router.back()
+      } catch (err) {
+        console.log('出错咯')
+      }
+    },
+    async saveNew() {
+      // 保存新增内容
+      this.ruleForm.defaultAddress = this.ruleForm.defaultAddress ? 1 : 0
+      const params = {
+        ...this.ruleForm,
+        addressProvince: this.areaList[0].name,
+        addressCity: this.areaList[1].name,
+        addressArea: '船山区',
+        userId: '607991414122247048',
+      }
+      try {
+        await userInfo.updateAddress({ axios: this.$axios }, params)
+        this.$router.back()
+      } catch (err) {
+        console.log('出错咯')
+      }
     },
   },
 }

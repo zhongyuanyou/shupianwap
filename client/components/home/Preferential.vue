@@ -1,14 +1,18 @@
 <template>
-  <div class="preferential-centent">
+  <div v-if="initData.length" class="preferential-centent">
     <TabCurve
       v-model="curentItem"
       :tab-list="tabBtn"
       :need-fixed="false"
+      name-field="locationName"
       @selectTabHandle="selectTabHandle"
     ></TabCurve>
     <div ref="rollRef" class="scroll-centent">
-      <ul>
-        <li v-for="(item, index) in tabBtn[curentItem].tabData" :key="index">
+      <ul v-if="tabBtn[curentItem]">
+        <li
+          v-for="(item, index) in tabBtn[curentItem].sortMaterialList"
+          :key="index"
+        >
           <a :href="item.materialList[0].materialLink">
             <div class="label-num">
               <span class="label">抢购中</span>
@@ -16,7 +20,7 @@
             </div>
             <div class="text-content">
               <strong>{{ item.materialList[0].materialName }}</strong>
-              <p>暂缺字段</p>
+              <p>{{ item.materialList[0].materialDescription }}</p>
             </div>
             <img :src="item.materialList[0].materialUrl" alt="" />
           </a>
@@ -40,86 +44,20 @@ export default {
         return []
       },
     },
-    tabData: {
-      type: Array,
-      default: () => {
-        return [
-          {
-            label: '抢购中',
-            num: '82,588588588',
-            title: '3天快速开公司3天快速开公司3天快速开公司',
-            describe: '特价享好礼特价享好礼特价享好礼特价享好礼',
-            url: require('~/assets/temporary/home/bn.png'),
-          },
-          {
-            label: '抢购中',
-            num: '82,588',
-            title: '3天快速开公司',
-            describe: '特价享好礼',
-            url: require('~/assets/temporary/home/bn.png'),
-          },
-          {
-            label: '抢购中',
-            num: '82,588',
-            title: '3天快速开公司',
-            describe: '特价享好礼',
-            url: require('~/assets/temporary/home/bn.png'),
-          },
-          {
-            label: '抢购中',
-            num: '82,588',
-            title: '3天快速开公司',
-            describe: '特价享好礼',
-            url: require('~/assets/temporary/home/bn.png'),
-          },
-          {
-            label: '抢购中',
-            num: '82,588',
-            title: '3天快速开公司',
-            describe: '特价享好礼',
-            url: require('~/assets/temporary/home/bn.png'),
-          },
-        ]
-      },
-    },
   },
   data() {
     return {
       curentItem: 0,
-      tabBtn: [
-        {
-          label: '限时特惠',
-          code: 'ad100026',
-          tabData: [],
-        },
-        {
-          label: '内容待定',
-          code: 'ad100055',
-          tabData: [],
-        },
-      ],
     }
   },
-  watch: {
-    initData(arr) {
-      this.tabBtn[0].tabData = arr
+  computed: {
+    tabBtn() {
+      return this.initData
     },
   },
   methods: {
-    selectTabHandle({ code, index }) {
+    selectTabHandle() {
       this.$refs.rollRef.scrollLeft = 0
-      // 切换tab请求数据
-      if (!this.tabBtn[index].tabData.length) {
-        this.$axios
-          .post(publicApi.findAdvertising, {
-            locationCodeList: [code],
-          })
-          .then((res) => {
-            if (res.code === 200) {
-              this.tabBtn[index].tabData = res.data[code].sortMaterialList
-            }
-          })
-      }
     },
   },
 }

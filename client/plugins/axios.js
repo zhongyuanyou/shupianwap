@@ -20,6 +20,11 @@ export default function ({ $axios, redirect }) {
       }
       config.params = config.params || {}
       config.headers.sysCode = 'zdm-api'
+      if (sessionStorage.userInfo) {
+        config.headers['x-auth-token'] = JSON.parse(
+          sessionStorage.userInfo
+        ).token
+      }
       return config
     },
     (error) => {

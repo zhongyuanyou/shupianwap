@@ -33,13 +33,19 @@ export default {
         return false
       },
     },
+    birthday: {
+      type: Date,
+      default: () => {
+        return new Date()
+      },
+    },
   },
   data() {
     return {
       visible: false,
       minDate: new Date(1960, 0, 1),
       maxDate: new Date(2025, 10, 1),
-      currentDate: new Date(),
+      currentDate: '',
     }
   },
   watch: {
@@ -50,6 +56,12 @@ export default {
       },
       immediate: true,
     },
+    birthday(newVal) {
+      this.currentDate = newVal
+    },
+  },
+  mounted() {
+    this.currentDate = this.birthday
   },
   methods: {
     closePopup() {

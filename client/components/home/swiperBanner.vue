@@ -31,7 +31,7 @@ export default {
   },
   data() {
     return {
-      autoplay: 3000, // 切换间隔
+      autoplay: 5000, // 切换间隔
       indicators: false, // 是否需要指示器
     }
   },

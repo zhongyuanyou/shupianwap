@@ -6,18 +6,17 @@
       position="right"
       :style="{ height: '100%', width: '100%' }"
     >
-      <sp-top-nav-bar :title="'在线直选规划师'" left-arrow ellipsis>
+      <Header title="在线直选规划师">
         <template #left>
-          <sp-icon
+          <my-icon
             class="back-icon"
-            name="specialreturn"
-            size="0.39rem"
+            name="nav_ic_back"
+            size="0.4rem"
             color="#1A1A1A"
-            class-prefix="sp-iconfont"
-            @click="onClickPopupLeft"
-          />
+            @click.native="onLeftClick"
+          ></my-icon>
         </template>
-      </sp-top-nav-bar>
+      </Header>
       <div class="search">
         <sp-nav-search
           ref="searchVal"
@@ -25,8 +24,8 @@
           v-myFocus
           border
           special-label
-          placeholder="请输入业务或规划师姓名"
-          @search="enterSearch"
+          placeholder="请输入规划师姓名"
+          @search="handleSearch"
         >
           <template #left-icon>
             <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
@@ -37,22 +36,15 @@
   </div>
 </template>
 <script>
-import {
-  Tag,
-  Popup,
-  TopNavBar,
-  Icon,
-  NavSearch,
-  Toast,
-} from '@chipspc/vant-dgg'
+import { Popup, NavSearch } from '@chipspc/vant-dgg'
+
+import Header from '@/components/common/head/header'
+
 export default {
   components: {
-    [Tag.name]: Tag,
     [NavSearch.name]: NavSearch,
     [Popup.name]: Popup,
-    [TopNavBar.name]: TopNavBar,
-    [Icon.name]: Icon,
-    [Toast.name]: Toast,
+    Header,
   },
   directives: {
     myFocus: {
@@ -75,26 +67,27 @@ export default {
   data() {
     return {
       popupShow: false,
-      search: { keywords: '', scoreSort: 0 },
+      search: { keywords: '' },
     }
   },
   methods: {
-    focSearch() {
+    onLeftClick() {
+      this.popupShow = false
+    },
+    openSearchPopup() {
       // 弹窗打开关闭
       this.popupShow = true
     },
     onClickPopupLeft() {
       this.popupShow = false
     },
-    enterSearch() {
+    handleSearch() {
       // 确认发送异步请求
-      if (this.search.keywords) {
-        this.popupShow = false
-        Toast(`√  共找到43471个规划师`)
-      }
-      const data = '异步请求结果数据'
-      this.$emit('enterData', data)
+      if (!this.search.keywords) return
+
+      this.$emit('onSearch', { keywords: this.search.keywords })
       this.search.keywords = ''
+      this.popupShow = false
     },
   },
 }

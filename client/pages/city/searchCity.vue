@@ -28,7 +28,11 @@
       </div>
     </sp-sticky>
     <div v-if="searchList.length" class="search-results">
-      <div v-for="(item, index) in searchList" :key="index">
+      <div
+        v-for="(item, index) in searchList"
+        :key="index"
+        @click="swichCity(item)"
+      >
         {{ item.name }}
       </div>
     </div>
@@ -36,8 +40,10 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { Sticky } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
+import { homeApi } from '@/api'
 export default {
   name: 'SearchCity',
   components: {
@@ -46,50 +52,66 @@ export default {
   },
   data() {
     return {
-      searchList: [
-        {
-          code: 'COMPANY_CD',
-          pcode: 'COMPANY',
-          description: '',
-          pid: '7832865386077028352',
-          sort: 0,
-          name: '成都',
-          id: '7832865662955618304',
-          ext5: '',
-          ext4: '',
-          ext3: '',
-          levels: '-1_1_7864361670522896384_7832865386077028352',
-          ext2: '',
-          status: 1,
-          ext1: '四川省/成都市',
-        },
-        {
-          code: 'COMPANY_BJCY',
-          pcode: 'COMPANY',
-          description: '',
-          pid: '7832865386077028352',
-          sort: 1,
-          name: '北京',
-          id: '7837857825929887744',
-          ext5: '',
-          ext4: '',
-          ext3: '',
-          levels: '-1_1_7864361670522896384_7832865386077028352',
-          ext2: '',
-          status: 1,
-          ext1: '北京市',
-        },
-      ],
+      searchList: [],
     }
   },
   methods: {
+    ...mapMutations({
+      SET_CITY: 'city/SET_CITY',
+    }),
     // 取消
     clooseHandle() {
       this.$router.back()
     },
     // 搜索框内容变化
     valChangeHandle(val) {
-      console.log(val)
+      if (val) {
+        // 搜索城市
+        this.$axios
+          .get(homeApi.findSiteList, {
+            params: {
+              cityName: val,
+            },
+          })
+          .then((res) => {
+            console.log(res)
+            if (res.code === 200) {
+              this.searchList = res.data.cityList
+            }
+          })
+      }
+    },
+    // 选择城市
+    swichCity(item) {
+      const data = {
+        code: item.code,
+        cityName: item.name,
+      }
+      const historyList = this.$cookies.get('cityHistory')
+        ? this.$cookies.get('cityHistory')
+        : []
+      const isHave = historyList.findIndex((item) => {
+        return item.code === data.code
+      })
+      if (isHave !== -1) {
+        historyList.splice(isHave, 1)
+      }
+      historyList.unshift({
+        code: data.code,
+        cityName: data.cityName,
+      })
+      if (historyList.length > 6) {
+        historyList.pop()
+      }
+      this.$cookies.set('cityHistory', historyList, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 99999, // 过期时间
+      })
+      this.SET_CITY({
+        code: data.code,
+        name: data.cityName,
+      })
+      this.$router.go(-2)
     },
   },
 }
