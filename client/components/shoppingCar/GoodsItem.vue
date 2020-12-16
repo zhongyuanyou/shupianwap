@@ -2,19 +2,21 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-12 17:33:29
+ * @LastEditTime: 2020-12-16 16:10:14
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
 <template>
   <div
     class="goods-item"
-    :class="{ 'goods-item--disable': status === 'offShelf' }"
+    :class="{
+      'goods-item--disable': commodityData.status === 'GOODS_STATUS_OFF_SHELF',
+    }"
   >
     <SkuService v-model="show" />
     <sp-swipe-cell
       ref="swipeCell"
-      :disabled="status === 'offShelf'"
+      :disabled="commodityData.status === 'GOODS_STATUS_OFF_SHELF'"
       :before-close="beforeClose"
     >
       <div class="goods-item__content">
@@ -28,17 +30,17 @@
             >
             </AsyncCheckbox>
             <MainGoodsItem
-              :main-data="commodityData.productVo"
+              :main-data="commodityData"
               @operation="handleOperation"
             />
           </div>
           <div
-            v-for="serviceVo of commodityData.serviceVoList"
-            :key="serviceVo.id"
+            v-for="serviceResource of commodityData.serviceResourceList"
+            :key="serviceResource.serviceItemId"
             class="goods-item__vice"
           >
             <div class="goods-item__vice-line--top sp-hairline--top">
-              <ViceGoodsItem :vice-data="serviceVo" />
+              <ViceGoodsItem :vice-data="serviceResource" />
             </div>
           </div>
         </div>
@@ -106,16 +108,21 @@ export default {
   },
   data() {
     return {
-      checked: false,
       show: false,
     }
   },
-  computed() {},
+  computed: {
+    checked() {
+      return !!this.commodityData.shopIsSelected
+    },
+  },
+
   methods: {
     handleAsyncCheckboxChange(value) {
       console.log('handleAsyncCheckboxChange:', value)
+      this.handleOperation({ type: 'select', data: { value } })
       // TODO 异步处理
-      this.checked = value
+      // this.checked = value
     },
     beforeClose({ position, instance }) {
       console.log('position:', position)
@@ -131,21 +138,25 @@ export default {
     },
     handleDetele() {
       console.log('handleDetele')
-      this.$emit('operation', { type: 'detele', item: {} })
+      this.handleOperation({ type: 'detele', data: {} })
     },
     handleAttention() {
       console.log('handleAttention')
       // this.$refs.swipeCell.close()
-      this.$emit('operation', { type: 'attention', item: {} })
+      this.handleOperation({ type: 'attention', data: {} })
     },
-    handleOperation(data = {}) {
-      const { type, value } = data
+    handleOperation(value = {}) {
+      const { type, data } = value
+      const { cartId } = this.commodityData
       switch (type) {
         case 'openSku':
           this.show = true
           break
         case 'count':
-          this.$emit('operation', { type: 'count', value })
+        case 'select':
+        case 'detele':
+        case 'attention':
+          this.$emit('operation', { data, type, cartId })
           break
       }
     },

@@ -8,6 +8,7 @@
       :tab-list="tabBtn"
       :need-fixed="true"
       :right="0.54"
+      name-field="name"
       @selectTabHandle="selectTabHandle"
     ></TabCurve>
     <!-- E 推荐模块tab -->
@@ -67,7 +68,7 @@
         </div>
       </sp-swipe-item>
     </sp-swipe>
-    <div class="loading-content">
+    <div v-if="tabBtn.length" class="loading-content">
       <sp-loading
         v-show="loading && !tabBtn[curentItem].noMore"
         size="20px"
@@ -95,78 +96,13 @@ export default {
   },
   data() {
     return {
-      tabBtn: [
-        {
-          label: '公司',
-          code: '0',
-          formatId: 'FL20201207080003',
-          limit: 5,
-          page: 1,
-          locationCode: 'ad100126',
-          adData: [],
-          goodsList: [],
-          noMore: false,
-        },
-        {
-          label: '商标',
-          code: '1',
-          formatId: 'FL20201207080003',
-          limit: 5,
-          page: 1,
-          locationCode: 'ad100126',
-          adData: [],
-          goodsList: [],
-          noMore: false,
-        },
-        {
-          label: '专利',
-          code: '2',
-          formatId: 'FL20201207080003',
-          limit: 5,
-          page: 1,
-          locationCode: 'ad100126',
-          adData: [],
-          goodsList: [],
-          noMore: false,
-        },
-        {
-          label: '新媒',
-          code: '3',
-          formatId: 'FL20201207080003',
-          limit: 5,
-          page: 1,
-          locationCode: 'ad100126',
-          adData: [],
-          goodsList: [],
-          noMore: false,
-        },
-        {
-          label: '资质',
-          code: '4',
-          formatId: 'FL20201207080003',
-          limit: 5,
-          page: 1,
-          locationCode: 'ad100126',
-          adData: [],
-          goodsList: [],
-          noMore: false,
-        },
-        {
-          label: '网店',
-          code: '5',
-          formatId: 'FL20201207080003',
-          limit: 5,
-          page: 1,
-          locationCode: 'ad100126',
-          adData: [],
-          goodsList: [],
-          noMore: false,
-        },
-      ],
+      tabBtn: [],
       loading: false,
       curentItem: 0,
       searchDomHeight: 0,
       params: {
+        dictionaryCode: 'C-SY-RMJY-GG', // 查询数据字典的code
+        findType: 0, // 查询类型：0：初始查询广告+数据字典+推荐商品  1：查询广告+推荐商品 2：只查推荐商品
         userId: '', // 用户id
         deviceId: '0022ef1a-f685-469a-93a8-5409892207a2', // 设备ID（用户唯一标识）
         areaCode: '', // 区域编码
@@ -174,8 +110,8 @@ export default {
         maxsize: 100, // 要求推荐产品的数量
         platform: 'APP', // 平台（app,m,pc）
         formatId: '', // 产品类别
-        limit: 0, // 分页条数
-        page: 0, // 当前页
+        limit: 5, // 分页条数
+        page: 1, // 当前页
         locationCode: '', // 查询广告的位置code
       },
     }
@@ -223,7 +159,8 @@ export default {
         if (Math.ceil(pageScrollTop + pageClientHeight) >= pageScrollHeight) {
           this.loading = true
           this.tabBtn[this.curentItem].page += 1
-          this.findRecomList(this.curentItem, 'more')
+          this.params.findType = 2
+          this.findRecomList(this.curentItem)
         }
       }
     },
@@ -253,6 +190,7 @@ export default {
         !this.tabBtn[index].goodsList.length &&
         !this.tabBtn[index].adData.length
       ) {
+        this.params.findType = 1
         this.findRecomList(index)
       }
     },
@@ -260,39 +198,43 @@ export default {
       e.stopImmediatePropagation() // 阻止冒泡
     },
     // 查询推荐商品
-    findRecomList(index, type = 'init') {
-      console.log(index, type)
+    findRecomList(index) {
+      console.log(index)
       if (!this.params.areaCode) {
         // this.params.areaCode = this.cityCode
         this.params.areaCode = 2
       }
-      this.params.formatId = this.tabBtn[index].formatId
-      this.params.limit = this.tabBtn[index].limit
-      this.params.page = this.tabBtn[index].page
-      if (type !== 'more') {
-        this.params.locationCode = this.tabBtn[index].locationCode
+      if (this.params.findType !== 0) {
+        this.params.formatId = this.tabBtn[index].ext3
+        this.params.limit = this.tabBtn[index].limit
+        this.params.page = this.tabBtn[index].page
+      }
+      if (this.params.findType === 1) {
+        this.params.locationCode = this.tabBtn[index].ext1
       }
       this.$axios.post(homeApi.findRecomList, this.params).then((res) => {
         console.log(index, res.data)
         this.loading = false
+        if (res.code === 200 && this.params.findType === 0) {
+          res.data.dictData[0].adData = res.data.adData
+          res.data.dictData[0].goodsList = res.data.goodsList
+          this.tabBtn = res.data.dictData
+          return
+        }
+        if (res.code === 200 && this.params.findType === 1) {
+          this.tabBtn[index].adData = res.data.adData
+          this.tabBtn[index].goodsList = res.data.goodsList
+          return
+        }
+
+        // 无更多数据
         if (!res.data.goodsList.length) {
           this.tabBtn[index].noMore = true
           return
         }
-        if (res.code === 200) {
-          const obj = {
-            goodsList: this.tabBtn[index].goodsList.concat(res.data.goodsList),
-          }
-          try {
-            if (type !== 'more') {
-              obj.adData =
-                res.data.adData[
-                  this.tabBtn[index].locationCode
-                ].sortMaterialList
-            }
-          } catch (error) {}
-          this.$set(this.tabBtn, index, Object.assign(this.tabBtn[index], obj))
-        }
+        this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
+          res.data.goodsList
+        )
       })
     },
   },
