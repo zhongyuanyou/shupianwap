@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-12 17:21:59
+ * @LastEditTime: 2020-12-16 16:25:33
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -29,6 +29,10 @@
       </Header>
     </div>
     <div class="body">
+      <div v-if="updateLoading" class="update-loading">
+        <sp-loading class="update-loading__content" color="#4974f5" />
+      </div>
+
       <div class="shopping-car__content">
         <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
           <sp-list
@@ -41,7 +45,7 @@
           >
             <div
               v-for="(item, index) in list"
-              :key="item"
+              :key="item.cartId"
               class="shopping-car__goods-item"
             >
               <GoodsItem
@@ -58,23 +62,23 @@
         </sp-pull-refresh>
       </div>
       <!-- 推荐列表 -->
-      <div class="recommend">
+      <div v-if="recommendList && recommendList.length" class="recommend">
         <h3 class="recommend__title">为您推荐</h3>
-        <div
-          v-if="recommendList && recommendList.length"
-          class="recommend-list"
-        >
+        <div class="recommend-list">
           <GoodsPro
             v-for="item in recommendList"
             :key="item"
             class="item-wrap"
           />
         </div>
-        <sp-loading v-else />
       </div>
     </div>
     <div class="footer sp-hairline--top">
-      <Bottombar :status="shoppingCarStatus" />
+      <Bottombar
+        :status="shoppingCarStatus"
+        :bottom-data="bottomData"
+        @operation="handleItemOperation"
+      />
     </div>
   </div>
 </template>
@@ -135,12 +139,32 @@ export default {
       error: false,
       finished: false,
       shoppingCarStatus: 'completed', // edit: 编辑
+      currentSelectedCartIds: [], // 选择的数据
+      updateLoading: false,
+      bottomData: {
+        selectAll: false,
+        totalAmount: '0.00',
+        totalCount: 0,
+        discountsAmount: '0.00',
+      },
     }
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
     }),
+  },
+  watch: {
+    currentSelectedCartIds: {
+      handler(newVal, oldVal) {
+        console.log('newVal:', newVal)
+        if (newVal.length && newVal.length === this.list.length) {
+          return (this.bottomData.selectAll = true)
+        }
+        return (this.bottomData.selectAll = false)
+      },
+      immediate: true,
+    },
   },
   created() {
     this.getRecommendList()
@@ -156,61 +180,103 @@ export default {
     },
 
     onLoad() {
-      setTimeout(() => {}, 1000)
       this.getList()
         .then((data) => {
           if (this.refreshing) {
             this.list = []
             this.refreshing = false
           }
+          // 只请求一次
           this.loading = false
           this.finished = true
 
           this.list = data
-          // for (let i = 0; i < 2; i++) {
-          // this.list.push(this.list.length + 1)
-          // }
-          // if (!this.list.length || this.list.length >= 4) {
-          //   this.finished = true
-          // }
+          // 接收选中的放入 currentSelectedCartIds 中
+          this.currentSelectedCartIds = data.reduce((accumulator, item) => {
+            if (item.shopIsSelected === 1) {
+              accumulator.push(item.cartId)
+            }
+            return accumulator
+          }, [])
         })
         .catch(() => {
           this.error = true
           this.loading = false
-          for (let i = 0; i < 2; i++) {
-            this.list.push(this.list.length + 1)
-          }
-          if (!this.list.length || this.list.length >= 4) {
-            this.finished = true
-          }
         })
     },
     onRefresh() {
-      // 清空列表数据
       this.finished = false
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
       this.onLoad()
     },
     handleItemOperation(value = {}) {
-      const { type, item } = value
+      const { type, data, cartId } = value
       console.log('type:', type)
       switch (type) {
         case 'detele':
-          this.deteleItem(item)
+          this.deteleItem(cartId, data)
           break
         case 'attention':
-          this.attentionItem(item)
+          this.attentionItem(cartId, data)
+          break
+        case 'select':
+          this.selectItem(cartId, data)
+          break
+        case 'count':
+          this.countOperation(cartId, data)
+          break
+        case 'selectAll':
+          this.selectAll(data)
           break
       }
     },
-    deteleItem(item) {
+    // 删除列表
+    deteleItem(cartId, data) {
       this.$refs.goodsPopup.open('detele').then(() => {
         console.log('发起请求')
       })
     },
-    attentionItem() {},
+
+    // 关注列表
+    attentionItem(cartId, data) {},
+    // 全选
+    selectAll(data) {
+      const cartIdArray = this.list.map((item) => item.cartId)
+      const cartId = cartIdArray.join()
+      this.selectItem(cartId, data)
+    },
+    // 选择
+    async selectItem(cartId, data = {}) {
+      console.log(cartId, data)
+      cartId = '' + cartId
+
+      const { value } = data
+      try {
+        const data = await this.postUpdate({ cartId, type: 'select', value })
+        const cartArray = cartId.split(',')
+        if (value) {
+          // 选中
+          cartArray.forEach((item) => {
+            !this.currentSelectedCartIds.includes(item) &&
+              this.currentSelectedCartIds.push(cartId)
+          })
+        } else {
+          cartArray.forEach((item) => {
+            const index = this.currentSelectedCartIds.indexOf(item)
+            console.log('index', index)
+            index > -1 && this.currentSelectedCartIds.splice(index, 1)
+          })
+        }
+
+        this.list = this.list.map((item) => {
+          let shopIsSelected = false
+          cartArray.includes(item.cartId) && (shopIsSelected = value)
+          return { ...item, shopIsSelected }
+        })
+      } catch (error) {}
+    },
+    // 数量操作
+    countOperation(cartId, data) {},
 
     // 请求购物车列表
     async getList() {
@@ -226,6 +292,52 @@ export default {
       }
     },
 
+    // 请求购物车列表
+    async postUpdate(data = {}) {
+      const {
+        type,
+        goodsNumber,
+        cartId,
+        value,
+        serviceList,
+        skuAttr,
+        skuId,
+      } = data
+      let params = {}
+      switch (type) {
+        case 'updateNum':
+          params = { goodsNumber: value }
+          break
+        case 'remove':
+          break
+        case 'updateSkuItem':
+          params = { serviceList, skuAttr, skuId, goodsNumber: value }
+          break
+        case 'select':
+          params = { selectFlag: +value } // 将boolean转换为数字（1：选中 ,0：取消选中）
+          break
+      }
+      try {
+        this.updateLoading = true
+        const userId = this.userInfo.userId || '123456'
+        const defalutParams = {
+          id: cartId,
+          createrId: userId,
+          type,
+        }
+        let data = await shoppingCar.update({ ...defalutParams, ...params })
+        console.log(data)
+        if (!Array.isArray(data)) data = []
+        this.updateLoading = false
+        return data
+      } catch (error) {
+        console.error('postUpdate:', error)
+        this.updateLoading = false
+        return Promise.reject(error)
+      }
+    },
+
+    // 请求推荐产品列表
     getRecommendList() {
       setTimeout(() => {
         for (let i = 0; i < 5; i++) {
@@ -290,6 +402,24 @@ export default {
     flex: 1;
     padding: 0;
     overflow-y: scroll;
+    position: relative;
+    // TODO  遮罩层 有问题
+    .update-loading {
+      position: absolute;
+      width: auto;
+      height: auto;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      text-align: center;
+      &__content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
   }
   &__goods {
     &-item {
