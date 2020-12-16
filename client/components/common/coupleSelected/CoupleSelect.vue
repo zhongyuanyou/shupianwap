@@ -1,7 +1,7 @@
 <template>
   <div class="couple">
     <!--S 省导航-->
-    <div class="couple_province">
+    <div v-if="coupleData.length" class="couple_province">
       <div
         v-for="(item, index) in coupleData"
         :key="index"
@@ -159,24 +159,9 @@ export default {
   mounted() {
     this.$emit('initThis', this)
     const list = this.cityData
-    if (list[0].name === '全国') {
-      list[0].children = [
-        {
-          name: '不限',
-          code: '',
-          children: [
-            {
-              name: '不限',
-              code: '',
-            },
-          ],
-        },
-      ]
-    } else {
-      list.unshift({
-        name: '全国',
-        code: '',
-        children: [
+    if (!this.isLocation) {
+      if (list[0].name === '全国') {
+        list[0].children = [
           {
             name: '不限',
             code: '',
@@ -187,21 +172,38 @@ export default {
               },
             ],
           },
-        ],
-      })
+        ]
+      } else {
+        list.unshift({
+          name: '全国',
+          code: '',
+          children: [
+            {
+              name: '不限',
+              code: '',
+              children: [
+                {
+                  name: '不限',
+                  code: '',
+                },
+              ],
+            },
+          ],
+        })
+      }
     }
     this.coupleData = list
     if (this.backData.length) {
       this.selectData = this.backData
-      this.cityData.forEach((item, index) => {
+      this.coupleData.forEach((item, index) => {
         if (
-          item.name === this.backData[0].name &&
-          item.code === this.backData[0].code
+          item.name === this.coupleData[0].name &&
+          item.code === this.coupleData[0].code
         ) {
           this.pIndex = index
         }
       })
-      this.cityData[this.pIndex].children.forEach((item, index) => {
+      this.coupleData[this.pIndex].children.forEach((item, index) => {
         if (
           item.name === this.backData[1].name &&
           item.code === this.backData[1].code
@@ -210,7 +212,7 @@ export default {
         }
       })
       if (!this.isLocation) {
-        this.cityData[this.pIndex].children[this.cIndex].children.forEach(
+        this.coupleData[this.pIndex].children[this.cIndex].children.forEach(
           (item, index) => {
             if (
               item.name === this.backData[2].name &&
@@ -222,16 +224,19 @@ export default {
         )
       }
       // 若用户有选择数据后，再进入组件时判断当前对应的省市区是否包含不限选项
-      if (this.cityData[this.pIndex].children[0].name !== '不限') {
-        this.cityData[this.pIndex].children.unshift({ name: '不限', code: '' })
+      if (this.coupleData[this.pIndex].children[0].name !== '不限') {
+        this.coupleData[this.pIndex].children.unshift({
+          name: '不限',
+          code: '',
+        })
         this.cIndex += 1
       }
       if (!this.isLocation) {
         if (
-          this.cityData[this.pIndex].children[this.cIndex].children[0].name !==
-          '不限'
+          this.coupleData[this.pIndex].children[this.cIndex].children[0]
+            .name !== '不限'
         ) {
-          this.cityData[this.pIndex].children[this.cIndex].children.unshift({
+          this.coupleData[this.pIndex].children[this.cIndex].children.unshift({
             name: '不限',
             code: '',
           })
@@ -239,15 +244,29 @@ export default {
       }
     } else if (this.isLocation) {
       this.selectData = [
-        { name: '全国', code: this.coupleData[0].code },
+        { name: '全国', code: this.coupleData[0].code || '' },
         { name: '不限', code: '' },
       ]
     } else {
       this.selectData = [
-        { name: '全国', code: this.coupleData[0].code },
+        { name: '全国', code: this.coupleData[0].code || '' },
         { name: '不限', code: '' },
         { regions: new Array({ name: '不限', code: '' }) },
       ]
+    }
+    if (this.coupleData[0].children[0].name !== '不限') {
+      this.coupleData[0].children.unshift({
+        name: '不限',
+        code: '',
+      })
+    }
+    if (!this.isLocation) {
+      if (this.coupleData[0].children[0].children[0].name !== '不限') {
+        this.coupleData[0].children[0].children.unshift({
+          name: '不限',
+          code: '',
+        })
+      }
     }
   },
   methods: {

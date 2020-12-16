@@ -44,6 +44,7 @@
               <CoupleSelect
                 :multiple="false"
                 :city-data="regionsOption"
+                :is-location="true"
                 @select="handleRegionsSelect"
               />
             </sp-dropdown-item>
