@@ -18,7 +18,7 @@
       @change="onChange"
     >
       <sp-swipe-item v-for="(item, index) in tabBtn" :key="index">
-        <div v-if="index === curentItem">
+        <div v-show="index === curentItem">
           <!-- S 推荐内容滚动区 -->
           <div
             v-if="item.adData.length"
@@ -44,6 +44,19 @@
           <!-- E 推荐内容滚动区 -->
           <!-- S 推荐商品列表 -->
           <div class="goods-list">
+            <sp-skeleton
+              v-for="val in tabBtn[index].limit"
+              :key="val + 'a'"
+              avatar-shape="square"
+              avatar-size="2.4rem"
+              title
+              title-width="100%"
+              avatar
+              :row="3"
+              :row-width="['80%', '70%', '50%']"
+              :loading="item.goodsList.length > 0 ? false : true"
+            >
+            </sp-skeleton>
             <GoodsPro
               v-for="(goodsitem, sub) in item.goodsList"
               :key="sub"
@@ -52,7 +65,6 @@
           </div>
           <!-- E 推荐商品列表 -->
         </div>
-        <div v-else class="plashold" :style="{ height: height }"></div>
       </sp-swipe-item>
     </sp-swipe>
     <div class="loading-content">
@@ -68,7 +80,7 @@
 </template>
 
 <script>
-import { Swipe, swipeItem, Loading } from '@chipspc/vant-dgg'
+import { Swipe, swipeItem, Loading, Skeleton } from '@chipspc/vant-dgg'
 import { homeApi } from '@/api'
 import TabCurve from '@/components/common/tab/TabCurve'
 import GoodsPro from '@/components/common/goodsItem/GoodsPro'
@@ -77,6 +89,7 @@ export default {
     [Swipe.name]: Swipe,
     [swipeItem.name]: swipeItem,
     [Loading.name]: Loading,
+    [Skeleton.name]: Skeleton,
     TabCurve,
     GoodsPro,
   },
@@ -160,12 +173,11 @@ export default {
         sceneId: 'app-mainye-01', // 场景ID
         maxsize: 100, // 要求推荐产品的数量
         platform: 'APP', // 平台（app,m,pc）
-        formatId: 'FL20201211085219', // 产品类别
+        formatId: '', // 产品类别
         limit: 0, // 分页条数
         page: 0, // 当前页
         locationCode: '', // 查询广告的位置code
       },
-      height: '',
     }
   },
   computed: {
@@ -188,25 +200,27 @@ export default {
     try {
       this.searchDomHeight =
         this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
-      const h =
-        document.documentElement.clientHeight || document.body.clientHeight // 获取屏幕视口高度
-      this.height = h + 'px'
       window.addEventListener('scroll', this.handleScroll, true) // 监听滚动
     } catch (error) {
       console.log(error)
     }
   },
   methods: {
+    // 滚动加载更多
     handleScroll() {
-      const pageScrollTop =
-        window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop // 滚动条距离顶部的位置
-      const pageScrollHeight = document.body.scrollHeight // 页面文档的总高度
-      const pageClientHeight = document.body.clientHeight + 1 // 页面视口的高度
-      // 监听页面是否滚动到底部加载更多数据
-      if (Math.ceil(pageScrollTop + pageClientHeight) >= pageScrollHeight) {
-        if (!this.loading && !this.tabBtn[this.curentItem].noMore) {
+      if (
+        this.tabBtn[this.curentItem].goodsList.length &&
+        !this.loading &&
+        !this.tabBtn[this.curentItem].noMore
+      ) {
+        const pageScrollTop =
+          window.pageYOffset ||
+          document.documentElement.scrollTop ||
+          document.body.scrollTop // 滚动条距离顶部的位置
+        const pageScrollHeight = document.body.scrollHeight // 页面文档的总高度
+        const pageClientHeight = document.body.clientHeight + 1 // 页面视口的高度
+        // 监听页面是否滚动到底部加载更多数据
+        if (Math.ceil(pageScrollTop + pageClientHeight) >= pageScrollHeight) {
           this.loading = true
           this.tabBtn[this.curentItem].page += 1
           this.findRecomList(this.curentItem, 'more')
@@ -247,9 +261,10 @@ export default {
     },
     // 查询推荐商品
     findRecomList(index, type = 'init') {
-      console.log(index)
+      console.log(index, type)
       if (!this.params.areaCode) {
-        this.params.areaCode = this.cityCode
+        // this.params.areaCode = this.cityCode
+        this.params.areaCode = 2
       }
       this.params.formatId = this.tabBtn[index].formatId
       this.params.limit = this.tabBtn[index].limit
@@ -258,7 +273,8 @@ export default {
         this.params.locationCode = this.tabBtn[index].locationCode
       }
       this.$axios.post(homeApi.findRecomList, this.params).then((res) => {
-        console.log(index, res.data.goodsList)
+        console.log(index, res.data)
+        this.loading = false
         if (!res.data.goodsList.length) {
           this.tabBtn[index].noMore = true
           return
@@ -267,12 +283,15 @@ export default {
           const obj = {
             goodsList: this.tabBtn[index].goodsList.concat(res.data.goodsList),
           }
-          if (type !== 'more') {
-            obj.adData =
-              res.data.adData[this.tabBtn[index].locationCode].sortMaterialList
-          }
+          try {
+            if (type !== 'more') {
+              obj.adData =
+                res.data.adData[
+                  this.tabBtn[index].locationCode
+                ].sortMaterialList
+            }
+          } catch (error) {}
           this.$set(this.tabBtn, index, Object.assign(this.tabBtn[index], obj))
-          this.loading = false
         }
       })
     },
@@ -281,6 +300,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@skeleton-row-margin-top: 0;
 .scroll-recom {
   padding: 22px 0 32px 40px;
   display: flex;
@@ -358,9 +378,19 @@ export default {
   align-items: center;
   justify-content: center;
   height: 40px;
+  line-height: 40px;
+  margin-top: -20px;
   .no-data {
     font-size: 24px;
     color: #333;
+  }
+}
+.my-swipe {
+  /deep/ .sp-skeleton {
+    padding: 32px 0;
+  }
+  /deep/ .sp-skeleton__content {
+    padding-top: 0;
   }
 }
 </style>

@@ -6,7 +6,6 @@
  * @FilePath: /chips-wap/app/controller/home.js
  * */
 "use strict";
-
 const Controller = require("egg").Controller;
 const { contentApi } = require("../../config/serveApi/index");
 const { productRules } = require("../validate/home");
@@ -152,7 +151,6 @@ class homeController extends Controller {
         }
         // 获取站点
         const findCity = service.common.city.getSiteList();
-        console.log(ctx.request.body.locationCodeList);
         // 获取广告
         const findBanner = getBannerList(
             ctx,
@@ -288,7 +286,7 @@ class homeController extends Controller {
         const { ctx, service, app } = this;
         // 定义参数校验规则
         const rules = {
-            locationCode: { type: "string", required: false }, // 查询广告的位置code
+            findType: { type: "integer", required: true, min: 0, max: 2 }, // 查询类型：0：初始查询广告+数据字典+推荐商品  1：查询广告+推荐商品 2：只查推荐商品
         };
         const nweRules = Object.assign(rules, productRules);
         // 参数校验
@@ -298,7 +296,8 @@ class homeController extends Controller {
             ctx.helper.fail({ ctx, code: 422, res: valiErrors });
             return;
         }
-        const params = {
+        // 查询推荐产品所需参数
+        let params = {
             userId: ctx.request.body.userId, // 用户id
             deviceId: ctx.request.body.deviceId, // 设备id
             areaCode: ctx.request.body.areaCode, // 区域code
@@ -307,38 +306,110 @@ class homeController extends Controller {
             productType: ctx.request.body.productType, // 需要推荐的产品类别
             formatId: ctx.request.body.formatId, // 产品三级类别,没有三级类别用二级类别
         };
-        try {
-            // 获取推荐产品ids
-            const findRecom = service.common.recom.getRecomProductIdList(
-                params
-            );
-            let reqArr = [findRecom];
-            // 若用户查询的是第一页，需返回广告数据
-            if (ctx.request.body.page === 1) {
+        // 查询广告所需参数
+        let locationCode = ctx.request.body.locationCode;
+        let findRomReq = {};
+        let productData = {};
+        const findAdAndproduct = async () => {
+            try {
+                // 获取推荐产品ids
+                const findRecom = service.common.recom.getRecomProductIdList(
+                    params
+                );
                 // 查询广告
-                const findBanner = getBannerList(ctx, service, [
-                    ctx.request.body.locationCode,
-                ]);
-                reqArr.push(findBanner);
+                const findadData = getBannerList(ctx, service, [locationCode]);
+                const resArr = await Promise.all([findadData, findRecom]);
+                if (resArr[0].code === 200) {
+                    productData.adData = resArr[0].data; // 广告数据
+                }
+                findRomReq = resArr[1]; // 暂存推荐接口返回数据
+            } catch (error) {
+                ctx.logger.error(error);
+            }
+        };
+        try {
+            // 初始查询广告+数据字典+推荐商品
+            if (ctx.request.body.findType === 0) {
+                // 查询数据字典
+                const sysCode = app.config.apiClient.APPID[0];
+                const dict = contentApi.dataDict; // 查询字典
+                const dictUrl = ctx.helper.assembleUrl(sysCode, dict);
+                const codeData = await this.ctx.http.get(dictUrl, {
+                    code: ctx.request.body.dictionaryCode,
+                });
+                // 处理字典数据
+                if (codeData.code === 200) {
+                    const dictData = [];
+                    codeData.data.forEach((item) => {
+                        if (item.ext2.indexOf("wap") !== -1) {
+                            dictData.push({
+                                id: item.id,
+                                code: item.code,
+                                name: item.name,
+                                ext1: item.ext1,
+                                ext2: item.ext2,
+                                ext3: item.ext3,
+                                ext4: item.ext4,
+                                ext5: item.ext5,
+                                adData: [],
+                                goodsList: [],
+                            });
+                        }
+                    });
+                    productData.dictData = dictData; // 字典数据
+                    params.formatId = productData.dictData[0].ext3; // 获取产品分类编码
+                    locationCode = productData.dictData[0].ext1; // 获取广告位code
+                    await findAdAndproduct();
+                }
+            }
+            // 查询广告+推荐商品
+            if (ctx.request.body.findType === 1) {
+                // 定义参数校验规则
+                const rules = {
+                    locationCode: { type: "string", required: true }, // 查询广告的位置code
+                    formatId: { type: "string", required: true }, // 分类code
+                };
+                // 参数校验
+                const valiErrors = app.validator.validate(
+                    rules,
+                    ctx.request.body
+                );
+                // 参数校验未通过
+                if (valiErrors) {
+                    ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+                    return;
+                }
+                await findAdAndproduct();
+            }
+            // 只查推荐商品
+            if (ctx.request.body.findType === 2) {
+                // 定义参数校验规则
+                const rules = {
+                    formatId: { type: "string", required: true }, // 分类code
+                };
+                // 参数校验
+                const valiErrors = app.validator.validate(
+                    rules,
+                    ctx.request.body
+                );
+                // 参数校验未通过
+                if (valiErrors) {
+                    ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+                    return;
+                }
+                // 获取推荐产品ids
+                findRomReq = await service.common.recom.getRecomProductIdList(
+                    params
+                );
             }
 
-            const resArr = await Promise.all(reqArr);
-
-            let productData = {
-                describe: "",
-                goodsList: [],
-            }; // 推荐数据
-            // 获取广告数据成功
-            if (ctx.request.body.page === 1 && resArr[1].code === 200) {
-                productData.adData = resArr[1].data;
-            }
             // 从算法部获取到推荐产品id成功
-            if (resArr[0].code === 200) {
+            if (findRomReq.code === 200) {
                 // 根据前台的分页参数，动态选取一部分id
                 const start =
                     (ctx.request.body.page - 1) * ctx.request.body.limit;
                 const end = ctx.request.body.page * ctx.request.body.limit;
-                const pagetionList = resArr[0].data.productInfoList.slice(
+                const pagetionList = findRomReq.data.productInfoList.slice(
                     start,
                     end
                 );
@@ -352,7 +423,10 @@ class homeController extends Controller {
                 }
             }
             // 从算法部获取到推荐产品id失败
-            if (!productData.goodsList.length && ctx.request.body.page === 1) {
+            if (
+                !productData.goodsList.length &&
+                ctx.request.body.findType !== 2
+            ) {
                 // 查询产品中心交易资源搜索接口，返回搜索的产品列表作为推荐数据返给前端
                 const res = await getJyproList(ctx, service, {
                     classCode: ctx.request.body.productType, // 产品类别
@@ -365,7 +439,6 @@ class homeController extends Controller {
                     productData.describe = "搜索";
                 }
             }
-
             ctx.helper.success({
                 ctx,
                 code: 200,

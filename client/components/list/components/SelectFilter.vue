@@ -132,8 +132,34 @@ export default {
     confirmFilters() {
       // 确认筛选
       this.saveActiveItems = clone(this.activeItems, true)
-      this.$emit('activeItem', this.activeItems, 'selectFilter')
+      const emitData = this.resultHandle()
+      this.$emit('activeItem', emitData, 'selectFilter')
       this.$refs.item.toggle()
+    },
+    resultHandle() {
+      // 处理结果
+      // debugger
+      const fieldCode =
+        this.filterData.ext3 === '1'
+          ? this.filterData.ext1
+          : this.activeItems[0].ext1
+      let emitData = {
+        fieldCode,
+        fieldValue: [],
+        matchType: 'MATCH_TYPE_MULTI',
+      }
+      if (this.activeItems.length && this.activeItems[0].name === '不限') {
+        emitData = ''
+      } else if (this.activeItems.length) {
+        // 如果该筛选项是产品分类查询出来的，value需要取code，如果不是则需要取ext2
+        const _flag = this.filterData.ext3 === '1'
+        this.activeItems.forEach((item) => {
+          emitData.fieldValue.push(_flag ? item.code : item.ext2)
+        })
+      } else {
+        emitData = ''
+      }
+      return emitData
     },
   },
 }

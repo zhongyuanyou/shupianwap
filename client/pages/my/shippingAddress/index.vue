@@ -81,6 +81,7 @@
       v-model="popupStatus"
       :field="Field6"
       button-type="confirm"
+      @confirm="confirm"
     />
     <!--E 弹框-->
   </div>
@@ -116,6 +117,7 @@ export default {
         type: 'functional',
         title: '确定删除收货地址吗？',
       },
+      addressId: '', // 被选中的收货地址id
     }
   },
   computed: {
@@ -132,6 +134,7 @@ export default {
     },
     handleDel(item) {
       // 删除
+      this.addressId = item.id
       this.popupStatus = true
     },
     handleNew() {
@@ -150,6 +153,14 @@ export default {
       }
       const data = await userInfo.addressList({ axios: this.$axios }, params)
       this.addressList = data
+    },
+    async confirm() {
+      // 确认删除
+      const params = {
+        id: this.addressId,
+      }
+      await userInfo.delAddress({ axios: this.$axios }, params)
+      await this.getShippingAddressList()
     },
   },
 }

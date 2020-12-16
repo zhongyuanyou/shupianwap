@@ -16,6 +16,7 @@
     <div v-if="helpBannerData.length" class="help-moudle-bottom">
       <a
         v-for="(item, index) in helpBannerData"
+        v-show="index < 2"
         :key="index"
         :href="item.materialList[0].materialLink"
       >
