@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-16 19:15:57
+ * @LastEditTime: 2020-12-16 20:30:37
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -219,6 +219,9 @@ export default {
         case 'detele':
           this.deteleItem(cartId, data)
           break
+        case 'deteleAll':
+          this.deteleAllItem()
+          break
         case 'attention':
           this.attentionItem(cartId, data)
           break
@@ -235,9 +238,36 @@ export default {
     },
     // 删除列表
     deteleItem(cartId, data) {
-      this.$refs.goodsPopup.open('detele').then(() => {
-        console.log('发起请求')
-      })
+      this.$refs.goodsPopup
+        .open('detele')
+        .then(() => {
+          console.log('发起请求')
+          console.log('countOperation:', cartId, data)
+          cartId = '' + cartId
+          return this.postUpdate({ cartId, type: 'remove' })
+        })
+        .then(() => {
+          const cartArray = cartId.split(',')
+          cartArray.forEach((item) => {
+            const index = this.currentSelectedCartIds.indexOf(item)
+            console.log('index', index)
+            index > -1 && this.currentSelectedCartIds.splice(index, 1)
+          })
+
+          this.list = this.list.filter((item) => {
+            return !cartArray.includes(item.cartId)
+          })
+        })
+    },
+
+    // 全删除
+    deteleAllItem() {
+      if (this.currentSelectedCartIds.length === 0) {
+        Toast('请选择需要删除的商品')
+        return
+      }
+      const cartId = this.currentSelectedCartIds.join(',')
+      this.deteleItem(cartId)
     },
 
     // 关注列表
