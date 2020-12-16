@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-16 10:03:52
+ * @LastEditTime: 2020-12-16 20:07:46
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/MainGoodsItem.vue
 -->
@@ -37,21 +37,36 @@
           <span class="unit">元</span>
         </span>
         <sp-stepper
-          v-model="goodsCount"
           integer
           step="1"
           button-size="0.40rem"
           input-width="0.80rem"
           min="1"
+          :value="goodsCount"
           :max="!mainData.numFlag && mainData.maxNum ? mainData.maxNum : 99"
           :async-change="true"
           @change="handleCountChange"
         />
       </div>
-      <div class="goods-service__row">
-        <span class="goods-service__title"></span>
-        <span class="goods-service__content"></span>
-        <span class="goods-service__count"></span>
+      <div class="goods-service">
+        <div class="goods-service__row-left">增值服务</div>
+        <div class="goods-service__row-right">
+          <div
+            v-for="addService of mainData.addServiceList"
+            :key="addService.serviceItemId"
+            class="goods-service__item"
+          >
+            <span class="goods-service__title">{{
+              addService.serviceItemName
+            }}</span>
+            <span class="goods-service__content"></span>
+            <span class="goods-service__count">{{
+              `${
+                addService.serviceItemName ? addService.serviceItemName : '--'
+              }元  x${addService.num}`
+            }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -93,9 +108,13 @@ export default {
   },
   computed: {},
   watch: {
-    'mainData.goodsNumber'(newVal, oldVal) {
-      if (newVal === oldVal) return
-      this.goodsCount = newVal || 0
+    'mainData.goodsNumber': {
+      handler(newVal, oldVal) {
+        console.log('goodsNumber newVal:', newVal)
+        if (newVal === oldVal) return
+        this.goodsCount = newVal || 0
+      },
+      immediate: true,
     },
   },
   methods: {
@@ -107,15 +126,16 @@ export default {
       this.$emit('operation', { type: 'openSku' })
     },
     handleCountChange(value) {
+      console.log('handleCountChange value:', value)
       if (this.goodsCount === value) return
       // TODO异步校验
-      this.goodsCount = value
+      // this.goodsCount = value
       console.log('handleCountChange value:', value)
 
       // 人为修改,通知父组件
       this.$emit('operation', {
         type: 'count',
-        data: { value: this.goodsCount },
+        data: { value },
       })
     },
   },
@@ -241,6 +261,44 @@ export default {
             background-color: #cccccc;
           }
         }
+      }
+    }
+    .goods-service {
+      display: flex;
+      margin-top: 34px;
+      &__row-left {
+        font-size: 22px;
+        font-weight: bold;
+        color: #222222;
+        line-height: 26px;
+        flex: 88px 0 1;
+        white-space: nowrap;
+      }
+      &__row-right {
+        margin-left: 15px;
+        flex: 1;
+      }
+      &__item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+      &__title {
+        font-size: 22px;
+        font-weight: 400;
+        color: #222222;
+        line-height: 26px;
+        .textOverflow(1);
+      }
+      &__content {
+      }
+      &__count {
+        margin-left: 30px;
+        font-size: 22px;
+        font-weight: bold;
+        color: #222222;
+        line-height: 26px;
       }
     }
   }
