@@ -49,11 +49,6 @@ import { mapState } from 'vuex'
 import { complain } from '~/api'
 export default {
   name: 'ComplaintList',
-  computed: {
-    ...mapState({
-      userId: (state) => state.user.userInfo.userId,
-    }),
-  },
   components: {
     [Button.name]: Button,
     [TopNavBar.name]: TopNavBar,
@@ -71,6 +66,11 @@ export default {
       page: 1, // 当前页
       limit: 10, // 每页显示条数
     }
+  },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userInfo.userId,
+    }),
   },
   mounted() {
     this.getComplainList()

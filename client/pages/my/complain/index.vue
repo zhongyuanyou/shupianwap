@@ -192,6 +192,11 @@ export default {
             platformCode: 'adasdad', // 平台编码
             platformName: 'asdasdas', // 平台名称
           }
+          Toast({
+            message: '提交成功，感谢您的反馈',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
         } catch (err) {
           console.log(err)
         }
