@@ -126,7 +126,7 @@ export default {
       }
     },
     resetFilters() {
-      this.selectCheckBoxVue.clearSelect()
+      this.selectCheckBoxVue && this.selectCheckBoxVue.clearSelect()
       this.activeItems = []
     },
     confirmFilters() {

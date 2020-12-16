@@ -80,6 +80,15 @@ export default {
   },
   mounted() {},
   methods: {
+    resetAllSelect() {
+      // 重置所有筛选项resetFilters resetFilters resetFilters resetFilters
+      console.log(this.$refs)
+      // console.log(Object.keys(this.$refs))
+      Object.keys(this.$refs).forEach((item) => {
+        console.log(this.$refs[item])
+        this.$refs[item][0].resetFilters()
+      })
+    },
     getFilterHandle(data, filrerName) {
       console.log(data, filrerName)
       this.$emit('activeItem', data, filrerName)
@@ -240,9 +249,6 @@ export default {
         }
       })
       this.filters = filter
-      this.$nextTick(() => {
-        console.log(this.$refs)
-      })
     },
   },
 }
