@@ -49,5 +49,14 @@ const userInfo = {
       url: CHIPS_WAP_BASE_URL + '/yk/address/v1/add_shipping_address.do',
     })
   },
+  delAddress({ axios }, params) {
+    // 删除收货地址
+    return request({
+      axios,
+      params,
+      method: 'get',
+      url: CHIPS_WAP_BASE_URL + '/yk/address/v1/del_address.do',
+    })
+  },
 }
 export default userInfo

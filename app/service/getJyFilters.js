@@ -152,6 +152,9 @@ async function getTypeJyFilter(dictCode, classCode) {
             name: '不限',
             id: 'all',
           })
+          res[2].data.data.forEach((item) => {
+            item.ext1 = sb_gd_dq.ext1
+          })
           sb_fl.children = res[1].data.data
           sb_gd_dq.children = res[2].data.data
           result.data = res[0].data.data

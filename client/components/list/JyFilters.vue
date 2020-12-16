@@ -82,7 +82,7 @@ export default {
   methods: {
     getFilterHandle(data, filrerName) {
       console.log(data, filrerName)
-      this.$set(this.filterItem, filrerName, data)
+      this.$emit('activeItem', data, filrerName)
     },
     resetFilterData(filter) {
       /* const res = [

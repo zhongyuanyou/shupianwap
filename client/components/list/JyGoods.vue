@@ -18,7 +18,11 @@
         :title="item.name"
       ></sp-tab>
     </sp-tabs>
-    <jy-filters ref="dropDownMenu" :filter-data="jyFilterData" />
+    <jy-filters
+      ref="dropDownMenu"
+      :filter-data="jyFilterData"
+      @activeItem="getFilterHandle"
+    />
     <install-app v-show="listShow" ref="installApp" />
     <sp-list
       v-show="listShow"
@@ -143,6 +147,7 @@ export default {
       },
       jyFilterData: [],
       jyGoodsListData: [],
+      filterItem: {},
     }
   },
   watch: {
@@ -172,11 +177,15 @@ export default {
     })
     this.$emit('goodsList', 'jy', this)
     // 默认请求的数据
-    this.formData.classCode = this.tabItems[0].ext2
+    this.formData.classCode = this.tabItems[0].ext4
     this.formData.dictCode = this.tabItems[0].code
     this.initGoodsList()
   },
   methods: {
+    getFilterHandle(data, filrerName) {
+      // 获取筛选项数据
+      this.$set(this.filterItem, filrerName, data)
+    },
     onLoad() {
       console.log(1)
       const arr = new Array(10).fill(2)
