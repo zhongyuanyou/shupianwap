@@ -4,6 +4,7 @@
     <div class="planner-content">
       <div class="planner-content-left">
         <div class="planner-content-left-person">
+          <div class="planner-content-left-person-img"></div>
           <div class="planner-content-left-person-font">金牌规划师</div>
         </div>
         <div class="planner-content-left-content">
@@ -20,16 +21,16 @@
             <my-icon
               name="notify_ic_chat"
               color="#4974F5"
-              size="0.16rem"
-              class="icon"
+              size="0.32rem"
+              class="icon line"
             ></my-icon>
           </div>
           <div>
             <my-icon
               name="notify_ic_tel"
               color="#4974F5"
-              size="0.16rem"
-              class="icon"
+              size="0.32rem"
+              class="icon line"
             ></my-icon>
           </div>
         </div>
@@ -77,13 +78,23 @@ export default {
       display: flex;
       position: relative;
       &-person {
-        margin: 40px 25px 67px 40px;
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background: gray;
+        margin: 0 -15px 27px 0;
+        width: 180px;
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        position: relative;
+        &-img {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          background: gray;
+        }
         &-font {
-          padding: 5px 9px;
+          height: 26px;
+          line-height: 24px;
           font-size: 16px;
           font-family: PingFang SC;
           font-weight: bold;
@@ -92,8 +103,7 @@ export default {
           border: 1px solid #dfb45a;
           border-radius: 13px;
           position: absolute;
-          bottom: 42px;
-          left: 19px;
+          bottom: 37px;
         }
       }
       &-content {
@@ -143,6 +153,9 @@ export default {
           display: flex;
           align-items: center;
           justify-content: center;
+          .line {
+            line-height: 32px;
+          }
         }
       }
     }
