@@ -78,7 +78,7 @@ class homeController extends Controller {
             contentApi.findNav
         );
         // 获取固定导航数据
-        const findFixedNav = service.curl.curlGet(navUrl, {
+        const findFixedNav = this.ctx.http.get(navUrl, {
             categoryCode: ctx.request.body.fixedNavCategoryCode,
             platformCode: ctx.request.body.fixedNavPlatformCode,
             limit: ctx.request.body.fixedLimit,
@@ -86,7 +86,7 @@ class homeController extends Controller {
             includeField,
         });
         // 获取滚动导航数据
-        const findRollNav = service.curl.curlGet(navUrl, {
+        const findRollNav = this.ctx.http.get(navUrl, {
             categoryCode: ctx.request.body.rollNavCategoryCode,
             platformCode: ctx.request.body.rollNavPlatformCode,
             limit: ctx.request.body.rollLimit,
@@ -106,12 +106,12 @@ class homeController extends Controller {
                 });
             }
             // 固定导航数据处理
-            if (resData[1].data.code === 200) {
-                fixedNavList = resData[1].data.data.rows;
+            if (resData[1].code === 200) {
+                fixedNavList = resData[1].data.rows;
             }
             // 滚动导航数据处理
-            if (resData[2].data.code === 200) {
-                rollNavList = resData[2].data.data.rows;
+            if (resData[2].code === 200) {
+                rollNavList = resData[2].data.rows;
             }
             ctx.helper.success({
                 ctx,
@@ -169,10 +169,9 @@ class homeController extends Controller {
         const reqArr = [findCity, findBanner, findInformation];
         try {
             const resData = await Promise.all(reqArr);
-            console.log(resData[0].code, resData[1].code, resData[2].data.code);
             let cityList = []; // 站点数据
             let advertising = {}; // 广告数据
-            let information = {}; // 资讯数据
+            let information = []; // 资讯数据
             // 站点数据处理
             if (resData[0].code === 200) {
                 cityList = resData[0].data;
@@ -309,7 +308,11 @@ class homeController extends Controller {
         // 查询广告所需参数
         let locationCode = ctx.request.body.locationCode;
         let findRomReq = {};
-        let productData = {};
+        let productData = {
+            dictData: [],
+            adData: [],
+            goodsList: [],
+        };
         const findAdAndproduct = async () => {
             try {
                 // 获取推荐产品ids
@@ -319,8 +322,14 @@ class homeController extends Controller {
                 // 查询广告
                 const findadData = getBannerList(ctx, service, [locationCode]);
                 const resArr = await Promise.all([findadData, findRecom]);
+                const adCode =
+                    ctx.request.body.findType === 0
+                        ? productData.dictData[0].ext1
+                        : ctx.request.body.locationCode;
                 if (resArr[0].code === 200) {
-                    productData.adData = resArr[0].data; // 广告数据
+                    productData.adData = resArr[0].data[adCode]
+                        ? resArr[0].data[adCode].sortMaterialList
+                        : []; // 广告数据
                 }
                 findRomReq = resArr[1]; // 暂存推荐接口返回数据
             } catch (error) {
@@ -330,6 +339,23 @@ class homeController extends Controller {
         try {
             // 初始查询广告+数据字典+推荐商品
             if (ctx.request.body.findType === 0) {
+                // 定义参数校验规则
+                const rules = {
+                    dictionaryCode: {
+                        type: "string",
+                        required: true,
+                    }, // 查讯数据字典的code
+                };
+                // 参数校验
+                const valiErrors = app.validator.validate(
+                    rules,
+                    ctx.request.body
+                );
+                // 参数校验未通过
+                if (valiErrors) {
+                    ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+                    return;
+                }
                 // 查询数据字典
                 const sysCode = app.config.apiClient.APPID[0];
                 const dict = contentApi.dataDict; // 查询字典
@@ -351,6 +377,9 @@ class homeController extends Controller {
                                 ext3: item.ext3,
                                 ext4: item.ext4,
                                 ext5: item.ext5,
+                                limit: ctx.request.body.limit,
+                                page: ctx.request.body.page,
+                                noMore: false,
                                 adData: [],
                                 goodsList: [],
                             });
