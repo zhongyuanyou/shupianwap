@@ -8,7 +8,8 @@ const Controller = require('egg').Controller;
 const { Get, Post, Prefix } = require('egg-shell-decorators');
 const { userApi } = require('./../../config/serveApi/index');
 const {
-  newUpdateShippingAddress,
+  newShippingAddress,
+  upadteShippingAddress,
   listShippingAddress,
   detailShippingAddress,
   statusShippingAddress,
@@ -30,23 +31,14 @@ class AddressController extends Controller {
   async addAndUpdate() {
     // 新增或编辑地址
     const { ctx, service, app } = this;
-    getValiErrors(app, ctx, newUpdateShippingAddress, ctx.request.body);
+    getValiErrors(app, ctx, ctx.request.body.id ? upadteShippingAddress : newShippingAddress, ctx.request.body);
     // 参数校验通过,正常响应
     const {
       userId,
       contactName,
       phone,
-      addressProvince,
-      addressCity,
-      addressArea,
       address,
-      postcode,
       defaultAddress,
-      ext1,
-      ext2,
-      ext3,
-      ext4,
-      ext5,
     } = ctx.request.body;
     const ads = ctx.request.body.id ? userApi.updateShippingAddress : userApi.newShippingAddress;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], ads);
@@ -54,35 +46,38 @@ class AddressController extends Controller {
       userId,
       contactName,
       phone,
-      province: addressProvince,
-      city: addressCity,
-      area: addressArea,
+      province: ctx.request.body.addressProvince || '',
+      city: ctx.request.body.addressCity || '',
+      area: ctx.request.body.addressArea || '',
       defaultAddress,
       address,
-      postcode,
-      ext1,
-      ext2,
-      ext3,
-      ext4,
-      ext5,
+      postcode: ctx.request.body.postcode,
+      ext1: ctx.request.body.ext1,
+      ext2: ctx.request.body.ext2,
+      ext3: ctx.request.body.ext3,
+      ext4: ctx.request.body.ext4,
+      ext5: ctx.request.body.ext5,
       id: ctx.request.body.id,
     } : {
       userId,
       contactName,
       phone,
-      province: addressProvince,
-      city: addressCity,
-      area: addressArea,
+      addressProvince: ctx.request.body.addressProvince || '',
+      addressCity: ctx.request.body.addressCity || '',
+      addressArea: ctx.request.body.addressArea || '',
       defaultAddress,
       address,
-      postcode,
-      ext1,
-      ext2,
-      ext3,
-      ext4,
-      ext5,
+      postcode: ctx.request.body.postcode,
+      ext1: ctx.request.body.ext1,
+      ext2: ctx.request.body.ext2,
+      ext3: ctx.request.body.ext3,
+      ext4: ctx.request.body.ext4,
+      ext5: ctx.request.body.ext5,
     };
     const { status, data } = await service.curl.curlPost(url, params);
+    console.log('请求到数据', params);
+    console.log('请求到url', url);
+    console.log('返回到data', data);
     if (status === 200 && data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data || {} });
     } else {
@@ -129,7 +124,7 @@ class AddressController extends Controller {
     }
   }
 
-  @Get('/v1/del_address')
+  @Get('/v1/del_address.do')
   async del() {
     // 删除收货地址
     const { ctx, service, app } = this;

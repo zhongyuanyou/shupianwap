@@ -152,9 +152,7 @@ export default {
     }),
   },
   mounted() {
-    if (this.userId) {
-      this.getUserInfo()
-    }
+    this.getUserInfo()
   },
   methods: {
     onClickLeft() {

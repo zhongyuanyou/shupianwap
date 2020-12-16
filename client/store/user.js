@@ -12,6 +12,14 @@ export const state = () => ({
 })
 export const mutations = {
   SET_USER(state, data = {}) {
+    this.$cookies.set('token', data.token, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 过期时间
+    })
+    this.$cookies.set('userId', data.userId, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 过期时间
+    })
     state.userInfo = data
   },
 }

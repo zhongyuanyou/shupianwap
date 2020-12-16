@@ -1,13 +1,29 @@
 'use strict';
 module.exports = {
   // 新增或编辑收货地址校验规则
-  newUpdateShippingAddress: {
+  newShippingAddress: {
     userId: { type: 'string', required: true }, // 用户id
     contactName: { type: 'string', required: true }, // 联系人姓名
     phone: { type: 'string', required: true }, // 手机号码
     addressProvince: { type: 'string', required: false }, // 省
     addressCity: { type: 'string', required: false }, // 市
     addressArea: { type: 'string', required: false }, // 区
+    address: { type: 'string', required: true }, // 详细地址
+    postcode: { type: 'string', required: false }, // 邮政编码
+    ext1: { type: 'string', required: false }, // 扩展字段
+    ext2: { type: 'string', required: false }, // 扩展字段
+    ext3: { type: 'string', required: false }, // 扩展字段
+    ext4: { type: 'string', required: false }, // 扩展字段
+    ext5: { type: 'string', required: false }, // 扩展字段
+    id: { type: 'string', required: false }, // 收货地址
+  },
+  upadteShippingAddress: {
+    userId: { type: 'string', required: true }, // 用户id
+    contactName: { type: 'string', required: true }, // 联系人姓名
+    phone: { type: 'string', required: true }, // 手机号码
+    province: { type: 'string', required: false }, // 省
+    city: { type: 'string', required: false }, // 市
+    area: { type: 'string', required: false }, // 区
     address: { type: 'string', required: true }, // 详细地址
     postcode: { type: 'string', required: false }, // 邮政编码
     ext1: { type: 'string', required: false }, // 扩展字段

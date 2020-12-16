@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-12 15:34:40
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-14 09:28:23
+ * @LastEditTime: 2020-12-16 14:45:45
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/checkbox/AsyncCheckbox.vue
 -->
@@ -12,7 +12,6 @@
     class="async-checkbox"
     :value="checkedVal"
     v-bind="$attrs"
-    v-on="$listeners"
     @change="handleChange"
     @click="handleClick"
   >

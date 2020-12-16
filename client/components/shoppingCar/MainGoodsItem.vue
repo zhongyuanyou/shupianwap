@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-12 15:44:38
+ * @LastEditTime: 2020-12-16 10:03:52
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/MainGoodsItem.vue
 -->
@@ -21,7 +21,8 @@
           size="large"
           @click="handleSkuOpen"
         >
-          {{ formatPropList }}
+          <span class="goods-sku__text"> {{ mainData.skuAttrName }}</span>
+
           <my-icon
             name="shop_ic_open"
             size="0.14rem"
@@ -42,10 +43,15 @@
           button-size="0.40rem"
           input-width="0.80rem"
           min="1"
-          :max="mainData.maxNum"
+          :max="!mainData.numFlag && mainData.maxNum ? mainData.maxNum : 99"
           :async-change="true"
           @change="handleCountChange"
         />
+      </div>
+      <div class="goods-service__row">
+        <span class="goods-service__title"></span>
+        <span class="goods-service__content"></span>
+        <span class="goods-service__count"></span>
       </div>
     </div>
   </div>
@@ -85,17 +91,7 @@ export default {
       goodsCount: 1,
     }
   },
-  computed: {
-    formatPropList() {
-      const propList = this.mainData.propList
-      if (!Array.isArray(propList)) return ''
-      return propList.reduce((accumulator, item) => {
-        const { name } = item || {}
-        if (name) accumulator += `;${name}`
-        return accumulator
-      }, '')
-    },
-  },
+  computed: {},
   watch: {
     'mainData.goodsNumber'(newVal, oldVal) {
       if (newVal === oldVal) return
@@ -117,7 +113,10 @@ export default {
       console.log('handleCountChange value:', value)
 
       // 人为修改,通知父组件
-      this.$emit('operation', { type: 'count', value: this.goodsCount })
+      this.$emit('operation', {
+        type: 'count',
+        data: { value: this.goodsCount },
+      })
     },
   },
 }
@@ -184,11 +183,18 @@ export default {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
+      &__text {
+        .textOverflow(1);
+      }
       .ic__sku-open {
         margin-left: 8px;
       }
+
       /deep/.sp-tag--large {
         height: 40px;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
       }
     }
     .goods-price {

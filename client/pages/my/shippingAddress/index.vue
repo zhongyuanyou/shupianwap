@@ -156,11 +156,15 @@ export default {
     },
     async confirm() {
       // 确认删除
-      const params = {
-        id: this.addressId,
+      try {
+        const params = {
+          id: this.addressId,
+        }
+        await userInfo.delAddress({ axios: this.$axios }, params)
+        await this.getShippingAddressList()
+      } catch (err) {
+        console.log(err)
       }
-      await userInfo.delAddress({ axios: this.$axios }, params)
-      await this.getShippingAddressList()
     },
   },
 }
@@ -235,12 +239,12 @@ export default {
             align-items: center;
             flex-direction: row;
             .name {
-              max-width: 140px;
+              width: 130px;
               .textOverflow(1);
             }
             .tel {
               max-width: 220px;
-              margin-left: 93px;
+              margin-left: 50px;
               .textOverflow(1);
             }
             .default {

@@ -66,6 +66,7 @@ import {
   ImagePreview,
   Sticky,
 } from '@chipspc/vant-dgg'
+import { complain } from '~/api'
 export default {
   name: 'ComplaintDetail',
   components: {
@@ -98,6 +99,9 @@ export default {
       },
     }
   },
+  mounted() {
+    this.getComplainDetail()
+  },
   methods: {
     back() {
       this.$router.back()
@@ -109,6 +113,14 @@ export default {
         startPosition: index,
         closeable: true,
       })
+    },
+    async getComplainDetail() {
+      // 获取吐槽详情
+      const params = {
+        id: this.$route.params.id,
+      }
+      const data = await complain.detail({ axios: this.$axios }, params)
+      console.log('data', data)
     },
   },
 }

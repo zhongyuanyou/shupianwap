@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:55
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-27 10:09:44
+ * @LastEditTime: 2020-12-15 19:50:48
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/ViceGoodsItem.vue
 -->
@@ -12,24 +12,34 @@
       <span class="vice-goods-item__lable">急售</span>
       <img
         class="vice-goods-item__img"
-        src="https://img.yzcdn.cn/vant/cat.jpeg"
         alt=""
+        :src="viceData.img || 'https://img.yzcdn.cn/vant/cat.jpeg'"
       />
     </div>
     <div class="vice-goods-item__right">
       <div class="vice-goods-item__name-price">
-        <strong class="vice-goods-item__name">400电话 </strong>
-        <span class="vice-goods-item__unit-price">100元</span>
+        <strong class="vice-goods-item__name"
+          >{{ viceData.serviceItemName }}
+        </strong>
+        <span class="vice-goods-item__unit-price">{{
+          viceData.price != null ? `${viceData.price}元` : '--'
+        }}</span>
       </div>
       <div class="vice-goods-item__descript">
-        <span>4000962540</span>
+        <span>{{
+          viceData.serviceItemValName != null
+            ? `${viceData.serviceItemValName}`
+            : '--'
+        }}</span>
       </div>
       <div class="vice-goods-item__total-price">
         <span class="vice-goods-item__price">
           <span class="vice-goods-item__price-value">11350</span>
           <span class="vice-goods-item__price-unit">元</span>
         </span>
-        <span class="vice-goods-item__count">x2</span>
+        <span class="vice-goods-item__count">{{
+          viceData.num != null ? `x${viceData.num}` : '--'
+        }}</span>
       </div>
     </div>
   </div>
@@ -42,6 +52,14 @@ export default {
   name: 'ViceGoodsItem',
   components: {
     [Button.name]: Button,
+  },
+  props: {
+    viceData: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
   },
   data() {
     return {
