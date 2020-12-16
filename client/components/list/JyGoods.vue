@@ -214,9 +214,15 @@ export default {
       // 如果已经存储的有筛选数据则不需要再去请求筛选数据
       if (this.filterObj[this.formData.dictCode]) {
         this.formData.needTypes = 0
+        this.jyFilterData = this.filterObj[this.formData.dictCode]
       } else {
         this.formData.needTypes = 1
       }
+      this.formData.fieldList = []
+      delete this.formData.platformPriceStart
+      delete this.formData.platformPriceEnd
+      delete this.formData.sortBy
+      this.initGoodsList()
     },
     resetAllSelect() {
       // 重置筛选项
