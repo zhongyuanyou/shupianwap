@@ -115,7 +115,7 @@ export default {
     },
     resetFilters() {
       this.activeItems = []
-      this.coupleSelectVue.clear()
+      this.coupleSelectVue && this.coupleSelectVue.clear()
     },
     confirmFilters() {
       // 确认筛选
@@ -131,7 +131,10 @@ export default {
         fieldValue: [],
         matchType: 'MATCH_TYPE_MULTI',
       }
-      if (this.activeItems[0].name === '全国') {
+      if (this.activeItems.length === 0) {
+        // 当没有选中的筛选项的时候
+        emitData = ''
+      } else if (this.activeItems[0].name === '全国') {
         // 当省级为全国时，就不必去对地区进行筛选搜索
         emitData = ''
       } else if (this.activeItems[1].name === '不限') {

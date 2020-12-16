@@ -120,9 +120,39 @@ class goodsListService extends Service {
             params.isAsc = false
             break
         }
+        if (params.platformPriceStart || params.platformPriceEnd) {
+          params.platformPriceStart =
+            this.ctx.helper.calculate(`${params.platformPriceStart}*100`)
+          params.platformPriceEnd =
+            this.ctx.helper.calculate(`${params.platformPriceEnd}*100`)
+        } else {
+          delete params.platformPriceStart
+          delete params.platformPriceEnd
+        }
         delete params.needTypes
         delete params.dictCode
         const result = await service.curl.curlPost(url, params);
+        let arr = []
+        result.data.data.records.forEach((item) => {
+          let {
+            id,
+            name,
+            classCode,
+            goodsCode,
+            platformPrice,
+            fieldList,
+          } = item
+          // todo platformPrice金额需要转换成元，在这里是分
+          arr.push({
+            id,
+            name,
+            classCode,
+            referencePrice: platformPrice,
+            fieldList,
+            productNo: goodsCode,
+          })
+        })
+        result.data.data.records = arr;
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);

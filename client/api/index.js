@@ -10,6 +10,7 @@ import { foundApi } from './found'
 import { publicApi } from './public'
 import { userApi } from './user'
 import productDetailsApi from './productDetails'
+import complain from './complain'
 
 export { auth, shoppingCar, planner }
 export { category }
@@ -21,3 +22,4 @@ export { publicApi }
 export { userApi }
 export { productDetailsApi }
 export { dict }
+export { complain }

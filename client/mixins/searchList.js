@@ -7,7 +7,6 @@ export default {
       // console.log('this.searchText', this.searchText)
       // console.log('formData', this.formData)
       console.log('reqType', this.reqType)
-      console.log(2222)
       if (this.reqType === 'serve') {
         console.log('serveGoodsListData', this.serveGoodsListData)
         goods
@@ -36,7 +35,36 @@ export default {
           })
       } else {
         console.log('jyGoodsListData', this.jyGoodsListData)
-        this.jyGoodsListData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        goods
+          .searchJyGoodsList({ axios: this.$axios }, this.formData)
+          .then((data) => {
+            console.log(data)
+            if (
+              this.formData.needTypes === 1 &&
+              JSON.stringify(data.filters) !== '{}'
+            ) {
+              // 处理筛选项数据
+              this.jyFilterData = data.filters
+              this.filterObj[this.formData.dictCode] = data.filters
+              this.formData.needTypes = 0
+            }
+            this.jyGoodsListData = data.goods.records
+            if (data.goods.records.length < 10) {
+              this.finished = true
+            } else {
+              this.formData.start += 1
+              this.loading = false
+            }
+            if (this.jyGoodsListData.length === 0) {
+              this.listShow = false
+            } else {
+              this.listShow = true
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+        // this.jyGoodsListData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
       }
     },
     searchInputHandle() {

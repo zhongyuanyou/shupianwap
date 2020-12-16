@@ -107,7 +107,8 @@ export default {
         // 如果在当前列表进行了搜索框搜索，
         // 那么在切换列表的时候需要重新请求数据
         setTimeout(() => {
-          // 将事件放到事件栈底
+          // 将事件放到eventloop中去
+          console.log('this.tabVues[this.reqType]', this.tabVues[this.reqType])
           this.tabVues[this.reqType] &&
             this.tabVues[this.reqType].initGoodsList()
         }, 0)
@@ -160,7 +161,9 @@ export default {
       this.formData.searchText = this.currentInputText
       const type = this.reqType === 'serve' ? 'jy' : 'serve'
       this.tabVues[type] && this.tabVues[type].resetAllSelect()
-      this.isInput = true
+      if (this.tabVues[type]) {
+        this.isInput = true
+      }
       // 处理存储路由的query
       const query = this.$router.history.current.query
       const path = this.$router.history.current.path // 对象的拷
@@ -173,9 +176,9 @@ export default {
       // 存储服务和交易列表的vue实例
       if (key === 'jy' && !this.tabVues[key]) {
         this.tabVues[key] = val
-        this.$nextTick(() => {
+        /* this.$nextTick(() => {
           this.tabVues[key].searchKeydownHandle()
-        })
+        }) */
       } else {
         this.tabVues[key] = val
       }

@@ -22,8 +22,8 @@
           title-class="complaintList-item-title"
           value-class="complaintList-item-value"
           label-class="complaintList-item-label"
-          :title="item.title"
-          :label="item.createdTime"
+          :title="item.content"
+          :label="item.createTime"
           is-link
           center
           border
@@ -45,8 +45,15 @@ import {
   Cell,
   Sticky,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import { complain } from '~/api'
 export default {
   name: 'ComplaintList',
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userInfo.userId,
+    }),
+  },
   components: {
     [Button.name]: Button,
     [TopNavBar.name]: TopNavBar,
@@ -57,24 +64,16 @@ export default {
   },
   data() {
     return {
-      complaintList: [
-        {
-          id: 1,
-          title: '我的问答在哪里查看？',
-          status: '处理中',
-          createdTime: '2020-10-14 10:00',
-        },
-        {
-          id: 2,
-          title: '设置免打扰怎么还给我打电话？你...',
-          status: '已处理',
-          createdTime: '2020-10-14 10:00',
-        },
-      ],
+      complaintList: [],
       loading: false,
       finished: true, // 默认false
       refreshing: false,
+      page: 1, // 当前页
+      limit: 10, // 每页显示条数
     }
+  },
+  mounted() {
+    this.getComplainList()
   },
   methods: {
     back() {
@@ -107,6 +106,21 @@ export default {
       // 将 loading 设置为 true，表示处于加载状态
       // this.loading = true
       // this.onLoad()
+    },
+    async getComplainList() {
+      // 获取吐槽列表数据
+      const params = {
+        // userId: this.userId,
+        userId: '607991414122247048',
+        page: this.page,
+        limit: this.limit,
+      }
+      try {
+        const data = await complain.list({ axios: this.$axios }, params)
+        this.complaintList = data.rows
+      } catch (err) {
+        console.log(err)
+      }
     },
   },
 }

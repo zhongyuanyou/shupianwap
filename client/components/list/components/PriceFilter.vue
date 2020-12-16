@@ -147,7 +147,7 @@ export default {
       this.echoData.maxValue = ''
     },
     resetFilters() {
-      this.priceComponent.clearInput()
+      this.priceComponent && this.priceComponent.clearInput()
       this.echoData.activeItems = []
       this.echoData.maxValue = ''
       this.echoData.minValue = ''

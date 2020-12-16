@@ -56,7 +56,7 @@ export default {
   },
   watch: {
     selectValue(val) {
-      if (val) {
+      if (JSON.stringify(val) !== '{}') {
         this.dropdownTitle = val.name
         this.moreTextCss = 'jyDropdownFilter active'
         // 如果文字大于4个字需要添加样式
@@ -99,6 +99,12 @@ export default {
         })
       })
       // this.selectValue = this.option[0]
+    },
+    resetFilters() {
+      // 重置筛选项
+      this.dropdownTitle = this.filterData.name
+      this.selectValue = {}
+      this.moreTextCss = 'jyDropdownFilter'
     },
   },
 }

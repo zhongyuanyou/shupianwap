@@ -2,15 +2,19 @@
   <div class="goods-item" @click="jumpUrl">
     <div class="goods-item-left">
       <img src="" alt="" class="goods-img" />
-      <span class="tag">急售</span>
+      <!--<span class="tag">急售</span>-->
     </div>
     <div class="goods-right">
       <h3>{{ itemData.name }}</h3>
-      <p>{{ itemData.productDescription }}</p>
-      <div class="tags"><span>极速办理</span><span>极速办理</span></div>
+      <p>{{ description }}</p>
+      <div v-if="itemType.type === 'serve'" class="tags">
+        <span>极速办理</span><span>极速办理</span>
+      </div>
       <div class="price-sales">
         <span>{{ itemData.referencePrice }}元</span
-        ><span>销量 {{ itemData.salesSum }}</span>
+        ><span v-if="itemType.type === 'serve'"
+          >销量 {{ itemData.salesSum }}</span
+        >
       </div>
     </div>
   </div>
@@ -38,6 +42,17 @@ export default {
   },
   data() {
     return {}
+  },
+  computed: {
+    description() {
+      if (this.itemData.productDescription) {
+        return this.itemData.productDescription
+      }
+      if (this.itemData.fieldList) {
+        return this.itemData.fieldList
+      }
+      return ''
+    },
   },
   methods: {
     jumpUrl() {

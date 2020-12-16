@@ -3,6 +3,7 @@
     <sp-tabs
       v-if="isShowTabs"
       ref="spTabs"
+      v-model="activeTabIndex"
       title-active-color="#4974F5"
       title-inactive-color="#222"
       line-width="0"
@@ -40,6 +41,7 @@
         v-for="(item, index) in jyGoodsListData"
         :key="index"
         :item-type="itemType"
+        :item-data="item"
       />
     </sp-list>
     <Subscribe
@@ -58,7 +60,6 @@ import Subscribe from '@/components/list/Subscribe'
 import JyFilters from '@/components/list/JyFilters'
 import searchList from '@/mixins/searchList'
 import clone from '~/utils/clone'
-import { goods } from '@/api/index'
 
 export default {
   name: 'JyGoods',
@@ -138,26 +139,37 @@ export default {
       loading: false,
       finished: false,
       maxHeight: 0,
+      activeTabIndex: 0,
       formData: {
         start: 1,
         limit: 10,
         needTypes: 1,
         classCode: '',
         dictCode: '',
+        searchKey: '',
+        fieldList: '',
       },
       jyFilterData: [],
       jyGoodsListData: [],
       filterItem: {},
+      filterObj: {}, // 存储已经请求过的筛选项
     }
   },
   watch: {
+    searchText(val) {
+      // 搜索框发生变化时
+      this.formData.searchKey = val
+      if (this.reqType === 'jy') {
+        this.initGoodsList()
+      }
+    },
     isChangeTab() {
       this.formData.sortBy = ''
       this.formData.classCodes = ''
     },
-    initListData(val) {
+    /* initListData(val) {
       this.jyGoodsListData = clone(val)
-    },
+    }, */
   },
   mounted() {
     this.$nextTick(() => {
@@ -185,31 +197,72 @@ export default {
     getFilterHandle(data, filrerName) {
       // 获取筛选项数据
       this.$set(this.filterItem, filrerName, data)
+      this.filterItemHandle()
+      this.initGoodsList()
     },
     onLoad() {
       console.log(1)
-      const arr = new Array(10).fill(2)
-      this.jyGoodsListData = [...this.jyGoodsListData, ...arr]
-      this.loading = false
+      // const arr = new Array(10).fill(2)
+      // this.jyGoodsListData = [...this.jyGoodsListData, ...arr]
+      // this.loading = false
+      this.searchKeydownHandle()
     },
     changeTabs(name, title) {
       console.log(this.tabItems[name])
-      this.formData.classCode = this.tabItems[name]
-      this.formData.dictCode = this.tabItems[name]
+      this.formData.classCode = this.tabItems[name].ext4
+      this.formData.dictCode = this.tabItems[name].code
+      // 如果已经存储的有筛选数据则不需要再去请求筛选数据
+      if (this.filterObj[this.formData.dictCode]) {
+        this.formData.needTypes = 0
+      } else {
+        this.formData.needTypes = 1
+      }
     },
-    resetAllSelect() {},
+    resetAllSelect() {
+      // 重置筛选项
+      this.$refs.dropDownMenu.resetAllSelect()
+      this.formData.start = 1
+      this.jyGoodsListData = []
+      this.activeTabIndex = 0
+      this.formData.classCode = this.tabItems[0].ext4
+      this.formData.dictCode = this.tabItems[0].code
+      this.formData.fieldList = []
+      this.formData.needTypes = 0
+      delete this.formData.platformPriceStart
+      delete this.formData.platformPriceEnd
+      delete this.formData.sortBy
+    },
     initGoodsList() {
-      goods
-        .searchJyGoodsList({ axios: this.$axios }, this.formData)
-        .then((res) => {
-          console.log(res)
-          if (JSON.stringify(res.filters) !== '{}') {
-            this.jyFilterData = res.filters
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      console.log('initGoodsList')
+      // 获取初始数据
+      this.formData.start = 1
+      this.jyGoodsListData = []
+      this.loading = true
+      this.finished = false
+      this.searchKeydownHandle()
+    },
+    filterItemHandle() {
+      // 处理筛选数据，拼成筛选项
+      let arr = []
+      for (const key in this.filterItem) {
+        if (key === 'sortFilter') {
+          // 处理排序筛选
+          this.formData.sortBy = this.filterItem[key].id
+        } else if (key === 'moreFilter' && this.filterItem[key].length) {
+          // 处理更多筛选
+          arr = [...arr, ...this.filterItem[key]]
+        } else if (key === 'priceFilter' && this.filterItem[key]) {
+          // 处理价格筛选
+          this.formData.platformPriceStart = this.filterItem[
+            key
+          ].fieldValue.start
+          this.formData.platformPriceEnd = this.filterItem[key].fieldValue.end
+        } else if (this.filterItem[key] !== '') {
+          // 其他筛选数据
+          arr.push(this.filterItem[key])
+        }
+      }
+      this.formData.fieldList = arr
     },
   },
 }
