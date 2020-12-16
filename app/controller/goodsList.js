@@ -96,6 +96,8 @@ class ContentController extends Controller {
     const rules = {
       start: { type: 'number', required: true },
       limit: { type: 'number', required: true },
+      platformPriceStart: { type: 'number', required: false }, // 价格区间开始
+      platformPriceEnd: { type: 'number', required: false }, // 价格区间结束
       needTypes: { type: 'number', required: true }, // 是否需要分类数据，0不需要，1需要
       sortBy: { type: 'number', required: false }, // 排序 1.综合排序（默认）  2.最新发布  3.按价格从高到低  4.按价格从低到高
       classCode: { type: 'string', required: true }, // 产品分类编码
