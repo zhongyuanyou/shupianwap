@@ -35,16 +35,11 @@ class MyController extends Controller {
       value,
     } = ctx.request.body;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], userApi.updateInfo);
-    const { status, data } = await service.curl.curlPost(url, {
+    const { data } = await service.curl.curlPost(url, {
       type,
       value,
     });
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data || {} });
-    } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
-    }
+    ctx.helper.success({ ctx, code: 200, res: data || {} });
   }
 
   @Get('/v1/info.do')
@@ -56,17 +51,11 @@ class MyController extends Controller {
     // 参数校验通过,正常响应
     const { id } = ctx.query;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], userApi.dataInfo);
-    const { status, data } = await service.curl.curlGet(url, {
+    const { data } = await service.curl.curlGet(url, {
       id,
     }
     );
-    console.log('数据', data);
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data || {} });
-    } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
-    }
+    ctx.helper.success({ ctx, code: 200, res: data || {} });
   }
 }
 module.exports = MyController;
