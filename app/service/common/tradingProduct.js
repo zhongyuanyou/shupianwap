@@ -10,7 +10,7 @@ class tradingProduct extends Service {
      */
     async recommendList(ids = []) {
         return new Promise(async (resolve) => {
-            const { ctx, app } = this;
+            const { ctx, app, service } = this;
             const url = ctx.helper.assembleUrl(
                 app.config.apiClient.APPID[1],
                 productApi.getTradingListToIds
@@ -18,9 +18,9 @@ class tradingProduct extends Service {
             try {
                 const result = await service.curl.curlPost(url, { ids });
                 resolve({
-                    code: result.data.code,
-                    message: result.data.message,
-                    data: result.data.data || [],
+                    code: result.code,
+                    message: result.message,
+                    data: result.data || [],
                 });
             } catch (err) {
                 ctx.logger.error(err);
