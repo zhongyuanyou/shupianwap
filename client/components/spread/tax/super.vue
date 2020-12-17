@@ -2,7 +2,12 @@
   <div class="super">
     <div class="super-title">我们的优势</div>
     <div class="super-banner">
-      <div v-for="(index, i) of banners" :key="i" class="super-banner-item">
+      <div
+        v-for="(index, i) of banners"
+        :key="i"
+        class="super-banner-item"
+        @click="show"
+      >
         <div class="super-banner-item-left">
           <img :src="index.img" alt="" class="super-banner-item-left-icon" />
         </div>
@@ -47,6 +52,11 @@ export default {
         },
       ],
     }
+  },
+  methods: {
+    show() {
+      console.log(1)
+    },
   },
 }
 </script>

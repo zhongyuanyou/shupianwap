@@ -2,47 +2,62 @@
   <div class="planner">
     <div class="planner-title">咨询规划师</div>
     <div class="planner-content">
-      <div class="planner-content-left">
-        <div class="planner-content-left-person">
-          <div class="planner-content-left-person-img"></div>
-          <div class="planner-content-left-person-font">金牌规划师</div>
-        </div>
-        <div class="planner-content-left-content">
-          <div class="planner-content-left-content-name">郭亮亮</div>
-          <div class="planner-content-left-content-count">
-            薯片分 138 | 服务次数 258
+      <sp-swipe
+        :autoplay="3000"
+        indicator-color="white"
+        :show-indicators="false"
+        class="swipe"
+      >
+        <sp-swipe-item
+          v-for="index of 3"
+          :key="index"
+          class="planner-content-left"
+        >
+          <div class="planner-content-left-person">
+            <div class="planner-content-left-person-img"></div>
+            <div class="planner-content-left-person-font">金牌规划师</div>
           </div>
-          <div class="planner-content-left-content-tab">
-            <div v-for="(tab, i) of tabs" :key="i">{{ tab }}</div>
+          <div class="planner-content-left-content">
+            <div class="planner-content-left-content-name">郭亮亮</div>
+            <div class="planner-content-left-content-count">
+              薯片分 138 | 服务次数 258
+            </div>
+            <div class="planner-content-left-content-tab">
+              <div v-for="(tab, i) of tabs" :key="i">{{ tab }}</div>
+            </div>
           </div>
-        </div>
-        <div class="planner-content-left-icon">
-          <div style="margin-right: 0.2rem">
-            <my-icon
-              name="notify_ic_chat"
-              color="#4974F5"
-              size="0.32rem"
-              class="icon line"
-            ></my-icon>
-          </div>
-          <div>
-            <my-icon
-              name="notify_ic_tel"
-              color="#4974F5"
-              size="0.32rem"
-              class="icon line"
-            ></my-icon>
-          </div>
-        </div>
-      </div>
+          <div class="planner-content-left-icon">
+            <div style="margin-right: 0.2rem">
+              <my-icon
+                name="notify_ic_chat"
+                color="#4974F5"
+                size="0.32rem"
+                class="icon line"
+              ></my-icon>
+            </div>
+            <div>
+              <my-icon
+                name="notify_ic_tel"
+                color="#4974F5"
+                size="0.32rem"
+                class="icon line"
+              ></my-icon>
+            </div></div
+        ></sp-swipe-item>
+      </sp-swipe>
       <div class="planner-content-right"></div>
     </div>
   </div>
 </template>
 
 <script>
+import { Swipe, SwipeItem } from '@chipspc/vant-dgg'
 export default {
   name: 'Planner',
+  components: {
+    [Swipe.name]: Swipe,
+    [SwipeItem.name]: SwipeItem,
+  },
   data() {
     return {
       img: require('~/assets/spreadImages/tax/busi_img_swchbg01.png'),
@@ -67,8 +82,12 @@ export default {
   }
   &-content {
     display: flex;
-    &-left {
+    .swipe {
       width: 660px;
+      height: 207px;
+    }
+    &-left {
+      width: 660px !important;
       height: 207px;
       background: url('~assets/spreadImages/tax/busi_img_swchbg01.png');
       background-size: 100% 100%;
@@ -127,11 +146,13 @@ export default {
         &-tab {
           display: flex;
           div {
+            text-align: center;
             width: 104px;
             height: 32px;
             background: #f0f1f3;
             border-radius: 4px;
             font-size: 22px;
+            line-height: 32px;
             font-family: PingFang SC;
             font-weight: 400;
             color: #68728d;

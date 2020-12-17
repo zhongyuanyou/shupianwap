@@ -7,7 +7,9 @@
     <div class="banner-top">
       <sp-swipe :autoplay="3000" indicator-color="white">
         <sp-swipe-item v-for="(image, index) in images" :key="index">
-          <img :src="image" class="banner-top-img" />
+          <a href="javascript:;">
+            <img :src="image" class="banner-top-img" />
+          </a>
         </sp-swipe-item>
       </sp-swipe>
     </div>
@@ -49,8 +51,8 @@
         <sp-action-sheet
           v-model="show"
           :actions="actions"
-          cancel-text="取消"
           close-on-click-action
+          @select="onSelect"
         />
         <div class="banner-bottom-form-div">
           <span>手机号</span>
@@ -74,7 +76,8 @@
         </div>
         <button class="banner-bottom-form-button">咨询获取节税方案</button>
         <div class="banner-bottom-form-lastdiv">
-          今日已提供方案：<span>126</span>份
+          今日已提供方案：<span>{{ count }}</span
+          >份
         </div>
       </div>
     </div>
@@ -102,7 +105,20 @@ export default {
       active: 1,
       bigfont: { big: true },
       smallfont: { small: true },
-      actions: [{ name: '选项一' }, { name: '选项二' }, { name: '选项三' }],
+      actions: [
+        { name: 'ISO45001认证', color: '#5a79e8' },
+        { name: 'ISO14001认证' },
+        { name: 'ISO9001认证' },
+        { name: 'ISO50430认证' },
+        { name: 'ISO27001认证' },
+        { name: 'ISO13485认证' },
+        { name: '认证年审' },
+        { name: '三体系认证' },
+        { name: '双体系认证' },
+        { name: '其他认证' },
+      ],
+      selectname: 'ISO45001认证',
+      count: 126,
     }
   },
 
@@ -129,6 +145,16 @@ export default {
             clearInterval(time)
           }
         }, 1000)
+      }
+    },
+    onSelect(e) {
+      this.selectname = e.name
+      for (const item of this.actions) {
+        if (item.name === this.selectname) {
+          item.color = '#5a79e8'
+        } else {
+          item.color = '#232124'
+        }
       }
     },
   },
@@ -228,6 +254,8 @@ export default {
       }
       &-lastdiv {
         font-size: 26px;
+        height: 26px;
+        line-height: 26px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #555555;
@@ -270,5 +298,12 @@ a {
   font-family: PingFang SC;
   font-weight: 400;
   color: #999999;
+}
+/deep/ .sp-action-sheet__name {
+  font-size: 31px;
+  line-height: 56px;
+  height: 56px;
+  font-family: PingFang SC;
+  font-weight: bold;
 }
 </style>

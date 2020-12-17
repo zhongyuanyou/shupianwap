@@ -1,48 +1,55 @@
 <template>
   <div class="serve">
     <div class="serve-text">稅筹服务介绍</div>
-    <div
-      v-for="(index, i) of cards"
-      :key="i"
-      class="serve-card"
-      :style="index.bg"
-    >
-      <div class="serve-card-first">
-        <div>
-          <div class="serve-card-first-big">{{ index.num1 }}万+</div>
-          <div class="serve-card-first-small">在线咨询</div>
+    <a href="javascript:;">
+      <div
+        v-for="(index, i) of cards"
+        :key="i"
+        class="serve-card"
+        :style="index.bg"
+      >
+        <div class="serve-card-first">
+          <div>
+            <div class="serve-card-first-big">{{ index.num1 }}万+</div>
+            <div class="serve-card-first-small">在线咨询</div>
+          </div>
+          <div>
+            <div class="serve-card-first-big">{{ index.num2 }}万+</div>
+            <div class="serve-card-first-small">累计成交</div>
+          </div>
+          <div>
+            <div class="serve-card-first-big">{{ index.num3 }}万+</div>
+            <div class="serve-card-first-small">成功案列</div>
+          </div>
         </div>
-        <div>
-          <div class="serve-card-first-big">{{ index.num2 }}万+</div>
-          <div class="serve-card-first-small">累计成交</div>
-        </div>
-        <div>
-          <div class="serve-card-first-big">{{ index.num3 }}万+</div>
-          <div class="serve-card-first-small">成功案列</div>
+        <div class="serve-card-second">
+          <div class="serve-card-second-left">
+            <span>{{ index.price }}</span
+            ><span>元起</span><strike>488.00</strike>
+          </div>
+          <div class="serve-card-second-right">
+            <div class="serve-card-second-right-person"></div>
+            <div class="serve-card-second-right-rap" @click="col">
+              <my-icon
+                name="notify_ic_chat"
+                color="#4974F5"
+                size="0.4rem"
+                class="icon"
+              ></my-icon>
+            </div>
+            <div class="serve-card-second-right-rap" @click="col">
+              <my-icon
+                name="notify_ic_tel"
+                color="#4974F5"
+                size="0.4rem"
+                class="icon"
+                @click="col"
+              ></my-icon>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="serve-card-second">
-        <div class="serve-card-second-left">
-          <span>{{ index.price }}</span
-          ><span>元起</span><strike>488.00</strike>
-        </div>
-        <div class="serve-card-second-right">
-          <div class="serve-card-second-right-person"></div>
-          <my-icon
-            name="notify_ic_chat"
-            color="#4974F5"
-            size="0.4rem"
-            class="icon"
-          ></my-icon>
-          <my-icon
-            name="notify_ic_tel"
-            color="#4974F5"
-            size="0.4rem"
-            class="icon"
-          ></my-icon>
-        </div>
-      </div>
-    </div>
+    </a>
   </div>
 </template>
 
@@ -93,6 +100,12 @@ export default {
         },
       ],
     }
+  },
+  methods: {
+    col(e) {
+      console.log(1)
+      e.stopPropagation()
+    },
   },
 }
 </script>
@@ -188,6 +201,12 @@ export default {
           width: 56px;
           border-radius: 50%;
           background: gray;
+        }
+        &-rap {
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
         }
       }
     }
