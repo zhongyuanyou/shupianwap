@@ -25,7 +25,7 @@
     <ServiceInfo :client-details-data="scProductDetailData.clientDetails" />
     <!--    推荐规划师-->
     <div class="planners-box">
-      <Planners :info="info" />
+      <Planners :info="planners" />
       <div class="planners-box-quiz">
         <h2>您的疑问，第一时间为您解答</h2>
         <div>
@@ -54,6 +54,7 @@ import ServiceItems from '~/components/detail/service/ServiceItems'
 import ServiceInfo from '~/components/detail/service/ServiceInfo'
 import Planners from '~/components/detail/Planners'
 import Need from '~/components/detail/Need'
+import getUserSign from '@/utils/fingerprint'
 import { productDetailsApi } from '~/api'
 export default {
   name: 'ServiceDetails',
@@ -71,7 +72,6 @@ export default {
     Need,
   },
   async asyncData({ $axios, params }) {
-    console.log(12121)
     try {
       const res = await $axios.post(productDetailsApi.scProductDetail, {
         productId: params.id,
@@ -95,25 +95,22 @@ export default {
   data() {
     return {
       opacity: 0,
+      // 服务详情数据
       scProductDetailData: {
-        baseData: {},
-        attrs: [],
-        tags: {},
-        operating: {},
-        clientDetails: {},
+        baseData: {}, // 基本信息
+        attrs: [], // 产品属性
+        tags: {}, // 产品标签
+        operating: {}, // 运营信息
+        clientDetails: {}, // 客户端展示数据
         refConfig: [],
-        skuAttrs: [],
-        normalItemList: [],
+        skuAttrs: [], // sku属性
+        normalItemList: [], // 基本服务项
       },
+      planners: [],
       info: {
         images: [
           'https://img.yzcdn.cn/vant/cat.jpeg',
           'https://img.yzcdn.cn/vant/cat.jpeg',
-        ],
-        basicInfo: {},
-        serviceItems: [
-          { serviceName: '公司核名服务', serviceDes: '这是一段描述' },
-          { serviceName: '工商系统提报', serviceDes: '这是一段描述' },
         ],
         planners: [
           {
@@ -145,6 +142,7 @@ export default {
       refreshing: false,
       plannerLimit: 5,
       page: 1,
+      deviceId: null, // 用户唯一标识
     }
   },
   computed: {
@@ -167,15 +165,19 @@ export default {
     onLoad() {
       console.log('加载更多')
     },
-    handleGetRecPlanner() {
-      console.log(this.area)
+    async handleGetRecPlanner() {
+      // 获取用户唯一标识
+      if (!this.deviceId) {
+        this.deviceId = await getUserSign()
+      }
+      console.log(this.scProductDetailData.baseData)
       this.$axios
         .get(productDetailsApi.recPlanner, {
           params: {
-            limit: 5,
+            limit: 3,
             page: 1,
             area: this.city.code, // 区域编码
-            deviceId: null, // 设备ID
+            deviceId: this.deviceId, // 设备ID
             level_2_ID: this.scProductDetailData.baseData.parentClassCode
               ? this.scProductDetailData.baseData.parentClassCode.split(',')[1]
               : null, // 二级产品分类
@@ -187,8 +189,10 @@ export default {
             productId: this.$route.params.id, // 产品id
           },
         })
-        .then((data) => {
-          console.log(data)
+        .then((res) => {
+          if (res.code === 200) {
+            this.planners = res.data.records
+          }
         })
         .catch((err) => {
           console.log(err)

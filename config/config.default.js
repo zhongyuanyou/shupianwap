@@ -37,9 +37,9 @@ module.exports = appInfo => {
       common: {
         'Content-Type': 'application/json; charset=UTF-8',
         'X-User-Agent': '4b43c3f3-d817-4576-95b1-ad8519a2f14e',
-      }
+      },
     },
-    timeout: 10000
+    timeout: 10000,
   };
   return {
     ...config,
