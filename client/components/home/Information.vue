@@ -21,7 +21,7 @@
         @click="jumpPage(item.id)"
       >
         <div class="text-box">
-          <p v-if="index !== 0">{{ item.subtitle }}</p>
+          <p v-if="index !== 0">{{ item.description }}</p>
           <h6>{{ item.title }}</h6>
         </div>
         <div class="img-label">

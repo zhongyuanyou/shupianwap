@@ -1,0 +1,7 @@
+'use strict'
+
+import { CHIPS_WAP_BASE_URL } from '../config/constant'
+const interviewApi = {
+  list: `${CHIPS_WAP_BASE_URL}/nk/interview/v1/get_interview_list.do`, // 获取用户信息
+}
+export { interviewApi }

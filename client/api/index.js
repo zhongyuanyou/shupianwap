@@ -11,6 +11,8 @@ import { publicApi } from './public'
 import { userApi } from './user'
 import productDetailsApi from './productDetails'
 import complain from './complain'
+import { interviewApi } from './interview'
+import { helpApi } from './help' // 帮助中心相关接口
 
 export { auth, shoppingCar, planner }
 export { category }
@@ -23,3 +25,5 @@ export { userApi }
 export { productDetailsApi }
 export { dict }
 export { complain }
+export { interviewApi }
+export { helpApi }
