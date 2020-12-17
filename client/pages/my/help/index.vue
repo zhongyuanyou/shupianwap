@@ -97,7 +97,10 @@ import {
   BottombarIcon,
   Sticky,
 } from '@chipspc/vant-dgg'
+import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
+import { helpApi } from '@/api'
 import Header from '@/components/common/head/header'
+
 export default {
   name: 'Help',
   components: {
@@ -109,6 +112,33 @@ export default {
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
     [BottombarIcon.name]: BottombarIcon,
+  },
+  async asyncData({ $axios }) {
+    const params = {
+      findType: 0, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
+      locationCode: 'ad100006', // 广告位code
+      code: 'con100873', // 获取分类列表选项的code
+      limit: 10,
+      page: 1,
+      categoryCode: '', // 分类code赛选文章
+      keyword: '',
+      terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
+      platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
+    }
+    let tabData = []
+    try {
+      const res = await $axios.post(helpApi.findArticle, params)
+      if (res.code === 200) {
+        tabData = res.data.categoryList
+        tabData[0].adList = res.data.adListData
+        tabData[0].articleData = res.data.articleData
+      }
+      console.log('服务端', res)
+    } catch (error) {}
+    return {
+      params,
+      tabData,
+    }
   },
   data() {
     return {
@@ -225,10 +255,26 @@ export default {
           text: '公司注册需要哪些资料？abc',
         },
       ],
+      //   params: {
+      //     findType: 0, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
+      //     locationCode: 'ad100006', // 广告位code
+      //     code: 'con100873', // 获取分类列表选项的code
+      //     limit: 10,
+      //     page: 1,
+      //     categoryCode: '', // 分类code赛选文章
+      //     keyword: '',
+      //     terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
+      //     platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
+      //   },
     }
   },
   mounted() {
+    console.log(this.params, this.tabData)
     this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
+  },
+  created() {
+    if (process.client) {
+    }
   },
   methods: {
     // tab切换
