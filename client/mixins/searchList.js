@@ -7,6 +7,7 @@ export default {
       // console.log('this.searchText', this.searchText)
       // console.log('formData', this.formData)
       console.log('reqType', this.reqType)
+      this.listShow = true
       if (this.reqType === 'serve') {
         console.log('serveGoodsListData', this.serveGoodsListData)
         goods
@@ -31,40 +32,68 @@ export default {
               }
             } else {
               // todo 提示没有数据
+              this.listShow = false
             }
           })
+          .catch((err) => {
+            // todo 提示没有数据
+            this.listShow = false
+            console.error(err)
+          })
       } else {
-        console.log('jyGoodsListData', this.jyGoodsListData)
+        console.log(
+          'jyGoodsListData',
+          this.jyGoodsListData[this.currentTabJyCode]
+        )
         goods
-          .searchJyGoodsList({ axios: this.$axios }, this.formData)
+          .searchJyGoodsList(
+            { axios: this.$axios },
+            this.formData[this.currentTabJyCode]
+          )
           .then((data) => {
             console.log(data)
             if (
-              this.formData.needTypes === 1 &&
+              this.formData[this.currentTabJyCode].needTypes === 1 &&
               JSON.stringify(data.filters) !== '{}'
             ) {
               // 处理筛选项数据
-              this.jyFilterData = data.filters
-              this.filterObj[this.formData.dictCode] = data.filters
-              this.formData.needTypes = 0
+              this.jyFilterData[this.currentTabJyCode] = data.filters
+              this.formData[this.currentTabJyCode].needTypes = 0
             }
-            this.jyGoodsListData = data.goods.records
+            if (JSON.stringify(data.goods) !== '{}') {
+              this.jyGoodsListData[this.currentTabJyCode] = data.goods.records
+            } else {
+              this.jyGoodsListData[this.currentTabJyCode] = []
+            }
             if (data.goods.records.length < 10) {
               this.finished = true
             } else {
-              this.formData.start += 1
+              this.formData[this.currentTabJyCode].start += 1
               this.loading = false
             }
-            if (this.jyGoodsListData.length === 0) {
+            // 显示或隐藏订阅框
+            if (this.jyGoodsListData[this.currentTabJyCode].length === 0) {
               this.listShow = false
             } else {
               this.listShow = true
             }
+            // 如果没有计算maxHeight，则需要在筛选数据出来后计算列表的最大高
+            if (this.maxHeight === 0) {
+              /* console.log(this.$refs.installApp)
+              console.log(this.$refs.dropDownMenu)
+              console.log(this.$refs.spTabs)
+              console.log(this.$el)
+              console.log(
+                document.querySelectorAll('.sp-tabs-self .sp-tabs__wrap')
+              ) */
+              this.computedHeight()
+            }
           })
           .catch((err) => {
-            console.log(err)
+            // todo 提示没有数据
+            this.listShow = false
+            console.error(err)
           })
-        // this.jyGoodsListData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
       }
     },
     searchInputHandle() {

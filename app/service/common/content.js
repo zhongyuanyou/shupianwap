@@ -2,6 +2,11 @@
 const Service = require('egg').Service;
 const { contentApi } = require('../../../config/serveApi/index');
 class InformationService extends Service {
+  /**
+   * @author xyg
+   * 获取内容列表服务API（GET）
+   * @params { Object } 参数
+   */
   async list(params = {}) {
     // 列表
     return new Promise(async resolve => {
@@ -21,6 +26,11 @@ class InformationService extends Service {
       }
     });
   }
+  /**
+   * @author xyg
+   * 获取内容详情API（GET）
+   * @params { Object } 参数
+   */
   async detail(params = {}) {
     // 详情
     return new Promise(async resolve => {
