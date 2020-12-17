@@ -80,16 +80,19 @@ export default {
       box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
       border-radius: 4px;
       margin-right: 16px;
+      padding: 0 8px;
       a {
         display: flex;
         align-items: center;
         justify-content: center;
         width: 100%;
         height: 100%;
+        line-height: 64px;
         font-size: 26px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #222222;
+        .textOverflow(1);
       }
     }
     .active {
@@ -117,7 +120,7 @@ export default {
     width: 100%;
     margin-top: 32px;
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     a {
       width: 32%;
       height: 144px;
@@ -126,6 +129,9 @@ export default {
       //   padding: 19px 22px 20px 24px;
       background: #f8f8f8;
       border-radius: 8px;
+      &:not(:last-child) {
+        margin-right: 1.79%;
+      }
       > img {
         width: 100%;
         height: 100%;

@@ -105,7 +105,7 @@ export default {
         dictionaryCode: 'C-SY-RMJY-GG', // 查询数据字典的code
         findType: 0, // 查询类型：0：初始查询广告+数据字典+推荐商品  1：查询广告+推荐商品 2：只查推荐商品
         userId: '', // 用户id
-        deviceId: '', // 设备ID（用户唯一标识）
+        deviceId: '', // 设备ID（用户唯一标识） 0022ef1a-f685-469a-93a8-5409892207a2
         areaCode: '', // 区域编码
         sceneId: 'app-mainye-01', // 场景ID
         maxsize: 100, // 要求推荐产品的数量
