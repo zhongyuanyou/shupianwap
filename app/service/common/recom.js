@@ -3,6 +3,7 @@ const Service = require("egg").Service;
 const { algorithmApi } = require("../../../config/serveApi/index");
 class cityService extends Service {
     /**
+     * @Author: MaLiang
      * 获取推荐产品id列表API（HTTP）
      * @params { Object }
      * @params.userId { string } 用户id 非必须
@@ -38,12 +39,12 @@ class cityService extends Service {
                         algorithmApi.productRecom
                     );
                     const result = await service.curl.curlPost(url, params);
-                    if (result.data.code === 200) {
+                    if (result.code === 200) {
                         const overdueTime = 60 * 60; // 过期时间(1小时)
                         // 缓存数据
-                        service.redis.set(key, result.data, overdueTime);
+                        service.redis.set(key, result, overdueTime);
                     }
-                    resolve(result.data);
+                    resolve(result);
                 }
             } catch (err) {
                 ctx.logger.error(err);

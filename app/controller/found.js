@@ -26,19 +26,19 @@ const getInformation = async function(service, bannerApi, listApi, locationCode,
     const initAllRes = await Promise.all(reqAll);
     // 广告数据处理
     if (
-      initAllRes[0].data.code === 200 &&
-      initAllRes[0].data.data &&
-      Array.isArray(initAllRes[0].data.data)
+      initAllRes[0].code === 200 &&
+      initAllRes[0].data &&
+      Array.isArray(initAllRes[0].data)
     ) {
-      information_banner = initAllRes[0].data.data;
+      information_banner = initAllRes[0].data;
     }
     // 资讯列表处理
     if (
-      initAllRes[1].data.code === 200 &&
-      initAllRes[1].data.data &&
-      Array.isArray(initAllRes[1].data.data.rows)
+      initAllRes[1].code === 200 &&
+      initAllRes[1].data &&
+      Array.isArray(initAllRes[1].data.rows)
     ) {
-      information_list = initAllRes[1].data.data.rows;
+      information_list = initAllRes[1].data.rows;
     }
     const resData = isInit ? {
       information_class,
@@ -76,26 +76,21 @@ class FoundController extends Controller {
     const { ctx, app, service } = this;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findCategoryDetail);
     // 获取分类
-    const { status, data } = await service.curl.curlGet(
+    const { data } = await service.curl.curlGet(
       url, {
         code: 'con100000',
       });
-    if (status === 200 && data.code === 200) {
-      // 若获取分类请求正常返回数据
-      const childList = data.data.childrenList || [];
-      if (childList.length) {
-        childList.forEach(item => {
-          delete item.childrenList;
-        });
-      }
-      information_class = childList;
-      const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
-      const listApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findPage);
-      await getInformation(service, bannerApi, listApi, new Array('ad100026'), information_class[0].code, ctx, true);
-    } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
+    // 若获取分类请求正常返回数据
+    const childList = data.childrenList || [];
+    if (childList.length) {
+      childList.forEach(item => {
+        delete item.childrenList;
+      });
     }
+    information_class = childList;
+    const bannerApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findAdList);
+    const listApi = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findPage);
+    await getInformation(service, bannerApi, listApi, new Array('ad100026'), information_class[0].code, ctx, true);
   }
 
   @Get('/v1/list.do')
@@ -106,21 +101,16 @@ class FoundController extends Controller {
     // 参数校验通过,正常响应
     const { limit = 10, page = 1, categoryCode, keyword } = ctx.query;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[0], contentApi.findPage);
-    const { status, data } = await service.curl.curlGet(url, {
+    const { data } = await service.curl.curlGet(url, {
       limit,
       page,
       categoryCode,
       keyword,
     });
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: {
-        information_list: data.data.rows || [],
-        totalCount: data.data.total,
-      } });
-    } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
-    }
+    ctx.helper.success({ ctx, code: 200, res: {
+      information_list: data.rows || [],
+      totalCount: data.total,
+    } });
   }
 
   @Get('/v1/detail.do')
@@ -133,13 +123,8 @@ class FoundController extends Controller {
     const params = {
       id,
     };
-    const { status, data } = await service.common.content.detail(params);
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data });
-    } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
-    }
+    const { data } = await service.common.content.detail(params);
+    ctx.helper.success({ ctx, code: 200, res: data });
   }
 
   @Get('/v1/banner_information.do')

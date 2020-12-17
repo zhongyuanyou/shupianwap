@@ -111,7 +111,7 @@ export default {
       // 获取吐槽列表数据
       const params = {
         // userId: this.userId,
-        userId: '607991414122247048',
+        userId: '607991757719633892',
         page: this.page,
         limit: this.limit,
       }

@@ -46,9 +46,9 @@ class AddressController extends Controller {
       userId,
       contactName,
       phone,
-      province: ctx.request.body.addressProvince || '',
-      city: ctx.request.body.addressCity || '',
-      area: ctx.request.body.addressArea || '',
+      addressProvince: ctx.request.body.addressProvince,
+      addressCity: ctx.request.body.addressCity,
+      addressArea: ctx.request.body.addressArea,
       defaultAddress,
       address,
       postcode: ctx.request.body.postcode,
@@ -74,16 +74,8 @@ class AddressController extends Controller {
       ext4: ctx.request.body.ext4,
       ext5: ctx.request.body.ext5,
     };
-    const { status, data } = await service.curl.curlPost(url, params);
-    console.log('请求到数据', params);
-    console.log('请求到url', url);
-    console.log('返回到data', data);
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data || {} });
-    } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
-    }
+    const { data } = await service.curl.curlPost(url, params);
+    ctx.helper.success({ ctx, code: 200, res: data || {} });
   }
 
   @Get('/v1/shipping_address_list.do')
@@ -94,15 +86,10 @@ class AddressController extends Controller {
     // 参数校验通过,正常响应
     const { userId } = ctx.query;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], userApi.listShippingAddress);
-    const { status, data } = await service.curl.curlGet(url, {
+    const { data } = await service.curl.curlGet(url, {
       userId,
     });
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data || [] });
-    } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
-    }
+    ctx.helper.success({ ctx, code: 200, res: data || [] });
   }
 
   @Get('/v1/shipping_address_info.do')
@@ -113,15 +100,10 @@ class AddressController extends Controller {
     // 参数校验通过,正常响应
     const { id } = ctx.query;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], userApi.detailShippingAddress);
-    const { status, data } = await service.curl.curlGet(url, {
+    const { data } = await service.curl.curlGet(url, {
       id,
     });
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data || {} });
-    } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
-    }
+    ctx.helper.success({ ctx, code: 200, res: data || {} });
   }
 
   @Get('/v1/del_address.do')
@@ -134,13 +116,8 @@ class AddressController extends Controller {
     const { id } = ctx.query;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3],
       userApi.delShippingAddress);
-    const { status, data } = await service.curl.curlGet(url, { id });
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data || {} });
-    } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
-    }
+    const { data } = await service.curl.curlGet(url, { id });
+    ctx.helper.success({ ctx, code: 200, res: data || {} });
   }
 }
 module.exports = AddressController;

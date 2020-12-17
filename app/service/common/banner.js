@@ -2,7 +2,7 @@
 const Service = require("egg").Service;
 const { contentApi } = require("../../../config/serveApi/index");
 class bannerService extends Service {
-    /**
+    /** @Author: MaLiang
      * 获取广告列表服务API（HTTP）
      * @locationCodeList { Array } locationCodeList 广告编码
      * @return { Object } 返回请求结果数据
@@ -15,7 +15,7 @@ class bannerService extends Service {
                 contentApi.findAdList
             );
             try {
-                const result = await this.ctx.http.post(adUrl, {
+                const result = await service.curl.curlPost(adUrl, {
                     locationCodeList,
                 });
                 const advertising = {};

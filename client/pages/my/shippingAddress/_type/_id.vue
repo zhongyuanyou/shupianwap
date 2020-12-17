@@ -102,7 +102,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
-import { userInfo } from '@/api'
+import { userinfoApi } from '@/api'
 export default {
   name: 'Id',
   components: {
@@ -160,6 +160,7 @@ export default {
     },
     select(data) {
       // 选择地址
+      this.areaTxt = ''
       this.areaList = data
       data.forEach((item) => {
         this.areaTxt += item.name
@@ -182,8 +183,19 @@ export default {
       const params = {
         id: this.$route.params.id,
       }
-      const data = await userInfo.addressDetail({ axios: this.$axios }, params)
-      this.ruleForm = data
+      const data = await this.$axios.get(userinfoApi.addressDetail, { params })
+      this.ruleForm = data.data
+      this.areaTxt = `${data.data.addressProvince || ''}${
+        data.data.addressCity || ''
+      }${data.data.addressArea || ''}`
+      this.areaList[0] = {
+        name: `${data.data.addressProvince}`,
+        code: 'gd',
+      }
+      this.areaList[1] = {
+        name: `${data.data.addressCity}`,
+        code: 'sz',
+      }
       this.ruleForm.defaultAddress = !!this.ruleForm.defaultAddress
     },
     handleSave() {
@@ -199,9 +211,12 @@ export default {
       this.ruleForm.defaultAddress = this.ruleForm.defaultAddress ? 1 : 0
       const params = {
         ...this.ruleForm,
+        addressProvince: this.areaList.length ? this.areaList[0].name : '',
+        addressCity: this.areaList.length > 1 ? this.areaList[1].name : '',
+        addressArea: '船山区',
       }
       try {
-        await userInfo.updateAddress({ axios: this.$axios }, params)
+        await this.$axios.post(userinfoApi.updateAddress, params)
         this.$router.back()
       } catch (err) {
         console.log('出错咯')
@@ -215,10 +230,10 @@ export default {
         addressProvince: this.areaList.length ? this.areaList[0].name : '',
         addressCity: this.areaList.length > 1 ? this.areaList[1].name : '',
         addressArea: '船山区',
-        userId: '607991414122247048',
+        userId: '607991757719633892',
       }
       try {
-        await userInfo.updateAddress({ axios: this.$axios }, params)
+        await this.$axios.post(userinfoApi.updateAddress, params)
         this.$router.back()
       } catch (err) {
         console.log('出错咯')
@@ -230,7 +245,7 @@ export default {
         const params = {
           id: this.ruleForm.id,
         }
-        await userInfo.delAddress({ axios: this.$axios }, params)
+        await this.$axios.get(userinfoApi.delAddress, { params })
         this.$router.back()
       } catch (err) {
         console.log(err)
