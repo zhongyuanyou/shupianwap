@@ -25,6 +25,7 @@ class cityService extends Service {
     }
 
     /**
+     * @author xyg
      * 获取所有地区数据（get）
      * @return { Object } 返回请求结果数据
      */
