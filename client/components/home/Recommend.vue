@@ -137,10 +137,13 @@ export default {
     try {
       this.searchDomHeight =
         this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
-      window.addEventListener('scroll', this.handleScroll, true) // 监听滚动
+      window.addEventListener('scroll', this.handleScroll) // 监听滚动
     } catch (error) {
       console.log(error)
     }
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     // 滚动加载更多
