@@ -12,7 +12,7 @@ class categoryService extends Service {
    */
   async getCategoryDetail(code, id) {
     return new Promise(async resolve => {
-      const { ctx, app } = this;
+      const { ctx, app, service } = this;
       const url = ctx.helper.assembleUrl(
         app.config.apiClient.APPID[0],
         contentApi.findCategoryDetail
@@ -23,7 +23,7 @@ class categoryService extends Service {
       try {
         // 忽略fegin校验条件
         ctx.headers['X-User-Agent'] = '4b43c3f3-d817-4576-95b1-ad8519a2f14e';
-        const result = await ctx.curlGet(url, { code, id });
+        const result = await service.curl.curlGet(url, { code, id });
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);
