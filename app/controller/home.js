@@ -174,7 +174,7 @@ class homeController extends Controller {
             let information = []; // 资讯数据
             // 站点数据处理
             if (resData[0].code === 200) {
-                cityList = resData[0].data;
+                cityList = resData[0].data.cityList;
             }
             // 广告数据处理
             if (resData[1].code === 200) {
@@ -225,9 +225,7 @@ class homeController extends Controller {
             ctx.helper.success({
                 ctx,
                 code: 200,
-                res: {
-                    cityList: resData.data,
-                },
+                res: resData.data,
             });
         } catch (error) {
             ctx.logger.error(error);

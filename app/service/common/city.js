@@ -9,18 +9,14 @@ class cityService extends Service {
      */
     async getSiteList(cityName = "") {
         return new Promise(async (resolve) => {
-            const { ctx, app } = this;
+            const { ctx, app, service } = this;
             const url = ctx.helper.assembleUrl(
                 app.config.apiClient.APPID[0],
                 contentApi.findSiteList
             );
             try {
                 const result = await service.curl.curlGet(url, { cityName });
-                resolve({
-                    code: result.data.code,
-                    message: result.data.message,
-                    data: result.data.data.cityList || [],
-                });
+                resolve(result);
             } catch (err) {
                 ctx.logger.error(err);
                 resolve(ctx.helper.errMessage(err));
