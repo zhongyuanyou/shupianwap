@@ -58,7 +58,7 @@
 <script>
 import { WorkTabs, WorkTab } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
-import serveGoods from '@/components/list/serveGoods'
+import serveGoods from '@/components/list/ServeGoods'
 import JyGoods from '@/components/list/JyGoods'
 // import searchList from '@/mixins/searchList'
 import { goods, dict } from '@/api/index'
