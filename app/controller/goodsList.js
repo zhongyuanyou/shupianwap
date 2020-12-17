@@ -59,15 +59,17 @@ class ContentController extends Controller {
         resArrs.push(serveFilters)
       }
       const data = await Promise.all(resArrs)
+      // console.log(data)
       if (ctx.request.body.needGoodsList === 1) {
-        if(data[0].status === 200 && data[0].data.code === 200) {
-          resBody.goods = data[0].data.data
+        if(data[0].code === 200) {
+          resBody.goods = data[0].data
         } else {
           resBody.goods = {}
         }
       }
       if (ctx.request.body.needTypes === 1) {
         // 需要返回筛选数据
+        // 判断是否需要商品数据，如果不需要的话就只有筛选数据
         const _index = ctx.request.body.needGoodsList === 0 ? 0 : 1
         if(data[_index] && data[_index].code === 200) {
           resBody.typeData = data[_index].data[0]
@@ -78,7 +80,7 @@ class ContentController extends Controller {
         }
       }
       if (JSON.stringify(resBody.goods) === '{}' && JSON.stringify(resBody.typeData) === '{}') {
-        ctx.logger.error(data[0].status, data[1].status, data[2].status, resBody);
+        ctx.logger.error(resBody);
         ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
       } else {
         ctx.helper.success({ ctx, code: 200, res: resBody });
@@ -137,8 +139,8 @@ class ContentController extends Controller {
       }
       const data = await Promise.all(resArrs)
       // console.log(data)
-      if(data[0].status === 200 && data[0].data.code === 200) {
-        resBody.goods = data[0].data.data
+      if(data[0].code === 200) {
+        resBody.goods = data[0].data
       } else {
         resBody.goods = {}
       }
@@ -151,7 +153,7 @@ class ContentController extends Controller {
         }
       }
       if (JSON.stringify(resBody.goods) === '{}' && JSON.stringify(resBody.filters) === '{}') {
-        ctx.logger.error(data[0].status, data[1].status, resBody);
+        ctx.logger.error(resBody);
         ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
       } else {
         ctx.helper.success({ ctx, code: 200, res: resBody });

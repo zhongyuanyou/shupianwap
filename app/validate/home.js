@@ -3,7 +3,7 @@ module.exports = {
     // 首页推荐产品校验规则
     productRules: {
         userId: { type: "string", required: false }, // 用户id
-        deviceId: { type: "string", required: true }, // 设备ID（用户唯一标识）
+        deviceId: { type: "string", required: false }, // 设备ID（用户唯一标识）
         formatId: { type: "string", required: false }, // 业态ID（首页等场景不需传，如其他场景能获取到必传）
         areaCode: { type: "string", required: true }, // 区域编码
         sceneId: { type: "string", required: true }, // 场景ID

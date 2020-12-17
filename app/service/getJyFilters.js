@@ -39,34 +39,32 @@ async function getTypeJyFilter(dictCode, classCode) {
         const cityList = service.common.city.getCityList(); // 获取地区数据
         const gshyCategory = service.common.category.getProductCategory({code: classCode,productTypeCode: 'PRO_CLASS_TYPE_SERVICE'}); // 公司的行业筛选项
         const res = await Promise.all([jyFilters, cityList, gshyCategory]);
-        const _flag = res[0].status === 200 &&
-          res[1].status === 200 &&
-          res[2].status === 200 &&
-          res[0].data.code === 200 &&
-          res[1].data.code === 200 &&
-          res[2].data.code === 200
+        const _flag =
+          res[0].code === 200 &&
+          res[1].code === 200 &&
+          res[2].code === 200
         // console.log(res)
         if (_flag) {
           // 找到地区选项
-          let gs_dq = res[0].data.data.find((item) => {
+          let gs_dq = res[0].data.find((item) => {
             return item.code === 'CONDITION-JY-GS-DQ'
           })
-          gs_dq.children = res[1].data.data; // 将地区数据和筛选合并
+          gs_dq.children = res[1].data; // 将地区数据和筛选合并
           gs_dq.children.unshift({ // 为地区数据添加全国选项
             name: '全国',
-            code: res[1].data.data[0].pcode,
+            code: res[1].data[0].pcode,
             children: [],
           })
           // 找到行业选项
-          let gs_hy = res[0].data.data.find((item) => {
+          let gs_hy = res[0].data.find((item) => {
             return item.code === 'CONDITION-JY-GS-HY'
           })
-          res[2].data.data.unshift({
+          res[2].data.unshift({
             name: '不限',
             id: 'all',
           })
-          gs_hy.children = res[2].data.data; // 将行业数据与筛选合并
-          result.data = res[0].data.data
+          gs_hy.children = res[2].data; // 将行业数据与筛选合并
+          result.data = res[0].data
           result.code = 200
         } else {
           result.data = {}
@@ -78,21 +76,20 @@ async function getTypeJyFilter(dictCode, classCode) {
         const zyhyCategory = service.common.category.getProductCategory({code: classCode,productTypeCode: 'PRO_CLASS_TYPE_SERVICE'}); // 专利的行业筛选项
         const res = await Promise.all([jyFilters, zyhyCategory]);
         console.log(res)
-        const _flag = res[0].status === 200 &&
-          res[1].status === 200 &&
-          res[0].data.code === 200 &&
-          res[1].data.code === 200
+        const _flag =
+          res[0].code === 200 &&
+          res[1].code === 200
         // 找到行业选项
         if (_flag) {
-          let zy_hy = res[0].data.data.find((item) => {
+          let zy_hy = res[0].data.find((item) => {
             return item.code === 'CONDITION-JY-ZY-HY'
           })
-          res[1].data.data.unshift({
+          res[1].data.unshift({
             name: '不限',
             id: 'all',
           })
-          zy_hy.children = res[1].data.data
-          result.data = res[0].data.data
+          zy_hy.children = res[1].data
+          result.data = res[0].data
           result.code = 200
         } else {
           result.data = {}
@@ -103,21 +100,20 @@ async function getTypeJyFilter(dictCode, classCode) {
         // 商标
         const sbflCategory = service.common.category.getProductCategory({code: classCode,productTypeCode: 'PRO_CLASS_TYPE_SERVICE'}); // 商标的分类筛选项
         const res = await Promise.all([jyFilters, sbflCategory]);
-        const _flag = res[0].status === 200 &&
-          res[1].status === 200 &&
-          res[0].data.code === 200 &&
-          res[1].data.code === 200
+        const _flag =
+          res[0].code === 200 &&
+          res[1].code === 200
         // 找到行业选项
         if (_flag) {
-          let sb_fl = res[0].data.data.find((item) => {
+          let sb_fl = res[0].data.find((item) => {
             return item.code === 'CONDITION-JY-SB-FL'
           })
-          res[1].data.data.unshift({
+          res[1].data.unshift({
             name: '不限',
             id: 'all',
           })
-          sb_fl.children = res[1].data.data
-          result.data = res[0].data.data
+          sb_fl.children = res[1].data
+          result.data = res[0].data
           result.code = 200
         } else {
           result.data = {}
@@ -129,35 +125,33 @@ async function getTypeJyFilter(dictCode, classCode) {
         const cityList = service.curl.curlGet(dictUrl, {code: '2147483647'}); // 获取地区数据
         const zzlbCategory = service.common.category.getProductCategory({code: classCode,productTypeCode: 'PRO_CLASS_TYPE_SERVICE'}); // 商标的分类筛选项
         const res = await Promise.all([jyFilters, zzlbCategory, cityList]);
-        const _flag = res[0].status === 200 &&
-          res[1].status === 200 &&
-          res[2].status === 200 &&
-          res[0].data.code === 200 &&
-          res[1].data.code === 200 &&
-          res[2].data.code === 200
+        const _flag =
+          res[0].code === 200 &&
+          res[1].code === 200 &&
+          res[2].code === 200
         if (_flag) {
           // 找到类别选项
-          let sb_fl = res[0].data.data.find((item) => {
+          let sb_fl = res[0].data.find((item) => {
             return item.code === 'CONDITION-JY-ZZ-LB'
           })
           // 找到更多选项
-          let sb_gd = res[0].data.data.find((item) => {
+          let sb_gd = res[0].data.find((item) => {
             return item.code === 'CONDITION-JY-ZZ-GD'
           })
           // 找到更多选项下的地区选项
           let sb_gd_dq = sb_gd.children.find((item) => {
             return item.code === 'CONDITION-JY-ZZ-GD-DQ'
           })
-          res[1].data.data.unshift({
+          res[1].data.unshift({
             name: '不限',
             id: 'all',
           })
-          res[2].data.data.forEach((item) => {
+          res[2].data.forEach((item) => {
             item.ext1 = sb_gd_dq.ext1
           })
-          sb_fl.children = res[1].data.data
-          sb_gd_dq.children = res[2].data.data
-          result.data = res[0].data.data
+          sb_fl.children = res[1].data
+          sb_gd_dq.children = res[2].data
+          result.data = res[0].data
           result.code = 200
         } else {
           result.data = {}
