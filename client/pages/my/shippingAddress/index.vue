@@ -97,7 +97,7 @@ import {
   BottombarButton,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { userInfo } from '@/api'
+import { userinfoApi } from '@/api'
 export default {
   name: 'Index',
   components: {
@@ -149,10 +149,10 @@ export default {
       // 获取收货地址列表
       const params = {
         // userId: this.userId,
-        userId: '607991414122247048',
+        userId: '607991757719633892',
       }
-      const data = await userInfo.addressList({ axios: this.$axios }, params)
-      this.addressList = data
+      const data = await this.$axios.get(userinfoApi.addressList, { params })
+      this.addressList = data.data
     },
     async confirm() {
       // 确认删除
@@ -160,7 +160,7 @@ export default {
         const params = {
           id: this.addressId,
         }
-        await userInfo.delAddress({ axios: this.$axios }, params)
+        await this.$axios.get(userinfoApi.delAddress, { params })
         await this.getShippingAddressList()
       } catch (err) {
         console.log(err)

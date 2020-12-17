@@ -32,7 +32,7 @@
 <script>
 import { TopNavBar } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { userInfo } from '~/api'
+import { userinfoApi } from '~/api'
 export default {
   name: 'NickName',
   components: {
@@ -63,7 +63,7 @@ export default {
         type: 1,
         value: this.nickname,
       }
-      await userInfo.update({ axios: this.$axios }, params)
+      await this.$axios.post(userinfoApi.update, params)
       this.$router.back()
     },
     clear() {

@@ -37,7 +37,7 @@
 <script>
 import { TopNavBar, Toast } from '@chipspc/vant-dgg'
 import { checkEmail } from '~/utils/check'
-import { userInfo } from '~/api'
+import { userinfoApi } from '~/api'
 export default {
   name: 'Email',
   components: {
@@ -72,7 +72,7 @@ export default {
         type: 4,
         value: this.email,
       }
-      await userInfo.update({ axios: this.$axios }, params)
+      await this.$axios.post(userinfoApi.update, params)
       this.$router.back()
     },
     clear() {

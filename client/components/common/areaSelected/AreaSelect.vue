@@ -68,19 +68,19 @@
                 :style="{
                   color: selectList.length
                     ? step == 0
-                      ? selectList[0] && selectList[0].code == cItem.code
+                      ? selectList[0] && selectList[0].name == cItem.name
                         ? '#4974F5'
                         : '#222'
-                      : selectList[1] && selectList[1].code == cItem.code
+                      : selectList[1] && selectList[1].name == cItem.name
                       ? '#4974F5'
                       : '#222'
                     : '#222',
                   fontWeight: selectList.length
                     ? step == 0
-                      ? selectList[0] && selectList[0].code == cItem.code
+                      ? selectList[0] && selectList[0].name == cItem.name
                         ? 'bold'
                         : 'normal'
-                      : selectList[1] && selectList[1].code == cItem.code
+                      : selectList[1] && selectList[1].name == cItem.name
                       ? 'bold'
                       : 'normal'
                     : 'normal',
@@ -94,10 +94,10 @@
                     selectList.length &&
                     ((step == 0 &&
                       selectList[0] &&
-                      selectList[0].code == cItem.code) ||
+                      selectList[0].name == cItem.name) ||
                       (step == 1 &&
                         selectList[1] &&
-                        selectList[1].code == cItem.code))
+                        selectList[1].name == cItem.name))
                   "
                   name="success"
                   color="#4974F5"
@@ -221,22 +221,36 @@ export default {
       },
       immediate: true,
     },
+    cityData(newVal) {
+      this.selectList = newVal
+      if (newVal.length) {
+        let tIndex = ''
+        this.cityList.forEach((item, index) => {
+          if (item.name === this.selectList[0].name) {
+            tIndex = index
+            this.selectList[0] = item
+          }
+        })
+        this.cityList[tIndex].children.forEach((item) => {
+          if (item.name === this.selectList[1].name) {
+            this.selectList[1] = item
+          }
+        })
+      }
+    },
   },
   mounted() {
     this.initCity(this.cityList)
   },
   methods: {
     initCity(cityList) {
-      // pinyin.setOptions({checkPolyphone: false, charCase: 0});
       const { cityArr, FristPin } = this
       const cityjson = {}
       for (let i = 0; i < cityList.length; i++) {
-        // let cityName=cityList[i].value // //遍历数组,拿到城市名称
         const firstName = pyjs.getCamelChars(cityList[i].name).substr(0, 1) // 拿到城市首字母，并保存
         cityList[i].first = firstName // 给原先城市键值对添加first属性
         cityArr.push(cityList[i])
       }
-      // let cityJson = {};
       for (let i = 0; i < FristPin.length; i++) {
         // 这里的FirstPin是一个写入了所有字母的数组,
         cityjson[FristPin[i]] = cityArr.filter(function (value) {
@@ -303,15 +317,31 @@ export default {
       this.closePopup()
     },
     changeCity(item, index) {
-      // 切换省市
-      this.step = index
-      this.clear()
-      if (index === 0) {
-        // 若点击到省
-        this.initCity(this.cityList)
-      } else {
-        this.initCity(this.selectList[0].children)
-      }
+      this.$nextTick(() => {
+        // 切换省市
+        this.step = index
+        this.clear()
+        if (index === 0) {
+          // 若点击到省
+          this.initCity(this.cityList)
+        } else {
+          if (this.cityData.length) {
+            let tIndex = ''
+            this.cityList.forEach((item, index) => {
+              if (item.name === this.selectList[0].name) {
+                tIndex = index
+                this.selectList[0] = item
+              }
+            })
+            this.cityList[tIndex].children.forEach((item) => {
+              if (item.name === this.selectList[1].name) {
+                this.selectList[1] = item
+              }
+            })
+          }
+          this.initCity(this.selectList[0].children)
+        }
+      })
     },
   },
 }

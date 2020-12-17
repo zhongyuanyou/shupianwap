@@ -63,7 +63,7 @@
 <script>
 import { Button, Image } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { userInfo } from '@/api'
+import { userinfoApi } from '@/api'
 export default {
   layout: 'nav',
   name: 'Index',
@@ -103,10 +103,11 @@ export default {
     async getUserInfo() {
       // 获取用户信息
       const params = {
-        id: this.userId,
+        // id: this.userId,
+        id: '607991757719633892',
       }
-      const data = await userInfo.info({ axios: this.$axios }, params)
-      this.info = data
+      const data = await this.$axios.get(userinfoApi.info, { params })
+      this.info = data.data
     },
   },
 }
