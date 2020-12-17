@@ -458,7 +458,7 @@ class homeController extends Controller {
             ) {
                 // 查询产品中心交易资源搜索接口，返回搜索的产品列表作为推荐数据返给前端
                 const res = await getJyproList(ctx, service, {
-                    classCode: ctx.request.body.productType, // 产品类别
+                    classCode: ctx.request.body.formatId, // 产品类别
                     start: ctx.request.body.page, // 当前页
                     limit: ctx.request.body.limit, // 每页条数
                 });
