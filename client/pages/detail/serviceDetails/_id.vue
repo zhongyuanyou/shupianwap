@@ -25,7 +25,7 @@
     <ServiceInfo :client-details-data="scProductDetailData.clientDetails" />
     <!--    推荐规划师-->
     <div class="planners-box">
-      <Planners :info="info" />
+      <Planners :info="planners" />
       <div class="planners-box-quiz">
         <h2>您的疑问，第一时间为您解答</h2>
         <div>
@@ -34,20 +34,27 @@
         </div>
       </div>
     </div>
-    <div></div>
     <!--    猜你喜欢-->
-    <Need :info="{ ...info }" />
+    <sp-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+    >
+      <Need :info="{ ...info }" />
+    </sp-list>
   </div>
 </template>
 
 <script>
-import { Sticky, TopNavBar, Button } from '@chipspc/vant-dgg'
+import { Sticky, TopNavBar, Button, List, PullRefresh } from '@chipspc/vant-dgg'
 import Banner from '~/components/detail/Banner'
 import BasicInfo from '~/components/detail/service/BasicInfo'
 import ServiceItems from '~/components/detail/service/ServiceItems'
 import ServiceInfo from '~/components/detail/service/ServiceInfo'
 import Planners from '~/components/detail/Planners'
 import Need from '~/components/detail/Need'
+import getUserSign from '@/utils/fingerprint'
 import { productDetailsApi } from '~/api'
 export default {
   name: 'ServiceDetails',
@@ -55,6 +62,8 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [Sticky.name]: Sticky,
     [Button.name]: Button,
+    [List.name]: List,
+    [PullRefresh.name]: PullRefresh,
     Banner,
     BasicInfo,
     ServiceItems,
@@ -63,7 +72,6 @@ export default {
     Need,
   },
   async asyncData({ $axios, params }) {
-    console.log(12121)
     try {
       const res = await $axios.post(productDetailsApi.scProductDetail, {
         productId: params.id,
@@ -77,7 +85,6 @@ export default {
         needTag: 'true',
       })
       if (res.code === 200) {
-        console.log(res.data)
         return { scProductDetailData: res.data }
       }
     } catch (err) {
@@ -88,25 +95,22 @@ export default {
   data() {
     return {
       opacity: 0,
+      // 服务详情数据
       scProductDetailData: {
-        baseData: {},
-        attrs: [],
-        tags: {},
-        operating: {},
-        clientDetails: {},
+        baseData: {}, // 基本信息
+        attrs: [], // 产品属性
+        tags: {}, // 产品标签
+        operating: {}, // 运营信息
+        clientDetails: {}, // 客户端展示数据
         refConfig: [],
-        skuAttrs: [],
-        normalItemList: [],
+        skuAttrs: [], // sku属性
+        normalItemList: [], // 基本服务项
       },
+      planners: [],
       info: {
         images: [
           'https://img.yzcdn.cn/vant/cat.jpeg',
           'https://img.yzcdn.cn/vant/cat.jpeg',
-        ],
-        basicInfo: {},
-        serviceItems: [
-          { serviceName: '公司核名服务', serviceDes: '这是一段描述' },
-          { serviceName: '工商系统提报', serviceDes: '这是一段描述' },
         ],
         planners: [
           {
@@ -132,7 +136,23 @@ export default {
       },
       consultText1: '在线咨询',
       consultText2: '电话咨询',
+      list: [],
+      loading: false,
+      finished: false,
+      refreshing: false,
+      plannerLimit: 5,
+      page: 1,
+      deviceId: null, // 用户唯一标识
     }
+  },
+  computed: {
+    city() {
+      //  因为要做修改 num 的值  所以放在 计算属性里
+      return this.$store.state.city.currentCity
+    },
+  },
+  mounted() {
+    this.handleGetRecPlanner()
   },
   methods: {
     scrollHandle({ scrollTop }) {
@@ -141,6 +161,42 @@ export default {
     },
     onClickButton() {
       console.log('点击按钮')
+    },
+    onLoad() {
+      console.log('加载更多')
+    },
+    async handleGetRecPlanner() {
+      // 获取用户唯一标识
+      if (!this.deviceId) {
+        this.deviceId = await getUserSign()
+      }
+      console.log(this.scProductDetailData.baseData)
+      this.$axios
+        .get(productDetailsApi.recPlanner, {
+          params: {
+            limit: 3,
+            page: 1,
+            area: this.city.code, // 区域编码
+            deviceId: this.deviceId, // 设备ID
+            level_2_ID: this.scProductDetailData.baseData.parentClassCode
+              ? this.scProductDetailData.baseData.parentClassCode.split(',')[1]
+              : null, // 二级产品分类
+            login_name: null, // 规划师ID(选填)
+            productType: 'FL20201116000002', // 产品类型
+            sceneId: 'app-cpxqye-01', // 场景ID
+            user_id: this.$cookies.get('userId'), // 用户ID(选填)
+            platform: 'app', // 平台（app,m,pc）
+            productId: this.$route.params.id, // 产品id
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.planners = res.data.records
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
   },
 }

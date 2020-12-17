@@ -18,8 +18,8 @@ async function getMchSettled(ctx) {
     page,
     status: 1,
   });
-  if (planner.status === 200 && planner.data.code === 200) {
-    ctx.helper.success({ ctx, code: 200, res: planner.data.data });
+  if (planner.code === 200) {
+    ctx.helper.success({ ctx, code: 200, res: planner.data });
     return;
   }
   ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
@@ -69,7 +69,7 @@ class RecommendController extends Controller {
       app.config.apiClient.APPID[6],
       algorithmApi.plannerRecom
     );
-    const { status, data } = await service.curl.curlPost(url, {
+    const { code, data } = await service.curl.curlPost(url, {
       area,
       deviceId,
       level_2_ID,
@@ -79,7 +79,7 @@ class RecommendController extends Controller {
       user_id,
       platform,
     });
-    if (status === 200 && data.code === 200) {
+    if (code === 200) {
       // 查询到算法规划师id查询用户规划师
       // ctx.helper.success({ ctx, code: 200, res: data.data });
       const { ctx, app, service } = this;
@@ -89,31 +89,34 @@ class RecommendController extends Controller {
       );
       // 查询出所有推荐的规划师数据信息
       const plannerList = await service.curl.curlPost(mchSettledUrl, {
-        mchUserIds: data.data.planerInfoList,
+        mchUserIds: data.planerInfoList,
       });
-      if (plannerList.status === 200 && plannerList.data.code === 200 && plannerList.data.data.records.length > 0) {
+      if (plannerList.code === 200 && plannerList.data.records.length > 0) {
         try {
           // 将得到的推荐数据存入缓存一小时失效
-          await ctx.service.redis.set('shupian-wap-recommend-planner-list', plannerList.data.data, 60 * 60);
+          ctx.service.redis.set('shupian-wap-recommend-planner-list', plannerList.data, 60 * 60);
           ctx.helper.success({ ctx, code: 200, res: {
             currentPage: page,
             limit,
-            totalPage: Math.ceil(plannerList.data.data.records.length / limit),
-            totalCount: plannerList.data.data.records.length,
-            records: plannerList.data.data.records.slice((page - 1) * limit, limit),
+            totalPage: Math.ceil(plannerList.data.records.length / limit),
+            totalCount: plannerList.data.records.length,
+            records: plannerList.data.records.slice((page - 1) * limit, limit),
           } });
         } catch (err) {
           ctx.logger.error(err);
           // 接口报错,请求商户中心规划师列表兜底
           await getMchSettled(ctx);
+          return;
         }
       } else {
         // 接口报错,请求商户中心规划师列表兜底
         await getMchSettled(ctx);
+        return;
       }
     } else {
       // 接口报错,请求商户中心规划师列表兜底
       await getMchSettled(ctx);
+      return;
     }
   }
 }
