@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 15:03:56
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-30 17:14:32
+ * @LastEditTime: 2020-12-17 15:51:45
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/sku/SkuServiceRowItem.vue
 -->
@@ -68,11 +68,12 @@ export default {
   },
   methods: {
     handleClick() {
+      console.log('sdf')
       if (this.disabled) return
       // 单选激活状态 再点击不触发
       if (!this.multiple && this.isActive) return
-      this.isActive = !this.isActive
-      this.$emit('skuSelect', { ...this.skuValue, actived: this.isActive })
+      // this.isActive = !this.isActive
+      this.$emit('skuItemSelect', { ...this.skuValue, actived: !this.isActive })
     },
   },
 }

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-16 16:10:14
+ * @LastEditTime: 2020-12-17 20:31:47
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -13,7 +13,12 @@
       'goods-item--disable': commodityData.status === 'GOODS_STATUS_OFF_SHELF',
     }"
   >
-    <SkuService v-model="show" />
+    <SkuService
+      v-model="show"
+      :sku-data="formateSkuData"
+      :goods="tempGoods"
+      @operation="handleOperation"
+    />
     <sp-swipe-cell
       ref="swipeCell"
       :disabled="commodityData.status === 'GOODS_STATUS_OFF_SHELF'"
@@ -76,12 +81,14 @@
 </template>
 
 <script>
-import { SwipeCell, Card, Button } from '@chipspc/vant-dgg'
+import { SwipeCell, Card, Button, Toast } from '@chipspc/vant-dgg'
 
 import MainGoodsItem from './MainGoodsItem'
 import ViceGoodsItem from './ViceGoodsItem'
 import SkuService from '@/components/common/sku/SkuService'
 import AsyncCheckbox from '@/components/common/checkbox/AsyncCheckbox'
+
+import { shoppingCar } from '@/api'
 
 export default {
   name: 'GoodsItem',
@@ -109,11 +116,77 @@ export default {
   data() {
     return {
       show: false,
+      skuData: {
+        productId: '',
+        name: '',
+        productNo: '',
+        referencePrice: '', // 参考价格
+        skuAttrList: [], // 属性列表
+        serviceGoodsClassList: [], // 服务资源列表
+        goodsId: '',
+        goodsNo: '',
+        specialItemList: [], // 增值服务项
+        salesPriceSum: '',
+        settlementPriceSum: '',
+      },
+      tempGoods: {
+        goodsId: '',
+        goodsNo: '',
+        name: '',
+        skuAttrKey: '', // 选中sku列表逗号隔开
+        goodsNumber: 0,
+        serviceResourceList: [],
+        price: '',
+        productId: '',
+        addServiceList: [],
+      },
     }
   },
   computed: {
     checked() {
       return !!this.commodityData.shopIsSelected
+    },
+    formateSkuData() {
+      if (!this.skuData) return { tree: [] }
+      const {
+        productId,
+        name,
+        productNo,
+        referencePrice,
+        skuAttrList,
+        serviceGoodsClassList,
+        specialItemList,
+      } = this.skuData
+      if (!Array.isArray(this.skuData.skuAttrList)) return { tree: [] }
+      const tree = this.skuData.skuAttrList.map((item) => {
+        const { id, code, name, attrValList = [] } = item
+        return {
+          k: name,
+          k_s: 'sp' + code, // 自定义的前缀
+          k_id: id,
+          v: Array.isArray(attrValList) ? attrValList : [],
+        }
+      })
+
+      // 服务资源列表
+      const resourceServiceList = Array.isArray(serviceGoodsClassList)
+        ? serviceGoodsClassList
+        : []
+
+      // 增值服务
+      const addServiceList = Array.isArray(specialItemList)
+        ? specialItemList
+        : []
+
+      return {
+        tree,
+        resourceServiceList,
+        addServiceList,
+        productId,
+        name,
+        productNo,
+        referencePrice,
+      }
     },
   },
 
@@ -150,7 +223,7 @@ export default {
       const { cartId } = this.commodityData
       switch (type) {
         case 'openSku':
-          this.show = true
+          this.openSku()
           break
         case 'count':
         case 'select':
@@ -158,6 +231,121 @@ export default {
         case 'attention':
           this.$emit('operation', { data, type, cartId })
           break
+        case 'skuSelect':
+          this.selecteSku(data)
+          break
+      }
+    },
+    openSku() {
+      if (!this.skuData.skuAttrList || !this.skuData.skuAttrList.length) {
+        this.getSkuData()
+      }
+      const {
+        skuId,
+        skuAttrKey,
+        goodsNumber,
+        serviceResourceList,
+        price,
+        productId,
+        addServiceList,
+      } = this.commodityData
+
+      this.tempGoods = {
+        goodsId: skuId,
+        skuAttrKey,
+        goodsNumber,
+        serviceResourceList,
+        price,
+        productId,
+        addServiceList,
+      }
+
+      this.show = true
+    },
+    selecteSku(data = {}) {
+      const { activedList = [], inactivedList = [], id } = data
+      let skuAttrList = this.tempGoods.skuAttrKey.split(',')
+      activedList.forEach((item) => {
+        !skuAttrList.includes(item) && skuAttrList.push(item)
+      })
+      skuAttrList = skuAttrList.filter((item) => !inactivedList.includes(item))
+      //
+      const currentSkuAttr = skuAttrList.join(',')
+
+      this.getGoodsDetail(currentSkuAttr)
+        .then((data) => {
+          this.tempGoods.skuAttrKey = currentSkuAttr
+        })
+        .catch(() => {
+          Toast('选择失败！')
+        })
+    },
+    async getSkuData() {
+      try {
+        const productId = '607991345402771561' // this.commodityData.productId || '607991345402771561'
+        const attrValKey = 'SXZ20201211050014' // this.commodityData.skuAttrKey || 'SXZ20201211050014'
+        const productPromise = shoppingCar.productDetail({ productId })
+        const skuPromise = this.getGoodsDetail(attrValKey)
+        const [productDetail = {}, skuDetail = {}] = await Promise.all([
+          productPromise,
+          skuPromise,
+        ])
+
+        const {
+          skuAttrList, // 属性列表
+          serviceGoodsClassList, // 服务资源列表
+          name,
+          referencePrice, // 参考价格
+          productNo,
+        } = productDetail
+
+        const { id } = skuDetail
+        const data = {
+          name,
+          productNo,
+          referencePrice,
+          skuAttrList,
+          serviceGoodsClassList,
+          ...skuDetail,
+        }
+        this.skuData = data
+        console.log(data)
+        return data
+      } catch (error) {
+        console.error('getList:', error)
+        return Promise.reject(error)
+      }
+    },
+
+    // 获取商品服务详情
+    async getGoodsDetail(attrValKey) {
+      try {
+        const productId = '607991345402771561' // this.commodityData.productId || '607991345402771561'
+        const goodsDetail = await shoppingCar.skuDetail({
+          productId,
+          attrValKey,
+        })
+        const {
+          id,
+          specialItemList, // 增值服务项
+          goodsNo,
+          salesPriceSum, // 销售价格
+          settlementPriceSum, // 结算价格
+        } = goodsDetail
+        const data = {
+          goodsId: id,
+          goodsNo,
+          productId,
+          specialItemList,
+          salesPriceSum,
+          settlementPriceSum,
+        }
+        this.tempGoods = { ...this.tempGoods, ...data }
+        console.log(data)
+        return data
+      } catch (error) {
+        console.error('getGoodsDetail:', error)
+        return Promise.reject(error)
       }
     },
   },

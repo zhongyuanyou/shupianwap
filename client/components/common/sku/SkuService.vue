@@ -3,22 +3,14 @@
     <sp-sku
       v-model="visible"
       class="sku-service-container"
-      :sku="sku"
+      :sku="skuData"
       :goods="goods"
-      :goods-id="goodsId"
       :quota="quota"
       :quota-used="quotaUsed"
-      :hide-stock="sku.hide_stock"
       @buy-clicked="onBuyClicked"
       @add-cart="onAddCartClicked"
     >
-      <!-- price,
-          originPrice,
-          selectedNum,
-          skuEventBus,
-          selectedSku,
-          selectedSkuComb, -->
-      <template #sku-header="{ price }">
+      <template #sku-header>
         <div class="sku-service-header sp-hairline--bottom">
           <sp-image
             fit="cover"
@@ -27,19 +19,24 @@
           />
           <div class="sku-service-header__goods-info">
             <div class="sku-service__goods-price">
-              <span class="sku-service__price-num">{{ price }}</span>
+              <span class="sku-service__price-num">{{ goods.price }}</span>
               <span class="sku-service__price-unit">元</span>
             </div>
             <div class="sku-service-header-item">
-              <div class="sku-service__number">编号:191015773</div>
+              <div class="sku-service__number">编号:{{ goods.goodsNo }}</div>
             </div>
           </div>
         </div>
       </template>
       <template #sku-group="{ selectedNum, skuEventBus, selectedSkuComb }">
         <div class="sku-service-group">
-          <SkuServiceRow :sku-row="sku.tree[0]" />
-          <SkuServiceRow :sku-row="sku.tree[1]" />
+          <SkuServiceRow
+            v-for="treeItem of formatSkuTree"
+            :key="treeItem.k_id"
+            :sku-row="treeItem"
+            :actived="formatSkuAttr"
+            @selectChange="handleSelectChange"
+          />
         </div>
         <div class="sku-service-stepper-wrap sp-hairline--bottom">
           <SkuServiceStepper
@@ -58,13 +55,15 @@
           <SkuServiceRow :sku-row="{ k: '服务资源' }">
             <div class="sku-service-resource">
               <sp-cell
+                v-for="resourceService of skuData.resourceServiceList"
+                :key="resourceService.classCode"
                 class="sku-service-resource__item"
                 is-link
                 @click="handleResourceClick('address')"
               >
                 <template #title>
                   <span class="sku-service-resource__item-title"
-                    >注册地址：</span
+                    >{{ resourceService.className }}：</span
                   >
                   <span class="sku-service-resource__item-content"
                     >成都师花样正金融服务中心一楼三单元</span
@@ -77,7 +76,7 @@
                   >
                 </template>
               </sp-cell>
-              <sp-cell class="sku-service-resource__item" is-link>
+              <!-- <sp-cell class="sku-service-resource__item" is-link>
                 <template #title>
                   <span class="sku-service-resource__item-title"
                     >400电话：</span
@@ -91,7 +90,7 @@
                     >￥5.00</span
                   >
                 </template>
-              </sp-cell>
+              </sp-cell> -->
             </div>
           </SkuServiceRow>
           <div class="sku-service-add">
@@ -178,12 +177,22 @@ export default {
       type: Number,
       default: 1,
     },
+    skuData: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
+    goods: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
   },
   data() {
     return {
       sku: {
-        // 所有sku规格类目与其值的从属关系，比如商品有颜色和尺码两大类规格，颜色下面又有红色和蓝色两个规格值。
-        // 可以理解为一个商品可以有多个规格类目，一个规格类目下可以有多个规格值。
         tree: [
           {
             k: '区域',
@@ -260,54 +269,13 @@ export default {
             ],
           },
         ],
-        list: [
-          {
-            id: 2259,
-            s1: '2',
-            s2: '1',
-            price: 1000,
-            discount: 10,
-            stock_num: 110,
-          },
-          {
-            id: 2260,
-            s1: '3',
-            s2: '1',
-            price: 1000,
-            discount: 10,
-            stock_num: 99,
-          },
-          {
-            id: 2257,
-            s1: '1',
-            s2: '1',
-            price: 1000,
-            discount: 10,
-            stock_num: 111,
-          },
-          {
-            id: 2258,
-            s1: '1',
-            s2: '2',
-            price: 1100,
-            discount: 10,
-            stock_num: 6,
-          },
-        ],
         price: '3.00', // 默认价格（单位元）
-        stock_num: 227, // 商品总库存
-        collection_id: 2261, // 无规格商品 skuId 取 collection_id，否则取所选 sku 组合对应的 id
-        none_sku: false, // 是否无规格商品
-        hide_stock: false, // 是否隐藏剩余库存
       },
-      goods: {
-        price: 2,
-        title: '测试商品',
-        picture: 'https://b.yzcdn.cn/vant/sku/shoes-1.png',
-      },
-      goodsId: '1',
-      // quota: 5,
-      // quotaUsed: 1,
+      // goods: {
+      //   price: 2,
+      //   title: '测试商品',
+      //   picture: 'https://b.yzcdn.cn/vant/sku/shoes-1.png',
+      // },
     }
   },
   computed: {
@@ -319,6 +287,23 @@ export default {
         this.$emit('update', newVal)
       },
     },
+    formatSkuTree() {
+      if (!Array.isArray(this.skuData.tree)) return []
+      const selectedSkuAttrList = ('' + this.goods.skuAttrKey).split(',')
+      return this.skuData.tree.map((item) => {
+        const { v = [] } = item || {}
+        if (!Array.isArray(v)) return { ...item }
+        const mapAttrList = v.map((attrVal) => {
+          const actived = selectedSkuAttrList.includes(attrVal.id)
+          return { ...attrVal, actived }
+        })
+        return { ...item, v: mapAttrList }
+      })
+    },
+    formatSkuAttr() {
+      const { skuAttrKey } = this.goods
+      return ('' + skuAttrKey).split(',')
+    },
   },
   methods: {
     onBuyClicked(value) {
@@ -326,6 +311,13 @@ export default {
     },
     onAddCartClicked(value) {
       console.log('onAddCartClicked:', value)
+    },
+    handleSelectChange(value) {
+      console.log('handleSelectChange:', value)
+      this.$emit('operation', {
+        type: 'skuSelect',
+        data: value,
+      })
     },
     handleStepperChange(event) {
       this.$emit('stepper-change', event)
