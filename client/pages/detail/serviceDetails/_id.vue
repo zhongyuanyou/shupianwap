@@ -34,14 +34,20 @@
         </div>
       </div>
     </div>
-    <div></div>
     <!--    猜你喜欢-->
-    <Need :info="{ ...info }" />
+    <sp-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+    >
+      <Need :info="{ ...info }" />
+    </sp-list>
   </div>
 </template>
 
 <script>
-import { Sticky, TopNavBar, Button } from '@chipspc/vant-dgg'
+import { Sticky, TopNavBar, Button, List, PullRefresh } from '@chipspc/vant-dgg'
 import Banner from '~/components/detail/Banner'
 import BasicInfo from '~/components/detail/service/BasicInfo'
 import ServiceItems from '~/components/detail/service/ServiceItems'
@@ -55,6 +61,8 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [Sticky.name]: Sticky,
     [Button.name]: Button,
+    [List.name]: List,
+    [PullRefresh.name]: PullRefresh,
     Banner,
     BasicInfo,
     ServiceItems,
@@ -77,7 +85,6 @@ export default {
         needTag: 'true',
       })
       if (res.code === 200) {
-        console.log(res.data)
         return { scProductDetailData: res.data }
       }
     } catch (err) {
@@ -132,7 +139,22 @@ export default {
       },
       consultText1: '在线咨询',
       consultText2: '电话咨询',
+      list: [],
+      loading: false,
+      finished: false,
+      refreshing: false,
+      plannerLimit: 5,
+      page: 1,
     }
+  },
+  computed: {
+    city() {
+      //  因为要做修改 num 的值  所以放在 计算属性里
+      return this.$store.state.city.currentCity
+    },
+  },
+  mounted() {
+    this.handleGetRecPlanner()
   },
   methods: {
     scrollHandle({ scrollTop }) {
@@ -141,6 +163,36 @@ export default {
     },
     onClickButton() {
       console.log('点击按钮')
+    },
+    onLoad() {
+      console.log('加载更多')
+    },
+    handleGetRecPlanner() {
+      console.log(this.area)
+      this.$axios
+        .get(productDetailsApi.recPlanner, {
+          params: {
+            limit: 5,
+            page: 1,
+            area: this.city.code, // 区域编码
+            deviceId: null, // 设备ID
+            level_2_ID: this.scProductDetailData.baseData.parentClassCode
+              ? this.scProductDetailData.baseData.parentClassCode.split(',')[1]
+              : null, // 二级产品分类
+            login_name: null, // 规划师ID(选填)
+            productType: 'FL20201116000002', // 产品类型
+            sceneId: 'app-cpxqye-01', // 场景ID
+            user_id: this.$cookies.get('userId'), // 用户ID(选填)
+            platform: 'app', // 平台（app,m,pc）
+            productId: this.$route.params.id, // 产品id
+          },
+        })
+        .then((data) => {
+          console.log(data)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
   },
 }
