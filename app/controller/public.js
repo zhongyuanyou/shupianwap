@@ -13,6 +13,7 @@ const { Prefix, Post } = require("egg-shell-decorators");
 @Prefix("/nk/public")
 class publicController extends Controller {
     /**
+     * @Author: MaLiang
      * 查询广告
      */
     @Post("/v1/find_advertising.do")

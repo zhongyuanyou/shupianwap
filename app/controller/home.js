@@ -78,7 +78,7 @@ class homeController extends Controller {
             contentApi.findNav
         );
         // 获取固定导航数据
-        const findFixedNav = this.ctx.http.get(navUrl, {
+        const findFixedNav = service.curl.curlGet(navUrl, {
             categoryCode: ctx.request.body.fixedNavCategoryCode,
             platformCode: ctx.request.body.fixedNavPlatformCode,
             limit: ctx.request.body.fixedLimit,
@@ -86,7 +86,7 @@ class homeController extends Controller {
             includeField,
         });
         // 获取滚动导航数据
-        const findRollNav = this.ctx.http.get(navUrl, {
+        const findRollNav = service.curl.curlGet(navUrl, {
             categoryCode: ctx.request.body.rollNavCategoryCode,
             platformCode: ctx.request.body.rollNavPlatformCode,
             limit: ctx.request.body.rollLimit,
@@ -181,8 +181,8 @@ class homeController extends Controller {
                 advertising = resData[1].data;
             }
             // 资讯数据处理
-            if (resData[2].data.code === 200) {
-                information = resData[2].data.data.rows || [];
+            if (resData[2].code === 200) {
+                information = resData[2].data.rows || [];
             }
 
             ctx.helper.success({
@@ -268,7 +268,7 @@ class homeController extends Controller {
                 ctx,
                 code: 200,
                 res: {
-                    infoList: resData.data.data.rows || [],
+                    infoList: resData.data.rows || [],
                 },
             });
         } catch (error) {
@@ -360,7 +360,7 @@ class homeController extends Controller {
                 const sysCode = app.config.apiClient.APPID[0];
                 const dict = contentApi.dataDict; // 查询字典
                 const dictUrl = ctx.helper.assembleUrl(sysCode, dict);
-                const codeData = await this.ctx.http.get(dictUrl, {
+                const codeData = await service.curl.curlGet(dictUrl, {
                     code: ctx.request.body.dictionaryCode,
                 });
                 // 处理字典数据
@@ -462,9 +462,8 @@ class homeController extends Controller {
                     start: ctx.request.body.page, // 当前页
                     limit: ctx.request.body.limit, // 每页条数
                 });
-                if (res.data.code === 200) {
-                    productData.goodsList =
-                        res.data.data.length || res.data.data.records;
+                if (res.code === 200) {
+                    productData.goodsList = res.data.length || res.data.records;
                     productData.describe = "搜索";
                 }
             }

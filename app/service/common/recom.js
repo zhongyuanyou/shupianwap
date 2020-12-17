@@ -3,6 +3,7 @@ const Service = require("egg").Service;
 const { algorithmApi } = require("../../../config/serveApi/index");
 class cityService extends Service {
     /**
+     * @Author: MaLiang
      * 获取推荐产品id列表API（HTTP）
      * @params { Object }
      * @params.userId { string } 用户id 非必须
