@@ -118,6 +118,7 @@ import {
   Sticky,
   TopNavBar,
 } from '@chipspc/vant-dgg'
+import { interviewApi } from '~/api'
 
 export default {
   name: 'Interview',
@@ -137,7 +138,12 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
+      page: 1, // 当前页
+      limit: 10, // 每页显示条数
     }
+  },
+  mounted() {
+    this.getInterviewList()
   },
   methods: {
     back() {
@@ -161,43 +167,52 @@ export default {
       console.log('取消面谈：' + id)
     },
     onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          const itemObj = {
-            id: i,
-            name: '石爱停',
-            avatar:
-              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/images/ZAsSZ8zwXb.jpg',
-            time: '2020-09-19 14:00',
-            address: '顶呱呱成都政企服务中心',
-            type: '到访面谈',
-            status: i < 1 ? 1 : i > 1 && i < 3 ? 2 : 0,
-            cancelTime: '2020年9月20日',
-            completeTime: '2020年9月20日',
-            phone: '13628009206',
-          }
-          this.list.push(itemObj)
-        }
-        this.loading = false
-
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
+      // setTimeout(() => {
+      //   if (this.refreshing) {
+      //     this.list = []
+      //     this.refreshing = false
+      //   }
+      //
+      //   for (let i = 0; i < 10; i++) {
+      //     const itemObj = {
+      //       id: i,
+      //       name: '石爱停',
+      //       avatar:
+      //         'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/images/ZAsSZ8zwXb.jpg',
+      //       time: '2020-09-19 14:00',
+      //       address: '顶呱呱成都政企服务中心',
+      //       type: '到访面谈',
+      //       status: i < 1 ? 1 : i > 1 && i < 3 ? 2 : 0,
+      //       cancelTime: '2020年9月20日',
+      //       completeTime: '2020年9月20日',
+      //       phone: '13628009206',
+      //     }
+      //     this.list.push(itemObj)
+      //   }
+      //   this.loading = false
+      //
+      //   if (this.list.length >= 40) {
+      //     this.finished = true
+      //   }
+      // }, 1000)
     },
     onRefresh() {
-      // 清空列表数据
-      this.finished = false
-
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
+      // // 清空列表数据
+      // this.finished = false
+      //
+      // // 重新加载数据
+      // // 将 loading 设置为 true，表示处于加载状态
+      // this.loading = true
+      // this.onLoad()
+    },
+    async getInterviewList() {
+      // 获取面谈记录列表
+      const params = {
+        limit: this.limit,
+        page: this.page,
+      }
+      const res = await this.$axios.get(interviewApi.list, { params })
+      this.list = res.data.records
     },
   },
 }
