@@ -43,7 +43,7 @@ class categoryService extends Service {
   async getProductCategory(object) {
     // 获取产品分类列表
     return new Promise(async resolve => {
-      const { ctx, app } = this;
+      const { ctx, app, service } = this;
       const { code , productTypeCode } = object
       const url = ctx.helper.assembleUrl(
         app.config.apiClient.APPID[1],
@@ -53,18 +53,9 @@ class categoryService extends Service {
         resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
       }
       try {
-        const result = await ctx.curl(url, {
-          // 必须指定 method
-          method: 'POST',
-          // 默认将网管处理后的headers给后端服务
-          headers: ctx.headers,
-          // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-          dataType: 'json',
-          data: {
-            productTypeCode,
-            code
-          },
-          timeout: 10 * 1000,
+        const result = await service.curl.curlPost(url, {
+          productTypeCode,
+          code
         });
         resolve(result);
       } catch (err) {

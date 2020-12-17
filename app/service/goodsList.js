@@ -46,7 +46,7 @@ class goodsListService extends Service {
         const result = await service.curl.curlPost(url, params);
         // console.log(result)
         let arr = []
-        result.data.data.records.forEach((item) => {
+        result.data.records.forEach((item) => {
           let {
             id,
             name,
@@ -73,7 +73,7 @@ class goodsListService extends Service {
             productNo,
           })
         })
-        result.data.data.records = arr;
+        result.data.records = arr;
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);
@@ -133,7 +133,7 @@ class goodsListService extends Service {
         delete params.dictCode
         const result = await service.curl.curlPost(url, params);
         let arr = []
-        result.data.data.records.forEach((item) => {
+        result.data.records.forEach((item) => {
           let {
             id,
             name,
@@ -152,7 +152,7 @@ class goodsListService extends Service {
             productNo: goodsCode,
           })
         })
-        result.data.data.records = arr;
+        result.data.records = arr;
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);
