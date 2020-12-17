@@ -96,6 +96,9 @@ class homeController extends Controller {
         const reqArr = [findBanner, findFixedNav, findRollNav];
         try {
             const resData = await Promise.all(reqArr);
+            console.log("光告：", resData[0]);
+            console.log("固定", resData[1]);
+            console.log("滚动", resData[2]);
             let advertising = {}; // 广告数据
             let fixedNavList = []; // 固定导航数据
             let rollNavList = []; // 滚动导航数据
