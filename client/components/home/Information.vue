@@ -15,6 +15,7 @@
     <div class="information-content">
       <div
         v-for="(item, index) in infoList"
+        v-show="index < infoParams.limit"
         :key="index"
         class="information-item"
         @click="jumpPage(item.id)"
@@ -24,7 +25,7 @@
           <h6>{{ item.title }}</h6>
         </div>
         <div class="img-label">
-          <strong>{{ item.label }}</strong>
+          <!-- <strong>{{ item.label }}</strong> -->
           <img :src="item.jumpImageUrl" alt="" />
         </div>
       </div>

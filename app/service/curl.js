@@ -9,27 +9,26 @@ class CurlService extends Service {
    */
   async curlGet(url = '', params = {}) {
     return new Promise(async resolve => {
-      const { ctx } = this;
+      const { ctx } = this
       if (!url) {
         resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
       }
+      // console.log(ctx.headers);
+      // const headers = ctx.headers['content-type'] = 'application/json; charset=UTF-8'
       try {
-        const result = await ctx.curl(url, {
-          // 必须指定 method
-          method: 'GET',
-          // 默认将网管处理后的headers给后端服务
-          headers: ctx.headers,
-          // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-          dataType: 'json',
-          data: params,
-          timeout: 10 * 1000,
-        });
+        const result = await ctx.http.get(url, params,
+          {
+            // 默认将网管处理后的headers给后端服务
+            headers: ctx.headers,
+            timeout: 10 * 1000,
+          }
+        );
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);
         resolve(ctx.helper.errMessage(err));
       }
-    });
+    })
   }
 
   /**
@@ -40,29 +39,28 @@ class CurlService extends Service {
    */
   curlPost(url = '', data = {}) {
     return new Promise(async resolve => {
-      const { ctx } = this;
+      const { ctx } = this
       if (!url) {
         resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
       }
+      // const headers = ctx.headers['content-type'] = 'application/json; charset=UTF-8'
       try {
-        const result = await ctx.curl(url, {
-          // 必须指定 method
-          method: 'POST',
-          // 默认将网管处理后的headers给后端服务
-          headers: ctx.headers,
-          // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-          dataType: 'json',
-          data,
-          timeout: 10 * 1000,
-          // 忽略证书
-          // rejectUnauthorized: false,
-        });
+        const result = await ctx.http.post(url, data,
+          {
+            // 默认将网管处理后的headers给后端服务
+            headers: {
+              'content-type': 'application/json',
+              'content-length': 200,
+            },
+            timeout: 10 * 1000,
+          }
+        );
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);
         resolve(ctx.helper.errMessage(err));
       }
-    });
+    })
   }
 
   /**

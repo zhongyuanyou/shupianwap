@@ -137,7 +137,7 @@ export default {
       formData: {
         content: '', // 内容
         feedbackTypeId: '', // 吐槽类型
-        userId: '607991414122247048', // 用户id
+        userId: '607991757719633892', // 用户id
         terminalCode: 'adadasdasd', // 终端编码
         terminalName: 'dadasd', // 终端名称
         platformCode: 'adasdad', // 平台编码
@@ -186,7 +186,7 @@ export default {
           this.formData = {
             content: '', // 内容
             feedbackTypeId: '', // 吐槽类型
-            userId: '607991414122247048', // 用户id
+            userId: '607991757719633892', // 用户id
             terminalCode: 'adadasdasd', // 终端编码
             terminalName: 'dadasd', // 终端名称
             platformCode: 'adasdad', // 平台编码

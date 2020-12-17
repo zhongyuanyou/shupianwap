@@ -75,11 +75,11 @@ export default {
     margin-bottom: 29px;
     a {
       display: inline-block;
-      width: 103px;
+      width: 119px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      padding: 5px 0px;
+      padding: 5px 8px;
       background: #f0f2f5;
       border-radius: 4px;
       font-size: 22px;

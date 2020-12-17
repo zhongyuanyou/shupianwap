@@ -44,15 +44,17 @@ class getServeFiltersService extends Service {
         // 查询服务产品排序字典
         const sortDict = await service.curl.curlGet(url, {code: 'CONDITION-QF-SORT'});
         const serviceCategory = await service.common.category.getProductCategory({productTypeCode: 'PRO_CLASS_TYPE_SERVICE'});
+        // console.log('sortDict', sortDict)
+        // console.log('serviceCategory', serviceCategory)
         if (
-          sortDict.status === 200 &&
-          serviceCategory.status === 200 &&
-          sortDict.data.code === 200 &&
-          serviceCategory.data.code === 200
+          /*sortDict.status === 200 &&
+          serviceCategory.status === 200 &&*/
+          sortDict.code === 200 &&
+          serviceCategory.code === 200
         ) {
           // 处理服务分类，重组数据
-          const arr = categoryHandle(serviceCategory.data.data)
-          result.data = [arr, sortDict.data.data]
+          const arr = categoryHandle(serviceCategory.data)
+          result.data = [arr, sortDict.data]
           result.code = 200
         } else {
           result.data = []

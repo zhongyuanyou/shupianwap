@@ -54,12 +54,12 @@ export default {
     },
     onServiceTouch() {
       this.$router.push({
-        path: '/my/about/agreement',
+        path: '/my/about/2',
       })
     },
     onPrivacyTouch() {
       this.$router.push({
-        path: '/my/about/agreement',
+        path: '/my/about/1',
         query: { type: 1 },
       })
     },

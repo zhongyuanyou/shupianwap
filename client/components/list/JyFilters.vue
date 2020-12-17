@@ -88,6 +88,7 @@ export default {
         console.log(this.$refs[item])
         this.$refs[item][0].resetFilters()
       })
+      this.$emit('emitVue', this, 'jyFilter')
     },
     getFilterHandle(data, filrerName) {
       console.log(data, filrerName)

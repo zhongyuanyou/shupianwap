@@ -33,8 +33,14 @@ export default {
   computed: {},
   watch: {},
   created() {},
-  mounted() {},
-  methods: {},
+  mounted() {
+    this.getQuestionDetail()
+  },
+  methods: {
+    getQuestionDetail() {
+      // 获取问答详情
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

@@ -79,25 +79,20 @@ export default {
     back() {
       this.$router.back()
     },
-    onLoad() {
-      // setTimeout(() => {
-      //   if (this.refreshing) {
-      //     this.complaintList = []
-      //     this.refreshing = false
-      //   }
-      //   for (let i = 0; i < 10; i++) {
-      //     const obj = {
-      //       title: '我的问答在哪里查看？',
-      //       status: '处理中',
-      //       createdTime: '2020-10-14 10:00',
-      //     }
-      //     this.complaintList.push(obj)
-      //   }
-      //   this.loading = false
-      //   if (this.complaintList.length >= 40) {
-      //     this.finished = true
-      //   }
-      // }, 1000)
+    async onLoad() {
+      const page = this.page++
+      const params = {
+        userId: '607991757719633892',
+        limit: this.limit,
+        page,
+      }
+      const data = await complain.list({ axios: this.$axios }, params)
+      if (data.rows.length) {
+        this.loading = false
+        this.complaintList = this.complaintList.concat(data.rows)
+      } else {
+        this.finished = true
+      }
     },
     onRefresh() {
       // 清空列表数据
@@ -111,7 +106,7 @@ export default {
       // 获取吐槽列表数据
       const params = {
         // userId: this.userId,
-        userId: '607991414122247048',
+        userId: '607991757719633892',
         page: this.page,
         limit: this.limit,
       }

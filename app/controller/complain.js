@@ -52,22 +52,12 @@ class ComplainController extends Controller {
 
     const url = getComplainUrl(app, ctx, "feedbackAdd");
 
-    const { status, data } = await service.curl.curlPost(url, ctx.request.body);
+    const { data } = await service.curl.curlPost(url, ctx.request.body);
 
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({
-        ctx,
-        code: 200,
-        res: data.data,
-      });
-      return;
-    }
-
-    ctx.helper.fail({
+    ctx.helper.success({
       ctx,
-      code: status,
+      code: 200,
       res: data,
-      detailMessage: data.message || "请求失败",
     });
   }
 
@@ -80,20 +70,11 @@ class ComplainController extends Controller {
     if (getValiErrors(app, ctx, rules, ctx.query)) return;
 
     const url = getComplainUrl(app, ctx, "feedbackDetail");
-    const { status, data = {} } = await service.curl.curlGet(url, ctx.query);
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({
-        ctx,
-        code: 200,
-        res: data.data || {},
-      });
-      return;
-    }
-    ctx.helper.fail({
+    const { data = {} } = await service.curl.curlGet(url, ctx.query);
+    ctx.helper.success({
       ctx,
-      code: status,
-      res: data,
-      detailMessage: data.message || "请求失败",
+      code: 200,
+      res: data || {},
     });
   }
 
@@ -108,20 +89,11 @@ class ComplainController extends Controller {
     if (getValiErrors(app, ctx, rules, ctx.query)) return;
 
     const url = getComplainUrl(app, ctx, "feedbackList");
-    const { status, data = {} } = await service.curl.curlGet(url, ctx.query);
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({
-        ctx,
-        code: 200,
-        res: data.data || {},
-      });
-      return;
-    }
-    ctx.helper.fail({
+    const { data = {} } = await service.curl.curlGet(url, ctx.query);
+    ctx.helper.success({
       ctx,
-      code: status,
-      res: data,
-      detailMessage: data.message || "请求失败",
+      code: 200,
+      res: data || {},
     });
   }
 }

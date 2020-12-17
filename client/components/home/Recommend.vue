@@ -82,6 +82,7 @@
 
 <script>
 import { Swipe, swipeItem, Loading, Skeleton } from '@chipspc/vant-dgg'
+import getUserSign from '@/utils/fingerprint'
 import { homeApi } from '@/api'
 import TabCurve from '@/components/common/tab/TabCurve'
 import GoodsPro from '@/components/common/goodsItem/GoodsPro'
@@ -104,7 +105,7 @@ export default {
         dictionaryCode: 'C-SY-RMJY-GG', // 查询数据字典的code
         findType: 0, // 查询类型：0：初始查询广告+数据字典+推荐商品  1：查询广告+推荐商品 2：只查推荐商品
         userId: '', // 用户id
-        deviceId: '0022ef1a-f685-469a-93a8-5409892207a2', // 设备ID（用户唯一标识）
+        deviceId: '', // 设备ID（用户唯一标识） 0022ef1a-f685-469a-93a8-5409892207a2
         areaCode: '', // 区域编码
         sceneId: 'app-mainye-01', // 场景ID
         maxsize: 100, // 要求推荐产品的数量
@@ -136,15 +137,19 @@ export default {
     try {
       this.searchDomHeight =
         this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
-      window.addEventListener('scroll', this.handleScroll, true) // 监听滚动
+      window.addEventListener('scroll', this.handleScroll) // 监听滚动
     } catch (error) {
       console.log(error)
     }
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     // 滚动加载更多
     handleScroll() {
       if (
+        this.tabBtn.length &&
         this.tabBtn[this.curentItem].goodsList.length &&
         !this.loading &&
         !this.tabBtn[this.curentItem].noMore
@@ -198,17 +203,23 @@ export default {
       e.stopImmediatePropagation() // 阻止冒泡
     },
     // 查询推荐商品
-    findRecomList(index) {
-      console.log(index)
+    async findRecomList(index) {
+      // 获取用户唯一标识
+      if (!this.params.deviceId) {
+        this.params.deviceId = await getUserSign()
+      }
+      // 设置站点编码
       if (!this.params.areaCode) {
         // this.params.areaCode = this.cityCode
         this.params.areaCode = 2
       }
+      // 若不是初始化查询，需获取选中项的参数
       if (this.params.findType !== 0) {
         this.params.formatId = this.tabBtn[index].ext3
         this.params.limit = this.tabBtn[index].limit
         this.params.page = this.tabBtn[index].page
       }
+      // 获取选中项的广告位code
       if (this.params.findType === 1) {
         this.params.locationCode = this.tabBtn[index].ext1
       }

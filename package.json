@@ -24,6 +24,7 @@
     "egg-shell-decorators": "^1.5.0",
     "egg-validate": "^2.0.2",
     "egg-xtransit": "^1.2.2",
+    "fingerprintjs2": "^2.1.2",
     "js-pinyin": "^0.1.9",
     "less": "^3.12.2",
     "less-loader": "^5.0.0",

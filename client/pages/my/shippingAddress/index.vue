@@ -50,6 +50,7 @@
               type="default"
               color="#f8f8f8"
               class="handle_btn"
+              @click="handleDefault(item, index)"
               ><span slot="default" class="default_txt"
                 >设为<br />默认</span
               ></sp-button
@@ -84,6 +85,14 @@
       @confirm="confirm"
     />
     <!--E 弹框-->
+    <!--S 弹框-->
+    <sp-center-popup
+      v-model="defaultStatus"
+      :field="Field7"
+      button-type="confirm"
+      @confirm="defaulConfirm"
+    />
+    <!--E 弹框-->
   </div>
 </template>
 
@@ -97,7 +106,7 @@ import {
   BottombarButton,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { userInfo } from '@/api'
+import { userinfoApi } from '@/api'
 export default {
   name: 'Index',
   components: {
@@ -117,7 +126,12 @@ export default {
         type: 'functional',
         title: '确定删除收货地址吗？',
       },
+      Field7: {
+        type: 'functional',
+        title: '确定设为默认地址吗？',
+      },
       addressId: '', // 被选中的收货地址id
+      defaultStatus: false,
     }
   },
   computed: {
@@ -137,6 +151,11 @@ export default {
       this.addressId = item.id
       this.popupStatus = true
     },
+    handleDefault(item) {
+      // 删除
+      this.addressId = item.id
+      this.defaultStatus = true
+    },
     handleNew() {
       // 新建收货地址
       this.$router.push('/my/shippingAddress/add/1')
@@ -149,10 +168,10 @@ export default {
       // 获取收货地址列表
       const params = {
         // userId: this.userId,
-        userId: '607991414122247048',
+        userId: '607991757719633892',
       }
-      const data = await userInfo.addressList({ axios: this.$axios }, params)
-      this.addressList = data
+      const data = await this.$axios.get(userinfoApi.addressList, { params })
+      this.addressList = data.data
     },
     async confirm() {
       // 确认删除
@@ -160,11 +179,20 @@ export default {
         const params = {
           id: this.addressId,
         }
-        await userInfo.delAddress({ axios: this.$axios }, params)
+        await this.$axios.get(userinfoApi.delAddress, { params })
         await this.getShippingAddressList()
       } catch (err) {
         console.log(err)
       }
+    },
+    async defaulConfirm() {
+      // 设为默认地址
+      const params = {
+        id: this.addressId,
+        defaultAddress: 1,
+      }
+      await this.$axios.post(userinfoApi.updateAddress, params)
+      await this.getShippingAddressList()
     },
   },
 }

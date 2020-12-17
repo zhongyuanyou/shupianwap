@@ -27,7 +27,7 @@
 <script>
 import { WorkTabs, WorkTab, Badge } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
-import serveGoods from '@/components/list/serveGoods'
+import serveGoods from '@/components/list/ServeGoods'
 import { goods } from '@/api/index'
 
 export default {

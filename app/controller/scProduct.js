@@ -31,11 +31,11 @@ class ScProductDetailsController extends Controller {
     const scProParams = Object.assign({}, ctx.request.body);
     // 删除是否加载服务项目
     delete scProParams.serviceItem;
-    const { status, data } = await service.curl.curlPost(
+    const { code, message, data } = await service.curl.curlPost(
       detailUrl,
       scProParams
     );
-    if (status === 200 && data.code === 200) {
+    if (code === 200) {
       // 假如不需要加载服务项目,直接返回产品详情
       const {
         id, // 产品id
@@ -45,6 +45,7 @@ class ScProductDetailsController extends Controller {
         className, // 分类名称
         productGroupId, // 产品组id
         areaCode, // 城市
+        parentClassCode, // 分类所有上级code
         referencePrice, // 参考价格（元）
         productDescription, // 产品说明
         attrs = [], // 产品属性（集合）
@@ -55,7 +56,8 @@ class ScProductDetailsController extends Controller {
         normalItemList, // 基本服务项
         specialItemList, // 增值服务项
         serviceGoodsClassList, // 产品关联服务资源分类
-      } = data.data;
+      } = data;
+      //  运营信息
       const operatingData = {
         showName: operating.showName, // 前端展示名称
         slogan: operating.slogan, // 广告语
@@ -82,11 +84,17 @@ class ScProductDetailsController extends Controller {
         app.config.apiClient.APPID[1],
         productApi.serviceItemDetails
       );
-      const serviceItemResult = await ctx.service.curl.curlPost(serviceItemUrl, {
-        ids: serviceItemIds,
-      });
+      const serviceItemResult = await ctx.service.curl.curlPost(
+        serviceItemUrl,
+        {
+          ids: serviceItemIds,
+        }
+      );
       let normalItemArr = [];
-      if (serviceItemResult.status === 200 && serviceItemResult.data.code === 200) {
+      if (
+        serviceItemResult.status === 200 &&
+        serviceItemResult.data.code === 200
+      ) {
         normalItemArr = serviceItemResult.data.data;
       }
       /** todo:获取产品标签****/
@@ -107,17 +115,19 @@ class ScProductDetailsController extends Controller {
       );
       const tagsPromiseAll = [];
       for (const tag in tagsObj) {
-        tagsPromiseAll.push(new Promise(async (resolve, reject) => {
-          try {
-            const result = await ctx.service.curl.curlPost(tagUrl, {
-              tagType: tag,
-              tagIds: tagsObj[tag],
-            });
-            resolve({ key: tag, result });
-          } catch (err) {
-            reject(err);
-          }
-        }));
+        tagsPromiseAll.push(
+          new Promise(async (resolve, reject) => {
+            try {
+              const result = await ctx.service.curl.curlPost(tagUrl, {
+                tagType: tag,
+                tagIds: tagsObj[tag],
+              });
+              resolve({ key: tag, result });
+            } catch (err) {
+              reject(err);
+            }
+          })
+        );
       }
       const tagsResult = await Promise.all(tagsPromiseAll);
       const tagArr = {};
@@ -137,6 +147,7 @@ class ScProductDetailsController extends Controller {
           classId,
           className,
           productGroupId,
+          parentClassCode,
           areaCode,
           referencePrice,
           productDescription,
@@ -152,7 +163,7 @@ class ScProductDetailsController extends Controller {
       };
       ctx.helper.success({ ctx, code: 200, res: baseData });
     } else {
-      ctx.logger.error(status, data);
+      ctx.logger.error(code, message);
       ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }

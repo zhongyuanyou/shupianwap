@@ -122,7 +122,7 @@ import ImgSelected from '~/components/my/information/ImgSelected'
 import SexSelected from '~/components/my/information/SexSelected'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
 import BirthdaySelected from '~/components/my/information/BirthdaySelected'
-import { userInfo } from '@/api'
+import { userinfoApi } from '@/api'
 export default {
   name: 'Information',
   components: {
@@ -148,7 +148,7 @@ export default {
   },
   computed: {
     ...mapState({
-      userId: (state) => state.user.userInfo.userId || null,
+      userId: (state) => state.user.userInfo.userId,
     }),
   },
   mounted() {
@@ -166,7 +166,7 @@ export default {
         type: 3,
         value: this.info.sex,
       }
-      await userInfo.update({ axios: this.$axios }, params)
+      await this.$axios.post(userinfoApi.update, params)
     },
     handleClick(val) {
       if (val === 2) {
@@ -191,7 +191,7 @@ export default {
         type: 5,
         value: `${this.info.province},${this.info.city},船山区`,
       }
-      await userInfo.update({ axios: this.$axios }, params)
+      await this.$axios.post(userinfoApi.update, params)
     },
     GMTToStr(time) {
       const date = new Date(time)
@@ -215,16 +215,17 @@ export default {
         type: 2,
         value: this.info.birthday,
       }
-      await userInfo.update({ axios: this.$axios }, params)
+      await this.$axios.post(userinfoApi.update, params)
     },
     onOversize() {},
     async getUserInfo() {
       // 获取用户信息
       const params = {
-        id: this.userId,
+        // id: this.userId,
+        id: '607991757719633892',
       }
-      const data = await userInfo.info({ axios: this.$axios }, params)
-      this.info = data
+      const data = await this.$axios.get(userinfoApi.info, { params })
+      this.info = data.data
     },
   },
 }
