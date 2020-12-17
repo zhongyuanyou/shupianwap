@@ -17,11 +17,11 @@ class CategoryController extends Controller {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
       return;
     }
-    const { status, data } = await service.common.category.getCategoryDetail(ctx.query.code, ctx.query.id)
-    if (status === 200 && data.code === 200) {
+    const data = await service.common.category.getCategoryDetail(ctx.query.code, ctx.query.id)
+    if (data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data });
     } else {
-      ctx.logger.error(status, data);
+      ctx.logger.error( data);
       ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
