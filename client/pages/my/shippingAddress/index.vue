@@ -50,6 +50,7 @@
               type="default"
               color="#f8f8f8"
               class="handle_btn"
+              @click="handleDefault(item, index)"
               ><span slot="default" class="default_txt"
                 >设为<br />默认</span
               ></sp-button
@@ -82,6 +83,14 @@
       :field="Field6"
       button-type="confirm"
       @confirm="confirm"
+    />
+    <!--E 弹框-->
+    <!--S 弹框-->
+    <sp-center-popup
+      v-model="defaultStatus"
+      :field="Field7"
+      button-type="confirm"
+      @confirm="defaulConfirm"
     />
     <!--E 弹框-->
   </div>
@@ -117,7 +126,12 @@ export default {
         type: 'functional',
         title: '确定删除收货地址吗？',
       },
+      Field7: {
+        type: 'functional',
+        title: '确定设为默认地址吗？',
+      },
       addressId: '', // 被选中的收货地址id
+      defaultStatus: false,
     }
   },
   computed: {
@@ -136,6 +150,11 @@ export default {
       // 删除
       this.addressId = item.id
       this.popupStatus = true
+    },
+    handleDefault(item) {
+      // 删除
+      this.addressId = item.id
+      this.defaultStatus = true
     },
     handleNew() {
       // 新建收货地址
@@ -165,6 +184,15 @@ export default {
       } catch (err) {
         console.log(err)
       }
+    },
+    async defaulConfirm() {
+      // 设为默认地址
+      const params = {
+        id: this.addressId,
+        defaultAddress: 1,
+      }
+      await this.$axios.post(userinfoApi.updateAddress, params)
+      await this.getShippingAddressList()
     },
   },
 }
