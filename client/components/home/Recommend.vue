@@ -68,32 +68,29 @@
         </div>
       </sp-swipe-item>
     </sp-swipe>
-    <div v-if="tabBtn.length" class="loading-content">
-      <sp-loading
-        v-show="loading && !tabBtn[curentItem].noMore"
-        size="20px"
-        color="#4974f5"
-        >正在加载...</sp-loading
-      >
-      <p v-if="tabBtn[curentItem].noMore" class="no-data">没有更多了</p>
-    </div>
+    <Loading-down
+      v-if="tabBtn.length"
+      :loading="loading && !tabBtn[curentItem].noMore"
+      :no-data="tabBtn[curentItem].noMore"
+    />
   </div>
 </template>
 
 <script>
-import { Swipe, swipeItem, Loading, Skeleton } from '@chipspc/vant-dgg'
+import { Swipe, swipeItem, Skeleton } from '@chipspc/vant-dgg'
 import getUserSign from '@/utils/fingerprint'
 import { homeApi } from '@/api'
 import TabCurve from '@/components/common/tab/TabCurve'
 import GoodsPro from '@/components/common/goodsItem/GoodsPro'
+import LoadingDown from '@/components/common/loading/LoadingDown'
 export default {
   components: {
     [Swipe.name]: Swipe,
     [swipeItem.name]: swipeItem,
-    [Loading.name]: Loading,
     [Skeleton.name]: Skeleton,
     TabCurve,
     GoodsPro,
+    LoadingDown,
   },
   data() {
     return {
@@ -324,18 +321,6 @@ export default {
     width: 100%;
     height: 1px;
     background: #f4f4f4;
-  }
-}
-.loading-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  line-height: 40px;
-  margin-top: -20px;
-  .no-data {
-    font-size: 24px;
-    color: #333;
   }
 }
 .my-swipe {

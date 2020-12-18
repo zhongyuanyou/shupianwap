@@ -43,6 +43,7 @@ class helpController extends Controller {
                 page: { type: "integer", required: true }, // 查询文章的当前页
                 platformCode: { type: "string", required: true }, // 查询文章的平台code
                 terminalCode: { type: "string", required: true }, // 查询文章的终端code
+                includeField: { type: "string", required: true }, // 查询文章的终端code
             };
         }
         if (ctx.request.body.findType === 1) {
@@ -52,8 +53,10 @@ class helpController extends Controller {
                 limit: { type: "integer", required: true }, // 查询文章的每页条数
                 page: { type: "integer", required: true }, // 查询文章的当前页
                 keyword: { type: "string", required: false }, // 关键词搜索文章
+                keywordField: { type: "string", required: false }, // 关键词搜索文章
                 platformCode: { type: "string", required: true }, // 查询文章的平台code
                 terminalCode: { type: "string", required: true }, // 查询文章的终端code
+                includeField: { type: "string", required: true }, // 查询文章的终端code
             };
         }
         // 参数校验
@@ -79,6 +82,8 @@ class helpController extends Controller {
                     platformCode: ctx.request.body.platformCode,
                     terminalCode: ctx.request.body.terminalCode,
                     keyword: ctx.request.body.keyword,
+                    keywordField: ctx.request.body.keywordField,
+                    includeField: ctx.request.body.includeField,
                 });
                 if (articleResData.code === 200) {
                     cacheData.articleData = articleResData.data.rows;
@@ -123,6 +128,7 @@ class helpController extends Controller {
                     page: ctx.request.body.page,
                     platformCode: ctx.request.body.platformCode,
                     terminalCode: ctx.request.body.terminalCode,
+                    includeField: ctx.request.body.includeField,
                 });
                 console.log(111, articleRes);
                 if (articleRes.code === 200) {

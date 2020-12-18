@@ -5,7 +5,7 @@
     <!-- E 头部 -->
     <!-- S 广告位 -->
     <div class="help-bn">
-      <img src="" alt="" />
+      <img :src="adData.materialUrl" alt="" />
     </div>
     <!-- E 广告位 -->
     <div class="hele-centent">
@@ -33,10 +33,10 @@
       <div class="search-content">
         <strong>更多服务</strong>
         <sp-search
-          v-model="keywords"
           shape="round"
+          :disabled="true"
           placeholder="搜索您遇到的问题"
-          @focus="$router.push('/my/help/helpCenter')"
+          @click="$router.push('/my/help/helpCenter')"
         />
       </div>
       <!-- E 搜索 -->
@@ -47,25 +47,30 @@
           :offset-top="headHeight - 0.5"
           @scroll="searchHandle"
         >
-          <sp-work-tabs v-model="active" @click="tabsClickHandle">
+          <sp-work-tabs
+            v-model="active"
+            :ellipsis="false"
+            :scrollspy="false"
+            @click="tabsClickHandle"
+          >
             <sp-work-tab
               v-for="(item, index) in tabData"
               :key="index"
-              :title="item.title"
-              :name="item.code"
+              :title="item.name"
+              :name="index"
             ></sp-work-tab>
           </sp-work-tabs>
         </sp-sticky>
         <!-- E tab -->
         <!-- S 列表 -->
-        <div class="problem-list">
+        <div v-if="tabData.length" class="problem-list">
           <ul>
             <li
-              v-for="(item, index) in problemList"
+              v-for="(item, index) in tabData[active].articleData"
               :key="index"
-              @click="$router.push('/my/help/questions')"
+              @click="onServiceTouch(item.id)"
             >
-              <span>{{ item.text + index }}</span>
+              <span>{{ item.title }}</span>
               <my-icon
                 name="order_ic_listnext"
                 size="0.21rem"
@@ -73,6 +78,11 @@
               ></my-icon>
             </li>
           </ul>
+          <Loading-down
+            v-if="tabData.length && tabData[active].articleData.length"
+            :loading="loading && !tabData[active].noMore"
+            :no-data="tabData[active].noMore"
+          />
         </div>
         <!-- E 列表 -->
       </div>
@@ -100,11 +110,13 @@ import {
 import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
 import { helpApi } from '@/api'
 import Header from '@/components/common/head/header'
+import LoadingDown from '@/components/common/loading/LoadingDown'
 
 export default {
   name: 'Help',
   components: {
     Header,
+    LoadingDown,
     [Sticky.name]: Sticky,
     [Search.name]: Search,
     [WorkTab.name]: WorkTab,
@@ -121,169 +133,113 @@ export default {
       limit: 10,
       page: 1,
       categoryCode: '', // 分类code赛选文章
-      keyword: '',
       terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
       platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
+      includeField: 'id,title', // 必须要输出的内容字段
     }
     let tabData = []
+    let adData = {}
     try {
       const res = await $axios.post(helpApi.findArticle, params)
       if (res.code === 200) {
+        res.data.categoryList.forEach((item) => {
+          item.limit = params.limit
+          item.page = params.page
+          item.noMore = false
+          item.articleData = []
+        })
         tabData = res.data.categoryList
-        tabData[0].adList = res.data.adListData
         tabData[0].articleData = res.data.articleData
+        adData = res.data.adListData[0].materialList[0]
       }
       console.log('服务端', res)
     } catch (error) {}
     return {
       params,
       tabData,
+      adData,
     }
   },
   data() {
     return {
-      keywords: '',
+      loading: false,
       active: 0,
       isFixed: false,
       headHeight: 0,
-      tabData: [
-        {
-          title: '热搜问题',
-          code: 'a',
-        },
-        {
-          title: '活动类',
-          code: 'b',
-        },
-        {
-          title: '订单类',
-          code: 'c',
-        },
-        {
-          title: '支付类',
-          code: 'd',
-        },
-        {
-          title: '售后类',
-          code: 'e',
-        },
-        {
-          title: '其它类',
-          code: 'f',
-        },
-      ],
-      problemList: [
-        {
-          id: '1',
-          text:
-            '公司注册需要哪些资料？公司注册需要哪些资料？公司注册需要哪些资料？公司注册需要哪些资料？',
-        },
-        {
-          id: '2',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '3',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '4',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '5',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '6',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '7',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '8',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '9',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？abc',
-        },
-      ],
-      //   params: {
-      //     findType: 0, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
-      //     locationCode: 'ad100006', // 广告位code
-      //     code: 'con100873', // 获取分类列表选项的code
-      //     limit: 10,
-      //     page: 1,
-      //     categoryCode: '', // 分类code赛选文章
-      //     keyword: '',
-      //     terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
-      //     platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
-      //   },
+      tabData: [],
     }
   },
   mounted() {
     console.log(this.params, this.tabData)
     this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
   },
-  created() {
-    if (process.client) {
-    }
-  },
   methods: {
     // tab切换
-    tabsClickHandle(name, title) {
-      console.log(name, title)
+    tabsClickHandle(index) {
+      if (!this.tabData[index].articleData.length) {
+        this.getProblemList(index, 1)
+      }
     },
-    // 监听滚动吸顶
-    searchHandle({ isFixed }) {
+    // 监听滚动吸顶与触底加载更多
+    searchHandle({ scrollTop, isFixed }) {
       this.isFixed = isFixed
+      if (
+        this.tabData.length &&
+        this.tabData[this.active].articleData.length &&
+        !this.loading &&
+        !this.tabData[this.active].noMore
+      ) {
+        const pageScrollHeight = document.body.scrollHeight // 页面文档的总高度
+        const pageClientHeight = document.body.clientHeight + 1 // 页面视口的高度
+        // 监听页面是否滚动到底部加载更多数据
+        if (Math.ceil(scrollTop + pageClientHeight) >= pageScrollHeight) {
+          this.loading = true
+          this.tabData[this.active].page += 1
+          this.getProblemList(this.active, 2)
+        }
+      }
+    },
+    // 获取问题列表
+    getProblemList(index, type) {
+      const params = {
+        findType: 1,
+        categoryCode: this.tabData[index].code,
+        locationCode: null,
+        limit: this.tabData[index].limit,
+        page: this.tabData[index].page,
+      }
+      this.params = Object.assign(this.params, params)
+      console.log(this.params)
+      this.$axios.post(helpApi.findArticle, this.params).then((res) => {
+        console.log(res)
+        this.loading = false
+        // 无更多数据
+        if (!res.data.articleData.length) {
+          this.tabData[index].noMore = true
+          return
+        }
+        // 切换加载
+        if (res.code === 200 && type === 1) {
+          const obj = {
+            ...this.tabData[index],
+            articleData: res.data.articleData,
+          }
+          this.$set(this.tabData, index, obj)
+          return
+        }
+        // 触底加载更多
+        if (res.code === 200 && type === 2) {
+          this.tabData[index].articleData = this.tabData[
+            index
+          ].articleData.concat(res.data.articleData)
+        }
+      })
+    },
+    onServiceTouch(id) {
+      this.$router.push({
+        path: '/my/help/questions',
+        query: { id },
+      })
     },
   },
 }
@@ -295,6 +251,10 @@ export default {
     width: 100%;
     height: 320px;
     background: #4974f5;
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
   .hele-centent {
     position: relative;
