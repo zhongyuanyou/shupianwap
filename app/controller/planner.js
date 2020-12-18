@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-04 10:54:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-15 09:51:06
+ * @LastEditTime: 2020-12-18 11:58:34
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/planner.js
  */
@@ -81,17 +81,17 @@ class PlannerController extends Controller {
     };
     // 先查询列表
     const listResult = await service.planner.getPlannerList(listParams);
-    if (listResult.status !== 200 || listResult.data.code !== 200) {
+    if (listResult.code !== 200) {
       ctx.helper.fail({
         ctx,
-        code: listResult.status,
+        code: listResult.code,
         res: listResult.data,
-        detailMessage: listResult.data.message || "请求失败",
+        detailMessage: listResult.message || "请求失败",
       });
       return;
     }
 
-    const listData = listResult.data.data || {};
+    const listData = listResult.data || {};
     const listRecords = listData.records || [];
 
     // 办公地址
@@ -109,14 +109,9 @@ class PlannerController extends Controller {
       categoryResultPromise,
     ]);
 
-    if (
-      addressResult.status === 200 &&
-      addressResult.data.code === 200 &&
-      categoryResult.status === 200 &&
-      categoryResult.data.code === 200
-    ) {
-      const adRes = addressResult.data.data || [];
-      const tagRes = categoryResult.data.data || [];
+    if (addressResult.code === 200 && categoryResult.code === 200) {
+      const adRes = addressResult.data || [];
+      const tagRes = categoryResult.data || [];
       const resRecords = service.planner.mergeAdTagImgTolist(
         listRecords,
         adRes,
@@ -177,16 +172,13 @@ class PlannerController extends Controller {
 
     // TODO 请求头像图片接口(前端统一规则)
     if (
-      detailResult.status === 200 &&
-      detailResult.data.code === 200 &&
-      rankResult.status === 200 &&
-      rankResult.data.code === 200 &&
-      categoryResult.status === 200 &&
-      categoryResult.data.code === 200
+      detailResult.code === 200 &&
+      rankResult.code === 200 &&
+      categoryResult.code === 200
     ) {
-      const detailRes = detailResult.data.data || {};
-      const rankRes = rankResult.data.data || {};
-      const categoryRes = categoryResult.data.data || {};
+      const detailRes = detailResult.data || {};
+      const rankRes = rankResult.data || {};
+      const categoryRes = categoryResult.data || {};
       const tagList = categoryRes[0].tagNameList;
 
       ctx.helper.success({
@@ -218,12 +210,12 @@ class PlannerController extends Controller {
       app.config.apiClient.APPID[5],
       merchantApi.sensitiveInfo
     );
-    const { data, status } = await service.curl.curlPost(sensitiveUrl, {
+    const data = await service.curl.curlPost(sensitiveUrl, {
       id,
       sensitiveInfoType, // 预约人手机号:APPOINTMENT 商户用户手机号: MCH_USER 商户超管手机号：MCH_ADMIN_USER 商户法人身份证号：MCH_LEGAL_PERSON_CARD_NO 联系人手机号: MCH_LINK_MAN 用户的身份证号码: MCH_USER_PERSON_CARD_NO
     });
 
-    if (status === 200 && data.code === 200) {
+    if (data.code === 200) {
       ctx.helper.success({
         ctx,
         code: 200,
@@ -233,9 +225,9 @@ class PlannerController extends Controller {
     }
     ctx.helper.fail({
       ctx,
-      code: data.code || status,
+      code: data.code,
       res: data,
-      detailMessage: "请求失败",
+      detailMessage: data.message || "请求失败",
     });
   }
 }

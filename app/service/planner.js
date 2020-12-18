@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-11 14:34:53
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-14 14:59:48
+ * @LastEditTime: 2020-12-18 11:46:06
  * @Description: file content
  * @FilePath: /chips-wap/app/service/planner.js
  */
@@ -33,7 +33,7 @@ class goodsListService extends Service {
         merchantApi.list
       );
       if (!url) {
-        resolve({ ctx, code: 202, res: "缺少后端服务请求API路径" });
+        resolve({ ctx, code: 202, message: "缺少后端服务请求API路径" });
       }
       try {
         const listParams = {
@@ -68,7 +68,7 @@ class goodsListService extends Service {
         merchantApi.categoryList
       );
       if (!url) {
-        resolve({ ctx, code: 202, res: "缺少后端服务请求API路径" });
+        resolve({ ctx, code: 202, message: "缺少后端服务请求API路径" });
       }
       try {
         const result = await service.curl.curlPost(url, {
@@ -80,13 +80,12 @@ class goodsListService extends Service {
           start: 1,
         });
 
-        const { data = {}, status } = result;
-        if (status !== 200 || data.code !== 200) {
+        if (result.code !== 200) {
           resolve(result);
           return;
         }
 
-        const dataResult = data.data || {};
+        const dataResult = result.data || {};
         const recodes = dataResult.records || [];
         const formateData = mchUserIds.map((id) => {
           const tagNameList = recodes.reduce((accumulator, current) => {
@@ -107,10 +106,11 @@ class goodsListService extends Service {
           };
         });
 
-        resolve({
-          status,
-          data: Object.assign({}, data, { data: formateData }),
-        });
+        resolve(
+          Object.assign(result, {
+            data: formateData,
+          })
+        );
       } catch (err) {
         ctx.logger.error(err);
         resolve(ctx.helper.errMessage(err));
@@ -135,7 +135,8 @@ class goodsListService extends Service {
         resolve({ ctx, code: 202, res: "缺少后端服务请求API路径" });
       }
       try {
-        const result = await service.curl.curlPost(url, addressIds);
+        const addressIdsStr = JSON.stringify(addressIds);
+        const result = await service.curl.curlPost(url, addressIdsStr);
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-04 13:53:30
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-04 16:54:15
+ * @LastEditTime: 2020-12-18 10:27:01
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/complain.js
  */
@@ -52,12 +52,21 @@ class ComplainController extends Controller {
 
     const url = getComplainUrl(app, ctx, "feedbackAdd");
 
-    const { data } = await service.curl.curlPost(url, ctx.request.body);
+    const data = await service.curl.curlPost(url, ctx.request.body);
 
-    ctx.helper.success({
+    if (data.code === 200) {
+      ctx.helper.success({
+        ctx,
+        code: 200,
+        res: data.data,
+      });
+      return;
+    }
+    ctx.helper.fail({
       ctx,
-      code: 200,
-      res: data,
+      code: data.code,
+      res: data.data || {},
+      detailMessage: data.message || "请求失败",
     });
   }
 
@@ -70,11 +79,20 @@ class ComplainController extends Controller {
     if (getValiErrors(app, ctx, rules, ctx.query)) return;
 
     const url = getComplainUrl(app, ctx, "feedbackDetail");
-    const { data = {} } = await service.curl.curlGet(url, ctx.query);
-    ctx.helper.success({
+    const data = await service.curl.curlGet(url, ctx.query);
+    if (data.code === 200) {
+      ctx.helper.success({
+        ctx,
+        code: 200,
+        res: data.data,
+      });
+      return;
+    }
+    ctx.helper.fail({
       ctx,
-      code: 200,
-      res: data || {},
+      code: data.code,
+      res: data.data || {},
+      detailMessage: data.message || "请求失败",
     });
   }
 
@@ -89,11 +107,20 @@ class ComplainController extends Controller {
     if (getValiErrors(app, ctx, rules, ctx.query)) return;
 
     const url = getComplainUrl(app, ctx, "feedbackList");
-    const { data = {} } = await service.curl.curlGet(url, ctx.query);
-    ctx.helper.success({
+    const data = await service.curl.curlGet(url, ctx.query);
+    if (data.code === 200) {
+      ctx.helper.success({
+        ctx,
+        code: 200,
+        res: data.data,
+      });
+      return;
+    }
+    ctx.helper.fail({
       ctx,
-      code: 200,
-      res: data || {},
+      code: data.code,
+      res: data.data || {},
+      detailMessage: data.message || "请求失败",
     });
   }
 }
