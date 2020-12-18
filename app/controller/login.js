@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-03 15:34:31
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 13:56:16
+ * @LastEditTime: 2020-12-18 10:18:05
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/login.js
  */
@@ -43,9 +43,9 @@ class LoginController extends Controller {
       userApi.login
     );
 
-    const { status, data } = await service.curl.curlPost(url, ctx.request.body);
+    const data = await service.curl.curlPost(url, ctx.request.body);
 
-    if (status === 200 && data.code === 200) {
+    if (data.code === 200) {
       ctx.helper.success({
         ctx,
         code: 200,
@@ -55,7 +55,7 @@ class LoginController extends Controller {
     }
     ctx.helper.fail({
       ctx,
-      code: data.code || status,
+      code: data.code,
       res: data.data || {},
       detailMessage: data.message || "请求失败",
     });
@@ -75,8 +75,8 @@ class LoginController extends Controller {
       userApi.logout
     );
     Object.assign(ctx.headers, { sysCode: "crisps-app" });
-    const { status, data } = await service.curl.curlGet(url, ctx.query);
-    if (status === 200 && data.code === 200) {
+    const data = await service.curl.curlGet(url, ctx.query);
+    if (data.code === 200) {
       ctx.helper.success({
         ctx,
         code: 200,
@@ -86,7 +86,7 @@ class LoginController extends Controller {
     }
     ctx.helper.fail({
       ctx,
-      code: status,
+      code: data.code,
       res: data,
       detailMessage: data.message || "请求失败",
     });
@@ -120,7 +120,7 @@ class LoginController extends Controller {
       userApi.login
     );
     Object.assign(ctx.headers, { sysCode: "crisps-app" });
-    const { status, data = {} } = await service.curl.curlPost(registerUrl, {
+    const data = await service.curl.curlPost(registerUrl, {
       dataJson: {
         phone,
         password,
@@ -132,7 +132,7 @@ class LoginController extends Controller {
       accountChannel: "AUTH_PHONE_VERIFY",
     });
 
-    if (status === 200 && data.code === 200) {
+    if (data.code === 200) {
       ctx.helper.success({
         ctx,
         code: 200,
@@ -142,7 +142,7 @@ class LoginController extends Controller {
     }
     ctx.helper.fail({
       ctx,
-      code: data.code || status,
+      code: data.code,
       res: data || {},
       detailMessage: data.message || "请求失败",
     });
@@ -165,12 +165,9 @@ class LoginController extends Controller {
       userApi.reset
     );
     Object.assign(ctx.headers, { sysCode: "crisps-app" });
-    const { status, data = {} } = await service.curl.curlPost(
-      url,
-      ctx.request.body
-    );
+    const data = await service.curl.curlPost(url, ctx.request.body);
 
-    if (status === 200 && data.code === 200) {
+    if (data.code === 200) {
       ctx.helper.success({
         ctx,
         code: 200,
@@ -180,7 +177,7 @@ class LoginController extends Controller {
     }
     ctx.helper.fail({
       ctx,
-      code: data.code || status,
+      code: data.code,
       res: data || {},
       detailMessage: data.message || "请求失败",
     });
@@ -202,15 +199,18 @@ class LoginController extends Controller {
       reset: "USER_FORGET_PASS",
     }[type];
 
-    Object.assign(ctx.headers, { sysCode: "crisps-app", 'Content-Type': 'application/json' });
-    const { status, data } = await service.common.verificationCode.getSmsCode(
+    Object.assign(ctx.headers, {
+      sysCode: "crisps-app",
+      "Content-Type": "application/json",
+    });
+    const data = await service.common.verificationCode.getSmsCode(
       phone,
       null,
       "ORDINARY_USER",
       msgTemplateCode
     );
 
-    if (status === 200 && data.code === 200) {
+    if (data.code === 200) {
       ctx.helper.success({
         ctx,
         code: 200,
@@ -220,7 +220,7 @@ class LoginController extends Controller {
     }
     ctx.helper.fail({
       ctx,
-      code: data.code || status,
+      code: data.code,
       res: data || {},
       detailMessage: data.message || "请求失败",
     });

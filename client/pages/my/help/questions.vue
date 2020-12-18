@@ -1,86 +1,80 @@
 <template>
-  <div class="wrapper">
+  <div class="page-content">
     <Header title="问题解答" />
-    <div class="titleDiv divClass">
-      <my-icon name="per_ic_about" class="iconClass" />
-      <span>{{ title }}</span>
+    <div class="title-box moudle">
+      <my-icon
+        name="command_img_questions"
+        size="0.32rem"
+        bg-color="linear-gradient(-45deg, #4974F5, #6093FB)"
+      />
+      <strong class="title-content">{{ title }}</strong>
     </div>
-    <div class="answerDiv">
-      <my-icon name="per_ic_about" class="iconClass" />
-      <div class="divClass">
-        <span>{{ answer }}</span>
-        <a :href="url" class="urlClass">{{ url }}</a>
-      </div>
+    <div class="content-box moudle">
+      <my-icon
+        name="command_img_answers"
+        size="0.32rem"
+        bg-color="linear-gradient(-45deg, #FF614E, #FA7769)"
+      />
+      <div class="text-content" v-html="content"></div>
     </div>
   </div>
 </template>
 
 <script>
+import { foundApi } from '~/api'
 import Header from '@/components/common/head/header'
 export default {
   name: 'Questions',
   components: { Header },
-  props: {},
+  async asyncData({ $axios, query }) {
+    let detailData = {}
+    try {
+      const res = await $axios.get(foundApi.infoDetail, {
+        params: { id: query.id, includeField: 'id,title,content' },
+      })
+      if (res.code === 200) {
+        detailData = res.data
+      }
+    } catch (error) {}
+    return detailData
+  },
   data() {
-    return {
-      title:
-        '资质可以直接用吗？谢谢资质可以直接用吗？谢谢资质可以直接用吗？谢谢资质可以直接用吗？谢谢',
-      answer:
-        '整体转让是指把公司整体转让给买家，对于受让人来说，调查债权债务、证书有效期和在职人员的情况整体转让是指把公司整体转让给买家。对于受让人来说，调查债权债务、证书有效期和在职人员的情况整体转让是指把公司整体转让给买家，对于受让人来说，调查债权债务、证书有效期和在职人员的情况整体转让是指把公司整体转让给买家，对于受让人来说。',
-      url: 'http://127.0.0.1:32767start.html',
-    }
-  },
-  computed: {},
-  watch: {},
-  created() {},
-  mounted() {
-    this.getQuestionDetail()
-  },
-  methods: {
-    getQuestionDetail() {
-      // 获取问答详情
-    },
+    return {}
   },
 }
 </script>
 <style lang="less" scoped>
-.wrapper {
-  span,
-  a {
-    font-size: 32px;
-    font-family: PingFang SC;
-    // display: inline-block;
-    width: 606px;
-    float: left;
-    margin-top: 10px;
-    margin-left: 17px;
+.page-content {
+  font-size: 32px;
+  padding-bottom: 40px;
+  /deep/ a {
+    color: #4974f5;
   }
-  .iconClass {
-    color: #333333;
-    margin-left: 40px;
-    font-size: 32px;
-    float: left;
+  /deep/ img {
+    max-width: 100% !important;
+    height: auto;
   }
-  .divClass {
-    overflow: hidden;
-    margin-top: 45px;
-  }
-  .titleDiv {
-    span {
+  .moudle {
+    padding: 0 40px;
+    display: flex;
+    .title-content {
+      margin-left: 16px;
+      font-family: PingFang SC;
       font-weight: bold;
       color: #1a1a1a;
       line-height: 40px;
     }
-  }
-  .answerDiv {
-    span {
+    .text-content {
+      margin-left: 16px;
+      font-family: PingFang SC;
       font-weight: 400;
       color: #222222;
       line-height: 46px;
+      margin-top: -4px;
     }
-    .urlClass {
-      color: #4974f5;
-    }
+  }
+  .title-box {
+    margin: 44px 0 40px 0;
   }
 }
 </style>
