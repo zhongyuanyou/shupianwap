@@ -96,14 +96,15 @@ export default {
       font-family: PingFang SC;
       font-weight: bold;
       color: #222222;
-      line-height: 52px;
+      line-height: 30px;
+      margin-bottom: 9px;
     }
     .small {
       font-size: 24px;
       font-family: PingFang SC;
       font-weight: 400;
       color: #999999;
-      ling-height: 36px;
+      line-height: 36px;
     }
   }
 }

@@ -56,7 +56,7 @@
           <input
             type="text"
             class="banner-bottom-form-input"
-            placeholder="信息包含中，仅官方可见"
+            placeholder="信息保护中，仅官方可见"
             @focus="focus"
           />
         </div>
@@ -64,11 +64,14 @@
           <span>验证码</span>
           <input
             type="text"
-            class="banner-bottom-form-input banner-bottom-form-input-wid"
+            class="banner-bottom-form-input banner-bottom-form-inputspe"
             placeholder="请输入验证码"
           />
-          <a href="javascript:;" class="banner-bottom-form-div-a" @click="send"
-            >获取验证码</a
+          <a
+            href="javascript:;"
+            class="banner-bottom-form-div-a"
+            @click="send"
+            >{{ test }}</a
           >
         </div>
         <button class="banner-bottom-form-button">咨询获取节税方案</button>
@@ -116,6 +119,7 @@ export default {
       ],
       selectname: 'ISO45001认证',
       count: 126,
+      test: '获取验证码',
     }
   },
 
@@ -129,16 +133,16 @@ export default {
     focus() {
       this.isshow = true
     },
-    send(e) {
-      if (e.target.innerHTML === '获取验证码') {
+    send() {
+      if (this.test === '获取验证码') {
         let i = 59
-        e.target.innerHTML = i + 's'
+        this.test = i + 's'
         const time = setInterval(() => {
-          if (i > 0) {
+          if (i > 1) {
             i--
-            e.target.innerHTML = i + 's'
+            this.test = i + 's'
           } else {
-            e.target.innerHTML = '获取验证码'
+            this.test = '获取验证码'
             clearInterval(time)
           }
         }, 1000)
@@ -181,7 +185,6 @@ export default {
     &-tab {
       width: 670px;
       height: 80px;
-      background: #f8f8f8;
       border-radius: 8px 4px 0px 0px;
       font-size: 24px;
       display: flex;
@@ -189,14 +192,13 @@ export default {
       line-height: 80px;
     }
     &-text {
-      width: 452px;
-      height: 25px;
+      height: 87px;
       font-size: 24px;
-      line-height: 25px;
+      line-height: 87px;
       font-family: PingFang SC;
       font-weight: 400;
       color: #555555;
-      margin: 31px 109px;
+      text-align: center;
     }
     &-form {
       padding: 0 40px;
@@ -214,30 +216,34 @@ export default {
         line-height: 80px;
         padding: 0 0 0 33px;
         position: relative;
+        display: flex;
         > span {
           display: inline-block;
           margin-right: 30px;
+          width: 84px;
         }
         &-a {
           position: absolute;
           right: 0;
-          margin-right: 33px;
+          margin: 0 33px;
         }
       }
       &-input {
         display: inline-block;
-        flex: 1;
         border: none;
         font-size: 28px;
         font-family: PingFang SC;
-        font-weight: 400;
+        font-weight: bold;
         background: #f8f8f8;
+        padding: 0;
+        width: 443px;
         &::placeholder {
           color: #cccccc;
+          font-weight: 400;
         }
       }
-      &-input-wid {
-        width: 240px;
+      &-inputspe {
+        width: 237px;
       }
       &-button {
         width: 100%;
@@ -289,18 +295,23 @@ a {
   font-family: PingFang SC;
   font-weight: bold;
   color: #1a1a1a;
+  background: white;
 }
 .small {
   font-size: 24px;
   font-family: PingFang SC;
   font-weight: 400;
   color: #999999;
+  background: #f8f8f8;
 }
 /deep/ .sp-action-sheet__name {
   font-size: 31px;
   line-height: 56px;
   height: 56px;
   font-family: PingFang SC;
-  font-weight: bold;
+  font-weight: 400;
+}
+/deep/ .sp-cell::after {
+  display: none;
 }
 </style>

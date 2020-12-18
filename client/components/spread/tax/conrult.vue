@@ -4,7 +4,7 @@
     <div class="conrult-banner">
       <sp-grid :border="false" :column-num="4">
         <sp-grid-item v-for="(index, i) of banners" :key="i">
-          <img :src="index.img" alt="" />
+          <div class="conrult-banner-img" :style="index.style"></div>
           <div class="conrult-banner-font">{{ index.title }}</div>
         </sp-grid-item>
       </sp-grid>
@@ -26,35 +26,75 @@ export default {
     return {
       banners: [
         {
-          img: require('~/assets/spreadImages/tax/busi_ic_swchicon1.png'),
+          style: {
+            backgroundImage:
+              'url(' +
+              require('~/assets/spreadImages/tax/busi_ic_swchicon1.png') +
+              ')',
+          },
           title: '微商、直播',
         },
         {
-          img: require('~/assets/spreadImages/tax/busi_ic_swchicon2.png'),
+          style: {
+            backgroundImage:
+              'url(' +
+              require('~/assets/spreadImages/tax/busi_ic_swchicon2.png') +
+              ')',
+          },
           title: '技术服务',
         },
         {
-          img: require('~/assets/spreadImages/tax/busi_ic_swchicon3.png'),
+          style: {
+            backgroundImage:
+              'url(' +
+              require('~/assets/spreadImages/tax/busi_ic_swchicon3.png') +
+              ')',
+          },
           title: '营销推广',
         },
         {
-          img: require('~/assets/spreadImages/tax/busi_ic_swchicon4.png'),
+          style: {
+            backgroundImage:
+              'url(' +
+              require('~/assets/spreadImages/tax/busi_ic_swchicon4.png') +
+              ')',
+          },
           title: '金融服务',
         },
         {
-          img: require('~/assets/spreadImages/tax/busi_ic_swchicon6.png'),
+          style: {
+            backgroundImage:
+              'url(' +
+              require('~/assets/spreadImages/tax/busi_ic_swchicon5.png') +
+              ')',
+          },
           title: '商贸物流',
         },
         {
-          img: require('~/assets/spreadImages/tax/busi_ic_swchicon5.png'),
+          style: {
+            backgroundImage:
+              'url(' +
+              require('~/assets/spreadImages/tax/busi_ic_swchicon6.png') +
+              ')',
+          },
           title: '设计服务',
         },
         {
-          img: require('~/assets/spreadImages/tax/busi_ic_swchicon6.png'),
+          style: {
+            backgroundImage:
+              'url(' +
+              require('~/assets/spreadImages/tax/busi_ic_swchicon7.png') +
+              ')',
+          },
           title: '咨询服务',
         },
         {
-          img: require('~/assets/spreadImages/tax/busi_ic_swchicon6.png'),
+          style: {
+            backgroundImage:
+              'url(' +
+              require('~/assets/spreadImages/tax/busi_ic_swchicon8.png') +
+              ')',
+          },
           title: '建筑及安装',
         },
       ],
@@ -79,10 +119,12 @@ export default {
   }
   &-banner {
     margin: 55px 0 16px 0;
-    img {
-      width: 80px;
-      height: 80px;
-      margin-bottom: 11px;
+    &-img {
+      width: 120px;
+      height: 120px;
+      margin-bottom: -9px;
+      background-size: 100% 100%;
+      background-position: center center;
     }
     &-font {
       font-size: 24px;

@@ -9,22 +9,31 @@
         class="planner-content my-swipe"
       >
         <sp-swipe-item
-          v-for="index of 3"
-          :key="index"
+          v-for="item of planners"
+          :key="item.id"
           class="planner-content-div"
         >
           <div class="planner-content-div-left">
             <div class="planner-content-div-left-person">
-              <div class="planner-content-div-left-person-img"></div>
+              <div
+                class="planner-content-div-left-person-img"
+                :style="
+                  item.avatarImg === ''
+                    ? { background: 'gray' }
+                    : { backgroundImage: `url(${item.avatarImg})` }
+                "
+              ></div>
               <div class="planner-content-div-left-person-font">金牌规划师</div>
             </div>
             <div class="planner-content-div-left-content">
-              <div class="planner-content-div-left-content-name">郭亮亮</div>
+              <div class="planner-content-div-left-content-name">
+                {{ item.name }}
+              </div>
               <div class="planner-content-div-left-content-count">
-                薯片分 138 | 服务次数 258
+                薯片分 {{ item.shuPianFen }} | 服务次数 {{ item.serverNum }}
               </div>
               <div class="planner-content-div-left-content-tab">
-                <div v-for="(tab, i) of tabs" :key="i">{{ tab }}</div>
+                <div v-for="(tab, i) of item.labels" :key="i">{{ tab }}</div>
               </div>
             </div>
             <div class="planner-content-div-left-icon">
@@ -62,10 +71,12 @@ export default {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
   },
+  props: {
+    planners: [],
+  },
   data() {
     return {
       img: require('~/assets/spreadImages/tax/busi_img_swchbg01.png'),
-      tabs: ['工商注册', '财税咨询', '税务筹划'],
     }
   },
 }
@@ -118,7 +129,8 @@ export default {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background: gray;
+            background-position: center center;
+            backgroung-size: 100% 100%;
           }
           &-font {
             height: 26px;

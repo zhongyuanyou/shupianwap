@@ -13,10 +13,12 @@
             <div class="serve-card-first-big">{{ index.num1 }}万+</div>
             <div class="serve-card-first-small">在线咨询</div>
           </div>
+          <div class="serve-card-first-hr"></div>
           <div>
             <div class="serve-card-first-big">{{ index.num2 }}万+</div>
             <div class="serve-card-first-small">累计成交</div>
           </div>
+          <div class="serve-card-first-hr"></div>
           <div>
             <div class="serve-card-first-big">{{ index.num3 }}万+</div>
             <div class="serve-card-first-small">成功案列</div>
@@ -25,7 +27,7 @@
         <div class="serve-card-second">
           <div class="serve-card-second-left">
             <span>{{ index.price }}</span
-            ><span>元起</span><strike>488.00</strike>
+            ><span>元起</span><strike>488.00元</strike>
           </div>
           <div class="serve-card-second-right">
             <div class="serve-card-second-right-person"></div>
@@ -125,10 +127,10 @@ export default {
     width: 670px;
     height: 472px;
     background: url('~assets/spreadImages/tax/busi_img_swchlist1.jpg');
-    background-size: 100% 100%;
+    background-size: 100% 101%;
     background-position: center;
     background-repeat: no-repeat;
-    border: 1px solid #cdcdcd;
+    border: 1px solid rgba(205, 205, 205, 0.3);
     border-radius: 4px;
     margin-bottom: 25px;
     &-first {
@@ -152,6 +154,12 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #999999;
+      }
+      &-hr {
+        width: 0.01rem;
+        height: 34px;
+        background: #f4f4f4;
+        margin-bottom: 11px;
       }
     }
     &-second {

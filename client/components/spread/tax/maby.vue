@@ -128,6 +128,7 @@ export default {
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     &-content {
       margin-left: 26px;
       display: flex;
@@ -152,11 +153,13 @@ export default {
       width: 200px;
       height: 80px;
       background: #4974f5;
-      border-radius: 0px 8px 8px 0px;
       font-size: 28px;
       font-family: PingFang SC;
       font-weight: bold;
       padding: 0;
+      border-radius: 0px 8px 8px 0px;
+      color: #ffffff;
+      margin-right: -1px;
     }
   }
 }

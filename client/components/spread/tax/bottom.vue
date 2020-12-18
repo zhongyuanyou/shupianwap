@@ -11,6 +11,7 @@
       </div>
       <div class="bottom-gray-three">薯片科技版权所有 | 关于我们</div>
     </div>
+    <div class="bottom-position"></div>
     <sp-bottombar safe-area-inset-bottom>
       <sp-bottombar-info title avatar :card="card" />
       <sp-bottombar-button type="info" color="#24AE68" :text="text1">
@@ -90,13 +91,15 @@ export default {
       margin: -8px;
     }
   }
+  &-position {
+    height: 164px;
+  }
 }
 //引入组件的整体
 /deep/ .sp-bottombar {
   display: flex;
   align-items: center;
   height: 116px;
-  position: relative;
 }
 //头像
 /deep/ .sp-bottombar-info__avatar {
@@ -115,10 +118,12 @@ export default {
   font-family: PingFang SC;
   font-weight: bold;
   color: #222222;
+  line-height: 32px;
 }
 /deep/ .sp-bottombar-info__sign {
   width: 125px;
   height: 32px;
+  line-height: 28px;
   background: #ffefc5;
   border: 2px solid #dac79a;
   border-radius: 4px;
@@ -127,6 +132,7 @@ export default {
   font-weight: 400;
   color: #7b6225;
   padding: 0;
+  margin-top: 6px;
 }
 //按钮
 /deep/ .sp-bottombar-button {
