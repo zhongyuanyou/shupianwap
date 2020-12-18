@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="banner"
-    :style="isshow == true ? { height: '9.75rem' } : { height: '8.71rem' }"
-  >
+  <div class="banner">
     <!--    第一层-->
     <div class="banner-top">
       <sp-swipe :autoplay="3000" indicator-color="white">
@@ -163,10 +160,10 @@ export default {
 
 <style scoped lang="less">
 .banner {
-  position: relative;
   &-top {
     width: 750px;
     height: 392px;
+    margin-bottom: -81px;
     &-img {
       width: 750px;
       height: 392px;
@@ -175,12 +172,12 @@ export default {
   &-bottom {
     background: #fff;
     width: 670px;
-    position: absolute;
-    top: 311px;
     margin: 0 40px;
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     font-size: 0;
+    position: relative;
+    z-index: 999;
     &-tab {
       width: 670px;
       height: 80px;
@@ -247,19 +244,19 @@ export default {
         height: 88px;
         background: #4974f5;
         border-radius: 8px;
-        margin-top: 32px;
+        margin-top: 40px;
         color: #ffffff;
         font-size: 32px;
         padding: 0;
       }
       &-lastdiv {
         font-size: 26px;
-        height: 26px;
+        height: 81px;
         line-height: 26px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #555555;
-        margin: 24px 0 32px;
+        padding: 24px 0 31px;
         display: flex;
         justify-content: center;
         > span {

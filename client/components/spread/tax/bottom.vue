@@ -133,8 +133,9 @@ export default {
   font-size: 32px;
   font-family: PingFang SC;
   font-weight: bold;
-}
-/deep/ .sp-bottombar-button {
   height: 100px;
+}
+/deep/ .sp-button__content {
+  border: 0;
 }
 </style>
