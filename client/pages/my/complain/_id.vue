@@ -7,7 +7,7 @@
         </template>
       </sp-top-nav-bar>
     </sp-sticky>
-    <div class="detail-content" v-if="info">
+    <div v-if="info" class="detail-content">
       <div class="detail-content-complain">
         <div class="detail-content-complain-title">
           {{ info.content }}

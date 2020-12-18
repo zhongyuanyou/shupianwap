@@ -171,8 +171,15 @@ export default {
       window.location.href = 'tel:' + number
     },
     // 取消面谈
-    cancelInterview(id) {
-      console.log('取消面谈：' + id)
+    async cancelInterview(id) {
+      const params = {
+        id,
+        type: 0,
+      }
+      const res = await this.$axios.post(interviewApi.cancel, params)
+      if (res.code === 200) {
+        this.getInterviewList()
+      }
     },
     async onLoad() {
       const page = this.page++
