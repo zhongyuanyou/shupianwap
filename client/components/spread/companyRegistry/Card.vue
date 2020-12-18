@@ -5,7 +5,7 @@
       <sp-cell
         title-class="down-left"
         :value-class="
-          selectValue == '请选择' ? 'down-right' : 'down-right_active'
+          selectValue == '请选择' ? 'down-right' : 'down-right--active'
         "
         :value="selectValue"
         is-link
@@ -21,7 +21,7 @@
         @select="onSelect"
       />
       <div class="input-phone">
-        <sp-cell-group @click="focus = verificationShow = true">
+        <sp-cell-group @click="verificationShow = true">
           <sp-field
             v-model="phoneValue"
             label="手机号"
@@ -94,7 +94,7 @@ export default {
   components: {
     [Image.name]: Image,
     [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
+    [CellGroup.name]: CellGroup, // FR:冗余删除
     [ActionSheet.name]: ActionSheet,
     [Toast.name]: Toast,
     [Icon.name]: Icon,
@@ -124,6 +124,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .card {
+  position: relative;
+  margin-top: -75px;
   .card-content {
     margin: 8px auto;
     border-radius: 8px;
@@ -176,7 +178,9 @@ export default {
         color: #cccccc;
         text-align: left;
       }
-      .down-right_active {
+
+      //
+      .down-right--active {
         display: inline-block;
         width: 166px !important;
         color: #1a1a1a;
@@ -222,10 +226,6 @@ export default {
       display: flex;
       justify-content: space-between;
       padding: 34px 19px 0 19px;
-      .sp-iconfont::before {
-        // size: 26px;
-        // color: red;
-      }
     }
   }
 }

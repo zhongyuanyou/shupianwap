@@ -1,6 +1,11 @@
 <template>
   <div class="register-list">
-    <div v-for="(list, index) of 3" :key="index" class="list">
+    <div
+      v-for="(listCounts, index) of listCount"
+      :key="index"
+      :style="{ backgroundImg: `url(${listCount.bgImg})` }"
+      class="list"
+    >
       <div class="list-count">
         <div class="list-count_item">
           <span>100万+</span>
@@ -16,7 +21,10 @@
         </div>
       </div>
       <div class="list-advisory">
-        <span class="price"><span>4000</span>元</span>
+        <span class="price"
+          ><span>{{ listCounts.pric }}</span
+          >元</span
+        >
         <div class="advisory">
           <sp-image
             round
@@ -26,8 +34,8 @@
           />
           <sp-image
             round
-            width="28px"
-            height="28px"
+            width="20px"
+            height="20px"
             :src="
               require('' +
                 '~/assets/spreadImages/company_registry/busi_img_gszcxx.png')
@@ -35,8 +43,8 @@
           />
           <sp-image
             round
-            width="28px"
-            height="28px"
+            width="20px"
+            height="20px"
             :src="
               require('' +
                 '~/assets/spreadImages/company_registry/busi_img_fwrx.png')
@@ -57,7 +65,22 @@ export default {
   },
   props: [],
   data() {
-    return {}
+    return {
+      listCount: [
+        {
+          pric: 4000,
+          bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_yxze.png'),
+        },
+        {
+          pric: 5000,
+          bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_gtzc.png'),
+        },
+        {
+          pric: 7000,
+          bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_fgs.png'),
+        },
+      ],
+    }
   },
 }
 </script>
@@ -65,7 +88,6 @@ export default {
 .register-list {
   .list {
     width: 670px;
-    // height: 435px;
     border: 1px solid #e6e6e6;
     background: url(~assets/spreadImages/company_registry/busi_img_fwjs_gtzc.png)
       top center/100% auto no-repeat;
@@ -118,7 +140,7 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin: 0 28px 0 8px;
+        padding: 0 28px 0 8px;
       }
     }
   }

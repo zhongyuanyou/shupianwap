@@ -26,18 +26,13 @@
       <h3>平台优势</h3>
       <div class="superiority-item">
         <ul>
-          <li>
-            <sp-image
-              round
-              width="35px"
-              height="35px"
-              fit="cover"
-              src="https://img.yzcdn.cn/vant/cat.jpeg"
-            />
+          <li v-for="(item, index) of image" :key="index">
+            <sp-image width="35px" height="35px" fit="cover" :src="item.img" />
+            <span class="list">
+              <div>{{ item.title }}</div>
+              <div>{{ item.content }}</div>
+            </span>
           </li>
-          <li>5</li>
-          <li>5</li>
-          <li>5</li>
         </ul>
       </div>
     </div>
@@ -52,7 +47,30 @@ export default {
     [Toast.name]: Toast,
   },
   data() {
-    return {}
+    return {
+      image: [
+        {
+          title: '大品牌',
+          content: '覆盖全国14个城市',
+          img: require('~/assets/spreadImages/company_registry/busi_img_ptys_dpp.png'),
+        },
+        {
+          title: '更专业',
+          content: '30万+专业规划师',
+          img: require('~/assets/spreadImages/company_registry/busi_img_ptys_gzy.png'),
+        },
+        {
+          title: '更省时',
+          content: '2小时内响应',
+          img: require('~/assets/spreadImages/company_registry/busi_img_ptys_gss.png'),
+        },
+        {
+          title: '零风险',
+          content: '急速售后 急速退款',
+          img: require('~/assets/spreadImages/company_registry/busi_img_ptys_lfx.png'),
+        },
+      ],
+    }
   },
 }
 </script>
@@ -66,6 +84,7 @@ export default {
     color: #1a1a1a;
     line-height: 52px;
     padding-bottom: 30px;
+    padding-top: 64px;
   }
   .message {
     margin-bottom: 24px;
@@ -169,7 +188,32 @@ export default {
           margin-bottom: 24px;
           /deep/.sp-image {
             vertical-align: middle;
-            margin: 0 16px 0 24px;
+            margin: 0 0 0 24px;
+            .sp-image__img {
+              border-radius: 8px;
+            }
+          }
+          .list {
+            display: flex !important;
+            width: 210px;
+            flex-direction: column;
+            height: 118px;
+            flex-wrap: wrap-reverse;
+            float: right;
+            > div {
+              font-size: 30px;
+              font-weight: bold;
+              color: #222222;
+              line-height: 73px;
+              height: 58px;
+            }
+            div:last-child {
+              line-height: 36px;
+              height: 36px;
+              font-size: 24px;
+              font-weight: 400;
+              color: #999999;
+            }
           }
         }
       }
