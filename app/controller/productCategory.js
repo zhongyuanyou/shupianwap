@@ -38,11 +38,11 @@ class ProductCategoryController extends Controller {
       let recommendData = []; // 广告数据
       // 产品分类总和
       if (
-        resData[0].data.code === 200 &&
-        resData[0].data.data &&
-        Array.isArray(resData[0].data.data)
+        resData[0].code === 200 &&
+        resData[0].data &&
+        Array.isArray(resData[0].data)
       ) {
-        const cData = resData[0].data.data;
+        const cData = resData[0].data;
         // 获取到所有一级分类
         categoryList = cData.filter(item => {
           return item.level === 1;
@@ -64,7 +64,6 @@ class ProductCategoryController extends Controller {
         return item.children.length;
       });
       // 广告数据
-      console.log('广告数据', resData[1]);
       if (
         resData[1].code === 200 &&
         resData[1].data

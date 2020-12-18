@@ -123,13 +123,6 @@ export default {
         }
       },
     },
-    isChangeTab: {
-      // 顶层tab服务资源和交易资源发生了改变需要清空筛选项
-      type: String,
-      default() {
-        return ''
-      },
-    },
   },
   data() {
     return {
@@ -143,25 +136,28 @@ export default {
       jyGoodsListData: {}, // 保存所有交易业态的列表数据
       currentTabJyCode: '', // 当前tab选中的jy code
       filterItem: {}, // 保存所有交易业态的已筛选数据
+      isReq: {}, // 存储当前业态是否已经进行过搜索
     }
   },
   watch: {
     searchText(val) {
       // 搜索框发生变化时
-      this.formData.searchKey = val
+      this.formData[this.currentTabJyCode].searchKey = val
+      console.log('1231312312321312312312312312321313', this.reqType)
       if (this.reqType === 'jy') {
+        this.resetAllSelect(this.currentTabJyCode)
         this.initGoodsList()
       }
-    },
-    isChangeTab() {
-      this.formData.sortBy = ''
-      this.formData.classCodes = ''
     },
   },
   mounted() {
     this.$emit('goodsList', 'jy', this)
     // 默认请求的数据
+    this.tabItems.forEach((item) => {
+      this.isReq[item.code] = false
+    })
     this.currentTabJyCode = this.tabItems[0].code
+    this.isReq[this.currentTabJyCode] = true
     this.filterItem[this.tabItems[0].code] = {}
     this.formData[this.tabItems[0].code] = {
       start: 1,
@@ -187,6 +183,7 @@ export default {
     },
     changeTabs(name, title) {
       // 切换业态tab
+      if (this.reqType !== 'jy') return
       console.log(this.tabItems[name])
       this.currentTabJyCode = this.tabItems[name].code
       // 如果已经存储的有筛选数据则不需要再去请求筛选数据
@@ -200,6 +197,7 @@ export default {
         // this.jyFilterData[this.currentTabJyCode] = this.filterObj[this.formData.dictCode]
       } else {
         this.filterItem[this.currentTabJyCode] = {}
+        this.jyGoodsListData[this.currentTabJyCode] = []
         this.formData[this.currentTabJyCode] = {
           start: 1,
           limit: 10,
@@ -209,22 +207,40 @@ export default {
           searchKey: this.searchText,
           fieldList: [],
         }
+      }
+      // 判断如果该业态下没请求过则需要重新请求
+      if (!this.isReq[this.currentTabJyCode]) {
         this.initGoodsList()
       }
     },
-    resetAllSelect() {
+    resetAllSelect(currentCode) {
       // 重置筛选项
-      /* this.$refs.dropDownMenu.resetAllSelect()
-      this.formData.start = 1
-      this.jyGoodsListData[this.currentTabJyCode] = []
-      this.activeTabIndex = 0
-      this.formData.classCode = this.tabItems[0].ext4
-      this.formData.dictCode = this.tabItems[0].code
-      this.formData.fieldList = []
-      this.formData.needTypes = 0
-      delete this.formData.platformPriceStart
-      delete this.formData.platformPriceEnd
-      delete this.formData.sortBy */
+      // console.log(this.$refs.dropDownMenu)
+      this.$refs.dropDownMenu.forEach((item) => {
+        if (item.filterData[0].pcode !== currentCode) {
+          item.resetAllSelect()
+        }
+      })
+      if (!currentCode) {
+        this.activeTabIndex = 0
+        this.currentTabJyCode = this.tabItems[0].code
+      }
+      Object.keys(this.formData).forEach((item) => {
+        if (item !== currentCode) {
+          this.jyGoodsListData[item] = []
+          this.formData[item].start = 1
+          // this.formData[item].classCode = this.tabItems[0].ext4
+          // this.formData[item].dictCode = this.tabItems[0].code
+          this.formData[item].fieldList = []
+          this.formData[item].needTypes = 0
+          this.formData[item].needTypes = 0
+          this.formData[item].searchKey = this.searchText
+          delete this.formData[item].platformPriceStart
+          delete this.formData[item].platformPriceEnd
+          delete this.formData[item].sortBy
+          this.isReq[item] = false
+        }
+      })
     },
     initGoodsList() {
       console.log('initGoodsList')

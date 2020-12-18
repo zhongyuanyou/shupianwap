@@ -90,13 +90,15 @@ export default {
     },
     async getInfoDetail() {
       // 获取资讯详情
-      const params = {
-        id: this.$route.params.id,
-      }
-      const res = await this.$axios.get(foundApi.infoDetail, { params })
-      if (res.code === 200) {
-        this.info = res.data
-      }
+      try {
+        const params = {
+          id: this.$route.params.id,
+        }
+        const res = await this.$axios.get(foundApi.infoDetail, { params })
+        if (res.code === 200) {
+          this.info = res.data
+        }
+      } catch (err) {}
     },
   },
 }

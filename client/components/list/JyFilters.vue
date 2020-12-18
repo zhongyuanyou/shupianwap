@@ -44,32 +44,6 @@ export default {
       currentComponets: 'SelectFilter',
       filters: [],
       selectValue: 0,
-      dropdownTitle1: '全部服务',
-      dropdownTitle2: '默认排序',
-      activeData: [
-        { text: '工商服务', id: '1' },
-        {
-          services: [
-            {
-              text: '有限公司注册',
-              id: 1,
-            },
-            {
-              text: '外资公司注册',
-              id: 2,
-              disabled: true,
-            },
-          ],
-        },
-      ],
-      option: [
-        { text: '默认排序', value: 0 },
-        { text: '销量从高到低', value: 1 },
-        { text: '销量从低到高', value: 2 },
-        { text: '价格从高到低', value: 3 },
-        { text: '价格从低到高', value: 4 },
-      ],
-      filterItem: {},
     }
   },
   watch: {
@@ -81,11 +55,11 @@ export default {
   mounted() {},
   methods: {
     resetAllSelect() {
-      // 重置所有筛选项resetFilters resetFilters resetFilters resetFilters
-      console.log(this.$refs)
+      // 重置所有筛选项
+      // console.log(this.$refs)
       // console.log(Object.keys(this.$refs))
       Object.keys(this.$refs).forEach((item) => {
-        console.log(this.$refs[item])
+        // console.log(this.$refs[item])
         this.$refs[item][0].resetFilters()
       })
       this.$emit('emitVue', this, 'jyFilter')
