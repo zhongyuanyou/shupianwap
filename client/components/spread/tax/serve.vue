@@ -203,7 +203,8 @@ export default {
         border-radius: 36px;
         display: flex;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
+        padding: 0 24px 0 8px;
         &-person {
           height: 56px;
           width: 56px;
