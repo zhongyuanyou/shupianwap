@@ -28,7 +28,7 @@
               v-model="telephone"
               label="手机号"
               type="tel"
-              placeholder="请输入用户名"
+              placeholder="信息保护中，仅官方可见"
             />
           </sp-cell-group>
         </div>
@@ -174,11 +174,11 @@ export default {
         height: 2px;
       }
       .title-name {
-        height: 31px;
+        height: 32px;
         font-size: 32px;
         font-weight: bold;
         color: #1a1a1a;
-        line-height: 44px;
+        line-height: 32px;
         margin: 0 15px;
       }
     }

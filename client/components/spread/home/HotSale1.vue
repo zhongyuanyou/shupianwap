@@ -118,11 +118,10 @@ export default {
       box-sizing: border-box;
       position: relative;
       border: 1px solid rgba(205, 205, 205, 0.5);
-
+      height: 22px;
       .middle-transition {
         display: flex;
         align-items: center;
-        align-content: center;
         span {
           display: block;
         }
@@ -138,10 +137,10 @@ export default {
         line-height: 28px;
         font-weight: bold;
         color: #ec5330;
-        padding-bottom: 5px;
       }
       .product-price-suffix {
         font-size: 20px;
+        line-height: 20px;
         color: #ec5330;
       }
       .product-text {
