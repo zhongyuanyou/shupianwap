@@ -72,7 +72,12 @@ export default {
     [SwipeItem.name]: SwipeItem,
   },
   props: {
-    planners: [],
+    planners: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
   data() {
     return {
