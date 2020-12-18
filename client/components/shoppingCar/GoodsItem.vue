@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-17 20:31:47
+ * @LastEditTime: 2020-12-18 18:31:34
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -135,10 +135,10 @@ export default {
         name: '',
         skuAttrKey: '', // 选中sku列表逗号隔开
         goodsNumber: 0,
-        serviceResourceList: [],
+        serviceResourceList: [], // 服务资源
         price: '',
         productId: '',
-        addServiceList: [],
+        addServiceList: [], // 增值服务
       },
     }
   },
@@ -157,8 +157,8 @@ export default {
         serviceGoodsClassList,
         specialItemList,
       } = this.skuData
-      if (!Array.isArray(this.skuData.skuAttrList)) return { tree: [] }
-      const tree = this.skuData.skuAttrList.map((item) => {
+      if (!Array.isArray(skuAttrList)) return { tree: [] }
+      const tree = skuAttrList.map((item) => {
         const { id, code, name, attrValList = [] } = item
         return {
           k: name,
@@ -175,7 +175,31 @@ export default {
 
       // 增值服务
       const addServiceList = Array.isArray(specialItemList)
-        ? specialItemList
+        ? specialItemList.map((item) => {
+            const { serviceItemId, code, name, serviceItemValList = [] } = item
+            const formatServiceItemValList = Array.isArray(serviceItemValList)
+              ? serviceItemValList.map((val) => {
+                  const {
+                    id,
+                    name,
+                    originalPrice,
+                    salesPrice,
+                    settlementPrice,
+                  } = val || {}
+                  return {
+                    id,
+                    name: `${name}  ￥${originalPrice}`,
+                  }
+                })
+              : []
+
+            return {
+              k: name,
+              k_s: 'sp' + code, // 自定义的前缀
+              k_id: serviceItemId,
+              v: formatServiceItemValList,
+            }
+          })
         : []
 
       return {
@@ -234,6 +258,9 @@ export default {
         case 'skuSelect':
           this.selecteSku(data)
           break
+        case 'addServiceSelect':
+          this.selecteAddService(data)
+          break
       }
     },
     openSku() {
@@ -262,6 +289,7 @@ export default {
 
       this.show = true
     },
+    // 商品sku属性的选择
     selecteSku(data = {}) {
       const { activedList = [], inactivedList = [], id } = data
       let skuAttrList = this.tempGoods.skuAttrKey.split(',')
@@ -275,10 +303,60 @@ export default {
       this.getGoodsDetail(currentSkuAttr)
         .then((data) => {
           this.tempGoods.skuAttrKey = currentSkuAttr
+          // 每次请求sku 增值服务需要清空
+          this.tempGoods.addServiceList = []
         })
         .catch(() => {
           Toast('选择失败！')
         })
+    },
+
+    // 增值服务的选择
+    selecteAddService(data = {}) {
+      console.log('结果')
+      const { activedList = [], id } = data
+
+      const originData = this.skuData.specialItemList
+      const activedItem = originData.find((item) => item.serviceItemId === id)
+      if (!activedItem) return
+      // 因为目前只能单选，取activedList[0]就行
+      const activedVal =
+        activedItem.serviceItemValList.find(
+          (item) => item.id === activedList[0]
+        ) || {}
+      const { name, originalPrice, salesPrice, settlementPrice } = activedVal
+
+      const matchedAddService = this.tempGoods.addServiceList.find(
+        (item) => item.serviceItemId === id
+      )
+
+      if (matchedAddService) {
+        // 对tempGoods中的数据，选中就修改, 没有选中则移除
+        const resultGoods = activedList.length
+          ? this.tempGoods.addServiceList.map((item) => {
+              if (item.serviceItemId === id) {
+                return {
+                  ...item,
+                  serviceItemValId: activedVal.id,
+                  serviceItemValName: name,
+                  price: originalPrice,
+                }
+              }
+              return { ...item }
+            })
+          : this.tempGoods.addServiceList.filter((item) => {
+              return item.serviceItemId !== id
+            })
+        this.tempGoods.addServiceList = resultGoods
+        return
+      }
+      this.tempGoods.addServiceList.push({
+        serviceItemId: id,
+        serviceItemName: activedItem.name,
+        serviceItemValId: activedVal.id,
+        serviceItemValName: name,
+        price: originalPrice,
+      })
     },
     async getSkuData() {
       try {

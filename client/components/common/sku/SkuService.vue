@@ -97,17 +97,21 @@
             <div class="sku-service-add__title">增值服务</div>
             <div class="sku-service-add__item">
               <SkuServiceRow
+                v-for="addService of formatSkuAddService"
+                :key="addService.k_id"
+                class="sku-service-add__sub-row"
+                :sku-row="addService"
+                :is-sub="true"
+                :actived="addService.activedList"
+                @selectChange="handleAddSelectChange"
+              >
+              </SkuServiceRow>
+              <!-- <SkuServiceRow
                 class="sku-service-add__sub-row"
                 :sku-row="sku.tree[2]"
                 :is-sub="true"
-              >
-              </SkuServiceRow>
-              <SkuServiceRow
-                class="sku-service-add__sub-row"
-                :sku-row="sku.tree[2]"
-                :is-sub="true"
-              >
-              </SkuServiceRow>
+              > 
+              </SkuServiceRow> -->
             </div>
           </div>
         </div>
@@ -304,6 +308,28 @@ export default {
       const { skuAttrKey } = this.goods
       return ('' + skuAttrKey).split(',')
     },
+    formatSkuAddService() {
+      if (!Array.isArray(this.skuData.addServiceList)) return []
+      const selectedAddServiceList = this.goods.addServiceList
+      return this.skuData.addServiceList.map((item) => {
+        // eslint-disable-next-line
+        const { k_id, v = [] } = item || {}
+        if (!Array.isArray(v)) return { ...item }
+        const activedList = []
+        const activedServiceItem = selectedAddServiceList.find(
+          // eslint-disable-next-line
+          (service) => service.serviceItemId === k_id
+        )
+        if (activedServiceItem) {
+          const matchedServiceVal = v.find(
+            (val) => val.id === activedServiceItem.serviceItemValId
+          )
+          matchedServiceVal && activedList.push(matchedServiceVal.id)
+        }
+
+        return { ...item, activedList }
+      })
+    },
   },
   methods: {
     onBuyClicked(value) {
@@ -312,10 +338,20 @@ export default {
     onAddCartClicked(value) {
       console.log('onAddCartClicked:', value)
     },
-    handleSelectChange(value) {
-      console.log('handleSelectChange:', value)
+    // sku属性选择
+    handleSelectChange(value, value2) {
+      console.log('handleSelectChange:', value, value2)
       this.$emit('operation', {
         type: 'skuSelect',
+        data: value,
+      })
+    },
+
+    // 增值服务选择
+    handleAddSelectChange(value) {
+      console.log('handleAddSelectChange:', value)
+      this.$emit('operation', {
+        type: 'addServiceSelect',
         data: value,
       })
     },
