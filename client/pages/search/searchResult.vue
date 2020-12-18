@@ -7,7 +7,7 @@
       :class="{ 'has-input': placeholderText !== '请输入搜索内容' }"
       @clickInputHandle="clickInputHandle"
     >
-      <div slot="left" class="nav-back">
+      <div slot="left" class="nav-back" @click="$router.go(-1)">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
       <div slot="right" class="info">

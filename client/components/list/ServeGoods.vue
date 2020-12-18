@@ -127,6 +127,7 @@ export default {
   watch: {
     searchText(val) {
       this.formData.keywords = val
+      console.log('111111111asdadsad')
       if (this.reqType === 'serve') {
         this.initGoodsList()
       }

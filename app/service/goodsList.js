@@ -129,6 +129,7 @@ class goodsListService extends Service {
           delete params.platformPriceStart
           delete params.platformPriceEnd
         }
+        delete params.sortBy
         delete params.needTypes
         delete params.dictCode
         const result = await service.curl.curlPost(url, params);
