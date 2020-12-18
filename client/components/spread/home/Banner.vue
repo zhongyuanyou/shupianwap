@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <sp-swipe style="height: 120px" vertical>
+  <div class="banner">
+    <sp-swipe class="banner-swipe" :loop="true" autoplay="5000">
       <sp-swipe-item v-for="(item, index) in images" :key="index">
         <sp-image fit="cover" :src="item" />
       </sp-swipe-item>
@@ -34,4 +34,13 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.banner {
+  width: 100%;
+  height: 240px;
+  margin-bottom: 20px;
+}
+.banner-swipe {
+  height: 240px;
+}
+</style>
