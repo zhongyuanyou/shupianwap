@@ -41,7 +41,7 @@
       <div class="banner-bottom-form">
         <sp-cell
           is-link
-          title="选择税务类型"
+          :title="select"
           arrow-direction="down"
           @click="show = true"
         />
@@ -120,6 +120,7 @@ export default {
       selectname: 'ISO45001认证',
       count: 126,
       test: '获取验证码',
+      select: '选择税务类型',
     }
   },
 
@@ -150,6 +151,7 @@ export default {
     },
     onSelect(e) {
       this.selectname = e.name
+      this.select = e.name
       for (const item of this.actions) {
         if (item.name === this.selectname) {
           item.color = '#5a79e8'

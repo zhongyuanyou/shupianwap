@@ -114,6 +114,7 @@ export default {
     li {
       width: 20%;
       height: 157px;
+      padding-top: 28px;
       a {
         width: 100%;
         height: 100%;

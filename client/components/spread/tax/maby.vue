@@ -55,30 +55,30 @@ export default {
               ')',
           },
         },
-        {
-          bg: {
-            backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchad4.png') +
-              ')',
-          },
-        },
-        {
-          bg: {
-            backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchad5.png') +
-              ')',
-          },
-        },
-        {
-          bg: {
-            backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchad6.png') +
-              ')',
-          },
-        },
+        // {
+        //   bg: {
+        //     backgroundImage:
+        //       'url(' +
+        //       require('~/assets/spreadImages/tax/busi_img_swchad4.png') +
+        //       ')',
+        //   },
+        // },
+        // {
+        //   bg: {
+        //     backgroundImage:
+        //       'url(' +
+        //       require('~/assets/spreadImages/tax/busi_img_swchad5.png') +
+        //       ')',
+        //   },
+        // },
+        // {
+        //   bg: {
+        //     backgroundImage:
+        //       'url(' +
+        //       require('~/assets/spreadImages/tax/busi_img_swchad6.png') +
+        //       ')',
+        //   },
+        // },
       ],
     }
   },
@@ -89,7 +89,6 @@ export default {
 .maby {
   padding: 31px 40px;
   width: 750px;
-  height: 735px;
   &-title {
     font-size: 40px;
     font-family: PingFang SC;
