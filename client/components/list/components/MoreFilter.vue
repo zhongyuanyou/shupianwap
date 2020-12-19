@@ -9,7 +9,7 @@
     <div
       class="more-content"
       :style="{
-        maxHeight: maxHeight,
+        maxHeight: contentMaxHeight,
       }"
     >
       <div v-for="(item, index) in children" :key="index" class="more-item">
@@ -50,8 +50,10 @@
       </div>
     </div>
     <BottomConfirm
+      ref="BottomConfirm"
       @resetFilters="resetFilters"
       @confirmFilters="confirmFilters"
+      @bottomConfirmHeight="getBottomConfirmHeight"
     />
   </sp-dropdown-item>
 </template>
@@ -77,6 +79,12 @@ export default {
         return null
       },
     },
+    filterMaxHeight: {
+      type: Number,
+      default() {
+        return 0
+      },
+    },
   },
   data() {
     return {
@@ -88,15 +96,8 @@ export default {
       selectValueArray: [], // 所选择的数据
       activeItems: [], // 默认激活的
       saveActiveItems: [], // 存储的筛选项数据
+      contentMaxHeight: 0, // 内容的最大高
     }
-  },
-  computed: {
-    maxHeight() {
-      let height = parseInt(this.$parent.$parent.$parent.maxHeight)
-      height = height + 44 - 80
-      height += 'px'
-      return height
-    },
   },
   watch: {
     activeItems(val) {
@@ -203,6 +204,10 @@ export default {
       })
       return filterKeyValArr
     },
+    getBottomConfirmHeight(height) {
+      // 获取底部确认按钮的高度
+      this.contentMaxHeight = this.filterMaxHeight - height + 'px'
+    },
   },
 }
 </script>
@@ -212,6 +217,8 @@ export default {
   overflow-x: hidden;
   overflow-y: scroll;
   padding: 52px 40px 56px 40px;
+  max-height: 584px;
+  border-bottom: 1px solid #cdcdcd;
   .more-item {
     margin-bottom: 60px;
     &:last-child {

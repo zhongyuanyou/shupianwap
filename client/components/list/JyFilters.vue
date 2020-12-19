@@ -6,6 +6,7 @@
       :ref="item.name"
       :key="index"
       :filter-data="item"
+      :filter-max-height="dropdownContentMaxHeight"
       @activeItem="getFilterHandle"
     ></component>
   </sp-dropdown-menu>
@@ -44,6 +45,7 @@ export default {
       currentComponets: 'SelectFilter',
       filters: [],
       selectValue: 0,
+      dropdownContentMaxHeight: 0,
     }
   },
   watch: {
@@ -52,7 +54,15 @@ export default {
       this.resetFilterData(clone(val))
     },
   },
-  mounted() {},
+  mounted() {
+    console.log(this.$el.getBoundingClientRect().top)
+    console.log(this.$el.getBoundingClientRect().height)
+    console.log(document.body.clientHeight)
+    this.dropdownContentMaxHeight =
+      document.body.clientHeight -
+      this.$el.getBoundingClientRect().top -
+      this.$el.getBoundingClientRect().height
+  },
   methods: {
     resetAllSelect() {
       // 重置所有筛选项

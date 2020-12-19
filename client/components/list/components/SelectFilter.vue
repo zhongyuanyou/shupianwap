@@ -9,7 +9,7 @@
     <div
       class="select-content"
       :style="{
-        maxHeight: maxHeight,
+        maxHeight: contentMaxHeight,
       }"
     >
       <select-check-box
@@ -28,6 +28,7 @@
       v-if="isSelectMore"
       @resetFilters="resetFilters"
       @confirmFilters="confirmFilters"
+      @bottomConfirmHeight="getBottomConfirmHeight"
     />
   </sp-dropdown-item>
 </template>
@@ -53,6 +54,12 @@ export default {
         return null
       },
     },
+    filterMaxHeight: {
+      type: Number,
+      default() {
+        return 0
+      },
+    },
   },
   data() {
     return {
@@ -63,15 +70,8 @@ export default {
       selectCheckBoxVue: null, // 筛选栏的实例
       activeItems: [], // 默认激活的
       saveActiveItems: [], // 存储的筛选项数据
+      contentMaxHeight: 0, // 内容的最大高
     }
-  },
-  computed: {
-    maxHeight() {
-      let height = parseInt(this.$parent.$parent.$parent.maxHeight)
-      height = height + 44 - 80
-      height += 'px'
-      return height
-    },
   },
   watch: {
     activeItems(val) {
@@ -99,6 +99,9 @@ export default {
         this.dropdownTitle = val.name
         this.selectList = val.filters
         this.isSelectMore = val.isSelects
+        if (!this.isSelectMore) {
+          this.getBottomConfirmHeight(0)
+        }
       }
     },
   },
@@ -107,6 +110,9 @@ export default {
       this.dropdownTitle = this.filterData.name
       this.selectList = this.filterData.children
       this.isSelectMore = this.filterData.isSelects
+      if (!this.isSelectMore) {
+        this.getBottomConfirmHeight(0)
+      }
     }
   },
   methods: {
@@ -138,7 +144,6 @@ export default {
     },
     resultHandle() {
       // 处理结果
-      // debugger
       const fieldCode =
         this.filterData.ext3 === '1'
           ? this.filterData.ext1
@@ -160,6 +165,10 @@ export default {
         emitData = ''
       }
       return emitData
+    },
+    getBottomConfirmHeight(height) {
+      // 获取底部确认按钮的高度
+      this.contentMaxHeight = this.filterMaxHeight - height + 'px'
     },
   },
 }
