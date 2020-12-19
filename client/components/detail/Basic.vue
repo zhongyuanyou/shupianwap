@@ -29,6 +29,12 @@ export default {
     [Button.name]: Button,
     Open,
   },
+  tcProductDetailData: {
+    type: Object,
+    default: () => {
+      return {}
+    },
+  },
 }
 </script>
 

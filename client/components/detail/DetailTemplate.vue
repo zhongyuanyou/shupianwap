@@ -20,17 +20,24 @@
     <Banner :images="info.images" />
     <!--S banner-->
     <!--S 第一板块-->
-    <Title :info="{ ...info }" />
+    <Title
+      :tc-product-detail-data="{ ...tcProductDetailData }"
+      :info="{ ...info }"
+    />
     <!--E 第一板块-->
     <!--S 第二板块 基本信息-->
-    <Basic :info="{ ...info }">
+    <Basic :tc-product-detail-data="{ tcProductDetailData }">
       <div slot="basic">
         <div class="company_info">
-          <div class="item">企业行业：<span>工程类</span></div>
-          <div class="item">经营时间：<span>3年以上</span></div>
-          <div class="item">注册资本：<span>1000万</span></div>
-          <div class="item">企业类型：<span>有限责任公司</span></div>
-          <div class="item">注册资本：<span>小规模纳税人</span></div>
+          <div
+            v-for="(baseDataList, idx) in tcProductDetailData.fieldList"
+            :key="idx"
+            class="item"
+          >
+            {{ baseDataList.fieldName }}：<span>{{
+              baseDataList.fieldRemark
+            }}</span>
+          </div>
         </div>
       </div>
     </Basic>
@@ -60,10 +67,7 @@
     <!--S 第十板块 猜你需要-->
     <Need :info="{ ...info }" />
     <!--E 第十板块 猜你需要-->
-    <sp-bottombar safe-area-inset-bottom>
-      <sp-bottombar-button type="info" :text="text1"> </sp-bottombar-button>
-      <sp-bottombar-button type="primary" :text="text2"> </sp-bottombar-button>
-    </sp-bottombar>
+    <commodityConsultation :planner-info="tcPlannerBooth" />
   </div>
 </template>
 
@@ -87,6 +91,7 @@ import Question from '~/components/detail/Question'
 import Case from '~/components/detail/Case'
 import Recommend from '~/components/detail/Recommend'
 import Need from '~/components/detail/Need'
+import commodityConsultation from '@/components/common/commodityConsultation/commodityConsultation'
 export default {
   name: 'DetailTemplate',
   components: {
@@ -107,6 +112,7 @@ export default {
     Case,
     Recommend,
     Need,
+    commodityConsultation,
   },
   props: {
     info: {
@@ -119,6 +125,18 @@ export default {
       type: String,
       default: () => {
         return '1'
+      },
+    },
+    tcProductDetailData: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+    tcPlannerBooth: {
+      type: Object,
+      default: () => {
+        return {}
       },
     },
   },

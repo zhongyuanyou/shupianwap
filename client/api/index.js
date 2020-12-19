@@ -13,6 +13,7 @@ import productDetailsApi from './productDetails'
 import complain from './complain'
 import { interviewApi } from './interview'
 import { helpApi } from './help' // 帮助中心相关接口
+import { recommendApi } from './recommend' // 帮助中心相关接口
 
 export { auth, shoppingCar, planner }
 export { category }
@@ -27,3 +28,4 @@ export { dict }
 export { complain }
 export { interviewApi }
 export { helpApi }
+export { recommendApi }

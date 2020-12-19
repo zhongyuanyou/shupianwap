@@ -91,11 +91,8 @@ class ScProductDetailsController extends Controller {
         }
       );
       let normalItemArr = [];
-      if (
-        serviceItemResult.status === 200 &&
-        serviceItemResult.data.code === 200
-      ) {
-        normalItemArr = serviceItemResult.data.data;
+      if (serviceItemResult.code === 200) {
+        normalItemArr = serviceItemResult.data;
       }
       /** todo:获取产品标签****/
       const tagsObj = {};
@@ -133,8 +130,8 @@ class ScProductDetailsController extends Controller {
       const tagArr = {};
       tagsResult.forEach(item => {
         tagArr[item.key] = [];
-        if (item.result.status === 200 && item.result.data.code === 200) {
-          tagArr[item.key] = item.result.data.data.records;
+        if (item.result.code === 200) {
+          tagArr[item.key] = item.result.data.records;
         }
       });
       /** todo:产品基本信息***/
@@ -183,11 +180,11 @@ class ScProductDetailsController extends Controller {
       app.config.apiClient.APPID[1],
       productApi.serviceItemList
     );
-    const { status, data } = await service.curl.curlPost(url, ctx.query);
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data });
+    const { code, message, data } = await service.curl.curlPost(url, ctx.query);
+    if (code === 200) {
+      ctx.helper.success({ ctx, code: 200, res: data });
     } else {
-      ctx.logger.error(status, data);
+      ctx.logger.error(code, message);
       ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
@@ -207,11 +204,11 @@ class ScProductDetailsController extends Controller {
       app.config.apiClient.APPID[1],
       productApi.skuAttrClassName
     );
-    const { status, data } = await service.curl.curlPost(url, ctx.query);
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data });
+    const { code, message, data } = await service.curl.curlPost(url, ctx.query);
+    if (code === 200) {
+      ctx.helper.success({ ctx, code: 200, res: data });
     } else {
-      ctx.logger.error(status, data);
+      ctx.logger.error(code, message);
       ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
@@ -237,30 +234,30 @@ class ScProductDetailsController extends Controller {
       contentApi.findCityList
     );
     // 获取到上架产品组的产品和产品对应的站点code
-    const { status, data } = await service.curl.curlPost(url, ctx.query);
-    if (status === 200 && data.code === 200) {
+    const { code, message, data } = await service.curl.curlPost(url, ctx.query);
+    if (code === 200) {
       // 根据获取到所有站点数据
       // 获取redis中缓存的站点信息
       let cityList = await ctx.service.redis.get('cityList');
       // 假如redis未查询到站点信息,需要再次查询站点信息
       if (!cityList) {
         const cityListResult = await service.curl.curlGet(siteListUrl);
-        if (cityListResult.status === 200 && cityListResult.data.code === 200) {
+        if (cityListResult.code === 200) {
           // 不适用await不需要让写redis阻塞响应
           // 格式化站点数据
           const siteList = {};
           // 将城市数据的code作为key存储在对象中
-          cityListResult.data.data.cityList.forEach(item => {
+          cityListResult.data.cityList.forEach(item => {
             siteList[item.code] = item;
           });
           // 将全国地区存储到站点对象中
-          siteList[cityListResult.data.data.national.code] =
-            cityListResult.data.data.national;
+          siteList[cityListResult.data.national.code] =
+            cityListResult.data.national;
           cityList = siteList;
           // 默认缓存站点数据一个小时
           ctx.service.redis.set('cityList', siteList, 60 * 60);
         } else {
-          ctx.logger.error(status, data);
+          ctx.logger.error(cityListResult.code, cityListResult.data);
           ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
           // 未获取到站点信息直接返回错误,停止当前程序执行
           return;
@@ -276,7 +273,7 @@ class ScProductDetailsController extends Controller {
       });
       ctx.helper.success({ ctx, code: 200, res: scProSite });
     } else {
-      ctx.logger.error(status, data);
+      ctx.logger.error(code, message);
       ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
@@ -310,7 +307,7 @@ class ScProductDetailsController extends Controller {
       page = 1,
       limit = 10,
     } = ctx.request.body;
-    const { status, data } = await service.curl.curlPost(url, {
+    const { code, message, data } = await service.curl.curlPost(url, {
       classCode,
       searchKey,
       goodsNo,
@@ -323,10 +320,10 @@ class ScProductDetailsController extends Controller {
       start: page,
       limit,
     });
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data });
+    if (code === 200) {
+      ctx.helper.success({ ctx, code: 200, res: data });
     } else {
-      ctx.logger.error(status, data);
+      ctx.logger.error(code, message);
       ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }

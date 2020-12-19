@@ -18,7 +18,7 @@
         <div class="info">
           <div class="info_tp">
             <p class="name">{{ item.userName }}</p>
-            <i class="icon gold_icon"></i>
+            <i class="gold_icon">{{ item.postName }}</i>
           </div>
           <div class="info_bot">
             <span class="num">{{ Number(item.point) }}</span
@@ -81,10 +81,28 @@ export default {
     vertical-align: middle;
   }
   .gold_icon {
-    width: 114px;
-    height: 28px;
-    background-image: url('~assets/images/planner/per_img_gold.png');
+    width: 146px;
+    height: 34px;
+    border: 1px solid #e0a963;
     margin-left: 12px;
+    border-radius: 16px;
+    font-size: 20px;
+    font-weight: 400;
+    color: #e0a963;
+    padding-left: 32px;
+    text-align: center;
+    position: relative;
+    &::before {
+      content: '';
+      display: block;
+      width: 34px;
+      height: 34px;
+      background: url('~assets/images/planner/per_img_gold.png') no-repeat;
+      background-size: 34px 34px;
+      position: absolute;
+      left: -1px;
+      top: -1px;
+    }
   }
   &_title {
     font-size: 40px;

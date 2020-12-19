@@ -38,11 +38,12 @@
     <sp-list
       v-model="loading"
       :finished="finished"
-      finished-text="没有更多了"
+      :finished-text="finishedText"
       @load="onLoad"
     >
-      <Need :info="{ ...info }" />
+      <RecommendScProduct :recommend-product-data="recommendProduct" />
     </sp-list>
+    <commodityConsultation :planner-info="scPlannerDetailData" />
   </div>
 </template>
 
@@ -53,9 +54,10 @@ import BasicInfo from '~/components/detail/service/BasicInfo'
 import ServiceItems from '~/components/detail/service/ServiceItems'
 import ServiceInfo from '~/components/detail/service/ServiceInfo'
 import Planners from '~/components/detail/Planners'
-import Need from '~/components/detail/Need'
+import RecommendScProduct from '~/components/detail/service/RecommendScProduct'
+import commodityConsultation from '@/components/common/commodityConsultation/commodityConsultation'
 import getUserSign from '@/utils/fingerprint'
-import { productDetailsApi } from '~/api'
+import { productDetailsApi, recommendApi } from '~/api'
 export default {
   name: 'ServiceDetails',
   components: {
@@ -69,29 +71,61 @@ export default {
     ServiceItems,
     ServiceInfo,
     Planners,
-    Need,
+    RecommendScProduct,
+    commodityConsultation,
   },
-  async asyncData({ $axios, params }) {
+  async asyncData({ $axios, params, app }) {
     try {
-      const res = await $axios.post(productDetailsApi.scProductDetail, {
-        productId: params.id,
-        serviceItem: 'true',
-        showClient: 'COMDIC_TERMINAL_WAP',
-        needServiceItem: true,
-        needOperating: 'true',
-        needRefConfig: 'true',
-        needSkuAttr: 'true',
-        needAttr: 'true',
-        needTag: 'true',
-      })
-      if (res.code === 200) {
-        return { scProductDetailData: res.data }
+      let scProductDetailData = {}
+      let scPlannerDetailData = {}
+      // 获取产品详情
+      const productDetailRes = await $axios.post(
+        productDetailsApi.scProductDetail,
+        {
+          productId: params.id,
+          serviceItem: 'true',
+          showClient: 'COMDIC_TERMINAL_WAP',
+          needServiceItem: true,
+          needOperating: 'true',
+          needRefConfig: 'true',
+          needSkuAttr: 'true',
+          needAttr: 'true',
+          needTag: 'true',
+        }
+      )
+      if (productDetailRes.code === 200) {
+        scProductDetailData = productDetailRes.data
+        // 获取钻展规划师
+        // 获取用户唯一标识
+        const deviceId = await getUserSign()
+        const plannerRes = await $axios.get(productDetailsApi.recPlanner, {
+          params: {
+            limit: 1,
+            page: 1,
+            area: productDetailRes.data.baseData.areaCode, // 区域编码
+            deviceId, // 设备ID
+            level_2_ID: productDetailRes.data.baseData.parentClassCode
+              ? productDetailRes.data.baseData.parentClassCode.split(',')[1]
+              : null, // 二级产品分类
+            login_name: null, // 规划师ID(选填)
+            productType: 'FL20201116000002', // 产品类型
+            sceneId: 'app-cpxqye-02', // 场景ID
+            user_id: app.$cookies.get('userId'), // 用户ID(选填)
+            platform: 'app', // 平台（app,m,pc）
+            productId: productDetailRes.data.baseData.id, // 产品id
+          },
+        })
+        if (plannerRes.code === 200) {
+          console.log(plannerRes.data.records[0])
+          scPlannerDetailData = plannerRes.data.records[0]
+        }
+        console.log({ scProductDetailData, scPlannerDetailData })
+        return { scProductDetailData, scPlannerDetailData }
       }
     } catch (err) {
       console.log('错误信息：', err)
     }
   },
-  layout: 'productDetail',
   data() {
     return {
       opacity: 0,
@@ -106,25 +140,12 @@ export default {
         skuAttrs: [], // sku属性
         normalItemList: [], // 基本服务项
       },
+      scPlannerDetailData: {}, // 钻展规划师
       planners: [],
       info: {
         images: [
           'https://img.yzcdn.cn/vant/cat.jpeg',
           'https://img.yzcdn.cn/vant/cat.jpeg',
-        ],
-        planners: [
-          {
-            name: '郑凯元',
-            avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          },
-          {
-            name: '郑凯元',
-            avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          },
-          {
-            name: '郑凯元',
-            avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          },
         ],
       },
       card: {
@@ -141,41 +162,48 @@ export default {
       finished: false,
       refreshing: false,
       plannerLimit: 5,
-      page: 1,
+      plannerPage: 1,
+      plannerCount: 0, // 推荐规划师总条数
       deviceId: null, // 用户唯一标识
+      productLimit: 5, // 产品每页条数
+      productPage: 1, // 产品分页
+      productCount: 0, // 推荐产品总条数
+      recommendProduct: [], // 推荐产品‘
+      finishedText: '没有更多了',
     }
   },
   computed: {
     city() {
-      //  因为要做修改 num 的值  所以放在 计算属性里
       return this.$store.state.city.currentCity
     },
   },
   mounted() {
+    // 获取推荐规划师
     this.handleGetRecPlanner()
+    // 获取推荐产品
+    this.handleGetRecProduct()
   },
   methods: {
     scrollHandle({ scrollTop }) {
       // 滚动事件
       this.opacity = scrollTop / 120
     },
-    onClickButton() {
-      console.log('点击按钮')
-    },
     onLoad() {
-      console.log('加载更多')
+      // 加载更多
+      this.productPage += 1
+      this.handleGetRecProduct()
     },
+    // 获取推荐规划师
     async handleGetRecPlanner() {
       // 获取用户唯一标识
       if (!this.deviceId) {
         this.deviceId = await getUserSign()
       }
-      console.log(this.scProductDetailData.baseData)
       this.$axios
         .get(productDetailsApi.recPlanner, {
           params: {
-            limit: 3,
-            page: 1,
+            limit: this.plannerLimit,
+            page: this.plannerPage,
             area: this.city.code, // 区域编码
             deviceId: this.deviceId, // 设备ID
             level_2_ID: this.scProductDetailData.baseData.parentClassCode
@@ -192,6 +220,51 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             this.planners = res.data.records
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    //   获取推荐产品
+    async handleGetRecProduct() {
+      // 获取用户唯一标识
+      if (!this.deviceId) {
+        this.deviceId = await getUserSign()
+      }
+      const formatId2 = this.scProductDetailData.baseData.parentClassCode.split(
+        ','
+      )[1] // 产品二级分类
+      const formatId3 = this.scProductDetailData.baseData.parentClassCode.split(
+        ','
+      )[2] // 产品三级分类
+      const formatId = formatId3 || formatId2
+      this.$axios
+        .get(recommendApi.recommendProduct, {
+          params: {
+            userId: this.$cookies.get('userId'), // 用户id
+            deviceId: this.deviceId, // 设备ID
+            formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
+            areaCode: '370400', // 区域编码
+            sceneId: 'app-fwcpxq-01', // 场景ID
+            productId: this.$route.params.id, // 产品ID（产品详情页必传）
+            productType: 'FL20201116000002', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
+            title: this.scProductDetailData.baseData.name, // 产品名称（产品详情页传、咨询页等）
+            platform: 'APP', // 平台（app,m,pc）
+            page: this.productPage,
+            limit: this.productLimit,
+            searchType: 2, // 搜索推荐产品类型：1：交易，2服务
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            if (res.data.records.length === 0) {
+              this.finished = true
+            }
+            this.productCount = res.data.totalCount // 推荐产品总条数
+            this.recommendProduct = [...this.recommendProduct].concat(
+              res.data.records
+            ) // 推荐产品列表
           }
         })
         .catch((err) => {
