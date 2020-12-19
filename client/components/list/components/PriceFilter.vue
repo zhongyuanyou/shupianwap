@@ -9,7 +9,7 @@
     <div
       class="price-content"
       :style="{
-        maxHeight: maxHeight,
+        maxHeight: contentMaxHeight,
       }"
     >
       <price-filter-components
@@ -25,6 +25,7 @@
     <BottomConfirm
       @resetFilters="resetFilters"
       @confirmFilters="confirmFilters"
+      @bottomConfirmHeight="getBottomConfirmHeight"
     />
   </sp-dropdown-item>
 </template>
@@ -50,6 +51,12 @@ export default {
         return null
       },
     },
+    filterMaxHeight: {
+      type: Number,
+      default() {
+        return 0
+      },
+    },
   },
   data() {
     return {
@@ -70,15 +77,8 @@ export default {
         maxValue: '',
         activeItems: [],
       }, // 存储的回显数据
+      contentMaxHeight: 0,
     }
-  },
-  computed: {
-    maxHeight() {
-      let height = parseInt(this.$parent.$parent.$parent.maxHeight)
-      height = height + 44 - 80
-      height += 'px'
-      return height
-    },
   },
   watch: {
     echoData: {
@@ -183,6 +183,10 @@ export default {
         emitData = ''
       }
       return emitData
+    },
+    getBottomConfirmHeight(height) {
+      // 获取底部确认按钮的高度
+      this.contentMaxHeight = this.filterMaxHeight - height + 'px'
     },
   },
 }

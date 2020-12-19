@@ -1,7 +1,6 @@
 <template>
   <div class="jyGoods">
     <sp-tabs
-      v-if="isShowTabs"
       ref="spTabs"
       v-model="activeTabIndex"
       title-active-color="#4974F5"
@@ -156,6 +155,7 @@ export default {
       this.isReq[item.code] = false
     })
     console.log('jygood', this.typeCodeIndex)
+    this.activeTabIndex = this.typeCodeIndex
     this.currentTabJyCode = this.tabItems[this.typeCodeIndex].code
     this.isReq[this.currentTabJyCode] = true
     this.filterItem[this.tabItems[this.typeCodeIndex].code] = {}
@@ -169,6 +169,9 @@ export default {
       fieldList: [],
     }
     this.initGoodsList()
+    if (!this.isShowTabs) {
+      this.$refs.spTabs.$refs.nav.parentNode.style.display = 'none'
+    }
   },
   methods: {
     getFilterHandle(data, filrerName) {
@@ -257,6 +260,7 @@ export default {
       // 处理筛选数据，拼成筛选项
       let arr = []
       for (const key in this.filterItem[this.currentTabJyCode]) {
+        // Todo 需要优化
         if (key === 'sortFilter') {
           // 处理排序筛选
           this.formData[this.currentTabJyCode].sortBy = this.filterItem[
@@ -283,6 +287,13 @@ export default {
           ].platformPriceEnd = this.filterItem[this.currentTabJyCode][
             key
           ].fieldValue.end
+        } else if (
+          key === 'priceFilter' &&
+          this.filterItem[this.currentTabJyCode][key] === ''
+        ) {
+          // 处理价格筛选
+          delete this.formData[this.currentTabJyCode].platformPriceStart
+          delete this.formData[this.currentTabJyCode].platformPriceEnd
         } else if (this.filterItem[this.currentTabJyCode][key] !== '') {
           // 其他筛选数据
           arr.push(this.filterItem[this.currentTabJyCode][key])
