@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-19 13:55:56
+ * @LastEditTime: 2020-12-19 15:56:38
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -127,6 +127,8 @@ export default {
         name: '',
         productNo: '',
         referencePrice: '', // 参考价格
+        shopRestrictionNumber: '', // 购买数量限制
+        shopRestriction: '', // 限制购买
         skuAttrList: [], // 属性列表
         serviceGoodsClassList: [], // 服务资源列表
         goodsId: '',
@@ -280,6 +282,9 @@ export default {
         case 'addShoppingCar':
           this.addShoppingCar(data)
           break
+        case 'skuCount': // sku弹出框里数量改变
+          this.changeSkuCount(data)
+          break
       }
     },
     openSku() {
@@ -414,11 +419,18 @@ export default {
       })
         .then((data) => {
           this.show = false
-          // TODO 通知刷新购物车
+          this.$emit('operation', {
+            type: 'refresh',
+          })
         })
         .catch(() => {
           Toast('加入购物车失败')
         })
+    },
+
+    // 修改sku弹出框 商品的数量
+    changeSkuCount(value) {
+      this.tempGoods.goodsNumber = value
     },
 
     // 第一次获取sku属性
@@ -439,13 +451,17 @@ export default {
           name,
           referencePrice, // 参考价格
           productNo,
+          operating = {},
         } = productDetail
 
-        const { id } = skuDetail
+        const { shopRestrictionNumber, shopRestriction } = operating
+
         const data = {
           name,
           productNo,
           referencePrice,
+          shopRestrictionNumber,
+          shopRestriction,
           skuAttrList,
           serviceGoodsClassList,
           ...skuDetail,

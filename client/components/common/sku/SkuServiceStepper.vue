@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 19:13:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-17 11:52:08
+ * @LastEditTime: 2020-12-19 15:25:06
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/sku/SkuServiceStepper.vue
 -->
@@ -28,13 +28,6 @@
 <script>
 import { Stepper } from '@chipspc/vant-dgg'
 
-const LIMIT_TYPE = {
-  QUOTA_LIMIT: 0,
-  STOCK_LIMIT: 1,
-}
-
-const { QUOTA_LIMIT, STOCK_LIMIT } = LIMIT_TYPE
-
 export default {
   name: 'SkuServiceStepper',
   components: {
@@ -42,18 +35,6 @@ export default {
   },
 
   props: {
-    sku: {
-      type: Object,
-      default: () => ({}),
-    },
-    skuEventBus: {
-      type: Object,
-      default: () => ({}),
-    },
-    selectedSkuComb: {
-      type: Object,
-      default: () => ({}),
-    },
     selectedNum: {
       type: Number,
       default: 1,
@@ -62,15 +43,11 @@ export default {
       type: Boolean,
       default: false,
     },
-    quota: {
+    maxNum: {
       type: Number,
-      default: 0,
+      default: 50,
     },
-    quotaUsed: {
-      type: Number,
-      default: 0,
-    },
-    startSaleNum: {
+    minNum: {
       type: Number,
       default: 1,
     },
@@ -81,62 +58,14 @@ export default {
     }
   },
   computed: {
-    limitType() {
-      // 购买限制类型: 限购/库存
-      let type = STOCK_LIMIT
-      const quotaLimit = this.quota - this.quotaUsed
-      if (this.quota > 0 && quotaLimit <= this.stock) {
-        type = QUOTA_LIMIT
-      }
-      return type
+    stepperMinLimit() {
+      return this.minNum || 1
     },
     stepperLimit() {
-      const quotaLimit = this.quota - this.quotaUsed
-      let limit
-
-      // 无限购时直接取库存，有限购时取限购数和库存数中小的那个
-      if (this.quota > 0 && quotaLimit <= this.stock) {
-        // 修正负的limit
-        limit = quotaLimit < 0 ? 0 : quotaLimit
-      } else {
-        limit = this.stock
-      }
-
-      return limit
-    },
-    stepperMinLimit() {
-      return this.startSaleNum < 1 ? 1 : this.startSaleNum
-    },
-
-    stock() {
-      if (this.selectedSkuComb) {
-        return this.selectedSkuComb.stock_num
-      }
-      return this.sku.stock_num
+      return this.maxNum || 2
     },
   },
-  watch: {
-    currentNum(num) {
-      const intValue = parseInt(num, 10)
-      if (intValue >= this.stepperMinLimit && intValue <= this.stepperLimit) {
-        this.skuEventBus.$emit('sku:numChange', intValue)
-      }
-    },
-
-    stepperLimit(limit) {
-      if (limit < this.currentNum && this.stepperMinLimit <= limit) {
-        this.currentNum = limit
-      }
-      this.checkState(this.stepperMinLimit, limit)
-    },
-
-    stepperMinLimit(start) {
-      if (start > this.currentNum || start > this.stepperLimit) {
-        this.currentNum = start
-      }
-      this.checkState(start, this.stepperLimit)
-    },
-  },
+  watch: {},
   created() {
     this.checkState(this.stepperMinLimit, this.stepperLimit)
   },
@@ -147,17 +76,14 @@ export default {
     },
 
     onOverLimit(action) {
-      this.skuEventBus.$emit('sku:overLimit', {
-        action,
-        limitType: this.limitType,
-        quota: this.quota,
-        quotaUsed: this.quotaUsed,
-        startSaleNum: this.startSaleNum,
-      })
+      console.log(action)
+      const message = action === 'minus' ? '超过过最小购买数量' : ''
+      this.$emit('overLimit', { type: action, message })
     },
 
     onChange(currentValue) {
       const intValue = parseInt(currentValue, 10)
+      if (isNaN(intValue)) return
       this.$emit('change', intValue)
     },
 
@@ -169,16 +95,6 @@ export default {
         // 当前选择数量大于最大可选时，需要重置已选数量
         this.currentNum = max
       }
-
-      this.skuEventBus.$emit('sku:stepperState', {
-        valid: min <= max,
-        min,
-        max,
-        limitType: this.limitType,
-        quota: this.quota,
-        quotaUsed: this.quotaUsed,
-        startSaleNum: this.startSaleNum,
-      })
     },
   },
 }

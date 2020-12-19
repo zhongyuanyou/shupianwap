@@ -5,10 +5,6 @@
       class="sku-service-container"
       :sku="skuData"
       :goods="goods"
-      :quota="quota"
-      :quota-used="quotaUsed"
-      @buy-clicked="onBuyClicked"
-      @add-cart="onAddCartClicked"
     >
       <template #sku-header>
         <div class="sku-service-header sp-hairline--bottom">
@@ -28,27 +24,24 @@
           </div>
         </div>
       </template>
-      <template #sku-group="{ selectedNum, skuEventBus, selectedSkuComb }">
+      <template #sku-group>
         <div class="sku-service-group">
           <SkuServiceRow
             v-for="treeItem of formatSkuTree"
             :key="treeItem.k_id"
             :sku-row="treeItem"
             :actived="formatSkuAttr"
+            :close-on-click-overlay="false"
             @selectChange="handleSelectChange"
           />
         </div>
         <div class="sku-service-stepper-wrap sp-hairline--bottom">
           <SkuServiceStepper
-            :quota="quota"
-            :quota-used="quotaUsed"
-            :start-sale-num="startSaleNum"
-            :sku="sku"
-            :sku-event-bus="skuEventBus"
-            :selected-sku-comb="selectedSkuComb"
-            :selected-num="selectedNum"
+            :selected-num="goods.goodsNumber"
             :disable-stepper-input="false"
+            :max-num="skuData.shopRestrictionNumber"
             @change="handleStepperChange"
+            @overLimit="handleStepperLimit"
           />
         </div>
         <div class="sku-service-group">
@@ -157,18 +150,6 @@ export default {
     show: {
       type: Boolean,
       default: false,
-    },
-    quota: {
-      type: Number,
-      default: 0,
-    },
-    quotaUsed: {
-      type: Number,
-      default: 0,
-    },
-    startSaleNum: {
-      type: Number,
-      default: 1,
     },
     skuData: {
       type: Object,
@@ -363,9 +344,17 @@ export default {
         data: value,
       })
     },
-    handleStepperChange(event) {
-      this.$emit('stepper-change', event)
+    handleStepperChange(value) {
+      console.log('handleStepperChange:', value)
+      this.$emit('operation', {
+        type: 'skuCount',
+        data: value,
+      })
     },
+    handleStepperLimit(data) {
+      console.log('handleStepperLimit:', data)
+    },
+
     handleResourceClick(type) {
       console.log('handleResourceClick type:', type)
     },

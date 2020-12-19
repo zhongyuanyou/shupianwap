@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-19 13:56:24
+ * @LastEditTime: 2020-12-19 15:54:21
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -234,6 +234,10 @@ export default {
           break
         case 'selectAll':
           this.selectAll(data)
+          break
+        case 'refresh':
+          this.refreshing = true
+          this.onRefresh()
           break
       }
     },
