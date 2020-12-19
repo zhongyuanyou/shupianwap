@@ -55,7 +55,7 @@
           <SkuServiceRow :sku-row="{ k: '服务资源' }">
             <div class="sku-service-resource">
               <sp-cell
-                v-for="resourceService of skuData.resourceServiceList"
+                v-for="resourceService of formatSkuResourceService"
                 :key="resourceService.classCode"
                 class="sku-service-resource__item"
                 is-link
@@ -65,32 +65,24 @@
                   <span class="sku-service-resource__item-title"
                     >{{ resourceService.className }}：</span
                   >
-                  <span class="sku-service-resource__item-content"
-                    >成都师花样正金融服务中心一楼三单元</span
-                  >
+                  <span class="sku-service-resource__item-content">{{
+                    resourceService.serviceItemValName || ''
+                  }}</span>
                 </template>
                 <template #default>
                   <span
-                    class="sku-service-resource__item-operation sku-service-resource__item-operation--placehodler"
-                    >请选择</span
+                    class="sku-service-resource__item-operation"
+                    :class="{
+                      'sku-service-resource__item-operation--placehodler': !resourceService.serviceItemValId,
+                    }"
+                    >{{
+                      resourceService.serviceItemValId
+                        ? '￥' + resourceService.price
+                        : '请选择'
+                    }}</span
                   >
                 </template>
               </sp-cell>
-              <!-- <sp-cell class="sku-service-resource__item" is-link>
-                <template #title>
-                  <span class="sku-service-resource__item-title"
-                    >400电话：</span
-                  >
-                  <span class="sku-service-resource__item-content"
-                    >4008-6962-540</span
-                  >
-                </template>
-                <template #default>
-                  <span class="sku-service-resource__item-operation"
-                    >￥5.00</span
-                  >
-                </template>
-              </sp-cell> -->
             </div>
           </SkuServiceRow>
           <div class="sku-service-add">
@@ -106,12 +98,6 @@
                 @selectChange="handleAddSelectChange"
               >
               </SkuServiceRow>
-              <!-- <SkuServiceRow
-                class="sku-service-add__sub-row"
-                :sku-row="sku.tree[2]"
-                :is-sub="true"
-              > 
-              </SkuServiceRow> -->
             </div>
           </div>
         </div>
@@ -120,12 +106,13 @@
       <template #sku-stepper="{}">
         <div></div>
       </template>
-      <template #sku-actions="{ skuEventBus }">
+      <template #sku-actions>
         <div class="sku-service-actions sp-hairline--top">
           <sp-button
             class="sku-service-actions__car-btn"
             size="large"
             type="warning"
+            @click="handleAddShoppingCar"
           >
             加入购物车
           </sp-button>
@@ -134,7 +121,7 @@
             class="sku-service-actions__buy-btn"
             size="large"
             type="danger"
-            @click="skuEventBus.$emit('sku:buy')"
+            @click="handleBuy"
           >
             立即购买
           </sp-button>
@@ -148,6 +135,8 @@
 import { Image, Sku, Stepper, Cell, Button } from '@chipspc/vant-dgg'
 import SkuServiceRow from './SkuServiceRow'
 import SkuServiceStepper from './SkuServiceStepper'
+
+import clone from '@/utils/clone'
 
 export default {
   name: 'SkuService',
@@ -330,6 +319,25 @@ export default {
         return { ...item, activedList }
       })
     },
+    formatSkuResourceService() {
+      if (!Array.isArray(this.skuData.resourceServiceList)) return []
+      return this.skuData.resourceServiceList.map((item) => {
+        const { classCode, className } = item || {}
+        const matched =
+          this.goods.serviceResourceList.find((resource) => {
+            const { serviceItemId } = resource || {}
+            return serviceItemId === classCode
+          }) || {}
+        const { price, serviceItemValName, serviceItemValId } = matched
+        return {
+          classCode,
+          className,
+          price,
+          serviceItemValName,
+          serviceItemValId,
+        }
+      })
+    },
   },
   methods: {
     onBuyClicked(value) {
@@ -339,8 +347,8 @@ export default {
       console.log('onAddCartClicked:', value)
     },
     // sku属性选择
-    handleSelectChange(value, value2) {
-      console.log('handleSelectChange:', value, value2)
+    handleSelectChange(value) {
+      console.log('handleSelectChange:', value)
       this.$emit('operation', {
         type: 'skuSelect',
         data: value,
@@ -361,6 +369,15 @@ export default {
     handleResourceClick(type) {
       console.log('handleResourceClick type:', type)
     },
+
+    handleAddShoppingCar() {
+      console.log('handleAddShoppingCar')
+      this.$emit('operation', {
+        type: 'addShoppingCar',
+        data: clone(this.goods, true),
+      })
+    },
+    handleBuy() {},
   },
 }
 </script>

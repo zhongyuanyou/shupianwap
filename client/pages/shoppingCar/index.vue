@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-16 20:30:37
+ * @LastEditTime: 2020-12-19 13:56:24
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -51,6 +51,7 @@
               <GoodsItem
                 :status="index === 1 ? 'offShelf' : 'sale'"
                 :commodity-data="item"
+                :user-id="userInfo.userId"
                 @operation="handleItemOperation"
               />
             </div>
@@ -346,17 +347,9 @@ export default {
       }
     },
 
-    // 请求购物车列表
+    // 更新购物车数据
     async postUpdate(data = {}) {
-      const {
-        type,
-        goodsNumber,
-        cartId,
-        value,
-        serviceList,
-        skuAttr,
-        skuId,
-      } = data
+      const { type, cartId, value, serviceList, skuAttr, skuId } = data
       let params = {}
       switch (type) {
         case 'updateNum':

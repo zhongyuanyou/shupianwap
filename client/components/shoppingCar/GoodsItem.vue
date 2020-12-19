@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-18 18:31:34
+ * @LastEditTime: 2020-12-19 13:55:56
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -88,6 +88,8 @@ import ViceGoodsItem from './ViceGoodsItem'
 import SkuService from '@/components/common/sku/SkuService'
 import AsyncCheckbox from '@/components/common/checkbox/AsyncCheckbox'
 
+import clone from '@/utils/clone'
+
 import { shoppingCar } from '@/api'
 
 export default {
@@ -105,6 +107,10 @@ export default {
     status: {
       type: String,
       default: 'sale', // offShelf：下架
+    },
+    userId: {
+      type: String,
+      default: '',
     },
     commodityData: {
       type: Object,
@@ -164,7 +170,17 @@ export default {
           k: name,
           k_s: 'sp' + code, // 自定义的前缀
           k_id: id,
-          v: Array.isArray(attrValList) ? attrValList : [],
+          v: Array.isArray(attrValList)
+            ? attrValList.map((item) => {
+                const { id, code, name } = item || {}
+                return {
+                  id: code, // 因使用的是code 获取商品属性
+                  originId: id,
+                  code,
+                  name,
+                }
+              })
+            : [],
         }
       })
 
@@ -261,6 +277,9 @@ export default {
         case 'addServiceSelect':
           this.selecteAddService(data)
           break
+        case 'addShoppingCar':
+          this.addShoppingCar(data)
+          break
       }
     },
     openSku() {
@@ -281,10 +300,10 @@ export default {
         goodsId: skuId,
         skuAttrKey,
         goodsNumber,
-        serviceResourceList,
         price,
         productId,
-        addServiceList,
+        serviceResourceList: clone(serviceResourceList, true),
+        addServiceList: clone(addServiceList, true),
       }
 
       this.show = true
@@ -350,7 +369,7 @@ export default {
         this.tempGoods.addServiceList = resultGoods
         return
       }
-      this.tempGoods.addServiceList.push({
+      this.tempGoods.addServiceList = this.tempGoods.addServiceList.concat({
         serviceItemId: id,
         serviceItemName: activedItem.name,
         serviceItemValId: activedVal.id,
@@ -358,10 +377,55 @@ export default {
         price: originalPrice,
       })
     },
+
+    // 加入购物车
+    addShoppingCar(data = {}) {
+      // const {} = data
+      console.log(data)
+      const {
+        goodsId,
+        skuAttrKey,
+        goodsNumber,
+        serviceResourceList = [],
+        addServiceList = [],
+      } = data
+
+      const serviceList = []
+      serviceResourceList.forEach((item) => {
+        serviceList.push({
+          ...item,
+          type: 3,
+        })
+      })
+      addServiceList.forEach((item) => {
+        serviceList.push({
+          ...item,
+          type: 2,
+        })
+      })
+
+      this.postUpdate({
+        value: goodsNumber,
+        cartId: this.commodityData.cartId,
+        serviceList,
+        skuAttr: skuAttrKey,
+        skuId: goodsId,
+        type: 'updateSkuItem',
+      })
+        .then((data) => {
+          this.show = false
+          // TODO 通知刷新购物车
+        })
+        .catch(() => {
+          Toast('加入购物车失败')
+        })
+    },
+
+    // 第一次获取sku属性
     async getSkuData() {
       try {
-        const productId = '607991345402771561' // this.commodityData.productId || '607991345402771561'
-        const attrValKey = 'SXZ20201211050014' // this.commodityData.skuAttrKey || 'SXZ20201211050014'
+        const productId = this.commodityData.productId || '607991345402771561' // '607991345402771561'
+        const attrValKey = this.commodityData.skuAttrKey || 'SXZ20201211050014' // SXZ20201211050014
         const productPromise = shoppingCar.productDetail({ productId })
         const skuPromise = this.getGoodsDetail(attrValKey)
         const [productDetail = {}, skuDetail = {}] = await Promise.all([
@@ -398,7 +462,7 @@ export default {
     // 获取商品服务详情
     async getGoodsDetail(attrValKey) {
       try {
-        const productId = '607991345402771561' // this.commodityData.productId || '607991345402771561'
+        const productId = this.commodityData.productId || '607991345402771561' // '607991345402771561'
         const goodsDetail = await shoppingCar.skuDetail({
           productId,
           attrValKey,
@@ -423,6 +487,33 @@ export default {
         return data
       } catch (error) {
         console.error('getGoodsDetail:', error)
+        return Promise.reject(error)
+      }
+    },
+
+    // 更新购物车数据
+    async postUpdate(data = {}) {
+      const { type, cartId, value, serviceList, skuAttr, skuId } = data
+      let params = {}
+      switch (type) {
+        case 'updateSkuItem':
+          params = { serviceList, skuAttr, skuId, goodsNumber: value }
+          break
+      }
+      try {
+        // TODO 测试用户
+        const userId = this.userId || '1234567'
+        const defalutParams = {
+          id: cartId,
+          createrId: userId,
+          type,
+        }
+        let data = await shoppingCar.update({ ...defalutParams, ...params })
+        console.log(data)
+        data = data || {}
+        return data
+      } catch (error) {
+        console.error('postUpdate:', error)
         return Promise.reject(error)
       }
     },

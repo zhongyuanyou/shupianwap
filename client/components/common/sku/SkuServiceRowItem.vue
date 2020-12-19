@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 15:03:56
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-17 15:51:45
+ * @LastEditTime: 2020-12-19 10:54:53
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/sku/SkuServiceRowItem.vue
 -->
@@ -61,9 +61,12 @@ export default {
   },
   computed: {},
   watch: {
-    actived(newVal, oldVal) {
-      if (newVal === oldVal) return
-      this.isActive = newVal
+    actived: {
+      handler(newVal, oldVal) {
+        if (newVal === oldVal) return
+        this.isActive = newVal
+      },
+      immediate: true,
     },
   },
   methods: {
