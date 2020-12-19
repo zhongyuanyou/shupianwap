@@ -10,8 +10,8 @@
           src="https://img.yzcdn.cn/vant/cat.jpeg"
         />
         <div class="commodityConsult-containner-userInfo-name">
-          <p>王深林</p>
-          <h3>金牌规划师</h3>
+          <p>{{ plannerInfo.userName }}</p>
+          <h3>{{ plannerInfo.postName }}</h3>
         </div>
       </div>
       <div class="commodityConsult-containner-handle">
@@ -29,6 +29,14 @@ export default {
   components: {
     [Image.name]: Image,
     [Button.name]: Button,
+  },
+  props: {
+    plannerInfo: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
   },
 }
 </script>
@@ -81,6 +89,7 @@ export default {
           font-size: 22px;
           font-weight: 400;
           color: #7b6225;
+          text-align: center;
         }
       }
     }
