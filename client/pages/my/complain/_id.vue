@@ -7,10 +7,10 @@
         </template>
       </sp-top-nav-bar>
     </sp-sticky>
-    <div class="detail-content">
+    <div v-if="info" class="detail-content">
       <div class="detail-content-complain">
         <div class="detail-content-complain-title">
-          {{ detailData.complain.title }}
+          {{ info.content }}
         </div>
         <div class="detail-content-complain-imgs">
           <sp-image
@@ -25,20 +25,20 @@
         </div>
         <div class="detail-content-complain-status">
           <div class="detail-content-complain-status-time">
-            提交时间：{{ detailData.complain.createdTime }}
+            提交时间：{{ info.createTime }}
           </div>
           <div class="detail-content-complain-status-tag">
-            {{ detailData.complain.status }}
+            {{ info.isDispose === 1 ? '已处理' : '未处理' }}
           </div>
         </div>
       </div>
       <div v-if="detailData.answer" class="detail-content-answer">
         <div class="detail-content-answer-title">解决方案</div>
         <div class="detail-content-answer-time">
-          解决时间：{{ detailData.answer.resolveTime }}
+          解决时间：{{ info.revertTime || '' }}
         </div>
         <div class="detail-content-answer-content">
-          {{ detailData.answer.content }}
+          {{ info.revertContent || '' }}
         </div>
         <div class="detail-content-answer-imgs">
           <sp-image
@@ -97,6 +97,7 @@ export default {
           imgs: ['https://img.yzcdn.cn/vant/cat.jpeg'],
         },
       },
+      info: {}, // 用户详情
     }
   },
   mounted() {
@@ -120,6 +121,7 @@ export default {
         id: this.$route.params.id,
       }
       const data = await complain.detail({ axios: this.$axios }, params)
+      this.info = data
       console.log('data', data)
     },
   },

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-16 16:10:14
+ * @LastEditTime: 2020-12-19 15:56:38
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -13,7 +13,12 @@
       'goods-item--disable': commodityData.status === 'GOODS_STATUS_OFF_SHELF',
     }"
   >
-    <SkuService v-model="show" />
+    <SkuService
+      v-model="show"
+      :sku-data="formateSkuData"
+      :goods="tempGoods"
+      @operation="handleOperation"
+    />
     <sp-swipe-cell
       ref="swipeCell"
       :disabled="commodityData.status === 'GOODS_STATUS_OFF_SHELF'"
@@ -76,12 +81,16 @@
 </template>
 
 <script>
-import { SwipeCell, Card, Button } from '@chipspc/vant-dgg'
+import { SwipeCell, Card, Button, Toast } from '@chipspc/vant-dgg'
 
 import MainGoodsItem from './MainGoodsItem'
 import ViceGoodsItem from './ViceGoodsItem'
 import SkuService from '@/components/common/sku/SkuService'
 import AsyncCheckbox from '@/components/common/checkbox/AsyncCheckbox'
+
+import clone from '@/utils/clone'
+
+import { shoppingCar } from '@/api'
 
 export default {
   name: 'GoodsItem',
@@ -99,6 +108,10 @@ export default {
       type: String,
       default: 'sale', // offShelf：下架
     },
+    userId: {
+      type: String,
+      default: '',
+    },
     commodityData: {
       type: Object,
       default() {
@@ -109,11 +122,113 @@ export default {
   data() {
     return {
       show: false,
+      skuData: {
+        productId: '',
+        name: '',
+        productNo: '',
+        referencePrice: '', // 参考价格
+        shopRestrictionNumber: '', // 购买数量限制
+        shopRestriction: '', // 限制购买
+        skuAttrList: [], // 属性列表
+        serviceGoodsClassList: [], // 服务资源列表
+        goodsId: '',
+        goodsNo: '',
+        specialItemList: [], // 增值服务项
+        salesPriceSum: '',
+        settlementPriceSum: '',
+      },
+      tempGoods: {
+        goodsId: '',
+        goodsNo: '',
+        name: '',
+        skuAttrKey: '', // 选中sku列表逗号隔开
+        goodsNumber: 0,
+        serviceResourceList: [], // 服务资源
+        price: '',
+        productId: '',
+        addServiceList: [], // 增值服务
+      },
     }
   },
   computed: {
     checked() {
       return !!this.commodityData.shopIsSelected
+    },
+    formateSkuData() {
+      if (!this.skuData) return { tree: [] }
+      const {
+        productId,
+        name,
+        productNo,
+        referencePrice,
+        skuAttrList,
+        serviceGoodsClassList,
+        specialItemList,
+      } = this.skuData
+      if (!Array.isArray(skuAttrList)) return { tree: [] }
+      const tree = skuAttrList.map((item) => {
+        const { id, code, name, attrValList = [] } = item
+        return {
+          k: name,
+          k_s: 'sp' + code, // 自定义的前缀
+          k_id: id,
+          v: Array.isArray(attrValList)
+            ? attrValList.map((item) => {
+                const { id, code, name } = item || {}
+                return {
+                  id: code, // 因使用的是code 获取商品属性
+                  originId: id,
+                  code,
+                  name,
+                }
+              })
+            : [],
+        }
+      })
+
+      // 服务资源列表
+      const resourceServiceList = Array.isArray(serviceGoodsClassList)
+        ? serviceGoodsClassList
+        : []
+
+      // 增值服务
+      const addServiceList = Array.isArray(specialItemList)
+        ? specialItemList.map((item) => {
+            const { serviceItemId, code, name, serviceItemValList = [] } = item
+            const formatServiceItemValList = Array.isArray(serviceItemValList)
+              ? serviceItemValList.map((val) => {
+                  const {
+                    id,
+                    name,
+                    originalPrice,
+                    salesPrice,
+                    settlementPrice,
+                  } = val || {}
+                  return {
+                    id,
+                    name: `${name}  ￥${originalPrice}`,
+                  }
+                })
+              : []
+
+            return {
+              k: name,
+              k_s: 'sp' + code, // 自定义的前缀
+              k_id: serviceItemId,
+              v: formatServiceItemValList,
+            }
+          })
+        : []
+
+      return {
+        tree,
+        resourceServiceList,
+        addServiceList,
+        productId,
+        name,
+        productNo,
+        referencePrice,
+      }
     },
   },
 
@@ -150,7 +265,7 @@ export default {
       const { cartId } = this.commodityData
       switch (type) {
         case 'openSku':
-          this.show = true
+          this.openSku()
           break
         case 'count':
         case 'select':
@@ -158,6 +273,264 @@ export default {
         case 'attention':
           this.$emit('operation', { data, type, cartId })
           break
+        case 'skuSelect':
+          this.selecteSku(data)
+          break
+        case 'addServiceSelect':
+          this.selecteAddService(data)
+          break
+        case 'addShoppingCar':
+          this.addShoppingCar(data)
+          break
+        case 'skuCount': // sku弹出框里数量改变
+          this.changeSkuCount(data)
+          break
+      }
+    },
+    openSku() {
+      if (!this.skuData.skuAttrList || !this.skuData.skuAttrList.length) {
+        this.getSkuData()
+      }
+      const {
+        skuId,
+        skuAttrKey,
+        goodsNumber,
+        serviceResourceList,
+        price,
+        productId,
+        addServiceList,
+      } = this.commodityData
+
+      this.tempGoods = {
+        goodsId: skuId,
+        skuAttrKey,
+        goodsNumber,
+        price,
+        productId,
+        serviceResourceList: clone(serviceResourceList, true),
+        addServiceList: clone(addServiceList, true),
+      }
+
+      this.show = true
+    },
+    // 商品sku属性的选择
+    selecteSku(data = {}) {
+      const { activedList = [], inactivedList = [], id } = data
+      let skuAttrList = this.tempGoods.skuAttrKey.split(',')
+      activedList.forEach((item) => {
+        !skuAttrList.includes(item) && skuAttrList.push(item)
+      })
+      skuAttrList = skuAttrList.filter((item) => !inactivedList.includes(item))
+      //
+      const currentSkuAttr = skuAttrList.join(',')
+
+      this.getGoodsDetail(currentSkuAttr)
+        .then((data) => {
+          this.tempGoods.skuAttrKey = currentSkuAttr
+          // 每次请求sku 增值服务需要清空
+          this.tempGoods.addServiceList = []
+        })
+        .catch(() => {
+          Toast('选择失败！')
+        })
+    },
+
+    // 增值服务的选择
+    selecteAddService(data = {}) {
+      console.log('结果')
+      const { activedList = [], id } = data
+
+      const originData = this.skuData.specialItemList
+      const activedItem = originData.find((item) => item.serviceItemId === id)
+      if (!activedItem) return
+      // 因为目前只能单选，取activedList[0]就行
+      const activedVal =
+        activedItem.serviceItemValList.find(
+          (item) => item.id === activedList[0]
+        ) || {}
+      const { name, originalPrice, salesPrice, settlementPrice } = activedVal
+
+      const matchedAddService = this.tempGoods.addServiceList.find(
+        (item) => item.serviceItemId === id
+      )
+
+      if (matchedAddService) {
+        // 对tempGoods中的数据，选中就修改, 没有选中则移除
+        const resultGoods = activedList.length
+          ? this.tempGoods.addServiceList.map((item) => {
+              if (item.serviceItemId === id) {
+                return {
+                  ...item,
+                  serviceItemValId: activedVal.id,
+                  serviceItemValName: name,
+                  price: originalPrice,
+                }
+              }
+              return { ...item }
+            })
+          : this.tempGoods.addServiceList.filter((item) => {
+              return item.serviceItemId !== id
+            })
+        this.tempGoods.addServiceList = resultGoods
+        return
+      }
+      this.tempGoods.addServiceList = this.tempGoods.addServiceList.concat({
+        serviceItemId: id,
+        serviceItemName: activedItem.name,
+        serviceItemValId: activedVal.id,
+        serviceItemValName: name,
+        price: originalPrice,
+      })
+    },
+
+    // 加入购物车
+    addShoppingCar(data = {}) {
+      // const {} = data
+      console.log(data)
+      const {
+        goodsId,
+        skuAttrKey,
+        goodsNumber,
+        serviceResourceList = [],
+        addServiceList = [],
+      } = data
+
+      const serviceList = []
+      serviceResourceList.forEach((item) => {
+        serviceList.push({
+          ...item,
+          type: 3,
+        })
+      })
+      addServiceList.forEach((item) => {
+        serviceList.push({
+          ...item,
+          type: 2,
+        })
+      })
+
+      this.postUpdate({
+        value: goodsNumber,
+        cartId: this.commodityData.cartId,
+        serviceList,
+        skuAttr: skuAttrKey,
+        skuId: goodsId,
+        type: 'updateSkuItem',
+      })
+        .then((data) => {
+          this.show = false
+          this.$emit('operation', {
+            type: 'refresh',
+          })
+        })
+        .catch(() => {
+          Toast('加入购物车失败')
+        })
+    },
+
+    // 修改sku弹出框 商品的数量
+    changeSkuCount(value) {
+      this.tempGoods.goodsNumber = value
+    },
+
+    // 第一次获取sku属性
+    async getSkuData() {
+      try {
+        const productId = this.commodityData.productId || '607991345402771561' // '607991345402771561'
+        const attrValKey = this.commodityData.skuAttrKey || 'SXZ20201211050014' // SXZ20201211050014
+        const productPromise = shoppingCar.productDetail({ productId })
+        const skuPromise = this.getGoodsDetail(attrValKey)
+        const [productDetail = {}, skuDetail = {}] = await Promise.all([
+          productPromise,
+          skuPromise,
+        ])
+
+        const {
+          skuAttrList, // 属性列表
+          serviceGoodsClassList, // 服务资源列表
+          name,
+          referencePrice, // 参考价格
+          productNo,
+          operating = {},
+        } = productDetail
+
+        const { shopRestrictionNumber, shopRestriction } = operating
+
+        const data = {
+          name,
+          productNo,
+          referencePrice,
+          shopRestrictionNumber,
+          shopRestriction,
+          skuAttrList,
+          serviceGoodsClassList,
+          ...skuDetail,
+        }
+        this.skuData = data
+        console.log(data)
+        return data
+      } catch (error) {
+        console.error('getList:', error)
+        return Promise.reject(error)
+      }
+    },
+
+    // 获取商品服务详情
+    async getGoodsDetail(attrValKey) {
+      try {
+        const productId = this.commodityData.productId || '607991345402771561' // '607991345402771561'
+        const goodsDetail = await shoppingCar.skuDetail({
+          productId,
+          attrValKey,
+        })
+        const {
+          id,
+          specialItemList, // 增值服务项
+          goodsNo,
+          salesPriceSum, // 销售价格
+          settlementPriceSum, // 结算价格
+        } = goodsDetail
+        const data = {
+          goodsId: id,
+          goodsNo,
+          productId,
+          specialItemList,
+          salesPriceSum,
+          settlementPriceSum,
+        }
+        this.tempGoods = { ...this.tempGoods, ...data }
+        console.log(data)
+        return data
+      } catch (error) {
+        console.error('getGoodsDetail:', error)
+        return Promise.reject(error)
+      }
+    },
+
+    // 更新购物车数据
+    async postUpdate(data = {}) {
+      const { type, cartId, value, serviceList, skuAttr, skuId } = data
+      let params = {}
+      switch (type) {
+        case 'updateSkuItem':
+          params = { serviceList, skuAttr, skuId, goodsNumber: value }
+          break
+      }
+      try {
+        // TODO 测试用户
+        const userId = this.userId || '1234567'
+        const defalutParams = {
+          id: cartId,
+          createrId: userId,
+          type,
+        }
+        let data = await shoppingCar.update({ ...defalutParams, ...params })
+        console.log(data)
+        data = data || {}
+        return data
+      } catch (error) {
+        console.error('postUpdate:', error)
+        return Promise.reject(error)
       }
     },
   },

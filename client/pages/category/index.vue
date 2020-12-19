@@ -50,7 +50,7 @@
                   :key="index"
                 >
                   <sp-image
-                    fit="contain"
+                    fit="cover"
                     class="swipe_img"
                     :src="item.materialList[0].materialUrl"
                   />
@@ -70,7 +70,7 @@
                 v-for="(cItem, cIndex) in item.children"
                 :key="cIndex"
                 class="item_con_child"
-                @click="handleItem(item)"
+                @click="handleItem(cItem)"
               >
                 {{ cItem.name }}
               </div>
@@ -186,28 +186,7 @@ export default {
     },
     handleItem(item) {
       // 点击每一个二级分类
-      const categoryData = []
-      categoryData[0] = {
-        code: item.code,
-        id: item.id,
-        name: item.name,
-        text: item.name,
-      }
-      categoryData[1] = {
-        services: [],
-      }
-      this.categoryData = categoryData
-      if (item.children.length) {
-        item.children.forEach((cItem) => {
-          categoryData[1].services.push({
-            code: cItem.code,
-            id: cItem.id,
-            name: cItem.name,
-            text: cItem.name,
-          })
-        })
-      }
-      sessionStorage.categoryData = JSON.stringify(categoryData)
+      sessionStorage.categoryData = JSON.stringify(item)
       this.$router.push('/list/serveList')
     },
   },

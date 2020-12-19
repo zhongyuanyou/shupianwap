@@ -1,7 +1,6 @@
 <template>
   <div class="jyGoods">
     <sp-tabs
-      v-if="isShowTabs"
       ref="spTabs"
       v-model="activeTabIndex"
       title-active-color="#4974F5"
@@ -100,11 +99,11 @@ export default {
         return {}
       },
     },
-    typeCode: {
+    typeCodeIndex: {
       // 业态类型
-      type: String,
+      type: Number,
       default() {
-        return '公司交易'
+        return 0
       },
     },
     searchText: {
@@ -123,13 +122,6 @@ export default {
         }
       },
     },
-    isChangeTab: {
-      // 顶层tab服务资源和交易资源发生了改变需要清空筛选项
-      type: String,
-      default() {
-        return ''
-      },
-    },
   },
   data() {
     return {
@@ -143,36 +135,43 @@ export default {
       jyGoodsListData: {}, // 保存所有交易业态的列表数据
       currentTabJyCode: '', // 当前tab选中的jy code
       filterItem: {}, // 保存所有交易业态的已筛选数据
+      isReq: {}, // 存储当前业态是否已经进行过搜索
     }
   },
   watch: {
     searchText(val) {
       // 搜索框发生变化时
-      this.formData.searchKey = val
+      this.formData[this.currentTabJyCode].searchKey = val
       if (this.reqType === 'jy') {
+        this.resetAllSelect(this.currentTabJyCode)
         this.initGoodsList()
       }
-    },
-    isChangeTab() {
-      this.formData.sortBy = ''
-      this.formData.classCodes = ''
     },
   },
   mounted() {
     this.$emit('goodsList', 'jy', this)
     // 默认请求的数据
-    this.currentTabJyCode = this.tabItems[0].code
-    this.filterItem[this.tabItems[0].code] = {}
-    this.formData[this.tabItems[0].code] = {
+    this.tabItems.forEach((item) => {
+      this.isReq[item.code] = false
+    })
+    console.log('jygood', this.typeCodeIndex)
+    this.activeTabIndex = this.typeCodeIndex
+    this.currentTabJyCode = this.tabItems[this.typeCodeIndex].code
+    this.isReq[this.currentTabJyCode] = true
+    this.filterItem[this.tabItems[this.typeCodeIndex].code] = {}
+    this.formData[this.tabItems[this.typeCodeIndex].code] = {
       start: 1,
       limit: 10,
       needTypes: 1,
-      classCode: this.tabItems[0].ext4,
-      dictCode: this.tabItems[0].code,
+      classCode: this.tabItems[this.typeCodeIndex].ext4,
+      dictCode: this.tabItems[this.typeCodeIndex].code,
       searchKey: this.searchText,
       fieldList: [],
     }
     this.initGoodsList()
+    if (!this.isShowTabs) {
+      this.$refs.spTabs.$refs.nav.parentNode.style.display = 'none'
+    }
   },
   methods: {
     getFilterHandle(data, filrerName) {
@@ -187,6 +186,7 @@ export default {
     },
     changeTabs(name, title) {
       // 切换业态tab
+      if (this.reqType !== 'jy') return
       console.log(this.tabItems[name])
       this.currentTabJyCode = this.tabItems[name].code
       // 如果已经存储的有筛选数据则不需要再去请求筛选数据
@@ -200,6 +200,7 @@ export default {
         // this.jyFilterData[this.currentTabJyCode] = this.filterObj[this.formData.dictCode]
       } else {
         this.filterItem[this.currentTabJyCode] = {}
+        this.jyGoodsListData[this.currentTabJyCode] = []
         this.formData[this.currentTabJyCode] = {
           start: 1,
           limit: 10,
@@ -209,22 +210,42 @@ export default {
           searchKey: this.searchText,
           fieldList: [],
         }
+      }
+      // 判断如果该业态下没请求过则需要重新请求
+      if (!this.isReq[this.currentTabJyCode]) {
         this.initGoodsList()
       }
     },
-    resetAllSelect() {
+    resetAllSelect(currentCode) {
       // 重置筛选项
-      /* this.$refs.dropDownMenu.resetAllSelect()
-      this.formData.start = 1
-      this.jyGoodsListData[this.currentTabJyCode] = []
-      this.activeTabIndex = 0
-      this.formData.classCode = this.tabItems[0].ext4
-      this.formData.dictCode = this.tabItems[0].code
-      this.formData.fieldList = []
-      this.formData.needTypes = 0
-      delete this.formData.platformPriceStart
-      delete this.formData.platformPriceEnd
-      delete this.formData.sortBy */
+      console.log('this.$refs.dropDownMenu', this.$refs.dropDownMenu)
+      if (this.$refs.dropDownMenu) {
+        this.$refs.dropDownMenu.forEach((item) => {
+          if (item.filterData[0].pcode !== currentCode) {
+            item.resetAllSelect()
+          }
+        })
+      }
+      if (!currentCode) {
+        this.activeTabIndex = 0
+        this.currentTabJyCode = this.tabItems[0].code
+      }
+      Object.keys(this.formData).forEach((item) => {
+        if (item !== currentCode) {
+          this.jyGoodsListData[item] = []
+          this.formData[item].start = 1
+          // this.formData[item].classCode = this.tabItems[0].ext4
+          // this.formData[item].dictCode = this.tabItems[0].code
+          this.formData[item].fieldList = []
+          this.formData[item].needTypes = 0
+          this.formData[item].needTypes = 0
+          this.formData[item].searchKey = this.searchText
+          delete this.formData[item].platformPriceStart
+          delete this.formData[item].platformPriceEnd
+          delete this.formData[item].sortBy
+          this.isReq[item] = false
+        }
+      })
     },
     initGoodsList() {
       console.log('initGoodsList')
@@ -239,6 +260,7 @@ export default {
       // 处理筛选数据，拼成筛选项
       let arr = []
       for (const key in this.filterItem[this.currentTabJyCode]) {
+        // Todo 需要优化
         if (key === 'sortFilter') {
           // 处理排序筛选
           this.formData[this.currentTabJyCode].sortBy = this.filterItem[
@@ -265,6 +287,13 @@ export default {
           ].platformPriceEnd = this.filterItem[this.currentTabJyCode][
             key
           ].fieldValue.end
+        } else if (
+          key === 'priceFilter' &&
+          this.filterItem[this.currentTabJyCode][key] === ''
+        ) {
+          // 处理价格筛选
+          delete this.formData[this.currentTabJyCode].platformPriceStart
+          delete this.formData[this.currentTabJyCode].platformPriceEnd
         } else if (this.filterItem[this.currentTabJyCode][key] !== '') {
           // 其他筛选数据
           arr.push(this.filterItem[this.currentTabJyCode][key])
@@ -274,12 +303,19 @@ export default {
     },
     computedHeight() {
       // 计算列表的最大高
-      const installAPPHeight = this.$refs.installApp[0].$el.clientHeight
-      const dropDownMenuHeight = this.$refs.dropDownMenu[0].$el.clientHeight
+      const installAPPHeight = this.$refs.installApp
+        ? this.$refs.installApp[0].$el.clientHeight
+        : -1000
+      const dropDownMenuHeight = this.$refs.dropDownMenu
+        ? this.$refs.dropDownMenu[0].$el.clientHeight
+        : -1000
       const topHeight = this.$el.getBoundingClientRect().top
       const spTabsHeight = document.querySelectorAll(
         '.sp-tabs-self .sp-tabs__wrap'
-      )[0].clientHeight
+      )[0]
+        ? document.querySelectorAll('.sp-tabs-self .sp-tabs__wrap')[0]
+            .clientHeight
+        : 0
       this.maxHeight =
         document.body.clientHeight -
         installAPPHeight -

@@ -30,31 +30,83 @@ class ProductCategoryController extends Controller {
     const getAdvertising = service.common.banner.getAdList([ 'ad100129' ]);
     // 获取产品分类
     const getClassification = service.common.category.getProductCategory({ productTypeCode: 'PRO_CLASS_TYPE_SERVICE' });
-
-    const reqAll = [ getClassification, getAdvertising ];
+    // 获取交易分类
+    const getClassifyTrading = service.common.category.getProductCategory({ productTypeCode: 'PRO_CLASS_TYPE_TRANSACTION' });
+    const reqAll = [ getClassification, getClassifyTrading, getAdvertising ];
     try {
       const resData = await Promise.all(reqAll);
       let categoryList = [];
       let recommendData = []; // 广告数据
-      // 产品分类总和
+      let jyCategoryList = []; // 交易分类集合
+      let cpRecList = []; // 产品的推荐分类数据
+      let jyRecList = []; // 交易的推荐分类数据
+      // 服务产品分类总和
       if (
-        resData[0].data.code === 200 &&
-        resData[0].data.data &&
-        Array.isArray(resData[0].data.data)
+        resData[0].code === 200 &&
+        resData[0].data &&
+        Array.isArray(resData[0].data)
       ) {
-        const cData = resData[0].data.data;
-        // 获取到所有一级分类
+        const cData = resData[0].data;
+        // 获取到所有产品一级分类
         categoryList = cData.filter(item => {
-          return item.level === 1;
+          return item.level === 1 && item.recommended;
         });
+        // 为您推荐产品分类
+        // 判断是否有为您推荐的分类数据
+        cpRecList = cData.filter(item => {
+          return item.topping === 1;
+        });
+        if (categoryList[0].name !== '为您推荐' && cpRecList.length) {
+          categoryList.unshift({ name: '为您推荐', id: '' });
+        }
         // 为每一个一级分类对象添加子级分类集合变量children
         categoryList.forEach(item => {
           item.children = [];
         });
+        // 若有为您推荐数据
+        if (categoryList[0].name === '为您推荐') {
+          categoryList[0].children = cpRecList;
+        }
         for (let i = 0; i < cData.length; i++) {
           for (let j = 0; j < categoryList.length; j++) {
-            if (cData[i].level === 2 && cData[i].parentId === categoryList[j].id) {
+            if (cData[i].level === 2 && cData[i].parentId === categoryList[j].id && cData[i].recommended && !cData[i].topping) {
               categoryList[j].children.push(cData[i]);
+            }
+          }
+        }
+      }
+      // 交易产品分类总和
+      if (
+        resData[1].code === 200 &&
+        resData[1].data &&
+        Array.isArray(resData[1].data)
+      ) {
+        const jData = resData[1].data;
+        // 获取到所有交易一级分类
+        jyCategoryList = jData.filter(item => {
+          return item.level === 1 && !item.recommended;
+        });
+        // 为您推荐产品分类
+        // 判断是否有为您推荐的分类数据
+        jyRecList = jData.filter(item => {
+          return item.topping === 1;
+        });
+        if (categoryList[0].name !== '为您推荐' && jyRecList.length) {
+          categoryList.unshift({ name: '为您推荐', id: '' });
+        }
+        // 为每一个一级分类对象添加子级分类集合变量children
+        jyCategoryList.forEach(item => {
+          item.children = [];
+        });
+        // 若有为您推荐数据
+        if (categoryList[0].name === '为您推荐') {
+          categoryList[0].children = jyRecList;
+        }
+        categoryList = categoryList.concat(jyCategoryList);
+        for (let i = 0; i < jData.length; i++) {
+          for (let j = 0; j < categoryList.length; j++) {
+            if (jData[i].level === 2 && jData[i].parentId === categoryList[j].id && !jData[i].recommended && !jData[i].topping) {
+              categoryList[j].children.push(jData[i]);
             }
           }
         }
@@ -64,12 +116,11 @@ class ProductCategoryController extends Controller {
         return item.children.length;
       });
       // 广告数据
-      console.log('广告数据', resData[1]);
       if (
-        resData[1].code === 200 &&
-        resData[1].data
+        resData[2].code === 200 &&
+        resData[2].data
       ) {
-        recommendData = resData[1].data.ad100129.sortMaterialList;
+        recommendData = resData[2].data.ad100129.sortMaterialList;
       }
       ctx.helper.success({
         ctx,

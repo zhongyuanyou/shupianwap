@@ -164,6 +164,9 @@ export default {
       font-size: 30px;
       color: #1a1a1a;
       color: #999999;
+      white-space: nowrap;
+      word-break: normal;
+      .textOverflow(1);
     }
     .search-icon {
       margin-right: 17px;

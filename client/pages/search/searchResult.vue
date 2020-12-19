@@ -7,7 +7,7 @@
       :class="{ 'has-input': placeholderText !== '请输入搜索内容' }"
       @clickInputHandle="clickInputHandle"
     >
-      <div slot="left" class="nav-back">
+      <div slot="left" class="nav-back" @click="$router.go(-1)">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
       <div slot="right" class="info">
@@ -27,7 +27,6 @@
       </sp-work-tab>
       <sp-work-tab title="资产交易">
         <JyGoods
-          :init-jy-data="jyGoodsListData"
           :search-text="formData.searchText"
           :tab-items="jyTypesData"
           :req-type="reqType"
@@ -144,7 +143,7 @@ export default {
           }
         })
       Promise.all([a, b]).then((res) => {
-        console.log('getInitDatares', res)
+        // console.log('getInitDatares', res)
         if (res[0]) {
           this.serveGoodsListData = res[0]
         }

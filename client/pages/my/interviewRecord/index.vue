@@ -36,7 +36,7 @@
                 </div>
                 <div class="item-info_detail">
                   <h4>
-                    <span class="name">{{ item.name }}</span>
+                    <span class="name">{{ item.inviterName }}</span>
                     <span class="title">
                       <span class="title-content">
                         <i class="icon gold_icon"></i>
@@ -45,10 +45,10 @@
                     </span>
                   </h4>
                   <p>
-                    面谈时间：<span>{{ item.time }}</span>
+                    面谈时间：<span>{{ item.inviteTime }}</span>
                   </p>
                   <p class="address">
-                    面谈地点：<span>{{ item.address }}</span
+                    面谈地点：<span>{{ item.inviteAddress }}</span
                     ><my-icon
                       class="address_icon"
                       name="per_ic_addressr"
@@ -57,7 +57,9 @@
                     />
                   </p>
                   <p>
-                    面谈方式：<span>{{ item.type }}</span>
+                    面谈方式：<span>{{
+                      item.inviteType ? '外出拜访' : '客户上门'
+                    }}</span>
                   </p>
                 </div>
               </div>
@@ -73,15 +75,21 @@
                   ><my-icon name="notify_ic_tel" size="0.32rem" color="#4974F5"
                 /></sp-button>
                 <sp-tag
-                  v-if="item.status === 1 || item.status === 2"
+                  v-if="
+                    item.inviteStatus === 1 ||
+                    item.inviteStatus === 2 ||
+                    item.inviteStatus === 3
+                  "
                   color="#F8F8F8"
                   text-color="#999999"
                   >{{
-                    item.status === 1
-                      ? '已完成'
-                      : item.status === 2
-                      ? '已取消'
-                      : ''
+                    item.inviteStatus === 0
+                      ? '待面谈'
+                      : item.inviteStatus === 1
+                      ? '已面谈'
+                      : item.inviteStatus === 2
+                      ? '已评价'
+                      : '已取消'
                   }}</sp-tag
                 >
               </div>
@@ -163,38 +171,31 @@ export default {
       window.location.href = 'tel:' + number
     },
     // 取消面谈
-    cancelInterview(id) {
-      console.log('取消面谈：' + id)
+    async cancelInterview(id) {
+      const params = {
+        id,
+        type: 0,
+      }
+      const res = await this.$axios.post(interviewApi.cancel, params)
+      if (res.code === 200) {
+        this.getInterviewList()
+      }
     },
-    onLoad() {
-      // setTimeout(() => {
-      //   if (this.refreshing) {
-      //     this.list = []
-      //     this.refreshing = false
-      //   }
-      //
-      //   for (let i = 0; i < 10; i++) {
-      //     const itemObj = {
-      //       id: i,
-      //       name: '石爱停',
-      //       avatar:
-      //         'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/images/ZAsSZ8zwXb.jpg',
-      //       time: '2020-09-19 14:00',
-      //       address: '顶呱呱成都政企服务中心',
-      //       type: '到访面谈',
-      //       status: i < 1 ? 1 : i > 1 && i < 3 ? 2 : 0,
-      //       cancelTime: '2020年9月20日',
-      //       completeTime: '2020年9月20日',
-      //       phone: '13628009206',
-      //     }
-      //     this.list.push(itemObj)
-      //   }
-      //   this.loading = false
-      //
-      //   if (this.list.length >= 40) {
-      //     this.finished = true
-      //   }
-      // }, 1000)
+    async onLoad() {
+      const page = this.page++
+      const params = {
+        limit: this.limit,
+        page,
+      }
+      const res = await this.$axios.get(interviewApi.list, { params })
+      if (res.code === 200) {
+        if (res.data.records.length) {
+          this.loading = false
+          this.list = this.list.concat(res.data.records)
+        } else {
+          this.finished = true
+        }
+      }
     },
     onRefresh() {
       // // 清空列表数据

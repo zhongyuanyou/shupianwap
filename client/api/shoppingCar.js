@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-09 17:07:59
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-12 10:40:56
+ * @LastEditTime: 2020-12-17 10:43:47
  * @Description: file content
  * @FilePath: /chips-wap/client/api/shoppingCar.js
  */
@@ -33,6 +33,24 @@ const shoppingCar = {
       params,
       method: 'post',
       url: CHIPS_APP_BASE_URL + '/yk/cart/add.do',
+    })
+  },
+
+  // 服务产品详情
+  productDetail(params) {
+    return request({
+      params,
+      method: 'post',
+      url: CHIPS_APP_BASE_URL + '/nk/service/product/v1/find_detail.do',
+    })
+  },
+
+  // 商品的价格 服务资源等
+  skuDetail(params) {
+    return request({
+      params,
+      method: 'post',
+      url: CHIPS_APP_BASE_URL + '/nk/service/product/v1/find_skuDetail.do',
     })
   },
 }
