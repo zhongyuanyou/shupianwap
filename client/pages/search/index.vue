@@ -143,7 +143,7 @@ export default {
         name: this.value,
         isJumpLink: 0,
       }
-      this.searchKeydownHandle(data)
+      this.addSearchHistoryMixin(data)
       this.jumpHandle(data)
     },
     // 清除搜索历史
@@ -225,7 +225,7 @@ export default {
         url: item.url,
         imageUrl: item.imageUrl,
       }
-      this.searchKeydownHandle(data)
+      this.addSearchHistoryMixin(data)
       this.jumpHandle(item)
     },
   },

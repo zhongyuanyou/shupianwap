@@ -5,8 +5,8 @@
 export default {
   methods: {
     // 搜索前添加历史记录 data.name: 搜索关键词  data.isJumpLink：点击跳转类型，跳转搜索结果页传 0
-    searchKeydownHandle(data = {}) {
-      if (!data.name || data.isJumpLink) {
+    addSearchHistoryMixin(data = {}) {
+      if (!data.name) {
         return
       }
       const historyList = this.$cookies.get('searchHistory')
