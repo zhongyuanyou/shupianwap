@@ -2,25 +2,24 @@
   <div class="jy-list">
     <!--S搜索框-->
     <Search
-      v-model="searchText"
+      v-model="currentInputText"
       placeholder="请输入搜索内容"
       @searchKeydownHandle="searchKeydownHandle"
-      @searchInputHandle="searchInputHandle"
     >
       <div slot="left" class="nav-back">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
       <div slot="right" class="info">
-        <sp-badge :content="5">
-          <my-icon name="nav_ic_msg" size="0.40rem" color="#1a1a1a"></my-icon>
-        </sp-badge>
+        <my-icon name="nav_ic_msg" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
     </Search>
     <!--E搜索框-->
     <jy-goods
-      :init-list-data="jyGoodsListData"
+      v-if="jyTypesData.length"
       :is-show-tabs="false"
-      :type-code="typeCode"
+      :tab-items="jyTypesData"
+      :type-code-index="typeCodeIndex"
+      :req-type="reqType"
       :search-text="searchText"
     />
   </div>
@@ -30,7 +29,7 @@
 import { WorkTabs, WorkTab, Badge } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import JyGoods from '@/components/list/JyGoods'
-import searchList from '@/mixins/searchList'
+import { dict } from '@/api/index'
 
 export default {
   name: 'JyList',
@@ -41,12 +40,14 @@ export default {
     JyGoods,
     [Badge.name]: Badge,
   },
-  mixins: [searchList],
   data() {
     return {
-      jyGoodsListData: [], // 服务商品列表数据
-      typeCode: '公司交易',
+      jyGoodsListData: {}, // 服务商品列表数据
+      typeCodeIndex: 0,
       searchText: '',
+      currentInputText: '',
+      reqType: 'jy',
+      jyTypesData: [], // 交易业态数据
       formData: {
         page: 1,
         limit: 10,
@@ -54,7 +55,30 @@ export default {
     }
   },
   mounted() {
-    this.reqType = 'jy'
+    this.getJyType()
+  },
+  methods: {
+    searchKeydownHandle() {
+      // 点击搜索按钮
+      this.searchText = this.currentInputText
+    },
+    async getJyType() {
+      const jyTypeData = await dict
+        .findCmsCode({ axios: this.$axios }, { code: 'CONDITION-JY' })
+        .then((result) => result)
+        .catch((e) => {
+          if (e.code !== 200) {
+            console.log(e)
+          }
+        })
+      if (jyTypeData) {
+        this.jyTypesData = jyTypeData
+        const index = this.jyTypesData.findIndex((item) => {
+          return item.ext4 === this.$route.query.typeCode
+        })
+        this.typeCodeIndex = index
+      }
+    },
   },
 }
 </script>

@@ -100,11 +100,11 @@ export default {
         return {}
       },
     },
-    typeCode: {
+    typeCodeIndex: {
       // 业态类型
-      type: String,
+      type: Number,
       default() {
-        return '公司交易'
+        return 0
       },
     },
     searchText: {
@@ -143,7 +143,6 @@ export default {
     searchText(val) {
       // 搜索框发生变化时
       this.formData[this.currentTabJyCode].searchKey = val
-      console.log('1231312312321312312312312312321313', this.reqType)
       if (this.reqType === 'jy') {
         this.resetAllSelect(this.currentTabJyCode)
         this.initGoodsList()
@@ -156,15 +155,16 @@ export default {
     this.tabItems.forEach((item) => {
       this.isReq[item.code] = false
     })
-    this.currentTabJyCode = this.tabItems[0].code
+    console.log('jygood', this.typeCodeIndex)
+    this.currentTabJyCode = this.tabItems[this.typeCodeIndex].code
     this.isReq[this.currentTabJyCode] = true
-    this.filterItem[this.tabItems[0].code] = {}
-    this.formData[this.tabItems[0].code] = {
+    this.filterItem[this.tabItems[this.typeCodeIndex].code] = {}
+    this.formData[this.tabItems[this.typeCodeIndex].code] = {
       start: 1,
       limit: 10,
       needTypes: 1,
-      classCode: this.tabItems[0].ext4,
-      dictCode: this.tabItems[0].code,
+      classCode: this.tabItems[this.typeCodeIndex].ext4,
+      dictCode: this.tabItems[this.typeCodeIndex].code,
       searchKey: this.searchText,
       fieldList: [],
     }
@@ -215,12 +215,14 @@ export default {
     },
     resetAllSelect(currentCode) {
       // 重置筛选项
-      // console.log(this.$refs.dropDownMenu)
-      this.$refs.dropDownMenu.forEach((item) => {
-        if (item.filterData[0].pcode !== currentCode) {
-          item.resetAllSelect()
-        }
-      })
+      console.log('this.$refs.dropDownMenu', this.$refs.dropDownMenu)
+      if (this.$refs.dropDownMenu) {
+        this.$refs.dropDownMenu.forEach((item) => {
+          if (item.filterData[0].pcode !== currentCode) {
+            item.resetAllSelect()
+          }
+        })
+      }
       if (!currentCode) {
         this.activeTabIndex = 0
         this.currentTabJyCode = this.tabItems[0].code
@@ -290,12 +292,19 @@ export default {
     },
     computedHeight() {
       // 计算列表的最大高
-      const installAPPHeight = this.$refs.installApp[0].$el.clientHeight
-      const dropDownMenuHeight = this.$refs.dropDownMenu[0].$el.clientHeight
+      const installAPPHeight = this.$refs.installApp
+        ? this.$refs.installApp[0].$el.clientHeight
+        : -1000
+      const dropDownMenuHeight = this.$refs.dropDownMenu
+        ? this.$refs.dropDownMenu[0].$el.clientHeight
+        : -1000
       const topHeight = this.$el.getBoundingClientRect().top
       const spTabsHeight = document.querySelectorAll(
         '.sp-tabs-self .sp-tabs__wrap'
-      )[0].clientHeight
+      )[0]
+        ? document.querySelectorAll('.sp-tabs-self .sp-tabs__wrap')[0]
+            .clientHeight
+        : 0
       this.maxHeight =
         document.body.clientHeight -
         installAPPHeight -

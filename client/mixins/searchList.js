@@ -73,7 +73,7 @@ export default {
             this.listShow = true
           }
           // 如果没有计算maxHeight，则需要在筛选数据出来后计算列表的最大高
-          if (this.maxHeight === 0) {
+          if (this.maxHeight <= 0) {
             /* console.log(this.$refs.installApp)
             console.log(this.$refs.dropDownMenu)
             console.log(this.$refs.spTabs)

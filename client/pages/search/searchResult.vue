@@ -27,7 +27,6 @@
       </sp-work-tab>
       <sp-work-tab title="资产交易">
         <JyGoods
-          :init-jy-data="jyGoodsListData"
           :search-text="formData.searchText"
           :tab-items="jyTypesData"
           :req-type="reqType"
@@ -144,7 +143,7 @@ export default {
           }
         })
       Promise.all([a, b]).then((res) => {
-        console.log('getInitDatares', res)
+        // console.log('getInitDatares', res)
         if (res[0]) {
           this.serveGoodsListData = res[0]
         }
