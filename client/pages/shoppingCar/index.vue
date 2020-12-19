@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-19 15:54:21
+ * @LastEditTime: 2020-12-19 16:53:58
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -239,6 +239,10 @@ export default {
           this.refreshing = true
           this.onRefresh()
           break
+        case 'resourceServiceSelect': // sku弹出框里资源服务
+          this.selecteResourceService(cartId, data)
+
+          break
       }
     },
     // 删除列表
@@ -282,6 +286,24 @@ export default {
       const cartIdArray = this.list.map((item) => item.cartId)
       const cartId = cartIdArray.join()
       this.selectItem(cartId, data)
+    },
+    // 资源服务的选择
+    selecteResourceService(cartId, value) {
+      const { type, classCode } = value
+      switch (type) {
+        case 'registerAddress':
+          this.$router.push({
+            name: 'detail-selectAddress',
+            query: { classCode },
+          })
+          break
+        case 'phone':
+          this.$router.push({
+            name: 'detail-selectPhone',
+            query: { classCode },
+          })
+          break
+      }
     },
     // 选择
     async selectItem(cartId, data = {}) {

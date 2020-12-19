@@ -69,6 +69,8 @@
       >
         <sp-list
           v-model="loading"
+          error-text="请求失败，点击重新加载"
+          :error.sync="error"
           :finished="finished"
           finished-text="没有更多了"
           @load="onLoad"
@@ -95,7 +97,15 @@ import {
 import PriceFilterComponents from '@/components/common/filters/PriceFilterComponents'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import CheckboxList from '@/components/detail/CheckboxList'
-// import { productDetailsApi } from '~/api'
+
+import { shoppingCar } from '@/api'
+
+const DEFAULT_PAGE = {
+  limit: 10,
+  page: 1,
+  totalCount: 0,
+}
+
 export default {
   name: 'SelectPhone',
   components: {
@@ -112,9 +122,6 @@ export default {
     BottomConfirm,
     CheckboxList,
   },
-  // asyncData({ $axios, params }) {
-  //   $axios.get()
-  // },
   data() {
     return {
       searchValue: null,
@@ -122,13 +129,11 @@ export default {
       price: '价格',
       sortValue: 0,
       loading: false,
+      error: false,
       finished: false,
       refreshing: false,
+      pageOption: DEFAULT_PAGE,
       //  选择后标题样式
-      titleBeforFour: false,
-      titleLastFour: false,
-      titlePrice: false,
-      titleSort: false,
       priceList: [
         {
           name: '1万以下',
@@ -157,44 +162,41 @@ export default {
         { text: '按照价格从高到低', value: 2 },
       ],
       checkboxList: [
-        { title: '4008886662', price: '10000' },
-        { title: '4008886663', price: '10000' },
-        { title: '4008886664', price: '10000' },
-        { title: '4008886662', price: '10000' },
-        { title: '4008886663', price: '10000' },
-        { title: '4008886664', price: '10000' },
-        { title: '4008886662', price: '10000' },
-        { title: '4008886663', price: '10000' },
-        { title: '4008886664', price: '10000' },
-        { title: '4008886664', price: '10000' },
+        // { title: '4008886662', price: '10000' },
       ],
     }
   },
   methods: {
     onLoad() {
-      // 加载更多请求
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.checkboxList = []
-          this.refreshing = false
-        }
-        for (let i = 0; i < 10; i++) {
-          this.checkboxList.push(this.checkboxList.length + 1)
-        }
-        this.loading = false
+      let currentPage = this.pageOption.page
+      if (!this.refreshing && this.checkboxList.length && currentPage >= 1) {
+        currentPage += 1
+      } else if (this.refreshing) {
+        this.pageOption = DEFAULT_PAGE
+        currentPage = 1
+      }
 
-        // 停止加载的条件
-        if (this.checkboxList.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
+      this.getList(currentPage)
+        .then((data) => {
+          const { totalCount } = data
+          if (this.refreshing) {
+            this.checkboxList = []
+            this.refreshing = false
+          }
+          this.loading = false
+          if (this.pageOption.totalCount <= this.checkboxList.length) {
+            this.finished = true
+          }
+        })
+        .catch((error) => {
+          this.error = true
+          this.loading = false
+          Toast('加载失败')
+          console.log(error)
+        })
     },
     onRefresh() {
-      // 刷新发送请求
-      // 清空列表数据
       this.finished = false
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
       this.onLoad()
     },
@@ -205,6 +207,7 @@ export default {
     onClickLeft() {
       //  左侧返回
       Toast('返回')
+      this.$router.go(-1)
     },
     minInput(val) {
       // 最小输入框
@@ -231,6 +234,34 @@ export default {
       // 确认价格
       this.$refs.isShowPrice.toggle()
       this.dropdownPrice = this.price
+    },
+    // 请求列表
+    async getList(currentPage) {
+      const { limit } = this.pageOption
+      try {
+        const classCode = this.$route.query.classCode
+        const data = await shoppingCar.resourceList({
+          classCode,
+          limit,
+          page: currentPage,
+        })
+        console.log(data)
+        if (this.refreshing) {
+          this.list = []
+          this.refreshing = false
+        }
+        if (data) {
+          if (!Array.isArray(data.records)) data.records = []
+          const { limit, currentPage = 1, totalCount = 0, records = [] } = data
+          this.pageOption = { limit, totalCount, page: currentPage }
+          this.checkboxList.push(...records)
+        }
+
+        return data || {}
+      } catch (error) {
+        console.error('getList:', error)
+        return Promise.reject(error)
+      }
     },
   },
 }

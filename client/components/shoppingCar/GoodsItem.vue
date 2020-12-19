@@ -285,6 +285,10 @@ export default {
         case 'skuCount': // sku弹出框里数量改变
           this.changeSkuCount(data)
           break
+        case 'resourceServiceSelect': // sku弹出框里资源服务
+          // this.selecteResourceService(data)
+          this.$emit('operation', { data, type, cartId })
+          break
       }
     },
     openSku() {
@@ -432,6 +436,9 @@ export default {
     changeSkuCount(value) {
       this.tempGoods.goodsNumber = value
     },
+
+    // 资源服务的选择
+    selecteResourceService(value) {},
 
     // 第一次获取sku属性
     async getSkuData() {

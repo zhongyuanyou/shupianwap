@@ -3,16 +3,16 @@
  * @author zhaoDongMing
  * @date
  */
-'use strict';
-const Controller = require('egg').Controller;
-const { Post, Get, Prefix } = require('egg-shell-decorators');
-const { productApi, contentApi } = require('./../../config/serveApi/index');
-const rules = require('../validate/scProduct');
+"use strict";
+const Controller = require("egg").Controller;
+const { Post, Get, Prefix } = require("egg-shell-decorators");
+const { productApi, contentApi } = require("./../../config/serveApi/index");
+const rules = require("../validate/scProduct");
 
-@Prefix('/nk/sc_product')
+@Prefix("/nk/sc_product")
 class ScProductDetailsController extends Controller {
   // 获取服务产品详情
-  @Post('/v1/detail.do')
+  @Post("/v1/detail.do")
   async getScProductDetail() {
     const { ctx, service, app } = this;
     // 参数校验
@@ -76,7 +76,7 @@ class ScProductDetailsController extends Controller {
       /** todo:* 获取服务项***/
       // 获取到基础服务的ID
       const serviceItemIds = [];
-      normalItemList.forEach(item => {
+      normalItemList.forEach((item) => {
         serviceItemIds.push(item.serviceItemId);
       });
       // 获取到请求的Url
@@ -100,7 +100,7 @@ class ScProductDetailsController extends Controller {
       /** todo:获取产品标签****/
       const tagsObj = {};
       // 获取到各类型的标签ID
-      tags.forEach(item => {
+      tags.forEach((item) => {
         if (tagsObj[item.tagType]) {
           tagsObj[item.tagType].push(item.tagId);
         } else {
@@ -131,7 +131,7 @@ class ScProductDetailsController extends Controller {
       }
       const tagsResult = await Promise.all(tagsPromiseAll);
       const tagArr = {};
-      tagsResult.forEach(item => {
+      tagsResult.forEach((item) => {
         tagArr[item.key] = [];
         if (item.result.status === 200 && item.result.data.code === 200) {
           tagArr[item.key] = item.result.data.data.records;
@@ -164,11 +164,11 @@ class ScProductDetailsController extends Controller {
       ctx.helper.success({ ctx, code: 200, res: baseData });
     } else {
       ctx.logger.error(code, message);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
+      ctx.helper.fail({ ctx, code: 500, res: "后端接口异常！" });
     }
   }
   // 获取服务产品服务项
-  @Get('/v1/service_Items.do')
+  @Get("/v1/service_Items.do")
   async getScProductServiceItems() {
     const { ctx, service, app } = this;
     // 参数校验
@@ -188,11 +188,11 @@ class ScProductDetailsController extends Controller {
       ctx.helper.success({ ctx, code: 200, res: data.data });
     } else {
       ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
+      ctx.helper.fail({ ctx, code: 500, res: "后端接口异常！" });
     }
   }
   // 获取服务产品属性
-  @Get('/v1/attr_list.do')
+  @Get("/v1/attr_list.do")
   async getScProductAttrList() {
     const { ctx, service, app } = this;
     // 参数校验
@@ -212,11 +212,11 @@ class ScProductDetailsController extends Controller {
       ctx.helper.success({ ctx, code: 200, res: data.data });
     } else {
       ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
+      ctx.helper.fail({ ctx, code: 500, res: "后端接口异常！" });
     }
   }
   // 获取服务产品站点数据（当前产品可以销售的城市）
-  @Get('/v1/site_list.do')
+  @Get("/v1/site_list.do")
   async getScProductSiteList() {
     const { ctx, service, app } = this;
     // 参数校验
@@ -241,7 +241,7 @@ class ScProductDetailsController extends Controller {
     if (status === 200 && data.code === 200) {
       // 根据获取到所有站点数据
       // 获取redis中缓存的站点信息
-      let cityList = await ctx.service.redis.get('cityList');
+      let cityList = await ctx.service.redis.get("cityList");
       // 假如redis未查询到站点信息,需要再次查询站点信息
       if (!cityList) {
         const cityListResult = await service.curl.curlGet(siteListUrl);
@@ -250,7 +250,7 @@ class ScProductDetailsController extends Controller {
           // 格式化站点数据
           const siteList = {};
           // 将城市数据的code作为key存储在对象中
-          cityListResult.data.data.cityList.forEach(item => {
+          cityListResult.data.data.cityList.forEach((item) => {
             siteList[item.code] = item;
           });
           // 将全国地区存储到站点对象中
@@ -258,10 +258,10 @@ class ScProductDetailsController extends Controller {
             cityListResult.data.data.national;
           cityList = siteList;
           // 默认缓存站点数据一个小时
-          ctx.service.redis.set('cityList', siteList, 60 * 60);
+          ctx.service.redis.set("cityList", siteList, 60 * 60);
         } else {
           ctx.logger.error(status, data);
-          ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
+          ctx.helper.fail({ ctx, code: 500, res: "后端接口异常！" });
           // 未获取到站点信息直接返回错误,停止当前程序执行
           return;
         }
@@ -277,11 +277,11 @@ class ScProductDetailsController extends Controller {
       ctx.helper.success({ ctx, code: 200, res: scProSite });
     } else {
       ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
+      ctx.helper.fail({ ctx, code: 500, res: "后端接口异常！" });
     }
   }
   // 获取服务资源
-  @Post('/v1/service_resource.do')
+  @Post("/v1/service_resource.do")
   async getServiceResource() {
     const { ctx, service, app } = this;
     // 参数校验
@@ -310,7 +310,7 @@ class ScProductDetailsController extends Controller {
       page = 1,
       limit = 10,
     } = ctx.request.body;
-    const { status, data } = await service.curl.curlPost(url, {
+    const data = await service.curl.curlPost(url, {
       classCode,
       searchKey,
       goodsNo,
@@ -323,11 +323,16 @@ class ScProductDetailsController extends Controller {
       start: page,
       limit,
     });
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data });
+    if (data.code === 200) {
+      ctx.helper.success({ ctx, code: 200, res: data });
     } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
+      ctx.logger.error(data.code, data);
+      ctx.helper.fail({
+        ctx,
+        code: data.code || 500,
+        res: "后端接口异常！",
+        detailMessage: data.message || "后端接口异常！",
+      });
     }
   }
 }
