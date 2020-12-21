@@ -137,10 +137,19 @@ export default {
   computed: {
     ...mapState({
       userId: (state) => state.user.userInfo.userId || null,
+      isInApp: (state) => state.app.isInApp,
     }),
   },
   mounted() {
     this.getShippingAddressList()
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle(
+        {
+          title: '我的收货地址',
+        },
+        (res) => {}
+      )
+    }
   },
   methods: {
     onClickLeft() {
@@ -158,10 +167,27 @@ export default {
     },
     handleNew() {
       // 新建收货地址
+      if (this.isInApp) {
+        this.$appFn.dggSetTitle(
+          {
+            title: '新建收货地址',
+          },
+          (res) => {}
+        )
+      }
       this.$router.push('/my/shippingAddress/add/1')
     },
     handleEdit(item) {
       // 编辑收货地址
+      if (this.isInApp) {
+        this.$appFn.dggSetTitle(
+          {
+            title: '编辑收货地址',
+          },
+          (res) => {}
+        )
+        return
+      }
       this.$router.push(`/my/shippingAddress/edit/${item.id}`)
     },
     async getShippingAddressList() {

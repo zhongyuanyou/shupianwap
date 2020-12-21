@@ -49,6 +49,7 @@ import Information from '@/components/home/Information'
 import HotServe from '@/components/home/HotServe'
 import Recommend from '@/components/home/Recommend'
 import FiexdBtn from '@/components/home/FiexdBtn'
+import { imInit, pullUnreadMsgCount } from '~/utils/im'
 export default {
   layout: 'nav',
   name: 'Home',
@@ -88,7 +89,7 @@ export default {
     }
     try {
       const res = await $axios.post(homeApi.initRequest, initReqParams)
-      console.log('服务端', res)
+      //   console.log('服务端', res)
       if (res.code === 200) {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
         initData.rollBannerData = res.data.advertising[rollAdCode] || []
@@ -130,7 +131,7 @@ export default {
       this.$axios
         .post(homeApi.asyncRequest, this.asyncReqParams)
         .then((res) => {
-          console.log('客户端：', res.data)
+          //   console.log('客户端：', res.data)
           this.asyncData.cityData = res.data.cityList
           this.adModuleOne.forEach((item) => {
             if (res.data.advertising[item]) {
@@ -146,7 +147,16 @@ export default {
         })
     }
   },
-  methods: {},
+  mounted() {
+    const imSdk = imInit()
+    console.log(55, imSdk)
+    // const userInfo = this.$appFn(this)
+    // console.log(userInfo)
+    // 获取未读消息总数
+    pullUnreadMsgCount().then((res) => {
+      console.log(56, res)
+    })
+  },
 }
 </script>
 <style lang="less" scoped>

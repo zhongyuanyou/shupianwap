@@ -224,7 +224,7 @@ export default {
         this.params.locationCode = this.tabBtn[index].ext1
       }
       this.$axios.post(homeApi.findRecomList, this.params).then((res) => {
-        console.log(index, res.data)
+        // console.log(index, res.data)
         this.loading = false
         if (res.code === 200 && this.params.findType === 0) {
           res.data.dictData[0].adData = res.data.adData
