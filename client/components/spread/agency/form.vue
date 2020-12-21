@@ -49,6 +49,8 @@
           v-model="phonenumber"
           label="手机号"
           placeholder="信息保护中，仅官方可见"
+          onkeyup="value=value.replace(/[^\d]/g,'')"
+          maxlength="11"
           @click="verificationshow()"
         />
         <!-- s 获取验证码 -->

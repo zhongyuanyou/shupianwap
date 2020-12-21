@@ -69,11 +69,6 @@ export default {
           url: '',
           img: require('~/assets/spreadImages/agency/busi_img_dljzbanner@1,5x.jpg'),
         },
-        {
-          code: 2,
-          url: '',
-          img: require('~/assets/spreadImages/agency/busi_img_dljzbanner@1,5x.jpg'),
-        },
       ],
       // 服务介绍列表
       servicelist: [
