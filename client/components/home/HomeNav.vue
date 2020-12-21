@@ -88,7 +88,12 @@ export default {
           break
         // 跳转图片链接
         case 3:
-          url = '/404'
+          url = {
+            name: 'img',
+            params: {
+              url: item.imageUrl,
+            },
+          }
           break
         default:
           url = item.url

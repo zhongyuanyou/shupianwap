@@ -31,7 +31,8 @@
               <li v-for="(key, v) in item.adData" :key="v">
                 <a
                   v-if="key.materialList.length"
-                  :href="key.materialList[0].materialLink"
+                  href="javascript:void(0)"
+                  @click="adJumpHandleMixin(key.materialList[0])"
                 >
                   <img
                     class="recom-img"
@@ -83,6 +84,7 @@ import { homeApi } from '@/api'
 import TabCurve from '@/components/common/tab/TabCurve'
 import GoodsPro from '@/components/common/goodsItem/GoodsPro'
 import LoadingDown from '@/components/common/loading/LoadingDown'
+import adJumpHandle from '~/mixins/adJumpHandle'
 export default {
   components: {
     [Swipe.name]: Swipe,
@@ -92,6 +94,7 @@ export default {
     GoodsPro,
     LoadingDown,
   },
+  mixins: [adJumpHandle],
   data() {
     return {
       tabBtn: [],
@@ -314,7 +317,7 @@ export default {
 .goods-list {
   position: relative;
   width: 100%;
-  padding: 0 40px 32px 40px;
+  padding: 0 40px 0 40px;
   &::before {
     display: block;
     content: '';

@@ -13,7 +13,10 @@
           v-for="(item, index) in tabBtn[curentItem].sortMaterialList"
           :key="index"
         >
-          <a :href="item.materialList[0].materialLink">
+          <a
+            href="javascript:void(0)"
+            @click="adJumpHandleMixin(item.materialList[0])"
+          >
             <div class="label-num">
               <span class="label">抢购中</span>
               <span class="num">缺字段人购买</span>
@@ -33,10 +36,12 @@
 <script>
 import TabCurve from '@/components/common/tab/TabCurve'
 import { publicApi } from '@/api'
+import adJumpHandle from '~/mixins/adJumpHandle'
 export default {
   components: {
     TabCurve,
   },
+  mixins: [adJumpHandle],
   props: {
     initData: {
       type: Array,

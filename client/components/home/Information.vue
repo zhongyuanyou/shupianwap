@@ -84,7 +84,7 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            if (!res.data.infoList.length) {
+            if (!res.data.infoList.length && this.infoParams.page > 1) {
               this.infoParams.page = 0
               this.updateInfo()
               return
