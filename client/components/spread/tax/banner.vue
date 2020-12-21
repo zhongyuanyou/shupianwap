@@ -209,7 +209,6 @@ export default {
       return nowTimeString
     },
     consultForm() {
-      console.log(window.promotion)
       const _tel = this.tel
       const _code = this.code
       const _telReg = /^1[3,4,5,6,7,8,9]\d{9}$/
@@ -228,8 +227,12 @@ export default {
         console.log('请输入验证码')
         return
       }
+      if (this.select === '选择税务类型') {
+        console.log('请选择税务类型')
+        return
+      }
       const contentStr = {
-        gsmc: this.select,
+        swlx: this.select,
       }
       const params = {
         formId, // formId,唯一ID提交资源中心
