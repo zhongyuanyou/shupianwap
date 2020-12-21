@@ -39,7 +39,7 @@
               </div>
             </div>
             <div class="planner-content-item-shadow-icon">
-              <div style="margin-right: 0.2rem">
+              <div style="margin-right: 0.2rem" @click="openIM">
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -102,6 +102,12 @@ export default {
     return {
       img: require('~/assets/spreadImages/tax/busi_img_swchbg01.png'),
     }
+  },
+  methods: {
+    openIM() {
+      console.log(1)
+      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+    },
   },
 }
 </script>
