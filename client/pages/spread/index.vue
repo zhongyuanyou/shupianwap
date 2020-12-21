@@ -23,7 +23,7 @@
     <ShiYong />
     <!-- END 实用工具-->
     <!-- START 企服规划师-->
-    <GuiHuaShi />
+    <GuiHuaShiSwipe :data="guiHuaShiList" title="企服规划师" />
     <!-- END 企服规划师-->
     <!-- START 平台优势-->
     <PingTaiYouShi />
@@ -45,11 +45,11 @@ import HotSale from '@/components/spread/home/HotSale1'
 import ChuChuang from '@/components/spread/home/ChuChuang'
 import JingYing from '@/components/spread/home/JingYing'
 import ShiYong from '@/components/spread/home/ShiYong'
-import GuiHuaShi from '@/components/spread/home/GuiHuaShi'
 import PingTaiYouShi from '@/components/spread/home/PingTaiYouShi'
 import ShuPianZhaoRen from '@/components/spread/home/ShuPianZhaoRen'
-import FixedBottom from '@/components/spread/home/FixedBottom1'
+import FixedBottom from '@/components/spread/home/FixedBottom'
 import KuaiSuChaXun from '@/components/spread/home/KuaiSuChaXun'
+import GuiHuaShiSwipe from '@/components/spread/common/GuiHuaShiSwipe'
 export default {
   name: 'Index',
   components: {
@@ -60,11 +60,11 @@ export default {
     ChuChuang,
     JingYing,
     ShiYong,
-    GuiHuaShi,
     PingTaiYouShi,
     ShuPianZhaoRen,
     FixedBottom,
     KuaiSuChaXun,
+    GuiHuaShiSwipe,
   },
   data() {
     return {
@@ -72,6 +72,36 @@ export default {
         require('~/assets/spreadImages/home/busi_img_gscsbanner01.jpg'),
         require('~/assets/spreadImages/home/busi_img_gscsbanner01.jpg'),
         require('~/assets/spreadImages/home/busi_img_gscsbanner01.jpg'),
+      ],
+      guiHuaShiList: [
+        {
+          id: 1,
+          avatarImg: '',
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+        },
+        {
+          id: 2,
+          avatarImg: '',
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+        },
+        {
+          id: 3,
+          type: '金牌规划师',
+          avatarImg: '',
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+        },
       ],
     }
   },
@@ -82,7 +112,7 @@ export default {
 .page-content {
   width: 750px;
   margin: 0 auto;
-  font-family: @PingFangSC;
+  font-family: PingFang SC;
   padding-bottom: 60px;
 }
 </style>

@@ -113,7 +113,7 @@ export default {
   width: calc(100% - 80px);
   margin: 0 auto;
   padding: 30px 0;
-  font-family: @PingFangSC;
+  font-family: PingFang SC;
 
   .title {
     font-size: 40px;

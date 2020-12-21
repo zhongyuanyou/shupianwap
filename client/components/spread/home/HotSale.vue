@@ -52,7 +52,7 @@ export default {
 <style lang="less" scoped>
 .hot-sale {
   padding: 30px 40px;
-  font-family: @PingFangSC;
+  font-family: PingFang SC;
 
   .title {
     font-size: 40px;

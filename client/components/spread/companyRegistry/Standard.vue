@@ -1,0 +1,140 @@
+<template>
+  <div class="standard">
+    <div class="standard-item">
+      <sp-cell
+        value-class="right-value"
+        title-class="left-title"
+        :title="title"
+        is-link
+        arrow-direction="down"
+        value="查看更多"
+        @click="show = true"
+      />
+      <sp-action-sheet v-model="show" :actions="content" @select="onSelect" />
+      <div class="content">
+        <div v-for="(item, index) of content" :key="index">
+          <div
+            v-show="item.flag"
+            class="content-item"
+            v-html="item.content"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <QueryPhone />
+  </div>
+</template>
+<script>
+import { Cell, CellGroup, ActionSheet, Toast, Image } from '@chipspc/vant-dgg'
+import QueryPhone from './QueryPhone'
+export default {
+  name: 'Standard',
+  components: {
+    [Cell.name]: Cell,
+    [CellGroup.name]: CellGroup,
+    [ActionSheet.name]: ActionSheet,
+    [Toast.name]: ActionSheet,
+    [Image.name]: Image,
+    QueryPhone,
+  },
+  data() {
+    return {
+      title: '有限公司',
+      show: false,
+      active: 2,
+      content: [
+        {
+          name: '注册标准',
+          content: `<p>注册标准</p> <p>(1）股东符合法定人数共同出资设立</p>
+            <p>(2）股东出资达到法定资本最低限度（不同公司最低限度不同）</p>
+            <p>(3）股东共同制定公司章程； (4）有公司名称</p>
+            <p>(5）有固定的生产经营场所和必要的生产经营条件。</p>
+            <p>(3）股东共同制定公司章程；</p>
+            <p>(4）有公司名称，建立符合有限责任公司要求的组织机构；</p>`,
+          flag: true,
+        },
+        {
+          name: '产品标准',
+          content: `<p>产品标准</p> <p>(1）股东符合法定人数共同出资设立</p>
+            <p>(2）股东出资达到法定资本最低限度（不同公司最低限度不同）</p>
+            <p>(3）股东共同制定公司章程； (4）有公司名称</p>
+            <p>(5）有固定的生产经营场所和必要的生产经营条件。</p>
+            <p>(3）股东共同制定公司章程；</p>
+            <p>(4）有公司名称，建立符合有限责任公司要求的组织机构；</p>`,
+          flag: false,
+        },
+        {
+          name: '服务标准',
+          content: `<p>服务标准</p> <p>(1）股东符合法定人数共同出资设立</p>
+            <p>(2）股东出资达到法定资本最低限度（不同公司最低限度不同）</p>
+            <p>(3）股东共同制定公司章程； (4）有公司名称</p>
+            <p>(5）有固定的生产经营场所和必要的生产经营条件。</p>
+            <p>(3）股东共同制定公司章程；</p>
+            <p>(4）有公司名称，建立符合有限责任公司要求的组织机构；</p>`,
+          flag: false,
+        },
+        {
+          name: '内容标准',
+          content: `<p>内容标准</p> <p>(1）股东符合法定人数共同出资设立</p>
+            <p>(2）股东出资达到法定资本最低限度（不同公司最低限度不同）</p>
+            <p>(3）股东共同制定公司章程； (4）有公司名称</p>
+            <p>(5）有固定的生产经营场所和必要的生产经营条件。</p>
+            <p>(3）股东共同制定公司章程；</p>
+            <p>(4）有公司名称，建立符合有限责任公司要求的组织机构；</p>`,
+          flag: false,
+        },
+      ],
+    }
+  },
+  methods: {
+    onSelect(action, index) {
+      // 默认情况下点击选项时不会自动收起
+      // 可以通过 close-on-click-action 属性开启自动收起
+      console.log(action, index)
+      this.content.forEach((element) => {
+        element.flag = false
+        this.title = action.name
+      })
+      this.content[index].flag = true
+      this.show = false
+    },
+  },
+}
+</script>
+<style lang="less" scoped>
+.standard {
+  .standard-item {
+    width: 669px;
+    border: 1px solid rgba(205, 205, 205, 0.5);
+    border-radius: 8px;
+    .sp-cell {
+      background-color: #f4f7fe;
+      .right-value {
+        font-size: 26px;
+        font-weight: 400;
+        color: #4974f5;
+      }
+      .left-title {
+        font-size: 32px;
+        font-weight: 500;
+        color: #4974f5;
+      }
+      i {
+        color: #4974f5;
+      }
+    }
+    .content {
+      padding: 26px 35px 28px 31px;
+      font-size: 28px;
+      color: #555555;
+      line-height: 42px;
+      /deep/.content-item {
+        p:first-child {
+          color: #222222;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+</style>

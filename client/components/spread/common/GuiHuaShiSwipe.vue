@@ -1,6 +1,6 @@
 <template>
   <div class="planner">
-    <div class="planner-title">咨询规划师</div>
+    <div class="planner-title">{{ title }}</div>
     <div class="planner-flex">
       <sp-swipe
         :autoplay="3000"
@@ -9,34 +9,36 @@
         class="planner-content my-swipe"
       >
         <sp-swipe-item
-          v-for="item of planners"
+          v-for="item of data"
           :key="item.id"
-          class="planner-content-div"
+          class="planner-content-item"
         >
-          <div class="planner-content-div-left">
-            <div class="planner-content-div-left-person">
+          <div class="planner-content-item-shadow">
+            <div class="planner-content-item-shadow-person">
               <div
-                class="planner-content-div-left-person-img"
+                class="planner-content-item-shadow-person-img"
                 :style="
                   item.avatarImg === ''
                     ? { background: 'gray' }
                     : { backgroundImage: `url(${item.avatarImg})` }
                 "
               ></div>
-              <div class="planner-content-div-left-person-font">金牌规划师</div>
+              <div class="planner-content-item-shadow-person-font">
+                金牌规划师
+              </div>
             </div>
-            <div class="planner-content-div-left-content">
-              <div class="planner-content-div-left-content-name">
+            <div class="planner-content-item-shadow-content">
+              <div class="planner-content-item-shadow-content-name">
                 {{ item.name }}
               </div>
-              <div class="planner-content-div-left-content-count">
+              <div class="planner-content-item-shadow-content-count">
                 薯片分 {{ item.shuPianFen }} | 服务次数 {{ item.serverNum }}
               </div>
-              <div class="planner-content-div-left-content-tab">
+              <div class="planner-content-item-shadow-content-tab">
                 <div v-for="(tab, i) of item.labels" :key="i">{{ tab }}</div>
               </div>
             </div>
-            <div class="planner-content-div-left-icon">
+            <div class="planner-content-item-shadow-icon">
               <div style="margin-right: 0.2rem">
                 <my-icon
                   name="notify_ic_chat"
@@ -55,8 +57,8 @@
               </div>
             </div>
           </div>
+          <div class="planner-content-item-space"></div>
         </sp-swipe-item>
-        <div class="planner-content-space"></div>
       </sp-swipe>
       <div class="planner-right"></div>
     </div>
@@ -66,16 +68,33 @@
 <script>
 import { Swipe, SwipeItem } from '@chipspc/vant-dgg'
 export default {
-  name: 'Planner',
+  name: 'GuihuashiSwipe',
   components: {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
   },
   props: {
-    planners: {
+    data: {
       type: Array,
       default: () => {
-        return []
+        return [
+          {
+            id: 1,
+            type: '金牌规划师',
+            avatarImg: '',
+            name: '郭亮亮',
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: 12345679985,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+          },
+        ]
+      },
+    },
+    title: {
+      type: String,
+      default: () => {
+        return '规划师'
       },
     },
   },
@@ -91,7 +110,7 @@ export default {
 .planner {
   width: 750px;
   height: 349px;
-  padding: 30px 0 40px 40px;
+  padding: 30px 0 0 40px;
   &-title {
     font-size: 40px;
     line-height: 40px;
@@ -104,23 +123,20 @@ export default {
     display: flex;
   }
   &-content {
-    width: 660px;
-    height: 207px;
-    margin-right: 20px;
-    &-div {
-      width: 660px;
-      height: 207px;
-      display: inline-block;
-      &-left {
+    width: 688px;
+    &-item {
+      display: flex;
+      &-shadow {
         width: 660px;
         height: 207px;
         background: url('~assets/spreadImages/tax/busi_img_swchbg01.png');
         background-size: 100% 100%;
-        border: 1px solid rgba(205, 205, 205, 0.4);
-        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(205, 205, 205, 0.3);
+        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         display: flex;
         position: relative;
+        margin-bottom: 40px;
         &-person {
           margin: 0 -15px 27px 0;
           width: 180px;
@@ -135,7 +151,7 @@ export default {
             height: 100px;
             border-radius: 50%;
             background-position: center center;
-            backgroung-size: 100% 100%;
+            background-size: 100% 100%;
           }
           &-font {
             height: 26px;
@@ -207,9 +223,9 @@ export default {
           }
         }
       }
-    }
-    &-space {
-      border: 15px solid transparent;
+      &-space {
+        width: 20px;
+      }
     }
   }
   &-right {

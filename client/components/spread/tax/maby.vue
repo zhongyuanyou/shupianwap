@@ -119,7 +119,7 @@ export default {
       &-number {
         font-size: 40px;
         line-height: 40px;
-        font-family: Impact;
+        font-family: @Bebas;
         font-weight: 400;
         color: #4974f5;
       }

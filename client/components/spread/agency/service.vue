@@ -188,7 +188,7 @@ export default {
               height: 40px;
               position: absolute;
               top: 50%;
-              margin-top: -21px;
+              margin-top: -22px;
             }
             > a:nth-child(2) {
               left: 104px;
