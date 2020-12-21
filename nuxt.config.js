@@ -118,6 +118,9 @@ module.exports = {
         { src: "@/plugins/vconsole", ssr: false },
         { src: '@/plugins/app-sdk', ssr: false },
     ],
+    router: {
+      middleware: 'appDock',
+    },
     buildModules: ["@nuxtjs/eslint-module"],
     modules: [
         "@nuxtjs/axios",

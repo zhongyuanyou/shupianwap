@@ -121,7 +121,6 @@ const appHandler = {
   },
   // app原生路由跳转
   dggLocation: (fn = () => {}) => {
-    alert('调用方法')
     Bridge.callHandler('dgg_location', {}, (res) => {
       handleRequest(res, fn)
     })

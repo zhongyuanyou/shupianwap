@@ -138,6 +138,7 @@ export default {
   computed: {
     ...mapState({
       userId: (state) => state.user.userInfo.userId || null,
+      isInApp: (state) => state.app.isInApp,
     }),
   },
   mounted() {
