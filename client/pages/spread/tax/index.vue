@@ -19,7 +19,7 @@
     <Process></Process>
     <!--  服务流程  -->
     <!--  规划师  -->
-    <Planner :planners="planners"></Planner>
+    <GuiHuaShiSwipe :data="planners" :title="plannersTitle"></GuiHuaShiSwipe>
     <!--  规划师  -->
     <!--  可能需要  -->
     <Maby></Maby>
@@ -38,7 +38,7 @@ import Conrult from '~/components/spread/tax/conrult'
 import Super from '~/components/spread/tax/super'
 import Process from '~/components/spread/tax/process'
 // import Planner from '~/components/spread/tax/planner'
-import Planner from '~/components/spread/common/GuiHuaShiSwipe'
+import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
 import Maby from '~/components/spread/tax/maby'
 import Bottom from '~/components/spread/tax/bottom'
 export default {
@@ -50,7 +50,7 @@ export default {
     Conrult,
     Super,
     Process,
-    Planner,
+    GuiHuaShiSwipe,
     Maby,
     Bottom,
   },
@@ -89,6 +89,7 @@ export default {
           labels: ['工商注册', '财税咨询', '税务筹划'],
         },
       ],
+      plannersTitle: '咨询规划师',
     }
   },
 }

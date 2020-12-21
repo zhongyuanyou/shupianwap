@@ -3,17 +3,17 @@
     <div class="super-title">我们的优势</div>
     <div class="super-banner">
       <div
-        v-for="(index, i) of banners"
+        v-for="(item, i) of banners"
         :key="i"
         class="super-banner-item"
         @click="show"
       >
         <div class="super-banner-item-left">
-          <img :src="index.img" alt="" class="super-banner-item-left-icon" />
+          <img :src="item.img" alt="" class="super-banner-item-left-icon" />
         </div>
         <div class="super-banner-item-right">
-          <div class="big">{{ index.bigfont }}</div>
-          <div class="small" :style="index.style">{{ index.smallfont }}</div>
+          <div class="big">{{ item.bigfont }}</div>
+          <div class="small" :style="item.style">{{ item.smallfont }}</div>
         </div>
       </div>
     </div>

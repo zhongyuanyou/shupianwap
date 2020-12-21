@@ -9,8 +9,8 @@
         class="planner-content my-swipe"
       >
         <sp-swipe-item
-          v-for="index of 3"
-          :key="index"
+          v-for="item of 3"
+          :key="item"
           class="planner-content-div"
         >
           <div class="planner-content-div-left">

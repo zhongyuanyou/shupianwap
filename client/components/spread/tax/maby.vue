@@ -3,10 +3,10 @@
     <div class="maby-title">这些业务您可能也需要</div>
     <div class="maby-banner">
       <div
-        v-for="(index, i) of imgs"
+        v-for="(item, i) of imgs"
         :key="i"
         class="maby-banner-item"
-        :style="index.bg"
+        :style="item.bg"
       ></div>
     </div>
     <div class="maby-bottom">对于代理记账还有疑问？企服专家为您免费解答</div>
@@ -55,30 +55,6 @@ export default {
               ')',
           },
         },
-        // {
-        //   bg: {
-        //     backgroundImage:
-        //       'url(' +
-        //       require('~/assets/spreadImages/tax/busi_img_swchad4.png') +
-        //       ')',
-        //   },
-        // },
-        // {
-        //   bg: {
-        //     backgroundImage:
-        //       'url(' +
-        //       require('~/assets/spreadImages/tax/busi_img_swchad5.png') +
-        //       ')',
-        //   },
-        // },
-        // {
-        //   bg: {
-        //     backgroundImage:
-        //       'url(' +
-        //       require('~/assets/spreadImages/tax/busi_img_swchad6.png') +
-        //       ')',
-        //   },
-        // },
       ],
     }
   },
@@ -143,7 +119,7 @@ export default {
       &-number {
         font-size: 40px;
         line-height: 40px;
-        font-family: Impact;
+        font-family: @Bebas;
         font-weight: 400;
         color: #4974f5;
       }
