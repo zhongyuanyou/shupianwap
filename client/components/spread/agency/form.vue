@@ -358,10 +358,11 @@ export default {
     }
   }
   .statistical {
-    margin: 33px 0 32px;
+    margin: 32px 0 32px;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 24px;
     .line {
       width: 1px;
       height: 20px;
@@ -372,9 +373,10 @@ export default {
       font-size: 24px;
       font-family: PingFang SC;
       font-weight: 400;
-      line-height: 44px;
       margin-top: -10px;
       color: #555555;
+      line-height: 24px;
+      margin-top: 1px;
       > span {
         color: #ec5330;
       }

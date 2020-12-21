@@ -120,7 +120,7 @@ export default {
       > span:last-child {
         display: block;
         font-size: 40px;
-        font-family: Impact;
+        font-family: @Bebas;
         font-weight: 400;
         color: #4974f5;
         line-height: 32px;
