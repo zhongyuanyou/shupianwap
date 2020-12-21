@@ -3,35 +3,35 @@
     <div class="serve-text">稅筹服务介绍</div>
     <a href="javascript:;">
       <div
-        v-for="(index, i) of cards"
+        v-for="(item, i) of cards"
         :key="i"
         class="serve-card"
-        :style="index.bg"
+        :style="item.bg"
       >
         <div class="serve-card-first">
           <div>
-            <div class="serve-card-first-big">{{ index.num1 }}万+</div>
+            <div class="serve-card-first-big">{{ item.num1 }}万+</div>
             <div class="serve-card-first-small">在线咨询</div>
           </div>
           <div class="serve-card-first-hr"></div>
           <div>
-            <div class="serve-card-first-big">{{ index.num2 }}万+</div>
+            <div class="serve-card-first-big">{{ item.num2 }}万+</div>
             <div class="serve-card-first-small">累计成交</div>
           </div>
           <div class="serve-card-first-hr"></div>
           <div>
-            <div class="serve-card-first-big">{{ index.num3 }}万+</div>
+            <div class="serve-card-first-big">{{ item.num3 }}万+</div>
             <div class="serve-card-first-small">成功案列</div>
           </div>
         </div>
         <div class="serve-card-second">
           <div class="serve-card-second-left">
-            <span>{{ index.price }}</span
+            <span>{{ item.price }}</span
             ><span>元起</span><strike>488.00元</strike>
           </div>
           <div class="serve-card-second-right">
             <div class="serve-card-second-right-person"></div>
-            <div class="serve-card-second-right-rap" @click="col">
+            <div class="serve-card-second-right-rap" @click="call">
               <my-icon
                 name="notify_ic_chat"
                 color="#4974F5"
@@ -39,13 +39,12 @@
                 class="icon"
               ></my-icon>
             </div>
-            <div class="serve-card-second-right-rap" @click="col">
+            <div class="serve-card-second-right-rap" @click="call">
               <my-icon
                 name="notify_ic_tel"
                 color="#4974F5"
                 size="0.4rem"
                 class="icon"
-                @click="col"
               ></my-icon>
             </div>
           </div>
@@ -104,7 +103,7 @@ export default {
     }
   },
   methods: {
-    col(e) {
+    call(e) {
       console.log(1)
       e.stopPropagation()
     },
@@ -127,7 +126,7 @@ export default {
     width: 670px;
     height: 472px;
     background: url('~assets/spreadImages/tax/busi_img_swchlist1.jpg');
-    background-size: 100% 101%;
+    background-size: 101% 101%;
     background-position: center;
     background-repeat: no-repeat;
     border: 1px solid rgba(205, 205, 205, 0.3);
@@ -139,7 +138,7 @@ export default {
       display: flex;
       align-items: flex-end;
       justify-content: space-around;
-      border-bottom: 1px solid #f4f4f4;
+      border-bottom: 1px dashed #f4f4f4;
       &-big {
         font-size: 34px;
         line-height: 34px;

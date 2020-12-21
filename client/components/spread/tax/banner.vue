@@ -262,7 +262,7 @@ export default {
         height: 81px;
         line-height: 26px;
         font-family: PingFang SC;
-        font-weight: bold;
+        font-weight: 400;
         color: #555555;
         padding: 24px 0 31px;
         display: flex;
@@ -270,6 +270,7 @@ export default {
         > span {
           display: inline-block;
           color: #4974f5;
+          font-weight: bold;
         }
       }
     }

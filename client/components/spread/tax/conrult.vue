@@ -3,9 +3,9 @@
     <div class="conrult-title">量身打造各行各业稅收解決方案</div>
     <div class="conrult-banner">
       <sp-grid :border="false" :column-num="4">
-        <sp-grid-item v-for="(index, i) of banners" :key="i">
-          <div class="conrult-banner-img" :style="index.style"></div>
-          <div class="conrult-banner-font">{{ index.title }}</div>
+        <sp-grid-item v-for="(item, i) of banners" :key="i">
+          <div class="conrult-banner-img" :style="item.style"></div>
+          <div class="conrult-banner-font">{{ item.title }}</div>
         </sp-grid-item>
       </sp-grid>
     </div>
