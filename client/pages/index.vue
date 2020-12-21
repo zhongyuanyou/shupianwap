@@ -1,5 +1,5 @@
 <template>
-  <div class="page-content">
+  <div ref="homeRef" class="page-content">
     <!-- S 搜索 + 大banner -->
     <SearchBanner
       ref="searchBannerRef"

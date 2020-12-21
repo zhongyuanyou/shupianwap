@@ -156,7 +156,7 @@ export default {
           document.documentElement.scrollTop ||
           document.body.scrollTop // 滚动条距离顶部的位置
         const pageScrollHeight = document.body.scrollHeight // 页面文档的总高度
-        const pageClientHeight = document.body.clientHeight + 1 // 页面视口的高度
+        const pageClientHeight = window.innerHeight // 窗口文档显示区域的高度
         // 监听页面是否滚动到底部加载更多数据
         if (Math.ceil(pageScrollTop + pageClientHeight) >= pageScrollHeight) {
           this.loading = true

@@ -190,7 +190,7 @@ export default {
         !this.tabData[this.active].noMore
       ) {
         const pageScrollHeight = document.body.scrollHeight // 页面文档的总高度
-        const pageClientHeight = document.body.clientHeight + 1 // 页面视口的高度
+        const pageClientHeight = window.innerHeight // 窗口文档显示区域的高度
         // 监听页面是否滚动到底部加载更多数据
         if (Math.ceil(scrollTop + pageClientHeight) >= pageScrollHeight) {
           this.loading = true
