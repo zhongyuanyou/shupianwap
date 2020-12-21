@@ -1,8 +1,13 @@
+/**
+ * @author xyg
+ * @since 2020/12/01
+ */
 import { goods } from '@/api/index'
 export default {
   methods: {
     getServeListReq() {
       console.log('serveGoodsListData', this.serveGoodsListData)
+      // this.skeletonLoading = true
       goods
         .searchServeGoodsList({ axios: this.$axios }, this.formData)
         .then((data) => {
@@ -27,10 +32,12 @@ export default {
             // todo 提示没有数据
             this.listShow = false
           }
+          this.skeletonLoading = false
         })
         .catch((err) => {
           // todo 提示没有数据
           this.listShow = false
+          this.skeletonLoading = false
           console.error(err)
         })
     },
@@ -95,7 +102,7 @@ export default {
       // console.log('this.searchText', this.searchText)
       // console.log('formData', this.formData)
       console.log('reqType', this.reqType)
-      this.listShow = true
+      // this.listShow = true
       if (this.reqType === 'serve') {
         this.getServeListReq()
       } else {

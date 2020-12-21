@@ -1,5 +1,6 @@
 <template>
   <div class="serveGoods">
+    <!-- S筛选项 -->
     <sp-dropdown-menu ref="dropDownMenu">
       <sp-dropdown-item
         ref="item"
@@ -29,7 +30,11 @@
         @close="close(1)"
       />
     </sp-dropdown-menu>
+    <!-- E筛选项 -->
+    <!-- S下载App -->
     <install-app v-show="listShow" ref="installApp" />
+    <!-- E下载App -->
+    <!--S商品列表-->
     <sp-list
       v-show="listShow"
       v-model="loading"
@@ -48,12 +53,25 @@
         :item-data="item"
       />
     </sp-list>
-    <Subscribe v-show="!listShow" />
+    <div>
+      <sp-skeleton
+        v-for="item in 10"
+        :key="item"
+        title
+        :row="3"
+        :loading="skeletonLoading"
+        style="margin-top: 10px"
+      ></sp-skeleton>
+    </div>
+    <!--E商品列表-->
+    <!--S订阅-->
+    <Subscribe v-show="!listShow && !skeletonLoading" />
+    <!--E订阅-->
   </div>
 </template>
 
 <script>
-import { DropdownMenu, DropdownItem, List } from '@chipspc/vant-dgg'
+import { DropdownMenu, DropdownItem, List, Skeleton } from '@chipspc/vant-dgg'
 import InstallApp from '@/components/common/app/InstallApp'
 import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
@@ -69,6 +87,7 @@ export default {
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
     [List.name]: List,
+    [Skeleton.name]: Skeleton,
     ServiceSelect,
     BottomConfirm,
     InstallApp,
@@ -109,7 +128,8 @@ export default {
         classCodes: '',
         keywords: '',
       },
-      listShow: true,
+      skeletonLoading: true,
+      listShow: false,
       loading: false,
       finished: false,
       selectValue: '',

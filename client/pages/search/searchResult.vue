@@ -59,7 +59,7 @@ import { WorkTabs, WorkTab } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import serveGoods from '@/components/list/ServeGoods'
 import JyGoods from '@/components/list/JyGoods'
-// import searchList from '@/mixins/searchList'
+import addSearchHistory from '@/mixins/addSearchHistory'
 import { goods, dict } from '@/api/index'
 export default {
   name: 'SearchResult',
@@ -70,7 +70,7 @@ export default {
     serveGoods,
     JyGoods,
   },
-  // mixins: [searchList],
+  mixins: [addSearchHistory],
   data() {
     return {
       formData: {
@@ -169,6 +169,7 @@ export default {
       const newQuery = JSON.parse(JSON.stringify(query))
       newQuery.keywords = this.formData.searchText
       this.$router.replace({ path, query: newQuery })
+      this.addSearchHistoryMixin({ name: this.currentInputText, isJumpLink: 0 })
     },
     searchInputHandle() {},
     getTabVue(key, val) {
