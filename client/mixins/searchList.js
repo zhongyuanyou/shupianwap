@@ -13,10 +13,15 @@ export default {
         .then((data) => {
           console.log(data)
           if (JSON.stringify(data.goods) !== '{}') {
+            // 数据里面商品有值
             this.serveGoodsListData = [
               ...this.serveGoodsListData,
               ...data.goods.records,
             ]
+            if (this.formData.start === 1) {
+              // 提示查找到多少条资源
+              this.searchToast(`共找到${data.goods.totalCount}条资源`)
+            }
             if (data.goods.records.length < 10) {
               this.finished = true
             } else {
@@ -59,13 +64,21 @@ export default {
             JSON.stringify(data.filters) !== '{}'
           ) {
             // 处理筛选项数据
-            this.jyFilterData[this.currentTabJyCode] = data.filters
+            this.$set(this.jyFilterData, this.currentTabJyCode, data.filters)
             this.formData[this.currentTabJyCode].needTypes = 0
           }
           if (JSON.stringify(data.goods) !== '{}') {
-            this.jyGoodsListData[this.currentTabJyCode] = data.goods.records
+            // 数据里面商品有值
+            this.jyGoodsListData[this.currentTabJyCode] = [
+              ...this.jyGoodsListData[this.currentTabJyCode],
+              ...data.goods.records,
+            ]
           } else {
             this.jyGoodsListData[this.currentTabJyCode] = []
+          }
+          if (this.formData[this.currentTabJyCode].start === 1) {
+            // 提示查找到多少条资源
+            this.searchToast(`共找到${data.goods.totalCount}条资源`)
           }
           if (data.goods.records.length < 10) {
             this.finished = true
@@ -81,14 +94,16 @@ export default {
           }
           // 如果没有计算maxHeight，则需要在筛选数据出来后计算列表的最大高
           if (this.maxHeight <= 0) {
-            /* console.log(this.$refs.installApp)
-            console.log(this.$refs.dropDownMenu)
-            console.log(this.$refs.spTabs)
-            console.log(this.$el)
-            console.log(
-              document.querySelectorAll('.sp-tabs-self .sp-tabs__wrap')
-            ) */
-            this.computedHeight()
+            this.$nextTick(() => {
+              console.log(this.$refs.installApp)
+              console.log(this.$refs.dropDownMenu)
+              console.log(this.$refs.spTabs)
+              console.log(this.$el)
+              console.log(
+                document.querySelectorAll('.sp-tabs-self .sp-tabs__wrap')
+              )
+              this.computedHeight()
+            })
           }
         })
         .catch((err) => {
@@ -115,6 +130,15 @@ export default {
       // console.log('reqType', this.reqType)
       // console.log('serveGoodsListData', this.serveGoodsListData)
       // console.log('jyGoodsListData', this.jyGoodsListData)
+    },
+    searchToast(message) {
+      // 轻提示
+      this.$spToast({
+        icon: 'toast_ic_comp',
+        message,
+        duration: 1500,
+        forbidClick: true,
+      })
     },
   },
   mounted() {},

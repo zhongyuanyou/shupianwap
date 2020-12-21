@@ -105,7 +105,7 @@ module.exports = {
     css: [
         "~assets/css/reset.css",
         "~assets/icons/iconfont.css",
-        "~assets/styles/reset-vant.css",
+        "~assets/styles/reset-vant.less",
     ],
     styleResources: {
         less: "~/assets/styles/variables.less",
@@ -116,6 +116,7 @@ module.exports = {
         { src: "@/plugins/dgg-md", ssr: false },
         { src: "@/plugins/my-icon", ssr: true },
         { src: "@/plugins/vconsole", ssr: false },
+        { src: "@/plugins/sp-toast", ssr: false },
     ],
     buildModules: ["@nuxtjs/eslint-module"],
     modules: [

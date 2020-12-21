@@ -67,6 +67,9 @@
     <!--S订阅-->
     <Subscribe v-show="!listShow && !skeletonLoading" />
     <!--E订阅-->
+    <!--S中间轻提示-->
+    <loading-center v-show="false" />
+    <!--E中间轻提示-->
   </div>
 </template>
 
@@ -79,6 +82,7 @@ import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
 import clone from '~/utils/clone'
 import searchList from '@/mixins/searchList'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
 export default {
   name: 'ServeGoods',
@@ -88,6 +92,7 @@ export default {
     [DropdownItem.name]: DropdownItem,
     [List.name]: List,
     [Skeleton.name]: Skeleton,
+    LoadingCenter,
     ServiceSelect,
     BottomConfirm,
     InstallApp,

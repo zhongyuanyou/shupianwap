@@ -47,13 +47,12 @@
           </sp-list>
           <!--E商品列表-->
         </template>
-        <div>
+        <div v-if="!jyFilterData[item.code]">
           <sp-skeleton
             v-for="_index in 10"
             :key="_index"
             title
             :row="3"
-            :loading="!jyFilterData[item.code]"
             style="margin-top: 10px"
           ></sp-skeleton>
         </div>
@@ -268,11 +267,11 @@ export default {
       })
     },
     initGoodsList() {
-      console.log('initGoodsList')
+      console.log('initGoodsList', 'aaaaaaaaaaaaaaaaaaaaaaa')
       // 获取初始数据
       this.formData[this.currentTabJyCode].start = 1
-      this.jyGoodsListData[this.currentTabJyCode] = []
       this.loading = true
+      this.jyGoodsListData[this.currentTabJyCode] = []
       this.finished = false
       this.searchKeydownHandle()
     },
@@ -325,10 +324,10 @@ export default {
       // 计算列表的最大高
       const installAPPHeight = this.$refs.installApp
         ? this.$refs.installApp[0].$el.clientHeight
-        : -1000
+        : 10000
       const dropDownMenuHeight = this.$refs.dropDownMenu
         ? this.$refs.dropDownMenu[0].$el.clientHeight
-        : -1000
+        : 10000
       const topHeight = this.$el.getBoundingClientRect().top
       const spTabsHeight = document.querySelectorAll(
         '.sp-tabs-self .sp-tabs__wrap'
