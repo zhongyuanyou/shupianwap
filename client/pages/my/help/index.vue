@@ -12,19 +12,19 @@
       <!-- S 功能 -->
       <div class="func-list">
         <div>
-          <img src="" alt="" />
+          <img src="../../../assets/temporary/home/help_icon_pass.png" alt="" />
           <span>修改登录密码</span>
         </div>
         <div>
-          <img src="" alt="" />
+          <img src="../../../assets/temporary/home/help_icon_tel.png" alt="" />
           <span>实名认证</span>
         </div>
         <div>
-          <img src="" alt="" />
+          <img src="../../../assets/temporary/home/help_icon_name.png" alt="" />
           <span>免打扰设置</span>
         </div>
         <div>
-          <img src="" alt="" />
+          <img src="../../../assets/temporary/home/help_icon_msg.png" alt="" />
           <span>我要吐槽</span>
         </div>
       </div>
@@ -276,7 +276,6 @@ export default {
         > img {
           width: 48px;
           height: 48px;
-          background: #c2c2c2;
         }
         > span {
           font-size: 24px;
