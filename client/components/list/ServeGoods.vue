@@ -40,7 +40,7 @@
       v-model="loading"
       :finished="finished"
       :style="{
-        maxHeight: maxHeight,
+        maxHeight: `${maxHeight}px`,
       }"
       finished-text="没有更多了"
       class="goods-content"
@@ -166,6 +166,7 @@ export default {
       })
       // 分类数据
       this.typeData = clone(val.typeData)
+      this.selectValue = this.option[0].value
     },
     activeData(val) {
       if (this.saveActiveData.length && this.saveActiveData[0].code !== -1) {
@@ -177,17 +178,6 @@ export default {
     },
   },
   mounted() {
-    this.$nextTick(() => {
-      const installAPPHeight = this.$refs.installApp.$el.clientHeight
-      const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
-      const topHeight = this.$el.getBoundingClientRect().top
-      this.maxHeight =
-        document.body.clientHeight -
-        installAPPHeight -
-        dropDownMenuHeight -
-        topHeight +
-        'px'
-    })
     this.$emit('goodsList', 'serve', this)
     // console.log('this.searchText', this.searchText)
     this.formData.keywords = this.searchText
@@ -204,11 +194,12 @@ export default {
     },
     handleSelect(val) {
       // 分类选择
-      console.log(val)
+      // console.log(val)
       this.activeData = val
     },
     open(index) {},
     close(index) {
+      console.log('index', index)
       // 关闭下拉选择框
       if (
         index === 1 &&
@@ -217,7 +208,7 @@ export default {
       ) {
         // 给下拉标题增加选中
         this.addClass('active', 1)
-      } else {
+      } else if (index === 1) {
         this.removeClass('active', 1)
       }
       if (index === 0) {
