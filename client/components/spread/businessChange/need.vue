@@ -37,17 +37,17 @@ export default {
       ProductList: [
         {
           code: 1,
-          img: require('~/assets/spreadImages/agency/busi_img_dljzbl01@1,5x.jpg'),
+          img: require('~/assets/spreadImages/businessChange/busi_img_gsbgbl01.jpg'),
           url: '',
         },
         {
           code: 2,
-          img: require('~/assets/spreadImages/agency/busi_img_dljzbl02@1,5x.jpg'),
+          img: require('~/assets/spreadImages/businessChange/busi_img_gsbgbl02.jpg'),
           url: '',
         },
         {
           code: 3,
-          img: require('~/assets/spreadImages/agency/busi_img_dljzbl03@1,5x.jpg'),
+          img: require('~/assets/spreadImages/businessChange/busi_img_gsbgbl03.jpg'),
           url: '',
         },
       ],

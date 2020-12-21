@@ -22,7 +22,7 @@
     <Choose />
     <!-- e 为什么选择薯片平台-->
     <!-- s 咨询规划师 -->
-    <Planners :data="plannersList" />
+    <Planners :data="plannersList" :title="plannersTitle" />
     <!-- e 咨询规划师 -->
     <!-- s 可能需要 -->
     <Need />
@@ -61,6 +61,7 @@ export default {
   data() {
     return {
       title: '代理记账',
+      plannersTitle: '咨询规划师',
       // 轮播列表
       imgList: [
         {
