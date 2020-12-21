@@ -119,7 +119,7 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
-  // app原生路由跳转
+  // app定位
   dggLocation: (fn = () => {}) => {
     Bridge.callHandler('dgg_location', {}, (res) => {
       handleRequest(res, fn)

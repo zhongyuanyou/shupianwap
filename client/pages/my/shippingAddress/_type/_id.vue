@@ -145,6 +145,18 @@ export default {
     if (this.$route.params.type === 'edit') {
       this.getAddressDetail()
     }
+    // 判断是否在app中，若在，则执行发送导航头数据的方法
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle(
+        {
+          title:
+            this.$route.params.type === 'edit'
+              ? '编辑收货地址'
+              : '新建收货地址',
+        },
+        (res) => {}
+      )
+    }
   },
   methods: {
     onClickLeft() {
@@ -157,7 +169,14 @@ export default {
         this.ruleForm.name = ''
       } else if (val === 2) {
         this.$appFn.dggLocation((res) => {
-          console.log('res')
+          // 拿到app定位后端数据并赋值
+          const addressJSON = JSON.parse(res.address)
+          this.areaTxt =
+            addressJSON.province + addressJSON.city + addressJSON.district
+          this.areaList[0] = { name: addressJSON.province, code: '' }
+          this.areaList[1] = { name: addressJSON.city, code: '' }
+          this.areaList[2] = { name: addressJSON.district, code: '' }
+          this.ruleForm.address = addressJSON.address
         })
       }
     },
