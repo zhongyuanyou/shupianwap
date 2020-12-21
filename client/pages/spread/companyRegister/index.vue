@@ -76,7 +76,7 @@ import RegisterReady from '@/components/spread/companyRegistry/RegisterReady'
 import Consult from '@/components/spread/companyRegistry/Consult'
 import QueryPhone from '@/components/spread/companyRegistry/QueryPhone'
 import Bottom from '@/components/spread/companyRegistry/bottom'
-import Planner from '@/components/spread/common/planner'
+import Planner from '~/components/spread/common/GuiHuaShiSwipe'
 
 export default {
   name: 'CompanyRegistry',

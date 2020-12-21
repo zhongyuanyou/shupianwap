@@ -94,7 +94,7 @@ export default {
   width: calc(100% - 80px);
   margin: 0 auto;
   padding: 30px 0;
-  font-family: @PingFangSC;
+  font-family: PingFang SC;
 
   .title {
     font-size: 40px;
@@ -117,7 +117,7 @@ export default {
       border-radius: 8px;
       box-sizing: border-box;
       position: relative;
-      border: 1px solid rgba(205, 205, 205, 0.5);
+      border: 1px solid rgba(205, 205, 205, 0.3);
       height: 22px;
       .middle-transition {
         display: flex;

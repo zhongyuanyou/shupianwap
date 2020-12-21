@@ -1,6 +1,6 @@
 <template>
   <div class="planner">
-    <div class="planner-title">咨询规划师</div>
+    <div class="planner-title">{{ title }}</div>
     <div class="planner-flex">
       <sp-swipe
         :autoplay="3000"
@@ -9,7 +9,7 @@
         class="planner-content my-swipe"
       >
         <sp-swipe-item
-          v-for="item of planners"
+          v-for="item of data"
           :key="item.id"
           class="planner-content-div"
         >
@@ -66,16 +66,33 @@
 <script>
 import { Swipe, SwipeItem } from '@chipspc/vant-dgg'
 export default {
-  name: 'Planner',
+  name: 'GuihuashiSwipe',
   components: {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
   },
   props: {
-    planners: {
+    data: {
       type: Array,
       default: () => {
-        return []
+        return [
+          {
+            id: 1,
+            type: '金牌规划师',
+            avatarImg: '',
+            name: '郭亮亮',
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: 12345679985,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+          },
+        ]
+      },
+    },
+    title: {
+      type: String,
+      default: () => {
+        return '规划师'
       },
     },
   },

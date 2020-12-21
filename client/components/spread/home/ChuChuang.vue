@@ -80,7 +80,7 @@ export default {
   width: calc(100% - 80px);
   margin: 0 auto;
   padding: 30px 0;
-  font-family: @PingFangSC;
+  font-family: PingFang SC;
 
   .title {
     font-size: 40px;
@@ -117,12 +117,14 @@ export default {
       }
       .product-price {
         font-size: 28px;
+        line-height: 28px;
         font-weight: bold;
         color: #ec5330;
         padding-bottom: 5px;
       }
       .product-price-suffix {
         font-size: 20px;
+        line-height: 20px;
         color: #ec5330;
       }
     }

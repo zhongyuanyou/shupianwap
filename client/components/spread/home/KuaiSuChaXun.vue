@@ -160,7 +160,7 @@ export default {
   .all-form {
     width: 670px;
     background: #ffffff;
-    border: 1px solid rgba(205, 205, 205, 0.5);
+    border: 1px solid rgba(205, 205, 205, 0.3);
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.08);
     border-radius: 8px;
     padding: 47px 40px 32px 40px;

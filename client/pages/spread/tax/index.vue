@@ -38,7 +38,7 @@ import Conrult from '~/components/spread/tax/conrult'
 import Super from '~/components/spread/tax/super'
 import Process from '~/components/spread/tax/process'
 // import Planner from '~/components/spread/tax/planner'
-import Planner from '~/components/spread/common/planner'
+import Planner from '~/components/spread/common/GuiHuaShiSwipe'
 import Maby from '~/components/spread/tax/maby'
 import Bottom from '~/components/spread/tax/bottom'
 export default {
