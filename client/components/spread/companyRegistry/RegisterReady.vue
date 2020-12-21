@@ -83,7 +83,7 @@ export default {
     font-weight: bold;
     color: #1a1a1a;
     line-height: 52px;
-    padding-bottom: 30px;
+    padding-bottom: 32px;
     padding-top: 64px;
   }
   .message {
@@ -173,6 +173,9 @@ export default {
     }
   }
   .superiority {
+    h3 {
+      padding-top: 38px;
+    }
     .superiority-item {
       ul {
         display: flex;

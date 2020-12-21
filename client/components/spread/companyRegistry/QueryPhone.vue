@@ -2,16 +2,11 @@
   <div class="query-phone">
     <h5>有疑问？千万企服专家为您免费解答</h5>
     <div>
-      <span
-        ><sp-image
-          round
-          width="14px"
-          height="18px"
-          :src="
-            require('' +
-              '~/assets/spreadImages/company_registry/busi_img_fwrx.png')
-          "
-      /></span>
+      <span>
+        <span class="icon">
+          <my-icon name="notify_ic_tel" size="20px" color="#4974F5">
+          </my-icon></span
+      ></span>
       <span>服务热线：</span>
       <span>4000 - 535800</span>
       <button @click="QueryPhone">立即咨询</button>
@@ -42,7 +37,7 @@ export default {
     font-size: 30px;
     font-weight: bold;
     color: #222222;
-    padding: 32px 0;
+    padding: 64px 0px 32px;
   }
   > div {
     display: block;
@@ -54,10 +49,11 @@ export default {
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
-    .sp-image {
-      margin: 22px 4px 22px 26px;
+    .icon {
+      display: inline-block;
+      vertical-align: middle;
+      margin: -44px -2px 10px 20px;
       height: 80px;
-      line-height: 80px;
     }
     span:nth-child(2),
     span:nth-child(3) {
@@ -68,7 +64,7 @@ export default {
     }
     span:nth-child(3) {
       font-size: 40px;
-      font-family: Impact;
+      font-family: @Bebas;
       color: #4974f5;
     }
     > button {
