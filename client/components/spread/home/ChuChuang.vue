@@ -104,7 +104,6 @@ export default {
       .middle-transition {
         display: flex;
         align-items: center;
-        align-content: center;
         span {
           display: block;
         }
