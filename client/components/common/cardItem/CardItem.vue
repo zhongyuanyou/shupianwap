@@ -161,12 +161,13 @@ export default {
   }
   .space_img_con {
     position: relative;
+    width: 248px;
     height: 180px;
     .hot_con_pos {
       position: absolute;
       right: 12px;
       bottom: 12px;
-      z-index: 5;
+      z-index: 1;
     }
   }
   .hot_con {

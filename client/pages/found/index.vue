@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="found">
     <sp-top-nav-bar special-layout :placeholder="true" fixed>
       <template #title>
         <sp-work-tabs
@@ -108,5 +108,8 @@ export default {
 
 <style lang="less" scoped>
 .found {
+  /deep/ .sp-top-nav-bar {
+    z-index: 5;
+  }
 }
 </style>
