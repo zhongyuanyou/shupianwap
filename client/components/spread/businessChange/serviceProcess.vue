@@ -106,7 +106,7 @@ export default {
         .process-content {
           display: flex;
           flex-direction: column;
-          align-items: start;
+          align-items: flex-start;
           margin-left: 40px;
           > span {
             display: block;
