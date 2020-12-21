@@ -27,6 +27,7 @@
     <!-- s 底部导航 -->
     <Bottom />
     <!-- e 底部导航 -->
+    <dgg-im-company></dgg-im-company>
   </div>
 </template>
 
@@ -40,7 +41,7 @@ import ServiceProcess from '../../../components/spread/businessChange/servicePro
 import Planners from '../../../components/spread/common/GuiHuaShiSwipe'
 import Need from '../../../components/spread/businessChange/need'
 import Bottom from '../../../components/spread/agency/bottom'
-
+import dggImCompany from '../../../components/spread/dggImCompany'
 export default {
   components: {
     Header,
@@ -52,6 +53,7 @@ export default {
     Planners,
     Need,
     Bottom,
+    dggImCompany,
   },
   data() {
     return {

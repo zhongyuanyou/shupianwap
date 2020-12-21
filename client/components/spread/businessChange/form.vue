@@ -38,6 +38,9 @@
           v-model="phonenumber"
           label="手机号"
           placeholder="信息保护中，仅官方可见"
+          type="text"
+          onkeyup="value=value.replace(/[^\d]/g,'')"
+          maxlength="11"
           @click="verificationshow()"
         />
         <!-- s 获取验证码 -->
@@ -65,7 +68,7 @@
       </div>
       <!-- s 按钮 -->
       <button class="free-btn" @click="freeBtn()">
-        <span>免费定制方案</span>
+        <span>立即获取方案</span>
       </button>
       <!-- e 按钮 -->
       <div class="bottom-lables">
@@ -171,7 +174,6 @@ export default {
   margin-top: -80px;
   padding: 0 40px;
   position: relative;
-  z-index: 2;
   .form-box {
     width: 100%;
     background: #ffffff;
