@@ -130,7 +130,7 @@ export default {
         width: 660px;
         height: 207px;
         background: url('~assets/spreadImages/tax/busi_img_swchbg01.png');
-        background-size: 100% 100%;
+        background-size: 101% 101%;
         border: 1px solid rgba(205, 205, 205, 0.3);
         box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
