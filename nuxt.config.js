@@ -86,15 +86,19 @@ module.exports = {
         charset: 'utf-8',
       },
       {
-        src:
-                    'https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-2.0.18.js',
+        src: 'https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-2.0.18.js',
         ssr: false,
         type: 'text/javascript',
         charset: 'utf-8',
       },
       {
-        src:
-                    'https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js',
+        src: 'https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js',
+        ssr: false,
+        type: 'text/javascript',
+        charset: 'utf-8',
+      },
+      {
+        src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
         ssr: false,
         type: 'text/javascript',
         charset: 'utf-8',

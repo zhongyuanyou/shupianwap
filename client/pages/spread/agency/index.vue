@@ -22,7 +22,7 @@
     <Choose />
     <!-- e 为什么选择薯片平台-->
     <!-- s 咨询规划师 -->
-    <Planners :plannerslist="plannerslist" />
+    <Planners :data="plannersList" :title="plannersTitle" />
     <!-- e 咨询规划师 -->
     <!-- s 可能需要 -->
     <Need />
@@ -41,7 +41,7 @@ import Service from '../../../components/spread/agency/service'
 import ServiceContent from '../../../components/spread/agency/servicecontent'
 import Process from '../../../components/spread/agency/process'
 import Choose from '../../../components/spread/agency/choose'
-import Planners from '../../../components/spread/agency/planners'
+import Planners from '../../../components/spread/common/GuiHuaShiSwipe'
 import Bottom from '../../../components/spread/agency/bottom'
 import Need from '../../../components/spread/agency/need'
 
@@ -61,6 +61,7 @@ export default {
   data() {
     return {
       title: '代理记账',
+      plannersTitle: '咨询规划师',
       // 轮播列表
       imgList: [
         {
@@ -111,30 +112,36 @@ export default {
         },
       ],
       // 规划师列表
-      plannerslist: [
+      plannersList: [
         {
-          code: 1,
+          id: 1,
+          type: '金牌规划师',
+          avatarImg: '',
           name: '郭亮亮',
-          points: 138,
-          count: 258,
-          headimg: '',
-          lable: ['工商注册', '财税咨询', '税务筹划'],
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
         },
         {
-          code: 2,
+          id: 2,
+          type: '金牌规划师',
+          avatarImg: '',
           name: '郭亮亮',
-          points: 138,
-          count: 258,
-          headimg: '',
-          lable: ['工商注册', '财税咨询', '税务筹划'],
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
         },
         {
-          code: 3,
+          id: 3,
+          type: '金牌规划师',
+          avatarImg: '',
           name: '郭亮亮',
-          points: 138,
-          count: 258,
-          headimg: '',
-          lable: ['工商注册', '财税咨询', '税务筹划'],
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
         },
       ],
     }

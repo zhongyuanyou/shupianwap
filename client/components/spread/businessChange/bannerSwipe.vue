@@ -1,11 +1,6 @@
 <template>
-  <div class="banner">
-    <sp-swipe
-      class="my-swipe"
-      :autoplay="3000"
-      indicator-color="#FFFFFF"
-      :show-indicators="imglist.length > 1 ? true : false"
-    >
+  <div class="bannerSwipe">
+    <sp-swipe class="my-swipe" :autoplay="3000" indicator-color="#FFFFFF">
       <sp-swipe-item v-for="(item, index) in imglist" :key="index">
         <router-link :to="item.url"><img :src="item.img" alt="" /></router-link>
       </sp-swipe-item>
@@ -24,7 +19,7 @@ export default {
         return {
           code: 1,
           url: '',
-          img: require('~/assets/spreadImages/agency/busi_img_dljzbanner@1,5x.jpg'),
+          img: require('~/assets/spreadImages/businessChange/busi_img_gsbgbanner01.jpg'),
         }
       },
     },
@@ -36,7 +31,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.banner {
+.bannerSwipe {
   width: 100%;
   .my-swipe .sp-swipe-item {
     color: #fff;
