@@ -108,6 +108,7 @@ const DEFAULT_PAGE = {
 
 export default {
   name: 'SelectPhone',
+  layout: 'keepAlive',
   components: {
     [TopNavBar.name]: TopNavBar,
     [NavSearch.name]: NavSearch,
