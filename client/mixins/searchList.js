@@ -38,6 +38,15 @@ export default {
             this.listShow = false
           }
           this.skeletonLoading = false
+          this.$nextTick(() => {
+            const installAPPHeight = this.$refs.installApp.$el.clientHeight
+            const installAPPTop = this.$refs.installApp.$el.getBoundingClientRect()
+              .top
+            // const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
+            // const topHeight = this.$el.getBoundingClientRect().top
+            this.maxHeight =
+              document.body.clientHeight - installAPPHeight - installAPPTop
+          })
         })
         .catch((err) => {
           // todo 提示没有数据
@@ -95,13 +104,13 @@ export default {
           // 如果没有计算maxHeight，则需要在筛选数据出来后计算列表的最大高
           if (this.maxHeight <= 0) {
             this.$nextTick(() => {
-              console.log(this.$refs.installApp)
+              /* console.log(this.$refs.installApp)
               console.log(this.$refs.dropDownMenu)
               console.log(this.$refs.spTabs)
               console.log(this.$el)
               console.log(
                 document.querySelectorAll('.sp-tabs-self .sp-tabs__wrap')
-              )
+              ) */
               this.computedHeight()
             })
           }
@@ -136,7 +145,7 @@ export default {
       this.$spToast({
         icon: 'toast_ic_comp',
         message,
-        duration: 1500,
+        duration: 1000,
         forbidClick: true,
       })
     },
