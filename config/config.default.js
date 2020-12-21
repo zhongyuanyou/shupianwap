@@ -1,5 +1,6 @@
 'use strict';
 const path = require('path');
+const fs = require(('fs'));
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
@@ -16,6 +17,9 @@ module.exports = appInfo => {
       path.join(appInfo.root, 'logs/unittest/common-error.log'),
       path.join(appInfo.root, 'logs/prod/common-error.log'),
     ],
+  };
+  config.siteFile = {
+    '/favicon.ico': fs.readFileSync(path.join(__dirname, './../client/static/spread.png')),
   };
   return {
     ...config,
