@@ -62,6 +62,10 @@ export default {
       document.body.clientHeight -
       this.$el.getBoundingClientRect().top -
       this.$el.getBoundingClientRect().height
+    if (this.filterData.length) {
+      // 处理筛选项
+      this.resetFilterData(clone(this.filterData))
+    }
   },
   methods: {
     resetAllSelect() {
