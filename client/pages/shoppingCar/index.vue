@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-20 23:27:15
+ * @LastEditTime: 2020-12-21 11:55:55
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -308,13 +308,13 @@ export default {
         case 'registerAddress':
           this.$router.push({
             name: 'detail-selectAddress',
-            query: { classCode },
+            query: { classCode, redirectType: 'wap', redirect: '/shoppingcar' },
           })
           break
         case 'phone':
           this.$router.push({
             name: 'detail-selectPhone',
-            query: { classCode },
+            query: { classCode, redirectType: 'wap', redirect: '/shoppingcar' },
           })
           break
       }

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-19 15:56:38
+ * @LastEditTime: 2020-12-21 14:21:15
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -81,6 +81,8 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from 'vuex'
+
 import { SwipeCell, Card, Button, Toast } from '@chipspc/vant-dgg'
 
 import MainGoodsItem from './MainGoodsItem'
@@ -89,6 +91,7 @@ import SkuService from '@/components/common/sku/SkuService'
 import AsyncCheckbox from '@/components/common/checkbox/AsyncCheckbox'
 
 import clone from '@/utils/clone'
+import fingerprint from '@/utils/fingerprint'
 
 import { shoppingCar } from '@/api'
 
@@ -148,9 +151,14 @@ export default {
         productId: '',
         addServiceList: [], // 增值服务
       },
+      config: { userId: '', deviceCode: '', reqArea: '', terminalCode: '' }, // 不同平台的配置
     }
   },
   computed: {
+    ...mapState({
+      cityCode: (state) => state.city.currentCity.code,
+      userInfo: (state) => state.user.userInfo,
+    }),
     checked() {
       return !!this.commodityData.shopIsSelected
     },
@@ -440,12 +448,36 @@ export default {
     // 资源服务的选择
     selecteResourceService(value) {},
 
+    // 根据不同的平台差异，获取不同的参数
+    async uPGetConfig() {
+      if (this.config.deviceCode) return { ...this.config }
+
+      let userId = ''
+      let deviceCode = ''
+      let reqArea = ''
+      let terminalCode = ''
+
+      // TODO 获取当前的运行环境
+      if (this.runEnv === 'app') {
+        terminalCode = 'COMDIC_TERMINAL_APP'
+      } else {
+        reqArea = this.cityCode
+        terminalCode = 'COMDIC_TERMINAL_WAP'
+        deviceCode = await fingerprint()
+        userId = this.userInfo.userId
+      }
+      const config = { userId, deviceCode, reqArea, terminalCode }
+      this.config = config
+      return config
+    },
+
     // 第一次获取sku属性
     async getSkuData() {
       try {
+        const config = await this.uPGetConfig()
         const productId = this.commodityData.productId || '607991345402771561' // '607991345402771561'
         const attrValKey = this.commodityData.skuAttrKey || 'SXZ20201211050014' // SXZ20201211050014
-        const productPromise = shoppingCar.productDetail({ productId })
+        const productPromise = shoppingCar.productDetail({ productId }, config)
         const skuPromise = this.getGoodsDetail(attrValKey)
         const [productDetail = {}, skuDetail = {}] = await Promise.all([
           productPromise,

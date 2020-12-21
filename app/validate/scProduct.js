@@ -69,7 +69,7 @@ module.exports = {
       goodsPriceEnd: { type: 'number', required: false }, // 资源价格-止
       fieldList: { type: 'array', required: false }, // 资源字段查询
       withFieldFlg: { type: 'number', required: false }, // 需要详情标志  0不需要(默认) 1需要
-      orderBy: { type: 'id', required: false }, // 排序类型  数据字典
+      orderBy: { type: 'string', required: false }, // 排序类型  数据字典
       isAsc: { type: 'boolean', required: false }, // 是否是顺序 true顺序(默认)  false 逆序
       page: { type: 'number', required: false }, // 当前页
       limit: { type: 'number', required: false }, // 每页条数

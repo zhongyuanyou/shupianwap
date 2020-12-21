@@ -10,7 +10,7 @@
         </template>
         <template #title>
           <sp-nav-search
-            v-model="searchValue"
+            v-model="search.searchKey"
             border
             placeholder="请输入您喜欢的号码"
             class="search"
@@ -33,13 +33,13 @@
           <!-- 选择价格区间 -->
           <sp-dropdown-item
             ref="isShowPrice"
-            :title-class="dropdownPrice != '价格' ? 'title-style' : ''"
-            :title="dropdownPrice"
+            :title-class="dropdownPriceTitel != '价格' ? 'title-style' : ''"
+            :title="dropdownPriceTitel"
           >
             <div class="select-price">
               <PriceFilterComponents
                 ref="PriceFilter"
-                :price-list="priceList"
+                :price-list="formatPriceOption"
                 @minInput="minInput"
                 @maxInput="maxInput"
                 @selectItems="selectedPrices"
@@ -53,9 +53,15 @@
           </sp-dropdown-item>
           <!-- 排序 -->
           <sp-dropdown-item
-            v-model="sortValue"
-            :title-class="sortValue > 0 ? 'title-style' : ''"
-            :options="option"
+            v-model="search.sortValue"
+            :title-class="
+              formatSortOption[0] &&
+              formatSortOption[0].value !== search.sortValue
+                ? 'title-style'
+                : ''
+            "
+            :options="formatSortOption"
+            @change="handleSortChange"
           />
         </sp-dropdown-menu>
       </sp-sticky>
@@ -75,7 +81,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <CheckboxList :list="checkboxList" />
+          <CheckboxList :list="checkboxList" @operation="handleOperation" />
         </sp-list>
       </sp-pull-refresh>
     </div>
@@ -98,7 +104,7 @@ import PriceFilterComponents from '@/components/common/filters/PriceFilterCompon
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import CheckboxList from '@/components/detail/CheckboxList'
 
-import { shoppingCar } from '@/api'
+import { shoppingCar, dict } from '@/api'
 
 const DEFAULT_PAGE = {
   limit: 10,
@@ -125,49 +131,100 @@ export default {
   },
   data() {
     return {
-      searchValue: null,
-      dropdownPrice: '价格',
-      price: '价格',
-      sortValue: 0,
+      search: {
+        searchKey: '',
+        sortValue: 0,
+        price: {},
+        minPrice: '',
+        maxPrice: '',
+      },
+      dropdownPriceTitel: '价格',
       loading: false,
       error: false,
       finished: false,
       refreshing: false,
       pageOption: DEFAULT_PAGE,
-      //  选择后标题样式
-      priceList: [
-        {
-          name: '1万以下',
-          id: '1',
-        },
-        {
-          name: '1-2万',
-          id: '2',
-        },
-        {
-          name: '2-5万',
-          id: '3',
-        },
-        {
-          name: '5-10万',
-          id: '4',
-        },
-        {
-          name: '10万以上',
-          id: '5',
-        },
-      ],
-      option: [
-        { text: '默认排序', value: 0 },
-        { text: '按照价格从低到高', value: 1 },
-        { text: '按照价格从高到低', value: 2 },
-      ],
-      checkboxList: [
-        // { title: '4008886662', price: '10000' },
-      ],
+      priceOption: [],
+      sortOption: [],
+      checkboxList: [],
+      runEnv: 'browser', // 运行环境  browser: 浏览器， app:
+      redirect: this.$route.query.redirect, // 返回跳转的位置
+      redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去
+    }
+  },
+  computed: {
+    formatSortOption() {
+      if (!Array.isArray(this.sortOption)) return []
+      return this.sortOption.map((item) => {
+        const { name, code } = item || {}
+        return { text: name, value: code }
+      })
+    },
+
+    formatPriceOption() {
+      if (!Array.isArray(this.priceOption)) return []
+      return this.priceOption.map((item) => {
+        const { name, code } = item || {}
+        return { name, id: code }
+      })
+    },
+
+    // 格式化查询条件
+    formatSearchParams() {
+      const { searchKey, minPrice, maxPrice, price, sortValue } = this.search
+      let goodsPriceStart = null
+      let goodsPriceEnd = null
+      let orderBy = null
+      let isAsc = false
+      if (price.id) {
+        const matchedPrice =
+          this.priceOption.find((item) => item.code === price.id) || {}
+        // notice: 价格 需要在cms 数据字典配置 扩展第二字段  如 ext2:‘1000-2000’
+        const { ext1, ext2 } = matchedPrice
+        goodsPriceStart = ext1 || null
+        goodsPriceEnd = ext2 || null
+      } else {
+        goodsPriceStart = minPrice || null
+        goodsPriceEnd = maxPrice || null
+      }
+
+      const matchedSort = this.sortOption.find(
+        (item) => item.code === sortValue
+      )
+      if (matchedSort) {
+        const { ext1, ext2 } = matchedSort
+        orderBy = ext1
+        isAsc = !!ext2
+      }
+      return { searchKey, goodsPriceStart, goodsPriceEnd, orderBy, isAsc }
+    },
+  },
+  watch: {
+    formatSortOption: {
+      handler(newVal, oldVal) {
+        if (!this.search.sortValue) {
+          this.search.sortValue = newVal[0] && newVal[0].value
+        }
+      },
+      immediate: true,
+    },
+  },
+  created() {
+    if (process && process.client) {
+      this.getFilterOption()
     }
   },
   methods: {
+    handleSortChange(value) {
+      console.log(value)
+      // 触发 formatSearchParams 计算
+      this.search.sortValue = value
+      this.handleSearch()
+    },
+    handleSearch() {
+      this.refreshing = true
+      this.onRefresh()
+    },
     onLoad() {
       let currentPage = this.pageOption.page
       if (!this.refreshing && this.checkboxList.length && currentPage >= 1) {
@@ -180,10 +237,6 @@ export default {
       this.getList(currentPage)
         .then((data) => {
           const { totalCount } = data
-          if (this.refreshing) {
-            this.checkboxList = []
-            this.refreshing = false
-          }
           this.loading = false
           if (this.pageOption.totalCount <= this.checkboxList.length) {
             this.finished = true
@@ -203,52 +256,110 @@ export default {
     },
     onClickRight() {
       // 搜索
-      Toast('搜索')
+      this.handleSearch()
     },
     onClickLeft() {
       //  左侧返回
       Toast('返回')
-      this.$router.go(-1)
+      this.uPGoBack()
     },
     minInput(val) {
       // 最小输入框
       console.log(val)
+      this.search.price = {}
+      this.search.minInput = val
     },
     maxInput(val) {
       // 最大输入框
       console.log(val)
+      this.search.price = {}
+      this.search.maxPrice = val
     },
     selectedAllPrices(item, items) {
-      this.price = item.name
+      const { name, id } = item
+      this.search.minInput = ''
+      this.search.maxPrice = ''
+      this.search.price = { name, id }
     },
-    selectedPrices(val) {
+    selectedPrices(item) {
       // 选择价格标题显示
-      this.price = val.name
+      const { name, id } = item
+      this.search.minInput = ''
+      this.search.maxPrice = ''
+      this.search.price = { name, id }
     },
     resetPrice() {
       // 重置价格
-      this.dropdownPrice = '价格'
-      this.price = '价格'
+      this.dropdownPriceTitel = '价格'
+      this.search.price = {}
+      this.search.minInput = ''
+      this.search.maxPrice = ''
       this.$refs.PriceFilter.clearInput()
     },
     confirmPrice() {
       // 确认价格
       this.$refs.isShowPrice.toggle()
-      this.dropdownPrice = this.price
+      const { minInput, maxPrice, price } = this.search
+      let dropdownPriceTitel = '价格'
+      if (price.name) {
+        dropdownPriceTitel = price.name
+      } else if (minInput || maxPrice) {
+        dropdownPriceTitel = minInput
+          ? `${minInput}-${maxPrice}`
+          : `${maxPrice}`
+      }
+
+      this.dropdownPriceTitel = dropdownPriceTitel
+      this.handleSearch()
     },
+    handleOperation(value) {
+      const { type, data } = value || {}
+      switch (type) {
+        case 'confirm':
+          this.uPGoBack(data)
+      }
+    },
+
+    // 平台不同，跳转方式不同
+    uPGoBack(data) {
+      if (this.runEnv === 'app' && this.redirectType === 'app') {
+        // TODO  在app中 返回 且 跳转到app原生页面
+        return
+      }
+
+      // 在浏览器里 返回
+      if (data) {
+        this.$router.push({ path: this.redirect, params: { data } })
+      } else {
+        this.$router.back(-1)
+      }
+    },
+
     // 请求列表
     async getList(currentPage) {
       const { limit } = this.pageOption
+      const {
+        searchKey,
+        goodsPriceStart,
+        goodsPriceEnd,
+        orderBy,
+        isAsc,
+      } = this.formatSearchParams
       try {
         const classCode = this.$route.query.classCode
         const data = await shoppingCar.resourceList({
           classCode,
           limit,
           page: currentPage,
+          searchKey,
+          goodsPriceStart,
+          goodsPriceEnd,
+          orderBy,
+          isAsc,
         })
         console.log(data)
         if (this.refreshing) {
-          this.list = []
+          this.checkboxList = []
           this.refreshing = false
         }
         if (data) {
@@ -261,6 +372,27 @@ export default {
         return data || {}
       } catch (error) {
         console.error('getList:', error)
+        return Promise.reject(error)
+      }
+    },
+
+    // 请求过滤条件
+    async getFilterOption(currentPage) {
+      try {
+        const data = await dict.findCmsCodes(
+          { axios: this.$axios },
+          {
+            codes: 'CRISPS-C-CONDITION-400-JG,CRISPS-C-CONDITION-400-PX',
+          }
+        )
+        // console.log(data)
+        const dataObj = JSON.parse(data)
+        console.log(dataObj)
+        this.sortOption = dataObj['CRISPS-C-CONDITION-400-PX']
+        this.priceOption = dataObj['CRISPS-C-CONDITION-400-JG']
+        return data || {}
+      } catch (error) {
+        console.error('getFilterOption:', error)
         return Promise.reject(error)
       }
     },
@@ -309,7 +441,6 @@ export default {
   /deep/.title-style {
     // 下拉选择显示标题样式
     font-size: 26px;
-    font-family: PingFang SC;
     font-weight: bold;
     color: #4974f5;
   }

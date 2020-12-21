@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-21 08:58:02
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-21 08:59:55
+ * @LastEditTime: 2020-12-21 09:23:45
  * @Description: file content
  * @FilePath: /chips-wap/client/store/keepAlive.js
  */
@@ -28,6 +28,7 @@ export const mutations = {
         break
       case 'max':
         state.keepAliveProps.max = max
+        break
     }
   },
 }
