@@ -6,7 +6,11 @@
       :show-indicators="indicators"
     >
       <sp-swipe-item v-for="(item, index) in swiperData" :key="index">
-        <a :href="item.materialList[0].materialLink" class="swiper-box">
+        <a
+          href="javascript:void(0)"
+          class="swiper-box"
+          @click="adJumpHandleMixin(item.materialList[0])"
+        >
           <img :src="item.materialList[0].materialUrl" alt="" />
         </a>
       </sp-swipe-item>
@@ -16,11 +20,13 @@
 
 <script>
 import { Swipe, swipeItem } from '@chipspc/vant-dgg'
+import adJumpHandle from '~/mixins/adJumpHandle'
 export default {
   components: {
     [Swipe.name]: Swipe,
     [swipeItem.name]: swipeItem,
   },
+  mixins: [adJumpHandle],
   props: {
     swiperData: {
       type: Array,
