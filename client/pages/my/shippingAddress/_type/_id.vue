@@ -138,6 +138,7 @@ export default {
   computed: {
     ...mapState({
       userId: (state) => state.user.userInfo.userId || null,
+      isInApp: (state) => state.app.isInApp,
     }),
   },
   mounted() {
@@ -154,9 +155,11 @@ export default {
       // 点击右边区域
       if (val === 1) {
         this.ruleForm.name = ''
-        return
+      } else if (val === 2) {
+        this.$appFn.dggLocation((res) => {
+          console.log('res')
+        })
       }
-      alert('需跳转到app的地址定位页面')
     },
     select(data) {
       // 选择地址

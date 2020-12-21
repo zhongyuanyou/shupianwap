@@ -102,12 +102,14 @@ export default {
     },
     async getUserInfo() {
       // 获取用户信息
-      const params = {
-        // id: this.userId,
-        id: '607991757719633892',
-      }
-      const data = await this.$axios.get(userinfoApi.info, { params })
-      this.info = data.data
+      try {
+        const params = {
+          // id: this.userId,
+          id: '607991757719633892',
+        }
+        const data = await this.$axios.get(userinfoApi.info, { params })
+        this.info = data.data
+      } catch (err) {}
     },
   },
 }

@@ -18,7 +18,8 @@
         v-for="(item, index) in helpBannerData"
         v-show="index < 2"
         :key="index"
-        :href="item.materialList[0].materialLink"
+        href="javascript:void(0)"
+        @click="adJumpHandleMixin(item.materialList[0])"
       >
         <img class="img" :src="item.materialList[0].materialUrl" alt="" />
         <!-- <img
@@ -43,7 +44,9 @@
 </template>
 
 <script>
+import adJumpHandle from '~/mixins/adJumpHandle'
 export default {
+  mixins: [adJumpHandle],
   props: {
     helpBannerData: {
       type: Array,

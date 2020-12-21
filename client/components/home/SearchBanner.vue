@@ -5,7 +5,8 @@
   >
     <a
       v-if="fiexdBannerData.length"
-      :href="fiexdBannerData[0].materialList[0].materialLink"
+      href="javascript:void(0)"
+      @click="adJumpHandleMixin(fiexdBannerData[0].materialList[0])"
     >
       <img :src="fiexdBannerData[0].materialList[0].materialUrl" alt="" />
     </a>
@@ -39,11 +40,13 @@
 import { Sticky } from '@chipspc/vant-dgg'
 import { mapState, mapActions } from 'vuex'
 import Search from '@/components/common/search/Search'
+import adJumpHandle from '~/mixins/adJumpHandle'
 export default {
   components: {
     [Sticky.name]: Sticky,
     Search,
   },
+  mixins: [adJumpHandle],
   props: {
     // 站点列表
     cityData: {

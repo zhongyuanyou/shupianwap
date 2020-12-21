@@ -68,11 +68,11 @@ export default {
           }
           return
         }
-        document.body.scrollTop = document.documentElement.scrollTop = top -= 80
+        document.body.scrollTop = document.documentElement.scrollTop = top -= 200
         if (top <= 0) {
           clearInterval(timer)
         }
-      }, 10)
+      })
     },
   },
 }

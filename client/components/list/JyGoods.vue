@@ -14,31 +14,48 @@
       @change="changeTabs"
     >
       <sp-tab v-for="(item, index) in tabItems" :key="index" :title="item.name">
-        <jy-filters
-          ref="dropDownMenu"
-          :filter-data="jyFilterData[item.code]"
-          @activeItem="getFilterHandle"
-        />
-        <install-app v-show="listShow" ref="installApp" />
-        <sp-list
-          v-show="listShow"
-          v-model="loading"
-          :finished="finished"
-          :style="{
-            maxHeight: maxHeight,
-          }"
-          finished-text="没有更多了"
-          class="goods-content"
-          offset="30"
-          @load="onLoad"
-        >
-          <goods-item
-            v-for="(_item, _index) in jyGoodsListData[item.code]"
-            :key="_index"
-            :item-type="itemType"
-            :item-data="_item"
+        <template v-if="jyFilterData[item.code]">
+          <!--S交易筛选-->
+          <jy-filters
+            ref="dropDownMenu"
+            :filter-data="jyFilterData[item.code]"
+            @activeItem="getFilterHandle"
           />
-        </sp-list>
+          <!--E交易筛选-->
+          <!-- S下载App -->
+          <install-app v-show="listShow" ref="installApp" />
+          <!-- E下载App -->
+          <!--S商品列表-->
+          <sp-list
+            v-show="listShow"
+            v-model="loading"
+            :finished="finished"
+            :style="{
+              maxHeight: maxHeight,
+            }"
+            finished-text="没有更多了"
+            class="goods-content"
+            offset="30"
+            @load="onLoad"
+          >
+            <goods-item
+              v-for="(_item, _index) in jyGoodsListData[item.code]"
+              :key="_index"
+              :item-type="itemType"
+              :item-data="_item"
+            />
+          </sp-list>
+          <!--E商品列表-->
+        </template>
+        <div v-if="!jyFilterData[item.code]">
+          <sp-skeleton
+            v-for="_index in 10"
+            :key="_index"
+            title
+            :row="3"
+            style="margin-top: 10px"
+          ></sp-skeleton>
+        </div>
       </sp-tab>
     </sp-tabs>
     <Subscribe
@@ -50,7 +67,7 @@
 </template>
 
 <script>
-import { List, Tabs, Tab } from '@chipspc/vant-dgg'
+import { List, Tabs, Tab, Skeleton } from '@chipspc/vant-dgg'
 import InstallApp from '@/components/common/app/InstallApp'
 import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
@@ -68,6 +85,7 @@ export default {
     JyFilters,
     [Tabs.name]: Tabs,
     [Tab.name]: Tab,
+    [Skeleton.name]: Skeleton,
   },
   mixins: [searchList],
   props: {
@@ -131,6 +149,7 @@ export default {
       maxHeight: 0,
       activeTabIndex: 0,
       formData: {},
+      skeletonLoading: true,
       jyFilterData: {}, // 保存所有交易业态的筛选项数据
       jyGoodsListData: {}, // 保存所有交易业态的列表数据
       currentTabJyCode: '', // 当前tab选中的jy code
@@ -169,9 +188,9 @@ export default {
       fieldList: [],
     }
     this.initGoodsList()
-    if (!this.isShowTabs) {
+    /* if (!this.isShowTabs) {
       this.$refs.spTabs.$refs.nav.parentNode.style.display = 'none'
-    }
+    } */
   },
   methods: {
     getFilterHandle(data, filrerName) {
@@ -248,11 +267,11 @@ export default {
       })
     },
     initGoodsList() {
-      console.log('initGoodsList')
+      console.log('initGoodsList', 'aaaaaaaaaaaaaaaaaaaaaaa')
       // 获取初始数据
       this.formData[this.currentTabJyCode].start = 1
-      this.jyGoodsListData[this.currentTabJyCode] = []
       this.loading = true
+      this.jyGoodsListData[this.currentTabJyCode] = []
       this.finished = false
       this.searchKeydownHandle()
     },
@@ -305,10 +324,10 @@ export default {
       // 计算列表的最大高
       const installAPPHeight = this.$refs.installApp
         ? this.$refs.installApp[0].$el.clientHeight
-        : -1000
+        : 10000
       const dropDownMenuHeight = this.$refs.dropDownMenu
         ? this.$refs.dropDownMenu[0].$el.clientHeight
-        : -1000
+        : 10000
       const topHeight = this.$el.getBoundingClientRect().top
       const spTabsHeight = document.querySelectorAll(
         '.sp-tabs-self .sp-tabs__wrap'

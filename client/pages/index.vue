@@ -1,5 +1,5 @@
 <template>
-  <div class="page-content">
+  <div ref="homeRef" class="page-content">
     <!-- S 搜索 + 大banner -->
     <SearchBanner
       ref="searchBannerRef"
@@ -64,9 +64,9 @@ export default {
     FiexdBtn,
   },
   async asyncData({ $axios }) {
-    const fiexdAdCode = 'ad100130' // 顶部固定banner的code
-    const rollAdCode = 'ad100130' // 导航下方轮播banner code
-    const helpAdCode = 'ad100130' // 帮我找下方banner code
+    const fiexdAdCode = 'ad100233' // 顶部固定banner的code
+    const rollAdCode = 'ad100233' // 导航下方轮播banner code
+    const helpAdCode = 'ad100233' // 帮我找下方banner code
     // 首屏请求导航和广告的参数
     const initReqParams = {
       locationCodeList: [fiexdAdCode, rollAdCode, helpAdCode], // 广告位code列表
@@ -103,8 +103,8 @@ export default {
   },
   data() {
     return {
-      adModuleOne: ['ad100002', 'ad100002'], // 限时特惠板块
-      adModuleTwo: ['ad100002', 'ad100002', 'ad100002', 'ad100002'], // 热门服务板块
+      adModuleOne: ['ad100233', 'ad100233'], // 限时特惠板块
+      adModuleTwo: ['ad100233', 'ad100233', 'ad100233', 'ad100233'], // 热门服务板块
       asyncReqParams: {
         infoLimit: 3, // 资讯每页数量
         infoPage: 1, // 资讯当前页
