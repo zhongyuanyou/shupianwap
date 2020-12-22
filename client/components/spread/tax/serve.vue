@@ -31,7 +31,7 @@
           </div>
           <div class="serve-card-second-right">
             <div class="serve-card-second-right-person"></div>
-            <div class="serve-card-second-right-rap" @click="call">
+            <div class="serve-card-second-right-rap" @click="openIM">
               <my-icon
                 name="notify_ic_chat"
                 color="#4974F5"
@@ -106,6 +106,10 @@ export default {
     call(e) {
       console.log(1)
       e.stopPropagation()
+    },
+    openIM() {
+      console.log(1)
+      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
     },
   },
 }

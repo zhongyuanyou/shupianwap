@@ -7,7 +7,7 @@
         <div></div>
       </div>
       <div class="bottom-gray-second">
-        span薯片找人企业服务平台，2800万用户的选择
+        薯片找人企业服务平台，2800万用户的选择
       </div>
       <div class="bottom-gray-three">薯片科技版权所有 | 关于我们</div>
     </div>

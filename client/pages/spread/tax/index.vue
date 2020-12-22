@@ -27,6 +27,9 @@
     <!--  底部  -->
     <Bottom></Bottom>
     <!--  底部  -->
+    <!--  IM  -->
+    <dgg-im-company></dgg-im-company>
+    <!--  IM  -->
   </div>
 </template>
 
@@ -41,6 +44,7 @@ import Process from '~/components/spread/tax/process'
 import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
 import Maby from '~/components/spread/tax/maby'
 import Bottom from '~/components/spread/tax/bottom'
+import dggImCompany from '@/components/spread/dggImCompany'
 export default {
   name: 'TaxVue',
   components: {
@@ -53,6 +57,7 @@ export default {
     GuiHuaShiSwipe,
     Maby,
     Bottom,
+    dggImCompany,
   },
   data() {
     return {
