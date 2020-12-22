@@ -28,7 +28,7 @@
               </div>
             </div>
             <div class="planner-content-div-left-icon">
-              <div style="margin-right: 0.2rem"window.open>
+              <div style="margin-right: 0.2rem" @click="$parent.openIm">
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -72,8 +72,7 @@ export default {
     }
   },
   methods: {
-    openIM() {
-      console.log(1)
+    openIm() {
       this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
     },
   },

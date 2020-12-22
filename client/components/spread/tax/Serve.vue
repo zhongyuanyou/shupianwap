@@ -6,7 +6,7 @@
       :key="i"
       class="serve-card"
       :style="item.bg"
-      @click="openIMurl"
+      @click="openImUrl"
     >
       <div class="serve-card-first">
         <div>
@@ -31,14 +31,7 @@
         </div>
         <div class="serve-card-second-right">
           <div class="serve-card-second-right-person"></div>
-          <div
-            class="serve-card-second-right-rap"
-            @click="
-              () => {
-                $parent.openIM
-              }
-            "
-          >
+          <div class="serve-card-second-right-rap" @click="$parent.openIm">
             <my-icon
               name="notify_ic_chat"
               color="#4974F5"
@@ -113,11 +106,11 @@ export default {
     call(e) {
       e.stopPropagation()
     },
-    openIMurl() {
+    openImUrl() {
       if (this.url !== '') {
         window.open = this.url
       } else {
-        this.$parent.openIM()
+        this.$parent.openIm()
       }
     },
   },

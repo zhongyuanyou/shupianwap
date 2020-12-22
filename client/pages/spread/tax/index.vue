@@ -1,38 +1,38 @@
 <template>
   <div class="center">
     <!--  头部  -->
-    <Head :title="title"></Head>
+    <headHeader :title="headTitle"></headHeader>
     <!--  头部  -->
     <!--  轮播/表单  -->
-    <Banner></Banner>
+    <banner></banner>
     <!--  轮播/表单  -->
     <!--  服务  -->
-    <Serve></Serve>
+    <serve></serve>
     <!--  服务  -->
     <!--  咨询  -->
-    <Conrult></Conrult>
+    <conrult></conrult>
     <!--  咨询  -->
     <!--  优势  -->
-    <Super></Super>
+    <good></good>
     <!--  优势  -->
     <!--  服务流程  -->
-    <Process></Process>
+    <process></process>
     <!--  服务流程  -->
     <!--  规划师  -->
-    <GuiHuaShiSwipe :data="planners" :title="plannersTitle"></GuiHuaShiSwipe>
+    <gui-hua-shi-swipe
+      :data="plannersData"
+      :title="plannersTitle"
+    ></gui-hua-shi-swipe>
     <!--  规划师  -->
     <!--  可能需要  -->
-    <Maby></Maby>
+    <maby></maby>
     <!--  可能需要  -->
     <!--  立即咨询  -->
-    <ConsultTel
-      title="对于代理记账还有疑问？企服专家为您免费解答"
-      tel="4000-535800"
-    ></ConsultTel>
+    <consult-tel :title="consultTitle" :tel="consultTel"></consult-tel>
     <!--  立即咨询  -->
     <!--  底部  -->
-    <ShuPianZhaoRen></ShuPianZhaoRen>
-    <FixedBottom :data="data"></FixedBottom>
+    <shu-pian-zhao-ren></shu-pian-zhao-ren>
+    <fixed-bottom :data="fixedBottomData"></fixed-bottom>
     <!--  底部  -->
     <!--  IM  -->
     <dgg-im-company></dgg-im-company>
@@ -41,41 +41,42 @@
 </template>
 
 <script>
-import Head from '~/components/common/head/header'
-import Banner from '~/components/spread/tax/banner'
-import Serve from '~/components/spread/tax/serve'
-import Conrult from '~/components/spread/tax/conrult'
-import Super from '~/components/spread/tax/super'
-import Process from '~/components/spread/tax/process'
-// import Planner from '~/components/spread/tax/planner'
-import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
-import Maby from '~/components/spread/tax/maby'
-// import Bottom from '~/components/spread/tax/bottom'
+import headHeader from '~/components/common/head/header'
+import banner from '~/components/spread/tax/Banner'
+import serve from '~/components/spread/tax/Serve'
+import conrult from '~/components/spread/tax/Conrult'
+import good from '~/components/spread/tax/Good'
+import process from '~/components/spread/tax/Process'
+// import planner from '~/components/spread/tax/Planner'
+import guiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
+import maby from '~/components/spread/tax/maby'
+// import bottom from '~/components/spread/tax/Bottom'
 import dggImCompany from '~/components/spread/DggImCompany'
-import ShuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
-import FixedBottom from '~/components/spread/common/FixedBottom'
-import ConsultTel from '@/components/spread/common/ConsultTel'
+import shuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
+import fixedBottom from '~/components/spread/common/FixedBottom'
+import consultTel from '@/components/spread/common/ConsultTel'
 export default {
   name: 'TaxVue',
   components: {
-    Head,
-    Banner,
-    Serve,
-    Conrult,
-    Super,
-    Process,
-    GuiHuaShiSwipe,
-    Maby,
-    // Bottom,
+    headHeader,
+    banner,
+    serve,
+    conrult,
+    good,
+    process,
+    // planner,
+    guiHuaShiSwipe,
+    maby,
+    // bottom,
     dggImCompany,
-    ShuPianZhaoRen,
-    FixedBottom,
-    ConsultTel,
+    shuPianZhaoRen,
+    fixedBottom,
+    consultTel,
   },
   data() {
     return {
-      title: '税务筹划',
-      planners: {
+      headTitle: '税务筹划',
+      plannersData: {
         planners: [
           {
             id: 1,
@@ -116,7 +117,7 @@ export default {
         },
       },
       plannersTitle: '咨询规划师',
-      data: {
+      fixedBottomData: {
         show: {
           imgSrc: 'http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg',
           cardName: '王深林',
@@ -132,15 +133,17 @@ export default {
           telephone: '18402858698',
         },
       },
+      consultTitle: '对于代理记账还有疑问？企服专家为您免费解答',
+      consultTel: '4000-535800',
     }
   },
   methods: {
-    openIM() {
+    openIm() {
       this.$root.$emit(
-        this.planners.im.function,
-        this.planners.im.id,
-        this.planners.im.name,
-        this.planners.im.num
+        this.plannersData.im.function,
+        this.plannersData.im.id,
+        this.plannersData.im.name,
+        this.plannersData.im.num
       )
     },
   },

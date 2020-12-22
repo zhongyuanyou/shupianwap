@@ -6,7 +6,7 @@
         v-for="(item, i) of banners"
         :key="i"
         class="super-banner-item"
-        @click="openIMurl"
+        @click="openImUrl"
       >
         <div class="super-banner-item-left">
           <img :src="item.img" alt="" class="super-banner-item-left-icon" />
@@ -55,11 +55,11 @@ export default {
     }
   },
   methods: {
-    openIMurl() {
+    openImUrl() {
       if (this.url !== '') {
         window.open = this.url
       } else {
-        this.$parent.openIM()
+        this.$parent.openIm()
       }
     },
   },

@@ -14,9 +14,7 @@
       </sp-grid>
     </div>
     <div class="conrult-gray">更多行业解决方案</div>
-    <button class="conrult-button" @click="this.$parent.openIM">
-      立即咨询
-    </button>
+    <button class="conrult-button" @click="$parent.openIm">立即咨询</button>
   </div>
 </template>
 
@@ -112,7 +110,7 @@ export default {
       if (this.url !== '') {
         window.open = this.url
       } else {
-        this.$parent.openIM()
+        this.$parent.openIm()
       }
     },
   },

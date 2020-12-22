@@ -12,7 +12,7 @@
           v-for="item of data.planners"
           :key="item.id"
           class="planner-content-item"
-          @click="openIMurl"
+          @click="openImUrl"
         >
           <div class="planner-content-item-shadow">
             <div class="planner-content-item-shadow-person">
@@ -42,14 +42,7 @@
               </div>
             </div>
             <div class="planner-content-item-shadow-icon">
-              <div
-                style="margin-right: 0.2rem"
-                @click="
-                  () => {
-                    $parent.openIM
-                  }
-                "
-              >
+              <div style="margin-right: 0.2rem" @click="openIm">
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -123,7 +116,7 @@ export default {
     }
   },
   methods: {
-    openIM() {
+    openIm() {
       this.$root.$emit(
         this.data.im.function,
         this.data.im.id,
@@ -131,7 +124,7 @@ export default {
         this.data.im.num
       )
     },
-    openIMurl() {
+    openImUrl() {
       if (this.url !== '') {
         window.open = this.url
       } else {
