@@ -14,8 +14,8 @@
             :color="item.path === active ? iconColorActive : iconColorDefault"
           ></my-icon>
           <span
-            class="unReadNum"
             v-if="item.path === '/msg' && unreadNum > 0"
+            class="unReadNum"
             >{{ unreadNum > 99 ? '99+' : unreadNum }}</span
           >
           <span
@@ -33,12 +33,14 @@
 
 <script>
 import { Badge } from 'vant'
+import { mapState } from 'vuex'
 import config from '@/config'
+import { pullUnreadMsgCount } from '@/utils/im'
 export default {
   name: 'Bottombar',
   data() {
     return {
-      unreadNum: 1,
+      unreadNum: 0,
       active: 'home',
       iconColorDefault: '#999999',
       iconColorActive: '#4974F5',
@@ -66,6 +68,12 @@ export default {
       ],
     }
   },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user.userInfo, // 登录的用户信息
+      imExample: (state) => state.im.imExample, // IM 实例
+    }),
+  },
   watch: {
     $route(to, from) {
       const path = this.$route.path
@@ -76,12 +84,28 @@ export default {
     const path = this.$route.path
     this.active = path
   },
+  mounted() {
+    //  获取IM未读消息总数
+    pullUnreadMsgCount(this.imExample).then((res) => {
+      console.log('IM消息未读数：', res)
+      if (res.code === 200) {
+        this.unreadNum = res.data.totleUnread
+      }
+    })
+  },
   methods: {
     pageJump(item) {
       // 消息页面跳转 IM
       if (item.path === '/msg') {
-        console.log(config.imConfigure.msgPageLink)
-        window.location.href = `${config.imConfigure.msgPageLink}?token=607992547993614357&userId=607991173604074209&userType=ORDINARY_USER`
+        if (this.userInfo.token) {
+          window.location.href = `${config.imConfigure.msgPageLink}?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
+          return
+        } else {
+          this.$router.push({
+            path: '/login',
+          })
+        }
+        // window.location.href = `${config.imConfigure.msgPageLink}?token=607992547993614357&userId=607991173604074209&userType=ORDINARY_USER`
         return
       }
       const path = this.$route.path

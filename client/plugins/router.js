@@ -7,11 +7,24 @@
  * @FilePath: /xdy-wap/plugins/router.js
  */
 import Vue from 'vue'
-export default ({ app }) => {
+import { imInit } from '@/utils/im'
+export default ({ app, store }) => {
   app.router.beforeEach((to, from, next) => {
     if (process.client) {
       Vue.nextTick(() => {
         dggSensors.quick('autoTrackSinglePage')
+
+        // 已登录用户，若未初始化IM，进行IM初始化
+        const { token, userId, userType } = store.state.user.userInfo
+        if (!store.state.im.imSdk && token) {
+          // 初始化IM
+          const initImSdk = imInit({
+            token,
+            userId,
+            userType,
+          })
+          store.commit('im/SET_IM_SDK', initImSdk)
+        }
       })
     }
     next()

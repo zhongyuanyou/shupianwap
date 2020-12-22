@@ -49,7 +49,6 @@ import Information from '@/components/home/Information'
 import HotServe from '@/components/home/HotServe'
 import Recommend from '@/components/home/Recommend'
 import FiexdBtn from '@/components/home/FiexdBtn'
-import { imInit, pullUnreadMsgCount } from '~/utils/im'
 export default {
   layout: 'nav',
   name: 'Home',
@@ -146,16 +145,6 @@ export default {
           })
         })
     }
-  },
-  mounted() {
-    const imSdk = imInit()
-    console.log(55, imSdk)
-    // const userInfo = this.$appFn(this)
-    // console.log(userInfo)
-    // 获取未读消息总数
-    pullUnreadMsgCount().then((res) => {
-      console.log(56, res)
-    })
   },
 }
 </script>
