@@ -16,7 +16,7 @@ module.exports = app => {
     // * extendBussineChange 工商变更
     // * extendNetWorkQualifications 互联网资质
     // * extendBussineHome 工商首页
-    // * extendAccout 代理记账
+    // * extendAccount 代理记账
     async task(ctx) {
       const pageCodes = [
         {
@@ -28,7 +28,7 @@ module.exports = app => {
         {
           today: 0,
           total: 641012,
-          code: 'extendAccout',
+          code: 'extendAccount',
           ratio: 1.5,
         },
       ];

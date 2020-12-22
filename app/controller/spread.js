@@ -14,7 +14,7 @@
  * extendBussineChange 工商变更
  * extendNetWorkQualifications 互联网资质
  * extendBussineHome 工商首页
- * extendAccout 代理记账
+ * extendAccount 代理记账
  * @param locations 广告位置集合
  * @param showNum 是否展示今日数据累计数据
  */
@@ -145,7 +145,7 @@ class SpreadController extends Controller {
     // 今日数据，累计数据
     const nums = {};
     if (
-      ctx.query.pageCode === 'extendAccout' ||
+      ctx.query.pageCode === 'extendAccount' ||
       ctx.query.pageCode === 'extendBankServer'
     ) {
       const cacheKeyToday = ctx.helper.cacheKey(

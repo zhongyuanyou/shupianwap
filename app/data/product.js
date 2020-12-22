@@ -719,7 +719,7 @@ const res = {
       },
     },
     {
-      id: 'extendAccout1', // 代理记账
+      id: 'extendAccount1', // 代理记账
       name: '',
       referencePrice: 2288,
       operating: {
@@ -733,7 +733,7 @@ const res = {
       },
     },
     {
-      id: 'extendAccout2', // 代理记账
+      id: 'extendAccount2', // 代理记账
       name: '',
       referencePrice: 1500,
       operating: {
@@ -748,7 +748,7 @@ const res = {
       },
     },
     {
-      id: 'extendAccout3', // 代理记账
+      id: 'extendAccount3', // 代理记账
       name: '',
       referencePrice: 6988,
       operating: {
