@@ -57,7 +57,7 @@
 
 <script>
 import { Swipe, SwipeItem } from '@chipspc/vant-dgg'
-import dggImCompany from '@/components/spread/dggImCompany'
+import dggImCompany from '~/components/spread/DggImCompany'
 export default {
   name: 'Planner',
   components: {

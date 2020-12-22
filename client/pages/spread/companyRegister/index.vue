@@ -114,7 +114,7 @@ import RegisterReady from '@/components/spread/companyRegistry/RegisterReady'
 import QueryPhone from '@/components/spread/companyRegistry/QueryPhone'
 import Bottom from '@/components/spread/companyRegistry/bottom'
 import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
-import dggImCompany from '@/components/spread/dggImCompany'
+import dggImCompany from '~/components/spread/DggImCompany'
 export default {
   name: 'CompanyRegistry',
   components: {

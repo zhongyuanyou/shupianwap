@@ -44,7 +44,7 @@ import Process from '~/components/spread/tax/process'
 import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
 import Maby from '~/components/spread/tax/maby'
 import Bottom from '~/components/spread/tax/bottom'
-import dggImCompany from '@/components/spread/dggImCompany'
+import dggImCompany from '~/components/spread/DggImCompany'
 export default {
   name: 'TaxVue',
   components: {

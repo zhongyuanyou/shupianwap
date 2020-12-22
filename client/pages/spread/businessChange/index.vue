@@ -41,7 +41,7 @@ import ServiceProcess from '../../../components/spread/businessChange/servicePro
 import Planners from '../../../components/spread/common/GuiHuaShiSwipe'
 import Need from '../../../components/spread/businessChange/need'
 import Bottom from '../../../components/spread/agency/bottom'
-import dggImCompany from '../../../components/spread/dggImCompany'
+import dggImCompany from '../../../components/spread/DggImCompany'
 export default {
   components: {
     Header,

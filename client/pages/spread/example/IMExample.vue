@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import dggImCompany from '@/components/spread/dggImCompany'
+import dggImCompany from '~/components/spread/DggImCompany'
 export default {
   name: 'IMExample',
   components: {

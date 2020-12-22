@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import dggImCompany from '@/components/spread/dggImCompany'
+import dggImCompany from '~/components/spread/DggImCompany'
 import Header from '@/components/common/head/header'
 import Banner from '@/components/spread/home/Banner'
 import Nav from '@/components/spread/home/Nav'
