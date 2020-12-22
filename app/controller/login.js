@@ -2,14 +2,14 @@
  * @Author: xiao pu
  * @Date: 2020-12-03 15:34:31
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-22 11:11:29
+ * @LastEditTime: 2020-12-22 19:42:33
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/login.js
  */
 'use strict';
 const Controller = require('egg').Controller;
 const { Get, Post, Prefix } = require('egg-shell-decorators');
-const { userApi } = require('./../../config/serveApi/index');
+const { userApi, contentApi } = require('./../../config/serveApi/index');
 
 const getValiErrors = function (app, ctx, rules, data) {
   // 参数校验
@@ -240,6 +240,41 @@ class LoginController extends Controller {
     );
     Object.assign(ctx.headers, { sysCode: 'crisps-app' });
     const data = await service.curl.curlPost(url, ctx.request.body);
+    if (data.code === 200) {
+      ctx.helper.success({
+        ctx,
+        code: 200,
+        res: data.data,
+      });
+      return;
+    }
+    ctx.helper.fail({
+      ctx,
+      code: data.code,
+      res: data,
+      detailMessage: data.message || '请求失败',
+    });
+  }
+
+  @Get('/protocol.do')
+  async protocol() {
+    const { ctx, service, app } = this;
+    const rules = {
+      id: { type: 'string', required: false }, // 内容id
+      categoryCode: { type: 'string', required: false }, // 分类编码,查询当前分类及其所有启用子类,多个code通过逗号
+      includeField: { type: 'string', required: false }, // 必须要输出的内容字段，优先于excludeField，多个字段名称使用,（逗号）连接，默认排除content，需要输出时在此显式声明
+    };
+    if (getValiErrors(app, ctx, rules, ctx.query)) return;
+
+    const { id, categoryCode, includeField } = ctx.query;
+    const params = { id, categoryCode, includeField };
+    // const data = await service.common.content.detail(params);
+    const url = ctx.helper.assembleUrl(
+      app.config.apiClient.APPID[0],
+      contentApi.infoList
+    );
+    const data = await service.curl.curlGet(url, params);
+
     if (data.code === 200) {
       ctx.helper.success({
         ctx,

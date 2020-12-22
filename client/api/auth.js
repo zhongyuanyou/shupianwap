@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-08 10:39:44
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 13:49:02
+ * @LastEditTime: 2020-12-22 20:39:18
  * @Description: file content
  * @FilePath: /chips-wap/client/api/auth.js
  */
@@ -69,6 +69,20 @@ const auth = {
       params,
       method: 'post',
       url: CHIPS_WAP_BASE_URL + '/nk/login/v1/account_info.do',
+    })
+  },
+
+  /**
+   * 获取协议内容
+   * @param {object} params
+   * @param {string} params.categoryCode  cms里面自己配置后获取到的
+   * @param {string} params.includeField  如 title,content
+   * @returns {Promise}
+   */
+  protocol(params) {
+    return request({
+      params,
+      url: CHIPS_WAP_BASE_URL + '/nk/login/v1/protocol.do',
     })
   },
 }

@@ -9,7 +9,7 @@ class InformationService extends Service {
    */
   async list(params = {}) {
     // 列表
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       const { ctx, app, service } = this;
       const sysCode = app.config.apiClient.APPID[0];
       const address = contentApi.findPage;
@@ -33,7 +33,7 @@ class InformationService extends Service {
    */
   async detail(params = {}) {
     // 详情
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       const { ctx, app, service } = this;
       const sysCode = app.config.apiClient.APPID[0];
       const address = contentApi.infoDetail;
