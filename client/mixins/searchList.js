@@ -20,7 +20,7 @@ export default {
             ]
             if (this.formData.start === 1) {
               // 提示查找到多少条资源
-              this.searchToast(`共找到${data.goods.totalCount}条资资源资源源`)
+              this.searchToast(`共找到${data.goods.totalCount}条资源`)
             }
             if (data.goods.records.length < 10) {
               this.finished = true
@@ -142,10 +142,9 @@ export default {
     },
     searchToast(message) {
       // 轻提示
-      console.log(this.$refs)
       this.$refs.spToast.show({
         message,
-        duration: 10500,
+        duration: 1500,
         icon: 'toast_ic_comp',
         forbidClick: true,
       })
