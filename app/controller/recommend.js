@@ -271,12 +271,28 @@ class RecommendController extends Controller {
           if (searchType === 1) {
             // 推荐产品需要展示的属性字段
             productList.data.forEach((list, index) => {
-              productList.data[index].fieldList = list.fieldList.filter(item => {
-                if (list.classCodeLevelList && tagsKeys[list.classCodeLevelList[0]]) {
+              const fieldList = [];
+              list.fieldList.forEach(item => {
+                if (list.classCodeLevelList &&
+                    tagsKeys[list.classCodeLevelList[0]] &&
+                    tagsKeys[list.classCodeLevelList[0]].includes(item.fieldCode)
+                ) {
+                  //  判断是否是地区相关
+                  if (item.fieldCode === 'qualification_registration_area') {
+                    // 查询获取到的地区名称
+                    const listValArr = [];
+                    item.fieldValueList.forEach(async code => {
+                      const listVal = await ctx.service.redis.get(code);
+                      listValArr.push(listVal.name);
+                    });
+                    item.fieldValueList = listValArr;
+                  }
+                  fieldList.push(item);
                   return tagsKeys[list.classCodeLevelList[0]].includes(item.fieldCode);
                 }
                 return false;
               });
+              productList[index].fieldList = fieldList;
             });
           }
           const limitProductData = [ ...productListData ].slice((page - 1) * limit, page * limit);
