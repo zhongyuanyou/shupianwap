@@ -130,13 +130,19 @@ const appHandler = {
     data = { urlString: 'https://www.baidu.com' },
     fn = () => {}
   ) => {
-    Bridge.callHandler('dgg_location', data, (res) => {
+    Bridge.callHandler('dgg_openNewWeb', data, (res) => {
       handleRequest(res, fn)
     })
   },
   // 拨打电话
   dggCallPhone: (data = { phone: '17755021122' }, fn = () => {}) => {
-    Bridge.callHandler('dgg_location', data, (res) => {
+    Bridge.callHandler('dgg_callPhone', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // wap返回数据给到flutter
+  dggWebBackValueToFlutter: (data = {}, fn = () => {}) => {
+    Bridge.callHandler('dgg_webBackValueToFlutter', data, (res) => {
       handleRequest(res, fn)
     })
   },
