@@ -18,8 +18,18 @@ import imSdk from '@dgg/sp-im-sdk'
  * @return: void
  */
 export function imInit(data = {}) {
+  const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
+  const BASE = {
+    // 开发、测试环境
+    development: 'D',
+    // 预发布环境
+    release: 'Y',
+    // 生产环境
+    production: 'P',
+  }
+  const env = BASE[DGG_SERVER_ENV]
   const initSdk = imSdk.instance({
-    env: 'D', // 'D|T|Y|P'
+    env, // 'D|T|Y|P'
     token: data.token,
     userId: data.userId,
     userTypeFlag: data.userType,
@@ -92,6 +102,35 @@ export function createSession(imExample, data = {}) {
  */
 export function sendTemplateMsg(imExample, data = {}) {
   return new Promise((resolve) => {
+    const params = {
+      templateId: '', // 模板 id
+      receiver: data.receiver, // 会话 id
+      senderName: data.senderName, // 发送者昵称
+      msgType: '', // 消息类型
+      extContent: data.extContent, // 路由参数
+      paramJsonStr: {
+        productName: data.productName,
+        productContent: data.productContent,
+        price: data.price,
+        forwardAbstract: data.forwardAbstract,
+        routerId: data.routerId,
+      },
+    }
+    switch (data.sendType) {
+      // 带图片的模板消息
+      case 0:
+        params.paramJsonStr.imageUrl = data.imageUrl
+        params.paramJsonStr.unit = data.unit
+        params.templateId = '5fcef0aec24ddd00065a8c93'
+        break
+      // 不带图片的模板消息
+      case 1:
+        params.templateId = '5fcef0aec24ddd00065a8c83'
+        break
+
+      default:
+        break
+    }
     imExample.sendTemplateMsg(data, (res) => {
       resolve(res)
     })
