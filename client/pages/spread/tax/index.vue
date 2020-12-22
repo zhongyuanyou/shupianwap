@@ -23,9 +23,14 @@
     <!--  规划师  -->
     <!--  可能需要  -->
     <Maby></Maby>
+    <ConsultTel
+      title="对于代理记账还有疑问？企服专家为您免费解答"
+      tel="4000-535800"
+    ></ConsultTel>
     <!--  可能需要  -->
     <!--  底部  -->
-    <Bottom></Bottom>
+    <ShuPianZhaoRen></ShuPianZhaoRen>
+    <FixedBottom></FixedBottom>
     <!--  底部  -->
     <!--  IM  -->
     <dgg-im-company></dgg-im-company>
@@ -43,8 +48,11 @@ import Process from '~/components/spread/tax/process'
 // import Planner from '~/components/spread/tax/planner'
 import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
 import Maby from '~/components/spread/tax/maby'
-import Bottom from '~/components/spread/tax/bottom'
+// import Bottom from '~/components/spread/tax/bottom'
 import dggImCompany from '~/components/spread/DggImCompany'
+import ShuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
+import FixedBottom from '~/components/spread/common/FixedBottom'
+import ConsultTel from '@/components/spread/common/ConsultTel'
 export default {
   name: 'TaxVue',
   components: {
@@ -56,8 +64,11 @@ export default {
     Process,
     GuiHuaShiSwipe,
     Maby,
-    Bottom,
+    // Bottom,
     dggImCompany,
+    ShuPianZhaoRen,
+    FixedBottom,
+    ConsultTel,
   },
   data() {
     return {

@@ -2,8 +2,6 @@
 <html>
     <head>
       <meta charset="UTF-8">
-<!--      页面不用jQuery,自己把相应的jQuery替换掉-->
-      <script typet="text/javascript" src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
 <!--      这一步我已经在全局配置，无需引入-->
       <script typet="text/javascript" src="https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js"></script>
     </head>
@@ -32,7 +30,7 @@
            <input type="hidden" name="zclx" >
            <input type="tel" name="tel" autocomplete="off" maxlength="11" placeholder="请输入电话号码">
            <input type="tel" name="code" autocomplete="off" maxlength="6" placeholder="请输入验证码">
-           <button type="button" class="get-code">获取验证码</button>
+           <button type="button" class="get-code" id="btn">获取验证码</button>
            <button type="button" id="sub-btn">立即申请</button>
        </div>
     <script>
@@ -41,38 +39,39 @@
           // 倒计时  如果自己写了不用管，按照自己的来，只是记住逻辑顺序
           var count  //做成全局变量，便于表单提交成功后快速清0
           // 发送验证码之后倒计时
-          function countDown(el) {
+          function countDown() {
               count = 60;
-              el.attr('disabled', 'disabled');
+              var el = document.getElementById('btn');
+              el.disabled= true;
               function down() {
                   count--;
-                  el.text(count + 's后发送');
+                  el.innerHTML=(count + 's后发送');
                   var timer = setTimeout(function () {
                       down()
                   }, 1000)
                   if (count <= 0) {
-                      el.text('重新发送');
+                      el.innerHTML=('重新发送');
                       clearTimeout(timer);
-                      el.removeAttr('disabled');
+                      el.disabled=false;
                   }
               }
               down()
           }
           // 发送验证码
-          function getMsg(setData, that) {
+          function getMsg(setData) {
             // 自己页面调用promotion要用window.promotion
             promotion.privat.getSmsCode(setData, function (res) {
               if (res.error == 0) {
                 console.log(res.msg)
-                countDown($(that))
+                countDown()
                 return false
               }
               console.log(res.msg)
             })
           }
           // 发送验证码前验证
-          $(ID).find('.get-code').bind('click',function () {
-              var _tel = $(ID).find('input[name="tel"]').val();
+          document.getElementsByClassName('get-code')[0].onclick=function () {
+              var _tel = document.getElementsByName('tel')[0].value;
               var _reg = /^1[3,4,5,6,7,8,9]\d{9}$/;
               if (_tel == '') {
                   return console.log('请输入手机号码');
@@ -84,8 +83,8 @@
                   tel: _tel,
                   type:"gs"
               }
-              getMsg(setData, this)
-          })
+              getMsg(setData)
+          }
           //后台规定获取当前时间作为json字符串，来当做一个唯一标识
           function getDate() {
               var timeStamp = new Date();
@@ -104,11 +103,11 @@
           }
           // 提交表单
           var formId
-          $(ID).find('#sub-btn').click(function () {
-           var _name =$(ID).find('input[name="name"]').val();
-            var _city =$(ID).find('select[name="city"]').val();
-            var _tel =$(ID).find('input[name="tel"]').val();
-            var _code =$(ID).find('input[name="code"]').val();
+      document.getElementById('sub-btn').onclick=function () {
+           var _name =document.getElementsByName('name')[0].value;
+            var _city =document.getElementsByName('city')[0].value;
+            var _tel =document.getElementsByName('tel')[0].value;
+            var _code =document.getElementsByName('code')[0].value;
             var _telReg = /^1[3,4,5,6,7,8,9]\d{9}$/;
             var web_url = window.location.href;
             formId = getDate() + _tel;  //生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
@@ -133,9 +132,9 @@
                 return
             }
             //若一级表单中存在二级属性字段（如公司名称、类别等）时，需将之放入对象，并转化为json字符串，在content属性中传入，这样即使用户没有提交二级表单也能把相关属性传入，若有二级表单，也和二级表单提交的属性不冲突
-            var contentStr = {
-                gsmc: _gsmc,//此处是没有规定参数名称的统一封装到对象作为备注信息
-            }
+            // var contentStr = {
+            //     gsmc: _gsmc,//此处是没有规定参数名称的统一封装到对象作为备注信息
+            // }
             var params = {
                 formId: formId,   //formId,唯一ID提交资源中心
                 name: _name,      //姓名
@@ -146,7 +145,7 @@
                 device: "wap",    //设备：pc,wap
                 web: "xmt",       //归属渠道：xmt,zytg,wxgzh
                 smsCode: _code,   //验证码
-                content: JSON.stringify(contentStr) //二级属性
+                //content: JSON.stringify(contentStr) //二级属性
             }
             promotion.privat.consultForm(params, function (res) {
                 if(res.error == 0){
@@ -156,7 +155,7 @@
                 }
 
             })
-        })
+        }
          // 如果有二级表单，设置二级表单参数
          var params1 = {
             formId: formId,//必加，用以判断是否和一级表单同属一次提交

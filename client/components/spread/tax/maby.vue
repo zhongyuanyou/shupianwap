@@ -9,20 +9,6 @@
         :style="item.bg"
       ></div>
     </div>
-    <div class="maby-bottom">对于代理记账还有疑问？企服专家为您免费解答</div>
-    <div class="maby-last">
-      <div class="maby-last-content">
-        <my-icon
-          name="notify_ic_tel"
-          color="#4974F5"
-          size="0.36rem"
-          class="icon"
-        ></my-icon>
-        <span class="maby-last-content-text">服务热线:</span>
-        <span class="maby-last-content-number">4000-535800</span>
-      </div>
-      <button class="maby-last-button">立即咨询</button>
-    </div>
   </div>
 </template>
 
@@ -63,7 +49,7 @@ export default {
 
 <style scoped lang="less">
 .maby {
-  padding: 31px 40px;
+  padding: 31px 40px 0;
   width: 750px;
   &-title {
     font-size: 40px;
