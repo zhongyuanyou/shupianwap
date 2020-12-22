@@ -4,14 +4,14 @@
       <h3>免费查询公司名称能否注册</h3>
       <sp-cell
         title-class="down-left"
+        :border="false"
         :value-class="
           selectValue == '请选择' ? 'down-right' : 'down-right--active'
         "
         :value="selectValue"
         is-link
-        :border="false"
         arrow-direction="down"
-        title="单元格"
+        title="我需要"
         @click="downShow = true"
       >
       </sp-cell>
@@ -24,6 +24,8 @@
         <sp-cell-group @click="verificationShow = true">
           <sp-field
             v-model="phoneValue"
+            type="digit"
+            :border="false"
             label="手机号"
             placeholder="信息保护中，仅官方可见"
             label-class="style-phone"
@@ -39,13 +41,13 @@
             label-class="style-phone"
           >
             <template #button>
-              <span class="verification">获取验证码</span>
+              <span class="verification" @click="send">{{ test }}</span>
             </template>
           </sp-field>
         </div>
       </div>
       <div class="button">
-        <sp-button type="primary" block size="small">主要按钮</sp-button>
+        <sp-button type="primary" block size="small">立即查询</sp-button>
       </div>
       <div class="flow">
         <span
@@ -107,8 +109,21 @@ export default {
       phoneValue: '',
       sms: '',
       verificationShow: false,
+      test: '获取验证码',
       downShow: false,
-      actions: [{ name: '选项一' }, { name: '选项二' }, { name: '选项三' }],
+      actions: [
+        { name: '有限责任公司注册' },
+        { name: '个体注册' },
+        { name: '分公司注册' },
+        { name: '子公司注册' },
+        { name: '股份公司注册' },
+        { name: '个人独资企业注册' },
+        { name: '合伙企业注册' },
+        { name: '外资企业注册' },
+        { name: '外资分公司注册' },
+        { name: '中外合资企业注册' },
+        { name: '其他注册' },
+      ],
     }
   },
   methods: {
@@ -118,6 +133,21 @@ export default {
       this.downShow = false
       this.selectValue = item.name
       Toast(item.name)
+    },
+    send() {
+      if (this.test === '获取验证码') {
+        let i = 59
+        this.test = i + 's'
+        const time = setInterval(() => {
+          if (i > 1) {
+            i--
+            this.test = i + 's'
+          } else {
+            this.test = '获取验证码'
+            clearInterval(time)
+          }
+        }, 1000)
+      }
     },
   },
 }
@@ -134,7 +164,7 @@ export default {
     display: block;
     position: relative;
     padding: 0 40px 34px;
-    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.8);
+    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.08);
     text-align: center;
     h3 {
       font-size: 32px;
@@ -172,14 +202,11 @@ export default {
         color: #1a1a1a;
         flex: 0 0 20%;
       }
-
       .down-right {
         display: inline-block;
         color: #cccccc;
         text-align: left;
       }
-
-      //
       .down-right--active {
         display: inline-block;
         width: 166px !important;
@@ -189,6 +216,9 @@ export default {
     }
     /deep/.input-phone,
     .input-verification {
+      .sp-hairline--top-bottom::after {
+        border-width: 0 0;
+      }
       margin: 24px 0 40px 0;
       .style-phone {
         width: 112px;

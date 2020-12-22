@@ -105,7 +105,6 @@ export default {
   },
   methods: {
     openIM() {
-      console.log(1)
       this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
     },
   },

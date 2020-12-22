@@ -49,9 +49,8 @@ export default {
 .bottom {
   &-gray {
     width: 750px;
-    height: 241px;
-    // background: #f4f4f4;
-    padding: 32px 0 64px 0;
+    height: 150px;
+    padding: 32px 0 0 0;
     display: flex;
     flex-direction: column;
     align-items: center;
