@@ -85,27 +85,28 @@ export default {
     this.active = path
   },
   mounted() {
-    //  获取IM未读消息总数
-    pullUnreadMsgCount(this.imExample).then((res) => {
-      console.log('IM消息未读数：', res)
-      if (res.code === 200) {
-        this.unreadNum = res.data.totleUnread
-      }
-    })
+    if (this.imExample) {
+      //  获取IM未读消息总数
+      pullUnreadMsgCount(this.imExample).then((res) => {
+        console.log('IM消息未读数：', res)
+        if (res.code === 200) {
+          this.unreadNum = res.data.totleUnread
+        }
+      })
+    }
   },
   methods: {
     pageJump(item) {
       // 消息页面跳转 IM
       if (item.path === '/msg') {
         if (this.userInfo.token) {
-          window.location.href = `${config.imConfigure.msgPageLink}?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
+          window.location.href = `${config.imBaseUrl}/index?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
           return
         } else {
           this.$router.push({
             path: '/login',
           })
         }
-        // window.location.href = `${config.imConfigure.msgPageLink}?token=607992547993614357&userId=607991173604074209&userType=ORDINARY_USER`
         return
       }
       const path = this.$route.path
