@@ -1,7 +1,7 @@
 <template>
   <div class="company-registry">
     <sp-top-nav-bar
-      title="公司注册"
+      title="公商注册"
       background="#FFFFFF"
       title-color="#1A1A1A"
       ellipsis
@@ -25,7 +25,17 @@
     </div>
     <div class="introduction">
       <h5>服务介绍</h5>
-      <Registerlist />
+      <Registerlist :list-count="listCount" :is-more="isMore" />
+      <p v-show="listCount.length > 3" class="more">
+        <span @click="onMore"
+          >更多服务
+          <my-icon
+            :name="isMore ? 'tab_ic_all_s' : 'tab_ic_all_n'"
+            size="13px"
+            color="#555555"
+          ></my-icon
+        ></span>
+      </p>
     </div>
     <div class="norm">
       <h5>办理标准</h5>
@@ -37,18 +47,45 @@
     <!-- E注册公司准备工作-平台优势 -->
     <!-- S咨询规划师 -->
     <div class="refer">
-      <h5>咨询规划师</h5>
-      <Consult />
-      <!-- <Planner :planners="planners" /> -->
+      <GuiHuaShiSwipe :data="planners" :title="plannersTitle"></GuiHuaShiSwipe>
     </div>
     <!-- E咨询规划师 -->
     <!-- S其他服务 -->
     <div class="service">
       <h5>您可能还需要其他服务</h5>
       <div class="serice-item">
-        <a v-for="(item, index) of sericeImg" :key="index" href=""
-          ><span> <sp-image width="104px" height="94px" :src="item.img" /></span
+        <a href=""
+          ><span>
+            <sp-image
+              width="104px"
+              height="94px"
+              :src="
+                require('~/assets/spreadImages/company_registry/busi_img_nkn_swch.png')
+              "
+            /> </span
         ></a>
+        <a href="">
+          <span>
+            <sp-image
+              width="104px"
+              height="94px"
+              :src="
+                require('~/assets/spreadImages/company_registry/busi_img_nkn_dljz.png')
+              "
+            />
+          </span>
+        </a>
+        <a href="">
+          <span>
+            <sp-image
+              width="104px"
+              height="94px"
+              :src="
+                require('~/assets/spreadImages/company_registry/busi_img_nkn_qtfw.png')
+              "
+            />
+          </span>
+        </a>
       </div>
     </div>
     <!-- E其他服务 -->
@@ -56,6 +93,7 @@
       <QueryPhone />
     </div>
     <div class="foot"><Bottom /></div>
+    <dgg-im-company></dgg-im-company>
   </div>
 </template>
 <script>
@@ -73,11 +111,10 @@ import Card from '@/components/spread/companyRegistry/Card.vue'
 import Registerlist from '@/components/spread/companyRegistry/Registerlist.vue'
 import Standard from '@/components/spread/companyRegistry/standard.vue'
 import RegisterReady from '@/components/spread/companyRegistry/RegisterReady'
-import Consult from '@/components/spread/companyRegistry/Consult'
 import QueryPhone from '@/components/spread/companyRegistry/QueryPhone'
 import Bottom from '@/components/spread/companyRegistry/bottom'
-import Planner from '~/components/spread/common/GuiHuaShiSwipe'
-
+import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
+import dggImCompany from '~/components/spread/DggImCompany'
 export default {
   name: 'CompanyRegistry',
   components: {
@@ -93,13 +130,14 @@ export default {
     Card,
     Registerlist,
     Standard,
-    Consult,
     QueryPhone,
     Bottom,
-    // Planner,
+    GuiHuaShiSwipe,
+    dggImCompany,
   },
   data() {
     return {
+      isMore: false,
       bannerImages: [
         {
           code: 1,
@@ -114,57 +152,72 @@ export default {
       ],
       sericeImg: [
         {
-          img: require('~/assets/spreadImages/company_registry/busi_img_nkn_yzkz.png'),
-        },
-        {
-          img: require('~/assets/spreadImages/company_registry/busi_img_nkn_yhfw.png'),
+          img: require('~/assets/spreadImages/company_registry/busi_img_nkn_swch.png'),
         },
         {
           img: require('~/assets/spreadImages/company_registry/busi_img_nkn_dljz.png'),
         },
         {
-          img: require('~/assets/spreadImages/company_registry/busi_img_nkn_xkzbl.png'),
-        },
-        {
-          img: require('~/assets/spreadImages/company_registry/busi_img_nkn_gsbg.png'),
-        },
-        {
-          img: require('~/assets/spreadImages/company_registry/busi_img_nkn_gsjy.png'),
+          img: require('~/assets/spreadImages/company_registry/busi_img_nkn_qtfw.png'),
         },
       ],
-      // planners: [
-      //   {
-      //     id: 1,
-      //     type: '金牌规划师',
-      //     avatarImg: require('~/assets/spreadImages/home/busi_img_gscsrx01.jpg'),
-      //     name: '郭亮亮',
-      //     shuPianFen: 11,
-      //     serverNum: 250,
-      //     telephone: 12345679985,
-      //     labels: ['工商注册', '财税咨询', '税务筹划'],
-      //   },
-      //   {
-      //     id: 2,
-      //     type: '金牌规划师',
-      //     avatarImg: require('~/assets/spreadImages/home/busi_img_gscsrx01.jpg'),
-      //     name: '郭亮亮',
-      //     shuPianFen: 11,
-      //     serverNum: 250,
-      //     telephone: 12345679985,
-      //     labels: ['工商注册', '财税咨询', '税务筹划'],
-      //   },
-      // ],
+      planners: [
+        {
+          id: 1,
+          type: '金牌规划师',
+          avatarImg: require('~/assets/spreadImages/home/busi_img_gscsys04.png'),
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+        },
+        {
+          id: 2,
+          type: '金牌规划师',
+          avatarImg: require('~/assets/spreadImages/home/busi_img_gscsys04.png'),
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+        },
+      ],
+      plannersTitle: '咨询规划师',
+      listCount: [
+        {
+          pric: 4000,
+          bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_yxze.png'),
+        },
+        {
+          pric: 5000,
+          bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_gtzc.png'),
+        },
+        {
+          pric: 7000,
+          bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_fgs.png'),
+        },
+        {
+          pric: 7000,
+          bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_fgs.png'),
+        },
+      ],
     }
   },
   methods: {
     onClickLeft() {
       console.log('返回')
     },
+    onMore() {
+      this.isMore ? (this.isMore = false) : (this.isMore = true)
+    },
   },
 }
 </script>
 <style lang="less" scoped>
 .company-registry {
+  width: 750px;
+  margin: 0 auto;
   position: relative;
   padding-bottom: 196px;
   .banner-img {
@@ -182,20 +235,26 @@ export default {
   .introduction,
   .norm,
   .service {
-    padding: 64px 42px 0 42px;
+    padding: 24px 42px 0 38px;
     h5 {
       font-size: 40px;
-      margin-bottom: 36px;
+      margin-bottom: 32px;
     }
   }
-  .refer {
-    padding: 34px 0px 0 42px;
-    h5 {
-      font-size: 40px;
-      margin-bottom: 0px;
+  .introduction {
+    padding-top: 50px;
+    .more {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 400;
+      color: #555555;
+      line-height: 44px;
+      padding: 8px 0 40px 0;
+      padding-bottom: 24px;
     }
   }
   .service {
+    padding-top: 14px;
     margin: 0 auto;
     .serice-item {
       margin: 0 auto;

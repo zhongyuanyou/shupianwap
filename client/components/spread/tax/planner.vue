@@ -28,7 +28,7 @@
               </div>
             </div>
             <div class="planner-content-div-left-icon">
-              <div style="margin-right: 0.2rem">
+              <div style="margin-right: 0.2rem" @click="openIM">
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -51,22 +51,31 @@
       </sp-swipe>
       <div class="planner-right"></div>
     </div>
+    <dgg-im-company></dgg-im-company>
   </div>
 </template>
 
 <script>
 import { Swipe, SwipeItem } from '@chipspc/vant-dgg'
+import dggImCompany from '~/components/spread/DggImCompany'
 export default {
   name: 'Planner',
   components: {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
+    dggImCompany,
   },
   data() {
     return {
       img: require('~/assets/spreadImages/tax/busi_img_swchbg01.png'),
       tabs: ['工商注册', '财税咨询', '税务筹划'],
     }
+  },
+  methods: {
+    openIM() {
+      console.log(1)
+      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+    },
   },
 }
 </script>

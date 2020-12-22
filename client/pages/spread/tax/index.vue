@@ -24,9 +24,19 @@
     <!--  可能需要  -->
     <Maby></Maby>
     <!--  可能需要  -->
+    <!--  立即咨询  -->
+    <ConsultTel
+      title="对于代理记账还有疑问？企服专家为您免费解答"
+      tel="4000-535800"
+    ></ConsultTel>
+    <!--  立即咨询  -->
     <!--  底部  -->
-    <Bottom></Bottom>
+    <ShuPianZhaoRen></ShuPianZhaoRen>
+    <FixedBottom :data="data"></FixedBottom>
     <!--  底部  -->
+    <!--  IM  -->
+    <dgg-im-company></dgg-im-company>
+    <!--  IM  -->
   </div>
 </template>
 
@@ -40,7 +50,11 @@ import Process from '~/components/spread/tax/process'
 // import Planner from '~/components/spread/tax/planner'
 import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
 import Maby from '~/components/spread/tax/maby'
-import Bottom from '~/components/spread/tax/bottom'
+// import Bottom from '~/components/spread/tax/bottom'
+import dggImCompany from '~/components/spread/DggImCompany'
+import ShuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
+import FixedBottom from '~/components/spread/common/FixedBottom'
+import ConsultTel from '@/components/spread/common/ConsultTel'
 export default {
   name: 'TaxVue',
   components: {
@@ -52,7 +66,11 @@ export default {
     Process,
     GuiHuaShiSwipe,
     Maby,
-    Bottom,
+    // Bottom,
+    dggImCompany,
+    ShuPianZhaoRen,
+    FixedBottom,
+    ConsultTel,
   },
   data() {
     return {
@@ -90,6 +108,22 @@ export default {
         },
       ],
       plannersTitle: '咨询规划师',
+      data: {
+        show: {
+          imgSrc: 'http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg',
+          cardName: '王深林',
+          cardSign: '金牌规划师',
+          icon: '',
+          round: true,
+          avatarSize: 40,
+        },
+        info: {
+          id: '7862495547640840192',
+          name: '张毅',
+          jobNum: '107547',
+          telephone: '18402858698',
+        },
+      },
     }
   },
 }

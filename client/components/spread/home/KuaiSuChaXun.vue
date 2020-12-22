@@ -10,7 +10,9 @@
         <div class="dropdown-menu">
           <div class="dropdown-menu-content" @click="showDropdownList">
             <span class="dropdown-menu-content-prefix">我需要</span>
-            <span class="dropdown-menu-content-val">{{ value.name }}</span>
+            <span class="dropdown-menu-content-val">{{
+              dropdownValue.name
+            }}</span>
             <img
               class="dropdown-menu-content-img"
               src="~/assets/spreadImages/home/busi_img_gscsbd03.png"
@@ -23,16 +25,15 @@
           />
         </div>
         <div class="input-all">
-          <sp-cell-group>
-            <sp-field
-              v-model="telephone"
-              label="手机号"
-              type="tel"
-              placeholder="信息保护中，仅官方可见"
-            />
-          </sp-cell-group>
+          <sp-field
+            v-model="telephone"
+            label="手机号"
+            type="tel"
+            placeholder="信息保护中，仅官方可见"
+            @focus="() => (smsInputIsShow = true)"
+          />
         </div>
-        <div class="input-all1">
+        <div v-if="smsInputIsShow" class="input-all1">
           <sp-field
             v-model="sms"
             center
@@ -48,7 +49,7 @@
           </sp-field>
         </div>
         <div class="submit">
-          <sp-button type="primary">免费预约</sp-button>
+          <sp-button type="primary" @click="submitForm">免费预约</sp-button>
         </div>
       </div>
       <div class="notes">
@@ -65,7 +66,7 @@
 </template>
 
 <script>
-import { ActionSheet, Field, Button, CellGroup } from '@chipspc/vant-dgg'
+import { ActionSheet, Field, Button, CellGroup, Toast } from '@chipspc/vant-dgg'
 
 export default {
   name: 'KuaiSuChaXun',
@@ -74,23 +75,28 @@ export default {
     [Field.name]: Field,
     [Button.name]: Button,
     [CellGroup.name]: CellGroup,
+    [Toast.name]: Toast,
   },
   data() {
     return {
+      // 下拉
       dropList: [
-        { id: 1, name: '基本开户', color: '#5a79e8' },
-        { id: 2, name: '公司注册', color: '#222222' },
-        { id: 3, name: '公司变更', color: '#222222' },
-        { id: 4, name: '刻制印章', color: '#222222' },
-        { id: 5, name: '代理记账', color: '#222222' },
-        { id: 6, name: '银行变更', color: '#222222' },
-        { id: 7, name: '公司核名', color: '#222222' },
-        { id: 8, name: '其他业务', color: '#222222' },
+        { id: 1, code: 'jbkh', name: '基本开户', color: '#5a79e8' },
+        { id: 2, code: 'gszc', name: '公司注册', color: '#222222' },
+        { id: 3, code: 'gsbg', name: '公司变更', color: '#222222' },
+        { id: 4, code: 'kzyz', name: '刻制印章', color: '#222222' },
+        { id: 5, code: 'dljz', name: '代理记账', color: '#222222' },
+        { id: 6, code: 'yhbg', name: '银行变更', color: '#222222' },
+        { id: 7, code: 'gshm', name: '公司核名', color: '#222222' },
+        { id: 8, code: 'qtyw', name: '其他业务', color: '#222222' },
       ],
-      value: '',
+      dropdownValue: '',
       dropdownMenuIsShow: false,
+      // 手机号
       telephone: '',
-      sms: '', // 验证码
+      // 验证码
+      smsInputIsShow: false,
+      sms: '',
       formNotes: [
         {
           id: 1,
@@ -113,14 +119,14 @@ export default {
     }
   },
   created() {
-    this.value = this.dropList[0]
+    this.dropdownValue = this.dropList[0]
   },
   methods: {
     onSelect(item) {
       // 默认情况下点击选项时不会自动收起
       // 可以通过 close-on-click-action 属性开启自动收起
       this.dropdownMenuIsShow = false
-      this.value = item
+      this.dropdownValue = item
       this.dropList.forEach((obj) => {
         if (obj.name === item.name) {
           obj.color = '#5a79e8'
@@ -132,11 +138,33 @@ export default {
     showDropdownList() {
       this.dropdownMenuIsShow = true
     },
+    // 发送验证码
     sendSms() {
       const vm = this
       if (this.countdown > -1) {
-        return
+      } else {
+        // 1、验证手机号
+        const verifyTelResult = this.verifyTel()
+        // 2、验证手机号成功发送验证码
+        // 2.1 发送验证码成功，倒计时开始。2.2发送验证码失败，提示并倒计时不开始
+        if (verifyTelResult) {
+          const _data = {
+            tel: this.telephone,
+            type: 'gs',
+          }
+          window.promotion.privat.getSmsCode(_data, (res) => {
+            // 发送成功，倒计时开始
+            if (res.error === 0) {
+              vm.countDown()
+            }
+            console.log(res.msg)
+          })
+        }
       }
+    },
+    // 验证码倒计时
+    countDown() {
+      const vm = this
       this.countdown = 10
       this.countdownTimer = setInterval(function () {
         if (vm.countdown === 0) {
@@ -147,6 +175,90 @@ export default {
           vm.countdown > 0 && vm.countdown--
         }
       }, 1000)
+    },
+    // 验证手机号
+    verifyTel() {
+      const _tel = this.telephone
+      const _reg = /^1[3,4,5,6,7,8,9]\d{9}$/
+      if (_tel === '') {
+        return Toast('请输入手机号码') && false
+      }
+      if (!_reg.test(_tel)) {
+        return Toast('请输入正确的手机号码') && false
+      }
+      return true
+    },
+    // 表单提交
+    submitForm() {
+      // 1、验证表单数据格式
+      const _tel = this.telephone
+      const _code = this.sms
+      const _telReg = /^1[3,4,5,6,7,8,9]\d{9}$/
+      if (!_tel) {
+        Toast('请输入电话号码')
+        return
+      }
+      if (!_telReg.test(_tel)) {
+        Toast('请输入正确的电话号码')
+        return
+      }
+      if (!_code) {
+        Toast('请输入验证码')
+        return
+      }
+      if (this.select === '选择税务类型') {
+        Toast('请选择税务类型')
+        return
+      }
+      // 2、整合表单数据
+      const webUrl = window.location.href
+      const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
+      const contentStr = {
+        yeWuLeiXing: this.dropdownValue.name,
+      }
+      const params = {
+        formId, // formId,唯一ID提交资源中心
+        name: '匿名客户',
+        tel: _tel, // 电话
+        url: webUrl, // 当前页面地址。用于后台判断ip发送验证码次数
+        type: 'swch', // 业态编码。
+        place: 'cd', // 定位城市。
+        device: 'wap', // 设备：pc,wap。
+        web: 'xmt', // 归属渠道：xmt,zytg,wxgzh。
+        smsCode: _code, // 验证码
+        content: JSON.stringify(contentStr),
+      }
+      // 3、提交表单
+      window.promotion.privat.consultForm(params, (res) => {
+        if (res.error === 0) {
+          // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
+          console.log(res)
+          Toast('提交成功，请注意接听电话')
+        } else {
+          console.log(res)
+        }
+      })
+    },
+    getDate() {
+      const timeStamp = new Date()
+      // 获取当前年
+      const currentYear = JSON.stringify(timeStamp.getFullYear())
+      // 获取当前月
+      const currentMonth = JSON.stringify(timeStamp.getMonth() + 1)
+      // 获取当前日
+      const currentDate = JSON.stringify(timeStamp.getDate())
+      const currentHour = JSON.stringify(timeStamp.getHours()) // 获取当前小时数(0-23)
+      const currentMin = JSON.stringify(timeStamp.getMinutes()) // 获取当前分钟数(0-59)
+      const currentSeconds = JSON.stringify(timeStamp.getSeconds())
+      // 获取当前时间
+      const nowTimeString =
+        currentYear +
+        currentMonth +
+        currentDate +
+        currentHour +
+        currentMin +
+        currentSeconds
+      return nowTimeString
     },
   },
 }

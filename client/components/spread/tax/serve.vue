@@ -31,7 +31,7 @@
           </div>
           <div class="serve-card-second-right">
             <div class="serve-card-second-right-person"></div>
-            <div class="serve-card-second-right-rap" @click="call">
+            <div class="serve-card-second-right-rap" @click="openIM">
               <my-icon
                 name="notify_ic_chat"
                 color="#4974F5"
@@ -104,8 +104,10 @@ export default {
   },
   methods: {
     call(e) {
-      console.log(1)
       e.stopPropagation()
+    },
+    openIM() {
+      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
     },
   },
 }
@@ -208,7 +210,9 @@ export default {
           height: 56px;
           width: 56px;
           border-radius: 50%;
-          background: gray;
+          background-image: url('http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg');
+          background-position: center center;
+          background-size: 100% 100%;
         }
         &-rap {
           width: 40px;

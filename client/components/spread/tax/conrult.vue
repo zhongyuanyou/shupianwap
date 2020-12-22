@@ -10,7 +10,7 @@
       </sp-grid>
     </div>
     <div class="conrult-gray">更多行业解决方案</div>
-    <button class="conrult-button">立即咨询</button>
+    <button class="conrult-button" @click="consult">立即咨询</button>
   </div>
 </template>
 
@@ -99,6 +99,11 @@ export default {
         },
       ],
     }
+  },
+  methods: {
+    consult() {
+      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+    },
   },
 }
 </script>

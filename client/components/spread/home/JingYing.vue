@@ -113,7 +113,6 @@ export default {
       .middle-transition {
         display: flex;
         align-items: center;
-        align-content: center;
         span {
           display: block;
         }
@@ -129,7 +128,6 @@ export default {
         line-height: 28px;
         font-weight: bold;
         color: #ec5330;
-        padding-bottom: 5px;
       }
       .product-price-suffix {
         font-size: 20px;

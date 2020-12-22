@@ -32,12 +32,16 @@
     <ShuPianZhaoRen />
     <!-- END 薯片找人-->
     <!-- START 固定底部-->
-    <FixedBottom />
+    <FixedBottom :data="guiHuaShiBottom" />
     <!-- END 固定底部-->
+    <!-- START IM在线咨询-->
+    <dgg-im-company></dgg-im-company>
+    <!-- END IM在线咨询-->
   </div>
 </template>
 
 <script>
+import dggImCompany from '~/components/spread/DggImCompany'
 import Header from '@/components/common/head/header'
 import Banner from '@/components/spread/home/Banner'
 import Nav from '@/components/spread/home/Nav'
@@ -46,8 +50,8 @@ import ChuChuang from '@/components/spread/home/ChuChuang'
 import JingYing from '@/components/spread/home/JingYing'
 import ShiYong from '@/components/spread/home/ShiYong'
 import PingTaiYouShi from '@/components/spread/home/PingTaiYouShi'
-import ShuPianZhaoRen from '@/components/spread/home/ShuPianZhaoRen'
-import FixedBottom from '@/components/spread/home/FixedBottom'
+import ShuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
+import FixedBottom from '~/components/spread/common/FixedBottom'
 import KuaiSuChaXun from '@/components/spread/home/KuaiSuChaXun'
 import GuiHuaShiSwipe from '@/components/spread/common/GuiHuaShiSwipe'
 export default {
@@ -65,6 +69,7 @@ export default {
     FixedBottom,
     KuaiSuChaXun,
     GuiHuaShiSwipe,
+    dggImCompany,
   },
   data() {
     return {
@@ -103,6 +108,22 @@ export default {
           labels: ['工商注册', '财税咨询', '税务筹划'],
         },
       ],
+      guiHuaShiBottom: {
+        show: {
+          imgSrc: 'http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg',
+          cardName: '王深林',
+          cardSign: '金牌规划师',
+          icon: '',
+          round: true,
+          avatarSize: 40,
+        },
+        info: {
+          id: '7862495547640840192',
+          name: '张毅',
+          jobNum: '107547',
+          telephone: '18402858698',
+        },
+      },
     }
   },
 }
@@ -113,6 +134,5 @@ export default {
   width: 750px;
   margin: 0 auto;
   font-family: PingFang SC;
-  padding-bottom: 60px;
 }
 </style>

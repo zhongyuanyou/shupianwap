@@ -3,7 +3,8 @@
     <sp-swipe
       class="my-swipe"
       :autoplay="3000"
-      :show-indicators="showIndicators"
+      indicator-color="#FFFFFF"
+      :show-indicators="imglist.length > 1 ? true : false"
     >
       <sp-swipe-item v-for="(item, index) in imglist" :key="index">
         <router-link :to="item.url"><img :src="item.img" alt="" /></router-link>
@@ -29,9 +30,7 @@ export default {
     },
   },
   data() {
-    return {
-      showIndicators: false,
-    }
+    return {}
   },
 }
 </script>
@@ -49,6 +48,9 @@ export default {
         width: 100%;
       }
     }
+  }
+  /deep/.sp-swipe__indicators {
+    bottom: 96px;
   }
 }
 </style>

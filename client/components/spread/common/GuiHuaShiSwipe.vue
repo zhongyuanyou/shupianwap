@@ -19,7 +19,9 @@
                 class="planner-content-item-shadow-person-img"
                 :style="
                   item.avatarImg === ''
-                    ? { background: 'gray' }
+                    ? {
+                        backgroundImage: `url(http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg)`,
+                      }
                     : { backgroundImage: `url(${item.avatarImg})` }
                 "
               ></div>
@@ -39,7 +41,7 @@
               </div>
             </div>
             <div class="planner-content-item-shadow-icon">
-              <div style="margin-right: 0.2rem">
+              <div style="margin-right: 0.2rem" @click="openIM">
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -103,6 +105,11 @@ export default {
       img: require('~/assets/spreadImages/tax/busi_img_swchbg01.png'),
     }
   },
+  methods: {
+    openIM() {
+      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+    },
+  },
 }
 </script>
 
@@ -130,7 +137,7 @@ export default {
         width: 660px;
         height: 207px;
         background: url('~assets/spreadImages/tax/busi_img_swchbg01.png');
-        background-size: 100% 100%;
+        background-size: 101% 101%;
         border: 1px solid rgba(205, 205, 205, 0.3);
         box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
         border-radius: 4px;

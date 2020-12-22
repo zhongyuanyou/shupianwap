@@ -49,6 +49,8 @@
           v-model="phonenumber"
           label="手机号"
           placeholder="信息保护中，仅官方可见"
+          onkeyup="value=value.replace(/[^\d]/g,'')"
+          maxlength="11"
           @click="verificationshow()"
         />
         <!-- s 获取验证码 -->
@@ -106,8 +108,8 @@ export default {
         { code: 2, scope: '100-500万' },
         { code: 3, scope: '500万以上' },
       ],
-      read: true,
       actived: 1,
+      read: true,
       second: '', // 倒计时秒数
       value: '科技信息', // 行业信息
       phonenumber: '', // 电话号码
@@ -190,7 +192,6 @@ export default {
   margin-top: -80px;
   padding: 0 40px;
   position: relative;
-
   .form-box {
     width: 100%;
     background: #ffffff;

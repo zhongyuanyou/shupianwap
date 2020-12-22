@@ -68,5 +68,11 @@ export default {
     font-weight: bold;
     color: #ffffff;
   }
+  /deep/.sp-button__content {
+    font-size: 32px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #ffffff;
+  }
 }
 </style>
