@@ -77,14 +77,13 @@ export default {
 <style lang="less" scoped>
 .register-ready {
   font-size: 28px;
-  padding: 0 42px 0 40px;
+  padding: 32px 42px 0 40px;
   h3 {
     font-size: 40px;
     font-weight: bold;
     color: #1a1a1a;
     line-height: 52px;
     padding-bottom: 32px;
-    padding-top: 64px;
   }
   .message {
     margin-bottom: 24px;

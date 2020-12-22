@@ -98,7 +98,7 @@ export default {
   components: {
     [Image.name]: Image,
     [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup, // FR:冗余删除
+    [CellGroup.name]: CellGroup,
     [ActionSheet.name]: ActionSheet,
     [Toast.name]: Toast,
     [Icon.name]: Icon,
@@ -250,7 +250,13 @@ export default {
           // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
           console.log(res)
           Toast('提交成功，请注意接听电话')
-          // $('.ejForm').show()
+          this.selectValue = '请选择'
+          this.sms = ''
+          this.phoneValue = ''
+          // this.test = '获取验证码'
+        } else {
+          // ------------
+          console.log(res)
         }
       })
     },

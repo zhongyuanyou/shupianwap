@@ -21,12 +21,10 @@
         </div>
       </div>
     </div>
-    <QueryPhone />
   </div>
 </template>
 <script>
 import { Cell, CellGroup, ActionSheet, Toast, Image } from '@chipspc/vant-dgg'
-import QueryPhone from './QueryPhone'
 export default {
   name: 'Standard',
   components: {
@@ -35,11 +33,10 @@ export default {
     [ActionSheet.name]: ActionSheet,
     [Toast.name]: ActionSheet,
     [Image.name]: Image,
-    QueryPhone,
   },
   data() {
     return {
-      title: '有限责任公司',
+      title: '注册标准',
       show: false,
       active: 2,
       content: [
@@ -51,6 +48,7 @@ export default {
             <p>(4）有公司名称;</p>
             <p>(5）有固定的生产经营场所和必要的生产经营条件。</p>`,
           flag: true,
+          color: '#5a79e8',
         },
         {
           name: '个体商户',
@@ -74,10 +72,11 @@ export default {
     onSelect(action, index) {
       // 默认情况下点击选项时不会自动收起
       // 可以通过 close-on-click-action 属性开启自动收起
-      console.log(action, index)
+      this.title = action.name
       this.content.forEach((element) => {
         element.flag = false
-        this.title = action.name
+        if (element.name === this.title) element.color = '#5a79e8'
+        else element.color = '#232124'
       })
       this.content[index].flag = true
       this.show = false
