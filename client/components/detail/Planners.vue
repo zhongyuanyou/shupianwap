@@ -81,17 +81,24 @@ export default {
     vertical-align: middle;
   }
   .gold_icon {
-    width: 146px;
+    min-width: 146px;
+    max-width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
     height: 34px;
+    line-height: 32px;
     border: 1px solid #e0a963;
     margin-left: 12px;
     border-radius: 16px;
     font-size: 20px;
     font-weight: 400;
     color: #e0a963;
-    padding-left: 32px;
+    padding-left: 38px;
+    padding-right: 7px;
     text-align: center;
     position: relative;
+    font-style: normal;
     &::before {
       content: '';
       display: block;

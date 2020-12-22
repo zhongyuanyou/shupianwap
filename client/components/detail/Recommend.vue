@@ -9,7 +9,7 @@
       </div>
     </div>
     <sp-swipe :loop="false" :width="315.5" :show-indicators="false">
-      <sp-swipe-item v-for="(item, index) in info.req" :key="index">
+      <sp-swipe-item v-for="item in similarRecommendData" :key="item.id">
         <div class="swipe_item_con">
           <div class="swipe_item_con_img">
             <sp-image
@@ -21,10 +21,10 @@
           </div>
           <div class="swipe_item_con_rt">
             <p class="title">
-              西南地区 一般纳税人，个人西南地区 一般纳税人，个人
+              {{ item.name }}
             </p>
             <div class="swipe_item_con_rt_bot">
-              <p class="money">45.28元</p>
+              <p class="money">{{ item.platformPrice }}元</p>
               <p class="province">四川省</p>
             </div>
           </div>
@@ -44,13 +44,9 @@ export default {
     [Image.name]: Image,
   },
   props: {
-    info: {
-      type: Object,
-      default: () => {
-        return {
-          req: [],
-        }
-      },
+    similarRecommendData: {
+      type: Array,
+      default: () => [],
     },
   },
 }

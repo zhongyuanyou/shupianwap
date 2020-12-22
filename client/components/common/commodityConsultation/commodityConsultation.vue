@@ -11,7 +11,7 @@
         />
         <div class="commodityConsult-containner-userInfo-name">
           <p>{{ plannerInfo.userName }}</p>
-          <h3>{{ plannerInfo.postName }}</h3>
+          <span>{{ plannerInfo.postName }}</span>
         </div>
       </div>
       <div class="commodityConsult-containner-handle">
@@ -66,7 +66,7 @@ export default {
       margin-top: 34px;
       display: flex;
       justify-content: space-between;
-      padding-bottom: 34px;
+      /*padding-bottom: 34px;*/
       &-name {
         margin-left: 25px;
         p {
@@ -77,8 +77,12 @@ export default {
           line-height: 33px;
           margin-top: 3px;
           margin-bottom: 9px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 150px;
         }
-        h3 {
+        span {
           height: 32px;
           line-height: 30px;
           padding-left: 8px;
@@ -90,6 +94,11 @@ export default {
           font-weight: 400;
           color: #7b6225;
           text-align: center;
+          max-width: 150px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          float: left;
         }
       }
     }

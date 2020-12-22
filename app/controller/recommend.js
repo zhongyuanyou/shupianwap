@@ -30,7 +30,24 @@ async function getMchSettled(ctx) {
 }
 async function resDefaultObj(ctx) {
 // 接口报错,请求商户中心规返回空数据
-  const { limit, page } = ctx.query;
+  const { limit, page, sceneId } = ctx.query;
+  // 先从缓存中获取推荐产品列表
+  const recommendProduct = await ctx.service.redis.get(sceneId);
+  // 获取到缓存数据
+  if (recommendProduct) {
+    await ctx.helper.success({
+      ctx,
+      code: 200,
+      res: {
+        currentPage: page,
+        limit,
+        totalPage: Math.ceil(recommendProduct.length / limit),
+        totalCount: recommendProduct.length,
+        records: recommendProduct.slice((page - 1) * limit, limit * page),
+      },
+    });
+    return;
+  }
   await ctx.helper.success({
     ctx,
     code: 200,
@@ -82,7 +99,7 @@ class RecommendController extends Controller {
           limit,
           totalPage: Math.ceil(recommendPlanner.records.length / limit),
           totalCount: recommendPlanner.records.length,
-          records: recommendPlanner.records.slice((page - 1) * limit, limit),
+          records: recommendPlanner.records.slice((page - 1) * limit, limit * page),
         },
       });
       return;
@@ -129,7 +146,7 @@ class RecommendController extends Controller {
               totalCount: plannerList.data.records.length,
               records: plannerList.data.records.slice(
                 (page - 1) * limit,
-                limit
+                limit * page
               ),
             },
           });
@@ -183,7 +200,7 @@ class RecommendController extends Controller {
       app.config.apiClient.APPID[6],
       algorithmApi.productRecom
     );
-    const { code, data } = await service.curl.curlPost(url, {
+    const { code, message, data } = await service.curl.curlPost(url, {
       userId,
       deviceId,
       formatId,
@@ -197,23 +214,7 @@ class RecommendController extends Controller {
     });
     if (code === 200) {
       if (data.productInfoList.length < 1) {
-        // 先从缓存中获取推荐产品列表
-        const recommendProduct = await ctx.service.redis.get(sceneId);
-        // 获取到缓存数据
-        if (recommendProduct) {
-          ctx.helper.success({
-            ctx,
-            code: 200,
-            res: {
-              currentPage: page,
-              limit,
-              totalPage: Math.ceil(recommendProduct.length / limit),
-              totalCount: recommendProduct.length,
-              records: recommendProduct.slice((page - 1) * limit, limit),
-            },
-          });
-          return;
-        }
+        // 兜底
         await resDefaultObj(ctx);
         return;
       }
@@ -225,6 +226,7 @@ class RecommendController extends Controller {
           app.config.apiClient.APPID[1],
           productApi.getTradingListToIds
         );
+        params.fieldDetail = 1;
         params.ids = data.productInfoList;
       //  2是服务
       } else {
@@ -233,15 +235,51 @@ class RecommendController extends Controller {
           productApi.productDetails
         );
         params.productIds = data.productInfoList;
+        params.needRefConfig = false;
       }
 
       // 查询出所有推荐的规划师数据信息
       const productList = await service.curl.curlPost(productUrl, params);
       if (productList.code === 200 && productList.data.length > 0) {
         try {
+          // 获取显示标签
+          const tagsKeys = {
+            FL20201207080003: [
+              'company_industry', // 公司行业
+              'taxpayer_type', // 纳税类型
+              'registered_capital', // 注册资本
+              'registration_time', // 注册时间
+            ],
+            FL20201202065056: [
+              'trademark_type', // 商标分类
+              'similar_group', // 组合类型
+            ],
+            FL20201202065055: [
+              'patent_type', // 专利类型
+              'patent_industry', // 专利行业
+              'patent_status', // 状态
+            ],
+            FL20201202065054: [
+              'qualification_registration_area', // 区域
+              'qualification_expire_date', // 到期时间
+              'safety_production_license', // 安许证
+              'qualification_registered_capital', // 注册资本
+            ],
+          };
           // 将得到的推荐数据存入缓存一小时失效
           const productListData = productList.data;
-          ctx.service.redis.set(sceneId, productListData);
+          if (searchType === 1) {
+            // 推荐产品需要展示的属性字段
+            productList.data.forEach((list, index) => {
+              productList.data[index].fieldList = list.fieldList.filter(item => {
+                if (list.classCodeLevelList && tagsKeys[list.classCodeLevelList[0]]) {
+                  return tagsKeys[list.classCodeLevelList[0]].includes(item.fieldCode);
+                }
+                return false;
+              });
+            });
+          }
+          const limitProductData = [ ...productListData ].slice((page - 1) * limit, page * limit);
           ctx.helper.success({
             ctx,
             code: 200,
@@ -250,26 +288,25 @@ class RecommendController extends Controller {
               limit,
               totalPage: Math.ceil(productListData.length / limit),
               totalCount: productListData.length,
-              records: productListData.slice(
-                (page - 1) * limit,
-                limit
-              ),
+              records: limitProductData,
             },
           });
+          ctx.service.redis.set(sceneId, productListData);
           return;
         } catch (err) {
           ctx.logger.error(err);
-          // 接口报错,返回空数据
+          // 兜底
           await resDefaultObj(ctx);
           return;
         }
       } else {
-        // 接口报错,请求商户中心规返回空数据
+        // 兜底
         await resDefaultObj(ctx);
         return;
       }
     } else {
-      // 接口报错,请求商户中心规返回空数据
+      ctx.logger.error(code, message);
+      // 兜底
       await resDefaultObj(ctx);
       return;
     }

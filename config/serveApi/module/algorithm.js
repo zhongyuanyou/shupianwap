@@ -7,6 +7,6 @@
  * */
 'use strict';
 module.exports.algorithmApi = {
-  productRecom: '/recommendInfo/productRecom.do',
-  plannerRecom: '/recommendInfo/plannerRecom.do', // 规划师推荐
+  productRecom: '/nk/recommendInfo/productRecom.do',
+  plannerRecom: '/nk/recommendInfo/plannerRecom.do', // 规划师推荐
 };
