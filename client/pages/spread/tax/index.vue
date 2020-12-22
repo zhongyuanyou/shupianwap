@@ -23,14 +23,16 @@
     <!--  规划师  -->
     <!--  可能需要  -->
     <Maby></Maby>
+    <!--  可能需要  -->
+    <!--  立即咨询  -->
     <ConsultTel
       title="对于代理记账还有疑问？企服专家为您免费解答"
       tel="4000-535800"
     ></ConsultTel>
-    <!--  可能需要  -->
+    <!--  立即咨询  -->
     <!--  底部  -->
     <ShuPianZhaoRen></ShuPianZhaoRen>
-    <FixedBottom></FixedBottom>
+    <FixedBottom :data="data"></FixedBottom>
     <!--  底部  -->
     <!--  IM  -->
     <dgg-im-company></dgg-im-company>
@@ -106,6 +108,22 @@ export default {
         },
       ],
       plannersTitle: '咨询规划师',
+      data: {
+        show: {
+          imgSrc: 'http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg',
+          cardName: '王深林',
+          cardSign: '金牌规划师',
+          icon: '',
+          round: true,
+          avatarSize: 40,
+        },
+        info: {
+          id: '7862495547640840192',
+          name: '张毅',
+          jobNum: '107547',
+          telephone: '18402858698',
+        },
+      },
     }
   },
 }
