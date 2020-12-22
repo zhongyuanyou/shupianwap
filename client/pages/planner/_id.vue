@@ -4,7 +4,7 @@
  * @LastEditors: Please set LastEditors
  * @LastEditTime: 2020-12-15 11:56:44
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/planner/_id.vue
+ * @FilePath: /chips-wap/client/pages/planner/serviceDetails.vue
 -->
 
 <template>

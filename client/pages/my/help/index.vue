@@ -1,7 +1,7 @@
 <template>
   <div class="help-page">
     <!-- S 头部 -->
-    <Header ref="headerRef" title="帮助中心" />
+    <Header v-if="!isInApp" ref="headerRef" title="帮助中心" />
     <!-- E 头部 -->
     <!-- S 广告位 -->
     <div class="help-bn">
@@ -10,20 +10,20 @@
     <!-- E 广告位 -->
     <div class="hele-centent">
       <!-- S 功能 -->
-      <div class="func-list">
-        <div>
+      <div v-if="isInApp" class="func-list">
+        <div @click="handleClick(0)">
           <img src="../../../assets/temporary/home/help_icon_pass.png" alt="" />
-          <span>修改登录密码</span>
+          <span>{{ isPassword ? '修改登录密码' : '设置登录密码' }}</span>
         </div>
-        <div>
+        <div @click="handleClick(1)">
           <img src="../../../assets/temporary/home/help_icon_tel.png" alt="" />
           <span>实名认证</span>
         </div>
-        <div>
+        <div @click="handleClick(2)">
           <img src="../../../assets/temporary/home/help_icon_name.png" alt="" />
-          <span>免打扰设置</span>
+          <span>修改手机号</span>
         </div>
-        <div>
+        <div @click="handleClick(3)">
           <img src="../../../assets/temporary/home/help_icon_msg.png" alt="" />
           <span>我要吐槽</span>
         </div>
@@ -89,7 +89,7 @@
     </div>
     <!-- S footer -->
     <sp-bottombar safe-area-inset-bottom>
-      <sp-bottombar-icon icon="phone-o" text="致电" />
+      <sp-bottombar-icon icon="phone-o" text="致电" @click="handleTel" />
       <sp-bottombar-button type="primary" text="在线客服" />
     </sp-bottombar>
     <!-- E footer -->
@@ -107,6 +107,7 @@ import {
   BottombarIcon,
   Sticky,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
 import { helpApi } from '@/api'
 import Header from '@/components/common/head/header'
@@ -152,7 +153,6 @@ export default {
         tabData[0].articleData = res.data.articleData
         adData = res.data.adListData[0].materialList[0]
       }
-      console.log('服务端', res)
     } catch (error) {}
     return {
       params,
@@ -169,9 +169,24 @@ export default {
       tabData: [],
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+      isPassword: (state) => state.user.userInfo.isPassword || 0,
+    }),
+  },
   mounted() {
-    console.log(this.params, this.tabData)
-    this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
+    if (!this.isInApp) {
+      this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
+    } else {
+      // 设置app导航名称
+      this.$appFn.dggSetTitle(
+        {
+          title: '帮助中心',
+        },
+        (res) => {}
+      )
+    }
   },
   methods: {
     // tab切换
@@ -209,9 +224,7 @@ export default {
         page: this.tabData[index].page,
       }
       this.params = Object.assign(this.params, params)
-      console.log(this.params)
       this.$axios.post(helpApi.findArticle, this.params).then((res) => {
-        console.log(res)
         this.loading = false
         // 无更多数据
         if (!res.data.articleData.length) {
@@ -240,6 +253,37 @@ export default {
         path: '/my/help/questions',
         query: { id },
       })
+    },
+    handleClick(val) {
+      if (val === 3) {
+        this.$router.push('/my/complain')
+      } else if (val === 2) {
+        this.$appFn.dggJumpRoute({
+          iOSRouter:
+            '{"path":"CPSCustomer:CPSCustomer/CPSVerificationViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}',
+          androidRouter: '',
+        })
+      } else if (val === 0) {
+        const iosSetPassword =
+          '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
+        const androisSetPassword = ''
+        const iosUpdatePassword =
+          '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
+        const androisUpdatePassword = ''
+        this.$appFn.dggJumpRoute({
+          iOSRouter: this.isPassword ? iosUpdatePassword : iosSetPassword,
+          androidRouter: this.isPassword
+            ? androisUpdatePassword
+            : androisSetPassword,
+        })
+      }
+    },
+    handleTel() {
+      // 拨打电话
+      if (this.isInApp) {
+        // 如果当前页面在app中，则调用原生拨打电话的方法
+        this.$appFn.dggCallPhone({ phone: '17755021122' }, (res) => {})
+      }
     },
   },
 }

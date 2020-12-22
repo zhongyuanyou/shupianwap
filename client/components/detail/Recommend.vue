@@ -20,12 +20,17 @@
             />
           </div>
           <div class="swipe_item_con_rt">
-            <p class="title">
-              {{ item.name }}
-            </p>
+            <p class="title">{{ item.name }}</p>
+            <div class="label">
+              <span v-for="(lItem, index) in item.fieldList" :key="index">{{
+                `${lItem.fieldValueList ? lItem.fieldValueList[0] : ''}${
+                  index === item.fieldList.length - 1 ? '' : '|'
+                }`
+              }}</span>
+            </div>
             <div class="swipe_item_con_rt_bot">
               <p class="money">{{ item.platformPrice }}元</p>
-              <p class="province">四川省</p>
+              <!--              <p class="province">四川省</p>-->
             </div>
           </div>
         </div>
@@ -112,21 +117,44 @@ export default {
     justify-content: flex-start;
     align-items: flex-start;
     flex-direction: row;
+    overflow: hidden;
     &_rt {
       width: 100%;
-      height: 160px;
+      /*height: 160px;*/
       margin-left: 23px;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       flex-direction: column;
       .title {
-        font-size: 28px;
+        font-size: 0.32rem;
         font-family: PingFang SC;
         font-weight: bold;
         color: #222222;
-        line-height: 40px;
+        margin-top: -0.06rem;
+        line-height: 0.44rem;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        overflow: hidden;
+        white-space: normal;
         .textOverflow(2);
+      }
+      .label {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: row;
+        margin-top: 2px;
+        margin-bottom: 9px;
+        span {
+          font-size: 22px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          color: #222222;
+        }
       }
       &_bot {
         display: flex;
@@ -135,11 +163,11 @@ export default {
         flex-direction: row;
         width: 100%;
         .money {
-          font-size: 36px;
+          font-size: 0.3rem;
           font-family: PingFang SC;
           font-weight: bold;
           color: #ec5330;
-          line-height: 36px;
+          margin-top: 0.09rem;
         }
         .province {
           font-size: 24px;

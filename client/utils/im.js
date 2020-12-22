@@ -106,21 +106,21 @@ export function sendTemplateMsg(imExample, data = {}) {
       templateId: '', // 模板 id
       receiver: data.receiver, // 会话 id
       senderName: data.senderName, // 发送者昵称
-      msgType: '', // 消息类型
+      msgType: data.msgType, // 消息类型
       extContent: data.extContent, // 路由参数
       paramJsonStr: {
-        productName: data.productName,
-        productContent: data.productContent,
-        price: data.price,
-        forwardAbstract: data.forwardAbstract,
-        routerId: data.routerId,
+        productName: data.productName, // 产品名称
+        productContent: data.productContent, // 产品信息
+        price: data.price, // 价格
+        forwardAbstract: data.forwardAbstract, // 摘要信息，可与显示内容保持一致
+        routerId: data.routerId, // 路由ID
       },
     }
     switch (data.sendType) {
       // 带图片的模板消息
       case 0:
-        params.paramJsonStr.imageUrl = data.imageUrl
-        params.paramJsonStr.unit = data.unit
+        params.paramJsonStr.imageUrl = data.imageUrl // 产品图片
+        params.paramJsonStr.unit = data.unit // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
         params.templateId = '5fcef0aec24ddd00065a8c93'
         break
       // 不带图片的模板消息
@@ -131,7 +131,8 @@ export function sendTemplateMsg(imExample, data = {}) {
       default:
         break
     }
-    imExample.sendTemplateMsg(data, (res) => {
+    params.paramJsonStr = JSON.stringify(params.paramJsonStr)
+    imExample.sendTemplateMsg(params, (res) => {
       resolve(res)
     })
   })

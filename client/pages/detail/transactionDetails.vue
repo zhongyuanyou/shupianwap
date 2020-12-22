@@ -5,7 +5,7 @@
       :tc-product-detail-data="tcProductDetailData"
       :tc-planner-booth="tcPlannerBooth"
       :recommend-planner="planners"
-      :detail-type="$route.params.type"
+      :detail-type="$route.query.type"
     />
   </div>
 </template>
@@ -19,7 +19,7 @@ export default {
   components: {
     DetailTemplate,
   },
-  async asyncData({ $axios, params, app, store }) {
+  async asyncData({ $axios, query, app, store }) {
     try {
       let tcPlannerBooth = {}
       let tcProductDetailData = {}
@@ -27,7 +27,7 @@ export default {
         productDetailsApi.tcProductDetail,
         {
           params: {
-            productId: params.id,
+            productId: query.id,
           },
         }
       )

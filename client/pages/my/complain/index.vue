@@ -52,12 +52,15 @@
         >
       </div>
       <div class="complaint-image">
-        <div class="complaint-image-title">上传照片</div>
+        <div class="complaint-image-title">
+          上传照片{{ JSON.stringify(uploader) }}
+        </div>
         <div class="complaint-image-upload">
           <sp-uploader
             v-model="uploader"
             :max-count="3"
             :max-size="20 * 1024 * 1024"
+            :after-read="afterRead"
             @oversize="onOversize"
           >
             <template>
@@ -87,6 +90,7 @@
         />
       </sp-bottombar>
     </div>
+    <spToast ref="spToast"></spToast>
   </div>
 </template>
 <script>
@@ -101,6 +105,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { complain } from '~/api'
+import spToast from '@/components/common/spToast/spToast'
 export default {
   name: 'AddComplaint',
   components: {
@@ -110,6 +115,7 @@ export default {
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
     [Sticky.name]: Sticky,
+    spToast,
   },
   data() {
     return {
@@ -211,19 +217,24 @@ export default {
             platformCode: 'adasdad', // 平台编码
             platformName: 'asdasdas', // 平台名称
           }
-          Toast({
+          this.$refs.spToast.show({
             message: '提交成功，感谢您的反馈',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
+            duration: 1500,
+            forbidClick: true,
+            icon: 'spiconfont-tab_ic_check',
           })
-        } catch (err) {
-          console.log(err)
-        }
+        } catch (err) {}
       }
     },
     // 限制图片大小
     onOversize(file) {
       Toast('文件大小不能超过20M')
+    },
+    afterRead(file, detail) {
+      console.log('file', file)
+    },
+    uploadSuccess(response) {
+      console.log('response', response)
     },
   },
 }

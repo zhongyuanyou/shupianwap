@@ -270,13 +270,12 @@ class RecommendController extends Controller {
           const productListData = productList.data;
           if (searchType === 1) {
             // 推荐产品需要展示的属性字段
-            productList.data.forEach((list, index) => {
-              productList.data[index].fieldList = list.fieldList.filter(item => {
-                if (list.classCodeLevelList && tagsKeys[list.classCodeLevelList[0]]) {
-                  return tagsKeys[list.classCodeLevelList[0]].includes(item.fieldCode);
-                }
-                return false;
-              });
+            productList.data.forEach(list => {
+              list.fieldList.filter(item => (
+                list.classCodeLevelList &&
+                tagsKeys[list.classCodeLevelList[0]] &&
+                tagsKeys[list.classCodeLevelList[0]].includes(item.fieldCode))
+              );
             });
           }
           const limitProductData = [ ...productListData ].slice((page - 1) * limit, page * limit);

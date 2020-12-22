@@ -55,8 +55,8 @@ import ServiceItems from '~/components/detail/service/ServiceItems'
 import ServiceInfo from '~/components/detail/service/ServiceInfo'
 import Planners from '~/components/detail/Planners'
 import RecommendScProduct from '~/components/detail/service/RecommendScProduct'
-import commodityConsultation from '@/components/common/commodityConsultation/commodityConsultation'
-import getUserSign from '@/utils/fingerprint'
+import commodityConsultation from '~/components/common/commodityConsultation/commodityConsultation'
+import getUserSign from '~/utils/fingerprint'
 import { productDetailsApi, recommendApi } from '~/api'
 export default {
   name: 'ServiceDetails',
@@ -74,7 +74,7 @@ export default {
     RecommendScProduct,
     commodityConsultation,
   },
-  async asyncData({ $axios, params, app }) {
+  async asyncData({ $axios, query, app }) {
     try {
       let scProductDetailData = {}
       let scPlannerDetailData = {}
@@ -82,7 +82,7 @@ export default {
       const productDetailRes = await $axios.post(
         productDetailsApi.scProductDetail,
         {
-          productId: params.id,
+          productId: query.id,
           serviceItem: 'true',
           showClient: 'COMDIC_TERMINAL_WAP',
           needServiceItem: true,
@@ -213,7 +213,7 @@ export default {
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId'), // 用户ID(选填)
             platform: 'app', // 平台（app,m,pc）
-            productId: this.$route.params.id, // 产品id
+            productId: this.$route.query.id, // 产品id
           },
         })
         .then((res) => {
@@ -246,7 +246,7 @@ export default {
             formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
             areaCode: '370400', // 区域编码
             sceneId: 'app-fwcpxq-01', // 场景ID
-            productId: this.$route.params.id, // 产品ID（产品详情页必传）
+            productId: this.$route.query.id, // 产品ID（产品详情页必传）
             productType: 'FL20201116000002', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.scProductDetailData.baseData.name, // 产品名称（产品详情页传、咨询页等）
             platform: 'APP', // 平台（app,m,pc）

@@ -28,4 +28,5 @@ module.exports.contentApi = {
   findSiteList: '/nk/app/website_config/v1/city_list.do', // 获取站点列表
   findKeyword: '/nk/app/content_keyword/v1/find_page.do', // 获取文章内容关键词
   findCityList: '/nk/app/website_config/v1/city_list.do', // 查询市级数据列表
+  findCodeWebsite: '/nk/app/website_config/v1/detail.do', // 根据编号查询详情和下级数据
 };
