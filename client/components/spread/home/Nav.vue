@@ -4,7 +4,14 @@
       <!-- S 固定导航 -->
       <ul v-if="navList && navList.length <= num" class="fixed-nav">
         <li v-for="(item, index) in navList" :key="index">
-          <a href="javascript:void(0);">
+          <a
+            href="javascript:void(0);"
+            @click="
+              () => {
+                $parent.jumpLink(item.url)
+              }
+            "
+          >
             <img :src="item.icon" alt="" />
             <span>{{ item.name }}</span>
           </a>
@@ -15,7 +22,14 @@
       <div ref="refScroll" class="scroll-centent" @scroll="scrollHandle">
         <ul v-if="navList && navList.length > num" class="scroll-nav">
           <li v-for="(item, index) in navList" :key="index" class="nav-item">
-            <a href="javascript:void(0);">
+            <a
+              href="javascript:void(0);"
+              @click="
+                () => {
+                  $parent.jumpLink(item.url)
+                }
+              "
+            >
               <img :src="item.icon" alt="" />
               <span>{{ item.name }}</span>
             </a>
@@ -37,42 +51,52 @@ export default {
           {
             icon: require('~/assets/temporary/home/home_ic_busi_x1.5.png'),
             name: '工商注册',
+            url: 'http://127.0.0.1:7001/spread/tax',
           },
           {
             icon: require('~/assets/temporary/home/home_ic_ac_x1.5.png'),
             name: '工商变更',
+            url: '',
           },
           {
             icon: require('~/assets/temporary/home/home_ic_ip_x1.5.png'),
             name: '代理记账',
+            url: '',
           },
           {
             icon: require('~/assets/temporary/home/home_ic_web_x1.5.png'),
             name: '刻制印章',
+            url: '',
           },
           {
             icon: require('~/assets/temporary/home/home_ic_law_x1.5.png'),
             name: '许可证办理',
+            url: '',
           },
           {
             icon: require('~/assets/temporary/home/home_ic_web_x1.5.png'),
             name: '互联网资质',
+            url: '',
           },
           {
             icon: require('~/assets/temporary/home/home_ic_law_x1.5.png'),
             name: '税收筹划',
+            url: '',
           },
           {
             icon: require('~/assets/temporary/home/home_ic_web_x1.5.png'),
             name: '银行服务',
+            url: '',
           },
           {
             icon: require('~/assets/temporary/home/home_ic_law_x1.5.png'),
             name: '体系认证',
+            url: '',
           },
           {
             icon: require('~/assets/temporary/home/home_ic_law_x1.5.png'),
             name: '工商注销',
+            url: '',
           },
         ]
       },

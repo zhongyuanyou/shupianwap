@@ -2,7 +2,7 @@
   <div class="chuchuang">
     <div class="title">热销专区</div>
     <div class="product">
-      <div
+      <a
         v-for="product in productList"
         :key="product.id"
         class="product-item"
@@ -11,6 +11,12 @@
           width: product.imgWidth / 100 + 'rem',
           height: product.imgHeight / 100 + 'rem',
         }"
+        href="javascript:void(0);"
+        @click="
+          () => {
+            $parent.jumpLink(product.url)
+          }
+        "
       >
         <div
           v-if="product.id != 5"
@@ -32,7 +38,7 @@
             src="~/assets/spreadImages/home/busi_img_gscsjg_arro.png"
           />
         </div>
-      </div>
+      </a>
     </div>
   </div>
 </template>
@@ -50,6 +56,7 @@ export default {
           imgHeight: 348,
           marginRight: true,
           price: 1800,
+          url: '',
         },
         {
           id: 2,
@@ -58,6 +65,7 @@ export default {
           imgHeight: 168,
           marginRight: true,
           price: 488,
+          url: '',
         },
         {
           id: 3,
@@ -66,6 +74,7 @@ export default {
           imgHeight: 168,
           marginRight: true,
           price: 1500,
+          url: '',
         },
         {
           id: 4,
@@ -74,6 +83,7 @@ export default {
           imgHeight: 168,
           marginRight: false,
           price: 600,
+          url: '',
         },
         {
           id: 5,
@@ -82,10 +92,12 @@ export default {
           imgHeight: 168,
           marginRight: false,
           price: 0,
+          url: '',
         },
       ],
     }
   },
+  methods: {},
 }
 </script>
 

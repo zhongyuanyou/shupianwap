@@ -2,10 +2,20 @@
   <div class="shiyong">
     <div class="title">实用工具</div>
     <div class="tools">
-      <div v-for="item in list" :key="item.id" class="tool">
+      <a
+        v-for="item in list"
+        :key="item.id"
+        class="tool"
+        href="javascript:void(0);"
+        @click="
+          () => {
+            $parent.jumpLink(item.url)
+          }
+        "
+      >
         <img class="tool-img" :src="item.img" />
         <p class="tool-name">{{ item.name }}</p>
-      </div>
+      </a>
     </div>
   </div>
 </template>
@@ -22,6 +32,7 @@ export default {
           img: require('~/assets/spreadImages/home/busi_img_gscsgj01.png'),
           imgWidth: 225,
           imgHeight: 348,
+          url: '',
         },
         {
           id: 2,
@@ -29,6 +40,7 @@ export default {
           img: require('~/assets/spreadImages/home/busi_img_gscsgj02.png'),
           imgWidth: 225,
           imgHeight: 348,
+          url: '',
         },
         {
           id: 3,
@@ -36,6 +48,7 @@ export default {
           img: require('~/assets/spreadImages/home/busi_img_gscsgj03.png'),
           imgWidth: 225,
           imgHeight: 348,
+          url: '',
         },
         {
           id: 4,
@@ -43,6 +56,7 @@ export default {
           img: require('~/assets/spreadImages/home/busi_img_gscsgj04.png'),
           imgWidth: 225,
           imgHeight: 348,
+          url: '',
         },
       ],
     }

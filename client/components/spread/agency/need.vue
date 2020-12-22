@@ -13,7 +13,7 @@
         <span>电话咨询：</span>
         <span>4000 - 962540</span>
       </div>
-      <router-link to="">立即咨询</router-link>
+      <a href="javascript:;" @click="openIM(url)">立即咨询</a>
     </div>
     <div class="chips">
       <div>
@@ -51,7 +51,17 @@ export default {
           url: '',
         },
       ],
+      url: '',
     }
+  },
+  methods: {
+    openIM(url) {
+      if (url !== '') {
+        window.location.href = url
+      } else {
+        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+      }
+    },
   },
 }
 </script>

@@ -14,7 +14,7 @@
     </div>
     <div class="consulting-box">
       <span>我面临这些问题，我要解决</span>
-      <a href="">立即咨询</a>
+      <a href="JavaScript:;" @click="openIM(url)">立即咨询</a>
     </div>
   </div>
 </template>
@@ -23,6 +23,7 @@
 export default {
   data() {
     return {
+      url: '',
       riskList: [
         {
           code: 1,
@@ -52,6 +53,15 @@ export default {
         },
       ],
     }
+  },
+  methods: {
+    openIM(url) {
+      if (url !== '') {
+        window.location.href = url
+      } else {
+        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+      }
+    },
   },
 }
 </script>
