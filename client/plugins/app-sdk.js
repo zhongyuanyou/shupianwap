@@ -162,3 +162,5 @@ export default {
   ...appHandler,
   registHandler,
 }
+
+export { appHandler }

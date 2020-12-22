@@ -154,22 +154,6 @@ export default {
         },
         (res) => {}
       )
-      // 获取app用户登录信息
-      this.$appFn.dggGetUserInfo((res) => {
-        if (res.code === 200) {
-          const userInfo = JSON.parse(res.data)
-          this.$store.commit('user/SET_USER', userInfo)
-          this.getShippingAddressList()
-        } else {
-          this.$spToast({
-            icon: 'popup_ic_fail',
-            message: res.msg,
-            duration: 1500,
-            forbidClick: true,
-          })
-        }
-      })
-      return
     }
     this.getShippingAddressList()
   },
@@ -218,6 +202,7 @@ export default {
         // userId: this.userId,
         userId: this.userId,
       }
+      console.log('store里面的id', this.userId)
       const data = await this.$axios.get(userinfoApi.addressList, { params })
       this.addressList = data.data
     },
