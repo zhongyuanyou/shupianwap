@@ -16,12 +16,14 @@ export const actions = {
     const currentCity = app.$cookies.get('currentCity')
     const positionCityName = app.$cookies.get('positionCityName')
     const positionStatus = app.$cookies.get('positionStatus')
-    const token = app.$cookies.get('token')
-    const userId = app.$cookies.get('userId')
+    const token = app.$cookies.get('token', { path: '/' })
+    const userId = app.$cookies.get('userId', { path: '/' })
+    const userType = app.$cookies.get('userType', { path: '/' })
 
     commit('city/SET_CITY', currentCity || {})
     commit('city/SET_POSITION_CITY', positionCityName || '')
     commit('city/SET_POSITION_STATUS', positionStatus || null)
-    if (token && userId) commit('user/SET_USER', { token, userId })
+    if (token && userId && userType)
+      commit('user/SET_USER', { token, userId, userType })
   },
 }

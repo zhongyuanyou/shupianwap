@@ -18,11 +18,11 @@ import imSdk from '@dgg/sp-im-sdk'
  * @return: void
  */
 export function imInit(data = {}) {
-  return (window.imSdk = imSdk.instance({
+  const initSdk = imSdk.instance({
     env: 'D', // 'D|T|Y|P'
-    token: '607992444914399156',
-    userId: '607991173604074209',
-    userTypeFlag: 'ORDINARY_USER',
+    token: data.token,
+    userId: data.userId,
+    userTypeFlag: data.userType,
     sysCode: 'crisps-app',
     secret: 'b06ca305974e8b6b590b8315f72a7438',
     appKey: '4R29RHK10AQILT8ONUAOC5DDST',
@@ -30,17 +30,19 @@ export function imInit(data = {}) {
     onError: (res) => {
       console.log(res)
     },
-  }))
+  })
+  return initSdk
 }
 
 /**
  * @description: 获取未读数总数
+ * @param {Object} imExample: 初始化IM的实例  必传
  * @param {Object} data: 非必传
  * @return: void
  */
-export function pullUnreadMsgCount(data = {}) {
+export function pullUnreadMsgCount(imExample, data = {}) {
   return new Promise((resolve) => {
-    window.imSdk.pullUnreadMsgCount({}, (res) => {
+    imExample.pullUnreadMsgCount({}, (res) => {
       resolve(res)
     })
   })
@@ -48,19 +50,32 @@ export function pullUnreadMsgCount(data = {}) {
 
 /**
  * @description: 创建会话（私聊）
+ * @param {Object} imExample: 初始化IM的实例  必传
  * @param {Object} data: 必传
  * @param {String} data.imUserId: 对方用户ID（用户唯一标识） 必传
  * @param {String} data.imUserType: 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户 必传
  * @param {Object} data.ext: 扩展字段，客户端自定义 必传
- * @param {String} data.ext.intentionType: 意向业务
- * @param {String} data.ext.intentionCity: 意向城市
- * @param {String} data.ext.recommendId: 推荐ID
- * @param {Object} data.ext.recommendAttrJson: 推荐属性 Object
+ * @param {String} data.ext.intentionType: 意向业务 非必传
+ * @param {String} data.ext.intentionCity: 意向城市 非必传
+ * @param {String} data.ext.recommendId: 推荐ID 非必传
+ * @param {Object} data.ext.recommendAttrJson: 推荐属性 Object 非必传
  * @return: void
  */
-export function createSession(data = {}) {
+export function createSession(imExample, data = {}) {
+  let params = {
+    imUserId: '',
+    imUserType: 'MERCHANT_USER',
+    ext: {
+      intentionType: '',
+      intentionCity: '',
+      recommendId: '',
+      recommendAttrJson: {},
+      startUserType: 'cps-app',
+    },
+  }
+  params = Object.assign(params, data)
   return new Promise((resolve) => {
-    window.imSdk.createSession(data, (res) => {
+    imExample.createSession(params, (res) => {
       resolve(res)
     })
   })
@@ -68,15 +83,16 @@ export function createSession(data = {}) {
 
 /**
  * @description: 发送模板消息
+ * @param {Object} imExample: 初始化IM的实例  必传
  * @param {Object} data: 必传
  * @param {String} data.imUserId: 对方用户ID（用户唯一标识） 必传
  * @param {String} data.imUserType: 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户 必传
  * @param {String} data.ext: 扩展字段，客户端自定义 非必传
  * @return: void
  */
-export function sendTemplateMsg(data = {}) {
+export function sendTemplateMsg(imExample, data = {}) {
   return new Promise((resolve) => {
-    window.imSdk.sendTemplateMsg(data, (res) => {
+    imExample.sendTemplateMsg(data, (res) => {
       resolve(res)
     })
   })

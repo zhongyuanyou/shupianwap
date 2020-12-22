@@ -142,10 +142,10 @@ export default {
     },
     searchToast(message) {
       // 轻提示
-      this.$spToast({
-        icon: 'toast_ic_comp',
+      this.$refs.spToast.show({
         message,
-        duration: 1000,
+        duration: 1500,
+        icon: 'toast_ic_comp',
         forbidClick: true,
       })
     },

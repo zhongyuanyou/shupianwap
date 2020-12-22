@@ -8,7 +8,6 @@
  */
 
 import { auth } from '@/api'
-
 export const state = () => ({
   userInfo: {},
   token: '',
@@ -21,6 +20,10 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
     this.$cookies.set('userId', data.userId, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 过期时间
+    })
+    this.$cookies.set('userType', data.userType, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })

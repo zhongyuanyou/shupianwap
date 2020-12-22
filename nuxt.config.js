@@ -116,7 +116,6 @@ module.exports = {
         { src: "@/plugins/dgg-md", ssr: false },
         { src: "@/plugins/my-icon", ssr: true },
         { src: "@/plugins/vconsole", ssr: false },
-        { src: "@/plugins/sp-toast", ssr: false },
         { src: '@/plugins/app-sdk', ssr: false },
     ],
     router: {

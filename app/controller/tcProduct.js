@@ -74,10 +74,10 @@ class TcProductController extends Controller {
           'safety_production_license', // 安许证
           'qualification_registered_capital', // 注册资本
           'qualification_type', // 资质分类
-          'qualification_level', // 资质等级
         ],
       };
-      const baseData = data.fieldList.filter(item => baseDataKeys[data.classCode].includes(item.fieldCode));
+      // 基本信息
+      const baseData = data.fieldList.filter(item => baseDataKeys[data.classCodeLevelList[0]].includes(item.fieldCode));
       data.fieldList = baseData;
       ctx.helper.success({ ctx, code: 200, res: data });
     } else {

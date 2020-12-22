@@ -38,7 +38,7 @@
     <sp-list
       v-model="loading"
       :finished="finished"
-      :finished-text="finishedText"
+      finished-text="没有更多了"
       @load="onLoad"
     >
       <RecommendScProduct :recommend-product-data="recommendProduct" />
@@ -161,7 +161,7 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
-      plannerLimit: 5,
+      plannerLimit: 3,
       plannerPage: 1,
       plannerCount: 0, // 推荐规划师总条数
       deviceId: null, // 用户唯一标识
@@ -169,7 +169,6 @@ export default {
       productPage: 1, // 产品分页
       productCount: 0, // 推荐产品总条数
       recommendProduct: [], // 推荐产品‘
-      finishedText: '没有更多了',
     }
   },
   computed: {
