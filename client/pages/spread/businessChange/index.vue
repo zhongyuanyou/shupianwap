@@ -57,7 +57,7 @@ export default {
   },
   data() {
     return {
-      title: '工商注册',
+      title: '工商变更',
       plannersTitle: '咨询规划师',
       // 轮播列表
       imgList: [

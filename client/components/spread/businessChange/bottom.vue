@@ -2,7 +2,7 @@
   <div class="bottom-btn">
     <sp-bottombar safe-area-inset-bottom>
       <sp-bottombar-info title avatar :card="card" />
-      <sp-bottombar-button type="info" :text="text1" @click="onLineButton">
+      <sp-bottombar-button type="info" :text="text1" @click="openIMM">
       </sp-bottombar-button>
       <sp-bottombar-button type="primary" :text="text2" @click="CallButton">
       </sp-bottombar-button>
@@ -39,8 +39,7 @@ export default {
     }
   },
   methods: {
-    onLineButton() {
-      console.log('在线咨询')
+    openIMM() {
       this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
     },
     CallButton() {

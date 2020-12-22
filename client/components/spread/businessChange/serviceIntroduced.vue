@@ -11,8 +11,10 @@
         >
           <div class="total">
             <div v-for="(v, i) in item.tatol" :key="i">
-              <span>{{ v.price }}</span>
-              <span>{{ v.title }}</span>
+              <div class="vertical-bar"></div>
+              <div>
+                <span>{{ v.price }}</span> <span>{{ v.title }}</span>
+              </div>
             </div>
           </div>
           <div class="line"></div>
@@ -52,7 +54,15 @@
       <span v-show="more">更多服务</span>
       <span v-show="close">收起</span>
       <my-icon
+        v-show="icOpen"
         name="tab_ic_all_n"
+        size="0.2rem"
+        class="input-ic-open"
+        color="#cccccc"
+      ></my-icon>
+      <my-icon
+        v-show="icClose"
+        name="tab_ic_all_s"
         size="0.2rem"
         class="input-ic-open"
         color="#cccccc"
@@ -76,6 +86,8 @@ export default {
     return {
       more: true,
       close: false,
+      icClose: false,
+      icOpen: true,
       num: 2,
     }
   },
@@ -84,10 +96,14 @@ export default {
       if (this.more) {
         this.close = true
         this.more = false
+        this.icOpen = false
+        this.icClose = true
         this.num = this.servicelist.length
       } else {
         this.close = false
         this.more = true
+        this.icOpen = true
+        this.icClose = false
         this.num = 2
       }
     },
@@ -118,7 +134,7 @@ export default {
         border-radius: 8px;
         background-repeat: no-repeat;
         background-position: 0px -3px;
-        background-size: 100% 100%;
+        background-size: 101% 100%;
 
         &:not(:first-child) {
           margin-top: 24px;
@@ -138,28 +154,45 @@ export default {
           padding-left: 32px;
           > div {
             display: flex;
-            flex-direction: column;
+            align-items: center;
             flex: 1;
-            > span {
-              display: block;
-              font-size: 32px;
-              font-family: PingFang SC;
-              font-weight: bold;
-              color: #222222;
-              line-height: 31px;
-              &:last-child {
-                font-size: 22px;
-                font-weight: normal;
-                color: #999999;
-                line-height: 21px;
-                margin-top: 10px;
+            position: relative;
+            &:first-child {
+              .vertical-bar {
+                display: none;
+              }
+            }
+            .vertical-bar {
+              width: 1px;
+              height: 40px;
+              background: #f4f4f4;
+              position: absolute;
+              top: 50%;
+              margin-top: -20px;
+              left: -23px;
+            }
+            > div:last-child {
+              > span {
+                display: block;
+                font-size: 32px;
+                font-family: PingFang SC;
+                font-weight: bold;
+                color: #222222;
+                line-height: 31px;
+                &:last-child {
+                  font-size: 22px;
+                  font-weight: normal;
+                  color: #999999;
+                  line-height: 21px;
+                  margin-top: 10px;
+                }
               }
             }
           }
         }
         .line {
           width: 100%;
-          border: 1px dashed #f4f4f4;
+          border-bottom: 1px dashed #f4f4f4;
           position: absolute;
           bottom: 26.32%;
         }
@@ -179,6 +212,7 @@ export default {
             line-height: 40px;
             display: flex;
             align-items: flex-end;
+
             > span {
               display: block;
             }
