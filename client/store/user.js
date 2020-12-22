@@ -23,6 +23,10 @@ export const mutations = {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
+    this.$cookies.set('userType', data.userType, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 过期时间
+    })
     state.userInfo = data
     state.token = data.token
     state.userId = data.userId
