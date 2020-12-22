@@ -54,6 +54,7 @@ import ShuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
 import FixedBottom from '~/components/spread/common/FixedBottom'
 import KuaiSuChaXun from '@/components/spread/home/KuaiSuChaXun'
 import GuiHuaShiSwipe from '@/components/spread/common/GuiHuaShiSwipe'
+import { homeApi } from '~/api'
 export default {
   name: 'Index',
   components: {
@@ -70,6 +71,13 @@ export default {
     KuaiSuChaXun,
     GuiHuaShiSwipe,
     dggImCompany,
+  },
+  async asyncData({ $axios }) {
+    // const type = 'extendBussineHome'
+    // const res = await $axios.get(
+    //   `http://172.16.133.7:7001/service/nk/spread/v1/list.do?pageCode=${type}`
+    // )
+    // console.log(res)
   },
   data() {
     return {
@@ -124,6 +132,31 @@ export default {
           telephone: '18402858698',
         },
       },
+      pagePlanner: {
+        id: '7862495547640840192',
+        name: '张毅',
+        jobNum: '107547',
+      },
+    }
+  },
+  methods: {
+    jumpLink(url) {
+      if (url) {
+        window.open(url, '_blank')
+      } else {
+        const planner = this.pagePlanner
+        this.$root.$emit(
+          'openIMM',
+          planner.id,
+          planner.name || '',
+          planner.jobNum || ''
+        )
+      }
+    },
+  },
+  head() {
+    return {
+      title: '工商首页',
     }
   },
 }

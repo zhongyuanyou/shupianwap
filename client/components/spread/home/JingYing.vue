@@ -2,7 +2,7 @@
   <div class="chuchuang">
     <div class="title">经营必备</div>
     <div class="product">
-      <div
+      <a
         v-for="product in productList"
         :key="product.id"
         class="product-item"
@@ -11,6 +11,12 @@
           width: product.imgWidth / 100 + 'rem',
           height: product.imgHeight / 100 + 'rem',
         }"
+        href="javascript:void(0);"
+        @click="
+          () => {
+            $parent.jumpLink(product.url)
+          }
+        "
       >
         <div class="product-price-position">
           <div class="middle-transition">
@@ -18,7 +24,7 @@
             <span class="product-price-suffix">元起</span>
           </div>
         </div>
-      </div>
+      </a>
     </div>
   </div>
 </template>
@@ -36,6 +42,7 @@ export default {
           imgHeight: 170,
           marginRight: true,
           price: 2000,
+          url: '',
         },
         {
           id: 2,
@@ -44,6 +51,7 @@ export default {
           imgHeight: 170,
           marginRight: true,
           price: 3488,
+          url: '',
         },
         {
           id: 3,
@@ -52,6 +60,7 @@ export default {
           imgHeight: 170,
           marginRight: false,
           price: 200,
+          url: '',
         },
         {
           id: 4,
@@ -60,6 +69,7 @@ export default {
           imgHeight: 170,
           marginRight: true,
           price: 888,
+          url: '',
         },
         {
           id: 5,
@@ -68,6 +78,7 @@ export default {
           imgHeight: 170,
           marginRight: true,
           price: 300,
+          url: '',
         },
         {
           id: 6,
@@ -76,6 +87,7 @@ export default {
           imgHeight: 170,
           marginRight: false,
           price: 200,
+          url: '',
         },
       ],
     }
