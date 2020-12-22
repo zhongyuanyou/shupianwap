@@ -87,6 +87,15 @@ export default {
       &:nth-child(2) ~ div {
         margin-top: 16px;
       }
+      &:nth-child(2) {
+        .img-box {
+          padding: 1px 4px;
+          > img {
+            width: 40px;
+            height: 46px;
+          }
+        }
+      }
       .img-box {
         width: 48px;
         height: 48px;
