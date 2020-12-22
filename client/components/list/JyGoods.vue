@@ -63,6 +63,7 @@
       title="新上商品通知"
       desc="填写手机号,相关商品上架第一时间通知"
     />
+    <sp-toast ref="spToast" />
   </div>
 </template>
 
@@ -73,6 +74,7 @@ import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
 import JyFilters from '@/components/list/JyFilters'
 import searchList from '@/mixins/searchList'
+import spToast from '@/components/common/spToast/spToast'
 import clone from '~/utils/clone'
 
 export default {
@@ -86,6 +88,7 @@ export default {
     [Tabs.name]: Tabs,
     [Tab.name]: Tab,
     [Skeleton.name]: Skeleton,
+    spToast,
   },
   mixins: [searchList],
   props: {
