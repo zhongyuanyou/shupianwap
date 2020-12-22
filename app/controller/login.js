@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-03 15:34:31
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-21 20:22:17
+ * @LastEditTime: 2020-12-22 11:11:29
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/login.js
  */
@@ -227,7 +227,7 @@ class LoginController extends Controller {
   }
 
   @Post('/account_info.do')
-  async logout() {
+  async accountInfo() {
     const { ctx, service, app } = this;
     const rules = {
       userId: { type: 'string', required: true },
@@ -235,7 +235,7 @@ class LoginController extends Controller {
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
 
     const url = ctx.helper.assembleUrl(
-      app.config.apiClient.APPID[2],
+      app.config.apiClient.APPID[3],
       userApi.accountInfo
     );
     Object.assign(ctx.headers, { sysCode: 'crisps-app' });
