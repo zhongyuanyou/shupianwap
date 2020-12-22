@@ -134,6 +134,5 @@ export default {
   width: 750px;
   margin: 0 auto;
   font-family: PingFang SC;
-  padding-bottom: 60px;
 }
 </style>
