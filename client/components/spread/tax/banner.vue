@@ -214,8 +214,7 @@ export default {
       const _tel = this.tel
       const _code = this.code
       const _telReg = /^1[3,4,5,6,7,8,9]\d{9}$/
-      // eslint-disable-next-line camelcase
-      const web_url = window.location.href
+      const webUrl = window.location.href
       const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       if (!_tel) {
         Toast('请输入电话号码')
@@ -234,13 +233,13 @@ export default {
         return
       }
       const contentStr = {
-        swlx: this.select,
+        shuiwuleixing: this.select,
       }
       const params = {
         formId, // formId,唯一ID提交资源中心
         name: '匿名客户',
         tel: _tel, // 电话
-        url: web_url, // 链接
+        url: webUrl, // 链接
         type: 'swch', // 业态编码
         place: 'cd',
         device: 'wap', // 设备：pc,wap

@@ -19,7 +19,9 @@
                 class="planner-content-item-shadow-person-img"
                 :style="
                   item.avatarImg === ''
-                    ? { background: 'gray' }
+                    ? {
+                        backgroundImage: `url(http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg)`,
+                      }
                     : { backgroundImage: `url(${item.avatarImg})` }
                 "
               ></div>

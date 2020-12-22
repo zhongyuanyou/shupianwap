@@ -13,7 +13,7 @@
         <span>电话咨询：</span>
         <span>4000 - 962540</span>
       </div>
-      <router-link to="">立即咨询</router-link>
+      <router-link to=""><span>立即咨询</span></router-link>
     </div>
     <div class="chips">
       <div>
@@ -131,12 +131,16 @@ export default {
       height: 80px;
       background: #4974f5;
       border-radius: 0px 8px 8px 0px;
-      font-size: 28px;
-      font-family: PingFang SC;
-      font-weight: bold;
-      color: #ffffff;
-      line-height: 80px;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      > span {
+        text-align: center;
+        font-size: 28px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #ffffff;
+      }
     }
   }
   .chips {

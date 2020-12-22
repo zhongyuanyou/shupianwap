@@ -25,7 +25,7 @@ export default {
   .zhaoren-content {
     width: calc(100% - 80px);
     height: 210px;
-    padding: 30px 0;
+    padding: 32px 0;
     font-family: PingFang SC;
     margin: 0 auto;
     box-sizing: border-box;
@@ -34,7 +34,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 9px;
+      margin-bottom: 15px;
       .title-line {
         width: 90px;
         height: 1px;
@@ -53,7 +53,7 @@ export default {
       line-height: 24px;
       font-weight: 400;
       color: #999999;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
       text-align: center;
     }
     .footer {

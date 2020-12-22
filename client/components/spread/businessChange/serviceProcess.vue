@@ -108,7 +108,7 @@ export default {
           flex-direction: column;
           align-items: flex-start;
           margin-left: 40px;
-          margin-top: 5px;
+          margin-top: 8px;
           > span {
             display: block;
             &:first-child {
