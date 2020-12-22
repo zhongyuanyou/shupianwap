@@ -5,9 +5,9 @@
         <sp-cell
           v-for="(item, index) in list"
           :key="item.id"
+          clickable
           :title="`${item.name}`"
           :label="`售价: ${item.goodsPrice}`"
-          clickable
           @click="toggle(index)"
         >
           <template #right-icon>
