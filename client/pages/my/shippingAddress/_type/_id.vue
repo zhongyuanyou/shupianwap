@@ -138,11 +138,24 @@ export default {
   computed: {
     ...mapState({
       userId: (state) => state.user.userInfo.userId || null,
+      isInApp: (state) => state.app.isInApp,
     }),
   },
   mounted() {
     if (this.$route.params.type === 'edit') {
       this.getAddressDetail()
+    }
+    // 判断是否在app中，若在，则执行发送导航头数据的方法
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle(
+        {
+          title:
+            this.$route.params.type === 'edit'
+              ? '编辑收货地址'
+              : '新建收货地址',
+        },
+        (res) => {}
+      )
     }
   },
   methods: {
@@ -154,9 +167,18 @@ export default {
       // 点击右边区域
       if (val === 1) {
         this.ruleForm.name = ''
-        return
+      } else if (val === 2) {
+        this.$appFn.dggLocation((res) => {
+          // 拿到app定位后端数据并赋值
+          const addressJSON = JSON.parse(res.address)
+          this.areaTxt =
+            addressJSON.province + addressJSON.city + addressJSON.district
+          this.areaList[0] = { name: addressJSON.province, code: '' }
+          this.areaList[1] = { name: addressJSON.city, code: '' }
+          this.areaList[2] = { name: addressJSON.district, code: '' }
+          this.ruleForm.address = addressJSON.address
+        })
       }
-      alert('需跳转到app的地址定位页面')
     },
     select(data) {
       // 选择地址
@@ -165,7 +187,6 @@ export default {
       data.forEach((item) => {
         this.areaTxt += item.name
       })
-      console.log(data)
     },
     handleAddress() {
       // 点击收货地址显示弹窗
@@ -190,11 +211,11 @@ export default {
       }${data.data.addressArea || ''}`
       this.areaList[0] = {
         name: `${data.data.addressProvince}`,
-        code: 'gd',
+        code: '',
       }
       this.areaList[1] = {
         name: `${data.data.addressCity}`,
-        code: 'sz',
+        code: '',
       }
       this.ruleForm.defaultAddress = !!this.ruleForm.defaultAddress
     },
@@ -218,9 +239,7 @@ export default {
       try {
         await this.$axios.post(userinfoApi.updateAddress, params)
         this.$router.back()
-      } catch (err) {
-        console.log('出错咯')
-      }
+      } catch (err) {}
     },
     async saveNew() {
       // 保存新增内容
@@ -230,14 +249,12 @@ export default {
         addressProvince: this.areaList.length ? this.areaList[0].name : '',
         addressCity: this.areaList.length > 1 ? this.areaList[1].name : '',
         addressArea: '船山区',
-        userId: '607991757719633892',
+        userId: this.userId,
       }
       try {
         await this.$axios.post(userinfoApi.updateAddress, params)
         this.$router.back()
-      } catch (err) {
-        console.log('出错咯')
-      }
+      } catch (err) {}
     },
     async confirm() {
       // 确定删除
@@ -247,9 +264,7 @@ export default {
         }
         await this.$axios.get(userinfoApi.delAddress, { params })
         this.$router.back()
-      } catch (err) {
-        console.log(err)
-      }
+      } catch (err) {}
     },
   },
 }

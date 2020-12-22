@@ -9,7 +9,7 @@
 
 'use strict'
 
-import { CHIPS_APP_BASE_URL } from '../config/constant'
+import { CHIPS_APP_BASE_URL, CHIPS_WAP_BASE_URL } from '../config/constant'
 
 import { request } from '@/utils/request'
 
@@ -37,11 +37,20 @@ const shoppingCar = {
   },
 
   // 服务产品详情
-  productDetail(params) {
+  productDetail(params, config = {}) {
+    const { userId, deviceCode, reqArea, terminalCode } = config
     return request({
       params,
       method: 'post',
       url: CHIPS_APP_BASE_URL + '/nk/service/product/v1/find_detail.do',
+      extraConfig: {
+        headers: {
+          'X-Req-UserId': userId,
+          'X-Device-Code': deviceCode,
+          'X-Req-Area': reqArea,
+          terminalCode,
+        },
+      },
     })
   },
 
@@ -51,6 +60,15 @@ const shoppingCar = {
       params,
       method: 'post',
       url: CHIPS_APP_BASE_URL + '/nk/service/product/v1/find_skuDetail.do',
+    })
+  },
+
+  // 服务资源 列表
+  resourceList(params) {
+    return request({
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/nk/sc_product/v1/service_resource.do',
     })
   },
 }

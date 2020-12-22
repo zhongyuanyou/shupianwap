@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-19 15:54:21
+ * @LastEditTime: 2020-12-21 11:55:55
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -111,6 +111,7 @@ const shoppingCarStatusList = {
 
 export default {
   name: 'ShoppingCar',
+  layout: 'keepAlive',
   components: {
     [TopNavBar.name]: TopNavBar,
     [Button.name]: Button,
@@ -125,11 +126,11 @@ export default {
     ShoppingCarNull,
   },
   async asyncData({ store }) {
-    const userId = store.state.user.userInfo.userId || '1234567'
-    try {
-      const data = await shoppingCar.list({ userId })
-      return { asyncData: data }
-    } catch (error) {}
+    // const userId = store.state.user.userInfo.userId || '1234567'
+    // try {
+    //   const data = await shoppingCar.list({ userId })
+    //   return { asyncData: data }
+    // } catch (error) {}
   },
   data() {
     return {
@@ -167,6 +168,16 @@ export default {
       immediate: true,
     },
   },
+  beforeRouteLeave(to, from, next) {
+    console.log('beforeRouteLeave:', to)
+    // 从购物车到 400电话 或者 地址注册页 缓存
+    if (['detail-selectPhone', 'detail-selectAddress'].includes(to.name)) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'ShoppingCar' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'ShoppingCar' })
+    }
+    next()
+  },
   created() {
     if (process && process.client) {
       this.postUpdate({ type: 'init' })
@@ -174,6 +185,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     onClickLeft() {
       console.log('nav onClickLeft')
     },
@@ -239,6 +253,10 @@ export default {
           this.refreshing = true
           this.onRefresh()
           break
+        case 'resourceServiceSelect': // sku弹出框里资源服务
+          this.selecteResourceService(cartId, data)
+
+          break
       }
     },
     // 删除列表
@@ -282,6 +300,24 @@ export default {
       const cartIdArray = this.list.map((item) => item.cartId)
       const cartId = cartIdArray.join()
       this.selectItem(cartId, data)
+    },
+    // 资源服务的选择
+    selecteResourceService(cartId, value) {
+      const { type, classCode } = value
+      switch (type) {
+        case 'registerAddress':
+          this.$router.push({
+            name: 'detail-selectAddress',
+            query: { classCode, redirectType: 'wap', redirect: '/shoppingcar' },
+          })
+          break
+        case 'phone':
+          this.$router.push({
+            name: 'detail-selectPhone',
+            query: { classCode, redirectType: 'wap', redirect: '/shoppingcar' },
+          })
+          break
+      }
     },
     // 选择
     async selectItem(cartId, data = {}) {

@@ -9,6 +9,7 @@
 module.exports.userApi = {
   login: "/nk/auth/v1/login.do",
   logout: "/nk/auth/v1/login_out.do",
+  accountInfo: "/nk/account/v1/find_account_by_user_id.do", // 获取登录账户信息
   verifySmsCode: "/nk/sms/v1/verify_sms_code.do", // 校验短信验证码
   register: "/nk/register/v1/register_user.do",
   reset: "/nk/account/v1/reset_password_by_user_id.do",

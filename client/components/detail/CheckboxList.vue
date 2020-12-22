@@ -4,9 +4,9 @@
       <sp-cell-group>
         <sp-cell
           v-for="(item, index) in list"
-          :key="index"
-          :title="`${item.title}`"
-          :label="`售价: ${item.price}`"
+          :key="item.id"
+          :title="`${item.name}`"
+          :label="`售价: ${item.goodsPrice}`"
           clickable
           @click="toggle(index)"
         >
@@ -51,15 +51,26 @@ export default {
     return {
       // 存储选择的结果
       result: [],
+      lastIndex: -1,
     }
   },
   methods: {
     toggle(index) {
+      // 保持只有一个选项
+      if (this.lastIndex > -1 && index !== this.lastIndex) {
+        this.$refs.checkboxes[this.lastIndex].toggle(false)
+      }
+      this.lastIndex = index
+
       this.$refs.checkboxes[index].toggle()
     },
     onSubmit() {
       // 提交选择信息
       console.log(this.result)
+      this.$emit('operation', {
+        type: 'confirm',
+        data: this.result[0],
+      })
     },
   },
 }

@@ -31,7 +31,8 @@
               <li v-for="(key, v) in item.adData" :key="v">
                 <a
                   v-if="key.materialList.length"
-                  :href="key.materialList[0].materialLink"
+                  href="javascript:void(0)"
+                  @click="adJumpHandleMixin(key.materialList[0])"
                 >
                   <img
                     class="recom-img"
@@ -83,6 +84,7 @@ import { homeApi } from '@/api'
 import TabCurve from '@/components/common/tab/TabCurve'
 import GoodsPro from '@/components/common/goodsItem/GoodsPro'
 import LoadingDown from '@/components/common/loading/LoadingDown'
+import adJumpHandle from '~/mixins/adJumpHandle'
 export default {
   components: {
     [Swipe.name]: Swipe,
@@ -92,6 +94,7 @@ export default {
     GoodsPro,
     LoadingDown,
   },
+  mixins: [adJumpHandle],
   data() {
     return {
       tabBtn: [],
@@ -156,7 +159,7 @@ export default {
           document.documentElement.scrollTop ||
           document.body.scrollTop // 滚动条距离顶部的位置
         const pageScrollHeight = document.body.scrollHeight // 页面文档的总高度
-        const pageClientHeight = document.body.clientHeight + 1 // 页面视口的高度
+        const pageClientHeight = window.innerHeight // 窗口文档显示区域的高度
         // 监听页面是否滚动到底部加载更多数据
         if (Math.ceil(pageScrollTop + pageClientHeight) >= pageScrollHeight) {
           this.loading = true
@@ -221,7 +224,7 @@ export default {
         this.params.locationCode = this.tabBtn[index].ext1
       }
       this.$axios.post(homeApi.findRecomList, this.params).then((res) => {
-        console.log(index, res.data)
+        // console.log(index, res.data)
         this.loading = false
         if (res.code === 200 && this.params.findType === 0) {
           res.data.dictData[0].adData = res.data.adData
@@ -314,7 +317,7 @@ export default {
 .goods-list {
   position: relative;
   width: 100%;
-  padding: 0 40px 32px 40px;
+  padding: 0 40px 0 40px;
   &::before {
     display: block;
     content: '';

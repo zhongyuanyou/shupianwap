@@ -52,7 +52,7 @@
                 :key="resourceService.classCode"
                 class="sku-service-resource__item"
                 is-link
-                @click="handleResourceClick('address')"
+                @click="handleResourceClick(resourceService.classCode)"
               >
                 <template #title>
                   <span class="sku-service-resource__item-title"
@@ -109,7 +109,6 @@
           >
             加入购物车
           </sp-button>
-          <!-- 直接触发 sku 内部事件，通过内部事件执行 onBuyClicked 回调 -->
           <sp-button
             class="sku-service-actions__buy-btn"
             size="large"
@@ -344,6 +343,7 @@ export default {
         data: value,
       })
     },
+    // 触发数量的选择
     handleStepperChange(value) {
       console.log('handleStepperChange:', value)
       this.$emit('operation', {
@@ -355,8 +355,26 @@ export default {
       console.log('handleStepperLimit:', data)
     },
 
-    handleResourceClick(type) {
-      console.log('handleResourceClick type:', type)
+    // 选择
+    handleResourceClick(classCode) {
+      console.log('handleResourceClick type:', classCode)
+      let type = ''
+      switch (classCode) {
+        case 'FL20201211085087': // 注册地址
+          type = 'registerAddress'
+          // TODO 测试
+          classCode = 'FL20201211085087'
+          break
+        case 'FL20201214095005': // 400
+          type = 'phone'
+          classCode = 'FL20201202065046'
+
+          break
+      }
+      this.$emit('operation', {
+        type: 'resourceServiceSelect',
+        data: { type, classCode },
+      })
     },
 
     handleAddShoppingCar() {

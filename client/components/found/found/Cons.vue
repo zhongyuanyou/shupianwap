@@ -60,6 +60,7 @@ import {
   Cell,
   Image,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import CardItem from '~/components/common/cardItem/CardItem'
 import { foundApi } from '@/api'
 Vue.use(Lazyload)
@@ -108,6 +109,11 @@ export default {
       bannerList: this.banner, // 广告集合
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   watch: {
     banner(newVal) {
       this.bannerList = newVal
@@ -123,6 +129,13 @@ export default {
     },
     handleClick(item, index) {
       // 点击
+      if (this.isInApp) {
+        this.$appFn.dggOpenNewWeb(
+          { urlString: `https://172.16.139.140:7001/found/detail/${item.id}` },
+          (res) => {}
+        )
+        return
+      }
       this.$router.push(`/found/detail/${item.id}`)
     },
     onRefresh() {

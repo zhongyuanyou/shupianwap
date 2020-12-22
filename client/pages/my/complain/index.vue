@@ -99,6 +99,7 @@ import {
   Sticky,
   BottombarButton,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import { complain } from '~/api'
 export default {
   name: 'AddComplaint',
@@ -137,13 +138,31 @@ export default {
       formData: {
         content: '', // 内容
         feedbackTypeId: '', // 吐槽类型
-        userId: '607991757719633892', // 用户id
+        userId: this.userId || '', // 用户id
         terminalCode: 'adadasdasd', // 终端编码
         terminalName: 'dadasd', // 终端名称
         platformCode: 'adasdad', // 平台编码
         platformName: 'asdasdas', // 平台名称
       },
     }
+  },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userInfo.userId,
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
+  mounted() {
+    if (this.isInApp) {
+      // 设置app导航名称
+      this.$appFn.dggSetTitle(
+        {
+          title: '我要吐槽',
+        },
+        (res) => {}
+      )
+    }
+    this.formData.userId = this.userId
   },
   methods: {
     back() {
@@ -186,7 +205,7 @@ export default {
           this.formData = {
             content: '', // 内容
             feedbackTypeId: '', // 吐槽类型
-            userId: '607991757719633892', // 用户id
+            userId: this.userId, // 用户id
             terminalCode: 'adadasdasd', // 终端编码
             terminalName: 'dadasd', // 终端名称
             platformCode: 'adasdad', // 平台编码

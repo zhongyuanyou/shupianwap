@@ -76,7 +76,7 @@ class ScProductDetailsController extends Controller {
       /** todo:* 获取服务项***/
       // 获取到基础服务的ID
       const serviceItemIds = [];
-      normalItemList.forEach(item => {
+      normalItemList.forEach((item) => {
         serviceItemIds.push(item.serviceItemId);
       });
       // 获取到请求的Url
@@ -97,7 +97,7 @@ class ScProductDetailsController extends Controller {
       /** todo:获取产品标签****/
       const tagsObj = {};
       // 获取到各类型的标签ID
-      tags.forEach(item => {
+      tags.forEach((item) => {
         if (tagsObj[item.tagType]) {
           tagsObj[item.tagType].push(item.tagId);
         } else {
@@ -128,7 +128,7 @@ class ScProductDetailsController extends Controller {
       }
       const tagsResult = await Promise.all(tagsPromiseAll);
       const tagArr = {};
-      tagsResult.forEach(item => {
+      tagsResult.forEach((item) => {
         tagArr[item.key] = [];
         if (item.result.code === 200) {
           tagArr[item.key] = item.result.data.records;
@@ -247,7 +247,7 @@ class ScProductDetailsController extends Controller {
           // 格式化站点数据
           const siteList = {};
           // 将城市数据的code作为key存储在对象中
-          cityListResult.data.cityList.forEach(item => {
+          cityListResult.data.cityList.forEach((item) => {
             siteList[item.code] = item;
           });
           // 将全国地区存储到站点对象中
@@ -307,7 +307,7 @@ class ScProductDetailsController extends Controller {
       page = 1,
       limit = 10,
     } = ctx.request.body;
-    const { code, message, data } = await service.curl.curlPost(url, {
+    const data = await service.curl.curlPost(url, {
       classCode,
       searchKey,
       goodsNo,
@@ -320,11 +320,16 @@ class ScProductDetailsController extends Controller {
       start: page,
       limit,
     });
-    if (code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data });
+    if (data.code === 200) {
+      ctx.helper.success({ ctx, code: 200, res: data.data });
     } else {
-      ctx.logger.error(code, message);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
+      ctx.logger.error(data.code, data);
+      ctx.helper.fail({
+        ctx,
+        code: data.code || 500,
+        res: '后端接口异常！',
+        detailMessage: data.message || '后端接口异常！',
+      });
     }
   }
 }

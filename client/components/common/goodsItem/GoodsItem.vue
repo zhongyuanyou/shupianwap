@@ -8,7 +8,10 @@
       <h3>{{ itemData.name }}</h3>
       <p>{{ description }}</p>
       <div v-if="itemType.type === 'serve'" class="tags">
-        <span>极速办理</span><span>极速办理</span>
+        <span>极速办理</span>
+        <span>极速办理</span>
+        <span>极速办理</span>
+        <span>极速办理</span>
       </div>
       <div class="price-sales">
         <span>{{ itemData.referencePrice }}元</span
@@ -130,18 +133,24 @@ export default {
       .textOverflow(1);
     }
     .tags {
+      display: flex;
+      flex-wrap: wrap;
       display: inherit;
+      height: 32px;
+      overflow: hidden;
       span {
-        padding: 5px 8px;
+        display: inline-block;
+        height: 32px;
+        line-height: 32px;
+        padding: 0 8px;
         background: #f0f2f5;
         border-radius: 4px;
         font-size: 22px;
-        line-height: 1;
-        line-height: 1;
         font-family: PingFang SC;
         font-weight: 400;
         color: #5c7499;
         margin-right: 12px;
+        .textOverflow(1);
         &:last-child {
           margin-right: 0;
         }

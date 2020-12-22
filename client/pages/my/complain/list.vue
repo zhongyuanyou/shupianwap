@@ -70,10 +70,20 @@ export default {
   computed: {
     ...mapState({
       userId: (state) => state.user.userInfo.userId,
+      isInApp: (state) => state.app.isInApp,
     }),
   },
   mounted() {
     this.getComplainList()
+    if (this.isInApp) {
+      // 设置app导航名称
+      this.$appFn.dggSetTitle(
+        {
+          title: '反馈进度',
+        },
+        (res) => {}
+      )
+    }
   },
   methods: {
     back() {
@@ -82,7 +92,7 @@ export default {
     async onLoad() {
       const page = this.page++
       const params = {
-        userId: '607991757719633892',
+        userId: this.userId,
         limit: this.limit,
         page,
       }
@@ -106,7 +116,7 @@ export default {
       // 获取吐槽列表数据
       const params = {
         // userId: this.userId,
-        userId: '607991757719633892',
+        userId: this.userId,
         page: this.page,
         limit: this.limit,
       }

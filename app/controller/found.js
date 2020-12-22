@@ -151,10 +151,9 @@ class FoundController extends Controller {
         const { ctx, service, app } = this;
         getValiErrors(app, ctx, infoDetail, ctx.query);
         // 参数校验通过,正常响应
-        const { id, includeField } = ctx.query;
+        const { id } = ctx.query;
         const params = {
             id,
-            includeField,
         };
         const { data } = await service.common.content.detail(params);
         ctx.helper.success({ ctx, code: 200, res: data });

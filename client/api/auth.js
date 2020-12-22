@@ -58,5 +58,18 @@ const auth = {
       url: CHIPS_WAP_BASE_URL + '/nk/login/v1/smsCode.do',
     })
   },
+  /**
+   * 根据UserId 获取用户信息
+   * @param {object} params
+   * @param {string} params.userId
+   * @returns {Promise}
+   */
+  accountInfo(params) {
+    return request({
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/nk/login/v1/account_info.do',
+    })
+  },
 }
 export default auth

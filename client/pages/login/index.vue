@@ -286,14 +286,14 @@ export default {
       }
       try {
         const data = await auth.login({ axios: this.$axios }, params)
-        console.log(data)
         // 缓存用户信息
         if (data != null) {
           this.setUserInfo(data)
         }
         return data
       } catch (error) {
-        this.loginForm(error.message)
+        console.log('err', error)
+        // this.loginForm(error.message)
       }
     },
 

@@ -14,7 +14,8 @@
       <a
         v-for="(item, index) in labelBtn[currentItem].sortMaterialList"
         :key="index"
-        :href="item.materialList[0].materialLink"
+        href="javascript:void(0)"
+        @click="adJumpHandleMixin(item.materialList[0])"
       >
         <img :src="item.materialList[0].materialUrl" alt="" />
       </a>
@@ -23,7 +24,9 @@
 </template>
 
 <script>
+import adJumpHandle from '~/mixins/adJumpHandle'
 export default {
+  mixins: [adJumpHandle],
   props: {
     hotData: {
       type: Array,

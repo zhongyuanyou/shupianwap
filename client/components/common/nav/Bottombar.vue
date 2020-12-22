@@ -14,6 +14,12 @@
             :color="item.path === active ? iconColorActive : iconColorDefault"
           ></my-icon>
           <span
+            v-if="item.path === '/msg' && unreadNum > 0"
+            class="unReadNum"
+            >{{ unreadNum > 99 ? '99+' : unreadNum }}</span
+          >
+          <span
+            class="name"
             :style="{
               color: item.path === active ? iconColorActive : iconColorDefault,
             }"
@@ -26,10 +32,15 @@
 </template>
 
 <script>
+import { Badge } from 'vant'
+import { mapState } from 'vuex'
+import config from '@/config'
+import { pullUnreadMsgCount } from '@/utils/im'
 export default {
   name: 'Bottombar',
   data() {
     return {
+      unreadNum: 0,
       active: 'home',
       iconColorDefault: '#999999',
       iconColorActive: '#4974F5',
@@ -47,7 +58,7 @@ export default {
         {
           name: '消息',
           iconName: 'tabbar_ic_msg',
-          path: '',
+          path: '/msg',
         },
         {
           name: '我的',
@@ -57,34 +68,47 @@ export default {
       ],
     }
   },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user.userInfo, // 登录的用户信息
+      imExample: (state) => state.im.imExample, // IM 实例
+    }),
+  },
   watch: {
     $route(to, from) {
-      const path =
-        this.$route.path === '/' ||
-        this.$route.path === '/examples' ||
-        this.$route.path === '/tools'
-          ? '/'
-          : this.$route.path
+      const path = this.$route.path
       this.active = path
     },
   },
   created() {
-    const path =
-      this.$route.path === '/' ||
-      this.$route.path === '/examples' ||
-      this.$route.path === '/tools'
-        ? '/'
-        : this.$route.path
+    const path = this.$route.path
     this.active = path
+  },
+  mounted() {
+    //  获取IM未读消息总数
+    pullUnreadMsgCount(this.imExample).then((res) => {
+      console.log('IM消息未读数：', res)
+      if (res.code === 200) {
+        this.unreadNum = res.data.totleUnread
+      }
+    })
   },
   methods: {
     pageJump(item) {
-      const path =
-        this.$route.path === '/' ||
-        this.$route.path === '/examples' ||
-        this.$route.path === '/tools'
-          ? '/'
-          : this.$route.path
+      // 消息页面跳转 IM
+      if (item.path === '/msg') {
+        if (this.userInfo.token) {
+          window.location.href = `${config.imConfigure.msgPageLink}?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
+          return
+        } else {
+          this.$router.push({
+            path: '/login',
+          })
+        }
+        // window.location.href = `${config.imConfigure.msgPageLink}?token=607992547993614357&userId=607991173604074209&userType=ORDINARY_USER`
+        return
+      }
+      const path = this.$route.path
       if (path === item.path) {
         return
       }
@@ -118,18 +142,33 @@ export default {
       height: 98px;
       padding: 16px 0 11px 0;
       a {
+        position: relative;
         width: 100%;
         height: 71px;
         display: flex;
         justify-content: space-between;
         flex-direction: column;
         align-items: center;
-        > span {
+        > .name {
           font-size: 20px;
           line-height: 20px;
           font-family: PingFang SC;
           font-weight: bold;
           color: #999999;
+        }
+        .unReadNum {
+          position: absolute;
+          left: 50%;
+          top: -6px;
+          min-width: 32px;
+          background: #f1524e;
+          border: 4px solid #ffffff;
+          border-radius: 18px;
+          color: #fff;
+          font-size: 20px;
+          padding: 0 3px;
+          box-sizing: border-box;
+          text-align: center;
         }
       }
       .active {
