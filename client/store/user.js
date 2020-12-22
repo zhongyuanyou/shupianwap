@@ -8,7 +8,6 @@
  */
 
 import { auth } from '@/api'
-
 export const state = () => ({
   userInfo: {},
   token: '',

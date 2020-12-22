@@ -138,7 +138,7 @@ export default {
       formData: {
         content: '', // 内容
         feedbackTypeId: '', // 吐槽类型
-        userId: '607991757719633892', // 用户id
+        userId: this.userId || '', // 用户id
         terminalCode: 'adadasdasd', // 终端编码
         terminalName: 'dadasd', // 终端名称
         platformCode: 'adasdad', // 平台编码
@@ -148,6 +148,7 @@ export default {
   },
   computed: {
     ...mapState({
+      userId: (state) => state.user.userInfo.userId,
       isInApp: (state) => state.app.isInApp,
     }),
   },
@@ -161,6 +162,7 @@ export default {
         (res) => {}
       )
     }
+    this.formData.userId = this.userId
   },
   methods: {
     back() {
@@ -203,7 +205,7 @@ export default {
           this.formData = {
             content: '', // 内容
             feedbackTypeId: '', // 吐槽类型
-            userId: '607991757719633892', // 用户id
+            userId: this.userId, // 用户id
             terminalCode: 'adadasdasd', // 终端编码
             terminalName: 'dadasd', // 终端名称
             platformCode: 'adasdad', // 平台编码

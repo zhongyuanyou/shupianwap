@@ -92,7 +92,7 @@ export default {
     async onLoad() {
       const page = this.page++
       const params = {
-        userId: '607991757719633892',
+        userId: this.userId,
         limit: this.limit,
         page,
       }
@@ -116,7 +116,7 @@ export default {
       // 获取吐槽列表数据
       const params = {
         // userId: this.userId,
-        userId: '607991757719633892',
+        userId: this.userId,
         page: this.page,
         limit: this.limit,
       }

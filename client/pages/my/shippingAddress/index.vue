@@ -157,14 +157,8 @@ export default {
       // 获取app用户登录信息
       this.$appFn.dggGetUserInfo((res) => {
         if (res.code === 200) {
-          this.$refs.spToast.show({
-            message: '哈哈哈',
-            duration: 1500,
-            forbidClick: true,
-            icon: 'popup_ic_fail',
-          })
           const userInfo = JSON.parse(res.data)
-          // this.$store.commit('user/SET_USER', userInfo)
+          this.$store.commit('user/SET_USER', userInfo)
           this.getShippingAddressList()
         } else {
           this.$spToast({

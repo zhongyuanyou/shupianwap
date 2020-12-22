@@ -19,8 +19,12 @@ export default function ({ $axios, redirect, app }) {
       }
       config.params = config.params || {}
       config.headers.sysCode = 'zdm-api'
-      config.headers['X-Auth-Token'] = app.$cookies.get('token')
-      config.headers['X-Req-UserId'] = app.$cookies.get('userId')
+      config.headers['X-Auth-Token'] = app.$cookies.get('token', {
+        path: '/',
+      })
+      config.headers['X-Req-UserId'] = app.$cookies.get('userId', {
+        path: '/',
+      })
       // config.headers['X-Auth-Token'] = '607991860798845556'
       // config.headers['X-Req-UserId'] = '607991757719633892'
       return config
