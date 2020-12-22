@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { Swipe, SwipeItem, ActionSheet, Cell } from '@chipspc/vant-dgg'
+import { Swipe, SwipeItem, ActionSheet, Cell, Toast } from '@chipspc/vant-dgg'
 export default {
   name: 'BannerVue',
   components: {
@@ -97,6 +97,7 @@ export default {
     [SwipeItem.name]: SwipeItem,
     [ActionSheet.name]: ActionSheet,
     [Cell.name]: Cell,
+    [Toast.name]: Toast,
   },
   data() {
     return {
@@ -140,10 +141,10 @@ export default {
       const _tel = this.tel
       const _reg = /^1[3,4,5,6,7,8,9]\d{9}$/
       if (_tel === '') {
-        return console.log('请输入手机号码')
+        return Toast('请输入手机号码')
       }
       if (!_reg.test(_tel)) {
-        return console.log('请输入正确的手机号码')
+        return Toast('请输入正确的手机号码')
       }
       const Data = {
         tel: _tel,
@@ -208,6 +209,7 @@ export default {
         currentSeconds
       return nowTimeString
     },
+    // 提交表单
     consultForm() {
       const _tel = this.tel
       const _code = this.code
@@ -216,19 +218,19 @@ export default {
       const web_url = window.location.href
       const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       if (!_tel) {
-        console.log('请输入电话号码')
+        Toast('请输入电话号码')
         return
       }
       if (!_telReg.test(_tel)) {
-        console.log('请输入正确的电话号码')
+        Toast('请输入正确的电话号码')
         return
       }
       if (!_code) {
-        console.log('请输入验证码')
+        Toast('请输入验证码')
         return
       }
       if (this.select === '选择税务类型') {
-        console.log('请选择税务类型')
+        Toast('请选择税务类型')
         return
       }
       const contentStr = {
@@ -250,7 +252,7 @@ export default {
         if (res.error === 0) {
           // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
           console.log(res)
-          console.log('提交成功，请注意接听电话')
+          Toast('提交成功，请注意接听电话')
         } else {
           console.log(res)
         }
