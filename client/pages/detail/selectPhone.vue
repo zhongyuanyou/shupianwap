@@ -33,8 +33,8 @@
           <!-- 选择价格区间 -->
           <sp-dropdown-item
             ref="isShowPrice"
-            :title-class="dropdownPriceTitel != '价格' ? 'title-style' : ''"
-            :title="dropdownPriceTitel"
+            :title-class="dropdownPriceTitle != '价格' ? 'title-style' : ''"
+            :title="dropdownPriceTitle"
           >
             <div class="select-price">
               <PriceFilterComponents
@@ -75,10 +75,10 @@
       >
         <sp-list
           v-model="loading"
+          finished-text="没有更多了"
           error-text="请求失败，点击重新加载"
           :error.sync="error"
           :finished="finished"
-          finished-text="没有更多了"
           @load="onLoad"
         >
           <CheckboxList :list="checkboxList" @operation="handleOperation" />
@@ -88,6 +88,8 @@
   </div>
 </template>
 <script>
+import { mapState, mapMutations, mapActions } from 'vuex'
+
 import {
   TopNavBar,
   NavSearch,
@@ -138,7 +140,7 @@ export default {
         minPrice: '',
         maxPrice: '',
       },
-      dropdownPriceTitel: '价格',
+      dropdownPriceTitle: '价格',
       loading: false,
       error: false,
       finished: false,
@@ -147,12 +149,14 @@ export default {
       priceOption: [],
       sortOption: [],
       checkboxList: [],
-      runEnv: 'browser', // 运行环境  browser: 浏览器， app:
       redirect: this.$route.query.redirect, // 返回跳转的位置
       redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去
     }
   },
   computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
     formatSortOption() {
       if (!Array.isArray(this.sortOption)) return []
       return this.sortOption.map((item) => {
@@ -260,7 +264,6 @@ export default {
     },
     onClickLeft() {
       //  左侧返回
-      Toast('返回')
       this.uPGoBack()
     },
     minInput(val) {
@@ -290,7 +293,7 @@ export default {
     },
     resetPrice() {
       // 重置价格
-      this.dropdownPriceTitel = '价格'
+      this.dropdownPriceTitle = '价格'
       this.search.price = {}
       this.search.minInput = ''
       this.search.maxPrice = ''
@@ -300,18 +303,19 @@ export default {
       // 确认价格
       this.$refs.isShowPrice.toggle()
       const { minInput, maxPrice, price } = this.search
-      let dropdownPriceTitel = '价格'
+      let dropdownPriceTitle = '价格'
       if (price.name) {
-        dropdownPriceTitel = price.name
+        dropdownPriceTitle = price.name
       } else if (minInput || maxPrice) {
-        dropdownPriceTitel = minInput
+        dropdownPriceTitle = minInput
           ? `${minInput}-${maxPrice}`
           : `${maxPrice}`
       }
 
-      this.dropdownPriceTitel = dropdownPriceTitel
+      this.dropdownPriceTitle = dropdownPriceTitle
       this.handleSearch()
     },
+
     handleOperation(value) {
       const { type, data } = value || {}
       switch (type) {
@@ -322,7 +326,7 @@ export default {
 
     // 平台不同，跳转方式不同
     uPGoBack(data) {
-      if (this.runEnv === 'app' && this.redirectType === 'app') {
+      if (this.isInApp && this.redirectType === 'app') {
         // TODO  在app中 返回 且 跳转到app原生页面
         return
       }
