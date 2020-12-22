@@ -30,9 +30,10 @@
             label="手机号"
             type="tel"
             placeholder="信息保护中，仅官方可见"
+            @focus="() => (smsInputIsShow = true)"
           />
         </div>
-        <div class="input-all1">
+        <div v-if="smsInputIsShow" class="input-all1">
           <sp-field
             v-model="sms"
             center
@@ -78,7 +79,6 @@ export default {
   },
   data() {
     return {
-      //
       // 下拉
       dropList: [
         { id: 1, code: 'jbkh', name: '基本开户', color: '#5a79e8' },
@@ -95,6 +95,7 @@ export default {
       // 手机号
       telephone: '',
       // 验证码
+      smsInputIsShow: false,
       sms: '',
       formNotes: [
         {
@@ -118,7 +119,7 @@ export default {
     }
   },
   created() {
-    this.value = this.dropList[0]
+    this.dropdownValue = this.dropList[0]
   },
   methods: {
     onSelect(item) {
@@ -177,7 +178,7 @@ export default {
     },
     // 验证手机号
     verifyTel() {
-      const _tel = this.tel
+      const _tel = this.telephone
       const _reg = /^1[3,4,5,6,7,8,9]\d{9}$/
       if (_tel === '') {
         return Toast('请输入手机号码') && false
@@ -190,8 +191,8 @@ export default {
     // 表单提交
     submitForm() {
       // 1、验证表单数据格式
-      const _tel = this.tel
-      const _code = this.code
+      const _tel = this.telephone
+      const _code = this.sms
       const _telReg = /^1[3,4,5,6,7,8,9]\d{9}$/
       if (!_tel) {
         Toast('请输入电话号码')
