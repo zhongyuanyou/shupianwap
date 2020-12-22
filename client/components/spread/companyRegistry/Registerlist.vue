@@ -4,7 +4,6 @@
       class="register-list_hidden"
       :style="{ maxHeight: `${isMore ? '30000px' : '805px'}` }"
     >
-      <!-- <nuxt-link to="/"> -->
       <div
         v-for="(listCounts, index) of listCount"
         :key="index"
@@ -14,20 +13,23 @@
         }"
         class="list"
       >
-        <div class="list-count">
-          <div class="list-count_item">
-            <span>100万+</span>
-            <div>在线咨询</div>
+        <nuxt-link to="/">
+          <div class="list-count">
+            <div class="list-count_item">
+              <span>100万+</span>
+              <div>在线咨询</div>
+            </div>
+            <div class="list-count_item">
+              <span>100万+</span>
+              <div>在线咨询</div>
+            </div>
+            <div class="list-count_item">
+              <span>100万+</span>
+              <div>在线咨询</div>
+            </div>
           </div>
-          <div class="list-count_item">
-            <span>100万+</span>
-            <div>在线咨询</div>
-          </div>
-          <div class="list-count_item">
-            <span>100万+</span>
-            <div>在线咨询</div>
-          </div>
-        </div>
+        </nuxt-link>
+
         <div class="list-advisory">
           <span class="price"
             ><span>{{ listCounts.pric }}</span
@@ -40,22 +42,24 @@
               height="28px"
               src="https://img.yzcdn.cn/vant/cat.jpeg"
             />
-            <my-icon
-              name="notify_ic_chat"
-              size="20px"
-              color="#4974F5"
-              @click="onMessage"
-            ></my-icon>
-            <my-icon
-              name="notify_ic_tel"
-              size="20px"
-              color="#4974F5"
-              @click="onPhone"
-            ></my-icon>
+            <span @click="onMessage"
+              ><my-icon
+                name="notify_ic_chat"
+                size="20px"
+                color="#4974F5"
+              ></my-icon
+            ></span>
+            <span>
+              <my-icon
+                name="notify_ic_tel"
+                size="20px"
+                color="#4974F5"
+                @click="onPhone"
+              ></my-icon
+            ></span>
           </div>
         </div>
       </div>
-      <!-- </nuxt-link> -->
     </div>
   </div>
 </template>
@@ -112,8 +116,7 @@ export default {
       .list-count {
         display: flex;
         justify-content: space-between;
-        margin: 183px 0 0 0;
-        padding: 32px 82px;
+        padding: 216px 82px 78px;
         position: relative;
         .list-count_item {
           font-size: 34px;
@@ -137,7 +140,7 @@ export default {
       .list-advisory {
         display: flex;
         justify-content: space-between;
-        padding: 46px 32px;
+        padding: 0px 32px 46px;
         .price {
           font-size: 24px;
           font-weight: bold;
@@ -156,6 +159,10 @@ export default {
           justify-content: space-between;
           align-items: center;
           padding: 0 28px 0 8px;
+          > span {
+            height: 72px;
+            line-height: 35px;
+          }
         }
       }
     }
