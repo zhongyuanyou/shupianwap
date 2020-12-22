@@ -108,22 +108,22 @@ export default {
           bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw03.png'),
         },
         {
-          code: 3,
+          code: 4,
           tatol: [
-            { price: '6万+', title: '在线质询' },
-            { price: '5万+', title: '累计成交' },
-            { price: '5万+', title: '成功注册' },
+            { price: '1万+', title: '在线质询' },
+            { price: '1万+', title: '累计成交' },
+            { price: '1万+', title: '成功注册' },
           ],
           price: '600',
           headimg: '',
           bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw04.png'),
         },
         {
-          code: 4,
+          code: 5,
           tatol: [
-            { price: '6万+', title: '在线质询' },
-            { price: '5万+', title: '累计成交' },
-            { price: '5万+', title: '成功注册' },
+            { price: '7千+', title: '在线质询' },
+            { price: '6千+', title: '累计成交' },
+            { price: '6千+', title: '成功注册' },
           ],
           price: '600',
           headimg: '',
@@ -132,9 +132,9 @@ export default {
         {
           code: 6,
           tatol: [
-            { price: '6万+', title: '在线质询' },
-            { price: '5万+', title: '累计成交' },
-            { price: '5万+', title: '成功注册' },
+            { price: '6千+', title: '在线质询' },
+            { price: '6千+', title: '累计成交' },
+            { price: '6千+', title: '成功注册' },
           ],
           price: '600',
           headimg: '',

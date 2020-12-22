@@ -30,6 +30,7 @@
     <!-- s 底部导航 -->
     <Bottom />
     <!-- e 底部导航 -->
+    <dgg-im-company></dgg-im-company>
   </div>
 </template>
 
@@ -44,6 +45,7 @@ import Choose from '../../../components/spread/agency/choose'
 import Planners from '../../../components/spread/common/GuiHuaShiSwipe'
 import Bottom from '../../../components/spread/agency/bottom'
 import Need from '../../../components/spread/agency/need'
+import dggImCompany from '../../../components/spread/DggImCompany'
 
 export default {
   components: {
@@ -57,6 +59,7 @@ export default {
     Planners,
     Need,
     Bottom,
+    dggImCompany,
   },
   data() {
     return {
