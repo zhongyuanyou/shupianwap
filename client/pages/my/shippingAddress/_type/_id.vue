@@ -187,7 +187,6 @@ export default {
       data.forEach((item) => {
         this.areaTxt += item.name
       })
-      console.log(data)
     },
     handleAddress() {
       // 点击收货地址显示弹窗
@@ -212,11 +211,11 @@ export default {
       }${data.data.addressArea || ''}`
       this.areaList[0] = {
         name: `${data.data.addressProvince}`,
-        code: 'gd',
+        code: '',
       }
       this.areaList[1] = {
         name: `${data.data.addressCity}`,
-        code: 'sz',
+        code: '',
       }
       this.ruleForm.defaultAddress = !!this.ruleForm.defaultAddress
     },
@@ -240,9 +239,7 @@ export default {
       try {
         await this.$axios.post(userinfoApi.updateAddress, params)
         this.$router.back()
-      } catch (err) {
-        console.log('出错咯')
-      }
+      } catch (err) {}
     },
     async saveNew() {
       // 保存新增内容
@@ -252,14 +249,12 @@ export default {
         addressProvince: this.areaList.length ? this.areaList[0].name : '',
         addressCity: this.areaList.length > 1 ? this.areaList[1].name : '',
         addressArea: '船山区',
-        userId: '607991757719633892',
+        userId: this.userId,
       }
       try {
         await this.$axios.post(userinfoApi.updateAddress, params)
         this.$router.back()
-      } catch (err) {
-        console.log('出错咯')
-      }
+      } catch (err) {}
     },
     async confirm() {
       // 确定删除
@@ -269,9 +264,7 @@ export default {
         }
         await this.$axios.get(userinfoApi.delAddress, { params })
         this.$router.back()
-      } catch (err) {
-        console.log(err)
-      }
+      } catch (err) {}
     },
   },
 }

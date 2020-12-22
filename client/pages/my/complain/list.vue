@@ -70,10 +70,20 @@ export default {
   computed: {
     ...mapState({
       userId: (state) => state.user.userInfo.userId,
+      isInApp: (state) => state.app.isInApp,
     }),
   },
   mounted() {
     this.getComplainList()
+    if (this.isInApp) {
+      // 设置app导航名称
+      this.$appFn.dggSetTitle(
+        {
+          title: '反馈进度',
+        },
+        (res) => {}
+      )
+    }
   },
   methods: {
     back() {

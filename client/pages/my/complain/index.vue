@@ -99,6 +99,7 @@ import {
   Sticky,
   BottombarButton,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import { complain } from '~/api'
 export default {
   name: 'AddComplaint',
@@ -143,6 +144,22 @@ export default {
         platformCode: 'adasdad', // 平台编码
         platformName: 'asdasdas', // 平台名称
       },
+    }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
+  mounted() {
+    if (this.isInApp) {
+      // 设置app导航名称
+      this.$appFn.dggSetTitle(
+        {
+          title: '我要吐槽',
+        },
+        (res) => {}
+      )
     }
   },
   methods: {

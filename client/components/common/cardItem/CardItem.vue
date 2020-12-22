@@ -18,7 +18,9 @@
         </p>
         <div class="hot_con">
           <my-icon name="news_ic_heat" color="#fff" size="0.17rem" />
-          <p class="num">{{ favour.newsReadAll }}</p>
+          <p class="num">
+            {{ favour.newsReadAll > 99999 ? '10w+' : favour.newsReadAll }}
+          </p>
         </div>
       </div>
     </div>
@@ -34,7 +36,9 @@
       <div class="space_img_con">
         <div :class="['hot_con', 'hot_con_pos']">
           <my-icon name="news_ic_heat" color="#fff" size="0.17rem" />
-          <p class="num">{{ favour.newsReadAll }}</p>
+          <p class="num">
+            {{ favour.newsReadAll > 99999 ? '10w+' : favour.newsReadAll }}
+          </p>
         </div>
         <sp-image
           v-if="image && image.src"
@@ -171,7 +175,7 @@ export default {
     }
   }
   .hot_con {
-    width: 84px;
+    width: 105px;
     height: 38px;
     border-radius: 19px;
     text-align: center;
@@ -185,7 +189,7 @@ export default {
       font-family: PingFang SC;
       font-weight: 400;
       color: #fff;
-      margin-left: 10px;
+      margin-left: 5px;
     }
   }
 }

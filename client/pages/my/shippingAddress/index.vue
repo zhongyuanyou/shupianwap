@@ -93,6 +93,7 @@
       @confirm="defaulConfirm"
     />
     <!--E 弹框-->
+    <spToast ref="spToast"></spToast>
   </div>
 </template>
 
@@ -104,9 +105,11 @@ import {
   CenterPopup,
   Bottombar,
   BottombarButton,
+  Toast,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { userinfoApi } from '@/api'
+import spToast from '@/components/common/spToast/spToast'
 export default {
   name: 'Index',
   components: {
@@ -116,6 +119,8 @@ export default {
     [CenterPopup.name]: CenterPopup,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
+    [Toast.name]: Toast,
+    spToast,
   },
   data() {
     return {
@@ -141,15 +146,38 @@ export default {
     }),
   },
   mounted() {
-    this.getShippingAddressList()
     if (this.isInApp) {
+      // 设置app导航名称
       this.$appFn.dggSetTitle(
         {
           title: '我的收货地址',
         },
         (res) => {}
       )
+      // 获取app用户登录信息
+      this.$appFn.dggGetUserInfo((res) => {
+        if (res.code === 200) {
+          this.$refs.spToast.show({
+            message: '哈哈哈',
+            duration: 1500,
+            forbidClick: true,
+            icon: 'popup_ic_fail',
+          })
+          const userInfo = JSON.parse(res.data)
+          // this.$store.commit('user/SET_USER', userInfo)
+          this.getShippingAddressList()
+        } else {
+          this.$spToast({
+            icon: 'popup_ic_fail',
+            message: res.msg,
+            duration: 1500,
+            forbidClick: true,
+          })
+        }
+      })
+      return
     }
+    this.getShippingAddressList()
   },
   methods: {
     onClickLeft() {
@@ -194,7 +222,7 @@ export default {
       // 获取收货地址列表
       const params = {
         // userId: this.userId,
-        userId: '607991757719633892',
+        userId: this.userId,
       }
       const data = await this.$axios.get(userinfoApi.addressList, { params })
       this.addressList = data.data
@@ -207,18 +235,18 @@ export default {
         }
         await this.$axios.get(userinfoApi.delAddress, { params })
         await this.getShippingAddressList()
-      } catch (err) {
-        console.log(err)
-      }
+      } catch (err) {}
     },
     async defaulConfirm() {
       // 设为默认地址
-      const params = {
-        id: this.addressId,
-        defaultAddress: 1,
-      }
-      await this.$axios.post(userinfoApi.updateAddress, params)
-      await this.getShippingAddressList()
+      try {
+        const params = {
+          id: this.addressId,
+          defaultAddress: 1,
+        }
+        await this.$axios.post(userinfoApi.updateAddress, params)
+        await this.getShippingAddressList()
+      } catch (err) {}
     },
   },
 }
