@@ -21,7 +21,7 @@
               <span>元起</span>
             </div>
             <div class="contact-btn">
-              <a href="javascript:;">
+              <a href="javascript:;" @click="openIM(url)">
                 <img :src="item.headimg" alt="" />
               </a>
               <a href="javascript:;" @click="chat(index)">
@@ -33,7 +33,7 @@
                 >
                 </my-icon>
               </a>
-              <a href="javascript:;">
+              <a href="javascript:;" @click="openIM(url)">
                 <my-icon
                   name="notify_ic_tel"
                   color="#4974F5"
@@ -60,9 +60,21 @@ export default {
       default: () => {},
     },
   },
+  data() {
+    return {
+      url: '',
+    }
+  },
   methods: {
     chat() {
       this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+    },
+    openIM(url) {
+      if (url !== '') {
+        window.location.href = url
+      } else {
+        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+      }
     },
   },
 }
