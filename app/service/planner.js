@@ -2,14 +2,14 @@
  * @Author: xiao pu
  * @Date: 2020-12-11 14:34:53
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-18 13:38:57
+ * @LastEditTime: 2020-12-22 10:32:28
  * @Description: file content
  * @FilePath: /chips-wap/app/service/planner.js
  */
 
-"use strict";
-const Service = require("egg").Service;
-const { merchantApi } = require("./../../config/serveApi/index");
+'use strict';
+const Service = require('egg').Service;
+const { merchantApi } = require('./../../config/serveApi/index');
 class goodsListService extends Service {
   /**
    * 获取规划师列表（POST）
@@ -33,7 +33,7 @@ class goodsListService extends Service {
         merchantApi.list
       );
       if (!url) {
-        resolve({ ctx, code: 202, message: "缺少后端服务请求API路径" });
+        resolve({ ctx, code: 202, message: '缺少后端服务请求API路径' });
       }
       try {
         const listParams = {
@@ -43,6 +43,7 @@ class goodsListService extends Service {
           status,
           limit,
           start: page,
+          findType: 1, // 1 查询所有的服务商和消化商，排除运营商
         };
         if (sort) Object.assign(listParams, { [sort.sortType]: sort.value });
         const result = await service.curl.curlPost(url, listParams);
@@ -68,14 +69,14 @@ class goodsListService extends Service {
         merchantApi.categoryList
       );
       if (!url) {
-        resolve({ ctx, code: 202, message: "缺少后端服务请求API路径" });
+        resolve({ ctx, code: 202, message: '缺少后端服务请求API路径' });
       }
       try {
         const result = await service.curl.curlPost(url, {
           // TODO: 测试
-          mchUserIds: ["607990864366434868", "607990967445645276"],
+          mchUserIds: ['607990864366434868', '607990967445645276'],
           // mchUserIds,
-          statusParamCode: "ENABLE", // 查询状态码 DISABLE禁用 ，ENABLE启用，默认查询所有
+          statusParamCode: 'ENABLE', // 查询状态码 DISABLE禁用 ，ENABLE启用，默认查询所有
           limit: mchUserIds.length * 3, // 做多查 3条
           start: 1,
         });
@@ -132,7 +133,7 @@ class goodsListService extends Service {
         merchantApi.addressList
       );
       if (!url) {
-        resolve({ ctx, code: 202, res: "缺少后端服务请求API路径" });
+        resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
       }
       try {
         const addressIdsStr = JSON.stringify(addressIds);
