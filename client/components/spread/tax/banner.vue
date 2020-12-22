@@ -209,6 +209,7 @@ export default {
         currentSeconds
       return nowTimeString
     },
+    // 提交表单
     consultForm() {
       const _tel = this.tel
       const _code = this.code
