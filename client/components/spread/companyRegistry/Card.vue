@@ -41,13 +41,15 @@
             label-class="style-phone"
           >
             <template #button>
-              <span class="verification" @click="send">{{ test }}</span>
+              <span class="verification" @click="onSms">{{ test }}</span>
             </template>
           </sp-field>
         </div>
       </div>
       <div class="button">
-        <sp-button type="primary" block size="small">立即查询</sp-button>
+        <sp-button type="primary" block size="small" @click="onForm"
+          >立即查询</sp-button
+        >
       </div>
       <div class="flow">
         <span
@@ -132,22 +134,125 @@ export default {
       // 可以通过 close-on-click-action 属性开启自动收起
       this.downShow = false
       this.selectValue = item.name
-      Toast(item.name)
+      this.actions.forEach((element) => {
+        if (element.name === this.selectValue) element.color = '#5a79e8'
+        else element.color = '#232124'
+      })
     },
-    send() {
-      if (this.test === '获取验证码') {
-        let i = 59
-        this.test = i + 's'
-        const time = setInterval(() => {
-          if (i > 1) {
-            i--
-            this.test = i + 's'
-          } else {
-            this.test = '获取验证码'
-            clearInterval(time)
-          }
-        }, 1000)
+    // 验证码 发送前验证
+    onSms() {
+      const _tel = this.phoneValue
+      const _reg = /^1[3,4,5,6,7,8,9]\d{9}$/
+      if (_tel === '') {
+        return Toast('请输入手机号码')
       }
+      if (!_reg.test(_tel)) {
+        return Toast('请输入正确的验证码')
+      }
+      const setData = {
+        tel: _tel,
+        type: 'gs',
+      }
+      this.getMsg(setData)
+    },
+    // 发送验证码
+    getMsg(setData) {
+      if (this.test === '获取验证码' || this.test === '重新发送') {
+        window.promotion.privat.getSmsCode(setData, (res) => {
+          if (res.error === 0) {
+            let i = 59
+            this.test = i + 's'
+            const time = setInterval(() => {
+              if (i > 1) {
+                i--
+                this.test = i + 's'
+              } else {
+                this.test = '重新发送'
+                clearInterval(time)
+              }
+            }, 1000)
+            console.log(res)
+            return false
+          }
+          Toast(this.test + '后发送')
+          // console.log(res)
+        })
+      }
+    },
+    // 后台规定获取当前时间作为json字符串，来当做一个唯一标识
+    getDate() {
+      const timeStamp = new Date()
+      // 获取当前年
+      const currentYear = JSON.stringify(timeStamp.getFullYear())
+      // 获取当前月
+      const currentMonth = JSON.stringify(timeStamp.getMonth() + 1)
+      // 获取当前日
+      const currentDate = JSON.stringify(timeStamp.getDate())
+      const currentHour = JSON.stringify(timeStamp.getHours()) // 获取当前小时数(0-23)
+      const currentMin = JSON.stringify(timeStamp.getMinutes()) // 获取当前分钟数(0-59)
+      const currentSeconds = JSON.stringify(timeStamp.getSeconds())
+      // 获取当前时间
+      const nowTimeString =
+        currentYear +
+        currentMonth +
+        currentDate +
+        currentHour +
+        currentMin +
+        currentSeconds
+      return nowTimeString
+    },
+    onForm() {
+      // let _name = $(ID).find('input[name="name"]').val()
+      const _city = 'cd'
+      const _tel = this.phoneValue
+      const _code = this.sms
+      const _telReg = /^1[3,4,5,6,7,8,9]\d{9}$/
+      const webUrl = window.location.href
+      const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
+      if (!_city) {
+        Toast('请选择办理城市')
+        return
+      }
+      if (!_tel) {
+        Toast('请输入电话号码')
+        return
+      }
+      if (!_telReg.test(_tel)) {
+        Toast('请输入正确的电话号码')
+        return
+      }
+      if (!_code) {
+        Toast('请输入验证码')
+        return
+      }
+      // 若一级表单中存在二级属性字段（如公司名称、类别等）时，需将之放入对象，并转化为json字符串，在content属性中传入，这样即使用户没有提交二级表单也能把相关属性传入，若有二级表单，也和二级表单提交的属性不冲突
+      const contentStr = {
+        companyRegistry: this.selectValue,
+      }
+      if (contentStr.companyRegistry === '请选择') {
+        Toast('请选择你需要的类型')
+        return
+      }
+      const params = {
+        formId, // formId,唯一ID提交资源中心
+        name: '匿名用户', // 姓名
+        tel: _tel, // 电话
+        url: webUrl, // 链接
+        type: 'gszc', // 业态编码
+        place: _city, // 地区编码（需传编码）cd
+        device: 'wap', // 设备：pc,wap
+        web: 'xmt', // 归属渠道：xmt,zytg,wxgzh
+        smsCode: _code, // 验证码
+        content: JSON.stringify(contentStr), // 二级属性
+      }
+      window.promotion.privat.consultForm(params, (res) => {
+        if (res.error === 0) {
+          // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
+          console.log(res)
+          Toast('提交成功，请注意接听电话')
+          // $('.ejForm').show()
+        }
+      })
     },
   },
 }

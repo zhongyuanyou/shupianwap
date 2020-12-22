@@ -1,7 +1,7 @@
 <template>
   <div class="company-registry">
     <sp-top-nav-bar
-      title="公商注册"
+      title="公司注册"
       background="#FFFFFF"
       title-color="#1A1A1A"
       ellipsis
