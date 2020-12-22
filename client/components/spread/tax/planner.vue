@@ -28,7 +28,7 @@
               </div>
             </div>
             <div class="planner-content-div-left-icon">
-              <div style="margin-right: 0.2rem" @click="openIM">
+              <div style="margin-right: 0.2rem"window.open>
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"

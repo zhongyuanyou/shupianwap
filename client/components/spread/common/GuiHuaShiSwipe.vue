@@ -9,9 +9,10 @@
         class="planner-content my-swipe"
       >
         <sp-swipe-item
-          v-for="item of data"
+          v-for="item of data.planners"
           :key="item.id"
           class="planner-content-item"
+          @click="openIMurl"
         >
           <div class="planner-content-item-shadow">
             <div class="planner-content-item-shadow-person">
@@ -41,7 +42,14 @@
               </div>
             </div>
             <div class="planner-content-item-shadow-icon">
-              <div style="margin-right: 0.2rem" @click="openIM">
+              <div
+                style="margin-right: 0.2rem"
+                @click="
+                  () => {
+                    $parent.openIM
+                  }
+                "
+              >
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -49,7 +57,7 @@
                   class="icon line"
                 ></my-icon>
               </div>
-              <div>
+              <div @click="tel">
                 <my-icon
                   name="notify_ic_tel"
                   color="#4974F5"
@@ -77,20 +85,28 @@ export default {
   },
   props: {
     data: {
-      type: Array,
+      type: Object,
       default: () => {
-        return [
-          {
-            id: 1,
-            type: '金牌规划师',
-            avatarImg: '',
-            name: '郭亮亮',
-            shuPianFen: 11,
-            serverNum: 250,
-            telephone: 12345679985,
-            labels: ['工商注册', '财税咨询', '税务筹划'],
+        return {
+          planners: [
+            {
+              id: 1,
+              type: '金牌规划师',
+              avatarImg: '',
+              name: '郭亮亮',
+              shuPianFen: 11,
+              serverNum: 250,
+              telephone: 12345679985,
+              labels: ['工商注册', '财税咨询', '税务筹划'],
+            },
+          ],
+          im: {
+            function: 'openIMM',
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
           },
-        ]
+        }
       },
     },
     title: {
@@ -103,11 +119,32 @@ export default {
   data() {
     return {
       img: require('~/assets/spreadImages/tax/busi_img_swchbg01.png'),
+      url: '',
     }
   },
   methods: {
     openIM() {
-      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+      this.$root.$emit(
+        this.data.im.function,
+        this.data.im.id,
+        this.data.im.name,
+        this.data.im.num
+      )
+    },
+    openIMurl() {
+      if (this.url !== '') {
+        window.open = this.url
+      } else {
+        this.$root.$emit(
+          this.data.im.function,
+          this.data.im.id,
+          this.data.im.name,
+          this.data.im.num
+        )
+      }
+    },
+    tel(e) {
+      e.stopPropagation()
     },
   },
 }

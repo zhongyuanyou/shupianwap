@@ -7,6 +7,7 @@
         :key="i"
         class="maby-banner-item"
         :style="item.bg"
+        @click="openIMurl"
       ></div>
     </div>
   </div>
@@ -42,7 +43,17 @@ export default {
           },
         },
       ],
+      url: '',
     }
+  },
+  methods: {
+    openIMurl() {
+      if (this.url !== '') {
+        window.open = this.url
+      } else {
+        this.$parent.openIM()
+      }
+    },
   },
 }
 </script>

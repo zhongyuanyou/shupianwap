@@ -75,38 +75,46 @@ export default {
   data() {
     return {
       title: '税务筹划',
-      planners: [
-        {
-          id: 1,
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 138,
-          serverNum: 258,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
+      planners: {
+        planners: [
+          {
+            id: 1,
+            type: '金牌规划师',
+            avatarImg: '',
+            name: '郭亮亮',
+            shuPianFen: 138,
+            serverNum: 258,
+            telephone: 12345679985,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+          },
+          {
+            id: 2,
+            type: '金牌规划师',
+            avatarImg: '',
+            name: '郭亮亮',
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: 12345679985,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+          },
+          {
+            id: 3,
+            type: '金牌规划师',
+            avatarImg: '',
+            name: '郭亮亮',
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: 12345679985,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+          },
+        ],
+        im: {
+          function: 'openIMM',
+          id: '7862495547640840192',
+          name: '张毅',
+          num: '107547',
         },
-        {
-          id: 2,
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-        },
-        {
-          id: 3,
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-        },
-      ],
+      },
       plannersTitle: '咨询规划师',
       data: {
         show: {
@@ -124,6 +132,21 @@ export default {
           telephone: '18402858698',
         },
       },
+    }
+  },
+  methods: {
+    openIM() {
+      this.$root.$emit(
+        this.planners.im.function,
+        this.planners.im.id,
+        this.planners.im.name,
+        this.planners.im.num
+      )
+    },
+  },
+  head() {
+    return {
+      title: '税务筹划',
     }
   },
 }

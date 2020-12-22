@@ -1,56 +1,62 @@
 <template>
   <div class="serve">
     <div class="serve-text">稅筹服务介绍</div>
-    <a href="javascript:;">
-      <div
-        v-for="(item, i) of cards"
-        :key="i"
-        class="serve-card"
-        :style="item.bg"
-      >
-        <div class="serve-card-first">
-          <div>
-            <div class="serve-card-first-big">{{ item.num1 }}万+</div>
-            <div class="serve-card-first-small">在线咨询</div>
-          </div>
-          <div class="serve-card-first-hr"></div>
-          <div>
-            <div class="serve-card-first-big">{{ item.num2 }}万+</div>
-            <div class="serve-card-first-small">累计成交</div>
-          </div>
-          <div class="serve-card-first-hr"></div>
-          <div>
-            <div class="serve-card-first-big">{{ item.num3 }}万+</div>
-            <div class="serve-card-first-small">成功案列</div>
-          </div>
+    <div
+      v-for="(item, i) of cards"
+      :key="i"
+      class="serve-card"
+      :style="item.bg"
+      @click="openIMurl"
+    >
+      <div class="serve-card-first">
+        <div>
+          <div class="serve-card-first-big">{{ item.num1 }}万+</div>
+          <div class="serve-card-first-small">在线咨询</div>
         </div>
-        <div class="serve-card-second">
-          <div class="serve-card-second-left">
-            <span>{{ item.price }}</span
-            ><span>元起</span><strike>488.00元</strike>
+        <div class="serve-card-first-hr"></div>
+        <div>
+          <div class="serve-card-first-big">{{ item.num2 }}万+</div>
+          <div class="serve-card-first-small">累计成交</div>
+        </div>
+        <div class="serve-card-first-hr"></div>
+        <div>
+          <div class="serve-card-first-big">{{ item.num3 }}万+</div>
+          <div class="serve-card-first-small">成功案列</div>
+        </div>
+      </div>
+      <div class="serve-card-second">
+        <div class="serve-card-second-left">
+          <span>{{ item.price }}</span
+          ><span>元起</span><strike>488.00元</strike>
+        </div>
+        <div class="serve-card-second-right">
+          <div class="serve-card-second-right-person"></div>
+          <div
+            class="serve-card-second-right-rap"
+            @click="
+              () => {
+                $parent.openIM
+              }
+            "
+          >
+            <my-icon
+              name="notify_ic_chat"
+              color="#4974F5"
+              size="0.4rem"
+              class="icon"
+            ></my-icon>
           </div>
-          <div class="serve-card-second-right">
-            <div class="serve-card-second-right-person"></div>
-            <div class="serve-card-second-right-rap" @click="openIM">
-              <my-icon
-                name="notify_ic_chat"
-                color="#4974F5"
-                size="0.4rem"
-                class="icon"
-              ></my-icon>
-            </div>
-            <div class="serve-card-second-right-rap" @click="call">
-              <my-icon
-                name="notify_ic_tel"
-                color="#4974F5"
-                size="0.4rem"
-                class="icon"
-              ></my-icon>
-            </div>
+          <div class="serve-card-second-right-rap" @click="call">
+            <my-icon
+              name="notify_ic_tel"
+              color="#4974F5"
+              size="0.4rem"
+              class="icon"
+            ></my-icon>
           </div>
         </div>
       </div>
-    </a>
+    </div>
   </div>
 </template>
 
@@ -100,14 +106,19 @@ export default {
           person: '',
         },
       ],
+      url: '',
     }
   },
   methods: {
     call(e) {
       e.stopPropagation()
     },
-    openIM() {
-      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+    openIMurl() {
+      if (this.url !== '') {
+        window.open = this.url
+      } else {
+        this.$parent.openIM()
+      }
     },
   },
 }
