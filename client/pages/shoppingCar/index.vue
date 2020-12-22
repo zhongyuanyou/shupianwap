@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-21 11:55:55
+ * @LastEditTime: 2020-12-22 15:51:28
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -49,9 +49,11 @@
               class="shopping-car__goods-item"
             >
               <GoodsItem
+                ref="goodsItem"
                 :status="index === 1 ? 'offShelf' : 'sale'"
                 :commodity-data="item"
                 :user-id="userInfo.userId"
+                :index="index"
                 @operation="handleItemOperation"
               />
             </div>
@@ -149,6 +151,7 @@ export default {
         totalCount: 0,
         discountsAmount: '0.00',
       },
+      skuOpenIndex: -1, // 记录当前打开的sku的序列号
     }
   },
   computed: {
@@ -183,6 +186,21 @@ export default {
       this.postUpdate({ type: 'init' })
       this.getRecommendList()
     }
+  },
+  activated() {
+    console.log('activated:', this.$route.params)
+    const { id, code, name, goodsPrice, classCode } =
+      this.$route.params.data || {}
+    console.log('classCode : ', classCode)
+    const goodsItemInstance = this.$refs.goodsItem[this.skuOpenIndex]
+    if (!goodsItemInstance) return
+    goodsItemInstance.selecteResourceService({
+      id,
+      code,
+      name,
+      goodsPrice,
+      classCode,
+    })
   },
   methods: {
     ...mapMutations({
@@ -228,7 +246,7 @@ export default {
       this.onLoad()
     },
     handleItemOperation(value = {}) {
-      const { type, data, cartId } = value
+      const { type, data, cartId, index } = value
       console.log('type:', type)
       switch (type) {
         case 'detele':
@@ -254,8 +272,7 @@ export default {
           this.onRefresh()
           break
         case 'resourceServiceSelect': // sku弹出框里资源服务
-          this.selecteResourceService(cartId, data)
-
+          this.selecteResourceService(cartId, data, index)
           break
       }
     },
@@ -302,19 +319,20 @@ export default {
       this.selectItem(cartId, data)
     },
     // 资源服务的选择
-    selecteResourceService(cartId, value) {
+    selecteResourceService(cartId, value, index) {
       const { type, classCode } = value
+      this.skuOpenIndex = index
       switch (type) {
         case 'registerAddress':
           this.$router.push({
             name: 'detail-selectAddress',
-            query: { classCode, redirectType: 'wap', redirect: '/shoppingcar' },
+            query: { classCode, redirectType: 'wap', redirect: 'shoppingCar' },
           })
           break
         case 'phone':
           this.$router.push({
             name: 'detail-selectPhone',
-            query: { classCode, redirectType: 'wap', redirect: '/shoppingcar' },
+            query: { classCode, redirectType: 'wap', redirect: 'shoppingCar' },
           })
           break
       }
@@ -376,7 +394,8 @@ export default {
     // 请求购物车列表
     async getList() {
       try {
-        const userId = this.userInfo.userId || '1234567'
+        // TODO 测试数据
+        const userId = '1234567' // this.userInfo.userId
         let data = await shoppingCar.list({ userId })
         console.log(data)
         if (!Array.isArray(data)) data = []

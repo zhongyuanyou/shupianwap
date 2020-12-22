@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 16:24:21
+ * @LastEditTime: 2020-12-22 16:02:12
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
@@ -293,7 +293,8 @@ export default {
         }
         return data
       } catch (error) {
-        this.loginForm(error.message)
+        this.loginToast(error.message)
+        return Promise.reject(error)
       }
     },
 

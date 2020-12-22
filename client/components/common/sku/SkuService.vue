@@ -101,7 +101,7 @@
       </template>
       <template #sku-actions>
         <div class="sku-service-actions sp-hairline--top">
-          <sp-button
+          <!-- <sp-button
             class="sku-service-actions__car-btn"
             size="large"
             type="warning"
@@ -116,6 +116,14 @@
             @click="handleBuy"
           >
             立即购买
+          </sp-button> -->
+          <sp-button
+            class="sku-service-actions__comfirm-btn"
+            size="large"
+            type="warning"
+            @click="handleAddShoppingCar"
+          >
+            确定
           </sp-button>
         </div>
       </template>
@@ -362,13 +370,9 @@ export default {
       switch (classCode) {
         case 'FL20201211085087': // 注册地址
           type = 'registerAddress'
-          // TODO 测试
-          classCode = 'FL20201211085087'
           break
         case 'FL20201214095005': // 400
           type = 'phone'
-          classCode = 'FL20201202065046'
-
           break
       }
       this.$emit('operation', {
@@ -505,6 +509,13 @@ export default {
     }
     &__buy-btn {
       width: 327px;
+      height: 100px;
+      background: #ec5330;
+      border-radius: 8px;
+    }
+    &__comfirm-btn {
+      // width: 327px;
+      flex: 1;
       height: 100px;
       background: #ec5330;
       border-radius: 8px;

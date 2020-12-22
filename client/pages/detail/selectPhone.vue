@@ -329,7 +329,16 @@ export default {
 
       // 在浏览器里 返回
       if (data) {
-        this.$router.push({ path: this.redirect, params: { data } })
+        // 判断是路劲还是name
+        if (this.redirect) {
+          const isPath = /\//.test(this.redirect + '')
+          const pushParams = {
+            path: isPath ? this.redirect : null,
+            name: isPath ? null : this.redirect,
+            params: { data },
+          }
+          this.$router.push(pushParams)
+        }
       } else {
         this.$router.back(-1)
       }

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-21 14:21:15
+ * @LastEditTime: 2020-12-22 15:35:42
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -95,6 +95,12 @@ import fingerprint from '@/utils/fingerprint'
 
 import { shoppingCar } from '@/api'
 
+// 资源服务 与 查询相关列表 classCode  对应关系， key(资源服务的) ： value(相关列表查询的)
+const RESOURCE_ITEM_CODE_MAP = {
+  FL20201214095005: 'FL20201202065046', // 400电话
+  FL20201211085087: 'FL20201211085087', // 注册地址
+}
+
 export default {
   name: 'GoodsItem',
   components: {
@@ -112,7 +118,7 @@ export default {
       default: 'sale', // offShelf：下架
     },
     userId: {
-      type: String,
+      type: [String, Number],
       default: '',
     },
     commodityData: {
@@ -120,6 +126,10 @@ export default {
       default() {
         return {}
       },
+    },
+    index: {
+      type: Number,
+      default: -1,
     },
   },
   data() {
@@ -295,7 +305,16 @@ export default {
           break
         case 'resourceServiceSelect': // sku弹出框里资源服务
           // this.selecteResourceService(data)
-          this.$emit('operation', { data, type, cartId })
+
+          this.$emit('operation', {
+            data: {
+              ...data,
+              classCode: RESOURCE_ITEM_CODE_MAP[data.classCode],
+            },
+            type,
+            cartId,
+            index: this.index,
+          })
           break
       }
     },
@@ -446,7 +465,31 @@ export default {
     },
 
     // 资源服务的选择
-    selecteResourceService(value) {},
+    selecteResourceService(data = {}) {
+      console.log(data)
+      const { id, code, name, goodsPrice } = data
+      const classCode = Object.keys(RESOURCE_ITEM_CODE_MAP).find(
+        (item) => RESOURCE_ITEM_CODE_MAP[item] === data.classCode
+      )
+      if (!classCode) return
+      const { serviceResourceList = [] } = this.tempGoods
+      const matchedItem = this.skuData.serviceGoodsClassList.find(
+        (item) => item.classCode === classCode
+      )
+      const className = matchedItem ? matchedItem.className : ''
+      const filteredList = serviceResourceList.filter(
+        (item) => item.serviceItemId !== classCode
+      )
+      filteredList.push({
+        price: goodsPrice,
+        num: 1,
+        serviceItemId: classCode,
+        serviceItemName: className,
+        serviceItemValId: id,
+        serviceItemValName: name,
+      })
+      this.tempGoods.serviceResourceList = filteredList
+    },
 
     // 根据不同的平台差异，获取不同的参数
     async uPGetConfig() {
