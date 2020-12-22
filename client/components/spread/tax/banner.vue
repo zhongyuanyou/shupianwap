@@ -136,7 +136,7 @@ export default {
     focus() {
       this.isshow = true
     },
-    // 验证 验证码
+    // 验证 电话号码
     testMsg() {
       const _tel = this.tel
       const _reg = /^1[3,4,5,6,7,8,9]\d{9}$/
