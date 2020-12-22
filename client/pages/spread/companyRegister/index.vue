@@ -1,7 +1,7 @@
 <template>
   <div class="company-registry">
     <sp-top-nav-bar
-      title="公司注册"
+      title="公商注册"
       background="#FFFFFF"
       title-color="#1A1A1A"
       ellipsis
@@ -47,7 +47,7 @@
     <!-- E注册公司准备工作-平台优势 -->
     <!-- S咨询规划师 -->
     <div class="refer">
-      <Planner :planners="planners" />
+      <GuiHuaShiSwipe :data="planners" :title="plannersTitle"></GuiHuaShiSwipe>
     </div>
     <!-- E咨询规划师 -->
     <!-- S其他服务 -->
@@ -113,8 +113,8 @@ import Standard from '@/components/spread/companyRegistry/standard.vue'
 import RegisterReady from '@/components/spread/companyRegistry/RegisterReady'
 import QueryPhone from '@/components/spread/companyRegistry/QueryPhone'
 import Bottom from '@/components/spread/companyRegistry/bottom'
-import Planner from '~/components/spread/common/GuiHuaShiSwipe'
-import dggImCompany from '@/components/spread/dggImCompany'
+import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
+import dggImCompany from '~/components/spread/DggImCompany'
 export default {
   name: 'CompanyRegistry',
   components: {
@@ -132,7 +132,7 @@ export default {
     Standard,
     QueryPhone,
     Bottom,
-    Planner,
+    GuiHuaShiSwipe,
     dggImCompany,
   },
   data() {
@@ -183,6 +183,7 @@ export default {
           labels: ['工商注册', '财税咨询', '税务筹划'],
         },
       ],
+      plannersTitle: '咨询规划师',
       listCount: [
         {
           pric: 4000,

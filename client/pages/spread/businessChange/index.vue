@@ -41,7 +41,7 @@ import ServiceProcess from '../../../components/spread/businessChange/servicePro
 import Planners from '../../../components/spread/common/GuiHuaShiSwipe'
 import Need from '../../../components/spread/businessChange/need'
 import Bottom from '../../../components/spread/agency/bottom'
-import dggImCompany from '../../../components/spread/dggImCompany'
+import dggImCompany from '../../../components/spread/DggImCompany'
 export default {
   components: {
     Header,
@@ -57,7 +57,7 @@ export default {
   },
   data() {
     return {
-      title: '工商注册',
+      title: '工商变更',
       plannersTitle: '咨询规划师',
       // 轮播列表
       imgList: [

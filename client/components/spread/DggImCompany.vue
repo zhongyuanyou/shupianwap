@@ -159,8 +159,7 @@ export default {
   created() {
     // 在vue根实例上监听openIMM方法，对应的在需要的地方触发openIMM方法
     this.$root.$on('openIMM', (id, name, num) => {
-      debugger
-      // id是规划师id，name是规划师名字，num暂未知
+      // id是规划师id，name是规划师名字，num是规划师工号
       this.isPopupShow = true
       this.createSession(id, name, num)
     })

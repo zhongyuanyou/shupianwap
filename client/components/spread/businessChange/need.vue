@@ -76,7 +76,6 @@ export default {
     > li {
       flex-basis: 32%;
       background: #f8f8f8;
-      border: 1px solid rgba(205, 205, 205, 0.3);
       border-radius: 8px;
       > a {
         > img {

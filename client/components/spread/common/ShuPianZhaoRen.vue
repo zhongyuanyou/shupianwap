@@ -19,6 +19,7 @@ export default {
 <style lang="less" scoped>
 .zhaoren {
   width: calc(100% - 80px);
+  height: 210px;
   padding: 30px 0;
   font-family: PingFang SC;
   margin: 0 auto;
@@ -52,7 +53,6 @@ export default {
     font-size: 20px;
     font-weight: 400;
     color: #c5c5c5;
-    //margin-bottom: 12px;
   }
 }
 </style>
