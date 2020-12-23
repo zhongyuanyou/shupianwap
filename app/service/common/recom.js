@@ -1,6 +1,7 @@
 'use strict';
 const Service = require('egg').Service;
 const { algorithmApi } = require('../../../config/serveApi/index');
+const { RECOM_TIME } = require('../../../config/constant/cacheTime');
 class cityService extends Service {
   /**
    * @Author: MaLiang
@@ -23,16 +24,17 @@ class cityService extends Service {
     return new Promise(async (resolve) => {
       const { ctx, app, service } = this;
       try {
-        const key =
-          params.deviceId +
-          params.userId +
-          params.areaCode +
-          params.productType +
-          params.formatId;
+        const cacheKey = ctx.helper.cacheKey(ctx.method, ctx.path, {
+          deviceId: params.deviceId,
+          userId: params.userId,
+          areaCode: params.areaCode,
+          productType: params.productType,
+          formatId: params.formatId,
+        });
         // 通过用户唯一标识从redis获取推荐产品ids
-        const cacheProductIds = await service.redis.get(key);
-        if (cacheProductIds && cacheProductIds.code === 200) {
-          resolve(cacheProductIds);
+        const cacheData = await service.redis.get(cacheKey);
+        if (cacheData && cacheData.code === 200) {
+          resolve(cacheData);
         } else {
           const url = ctx.helper.assembleUrl(
             app.config.apiClient.APPID[6],
@@ -40,9 +42,8 @@ class cityService extends Service {
           );
           const result = await service.curl.curlPost(url, params);
           if (result.code === 200 && result.data.productInfoList.length) {
-            const overdueTime = 60 * 60; // 过期时间(1小时)
             // 缓存数据
-            service.redis.set(key, result, overdueTime);
+            service.redis.set(cacheKey, result, RECOM_TIME);
           }
           resolve(result);
         }
