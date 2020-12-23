@@ -33,64 +33,10 @@
 export default {
   name: 'JingYing',
   data() {
-    return {
-      productList: [
-        {
-          id: 1,
-          img: require('~/assets/spreadImages/home/busi_img_gscsjy01.png'),
-          imgWidth: 215,
-          imgHeight: 170,
-          marginRight: true,
-          price: 2000,
-          url: '',
-        },
-        {
-          id: 2,
-          img: require('~/assets/spreadImages/home/busi_img_gscsjy02.png'),
-          imgWidth: 215,
-          imgHeight: 170,
-          marginRight: true,
-          price: 3488,
-          url: '',
-        },
-        {
-          id: 3,
-          img: require('~/assets/spreadImages/home/busi_img_gscsjy03.png'),
-          imgWidth: 215,
-          imgHeight: 170,
-          marginRight: false,
-          price: 200,
-          url: '',
-        },
-        {
-          id: 4,
-          img: require('~/assets/spreadImages/home/busi_img_gscsjy04.png'),
-          imgWidth: 215,
-          imgHeight: 170,
-          marginRight: true,
-          price: 888,
-          url: '',
-        },
-        {
-          id: 5,
-          img: require('~/assets/spreadImages/home/busi_img_gscsjy05.png'),
-          imgWidth: 215,
-          imgHeight: 170,
-          marginRight: true,
-          price: 300,
-          url: '',
-        },
-        {
-          id: 6,
-          img: require('~/assets/spreadImages/home/busi_img_gscsjy06.png'),
-          imgWidth: 215,
-          imgHeight: 170,
-          marginRight: false,
-          price: 200,
-          url: '',
-        },
-      ],
-    }
+    return {}
+  },
+  created() {
+    this.productList = this.$parent.jingYingProductList
   },
 }
 </script>

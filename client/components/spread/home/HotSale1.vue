@@ -47,55 +47,10 @@
 export default {
   name: 'HotSale',
   data() {
-    return {
-      productList: [
-        {
-          id: 1,
-          img: require('~/assets/spreadImages/home/busi_img_gscsrx01.jpg'),
-          imgWidth: 225,
-          imgHeight: 348,
-          marginRight: true,
-          price: 1800,
-          url: '',
-        },
-        {
-          id: 2,
-          img: require('~/assets/spreadImages/home/busi_img_gscsrx02.jpg'),
-          imgWidth: 210,
-          imgHeight: 168,
-          marginRight: true,
-          price: 488,
-          url: '',
-        },
-        {
-          id: 3,
-          img: require('~/assets/spreadImages/home/busi_img_gscsrx03.jpg'),
-          imgWidth: 210,
-          imgHeight: 168,
-          marginRight: true,
-          price: 1500,
-          url: '',
-        },
-        {
-          id: 4,
-          img: require('~/assets/spreadImages/home/busi_img_gscsrx04.jpg'),
-          imgWidth: 210,
-          imgHeight: 168,
-          marginRight: false,
-          price: 600,
-          url: '',
-        },
-        {
-          id: 5,
-          img: require('~/assets/spreadImages/home/busi_img_gscsrx05.jpg'),
-          imgWidth: 210,
-          imgHeight: 168,
-          marginRight: false,
-          price: 0,
-          url: '',
-        },
-      ],
-    }
+    return {}
+  },
+  created() {
+    this.productList = this.$parent.hotSaleProductList
   },
   methods: {},
 }
