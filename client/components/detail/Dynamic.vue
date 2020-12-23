@@ -4,11 +4,11 @@
     <div class="dynamic_statistical">
       <div class="dynamic_statistical_item">
         <p class="statistical_title">近7日浏览量</p>
-        <p class="statistical_num">295</p>
+        <p class="statistical_num">{{ views }}</p>
       </div>
       <div class="dynamic_statistical_item">
         <p class="statistical_title">近7日咨询量</p>
-        <p class="statistical_num">180</p>
+        <p class="statistical_num">{{ consultationVolume }}</p>
       </div>
     </div>
   </div>
@@ -20,6 +20,23 @@ export default {
   name: 'Dynamic',
   components: {
     [Cell.name]: Cell,
+  },
+  data() {
+    return {
+      views: 0,
+      consultationVolume: 0,
+    }
+  },
+  mounted() {
+    // 生成阅读量
+    this.generatingRandom(70, 40, 'views')
+    // 生成咨询量
+    this.generatingRandom(15, 10, 'consultationVolume')
+  },
+  methods: {
+    generatingRandom(max, min, key) {
+      this[key] = Math.floor(Math.random() * (max - min + 1) + min)
+    },
   },
 }
 </script>

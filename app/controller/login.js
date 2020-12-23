@@ -2,14 +2,14 @@
  * @Author: xiao pu
  * @Date: 2020-12-03 15:34:31
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 13:56:16
+ * @LastEditTime: 2020-12-22 19:42:33
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/login.js
  */
-"use strict";
-const Controller = require("egg").Controller;
-const { Get, Post, Prefix } = require("egg-shell-decorators");
-const { userApi } = require("./../../config/serveApi/index");
+'use strict';
+const Controller = require('egg').Controller;
+const { Get, Post, Prefix } = require('egg-shell-decorators');
+const { userApi, contentApi } = require('./../../config/serveApi/index');
 
 const getValiErrors = function (app, ctx, rules, data) {
   // 参数校验
@@ -22,30 +22,30 @@ const getValiErrors = function (app, ctx, rules, data) {
   return false;
 };
 
-@Prefix("/nk/login/v1")
+@Prefix('/nk/login/v1')
 class LoginController extends Controller {
-  @Post("/login.do")
+  @Post('/login.do')
   async login() {
     const { ctx, service, app } = this;
     // 定义参数校验规则
     const rules = {
-      accountChannel: { type: "string", required: true },
-      userType: { type: "string", required: true },
-      client: { type: "string", required: true },
-      platformType: { type: "string", required: true },
-      dataJson: { type: "object", required: true },
+      accountChannel: { type: 'string', required: true },
+      userType: { type: 'string', required: true },
+      client: { type: 'string', required: true },
+      platformType: { type: 'string', required: true },
+      dataJson: { type: 'object', required: true },
     };
 
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
-    Object.assign(ctx.headers, { sysCode: "crisps-app" });
+    Object.assign(ctx.headers, { sysCode: 'crisps-app' });
     const url = ctx.helper.assembleUrl(
       app.config.apiClient.APPID[2],
       userApi.login
     );
 
-    const { status, data } = await service.curl.curlPost(url, ctx.request.body);
+    const data = await service.curl.curlPost(url, ctx.request.body);
 
-    if (status === 200 && data.code === 200) {
+    if (data.code === 200) {
       ctx.helper.success({
         ctx,
         code: 200,
@@ -55,18 +55,18 @@ class LoginController extends Controller {
     }
     ctx.helper.fail({
       ctx,
-      code: data.code || status,
+      code: data.code,
       res: data.data || {},
-      detailMessage: data.message || "请求失败",
+      detailMessage: data.message || '请求失败',
     });
   }
 
-  @Get("/logout.do")
+  @Get('/logout.do')
   async logout() {
     const { ctx, service, app } = this;
     const rules = {
-      token: { type: "string", required: true },
-      userId: { type: "string", required: true },
+      token: { type: 'string', required: true },
+      userId: { type: 'string', required: true },
     };
     if (getValiErrors(app, ctx, rules, ctx.query)) return;
 
@@ -74,9 +74,9 @@ class LoginController extends Controller {
       app.config.apiClient.APPID[2],
       userApi.logout
     );
-    Object.assign(ctx.headers, { sysCode: "crisps-app" });
-    const { status, data } = await service.curl.curlGet(url, ctx.query);
-    if (status === 200 && data.code === 200) {
+    Object.assign(ctx.headers, { sysCode: 'crisps-app' });
+    const data = await service.curl.curlGet(url, ctx.query);
+    if (data.code === 200) {
       ctx.helper.success({
         ctx,
         code: 200,
@@ -86,23 +86,23 @@ class LoginController extends Controller {
     }
     ctx.helper.fail({
       ctx,
-      code: status,
+      code: data.code,
       res: data,
-      detailMessage: data.message || "请求失败",
+      detailMessage: data.message || '请求失败',
     });
   }
 
-  @Post("/register.do")
+  @Post('/register.do')
   async register() {
     // 获取资讯详情
     const { ctx, service, app } = this;
     const rules = {
-      phone: { type: "string", required: true },
-      smsCode: { type: "string", required: true },
-      password: { type: "string", required: true },
-      client: { type: "string", required: true },
-      platformType: { type: "string", required: true },
-      userType: { type: "string", required: true },
+      phone: { type: 'string', required: true },
+      smsCode: { type: 'string', required: true },
+      password: { type: 'string', required: true },
+      client: { type: 'string', required: true },
+      platformType: { type: 'string', required: true },
+      userType: { type: 'string', required: true },
     };
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
 
@@ -119,8 +119,8 @@ class LoginController extends Controller {
       app.config.apiClient.APPID[2],
       userApi.login
     );
-    Object.assign(ctx.headers, { sysCode: "crisps-app" });
-    const { status, data = {} } = await service.curl.curlPost(registerUrl, {
+    Object.assign(ctx.headers, { sysCode: 'crisps-app' });
+    const data = await service.curl.curlPost(registerUrl, {
       dataJson: {
         phone,
         password,
@@ -129,10 +129,10 @@ class LoginController extends Controller {
       userType,
       client,
       platformType,
-      accountChannel: "AUTH_PHONE_VERIFY",
+      accountChannel: 'AUTH_PHONE_VERIFY',
     });
 
-    if (status === 200 && data.code === 200) {
+    if (data.code === 200) {
       ctx.helper.success({
         ctx,
         code: 200,
@@ -142,20 +142,20 @@ class LoginController extends Controller {
     }
     ctx.helper.fail({
       ctx,
-      code: data.code || status,
+      code: data.code,
       res: data || {},
-      detailMessage: data.message || "请求失败",
+      detailMessage: data.message || '请求失败',
     });
   }
 
-  @Post("/reset.do")
+  @Post('/reset.do')
   async reset() {
     const { ctx, service, app } = this;
     const rules = {
-      phone: { type: "string", required: true },
-      smsCode: { type: "string", required: true },
-      newPassword: { type: "string", required: true },
-      userType: { type: "string", required: true },
+      phone: { type: 'string', required: true },
+      smsCode: { type: 'string', required: true },
+      newPassword: { type: 'string', required: true },
+      userType: { type: 'string', required: true },
     };
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
 
@@ -164,13 +164,10 @@ class LoginController extends Controller {
       app.config.apiClient.APPID[3],
       userApi.reset
     );
-    Object.assign(ctx.headers, { sysCode: "crisps-app" });
-    const { status, data = {} } = await service.curl.curlPost(
-      url,
-      ctx.request.body
-    );
+    Object.assign(ctx.headers, { sysCode: 'crisps-app' });
+    const data = await service.curl.curlPost(url, ctx.request.body);
 
-    if (status === 200 && data.code === 200) {
+    if (data.code === 200) {
       ctx.helper.success({
         ctx,
         code: 200,
@@ -180,37 +177,40 @@ class LoginController extends Controller {
     }
     ctx.helper.fail({
       ctx,
-      code: data.code || status,
+      code: data.code,
       res: data || {},
-      detailMessage: data.message || "请求失败",
+      detailMessage: data.message || '请求失败',
     });
   }
 
-  @Get("/smsCode.do")
+  @Get('/smsCode.do')
   async smsCode() {
     const { ctx, service, app } = this;
     const rules = {
-      phone: { type: "string", required: true },
-      type: ["login", "register", "reset"],
+      phone: { type: 'string', required: true },
+      type: ['login', 'register', 'reset'],
     };
     if (getValiErrors(app, ctx, rules, ctx.query)) return;
 
     const { phone, type } = ctx.query;
     const msgTemplateCode = {
-      login: "SMS_TMP_LOGIN",
-      register: "SMS_TMP_LOGIN",
-      reset: "USER_FORGET_PASS",
+      login: 'SMS_TMP_LOGIN',
+      register: 'SMS_TMP_LOGIN',
+      reset: 'USER_FORGET_PASS',
     }[type];
 
-    Object.assign(ctx.headers, { sysCode: "crisps-app", 'Content-Type': 'application/json' });
-    const { status, data } = await service.common.verificationCode.getSmsCode(
+    Object.assign(ctx.headers, {
+      sysCode: 'crisps-app',
+      'Content-Type': 'application/json',
+    });
+    const data = await service.common.verificationCode.getSmsCode(
       phone,
       null,
-      "ORDINARY_USER",
+      'ORDINARY_USER',
       msgTemplateCode
     );
 
-    if (status === 200 && data.code === 200) {
+    if (data.code === 200) {
       ctx.helper.success({
         ctx,
         code: 200,
@@ -220,9 +220,74 @@ class LoginController extends Controller {
     }
     ctx.helper.fail({
       ctx,
-      code: data.code || status,
+      code: data.code,
       res: data || {},
-      detailMessage: data.message || "请求失败",
+      detailMessage: data.message || '请求失败',
+    });
+  }
+
+  @Post('/account_info.do')
+  async accountInfo() {
+    const { ctx, service, app } = this;
+    const rules = {
+      userId: { type: 'string', required: true },
+    };
+    if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
+
+    const url = ctx.helper.assembleUrl(
+      app.config.apiClient.APPID[3],
+      userApi.accountInfo
+    );
+    Object.assign(ctx.headers, { sysCode: 'crisps-app' });
+    const data = await service.curl.curlPost(url, ctx.request.body);
+    if (data.code === 200) {
+      ctx.helper.success({
+        ctx,
+        code: 200,
+        res: data.data,
+      });
+      return;
+    }
+    ctx.helper.fail({
+      ctx,
+      code: data.code,
+      res: data,
+      detailMessage: data.message || '请求失败',
+    });
+  }
+
+  @Get('/protocol.do')
+  async protocol() {
+    const { ctx, service, app } = this;
+    const rules = {
+      id: { type: 'string', required: false }, // 内容id
+      categoryCode: { type: 'string', required: false }, // 分类编码,查询当前分类及其所有启用子类,多个code通过逗号
+      includeField: { type: 'string', required: false }, // 必须要输出的内容字段，优先于excludeField，多个字段名称使用,（逗号）连接，默认排除content，需要输出时在此显式声明
+    };
+    if (getValiErrors(app, ctx, rules, ctx.query)) return;
+
+    const { id, categoryCode, includeField } = ctx.query;
+    const params = { id, categoryCode, includeField };
+    // const data = await service.common.content.detail(params);
+    const url = ctx.helper.assembleUrl(
+      app.config.apiClient.APPID[0],
+      contentApi.infoList
+    );
+    const data = await service.curl.curlGet(url, params);
+
+    if (data.code === 200) {
+      ctx.helper.success({
+        ctx,
+        code: 200,
+        res: data.data,
+      });
+      return;
+    }
+    ctx.helper.fail({
+      ctx,
+      code: data.code,
+      res: data,
+      detailMessage: data.message || '请求失败',
     });
   }
 }

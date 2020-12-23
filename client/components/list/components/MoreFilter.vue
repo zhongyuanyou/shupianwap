@@ -9,12 +9,12 @@
     <div
       class="more-content"
       :style="{
-        maxHeight: maxHeight,
+        maxHeight: contentMaxHeight,
       }"
     >
       <div v-for="(item, index) in children" :key="index" class="more-item">
         <div class="more-item__title">
-          <h2>{{ item.title }}</h2>
+          <h2>{{ item.name }}</h2>
           <div v-if="isShowBtn[index]" @click="showAllList(index)">
             全部
             <div
@@ -31,7 +31,8 @@
           </div>
         </div>
         <select-check-box
-          :select-list="item.filters"
+          :is-show-all-option="false"
+          :select-list="item.children"
           :gutter="12"
           :is-select-more="item.isSelects"
           :self-active-item="activeItems[index]"
@@ -49,8 +50,10 @@
       </div>
     </div>
     <BottomConfirm
+      ref="BottomConfirm"
       @resetFilters="resetFilters"
       @confirmFilters="confirmFilters"
+      @bottomConfirmHeight="getBottomConfirmHeight"
     />
   </sp-dropdown-item>
 </template>
@@ -76,241 +79,25 @@ export default {
         return null
       },
     },
+    filterMaxHeight: {
+      type: Number,
+      default() {
+        return 0
+      },
+    },
   },
   data() {
     return {
       moreTextCss: 'jyDropdownFilter',
       dropdownTitle: '',
-      children: [
-        {
-          title: '行业类型',
-          filters: [
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-          ],
-          isSelects: false,
-        },
-        {
-          title: '行业类型2',
-          filters: [
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-          ],
-          isSelects: true,
-        },
-        {
-          title: '行业类型3',
-          filters: [
-            {
-              id: '1',
-              name: '科技信息',
-            },
-            {
-              id: '2',
-              name: '科技信息',
-            },
-            {
-              id: '3',
-              name: '科技信息',
-            },
-            {
-              id: '4',
-              name: '科技信息',
-            },
-            {
-              id: '5',
-              name: '科技信息',
-            },
-            {
-              id: '6',
-              name: '科技信息',
-            },
-            {
-              id: '7',
-              name: '科技信息',
-            },
-          ],
-          isSelects: false,
-        },
-      ],
+      children: [],
       isShowBtn: [], // 对应的筛选栏是否显示全部按钮
       selectBoxVue: [], // 存储所有的选择栏vue实例
       selectValueArray: [], // 所选择的数据
       activeItems: [], // 默认激活的
       saveActiveItems: [], // 存储的筛选项数据
+      contentMaxHeight: 0, // 内容的最大高
     }
-  },
-  computed: {
-    maxHeight() {
-      let height = parseInt(this.$parent.$parent.$parent.maxHeight)
-      height = height + 44 - 80
-      height += 'px'
-      return height
-    },
   },
   watch: {
     activeItems(val) {
@@ -324,7 +111,7 @@ export default {
       } else if (arr.length === 0) {
         this.removeClass('moreText')
         this.removeClass('active')
-        this.dropdownTitle = this.filterData.title
+        this.dropdownTitle = this.filterData.name
       }
       // 如果筛选名字个数超过了4个那么需要加样式
       /* if (this.dropdownTitle.length >= 4) {
@@ -335,14 +122,15 @@ export default {
     },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
-        this.dropdownTitle = val.title
+        this.dropdownTitle = val.name
+        this.children = val.children
       }
     },
   },
   mounted() {
     if (this.filterData && JSON.stringify(this.filterData) !== '{}') {
-      this.dropdownTitle = this.filterData.title
-      // this.selectList = this.filterData.filters
+      this.dropdownTitle = this.filterData.name
+      this.children = this.filterData.children
     }
   },
   methods: {
@@ -390,9 +178,35 @@ export default {
     },
     confirmFilters() {
       // 确认筛选
+
       this.saveActiveItems = clone(this.activeItems, true)
-      this.$emit('activeItem', this.activeItems, 'moreFilter')
+      const emitData = this.resultHandle()
+      this.$emit('activeItem', emitData, 'moreFilter')
       this.$refs.item.toggle()
+    },
+    resultHandle() {
+      // 处理结果
+      const filterKeyValArr = []
+      this.saveActiveItems.forEach((item) => {
+        const emitData = {
+          fieldCode: '',
+          fieldValue: [],
+          matchType: 'MATCH_TYPE_MULTI',
+        }
+        if (item.length) {
+          item.forEach((_item) => {
+            emitData.fieldCode = _item.ext1
+            // 像地区这种ext2没有值，就需要去取字典上面的code
+            emitData.fieldValue.push(_item.ext2 ? _item.ext2 : _item.code)
+          })
+          filterKeyValArr.push(emitData)
+        }
+      })
+      return filterKeyValArr
+    },
+    getBottomConfirmHeight(height) {
+      // 获取底部确认按钮的高度
+      this.contentMaxHeight = this.filterMaxHeight - height + 'px'
     },
   },
 }
@@ -403,6 +217,8 @@ export default {
   overflow-x: hidden;
   overflow-y: scroll;
   padding: 52px 40px 56px 40px;
+  max-height: 584px;
+  border-bottom: 1px solid #cdcdcd;
   .more-item {
     margin-bottom: 60px;
     &:last-child {
@@ -429,7 +245,7 @@ export default {
         /*transform: rotateX(180deg);*/
         div {
           display: inline;
-          .tab_ic_all_n {
+          .spiconfont-tab_ic_all_n {
             margin-left: 12px;
           }
           &.show_all {

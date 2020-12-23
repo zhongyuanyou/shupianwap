@@ -29,13 +29,13 @@ module.exports = {
     DGG_SERVER_ENV: process.env.DGG_SERVER_ENV,
   },
   head: {
-    title: process.env.npm_package_name || '',
+    title: '薯片·让更多人生活更美好！',
     meta: [
       { charset: 'utf-8' },
       {
         name: 'viewport',
         content:
-                    'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover',
+          'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover',
       },
       {
         hid: 'description',
@@ -86,13 +86,15 @@ module.exports = {
         charset: 'utf-8',
       },
       {
-        src: 'https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-2.0.18.js',
+        src:
+          'https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-2.0.18.js',
         ssr: false,
         type: 'text/javascript',
         charset: 'utf-8',
       },
       {
-        src: 'https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js',
+        src:
+          'https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js',
         ssr: false,
         type: 'text/javascript',
         charset: 'utf-8',
@@ -100,7 +102,11 @@ module.exports = {
     ],
   },
   loading: { color: '#fff' },
-  css: [ '~assets/css/reset.css', '~assets/icons/iconfont.css', '~assets/styles/reset-vant.css' ],
+  css: [
+    '~assets/css/reset.css',
+    '~assets/icons/iconfont.css',
+    '~assets/styles/reset-vant.less',
+  ],
   styleResources: {
     less: '~/assets/styles/variables.less',
   },
@@ -109,7 +115,12 @@ module.exports = {
     { src: '@/plugins/router', ssr: false },
     { src: '@/plugins/dgg-md', ssr: false },
     { src: '@/plugins/my-icon', ssr: true },
+    { src: '@/plugins/vconsole', ssr: false },
+    { src: '@/plugins/app-sdk', ssr: false },
   ],
+  router: {
+    middleware: 'appDock',
+  },
   buildModules: [ '@nuxtjs/eslint-module' ],
   modules: [
     '@nuxtjs/axios',

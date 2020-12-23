@@ -16,7 +16,7 @@
     </sp-top-nav-bar>
     <!--E 头部-->
     <!--S 内容-->
-    <div class="information_con">
+    <div v-if="info" class="information_con">
       <div class="information_con_tp">
         <div class="avatar_con">
           <sp-uploader
@@ -45,7 +45,7 @@
         <div class="cell" @click="handleClick(2)">
           <p class="title">昵称</p>
           <div class="right_icon">
-            <p class="txt">{{ info.nickName || '' }}</p>
+            <p class="txt">{{ info.nickName || '未设置' }}</p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
         </div>
@@ -53,7 +53,7 @@
           <p class="title">生日</p>
           <div class="right_icon">
             <p class="txt">
-              {{ info.birthday || '' }}
+              {{ info.birthday || '未设置' }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
@@ -61,7 +61,9 @@
         <div class="cell" @click="handleClick(4)">
           <p class="title">性别</p>
           <div class="right_icon">
-            <p class="txt">{{ info.sex || '' }}</p>
+            <p class="txt">
+              {{ info ? (info.sex === 1 ? '男' : '女' || '未设置') : '未设置' }}
+            </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
         </div>
@@ -94,13 +96,21 @@
     <ImgSelected :show.sync="show" />
     <!--E 上传图片popup-->
     <!--S 上传图片popup-->
-    <SexSelected :show.sync="sexShow" :sex="sex" @changeSex="changeSex" />
+    <SexSelected
+      :show.sync="sexShow"
+      :sex="info ? info.sex : 1"
+      @changeSex="changeSex"
+    />
     <!--E 上传图片popup-->
     <!--S 上传图片popup-->
     <AreaSelect :show.sync="areaShow" :city-data="area" @select="select" />
     <!--E 上传图片popup-->
     <!--S 选择生日popup-->
-    <BirthdaySelected :show.sync="birthShow" @changeBirthday="changeBirthday" />
+    <BirthdaySelected
+      :show.sync="birthShow"
+      :birthday="info && info.birthday ? StrToGMT(info.birthday) : new Date()"
+      @changeBirthday="changeBirthday"
+    />
     <!--S 选择生日popup-->
   </div>
 </template>
@@ -112,7 +122,7 @@ import ImgSelected from '~/components/my/information/ImgSelected'
 import SexSelected from '~/components/my/information/SexSelected'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
 import BirthdaySelected from '~/components/my/information/BirthdaySelected'
-import { userInfo } from '@/api'
+import { userinfoApi } from '@/api'
 export default {
   name: 'Information',
   components: {
@@ -131,37 +141,39 @@ export default {
       sexShow: false, // 显示性别选择
       areaShow: false, // 显示地区选择
       birthShow: false, // 显示生日选择
-      sex: '男', // 性别
       area: [], // 地区
-      birthday: '', // 生日
       uploader: [],
       info: null, // 用户信息
     }
   },
   computed: {
     ...mapState({
-      userId: (state) => state.user.userInfo.userId || null,
+      userId: (state) => state.user.userInfo.userId,
     }),
   },
-  created() {
-    if (this.userId) {
-      this.getUserInfo()
-    }
+  mounted() {
+    this.getUserInfo()
   },
   methods: {
     onClickLeft() {
       // 点击返回
       this.$router.back()
     },
-    changeSex(sex) {
+    async changeSex(sex) {
       // 修改性别
-      this.sex = sex
+      this.info.sex = sex
+      const params = {
+        type: 3,
+        value: this.info.sex,
+      }
+      await this.$axios.post(userinfoApi.update, params)
     },
     handleClick(val) {
       if (val === 2) {
-        this.$router.push('/my/info/nickname')
+        this.$router.push(`/my/info/nickname/${this.info.nickName}`)
       } else if (val === 5) {
-        this.$router.push('/my/info/email')
+        console.log(this.info)
+        this.$router.push(`/my/info/email/${this.info.email}`)
       } else if (val === 4) {
         this.sexShow = true
       } else if (val === 6) {
@@ -170,24 +182,50 @@ export default {
         this.birthShow = true
       }
     },
-    select(data) {
+    async select(data) {
       // 地区选择
+      this.info.province = data[0].name
+      this.info.city = data[1].name
       this.area = data
+      const params = {
+        type: 5,
+        value: `${this.info.province},${this.info.city},船山区`,
+      }
+      await this.$axios.post(userinfoApi.update, params)
     },
-    changeBirthday(val) {
+    GMTToStr(time) {
+      const date = new Date(time)
+      const Str =
+        date.getFullYear() +
+        '-' +
+        (date.getMonth() + 1) +
+        '-' +
+        date.getDate() +
+        ' '
+      return Str
+    },
+    StrToGMT(time) {
+      const GMT = new Date(time)
+      return GMT
+    },
+    async changeBirthday(val) {
       // 生日选择
-      this.birthday = val
+      this.info.birthday = this.GMTToStr(val)
+      const params = {
+        type: 2,
+        value: this.info.birthday,
+      }
+      await this.$axios.post(userinfoApi.update, params)
     },
     onOversize() {},
     async getUserInfo() {
       // 获取用户信息
-      // 获取用户信息
       const params = {
-        id: this.userId,
+        // id: this.userId,
+        id: '607991757719633892',
       }
-      const data = await userInfo.info({ axios: this.$axios }, params)
-      this.info = data
-      console.log('info', this.info)
+      const data = await this.$axios.get(userinfoApi.info, { params })
+      this.info = data.data
     },
   },
 }

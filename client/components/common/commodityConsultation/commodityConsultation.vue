@@ -10,8 +10,8 @@
           src="https://img.yzcdn.cn/vant/cat.jpeg"
         />
         <div class="commodityConsult-containner-userInfo-name">
-          <p>王深林</p>
-          <h3>金牌规划师</h3>
+          <p>{{ plannerInfo.userName }}</p>
+          <span>{{ plannerInfo.postName }}</span>
         </div>
       </div>
       <div class="commodityConsult-containner-handle">
@@ -29,6 +29,14 @@ export default {
   components: {
     [Image.name]: Image,
     [Button.name]: Button,
+  },
+  props: {
+    plannerInfo: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
   },
 }
 </script>
@@ -58,7 +66,7 @@ export default {
       margin-top: 34px;
       display: flex;
       justify-content: space-between;
-      padding-bottom: 34px;
+      /*padding-bottom: 34px;*/
       &-name {
         margin-left: 25px;
         p {
@@ -69,8 +77,12 @@ export default {
           line-height: 33px;
           margin-top: 3px;
           margin-bottom: 9px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 150px;
         }
-        h3 {
+        span {
           height: 32px;
           line-height: 30px;
           padding-left: 8px;
@@ -81,6 +93,12 @@ export default {
           font-size: 22px;
           font-weight: 400;
           color: #7b6225;
+          text-align: center;
+          max-width: 150px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          float: left;
         }
       }
     }

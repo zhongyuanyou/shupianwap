@@ -28,8 +28,9 @@
           <div class="address_con_list_item">
             <div class="address_con_list_item_lf">
               <div class="info">
-                {{ item.name }}<span class="tel">{{ item.tel }}</span
-                ><span v-if="index === 0" class="default">默认</span>
+                <div class="name">{{ item.contactName }}</div>
+                <div class="tel">{{ item.phone }}</div>
+                <span v-if="item.defaultAddress" class="default">默认</span>
               </div>
               <div class="address">{{ item.address }}</div>
             </div>
@@ -49,6 +50,7 @@
               type="default"
               color="#f8f8f8"
               class="handle_btn"
+              @click="handleDefault(item, index)"
               ><span slot="default" class="default_txt"
                 >设为<br />默认</span
               ></sp-button
@@ -58,7 +60,7 @@
               text="删除"
               type="danger"
               class="handle_btn"
-              @click="handleDel(item)"
+              @click="handleDel(item, index)"
             />
           </template>
         </sp-swipe-cell>
@@ -80,8 +82,18 @@
       v-model="popupStatus"
       :field="Field6"
       button-type="confirm"
+      @confirm="confirm"
     />
     <!--E 弹框-->
+    <!--S 弹框-->
+    <sp-center-popup
+      v-model="defaultStatus"
+      :field="Field7"
+      button-type="confirm"
+      @confirm="defaulConfirm"
+    />
+    <!--E 弹框-->
+    <sp-toast ref="spToast"></sp-toast>
   </div>
 </template>
 
@@ -93,7 +105,11 @@ import {
   CenterPopup,
   Bottombar,
   BottombarButton,
+  Toast,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import { userinfoApi } from '@/api'
+import SpToast from '@/components/common/spToast/SpToast'
 export default {
   name: 'Index',
   components: {
@@ -103,120 +119,113 @@ export default {
     [CenterPopup.name]: CenterPopup,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
+    [Toast.name]: Toast,
+    SpToast,
   },
   data() {
     return {
-      addressList: [
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-        {
-          name: '莉莉',
-          tel: '18183238323',
-          address:
-            '四川省成都市武侯区科华北路1号顶呱呱政企服务中心1楼四川省成都市武侯区',
-        },
-      ],
+      addressList: [], // 收货地址列表
       popupStatus: false,
+      addressIndex: '', // 选中的收货地址下标
       Field6: {
         type: 'functional',
         title: '确定删除收货地址吗？',
       },
+      Field7: {
+        type: 'functional',
+        title: '确定设为默认地址吗？',
+      },
+      addressId: '', // 被选中的收货地址id
+      defaultStatus: false,
     }
   },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userInfo.userId || null,
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
+  mounted() {
+    if (this.isInApp) {
+      // 设置app导航名称
+      this.$appFn.dggSetTitle(
+        {
+          title: '我的收货地址',
+        },
+        (res) => {}
+      )
+    }
+    this.getShippingAddressList()
+  },
   methods: {
-    onClickLeft() {},
+    onClickLeft() {
+      this.$router.back()
+    },
     handleDel(item) {
       // 删除
+      this.addressId = item.id
       this.popupStatus = true
+    },
+    handleDefault(item) {
+      // 删除
+      this.addressId = item.id
+      this.defaultStatus = true
     },
     handleNew() {
       // 新建收货地址
+      if (this.isInApp) {
+        this.$appFn.dggSetTitle(
+          {
+            title: '新建收货地址',
+          },
+          (res) => {}
+        )
+      }
       this.$router.push('/my/shippingAddress/add/1')
     },
     handleEdit(item) {
-      this.$router.push('/my/shippingAddress/edit/1')
+      // 编辑收货地址
+      if (this.isInApp) {
+        this.$appFn.dggSetTitle(
+          {
+            title: '编辑收货地址',
+          },
+          (res) => {}
+        )
+        return
+      }
+      this.$router.push(`/my/shippingAddress/edit/${item.id}`)
+    },
+    async getShippingAddressList() {
+      // 获取收货地址列表
+      const params = {
+        // userId: this.userId,
+        userId: this.userId,
+      }
+      console.log('store里面的id', this.userId)
+      const data = await this.$axios.get(userinfoApi.addressList, { params })
+      this.addressList = data.data
+    },
+    async confirm() {
+      // 确认删除
+      try {
+        const params = {
+          id: this.addressId,
+        }
+        await this.$axios.get(userinfoApi.delAddress, { params })
+        await this.getShippingAddressList()
+      } catch (err) {}
+    },
+    async defaulConfirm() {
+      // 设为默认地址
+      try {
+        const params = {
+          id: this.addressId,
+          defaultAddress: 1,
+        }
+        await this.$axios.post(userinfoApi.updateAddress, params)
+        await this.getShippingAddressList()
+      } catch (err) {}
     },
   },
 }
@@ -286,8 +295,18 @@ export default {
             line-height: 44px;
             font-size: 30px;
             margin-top: 30px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: row;
+            .name {
+              width: 130px;
+              .textOverflow(1);
+            }
             .tel {
-              margin-left: 93px;
+              max-width: 220px;
+              margin-left: 50px;
+              .textOverflow(1);
             }
             .default {
               margin-left: 11px;

@@ -14,11 +14,13 @@
       />
       <div class="card_item_bot">
         <p class="card_item_bot_lf">
-          {{ favour.name }}<span>{{ favour.time }}</span>
+          {{ favour.createrName }}<span>{{ favour.createTime }}</span>
         </p>
         <div class="hot_con">
           <my-icon name="news_ic_heat" color="#fff" size="0.17rem" />
-          <p class="num">{{ favour.value }}</p>
+          <p class="num">
+            {{ favour.newsReadAll > 99999 ? '10w+' : favour.newsReadAll }}
+          </p>
         </div>
       </div>
     </div>
@@ -28,13 +30,15 @@
           <span v-if="favour.hot" class="hot">热门</span>{{ favour.title }}
         </p>
         <p class="space_lf">
-          {{ favour.name }}<span>{{ favour.time }}</span>
+          {{ favour.createrName }}<span>{{ favour.createTime }}</span>
         </p>
       </div>
       <div class="space_img_con">
         <div :class="['hot_con', 'hot_con_pos']">
           <my-icon name="news_ic_heat" color="#fff" size="0.17rem" />
-          <p class="num">{{ favour.value }}</p>
+          <p class="num">
+            {{ favour.newsReadAll > 99999 ? '10w+' : favour.newsReadAll }}
+          </p>
         </div>
         <sp-image
           v-if="image && image.src"
@@ -109,6 +113,7 @@ export default {
     }
   }
   .normal_img {
+    width: 100%;
     margin-top: 33px;
   }
   .space_item {
@@ -140,6 +145,7 @@ export default {
     font-weight: bold;
     line-height: 46px;
     font-family: PingFang SC;
+    .textOverflow(2);
     .hot {
       padding: 0 7px;
       height: 32px;
@@ -159,16 +165,17 @@ export default {
   }
   .space_img_con {
     position: relative;
+    width: 248px;
     height: 180px;
     .hot_con_pos {
       position: absolute;
       right: 12px;
       bottom: 12px;
-      z-index: 5;
+      z-index: 1;
     }
   }
   .hot_con {
-    width: 84px;
+    width: 105px;
     height: 38px;
     border-radius: 19px;
     text-align: center;
@@ -182,7 +189,7 @@ export default {
       font-family: PingFang SC;
       font-weight: 400;
       color: #fff;
-      margin-left: 10px;
+      margin-left: 5px;
     }
   }
 }

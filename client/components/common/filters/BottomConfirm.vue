@@ -13,6 +13,9 @@
 <script>
 export default {
   name: 'BottomConfirm',
+  mounted() {
+    this.$emit('bottomConfirmHeight', this.$el.getBoundingClientRect().height)
+  },
   methods: {
     resetFilters() {
       this.$emit('resetFilters')

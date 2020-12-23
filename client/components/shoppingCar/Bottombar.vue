@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-28 11:00:06
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-28 14:23:19
+ * @LastEditTime: 2020-12-16 16:27:42
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/Bottombar.vue
 -->
@@ -17,29 +17,36 @@
 <template>
   <div class="bottombar">
     <div class="bottombar__left">
-      <sp-checkbox
+      <AsyncCheckbox
         v-model="checked"
         icon-size="0.32rem"
         class="bottombar__check"
-        @change="handleChange"
-        >全选</sp-checkbox
+        @change="handleAsyncCheckboxChange"
+        >全选</AsyncCheckbox
       >
     </div>
     <div v-if="status === 'completed'" class="bottombar__middle">
       <div class="bottombar__price flex-r-s flex-r-a-b">
         <span class="bottombar__price-label">合计:</span>
-        <span class="bottombar__price-number">200.5</span>
+        <span class="bottombar__price-number">{{
+          bottomData.totalAmount
+        }}</span>
         <span class="bottombar__price-unit">元</span>
       </div>
       <div class="bottombar__discounts flex-r-s flex-r-a-b">
         <span class="bottombar__discounts-label">优惠减</span>
-        <span class="bottombar__discounts-number">400.5</span>
+        <span class="bottombar__discounts-number">{{
+          bottomData.discountsAmount
+        }}</span>
         <span class="bottombar__discounts-unit">元</span>
       </div>
     </div>
     <div class="bottombar__right">
-      <sp-button v-if="status === 'completed'" class="comfirm-btn"
-        >去结算<span>(2)</span></sp-button
+      <sp-button
+        v-if="status === 'completed'"
+        class="comfirm-btn"
+        @click="handleOperation({ type: 'bill' })"
+        >去结算<span>({{ bottomData.totalCount }})</span></sp-button
       >
       <sp-button
         v-if="status === 'edit'"
@@ -47,6 +54,7 @@
         hairline
         type="primary"
         class="remove-btn"
+        @click="handleOperation({ type: 'attentionAll' })"
         >移入关注</sp-button
       >
       <sp-button
@@ -55,6 +63,7 @@
         hairline
         type="danger"
         class="detele-btn"
+        @click="handleOperation({ type: 'deteleAll' })"
         >删除</sp-button
       >
     </div>
@@ -62,28 +71,49 @@
 </template>
 
 <script>
-import { Button, Checkbox } from '@chipspc/vant-dgg'
+import { Button } from '@chipspc/vant-dgg'
+import AsyncCheckbox from '@/components/common/checkbox/AsyncCheckbox'
 
 export default {
   name: 'Bottombar',
   components: {
     [Button.name]: Button,
-    [Checkbox.name]: Checkbox,
+    AsyncCheckbox,
   },
   props: {
     status: {
       type: String,
       default: 'completed',
     },
+    bottomData: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
   },
   data() {
-    return {
-      checked: false,
-    }
+    return {}
+  },
+  computed: {
+    checked() {
+      return !!this.bottomData.selectAll
+    },
   },
   methods: {
-    handleChange(value) {
+    handleAsyncCheckboxChange(value) {
       console.log('handleChange:', value)
+      this.handleOperation({ type: 'selectAll', data: { value } })
+    },
+    handleOperation(value = {}) {
+      const { type, data } = value
+      switch (type) {
+        case 'bill':
+        case 'selectAll':
+        case 'attentionAll':
+        case 'deteleAll':
+          this.$emit('operation', { data, type })
+      }
     },
   },
 }

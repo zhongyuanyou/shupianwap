@@ -8,13 +8,9 @@
       </a>
     </h2>
     <ul class="serviceItems-list">
-      <li>
-        <span>公司核名服务</span>
-        <em>这是一条描述文字</em>
-      </li>
-      <li>
-        <span>公司核名服务</span>
-        <em>这是一条描述文字</em>
+      <li v-for="item in normalItemList" :key="item.id">
+        <span>{{ item.name }}</span>
+        <em>{{ item.description }}</em>
       </li>
     </ul>
     <div class="open_app">
@@ -29,7 +25,11 @@
       position="bottom"
       :style="{ padding: '25px 20px' }"
     >
-      <sp-safeguard :options="options" success ellipsis></sp-safeguard>
+      <sp-safeguard
+        :options="normalItemOptions"
+        success
+        ellipsis
+      ></sp-safeguard>
     </sp-popup>
   </div>
 </template>
@@ -46,6 +46,12 @@ export default {
     MyIcon,
     Open,
   },
+  props: {
+    normalItemListData: {
+      type: Array,
+      default: () => [],
+    },
+  },
   data() {
     return {
       showRoundCorner: false,
@@ -53,33 +59,44 @@ export default {
         {
           text: '由顶呱呱作为居间担保，12年专业企服领域，大品牌，值得信赖',
           title: '1.担保交易',
-          icon: 'sign',
         },
         {
           text: '为保障交易双方权益和交易产物安全，交易时需签署买卖交易合同',
           title: '2.签署合同',
-          icon: 'sign',
         },
         {
           text:
             '交易时资金需暂时托管到薯片，待买方确认交易信息完全无误或买方签署合同并确认之后，打款到卖方，全程公平公正',
           title: '3.资金保障',
-          icon: 'sign',
         },
         {
           text: '为保障交易双方权益和交易产物安全，交易时需签署买卖交易合同',
           title: '2.签署合同',
-          icon: 'sign',
         },
         {
           text:
             '交易时资金需暂时托管到薯片，待买方确认交易信息完全无误或买方签署合同并确认之后，打款到卖方，全程公平公正',
           title: '3.资金保障',
-          icon: 'sign',
         },
       ],
       iconPrefix: 'sp-iconfont',
     }
+  },
+  computed: {
+    normalItemList() {
+      const normalItemArr = [...this.normalItemListData].slice(0, 2)
+      return normalItemArr
+    },
+    normalItemOptions() {
+      const normalItem = []
+      this.normalItemListData.forEach((item) => {
+        normalItem.push({
+          title: item.name,
+          text: item.description,
+        })
+      })
+      return normalItem
+    },
   },
 }
 </script>
@@ -136,6 +153,9 @@ export default {
     .sp-safeguard__icon {
       display: none;
     }
+  }
+  /deep/ .sp-safeguard__list li {
+    display: block;
   }
 }
 </style>

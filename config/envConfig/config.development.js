@@ -4,6 +4,7 @@ const path = require('path');
 function getIPAdress() {
   const interfaces = require('os').networkInterfaces();
   for (const devName in interfaces) {
+<<<<<<< HEAD
     const iface = interfaces[devName];
     for (let i = 0; i < iface.length; i++) {
       const alias = iface[i];
@@ -13,26 +14,52 @@ function getIPAdress() {
         !alias.internal
       ) {
         return alias.address;
+=======
+    if (!devName.includes('Npcap')) {
+      const iface = interfaces[devName];
+      for (let i = 0; i < iface.length; i++) {
+        const alias = iface[i];
+        if (
+          alias.family === 'IPv4' &&
+            alias.address !== '127.0.0.1' &&
+            !alias.internal
+        ) {
+          return alias.address;
+        }
+>>>>>>> b8714ff8c02f3f63430c8a2836a1bcc652aeffd5
       }
     }
   }
 }
+<<<<<<< HEAD
 
 module.exports = appInfo => {
   /**
    * built-in config
    * @type {Egg.EggAppConfig}
    **/
+=======
+module.exports = appInfo => {
+  /**
+     * built-in config
+     * @type {Egg.EggAppConfig}
+     **/
+>>>>>>> b8714ff8c02f3f63430c8a2836a1bcc652aeffd5
   const config = (exports = {});
 
   // 用于cookie签名密钥，应更改为您自己的密钥并保持安全
   config.keys = appInfo.name + '_1599699446500_2481';
   config.cluster = {
     listen: {
+<<<<<<< HEAD
+=======
+      host: '0.0.0.0',
+>>>>>>> b8714ff8c02f3f63430c8a2836a1bcc652aeffd5
       port: 7001,
     },
   };
   // 在此处添加中间件配置
+<<<<<<< HEAD
   config.middleware = [
     'nuxt',
     'gzip',
@@ -40,6 +67,9 @@ module.exports = appInfo => {
     'eureka',
     'dggCache',
   ];
+=======
+  config.middleware = [ 'nuxt', 'gzip', 'errFilter', 'eureka', 'dggCache' ];
+>>>>>>> b8714ff8c02f3f63430c8a2836a1bcc652aeffd5
   config.gzip = {
     threshold: 1024, // 小于 1k 的响应体不压缩
   };
@@ -103,6 +133,12 @@ module.exports = appInfo => {
       'crisps-auth-center-api', // 鉴权
       'crisps-user-center-api', // 用户
       'crm-biz', // 企大顺
+<<<<<<< HEAD
+=======
+      // 商户中心
+      'merchant-center-manager',
+      'cloud-recomd-api', // 算法
+>>>>>>> b8714ff8c02f3f63430c8a2836a1bcc652aeffd5
     ],
   };
   // eureka相关配置
@@ -155,8 +191,13 @@ module.exports = appInfo => {
   };
   // 在此处添加个人配置
   const userConfig = {
+<<<<<<< HEAD
     // redis默认缓存数据的时长(S秒),产线环境24小时,开发环境1小时
     redisCacheTime: 60 * 60,
+=======
+    // redis默认缓存数据的时长(S秒)5分钟
+    redisCacheTime: 60 * 5,
+>>>>>>> b8714ff8c02f3f63430c8a2836a1bcc652aeffd5
     baseUrl: '',
   };
   return {

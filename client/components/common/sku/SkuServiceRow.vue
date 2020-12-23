@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 15:10:43
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-02 08:50:29
+ * @LastEditTime: 2020-12-17 20:22:43
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/sku/SkuServiceRow.vue
 -->
@@ -15,11 +15,12 @@
 
       <div class="sku-service-row__wrap">
         <slot name="default">
-          <template v-for="item of skuRow.v">
+          <template v-for="item of formateSkuRowVal">
             <SkuServiceRowItem
               :key="item.id"
               :sku-value="item"
-              @sku-select="handleSelect"
+              :actived="item.actived"
+              @skuItemSelect="handleSelect"
             />
           </template>
         </slot>
@@ -61,19 +62,95 @@ export default {
           //     },
           //   ],
           //   largeImageMode: true,
-          //   is_multiple: false, // 是否多选
+          //   isMultiple: false, // 是否多选
         }
       },
     },
+    actived: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+    // 异步选择
+    asyncSelect: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
-    return {}
+    return {
+      currentActived: [],
+    }
   },
-  computed: {},
+  computed: {
+    formateSkuRowVal() {
+      const valList = this.skuRow.v
+      if (!Array.isArray(valList)) return []
+      return valList.map((item) => {
+        item = item || {}
+        const actived = this.currentActived.includes(item.id)
+        return { ...item, actived }
+      })
+    },
+  },
+  watch: {
+    actived: {
+      handler(newVal, oldVal) {
+        if (!Array.isArray(newVal)) return
+        this.currentActived = newVal
+      },
+      immediate: true,
+    },
+  },
   methods: {
     handleSelect(value = {}) {
       const { actived, id } = value
       console.log('handleSelect:', actived, id)
+      let activedList = []
+      if (!this.asyncSelect) {
+        // 多选项
+        if (this.skuRow.isMultiple) {
+          if (!actived) {
+            // 取消
+            const index = this.currentActived.indexOf(id)
+            if (index > -1) {
+              this.currentActived.splice(index, 1)
+            }
+          } else {
+            this.currentActived.push(id)
+          }
+        } else {
+          // 单选
+          this.currentActived = actived ? [id] : []
+        }
+        activedList = this.currentActived.slice()
+      } else {
+        activedList = this.currentActived.slice()
+        if (this.skuRow.isMultiple) {
+          if (!actived) {
+            // 取消
+            const index = activedList.indexOf(id)
+            if (index > -1) {
+              activedList.splice(index, 1)
+            }
+          } else {
+            activedList.push(id)
+          }
+        } else {
+          // 单选
+          activedList = actived ? [id] : []
+        }
+      }
+      const inactivedList = this.skuRow.v.reduce((accumulator, item) => {
+        !activedList.includes(item.id) && accumulator.push(item.id)
+        return accumulator
+      }, [])
+      this.$emit('selectChange', {
+        activedList,
+        inactivedList,
+        id: this.skuRow.k_id,
+      })
     },
   },
 }

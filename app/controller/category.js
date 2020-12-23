@@ -17,22 +17,23 @@ class CategoryController extends Controller {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
       return;
     }
-    const { status, data } = await service.common.category.getCategoryDetail(ctx.query.code, ctx.query.id)
-    if (status === 200 && data.code === 200) {
+    const data = await service.common.category.getCategoryDetail(ctx.query.code, ctx.query.id)
+    if (data.code === 200) {
       ctx.helper.success({ ctx, code: 200, res: data.data });
     } else {
-      ctx.logger.error(status, data);
+      ctx.logger.error( data);
       ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
     }
   }
   @Get('/v1/get_product_category.do')
-  async getJyProductCategory() {
+  async getProductCategory() {
     // 获取产品的分类
     const { ctx, service, app } = this;
     try {
       // 定义参数校验规则
       const rules = {
         productTypeCode: { type: 'string', required: true }, // 产品类型
+        code: { type: 'string', required: false }, // 产品类型
       };
       // 参数校验
       const valiErrors = app.validator.validate(rules, ctx.query);
@@ -41,7 +42,7 @@ class CategoryController extends Controller {
         ctx.helper.fail({ ctx, code: 422, res: valiErrors });
         return;
       }
-      const {status, data} = await service.common.category.getProductCategory(ctx.query.productTypeCode);
+      const {status, data} = await service.common.category.getProductCategory(ctx.query);
       // 成功之后的响应
       if (status === 200 && data.code === 200) {
         ctx.helper.success({ ctx, code: 200, res: data });
