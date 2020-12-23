@@ -17,42 +17,49 @@ export default {
   methods: {
     // 创建IM会话
     creatImSession() {
-      const imUserId = '607992685432567399' // 商户用户ID
-      this.creatImSessionMixin({ imUserId })
+      const imUserId = '607991036165120329' // 商户用户ID
+      const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      this.creatImSessionMixin({ imUserId, imUserType })
     },
     // 发送模板消息(带图片)
     sendTemplateMsgWithImg() {
-      const data = {
-        imUserId: '607992685432567399', // 商户用户ID
+      // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
+      // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
+      const sessionParams = {
+        imUserId: '607991036165120329', // 商户用户ID
+        imUserType: 'MERCHANT_USER', // 用户类型
+      }
+      const msgParams = {
         sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
-        senderName: '181******33', // 发送者昵称
         msgType: 'im_tmplate', // 消息类型
-        extContent: '', // 路由参数
-        productName: '产品名称-带', // 产品名称
+        extContent: { type: '121', id: '607992101317013570' }, // 路由参数
+        productName: '交易产品-带图', // 产品名称
         productContent: '产品信息-DSGSDGdfsgsdfg215251', // 产品信息
         price: '20.20元', // 价格
         forwardAbstract: '摘要信息，可与显示内容保持一致', // 摘要信息，可与显示内容保持一致
-        routerId: '', // 路由ID
+        routerId: 'IMRouter_APP_ProductDetail_Trade', // 路由ID
         imageUrl: 'https://img.yzcdn.cn/vant/cat.jpeg', // 产品图片
         unit: '20元', // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
       }
-      this.sendTemplateMsgMixin(data)
+      this.sendTemplateMsgMixin({ sessionParams, msgParams })
     },
     // 发送模板消息(不带图片)
     sendTemplateMsgNoImg() {
-      const data = {
-        imUserId: '607992685432567399', // 商户用户ID
-        sendType: 1, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
-        senderName: '181******33', // 发送者昵称
-        msgType: 'im_tmplate', // 消息类型
-        extContent: '', // 路由参数
-        productName: '产品名称-不带图', // 产品名称
-        productContent: '产品信息-848444558454', // 产品信息
-        price: '50.92元', // 价格
-        forwardAbstract: '摘要信息，可与显示内容保持一致', // 摘要信息，可与显示内容保持一致
-        routerId: '', // 路由ID
+      const sessionParams = {
+        imUserId: '607991036165120329', // 商户用户ID
+        imUserType: 'MERCHANT_USER', // 用户类型
       }
-      this.sendTemplateMsgMixin(data)
+      const msgParams = {
+        sendType: 1, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
+        msgType: 'im_tmplate', // 消息类型
+        extContent: { id: '607991242323551420' }, // 路由参数
+        productName: '服务产品-不带图', // 产品名称
+        productContent: '产品信息-848444558454', // 产品信息
+        price: '50.92', // 价格
+        forwardAbstract: '摘要信息，可与显示内容保持一致', // 摘要信息，可与显示内容保持一致
+        routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
+      }
+      this.sendTemplateMsgMixin({ sessionParams, msgParams })
     },
   },
 }

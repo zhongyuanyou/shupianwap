@@ -71,6 +71,7 @@ export default {
   left: 0;
   right: 0;
   background-color: #fff;
+  z-index: 3;
   &_lf {
     display: flex;
     justify-content: flex-start;

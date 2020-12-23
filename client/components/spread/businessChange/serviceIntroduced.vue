@@ -1,0 +1,303 @@
+<template>
+  <div class="serviceIntroduced">
+    <span class="title">变更服务介绍</span>
+    <div class="prolist">
+      <ul>
+        <li
+          v-for="(item, index) in servicelist"
+          v-show="index > num ? false : true"
+          :key="index"
+          :style="{ backgroundImage: 'url(' + item.bgimage + ')' }"
+        >
+          <div class="total">
+            <div v-for="(v, i) in item.tatol" :key="i">
+              <div class="vertical-bar"></div>
+              <div>
+                <span>{{ v.price }}</span> <span>{{ v.title }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="line"></div>
+          <div class="contact">
+            <div class="price">
+              <span>{{ item.price }}</span>
+              <span>元起</span>
+            </div>
+            <div class="contact-btn">
+              <a href="javascript:;" @click="openIM(url)">
+                <img :src="item.headimg" alt="" />
+              </a>
+              <a href="javascript:;" @click="chat(index)">
+                <my-icon
+                  name="notify_ic_chat"
+                  color="#4974F5"
+                  size="0.4rem"
+                  class="icon"
+                >
+                </my-icon>
+              </a>
+              <a href="javascript:;" @click="openIM(url)">
+                <my-icon
+                  name="notify_ic_tel"
+                  color="#4974F5"
+                  size="0.4rem"
+                  class="icon"
+                >
+                </my-icon>
+              </a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div
+      v-show="servicelist.length > 3"
+      class="show-more-btn"
+      @click="showMore"
+    >
+      <span v-show="more">更多服务</span>
+      <span v-show="close">收起</span>
+      <my-icon
+        v-show="more"
+        name="tab_ic_all_n"
+        size="0.2rem"
+        class="input-ic-open"
+        color="#cccccc"
+      ></my-icon>
+      <my-icon
+        v-show="close"
+        name="tab_ic_all_s"
+        size="0.2rem"
+        class="input-ic-open"
+        color="#cccccc"
+      ></my-icon>
+    </div>
+  </div>
+</template>
+
+<script>
+import MyIcon from '../../common/myIcon/MyIcon.vue'
+
+export default {
+  components: { MyIcon },
+  props: {
+    servicelist: {
+      type: Array,
+      default: () => {},
+    },
+  },
+  data() {
+    return {
+      more: true,
+      close: false,
+      num: 2,
+      url: '',
+    }
+  },
+  methods: {
+    showMore() {
+      if (this.more) {
+        this.close = true
+        this.more = false
+        this.num = this.servicelist.length
+      } else {
+        this.close = false
+        this.more = true
+        this.num = 2
+      }
+    },
+    chat() {
+      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+    },
+
+    openIM(url) {
+      if (url !== '') {
+        window.location.href = url
+      } else {
+        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+      }
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped>
+.serviceIntroduced {
+  width: 100%;
+  padding: 31px 40px 32px;
+  .title {
+    display: block;
+    font-size: 40px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #1a1a1a;
+  }
+  .prolist {
+    margin-top: 31px;
+    > ul {
+      > li {
+        position: relative;
+        width: 670px;
+        height: 456px;
+        border: 1px solid rgba(205, 205, 205, 0.3);
+        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        background-repeat: no-repeat;
+        background-position: 0px -3px;
+        background-size: 101% 100%;
+
+        &:not(:first-child) {
+          margin-top: 24px;
+        }
+        > img {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+        }
+        .total {
+          width: 100%;
+          position: absolute;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          bottom: 33.55%;
+          padding-left: 32px;
+          > div {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            position: relative;
+            &:first-child {
+              .vertical-bar {
+                display: none;
+              }
+            }
+            .vertical-bar {
+              width: 1px;
+              height: 40px;
+              background: #f4f4f4;
+              position: absolute;
+              top: 50%;
+              margin-top: -20px;
+              left: -23px;
+            }
+            > div:last-child {
+              > span {
+                display: block;
+                font-size: 32px;
+                font-family: PingFang SC;
+                font-weight: bold;
+                color: #222222;
+                line-height: 31px;
+                &:last-child {
+                  font-size: 22px;
+                  font-weight: normal;
+                  color: #999999;
+                  line-height: 21px;
+                  margin-top: 10px;
+                }
+              }
+            }
+          }
+        }
+        .line {
+          width: 100%;
+          border-bottom: 1px dashed #f4f4f4;
+          position: absolute;
+          bottom: 26.32%;
+        }
+        .contact {
+          padding: 0 32px 0 34px;
+          position: absolute;
+          bottom: 5.26%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          .price {
+            font-size: 40px;
+            font-family: PingFang SC;
+            font-weight: bold;
+            color: #ec5330;
+            line-height: 40px;
+            display: flex;
+            align-items: flex-end;
+
+            > span {
+              display: block;
+            }
+            > span:last-child {
+              font-size: 22px;
+              line-height: 30px;
+              font-weight: normal;
+            }
+          }
+          .contact-btn {
+            width: 240px;
+            height: 72px;
+            background: #ebf3ff;
+            border-radius: 36px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            > a {
+              width: 56px;
+              height: 56px;
+              position: relative;
+              .icon {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                margin-top: -20px;
+                margin-left: -20px;
+              }
+            }
+            > a:first-child {
+              background: #4974f5;
+              border-radius: 50%;
+              margin-left: 8px;
+            }
+            > a:not(:first-child) {
+              width: 40px;
+              height: 40px;
+              position: absolute;
+              top: 50%;
+              margin-top: -22px;
+            }
+            > a:nth-child(2) {
+              left: 104px;
+            }
+            > a:last-child {
+              right: 24px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .show-more-btn {
+    width: 278px;
+    height: 64px;
+    background: #ffffff;
+    border: 1px solid #cdcdcd;
+    border-radius: 32px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 19px 0;
+    margin-top: 40px;
+    > span {
+      display: block;
+      font-size: 28px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #999999;
+    }
+    .input-ic-open {
+      margin-left: 12px;
+      margin-top: 2px;
+    }
+  }
+}
+</style>

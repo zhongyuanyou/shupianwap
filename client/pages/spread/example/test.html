@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+    <head>
+      <meta charset="UTF-8">
+<!--      这一步我已经在全局配置，无需引入-->
+      <script typet="text/javascript" src="https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js"></script>
+    </head>
+    <body>
+        <div id="form">
+            <input type="text" name="name" autocomplete="off" maxlength="20" placeholder="请输入您的姓名">
+            <select name="city">
+                 <option value="">请选择要办理注册的城市</option>
+                 <option value="cd">成都</option>
+                 <option value="cq">重庆</option>
+                 <option value="sh">上海</option>
+                 <option value="wh">武汉</option>
+                 <option value="gz">广州</option>
+                 <option value="sz">深圳</option>
+                 <option value="yc">宜昌</option>
+                 <option value="zz">郑州</option>
+                 <option value="fs">佛山</option>
+                 <option value="dg">东莞</option>
+                 <option value="cs">长沙</option>
+                 <option value="hz">杭州</option>
+                 <option value="sjz">石家庄</option>
+                 <option value="bj">北京</option>
+           </select>
+           <!-- 除name,place,tel外，其余表单字段皆为二级属性 -->
+           <input type="hidden" name="yxblqy" >
+           <input type="hidden" name="zclx" >
+           <input type="tel" name="tel" autocomplete="off" maxlength="11" placeholder="请输入电话号码">
+           <input type="tel" name="code" autocomplete="off" maxlength="6" placeholder="请输入验证码">
+           <button type="button" class="get-code" id="btn">获取验证码</button>
+           <button type="button" id="sub-btn">立即申请</button>
+       </div>
+    <script>
+    //封装成方法，页面有多个表单时可分别调用
+    function submitForm(ID) {
+          // 倒计时  如果自己写了不用管，按照自己的来，只是记住逻辑顺序
+          var count  //做成全局变量，便于表单提交成功后快速清0
+          // 发送验证码之后倒计时
+          function countDown() {
+              count = 60;
+              var el = document.getElementById('btn');
+              el.disabled= true;
+              function down() {
+                  count--;
+                  el.innerHTML=(count + 's后发送');
+                  var timer = setTimeout(function () {
+                      down()
+                  }, 1000)
+                  if (count <= 0) {
+                      el.innerHTML=('重新发送');
+                      clearTimeout(timer);
+                      el.disabled=false;
+                  }
+              }
+              down()
+          }
+          // 发送验证码
+          function getMsg(setData) {
+            // 自己页面调用promotion要用window.promotion
+            promotion.privat.getSmsCode(setData, function (res) {
+              if (res.error == 0) {
+                console.log(res.msg)
+                countDown()
+                return false
+              }
+              console.log(res.msg)
+            })
+          }
+          // 发送验证码前验证
+          document.getElementsByClassName('get-code')[0].onclick=function () {
+              var _tel = document.getElementsByName('tel')[0].value;
+              var _reg = /^1[3,4,5,6,7,8,9]\d{9}$/;
+              if (_tel == '') {
+                  return console.log('请输入手机号码');
+              }
+              if (!_reg.test(_tel)) {
+                  return console.log('请输入正确的手机号码');
+              }
+              var setData = {
+                  tel: _tel,
+                  type:"gs"
+              }
+              getMsg(setData)
+          }
+          //后台规定获取当前时间作为json字符串，来当做一个唯一标识
+          function getDate() {
+              var timeStamp = new Date();
+              //获取当前年
+              var currentYear = JSON.stringify(timeStamp.getFullYear());
+              //获取当前月
+              var currentMonth = JSON.stringify(timeStamp.getMonth() + 1);
+              //获取当前日
+              var currentDate = JSON.stringify(timeStamp.getDate());
+              var currentHour = JSON.stringify(timeStamp.getHours()); //获取当前小时数(0-23)
+              var currentMin = JSON.stringify(timeStamp.getMinutes()); //获取当前分钟数(0-59)
+              var currentSeconds = JSON.stringify(timeStamp.getSeconds());
+              //获取当前时间
+              var nowTimeString = currentYear + currentMonth + currentDate + currentHour + currentMin + currentSeconds;
+              return nowTimeString;
+          }
+          // 提交表单
+          var formId
+      document.getElementById('sub-btn').onclick=function () {
+           var _name =document.getElementsByName('name')[0].value;
+            var _city =document.getElementsByName('city')[0].value;
+            var _tel =document.getElementsByName('tel')[0].value;
+            var _code =document.getElementsByName('code')[0].value;
+            var _telReg = /^1[3,4,5,6,7,8,9]\d{9}$/;
+            var web_url = window.location.href;
+            formId = getDate() + _tel;  //生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
+           if (!_name ){
+                console.log('请输入您的姓名');
+                return
+            }
+            if (!_city){
+                console.log('请选择办理城市');
+                return
+            }
+            if (!_tel){
+                console.log('请输入电话号码');
+                return
+            }
+            if (!_telReg.test(_tel)) {
+                console.log('请输入正确的电话号码');
+                return
+            }
+            if (!_code){
+                console.log('请输入验证码');
+                return
+            }
+            //若一级表单中存在二级属性字段（如公司名称、类别等）时，需将之放入对象，并转化为json字符串，在content属性中传入，这样即使用户没有提交二级表单也能把相关属性传入，若有二级表单，也和二级表单提交的属性不冲突
+            // var contentStr = {
+            //     gsmc: _gsmc,//此处是没有规定参数名称的统一封装到对象作为备注信息
+            // }
+            var params = {
+                formId: formId,   //formId,唯一ID提交资源中心
+                name: _name,      //姓名
+                tel: _tel,        //电话
+                url: web_url,     //链接
+                type: "gszc",     //业态编码
+                place: _city,     //地区编码（需传编码）cd
+                device: "wap",    //设备：pc,wap
+                web: "xmt",       //归属渠道：xmt,zytg,wxgzh
+                smsCode: _code,   //验证码
+                //content: JSON.stringify(contentStr) //二级属性
+            }
+            promotion.privat.consultForm(params, function (res) {
+                if(res.error == 0){
+                    //这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
+                    console.log('提交成功，请注意接听电话')
+                    //$('.ejForm').show()
+                }
+
+            })
+        }
+         // 如果有二级表单，设置二级表单参数
+         var params1 = {
+            formId: formId,//必加，用以判断是否和一级表单同属一次提交
+            //yxblqy: _yxblqy,
+            //zclx: _zclx,
+        }
+         //提交二级表单
+        //  promotion.privat.addForm(params1, function (res) {
+        //     if (res.error == 0) {
+        //         //在这里写二级表单提交成功后的函数
+        //         console.log('提交成功，请保持电话畅通')
+        //         //为防止提交成功后刷新产生PV不准确，现在表单提交成功后将所有值清空，回到初始样式
+        //         $('[name="city"]').val('')
+        //         $('[name="tel"]').val('')
+        //         $('[name="msgCode"]').val('')
+        //         count = 0
+        //         setTimeout(() => {
+        //           $('.get-code').text('获取验证码')
+        //           //$('.ejForm').hide(200)
+        //         }, 3000)
+        //     }
+        // })
+    }
+    submitForm('#submitForm')
+    </script>
+    </body>
+</html>

@@ -88,7 +88,7 @@
         />
       </sp-bottombar>
     </div>
-    <spToast ref="spToast"></spToast>
+    <sp-toast ref="spToast"></sp-toast>
   </div>
 </template>
 <script>
@@ -103,7 +103,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { complain, commonApi } from '~/api'
-import spToast from '@/components/common/spToast/SpToast'
+import SpToast from '@/components/common/spToast/SpToast'
 export default {
   name: 'AddComplaint',
   components: {
@@ -113,30 +113,12 @@ export default {
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
     [Sticky.name]: Sticky,
-    spToast,
+    SpToast,
   },
   data() {
     return {
       selectTypes: [], // 吐槽类型type
       multipleChoice: false, // 是否可多选
-      types: [
-        {
-          name: '体验问题',
-          type: 1,
-        },
-        {
-          name: '需要新功能',
-          type: 2,
-        },
-        {
-          name: '功能异常',
-          type: 3,
-        },
-        {
-          name: '其他',
-          type: 4,
-        },
-      ],
       complainCategory: [], // 吐槽分类集合
       desc: '',
       uploader: [],

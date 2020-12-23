@@ -132,7 +132,9 @@ export default {
       if (this.isInApp) {
         this.$appFn.dggOpenNewWeb(
           { urlString: `https://172.16.139.140:7001/found/detail/${item.id}` },
-          (res) => {}
+          (res) => {
+            console.log('res', res)
+          }
         )
         return
       }

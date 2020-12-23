@@ -93,7 +93,7 @@
       @confirm="defaulConfirm"
     />
     <!--E 弹框-->
-    <spToast ref="spToast"></spToast>
+    <sp-toast ref="spToast"></sp-toast>
   </div>
 </template>
 
@@ -109,7 +109,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { userinfoApi } from '@/api'
-import spToast from '@/components/common/spToast/spToast'
+import SpToast from '@/components/common/spToast/SpToast'
 export default {
   name: 'Index',
   components: {
@@ -120,7 +120,7 @@ export default {
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
     [Toast.name]: Toast,
-    spToast,
+    SpToast,
   },
   data() {
     return {
@@ -192,7 +192,6 @@ export default {
           },
           (res) => {}
         )
-        return
       }
       this.$router.push(`/my/shippingAddress/edit/${item.id}`)
     },
