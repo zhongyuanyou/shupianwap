@@ -49,7 +49,10 @@
     <!-- E注册公司准备工作-平台优势 -->
     <!-- S咨询规划师 -->
     <div class="refer">
-      <GuiHuaShiSwipe :data="planners" :title="plannersTitle"></GuiHuaShiSwipe>
+      <GuiHuaShiSwipe
+        :plannersdata="planners"
+        :title="plannersTitle"
+      ></GuiHuaShiSwipe>
     </div>
     <!-- E咨询规划师 -->
     <!-- S其他服务 -->
@@ -168,46 +171,53 @@ export default {
           img: require('~/assets/spreadImages/company_registry/busi_img_nkn_qtfw.png'),
         },
       ],
-      planners: {
-        planners: [
-          {
-            id: 1,
-            type: '金牌规划师',
-            avatarImg: '',
-            name: '郭亮亮',
-            shuPianFen: 138,
-            serverNum: 258,
-            telephone: 12345679985,
-            labels: ['工商注册', '财税咨询', '税务筹划'],
+      planners: [
+        {
+          id: 1,
+          type: '金牌规划师',
+          avatarImg: '',
+          name: '郭亮亮',
+          shuPianFen: 138,
+          serverNum: 258,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
           },
-          {
-            id: 2,
-            type: '金牌规划师',
-            avatarImg: '',
-            name: '郭亮亮',
-            shuPianFen: 11,
-            serverNum: 250,
-            telephone: 12345679985,
-            labels: ['工商注册', '财税咨询', '税务筹划'],
-          },
-          {
-            id: 3,
-            type: '金牌规划师',
-            avatarImg: '',
-            name: '郭亮亮',
-            shuPianFen: 11,
-            serverNum: 250,
-            telephone: 12345679985,
-            labels: ['工商注册', '财税咨询', '税务筹划'],
-          },
-        ],
-        im: {
-          function: 'openIMM',
-          id: '7862495547640840192',
-          name: '张毅',
-          num: '107547',
         },
-      },
+        {
+          id: 2,
+          type: '金牌规划师',
+          avatarImg: '',
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
+          },
+        },
+        {
+          id: 3,
+          type: '金牌规划师',
+          avatarImg: '',
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
+          },
+        },
+      ],
       plannersTitle: '咨询规划师',
       listCount: [
         {
@@ -265,6 +275,14 @@ export default {
   head() {
     return {
       title: '工商注册-公司注册',
+      script: [
+        {
+          src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
+          ssr: false,
+          type: 'text/javascript',
+          charset: 'utf-8',
+        },
+      ],
     }
   },
 }
