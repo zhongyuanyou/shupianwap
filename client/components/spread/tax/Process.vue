@@ -1,0 +1,37 @@
+<template>
+  <div class="process">
+    <div class="process-title">服务流程</div>
+    <img :src="img" alt="" />
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Process',
+  data() {
+    return {
+      img: require('~/assets/spreadImages/tax/busi_img_swchlc.jpg'),
+    }
+  },
+}
+</script>
+
+<style scoped lang="less">
+.process {
+  width: 750px;
+  height: 255px;
+  padding: 30px 0 0;
+  &-title {
+    margin: 0 0 15px 40px;
+    font-size: 40px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #1a1a1a;
+    line-height: 40px;
+  }
+  img {
+    width: 750px;
+    height: 170px;
+  }
+}
+</style>

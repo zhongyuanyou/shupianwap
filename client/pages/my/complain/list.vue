@@ -173,7 +173,7 @@ export default {
     color: #cccccc;
     margin-left: 12px;
     // &::before {
-    //   font-size: 26px;
+    //   fonts-size: 26px;
     // }
   }
 }

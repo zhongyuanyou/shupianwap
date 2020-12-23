@@ -152,7 +152,7 @@ export default {
       }
       .txt {
         font-size: 32px;
-        font-family: PingFang-SC-Bold, PingFang-SC;
+        font-family: PingFang SC;
         font-weight: bold;
         color: #ffffff;
         line-height: 32px;
