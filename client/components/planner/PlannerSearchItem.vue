@@ -103,6 +103,7 @@ export default {
       let data = {}
       switch (type) {
         case 'IM':
+          data = { mchUserId: this.itemData.mchUserId }
           break
         case 'tel':
           data = await this.getTel()

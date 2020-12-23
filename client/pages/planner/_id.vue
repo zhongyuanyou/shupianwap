@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-15 11:56:44
+ * @LastEditTime: 2020-12-23 20:39:05
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/planner/serviceDetails.vue
+ * @FilePath: /chips-wap/client/pages/planner/_id.vue
 -->
 
 <template>
@@ -144,10 +144,18 @@
         <sp-bottombar-button type="info" text="在线联系" @click="handleIM" />
       </sp-bottombar>
     </div>
+    <sp-share-sheet
+      v-model="showShare"
+      title="立即分享给好友"
+      :options="shareOptions"
+      @select="onSelect"
+    />
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
+
 import {
   Button,
   Toast,
@@ -155,12 +163,15 @@ import {
   Tag,
   Bottombar,
   BottombarButton,
+  ShareSheet,
 } from '@chipspc/vant-dgg'
 
 import Header from '@/components/common/head/header'
 import GoodsPro from '@/components/planner/GoodsPro'
 
 import { planner } from '@/api'
+import imHandle from '@/mixins/imHandle'
+import { callPhone, copyToClipboard } from '@/utils/common'
 
 export default {
   name: 'List',
@@ -170,17 +181,24 @@ export default {
     [Tag.name]: Tag,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
+    [ShareSheet.name]: ShareSheet,
     Header,
     GoodsPro,
   },
+  mixins: [imHandle],
   data() {
     return {
       recommendList: [],
       loading: true,
       detailData: {},
+      shareOptions: [],
+      showShare: false,
     }
   },
   computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
     formatTagList() {
       const tagList = this.detailData.tagList
       if (!Array.isArray(tagList)) return []
@@ -200,13 +218,75 @@ export default {
     },
     onClickRight() {
       console.log('nav onClickRight')
+      this.uPShareOption()
     },
     handleCall() {
       console.log('call ')
+      this.uPCall(this.detailData.phone)
     },
     handleIM() {
       console.log('IM ')
+      this.uPIM({ mchUserId: this.detailData.id })
     },
+
+    onSelect(option) {
+      // TODO 分享的调用
+      Toast(option.name)
+      this.uPShare(option)
+    },
+
+    uPShare(option) {
+      if (this.isInApp) {
+        this.showShare = false
+        return
+      }
+      copyToClipboard(location && location.href)
+      this.showShare = false
+    },
+
+    // 分享
+    uPShareOption() {
+      if (this.isInApp) {
+        this.shareOptions = [
+          { name: '微信', icon: 'wechat' },
+          { name: '微博', icon: 'weibo' },
+          { name: '复制链接', icon: 'link' },
+          { name: '分享海报', icon: 'poster' },
+          { name: '二维码', icon: 'qrcode' },
+        ]
+        this.showShare = true
+        return
+      }
+
+      this.shareOptions = [{ name: '复制链接', icon: 'link' }]
+      this.showShare = true
+    },
+    // 拨打电话号码
+    uPCall(telNumber) {
+      // 如果当前页面在app中，则调用原生拨打电话的方法
+      if (this.isInApp) {
+        this.$appFn.dggCallPhone({ phone: telNumber }, (res) => {
+          const { code } = res || {}
+          if (code !== 200) Toast('拨号失败！')
+        })
+        return
+      }
+      // 浏览器中调用的
+      callPhone(telNumber)
+    },
+
+    // 发起聊天
+    uPIM(data = {}) {
+      const { mchUserId } = data
+      // 如果当前页面在app中，则调用原生拨打电话的方法
+      if (this.isInApp) {
+        // TODO 调用IM 暂无
+        return
+      }
+      const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      this.creatImSessionMixin({ imUserId: mchUserId, imUserType })
+    },
+
     // 获取详情数据
     async getDetail() {
       try {

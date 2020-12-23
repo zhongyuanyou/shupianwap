@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-15 16:20:38
+ * @LastEditTime: 2020-12-23 19:48:04
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -10,11 +10,14 @@
 <template>
   <div class="list">
     <div class="head">
-      <Header title="在线直选规划师" />
+      <Header v-if="isInApp" :title="title" />
     </div>
     <div class="body">
       <SearchPopup ref="searchPopup" @onSearch="handleKeywordsSearch" />
-      <sp-cell class="search">
+      <sp-cell
+        class="search"
+        :class="[isInApp ? 'search-sticky--app' : 'search-sticky--browser']"
+      >
         <div>
           <sp-nav-search
             v-model="search.keywords"
@@ -117,7 +120,10 @@ import Header from '@/components/common/head/header'
 import SearchPopup from '@/components/planner/SearchPopup'
 import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
 
+import imHandle from '@/mixins/imHandle'
+
 import { planner, dict } from '@/api'
+import { callPhone } from '@/utils/common'
 
 const SORT_CONFIG = [
   {
@@ -181,8 +187,10 @@ export default {
     SearchPopup,
     PlannerSearchItem,
   },
+  mixins: [imHandle],
   data() {
     return {
+      title: '在线直选规划师',
       search: {
         keywords: '',
         sortId: 0,
@@ -204,6 +212,7 @@ export default {
   computed: {
     ...mapState({
       currentCity: (state) => state.city.currentCity,
+      isInApp: (state) => state.app.isInApp,
     }),
     formatSearch() {
       const { sortId, keywords, region } = this.search
@@ -230,6 +239,7 @@ export default {
   created() {
     if (process && process.client) {
       this.uPGetRegion()
+      this.uPSetHeader()
     }
   },
   methods: {
@@ -294,10 +304,12 @@ export default {
       const { type, data } = value
       switch (type) {
         case 'IM':
-          console.log('发起IM')
+          console.log('发起IM', data)
+          this.uPIM(data)
           break
         case 'tel':
           console.log('想打电话：', data)
+          this.uPCall(data)
           break
         case 'detail':
           console.log('看看详情：', data)
@@ -310,13 +322,53 @@ export default {
       this.refreshing = true
       this.onRefresh()
     },
-    // 统一平台 调用
+
+    uPSetHeader() {
+      if (this.isInApp) {
+        this.$appFn.dggSetTitle({ title: this.title }, (res) => {
+          const { code } = res || {}
+          code !== 200 && console.error('dggSetTitle error!')
+        })
+      }
+    },
+
+    // 统一平台 区域设置
     uPGetRegion() {
+      // TODO app 上获取code
+      if (this.isInApp) {
+        // this.SET_CITY({code, name}) // 设置当前的定位到vuex中
+        return
+      }
+
       // 浏览器上逻辑
       const { code } = this.currentCity || {}
       this.getRegionList(code)
-      // TODO app 上获取code
-      // this.SET_CITY({code, name}) // 设置当前的定位到vuex中
+    },
+
+    // 拨打电话号码
+    uPCall(telNumber) {
+      // 如果当前页面在app中，则调用原生拨打电话的方法
+      if (this.isInApp) {
+        this.$appFn.dggCallPhone({ phone: telNumber }, (res) => {
+          const { code } = res || {}
+          if (code !== 200) Toast('拨号失败！')
+        })
+        return
+      }
+      // 浏览器中调用的
+      callPhone(telNumber)
+    },
+
+    // 发起聊天
+    uPIM(data = {}) {
+      const { mchUserId } = data
+      // 如果当前页面在app中，则调用原生拨打电话的方法
+      if (this.isInApp) {
+        // TODO 调用IM 暂无
+        return
+      }
+      const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      this.creatImSessionMixin({ imUserId: mchUserId, imUserType })
     },
 
     async getList(currentPage) {
@@ -379,6 +431,12 @@ export default {
   }
   .body {
     padding: 0;
+    .search-sticky--browser {
+      top: -30px;
+    }
+    .search-sticky--app {
+      top: -120px;
+    }
     .search {
       position: sticky;
       top: -30px;
