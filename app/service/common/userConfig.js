@@ -5,7 +5,7 @@ class ConfigService extends Service {
   async getUserConfig(params = {}) {
     // 获取用户规则
     return new Promise(async resolve => {
-      const { ctx, app } = this;
+      const { ctx, app, service } = this;
       const sysCode = app.config.apiClient.APPID[2];
       const address = userApi.userConfig;
       const url = ctx.helper.assembleUrl(sysCode, address);
@@ -13,13 +13,7 @@ class ConfigService extends Service {
         resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
       }
       try {
-        const res = await ctx.curl(url, {
-          method: 'GET',
-          dataType: 'json',
-          headers: ctx.headers,
-          data: params,
-          timeout: 10 * 1000,
-        });
+        const res = await service.curl.curlGet(url, params);
         resolve(res);
       } catch (err) {
         ctx.logger.error(err);

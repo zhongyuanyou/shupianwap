@@ -8,7 +8,8 @@ const Controller = require('egg').Controller;
 const { Get, Post, Prefix } = require('egg-shell-decorators');
 const { userApi } = require('./../../config/serveApi/index');
 const {
-  newUpdateShippingAddress,
+  newShippingAddress,
+  upadteShippingAddress,
   listShippingAddress,
   detailShippingAddress,
   statusShippingAddress,
@@ -30,63 +31,51 @@ class AddressController extends Controller {
   async addAndUpdate() {
     // 新增或编辑地址
     const { ctx, service, app } = this;
-    getValiErrors(app, ctx, newUpdateShippingAddress, ctx.request.body);
+    getValiErrors(app, ctx, ctx.request.body.id ? upadteShippingAddress : newShippingAddress, ctx.request.body);
     // 参数校验通过,正常响应
     const {
       userId,
       contactName,
       phone,
-      addressProvince,
-      addressCity,
-      addressArea,
       address,
-      postcode,
-      ext1,
-      ext2,
-      ext3,
-      ext4,
-      ext5,
-      id = null,
+      defaultAddress,
     } = ctx.request.body;
-    const ads = id ? userApi.updateShippingAddress : userApi.newShippingAddress;
+    const ads = ctx.request.body.id ? userApi.updateShippingAddress : userApi.newShippingAddress;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], ads);
-    const params = id ? {
+    const params = ctx.request.body.id ? {
       userId,
       contactName,
       phone,
-      addressProvince,
-      addressCity,
-      addressArea,
+      addressProvince: ctx.request.body.addressProvince,
+      addressCity: ctx.request.body.addressCity,
+      addressArea: ctx.request.body.addressArea,
+      defaultAddress,
       address,
-      postcode,
-      ext1,
-      ext2,
-      ext3,
-      ext4,
-      ext5,
-      id,
+      postcode: ctx.request.body.postcode,
+      ext1: ctx.request.body.ext1,
+      ext2: ctx.request.body.ext2,
+      ext3: ctx.request.body.ext3,
+      ext4: ctx.request.body.ext4,
+      ext5: ctx.request.body.ext5,
+      id: ctx.request.body.id,
     } : {
       userId,
       contactName,
       phone,
-      addressProvince,
-      addressCity,
-      addressArea,
+      addressProvince: ctx.request.body.addressProvince || '',
+      addressCity: ctx.request.body.addressCity || '',
+      addressArea: ctx.request.body.addressArea || '',
+      defaultAddress,
       address,
-      postcode,
-      ext1,
-      ext2,
-      ext3,
-      ext4,
-      ext5,
+      postcode: ctx.request.body.postcode,
+      ext1: ctx.request.body.ext1,
+      ext2: ctx.request.body.ext2,
+      ext3: ctx.request.body.ext3,
+      ext4: ctx.request.body.ext4,
+      ext5: ctx.request.body.ext5,
     };
-    const { status, data } = await service.curl.curlPost(url, params);
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data || {} });
-    } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
-    }
+    const { data } = await service.curl.curlPost(url, params);
+    ctx.helper.success({ ctx, code: 200, res: data || {} });
   }
 
   @Get('/v1/shipping_address_list.do')
@@ -97,15 +86,10 @@ class AddressController extends Controller {
     // 参数校验通过,正常响应
     const { userId } = ctx.query;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], userApi.listShippingAddress);
-    const { status, data } = await service.curl.curlGet(url, {
+    const { data } = await service.curl.curlGet(url, {
       userId,
     });
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data || [] });
-    } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
-    }
+    ctx.helper.success({ ctx, code: 200, res: data || [] });
   }
 
   @Get('/v1/shipping_address_info.do')
@@ -116,35 +100,24 @@ class AddressController extends Controller {
     // 参数校验通过,正常响应
     const { id } = ctx.query;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], userApi.detailShippingAddress);
-    const { status, data } = await service.curl.curlGet(url, {
+    const { data } = await service.curl.curlGet(url, {
       id,
     });
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data || {} });
-    } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
-    }
+    ctx.helper.success({ ctx, code: 200, res: data || {} });
   }
 
-  @Post('/v1/del_default_address')
-  async status() {
-    // 删除或将收货地址设为默认
+  @Get('/v1/del_address.do')
+  async del() {
+    // 删除收货地址
     const { ctx, service, app } = this;
     // 定义参数校验规则
     getValiErrors(app, ctx, statusShippingAddress, ctx.request.body);
     // 参数校验通过,正常响应
-    const { id, userId = null } = ctx.request.body;
+    const { id } = ctx.query;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3],
-      userId ? userApi.delShippingAddress : userApi.defaultShippingAddress);
-    const params = userId ? { id } : { id, userId };
-    const { status, data } = await service.curl.curlGet(url, params);
-    if (status === 200 && data.code === 200) {
-      ctx.helper.success({ ctx, code: 200, res: data.data || {} });
-    } else {
-      ctx.logger.error(status, data);
-      ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
-    }
+      userApi.delShippingAddress);
+    const { data } = await service.curl.curlGet(url, { id });
+    ctx.helper.success({ ctx, code: 200, res: data || {} });
   }
 }
 module.exports = AddressController;

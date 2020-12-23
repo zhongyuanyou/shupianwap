@@ -1,6 +1,6 @@
 'use strict';
 const Controller = require('egg').Controller;
-const { Post, Prefix } = require('egg-shell-decorators');
+const { Post, Get, Prefix } = require('egg-shell-decorators');
 const { contentApi } = require('./../../config/serveApi/index');
 const rules = require('./../validate/dict');
 
@@ -16,10 +16,9 @@ class ContentController extends Controller {
       start: { type: 'number', required: true },
       limit: { type: 'number', required: true },
       needTypes: { type: 'number', required: true }, // 是否需要分类数据，0不需要，1需要
+      needGoodsList: { type: 'number', required: true }, // 是否需要商品列表数据，0不需要，1需要
       showClient: { type: 'string', required: false }, // 展示终端code
       sortBy: {type: 'string', required: false}, // 排序CONDITION-QF-SORT-MR：默认排序，CONDITION-QF-SORT-XLDG：按销量从低到高，CONDITION-QF-SORT-XLGD：按销量从高到低，CONDITION-QF-SORT-JGDG:按价格从低到高,CONDITION-QF-SORT-JGGD:按价格从高到低,
-      // orderBy: { type: 'string', required: false }, // 排序方式（DEFAULT_SORT默认排序、SALES_SORT销量排序、REFERENCE_PRICE_SORT参考价格排序）
-      // isAsc: { type: 'boolean', required: false }, // 是否正序
       classCodes: { type: 'string', required: false }, // 分类code   多个英文逗号分隔
       areaCodes: { type: 'string', required: false }, // 城市code  多个英文逗号分隔
       needTag: { type: 'boolean', required: false }, // 是否展示标签
@@ -28,6 +27,17 @@ class ContentController extends Controller {
       keywords: { type: 'string', required: false }, // 搜索关键词
       screenAttrIds: { type: 'array', required: false }, // 筛选标签集合
     };
+    for(const k in ctx.request.body) {
+      const val = ctx.request.body[k]
+      if(val === 'undefined' ||
+        val === undefined ||
+        val === null ||
+        val === 'null' ||
+        val === ''
+      ) {
+        delete ctx.request.body[k]
+      }
+    }
     // 参数校验
     const valiErrors = app.validator.validate(rules, ctx.request.body);
     // 参数校验未通过
@@ -37,9 +47,11 @@ class ContentController extends Controller {
     }
     try {
       let resArrs = []
-      // 请求商品数据
-      const goodsList = service.goodsList.getServeGoodsList(ctx.request.body);
-      resArrs.push(goodsList)
+      if (ctx.request.body.needGoodsList === 1) {
+        // 请求商品数据
+        const goodsList = service.goodsList.getServeGoodsList(ctx.request.body);
+        resArrs.push(goodsList)
+      }
       if (ctx.request.body.needTypes === 1) {
         // 需要返回分类筛选参数
         // 查询服务列表筛选项包括分类和排序列表
@@ -47,23 +59,28 @@ class ContentController extends Controller {
         resArrs.push(serveFilters)
       }
       const data = await Promise.all(resArrs)
-      if(data[0].status === 200 && data[0].data.code === 200) {
-        resBody.goods = data[0].data.data
-      } else {
-        resBody.goods = {}
+      // console.log(data)
+      if (ctx.request.body.needGoodsList === 1) {
+        if(data[0].code === 200) {
+          resBody.goods = data[0].data
+        } else {
+          resBody.goods = {}
+        }
       }
       if (ctx.request.body.needTypes === 1) {
         // 需要返回筛选数据
-        if(data[1] && data[1].code === 200) {
-          resBody.typeData = data[1].data[0]
-          resBody.sortFilter = data[1].data[1]
+        // 判断是否需要商品数据，如果不需要的话就只有筛选数据
+        const _index = ctx.request.body.needGoodsList === 0 ? 0 : 1
+        if(data[_index] && data[_index].code === 200) {
+          resBody.typeData = data[_index].data[0]
+          resBody.sortFilter = data[_index].data[1]
         } else {
-          resBody.typeData = {}
-          resBody.sortFilter = {}
+          resBody.typeData = []
+          resBody.sortFilter = []
         }
       }
       if (JSON.stringify(resBody.goods) === '{}' && JSON.stringify(resBody.typeData) === '{}') {
-        ctx.logger.error(data[0].status, data[1].status, data[2].status, resBody);
+        ctx.logger.error(resBody);
         ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
       } else {
         ctx.helper.success({ ctx, code: 200, res: resBody });
@@ -81,13 +98,27 @@ class ContentController extends Controller {
     const rules = {
       start: { type: 'number', required: true },
       limit: { type: 'number', required: true },
+      platformPriceStart: { type: 'number', required: false }, // 价格区间开始
+      platformPriceEnd: { type: 'number', required: false }, // 价格区间结束
       needTypes: { type: 'number', required: true }, // 是否需要分类数据，0不需要，1需要
-      sort: { type: 'number', required: false }, // 排序 1.综合排序（默认）  2.最新发布  3.按价格从高到低  4.按价格从低到高
-      classCode: { type: 'string', required: true }, // 产品分类
+      sortBy: { type: 'number', required: false }, // 排序 1.综合排序（默认）  2.最新发布  3.按价格从高到低  4.按价格从低到高
+      classCode: { type: 'string', required: true }, // 产品分类编码
+      dictCode: { type: 'string', required: true }, // 字典编码
       withFieldDetail: { type: 'string', required: false }, // 字段详情标志,0不需要字段详情(默认) 1需要字段详情
       searchKey: { type: 'string', required: false }, // 搜索关键词
       fieldList: { type: 'array', required: false},
     };
+    for(const k in ctx.request.body) {
+      const val = ctx.request.body[k]
+      if(val === 'undefined' ||
+        val === undefined ||
+        val === null ||
+        val === 'null' ||
+        val === ''
+      ) {
+        delete ctx.request.body[k]
+      }
+    }
     // 参数校验
     const valiErrors = app.validator.validate(rules, ctx.request.body);
     // 参数校验未通过
@@ -103,13 +134,13 @@ class ContentController extends Controller {
       if (ctx.request.body.needTypes === 1) {
         // 需要返回分类筛选参数
         // 查询字典
-        const dict = service.getJyFilters.getJyFilters();
+        const dict = service.getJyFilters.getJyFilters(ctx.request.body.dictCode, ctx.request.body.classCode);
         resArrs.push(dict)
       }
       const data = await Promise.all(resArrs)
-      console.log(data)
-      if(data[0].status === 200 && data[0].data.code === 200) {
-        resBody.goods = data[0].data.data
+      // console.log(data)
+      if(data[0].code === 200) {
+        resBody.goods = data[0].data
       } else {
         resBody.goods = {}
       }
@@ -122,7 +153,7 @@ class ContentController extends Controller {
         }
       }
       if (JSON.stringify(resBody.goods) === '{}' && JSON.stringify(resBody.filters) === '{}') {
-        ctx.logger.error(data[0].status, data[1].status, resBody);
+        ctx.logger.error(resBody);
         ctx.helper.fail({ ctx, code: 500, res: '后端接口异常！' });
       } else {
         ctx.helper.success({ ctx, code: 200, res: resBody });

@@ -41,8 +41,39 @@ class goodsListService extends Service {
             break
         }
         delete params.needTypes
+        delete params.needGoodsList
         delete params.sortBy
         const result = await service.curl.curlPost(url, params);
+        // console.log(result)
+        let arr = []
+        result.data.records.forEach((item) => {
+          let {
+            id,
+            name,
+            salesSum,
+            classCode,
+            className,
+            referencePrice,
+            tags,
+            clientDetails,
+            productDescription,
+            productNo,
+          } = item
+          // todo referencePrice金额需要转换成元，在这里是分
+          arr.push({
+            id,
+            name,
+            salesSum,
+            classCode,
+            className,
+            referencePrice,
+            tags,
+            clientDetails,
+            productDescription,
+            productNo,
+          })
+        })
+        result.data.records = arr;
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);
@@ -65,9 +96,64 @@ class goodsListService extends Service {
         resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
       }
       try {
+        // 1.综合排序（默认）  2.最新发布  3.按价格从低到高  4.按价格从高到低
         let params = JSON.parse(JSON.stringify(data))
+        switch(params.sortBy) {
+          case 1:
+            // 综合排序（默认）
+            params.orderBy = 'DEFAULT_SORT' // 默认排序
+            params.isAsc = true // 升序排序
+            break
+          case 2:
+            // 最新发布
+            params.orderBy = 'CREATE_TIME_SORT'
+            params.isAsc = false // 降序排序
+            break
+          case 3:
+            // 按价格从低到高
+            params.orderBy = 'PRICE_SORT'
+            params.isAsc = true
+            break
+          case 4:
+            // 按价格从高到低
+            params.orderBy = 'PRICE_SORT'
+            params.isAsc = false
+            break
+        }
+        if (params.platformPriceStart || params.platformPriceEnd) {
+          params.platformPriceStart =
+            this.ctx.helper.calculate(`${params.platformPriceStart}*100`)
+          params.platformPriceEnd =
+            this.ctx.helper.calculate(`${params.platformPriceEnd}*100`)
+        } else {
+          delete params.platformPriceStart
+          delete params.platformPriceEnd
+        }
+        delete params.sortBy
         delete params.needTypes
+        delete params.dictCode
         const result = await service.curl.curlPost(url, params);
+        let arr = []
+        result.data.records.forEach((item) => {
+          let {
+            id,
+            name,
+            classCode,
+            goodsCode,
+            platformPrice,
+            fieldList,
+          } = item
+          // todo platformPrice金额需要转换成元，在这里是分
+          arr.push({
+            id,
+            name,
+            classCode,
+            referencePrice: platformPrice,
+            fieldList,
+            productNo: goodsCode,
+          })
+        })
+        result.data.records = arr;
         resolve(result);
       } catch (err) {
         ctx.logger.error(err);

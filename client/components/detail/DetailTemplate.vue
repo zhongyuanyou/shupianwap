@@ -20,17 +20,24 @@
     <Banner :images="info.images" />
     <!--S banner-->
     <!--S 第一板块-->
-    <Title :info="{ ...info }" />
+    <Title
+      :tc-product-detail-data="{ ...tcProductDetailData }"
+      :info="{ ...info }"
+    />
     <!--E 第一板块-->
     <!--S 第二板块 基本信息-->
-    <Basic :info="{ ...info }">
+    <Basic :tc-product-detail-data="{ tcProductDetailData }">
       <div slot="basic">
         <div class="company_info">
-          <div class="item">企业行业：<span>工程类</span></div>
-          <div class="item">经营时间：<span>3年以上</span></div>
-          <div class="item">注册资本：<span>1000万</span></div>
-          <div class="item">企业类型：<span>有限责任公司</span></div>
-          <div class="item">注册资本：<span>小规模纳税人</span></div>
+          <div
+            v-for="(baseDataList, idx) in tcProductDetailData.fieldList"
+            :key="idx"
+            class="item"
+          >
+            {{ baseDataList.fieldName }}：<span>{{
+              baseDataList.fieldValue
+            }}</span>
+          </div>
         </div>
       </div>
     </Basic>
@@ -43,7 +50,7 @@
     <Commitment :info="{ ...info }" />
     <!--E 第四板块 交易服务保障承诺-->
     <!--S 第五板块 推荐规划师-->
-    <Planners :info="{ ...info }" />
+    <Planners :info="recommendPlanner" />
     <!--E 第五板块 推荐规划师-->
     <!--S 第六板块 商品动态-->
     <Dynamic :info="{ ...info }" />
@@ -55,15 +62,19 @@
     <Case :info="{ ...info }" />
     <!--E 第八板块 成功案例-->
     <!--S 第九板块 同类推荐-->
-    <Recommend :info="{ ...info }" />
+    <Recommend :similar-recommend-data="similarRecommend" />
     <!--E 第九板块 同类推荐-->
     <!--S 第十板块 猜你需要-->
-    <Need :info="{ ...info }" />
+    <sp-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+    >
+      <Need :product-data="recommendProduct" />
+    </sp-list>
     <!--E 第十板块 猜你需要-->
-    <sp-bottombar safe-area-inset-bottom>
-      <sp-bottombar-button type="info" :text="text1"> </sp-bottombar-button>
-      <sp-bottombar-button type="primary" :text="text2"> </sp-bottombar-button>
-    </sp-bottombar>
+    <commodityConsultation :planner-info="tcPlannerBooth" />
   </div>
 </template>
 
@@ -75,6 +86,7 @@ import {
   BottombarButton,
   BottombarIcon,
   BottombarInfo,
+  List,
 } from '@chipspc/vant-dgg'
 import Banner from '~/components/detail/Banner'
 import Title from '~/components/detail/Title'
@@ -87,6 +99,9 @@ import Question from '~/components/detail/Question'
 import Case from '~/components/detail/Case'
 import Recommend from '~/components/detail/Recommend'
 import Need from '~/components/detail/Need'
+import commodityConsultation from '@/components/common/commodityConsultation/commodityConsultation'
+import getUserSign from '~/utils/fingerprint'
+import { recommendApi } from '~/api'
 export default {
   name: 'DetailTemplate',
   components: {
@@ -96,6 +111,7 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [BottombarIcon.name]: BottombarIcon,
     [BottombarInfo.name]: BottombarInfo,
+    [List.name]: List,
     Banner,
     Title,
     Basic,
@@ -107,6 +123,7 @@ export default {
     Case,
     Recommend,
     Need,
+    commodityConsultation,
   },
   props: {
     info: {
@@ -121,21 +138,42 @@ export default {
         return '1'
       },
     },
+    tcProductDetailData: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+    tcPlannerBooth: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+    recommendPlanner: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
       opacity: 0,
-      card: {
-        imgSrc: 'http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg',
-        cardName: '王深林',
-        cardSign: '金牌规划师',
-        icon: 'coupon-o',
-        round: true,
-        avatarSize: 40,
-      },
       text1: '在线咨询',
       text2: '电话咨询',
+      finished: false, // 停止加载更多
+      loading: false,
+      productPage: 1,
+      productLimit: 10,
+      productCount: 0,
+      recommendProduct: [],
+      similarRecommend: [], // 同类推荐产品
     }
+  },
+  mounted() {
+    // 获取推荐产品
+    this.getrecommendProduct()
+    // 获取同类推荐
+    this.getSimilarRecommend()
   },
   methods: {
     scrollHandle({ scrollTop }) {
@@ -146,6 +184,98 @@ export default {
       // 返回上一页
       this.$router.back()
     },
+    //
+    onLoad() {
+      this.productPage += 1
+      // 加载更多推荐
+      this.getrecommendProduct()
+    },
+    // 获取推荐交易产品
+    async getrecommendProduct() {
+      this.loading = true
+      // 获取用户唯一标识
+      if (!this.deviceId) {
+        this.deviceId = await getUserSign()
+      }
+      const formatId2 = this.tcProductDetailData.classCodeLevel.split(',')[1] // 产品二级分类
+      const formatId3 = this.tcProductDetailData.classCodeLevel.split(',')[2] // 产品三级分类
+      const formatId = formatId3 || formatId2
+      this.$axios
+        .get(recommendApi.recommendProduct, {
+          params: {
+            userId: this.$cookies.get('userId'), // 用户id
+            deviceId: this.deviceId, // 设备ID
+            formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
+            areaCode: '2', // 区域编码
+            sceneId: 'app-jycpxq-02', // 场景ID
+            productId: this.tcProductDetailData.id, // 产品ID（产品详情页必传）
+            productType: 'FL20201116000003', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
+            title: this.tcProductDetailData.name, // 产品名称（产品详情页传、咨询页等）
+            platform: 'APP', // 平台（app,m,pc）
+            page: this.productPage,
+            limit: this.productLimit,
+            searchType: 1, // 搜索推荐产品类型：1：交易，2服务
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            if (res.data.records.length === 0) {
+              this.finished = true
+            }
+            this.productCount = res.data.totalCount // 推荐产品总条数
+            this.recommendProduct = [...this.recommendProduct].concat(
+              res.data.records
+            ) // 推荐产品列表
+            // 推荐产品最多加载30条
+            if (this.recommendProduct.length >= 30) {
+              this.finished = true
+            }
+          }
+          this.loading = false
+        })
+        .catch((err) => {
+          this.loading = false
+          console.log(err)
+        })
+    },
+    // 获取同类推荐
+    async getSimilarRecommend() {
+      this.loading = true
+      // 获取用户唯一标识
+      if (!this.deviceId) {
+        this.deviceId = await getUserSign()
+      }
+      const formatId2 = this.tcProductDetailData.classCodeLevel.split(',')[1] // 产品二级分类
+      const formatId3 = this.tcProductDetailData.classCodeLevel.split(',')[2] // 产品三级分类
+      const formatId = formatId3 || formatId2
+      this.$axios
+        .get(recommendApi.recommendProduct, {
+          params: {
+            userId: this.$cookies.get('userId'), // 用户id
+            deviceId: this.deviceId, // 设备ID
+            formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
+            areaCode: '2', // 区域编码
+            sceneId: 'app-jycpxq-01', // 场景ID
+            productId: this.tcProductDetailData.id, // 产品ID（产品详情页必传）
+            productType: 'FL20201116000003', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
+            title: this.tcProductDetailData.name, // 产品名称（产品详情页传、咨询页等）
+            platform: 'APP', // 平台（app,m,pc）
+            page: 1,
+            limit: 5,
+            searchType: 1, // 搜索推荐产品类型：1：交易，2服务
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.similarRecommend = res.data.records
+            console.log(this.similarRecommend)
+          }
+        })
+        .catch((err) => {
+          this.loading = false
+          console.log(err)
+        })
+    },
   },
 }
 </script>
@@ -155,7 +285,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #f8f8f8;
-  padding-bottom: 144px;
+  /*padding-bottom: 144px;*/
   /deep/ .sp-hairline--bottom::after {
     border-bottom: none;
   }

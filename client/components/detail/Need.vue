@@ -1,7 +1,7 @@
 <template>
   <div class="need">
-    <p class="need_title">猜你需要</p>
-    <div v-for="item in 3" :key="item" class="need_item">
+    <p class="need_title">猜您需要</p>
+    <div v-for="item in productData" :key="item.id" class="need_item">
       <div class="need_item_img">
         <sp-image
           width="1.6rem"
@@ -13,19 +13,21 @@
       </div>
       <div class="need_item_rt">
         <p class="title">
-          成都市网络信息科技有限公司成都市网络信息科技有限公司网络信息科技有限公司
+          {{ item.name }}
         </p>
         <div class="label">
-          <span v-for="(lItem, index) in label" :key="index">{{
-            `${lItem}${index == label.length - 1 ? '' : '|'}`
+          <span v-for="(lItem, index) in item.fieldList" :key="index">{{
+            `${lItem.fieldValueList ? lItem.fieldValueList[0] : ''}${
+              index === item.fieldList.length - 1 ? '' : '|'
+            }`
           }}</span>
         </div>
         <div class="tags">
-          <div v-for="(tItem, index) in tags" :key="index" class="tags_item">
+          <div v-for="(tItem, index) in 0" :key="index" class="tags_item">
             {{ tItem }}
           </div>
         </div>
-        <p class="money">4.25元</p>
+        <p class="money">{{ item.platformPrice }}元</p>
       </div>
     </div>
   </div>
@@ -37,6 +39,12 @@ export default {
   name: 'Need',
   components: {
     [Image.name]: Image,
+  },
+  props: {
+    productData: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {

@@ -11,7 +11,7 @@
             @click="selectItem(item, index)"
           >
             <span :class="[index === visible ? 'tab-curve-active' : '']">{{
-              item.label
+              item[nameField]
             }}</span>
             <div class="svg-content">
               <my-icon
@@ -40,7 +40,7 @@
           @click="selectItem(item, index)"
         >
           <span :class="[index === visible ? 'tab-curve-active' : '']">{{
-            item.label
+            item[nameField]
           }}</span>
           <div class="svg-content">
             <my-icon
@@ -85,6 +85,13 @@ export default {
       type: Array,
       default: () => {
         return []
+      },
+    },
+    // label展示的字段
+    nameField: {
+      type: String,
+      default: () => {
+        return 'label'
       },
     },
     // 每个TAB之间的间距

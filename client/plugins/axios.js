@@ -1,13 +1,13 @@
 import qs from 'qs'
+import { saveAxiosInstance } from '@/utils/request'
 const BASE = require('~/config/index.js')
-export default function ({ $axios, redirect }) {
+export default function ({ $axios, redirect, app }) {
   // 设置基本URL
   if (process.server) {
     $axios.defaults.baseURL = BASE.baseURL
   } else {
     $axios.defaults.baseURL = '/api'
   }
-
   $axios.interceptors.request.use(
     (config) => {
       if (
@@ -18,8 +18,21 @@ export default function ({ $axios, redirect }) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
-      config.headers.sysCode = 'pcd-api'
-      config.headers['X-Req-UserId'] = ['7950560027311669248']
+      config.headers.sysCode = 'zdm-api'
+      if (
+        app.$cookies.get('token', {
+          path: '/',
+        })
+      ) {
+        config.headers['X-Auth-Token'] = app.$cookies.get('token', {
+          path: '/',
+        })
+        config.headers['X-Req-UserId'] = app.$cookies.get('userId', {
+          path: '/',
+        })
+      }
+      // config.headers['X-Auth-Token'] = '607991860798845556'
+      // config.headers['X-Req-UserId'] = '607991757719633892'
       return config
     },
     (error) => {
@@ -50,4 +63,5 @@ export default function ({ $axios, redirect }) {
       redirect('/500')
     }
   })
+  saveAxiosInstance($axios)
 }

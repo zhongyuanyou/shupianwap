@@ -3,7 +3,6 @@
     ref="item"
     :title="dropdownTitle"
     :title-class="moreTextCss"
-    @open="open"
     @close="close"
   >
     <div class="sort-content">
@@ -57,7 +56,7 @@ export default {
   },
   watch: {
     selectValue(val) {
-      if (val) {
+      if (JSON.stringify(val) !== '{}') {
         this.dropdownTitle = val.name
         this.moreTextCss = 'jyDropdownFilter active'
         // 如果文字大于4个字需要添加样式
@@ -81,11 +80,6 @@ export default {
     }
   },
   methods: {
-    open() {
-      if (this.sortfilterDom) {
-        this.sortfilterDom = document.querySelector('.sortfilter')
-      }
-    },
     close() {},
     isActive(item) {
       return item.id === this.selectValue.id
@@ -97,9 +91,22 @@ export default {
       this.$refs.item.toggle()
     },
     initOption(data) {
-      this.dropdownTitle = data.title
-      this.option = data.filters
+      this.dropdownTitle = data.name
+      const arr = []
+      data.children.forEach((item, _index) => {
+        arr.push({
+          name: item.name,
+          id: _index + 1,
+        })
+      })
+      this.option = arr
       // this.selectValue = this.option[0]
+    },
+    resetFilters() {
+      // 重置筛选项
+      this.dropdownTitle = this.filterData.name
+      this.selectValue = {}
+      this.moreTextCss = 'jyDropdownFilter'
     },
   },
 }

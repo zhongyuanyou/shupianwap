@@ -1,30 +1,30 @@
 <template>
   <div class="help-page">
     <!-- S 头部 -->
-    <Header ref="headerRef" title="帮助中心" />
+    <Header v-if="!isInApp" ref="headerRef" title="帮助中心" />
     <!-- E 头部 -->
     <!-- S 广告位 -->
     <div class="help-bn">
-      <img src="" alt="" />
+      <img :src="adData.materialUrl" alt="" />
     </div>
     <!-- E 广告位 -->
     <div class="hele-centent">
       <!-- S 功能 -->
-      <div class="func-list">
-        <div>
-          <img src="" alt="" />
-          <span>修改登录密码</span>
+      <div v-if="isInApp" class="func-list">
+        <div @click="handleClick(0)">
+          <img src="../../../assets/temporary/home/help_icon_pass.png" alt="" />
+          <span>{{ isPassword ? '修改登录密码' : '设置登录密码' }}</span>
         </div>
-        <div>
-          <img src="" alt="" />
+        <div @click="handleClick(1)">
+          <img src="../../../assets/temporary/home/help_icon_tel.png" alt="" />
           <span>实名认证</span>
         </div>
-        <div>
-          <img src="" alt="" />
-          <span>免打扰设置</span>
+        <div @click="handleClick(2)">
+          <img src="../../../assets/temporary/home/help_icon_name.png" alt="" />
+          <span>修改手机号</span>
         </div>
-        <div>
-          <img src="" alt="" />
+        <div @click="handleClick(3)">
+          <img src="../../../assets/temporary/home/help_icon_msg.png" alt="" />
           <span>我要吐槽</span>
         </div>
       </div>
@@ -33,10 +33,10 @@
       <div class="search-content">
         <strong>更多服务</strong>
         <sp-search
-          v-model="keywords"
           shape="round"
+          :disabled="true"
           placeholder="搜索您遇到的问题"
-          @focus="$router.push('/my/help/helpCenter')"
+          @click="$router.push('/my/help/helpCenter')"
         />
       </div>
       <!-- E 搜索 -->
@@ -47,25 +47,30 @@
           :offset-top="headHeight - 0.5"
           @scroll="searchHandle"
         >
-          <sp-work-tabs v-model="active" @click="tabsClickHandle">
+          <sp-work-tabs
+            v-model="active"
+            :ellipsis="false"
+            :scrollspy="false"
+            @click="tabsClickHandle"
+          >
             <sp-work-tab
               v-for="(item, index) in tabData"
               :key="index"
-              :title="item.title"
-              :name="item.code"
+              :title="item.name"
+              :name="index"
             ></sp-work-tab>
           </sp-work-tabs>
         </sp-sticky>
         <!-- E tab -->
         <!-- S 列表 -->
-        <div class="problem-list">
+        <div v-if="tabData.length" class="problem-list">
           <ul>
             <li
-              v-for="(item, index) in problemList"
+              v-for="(item, index) in tabData[active].articleData"
               :key="index"
-              @click="$router.push('/my/help/questions')"
+              @click="onServiceTouch(item.id)"
             >
-              <span>{{ item.text + index }}</span>
+              <span>{{ item.title }}</span>
               <my-icon
                 name="order_ic_listnext"
                 size="0.21rem"
@@ -73,13 +78,18 @@
               ></my-icon>
             </li>
           </ul>
+          <Loading-down
+            v-if="tabData.length && tabData[active].articleData.length"
+            :loading="loading && !tabData[active].noMore"
+            :no-data="tabData[active].noMore"
+          />
         </div>
         <!-- E 列表 -->
       </div>
     </div>
     <!-- S footer -->
     <sp-bottombar safe-area-inset-bottom>
-      <sp-bottombar-icon icon="phone-o" text="致电" />
+      <sp-bottombar-icon icon="phone-o" text="致电" @click="handleTel" />
       <sp-bottombar-button type="primary" text="在线客服" />
     </sp-bottombar>
     <!-- E footer -->
@@ -97,11 +107,17 @@ import {
   BottombarIcon,
   Sticky,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
+import { helpApi } from '@/api'
 import Header from '@/components/common/head/header'
+import LoadingDown from '@/components/common/loading/LoadingDown'
+
 export default {
   name: 'Help',
   components: {
     Header,
+    LoadingDown,
     [Sticky.name]: Sticky,
     [Search.name]: Search,
     [WorkTab.name]: WorkTab,
@@ -110,134 +126,164 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [BottombarIcon.name]: BottombarIcon,
   },
+  async asyncData({ $axios }) {
+    const params = {
+      findType: 0, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
+      locationCode: 'ad100006', // 广告位code
+      code: 'con100873', // 获取分类列表选项的code
+      limit: 10,
+      page: 1,
+      categoryCode: '', // 分类code赛选文章
+      terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
+      platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
+      includeField: 'id,title', // 必须要输出的内容字段
+    }
+    let tabData = []
+    let adData = {}
+    try {
+      const res = await $axios.post(helpApi.findArticle, params)
+      if (res.code === 200) {
+        res.data.categoryList.forEach((item) => {
+          item.limit = params.limit
+          item.page = params.page
+          item.noMore = false
+          item.articleData = []
+        })
+        tabData = res.data.categoryList
+        tabData[0].articleData = res.data.articleData
+        adData = res.data.adListData[0].materialList[0]
+      }
+    } catch (error) {}
+    return {
+      params,
+      tabData,
+      adData,
+    }
+  },
   data() {
     return {
-      keywords: '',
+      loading: false,
       active: 0,
       isFixed: false,
       headHeight: 0,
-      tabData: [
-        {
-          title: '热搜问题',
-          code: 'a',
-        },
-        {
-          title: '活动类',
-          code: 'b',
-        },
-        {
-          title: '订单类',
-          code: 'c',
-        },
-        {
-          title: '支付类',
-          code: 'd',
-        },
-        {
-          title: '售后类',
-          code: 'e',
-        },
-        {
-          title: '其它类',
-          code: 'f',
-        },
-      ],
-      problemList: [
-        {
-          id: '1',
-          text:
-            '公司注册需要哪些资料？公司注册需要哪些资料？公司注册需要哪些资料？公司注册需要哪些资料？',
-        },
-        {
-          id: '2',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '3',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '4',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '5',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '6',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '7',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '8',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '9',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？',
-        },
-        {
-          id: '1',
-          text: '公司注册需要哪些资料？abc',
-        },
-      ],
+      tabData: [],
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+      isPassword: (state) => state.user.userInfo.isPassword || 0,
+    }),
+  },
   mounted() {
-    this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
+    if (!this.isInApp) {
+      this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
+    } else {
+      // 设置app导航名称
+      this.$appFn.dggSetTitle(
+        {
+          title: '帮助中心',
+        },
+        (res) => {}
+      )
+    }
   },
   methods: {
     // tab切换
-    tabsClickHandle(name, title) {
-      console.log(name, title)
+    tabsClickHandle(index) {
+      if (!this.tabData[index].articleData.length) {
+        this.getProblemList(index, 1)
+      }
     },
-    // 监听滚动吸顶
-    searchHandle({ isFixed }) {
+    // 监听滚动吸顶与触底加载更多
+    searchHandle({ scrollTop, isFixed }) {
       this.isFixed = isFixed
+      if (
+        this.tabData.length &&
+        this.tabData[this.active].articleData.length &&
+        !this.loading &&
+        !this.tabData[this.active].noMore
+      ) {
+        const pageScrollHeight = document.body.scrollHeight // 页面文档的总高度
+        const pageClientHeight = window.innerHeight // 窗口文档显示区域的高度
+        // 监听页面是否滚动到底部加载更多数据
+        if (Math.ceil(scrollTop + pageClientHeight) >= pageScrollHeight) {
+          this.loading = true
+          this.tabData[this.active].page += 1
+          this.getProblemList(this.active, 2)
+        }
+      }
+    },
+    // 获取问题列表
+    getProblemList(index, type) {
+      const params = {
+        findType: 1,
+        categoryCode: this.tabData[index].code,
+        locationCode: null,
+        limit: this.tabData[index].limit,
+        page: this.tabData[index].page,
+      }
+      this.params = Object.assign(this.params, params)
+      this.$axios.post(helpApi.findArticle, this.params).then((res) => {
+        this.loading = false
+        // 无更多数据
+        if (!res.data.articleData.length) {
+          this.tabData[index].noMore = true
+          return
+        }
+        // 切换加载
+        if (res.code === 200 && type === 1) {
+          const obj = {
+            ...this.tabData[index],
+            articleData: res.data.articleData,
+          }
+          this.$set(this.tabData, index, obj)
+          return
+        }
+        // 触底加载更多
+        if (res.code === 200 && type === 2) {
+          this.tabData[index].articleData = this.tabData[
+            index
+          ].articleData.concat(res.data.articleData)
+        }
+      })
+    },
+    onServiceTouch(id) {
+      this.$router.push({
+        path: '/my/help/questions',
+        query: { id },
+      })
+    },
+    handleClick(val) {
+      if (val === 3) {
+        this.$router.push('/my/complain')
+      } else if (val === 2) {
+        this.$appFn.dggJumpRoute({
+          iOSRouter:
+            '{"path":"CPSCustomer:CPSCustomer/CPSVerificationViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}',
+          androidRouter: '',
+        })
+      } else if (val === 0) {
+        const iosSetPassword =
+          '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
+        const androisSetPassword = ''
+        const iosUpdatePassword =
+          '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
+        const androisUpdatePassword = ''
+        this.$appFn.dggJumpRoute({
+          iOSRouter: this.isPassword ? iosUpdatePassword : iosSetPassword,
+          androidRouter: this.isPassword
+            ? androisUpdatePassword
+            : androisSetPassword,
+        })
+      }
+    },
+    handleTel() {
+      // 拨打电话
+      if (this.isInApp) {
+        // 如果当前页面在app中，则调用原生拨打电话的方法
+        this.$appFn.dggCallPhone({ phone: '17755021122' }, (res) => {})
+      }
     },
   },
 }
@@ -249,6 +295,10 @@ export default {
     width: 100%;
     height: 320px;
     background: #4974f5;
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
   .hele-centent {
     position: relative;
@@ -270,7 +320,6 @@ export default {
         > img {
           width: 48px;
           height: 48px;
-          background: #c2c2c2;
         }
         > span {
           font-size: 24px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="hot-moudle">
+  <div v-if="hotData.length" class="hot-moudle">
     <ul>
       <li
         v-for="(item, index) in labelBtn"
@@ -7,115 +7,31 @@
         :class="{ active: index === currentItem }"
         @click="swichHandle(index)"
       >
-        <a href="javascript:void(0);">{{ item.name }}</a>
+        <a href="javascript:void(0);">{{ item.locationName }}</a>
       </li>
     </ul>
-    <div class="hot-list">
+    <div v-if="labelBtn[currentItem]" class="hot-list">
       <a
-        v-for="(item, index) in labelBtn[currentItem].data"
+        v-for="(item, index) in labelBtn[currentItem].sortMaterialList"
         :key="index"
-        href="javascript:void(0);"
+        href="javascript:void(0)"
+        @click="adJumpHandleMixin(item.materialList[0])"
       >
-        <span>{{ item.name }}</span>
-        <strong>{{ item.title }}</strong>
-        <p>{{ item.describe }}</p>
+        <img :src="item.materialList[0].materialUrl" alt="" />
       </a>
     </div>
   </div>
 </template>
 
 <script>
+import adJumpHandle from '~/mixins/adJumpHandle'
 export default {
+  mixins: [adJumpHandle],
   props: {
-    labelBtn: {
+    hotData: {
       type: Array,
       default: () => {
-        return [
-          {
-            name: '热门服务',
-            code: '1',
-            data: [
-              {
-                name: '老板必看1老板必看1老板必看1',
-                title: '有限公司注册1老板必看1老板必看1',
-                describe: '7天内可交付1老板必看1老板必看1',
-              },
-              {
-                name: '老板必看',
-                title: '有限公司注册',
-                describe: '7天内可交付',
-              },
-              {
-                name: '老板必看',
-                title: '有限公司注册',
-                describe: '7天内可交付',
-              },
-            ],
-          },
-          {
-            name: '今日必看',
-            code: '2',
-            data: [
-              {
-                name: '老板必看2',
-                title: '有限公司注册2',
-                describe: '7天内可交付2',
-              },
-              {
-                name: '老板必看',
-                title: '有限公司注册',
-                describe: '7天内可交付',
-              },
-              {
-                name: '老板必看',
-                title: '有限公司注册',
-                describe: '7天内可交付',
-              },
-            ],
-          },
-          {
-            name: '刚需捡漏',
-            code: '3',
-            data: [
-              {
-                name: '老板必看3',
-                title: '有限公司注册3',
-                describe: '7天内可交付3',
-              },
-              {
-                name: '老板必看',
-                title: '有限公司注册',
-                describe: '7天内可交付',
-              },
-              {
-                name: '老板必看',
-                title: '有限公司注册',
-                describe: '7天内可交付',
-              },
-            ],
-          },
-          {
-            name: '限时特惠',
-            code: '4',
-            data: [
-              {
-                name: '老板必看4',
-                title: '有限公司4',
-                describe: '7天内可交付4',
-              },
-              {
-                name: '老板必看',
-                title: '有限公司注册',
-                describe: '7天内可交付',
-              },
-              {
-                name: '老板必看',
-                title: '有限公司注册',
-                describe: '7天内可交付',
-              },
-            ],
-          },
-        ]
+        return []
       },
     },
   },
@@ -124,6 +40,11 @@ export default {
       currentItem: 0,
       timer: null,
     }
+  },
+  computed: {
+    labelBtn() {
+      return this.hotData
+    },
   },
   mounted() {
     this.timer = setInterval(this.swiperHandle, 5000)
@@ -162,16 +83,19 @@ export default {
       box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
       border-radius: 4px;
       margin-right: 16px;
+      padding: 0 8px;
       a {
         display: flex;
         align-items: center;
         justify-content: center;
         width: 100%;
         height: 100%;
+        line-height: 64px;
         font-size: 26px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #222222;
+        .textOverflow(1);
       }
     }
     .active {
@@ -199,15 +123,22 @@ export default {
     width: 100%;
     margin-top: 32px;
     display: flex;
-    justify-content: space-between;
-    > a {
+    // justify-content: space-between;
+    a {
       width: 32%;
       height: 144px;
       display: flex;
       flex-direction: column;
-      padding: 19px 22px 20px 24px;
+      //   padding: 19px 22px 20px 24px;
       background: #f8f8f8;
       border-radius: 8px;
+      &:not(:last-child) {
+        margin-right: 1.79%;
+      }
+      > img {
+        width: 100%;
+        height: 100%;
+      }
       > span {
         font-size: 22px;
         font-family: PingFang SC;

@@ -1,13 +1,17 @@
 <template>
-  <div class="swiper-bn">
+  <div v-if="swiperData.length" class="swiper-bn">
     <sp-swipe
       class="my-swipe"
       :autoplay="autoplay"
       :show-indicators="indicators"
     >
       <sp-swipe-item v-for="(item, index) in swiperData" :key="index">
-        <a href="javascript:void(0);" class="swiper-box">
-          <img :src="item.icon" alt="" />
+        <a
+          href="javascript:void(0)"
+          class="swiper-box"
+          @click="adJumpHandleMixin(item.materialList[0])"
+        >
+          <img :src="item.materialList[0].materialUrl" alt="" />
         </a>
       </sp-swipe-item>
     </sp-swipe>
@@ -16,29 +20,24 @@
 
 <script>
 import { Swipe, swipeItem } from '@chipspc/vant-dgg'
+import adJumpHandle from '~/mixins/adJumpHandle'
 export default {
   components: {
     [Swipe.name]: Swipe,
     [swipeItem.name]: swipeItem,
   },
+  mixins: [adJumpHandle],
   props: {
     swiperData: {
       type: Array,
       default: () => {
-        return [
-          {
-            icon: require('~/assets/temporary/home/bn.png'),
-          },
-          {
-            icon: require('~/assets/temporary/home/bn.png'),
-          },
-        ]
+        return []
       },
     },
   },
   data() {
     return {
-      autoplay: 3000, // 切换间隔
+      autoplay: 5000, // 切换间隔
       indicators: false, // 是否需要指示器
     }
   },

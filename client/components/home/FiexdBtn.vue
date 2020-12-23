@@ -13,6 +13,7 @@
 export default {
   data() {
     return {
+      headHeight: 0,
       btnData: {
         isShow: false,
         text: '推荐',
@@ -25,14 +26,16 @@ export default {
     // 监听页面滚动
     window.addEventListener('scroll', this.scrollToTop)
     // 动态获取头部搜索栏高度
-    const headHeight = this.$parent.$refs.searchBannerRef.$refs.searchRef.$el
-      .clientHeight
-    // 获取推荐板块到顶部的距离 减 搜索栏高度
-    this.recommendTop =
-      this.$parent.$refs.recommendRef.$el.offsetTop - headHeight
+    this.headHeight = this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.scrollToTop)
   },
   methods: {
     scrollToTop() {
+      // 获取推荐板块到顶部的距离 减 搜索栏高度
+      this.recommendTop =
+        this.$parent.$refs.recommendRef.$el.offsetTop - this.headHeight
       const scrollTop =
         window.pageYOffset ||
         document.documentElement.scrollTop ||
@@ -53,6 +56,9 @@ export default {
     },
     scrollHandle(text) {
       let top = document.documentElement.scrollTop || document.body.scrollTop
+      // 获取推荐板块到顶部的距离 减 搜索栏高度
+      this.recommendTop =
+        this.$parent.$refs.recommendRef.$el.offsetTop - this.headHeight
       const timer = setInterval(() => {
         if (text === '推荐') {
           document.body.scrollTop = document.documentElement.scrollTop = top += 80
@@ -62,11 +68,11 @@ export default {
           }
           return
         }
-        document.body.scrollTop = document.documentElement.scrollTop = top -= 80
+        document.body.scrollTop = document.documentElement.scrollTop = top -= 200
         if (top <= 0) {
           clearInterval(timer)
         }
-      }, 10)
+      })
     },
   },
 }

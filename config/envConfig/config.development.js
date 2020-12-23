@@ -4,21 +4,22 @@ const path = require('path');
 function getIPAdress() {
   const interfaces = require('os').networkInterfaces();
   for (const devName in interfaces) {
-    const iface = interfaces[devName];
-    for (let i = 0; i < iface.length; i++) {
-      const alias = iface[i];
-      if (
-        alias.family === 'IPv4' &&
-        alias.address !== '127.0.0.1' &&
-        !alias.internal
-      ) {
-        return alias.address;
+    if (!devName.includes('Npcap')) {
+      const iface = interfaces[devName];
+      for (let i = 0; i < iface.length; i++) {
+        const alias = iface[i];
+        if (
+          alias.family === 'IPv4' &&
+          alias.address !== '127.0.0.1' &&
+          !alias.internal
+        ) {
+          return alias.address;
+        }
       }
     }
   }
 }
-
-module.exports = appInfo => {
+module.exports = (appInfo) => {
   /**
    * built-in config
    * @type {Egg.EggAppConfig}
@@ -29,17 +30,12 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1599699446500_2481';
   config.cluster = {
     listen: {
+      host: '0.0.0.0',
       port: 7001,
     },
   };
   // 在此处添加中间件配置
-  config.middleware = [
-    'nuxt',
-    'gzip',
-    'errFilter',
-    'eureka',
-    'dggCache',
-  ];
+  config.middleware = ['nuxt', 'gzip', 'errFilter', 'eureka', 'dggCache'];
   config.gzip = {
     threshold: 1024, // 小于 1k 的响应体不压缩
   };
@@ -103,6 +99,9 @@ module.exports = appInfo => {
       'crisps-auth-center-api', // 鉴权
       'crisps-user-center-api', // 用户
       'crm-biz', // 企大顺
+      // 商户中心
+      'merchant-center-manager',
+      'cloud-recomd-api', // 算法
     ],
   };
   // eureka相关配置
@@ -121,8 +120,7 @@ module.exports = appInfo => {
       healthCheckUrl: null,
       vipAddress: 'crisps-app-wap-bff-api',
       dataCenterInfo: {
-        '@class':
-          'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+        '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
         name: 'MyOwn',
       },
       metadata: {
