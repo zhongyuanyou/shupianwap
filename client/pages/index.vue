@@ -64,8 +64,8 @@ export default {
     FiexdBtn,
   },
   async asyncData({ $axios }) {
-    const fiexdAdCode = 'ad100233' // 顶部固定banner的code
-    const rollAdCode = 'ad100233' // 导航下方轮播banner code
+    const fiexdAdCode = 'ad100077' // 顶部固定banner的code
+    const rollAdCode = 'ad100091' // 导航下方轮播banner code
     const helpAdCode = 'ad100233' // 帮我找下方banner code
     // 首屏请求导航和广告的参数
     const initReqParams = {
@@ -87,7 +87,11 @@ export default {
       rollNavData: [], // 滚动导航
     }
     try {
-      const res = await $axios.post(homeApi.initRequest, initReqParams)
+      const res = await $axios.post(homeApi.initRequest, initReqParams, {
+        headers: {
+          'x-cache-control': 'cache',
+        },
+      })
       //   console.log('服务端', res)
       if (res.code === 200) {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
@@ -128,7 +132,11 @@ export default {
       )
       // 获取非首屏数据（广告 + 资讯）
       this.$axios
-        .post(homeApi.asyncRequest, this.asyncReqParams)
+        .post(homeApi.asyncRequest, this.asyncReqParams, {
+          headers: {
+            'x-cache-control': 'cache',
+          },
+        })
         .then((res) => {
           //   console.log('客户端：', res.data)
           this.asyncData.cityData = res.data.cityList

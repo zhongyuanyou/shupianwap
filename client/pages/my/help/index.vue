@@ -283,7 +283,9 @@ export default {
       if (this.isInApp) {
         // 如果当前页面在app中，则调用原生拨打电话的方法
         this.$appFn.dggCallPhone({ phone: '17755021122' }, (res) => {})
+        return
       }
+      window.location.href = 'tel:17755021122'
     },
   },
 }

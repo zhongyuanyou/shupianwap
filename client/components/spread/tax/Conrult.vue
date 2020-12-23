@@ -106,6 +106,7 @@ export default {
     }
   },
   methods: {
+    // 点击该模块判断是否进行跳转，如果不跳转就调用IM
     openIMurl() {
       if (this.url !== '') {
         window.open = this.url

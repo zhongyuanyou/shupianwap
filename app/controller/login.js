@@ -188,15 +188,16 @@ class LoginController extends Controller {
     const { ctx, service, app } = this;
     const rules = {
       phone: { type: 'string', required: true },
-      type: ['login', 'register', 'reset'],
+      type: ['login', 'register', 'reset', 'default'],
     };
     if (getValiErrors(app, ctx, rules, ctx.query)) return;
 
     const { phone, type } = ctx.query;
     const msgTemplateCode = {
-      login: 'SMS_TMP_LOGIN',
-      register: 'SMS_TMP_LOGIN',
-      reset: 'USER_FORGET_PASS',
+      login: 'SMS_TMP_LOGIN', // 登录
+      register: 'SMS_TMP_LOGIN', // 注册
+      reset: 'USER_FORGET_PASS', // 重置密码
+      default: 'SMS_TMP_USER', // 只是获取验证码
     }[type];
 
     Object.assign(ctx.headers, {

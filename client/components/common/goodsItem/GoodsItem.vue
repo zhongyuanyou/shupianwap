@@ -10,17 +10,14 @@
       <div
         class="tags"
         :style="{
-          visibility: itemType.type === 'serve' ? 'visible' : 'hidden',
+          visibility: goodstype.type === 'serve' ? 'visible' : 'hidden',
         }"
       >
-        <span>极速办理</span>
-        <span>极速办理</span>
-        <span>极速办理</span>
-        <span>极速办理</span>
+        <span v-for="(item, index) in tags" :key="index">{{ item.name }}</span>
       </div>
       <div class="price-sales">
         <span>{{ itemData.referencePrice }}元</span
-        ><span v-if="itemType.type === 'serve'"
+        ><span v-if="goodstype.type === 'serve'"
           >销量 {{ itemData.salesSum }}</span
         >
       </div>
@@ -32,7 +29,7 @@
 export default {
   name: 'GoodsItem',
   props: {
-    itemType: {
+    goodstype: {
       type: Object,
       default() {
         return {
@@ -63,14 +60,21 @@ export default {
       }
       return ''
     },
+    tags() {
+      if ('PRO_SALES_TAG' in this.itemData) {
+        return this.itemData.PRO_SALES_TAG
+      } else {
+        return []
+      }
+    },
   },
   methods: {
     jumpUrl() {
-      if (this.itemType.type === 'serve') {
+      if (this.goodstype.type === 'serve') {
         this.$router.push(`/detail/serviceDetails?id=${this.itemData.id}`)
       } else {
         this.$router.push(
-          `/detail/transactionDetails?type=${this.itemType.typeCode}&id=${this.itemData.id}`
+          `/detail/transactionDetails?type=${this.goodstype.typeCode}&id=${this.itemData.id}`
         )
       }
     },

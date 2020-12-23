@@ -28,7 +28,7 @@ export default {
         duration,
         className,
         message,
-        icon, // 图标有点烦人
+        icon,
         iconPrefix: 'spiconfont',
       })
     },

@@ -9,7 +9,7 @@
         class="planner-content my-swipe"
       >
         <sp-swipe-item
-          v-for="(item, i) of plannersdata"
+          v-for="(item, i) of plannersData"
           :key="i"
           class="planner-content-item"
           @click="openImUrl(i)"
@@ -77,12 +77,13 @@ export default {
     [SwipeItem.name]: SwipeItem,
   },
   props: {
-    plannersdata: {
+    // 每一个模块的规划师信息
+    plannersData: {
       type: Array,
       default: () => {
         return [
           {
-            code: 1,
+            id: 7862495547640840192,
             type: '金牌规划师',
             avatarImg: '',
             name: '郭亮亮',
@@ -90,14 +91,10 @@ export default {
             serverNum: 250,
             telephone: 12345679985,
             labels: ['工商注册', '财税咨询', '税务筹划'],
-            im: {
-              id: '7862495547640840192',
-              name: '张毅',
-              num: '107547',
-            },
+            jobNum: '107547',
           },
           {
-            code: 2,
+            id: 7862495547640840192,
             type: '金牌规划师',
             avatarImg: '',
             name: '郭亮亮',
@@ -105,14 +102,10 @@ export default {
             serverNum: 250,
             telephone: 12345679985,
             labels: ['工商注册', '财税咨询', '税务筹划'],
-            im: {
-              id: '7862495547640840192',
-              name: '张毅',
-              num: '107547',
-            },
+            jobNum: '107547',
           },
           {
-            code: 3,
+            id: 7862495547640840192,
             type: '金牌规划师',
             avatarImg: '',
             name: '郭亮亮',
@@ -120,15 +113,12 @@ export default {
             serverNum: 250,
             telephone: 12345679985,
             labels: ['工商注册', '财税咨询', '税务筹划'],
-            im: {
-              id: '7862495547640840192',
-              name: '张毅',
-              num: '107547',
-            },
+            jobNum: '107547',
           },
         ]
       },
     },
+    // 该模块的标题
     title: {
       type: String,
       default: () => {
@@ -143,26 +133,26 @@ export default {
     }
   },
   methods: {
+    // icon点击触发，无需判断
     openIm(i, e) {
       e.stopPropagation()
-      console.log(1)
       this.$root.$emit(
         'openIMM',
-        this.plannersdata[i].im.id,
-        this.plannersdata[i].im.name,
-        this.plannersdata[i].im.num
+        this.plannersData[i].id,
+        this.plannersData[i].name,
+        this.plannersData[i].jobNum
       )
     },
+    // 整个模块点击触发，判断是否跳转
     openImUrl(i) {
       if (this.url !== '') {
         window.open = this.url
       } else {
-        console.log(1)
         this.$root.$emit(
           'openIMM',
-          this.plannersdata[i].im.id,
-          this.plannersdata[i].im.name,
-          this.plannersdata[i].im.num
+          this.plannersData[i].id,
+          this.plannersData[i].name,
+          this.plannersData[i].jobNum
         )
       }
     },

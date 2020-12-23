@@ -37,10 +37,11 @@ class interviewController extends Controller {
         try {
             // 获取面谈记录列表
             const resData = await service.curl.curlGet(url, {
+                // categoryCode: ctx.query.categoryCode,
+                // platformCode: ctx.query.platformCode,
                 limit: ctx.query.limit,
                 start: ctx.query.page,
             });
-            console.log('resData', resData);
             let data =
                 resData.code === 200
                     ? resData.data
@@ -94,19 +95,58 @@ class interviewController extends Controller {
             const resData = await service.curl.curlPost(
                 `${url}?id=${ctx.request.body.id}`
             );
-            if (resData.data.code === 200) {
+            if (resData.code === 200) {
                 ctx.helper.success({
                     ctx,
                     code: 200,
-                    res: resData.data.message || "",
+                    res: resData.message || "",
                 });
             } else {
                 ctx.helper.fail({
                     ctx,
-                    code: resData.data.code,
-                    res: resData.data.message || "",
+                    code: resData.code,
+                    res: resData.message || "",
                 });
             }
+        } catch (error) {
+            ctx.logger.error(error);
+            ctx.helper.fail({ ctx, code: 500, res: "后端接口异常！" });
+        }
+    }
+
+    // 获取面谈详情
+    @Get("/v1/interview_detail.do")
+    async detail() {
+        const { ctx, service, app } = this;
+        // 定义参数校验规则
+        const rules = {
+            id: { type: "string", required: true }, // 面谈记录id
+        };
+        // 参数校验
+        const valiErrors = app.validator.validate(rules, ctx.query);
+        // 参数校验未通过
+        if (valiErrors) {
+            ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+            return;
+        }
+        const url = ctx.helper.assembleUrl(
+          app.config.apiClient.APPID[4],
+          dashunApi.interviewDetail
+        );
+        try {
+            // 获取面谈记录列表
+            const resData = await service.curl.curlGet(url, {
+                id: ctx.query.id
+            });
+            let data =
+              resData.code === 200
+                ? resData.data
+                : {};
+            ctx.helper.success({
+                ctx,
+                code: 200,
+                res: data,
+            });
         } catch (error) {
             ctx.logger.error(error);
             ctx.helper.fail({ ctx, code: 500, res: "后端接口异常！" });

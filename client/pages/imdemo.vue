@@ -32,7 +32,7 @@ export default {
       const msgParams = {
         sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
         msgType: 'im_tmplate', // 消息类型
-        extContent: { type: '121', id: '607992101317013570' }, // 路由参数
+        extContent: { type: '121', productId: '607992101317013570' }, // 路由参数
         productName: '交易产品-带图', // 产品名称
         productContent: '产品信息-DSGSDGdfsgsdfg215251', // 产品信息
         price: '20.20元', // 价格
@@ -52,7 +52,7 @@ export default {
       const msgParams = {
         sendType: 1, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
         msgType: 'im_tmplate', // 消息类型
-        extContent: { id: '607991242323551420' }, // 路由参数
+        extContent: { productId: '607991242323551420' }, // 路由参数
         productName: '服务产品-不带图', // 产品名称
         productContent: '产品信息-848444558454', // 产品信息
         price: '50.92', // 价格
