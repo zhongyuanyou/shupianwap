@@ -1,8 +1,8 @@
 <template>
-  <div class="nickname">
+  <div class="email">
     <!--S 头部-->
     <sp-top-nav-bar
-      :title="'昵称'"
+      :title="'电子邮箱'"
       ellipsis
       :fixed="true"
       :right-text="'保存'"
@@ -17,10 +17,15 @@
     </sp-top-nav-bar>
     <!--E 头部-->
     <!--S 内容-->
-    <div class="nickname_con">
-      <div class="nickname_con_item">
-        <input v-model="name" placeholder="请输入您的昵称" type="text" />
-        <div class="nickname_con_item_close" @click="clear">
+    <div class="email_con">
+      <div class="email_con_item">
+        <input
+          v-model="email"
+          placeholder="请输入您的电子邮箱地址"
+          type="text"
+          @change="checkEmai"
+        />
+        <div class="email_con_item_close" @click="clear">
           <my-icon name="pay_ic_fail" size="0.32rem" color="#ccc" />
         </div>
       </div>
@@ -30,36 +35,70 @@
 </template>
 
 <script>
-import { TopNavBar } from '@chipspc/vant-dgg'
+import { TopNavBar, Toast } from '@chipspc/vant-dgg'
+import { checkEmail } from '~/utils/check'
+import { userinfoApi } from '~/api'
 export default {
-  name: 'NickName',
+  name: 'Email',
   components: {
     [TopNavBar.name]: TopNavBar,
+    [Toast.name]: Toast,
   },
   data() {
     return {
-      name: '逆风而行',
+      email: '',
+      emailRight: false, // 邮箱格式是否正确
     }
+  },
+  mounted() {
+    this.email = this.$route.params.email
   },
   methods: {
     onClickLeft() {
       // 点击返回
       this.$router.back()
     },
-    onClickRight() {
+    async onClickRight() {
       // 点击保存
-      this.$router.push('/my/information')
+      if (!this.emailRight) {
+        Toast({
+          message: '请输入有效邮箱号码',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+        return
+      }
+      const params = {
+        type: 4,
+        value: this.email,
+      }
+      await this.$axios.post(userinfoApi.update, params)
+      this.$router.back()
     },
     clear() {
       // 清除昵称
-      this.name = ''
+      this.email = ''
+    },
+    checkEmai() {
+      // 校验邮箱格式
+      const status = checkEmail(this.email)
+      if (!status) {
+        Toast({
+          message: '请输入有效邮箱号码',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+        this.emailRight = false
+        return
+      }
+      this.emailRight = true
     },
   },
 }
 </script>
 
 <style lang="less" scoped>
-.nickname {
+.email {
   width: 100%;
   height: 100%;
   background-color: #f8f8f8;

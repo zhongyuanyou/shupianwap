@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-03 13:53:16
+ * @LastEditTime: 2020-12-15 16:20:38
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -10,17 +10,19 @@
 <template>
   <div class="list">
     <div class="head">
-      <Header title="在线直选规划师" @leftClickFuc="onClickLeft" />
+      <Header title="在线直选规划师" />
     </div>
     <div class="body">
+      <SearchPopup ref="searchPopup" @onSearch="handleKeywordsSearch" />
       <sp-cell class="search">
         <div>
           <sp-nav-search
             v-model="search.keywords"
             border
             special-label
-            placeholder="请输入业务或规划师姓名"
-            @focus="focSearch"
+            class="search__input"
+            placeholder="请输入规划师姓名"
+            @focus="handleSearchFocus"
           >
             <template #left-icon>
               <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
@@ -28,195 +30,76 @@
           </sp-nav-search>
           <sp-dropdown-menu class="search__dropdown">
             <sp-dropdown-item
-              ref="item"
-              :title-class="regions != '区域' ? 'title-style' : ''"
+              ref="regionsDropdownItem"
+              :title-class="
+                search.region.name != '区域'
+                  ? 'sp-dropdown-menu__title--selected '
+                  : ''
+              "
               class="search__dropdown-regoin"
             >
               <template #title>
-                <span>{{ regions }}</span>
+                <span>{{ search.region.name }}</span>
               </template>
               <CoupleSelect
                 :multiple="false"
-                :city-data="city"
-                @select="coupleSelect"
+                :city-data="regionsOption"
+                :is-location="true"
+                @select="handleRegionsSelect"
               />
             </sp-dropdown-item>
             <sp-dropdown-item
-              v-model="search.scoreSort"
-              :title-class="search.scoreSort > 0 ? 'title-style' : ''"
+              v-model="search.sortId"
+              :title-class="
+                search.sortId > 0 ? 'sp-dropdown-menu__title--selected' : ''
+              "
               class="search__dropdown-sort"
-              :options="option"
+              :options="sortOption"
+              @change="handleSortChange"
             />
           </sp-dropdown-menu>
         </div>
       </sp-cell>
-      <SearchPopup ref="SearchPopup" @enterData="enterData" />
-
       <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
         <sp-list
           v-model="loading"
+          error-text="请求失败，点击重新加载"
+          :error.sync="error"
           :finished="finished"
           :finished-text="list.length > 0 ? '没有更多了' : ''"
           @load="onLoad"
         >
           <template v-if="list && list.length">
-            <sp-cell v-for="item in list" :key="item">
-              <div class="item">
-                <div class="left">
-                  <div class="item_avatar">
-                    <sp-image
-                      width="1.2rem"
-                      height="1.6rem"
-                      fit="cover"
-                      src="https://img.yzcdn.cn/vant/cat.jpeg"
-                    />
-                  </div>
-                  <div class="item_detail">
-                    <h4>
-                      <span class="item_detail--name">黄橙橙</span>
-                    </h4>
-
-                    <p class="item_detail--address">
-                      顶呱呱·跳伞塔·桃源办公中心.一楼
-                    </p>
-                    <div class="item_detail--tag-list">
-                      <sp-tag color="#F8F8F8" text-color="#999999"
-                        >服务标杆</sp-tag
-                      >
-                      <sp-tag color="#F8F8F8" text-color="#999999"
-                        >态度真诚热情</sp-tag
-                      >
-                    </div>
-                    <div class="item_detail--data">
-                      <div class="data-item">
-                        <h5>95</h5>
-                        <p>历史成交</p>
-                      </div>
-                      <div class="vertical-line"></div>
-                      <div class="data-item">
-                        <h5>4.9</h5>
-                        <p>用户评价</p>
-                      </div>
-                      <div class="vertical-line"></div>
-                      <div class="data-item">
-                        <h5>154</h5>
-                        <p>薯片分</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="right">
-                  <div class="item_contact">
-                    <sp-button round class="contact-btn"
-                      ><my-icon
-                        class=""
-                        name="notify_ic_chat"
-                        size="0.32rem"
-                        color="#4974F5"
-                    /></sp-button>
-
-                    <sp-button round class="contact-btn"
-                      ><my-icon
-                        class=""
-                        name="notify_ic_chat"
-                        size="0.32rem"
-                        color="#4974F5"
-                    /></sp-button>
-                  </div>
-                </div>
-              </div>
+            <sp-cell v-for="item in list" :key="item.mchUserId">
+              <PlannerSearchItem
+                :item-data="item"
+                @operation="handleOperation"
+              />
             </sp-cell>
           </template>
-          <template v-else>
+          <template v-else-if="!loading">
             <div class="no-data">
               <sp-image
                 class="no-data__icon"
                 fit="cover"
                 :src="require('../../assets/images/search-null.png')"
               />
-              <div class="no-data__descript">抱歉，未搜索到对应的规划师</div>
-              <div class="no-data__tip">换个条件试试</div>
+              <template v-if="!error">
+                <div class="no-data__descript">抱歉，未搜索到对应的规划师</div>
+                <div class="no-data__tip">换个条件试试</div>
+              </template>
             </div>
           </template>
         </sp-list>
       </sp-pull-refresh>
-      <div v-if="!list || !list.length" class="recommend">
-        <h3 class="recommend__title">为你推荐规划师</h3>
-        <div class="recommend-list">
-          <sp-cell v-for="item in recommendList" :key="item" class="item-wrap">
-            <div class="item">
-              <div class="left">
-                <div class="item_avatar">
-                  <sp-image
-                    width="1.2rem"
-                    height="1.6rem"
-                    fit="cover"
-                    src="https://img.yzcdn.cn/vant/cat.jpeg"
-                  />
-                </div>
-                <div class="item_detail">
-                  <h4>
-                    <span class="item_detail--name">黄橙橙</span>
-                  </h4>
-
-                  <p class="item_detail--address">
-                    顶呱呱·跳伞塔·桃源办公中心.一楼
-                  </p>
-                  <div class="item_detail--tag-list">
-                    <sp-tag color="#F8F8F8" text-color="#999999"
-                      >服务标杆</sp-tag
-                    >
-                    <sp-tag color="#F8F8F8" text-color="#999999"
-                      >态度真诚热情</sp-tag
-                    >
-                  </div>
-                  <div class="item_detail--data">
-                    <div class="data-item">
-                      <h5>95</h5>
-                      <p>历史成交</p>
-                    </div>
-                    <div class="vertical-line"></div>
-                    <div class="data-item">
-                      <h5>4.9</h5>
-                      <p>用户评价</p>
-                    </div>
-                    <div class="vertical-line"></div>
-                    <div class="data-item">
-                      <h5>154</h5>
-                      <p>薯片分</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="right">
-                <div class="item_contact">
-                  <sp-button round class="contact-btn"
-                    ><my-icon
-                      name="notify_ic_chat"
-                      size="0.32rem"
-                      color="#4974F5"
-                  /></sp-button>
-
-                  <sp-button round class="contact-btn"
-                    ><my-icon
-                      name="notify_ic_tel"
-                      size="0.32rem"
-                      color="#4974F5"
-                  /></sp-button>
-                </div>
-              </div>
-            </div>
-          </sp-cell>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
+
 import {
-  Row,
-  Col,
   Button,
   DropdownMenu,
   DropdownItem,
@@ -227,19 +110,63 @@ import {
   Cell,
   Image,
   Tag,
-  Icon,
 } from '@chipspc/vant-dgg'
 
 import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
 import Header from '@/components/common/head/header'
 import SearchPopup from '@/components/planner/SearchPopup'
-import { city } from '@/utils/city'
+import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
+
+import { planner, dict } from '@/api'
+
+const SORT_CONFIG = [
+  {
+    type: 'pointSort', // 排序类型
+    sortValue: 1, // 升序
+    text: '薯片分从高到底',
+    value: 0,
+  },
+  {
+    type: 'pointSort',
+    sortValue: 2, // 降序
+    text: '薯片分从底到高',
+    value: 1,
+  },
+  {
+    type: 'reputationSort',
+    sortValue: 1, // 升序
+    text: '客户评价分从高到低',
+    value: 2,
+  },
+  {
+    type: 'reputationSort',
+    sortValue: 2, // 降序
+    text: '客户评价分从低到高',
+    value: 3,
+  },
+  {
+    type: 'payNumSort',
+    sortValue: 1, // 升序
+    text: '成交量从高到低',
+    value: 4,
+  },
+  {
+    type: 'payNumSort',
+    sortValue: 2, // 降序
+    text: '成交量从低到高',
+    value: 5,
+  },
+]
+
+const DEFAULT_PAGE = {
+  limit: 10,
+  page: 1,
+  totalCount: 0,
+}
 
 export default {
   name: 'List',
   components: {
-    [Row.name]: Row,
-    [Col.name]: Col,
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
@@ -249,78 +176,192 @@ export default {
     [NavSearch.name]: NavSearch,
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
-    [Icon.name]: Icon,
     Header,
     CoupleSelect,
     SearchPopup,
+    PlannerSearchItem,
   },
   data() {
     return {
-      list: [],
-      recommendList: [],
-      loading: false,
-      finished: false,
+      search: {
+        keywords: '',
+        sortId: 0,
+        region: {
+          name: '区域',
+          code: '',
+        },
+      },
+      sortOption: SORT_CONFIG,
+      regionsOption: [],
       refreshing: false,
-      regions: '区域',
-      search: { keywords: '', scoreSort: 0 },
-      option: [
-        { text: '薯片分从高到底', value: 0 },
-        { text: '客户评价分从高到低', value: 1 },
-        { text: '成交量从高到低', value: 2 },
-        { text: '价格从高到低', value: 3 },
-        { text: '价格从低到高', value: 4 },
-      ],
+      loading: false,
+      error: false,
+      finished: false,
+      pageOption: DEFAULT_PAGE,
+      list: [],
     }
   },
   computed: {
-    city() {
-      return city
+    ...mapState({
+      currentCity: (state) => state.city.currentCity,
+    }),
+    formatSearch() {
+      const { sortId, keywords, region } = this.search
+      const matched =
+        this.sortOption.find((item) => item.value === sortId) || SORT_CONFIG[0]
+      const sort = {
+        sortType: matched.type,
+        value: matched.sortValue,
+      }
+      const code = region.name === '区域' ? this.currentCity.code : region.code
+      // const regionDto = {
+      //   codeState: region.name === '区域' ? 2 : 3,
+      //   regions: [code],
+      // }
+      // TODO 测试数据
+      const regionDto = {
+        codeState: 1,
+        regions: ['110000'],
+      }
+
+      return { sort, plannerName: keywords, regionDto }
     },
   },
+  created() {
+    if (process && process.client) {
+      this.uPGetRegion()
+    }
+  },
   methods: {
-    onClickLeft() {
-      console.log('返回')
-    },
-    coupleSelect(data) {
+    ...mapMutations({
+      SET_CITY: 'city/SET_CITY',
+    }),
+    handleRegionsSelect(data) {
       console.log(data)
-      if (data[2].regions.length) {
-        this.regions = data[2].regions[0].name
-        this.$refs.item.toggle()
+      // TODO 测试
+      if (this.currentCity.code !== data[0].code) return
+      const { code, name } = data[1]
+      this.search.region = {
+        code,
+        name,
       }
+      this.$refs.regionsDropdownItem.toggle()
+      this.handleSearch()
+    },
+    handleSortChange(value) {
+      console.log(value)
+      // 触发 formatSearch 计算
+      this.search.sortId = value
+      this.handleSearch()
     },
     onLoad() {
-      setTimeout(() => {
+      let currentPage = this.pageOption.page
+      if (!this.refreshing && this.list.length && currentPage >= 1) {
+        currentPage += 1
+      } else if (this.refreshing) {
+        this.pageOption = DEFAULT_PAGE
+        currentPage = 1
+      }
+      this.getList(currentPage)
+        .then((data) => {
+          console.log(data)
+          this.loading = false
+          if (this.list.length >= this.pageOption.totalCount) {
+            this.finished = true
+          }
+        })
+        .catch(() => {
+          console.log('sdf')
+          this.error = true
+          this.loading = false
+        })
+    },
+    onRefresh() {
+      this.finished = false
+      this.loading = true
+      this.onLoad()
+    },
+    handleSearchFocus() {
+      this.$refs.searchPopup.openSearchPopup()
+    },
+    handleKeywordsSearch(data = {}) {
+      const { keywords } = data
+      this.search.keywords = keywords
+      this.handleSearch()
+    },
+
+    handleOperation(value = {}) {
+      const { type, data } = value
+      switch (type) {
+        case 'IM':
+          console.log('发起IM')
+          break
+        case 'tel':
+          console.log('想打电话：', data)
+          break
+        case 'detail':
+          console.log('看看详情：', data)
+          this.$router.push({ name: 'planner-id', query: data })
+          break
+      }
+    },
+
+    handleSearch() {
+      this.refreshing = true
+      this.onRefresh()
+    },
+    // 统一平台 调用
+    uPGetRegion() {
+      // 浏览器上逻辑
+      const { code } = this.currentCity || {}
+      this.getRegionList(code)
+      // TODO app 上获取code
+      // this.SET_CITY({code, name}) // 设置当前的定位到vuex中
+    },
+
+    async getList(currentPage) {
+      const { limit } = this.pageOption
+      const { sort, plannerName, regionDto } = this.formatSearch
+      const params = { sort, plannerName, regionDto, limit, page: currentPage }
+      try {
+        const data = await planner.list(params)
+        console.log(data)
         if (this.refreshing) {
           this.list = []
           this.refreshing = false
         }
-
-        for (let i = 0; i < 10; i++) {
-          // this.list.push(this.list.length + 1)
-          this.recommendList.push(this.list.length + 1)
+        if (data) {
+          const { limit, currentPage = 1, totalCount = 0, records = [] } = data
+          this.pageOption = { limit, totalCount, page: currentPage }
+          this.list.push(...records)
+          Toast(`共找到${totalCount}个规划师`)
         }
-        this.list = []
-        this.loading = false
-
-        if (!this.list.length || this.list.length >= 40) {
-          this.finished = true
+        return data
+      } catch (error) {
+        if (this.refreshing) {
+          this.refreshing = false
         }
-      }, 1000)
+        console.error('getList:', error)
+        return Promise.reject(error)
+      }
     },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
-    focSearch() {
-      this.$refs.SearchPopup.focSearch()
-    },
-    enterData(data) {
-      //  获取子组件异步结果
-      console.log(data)
+
+    // 获取区域数据
+    async getRegionList(code) {
+      try {
+        const data = await dict.findCmsTier({ axios: this.$axios }, { code })
+        console.log(data)
+        this.regionsOption = [
+          {
+            ...this.currentCity,
+            children: Array.isArray(data) ? data : [],
+          },
+        ]
+        return data
+      } catch (error) {
+        console.error('getRegionList:', error)
+        return Promise.reject(error)
+      }
     },
   },
 }
@@ -334,9 +375,6 @@ export default {
 .list {
   height: 100%;
   overflow-y: scroll;
-  /deep/div {
-    font-size: 24px;
-  }
   .head {
   }
   .body {
@@ -345,11 +383,16 @@ export default {
       position: sticky;
       top: -30px;
       z-index: 10;
-      padding: 16px 40px;
-      /deep/.sp-field__control {
-        font-size: 30px;
-        font-weight: bold;
+      padding: 0 40px;
+      &__input {
+        height: 96px;
+        margin: 16px 0;
+        /deep/.sp-field__control {
+          font-size: 30px;
+          font-weight: bold;
+        }
       }
+
       /deep/.sp-dropdown-menu {
         &__bar {
           box-shadow: none;
@@ -360,7 +403,7 @@ export default {
           padding: 0 20px;
           justify-content: flex-start;
           &:first-child {
-            flex-basis: 150px;
+            flex-basis: 200px;
           }
           &:last-child {
             margin-left: 40px;
@@ -372,9 +415,18 @@ export default {
           &--active {
             color: @main-color;
           }
-          & > div {
+          .sp-ellipsis {
             font-size: 26px;
             font-weight: 400;
+          }
+        }
+        // 选中的样式
+        .sp-dropdown-menu__title--selected {
+          color: #4974f5;
+          line-height: 28px;
+          .sp-ellipsis {
+            font-weight: bold;
+            font-size: 32px;
           }
         }
       }
@@ -382,121 +434,13 @@ export default {
         left: 0;
         right: 0;
       }
-      /deep/.title-style {
-        //下拉标题样式
-        font-size: 32px;
-        font-family: PingFang SC;
-        font-weight: bold;
-        color: #4974f5;
-        line-height: 28px;
-      }
     }
   }
-  .recommend {
-    &__title {
-      padding: 0 40px;
-      font-size: 40px;
-      font-weight: bold;
-      color: @title-text-color;
-      line-height: 44px;
-      margin-bottom: 6px;
-    }
-  }
-  .icon {
-    display: inline-block;
-    background-repeat: no-repeat;
-    background-size: cover;
-    vertical-align: middle;
-  }
+
   .item-wrap {
     padding: 40px;
   }
-  .item {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    .left {
-      display: flex;
-      align-items: flex-start;
-      flex: 1;
-    }
-    .right {
-      position: relative;
-      flex: 100px 0 1;
-    }
-    &_avatar {
-      img {
-        border-radius: 4px;
-      }
-    }
-    &_detail {
-      padding-left: 34px;
-      h4 {
-        display: flex;
-      }
-      &--name {
-        font-size: 32px;
-        font-weight: bold;
-        color: @title-text-color;
-        line-height: 36px;
-        margin-right: 16px;
-      }
-      &--address {
-        max-width: 330px;
-        font-size: 24px;
-        font-weight: 400;
-        color: @title-text-color;
-        line-height: 28px;
-        margin-top: 20px;
-        .textOverflow(1);
-      }
-      &--tag-list {
-        margin-top: 12px;
-        line-height: 1;
-        font-size: 22px;
-      }
-      &--data {
-        display: flex;
-        margin-top: 20px;
-        .data-item {
-          font-weight: 400;
-          padding: 0 30px;
-          &:first-child {
-            padding-left: 0;
-          }
-          &:last-child {
-            padding-right: 0;
-          }
-          h5 {
-            font-size: 36px;
-            font-family: Bebas;
-            color: #222222;
-            line-height: 40px;
-          }
-          p {
-            margin-top: 8px;
-            font-size: 24px;
-            color: #999999;
-            line-height: 28px;
-          }
-        }
-        .vertical-line {
-          .vertical-line(@height:70px; @bgColor:#E5E5E5; @skewX:-15deg;);
-        }
-      }
-    }
-    &_contact {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 150px;
-      .contact-btn {
-        width: 64px;
-        height: 64px;
-        background: #ebf3ff;
-      }
-    }
-  }
+
   .no-data {
     display: flex;
     flex-direction: column;

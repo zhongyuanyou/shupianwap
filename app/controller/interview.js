@@ -43,8 +43,8 @@ class interviewController extends Controller {
                 start: ctx.query.page,
             });
             let data =
-                resData.data.code === 200
-                    ? resData.data.data
+                resData.code === 200
+                    ? resData.data
                     : {
                           totalCount: 0,
                           records: [],

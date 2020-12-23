@@ -1,5 +1,6 @@
 <template>
   <div class="serveGoods">
+    <!-- S筛选项 -->
     <sp-dropdown-menu ref="dropDownMenu">
       <sp-dropdown-item
         ref="item"
@@ -11,6 +12,7 @@
         <ServiceSelect
           :active-data="activeData"
           :items="typeData"
+          value="code"
           @select="handleSelect"
         />
         <BottomConfirm
@@ -24,30 +26,55 @@
         :title-class="moreTextCss[1]"
         :options="option"
         @open="open(1)"
+        @change="selectDropdown"
         @close="close(1)"
       />
     </sp-dropdown-menu>
+    <!-- E筛选项 -->
+    <!-- S下载App -->
     <install-app v-show="listShow" ref="installApp" />
+    <!-- E下载App -->
+    <!--S商品列表-->
     <sp-list
       v-show="listShow"
       v-model="loading"
       :finished="finished"
       :style="{
-        maxHeight: maxHeight,
+        maxHeight: `${maxHeight}px`,
       }"
       finished-text="没有更多了"
       class="goods-content"
       offset="30"
       @load="onLoad"
     >
-      <goods-item v-for="(item, index) in serveGoodsListData" :key="index" />
+      <goods-item
+        v-for="(item, index) in serveGoodsListData"
+        :key="index"
+        :item-data="item"
+      />
     </sp-list>
-    <Subscribe v-show="!listShow" />
+    <div>
+      <sp-skeleton
+        v-for="item in 10"
+        :key="item"
+        title
+        :row="3"
+        :loading="skeletonLoading"
+        style="margin-top: 10px"
+      ></sp-skeleton>
+    </div>
+    <!--E商品列表-->
+    <!--S订阅-->
+    <Subscribe v-show="!listShow && !skeletonLoading" />
+    <!--E订阅-->
+    <!--S中间轻提示-->
+    <sp-toast ref="spToast" />
+    <!--E中间轻提示-->
   </div>
 </template>
 
 <script>
-import { DropdownMenu, DropdownItem, List } from '@chipspc/vant-dgg'
+import { DropdownMenu, DropdownItem, List, Skeleton } from '@chipspc/vant-dgg'
 import InstallApp from '@/components/common/app/InstallApp'
 import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
@@ -55,6 +82,7 @@ import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
 import clone from '~/utils/clone'
 import searchList from '@/mixins/searchList'
+import SpToast from '@/components/common/spToast/SpToast'
 
 export default {
   name: 'ServeGoods',
@@ -63,13 +91,22 @@ export default {
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
     [List.name]: List,
+    [Skeleton.name]: Skeleton,
     ServiceSelect,
     BottomConfirm,
     InstallApp,
     Subscribe,
+    SpToast,
   },
   mixins: [searchList],
   props: {
+    reqType: {
+      // 搜索结果页的顶部tab类型
+      type: String,
+      default() {
+        return ''
+      },
+    },
     initServiceData: {
       // 初始化列表数据，仅做初始化的时候用或是在进行条件搜索的时候用
       type: Object,
@@ -78,6 +115,7 @@ export default {
       },
     },
     searchText: {
+      // 搜索框内容
       type: String,
       default() {
         return ''
@@ -87,13 +125,19 @@ export default {
   data() {
     return {
       formData: {
-        page: 1,
+        start: 2,
         limit: 10,
+        needTypes: 0,
+        needGoodsList: 1,
+        sortBy: '',
+        classCodes: '',
+        keywords: '',
       },
-      listShow: true,
+      skeletonLoading: true,
+      listShow: false,
       loading: false,
       finished: false,
-      selectValue: 0,
+      selectValue: '',
       dropdownTitle1: '全部服务',
       dropdownTitle2: '默认排序',
       moreTextCss: ['dropdownItem', 'dropdownItem'],
@@ -106,9 +150,13 @@ export default {
     }
   },
   watch: {
+    searchText(val) {
+      this.formData.keywords = val
+      if (this.reqType === 'serve') {
+        this.initGoodsList()
+      }
+    },
     initServiceData(val) {
-      // 商品列表
-      this.serveGoodsListData = clone(val.goods.records)
       // 排序筛选
       val.sortFilter.forEach((item) => {
         this.option.push({
@@ -116,13 +164,12 @@ export default {
           value: item.code,
         })
       })
+      // 分类数据
       this.typeData = clone(val.typeData)
-    },
-    selectValue(val) {
-      this.dropdownTitle2 = this.option[val].text
+      this.selectValue = this.option[0].value
     },
     activeData(val) {
-      if (val.length) {
+      if (this.saveActiveData.length && this.saveActiveData[0].code !== -1) {
         this.addClass('active', 0)
       } else {
         this.removeClass('active', 0)
@@ -131,30 +178,37 @@ export default {
     },
   },
   mounted() {
-    const installAPPHeight = this.$refs.installApp.$el.clientHeight
-    const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
-    const topHeight = this.$el.getBoundingClientRect().top
-    this.maxHeight =
-      document.body.clientHeight -
-      installAPPHeight -
-      dropDownMenuHeight -
-      topHeight +
-      'px'
-    this.reqType = 'serve'
+    this.$emit('goodsList', 'serve', this)
+    // console.log('this.searchText', this.searchText)
+    this.formData.keywords = this.searchText
+    this.initGoodsList()
   },
   methods: {
+    selectDropdown(val) {
+      const option = this.option.filter((item) => {
+        return item.value === val
+      })
+      this.dropdownTitle2 = option.text
+      this.formData.sortBy = val
+      this.initGoodsList()
+    },
     handleSelect(val) {
       // 分类选择
-      console.log(val)
+      // console.log(val)
       this.activeData = val
     },
     open(index) {},
     close(index) {
+      console.log('index', index)
       // 关闭下拉选择框
-      if (index === 1 && this.selectValue !== 0) {
+      if (
+        index === 1 &&
+        this.option.length &&
+        this.selectValue !== this.option[0].value
+      ) {
         // 给下拉标题增加选中
         this.addClass('active', 1)
-      } else {
+      } else if (index === 1) {
         this.removeClass('active', 1)
       }
       if (index === 0) {
@@ -163,9 +217,9 @@ export default {
     },
     onLoad() {
       console.log(1)
-      const arr = new Array(10).fill(2)
-      this.serveGoodsListData = [...this.serveGoodsListData, ...arr]
-      this.loading = false
+      // const arr = new Array(10).fill(2)
+      // this.serveGoodsListData = [...this.serveGoodsListData, ...arr]
+      this.searchKeydownHandle()
     },
     resetFilters() {
       // 重置分类筛选
@@ -175,11 +229,42 @@ export default {
       // 确认筛选
       console.log('this.activeData', this.activeData)
       this.saveActiveData = clone(this.activeData)
+      this.formData.classCodes = this.typeDataHandle()
+      this.initGoodsList()
       this.$refs.item.toggle()
+    },
+    typeDataHandle() {
+      // 处理选择的分类数据
+      let strCode
+      if (this.saveActiveData.length === 0) {
+        strCode = ''
+      } else if (
+        this.saveActiveData[1].services[0].code === -1 &&
+        this.saveActiveData[0].code === -1
+      ) {
+        // 父选项和子选择项都为不限
+        strCode = ''
+      } else if (this.saveActiveData[1].services[0].code === -1) {
+        strCode = this.saveActiveData[0].code
+      } else {
+        strCode = []
+        this.saveActiveData[1].services.forEach((item) => {
+          strCode.push(item.code)
+        })
+        strCode = strCode.join(',')
+      }
+      return strCode
+    },
+    initGoodsList() {
+      // 获取初始数据
+      this.formData.start = 1
+      this.serveGoodsListData = []
+      this.loading = true
+      this.finished = false
+      this.searchKeydownHandle()
     },
     concatStr(val) {
       // 处理筛选头部的展示
-      console.log('sad', val)
       if (!val.length) {
         this.dropdownTitle1 = '全部服务'
         return
@@ -193,7 +278,7 @@ export default {
         val[1].services[0]
       ) {
         if (val[0].text === '不限') {
-          this.dropdownTitle1 = '不限'
+          this.dropdownTitle1 = '全部服务'
         } else {
           this.dropdownTitle1 = val[0].text + '-' + val[1].services[0].text
         }
@@ -223,6 +308,16 @@ export default {
       }
       // this.moreTextCss[index] = arr.join(' ')
       this.$set(this.moreTextCss, index, arr.join(' '))
+    },
+    resetAllSelect() {
+      this.saveActiveData = []
+      this.activeData = []
+      this.formData.sortBy = ''
+      this.formData.classCodes = ''
+      this.formData.start = 1
+      this.removeClass('active', 1)
+      this.selectValue = this.option[0].value
+      this.dropdownTitle1 = '全部服务'
     },
   },
 }

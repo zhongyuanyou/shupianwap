@@ -9,12 +9,13 @@
     <div
       class="price-content"
       :style="{
-        maxHeight: maxHeight,
+        maxHeight: contentMaxHeight,
       }"
     >
       <price-filter-components
         :price-list="selectList"
         :echo-data="echoData"
+        :is-show-all-option="false"
         @minInput="minInput"
         @maxInput="maxInput"
         @selectItems="selectItems"
@@ -24,6 +25,7 @@
     <BottomConfirm
       @resetFilters="resetFilters"
       @confirmFilters="confirmFilters"
+      @bottomConfirmHeight="getBottomConfirmHeight"
     />
   </sp-dropdown-item>
 </template>
@@ -49,6 +51,12 @@ export default {
         return null
       },
     },
+    filterMaxHeight: {
+      type: Number,
+      default() {
+        return 0
+      },
+    },
   },
   data() {
     return {
@@ -69,15 +77,8 @@ export default {
         maxValue: '',
         activeItems: [],
       }, // 存储的回显数据
+      contentMaxHeight: 0,
     }
-  },
-  computed: {
-    maxHeight() {
-      let height = parseInt(this.$parent.$parent.$parent.maxHeight)
-      height = height + 44 - 80
-      height += 'px'
-      return height
-    },
   },
   watch: {
     echoData: {
@@ -93,7 +94,7 @@ export default {
           this.dropdownTitle = Number(minValue) + '-' + Number(maxValue)
           this.addClass('active')
         } else {
-          this.dropdownTitle = this.filterData.title
+          this.dropdownTitle = this.filterData.name
           this.removeClass('moreText')
           this.removeClass('active')
         }
@@ -107,16 +108,16 @@ export default {
     },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
-        this.dropdownTitle = val.title
-        this.selectList = val.filters
+        this.dropdownTitle = val.name
+        this.selectList = val.children
         this.isSelectMore = val.isSelects
       }
     },
   },
   mounted() {
     if (this.filterData && JSON.stringify(this.filterData) !== '{}') {
-      this.dropdownTitle = this.filterData.title
-      this.selectList = this.filterData.filters
+      this.dropdownTitle = this.filterData.name
+      this.selectList = this.filterData.children
       this.isSelectMore = this.filterData.isSelects
     }
   },
@@ -146,15 +147,46 @@ export default {
       this.echoData.maxValue = ''
     },
     resetFilters() {
-      this.priceComponent.clearInput()
+      this.priceComponent && this.priceComponent.clearInput()
       this.echoData.activeItems = []
       this.echoData.maxValue = ''
       this.echoData.minValue = ''
     },
     confirmFilters() {
       this.saveEchoData = clone(this.echoData, true)
-      this.$emit('activeItem', this.echoData, 'priceFilter')
+      const emitData = this.resultHandle()
+      this.$emit('activeItem', emitData, 'priceFilter')
       this.$refs.item.toggle()
+    },
+    resultHandle() {
+      // 处理结果
+      let emitData = {
+        fieldCode: this.filterData.children[0].ext1,
+        fieldValue: {
+          start: '',
+          end: '',
+        },
+        matchType: 'MATCH_TYPE_RANGE',
+      }
+      if (this.echoData.maxValue || this.echoData.minValue) {
+        // 如果有
+        emitData.fieldValue.start = Number(this.echoData.minValue)
+        emitData.fieldValue.end = Number(this.echoData.maxValue)
+      } else if (this.echoData.activeItems.length) {
+        emitData.fieldValue.start = Number(
+          this.echoData.activeItems[0].ext2.split('-')[0]
+        )
+        emitData.fieldValue.end = Number(
+          this.echoData.activeItems[0].ext2.split('-')[1]
+        )
+      } else {
+        emitData = ''
+      }
+      return emitData
+    },
+    getBottomConfirmHeight(height) {
+      // 获取底部确认按钮的高度
+      this.contentMaxHeight = this.filterMaxHeight - height + 'px'
     },
   },
 }

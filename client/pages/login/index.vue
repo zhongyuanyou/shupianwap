@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 16:24:21
+ * @LastEditTime: 2020-12-22 16:05:15
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
@@ -286,11 +286,14 @@ export default {
       }
       try {
         const data = await auth.login({ axios: this.$axios }, params)
-        console.log(data)
-        if (data != null) this.setUserInfo(data)
+        // 缓存用户信息
+        if (data != null) {
+          this.setUserInfo(data)
+        }
         return data
       } catch (error) {
-        this.loginForm(error.message)
+        this.loginToast(error.message)
+        return Promise.reject(error)
       }
     },
 

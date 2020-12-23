@@ -1,3 +1,7 @@
+/**
+ * @author xyg
+ * @since 2020/12/01
+ */
 export default {
   methods: {
     addClass(className) {

@@ -1,24 +1,31 @@
 <template>
-  <div class="preferential-centent">
+  <div v-if="initData.length" class="preferential-centent">
     <TabCurve
       v-model="curentItem"
       :tab-list="tabBtn"
       :need-fixed="false"
+      name-field="locationName"
       @selectTabHandle="selectTabHandle"
     ></TabCurve>
-    <div class="scroll-centent">
-      <ul>
-        <li v-for="(item, index) in tabData" :key="index">
-          <a href="javascript:void(0);">
+    <div ref="rollRef" class="scroll-centent">
+      <ul v-if="tabBtn[curentItem]">
+        <li
+          v-for="(item, index) in tabBtn[curentItem].sortMaterialList"
+          :key="index"
+        >
+          <a
+            href="javascript:void(0)"
+            @click="adJumpHandleMixin(item.materialList[0])"
+          >
             <div class="label-num">
-              <span class="label">{{ item.label }}</span>
-              <span class="num">{{ item.num }}人已购买</span>
+              <span class="label">抢购中</span>
+              <span class="num">缺字段人购买</span>
             </div>
             <div class="text-content">
-              <strong>{{ item.title }}</strong>
-              <p>{{ item.describe }}</p>
+              <strong>{{ item.materialList[0].materialName }}</strong>
+              <p>{{ item.materialList[0].materialDescription }}</p>
             </div>
-            <img :src="item.url" alt="" />
+            <img :src="item.materialList[0].materialUrl" alt="" />
           </a>
         </li>
       </ul>
@@ -28,66 +35,18 @@
 
 <script>
 import TabCurve from '@/components/common/tab/TabCurve'
+import { publicApi } from '@/api'
+import adJumpHandle from '~/mixins/adJumpHandle'
 export default {
   components: {
     TabCurve,
   },
+  mixins: [adJumpHandle],
   props: {
-    tabBtn: {
+    initData: {
       type: Array,
       default: () => {
-        return [
-          {
-            label: '限时特惠',
-            code: '1',
-          },
-          {
-            label: '内容待定',
-            code: '2',
-          },
-        ]
-      },
-    },
-    tabData: {
-      type: Array,
-      default: () => {
-        return [
-          {
-            label: '抢购中',
-            num: '82,588588588',
-            title: '3天快速开公司3天快速开公司3天快速开公司',
-            describe: '特价享好礼特价享好礼特价享好礼特价享好礼',
-            url: require('~/assets/temporary/home/bn.png'),
-          },
-          {
-            label: '抢购中',
-            num: '82,588',
-            title: '3天快速开公司',
-            describe: '特价享好礼',
-            url: require('~/assets/temporary/home/bn.png'),
-          },
-          {
-            label: '抢购中',
-            num: '82,588',
-            title: '3天快速开公司',
-            describe: '特价享好礼',
-            url: require('~/assets/temporary/home/bn.png'),
-          },
-          {
-            label: '抢购中',
-            num: '82,588',
-            title: '3天快速开公司',
-            describe: '特价享好礼',
-            url: require('~/assets/temporary/home/bn.png'),
-          },
-          {
-            label: '抢购中',
-            num: '82,588',
-            title: '3天快速开公司',
-            describe: '特价享好礼',
-            url: require('~/assets/temporary/home/bn.png'),
-          },
-        ]
+        return []
       },
     },
   },
@@ -96,9 +55,14 @@ export default {
       curentItem: 0,
     }
   },
+  computed: {
+    tabBtn() {
+      return this.initData
+    },
+  },
   methods: {
-    selectTabHandle(data) {
-      console.log(data)
+    selectTabHandle() {
+      this.$refs.rollRef.scrollLeft = 0
     },
   },
 }

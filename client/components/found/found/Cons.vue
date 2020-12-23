@@ -34,11 +34,11 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <sp-cell v-for="(item, index) in cardList" :key="index">
+          <sp-cell v-for="(item, index) in infoList" :key="index">
             <CardItem
               :favour="item"
-              :image="item.images"
-              :layout="item.layout || false"
+              :image="item.imageUrl ? { src: item.imageUrl } : null"
+              :layout="item.listType === 1 ? true : false"
               @click="handleClick(item, index)"
             />
           </sp-cell>
@@ -60,7 +60,9 @@ import {
   Cell,
   Image,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import CardItem from '~/components/common/cardItem/CardItem'
+import { foundApi } from '@/api'
 Vue.use(Lazyload)
 export default {
   name: 'Con',
@@ -73,6 +75,24 @@ export default {
     [Image.name]: Image,
     CardItem,
   },
+  props: {
+    banner: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+    list: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+    categoryCode: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       images: [
@@ -83,42 +103,24 @@ export default {
       refreshing: false,
       loading: false,
       finished: false,
-      cardList: [
-        {
-          title: '豪华车销量冠军几无悬念，宝马凭什么撼动奥迪王座？',
-          icon: 'good-job-o',
-          value: 25,
-          activeClass: '',
-          hot: true,
-          name: '成都顶呱呱',
-          time: '25分钟前',
-          images: {
-            src: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          },
-        },
-        {
-          title: '豪华车销量冠军几无悬念，宝马凭什么撼动奥迪王座？',
-          icon: 'good-job-o',
-          value: 25,
-          activeClass: '',
-          hot: true,
-          name: '成都顶呱呱',
-          time: '25分钟前',
-        },
-        {
-          title: '理性过剩，信息同质化，创业者如何培养超级创造力？',
-          icon: 'good-job-o',
-          value: 25,
-          activeClass: '',
-          layout: true,
-          name: '成都顶呱呱',
-          time: '25分钟前',
-          images: {
-            src: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          },
-        },
-      ],
+      limit: 10, // 每页显示条数
+      page: 2, // 当前页
+      infoList: this.list, // 资讯列表
+      bannerList: this.banner, // 广告集合
     }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
+  watch: {
+    banner(newVal) {
+      this.bannerList = newVal
+    },
+    list(newVal) {
+      this.infoList = newVal
+    },
   },
   methods: {
     onChange(index) {
@@ -127,14 +129,40 @@ export default {
     },
     handleClick(item, index) {
       // 点击
-      this.$router.push('/found/detail')
+      if (this.isInApp) {
+        this.$appFn.dggOpenNewWeb(
+          { urlString: `https://172.16.139.140:7001/found/detail/${item.id}` },
+          (res) => {
+            console.log('res', res)
+          }
+        )
+        return
+      }
+      this.$router.push(`/found/detail/${item.id}`)
     },
     onRefresh() {
       setTimeout(() => {
         this.refreshing = false
       }, 2000)
     },
-    onLoad() {},
+    async onLoad() {
+      // 上滑加载更多资讯列表
+      const page = this.page++
+      const params = {
+        categoryCode: this.categoryCode,
+        limit: this.limit,
+        page,
+      }
+      const res = await this.$axios.get(foundApi.infoList, { params })
+      if (res.code === 200) {
+        if (res.data.information_list.length) {
+          this.loading = false
+          this.infoList = this.infoList.concat(res.data.information_list)
+        } else {
+          this.finished = true
+        }
+      }
+    },
   },
 }
 </script>

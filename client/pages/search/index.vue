@@ -6,7 +6,7 @@
         v-model="value"
         :icon-left="0.24"
         placeholder="请输入搜索内容"
-        @searchKeydownHandle="searchKeydownHandle"
+        @searchKeydownHandle="keyClickHandle"
       >
         <template v-slot:right>
           <a class="cloose-btn" href="javascript:void(0);" @click="clooseHandle"
@@ -16,7 +16,7 @@
       </Search>
     </sp-sticky>
     <!-- S 搜索历史 -->
-    <div v-if="historyData.length" class="search-moudle search-history">
+    <div v-show="historyData.length" class="search-moudle search-history">
       <div>
         <strong>搜索历史</strong>
         <my-icon
@@ -27,12 +27,10 @@
         ></my-icon>
       </div>
       <ul>
-        <li
-          v-for="(item, index) in historyData"
-          :key="index"
-          @click="keyClickHandle(item)"
-        >
-          <a href="javascript:void(0);">{{ item }}</a>
+        <li v-for="(item, index) in historyData" :key="index">
+          <a href="javascript:void(0)" @click="cacheSearch(item)">{{
+            item.name
+          }}</a>
         </li>
       </ul>
     </div>
@@ -42,175 +40,194 @@
       <div>
         <strong>猜您需要</strong>
         <my-icon
+          v-if="searchTop.length > 2"
           name="search_ic_re"
           size="0.32rem"
           color="#CCCCCC"
-          @click="refreshKeywords"
+          @click.native="refreshKeywords"
         ></my-icon>
       </div>
-      <ul class="search-top">
-        <li
-          v-for="(item, index) in searchTop"
-          :key="index + item"
-          @click="keyClickHandle(item)"
-        >
+      <ul v-if="searchHeight.length" class="search-top">
+        <li v-for="(item, index) in searchHeight" :key="index">
           <my-icon
             name="search_ic_hot"
             size="0.24rem"
             bg-color="linear-gradient(0deg, #FB5B44 0%, #FE8878 100%)"
           ></my-icon>
-          <a href="javascript:void(0);">{{ item }}</a>
+          <a href="javascript:void(0)" @click="cacheSearch(item)">{{
+            item.name
+          }}</a>
         </li>
       </ul>
-      <ul class="search-btm">
-        <li
-          v-for="(item, index) in searchRec"
-          :key="index"
-          @click="keyClickHandle(item)"
-        >
-          <a href="javascript:void(0);">{{ item }}</a>
+      <ul v-if="searchTop.length" class="search-btm">
+        <li v-for="(item, index) in searchTop" :key="index">
+          <a href="javascript:void(0)" @click="cacheSearch(item)">{{
+            item.name
+          }}</a>
         </li>
       </ul>
     </div>
     <!-- E 猜您需要 -->
     <!-- S 热搜词 -->
-    <div class="search-moudle search-hot">
+    <div v-if="searchHot.length" class="search-moudle search-hot">
       <div>
         <strong>热搜词</strong>
       </div>
       <ul>
-        <li
-          v-for="(item, index) in searchHot"
-          :key="index"
-          @click="keyClickHandle(item.keywords)"
-        >
-          <span>{{ index + 1 }}</span>
-          <p>{{ item.keywords }}</p>
-          <i>{{ item.count }}</i>
+        <li v-for="(item, index) in searchHot" :key="index">
+          <a href="javascript:void(0)" @click="cacheSearch(item)">
+            <span>{{ index + 1 }}</span>
+            <p>{{ item.name }}</p>
+            <i>{{ item.allSearchTimes }}</i>
+          </a>
         </li>
       </ul>
     </div>
     <!-- E 热搜词 -->
+    <Loading-center v-show="loading" />
   </div>
 </template>
 
 <script>
 import { Sticky } from '@chipspc/vant-dgg'
+import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
+import { searchApi } from '@/api'
 import Search from '@/components/common/search/Search'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import addSearchHistory from '~/mixins/addSearchHistory'
 export default {
   name: 'SearchPage',
   components: {
     [Sticky.name]: Sticky,
     Search,
+    LoadingCenter,
   },
+  mixins: [addSearchHistory],
   data() {
     return {
+      loading: false,
       value: '',
       historyData: [],
-      searchTop: ['预约上门服务', '找规划师', '成立三年', '成立三年'],
-      searchRec: [
-        '科技公司',
-        '账目干净',
-        '成立三年',
-        '小规模记账',
-        '纳税人代理记账',
-        '纳税人代理记账',
-        '纳税人',
-        '纳税人',
-      ],
-      searchHot: [
-        {
-          keywords: '最新国家政策报告最新国家政策报告最新国家政策报告',
-          count: 352561,
-        },
-        {
-          keywords: '法律咨询收费标准',
-          count: 252563,
-        },
-        {
-          keywords: '社保代缴真的全免费吗',
-          count: 232150,
-        },
-        {
-          keywords: '企服双11优惠力度',
-          count: 151286,
-        },
-        {
-          keywords: '优惠力度折扣',
-          count: 150530,
-        },
-        {
-          keywords: '优惠力度折扣',
-          count: 150530,
-        },
-        {
-          keywords: '优惠力度折扣',
-          count: 150530,
-        },
-        {
-          keywords: '优惠力度折扣',
-          count: 150530,
-        },
-        {
-          keywords: '优惠力度折扣',
-          count: 150530,
-        },
-        {
-          keywords: '优惠力度折扣',
-          count: 150530,
-        },
-      ],
+      searchHeight: [], // 高亮关键词
+      searchTop: [], // 置顶非高亮关键词
+      searchHot: [], // 热搜
+      params: {
+        findType: 3, // 查询类型 （0：只查推荐（置顶）+ 高亮 1：查询推荐（非高亮） 2：查询热搜 3：查询3中类型的列表数据）
+        topLimit: 10, // 查询置顶的每页数量
+        topPage: 1, // 查询置顶的当前页
+        heightLimit: 4, // 查询置顶+高亮的每页数量
+        heightPage: 1, // 查询置顶+高亮的每页数量
+        hotLimit: 10, // 查询热搜的每页数量
+        hotPage: 1, // 查询热搜的当前页
+        terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
+        platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
+      },
     }
   },
-  mounted() {
-    this.historyData = this.$cookies.get('searchHistory')
-      ? this.$cookies.get('searchHistory')
-      : []
+  created() {
+    if (process.client) {
+      this.getInitData()
+      this.historyData = this.$cookies.get('searchHistory')
+        ? this.$cookies.get('searchHistory')
+        : []
+      console.log(123, this.historyData)
+    }
   },
   methods: {
     // 取消
     clooseHandle() {
       this.$router.back()
     },
-    keyClickHandle(val) {
-      this.value = val
-      this.searchKeydownHandle()
-    },
-    // 搜索前添加历史记录
-    searchKeydownHandle() {
-      const historyList = this.$cookies.get('searchHistory')
-        ? this.$cookies.get('searchHistory')
-        : []
-      const isHave = historyList.findIndex((val) => {
-        return val === this.value
-      })
-      if (isHave !== -1) {
-        historyList.splice(isHave, 1)
+    keyClickHandle() {
+      const data = {
+        name: this.value,
+        isJumpLink: 0,
       }
-      historyList.unshift(this.value)
-      if (historyList.length > 16) {
-        historyList.pop()
-      }
-      this.$cookies.set('searchHistory', historyList, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 99999, // 过期时间
-      })
-      if (this.value) {
-        this.$router.push({
-          path: '/search/searchResult',
-          query: {
-            keywords: this.value,
-          },
-        })
-      }
+      this.addSearchHistoryMixin(data)
+      this.jumpHandle(data)
     },
     // 清除搜索历史
     removeHistory() {
       this.$cookies.remove('searchHistory')
       this.historyData = []
     },
-    // 刷新搜索词
-    refreshKeywords() {},
+    // 刷新搜索词(查询置顶非高亮)
+    refreshKeywords() {
+      this.params.findType = 1
+      this.params.topPage += 1
+      this.getInitData()
+    },
+    getInitData() {
+      this.loading = true
+      this.$axios
+        .get(searchApi.findKeywords, { params: this.params })
+        .then((res) => {
+          this.loading = false
+          if (res.code === 200 && this.params.findType === 1) {
+            if (!res.data.topUnHeightList.length && this.params.topPage > 1) {
+              this.params.topPage = 1
+              this.getInitData()
+              return
+            }
+            this.searchTop = res.data.topUnHeightList
+            return
+          }
+          if (res.code === 200) {
+            this.searchHeight = res.data.topHeightList
+            this.searchTop = res.data.topUnHeightList
+            this.searchHot = res.data.hotList
+          }
+        })
+    },
+    // 跳转处理
+    jumpHandle(item) {
+      let url = ''
+      switch (item.isJumpLink) {
+        // 跳转内链
+        case 1:
+          url = item.wapRoute
+          this.$router.push({
+            path: url,
+          })
+          break
+        // 跳转外链
+        case 2:
+          url = item.url
+          window.location.href = url
+          break
+        // 跳转图片链接
+        case 3:
+          url = `img`
+          this.$router.push({
+            name: url,
+            params: {
+              url: item.imageUrl,
+            },
+          })
+          break
+        default:
+          url = `/search/searchResult`
+          this.$router.push({
+            path: url,
+            query: {
+              keywords: item.name,
+            },
+          })
+          break
+      }
+    },
+    // 缓存搜索
+    cacheSearch(item) {
+      const data = {
+        name: item.name,
+        isJumpLink: item.isJumpLink,
+        wapRoute: item.wapRoute,
+        url: item.url,
+        imageUrl: item.imageUrl,
+      }
+      this.addSearchHistoryMixin(data)
+      this.jumpHandle(item)
+    },
   },
 }
 </script>
@@ -285,54 +302,58 @@ export default {
       display: flex;
       flex-direction: column;
       > li {
-        display: flex;
-        align-items: center;
         width: 100%;
         height: 108px;
         background: #ffffff;
         border-bottom: 1px solid #f4f4f4;
         padding: 0;
         margin: 0;
-        > span {
-          width: 36px;
-          height: 36px;
-          background: #f8f8f8;
-          border-radius: 4px;
-          font-size: 22px;
-          font-family: Bebas;
-          font-weight: bold;
-          font-weight: 400;
-          color: #555555;
-          margin-right: 24px;
-          text-align: center;
-          line-height: 36px;
+        a {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+          > span {
+            width: 36px;
+            height: 36px;
+            background: #f8f8f8;
+            border-radius: 4px;
+            font-size: 22px;
+            font-family: Bebas;
+            font-weight: bold;
+            font-weight: 400;
+            color: #555555;
+            margin-right: 24px;
+            text-align: center;
+            line-height: 36px;
+          }
+          > p {
+            flex: 1;
+            text-align: left;
+            font-size: 30px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #222222;
+            .textOverflow(1);
+          }
+          > i {
+            font-style: inherit;
+            font-size: 24px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #999999;
+            margin-left: 24px;
+          }
         }
-        > p {
-          flex: 1;
-          text-align: left;
-          font-size: 30px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #222222;
-          .textOverflow(1);
-        }
-        > i {
-          font-style: inherit;
-          font-size: 24px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #999999;
-          margin-left: 24px;
-        }
-        &:nth-child(1) > span {
+        &:nth-child(1) a > span {
           color: #ffffff;
           background: #fa5741;
         }
-        &:nth-child(2) > span {
+        &:nth-child(2) a > span {
           color: #ffffff;
           background: #fa8f41;
         }
-        &:nth-child(3) > span {
+        &:nth-child(3) a > span {
           color: #ffffff;
           background: #fac841;
         }

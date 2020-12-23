@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div @click="show = true">点击</div>
     <CitySelect :show.sync="show" :city-data="cityData" @select="select" />
     <div style="width: 100%; height: 300px">
       <CoupleSelect
@@ -52,6 +53,7 @@ export default {
     },
     select(data) {
       this.cityData = data
+      console.log('返回的数据', data)
     },
     coupleSelect(data) {
       console.log(data)
