@@ -35,15 +35,21 @@
         <span>免费订阅通知</span>
       </div>
     </div>
+    <sp-toast ref="spToast" />
   </div>
 </template>
 
 <script>
 import { Field } from '@chipspc/vant-dgg'
+import { auth } from '@/api'
+import { checkPhone } from '@/utils/check.js'
+import SpToast from '@/components/common/spToast/SpToast'
+
 export default {
   name: 'Subscribe',
   components: {
     [Field.name]: Field,
+    SpToast,
   },
   props: {
     title: {
@@ -71,16 +77,49 @@ export default {
   },
   mounted() {
     this.isLogin = false
+    this.$store.state.user.token && (this.isLogin = true)
   },
   methods: {
     submitSubscribe() {
       // 提交订阅
+      this.$refs.spToast.show({
+        message: '提交成功',
+        duration: 1500,
+        icon: 'toast_ic_comp',
+        forbidClick: true,
+      })
     },
     getSMS() {
+      if (!checkPhone(this.tel)) {
+        this.$refs.spToast.show({
+          message: '请输入正确的手机号',
+          duration: 1500,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        return
+      }
       if (!this.isSendSMS) {
         // 获取验证码
-        this.isSendSMS = true
-        this.countDown()
+        const params = {
+          phone: this.tel,
+          type: 'default',
+        }
+        auth
+          .smsCode({ axios: this.$axios }, params)
+          .then((res) => {
+            console.log(res)
+            this.isSendSMS = true
+            this.countDown()
+          })
+          .catch(() => {
+            this.$refs.spToast.show({
+              message: '网络错误，请稍后再试',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          })
       }
     },
     // 倒计时
