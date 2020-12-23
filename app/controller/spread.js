@@ -114,6 +114,25 @@ class SpreadController extends Controller {
     const adList = adRes.data.filter(item => {
       return item.pageCode === ctx.query.pageCode;
     });
+    const plannerRes = await service.curl.curlPost(
+      'http://172.16.132.35:1553/planner/recommend',
+      {
+        designerIds: '3879830#202254#9635931#10862#10970',
+        formatType:
+          ctx.query.pageCode === 'extendAccount'
+            ? '会计'
+            : '工商',
+        maxsize: 10,
+      }
+    );
+    let planlerList = [];
+    if (
+      plannerRes.status === 200 &&
+      (plannerRes.data.code === 0 ||
+        plannerRes.data.code === 200)
+    ) {
+      planlerList = plannerRes.data.data;
+    }
     let products = [];
     if (productRes.code === 200) {
       products = productRes.data;
@@ -166,6 +185,7 @@ class SpreadController extends Controller {
       res.nums = nums;
     }
     res.adList = adList;
+    res.planlerList = planlerList;
     ctx.helper.success({
       ctx,
       code: 200,
