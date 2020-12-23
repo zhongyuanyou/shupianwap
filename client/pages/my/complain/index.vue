@@ -28,14 +28,14 @@
         <p class="complaint-type-title">请选择反馈或建议的类型</p>
         <div class="complaint-type-content">
           <span
-            v-for="(item, index) in types"
+            v-for="(item, index) in complainCategory"
             :key="index"
             :class="
-              formData.feedbackTypeId === item.type
+              formData.feedbackTypeId === item.id
                 ? 'complaint-type-content-item complaint-type-content-item-active'
                 : 'complaint-type-content-item'
             "
-            @click="changeType(item.type)"
+            @click="changeType(item.id)"
             >{{ item.name }}</span
           >
         </div>
@@ -52,9 +52,7 @@
         >
       </div>
       <div class="complaint-image">
-        <div class="complaint-image-title">
-          上传照片{{ JSON.stringify(uploader) }}
-        </div>
+        <div class="complaint-image-title">上传照片</div>
         <div class="complaint-image-upload">
           <sp-uploader
             v-model="uploader"
@@ -104,8 +102,8 @@ import {
   BottombarButton,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { complain } from '~/api'
-import spToast from '@/components/common/spToast/spToast'
+import { complain, commonApi } from '~/api'
+import spToast from '@/components/common/spToast/SpToast'
 export default {
   name: 'AddComplaint',
   components: {
@@ -139,6 +137,7 @@ export default {
           type: 4,
         },
       ],
+      complainCategory: [], // 吐槽分类集合
       desc: '',
       uploader: [],
       formData: {
@@ -169,9 +168,14 @@ export default {
       )
     }
     this.formData.userId = this.userId
+    this.getComplainCategory()
   },
   methods: {
     back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
       this.$router.back()
     },
     complaintList() {
@@ -194,7 +198,6 @@ export default {
       //   this.selectTypes = []
       // }
       this.formData.feedbackTypeId = type
-      console.log(this.formData)
     },
     // 提交
     async submit() {
@@ -230,11 +233,20 @@ export default {
     onOversize(file) {
       Toast('文件大小不能超过20M')
     },
-    afterRead(file, detail) {
+    afterRead(file) {
       console.log('file', file)
     },
-    uploadSuccess(response) {
-      console.log('response', response)
+    async getComplainCategory() {
+      // 获取吐槽分类
+      try {
+        const params = {
+          code: 'fed100026',
+        }
+        const res = await this.$axios.get(commonApi.detail, { params })
+        if (res.code === 200) {
+          this.complainCategory = res.data.childrenList
+        }
+      } catch (err) {}
     },
   },
 }

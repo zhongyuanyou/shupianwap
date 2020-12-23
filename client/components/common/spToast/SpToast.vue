@@ -23,7 +23,10 @@ export default {
   },
   methods: {
     show({ duration = 1000, message = '', icon = '', forbidClick = false }) {
-      this.isShow = true
+      if (typeof duration !== 'number') {
+        console.error('duration 类型错误')
+        throw new Error('duration 类型错误')
+      }
       if (typeof icon !== 'string') {
         console.error('icon 类型错误')
         throw new Error('icon 类型错误')
@@ -36,6 +39,7 @@ export default {
         console.error('forbidClick 类型错误')
         throw new Error('forbidClick 类型错误')
       }
+      this.isShow = true
       this.forbidClick = forbidClick
       this.message = message
       this.icon = icon
