@@ -10,8 +10,8 @@ function getIPAdress() {
         const alias = iface[i];
         if (
           alias.family === 'IPv4' &&
-            alias.address !== '127.0.0.1' &&
-            !alias.internal
+          alias.address !== '127.0.0.1' &&
+          !alias.internal
         ) {
           return alias.address;
         }
@@ -19,11 +19,11 @@ function getIPAdress() {
     }
   }
 }
-module.exports = appInfo => {
+module.exports = (appInfo) => {
   /**
-     * built-in config
-     * @type {Egg.EggAppConfig}
-     **/
+   * built-in config
+   * @type {Egg.EggAppConfig}
+   **/
   const config = (exports = {});
 
   // 用于cookie签名密钥，应更改为您自己的密钥并保持安全
@@ -35,7 +35,7 @@ module.exports = appInfo => {
     },
   };
   // 在此处添加中间件配置
-  config.middleware = [ 'nuxt', 'gzip', 'errFilter', 'eureka', 'dggCache' ];
+  config.middleware = ['nuxt', 'gzip', 'errFilter', 'eureka', 'dggCache'];
   config.gzip = {
     threshold: 1024, // 小于 1k 的响应体不压缩
   };
@@ -120,12 +120,11 @@ module.exports = appInfo => {
       healthCheckUrl: null,
       vipAddress: 'crisps-app-wap-bff-api',
       dataCenterInfo: {
-        '@class':
-                    'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+        '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
         name: 'MyOwn',
       },
       metadata: {
-        version: '2.2',
+        version: '3.0',
       },
     },
     requestMiddleware: (requestOpts, done) => {
@@ -154,8 +153,8 @@ module.exports = appInfo => {
   };
   // 在此处添加个人配置
   const userConfig = {
-    // redis默认缓存数据的时长(S秒)5分钟
-    redisCacheTime: 60 * 5,
+    // redis默认缓存数据的时长(S秒),产线环境24小时,开发环境1小时
+    redisCacheTime: 60 * 60,
     baseUrl: '',
   };
   return {

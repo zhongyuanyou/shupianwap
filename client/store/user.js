@@ -12,6 +12,7 @@ export const state = () => ({
   userInfo: {},
   token: '',
   userId: '',
+  userType: '', // 用户类型
 })
 export const mutations = {
   SET_USER(state, data = {}) {
@@ -30,6 +31,7 @@ export const mutations = {
     state.userInfo = data
     state.token = data.token
     state.userId = data.userId
+    state.userType = data.userType
   },
 }
 

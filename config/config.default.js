@@ -20,7 +20,9 @@ module.exports = appInfo => {
   };
   // 修改服务favicon
   config.siteFile = {
-    '/favicon.ico': fs.readFileSync(path.join(__dirname, './../client/static/favicon.ico')),
+    '/favicon.ico': fs.readFileSync(
+      path.join(__dirname, './../client/static/favicon.ico')
+    ),
   };
   // add http_proxy to httpclient
   if (process.env.http_proxy) {
