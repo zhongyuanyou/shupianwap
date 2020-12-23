@@ -117,7 +117,7 @@ import {
 } from '@chipspc/vant-dgg'
 import Card from '@/components/spread/companyRegistry/Card.vue'
 import Registerlist from '@/components/spread/companyRegistry/Registerlist.vue'
-import Standard from '@/components/spread/companyRegistry/standard.vue'
+import Standard from '@/components/spread/companyRegistry/Standard.vue'
 import RegisterReady from '@/components/spread/companyRegistry/RegisterReady'
 import FixedBottom from '@/components/spread/common/FixedBottom'
 import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
