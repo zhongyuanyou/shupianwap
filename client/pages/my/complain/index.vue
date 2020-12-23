@@ -88,7 +88,7 @@
         />
       </sp-bottombar>
     </div>
-    <spToast ref="spToast"></spToast>
+    <sp-toast ref="spToast"></sp-toast>
   </div>
 </template>
 <script>
@@ -103,7 +103,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { complain, commonApi } from '~/api'
-import spToast from '@/components/common/spToast/SpToast'
+import SpToast from '@/components/common/spToast/SpToast'
 export default {
   name: 'AddComplaint',
   components: {
@@ -113,7 +113,7 @@ export default {
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
     [Sticky.name]: Sticky,
-    spToast,
+    SpToast,
   },
   data() {
     return {
