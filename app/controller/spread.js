@@ -21,14 +21,8 @@
 const Controller = require('egg').Controller;
 const adRes = require('../data/adData');
 const productRes = require('../data/product');
-const {
-  Get,
-  Post,
-  Prefix,
-} = require('egg-shell-decorators');
-const {
-  contentApi,
-} = require('../../config/serveApi/index');
+const { Get, Post, Prefix } = require('egg-shell-decorators');
+const { contentApi, algorithmApi } = require('../../config/serveApi/index');
 @Prefix('/nk/spread')
 class SpreadController extends Controller {
   @Get('/v1/list.do')
@@ -41,10 +35,7 @@ class SpreadController extends Controller {
       showNum: { type: 'boolean', required: false },
     };
     // 进行参数校验
-    const valiErrors = app.validator.validate(
-      rules,
-      ctx.query
-    );
+    const valiErrors = app.validator.validate(rules, ctx.query);
     // 参数校验未通过
     if (valiErrors) {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
@@ -111,50 +102,43 @@ class SpreadController extends Controller {
     //   productDetails = [];
     // }
     // 广告物料数据模拟
-    const adList = adRes.data.filter(item => {
+    const adList = adRes.data.filter((item) => {
       return item.pageCode === ctx.query.pageCode;
     });
-    const plannerRes = await service.curl.curlPost(
-      'http://172.16.132.35:1553/planner/recommend',
-      {
-        designerIds: '3879830#202254#9635931#10862#10970',
-        formatType:
-          ctx.query.pageCode === 'extendAccount'
-            ? '会计'
-            : '工商',
-        maxsize: 10,
-      }
+    const planerUrl = ctx.helper.assembleUrl(
+      app.config.apiClient.APPID[6],
+      algorithmApi.planerSpread
     );
-    console.log('plannerRes', plannerRes);
+    // const plannerRes = await service.curl.curlPost(
+    //   'http://172.16.132.35:1553/planner/recommend',
+    //   {
+    //     designerIds: '3879830#202254#9635931#10862#10970',
+    //     formatType: ctx.query.pageCode === 'extendAccount' ? '会计' : '工商',
+    //     maxsize: 10,
+    //   }
+    // );
+    // console.log('plannerRes', plannerRes);
     let planlerList = [];
-    if (
-      plannerRes.status === 200 &&
-      (plannerRes.data.code === 0 ||
-        plannerRes.data.code === 200)
-    ) {
-      planlerList = plannerRes.data.data;
-    }
+    // if (
+    //   plannerRes.status === 200 &&
+    //   (plannerRes.data.code === 0 || plannerRes.data.code === 200)
+    // ) {
+    //   planlerList = plannerRes.data.data;
+    // }
     let products = [];
-    if (productRes.code === 200) {
-      products = productRes.data;
-    }
+    // if (productRes.code === 200) {
+    //   products = productRes.data;
+    // }
     // 产品数据
     for (let i = adList.length - 1; i >= 0; i--) {
-      for (
-        let j = adList[i].sortMaterialList.length - 1;
-        j >= 0;
-        j--
-      ) {
+      for (let j = adList[i].sortMaterialList.length - 1; j >= 0; j--) {
         for (
-          let k =
-            adList[i].sortMaterialList[j].materialList
-              .length - 1;
+          let k = adList[i].sortMaterialList[j].materialList.length - 1;
           k >= 0;
           k--
         ) {
           for (let m = products.length - 1; m >= 0; m--) {
-            const obj1 =
-              adList[i].sortMaterialList[j].materialList[k];
+            const obj1 = adList[i].sortMaterialList[j].materialList[k];
             if (obj1.productId === products[m].id) {
               obj1.productDetail = products[m];
             }
@@ -168,18 +152,10 @@ class SpreadController extends Controller {
       ctx.query.pageCode === 'extendAccount' ||
       ctx.query.pageCode === 'extendBankServer'
     ) {
-      const cacheKeyToday = ctx.helper.cacheKey(
-        ctx.query.pageCode + 'today'
-      );
-      nums.todayNum = await ctx.service.redis.get(
-        cacheKeyToday
-      );
-      const cacheKeyTotal = ctx.helper.cacheKey(
-        ctx.query.pageCode + 'total'
-      );
-      nums.totalNum = await ctx.service.redis.get(
-        cacheKeyTotal
-      );
+      const cacheKeyToday = ctx.helper.cacheKey(ctx.query.pageCode + 'today');
+      nums.todayNum = await ctx.service.redis.get(cacheKeyToday);
+      const cacheKeyTotal = ctx.helper.cacheKey(ctx.query.pageCode + 'total');
+      nums.totalNum = await ctx.service.redis.get(cacheKeyTotal);
     }
     const res = {};
     if (nums.totalNum) {
