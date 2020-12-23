@@ -2,11 +2,11 @@
   <div class="serve">
     <div class="serve-text">稅筹服务介绍</div>
     <div
-      v-for="(item, i) of cards"
+      v-for="(item, i) of serveData"
       :key="i"
       class="serve-card"
       :style="item.bg"
-      @click="openImUrl"
+      @click="openImUrl(i)"
     >
       <div class="serve-card-first">
         <div>
@@ -31,7 +31,7 @@
         </div>
         <div class="serve-card-second-right">
           <div class="serve-card-second-right-person"></div>
-          <div class="serve-card-second-right-rap" @click="$parent.openIm">
+          <div class="serve-card-second-right-rap" @click="openIm(i, $event)">
             <my-icon
               name="notify_ic_chat"
               color="#4974F5"
@@ -56,61 +56,102 @@
 <script>
 export default {
   name: 'Serve',
+  props: {
+    // 每个模块的信息
+    serveData: {
+      type: Array,
+      default: () => {
+        return [
+          {
+            bg: {
+              backgroundImage:
+                'url(' +
+                require('~/assets/spreadImages/tax/busi_img_swchlist1.jpg') +
+                ')',
+            },
+            num1: '28',
+            num2: '27',
+            num3: '27',
+            price: '500',
+            person: '',
+            // 调用IM时候的信息
+            im: {
+              id: '7862495547640840192',
+              name: '张毅',
+              num: '107547',
+            },
+          },
+          {
+            bg: {
+              backgroundImage:
+                'url(' +
+                require('~/assets/spreadImages/tax/busi_img_swchlist2.jpg') +
+                ')',
+            },
+            num1: '28',
+            num2: '27',
+            num3: '27',
+            price: '500',
+            person: '',
+            im: {
+              id: '7862495547640840192',
+              name: '张毅',
+              num: '107547',
+            },
+          },
+          {
+            bg: {
+              backgroundImage:
+                'url(' +
+                require('~/assets/spreadImages/tax/busi_img_swchlist3.jpg') +
+                ')',
+            },
+            num1: '28',
+            num2: '27',
+            num3: '27',
+            price: '500',
+            person: '',
+            im: {
+              id: '7862495547640840192',
+              name: '张毅',
+              num: '107547',
+            },
+          },
+        ]
+      },
+    },
+  },
   data() {
     return {
-      cards: [
-        {
-          bg: {
-            backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchlist1.jpg') +
-              ')',
-          },
-          num1: '28',
-          num2: '27',
-          num3: '27',
-          price: '500',
-          person: '',
-        },
-        {
-          bg: {
-            backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchlist2.jpg') +
-              ')',
-          },
-          num1: '28',
-          num2: '27',
-          num3: '27',
-          price: '500',
-          person: '',
-        },
-        {
-          bg: {
-            backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchlist3.jpg') +
-              ')',
-          },
-          num1: '28',
-          num2: '27',
-          num3: '27',
-          price: '500',
-          person: '',
-        },
-      ],
       url: '',
     }
   },
   methods: {
+    // 电话图标调用电话接口
     call(e) {
       e.stopPropagation()
     },
-    openImUrl() {
+    // 信息图标直接调用IM
+    openIm(i, e) {
+      e.stopPropagation()
+      this.$root.$emit(
+        'openIMM',
+        this.serveData[i].im.id,
+        this.serveData[i].im.name,
+        this.serveData[i].im.num
+      )
+    },
+    // 点击该模块判断是否进行跳转，如果不跳转就调用IM
+    openImUrl(i) {
       if (this.url !== '') {
         window.open = this.url
       } else {
-        this.$parent.openIm()
+        this.$root.$emit(
+          'openIMM',
+          this.serveData[i].im.id,
+          this.serveData[i].im.name,
+          this.serveData[i].im.num
+        )
       }
     },
   },
@@ -152,6 +193,7 @@ export default {
         font-weight: bold;
         color: #222222;
         margin-bottom: 17px;
+        text-align: center;
       }
       &-small {
         font-size: 22px;
@@ -159,6 +201,7 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #999999;
+        text-align: center;
       }
       &-hr {
         width: 0.01rem;

@@ -43,7 +43,7 @@
               :key="_index"
               :item-type="itemType"
               :item-data="_item"
-              :itemType="{ type: 'jy', typeCode: item.ext4 }"
+              :goodstype="{ type: 'jy', typeCode: item.ext4 }"
             />
           </sp-list>
           <!--E商品列表-->

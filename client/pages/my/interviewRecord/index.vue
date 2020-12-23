@@ -1,6 +1,6 @@
 <template>
   <div class="interview">
-    <sp-sticky>
+    <sp-sticky v-if="!isInApp">
       <sp-top-nav-bar title="面谈记录" ellipsis @on-click-left="back">
         <template #left>
           <div>
@@ -23,7 +23,7 @@
             class="item"
             :border="false"
           >
-            <div class="item-info">
+            <div class="item-info" @click="handleClick(item)">
               <div class="left">
                 <div class="item-info_avatar" @click="scanDetail(item.id)">
                   <sp-image
@@ -48,13 +48,7 @@
                     面谈时间：<span>{{ item.inviteTime }}</span>
                   </p>
                   <p class="address">
-                    面谈地点：<span>{{ item.inviteAddress }}</span
-                    ><my-icon
-                      class="address_icon"
-                      name="per_ic_addressr"
-                      size="0.12rem"
-                      color="#4974F5"
-                    />
+                    面谈地点：<span>{{ item.inviteAddress }}</span>
                   </p>
                   <p>
                     面谈方式：<span>{{
@@ -96,21 +90,30 @@
             </div>
             <div class="item-status">
               <sp-button
-                v-if="item.status === 0"
+                v-if="item.inviteStatus === 0"
                 plain
                 type="default"
                 @click="cancelInterview(item.id)"
                 >取消面谈</sp-button
               >
-              <span v-else-if="item.status === 2"
+              <span v-else-if="item.inviteStatus === 2"
                 >您在{{ item.cancelTime }}已取消面谈</span
               >
+              <span v-else-if="item.inviteStatus === 3">您已取消面谈</span>
               <span v-else>您在{{ item.completeTime }}已完成面谈</span>
             </div>
           </sp-cell>
         </sp-list>
       </sp-pull-refresh>
     </div>
+    <!--S 弹框-->
+    <sp-center-popup
+      v-model="cancelStatus"
+      :field="Field7"
+      button-type="confirm"
+      @confirm="cancelConfirm"
+    />
+    <!--E 弹框-->
   </div>
 </template>
 
@@ -125,7 +128,9 @@ import {
   Tag,
   Sticky,
   TopNavBar,
+  CenterPopup,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import { interviewApi } from '~/api'
 
 export default {
@@ -139,6 +144,7 @@ export default {
     [Tag.name]: Tag,
     [Sticky.name]: Sticky,
     [TopNavBar.name]: TopNavBar,
+    [CenterPopup.name]: CenterPopup,
   },
   data() {
     return {
@@ -148,10 +154,29 @@ export default {
       refreshing: false,
       page: 1, // 当前页
       limit: 10, // 每页显示条数
+      cancelStatus: false,
+      interId: '', // 面谈id
+      Field7: {
+        type: 'functional',
+        title: '确定取消面谈吗？',
+      },
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   mounted() {
-    this.getInterviewList()
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle(
+        {
+          title: '面谈记录',
+        },
+        (res) => {}
+      )
+    }
+    // this.getInterviewList()
   },
   methods: {
     back() {
@@ -170,16 +195,26 @@ export default {
       // }
       window.location.href = 'tel:' + number
     },
+    cancelConfirm() {
+      // 显示取消面谈确认框
+      this.cancelView()
+    },
+    cancelInterview(id) {
+      this.interId = id
+      this.cancelStatus = true
+    },
     // 取消面谈
-    async cancelInterview(id) {
-      const params = {
-        id,
-        type: 0,
-      }
-      const res = await this.$axios.post(interviewApi.cancel, params)
-      if (res.code === 200) {
-        this.getInterviewList()
-      }
+    async cancelView() {
+      try {
+        const params = {
+          id: this.interId,
+          type: 0,
+        }
+        const res = await this.$axios.post(interviewApi.cancel, params)
+        if (res.code === 200) {
+          this.getInterviewList()
+        }
+      } catch (err) {}
     },
     async onLoad() {
       const page = this.page++
@@ -214,6 +249,10 @@ export default {
       }
       const res = await this.$axios.get(interviewApi.list, { params })
       this.list = res.data.records
+    },
+    handleClick(item) {
+      // 点击面谈记录
+      this.$router.push(`/my/interviewRecord/${item.id}`)
     },
   },
 }
@@ -252,8 +291,9 @@ export default {
               font-size: 32px;
               font-weight: bold;
               color: @title-text-color;
-              line-height: 36px;
               margin-right: 16px;
+              max-width: 100px;
+              .textOverflow(1);
             }
             .title {
               position: relative;
@@ -273,6 +313,7 @@ export default {
                 .gold_icon {
                   width: 114px;
                   height: 28px;
+                  line-height: 28px;
                   background-image: url('~assets/images/planner/per_img_gold.png');
                 }
                 .certificates_icon {
@@ -288,7 +329,6 @@ export default {
             font-family: PingFang SC;
             font-weight: 400;
             color: #999999;
-            line-height: 24px;
             margin-bottom: 16px;
             .textOverflow(1);
             span {
@@ -349,6 +389,9 @@ export default {
             font-family: PingFang SC;
             font-weight: 400;
           }
+        }
+        /deep/ .sp-button {
+          width: 100%;
         }
         span {
           font-size: 28px;
