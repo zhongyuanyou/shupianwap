@@ -7,7 +7,12 @@
     <div class="goods-right">
       <h3>{{ itemData.name }}</h3>
       <p>{{ description }}</p>
-      <div v-if="itemType.type === 'serve'" class="tags">
+      <div
+        class="tags"
+        :style="{
+          visibility: itemType.type === 'serve' ? 'visible' : 'hidden',
+        }"
+      >
         <span>极速办理</span>
         <span>极速办理</span>
         <span>极速办理</span>
@@ -32,7 +37,7 @@ export default {
       default() {
         return {
           type: 'serve',
-          classify: 'wd',
+          typeCode: '',
         }
       },
     },
@@ -51,8 +56,10 @@ export default {
       if (this.itemData.productDescription) {
         return this.itemData.productDescription
       }
-      if (this.itemData.fieldList) {
-        return this.itemData.fieldList
+      if (this.itemData.fieldList && this.itemData.fieldList.length) {
+        const desc = []
+        this.itemData.fieldList.forEach((item) => desc.push(item.fieldName))
+        return desc.join('|')
       }
       return ''
     },
@@ -60,10 +67,10 @@ export default {
   methods: {
     jumpUrl() {
       if (this.itemType.type === 'serve') {
-        this.$router.push('/detail/serviceDetails')
+        this.$router.push(`/detail/serviceDetails?id=${this.itemData.id}`)
       } else {
         this.$router.push(
-          `/detail/${this.itemType.classify}/${this.itemData.id}`
+          `/detail/transactionDetails?type=${this.itemType.typeCode}&id=${this.itemData.id}`
         )
       }
     },
