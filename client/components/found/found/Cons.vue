@@ -131,7 +131,7 @@ export default {
       // 点击
       if (this.isInApp) {
         this.$appFn.dggOpenNewWeb(
-          { urlString: `https://172.16.139.140:7001/found/detail/${item.id}` },
+          { urlString: `http://172.16.139.140:7001/found/detail/${item.id}` },
           (res) => {
             console.log('res', res)
           }

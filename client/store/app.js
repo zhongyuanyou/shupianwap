@@ -1,6 +1,7 @@
 export const state = () => ({
   isShowOpenApp: true, // 底部打开app显示和隐藏
   isInApp: false, // 是否在APP中
+  appInfo: {}, // app信息
 })
 
 export const mutations = {
@@ -11,6 +12,9 @@ export const mutations = {
   SET_UA_INFO(state, val) {
     state.isInApp = val
   },
+  SET_APP_INFO(state, val) {
+    state.appInfo = val
+  },
 }
 
 export const actions = {
@@ -20,5 +24,8 @@ export const actions = {
   },
   setUAInfo({ commit }, data) {
     commit('SET_UA_INFO', data)
+  },
+  setAppInfo({ commit }, data) {
+    commit('SET_APP_INFO', data)
   },
 }
