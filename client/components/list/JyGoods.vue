@@ -74,7 +74,7 @@ import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
 import JyFilters from '@/components/list/JyFilters'
 import searchList from '@/mixins/searchList'
-import spToast from '@/components/common/spToast/spToast'
+import spToast from '@/components/common/spToast/SpToast'
 import clone from '~/utils/clone'
 
 export default {

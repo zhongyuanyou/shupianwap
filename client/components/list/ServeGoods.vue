@@ -82,7 +82,7 @@ import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
 import clone from '~/utils/clone'
 import searchList from '@/mixins/searchList'
-import spToast from '@/components/common/spToast/spToast'
+import spToast from '@/components/common/spToast/SpToast'
 
 export default {
   name: 'ServeGoods',
