@@ -7,7 +7,7 @@
     <banner></banner>
     <!--  轮播/表单  -->
     <!--  服务  -->
-    <serve></serve>
+    <serve :serve-data="serveData"></serve>
     <!--  服务  -->
     <!--  咨询  -->
     <conrult></conrult>
@@ -20,7 +20,7 @@
     <!--  服务流程  -->
     <!--  规划师  -->
     <gui-hua-shi-swipe
-      :plannersdata="plannersData"
+      :planners-data="plannersData"
       :title="plannersTitle"
     ></gui-hua-shi-swipe>
     <!--  规划师  -->
@@ -72,6 +72,13 @@ export default {
     shuPianZhaoRen,
     fixedBottom,
     consultTel,
+  },
+  async asyncData({ $axios }) {
+    const type = 'extendTaxPlanning'
+    const res = await $axios.get(
+      `http://172.16.133.7:7001/service/nk/spread/v1/list.do?pageCode=${type}`
+    )
+    return { result: res.data }
   },
   data() {
     return {
@@ -142,6 +149,62 @@ export default {
       },
       consultTitle: '对于代理记账还有疑问？企服专家为您免费解答',
       consultTel: '4000-535800',
+      serveData: [
+        {
+          bg: {
+            backgroundImage:
+              'url(' +
+              require('~/assets/spreadImages/tax/busi_img_swchlist1.jpg') +
+              ')',
+          },
+          num1: '28',
+          num2: '27',
+          num3: '27',
+          price: '500',
+          person: '',
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
+          },
+        },
+        {
+          bg: {
+            backgroundImage:
+              'url(' +
+              require('~/assets/spreadImages/tax/busi_img_swchlist2.jpg') +
+              ')',
+          },
+          num1: '28',
+          num2: '27',
+          num3: '27',
+          price: '500',
+          person: '',
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
+          },
+        },
+        {
+          bg: {
+            backgroundImage:
+              'url(' +
+              require('~/assets/spreadImages/tax/busi_img_swchlist3.jpg') +
+              ')',
+          },
+          num1: '28',
+          num2: '27',
+          num3: '27',
+          price: '500',
+          person: '',
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
+          },
+        },
+      ],
       im: {
         id: '7862495547640840192',
         name: '张毅',
@@ -149,7 +212,34 @@ export default {
       },
     }
   },
+  created() {
+    // 调用服务模块数据处理
+    this.getServeData(this.result)
+  },
   methods: {
+    // 服务模块数据处理
+    getServeData(res) {
+      for (let i = 0; i < this.serveData.length; i++) {
+        // 循环价格
+        this.serveData[i].price =
+          res.adList[0].sortMaterialList[
+            i
+          ].materialList[0].productDetail.referencePrice
+        // 循环咨询
+        this.serveData[i].num1 =
+          res.adList[0].sortMaterialList[i].materialList[0].productDetail
+            .operating.actualViews / 10000
+        // 循环咨询
+        this.serveData[i].num2 =
+          res.adList[0].sortMaterialList[i].materialList[0].productDetail
+            .operating.defaultSales / 10000
+        // 循环咨询
+        this.serveData[i].num3 =
+          res.adList[0].sortMaterialList[i].materialList[0].productDetail
+            .operating.actualSales / 10000
+      }
+    },
+    // 这个页面统一调用IM时的信息
     openIm() {
       this.$root.$emit('openIMM', this.im.id, this.im.name, this.im.num)
     },
@@ -157,6 +247,22 @@ export default {
   head() {
     return {
       title: '税务筹划',
+      meta: [
+        {
+          name: 'keywords',
+          content: '专利转让网,专利转让平台,优质专利,专利交易,顶呱呱交易平台',
+        },
+        {
+          name: 'description',
+          content:
+            '顶呱呱交易平台，提供特价专利转让、精品专利交易、专利买卖出售服务。百万海量专利资源在线选购，即买即用，专业的专利买卖平台就上顶呱呱，安全放心！',
+        },
+      ],
+      script: [
+        {
+          src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
+        },
+      ],
     }
   },
 }
