@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2020-02-21 04:16:27
- * @LastEditTime: 2020-02-21 19:51:52
- * @LastEditors: your name
+ * @LastEditTime: 2020-12-23 14:24:39
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: /xdy-wap/plugins/router.js
+ * @FilePath: /chips-wap/client/plugins/router.js
  */
 import Vue from 'vue'
 import { appHandler } from './app-sdk'
@@ -13,6 +13,7 @@ const infoList = [
   'my-shippingAddress', // 收货地址列表页面
   'my-interviewRecord', // 面谈记录列表页面
   'my-complain', // 新增吐槽页面
+  'shoppingCar', // 购物车页面
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {

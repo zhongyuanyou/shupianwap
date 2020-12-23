@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-22 15:35:42
+ * @LastEditTime: 2020-12-23 13:35:42
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -466,7 +466,6 @@ export default {
 
     // 资源服务的选择
     selecteResourceService(data = {}) {
-      console.log(data)
       const { id, code, name, goodsPrice } = data
       const classCode = Object.keys(RESOURCE_ITEM_CODE_MAP).find(
         (item) => RESOURCE_ITEM_CODE_MAP[item] === data.classCode
@@ -478,12 +477,12 @@ export default {
       )
       const className = matchedItem ? matchedItem.className : ''
       const filteredList = serviceResourceList.filter(
-        (item) => item.serviceItemId !== classCode
+        (item) => item.serviceItemId !== matchedItem.id
       )
       filteredList.push({
         price: goodsPrice,
         num: 1,
-        serviceItemId: classCode,
+        serviceItemId: matchedItem.id,
         serviceItemName: className,
         serviceItemValId: id,
         serviceItemValName: name,
@@ -580,7 +579,7 @@ export default {
           salesPriceSum,
           settlementPriceSum,
         }
-        this.tempGoods = { ...this.tempGoods, ...data }
+        this.tempGoods = { ...this.tempGoods, ...data, price: salesPriceSum }
         console.log(data)
         return data
       } catch (error) {

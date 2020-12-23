@@ -6,7 +6,13 @@
           <span>{{
             recommendPlannerName ? recommendPlannerName : '顶呱呱平台'
           }}</span>
-          <my-icon name="arrow-down" @click="isPopupShow = false"></my-icon>
+          <span @click="isPopupShow = false">
+            <my-icon
+              name="sear_ic_open"
+              size="0.2rem"
+              color="#ffffff"
+            ></my-icon>
+          </span>
         </div>
         <div ref="viewBox" class="mobile-page">
           <template v-for="(item, index) in currentChatData">
