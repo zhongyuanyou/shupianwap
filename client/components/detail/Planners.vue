@@ -2,8 +2,8 @@
   <div class="planners">
     <p class="planners_title">推荐规划师</p>
     <div
-      v-for="(item, index) in info.planners"
-      :key="index"
+      v-for="(item, index) in info"
+      :key="item.userCenterId"
       class="planners_item"
       :style="{ marginTop: index === 0 ? '0.48rem' : '0.66rem' }"
     >
@@ -17,12 +17,12 @@
         />
         <div class="info">
           <div class="info_tp">
-            <p class="name">{{ item.name }}</p>
-            <i class="icon gold_icon"></i>
+            <p class="name">{{ item.userName }}</p>
+            <i class="gold_icon">{{ item.postName }}</i>
           </div>
           <div class="info_bot">
-            <span class="num">221</span
-            ><span class="txt">薯片分 | 2次服务</span>
+            <span class="num">{{ Number(item.point) }}</span
+            ><span class="txt">薯片分 | {{ Number(item.payNum) }}次服务</span>
           </div>
         </div>
       </div>
@@ -56,12 +56,8 @@ export default {
   },
   props: {
     info: {
-      type: Object,
-      default: () => {
-        return {
-          planners: [],
-        }
-      },
+      type: Array,
+      default: () => [],
     },
   },
   methods: {
@@ -85,10 +81,35 @@ export default {
     vertical-align: middle;
   }
   .gold_icon {
-    width: 114px;
-    height: 28px;
-    background-image: url('~assets/images/planner/per_img_gold.png');
+    min-width: 146px;
+    max-width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 34px;
+    line-height: 32px;
+    border: 1px solid #e0a963;
     margin-left: 12px;
+    border-radius: 16px;
+    font-size: 20px;
+    font-weight: 400;
+    color: #e0a963;
+    padding-left: 38px;
+    padding-right: 7px;
+    text-align: center;
+    position: relative;
+    font-style: normal;
+    &::before {
+      content: '';
+      display: block;
+      width: 34px;
+      height: 34px;
+      background: url('~assets/images/planner/per_img_gold.png') no-repeat;
+      background-size: 34px 34px;
+      position: absolute;
+      left: -1px;
+      top: -1px;
+    }
   }
   &_title {
     font-size: 40px;
@@ -122,8 +143,11 @@ export default {
           flex-direction: row;
           height: 32px;
           .name {
+            max-width: 200px;
             font-size: 32px;
-            font-family: PingFang SC;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
             font-weight: bold;
             color: #1a1a1a;
             line-height: 32px;

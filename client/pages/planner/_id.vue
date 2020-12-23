@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-03 14:00:00
+ * @LastEditTime: 2020-12-15 11:56:44
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/planner/_id.vue
+ * @FilePath: /chips-wap/client/pages/planner/serviceDetails.vue
 -->
 
 <template>
@@ -34,27 +34,28 @@
                     width="1.2rem"
                     height="1.2rem"
                     fit="cover"
-                    src="https://img.yzcdn.cn/vant/cat.jpeg"
+                    :src="
+                      detailData.img || 'https://img.yzcdn.cn/vant/cat.jpeg'
+                    "
                   />
                 </div>
                 <div>
-                  <h4 class="detail-content__name">王译名</h4>
+                  <h4 class="detail-content__name">{{ detailData.name }}</h4>
                   <p class="detail-content__discript">
-                    公司过户请联系我噢噢公司过户请联系我
-                    噢噢公司过户请联系我噢噢公司过户请联
+                    {{ detailData.synopsis }}
                   </p>
                 </div>
               </div>
 
               <div class="detail-content__tag-list">
-                <sp-tag size="large" color="#EADACD" text-color="#222222"
-                  >公司过户</sp-tag
-                >
-                <sp-tag size="large" color="#EADACD" text-color="#222222"
-                  >商标过户</sp-tag
-                >
-                <sp-tag size="large" color="#EADACD" text-color="#222222"
-                  >股权变更</sp-tag
+                <sp-tag
+                  v-for="tag of formatTagList"
+                  :key="tag"
+                  size="large"
+                  color="#EADACD"
+                  text-color="#222222"
+                  class="detail-content__tag"
+                  >{{ tag }}</sp-tag
                 >
               </div>
             </div>
@@ -62,24 +63,38 @@
               <div class="detail-content__section-title">个人信息</div>
               <ul class="detail-content__section-content">
                 <li>
-                  <span class="label">服务次数：</span>
-                  <span class="content">10次</span>
+                  <span class="label">服务人数：</span>
+                  <span class="content">{{
+                    detailData.serveNum ? `${detailData.serveNum}人` : '--'
+                  }}</span>
                 </li>
                 <li>
                   <span class="label">好评率：</span>
-                  <span class="content">98.7%</span>
+                  <span class="content">{{
+                    detailData.goodReputation
+                      ? `${detailData.goodReputation}次`
+                      : '--'
+                  }}</span>
                 </li>
                 <li>
                   <span class="label">服务经验：</span>
-                  <span class="content">小于1年</span>
+                  <span class="content">{{
+                    detailData.serveAge ? `${detailData.serveAge}年` : '--'
+                  }}</span>
                 </li>
                 <li>
                   <span class="label">成交记录：</span>
-                  <span class="content">58次</span>
+                  <span class="content">{{
+                    detailData.serveAge ? `${detailData.serveAge}次` : '--'
+                  }}</span>
                 </li>
                 <li>
                   <span class="label">平均响应时间：</span>
-                  <span class="content">17s</span>
+                  <span class="content">{{
+                    detailData.averageResponseTime
+                      ? `${detailData.averageResponseTime}s`
+                      : '--'
+                  }}</span>
                 </li>
               </ul>
             </div>
@@ -89,8 +104,12 @@
                 <span>薯片分</span>
                 <i class="horizontal-line"></i>
               </div>
-              <div class="detail-content__sp-score">440</div>
-              <div class="detail-content__level">打败96%的规划师</div>
+              <div class="detail-content__sp-score">
+                {{ detailData.point || '--' }}
+              </div>
+              <div class="detail-content__level">
+                打败{{ detailData.prop }}的规划师
+              </div>
               <div class="detail-content__explain">
                 <span>
                   什么是薯片分
@@ -130,13 +149,8 @@
 
 <script>
 import {
-  TopNavBar,
   Button,
-  DropdownMenu,
-  DropdownItem,
-  NavSearch,
   Toast,
-  PullRefresh,
   Image,
   Tag,
   Bottombar,
@@ -146,19 +160,14 @@ import {
 import Header from '@/components/common/head/header'
 import GoodsPro from '@/components/planner/GoodsPro'
 
-import { city } from '@/utils/city'
+import { planner } from '@/api'
 
 export default {
   name: 'List',
   components: {
-    [TopNavBar.name]: TopNavBar,
     [Button.name]: Button,
-    [PullRefresh.name]: PullRefresh,
     [Image.name]: Image,
     [Tag.name]: Tag,
-    [NavSearch.name]: NavSearch,
-    [DropdownMenu.name]: DropdownMenu,
-    [DropdownItem.name]: DropdownItem,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
     Header,
@@ -167,16 +176,23 @@ export default {
   data() {
     return {
       recommendList: [],
-      loading: false,
+      loading: true,
+      detailData: {},
     }
   },
   computed: {
-    city() {
-      return city
+    formatTagList() {
+      const tagList = this.detailData.tagList
+      if (!Array.isArray(tagList)) return []
+      const formatData = tagList.slice(0, 2)
+      formatData.push('时代峰峻水电费水电费')
+      return formatData
     },
   },
   created() {
-    this.getList()
+    if (process && process.client) {
+      this.getDetail()
+    }
   },
   methods: {
     onClickLeft() {
@@ -191,14 +207,23 @@ export default {
     handleIM() {
       console.log('IM ')
     },
-    getList() {
-      this.loading = true
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.recommendList.push(this.recommendList.length + 1)
+    // 获取详情数据
+    async getDetail() {
+      try {
+        const { mchUserId } = this.$route.query
+        if (mchUserId == null) {
+          Toast('缺少规划师参数')
+          return
         }
-        this.loading = false
-      }, 1000)
+        const params = { id: mchUserId }
+        const data = await planner.detail(params)
+        console.log(data)
+        this.detailData = data || {}
+        return data
+      } catch (error) {
+        console.error('getDetail:', error)
+        return Promise.reject(error)
+      }
     },
   },
 }
@@ -215,27 +240,10 @@ export default {
   justify-content: flex-start;
 }
 
-.flex-r-c {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
 .flex-r-sb {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-}
-
-.flex-r-a-s {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-}
-
-.flex-r-a-c {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 }
 
 .detail {
@@ -293,6 +301,7 @@ export default {
         font-weight: bold;
         color: #222222;
         line-height: 40px;
+        .textOverflow(1);
       }
       &__discript {
         margin-top: 20px;
@@ -306,10 +315,15 @@ export default {
         margin-top: 24px;
         line-height: 1em;
         font-size: 0;
+        display: flex;
         /deep/.sp-tag {
+          max-width: 280px;
           margin-left: 12px;
           font-size: 24px;
           font-weight: 400;
+          white-space: nowrap;
+          word-break: normal;
+          .textOverflow(1);
           &:first-child {
             margin-left: 0;
           }

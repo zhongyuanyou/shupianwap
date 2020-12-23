@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-26 19:44:09
+ * @LastEditTime: 2020-12-16 20:07:46
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/MainGoodsItem.vue
 -->
@@ -10,19 +10,20 @@
   <div class="main-goods-item">
     <div class="goods-lable-img">
       <span class="lable">急售</span>
-      <img src="https://img.yzcdn.cn/vant/cat.jpeg" alt="" />
+      <img alt="img" :src="mainData.img" />
     </div>
     <div class="goods-info">
-      <strong class="goods-name">
-        成都**科技有限科技有限科技有限科技有限科技有限科技有限科技有限</strong
-      >
+      <strong class="goods-name"> {{ mainData.name }}</strong>
       <div class="goods-sku">
         <sp-tag
           color="#F8F8F8"
           text-color="#999999"
           size="large"
           @click="handleSkuOpen"
-          >武侯区;无注册地址<my-icon
+        >
+          <span class="goods-sku__text"> {{ mainData.skuAttrName }}</span>
+
+          <my-icon
             name="shop_ic_open"
             size="0.14rem"
             color="#999999"
@@ -32,18 +33,40 @@
       </div>
       <div class="goods-price">
         <span class="sales-price">
-          <span class="big-value">11350</span>
+          <span class="big-value">{{ mainData.price }}</span>
           <span class="unit">元</span>
         </span>
         <sp-stepper
-          v-model="goodsCount"
           integer
           step="1"
-          min="0"
-          max="8"
           button-size="0.40rem"
           input-width="0.80rem"
+          min="1"
+          :value="goodsCount"
+          :max="!mainData.numFlag && mainData.maxNum ? mainData.maxNum : 99"
+          :async-change="true"
+          @change="handleCountChange"
         />
+      </div>
+      <div class="goods-service">
+        <div class="goods-service__row-left">增值服务</div>
+        <div class="goods-service__row-right">
+          <div
+            v-for="addService of mainData.addServiceList"
+            :key="addService.serviceItemId"
+            class="goods-service__item"
+          >
+            <span class="goods-service__title">{{
+              addService.serviceItemName
+            }}</span>
+            <span class="goods-service__content"></span>
+            <span class="goods-service__count">{{
+              `${
+                addService.serviceItemName ? addService.serviceItemName : '--'
+              }元  x${addService.num}`
+            }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -69,11 +92,30 @@ export default {
     [Tag.name]: Tag,
     [Stepper.name]: Stepper,
   },
+  props: {
+    mainData: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
+  },
   data() {
     return {
       checked: false,
       goodsCount: 1,
     }
+  },
+  computed: {},
+  watch: {
+    'mainData.goodsNumber': {
+      handler(newVal, oldVal) {
+        console.log('goodsNumber newVal:', newVal)
+        if (newVal === oldVal) return
+        this.goodsCount = newVal || 0
+      },
+      immediate: true,
+    },
   },
   methods: {
     handleChange(value) {
@@ -82,6 +124,19 @@ export default {
     handleSkuOpen() {
       console.log('handleSkuOpen')
       this.$emit('operation', { type: 'openSku' })
+    },
+    handleCountChange(value) {
+      console.log('handleCountChange value:', value)
+      if (this.goodsCount === value) return
+      // TODO异步校验
+      // this.goodsCount = value
+      console.log('handleCountChange value:', value)
+
+      // 人为修改,通知父组件
+      this.$emit('operation', {
+        type: 'count',
+        data: { value },
+      })
     },
   },
 }
@@ -148,11 +203,18 @@ export default {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
+      &__text {
+        .textOverflow(1);
+      }
       .ic__sku-open {
         margin-left: 8px;
       }
+
       /deep/.sp-tag--large {
         height: 40px;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
       }
     }
     .goods-price {
@@ -199,6 +261,44 @@ export default {
             background-color: #cccccc;
           }
         }
+      }
+    }
+    .goods-service {
+      display: flex;
+      margin-top: 34px;
+      &__row-left {
+        font-size: 22px;
+        font-weight: bold;
+        color: #222222;
+        line-height: 26px;
+        flex: 88px 0 1;
+        white-space: nowrap;
+      }
+      &__row-right {
+        margin-left: 15px;
+        flex: 1;
+      }
+      &__item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+      &__title {
+        font-size: 22px;
+        font-weight: 400;
+        color: #222222;
+        line-height: 26px;
+        .textOverflow(1);
+      }
+      &__content {
+      }
+      &__count {
+        margin-left: 30px;
+        font-size: 22px;
+        font-weight: bold;
+        color: #222222;
+        line-height: 26px;
       }
     }
   }

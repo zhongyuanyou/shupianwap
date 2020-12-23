@@ -1,15 +1,21 @@
 <template>
   <div class="nav-layout">
     <nuxt />
-    <Bottombar />
+    <Bottombar v-if="!isInApp" />
     <div class="nav-placeholder"></div>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import Bottombar from '@/components/common/nav/Bottombar'
 export default {
   components: {
     Bottombar,
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
 }
 </script>

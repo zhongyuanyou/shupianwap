@@ -1,35 +1,41 @@
 <template>
-  <div class="item">
-    <div v-if="info.img">
+  <div class="item" @click="handleClick">
+    <div v-if="info.imageUrl">
       <div class="item_tp">
         <div class="item_tp_lf">
           <div class="title">{{ info.title }}</div>
-          <div class="content">{{ info.content }}</div>
+          <div class="content">{{ info.description }}</div>
         </div>
         <div class="item_tp_rt">
-          <img :src="info.img" />
+          <img :src="info.imageUrl" />
         </div>
       </div>
       <div class="item_bot">
         <div class="item_bot_lf">
-          <img class="avatar" :src="info.avatar" />
-          <p class="name">{{ info.name }}</p>
+          <img class="avatar" :src="info.imageUrl" />
+          <p class="name">{{ info.updaterName }}</p>
         </div>
         <div class="item_bot_rt">
-          {{ info.time }}
+          {{ info.updateTime }}
         </div>
       </div>
     </div>
     <div v-else>
       <div class="title">{{ info.title }}</div>
-      <div class="content">{{ info.content }}</div>
+      <div class="content">{{ info.description }}</div>
       <div :class="['item_bot', 'item_bot_copy']">
         <div class="item_bot_lf">
-          <img class="avatar" :src="info.avatar" />
-          <p class="name">{{ info.name }}</p>
+          <sp-image
+            width="0.48rem"
+            height="0.48rem"
+            radius="0.24rem"
+            fit="cover"
+            :src="info.imageUrl"
+          />
+          <p class="name">{{ info.updaterName }}</p>
         </div>
         <div class="item_bot_rt">
-          {{ info.time }}
+          {{ info.updateTime }}
         </div>
       </div>
     </div>
@@ -37,14 +43,22 @@
 </template>
 
 <script>
+import { Image } from '@chipspc/vant-dgg'
 export default {
   name: 'Item',
+  components: { [Image.name]: Image },
   props: {
     info: {
       type: Object,
       default: () => {
         return {}
       },
+    },
+  },
+  methods: {
+    handleClick() {
+      // 点击跳转详情
+      this.$router.push(`/found/detail/${this.info.id}`)
     },
   },
 }
@@ -69,7 +83,6 @@ export default {
     font-family: PingFang SC;
     font-weight: 400;
     color: #222222;
-    line-height: 24px;
     .textOverflow(2);
   }
   &_tp {
@@ -91,6 +104,7 @@ export default {
     }
   }
   &_bot {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;

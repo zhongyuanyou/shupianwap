@@ -28,26 +28,28 @@
         <p class="complaint-type-title">请选择反馈或建议的类型</p>
         <div class="complaint-type-content">
           <span
-            v-for="(item, index) in types"
+            v-for="(item, index) in complainCategory"
             :key="index"
             :class="
-              selectTypes.includes(item.type)
+              formData.feedbackTypeId === item.id
                 ? 'complaint-type-content-item complaint-type-content-item-active'
                 : 'complaint-type-content-item'
             "
-            @click="changeType(item.type)"
+            @click="changeType(item.id)"
             >{{ item.name }}</span
           >
         </div>
       </div>
       <div class="complaint-content">
         <textarea
-          v-model="desc"
+          v-model="formData.content"
           class="complaint-content-textarea"
           placeholder="请描述您的问题，有助于快速处理您的反馈额~(最少10个字符)"
           maxlength="200"
         />
-        <span class="complaint-content-label">{{ desc.length }}/200</span>
+        <span class="complaint-content-label"
+          >{{ formData.content.length }}/200</span
+        >
       </div>
       <div class="complaint-image">
         <div class="complaint-image-title">上传照片</div>
@@ -56,6 +58,7 @@
             v-model="uploader"
             :max-count="3"
             :max-size="20 * 1024 * 1024"
+            :after-read="afterRead"
             @oversize="onOversize"
           >
             <template>
@@ -77,12 +80,15 @@
           type="primary"
           text="提交"
           :disabled="
-            !(desc.length > 10 && selectTypes.length > 0) ? true : false
+            formData.content.length < 10 || formData.feedbackTypeId === ''
+              ? true
+              : false
           "
           @click="submit"
         />
       </sp-bottombar>
     </div>
+    <sp-toast ref="spToast"></sp-toast>
   </div>
 </template>
 <script>
@@ -95,6 +101,9 @@ import {
   Sticky,
   BottombarButton,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import { complain, commonApi } from '~/api'
+import SpToast from '@/components/common/spToast/SpToast'
 export default {
   name: 'AddComplaint',
   components: {
@@ -104,68 +113,122 @@ export default {
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
     [Sticky.name]: Sticky,
+    SpToast,
   },
   data() {
     return {
       selectTypes: [], // 吐槽类型type
       multipleChoice: false, // 是否可多选
-      types: [
-        {
-          name: '体验问题',
-          type: 1,
-        },
-        {
-          name: '需要新功能',
-          type: 2,
-        },
-        {
-          name: '功能异常',
-          type: 3,
-        },
-        {
-          name: '其他',
-          type: 4,
-        },
-      ],
+      complainCategory: [], // 吐槽分类集合
       desc: '',
       uploader: [],
+      formData: {
+        content: '', // 内容
+        feedbackTypeId: '', // 吐槽类型
+        userId: this.userId || '', // 用户id
+        terminalCode: 'adadasdasd', // 终端编码
+        terminalName: 'dadasd', // 终端名称
+        platformCode: 'adasdad', // 平台编码
+        platformName: 'asdasdas', // 平台名称
+      },
     }
+  },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userInfo.userId,
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
+  mounted() {
+    if (this.isInApp) {
+      // 设置app导航名称
+      this.$appFn.dggSetTitle(
+        {
+          title: '我要吐槽',
+        },
+        (res) => {}
+      )
+    }
+    this.formData.userId = this.userId
+    this.getComplainCategory()
   },
   methods: {
     back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
       this.$router.back()
     },
     complaintList() {
       this.$router.push('/my/complain/list')
     },
     changeType(type) {
-      if (this.multipleChoice) {
-        // 多选
-        if (!this.selectTypes.includes(type)) {
-          this.selectTypes.push(type)
-        } else {
-          this.selectTypes.splice(
-            this.selectTypes.findIndex((item) => item === type),
-            1
-          )
-        }
-      } else if (!this.selectTypes.includes(type)) {
-        this.selectTypes = [type]
-      } else {
-        this.selectTypes = []
-      }
+      // if (this.multipleChoice) {
+      //   // 多选
+      //   if (!this.selectTypes.includes(type)) {
+      //     this.selectTypes.push(type)
+      //   } else {
+      //     this.selectTypes.splice(
+      //       this.selectTypes.findIndex((item) => item === type),
+      //       1
+      //     )
+      //   }
+      // } else if (!this.selectTypes.includes(type)) {
+      //   this.selectTypes = [type]
+      // } else {
+      //   this.selectTypes = []
+      // }
+      this.formData.feedbackTypeId = type
     },
     // 提交
-    submit() {
-      if (this.desc.length < 10) {
+    async submit() {
+      if (this.formData.content.length < 10) {
         Toast.fail('描述问题为必填，长度为10-200个字')
-      } else if (!this.selectTypes.length > 0) {
+      } else if (this.formData.feedbackTypeId === '') {
         Toast.fail('请选择反馈或建议的类型')
+      } else {
+        try {
+          const params = {
+            ...this.formData,
+          }
+          const data = await complain.add({ axios: this.$axios }, params)
+          this.formData = {
+            content: '', // 内容
+            feedbackTypeId: '', // 吐槽类型
+            userId: this.userId, // 用户id
+            terminalCode: 'adadasdasd', // 终端编码
+            terminalName: 'dadasd', // 终端名称
+            platformCode: 'adasdad', // 平台编码
+            platformName: 'asdasdas', // 平台名称
+          }
+          this.$refs.spToast.show({
+            message: '提交成功，感谢您的反馈',
+            duration: 1500,
+            forbidClick: true,
+            icon: 'spiconfont-tab_ic_check',
+          })
+        } catch (err) {}
       }
     },
     // 限制图片大小
     onOversize(file) {
       Toast('文件大小不能超过20M')
+    },
+    afterRead(file) {
+      console.log('file', file)
+    },
+    async getComplainCategory() {
+      // 获取吐槽分类
+      try {
+        const params = {
+          code: 'fed100026',
+        }
+        const res = await this.$axios.get(commonApi.detail, { params })
+        if (res.code === 200) {
+          this.complainCategory = res.data.childrenList
+        }
+      } catch (err) {}
     },
   },
 }

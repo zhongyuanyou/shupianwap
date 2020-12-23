@@ -13,13 +13,11 @@
               <div v-text="item.title"></div>
               <div>
                 <!-- 循环属性 -->
-                <span
-                  v-for="(attributes, i) of item.attribute"
-                  :key="i"
-                  v-text="attributes"
-                ></span>
+                <span v-for="field of item.fieldList" :key="field.fieldCode">{{
+                  `${field.fieldName}:${field.fieldValue}`
+                }}</span>
               </div>
-              <div>销售价：<span v-text="item.price"></span></div>
+              <div>销售价：<span v-text="item.goodsPrice"></span></div>
             </div>
             <template #right-icon>
               <sp-radio ref="checkboxes" :name="item" />
@@ -57,16 +55,27 @@ export default {
   data() {
     return {
       result: [],
+      lastIndex: -1,
     }
   },
 
   methods: {
     toggle(index) {
+      // 保持只有一个选项
+      if (this.lastIndex > -1 && index !== this.lastIndex) {
+        this.$refs.checkboxes[this.lastIndex].toggle(false)
+      }
+      this.lastIndex = index
+
       this.$refs.checkboxes[index].toggle()
     },
     onSubmit() {
       //  提交选择信息
       console.log(this.result)
+      this.$emit('operation', {
+        type: 'confirm',
+        data: this.result,
+      })
     },
   },
 }

@@ -5,12 +5,16 @@ const { contentApi } = require('./../../config/serveApi/index');
 function categoryHandle(arr) {
   let arr1 = []
   let arr2 = []
+  // 找出层级为1的分类
   arr1 = arr.filter((item) => {
     return item.level === 1
   })
+  // 找出层级为2的分类
   arr2 = arr.filter((item) => {
     return item.level === 2
   })
+  // Todo 2级分类需要添加不限数据
+
   arr1.forEach((item) => {
     item.children = arr2.filter((i) => {
       return item.id === i.parentId
@@ -38,23 +42,19 @@ class getServeFiltersService extends Service {
           resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
         }
         // 查询服务产品排序字典
-        const sortDict = service.curl.curlAll(url, {
-          method: 'GET',
-          data: {
-            code: 'CONDITION-QF-SORT',
-          },
-        });
-        const serviceCategory = service.common.category.getProductCategory('PRO_CLASS_TYPE_SERVICE');
-        const res = await Promise.all([serviceCategory, sortDict])
+        const sortDict = await service.curl.curlGet(url, {code: 'CONDITION-QF-SORT'});
+        const serviceCategory = await service.common.category.getProductCategory({productTypeCode: 'PRO_CLASS_TYPE_SERVICE'});
+        // console.log('sortDict', sortDict)
+        // console.log('serviceCategory', serviceCategory)
         if (
-          res[0].status === 200 &&
-          res[1].status === 200 &&
-          res[0].data.code === 200 &&
-          res[1].data.code === 200
+          /*sortDict.status === 200 &&
+          serviceCategory.status === 200 &&*/
+          sortDict.code === 200 &&
+          serviceCategory.code === 200
         ) {
           // 处理服务分类，重组数据
-          const arr = categoryHandle(res[0].data.data)
-          result.data = [arr, res[1].data.data]
+          const arr = categoryHandle(serviceCategory.data)
+          result.data = [arr, sortDict.data]
           result.code = 200
         } else {
           result.data = []

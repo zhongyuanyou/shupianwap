@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 11:43:42
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-02 14:00:56
+ * @LastEditTime: 2020-12-22 20:31:23
  * @Description: file content
  * @FilePath: /chips-wap/client/components/login/ProtocolField.vue
 -->
@@ -17,8 +17,16 @@
       <template #extra>
         <span class="protocol">
           {{ descript }}
-          <a class="text-decor--underline">《薯片用户服务协议》</a>和
-          <a class="text-decor--underline">《薯片隐私协议》</a></span
+          <a
+            class="text-decor--underline"
+            @click="handleProtocol('protocol100122')"
+            >《薯片用户服务协议》</a
+          >和
+          <a
+            class="text-decor--underline"
+            @click="handleProtocol('protocol100121')"
+            >《薯片隐私协议》</a
+          ></span
         >
       </template>
     </sp-field>
@@ -66,6 +74,12 @@ export default {
     handleChange(value) {
       console.log('handleChange:', value)
       this.$emit('change', value)
+    },
+    handleProtocol(categoryCode) {
+      this.$router.push({
+        name: 'login-protocol',
+        query: { categoryCode },
+      })
     },
   },
 }

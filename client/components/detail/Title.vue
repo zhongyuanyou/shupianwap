@@ -2,21 +2,21 @@
   <div class="title">
     <div class="title_tags">
       <div class="title_tags_con">
-        <div
-          v-for="(item, index) in info.tags"
-          :key="index"
-          class="title_tags_con_item"
-        >
-          {{ item }}
-        </div>
+        <!--        <div-->
+        <!--          v-for="(item, index) in info.tags"-->
+        <!--          :key="index"-->
+        <!--          class="title_tags_con_item"-->
+        <!--        >-->
+        <!--          {{ item }}-->
+        <!--        </div>-->
       </div>
       <div class="title_tags_remind">降价提醒</div>
     </div>
-    <p class="title_btitle">{{ info.title }}</p>
+    <p class="title_btitle">{{ tcProductDetailData.name }}</p>
     <div class="imp_remind">
       <i class="icon certificates_icon"></i><span>重要提醒</span>
     </div>
-    <p class="money">{{ info.money }}元</p>
+    <p class="money">{{ tcProductDetailData.platformPrice }}元</p>
   </div>
 </template>
 
@@ -30,6 +30,12 @@ export default {
         return {
           tags: [],
         }
+      },
+    },
+    tcProductDetailData: {
+      type: Object,
+      default: () => {
+        return {}
       },
     },
   },

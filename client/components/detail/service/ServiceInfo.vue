@@ -1,13 +1,22 @@
 <template>
-  <div class="serviceInfo">
+  <div v-if="clientDetailsData['clientDetail']" class="serviceInfo">
     <h1 class="serviceInfo-title">服务详情</h1>
-    <div></div>
+    <div v-html="clientDetailsData['clientDetail']"></div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'ServiceInfo',
+  props: {
+    clientDetailsData: {
+      type: Object,
+      required: true,
+      default: () => {
+        return {}
+      },
+    },
+  },
 }
 </script>
 

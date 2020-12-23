@@ -20,31 +20,31 @@
     <!--E 顶部-->
     <!--S 按钮区-->
     <div class="my_btns">
-      <div class="my_btns_item">
+      <div class="my_btns_item" @click="handleClick(0)">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_entrust" size="0.36rem" color="#4974F5" />
         </div>
         <div class="my_btns_item_con">委托出售</div>
       </div>
-      <div class="my_btns_item">
+      <div class="my_btns_item" @click="handleClick(1)">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_cooperation" size="0.36rem" color="#FE8C29" />
         </div>
         <div class="my_btns_item_con">我要合作</div>
       </div>
-      <div class="my_btns_item" @click="$router.push('/my/help')">
+      <div class="my_btns_item" @click="handleClick(2)">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_help" size="0.36rem" color="#00B365" />
         </div>
         <div class="my_btns_item_con">帮助中心</div>
       </div>
-      <div class="my_btns_item">
+      <div class="my_btns_item" @click="handleClick(3)">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_debunk" size="0.36rem" color="#10BBB8" />
         </div>
         <div class="my_btns_item_con">我要吐槽</div>
       </div>
-      <div class="my_btns_item">
+      <div class="my_btns_item" @click="handleClick(4)">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_about" size="0.36rem" color="#4974F5" />
         </div>
@@ -63,7 +63,7 @@
 <script>
 import { Button, Image } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { userInfo } from '@/api'
+import { userinfoApi } from '@/api'
 export default {
   layout: 'nav',
   name: 'Index',
@@ -78,10 +78,10 @@ export default {
   },
   computed: {
     ...mapState({
-      userId: (state) => state.user.userInfo.userId || null,
+      userId: (state) => state.user.userInfo.userId,
     }),
   },
-  created() {
+  mounted() {
     if (this.userId) {
       this.getUserInfo()
     }
@@ -104,11 +104,23 @@ export default {
     },
     async getUserInfo() {
       // 获取用户信息
-      const params = {
-        id: this.userId,
+      try {
+        const params = {
+          // id: this.userId,
+          id: this.userId,
+        }
+        const data = await this.$axios.get(userinfoApi.info, { params })
+        this.info = data.data
+      } catch (err) {}
+    },
+    handleClick(val) {
+      if (val === 2) {
+        this.$router.push('/my/help')
+      } else if (val === 3) {
+        this.$router.push('/my/complain')
+      } else if (val === 4) {
+        this.$router.push('/my/about')
       }
-      const data = await userInfo.info({ axios: this.$axios }, params)
-      this.info = data
     },
   },
 }

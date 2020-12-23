@@ -2,13 +2,28 @@
   <div class="goods-item" @click="jumpUrl">
     <div class="goods-item-left">
       <img src="" alt="" class="goods-img" />
-      <span class="tag">急售</span>
+      <!--<span class="tag">急售</span>-->
     </div>
     <div class="goods-right">
-      <h3>全国地区 外资公司注册</h3>
-      <p>累计服务10000家外资企业</p>
-      <div class="tags"><span>极速办理</span><span>极速办理</span></div>
-      <div class="price-sales"><span>3000元</span><span>销量 6000</span></div>
+      <h3>{{ itemData.name }}</h3>
+      <p>{{ description }}</p>
+      <div
+        class="tags"
+        :style="{
+          visibility: itemType.type === 'serve' ? 'visible' : 'hidden',
+        }"
+      >
+        <span>极速办理</span>
+        <span>极速办理</span>
+        <span>极速办理</span>
+        <span>极速办理</span>
+      </div>
+      <div class="price-sales">
+        <span>{{ itemData.referencePrice }}元</span
+        ><span v-if="itemType.type === 'serve'"
+          >销量 {{ itemData.salesSum }}</span
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -22,7 +37,7 @@ export default {
       default() {
         return {
           type: 'serve',
-          classify: 'wd',
+          typeCode: '',
         }
       },
     },
@@ -36,13 +51,26 @@ export default {
   data() {
     return {}
   },
+  computed: {
+    description() {
+      if (this.itemData.productDescription) {
+        return this.itemData.productDescription
+      }
+      if (this.itemData.fieldList && this.itemData.fieldList.length) {
+        const desc = []
+        this.itemData.fieldList.forEach((item) => desc.push(item.fieldName))
+        return desc.join('|')
+      }
+      return ''
+    },
+  },
   methods: {
     jumpUrl() {
       if (this.itemType.type === 'serve') {
-        this.$router.push('/detail/serviceDetails')
+        this.$router.push(`/detail/serviceDetails?id=${this.itemData.id}`)
       } else {
         this.$router.push(
-          `/detail/${this.itemType.classify}/${this.itemData.id}`
+          `/detail/transactionDetails?type=${this.itemType.typeCode}&id=${this.itemData.id}`
         )
       }
     },
@@ -112,18 +140,24 @@ export default {
       .textOverflow(1);
     }
     .tags {
+      display: flex;
+      flex-wrap: wrap;
       display: inherit;
+      height: 32px;
+      overflow: hidden;
       span {
-        padding: 5px 8px;
+        display: inline-block;
+        height: 32px;
+        line-height: 32px;
+        padding: 0 8px;
         background: #f0f2f5;
         border-radius: 4px;
         font-size: 22px;
-        line-height: 1;
-        line-height: 1;
         font-family: PingFang SC;
         font-weight: 400;
         color: #5c7499;
         margin-right: 12px;
+        .textOverflow(1);
         &:last-child {
           margin-right: 0;
         }

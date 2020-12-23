@@ -40,7 +40,7 @@ export const mutations = {
 }
 
 export const actions = {
-  POSITION_CITY({ commit }, { cityList, type }) {
+  POSITION_CITY({ commit, state }, { cityList, type }) {
     // 调用城市定位方法
     getPosition()
       .then((res) => {
@@ -74,7 +74,7 @@ export const actions = {
         // 定位失败，设置默认城市为成都
         commit('SET_POSITION_CITY', '')
         commit('SET_POSITION_STATUS', 0)
-        if (type === 'rest') return // 若是重新定位，定位失败不重置当前城市
+        if (type === 'rest' && state.currentCity.name) return // 若是重新定位，定位失败并且当前有已选城市不重置当前城市
         commit('SET_CITY', {
           code: 'COMPANY_CD',
           name: '成都',

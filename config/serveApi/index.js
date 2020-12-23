@@ -5,21 +5,23 @@
  * @Description: 中间层调用java服务的api地址聚合
  * @FilePath: /chips-wap/config/envConfig/serveApi/index.js
  * */
-"use strict";
-const { algorithmApi } = require("./module/algorithm"); // 算法
-const { bigDataApi } = require("./module/bigData"); // 大数据
-const { contentApi } = require("./module/content"); // CMS内容
-const { productApi } = require("./module/product"); // 产品中心
-const { userApi } = require("./module/user"); // 用户中心
-const { iesApi } = require("./module/ies"); // 智企
-const { dashunApi } = require("./module/enterpriseDashun"); // 企大顺
+'use strict';
+const { algorithmApi } = require('./module/algorithm'); // 算法
+const { bigDataApi } = require('./module/bigData'); // 大数据
+const { contentApi } = require('./module/content'); // CMS内容
+const { productApi } = require('./module/product'); // 产品中心
+const { userApi } = require('./module/user'); // 用户中心
+const { iesApi } = require('./module/ies'); // 智企
+const { dashunApi } = require('./module/enterpriseDashun'); // 企大顺
+const { merchantApi } = require('./module/merchant'); // 商户中心
 
 module.exports = {
-    algorithmApi,
-    bigDataApi,
-    contentApi,
-    productApi,
-    userApi,
-    iesApi,
-    dashunApi,
+  algorithmApi,
+  bigDataApi,
+  contentApi,
+  productApi,
+  userApi,
+  iesApi,
+  dashunApi,
+  merchantApi,
 };
