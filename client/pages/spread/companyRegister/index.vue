@@ -145,6 +145,16 @@ export default {
     dggImCompany,
     FixedBottom,
   },
+
+  // async asyncData({ $axios }) {
+  //   const type = 'extendBussineReg'
+  //   const res = await $axios.get(
+  //     `http://172.16.133.7:7001/service/nk/spread/v1/list.do?pageCode=${type}`
+  //   )
+  //   console.log(res)
+  //   return { result: res }
+  // },
+
   data() {
     return {
       isMore: false,
@@ -257,6 +267,9 @@ export default {
       tel: '4000-535800',
     }
   },
+  // created() {
+  //   console.log(this.result)
+  // },
   methods: {
     onClickLeft() {
       console.log('返回')
@@ -272,6 +285,7 @@ export default {
       }
     },
   },
+
   head() {
     return {
       title: '工商注册-公司注册',
