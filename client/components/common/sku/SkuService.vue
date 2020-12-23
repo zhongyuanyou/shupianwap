@@ -78,7 +78,7 @@
               </sp-cell>
             </div>
           </SkuServiceRow>
-          <div class="sku-service-add">
+          <div class="sku-service-add" v-if="formatSkuAddService.length">
             <div class="sku-service-add__title">增值服务</div>
             <div class="sku-service-add__item">
               <SkuServiceRow
@@ -310,14 +310,15 @@ export default {
     formatSkuResourceService() {
       if (!Array.isArray(this.skuData.resourceServiceList)) return []
       return this.skuData.resourceServiceList.map((item) => {
-        const { classCode, className } = item || {}
+        const { classCode, className, id } = item || {}
         const matched =
           this.goods.serviceResourceList.find((resource) => {
             const { serviceItemId } = resource || {}
-            return serviceItemId === classCode
+            return serviceItemId === id
           }) || {}
         const { price, serviceItemValName, serviceItemValId } = matched
         return {
+          id,
           classCode,
           className,
           price,

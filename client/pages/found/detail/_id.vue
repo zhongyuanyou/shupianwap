@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <!--S 导航-->
-    <sp-top-nav-bar ellipsis :fixed="true">
+    <sp-top-nav-bar ellipsis :fixed="true" @on-click-right="onClickRight">
       <template #left>
         <div @click="back">
           <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
@@ -60,12 +60,17 @@
         </div>
       </div>
       <!--E 版本信息-->
+      <sp-share-sheet
+        v-model="showShare"
+        :options="options"
+        @select="handleSelect"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { TopNavBar, Icon, Image } from '@chipspc/vant-dgg'
+import { TopNavBar, Icon, Image, ShareSheet } from '@chipspc/vant-dgg'
 import { foundApi } from '~/api'
 export default {
   name: 'Detail',
@@ -73,11 +78,19 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [Icon.name]: Icon,
     [Image.name]: Image,
+    [ShareSheet.name]: ShareSheet,
   },
   data() {
     return {
       tags: ['公司发展', '公司发展'], // 模拟tags数据
       info: null, // 资讯详情
+      showShare: false, // 显示分享面板
+      options: [
+        {
+          name: '链接',
+          icon: 'link',
+        },
+      ],
     }
   },
   mounted() {
@@ -99,6 +112,15 @@ export default {
           this.info = res.data
         }
       } catch (err) {}
+    },
+    onClickRight() {
+      this.showShare = true
+    },
+    handleSelect(option, index) {
+      // 点击分享
+      if (option.name === '链接') {
+        console.log('index', option)
+      }
     },
   },
 }

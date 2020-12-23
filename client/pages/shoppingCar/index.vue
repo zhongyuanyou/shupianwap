@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-22 15:51:28
+ * @LastEditTime: 2020-12-23 15:22:13
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -34,7 +34,11 @@
       </div>
 
       <div class="shopping-car__content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <sp-pull-refresh
+          v-model="refreshing"
+          :disabled="false"
+          @refresh="onRefresh"
+        >
           <sp-list
             v-model="loading"
             class="shopping-car__goods"
@@ -157,6 +161,7 @@ export default {
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
+      isInApp: (state) => state.app.isInApp,
     }),
   },
   watch: {
@@ -208,6 +213,11 @@ export default {
     }),
     onClickLeft() {
       console.log('nav onClickLeft')
+      if (this.isInApp) {
+        this.$appFn.dggCloseWebView()
+        return
+      }
+      this.$router.go(-1)
     },
     onClickRight() {
       console.log('nav onClickRight')
@@ -267,6 +277,9 @@ export default {
         case 'selectAll':
           this.selectAll(data)
           break
+        case 'bill':
+          this.uPBill(data)
+          break
         case 'refresh':
           this.refreshing = true
           this.onRefresh()
@@ -318,19 +331,50 @@ export default {
       const cartId = cartIdArray.join()
       this.selectItem(cartId, data)
     },
+
+    // 统一的计算
+    uPBill() {
+      const cartIdsStr = this.currentSelectedCartIds.join(',') // 多个cartId 用逗号凭借为一个
+      console.log(cartIdsStr)
+      // 在app中
+      if (this.isInApp) {
+        const iOSRouter = {
+          path:
+            'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
+          parameter: {
+            routerPath: 'cps/place_order',
+            parameter: { cartId: cartIdsStr, type: 1 },
+          },
+        }
+        const iOSRouterStr = JSON.stringify(iOSRouter)
+        this.$appFn.dggJumpRoute(
+          {
+            iOSRouter: iOSRouterStr,
+            androidRouter: '',
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              Toast('结算失败')
+            }
+          }
+        )
+      }
+    },
+
     // 资源服务的选择
     selecteResourceService(cartId, value, index) {
       const { type, classCode } = value
       this.skuOpenIndex = index
       switch (type) {
         case 'registerAddress':
-          this.$router.push({
+          this.$router.replace({
             name: 'detail-selectAddress',
             query: { classCode, redirectType: 'wap', redirect: 'shoppingCar' },
           })
           break
         case 'phone':
-          this.$router.push({
+          this.$router.replace({
             name: 'detail-selectPhone',
             query: { classCode, redirectType: 'wap', redirect: 'shoppingCar' },
           })

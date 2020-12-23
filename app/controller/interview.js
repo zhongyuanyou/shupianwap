@@ -37,11 +37,10 @@ class interviewController extends Controller {
         try {
             // 获取面谈记录列表
             const resData = await service.curl.curlGet(url, {
-                categoryCode: ctx.query.categoryCode,
-                platformCode: ctx.query.platformCode,
                 limit: ctx.query.limit,
                 start: ctx.query.page,
             });
+            console.log('resData', resData);
             let data =
                 resData.code === 200
                     ? resData.data

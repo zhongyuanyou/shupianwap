@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-16 20:07:46
+ * @LastEditTime: 2020-12-23 13:40:44
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/MainGoodsItem.vue
 -->
@@ -48,7 +48,7 @@
           @change="handleCountChange"
         />
       </div>
-      <div class="goods-service">
+      <div v-if="mainData.addServiceList.length" class="goods-service">
         <div class="goods-service__row-left">增值服务</div>
         <div class="goods-service__row-right">
           <div
