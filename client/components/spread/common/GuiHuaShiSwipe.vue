@@ -9,10 +9,10 @@
         class="planner-content my-swipe"
       >
         <sp-swipe-item
-          v-for="item of data.planners"
-          :key="item.id"
+          v-for="(item, i) of plannersdata"
+          :key="i"
           class="planner-content-item"
-          @click="openImUrl"
+          @click="openImUrl(i)"
         >
           <div class="planner-content-item-shadow">
             <div class="planner-content-item-shadow-person">
@@ -38,11 +38,11 @@
                 薯片分 {{ item.shuPianFen }} | 服务次数 {{ item.serverNum }}
               </div>
               <div class="planner-content-item-shadow-content-tab">
-                <div v-for="(tab, i) of item.labels" :key="i">{{ tab }}</div>
+                <div v-for="(tab, j) of item.labels" :key="j">{{ tab }}</div>
               </div>
             </div>
             <div class="planner-content-item-shadow-icon">
-              <div style="margin-right: 0.2rem" @click="openIm">
+              <div style="margin-right: 0.2rem" @click="openIm(i, $event)">
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -77,29 +77,56 @@ export default {
     [SwipeItem.name]: SwipeItem,
   },
   props: {
-    data: {
-      type: Object,
+    plannersdata: {
+      type: Array,
       default: () => {
-        return {
-          planners: [
-            {
-              id: 1,
-              type: '金牌规划师',
-              avatarImg: '',
-              name: '郭亮亮',
-              shuPianFen: 11,
-              serverNum: 250,
-              telephone: 12345679985,
-              labels: ['工商注册', '财税咨询', '税务筹划'],
+        return [
+          {
+            code: 1,
+            type: '金牌规划师',
+            avatarImg: '',
+            name: '郭亮亮',
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: 12345679985,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+            im: {
+              id: '7862495547640840192',
+              name: '张毅',
+              num: '107547',
             },
-          ],
-          im: {
-            function: 'openIMM',
-            id: '7862495547640840192',
-            name: '张毅',
-            num: '107547',
           },
-        }
+          {
+            code: 2,
+            type: '金牌规划师',
+            avatarImg: '',
+            name: '郭亮亮',
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: 12345679985,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+            im: {
+              id: '7862495547640840192',
+              name: '张毅',
+              num: '107547',
+            },
+          },
+          {
+            code: 3,
+            type: '金牌规划师',
+            avatarImg: '',
+            name: '郭亮亮',
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: 12345679985,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+            im: {
+              id: '7862495547640840192',
+              name: '张毅',
+              num: '107547',
+            },
+          },
+        ]
       },
     },
     title: {
@@ -116,23 +143,26 @@ export default {
     }
   },
   methods: {
-    openIm() {
+    openIm(i, e) {
+      e.stopPropagation()
+      console.log(1)
       this.$root.$emit(
-        this.data.im.function,
-        this.data.im.id,
-        this.data.im.name,
-        this.data.im.num
+        'openIMM',
+        this.plannersdata[i].im.id,
+        this.plannersdata[i].im.name,
+        this.plannersdata[i].im.num
       )
     },
-    openImUrl() {
+    openImUrl(i) {
       if (this.url !== '') {
         window.open = this.url
       } else {
+        console.log(1)
         this.$root.$emit(
-          this.data.im.function,
-          this.data.im.id,
-          this.data.im.name,
-          this.data.im.num
+          'openIMM',
+          this.plannersdata[i].im.id,
+          this.plannersdata[i].im.name,
+          this.plannersdata[i].im.num
         )
       }
     },

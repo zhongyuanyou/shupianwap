@@ -20,7 +20,7 @@
     <!--  服务流程  -->
     <!--  规划师  -->
     <gui-hua-shi-swipe
-      :data="plannersData"
+      :plannersdata="plannersData"
       :title="plannersTitle"
     ></gui-hua-shi-swipe>
     <!--  规划师  -->
@@ -76,46 +76,53 @@ export default {
   data() {
     return {
       headTitle: '税务筹划',
-      plannersData: {
-        planners: [
-          {
-            id: 1,
-            type: '金牌规划师',
-            avatarImg: '',
-            name: '郭亮亮',
-            shuPianFen: 138,
-            serverNum: 258,
-            telephone: 12345679985,
-            labels: ['工商注册', '财税咨询', '税务筹划'],
+      plannersData: [
+        {
+          id: 1,
+          type: '金牌规划师',
+          avatarImg: '',
+          name: '郭亮亮',
+          shuPianFen: 138,
+          serverNum: 258,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
           },
-          {
-            id: 2,
-            type: '金牌规划师',
-            avatarImg: '',
-            name: '郭亮亮',
-            shuPianFen: 11,
-            serverNum: 250,
-            telephone: 12345679985,
-            labels: ['工商注册', '财税咨询', '税务筹划'],
-          },
-          {
-            id: 3,
-            type: '金牌规划师',
-            avatarImg: '',
-            name: '郭亮亮',
-            shuPianFen: 11,
-            serverNum: 250,
-            telephone: 12345679985,
-            labels: ['工商注册', '财税咨询', '税务筹划'],
-          },
-        ],
-        im: {
-          function: 'openIMM',
-          id: '7862495547640840192',
-          name: '张毅',
-          num: '107547',
         },
-      },
+        {
+          id: 2,
+          type: '金牌规划师',
+          avatarImg: '',
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
+          },
+        },
+        {
+          id: 3,
+          type: '金牌规划师',
+          avatarImg: '',
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
+          },
+        },
+      ],
       plannersTitle: '咨询规划师',
       fixedBottomData: {
         show: {
@@ -135,16 +142,16 @@ export default {
       },
       consultTitle: '对于代理记账还有疑问？企服专家为您免费解答',
       consultTel: '4000-535800',
+      im: {
+        id: '7862495547640840192',
+        name: '张毅',
+        num: '107547',
+      },
     }
   },
   methods: {
     openIm() {
-      this.$root.$emit(
-        this.plannersData.im.function,
-        this.plannersData.im.id,
-        this.plannersData.im.name,
-        this.plannersData.im.num
-      )
+      this.$root.$emit('openIMM', this.im.id, this.im.name, this.im.num)
     },
   },
   head() {
