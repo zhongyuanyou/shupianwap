@@ -32,7 +32,7 @@
     <!--  立即咨询  -->
     <!--  底部  -->
     <shu-pian-zhao-ren></shu-pian-zhao-ren>
-    <fixed-bottom :data="fixedBottomData"></fixed-bottom>
+    <fixed-bottom :planner="fixedBottomData"></fixed-bottom>
     <!--  底部  -->
     <!--  IM  -->
     <dgg-im-company></dgg-im-company>
@@ -55,6 +55,7 @@ import dggImCompany from '~/components/spread/DggImCompany'
 import shuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
 import fixedBottom from '~/components/spread/common/FixedBottom'
 import consultTel from '@/components/spread/common/ConsultTel'
+import { spreadApi } from '@/api/spread'
 export default {
   name: 'TaxVue',
   components: {
@@ -74,11 +75,22 @@ export default {
     consultTel,
   },
   async asyncData({ $axios }) {
-    const type = 'extendTaxPlanning'
-    const res = await $axios.get(
-      `http://172.16.133.7:7001/service/nk/spread/v1/list.do?pageCode=${type}`
-    )
-    return { result: res.data }
+    const type = 'extendTaxPlanning '
+    try {
+      const res = await $axios.get(spreadApi.list, {
+        params: {
+          pageCode: type,
+        },
+      })
+      if (res.code === 200) {
+        console.log(res.data.adList[0].sortMaterialList[0].materialList[0])
+        return {
+          result: res.data,
+        }
+      }
+    } catch (error) {
+      console.log('error', error)
+    }
   },
   data() {
     return {
@@ -153,20 +165,11 @@ export default {
       ],
       plannersTitle: '咨询规划师',
       fixedBottomData: {
-        show: {
-          imgSrc: 'http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg',
-          cardName: '王深林',
-          cardSign: '金牌规划师',
-          icon: '',
-          round: true,
-          avatarSize: 40,
-        },
-        info: {
-          id: '7862495547640840192',
-          name: '张毅',
-          jobNum: '107547',
-          telephone: '18402858698',
-        },
+        id: '7862495547640840192',
+        name: '张毅',
+        jobNum: '107547',
+        telephone: '18402858698',
+        imgSrc: 'http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg',
       },
       consultTitle: '对于代理记账还有疑问？企服专家为您免费解答',
       consultTel: '4000-535800',
@@ -235,31 +238,31 @@ export default {
   },
   created() {
     // 调用服务模块数据处理
-    this.getServeData(this.result)
+    // this.getServeData(this.result)
   },
   methods: {
     // 服务模块数据处理
-    getServeData(res) {
-      for (let i = 0; i < this.serveData.length; i++) {
-        // 循环价格
-        this.serveData[i].price =
-          res.adList[0].sortMaterialList[
-            i
-          ].materialList[0].productDetail.referencePrice
-        // 循环咨询
-        this.serveData[i].num1 =
-          res.adList[0].sortMaterialList[i].materialList[0].productDetail
-            .operating.actualViews / 10000
-        // 循环咨询
-        this.serveData[i].num2 =
-          res.adList[0].sortMaterialList[i].materialList[0].productDetail
-            .operating.defaultSales / 10000
-        // 循环咨询
-        this.serveData[i].num3 =
-          res.adList[0].sortMaterialList[i].materialList[0].productDetail
-            .operating.actualSales / 10000
-      }
-    },
+    // getServeData(res) {
+    //   for (let i = 0; i < this.serveData.length; i++) {
+    //     // 循环价格
+    //     this.serveData[i].price =
+    //       res.adList[0].sortMaterialList[
+    //         i
+    //       ].materialList[0].productDetail.referencePrice
+    //     // 循环咨询
+    //     this.serveData[i].num1 =
+    //       res.adList[0].sortMaterialList[i].materialList[0].productDetail
+    //         .operating.actualViews / 10000
+    //     // 循环咨询
+    //     this.serveData[i].num2 =
+    //       res.adList[0].sortMaterialList[i].materialList[0].productDetail
+    //         .operating.defaultSales / 10000
+    //     // 循环咨询
+    //     this.serveData[i].num3 =
+    //       res.adList[0].sortMaterialList[i].materialList[0].productDetail
+    //         .operating.actualSales / 10000
+    //   }
+    // },
     // 这个页面统一调用IM时的信息
     openIm() {
       this.$root.$emit('openIMM', this.im.id, this.im.name, this.im.num)
