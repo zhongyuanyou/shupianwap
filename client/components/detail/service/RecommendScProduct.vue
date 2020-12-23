@@ -16,7 +16,7 @@
           {{ item.name }}
         </p>
         <div class="label">
-          <span>{{ item.operating.slogan }}</span>
+          <span>{{ item.operating ? item.operating.slogan : null }}</span>
         </div>
         <div class="tags">
           <div

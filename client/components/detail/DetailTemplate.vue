@@ -20,10 +20,7 @@
     <Banner :images="info.images" />
     <!--S banner-->
     <!--S 第一板块-->
-    <Title
-      :tc-product-detail-data="{ ...tcProductDetailData }"
-      :info="{ ...info }"
-    />
+    <Title :tc-product-detail-data="tcProductDetailData" :info="{ ...info }" />
     <!--E 第一板块-->
     <!--S 第二板块 基本信息-->
     <Basic :tc-product-detail-data="{ tcProductDetailData }">
@@ -44,7 +41,7 @@
     <!--E 第二板块 基本信息-->
     <slot name="qualification"></slot>
     <!--S 第三板块 评估报告-->
-    <Report :info="{ ...info }" />
+    <Report />
     <!--E 第三板块 评估报告-->
     <!--S 第四板块 交易服务保障承诺-->
     <Commitment :info="{ ...info }" />
@@ -62,7 +59,10 @@
     <Case :info="{ ...info }" />
     <!--E 第八板块 成功案例-->
     <!--S 第九板块 同类推荐-->
-    <Recommend :similar-recommend-data="similarRecommend" />
+    <Recommend
+      :detail-type="detailType"
+      :similar-recommend-data="similarRecommend"
+    />
     <!--E 第九板块 同类推荐-->
     <!--S 第十板块 猜你需要-->
     <sp-list
@@ -74,7 +74,10 @@
       <Need :product-data="recommendProduct" />
     </sp-list>
     <!--E 第十板块 猜你需要-->
-    <commodityConsultation :planner-info="tcPlannerBooth" />
+    <commodityConsultation
+      :im-jump-query="imJumpQuery"
+      :planner-info="tcPlannerBooth"
+    />
   </div>
 </template>
 
@@ -135,7 +138,7 @@ export default {
     detailType: {
       type: String,
       default: () => {
-        return '1'
+        return this.$route.query.type ? this.$route.query.type : null
       },
     },
     tcProductDetailData: {
@@ -153,6 +156,12 @@ export default {
     recommendPlanner: {
       type: Array,
       default: () => [],
+    },
+    imJumpQuery: {
+      type: Object,
+      default: () => {
+        return {}
+      },
     },
   },
   data() {
@@ -231,10 +240,10 @@ export default {
               this.finished = true
             }
           }
-          this.loading = false
+          this.finished = true
         })
         .catch((err) => {
-          this.loading = false
+          this.finished = true
           console.log(err)
         })
     },
@@ -284,6 +293,7 @@ export default {
 .template {
   width: 100%;
   height: 100%;
+  overflow: hidden;
   background-color: #f8f8f8;
   /*padding-bottom: 144px;*/
   /deep/ .sp-hairline--bottom::after {

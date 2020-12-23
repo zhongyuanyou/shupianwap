@@ -5,7 +5,8 @@
       :tc-product-detail-data="tcProductDetailData"
       :tc-planner-booth="tcPlannerBooth"
       :recommend-planner="planners"
-      :detail-type="$route.query.type"
+      :detail-type="tcProductDetailData.classCodeLevelList[0]"
+      :im-jump-query="imJumpQuery"
     />
   </div>
 </template>
@@ -23,7 +24,7 @@ export default {
     try {
       let tcPlannerBooth = {}
       let tcProductDetailData = {}
-      const { code, data } = await $axios.get(
+      const { code, message, data } = await $axios.get(
         productDetailsApi.tcProductDetail,
         {
           params: {
@@ -57,6 +58,8 @@ export default {
           tcPlannerBooth = plannerRes.data.records[0]
         }
         return { tcProductDetailData, tcPlannerBooth }
+      } else {
+        console.log(code, message)
       }
     } catch (err) {
       console.log(err)
@@ -105,6 +108,18 @@ export default {
   computed: {
     city() {
       return this.$store.state.city.currentCity
+    },
+    imJumpQuery() {
+      const imdata = {
+        productName: this.tcProductDetailData.name, // 产品名称
+        productContent: this.tcProductDetailData.name, // 产品信息
+        price: `${this.tcProductDetailData.platformPrice}元`, // 价格
+        forwardAbstract: this.tcProductDetailData.name, // 摘要信息，可与显示内容保持一致
+        routerId: 'IMRouter_APP_ProductDetail_Trade', // 路由ID
+        imageUrl: 'https://img.yzcdn.cn/vant/cat.jpeg', // 产品图片
+        unit: `${this.tcProductDetailData.platformPrice.split('.')[1]}元`, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+      }
+      return imdata
     },
   },
   mounted() {

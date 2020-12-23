@@ -6,13 +6,14 @@
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/planner.js
  */
-"use strict";
-const Controller = require("egg").Controller;
-const { Get, Post, Prefix } = require("egg-shell-decorators");
+'use strict';
+const Controller = require('egg').Controller;
+const CryptoJS = require('crypto-js');
+const { Get, Post, Prefix } = require('egg-shell-decorators');
 
-const { merchantApi } = require("./../../config/serveApi/index");
+const { merchantApi } = require('./../../config/serveApi/index');
 
-const getValiErrors = function (app, ctx, rules, data) {
+const getValiErrors = function(app, ctx, rules, data) {
   // 参数校验
   const valiErrors = app.validator.validate(rules, data);
   // 参数校验未通过
@@ -23,34 +24,34 @@ const getValiErrors = function (app, ctx, rules, data) {
   return false;
 };
 
-@Prefix("/nk/planner/v1")
+@Prefix('/nk/planner/v1')
 class PlannerController extends Controller {
-  @Post("/list.do")
+  @Post('/list.do')
   async list() {
     const { ctx, service, app } = this;
     // 定义参数校验规则
     const rules = {
-      userId: { type: "string", required: false }, // 查找我的规划师有用
-      plannerName: { type: "string", required: false },
+      userId: { type: 'string', required: false }, // 查找我的规划师有用
+      plannerName: { type: 'string', required: false },
       regionDto: {
-        type: "object",
+        type: 'object',
         required: false,
         rule: {
-          codeState: [1, 2, 3], // 经营区域Code类型  1省  2市 3区
-          regions: { type: "array", required: false }, // 经营区域Code
+          codeState: [ 1, 2, 3 ], // 经营区域Code类型  1省  2市 3区
+          regions: { type: 'array', required: false }, // 经营区域Code
         },
       },
       sort: {
-        type: "object",
+        type: 'object',
         required: false,
         rule: {
-          value: [1, 2], // 1升序   2降序
-          sortType: ["pointSort", "reputationSort", "payNumSort"], // 积分排序 好评率排序 成交次数排序
+          value: [ 1, 2 ], // 1升序   2降序
+          sortType: [ 'pointSort', 'reputationSort', 'payNumSort' ], // 积分排序 好评率排序 成交次数排序
         },
       },
-      status: { type: "number", required: false }, // 在职状态(-1全部 0禁用/小黑屋 1启用 3离职）
-      limit: { type: "number", required: true },
-      page: { type: "number", required: true },
+      status: { type: 'number', required: false }, // 在职状态(-1全部 0禁用/小黑屋 1启用 3离职）
+      limit: { type: 'number', required: true },
+      page: { type: 'number', required: true },
     };
 
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
@@ -65,10 +66,10 @@ class PlannerController extends Controller {
       page,
     } = ctx.request.body;
 
-    //TODO 有userID 先查大数据获取
+    // TODO 有userID 先查大数据获取
     let mchUserIds = [];
     if (userId) {
-      mchUserIds = ["607991207963818368"];
+      mchUserIds = [ '607991207963818368' ];
     }
     const listParams = {
       plannerName,
@@ -86,7 +87,7 @@ class PlannerController extends Controller {
         ctx,
         code: listResult.code,
         res: listResult.data,
-        detailMessage: listResult.message || "请求失败",
+        detailMessage: listResult.message || '请求失败',
       });
       return;
     }
@@ -95,16 +96,16 @@ class PlannerController extends Controller {
     const listRecords = listData.records || [];
 
     // 办公地址
-    const addressIds = listRecords.map((item) => item.officeAddressId);
+    const addressIds = listRecords.map(item => item.officeAddressId);
     const addressResultPromise = service.planner.getAddressList({ addressIds });
     // 标签
-    const listMchUserIds = listRecords.map((item) => item.mchUserId);
+    const listMchUserIds = listRecords.map(item => item.mchUserId);
     const categoryResultPromise = service.planner.getCategoryList({
       mchUserIds: listMchUserIds,
     });
 
     // // TODO再并发请求 照片
-    const [addressResult, categoryResult] = await Promise.all([
+    const [ addressResult, categoryResult ] = await Promise.all([
       addressResultPromise,
       categoryResultPromise,
     ]);
@@ -130,15 +131,15 @@ class PlannerController extends Controller {
       ctx,
       code: 500,
       res: {},
-      detailMessage: "请求失败",
+      detailMessage: '请求失败',
     });
   }
 
-  @Get("/detail.do")
+  @Get('/detail.do')
   async detail() {
     const { ctx, service, app } = this;
     const rules = {
-      id: { type: "string", required: true },
+      id: { type: 'string', required: true },
     };
     if (getValiErrors(app, ctx, rules, ctx.query)) return;
     const { id } = ctx.query;
@@ -161,10 +162,10 @@ class PlannerController extends Controller {
     });
 
     const categoryResultPromise = service.planner.getCategoryList({
-      mchUserIds: [id],
+      mchUserIds: [ id ],
     });
 
-    const [detailResult, rankResult, categoryResult] = await Promise.all([
+    const [ detailResult, rankResult, categoryResult ] = await Promise.all([
       detailResultPromise,
       rankResultPromise,
       categoryResultPromise,
@@ -192,19 +193,19 @@ class PlannerController extends Controller {
       ctx,
       code: 500,
       res: {},
-      detailMessage: "请求失败",
+      detailMessage: '请求失败',
     });
   }
 
-  @Get("/tel.do")
+  @Get('/tel.do')
   async getTel() {
     const { ctx, service, app } = this;
     const rules = {
-      id: { type: "string", required: true },
-      sensitiveInfoType: { type: "string", required: false },
+      id: { type: 'string', required: true },
+      sensitiveInfoType: { type: 'string', required: false },
     };
     if (getValiErrors(app, ctx, rules, ctx.query)) return;
-    const { id, sensitiveInfoType = "MCH_USER" } = ctx.query;
+    const { id, sensitiveInfoType = 'MCH_USER' } = ctx.query;
     // 查询详情
     const sensitiveUrl = ctx.helper.assembleUrl(
       app.config.apiClient.APPID[5],
@@ -216,10 +217,19 @@ class PlannerController extends Controller {
     });
 
     if (data.code === 200) {
+      // 加密手机号
+      const wordArray = CryptoJS.enc.Utf8.parse(data.data);
+      const base64 = CryptoJS.enc.Base64.stringify(wordArray);
+      const ciphertext = base64;
+      // 脱敏手机号
+      const tel = data.data.replace(/(\d{3})\d+(\d{4})/, '$1****$2');
       ctx.helper.success({
         ctx,
         code: 200,
-        res: data.data || {},
+        res: {
+          tel,
+          ciphertext,
+        },
       });
       return;
     }
@@ -227,7 +237,7 @@ class PlannerController extends Controller {
       ctx,
       code: data.code,
       res: data,
-      detailMessage: data.message || "请求失败",
+      detailMessage: data.message || '请求失败',
     });
   }
 }

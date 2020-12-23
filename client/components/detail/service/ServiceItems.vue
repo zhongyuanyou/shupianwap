@@ -49,7 +49,9 @@ export default {
   props: {
     normalItemListData: {
       type: Array,
-      default: () => [],
+      default: () => {
+        return []
+      },
     },
   },
   data() {
@@ -84,12 +86,16 @@ export default {
   },
   computed: {
     normalItemList() {
-      const normalItemArr = [...this.normalItemListData].slice(0, 2)
+      const normalItemArr = this.normalItemListData
+        ? [...this.normalItemListData].slice(0, 2)
+        : []
       return normalItemArr
     },
     normalItemOptions() {
       const normalItem = []
-      this.normalItemListData.forEach((item) => {
+      let normalItemArr = []
+      if (this.normalItemListData) normalItemArr = this.normalItemListData
+      normalItemArr.forEach((item) => {
         normalItem.push({
           title: item.name,
           text: item.description,

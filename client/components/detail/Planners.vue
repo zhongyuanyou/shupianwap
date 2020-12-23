@@ -34,7 +34,7 @@
             size="0.32rem"
             color="#4974F5"
         /></sp-button>
-        <sp-button round class="contact-btn" @click="handleTel"
+        <sp-button round class="contact-btn" @click="handleTel(item.mchUserId)"
           ><my-icon
             class=""
             name="notify_ic_tel"
@@ -47,7 +47,9 @@
 </template>
 
 <script>
-import { Image, Button } from '@chipspc/vant-dgg'
+import { Image, Button, Toast } from '@chipspc/vant-dgg'
+import { parseTel } from '~/utils/common'
+import { planner } from '~/api'
 export default {
   name: 'Planners',
   components: {
@@ -61,8 +63,22 @@ export default {
     },
   },
   methods: {
-    handleTel() {
-      window.location.href = 'tel://18116757032'
+    async handleTel(mchUserId) {
+      try {
+        const telData = await planner.tel({
+          id: mchUserId,
+          sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        const tel = parseTel(telData.ciphertext)
+        window.location.href = `tel://${tel}`
+      } catch (err) {
+        Toast({
+          message: '未获取到划师联系方式',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+      }
     },
   },
 }

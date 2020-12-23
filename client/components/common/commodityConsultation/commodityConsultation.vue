@@ -15,27 +15,87 @@
         </div>
       </div>
       <div class="commodityConsult-containner-handle">
-        <sp-button type="primary">在线咨询</sp-button>
-        <sp-button type="info">电话联系</sp-button>
+        <sp-button
+          type="primary"
+          @click="sendTemplateMsgWithImg(plannerInfo.mchUserId)"
+        >
+          在线咨询
+        </sp-button>
+        <sp-button type="info" @click="handleTel(plannerInfo.mchUserId)">
+          电话联系
+        </sp-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Image, Button } from '@chipspc/vant-dgg'
+import { Image, Button, Toast } from '@chipspc/vant-dgg'
+import { planner } from '~/api'
+import { parseTel } from '~/utils/common'
+import imHandle from '~/mixins/imHandle'
 export default {
   name: 'CommodityConsultation',
   components: {
     [Image.name]: Image,
     [Button.name]: Button,
   },
+  mixins: [imHandle],
   props: {
     plannerInfo: {
       type: Object,
       default: () => {
         return {}
       },
+    },
+    imJumpQuery: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+  },
+  methods: {
+    // 拨打电话
+    async handleTel(mchUserId) {
+      try {
+        const telData = await planner.tel({
+          id: mchUserId,
+          sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        const tel = parseTel(telData.ciphertext)
+        window.location.href = `tel://${tel}`
+      } catch (err) {
+        Toast({
+          message: '未获取到划师联系方式',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+      }
+    },
+    // 调起IM
+    // 发送模板消息(带图片)
+    sendTemplateMsgWithImg(mchUserId) {
+      // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
+      // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
+      const sessionParams = {
+        imUserId: mchUserId, // 商户用户ID
+        imUserType: 'MERCHANT_USER', // 用户类型
+      }
+      const msgParams = {
+        sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
+        msgType: 'im_tmplate', // 消息类型
+        extContent: this.$route.query, // 路由参数
+        productName: this.imJumpQuery.productName, // 产品名称
+        productContent: this.imJumpQuery.productContent, // 产品信息
+        price: this.imJumpQuery.price, // 价格
+        forwardAbstract: this.imJumpQuery.forwardAbstract, // 摘要信息，可与显示内容保持一致
+        routerId: this.imJumpQuery.routerId, // 路由ID
+        imageUrl: this.imJumpQuery.imageUrl, // 产品图片
+        unit: this.imJumpQuery.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+      }
+      this.sendTemplateMsgMixin({ sessionParams, msgParams })
     },
   },
 }

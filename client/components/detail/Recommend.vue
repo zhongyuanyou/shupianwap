@@ -3,9 +3,19 @@
     <div class="recommend_tp">
       <p class="recommend_tp_title">同类推荐</p>
       <div class="recommend_tp_more">
-        查看更多<span
-          ><my-icon name="order_ic_listnext" size="0.21rem" color="#ccc"
-        /></span>
+        <nuxt-link
+          :to="{
+            path: '/list/jyList',
+            query: {
+              typeCode: detailType,
+            },
+          }"
+        >
+          查看更多
+          <span>
+            <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
+          </span>
+        </nuxt-link>
       </div>
     </div>
     <sp-swipe :loop="false" :width="315.5" :show-indicators="false">
@@ -53,6 +63,12 @@ export default {
       type: Array,
       default: () => [],
     },
+    detailType: {
+      type: String,
+      default: () => {
+        return this.$route.query.type ? this.$route.query.type : null
+      },
+    },
   },
 }
 </script>
@@ -80,8 +96,11 @@ export default {
       font-family: PingFang SC;
       font-weight: 400;
       color: #999999;
-      span {
-        margin-left: 19px;
+      a {
+        color: #999999;
+        span {
+          margin-left: 8px;
+        }
       }
     }
   }

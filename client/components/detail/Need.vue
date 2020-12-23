@@ -2,33 +2,43 @@
   <div class="need">
     <p class="need_title">猜您需要</p>
     <div v-for="item in productData" :key="item.id" class="need_item">
-      <div class="need_item_img">
-        <sp-image
-          width="1.6rem"
-          height="1.6rem"
-          fit="cover"
-          radius="0.04rem"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
-        />
-      </div>
-      <div class="need_item_rt">
-        <p class="title">
-          {{ item.name }}
-        </p>
-        <div class="label">
-          <span v-for="(lItem, index) in item.fieldList" :key="index">{{
-            `${lItem.fieldValueList ? lItem.fieldValueList[0] : ''}${
-              index === item.fieldList.length - 1 ? '' : '|'
-            }`
-          }}</span>
+      <nuxt-link
+        :to="{
+          path: '/detail/transactionDetails',
+          query: {
+            type: '12',
+            id: item.id,
+          },
+        }"
+      >
+        <div class="need_item_img">
+          <sp-image
+            width="1.6rem"
+            height="1.6rem"
+            fit="cover"
+            radius="0.04rem"
+            src="https://img.yzcdn.cn/vant/cat.jpeg"
+          />
         </div>
-        <div class="tags">
-          <div v-for="(tItem, index) in 0" :key="index" class="tags_item">
-            {{ tItem }}
+        <div class="need_item_rt">
+          <p class="title">
+            {{ item.name }}
+          </p>
+          <div class="label">
+            <span v-for="(lItem, index) in item.fieldList" :key="index">{{
+              `${lItem.fieldValueList ? lItem.fieldValueList[0] : ''}${
+                index === item.fieldList.length - 1 ? '' : '|'
+              }`
+            }}</span>
           </div>
+          <div class="tags">
+            <div v-for="(tItem, index) in 0" :key="index" class="tags_item">
+              {{ tItem }}
+            </div>
+          </div>
+          <p class="money">{{ item.platformPrice }}元</p>
         </div>
-        <p class="money">{{ item.platformPrice }}元</p>
-      </div>
+      </nuxt-link>
     </div>
   </div>
 </template>
@@ -69,12 +79,16 @@ export default {
   }
   &_item {
     width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-direction: row;
-    padding: 40px 0;
-    border-bottom: 1px solid #f4f4f4;
+    a {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-direction: row;
+      padding: 40px 0;
+      border-bottom: 1px solid #f4f4f4;
+      overflow: hidden;
+    }
     &:last-child {
       border-bottom: none;
     }
@@ -109,6 +123,7 @@ export default {
           font-family: PingFang SC;
           font-weight: 400;
           color: #222222;
+          white-space: nowrap;
         }
       }
       .tags {

@@ -43,7 +43,10 @@
     >
       <RecommendScProduct :recommend-product-data="recommendProduct" />
     </sp-list>
-    <commodityConsultation :planner-info="scPlannerDetailData" />
+    <commodityConsultation
+      :im-jump-query="imJumpQuery"
+      :planner-info="scPlannerDetailData"
+    />
   </div>
 </template>
 
@@ -116,11 +119,12 @@ export default {
           },
         })
         if (plannerRes.code === 200) {
-          console.log(plannerRes.data.records[0])
           scPlannerDetailData = plannerRes.data.records[0]
         }
-        console.log({ scProductDetailData, scPlannerDetailData })
+        console.log({ scProductDetailData })
         return { scProductDetailData, scPlannerDetailData }
+      } else {
+        console.log(productDetailRes)
       }
     } catch (err) {
       console.log('错误信息：', err)
@@ -165,7 +169,7 @@ export default {
       plannerPage: 1,
       plannerCount: 0, // 推荐规划师总条数
       deviceId: null, // 用户唯一标识
-      productLimit: 5, // 产品每页条数
+      productLimit: 10, // 产品每页条数
       productPage: 1, // 产品分页
       productCount: 0, // 推荐产品总条数
       recommendProduct: [], // 推荐产品‘
@@ -174,6 +178,20 @@ export default {
   computed: {
     city() {
       return this.$store.state.city.currentCity
+    },
+    imJumpQuery() {
+      const imdata = {
+        productName: this.scProductDetailData.baseData.name, // 产品名称
+        productContent: this.scProductDetailData.baseData.productDescription, // 产品信息
+        price: `${this.scProductDetailData.baseData.referencePrice}元`, // 价格
+        forwardAbstract: this.scProductDetailData.baseData.productDescription, // 摘要信息，可与显示内容保持一致
+        routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
+        imageUrl: 'https://img.yzcdn.cn/vant/cat.jpeg', // 产品图片
+        unit: `${
+          this.scProductDetailData.baseData.referencePrice.split('.')[1]
+        }元`, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+      }
+      return imdata
     },
   },
   mounted() {
@@ -227,6 +245,7 @@ export default {
     },
     //   获取推荐产品
     async handleGetRecProduct() {
+      this.loading = true
       // 获取用户唯一标识
       if (!this.deviceId) {
         this.deviceId = await getUserSign()
@@ -264,9 +283,18 @@ export default {
             this.recommendProduct = [...this.recommendProduct].concat(
               res.data.records
             ) // 推荐产品列表
+            if (this.recommendProduct.length >= 30) {
+              console.log(1212)
+              this.finished = true
+            } else {
+              this.loading = false
+            }
+          } else {
+            this.finished = true
           }
         })
         .catch((err) => {
+          this.finished = true
           console.log(err)
         })
     },
