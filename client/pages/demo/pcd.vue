@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-20 09:56:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-27 16:05:21
+ * @LastEditTime: 2020-12-12 16:44:06
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/demo/pcd.vue
 -->
@@ -22,6 +22,16 @@
         @closed="handleDialogClosed"
       >
       </InstallAppDialog>
+      <!-- 异步复选框 -->
+      <AsyncCheckbox
+        v-model="checkbox"
+        :async-change="false"
+        @change="handleAsyncCheckboxChange"
+      >
+        <template #icon="{ checked }">
+          <span>{{ checked }}</span>
+        </template>
+      </AsyncCheckbox>
     </div>
     <sp-button class="btn" type="primary" @click="handleImgAuthBtn"
       >验证码调用方式</sp-button
@@ -49,6 +59,7 @@ import ImgAuthDialogFn from '@/components/common/imgAuth'
 import RecommendDialog from '@/components/RecommendDialog'
 import InstallAppDialog from '@/components/common/app/InstallAppDialog'
 import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
+import AsyncCheckbox from '@/components/common/checkbox/AsyncCheckbox'
 
 import objectDiff from '@/utils/objectDiff'
 
@@ -60,6 +71,7 @@ export default {
     RecommendDialog,
     InstallAppDialog,
     ServiceSelect,
+    AsyncCheckbox,
   },
   data() {
     return {
@@ -82,6 +94,7 @@ export default {
           ],
         },
       ],
+      checkbox: true,
     }
   },
   methods: {
@@ -108,11 +121,16 @@ export default {
     },
     handleAppInstallBtn() {
       this.showInstallAppDialog = !this.showInstallAppDialog
+      this.checkbox = !this.checkbox
     },
     handleObjDiffBtn() {
       console.log(
         objectDiff.diffOwnProperties({ x: 1, y: [1] }, { x: 1, y: [12] })
       )
+    },
+    handleAsyncCheckboxChange(value) {
+      console.log('value:', value)
+      console.log('this.checkbox :', this.checkbox)
     },
   },
 }

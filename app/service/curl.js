@@ -1,5 +1,5 @@
-'use strict';
-const Service = require('egg').Service;
+"use strict";
+const Service = require("egg").Service;
 class CurlService extends Service {
   /**
    * 调用curlGet服务API（HTTP）
@@ -7,21 +7,18 @@ class CurlService extends Service {
    * @param { Object } params 请求参数
    * @return { Object } 返回请求结果数据
    */
-  async curlGet(url = '', params = {}) {
-    return new Promise(async resolve => {
+  async curlGet(url = "", params = {}) {
+    return new Promise(async (resolve) => {
       const { ctx } = this;
       if (!url) {
-        resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
+        resolve({ ctx, code: 202, res: "缺少后端服务请求API路径" });
       }
+      // console.log(ctx.headers);
+      // const headers = ctx.headers['content-type'] = 'application/json; charset=UTF-8'
       try {
-        const result = await ctx.curl(url, {
-          // 必须指定 method
-          method: 'GET',
+        const result = await ctx.http.get(url, params, {
           // 默认将网管处理后的headers给后端服务
           headers: ctx.headers,
-          // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-          dataType: 'json',
-          data: params,
           timeout: 10 * 1000,
         });
         resolve(result);
@@ -38,27 +35,24 @@ class CurlService extends Service {
    * @param { Object } data 请求参数
    * @return { Object } 返回请求结果数据
    */
-  curlPost(url = '', data = {}) {
-    return new Promise(async resolve => {
+  curlPost(url = "", data = {}) {
+    return new Promise(async (resolve) => {
       const { ctx } = this;
       if (!url) {
-        resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
+        resolve({ ctx, code: 202, res: "缺少后端服务请求API路径" });
       }
+      // const headers = ctx.headers['content-type'] = 'application/json; charset=UTF-8'
       try {
-        const result = await ctx.curl(url, {
-          // 必须指定 method
-          method: 'POST',
+        const result = await ctx.http.post(url, data, {
           // 默认将网管处理后的headers给后端服务
-          headers: {
-            'content-type': 'application/json',
-            'content-length': 200,
-          },
-          // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-          dataType: 'json',
-          data,
+          headers: Object.assign(
+            {
+              "content-type": "application/json",
+              "content-length": 200,
+            },
+            ctx.headers
+          ),
           timeout: 10 * 1000,
-          // 忽略证书
-          // rejectUnauthorized: false,
         });
         resolve(result);
       } catch (err) {
@@ -74,21 +68,21 @@ class CurlService extends Service {
    * @param { Object } options curl的配置信息
    * @return { Object } 返回请求结果数据
    */
-  async curlAll(url = '', options = {}) {
-    console.log('remote Url :', url);
-    return new Promise(async resolve => {
+  async curlAll(url = "", options = {}) {
+    console.log("remote Url :", url);
+    return new Promise(async (resolve) => {
       const { ctx } = this;
       if (!url) {
-        resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
+        resolve({ ctx, code: 202, res: "缺少后端服务请求API路径" });
       }
       try {
         const {
           // 必须指定 method
-          method = 'GET',
+          method = "GET",
           // 默认将网管处理后的headers给后端服务
           headers = ctx.headers,
           // 明确告诉 HttpClient 以 JSON 格式处理返回的响应 body
-          dataType = 'json',
+          dataType = "json",
           data = {},
           timeout = 10 * 1000,
         } = options;

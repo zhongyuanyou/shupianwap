@@ -1,35 +1,41 @@
 <template>
   <div class="keyword">
     <!--S 搜索-->
-    <FoundHeader
-      :left="true"
-      :keywords="this.$route.params.keywords"
-      @inputChange="inputChange"
-    />
+    <FoundHeader :left="true" :keywords="keywords" @inputChange="inputChange" />
     <!--E 搜索-->
     <!--S 内容-->
     <div class="keyword_con">
       <div class="keyword_con_title">相关新闻</div>
-      <div v-for="(item, index) in list" :key="index">
-        <Item :info="item" />
-      </div>
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+        <div v-for="(item, index) in list" :key="index">
+          <Item :info="item" />
+        </div>
+      </sp-list>
     </div>
     <!--E 内容-->
   </div>
 </template>
 
 <script>
+import { List } from '@chipspc/vant-dgg'
 import FoundHeader from '~/components/found/common/FoundHeader'
 import Item from '~/components/found/search/Item'
+import { foundApi } from '@/api'
 export default {
   name: 'Keywords',
   components: {
     FoundHeader,
     Item,
+    [List.name]: List,
   },
   data() {
     return {
-      keywords: '',
+      keywords: this.$route.params.keywords, // 资讯搜索关键字
       list: [
         {
           title:
@@ -48,11 +54,49 @@ export default {
           avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
           time: '1天前',
         },
-      ],
+      ], // 通过关键字查询的资讯列表
+      limit: 10, // 每页显示条数
+      page: 1, // 当前页
+      loading: false,
+      finished: false,
     }
   },
+  mounted() {
+    // this.getInfoList()
+  },
   methods: {
-    inputChange() {},
+    inputChange() {
+      this.getInfoList()
+    },
+    async getInfoList() {
+      // 获取资讯列表
+      const params = {
+        keyword: this.keywords,
+        limit: this.limit,
+        page: this.page,
+      }
+      const res = await this.$axios.get(foundApi.infoList, { params })
+      if (res.code === 200) {
+        this.list = res.data.information_list
+      }
+    },
+    async onLoad() {
+      const page = this.page++
+      const params = {
+        keyword: this.keywords,
+        limit: this.limit,
+        page,
+      }
+      const res = await this.$axios.get(foundApi.infoList, { params })
+      if (res.code === 200) {
+        if (res.data.information_list.length) {
+          this.loading = false
+          this.list = this.list.concat(res.data.information_list)
+        } else {
+          this.finished = true
+        }
+      }
+    },
   },
 }
 </script>

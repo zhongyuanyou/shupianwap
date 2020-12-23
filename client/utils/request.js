@@ -2,12 +2,19 @@
  * @Author: xiao pu
  * @Date: 2020-12-08 10:50:07
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 15:21:12
+ * @LastEditTime: 2020-12-10 11:42:01
  * @Description: file content
  * @FilePath: /chips-wap/client/utils/request.js
  */
 
 import Qs from 'qs'
+
+// 保存axios插件的实例
+let axiosInstance = null
+
+export function saveAxiosInstance(axios) {
+  axiosInstance = axios
+}
 
 // eslint-disable-next-line
 /******************************* 工具函数 ************************************/
@@ -38,7 +45,9 @@ export function request(
   callback
 ) {
   return new Promise((resolve, reject) => {
-    if (!axios) {
+    // 传入axios 就使用，没有传入，就使用axios插件中获取到的实例
+    if (!axios) axios = axiosInstance
+    if (!axiosInstance) {
       reject(new Error('axios 为空'))
     }
     if (method === 'get') {

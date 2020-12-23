@@ -43,6 +43,7 @@ class helpController extends Controller {
                 page: { type: "integer", required: true }, // 查询文章的当前页
                 platformCode: { type: "string", required: true }, // 查询文章的平台code
                 terminalCode: { type: "string", required: true }, // 查询文章的终端code
+                includeField: { type: "string", required: true }, // 查询文章的终端code
             };
         }
         if (ctx.request.body.findType === 1) {
@@ -52,8 +53,10 @@ class helpController extends Controller {
                 limit: { type: "integer", required: true }, // 查询文章的每页条数
                 page: { type: "integer", required: true }, // 查询文章的当前页
                 keyword: { type: "string", required: false }, // 关键词搜索文章
+                keywordField: { type: "string", required: false }, // 关键词搜索文章
                 platformCode: { type: "string", required: true }, // 查询文章的平台code
                 terminalCode: { type: "string", required: true }, // 查询文章的终端code
+                includeField: { type: "string", required: true }, // 查询文章的终端code
             };
         }
         // 参数校验
@@ -63,6 +66,12 @@ class helpController extends Controller {
             ctx.helper.fail({ ctx, code: 422, res: valiErrors });
             return;
         }
+
+        let cacheData = {
+            adListData: [], // 广告数据
+            categoryList: [], // 分类数据
+            articleData: [], // 文章列表数据
+        };
         // 只查询文章列表
         if (ctx.request.body.findType === 1) {
             try {
@@ -73,15 +82,15 @@ class helpController extends Controller {
                     platformCode: ctx.request.body.platformCode,
                     terminalCode: ctx.request.body.terminalCode,
                     keyword: ctx.request.body.keyword,
+                    keywordField: ctx.request.body.keywordField,
+                    includeField: ctx.request.body.includeField,
                 });
-                if (articleResData.data.code === 200) {
+                if (articleResData.code === 200) {
+                    cacheData.articleData = articleResData.data.rows;
                     ctx.helper.success({
                         ctx,
                         code: 200,
-                        res: {
-                            rows: articleResData.data.data.rows,
-                            total: articleResData.data.data.total,
-                        },
+                        res: cacheData,
                     });
                 }
             } catch (error) {
@@ -101,39 +110,35 @@ class helpController extends Controller {
         const reqArr = [adData, categoryData];
         try {
             const resData = await Promise.all(reqArr);
-            let adListData = [];
-            let categoryList = []; // 分类数据
-            let articleData = {}; // 文章数据
             if (resData[0].code === 200) {
-                adListData = resData[0].data || [];
+                cacheData.adListData =
+                    resData[0].data[ctx.request.body.locationCode]
+                        .sortMaterialList || [];
             }
-            if (resData[1].data.code === 200) {
-                categoryList = resData[1].data.data
-                    ? resData[1].data.data.childrenList
+            if (resData[1].code === 200) {
+                cacheData.categoryList = resData[1].data
+                    ? resData[1].data.childrenList
                     : [];
             }
-            if (categoryList.length) {
+            if (cacheData.categoryList.length) {
                 // 获取文章列表
                 const articleRes = await getarticleList(ctx, service, {
-                    categoryCode: categoryList[0].code,
+                    categoryCode: cacheData.categoryList[0].code,
                     limit: ctx.request.body.limit,
                     page: ctx.request.body.page,
                     platformCode: ctx.request.body.platformCode,
                     terminalCode: ctx.request.body.terminalCode,
+                    includeField: ctx.request.body.includeField,
                 });
-                if (articleRes.data.code === 200) {
-                    articleData.rows = articleRes.data.data.rows;
-                    articleData.total = articleRes.data.data.total;
+                console.log(111, articleRes);
+                if (articleRes.code === 200) {
+                    cacheData.articleData = articleRes.data.rows;
                 }
             }
             ctx.helper.success({
                 ctx,
                 code: 200,
-                res: {
-                    adListData,
-                    categoryList,
-                    articleData,
-                },
+                res: cacheData,
             });
         } catch (error) {
             ctx.logger.error(error);

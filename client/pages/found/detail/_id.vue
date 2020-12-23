@@ -15,9 +15,9 @@
       </template>
     </sp-top-nav-bar>
     <!--E 导航-->
-    <div class="detail_con">
+    <div v-if="info" class="detail_con">
       <div class="detail_con_title">
-        理性过剩、信息同质，创业者如何 培养创造力？
+        {{ info.title }}
       </div>
       <!--S 账号信息-->
       <div class="detail_con_info">
@@ -32,20 +32,13 @@
           />
         </div>
         <div class="detail_con_info_content">
-          <p class="title">成都顶呱呱</p>
-          <p class="time">25分钟前</p>
+          <p class="title">{{ info.updaterName }}</p>
+          <p class="time">{{ info.updateTime }}</p>
         </div>
       </div>
       <!--E 账号信息-->
       <!--S 模拟显示富文本内容 后期需用V-HTML显示富文本内容-->
-      <div class="fwb">
-        一个在创投圈广为流传的故事是，2017年孙正义问WeWork创始人诺伊曼，“你觉得在一场战斗中，聪明人和疯子，究竟谁会赢？”诺伊曼告诉孙正义，“疯子。”
-        一个在创投圈广为流传的故事是，2017年孙正义问WeWork创始人诺伊曼，“你觉得在一场战斗中，聪明人和疯子，究竟谁会赢？”诺伊曼告诉孙正义，“疯子。”
-        一个在创投圈广为流传的故事是，2017年孙正义问WeWork创始人诺伊曼，“你觉得在一场战斗中，聪明人和疯子，究竟谁会赢？”诺伊曼告诉孙正义，“疯子。”
-        一个在创投圈广为流传的故事是，2017年孙正义问WeWork创始人诺伊曼，“你觉得在一场战斗中，聪明人和疯子，究竟谁会赢？”诺伊曼告诉孙正义，“疯子。”
-        一个在创投圈广为流传的故事是，2017年孙正义问WeWork创始人诺伊曼，“你觉得在一场战斗中，聪明人和疯子，究竟谁会赢？”诺伊曼告诉孙正义，“疯子。”
-        一个在创投圈广为流传的故事是，2017年孙正义问WeWork创始人诺伊曼，“你觉得在一场战斗中，聪明人和疯子，究竟谁会赢？”诺伊曼告诉孙正义，“疯子。”
-      </div>
+      <div class="fwb" v-html="info.content"></div>
       <!--S 版本信息-->
       <div class="copyright">
         <div class="copyright_con">
@@ -61,7 +54,9 @@
               {{ item }}
             </div>
           </div>
-          <div class="hot">热度<span>5890</span></div>
+          <div class="hot">
+            热度<span>{{ info.newsReadAll || 0 }}</span>
+          </div>
         </div>
       </div>
       <!--E 版本信息-->
@@ -71,6 +66,7 @@
 
 <script>
 import { TopNavBar, Icon, Image } from '@chipspc/vant-dgg'
+import { foundApi } from '~/api'
 export default {
   name: 'Detail',
   components: {
@@ -81,12 +77,28 @@ export default {
   data() {
     return {
       tags: ['公司发展', '公司发展'], // 模拟tags数据
+      info: null, // 资讯详情
     }
+  },
+  mounted() {
+    this.getInfoDetail()
   },
   methods: {
     back() {
       // 返回上一页
       this.$router.back()
+    },
+    async getInfoDetail() {
+      // 获取资讯详情
+      try {
+        const params = {
+          id: this.$route.params.id,
+        }
+        const res = await this.$axios.get(foundApi.infoDetail, { params })
+        if (res.code === 200) {
+          this.info = res.data
+        }
+      } catch (err) {}
     },
   },
 }
@@ -130,14 +142,12 @@ export default {
           font-family: PingFang SC;
           font-weight: bold;
           color: #222222;
-          line-height: 28px;
         }
         .time {
           font-size: 24px;
           font-family: PingFang SC;
           font-weight: 400;
           color: #999999;
-          line-height: 28px;
         }
       }
     }

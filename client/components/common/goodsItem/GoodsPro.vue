@@ -6,8 +6,8 @@
     </div>
     <div class="goods-info">
       <strong class="goods-name">
-        <span class="pro-lable"><i>双11大促</i></span
-        >成都**科技有限科技有限科技有限科技有限科技有限科技有限科技有限</strong
+        <span class="pro-lable"><i>无字段</i></span
+        >{{ goodsData.name }}</strong
       >
       <div class="goods-lable">
         <span>带地址</span>
@@ -21,11 +21,13 @@
       </div>
       <div class="goods-price">
         <span class="sales-proce">
-          <span class="big-value">4030</span>
-          <span class="small-value">.52</span>
+          <span class="big-value">{{ priceRest(0) }}</span>
+          <span v-if="priceRest(1)" class="small-value"
+            >.{{ priceRest(1) }}</span
+          >
           <span class="unit">元</span>
         </span>
-        <span class="original-price">4,510元</span>
+        <span class="original-price">{{ goodsData.goodsPrice }}元</span>
       </div>
       <div v-if="false" class="recommend">
         <span>荐</span>
@@ -37,8 +39,23 @@
 
 <script>
 export default {
-  data() {
-    return {}
+  props: {
+    goodsData: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+  },
+  methods: {
+    priceRest(index = 0) {
+      if (!this.goodsData.platformPrice) return 0
+      const isFlot = this.goodsData.platformPrice.indexOf('1')
+      if (isFlot !== -1) {
+        return this.goodsData.platformPrice.split('.')[index]
+      }
+      return index === 0 ? this.goodsData.platformPrice : ''
+    },
   },
 }
 </script>
@@ -188,6 +205,7 @@ export default {
           font-family: PingFang SC;
           font-weight: 400;
           color: #ec5330;
+          margin-left: 4px;
         }
       }
       .original-price {

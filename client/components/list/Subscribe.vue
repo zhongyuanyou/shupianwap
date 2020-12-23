@@ -13,7 +13,7 @@
     <div class="subscribe-content">
       <div class="title">{{ title }}</div>
       <p>{{ desc }}</p>
-      <template v-if="show">
+      <template v-if="!isLogin">
         <sp-field
           v-model="tel"
           type="number"
@@ -22,7 +22,9 @@
         />
         <sp-field v-model="sms" center placeholder="请输入验证码">
           <template #button>
-            <span>发送验证码</span>
+            <span :class="{ no_get: isSendSMS }" @click="getSMS">{{
+              isSendSMS ? `(${count})重新获取` : '获取验证码'
+            }}</span>
           </template>
         </sp-field>
       </template>
@@ -61,12 +63,37 @@ export default {
     return {
       tel: '',
       sms: '',
-      show: false,
+      isLogin: false, // 是否登录
+      smsStr: '获取验证码',
+      count: 60,
+      isSendSMS: false,
     }
+  },
+  mounted() {
+    this.isLogin = false
   },
   methods: {
     submitSubscribe() {
       // 提交订阅
+    },
+    getSMS() {
+      if (!this.isSendSMS) {
+        // 获取验证码
+        this.isSendSMS = true
+        this.countDown()
+      }
+    },
+    // 倒计时
+    countDown() {
+      if (this.count === 0) {
+        this.count = 60
+        this.isSendSMS = false
+      } else {
+        this.count--
+        setTimeout(() => {
+          this.countDown()
+        }, 1000)
+      }
     },
   },
 }
@@ -148,6 +175,12 @@ export default {
       color: #222222;
       margin-bottom: 24px;
     }
+  }
+  .no_get {
+    font-size: 28px;
+    font-family: PingFang SC;
+    font-weight: 400;
+    color: #cccccc;
   }
 }
 </style>

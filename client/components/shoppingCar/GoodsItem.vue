@@ -2,36 +2,50 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-30 10:19:55
+ * @LastEditTime: 2020-12-22 15:35:42
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
 <template>
   <div
     class="goods-item"
-    :class="{ 'goods-item--disable': status === 'offShelf' }"
+    :class="{
+      'goods-item--disable': commodityData.status === 'GOODS_STATUS_OFF_SHELF',
+    }"
   >
-    <SkuService v-model="show" />
+    <SkuService
+      v-model="show"
+      :sku-data="formateSkuData"
+      :goods="tempGoods"
+      @operation="handleOperation"
+    />
     <sp-swipe-cell
       ref="swipeCell"
-      :disabled="status === 'offShelf'"
+      :disabled="commodityData.status === 'GOODS_STATUS_OFF_SHELF'"
       :before-close="beforeClose"
     >
       <div class="goods-item__content">
         <div class="goods-item__content-line-bottom sp-hairline--bottom">
           <div class="goods-item__main">
-            <sp-checkbox
+            <AsyncCheckbox
               v-model="checked"
               icon-size="0.32rem"
               class="goods-item__check"
-              @change="handleChange"
-            ></sp-checkbox>
-            <MainGoodsItem @operation="handleOperation" />
+              @change="handleAsyncCheckboxChange"
+            >
+            </AsyncCheckbox>
+            <MainGoodsItem
+              :main-data="commodityData"
+              @operation="handleOperation"
+            />
           </div>
-
-          <div v-for="i in 2" :key="i" class="goods-item__vice">
+          <div
+            v-for="serviceResource of commodityData.serviceResourceList"
+            :key="serviceResource.serviceItemId"
+            class="goods-item__vice"
+          >
             <div class="goods-item__vice-line--top sp-hairline--top">
-              <ViceGoodsItem />
+              <ViceGoodsItem :vice-data="serviceResource" />
             </div>
           </div>
         </div>
@@ -59,17 +73,33 @@
       v-if="status === 'offShelf'"
       class="goods-item--disable-tip flex-c-c flex-c-a-c"
     >
+      <span class="goods-item--disable-tip__zh">已下架</span>
       <span class="division-line">·</span>
+      <span class="goods-item--disable-tip__en">off shelf</span>
     </div>
   </div>
 </template>
 
 <script>
-import { SwipeCell, Card, Button, Checkbox } from '@chipspc/vant-dgg'
+import { mapState, mapMutations, mapActions } from 'vuex'
+
+import { SwipeCell, Card, Button, Toast } from '@chipspc/vant-dgg'
 
 import MainGoodsItem from './MainGoodsItem'
 import ViceGoodsItem from './ViceGoodsItem'
 import SkuService from '@/components/common/sku/SkuService'
+import AsyncCheckbox from '@/components/common/checkbox/AsyncCheckbox'
+
+import clone from '@/utils/clone'
+import fingerprint from '@/utils/fingerprint'
+
+import { shoppingCar } from '@/api'
+
+// 资源服务 与 查询相关列表 classCode  对应关系， key(资源服务的) ： value(相关列表查询的)
+const RESOURCE_ITEM_CODE_MAP = {
+  FL20201214095005: 'FL20201202065046', // 400电话
+  FL20201211085087: 'FL20201211085087', // 注册地址
+}
 
 export default {
   name: 'GoodsItem',
@@ -77,26 +107,155 @@ export default {
     [SwipeCell.name]: SwipeCell,
     [Card.name]: Card,
     [Button.name]: Button,
-    [Checkbox.name]: Checkbox,
     MainGoodsItem,
     ViceGoodsItem,
     SkuService,
+    AsyncCheckbox,
   },
   props: {
     status: {
       type: String,
       default: 'sale', // offShelf：下架
     },
+    userId: {
+      type: [String, Number],
+      default: '',
+    },
+    commodityData: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
+    index: {
+      type: Number,
+      default: -1,
+    },
   },
   data() {
     return {
-      checked: false,
       show: false,
+      skuData: {
+        productId: '',
+        name: '',
+        productNo: '',
+        referencePrice: '', // 参考价格
+        shopRestrictionNumber: '', // 购买数量限制
+        shopRestriction: '', // 限制购买
+        skuAttrList: [], // 属性列表
+        serviceGoodsClassList: [], // 服务资源列表
+        goodsId: '',
+        goodsNo: '',
+        specialItemList: [], // 增值服务项
+        salesPriceSum: '',
+        settlementPriceSum: '',
+      },
+      tempGoods: {
+        goodsId: '',
+        goodsNo: '',
+        name: '',
+        skuAttrKey: '', // 选中sku列表逗号隔开
+        goodsNumber: 0,
+        serviceResourceList: [], // 服务资源
+        price: '',
+        productId: '',
+        addServiceList: [], // 增值服务
+      },
+      config: { userId: '', deviceCode: '', reqArea: '', terminalCode: '' }, // 不同平台的配置
     }
   },
+  computed: {
+    ...mapState({
+      cityCode: (state) => state.city.currentCity.code,
+      userInfo: (state) => state.user.userInfo,
+    }),
+    checked() {
+      return !!this.commodityData.shopIsSelected
+    },
+    formateSkuData() {
+      if (!this.skuData) return { tree: [] }
+      const {
+        productId,
+        name,
+        productNo,
+        referencePrice,
+        skuAttrList,
+        serviceGoodsClassList,
+        specialItemList,
+      } = this.skuData
+      if (!Array.isArray(skuAttrList)) return { tree: [] }
+      const tree = skuAttrList.map((item) => {
+        const { id, code, name, attrValList = [] } = item
+        return {
+          k: name,
+          k_s: 'sp' + code, // 自定义的前缀
+          k_id: id,
+          v: Array.isArray(attrValList)
+            ? attrValList.map((item) => {
+                const { id, code, name } = item || {}
+                return {
+                  id: code, // 因使用的是code 获取商品属性
+                  originId: id,
+                  code,
+                  name,
+                }
+              })
+            : [],
+        }
+      })
+
+      // 服务资源列表
+      const resourceServiceList = Array.isArray(serviceGoodsClassList)
+        ? serviceGoodsClassList
+        : []
+
+      // 增值服务
+      const addServiceList = Array.isArray(specialItemList)
+        ? specialItemList.map((item) => {
+            const { serviceItemId, code, name, serviceItemValList = [] } = item
+            const formatServiceItemValList = Array.isArray(serviceItemValList)
+              ? serviceItemValList.map((val) => {
+                  const {
+                    id,
+                    name,
+                    originalPrice,
+                    salesPrice,
+                    settlementPrice,
+                  } = val || {}
+                  return {
+                    id,
+                    name: `${name}  ￥${originalPrice}`,
+                  }
+                })
+              : []
+
+            return {
+              k: name,
+              k_s: 'sp' + code, // 自定义的前缀
+              k_id: serviceItemId,
+              v: formatServiceItemValList,
+            }
+          })
+        : []
+
+      return {
+        tree,
+        resourceServiceList,
+        addServiceList,
+        productId,
+        name,
+        productNo,
+        referencePrice,
+      }
+    },
+  },
+
   methods: {
-    handleChange(value) {
-      console.log('handleChange:', value)
+    handleAsyncCheckboxChange(value) {
+      console.log('handleAsyncCheckboxChange:', value)
+      this.handleOperation({ type: 'select', data: { value } })
+      // TODO 异步处理
+      // this.checked = value
     },
     beforeClose({ position, instance }) {
       console.log('position:', position)
@@ -112,19 +271,348 @@ export default {
     },
     handleDetele() {
       console.log('handleDetele')
-      this.$emit('operation', { type: 'detele', item: {} })
+      this.handleOperation({ type: 'detele', data: {} })
     },
     handleAttention() {
       console.log('handleAttention')
       // this.$refs.swipeCell.close()
-      this.$emit('operation', { type: 'attention', item: {} })
+      this.handleOperation({ type: 'attention', data: {} })
     },
     handleOperation(value = {}) {
-      const { type } = value
+      const { type, data } = value
+      const { cartId } = this.commodityData
       switch (type) {
         case 'openSku':
-          this.show = true
+          this.openSku()
           break
+        case 'count':
+        case 'select':
+        case 'detele':
+        case 'attention':
+          this.$emit('operation', { data, type, cartId })
+          break
+        case 'skuSelect':
+          this.selecteSku(data)
+          break
+        case 'addServiceSelect':
+          this.selecteAddService(data)
+          break
+        case 'addShoppingCar':
+          this.addShoppingCar(data)
+          break
+        case 'skuCount': // sku弹出框里数量改变
+          this.changeSkuCount(data)
+          break
+        case 'resourceServiceSelect': // sku弹出框里资源服务
+          // this.selecteResourceService(data)
+
+          this.$emit('operation', {
+            data: {
+              ...data,
+              classCode: RESOURCE_ITEM_CODE_MAP[data.classCode],
+            },
+            type,
+            cartId,
+            index: this.index,
+          })
+          break
+      }
+    },
+    openSku() {
+      if (!this.skuData.skuAttrList || !this.skuData.skuAttrList.length) {
+        this.getSkuData()
+      }
+      const {
+        skuId,
+        skuAttrKey,
+        goodsNumber,
+        serviceResourceList,
+        price,
+        productId,
+        addServiceList,
+      } = this.commodityData
+
+      this.tempGoods = {
+        goodsId: skuId,
+        skuAttrKey,
+        goodsNumber,
+        price,
+        productId,
+        serviceResourceList: clone(serviceResourceList, true),
+        addServiceList: clone(addServiceList, true),
+      }
+
+      this.show = true
+    },
+    // 商品sku属性的选择
+    selecteSku(data = {}) {
+      const { activedList = [], inactivedList = [], id } = data
+      let skuAttrList = this.tempGoods.skuAttrKey.split(',')
+      activedList.forEach((item) => {
+        !skuAttrList.includes(item) && skuAttrList.push(item)
+      })
+      skuAttrList = skuAttrList.filter((item) => !inactivedList.includes(item))
+      //
+      const currentSkuAttr = skuAttrList.join(',')
+
+      this.getGoodsDetail(currentSkuAttr)
+        .then((data) => {
+          this.tempGoods.skuAttrKey = currentSkuAttr
+          // 每次请求sku 增值服务需要清空
+          this.tempGoods.addServiceList = []
+        })
+        .catch(() => {
+          Toast('选择失败！')
+        })
+    },
+
+    // 增值服务的选择
+    selecteAddService(data = {}) {
+      console.log('结果')
+      const { activedList = [], id } = data
+
+      const originData = this.skuData.specialItemList
+      const activedItem = originData.find((item) => item.serviceItemId === id)
+      if (!activedItem) return
+      // 因为目前只能单选，取activedList[0]就行
+      const activedVal =
+        activedItem.serviceItemValList.find(
+          (item) => item.id === activedList[0]
+        ) || {}
+      const { name, originalPrice, salesPrice, settlementPrice } = activedVal
+
+      const matchedAddService = this.tempGoods.addServiceList.find(
+        (item) => item.serviceItemId === id
+      )
+
+      if (matchedAddService) {
+        // 对tempGoods中的数据，选中就修改, 没有选中则移除
+        const resultGoods = activedList.length
+          ? this.tempGoods.addServiceList.map((item) => {
+              if (item.serviceItemId === id) {
+                return {
+                  ...item,
+                  serviceItemValId: activedVal.id,
+                  serviceItemValName: name,
+                  price: originalPrice,
+                }
+              }
+              return { ...item }
+            })
+          : this.tempGoods.addServiceList.filter((item) => {
+              return item.serviceItemId !== id
+            })
+        this.tempGoods.addServiceList = resultGoods
+        return
+      }
+      this.tempGoods.addServiceList = this.tempGoods.addServiceList.concat({
+        serviceItemId: id,
+        serviceItemName: activedItem.name,
+        serviceItemValId: activedVal.id,
+        serviceItemValName: name,
+        price: originalPrice,
+      })
+    },
+
+    // 加入购物车
+    addShoppingCar(data = {}) {
+      // const {} = data
+      console.log(data)
+      const {
+        goodsId,
+        skuAttrKey,
+        goodsNumber,
+        serviceResourceList = [],
+        addServiceList = [],
+      } = data
+
+      const serviceList = []
+      serviceResourceList.forEach((item) => {
+        serviceList.push({
+          ...item,
+          type: 3,
+        })
+      })
+      addServiceList.forEach((item) => {
+        serviceList.push({
+          ...item,
+          type: 2,
+        })
+      })
+
+      this.postUpdate({
+        value: goodsNumber,
+        cartId: this.commodityData.cartId,
+        serviceList,
+        skuAttr: skuAttrKey,
+        skuId: goodsId,
+        type: 'updateSkuItem',
+      })
+        .then((data) => {
+          this.show = false
+          this.$emit('operation', {
+            type: 'refresh',
+          })
+        })
+        .catch(() => {
+          Toast('加入购物车失败')
+        })
+    },
+
+    // 修改sku弹出框 商品的数量
+    changeSkuCount(value) {
+      this.tempGoods.goodsNumber = value
+    },
+
+    // 资源服务的选择
+    selecteResourceService(data = {}) {
+      console.log(data)
+      const { id, code, name, goodsPrice } = data
+      const classCode = Object.keys(RESOURCE_ITEM_CODE_MAP).find(
+        (item) => RESOURCE_ITEM_CODE_MAP[item] === data.classCode
+      )
+      if (!classCode) return
+      const { serviceResourceList = [] } = this.tempGoods
+      const matchedItem = this.skuData.serviceGoodsClassList.find(
+        (item) => item.classCode === classCode
+      )
+      const className = matchedItem ? matchedItem.className : ''
+      const filteredList = serviceResourceList.filter(
+        (item) => item.serviceItemId !== classCode
+      )
+      filteredList.push({
+        price: goodsPrice,
+        num: 1,
+        serviceItemId: classCode,
+        serviceItemName: className,
+        serviceItemValId: id,
+        serviceItemValName: name,
+      })
+      this.tempGoods.serviceResourceList = filteredList
+    },
+
+    // 根据不同的平台差异，获取不同的参数
+    async uPGetConfig() {
+      if (this.config.deviceCode) return { ...this.config }
+
+      let userId = ''
+      let deviceCode = ''
+      let reqArea = ''
+      let terminalCode = ''
+
+      // TODO 获取当前的运行环境
+      if (this.runEnv === 'app') {
+        terminalCode = 'COMDIC_TERMINAL_APP'
+      } else {
+        reqArea = this.cityCode
+        terminalCode = 'COMDIC_TERMINAL_WAP'
+        deviceCode = await fingerprint()
+        userId = this.userInfo.userId
+      }
+      const config = { userId, deviceCode, reqArea, terminalCode }
+      this.config = config
+      return config
+    },
+
+    // 第一次获取sku属性
+    async getSkuData() {
+      try {
+        const config = await this.uPGetConfig()
+        const productId = this.commodityData.productId || '607991345402771561' // '607991345402771561'
+        const attrValKey = this.commodityData.skuAttrKey || 'SXZ20201211050014' // SXZ20201211050014
+        const productPromise = shoppingCar.productDetail({ productId }, config)
+        const skuPromise = this.getGoodsDetail(attrValKey)
+        const [productDetail = {}, skuDetail = {}] = await Promise.all([
+          productPromise,
+          skuPromise,
+        ])
+
+        const {
+          skuAttrList, // 属性列表
+          serviceGoodsClassList, // 服务资源列表
+          name,
+          referencePrice, // 参考价格
+          productNo,
+          operating = {},
+        } = productDetail
+
+        const { shopRestrictionNumber, shopRestriction } = operating
+
+        const data = {
+          name,
+          productNo,
+          referencePrice,
+          shopRestrictionNumber,
+          shopRestriction,
+          skuAttrList,
+          serviceGoodsClassList,
+          ...skuDetail,
+        }
+        this.skuData = data
+        console.log(data)
+        return data
+      } catch (error) {
+        console.error('getList:', error)
+        return Promise.reject(error)
+      }
+    },
+
+    // 获取商品服务详情
+    async getGoodsDetail(attrValKey) {
+      try {
+        const productId = this.commodityData.productId || '607991345402771561' // '607991345402771561'
+        const goodsDetail = await shoppingCar.skuDetail({
+          productId,
+          attrValKey,
+        })
+        const {
+          id,
+          specialItemList, // 增值服务项
+          goodsNo,
+          salesPriceSum, // 销售价格
+          settlementPriceSum, // 结算价格
+        } = goodsDetail
+        const data = {
+          goodsId: id,
+          goodsNo,
+          productId,
+          specialItemList,
+          salesPriceSum,
+          settlementPriceSum,
+        }
+        this.tempGoods = { ...this.tempGoods, ...data }
+        console.log(data)
+        return data
+      } catch (error) {
+        console.error('getGoodsDetail:', error)
+        return Promise.reject(error)
+      }
+    },
+
+    // 更新购物车数据
+    async postUpdate(data = {}) {
+      const { type, cartId, value, serviceList, skuAttr, skuId } = data
+      let params = {}
+      switch (type) {
+        case 'updateSkuItem':
+          params = { serviceList, skuAttr, skuId, goodsNumber: value }
+          break
+      }
+      try {
+        // TODO 测试用户
+        const userId = this.userId || '1234567'
+        const defalutParams = {
+          id: cartId,
+          createrId: userId,
+          type,
+        }
+        let data = await shoppingCar.update({ ...defalutParams, ...params })
+        console.log(data)
+        data = data || {}
+        return data
+      } catch (error) {
+        console.error('postUpdate:', error)
+        return Promise.reject(error)
       }
     },
   },
@@ -169,11 +657,11 @@ export default {
     font-weight: 400;
     color: #ffffff;
     z-index: 11;
-    &::before {
+    &__zh {
       content: '已下架';
       font-size: 24px;
     }
-    &::after {
+    &__en {
       content: 'off shelf';
       font-size: 18px;
     }

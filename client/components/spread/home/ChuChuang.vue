@@ -33,50 +33,10 @@
 export default {
   name: 'HotSale',
   data() {
-    return {
-      productList: [
-        {
-          id: 1,
-          img: require('~/assets/spreadImages/home/busi_img_gscscc01.png'),
-          imgWidth: 329,
-          imgHeight: 188,
-          marginRight: true,
-          price: 888,
-        },
-        {
-          id: 2,
-          img: require('~/assets/spreadImages/home/busi_img_gscscc02.png'),
-          imgWidth: 329,
-          imgHeight: 188,
-          marginRight: false,
-          price: 580,
-        },
-        {
-          id: 3,
-          img: require('~/assets/spreadImages/home/busi_img_gscscc03.png'),
-          imgWidth: 215,
-          imgHeight: 188,
-          marginRight: true,
-          price: 600,
-        },
-        {
-          id: 4,
-          img: require('~/assets/spreadImages/home/busi_img_gscscc04.png'),
-          imgWidth: 215,
-          imgHeight: 188,
-          marginRight: true,
-          price: 688,
-        },
-        {
-          id: 5,
-          img: require('~/assets/spreadImages/home/busi_img_gscscc05.png'),
-          imgWidth: 215,
-          imgHeight: 188,
-          marginRight: false,
-          price: 0,
-        },
-      ],
-    }
+    return {}
+  },
+  created() {
+    this.productList = this.$parent.chuChuangProductList
   },
 }
 </script>

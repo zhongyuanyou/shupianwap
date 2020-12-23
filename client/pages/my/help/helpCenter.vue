@@ -2,44 +2,50 @@
   <div class="wrapper">
     <Header title="帮助中心" />
     <sp-search
-      v-model="searchText"
+      v-model="params.keyword"
       placeholder="搜索您遇到的问题"
       background="#f8f8f8"
       class="search"
       clearable
       reverse
+      :maxlength="20"
       @search="searchFuc"
     />
     <sp-cell-group>
       <sp-cell
-        v-for="(item, index) in list"
+        v-for="(item, index) in searchResult"
         :key="index"
         center
         is-link
         class="cellClass"
-        @click="onServiceTouch"
+        @click="onServiceTouch(item.id)"
       >
         <template #title>
-          <span class="custom-title">{{ item + index }}</span>
+          <span class="custom-title">{{ item.title }}</span>
         </template>
       </sp-cell>
     </sp-cell-group>
-    <div v-if="!list.length" class="noFindDiv">
+    <div v-if="noData" class="noFindDiv">
       <div>
         <img :src="img" alt="" />
       </div>
       <span class="firstSpan">抱歉，未找到相关问题</span>
       <span class="lastSpan">联系客服</span>
     </div>
+    <Loading-center v-show="loading" />
   </div>
 </template>
 
 <script>
 import { Search, Cell, CellGroup } from '@chipspc/vant-dgg'
+import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
+import { helpApi } from '@/api'
 import Header from '@/components/common/head/header'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'HelpCenter',
   components: {
+    LoadingCenter,
     [Search.name]: Search,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
@@ -48,58 +54,56 @@ export default {
   props: {},
   data() {
     return {
-      searchText: '',
-      list: [
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-        '回答',
-      ],
-      img: require('~/assets/temporary/home/notify_img_logo@1,5x.png'),
+      loading: false,
+      params: {
+        keyword: '',
+        findType: 1, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
+        categoryCode: 'con100873',
+        limit: 1000,
+        page: 1,
+        keywordField: 'title', // 需要检索的字段
+        terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
+        platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
+        includeField: 'id,title', // 必须要输出的内容字段
+      },
+      searchResult: [],
+      noData: false,
+      img: require('~/assets/temporary/home/default_img_nofind@2x.png'),
     }
   },
-  computed: {},
-  watch: {
-    list(newVal, oldVal) {
-      // 是否显示未到到框的逻辑
-      this.isShowNoFind =
-        !Array.isArray(newVal) || (Array.isArray(newVal) && !newVal.length)
-    },
-  },
-  created() {},
-  mounted() {},
   methods: {
-    onServiceTouch() {
-      //   console.log(111)
+    onServiceTouch(id) {
       this.$router.push({
         path: '/my/help/questions',
-        query: { type: 1 },
+        query: { id },
       })
     },
+    // 搜索
     searchFuc() {
-      // 这里异步取数据
-      this.list = []
+      if (!this.params.keyword) {
+        return
+      }
+      this.loading = true
+      this.$axios.post(helpApi.findArticle, this.params).then((res) => {
+        if (res.code === 200) {
+          this.loading = false
+          if (!res.data.articleData || !res.data.articleData.length) {
+            this.searchResult = []
+            this.noData = true
+            return
+          }
+          this.noData = false
+          this.searchResult = res.data.articleData
+        }
+      })
     },
   },
 }
 </script>
 <style lang="less" scoped>
 .wrapper {
-  .cellClass {
-    // height: 72px;
+  .custom-title {
+    .textOverflow(1);
   }
   .noFindDiv {
     width: 100%;

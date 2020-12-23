@@ -22,8 +22,8 @@
           title-class="complaintList-item-title"
           value-class="complaintList-item-value"
           label-class="complaintList-item-label"
-          :title="item.title"
-          :label="item.createdTime"
+          :title="item.content"
+          :label="item.createTime"
           is-link
           center
           border
@@ -45,6 +45,8 @@ import {
   Cell,
   Sticky,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import { complain } from '~/api'
 export default {
   name: 'ComplaintList',
   components: {
@@ -57,48 +59,50 @@ export default {
   },
   data() {
     return {
-      complaintList: [
-        {
-          id: 1,
-          title: '我的问答在哪里查看？',
-          status: '处理中',
-          createdTime: '2020-10-14 10:00',
-        },
-        {
-          id: 2,
-          title: '设置免打扰怎么还给我打电话？你...',
-          status: '已处理',
-          createdTime: '2020-10-14 10:00',
-        },
-      ],
+      complaintList: [],
       loading: false,
       finished: true, // 默认false
       refreshing: false,
+      page: 1, // 当前页
+      limit: 10, // 每页显示条数
+    }
+  },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userInfo.userId,
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
+  mounted() {
+    this.getComplainList()
+    if (this.isInApp) {
+      // 设置app导航名称
+      this.$appFn.dggSetTitle(
+        {
+          title: '反馈进度',
+        },
+        (res) => {}
+      )
     }
   },
   methods: {
     back() {
       this.$router.back()
     },
-    onLoad() {
-      // setTimeout(() => {
-      //   if (this.refreshing) {
-      //     this.complaintList = []
-      //     this.refreshing = false
-      //   }
-      //   for (let i = 0; i < 10; i++) {
-      //     const obj = {
-      //       title: '我的问答在哪里查看？',
-      //       status: '处理中',
-      //       createdTime: '2020-10-14 10:00',
-      //     }
-      //     this.complaintList.push(obj)
-      //   }
-      //   this.loading = false
-      //   if (this.complaintList.length >= 40) {
-      //     this.finished = true
-      //   }
-      // }, 1000)
+    async onLoad() {
+      const page = this.page++
+      const params = {
+        userId: this.userId,
+        limit: this.limit,
+        page,
+      }
+      const data = await complain.list({ axios: this.$axios }, params)
+      if (data.rows.length) {
+        this.loading = false
+        this.complaintList = this.complaintList.concat(data.rows)
+      } else {
+        this.finished = true
+      }
     },
     onRefresh() {
       // 清空列表数据
@@ -107,6 +111,21 @@ export default {
       // 将 loading 设置为 true，表示处于加载状态
       // this.loading = true
       // this.onLoad()
+    },
+    async getComplainList() {
+      // 获取吐槽列表数据
+      const params = {
+        // userId: this.userId,
+        userId: this.userId,
+        page: this.page,
+        limit: this.limit,
+      }
+      try {
+        const data = await complain.list({ axios: this.$axios }, params)
+        this.complaintList = data.rows
+      } catch (err) {
+        console.log(err)
+      }
     },
   },
 }
