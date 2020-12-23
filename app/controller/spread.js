@@ -125,6 +125,7 @@ class SpreadController extends Controller {
         maxsize: 10,
       }
     );
+    console.log('plannerRes', plannerRes);
     let planlerList = [];
     if (
       plannerRes.status === 200 &&
