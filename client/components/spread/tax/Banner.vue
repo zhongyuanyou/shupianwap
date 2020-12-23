@@ -15,25 +15,13 @@
       <!--      导航-->
       <div class="banner-bottom-tab">
         <div
-          :class="active == 1 ? bigfont : smallfont"
+          v-for="(item, i) of tabs"
+          :key="i"
+          :class="active == i ? bigfont : smallfont"
           style="width: 195px"
-          @click="change(1)"
+          @click="change(i)"
         >
-          增值税筹划
-        </div>
-        <div
-          :class="active == 2 ? bigfont : smallfont"
-          style="width: 232px"
-          @click="change(2)"
-        >
-          企业所得税筹划
-        </div>
-        <div
-          :class="active == 3 ? bigfont : smallfont"
-          style="width: 243px"
-          @click="change(3)"
-        >
-          个人所得税筹划
+          {{ item }}
         </div>
       </div>
       <div class="banner-bottom-text">为您定制稅筹方案，可降低成本40%-90%</div>
@@ -73,7 +61,7 @@
             href="javascript:;"
             class="banner-bottom-form-div-a"
             @click="testMsg"
-            >{{ test }}</a
+            >{{ text }}</a
           >
         </div>
         <button class="banner-bottom-form-button" @click="consultForm">
@@ -107,6 +95,7 @@ export default {
       ],
       show: false,
       isshow: false,
+      tabs: ['增值稅筹划', '企业所得稅筹划', '个人所得稅筹划'],
       active: 1,
       bigfont: { big: true },
       smallfont: { small: true },
@@ -117,10 +106,11 @@ export default {
       ],
       selectname: 'ISO45001认证',
       count: 126,
-      test: '获取验证码',
+      text: '获取验证码',
       select: '选择税务类型',
       tel: '',
       code: '',
+      time: '',
     }
   },
 
@@ -154,18 +144,18 @@ export default {
     },
     // 验证后 发送验证码
     send(data) {
-      if (this.test === '获取验证码' || this.test === '重新发送') {
+      if (this.text === '获取验证码' || this.text === '重新发送') {
         window.promotion.privat.getSmsCode(data, (res) => {
           if (res.error === 0) {
             let i = 59
-            this.test = i + 's'
-            const time = setInterval(() => {
+            this.text = i + 's'
+            this.time = setInterval(() => {
               if (i > 1) {
                 i--
-                this.test = i + 's'
+                this.text = i + 's'
               } else {
-                this.test = '重新发送'
-                clearInterval(time)
+                this.text = '重新发送'
+                clearInterval(this.time)
               }
             }, 1000)
             console.log(res.msg)
@@ -214,7 +204,7 @@ export default {
       const _tel = this.tel
       const _code = this.code
       const _telReg = /^1[3,4,5,6,7,8,9]\d{9}$/
-      const webUrl = window.location.href
+      const webUrl = window.open
       const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       if (!_tel) {
         Toast('请输入电话号码')
@@ -234,6 +224,7 @@ export default {
       }
       const contentStr = {
         shuiwuleixing: this.select,
+        chouhualeixing: this.tabs[this.active],
       }
       const params = {
         formId, // formId,唯一ID提交资源中心
@@ -252,6 +243,11 @@ export default {
           // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
           console.log(res)
           Toast('提交成功，请注意接听电话')
+          clearInterval(this.time)
+          this.tel = ''
+          this.code = ''
+          this.text = '发送验证码'
+          this.select = '选择税务类型'
         } else {
           console.log(res)
         }

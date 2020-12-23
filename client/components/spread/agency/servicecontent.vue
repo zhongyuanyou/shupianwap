@@ -26,13 +26,13 @@
       </div>
     </div>
     <div class="consultingbtn">
-      <router-link to="">
+      <a href="javascript:;" @click="openIM('')">
         <img
           src="~/assets/spreadImages/agency/busi_img_dljznrtel@1,5x.png"
           alt=""
         />
         <span>一键代办咨询</span>
-      </router-link>
+      </a>
     </div>
   </div>
 </template>
@@ -93,6 +93,13 @@ export default {
   methods: {
     select(code) {
       this.actived = code
+    },
+    openIM(url) {
+      if (url !== '') {
+        window.location.href = url
+      } else {
+        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+      }
     },
   },
 }

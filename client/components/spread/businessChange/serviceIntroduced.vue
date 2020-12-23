@@ -24,10 +24,10 @@
               <span>元起</span>
             </div>
             <div class="contact-btn">
-              <router-link to="">
+              <a href="javascript:;" @click="openIM(url)">
                 <img :src="item.headimg" alt="" />
-              </router-link>
-              <router-link to="">
+              </a>
+              <a href="javascript:;" @click="chat(index)">
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -35,8 +35,8 @@
                   class="icon"
                 >
                 </my-icon>
-              </router-link>
-              <router-link to="">
+              </a>
+              <a href="javascript:;" @click="openIM(url)">
                 <my-icon
                   name="notify_ic_tel"
                   color="#4974F5"
@@ -44,24 +44,28 @@
                   class="icon"
                 >
                 </my-icon>
-              </router-link>
+              </a>
             </div>
           </div>
         </li>
       </ul>
     </div>
-    <div class="show-more-btn" @click="showMore">
+    <div
+      v-show="servicelist.length > 3"
+      class="show-more-btn"
+      @click="showMore"
+    >
       <span v-show="more">更多服务</span>
       <span v-show="close">收起</span>
       <my-icon
-        v-show="icOpen"
+        v-show="more"
         name="tab_ic_all_n"
         size="0.2rem"
         class="input-ic-open"
         color="#cccccc"
       ></my-icon>
       <my-icon
-        v-show="icClose"
+        v-show="close"
         name="tab_ic_all_s"
         size="0.2rem"
         class="input-ic-open"
@@ -86,9 +90,8 @@ export default {
     return {
       more: true,
       close: false,
-      icClose: false,
-      icOpen: true,
       num: 2,
+      url: '',
     }
   },
   methods: {
@@ -96,15 +99,22 @@ export default {
       if (this.more) {
         this.close = true
         this.more = false
-        this.icOpen = false
-        this.icClose = true
         this.num = this.servicelist.length
       } else {
         this.close = false
         this.more = true
-        this.icOpen = true
-        this.icClose = false
         this.num = 2
+      }
+    },
+    chat() {
+      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+    },
+
+    openIM(url) {
+      if (url !== '') {
+        window.location.href = url
+      } else {
+        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
       }
     },
   },

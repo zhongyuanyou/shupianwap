@@ -6,7 +6,7 @@
         v-for="(item, i) of banners"
         :key="i"
         class="super-banner-item"
-        @click="show"
+        @click="openImUrl"
       >
         <div class="super-banner-item-left">
           <img :src="item.img" alt="" class="super-banner-item-left-icon" />
@@ -51,11 +51,16 @@ export default {
           style: { width: '2.4rem' },
         },
       ],
+      url: '',
     }
   },
   methods: {
-    show() {
-      console.log(1)
+    openImUrl() {
+      if (this.url !== '') {
+        window.open = this.url
+      } else {
+        this.$parent.openIm()
+      }
     },
   },
 }
@@ -80,6 +85,9 @@ export default {
     &-item {
       display: flex;
       margin-right: 18px;
+      a {
+        display: flex;
+      }
       &-left {
         display: flex;
         align-items: flex-start;

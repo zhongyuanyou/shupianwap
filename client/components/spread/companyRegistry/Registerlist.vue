@@ -2,7 +2,7 @@
   <div class="register-list">
     <div
       class="register-list_hidden"
-      :style="{ maxHeight: `${isMore ? '30000px' : '805px'}` }"
+      :class="isMore ? 'register-list_max' : 'register-list_max--active'"
     >
       <div
         v-for="(listCounts, index) of listCount"
@@ -13,7 +13,7 @@
         }"
         class="list"
       >
-        <nuxt-link to="/">
+        <div @click="onMessage('')">
           <div class="list-count">
             <div class="list-count_item">
               <span>100万+</span>
@@ -28,7 +28,7 @@
               <div>在线咨询</div>
             </div>
           </div>
-        </nuxt-link>
+        </div>
 
         <div class="list-advisory">
           <span class="price"
@@ -42,7 +42,7 @@
               height="28px"
               src="https://img.yzcdn.cn/vant/cat.jpeg"
             />
-            <span @click="onMessage"
+            <span @click="onMessage('')"
               ><my-icon
                 name="notify_ic_chat"
                 size="20px"
@@ -90,8 +90,12 @@ export default {
     return {}
   },
   methods: {
-    onMessage() {
-      this.$root.$emit('openIMM', '7862499547640840192', '张毅', '107547')
+    onMessage(url) {
+      if (url !== '') {
+        window.location.href = url
+      } else {
+        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+      }
     },
     onPhone() {
       Toast('电话')
@@ -166,6 +170,13 @@ export default {
         }
       }
     }
+  }
+  // 选择更多高度
+  .register-list_max {
+    max-height: 10000px;
+  }
+  .register-list_max--active {
+    max-height: 1610px;
   }
 }
 </style>

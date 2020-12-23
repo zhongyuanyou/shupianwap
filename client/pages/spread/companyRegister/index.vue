@@ -1,7 +1,7 @@
 <template>
   <div class="company-registry">
     <sp-top-nav-bar
-      title="公商注册"
+      title="公司注册"
       background="#FFFFFF"
       title-color="#1A1A1A"
       ellipsis
@@ -41,8 +41,10 @@
       <h5>办理标准</h5>
       <Standard />
     </div>
+    <!-- S立即咨询 -->
+    <div class="help"><ConsultTel :title="myTitle" :tel="tel" /></div>
+    <!-- E立即咨询 -->
     <!-- S注册公司准备工作-平台优势 -->
-    <!-- <div class="register-ready"></div> -->
     <RegisterReady />
     <!-- E注册公司准备工作-平台优势 -->
     <!-- S咨询规划师 -->
@@ -54,7 +56,7 @@
     <div class="service">
       <h5>您可能还需要其他服务</h5>
       <div class="serice-item">
-        <a href=""
+        <a @click="onService('')"
           ><span>
             <sp-image
               width="104px"
@@ -64,7 +66,7 @@
               "
             /> </span
         ></a>
-        <a href="">
+        <a @click="onService('')">
           <span>
             <sp-image
               width="104px"
@@ -75,7 +77,7 @@
             />
           </span>
         </a>
-        <a href="">
+        <a @click="onService('')">
           <span>
             <sp-image
               width="104px"
@@ -89,10 +91,13 @@
       </div>
     </div>
     <!-- E其他服务 -->
+    <!-- S立即咨询 -->
     <div class="help">
-      <QueryPhone />
+      <ConsultTel :title="myTitle" :tel="tel" />
+      <ShuPianZhaoRen />
     </div>
-    <div class="foot"><Bottom /></div>
+    <!-- E立即咨询 -->
+    <div class="foot"><FixedBottom :data="data" /></div>
     <dgg-im-company></dgg-im-company>
   </div>
 </template>
@@ -111,9 +116,10 @@ import Card from '@/components/spread/companyRegistry/Card.vue'
 import Registerlist from '@/components/spread/companyRegistry/Registerlist.vue'
 import Standard from '@/components/spread/companyRegistry/standard.vue'
 import RegisterReady from '@/components/spread/companyRegistry/RegisterReady'
-import QueryPhone from '@/components/spread/companyRegistry/QueryPhone'
-import Bottom from '@/components/spread/companyRegistry/bottom'
+import FixedBottom from '@/components/spread/common/FixedBottom'
 import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
+import ConsultTel from '~/components/spread/common/ConsultTel'
+import ShuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
 import dggImCompany from '~/components/spread/DggImCompany'
 export default {
   name: 'CompanyRegistry',
@@ -130,10 +136,11 @@ export default {
     Card,
     Registerlist,
     Standard,
-    QueryPhone,
-    Bottom,
+    ConsultTel,
+    ShuPianZhaoRen,
     GuiHuaShiSwipe,
     dggImCompany,
+    FixedBottom,
   },
   data() {
     return {
@@ -161,28 +168,46 @@ export default {
           img: require('~/assets/spreadImages/company_registry/busi_img_nkn_qtfw.png'),
         },
       ],
-      planners: [
-        {
-          id: 1,
-          type: '金牌规划师',
-          avatarImg: require('~/assets/spreadImages/home/busi_img_gscsys04.png'),
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
+      planners: {
+        planners: [
+          {
+            id: 1,
+            type: '金牌规划师',
+            avatarImg: '',
+            name: '郭亮亮',
+            shuPianFen: 138,
+            serverNum: 258,
+            telephone: 12345679985,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+          },
+          {
+            id: 2,
+            type: '金牌规划师',
+            avatarImg: '',
+            name: '郭亮亮',
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: 12345679985,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+          },
+          {
+            id: 3,
+            type: '金牌规划师',
+            avatarImg: '',
+            name: '郭亮亮',
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: 12345679985,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+          },
+        ],
+        im: {
+          function: 'openIMM',
+          id: '7862495547640840192',
+          name: '张毅',
+          num: '107547',
         },
-        {
-          id: 2,
-          type: '金牌规划师',
-          avatarImg: require('~/assets/spreadImages/home/busi_img_gscsys04.png'),
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-        },
-      ],
+      },
       plannersTitle: '咨询规划师',
       listCount: [
         {
@@ -202,6 +227,24 @@ export default {
           bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_fgs.png'),
         },
       ],
+      data: {
+        show: {
+          imgSrc: 'http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg',
+          cardName: '王深林',
+          cardSign: '金牌规划师',
+          icon: '',
+          round: true,
+          avatarSize: 40,
+        },
+        info: {
+          id: '7862495547640840192',
+          name: '张毅',
+          jobNum: '107547',
+          telephone: '18402858698',
+        },
+      },
+      myTitle: '有疑问？千万企服专家为您免费解答',
+      tel: '4000-535800',
     }
   },
   methods: {
@@ -211,6 +254,18 @@ export default {
     onMore() {
       this.isMore ? (this.isMore = false) : (this.isMore = true)
     },
+    onService(url) {
+      if (url !== '') {
+        window.location.href = url
+      } else {
+        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+      }
+    },
+  },
+  head() {
+    return {
+      title: '工商注册-公司注册',
+    }
   },
 }
 </script>
@@ -219,7 +274,6 @@ export default {
   width: 750px;
   margin: 0 auto;
   position: relative;
-  padding-bottom: 196px;
   .banner-img {
     /deep/.my-swipe .sp-swipe-item {
       color: #fff;
@@ -242,7 +296,7 @@ export default {
     }
   }
   .introduction {
-    padding-top: 50px;
+    padding-top: 64px;
     .more {
       text-align: center;
       font-size: 28px;
@@ -250,7 +304,6 @@ export default {
       color: #555555;
       line-height: 44px;
       padding: 8px 0 40px 0;
-      padding-bottom: 24px;
     }
   }
   .service {
@@ -270,12 +323,10 @@ export default {
       }
     }
   }
-  .help,
-  .foot {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 0 40px 0 40px;
+  .help {
+    /deep/.cousulttel-bottom {
+      text-align: left;
+    }
   }
 }
 </style>

@@ -3,14 +3,18 @@
     <div class="conrult-title">量身打造各行各业稅收解決方案</div>
     <div class="conrult-banner">
       <sp-grid :border="false" :column-num="4">
-        <sp-grid-item v-for="(item, i) of banners" :key="i">
+        <sp-grid-item
+          v-for="(item, i) of banners"
+          :key="i"
+          @click="openIMurl()"
+        >
           <div class="conrult-banner-img" :style="item.style"></div>
           <div class="conrult-banner-font">{{ item.title }}</div>
         </sp-grid-item>
       </sp-grid>
     </div>
     <div class="conrult-gray">更多行业解决方案</div>
-    <button class="conrult-button" @click="consult">立即咨询</button>
+    <button class="conrult-button" @click="$parent.openIm">立即咨询</button>
   </div>
 </template>
 
@@ -98,11 +102,16 @@ export default {
           title: '建筑及安装',
         },
       ],
+      url: '',
     }
   },
   methods: {
-    consult() {
-      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+    openIMurl() {
+      if (this.url !== '') {
+        window.open = this.url
+      } else {
+        this.$parent.openIm()
+      }
     },
   },
 }

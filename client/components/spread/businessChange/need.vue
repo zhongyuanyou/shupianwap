@@ -13,7 +13,7 @@
         <span>电话咨询：</span>
         <span>4000 - 962540</span>
       </div>
-      <router-link to="">立即咨询</router-link>
+      <a href="javascript:;" @click="openIM(url)"><span>立即咨询</span></a>
     </div>
     <div class="chips">
       <div>
@@ -34,6 +34,7 @@ export default {
   components: { MyIcon },
   data() {
     return {
+      url: '',
       ProductList: [
         {
           code: 1,
@@ -52,6 +53,15 @@ export default {
         },
       ],
     }
+  },
+  methods: {
+    openIM(url) {
+      if (url !== '') {
+        window.location.href = url
+      } else {
+        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+      }
+    },
   },
 }
 </script>
@@ -131,12 +141,16 @@ export default {
       height: 80px;
       background: #4974f5;
       border-radius: 0px 8px 8px 0px;
-      font-size: 28px;
-      font-family: PingFang SC;
-      font-weight: bold;
-      color: #ffffff;
-      line-height: 80px;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      > span {
+        text-align: center;
+        font-size: 28px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #ffffff;
+      }
     }
   }
   .chips {

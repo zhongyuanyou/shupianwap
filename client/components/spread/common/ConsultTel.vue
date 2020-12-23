@@ -1,27 +1,25 @@
 <template>
   <div class="cousulttel">
-    <div class="cousulttel-bottom">
+    <div class="cousulttel-title">
       {{ title }}
     </div>
-    <div class="cousulttel-last">
-      <div class="cousulttel-last-content">
+    <div class="cousulttel-content">
+      <div class="cousulttel-content-left">
         <my-icon
           name="notify_ic_tel"
           color="#4974F5"
           size="0.36rem"
           class="icon"
         ></my-icon>
-        <span class="cousulttel-last-content-text">服务热线:</span>
-        <span class="cousulttel-last-content-number">{{ tel }}</span>
+        <span class="cousulttel-content-left-text">服务热线:</span>
+        <span class="cousulttel-content-left-number">{{ tel }}</span>
       </div>
-      <button class="cousulttel-last-button">立即咨询</button>
+      <button class="cousulttel-content-button">立即咨询</button>
     </div>
   </div>
 </template>
 
 <script>
-import { isNumber } from '~/utils/check-types'
-
 export default {
   name: 'ConsultTel',
   props: {
@@ -46,7 +44,7 @@ export default {
 <style scoped lang="less">
 .cousulttel {
   padding: 0 40px 32px;
-  &-bottom {
+  &-title {
     font-size: 30px;
     font-family: PingFang SC;
     font-weight: bold;
@@ -56,7 +54,7 @@ export default {
     height: 30px;
     line-height: 30px;
   }
-  &-last {
+  &-content {
     width: 670px;
     height: 80px;
     border: 2px solid #4974f5;
@@ -64,7 +62,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    &-content {
+    &-left {
       margin-left: 26px;
       display: flex;
       align-items: center;

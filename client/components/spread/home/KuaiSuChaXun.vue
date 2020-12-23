@@ -155,7 +155,7 @@ export default {
           window.promotion.privat.getSmsCode(_data, (res) => {
             // 发送成功，倒计时开始
             if (res.error === 0) {
-              vm.countDown()
+              vm.countDownFun()
             }
             console.log(res.msg)
           })
@@ -163,13 +163,13 @@ export default {
       }
     },
     // 验证码倒计时
-    countDown() {
+    countDownFun() {
       const vm = this
       this.countdown = 10
       this.countdownTimer = setInterval(function () {
         if (vm.countdown === 0) {
           vm.countdown = -1
-          clearInterval(this.countdownTimer)
+          clearInterval(vm.countdownTimer)
           vm.countdownTimer = null
         } else {
           vm.countdown > 0 && vm.countdown--
@@ -221,7 +221,7 @@ export default {
         name: '匿名客户',
         tel: _tel, // 电话
         url: webUrl, // 当前页面地址。用于后台判断ip发送验证码次数
-        type: 'swch', // 业态编码。
+        type: 'gszc', // 业态编码。固定几个业态编码。
         place: 'cd', // 定位城市。
         device: 'wap', // 设备：pc,wap。
         web: 'xmt', // 归属渠道：xmt,zytg,wxgzh。
@@ -229,11 +229,18 @@ export default {
         content: JSON.stringify(contentStr),
       }
       // 3、提交表单
+      const vm = this
       window.promotion.privat.consultForm(params, (res) => {
         if (res.error === 0) {
           // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
           console.log(res)
           Toast('提交成功，请注意接听电话')
+          // 清空表单
+          vm.telephone = ''
+          vm.sms = ''
+          vm.countdown = -1
+          clearInterval(vm.countdownTimer)
+          vm.countdownTimer = null
         } else {
           console.log(res)
         }

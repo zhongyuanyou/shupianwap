@@ -2,7 +2,7 @@
   <div class="chuchuang">
     <div class="title">初创必备</div>
     <div class="product">
-      <div
+      <a
         v-for="product in productList"
         :key="product.id"
         class="product-item"
@@ -11,6 +11,12 @@
           width: product.imgWidth / 100 + 'rem',
           height: product.imgHeight / 100 + 'rem',
         }"
+        href="javascript:void(0);"
+        @click="
+          () => {
+            $parent.jumpLink(product.url)
+          }
+        "
       >
         <div v-if="product.id != 5" class="product-price-position">
           <div class="middle-transition">
@@ -18,7 +24,7 @@
             <span class="product-price-suffix">元起</span>
           </div>
         </div>
-      </div>
+      </a>
     </div>
   </div>
 </template>
