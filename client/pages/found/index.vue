@@ -21,16 +21,19 @@
         <sp-icon name="search" size="20" @click="onClickRight" />
       </template>
     </sp-top-nav-bar>
-    <Con
-      :banner="information_banner"
-      :list="information_list"
-      :category-code="categoryCode"
-    />
+    <div :style="{ marginTop: isInApp ? 0 : 0 }">
+      <Con
+        :banner="information_banner"
+        :list="information_list"
+        :category-code="categoryCode"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import { WorkTab, WorkTabs, Icon, TopNavBar, Toast } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import Con from '~/components/found/found/Cons'
 import { foundApi } from '@/api'
 export default {
@@ -65,6 +68,11 @@ export default {
       information_list: [], // 资讯列表
       categoryCode: '', // code码
     }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
   mounted() {
     this.information_class =

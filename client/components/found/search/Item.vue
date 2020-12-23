@@ -25,7 +25,13 @@
       <div class="content">{{ info.description }}</div>
       <div :class="['item_bot', 'item_bot_copy']">
         <div class="item_bot_lf">
-          <img class="avatar" :src="info.imageUrl" />
+          <sp-image
+            width="0.48rem"
+            height="0.48rem"
+            radius="0.24rem"
+            fit="cover"
+            :src="info.imageUrl"
+          />
           <p class="name">{{ info.updaterName }}</p>
         </div>
         <div class="item_bot_rt">
@@ -37,8 +43,10 @@
 </template>
 
 <script>
+import { Image } from '@chipspc/vant-dgg'
 export default {
   name: 'Item',
+  components: { [Image.name]: Image },
   props: {
     info: {
       type: Object,
@@ -75,7 +83,6 @@ export default {
     font-family: PingFang SC;
     font-weight: 400;
     color: #222222;
-    line-height: 24px;
     .textOverflow(2);
   }
   &_tp {
@@ -97,6 +104,7 @@ export default {
     }
   }
   &_bot {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;

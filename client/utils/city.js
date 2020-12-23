@@ -300,11 +300,11 @@ export const city = [
 ]
 export const cityCopy = [
   {
-    name: '四川',
+    name: '四川省',
     code: 'sc',
     children: [
       {
-        name: '成都',
+        name: '成都市',
         code: 'cd',
         children: [
           {
@@ -318,7 +318,7 @@ export const cityCopy = [
         ],
       },
       {
-        name: '遂宁',
+        name: '遂宁市',
         code: 'sn',
         children: [
           {
@@ -334,11 +334,11 @@ export const cityCopy = [
     ],
   },
   {
-    name: '广东',
+    name: '广东省',
     code: 'gd',
     children: [
       {
-        name: '深圳',
+        name: '深圳市',
         code: 'sz',
         children: [
           {
@@ -352,7 +352,7 @@ export const cityCopy = [
         ],
       },
       {
-        name: '遂宁',
+        name: '遂宁市',
         code: 'sn',
         children: [
           {
@@ -368,11 +368,11 @@ export const cityCopy = [
     ],
   },
   {
-    name: '重庆',
+    name: '重庆省',
     code: 'cq',
     children: [
       {
-        name: '成都',
+        name: '成都市',
         code: 'cd',
         children: [
           {
@@ -386,7 +386,7 @@ export const cityCopy = [
         ],
       },
       {
-        name: '遂宁',
+        name: '遂宁市',
         code: 'sn',
         children: [
           {
@@ -402,11 +402,11 @@ export const cityCopy = [
     ],
   },
   {
-    name: '上海',
+    name: '上海省',
     code: 'sh',
     children: [
       {
-        name: '成都',
+        name: '成都市',
         code: 'cd',
         children: [
           {
@@ -420,7 +420,7 @@ export const cityCopy = [
         ],
       },
       {
-        name: '遂宁',
+        name: '遂宁市',
         code: 'sn',
         children: [
           {
@@ -436,11 +436,11 @@ export const cityCopy = [
     ],
   },
   {
-    name: '北京',
+    name: '北京省',
     code: 'bj',
     children: [
       {
-        name: '成都',
+        name: '成都市',
         code: 'cd',
         children: [
           {
@@ -454,7 +454,7 @@ export const cityCopy = [
         ],
       },
       {
-        name: '遂宁',
+        name: '遂宁市',
         code: 'sn',
         children: [
           {
@@ -470,11 +470,11 @@ export const cityCopy = [
     ],
   },
   {
-    name: '台湾',
+    name: '台湾省',
     code: 'tw',
     children: [
       {
-        name: '成都',
+        name: '成都市',
         code: 'cd',
         children: [
           {
@@ -488,7 +488,7 @@ export const cityCopy = [
         ],
       },
       {
-        name: '遂宁',
+        name: '遂宁市',
         code: 'sn',
         children: [
           {

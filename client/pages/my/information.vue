@@ -82,7 +82,7 @@
             <p class="txt">
               {{
                 info.province
-                  ? info.province + ' ' + info.city + ' ' + info.district
+                  ? info.province + ' ' + info.city + ' ' + info.district || ''
                   : '未设置'
               }}
             </p>
@@ -184,9 +184,11 @@ export default {
     },
     async select(data) {
       // 地区选择
+      console.log('data', data)
       this.info.province = data[0].name
       this.info.city = data[1].name
-      this.area = data
+      this.$set(this.area, 0, { name: data[0].name, code: data[0].code })
+      this.$set(this.area, 1, { name: data[1].name, code: data[1].code })
       const params = {
         type: 5,
         value: `${this.info.province},${this.info.city},船山区`,
@@ -220,12 +222,15 @@ export default {
     onOversize() {},
     async getUserInfo() {
       // 获取用户信息
-      const params = {
-        // id: this.userId,
-        id: '607991757719633892',
-      }
-      const data = await this.$axios.get(userinfoApi.info, { params })
-      this.info = data.data
+      try {
+        const params = {
+          id: this.userId,
+        }
+        const data = await this.$axios.get(userinfoApi.info, { params })
+        this.info = data.data
+        this.$set(this.area, 0, { name: data.data.province, code: '' })
+        this.$set(this.area, 1, { name: data.data.city, code: '' })
+      } catch (err) {}
     },
   },
 }

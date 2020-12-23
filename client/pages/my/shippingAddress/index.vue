@@ -192,7 +192,6 @@ export default {
           },
           (res) => {}
         )
-        return
       }
       this.$router.push(`/my/shippingAddress/edit/${item.id}`)
     },
