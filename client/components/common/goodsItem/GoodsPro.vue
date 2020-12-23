@@ -1,23 +1,23 @@
 <template>
   <a href="javascript:void(0);" class="goods-item">
     <div class="goods-lable-img">
-      <span class="lable">2千元成交礼</span>
+      <span v-if="false" class="lable">2千元成交礼</span>
       <img src="https://img.yzcdn.cn/vant/cat.jpeg" alt="" />
     </div>
     <div class="goods-info">
       <strong class="goods-name">
-        <span class="pro-lable"><i>无字段</i></span
+        <span v-if="false" class="pro-lable"><i>无字段</i></span
         >{{ goodsData.name }}</strong
       >
-      <div class="goods-lable">
+      <div v-if="false" class="goods-lable">
         <span>带地址</span>
         <span>无烂坏账</span>
         <span>小规模</span>
       </div>
       <div class="goods-sku">
-        <span>锦江区</span>
-        <span>有注册经营地址</span>
-        <span>其他</span>
+        <span v-for="(item, index) in goodsData.fieldList" :key="index">{{
+          item
+        }}</span>
       </div>
       <div class="goods-price">
         <span class="sales-proce">
@@ -142,7 +142,6 @@ export default {
     .goods-lable {
       display: flex;
       flex-wrap: wrap;
-      margin-bottom: 8px;
       > span {
         display: flex;
         align-items: center;
@@ -162,6 +161,7 @@ export default {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
+      margin-top: 8px;
       > span {
         display: flex;
         align-items: center;
