@@ -1,6 +1,6 @@
 <template>
   <div class="detail">
-    <sp-sticky>
+    <sp-sticky v-if="!isInApp">
       <sp-top-nav-bar title="面谈确认" ellipsis @on-click-left="back">
         <template #left>
           <div>
@@ -27,7 +27,7 @@
               <p>规划师</p>
             </div>
             <div class="item__rt">
-              <p>李规划（20199181)</p>
+              <p>{{ info.accompanyName }}</p>
             </div>
           </div>
           <div class="item">
@@ -40,7 +40,7 @@
               <p>面谈时间</p>
             </div>
             <div class="item__rt">
-              <p>2020/09/19 14:00</p>
+              <p>{{ info.inviteTime }}</p>
             </div>
           </div>
           <div class="item">
@@ -53,7 +53,7 @@
               <p>面谈地点</p>
             </div>
             <div class="item__rt">
-              <p>政企服务中心</p>
+              <p>{{ info.inviteAddress }}</p>
             </div>
           </div>
           <div class="item">
@@ -81,6 +81,8 @@
 
 <script>
 import { Sticky, TopNavBar, Button } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import { interviewApi } from '~/api'
 export default {
   name: 'Detail',
   components: {
@@ -88,10 +90,40 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [Button.name]: Button,
   },
+  data() {
+    return {
+      info: {
+        inviteAddress: '', // 面谈地址
+        accompanyName: '', // 规划师名字
+        inviteTime: '', // 面谈时间
+        inviteStatus: 0, // 面谈状态
+      }, // 面谈详情
+    }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
+  mounted() {
+    this.getInterviewDetail()
+  },
   methods: {
     back() {
       // 返回上一页
       this.$router.back()
+    },
+    async getInterviewDetail() {
+      // 获取面谈详情
+      try {
+        const params = {
+          id: this.$route.params.id,
+        }
+        const res = await this.$axios.get(interviewApi.detail, { params })
+        if (res.code === 200) {
+          this.info = res.data
+        }
+      } catch (err) {}
     },
   },
 }
@@ -155,11 +187,13 @@ export default {
             }
           }
           &__rt {
+            max-width: 350px;
             > p {
               font-size: 28px;
               font-family: PingFang-SC-Bold, PingFang-SC;
               font-weight: bold;
               color: #1a1a1a;
+              .textOverflow(1);
             }
           }
         }
