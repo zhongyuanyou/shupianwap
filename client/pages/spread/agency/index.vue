@@ -110,6 +110,7 @@ export default {
         },
       ],
       // 规划师列表
+
       plannersList: [
         {
           id: 1,
@@ -120,6 +121,11 @@ export default {
           serverNum: 250,
           telephone: 12345679985,
           labels: ['工商注册', '财税咨询', '税务筹划'],
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
+          },
         },
         {
           id: 2,
@@ -130,6 +136,11 @@ export default {
           serverNum: 250,
           telephone: 12345679985,
           labels: ['工商注册', '财税咨询', '税务筹划'],
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
+          },
         },
         {
           id: 3,
@@ -140,6 +151,11 @@ export default {
           serverNum: 250,
           telephone: 12345679985,
           labels: ['工商注册', '财税咨询', '税务筹划'],
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
+          },
         },
       ],
     }
@@ -147,6 +163,11 @@ export default {
   head() {
     return {
       title: '代理记账',
+      script: [
+        {
+          src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
+        },
+      ],
     }
   },
 }

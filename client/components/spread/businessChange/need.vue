@@ -3,7 +3,9 @@
     <span class="title">你可能还需要办理</span>
     <ul class="productlist">
       <li v-for="(item, index) in ProductList" :key="index">
-        <router-link to=""><img :src="item.img" alt="" /></router-link>
+        <a href="javascript:;" @click="openIM(url)"
+          ><img :src="item.img" alt=""
+        /></a>
       </li>
     </ul>
     <span class="answer">对代理记账有疑问？企服专家为您免费解答</span>
