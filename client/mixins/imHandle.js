@@ -42,7 +42,7 @@ export default {
               params: { id: this.userId },
             })
             .then((res) => {
-              if (res.code === 200) {
+              if (res.code === 200 && res.data.id) {
                 resolve(res.data)
               } else {
                 this.loginToast('获取用户信息失败')
@@ -109,7 +109,7 @@ export default {
      * @param {String} msgParams.sendType: 0：带图片的模板消息  1：不带图片的模板消息 必传
      * @param {String} msgParams.senderName: 发送者昵称 非必传
      * @param {String} msgParams.msgType: 消息类型 必传
-     * @param {String} msgParams.extContent: 路由参数 必传
+     * @param {Object} msgParams.extContent: 路由参数 必传
      * @param {String} msgParams.productName: 产品名称 必传
      * @param {String} msgParams.productContent: 产品信息 必传
      * @param {String} msgParams.price: 价格 必传
@@ -142,7 +142,7 @@ export default {
                 receiver: res.data.groupId, // 会话 id
                 senderName: userInfo.nickName, // 发送者昵称
                 msgType: msgParams.msgType, // 消息类型
-                extContent: msgParams.extContent, // 路由参数
+                extContent: JSON.stringify(msgParams.extContent), // 路由参数
                 paramJsonStr: {
                   productName: msgParams.productName, // 产品名称
                   productContent: msgParams.productContent, // 产品信息
