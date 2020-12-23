@@ -97,12 +97,6 @@ module.exports = {
         type: 'text/javascript',
         charset: 'utf-8',
       },
-      {
-        src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
     ],
   },
   loading: { color: '#fff' },
