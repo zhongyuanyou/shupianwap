@@ -327,7 +327,26 @@ export default {
     // 平台不同，跳转方式不同
     uPGoBack(data) {
       if (this.isInApp && this.redirectType === 'app') {
-        // TODO  在app中 返回 且 跳转到app原生页面
+        const fullPath = location ? location.href : ''
+        this.$appFn.dggWebBackValueToFlutter(
+          {
+            code: data ? 200 : 201,
+            url: fullPath,
+            data,
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              console.error('dggWebBackValueToFlutter 失败')
+              return
+            }
+            this.$appFn.dggCloseWebView((res) => {
+              if (!res || res.code !== 200) {
+                Toast('返回失败！')
+              }
+            })
+          }
+        )
         return
       }
 
@@ -341,7 +360,7 @@ export default {
             name: isPath ? null : this.redirect,
             params: { data },
           }
-          this.$router.push(pushParams)
+          this.$router.replace(pushParams)
         }
       } else {
         this.$router.back(-1)
