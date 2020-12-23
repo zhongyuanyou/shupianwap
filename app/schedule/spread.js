@@ -1,10 +1,15 @@
 'use strict';
+/**
+ * @param app 推广页所需的基础数据，今日数据，累计数据处理
+ * @author tangdaibing
+ * @since 2020/12/21
+ */
 module.exports = app => {
   return {
     schedule: {
-      interval: '60s',
-      type: 'worker', // 每台机器上只有一个 worker 会执行这个定时任务，每次执行定时任务的 worker 的选择是随机的。
-      immediate: true, // 启动时立即执行一次
+      interval: '120s',
+      type: 'worker',
+      immediate: true,
     },
     // * extendBankServer 银行服务
     // * extendBussineWithdraw 工商注销
@@ -23,18 +28,18 @@ module.exports = app => {
           today: 0,
           total: 1100,
           code: 'extendBankServer',
-          ratio: 1.2, // 增长系数
+          ratio: 0.5, // 增长系数
         },
         {
           today: 0,
-          total: 641012,
+          total: 640000,
           code: 'extendAccount',
-          ratio: 1.5,
+          ratio: 2,
         },
       ];
       for (let i = 0; i < pageCodes.length; i++) {
         const rangeNum = Math.ceil(
-          (Math.random() * 2 + 1) * pageCodes[i].ratio
+          (Math.random() * 5 + 1) * pageCodes[i].ratio
         );
         const Hours = new Date().getHours();
         const obj = pageCodes[i];
