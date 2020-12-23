@@ -50,8 +50,8 @@
     <!-- S咨询规划师 -->
     <div class="refer">
       <GuiHuaShiSwipe
-        :plannersdata="planners"
-        :title="plannersTitle"
+        :planners-data="guiHuaShiList"
+        title="咨询规划师"
       ></GuiHuaShiSwipe>
     </div>
     <!-- E咨询规划师 -->
@@ -100,7 +100,7 @@
       <ShuPianZhaoRen />
     </div>
     <!-- E立即咨询 -->
-    <div class="foot"><FixedBottom :data="data" /></div>
+    <div class="foot"><FixedBottom :planner="planner" /></div>
     <dgg-im-company></dgg-im-company>
   </div>
 </template>
@@ -124,6 +124,7 @@ import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
 import ConsultTel from '~/components/spread/common/ConsultTel'
 import ShuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
 import dggImCompany from '~/components/spread/DggImCompany'
+import { spreadApi } from '@/api/spread'
 export default {
   name: 'CompanyRegistry',
   components: {
@@ -154,7 +155,26 @@ export default {
   //   console.log(res)
   //   return { result: res }
   // },
-
+  async asyncData({ $axios }) {
+    console.log('111')
+    console.log('111')
+    const type = 'extendBussineReg'
+    try {
+      const res = await $axios.get(spreadApi.list, {
+        params: {
+          pageCode: type,
+        },
+      })
+      console.log(res)
+      if (res.code === 200) {
+        return {
+          resultData: res,
+        }
+      }
+    } catch (error) {
+      console.log('error', error)
+    }
+  },
   data() {
     return {
       isMore: false,
@@ -181,14 +201,13 @@ export default {
           img: require('~/assets/spreadImages/company_registry/busi_img_nkn_qtfw.png'),
         },
       ],
-      planners: [
+      guiHuaShiList: [
         {
           id: 1,
-          type: '金牌规划师',
           avatarImg: '',
           name: '郭亮亮',
-          shuPianFen: 138,
-          serverNum: 258,
+          shuPianFen: 11,
+          serverNum: 250,
           telephone: 12345679985,
           labels: ['工商注册', '财税咨询', '税务筹划'],
           im: {
@@ -199,7 +218,6 @@ export default {
         },
         {
           id: 2,
-          type: '金牌规划师',
           avatarImg: '',
           name: '郭亮亮',
           shuPianFen: 11,
@@ -228,7 +246,6 @@ export default {
           },
         },
       ],
-      plannersTitle: '咨询规划师',
       listCount: [
         {
           pric: 4000,
@@ -247,29 +264,20 @@ export default {
           bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_fgs.png'),
         },
       ],
-      data: {
-        show: {
-          imgSrc: 'http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg',
-          cardName: '王深林',
-          cardSign: '金牌规划师',
-          icon: '',
-          round: true,
-          avatarSize: 40,
-        },
-        info: {
-          id: '7862495547640840192',
-          name: '张毅',
-          jobNum: '107547',
-          telephone: '18402858698',
-        },
+      planner: {
+        id: '7862495547640840192',
+        name: '张毅',
+        jobNum: '107547',
+        telephone: '18402858698',
+        imgSrc: '',
       },
       myTitle: '有疑问？千万企服专家为您免费解答',
       tel: '4000-535800',
     }
   },
-  // created() {
-  //   console.log(this.result)
-  // },
+  created() {
+    console.log(this.resultData)
+  },
   methods: {
     onClickLeft() {
       console.log('返回')
