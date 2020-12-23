@@ -1,6 +1,6 @@
 <template>
   <sp-bottombar safe-area-inset-bottom>
-    <sp-bottombar-info title avatar :card="data.show" />
+    <sp-bottombar-info title avatar :card="card" />
     <sp-bottombar-button type="info" :text="text1" @click="onClickButton1">
     </sp-bottombar-button>
     <sp-bottombar-button type="primary" :text="text2" @click="onClickButton2">
@@ -24,34 +24,35 @@ export default {
     [BottombarInfo.name]: BottombarInfo,
   },
   props: {
-    data: {
+    planner: {
       type: Object,
       required: true,
       default: () => {
         return {
-          show: {
-            imgSrc:
-              'http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg',
-            cardName: '王深林',
-            cardSign: '金牌规划师',
-            icon: '',
-            round: true,
-            avatarSize: 40,
-          },
-          info: {
-            id: '7862495547640840192',
-            name: '张毅',
-            jobNum: '107547',
-            telephone: '18402858698',
-          },
+          id: '7862495547640840192',
+          name: '张毅',
+          jobNum: '107547',
+          telephone: '18402858698',
+          imgSrc: '',
         }
       },
     },
   },
   data() {
     return {
+      card: {},
       text1: '在线咨询',
       text2: '电话咨询',
+    }
+  },
+  created() {
+    this.card = {
+      imgSrc: this.planner.imgSrc,
+      cardName: this.planner.name,
+      cardSign: '金牌规划师',
+      icon: '',
+      round: true,
+      avatarSize: 40,
     }
   },
   methods: {
@@ -62,9 +63,9 @@ export default {
       // 107547：工号。可不传
       this.$root.$emit(
         'openIMM',
-        this.data.info.id,
-        this.data.info.name || '',
-        this.data.info.jobNum || ''
+        this.planner.id,
+        this.planner.name || '',
+        this.planner.jobNum || ''
       )
     },
     // @--电话咨询

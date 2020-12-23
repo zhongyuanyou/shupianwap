@@ -89,36 +89,50 @@ export default {
   },
   data() {
     return {
+      // 轮播图片
       images: [
         require('~/assets/spreadImages/tax/busi_img_swchbanner1.jpg'),
         require('~/assets/spreadImages/tax/busi_img_swchbanner2.jpg'),
       ],
+      // 下弹窗选项栏显示状态
       show: false,
+      // 验证码输入框显示状态
       isshow: false,
+      // 导航选项内容
       tabs: ['增值稅筹划', '企业所得稅筹划', '个人所得稅筹划'],
+      // 导航选项判断状态码
       active: 1,
+      // 选中时的样式
       bigfont: { big: true },
+      // 未选中时的样式
       smallfont: { small: true },
+      // 下弹窗选项内容
       actions: [
         { name: '代理类', color: '#5a79e8' },
         { name: '咨询类' },
         { name: '审计类' },
       ],
-      selectname: 'ISO45001认证',
+      // 咨询数量
       count: 126,
+      // 验证码按钮内容
       text: '获取验证码',
+      // 下弹窗选项内容
       select: '选择税务类型',
+      // 电话
       tel: '',
+      // 验证码
       code: '',
+      // 验证码计时器
       time: '',
     }
   },
 
   methods: {
+    // 下弹窗显示
     showPopup() {
       this.show = true
     },
-    // 表头切换
+    // 表头导航选项切换
     change(i) {
       this.active = i
     },
@@ -147,6 +161,7 @@ export default {
       if (this.text === '获取验证码' || this.text === '重新发送') {
         window.promotion.privat.getSmsCode(data, (res) => {
           if (res.error === 0) {
+            // 发送成功后的操作
             let i = 59
             this.text = i + 's'
             this.time = setInterval(() => {
@@ -158,14 +173,14 @@ export default {
                 clearInterval(this.time)
               }
             }, 1000)
-            console.log(res.msg)
             return false
           }
-          console.log(res.msg)
+          // 没成功的时候调用
+          Toast(res.msg)
         })
       }
     },
-    // 内容选择
+    // 下弹窗内容选择后样式改变
     onSelect(e) {
       this.selectname = e.name
       this.select = e.name
@@ -222,6 +237,7 @@ export default {
         Toast('请选择税务类型')
         return
       }
+      // 没有明确参数名的，全放content中作为备注信息
       const contentStr = {
         shuiwuleixing: this.select,
         chouhualeixing: this.tabs[this.active],
@@ -234,14 +250,13 @@ export default {
         type: 'swch', // 业态编码
         place: 'cd',
         device: 'wap', // 设备：pc,wap
-        web: 'xmt', // 归属渠道：xmt,zytg,wxgzh
+        web: 'SP', // 归属渠道：xmt,zytg,wxgzh
         smsCode: _code, // 验证码
-        content: JSON.stringify(contentStr),
+        content: JSON.stringify(contentStr), // 把const备注信息json化
       }
       window.promotion.privat.consultForm(params, (res) => {
         if (res.error === 0) {
           // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
-          console.log(res)
           Toast('提交成功，请注意接听电话')
           clearInterval(this.time)
           this.tel = ''
