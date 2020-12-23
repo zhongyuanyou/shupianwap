@@ -12,7 +12,7 @@
     <div v-if="selectList.length" class="select">
       <div
         v-for="(item, index) in selectList"
-        :key="index"
+        :key="item.name"
         :style="{
           color:
             selectList.length === 1
@@ -39,7 +39,7 @@
         :sticky="false"
         class="popup_con_bar"
       >
-        <div v-for="(item, index) in city" :key="index">
+        <div v-for="item in city" :key="item.name">
           <!-- S 索引标题 -->
           <sp-index-anchor
             :index="item.code"
@@ -59,7 +59,7 @@
           <div v-if="item.code != '热'">
             <div
               v-for="(cItem, index) in item.children"
-              :key="index"
+              :key="cItem.name"
               class="cell"
               @click="select(cItem, index)"
             >
@@ -111,7 +111,7 @@
           <div v-else class="popup_con_hot">
             <div
               v-for="(cItem, index) in item.info.children"
-              :key="index"
+              :key="cItem.name"
               class="popup_con_hot_item"
               @click="select(cItem, index)"
             >
