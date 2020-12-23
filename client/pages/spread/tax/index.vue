@@ -83,6 +83,27 @@ export default {
   data() {
     return {
       headTitle: '税务筹划',
+      sortMaterialList: [
+        {
+          materialList: [
+            {
+              productDetail: {
+                id: 'extendAccount1',
+                name: '',
+                referencePrice: 2288,
+                operating: {
+                  showName: '小规模纳税人代理记账',
+                  slogan: '连续12个月应征增值税销售额未超过500万元',
+                  productDescribe: '连续12个月应征增值税销售额未超过500万元',
+                  actualViews: 210000,
+                  defaultSales: 180000,
+                  actualSales: 180000,
+                },
+              },
+            },
+          ],
+        },
+      ],
       plannersData: [
         {
           id: 1,
