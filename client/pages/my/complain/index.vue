@@ -119,24 +119,6 @@ export default {
     return {
       selectTypes: [], // 吐槽类型type
       multipleChoice: false, // 是否可多选
-      types: [
-        {
-          name: '体验问题',
-          type: 1,
-        },
-        {
-          name: '需要新功能',
-          type: 2,
-        },
-        {
-          name: '功能异常',
-          type: 3,
-        },
-        {
-          name: '其他',
-          type: 4,
-        },
-      ],
       complainCategory: [], // 吐槽分类集合
       desc: '',
       uploader: [],

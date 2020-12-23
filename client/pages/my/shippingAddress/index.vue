@@ -109,7 +109,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { userinfoApi } from '@/api'
-import spToast from '@/components/common/spToast/spToast'
+import spToast from '@/components/common/spToast/SpToast'
 export default {
   name: 'Index',
   components: {
