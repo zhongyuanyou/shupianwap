@@ -6,7 +6,7 @@ class ConfigService extends Service {
     // 获取用户规则
     return new Promise(async resolve => {
       const { ctx, app, service } = this;
-      const sysCode = app.config.apiClient.APPID[2];
+      const sysCode = app.config.apiClient.APPID[3];
       const address = userApi.userConfig;
       const url = ctx.helper.assembleUrl(sysCode, address);
       if (!url) {
