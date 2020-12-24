@@ -26,7 +26,7 @@
         </div>
         <div class="img-label">
           <!-- <strong>{{ item.label }}</strong> -->
-          <img :src="item.jumpImageUrl" alt="" />
+          <img v-lazy="item.jumpImageUrl" alt="" />
         </div>
       </div>
     </div>
