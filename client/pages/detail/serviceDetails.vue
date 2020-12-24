@@ -2,7 +2,11 @@
   <div class="serviceDetails">
     <!-- 导航栏-->
     <sp-sticky z-index="5" @scroll="scrollHandle">
-      <sp-top-nav-bar ellipsis :background="`rgba(255,255,255,${opacity})`">
+      <sp-top-nav-bar
+        ellipsis
+        :background="`rgba(255,255,255,${opacity})`"
+        @on-click-left="onClickLeft"
+      >
         <template #left>
           <div>
             <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
@@ -211,6 +215,10 @@ export default {
       // 加载更多
       this.productPage += 1
       this.handleGetRecProduct()
+    },
+    onClickLeft() {
+      // 返回上一页
+      this.$router.back()
     },
     // 获取推荐规划师
     async handleGetRecPlanner() {
