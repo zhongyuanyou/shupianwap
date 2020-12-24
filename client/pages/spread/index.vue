@@ -1024,7 +1024,6 @@ export default {
   created() {
     this.adHandleData(this.resultData.data.adList || [])
     this.plannerHandleData(this.resultData.data.planlerList || [])
-    console.log(this.resultData)
   },
   methods: {
     jumpLink(url) {

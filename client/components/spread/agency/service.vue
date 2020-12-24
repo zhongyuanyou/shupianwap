@@ -7,13 +7,27 @@
           v-for="(item, index) in servicelist"
           :key="index"
           :style="{ backgroundImage: 'url(' + item.bgimage + ')' }"
+          @click="
+            () => {
+              $parent.openIM(item.url, item.planner)
+            }
+          "
         >
           <div class="total">
-            <div v-for="(v, i) in item.tatol" :key="i">
-              <span>{{ v.price }}</span>
-              <span>{{ v.title }}</span>
+            <div>
+              <span>{{ item.actualViews }}</span>
+              <span>在线咨询</span>
+            </div>
+            <div>
+              <span>{{ item.defaultSales }}</span>
+              <span>累计成交</span>
+            </div>
+            <div>
+              <span>{{ item.actualSales }}</span>
+              <span>成功注册</span>
             </div>
           </div>
+
           <div class="line"></div>
           <div class="contact">
             <div class="price">
@@ -65,6 +79,7 @@ export default {
       url: '',
     }
   },
+  created() {},
   methods: {
     chat() {
       this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
@@ -127,6 +142,7 @@ export default {
             display: flex;
             flex-direction: column;
             flex: 1;
+
             > span {
               display: block;
               font-size: 32px;

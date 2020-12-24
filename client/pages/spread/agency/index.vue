@@ -28,7 +28,7 @@
     <Need />
     <!-- e 可能需要 -->
     <!-- s 底部导航 -->
-    <Bottom :planner="panner" />
+    <Bottom :planner="planner" />
     <!-- e 底部导航 -->
     <dgg-im-company></dgg-im-company>
   </div>
@@ -73,117 +73,10 @@ export default {
         resultData: res,
       }
     } catch (error) {
-      // console.log('error', error)
+      console.log('error', error)
       // 请求出错也要保证页面正常显示
-    }
-  },
-  data() {
-    return {
-      title: '代理记账',
-      plannersTitle: '咨询规划师',
-      nums: null,
-      panner: {
-        id: '7862495547640840192',
-        name: '张毅',
-        jobNum: '107547',
-        telephone: '18402858698',
-        imgSrc: '',
-      },
-      // 轮播列表
-      imgList: [
-        {
-          code: 1,
-          url: '',
-          img: require('~/assets/spreadImages/agency/busi_img_dljzbanner@1,5x.jpg'),
-        },
-      ],
-      // 服务介绍列表
-      servicelist: [
-        {
-          code: 1,
-          tatol: [
-            { price: '21万+', title: '在线质询' },
-            { price: '18万+', title: '累计成交' },
-            { price: '18万+', title: '成功注册' },
-          ],
-          price: '2288',
-          headimg: '',
-          bgimage: require('~/assets/spreadImages/agency/busi_img_dljzcp01@1,5x.jpg'),
-        },
-        {
-          code: 2,
-          tatol: [
-            { price: '13万+', title: '在线质询' },
-            { price: '10万+', title: '累计成交' },
-            { price: '10万+', title: '成功注册' },
-          ],
-          price: '1500',
-          headimg: '',
-          bgimage: require('~/assets/spreadImages/agency/busi_img_dljzcp02@1,5x.jpg'),
-        },
-        {
-          code: 3,
-          tatol: [
-            { price: '6万+', title: '在线质询' },
-            { price: '5万+', title: '累计成交' },
-            { price: '5万+', title: '成功注册' },
-          ],
-          price: '6988',
-          headimg: '',
-          bgimage: require('~/assets/spreadImages/agency/busi_img_dljzcp03@1,5x.jpg'),
-        },
-      ],
-      // 规划师列表
-
-      plannersList: [
-        {
-          id: 1,
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          im: {
-            id: '7862495547640840192',
-            name: '张毅',
-            num: '107547',
-          },
-        },
-        {
-          id: 2,
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          im: {
-            id: '7862495547640840192',
-            name: '张毅',
-            num: '107547',
-          },
-        },
-        {
-          id: 3,
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          im: {
-            id: '7862495547640840192',
-            name: '张毅',
-            num: '107547',
-          },
-        },
-      ],
-      test: [
-        {
+      return {
+        resultData: {
           code: 200,
           message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
           data: {
@@ -412,14 +305,172 @@ export default {
             ],
           },
         },
+      }
+    }
+  },
+  data() {
+    return {
+      title: '代理记账',
+      plannersTitle: '咨询规划师',
+      nums: null,
+      planner: {
+        id: '7862495547640840192',
+        name: '张毅',
+        jobNum: '107547',
+        telephone: '18402858698',
+        imgSrc: '',
+      },
+      // 轮播列表
+      imgList: [
+        {
+          code: 1,
+          url: '',
+          img: require('~/assets/spreadImages/agency/busi_img_dljzbanner@1,5x.jpg'),
+        },
+      ],
+      // 服务介绍列表
+      servicelist: [
+        {
+          id: '',
+          actualViews: '7295',
+          defaultSales: '5173',
+          actualSales: '5173',
+          price: '2288',
+          bgimage: require('~/assets/spreadImages/agency/busi_img_dljzcp01@1,5x.jpg'),
+        },
+        {
+          id: '',
+          actualViews: '983',
+          defaultSales: '642',
+          actualSales: '642',
+          price: '1500',
+          bgimage: require('~/assets/spreadImages/agency/busi_img_dljzcp02@1,5x.jpg'),
+        },
+        {
+          id: '',
+          actualViews: '1275',
+          defaultSales: '937',
+          actualSales: '937',
+          price: '6988',
+          headimg: '',
+          bgimage: require('~/assets/spreadImages/agency/busi_img_dljzcp03@1,5x.jpg'),
+        },
+      ],
+      // 规划师列表
+
+      plannersList: [
+        {
+          id: 1,
+          type: '金牌规划师',
+          avatarImg: '',
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
+          },
+        },
+        {
+          id: 2,
+          type: '金牌规划师',
+          avatarImg: '',
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
+          },
+        },
+        {
+          id: 3,
+          type: '金牌规划师',
+          avatarImg: '',
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+          im: {
+            id: '7862495547640840192',
+            name: '张毅',
+            num: '107547',
+          },
+        },
       ],
     }
   },
   created() {
-    console.log(this.resultData)
+    this.productDetail(this.resultData.data.adList[0].sortMaterialList)
     this.nums = this.resultData.data.nums
   },
-  methods: {},
+  methods: {
+    // 商品数据处理
+    productDetail(data) {
+      if (data.length === 0) {
+      } else {
+        const fuWuList = []
+        data.forEach((item, index) => {
+          const obj = {
+            id: item.id,
+            actualViews:
+              item.materialList[0].productDetail.operating.actualViews,
+            defaultSales:
+              item.materialList[0].productDetail.operating.defaultSales,
+            actualSales:
+              item.materialList[0].productDetail.operating.actualSales,
+            price: item.materialList[0].productDetail.referencePrice,
+            bgimage: require(`~/assets/spreadImages/agency/busi_img_dljzcp0${
+              index + 1
+            }@1,5x.jpg`),
+          }
+          fuWuList.push(obj)
+        })
+        this.servicelist = fuWuList
+      }
+    },
+    // 跳转判断
+    openIM(url, planner) {
+      if (url) {
+        window.open(url, '_blank')
+        this.$root.$emit(
+          'openIMM',
+          planner.id,
+          planner.name || '',
+          planner.jobNum || ''
+        )
+      } else {
+        const guiHuaShi = this.planner
+        this.$root.$emit(
+          'openIMM',
+          guiHuaShi.id,
+          guiHuaShi.name || '',
+          guiHuaShi.jobNum || ''
+        )
+      }
+    },
+    // 规划师处理
+    plannerHandLeDate(data) {
+      if (data.length === 0) {
+        return {}
+      }
+      // 如果data有数据执行后面代码
+      this.planner = data[0] && {
+        id: data[0].userId,
+        name: data[0].realName,
+        jobNum: data[0].loginName,
+        telephone: data[0].userPhone,
+        imgSrc: data[0].userHeadUrl,
+      }
+    },
+  },
   head() {
     return {
       title: '代理记账',
