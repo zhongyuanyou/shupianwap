@@ -1,24 +1,26 @@
 <template>
   <div class="address">
     <!--S 头部-->
-    <sp-top-nav-bar
-      :title="$route.params.type === 'add' ? '新增收货地址' : '编辑收货地址'"
-      left-arrow
-      ellipsis
-      :fixed="true"
-      :right-text="$route.params.type === 'edit' ? '删除' : null"
-      @on-click-left="onClickLeft"
-      @on-click-right="onClickRight"
-    >
-      <template #left>
-        <div>
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
-        </div>
-      </template>
-    </sp-top-nav-bar>
+    <sp-sticky v-if="!isInApp">
+      <sp-top-nav-bar
+        :title="$route.params.type === 'add' ? '新增收货地址' : '编辑收货地址'"
+        left-arrow
+        ellipsis
+        :fixed="true"
+        :right-text="$route.params.type === 'edit' ? '删除' : null"
+        @on-click-left="onClickLeft"
+        @on-click-right="onClickRight"
+      >
+        <template #left>
+          <div>
+            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
+          </div>
+        </template>
+      </sp-top-nav-bar>
+    </sp-sticky>
     <!--E 头部-->
     <!--S 内容-->
-    <div class="address_con">
+    <div class="address_con" :style="{ paddingTop: isInApp ? 0 : '0.88rem' }">
       <sp-form class="address_con_tp">
         <sp-field
           v-model="ruleForm.contactName"
@@ -99,6 +101,7 @@ import {
   CenterPopup,
   Bottombar,
   BottombarButton,
+  Sticky,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
@@ -115,6 +118,7 @@ export default {
     [CenterPopup.name]: CenterPopup,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
+    [Sticky.name]: Sticky,
     AreaSelect,
   },
   data() {

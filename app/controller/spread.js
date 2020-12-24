@@ -19,10 +19,10 @@
  * @param showNum 是否展示今日数据累计数据
  */
 const Controller = require('egg').Controller;
-const adRes = require('../data/adData');
-const productRes = require('../data/product');
 const { Get, Post, Prefix } = require('egg-shell-decorators');
 const { contentApi, algorithmApi } = require('../../config/serveApi/index');
+const adRes = require('../data/adData');
+const productRes = require('../data/product');
 @Prefix('/nk/spread')
 class SpreadController extends Controller {
   @Get('/v1/list.do')
@@ -126,9 +126,9 @@ class SpreadController extends Controller {
     //   planlerList = plannerRes.data.data;
     // }
     let products = [];
-    // if (productRes.code === 200) {
-    //   products = productRes.data;
-    // }
+    if (productRes.code === 200) {
+      products = productRes.data;
+    }
     // 产品数据
     for (let i = adList.length - 1; i >= 0; i--) {
       for (let j = adList[i].sortMaterialList.length - 1; j >= 0; j--) {
@@ -147,19 +147,23 @@ class SpreadController extends Controller {
       }
     }
     // 今日数据，累计数据
-    const nums = {};
+    let numsRes;
     if (
       ctx.query.pageCode === 'extendAccount' ||
       ctx.query.pageCode === 'extendBankServer'
     ) {
       const cacheKeyToday = ctx.helper.cacheKey(ctx.query.pageCode + 'today');
-      nums.todayNum = await ctx.service.redis.get(cacheKeyToday);
+      const nums1Res = ctx.service.redis.get(cacheKeyToday);
       const cacheKeyTotal = ctx.helper.cacheKey(ctx.query.pageCode + 'total');
-      nums.totalNum = await ctx.service.redis.get(cacheKeyTotal);
+      const nums2Res = ctx.service.redis.get(cacheKeyTotal);
+      numsRes = await Promise.all([nums1Res, nums2Res]);
     }
     const res = {};
-    if (nums.totalNum) {
-      res.nums = nums;
+    if (numsRes && numsRes.length > 0) {
+      res.nums = {
+        todayNum: numsRes[0],
+        totalNum: numsRes[1],
+      };
     }
     res.adList = adList;
     res.planlerList = planlerList;

@@ -27,7 +27,7 @@
               <p>规划师</p>
             </div>
             <div class="item__rt">
-              <p>{{ info.accompanyName }}</p>
+              <p>{{ info.inviterName }}</p>
             </div>
           </div>
           <div class="item">
@@ -66,13 +66,32 @@
               <p>陪谈人</p>
             </div>
             <div class="item__rt">
-              <p>李规划（20199181)</p>
+              <p>{{ info.accompanyName }}</p>
             </div>
           </div>
         </div>
       </div>
-      <sp-button type="primary">确认，已完成面谈</sp-button>
-      <sp-button type="primary">已取消面谈</sp-button>
+      <sp-button
+        v-if="info.inviteStatus === 0"
+        type="primary"
+        @click="handleInterStatus(1)"
+        >确认，已完成面谈</sp-button
+      >
+      <sp-button
+        v-if="info.inviteStatus === 0"
+        type="primary"
+        @click="handleInterStatus(0)"
+        >取消面谈</sp-button
+      >
+      <div v-if="info.inviteStatus !== 0" class="status">
+        {{
+          info.inviteStatus === 1
+            ? '已面谈'
+            : info.inviteStatus === 2
+            ? '已评价'
+            : '已取消'
+        }}
+      </div>
     </div>
     <!--E content-->
     <p class="bot">薯片找人 | 日常五福，尽在薯片！</p>
@@ -94,9 +113,10 @@ export default {
     return {
       info: {
         inviteAddress: '', // 面谈地址
-        accompanyName: '', // 规划师名字
+        accompanyName: '', // 陪谈人
         inviteTime: '', // 面谈时间
         inviteStatus: 0, // 面谈状态
+        inviterName: '', // 规划师
       }, // 面谈详情
     }
   },
@@ -122,6 +142,18 @@ export default {
         const res = await this.$axios.get(interviewApi.detail, { params })
         if (res.code === 200) {
           this.info = res.data
+        }
+      } catch (err) {}
+    },
+    async handleInterStatus(val) {
+      try {
+        const params = {
+          id: this.info.id,
+          type: val,
+        }
+        const res = await this.$axios.post(interviewApi.cancel, params)
+        if (res.code === 200) {
+          this.getInterviewDetail()
         }
       } catch (err) {}
     },
@@ -208,6 +240,13 @@ export default {
         border: 1px solid rgba(73, 116, 245, 0.1);
         color: #4974f5;
       }
+    }
+    .status {
+      width: 100%;
+      text-align: center;
+      margin-top: 84px;
+      font-size: 30px;
+      color: #666;
     }
   }
   .bot {

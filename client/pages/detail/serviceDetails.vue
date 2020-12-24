@@ -2,7 +2,11 @@
   <div class="serviceDetails">
     <!-- 导航栏-->
     <sp-sticky z-index="5" @scroll="scrollHandle">
-      <sp-top-nav-bar ellipsis :background="`rgba(255,255,255,${opacity})`">
+      <sp-top-nav-bar
+        ellipsis
+        :background="`rgba(255,255,255,${opacity})`"
+        @on-click-left="onClickLeft"
+      >
         <template #left>
           <div>
             <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
@@ -188,7 +192,9 @@ export default {
         routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
         imageUrl: 'https://img.yzcdn.cn/vant/cat.jpeg', // 产品图片
         unit: `${
-          this.scProductDetailData.baseData.referencePrice.split('.')[1]
+          this.scProductDetailData.baseData.referencePrice
+            ? this.scProductDetailData.baseData.referencePrice.split('.')[1]
+            : '00'
         }元`, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
       }
       return imdata
@@ -209,6 +215,10 @@ export default {
       // 加载更多
       this.productPage += 1
       this.handleGetRecProduct()
+    },
+    onClickLeft() {
+      // 返回上一页
+      this.$router.back()
     },
     // 获取推荐规划师
     async handleGetRecPlanner() {

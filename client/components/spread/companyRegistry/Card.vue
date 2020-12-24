@@ -241,7 +241,7 @@ export default {
         type: 'gszc', // 业态编码
         place: _city, // 地区编码（需传编码）cd
         device: 'wap', // 设备：pc,wap
-        web: 'xmt', // 归属渠道：xmt,zytg,wxgzh
+        web: 'SP', // 归属渠道：xmt,zytg,wxgzh
         smsCode: _code, // 验证码
         content: JSON.stringify(contentStr), // 二级属性
       }

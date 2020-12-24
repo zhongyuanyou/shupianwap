@@ -1,7 +1,12 @@
 <template>
   <div class="detail">
     <!--S 导航-->
-    <sp-top-nav-bar ellipsis :fixed="true" @on-click-right="onClickRight">
+    <sp-top-nav-bar
+      v-if="!isInApp"
+      ellipsis
+      :fixed="true"
+      @on-click-right="onClickRight"
+    >
       <template #left>
         <div @click="back">
           <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
@@ -15,7 +20,10 @@
       </template>
     </sp-top-nav-bar>
     <!--E 导航-->
-    <div v-if="info" class="detail_con">
+    <div
+      class="detail_con"
+      :style="{ paddingTop: isInApp ? '0.64rem' : '1.52rem' }"
+    >
       <div class="detail_con_title">
         {{ info.title }}
       </div>
@@ -71,6 +79,7 @@
 
 <script>
 import { TopNavBar, Icon, Image, ShareSheet } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import { foundApi } from '~/api'
 export default {
   name: 'Detail',
@@ -83,7 +92,12 @@ export default {
   data() {
     return {
       tags: ['公司发展', '公司发展'], // 模拟tags数据
-      info: null, // 资讯详情
+      info: {
+        title: '',
+        updaterName: '',
+        updateTime: '',
+        content: '',
+      }, // 资讯详情
       showShare: false, // 显示分享面板
       options: [
         {
@@ -92,6 +106,11 @@ export default {
         },
       ],
     }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
   mounted() {
     this.getInfoDetail()
@@ -129,7 +148,7 @@ export default {
 <style lang="less" scoped>
 .detail {
   &_con {
-    padding: 152px 40px 128px 40px;
+    padding: 0 40px 128px 40px;
     &_title {
       font-size: 44px;
       font-family: PingFang SC;

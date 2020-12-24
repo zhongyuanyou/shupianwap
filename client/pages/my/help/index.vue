@@ -79,7 +79,10 @@
             </li>
           </ul>
           <Loading-down
-            v-if="tabData.length && tabData[active].articleData.length"
+            v-if="
+              tabData.length &&
+              tabData[active].articleData.length > params.limit
+            "
             :loading="loading && !tabData[active].noMore"
             :no-data="tabData[active].noMore"
           />
@@ -141,12 +144,17 @@ export default {
     let tabData = []
     let adData = {}
     try {
-      const res = await $axios.post(helpApi.findArticle, params)
+      const res = await $axios.post(helpApi.findArticle, params, {
+        headers: {
+          'x-cache-control': 'cache',
+        },
+      })
       if (res.code === 200) {
-        res.data.categoryList.forEach((item) => {
+        res.data.categoryList.forEach((item, imdex) => {
           item.limit = params.limit
           item.page = params.page
-          item.noMore = false
+          item.noMore =
+            imdex === 0 && res.data.articleData.length < params.limit
           item.articleData = []
         })
         tabData = res.data.categoryList

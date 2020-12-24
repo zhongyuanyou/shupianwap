@@ -49,13 +49,20 @@ const auth = {
       url: CHIPS_WAP_BASE_URL + '/nk/login/v1/reset.do',
     })
   },
-
   smsCode({ axios }, params) {
     return request({
       axios,
       params,
       method: 'get',
       url: CHIPS_WAP_BASE_URL + '/nk/login/v1/smsCode.do',
+    })
+  },
+  checkSmsCode({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/nk/login//v1/check-sms-code',
     })
   },
   /**
