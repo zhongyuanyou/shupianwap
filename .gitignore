@@ -14,3 +14,4 @@ typings/
 .nyc_output/
 .nuxt/
 .github/
+config/envConfig/config.development.js
