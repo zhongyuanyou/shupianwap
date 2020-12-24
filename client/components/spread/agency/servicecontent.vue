@@ -26,7 +26,14 @@
       </div>
     </div>
     <div class="consultingbtn">
-      <a href="javascript:;" @click="openIM('')">
+      <a
+        href="javascript:;"
+        @click="
+          () => {
+            $parent.openIM(url)
+          }
+        "
+      >
         <img
           src="~/assets/spreadImages/agency/busi_img_dljznrtel@1,5x.png"
           alt=""
