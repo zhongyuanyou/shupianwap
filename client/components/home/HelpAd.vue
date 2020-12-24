@@ -21,7 +21,7 @@
         href="javascript:void(0)"
         @click="adJumpHandleMixin(item.materialList[0])"
       >
-        <img class="img" :src="item.materialList[0].materialUrl" alt="" />
+        <img v-lazy="item.materialList[0].materialUrl" class="img" alt="" />
         <!-- <img
           src="http://m.360buyimg.com/mobilecms/s120x120_jfs/t1/125678/35/5947/4868/5efbf28cEbf04a25a/e2bcc411170524f0.png.webp"
           alt=""
