@@ -125,6 +125,12 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // app当前定位的站点
+  dggCityCode: (fn = () => {}) => {
+    Bridge.callHandler('dgg_cityCode', {}, (res) => {
+      handleRequest(res, fn)
+    })
+  },
   // 打开新的webView
   dggOpenNewWeb: (
     data = { urlString: 'https://www.baidu.com' },

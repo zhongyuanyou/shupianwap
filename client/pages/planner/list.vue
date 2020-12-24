@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-23 19:48:04
+ * @LastEditTime: 2020-12-24 13:39:54
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -10,7 +10,17 @@
 <template>
   <div class="list">
     <div class="head">
-      <Header v-if="isInApp" :title="title" />
+      <Header title="在线直选规划师">
+        <template #left>
+          <my-icon
+            class="back-icon"
+            name="nav_ic_back"
+            size="0.4rem"
+            color="#1A1A1A"
+            @click.native="onLeftClick"
+          ></my-icon>
+        </template>
+      </Header>
     </div>
     <div class="body">
       <SearchPopup ref="searchPopup" @onSearch="handleKeywordsSearch" />
@@ -25,7 +35,8 @@
             special-label
             class="search__input"
             placeholder="请输入规划师姓名"
-            @focus="handleSearchFocus"
+            :disabled="true"
+            @click="handleSearchFocus"
           >
             <template #left-icon>
               <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
@@ -34,6 +45,7 @@
           <sp-dropdown-menu class="search__dropdown">
             <sp-dropdown-item
               ref="regionsDropdownItem"
+              :disabled="!regionsOption || !regionsOption.length"
               :title-class="
                 search.region.name != '区域'
                   ? 'sp-dropdown-menu__title--selected '
@@ -96,6 +108,7 @@
         </sp-list>
       </sp-pull-refresh>
     </div>
+    <sp-toast ref="spToast" />
   </div>
 </template>
 
@@ -119,11 +132,12 @@ import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
 import Header from '@/components/common/head/header'
 import SearchPopup from '@/components/planner/SearchPopup'
 import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
+import SpToast from '@/components/common/spToast/SpToast'
 
 import imHandle from '@/mixins/imHandle'
 
 import { planner, dict } from '@/api'
-import { callPhone } from '@/utils/common'
+import { callPhone, parseTel } from '@/utils/common'
 
 const SORT_CONFIG = [
   {
@@ -186,11 +200,11 @@ export default {
     CoupleSelect,
     SearchPopup,
     PlannerSearchItem,
+    SpToast,
   },
   mixins: [imHandle],
   data() {
     return {
-      title: '在线直选规划师',
       search: {
         keywords: '',
         sortId: 0,
@@ -239,21 +253,24 @@ export default {
   created() {
     if (process && process.client) {
       this.uPGetRegion()
-      this.uPSetHeader()
     }
   },
   methods: {
     ...mapMutations({
       SET_CITY: 'city/SET_CITY',
     }),
+
+    onLeftClick() {
+      console.log('nav onClickLeft')
+      this.uPGpBack()
+    },
     handleRegionsSelect(data) {
       console.log(data)
-      // TODO 测试
       if (this.currentCity.code !== data[0].code) return
-      const { code, name } = data[1]
+      const { code, name } = data[1] || {}
       this.search.region = {
         code,
-        name,
+        name: name === '不限' ? '区域' : name,
       }
       this.$refs.regionsDropdownItem.toggle()
       this.handleSearch()
@@ -323,20 +340,31 @@ export default {
       this.onRefresh()
     },
 
-    uPSetHeader() {
+    uPGpBack() {
       if (this.isInApp) {
-        this.$appFn.dggSetTitle({ title: this.title }, (res) => {
-          const { code } = res || {}
-          code !== 200 && console.error('dggSetTitle error!')
-        })
+        this.$appFn.dggCloseWebView()
+        return
       }
+      this.$router.go(-1)
     },
 
     // 统一平台 区域设置
     uPGetRegion() {
-      // TODO app 上获取code
+      // app 上获取区域code
       if (this.isInApp) {
-        // this.SET_CITY({code, name}) // 设置当前的定位到vuex中
+        this.$appFn.dggCityCode((res) => {
+          const { code, data } = res || {}
+          if (code !== 200)
+            return this.$refs.spToast.show({
+              message: '当前区域获取失败',
+              duration: 1000,
+              forbidClick: true,
+            })
+          const { adCode, cityName } = data
+          console.log('dggCityCode:', res)
+          this.getRegionList(adCode)
+          this.SET_CITY({ code: adCode, name: cityName }) // 设置当前的定位到vuex中
+        })
         return
       }
 
@@ -346,7 +374,10 @@ export default {
     },
 
     // 拨打电话号码
-    uPCall(telNumber) {
+    uPCall(data) {
+      const { ciphertext } = data || {}
+      const telNumber = parseTel(ciphertext)
+      console.log('telNumber:', telNumber)
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
         this.$appFn.dggCallPhone({ phone: telNumber }, (res) => {

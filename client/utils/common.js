@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-23 17:07:19
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-23 20:44:04
+ * @LastEditTime: 2020-12-24 10:08:51
  * @Description: file content
  * @FilePath: /chips-wap/client/utils/common.js
  */
@@ -14,7 +14,7 @@
 
 import CryptoJS from 'crypto-js'
 export const callPhone = (tel) => {
-  window && window.open(`tel:${tel}`, '_blank')
+  window && (window.location.href = `tel:${tel}`)
 }
 /**
  * @description 复制内容到浏览器端粘贴板
