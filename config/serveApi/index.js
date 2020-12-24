@@ -14,6 +14,7 @@ const { userApi } = require('./module/user'); // 用户中心
 const { iesApi } = require('./module/ies'); // 智企
 const { dashunApi } = require('./module/enterpriseDashun'); // 企大顺
 const { merchantApi } = require('./module/merchant'); // 商户中心
+const { architectureCenterApi } = require('./module/architectureCenter'); // 架构中心
 
 module.exports = {
   algorithmApi,
@@ -24,4 +25,5 @@ module.exports = {
   iesApi,
   dashunApi,
   merchantApi,
+  architectureCenterApi,
 };
