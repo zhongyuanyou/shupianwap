@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-24 14:30:43
+ * @LastEditTime: 2020-12-24 15:13:15
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
@@ -151,6 +151,7 @@ import PhoneField from '@/components/login/PhoneField'
 
 import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
+import { openLink } from '@/utils/common.js'
 
 // 第三方登录需要回传的参数
 const SOURCE_PLATFROM_PARAMS = { IM: ['token', 'userId'] }
@@ -196,10 +197,10 @@ export default {
         return
       }
       this.login().then((data) => {
-        let query = {}
+        // 跳转外连接
         if (this.sourcePlatform) {
           const keyList = SOURCE_PLATFROM_PARAMS[this.sourcePlatform]
-          query = Array.isArray(keyList)
+          const query = Array.isArray(keyList)
             ? keyList.reduce((accumulator, key) => {
                 data = data || {}
                 if (data[key]) {
@@ -208,8 +209,11 @@ export default {
                 return accumulator
               }, {})
             : {}
+          openLink(this.redirect, query)
+          return
         }
-        this.$router.push({ path: this.redirect, query })
+
+        this.$router.push(this.redirect)
       })
     },
     handleSwitchLookPassword() {
