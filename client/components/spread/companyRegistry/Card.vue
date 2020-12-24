@@ -157,11 +157,15 @@ export default {
     },
     // 发送验证码
     getMsg(setData) {
+      console.log(setData === 'esc')
       if (this.test === '获取验证码' || this.test === '重新发送') {
         window.promotion.privat.getSmsCode(setData, (res) => {
           if (res.error === 0) {
             let i = 59
             this.test = i + 's'
+            if (setData === 'esc') {
+              i = 1
+            }
             const time = setInterval(() => {
               if (i > 1) {
                 i--
@@ -175,7 +179,6 @@ export default {
             return false
           }
           Toast(this.test + '后发送')
-          // console.log(res)
         })
       }
     },
@@ -253,7 +256,8 @@ export default {
           this.selectValue = '请选择'
           this.sms = ''
           this.phoneValue = ''
-          // this.test = '获取验证码'
+          window.clearInterval()
+          this.getMsg('esc')
         } else {
           // ------------
           console.log(res)
