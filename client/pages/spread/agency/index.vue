@@ -7,7 +7,7 @@
     <Banner :imglist="imgList" />
     <!-- e Banner -->
     <!-- s form表单 -->
-    <Form />
+    <Form :nums="nums" />
     <!-- e form表单 -->
     <!-- s 服务介绍 -->
     <Service :servicelist="servicelist" />
@@ -28,7 +28,7 @@
     <Need />
     <!-- e 可能需要 -->
     <!-- s 底部导航 -->
-    <Bottom />
+    <Bottom :planner="planner" />
     <!-- e 底部导航 -->
     <dgg-im-company></dgg-im-company>
   </div>
@@ -43,9 +43,10 @@ import ServiceContent from '../../../components/spread/agency/servicecontent'
 import Process from '../../../components/spread/agency/process'
 import Choose from '../../../components/spread/agency/choose'
 import Planners from '../../../components/spread/common/GuiHuaShiSwipe'
-import Bottom from '../../../components/spread/agency/bottom'
+import Bottom from '../../../components/spread/common/FixedBottom'
 import Need from '../../../components/spread/agency/need'
 import dggImCompany from '../../../components/spread/DggImCompany'
+import { spreadApi } from '@/api/spread'
 
 export default {
   components: {
@@ -61,10 +62,264 @@ export default {
     Bottom,
     dggImCompany,
   },
+  async asyncData({ $axios }) {
+    const type = 'extendAccount'
+    try {
+      const res = await $axios.get(spreadApi.list, {
+        params: { pageCode: type },
+      })
+      console.log(res)
+      return {
+        resultData: res,
+      }
+    } catch (error) {
+      console.log('error', error)
+      // 请求出错也要保证页面正常显示
+      return {
+        resultData: {
+          code: 200,
+          message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
+          data: {
+            nums: {
+              todayNum: 12528,
+              totalNum: 652517,
+            },
+            planlerList: [
+              {
+                id: 30312,
+                userId: '7930253930943676416',
+                userCentreId: '7930253930615472128',
+                loginName: '109870',
+                realName: '李海怡',
+                userHeadUrl:
+                  'http://fastdfs.dggvip.net:8080/group1/M00/0F/60/CgAAB18_I3GEbQtUAAAAAF_T27Q303.jpg',
+                userPhone: '13696057459',
+                cvr: 0.146341,
+                cvrValue: 64.606717,
+                orderBus: 6,
+                orderBusValue: 49.807025,
+                busPerformance: 13492,
+                busPerformanceValue: 88.692524,
+                abilityValue: 70.319713,
+                formatType: '工商',
+              },
+              {
+                id: 30136,
+                userId: '3394',
+                userCentreId: '3394',
+                loginName: '2022554',
+                realName: '刘琴',
+                userHeadUrl:
+                  'http://fastdfs.dggvip.net:8080/group1/M00/0F/72/CgAAB19ExY6EVv-6AAAAAG6SJVc351.jpg',
+                userPhone: '13350072314',
+                cvr: 0.06383,
+                cvrValue: 58.521736,
+                orderBus: 3,
+                orderBusValue: 48.092239,
+                busPerformance: 4412.4,
+                busPerformanceValue: 68.377345,
+                abilityValue: 60.229761,
+                formatType: '工商',
+              },
+              {
+                id: 30299,
+                userId: '7887200447593906176',
+                userCentreId: '7887200447257313280',
+                loginName: '108862',
+                realName: '李劲',
+                userHeadUrl:
+                  'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+                userPhone: '18884259139',
+                cvr: 0.209302,
+                cvrValue: 68.96185,
+                orderBus: 9,
+                orderBusValue: 51.522266,
+                busPerformance: 12192,
+                busPerformanceValue: 86.706115,
+                abilityValue: 72.229634,
+                formatType: '工商',
+              },
+              {
+                id: 30158,
+                userId: '43999',
+                userCentreId: '7704199733711282176',
+                loginName: '96352931',
+                realName: '岳雪冬',
+                userHeadUrl:
+                  'http://fastdfs.dggvip.net:8080/group1/M00/02/C0/wKiyYlubWPyEbXyQAAAAAH6D3Zw879.jpg',
+                userPhone: '13908231675',
+                cvr: 0.140625,
+                cvrValue: 64.197653,
+                orderBus: 9,
+                orderBusValue: 51.522266,
+                busPerformance: 24742,
+                busPerformanceValue: 97.482166,
+                abilityValue: 73.212083,
+                formatType: '工商',
+              },
+              {
+                id: 30165,
+                userId: '66475',
+                userCentreId: '66475',
+                loginName: '38798340',
+                realName: '钟霞',
+                userHeadUrl:
+                  'http://fastdfs.dggvip.net:8080/group1/M00/0F/E7/CgAAB19jRe-EZCmnAAAAAOB-9qQ642.jpg',
+                userPhone: '13730634929',
+                cvr: 0.157895,
+                cvrValue: 65.427034,
+                orderBus: 9,
+                orderBusValue: 51.522266,
+                busPerformance: 20770,
+                busPerformanceValue: 95.658559,
+                abilityValue: 73.270253,
+                formatType: '工商',
+              },
+            ],
+            adList: [
+              {
+                pageCode: 'extendAccount',
+                locationShowTypeCode: 'GGWZXSS_GDXS',
+                locationName: 'wap-推广页-代理记账',
+                locationId: '8027896820880179200',
+                locationAddressCode: '',
+                sortMaterialList: [
+                  {
+                    locationSort: 1,
+                    materialList: [
+                      {
+                        materialTypeCode: 'GGLX_TP',
+                        materialUrl:
+                          'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+                        imgLink: '',
+                        materialLink: 'https://www.baidu.com/',
+                        materialCode: 'src100302',
+                        materialHeight: 1334,
+                        materialId: 0,
+                        materialDescription: '',
+                        materialName: '代理记账1-1',
+                        androidLink: '',
+                        materialWidth: 750,
+                        iosLink: '',
+                        linkType: 2,
+                        wapLink: '',
+                        executeParam: '',
+                        productId: 'extendAccount1',
+                        productDetail: {
+                          id: 'extendAccount1',
+                          name: '',
+                          referencePrice: 2288,
+                          operating: {
+                            showName: '小规模纳税人代理记账',
+                            slogan: '连续12个月应征增值税销售额未超过500万元',
+                            productDescribe:
+                              '连续12个月应征增值税销售额未超过500万元',
+                            actualViews: 210000,
+                            defaultSales: 180000,
+                            actualSales: 180000,
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    locationSort: 2,
+                    materialList: [
+                      {
+                        materialTypeCode: 'GGLX_TP',
+                        materialUrl:
+                          'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+                        imgLink: '',
+                        materialLink: 'https://www.baidu.com/',
+                        materialCode: 'src100302',
+                        materialHeight: 1334,
+                        materialId: 0,
+                        materialDescription: '',
+                        materialName: '代理记账1-2',
+                        androidLink: '',
+                        materialWidth: 750,
+                        iosLink: '',
+                        linkType: 2,
+                        wapLink: '',
+                        executeParam: '',
+                        productId: 'extendAccount2',
+                        productDetail: {
+                          id: 'extendAccount2',
+                          name: '',
+                          referencePrice: 1500,
+                          operating: {
+                            showName: '个体户代理记账',
+                            slogan:
+                              '经营修理服务、加工、个体运输业、饮食业等的个体户',
+                            productDescribe:
+                              '经营修理服务、加工、个体运输业、饮食业等的个体户',
+                            actualViews: 130000,
+                            defaultSales: 100000,
+                            actualSales: 100000,
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    locationSort: 3,
+                    materialList: [
+                      {
+                        materialTypeCode: 'GGLX_TP',
+                        materialUrl:
+                          'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+                        imgLink: '',
+                        materialLink: 'https://www.baidu.com/',
+                        materialCode: 'src100302',
+                        materialHeight: 1334,
+                        materialId: 0,
+                        materialDescription: '',
+                        materialName: '代理记账1-3',
+                        androidLink: '',
+                        materialWidth: 750,
+                        iosLink: '',
+                        linkType: 2,
+                        wapLink: '',
+                        executeParam: '',
+                        productId: 'extendAccount3',
+                        productDetail: {
+                          id: 'extendAccount3',
+                          name: '',
+                          referencePrice: 6988,
+                          operating: {
+                            showName: '一般纳税人代理记账',
+                            slogan: '应税服务年销售额大于500万元',
+                            productDescribe: '应税服务年销售额大于500万元',
+                            actualViews: 60000,
+                            defaultSales: 50000,
+                            actualSales: 50000,
+                          },
+                        },
+                      },
+                    ],
+                  },
+                ],
+                locationCode: 'ad100230',
+                locationCodeLocType: 2,
+              },
+            ],
+          },
+        },
+      }
+    }
+  },
   data() {
     return {
       title: '代理记账',
       plannersTitle: '咨询规划师',
+      nums: null,
+      planner: {
+        id: '7862495547640840192',
+        name: '张毅',
+        jobNum: '107547',
+        telephone: '18402858698',
+        imgSrc: '',
+      },
       // 轮播列表
       imgList: [
         {
@@ -76,34 +331,26 @@ export default {
       // 服务介绍列表
       servicelist: [
         {
-          code: 1,
-          tatol: [
-            { price: '21万+', title: '在线质询' },
-            { price: '18万+', title: '累计成交' },
-            { price: '18万+', title: '成功注册' },
-          ],
+          id: '',
+          actualViews: '7295',
+          defaultSales: '5173',
+          actualSales: '5173',
           price: '2288',
-          headimg: '',
           bgimage: require('~/assets/spreadImages/agency/busi_img_dljzcp01@1,5x.jpg'),
         },
         {
-          code: 2,
-          tatol: [
-            { price: '13万+', title: '在线质询' },
-            { price: '10万+', title: '累计成交' },
-            { price: '10万+', title: '成功注册' },
-          ],
+          id: '',
+          actualViews: '983',
+          defaultSales: '642',
+          actualSales: '642',
           price: '1500',
-          headimg: '',
           bgimage: require('~/assets/spreadImages/agency/busi_img_dljzcp02@1,5x.jpg'),
         },
         {
-          code: 3,
-          tatol: [
-            { price: '6万+', title: '在线质询' },
-            { price: '5万+', title: '累计成交' },
-            { price: '5万+', title: '成功注册' },
-          ],
+          id: '',
+          actualViews: '1275',
+          defaultSales: '937',
+          actualSales: '937',
           price: '6988',
           headimg: '',
           bgimage: require('~/assets/spreadImages/agency/busi_img_dljzcp03@1,5x.jpg'),
@@ -159,6 +406,70 @@ export default {
         },
       ],
     }
+  },
+  created() {
+    this.productDetail(this.resultData.data.adList[0].sortMaterialList)
+    this.nums = this.resultData.data.nums
+  },
+  methods: {
+    // 商品数据处理
+    productDetail(data) {
+      if (data.length === 0) {
+      } else {
+        const fuWuList = []
+        data.forEach((item, index) => {
+          const obj = {
+            id: item.id,
+            actualViews:
+              item.materialList[0].productDetail.operating.actualViews,
+            defaultSales:
+              item.materialList[0].productDetail.operating.defaultSales,
+            actualSales:
+              item.materialList[0].productDetail.operating.actualSales,
+            price: item.materialList[0].productDetail.referencePrice,
+            bgimage: require(`~/assets/spreadImages/agency/busi_img_dljzcp0${
+              index + 1
+            }@1,5x.jpg`),
+          }
+          fuWuList.push(obj)
+        })
+        this.servicelist = fuWuList
+      }
+    },
+    // 跳转判断
+    openIM(url, planner) {
+      if (url) {
+        window.open(url, '_blank')
+        this.$root.$emit(
+          'openIMM',
+          planner.id,
+          planner.name || '',
+          planner.jobNum || ''
+        )
+      } else {
+        const guiHuaShi = this.planner
+        this.$root.$emit(
+          'openIMM',
+          guiHuaShi.id,
+          guiHuaShi.name || '',
+          guiHuaShi.jobNum || ''
+        )
+      }
+    },
+    // 规划师处理
+    plannerHandLeDate(data) {
+      if (data.length === 0) {
+        return {}
+      }
+      // 如果data有数据执行后面代码
+      this.planner = data[0] && {
+        id: data[0].userId,
+        name: data[0].realName,
+        jobNum: data[0].loginName,
+        telephone: data[0].userPhone,
+        imgSrc: data[0].userHeadUrl,
+      }
+    },
   },
   head() {
     return {

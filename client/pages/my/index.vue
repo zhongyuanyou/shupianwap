@@ -13,7 +13,7 @@
           @click="handleAvatar"
         />
         <p class="txt" @click="handleClickLogin">
-          {{ info ? '欢迎你，' + info.fullName || '' : '登录/注册' }}
+          {{ userId ? '欢迎你，' + info.fullName || '' : '登录/注册' }}
         </p>
       </div>
     </div>
@@ -54,14 +54,24 @@
     <!--S 按钮区-->
     <!--S 退出登录-->
     <div class="exit_btn">
-      <sp-button v-if="info" type="default">退出登录</sp-button>
+      <sp-button v-if="info" type="default" @click="showExit"
+        >退出登录</sp-button
+      >
     </div>
     <!--E 退出登录-->
+    <!--S 弹框-->
+    <sp-center-popup
+      v-model="loginStatus"
+      :field="Field7"
+      button-type="confirm"
+      @confirm="exitConfirm"
+    />
+    <!--E 弹框-->
   </div>
 </template>
 
 <script>
-import { Button, Image } from '@chipspc/vant-dgg'
+import { Button, Image, CenterPopup } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { userinfoApi } from '@/api'
 export default {
@@ -70,15 +80,24 @@ export default {
   components: {
     [Button.name]: Button,
     [Image.name]: Image,
+    [CenterPopup.name]: CenterPopup,
   },
   data() {
     return {
-      info: null, // 用户信息
+      info: {
+        fullName: '', // 用户昵称
+      }, // 用户信息
+      loginStatus: false, // 弹框显示状态
+      Field7: {
+        type: 'functional',
+        title: '确定退出吗？',
+      },
     }
   },
   computed: {
     ...mapState({
       userId: (state) => state.user.userInfo.userId,
+      token: (state) => state.user.userInfo.token,
     }),
   },
   mounted() {
@@ -89,14 +108,17 @@ export default {
   methods: {
     handleAvatar() {
       // 点击头像
-      if (!this.info) {
-        this.$router.push('/login')
+      if (!this.userId) {
+        this.$router.push({
+          name: 'login',
+          query: { redirect: this.$route.fullPath },
+        })
       } else {
         this.$router.push('/my/information')
       }
     },
     handleClickLogin() {
-      if (this.info) return
+      if (this.userId) return
       this.$router.push({
         name: 'login',
         query: { redirect: this.$route.fullPath },
@@ -120,6 +142,21 @@ export default {
         this.$router.push('/my/complain')
       } else if (val === 4) {
         this.$router.push('/my/about')
+      }
+    },
+    showExit() {
+      this.loginStatus = true
+    },
+    async exitConfirm() {
+      // 退出
+      const params = {
+        userId: this.userId,
+        token: this.token,
+      }
+      const res = await this.$axios.get(userinfoApi.loginOut, { params })
+      if (res.code === 200) {
+        // 清除cookie中的数据
+        this.$store.dispatch('user/clearUser')
       }
     },
   },

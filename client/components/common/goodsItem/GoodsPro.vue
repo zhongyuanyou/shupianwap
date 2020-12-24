@@ -2,7 +2,7 @@
   <a href="javascript:void(0);" class="goods-item">
     <div class="goods-lable-img">
       <span v-if="false" class="lable">2千元成交礼</span>
-      <img src="https://img.yzcdn.cn/vant/cat.jpeg" alt="" />
+      <img v-lazy="defaultImg" alt="" />
     </div>
     <div class="goods-info">
       <strong class="goods-name">
@@ -46,6 +46,11 @@ export default {
         return {}
       },
     },
+  },
+  data() {
+    return {
+      defaultImg: 'https://img.yzcdn.cn/vant/cat.jpeg',
+    }
   },
   methods: {
     priceRest(index = 0) {

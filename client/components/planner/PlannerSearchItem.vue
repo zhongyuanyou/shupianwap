@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-14 10:48:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-15 10:54:24
+ * @LastEditTime: 2020-12-24 10:02:53
  * @Description: file content
  * @FilePath: /chips-wap/client/components/planner/PlannerSearchItem.vue
 -->
@@ -60,7 +60,6 @@
         <sp-button round class="contact-btn" @click.stop="handleClick('IM')"
           ><my-icon name="notify_ic_chat" size="0.32rem" color="#4974F5"
         /></sp-button>
-
         <sp-button round class="contact-btn" @click.stop="handleClick('tel')"
           ><my-icon name="notify_ic_tel" size="0.32rem" color="#4974F5"
         /></sp-button>

@@ -15,7 +15,7 @@
         <span>电话咨询：</span>
         <span>4000 - 962540</span>
       </div>
-      <a href="javascript:;" @click="openIM(url)"><span>立即咨询</span></a>
+      <a href="javascript:;" @click="openIM('')"><span>立即咨询</span></a>
     </div>
     <div class="chips">
       <div>
@@ -56,6 +56,7 @@ export default {
       ],
     }
   },
+  created() {},
   methods: {
     openIM(url) {
       if (url !== '') {

@@ -63,6 +63,7 @@ export default {
       this.searchText = this.currentInputText
     },
     async getJyType() {
+      // 交易的业态数据
       const jyTypeData = await dict
         .findCmsCode({ axios: this.$axios }, { code: 'CONDITION-JY' })
         .then((result) => result)
@@ -73,6 +74,7 @@ export default {
         })
       if (jyTypeData) {
         this.jyTypesData = jyTypeData
+        // 查找query的typeCode是第几个下标
         const index = this.jyTypesData.findIndex((item) => {
           return item.ext4 === this.$route.query.typeCode
         })

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-23 20:39:05
+ * @LastEditTime: 2020-12-24 10:44:45
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/_id.vue
 -->
@@ -115,7 +115,9 @@
                   什么是薯片分
                   <my-icon name="per_ic_help" size="0.24rem" color="#666666" />
                 </span>
-                <sp-button class="detail-content__explain-btn"
+                <sp-button
+                  class="detail-content__explain-btn"
+                  @click="handlePoint"
                   >查看详情</sp-button
                 >
               </div>
@@ -150,6 +152,7 @@
       :options="shareOptions"
       @select="onSelect"
     />
+    <sp-toast ref="spToast" class="detail-toast" />
   </div>
 </template>
 
@@ -168,6 +171,7 @@ import {
 
 import Header from '@/components/common/head/header'
 import GoodsPro from '@/components/planner/GoodsPro'
+import SpToast from '@/components/common/spToast/SpToast'
 
 import { planner } from '@/api'
 import imHandle from '@/mixins/imHandle'
@@ -184,6 +188,7 @@ export default {
     [ShareSheet.name]: ShareSheet,
     Header,
     GoodsPro,
+    SpToast,
   },
   mixins: [imHandle],
   data() {
@@ -233,6 +238,15 @@ export default {
       // TODO 分享的调用
       Toast(option.name)
       this.uPShare(option)
+    },
+
+    handlePoint() {
+      this.$refs.spToast.show({
+        message: '薯片分是对规划师的综合衡量，薯片分越高综合表现越好',
+        duration: 1500,
+        forbidClick: true,
+        // icon: 'spiconfont-tab_ic_check',
+      })
     },
 
     uPShare(option) {
@@ -318,6 +332,13 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+}
+
+.flex-r-a-c {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .flex-r-sb {
@@ -485,6 +506,11 @@ export default {
   }
   .item-wrap {
     padding: 40px;
+  }
+  &-toast {
+    /deep/.my-toast__content {
+      transform: translateY(-100%);
+    }
   }
 }
 </style>

@@ -125,6 +125,12 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // app当前定位的站点
+  dggCityCode: (fn = () => {}) => {
+    Bridge.callHandler('dgg_cityCode', {}, (res) => {
+      handleRequest(res, fn)
+    })
+  },
   // 打开新的webView
   dggOpenNewWeb: (
     data = { urlString: 'https://www.baidu.com' },
@@ -143,6 +149,15 @@ const appHandler = {
   // wap返回数据给到flutter
   dggWebBackValueToFlutter: (data = {}, fn = () => {}) => {
     Bridge.callHandler('dgg_webBackValueToFlutter', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // 调用分享
+  dggShare: (
+    data = { image: '', title: '', subTitle: '', url: '' },
+    fn = () => {}
+  ) => {
+    Bridge.callHandler('dgg_share', data, (res) => {
       handleRequest(res, fn)
     })
   },

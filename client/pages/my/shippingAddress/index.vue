@@ -1,22 +1,24 @@
 <template>
   <div class="address">
     <!--S 头部-->
-    <sp-top-nav-bar
-      :title="'我的收货地址'"
-      left-arrow
-      ellipsis
-      :fixed="true"
-      @on-click-left="onClickLeft"
-    >
-      <template #left>
-        <div>
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
-        </div>
-      </template>
-    </sp-top-nav-bar>
+    <sp-sticky v-if="!isInApp">
+      <sp-top-nav-bar
+        :title="'我的收货地址'"
+        left-arrow
+        ellipsis
+        :fixed="true"
+        @on-click-left="onClickLeft"
+      >
+        <template #left>
+          <div>
+            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
+          </div>
+        </template>
+      </sp-top-nav-bar>
+    </sp-sticky>
     <!--E 头部-->
     <!--S 内容-->
-    <div class="address_con">
+    <div class="address_con" :style="{ paddingTop: isInApp ? 0 : '0.88rem' }">
       <p v-if="!addressList.length" class="prompt">您还没有添加收货地址额～</p>
       <div v-else class="address_con_list">
         <sp-swipe-cell
@@ -106,6 +108,7 @@ import {
   Bottombar,
   BottombarButton,
   Toast,
+  Sticky,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { userinfoApi } from '@/api'
@@ -120,6 +123,7 @@ export default {
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
     [Toast.name]: Toast,
+    [Sticky.name]: Sticky,
     SpToast,
   },
   data() {

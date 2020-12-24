@@ -19,12 +19,38 @@
  * @param showNum 是否展示今日数据累计数据
  */
 const Controller = require('egg').Controller;
-const adRes = require('../data/adData');
-const productRes = require('../data/product');
 const { Get, Post, Prefix } = require('egg-shell-decorators');
 const { contentApi, algorithmApi } = require('../../config/serveApi/index');
+const adRes = require('../data/adData');
+const productRes = require('../data/product');
 @Prefix('/nk/spread')
 class SpreadController extends Controller {
+  @Get('/v1/testPlaner.do')
+  async testRecomend() {
+    const { ctx, app, service } = this;
+    const res = await service.curl.curlPost(
+      'http://192.168.254.224:30108/planner/recommend',
+      {
+        designerIds: '3879830#202254#9635931#10862#10970',
+        formatType: ctx.query.key,
+        maxsize: 10,
+      }
+    );
+    let data = [];
+    if (res.code === 200 || res.code === 0) {
+      ctx.helper.success({
+        ctx,
+        code: 200,
+        res: res.data,
+      });
+    } else {
+      ctx.helper.fail({
+        ctx,
+        code: 500,
+        res: res,
+      });
+    }
+  }
   @Get('/v1/list.do')
   async list() {
     const { ctx, app, service } = this;
@@ -101,34 +127,14 @@ class SpreadController extends Controller {
     // } else {
     //   productDetails = [];
     // }
+    let products = [];
+    if (productRes.code === 200) {
+      products = productRes.data;
+    }
     // 广告物料数据模拟
     const adList = adRes.data.filter((item) => {
       return item.pageCode === ctx.query.pageCode;
     });
-    const planerUrl = ctx.helper.assembleUrl(
-      app.config.apiClient.APPID[6],
-      algorithmApi.planerSpread
-    );
-    // const plannerRes = await service.curl.curlPost(
-    //   'http://172.16.132.35:1553/planner/recommend',
-    //   {
-    //     designerIds: '3879830#202254#9635931#10862#10970',
-    //     formatType: ctx.query.pageCode === 'extendAccount' ? '会计' : '工商',
-    //     maxsize: 10,
-    //   }
-    // );
-    // console.log('plannerRes', plannerRes);
-    let planlerList = [];
-    // if (
-    //   plannerRes.status === 200 &&
-    //   (plannerRes.data.code === 0 || plannerRes.data.code === 200)
-    // ) {
-    //   planlerList = plannerRes.data.data;
-    // }
-    let products = [];
-    // if (productRes.code === 200) {
-    //   products = productRes.data;
-    // }
     // 产品数据
     for (let i = adList.length - 1; i >= 0; i--) {
       for (let j = adList[i].sortMaterialList.length - 1; j >= 0; j--) {
@@ -146,20 +152,45 @@ class SpreadController extends Controller {
         }
       }
     }
+    // const planerUrl = ctx.helper.assembleUrl(
+    //   app.config.apiClient.APPID[6],
+    //   algorithmApi.planerSpread
+    // );
+    const plannerRes = await service.curl.curlPost(
+      'http://192.168.254.224:30108/planner/recommend',
+      {
+        designerIds: '3879830#202254#9635931#10862#10970',
+        formatType: ctx.query.pageCode === 'extendAccount' ? '会计' : '工商',
+        maxsize: 10,
+      }
+    );
+    let planlerList = [];
+    if (
+      plannerRes.data.code === 0 ||
+      plannerRes.data.code === 200 ||
+      plannerRes.code === 0 ||
+      plannerRes.code === 200
+    ) {
+      planlerList = plannerRes.data;
+    }
     // 今日数据，累计数据
-    const nums = {};
+    let numsRes;
     if (
       ctx.query.pageCode === 'extendAccount' ||
       ctx.query.pageCode === 'extendBankServer'
     ) {
       const cacheKeyToday = ctx.helper.cacheKey(ctx.query.pageCode + 'today');
-      nums.todayNum = await ctx.service.redis.get(cacheKeyToday);
+      const nums1Res = ctx.service.redis.get(cacheKeyToday);
       const cacheKeyTotal = ctx.helper.cacheKey(ctx.query.pageCode + 'total');
-      nums.totalNum = await ctx.service.redis.get(cacheKeyTotal);
+      const nums2Res = ctx.service.redis.get(cacheKeyTotal);
+      numsRes = await Promise.all([nums1Res, nums2Res]);
     }
     const res = {};
-    if (nums.totalNum) {
-      res.nums = nums;
+    if (numsRes && numsRes.length > 0) {
+      res.nums = {
+        todayNum: numsRes[0],
+        totalNum: numsRes[1],
+      };
     }
     res.adList = adList;
     res.planlerList = planlerList;

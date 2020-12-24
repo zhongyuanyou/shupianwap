@@ -25,7 +25,7 @@ class CodeService extends Service {
     // 校验验证码
     return new Promise(async resolve => {
       const { ctx, app, service } = this;
-      const sysCode = app.config.apiClient.APPID[2];
+      const sysCode = app.config.apiClient.APPID[3];
       const address = userApi.verifySmsCode;
       const url = ctx.helper.assembleUrl(sysCode, address);
       if (!url) {

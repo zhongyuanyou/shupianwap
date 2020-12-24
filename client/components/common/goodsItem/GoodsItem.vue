@@ -50,18 +50,24 @@ export default {
   },
   computed: {
     description() {
+      // 描述，包括
       if (this.itemData.productDescription) {
         return this.itemData.productDescription
       }
       if (this.itemData.fieldList && this.itemData.fieldList.length) {
         const desc = []
-        this.itemData.fieldList.forEach((item) => desc.push(item.fieldName))
-        return desc.join('|')
+        this.itemData.fieldList.forEach((item) =>
+          desc.push(item.fieldValueCn || item.fieldValueList[0])
+        )
+        return desc.join(' | ')
       }
       return ''
     },
     tags() {
-      if ('PRO_SALES_TAG' in this.itemData) {
+      if (
+        'PRO_SALES_TAG' in this.itemData &&
+        this.itemData.PRO_SALES_TAG.length
+      ) {
         return this.itemData.PRO_SALES_TAG
       } else {
         return []

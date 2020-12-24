@@ -8,12 +8,26 @@
           v-show="index > num ? false : true"
           :key="index"
           :style="{ backgroundImage: 'url(' + item.bgimage + ')' }"
+          @click="
+            () => {
+              $parent.openIM(item.url)
+            }
+          "
         >
           <div class="total">
-            <div v-for="(v, i) in item.tatol" :key="i">
+            <div>
               <div class="vertical-bar"></div>
               <div>
-                <span>{{ v.price }}</span> <span>{{ v.title }}</span>
+                <span>{{ item.actualViews }}</span>
+                <span>在线咨询</span>
+              </div>
+              <div>
+                <span>{{ item.defaultSales }}</span>
+                <span>累计成交</span>
+              </div>
+              <div>
+                <span>{{ item.actualSales }}</span>
+                <span>成功注册</span>
               </div>
             </div>
           </div>
@@ -24,7 +38,14 @@
               <span>元起</span>
             </div>
             <div class="contact-btn">
-              <a href="javascript:;" @click="openIM(url)">
+              <a
+                href="javascript:;"
+                @click="
+                  () => {
+                    $parent.openIM(item.url)
+                  }
+                "
+              >
                 <img :src="item.headimg" alt="" />
               </a>
               <a href="javascript:;" @click="chat(index)">
@@ -36,7 +57,14 @@
                 >
                 </my-icon>
               </a>
-              <a href="javascript:;" @click="openIM(url)">
+              <a
+                href="javascript:;"
+                @click="
+                  () => {
+                    $parent.openIM(item.url)
+                  }
+                "
+              >
                 <my-icon
                   name="notify_ic_tel"
                   color="#4974F5"
@@ -91,7 +119,6 @@ export default {
       more: true,
       close: false,
       num: 2,
-      url: '',
     }
   },
   methods: {
@@ -108,14 +135,6 @@ export default {
     },
     chat() {
       this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
-    },
-
-    openIM(url) {
-      if (url !== '') {
-        window.location.href = url
-      } else {
-        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
-      }
     },
   },
 }
@@ -165,23 +184,9 @@ export default {
           > div {
             display: flex;
             align-items: center;
-            flex: 1;
-            position: relative;
-            &:first-child {
-              .vertical-bar {
-                display: none;
-              }
-            }
-            .vertical-bar {
-              width: 1px;
-              height: 40px;
-              background: #f4f4f4;
-              position: absolute;
-              top: 50%;
-              margin-top: -20px;
-              left: -23px;
-            }
-            > div:last-child {
+            width: 100%;
+            > div:not(:first-child) {
+              flex: 1;
               > span {
                 display: block;
                 font-size: 32px;
@@ -197,6 +202,21 @@ export default {
                   margin-top: 10px;
                 }
               }
+            }
+            &:first-child {
+              .vertical-bar {
+                display: none;
+              }
+            }
+            .vertical-bar {
+              width: 1px;
+              height: 40px;
+              background: #f4f4f4;
+              position: absolute;
+              top: 50%;
+              margin-top: -20px;
+              left: -23px;
+              background: red;
             }
           }
         }

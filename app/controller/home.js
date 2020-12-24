@@ -11,6 +11,7 @@ const { contentApi, productApi } = require('../../config/serveApi/index');
 const { RULES } = require('../../config/constant/jyFieldRules');
 const { productRules } = require('../validate/home');
 const { Get, Prefix, Post } = require('egg-shell-decorators');
+const { BASE_CACHE_TIME } = require('../../config/constant/cacheTime');
 
 // 获取广告列表
 const getBannerList = async (ctx, service, locationCodeList) => {
@@ -42,11 +43,11 @@ class homeController extends Controller {
     const rules = {
       locationCodeList: { type: 'array', required: true }, // 广告编码
       fixedNavCategoryCode: { type: 'string', required: true }, // 固定导航分类code
-      fixedNavPlatformCode: { type: 'string', required: true }, // 固定导航平台code
       fixedLimit: { type: 'integer', required: true }, // 固定导航每页条数
       fixedPage: { type: 'integer', required: true }, // 固定导航当前页
       rollNavCategoryCode: { type: 'string', required: true }, // 滚动导航分类code
-      rollNavPlatformCode: { type: 'string', required: true }, // 滚动导航平台code
+      platformCode: { type: 'string', required: true }, // 平台code
+      terminalCode: { type: 'string', required: true }, // 终端code
       rollLimit: { type: 'integer', required: true }, // 滚动导航每页条数
       rollPage: { type: 'integer', required: true }, // 滚动导航当前页
     };
@@ -72,7 +73,8 @@ class homeController extends Controller {
     // 获取固定导航数据
     const findFixedNav = service.curl.curlGet(navUrl, {
       categoryCode: ctx.request.body.fixedNavCategoryCode,
-      platformCode: ctx.request.body.fixedNavPlatformCode,
+      platformCode: ctx.request.body.platformCode,
+      terminalCode: ctx.request.body.terminalCode,
       limit: ctx.request.body.fixedLimit,
       page: ctx.request.body.fixedPage,
       includeField,
@@ -80,7 +82,8 @@ class homeController extends Controller {
     // 获取滚动导航数据
     const findRollNav = service.curl.curlGet(navUrl, {
       categoryCode: ctx.request.body.rollNavCategoryCode,
-      platformCode: ctx.request.body.rollNavPlatformCode,
+      platformCode: ctx.request.body.platformCode,
+      terminalCode: ctx.request.body.terminalCode,
       limit: ctx.request.body.rollLimit,
       page: ctx.request.body.rollPage,
       includeField,
@@ -342,36 +345,56 @@ class homeController extends Controller {
           ctx.helper.fail({ ctx, code: 422, res: valiErrors });
           return;
         }
-        // 查询数据字典
-        const sysCode = app.config.apiClient.APPID[0];
-        const dict = contentApi.dataDict; // 查询字典
-        const dictUrl = ctx.helper.assembleUrl(sysCode, dict);
-        const codeData = await service.curl.curlGet(dictUrl, {
-          code: ctx.request.body.dictionaryCode,
-        });
-        // 处理字典数据
-        if (codeData.code === 200) {
-          const dictData = [];
-          codeData.data.forEach((item) => {
-            if (item.ext2.indexOf('wap') !== -1) {
-              dictData.push({
-                id: item.id,
-                code: item.code,
-                name: item.name,
-                ext1: item.ext1,
-                ext2: item.ext2,
-                ext3: item.ext3,
-                ext4: item.ext4,
-                ext5: item.ext5,
-                limit: ctx.request.body.limit,
-                page: ctx.request.body.page,
-                noMore: false,
-                adData: [],
-                goodsList: [],
-              });
-            }
+
+        const cacheKey = ctx.helper.cacheKey(
+          ctx.method,
+          ctx.path,
+          ctx.request.body.dictionaryCode
+        );
+        // 获取缓存的数据字典数据
+        const cacheData = await service.redis.get(cacheKey);
+        // 命中缓存
+        if (cacheData) {
+          productData.dictData = cacheData;
+        }
+
+        // 未命中缓存
+        if (!cacheData) {
+          const sysCode = app.config.apiClient.APPID[0];
+          const dict = contentApi.dataDict; // 查询字典
+          const dictUrl = ctx.helper.assembleUrl(sysCode, dict);
+          const codeData = await service.curl.curlGet(dictUrl, {
+            code: ctx.request.body.dictionaryCode,
           });
-          productData.dictData = dictData; // 字典数据
+          // 处理字典数据
+          if (codeData.code === 200 && codeData.data.length) {
+            const dictData = [];
+            codeData.data.forEach((item) => {
+              if (item.ext2.indexOf('wap') !== -1) {
+                dictData.push({
+                  id: item.id,
+                  code: item.code,
+                  name: item.name,
+                  ext1: item.ext1,
+                  ext2: item.ext2,
+                  ext3: item.ext3,
+                  ext4: item.ext4,
+                  ext5: item.ext5,
+                  limit: ctx.request.body.limit,
+                  page: ctx.request.body.page,
+                  noMore: false,
+                  adData: [],
+                  goodsList: [],
+                });
+              }
+            });
+            // 设置缓存数据字典数据
+            service.redis.set(cacheKey, dictData, BASE_CACHE_TIME);
+            productData.dictData = dictData; // 字典数据
+          }
+        }
+
+        if (productData.dictData.length) {
           params.formatId = productData.dictData[0].ext3; // 获取产品分类编码
           locationCode = productData.dictData[0].ext1; // 获取广告位code
           await findAdAndproduct();
@@ -418,13 +441,13 @@ class homeController extends Controller {
         const attribute = RULES[params.formatId];
         const nweGoodsList = [];
         goodsList.forEach((item) => {
-          let arr = [];
+          let attrArr = [];
           if (item.fieldList && item.fieldList.length) {
-            attribute.forEach((key) => {
-              const attrItem = item.fieldList.filter((utm) => {
-                return utm.fieldCode === key;
-              });
-              arr.push(attrItem[0].fieldName);
+            attrArr = item.fieldList.filter((utm) => {
+              return attribute.indexOf(utm.fieldCode) > -1;
+            });
+            attrArr.forEach((a, b) => {
+              attrArr.splice(b, 1, a.fieldValueCn || a.fieldValue);
             });
           }
           nweGoodsList.push({
@@ -432,7 +455,7 @@ class homeController extends Controller {
             name: item.name,
             goodsPrice: item.goodsPrice,
             platformPrice: item.platformPrice,
-            fieldList: arr,
+            fieldList: attrArr,
           });
         });
         return nweGoodsList;
