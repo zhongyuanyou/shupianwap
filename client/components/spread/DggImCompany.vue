@@ -31,10 +31,7 @@
               />
             </div>
             <div v-else :key="index" class="admin-group">
-              <img
-                class="admin-img"
-                src="https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg"
-              />
+              <img class="admin-img" :src="plannerImgSrc" />
               <div class="admin-msg">
                 <h2 class="time">{{ item.createTime | timeFormat }}</h2>
                 <i class="triangle-admin"></i>
@@ -123,6 +120,8 @@ export default {
       // 聊天框弹窗
       isPopupShow: false,
       dggenv: DGG_SERVER_ENV,
+      plannerImgSrc:
+        'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg',
       // 游客输入的内容
       userText: '',
       // im
@@ -164,8 +163,14 @@ export default {
   // },
   created() {
     // 在vue根实例上监听openIMM方法，对应的在需要的地方触发openIMM方法
-    this.$root.$on('openIMM', (id, name, num) => {
-      // id是规划师id，name是规划师名字，num是规划师工号
+    this.$root.$on('openIMM', (id, name, num, imgSrc) => {
+      // id是规划师id，name是规划师名字，num是规划师工号，imgSrc是规划师头像
+      if (imgSrc) {
+        this.plannerImgSrc = imgSrc
+      } else {
+        this.plannerImgSrc =
+          'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg'
+      }
       this.isPopupShow = true
       this.createSession(id, name, num)
     })

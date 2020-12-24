@@ -47,7 +47,9 @@ export default {
   },
   created() {
     this.card = {
-      imgSrc: this.planner.imgSrc,
+      imgSrc:
+        this.planner.imgSrc ||
+        'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg',
       cardName: this.planner.name,
       cardSign: '金牌规划师',
       icon: '',
@@ -65,7 +67,8 @@ export default {
         'openIMM',
         this.planner.id,
         this.planner.name || '',
-        this.planner.jobNum || ''
+        this.planner.jobNum || '',
+        this.planner.imgSrc || ''
       )
     },
     // @--电话咨询
