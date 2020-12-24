@@ -222,7 +222,7 @@ export default {
         type: 'gsbg', // 业态编码。
         place: 'cd', // 定位城市。
         device: 'wap', // 设备：pc,wap。
-        web: 'xmt', // 归属渠道：xmt,zytg,wxgzh。
+        web: 'SP', // 归属渠道：xmt,zytg,wxgzh。
         smsCode: _code, // 验证码
         content: JSON.stringify(contentStr),
       }
