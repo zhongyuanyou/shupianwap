@@ -157,8 +157,6 @@ class SpreadController extends Controller {
       const cacheKeyTotal = ctx.helper.cacheKey(ctx.query.pageCode + 'total');
       const nums2Res = ctx.service.redis.get(cacheKeyTotal);
       numsRes = await Promise.all([nums1Res, nums2Res]);
-    } else {
-      nums = undefined;
     }
     const res = {};
     if (numsRes && numsRes.length > 0) {
