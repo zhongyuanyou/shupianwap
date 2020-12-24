@@ -11,7 +11,7 @@ const { contentApi, productApi } = require('../../config/serveApi/index');
 const { RULES } = require('../../config/constant/jyFieldRules');
 const { productRules } = require('../validate/home');
 const { Get, Prefix, Post } = require('egg-shell-decorators');
-const { ADVERT_TIME } = require('../../config/constant/cacheTime');
+const { BASE_CACHE_TIME } = require('../../config/constant/cacheTime');
 
 // 获取广告列表
 const getBannerList = async (ctx, service, locationCodeList) => {
@@ -43,11 +43,11 @@ class homeController extends Controller {
     const rules = {
       locationCodeList: { type: 'array', required: true }, // 广告编码
       fixedNavCategoryCode: { type: 'string', required: true }, // 固定导航分类code
-      fixedNavPlatformCode: { type: 'string', required: true }, // 固定导航平台code
       fixedLimit: { type: 'integer', required: true }, // 固定导航每页条数
       fixedPage: { type: 'integer', required: true }, // 固定导航当前页
       rollNavCategoryCode: { type: 'string', required: true }, // 滚动导航分类code
-      rollNavPlatformCode: { type: 'string', required: true }, // 滚动导航平台code
+      platformCode: { type: 'string', required: true }, // 平台code
+      terminalCode: { type: 'string', required: true }, // 终端code
       rollLimit: { type: 'integer', required: true }, // 滚动导航每页条数
       rollPage: { type: 'integer', required: true }, // 滚动导航当前页
     };
@@ -73,7 +73,8 @@ class homeController extends Controller {
     // 获取固定导航数据
     const findFixedNav = service.curl.curlGet(navUrl, {
       categoryCode: ctx.request.body.fixedNavCategoryCode,
-      platformCode: ctx.request.body.fixedNavPlatformCode,
+      platformCode: ctx.request.body.platformCode,
+      terminalCode: ctx.request.body.terminalCode,
       limit: ctx.request.body.fixedLimit,
       page: ctx.request.body.fixedPage,
       includeField,
@@ -81,7 +82,8 @@ class homeController extends Controller {
     // 获取滚动导航数据
     const findRollNav = service.curl.curlGet(navUrl, {
       categoryCode: ctx.request.body.rollNavCategoryCode,
-      platformCode: ctx.request.body.rollNavPlatformCode,
+      platformCode: ctx.request.body.platformCode,
+      terminalCode: ctx.request.body.terminalCode,
       limit: ctx.request.body.rollLimit,
       page: ctx.request.body.rollPage,
       includeField,
@@ -387,7 +389,7 @@ class homeController extends Controller {
               }
             });
             // 设置缓存数据字典数据
-            service.redis.set(cacheKey, dictData, ADVERT_TIME);
+            service.redis.set(cacheKey, dictData, BASE_CACHE_TIME);
             productData.dictData = dictData; // 字典数据
           }
         }

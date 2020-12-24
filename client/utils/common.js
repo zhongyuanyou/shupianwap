@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-23 17:07:19
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-24 10:08:51
+ * @LastEditTime: 2020-12-24 15:13:59
  * @Description: file content
  * @FilePath: /chips-wap/client/utils/common.js
  */
@@ -13,6 +13,8 @@
  */
 
 import CryptoJS from 'crypto-js'
+import Qs from 'qs'
+
 export const callPhone = (tel) => {
   window && (window.location.href = `tel:${tel}`)
 }
@@ -40,4 +42,10 @@ export const parseTel = (tel) => {
   const parsedWordArray = CryptoJS.enc.Base64.parse(tel)
   const parsedTel = parsedWordArray.toString(CryptoJS.enc.Utf8)
   return parsedTel
+}
+
+// 打开第三方链接
+export const openLink = (link, data) => {
+  const dataStr = Qs.stringify(data)
+  window && (window.location.href = `${link}?${dataStr}`)
 }

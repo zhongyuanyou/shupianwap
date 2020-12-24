@@ -83,7 +83,7 @@ export default {
       default: () => {
         return [
           {
-            id: 7862495547640840192,
+            id: '7862495547640840192',
             type: '金牌规划师',
             avatarImg: '',
             name: '郭亮亮',
@@ -94,7 +94,7 @@ export default {
             jobNum: '107547',
           },
           {
-            id: 7862495547640840192,
+            id: '7862495547640840192',
             type: '金牌规划师',
             avatarImg: '',
             name: '郭亮亮',
@@ -105,7 +105,7 @@ export default {
             jobNum: '107547',
           },
           {
-            id: 7862495547640840192,
+            id: '7862495547640840192',
             type: '金牌规划师',
             avatarImg: '',
             name: '郭亮亮',
