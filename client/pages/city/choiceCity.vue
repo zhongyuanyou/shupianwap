@@ -93,6 +93,7 @@
         </div>
       </sp-index-bar>
     </div>
+    <Loading-center v-show="loading" />
   </div>
 </template>
 
@@ -102,6 +103,7 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import pyjs from 'js-pinyin'
 import { homeApi } from '@/api'
 import Search from '@/components/common/search/Search'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'ChoiceCity',
   components: {
@@ -110,9 +112,11 @@ export default {
     [IndexAnchor.name]: IndexAnchor,
     [Cell.name]: Cell,
     Search,
+    LoadingCenter,
   },
   data() {
     return {
+      loading: false,
       cityHistory: [], // 历史选择
       cityList: [], // 站点列表
       nweCityList: [], // 带首字母的站点列表
@@ -131,16 +135,24 @@ export default {
     if (process.client) {
       // 获取城市列表
       console.log(77, homeApi.findSiteList)
-      this.$axios.get(homeApi.findSiteList).then((res) => {
-        console.log(res)
-        if (res.code === 200) {
-          this.cityList = res.data.cityList
-          if (this.cityList.length) {
-            // 格式化城市数据
-            this.nweCityList = this.getBrands(this.cityList)
+      this.loading = true
+      this.$axios
+        .get(homeApi.findSiteList, {
+          headers: {
+            'x-cache-control': 'cache',
+          },
+        })
+        .then((res) => {
+          console.log(res)
+          if (res.code === 200) {
+            this.loading = false
+            this.cityList = res.data.cityList
+            if (this.cityList.length) {
+              // 格式化城市数据
+              this.nweCityList = this.getBrands(this.cityList)
+            }
           }
-        }
-      })
+        })
     }
   },
   mounted() {
