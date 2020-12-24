@@ -73,9 +73,15 @@
       <!-- e 按钮 -->
       <!-- s 处理事件统计 -->
       <div class="statistical">
-        <span>今日进行 <span>126</span>件</span>
+        <span
+          >今日进行 <span>{{ nums.todayNum }}</span
+          >件</span
+        >
         <div class="line"></div>
-        <span>累计办理<span>640,934</span>件</span>
+        <span
+          >累计办理<span>{{ nums.totalNum }}</span
+          >件</span
+        >
       </div>
       <!-- e 处理事件统计 -->
     </div>
@@ -92,6 +98,17 @@ export default {
     [ActionSheet.name]: ActionSheet,
     [CountDown.name]: CountDown,
     [Toast.name]: Toast,
+  },
+  props: {
+    nums: {
+      type: Object,
+      default: () => {
+        return {
+          todayNum: 12528,
+          totalNum: 652517,
+        }
+      },
+    },
   },
   data() {
     return {
@@ -213,7 +230,7 @@ export default {
         type: 'kjdl', // 业态编码。
         place: 'cd', // 定位城市。
         device: 'wap', // 设备：pc,wap。
-        web: 'xmt', // 归属渠道：xmt,zytg,wxgzh。
+        web: 'SP', // 归属渠道：xmt,zytg,wxgzh。
         smsCode: _code, // 验证码
         content: JSON.stringify(contentStr),
       }

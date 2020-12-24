@@ -87,7 +87,19 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      bgImg: [
+        {
+          img: require('~/assets/spreadImages/company_registry/busi_img_fwjs_yxze.png'),
+        },
+        {
+          img: require('~/assets/spreadImages/company_registry/busi_img_fwjs_gtzc.png'),
+        },
+        {
+          img: require('~/assets/spreadImages/company_registry/busi_img_fwjs_fgs.png'),
+        },
+      ],
+    }
   },
   methods: {
     onMessage(url) {
