@@ -117,12 +117,11 @@ export default {
     }
     a {
       display: flex;
-      align-items: center;
       font-size: 24px;
+      line-height: 27px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #4974f5;
-      vertical-align: middle;
       .my-icon {
         margin-right: 11px;
       }

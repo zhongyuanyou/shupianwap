@@ -420,7 +420,7 @@ export default {
     color: #222222;
   }
   /deep/ .sp-index-bar__index {
-    padding: 15px 16px 15px 5px;
+    padding: 10px 16px 10px 5px;
     font-size: 20px;
     font-family: PingFang SC;
     font-weight: bold;
