@@ -244,7 +244,7 @@ export default {
       }
     } else if (this.isLocation) {
       this.selectData = [
-        { name: '全国', code: this.coupleData[0].code || '' },
+        { name: this.coupleData[0].name, code: this.coupleData[0].code || '' },
         { name: '不限', code: '' },
       ]
     } else {
