@@ -33,6 +33,13 @@ export const mutations = {
     state.userId = data.userId
     state.userType = data.userType
   },
+  CLEAR_USER(state) {
+    this.$cookies.removeAll()
+    state.token = ''
+    state.userId = ''
+    state.userType = ''
+    state.userInfo = {}
+  },
 }
 
 export const actions = {
@@ -50,5 +57,8 @@ export const actions = {
       console.error('ACCOUNT_INFO:', error)
       return Promise.reject(error)
     }
+  },
+  clearUser({ commit }) {
+    commit('CLEAR_USER')
   },
 }
