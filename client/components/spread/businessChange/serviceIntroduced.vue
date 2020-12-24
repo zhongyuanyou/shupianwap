@@ -8,11 +8,7 @@
           v-show="index > num ? false : true"
           :key="index"
           :style="{ backgroundImage: 'url(' + item.bgimage + ')' }"
-          @click="
-            () => {
-              $parent.openIM(item.url)
-            }
-          "
+          @click="plannerIm(item.planner)"
         >
           <div class="total">
             <div>
@@ -46,9 +42,9 @@
                   }
                 "
               >
-                <img :src="item.headimg" alt="" />
+                <img :src="item.planner.avatarImg" alt="" />
               </a>
-              <a href="javascript:;" @click="chat(index)">
+              <a href="javascript:;">
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -133,8 +129,15 @@ export default {
         this.num = 2
       }
     },
-    chat() {
-      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+    plannerIm(planner) {
+      const guiHuaShi = planner
+      this.$root.$emit(
+        'openIMM',
+        guiHuaShi.id,
+        guiHuaShi.name || '',
+        guiHuaShi.jobNum || '',
+        planner.imgSrc || ''
+      )
     },
   },
 }
@@ -276,6 +279,11 @@ export default {
               background: #4974f5;
               border-radius: 50%;
               margin-left: 8px;
+              display: flex;
+              > img {
+                width: 100%;
+                border-radius: 50%;
+              }
             }
             > a:not(:first-child) {
               width: 40px;

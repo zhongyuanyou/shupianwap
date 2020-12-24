@@ -25,7 +25,7 @@
         href="javascript:;"
         @click="
           () => {
-            $parent.openIM(item.url)
+            $parent.openIM(url)
           }
         "
         >立即咨询</a

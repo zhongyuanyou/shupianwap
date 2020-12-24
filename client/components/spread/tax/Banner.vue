@@ -151,11 +151,11 @@ export default {
       if (!_reg.test(_tel)) {
         return Toast('请输入正确的手机号码')
       }
-      const Data = {
+      const data = {
         tel: _tel,
         type: 'gs',
       }
-      this.send(Data)
+      this.send(data)
     },
     // 验证后 发送验证码
     send(data) {
