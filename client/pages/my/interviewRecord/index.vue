@@ -65,7 +65,10 @@
                     color="#4974F5"
                 /></sp-button>
 
-                <sp-button round class="contact-btn" @click="tel(item.phone)"
+                <sp-button
+                  round
+                  class="contact-btn"
+                  @click.stop="tel(item.inviterContact)"
                   ><my-icon name="notify_ic_tel" size="0.32rem" color="#4974F5"
                 /></sp-button>
                 <sp-tag
@@ -132,6 +135,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { interviewApi } from '~/api'
+// import { parseTel } from '~/utils/common'
 
 export default {
   name: 'Interview',
@@ -193,6 +197,7 @@ export default {
       // } else {
       //   window.location.href = 'tel:' + number
       // }
+      console.log(number)
       window.location.href = 'tel:' + number
     },
     cancelConfirm() {

@@ -57,11 +57,6 @@
           。文章中图片源自原作者配图，如涉及侵权，请联系jubao @dgg.net删除
         </div>
         <div class="copyright_tags">
-          <div class="tags">
-            <div v-for="(item, index) in tags" :key="index" class="tags_item">
-              {{ item }}
-            </div>
-          </div>
           <div class="hot">
             热度<span>{{ info.newsReadAll || 0 }}</span>
           </div>
@@ -91,7 +86,6 @@ export default {
   },
   data() {
     return {
-      tags: ['公司发展', '公司发展'], // 模拟tags数据
       info: {
         title: '',
         updaterName: '',
@@ -211,7 +205,7 @@ export default {
       }
       &_tags {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
         flex-direction: row;
         margin-top: 71px;

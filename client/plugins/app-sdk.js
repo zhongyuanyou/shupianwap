@@ -152,6 +152,15 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // 调用分享
+  dggShare: (
+    data = { image: '', title: '', subTitle: '', url: '' },
+    fn = () => {}
+  ) => {
+    Bridge.callHandler('dgg_share', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
 }
 
 // 注册APP调用的js方法
