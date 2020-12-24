@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-22 16:05:15
+ * @LastEditTime: 2020-12-24 14:30:43
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
@@ -152,6 +152,9 @@ import PhoneField from '@/components/login/PhoneField'
 import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
 
+// 第三方登录需要回传的参数
+const SOURCE_PLATFROM_PARAMS = { IM: ['token', 'userId'] }
+
 export default {
   name: 'Login',
   components: {
@@ -174,6 +177,7 @@ export default {
       },
       isValidSubmit: false,
       passwordFieldType: 'password', // text：明文
+      sourcePlatform: this.$route.query.sourcePlatform || '', // 第三方 需要携带的参数   IM: token, userId
       loginType: this.$route.query.loginType || 'telephone', // account: 账户登录； telephone：手机快捷登录
       redirect: this.$route.query.redirect || '/', // 登录后需要跳转的地址
     }
@@ -191,8 +195,21 @@ export default {
         this.loginToast(message)
         return
       }
-      this.login().then(() => {
-        this.$router.push(this.redirect)
+      this.login().then((data) => {
+        let query = {}
+        if (this.sourcePlatform) {
+          const keyList = SOURCE_PLATFROM_PARAMS[this.sourcePlatform]
+          query = Array.isArray(keyList)
+            ? keyList.reduce((accumulator, key) => {
+                data = data || {}
+                if (data[key]) {
+                  accumulator[key] = data[key]
+                }
+                return accumulator
+              }, {})
+            : {}
+        }
+        this.$router.push({ path: this.redirect, query })
       })
     },
     handleSwitchLookPassword() {
