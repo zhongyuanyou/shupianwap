@@ -35,8 +35,8 @@
                   @click="adJumpHandleMixin(key.materialList[0])"
                 >
                   <img
-                    class="recom-img"
                     v-lazy="key.materialList[0].materialUrl"
+                    class="recom-img"
                     alt=""
                   />
                 </a>
