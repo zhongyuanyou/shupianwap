@@ -32,6 +32,7 @@ export default {
           },
         }
       )
+      console.log(data)
       if (code === 200) {
         tcProductDetailData = data
         // 获取钻展规划师

@@ -53,10 +53,10 @@
     <Dynamic :info="{ ...info }" />
     <!--E 第六板块 商品动态-->
     <!--S 第七板块 常见问题-->
-    <Question :info="{ ...info }" />
+    <Question :detail-type="detailType" :info="{ ...info }" />
     <!--E 第七板块 常见问题-->
     <!--S 第八板块 成功案例-->
-    <Case :info="{ ...info }" />
+    <Case :detail-type="detailType" :info="{ ...info }" />
     <!--E 第八板块 成功案例-->
     <!--S 第九板块 同类推荐-->
     <Recommend
