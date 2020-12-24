@@ -73,17 +73,15 @@ export default {
     dggImCompany,
   },
   async asyncData({ $axios }) {
-    console.log('111')
-    console.log('111')
     const type = 'extendBussineHome'
     try {
-      const res = await $axios.get(`${spreadApi.list}pageCode=${type}`)
+      const res = await $axios.get(`${spreadApi.list}?pageCode=${type}`)
       console.log(res)
       return {
         resultData: res,
       }
     } catch (error) {
-      console.log('error：', error.message)
+      console.log('spreadApi.list error：', error.message)
       // 请求出错也要保证页面正常显示
       return {
         resultData: {
@@ -122,7 +120,7 @@ export default {
                         productDetail: {
                           id: 'extendBussineHomeHot1',
                           name: '',
-                          referencePrice: 1800,
+                          referencePrice: 4500,
                           operating: {
                             showName: '食品经营许可证',
                             slogan: '食品行业所需资质官方保障',
