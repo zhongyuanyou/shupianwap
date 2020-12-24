@@ -90,7 +90,10 @@ export default {
     handleAvatar() {
       // 点击头像
       if (!this.info) {
-        this.$router.push('/login')
+        this.$router.push({
+          name: 'login',
+          query: { redirect: this.$route.fullPath },
+        })
       } else {
         this.$router.push('/my/information')
       }
