@@ -192,9 +192,9 @@ export default {
       fieldList: [],
     }
     this.initGoodsList()
-    /* if (!this.isShowTabs) {
+    if (!this.isShowTabs) {
       this.$refs.spTabs.$refs.nav.parentNode.style.display = 'none'
-    } */
+    }
   },
   methods: {
     getFilterHandle(data, filrerName) {
@@ -271,7 +271,6 @@ export default {
       })
     },
     initGoodsList() {
-      console.log('initGoodsList', 'aaaaaaaaaaaaaaaaaaaaaaa')
       // 获取初始数据
       this.formData[this.currentTabJyCode].start = 1
       this.loading = true
