@@ -25,7 +25,7 @@
     <Need />
     <!-- e 可能需要办理 -->
     <!-- s 底部导航 -->
-    <Bottom />
+    <Bottom :planner="planner" />
     <!-- e 底部导航 -->
     <dgg-im-company></dgg-im-company>
   </div>
@@ -40,8 +40,10 @@ import ServiceIntroduced from '../../../components/spread/businessChange/service
 import ServiceProcess from '../../../components/spread/businessChange/serviceProcess'
 import Planners from '../../../components/spread/common/GuiHuaShiSwipe'
 import Need from '../../../components/spread/businessChange/need'
-import Bottom from '../../../components/spread/agency/bottom'
+import Bottom from '../../../components/spread/common/FixedBottom'
 import dggImCompany from '../../../components/spread/DggImCompany'
+import { spreadApi } from '@/api/spread'
+
 export default {
   components: {
     Header,
@@ -55,10 +57,33 @@ export default {
     Bottom,
     dggImCompany,
   },
+  async asyncData({ $axios }) {
+    const type = 'extendBussineChange'
+    try {
+      const res = await $axios.get(spreadApi.list, {
+        params: { pageCode: type },
+      })
+      console.log(res)
+      return {
+        resultData: res,
+      }
+    } catch (error) {
+      console.log('error', error)
+      // 请求出错也要保证页面正常显示
+      return {}
+    }
+  },
   data() {
     return {
       title: '工商变更',
       plannersTitle: '咨询规划师',
+      planner: {
+        id: '7862495547640840192',
+        name: '张毅',
+        jobNum: '107547',
+        telephone: '18402858698',
+        imgSrc: '',
+      },
       // 轮播列表
       imgList: [
         {
@@ -75,67 +100,54 @@ export default {
       // 服务列表
       servicelist: [
         {
-          code: 1,
-          tatol: [
-            { price: '18万+', title: '在线质询' },
-            { price: '17万+', title: '累计成交' },
-            { price: '17万+', title: '成功注册' },
-          ],
+          id: '',
+          actualViews: '18万',
+          defaultSales: '17万',
+          actualSales: '17万',
           price: '488',
-          headimg: '',
           bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw01.png'),
         },
         {
-          code: 2,
-          tatol: [
-            { price: '15万+', title: '在线质询' },
-            { price: '14万+', title: '累计成交' },
-            { price: '14万+', title: '成功注册' },
-          ],
+          id: '',
+          actualViews: '15万',
+          defaultSales: '14万',
+          actualSales: '14万',
           price: '488',
           headimg: '',
           bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw02.png'),
         },
         {
-          code: 3,
-          tatol: [
-            { price: '2万+', title: '在线质询' },
-            { price: '2万+', title: '累计成交' },
-            { price: '2万+', title: '成功注册' },
-          ],
+          id: '',
+          actualViews: '2万',
+          defaultSales: '2万',
+          actualSales: '2万',
           price: '600',
           headimg: '',
           bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw03.png'),
         },
         {
-          code: 4,
-          tatol: [
-            { price: '1万+', title: '在线质询' },
-            { price: '1万+', title: '累计成交' },
-            { price: '1万+', title: '成功注册' },
-          ],
+          id: '',
+          actualViews: '1万',
+          defaultSales: '1万',
+          actualSales: '1万',
           price: '600',
           headimg: '',
           bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw04.png'),
         },
         {
-          code: 5,
-          tatol: [
-            { price: '7千+', title: '在线质询' },
-            { price: '6千+', title: '累计成交' },
-            { price: '6千+', title: '成功注册' },
-          ],
+          id: '',
+          actualViews: '7万',
+          defaultSales: '6万',
+          actualSales: '6万',
           price: '600',
           headimg: '',
           bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw05.png'),
         },
         {
-          code: 6,
-          tatol: [
-            { price: '6千+', title: '在线质询' },
-            { price: '6千+', title: '累计成交' },
-            { price: '6千+', title: '成功注册' },
-          ],
+          id: '',
+          actualViews: '6万',
+          defaultSales: '6万',
+          actualSales: '6万',
           price: '600',
           headimg: '',
           bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw06.png'),
@@ -175,6 +187,48 @@ export default {
         },
       ],
     }
+  },
+  created() {
+    this.productDetail(this.resultData.data.adList[0].sortMaterialList)
+  },
+  methods: {
+    productDetail(data) {
+      if (data.length === 0) {
+      } else {
+        const fuWuList = []
+        data.forEach((item, index) => {
+          const obj = {
+            id: item.id,
+            actualViews:
+              item.materialList[0].productDetail.operating.actualViews,
+            defaultSales:
+              item.materialList[0].productDetail.operating.defaultSales,
+            actualSales:
+              item.materialList[0].productDetail.operating.actualSales,
+            price: item.materialList[0].productDetail.referencePrice,
+            bgimage: require(`~/assets/spreadImages/businessChange/busi_img_gsbgfw0${
+              index + 1
+            }.png`),
+          }
+          fuWuList.push(obj)
+        })
+        this.servicelist = fuWuList
+      }
+    },
+    // 跳转判断
+    openIM(url) {
+      if (url) {
+        window.open(url, '_blank')
+      } else {
+        const planner = this.planner
+        this.$root.$emit(
+          'openIMM',
+          planner.id,
+          planner.name || '',
+          planner.jobNum || ''
+        )
+      }
+    },
   },
   head() {
     return {

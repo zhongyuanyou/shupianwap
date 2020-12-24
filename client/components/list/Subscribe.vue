@@ -84,8 +84,8 @@ export default {
     },
   },
   mounted() {
-    this.isLogin = false
     if (this.$store.state.user.userId) {
+      this.isLogin = true
       // 获取用户信息
       this.$axios
         .get(userinfoApi.info, {
@@ -93,9 +93,9 @@ export default {
         })
         .then((res) => {
           if (res.code === 200 && res.data.id) {
-            this.isLogin = false
             this.userInfo = res.data
           } else {
+            this.isLogin = false
             this.$refs.spToast.show({
               message: '获取用户信息失败',
               duration: 1000,
@@ -103,6 +103,15 @@ export default {
               forbidClick: true,
             })
           }
+        })
+        .catch((err) => {
+          console.error(err)
+          this.$refs.spToast.show({
+            message: '网络错误，请稍后再试',
+            duration: 1000,
+            icon: 'toast_ic_error',
+            forbidClick: true,
+          })
         })
     }
   },

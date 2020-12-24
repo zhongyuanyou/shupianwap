@@ -5,11 +5,11 @@
       <ul v-if="fiexdNav && fiexdNav.length" class="fixed-nav">
         <li v-for="(item, index) in fiexdNav" :key="index">
           <a v-if="item.navigationWay === 2" :href="jumpHandle(item)">
-            <img :src="item.navigationImageUrl" alt="" />
+            <img v-lazy="item.navigationImageUrl" alt="" />
             <span>{{ item.name }}</span>
           </a>
           <nuxt-link v-else :to="jumpHandle(item)">
-            <img :src="item.navigationImageUrl" alt="" />
+            <img v-lazy="item.navigationImageUrl" alt="" />
             <span>{{ item.name }}</span>
           </nuxt-link>
         </li>
@@ -20,11 +20,11 @@
         <ul v-if="rollNav && rollNav.length" class="scroll-nav">
           <li v-for="(item, index) in rollNav" :key="index">
             <a v-if="item.navigationWay === 2" :href="jumpHandle(item)">
-              <img :src="item.navigationImageUrl" alt="" />
+              <img v-lazy="item.navigationImageUrl" alt="" />
               <span>{{ item.name }}</span>
             </a>
             <nuxt-link v-else :to="jumpHandle(item)">
-              <img :src="item.navigationImageUrl" alt="" />
+              <img v-lazy="item.navigationImageUrl" alt="" />
               <span>{{ item.name }}</span>
             </nuxt-link>
           </li>
@@ -35,6 +35,7 @@
       <div v-if="rollNav.length > 10" class="scroll-box">
         <span><i :style="{ left: scroLeft + '%' }"></i></span>
       </div>
+      <div v-else class="scroll-box"></div>
       <!-- E 自定义滚动条 -->
     </nav>
   </div>

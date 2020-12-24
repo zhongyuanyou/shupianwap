@@ -2,10 +2,11 @@
   <div class="question">
     <div class="question_tp">
       <p class="question_tp_title">常见问题</p>
-      <div class="question_tp_more">
-        查看更多<span
-          ><my-icon name="order_ic_listnext" size="0.21rem" color="#ccc"
-        /></span>
+      <div class="question_tp_more" @click="handlToProblemList">
+        查看更多
+        <span>
+          <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
+        </span>
       </div>
     </div>
     <div class="question_item">
@@ -26,6 +27,19 @@
 <script>
 export default {
   name: 'Question',
+  props: {
+    detailType: {
+      type: String,
+      default: () => {
+        return this.$route.query.type ? this.$route.query.type : null
+      },
+    },
+  },
+  methods: {
+    handlToProblemList() {
+      this.$router.push(`/commonProblem/${this.detailType}`)
+    },
+  },
 }
 </script>
 

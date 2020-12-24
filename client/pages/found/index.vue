@@ -117,6 +117,8 @@ export default {
 <style lang="less" scoped>
 .found {
   /deep/ .sp-top-nav-bar {
+    padding-top: constant(safe-area-inset-top);
+    padding-top: env(safe-area-inset-top);
     z-index: 5;
   }
 }

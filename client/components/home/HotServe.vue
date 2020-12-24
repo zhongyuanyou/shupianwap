@@ -17,7 +17,7 @@
         href="javascript:void(0)"
         @click="adJumpHandleMixin(item.materialList[0])"
       >
-        <img :src="item.materialList[0].materialUrl" alt="" />
+        <img v-lazy="item.materialList[0].materialUrl" alt="" />
       </a>
     </div>
   </div>

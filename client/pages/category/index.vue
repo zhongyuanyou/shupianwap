@@ -2,7 +2,7 @@
   <div class="category">
     <!--S 头部-->
     <div class="category_header">
-      <my-icon name="nav_ic_back" size="0.33rem" color="#1a1a1a" />
+      <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a" />
       <div class="category_header_con">
         <my-icon name="sear_ic_sear" size="0.28rem" color="#999" />
         <input
