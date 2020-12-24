@@ -227,6 +227,38 @@ class LoginController extends Controller {
     });
   }
 
+  @Post('/check-sms-code')
+  async checkSmsCode() {
+    const { ctx, service, app } = this;
+    const rules = {
+      phone: { type: 'string', required: true },
+      userId: { type: 'string', required: false },
+      userType: { type: 'string', required: true },
+      smsCode: { type: 'string', required: true },
+    };
+    if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
+    const data = await service.common.verificationCode.checkSmsCode(
+      ctx.request.body.phone,
+      ctx.request.body.userId,
+      ctx.request.body.userType,
+      ctx.request.body.smsCode,
+    )
+    if (data.code === 200) {
+      ctx.helper.success({
+        ctx,
+        code: 200,
+        res: data.data,
+      });
+      return;
+    }
+    ctx.helper.fail({
+      ctx,
+      code: data.code,
+      res: data,
+      detailMessage: data.message || '请求失败',
+    });
+  }
+
   @Post('/account_info.do')
   async accountInfo() {
     const { ctx, service, app } = this;

@@ -55,8 +55,10 @@ export default {
       }
       if (this.itemData.fieldList && this.itemData.fieldList.length) {
         const desc = []
-        this.itemData.fieldList.forEach((item) => desc.push(item.fieldName))
-        return desc.join('|')
+        this.itemData.fieldList.forEach((item) =>
+          desc.push(item.fieldValueCn || item.fieldValueList[0])
+        )
+        return desc.join(' | ')
       }
       return ''
     },
