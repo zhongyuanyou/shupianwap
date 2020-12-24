@@ -87,7 +87,11 @@ export default {
       rollNavData: [], // 滚动导航
     }
     try {
-      const res = await $axios.post(homeApi.initRequest, initReqParams)
+      const res = await $axios.post(homeApi.initRequest, initReqParams, {
+        headers: {
+          'x-cache-control': 'cache',
+        },
+      })
       //   console.log('服务端', res)
       if (res.code === 200) {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []

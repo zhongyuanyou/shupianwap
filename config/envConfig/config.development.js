@@ -19,7 +19,7 @@ function getIPAdress() {
     }
   }
 }
-module.exports = appInfo => {
+module.exports = (appInfo) => {
   /**
    * built-in config
    * @type {Egg.EggAppConfig}
@@ -35,7 +35,7 @@ module.exports = appInfo => {
     },
   };
   // 在此处添加中间件配置
-  config.middleware = [ 'nuxt', 'gzip', 'errFilter', 'eureka', 'dggCache' ];
+  config.middleware = ['nuxt', 'gzip', 'errFilter', 'eureka', 'dggCache'];
   config.gzip = {
     threshold: 1024, // 小于 1k 的响应体不压缩
   };
@@ -154,7 +154,7 @@ module.exports = appInfo => {
   // 在此处添加个人配置
   const userConfig = {
     // redis默认缓存数据的时长(S秒),产线环境24小时,开发环境1小时
-    redisCacheTime: 60 * 60,
+    redisCacheTime: 60 * 5,
     baseUrl: '',
   };
   return {
