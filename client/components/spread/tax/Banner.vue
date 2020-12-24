@@ -28,9 +28,9 @@
       <!--      表单-->
       <div class="banner-bottom-form">
         <sp-cell
-          is-link
           :title="select"
           arrow-direction="down"
+          is-link
           @click="show = true"
         />
         <sp-action-sheet
@@ -43,9 +43,9 @@
           <span>手机号</span>
           <input
             v-model="tel"
-            type="text"
             class="banner-bottom-form-input"
             placeholder="信息保护中，仅官方可见"
+            type="text"
             @focus="focus"
           />
         </div>
@@ -53,13 +53,13 @@
           <span>验证码</span>
           <input
             v-model="code"
-            type="text"
             class="banner-bottom-form-input banner-bottom-form-inputspe"
             placeholder="请输入验证码"
+            type="text"
           />
           <a
-            href="javascript:;"
             class="banner-bottom-form-div-a"
+            href="javascript:;"
             @click="testMsg"
             >{{ text }}</a
           >
@@ -78,6 +78,7 @@
 
 <script>
 import { Swipe, SwipeItem, ActionSheet, Cell, Toast } from '@chipspc/vant-dgg'
+
 export default {
   name: 'BannerVue',
   components: {
@@ -272,17 +273,19 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .banner {
   &-top {
     width: 750px;
     height: 392px;
     margin-bottom: -81px;
+
     &-img {
       width: 750px;
       height: 392px;
     }
   }
+
   &-bottom {
     background: #fff;
     width: 670px;
@@ -292,6 +295,7 @@ export default {
     font-size: 0;
     position: relative;
     z-index: 999;
+
     &-tab {
       width: 670px;
       height: 80px;
@@ -301,6 +305,7 @@ export default {
       text-align: center;
       line-height: 80px;
     }
+
     &-text {
       height: 87px;
       font-size: 24px;
@@ -310,8 +315,10 @@ export default {
       color: #555555;
       text-align: center;
     }
+
     &-form {
       padding: 0 40px;
+
       &-div {
         font-size: 28px;
         font-family: PingFang SC;
@@ -327,17 +334,20 @@ export default {
         padding: 0 0 0 33px;
         position: relative;
         display: flex;
+
         > span {
           display: inline-block;
           margin-right: 30px;
           width: 84px;
         }
+
         &-a {
           position: absolute;
           right: 0;
           margin: 0 33px;
         }
       }
+
       &-input {
         display: inline-block;
         border: none;
@@ -347,14 +357,17 @@ export default {
         background: #f8f8f8;
         padding: 0;
         width: 443px;
+
         &::placeholder {
           color: #cccccc;
           font-weight: 400;
         }
       }
+
       &-inputspe {
         width: 237px;
       }
+
       &-button {
         width: 100%;
         height: 88px;
@@ -365,6 +378,7 @@ export default {
         font-size: 32px;
         padding: 0;
       }
+
       &-lastdiv {
         font-size: 26px;
         height: 81px;
@@ -375,6 +389,7 @@ export default {
         padding: 24px 0 31px;
         display: flex;
         justify-content: center;
+
         > span {
           display: inline-block;
           color: #4974f5;
@@ -384,6 +399,7 @@ export default {
     }
   }
 }
+
 /deep/ .sp-cell {
   width: 590px;
   height: 80px;
@@ -395,12 +411,14 @@ export default {
   font-weight: 400;
   color: #1a1a1a;
 }
+
 a {
   font-size: 28px;
   font-family: PingFang SC;
   font-weight: 400;
   color: #4974f5;
 }
+
 .big {
   font-size: 24px;
   font-family: PingFang SC;
@@ -408,6 +426,7 @@ a {
   color: #1a1a1a;
   background: white;
 }
+
 .small {
   font-size: 24px;
   font-family: PingFang SC;
@@ -415,6 +434,7 @@ a {
   color: #999999;
   background: #f8f8f8;
 }
+
 /deep/ .sp-action-sheet__name {
   font-size: 31px;
   line-height: 56px;
@@ -422,6 +442,7 @@ a {
   font-family: PingFang SC;
   font-weight: 400;
 }
+
 /deep/ .sp-cell::after {
   display: none;
 }

@@ -91,7 +91,8 @@ export default {
         'openIMM',
         this.serveData[i].id,
         this.serveData[i].name,
-        this.serveData[i].jobNum
+        this.serveData[i].jobNum,
+        this.serveData[i].person
       )
     },
     // 点击该模块判断是否进行跳转，如果不跳转就调用IM
@@ -103,7 +104,8 @@ export default {
           'openIMM',
           this.serveData[i].id,
           this.serveData[i].name,
-          this.serveData[i].jobNum
+          this.serveData[i].jobNum,
+          this.serveData[i].person
         )
       }
     },
