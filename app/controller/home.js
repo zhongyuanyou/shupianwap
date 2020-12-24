@@ -11,7 +11,7 @@ const { contentApi, productApi } = require('../../config/serveApi/index');
 const { RULES } = require('../../config/constant/jyFieldRules');
 const { productRules } = require('../validate/home');
 const { Get, Prefix, Post } = require('egg-shell-decorators');
-const { ADVERT_TIME } = require('../../config/constant/cacheTime');
+const { BASE_CACHE_TIME } = require('../../config/constant/cacheTime');
 
 // 获取广告列表
 const getBannerList = async (ctx, service, locationCodeList) => {
@@ -387,7 +387,7 @@ class homeController extends Controller {
               }
             });
             // 设置缓存数据字典数据
-            service.redis.set(cacheKey, dictData, ADVERT_TIME);
+            service.redis.set(cacheKey, dictData, BASE_CACHE_TIME);
             productData.dictData = dictData; // 字典数据
           }
         }

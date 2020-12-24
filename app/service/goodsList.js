@@ -31,7 +31,9 @@ function resetServeTags(tagsData, result) {
     // 对商品列表标签进行分类和合并
     item.tags && item.tags.forEach((_item) => {
       // 进行id筛选
-      item[_item.tagType] = tagType[_item.tagType].filter((__item) => __item.id === _item.tagId)
+      if (tagType[_item.tagType]) {
+        item[_item.tagType] = tagType[_item.tagType].filter((__item) => __item.id === _item.tagId)
+      }
     })
   })
   return result

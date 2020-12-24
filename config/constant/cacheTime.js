@@ -7,6 +7,6 @@
  * */
 
 module.exports = {
+  BASE_CACHE_TIME: 60 * 5, // 所有内容的缓存的过期时间(5分钟)
   RECOM_TIME: 60 * 60, // 算法推荐产品ids缓存过期时间(1小时)
-  ADVERT_TIME: 60 * 5, // 广告缓存的过期时间(5分钟)
 };

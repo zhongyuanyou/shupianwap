@@ -50,6 +50,7 @@ export default {
   },
   computed: {
     description() {
+      // 描述，包括
       if (this.itemData.productDescription) {
         return this.itemData.productDescription
       }
@@ -63,7 +64,10 @@ export default {
       return ''
     },
     tags() {
-      if ('PRO_SALES_TAG' in this.itemData) {
+      if (
+        'PRO_SALES_TAG' in this.itemData &&
+        this.itemData.PRO_SALES_TAG.length
+      ) {
         return this.itemData.PRO_SALES_TAG
       } else {
         return []
