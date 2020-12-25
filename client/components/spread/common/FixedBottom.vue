@@ -4,8 +4,8 @@
     <sp-bottombar-button
       v-md-map
       v-md:p_IMClick
-      data-im-name="工商聚合页_底部_在线咨询"
-      data-im_type="售前"
+      :data-im-name="md.imMd.name"
+      :data-im_type="md.imMd.type"
       type="info"
       :text="text1"
       @click="onClickButton1"
@@ -14,7 +14,7 @@
     <sp-bottombar-button
       v-md-map
       v-md:webClick
-      data-name="工商聚合页_底部_在线咨询"
+      :data-name="md.telMd.name"
       type="primary"
       :text="text2"
       @click="onClickButton2"
@@ -49,6 +49,21 @@ export default {
           jobNum: '107547',
           telephone: '18402858698',
           imgSrc: '',
+        }
+      },
+    },
+    md: {
+      type: Object,
+      default: () => {
+        return {
+          telMd: {
+            name: '工商聚合页_底部_电话联系',
+            type: '售前',
+          },
+          imMd: {
+            name: '工商聚合页_底部_在线咨询',
+            type: '售前',
+          },
         }
       },
     },
