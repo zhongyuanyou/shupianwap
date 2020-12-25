@@ -230,6 +230,9 @@ export default {
       color: #4974f5;
     }
   }
+  /deep/.spiconfont-sear_ic_sear {
+    margin-left: 24px !important;
+  }
   .search-page {
     position: absolute;
     top: 0;

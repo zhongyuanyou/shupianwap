@@ -206,7 +206,8 @@ module.exports = {
       re.lastIndex = 0; // 采取预防措施，重新启动pos
       // 循环时仍然需要计算优先级
       while (re.test(input)) {
-        output = operation(RegExp.$1, RegExp.$2, RegExp.$3);
+        console.log('RegExp.$1, RegExp.$2, RegExp.$3', RegExp.$1, RegExp.$2, RegExp.$3)
+        output = operation(+RegExp.$1, RegExp.$2, +RegExp.$3);
         if (isNaN(output) || !isFinite(output)) { return output; } // 如果不是数字就退出
         input = input.replace(re, output);
       }
@@ -278,7 +279,13 @@ module.exports = {
           // eslint-disable-next-line no-unreachable
           break;
         case f.div:
-          result = (n1 / n2) / (t2 / t1);
+          // result = (n1 / n2) / (t2 / t1);
+          let _t1 = 0, _t2 = 0, r1, r2;
+          try { _t1 = a.toString().split(".")[1].length } catch (e) { }
+          try { _t2 = b.toString().split(".")[1].length } catch (e) { }
+          r1 = Number(a.toString().replace(".", ""))
+          r2 = Number(b.toString().replace(".", ""))
+          result = (r1 / r2) * Math.pow(10, _t2 - _t1);
           return result;
           // eslint-disable-next-line no-unreachable
           break;

@@ -92,6 +92,9 @@ export default {
   .search-content {
     padding: 16px 32px;
   }
+  /deep/.spiconfont-sear_ic_sear {
+    margin-left: 24px !important;
+  }
   .nav-back {
     margin-right: 32px;
   }

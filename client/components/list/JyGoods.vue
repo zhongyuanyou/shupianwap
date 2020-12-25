@@ -358,9 +358,11 @@ export default {
     padding: 0 40px;
   }
   /deep/.sp-tabs {
-    border-bottom: 1px solid #f4f4f4;
     .sp-tabs__line {
       display: none;
+    }
+    /deep/.sp-dropdown-menu {
+      border-bottom: 1px solid #f4f4f4;
     }
   }
   /deep/.sp-tabs__wrap--scrollable .sp-tabs__nav--complete {
