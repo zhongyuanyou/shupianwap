@@ -19,12 +19,12 @@
     <!--E 头部-->
     <!--S 内容-->
     <div class="address_con" :style="{ paddingTop: isInApp ? 0 : '0.88rem' }">
-      <div v-if="!addressList.length && loadingStatus" class="no_address">
+      <div v-if="!addressList.length" class="no_address">
         <img src="~/assets/images/default_img_nopoint.png" />
         <p class="prompt">未添加收货地址</p>
         <p class="new_address" @click="handleNew">新建地址</p>
       </div>
-      <div v-if="addressList.length && loadingStatus" class="address_con_list">
+      <div v-if="addressList.length" class="address_con_list">
         <sp-swipe-cell
           v-for="(item, index) in addressList"
           :key="index"
@@ -71,23 +71,10 @@
           </template>
         </sp-swipe-cell>
       </div>
-      <div v-if="!loadingStatus" style="width: 100%">
-        <sp-skeleton
-          v-for="item in 3"
-          :key="item"
-          title
-          title-width="100%"
-          :row="3"
-          style="margin-top: 10px"
-        ></sp-skeleton>
-      </div>
     </div>
     <!--E 内容-->
     <!--S 底部-->
-    <sp-bottombar
-      v-if="addressList.length && loadingStatus"
-      safe-area-inset-bottom
-    >
+    <sp-bottombar v-if="addressList.length" safe-area-inset-bottom>
       <sp-bottombar-button
         type="primary"
         icon="plus"
@@ -126,7 +113,6 @@ import {
   BottombarButton,
   Toast,
   Sticky,
-  Skeleton,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { userinfoApi } from '@/api'
@@ -142,7 +128,6 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [Toast.name]: Toast,
     [Sticky.name]: Sticky,
-    [Skeleton.name]: Skeleton,
     SpToast,
   },
   data() {
@@ -160,7 +145,6 @@ export default {
       },
       addressId: '', // 被选中的收货地址id
       defaultStatus: false,
-      loadingStatus: false, // 加载状态
     }
   },
   computed: {
@@ -226,7 +210,6 @@ export default {
         userId: this.userId,
       }
       const res = await this.$axios.get(userinfoApi.addressList, { params })
-      this.loadingStatus = true
       if (res.code === 200) {
         this.addressList = res.data
       }

@@ -1,24 +1,21 @@
 <template>
   <div class="detail">
     <!--S 导航-->
-    <sp-top-nav-bar
-      v-if="!isInApp"
-      ellipsis
-      :fixed="true"
-      @on-click-right="onClickRight"
-    >
-      <template #left>
-        <div @click="back">
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-        </div>
-      </template>
+    <sp-Sticky v-if="!isInApp">
+      <sp-top-nav-bar ellipsis :fixed="true" @on-click-right="onClickRight">
+        <template #left>
+          <div @click="back">
+            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          </div>
+        </template>
 
-      <template #right>
-        <div>
-          <my-icon name="nav_ic_share" size="0.35rem" />
-        </div>
-      </template>
-    </sp-top-nav-bar>
+        <template #right>
+          <div>
+            <my-icon name="nav_ic_share" size="0.35rem" />
+          </div>
+        </template>
+      </sp-top-nav-bar>
+    </sp-Sticky>
     <!--E 导航-->
     <div
       class="detail_con"
@@ -75,7 +72,14 @@
 </template>
 
 <script>
-import { TopNavBar, Icon, Image, ShareSheet, Skeleton } from '@chipspc/vant-dgg'
+import {
+  TopNavBar,
+  Icon,
+  Image,
+  ShareSheet,
+  Skeleton,
+  Sticky,
+} from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { foundApi } from '~/api'
 export default {
@@ -86,6 +90,7 @@ export default {
     [Image.name]: Image,
     [ShareSheet.name]: ShareSheet,
     [Skeleton.name]: Skeleton,
+    [Sticky.name]: Sticky,
   },
   data() {
     return {

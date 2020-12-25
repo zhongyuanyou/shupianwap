@@ -58,7 +58,10 @@
                 </div>
               </div>
               <div class="right item-info_contact">
-                <sp-button round class="contact-btn"
+                <sp-button
+                  round
+                  class="contact-btn"
+                  @click.stop="handleIm(item)"
                   ><my-icon
                     name="notify_ic_chat"
                     size="0.32rem"
@@ -135,6 +138,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { interviewApi, publicApi } from '~/api'
+import imHandle from '@/mixins/imHandle'
 // import { parseTel } from '~/utils/common'
 
 export default {
@@ -150,6 +154,7 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [CenterPopup.name]: CenterPopup,
   },
+  mixins: [imHandle],
   data() {
     return {
       list: [],
@@ -169,6 +174,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      userId: (state) => state.user.userInfo.userId,
     }),
   },
   mounted() {
@@ -267,6 +273,12 @@ export default {
     handleClick(item) {
       // 点击面谈记录
       this.$router.push(`/my/interviewRecord/${item.id}`)
+    },
+    handleIm(item) {
+      // 调起IM
+      const imUserId = this.userId // 商户用户ID
+      const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      this.creatImSessionMixin({ imUserId, imUserType })
     },
   },
 }

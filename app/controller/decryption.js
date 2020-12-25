@@ -18,7 +18,7 @@ class descryptionController extends Controller {
     const { ctx, service, app } = this;
     // 定义参数校验规则
     const rules = {
-      encryptPhone: { type: 'string', required: true }, // 广告位置code
+      encryptPhone: { type: 'object', required: true }, // 加密电话号码
     };
     // 参数校验
     const valiErrors = app.validator.validate(rules, ctx.request.body);
@@ -33,7 +33,9 @@ class descryptionController extends Controller {
         dashunApi.decryptionPhone
       );
       const params = {
-        encryptPhone: ctx.request.body.encryptPhone,
+        vo: {
+          encryptPhone: ctx.request.body.encryptPhone,
+        },
       };
       const res = await service.curl.curlPost(url, params);
       console.log('电话解密', res);
