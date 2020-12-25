@@ -6,7 +6,7 @@
       placeholder="请输入搜索内容"
       @searchKeydownHandle="searchKeydownHandle"
     >
-      <div slot="left" class="nav-back" @click="console.log(123)">
+      <div slot="left" class="nav-back" @click="$router.go(-1)">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
       <div slot="right" class="info">
@@ -19,6 +19,7 @@
       :init-service-data="serveGoodsListData"
       :search-text="formData.searchText"
       :req-type="reqType"
+      :session-category="sessionCategory"
     />
     <!--E筛选栏-->
   </div>
@@ -51,7 +52,12 @@ export default {
         needGoodsList: 0,
         searchText: '',
       },
+      sessionCategory: null,
     }
+  },
+  beforeMount() {
+    // 获取从分类页session中需要搜索服务的数据
+    this.sessionCategory = JSON.parse(sessionStorage.getItem('categoryData'))
   },
   mounted() {
     this.getInitData()
