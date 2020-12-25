@@ -9,7 +9,7 @@
           v-md-map
           v-md:webClick
           :style="{ backgroundImage: 'url(' + item.bgimage + ')' }"
-          data-name="变更服务介绍_item.plannerName_在线咨询"
+          :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
           @click="plannerIm(item.planner)"
         >
           <div class="total">
@@ -39,7 +39,7 @@
                 v-md:p_IMClick
                 href="javascript:;"
                 data-im_type="售前"
-                data-name="变更服务介绍_item.plannerName_在线咨询"
+                :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
               >
                 <img :src="item.planner.avatarImg" alt="" />
               </a>
@@ -48,7 +48,7 @@
                 v-md:p_IMClick
                 href="javascript:;"
                 data-im_type="售前"
-                data-name="变更服务介绍_item.plannerName_在线咨询"
+                :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
               >
                 <my-icon
                   name="notify_ic_chat"
@@ -62,7 +62,7 @@
                 v-md-map
                 v-md:webClick
                 href="javascript:;"
-                data-name="变更服务介绍_item.plannerName_拨打电话"
+                :data-name="`变更服务介绍_${item.plannerName}_拨打电话`"
                 @click="call(item.planner.telephone)"
               >
                 <my-icon
