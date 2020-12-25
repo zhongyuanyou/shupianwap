@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-11 14:34:53
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-22 10:32:28
+ * @LastEditTime: 2020-12-24 19:35:03
  * @Description: file content
  * @FilePath: /chips-wap/app/service/planner.js
  */
@@ -10,7 +10,7 @@
 'use strict';
 const Service = require('egg').Service;
 const { merchantApi } = require('./../../config/serveApi/index');
-class goodsListService extends Service {
+class plannerService extends Service {
   /**
    * 获取规划师列表（POST）
    * @data { Object } data 请求参数
@@ -66,7 +66,7 @@ class goodsListService extends Service {
       const { ctx, app, service } = this;
       const url = ctx.helper.assembleUrl(
         app.config.apiClient.APPID[5],
-        merchantApi.categoryList
+        merchantApi.tagList
       );
       if (!url) {
         resolve({ ctx, code: 202, message: '缺少后端服务请求API路径' });
@@ -76,9 +76,8 @@ class goodsListService extends Service {
           // TODO: 测试
           mchUserIds: ['607990864366434868', '607990967445645276'],
           // mchUserIds,
-          statusParamCode: 'ENABLE', // 查询状态码 DISABLE禁用 ，ENABLE启用，默认查询所有
-          limit: mchUserIds.length * 3, // 做多查 3条
-          start: 1,
+          number: 5,
+          mchBusinessEnum: 'FIRST_TYPE', // FIRST_TYPE: 一级分类,  SECOND_TYPE: 二级分类,  THIRD_TYPE:三级分类,   PRODUCT_BUSINESS_TYPE:产品或者服务项目
         });
 
         if (result.code !== 200) {
@@ -86,21 +85,19 @@ class goodsListService extends Service {
           return;
         }
 
-        const dataResult = result.data || {};
-        const recodes = dataResult.records || [];
-        const formateData = mchUserIds.map((id) => {
-          const tagNameList = recodes.reduce((accumulator, current) => {
-            const { mchUserId, firstTypeName } = current; // 获取 第一类的名字
-            // 正式逻辑
-            // if (id === mchUserId && !accumulator.includes(firstTypeName)) {
-            //   accumulator.push(firstTypeName);
-            // }
-            //TODO 测试逻辑
-            if (!accumulator.includes(firstTypeName)) {
-              accumulator.push(firstTypeName);
+        const recodes = result.data || [];
+        const formatData = mchUserIds.map((id) => {
+          const matched = recodes.find((item) => {
+            const { mchUserId } = item || {};
+            return mchUserId === id;
+          });
+          const tagNameList = [];
+          if (matched) {
+            const { details } = matched;
+            if (Array.isArray(details)) {
+              tagNameList = details.map((item) => item.name);
             }
-            return accumulator;
-          }, []);
+          }
           return {
             mchUserId: id,
             tagNameList,
@@ -109,7 +106,7 @@ class goodsListService extends Service {
 
         resolve(
           Object.assign(result, {
-            data: formateData,
+            data: formatData,
           })
         );
       } catch (err) {
@@ -146,12 +143,67 @@ class goodsListService extends Service {
     });
   }
 
+  /**
+   * 获取规划师头像（POST）
+   * @data { Object } data 请求参数
+   * @data { Array } data.mchUserIds 规划师id数组
+   * @return { Promise } 返回请求结果数据
+   */
+  async getPlannerImgList({ mchUserIds = [] }) {
+    return new Promise(async (resolve) => {
+      const { ctx, app, service } = this;
+      const url = ctx.helper.assembleUrl(
+        app.config.apiClient.APPID[5],
+        merchantApi.getAvatarIds
+      );
+      if (!url) {
+        resolve({ ctx, code: 202, res: '缺少后端服务请求API路径' });
+      }
+      try {
+        const result = await service.curl.curlPost(url, {
+          keyType: 'MCH_USER_HEAD',
+          filePath: true,
+          codes: mchUserIds,
+        });
+        if (result.code !== 200) {
+          resolve(result);
+          return;
+        }
+        const { data } = result;
+        const formatData = mchUserIds.map((id) => {
+          let img = '';
+          if (Array.isArray(data)) {
+            const matched = data.find((item) => {
+              const { fileId, filePath } = item || {};
+              const isIncludes = ('' + fileId).includes('' + id);
+              return isIncludes;
+            });
+            img = matched ? matched.filePath : '';
+          }
+          return {
+            mchUserId: id,
+            img,
+          };
+        });
+        resolve(
+          Object.assign(result, {
+            data: formatData,
+          })
+        );
+      } catch (err) {
+        ctx.logger.error(err);
+        resolve(ctx.helper.errMessage(err));
+      }
+    });
+  }
+
   // 合并 办公地址，标签，图片等数据 到规划师列表
-  mergeAdTagImgTolist(targetArray, adArray, tagArray) {
+  mergeAdTagImgTolist(targetArray, adArray, tagArray, imgArray) {
     if (
       !Array.isArray(targetArray) ||
       !Array.isArray(adArray) ||
-      !Array.isArray(adArray)
+      !Array.isArray(adArray) ||
+      !Array.isArray(imgArray)
     ) {
       return [];
     }
@@ -163,8 +215,11 @@ class goodsListService extends Service {
       const matchTag =
         tagArray.find((tagItem) => tagItem.mchUserId === item.mchUserId) || {};
       const tagList = matchTag.tagNameList || [];
-      return Object.assign({}, item, { officeAddress, tagList });
+      const matchImg =
+        imgArray.find((imgItem) => imgItem.mchUserId === item.mchUserId) || {};
+      const img = matchImg.filePath || '';
+      return Object.assign({}, item, { officeAddress, tagList, img });
     });
   }
 }
-module.exports = goodsListService;
+module.exports = plannerService;
