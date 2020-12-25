@@ -121,6 +121,13 @@ export default {
         return ''
       },
     },
+    sessionCategory: {
+      // session分类数据，前置页面为分类页
+      type: Object,
+      default() {
+        return {}
+      },
+    },
   },
   data() {
     return {
@@ -179,7 +186,10 @@ export default {
   },
   mounted() {
     this.$emit('goodsList', 'serve', this)
-    // console.log('this.searchText', this.searchText)
+    // 处理如果是从分类页进来的session中有分类数据
+    if (this.sessionCategory && JSON.stringify(this.sessionCategory) !== '{}') {
+      this.formData.classCodes = this.sessionCategory.code
+    }
     this.formData.keywords = this.searchText
     this.initGoodsList()
   },
@@ -237,6 +247,7 @@ export default {
       // 处理选择的分类数据
       let strCode
       if (this.saveActiveData.length === 0) {
+        // 没有选项的数据
         strCode = ''
       } else if (
         this.saveActiveData[1].services[0].code === -1 &&
@@ -245,8 +256,10 @@ export default {
         // 父选项和子选择项都为不限
         strCode = ''
       } else if (this.saveActiveData[1].services[0].code === -1) {
+        // 子选项为不限选项
         strCode = this.saveActiveData[0].code
       } else {
+        // 子选项是非'不限'的选项
         strCode = []
         this.saveActiveData[1].services.forEach((item) => {
           strCode.push(item.code)

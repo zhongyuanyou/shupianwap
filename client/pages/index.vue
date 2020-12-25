@@ -63,7 +63,7 @@ export default {
     Recommend,
     FiexdBtn,
   },
-  async asyncData({ $axios }) {
+  async asyncData({ $axios, redirect }) {
     const fiexdAdCode = 'ad100077' // 顶部固定banner的code
     const rollAdCode = 'ad100105' // 导航下方轮播banner code
     const helpAdCode = 'ad100233' // 帮我找下方banner code
@@ -100,7 +100,9 @@ export default {
         initData.fiexdNavData = res.data.fixedNavList || []
         initData.rollNavData = res.data.rollNavList || []
       }
-    } catch (error) {}
+    } catch (error) {
+      redirect('/500')
+    }
     return {
       initData,
     }

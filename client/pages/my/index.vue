@@ -131,8 +131,13 @@ export default {
           // id: this.userId,
           id: this.userId,
         }
-        const data = await this.$axios.get(userinfoApi.info, { params })
-        this.info = data.data
+        const res = await this.$axios.get(userinfoApi.info, { params })
+        if (res.code === 200 && res.data !== {}) {
+          this.info = res.data
+        } else {
+          // 清除用户缓存信息
+          this.$store.dispatch('user/clearUser')
+        }
       } catch (err) {}
     },
     handleClick(val) {

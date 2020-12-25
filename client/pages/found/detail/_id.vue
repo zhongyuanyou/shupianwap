@@ -1,67 +1,66 @@
 <template>
   <div class="detail">
     <!--S 导航-->
-    <sp-top-nav-bar
-      v-if="!isInApp"
-      ellipsis
-      :fixed="true"
-      @on-click-right="onClickRight"
-    >
-      <template #left>
-        <div @click="back">
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-        </div>
-      </template>
+    <sp-Sticky v-if="!isInApp">
+      <sp-top-nav-bar ellipsis :fixed="true" @on-click-right="onClickRight">
+        <template #left>
+          <div @click="back">
+            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          </div>
+        </template>
 
-      <template #right>
-        <div>
-          <my-icon name="nav_ic_share" size="0.35rem" />
-        </div>
-      </template>
-    </sp-top-nav-bar>
+        <template #right>
+          <div>
+            <my-icon name="nav_ic_share" size="0.35rem" />
+          </div>
+        </template>
+      </sp-top-nav-bar>
+    </sp-Sticky>
     <!--E 导航-->
     <div
       class="detail_con"
       :style="{ paddingTop: isInApp ? '0.64rem' : '1.52rem' }"
     >
-      <div class="detail_con_title">
-        {{ info.title }}
-      </div>
-      <!--S 账号信息-->
-      <div class="detail_con_info">
-        <div class="detail_con_info_logo_con">
-          <sp-image
-            round
-            width="0.88rem"
-            height="0.88rem"
-            fit="cover"
-            class="detail_con_info_logo_con_logo"
-            src="https://img.yzcdn.cn/vant/apple-1.jpg"
-          />
+      <sp-skeleton title :row="10" :loading="loading">
+        <div class="detail_con_title">
+          {{ info.title }}
         </div>
-        <div class="detail_con_info_content">
-          <p class="title">{{ info.updaterName }}</p>
-          <p class="time">{{ info.updateTime }}</p>
-        </div>
-      </div>
-      <!--E 账号信息-->
-      <!--S 模拟显示富文本内容 后期需用V-HTML显示富文本内容-->
-      <div class="fwb" v-html="info.content"></div>
-      <!--S 版本信息-->
-      <div class="copyright">
-        <div class="copyright_con">
-          本文版权归属原作者，本网站转载已获得作者授权，未经薯
-          片找人网书面声明，不得引用、复制、转载、摘编、修改、
-          抄袭、剽窃或以其他任何方式使用上诉内容。本文仅代表作
-          者观点，文章内容仅供参考，不代表薯片找人的观点和立场
-          。文章中图片源自原作者配图，如涉及侵权，请联系jubao @dgg.net删除
-        </div>
-        <div class="copyright_tags">
-          <div class="hot">
-            热度<span>{{ info.newsReadAll || 0 }}</span>
+        <!--S 账号信息-->
+        <div class="detail_con_info">
+          <div class="detail_con_info_logo_con">
+            <sp-image
+              round
+              width="0.88rem"
+              height="0.88rem"
+              fit="cover"
+              class="detail_con_info_logo_con_logo"
+              src="https://img.yzcdn.cn/vant/apple-1.jpg"
+            />
+          </div>
+          <div class="detail_con_info_content">
+            <p class="title">{{ info.updaterName }}</p>
+            <p class="time">{{ info.updateTime }}</p>
           </div>
         </div>
-      </div>
+        <!--E 账号信息-->
+        <!--S 模拟显示富文本内容 后期需用V-HTML显示富文本内容-->
+        <div class="fwb" v-html="info.content"></div>
+        <!--S 版本信息-->
+        <div class="copyright">
+          <div class="copyright_con">
+            本文版权归属原作者，本网站转载已获得作者授权，未经薯
+            片找人网书面声明，不得引用、复制、转载、摘编、修改、
+            抄袭、剽窃或以其他任何方式使用上诉内容。本文仅代表作
+            者观点，文章内容仅供参考，不代表薯片找人的观点和立场
+            。文章中图片源自原作者配图，如涉及侵权，请联系jubao @dgg.net删除
+          </div>
+          <div class="copyright_tags">
+            <div class="hot">
+              热度<span>{{ info.newsReadAll || 0 }}</span>
+            </div>
+          </div>
+        </div>
+      </sp-skeleton>
       <!--E 版本信息-->
       <sp-share-sheet
         v-model="showShare"
@@ -73,7 +72,14 @@
 </template>
 
 <script>
-import { TopNavBar, Icon, Image, ShareSheet } from '@chipspc/vant-dgg'
+import {
+  TopNavBar,
+  Icon,
+  Image,
+  ShareSheet,
+  Skeleton,
+  Sticky,
+} from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { foundApi } from '~/api'
 export default {
@@ -83,6 +89,8 @@ export default {
     [Icon.name]: Icon,
     [Image.name]: Image,
     [ShareSheet.name]: ShareSheet,
+    [Skeleton.name]: Skeleton,
+    [Sticky.name]: Sticky,
   },
   data() {
     return {
@@ -99,6 +107,7 @@ export default {
           icon: 'link',
         },
       ],
+      loading: true,
     }
   },
   computed: {
@@ -108,6 +117,9 @@ export default {
   },
   mounted() {
     this.getInfoDetail()
+  },
+  destroyed() {
+    this.$appFn.dggHideNav((res) => {})
   },
   methods: {
     back() {
@@ -123,6 +135,7 @@ export default {
         const res = await this.$axios.get(foundApi.infoDetail, { params })
         if (res.code === 200) {
           this.info = res.data
+          this.loading = false
         }
       } catch (err) {}
     },
@@ -141,6 +154,9 @@ export default {
 
 <style lang="less" scoped>
 .detail {
+  /deep/ img {
+    max-width: 100%;
+  }
   &_con {
     padding: 0 40px 128px 40px;
     &_title {

@@ -45,15 +45,13 @@ export const actions = {
     getPosition()
       .then((res) => {
         // 定位成功
-        const city = res.city
+        const { city } = res
         if (cityList.length) {
           // 遍历城市列表，找到对应城市
-          const isHas = cityList.find(
-            (item) => item.name.indexOf(city.substr(0, city.length - 1)) !== -1
-          )
+          const isHas = cityList.find((item) => item.name === city)
           // 匹配到对应城市
           if (isHas) {
-            commit('SET_POSITION_CITY', city.substr(0, city.length - 1))
+            commit('SET_POSITION_CITY', city)
             commit('SET_POSITION_STATUS', 2)
             if (type === 'rest') return // 若是重新定位，定位成功不重置当前城市
             commit('SET_CITY', isHas)
@@ -61,12 +59,12 @@ export const actions = {
           }
         }
         // 未匹配到对应城市
-        commit('SET_POSITION_CITY', city.substr(0, city.length - 1))
+        commit('SET_POSITION_CITY', city)
         commit('SET_POSITION_STATUS', 1)
         if (type === 'rest') return // 若是重新定位，定位后不重置当前城市
         commit('SET_CITY', {
-          code: 'COMPANY_CD',
-          name: '成都',
+          code: '510100',
+          name: '成都市',
         })
       })
       .catch((err) => {
@@ -76,8 +74,8 @@ export const actions = {
         commit('SET_POSITION_STATUS', 0)
         if (type === 'rest' && state.currentCity.name) return // 若是重新定位，定位失败并且当前有已选城市不重置当前城市
         commit('SET_CITY', {
-          code: 'COMPANY_CD',
-          name: '成都',
+          code: '510100',
+          name: '成都市',
         })
       })
   },

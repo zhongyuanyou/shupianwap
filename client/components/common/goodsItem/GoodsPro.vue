@@ -1,5 +1,5 @@
 <template>
-  <a href="javascript:void(0);" class="goods-item">
+  <a href="javascript:void(0);" class="goods-item" @click="jumpPage">
     <div class="goods-lable-img">
       <span v-if="false" class="lable">2千元成交礼</span>
       <img v-lazy="defaultImg" alt="" />
@@ -60,6 +60,15 @@ export default {
         return this.goodsData.platformPrice.split('.')[index]
       }
       return index === 0 ? this.goodsData.platformPrice : ''
+    },
+    jumpPage() {
+      this.$router.push({
+        path: '/detail/transactionDetails',
+        query: {
+          type: this.goodsData.type,
+          productId: this.goodsData.id,
+        },
+      })
     },
   },
 }

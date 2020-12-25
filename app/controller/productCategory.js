@@ -56,7 +56,7 @@ class ProductCategoryController extends Controller {
         cpRecList = cData.filter(item => {
           return item.topping === 1;
         });
-        if (categoryList[0].name !== '为您推荐' && cpRecList.length) {
+        if (!categoryList.length || (categoryList[0].name !== '为您推荐' && cpRecList.length)) {
           categoryList.unshift({ name: '为您推荐', id: '' });
         }
         // 为每一个一级分类对象添加子级分类集合变量children
@@ -91,7 +91,7 @@ class ProductCategoryController extends Controller {
         jyRecList = jData.filter(item => {
           return item.topping === 1;
         });
-        if (categoryList[0].name !== '为您推荐' && jyRecList.length) {
+        if (!categoryList.length || (categoryList[0].name !== '为您推荐' && jyRecList.length)) {
           categoryList.unshift({ name: '为您推荐', id: '' });
         }
         // 为每一个一级分类对象添加子级分类集合变量children

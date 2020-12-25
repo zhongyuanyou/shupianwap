@@ -2,7 +2,12 @@
   <div class="category">
     <!--S 头部-->
     <div class="category_header">
-      <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a" />
+      <my-icon
+        name="nav_ic_back"
+        size="0.40rem"
+        color="#1a1a1a"
+        @click="back"
+      />
       <div class="category_header_con">
         <my-icon name="sear_ic_sear" size="0.28rem" color="#999" />
         <input
@@ -29,6 +34,7 @@
             }"
             @click="handleClick(index)"
           >
+            <div v-show="TabNavList == index" class="line"></div>
             {{ item.name }}
           </li>
         </ul>
@@ -189,6 +195,9 @@ export default {
       sessionStorage.categoryData = JSON.stringify(item)
       this.$router.push('/list/serveList')
     },
+    back() {
+      this.$router.back()
+    },
   },
 }
 </script>
@@ -269,7 +278,18 @@ export default {
         color: #555555;
         text-align: center;
         line-height: 124px;
+        position: relative;
         .textOverflow(1);
+      }
+      .line {
+        width: 6px;
+        height: 40px;
+        background-color: #4974f5;
+        border-radius: 0 3px 3px 0;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        margin-top: -20px;
       }
     }
     &_rt {

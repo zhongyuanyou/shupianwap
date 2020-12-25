@@ -146,6 +146,12 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // 隐藏导航头部
+  dggHideNav: (fn = () => {}) => {
+    Bridge.callHandler('dgg_hideNav', {}, (res) => {
+      handleRequest(res, fn)
+    })
+  },
   // wap返回数据给到flutter
   dggWebBackValueToFlutter: (data = {}, fn = () => {}) => {
     Bridge.callHandler('dgg_webBackValueToFlutter', data, (res) => {

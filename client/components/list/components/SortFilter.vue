@@ -22,7 +22,7 @@
             name="tab_ic_check"
             size="0.22rem"
             color="#4974f5"
-          ></my-icon>
+          />
         </template>
       </sp-cell>
     </div>

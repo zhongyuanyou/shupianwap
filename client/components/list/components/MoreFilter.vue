@@ -22,11 +22,7 @@
                 show_all: selectBoxVue[index].selfIsShowAll,
               }"
             >
-              <my-icon
-                name="tab_ic_all_n"
-                size="0.16rem"
-                color="#4974f5"
-              ></my-icon>
+              <my-icon name="tab_ic_all_n" size="0.16rem" color="#4974f5" />
             </div>
           </div>
         </div>
@@ -103,12 +99,15 @@ export default {
     activeItems(val) {
       const arr = val.flat(1)
       if (arr.length === 1) {
+        // 选中的选项只有一项
         this.dropdownTitle = arr[0].name
         this.addClass('active')
       } else if (arr.length > 1) {
+        // 选中的选项有多个
         this.dropdownTitle = '多选'
         this.addClass('active')
       } else if (arr.length === 0) {
+        // 选中的选项为0项
         this.removeClass('moreText')
         this.removeClass('active')
         this.dropdownTitle = this.filterData.name
@@ -178,9 +177,9 @@ export default {
     },
     confirmFilters() {
       // 确认筛选
-
       this.saveActiveItems = clone(this.activeItems, true)
-      const emitData = this.resultHandle()
+      let emitData = this.resultHandle()
+      emitData = emitData.length ? emitData : ''
       this.$emit('activeItem', emitData, 'moreFilter')
       this.$refs.item.toggle()
     },

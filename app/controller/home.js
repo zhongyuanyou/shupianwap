@@ -442,7 +442,7 @@ class homeController extends Controller {
         const nweGoodsList = [];
         goodsList.forEach((item) => {
           let attrArr = [];
-          if (item.fieldList && item.fieldList.length) {
+          if (item.fieldList && item.fieldList.length && attribute) {
             attrArr = item.fieldList.filter((utm) => {
               return attribute.indexOf(utm.fieldCode) > -1;
             });
@@ -453,6 +453,7 @@ class homeController extends Controller {
           nweGoodsList.push({
             id: item.id,
             name: item.name,
+            type: item.classCodeLevelList[0] || params.formatId,
             goodsPrice: item.goodsPrice,
             platformPrice: item.platformPrice,
             fieldList: attrArr,

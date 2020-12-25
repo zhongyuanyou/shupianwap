@@ -6,7 +6,13 @@
     </div>
     <div class="goods-right">
       <h3>{{ itemData.name }}</h3>
-      <p>{{ description }}</p>
+      <p
+        :style="{
+          visibility: description ? 'visible' : 'hidden',
+        }"
+      >
+        {{ description }}
+      </p>
       <div
         class="tags"
         :style="{
@@ -77,7 +83,9 @@ export default {
   methods: {
     jumpUrl() {
       if (this.goodstype.type === 'serve') {
-        this.$router.push(`/detail/serviceDetails?id=${this.itemData.id}`)
+        this.$router.push(
+          `/detail/serviceDetails?productId=${this.itemData.id}`
+        )
       } else {
         this.$router.push(
           `/detail/transactionDetails?type=${this.goodstype.typeCode}&id=${this.itemData.id}`

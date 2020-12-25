@@ -19,8 +19,12 @@
     <!--E 头部-->
     <!--S 内容-->
     <div class="address_con" :style="{ paddingTop: isInApp ? 0 : '0.88rem' }">
-      <p v-if="!addressList.length" class="prompt">您还没有添加收货地址额～</p>
-      <div v-else class="address_con_list">
+      <div v-if="!addressList.length" class="no_address">
+        <img src="~/assets/images/default_img_nopoint.png" />
+        <p class="prompt">未添加收货地址</p>
+        <p class="new_address" @click="handleNew">新建地址</p>
+      </div>
+      <div v-if="addressList.length" class="address_con_list">
         <sp-swipe-cell
           v-for="(item, index) in addressList"
           :key="index"
@@ -70,7 +74,7 @@
     </div>
     <!--E 内容-->
     <!--S 底部-->
-    <sp-bottombar safe-area-inset-bottom>
+    <sp-bottombar v-if="addressList.length" safe-area-inset-bottom>
       <sp-bottombar-button
         type="primary"
         icon="plus"
@@ -205,9 +209,10 @@ export default {
         // userId: this.userId,
         userId: this.userId,
       }
-      console.log('store里面的id', this.userId)
-      const data = await this.$axios.get(userinfoApi.addressList, { params })
-      this.addressList = data.data
+      const res = await this.$axios.get(userinfoApi.addressList, { params })
+      if (res.code === 200) {
+        this.addressList = res.data
+      }
     },
     async confirm() {
       // 确认删除
@@ -251,12 +256,28 @@ export default {
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
+    .no_address {
+      width: 100%;
+      text-align: center;
+      > img {
+        width: 340px;
+        height: 340px;
+        margin-top: 176px;
+      }
+    }
     .prompt {
       font-size: 34px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #1a1a1a;
-      margin-top: 429px;
+      margin-top: 24px;
+    }
+    .new_address {
+      margin-top: 31px;
+      font-size: 28px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #4974f5;
     }
     &_list {
       width: 100%;
