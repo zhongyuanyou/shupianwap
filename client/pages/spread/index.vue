@@ -23,7 +23,10 @@
     <ShiYong />
     <!-- END 实用工具-->
     <!-- START 企服规划师-->
-    <GuiHuaShiSwipe :planners-data="guiHuaShiList" title="企服规划师" />
+    <GuiHuaShiSwipe
+      :planners-data="guiHuaShiList"
+      :planners-common="guiHuaShiListMd"
+    />
     <!-- END 企服规划师-->
     <!-- START 平台优势-->
     <PingTaiYouShi />
@@ -32,7 +35,7 @@
     <ShuPianZhaoRen />
     <!-- END 薯片找人-->
     <!-- START 固定底部-->
-    <FixedBottom :planner="pagePlanner" />
+    <FixedBottom :planner="pagePlanner" :md="fixedBottomMd" />
     <!-- END 固定底部-->
     <!-- START IM在线咨询-->
     <dgg-im-company></dgg-im-company>
@@ -845,6 +848,21 @@ export default {
         jobNum: '107547',
         telephone: '18402858698',
         imgSrc: '',
+      },
+      // @--埋点数据
+      guiHuaShiListMd: {
+        title: '',
+        imName: '',
+        telName: '',
+      },
+      fixedBottomMd: {
+        telMd: {
+          name: '工商聚合页_底部_电话联系',
+        },
+        imMd: {
+          name: '工商聚合页_底部_在线咨询',
+          type: '售前',
+        },
       },
       // @--广告位数据
       hotSaleProductList: [
