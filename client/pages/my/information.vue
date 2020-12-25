@@ -20,13 +20,13 @@
       <div class="information_con_tp">
         <div class="avatar_con" @click="handleClick(1)">
           <sp-uploader
+            v-if="isUpdateAvatar"
             v-model="uploader"
             class="uploader"
             upload-text="点击上传"
             :max-count="1"
             :max-size="20 * 1024 * 1024"
             @oversize="onOversize"
-            v-if="isUpdateAvatar"
           />
           <div class="cell">
             <p class="title">头像</p>
@@ -208,7 +208,6 @@ export default {
     },
     async select(data) {
       // 地区选择
-      console.log('data', data)
       this.info.province = data[0].name
       this.info.city = data[1].name
       this.$set(this.area, 0, { name: data[0].name, code: data[0].code })
@@ -252,8 +251,10 @@ export default {
         }
         const data = await this.$axios.get(userinfoApi.info, { params })
         this.info = data.data
-        this.$set(this.area, 0, { name: data.data.province, code: '' })
-        this.$set(this.area, 1, { name: data.data.city, code: '' })
+        if (data.data.province && data.data.city) {
+          this.$set(this.area, 0, { name: data.data.province, code: '' })
+          this.$set(this.area, 1, { name: data.data.city, code: '' })
+        }
       } catch (err) {}
     },
     async getConfig() {
