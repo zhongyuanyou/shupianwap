@@ -3,6 +3,9 @@
     <div class="card-content">
       <h3>免费查询公司名称能否注册</h3>
       <sp-cell
+        v-md-map
+        v-md:WebClick
+        data-form_name="工商注册_表单_我需要"
         title-class="down-left"
         :border="false"
         :value-class="
@@ -24,6 +27,9 @@
         <sp-cell-group @click="verificationShow = true">
           <sp-field
             v-model="phoneValue"
+            v-md-map
+            v-md:WebClick
+            data-form_name="工商注册_表单_手机号"
             type="digit"
             :border="false"
             label="手机号"
@@ -34,6 +40,9 @@
         <div v-show="verificationShow" class="input-verification">
           <sp-field
             v-model="sms"
+            v-md-map
+            v-md:WebClick
+            data-form_name="工商注册_表单_验证码"
             center
             clearable
             label="验证码"
@@ -41,12 +50,26 @@
             label-class="style-phone"
           >
             <template #button>
-              <span class="verification" @click="onSms">{{ test }}</span>
+              <span
+                v-md-map
+                v-md:WebClick
+                class="verification"
+                @click="onSms"
+                >{{ test }}</span
+              >
             </template>
           </sp-field>
         </div>
       </div>
-      <div class="button">
+      <div
+        v-md-map
+        v-md:WebClick
+        v-md:p_formSubmit
+        data-event_name="p_formSubmit"
+        data-form_type="咨询表单"
+        data-form_name="工商注册_表单"
+        class="button"
+      >
         <sp-button type="primary" block size="small" @click="onForm"
           >立即查询</sp-button
         >
@@ -113,19 +136,7 @@ export default {
       verificationShow: false,
       test: '获取验证码',
       downShow: false,
-      actions: [
-        { name: '有限责任公司注册' },
-        { name: '个体注册' },
-        { name: '分公司注册' },
-        { name: '子公司注册' },
-        { name: '股份公司注册' },
-        { name: '个人独资企业注册' },
-        { name: '合伙企业注册' },
-        { name: '外资企业注册' },
-        { name: '外资分公司注册' },
-        { name: '中外合资企业注册' },
-        { name: '其他注册' },
-      ],
+      actions: [{ name: '个体注册' }, { name: '工商注册' }],
     }
   },
   methods: {
@@ -253,11 +264,39 @@ export default {
           this.sms = ''
           this.phoneValue = ''
           this.test = '发送验证码'
+          // 表单成功买点
+          window.getTrackRow('p_formSubmitResult', {
+            even_name: 'p_formSubmitResult',
+            form_type: '咨询表单',
+            form_name: '工商注册_表单',
+          })
         } else {
           // ------------
-          console.log(res)
+          Toast('提交失败,请重试')
         }
       })
+      //  待修改
+      // window.promotion.privat.consultForm(params, function (res) {
+      //   if (res.error === 0) {
+      //     window.getTrackRow('p_formSubmitResult', {
+      //       even_name: 'p_formSubmitResult',
+      //       form_type: '咨询',
+      //       form_sn: 'ZL077',
+      //       form_name: '顶部表单-转让专利',
+      //     })
+      //     if (that.index2 === 0) {
+      //       that.isSuccess = false
+      //     } else {
+      //       that.isSuccess = true
+      //       setTimeout(function () {
+      //         that.initForm()
+      //       }, 3000)
+      //     }
+      //     that.showMask = true
+      //   } else {
+      //     Toast('提交成功，请注意接听电话')
+      //   }
+      // })
     },
   },
 }
@@ -310,7 +349,7 @@ export default {
         display: inline-block !important;
         margin-right: 16px;
         color: #1a1a1a;
-        flex: 0 0 20%;
+        flex: 0 0 22%;
       }
       .down-right {
         display: inline-block;

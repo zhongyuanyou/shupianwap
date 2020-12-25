@@ -62,7 +62,7 @@
         <a
           v-for="(item, index) of sericeImg"
           :key="index"
-          @click="onService('')"
+          @click="onService('', index)"
           ><span> <sp-image :src="item.img" /> </span
         ></a>
       </div>
@@ -130,6 +130,7 @@ export default {
       })
       return {
         resultData: res,
+        // 待删除
         // resultData: {
         //   code: 200,
         //   message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
@@ -692,7 +693,7 @@ export default {
         imgSrc: '',
       },
       myTitle: '有疑问？千万企服专家为您免费解答',
-      tel: '4000-535800',
+      tel: '4000-962540',
     }
   },
   created() {
@@ -757,11 +758,17 @@ export default {
     onMore() {
       this.isMore ? (this.isMore = false) : (this.isMore = true)
     },
-    onService(url) {
+    onService(url, index) {
       if (url !== '') {
         window.location.href = url
       } else {
-        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+        this.$root.$emit(
+          'openIMM',
+          this.listCount[index].id,
+          this.listCount[index].name,
+          this.listCount[index].jobNum,
+          this.listCount[index].imgSrc
+        )
       }
     },
   },
@@ -775,6 +782,12 @@ export default {
           ssr: false,
           type: 'text/javascript',
           charset: 'utf-8',
+        },
+        {
+          src: '/js/spread/companyRegister-md-config.js',
+        },
+        {
+          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
         },
       ],
     }
