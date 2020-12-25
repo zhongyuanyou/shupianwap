@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-25 10:37:36
+ * @LastEditTime: 2020-12-25 10:40:16
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/detail.vue
 -->
@@ -334,7 +334,7 @@ export default {
         console.error('getDetail:', error)
         this.$refs.spToast.show({
           message: error.message || '请求失败！',
-          duration: 0,
+          duration: 1000,
           forbidClick: false,
           icon: 'toast_ic_error',
         })
