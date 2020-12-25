@@ -140,7 +140,8 @@ export default {
         'openIMM',
         this.plannersData[i].id,
         this.plannersData[i].name,
-        this.plannersData[i].jobNum
+        this.plannersData[i].jobNum,
+        this.plannersData[i].avatarImg
       )
     },
     // 整个模块点击触发，判断是否跳转
@@ -152,7 +153,8 @@ export default {
           'openIMM',
           this.plannersData[i].id,
           this.plannersData[i].name,
-          this.plannersData[i].jobNum
+          this.plannersData[i].jobNum,
+          this.plannersData[i].avatarImg
         )
       }
     },

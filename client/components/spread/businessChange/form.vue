@@ -20,12 +20,20 @@
           :readonly="read"
           @click="selectshow = true"
         />
-        <my-icon
-          name="tab_ic_all_n"
-          size="0.2rem"
-          class="input-ic-open"
-          color="#cccccc"
-        ></my-icon>
+        <div
+          @click="
+            () => {
+              selectshow = true
+            }
+          "
+        >
+          <my-icon
+            name="tab_ic_all_n"
+            size="0.2rem"
+            class="input-ic-open"
+            color="#cccccc"
+          ></my-icon>
+        </div>
         <!-- e行业下拉框 -->
         <!-- s下拉选项框 -->
         <sp-action-sheet
@@ -38,8 +46,6 @@
           v-model="telephone"
           label="手机号"
           placeholder="信息保护中，仅官方可见"
-          type="text"
-          onkeyup="value=value.replace(/[^\d]/g,'')"
           maxlength="11"
           @focus="() => (isshow = true)"
         />
@@ -126,6 +132,7 @@ export default {
       if (this.countdown > -1) {
       }
     },
+    // 验证码倒计时
     // 验证码倒计时
     countDown() {
       const vm = this
@@ -322,7 +329,9 @@ export default {
           font-family: PingFang SC;
           font-weight: bold;
           color: #1a1a1a;
-          flex: 1;
+          /deep/.sp-field__body {
+            width: 100%;
+          }
           &::-webkit-input-placeholder {
             color: #cccccc;
             font-weight: normal;
@@ -331,7 +340,7 @@ export default {
       }
       &:nth-of-type(3) {
         /deep/.sp-field__body {
-          width: 50%;
+          width: 80%;
         }
       }
     }

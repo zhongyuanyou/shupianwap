@@ -56,6 +56,7 @@ import shuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
 import fixedBottom from '~/components/spread/common/FixedBottom'
 import consultTel from '@/components/spread/common/ConsultTel'
 import { spreadApi } from '@/api/spread'
+
 export default {
   name: 'TaxVue',
   components: {
@@ -90,6 +91,9 @@ export default {
       }
     } catch (error) {
       console.log('error', error)
+      return {
+        result: '',
+      }
     }
   },
   data() {
@@ -415,11 +419,13 @@ export default {
   },
   created() {
     // 请求回来的数据替代本地
-    if (this.result.planlerList.length !== 0) {
-      this.planlerList = this.result.planlerList
-    }
-    if (this.result.adList.length !== 0) {
-      this.adList = this.result.adList
+    if (this.result !== '') {
+      if (this.result.planlerList.length !== 0) {
+        this.planlerList = this.result.planlerList
+      }
+      if (this.result.adList.length !== 0) {
+        this.adList = this.result.adList
+      }
     }
     // 处理各个模块的数据
     this.getServeData()
@@ -486,7 +492,8 @@ export default {
         'openIMM',
         this.planlerList[0].userId,
         this.planlerList[0].realName,
-        this.planlerList[0].loginName
+        this.planlerList[0].loginName,
+        this.planlerList[0].userHeadUrl
       )
     },
   },

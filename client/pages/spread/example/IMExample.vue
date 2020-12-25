@@ -17,7 +17,14 @@ export default {
       // 7862495547640840192：规划师id
       // 张毅：规划师名字
       // 107547：规划师工号，可不传
-      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+      // https://tenant-assets：规划师头像
+      this.$root.$emit(
+        'openIMM',
+        '7862495547640840192',
+        '张毅',
+        '107547',
+        'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg'
+      )
     },
   },
 }

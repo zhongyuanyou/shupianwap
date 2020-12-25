@@ -7,11 +7,7 @@
           v-for="(item, index) in servicelist"
           :key="index"
           :style="{ backgroundImage: 'url(' + item.bgimage + ')' }"
-          @click="
-            () => {
-              $parent.openIM(item.url, item.planner)
-            }
-          "
+          @click="plannerIm(item.planner)"
         >
           <div class="total">
             <div>
@@ -35,10 +31,24 @@
               <span>元起</span>
             </div>
             <div class="contact-btn">
-              <a href="javascript:;" @click="openIM(url)">
-                <img :src="item.headimg" alt="" />
+              <a
+                href="javascript:;"
+                @click="
+                  () => {
+                    $parent.openIM(item.url)
+                  }
+                "
+              >
+                <img :src="item.planner.avatarImg" alt="" />
               </a>
-              <a href="javascript:;" @click="chat(index)">
+              <a
+                href="javascript:;"
+                @click="
+                  () => {
+                    $parent.openIM(item.url)
+                  }
+                "
+              >
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -47,7 +57,14 @@
                 >
                 </my-icon>
               </a>
-              <a href="javascript:;" @click="openIM(url)">
+              <a
+                href="javascript:;"
+                @click="
+                  () => {
+                    $parent.openIM(item.url)
+                  }
+                "
+              >
                 <my-icon
                   name="notify_ic_tel"
                   color="#4974F5"
@@ -65,6 +82,7 @@
 </template>
 
 <script>
+import { planner } from '../../../api'
 import MyIcon from '../../common/myIcon/MyIcon.vue'
 export default {
   components: { MyIcon },
@@ -75,21 +93,19 @@ export default {
     },
   },
   data() {
-    return {
-      url: '',
-    }
+    return {}
   },
   created() {},
   methods: {
-    chat() {
-      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
-    },
-    openIM(url) {
-      if (url !== '') {
-        window.location.href = url
-      } else {
-        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
-      }
+    plannerIm(planner) {
+      const guiHuaShi = planner
+      this.$root.$emit(
+        'openIMM',
+        guiHuaShi.id,
+        guiHuaShi.name || '',
+        guiHuaShi.jobNum || '',
+        planner.imgSrc
+      )
     },
   },
 }
@@ -215,6 +231,12 @@ export default {
               background: #4974f5;
               border-radius: 50%;
               margin-left: 8px;
+              display: block;
+              display: flex;
+              > img {
+                width: 100%;
+                border-radius: 50%;
+              }
             }
             > a:not(:first-child) {
               width: 40px;

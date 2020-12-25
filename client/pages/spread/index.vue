@@ -73,17 +73,15 @@ export default {
     dggImCompany,
   },
   async asyncData({ $axios }) {
-    console.log('111')
-    console.log('111')
     const type = 'extendBussineHome'
     try {
-      const res = await $axios.get(`${spreadApi.list}pageCode=${type}`)
+      const res = await $axios.get(`${spreadApi.list}?pageCode=${type}`)
       console.log(res)
       return {
         resultData: res,
       }
     } catch (error) {
-      console.log('error', error)
+      console.log('spreadApi.list error：', error.message)
       // 请求出错也要保证页面正常显示
       return {
         resultData: {
@@ -122,7 +120,7 @@ export default {
                         productDetail: {
                           id: 'extendBussineHomeHot1',
                           name: '',
-                          referencePrice: 1800,
+                          referencePrice: 4500,
                           operating: {
                             showName: '食品经营许可证',
                             slogan: '食品行业所需资质官方保障',
@@ -824,47 +822,14 @@ export default {
       ],
       guiHuaShiList: [
         {
-          id: 1,
+          id: '7862495547640840192',
           avatarImg: '',
-          name: '郭亮亮',
+          name: '张毅',
           shuPianFen: 11,
           serverNum: 250,
           telephone: 12345679985,
           labels: ['工商注册', '财税咨询', '税务筹划'],
-          im: {
-            id: '7862495547640840192',
-            name: '张毅',
-            num: '107547',
-          },
-        },
-        {
-          id: 2,
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          im: {
-            id: '7862495547640840192',
-            name: '张毅',
-            num: '107547',
-          },
-        },
-        {
-          id: 3,
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          im: {
-            id: '7862495547640840192',
-            name: '张毅',
-            num: '107547',
-          },
+          jobNum: '107547',
         },
       ],
       pagePlanner: {
@@ -882,6 +847,7 @@ export default {
           imgWidth: 225,
           imgHeight: 348,
           marginRight: true,
+          price: 500,
           url: '',
         },
         {
@@ -1035,29 +1001,36 @@ export default {
           'openIMM',
           planner.id,
           planner.name || '',
-          planner.jobNum || ''
+          planner.jobNum || '',
+          planner.imgSrc || ''
         )
       }
     },
     // 处理广告位数据
     adHandleData(data) {
-      console.log(data)
+      if (data.length === 0) return
       data.forEach((adItem, adIndex) => {
         adItem.sortMaterialList.forEach((item, index) => {
-          // 热销专区
-          if (adIndex === 0) {
-            this.hotSaleProductList[index].price =
-              item.materialList[0].productDetail.referencePrice
-          }
-          // 初创必备
-          if (adIndex === 1) {
-            this.chuChuangProductList[index].price =
-              item.materialList[0].productDetail.referencePrice
-          }
-          // 经营必备
-          if (adIndex === 2) {
-            this.jingYingProductList[index].price =
-              item.materialList[0].productDetail.referencePrice
+          const referencePrice =
+            item.materialList[0].productDetail.referencePrice
+          if (referencePrice) {
+            switch (adIndex) {
+              // 热销专区
+              case 0: {
+                this.hotSaleProductList[index].price = referencePrice
+                break
+              }
+              // 初创必备
+              case 1: {
+                this.chuChuangProductList[index].price = referencePrice
+                break
+              }
+              // 经营必备
+              case 2: {
+                this.jingYingProductList[index].price = referencePrice
+                break
+              }
+            }
           }
         })
       })
@@ -1066,20 +1039,13 @@ export default {
     plannerHandleData(data) {
       if (data.length === 0) return
       // 默认第一个为页面规划师
-      const defaultPlanner = {
-        id: '7862495547640840192',
-        name: '张毅',
-        jobNum: '107547',
+      this.pagePlanner = {
+        id: data[0].userId,
+        name: data[0].realName,
+        jobNum: data[0].loginName,
+        telephone: data[0].userPhone,
+        imgSrc: data[0].userHeadUrl,
       }
-      this.pagePlanner =
-        (data[0] && {
-          id: data[0].userId,
-          name: data[0].realName,
-          jobNum: data[0].loginName,
-          telephone: data[0].userPhone,
-          imgSrc: data[0].userHeadUrl,
-        }) ||
-        defaultPlanner
 
       // 规划师列表
       const guiHuaShiList = []
