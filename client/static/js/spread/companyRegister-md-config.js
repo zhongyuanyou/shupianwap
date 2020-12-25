@@ -2,7 +2,7 @@
 if (window.currentDo) delete currentDo
 let currentDo = location.origin
 var DGGCONFIG = {
-  platform_type: '专利wap端', // 类型
+  platform_type: 'wap端', // 类型
   app_name: 'wap端工商注册推广页', // 名称
   server_url:
     currentDo === 'https://mjy.dgg.cn'

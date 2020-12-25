@@ -74,7 +74,13 @@
                 color="#4974F5"
               ></my-icon
             ></span>
-            <span @click="onPhone(index)">
+            <span
+              v-md-map
+              v-md:webClick
+              data-name="工商注册_服务介绍_电话"
+              type="primary"
+              @click="onPhone(index)"
+            >
               <my-icon
                 name="notify_ic_tel"
                 size="20px"
@@ -156,8 +162,6 @@ export default {
       }
     },
     onPhone(index) {
-      console.log(index)
-      Toast('电话')
       window.location.href = `tel:${this.listCount[index].telephone}`
     },
   },

@@ -27,7 +27,11 @@
       <h5>服务介绍</h5>
       <Registerlist :list-count="listCount" :is-more="isMore" />
       <p v-show="listCount.length > 3" class="more">
-        <span @click="onMore"
+        <span
+          v-md-map
+          v-md:webClick
+          data-name="工商注册_服务介绍_展开更多"
+          @click="onMore"
           >更多服务
           <my-icon
             :name="isMore ? 'tab_ic_all_s' : 'tab_ic_all_n'"
@@ -51,7 +55,7 @@
     <div class="refer">
       <GuiHuaShiSwipe
         :planners-data="guiHuaShiList"
-        title="咨询规划师"
+        :planners-common="plannersCommon"
       ></GuiHuaShiSwipe>
     </div>
     <!-- E咨询规划师 -->
@@ -63,7 +67,8 @@
           v-for="(item, index) of sericeImg"
           :key="index"
           @click="onService('', index)"
-          ><span> <sp-image :src="item.img" /> </span
+          ><span v-md-map v-md:webClick :data-name="item.name">
+            <sp-image :src="item.img" /> </span
         ></a>
       </div>
     </div>
@@ -601,60 +606,35 @@ export default {
       sericeImg: [
         {
           img: require('~/assets/spreadImages/company_registry/busi_img_nkn_swch.png'),
+          name: '工商注册_你可能还需要其他服务_税务筹划',
         },
         {
           img: require('~/assets/spreadImages/company_registry/busi_img_nkn_dljz.png'),
+          name: '工商注册_你可能还需要其他服务_代理记账',
         },
         {
           img: require('~/assets/spreadImages/company_registry/busi_img_nkn_qtfw.png'),
+          name: '工商注册_你可能还需要其他服务_其他服务',
         },
       ],
       // 规划师轮播列表
       guiHuaShiList: [
         {
-          id: 1,
+          id: '7862495547640840192',
           avatarImg: '',
-          name: '郭亮亮',
+          name: '张毅',
           shuPianFen: 11,
           serverNum: 250,
           telephone: 12345679985,
           labels: ['工商注册', '财税咨询', '税务筹划'],
-          im: {
-            id: '7862495547640840192',
-            name: '张毅',
-            jobNum: '107546',
-          },
-        },
-        {
-          id: 2,
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          im: {
-            id: '7862495547640840192',
-            name: '张毅',
-            jobNum: '107547',
-          },
-        },
-        {
-          id: 3,
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          im: {
-            id: '7862495547640840192',
-            name: '张毅',
-            jobNum: '107544',
-          },
+          jobNum: '107547',
         },
       ],
+      plannersCommon: {
+        title: '咨询规划师',
+        imName: '工商注册_咨询规划师_在线咨询',
+        telName: '工商注册_咨询规划师_电话',
+      },
       // 列表
       listCount: [
         {
@@ -706,7 +686,6 @@ export default {
     // listCout列表数据处理
     ListCount(data) {
       const listAll = data.adList[0].sortMaterialList
-      console.log(data)
       if (listAll.length !== 0) {
         listAll.forEach((elem, index) => {
           const priceVal = elem.materialList[0].productDetail.referencePrice
@@ -714,7 +693,7 @@ export default {
           this.listCount[index].pric = priceVal
           this.listCount[index].operating = operatingVal
           if (data.planlerList.length !== 0) {
-            this.listCount[index].id = data.planlerList[index].userId
+            this.listCount[index].id = data.planlerList[index].userCentreId
             this.listCount[index].name = data.planlerList[index].realName
             this.listCount[index].jobNum = data.planlerList[index].loginName
             this.listCount[index].telephone = data.planlerList[index].userPhone
@@ -722,7 +701,6 @@ export default {
           }
         })
       }
-      console.log(this.listCount)
     },
     // 规划师数据
     plannerData(data) {
@@ -738,7 +716,7 @@ export default {
         const guiHuaShiList = []
         data.forEach((item) => {
           const obj = {
-            id: item.userId,
+            id: item.userCentreId,
             avatarImg: item.userHeadUrl,
             name: item.realName,
             shuPianFen: 11,
@@ -853,7 +831,7 @@ export default {
     }
   }
   .help {
-    /deep/.cousulttel-bottom {
+    /deep/.cousulttel-title {
       text-align: left;
     }
   }
