@@ -1077,16 +1077,16 @@ export default {
       title: '工商首页',
       script: [
         {
+          src: '/js/spread/businessHome-md-config.js',
+        },
+        {
+          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
+        },
+        {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
           ssr: false,
           type: 'text/javascript',
           charset: 'utf-8',
-        },
-        {
-          src: 'js/spread/businessHome-md-config.js',
-        },
-        {
-          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
         },
       ],
     }
