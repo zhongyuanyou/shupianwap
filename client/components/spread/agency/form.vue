@@ -14,54 +14,38 @@
       </div>
       <span class="form-content">请输入公司年营业额，我们为您灵活制定方案</span>
       <div class="lines-scope">
+        <div>企业类型</div>
         <div
           v-for="(item, index) in LinesScope"
           :key="index"
+          v-md-map
+          v-md:webClick
           :class="[actived == index + 1 ? 'isactive' : '']"
+          data-name="代理记账表单_item.scope"
+          data-form_type="咨询表单"
           @click="selected(item.code)"
         >
           {{ item.scope }}
         </div>
       </div>
       <div class="input-box">
-        <!-- s行业下拉框 -->
-        <sp-field
-          v-model="value"
-          label="行业"
-          :readonly="read"
-          @click="selectshow = true"
-        />
-        <div
-          @click="
-            () => {
-              selectshow = true
-            }
-          "
-        >
-          <my-icon
-            name="tab_ic_all_n"
-            size="0.2rem"
-            class="input-ic-open"
-            color="#cccccc"
-          ></my-icon>
-        </div>
-
-        <!-- e行业下拉框 -->
-        <!-- s下拉选项框 -->
-        <sp-action-sheet
-          v-model="selectshow"
-          :actions="actions"
-          @select="onSelect"
-        />
         <!-- s 公司名称 -->
         <sp-field
           v-model="company"
+          v-md-map
+          v-md:webClick
           label="公司名称"
           placeholder="请输入公司名称"
+          data-name="代理记账表单_公司名称"
+          data-form_type="咨询表单"
         />
-        <!-- e下拉选项框  -->
+        <!-- s 手机号输入框 -->
         <sp-field
           v-model="telephone"
+          v-md-map
+          v-md:webClick
+          data-name="代理记账表单_手机号"
+          data-form_type="咨询表单"
           label="手机号"
           placeholder="信息保护中，仅官方可见"
           maxlength="11"
@@ -72,11 +56,22 @@
           <sp-field
             v-show="isshow"
             v-model="sms"
+            v-md-map
+            v-md:webClick
             label="验证码"
             placeholder="请输入验证码"
+            data-name="代理记账表单_验证码"
+            data-form_type="咨询表单"
           />
           <!-- s 倒计时 -->
-          <span class="seconds" @click="sendSms">
+          <span
+            v-md-map
+            v-md:webClick
+            class="seconds"
+            data-name="代理记账表单_获取验证码"
+            data-form_type="咨询表单"
+            @click="sendSms"
+          >
             {{ countdown > 0 ? `${countdown}s` : '发送验证码' }}</span
           >
           <!-- e 倒计时 -->
@@ -84,7 +79,18 @@
         <!-- e 获取验证码 -->
       </div>
       <!-- s 按钮 -->
-      <button @click="FreeBtn()"><span>免费定制方案</span></button>
+      <button
+        v-md:WebClick
+        v-md:p_formSubmit
+        v-md-map
+        class="free-btn"
+        data-event_name="p_formSubmit"
+        data-form_type="咨询表单"
+        data-form_name="代理记账_提交表单"
+        @click="FreeBtn()"
+      >
+        <span>免费定制方案</span>
+      </button>
       <!-- e 按钮 -->
       <!-- s 处理事件统计 -->
       <div class="statistical">
@@ -108,7 +114,6 @@ import { Field, ActionSheet, CountDown, Toast } from '@chipspc/vant-dgg'
 import MyIcon from '../../common/myIcon/MyIcon.vue'
 export default {
   components: {
-    MyIcon,
     [Field.name]: Field,
     [ActionSheet.name]: ActionSheet,
     [CountDown.name]: CountDown,
@@ -128,14 +133,12 @@ export default {
   data() {
     return {
       LinesScope: [
-        { code: 1, scope: '0-100万' },
-        { code: 2, scope: '100-500万' },
-        { code: 3, scope: '500万以上' },
+        { code: 1, scope: '小规模纳税人' },
+        { code: 2, scope: '一般纳税人' },
       ],
       actived: 1,
       read: true,
-      scope: '0-100万',
-      value: '小规模纳税人', // 行业信息
+      scope: '小规模纳税人',
       telephone: '', // 电话号码
       sms: '', // 验证码
       isshow: false, // 验证码框是否显示
@@ -143,15 +146,9 @@ export default {
       countdown: -1, // 发送验证码倒计时60秒
       countdownTimer: null,
       company: '',
-      actions: [
-        { name: '小规模纳税人', color: '#5a79e8' },
-        { name: '一般纳税人', color: '#222222' },
-      ], // 下拉框内容
     }
   },
-  created() {
-    this.dropdownValue = this.actions[0]
-  },
+  created() {},
   methods: {
     selected(index) {
       this.actived = index
@@ -219,7 +216,6 @@ export default {
       const webUrl = window.location.href
       const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       const contentStr = {
-        industry: this.dropdownValue.name,
         LinesScope: this.scope,
       }
       const params = {
@@ -241,7 +237,7 @@ export default {
           console.log(res)
           this.telephone = ''
           this.sms = ''
-          console.log(contentStr)
+          console.log(params)
           Toast('提交成功，请注意接听电话')
         } else {
           console.log(res)
@@ -281,18 +277,6 @@ export default {
         currentMin +
         currentSeconds
       return nowTimeString
-    },
-    // 底部下拉框
-    onSelect(item) {
-      this.selectshow = false
-      this.value = item.name
-      this.actions.forEach((obj) => {
-        if (obj.name === item.name) {
-          obj.color = '#5a79e8'
-        } else {
-          obj.color = '#222222'
-        }
-      })
     },
   },
 }
@@ -360,6 +344,12 @@ export default {
         color: #555555;
         text-align: center;
         line-height: 80px;
+        &:first-child {
+          font-size: 28px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          color: #1a1a1a;
+        }
       }
       .isactive {
         background: #ecf1fe;

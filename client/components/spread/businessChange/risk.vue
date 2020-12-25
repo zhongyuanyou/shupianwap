@@ -21,7 +21,7 @@
         href="JavaScript:;"
         data-im_type="售前"
         data-name="工商不变更风险_立即咨询"
-        @click="$parent.openIM(url)"
+        @click="call()"
         >立即咨询</a
       >
     </div>
@@ -33,6 +33,7 @@ export default {
   data() {
     return {
       url: '',
+      telephone: '',
       riskList: [
         {
           code: 1,
@@ -63,7 +64,14 @@ export default {
       ],
     }
   },
-  methods: {},
+  created() {
+    this.telephone = this.$parent.planner.telephone
+  },
+  methods: {
+    call() {
+      window.location.href = `tel:${this.telephone}`
+    },
+  },
 }
 </script>
 

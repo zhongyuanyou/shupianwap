@@ -6,7 +6,10 @@
         <li
           v-for="(item, index) in servicelist"
           :key="index"
+          v-md-map
+          v-md:webClick
           :style="{ backgroundImage: 'url(' + item.bgimage + ')' }"
+          data-name="变更服务介绍_item.plannerName_在线咨询"
           @click="plannerIm(item.planner)"
         >
           <div class="total">
@@ -32,7 +35,11 @@
             </div>
             <div class="contact-btn">
               <a
+                v-md-map
+                v-md:p_IMClick
                 href="javascript:;"
+                data-im_type="售前"
+                data-name="变更服务介绍_item.plannerName_在线咨询"
                 @click="
                   () => {
                     $parent.openIM(item.url)
@@ -42,7 +49,11 @@
                 <img :src="item.planner.avatarImg" alt="" />
               </a>
               <a
+                v-md-map
+                v-md:p_IMClick
                 href="javascript:;"
+                data-im_type="售前"
+                data-name="变更服务介绍_item.plannerName_在线咨询"
                 @click="
                   () => {
                     $parent.openIM(item.url)
@@ -58,12 +69,11 @@
                 </my-icon>
               </a>
               <a
+                v-md-map
+                v-md:webClick
                 href="javascript:;"
-                @click="
-                  () => {
-                    $parent.openIM(item.url)
-                  }
-                "
+                data-name="变更服务介绍_item.plannerName_拨打电话"
+                @click="call(item.planner.telephone)"
               >
                 <my-icon
                   name="notify_ic_tel"
@@ -106,6 +116,10 @@ export default {
         guiHuaShi.jobNum || '',
         planner.imgSrc
       )
+    },
+    call(tel) {
+      window.location.href = `tel:${tel}`
+      event.stopPropagation()
     },
   },
 }

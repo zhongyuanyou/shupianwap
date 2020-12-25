@@ -70,11 +70,7 @@
                 v-md:webClick
                 href="javascript:;"
                 data-name="变更服务介绍_item.plannerName_拨打电话"
-                @click="
-                  () => {
-                    $parent.openIM(item.url)
-                  }
-                "
+                @click="call(item.planner.telephone)"
               >
                 <my-icon
                   name="notify_ic_tel"
@@ -161,6 +157,10 @@ export default {
         guiHuaShi.jobNum || '',
         planner.imgSrc || ''
       )
+    },
+    call(tel) {
+      window.location.href = `tel:${tel}`
+      event.stopPropagation()
     },
   },
 }

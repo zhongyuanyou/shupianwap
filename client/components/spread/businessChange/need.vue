@@ -29,11 +29,7 @@
         v-md:webClick
         href="javascript:;"
         data-name="工商变更_还有疑问_立即咨询"
-        @click="
-          () => {
-            $parent.openIM(url)
-          }
-        "
+        @click="call()"
         ><span>立即咨询</span></a
       >
     </div>
@@ -56,6 +52,7 @@ export default {
   components: { MyIcon },
   data() {
     return {
+      telephone: '4000-962540',
       url: '',
       needlist: [
         '工商变更_您可能还需要办理_工商注册',
@@ -82,7 +79,11 @@ export default {
     }
   },
   created() {},
-  methods: {},
+  methods: {
+    call() {
+      window.location.href = `tel:${this.telephone}`
+    },
+  },
 }
 </script>
 

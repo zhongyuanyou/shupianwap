@@ -22,7 +22,7 @@
     <Choose />
     <!-- e 为什么选择薯片平台-->
     <!-- s 咨询规划师 -->
-    <Planners :planners-data="plannersList" :title="plannersTitle" />
+    <Planners :planners-data="plannersList" :planners-common="plannersTitle" />
     <!-- e 咨询规划师 -->
     <!-- s 可能需要 -->
     <Need />
@@ -81,13 +81,17 @@ export default {
   data() {
     return {
       title: '代理记账',
-      plannersTitle: '咨询规划师',
+      plannersTitle: {
+        title: '咨询规划师',
+        imName: '代理记账咨询规划师_在线咨询',
+        telName: '代理记账咨询规划师_拨打电话',
+      },
       nums: null,
       planner: {
-        id: '7862495547640840192',
-        name: '张毅',
-        jobNum: '107547',
-        telephone: '18402858698',
+        id: '',
+        name: '',
+        jobNum: '',
+        telephone: '',
         imgSrc: '',
       },
       resultData: {
@@ -421,8 +425,8 @@ export default {
       this.productDetail(this.resultData.data.adList[0].sortMaterialList)
       this.plannerHandleData(this.resultData.data.planlerList || [])
       this.nums = this.resultData.data.nums
-      console.log(1111)
     }
+    console.log(this.planner)
   },
   methods: {
     // 商品数据处理
@@ -445,6 +449,7 @@ export default {
               index + 1
             }@1,5x.jpg`),
             planner: this.plannersList[`${index >= 1 ? 1 : index}`],
+            plannerName: item.materialList[0].productDetail.operating.showName,
           }
           fuWuList.push(obj)
         })
@@ -487,6 +492,7 @@ export default {
       this.plannersList = guiHuaShiList
       // 转站规划师
       this.planner = this.plannersList[0]
+      return this.planner
     },
   },
   head() {

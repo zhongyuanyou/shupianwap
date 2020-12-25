@@ -19,7 +19,7 @@
     <ServiceProcess />
     <!-- e 服务流程 -->
     <!-- s 规划师 -->
-    <Planners :planners-data="plannersList" :title="plannersTitle" />
+    <Planners :planners-data="plannersList" :planners-common="plannersTitle" />
     <!-- e 规划师 -->
     <!-- s 可能需要办理 -->
     <Need />
@@ -76,7 +76,11 @@ export default {
   data() {
     return {
       title: '工商变更',
-      plannersTitle: '咨询规划师',
+      plannersTitle: {
+        title: '咨询规划师',
+        imName: '工商变更咨询规划师_在线咨询',
+        telName: '工商变更咨询规划师_拨打电话',
+      },
       planner: {
         id: '7862495547640840192',
         name: '张毅',
