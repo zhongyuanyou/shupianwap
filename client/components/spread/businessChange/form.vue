@@ -16,6 +16,10 @@
         <!-- s行业下拉框 -->
         <sp-field
           v-model="value"
+          v-md-map
+          v-md:WebClick
+          data-name="工商变更表单_下拉表单"
+          data-form_type="咨询表单"
           label="变更项目"
           :readonly="read"
           @click="selectshow = true"
@@ -44,17 +48,35 @@
         <!-- e下拉选项框  -->
         <sp-field
           v-model="telephone"
+          v-md-map
+          v-md:WebClick
+          data-name="工商变更表单_手机号"
+          data-form_type="咨询表单"
           label="手机号"
           placeholder="信息保护中，仅官方可见"
           maxlength="11"
           @focus="() => (isshow = true)"
         />
         <!-- s 获取验证码 -->
-        <div v-show="isshow" class="verification-box">
+        <div
+          v-show="isshow"
+          v-md-map
+          v-md:WebClick
+          class="verification-box"
+          data-name="工商变更表单_验证码"
+          data-form_type="咨询表单"
+        >
           <sp-field v-model="sms" label="验证码" placeholder="请输入验证码" />
 
           <!-- s 倒计时 -->
-          <span class="seconds" @click="sendSms">
+          <span
+            v-md-map
+            v-md:WebClick
+            class="seconds"
+            data-name="工商变更表单_获取验证码"
+            data-form_type="咨询表单"
+            @click="sendSms"
+          >
             {{ countdown > 0 ? `${countdown}s` : '发送验证码' }}</span
           >
           <!-- e 倒计时 -->
@@ -62,7 +84,16 @@
         <!-- e 获取验证码 -->
       </div>
       <!-- s 按钮 -->
-      <button class="free-btn" @click="freeBtn()">
+      <button
+        v-md:WebClick
+        v-md:p_formSubmit
+        v-md-map
+        class="free-btn"
+        data-event_name="p_formSubmit"
+        data-form_type="咨询表单"
+        data-form_name="工商变更表单_提交表单"
+        @click="freeBtn()"
+      >
         <span>立即获取方案</span>
       </button>
       <!-- e 按钮 -->
@@ -239,6 +270,12 @@ export default {
           console.log(res)
           this.telephone = ''
           this.sms = ''
+          window.getTrackRow('p_formSubmitResult', {
+            even_name: 'p_formSubmitResult',
+            form_type: '咨询表单',
+            form_sn: 'ZL077',
+            form_name: '工商变更表单_提交表单',
+          })
           Toast('提交成功，请注意接听电话')
         } else {
           console.log(res)

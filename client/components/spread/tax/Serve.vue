@@ -4,6 +4,9 @@
     <div
       v-for="(item, i) of serveData"
       :key="i"
+      v-md-map
+      v-md:webClick
+      :data-name="`税筹服务介绍_${item.productName}`"
       class="serve-card"
       :style="item.bg"
       @click="openImUrl(i)"
@@ -27,10 +30,15 @@
       <div class="serve-card-second">
         <div class="serve-card-second-left">
           <span>{{ item.price }}</span
-          ><span>元起</span><strike>488.00元</strike>
+          ><span>元起</span>
+          <!--          <strike>488.00元</strike>-->
         </div>
         <div class="serve-card-second-right">
           <div
+            v-md-map
+            v-md:p_IMClick
+            data-im_type="售前"
+            data-form_type="售前"
             class="serve-card-second-right-person"
             :style="
               item.person === ''
@@ -39,8 +47,16 @@
                   }
                 : { backgroundImage: `url(${item.person})` }
             "
+            @click="openIm(i, $event)"
           ></div>
-          <div class="serve-card-second-right-rap" @click="openIm(i, $event)">
+          <div
+            v-md-map
+            v-md:p_IMClick
+            data-im_type="售前"
+            data-form_type="售前"
+            class="serve-card-second-right-rap"
+            @click="openIm(i, $event)"
+          >
             <my-icon
               name="notify_ic_chat"
               color="#4974F5"
@@ -48,7 +64,13 @@
               class="icon"
             ></my-icon>
           </div>
-          <div class="serve-card-second-right-rap" @click="call">
+          <div
+            v-md-map
+            v-md:webClick
+            class="serve-card-second-right-rap"
+            data-name="税筹服务介绍_增值税筹划_拨打电话"
+            @click="call"
+          >
             <my-icon
               name="notify_ic_tel"
               color="#4974F5"
@@ -83,6 +105,7 @@ export default {
     // 电话图标调用电话接口
     call(e) {
       e.stopPropagation()
+      window.location.href = `tel:${this.serveData.phone}`
     },
     // 信息图标直接调用IM
     openIm(i, e) {

@@ -17,8 +17,11 @@
         <div
           v-for="(item, i) of tabs"
           :key="i"
+          v-md-map
+          v-md:webClick
           :class="active == i ? bigfont : smallfont"
           style="width: 195px"
+          :data-name="`税务筹划表单_表头选择栏_${item}`"
           @click="change(i)"
         >
           {{ item }}
@@ -28,9 +31,12 @@
       <!--      表单-->
       <div class="banner-bottom-form">
         <sp-cell
+          v-md-map
+          v-md:webClick
           :title="select"
           arrow-direction="down"
           is-link
+          data-name="税务筹划表单_下拉表单"
           @click="show = true"
         />
         <sp-action-sheet
@@ -43,9 +49,12 @@
           <span>手机号</span>
           <input
             v-model="tel"
+            v-md-map
+            v-md:webClick
             class="banner-bottom-form-input"
             placeholder="信息保护中，仅官方可见"
             type="text"
+            data-name="税务筹划表单_手机号"
             @focus="focus"
           />
         </div>
@@ -53,18 +62,32 @@
           <span>验证码</span>
           <input
             v-model="code"
+            v-md-map
+            v-md:webClick
+            data-name="税务筹划表单_验证码"
             class="banner-bottom-form-input banner-bottom-form-inputspe"
             placeholder="请输入验证码"
             type="text"
           />
           <a
+            v-md-map
+            v-md:webClick
             class="banner-bottom-form-div-a"
             href="javascript:;"
+            data-name="税务筹划表单_获取验证码"
             @click="testMsg"
             >{{ text }}</a
           >
         </div>
-        <button class="banner-bottom-form-button" @click="consultForm">
+        <button
+          v-md:p_formSubmit
+          v-md-map
+          data-event_name="p_formSubmit"
+          data-form_type="咨询表单"
+          data-form_name="税务筹划表单_验证码"
+          class="banner-bottom-form-button"
+          @click="consultForm"
+        >
           咨询获取节税方案
         </button>
         <div class="banner-bottom-form-lastdiv">
@@ -264,6 +287,11 @@ export default {
           this.code = ''
           this.text = '发送验证码'
           this.select = '选择税务类型'
+          window.getTrackRow('p_formSubmitResult', {
+            even_name: 'p_formSubmitResult',
+            form_type: '咨询表单',
+            form_name: '税务筹划表单_提交',
+          })
         } else {
           console.log(res)
         }

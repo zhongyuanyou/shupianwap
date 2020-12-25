@@ -5,8 +5,11 @@
       <div
         v-for="(item, i) of imgs"
         :key="i"
+        v-md-map
+        v-md:webClick
         class="maby-banner-item"
         :style="item.bg"
+        :data-name="`这些业务您可能也需要_${item.title}`"
         @click="openImUrl"
       ></div>
     </div>
@@ -20,6 +23,7 @@ export default {
     return {
       imgs: [
         {
+          title: '税务筹划',
           bg: {
             backgroundImage:
               'url(' +
@@ -28,17 +32,19 @@ export default {
           },
         },
         {
+          title: '代理记账',
           bg: {
             backgroundImage:
               'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchad2.png'),
+              require('~/assets/spreadImages/tax/busi_img_swchad3.png'),
           },
         },
         {
+          title: '银行服务',
           bg: {
             backgroundImage:
               'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchad3.png') +
+              require('~/assets/spreadImages/tax/busi_img_swchad2.png') +
               ')',
           },
         },
