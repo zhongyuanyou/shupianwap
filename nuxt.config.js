@@ -117,7 +117,6 @@ module.exports = {
     { src: '@/plugins/my-icon', ssr: true },
     { src: '@/plugins/vconsole', ssr: false },
     { src: '@/plugins/app-sdk', ssr: false },
-    { src: '@/plugins/dgg-ui', ssr: false },
   ],
   router: {
     middleware: 'appDock',

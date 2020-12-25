@@ -81,14 +81,13 @@ export default {
     return {
       // 下拉
       dropList: [
-        { id: 1, code: 'jbkh', name: '基本开户', color: '#5a79e8' },
-        { id: 2, code: 'gszc', name: '公司注册', color: '#222222' },
-        { id: 3, code: 'gsbg', name: '公司变更', color: '#222222' },
-        { id: 4, code: 'kzyz', name: '刻制印章', color: '#222222' },
-        { id: 5, code: 'dljz', name: '代理记账', color: '#222222' },
-        { id: 6, code: 'yhbg', name: '银行变更', color: '#222222' },
-        { id: 7, code: 'gshm', name: '公司核名', color: '#222222' },
-        { id: 8, code: 'qtyw', name: '其他业务', color: '#222222' },
+        { id: 1, name: '公司注册', color: '#5a79e8' },
+        { id: 2, name: '工商变更', color: '#222222' },
+        { id: 3, name: '代理记账', color: '#222222' },
+        { id: 4, name: '印章刻制', color: '#222222' },
+        { id: 5, name: '银行服务', color: '#222222' },
+        { id: 6, name: '许可证办理', color: '#222222' },
+        { id: 7, name: '其他服务', color: '#222222' },
       ],
       dropdownValue: '',
       dropdownMenuIsShow: false,
