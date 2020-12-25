@@ -38,7 +38,7 @@ const getInformation = async function (
             initAllRes[0].data &&
             Array.isArray(initAllRes[0].data)
         ) {
-            information_banner = initAllRes[0].data;
+            information_banner = initAllRes[0].data || [];
         }
         // 资讯列表处理
         if (

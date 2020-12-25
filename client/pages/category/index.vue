@@ -29,6 +29,7 @@
             }"
             @click="handleClick(index)"
           >
+            <div class="line" v-show="TabNavList == index"></div>
             {{ item.name }}
           </li>
         </ul>
@@ -269,7 +270,18 @@ export default {
         color: #555555;
         text-align: center;
         line-height: 124px;
+        position: relative;
         .textOverflow(1);
+      }
+      .line {
+        width: 6px;
+        height: 40px;
+        background-color: #4974f5;
+        border-radius: 0 3px 3px 0;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        margin-top: -20px;
       }
     }
     &_rt {

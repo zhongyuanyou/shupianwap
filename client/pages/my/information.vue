@@ -82,9 +82,7 @@
           <div class="right_icon">
             <p class="txt">
               {{
-                info.province
-                  ? info.province + ' ' + info.city + ' ' + info.district || ''
-                  : '未设置'
+                info.province ? info.province + ' ' + info.city + ' ' : '未设置'
               }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
@@ -180,7 +178,7 @@ export default {
         if (!this.isUpdateName) {
           // 如果不能修改
           this.$refs.spToast.show({
-            message: '当前不能修改昵称',
+            message: '抱歉，昵称暂不支持修改',
             duration: 1500,
             forbidClick: true,
           })
@@ -199,7 +197,7 @@ export default {
         if (!this.isUpdateAvatar) {
           // 如果不能修改
           this.$refs.spToast.show({
-            message: '当前不能修改头像',
+            message: '抱歉，头像暂不支持修改',
             duration: 1500,
             forbidClick: true,
           })

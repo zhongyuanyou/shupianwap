@@ -36,25 +36,7 @@ export default {
   data() {
     return {
       keywords: this.$route.params.keywords, // 资讯搜索关键字
-      list: [
-        {
-          title:
-            '天津小学何时招生？这个区暂缓随迁 子女入学登记家长速看这个区暂缓随迁 子女入学登记家长速看',
-          content:
-            '你觉得在一个战斗中，究竟聪明人和疯子谁会赢你觉得在一个战斗中，究竟聪明人和疯子谁会赢？',
-          name: '成都薯片',
-          avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          img: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          time: '1天前',
-        },
-        {
-          title: '天津小学何时招生？这个区暂缓随迁 子女入学登记家长速看',
-          content: '你觉得在一个战斗中，究竟聪明人和疯子谁会 赢？',
-          name: '成都薯片',
-          avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          time: '1天前',
-        },
-      ], // 通过关键字查询的资讯列表
+      list: [], // 通过关键字查询的资讯列表
       limit: 10, // 每页显示条数
       page: 1, // 当前页
       loading: false,
