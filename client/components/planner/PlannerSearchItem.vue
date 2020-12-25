@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-14 10:48:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-24 10:02:53
+ * @LastEditTime: 2020-12-25 17:34:34
  * @Description: file content
  * @FilePath: /chips-wap/client/components/planner/PlannerSearchItem.vue
 -->
@@ -14,7 +14,7 @@
           width="1.2rem"
           height="1.6rem"
           fit="cover"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          :src="itemData.img"
         />
       </div>
       <div class="planner-search-item_detail">
@@ -102,7 +102,10 @@ export default {
       let data = {}
       switch (type) {
         case 'IM':
-          data = { mchUserId: this.itemData.mchUserId }
+          data = {
+            mchUserId: this.itemData.mchUserId,
+            userName: this.itemData.userName,
+          }
           break
         case 'tel':
           data = await this.getTel()

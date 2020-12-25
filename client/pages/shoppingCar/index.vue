@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-23 15:22:13
+ * @LastEditTime: 2020-12-25 11:56:52
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -68,15 +68,20 @@
           </sp-list>
         </sp-pull-refresh>
       </div>
-      <!-- 推荐列表 -->
+      <!-- 推荐列表 取消了 -->
       <div v-if="recommendList && recommendList.length" class="recommend">
         <h3 class="recommend__title">为您推荐</h3>
         <div class="recommend-list">
-          <GoodsPro
-            v-for="item in recommendList"
-            :key="item"
-            class="item-wrap"
-          />
+          <sp-list
+            v-model="recommendLoading"
+            class="shopping-car__goods"
+            error-text="请求失败，点击重新加载"
+            :error.sync="recommendError"
+            :finished="recommendFinished"
+            @load="recommendOnLoad"
+          >
+            <RecommendScProduct :recommend-product-data="recommendList" />
+          </sp-list>
         </div>
       </div>
     </div>
@@ -102,11 +107,11 @@ import {
 } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 
-import GoodsPro from '@/components/planner/GoodsPro'
 import GoodsItem from '@/components/shoppingCar/GoodsItem'
 import Bottombar from '@/components/shoppingCar/Bottombar'
 import GoodsPopup from '@/components/shoppingCar/GoodsPopup'
 import ShoppingCarNull from '@/components/shoppingCar/ShoppingCarNull'
+import RecommendScProduct from '@/components/detail/service/RecommendScProduct'
 
 import { shoppingCar } from '@/api'
 
@@ -126,22 +131,14 @@ export default {
     [Loading.name]: Loading,
     Header,
     GoodsPopup,
-    GoodsPro,
+    RecommendScProduct,
     GoodsItem,
     Bottombar,
     ShoppingCarNull,
   },
-  async asyncData({ store }) {
-    // const userId = store.state.user.userInfo.userId || '1234567'
-    // try {
-    //   const data = await shoppingCar.list({ userId })
-    //   return { asyncData: data }
-    // } catch (error) {}
-  },
   data() {
     return {
       list: [],
-      recommendList: [],
       refreshing: false,
       loading: false,
       error: false,
@@ -156,6 +153,10 @@ export default {
         discountsAmount: '0.00',
       },
       skuOpenIndex: -1, // 记录当前打开的sku的序列号
+      recommendList: [],
+      recommendLoading: false,
+      recommendError: false,
+      recommendFinished: false,
     }
   },
   computed: {
@@ -189,7 +190,6 @@ export default {
   created() {
     if (process && process.client) {
       this.postUpdate({ type: 'init' })
-      this.getRecommendList()
     }
   },
   activated() {
@@ -289,6 +289,7 @@ export default {
           break
       }
     },
+
     // 删除列表
     deteleItem(cartId, data) {
       this.$refs.goodsPopup
@@ -332,7 +333,7 @@ export default {
       this.selectItem(cartId, data)
     },
 
-    // 统一的计算
+    // 统一的结算
     uPBill() {
       const cartIdsStr = this.currentSelectedCartIds.join(',') // 多个cartId 用逗号凭借为一个
       console.log(cartIdsStr)
@@ -381,6 +382,9 @@ export default {
           break
       }
     },
+
+    // 推荐数据加载
+    recommendOnLoad() {},
     // 选择
     async selectItem(cartId, data = {}) {
       cartId = '' + cartId
@@ -492,15 +496,6 @@ export default {
         return Promise.reject(error)
       }
     },
-
-    // 请求推荐产品列表
-    getRecommendList() {
-      setTimeout(() => {
-        for (let i = 0; i < 5; i++) {
-          this.recommendList.push(this.recommendList.length + 1)
-        }
-      }, 50000)
-    },
   },
 }
 </script>
@@ -509,35 +504,6 @@ export default {
 @title-text-color: #1a1a1a;
 @subtitle-text-color: #999999;
 @hint-text-color: #cccccc;
-
-.flex-r-s {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-}
-
-.flex-r-c {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-.flex-r-sb {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.flex-r-a-s {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-}
-
-.flex-r-a-c {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
 
 .shopping-car {
   height: 100%;

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-25 10:40:16
+ * @LastEditTime: 2020-12-25 18:26:02
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/detail.vue
 -->
@@ -34,10 +34,11 @@
                     width="1.2rem"
                     height="1.2rem"
                     fit="cover"
-                    :src="
-                      detailData.img || 'https://img.yzcdn.cn/vant/cat.jpeg'
-                    "
+                    :src="detailData.img"
                   />
+                  <span class="detail-content__title">{{
+                    detailData.title
+                  }}</span>
                 </div>
                 <div>
                   <h4 class="detail-content__name">{{ detailData.name }}</h4>
@@ -231,12 +232,13 @@ export default {
     },
     handleIM() {
       console.log('IM ')
-      this.uPIM({ mchUserId: this.detailData.id })
+      this.uPIM({
+        mchUserId: this.detailData.id,
+        userName: this.itemData.userName,
+      })
     },
 
     onSelect(option) {
-      // TODO 分享的调用
-      Toast(option.name)
       this.uPShare(option)
     },
 
@@ -302,10 +304,26 @@ export default {
 
     // 发起聊天
     uPIM(data = {}) {
-      const { mchUserId } = data
+      const { mchUserId, userName } = data
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
-        // TODO 调用IM 暂无
+        this.$appFn.dggOpenIM(
+          {
+            name: userName,
+            userId: mchUserId,
+            userType: 'MERCHANT_USER',
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200)
+              this.$refs.spToast.show({
+                message: `联系失败`,
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_remind',
+              })
+          }
+        )
         return
       }
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
@@ -406,18 +424,28 @@ export default {
         height: 120px;
         margin-right: 24px;
         position: relative;
-        &::after {
-          content: '';
-          display: block;
-          width: 98px;
-          height: 26px;
-          position: absolute;
-          bottom: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          background: url(~assets/images/planner/per_img_gold.png) center/cover
-            no-repeat;
-        }
+      }
+      &__title {
+        content: '';
+        display: block;
+        max-width: 98px;
+        max-width: 120px;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 28px;
+        padding: 0 12px;
+        background: linear-gradient(135deg, #ffeab9, #edcf98);
+        border: 1px solid #dfb45a;
+        border-radius: 14px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #9b6809;
+        line-height: 28px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       &__name {
         font-size: 36px;

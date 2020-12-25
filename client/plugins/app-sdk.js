@@ -161,6 +161,25 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // 调用设备信息
+  dggDeviceInfo: (fn = () => {}) => {
+    Bridge.callHandler('dgg_deviceInfo', {}, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // 调用IM
+  dggOpenIM: (
+    data = {
+      name: '', // 商户用户名称
+      userId: '', // 商户用户ID
+      userType: '', // 用户类型
+    },
+    fn = () => {}
+  ) => {
+    Bridge.callHandler('dgg_openIM', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
 }
 
 // 注册APP调用的js方法

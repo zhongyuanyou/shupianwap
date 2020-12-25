@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-04 10:54:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-24 20:04:15
+ * @LastEditTime: 2020-12-25 13:43:33
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/planner.js
  */
@@ -61,24 +61,19 @@ class PlannerController extends Controller {
       plannerName,
       regionDto,
       sort,
-      status = -1,
+      status = 1,
       limit,
       page,
     } = ctx.request.body;
 
-    // TODO 有userID 先查大数据获取
-    let mchUserIds = [];
-    if (userId) {
-      mchUserIds = ['607991207963818368'];
-    }
     const listParams = {
       plannerName,
       regionDto,
-      mchUserIds,
       status,
       limit,
       page,
       sort,
+      userCenterIds: [userId],
     };
     // 先查询列表
     const listResult = await service.planner.getPlannerList(listParams);

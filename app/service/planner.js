@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-11 14:34:53
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-24 19:35:03
+ * @LastEditTime: 2020-12-25 16:32:39
  * @Description: file content
  * @FilePath: /chips-wap/app/service/planner.js
  */
@@ -20,6 +20,7 @@ class plannerService extends Service {
   async getPlannerList({
     plannerName,
     regionDto,
+    userCenterIds = [],
     mchUserIds = [],
     status,
     sort,
@@ -37,6 +38,7 @@ class plannerService extends Service {
       }
       try {
         const listParams = {
+          userCenterIds,
           searchKey: plannerName,
           regionDto,
           mchUserIds,
@@ -74,8 +76,8 @@ class plannerService extends Service {
       try {
         const result = await service.curl.curlPost(url, {
           // TODO: 测试
-          mchUserIds: ['607990864366434868', '607990967445645276'],
-          // mchUserIds,
+          // mchUserIds: ['607990864366434868', '607990967445645276'],
+          mchUserIds,
           number: 5,
           mchBusinessEnum: 'FIRST_TYPE', // FIRST_TYPE: 一级分类,  SECOND_TYPE: 二级分类,  THIRD_TYPE:三级分类,   PRODUCT_BUSINESS_TYPE:产品或者服务项目
         });
@@ -91,7 +93,7 @@ class plannerService extends Service {
             const { mchUserId } = item || {};
             return mchUserId === id;
           });
-          const tagNameList = [];
+          let tagNameList = [];
           if (matched) {
             const { details } = matched;
             if (Array.isArray(details)) {
@@ -174,9 +176,8 @@ class plannerService extends Service {
           let img = '';
           if (Array.isArray(data)) {
             const matched = data.find((item) => {
-              const { fileId, filePath } = item || {};
-              const isIncludes = ('' + fileId).includes('' + id);
-              return isIncludes;
+              const { code } = item || {};
+              return code === id;
             });
             img = matched ? matched.filePath : '';
           }

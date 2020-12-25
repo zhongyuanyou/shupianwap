@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-25 09:33:09
+ * @LastEditTime: 2020-12-25 17:42:49
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -185,7 +185,7 @@ const DEFAULT_PAGE = {
 }
 
 export default {
-  name: 'List',
+  name: 'PlannerList',
   components: {
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
@@ -362,6 +362,7 @@ export default {
               message: '当前区域获取失败',
               duration: 1000,
               forbidClick: true,
+              icon: 'toast_ic_remind',
             })
           const { adCode, cityName } = data
           console.log('dggCityCode:', res)
@@ -385,7 +386,14 @@ export default {
       if (this.isInApp) {
         this.$appFn.dggCallPhone({ phone: telNumber }, (res) => {
           const { code } = res || {}
-          if (code !== 200) Toast('拨号失败！')
+          if (code !== 200) {
+            this.$refs.spToast.show({
+              message: '拨号失败！',
+              duration: 1000,
+              forbidClick: true,
+              icon: 'toast_ic_remind',
+            })
+          }
         })
         return
       }
@@ -395,10 +403,26 @@ export default {
 
     // 发起聊天
     uPIM(data = {}) {
-      const { mchUserId } = data
+      const { mchUserId, userName } = data
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
-        // TODO 调用IM 暂无
+        this.$appFn.dggOpenIM(
+          {
+            name: userName,
+            userId: mchUserId,
+            userType: 'MERCHANT_USER',
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200)
+              this.$refs.spToast.show({
+                message: `联系失败`,
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_remind',
+              })
+          }
+        )
         return
       }
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
@@ -420,7 +444,12 @@ export default {
           const { limit, currentPage = 1, totalCount = 0, records = [] } = data
           this.pageOption = { limit, totalCount, page: currentPage }
           this.list.push(...records)
-          Toast(`共找到${totalCount}个规划师`)
+          this.$refs.spToast.show({
+            message: `共找到${totalCount}个规划师`,
+            duration: 1000,
+            forbidClick: true,
+            icon: 'toast_ic_comp',
+          })
         }
         return data
       } catch (error) {
@@ -437,12 +466,15 @@ export default {
       try {
         const data = await dict.findCmsTier({ axios: this.$axios }, { code })
         console.log(data)
-        this.regionsOption = [
-          {
-            ...this.currentCity,
-            children: Array.isArray(data) ? data : [],
-          },
-        ]
+        if (Array.isArray(data) && data.length) {
+          this.regionsOption = [
+            {
+              ...this.currentCity,
+              children: Array.isArray(data) ? data : [],
+            },
+          ]
+        }
+
         return data
       } catch (error) {
         console.error('getRegionList:', error)

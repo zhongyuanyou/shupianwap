@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-23 17:07:19
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-24 15:13:59
+ * @LastEditTime: 2020-12-25 11:05:30
  * @Description: file content
  * @FilePath: /chips-wap/client/utils/common.js
  */
@@ -47,5 +47,7 @@ export const parseTel = (tel) => {
 // 打开第三方链接
 export const openLink = (link, data) => {
   const dataStr = Qs.stringify(data)
-  window && (window.location.href = `${link}?${dataStr}`)
+  window &&
+    (window.location.href =
+      link.indexOf('?') > -1 ? `${link}&${dataStr}` : `${link}?${dataStr}`)
 }
