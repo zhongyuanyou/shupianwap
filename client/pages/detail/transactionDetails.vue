@@ -28,7 +28,7 @@ export default {
         productDetailsApi.tcProductDetail,
         {
           params: {
-            productId: query.id,
+            productId: query.productId,
           },
         }
       )

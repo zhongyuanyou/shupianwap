@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-24 13:39:54
+ * @LastEditTime: 2020-12-25 09:33:09
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -330,7 +330,10 @@ export default {
           break
         case 'detail':
           console.log('看看详情：', data)
-          this.$router.push({ name: 'planner-id', query: data })
+          this.$router.push({
+            name: 'planner-detail',
+            query: data,
+          })
           break
       }
     },

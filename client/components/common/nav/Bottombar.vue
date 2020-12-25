@@ -106,7 +106,7 @@ export default {
           this.$router.push({
             path: '/login',
             query: {
-              redirect: this.$route.path,
+              redirect: this.$route.fullPath,
             },
           })
         }

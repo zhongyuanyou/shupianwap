@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-24 10:44:45
+ * @LastEditTime: 2020-12-25 09:32:23
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/planner/_id.vue
+ * @FilePath: /chips-wap/client/pages/planner/detail.vue
 -->
 
 <template>
@@ -304,6 +304,7 @@ export default {
     // 获取详情数据
     async getDetail() {
       try {
+        debugger
         const { mchUserId } = this.$route.query
         if (mchUserId == null) {
           Toast('缺少规划师参数')
