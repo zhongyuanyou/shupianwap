@@ -97,7 +97,7 @@ export default {
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
         this.dropdownTitle = val.name
-        this.selectList = val.filters
+        this.selectList = val.filters ? val.filters : []
         this.isSelectMore = val.isSelects
         if (!this.isSelectMore) {
           this.getBottomConfirmHeight(0)
@@ -108,7 +108,7 @@ export default {
   mounted() {
     if (this.filterData && JSON.stringify(this.filterData) !== '{}') {
       this.dropdownTitle = this.filterData.name
-      this.selectList = this.filterData.children
+      this.selectList = this.filterData.children ? this.filterData.children : []
       this.isSelectMore = this.filterData.isSelects
       if (!this.isSelectMore) {
         this.getBottomConfirmHeight(0)

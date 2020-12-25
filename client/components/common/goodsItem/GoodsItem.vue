@@ -6,7 +6,13 @@
     </div>
     <div class="goods-right">
       <h3>{{ itemData.name }}</h3>
-      <p>{{ description }}</p>
+      <p
+        :style="{
+          visibility: description ? 'visible' : 'hidden',
+        }"
+      >
+        {{ description }}
+      </p>
       <div
         class="tags"
         :style="{

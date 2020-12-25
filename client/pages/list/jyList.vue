@@ -78,7 +78,10 @@ export default {
         this.jyTypesData = jyTypeData
         // 查找query的typeCode是第几个下标
         const index = this.jyTypesData.findIndex((item) => {
-          return item.ext4 === this.$route.query.typeCode
+          const typeCode = this.$route.query.typeCode
+            ? this.$route.query.typeCode
+            : item.ext4
+          return item.ext4 === typeCode
         })
         this.typeCodeIndex = index
       }
@@ -99,6 +102,9 @@ export default {
   }
   .info {
     margin-left: 41px;
+  }
+  /deep/.spiconfont-sear_ic_sear {
+    margin-left: 24px !important;
   }
   /deep/.sp-work-tabs__nav .sp-work-tab {
     font-size: 32px;

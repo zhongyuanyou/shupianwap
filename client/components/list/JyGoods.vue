@@ -13,7 +13,11 @@
       }"
       @change="changeTabs"
     >
-      <sp-tab v-for="(item, index) in tabItems" :key="index" :title="item.name">
+      <sp-tab
+        v-for="(item, index) in tabItems"
+        :key="index"
+        :title="item.name + '交易'"
+      >
         <template v-if="jyFilterData[item.code]">
           <!--S交易筛选-->
           <jy-filters
@@ -358,9 +362,11 @@ export default {
     padding: 0 40px;
   }
   /deep/.sp-tabs {
-    border-bottom: 1px solid #f4f4f4;
     .sp-tabs__line {
       display: none;
+    }
+    /deep/.sp-dropdown-menu {
+      border-bottom: 1px solid #f4f4f4;
     }
   }
   /deep/.sp-tabs__wrap--scrollable .sp-tabs__nav--complete {
