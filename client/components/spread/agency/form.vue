@@ -31,12 +31,21 @@
           :readonly="read"
           @click="selectshow = true"
         />
-        <my-icon
-          name="tab_ic_all_n"
-          size="0.2rem"
-          class="input-ic-open"
-          color="#cccccc"
-        ></my-icon>
+        <div
+          @click="
+            () => {
+              selectshow = true
+            }
+          "
+        >
+          <my-icon
+            name="tab_ic_all_n"
+            size="0.2rem"
+            class="input-ic-open"
+            color="#cccccc"
+          ></my-icon>
+        </div>
+
         <!-- e行业下拉框 -->
         <!-- s下拉选项框 -->
         <sp-action-sheet
@@ -396,7 +405,7 @@ export default {
         }
         &:nth-of-type(3) {
           /deep/.sp-field__body {
-            width: 50%;
+            width: 80%;
           }
         }
       }

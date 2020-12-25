@@ -1082,6 +1082,12 @@ export default {
           type: 'text/javascript',
           charset: 'utf-8',
         },
+        {
+          src: 'js/spread/businessHome-md-config.js',
+        },
+        {
+          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
+        },
       ],
     }
   },

@@ -10,7 +10,7 @@ const bablePlugin = [
     'import',
     {
       libraryName: '@chipspc/vant-dgg',
-      style: name => `${name}/style/less`,
+      style: (name) => `${name}/style/less`,
     },
     '@chipspc/vant-dgg',
   ],
@@ -117,17 +117,18 @@ module.exports = {
     { src: '@/plugins/my-icon', ssr: true },
     { src: '@/plugins/vconsole', ssr: false },
     { src: '@/plugins/app-sdk', ssr: false },
+    { src: '@/plugins/dgg-ui', ssr: false },
   ],
   router: {
     middleware: 'appDock',
   },
-  buildModules: [ '@nuxtjs/eslint-module' ],
+  buildModules: ['@nuxtjs/eslint-module'],
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     '@nuxtjs/style-resources',
     'cookie-universal-nuxt',
-    [ 'cookie-universal-nuxt', { parseJSON: true }],
+    ['cookie-universal-nuxt', { parseJSON: true }],
   ],
   axios: {
     proxy: true,
@@ -145,7 +146,7 @@ module.exports = {
     },
   },
   build: {
-    transpile: [ /vant.*?less/ ],
+    transpile: [/vant.*?less/],
     postcss: {
       plugins: {
         'postcss-pxtorem': {
@@ -156,7 +157,7 @@ module.exports = {
         },
       },
       preset: {
-        browsers: [ 'Android >= 4.0', 'iOS >= 7' ],
+        browsers: ['Android >= 4.0', 'iOS >= 7'],
       },
     },
     babel: {
