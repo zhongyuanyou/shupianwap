@@ -219,8 +219,7 @@ export default {
       }
       // 设置站点编码
       if (!this.params.areaCode) {
-        // this.params.areaCode = this.cityCode
-        this.params.areaCode = 2
+        this.params.areaCode = this.cityCode
       }
       // 若不是初始化查询，需获取选中项的参数
       if (this.params.findType !== 0) {
