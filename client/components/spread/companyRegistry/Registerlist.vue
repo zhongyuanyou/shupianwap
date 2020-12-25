@@ -14,7 +14,15 @@
         class="list"
         @click="onMessage('', index, $event)"
       >
-        <div class="list-count">
+        <div
+          v-md-map
+          v-md:WebClick
+          v-md:p_IMClick
+          data-im_type="售前"
+          data-form_type="售前"
+          data-name="工商注册_服务介绍_在线咨询"
+          class="list-count"
+        >
           <div class="list-count_item">
             <span>{{ listCounts.operating.actualSales }}</span>
             <div>在线咨询</div>
@@ -29,31 +37,49 @@
           </div>
         </div>
         <div class="list-advisory">
-          <span class="price"
+          <span
+            v-md-map
+            v-md:WebClick
+            v-md:p_IMClick
+            data-im_type="售前"
+            data-form_type="售前"
+            data-name="工商注册_服务介绍_在线咨询"
+            class="price"
             ><span>{{ listCounts.pric }}</span
             >元起</span
           >
           <div class="advisory">
             <sp-image
+              v-md-map
+              v-md:WebClick
+              v-md:p_IMClick
+              data-im_type="售前"
+              data-form_type="售前"
+              data-name="工商注册_服务介绍_在线咨询"
               round
               width="28px"
               height="28px"
               :src="listCounts.imgSrc"
             />
             <span
+              v-md-map
+              v-md:WebClick
+              v-md:p_IMClick
+              data-im_type="售前"
+              data-form_type="售前"
+              data-name="工商注册_服务介绍_在线咨询"
               ><my-icon
                 name="notify_ic_chat"
                 size="20px"
                 color="#4974F5"
               ></my-icon
             ></span>
-            <span>
+            <span @click="onPhone(index)">
               <my-icon
                 name="notify_ic_tel"
                 size="20px"
                 color="#4974F5"
                 data-stop="stop"
-                @click="onPhone"
               ></my-icon
             ></span>
           </div>
@@ -129,8 +155,10 @@ export default {
         }
       }
     },
-    onPhone() {
+    onPhone(index) {
+      console.log(index)
       Toast('电话')
+      window.location.href = `tel:${this.listCount[index].telephone}`
     },
   },
 }

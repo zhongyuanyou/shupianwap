@@ -62,7 +62,7 @@
         <a
           v-for="(item, index) of sericeImg"
           :key="index"
-          @click="onService('')"
+          @click="onService('', index)"
           ><span> <sp-image :src="item.img" /> </span
         ></a>
       </div>
@@ -129,229 +129,230 @@ export default {
         },
       })
       return {
-        // resultData: res,
-        resultData: {
-          code: 200,
-          message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
-          data: {
-            adList: [
-              {
-                pageCode: 'extendBussineReg',
-                locationShowTypeCode: 'GGWZXSS_GDXS',
-                locationName: 'wap-推广页-工商注册广告',
-                locationId: '8027896820880179200',
-                locationAddressCode: '',
-                sortMaterialList: [
-                  {
-                    locationSort: 1,
-                    materialList: [
-                      {
-                        materialTypeCode: 'GGLX_TP',
-                        materialUrl:
-                          'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
-                        imgLink: '',
-                        materialLink: 'https://www.baidu.com/',
-                        materialCode: 'src100302',
-                        materialHeight: 1334,
-                        materialId: 0,
-                        materialDescription: '',
-                        materialName: '工商注册广告物料1-1',
-                        androidLink: '',
-                        materialWidth: 750,
-                        iosLink: '',
-                        linkType: 2,
-                        wapLink: '',
-                        executeParam: '',
-                        productId: 'extendBussineReg1',
-                        productDetail: {
-                          id: 'extendBussineReg1',
-                          name: '',
-                          referencePrice: 888,
-                          operating: {
-                            showName: '有限责任公司',
-                            slogan: '',
-                            productDescribe: '',
-                            actualViews: 6439,
-                            defaultSales: 4932,
-                            actualSales: 4930,
-                          },
-                        },
-                      },
-                    ],
-                  },
-                  {
-                    locationSort: 1,
-                    materialList: [
-                      {
-                        materialTypeCode: 'GGLX_TP',
-                        materialUrl:
-                          'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
-                        imgLink: '',
-                        materialLink: 'https://www.baidu.com/',
-                        materialCode: 'src100302',
-                        materialHeight: 1334,
-                        materialId: 0,
-                        materialDescription: '',
-                        materialName: '工商注册广告物料1-2',
-                        androidLink: '',
-                        materialWidth: 750,
-                        iosLink: '',
-                        linkType: 2,
-                        wapLink: '',
-                        executeParam: '',
-                        productId: 'extendBussineReg2',
-                        productDetail: {
-                          id: 'extendBussineReg2',
-                          name: '个体注册',
-                          referencePrice: 688,
-                          operating: {
-                            showName: '个体注册',
-                            slogan: '',
-                            productDescribe: '',
-                            actualViews: 3291,
-                            defaultSales: 1837,
-                            actualSales: 1832,
-                          },
-                        },
-                      },
-                    ],
-                  },
-                  {
-                    locationSort: 1,
-                    materialList: [
-                      {
-                        materialTypeCode: 'GGLX_TP',
-                        materialUrl:
-                          'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
-                        imgLink: '',
-                        materialLink: 'https://www.baidu.com/',
-                        materialCode: 'src100302',
-                        materialHeight: 1334,
-                        materialId: 0,
-                        materialDescription: '',
-                        materialName: '工商注册广告物料1-3',
-                        androidLink: '',
-                        materialWidth: 750,
-                        iosLink: '',
-                        linkType: 2,
-                        wapLink: '',
-                        executeParam: '',
-                        productId: 'extendBussineReg3',
-                        productDetail: {
-                          id: 'extendBussineReg3',
-                          name: '',
-                          referencePrice: 4000,
-                          operating: {
-                            showName: '分公司注册',
-                            slogan: '',
-                            productDescribe: '',
-                            actualViews: 541,
-                            defaultSales: 393,
-                            actualSales: 387,
-                          },
-                        },
-                      },
-                    ],
-                  },
-                ],
-                locationCode: 'ad100230',
-                locationCodeLocType: 2,
-              },
-            ],
-            planlerList: [
-              {
-                id: 30006,
-                userId: '3394',
-                userCentreId: '3394',
-                loginName: '2022554',
-                realName: '刘琴',
-                userHeadUrl:
-                  'http://fastdfs.dggvip.net:8080/group1/M00/0F/72/CgAAB19ExY6EVv-6AAAAAG6SJVc351.jpg',
-                userPhone: '13350072314',
-                cvr: 0.0625,
-                cvrValue: 58.420922,
-                orderBus: 3,
-                orderBusValue: 48.092239,
-                busPerformance: 4412.4,
-                busPerformanceValue: 68.377345,
-                abilityValue: 60.176291,
-                formatType: '工商',
-              },
-              {
-                id: 30169,
-                userId: '7887200447593906176',
-                userCentreId: '7887200447257313280',
-                loginName: '108862',
-                realName: '李劲',
-                userHeadUrl:
-                  'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-                userPhone: '18884259139',
-                cvr: 0.204545,
-                cvrValue: 68.643112,
-                orderBus: 9,
-                orderBusValue: 51.522266,
-                busPerformance: 12192,
-                busPerformanceValue: 86.706115,
-                abilityValue: 72.060582,
-                formatType: '工商',
-              },
-              {
-                id: 30182,
-                userId: '7930253930943676416',
-                userCentreId: '7930253930615472128',
-                loginName: '109870',
-                realName: '李海怡',
-                userHeadUrl:
-                  'http://fastdfs.dggvip.net:8080/group1/M00/0F/60/CgAAB18_I3GEbQtUAAAAAF_T27Q303.jpg',
-                userPhone: '13696057459',
-                cvr: 0.146341,
-                cvrValue: 64.606717,
-                orderBus: 6,
-                orderBusValue: 49.807025,
-                busPerformance: 13492,
-                busPerformanceValue: 88.692524,
-                abilityValue: 70.319713,
-                formatType: '工商',
-              },
-              {
-                id: 30028,
-                userId: '43999',
-                userCentreId: '7704199733711282176',
-                loginName: '96352931',
-                realName: '岳雪冬',
-                userHeadUrl:
-                  'http://fastdfs.dggvip.net:8080/group1/M00/02/C0/wKiyYlubWPyEbXyQAAAAAH6D3Zw879.jpg',
-                userPhone: '13908231675',
-                cvr: 0.140625,
-                cvrValue: 64.197653,
-                orderBus: 9,
-                orderBusValue: 51.522266,
-                busPerformance: 24742,
-                busPerformanceValue: 97.482166,
-                abilityValue: 73.212083,
-                formatType: '工商',
-              },
-              {
-                id: 30035,
-                userId: '66475',
-                userCentreId: '66475',
-                loginName: '38798340',
-                realName: '钟霞',
-                userHeadUrl:
-                  'http://fastdfs.dggvip.net:8080/group1/M00/0F/E7/CgAAB19jRe-EZCmnAAAAAOB-9qQ642.jpg',
-                userPhone: '13730634929',
-                cvr: 0.152542,
-                cvrValue: 65.048084,
-                orderBus: 9,
-                orderBusValue: 51.522266,
-                busPerformance: 20770,
-                busPerformanceValue: 95.658559,
-                abilityValue: 73.069267,
-                formatType: '工商',
-              },
-            ],
-          },
-        },
+        resultData: res,
+        // 待删除
+        // resultData: {
+        //   code: 200,
+        //   message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
+        //   data: {
+        //     adList: [
+        //       {
+        //         pageCode: 'extendBussineReg',
+        //         locationShowTypeCode: 'GGWZXSS_GDXS',
+        //         locationName: 'wap-推广页-工商注册广告',
+        //         locationId: '8027896820880179200',
+        //         locationAddressCode: '',
+        //         sortMaterialList: [
+        //           {
+        //             locationSort: 1,
+        //             materialList: [
+        //               {
+        //                 materialTypeCode: 'GGLX_TP',
+        //                 materialUrl:
+        //                   'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+        //                 imgLink: '',
+        //                 materialLink: 'https://www.baidu.com/',
+        //                 materialCode: 'src100302',
+        //                 materialHeight: 1334,
+        //                 materialId: 0,
+        //                 materialDescription: '',
+        //                 materialName: '工商注册广告物料1-1',
+        //                 androidLink: '',
+        //                 materialWidth: 750,
+        //                 iosLink: '',
+        //                 linkType: 2,
+        //                 wapLink: '',
+        //                 executeParam: '',
+        //                 productId: 'extendBussineReg1',
+        //                 productDetail: {
+        //                   id: 'extendBussineReg1',
+        //                   name: '',
+        //                   referencePrice: 888,
+        //                   operating: {
+        //                     showName: '有限责任公司',
+        //                     slogan: '',
+        //                     productDescribe: '',
+        //                     actualViews: 6439,
+        //                     defaultSales: 4932,
+        //                     actualSales: 4930,
+        //                   },
+        //                 },
+        //               },
+        //             ],
+        //           },
+        //           {
+        //             locationSort: 1,
+        //             materialList: [
+        //               {
+        //                 materialTypeCode: 'GGLX_TP',
+        //                 materialUrl:
+        //                   'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+        //                 imgLink: '',
+        //                 materialLink: 'https://www.baidu.com/',
+        //                 materialCode: 'src100302',
+        //                 materialHeight: 1334,
+        //                 materialId: 0,
+        //                 materialDescription: '',
+        //                 materialName: '工商注册广告物料1-2',
+        //                 androidLink: '',
+        //                 materialWidth: 750,
+        //                 iosLink: '',
+        //                 linkType: 2,
+        //                 wapLink: '',
+        //                 executeParam: '',
+        //                 productId: 'extendBussineReg2',
+        //                 productDetail: {
+        //                   id: 'extendBussineReg2',
+        //                   name: '个体注册',
+        //                   referencePrice: 688,
+        //                   operating: {
+        //                     showName: '个体注册',
+        //                     slogan: '',
+        //                     productDescribe: '',
+        //                     actualViews: 3291,
+        //                     defaultSales: 1837,
+        //                     actualSales: 1832,
+        //                   },
+        //                 },
+        //               },
+        //             ],
+        //           },
+        //           {
+        //             locationSort: 1,
+        //             materialList: [
+        //               {
+        //                 materialTypeCode: 'GGLX_TP',
+        //                 materialUrl:
+        //                   'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+        //                 imgLink: '',
+        //                 materialLink: 'https://www.baidu.com/',
+        //                 materialCode: 'src100302',
+        //                 materialHeight: 1334,
+        //                 materialId: 0,
+        //                 materialDescription: '',
+        //                 materialName: '工商注册广告物料1-3',
+        //                 androidLink: '',
+        //                 materialWidth: 750,
+        //                 iosLink: '',
+        //                 linkType: 2,
+        //                 wapLink: '',
+        //                 executeParam: '',
+        //                 productId: 'extendBussineReg3',
+        //                 productDetail: {
+        //                   id: 'extendBussineReg3',
+        //                   name: '',
+        //                   referencePrice: 4000,
+        //                   operating: {
+        //                     showName: '分公司注册',
+        //                     slogan: '',
+        //                     productDescribe: '',
+        //                     actualViews: 541,
+        //                     defaultSales: 393,
+        //                     actualSales: 387,
+        //                   },
+        //                 },
+        //               },
+        //             ],
+        //           },
+        //         ],
+        //         locationCode: 'ad100230',
+        //         locationCodeLocType: 2,
+        //       },
+        //     ],
+        //     planlerList: [
+        //       {
+        //         id: 30006,
+        //         userId: '3394',
+        //         userCentreId: '3394',
+        //         loginName: '2022554',
+        //         realName: '刘琴',
+        //         userHeadUrl:
+        //           'http://fastdfs.dggvip.net:8080/group1/M00/0F/72/CgAAB19ExY6EVv-6AAAAAG6SJVc351.jpg',
+        //         userPhone: '13350072314',
+        //         cvr: 0.0625,
+        //         cvrValue: 58.420922,
+        //         orderBus: 3,
+        //         orderBusValue: 48.092239,
+        //         busPerformance: 4412.4,
+        //         busPerformanceValue: 68.377345,
+        //         abilityValue: 60.176291,
+        //         formatType: '工商',
+        //       },
+        //       {
+        //         id: 30169,
+        //         userId: '7887200447593906176',
+        //         userCentreId: '7887200447257313280',
+        //         loginName: '108862',
+        //         realName: '李劲',
+        //         userHeadUrl:
+        //           'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+        //         userPhone: '18884259139',
+        //         cvr: 0.204545,
+        //         cvrValue: 68.643112,
+        //         orderBus: 9,
+        //         orderBusValue: 51.522266,
+        //         busPerformance: 12192,
+        //         busPerformanceValue: 86.706115,
+        //         abilityValue: 72.060582,
+        //         formatType: '工商',
+        //       },
+        //       {
+        //         id: 30182,
+        //         userId: '7930253930943676416',
+        //         userCentreId: '7930253930615472128',
+        //         loginName: '109870',
+        //         realName: '李海怡',
+        //         userHeadUrl:
+        //           'http://fastdfs.dggvip.net:8080/group1/M00/0F/60/CgAAB18_I3GEbQtUAAAAAF_T27Q303.jpg',
+        //         userPhone: '13696057459',
+        //         cvr: 0.146341,
+        //         cvrValue: 64.606717,
+        //         orderBus: 6,
+        //         orderBusValue: 49.807025,
+        //         busPerformance: 13492,
+        //         busPerformanceValue: 88.692524,
+        //         abilityValue: 70.319713,
+        //         formatType: '工商',
+        //       },
+        //       {
+        //         id: 30028,
+        //         userId: '43999',
+        //         userCentreId: '7704199733711282176',
+        //         loginName: '96352931',
+        //         realName: '岳雪冬',
+        //         userHeadUrl:
+        //           'http://fastdfs.dggvip.net:8080/group1/M00/02/C0/wKiyYlubWPyEbXyQAAAAAH6D3Zw879.jpg',
+        //         userPhone: '13908231675',
+        //         cvr: 0.140625,
+        //         cvrValue: 64.197653,
+        //         orderBus: 9,
+        //         orderBusValue: 51.522266,
+        //         busPerformance: 24742,
+        //         busPerformanceValue: 97.482166,
+        //         abilityValue: 73.212083,
+        //         formatType: '工商',
+        //       },
+        //       {
+        //         id: 30035,
+        //         userId: '66475',
+        //         userCentreId: '66475',
+        //         loginName: '38798340',
+        //         realName: '钟霞',
+        //         userHeadUrl:
+        //           'http://fastdfs.dggvip.net:8080/group1/M00/0F/E7/CgAAB19jRe-EZCmnAAAAAOB-9qQ642.jpg',
+        //         userPhone: '13730634929',
+        //         cvr: 0.152542,
+        //         cvrValue: 65.048084,
+        //         orderBus: 9,
+        //         orderBusValue: 51.522266,
+        //         busPerformance: 20770,
+        //         busPerformanceValue: 95.658559,
+        //         abilityValue: 73.069267,
+        //         formatType: '工商',
+        //       },
+        //     ],
+        //   },
+        // },
       }
     } catch (error) {
       console.log('error', error)
@@ -692,7 +693,7 @@ export default {
         imgSrc: '',
       },
       myTitle: '有疑问？千万企服专家为您免费解答',
-      tel: '4000-535800',
+      tel: '4000-962540',
     }
   },
   created() {
@@ -757,11 +758,17 @@ export default {
     onMore() {
       this.isMore ? (this.isMore = false) : (this.isMore = true)
     },
-    onService(url) {
+    onService(url, index) {
       if (url !== '') {
         window.location.href = url
       } else {
-        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+        this.$root.$emit(
+          'openIMM',
+          this.listCount[index].id,
+          this.listCount[index].name,
+          this.listCount[index].jobNum,
+          this.listCount[index].imgSrc
+        )
       }
     },
   },
@@ -775,6 +782,12 @@ export default {
           ssr: false,
           type: 'text/javascript',
           charset: 'utf-8',
+        },
+        {
+          src: '/js/spread/companyRegister-md-config.js',
+        },
+        {
+          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
         },
       ],
     }
