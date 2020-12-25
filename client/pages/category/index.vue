@@ -2,7 +2,12 @@
   <div class="category">
     <!--S 头部-->
     <div class="category_header">
-      <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a" />
+      <my-icon
+        name="nav_ic_back"
+        size="0.40rem"
+        color="#1a1a1a"
+        @click="back"
+      />
       <div class="category_header_con">
         <my-icon name="sear_ic_sear" size="0.28rem" color="#999" />
         <input
@@ -29,7 +34,7 @@
             }"
             @click="handleClick(index)"
           >
-            <div class="line" v-show="TabNavList == index"></div>
+            <div v-show="TabNavList == index" class="line"></div>
             {{ item.name }}
           </li>
         </ul>
@@ -189,6 +194,9 @@ export default {
       // 点击每一个二级分类
       sessionStorage.categoryData = JSON.stringify(item)
       this.$router.push('/list/serveList')
+    },
+    back() {
+      this.$router.back()
     },
   },
 }

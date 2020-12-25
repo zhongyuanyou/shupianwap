@@ -19,9 +19,11 @@
     <!--E 头部-->
     <!--S 内容-->
     <div class="address_con" :style="{ paddingTop: isInApp ? 0 : '0.88rem' }">
-      <p v-if="!addressList.length && loadingStatus" class="prompt">
-        您还没有添加收货地址额～
-      </p>
+      <div v-if="!addressList.length && loadingStatus" class="no_address">
+        <img src="~/assets/images/default_img_nopoint.png" />
+        <p class="prompt">未添加收货地址</p>
+        <p class="new_address" @click="handleNew">新建地址</p>
+      </div>
       <div v-if="addressList.length && loadingStatus" class="address_con_list">
         <sp-swipe-cell
           v-for="(item, index) in addressList"
@@ -69,7 +71,7 @@
           </template>
         </sp-swipe-cell>
       </div>
-      <div style="width: 100%" v-if="!loadingStatus">
+      <div v-if="!loadingStatus" style="width: 100%">
         <sp-skeleton
           v-for="item in 3"
           :key="item"
@@ -82,7 +84,10 @@
     </div>
     <!--E 内容-->
     <!--S 底部-->
-    <sp-bottombar safe-area-inset-bottom>
+    <sp-bottombar
+      v-if="addressList.length && loadingStatus"
+      safe-area-inset-bottom
+    >
       <sp-bottombar-button
         type="primary"
         icon="plus"
@@ -268,12 +273,28 @@ export default {
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
+    .no_address {
+      width: 100%;
+      text-align: center;
+      > img {
+        width: 340px;
+        height: 340px;
+        margin-top: 176px;
+      }
+    }
     .prompt {
       font-size: 34px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #1a1a1a;
-      margin-top: 429px;
+      margin-top: 24px;
+    }
+    .new_address {
+      margin-top: 31px;
+      font-size: 28px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #4974f5;
     }
     &_list {
       width: 100%;

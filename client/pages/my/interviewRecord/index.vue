@@ -25,7 +25,7 @@
           >
             <div class="item-info" @click="handleClick(item)">
               <div class="left">
-                <div class="item-info_avatar" @click="scanDetail(item.id)">
+                <div class="item-info_avatar" @click.stop="scanDetail(item)">
                   <sp-image
                     round
                     width="0.8rem"
@@ -134,7 +134,7 @@ import {
   CenterPopup,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { interviewApi } from '~/api'
+import { interviewApi, publicApi } from '~/api'
 // import { parseTel } from '~/utils/common'
 
 export default {
@@ -187,18 +187,25 @@ export default {
       this.$router.back()
     },
     // 查看规划师详情
-    scanDetail(id) {
-      this.$router.push('/planner/' + id)
+    scanDetail(item) {
+      const data = {
+        mchUserId: item.inviterId,
+      }
+      this.$router.push({
+        name: 'planner-detail',
+        query: data,
+      })
     },
     // 打电话
-    tel(number) {
-      // if (this.isdggapp) {
-      //   this.$appFn.callPhone(number, (res) => {})
-      // } else {
-      //   window.location.href = 'tel:' + number
-      // }
-      console.log(number)
-      window.location.href = 'tel:' + number
+    async tel(number) {
+      // window.location.href = 'tel:' + number
+      try {
+        const params = {
+          encryptPhone: number,
+        }
+        const res = await this.$axios.post(publicApi.descrptionPhone, params)
+        console.log('res', res)
+      } catch (err) {}
     },
     cancelConfirm() {
       // 显示取消面谈确认框
@@ -217,6 +224,8 @@ export default {
         }
         const res = await this.$axios.post(interviewApi.cancel, params)
         if (res.code === 200) {
+          this.page = 1
+          this.list = []
           this.getInterviewList()
         }
       } catch (err) {}
