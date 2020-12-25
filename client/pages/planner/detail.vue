@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-25 09:32:23
+ * @LastEditTime: 2020-12-25 10:37:36
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/detail.vue
 -->
@@ -244,7 +244,7 @@ export default {
       this.$refs.spToast.show({
         message: '薯片分是对规划师的综合衡量，薯片分越高综合表现越好',
         duration: 1500,
-        forbidClick: true,
+        forbidClick: false,
         // icon: 'spiconfont-tab_ic_check',
       })
     },
@@ -261,14 +261,25 @@ export default {
     // 分享
     uPShareOption() {
       if (this.isInApp) {
-        this.shareOptions = [
-          { name: '微信', icon: 'wechat' },
-          { name: '微博', icon: 'weibo' },
-          { name: '复制链接', icon: 'link' },
-          { name: '分享海报', icon: 'poster' },
-          { name: '二维码', icon: 'qrcode' },
-        ]
-        this.showShare = true
+        this.$appFn.dggShare(
+          {
+            image: this.detailData.img,
+            title: '规划师',
+            subTitle: '',
+            url: window && window.location.href,
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$refs.spToast.show({
+                message: '分享失败！',
+                duration: 1500,
+                forbidClick: false,
+                icon: 'toast_ic_remind',
+              })
+            }
+          }
+        )
         return
       }
 
@@ -304,10 +315,14 @@ export default {
     // 获取详情数据
     async getDetail() {
       try {
-        debugger
         const { mchUserId } = this.$route.query
         if (mchUserId == null) {
-          Toast('缺少规划师参数')
+          this.$refs.spToast.show({
+            message: '缺少规划师参数!',
+            duration: 1000,
+            forbidClick: false,
+            icon: 'toast_ic_error',
+          })
           return
         }
         const params = { id: mchUserId }
@@ -317,6 +332,12 @@ export default {
         return data
       } catch (error) {
         console.error('getDetail:', error)
+        this.$refs.spToast.show({
+          message: error.message || '请求失败！',
+          duration: 0,
+          forbidClick: false,
+          icon: 'toast_ic_error',
+        })
         return Promise.reject(error)
       }
     },
