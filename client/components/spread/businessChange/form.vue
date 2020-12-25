@@ -16,7 +16,7 @@
         <!-- s行业下拉框 -->
         <sp-field
           v-model="value"
-          label="我需要"
+          label="变更项目"
           :readonly="read"
           @click="selectshow = true"
         />
@@ -110,13 +110,12 @@ export default {
         { name: '经营范围变更', color: '#222222' },
         { name: '跨区地址变更', color: '#222222' },
         { name: '同区地址变更', color: '#222222' },
-        { name: '注册资金增加变更', color: '#222222' },
         { name: '注册资金减少变更', color: '#222222' },
         { name: '公司类型变更', color: '#222222' },
         { name: '个体变更', color: '#222222' },
         { name: '股权变更', color: '#222222' },
         { name: '认缴年限变更', color: '#222222' },
-        { name: '其他', color: '#222222' },
+        { name: '其他变更', color: '#222222' },
       ],
       lables: ['流程透明', '信息安全', '官方服务'],
     }
@@ -373,7 +372,7 @@ export default {
       font-family: PingFang SC;
       font-weight: 400;
       color: #1a1a1a;
-      width: 90px !important;
+      width: 115px !important;
     }
     /deep/.sp-field__control {
       font-size: 28px;
