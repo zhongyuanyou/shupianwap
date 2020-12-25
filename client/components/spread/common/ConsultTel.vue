@@ -19,6 +19,7 @@
         v-md:webClick
         class="cousulttel-content-button"
         data-name="对代理记账还有疑问_立即咨询"
+        @click="telPhone"
       >
         立即咨询
       </button>
@@ -43,6 +44,11 @@ export default {
       default: () => {
         return '4000-962540'
       },
+    },
+  },
+  methods: {
+    telPhone() {
+      window.location.href = `tel:${this.tel}`
     },
   },
 }

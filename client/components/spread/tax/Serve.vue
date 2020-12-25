@@ -69,7 +69,7 @@
             v-md:webClick
             class="serve-card-second-right-rap"
             data-name="税筹服务介绍_增值税筹划_拨打电话"
-            @click="call"
+            @click="call(i, $event)"
           >
             <my-icon
               name="notify_ic_tel"
@@ -103,9 +103,9 @@ export default {
   },
   methods: {
     // 电话图标调用电话接口
-    call(e) {
+    call(i, e) {
       e.stopPropagation()
-      window.location.href = `tel:${this.serveData.phone}`
+      window.location.href = `tel:${this.serveData[i].phone}`
     },
     // 信息图标直接调用IM
     openIm(i, e) {

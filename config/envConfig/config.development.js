@@ -124,7 +124,7 @@ module.exports = (appInfo) => {
         name: 'MyOwn',
       },
       metadata: {
-        version: '3.8',
+        version: '3.1',
       },
     },
     requestMiddleware: (requestOpts, done) => {

@@ -58,7 +58,7 @@
                 v-md-map
                 v-md:webClick
                 :data-name="plannersCommon.telName"
-                @click="tel"
+                @click="tel(i, $event)"
               >
                 <my-icon
                   name="notify_ic_tel"
@@ -156,9 +156,9 @@ export default {
         this.plannersData[i].avatarImg
       )
     },
-    tel(e) {
+    tel(i, e) {
       e.stopPropagation()
-      window.location.href = `tel:${this.plannersData.telephone}`
+      window.location.href = `tel:${this.plannersData[i].telephone}`
     },
   },
 }
