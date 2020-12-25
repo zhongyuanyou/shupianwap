@@ -118,6 +118,9 @@ export default {
   mounted() {
     this.getInfoDetail()
   },
+  destroyed() {
+    this.$appFn.dggHideNav((res) => {})
+  },
   methods: {
     back() {
       // 返回上一页
