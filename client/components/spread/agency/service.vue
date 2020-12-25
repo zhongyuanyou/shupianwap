@@ -40,11 +40,6 @@
                 href="javascript:;"
                 data-im_type="售前"
                 data-name="变更服务介绍_item.plannerName_在线咨询"
-                @click="
-                  () => {
-                    $parent.openIM(item.url)
-                  }
-                "
               >
                 <img :src="item.planner.avatarImg" alt="" />
               </a>
@@ -54,11 +49,6 @@
                 href="javascript:;"
                 data-im_type="售前"
                 data-name="变更服务介绍_item.plannerName_在线咨询"
-                @click="
-                  () => {
-                    $parent.openIM(item.url)
-                  }
-                "
               >
                 <my-icon
                   name="notify_ic_chat"

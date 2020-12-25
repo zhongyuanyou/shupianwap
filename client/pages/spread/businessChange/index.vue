@@ -601,7 +601,7 @@ export default {
       const guiHuaShiList = []
       data.forEach((item) => {
         const obj = {
-          id: item.userId,
+          id: item.userCentreId,
           avatarImg: item.userHeadUrl,
           name: item.realName,
           shuPianFen: 11,

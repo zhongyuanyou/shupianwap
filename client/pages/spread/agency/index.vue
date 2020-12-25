@@ -426,7 +426,6 @@ export default {
       this.plannerHandleData(this.resultData.data.planlerList || [])
       this.nums = this.resultData.data.nums
     }
-    console.log(this.planner)
   },
   methods: {
     // 商品数据处理
@@ -477,7 +476,7 @@ export default {
       const guiHuaShiList = []
       data.forEach((item) => {
         const obj = {
-          id: item.userId,
+          id: item.userCentreId,
           avatarImg: item.userHeadUrl,
           name: item.realName,
           shuPianFen: 11,

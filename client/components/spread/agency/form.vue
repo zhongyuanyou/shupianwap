@@ -19,9 +19,8 @@
           v-for="(item, index) in LinesScope"
           :key="index"
           v-md-map
-          v-md:webClick
           :class="[actived == index + 1 ? 'isactive' : '']"
-          data-name="代理记账表单_item.scope"
+          :data-name="`代理记账表单${item.scope}`"
           data-form_type="咨询表单"
           @click="selected(item.code)"
         >
@@ -80,9 +79,8 @@
       </div>
       <!-- s 按钮 -->
       <button
-        v-md:WebClick
-        v-md:p_formSubmit
         v-md-map
+        v-md:p_formSubmit
         class="free-btn"
         data-event_name="p_formSubmit"
         data-form_type="咨询表单"
@@ -237,6 +235,12 @@ export default {
           console.log(res)
           this.telephone = ''
           this.sms = ''
+          window.getTrackRow('p_formSubmitResult', {
+            even_name: 'p_formSubmitResult',
+            form_type: '咨询表单',
+            form_sn: 'ZL077',
+            form_name: '代理记账表单_提交表单',
+          })
           console.log(params)
           Toast('提交成功，请注意接听电话')
         } else {
