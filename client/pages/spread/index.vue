@@ -1065,7 +1065,7 @@ export default {
       if (data.length === 0) return
       // 默认第一个为页面规划师
       this.pagePlanner = {
-        id: data[0].userId,
+        id: data[0].userCentreId,
         name: data[0].realName,
         jobNum: data[0].loginName,
         telephone: data[0].userPhone,
@@ -1076,7 +1076,7 @@ export default {
       const guiHuaShiList = []
       data.forEach((item) => {
         const obj = {
-          id: item.userId,
+          id: item.userCentreId,
           avatarImg: item.userHeadUrl,
           name: item.realName,
           shuPianFen: 11,
