@@ -11,7 +11,7 @@
         :value="selectValue"
         is-link
         arrow-direction="down"
-        title="我需要"
+        title="注册类型"
         @click="downShow = true"
       >
       </sp-cell>
@@ -157,22 +157,18 @@ export default {
     },
     // 发送验证码
     getMsg(setData) {
-      console.log(setData === 'esc')
       if (this.test === '获取验证码' || this.test === '重新发送') {
         window.promotion.privat.getSmsCode(setData, (res) => {
           if (res.error === 0) {
             let i = 59
             this.test = i + 's'
-            if (setData === 'esc') {
-              i = 1
-            }
-            const time = setInterval(() => {
+            this.time = setInterval(() => {
               if (i > 1) {
                 i--
                 this.test = i + 's'
               } else {
                 this.test = '重新发送'
-                clearInterval(time)
+                clearInterval(this.time)
               }
             }, 1000)
             console.log(res)
@@ -233,7 +229,7 @@ export default {
         companyRegistry: this.selectValue,
       }
       if (contentStr.companyRegistry === '请选择') {
-        Toast('请选择你需要的类型')
+        Toast('请选择注册类型')
         return
       }
       const params = {
@@ -251,13 +247,12 @@ export default {
       window.promotion.privat.consultForm(params, (res) => {
         if (res.error === 0) {
           // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
-          console.log(res)
           Toast('提交成功，请注意接听电话')
+          clearInterval(this.time)
           this.selectValue = '请选择'
           this.sms = ''
           this.phoneValue = ''
-          window.clearInterval()
-          this.getMsg('esc')
+          this.test = '发送验证码'
         } else {
           // ------------
           console.log(res)
