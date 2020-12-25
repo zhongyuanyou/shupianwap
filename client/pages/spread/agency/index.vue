@@ -68,8 +68,10 @@ export default {
       const res = await $axios.get(spreadApi.list, {
         params: { pageCode: type },
       })
-      return {
-        result: res,
+      if (res.code === 200) {
+        return {
+          result: res,
+        }
       }
     } catch (error) {
       // 请求出错也要保证页面正常显示
@@ -417,7 +419,9 @@ export default {
       }
     } else {
       this.productDetail(this.resultData.data.adList[0].sortMaterialList)
+      this.plannerHandleData(this.resultData.data.planlerList || [])
       this.nums = this.resultData.data.nums
+      console.log(1111)
     }
   },
   methods: {

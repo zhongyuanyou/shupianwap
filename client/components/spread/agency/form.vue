@@ -53,6 +53,12 @@
           :actions="actions"
           @select="onSelect"
         />
+        <!-- s 公司名称 -->
+        <sp-field
+          v-model="company"
+          label="公司名称"
+          placeholder="请输入公司名称"
+        />
         <!-- e下拉选项框  -->
         <sp-field
           v-model="telephone"
@@ -128,35 +134,18 @@ export default {
       ],
       actived: 1,
       read: true,
-
-      value: '科技信息', // 行业信息
+      scope: '0-100万',
+      value: '小规模纳税人', // 行业信息
       telephone: '', // 电话号码
       sms: '', // 验证码
       isshow: false, // 验证码框是否显示
       selectshow: false, // 下拉选择框是否显示
       countdown: -1, // 发送验证码倒计时60秒
       countdownTimer: null,
+      company: '',
       actions: [
-        { name: '科技信息', color: '#5a79e8' },
-        { name: '广告传媒', color: '#222222' },
-        { name: '金融投资', color: '#222222' },
-        { name: '电子贸易', color: '#222222' },
-        { name: '教育培训', color: '#222222' },
-        { name: '物业地产', color: '#222222' },
-        { name: '经济中介', color: '#222222' },
-        { name: '建筑装饰', color: '#222222' },
-        { name: '家居建材', color: '#222222' },
-        { name: '通讯网络', color: '#222222' },
-        { name: '实业生产', color: '#222222' },
-        { name: '珠宝服饰', color: '#222222' },
-        { name: '文化初版', color: '#222222' },
-        { name: '印刷包装', color: '#222222' },
-        { name: '餐饮美容', color: '#222222' },
-        { name: '咨询服务', color: '#222222' },
-        { name: '食品农业', color: '#222222' },
-        { name: '会务展览', color: '#222222' },
-        { name: '物流供应链', color: '#222222' },
-        { name: '其他行业', color: '#222222' },
+        { name: '小规模纳税人', color: '#5a79e8' },
+        { name: '一般纳税人', color: '#222222' },
       ], // 下拉框内容
     }
   },
@@ -164,8 +153,9 @@ export default {
     this.dropdownValue = this.actions[0]
   },
   methods: {
-    selected(code) {
-      this.actived = code
+    selected(index) {
+      this.actived = index
+      return (this.scope = this.LinesScope[index - 1].scope)
     },
     // 验证码倒计时
     countDown() {
@@ -230,10 +220,11 @@ export default {
       const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       const contentStr = {
         industry: this.dropdownValue.name,
+        LinesScope: this.scope,
       }
       const params = {
         formId, // formId,唯一ID提交资源中心
-        name: '匿名客户',
+        name: this.company,
         tel: _tel, // 电话
         url: webUrl, // 当前页面地址。用于后台判断ip发送验证码次数
         type: 'kjdl', // 业态编码。
@@ -250,6 +241,7 @@ export default {
           console.log(res)
           this.telephone = ''
           this.sms = ''
+          console.log(contentStr)
           Toast('提交成功，请注意接听电话')
         } else {
           console.log(res)
@@ -438,7 +430,7 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #1a1a1a;
-        width: 90px !important;
+        width: 115px !important;
       }
       /deep/.sp-field__control {
         font-size: 28px;
