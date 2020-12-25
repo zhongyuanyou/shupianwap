@@ -496,6 +496,12 @@ export default {
         {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
         },
+        {
+          src: '/js/spread/businessAgency-md-config.js',
+        },
+        {
+          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
+        },
       ],
     }
   },

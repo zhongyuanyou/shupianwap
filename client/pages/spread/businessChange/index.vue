@@ -446,6 +446,7 @@ export default {
           price: '488',
           bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw01.png'),
           planner: {},
+          plannerName: '',
         },
         {
           id: '',
@@ -567,12 +568,14 @@ export default {
               index + 1
             }.png`),
             planner: this.plannersList[`${index <= 4 ? index : 1}`],
+            plannerName: item.materialList[0].productDetail.operating.showName,
           }
           fuWuList.push(obj)
         })
         this.servicelist = fuWuList
       }
     },
+
     // 跳转判断
     openIM(url) {
       if (url) {
@@ -617,6 +620,12 @@ export default {
       script: [
         {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
+        },
+        {
+          src: '/js/spread/businessChange-md-config.js',
+        },
+        {
+          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
         },
       ],
     }
