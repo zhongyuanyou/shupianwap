@@ -8,14 +8,14 @@
       @clickInputHandle="clickInputHandle"
     >
       <div slot="left" class="nav-back" @click="$router.go(-1)">
-        <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
+        <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a" />
       </div>
-      <div slot="right" class="info">
-        <my-icon name="nav_ic_msg" size="0.40rem" color="#1a1a1a"></my-icon>
+      <div slot="right" class="info" @click="jumpImMixin">
+        <my-icon name="nav_ic_msg" size="0.40rem" color="#1a1a1a" />
       </div>
     </Search>
     <!--E搜索框-->
-    <!--S筛选栏 :lazy-render="false"-->
+    <!--S筛选栏-->
     <sp-work-tabs v-model="active">
       <sp-work-tab title="企业服务">
         <serveGoods
@@ -60,6 +60,7 @@ import Search from '@/components/common/search/Search'
 import serveGoods from '@/components/list/ServeGoods'
 import JyGoods from '@/components/list/JyGoods'
 import addSearchHistory from '@/mixins/addSearchHistory'
+import listJumpIm from '@/mixins/listJumpIm'
 import { goods, dict } from '@/api/index'
 export default {
   name: 'SearchResult',
@@ -70,7 +71,7 @@ export default {
     serveGoods,
     JyGoods,
   },
-  mixins: [addSearchHistory],
+  mixins: [addSearchHistory, listJumpIm],
   data() {
     return {
       formData: {

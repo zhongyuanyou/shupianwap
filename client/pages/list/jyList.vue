@@ -9,7 +9,7 @@
       <div slot="left" class="nav-back">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
-      <div slot="right" class="info">
+      <div slot="right" class="info" @click="jumpImMixin">
         <my-icon name="nav_ic_msg" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
     </Search>
@@ -30,6 +30,7 @@ import { WorkTabs, WorkTab, Badge } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import JyGoods from '@/components/list/JyGoods'
 import { dict } from '@/api/index'
+import listJumpIm from '@/mixins/listJumpIm'
 
 export default {
   name: 'JyList',
@@ -40,6 +41,7 @@ export default {
     JyGoods,
     [Badge.name]: Badge,
   },
+  mixins: [listJumpIm],
   data() {
     return {
       jyGoodsListData: {}, // 服务商品列表数据
