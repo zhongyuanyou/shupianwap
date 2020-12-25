@@ -6,13 +6,13 @@
       "
     />
     <div
-      class="content"
       v-if="error.statusCode === 404 && error.path !== '/500'"
+      class="content"
     >
       <img src="../assets/temporary/home/default_img_404_2x.png" alt="" />
       <p>页面已失效</p>
     </div>
-    <div class="content" v-else>
+    <div v-else class="content">
       <img src="../assets/temporary/home/default_img_wrong_2x.png" alt="" />
       <p>请求错误</p>
     </div>
@@ -22,11 +22,18 @@
 <script>
 import Header from '@/components/common/head/header'
 export default {
-  props: ['error'],
-  name: 'ErrorPage',
   layout: 'default',
+  name: 'ErrorPage',
   components: {
     Header,
+  },
+  props: {
+    error: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
   },
   mounted() {
     console.log(this.error)
