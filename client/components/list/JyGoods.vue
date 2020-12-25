@@ -13,7 +13,11 @@
       }"
       @change="changeTabs"
     >
-      <sp-tab v-for="(item, index) in tabItems" :key="index" :title="item.name">
+      <sp-tab
+        v-for="(item, index) in tabItems"
+        :key="index"
+        :title="item.name + '交易'"
+      >
         <template v-if="jyFilterData[item.code]">
           <!--S交易筛选-->
           <jy-filters

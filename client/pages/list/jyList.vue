@@ -80,7 +80,7 @@ export default {
         const index = this.jyTypesData.findIndex((item) => {
           const typeCode = this.$route.query.typeCode
             ? this.$route.query.typeCode
-            : 'FL20201207080003'
+            : item.ext4
           return item.ext4 === typeCode
         })
         this.typeCodeIndex = index
