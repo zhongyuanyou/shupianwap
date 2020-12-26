@@ -136,7 +136,6 @@ const DEFAULT_PAGE = {
 
 export default {
   name: 'MyPlanner',
-  mixins: [imHandle],
   components: {
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
@@ -148,6 +147,7 @@ export default {
     [TopNavBar.name]: TopNavBar,
     SpToast,
   },
+  mixins: [imHandle],
   data() {
     return {
       list: [],

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-03 15:34:31
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-22 19:42:33
+ * @LastEditTime: 2020-12-26 15:42:45
  * @Description: file content
  * @FilePath: /chips-wap/app/controller/login.js
  */
@@ -34,9 +34,32 @@ class LoginController extends Controller {
       client: { type: 'string', required: true },
       platformType: { type: 'string', required: true },
       dataJson: { type: 'object', required: true },
+      imgCaptcha: { type: 'string', required: false },
     };
 
     if (getValiErrors(app, ctx, rules, ctx.request.body)) return;
+
+    // 需要图形验证的
+    const { imgCaptcha } = this.ctx.request.body;
+    if (imgCaptcha) {
+      const isSuccess = service.common.verificationCode.checkCaptcha(
+        imgCaptcha
+      );
+      if (!isSuccess) {
+        ctx.helper.fail({
+          ctx,
+          code: 422,
+          res: {},
+          detailMessage: '图形验证失败',
+        });
+        return;
+      }
+
+      ctx.request.body.dataJson = Object.assign({}, ctx.request.body.dataJson, {
+        picVerify: true,
+      });
+    }
+
     Object.assign(ctx.headers, { sysCode: 'crisps-app' });
     const url = ctx.helper.assembleUrl(
       app.config.apiClient.APPID[2],
@@ -241,8 +264,8 @@ class LoginController extends Controller {
       ctx.request.body.phone,
       ctx.request.body.userId,
       ctx.request.body.userType,
-      ctx.request.body.smsCode,
-    )
+      ctx.request.body.smsCode
+    );
     if (data.code === 200) {
       ctx.helper.success({
         ctx,
@@ -307,6 +330,30 @@ class LoginController extends Controller {
       contentApi.infoList
     );
     const data = await service.curl.curlGet(url, params);
+
+    if (data.code === 200) {
+      ctx.helper.success({
+        ctx,
+        code: 200,
+        res: data.data,
+      });
+      return;
+    }
+    ctx.helper.fail({
+      ctx,
+      code: data.code,
+      res: data,
+      detailMessage: data.message || '请求失败',
+    });
+  }
+
+  // 获取图形验证码
+  @Get('/img_code.do')
+  async getVerificationImg() {
+    const { ctx, service } = this;
+
+    // const data = await service.common.verificationCode.getImgCode();
+    const data = service.common.verificationCode.createCaptcha();
 
     if (data.code === 200) {
       ctx.helper.success({

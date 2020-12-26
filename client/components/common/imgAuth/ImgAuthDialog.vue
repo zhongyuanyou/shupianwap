@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-20 10:17:36
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-23 08:47:08
+ * @LastEditTime: 2020-12-26 15:49:14
  * @Description: file content
- * @FilePath: /chips-wap/client/components/imgAuth/ImgAuthDialog.vue
+ * @FilePath: /chips-wap/client/components/common/imgAuth/ImgAuthDialog.vue
 -->
 <template>
   <div class="img-auth-dialog">
@@ -50,7 +50,7 @@ export default {
       type: String,
       default: '请输入图片验证码',
     },
-    submitCode: {
+    callback: {
       type: Function,
       default(authCode) {
         console.log(authCode)
@@ -81,24 +81,20 @@ export default {
     console.log('shiyong ')
     this.portal()
   },
+  beforeDestroy() {
+    if (this.getContainer) {
+      const parent = this.$el.parentNode
+      if (parent) {
+        parent.removeChild(this.$el)
+      }
+    }
+  },
+
   methods: {
     beforeClose(action, done) {
       console.log(action)
-      if (action === 'confirm' && typeof this.submitCode === 'function') {
-        const result = this.submitCode(this.authCode)
-        if (result && result.then) {
-          result
-            .then(() => {
-              done()
-              this.authCode = ''
-            })
-            .catch(() => {
-              done(false)
-            })
-          return
-        }
-        result ? done() : done(false)
-        return
+      if (this.callback) {
+        this.callback(action, this.authCode)
       }
       done()
     },

@@ -92,5 +92,16 @@ const auth = {
       url: CHIPS_WAP_BASE_URL + '/nk/login/v1/protocol.do',
     })
   },
+
+  /**
+   * 获取图形码
+   * @returns {Promise}
+   */
+  imgCode(params) {
+    return request({
+      params,
+      url: CHIPS_WAP_BASE_URL + '/nk/login/v1/img_code.do',
+    })
+  },
 }
 export default auth

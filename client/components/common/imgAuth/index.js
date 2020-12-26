@@ -2,32 +2,54 @@
  * @Author: xiao pu
  * @Date: 2020-11-20 10:16:07
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-20 15:32:10
+ * @LastEditTime: 2020-12-26 15:26:00
  * @Description: file content
- * @FilePath: /chips-wap/client/components/imgAuth/index.js
+ * @FilePath: /chips-wap/client/components/common/imgAuth/index.js
  */
 import Vue from 'vue'
 import VueImgAuthDialog from './ImgAuthDialog.vue'
+
+let instance
 
 function createInstance() {
   if (!window || !window.document) {
     return {}
   }
-  const imgAuthDialog = new (Vue.extend(VueImgAuthDialog))({
+
+  if (instance) {
+    instance.$destroy()
+  }
+
+  instance = new (Vue.extend(VueImgAuthDialog))({
     el: document.createElement('div'),
   })
-  imgAuthDialog.$on('update', (value) => {
-    imgAuthDialog.show = value
+  instance.$on('update', (value) => {
+    instance.show = value
   })
 
-  return imgAuthDialog
+  return instance
 }
 
 function ImgAuthDialog(options = {}) {
-  const imgAuthDialog = createInstance()
-  console.log('成功！')
-  Object.assign(imgAuthDialog, options, { show: true })
-  return imgAuthDialog
+  if (process && process.server) {
+    return Promise.resolve()
+  }
+
+  return new Promise((resolve, reject) => {
+    const imgAuthDialog = createInstance()
+    Object.assign(imgAuthDialog, options, {
+      show: true,
+      resolve,
+      reject,
+      callback: (action, data) => {
+        imgAuthDialog[action === 'confirm' ? 'resolve' : 'reject']({
+          action,
+          data,
+        })
+      },
+    })
+    return imgAuthDialog
+  })
 }
 
 ImgAuthDialog.install = () => {
