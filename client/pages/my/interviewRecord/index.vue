@@ -202,7 +202,7 @@ export default {
         query: data,
       })
     },
-    // 打电话
+    // 打电话encryptPhone: number,
     async tel(number) {
       // window.location.href = 'tel:' + number
       try {
