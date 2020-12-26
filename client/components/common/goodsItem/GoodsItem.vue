@@ -88,7 +88,7 @@ export default {
         )
       } else {
         this.$router.push(
-          `/detail/transactionDetails?type=${this.goodstype.typeCode}&id=${this.itemData.id}`
+          `/detail/transactionDetails?type=${this.goodstype.typeCode}&productId=${this.itemData.id}`
         )
       }
     },
