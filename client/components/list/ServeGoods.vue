@@ -6,7 +6,6 @@
         ref="item"
         :title-class="moreTextCss[0]"
         :title="dropdownTitle1"
-        @open="open(0)"
         @close="close(0)"
       >
         <ServiceSelect
@@ -21,14 +20,32 @@
         />
       </sp-dropdown-item>
       <sp-dropdown-item
-        v-model="selectValue"
+        ref="dropdown2"
         :title="dropdownTitle2"
         :title-class="moreTextCss[1]"
-        :options="option"
-        @open="open(1)"
-        @change="selectDropdown"
-        @close="close(1)"
-      />
+      >
+        <div class="sort-content">
+          <sp-cell
+            v-for="(item, index) in option"
+            :key="index"
+            :title="item.text"
+            :class="{
+              active: isActive(item),
+            }"
+            @click="selectCell(item)"
+          >
+            <!-- 使用 right-icon 插槽来自定义右侧图标 -->
+            <template #right-icon>
+              <my-icon
+                v-show="isActive(item)"
+                name="tab_ic_check"
+                size="0.22rem"
+                color="#4974f5"
+              />
+            </template>
+          </sp-cell>
+        </div>
+      </sp-dropdown-item>
     </sp-dropdown-menu>
     <!-- E筛选项 -->
     <!-- S下载App -->
@@ -74,7 +91,13 @@
 </template>
 
 <script>
-import { DropdownMenu, DropdownItem, List, Skeleton } from '@chipspc/vant-dgg'
+import {
+  DropdownMenu,
+  DropdownItem,
+  List,
+  Skeleton,
+  Cell,
+} from '@chipspc/vant-dgg'
 import InstallApp from '@/components/common/app/InstallApp'
 import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
@@ -92,6 +115,7 @@ export default {
     [DropdownItem.name]: DropdownItem,
     [List.name]: List,
     [Skeleton.name]: Skeleton,
+    [Cell.name]: Cell,
     ServiceSelect,
     BottomConfirm,
     InstallApp,
@@ -173,7 +197,7 @@ export default {
       })
       // 分类数据
       this.typeData = clone(val.typeData)
-      this.selectValue = this.option[0].value
+      // this.selectValue = this.option[0].value
     },
     activeData(val) {
       if (this.saveActiveData.length && this.saveActiveData[0].code !== -1) {
@@ -194,41 +218,33 @@ export default {
     this.initGoodsList()
   },
   methods: {
-    selectDropdown(val) {
-      const option = this.option.filter((item) => {
-        return item.value === val
-      })
-      this.dropdownTitle2 = option.text
-      this.formData.sortBy = val
-      this.initGoodsList()
-    },
     handleSelect(val) {
       // 分类选择
       // console.log(val)
       this.activeData = val
     },
-    open(index) {},
-    close(index) {
-      console.log('index', index)
-      // 关闭下拉选择框
-      if (
-        index === 1 &&
-        this.option.length &&
-        this.selectValue !== this.option[0].value
-      ) {
-        // 给下拉标题增加选中
-        this.addClass('active', 1)
-      } else if (index === 1) {
+    selectCell(item) {
+      // 选择排序下拉框
+      this.dropdownTitle2 = item.text
+      this.formData.sortBy = item.value
+      this.initGoodsList()
+      this.$refs.dropdown2.toggle()
+      if (item.value === this.option[0].value) {
         this.removeClass('active', 1)
+      } else {
+        this.addClass('active', 1)
       }
+    },
+    isActive(item) {
+      // 排序选择激活状态
+      return item.value === this.formData.sortBy
+    },
+    close(index) {
       if (index === 0) {
         this.activeData = clone(this.saveActiveData)
       }
     },
     onLoad() {
-      console.log(1)
-      // const arr = new Array(10).fill(2)
-      // this.serveGoodsListData = [...this.serveGoodsListData, ...arr]
       this.searchKeydownHandle()
     },
     resetFilters() {
@@ -329,7 +345,7 @@ export default {
       this.formData.classCodes = ''
       this.formData.start = 1
       this.removeClass('active', 1)
-      this.selectValue = this.option[0].value
+      // this.selectValue = this.option[0].value
       this.dropdownTitle1 = '全部服务'
     },
   },
@@ -359,6 +375,16 @@ export default {
       margin-right: 0;
     }
   }
+  /*S排序选择框*/
+  .sort-content {
+    .sp-cell {
+      &.active {
+        font-weight: bold;
+        color: #4974f5;
+      }
+    }
+  }
+  /*E排序选择框*/
   /deep/.sp-cell {
     padding: 18px 40px;
     &::after {
