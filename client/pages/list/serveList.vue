@@ -79,7 +79,6 @@ export default {
           this.serveGoodsListData = data
         })
         .catch()
-      // todo 获取交易商品数据
     },
   },
 }

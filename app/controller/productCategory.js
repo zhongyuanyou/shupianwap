@@ -120,7 +120,7 @@ class ProductCategoryController extends Controller {
         resData[2].code === 200 &&
         resData[2].data
       ) {
-        recommendData = resData[2].data.ad100129.sortMaterialList;
+        recommendData = resData[2].data && resData[2].data.ad100129 ? resData[2].data.ad100129.sortMaterialList : [];
       }
       ctx.helper.success({
         ctx,

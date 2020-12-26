@@ -3,7 +3,6 @@
     ref="item"
     :title="dropdownTitle"
     :title-class="moreTextCss"
-    @close="close"
   >
     <div class="sort-content">
       <sp-cell
@@ -80,7 +79,6 @@ export default {
     }
   },
   methods: {
-    close() {},
     isActive(item) {
       return item.id === this.selectValue.id
     },
