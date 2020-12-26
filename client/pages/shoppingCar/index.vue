@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-25 11:56:52
+ * @LastEditTime: 2020-12-26 17:11:07
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -18,7 +18,7 @@
             size="0.4rem"
             color="#1A1A1A"
             class="head__icon-back"
-            @click="onClickLeft"
+            @click.native="onClickLeft"
           />
         </template>
         <template #right>
@@ -36,7 +36,7 @@
       <div class="shopping-car__content">
         <sp-pull-refresh
           v-model="refreshing"
-          :disabled="false"
+          :disabled="true"
           @refresh="onRefresh"
         >
           <sp-list
@@ -68,22 +68,6 @@
           </sp-list>
         </sp-pull-refresh>
       </div>
-      <!-- 推荐列表 取消了 -->
-      <div v-if="recommendList && recommendList.length" class="recommend">
-        <h3 class="recommend__title">为您推荐</h3>
-        <div class="recommend-list">
-          <sp-list
-            v-model="recommendLoading"
-            class="shopping-car__goods"
-            error-text="请求失败，点击重新加载"
-            :error.sync="recommendError"
-            :finished="recommendFinished"
-            @load="recommendOnLoad"
-          >
-            <RecommendScProduct :recommend-product-data="recommendList" />
-          </sp-list>
-        </div>
-      </div>
     </div>
     <div class="footer sp-hairline--top">
       <Bottombar
@@ -111,7 +95,6 @@ import GoodsItem from '@/components/shoppingCar/GoodsItem'
 import Bottombar from '@/components/shoppingCar/Bottombar'
 import GoodsPopup from '@/components/shoppingCar/GoodsPopup'
 import ShoppingCarNull from '@/components/shoppingCar/ShoppingCarNull'
-import RecommendScProduct from '@/components/detail/service/RecommendScProduct'
 
 import { shoppingCar } from '@/api'
 
@@ -131,7 +114,6 @@ export default {
     [Loading.name]: Loading,
     Header,
     GoodsPopup,
-    RecommendScProduct,
     GoodsItem,
     Bottombar,
     ShoppingCarNull,
@@ -153,10 +135,6 @@ export default {
         discountsAmount: '0.00',
       },
       skuOpenIndex: -1, // 记录当前打开的sku的序列号
-      recommendList: [],
-      recommendLoading: false,
-      recommendError: false,
-      recommendFinished: false,
     }
   },
   computed: {
@@ -383,8 +361,6 @@ export default {
       }
     },
 
-    // 推荐数据加载
-    recommendOnLoad() {},
     // 选择
     async selectItem(cartId, data = {}) {
       cartId = '' + cartId

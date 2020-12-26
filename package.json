@@ -36,6 +36,7 @@
     "nuxt": "^2.14.5",
     "qs": "^6.9.3",
     "regenerator-runtime": "^0.13.7",
+    "safe-area-insets": "^1.4.1",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
     "svg-captcha": "^1.4.0",
