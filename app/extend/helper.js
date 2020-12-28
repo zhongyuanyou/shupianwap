@@ -280,11 +280,14 @@ module.exports = {
           break;
         case f.div:
           // result = (n1 / n2) / (t2 / t1);
-          let _t1 = 0, _t2 = 0, r1, r2;
-          try { _t1 = a.toString().split(".")[1].length } catch (e) { }
-          try { _t2 = b.toString().split(".")[1].length } catch (e) { }
-          r1 = Number(a.toString().replace(".", ""))
-          r2 = Number(b.toString().replace(".", ""))
+          let _t1 = 0,
+            _t2 = 0,
+            r1,
+            r2;
+          try { _t1 = a.toString().split('.')[1].length; } catch (e) { }
+          try { _t2 = b.toString().split('.')[1].length; } catch (e) { }
+          r1 = Number(a.toString().replace('.', ''));
+          r2 = Number(b.toString().replace('.', ''));
           result = (r1 / r2) * Math.pow(10, _t2 - _t1);
           return result;
           // eslint-disable-next-line no-unreachable
@@ -300,5 +303,18 @@ module.exports = {
           break;
       }
     }
+  },
+  /**
+   * 进度计算后保留指定小数位数,返回字符串
+   * @param.num: String config文件中APPID下对应的项目实例名称
+   * @param.bit: String 请求路径
+   * @return {String}
+   */
+  priceFixed(num, bit) {
+    let numObj = '0';
+    if (Number(this.calculate(num))) {
+      numObj = Number(this.calculate(num));
+    }
+    return numObj.toFixed(bit);
   },
 };

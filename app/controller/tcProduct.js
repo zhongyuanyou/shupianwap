@@ -87,6 +87,9 @@ class TcProductController extends Controller {
       data.fieldList = baseData;
       // 当前对应的数据字典信息
       data.dictCode = currentDict[0].code;
+      // 处理价格
+      data.platformPrice = ctx.helper.priceFixed(`${data.platformPrice}/100`, 2);
+      // 响应结果数据
       ctx.helper.success({ ctx, code: 200, res: data });
     } else {
       ctx.logger.error(code, message);

@@ -25,7 +25,10 @@
               <strong>{{ item.materialList[0].materialName }}</strong>
               <p>{{ item.materialList[0].materialDescription }}</p>
             </div> -->
-            <img v-lazy="item.materialList[0].materialUrl" alt="" />
+            <img
+              v-lazy="item.materialList[0].materialUrl + $ossImgSet(327, 228)"
+              alt=""
+            />
           </a>
         </li>
       </ul>

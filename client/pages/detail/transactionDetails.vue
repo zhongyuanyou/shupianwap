@@ -34,7 +34,7 @@ export default {
           },
         }
       )
-      console.log(data, message)
+      console.log('错误打印', code, message)
       if (code === 200) {
         tcProductDetailData = data
         // 获取钻展规划师

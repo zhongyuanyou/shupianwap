@@ -6,8 +6,8 @@
         :to="{
           path: '/detail/transactionDetails',
           query: {
-            type: '12',
-            id: item.id,
+            type: detailType,
+            productId: item.id,
           },
         }"
       >
@@ -54,6 +54,12 @@ export default {
     productData: {
       type: Array,
       default: () => [],
+    },
+    detailType: {
+      type: String,
+      default: () => {
+        return this.$route.query.type ? this.$route.query.type : null
+      },
     },
   },
   data() {
