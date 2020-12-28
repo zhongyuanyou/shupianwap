@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { WorkTabs, WorkTab } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import serveGoods from '@/components/list/ServeGoods'
@@ -71,6 +72,7 @@ export default {
     serveGoods,
     JyGoods,
   },
+  layout: 'keepAlive',
   mixins: [addSearchHistory, listJumpIm],
   data() {
     return {
@@ -117,6 +119,8 @@ export default {
     },
   },
   mounted() {
+    // SearchResult
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'SearchResult' })
     this.getInitData()
     if (this.$route.query.keywords) {
       this.formData.searchText = this.$route.query.keywords
@@ -124,6 +128,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     // 获取初始化数据
     getInitData() {
       // 获取服务列表需要的筛选数据

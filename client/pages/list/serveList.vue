@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { WorkTabs, WorkTab, Badge } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import serveGoods from '@/components/list/ServeGoods'
@@ -41,6 +42,7 @@ export default {
     serveGoods,
     [Badge.name]: Badge,
   },
+  layout: 'keepAlive',
   mixins: [listJumpIm],
   data() {
     return {
@@ -62,9 +64,13 @@ export default {
     this.sessionCategory = JSON.parse(sessionStorage.getItem('categoryData'))
   },
   mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'ServeList' })
     this.getInitData()
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     searchKeydownHandle() {
       // 点击搜索按钮
       this.formData.searchText = this.searchText

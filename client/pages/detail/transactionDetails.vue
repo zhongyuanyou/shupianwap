@@ -20,6 +20,7 @@ export default {
   components: {
     DetailTemplate,
   },
+  layout: 'keepAlive',
   watchQuery: ['productId'],
   async asyncData({ $axios, query, app, store }) {
     try {

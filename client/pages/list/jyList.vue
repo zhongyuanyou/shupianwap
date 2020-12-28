@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { WorkTabs, WorkTab, Badge } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import JyGoods from '@/components/list/JyGoods'
@@ -41,6 +42,7 @@ export default {
     JyGoods,
     [Badge.name]: Badge,
   },
+  layout: 'keepAlive',
   mixins: [listJumpIm],
   data() {
     return {
@@ -57,9 +59,13 @@ export default {
     }
   },
   mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'JyList' })
     this.getJyType()
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     searchKeydownHandle() {
       // 点击搜索按钮
       this.searchText = this.currentInputText
