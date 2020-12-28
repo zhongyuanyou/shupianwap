@@ -7,7 +7,7 @@
         height="0.57rem"
         src="https://img.yzcdn.cn/vant/cat.jpeg"
       />
-      <span>薯片招人APP</span>
+      <span>薯片找人APP</span>
     </div>
     <sp-button type="primary" size="small">立即打开</sp-button>
   </div>

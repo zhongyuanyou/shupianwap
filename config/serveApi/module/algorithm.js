@@ -9,5 +9,5 @@
 module.exports.algorithmApi = {
   productRecom: '/nk/recommendInfo/productRecom.do',
   plannerRecom: '/nk/recommendInfo/plannerRecom.do', // 规划师推荐
-  planerSpread: '/planner/recommend', //推广页规划师接口
+  planerSpread: '/planner/recommend', // 推广页规划师接口
 };

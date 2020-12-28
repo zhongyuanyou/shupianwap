@@ -144,6 +144,9 @@ export default {
         font-weight: 400;
         color: #222222;
         font-style: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }

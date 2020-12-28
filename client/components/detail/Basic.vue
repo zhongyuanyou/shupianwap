@@ -29,10 +29,12 @@ export default {
     [Button.name]: Button,
     Open,
   },
-  tcProductDetailData: {
-    type: Object,
-    default: () => {
-      return {}
+  props: {
+    tcProductDetailData: {
+      type: Object,
+      default: () => {
+        return {}
+      },
     },
   },
 }
