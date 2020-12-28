@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <!--S 导航-->
-    <sp-Sticky v-if="!isInApp">
+    <sp-sticky v-if="!isInApp">
       <sp-top-nav-bar ellipsis :fixed="true" @on-click-right="onClickRight">
         <template #left>
           <div @click="back">
@@ -15,7 +15,7 @@
           </div>
         </template>
       </sp-top-nav-bar>
-    </sp-Sticky>
+    </sp-sticky>
     <!--E 导航-->
     <div
       class="detail_con"

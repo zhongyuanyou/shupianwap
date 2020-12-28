@@ -209,8 +209,10 @@ export default {
         const params = {
           encryptPhone: number,
         }
-        const res = await this.$axios.post(publicApi.descrptionPhone, params)
-        console.log('res', res)
+        const res = await this.$axios.get(publicApi.descrptionPhone, { params })
+        if (res.code === 200 && res.data) {
+          window.location.href = 'tel:' + res.data
+        }
       } catch (err) {}
     },
     cancelConfirm() {

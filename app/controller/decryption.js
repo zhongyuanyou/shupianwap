@@ -8,12 +8,12 @@
 'use strict';
 
 const Controller = require('egg').Controller;
-const { Prefix, Post } = require('egg-shell-decorators');
+const { Prefix, Get } = require('egg-shell-decorators');
 const { dashunApi } = require('../../config/serveApi/index');
 
 @Prefix('/yk/biz_business')
 class descryptionController extends Controller {
-  @Post('/v1/show_real_phone.do')
+  @Get('/v1/show_real_phone.do')
   async descryption() {
     const { ctx, service, app } = this;
     // 定义参数校验规则
@@ -21,7 +21,7 @@ class descryptionController extends Controller {
       encryptPhone: { type: 'string', required: true }, // 加密电话号码
     };
     // 参数校验
-    const valiErrors = app.validator.validate(rules, ctx.request.body);
+    const valiErrors = app.validator.validate(rules, ctx.query);
     // 参数校验未通过
     if (valiErrors) {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
@@ -33,9 +33,9 @@ class descryptionController extends Controller {
         dashunApi.decryptionPhone
       );
       const params = {
-        encryptPhone: ctx.request.body.encryptPhone,
+        encryptPhone: ctx.query.encryptPhone,
       };
-      const res = await service.curl.curlPost(url, JSON.stringify(params));
+      const res = await service.curl.curlGet(url, params);
       ctx.helper.success({
         ctx,
         code: 200,
