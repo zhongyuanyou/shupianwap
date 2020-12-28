@@ -2,14 +2,14 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 11:48:03
+ * @LastEditTime: 2020-12-28 11:54:19
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
 
 <template>
   <div class="list">
-    <div class="head" ref="head">
+    <div ref="head" class="head">
       <Header title="在线直选规划师">
         <template #left>
           <my-icon

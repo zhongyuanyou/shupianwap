@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 15:10:43
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-17 20:22:43
+ * @LastEditTime: 2020-12-28 16:22:10
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/sku/SkuServiceRow.vue
 -->
@@ -176,7 +176,7 @@ export default {
     align-items: center;
   }
   &__wrap {
-    margin: 30px -16px 0 0;
+    margin: 30px 0 0 0;
   }
   /deep/.sku-service-row-item {
     margin: 0 16px 16px 0;
@@ -190,7 +190,7 @@ export default {
       line-height: 30px;
     }
     @{module-name}__wrap {
-      margin: 24px -16px 0 0;
+      margin: 24px 0 0 0;
     }
   }
 }

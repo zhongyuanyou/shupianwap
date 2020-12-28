@@ -32,11 +32,18 @@ export default ({ app, store }) => {
         // 若跳转的页面在infoList中，则需要执行app请求用户信息操作
         appHandler.dggGetUserInfo((res) => {
           if (res.code === 200) {
-            const userInfo = JSON.parse(res.data)
-            if (userInfo.userId && userInfo.token) {
-              store.commit('user/SET_USER', userInfo)
+            try {
+              const userInfo = res.data
+              console.log('userInfo', userInfo)
+              if (userInfo.userId && userInfo.token) {
+                store.commit('user/SET_USER', userInfo)
+              }
+              next()
+            } catch (err) {
               next()
             }
+          } else {
+            alert('不是200')
           }
         })
       } else {

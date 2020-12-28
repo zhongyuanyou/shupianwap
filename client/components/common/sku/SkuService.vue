@@ -366,7 +366,7 @@ export default {
 
     // 选择
     handleResourceClick(classCode) {
-      console.log('handleResourceClick type:', classCode)
+      console.log('handleResourceClick classCode:', classCode)
       let type = ''
       switch (classCode) {
         case 'FL20201211085087': // 注册地址

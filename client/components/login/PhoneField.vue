@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 14:23:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 11:16:49
+ * @LastEditTime: 2020-12-28 14:22:56
  * @Description: file content
  * @FilePath: /chips-wap/client/components/login/PhoneField.vue
 -->
@@ -159,6 +159,10 @@ export default {
     color: #999999;
     .sp-button__text {
       font-size: 32px;
+    }
+    &:active::before {
+      opacity: 1;
+      background-color: transparent;
     }
   }
   .code-btn--disabled {

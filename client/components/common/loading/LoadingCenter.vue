@@ -1,9 +1,9 @@
 <template>
   <div class="loading-content">
     <div class="mantle">
-      <sp-loading size="0.39rem" color="#ffffff" text-size="0.32rem"
-        >加载中</sp-loading
-      >
+      <sp-loading size="0.39rem" color="#ffffff" text-size="0.32rem">{{
+        title
+      }}</sp-loading>
     </div>
   </div>
 </template>
@@ -14,6 +14,12 @@ export default {
   name: 'LoadingCenter',
   components: {
     [Loading.name]: Loading,
+  },
+  props: {
+    title: {
+      type: String,
+      default: '加载中',
+    },
   },
 }
 </script>

@@ -73,8 +73,12 @@ const Bridge = {
 
 // 数据状态判断
 const handleRequest = (ret, fn = () => {}) => {
-  const result = typeof ret === 'string' ? JSON.parse(ret) : ret
-  fn(result)
+  try {
+    const result = typeof ret === 'string' ? JSON.parse(ret) : ret
+    fn(result)
+  } catch (err) {
+    console.log('err', err)
+  }
 }
 
 // js调用APP方法
