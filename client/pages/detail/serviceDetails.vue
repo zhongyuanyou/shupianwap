@@ -29,7 +29,7 @@
     <ServiceInfo :client-details-data="scProductDetailData.clientDetails" />
     <!--    推荐规划师-->
     <div class="planners-box">
-      <Planners :info="planners" />
+      <Planners :im-jump-query="imJumpQuery" :info="planners" />
       <div class="planners-box-quiz">
         <h2>您的疑问，第一时间为您解答</h2>
         <div>

@@ -41,7 +41,7 @@
     <Commitment :info="{ ...info }" />
     <!--E 第四板块 交易服务保障承诺-->
     <!--S 第五板块 推荐规划师-->
-    <Planners :info="recommendPlanner" />
+    <Planners :im-jump-query="imJumpQuery" :info="recommendPlanner" />
     <!--E 第五板块 推荐规划师-->
     <!--S 第六板块 商品动态-->
     <Dynamic :info="{ ...info }" />

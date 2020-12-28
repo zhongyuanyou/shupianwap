@@ -9,18 +9,20 @@
       />
       <span>薯片找人APP</span>
     </div>
-    <sp-button type="primary" size="small">立即打开</sp-button>
+    <sp-button type="primary" size="small" @click="openApp">立即打开</sp-button>
   </div>
 </template>
 
 <script>
 import { Image, Button } from '@chipspc/vant-dgg'
+import openapp from '~/mixins/openapp'
 export default {
   name: 'Open',
   components: {
     [Image.name]: Image,
     [Button.name]: Button,
   },
+  mixins: [openapp],
 }
 </script>
 
