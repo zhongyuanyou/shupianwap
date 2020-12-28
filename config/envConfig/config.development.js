@@ -102,6 +102,7 @@ module.exports = (appInfo) => {
       // 商户中心
       'merchant-center-manager',
       'cloud-recomd-api', // 算法
+      'crisps-app-wap-bff-api', //薯片
     ],
   };
   // eureka相关配置
