@@ -26,10 +26,14 @@
     <Basic :tc-product-detail-data="{ tcProductDetailData }">
       <div slot="basic">
         <div class="company_info">
-          <div v-for="(baseDataList, idx) in fieldList" :key="idx" class="item">
-            <em>{{ baseDataList.listName }}:</em>
-            <span>{{ baseDataList.listVal }}</span>
-          </div>
+          <BasicItem
+            v-for="(baseDataList, idx) in fieldList"
+            :key="idx"
+            :base-data-list="baseDataList"
+          />
+          <!--          <div v-for="(baseDataList, idx) in fieldList" :key="idx" class="item">-->
+          <!--            <em>{{ baseDataList.listName }}:</em>-->
+          <!--          </div>-->
         </div>
       </div>
     </Basic>
@@ -108,6 +112,8 @@ import commodityConsultation from '@/components/common/commodityConsultation/com
 import getUserSign from '~/utils/fingerprint'
 import tcBasicData from '~/mock/tcBasicData'
 import { recommendApi } from '~/api'
+import MyIcon from '~/components/common/myIcon/MyIcon'
+import BasicItem from '~/components/detail/BasicItem'
 export default {
   name: 'DetailTemplate',
   components: {
@@ -130,6 +136,8 @@ export default {
     Recommend,
     Need,
     commodityConsultation,
+    MyIcon,
+    BasicItem,
   },
   props: {
     info: {
@@ -343,24 +351,6 @@ export default {
     flex-direction: row;
     flex-wrap: wrap;
     margin-top: 15px;
-    .item {
-      min-width: 50%;
-      max-width: 100%;
-      font-size: 30px;
-      font-family: PingFang SC;
-      font-weight: 400;
-      color: #999999;
-      margin-top: 32px;
-      display: flex;
-      em {
-        font-style: normal;
-        width: 150px;
-      }
-      span {
-        color: #1a1a1a;
-        flex: 1;
-      }
-    }
   }
 }
 </style>

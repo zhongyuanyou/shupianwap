@@ -1,6 +1,7 @@
 'use strict';
 const Service = require('egg').Service;
 const { contentApi } = require('./../../config/serveApi/index');
+const cacheTime = require('./../../config/constant/cacheTime');
 class FindDictService extends Service {
   async findDictChild(dictCode) {
     const { ctx, app } = this;
@@ -17,7 +18,7 @@ class FindDictService extends Service {
     const { code, message, data } = await ctx.service.curl.curlGet(dictUrl, { code: dictCode });
     if (code === 200 && data.length > 0) {
       // 数据获取成功将获取到的数据存入redis
-      ctx.service.redis.set(dictCode, data, 60 * 60);
+      ctx.service.redis.set(dictCode, data, cacheTime.DICTCHILDREN_CACHE_TIME);
       dictResult = data;
     } else {
       dictResult = [];
