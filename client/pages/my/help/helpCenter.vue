@@ -1,6 +1,14 @@
 <template>
   <div class="wrapper">
-    <Header title="帮助中心" />
+    <sp-sticky>
+      <sp-top-nav-bar title="帮助中心" ellipsis @on-click-left="back">
+        <template #left>
+          <div>
+            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          </div>
+        </template>
+      </sp-top-nav-bar>
+    </sp-sticky>
     <sp-search
       v-model="params.keyword"
       placeholder="搜索您遇到的问题"
@@ -37,10 +45,9 @@
 </template>
 
 <script>
-import { Search, Cell, CellGroup } from '@chipspc/vant-dgg'
+import { Search, Cell, CellGroup, TopNavBar, Sticky } from '@chipspc/vant-dgg'
 import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
 import { helpApi } from '@/api'
-import Header from '@/components/common/head/header'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'HelpCenter',
@@ -49,7 +56,8 @@ export default {
     [Search.name]: Search,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
-    Header,
+    [TopNavBar.name]: TopNavBar,
+    [Sticky.name]: Sticky,
   },
   props: {},
   data() {
@@ -96,6 +104,13 @@ export default {
           this.searchResult = res.data.articleData
         }
       })
+    },
+    back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      this.$router.back()
     },
   },
 }

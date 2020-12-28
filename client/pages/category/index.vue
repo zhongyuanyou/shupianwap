@@ -2,12 +2,9 @@
   <div class="category">
     <!--S 头部-->
     <div class="category_header">
-      <my-icon
-        name="nav_ic_back"
-        size="0.40rem"
-        color="#1a1a1a"
-        @click="back"
-      />
+      <div class="icon" @click="back">
+        <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a" />
+      </div>
       <div class="category_header_con">
         <my-icon name="sear_ic_sear" size="0.28rem" color="#999" />
         <input
@@ -221,6 +218,13 @@ export default {
     align-items: center;
     flex-direction: row;
     z-index: 6;
+    .icon {
+      height: 128px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: row;
+    }
     &_con {
       display: flex;
       justify-content: flex-start;

@@ -50,17 +50,22 @@ export default {
   mounted() {},
   methods: {
     onClickLeft() {
-      this.$router.back(-1)
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      this.$router.back()
     },
     onServiceTouch() {
       this.$router.push({
-        path: '/my/about/2',
+        name: 'login-protocol',
+        query: { categoryCode: 'protocol100122', hideHeader: true },
       })
     },
     onPrivacyTouch() {
       this.$router.push({
-        path: '/my/about/1',
-        query: { type: 1 },
+        name: 'login-protocol',
+        query: { categoryCode: 'protocol100121', hideHeader: true },
       })
     },
   },
