@@ -107,35 +107,7 @@ export default {
     listCount: {
       type: Array,
       default: () => {
-        return [
-          {
-            pric: 4000,
-            bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_yxze.png'),
-            operating: {
-              actualViews: 3291,
-              defaultSales: 1837,
-              actualSales: 1832,
-            },
-          },
-          {
-            pric: 5000,
-            bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_gtzc.png'),
-            operating: {
-              actualViews: 3291,
-              defaultSales: 1837,
-              actualSales: 1832,
-            },
-          },
-          {
-            pric: 7000,
-            bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_fgs.png'),
-            operating: {
-              actualViews: 3291,
-              defaultSales: 1837,
-              actualSales: 1832,
-            },
-          },
-        ]
+        return []
       },
     },
     isMore: {
