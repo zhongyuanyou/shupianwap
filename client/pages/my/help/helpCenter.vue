@@ -35,7 +35,7 @@
     </sp-cell-group>
     <div v-if="noData" class="noFindDiv">
       <div>
-        <img :src="$ossImgSet('9vnk3u2qlk80000.png', 340, 340)" alt="" />
+        <img :src="$ossImgSet(340, 340, '9vnk3u2qlk80000.png')" alt="" />
       </div>
       <span class="firstSpan">抱歉，未找到相关问题</span>
       <span class="lastSpan">联系客服</span>

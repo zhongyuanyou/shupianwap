@@ -4,7 +4,7 @@
     <div class="contentBg">
       <div class="content">
         <div class="iconBg">
-          <img :src="$ossImgSet('g6trabnxtg80000.png', 160, 160)" alt="" />
+          <img :src="$ossImgSet(160, 160, 'g6trabnxtg80000.png')" alt="" />
         </div>
         <span class="versionText">当前版本：V 1.2</span>
       </div>

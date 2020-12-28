@@ -9,7 +9,7 @@
           <strong>全城规划师为您线上服务</strong>
           <p>仅需3步/定制推荐/极速响应</p>
         </div>
-        <img :src="$ossImgSet('b61p961nyiw0000.png', 85, 85)" alt="" />
+        <img :src="$ossImgSet(85, 85, 'b61p961nyiw0000.png')" alt="" />
       </div>
       <a href="javascript:void(0);">免费帮找</a>
     </div>

@@ -9,11 +9,11 @@
       v-if="error.statusCode === 404 && error.path !== '/500'"
       class="content"
     >
-      <img :src="$ossImgSet('6s9j7abkuc00000.png', 340, 340)" alt="" />
+      <img :src="$ossImgSet(340, 340, '6s9j7abkuc00000.png')" alt="" />
       <p>页面已失效</p>
     </div>
     <div v-else class="content">
-      <img :src="$ossImgSet('8kozn06p6vk0000.png', 340, 340)" alt="" />
+      <img :src="$ossImgSet(340, 340, '8kozn06p6vk0000.png')" alt="" />
       <p>请求错误</p>
     </div>
   </div>
