@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-23 20:39:05
+ * @LastEditTime: 2020-12-25 18:26:02
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/planner/_id.vue
+ * @FilePath: /chips-wap/client/pages/planner/detail.vue
 -->
 
 <template>
@@ -34,10 +34,11 @@
                     width="1.2rem"
                     height="1.2rem"
                     fit="cover"
-                    :src="
-                      detailData.img || 'https://img.yzcdn.cn/vant/cat.jpeg'
-                    "
+                    :src="detailData.img"
                   />
+                  <span class="detail-content__title">{{
+                    detailData.title
+                  }}</span>
                 </div>
                 <div>
                   <h4 class="detail-content__name">{{ detailData.name }}</h4>
@@ -115,7 +116,9 @@
                   什么是薯片分
                   <my-icon name="per_ic_help" size="0.24rem" color="#666666" />
                 </span>
-                <sp-button class="detail-content__explain-btn"
+                <sp-button
+                  class="detail-content__explain-btn"
+                  @click="handlePoint"
                   >查看详情</sp-button
                 >
               </div>
@@ -150,6 +153,7 @@
       :options="shareOptions"
       @select="onSelect"
     />
+    <sp-toast ref="spToast" class="detail-toast" />
   </div>
 </template>
 
@@ -168,6 +172,7 @@ import {
 
 import Header from '@/components/common/head/header'
 import GoodsPro from '@/components/planner/GoodsPro'
+import SpToast from '@/components/common/spToast/SpToast'
 
 import { planner } from '@/api'
 import imHandle from '@/mixins/imHandle'
@@ -184,6 +189,7 @@ export default {
     [ShareSheet.name]: ShareSheet,
     Header,
     GoodsPro,
+    SpToast,
   },
   mixins: [imHandle],
   data() {
@@ -226,13 +232,23 @@ export default {
     },
     handleIM() {
       console.log('IM ')
-      this.uPIM({ mchUserId: this.detailData.id })
+      this.uPIM({
+        mchUserId: this.detailData.id,
+        userName: this.itemData.userName,
+      })
     },
 
     onSelect(option) {
-      // TODO 分享的调用
-      Toast(option.name)
       this.uPShare(option)
+    },
+
+    handlePoint() {
+      this.$refs.spToast.show({
+        message: '薯片分是对规划师的综合衡量，薯片分越高综合表现越好',
+        duration: 1500,
+        forbidClick: false,
+        // icon: 'spiconfont-tab_ic_check',
+      })
     },
 
     uPShare(option) {
@@ -247,14 +263,25 @@ export default {
     // 分享
     uPShareOption() {
       if (this.isInApp) {
-        this.shareOptions = [
-          { name: '微信', icon: 'wechat' },
-          { name: '微博', icon: 'weibo' },
-          { name: '复制链接', icon: 'link' },
-          { name: '分享海报', icon: 'poster' },
-          { name: '二维码', icon: 'qrcode' },
-        ]
-        this.showShare = true
+        this.$appFn.dggShare(
+          {
+            image: this.detailData.img,
+            title: '规划师',
+            subTitle: '',
+            url: window && window.location.href,
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$refs.spToast.show({
+                message: '分享失败！',
+                duration: 1500,
+                forbidClick: false,
+                icon: 'toast_ic_remind',
+              })
+            }
+          }
+        )
         return
       }
 
@@ -277,10 +304,26 @@ export default {
 
     // 发起聊天
     uPIM(data = {}) {
-      const { mchUserId } = data
+      const { mchUserId, userName } = data
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
-        // TODO 调用IM 暂无
+        this.$appFn.dggOpenIM(
+          {
+            name: userName,
+            userId: mchUserId,
+            userType: 'MERCHANT_USER',
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200)
+              this.$refs.spToast.show({
+                message: `联系失败`,
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_remind',
+              })
+          }
+        )
         return
       }
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
@@ -292,7 +335,12 @@ export default {
       try {
         const { mchUserId } = this.$route.query
         if (mchUserId == null) {
-          Toast('缺少规划师参数')
+          this.$refs.spToast.show({
+            message: '缺少规划师参数!',
+            duration: 1000,
+            forbidClick: false,
+            icon: 'toast_ic_error',
+          })
           return
         }
         const params = { id: mchUserId }
@@ -302,6 +350,12 @@ export default {
         return data
       } catch (error) {
         console.error('getDetail:', error)
+        this.$refs.spToast.show({
+          message: error.message || '请求失败！',
+          duration: 1000,
+          forbidClick: false,
+          icon: 'toast_ic_error',
+        })
         return Promise.reject(error)
       }
     },
@@ -318,6 +372,13 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+}
+
+.flex-r-a-c {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .flex-r-sb {
@@ -363,18 +424,28 @@ export default {
         height: 120px;
         margin-right: 24px;
         position: relative;
-        &::after {
-          content: '';
-          display: block;
-          width: 98px;
-          height: 26px;
-          position: absolute;
-          bottom: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          background: url(~assets/images/planner/per_img_gold.png) center/cover
-            no-repeat;
-        }
+      }
+      &__title {
+        content: '';
+        display: block;
+        max-width: 98px;
+        max-width: 120px;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 28px;
+        padding: 0 12px;
+        background: linear-gradient(135deg, #ffeab9, #edcf98);
+        border: 1px solid #dfb45a;
+        border-radius: 14px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #9b6809;
+        line-height: 28px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       &__name {
         font-size: 36px;
@@ -485,6 +556,11 @@ export default {
   }
   .item-wrap {
     padding: 40px;
+  }
+  &-toast {
+    /deep/.my-toast__content {
+      transform: translateY(-100%);
+    }
   }
 }
 </style>

@@ -31,7 +31,9 @@ function resetServeTags(tagsData, result) {
     // 对商品列表标签进行分类和合并
     item.tags && item.tags.forEach((_item) => {
       // 进行id筛选
-      item[_item.tagType] = tagType[_item.tagType].filter((__item) => __item.id === _item.tagId)
+      if (tagType[_item.tagType]) {
+        item[_item.tagType] = tagType[_item.tagType].filter((__item) => __item.id === _item.tagId)
+      }
     })
   })
   return result
@@ -100,6 +102,7 @@ class goodsListService extends Service {
           }
           // tagArr.push.call(tagArr, ...tags)
           // todo referencePrice金额需要转换成元，在这里是分
+          referencePrice = this.ctx.helper.calculate(`${referencePrice}/100`)
           arr.push({
             id,
             name,
@@ -114,11 +117,11 @@ class goodsListService extends Service {
           })
         })
         tagArr = [...new Set(tagArr)]
-        console.log(tagArr)
-        console.log(tagArr.length)
+        // console.log(tagArr)
+        // console.log(tagArr.length)
         const tagsResult = await service.curl.curlPost(tagsUrl, {tagIds: tagArr});
         let resetResult = [] // 标签
-        console.log('asdssssssssss', tagsResult)
+        // console.log('asdssssssssss', tagsResult)
         // 这里判断标签数据是否成功返回
         if (tagsResult.code === 200 && tagsResult.data.records.length) {
           resetResult = resetServeTags(tagsResult.data.records, arr)
@@ -177,6 +180,8 @@ class goodsListService extends Service {
             this.ctx.helper.calculate(`${params.platformPriceStart}*100`)
           params.platformPriceEnd =
             this.ctx.helper.calculate(`${params.platformPriceEnd}*100`)
+          // 处理一下结束金额，如果结束金额为0，则表示筛选为多少金额以上，需要删除结束金额
+          if (params.platformPriceEnd === 0) delete params.platformPriceEnd
         } else {
           delete params.platformPriceStart
           delete params.platformPriceEnd
@@ -187,7 +192,7 @@ class goodsListService extends Service {
         params.withFieldDetail = 1 // 需要属性详情
         const result = await service.curl.curlPost(url, params);
         let arr = []
-        result.data.records.forEach((item) => {
+        result.data && result.data.records.forEach((item) => {
           let {
             id,
             name,
@@ -196,95 +201,10 @@ class goodsListService extends Service {
             platformPrice,
             fieldList,
           } = item
-          fieldList = resetJyField(params.classCode,  [
-            {
-              "goodsId": "607991998237798464",
-              "goodsCode": "ZZ20201217115458",
-              "fieldName": "安全生产许可证",
-              "fieldCode": "safety_production_license",
-              "fieldDesc": "",
-              "fieldRemark": null,
-              "moduleCode": "qualification_information",
-              "fieldValue": "是",
-              "fieldValueCn": null,
-              "ext1": null,
-              "ext2": null,
-              "ext3": null,
-              "ext4": null,
-              "ext5": null,
-              "resourceId": null,
-              "fiedlType": "FIELD_TYPE_RADIO",
-              "fieldValueList": [
-                "是"
-              ]
-            },
-            {
-              "goodsId": "607991998237798464",
-              "goodsCode": "ZZ20201217115458",
-              "fieldName": "注册资本",
-              "fieldCode": "qualification_registered_capital",
-              "fieldDesc": "",
-              "fieldRemark": null,
-              "moduleCode": "qualification_information",
-              "fieldValue": "1.0E7",
-              "fieldValueCn": null,
-              "ext1": null,
-              "ext2": null,
-              "ext3": null,
-              "ext4": null,
-              "ext5": null,
-              "resourceId": null,
-              "fiedlType": "FIELD_TYPE_TEXT",
-              "fieldValueList": [
-                "1.0E7"
-              ]
-            },
-            {
-              "goodsId": "607991998237798464",
-              "goodsCode": "ZZ20201217115458",
-              "fieldName": "注册地区",
-              "fieldCode": "qualification_registration_area",
-              "fieldDesc": "",
-              "fieldRemark": null,
-              "moduleCode": "qualification_information",
-              "fieldValue": "510000,510100,510104",
-              "fieldValueCn": null,
-              "ext1": null,
-              "ext2": null,
-              "ext3": null,
-              "ext4": null,
-              "ext5": null,
-              "resourceId": null,
-              "fiedlType": "FIELD_TYPE_PROVINCE_CITY",
-              "fieldValueList": [
-                "510000",
-                "510100",
-                "510104"
-              ]
-            },
-            {
-              "goodsId": "607991998237798464",
-              "goodsCode": "ZZ20201217115458",
-              "fieldName": "到期时间",
-              "fieldCode": "qualification_expire_date",
-              "fieldDesc": "",
-              "fieldRemark": null,
-              "moduleCode": "qualification_information",
-              "fieldValue": "1704038400000",
-              "fieldValueCn": null,
-              "ext1": null,
-              "ext2": null,
-              "ext3": null,
-              "ext4": null,
-              "ext5": null,
-              "resourceId": null,
-              "fiedlType": "FIELD_TYPE_DATE_SINGLE",
-              "fieldValueList": [
-                "1704038400000"
-              ]
-            }
-          ])
+          // console.log('fieldList', fieldList)
+          fieldList = resetJyField(params.classCode,  fieldList)
           // todo platformPrice金额需要转换成元，在这里是分
+          platformPrice = this.ctx.helper.calculate(`${platformPrice}/100`)
           arr.push({
             id,
             name,

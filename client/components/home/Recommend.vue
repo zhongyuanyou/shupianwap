@@ -35,8 +35,8 @@
                   @click="adJumpHandleMixin(key.materialList[0])"
                 >
                   <img
+                    v-lazy="key.materialList[0].materialUrl"
                     class="recom-img"
-                    :src="key.materialList[0].materialUrl"
                     alt=""
                   />
                 </a>
@@ -56,7 +56,9 @@
               avatar
               :row="3"
               :row-width="['80%', '70%', '50%']"
-              :loading="item.goodsList.length > 0 ? false : true"
+              :loading="
+                item.goodsList.length > 0 ? false : true && !item.noData
+              "
             >
             </sp-skeleton>
             <GoodsPro
@@ -64,6 +66,13 @@
               :key="sub"
               :goods-data="goodsitem"
             />
+            <div v-if="item.noData" class="no-data">
+              <img
+                src="../../assets/temporary/home/default_img_noproduct_2x.png"
+                alt=""
+              />
+              <p>暂无数据</p>
+            </div>
           </div>
           <!-- E 推荐商品列表 -->
         </div>
@@ -210,8 +219,7 @@ export default {
       }
       // 设置站点编码
       if (!this.params.areaCode) {
-        // this.params.areaCode = this.cityCode
-        this.params.areaCode = 2
+        this.params.areaCode = this.cityCode
       }
       // 若不是初始化查询，需获取选中项的参数
       if (this.params.findType !== 0) {
@@ -230,11 +238,13 @@ export default {
           res.data.dictData[0].adData = res.data.adData
           res.data.dictData[0].goodsList = res.data.goodsList
           this.tabBtn = res.data.dictData
+          this.tabBtn[0].noData = res.data.goodsList.length === 0
           return
         }
         if (res.code === 200 && this.params.findType === 1) {
           this.tabBtn[index].adData = res.data.adData
           this.tabBtn[index].goodsList = res.data.goodsList
+          this.tabBtn[index].noData = res.data.goodsList.length === 0
           return
         }
 
@@ -277,10 +287,11 @@ export default {
         position: relative;
         width: 262px;
         height: 144px;
-        // background: #ffffff;
-        // border: 1px solid #cdcdcd;
-        // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
-        // border-radius: 8px;
+        background: #ffffff;
+        border: 1px solid #cdcdcd;
+        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
         // padding: 26px 32px 0 32px;
         // > strong {
         //   font-size: 28px;
@@ -324,6 +335,22 @@ export default {
     width: 100%;
     height: 1px;
     background: #f4f4f4;
+  }
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    img {
+      width: 340px;
+      height: 340px;
+    }
+    > p {
+      font-size: 30px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #1a1a1a;
+    }
   }
 }
 .my-swipe {

@@ -110,6 +110,7 @@ class RecommendController extends Controller {
       app.config.apiClient.APPID[6],
       algorithmApi.plannerRecom
     );
+    /** *todo:***查询出所有推荐的规划师数据信息****/
     const { code, data } = await service.curl.curlPost(url, {
       area,
       deviceId,
@@ -121,19 +122,44 @@ class RecommendController extends Controller {
       platform,
     });
     if (code === 200) {
-      // 查询到算法规划师id查询用户规划师
-      // ctx.helper.success({ ctx, code: 200, res: data.data });
+      /** *todo:****将算法的推荐规划师id翻译为真实的规划师列表****/
       const { ctx, app, service } = this;
       const mchSettledUrl = ctx.helper.assembleUrl(
         app.config.apiClient.APPID[5],
         merchantApi.list
       );
-      // 查询出所有推荐的规划师数据信息
       const plannerList = await service.curl.curlPost(mchSettledUrl, {
-        mchUserIds: data.planerInfoList,
+        mchUserIds: [ ...data.planerInfoList ].slice(
+          (page - 1) * limit,
+          limit * page), // 中间层分页
       });
       if (plannerList.code === 200 && plannerList.data.records.length > 0) {
         try {
+          /** *todo:***假如获取到规划师列表,根据规划师id获取规划师头像******/
+          // 获取到规划师头像查询的Url
+          const fileKeyUrl = ctx.helper.assembleUrl(
+            app.config.apiClient.APPID[5],
+            merchantApi.getAvatarIds
+          );
+          // 获取到所有规划师的id
+          const plannerIds = plannerList.data.records.map(item => item.userCenterId);
+          const plannerIcon = await service.curl.curlPost(fileKeyUrl, {
+            keyType: 'MCH_USER_HEAD',
+            codes: plannerIds,
+            filePath: true,
+          });
+          // 头像获取成功,将头像设置到
+          if (plannerIcon.code === 200 && plannerIcon.data) {
+            // 将头像的code作为key存储
+            const plannerIconObj = {};
+            plannerIcon.data.forEach(item => {
+              plannerIconObj[item.code] = item.filepath;
+            });
+            // 使用规划师列表的id去匹配对应的头像
+            plannerList.data.records.forEach((item, idx) => {
+              plannerList.data.records[idx].portrait = plannerIconObj[item.userCenterId];
+            });
+          }
           // 将得到的推荐数据存入缓存一小时失效
           ctx.service.redis.set(sceneId, plannerList.data, 60 * 60);
           ctx.helper.success({
@@ -144,10 +170,7 @@ class RecommendController extends Controller {
               limit,
               totalPage: Math.ceil(plannerList.data.records.length / limit),
               totalCount: plannerList.data.records.length,
-              records: plannerList.data.records.slice(
-                (page - 1) * limit,
-                limit * page
-              ),
+              records: plannerList.data.records,
             },
           });
         } catch (err) {
@@ -244,22 +267,22 @@ class RecommendController extends Controller {
         try {
           // 获取显示标签
           const tagsKeys = {
-            FL20201207080003: [
+            'CATE-JYZY-GS': [
               'company_industry', // 公司行业
               'taxpayer_type', // 纳税类型
               'registered_capital', // 注册资本
               'registration_time', // 注册时间
             ],
-            FL20201202065056: [
+            'CATE-JYZY-SB': [
               'trademark_type', // 商标分类
               'similar_group', // 组合类型
             ],
-            FL20201202065055: [
+            'CATE-JYZY-ZL': [
               'patent_type', // 专利类型
               'patent_industry', // 专利行业
               'patent_status', // 状态
             ],
-            FL20201202065054: [
+            'CATE-JYZY-ZZ': [
               'qualification_registration_area', // 区域
               'qualification_expire_date', // 到期时间
               'safety_production_license', // 安许证
@@ -268,12 +291,21 @@ class RecommendController extends Controller {
           };
           // 将得到的推荐数据存入缓存一小时失效
           const productListData = productList.data;
+          // 获取数据字典
+          const dictCodeList = await ctx.service.findDict.findDictChild('CATE-JYZY');
+          // 获取到当前分类的数据字典
+          const dictObj = {};
+          dictCodeList.forEach(dict => {
+            dictObj[dict.code] = dict;
+          });
           if (searchType === 1) {
             // 推荐产品需要展示的属性字段
             productListData.forEach((list, index) => {
               productListData[index].fieldList = list.fieldList.filter(item => {
                 if (list.classCodeLevelList && tagsKeys[list.classCodeLevelList[0]]) {
-                  return tagsKeys[list.classCodeLevelList[0]].includes(item.fieldCode);
+                  return tagsKeys[
+                    dictObj[list.classCodeLevelList[0]]
+                  ].includes(item.fieldCode);
                 }
                 return false;
               });

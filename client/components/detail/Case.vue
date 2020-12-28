@@ -2,24 +2,25 @@
   <div class="case">
     <p class="case_title">成功案例</p>
     <div class="case_con">
-      <p class="case_con_title">山东科技信息咨询信息咨询技术有限公司</p>
+      <p class="case_con_title">{{ caseData.name }}</p>
       <div class="case_con_info">
         <div class="case_con_info_lf">
-          地区：四川省<span>时间：2020.8.12</span>
+          {{ caseData.area }}
+          <!--          <span>时间：{{ caseData.time }}</span>-->
         </div>
-        <div class="case_con_info_rt">2020.7.20 成交</div>
+        <div class="case_con_info_rt">{{ caseData.time }} 成交</div>
       </div>
       <div class="case_evaluate">
-        <p>22.5元</p>
+        <p>{{ caseData.finalPrice }}</p>
         <div class="score">
           <sp-rate
-            v-model="value"
+            v-model="caseData.star"
             size="0.24rem"
             :readonly="true"
             color="#FF624F"
             void-color="#bbb"
           />
-          <span>{{ value }}</span>
+          <span>{{ caseData.star }}</span>
         </div>
       </div>
     </div>
@@ -28,15 +29,54 @@
 
 <script>
 import { Rate } from '@chipspc/vant-dgg'
+import caseMock from '~/mock/case'
 export default {
   name: 'Case',
   components: {
     [Rate.name]: Rate,
   },
+  props: {
+    classCodeDict: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
-      value: 3.5,
+      caseData: {
+        name: '--',
+        time: '---/---/---',
+        area: '--：---',
+        star: 0,
+        finalPrice: '-',
+        originalPrice: '-',
+      },
     }
+  },
+  mounted() {
+    this.getCase()
+  },
+  methods: {
+    //  随机抽取
+    getCase() {
+      const caseData = caseMock[this.classCodeDict]
+        ? caseMock[this.classCodeDict]
+        : [
+            {
+              name: '--',
+              time: '---/---/---',
+              area: '--：---',
+              star: 0,
+              finalPrice: '-',
+              originalPrice: '-',
+            },
+          ]
+      if (caseData.length < 2) {
+        this.caseData = caseData[0]
+      } else {
+        this.caseData = caseData[Math.floor(Math.random() * caseData.length)]
+      }
+    },
   },
 }
 </script>

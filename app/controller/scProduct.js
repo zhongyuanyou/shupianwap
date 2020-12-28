@@ -146,7 +146,7 @@ class ScProductDetailsController extends Controller {
           productGroupId,
           parentClassCode,
           areaCode,
-          referencePrice,
+          referencePrice: ctx.helper.priceFixed(`${referencePrice}/ 100`, 2), // 处理价格
           productDescription,
         },
         attrs,

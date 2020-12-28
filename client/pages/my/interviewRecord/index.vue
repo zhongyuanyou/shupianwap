@@ -25,7 +25,7 @@
           >
             <div class="item-info" @click="handleClick(item)">
               <div class="left">
-                <div class="item-info_avatar" @click="scanDetail(item.id)">
+                <div class="item-info_avatar" @click.stop="scanDetail(item)">
                   <sp-image
                     round
                     width="0.8rem"
@@ -58,14 +58,20 @@
                 </div>
               </div>
               <div class="right item-info_contact">
-                <sp-button round class="contact-btn"
+                <sp-button
+                  round
+                  class="contact-btn"
+                  @click.stop="handleIm(item)"
                   ><my-icon
                     name="notify_ic_chat"
                     size="0.32rem"
                     color="#4974F5"
                 /></sp-button>
 
-                <sp-button round class="contact-btn" @click="tel(item.phone)"
+                <sp-button
+                  round
+                  class="contact-btn"
+                  @click.stop="tel(item.inviterContact)"
                   ><my-icon name="notify_ic_tel" size="0.32rem" color="#4974F5"
                 /></sp-button>
                 <sp-tag
@@ -131,7 +137,9 @@ import {
   CenterPopup,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { interviewApi } from '~/api'
+import { interviewApi, publicApi } from '~/api'
+import imHandle from '@/mixins/imHandle'
+// import { parseTel } from '~/utils/common'
 
 export default {
   name: 'Interview',
@@ -146,6 +154,7 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [CenterPopup.name]: CenterPopup,
   },
+  mixins: [imHandle],
   data() {
     return {
       list: [],
@@ -165,6 +174,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      userId: (state) => state.user.userInfo.userId,
     }),
   },
   mounted() {
@@ -183,17 +193,27 @@ export default {
       this.$router.back()
     },
     // 查看规划师详情
-    scanDetail(id) {
-      this.$router.push('/planner/' + id)
+    scanDetail(item) {
+      const data = {
+        mchUserId: item.inviterId,
+      }
+      this.$router.push({
+        name: 'planner-detail',
+        query: data,
+      })
     },
-    // 打电话
-    tel(number) {
-      // if (this.isdggapp) {
-      //   this.$appFn.callPhone(number, (res) => {})
-      // } else {
-      //   window.location.href = 'tel:' + number
-      // }
-      window.location.href = 'tel:' + number
+    // 打电话encryptPhone: number,
+    async tel(number) {
+      // window.location.href = 'tel:' + number
+      try {
+        const params = {
+          encryptPhone: number,
+        }
+        const res = await this.$axios.get(publicApi.descrptionPhone, { params })
+        if (res.code === 200 && res.data) {
+          window.location.href = 'tel:' + res.data
+        }
+      } catch (err) {}
     },
     cancelConfirm() {
       // 显示取消面谈确认框
@@ -212,6 +232,8 @@ export default {
         }
         const res = await this.$axios.post(interviewApi.cancel, params)
         if (res.code === 200) {
+          this.page = 1
+          this.list = []
           this.getInterviewList()
         }
       } catch (err) {}
@@ -253,6 +275,12 @@ export default {
     handleClick(item) {
       // 点击面谈记录
       this.$router.push(`/my/interviewRecord/${item.id}`)
+    },
+    handleIm(item) {
+      // 调起IM
+      const imUserId = this.userId // 商户用户ID
+      const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      this.creatImSessionMixin({ imUserId, imUserType })
     },
   },
 }

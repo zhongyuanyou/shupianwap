@@ -130,6 +130,9 @@ export default {
 
 <style lang="less" scoped>
 .detail {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
   &-content {
     padding: 36px 40px;
     &-complain {

@@ -6,10 +6,10 @@
       placeholder="请输入搜索内容"
       @searchKeydownHandle="searchKeydownHandle"
     >
-      <div slot="left" class="nav-back" @click="console.log(123)">
+      <div slot="left" class="nav-back" @click="$router.go(-1)">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
-      <div slot="right" class="info">
+      <div slot="right" class="info" @click="jumpImMixin">
         <my-icon name="nav_ic_msg" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
     </Search>
@@ -19,16 +19,19 @@
       :init-service-data="serveGoodsListData"
       :search-text="formData.searchText"
       :req-type="reqType"
+      :session-category="sessionCategory"
     />
     <!--E筛选栏-->
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { WorkTabs, WorkTab, Badge } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import serveGoods from '@/components/list/ServeGoods'
 import { goods } from '@/api/index'
+import listJumpIm from '@/mixins/listJumpIm'
 
 export default {
   name: 'ServeList',
@@ -39,6 +42,8 @@ export default {
     serveGoods,
     [Badge.name]: Badge,
   },
+  layout: 'keepAlive',
+  mixins: [listJumpIm],
   data() {
     return {
       serveGoodsListData: {}, // 服务商品列表数据
@@ -51,12 +56,21 @@ export default {
         needGoodsList: 0,
         searchText: '',
       },
+      sessionCategory: null,
     }
   },
+  beforeMount() {
+    // 获取从分类页session中需要搜索服务的数据
+    this.sessionCategory = JSON.parse(sessionStorage.getItem('categoryData'))
+  },
   mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'ServeList' })
     this.getInitData()
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     searchKeydownHandle() {
       // 点击搜索按钮
       this.formData.searchText = this.searchText
@@ -71,7 +85,6 @@ export default {
           this.serveGoodsListData = data
         })
         .catch()
-      // todo 获取交易商品数据
     },
   },
 }
@@ -83,6 +96,9 @@ export default {
   height: 100%;
   .search-content {
     padding: 16px 32px;
+  }
+  /deep/.spiconfont-sear_ic_sear {
+    margin-left: 24px !important;
   }
   .nav-back {
     margin-right: 32px;

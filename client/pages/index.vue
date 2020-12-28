@@ -63,10 +63,10 @@ export default {
     Recommend,
     FiexdBtn,
   },
-  async asyncData({ $axios }) {
-    const fiexdAdCode = 'ad100077' // 顶部固定banner的code
-    const rollAdCode = 'ad100091' // 导航下方轮播banner code
-    const helpAdCode = 'ad100233' // 帮我找下方banner code
+  async asyncData({ $axios, redirect }) {
+    const fiexdAdCode = 'ad100234' // 顶部固定banner的code
+    const rollAdCode = 'ad100237' // 导航下方轮播banner code
+    const helpAdCode = 'ad100238' // 帮我找下方banner code(服务榜单)
     // 首屏请求导航和广告的参数
     const initReqParams = {
       locationCodeList: [fiexdAdCode, rollAdCode, helpAdCode], // 广告位code列表
@@ -74,10 +74,10 @@ export default {
       rollLimit: 1000, // 滚动导航每页条数
       fixedPage: 1, // 固定导航当前页
       fixedLimit: 5, // 固定导航每页条数
-      fixedNavCategoryCode: 'nav100001', // 固定导航分类code
-      fixedNavPlatformCode: 'COMDIC_PLATFORM_CRISPS', // 固定导航平台code
-      rollNavCategoryCode: 'nav100001', // 滚动导航分类code
-      rollNavPlatformCode: 'COMDIC_PLATFORM_CRISPS', // 滚动导航平台code
+      fixedNavCategoryCode: 'nav100007', // 固定导航分类code
+      rollNavCategoryCode: 'nav100012', // 滚动导航分类code
+      platformCode: CHIPS_PLATFORM_CODE, // 平台code
+      terminalCode: WAP_TERMINAL_CODE, // 终端code
     }
     const initData = {
       fiexdBannerData: [], // 固定广告
@@ -100,15 +100,17 @@ export default {
         initData.fiexdNavData = res.data.fixedNavList || []
         initData.rollNavData = res.data.rollNavList || []
       }
-    } catch (error) {}
+    } catch (error) {
+      redirect('/500')
+    }
     return {
       initData,
     }
   },
   data() {
     return {
-      adModuleOne: ['ad100233', 'ad100233'], // 限时特惠板块
-      adModuleTwo: ['ad100233', 'ad100233', 'ad100233', 'ad100233'], // 热门服务板块
+      adModuleOne: ['ad100235', 'ad100236'], // 限时特惠板块
+      adModuleTwo: ['ad100239', 'ad100240', 'ad100241', 'ad100242'], // 热门服务板块
       asyncReqParams: {
         infoLimit: 3, // 资讯每页数量
         infoPage: 1, // 资讯当前页

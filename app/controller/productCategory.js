@@ -56,7 +56,7 @@ class ProductCategoryController extends Controller {
         cpRecList = cData.filter(item => {
           return item.topping === 1;
         });
-        if (categoryList[0].name !== '为您推荐' && cpRecList.length) {
+        if (!categoryList.length || (categoryList[0].name !== '为您推荐' && cpRecList.length)) {
           categoryList.unshift({ name: '为您推荐', id: '' });
         }
         // 为每一个一级分类对象添加子级分类集合变量children
@@ -69,7 +69,7 @@ class ProductCategoryController extends Controller {
         }
         for (let i = 0; i < cData.length; i++) {
           for (let j = 0; j < categoryList.length; j++) {
-            if (cData[i].level === 2 && cData[i].parentId === categoryList[j].id && cData[i].recommended && !cData[i].topping) {
+            if (cData[i].level === 2 && cData[i].parentId === categoryList[j].id && cData[i].recommended && cData[i].status) {
               categoryList[j].children.push(cData[i]);
             }
           }
@@ -84,14 +84,14 @@ class ProductCategoryController extends Controller {
         const jData = resData[1].data;
         // 获取到所有交易一级分类
         jyCategoryList = jData.filter(item => {
-          return item.level === 1 && !item.recommended;
+          return item.level === 1 && !item.recommended && item.status;
         });
         // 为您推荐产品分类
         // 判断是否有为您推荐的分类数据
         jyRecList = jData.filter(item => {
           return item.topping === 1;
         });
-        if (categoryList[0].name !== '为您推荐' && jyRecList.length) {
+        if (!categoryList.length || (categoryList[0].name !== '为您推荐' && jyRecList.length)) {
           categoryList.unshift({ name: '为您推荐', id: '' });
         }
         // 为每一个一级分类对象添加子级分类集合变量children
@@ -102,14 +102,16 @@ class ProductCategoryController extends Controller {
         if (categoryList[0].name === '为您推荐') {
           categoryList[0].children = jyRecList;
         }
-        categoryList = categoryList.concat(jyCategoryList);
+        // categoryList = categoryList.concat(jyCategoryList);
         for (let i = 0; i < jData.length; i++) {
-          for (let j = 0; j < categoryList.length; j++) {
-            if (jData[i].level === 2 && jData[i].parentId === categoryList[j].id && !jData[i].recommended && !jData[i].topping) {
-              categoryList[j].children.push(jData[i]);
+          for (let j = 0; j < jyCategoryList.length; j++) {
+            if (jData[i].level === 2 && jData[i].parentId === jyCategoryList[j].id && !jData[i].recommended && jData[i].status) {
+              jyCategoryList[j].children.push(jData[i]);
             }
           }
         }
+        const jyInfo = { name: '交易产品', id: '', isJY: true, children: jyCategoryList };
+        categoryList.push(jyInfo);
       }
       // 筛选没有子级分类的产品分类
       categoryList = categoryList.filter(item => {
@@ -120,7 +122,7 @@ class ProductCategoryController extends Controller {
         resData[2].code === 200 &&
         resData[2].data
       ) {
-        recommendData = resData[2].data.ad100129.sortMaterialList;
+        recommendData = resData[2].data && resData[2].data.ad100129 ? resData[2].data.ad100129.sortMaterialList : [];
       }
       ctx.helper.success({
         ctx,

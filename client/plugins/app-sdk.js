@@ -125,6 +125,12 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // app当前定位的站点
+  dggCityCode: (fn = () => {}) => {
+    Bridge.callHandler('dgg_cityCode', {}, (res) => {
+      handleRequest(res, fn)
+    })
+  },
   // 打开新的webView
   dggOpenNewWeb: (
     data = { urlString: 'https://www.baidu.com' },
@@ -140,9 +146,43 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // 隐藏导航头部
+  dggHideNav: (fn = () => {}) => {
+    Bridge.callHandler('dgg_hideNav', {}, (res) => {
+      handleRequest(res, fn)
+    })
+  },
   // wap返回数据给到flutter
   dggWebBackValueToFlutter: (data = {}, fn = () => {}) => {
     Bridge.callHandler('dgg_webBackValueToFlutter', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // 调用分享
+  dggShare: (
+    data = { image: '', title: '', subTitle: '', url: '' },
+    fn = () => {}
+  ) => {
+    Bridge.callHandler('dgg_share', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // 调用设备信息
+  dggDeviceInfo: (fn = () => {}) => {
+    Bridge.callHandler('dgg_deviceInfo', {}, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // 调用IM
+  dggOpenIM: (
+    data = {
+      name: '', // 商户用户名称
+      userId: '', // 商户用户ID
+      userType: '', // 用户类型
+    },
+    fn = () => {}
+  ) => {
+    Bridge.callHandler('dgg_openIM', data, (res) => {
       handleRequest(res, fn)
     })
   },

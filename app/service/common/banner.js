@@ -1,7 +1,7 @@
 'use strict';
 const Service = require('egg').Service;
 const { contentApi } = require('../../../config/serveApi/index');
-const { ADVERT_TIME } = require('../../../config/constant/cacheTime');
+const { BASE_CACHE_TIME } = require('../../../config/constant/cacheTime');
 class bannerService extends Service {
   /** @Author: MaLiang
    * 获取广告列表服务API（HTTP）
@@ -45,7 +45,7 @@ class bannerService extends Service {
               message: result.message,
               data: advertising,
             },
-            ADVERT_TIME
+            BASE_CACHE_TIME
           );
         }
         resolve({

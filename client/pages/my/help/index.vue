@@ -1,7 +1,15 @@
 <template>
   <div class="help-page">
     <!-- S 头部 -->
-    <Header v-if="!isInApp" ref="headerRef" title="帮助中心" />
+    <sp-sticky>
+      <sp-top-nav-bar title="帮助中心" ellipsis @on-click-left="back">
+        <template #left>
+          <div>
+            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          </div>
+        </template>
+      </sp-top-nav-bar>
+    </sp-sticky>
     <!-- E 头部 -->
     <!-- S 广告位 -->
     <div class="help-bn">
@@ -79,7 +87,10 @@
             </li>
           </ul>
           <Loading-down
-            v-if="tabData.length && tabData[active].articleData.length"
+            v-if="
+              tabData.length &&
+              tabData[active].articleData.length > params.limit
+            "
             :loading="loading && !tabData[active].noMore"
             :no-data="tabData[active].noMore"
           />
@@ -105,18 +116,17 @@ import {
   Bottombar,
   BottombarButton,
   BottombarIcon,
+  TopNavBar,
   Sticky,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
 import { helpApi } from '@/api'
-import Header from '@/components/common/head/header'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 
 export default {
   name: 'Help',
   components: {
-    Header,
     LoadingDown,
     [Sticky.name]: Sticky,
     [Search.name]: Search,
@@ -125,6 +135,7 @@ export default {
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
     [BottombarIcon.name]: BottombarIcon,
+    [TopNavBar.name]: TopNavBar,
   },
   async asyncData({ $axios }) {
     const params = {
@@ -141,12 +152,17 @@ export default {
     let tabData = []
     let adData = {}
     try {
-      const res = await $axios.post(helpApi.findArticle, params)
+      const res = await $axios.post(helpApi.findArticle, params, {
+        headers: {
+          'x-cache-control': 'cache',
+        },
+      })
       if (res.code === 200) {
-        res.data.categoryList.forEach((item) => {
+        res.data.categoryList.forEach((item, imdex) => {
           item.limit = params.limit
           item.page = params.page
-          item.noMore = false
+          item.noMore =
+            imdex === 0 && res.data.articleData.length < params.limit
           item.articleData = []
         })
         tabData = res.data.categoryList
@@ -286,6 +302,13 @@ export default {
         return
       }
       window.location.href = 'tel:17755021122'
+    },
+    back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      this.$router.back()
     },
   },
 }

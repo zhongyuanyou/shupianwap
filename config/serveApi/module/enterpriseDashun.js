@@ -11,4 +11,5 @@ module.exports.dashunApi = {
     interviewCancel: "/yk/c/biz_interview_record/v1/cancel_interview", // 取消面谈
     interviewConfirm: "/yk/c/biz_interview_record/v1/finish_interview", // 面谈完成确认
     interviewDetail: "/yk/c/biz_interview_record/v1/interview_detail", // 面谈详情
+    decryptionPhone: "/yk/biz_business/v1/show_real_phone.do", // 电话解密
 };

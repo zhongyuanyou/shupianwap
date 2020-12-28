@@ -2,7 +2,9 @@
   <div class="category">
     <!--S 头部-->
     <div class="category_header">
-      <my-icon name="nav_ic_back" size="0.33rem" color="#1a1a1a" />
+      <div class="icon" @click="back">
+        <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a" />
+      </div>
       <div class="category_header_con">
         <my-icon name="sear_ic_sear" size="0.28rem" color="#999" />
         <input
@@ -29,6 +31,7 @@
             }"
             @click="handleClick(index)"
           >
+            <div v-show="TabNavList == index" class="line"></div>
             {{ item.name }}
           </li>
         </ul>
@@ -37,8 +40,8 @@
       <!--S 二级分类区域-->
       <section ref="r_list" class="category_con_rt">
         <div>
-          <div class="swiper">
-            <div v-if="recommendData.length" class="proList swiper_con">
+          <div v-if="recommendData.length" class="swiper">
+            <div class="proList swiper_con">
               <sp-swipe
                 class="my-swipe"
                 :autoplay="3000"
@@ -189,6 +192,9 @@ export default {
       sessionStorage.categoryData = JSON.stringify(item)
       this.$router.push('/list/serveList')
     },
+    back() {
+      this.$router.back()
+    },
   },
 }
 </script>
@@ -212,6 +218,13 @@ export default {
     align-items: center;
     flex-direction: row;
     z-index: 6;
+    .icon {
+      height: 128px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: row;
+    }
     &_con {
       display: flex;
       justify-content: flex-start;
@@ -269,7 +282,18 @@ export default {
         color: #555555;
         text-align: center;
         line-height: 124px;
+        position: relative;
         .textOverflow(1);
+      }
+      .line {
+        width: 6px;
+        height: 40px;
+        background-color: #4974f5;
+        border-radius: 0 3px 3px 0;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        margin-top: -20px;
       }
     }
     &_rt {

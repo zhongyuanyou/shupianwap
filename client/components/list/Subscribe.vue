@@ -29,7 +29,7 @@
         </sp-field>
       </template>
       <div v-else class="already-login">
-        <span>186****2232</span>
+        <span>{{ phone }}</span>
       </div>
       <div class="submit" @click="submitSubscribe">
         <span>免费订阅通知</span>
@@ -41,9 +41,10 @@
 
 <script>
 import { Field } from '@chipspc/vant-dgg'
-import { auth } from '@/api'
-import { checkPhone } from '@/utils/check.js'
+import { auth, userinfoApi } from '@/api'
+import { checkPhone, checkAuthCode } from '@/utils/check.js'
 import SpToast from '@/components/common/spToast/SpToast'
+import util from '@/utils/spread/util'
 
 export default {
   name: 'Subscribe',
@@ -73,21 +74,60 @@ export default {
       smsStr: '获取验证码',
       count: 60,
       isSendSMS: false,
+      userInfo: null,
+      phone: '',
     }
   },
+  watch: {
+    userInfo(val) {
+      this.phone = util.numberSuitScanf(val.mainAccount)
+    },
+  },
   mounted() {
-    this.isLogin = false
-    this.$store.state.user.token && (this.isLogin = true)
+    if (this.$store.state.user.userId) {
+      this.isLogin = true
+      // 获取用户信息
+      this.$axios
+        .get(userinfoApi.info, {
+          params: { id: this.$store.state.user.userId },
+        })
+        .then((res) => {
+          if (res.code === 200 && res.data.id) {
+            this.userInfo = res.data
+          } else {
+            this.isLogin = false
+            this.$refs.spToast.show({
+              message: '获取用户信息失败',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
+        .catch((err) => {
+          console.error(err)
+          this.$refs.spToast.show({
+            message: '网络错误，请稍后再试',
+            duration: 1000,
+            icon: 'toast_ic_error',
+            forbidClick: true,
+          })
+        })
+    }
   },
   methods: {
     submitSubscribe() {
       // 提交订阅
-      this.$refs.spToast.show({
-        message: '提交成功',
-        duration: 1500,
-        icon: 'toast_ic_comp',
-        forbidClick: true,
-      })
+      if (this.isLogin) {
+        this.$refs.spToast.show({
+          message: '提交成功',
+          duration: 1500,
+          icon: 'toast_ic_comp',
+          forbidClick: true,
+        })
+      } else {
+        this.checkSms()
+      }
     },
     getSMS() {
       if (!checkPhone(this.tel)) {
@@ -121,6 +161,37 @@ export default {
             })
           })
       }
+    },
+    checkSms() {
+      if (!checkAuthCode(this.sms)) {
+        this.$refs.spToast.show({
+          message: '请填写正确的验证码',
+          duration: 1000,
+          icon: 'toast_ic_error',
+          forbidClick: true,
+        })
+        return
+      }
+      auth
+        .checkSmsCode(
+          { axios: this.$axios },
+          {
+            phone: this.phone,
+            userType: 'ORDINARY_USER',
+            smsCode: this.sms,
+          }
+        )
+        .then((res) => {
+          console.log(res)
+          if (res.code === 200) {
+            this.$refs.spToast.show({
+              message: '提交成功',
+              duration: 1500,
+              icon: 'toast_ic_comp',
+              forbidClick: true,
+            })
+          }
+        })
     },
     // 倒计时
     countDown() {

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-20 09:56:21
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-12 16:44:06
+ * @LastEditTime: 2020-12-26 15:11:00
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/demo/pcd.vue
 -->
@@ -112,9 +112,11 @@ export default {
     },
     handleImgAuthBtn() {
       // 方法一： 通过组件调用
-      this.show = !this.show
+      // this.show = !this.show
       // 方法二： 通过方法调用
-      // ImgAuthDialogFn({ submitCode: this.handleSubmit })
+      ImgAuthDialogFn().then((acition, data) => {
+        console.log('action:', acition, data)
+      })
     },
     handleRecommendBtn() {
       this.showRecommendDialog = !this.showRecommendDialog

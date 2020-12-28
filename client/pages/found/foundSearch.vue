@@ -80,6 +80,8 @@ export default {
   &_con {
     margin-top: 128px;
     display: flex;
+    padding-top: constant(safe-area-inset-top);
+    padding-top: env(safe-area-inset-top);
     .no_history {
       margin-top: 279px;
       display: flex;

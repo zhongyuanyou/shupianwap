@@ -2,38 +2,50 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-23 19:48:04
+ * @LastEditTime: 2020-12-28 11:48:03
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
 
 <template>
   <div class="list">
-    <div class="head">
-      <Header v-if="isInApp" :title="title" />
+    <div class="head" ref="head">
+      <Header title="在线直选规划师">
+        <template #left>
+          <my-icon
+            class="back-icon"
+            name="nav_ic_back"
+            size="0.4rem"
+            color="#1A1A1A"
+            @click.native="onLeftClick"
+          ></my-icon>
+        </template>
+      </Header>
     </div>
     <div class="body">
       <SearchPopup ref="searchPopup" @onSearch="handleKeywordsSearch" />
-      <sp-cell
-        class="search"
-        :class="[isInApp ? 'search-sticky--app' : 'search-sticky--browser']"
-      >
-        <div>
-          <sp-nav-search
-            v-model="search.keywords"
-            border
-            special-label
-            class="search__input"
-            placeholder="请输入规划师姓名"
-            @focus="handleSearchFocus"
-          >
-            <template #left-icon>
-              <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
-            </template>
-          </sp-nav-search>
+      <div class="search">
+        <!-- S 搜索输入框 -->
+        <sp-nav-search
+          v-model="search.keywords"
+          border
+          special-label
+          class="search__input"
+          placeholder="请输入规划师姓名"
+          :disabled="true"
+          @click="handleSearchFocus"
+        >
+          <template #left-icon>
+            <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
+          </template>
+        </sp-nav-search>
+        <!-- E 搜索输入框 -->
+        <!-- S 下拉筛选条件 -->
+        <sp-sticky class="sticky-dropdown" :offset-top="headHeight">
           <sp-dropdown-menu class="search__dropdown">
             <sp-dropdown-item
               ref="regionsDropdownItem"
+              :disabled="!regionsOption || !regionsOption.length"
               :title-class="
                 search.region.name != '区域'
                   ? 'sp-dropdown-menu__title--selected '
@@ -61,8 +73,10 @@
               @change="handleSortChange"
             />
           </sp-dropdown-menu>
-        </div>
-      </sp-cell>
+        </sp-sticky>
+        <!-- E 下拉筛选条件 -->
+      </div>
+
       <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
         <sp-list
           v-model="loading"
@@ -96,6 +110,7 @@
         </sp-list>
       </sp-pull-refresh>
     </div>
+    <sp-toast ref="spToast" />
   </div>
 </template>
 
@@ -103,6 +118,7 @@
 import { mapState, mapMutations } from 'vuex'
 
 import {
+  Sticky,
   Button,
   DropdownMenu,
   DropdownItem,
@@ -119,11 +135,12 @@ import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
 import Header from '@/components/common/head/header'
 import SearchPopup from '@/components/planner/SearchPopup'
 import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
+import SpToast from '@/components/common/spToast/SpToast'
 
 import imHandle from '@/mixins/imHandle'
 
 import { planner, dict } from '@/api'
-import { callPhone } from '@/utils/common'
+import { callPhone, parseTel } from '@/utils/common'
 
 const SORT_CONFIG = [
   {
@@ -171,8 +188,9 @@ const DEFAULT_PAGE = {
 }
 
 export default {
-  name: 'List',
+  name: 'PlannerList',
   components: {
+    [Sticky.name]: Sticky,
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
@@ -186,11 +204,12 @@ export default {
     CoupleSelect,
     SearchPopup,
     PlannerSearchItem,
+    SpToast,
   },
   mixins: [imHandle],
   data() {
     return {
-      title: '在线直选规划师',
+      headHeight: '0.88rem',
       search: {
         keywords: '',
         sortId: 0,
@@ -239,21 +258,28 @@ export default {
   created() {
     if (process && process.client) {
       this.uPGetRegion()
-      this.uPSetHeader()
     }
+  },
+  mounted() {
+    this.headHeight = this.$refs.head.offsetHeight
+    console.log('head', this.$refs.head.offsetHeight)
   },
   methods: {
     ...mapMutations({
       SET_CITY: 'city/SET_CITY',
     }),
+
+    onLeftClick() {
+      console.log('nav onClickLeft')
+      this.uPGpBack()
+    },
     handleRegionsSelect(data) {
       console.log(data)
-      // TODO 测试
       if (this.currentCity.code !== data[0].code) return
-      const { code, name } = data[1]
+      const { code, name } = data[1] || {}
       this.search.region = {
         code,
-        name,
+        name: name === '不限' ? '区域' : name,
       }
       this.$refs.regionsDropdownItem.toggle()
       this.handleSearch()
@@ -313,7 +339,10 @@ export default {
           break
         case 'detail':
           console.log('看看详情：', data)
-          this.$router.push({ name: 'planner-id', query: data })
+          this.$router.push({
+            name: 'planner-detail',
+            query: data,
+          })
           break
       }
     },
@@ -323,20 +352,32 @@ export default {
       this.onRefresh()
     },
 
-    uPSetHeader() {
+    uPGpBack() {
       if (this.isInApp) {
-        this.$appFn.dggSetTitle({ title: this.title }, (res) => {
-          const { code } = res || {}
-          code !== 200 && console.error('dggSetTitle error!')
-        })
+        this.$appFn.dggCloseWebView()
+        return
       }
+      this.$router.go(-1)
     },
 
     // 统一平台 区域设置
     uPGetRegion() {
-      // TODO app 上获取code
+      // app 上获取区域code
       if (this.isInApp) {
-        // this.SET_CITY({code, name}) // 设置当前的定位到vuex中
+        this.$appFn.dggCityCode((res) => {
+          const { code, data } = res || {}
+          if (code !== 200)
+            return this.$refs.spToast.show({
+              message: '当前区域获取失败',
+              duration: 1000,
+              forbidClick: true,
+              icon: 'toast_ic_remind',
+            })
+          const { adCode, cityName } = data
+          console.log('dggCityCode:', res)
+          this.getRegionList(adCode)
+          this.SET_CITY({ code: adCode, name: cityName }) // 设置当前的定位到vuex中
+        })
         return
       }
 
@@ -346,12 +387,22 @@ export default {
     },
 
     // 拨打电话号码
-    uPCall(telNumber) {
+    uPCall(data) {
+      const { ciphertext } = data || {}
+      const telNumber = parseTel(ciphertext)
+      console.log('telNumber:', telNumber)
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
         this.$appFn.dggCallPhone({ phone: telNumber }, (res) => {
           const { code } = res || {}
-          if (code !== 200) Toast('拨号失败！')
+          if (code !== 200) {
+            this.$refs.spToast.show({
+              message: '拨号失败！',
+              duration: 1000,
+              forbidClick: true,
+              icon: 'toast_ic_remind',
+            })
+          }
         })
         return
       }
@@ -361,10 +412,26 @@ export default {
 
     // 发起聊天
     uPIM(data = {}) {
-      const { mchUserId } = data
+      const { mchUserId, userName } = data
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
-        // TODO 调用IM 暂无
+        this.$appFn.dggOpenIM(
+          {
+            name: userName,
+            userId: mchUserId,
+            userType: 'MERCHANT_USER',
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200)
+              this.$refs.spToast.show({
+                message: `联系失败`,
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_remind',
+              })
+          }
+        )
         return
       }
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
@@ -386,7 +453,12 @@ export default {
           const { limit, currentPage = 1, totalCount = 0, records = [] } = data
           this.pageOption = { limit, totalCount, page: currentPage }
           this.list.push(...records)
-          Toast(`共找到${totalCount}个规划师`)
+          this.$refs.spToast.show({
+            message: `共找到${totalCount}个规划师`,
+            duration: 1000,
+            forbidClick: true,
+            icon: 'toast_ic_comp',
+          })
         }
         return data
       } catch (error) {
@@ -403,12 +475,15 @@ export default {
       try {
         const data = await dict.findCmsTier({ axios: this.$axios }, { code })
         console.log(data)
-        this.regionsOption = [
-          {
-            ...this.currentCity,
-            children: Array.isArray(data) ? data : [],
-          },
-        ]
+        if (Array.isArray(data) && data.length) {
+          this.regionsOption = [
+            {
+              ...this.currentCity,
+              children: Array.isArray(data) ? data : [],
+            },
+          ]
+        }
+
         return data
       } catch (error) {
         console.error('getRegionList:', error)
@@ -431,27 +506,34 @@ export default {
   }
   .body {
     padding: 0;
-    .search-sticky--browser {
-      top: -30px;
-    }
-    .search-sticky--app {
-      top: -120px;
-    }
     .search {
-      position: sticky;
-      top: -30px;
-      z-index: 10;
-      padding: 0 40px;
       &__input {
         height: 96px;
-        margin: 16px 0;
+        margin: 16px 40px;
         /deep/.sp-field__control {
           font-size: 30px;
           font-weight: bold;
         }
       }
-
+      /deep/.sticky-dropdown {
+        .sp-sticky {
+          padding-top: 0;
+        }
+      }
       /deep/.sp-dropdown-menu {
+        padding: 0 40px;
+        position: relative;
+        &::after {
+          position: absolute;
+          box-sizing: border-box;
+          content: ' ';
+          pointer-events: none;
+          right: -50%;
+          left: -50%;
+          height: 1px;
+          background-color: #ebedf0;
+          transform: scale(0.5);
+        }
         &__bar {
           box-shadow: none;
           height: 90px;

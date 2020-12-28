@@ -2,30 +2,57 @@
   <div class="question">
     <div class="question_tp">
       <p class="question_tp_title">常见问题</p>
-      <div class="question_tp_more">
-        查看更多<span
-          ><my-icon name="order_ic_listnext" size="0.21rem" color="#ccc"
-        /></span>
+      <div class="question_tp_more" @click="handlToProblemList">
+        查看更多
+        <span>
+          <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
+        </span>
       </div>
     </div>
     <div class="question_item">
       <div class="question_item_title">
-        <my-icon name="per_ic_help" size="0.32rem" color="#4974F5" />
-        <span>请问公司股权转让流程？</span>
+        <my-icon name="command_img_questions" size="0.32rem" color="#4974F5" />
+        <span>{{ problemData.title }}</span>
       </div>
       <div class="question_item_answer">
-        <my-icon name="per_ic_help" size="0.32rem" color="#FF614E" />
-        <span
-          >变更工商-税务变更（如涉及变更名称）缴销印章，重刻新公司名称印章-变更企业社保，公积金户-变更银行。</span
-        >
+        <my-icon name="command_img_answers" size="0.32rem" color="#FF614E" />
+        <span v-html="problemData.content"></span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import problemMockData from '~/mock/problem'
 export default {
   name: 'Question',
+  props: {
+    classCodeDict: {
+      type: String,
+      default: '',
+    },
+  },
+  data() {
+    return {
+      problemData: {},
+    }
+  },
+  mounted() {
+    this.getMockData(this.classCodeDict)
+  },
+  methods: {
+    handlToProblemList() {
+      this.$router.push(`/detail/commonProblem/${this.classCodeDict}`)
+    },
+    getMockData(classCode) {
+      const problemData = problemMockData[classCode]
+        ? problemMockData[classCode]
+        : []
+      const problem =
+        problemData[Math.floor(Math.random() * problemData.length)]
+      this.problemData = problem || {}
+    },
+  },
 }
 </script>
 

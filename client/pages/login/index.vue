@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-22 16:05:15
+ * @LastEditTime: 2020-12-26 15:39:09
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
@@ -136,6 +136,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 import {
   TopNavBar,
   Form,
@@ -144,13 +146,16 @@ import {
   Checkbox,
   Toast,
 } from '@chipspc/vant-dgg'
-import { mapMutations } from 'vuex'
-
 import ProtocolField from '@/components/login/ProtocolField'
 import PhoneField from '@/components/login/PhoneField'
 
 import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
+import { openLink } from '@/utils/common.js'
+import ImgAuthDialog from '@/components/common/imgAuth'
+
+// 第三方登录需要回传的参数
+const SOURCE_PLATFROM_PARAMS = { IM: ['token', 'userId'] }
 
 export default {
   name: 'Login',
@@ -174,6 +179,7 @@ export default {
       },
       isValidSubmit: false,
       passwordFieldType: 'password', // text：明文
+      sourcePlatform: this.$route.query.sourcePlatform || '', // 第三方 需要携带的参数   IM: token, userId
       loginType: this.$route.query.loginType || 'telephone', // account: 账户登录； telephone：手机快捷登录
       redirect: this.$route.query.redirect || '/', // 登录后需要跳转的地址
     }
@@ -191,7 +197,23 @@ export default {
         this.loginToast(message)
         return
       }
-      this.login().then(() => {
+      this.login().then((data) => {
+        // 跳转外连接
+        if (this.sourcePlatform) {
+          const keyList = SOURCE_PLATFROM_PARAMS[this.sourcePlatform]
+          const query = Array.isArray(keyList)
+            ? keyList.reduce((accumulator, key) => {
+                data = data || {}
+                if (data[key]) {
+                  accumulator[key] = data[key]
+                }
+                return accumulator
+              }, {})
+            : {}
+          openLink(this.redirect, query)
+          return
+        }
+
         this.$router.push(this.redirect)
       })
     },
@@ -262,12 +284,13 @@ export default {
         account: '',
         password: '',
         readed: false,
+        imgCaptcha: '', // 图形验证码
       }
     },
 
     async login() {
       const isPhoneVerify = this.loginType === 'telephone'
-      const { tel, authCode, account, password } = this.loginForm
+      const { tel, authCode, account, password, imgCaptcha } = this.loginForm
       const dataJson = {
         phone: isPhoneVerify ? this.loginForm.tel : this.loginForm.account,
       }
@@ -283,6 +306,7 @@ export default {
         client: 'COMDIC_TERMINAL_WAP',
         platformType: 'COMDIC_PLATFORM_CRISPS',
         dataJson,
+        imgCaptcha,
       }
       try {
         const data = await auth.login({ axios: this.$axios }, params)
@@ -292,6 +316,19 @@ export default {
         }
         return data
       } catch (error) {
+        const { code } = error
+        // 需要验证码
+        if (code === '10408') {
+          ImgAuthDialog()
+            .then((result) => {
+              const { data } = result
+              this.loginForm.imgCaptcha = data
+            })
+            .catch(() => {
+              this.loginForm.imgCaptcha = ''
+            })
+          return
+        }
         this.loginToast(error.message)
         return Promise.reject(error)
       }

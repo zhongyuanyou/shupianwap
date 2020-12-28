@@ -29,14 +29,15 @@
     <ServiceInfo :client-details-data="scProductDetailData.clientDetails" />
     <!--    推荐规划师-->
     <div class="planners-box">
-      <Planners :info="planners" />
-      <div class="planners-box-quiz">
-        <h2>您的疑问，第一时间为您解答</h2>
-        <div>
-          <input placeholder="输入您想咨询的问题" type="text" />
-          <sp-button type="primary">提问</sp-button>
-        </div>
-      </div>
+      <Planners :im-jump-query="imJumpQuery" :info="planners" />
+      <!--   暂时取消此表单   -->
+      <!--      <div class="planners-box-quiz">-->
+      <!--        <h2>您的疑问，第一时间为您解答</h2>-->
+      <!--        <div>-->
+      <!--          <input placeholder="输入您想咨询的问题" type="text" />-->
+      <!--          <sp-button type="primary">提问</sp-button>-->
+      <!--        </div>-->
+      <!--      </div>-->
     </div>
     <!--    猜你喜欢-->
     <sp-list
@@ -81,6 +82,7 @@ export default {
     RecommendScProduct,
     commodityConsultation,
   },
+  layout: 'keepAlive',
   async asyncData({ $axios, query, app }) {
     try {
       let scProductDetailData = {}
@@ -89,7 +91,7 @@ export default {
       const productDetailRes = await $axios.post(
         productDetailsApi.scProductDetail,
         {
-          productId: query.id,
+          productId: query.productId,
           serviceItem: 'true',
           showClient: 'COMDIC_TERMINAL_WAP',
           needServiceItem: true,
@@ -241,7 +243,7 @@ export default {
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId'), // 用户ID(选填)
             platform: 'app', // 平台（app,m,pc）
-            productId: this.$route.query.id, // 产品id
+            productId: this.$route.query.productId, // 产品id
           },
         })
         .then((res) => {
@@ -275,7 +277,7 @@ export default {
             formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
             areaCode: '370400', // 区域编码
             sceneId: 'app-fwcpxq-01', // 场景ID
-            productId: this.$route.query.id, // 产品ID（产品详情页必传）
+            productId: this.$route.query.productId, // 产品ID（产品详情页必传）
             productType: 'FL20201116000002', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.scProductDetailData.baseData.name, // 产品名称（产品详情页传、咨询页等）
             platform: 'APP', // 平台（app,m,pc）

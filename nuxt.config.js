@@ -105,6 +105,7 @@ module.exports = {
     { src: '@/plugins/my-icon', ssr: true },
     { src: '@/plugins/vconsole', ssr: false },
     { src: '@/plugins/app-sdk', ssr: false },
+    { src: '@/plugins/lazyload', ssr: true },
   ],
   router: {
     middleware: 'appDock',

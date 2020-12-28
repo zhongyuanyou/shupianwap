@@ -21,7 +21,7 @@
         <sp-icon name="search" size="20" @click="onClickRight" />
       </template>
     </sp-top-nav-bar>
-    <div :style="{ marginTop: isInApp ? 0 : 0 }">
+    <div :style="{ marginTop: 0 }">
       <Con
         :banner="information_banner"
         :list="information_list"
@@ -117,6 +117,8 @@ export default {
 <style lang="less" scoped>
 .found {
   /deep/ .sp-top-nav-bar {
+    padding-top: constant(safe-area-inset-top);
+    padding-top: env(safe-area-inset-top);
     z-index: 5;
   }
 }

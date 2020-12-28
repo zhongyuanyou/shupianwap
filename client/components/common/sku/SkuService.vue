@@ -78,7 +78,7 @@
               </sp-cell>
             </div>
           </SkuServiceRow>
-          <div class="sku-service-add" v-if="formatSkuAddService.length">
+          <div v-if="formatSkuAddService.length" class="sku-service-add">
             <div class="sku-service-add__title">增值服务</div>
             <div class="sku-service-add__item">
               <SkuServiceRow

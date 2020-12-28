@@ -1,8 +1,8 @@
 <template>
-  <a href="javascript:void(0);" class="goods-item">
+  <a href="javascript:void(0);" class="goods-item" @click="jumpPage">
     <div class="goods-lable-img">
       <span v-if="false" class="lable">2千元成交礼</span>
-      <img src="https://img.yzcdn.cn/vant/cat.jpeg" alt="" />
+      <img v-lazy="defaultImg" alt="" />
     </div>
     <div class="goods-info">
       <strong class="goods-name">
@@ -47,6 +47,11 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      defaultImg: 'https://img.yzcdn.cn/vant/cat.jpeg',
+    }
+  },
   methods: {
     priceRest(index = 0) {
       if (!this.goodsData.platformPrice) return 0
@@ -55,6 +60,15 @@ export default {
         return this.goodsData.platformPrice.split('.')[index]
       }
       return index === 0 ? this.goodsData.platformPrice : ''
+    },
+    jumpPage() {
+      this.$router.push({
+        path: '/detail/transactionDetails',
+        query: {
+          type: this.goodsData.type,
+          productId: this.goodsData.id,
+        },
+      })
     },
   },
 }

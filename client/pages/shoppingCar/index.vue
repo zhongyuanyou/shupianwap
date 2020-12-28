@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-23 15:22:13
+ * @LastEditTime: 2020-12-26 17:11:07
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -18,7 +18,7 @@
             size="0.4rem"
             color="#1A1A1A"
             class="head__icon-back"
-            @click="onClickLeft"
+            @click.native="onClickLeft"
           />
         </template>
         <template #right>
@@ -36,7 +36,7 @@
       <div class="shopping-car__content">
         <sp-pull-refresh
           v-model="refreshing"
-          :disabled="false"
+          :disabled="true"
           @refresh="onRefresh"
         >
           <sp-list
@@ -68,17 +68,6 @@
           </sp-list>
         </sp-pull-refresh>
       </div>
-      <!-- 推荐列表 -->
-      <div v-if="recommendList && recommendList.length" class="recommend">
-        <h3 class="recommend__title">为您推荐</h3>
-        <div class="recommend-list">
-          <GoodsPro
-            v-for="item in recommendList"
-            :key="item"
-            class="item-wrap"
-          />
-        </div>
-      </div>
     </div>
     <div class="footer sp-hairline--top">
       <Bottombar
@@ -102,7 +91,6 @@ import {
 } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 
-import GoodsPro from '@/components/planner/GoodsPro'
 import GoodsItem from '@/components/shoppingCar/GoodsItem'
 import Bottombar from '@/components/shoppingCar/Bottombar'
 import GoodsPopup from '@/components/shoppingCar/GoodsPopup'
@@ -126,22 +114,13 @@ export default {
     [Loading.name]: Loading,
     Header,
     GoodsPopup,
-    GoodsPro,
     GoodsItem,
     Bottombar,
     ShoppingCarNull,
   },
-  async asyncData({ store }) {
-    // const userId = store.state.user.userInfo.userId || '1234567'
-    // try {
-    //   const data = await shoppingCar.list({ userId })
-    //   return { asyncData: data }
-    // } catch (error) {}
-  },
   data() {
     return {
       list: [],
-      recommendList: [],
       refreshing: false,
       loading: false,
       error: false,
@@ -189,7 +168,6 @@ export default {
   created() {
     if (process && process.client) {
       this.postUpdate({ type: 'init' })
-      this.getRecommendList()
     }
   },
   activated() {
@@ -289,6 +267,7 @@ export default {
           break
       }
     },
+
     // 删除列表
     deteleItem(cartId, data) {
       this.$refs.goodsPopup
@@ -332,7 +311,7 @@ export default {
       this.selectItem(cartId, data)
     },
 
-    // 统一的计算
+    // 统一的结算
     uPBill() {
       const cartIdsStr = this.currentSelectedCartIds.join(',') // 多个cartId 用逗号凭借为一个
       console.log(cartIdsStr)
@@ -381,6 +360,7 @@ export default {
           break
       }
     },
+
     // 选择
     async selectItem(cartId, data = {}) {
       cartId = '' + cartId
@@ -492,15 +472,6 @@ export default {
         return Promise.reject(error)
       }
     },
-
-    // 请求推荐产品列表
-    getRecommendList() {
-      setTimeout(() => {
-        for (let i = 0; i < 5; i++) {
-          this.recommendList.push(this.recommendList.length + 1)
-        }
-      }, 50000)
-    },
   },
 }
 </script>
@@ -509,35 +480,6 @@ export default {
 @title-text-color: #1a1a1a;
 @subtitle-text-color: #999999;
 @hint-text-color: #cccccc;
-
-.flex-r-s {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-}
-
-.flex-r-c {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-.flex-r-sb {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.flex-r-a-s {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-}
-
-.flex-r-a-c {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
 
 .shopping-car {
   height: 100%;

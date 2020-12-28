@@ -1,7 +1,10 @@
 <template>
   <div v-if="clientDetailsData['clientDetail']" class="serviceInfo">
     <h1 class="serviceInfo-title">服务详情</h1>
-    <div v-html="clientDetailsData['clientDetail']"></div>
+    <div
+      class="serviceInfo-content"
+      v-html="clientDetailsData['clientDetail']"
+    ></div>
   </div>
 </template>
 
@@ -31,6 +34,9 @@ export default {
     font-size: 40px;
     font-weight: bold;
     color: #1a1a1a;
+  }
+  &-content {
+    font-size: 24px;
   }
 }
 </style>

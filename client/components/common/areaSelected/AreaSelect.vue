@@ -68,19 +68,23 @@
                 :style="{
                   color: selectList.length
                     ? step == 0
-                      ? selectList[0] && selectList[0].name == cItem.name
+                      ? selectList[0] &&
+                        cItem.name.indexOf(selectList[0].name) > -1
                         ? '#4974F5'
                         : '#222'
-                      : selectList[1] && selectList[1].name == cItem.name
+                      : selectList[1] &&
+                        cItem.name.indexOf(selectList[1].name) > -1
                       ? '#4974F5'
                       : '#222'
                     : '#222',
                   fontWeight: selectList.length
                     ? step == 0
-                      ? selectList[0] && selectList[0].name == cItem.name
+                      ? selectList[0] &&
+                        cItem.name.indexOf(selectList[0].name) > -1
                         ? 'bold'
                         : 'normal'
-                      : selectList[1] && selectList[1].name == cItem.name
+                      : selectList[1] &&
+                        cItem.name.indexOf(selectList[1].name) > -1
                       ? 'bold'
                       : 'normal'
                     : 'normal',
@@ -94,10 +98,10 @@
                     selectList.length &&
                     ((step == 0 &&
                       selectList[0] &&
-                      selectList[0].name == cItem.name) ||
+                      cItem.name.indexOf(selectList[0].name) > -1) ||
                       (step == 1 &&
                         selectList[1] &&
-                        selectList[1].name == cItem.name))
+                        cItem.name.indexOf(selectList[1].name) > -1))
                   "
                   name="success"
                   color="#4974F5"
@@ -226,13 +230,13 @@ export default {
       if (newVal.length) {
         let tIndex = ''
         this.cityList.forEach((item, index) => {
-          if (item.name === this.selectList[0].name) {
+          if (item.name.indexOf(this.selectList[0].name) > -1) {
             tIndex = index
             this.selectList[0] = item
           }
         })
         this.cityList[tIndex].children.forEach((item) => {
-          if (item.name === this.selectList[1].name) {
+          if (item.name.indexOf(this.selectList[1].name) > -1) {
             this.selectList[1] = item
           }
         })

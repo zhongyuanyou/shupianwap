@@ -2,9 +2,17 @@
   <div
     v-if="isShow"
     :class="{ 'fixed-head': fixed }"
-    :style="{ height: headHeight }"
+    :style="{
+      height: headHeight,
+      'padding-top': safeTop,
+      'box-sizing': 'content-box',
+    }"
   >
-    <div class="my-head" :class="headClass" :style="{ height: headHeight }">
+    <div
+      class="my-head"
+      :class="headClass"
+      :style="{ height: headHeight, 'margin-top': safeTop }"
+    >
       <div class="slot-left">
         <slot name="left">
           <my-icon
@@ -25,6 +33,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
+import safeAreaInsets from 'safe-area-insets'
+
 export default {
   name: 'Header',
   props: {
@@ -53,9 +65,13 @@ export default {
   data() {
     return {
       isShow: true,
+      safeTop: '0px', // 顶部安全区的高度
     }
   },
   computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp, // 是否app中
+    }),
     headHeight() {
       if (typeof this.height === 'number') {
         return this.height + 'px'
@@ -63,9 +79,20 @@ export default {
       return this.height
     },
   },
+  created() {
+    this.getTopMargin()
+  },
   methods: {
     onLeftClick() {
       this.$router.back(-1)
+    },
+    getTopMargin() {
+      if (process && process.client) {
+        console.log('getTopMargin:', safeAreaInsets.top)
+        let safeTop = safeAreaInsets.top
+        if (this.isInApp && !safeTop) safeTop = '20pt'
+        this.safeTop = safeTop
+      }
     },
   },
 }

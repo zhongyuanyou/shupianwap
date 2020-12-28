@@ -59,7 +59,7 @@ async function getTypeJyFilter(dictCode, classCode) {
           let gs_hy = res[0].data.find((item) => {
             return item.code === 'CONDITION-JY-GS-HY'
           })
-          res[2].data.unshift({
+          res[2].data && res[2].data.unshift({
             name: '不限',
             id: 'all',
           })
@@ -84,7 +84,7 @@ async function getTypeJyFilter(dictCode, classCode) {
           let zy_hy = res[0].data.find((item) => {
             return item.code === 'CONDITION-JY-ZY-HY'
           })
-          res[1].data.unshift({
+          res[1].data && res[1].data.unshift({
             name: '不限',
             id: 'all',
           })
@@ -108,7 +108,7 @@ async function getTypeJyFilter(dictCode, classCode) {
           let sb_fl = res[0].data.find((item) => {
             return item.code === 'CONDITION-JY-SB-FL'
           })
-          res[1].data.unshift({
+          res[1].data && res[1].data.unshift({
             name: '不限',
             id: 'all',
           })
@@ -142,7 +142,7 @@ async function getTypeJyFilter(dictCode, classCode) {
           let sb_gd_dq = sb_gd.children.find((item) => {
             return item.code === 'CONDITION-JY-ZZ-GD-DQ'
           })
-          res[1].data.unshift({
+          res[1].data && res[1].data.unshift({
             name: '不限',
             id: 'all',
           })

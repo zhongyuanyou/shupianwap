@@ -18,8 +18,9 @@
     <!--S 内容-->
     <div v-if="info" class="information_con">
       <div class="information_con_tp">
-        <div class="avatar_con">
+        <div class="avatar_con" @click="handleClick(1)">
           <sp-uploader
+            v-if="isUpdateAvatar"
             v-model="uploader"
             class="uploader"
             upload-text="点击上传"
@@ -81,9 +82,7 @@
           <div class="right_icon">
             <p class="txt">
               {{
-                info.province
-                  ? info.province + ' ' + info.city + ' ' + info.district || ''
-                  : '未设置'
+                info.province ? info.province + ' ' + info.city + ' ' : '未设置'
               }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
@@ -112,6 +111,7 @@
       @changeBirthday="changeBirthday"
     />
     <!--S 选择生日popup-->
+    <sp-toast ref="spToast"></sp-toast>
   </div>
 </template>
 
@@ -123,6 +123,7 @@ import SexSelected from '~/components/my/information/SexSelected'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
 import BirthdaySelected from '~/components/my/information/BirthdaySelected'
 import { userinfoApi } from '@/api'
+import SpToast from '@/components/common/spToast/SpToast'
 export default {
   name: 'Information',
   components: {
@@ -134,6 +135,7 @@ export default {
     SexSelected,
     AreaSelect,
     BirthdaySelected,
+    SpToast,
   },
   data() {
     return {
@@ -144,6 +146,8 @@ export default {
       area: [], // 地区
       uploader: [],
       info: null, // 用户信息
+      isUpdateName: false, // 能否修改昵称
+      isUpdateAvatar: false, // 能否修改头像
     }
   },
   computed: {
@@ -153,6 +157,7 @@ export default {
   },
   mounted() {
     this.getUserInfo()
+    this.getConfig()
   },
   methods: {
     onClickLeft() {
@@ -170,9 +175,17 @@ export default {
     },
     handleClick(val) {
       if (val === 2) {
-        this.$router.push(`/my/info/nickname/${this.info.nickName}`)
+        if (!this.isUpdateName) {
+          // 如果不能修改
+          this.$refs.spToast.show({
+            message: '抱歉，昵称暂不支持修改',
+            duration: 1500,
+            forbidClick: true,
+          })
+        } else {
+          this.$router.push(`/my/info/nickname/${this.info.nickName}`)
+        }
       } else if (val === 5) {
-        console.log(this.info)
         this.$router.push(`/my/info/email/${this.info.email}`)
       } else if (val === 4) {
         this.sexShow = true
@@ -180,11 +193,19 @@ export default {
         this.areaShow = true
       } else if (val === 3) {
         this.birthShow = true
+      } else if (val === 1) {
+        if (!this.isUpdateAvatar) {
+          // 如果不能修改
+          this.$refs.spToast.show({
+            message: '抱歉，头像暂不支持修改',
+            duration: 1500,
+            forbidClick: true,
+          })
+        }
       }
     },
     async select(data) {
       // 地区选择
-      console.log('data', data)
       this.info.province = data[0].name
       this.info.city = data[1].name
       this.$set(this.area, 0, { name: data[0].name, code: data[0].code })
@@ -228,8 +249,39 @@ export default {
         }
         const data = await this.$axios.get(userinfoApi.info, { params })
         this.info = data.data
-        this.$set(this.area, 0, { name: data.data.province, code: '' })
-        this.$set(this.area, 1, { name: data.data.city, code: '' })
+        if (data.data.province && data.data.city) {
+          this.$set(this.area, 0, { name: data.data.province, code: '' })
+          this.$set(this.area, 1, { name: data.data.city, code: '' })
+        }
+      } catch (err) {}
+    },
+    async getConfig() {
+      // 获取用户配置
+      await this.getNameConfig()
+      await this.getAvatarConfig()
+    },
+    async getNameConfig() {
+      // 获取用户昵称配置
+      try {
+        const params = {
+          code: 'ordinary_allow_modify_nick_name',
+        }
+        const res = await this.$axios.get(userinfoApi.configuration, { params })
+        if (res.code === 200) {
+          this.isUpdateName = res.data === '1'
+        }
+      } catch (err) {}
+    },
+    async getAvatarConfig() {
+      // 获取用户头像配置
+      try {
+        const params = {
+          code: 'ordinary_allow_modify_photo',
+        }
+        const res = await this.$axios.get(userinfoApi.configuration, { params })
+        if (res.code === 200) {
+          this.isUpdateAvatar = res.data === '1'
+        }
       } catch (err) {}
     },
   },

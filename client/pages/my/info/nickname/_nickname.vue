@@ -26,6 +26,7 @@
       </div>
     </div>
     <!--E 内容-->
+    <sp-toast ref="spToast"></sp-toast>
   </div>
 </template>
 
@@ -33,10 +34,12 @@
 import { TopNavBar } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { userinfoApi } from '~/api'
+import SpToast from '@/components/common/spToast/SpToast'
 export default {
   name: 'NickName',
   components: {
     [TopNavBar.name]: TopNavBar,
+    SpToast,
   },
   data() {
     return {
@@ -58,17 +61,25 @@ export default {
     },
     async onClickRight() {
       // 点击保存
-      // this.$router.push('/my/information')
-      const params = {
-        type: 1,
-        value: this.nickname,
+      if (!this.nickname) {
+        // 未填写用户昵称
+        this.$refs.spToast.show({
+          message: '没有输入昵称呢，请重新输入',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else {
+        const params = {
+          type: 1,
+          value: this.nickname,
+        }
+        await this.$axios.post(userinfoApi.update, params)
+        this.$router.back()
       }
-      await this.$axios.post(userinfoApi.update, params)
-      this.$router.back()
     },
     clear() {
       // 清除昵称
-      this.name = ''
+      this.nickname = ''
     },
   },
 }

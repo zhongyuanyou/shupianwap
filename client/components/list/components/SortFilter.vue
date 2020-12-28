@@ -3,7 +3,6 @@
     ref="item"
     :title="dropdownTitle"
     :title-class="moreTextCss"
-    @close="close"
   >
     <div class="sort-content">
       <sp-cell
@@ -22,7 +21,7 @@
             name="tab_ic_check"
             size="0.22rem"
             color="#4974f5"
-          ></my-icon>
+          />
         </template>
       </sp-cell>
     </div>
@@ -80,7 +79,6 @@ export default {
     }
   },
   methods: {
-    close() {},
     isActive(item) {
       return item.id === this.selectValue.id
     },

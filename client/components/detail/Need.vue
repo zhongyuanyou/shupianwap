@@ -17,7 +17,7 @@
             height="1.6rem"
             fit="cover"
             radius="0.04rem"
-            src="https://img.yzcdn.cn/vant/cat.jpeg"
+            :src="item.portrait"
           />
         </div>
         <div class="need_item_rt">
@@ -26,7 +26,7 @@
           </p>
           <div class="label">
             <span v-for="(lItem, index) in item.fieldList" :key="index">{{
-              `${lItem.fieldValueList ? lItem.fieldValueList[0] : ''}${
+              `${lItem.fieldValueCn ? lItem.fieldValueCn : lItem.fieldValue}${
                 index === item.fieldList.length - 1 ? '' : '|'
               }`
             }}</span>

@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-20 10:16:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-23 08:47:39
+ * @LastEditTime: 2020-12-26 14:46:05
  * @Description: file content
- * @FilePath: /chips-wap/client/components/imgAuth/ImgAuthInput.vue
+ * @FilePath: /chips-wap/client/components/common/imgAuth/ImgAuthInput.vue
 -->
 
 <template>
@@ -14,11 +14,13 @@
         <template #right-icon>
           <div class="icon-wrap">
             <sp-loading v-show="imageLoading"> </sp-loading>
-            <img
+            <span
               v-show="!imageLoading"
-              :src="imgSrc"
+              class="img"
               @click="handleChangeImage"
-            />
+              v-html="imgSrc"
+            >
+            </span>
           </div>
         </template>
       </sp-field>
@@ -28,6 +30,8 @@
 
 <script>
 import { Field, CellGroup, Loading } from '@chipspc/vant-dgg'
+
+import { auth } from '@/api'
 
 export default {
   name: 'ImgAuthInput',
@@ -50,7 +54,7 @@ export default {
   data() {
     return {
       text: '',
-      imgSrc: 'https://img.yzcdn.cn/vant/apple-3.jpg',
+      imgSrc: '',
       imageLoading: false,
     }
   },
@@ -64,14 +68,29 @@ export default {
       this.$emit('input', newValue)
     },
   },
+  created() {
+    if (process && process.client) {
+      this.handleChangeImage()
+    }
+  },
   methods: {
     handleChangeImage() {
-      console.log('触发了图片切换')
       this.imageLoading = true
-      // TODO 请求图片
-      setTimeout(() => {
+      this.changeImg().then(() => {
         this.imageLoading = false
-      }, 4000)
+      })
+    },
+
+    async changeImg() {
+      try {
+        const data = await auth.imgCode()
+        console.log('imgCode:', data)
+        this.imgSrc = data
+        return data
+      } catch (error) {
+        // TODO 错误的交互
+        return Promise.reject(error)
+      }
     },
   },
 }
@@ -89,7 +108,8 @@ export default {
     width: 170px;
     height: 64px;
     text-align: center;
-    img {
+    .img {
+      display: inline-block;
       width: 100%;
       height: 100%;
     }

@@ -8,14 +8,14 @@
       @clickInputHandle="clickInputHandle"
     >
       <div slot="left" class="nav-back" @click="$router.go(-1)">
-        <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
+        <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a" />
       </div>
-      <div slot="right" class="info">
-        <my-icon name="nav_ic_msg" size="0.40rem" color="#1a1a1a"></my-icon>
+      <div slot="right" class="info" @click="jumpImMixin">
+        <my-icon name="nav_ic_msg" size="0.40rem" color="#1a1a1a" />
       </div>
     </Search>
     <!--E搜索框-->
-    <!--S筛选栏 :lazy-render="false"-->
+    <!--S筛选栏-->
     <sp-work-tabs v-model="active">
       <sp-work-tab title="企业服务">
         <serveGoods
@@ -55,11 +55,13 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { WorkTabs, WorkTab } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import serveGoods from '@/components/list/ServeGoods'
 import JyGoods from '@/components/list/JyGoods'
 import addSearchHistory from '@/mixins/addSearchHistory'
+import listJumpIm from '@/mixins/listJumpIm'
 import { goods, dict } from '@/api/index'
 export default {
   name: 'SearchResult',
@@ -70,7 +72,8 @@ export default {
     serveGoods,
     JyGoods,
   },
-  mixins: [addSearchHistory],
+  layout: 'keepAlive',
+  mixins: [addSearchHistory, listJumpIm],
   data() {
     return {
       formData: {
@@ -116,6 +119,8 @@ export default {
     },
   },
   mounted() {
+    // SearchResult
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'SearchResult' })
     this.getInitData()
     if (this.$route.query.keywords) {
       this.formData.searchText = this.$route.query.keywords
@@ -123,6 +128,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     // 获取初始化数据
     getInitData() {
       // 获取服务列表需要的筛选数据
@@ -228,6 +236,9 @@ export default {
       font-weight: bold;
       color: #4974f5;
     }
+  }
+  /deep/.spiconfont-sear_ic_sear {
+    margin-left: 24px !important;
   }
   .search-page {
     position: absolute;

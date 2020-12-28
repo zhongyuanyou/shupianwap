@@ -89,7 +89,10 @@ export default {
             // 提示查找到多少条资源
             this.searchToast(`共找到${data.goods.totalCount}条资源`)
           }
-          if (data.goods.records.length < 10) {
+          if (
+            data.goods.records.length < 10 ||
+            JSON.stringify(data.goods) === '{}'
+          ) {
             this.finished = true
           } else {
             this.formData[this.currentTabJyCode].start += 1
@@ -119,6 +122,7 @@ export default {
           // todo 提示没有数据
           this.listShow = false
           this.isReq[this.currentTabJyCode] = false
+          this.jyGoodsListData[this.currentTabJyCode] = []
           console.error(err)
         })
     },

@@ -13,7 +13,11 @@
       }"
       @change="changeTabs"
     >
-      <sp-tab v-for="(item, index) in tabItems" :key="index" :title="item.name">
+      <sp-tab
+        v-for="(item, index) in tabItems"
+        :key="index"
+        :title="item.name + '交易'"
+      >
         <template v-if="jyFilterData[item.code]">
           <!--S交易筛选-->
           <jy-filters
@@ -192,9 +196,9 @@ export default {
       fieldList: [],
     }
     this.initGoodsList()
-    /* if (!this.isShowTabs) {
+    if (!this.isShowTabs) {
       this.$refs.spTabs.$refs.nav.parentNode.style.display = 'none'
-    } */
+    }
   },
   methods: {
     getFilterHandle(data, filrerName) {
@@ -271,7 +275,6 @@ export default {
       })
     },
     initGoodsList() {
-      console.log('initGoodsList', 'aaaaaaaaaaaaaaaaaaaaaaa')
       // 获取初始数据
       this.formData[this.currentTabJyCode].start = 1
       this.loading = true
@@ -283,43 +286,43 @@ export default {
       // 处理筛选数据，拼成筛选项
       let arr = []
       for (const key in this.filterItem[this.currentTabJyCode]) {
-        // Todo 需要优化
-        if (key === 'sortFilter') {
-          // 处理排序筛选
-          this.formData[this.currentTabJyCode].sortBy = this.filterItem[
-            this.currentTabJyCode
-          ][key].id
-        } else if (
-          key === 'moreFilter' &&
-          this.filterItem[this.currentTabJyCode][key].length
-        ) {
-          // 处理更多筛选
-          arr = [...arr, ...this.filterItem[this.currentTabJyCode][key]]
-        } else if (
-          key === 'priceFilter' &&
-          this.filterItem[this.currentTabJyCode][key]
-        ) {
-          // 处理价格筛选
-          this.formData[
-            this.currentTabJyCode
-          ].platformPriceStart = this.filterItem[this.currentTabJyCode][
-            key
-          ].fieldValue.start
-          this.formData[
-            this.currentTabJyCode
-          ].platformPriceEnd = this.filterItem[this.currentTabJyCode][
-            key
-          ].fieldValue.end
-        } else if (
-          key === 'priceFilter' &&
-          this.filterItem[this.currentTabJyCode][key] === ''
-        ) {
-          // 处理价格筛选
-          delete this.formData[this.currentTabJyCode].platformPriceStart
-          delete this.formData[this.currentTabJyCode].platformPriceEnd
-        } else if (this.filterItem[this.currentTabJyCode][key] !== '') {
-          // 其他筛选数据
-          arr.push(this.filterItem[this.currentTabJyCode][key])
+        switch (key) {
+          case 'sortFilter':
+            // 处理排序筛选
+            this.formData[this.currentTabJyCode].sortBy = this.filterItem[
+              this.currentTabJyCode
+            ][key].id
+            break
+          case 'moreFilter':
+            if (this.filterItem[this.currentTabJyCode][key].length) {
+              // 处理更多筛选
+              arr = [...arr, ...this.filterItem[this.currentTabJyCode][key]]
+            }
+            break
+          case 'priceFilter':
+            if (this.filterItem[this.currentTabJyCode][key]) {
+              // 处理价格筛选
+              this.formData[
+                this.currentTabJyCode
+              ].platformPriceStart = this.filterItem[this.currentTabJyCode][
+                key
+              ].fieldValue.start
+              this.formData[
+                this.currentTabJyCode
+              ].platformPriceEnd = this.filterItem[this.currentTabJyCode][
+                key
+              ].fieldValue.end
+            } else if (this.filterItem[this.currentTabJyCode][key] === '') {
+              // 处理价格筛选
+              delete this.formData[this.currentTabJyCode].platformPriceStart
+              delete this.formData[this.currentTabJyCode].platformPriceEnd
+            }
+            break
+          default:
+            if (this.filterItem[this.currentTabJyCode][key] !== '') {
+              // 其他筛选数据
+              arr.push(this.filterItem[this.currentTabJyCode][key])
+            }
         }
       }
       this.formData[this.currentTabJyCode].fieldList = arr
@@ -359,9 +362,11 @@ export default {
     padding: 0 40px;
   }
   /deep/.sp-tabs {
-    border-bottom: 1px solid #f4f4f4;
     .sp-tabs__line {
       display: none;
+    }
+    /deep/.sp-dropdown-menu {
+      border-bottom: 1px solid #f4f4f4;
     }
   }
   /deep/.sp-tabs__wrap--scrollable .sp-tabs__nav--complete {

@@ -102,6 +102,8 @@ module.exports = (appInfo) => {
       // 商户中心
       'merchant-center-manager',
       'cloud-recomd-api', // 算法
+      // 架构中心
+      'tac-external-platform-server', // 第三方系统对接平台API
       'crisps-app-wap-bff-api', //薯片
     ],
   };
@@ -125,7 +127,7 @@ module.exports = (appInfo) => {
         name: 'MyOwn',
       },
       metadata: {
-        version: '2.2',
+        version: '3.0',
       },
     },
     requestMiddleware: (requestOpts, done) => {
@@ -155,7 +157,7 @@ module.exports = (appInfo) => {
   // 在此处添加个人配置
   const userConfig = {
     // redis默认缓存数据的时长(S秒),产线环境24小时,开发环境1小时
-    redisCacheTime: 60 * 60,
+    redisCacheTime: 60 * 5,
     baseUrl: '',
   };
   return {

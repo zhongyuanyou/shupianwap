@@ -27,7 +27,10 @@
         </div>
       </div>
       <div class="planners_item_rt">
-        <sp-button round class="contact-btn"
+        <sp-button
+          round
+          class="contact-btn"
+          @click="sendTemplateMsgWithImg(item.mchUserId)"
           ><my-icon
             class=""
             name="notify_ic_chat"
@@ -50,16 +53,24 @@
 import { Image, Button, Toast } from '@chipspc/vant-dgg'
 import { parseTel } from '~/utils/common'
 import { planner } from '~/api'
+import imHandle from '~/mixins/imHandle'
 export default {
   name: 'Planners',
   components: {
     [Image.name]: Image,
     [Button.name]: Button,
   },
+  mixins: [imHandle],
   props: {
     info: {
       type: Array,
       default: () => [],
+    },
+    imJumpQuery: {
+      type: Object,
+      default: () => {
+        return {}
+      },
     },
   },
   methods: {
@@ -79,6 +90,30 @@ export default {
           icon: 'popup_ic_fail',
         })
       }
+    },
+    // 调起IM
+    // 发送模板消息(带图片)
+    sendTemplateMsgWithImg(mchUserId) {
+      // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
+      // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
+      const sessionParams = {
+        imUserId: mchUserId, // 商户用户ID
+        imUserType: 'MERCHANT_USER', // 用户类型
+      }
+      console.log()
+      const msgParams = {
+        sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
+        msgType: 'im_tmplate', // 消息类型
+        extContent: this.$route.query, // 路由参数
+        productName: this.imJumpQuery.productName, // 产品名称
+        productContent: this.imJumpQuery.productContent, // 产品信息
+        price: this.imJumpQuery.price, // 价格
+        forwardAbstract: this.imJumpQuery.forwardAbstract, // 摘要信息，可与显示内容保持一致
+        routerId: this.imJumpQuery.routerId, // 路由ID
+        imageUrl: this.imJumpQuery.imageUrl, // 产品图片
+        unit: this.imJumpQuery.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+      }
+      this.sendTemplateMsgMixin({ sessionParams, msgParams })
     },
   },
 }
