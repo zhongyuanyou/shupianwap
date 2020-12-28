@@ -150,8 +150,6 @@ export default {
       width: 670px;
       border: 1px solid rgba(205, 205, 205, 0.3);
       border-radius: 8px;
-      background: url(~assets/spreadImages/company_registry/busi_img_fwjs_gtzc.png)
-        top center/100% auto no-repeat;
       margin-bottom: 25px;
       .list-count {
         display: flex;
