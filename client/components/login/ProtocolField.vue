@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 11:43:42
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-22 20:31:23
+ * @LastEditTime: 2020-12-28 14:58:58
  * @Description: file content
  * @FilePath: /chips-wap/client/components/login/ProtocolField.vue
 -->
@@ -12,21 +12,28 @@
     <sp-field name="readed" class="protocol-field__content">
       <template #input>
         <sp-checkbox v-model="readed" shape="round" @change="handleChange">
+          <template #icon="{ checked }">
+            <sp-icon
+              class-prefix="spiconfont"
+              size="0.28rem"
+              :name="checked ? 'login_ic_radio_s' : 'login_ic_radio_n'"
+              :color="checked ? '#4974F5' : '#CCCCCC'"
+            />
+          </template>
         </sp-checkbox>
       </template>
       <template #extra>
         <span class="protocol">
           {{ descript }}
-          <a
+          《<a
             class="text-decor--underline"
             @click="handleProtocol('protocol100122')"
-            >《薯片用户服务协议》</a
-          >和
-          <a
+            >薯片用户服务协议</a
+          >》和 《<a
             class="text-decor--underline"
             @click="handleProtocol('protocol100121')"
-            >《薯片隐私协议》</a
-          ></span
+            >薯片隐私协议</a
+          >》</span
         >
       </template>
     </sp-field>
@@ -34,13 +41,14 @@
 </template>
 
 <script>
-import { Field, Checkbox } from '@chipspc/vant-dgg'
+import { Field, Checkbox, Icon } from '@chipspc/vant-dgg'
 
 export default {
   name: 'ProtocolField',
   components: {
     [Field.name]: Field,
     [Checkbox.name]: Checkbox,
+    [Icon.name]: Icon,
   },
   model: {
     prop: 'value',

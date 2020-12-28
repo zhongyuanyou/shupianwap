@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 15:39:23
+ * @LastEditTime: 2020-12-28 15:48:30
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/forget.vue
 -->
@@ -79,12 +79,14 @@
         </sp-button>
       </div>
     </div>
+    <LoadingCenter v-show="loading" title="请求中" />
   </div>
 </template>
 
 <script>
 import { TopNavBar, Form, Button, Field, Toast } from '@chipspc/vant-dgg'
 import PhoneField from '@/components/login/PhoneField'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
 import { auth } from '@/api'
 import { checkPhone, checkPassword, checkAuthCode } from '@/utils/check.js'
@@ -97,6 +99,7 @@ export default {
     [Form.name]: Form,
     [Field.name]: Field,
     PhoneField,
+    LoadingCenter,
   },
   data() {
     return {
@@ -107,6 +110,7 @@ export default {
         confirmPassword: '',
       },
       isValidSubmit: false,
+      loading: false,
       redirect: this.$route.query.redirect || '/', // 登录后需要跳转的地址
     }
   },
@@ -216,9 +220,12 @@ export default {
           newPassword,
           userType: 'ORDINARY_USER',
         }
+        this.loading = true
         const data = await auth.reset({ axios: this.$axios }, params)
+        this.loading = false
         return data
       } catch (error) {
+        this.loading = false
         this.loginToast(error.message)
       }
     },
