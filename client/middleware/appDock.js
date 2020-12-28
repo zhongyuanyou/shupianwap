@@ -1,6 +1,7 @@
 export default function ({ app, req, redirect, route, store }) {
   if (req && req.headers && req.headers['user-agent']) {
-    if (req.headers['user-agent'].indexOf('CPSAPP') > -1) {
+    console.log(req.headers['user-agent'])
+    if (req.headers['user-agent'].indexOf('AppInfo') > -1) {
       // 设置store中isInApp是是否在app中状态为true
       store.dispatch('app/setUAInfo', true)
       if (req.headers['user-agent'].indexOf('AppInfo:') > -1) {
@@ -8,6 +9,7 @@ export default function ({ app, req, redirect, route, store }) {
           const info = JSON.parse(
             req.headers['user-agent'].split('AppInfo:')[1]
           )
+          console.log('info', info)
           store.dispatch('app/setAppInfo', info)
         }
       }

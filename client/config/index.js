@@ -1,3 +1,4 @@
+const defaults = require('./config.default')
 const development = require('./config.development')
 const release = require('./config.release')
 const production = require('./config.production')
@@ -10,4 +11,5 @@ const BASE = {
   // 生产环境
   production,
 }
-module.exports = BASE[DGG_SERVER_ENV]
+
+module.exports = Object.assign(defaults, BASE[DGG_SERVER_ENV])

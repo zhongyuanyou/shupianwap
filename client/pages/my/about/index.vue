@@ -4,7 +4,7 @@
     <div class="contentBg">
       <div class="content">
         <div class="iconBg">
-          <img :src="icon" alt="" />
+          <img :src="$ossImgSet(160, 160, 'g6trabnxtg80000.png')" alt="" />
         </div>
         <span class="versionText">当前版本：V 1.2</span>
       </div>
@@ -40,9 +40,7 @@ export default {
   },
   props: {},
   data() {
-    return {
-      icon: require('~/assets/temporary/home/notify_img_logo@1,5x.png'),
-    }
+    return {}
   },
   computed: {},
   watch: {},
@@ -50,17 +48,22 @@ export default {
   mounted() {},
   methods: {
     onClickLeft() {
-      this.$router.back(-1)
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      this.$router.back()
     },
     onServiceTouch() {
       this.$router.push({
-        path: '/my/about/2',
+        name: 'login-protocol',
+        query: { categoryCode: 'protocol100122', hideHeader: true },
       })
     },
     onPrivacyTouch() {
       this.$router.push({
-        path: '/my/about/1',
-        query: { type: 1 },
+        name: 'login-protocol',
+        query: { categoryCode: 'protocol100121', hideHeader: true },
       })
     },
   },

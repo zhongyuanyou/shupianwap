@@ -118,6 +118,7 @@ module.exports = {
     { src: '@/plugins/vconsole', ssr: false },
     { src: '@/plugins/app-sdk', ssr: false },
     { src: '@/plugins/lazyload', ssr: true },
+    { src: '@/plugins/oss', ssr: true },
   ],
   router: {
     middleware: 'appDock',

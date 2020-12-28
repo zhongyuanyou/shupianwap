@@ -10,7 +10,7 @@
       {{ baseData.productDescription }}
     </div>
     <div class="basic-price">
-      <div>{{ baseData.referencePrice }}<span>起</span></div>
+      <div>{{ baseData.referencePrice }}元<span>起</span></div>
       <p>
         销量 <span>{{ saleMum }}</span>
       </p>
@@ -75,7 +75,7 @@ export default {
     margin-bottom: 29px;
     a {
       display: inline-block;
-      width: 119px;
+      /*width: 119px;*/
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

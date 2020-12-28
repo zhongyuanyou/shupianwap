@@ -27,7 +27,8 @@
       <div slot="basic">
         <div class="company_info">
           <div v-for="(baseDataList, idx) in fieldList" :key="idx" class="item">
-            {{ baseDataList.listName }}：<span>{{ baseDataList.listVal }}</span>
+            <em>{{ baseDataList.listName }}:</em>
+            <span>{{ baseDataList.listVal }}</span>
           </div>
         </div>
       </div>
@@ -41,7 +42,7 @@
     <Commitment :info="{ ...info }" />
     <!--E 第四板块 交易服务保障承诺-->
     <!--S 第五板块 推荐规划师-->
-    <Planners :info="recommendPlanner" />
+    <Planners :im-jump-query="imJumpQuery" :info="recommendPlanner" />
     <!--E 第五板块 推荐规划师-->
     <!--S 第六板块 商品动态-->
     <Dynamic :info="{ ...info }" />
@@ -72,7 +73,7 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <Need :product-data="recommendProduct" />
+      <Need :detail-type="detailType" :product-data="recommendProduct" />
     </sp-list>
     <!--E 第十板块 猜你需要-->
     <commodityConsultation
@@ -350,8 +351,14 @@ export default {
       font-weight: 400;
       color: #999999;
       margin-top: 32px;
+      display: flex;
+      em {
+        font-style: normal;
+        width: 150px;
+      }
       span {
         color: #1a1a1a;
+        flex: 1;
       }
     }
   }

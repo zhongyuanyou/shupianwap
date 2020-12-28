@@ -67,10 +67,7 @@
               :goods-data="goodsitem"
             />
             <div v-if="item.noData" class="no-data">
-              <img
-                src="../../assets/temporary/home/default_img_noproduct_2x.png"
-                alt=""
-              />
+              <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
               <p>暂无数据</p>
             </div>
           </div>

@@ -29,14 +29,15 @@
     <ServiceInfo :client-details-data="scProductDetailData.clientDetails" />
     <!--    推荐规划师-->
     <div class="planners-box">
-      <Planners :info="planners" />
-      <div class="planners-box-quiz">
-        <h2>您的疑问，第一时间为您解答</h2>
-        <div>
-          <input placeholder="输入您想咨询的问题" type="text" />
-          <sp-button type="primary">提问</sp-button>
-        </div>
-      </div>
+      <Planners :im-jump-query="imJumpQuery" :info="planners" />
+      <!--   暂时取消此表单   -->
+      <!--      <div class="planners-box-quiz">-->
+      <!--        <h2>您的疑问，第一时间为您解答</h2>-->
+      <!--        <div>-->
+      <!--          <input placeholder="输入您想咨询的问题" type="text" />-->
+      <!--          <sp-button type="primary">提问</sp-button>-->
+      <!--        </div>-->
+      <!--      </div>-->
     </div>
     <!--    猜你喜欢-->
     <sp-list
@@ -81,6 +82,7 @@ export default {
     RecommendScProduct,
     commodityConsultation,
   },
+  layout: 'keepAlive',
   async asyncData({ $axios, query, app }) {
     try {
       let scProductDetailData = {}

@@ -146,7 +146,7 @@ class ScProductDetailsController extends Controller {
           productGroupId,
           parentClassCode,
           areaCode,
-          referencePrice,
+          referencePrice: ctx.helper.priceFixed(`${referencePrice}/ 100`, 2), // 处理价格
           productDescription,
         },
         attrs,
@@ -320,7 +320,14 @@ class ScProductDetailsController extends Controller {
       start: page,
       limit,
     });
+
     if (data.code === 200) {
+      // 处理价格
+      const listData = data.data.records.map(list => {
+        list.goodsPrice = ctx.helper.priceFixed(`${list.goodsPrice}/100`, 2);
+        return list;
+      });
+      data.data.records = listData;
       ctx.helper.success({ ctx, code: 200, res: data.data });
     } else {
       ctx.logger.error(data.code, data);

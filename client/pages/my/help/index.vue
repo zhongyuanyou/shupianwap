@@ -1,7 +1,13 @@
 <template>
   <div class="help-page">
     <!-- S 头部 -->
-    <Header v-if="!isInApp" ref="headerRef" title="帮助中心" />
+    <Header title="帮助中心">
+      <template #left>
+        <div @click="back">
+          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+        </div>
+      </template>
+    </Header>
     <!-- E 头部 -->
     <!-- S 广告位 -->
     <div class="help-bn">
@@ -12,19 +18,19 @@
       <!-- S 功能 -->
       <div v-if="isInApp" class="func-list">
         <div @click="handleClick(0)">
-          <img src="../../../assets/temporary/home/help_icon_pass.png" alt="" />
+          <img :src="$ossImgSet(48, 48, '6vjgpndq5g00000.png')" alt="" />
           <span>{{ isPassword ? '修改登录密码' : '设置登录密码' }}</span>
         </div>
         <div @click="handleClick(1)">
-          <img src="../../../assets/temporary/home/help_icon_tel.png" alt="" />
+          <img :src="$ossImgSet(48, 48, '9ez5xkd5qcc0000.png')" alt="" />
           <span>实名认证</span>
         </div>
         <div @click="handleClick(2)">
-          <img src="../../../assets/temporary/home/help_icon_name.png" alt="" />
+          <img :src="$ossImgSet(48, 48, 'df83pk71vgw0000.png')" alt="" />
           <span>修改手机号</span>
         </div>
         <div @click="handleClick(3)">
-          <img src="../../../assets/temporary/home/help_icon_msg.png" alt="" />
+          <img :src="$ossImgSet(48, 48, 'b4r8f0ylxag0000.png')" alt="" />
           <span>我要吐槽</span>
         </div>
       </div>
@@ -108,18 +114,18 @@ import {
   Bottombar,
   BottombarButton,
   BottombarIcon,
+  TopNavBar,
   Sticky,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
 import { helpApi } from '@/api'
-import Header from '@/components/common/head/header'
 import LoadingDown from '@/components/common/loading/LoadingDown'
+import Header from '@/components/common/head/header'
 
 export default {
   name: 'Help',
   components: {
-    Header,
     LoadingDown,
     [Sticky.name]: Sticky,
     [Search.name]: Search,
@@ -128,6 +134,8 @@ export default {
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
     [BottombarIcon.name]: BottombarIcon,
+    [TopNavBar.name]: TopNavBar,
+    Header,
   },
   async asyncData({ $axios }) {
     const params = {
@@ -294,6 +302,13 @@ export default {
         return
       }
       window.location.href = 'tel:17755021122'
+    },
+    back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      this.$router.back()
     },
   },
 }
