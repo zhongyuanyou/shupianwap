@@ -21,7 +21,7 @@
     <!--  规划师  -->
     <gui-hua-shi-swipe
       :planners-data="plannersData"
-      :title="plannersTitle"
+      :planners-common="plannersCommon"
     ></gui-hua-shi-swipe>
     <!--  规划师  -->
     <!--  可能需要  -->
@@ -49,7 +49,7 @@ import good from '~/components/spread/tax/Good'
 import process from '~/components/spread/tax/Process'
 // import planner from '~/components/spread/tax/Planner'
 import guiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
-import maby from '~/components/spread/tax/maby'
+import maby from '~/components/spread/tax/Maby'
 // import bottom from '~/components/spread/tax/Bottom'
 import dggImCompany from '~/components/spread/DggImCompany'
 import shuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
@@ -134,7 +134,11 @@ export default {
           jobNum: '',
         },
       ],
-      plannersTitle: '咨询规划师',
+      plannersCommon: {
+        title: '咨询规划师',
+        imName: '税务筹划_咨询规划师_在线咨询',
+        telName: '税务筹划_咨询规划师_拨打电话',
+      },
       fixedBottomData: {
         id: '',
         name: '',
@@ -143,7 +147,7 @@ export default {
         imgSrc: '',
       },
       consultTitle: '对于代理记账还有疑问？企服专家为您免费解答',
-      consultTel: '4000-535800',
+      consultTel: '4000-962540',
       serveData: [
         {
           bg: {
@@ -160,6 +164,8 @@ export default {
           id: '',
           name: '',
           jobNum: '',
+          productName: '增值税筹划',
+          phone: '',
         },
         {
           bg: {
@@ -176,6 +182,7 @@ export default {
           id: '',
           name: '',
           jobNum: '',
+          productName: '企业所得税筹划',
         },
         {
           bg: {
@@ -192,6 +199,7 @@ export default {
           id: '',
           name: '',
           jobNum: '',
+          productName: '个人所得税筹划',
         },
       ],
       // 请求失败的备用数据
@@ -455,11 +463,13 @@ export default {
         // 循环头像
         this.serveData[i].person = this.planlerList[i].userHeadUrl
         // 循环id
-        this.serveData[i].id = this.planlerList[i].userId
+        this.serveData[i].id = this.planlerList[i].userCentreId
         // 循环名字
         this.serveData[i].name = this.planlerList[i].realName
         // 循环工号
         this.serveData[i].jobNum = this.planlerList[i].loginName
+        // 循环电话号码
+        this.serveData[i].phone = this.planlerList[i].userPhone
       }
     },
     // 规划师模块数据处理
@@ -468,11 +478,13 @@ export default {
         // 循环头像
         this.plannersData[i].avatarImg = this.planlerList[i].userHeadUrl
         // 循环id
-        this.plannersData[i].id = this.planlerList[i].userId
+        this.plannersData[i].id = this.planlerList[i].userCentreId
         // 循环名字
         this.plannersData[i].name = this.planlerList[i].realName
         // 循环工号
         this.plannersData[i].jobNum = this.planlerList[i].loginName
+        // 循环电话
+        this.plannersData[i].telePhone = this.planlerList[i].userPhone
       }
     },
     // 规划师模块数据处理
@@ -480,17 +492,19 @@ export default {
       // 循环头像
       this.fixedBottomData.imgSrc = this.planlerList[0].userHeadUrl
       // 循环id
-      this.fixedBottomData.id = this.planlerList[0].userId
+      this.fixedBottomData.id = this.planlerList[0].userCentreId
       // 循环名字
       this.fixedBottomData.name = this.planlerList[0].realName
       // 循环工号
       this.fixedBottomData.jobNum = this.planlerList[0].loginName
+      // 循环工号
+      this.fixedBottomData.telephone = this.planlerList[0].userPhone
     },
     // 这个页面统一调用IM时的信息
     openIm() {
       this.$root.$emit(
         'openIMM',
-        this.planlerList[0].userId,
+        this.planlerList[0].userCentreId,
         this.planlerList[0].realName,
         this.planlerList[0].loginName,
         this.planlerList[0].userHeadUrl
@@ -514,6 +528,12 @@ export default {
       script: [
         {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
+        },
+        {
+          src: '/js/spread/tax-md-config.js',
+        },
+        {
+          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
         },
       ],
     }

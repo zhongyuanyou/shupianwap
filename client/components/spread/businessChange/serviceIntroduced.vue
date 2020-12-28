@@ -7,7 +7,10 @@
           v-for="(item, index) in servicelist"
           v-show="index > num ? false : true"
           :key="index"
+          v-md-map
+          v-md:webClick
           :style="{ backgroundImage: 'url(' + item.bgimage + ')' }"
+          :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
           @click="plannerIm(item.planner)"
         >
           <div class="total">
@@ -35,7 +38,11 @@
             </div>
             <div class="contact-btn">
               <a
+                v-md-map
+                v-md:p_IMClick
                 href="javascript:;"
+                data-im_type="售前"
+                :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
                 @click="
                   () => {
                     $parent.openIM(item.url)
@@ -44,7 +51,12 @@
               >
                 <img :src="item.planner.avatarImg" alt="" />
               </a>
-              <a href="javascript:;">
+              <a
+                v-md-map
+                v-md:p_IMClick
+                data-im_type="售前"
+                data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
+              >
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -54,12 +66,11 @@
                 </my-icon>
               </a>
               <a
+                v-md-map
+                v-md:webClick
                 href="javascript:;"
-                @click="
-                  () => {
-                    $parent.openIM(item.url)
-                  }
-                "
+                data-name="`变更服务介绍_${item.plannerName}_拨打电话"
+                @click="call(item.planner.telephone)"
               >
                 <my-icon
                   name="notify_ic_tel"
@@ -79,8 +90,16 @@
       class="show-more-btn"
       @click="showMore"
     >
-      <span v-show="more">更多服务</span>
-      <span v-show="close">收起</span>
+      <span
+        v-show="more"
+        v-md-map
+        v-md:webClick
+        data-name="工商变更页面_更多服务"
+        >更多服务</span
+      >
+      <span v-show="close" v-md-map v-md:webClick data-name="工商变更页面_收起"
+        >收起</span
+      >
       <my-icon
         v-show="more"
         name="tab_ic_all_n"
@@ -138,6 +157,10 @@ export default {
         guiHuaShi.jobNum || '',
         planner.imgSrc || ''
       )
+    },
+    call(tel) {
+      window.location.href = `tel:${tel}`
+      event.stopPropagation()
     },
   },
 }

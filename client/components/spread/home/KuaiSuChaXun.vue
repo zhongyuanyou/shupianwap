@@ -8,7 +8,13 @@
       </div>
       <div class="form">
         <div class="dropdown-menu">
-          <div class="dropdown-menu-content" @click="showDropdownList">
+          <div
+            v-md-map
+            v-md:webClick
+            data-name="工商聚合页_表单_我需要"
+            class="dropdown-menu-content"
+            @click="showDropdownList"
+          >
             <span class="dropdown-menu-content-prefix">我需要</span>
             <span class="dropdown-menu-content-val">{{
               dropdownValue.name
@@ -27,6 +33,9 @@
         <div class="input-all">
           <sp-field
             v-model="telephone"
+            v-md-map
+            v-md:webClick
+            data-name="工商聚合页_表单_手机号"
             label="手机号"
             type="tel"
             placeholder="信息保护中，仅官方可见"
@@ -36,20 +45,39 @@
         <div v-if="smsInputIsShow" class="input-all1">
           <sp-field
             v-model="sms"
+            v-md-map
+            v-md:webClick
+            data-name="工商聚合页_表单_验证码"
             center
             clearable
             label="验证码"
             placeholder="请输入验证码"
           >
             <template #button>
-              <sp-button size="small" type="primary" @click="sendSms">
+              <sp-button
+                v-md-map
+                v-md:webClick
+                data-name="工商聚合页_表单_获取验证码"
+                size="small"
+                type="primary"
+                @click="sendSms"
+              >
                 {{ countdown > 0 ? `${countdown}s` : '发送验证码' }}</sp-button
               >
             </template>
           </sp-field>
         </div>
         <div class="submit">
-          <sp-button type="primary" @click="submitForm">免费预约</sp-button>
+          <sp-button
+            v-md-map
+            v-md:p_formSubmit
+            data-event_name="p_formSubmit"
+            data-form_type="咨询表单"
+            data-form_name="工商聚合页_表单"
+            type="primary"
+            @click="submitForm"
+            >免费预约</sp-button
+          >
         </div>
       </div>
       <div class="notes">
@@ -81,14 +109,13 @@ export default {
     return {
       // 下拉
       dropList: [
-        { id: 1, code: 'jbkh', name: '基本开户', color: '#5a79e8' },
-        { id: 2, code: 'gszc', name: '公司注册', color: '#222222' },
-        { id: 3, code: 'gsbg', name: '公司变更', color: '#222222' },
-        { id: 4, code: 'kzyz', name: '刻制印章', color: '#222222' },
-        { id: 5, code: 'dljz', name: '代理记账', color: '#222222' },
-        { id: 6, code: 'yhbg', name: '银行变更', color: '#222222' },
-        { id: 7, code: 'gshm', name: '公司核名', color: '#222222' },
-        { id: 8, code: 'qtyw', name: '其他业务', color: '#222222' },
+        { id: 1, name: '公司注册', color: '#5a79e8' },
+        { id: 2, name: '工商变更', color: '#222222' },
+        { id: 3, name: '代理记账', color: '#222222' },
+        { id: 4, name: '印章刻制', color: '#222222' },
+        { id: 5, name: '银行服务', color: '#222222' },
+        { id: 6, name: '许可证办理', color: '#222222' },
+        { id: 7, name: '其他服务', color: '#222222' },
       ],
       dropdownValue: '',
       dropdownMenuIsShow: false,
@@ -232,10 +259,11 @@ export default {
       const vm = this
       window.promotion.privat.consultForm(params, (res) => {
         if (res.error === 0) {
-          // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
-          console.log(res)
+          // 1、提示
           Toast('提交成功，请注意接听电话')
-          // 清空表单
+          // 2、表单主动埋点
+          vm.formMaiDian()
+          // 3、清空表单和清楚倒计时定时器
           vm.telephone = ''
           vm.sms = ''
           vm.countdown = -1
@@ -266,6 +294,14 @@ export default {
         currentMin +
         currentSeconds
       return nowTimeString
+    },
+    // 表单有结果后，主动埋点
+    formMaiDian() {
+      window.getTrackRow('p_formSubmitResult', {
+        even_name: 'p_formSubmitResult',
+        form_type: '咨询表单',
+        form_name: '工商聚合页_表单',
+      })
     },
   },
 }

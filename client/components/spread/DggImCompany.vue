@@ -154,13 +154,26 @@ export default {
       groupId: '',
     }
   },
-  // watch: {
-  //   isPopupShow(val) {
-  //     val === false
-  //       ? (document.body.style.overflow = 'auto')
-  //       : (document.body.style.overflow = 'hidden')
-  //   },
-  // },
+  watch: {
+    isPopupShow(newVal) {
+      if (!newVal) {
+        // 当关闭对话框时，清除聊天数据，下次打开接口获取
+        this.currentChatData = [
+          {
+            text:
+              '您好，欢迎来到【顶呱呱平台】，我是您的专属接待客服，请问有什么可以帮助您呢？',
+            createTime: new Date().getTime(),
+            isUser: false,
+          },
+        ]
+      }
+    },
+    // isPopupShow(val) {
+    //   val === false
+    //     ? (document.body.style.overflow = 'auto')
+    //     : (document.body.style.overflow = 'hidden')
+    // },
+  },
   created() {
     // 在vue根实例上监听openIMM方法，对应的在需要的地方触发openIMM方法
     this.$root.$on('openIMM', (id, name, num, imgSrc) => {
@@ -339,6 +352,7 @@ export default {
     },
     // 创建对话
     async createSession(id, name, num) {
+      // id：规划师id
       const that = this
       that.recommendPlannerId = id
       that.recommendPlannerName = name
@@ -364,6 +378,7 @@ export default {
           localPoint: '', // 最后一次聊天记录的时间戳
         },
         (res) => {
+          console.log(res)
           if (res.code === 200) {
             that.currentChatData = [
               {

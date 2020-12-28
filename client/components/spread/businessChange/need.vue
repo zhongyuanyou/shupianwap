@@ -4,7 +4,10 @@
     <ul class="productlist">
       <li v-for="(item, index) in ProductList" :key="index">
         <a
+          v-md-map
+          v-md:webClick
           href="javascript:;"
+          data-name="needlist[index]"
           @click="
             () => {
               $parent.openIM(url)
@@ -22,12 +25,11 @@
         <span>4000 - 962540</span>
       </div>
       <a
+        v-md-map
+        v-md:webClick
         href="javascript:;"
-        @click="
-          () => {
-            $parent.openIM(url)
-          }
-        "
+        data-name="工商变更_还有疑问_立即咨询"
+        @click="call()"
         ><span>立即咨询</span></a
       >
     </div>
@@ -50,7 +52,13 @@ export default {
   components: { MyIcon },
   data() {
     return {
+      telephone: '4000-962540',
       url: '',
+      needlist: [
+        '工商变更_您可能还需要办理_工商注册',
+        '工商变更_您可能还需要办理_税务筹划',
+        '工商变更_您可能还需要办理_其他服务',
+      ],
       ProductList: [
         {
           code: 1,
@@ -71,7 +79,11 @@ export default {
     }
   },
   created() {},
-  methods: {},
+  methods: {
+    call() {
+      window.location.href = `tel:${this.telephone}`
+    },
+  },
 }
 </script>
 

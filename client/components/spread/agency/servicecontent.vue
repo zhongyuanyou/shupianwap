@@ -6,7 +6,10 @@
         <span
           v-for="item in ContentTitle"
           :key="item.code"
+          v-md-map
+          v-md:webClick
           :class="[actived == item.code ? 'isactive' : '']"
+          data-name="代理记账服务内容_选项卡_item.title"
           @click="select(item.code)"
           >{{ item.title }}</span
         >
@@ -27,12 +30,13 @@
     </div>
     <div class="consultingbtn">
       <a
+        v-md-map
+        v-md:WebClick
+        v-md:p_IMClick
         href="javascript:;"
-        @click="
-          () => {
-            $parent.openIM(url)
-          }
-        "
+        data-im_type="售前"
+        data-form_type="售前"
+        @click="call"
       >
         <img
           src="~/assets/spreadImages/agency/busi_img_dljznrtel@1,5x.png"
@@ -48,6 +52,7 @@
 export default {
   data() {
     return {
+      telephone: '',
       ContentTitle: [
         {
           code: 1,
@@ -97,16 +102,15 @@ export default {
       actived: 1,
     }
   },
+  created() {
+    this.telephone = this.$parent.planner.telephone
+  },
   methods: {
     select(code) {
       this.actived = code
     },
-    openIM(url) {
-      if (url !== '') {
-        window.location.href = url
-      } else {
-        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
-      }
+    call() {
+      window.location.href = `tel:${this.telephone}`
     },
   },
 }

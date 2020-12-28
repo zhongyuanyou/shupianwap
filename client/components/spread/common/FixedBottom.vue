@@ -1,9 +1,24 @@
 <template>
   <sp-bottombar safe-area-inset-bottom>
     <sp-bottombar-info title avatar :card="card" />
-    <sp-bottombar-button type="info" :text="text1" @click="onClickButton1">
+    <sp-bottombar-button
+      v-md-map
+      v-md:p_IMClick
+      :data-im-name="md.imMd.name"
+      :data-im_type="md.imMd.type"
+      type="info"
+      :text="text1"
+      @click="onClickButton1"
+    >
     </sp-bottombar-button>
-    <sp-bottombar-button type="primary" :text="text2" @click="onClickButton2">
+    <sp-bottombar-button
+      v-md-map
+      v-md:webClick
+      :data-name="md.telMd.name"
+      type="primary"
+      :text="text2"
+      @click="onClickButton2"
+    >
     </sp-bottombar-button>
   </sp-bottombar>
 </template>
@@ -34,6 +49,21 @@ export default {
           jobNum: '107547',
           telephone: '18402858698',
           imgSrc: '',
+        }
+      },
+    },
+    md: {
+      type: Object,
+      default: () => {
+        return {
+          telMd: {
+            name: '工商聚合页_底部_电话联系',
+            type: '售前',
+          },
+          imMd: {
+            name: '工商聚合页_底部_在线咨询',
+            type: '售前',
+          },
         }
       },
     },
@@ -72,7 +102,10 @@ export default {
       )
     },
     // @--电话咨询
-    onClickButton2() {},
+    onClickButton2() {
+      if (!this.planner.telephone) return
+      window.location.href = `tel:${this.planner.telephone}`
+    },
   },
 }
 </script>
