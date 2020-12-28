@@ -311,10 +311,10 @@ module.exports = {
    * @return {String}
    */
   priceFixed(num, bit) {
-    let numObj = 0;
+    let numObj = '0';
     if (Number(this.calculate(num))) {
       numObj = Number(this.calculate(num));
     }
-    return String(numObj.toFixed(bit));
+    return numObj.toFixed(bit);
   },
 };

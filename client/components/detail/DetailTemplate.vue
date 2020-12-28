@@ -27,7 +27,8 @@
       <div slot="basic">
         <div class="company_info">
           <div v-for="(baseDataList, idx) in fieldList" :key="idx" class="item">
-            {{ baseDataList.listName }}：<span>{{ baseDataList.listVal }}</span>
+            <em>{{ baseDataList.listName }}:</em>
+            <span>{{ baseDataList.listVal }}</span>
           </div>
         </div>
       </div>
@@ -72,7 +73,7 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <Need :product-data="recommendProduct" />
+      <Need :detail-type="detailType" :product-data="recommendProduct" />
     </sp-list>
     <!--E 第十板块 猜你需要-->
     <commodityConsultation
@@ -350,8 +351,14 @@ export default {
       font-weight: 400;
       color: #999999;
       margin-top: 32px;
+      display: flex;
+      em {
+        font-style: normal;
+        width: 150px;
+      }
       span {
         color: #1a1a1a;
+        flex: 1;
       }
     }
   }
