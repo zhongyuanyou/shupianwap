@@ -102,6 +102,7 @@ class goodsListService extends Service {
           }
           // tagArr.push.call(tagArr, ...tags)
           // todo referencePrice金额需要转换成元，在这里是分
+          referencePrice = this.ctx.helper.calculate(`${referencePrice}/100`)
           arr.push({
             id,
             name,
@@ -203,6 +204,7 @@ class goodsListService extends Service {
           // console.log('fieldList', fieldList)
           fieldList = resetJyField(params.classCode,  fieldList)
           // todo platformPrice金额需要转换成元，在这里是分
+          platformPrice = this.ctx.helper.calculate(`${platformPrice}/100`)
           arr.push({
             id,
             name,
