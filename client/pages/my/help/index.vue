@@ -1,15 +1,13 @@
 <template>
   <div class="help-page">
     <!-- S 头部 -->
-    <sp-sticky>
-      <sp-top-nav-bar title="帮助中心" ellipsis @on-click-left="back">
-        <template #left>
-          <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-          </div>
-        </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
+    <Header title="帮助中心">
+      <template #left>
+        <div @click="back">
+          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+        </div>
+      </template>
+    </Header>
     <!-- E 头部 -->
     <!-- S 广告位 -->
     <div class="help-bn">
@@ -123,6 +121,7 @@ import { mapState } from 'vuex'
 import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
 import { helpApi } from '@/api'
 import LoadingDown from '@/components/common/loading/LoadingDown'
+import Header from '@/components/common/head/header'
 
 export default {
   name: 'Help',
@@ -136,6 +135,7 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [BottombarIcon.name]: BottombarIcon,
     [TopNavBar.name]: TopNavBar,
+    Header,
   },
   async asyncData({ $axios }) {
     const params = {

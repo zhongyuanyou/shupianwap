@@ -167,6 +167,10 @@ export default {
   },
   methods: {
     onClickLeft() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
       this.$router.back()
     },
     handleDel(item) {

@@ -54,7 +54,7 @@
     <!--S 按钮区-->
     <!--S 退出登录-->
     <div class="exit_btn">
-      <sp-button v-if="info" type="default" @click="showExit"
+      <sp-button v-if="userId" type="default" @click="showExit"
         >退出登录</sp-button
       >
     </div>
