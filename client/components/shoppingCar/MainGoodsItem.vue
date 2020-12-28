@@ -2,14 +2,13 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-23 13:40:44
+ * @LastEditTime: 2020-12-28 15:56:57
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/MainGoodsItem.vue
 -->
 <template>
   <div class="main-goods-item">
     <div class="goods-lable-img">
-      <span class="lable">急售</span>
       <img alt="img" :src="mainData.img" />
     </div>
     <div class="goods-info">
@@ -167,22 +166,6 @@ export default {
     > img {
       width: 100%;
       height: 100%;
-    }
-    > .lable {
-      position: absolute;
-      left: 0;
-      top: 0;
-      display: flex;
-      align-items: center;
-      z-index: 2;
-      font-size: 22px;
-      font-family: PingFang SC;
-      font-weight: bold;
-      color: #ffffff;
-      height: 44px;
-      padding: 0 12px;
-      background: #ec5330;
-      border-radius: 8px 0px 8px 0px;
     }
   }
   .goods-info {

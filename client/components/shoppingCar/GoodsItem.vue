@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-23 13:35:42
+ * @LastEditTime: 2020-12-28 16:08:59
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -70,7 +70,7 @@
       </template>
     </sp-swipe-cell>
     <div
-      v-if="status === 'offShelf'"
+      v-if="commodityData.status === 'GOODS_STATUS_OFF_SHELF'"
       class="goods-item--disable-tip flex-c-c flex-c-a-c"
     >
       <span class="goods-item--disable-tip__zh">已下架</span>
@@ -113,14 +113,6 @@ export default {
     AsyncCheckbox,
   },
   props: {
-    status: {
-      type: String,
-      default: 'sale', // offShelf：下架
-    },
-    userId: {
-      type: [String, Number],
-      default: '',
-    },
     commodityData: {
       type: Object,
       default() {
@@ -598,8 +590,7 @@ export default {
           break
       }
       try {
-        // TODO 测试用户
-        const userId = this.userId || '1234567'
+        const userId = this.userInfo.userId
         const defalutParams = {
           id: cartId,
           createrId: userId,

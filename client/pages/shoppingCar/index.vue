@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-26 17:11:07
+ * @LastEditTime: 2020-12-28 20:32:33
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -29,10 +29,6 @@
       </Header>
     </div>
     <div class="body">
-      <div v-if="updateLoading" class="update-loading">
-        <sp-loading class="update-loading__content" color="#4974f5" />
-      </div>
-
       <div class="shopping-car__content">
         <sp-pull-refresh
           v-model="refreshing"
@@ -54,9 +50,7 @@
             >
               <GoodsItem
                 ref="goodsItem"
-                :status="index === 1 ? 'offShelf' : 'sale'"
                 :commodity-data="item"
-                :user-id="userInfo.userId"
                 :index="index"
                 @operation="handleItemOperation"
               />
@@ -76,6 +70,7 @@
         @operation="handleItemOperation"
       />
     </div>
+    <LoadingCenter v-show="updateLoading" />
   </div>
 </template>
 
@@ -95,6 +90,7 @@ import GoodsItem from '@/components/shoppingCar/GoodsItem'
 import Bottombar from '@/components/shoppingCar/Bottombar'
 import GoodsPopup from '@/components/shoppingCar/GoodsPopup'
 import ShoppingCarNull from '@/components/shoppingCar/ShoppingCarNull'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
 import { shoppingCar } from '@/api'
 
@@ -117,6 +113,7 @@ export default {
     GoodsItem,
     Bottombar,
     ShoppingCarNull,
+    LoadingCenter,
   },
   data() {
     return {
@@ -155,21 +152,14 @@ export default {
       immediate: true,
     },
   },
-  beforeRouteLeave(to, from, next) {
-    console.log('beforeRouteLeave:', to)
-    // 从购物车到 400电话 或者 地址注册页 缓存
-    if (['detail-selectPhone', 'detail-selectAddress'].includes(to.name)) {
-      this.SET_KEEP_ALIVE({ type: 'add', name: 'ShoppingCar' })
-    } else {
-      this.SET_KEEP_ALIVE({ type: 'remove', name: 'ShoppingCar' })
-    }
-    next()
-  },
+
   created() {
     if (process && process.client) {
       this.postUpdate({ type: 'init' })
     }
   },
+
+  // 在keep-alive中起作用，刷新从400或者地址获取到数据后刷新状态
   activated() {
     console.log('activated:', this.$route.params)
     const { id, code, name, goodsPrice, classCode } =
@@ -184,6 +174,18 @@ export default {
       goodsPrice,
       classCode,
     })
+  },
+
+  // 离开时 路由拦截
+  beforeRouteLeave(to, from, next) {
+    console.log('beforeRouteLeave:', to)
+    // 从购物车到 400电话 或者 地址注册页 缓存
+    if (['detail-selectPhone', 'detail-selectAddress'].includes(to.name)) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'ShoppingCar' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'ShoppingCar' })
+    }
+    next()
   },
   methods: {
     ...mapMutations({
@@ -372,7 +374,7 @@ export default {
           // 选中
           cartArray.forEach((item) => {
             !this.currentSelectedCartIds.includes(item) &&
-              this.currentSelectedCartIds.push(cartId)
+              this.currentSelectedCartIds.push(item)
           })
         } else {
           cartArray.forEach((item) => {
@@ -418,8 +420,7 @@ export default {
     // 请求购物车列表
     async getList() {
       try {
-        // TODO 测试数据
-        const userId = '1234567' // this.userInfo.userId
+        const userId = this.userInfo.userId
         let data = await shoppingCar.list({ userId })
         console.log(data)
         if (!Array.isArray(data)) data = []
@@ -453,7 +454,7 @@ export default {
       }
       try {
         this.updateLoading = true
-        const userId = this.userInfo.userId || '1234567'
+        const userId = this.userInfo.userId
         const defalutParams = {
           id: cartId,
           createrId: userId,
