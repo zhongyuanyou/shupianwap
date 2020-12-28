@@ -323,15 +323,20 @@ export default {
     font-size: 0;
     position: relative;
     z-index: 999;
-
     &-tab {
       width: 670px;
       height: 80px;
-      border-radius: 8px 4px 0px 0px;
+      border-radius: 8px 8px 0px 0px;
       font-size: 24px;
       display: flex;
       text-align: center;
       line-height: 80px;
+      & > :first-child {
+        border-top-left-radius: 8px;
+      }
+      & > :last-child {
+        border-top-right-radius: 8px;
+      }
     }
 
     &-text {
@@ -346,7 +351,6 @@ export default {
 
     &-form {
       padding: 0 40px;
-
       &-div {
         font-size: 28px;
         font-family: PingFang SC;

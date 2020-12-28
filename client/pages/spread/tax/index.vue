@@ -463,7 +463,7 @@ export default {
         // 循环头像
         this.serveData[i].person = this.planlerList[i].userHeadUrl
         // 循环id
-        this.serveData[i].id = this.planlerList[i].userId
+        this.serveData[i].id = this.planlerList[i].userCentreId
         // 循环名字
         this.serveData[i].name = this.planlerList[i].realName
         // 循环工号
@@ -478,7 +478,7 @@ export default {
         // 循环头像
         this.plannersData[i].avatarImg = this.planlerList[i].userHeadUrl
         // 循环id
-        this.plannersData[i].id = this.planlerList[i].userId
+        this.plannersData[i].id = this.planlerList[i].userCentreId
         // 循环名字
         this.plannersData[i].name = this.planlerList[i].realName
         // 循环工号
@@ -492,7 +492,7 @@ export default {
       // 循环头像
       this.fixedBottomData.imgSrc = this.planlerList[0].userHeadUrl
       // 循环id
-      this.fixedBottomData.id = this.planlerList[0].userId
+      this.fixedBottomData.id = this.planlerList[0].userCentreId
       // 循环名字
       this.fixedBottomData.name = this.planlerList[0].realName
       // 循环工号
@@ -504,7 +504,7 @@ export default {
     openIm() {
       this.$root.$emit(
         'openIMM',
-        this.planlerList[0].userId,
+        this.planlerList[0].userCentreId,
         this.planlerList[0].realName,
         this.planlerList[0].loginName,
         this.planlerList[0].userHeadUrl

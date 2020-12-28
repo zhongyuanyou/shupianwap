@@ -4,10 +4,10 @@
  * @author tangdaibing
  * @since 2020/12/21
  */
-module.exports = app => {
+module.exports = (app) => {
   return {
     schedule: {
-      interval: '120s',
+      interval: '10m',
       type: 'worker',
       immediate: true,
     },
@@ -32,7 +32,7 @@ module.exports = app => {
         },
         {
           today: 0,
-          total: 640000,
+          total: 26000,
           code: 'extendAccount',
           ratio: 2,
         },
@@ -43,12 +43,8 @@ module.exports = app => {
         );
         const Hours = new Date().getHours();
         const obj = pageCodes[i];
-        const cacheKeyToday = ctx.helper.cacheKey(
-          obj.code + 'today'
-        );
-        const cacheKeyTotal = ctx.helper.cacheKey(
-          obj.code + 'total'
-        );
+        const cacheKeyToday = ctx.helper.cacheKey(obj.code + 'today');
+        const cacheKeyTotal = ctx.helper.cacheKey(obj.code + 'total');
         if (Hours >= 0 && Hours < 9) {
           // 凌晨至早上9点不更新累计数据
           if (Hours === 0) {
@@ -60,9 +56,7 @@ module.exports = app => {
             );
           }
         } else {
-          let toDayNum = await ctx.service.redis.get(
-            cacheKeyToday
-          );
+          let toDayNum = await ctx.service.redis.get(cacheKeyToday);
           if (toDayNum) {
             toDayNum = Number(toDayNum) + rangeNum;
           } else toDayNum = rangeNum;
@@ -71,9 +65,7 @@ module.exports = app => {
             toDayNum,
             app.config.redisCacheTime
           );
-          let totalNum = await ctx.service.redis.get(
-            cacheKeyTotal
-          );
+          let totalNum = await ctx.service.redis.get(cacheKeyTotal);
           if (totalNum) {
             totalNum = Number(totalNum) + rangeNum;
           } else totalNum = obj.total;

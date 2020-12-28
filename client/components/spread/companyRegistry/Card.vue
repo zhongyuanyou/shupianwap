@@ -182,10 +182,9 @@ export default {
                 clearInterval(this.time)
               }
             }, 1000)
-            console.log(res)
             return false
           }
-          Toast(this.test + '后发送')
+          Toast(res.msg)
         })
       }
     },
@@ -263,7 +262,7 @@ export default {
           this.selectValue = '请选择'
           this.sms = ''
           this.phoneValue = ''
-          this.test = '发送验证码'
+          this.test = '重新发送'
           // 表单成功买点
           window.getTrackRow('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
@@ -272,7 +271,7 @@ export default {
           })
         } else {
           // ------------
-          Toast('提交失败,请重试')
+          Toast('验证码错误,请重试')
         }
       })
       //  待修改
@@ -347,7 +346,7 @@ export default {
       padding: 16px 16px;
       .down-left {
         display: inline-block !important;
-        margin-right: 16px;
+        margin: 0 16px 0 10px;
         color: #1a1a1a;
         flex: 0 0 22%;
       }
@@ -358,6 +357,7 @@ export default {
       }
       .down-right--active {
         display: inline-block;
+        font-weight: bold;
         width: 166px !important;
         color: #1a1a1a;
         text-align: left;
@@ -387,6 +387,8 @@ export default {
     }
     /deep/.input-verification {
       .sp-field__button {
+        text-align: center;
+        width: 162px;
         font-size: 28px;
         font-weight: 400;
         color: #4974f5;
