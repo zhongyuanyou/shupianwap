@@ -14,7 +14,16 @@
     </div>
     <div class="consulting-box">
       <span>我面临这些问题，我要解决</span>
-      <a href="JavaScript:;" @click="openIM(url)">立即咨询</a>
+      <a
+        v-md-map
+        v-md:WebClick
+        v-md:p_IMClick
+        href="JavaScript:;"
+        data-im_type="售前"
+        data-name="工商不变更风险_立即咨询"
+        @click="call()"
+        >立即咨询</a
+      >
     </div>
   </div>
 </template>
@@ -24,6 +33,7 @@ export default {
   data() {
     return {
       url: '',
+      telephone: '',
       riskList: [
         {
           code: 1,
@@ -54,13 +64,12 @@ export default {
       ],
     }
   },
+  created() {
+    this.telephone = this.$parent.planner.telephone
+  },
   methods: {
-    openIM(url) {
-      if (url !== '') {
-        window.location.href = url
-      } else {
-        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
-      }
+    call() {
+      window.location.href = `tel:${this.telephone}`
     },
   },
 }

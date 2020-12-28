@@ -3,7 +3,16 @@
     <span class="title">你可能还需要办理</span>
     <ul class="productlist">
       <li v-for="(item, index) in ProductList" :key="index">
-        <a href="javascript:;" @click="openIM(url)"
+        <a
+          v-md-map
+          v-md:webClick
+          href="javascript:;"
+          data-name="needlist[index]"
+          @click="
+            () => {
+              $parent.openIM(item.url)
+            }
+          "
           ><img :src="item.img" alt=""
         /></a>
       </li>
@@ -15,7 +24,14 @@
         <span>电话咨询：</span>
         <span>4000 - 962540</span>
       </div>
-      <a href="javascript:;" @click="openIM(url)">立即咨询</a>
+      <a
+        v-md-map
+        v-md:webClick
+        href="javascript:;"
+        data-name="代理记账_还有疑问_立即咨询"
+        @click="call()"
+        >立即咨询</a
+      >
     </div>
     <div class="chips">
       <div>
@@ -36,6 +52,12 @@ export default {
   components: { MyIcon },
   data() {
     return {
+      telephone: '4000 - 962540',
+      needlist: [
+        '代理记账_您可能还需要办理_工商注册',
+        '代理记账_您可能还需要办理_税务筹划',
+        '代理记账_您可能还需要办理_其他服务',
+      ],
       ProductList: [
         {
           code: 1,
@@ -56,13 +78,11 @@ export default {
       url: '',
     }
   },
+  created() {},
   methods: {
-    openIM(url) {
-      if (url !== '') {
-        window.location.href = url
-      } else {
-        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
-      }
+    call() {
+      window.location.href = `tel:${this.telephone}`
+      console.log(this.telephone)
     },
   },
 }

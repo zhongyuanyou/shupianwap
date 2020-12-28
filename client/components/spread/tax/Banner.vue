@@ -17,8 +17,11 @@
         <div
           v-for="(item, i) of tabs"
           :key="i"
+          v-md-map
+          v-md:webClick
           :class="active == i ? bigfont : smallfont"
           style="width: 195px"
+          :data-name="`税务筹划表单_表头选择栏_${item}`"
           @click="change(i)"
         >
           {{ item }}
@@ -28,9 +31,12 @@
       <!--      表单-->
       <div class="banner-bottom-form">
         <sp-cell
-          is-link
+          v-md-map
+          v-md:webClick
           :title="select"
           arrow-direction="down"
+          is-link
+          data-name="税务筹划表单_下拉表单"
           @click="show = true"
         />
         <sp-action-sheet
@@ -43,9 +49,12 @@
           <span>手机号</span>
           <input
             v-model="tel"
-            type="text"
+            v-md-map
+            v-md:webClick
             class="banner-bottom-form-input"
             placeholder="信息保护中，仅官方可见"
+            type="text"
+            data-name="税务筹划表单_手机号"
             @focus="focus"
           />
         </div>
@@ -53,18 +62,32 @@
           <span>验证码</span>
           <input
             v-model="code"
-            type="text"
+            v-md-map
+            v-md:webClick
+            data-name="税务筹划表单_验证码"
             class="banner-bottom-form-input banner-bottom-form-inputspe"
             placeholder="请输入验证码"
+            type="text"
           />
           <a
-            href="javascript:;"
+            v-md-map
+            v-md:webClick
             class="banner-bottom-form-div-a"
+            href="javascript:;"
+            data-name="税务筹划表单_获取验证码"
             @click="testMsg"
             >{{ text }}</a
           >
         </div>
-        <button class="banner-bottom-form-button" @click="consultForm">
+        <button
+          v-md:p_formSubmit
+          v-md-map
+          data-event_name="p_formSubmit"
+          data-form_type="咨询表单"
+          data-form_name="税务筹划表单_验证码"
+          class="banner-bottom-form-button"
+          @click="consultForm"
+        >
           咨询获取节税方案
         </button>
         <div class="banner-bottom-form-lastdiv">
@@ -78,6 +101,7 @@
 
 <script>
 import { Swipe, SwipeItem, ActionSheet, Cell, Toast } from '@chipspc/vant-dgg'
+
 export default {
   name: 'BannerVue',
   components: {
@@ -150,11 +174,11 @@ export default {
       if (!_reg.test(_tel)) {
         return Toast('请输入正确的手机号码')
       }
-      const Data = {
+      const data = {
         tel: _tel,
         type: 'gs',
       }
-      this.send(Data)
+      this.send(data)
     },
     // 验证后 发送验证码
     send(data) {
@@ -263,6 +287,11 @@ export default {
           this.code = ''
           this.text = '发送验证码'
           this.select = '选择税务类型'
+          window.getTrackRow('p_formSubmitResult', {
+            even_name: 'p_formSubmitResult',
+            form_type: '咨询表单',
+            form_name: '税务筹划表单_提交',
+          })
         } else {
           console.log(res)
         }
@@ -272,17 +301,19 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .banner {
   &-top {
     width: 750px;
     height: 392px;
     margin-bottom: -81px;
+
     &-img {
       width: 750px;
       height: 392px;
     }
   }
+
   &-bottom {
     background: #fff;
     width: 670px;
@@ -295,12 +326,19 @@ export default {
     &-tab {
       width: 670px;
       height: 80px;
-      border-radius: 8px 4px 0px 0px;
+      border-radius: 8px 8px 0px 0px;
       font-size: 24px;
       display: flex;
       text-align: center;
       line-height: 80px;
+      & > :first-child {
+        border-top-left-radius: 8px;
+      }
+      & > :last-child {
+        border-top-right-radius: 8px;
+      }
     }
+
     &-text {
       height: 87px;
       font-size: 24px;
@@ -310,6 +348,7 @@ export default {
       color: #555555;
       text-align: center;
     }
+
     &-form {
       padding: 0 40px;
       &-div {
@@ -327,17 +366,20 @@ export default {
         padding: 0 0 0 33px;
         position: relative;
         display: flex;
+
         > span {
           display: inline-block;
           margin-right: 30px;
           width: 84px;
         }
+
         &-a {
           position: absolute;
           right: 0;
           margin: 0 33px;
         }
       }
+
       &-input {
         display: inline-block;
         border: none;
@@ -347,14 +389,17 @@ export default {
         background: #f8f8f8;
         padding: 0;
         width: 443px;
+
         &::placeholder {
           color: #cccccc;
           font-weight: 400;
         }
       }
+
       &-inputspe {
         width: 237px;
       }
+
       &-button {
         width: 100%;
         height: 88px;
@@ -365,6 +410,7 @@ export default {
         font-size: 32px;
         padding: 0;
       }
+
       &-lastdiv {
         font-size: 26px;
         height: 81px;
@@ -375,6 +421,7 @@ export default {
         padding: 24px 0 31px;
         display: flex;
         justify-content: center;
+
         > span {
           display: inline-block;
           color: #4974f5;
@@ -384,6 +431,7 @@ export default {
     }
   }
 }
+
 /deep/ .sp-cell {
   width: 590px;
   height: 80px;
@@ -395,12 +443,14 @@ export default {
   font-weight: 400;
   color: #1a1a1a;
 }
+
 a {
   font-size: 28px;
   font-family: PingFang SC;
   font-weight: 400;
   color: #4974f5;
 }
+
 .big {
   font-size: 24px;
   font-family: PingFang SC;
@@ -408,6 +458,7 @@ a {
   color: #1a1a1a;
   background: white;
 }
+
 .small {
   font-size: 24px;
   font-family: PingFang SC;
@@ -415,6 +466,7 @@ a {
   color: #999999;
   background: #f8f8f8;
 }
+
 /deep/ .sp-action-sheet__name {
   font-size: 31px;
   line-height: 56px;
@@ -422,6 +474,7 @@ a {
   font-family: PingFang SC;
   font-weight: 400;
 }
+
 /deep/ .sp-cell::after {
   display: none;
 }

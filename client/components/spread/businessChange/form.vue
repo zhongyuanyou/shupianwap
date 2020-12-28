@@ -16,16 +16,28 @@
         <!-- s行业下拉框 -->
         <sp-field
           v-model="value"
-          label="我需要"
+          v-md-map
+          v-md:WebClick
+          data-name="工商变更表单_下拉表单"
+          data-form_type="咨询表单"
+          label="变更项目"
           :readonly="read"
           @click="selectshow = true"
         />
-        <my-icon
-          name="tab_ic_all_n"
-          size="0.2rem"
-          class="input-ic-open"
-          color="#cccccc"
-        ></my-icon>
+        <div
+          @click="
+            () => {
+              selectshow = true
+            }
+          "
+        >
+          <my-icon
+            name="tab_ic_all_n"
+            size="0.2rem"
+            class="input-ic-open"
+            color="#cccccc"
+          ></my-icon>
+        </div>
         <!-- e行业下拉框 -->
         <!-- s下拉选项框 -->
         <sp-action-sheet
@@ -36,19 +48,35 @@
         <!-- e下拉选项框  -->
         <sp-field
           v-model="telephone"
+          v-md-map
+          v-md:WebClick
+          data-name="工商变更表单_手机号"
+          data-form_type="咨询表单"
           label="手机号"
           placeholder="信息保护中，仅官方可见"
-          type="text"
-          onkeyup="value=value.replace(/[^\d]/g,'')"
           maxlength="11"
           @focus="() => (isshow = true)"
         />
         <!-- s 获取验证码 -->
-        <div v-show="isshow" class="verification-box">
+        <div
+          v-show="isshow"
+          v-md-map
+          v-md:WebClick
+          class="verification-box"
+          data-name="工商变更表单_验证码"
+          data-form_type="咨询表单"
+        >
           <sp-field v-model="sms" label="验证码" placeholder="请输入验证码" />
 
           <!-- s 倒计时 -->
-          <span class="seconds" @click="sendSms">
+          <span
+            v-md-map
+            v-md:WebClick
+            class="seconds"
+            data-name="工商变更表单_获取验证码"
+            data-form_type="咨询表单"
+            @click="sendSms"
+          >
             {{ countdown > 0 ? `${countdown}s` : '发送验证码' }}</span
           >
           <!-- e 倒计时 -->
@@ -56,7 +84,16 @@
         <!-- e 获取验证码 -->
       </div>
       <!-- s 按钮 -->
-      <button class="free-btn" @click="freeBtn()">
+      <button
+        v-md:WebClick
+        v-md:p_formSubmit
+        v-md-map
+        class="free-btn"
+        data-event_name="p_formSubmit"
+        data-form_type="咨询表单"
+        data-form_name="工商变更表单_提交表单"
+        @click="freeBtn()"
+      >
         <span>立即获取方案</span>
       </button>
       <!-- e 按钮 -->
@@ -104,13 +141,12 @@ export default {
         { name: '经营范围变更', color: '#222222' },
         { name: '跨区地址变更', color: '#222222' },
         { name: '同区地址变更', color: '#222222' },
-        { name: '注册资金增加变更', color: '#222222' },
         { name: '注册资金减少变更', color: '#222222' },
         { name: '公司类型变更', color: '#222222' },
         { name: '个体变更', color: '#222222' },
         { name: '股权变更', color: '#222222' },
         { name: '认缴年限变更', color: '#222222' },
-        { name: '其他', color: '#222222' },
+        { name: '其他变更', color: '#222222' },
       ],
       lables: ['流程透明', '信息安全', '官方服务'],
     }
@@ -126,6 +162,7 @@ export default {
       if (this.countdown > -1) {
       }
     },
+    // 验证码倒计时
     // 验证码倒计时
     countDown() {
       const vm = this
@@ -233,9 +270,18 @@ export default {
           console.log(res)
           this.telephone = ''
           this.sms = ''
+          this.countdown = -1
+          window.getTrackRow('p_formSubmitResult', {
+            even_name: 'p_formSubmitResult',
+            form_type: '咨询表单',
+            form_sn: 'ZL077',
+            form_name: '工商变更表单_提交表单',
+          })
           Toast('提交成功，请注意接听电话')
         } else {
-          console.log(res)
+          Toast(res.msg)
+          this.sms = ''
+          this.countdown = -1
         }
       })
     },
@@ -322,7 +368,9 @@ export default {
           font-family: PingFang SC;
           font-weight: bold;
           color: #1a1a1a;
-          flex: 1;
+          /deep/.sp-field__body {
+            width: 100%;
+          }
           &::-webkit-input-placeholder {
             color: #cccccc;
             font-weight: normal;
@@ -331,7 +379,7 @@ export default {
       }
       &:nth-of-type(3) {
         /deep/.sp-field__body {
-          width: 50%;
+          width: 80%;
         }
       }
     }
@@ -364,7 +412,7 @@ export default {
       font-family: PingFang SC;
       font-weight: 400;
       color: #1a1a1a;
-      width: 90px !important;
+      width: 115px !important;
     }
     /deep/.sp-field__control {
       font-size: 28px;

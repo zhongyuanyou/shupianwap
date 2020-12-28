@@ -31,10 +31,7 @@
               />
             </div>
             <div v-else :key="index" class="admin-group">
-              <img
-                class="admin-img"
-                src="https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg"
-              />
+              <img class="admin-img" :src="plannerImgSrc" />
               <div class="admin-msg">
                 <h2 class="time">{{ item.createTime | timeFormat }}</h2>
                 <i class="triangle-admin"></i>
@@ -69,12 +66,31 @@
               />
             </div>
           </div>
-          <i class="emoj" @click="emoji"></i>
-          <input
+          <span class="emoji-icon" @click="emoji">
+            <!--            <i class="emoji" @click="emoji"></i>-->
+            <my-icon
+              name="msg_ic_emoji"
+              size="0.4rem"
+              color="#333"
+              class="emoji"
+            ></my-icon>
+          </span>
+          <textarea
+            ref="msgInput"
             v-model="userText"
+            class="inputText"
             placeholder="请输入"
+            rows="1"
             @keyup.enter="addMessageClick"
-          />
+          ></textarea>
+          <!--          <div-->
+          <!--            ref="msgInput"-->
+          <!--            class="inputText"-->
+          <!--            contenteditable="true"-->
+          <!--            @keyup.enter="addMessageClick"-->
+          <!--          >-->
+          <!--            {{ userText }}-->
+          <!--          </div>-->
           <a class="button" @click="addMessageClick">发送</a>
         </div>
       </div>
@@ -123,6 +139,8 @@ export default {
       // 聊天框弹窗
       isPopupShow: false,
       dggenv: DGG_SERVER_ENV,
+      plannerImgSrc:
+        'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg',
       // 游客输入的内容
       userText: '',
       // im
@@ -153,19 +171,44 @@ export default {
       isAutoDisConnect: true,
       // 聊天记录的groupID
       groupId: '',
+      //
+      inputTimer: null,
     }
   },
-  // watch: {
-  //   isPopupShow(val) {
-  //     val === false
-  //       ? (document.body.style.overflow = 'auto')
-  //       : (document.body.style.overflow = 'hidden')
-  //   },
-  // },
+  watch: {
+    userText(newVal) {
+      // 当输入框里文字变化时，重新设置输入框的高度
+      this.getInputHeight(this.$refs.msgInput)
+    },
+    isPopupShow(newVal) {
+      if (!newVal) {
+        // 当关闭对话框时，清除聊天数据，下次打开接口获取
+        this.currentChatData = [
+          {
+            text:
+              '您好，欢迎来到【顶呱呱平台】，我是您的专属接待客服，请问有什么可以帮助您呢？',
+            createTime: new Date().getTime(),
+            isUser: false,
+          },
+        ]
+      }
+    },
+    // isPopupShow(val) {
+    //   val === false
+    //     ? (document.body.style.overflow = 'auto')
+    //     : (document.body.style.overflow = 'hidden')
+    // },
+  },
   created() {
     // 在vue根实例上监听openIMM方法，对应的在需要的地方触发openIMM方法
-    this.$root.$on('openIMM', (id, name, num) => {
-      // id是规划师id，name是规划师名字，num是规划师工号
+    this.$root.$on('openIMM', (id, name, num, imgSrc) => {
+      // id是规划师id，name是规划师名字，num是规划师工号，imgSrc是规划师头像
+      if (imgSrc) {
+        this.plannerImgSrc = imgSrc
+      } else {
+        this.plannerImgSrc =
+          'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg'
+      }
       this.isPopupShow = true
       this.createSession(id, name, num)
     })
@@ -252,6 +295,16 @@ export default {
     }
   },
   methods: {
+    getInputHeight(el) {
+      // console.log(el)
+      // 延时设置输入框高度
+      clearTimeout(this.inputTimer)
+      this.inputTimer = null
+      this.inputTimer = setTimeout(() => {
+        el.style.height = 'auto' // 必须设置为auto
+        el.style.height = el.scrollHeight + 'px'
+      }, 20)
+    },
     // 点击发送消息
     addMessageClick() {
       const that = this
@@ -334,6 +387,7 @@ export default {
     },
     // 创建对话
     async createSession(id, name, num) {
+      // id：规划师id
       const that = this
       that.recommendPlannerId = id
       that.recommendPlannerName = name
@@ -359,6 +413,7 @@ export default {
           localPoint: '', // 最后一次聊天记录的时间戳
         },
         (res) => {
+          console.log(res)
           if (res.code === 200) {
             that.currentChatData = [
               {
@@ -563,7 +618,7 @@ export default {
   }
   .mobile-page {
     padding: 20px 20px 50px;
-    height: calc(100% - 240px);
+    height: calc(100% - 230px);
     overflow-y: scroll;
     background: #ffffff;
     .admin-img,
@@ -641,16 +696,16 @@ export default {
   /*--- 消息输入框--- */
   .msg-input-bgk {
     width: 100%;
-    height: 120px;
+    height: auto;
     padding: 20px;
-    background: #fff;
+    background: #f8f8f8;
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     border-top: 1px solid #dddddd;
     margin-right: 20px;
     .emoji-box {
@@ -678,33 +733,54 @@ export default {
         }
       }
     }
-    .emoj {
-      vertical-align: middle;
-      height: 32px;
-      width: 32px;
-      display: inline-block;
-      background: url(https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/jyextension/emojis/emoji.png)
-        no-repeat;
-      background-size: 100% 100%;
+    .emoji-icon {
+      flex: none;
+      height: 60px;
+      line-height: 60px;
       margin-right: 20px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+      margin-top: 5px;
     }
-    input {
-      height: 100%;
-      border: 1px solid transparent;
+    .emoji {
+      flex: none;
+      display: inline-block;
+      //background: url(https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/jyextension/emojis/emoji.png)
+      //  no-repeat;
+      //background-size: 100% 100%;
+    }
+    .inputText {
+      // 输入框只有一行时，高度70px
+      resize: none; // 让textarea不能改变宽高
+      max-height: 180px;
+      min-height: 70px;
+      height: auto;
+      border: none;
       border-radius: 5px;
       flex-grow: 2;
       margin-right: 10px;
       font-size: 28px;
+      line-height: 40px;
       color: #333;
-      padding-left: 20px;
+      //padding-left: 20px;
       outline: none;
+      background: #ffffff;
+      padding: 15px 20px;
+      overflow-y: auto;
     }
     a.button {
-      padding: 10px 20px;
+      flex: none;
+      display: inline-block;
+      height: 60px;
+      line-height: 60px;
+      padding: 0px 20px;
       border-radius: 5px;
       background: rgb(19, 179, 180);
       color: #fff;
       font-size: 28px;
+      margin-bottom: 5px;
+      margin-top: 5px;
     }
   }
 }

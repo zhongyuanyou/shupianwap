@@ -4,34 +4,59 @@
     <div
       v-for="(item, i) of serveData"
       :key="i"
+      v-md-map
+      v-md:webClick
+      :data-name="`税筹服务介绍_${item.productName}`"
       class="serve-card"
       :style="item.bg"
       @click="openImUrl(i)"
     >
       <div class="serve-card-first">
         <div>
-          <div class="serve-card-first-big">{{ item.num1 }}万+</div>
+          <div class="serve-card-first-big">{{ item.num1 }}</div>
           <div class="serve-card-first-small">在线咨询</div>
         </div>
         <div class="serve-card-first-hr"></div>
         <div>
-          <div class="serve-card-first-big">{{ item.num2 }}万+</div>
+          <div class="serve-card-first-big">{{ item.num2 }}</div>
           <div class="serve-card-first-small">累计成交</div>
         </div>
         <div class="serve-card-first-hr"></div>
         <div>
-          <div class="serve-card-first-big">{{ item.num3 }}万+</div>
+          <div class="serve-card-first-big">{{ item.num3 }}</div>
           <div class="serve-card-first-small">成功案列</div>
         </div>
       </div>
       <div class="serve-card-second">
         <div class="serve-card-second-left">
           <span>{{ item.price }}</span
-          ><span>元起</span><strike>488.00元</strike>
+          ><span>元起</span>
+          <!--          <strike>488.00元</strike>-->
         </div>
         <div class="serve-card-second-right">
-          <div class="serve-card-second-right-person"></div>
-          <div class="serve-card-second-right-rap" @click="openIm(i, $event)">
+          <div
+            v-md-map
+            v-md:p_IMClick
+            data-im_type="售前"
+            data-form_type="售前"
+            class="serve-card-second-right-person"
+            :style="
+              item.person === ''
+                ? {
+                    backgroundImage: `url(http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg)`,
+                  }
+                : { backgroundImage: `url(${item.person})` }
+            "
+            @click="openIm(i, $event)"
+          ></div>
+          <div
+            v-md-map
+            v-md:p_IMClick
+            data-im_type="售前"
+            data-form_type="售前"
+            class="serve-card-second-right-rap"
+            @click="openIm(i, $event)"
+          >
             <my-icon
               name="notify_ic_chat"
               color="#4974F5"
@@ -39,7 +64,13 @@
               class="icon"
             ></my-icon>
           </div>
-          <div class="serve-card-second-right-rap" @click="call">
+          <div
+            v-md-map
+            v-md:webClick
+            class="serve-card-second-right-rap"
+            data-name="税筹服务介绍_增值税筹划_拨打电话"
+            @click="call(i, $event)"
+          >
             <my-icon
               name="notify_ic_tel"
               color="#4974F5"
@@ -61,63 +92,7 @@ export default {
     serveData: {
       type: Array,
       default: () => {
-        return [
-          {
-            bg: {
-              backgroundImage:
-                'url(' +
-                require('~/assets/spreadImages/tax/busi_img_swchlist1.jpg') +
-                ')',
-            },
-            num1: '28',
-            num2: '27',
-            num3: '27',
-            price: '500',
-            person: '',
-            // 调用IM时候的信息
-            im: {
-              id: '7862495547640840192',
-              name: '张毅',
-              num: '107547',
-            },
-          },
-          {
-            bg: {
-              backgroundImage:
-                'url(' +
-                require('~/assets/spreadImages/tax/busi_img_swchlist2.jpg') +
-                ')',
-            },
-            num1: '28',
-            num2: '27',
-            num3: '27',
-            price: '500',
-            person: '',
-            im: {
-              id: '7862495547640840192',
-              name: '张毅',
-              num: '107547',
-            },
-          },
-          {
-            bg: {
-              backgroundImage:
-                'url(' +
-                require('~/assets/spreadImages/tax/busi_img_swchlist3.jpg') +
-                ')',
-            },
-            num1: '28',
-            num2: '27',
-            num3: '27',
-            price: '500',
-            person: '',
-            im: {
-              id: '7862495547640840192',
-              name: '张毅',
-              num: '107547',
-            },
-          },
-        ]
+        return []
       },
     },
   },
@@ -128,17 +103,19 @@ export default {
   },
   methods: {
     // 电话图标调用电话接口
-    call(e) {
+    call(i, e) {
       e.stopPropagation()
+      window.location.href = `tel:${this.serveData[i].phone}`
     },
     // 信息图标直接调用IM
     openIm(i, e) {
       e.stopPropagation()
       this.$root.$emit(
         'openIMM',
-        this.serveData[i].im.id,
-        this.serveData[i].im.name,
-        this.serveData[i].im.num
+        this.serveData[i].id,
+        this.serveData[i].name,
+        this.serveData[i].jobNum,
+        this.serveData[i].person
       )
     },
     // 点击该模块判断是否进行跳转，如果不跳转就调用IM
@@ -148,9 +125,10 @@ export default {
       } else {
         this.$root.$emit(
           'openIMM',
-          this.serveData[i].im.id,
-          this.serveData[i].im.name,
-          this.serveData[i].im.num
+          this.serveData[i].id,
+          this.serveData[i].name,
+          this.serveData[i].jobNum,
+          this.serveData[i].person
         )
       }
     },
@@ -172,7 +150,6 @@ export default {
   &-card {
     width: 670px;
     height: 472px;
-    background: url('~assets/spreadImages/tax/busi_img_swchlist1.jpg');
     background-size: 101% 101%;
     background-position: center;
     background-repeat: no-repeat;
@@ -257,7 +234,6 @@ export default {
           height: 56px;
           width: 56px;
           border-radius: 50%;
-          background-image: url('http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg');
           background-position: center center;
           background-size: 100% 100%;
         }

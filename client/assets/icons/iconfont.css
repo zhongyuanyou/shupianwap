@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'spiconfont';  /* project id 2213614 */
-  src: url('//at.alicdn.com/t/font_2213614_r637ikpvo4c.eot');
-  src: url('//at.alicdn.com/t/font_2213614_r637ikpvo4c.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_2213614_r637ikpvo4c.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_2213614_r637ikpvo4c.woff') format('woff'),
-  url('//at.alicdn.com/t/font_2213614_r637ikpvo4c.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_2213614_r637ikpvo4c.svg#spiconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_2213614_nqyvsmvho2k.eot');
+  src: url('//at.alicdn.com/t/font_2213614_nqyvsmvho2k.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_2213614_nqyvsmvho2k.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_2213614_nqyvsmvho2k.woff') format('woff'),
+  url('//at.alicdn.com/t/font_2213614_nqyvsmvho2k.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_2213614_nqyvsmvho2k.svg#spiconfont') format('svg');
 }
 
 .spiconfont {
@@ -14,6 +14,110 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.spiconfont-msg_ic_emoji:before {
+  content: "\e626";
+}
+
+.spiconfont-task_ic_time:before {
+  content: "\e6e2";
+}
+
+.spiconfont-notify__ic_edit:before {
+  content: "\e60e";
+}
+
+.spiconfont-notify__ic_home:before {
+  content: "\e60d";
+}
+
+.spiconfont-notify_ic_search:before {
+  content: "\e60b";
+}
+
+.spiconfont-nav_ic_more1:before {
+  content: "\e60c";
+}
+
+.spiconfont-nav_ic_share1:before {
+  content: "\e60a";
+}
+
+.spiconfont-nav_ic_shop:before {
+  content: "\e606";
+}
+
+.spiconfont-personal_ic_authenticate:before {
+  content: "\e602";
+}
+
+.spiconfont-personal_ic_password:before {
+  content: "\e603";
+}
+
+.spiconfont-personal_ic_debun:before {
+  content: "\e604";
+}
+
+.spiconfont-personal_ic_revise:before {
+  content: "\e605";
+}
+
+.spiconfont-input_ic_open:before {
+  content: "\e68d";
+}
+
+.spiconfont-share_ic_wechat_d:before {
+  content: "\e68c";
+}
+
+.spiconfont-address_ic_location:before {
+  content: "\e6df";
+}
+
+.spiconfont-per_img_alipay:before {
+  content: "\e688";
+}
+
+.spiconfont-per_img_apple:before {
+  content: "\e689";
+}
+
+.spiconfont-per_img_qq:before {
+  content: "\e68a";
+}
+
+.spiconfont-per_img_wechat:before {
+  content: "\e68b";
+}
+
+.spiconfont-sp_ic_head:before {
+  content: "\e6d4";
+}
+
+.spiconfont-share_ic_link:before {
+  content: "\e682";
+}
+
+.spiconfont-share_ic_message:before {
+  content: "\e683";
+}
+
+.spiconfont-share_ic_wechat:before {
+  content: "\e684";
+}
+
+.spiconfont-share_ic_weibo:before {
+  content: "\e685";
+}
+
+.spiconfont-share_ic_qq:before {
+  content: "\e686";
+}
+
+.spiconfont-share_ic_moments:before {
+  content: "\e687";
 }
 
 .spiconfont-map_img_zb:before {

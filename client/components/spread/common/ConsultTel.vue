@@ -14,7 +14,15 @@
         <span class="cousulttel-content-left-text">服务热线:</span>
         <span class="cousulttel-content-left-number">{{ tel }}</span>
       </div>
-      <button class="cousulttel-content-button">立即咨询</button>
+      <button
+        v-md-map
+        v-md:webClick
+        class="cousulttel-content-button"
+        data-name="对代理记账还有疑问_立即咨询"
+        @click="telPhone"
+      >
+        立即咨询
+      </button>
     </div>
   </div>
 </template>
@@ -34,8 +42,13 @@ export default {
       type: String,
       required: true,
       default: () => {
-        return '4000-535800'
+        return '4000-962540'
       },
+    },
+  },
+  methods: {
+    telPhone() {
+      window.location.href = `tel:${this.tel}`
     },
   },
 }

@@ -12,49 +12,80 @@
             'url(' + listCounts.bgImg + ')' + 'top center/100% auto no-repeat',
         }"
         class="list"
+        @click="onMessage('', index, $event)"
       >
-        <div @click="onMessage('')">
-          <div class="list-count">
-            <div class="list-count_item">
-              <span>100万+</span>
-              <div>在线咨询</div>
-            </div>
-            <div class="list-count_item">
-              <span>100万+</span>
-              <div>在线咨询</div>
-            </div>
-            <div class="list-count_item">
-              <span>100万+</span>
-              <div>在线咨询</div>
-            </div>
+        <div
+          v-md-map
+          v-md:WebClick
+          v-md:p_IMClick
+          data-im_type="售前"
+          data-form_type="售前"
+          data-name="工商注册_服务介绍_在线咨询"
+          class="list-count"
+        >
+          <div class="list-count_item">
+            <span>{{ listCounts.operating.actualSales }}</span>
+            <div>在线咨询</div>
+          </div>
+          <div class="list-count_item">
+            <span>{{ listCounts.operating.actualViews }}</span>
+            <div>累计成交</div>
+          </div>
+          <div class="list-count_item">
+            <span>{{ listCounts.operating.defaultSales }}</span>
+            <div>成功案例</div>
           </div>
         </div>
-
         <div class="list-advisory">
-          <span class="price"
+          <span
+            v-md-map
+            v-md:WebClick
+            v-md:p_IMClick
+            data-im_type="售前"
+            data-form_type="售前"
+            data-name="工商注册_服务介绍_在线咨询"
+            class="price"
             ><span>{{ listCounts.pric }}</span
-            >元</span
+            >元起</span
           >
           <div class="advisory">
             <sp-image
+              v-md-map
+              v-md:WebClick
+              v-md:p_IMClick
+              data-im_type="售前"
+              data-form_type="售前"
+              data-name="工商注册_服务介绍_在线咨询"
               round
               width="28px"
               height="28px"
-              src="https://img.yzcdn.cn/vant/cat.jpeg"
+              :src="listCounts.imgSrc"
             />
-            <span @click="onMessage('')"
+            <span
+              v-md-map
+              v-md:WebClick
+              v-md:p_IMClick
+              data-im_type="售前"
+              data-form_type="售前"
+              data-name="工商注册_服务介绍_在线咨询"
               ><my-icon
                 name="notify_ic_chat"
                 size="20px"
                 color="#4974F5"
               ></my-icon
             ></span>
-            <span>
+            <span
+              v-md-map
+              v-md:webClick
+              data-name="工商注册_服务介绍_电话"
+              type="primary"
+              @click="onPhone(index)"
+            >
               <my-icon
                 name="notify_ic_tel"
                 size="20px"
                 color="#4974F5"
-                @click="onPhone"
+                data-stop="stop"
               ></my-icon
             ></span>
           </div>
@@ -76,7 +107,35 @@ export default {
     listCount: {
       type: Array,
       default: () => {
-        return []
+        return [
+          {
+            pric: 4000,
+            bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_yxze.png'),
+            operating: {
+              actualViews: 3291,
+              defaultSales: 1837,
+              actualSales: 1832,
+            },
+          },
+          {
+            pric: 5000,
+            bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_gtzc.png'),
+            operating: {
+              actualViews: 3291,
+              defaultSales: 1837,
+              actualSales: 1832,
+            },
+          },
+          {
+            pric: 7000,
+            bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_fgs.png'),
+            operating: {
+              actualViews: 3291,
+              defaultSales: 1837,
+              actualSales: 1832,
+            },
+          },
+        ]
       },
     },
     isMore: {
@@ -86,31 +145,24 @@ export default {
       },
     },
   },
-  data() {
-    return {
-      bgImg: [
-        {
-          img: require('~/assets/spreadImages/company_registry/busi_img_fwjs_yxze.png'),
-        },
-        {
-          img: require('~/assets/spreadImages/company_registry/busi_img_fwjs_gtzc.png'),
-        },
-        {
-          img: require('~/assets/spreadImages/company_registry/busi_img_fwjs_fgs.png'),
-        },
-      ],
-    }
-  },
   methods: {
-    onMessage(url) {
-      if (url !== '') {
-        window.location.href = url
-      } else {
-        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+    onMessage(url, index, e) {
+      if (e.target.dataset.stop !== 'stop') {
+        if (url !== '') {
+          window.location.href = url
+        } else {
+          this.$root.$emit(
+            'openIMM',
+            this.listCount[index].id,
+            this.listCount[index].name,
+            this.listCount[index].jobNum,
+            this.listCount[index].imgSrc
+          )
+        }
       }
     },
-    onPhone() {
-      Toast('电话')
+    onPhone(index) {
+      window.location.href = `tel:${this.listCount[index].telephone}`
     },
   },
 }

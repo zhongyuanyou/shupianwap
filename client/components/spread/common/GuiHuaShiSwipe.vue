@@ -1,6 +1,6 @@
 <template>
   <div class="planner">
-    <div class="planner-title">{{ title }}</div>
+    <div class="planner-title">{{ plannersCommon.title }}</div>
     <div class="planner-flex">
       <sp-swipe
         :autoplay="3000"
@@ -11,8 +11,12 @@
         <sp-swipe-item
           v-for="(item, i) of plannersData"
           :key="i"
+          v-md-map
+          v-md:p_IMClick
+          data_im_type="售前"
+          :data-name="plannersCommon.imName"
           class="planner-content-item"
-          @click="openImUrl(i)"
+          @click="openIm(i)"
         >
           <div class="planner-content-item-shadow">
             <div class="planner-content-item-shadow-person">
@@ -42,7 +46,7 @@
               </div>
             </div>
             <div class="planner-content-item-shadow-icon">
-              <div style="margin-right: 0.2rem" @click="openIm(i, $event)">
+              <div style="margin-right: 0.2rem">
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -50,7 +54,12 @@
                   class="icon line"
                 ></my-icon>
               </div>
-              <div @click="tel">
+              <div
+                v-md-map
+                v-md:webClick
+                :data-name="plannersCommon.telName"
+                @click="tel(i, $event)"
+              >
                 <my-icon
                   name="notify_ic_tel"
                   color="#4974F5"
@@ -83,7 +92,7 @@ export default {
       default: () => {
         return [
           {
-            id: 7862495547640840192,
+            id: '7862495547640840192',
             type: '金牌规划师',
             avatarImg: '',
             name: '郭亮亮',
@@ -94,7 +103,7 @@ export default {
             jobNum: '107547',
           },
           {
-            id: 7862495547640840192,
+            id: '7862495547640840192',
             type: '金牌规划师',
             avatarImg: '',
             name: '郭亮亮',
@@ -105,7 +114,7 @@ export default {
             jobNum: '107547',
           },
           {
-            id: 7862495547640840192,
+            id: '7862495547640840192',
             type: '金牌规划师',
             avatarImg: '',
             name: '郭亮亮',
@@ -119,10 +128,14 @@ export default {
       },
     },
     // 该模块的标题
-    title: {
-      type: String,
+    plannersCommon: {
+      type: Object,
       default: () => {
-        return '规划师'
+        return {
+          title: '规划师',
+          imName: '税务筹划_咨询规划师_在线咨询',
+          telName: '税务筹划_咨询规划师_拨打电话',
+        }
       },
     },
   },
@@ -134,30 +147,18 @@ export default {
   },
   methods: {
     // icon点击触发，无需判断
-    openIm(i, e) {
-      e.stopPropagation()
+    openIm(i) {
       this.$root.$emit(
         'openIMM',
         this.plannersData[i].id,
         this.plannersData[i].name,
-        this.plannersData[i].jobNum
+        this.plannersData[i].jobNum,
+        this.plannersData[i].avatarImg
       )
     },
-    // 整个模块点击触发，判断是否跳转
-    openImUrl(i) {
-      if (this.url !== '') {
-        window.open = this.url
-      } else {
-        this.$root.$emit(
-          'openIMM',
-          this.plannersData[i].id,
-          this.plannersData[i].name,
-          this.plannersData[i].jobNum
-        )
-      }
-    },
-    tel(e) {
+    tel(i, e) {
       e.stopPropagation()
+      window.location.href = `tel:${this.plannersData[i].telephone}`
     },
   },
 }

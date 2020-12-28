@@ -7,13 +7,26 @@
           v-for="(item, index) in servicelist"
           v-show="index > num ? false : true"
           :key="index"
+          v-md-map
+          v-md:webClick
           :style="{ backgroundImage: 'url(' + item.bgimage + ')' }"
+          :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
+          @click="plannerIm(item.planner)"
         >
           <div class="total">
-            <div v-for="(v, i) in item.tatol" :key="i">
+            <div>
               <div class="vertical-bar"></div>
               <div>
-                <span>{{ v.price }}</span> <span>{{ v.title }}</span>
+                <span>{{ item.actualViews }}</span>
+                <span>在线咨询</span>
+              </div>
+              <div>
+                <span>{{ item.defaultSales }}</span>
+                <span>累计成交</span>
+              </div>
+              <div>
+                <span>{{ item.actualSales }}</span>
+                <span>成功注册</span>
               </div>
             </div>
           </div>
@@ -24,10 +37,26 @@
               <span>元起</span>
             </div>
             <div class="contact-btn">
-              <a href="javascript:;" @click="openIM(url)">
-                <img :src="item.headimg" alt="" />
+              <a
+                v-md-map
+                v-md:p_IMClick
+                href="javascript:;"
+                data-im_type="售前"
+                :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
+                @click="
+                  () => {
+                    $parent.openIM(item.url)
+                  }
+                "
+              >
+                <img :src="item.planner.avatarImg" alt="" />
               </a>
-              <a href="javascript:;" @click="chat(index)">
+              <a
+                v-md-map
+                v-md:p_IMClick
+                data-im_type="售前"
+                data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
+              >
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -36,7 +65,13 @@
                 >
                 </my-icon>
               </a>
-              <a href="javascript:;" @click="openIM(url)">
+              <a
+                v-md-map
+                v-md:webClick
+                href="javascript:;"
+                data-name="`变更服务介绍_${item.plannerName}_拨打电话"
+                @click="call(item.planner.telephone)"
+              >
                 <my-icon
                   name="notify_ic_tel"
                   color="#4974F5"
@@ -55,8 +90,16 @@
       class="show-more-btn"
       @click="showMore"
     >
-      <span v-show="more">更多服务</span>
-      <span v-show="close">收起</span>
+      <span
+        v-show="more"
+        v-md-map
+        v-md:webClick
+        data-name="工商变更页面_更多服务"
+        >更多服务</span
+      >
+      <span v-show="close" v-md-map v-md:webClick data-name="工商变更页面_收起"
+        >收起</span
+      >
       <my-icon
         v-show="more"
         name="tab_ic_all_n"
@@ -91,7 +134,6 @@ export default {
       more: true,
       close: false,
       num: 2,
-      url: '',
     }
   },
   methods: {
@@ -106,16 +148,19 @@ export default {
         this.num = 2
       }
     },
-    chat() {
-      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+    plannerIm(planner) {
+      const guiHuaShi = planner
+      this.$root.$emit(
+        'openIMM',
+        guiHuaShi.id,
+        guiHuaShi.name || '',
+        guiHuaShi.jobNum || '',
+        planner.imgSrc || ''
+      )
     },
-
-    openIM(url) {
-      if (url !== '') {
-        window.location.href = url
-      } else {
-        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
-      }
+    call(tel) {
+      window.location.href = `tel:${tel}`
+      event.stopPropagation()
     },
   },
 }
@@ -165,23 +210,9 @@ export default {
           > div {
             display: flex;
             align-items: center;
-            flex: 1;
-            position: relative;
-            &:first-child {
-              .vertical-bar {
-                display: none;
-              }
-            }
-            .vertical-bar {
-              width: 1px;
-              height: 40px;
-              background: #f4f4f4;
-              position: absolute;
-              top: 50%;
-              margin-top: -20px;
-              left: -23px;
-            }
-            > div:last-child {
+            width: 100%;
+            > div:not(:first-child) {
+              flex: 1;
               > span {
                 display: block;
                 font-size: 32px;
@@ -197,6 +228,21 @@ export default {
                   margin-top: 10px;
                 }
               }
+            }
+            &:first-child {
+              .vertical-bar {
+                display: none;
+              }
+            }
+            .vertical-bar {
+              width: 1px;
+              height: 40px;
+              background: #f4f4f4;
+              position: absolute;
+              top: 50%;
+              margin-top: -20px;
+              left: -23px;
+              background: red;
             }
           }
         }
@@ -256,6 +302,11 @@ export default {
               background: #4974f5;
               border-radius: 50%;
               margin-left: 8px;
+              display: flex;
+              > img {
+                width: 100%;
+                border-radius: 50%;
+              }
             }
             > a:not(:first-child) {
               width: 40px;

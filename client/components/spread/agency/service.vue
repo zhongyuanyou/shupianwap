@@ -6,14 +6,27 @@
         <li
           v-for="(item, index) in servicelist"
           :key="index"
+          v-md-map
+          v-md:webClick
           :style="{ backgroundImage: 'url(' + item.bgimage + ')' }"
+          :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
+          @click="plannerIm(item.planner)"
         >
           <div class="total">
-            <div v-for="(v, i) in item.tatol" :key="i">
-              <span>{{ v.price }}</span>
-              <span>{{ v.title }}</span>
+            <div>
+              <span>{{ item.actualViews }}</span>
+              <span>在线咨询</span>
+            </div>
+            <div>
+              <span>{{ item.defaultSales }}</span>
+              <span>累计成交</span>
+            </div>
+            <div>
+              <span>{{ item.actualSales }}</span>
+              <span>成功注册</span>
             </div>
           </div>
+
           <div class="line"></div>
           <div class="contact">
             <div class="price">
@@ -21,10 +34,22 @@
               <span>元起</span>
             </div>
             <div class="contact-btn">
-              <a href="javascript:;" @click="openIM(url)">
-                <img :src="item.headimg" alt="" />
+              <a
+                v-md-map
+                v-md:p_IMClick
+                href="javascript:;"
+                data-im_type="售前"
+                :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
+              >
+                <img :src="item.planner.avatarImg" alt="" />
               </a>
-              <a href="javascript:;" @click="chat(index)">
+              <a
+                v-md-map
+                v-md:p_IMClick
+                href="javascript:;"
+                data-im_type="售前"
+                :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
+              >
                 <my-icon
                   name="notify_ic_chat"
                   color="#4974F5"
@@ -33,7 +58,13 @@
                 >
                 </my-icon>
               </a>
-              <a href="javascript:;" @click="openIM(url)">
+              <a
+                v-md-map
+                v-md:webClick
+                href="javascript:;"
+                :data-name="`变更服务介绍_${item.plannerName}_拨打电话`"
+                @click="call(item.planner.telephone)"
+              >
                 <my-icon
                   name="notify_ic_tel"
                   color="#4974F5"
@@ -51,6 +82,7 @@
 </template>
 
 <script>
+import { planner } from '../../../api'
 import MyIcon from '../../common/myIcon/MyIcon.vue'
 export default {
   components: { MyIcon },
@@ -61,20 +93,25 @@ export default {
     },
   },
   data() {
-    return {
-      url: '',
-    }
+    return {}
+  },
+  created() {
+    const a = this.servicelist
   },
   methods: {
-    chat() {
-      this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
+    plannerIm(planner) {
+      const guiHuaShi = planner
+      this.$root.$emit(
+        'openIMM',
+        guiHuaShi.id,
+        guiHuaShi.name || '',
+        guiHuaShi.jobNum || '',
+        planner.imgSrc
+      )
     },
-    openIM(url) {
-      if (url !== '') {
-        window.location.href = url
-      } else {
-        this.$root.$emit('openIMM', '7862495547640840192', '张毅', '107547')
-      }
+    call(tel) {
+      window.location.href = `tel:${tel}`
+      event.stopPropagation()
     },
   },
 }
@@ -127,6 +164,7 @@ export default {
             display: flex;
             flex-direction: column;
             flex: 1;
+
             > span {
               display: block;
               font-size: 32px;
@@ -199,6 +237,12 @@ export default {
               background: #4974f5;
               border-radius: 50%;
               margin-left: 8px;
+              display: block;
+              display: flex;
+              > img {
+                width: 100%;
+                border-radius: 50%;
+              }
             }
             > a:not(:first-child) {
               width: 40px;

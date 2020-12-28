@@ -5,6 +5,9 @@
       <ul v-if="navList && navList.length <= num" class="fixed-nav">
         <li v-for="(item, index) in navList" :key="index">
           <a
+            v-md-map
+            v-md:webClick
+            :data-name="`工商聚合页-${item.name}`"
             href="javascript:void(0);"
             @click="
               () => {
@@ -23,6 +26,9 @@
         <ul v-if="navList && navList.length > num" class="scroll-nav">
           <li v-for="(item, index) in navList" :key="index" class="nav-item">
             <a
+              v-md-map
+              v-md:webClick
+              :data-name="`工商聚合页-${item.name}`"
               href="javascript:void(0);"
               @click="
                 () => {
@@ -51,7 +57,7 @@ export default {
           {
             icon: require('~/assets/temporary/home/home_ic_busi_x1.5.png'),
             name: '工商注册',
-            url: 'http://127.0.0.1:7001/spread/tax',
+            url: '',
           },
           {
             icon: require('~/assets/temporary/home/home_ic_ac_x1.5.png'),

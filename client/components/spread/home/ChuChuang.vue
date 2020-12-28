@@ -5,6 +5,7 @@
       <a
         v-for="product in productList"
         :key="product.id"
+        v-md-map
         class="product-item"
         :style="{
           backgroundImage: 'url(' + product.img + ')',
@@ -69,7 +70,7 @@ export default {
 
       .middle-transition {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         span {
           display: block;
         }
@@ -88,7 +89,7 @@ export default {
       }
       .product-price-suffix {
         font-size: 20px;
-        line-height: 20px;
+        line-height: 24px;
         color: #ec5330;
       }
     }
