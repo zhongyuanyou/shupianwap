@@ -14,7 +14,7 @@
         <img
           v-if="item.id != 4"
           class="statistics-item-oblique-img"
-          src="~/assets/spreadImages/home/busi_img_gscsysline.png"
+          src="https://cdn.shupian.cn/sp-pt/wap/images/h0il2vpc62g000.png"
         />
       </div>
     </div>
@@ -70,37 +70,37 @@ export default {
           id: 1,
           name: '专属服务',
           desc: '专业服务顾问一对一 服务',
-          img: require('~/assets/spreadImages/home/busi_img_gscsys01.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/59ogpucldbk0000.png',
         },
         {
           id: 2,
           name: '极速响应',
           desc: '第一时间响应您的 需求',
-          img: require('~/assets/spreadImages/home/busi_img_gscsys02.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/1c6mel1le7ds000.png',
         },
         {
           id: 3,
           name: '无理由退款',
           desc: '未服务，30天内退款',
-          img: require('~/assets/spreadImages/home/busi_img_gscsys03.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/8tozz13hcrg0000.png',
         },
         {
           id: 4,
           name: '信息安全',
           desc: '加密保障信息安全',
-          img: require('~/assets/spreadImages/home/busi_img_gscsys04.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/e177vpe2thk0000.png',
         },
         {
           id: 5,
           name: '服务透明',
           desc: '流程可视化，线上可 查询服务节点',
-          img: require('~/assets/spreadImages/home/busi_img_gscsys05.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/atdr8h077c00000.png',
         },
         {
           id: 6,
           name: '风险赔付',
           desc: '业务风险由保险公司 赔付',
-          img: require('~/assets/spreadImages/home/busi_img_gscsys06.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/bax9ty3e3fk0000.png',
         },
       ],
     }

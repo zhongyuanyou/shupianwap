@@ -2,9 +2,13 @@
   <div class="chaxun">
     <div class="all-form">
       <div class="title">
-        <img src="~/assets/spreadImages/home/busi_img_gscsbd01.png" />
+        <img
+          src="https://cdn.shupian.cn/sp-pt/wap/images/7ccgcy48cv40000.png"
+        />
         <p class="title-name">快速查询</p>
-        <img src="~/assets/spreadImages/home/busi_img_gscsbd02.png" />
+        <img
+          src="https://cdn.shupian.cn/sp-pt/wap/images/drylv5blkoo0000.png"
+        />
       </div>
       <div class="form">
         <div class="dropdown-menu">
@@ -21,7 +25,7 @@
             }}</span>
             <img
               class="dropdown-menu-content-img"
-              src="~/assets/spreadImages/home/busi_img_gscsbd03.png"
+              src="https://cdn.shupian.cn/sp-pt/wap/images/4ehy9youej60000.png"
             />
           </div>
           <sp-action-sheet
@@ -84,7 +88,7 @@
         <div v-for="item in formNotes" :key="item.id" class="note-item">
           <img
             class="note-item-img"
-            src="~/assets/spreadImages/home/busi_img_gscsbd04.png"
+            src="https://cdn.shupian.cn/sp-pt/wap/images/7debdq96t480000.png"
           />
           <span class="note-item-name">{{ item.name }}</span>
         </div>
@@ -127,17 +131,17 @@ export default {
       formNotes: [
         {
           id: 1,
-          img: require('~/assets/spreadImages/home/busi_img_gscsbd04.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/7debdq96t480000.png',
           name: '资金担保',
         },
         {
           id: 2,
-          img: require('~/assets/spreadImages/home/busi_img_gscsbd04.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/7debdq96t480000.png',
           name: '信息安全',
         },
         {
           id: 3,
-          img: require('~/assets/spreadImages/home/busi_img_gscsbd04.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/7debdq96t480000.png',
           name: '平台服务',
         },
       ],
@@ -192,7 +196,7 @@ export default {
     // 验证码倒计时
     countDownFun() {
       const vm = this
-      this.countdown = 10
+      this.countdown = 60
       this.countdownTimer = setInterval(function () {
         if (vm.countdown === 0) {
           vm.countdown = -1

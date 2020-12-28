@@ -30,7 +30,7 @@ export default {
         {
           id: 1,
           name: '免费核名',
-          img: require('~/assets/spreadImages/home/busi_img_gscsgj01.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/dzwkf02u3vc0000.png',
           imgWidth: 225,
           imgHeight: 348,
           url: '',
@@ -38,7 +38,7 @@ export default {
         {
           id: 2,
           name: '注册公司标准',
-          img: require('~/assets/spreadImages/home/busi_img_gscsgj02.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/378pqy54zuq0000.png',
           imgWidth: 225,
           imgHeight: 348,
           url: '',
@@ -46,7 +46,7 @@ export default {
         {
           id: 3,
           name: '税筹方案',
-          img: require('~/assets/spreadImages/home/busi_img_gscsgj03.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/4wb4vrnwjo80000.png',
           imgWidth: 225,
           imgHeight: 348,
           url: '',
@@ -54,7 +54,7 @@ export default {
         {
           id: 4,
           name: '法律咨询',
-          img: require('~/assets/spreadImages/home/busi_img_gscsgj04.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/1e1guwl1gz28000.png',
           imgWidth: 225,
           imgHeight: 348,
           url: '',
