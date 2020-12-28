@@ -25,7 +25,7 @@ const ossImgSet = (width, heigt, imgName = null) => {
       width || 10
     },h_${heigt || 10},limit_0`
   } else {
-    return `?x-oss-process=image/resize,m_${fit || 'fill'},w_${width || 10},h_${
+    return `?x-oss-process=image/resize,m_fill,w_${width || 10},h_${
       heigt || 10
     },limit_0`
   }
