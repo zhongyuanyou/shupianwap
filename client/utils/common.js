@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-23 17:07:19
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-25 11:05:30
+ * @LastEditTime: 2020-12-28 08:46:03
  * @Description: file content
  * @FilePath: /chips-wap/client/utils/common.js
  */
@@ -31,7 +31,7 @@ export const copyToClipboard = (text) => {
   textareaEl.select()
   const res = document.execCommand('copy')
   document.body.removeChild(textareaEl)
-  console.log('复制成功')
+  console.log('复制是否成功：', res)
   return res
 }
 /**

@@ -2,14 +2,14 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-25 17:42:49
+ * @LastEditTime: 2020-12-28 11:48:03
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
 
 <template>
   <div class="list">
-    <div class="head">
+    <div class="head" ref="head">
       <Header title="在线直选规划师">
         <template #left>
           <my-icon
@@ -24,24 +24,24 @@
     </div>
     <div class="body">
       <SearchPopup ref="searchPopup" @onSearch="handleKeywordsSearch" />
-      <sp-cell
-        class="search"
-        :class="[isInApp ? 'search-sticky--app' : 'search-sticky--browser']"
-      >
-        <div>
-          <sp-nav-search
-            v-model="search.keywords"
-            border
-            special-label
-            class="search__input"
-            placeholder="请输入规划师姓名"
-            :disabled="true"
-            @click="handleSearchFocus"
-          >
-            <template #left-icon>
-              <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
-            </template>
-          </sp-nav-search>
+      <div class="search">
+        <!-- S 搜索输入框 -->
+        <sp-nav-search
+          v-model="search.keywords"
+          border
+          special-label
+          class="search__input"
+          placeholder="请输入规划师姓名"
+          :disabled="true"
+          @click="handleSearchFocus"
+        >
+          <template #left-icon>
+            <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
+          </template>
+        </sp-nav-search>
+        <!-- E 搜索输入框 -->
+        <!-- S 下拉筛选条件 -->
+        <sp-sticky class="sticky-dropdown" :offset-top="headHeight">
           <sp-dropdown-menu class="search__dropdown">
             <sp-dropdown-item
               ref="regionsDropdownItem"
@@ -73,8 +73,10 @@
               @change="handleSortChange"
             />
           </sp-dropdown-menu>
-        </div>
-      </sp-cell>
+        </sp-sticky>
+        <!-- E 下拉筛选条件 -->
+      </div>
+
       <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
         <sp-list
           v-model="loading"
@@ -116,6 +118,7 @@
 import { mapState, mapMutations } from 'vuex'
 
 import {
+  Sticky,
   Button,
   DropdownMenu,
   DropdownItem,
@@ -187,6 +190,7 @@ const DEFAULT_PAGE = {
 export default {
   name: 'PlannerList',
   components: {
+    [Sticky.name]: Sticky,
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
@@ -205,6 +209,7 @@ export default {
   mixins: [imHandle],
   data() {
     return {
+      headHeight: '0.88rem',
       search: {
         keywords: '',
         sortId: 0,
@@ -254,6 +259,10 @@ export default {
     if (process && process.client) {
       this.uPGetRegion()
     }
+  },
+  mounted() {
+    this.headHeight = this.$refs.head.offsetHeight
+    console.log('head', this.$refs.head.offsetHeight)
   },
   methods: {
     ...mapMutations({
@@ -497,27 +506,34 @@ export default {
   }
   .body {
     padding: 0;
-    .search-sticky--browser {
-      top: -30px;
-    }
-    .search-sticky--app {
-      top: -120px;
-    }
     .search {
-      position: sticky;
-      top: -30px;
-      z-index: 10;
-      padding: 0 40px;
       &__input {
         height: 96px;
-        margin: 16px 0;
+        margin: 16px 40px;
         /deep/.sp-field__control {
           font-size: 30px;
           font-weight: bold;
         }
       }
-
+      /deep/.sticky-dropdown {
+        .sp-sticky {
+          padding-top: 0;
+        }
+      }
       /deep/.sp-dropdown-menu {
+        padding: 0 40px;
+        position: relative;
+        &::after {
+          position: absolute;
+          box-sizing: border-box;
+          content: ' ';
+          pointer-events: none;
+          right: -50%;
+          left: -50%;
+          height: 1px;
+          background-color: #ebedf0;
+          transform: scale(0.5);
+        }
         &__bar {
           box-shadow: none;
           height: 90px;
