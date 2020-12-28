@@ -122,6 +122,7 @@ export default {
           // todo 提示没有数据
           this.listShow = false
           this.isReq[this.currentTabJyCode] = false
+          this.jyGoodsListData[this.currentTabJyCode] = []
           console.error(err)
         })
     },

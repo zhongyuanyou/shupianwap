@@ -206,7 +206,7 @@ module.exports = {
       re.lastIndex = 0; // 采取预防措施，重新启动pos
       // 循环时仍然需要计算优先级
       while (re.test(input)) {
-        console.log('RegExp.$1, RegExp.$2, RegExp.$3', RegExp.$1, RegExp.$2, RegExp.$3)
+        // console.log('RegExp.$1, RegExp.$2, RegExp.$3', RegExp.$1, RegExp.$2, RegExp.$3)
         output = operation(+RegExp.$1, RegExp.$2, +RegExp.$3);
         if (isNaN(output) || !isFinite(output)) { return output; } // 如果不是数字就退出
         input = input.replace(re, output);

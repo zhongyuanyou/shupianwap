@@ -5,7 +5,7 @@
       :tc-product-detail-data="tcProductDetailData"
       :tc-planner-booth="tcPlannerBooth"
       :recommend-planner="planners"
-      :detail-type="tcProductDetailData.classCodeLevelList[0]"
+      :detail-type="$route.query.type"
       :im-jump-query="imJumpQuery"
     />
   </div>
@@ -20,6 +20,8 @@ export default {
   components: {
     DetailTemplate,
   },
+  layout: 'keepAlive',
+  watchQuery: ['productId'],
   async asyncData({ $axios, query, app, store }) {
     try {
       let tcPlannerBooth = {}
@@ -32,7 +34,7 @@ export default {
           },
         }
       )
-      console.log(data)
+      console.log(data, message)
       if (code === 200) {
         tcProductDetailData = data
         // 获取钻展规划师
@@ -68,7 +70,11 @@ export default {
   },
   data() {
     return {
-      tcProductDetailData: {},
+      tcProductDetailData: {
+        classCodeLevelList: [],
+        platformPrice: '0',
+        classCodeLevel: '',
+      },
       tcPlannerBooth: {},
       deviceId: null, // 设备唯一码
       planners: [], // 规划师列表
