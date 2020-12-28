@@ -4,7 +4,7 @@
     <div class="contentBg">
       <div class="content">
         <div class="iconBg">
-          <img :src="icon" alt="" />
+          <img :src="$ossImgSet('g6trabnxtg80000.png', 160, 160)" alt="" />
         </div>
         <span class="versionText">当前版本：V 1.2</span>
       </div>
@@ -40,9 +40,7 @@ export default {
   },
   props: {},
   data() {
-    return {
-      icon: require('~/assets/temporary/home/notify_img_logo@1,5x.png'),
-    }
+    return {}
   },
   computed: {},
   watch: {},

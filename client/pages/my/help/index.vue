@@ -20,19 +20,19 @@
       <!-- S 功能 -->
       <div v-if="isInApp" class="func-list">
         <div @click="handleClick(0)">
-          <img src="../../../assets/temporary/home/help_icon_pass.png" alt="" />
+          <img :src="$ossImgSet('6vjgpndq5g00000.png', 48, 48)" alt="" />
           <span>{{ isPassword ? '修改登录密码' : '设置登录密码' }}</span>
         </div>
         <div @click="handleClick(1)">
-          <img src="../../../assets/temporary/home/help_icon_tel.png" alt="" />
+          <img :src="$ossImgSet('9ez5xkd5qcc0000.png', 48, 48)" alt="" />
           <span>实名认证</span>
         </div>
         <div @click="handleClick(2)">
-          <img src="../../../assets/temporary/home/help_icon_name.png" alt="" />
+          <img :src="$ossImgSet('df83pk71vgw0000.png', 48, 48)" alt="" />
           <span>修改手机号</span>
         </div>
         <div @click="handleClick(3)">
-          <img src="../../../assets/temporary/home/help_icon_msg.png" alt="" />
+          <img :src="$ossImgSet('b4r8f0ylxag0000.png', 48, 48)" alt="" />
           <span>我要吐槽</span>
         </div>
       </div>
