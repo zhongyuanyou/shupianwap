@@ -15,13 +15,7 @@ export default {
   props: {
     imglist: {
       type: Array,
-      default: () => {
-        return {
-          code: 1,
-          url: '',
-          img: require('~/assets/spreadImages/businessChange/busi_img_gsbgbanner01.jpg'),
-        }
-      },
+      default: () => {},
     },
   },
   data() {

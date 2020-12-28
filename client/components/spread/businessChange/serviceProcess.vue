@@ -25,31 +25,31 @@ export default {
       processList: [
         {
           code: 1,
-          img: require('~/assets/spreadImages/businessChange/busi_img_gsbglc01.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/e40octgfhfk0000.png',
           title: '线上下单',
           content: '2小时内专业商务咨询确认工商变更信息',
         },
         {
           code: 2,
-          img: require('~/assets/spreadImages/businessChange/busi_img_gsbglc02.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/ctki21e076g0000.png',
           title: '收集资料',
           content: '服务顾问根据变更内容向您收集相应手续资料',
         },
         {
           code: 3,
-          img: require('~/assets/spreadImages/businessChange/busi_img_gsbglc03.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/9arkao051iw0000.png',
           title: '材料递交',
           content: '专业人员撰写申请材料',
         },
         {
           code: 4,
-          img: require('~/assets/spreadImages/businessChange/busi_img_gsbglc04.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/arqcokbao200000.png',
           title: '提交资料',
           content: '专人提交至工商管理局',
         },
         {
           code: 5,
-          img: require('~/assets/spreadImages/businessChange/busi_img_gsbglc05.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/2eza6e5hqmm8000.png',
           title: '变更成功',
           content: '领取变更后的营业执照',
         },

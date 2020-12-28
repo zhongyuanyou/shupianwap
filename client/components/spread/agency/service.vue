@@ -184,7 +184,7 @@ export default {
         }
         .line {
           width: 100%;
-          border: 1px dashed #f4f4f4;
+          border-top: 1px dashed #f4f4f4;
           position: absolute;
           bottom: 26.32%;
         }

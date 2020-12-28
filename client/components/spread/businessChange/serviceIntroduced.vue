@@ -15,7 +15,6 @@
         >
           <div class="total">
             <div>
-              <div class="vertical-bar"></div>
               <div>
                 <span>{{ item.actualViews }}</span>
                 <span>在线咨询</span>
@@ -211,8 +210,17 @@ export default {
             display: flex;
             align-items: center;
             width: 100%;
-            > div:not(:first-child) {
+            > div {
               flex: 1;
+              position: relative;
+              &:not(:first-child)::before {
+                content: '';
+                position: absolute;
+                width: 1px;
+                height: 40px;
+                background: #f4f4f4;
+                left: -25px;
+              }
               > span {
                 display: block;
                 font-size: 32px;
@@ -228,21 +236,6 @@ export default {
                   margin-top: 10px;
                 }
               }
-            }
-            &:first-child {
-              .vertical-bar {
-                display: none;
-              }
-            }
-            .vertical-bar {
-              width: 1px;
-              height: 40px;
-              background: #f4f4f4;
-              position: absolute;
-              top: 50%;
-              margin-top: -20px;
-              left: -23px;
-              background: red;
             }
           }
         }

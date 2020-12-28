@@ -435,13 +435,21 @@ export default {
         {
           code: 1,
           url: '',
-          img: require('~/assets/spreadImages/businessChange/busi_img_gsbgbanner01.jpg'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/2mnnuo078ew0000.jpg',
         },
         {
           code: 2,
           url: '',
-          img: require('~/assets/spreadImages/businessChange/busi_img_gsbgbanner02.jpg'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/eqvnfyw0u6o0000.jpg',
         },
+      ],
+      serviceBG: [
+        'https://cdn.shupian.cn/sp-pt/wap/images/5uwyafh2j1g0000.png',
+        'https://cdn.shupian.cn/sp-pt/wap/images/althqxxyow00000.png',
+        'https://cdn.shupian.cn/sp-pt/wap/images/6bd02flvql80000.png',
+        'https://cdn.shupian.cn/sp-pt/wap/images/a7m299uz5bc0000.png',
+        'https://cdn.shupian.cn/sp-pt/wap/images/ep6v5p1eork0000.png',
+        'https://cdn.shupian.cn/sp-pt/wap/images/9818rtvq5c80000.png',
       ],
       // 服务列表
       servicelist: [
@@ -451,7 +459,8 @@ export default {
           defaultSales: '17万',
           actualSales: '17万',
           price: '488',
-          bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw01.png'),
+          bgimage:
+            'https://cdn.shupian.cn/sp-pt/wap/images/5uwyafh2j1g0000.png',
           planner: {},
           plannerName: '',
         },
@@ -462,7 +471,8 @@ export default {
           actualSales: '14万',
           price: '488',
           headimg: '',
-          bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw02.png'),
+          bgimage:
+            'https://cdn.shupian.cn/sp-pt/wap/images/althqxxyow00000.png',
           planner: {},
         },
         {
@@ -472,7 +482,8 @@ export default {
           actualSales: '2万',
           price: '600',
           headimg: '',
-          bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw03.png'),
+          bgimage:
+            'https://cdn.shupian.cn/sp-pt/wap/images/6bd02flvql80000.png',
           planner: {},
         },
         {
@@ -482,7 +493,8 @@ export default {
           actualSales: '1万',
           price: '600',
           headimg: '',
-          bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw04.png'),
+          bgimage:
+            'https://cdn.shupian.cn/sp-pt/wap/images/a7m299uz5bc0000.png',
           planner: {},
         },
         {
@@ -492,7 +504,8 @@ export default {
           actualSales: '6万',
           price: '600',
           headimg: '',
-          bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw05.png'),
+          bgimage:
+            'https://cdn.shupian.cn/sp-pt/wap/images/ep6v5p1eork0000.png',
           planner: {},
         },
         {
@@ -502,7 +515,8 @@ export default {
           actualSales: '6万',
           price: '600',
           headimg: '',
-          bgimage: require('~/assets/spreadImages/businessChange/busi_img_gsbgfw06.png'),
+          bgimage:
+            'https://cdn.shupian.cn/sp-pt/wap/images/9818rtvq5c80000.png',
           planner: {},
         },
       ],
@@ -564,9 +578,7 @@ export default {
             actualSales:
               item.materialList[0].productDetail.operating.actualSales,
             price: item.materialList[0].productDetail.referencePrice,
-            bgimage: require(`~/assets/spreadImages/businessChange/busi_img_gsbgfw0${
-              index + 1
-            }.png`),
+            bgimage: this.serviceBG[index],
             planner: this.plannersList[
               `${index < this.plannersList.length ? index : 0}`
             ],

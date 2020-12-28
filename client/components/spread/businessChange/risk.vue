@@ -37,26 +37,26 @@ export default {
       riskList: [
         {
           code: 1,
-          img: require('~/assets/spreadImages/businessChange/busi_img_gsbgfx01.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/8jxa0wdy8cg0000.png',
           title: '执照吊销',
           content: '工商变更逾期不登记，情节严重，吊销营业执照',
         },
         {
           code: 2,
-          img: require('~/assets/spreadImages/businessChange/busi_img_gsbgfx02.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/3jah4ba5qmu0000.png',
           title: '高额罚款',
           content: '工商变更逾期不登记，将被处以1万～10万元罚款',
         },
         {
           code: 3,
-          img: require('~/assets/spreadImages/businessChange/busi_img_gsbgfx03.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/eemwcfmg1940000.png',
           title: '败诉风险',
           content:
             '注册及经营地址逾期不变更，可能导致接收文书地址错误，错过重要信息',
         },
         {
           code: 4,
-          img: require('~/assets/spreadImages/businessChange/busi_img_gsbgfx04.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/c44jnqcjj2w0000.png',
           title: '收债困难',
           content:
             '注册及经营地址不一致时可能导致债务履行困难，欠款及活动款无法收回',

@@ -3,12 +3,12 @@
     <div class="form-box">
       <div class="form-title">
         <img
-          src="~/assets/spreadImages/agency/busi_img_dljztitrleft@1,5x.png"
+          src="https://cdn.shupian.cn/sp-pt/wap/images/62to3cpd7h40000.png"
           alt=""
         />
         <h4>立即预约专属规划师</h4>
         <img
-          src="~/assets/spreadImages/agency/busi_img_dljztitright@1,5x.png"
+          src="https://cdn.shupian.cn/sp-pt/wap/images/x5o8jch38cg000.png"
           alt=""
         />
       </div>
@@ -101,7 +101,7 @@
         <div v-for="(item, index) in lables" :key="index">
           <div class="img-box">
             <img
-              src="~/assets/spreadImages/businessChange/busi_img_gsbgbd04.png"
+              src="https://cdn.shupian.cn/sp-pt/wap/images/5q17nyoc9pw0000.png"
               alt=""
             />
           </div>
@@ -151,9 +151,7 @@ export default {
       lables: ['流程透明', '信息安全', '官方服务'],
     }
   },
-  created() {
-    this.dropdownValue = this.actions[0]
-  },
+  created() {},
   methods: {
     // 获取验证码
     obtain() {
@@ -249,7 +247,7 @@ export default {
       const webUrl = window.location.href
       const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       const contentStr = {
-        industry: this.dropdownValue.name,
+        industry: this.value,
       }
       const params = {
         formId, // formId,唯一ID提交资源中心
@@ -265,12 +263,14 @@ export default {
       }
       // 3、提交表单
       window.promotion.privat.consultForm(params, (res) => {
+        console.log(params)
         if (res.error === 0) {
           // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
           console.log(res)
           this.telephone = ''
           this.sms = ''
           this.countdown = -1
+          this.value = '法人变更'
           window.getTrackRow('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',

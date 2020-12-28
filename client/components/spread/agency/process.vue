@@ -24,28 +24,32 @@ export default {
         {
           code: 1,
           steps: '01',
-          stepsimg: require('~/assets/spreadImages/agency/busi_img_dljzlc01@1,5x.png'),
+          stepsimg:
+            'https://cdn.shupian.cn/sp-pt/wap/images/1zdwn4b0a0kg000.png',
           stepsname: '数据比对 核准信息',
           englishname: 'Data comparison',
         },
         {
           code: 2,
           steps: '02',
-          stepsimg: require('~/assets/spreadImages/agency/busi_img_dljzlc02@1,5x.png'),
+          stepsimg:
+            'https://cdn.shupian.cn/sp-pt/wap/images/3rt683twtma0000.png',
           stepsname: '会计做账 处理税务',
           englishname: 'Accounting',
         },
         {
           code: 3,
           steps: '03',
-          stepsimg: require('~/assets/spreadImages/agency/busi_img_dljzlc03@1,5x.png'),
+          stepsimg:
+            'https://cdn.shupian.cn/sp-pt/wap/images/376q5jrpuy60000.png',
           stepsname: '项目质检 全程审核',
           englishname: 'Quality testing',
         },
         {
           code: 4,
           steps: '04',
-          stepsimg: require('~/assets/spreadImages/agency/busi_img_dljzlc04@1,5x.png'),
+          stepsimg:
+            'https://cdn.shupian.cn/sp-pt/wap/images/ftzmh12fetk0000.png',
           stepsname: '整理成册 装订存档',
           englishname: 'Binding and filing',
         },

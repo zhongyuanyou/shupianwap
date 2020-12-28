@@ -61,17 +61,17 @@ export default {
       ProductList: [
         {
           code: 1,
-          img: require('~/assets/spreadImages/agency/busi_img_dljzbl01@1,5x.jpg'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/4sydiz0knhg0000.jpg',
           url: '',
         },
         {
           code: 2,
-          img: require('~/assets/spreadImages/agency/busi_img_dljzbl02@1,5x.jpg'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/6q2l9tmcb7g0000.jpg',
           url: '',
         },
         {
           code: 3,
-          img: require('~/assets/spreadImages/agency/busi_img_dljzbl03@1,5x.jpg'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/4gzzwko5f9g0000.jpg',
           url: '',
         },
       ],
