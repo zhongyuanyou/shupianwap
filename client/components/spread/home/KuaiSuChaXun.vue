@@ -270,6 +270,7 @@ export default {
           clearInterval(vm.countdownTimer)
           vm.countdownTimer = null
         } else {
+          Toast(res.msg)
           console.log(res)
         }
       })
@@ -431,6 +432,7 @@ export default {
         border-radius: 8px;
       }
       /deep/ .sp-button::before {
+        background: transparent;
       }
     }
 
@@ -443,8 +445,8 @@ export default {
         display: flex;
         align-items: center;
         .note-item-img {
-          width: 24px;
-          height: 24px;
+          width: 23px;
+          height: 23px;
           margin-right: 13px;
         }
         .note-item-name {
