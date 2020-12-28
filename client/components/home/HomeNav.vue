@@ -35,7 +35,10 @@
       <div v-if="rollNav.length > 10" class="scroll-box">
         <span><i :style="{ left: scroLeft + '%' }"></i></span>
       </div>
-      <div v-else class="scroll-box"></div>
+      <div
+        v-else-if="rollNav.length && rollNav.length < 10"
+        class="scroll-box"
+      ></div>
       <!-- E 自定义滚动条 -->
     </nav>
   </div>

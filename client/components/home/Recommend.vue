@@ -287,10 +287,11 @@ export default {
         position: relative;
         width: 262px;
         height: 144px;
-        // background: #ffffff;
-        // border: 1px solid #cdcdcd;
-        // box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
-        // border-radius: 8px;
+        background: #ffffff;
+        border: 1px solid #cdcdcd;
+        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
         // padding: 26px 32px 0 32px;
         // > strong {
         //   font-size: 28px;
