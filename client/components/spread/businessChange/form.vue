@@ -270,6 +270,7 @@ export default {
           console.log(res)
           this.telephone = ''
           this.sms = ''
+          this.countdown = -1
           window.getTrackRow('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
@@ -278,7 +279,9 @@ export default {
           })
           Toast('提交成功，请注意接听电话')
         } else {
-          console.log(res)
+          Toast(res.msg)
+          this.sms = ''
+          this.countdown = -1
         }
       })
     },

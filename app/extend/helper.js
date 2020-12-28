@@ -58,10 +58,10 @@ module.exports = {
     return dateInit;
   },
   /**
-     * 获取某个可用服务,随机取
-     * @param {*} instances 所有实例
-     * @return {*} json
-     */
+   * 获取某个可用服务,随机取
+   * @param {*} instances 所有实例
+   * @return {*} json
+   */
   getOneInstanceFromAll(instances) {
     if (instances != null) {
       const upInstances = [];
@@ -72,9 +72,7 @@ module.exports = {
       }
       if (upInstances.length > 0) {
         const instanceIndex =
-                    upInstances.length === 1
-                      ? 0
-                      : Date.now() % upInstances.length;
+          upInstances.length === 1 ? 0 : Date.now() % upInstances.length;
         return upInstances[instanceIndex];
       }
       return '';
@@ -83,10 +81,10 @@ module.exports = {
   },
   /** Thanks to  coordinator-node-client */
   /**
-     * 根据实例获取一个完整的ip方式的服务地址。
-     * @param {*} instance  app的实例。
-     * @return {string}  url地址,包括协议，ip和端口。例如:http://192.168.1.100:8080。
-     */
+   * 根据实例获取一个完整的ip方式的服务地址。
+   * @param {*} instance  app的实例。
+   * @return {string}  url地址,包括协议，ip和端口。例如:http://192.168.1.100:8080。
+   */
   getServerPath(instance) {
     let url = '';
     const http = 'http://';
@@ -96,7 +94,7 @@ module.exports = {
         url = http + instance.ipAddr + ':' + instance.port.$;
       } else if (
         instance.securePort &&
-                instance.securePort['@enabled'] === 'true'
+        instance.securePort['@enabled'] === 'true'
       ) {
         url = https + instance.ipAddr + ':' + instance.securePort.$;
       }
@@ -108,7 +106,7 @@ module.exports = {
     // 检测有是否传入实例Name
     if (
       instancesName &&
-            app.config.apiClient.APPID.indexOf(instancesName) === -1
+      app.config.apiClient.APPID.indexOf(instancesName) === -1
     ) {
       const err = new Error('请使用正确的appName获取节点');
       ctx.logger.error(err);
@@ -123,24 +121,25 @@ module.exports = {
     return serverUrl;
   },
   /**
-     * 将Egg的curl错误提示转换为项目统一的标准错误对象。
-     * @param {Object} err  错误对象。
-     * @return {Object}  错误信息对象。例如:{code: '404',message: '域名不存在',data: '域名不存在',}。
-     */
+   * 将Egg的curl错误提示转换为项目统一的标准错误对象。
+   * @param {Object} err  错误对象。
+   * @return {Object}  错误信息对象。例如:{code: '404',message: '域名不存在',data: '域名不存在',}。
+   */
   errMessage(err) {
     switch (err.code) {
       case 'ECONNRESET':
         return {
           code: '501',
-          message:
-                        '服务端主动断开 socket 连接，导致 HTTP 请求链路异常',
+          message: '服务端主动断开 socket 连接，导致 HTTP 请求链路异常',
           data: '服务端主动断开 socket 连接，导致 HTTP 请求链路异常',
         };
       case 'ECONNREFUSED':
         return {
           code: '406',
-          message: '请求的 url 所属 IP 或者端口无法连接成功,请确保IP或者端口设置正确',
-          data: '请求的 url 所属 IP 或者端口无法连接成功,请确保IP或者端口设置正确',
+          message:
+            '请求的 url 所属 IP 或者端口无法连接成功,请确保IP或者端口设置正确',
+          data:
+            '请求的 url 所属 IP 或者端口无法连接成功,请确保IP或者端口设置正确',
         };
       case 'ENOTFOUND':
         return {
@@ -157,12 +156,12 @@ module.exports = {
     }
   },
   /**
-     * 请求api接口组装
-     * @param {Object}
-     * @param.name: String config文件中APPID下对应的项目实例名称
-     * @param.path: String 请求路径
-     * @return {String}  完整的api接口
-     */
+   * 请求api接口组装
+   * @param {Object}
+   * @param.name: String config文件中APPID下对应的项目实例名称
+   * @param.path: String 请求路径
+   * @return {String}  完整的api接口
+   */
   assembleUrl(sysCode = null, path = '') {
     const { ctx } = this;
     const host = ctx.helper.getUrl(sysCode);
@@ -183,31 +182,24 @@ module.exports = {
       rk: ')',
     };
     f.ooo = [
-      [
-        [ f.mlt ],
-        [ f.div ],
-        [ f.mod ],
-        [ f.exp ],
-      ],
-      [
-        [ f.add ],
-        [ f.sub ],
-        [ f.lk ],
-        [ f.rk ],
-      ],
+      [[f.mlt], [f.div], [f.mod], [f.exp]],
+      [[f.add], [f.sub], [f.lk], [f.rk]],
     ];
 
     input = input.replace(/[^0-9%^*\/\-+.]/g, ''); // 清除不必要的字符
     let output;
     for (let i = 0, n = f.ooo.length; i < n; i++) {
-
       // 正则表达式，用于查找浮点数或整数之间的操作符
-      const re = new RegExp('(\\d+\\.?\\d*)([\\' + f.ooo[i].join('\\') + '])(\\d+\\.?\\d*)');
+      const re = new RegExp(
+        '(\\d+\\.?\\d*)([\\' + f.ooo[i].join('\\') + '])(\\d+\\.?\\d*)'
+      );
       re.lastIndex = 0; // 采取预防措施，重新启动pos
       // 循环时仍然需要计算优先级
       while (re.test(input)) {
         output = operation(RegExp.$1, RegExp.$2, RegExp.$3);
-        if (isNaN(output) || !isFinite(output)) { return output; } // 如果不是数字就退出
+        if (isNaN(output) || !isFinite(output)) {
+          return output;
+        } // 如果不是数字就退出
         input = input.replace(re, output);
       }
     }
@@ -278,7 +270,7 @@ module.exports = {
           // eslint-disable-next-line no-unreachable
           break;
         case f.div:
-          result = (n1 / n2) / (t2 / t1);
+          result = n1 / n2 / (t2 / t1);
           return result;
           // eslint-disable-next-line no-unreachable
           break;
@@ -293,5 +285,23 @@ module.exports = {
           break;
       }
     }
+  },
+  /**
+   * 获取薯片平台下的所有节点
+   */
+  getCripsInstance() {
+    const { ctx, app } = this;
+    const upInstances = [];
+    if (app.eurekaInstances) {
+      const instances = app.eurekaInstances['crisps-app-wap-bff-api'];
+      if (instances && instances.length > 0) {
+        for (const i of instances) {
+          if (i.status.toUpperCase() === 'UP') {
+            upInstances.push(i);
+          }
+        }
+      }
+    }
+    return upInstances;
   },
 };

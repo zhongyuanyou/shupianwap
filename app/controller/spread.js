@@ -156,14 +156,20 @@ class SpreadController extends Controller {
     //   app.config.apiClient.APPID[6],
     //   algorithmApi.planerSpread
     // );
-    const plannerRes = await service.curl.curlPost(
-      'http://192.168.254.224:30108/planner/recommend',
-      {
-        designerIds: '3879830#202254#9635931#10862#10970',
-        formatType: ctx.query.pageCode === 'extendAccount' ? '会计' : '工商',
-        maxsize: 10,
-      }
-    );
+    let plannerRes;
+    try {
+      plannerRes = await service.curl.curlPost(
+        'http://192.168.254.224:30108/planner/recommend',
+        {
+          designerIds: '3879830#202254#9635931#10862#10970',
+          formatType: ctx.query.pageCode === 'extendAccount' ? '会计' : '工商',
+          maxsize: 10,
+          timeout: 1000,
+        }
+      );
+    } catch (err) {
+      plannerRes = null;
+    }
     let planlerList = [];
     if (
       plannerRes.data.code === 0 ||

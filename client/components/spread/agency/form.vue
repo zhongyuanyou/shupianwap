@@ -193,6 +193,7 @@ export default {
       // 1、验证表单数据格式
       const _tel = this.telephone
       const _code = this.sms
+      const _company = this.company
       const _telReg = /^1[3,4,5,6,7,8,9]\d{9}$/
       if (!_tel) {
         Toast('请输入电话号码')
@@ -206,8 +207,8 @@ export default {
         Toast('请输入验证码')
         return
       }
-      if (this.select === '选择税务类型') {
-        Toast('请选择税务类型')
+      if (!_company) {
+        Toast('请输入公司名称')
         return
       }
       // 2、整合表单数据
@@ -235,6 +236,8 @@ export default {
           console.log(res)
           this.telephone = ''
           this.sms = ''
+          this.countdown = -1
+          this.company = ''
           window.getTrackRow('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
@@ -244,7 +247,9 @@ export default {
           console.log(params)
           Toast('提交成功，请注意接听电话')
         } else {
-          console.log(res)
+          Toast(res.msg)
+          this.sms = ''
+          this.countdown = -1
         }
       })
     },

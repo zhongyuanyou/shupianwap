@@ -95,7 +95,9 @@ export default {
   data() {
     return {}
   },
-  created() {},
+  created() {
+    const a = this.servicelist
+  },
   methods: {
     plannerIm(planner) {
       const guiHuaShi = planner

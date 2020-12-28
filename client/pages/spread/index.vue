@@ -114,7 +114,7 @@ export default {
                     productDetail: {
                       id: 'extendBussineHomeHot1',
                       name: '',
-                      referencePrice: 4500,
+                      referencePrice: 1800,
                       operating: {
                         showName: '食品经营许可证',
                         slogan: '食品行业所需资质官方保障',
@@ -851,7 +851,7 @@ export default {
       },
       // @--埋点数据
       guiHuaShiListMd: {
-        title: '',
+        title: '企服规划师',
         imName: '',
         telName: '',
       },
