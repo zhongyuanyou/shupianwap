@@ -43,7 +43,7 @@
       <!--S 二级分类区域-->
       <section ref="r_list" class="category_con_rt">
         <div>
-          <div class="swiper" v-if="recommendData.length">
+          <div v-if="recommendData.length" class="swiper">
             <div class="proList swiper_con">
               <sp-swipe
                 class="my-swipe"
