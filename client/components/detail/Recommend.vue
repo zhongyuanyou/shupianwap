@@ -20,30 +20,37 @@
     </div>
     <sp-swipe :loop="false" :width="315.5" :show-indicators="false">
       <sp-swipe-item v-for="item in similarRecommendData" :key="item.id">
-        <div class="swipe_item_con">
-          <div class="swipe_item_con_img">
-            <sp-image
-              width="1.6rem"
-              height="1.6rem"
-              fit="cover"
-              src="https://img.yzcdn.cn/vant/cat.jpeg"
-            />
-          </div>
-          <div class="swipe_item_con_rt">
-            <p class="title">{{ item.name }}</p>
-            <div class="label">
-              <span v-for="(lItem, index) in item.fieldList" :key="index">{{
-                `${lItem.fieldValueList ? lItem.fieldValueList[0] : ''}${
-                  index === item.fieldList.length - 1 ? '' : '|'
-                }`
-              }}</span>
+        <nuxt-link
+          :to="{
+            path: '/detail/transactionDetails',
+            query: { type: detailType, productId: item.id },
+          }"
+        >
+          <div class="swipe_item_con">
+            <div class="swipe_item_con_img">
+              <sp-image
+                width="1.6rem"
+                height="1.6rem"
+                fit="cover"
+                src="https://img.yzcdn.cn/vant/cat.jpeg"
+              />
             </div>
-            <div class="swipe_item_con_rt_bot">
-              <p class="money">{{ item.platformPrice }}元</p>
-              <!--              <p class="province">四川省</p>-->
+            <div class="swipe_item_con_rt">
+              <p class="title">{{ item.name }}</p>
+              <div class="label">
+                <span v-for="(lItem, index) in item.fieldList" :key="index">{{
+                  `${lItem.fieldValueList ? lItem.fieldValueList[0] : ''}${
+                    index === item.fieldList.length - 1 ? '' : '|'
+                  }`
+                }}</span>
+              </div>
+              <div class="swipe_item_con_rt_bot">
+                <p class="money">{{ item.platformPrice }}元</p>
+                <!-- <p class="province">四川省</p>-->
+              </div>
             </div>
           </div>
-        </div>
+        </nuxt-link>
       </sp-swipe-item>
     </sp-swipe>
   </div>

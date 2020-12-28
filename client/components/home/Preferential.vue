@@ -17,14 +17,14 @@
             href="javascript:void(0)"
             @click="adJumpHandleMixin(item.materialList[0])"
           >
-            <div class="label-num">
+            <!-- <div class="label-num">
               <span class="label">抢购中</span>
               <span class="num">缺字段人购买</span>
-            </div>
-            <div class="text-content">
+            </div> -->
+            <!-- <div class="text-content">
               <strong>{{ item.materialList[0].materialName }}</strong>
               <p>{{ item.materialList[0].materialDescription }}</p>
-            </div>
+            </div> -->
             <img v-lazy="item.materialList[0].materialUrl" alt="" />
           </a>
         </li>
@@ -96,16 +96,16 @@ export default {
           display: flex;
           width: 100%;
           height: 100%;
-          &::after {
-            content: '';
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), #000000);
-            z-index: 1;
-          }
+          //   &::after {
+          //     content: '';
+          //     width: 100%;
+          //     height: 100%;
+          //     position: absolute;
+          //     left: 0;
+          //     top: 0;
+          //     background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), #000000);
+          //     z-index: 1;
+          //   }
           .label-num {
             display: block;
             margin: 12px 0 0 12px;

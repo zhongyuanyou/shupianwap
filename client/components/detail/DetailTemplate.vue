@@ -26,14 +26,8 @@
     <Basic :tc-product-detail-data="{ tcProductDetailData }">
       <div slot="basic">
         <div class="company_info">
-          <div
-            v-for="(baseDataList, idx) in tcProductDetailData.fieldList"
-            :key="idx"
-            class="item"
-          >
-            {{ baseDataList.fieldName }}：<span>{{
-              baseDataList.fieldValue
-            }}</span>
+          <div v-for="(baseDataList, idx) in fieldList" :key="idx" class="item">
+            {{ baseDataList.listName }}：<span>{{ baseDataList.listVal }}</span>
           </div>
         </div>
       </div>
@@ -41,7 +35,7 @@
     <!--E 第二板块 基本信息-->
     <slot name="qualification"></slot>
     <!--S 第三板块 评估报告-->
-    <Report />
+    <Report :class-code-dict="tcProductDetailData.dictCode" />
     <!--E 第三板块 评估报告-->
     <!--S 第四板块 交易服务保障承诺-->
     <Commitment :info="{ ...info }" />
@@ -53,10 +47,17 @@
     <Dynamic :info="{ ...info }" />
     <!--E 第六板块 商品动态-->
     <!--S 第七板块 常见问题-->
-    <Question :detail-type="detailType" :info="{ ...info }" />
+    <Question
+      :class-code-dict="tcProductDetailData.dictCode"
+      :info="{ ...info }"
+    />
     <!--E 第七板块 常见问题-->
     <!--S 第八板块 成功案例-->
-    <Case :detail-type="detailType" :info="{ ...info }" />
+    <Case
+      :class-code-dict="tcProductDetailData.dictCode"
+      :detail-type="detailType"
+      :info="{ ...info }"
+    />
     <!--E 第八板块 成功案例-->
     <!--S 第九板块 同类推荐-->
     <Recommend
@@ -104,6 +105,7 @@ import Recommend from '~/components/detail/Recommend'
 import Need from '~/components/detail/Need'
 import commodityConsultation from '@/components/common/commodityConsultation/commodityConsultation'
 import getUserSign from '~/utils/fingerprint'
+import tcBasicData from '~/mock/tcBasicData'
 import { recommendApi } from '~/api'
 export default {
   name: 'DetailTemplate',
@@ -138,7 +140,7 @@ export default {
     detailType: {
       type: String,
       default: () => {
-        return this.$route.query.type ? this.$route.query.type : null
+        return null
       },
     },
     tcProductDetailData: {
@@ -176,13 +178,21 @@ export default {
       productCount: 0,
       recommendProduct: [],
       similarRecommend: [], // 同类推荐产品
+      tcBasicData, // 基本信息的key
+      fieldList: [],
     }
+  },
+  computed: {
+    city() {
+      return this.$store.state.city.currentCity
+    },
   },
   mounted() {
     // 获取推荐产品
     this.getrecommendProduct()
     // 获取同类推荐
     this.getSimilarRecommend()
+    this.fieldListFun() // 加载基本信息
   },
   methods: {
     scrollHandle({ scrollTop }) {
@@ -215,7 +225,7 @@ export default {
             userId: this.$cookies.get('userId'), // 用户id
             deviceId: this.deviceId, // 设备ID
             formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
-            areaCode: '2', // 区域编码
+            areaCode: this.city.code, // 区域编码
             sceneId: 'app-jycpxq-02', // 场景ID
             productId: this.tcProductDetailData.id, // 产品ID（产品详情页必传）
             productType: 'FL20201116000003', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
@@ -263,7 +273,7 @@ export default {
             userId: this.$cookies.get('userId'), // 用户id
             deviceId: this.deviceId, // 设备ID
             formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
-            areaCode: '2', // 区域编码
+            areaCode: this.city.code, // 区域编码
             sceneId: 'app-jycpxq-01', // 场景ID
             productId: this.tcProductDetailData.id, // 产品ID（产品详情页必传）
             productType: 'FL20201116000003', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
@@ -277,13 +287,36 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             this.similarRecommend = res.data.records
-            console.log(this.similarRecommend)
           }
         })
         .catch((err) => {
           this.loading = false
           console.log(err)
         })
+    },
+    fieldListFun() {
+      const fieldList = {}
+      this.tcProductDetailData.fieldList.forEach((list) => {
+        fieldList[list.fieldCode] = list
+      })
+      const tcBasicDataArr = [...tcBasicData[this.tcProductDetailData.dictCode]]
+      tcBasicDataArr.forEach((item, idx) => {
+        // 有翻译的值,显示翻译的值
+        if (fieldList[item.listKey] && fieldList[item.listKey].fieldValueCn) {
+          tcBasicDataArr[idx].listVal = fieldList[item.listKey].fieldValueCn
+        } else if (
+          fieldList[item.listKey] &&
+          fieldList[item.listKey].fieldValue
+        ) {
+          // 没有翻译的值,使用原始值
+          tcBasicDataArr[idx].listVal = fieldList[item.listKey].fieldValue
+        } else {
+          // 数据不存在,使用'/'代替
+          tcBasicDataArr[idx].listVal = '/'
+        }
+      })
+      console.log(tcBasicDataArr)
+      this.fieldList = tcBasicDataArr
     },
   },
 }

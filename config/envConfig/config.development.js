@@ -19,7 +19,7 @@ function getIPAdress() {
     }
   }
 }
-module.exports = (appInfo) => {
+module.exports = appInfo => {
   /**
    * built-in config
    * @type {Egg.EggAppConfig}
@@ -35,7 +35,7 @@ module.exports = (appInfo) => {
     },
   };
   // 在此处添加中间件配置
-  config.middleware = ['nuxt', 'gzip', 'errFilter', 'eureka', 'dggCache'];
+  config.middleware = [ 'nuxt', 'gzip', 'errFilter', 'eureka', 'dggCache' ];
   config.gzip = {
     threshold: 1024, // 小于 1k 的响应体不压缩
   };
@@ -126,7 +126,7 @@ module.exports = (appInfo) => {
         name: 'MyOwn',
       },
       metadata: {
-        version: '2.2',
+        version: '3.0',
       },
     },
     requestMiddleware: (requestOpts, done) => {
