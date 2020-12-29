@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-29 11:58:45
+ * @LastEditTime: 2020-12-29 14:36:36
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -102,12 +102,6 @@ import clone from '@/utils/clone'
 import fingerprint from '@/utils/fingerprint'
 
 import { shoppingCar } from '@/api'
-
-// 资源服务 与 查询相关列表 classCode  对应关系， key(资源服务的) ： value(相关列表查询的)
-const RESOURCE_ITEM_CODE_MAP = {
-  FL20201214095005: 'FL20201202065046', // 400电话
-  FL20201211085087: 'FL20201211085087', // 注册地址
-}
 
 export default {
   name: 'GoodsItem',
@@ -307,13 +301,8 @@ export default {
           this.changeSkuCount(data)
           break
         case 'resourceServiceSelect': // sku弹出框里资源服务
-          // this.selecteResourceService(data)
-
           this.$emit('operation', {
-            data: {
-              ...data,
-              classCode: RESOURCE_ITEM_CODE_MAP[data.classCode],
-            },
+            data,
             type,
             cartId,
             index: this.index,
@@ -469,10 +458,8 @@ export default {
 
     // 资源服务的选择
     selecteResourceService(data = {}) {
-      const { id, code, name, goodsPrice } = data
-      const classCode = Object.keys(RESOURCE_ITEM_CODE_MAP).find(
-        (item) => RESOURCE_ITEM_CODE_MAP[item] === data.classCode
-      )
+      const { id, name, goodsPrice, classCode } = data
+
       if (!classCode) return
       const { serviceResourceList = [] } = this.tempGoods
       const matchedItem = this.skuData.serviceGoodsClassList.find(

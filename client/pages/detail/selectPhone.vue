@@ -61,6 +61,7 @@
                 : ''
             "
             :options="formatSortOption"
+            :disabled="!formatSortOption || !formatSortOption.length"
             @change="handleSortChange"
           />
         </sp-dropdown-menu>
@@ -418,10 +419,9 @@ export default {
           }
         )
         // console.log(data)
-        const dataObj = JSON.parse(data)
-        console.log(dataObj)
-        this.sortOption = dataObj['CRISPS-C-CONDITION-400-PX']
-        this.priceOption = dataObj['CRISPS-C-CONDITION-400-JG']
+        console.log(data)
+        this.sortOption = data['CRISPS-C-CONDITION-400-PX']
+        this.priceOption = data['CRISPS-C-CONDITION-400-JG']
         return data || {}
       } catch (error) {
         console.error('getFilterOption:', error)

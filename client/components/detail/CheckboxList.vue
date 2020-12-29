@@ -11,7 +11,16 @@
           @click="toggle(index)"
         >
           <template #right-icon>
-            <sp-checkbox ref="checkboxes" :name="item" />
+            <sp-checkbox ref="checkboxes" :name="item">
+              <template #icon="{ checked }">
+                <sp-icon
+                  class-prefix="spiconfont"
+                  size="0.28rem"
+                  :name="checked ? 'login_ic_radio_s' : 'login_ic_radio_n'"
+                  :color="checked ? '#4974F5' : '#CCCCCC'"
+                />
+              </template>
+            </sp-checkbox>
           </template>
         </sp-cell>
       </sp-cell-group>
@@ -30,6 +39,7 @@ import {
   Cell,
   CellGroup,
   Button,
+  Icon,
 } from '@chipspc/vant-dgg'
 export default {
   components: {
@@ -38,6 +48,7 @@ export default {
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
     [Button.name]: Button,
+    [Icon.name]: Icon,
   },
   props: {
     list: {
