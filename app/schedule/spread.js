@@ -53,16 +53,13 @@ async function setData(ctx) {
     const obj = pageCodes[i];
     const cacheKeyToday = ctx.helper.cacheKey(obj.code + 'today');
     const cacheKeyTotal = ctx.helper.cacheKey(obj.code + 'total');
-    if (Hours >= 0 && Hours < 9) {
-      // 凌晨至早上9点不更新累计数据
-      if (Hours === 0) {
-        // 凌晨初始化今日数据
-        ctx.service.redis.set(
-          cacheKeyToday,
-          obj.today,
-          ctx.app.config.redisCacheTime
-        );
-      }
+    if (Hours === 0) {
+      // 凌晨初始化今日数据
+      ctx.service.redis.set(
+        cacheKeyToday,
+        obj.today,
+        ctx.app.config.redisCacheTime
+      );
     } else {
       let toDayNum = await ctx.service.redis.get(cacheKeyToday);
       if (toDayNum) {
@@ -75,8 +72,7 @@ async function setData(ctx) {
       );
       let totalNum = await ctx.service.redis.get(cacheKeyTotal);
       if (totalNum) {
-        // totalNum = Number(totalNum) + obj.stepNum;
-        totalNum = obj.total;
+        totalNum = Number(totalNum) + obj.stepNum;
       } else totalNum = obj.total;
       ctx.service.redis.set(
         cacheKeyTotal,
