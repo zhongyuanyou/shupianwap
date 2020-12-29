@@ -35,7 +35,6 @@
         <span>免费订阅通知</span>
       </div>
     </div>
-    <sp-toast ref="spToast" />
   </div>
 </template>
 
@@ -43,14 +42,12 @@
 import { Field } from '@chipspc/vant-dgg'
 import { auth, userinfoApi } from '@/api'
 import { checkPhone, checkAuthCode } from '@/utils/check.js'
-import SpToast from '@/components/common/spToast/SpToast'
 import util from '@/utils/spread/util'
 
 export default {
   name: 'Subscribe',
   components: {
     [Field.name]: Field,
-    SpToast,
   },
   props: {
     title: {
@@ -96,17 +93,11 @@ export default {
             this.userInfo = res.data
           } else {
             this.isLogin = false
-            this.$refs.spToast.show({
-              message: '获取用户信息失败',
-              duration: 1000,
-              icon: 'toast_ic_error',
-              forbidClick: true,
-            })
           }
         })
         .catch((err) => {
           console.error(err)
-          this.$refs.spToast.show({
+          this.$spToast.show({
             message: '网络错误，请稍后再试',
             duration: 1000,
             icon: 'toast_ic_error',

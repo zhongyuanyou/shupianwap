@@ -55,9 +55,9 @@ export default {
     },
   },
   mounted() {
-    console.log(this.$el.getBoundingClientRect().top)
-    console.log(this.$el.getBoundingClientRect().height)
-    console.log(document.body.clientHeight)
+    // console.log(this.$el.getBoundingClientRect().top)
+    // console.log(this.$el.getBoundingClientRect().height)
+    // console.log(document.body.clientHeight)
     this.dropdownContentMaxHeight =
       document.body.clientHeight -
       this.$el.getBoundingClientRect().top -
