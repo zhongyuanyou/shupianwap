@@ -41,7 +41,7 @@
         <img :src="$ossImgSet(340, 340, '9vnk3u2qlk80000.png')" alt="" />
       </div>
       <span class="firstSpan">抱歉，未找到相关问题</span>
-      <span class="lastSpan">联系客服</span>
+      <!-- <span class="lastSpan">联系客服</span> -->
     </div>
     <Loading-center v-show="loading" />
   </div>
