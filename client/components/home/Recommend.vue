@@ -35,7 +35,9 @@
                   @click="adJumpHandleMixin(key.materialList[0])"
                 >
                   <img
-                    v-lazy="key.materialList[0].materialUrl"
+                    v-lazy="
+                      key.materialList[0].materialUrl + $ossImgSet(262, 144)
+                    "
                     class="recom-img"
                     alt=""
                   />
