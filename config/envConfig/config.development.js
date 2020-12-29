@@ -102,6 +102,8 @@ module.exports = (appInfo) => {
       // 商户中心
       'merchant-center-manager',
       'cloud-recomd-api', // 算法
+      // 架构中心
+      'tac-external-platform-server', // 第三方系统对接平台API
       'crisps-app-wap-bff-api', //薯片
     ],
   };
@@ -125,7 +127,7 @@ module.exports = (appInfo) => {
         name: 'MyOwn',
       },
       metadata: {
-        version: '3.1',
+        version: '3.8',
       },
     },
     requestMiddleware: (requestOpts, done) => {

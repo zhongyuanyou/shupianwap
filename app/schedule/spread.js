@@ -61,22 +61,29 @@ async function setData(ctx) {
         ctx.service.redis.set(
           cacheKeyToday,
           obj.today,
-          app.config.redisCacheTime
+          ctx.app.config.redisCacheTime
         );
       }
     } else {
       let toDayNum = await ctx.service.redis.get(cacheKeyToday);
       if (toDayNum) {
         toDayNum = Number(toDayNum) + rangeNum;
-        toDayNum = rangeNum;
       } else toDayNum = rangeNum;
-      ctx.service.redis.set(cacheKeyToday, toDayNum, app.config.redisCacheTime);
+      ctx.service.redis.set(
+        cacheKeyToday,
+        toDayNum,
+        ctx.app.config.redisCacheTime
+      );
       let totalNum = await ctx.service.redis.get(cacheKeyTotal);
       if (totalNum) {
-        totalNum = Number(totalNum) + rangeNum;
+        // totalNum = Number(totalNum) + rangeNum;
         totalNum = obj.total;
       } else totalNum = obj.total;
-      ctx.service.redis.set(cacheKeyTotal, totalNum, app.config.redisCacheTime);
+      ctx.service.redis.set(
+        cacheKeyTotal,
+        totalNum,
+        ctx.app.config.redisCacheTime
+      );
     }
   }
 }
@@ -94,7 +101,7 @@ module.exports = (app) => {
         // 启动服务时无法及时获取到节点信息
         setData(ctx);
       } else {
-        if (instance.length > 0 && instance[0].instanceId === localIp) {
+        if (instance[0].instanceId.match(localIp)) {
           setData(ctx);
         }
       }
