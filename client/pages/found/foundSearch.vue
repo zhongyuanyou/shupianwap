@@ -1,7 +1,7 @@
 <template>
   <div class="search">
     <!--S 搜索框-->
-    <FoundHeader @inputChange="inputChange" />
+    <FoundHeader @inputChange="inputChange" @handelKeydown="handelKeydown" />
     <!--E 搜索框-->
     <!--S 内容-->
     <div class="search_con">
@@ -82,6 +82,9 @@ export default {
       // 清除数据
       this.$cookies.remove('foundHistory')
       this.historySearch = []
+    },
+    handelKeydown(data) {
+      this.handleClick(data)
     },
   },
 }

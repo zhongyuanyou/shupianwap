@@ -100,6 +100,7 @@
     />
     <!--E 弹框-->
     <sp-toast ref="spToast"></sp-toast>
+    <Loading-center v-show="loading" />
   </div>
 </template>
 
@@ -117,6 +118,7 @@ import {
 import { mapState } from 'vuex'
 import { userinfoApi } from '@/api'
 import SpToast from '@/components/common/spToast/SpToast'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'Index',
   components: {
@@ -129,6 +131,7 @@ export default {
     [Toast.name]: Toast,
     [Sticky.name]: Sticky,
     SpToast,
+    LoadingCenter,
   },
   data() {
     return {
@@ -145,6 +148,7 @@ export default {
       },
       addressId: '', // 被选中的收货地址id
       defaultStatus: false,
+      loading: false, // 加载效果状态
     }
   },
   computed: {
@@ -209,13 +213,19 @@ export default {
     },
     async getShippingAddressList() {
       // 获取收货地址列表
-      const params = {
-        // userId: this.userId,
-        userId: this.userId,
-      }
-      const res = await this.$axios.get(userinfoApi.addressList, { params })
-      if (res.code === 200) {
-        this.addressList = res.data
+      this.loading = true
+      try {
+        const params = {
+          // userId: this.userId,
+          userId: this.userId,
+        }
+        const res = await this.$axios.get(userinfoApi.addressList, { params })
+        this.loading = false
+        if (res.code === 200) {
+          this.addressList = res.data
+        }
+      } catch (err) {
+        this.loading = false
       }
     },
     async confirm() {
