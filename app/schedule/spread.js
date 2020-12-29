@@ -36,39 +36,35 @@ async function setData(ctx) {
   // * extendAccount 代理记账
   const pageCodes = [
     {
-      today: 0,
+      today: 118,
       total: 1100,
-      code: 'extendBankServer',
-      ratio: 0.5, // 增长系数
+      code: 'extendTaxPlanning',
+      stepNum: 11,
     },
     {
-      today: 0,
-      total: 26000,
+      today: 346,
+      total: 350829,
       code: 'extendAccount',
-      ratio: 2,
+      stepNum: 12,
     },
   ];
   for (let i = 0; i < pageCodes.length; i++) {
-    const rangeNum = Math.ceil((Math.random() * 5 + 1) * pageCodes[i].ratio);
     const Hours = new Date().getHours();
     const obj = pageCodes[i];
     const cacheKeyToday = ctx.helper.cacheKey(obj.code + 'today');
     const cacheKeyTotal = ctx.helper.cacheKey(obj.code + 'total');
-    if (Hours >= 0 && Hours < 9) {
-      // 凌晨至早上9点不更新累计数据
-      if (Hours === 0) {
-        // 凌晨初始化今日数据
-        ctx.service.redis.set(
-          cacheKeyToday,
-          obj.today,
-          ctx.app.config.redisCacheTime
-        );
-      }
+    if (Hours === 0) {
+      // 凌晨初始化今日数据
+      ctx.service.redis.set(
+        cacheKeyToday,
+        obj.today,
+        ctx.app.config.redisCacheTime
+      );
     } else {
       let toDayNum = await ctx.service.redis.get(cacheKeyToday);
       if (toDayNum) {
-        toDayNum = Number(toDayNum) + rangeNum;
-      } else toDayNum = rangeNum;
+        toDayNum = Number(toDayNum) + obj.stepNum;
+      } else toDayNum = obj.today;
       ctx.service.redis.set(
         cacheKeyToday,
         toDayNum,
@@ -76,8 +72,7 @@ async function setData(ctx) {
       );
       let totalNum = await ctx.service.redis.get(cacheKeyTotal);
       if (totalNum) {
-        // totalNum = Number(totalNum) + rangeNum;
-        totalNum = obj.total;
+        totalNum = Number(totalNum) + obj.stepNum;
       } else totalNum = obj.total;
       ctx.service.redis.set(
         cacheKeyTotal,
@@ -90,7 +85,7 @@ async function setData(ctx) {
 module.exports = (app) => {
   return {
     schedule: {
-      interval: '10s',
+      interval: '1h',
       type: 'worker',
       immediate: true,
     },
