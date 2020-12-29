@@ -11,7 +11,12 @@
     <Header title="我要吐槽">
       <template #left>
         <div @click="back">
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
         </div>
       </template>
       <template #right>
@@ -225,11 +230,15 @@ export default {
   /deep/.sp-top-nav-bar__right {
     font-size: 28px;
   }
+  .back_icon {
+    margin-left: 40px;
+  }
   .process {
     font-size: 28px;
     font-family: PingFang SC;
     font-weight: bold;
     color: #1a1a1a;
+    margin-right: 40px;
   }
   &-box {
     padding: 0px 40px 30px 40px;

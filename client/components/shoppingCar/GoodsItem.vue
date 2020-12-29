@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 16:08:59
+ * @LastEditTime: 2020-12-29 11:58:45
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -77,6 +77,12 @@
       <span class="division-line">·</span>
       <span class="goods-item--disable-tip__en">off shelf</span>
     </div>
+    <!--S loding-->
+    <LoadingCenter v-show="loading" />
+    <!--E loding-->
+    <!--S 中间轻提示-->
+    <SpToast ref="spToast" />
+    <!--E 中间轻提示-->
   </div>
 </template>
 
@@ -89,6 +95,8 @@ import MainGoodsItem from './MainGoodsItem'
 import ViceGoodsItem from './ViceGoodsItem'
 import SkuService from '@/components/common/sku/SkuService'
 import AsyncCheckbox from '@/components/common/checkbox/AsyncCheckbox'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import SpToast from '@/components/common/spToast/SpToast'
 
 import clone from '@/utils/clone'
 import fingerprint from '@/utils/fingerprint'
@@ -111,6 +119,8 @@ export default {
     ViceGoodsItem,
     SkuService,
     AsyncCheckbox,
+    LoadingCenter,
+    SpToast,
   },
   props: {
     commodityData: {
@@ -127,6 +137,7 @@ export default {
   data() {
     return {
       show: false,
+      loading: false,
       skuData: {
         productId: '',
         name: '',
@@ -310,9 +321,9 @@ export default {
           break
       }
     },
-    openSku() {
+    async openSku() {
       if (!this.skuData.skuAttrList || !this.skuData.skuAttrList.length) {
-        this.getSkuData()
+        await this.getSkuData()
       }
       const {
         skuId,
@@ -508,9 +519,10 @@ export default {
     // 第一次获取sku属性
     async getSkuData() {
       try {
+        this.loading = true
         const config = await this.uPGetConfig()
-        const productId = this.commodityData.productId || '607991345402771561' // '607991345402771561'
-        const attrValKey = this.commodityData.skuAttrKey || 'SXZ20201211050014' // SXZ20201211050014
+        const productId = this.commodityData.productId // '607991345402771561'
+        const attrValKey = this.commodityData.skuAttrKey // SXZ20201211050014
         const productPromise = shoppingCar.productDetail({ productId }, config)
         const skuPromise = this.getGoodsDetail(attrValKey)
         const [productDetail = {}, skuDetail = {}] = await Promise.all([
@@ -540,10 +552,18 @@ export default {
           ...skuDetail,
         }
         this.skuData = data
+        this.loading = false
         console.log(data)
         return data
       } catch (error) {
         console.error('getList:', error)
+        this.loading = false
+        this.$refs.spToast.show({
+          message: '获取sku失败',
+          duration: 1000,
+          forbidClick: false,
+          icon: 'toast_ic_remind',
+        })
         return Promise.reject(error)
       }
     },
@@ -697,6 +717,11 @@ export default {
     &-line--top {
       padding: 32px 0;
     }
+    /deep/&-line--top.sp-hairline--top {
+      &::after {
+        border-top-style: dashed !important;
+      }
+    }
   }
   &__operation {
     display: flex;
@@ -710,11 +735,6 @@ export default {
     &-delete {
       width: 120px;
       height: 100%;
-    }
-  }
-  /deep/.sp-hairline--top {
-    &::after {
-      border-top-style: dashed !important;
     }
   }
 }

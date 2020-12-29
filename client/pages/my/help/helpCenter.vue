@@ -3,7 +3,12 @@
     <Header title="帮助中心">
       <template #left>
         <div @click="back">
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
         </div>
       </template>
     </Header>
@@ -116,6 +121,9 @@ export default {
 </script>
 <style lang="less" scoped>
 .wrapper {
+  .back_icon {
+    margin-left: 40px;
+  }
   .custom-title {
     .textOverflow(1);
   }

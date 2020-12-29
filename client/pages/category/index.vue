@@ -7,12 +7,7 @@
       </div>
       <div class="category_header_con">
         <my-icon name="sear_ic_sear" size="0.28rem" color="#999" />
-        <input
-          v-model="keywords"
-          type="text"
-          placeholder="请输入搜索内容"
-          @input="inputChange"
-        />
+        <div class="input_con">请输入搜索内容</div>
       </div>
     </div>
     <!--E 头部-->
@@ -121,7 +116,6 @@ export default {
     this.getCategoryList()
   },
   methods: {
-    inputChange() {},
     _initScroll() {
       // 初始化滚动事件
       this.left = new Better(this.$refs.l_list, {
@@ -237,19 +231,18 @@ export default {
       box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
       border-radius: 8px;
       padding: 0 24px;
-      input {
+      .input_con {
         width: 100%;
         height: 92px;
-        text-indent: 15px;
         border: none;
         font-size: 30px;
         color: #1a1a1a;
         font-weight: bold;
-        &:focus {
-          outline: none;
-        }
-        //去除点击时候的背景色
-        -webkit-tap-highlight-color: rgba(255, 0, 0, 0);
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: row;
+        padding-left: 15px;
       }
     }
   }
