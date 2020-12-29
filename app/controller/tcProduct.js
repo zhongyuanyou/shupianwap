@@ -82,7 +82,14 @@ class TcProductController extends Controller {
       // 获取到当前分类的数据字典
       const currentDict = dictCodeList.filter(dict => dict.ext1 === data.classCodeLevelList[0]);
       // 根据获取到的数据字典,匹配到当前分类对应的数据
-      const baseData = data.fieldList.filter(item => baseDataKeys[currentDict[0].code].includes(item.fieldCode));
+      const baseData = data.fieldList.filter(item => {
+        // 当前是资质时,获取到filedList中的资质信息,单独提出
+        if (currentDict[0].code === 'CATE-JYZY-ZZ' && item.fieldCode === 'qualification_type') {
+          data.qftDetails = item;
+          return false;
+        }
+        return baseDataKeys[currentDict[0].code].includes(item.fieldCode);
+      });
       // 过滤好的交易产品属性
       data.fieldList = baseData;
       // 当前对应的数据字典信息

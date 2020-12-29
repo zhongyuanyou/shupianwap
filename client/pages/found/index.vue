@@ -70,6 +70,18 @@ export default {
       categoryCode: '', // code码
     }
   },
+  watch: {
+    activeTab(newVal) {
+      this.$cookies.set('activeTab', newVal)
+    },
+  },
+  created() {
+    if (process.client) {
+      this.activeTab = this.$cookies.get('activeTab')
+        ? this.$cookies.get('activeTab')
+        : 0
+    }
+  },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
