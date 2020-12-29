@@ -55,7 +55,7 @@ export default {
   methods: {
     priceRest(index = 0) {
       if (!this.goodsData.platformPrice) return 0
-      const isFlot = this.goodsData.platformPrice.indexOf('1')
+      const isFlot = this.goodsData.platformPrice.indexOf('.')
       if (isFlot !== -1) {
         return this.goodsData.platformPrice.split('.')[index]
       }

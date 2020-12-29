@@ -454,8 +454,11 @@ class homeController extends Controller {
             id: item.id,
             name: item.name,
             type: item.classCodeLevelList[0] || params.formatId,
-            goodsPrice: item.goodsPrice,
-            platformPrice: item.platformPrice,
+            goodsPrice: ctx.helper.priceFixed(`${item.goodsPrice}/ 100`, 2), // 处理价格
+            platformPrice: ctx.helper.priceFixed(
+              `${item.platformPrice}/ 100`,
+              2
+            ), // 处理价格
             fieldList: attrArr,
           });
         });

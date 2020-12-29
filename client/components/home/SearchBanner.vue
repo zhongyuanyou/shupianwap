@@ -8,7 +8,12 @@
       href="javascript:void(0)"
       @click="adJumpHandleMixin(fiexdBannerData[0].materialList[0])"
     >
-      <img :src="fiexdBannerData[0].materialList[0].materialUrl" alt="" />
+      <img
+        :src="
+          fiexdBannerData[0].materialList[0].materialUrl + $ossImgSet(750, 552)
+        "
+        alt=""
+      />
     </a>
     <sp-sticky @scroll="searchHandle">
       <Search
