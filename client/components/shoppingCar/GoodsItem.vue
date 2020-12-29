@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 16:08:59
+ * @LastEditTime: 2020-12-29 10:54:02
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -697,6 +697,11 @@ export default {
     &-line--top {
       padding: 32px 0;
     }
+    /deep/&-line--top.sp-hairline--top {
+      &::after {
+        border-top-style: dashed !important;
+      }
+    }
   }
   &__operation {
     display: flex;
@@ -710,11 +715,6 @@ export default {
     &-delete {
       width: 120px;
       height: 100%;
-    }
-  }
-  /deep/.sp-hairline--top {
-    &::after {
-      border-top-style: dashed !important;
     }
   }
 }

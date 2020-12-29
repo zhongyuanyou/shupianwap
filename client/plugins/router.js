@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-02-21 04:16:27
- * @LastEditTime: 2020-12-23 14:24:39
+ * @LastEditTime: 2020-12-29 09:51:04
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /chips-wap/client/plugins/router.js
@@ -34,6 +34,7 @@ export default ({ app, store }) => {
           if (res.code === 200) {
             try {
               const userInfo = JSON.parse(res.data)
+              console.log('来自app的userInfo：', userInfo)
               if (userInfo && userInfo.userId && userInfo.token) {
                 store.commit('user/SET_USER', userInfo)
               }
