@@ -70,6 +70,11 @@ export default {
       categoryCode: '', // code码
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   watch: {
     activeTab(newVal) {
       this.$cookies.set('activeTab', newVal)
@@ -81,11 +86,6 @@ export default {
         ? this.$cookies.get('activeTab')
         : 0
     }
-  },
-  computed: {
-    ...mapState({
-      isInApp: (state) => state.app.isInApp,
-    }),
   },
   mounted() {
     this.information_class =
