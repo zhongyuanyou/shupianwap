@@ -400,7 +400,7 @@ export default {
       const res = await $axios.get(spreadApi.list, {
         params: { pageCode: type },
       })
-      console.log(`Spread.Api 工商变更 : ${res.code} - ${res.message}`)
+      // console.log(`Spread.Api 工商变更 : ${res.code} - ${res.message}`)
       if (res.code === 200) {
         return {
           result: res,

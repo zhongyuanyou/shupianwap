@@ -7,7 +7,7 @@
           v-md-map
           v-md:webClick
           href="javascript:;"
-          data-name="needlist[index]"
+          :data-name="needlist[index]"
           @click="
             () => {
               $parent.openIM(url)

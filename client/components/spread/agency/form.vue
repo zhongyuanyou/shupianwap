@@ -19,8 +19,9 @@
           v-for="(item, index) in LinesScope"
           :key="index"
           v-md-map
+          v-md:WebClick
           :class="[actived == index + 1 ? 'isactive' : '']"
-          :data-name="`代理记账表单${item.scope}`"
+          :data-name="`代理记账表单_${item.scope}`"
           data-form_type="咨询表单"
           @click="selected(item.code)"
         >
