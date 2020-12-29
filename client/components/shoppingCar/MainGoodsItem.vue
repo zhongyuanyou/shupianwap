@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 15:56:57
+ * @LastEditTime: 2020-12-29 16:17:03
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/MainGoodsItem.vue
 -->
@@ -45,6 +45,8 @@
           :max="!mainData.numFlag && mainData.maxNum ? mainData.maxNum : 99"
           :async-change="true"
           @change="handleCountChange"
+          @focus="handleCountFoucs"
+          @blur="handleCountBlur"
         />
       </div>
       <div v-if="mainData.addServiceList.length" class="goods-service">
@@ -103,15 +105,26 @@ export default {
     return {
       checked: false,
       goodsCount: 1,
+      countStatus: 'blur', // foucs
     }
   },
   computed: {},
   watch: {
-    'mainData.goodsNumber': {
+    // 'mainData.goodsNumber': {
+    //   handler(newVal, oldVal) {
+    //     console.log('goodsNumber newVal:', newVal)
+    //     if (newVal === oldVal) return
+    //     this.goodsCount = newVal || 0
+    //   },
+    //   immediate: true,
+    // },
+    mainData: {
       handler(newVal, oldVal) {
-        console.log('goodsNumber newVal:', newVal)
-        if (newVal === oldVal) return
-        this.goodsCount = newVal || 0
+        console.log('mainData newVal:', newVal)
+        const { goodsNumber } = newVal || {}
+        if (goodsNumber !== this.goodsCount) {
+          this.goodsCount = goodsNumber || 0
+        }
       },
       immediate: true,
     },
@@ -127,8 +140,13 @@ export default {
     handleCountChange(value) {
       console.log('handleCountChange value:', value)
       if (this.goodsCount === value) return
-      // TODO异步校验
-      // this.goodsCount = value
+
+      // 聚焦不校验，在失去焦点才校验
+      if (this.countStatus === 'foucs') {
+        this.goodsCount = value
+        return
+      }
+      // 异步校验
       console.log('handleCountChange value:', value)
 
       // 人为修改,通知父组件
@@ -136,6 +154,24 @@ export default {
         type: 'count',
         data: { value },
       })
+    },
+    // 输入框失去焦点
+    handleCountFoucs() {
+      console.log('handleCountFoucs')
+      this.countStatus = 'foucs'
+    },
+
+    // 输入框获取焦点
+    handleCountBlur() {
+      console.log('handleCountBlur')
+      const value = this.goodsCount
+      if (value !== this.mainData.goodsNumber) {
+        this.$emit('operation', {
+          type: 'count',
+          data: { value },
+        })
+      }
+      this.countStatus = 'blur'
     },
   },
 }

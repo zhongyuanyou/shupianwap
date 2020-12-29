@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-02-21 04:16:27
- * @LastEditTime: 2020-12-29 09:51:04
+ * @LastEditTime: 2020-12-29 20:13:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /chips-wap/client/plugins/router.js
@@ -31,15 +31,17 @@ export default ({ app, store }) => {
       if (store.state.app.isInApp && infoList.includes(to.name)) {
         // 若跳转的页面在infoList中，则需要执行app请求用户信息操作
         appHandler.dggGetUserInfo((res) => {
+          console.log('来自app的userInfo res：', res)
           if (res.code === 200) {
             try {
-              const userInfo = JSON.parse(res.data)
+              const userInfo = res.data // JSON.parse(res.data)
               console.log('来自app的userInfo：', userInfo)
               if (userInfo && userInfo.userId && userInfo.token) {
                 store.commit('user/SET_USER', userInfo)
               }
               next()
             } catch (err) {
+              console.error('来自app的userInfo error：', err)
               next()
             }
           }

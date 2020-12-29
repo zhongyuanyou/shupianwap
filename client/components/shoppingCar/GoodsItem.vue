@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-29 14:36:36
+ * @LastEditTime: 2020-12-29 19:46:44
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -165,6 +165,7 @@ export default {
     ...mapState({
       cityCode: (state) => state.city.currentCity.code,
       userInfo: (state) => state.user.userInfo,
+      isInApp: (state) => state.app.isInApp,
     }),
     checked() {
       return !!this.commodityData.shopIsSelected
@@ -489,18 +490,55 @@ export default {
       let reqArea = ''
       let terminalCode = ''
 
-      // TODO 获取当前的运行环境
-      if (this.runEnv === 'app') {
+      // 在app运行环境
+      if (this.isInApp) {
         terminalCode = 'COMDIC_TERMINAL_APP'
+        const devicePromise = this.getAppDeviceInfo()
+        const regionPromise = this.getAppRegion()
+        ;[deviceCode, reqArea] = await Promise.all([
+          devicePromise,
+          regionPromise,
+        ])
       } else {
-        reqArea = this.cityCode
         terminalCode = 'COMDIC_TERMINAL_WAP'
+        reqArea = this.cityCode
         deviceCode = await fingerprint()
-        userId = this.userInfo.userId
       }
+      userId = this.userInfo.userId
       const config = { userId, deviceCode, reqArea, terminalCode }
       this.config = config
       return config
+    },
+
+    // 在app中获取Code
+    getAppDeviceInfo() {
+      return new Promise((resolve, reject) => {
+        this.$appFn.dggDeviceInfo((res) => {
+          console.log('dggDeviceInfo res:', res)
+          const { code, data = {} } = res
+          if (code === 200) {
+            resolve(data['X-Device-Code'])
+            return
+          }
+          reject(res)
+        })
+      })
+    },
+
+    // 获取app当前的站点
+    getAppRegion() {
+      return new Promise((resolve, reject) => {
+        this.$appFn.dggCityCode((res) => {
+          console.log('dggCityCode:', res)
+          const { code, data } = res || {}
+          if (code === 200) {
+            const { adCode } = data
+            resolve(adCode)
+            return
+          }
+          reject(res)
+        })
+      })
     },
 
     // 第一次获取sku属性
@@ -593,7 +631,14 @@ export default {
       let params = {}
       switch (type) {
         case 'updateSkuItem':
-          params = { serviceList, skuAttr, skuId, goodsNumber: value }
+          // 修改sku,默认选中
+          params = {
+            serviceList,
+            skuAttr,
+            skuId,
+            goodsNumber: value,
+            selectFlag: 1,
+          }
           break
       }
       try {

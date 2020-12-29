@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 11:54:19
+ * @LastEditTime: 2020-12-29 17:32:39
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -242,16 +242,15 @@ export default {
         value: matched.sortValue,
       }
       const code = region.name === '区域' ? this.currentCity.code : region.code
-      // const regionDto = {
-      //   codeState: region.name === '区域' ? 2 : 3,
-      //   regions: [code],
-      // }
-      // TODO 测试数据
       const regionDto = {
-        codeState: 1,
-        regions: ['110000'],
+        codeState: region.name === '区域' ? 2 : 3,
+        regions: [code],
       }
-
+      // TODO 测试数据
+      // const regionDto = {
+      //   codeState: 1,
+      //   regions: ['110000'],
+      // }
       return { sort, plannerName: keywords, regionDto }
     },
   },
