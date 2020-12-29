@@ -1,12 +1,17 @@
 <template>
   <div class="detail">
-    <sp-sticky>
-      <sp-top-nav-bar ellipsis title="进度详情">
-        <template #left>
-          <sp-icon name="arrow-left" size="20" @click="back" />
-        </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
+    <Header title="进度详情">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <div v-if="info" class="detail-content">
       <div class="detail-content-complain">
         <div class="detail-content-complain-title">
@@ -67,6 +72,7 @@ import {
   Sticky,
 } from '@chipspc/vant-dgg'
 import { complain } from '~/api'
+import Header from '@/components/common/head/header'
 export default {
   name: 'ComplaintDetail',
   components: {
@@ -76,6 +82,7 @@ export default {
     [Image.name]: Image,
     [ImagePreview.name]: ImagePreview,
     [Sticky.name]: Sticky,
+    Header,
   },
   data() {
     return {
@@ -133,6 +140,9 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  .back_icon {
+    margin-left: 40px;
+  }
   &-content {
     padding: 36px 40px;
     &-complain {
