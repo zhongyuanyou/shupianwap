@@ -5,8 +5,8 @@
     <!--E 搜索-->
     <!--S 内容-->
     <div class="safe_con">
-      <div class="keyword_con">
-        <div class="keyword_con_title">相关新闻</div>
+      <div class="safe_con_con">
+        <div class="safe_con_con_title">相关新闻</div>
         <sp-list
           v-model="loading"
           :finished="finished"
@@ -89,8 +89,6 @@ export default {
 .keyword {
   padding: 0 40px;
   .safe_con {
-    padding-top: constant(safe-area-inset-top);
-    padding-top: env(safe-area-inset-top);
     &_con {
       margin-top: 128px;
       padding-top: 33px;

@@ -1,14 +1,17 @@
 <template>
   <div class="complaintList">
-    <sp-sticky>
-      <sp-top-nav-bar title="反馈进度" ellipsis @on-click-left="back">
-        <template #left>
-          <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-          </div>
-        </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
+    <Header title="反馈进度">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <sp-list
         v-model="loading"
@@ -47,6 +50,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { complain } from '~/api'
+import Header from '@/components/common/head/header'
 export default {
   name: 'ComplaintList',
   components: {
@@ -56,6 +60,7 @@ export default {
     [List.name]: List,
     [Cell.name]: Cell,
     [Sticky.name]: Sticky,
+    Header,
   },
   data() {
     return {
@@ -133,6 +138,9 @@ export default {
 
 <style lang="less" scoped>
 .complaintList {
+  .back_icon {
+    margin-left: 40px;
+  }
   /deep/.sp-cell {
     padding: 32px 40px;
     line-height: auto;

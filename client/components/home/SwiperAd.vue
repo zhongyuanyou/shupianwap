@@ -11,7 +11,10 @@
           class="swiper-box"
           @click="adJumpHandleMixin(item.materialList[0])"
         >
-          <img :src="item.materialList[0].materialUrl" alt="" />
+          <img
+            :src="item.materialList[0].materialUrl + $ossImgSet(750, 230)"
+            alt=""
+          />
         </a>
       </sp-swipe-item>
     </sp-swipe>

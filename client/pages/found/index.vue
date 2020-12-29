@@ -5,6 +5,7 @@
         <sp-work-tabs
           v-model="activeTab"
           mask
+          swipeable
           title-active-color="#222"
           @click="onClickTap"
         >

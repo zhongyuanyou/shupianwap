@@ -109,7 +109,7 @@ export default {
   .slot-left {
     display: flex;
     position: absolute;
-    left: 40px;
+    left: 0;
     top: 50%;
     z-index: 2;
     transform: translateY(-50%);
@@ -128,7 +128,7 @@ export default {
   .slot-right {
     display: flex;
     position: absolute;
-    right: 40px;
+    right: 0;
     top: 50%;
     z-index: 2;
     transform: translateY(-50%);
