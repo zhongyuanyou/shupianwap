@@ -97,7 +97,7 @@ export default {
         })
         .catch((err) => {
           console.error(err)
-          this.$spToast.show({
+          this.$xToast.show({
             message: '网络错误，请稍后再试',
             duration: 1000,
             icon: 'toast_ic_error',

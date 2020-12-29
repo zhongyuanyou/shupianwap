@@ -146,7 +146,7 @@ export default {
     },
     searchToast(message) {
       // 轻提示
-      this.$spToast.show({
+      this.$xToast.show({
         message,
         duration: 1500,
         icon: 'toast_ic_comp',
