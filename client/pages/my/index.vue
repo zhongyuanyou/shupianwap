@@ -132,7 +132,11 @@ export default {
           id: this.userId,
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
-        if (res.code === 200 && res.data !== {}) {
+        if (
+          res.code === 200 &&
+          res.data !== {} &&
+          typeof res.data === 'object'
+        ) {
           this.info = res.data
         } else {
           // 清除用户缓存信息

@@ -16,7 +16,7 @@
     </sp-top-nav-bar>
     <!--E 头部-->
     <!--S 内容-->
-    <div v-if="info" class="information_con">
+    <div class="information_con">
       <div class="information_con_tp">
         <div class="avatar_con" @click="handleClick(1)">
           <sp-uploader
@@ -145,7 +145,14 @@ export default {
       birthShow: false, // 显示生日选择
       area: [], // 地区
       uploader: [],
-      info: null, // 用户信息
+      info: {
+        nickName: '',
+        birthday: '',
+        sex: 0,
+        email: '',
+        province: '',
+        city: '',
+      }, // 用户信息
       isUpdateName: false, // 能否修改昵称
       isUpdateAvatar: false, // 能否修改头像
     }
@@ -171,7 +178,14 @@ export default {
         type: 3,
         value: this.info.sex,
       }
-      await this.$axios.post(userinfoApi.update, params)
+      const res = await this.$axios.post(userinfoApi.update, params)
+      if (res.code === 200) {
+        this.$refs.spToast.show({
+          message: '设置成功',
+          duration: 1500,
+          forbidClick: true,
+        })
+      }
     },
     handleClick(val) {
       if (val === 2) {
@@ -214,7 +228,14 @@ export default {
         type: 5,
         value: `${this.info.province},${this.info.city},船山区`,
       }
-      await this.$axios.post(userinfoApi.update, params)
+      const res = await this.$axios.post(userinfoApi.update, params)
+      if (res.code === 200) {
+        this.$refs.spToast.show({
+          message: '设置成功',
+          duration: 1500,
+          forbidClick: true,
+        })
+      }
     },
     GMTToStr(time) {
       const date = new Date(time)
@@ -238,7 +259,14 @@ export default {
         type: 2,
         value: this.info.birthday,
       }
-      await this.$axios.post(userinfoApi.update, params)
+      const res = await this.$axios.post(userinfoApi.update, params)
+      if (res.code === 200) {
+        this.$refs.spToast.show({
+          message: '设置成功',
+          duration: 1500,
+          forbidClick: true,
+        })
+      }
     },
     onOversize() {},
     async getUserInfo() {
