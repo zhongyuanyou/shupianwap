@@ -136,15 +136,7 @@
 </template>
 
 <script>
-import {
-  Popup,
-  Image,
-  Sku,
-  Stepper,
-  Cell,
-  Button,
-  Icon,
-} from '@chipspc/vant-dgg'
+import { Popup, Image, Stepper, Cell, Button, Icon } from '@chipspc/vant-dgg'
 import SkuServiceRow from './SkuServiceRow'
 import SkuServiceStepper from './SkuServiceStepper'
 
@@ -155,7 +147,6 @@ export default {
   components: {
     [Popup.name]: Popup,
     [Icon.name]: Icon,
-    [Sku.name]: Sku,
     [Button.name]: Button,
     [Image.name]: Image,
     [Stepper.name]: Stepper,
@@ -188,89 +179,21 @@ export default {
   data() {
     return {
       sku: {
-        tree: [
-          {
-            k: '区域',
-            k_s: 's1',
-            k_id: '1',
-            v: [
-              {
-                id: '1',
-                name: '锦江区',
-              },
-              {
-                id: '2',
-                name: '青羊区',
-              },
-              {
-                id: '3',
-                name: '双流区',
-              },
-              {
-                id: '4',
-                name: '成渝立交',
-              },
-              {
-                id: '5',
-                name: '新都区',
-              },
-              {
-                id: '6',
-                name: '成华区',
-              },
-              {
-                id: '7',
-                name: '成都高新区',
-              },
-            ],
-            largeImageMode: true,
-          },
-          {
-            k: '地址情况',
-            k_s: 's2',
-            k_id: '2',
-            v: [
-              {
-                id: '1',
-                name: '有注册地址',
-              },
-              {
-                id: '2',
-                name: '无注册地址',
-              },
-            ],
-          },
-          {
-            k: '极速办理',
-            k_s: 's3',
-            k_id: '3',
-            v: [
-              {
-                id: '1',
-                name: '3天以内完成￥100.00',
-              },
-              {
-                id: '2',
-                name: '5天以内完成￥80.00',
-              },
-              {
-                id: '3',
-                name: '7天以内完成￥60.00',
-              },
-              {
-                id: '4',
-                name: '10天以内完成￥50.00',
-              },
-            ],
-          },
-        ],
-        price: '3.00', // 默认价格（单位元）
+        // tree: [
+        //   {
+        //     k: '区域',
+        //     k_s: 's1',
+        //     k_id: '1',
+        //     v: [
+        //       {
+        //         id: '1',
+        //         name: '锦江区',
+        //       },
+        //     ],
+        //   },
+        // ],
+        // price: '3.00', // 默认价格（单位元）
       },
-      // goods: {
-      //   price: 2,
-      //   title: '测试商品',
-      //   picture: 'https://b.yzcdn.cn/vant/sku/shoes-1.png',
-      // },
     }
   },
   computed: {
