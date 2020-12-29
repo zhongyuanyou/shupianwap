@@ -73,20 +73,21 @@ export default {
     color: #222222;
     flex: 1;
     position: relative;
-    margin-bottom: 102px;
+    margin-bottom: 95px;
     .dropDownContent {
       color: #222222;
-      max-height: 75px;
+      max-height: 80px;
       overflow: hidden;
       text-overflow: ellipsis;
       display: inline-block;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       transition: all 0.3s;
+      position: relative;
     }
     .more-icon-btn {
       position: absolute;
-      bottom: -102px;
+      bottom: -95px;
       width: 233px;
       height: 31px;
       line-height: 31px;

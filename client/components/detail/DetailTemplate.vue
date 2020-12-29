@@ -31,9 +31,6 @@
             :key="idx"
             :base-data-list="baseDataList"
           />
-          <!--          <div v-for="(baseDataList, idx) in fieldList" :key="idx" class="item">-->
-          <!--            <em>{{ baseDataList.listName }}:</em>-->
-          <!--          </div>-->
         </div>
       </div>
     </Basic>
