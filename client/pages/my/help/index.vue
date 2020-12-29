@@ -1,7 +1,7 @@
 <template>
   <div class="help-page">
     <!-- S 头部 -->
-    <Header title="帮助中心">
+    <Header ref="headerRef" title="帮助中心">
       <template #left>
         <div @click="back">
           <my-icon

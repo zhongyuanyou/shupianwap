@@ -10,6 +10,7 @@
         <sp-list
           v-model="loading"
           :finished="finished"
+          offset="0"
           finished-text="没有更多了"
           @load="onLoad"
         >
@@ -67,7 +68,7 @@ export default {
     async onLoad() {
       const page = this.page++
       const params = {
-        keyword: this.keywords,
+        keyword: this.keywords === ' ' ? '' : this.keywords,
         limit: this.limit,
         page,
       }

@@ -5,7 +5,7 @@
       <div class="icon" @click="back">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a" />
       </div>
-      <div class="category_header_con">
+      <div class="category_header_con" @click="goSearch">
         <my-icon name="sear_ic_sear" size="0.28rem" color="#999" />
         <div class="input_con">请输入搜索内容</div>
       </div>
@@ -78,20 +78,24 @@
       </section>
       <!--E 二级分类区域-->
     </div>
+    <Loading-center v-show="loading" />
     <!--E 内容区-->
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Better from 'better-scroll'
 import { Swipe, SwipeItem, Image } from '@chipspc/vant-dgg'
 import { category } from '@/api'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'Index',
   components: {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
     [Image.name]: Image,
+    LoadingCenter,
   },
   data() {
     return {
@@ -107,7 +111,13 @@ export default {
       TabNavList: 0, // 左右联动取值
       flag: true,
       categoryData: [], // 当前点击的分类相关数据
+      loading: false,
     }
+  },
+  computed: {
+    ...mapState({
+      currentCity: (state) => state.city.currentCity,
+    }),
   },
   // created() {
   //   this.getCategoryList()
@@ -169,17 +179,23 @@ export default {
       }, 100)
     },
     async getCategoryList() {
+      this.loading = true
       // 获取产品分类集合
-      const params = {
-        isRecommend: 0,
+      try {
+        const params = {
+          isRecommend: 0,
+        }
+        const data = await category.home({ axios: this.$axios }, params)
+        this.loading = false
+        this.categoryList = data.categoryList
+        this.recommendData = data.recommendData
+        this.$nextTick(() => {
+          this._initScroll()
+          this._getHeight()
+        })
+      } catch (err) {
+        this.loading = false
       }
-      const data = await category.home({ axios: this.$axios }, params)
-      this.categoryList = data.categoryList
-      this.recommendData = data.recommendData
-      this.$nextTick(() => {
-        this._initScroll()
-        this._getHeight()
-      })
     },
     handleItem(item) {
       // 点击每一个二级分类
@@ -188,6 +204,9 @@ export default {
     },
     back() {
       this.$router.back()
+    },
+    goSearch() {
+      this.$router.push('/search')
     },
   },
 }

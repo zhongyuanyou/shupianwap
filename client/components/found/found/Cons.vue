@@ -29,8 +29,10 @@
       <!--S 列表-->
       <div class="con_list">
         <sp-list
+          v-if="infoList.length"
           v-model="loading"
           :finished="finished"
+          offset="0"
           finished-text="没有更多了"
           @load="onLoad"
         >
@@ -43,6 +45,10 @@
             />
           </sp-cell>
         </sp-list>
+        <div v-if="!infoList.length" class="no-data">
+          <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
+          <p>暂无数据</p>
+        </div>
       </div>
     </sp-pull-refresh>
     <!--E 列表-->
@@ -107,6 +113,7 @@ export default {
       page: 2, // 当前页
       infoList: this.list, // 资讯列表
       bannerList: this.banner, // 广告集合
+      code: this.categoryCode,
     }
   },
   computed: {
@@ -120,6 +127,9 @@ export default {
     },
     list(newVal) {
       this.infoList = newVal
+    },
+    categoryCode(newVal) {
+      this.code = newVal
     },
   },
   methods: {
@@ -149,7 +159,7 @@ export default {
       // 上滑加载更多资讯列表
       const page = this.page++
       const params = {
-        categoryCode: this.categoryCode,
+        categoryCode: this.code,
         limit: this.limit,
         page,
       }
@@ -217,6 +227,22 @@ export default {
   }
   &_list {
     margin-top: 40px;
+    .no-data {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      img {
+        width: 340px;
+        height: 340px;
+      }
+      > p {
+        font-size: 30px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #1a1a1a;
+      }
+    }
   }
 }
 </style>
