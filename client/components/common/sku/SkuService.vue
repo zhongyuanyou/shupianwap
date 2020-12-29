@@ -52,7 +52,7 @@
                   :key="resourceService.classCode"
                   class="sku-resource__item"
                   is-link
-                  @click="handleResourceClick(resourceService.classCode)"
+                  @click="handleResourceClick(resourceService)"
                 >
                   <template #title>
                     <span class="sku-resource__item-title"
@@ -178,22 +178,22 @@ export default {
   },
   data() {
     return {
-      sku: {
-        // tree: [
-        //   {
-        //     k: '区域',
-        //     k_s: 's1',
-        //     k_id: '1',
-        //     v: [
-        //       {
-        //         id: '1',
-        //         name: '锦江区',
-        //       },
-        //     ],
-        //   },
-        // ],
-        // price: '3.00', // 默认价格（单位元）
-      },
+      // sku: {
+      //   tree: [
+      //     {
+      //       k: '区域',
+      //       k_s: 's1',
+      //       k_id: '1',
+      //       v: [
+      //         {
+      //           id: '1',
+      //           name: '锦江区',
+      //         },
+      //       ],
+      //     },
+      //   ],
+      //   price: '3.00', // 默认价格（单位元）
+      // },
     }
   },
   computed: {
@@ -247,7 +247,7 @@ export default {
     formatSkuResourceService() {
       if (!Array.isArray(this.skuData.resourceServiceList)) return []
       return this.skuData.resourceServiceList.map((item) => {
-        const { classCode, className, id } = item || {}
+        const { classCode, className, id, url } = item || {}
         const matched =
           this.goods.serviceResourceList.find((resource) => {
             const { serviceItemId } = resource || {}
@@ -261,6 +261,7 @@ export default {
           price,
           serviceItemValName,
           serviceItemValId,
+          url,
         }
       })
     },
@@ -301,21 +302,15 @@ export default {
       console.log('handleStepperLimit:', data)
     },
 
-    // 选择
-    handleResourceClick(classCode) {
-      console.log('handleResourceClick classCode:', classCode)
-      let type = ''
-      switch (classCode) {
-        case 'FL20201211085087': // 注册地址
-          type = 'registerAddress'
-          break
-        case 'FL20201214095005': // 400
-          type = 'phone'
-          break
-      }
+    // 选择服务资源
+    handleResourceClick(resource) {
+      console.log('handleResourceClick resource:', resource)
+      const { classCode, url } = resource || {}
+      const type = '' // 没什么卵用
+
       this.$emit('operation', {
         type: 'resourceServiceSelect',
-        data: { type, classCode },
+        data: { type, classCode, url },
       })
     },
 
@@ -411,7 +406,7 @@ export default {
       /deep/.sp-cell__title {
         display: inline-flex;
         align-items: center;
-        flex: 60% 1 0;
+        flex: 50% 1 0;
       }
       &-title {
         color: #555555;
@@ -424,6 +419,8 @@ export default {
       &-operation {
         font-weight: 400;
         color: #222222;
+        white-space: nowrap;
+        .textOverflow(1);
       }
       &-operation--placehodler {
         color: #999999;

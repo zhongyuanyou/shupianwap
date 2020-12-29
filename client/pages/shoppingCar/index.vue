@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 20:32:33
+ * @LastEditTime: 2020-12-29 14:36:45
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -162,14 +162,11 @@ export default {
   // 在keep-alive中起作用，刷新从400或者地址获取到数据后刷新状态
   activated() {
     console.log('activated:', this.$route.params)
-    const { id, code, name, goodsPrice, classCode } =
-      this.$route.params.data || {}
-    console.log('classCode : ', classCode)
+    const { id, name, goodsPrice, classCode } = this.$route.params.data || {}
     const goodsItemInstance = this.$refs.goodsItem[this.skuOpenIndex]
     if (!goodsItemInstance) return
     goodsItemInstance.selecteResourceService({
       id,
-      code,
       name,
       goodsPrice,
       classCode,
@@ -345,22 +342,10 @@ export default {
 
     // 资源服务的选择
     selecteResourceService(cartId, value, index) {
-      const { type, classCode } = value
+      const { type, classCode, url } = value
       this.skuOpenIndex = index
-      switch (type) {
-        case 'registerAddress':
-          this.$router.replace({
-            name: 'detail-selectAddress',
-            query: { classCode, redirectType: 'wap', redirect: 'shoppingCar' },
-          })
-          break
-        case 'phone':
-          this.$router.replace({
-            name: 'detail-selectPhone',
-            query: { classCode, redirectType: 'wap', redirect: 'shoppingCar' },
-          })
-          break
-      }
+      // 通过后台接口配置的跳转400或者注册地址查询页面
+      this.$router.replace(`${url}&redirect=shoppingCar`)
     },
 
     // 选择
