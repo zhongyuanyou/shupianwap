@@ -40,7 +40,7 @@ class categoryService extends Service {
     // 获取产品分类列表
     return new Promise(async resolve => {
       const { ctx, app, service } = this;
-      const { code , productTypeCode } = object
+      const { code , productTypeCode, needTwo,  needRecommend} = object
       const url = ctx.helper.assembleUrl(
         app.config.apiClient.APPID[1],
         productApi.getClassificationList
@@ -51,7 +51,9 @@ class categoryService extends Service {
       try {
         const result = await service.curl.curlPost(url, {
           productTypeCode,
-          code
+          code,
+          needTwo,
+          needRecommend,
         });
         resolve(result);
       } catch (err) {

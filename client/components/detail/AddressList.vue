@@ -20,7 +20,16 @@
               <div>销售价：<span v-text="item.goodsPrice"></span></div>
             </div>
             <template #right-icon>
-              <sp-radio ref="checkboxes" :name="item" />
+              <sp-radio ref="checkboxes" :name="item">
+                <template #icon="{ checked }">
+                  <sp-icon
+                    class-prefix="spiconfont"
+                    size="0.28rem"
+                    :name="checked ? 'login_ic_radio_s' : 'login_ic_radio_n'"
+                    :color="checked ? '#4974F5' : '#CCCCCC'"
+                  />
+                </template>
+              </sp-radio>
             </template>
           </sp-cell>
         </sp-cell-group>
@@ -34,7 +43,14 @@
   </div>
 </template>
 <script>
-import { RadioGroup, Radio, Cell, CellGroup, Button } from '@chipspc/vant-dgg'
+import {
+  RadioGroup,
+  Radio,
+  Cell,
+  CellGroup,
+  Button,
+  Icon,
+} from '@chipspc/vant-dgg'
 export default {
   name: 'AddressList',
   components: {
@@ -43,6 +59,7 @@ export default {
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
     [Button.name]: Button,
+    [Icon.name]: Icon,
   },
   props: {
     list: {

@@ -76,19 +76,11 @@
         </div>
       </div>
       <sp-bottombar safe-area-inset-bottom>
-        <sp-bottombar-button
-          type="primary"
-          text="提交"
-          :disabled="
-            formData.content.length < 10 || formData.feedbackTypeId === ''
-              ? true
-              : false
-          "
-          @click="submit"
-        />
+        <sp-bottombar-button type="primary" text="提交" @click="submit" />
       </sp-bottombar>
     </div>
     <sp-toast ref="spToast"></sp-toast>
+    <Loading-center v-show="loading" />
   </div>
 </template>
 <script>
@@ -105,6 +97,7 @@ import { mapState } from 'vuex'
 import { complain, commonApi } from '~/api'
 import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'AddComplaint',
   components: {
@@ -116,6 +109,7 @@ export default {
     [Sticky.name]: Sticky,
     SpToast,
     Header,
+    LoadingCenter,
   },
   data() {
     return {
@@ -133,6 +127,7 @@ export default {
         platformCode: 'adasdad', // 平台编码
         platformName: 'asdasdas', // 平台名称
       },
+      loading: false, // 加载效果状态
     }
   },
   computed: {
@@ -171,9 +166,17 @@ export default {
     // 提交
     async submit() {
       if (this.formData.content.length < 10) {
-        Toast.fail('描述问题为必填，长度为10-200个字')
+        this.$refs.spToast.show({
+          message: '描述问题为必填，长度为10-200个字',
+          duration: 1500,
+          forbidClick: true,
+        })
       } else if (this.formData.feedbackTypeId === '') {
-        Toast.fail('请选择反馈或建议的类型')
+        this.$refs.spToast.show({
+          message: '请选择反馈或建议的类型',
+          duration: 1500,
+          forbidClick: true,
+        })
       } else {
         try {
           const params = {
@@ -206,17 +209,19 @@ export default {
       console.log('file', file)
     },
     async getComplainCategory() {
+      this.loading = true
       // 获取吐槽分类
       try {
         const params = {
           code: 'fed100026',
         }
         const res = await this.$axios.get(commonApi.detail, { params })
+        this.loading = false
         if (res.code === 200) {
           this.complainCategory = res.data.childrenList
         }
       } catch (err) {
-        console.log('报错了')
+        this.loading = false
       }
     },
   },

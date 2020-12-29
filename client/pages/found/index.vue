@@ -75,6 +75,18 @@ export default {
       isInApp: (state) => state.app.isInApp,
     }),
   },
+  watch: {
+    activeTab(newVal) {
+      this.$cookies.set('activeTab', newVal)
+    },
+  },
+  created() {
+    if (process.client) {
+      this.activeTab = this.$cookies.get('activeTab')
+        ? this.$cookies.get('activeTab')
+        : 0
+    }
+  },
   mounted() {
     this.information_class =
       this.homeData && this.homeData.information_class
