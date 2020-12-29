@@ -14,7 +14,6 @@
       </div>
       <span class="form-content">请输入公司年营业额，我们为您灵活制定方案</span>
       <div class="lines-scope">
-        <div>企业类型</div>
         <div
           v-for="(item, index) in LinesScope"
           :key="index"
@@ -49,6 +48,8 @@
           label="手机号"
           placeholder="信息保护中，仅官方可见"
           maxlength="11"
+          type="tel"
+          :formatter="telephoneTest"
           @focus="() => (isshow = true)"
         />
         <!-- s 获取验证码 -->
@@ -62,6 +63,9 @@
             placeholder="请输入验证码"
             data-name="代理记账表单_验证码"
             data-form_type="咨询表单"
+            maxlength="6"
+            type="tel"
+            :formatter="formatter"
           />
           <!-- s 倒计时 -->
           <span
@@ -149,6 +153,13 @@ export default {
     this.nums.todayNum = this.nums.todayNum.toLocaleString()
   },
   methods: {
+    telephoneTest(value) {
+      return value.replace(/\D/, '')
+    },
+    formatter(value) {
+      // 过滤输入的特殊字符及汉字
+      return value.replace(/\W/, '')
+    },
     selected(index) {
       this.actived = index
       return (this.scope = this.LinesScope[index - 1].scope)
@@ -341,10 +352,10 @@ export default {
     }
     .lines-scope {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       margin-top: 40px;
       > div {
+        flex: 1;
         width: 186px;
         height: 80px;
         background: #f8f8f8;
@@ -356,10 +367,7 @@ export default {
         text-align: center;
         line-height: 80px;
         &:first-child {
-          font-size: 28px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #1a1a1a;
+          margin-right: 16px;
         }
       }
       .isactive {

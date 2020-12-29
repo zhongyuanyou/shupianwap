@@ -50,11 +50,13 @@
           v-model="telephone"
           v-md-map
           v-md:WebClick
+          type="tel"
           data-name="工商变更表单_手机号"
           data-form_type="咨询表单"
           label="手机号"
           placeholder="信息保护中，仅官方可见"
           maxlength="11"
+          :formatter="telephoneTest"
           @focus="() => (isshow = true)"
         />
         <!-- s 获取验证码 -->
@@ -66,7 +68,14 @@
           data-name="工商变更表单_验证码"
           data-form_type="咨询表单"
         >
-          <sp-field v-model="sms" label="验证码" placeholder="请输入验证码" />
+          <sp-field
+            v-model="sms"
+            label="验证码"
+            placeholder="请输入验证码"
+            maxlength="6"
+            type="tel"
+            :formatter="formatter"
+          />
 
           <!-- s 倒计时 -->
           <span
@@ -125,10 +134,12 @@ export default {
   },
   data() {
     return {
+      pattern: /^[a-z0-9]{6,16}$/,
       read: true,
       value: '法人变更', // 行业信息
       telephone: '', // 电话号码
       sms: '', // 验证码
+      number: '',
       isshow: false, // 验证码框是否显示
       selectshow: false, // 下拉选择框是否显示
       countdown: -1, // 发送验证码倒计时60秒
@@ -153,6 +164,13 @@ export default {
   },
   created() {},
   methods: {
+    telephoneTest(value) {
+      return value.replace(/\D/, '')
+    },
+    formatter(value) {
+      // 过滤输入的特殊字符及汉字
+      return value.replace(/\W/, '')
+    },
     // 获取验证码
     obtain() {
       this.obtainshow = false
