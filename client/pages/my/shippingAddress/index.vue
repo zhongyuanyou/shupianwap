@@ -213,6 +213,7 @@ export default {
         // userId: this.userId,
         userId: this.userId,
       }
+      console.log('这是userId', this.userId)
       const res = await this.$axios.get(userinfoApi.addressList, { params })
       if (res.code === 200) {
         this.addressList = res.data

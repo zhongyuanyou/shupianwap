@@ -33,17 +33,14 @@ export default ({ app, store }) => {
         appHandler.dggGetUserInfo((res) => {
           if (res.code === 200) {
             try {
-              const userInfo = res.data
-              console.log('userInfo', userInfo)
-              if (userInfo.userId && userInfo.token) {
+              const userInfo = JSON.parse(res.data)
+              if (userInfo && userInfo.userId && userInfo.token) {
                 store.commit('user/SET_USER', userInfo)
               }
               next()
             } catch (err) {
               next()
             }
-          } else {
-            alert('不是200')
           }
         })
       } else {
