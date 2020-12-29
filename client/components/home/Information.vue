@@ -26,7 +26,13 @@
         </div>
         <div class="img-label">
           <!-- <strong>{{ item.label }}</strong> -->
-          <img v-lazy="item.imageUrl" alt="" />
+          <img
+            v-lazy="
+              item.imageUrl +
+              $ossImgSet(index == 0 ? 228 : 140, index == 0 ? 228 : 106)
+            "
+            alt=""
+          />
         </div>
       </div>
     </div>

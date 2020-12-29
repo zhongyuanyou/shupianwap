@@ -17,7 +17,10 @@
         href="javascript:void(0)"
         @click="adJumpHandleMixin(item.materialList[0])"
       >
-        <img v-lazy="item.materialList[0].materialUrl" alt="" />
+        <img
+          v-lazy="item.materialList[0].materialUrl + $ossImgSet(215, 144)"
+          alt=""
+        />
       </a>
     </div>
   </div>
