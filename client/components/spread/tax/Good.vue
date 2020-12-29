@@ -2,12 +2,7 @@
   <div class="super">
     <div class="super-title">我们的优势</div>
     <div class="super-banner">
-      <div
-        v-for="(item, i) of banners"
-        :key="i"
-        class="super-banner-item"
-        @click="openImUrl"
-      >
+      <div v-for="(item, i) of banners" :key="i" class="super-banner-item">
         <div class="super-banner-item-left">
           <img :src="item.img" alt="" class="super-banner-item-left-icon" />
         </div>
@@ -27,25 +22,25 @@ export default {
     return {
       banners: [
         {
-          img: require('~/assets/spreadImages/tax/busi_ic_swchadv1.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/bbtvn2y2nts0000.png',
           bigfont: '税务合规',
           smallfont: '严格依据税法政策确保合规',
           style: { width: '1.92rem', marginBottom: '0.58rem' },
         },
         {
-          img: require('~/assets/spreadImages/tax/busi_ic_swchadv2.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/dwl0crnzuq80000.png',
           bigfont: '专业团队',
           smallfont: '专业税务筹划团队，出具匹配度更高的方案',
           style: { width: '2.4rem', marginBottom: '0.58rem' },
         },
         {
-          img: require('~/assets/spreadImages/tax/busi_ic_swchadv3.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/3ssn8agw5sw0000.png',
           bigfont: '资金安全',
           smallfont: '多重技术保障资金',
           style: { width: '1.92rem' },
         },
         {
-          img: require('~/assets/spreadImages/tax/busi_ic_swchadv4.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/evan1mws7d40000.png',
           bigfont: '政策稳定',
           smallfont: '享受专属优惠',
           style: { width: '2.4rem' },
@@ -53,16 +48,6 @@ export default {
       ],
       url: '',
     }
-  },
-  methods: {
-    // 点击该模块判断是否进行跳转，如果不跳转就调用IM
-    openImUrl() {
-      if (this.url !== '') {
-        window.open = this.url
-      } else {
-        this.$parent.openIm()
-      }
-    },
   },
 }
 </script>

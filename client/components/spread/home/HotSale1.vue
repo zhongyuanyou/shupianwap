@@ -36,7 +36,7 @@
           <span class="product-text">免费核查</span>
           <img
             class="product-icon"
-            src="~/assets/spreadImages/home/busi_img_gscsjg_arro.png"
+            src="https://cdn.shupian.cn/sp-pt/wap/images/f93gtyh1xvs0000.png"
           />
         </div>
       </a>

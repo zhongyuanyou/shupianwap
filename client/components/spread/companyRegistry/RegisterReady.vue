@@ -52,22 +52,22 @@ export default {
         {
           title: '大品牌',
           content: '覆盖全国14个城市',
-          img: require('~/assets/spreadImages/company_registry/busi_img_ptys_dpp.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/a2nf8wfz7wk0000.png',
         },
         {
           title: '更专业',
           content: '30万+专业规划师',
-          img: require('~/assets/spreadImages/company_registry/busi_img_ptys_gzy.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/2nn1kdoblmw0000.png',
         },
         {
           title: '更省时',
           content: '2小时内响应',
-          img: require('~/assets/spreadImages/company_registry/busi_img_ptys_gss.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/fh0eavpg2lc0000.png',
         },
         {
           title: '零风险',
           content: '急速售后 急速退款',
-          img: require('~/assets/spreadImages/company_registry/busi_img_ptys_lfx.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/8czcet6qcj40000.png',
         },
       ],
     }
@@ -91,7 +91,7 @@ export default {
       width: 669px;
       height: 80px;
       margin: 0 auto;
-      background: url(~assets/spreadImages/company_registry/busi_img_zegs_gsxx.png)
+      background: url(https://cdn.shupian.cn/sp-pt/wap/5s8vuoqf6r80000.png)
         no-repeat;
       background-size: contain;
       span {
@@ -134,7 +134,7 @@ export default {
     }
     &:nth-child(3) {
       p {
-        background: url(~assets/spreadImages/company_registry/busi_img_zcxx_wjcl.png)
+        background: url(https://cdn.shupian.cn/sp-pt/wap/4jt8fmvm9zw0000.png)
           no-repeat;
         background-size: contain;
         span {
@@ -153,7 +153,7 @@ export default {
     }
     &:nth-child(4) {
       p {
-        background: url(~assets/spreadImages/company_registry/busi_img_zegs_zcdz.png)
+        background: url(https://cdn.shupian.cn/sp-pt/wap/eeezqprbugg0000.png)
           no-repeat;
         background-size: contain;
         span {

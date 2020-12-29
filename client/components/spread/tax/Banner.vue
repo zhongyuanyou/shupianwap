@@ -33,10 +33,14 @@
         <sp-cell
           v-md-map
           v-md:webClick
-          :title="select"
+          title="请选择"
+          :value="selectName"
           arrow-direction="down"
           is-link
           data-name="税务筹划表单_下拉表单"
+          :value-class="
+            selectName === '税务类型' ? { gray: true } : { black: true }
+          "
           @click="show = true"
         />
         <sp-action-sheet
@@ -115,8 +119,8 @@ export default {
     return {
       // 轮播图片
       images: [
-        require('~/assets/spreadImages/tax/busi_img_swchbanner1.jpg'),
-        require('~/assets/spreadImages/tax/busi_img_swchbanner2.jpg'),
+        'https://cdn.shupian.cn/sp-pt/wap/dfzrgpsj6e80000.jpg',
+        'https://cdn.shupian.cn/sp-pt/wap/1591o9av6ye8000.jpg',
       ],
       // 下弹窗选项栏显示状态
       show: false,
@@ -132,7 +136,7 @@ export default {
       smallfont: { small: true },
       // 下弹窗选项内容
       actions: [
-        { name: '代理类', color: '#5a79e8' },
+        { name: '代理类', className: 'bold' },
         { name: '咨询类' },
         { name: '审计类' },
       ],
@@ -141,7 +145,7 @@ export default {
       // 验证码按钮内容
       text: '获取验证码',
       // 下弹窗选项内容
-      select: '选择税务类型',
+      selectName: '税务类型',
       // 电话
       tel: '',
       // 验证码
@@ -206,13 +210,12 @@ export default {
     },
     // 下弹窗内容选择后样式改变
     onSelect(e) {
-      this.selectname = e.name
-      this.select = e.name
+      this.selectName = e.name
       for (const item of this.actions) {
-        if (item.name === this.selectname) {
-          item.color = '#5a79e8'
+        if (item.name === this.selectName) {
+          item.className = 'bold'
         } else {
-          item.color = '#232124'
+          item.className = ''
         }
       }
     },
@@ -257,13 +260,13 @@ export default {
         Toast('请输入验证码')
         return
       }
-      if (this.select === '选择税务类型') {
+      if (this.selectName === '税务类型') {
         Toast('请选择税务类型')
         return
       }
       // 没有明确参数名的，全放content中作为备注信息
       const contentStr = {
-        shuiwuleixing: this.select,
+        shuiwuleixing: this.selectName,
         chouhualeixing: this.tabs[this.active],
       }
       const params = {
@@ -286,7 +289,7 @@ export default {
           this.tel = ''
           this.code = ''
           this.text = '发送验证码'
-          this.select = '选择税务类型'
+          this.selectName = ''
           window.getTrackRow('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
@@ -322,7 +325,6 @@ export default {
     border-radius: 8px;
     font-size: 0;
     position: relative;
-    z-index: 999;
     &-tab {
       width: 670px;
       height: 80px;
@@ -464,18 +466,42 @@ a {
   font-family: PingFang SC;
   font-weight: 400;
   color: #999999;
-  background: #f8f8f8;
+  background: #f4f4f4;
 }
-
+.bold {
+  font-weight: bold;
+  color: #5a79e8;
+}
 /deep/ .sp-action-sheet__name {
   font-size: 31px;
   line-height: 56px;
   height: 56px;
   font-family: PingFang SC;
-  font-weight: 400;
 }
-
+// 处理多余的横线
 /deep/ .sp-cell::after {
   display: none;
+}
+// 表单下拉框的布局
+/deep/ .sp-cell__title {
+  width: 84px;
+  margin-right: 30px;
+  flex: none;
+}
+// 表单下拉框的弹性分布
+/deep/ .sp-cell {
+  justify-content: space-between;
+}
+// 表单下拉框的选择内容样式
+/deep/ .sp-cell__value {
+  text-align: left;
+}
+.gray {
+  color: #cccccc;
+  font-weight: 400;
+}
+.black {
+  color: #1a1a1a;
+  font-weight: bold;
 }
 </style>

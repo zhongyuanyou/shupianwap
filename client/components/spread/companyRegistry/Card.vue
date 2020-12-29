@@ -146,8 +146,9 @@ export default {
       this.downShow = false
       this.selectValue = item.name
       this.actions.forEach((element) => {
-        if (element.name === this.selectValue) element.color = '#5a79e8'
-        else element.color = '#232124'
+        if (element.name === this.selectValue)
+          element.className = 'action-style'
+        else element.className = ''
       })
     },
     // 验证码 发送前验证
@@ -274,28 +275,6 @@ export default {
           Toast('验证码错误,请重试')
         }
       })
-      //  待修改
-      // window.promotion.privat.consultForm(params, function (res) {
-      //   if (res.error === 0) {
-      //     window.getTrackRow('p_formSubmitResult', {
-      //       even_name: 'p_formSubmitResult',
-      //       form_type: '咨询',
-      //       form_sn: 'ZL077',
-      //       form_name: '顶部表单-转让专利',
-      //     })
-      //     if (that.index2 === 0) {
-      //       that.isSuccess = false
-      //     } else {
-      //       that.isSuccess = true
-      //       setTimeout(function () {
-      //         that.initForm()
-      //       }, 3000)
-      //     }
-      //     that.showMask = true
-      //   } else {
-      //     Toast('提交成功，请注意接听电话')
-      //   }
-      // })
     },
   },
 }
@@ -408,6 +387,11 @@ export default {
       justify-content: space-between;
       padding: 34px 19px 0 19px;
     }
+  }
+  // 选中样式
+  .action-style {
+    color: #5a79e8;
+    font-weight: bold;
   }
 }
 </style>

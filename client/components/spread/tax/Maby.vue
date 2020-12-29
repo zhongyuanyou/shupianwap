@@ -26,26 +26,21 @@ export default {
           title: '税务筹划',
           bg: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchad1.png') +
-              ')',
+              'url(https://cdn.shupian.cn/sp-pt/wap/3d8d9tdlhuy0000.png)',
           },
         },
         {
           title: '代理记账',
           bg: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchad3.png'),
+              'url(https://cdn.shupian.cn/sp-pt/wap/21vfp6qa0i1s000.png)',
           },
         },
         {
           title: '银行服务',
           bg: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchad2.png') +
-              ')',
+              'url(https://cdn.shupian.cn/sp-pt/wap/4xen249owug0000.png)',
           },
         },
       ],

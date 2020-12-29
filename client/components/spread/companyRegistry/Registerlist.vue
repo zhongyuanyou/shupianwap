@@ -107,35 +107,7 @@ export default {
     listCount: {
       type: Array,
       default: () => {
-        return [
-          {
-            pric: 4000,
-            bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_yxze.png'),
-            operating: {
-              actualViews: 3291,
-              defaultSales: 1837,
-              actualSales: 1832,
-            },
-          },
-          {
-            pric: 5000,
-            bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_gtzc.png'),
-            operating: {
-              actualViews: 3291,
-              defaultSales: 1837,
-              actualSales: 1832,
-            },
-          },
-          {
-            pric: 7000,
-            bgImg: require('~/assets/spreadImages/company_registry/busi_img_fwjs_fgs.png'),
-            operating: {
-              actualViews: 3291,
-              defaultSales: 1837,
-              actualSales: 1832,
-            },
-          },
-        ]
+        return []
       },
     },
     isMore: {
@@ -178,8 +150,6 @@ export default {
       width: 670px;
       border: 1px solid rgba(205, 205, 205, 0.3);
       border-radius: 8px;
-      background: url(~assets/spreadImages/company_registry/busi_img_fwjs_gtzc.png)
-        top center/100% auto no-repeat;
       margin-bottom: 25px;
       .list-count {
         display: flex;

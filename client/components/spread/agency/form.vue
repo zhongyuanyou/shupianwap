@@ -3,12 +3,12 @@
     <div class="form-box">
       <div class="form-title">
         <img
-          src="~/assets/spreadImages/agency/busi_img_dljztitrleft@1,5x.png"
+          src="https://cdn.shupian.cn/sp-pt/wap/images/36v8fqlnh5y0000.png"
           alt=""
         />
         <h4>定制代账方案</h4>
         <img
-          src="~/assets/spreadImages/agency/busi_img_dljztitright@1,5x.png"
+          src="https://cdn.shupian.cn/sp-pt/wap/images/4nq906nfv760000.png"
           alt=""
         />
       </div>
@@ -121,10 +121,7 @@ export default {
     nums: {
       type: Object,
       default: () => {
-        return {
-          todayNum: 12528,
-          totalNum: 652517,
-        }
+        return {}
       },
     },
   },
@@ -146,7 +143,10 @@ export default {
       company: '',
     }
   },
-  created() {},
+  created() {
+    this.nums.totalNum = this.nums.totalNum.toLocaleString()
+    this.nums.todayNum = this.nums.todayNum.toLocaleString()
+  },
   methods: {
     selected(index) {
       this.actived = index
@@ -238,6 +238,7 @@ export default {
           this.sms = ''
           this.countdown = -1
           this.company = ''
+          this.actived = 1
           window.getTrackRow('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',

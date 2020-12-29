@@ -39,7 +39,7 @@
         @click="call"
       >
         <img
-          src="~/assets/spreadImages/agency/busi_img_dljznrtel@1,5x.png"
+          src="https://cdn.shupian.cn/sp-pt/wap/images/b4xyev4n8ps0000.png"
           alt=""
         />
         <span>一键代办咨询</span>
