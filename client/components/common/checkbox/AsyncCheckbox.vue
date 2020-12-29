@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-12 15:34:40
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-16 14:45:45
+ * @LastEditTime: 2020-12-28 15:10:55
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/checkbox/AsyncCheckbox.vue
 -->
@@ -19,18 +19,26 @@
       <slot name="default"> </slot>
     </template>
     <template #icon="{ checked }">
-      <slot name="icon" :checked="checked"></slot>
+      <slot name="icon" :checked="checked">
+        <sp-icon
+          class-prefix="spiconfont"
+          size="0.28rem"
+          :name="checked ? 'login_ic_radio_s' : 'login_ic_radio_n'"
+          :color="checked ? '#4974F5' : '#CCCCCC'"
+        />
+      </slot>
     </template>
   </sp-checkbox>
 </template>
 
 <script>
-import { Checkbox } from '@chipspc/vant-dgg'
+import { Checkbox, Icon } from '@chipspc/vant-dgg'
 
 export default {
   name: 'AsyncCheckbox',
   components: {
     [Checkbox.name]: Checkbox,
+    [Icon.name]: Icon,
   },
   model: {
     prop: 'isCheck',

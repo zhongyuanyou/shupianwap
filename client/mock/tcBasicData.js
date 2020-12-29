@@ -26,6 +26,7 @@ export default {
     },
     {
       listKey: 'business_scope',
+      listDropDown: true, // 是否需要下拉
       listName: '经营范围',
     },
   ],

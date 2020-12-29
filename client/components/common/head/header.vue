@@ -65,12 +65,13 @@ export default {
   data() {
     return {
       isShow: true,
-      safeTop: '0px', // 顶部安全区的高度
+      safeTop: '20px', // 顶部安全区的高度
     }
   },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
     headHeight() {
       if (typeof this.height === 'number') {
@@ -88,9 +89,9 @@ export default {
     },
     getTopMargin() {
       if (process && process.client) {
-        console.log('getTopMargin:', safeAreaInsets.top)
         let safeTop = safeAreaInsets.top
-        if (this.isInApp && !safeTop) safeTop = '20pt'
+        if (this.isInApp && !safeTop)
+          safeTop = this.appInfo.statusBarHeight + 'px'
         this.safeTop = safeTop
       }
     },
@@ -108,7 +109,7 @@ export default {
   .slot-left {
     display: flex;
     position: absolute;
-    left: 0;
+    left: 40px;
     top: 50%;
     z-index: 2;
     transform: translateY(-50%);
@@ -127,7 +128,7 @@ export default {
   .slot-right {
     display: flex;
     position: absolute;
-    right: 0;
+    right: 40px;
     top: 50%;
     z-index: 2;
     transform: translateY(-50%);

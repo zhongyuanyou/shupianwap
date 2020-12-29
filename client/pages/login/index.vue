@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-26 15:39:09
+ * @LastEditTime: 2020-12-28 15:44:34
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/index.vue
 -->
@@ -45,6 +45,7 @@
             name="authCode"
             clearable
             placeholder="请输入验证码"
+            maxlength="6"
             @input="handleAuthCodeInput"
           />
         </template>
@@ -132,6 +133,7 @@
         </sp-button>
       </div>
     </div>
+    <LoadingCenter v-show="loading" title="登录中" />
   </div>
 </template>
 
@@ -148,6 +150,7 @@ import {
 } from '@chipspc/vant-dgg'
 import ProtocolField from '@/components/login/ProtocolField'
 import PhoneField from '@/components/login/PhoneField'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
 import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
@@ -167,6 +170,7 @@ export default {
     [Checkbox.name]: Checkbox,
     PhoneField,
     ProtocolField,
+    LoadingCenter,
   },
   data() {
     return {
@@ -178,6 +182,7 @@ export default {
         readed: false,
       },
       isValidSubmit: false,
+      loading: false,
       passwordFieldType: 'password', // text：明文
       sourcePlatform: this.$route.query.sourcePlatform || '', // 第三方 需要携带的参数   IM: token, userId
       loginType: this.$route.query.loginType || 'telephone', // account: 账户登录； telephone：手机快捷登录
@@ -309,13 +314,16 @@ export default {
         imgCaptcha,
       }
       try {
+        this.loading = true
         const data = await auth.login({ axios: this.$axios }, params)
+        this.loading = false
         // 缓存用户信息
         if (data != null) {
           this.setUserInfo(data)
         }
         return data
       } catch (error) {
+        this.loading = false
         const { code } = error
         // 需要验证码
         if (code === '10408') {
@@ -502,6 +510,10 @@ export default {
       /deep/.sp-button__text {
         font-size: 26px;
         line-height: 1em;
+      }
+      &:active::before {
+        opacity: 1;
+        background-color: transparent;
       }
     }
     .vertical-line {

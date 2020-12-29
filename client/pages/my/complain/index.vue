@@ -8,21 +8,16 @@
 -->
 <template>
   <div class="complaint">
-    <sp-sticky>
-      <sp-top-nav-bar
-        title="我要吐槽"
-        right-text="反馈进度"
-        ellipsis
-        @on-click-right="complaintList"
-        @on-click-left="back"
-      >
-        <template #left>
-          <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-          </div>
-        </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
+    <Header title="我要吐槽">
+      <template #left>
+        <div @click="back">
+          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+        </div>
+      </template>
+      <template #right>
+        <p class="process" @click="complaintList">反馈进度</p>
+      </template>
+    </Header>
     <div class="complaint-box">
       <div class="complaint-type">
         <p class="complaint-type-title">请选择反馈或建议的类型</p>
@@ -104,6 +99,7 @@ import {
 import { mapState } from 'vuex'
 import { complain, commonApi } from '~/api'
 import SpToast from '@/components/common/spToast/SpToast'
+import Header from '@/components/common/head/header'
 export default {
   name: 'AddComplaint',
   components: {
@@ -114,6 +110,7 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [Sticky.name]: Sticky,
     SpToast,
+    Header,
   },
   data() {
     return {
@@ -164,21 +161,6 @@ export default {
       this.$router.push('/my/complain/list')
     },
     changeType(type) {
-      // if (this.multipleChoice) {
-      //   // 多选
-      //   if (!this.selectTypes.includes(type)) {
-      //     this.selectTypes.push(type)
-      //   } else {
-      //     this.selectTypes.splice(
-      //       this.selectTypes.findIndex((item) => item === type),
-      //       1
-      //     )
-      //   }
-      // } else if (!this.selectTypes.includes(type)) {
-      //   this.selectTypes = [type]
-      // } else {
-      //   this.selectTypes = []
-      // }
       this.formData.feedbackTypeId = type
     },
     // 提交
@@ -228,7 +210,9 @@ export default {
         if (res.code === 200) {
           this.complainCategory = res.data.childrenList
         }
-      } catch (err) {}
+      } catch (err) {
+        console.log('报错了')
+      }
     },
   },
 }
@@ -240,6 +224,12 @@ export default {
   padding-bottom: 160px;
   /deep/.sp-top-nav-bar__right {
     font-size: 28px;
+  }
+  .process {
+    font-size: 28px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #1a1a1a;
   }
   &-box {
     padding: 0px 40px 30px 40px;

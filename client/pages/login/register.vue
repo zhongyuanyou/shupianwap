@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 17:22:12
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-09 16:31:42
+ * @LastEditTime: 2020-12-28 15:51:10
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/login/register.vue
 -->
@@ -30,6 +30,7 @@
           name="authCode"
           clearable
           placeholder="请输入验证码"
+          maxlength="6"
           @input="handleAuthCodeInput"
         />
         <sp-field
@@ -101,6 +102,7 @@
         </sp-button>
       </div>
     </div>
+    <LoadingCenter v-show="loading" title="注册中" />
   </div>
 </template>
 
@@ -117,6 +119,7 @@ import {
 } from '@chipspc/vant-dgg'
 import PhoneField from '@/components/login/PhoneField'
 import ProtocolField from '@/components/login/ProtocolField'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
 import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
@@ -131,6 +134,7 @@ export default {
     [Checkbox.name]: Checkbox,
     PhoneField,
     ProtocolField,
+    LoadingCenter,
   },
   data() {
     return {
@@ -142,6 +146,7 @@ export default {
       },
       passwordFieldType: 'password', // text
       isValidSubmit: false,
+      loading: false,
       redirect: this.$route.query.redirect || '/', // 登录后需要跳转的地址
     }
   },
@@ -212,7 +217,6 @@ export default {
           break
       }
     },
-    // TODO 注册
     async register() {
       const { tel, authCode, password } = this.registerForm
       const params = {
@@ -224,11 +228,13 @@ export default {
         platformType: 'COMDIC_PLATFORM_CRISPS',
       }
       try {
+        this.loading = true
         const data = await auth.register({ axios: this.$axios }, params)
+        this.loading = false
         if (data != null) this.setUserInfo(data) // 注册成功后，返回的也是登录信息，所以也存
-
         return data
       } catch (error) {
+        this.loading = false
         this.loginToast(error && error.message)
       }
     },
