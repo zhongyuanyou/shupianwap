@@ -128,13 +128,14 @@ class FoundController extends Controller {
       const { limit = 10, page = 1, categoryCode, keyword } = ctx.query;
       const url = ctx.helper.assembleUrl(
         app.config.apiClient.APPID[0],
-        contentApi.findPage
+        contentApi.infoList
       );
       const { data } = await service.curl.curlGet(url, {
         limit,
         page,
         categoryCode,
         keyword,
+        keywordField: 'title',
       });
       ctx.helper.success({
         ctx,

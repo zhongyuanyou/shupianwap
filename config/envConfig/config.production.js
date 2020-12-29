@@ -77,6 +77,42 @@ module.exports = appInfo => {
           db: '0', // 数据库名称,redis默认16个数据库0-16
           weakDependent: true,
         },
+        {
+          // 可以配置多Redis节点
+          host: '172.16.32.4', // IP地址
+          port: '7003', // 端口号
+          family: 'root', // 用户名
+          password: '', // 用户密码
+          db: '0', // 数据库名称,redis默认16个数据库0-16
+          weakDependent: true,
+        },
+        {
+          // 可以配置多Redis节点
+          host: '172.16.32.4', // IP地址
+          port: '7004', // 端口号
+          family: 'root', // 用户名
+          password: '', // 用户密码
+          db: '0', // 数据库名称,redis默认16个数据库0-16
+          weakDependent: true,
+        },
+        {
+          // 可以配置多Redis节点
+          host: '172.16.32.7', // IP地址
+          port: '7005', // 端口号
+          family: 'root', // 用户名
+          password: '', // 用户密码
+          db: '0', // 数据库名称,redis默认16个数据库0-16
+          weakDependent: true,
+        },
+        {
+          // 可以配置多Redis节点
+          host: '172.16.32.7', // IP地址
+          port: '7006', // 端口号
+          family: 'root', // 用户名
+          password: '', // 用户密码
+          db: '0', // 数据库名称,redis默认16个数据库0-16
+          weakDependent: true,
+        },
       ],
     },
   };

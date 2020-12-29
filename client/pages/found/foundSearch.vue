@@ -1,7 +1,7 @@
 <template>
   <div class="search">
     <!--S 搜索框-->
-    <FoundHeader @inputChange="inputChange" />
+    <FoundHeader @inputChange="inputChange" @handelKeydown="handelKeydown" />
     <!--E 搜索框-->
     <!--S 内容-->
     <div class="search_con">
@@ -68,11 +68,11 @@ export default {
       const isHas = history.some((item) => {
         return item === keywords
       })
-      if (!isHas) {
+      if (!isHas && keywords) {
         history.push(keywords)
       }
       this.$cookies.set('foundHistory', history)
-      this.$router.push(`/found/${keywords}`)
+      this.$router.push(`/found/${keywords || ' '}`)
     },
     inputChange(data) {
       // input改变事件
@@ -82,6 +82,9 @@ export default {
       // 清除数据
       this.$cookies.remove('foundHistory')
       this.historySearch = []
+    },
+    handelKeydown(data) {
+      this.handleClick(data)
     },
   },
 }
@@ -158,7 +161,7 @@ export default {
       flex-direction: row;
       height: 102px;
       border-bottom: 1px solid #f4f4f4;
-      p {
+      > p {
         font-size: 30px;
         font-family: PingFang SC;
         font-weight: bold;
@@ -166,6 +169,12 @@ export default {
         span {
           color: #4974f5;
         }
+      }
+      > div {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-direction: row;
       }
     }
   }

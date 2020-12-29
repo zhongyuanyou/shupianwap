@@ -119,6 +119,7 @@ module.exports = {
     { src: '@/plugins/app-sdk', ssr: false },
     { src: '@/plugins/lazyload', ssr: true },
     { src: '@/plugins/oss', ssr: true },
+    { src: '@/plugins/install-components', ssr: false },
   ],
   router: {
     middleware: 'appDock',

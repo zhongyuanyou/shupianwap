@@ -36,6 +36,11 @@
     </Basic>
     <!--E 第二板块 基本信息-->
     <slot name="qualification"></slot>
+    <!--资质信息-->
+    <QftDetails
+      v-if="tcProductDetailData.dictCode === 'CATE-JYZY-ZZ'"
+      :qft-details-data="tcProductDetailData.qftDetails"
+    />
     <!--S 第三板块 评估报告-->
     <Report :class-code-dict="tcProductDetailData.dictCode" />
     <!--E 第三板块 评估报告-->
@@ -111,6 +116,7 @@ import tcBasicData from '~/mock/tcBasicData'
 import { recommendApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import BasicItem from '~/components/detail/BasicItem'
+import QftDetails from '~/components/detail/QftDetails'
 export default {
   name: 'DetailTemplate',
   components: {
@@ -135,6 +141,7 @@ export default {
     commodityConsultation,
     MyIcon,
     BasicItem,
+    QftDetails,
   },
   props: {
     info: {

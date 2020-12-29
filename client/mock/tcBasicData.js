@@ -103,9 +103,9 @@ export default {
       listKey: 'qualification_registered_capital',
       listName: '注册资本',
     },
-    {
-      listKey: 'qualification_type',
-      listName: '资质分类',
-    },
+    // {
+    //   listKey: 'qualification_type',
+    //   listName: '资质分类',
+    // },
   ],
 }

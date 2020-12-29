@@ -84,9 +84,6 @@
     <!--S订阅-->
     <Subscribe v-show="!listShow && !skeletonLoading" />
     <!--E订阅-->
-    <!--S中间轻提示-->
-    <sp-toast ref="spToast" />
-    <!--E中间轻提示-->
   </div>
 </template>
 
@@ -105,7 +102,6 @@ import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
 import clone from '~/utils/clone'
 import searchList from '@/mixins/searchList'
-import SpToast from '@/components/common/spToast/SpToast'
 
 export default {
   name: 'ServeGoods',
@@ -120,7 +116,6 @@ export default {
     BottomConfirm,
     InstallApp,
     Subscribe,
-    SpToast,
   },
   mixins: [searchList],
   props: {

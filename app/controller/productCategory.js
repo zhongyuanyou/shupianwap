@@ -29,9 +29,13 @@ class ProductCategoryController extends Controller {
     // 获取广告数据，若有locationCode的情况下
     const getAdvertising = service.common.banner.getAdList([ 'ad100129' ]);
     // 获取产品分类
-    const getClassification = service.common.category.getProductCategory({ productTypeCode: 'PRO_CLASS_TYPE_SERVICE' });
+    const getClassification = service.common.category.getProductCategory(
+      { productTypeCode: 'PRO_CLASS_TYPE_SERVICE', needTwo: 1 }
+    );
     // 获取交易分类
-    const getClassifyTrading = service.common.category.getProductCategory({ productTypeCode: 'PRO_CLASS_TYPE_TRANSACTION' });
+    const getClassifyTrading = service.common.category.getProductCategory(
+      { productTypeCode: 'PRO_CLASS_TYPE_TRANSACTION' }
+    );
     const reqAll = [ getClassification, getClassifyTrading, getAdvertising ];
     try {
       const resData = await Promise.all(reqAll);
@@ -49,12 +53,12 @@ class ProductCategoryController extends Controller {
         const cData = resData[0].data;
         // 获取到所有产品一级分类
         categoryList = cData.filter(item => {
-          return item.level === 1 && item.recommended;
+          return item.level === 1 && item.status;
         });
         // 为您推荐产品分类
         // 判断是否有为您推荐的分类数据
         cpRecList = cData.filter(item => {
-          return item.topping === 1;
+          return item.recommended === 1;
         });
         if (!categoryList.length || (categoryList[0].name !== '为您推荐' && cpRecList.length)) {
           categoryList.unshift({ name: '为您推荐', id: '' });
@@ -69,7 +73,7 @@ class ProductCategoryController extends Controller {
         }
         for (let i = 0; i < cData.length; i++) {
           for (let j = 0; j < categoryList.length; j++) {
-            if (cData[i].level === 2 && cData[i].parentId === categoryList[j].id && cData[i].recommended && cData[i].status) {
+            if (cData[i].level === 2 && cData[i].parentId === categoryList[j].id && cData[i].status) {
               categoryList[j].children.push(cData[i]);
             }
           }
@@ -84,12 +88,12 @@ class ProductCategoryController extends Controller {
         const jData = resData[1].data;
         // 获取到所有交易一级分类
         jyCategoryList = jData.filter(item => {
-          return item.level === 1 && !item.recommended && item.status;
+          return item.level === 1 && item.status;
         });
         // 为您推荐产品分类
         // 判断是否有为您推荐的分类数据
         jyRecList = jData.filter(item => {
-          return item.topping === 1;
+          return item.recommended === 1;
         });
         if (!categoryList.length || (categoryList[0].name !== '为您推荐' && jyRecList.length)) {
           categoryList.unshift({ name: '为您推荐', id: '' });
@@ -105,7 +109,7 @@ class ProductCategoryController extends Controller {
         // categoryList = categoryList.concat(jyCategoryList);
         for (let i = 0; i < jData.length; i++) {
           for (let j = 0; j < jyCategoryList.length; j++) {
-            if (jData[i].level === 2 && jData[i].parentId === jyCategoryList[j].id && !jData[i].recommended && jData[i].status) {
+            if (jData[i].level === 2 && jData[i].parentId === jyCategoryList[j].id && jData[i].status) {
               jyCategoryList[j].children.push(jData[i]);
             }
           }

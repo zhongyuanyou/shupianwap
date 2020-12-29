@@ -22,7 +22,7 @@
         <sp-icon name="search" size="20" @click="onClickRight" />
       </template>
     </sp-top-nav-bar>
-    <div :style="{ marginTop: 0 }">
+    <div :style="{ marginTop: 0, height: '100%' }">
       <Con
         :banner="information_banner"
         :list="information_list"
@@ -70,18 +70,6 @@ export default {
       categoryCode: '', // code码
     }
   },
-  watch: {
-    activeTab(newVal) {
-      this.$cookies.set('activeTab', newVal)
-    },
-  },
-  created() {
-    if (process.client) {
-      this.activeTab = this.$cookies.get('activeTab')
-        ? this.$cookies.get('activeTab')
-        : 0
-    }
-  },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
@@ -109,16 +97,20 @@ export default {
     async onClickTap(index, title) {
       // 切换按钮回滚到顶部
       window.scrollTo(0, 0)
+      this.information_banner = []
+      this.information_list = []
       // 点击tab标签
-      this.categoryCode = this.information_class[index].code
-      const params = {
-        categoryCode: this.categoryCode,
-      }
-      const res = await this.$axios.get(foundApi.screenRequest, { params })
-      if (res.code === 200) {
-        this.information_banner = res.data.information_banner
-        this.information_list = res.data.information_list
-      }
+      try {
+        this.categoryCode = this.information_class[index].code
+        const params = {
+          categoryCode: this.categoryCode,
+        }
+        const res = await this.$axios.get(foundApi.screenRequest, { params })
+        if (res.code === 200) {
+          this.information_banner = res.data.information_banner
+          this.information_list = res.data.information_list
+        }
+      } catch (err) {}
     },
     onClickRight() {
       this.$router.push('/found/foundSearch')
