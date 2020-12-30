@@ -1,5 +1,5 @@
 <template>
-  <sp-bottombar safe-area-inset-bottom>
+  <sp-bottombar safe-area-inset-bottom class="my-sp-bottombar">
     <sp-bottombar-info title avatar :card="card" />
     <sp-bottombar-button
       v-md-map
@@ -111,6 +111,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+// .my-sp-bottombar覆写了组件原本的样式
+.my-sp-bottombar {
+  width: calc(@spread-page-width - 80px);
+  left: auto;
+  right: auto;
+}
+
+/deep/ .sp-bottombar {
+}
 /deep/ .sp-bottombar-info__name {
   display: flex;
 }

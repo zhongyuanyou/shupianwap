@@ -825,11 +825,7 @@ export default {
   },
   data() {
     return {
-      images: [
-        'https://cdn.shupian.cn/sp-pt/wap/images/4jy3z5c6p5e0000.jpg',
-        'https://cdn.shupian.cn/sp-pt/wap/images/4jy3z5c6p5e0000.jpg',
-        'https://cdn.shupian.cn/sp-pt/wap/images/4jy3z5c6p5e0000.jpg',
-      ],
+      images: ['https://cdn.shupian.cn/sp-pt/wap/images/4jy3z5c6p5e0000.jpg'],
       guiHuaShiList: [
         {
           id: '7862495547640840192',
@@ -1114,8 +1110,20 @@ export default {
 
 <style lang="less" scoped>
 .page-content {
-  width: 750px;
+  width: @spread-page-width;
   margin: 0 auto;
   font-family: PingFang SC;
+
+  /deep/ .my-head {
+    // .my-head设置了固定定位，百分比相对于窗口。
+    width: @spread-page-width;
+    left: auto;
+  }
+
+  /deep/ .sp-overlay {
+    width: @spread-page-width;
+    left: auto;
+    right: auto;
+  }
 }
 </style>
