@@ -128,6 +128,7 @@ module.exports = (appInfo) => {
       },
       metadata: {
         version: '3.2',
+
       },
     },
     requestMiddleware: (requestOpts, done) => {
