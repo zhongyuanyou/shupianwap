@@ -293,7 +293,7 @@ module.exports = {
     const { ctx, app } = this;
     const upInstances = [];
     if (app.eurekaInstances) {
-      const instances = app.eurekaInstances['crisps-app-wap-bff-api'];
+      const instances = app.eurekaInstances['crisps-app-wap-bff-tgapi'];
       if (instances && instances.length > 0) {
         for (const i of instances) {
           if (i.status.toUpperCase() === 'UP') {
