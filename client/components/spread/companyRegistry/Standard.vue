@@ -122,5 +122,11 @@ export default {
       }
     }
   }
+  /deep/ .sp-overlay,
+  .sp-popup--bottom {
+    margin-left: -375px;
+    width: 750px;
+    left: 50%;
+  }
 }
 </style>

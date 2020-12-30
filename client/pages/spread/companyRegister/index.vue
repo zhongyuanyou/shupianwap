@@ -82,7 +82,9 @@
       <ShuPianZhaoRen />
     </div>
     <!-- E立即咨询 -->
-    <div class="foot"><FixedBottom :planner="planner" /></div>
+    <div class="foot">
+      <FixedBottom :planner="planner" />
+    </div>
     <dgg-im-company></dgg-im-company>
   </div>
 </template>
