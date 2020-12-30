@@ -1,5 +1,11 @@
 <template>
-  <div v-if="$store.state.app.isShowOpenApp" class="open-app">
+  <div
+    v-if="$store.state.app.isShowOpenApp"
+    class="open-app"
+    :style="{
+      bottom: `${bottom}px`,
+    }"
+  >
     <div class="closeApp" @click="closeOpenApp">
       <client-only>
         <my-icon
@@ -30,20 +36,20 @@ import openapp from '@/mixins/openapp'
 export default {
   name: 'OpenApp',
   mixins: [openapp],
+  props: {
+    bottom: {
+      type: Number,
+      default() {
+        return 0
+      },
+    },
+  },
   data() {
     return {
       isShow: false,
       isIOS: false,
       thisType: 'openapp',
-      noRoute: [
-        '/order/confirmOrder',
-        '/order/payFail',
-        '/order/submitOrder',
-        '/order/paySuccess',
-        '/activity/20200825/writeOff',
-        '/order/previewContractApp',
-        '/number',
-      ],
+      noRoute: [],
     }
   },
   mounted() {
@@ -76,11 +82,15 @@ export default {
 <style lang="less" scoped>
 /*@import '@/assets/styles/vant.var.less';*/
 .open-app {
+  position: fixed;
   display: flex;
   align-items: center;
   height: 100px;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.8);
+  left: 0;
+  bottom: 0;
+  z-index: 10;
   .closeApp {
     display: inline-block;
     position: absolute;
@@ -90,6 +100,9 @@ export default {
     width: 56px;
     /*background-color: rgba(0, 0, 0, 0.4);*/
     align-items: normal;
+    i {
+      display: block;
+    }
   }
   .sp-iconfont {
     position: absolute;

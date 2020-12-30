@@ -90,6 +90,8 @@ export default {
 .keyword {
   padding: 0 40px;
   .safe_con {
+    padding-top: constant(safe-area-inset-top);
+    padding-top: env(safe-area-inset-top);
     &_con {
       margin-top: 128px;
       padding-top: 33px;

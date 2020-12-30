@@ -13,20 +13,22 @@
       :class="headClass"
       :style="{ height: headHeight, 'padding-top': safeTop }"
     >
-      <div class="slot-left">
-        <slot name="left">
-          <my-icon
-            class="back-icon"
-            name="nav_ic_back"
-            size="0.4rem"
-            color="#1A1A1A"
-            @click.native="onLeftClick"
-          ></my-icon>
-        </slot>
-      </div>
-      <strong class="title">{{ title }}</strong>
-      <div class="slot-right">
-        <slot name="right"></slot>
+      <div class="my-head-row">
+        <div class="slot-left">
+          <slot name="left">
+            <my-icon
+              class="back-icon"
+              name="nav_ic_back"
+              size="0.4rem"
+              color="#1A1A1A"
+              @click.native="onLeftClick"
+            ></my-icon>
+          </slot>
+        </div>
+        <strong class="title">{{ title }}</strong>
+        <div class="slot-right">
+          <slot name="right"></slot>
+        </div>
       </div>
     </div>
   </div>
@@ -80,7 +82,13 @@ export default {
       return this.height
     },
   },
+  watch: {
+    $route() {
+      this.getTopMargin()
+    },
+  },
   mounted() {
+    console.log(1)
     this.getTopMargin()
   },
   methods: {
@@ -100,19 +108,26 @@ export default {
 </script>
 <style lang="less" scoped>
 .my-head {
-  position: relative;
-  display: flex;
-  align-items: center;
+  // position: relative;
+  // display: flex;
+  // align-items: center;
   background-color: #fff;
   font-size: 24px;
   box-shadow: 0px 1px 0px 0px #f4f4f4;
+  &-row {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
   .slot-left {
     display: flex;
-    // position: absolute;
-    // left: 0;
-    // top: 50%;
-    // z-index: 2;
-    // transform: translateY(-50%);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    z-index: 2;
+    transform: translateY(-50%);
     .back-icon {
       margin-left: 40px;
     }
@@ -127,11 +142,11 @@ export default {
   }
   .slot-right {
     display: flex;
-    // position: absolute;
-    // right: 0;
-    // top: 50%;
-    // z-index: 2;
-    // transform: translateY(-50%);
+    position: absolute;
+    right: 0;
+    top: 50%;
+    z-index: 2;
+    transform: translateY(-50%);
   }
 }
 .fixed-head {

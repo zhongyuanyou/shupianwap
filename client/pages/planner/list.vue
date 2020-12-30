@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-30 14:31:52
+ * @LastEditTime: 2020-12-30 15:05:42
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -260,7 +260,11 @@ export default {
     }
   },
   mounted() {
-    this.headHeight = this.$refs.head.offsetHeight
+    console.log(2)
+    this.$nextTick(() => {
+      this.headHeight = this.$refs.head.clientHeight
+      console.log('this.headHeight:', this.headHeight)
+    })
   },
   methods: {
     ...mapMutations({

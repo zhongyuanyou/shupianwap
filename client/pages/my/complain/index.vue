@@ -94,7 +94,7 @@ import {
   BottombarButton,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { complain, commonApi } from '~/api'
+import { complain, commonApi, ossApi } from '~/api'
 import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
@@ -165,41 +165,52 @@ export default {
     },
     // 提交
     async submit() {
-      if (this.formData.content.length < 10) {
-        this.$refs.spToast.show({
-          message: '描述问题为必填，长度为10-200个字',
-          duration: 1500,
-          forbidClick: true,
-        })
-      } else if (this.formData.feedbackTypeId === '') {
-        this.$refs.spToast.show({
-          message: '请选择反馈或建议的类型',
-          duration: 1500,
-          forbidClick: true,
-        })
-      } else {
-        try {
-          const params = {
-            ...this.formData,
-          }
-          const data = await complain.add({ axios: this.$axios }, params)
-          this.formData = {
-            content: '', // 内容
-            feedbackTypeId: '', // 吐槽类型
-            userId: this.userId, // 用户id
-            terminalCode: 'adadasdasd', // 终端编码
-            terminalName: 'dadasd', // 终端名称
-            platformCode: 'adasdad', // 平台编码
-            platformName: 'asdasdas', // 平台名称
-          }
-          this.$refs.spToast.show({
-            message: '提交成功，感谢您的反馈',
-            duration: 1500,
-            forbidClick: true,
-            icon: 'spiconfont-tab_ic_check',
-          })
-        } catch (err) {}
+      // if (this.formData.content.length < 10) {
+      //   this.$refs.spToast.show({
+      //     message: '描述问题为必填，长度为10-200个字',
+      //     duration: 1500,
+      //     forbidClick: true,
+      //   })
+      // } else if (this.formData.feedbackTypeId === '') {
+      //   this.$refs.spToast.show({
+      //     message: '请选择反馈或建议的类型',
+      //     duration: 1500,
+      //     forbidClick: true,
+      //   })
+      // } else {
+      //   try {
+      //     const params = {
+      //       ...this.formData,
+      //     }
+      //     const data = await complain.add({ axios: this.$axios }, params)
+      //     this.formData = {
+      //       content: '', // 内容
+      //       feedbackTypeId: '', // 吐槽类型
+      //       userId: this.userId, // 用户id
+      //       terminalCode: 'adadasdasd', // 终端编码
+      //       terminalName: 'dadasd', // 终端名称
+      //       platformCode: 'adasdad', // 平台编码
+      //       platformName: 'asdasdas', // 平台名称
+      //     }
+      //     this.$refs.spToast.show({
+      //       message: '提交成功，感谢您的反馈',
+      //       duration: 1500,
+      //       forbidClick: true,
+      //       icon: 'spiconfont-tab_ic_check',
+      //     })
+      //   } catch (err) {}
+      // }
+      console.log('up', this.uploader)
+      const formData = new FormData()
+      formData.append('file', this.uploader[0].file)
+      formData.append('uploadatalog', 'sp-pt/wap/images')
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       }
+      const res = await this.$axios.post(ossApi.add, formData, config)
+      console.log('res', res)
     },
     // 限制图片大小
     onOversize(file) {

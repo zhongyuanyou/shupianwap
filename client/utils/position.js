@@ -4,13 +4,18 @@ export default () => {
   const regeoUrl = 'https://restapi.amap.com/v3/geocode/regeo' // 高德地图逆地理编码接口服务（根据经纬度获取城市信息）
   const ipUrl = 'https://restapi.amap.com/v3/ip' // 高德地图根据用户请求地址ip获取所在城市
   return new Promise((resolve, reject) => {
+    const errorData = {
+      type: 0,
+      msg: '定位失败',
+    }
     // 判断浏览器是否支持地理位置接口
     if (navigator.geolocation) {
       // 支持
       agreeObtainLocation()
     } else {
       // 不支持,定位失败
-      reject(new Error('定位失败，当前浏览器不支持GPS定位'))
+      errorData.msg = '定位失败，当前浏览器不支持GPS定位'
+      reject(errorData)
       //   getCityInfoToIp()
     }
 
@@ -66,24 +71,27 @@ export default () => {
       //   getCityInfoToIp()
       switch (error.code) {
         case error.PERMISSION_DENIED:
-          reject(
-            new Error(
-              '定位失败，用户拒绝请求地理定位或因非https的站点被浏览器安全策略阻止'
-            )
-          )
+          errorData.type = 1
+          errorData.msg =
+            '定位失败，用户拒绝请求地理定位或因非https的站点被浏览器安全策略阻止'
           break
         case error.POSITION_UNAVAILABLE:
-          reject(new Error('定位失败，位置信息是不可用'))
+          errorData.type = 2
+          errorData.msg = '定位失败，位置信息是不可用'
           break
         case error.TIMEOUT:
-          reject(new Error('定位失败，请求获取用户位置超时'))
+          errorData.type = 3
+          errorData.msg = '定位失败，请求获取用户位置超时'
           break
         case error.UNKNOWN_ERROR:
-          reject(new Error('定位失败，定位系统失效'))
+          errorData.type = 4
+          errorData.msg = '定位失败，定位系统失效'
           break
         default:
-          reject(new Error('定位失败，未知异常'))
+          errorData.type = 5
+          errorData.msg = '定位失败，未知异常'
       }
+      reject(errorData)
     }
 
     // 获取用户的地理位置。使用它需要得到用户的授权

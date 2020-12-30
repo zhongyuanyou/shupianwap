@@ -16,6 +16,7 @@ import { helpApi } from './help' // 帮助中心相关接口
 import { searchApi } from './search' // 搜索相关接口
 import { recommendApi } from './recommend' // 推荐相关接口
 import { commonApi } from './common' // 帮助中心相关接口
+import { ossApi } from './oss'
 export { auth, shoppingCar, planner }
 export { category }
 export { userinfoApi }
@@ -32,3 +33,4 @@ export { helpApi }
 export { searchApi }
 export { recommendApi }
 export { commonApi }
+export { ossApi }
