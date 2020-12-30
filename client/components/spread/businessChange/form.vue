@@ -164,7 +164,7 @@ export default {
   created() {},
   methods: {
     telephoneTest(value) {
-      return value.replace(/^\d/, '')
+      return value.replace(/[^\d]/, '')
     },
     formatter(value) {
       // 过滤输入的特殊字符及汉字
