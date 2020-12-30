@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-29 20:08:32
+ * @LastEditTime: 2020-12-30 11:55:00
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -324,11 +324,19 @@ export default {
             parameter: { cartId: cartIdsStr, type: 1 },
           },
         }
+        const androidRouter = {
+          path: '/flutter/main',
+          parameter: {
+            routerPath: 'cps/place_order',
+            parameter: { cartId: cartIdsStr, type: 1 },
+          },
+        }
         const iOSRouterStr = JSON.stringify(iOSRouter)
+        const androidRouterStr = JSON.stringify(androidRouter)
         this.$appFn.dggJumpRoute(
           {
             iOSRouter: iOSRouterStr,
-            androidRouter: '',
+            androidRouter: androidRouterStr,
           },
           (res) => {
             const { code } = res || {}

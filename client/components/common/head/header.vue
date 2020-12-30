@@ -13,20 +13,22 @@
       :class="headClass"
       :style="{ height: headHeight, 'padding-top': safeTop }"
     >
-      <div class="slot-left">
-        <slot name="left">
-          <my-icon
-            class="back-icon"
-            name="nav_ic_back"
-            size="0.4rem"
-            color="#1A1A1A"
-            @click.native="onLeftClick"
-          ></my-icon>
-        </slot>
-      </div>
-      <strong class="title">{{ title }} {{ appInfo.statusBarHeight }}</strong>
-      <div class="slot-right">
-        <slot name="right"></slot>
+      <div class="my-head-row">
+        <div class="slot-left">
+          <slot name="left">
+            <my-icon
+              class="back-icon"
+              name="nav_ic_back"
+              size="0.4rem"
+              color="#1A1A1A"
+              @click.native="onLeftClick"
+            ></my-icon>
+          </slot>
+        </div>
+        <strong class="title">{{ title }}</strong>
+        <div class="slot-right">
+          <slot name="right"></slot>
+        </div>
       </div>
     </div>
   </div>
@@ -85,7 +87,8 @@ export default {
       this.getTopMargin()
     },
   },
-  created() {
+  mounted() {
+    console.log(1)
     this.getTopMargin()
   },
   methods: {
@@ -105,12 +108,19 @@ export default {
 </script>
 <style lang="less" scoped>
 .my-head {
-  position: relative;
-  display: flex;
-  align-items: center;
+  // position: relative;
+  // display: flex;
+  // align-items: center;
   background-color: #fff;
   font-size: 24px;
   box-shadow: 0px 1px 0px 0px #f4f4f4;
+  &-row {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
   .slot-left {
     display: flex;
     position: absolute;

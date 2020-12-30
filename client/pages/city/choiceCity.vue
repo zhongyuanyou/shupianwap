@@ -134,7 +134,6 @@ export default {
   created() {
     if (process.client) {
       // 获取城市列表
-      console.log(77, homeApi.findSiteList)
       this.loading = true
       this.$axios
         .get(homeApi.findSiteList, {
@@ -147,6 +146,7 @@ export default {
           if (res.code === 200) {
             this.loading = false
             this.cityList = res.data.cityList
+            console.log(777, this.cityList)
             if (this.cityList.length) {
               // 格式化城市数据
               this.nweCityList = this.getBrands(this.cityList)
@@ -251,12 +251,19 @@ export default {
     },
     // 选择定位城市
     choosePositionCity(name) {
-      if (this.currentCity === name) return
+      if (this.currentCity === name) {
+        this.$router.back()
+        return
+      }
       const arr = this.cityList.filter((item) => {
         return item.name === name
       })
       if (arr) {
-        this.getBrands({ cityName: arr[0].name, code: arr[0].code })
+        this.SET_CITY({
+          code: arr[0].code,
+          name: arr[0].name,
+        })
+        this.$router.back()
       }
     },
     // 返回页面

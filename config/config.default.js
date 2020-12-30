@@ -24,6 +24,19 @@ module.exports = appInfo => {
       path.join(__dirname, './../client/static/favicon.ico')
     ),
   };
+  // 关闭跨域校验(注意:默认开启的话,跨域调用API必须进行token校验)
+  // 配置指定的前端地址
+  config.cors = {
+    origin: '*',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+    // 下共享跨域session，前端ajax请求也要加上响应的参数
+    credentials: true,
+  };
+  config.security = {
+    csrf: false,
+    // 跨域白名单
+    domainWhiteList: [ '*' ],
+  };
   // add http_proxy to httpclient
   if (process.env.http_proxy) {
     config.httpclient = {

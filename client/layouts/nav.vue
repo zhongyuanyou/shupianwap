@@ -1,21 +1,40 @@
 <template>
   <div class="nav-layout">
     <nuxt />
-    <Bottombar v-if="!isInApp" />
-    <div class="nav-placeholder"></div>
+    <openApp v-if="!isInApp && showApp" :bottom="bottom" />
+    <Bottombar v-if="!isInApp" ref="bottombar" />
+    <div
+      class="nav-placeholder"
+      :class="isShowOpenApp ? 'show-open-app' : ''"
+    ></div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
 import Bottombar from '@/components/common/nav/Bottombar'
+import openApp from '@/components/common/app/OpenApp.vue'
 export default {
   components: {
     Bottombar,
+    openApp,
+  },
+  data() {
+    return {
+      bottom: 0,
+      showApp: false,
+    }
   },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      isShowOpenApp: (state) => state.app.isShowOpenApp,
     }),
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.bottom = this.$refs.bottombar.$el.getBoundingClientRect().height
+      this.showApp = true
+    })
   },
 }
 </script>
@@ -32,6 +51,11 @@ export default {
       display: block;
       width: 100%;
       height: 98px;
+    }
+  }
+  .show-open-app {
+    &::after {
+      height: 198px;
     }
   }
 }

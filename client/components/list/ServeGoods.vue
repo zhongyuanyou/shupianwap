@@ -85,6 +85,7 @@
     <!--S订阅-->
     <Subscribe v-show="!listShow && !skeletonLoading" />
     <!--E订阅-->
+    <openApp />
   </div>
 </template>
 
@@ -103,11 +104,13 @@ import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
 import clone from '~/utils/clone'
 import searchList from '@/mixins/searchList'
+import openApp from '@/components/common/app/OpenApp.vue'
 
 export default {
   name: 'ServeGoods',
   components: {
     GoodsItem,
+    openApp,
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
     [List.name]: List,
@@ -355,6 +358,9 @@ export default {
       font-weight: bold;
       color: #4974f5;
     }
+  }
+  /deep/.sp-dropdown-item {
+    z-index: 30 !important;
   }
   /*height: calc(100% - 200px);*/
   /deep/.sp-dropdown-item__content {
