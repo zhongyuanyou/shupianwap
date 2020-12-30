@@ -1,5 +1,5 @@
 <template>
-  <sp-bottombar v-show="isFixed" safe-area-inset-bottom class="my-sp-bottombar">
+  <sp-bottombar safe-area-inset-bottom class="my-sp-bottombar">
     <sp-bottombar-info title avatar :card="card" />
     <sp-bottombar-button
       v-md-map
