@@ -63,14 +63,24 @@ export default {
   computed: {
     description() {
       // 描述，包括
+      console.log(this.itemData)
       if (this.itemData.productDescription) {
         return this.itemData.productDescription
       }
       if (this.itemData.fieldList && this.itemData.fieldList.length) {
         const desc = []
-        this.itemData.fieldList.forEach((item) =>
-          desc.push(item.fieldValueCn || item.fieldValueList[0])
-        )
+        this.itemData.fieldList.forEach((item) => {
+          let val = ''
+          // 处理无字段数据的情况
+          if (item.fieldValueCn) {
+            val = item.fieldValueCn
+          } else if (item.fieldValueList && item.fieldValueList[0]) {
+            val = item.fieldValueList[0]
+          } else {
+            val = ''
+          }
+          if (val) desc.push(val)
+        })
         return desc.join(' | ')
       }
       return ''
