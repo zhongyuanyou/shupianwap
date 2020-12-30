@@ -3,7 +3,10 @@
     <nuxt />
     <openApp v-if="!isInApp" :bottom="bottom" />
     <Bottombar v-if="!isInApp" ref="bottombar" />
-    <div class="nav-placeholder"></div>
+    <div
+      class="nav-placeholder"
+      :class="isShowOpenApp ? 'show-open-app' : ''"
+    ></div>
   </div>
 </template>
 <script>
@@ -23,6 +26,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      isShowOpenApp: (state) => state.app.isShowOpenApp,
     }),
   },
   mounted() {
@@ -45,6 +49,11 @@ export default {
       display: block;
       width: 100%;
       height: 98px;
+    }
+  }
+  .show-open-app {
+    &::after {
+      height: 198px;
     }
   }
 }
