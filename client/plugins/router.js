@@ -59,7 +59,6 @@ export default ({ app, store }) => {
             if (res.code === 200) {
               try {
                 const userInfo = res.data || {}
-                console.log('来自app的userInfo：', userInfo)
                 if (userInfo && userInfo.userId && userInfo.token) {
                   store.commit('user/SET_USER', userInfo)
                 }

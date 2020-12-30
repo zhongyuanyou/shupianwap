@@ -2,7 +2,7 @@
   <a href="javascript:void(0);" class="goods-item" @click="jumpPage">
     <div class="goods-lable-img">
       <span v-if="false" class="lable">2千元成交礼</span>
-      <img v-lazy="defaultImg + $ossImgSet(240, 240)" alt="" />
+      <img v-lazy="goodsData.defaultImg + $ossImgSet(240, 240)" alt="" />
     </div>
     <div class="goods-info">
       <strong class="goods-name">
@@ -48,9 +48,7 @@ export default {
     },
   },
   data() {
-    return {
-      defaultImg: 'https://cdn.shupian.cn/sp-pt/wap/images/1u5qw0mktahs000.jpg',
-    }
+    return {}
   },
   methods: {
     priceRest(index = 0) {

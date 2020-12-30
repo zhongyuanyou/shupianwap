@@ -187,7 +187,6 @@ export default {
             ...this.formData,
           }
           const data = await complain.add({ axios: this.$axios }, params)
-          console.log('data', data)
           this.formData = {
             content: '', // 内容
             feedbackTypeId: '', // 吐槽类型
@@ -198,6 +197,7 @@ export default {
             platformName: 'asdasdas', // 平台名称
             images: [],
           }
+          this.uploader = []
           this.$refs.spToast.show({
             message: '提交成功，感谢您的反馈',
             duration: 1500,
