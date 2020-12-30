@@ -68,6 +68,7 @@
         v-for="(item, index) in serveGoodsListData"
         :key="index"
         :item-data="item"
+        :search-key="formData.keywords"
       />
     </sp-list>
     <div>

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-29 14:36:45
+ * @LastEditTime: 2020-12-29 20:08:32
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -399,7 +399,13 @@ export default {
           }
           return { ...item, goodsNumber, shopIsSelected }
         })
-      } catch (error) {}
+      } catch (error) {
+        console.log('countOperation', error)
+        // 为了通知MainGoodsItem 组件更新为原来的数量
+        this.list = this.list.map((item) => {
+          return { ...item }
+        })
+      }
     },
 
     // 请求购物车列表
@@ -428,7 +434,14 @@ export default {
         case 'remove':
           break
         case 'updateSkuItem':
-          params = { serviceList, skuAttr, skuId, goodsNumber: value }
+          // 修改sku,默认选中
+          params = {
+            serviceList,
+            skuAttr,
+            skuId,
+            goodsNumber: value,
+            selectFlag: 1,
+          }
           break
         case 'select':
           params = { selectFlag: +value } // 将boolean转换为数字（1：选中 ,0：取消选中）

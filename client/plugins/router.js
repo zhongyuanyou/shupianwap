@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-02-21 04:16:27
- * @LastEditTime: 2020-12-29 09:51:04
+ * @LastEditTime: 2020-12-29 20:13:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /chips-wap/client/plugins/router.js
@@ -35,29 +35,20 @@ export default ({ app, store }) => {
       const token = app.$cookies.get('token') // 获取缓存用户token
       if (!store.state.app.isInApp) {
         if (token) {
-          // 若用户已登录
-          try {
-            if (to.path === loginRoutePath) {
-              // 如果跳转登录页面，将被重定向到首页
-              next({
-                path: defaultRoutePath,
-              })
-            } else {
-              next()
-            }
-          } catch (err) {
-            console.log('错误', err)
-          }
-        } else {
-          // 若用户未登录
-          // eslint-disable-next-line no-lonely-if
-          if (routerBlackList.includes(to.path)) {
+          if (to.path === loginRoutePath) {
+            // 如果跳转登录页面，将被重定向到首页
             next({
-              path: loginRoutePath,
+              path: defaultRoutePath,
             })
           } else {
             next()
           }
+        } else if (routerBlackList.includes(to.path)) {
+          next({
+            path: loginRoutePath,
+          })
+        } else {
+          next()
         }
       } else {
         // 验证跳转页面是否嵌入app中后是否需获取app中到用户详情

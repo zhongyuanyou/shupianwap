@@ -5,14 +5,13 @@
       <!--<span class="tag">急售</span>-->
     </div>
     <div class="goods-right">
-      <h3>{{ itemData.name }}</h3>
+      <h3 v-html="heightLightHtml(itemData.name)"></h3>
       <p
         :style="{
           visibility: description ? 'visible' : 'hidden',
         }"
-      >
-        {{ description }}
-      </p>
+        v-html="heightLightHtml(description)"
+      ></p>
       <div
         class="tags"
         :style="{
@@ -35,6 +34,13 @@
 export default {
   name: 'GoodsItem',
   props: {
+    searchKey: {
+      // 用户搜索的关键词
+      type: String,
+      default() {
+        return ''
+      },
+    },
     goodstype: {
       type: Object,
       default() {
@@ -90,6 +96,18 @@ export default {
         this.$router.push(
           `/detail/transactionDetails?type=${this.goodstype.typeCode}&productId=${this.itemData.id}`
         )
+      }
+    },
+    heightLightHtml(str) {
+      // 高亮显示
+      if (this.searchKey !== '' && str.indexOf(this.searchKey) !== -1) {
+        const _str = str.replaceAll(
+          this.searchKey,
+          `<span style="color: #4974f5;">${this.searchKey}</span>`
+        )
+        return _str
+      } else {
+        return str
       }
     },
   },

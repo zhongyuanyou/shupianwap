@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 11:54:19
+ * @LastEditTime: 2020-12-30 11:19:42
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -242,16 +242,15 @@ export default {
         value: matched.sortValue,
       }
       const code = region.name === '区域' ? this.currentCity.code : region.code
-      // const regionDto = {
-      //   codeState: region.name === '区域' ? 2 : 3,
-      //   regions: [code],
-      // }
-      // TODO 测试数据
       const regionDto = {
-        codeState: 1,
-        regions: ['110000'],
+        codeState: region.name === '区域' ? 2 : 3,
+        regions: [code],
       }
-
+      // TODO 测试数据
+      // const regionDto = {
+      //   codeState: 1,
+      //   regions: ['110000'],
+      // }
       return { sort, plannerName: keywords, regionDto }
     },
   },
@@ -503,6 +502,7 @@ export default {
   height: 100%;
   overflow-y: scroll;
   .head {
+    background: #ffffff;
   }
   .body {
     padding: 0;
@@ -514,6 +514,9 @@ export default {
           font-size: 30px;
           font-weight: bold;
         }
+      }
+      &__dropdown {
+        background-color: #ffffff;
       }
       /deep/.sticky-dropdown {
         .sp-sticky {

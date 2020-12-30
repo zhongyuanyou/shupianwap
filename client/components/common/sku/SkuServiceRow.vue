@@ -2,18 +2,18 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 15:10:43
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 16:22:10
+ * @LastEditTime: 2020-12-29 19:55:32
  * @Description: file content
  * @FilePath: /chips-wap/client/components/common/sku/SkuServiceRow.vue
 -->
 <template>
-  <div class="sku-service-row" :class="{ 'sp-hairline--bottom': !isSub }">
-    <div :class="{ 'sku-service-row-sub': isSub }">
-      <div class="sku-service-row__title">
+  <div class="sku-row" :class="{ 'sp-hairline--bottom': !isSub }">
+    <div :class="{ 'sku-row-sub': isSub }">
+      <div class="sku-row__title">
         <span>{{ skuRow.k }}</span>
       </div>
 
-      <div class="sku-service-row__wrap">
+      <div class="sku-row__wrap">
         <slot name="default">
           <template v-for="item of formateSkuRowVal">
             <SkuServiceRowItem
@@ -157,7 +157,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@module-name: .sku-service-row;
+@module-name: .sku-row;
 
 @{module-name} {
   padding: 32px 0px;
@@ -177,6 +177,7 @@ export default {
   }
   &__wrap {
     margin: 30px 0 0 0;
+    font-size: 12px;
   }
   /deep/.sku-service-row-item {
     margin: 0 16px 16px 0;
