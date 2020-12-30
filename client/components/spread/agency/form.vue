@@ -154,11 +154,11 @@ export default {
   },
   methods: {
     telephoneTest(value) {
-      return value.replace(/\D/, '')
+      return value.replace(/[^\d]/, '')
     },
     formatter(value) {
       // 过滤输入的特殊字符及汉字
-      return value.replace(/\W/, '')
+      return value.replace(/[^a-z0-9A-Z]/, '')
     },
     selected(index) {
       this.actived = index

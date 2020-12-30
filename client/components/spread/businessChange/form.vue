@@ -134,7 +134,6 @@ export default {
   },
   data() {
     return {
-      pattern: /^[a-z0-9]{6,16}$/,
       read: true,
       value: '法人变更', // 行业信息
       telephone: '', // 电话号码
@@ -165,11 +164,11 @@ export default {
   created() {},
   methods: {
     telephoneTest(value) {
-      return value.replace(/\D/, '')
+      return value.replace(/^\d/, '')
     },
     formatter(value) {
       // 过滤输入的特殊字符及汉字
-      return value.replace(/\W/, '')
+      return value.replace(/[^a-z0-9A-Z]/, '')
     },
     // 获取验证码
     obtain() {
