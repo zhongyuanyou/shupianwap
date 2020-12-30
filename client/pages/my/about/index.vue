@@ -96,6 +96,10 @@ export default {
         align-items: center;
         justify-content: center;
         margin: 0 auto;
+        > img {
+          width: 100%;
+          height: 100%;
+        }
       }
       .versionText {
         width: 191px;

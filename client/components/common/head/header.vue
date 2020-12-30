@@ -24,7 +24,7 @@
           ></my-icon>
         </slot>
       </div>
-      <strong class="title">{{ title }}</strong>
+      <strong class="title">{{ title }} {{ appInfo.statusBarHeight }}</strong>
       <div class="slot-right">
         <slot name="right"></slot>
       </div>
@@ -78,6 +78,11 @@ export default {
         return this.height + 'px'
       }
       return this.height
+    },
+  },
+  watch: {
+    $route() {
+      this.getTopMargin()
     },
   },
   created() {
