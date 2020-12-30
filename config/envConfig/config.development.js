@@ -43,10 +43,6 @@ module.exports = appInfo => {
   config.bodyParser = {
     match: '/service',
   };
-  // 关闭跨域校验(注意:默认开启的话,跨域调用API必须进行token校验)
-  config.security = {
-    csrf: false,
-  };
   // 开发环境日志写入路径
   config.logger = {
     level: 'INFO',
