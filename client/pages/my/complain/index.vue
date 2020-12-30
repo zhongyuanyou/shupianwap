@@ -128,6 +128,7 @@ export default {
         platformName: 'asdasdas', // 平台名称
       },
       loading: false, // 加载效果状态
+      images: [], // 图片集合
     }
   },
   computed: {
@@ -165,59 +166,69 @@ export default {
     },
     // 提交
     async submit() {
-      // if (this.formData.content.length < 10) {
-      //   this.$refs.spToast.show({
-      //     message: '描述问题为必填，长度为10-200个字',
-      //     duration: 1500,
-      //     forbidClick: true,
-      //   })
-      // } else if (this.formData.feedbackTypeId === '') {
-      //   this.$refs.spToast.show({
-      //     message: '请选择反馈或建议的类型',
-      //     duration: 1500,
-      //     forbidClick: true,
-      //   })
-      // } else {
-      //   try {
-      //     const params = {
-      //       ...this.formData,
-      //     }
-      //     const data = await complain.add({ axios: this.$axios }, params)
-      //     this.formData = {
-      //       content: '', // 内容
-      //       feedbackTypeId: '', // 吐槽类型
-      //       userId: this.userId, // 用户id
-      //       terminalCode: 'adadasdasd', // 终端编码
-      //       terminalName: 'dadasd', // 终端名称
-      //       platformCode: 'adasdad', // 平台编码
-      //       platformName: 'asdasdas', // 平台名称
-      //     }
-      //     this.$refs.spToast.show({
-      //       message: '提交成功，感谢您的反馈',
-      //       duration: 1500,
-      //       forbidClick: true,
-      //       icon: 'spiconfont-tab_ic_check',
-      //     })
-      //   } catch (err) {}
-      // }
-      console.log('up', this.uploader)
-      const formData = new FormData()
-      formData.append('file', this.uploader[0].file)
-      formData.append('uploadatalog', 'sp-pt/wap/images')
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      if (this.formData.content.length < 10) {
+        this.$refs.spToast.show({
+          message: '描述问题为必填，长度为10-200个字',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else if (this.formData.feedbackTypeId === '') {
+        this.$refs.spToast.show({
+          message: '请选择反馈或建议的类型',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else {
+        try {
+          if (this.images.length) {
+            this.formData.imgs = this.images.toString()
+          }
+          const params = {
+            ...this.formData,
+          }
+          const data = await complain.add({ axios: this.$axios }, params)
+          console.log('data', data)
+          this.formData = {
+            content: '', // 内容
+            feedbackTypeId: '', // 吐槽类型
+            userId: this.userId, // 用户id
+            terminalCode: 'adadasdasd', // 终端编码
+            terminalName: 'dadasd', // 终端名称
+            platformCode: 'adasdad', // 平台编码
+            platformName: 'asdasdas', // 平台名称
+            images: [],
+          }
+          this.$refs.spToast.show({
+            message: '提交成功，感谢您的反馈',
+            duration: 1500,
+            forbidClick: true,
+            icon: 'spiconfont-tab_ic_check',
+          })
+        } catch (err) {}
       }
-      const res = await this.$axios.post(ossApi.add, formData, config)
-      console.log('res', res)
     },
     // 限制图片大小
     onOversize(file) {
       Toast('文件大小不能超过20M')
     },
     afterRead(file) {
-      console.log('file', file)
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+      const imgs = this.images
+      const formData = new FormData()
+      formData.append('uploadatalog', 'sp-pt/wap/images')
+      formData.append('file', file.file)
+      this.loading = true
+      this.$axios.post(ossApi.add, formData, config).then((res) => {
+        this.loading = false
+        if (res.code === 200) {
+          imgs.push(res.data.url)
+          this.images = imgs
+        }
+      })
     },
     async getComplainCategory() {
       this.loading = true
@@ -241,11 +252,9 @@ export default {
 
 <style lang="less" scoped>
 .complaint {
-  width: 100%;
-  padding-bottom: 160px;
-  /deep/.sp-top-nav-bar__right {
-    font-size: 28px;
-  }
+  height: 100%;
+  background-color: #fff;
+  overflow-y: scroll;
   .back_icon {
     margin-left: 40px;
   }
