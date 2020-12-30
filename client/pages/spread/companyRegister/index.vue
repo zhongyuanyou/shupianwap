@@ -561,7 +561,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .company-registry {
-  width: 750px;
+  width: @spread-page-width;
   margin: 0 auto;
   position: relative;
   font-family: PingFang SC;

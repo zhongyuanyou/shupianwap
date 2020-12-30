@@ -30,6 +30,7 @@
           </div>
           <sp-action-sheet
             v-model="dropdownMenuIsShow"
+            style="transform: translateX(-63px)"
             :actions="dropList"
             @select="onSelect"
           />
@@ -42,6 +43,8 @@
             data-name="工商聚合页_表单_手机号"
             label="手机号"
             type="tel"
+            maxlength="11"
+            :formatter="telTypingVerify"
             placeholder="信息保护中，仅官方可见"
             @focus="() => (smsInputIsShow = true)"
           />
@@ -55,7 +58,10 @@
             center
             clearable
             label="验证码"
+            type="tel"
             placeholder="请输入验证码"
+            maxlength="6"
+            :formatter="smsTypingVerify"
           >
             <template #button>
               <sp-button
@@ -153,6 +159,7 @@ export default {
     this.dropdownValue = this.dropList[0]
   },
   methods: {
+    // @--下拉
     onSelect(item) {
       // 默认情况下点击选项时不会自动收起
       // 可以通过 close-on-click-action 属性开启自动收起
@@ -169,6 +176,29 @@ export default {
     showDropdownList() {
       this.dropdownMenuIsShow = true
     },
+    // @--表单验证
+    // 手机号输入时验证：不能输入格式不符的字符
+    telTypingVerify(value) {
+      return value.replace(/[^\d]/, '')
+    },
+    // 验证码输入时验证：不能输入格式不符的字符
+    smsTypingVerify(value) {
+      // 过滤输入的特殊字符及汉字
+      return value.replace(/[^a-z0-9A-Z]/, '')
+    },
+    // 发送验证码时，验证手机号正确格式
+    verifyTel() {
+      const _tel = this.telephone
+      const _reg = /^1[3,4,5,6,7,8,9]\d{9}$/
+      if (_tel === '') {
+        return Toast('请输入手机号码') && false
+      }
+      if (!_reg.test(_tel)) {
+        return Toast('请输入正确的手机号码') && false
+      }
+      return true
+    },
+    // @--表单按钮
     // 发送验证码
     sendSms() {
       const vm = this
@@ -196,7 +226,7 @@ export default {
     // 验证码倒计时
     countDownFun() {
       const vm = this
-      this.countdown = 60
+      this.countdown = 59
       this.countdownTimer = setInterval(function () {
         if (vm.countdown === 0) {
           vm.countdown = -1
@@ -206,18 +236,6 @@ export default {
           vm.countdown > 0 && vm.countdown--
         }
       }, 1000)
-    },
-    // 验证手机号
-    verifyTel() {
-      const _tel = this.telephone
-      const _reg = /^1[3,4,5,6,7,8,9]\d{9}$/
-      if (_tel === '') {
-        return Toast('请输入手机号码') && false
-      }
-      if (!_reg.test(_tel)) {
-        return Toast('请输入正确的手机号码') && false
-      }
-      return true
     },
     // 表单提交
     submitForm() {
@@ -300,7 +318,7 @@ export default {
         currentSeconds
       return nowTimeString
     },
-    // 表单有结果后，主动埋点
+    // 表单提交有结果后，主动埋点
     formMaiDian() {
       window.getTrackRow('p_formSubmitResult', {
         even_name: 'p_formSubmitResult',
@@ -376,6 +394,18 @@ export default {
             position: absolute;
             right: 0;
           }
+        }
+        /deep/ .sp-popup--bottom {
+          width: @spread-page-width;
+          left: auto;
+          right: auto;
+          //transform: translateX(-126px); // 该属性因为组件样式未知bug，导致左侧出来一部分。且距离是一直固定是63px，不能转成rem
+        }
+        /deep/ .sp-overlay {
+          width: @spread-page-width;
+          left: 50%;
+          right: auto;
+          transform: translateX(-@spread-page-width / 2);
         }
       }
       .input-all {

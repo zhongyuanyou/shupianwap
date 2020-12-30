@@ -1,101 +1,95 @@
 <template>
-  <div>
-    <sp-popup v-model="isPopupShow" position="bottom" class="chat">
-      <div class="chat-box">
-        <div class="chat-box_head">
-          <span>{{
-            recommendPlannerName ? recommendPlannerName : '顶呱呱平台'
-          }}</span>
-          <span @click="isPopupShow = false">
-            <my-icon
-              name="sear_ic_open"
-              size="0.2rem"
-              color="#ffffff"
-            ></my-icon>
-          </span>
-        </div>
-        <div ref="viewBox" class="mobile-page">
-          <template v-for="(item, index) in currentChatData">
-            <div v-if="item.isUser" :key="index" class="user-group">
-              <div class="user-msg">
-                <h2 class="time">{{ item.createTime | timeFormat }}</h2>
-                <pre
-                  class="user-reply"
-                  v-html="covertMessageText(item.text)"
-                ></pre>
-                <i class="triangle-user"></i>
-              </div>
-              <img
-                class="user-img"
-                src="https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/jyextension/emojis/ggw/ggw_1.png"
-              />
+  <sp-popup v-model="isPopupShow" position="bottom" class="chat">
+    <div class="chat-box">
+      <div class="chat-box_head">
+        <span>{{
+          recommendPlannerName ? recommendPlannerName : '顶呱呱平台'
+        }}</span>
+        <span @click="isPopupShow = false">
+          <my-icon name="sear_ic_open" size="0.2rem" color="#ffffff"></my-icon>
+        </span>
+      </div>
+      <div ref="viewBox" class="mobile-page">
+        <template v-for="(item, index) in currentChatData">
+          <div v-if="item.isUser" :key="index" class="user-group">
+            <div class="user-msg">
+              <h2 class="time">{{ item.createTime | timeFormat }}</h2>
+              <pre
+                class="user-reply"
+                v-html="covertMessageText(item.text)"
+              ></pre>
+              <i class="triangle-user"></i>
             </div>
-            <div v-else :key="index" class="admin-group">
-              <img class="admin-img" :src="plannerImgSrc" />
-              <div class="admin-msg">
-                <h2 class="time">{{ item.createTime | timeFormat }}</h2>
-                <i class="triangle-admin"></i>
-                <pre
-                  class="admin-reply"
-                  v-html="covertMessageText(item.text)"
-                ></pre>
-              </div>
-            </div>
-          </template>
-        </div>
-        <!-- 输入消息 -->
-        <div class="msg-input-bgk">
-          <div v-if="emojishow" class="emoji-box">
-            <div
-              v-for="(currentEmojiArr, index) in currentAlbumKeys"
-              :key="index"
-            >
-              <img
-                v-for="(currentEmojiKey, keyIndex) in currentEmojiArr"
-                :key="keyIndex"
-                class="emoji-content-item"
-                :src="emojiList[currentAlbum][currentEmojiKey].img"
-                :class="
-                  currentAlbum == 'emoji' || currentAlbum == 'ggw'
-                    ? 'emoji-content-img-emoji'
-                    : 'emoji-content-img-other'
-                "
-                :data-src="emojiList[currentAlbum][currentEmojiKey].img"
-                :data-emoji="currentEmojiKey"
-                @click="emojiTap"
-              />
+            <img
+              class="user-img"
+              src="https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/jyextension/emojis/ggw/ggw_1.png"
+            />
+          </div>
+          <div v-else :key="index" class="admin-group">
+            <img class="admin-img" :src="plannerImgSrc" />
+            <div class="admin-msg">
+              <h2 class="time">{{ item.createTime | timeFormat }}</h2>
+              <i class="triangle-admin"></i>
+              <pre
+                class="admin-reply"
+                v-html="covertMessageText(item.text)"
+              ></pre>
             </div>
           </div>
-          <span class="emoji-icon" @click="emoji">
-            <!--            <i class="emoji" @click="emoji"></i>-->
-            <my-icon
-              name="msg_ic_emoji"
-              size="0.4rem"
-              color="#333"
-              class="emoji"
-            ></my-icon>
-          </span>
-          <textarea
-            ref="msgInput"
-            v-model="userText"
-            class="inputText"
-            placeholder="请输入"
-            rows="1"
-            @keyup.enter="addMessageClick"
-          ></textarea>
-          <!--          <div-->
-          <!--            ref="msgInput"-->
-          <!--            class="inputText"-->
-          <!--            contenteditable="true"-->
-          <!--            @keyup.enter="addMessageClick"-->
-          <!--          >-->
-          <!--            {{ userText }}-->
-          <!--          </div>-->
-          <a class="button" @click="addMessageClick">发送</a>
-        </div>
+        </template>
       </div>
-    </sp-popup>
-  </div>
+      <!-- 输入消息 -->
+      <div class="msg-input-bgk">
+        <div v-if="emojishow" class="emoji-box">
+          <div
+            v-for="(currentEmojiArr, index) in currentAlbumKeys"
+            :key="index"
+          >
+            <img
+              v-for="(currentEmojiKey, keyIndex) in currentEmojiArr"
+              :key="keyIndex"
+              class="emoji-content-item"
+              :src="emojiList[currentAlbum][currentEmojiKey].img"
+              :class="
+                currentAlbum == 'emoji' || currentAlbum == 'ggw'
+                  ? 'emoji-content-img-emoji'
+                  : 'emoji-content-img-other'
+              "
+              :data-src="emojiList[currentAlbum][currentEmojiKey].img"
+              :data-emoji="currentEmojiKey"
+              @click="emojiTap"
+            />
+          </div>
+        </div>
+        <span class="emoji-icon" @click="emoji">
+          <!--            <i class="emoji" @click="emoji"></i>-->
+          <my-icon
+            name="msg_ic_emoji"
+            size="0.4rem"
+            color="#333"
+            class="emoji"
+          ></my-icon>
+        </span>
+        <textarea
+          ref="msgInput"
+          v-model="userText"
+          class="inputText"
+          placeholder="请输入"
+          rows="1"
+          @keyup.enter="addMessageClick"
+        ></textarea>
+        <!--          <div-->
+        <!--            ref="msgInput"-->
+        <!--            class="inputText"-->
+        <!--            contenteditable="true"-->
+        <!--            @keyup.enter="addMessageClick"-->
+        <!--          >-->
+        <!--            {{ userText }}-->
+        <!--          </div>-->
+        <a class="button" @click="addMessageClick">发送</a>
+      </div>
+    </div>
+  </sp-popup>
 </template>
 
 <script>
@@ -589,10 +583,16 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.chat.md-popup {
+// .chat覆写了组件原本的样式
+// 该组件居中是因为父组件设置了居中
+.chat {
   z-index: 9999;
+  width: @spread-page-width;
+  left: auto;
 }
+
 .chat-box {
+  width: 100%;
   background: #ddd;
   height: 80vh;
   &_head {
@@ -695,14 +695,15 @@ export default {
   }
   /*--- 消息输入框--- */
   .msg-input-bgk {
-    width: 100%;
+    //width: 100%;
+    width: @spread-page-width;
     height: auto;
     padding: 20px;
     background: #f8f8f8;
     position: fixed;
     bottom: 0;
-    left: 0;
-    right: 0;
+    left: auto;
+    right: auto;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
