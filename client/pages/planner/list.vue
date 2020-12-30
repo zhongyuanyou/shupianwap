@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-30 16:29:14
+ * @LastEditTime: 2020-12-30 19:50:42
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -64,14 +64,34 @@
               />
             </sp-dropdown-item>
             <sp-dropdown-item
-              v-model="search.sortId"
+              ref="sortDropdown"
+              class="search__dropdown-sort"
               :title-class="
                 search.sortId > 0 ? 'sp-dropdown-menu__title--selected' : ''
               "
-              class="search__dropdown-sort"
-              :options="sortOption"
-              @change="handleSortChange"
-            />
+              :title="search.sortText"
+            >
+              <div class="search__dropdown-sort-content">
+                <sp-cell
+                  v-for="(item, index) in sortOption"
+                  :key="index"
+                  :title="item.text"
+                  :class="{
+                    active: item.value === search.sortId,
+                  }"
+                  @click="handleSortChange(item)"
+                >
+                  <template #right-icon>
+                    <my-icon
+                      v-show="item.value === search.sortId"
+                      name="tab_ic_check"
+                      size="0.22rem"
+                      color="#4974f5"
+                    />
+                  </template>
+                </sp-cell>
+              </div>
+            </sp-dropdown-item>
           </sp-dropdown-menu>
         </sp-sticky>
         <!-- E 下拉筛选条件 -->
@@ -146,37 +166,37 @@ import { callPhone, parseTel } from '@/utils/common'
 const SORT_CONFIG = [
   {
     type: 'pointSort', // 排序类型
-    sortValue: 1, // 升序
+    sortValue: 2, // 降序
     text: '薯片分从高到底',
     value: 0,
   },
   {
     type: 'pointSort',
-    sortValue: 2, // 降序
+    sortValue: 1, // 升序
     text: '薯片分从底到高',
     value: 1,
   },
   {
     type: 'reputationSort',
-    sortValue: 1, // 升序
+    sortValue: 2, // 降序
     text: '客户评价分从高到低',
     value: 2,
   },
   {
     type: 'reputationSort',
-    sortValue: 2, // 降序
+    sortValue: 1, // 升序
     text: '客户评价分从低到高',
     value: 3,
   },
   {
     type: 'payNumSort',
-    sortValue: 1, // 升序
+    sortValue: 2, // 降序
     text: '成交量从高到低',
     value: 4,
   },
   {
     type: 'payNumSort',
-    sortValue: 2, // 降序
+    sortValue: 1, // 升序
     text: '成交量从低到高',
     value: 5,
   },
@@ -214,6 +234,7 @@ export default {
       search: {
         keywords: '',
         sortId: 0,
+        sortText: '薯片分从高到底',
         region: {
           name: '区域',
           code: '',
@@ -289,10 +310,13 @@ export default {
       this.$refs.regionsDropdownItem.toggle()
       this.handleSearch()
     },
-    handleSortChange(value) {
+    handleSortChange(item) {
+      const { value, text } = item || {}
       console.log(value)
-      // 触发 formatSearch 计算
+      // 触发 formatSearchParams 计算
+      this.search.sortText = text
       this.search.sortId = value
+      this.$refs.sortDropdown.toggle()
       this.handleSearch()
     },
     onLoad() {
@@ -573,6 +597,21 @@ export default {
       &__dropdown {
         background-color: #ffffff;
       }
+      &__dropdown-sort-content {
+        .sp-cell {
+          padding: 18px 40px;
+          &::after {
+            display: none;
+          }
+          &:last-child {
+            margin-bottom: 40px;
+          }
+          &.active {
+            font-weight: bold;
+            color: #4974f5;
+          }
+        }
+      }
       /deep/.sticky-dropdown {
         .sp-sticky {
           padding-top: 0;
@@ -624,7 +663,7 @@ export default {
           line-height: 28px;
           .sp-ellipsis {
             font-weight: bold;
-            font-size: 32px;
+            font-size: 26px;
           }
         }
       }
