@@ -58,18 +58,40 @@
               @confirmFilters="confirmFilters"
             />
           </sp-dropdown-item>
+          <!-- S 排序选择 -->
           <sp-dropdown-item
-            v-model="search.sortValue"
+            ref="sortDropdown"
             :title-class="
               formatSortOption[0] &&
               formatSortOption[0].value !== search.sortValue
                 ? 'title-style'
                 : ''
             "
-            :options="formatSortOption"
             :disabled="!formatSortOption || !formatSortOption.length"
-            @change="handleSortChange"
-          />
+            :title="dropdownSortTitle"
+          >
+            <div class="sort-content">
+              <sp-cell
+                v-for="(item, index) in formatSortOption"
+                :key="index"
+                :title="item.text"
+                :class="{
+                  active: item.value === search.sortValue,
+                }"
+                @click="handleSortChange(item, index)"
+              >
+                <template #right-icon>
+                  <my-icon
+                    v-show="item.value === search.sortValue"
+                    name="tab_ic_check"
+                    size="0.22rem"
+                    color="#4974f5"
+                  />
+                </template>
+              </sp-cell>
+            </div>
+          </sp-dropdown-item>
+          <!-- E 排序选择 -->
         </sp-dropdown-menu>
       </sp-sticky>
     </div>
@@ -109,6 +131,7 @@ import {
   List,
   PullRefresh,
   Button,
+  Cell,
 } from '@chipspc/vant-dgg'
 import PriceFilterComponents from '@/components/common/filters/PriceFilterComponents'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
@@ -134,6 +157,7 @@ export default {
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
     [Button.name]: Button,
+    [Cell.name]: Cell,
     PriceFilterComponents,
     BottomConfirm,
     AddressList,
@@ -148,6 +172,7 @@ export default {
         maxPrice: '',
       },
       dropdownPriceTitle: '价格',
+      dropdownSortTitle: '',
       loading: false,
       error: false,
       finished: false,
@@ -226,6 +251,7 @@ export default {
       handler(newVal, oldVal) {
         if (!this.search.sortValue) {
           this.search.sortValue = newVal[0] && newVal[0].value
+          this.dropdownSortTitle = newVal[0] && newVal[0].text
         }
       },
       immediate: true,
@@ -237,10 +263,13 @@ export default {
     }
   },
   methods: {
-    handleSortChange(value) {
+    handleSortChange(item) {
+      const { value, text } = item || {}
       console.log(value)
       // 触发 formatSearchParams 计算
+      this.dropdownSortTitle = text
       this.search.sortValue = value
+      this.$refs.sortDropdown.toggle()
       this.handleSearch()
     },
     handleSearch() {
@@ -502,6 +531,22 @@ export default {
     }
     /deep/.sp-hairline--bottom::after {
       border-bottom-width: 0;
+    }
+  }
+
+  .sort-content {
+    .sp-cell {
+      padding: 18px 40px;
+      &::after {
+        display: none;
+      }
+      &:last-child {
+        margin-bottom: 40px;
+      }
+      &.active {
+        font-weight: bold;
+        color: #4974f5;
+      }
     }
   }
 
