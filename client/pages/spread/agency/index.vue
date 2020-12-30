@@ -460,5 +460,12 @@ export default {
 .agency {
   width: 750px;
   margin: 0 auto;
+  /deep/.fixed-head {
+    /deep/.my-head {
+      width: 750px;
+      left: 50%;
+      margin-left: -375px;
+    }
+  }
 }
 </style>

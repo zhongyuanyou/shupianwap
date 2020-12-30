@@ -651,6 +651,23 @@ export default {
 .businesschange {
   width: 750px;
   margin: 0 auto;
-  background: #ffffff;
+  position: relative;
+  /deep/.fixed-head {
+    /deep/.my-head {
+      width: 750px;
+      left: 50%;
+      margin-left: -375px;
+    }
+  }
+  /deep/.sp-popup--bottom {
+    width: 750px;
+    left: 50%;
+    margin-left: -375px;
+  }
+  /deep/.sp-overlay {
+    width: 750px;
+    left: 50%;
+    margin-left: -375px;
+  }
 }
 </style>
