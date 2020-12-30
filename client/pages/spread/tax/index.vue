@@ -32,7 +32,7 @@
     <!--  立即咨询  -->
     <!--  底部  -->
     <shu-pian-zhao-ren></shu-pian-zhao-ren>
-    <fixed-bottom :planner="fixedBottomData"></fixed-bottom>
+    <fixed-bottom v-show="!isFixed" :planner="fixedBottomData"></fixed-bottom>
     <!--  底部  -->
     <!--  IM  -->
     <dgg-im-company></dgg-im-company>
@@ -417,7 +417,21 @@ export default {
           locationCodeLocType: 2,
         },
       ],
+      isFixed: false, // 是否固定定位
+      // 默认屏幕高度
+      docmHeight: 0, // 一开始的屏幕高度
+      showHeight: 0, // 一开始的屏幕高度
     }
+  },
+  watch: {
+    showHeight() {
+      const that = this
+      if (that.docmHeight > that.showHeight) {
+        this.isFixed = true
+      } else if (that.docmHeight <= that.showHeight) {
+        this.isFixed = false
+      }
+    },
   },
   created() {
     // 请求回来的数据替代本地
@@ -433,6 +447,16 @@ export default {
     this.getServeData()
     this.getPlannersData()
     this.getfixedBottomData()
+  },
+  mounted() {
+    this.docmHeight = document.body.clientHeight
+    // window.onresize监听页面高度的变化
+    window.onresize = () => {
+      return (() => {
+        window.screenHeight = document.body.clientHeight
+        this.showHeight = window.screenHeight
+      })()
+    }
   },
   methods: {
     // 服务模块数据处理
@@ -539,5 +563,9 @@ export default {
 .center {
   width: 750px;
   margin: 0 auto;
+}
+/deep/ .my-head {
+  width: 750px !important;
+  left: auto !important;
 }
 </style>
