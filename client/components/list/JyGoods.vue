@@ -48,6 +48,7 @@
               :item-type="itemType"
               :item-data="_item"
               :goodstype="{ type: 'jy', typeCode: item.ext4 }"
+              :search-key="searchText"
             />
           </sp-list>
           <!--E商品列表-->
