@@ -433,6 +433,7 @@ class homeController extends Controller {
         findRomReq = await service.common.recom.getRecomProductIdList(params);
       }
 
+      let classCodeList = []; // 记录每个产品的分类code,用于查询分类详情中的图片
       // 过滤交易产品属性数据
       function jyGoodsHandle(goodsList) {
         if (!goodsList || !goodsList.length) {
@@ -459,8 +460,10 @@ class homeController extends Controller {
               `${item.platformPrice}/ 100`,
               2
             ), // 处理价格
+            classCode: item.classCode,
             fieldList: attrArr,
           });
+          classCodeList.push(item.classCode);
         });
         return nweGoodsList;
       }
@@ -496,6 +499,26 @@ class homeController extends Controller {
           productData.goodsList = jyGoodsHandle(res.data.records);
           productData.describe = '搜索';
         }
+      }
+
+      // 根据产品分类code查询产品分类详情
+      const classDetauls = await service.common.tradingProduct.getClassfiyDetail(
+        classCodeList
+      );
+      if (classDetauls.code === 200 && classDetauls.data.length) {
+        classDetauls.data.forEach((item) => {
+          productData.goodsList.forEach((key) => {
+            if (
+              item.code === key.classCode &&
+              Array.isArray(
+                item.classOperatingResponse.defaultProductFileIdUrls
+              )
+            ) {
+              key.defaultImg =
+                item.classOperatingResponse.defaultProductFileIdUrls[0];
+            }
+          });
+        });
       }
       ctx.helper.success({
         ctx,

@@ -186,8 +186,8 @@ export default {
 <style lang="less">
 .home-page-content + .open-app {
   max-width: 1000px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 50% !important;
+  transform: translateX(-50%) !important;
 }
 </style>
 <style lang="less" scoped>
