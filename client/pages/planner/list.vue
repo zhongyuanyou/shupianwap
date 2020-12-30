@@ -111,6 +111,7 @@
       </sp-pull-refresh>
     </div>
     <sp-toast ref="spToast" />
+    <openApp />
   </div>
 </template>
 

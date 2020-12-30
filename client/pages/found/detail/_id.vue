@@ -67,6 +67,7 @@
         @select="handleSelect"
       />
     </div>
+    <openApp />
   </div>
 </template>
 
@@ -82,6 +83,7 @@ import {
 import { mapState } from 'vuex'
 import { foundApi } from '~/api'
 import Header from '@/components/common/head/header'
+
 export default {
   name: 'Detail',
   components: {
