@@ -4,14 +4,14 @@
     :class="{ 'fixed-head': fixed }"
     :style="{
       height: headHeight,
-      'padding-top': safeTop,
+      'padding-top': safeTop + 'px',
       'box-sizing': 'content-box',
     }"
   >
     <div
       class="my-head"
       :class="headClass"
-      :style="{ height: headHeight, 'padding-top': safeTop }"
+      :style="{ height: headHeight, 'padding-top': safeTop + 'px' }"
     >
       <div class="my-head-row">
         <div class="slot-left">
@@ -67,8 +67,13 @@ export default {
   data() {
     return {
       isShow: true,
-      safeTop: '20px', // 顶部安全区的高度
+      safeTop: 20, // 顶部安全区的高度
     }
+  },
+  watch: {
+    $route() {
+      this.getTopMargin()
+    },
   },
   computed: {
     ...mapState({
@@ -82,11 +87,6 @@ export default {
       return this.height
     },
   },
-  watch: {
-    $route() {
-      this.getTopMargin()
-    },
-  },
   mounted() {
     console.log(1)
     this.getTopMargin()
@@ -98,8 +98,7 @@ export default {
     getTopMargin() {
       if (process && process.client) {
         let safeTop = safeAreaInsets.top
-        if (this.isInApp && !safeTop)
-          safeTop = this.appInfo.statusBarHeight + 'px'
+        if (this.isInApp) safeTop = this.appInfo.statusBarHeight
         this.safeTop = safeTop
       }
     },
@@ -111,7 +110,6 @@ export default {
   // position: relative;
   // display: flex;
   // align-items: center;
-  background-color: #fff;
   font-size: 24px;
   box-shadow: 0px 1px 0px 0px #f4f4f4;
   &-row {

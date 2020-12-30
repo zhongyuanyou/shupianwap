@@ -201,8 +201,17 @@ export default {
     },
     handleItem(item) {
       // 点击每一个二级分类
-      sessionStorage.categoryData = JSON.stringify(item)
-      this.$router.push('/list/serveList')
+      if (item.level === 2) {
+        sessionStorage.categoryData = JSON.stringify(item)
+        this.$router.push('/list/serveList')
+      } else {
+        this.$router.push({
+          name: 'list-jyList',
+          query: {
+            typeCode: item.code,
+          },
+        })
+      }
     },
     back() {
       this.$router.back()
