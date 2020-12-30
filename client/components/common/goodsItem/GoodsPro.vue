@@ -78,6 +78,7 @@ export default {
   width: 100%;
   padding: 32px 0;
   display: flex;
+  overflow: hidden;
   .goods-lable-img {
     position: relative;
     width: 240px;
@@ -174,6 +175,8 @@ export default {
       flex-wrap: wrap;
       align-items: center;
       margin-top: 8px;
+      word-break: break-all;
+      word-wrap: break-word;
       > span {
         display: flex;
         align-items: center;

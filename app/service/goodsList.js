@@ -38,6 +38,20 @@ function resetServeTags(tagsData, result) {
   })
   return result
 }
+// 处理服务标签
+function resetImg(imgsData, result) {
+  const imgCode = {}
+  imgsData.forEach((item) => {
+    // 对查询到的图片数据进行分类
+    imgCode[item.code] =
+      item.classOperatingResponse.defaultProductFileIdUrls &&
+      item.classOperatingResponse.defaultProductFileIdUrls[0]
+  })
+  result.forEach((item) => {
+    item.goodsImg = imgCode[item.classCode]
+  })
+  return result
+}
 class goodsListService extends Service {
   /**
    * 获取服务商品数据（POST）
@@ -81,6 +95,7 @@ class goodsListService extends Service {
         const result = await service.curl.curlPost(listUrl, params);
         if (result.code == 200) {
           let tagArr = []
+          let classCodes = []
           // console.log(result)
           let arr = []
           result.data.records.forEach((item) => {
@@ -101,7 +116,7 @@ class goodsListService extends Service {
                 tagArr.push(item.tagId)
               })
             }
-            // tagArr.push.call(tagArr, ...tags)
+            classCodes.push(classCode)
             // todo referencePrice金额需要转换成元，在这里是分
             referencePrice = this.ctx.helper.calculate(`${referencePrice}/100`)
             arr.push({
@@ -118,16 +133,30 @@ class goodsListService extends Service {
             })
           })
           tagArr = [...new Set(tagArr)]
+          classCodes = [...new Set(classCodes)]
           // console.log(tagArr)
           // console.log(tagArr.length)
-          const tagsResult = await service.curl.curlPost(tagsUrl, {tagIds: tagArr});
+          const tagsResult = service.curl.curlPost(tagsUrl, {tagIds: tagArr});
+          // console.log('classCodes', classCodes)
+          const classCodesResult = service.common.tradingProduct.getClassfiyDetail(classCodes);
+          // console.log('classCodesResult', classCodesResult)
+          const goodsItemResult = await Promise.all([tagsResult, classCodesResult])
           let resetResult = [] // 标签
+          // console.log(goodsItemResult[1].data);
           // console.log('asdssssssssss', tagsResult)
           // 这里判断标签数据是否成功返回
-          if (tagsResult.code === 200 && tagsResult.data.records.length) {
-            resetResult = resetServeTags(tagsResult.data.records, arr)
+          if (goodsItemResult[0].code === 200 && goodsItemResult[0].data.records.length) {
+            resetResult = resetServeTags(goodsItemResult[0].data.records, arr)
           } else {
             resetResult = arr
+          }
+          // 处理商品图片
+          if (
+            goodsItemResult[1].code === 200 &&
+            goodsItemResult[1].data &&
+            goodsItemResult[1].data.length
+          ) {
+            resetResult = resetImg(goodsItemResult[1].data, resetResult)
           }
           result.data.records = resetResult;
           resolve(result);
@@ -197,6 +226,7 @@ class goodsListService extends Service {
         const result = await service.curl.curlPost(url, params);
         if (result.code == 200) {
           let arr = []
+          let classCodes = []
           result.data && result.data.records.forEach((item) => {
             let {
               id,
@@ -210,6 +240,7 @@ class goodsListService extends Service {
             fieldList = resetJyField(params.classCode,  fieldList)
             // todo platformPrice金额需要转换成元，在这里是分
             platformPrice = this.ctx.helper.calculate(`${platformPrice}/100`)
+            classCodes.push(classCode)
             arr.push({
               id,
               name,
@@ -219,7 +250,19 @@ class goodsListService extends Service {
               productNo: goodsCode,
             })
           })
-          result.data.records = arr;
+          const classCodesResult = await service.common.tradingProduct.getClassfiyDetail(classCodes);
+          let resetResult = []
+          // 这里处理结果图片
+          if (
+            classCodesResult.code === 200 &&
+            classCodesResult.data &&
+            classCodesResult.data.length
+          ) {
+            resetResult = resetImg(classCodesResult.data, arr)
+          } else {
+            resetResult = arr
+          }
+          result.data.records = resetResult;
           resolve(result);
         } else {
           resolve(result);
