@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-29 17:32:39
+ * @LastEditTime: 2020-12-30 11:19:42
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -502,6 +502,7 @@ export default {
   height: 100%;
   overflow-y: scroll;
   .head {
+    background: #ffffff;
   }
   .body {
     padding: 0;
@@ -513,6 +514,9 @@ export default {
           font-size: 30px;
           font-weight: bold;
         }
+      }
+      &__dropdown {
+        background-color: #ffffff;
       }
       /deep/.sticky-dropdown {
         .sp-sticky {

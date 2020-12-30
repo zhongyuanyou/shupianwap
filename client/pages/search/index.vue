@@ -36,7 +36,10 @@
     </div>
     <!-- E 搜索历史 -->
     <!-- S 猜您需要 -->
-    <div class="search-moudle search-need">
+    <div
+      v-if="searchHeight.length || searchTop.length"
+      class="search-moudle search-need"
+    >
       <div>
         <strong>猜您需要</strong>
         <my-icon

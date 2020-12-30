@@ -11,7 +11,7 @@
     <div
       class="my-head"
       :class="headClass"
-      :style="{ height: headHeight, 'margin-top': safeTop }"
+      :style="{ height: headHeight, 'padding-top': safeTop }"
     >
       <div class="slot-left">
         <slot name="left">
@@ -24,7 +24,7 @@
           ></my-icon>
         </slot>
       </div>
-      <strong class="title">{{ title }}</strong>
+      <strong class="title">{{ title }} {{ appInfo.statusBarHeight }}</strong>
       <div class="slot-right">
         <slot name="right"></slot>
       </div>
@@ -78,6 +78,11 @@ export default {
         return this.height + 'px'
       }
       return this.height
+    },
+  },
+  watch: {
+    $route() {
+      this.getTopMargin()
     },
   },
   created() {
@@ -137,6 +142,7 @@ export default {
 .fixed-head {
   width: 100%;
   .my-head {
+    box-sizing: content-box;
     width: 100%;
     position: fixed;
     left: 0;

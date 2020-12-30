@@ -132,13 +132,11 @@ export default {
           id: this.userId,
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
-        if (
-          res.code === 200 &&
-          res.data !== {} &&
-          typeof res.data === 'object'
-        ) {
+        if (res.code === 200 && res.data && typeof res.data === 'object') {
+          console.log(111)
           this.info = res.data
         } else {
+          console.log(222)
           // 清除用户缓存信息
           this.$store.dispatch('user/clearUser')
         }
