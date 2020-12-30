@@ -73,45 +73,7 @@ export default {
       card: {},
       text1: '在线咨询',
       text2: '电话咨询',
-      // 默认屏幕高度
-      // isFixed: true, // 是否固定定位
-      // maxDocHeight: 0,
-      // docHeight: 0, // 一开始的屏幕高度，不会变
-      // showHeight: 0, // 真实屏幕高度，因为键盘弹入弹出发生变化
     }
-  },
-  watch: {
-    // showHeight: {
-    //   handler(newVal, oldVal) {
-    //     console.log(`docHeight：${this.docHeight}`)
-    //     console.log(`maxDocHeight：${this.maxDocHeight}`)
-    //
-    //     console.log(`oldShowHeight：${oldVal}`)
-    //     console.log(`newShowHeight：${newVal}`)
-    //
-    //     // if (this.showHeight === 0) {
-    //     //   if (!((this.showHeight === this.docHeight) === this.maxDocHeight)) {
-    //     //     this.isFixed = false
-    //     //     return
-    //     //   }
-    //     // }
-    //     if (this.showHeight > this.maxDocHeight) {
-    //       // 显示高度如果大于固定高度，表示在未加载完就打开键盘，导致固定高度小于显示高度。
-    //       // 重新获取固定高度后比较高度
-    //       this.maxDocHeight = this.showHeight
-    //     }
-    //
-    //     if (this.maxDocHeight > this.showHeight) {
-    //       // 当键盘弹出时
-    //       this.isFixed = false
-    //     } else {
-    //       // 显示高度等于固定高度
-    //       // 当键盘隐藏时
-    //       this.isFixed = true
-    //     }
-    //   },
-    //   immediate: true,
-    // },
   },
   created() {
     this.card = {
@@ -123,18 +85,6 @@ export default {
       icon: '',
       round: true,
       avatarSize: 40,
-    }
-  },
-  mounted() {
-    const vm = this
-    this.docHeight = document.body.clientHeight
-    this.maxDocHeight = document.body.clientHeight
-    // window.onresize监听页面高度的变化
-    window.onresize = () => {
-      return (() => {
-        vm.showHeight = document.body.clientHeight
-        console.log(`onresize-showHeight：${vm.showHeight}`)
-      })()
     }
   },
   methods: {
