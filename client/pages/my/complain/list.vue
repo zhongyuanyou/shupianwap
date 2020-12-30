@@ -116,6 +116,9 @@ export default {
       // 将 loading 设置为 true，表示处于加载状态
       // this.loading = true
       // this.onLoad()
+      this.refreshing = true
+      this.page = 1
+      this.getComplainList()
     },
     async getComplainList() {
       // 获取吐槽列表数据
@@ -127,6 +130,7 @@ export default {
       }
       try {
         const data = await complain.list({ axios: this.$axios }, params)
+        this.refreshing = false
         this.complaintList = data.rows
       } catch (err) {
         console.log(err)

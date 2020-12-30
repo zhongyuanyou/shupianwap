@@ -70,11 +70,6 @@ export default {
       safeTop: 20, // 顶部安全区的高度
     }
   },
-  watch: {
-    $route() {
-      this.getTopMargin()
-    },
-  },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp, // 是否app中
