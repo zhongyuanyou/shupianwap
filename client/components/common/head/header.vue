@@ -80,7 +80,7 @@ export default {
       return this.height
     },
   },
-  created() {
+  mounted() {
     this.getTopMargin()
   },
   methods: {
@@ -108,11 +108,11 @@ export default {
   box-shadow: 0px 1px 0px 0px #f4f4f4;
   .slot-left {
     display: flex;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    z-index: 2;
-    transform: translateY(-50%);
+    // position: absolute;
+    // left: 0;
+    // top: 50%;
+    // z-index: 2;
+    // transform: translateY(-50%);
     .back-icon {
       margin-left: 40px;
     }
@@ -127,11 +127,11 @@ export default {
   }
   .slot-right {
     display: flex;
-    position: absolute;
-    right: 0;
-    top: 50%;
-    z-index: 2;
-    transform: translateY(-50%);
+    // position: absolute;
+    // right: 0;
+    // top: 50%;
+    // z-index: 2;
+    // transform: translateY(-50%);
   }
 }
 .fixed-head {

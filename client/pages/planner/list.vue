@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-30 11:19:42
+ * @LastEditTime: 2020-12-30 14:31:52
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -261,7 +261,6 @@ export default {
   },
   mounted() {
     this.headHeight = this.$refs.head.offsetHeight
-    console.log('head', this.$refs.head.offsetHeight)
   },
   methods: {
     ...mapMutations({
@@ -452,12 +451,15 @@ export default {
           const { limit, currentPage = 1, totalCount = 0, records = [] } = data
           this.pageOption = { limit, totalCount, page: currentPage }
           this.list.push(...records)
-          this.$refs.spToast.show({
-            message: `共找到${totalCount}个规划师`,
-            duration: 1000,
-            forbidClick: true,
-            icon: 'toast_ic_comp',
-          })
+          // 第一页面请求提示
+          if (currentPage === 1) {
+            this.$refs.spToast.show({
+              message: `共找到${totalCount}个规划师`,
+              duration: 1000,
+              forbidClick: true,
+              icon: 'toast_ic_comp',
+            })
+          }
         }
         return data
       } catch (error) {

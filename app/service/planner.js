@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-11 14:34:53
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-30 10:22:36
+ * @LastEditTime: 2020-12-30 14:08:51
  * @Description: file content
  * @FilePath: /chips-wap/app/service/planner.js
  */
@@ -39,7 +39,7 @@ class plannerService extends Service {
       try {
         const listParams = {
           userCenterIds,
-          searchKey: plannerName,
+          name: plannerName, // 模糊匹配
           regionDto,
           mchUserIds,
           status,
