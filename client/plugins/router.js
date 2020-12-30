@@ -58,8 +58,7 @@ export default ({ app, store }) => {
           appHandler.dggGetUserInfo((res) => {
             if (res.code === 200) {
               try {
-                const userInfo = JSON.parse(res.data)
-                console.log('来自app的userInfo：', userInfo)
+                const userInfo = res.data
                 if (userInfo && userInfo.userId && userInfo.token) {
                   store.commit('user/SET_USER', userInfo)
                 }

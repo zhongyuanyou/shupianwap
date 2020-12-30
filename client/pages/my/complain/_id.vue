@@ -19,13 +19,13 @@
         </div>
         <div class="detail-content-complain-imgs">
           <sp-image
-            v-for="(item, index) in detailData.complain.imgs"
+            v-for="(item, index) in imgs"
             :key="index"
             class="detail-content-complain-imgs-item"
             width="75"
             height="75"
             :src="item"
-            @click="preview(detailData.complain.imgs, index)"
+            @click="preview(imgs, index)"
           />
         </div>
         <div class="detail-content-complain-status">
@@ -37,23 +37,23 @@
           </div>
         </div>
       </div>
-      <div v-if="detailData.answer" class="detail-content-answer">
+      <div class="detail-content-answer">
         <div class="detail-content-answer-title">解决方案</div>
         <div class="detail-content-answer-time">
-          解决时间：{{ info.revertTime || '' }}
+          解决时间：{{ info.revertTime }}
         </div>
         <div class="detail-content-answer-content">
-          {{ info.revertContent || '' }}
+          {{ info.revertContent }}
         </div>
         <div class="detail-content-answer-imgs">
           <sp-image
-            v-for="(item, index) in detailData.answer.imgs"
+            v-for="(item, index) in revertImgs"
             :key="index"
             class="detail-content-complain-imgs-item"
             width="75"
             height="75"
             :src="item"
-            @click="preview(detailData.answer.imgs, index)"
+            @click="preview(revertImgs, index)"
           />
         </div>
       </div>
@@ -86,25 +86,15 @@ export default {
   },
   data() {
     return {
-      detailData: {
-        complain: {
-          title: '设置免打扰怎么还给我打电话？你们这到底是什么情况，烦死了',
-          createdTime: '2020.10.14 10:00',
-          status: '处理中',
-          imgs: [
-            'https://img.yzcdn.cn/vant/apple-1.jpg',
-            'https://img.yzcdn.cn/vant/apple-2.jpg',
-            'https://img.yzcdn.cn/vant/apple-3.jpg',
-          ],
-        },
-        answer: {
-          resolveTime: '2020.10.14 10:00',
-          content:
-            '这里显示解决方案内容这里显示解决方案内容这里显示解决方案内容',
-          imgs: ['https://img.yzcdn.cn/vant/cat.jpeg'],
-        },
-      },
-      info: {}, // 用户详情
+      info: {
+        content: '', // 反馈内容
+        createTime: '', // 提交时间
+        isDispose: '', // 反馈状态
+        revertTime: '', // 解决时间
+        revertContent: '', // 解决内容
+      }, // 用户详情
+      imgs: [], // 反馈图片集合
+      revertImgs: [], // 反馈解决图片集合
     }
   },
   mounted() {
@@ -129,7 +119,8 @@ export default {
       }
       const data = await complain.detail({ axios: this.$axios }, params)
       this.info = data
-      console.log('data', data)
+      this.imgs = data.imgs ? data.imgs.split(',') : []
+      this.revertImgs = data.revertImgs ? data.revertImgs.split(',') : []
     },
   },
 }
