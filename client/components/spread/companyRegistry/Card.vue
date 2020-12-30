@@ -32,6 +32,7 @@
             data-form_name="工商注册_表单_手机号"
             type="digit"
             :border="false"
+            maxlength="11"
             label="手机号"
             placeholder="信息保护中，仅官方可见"
             label-class="style-phone"
@@ -46,7 +47,7 @@
             center
             clearable
             maxlength="6"
-            @input="inputVal()"
+            @input="inputVal($event)"
             label="验证码"
             placeholder="请输入验证码"
             label-class="style-phone"
@@ -142,16 +143,8 @@ export default {
     }
   },
   methods: {
-    inputVal() {
-      const reg = /^bai[0-9a-zA-Z]+$/
-      console.log(reg.test(this.sms))
-      if (reg.test(this.sms)) {
-        // this.sms.substring(0, this.sms.length - 1)
-        console.log(123)
-      }
-      // else {
-      //   this.sms.substring(0, this.sms.length - 1)
-      // }
+    inputVal(val) {
+      this.sms = this.sms.replace(/[^0-9A-Za-z]/g, '')
     },
     onSelect(item) {
       // 默认情况下点击选项时不会自动收起

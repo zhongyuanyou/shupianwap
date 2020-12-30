@@ -562,6 +562,7 @@ export default {
   width: 750px;
   margin: 0 auto;
   position: relative;
+  font-family: PingFang SC;
   .banner-img {
     /deep/.my-swipe .sp-swipe-item {
       color: #fff;
@@ -602,7 +603,7 @@ export default {
       font-weight: 400;
       color: #555555;
       line-height: 44px;
-      padding: 8px 0 40px 0;
+      padding: 12px 0 0 0;
     }
   }
   .service {
