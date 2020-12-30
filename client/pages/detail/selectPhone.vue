@@ -435,6 +435,7 @@ export default {
         if (this.refreshing) {
           this.list = []
           this.refreshing = false
+          this.selectedItem = null
         }
         if (data) {
           if (!Array.isArray(data.records)) data.records = []

@@ -34,23 +34,11 @@
           </sp-cell>
         </sp-cell-group>
       </sp-radio-group>
-      <div class="submit">
-        <sp-button color="#4974F5" block @click="onSubmit()">
-          确认选择
-        </sp-button>
-      </div>
     </div>
   </div>
 </template>
 <script>
-import {
-  RadioGroup,
-  Radio,
-  Cell,
-  CellGroup,
-  Button,
-  Icon,
-} from '@chipspc/vant-dgg'
+import { RadioGroup, Radio, Cell, CellGroup, Icon } from '@chipspc/vant-dgg'
 export default {
   name: 'AddressList',
   components: {
@@ -58,7 +46,6 @@ export default {
     [Radio.name]: Radio,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
-    [Button.name]: Button,
     [Icon.name]: Icon,
   },
   props: {
@@ -71,19 +58,20 @@ export default {
   },
   data() {
     return {
-      result: [],
-      lastIndex: -1,
+      result: null,
     }
   },
-
+  watch: {
+    result(newVal) {
+      console.log('newVal:', newVal)
+      this.$emit('operation', {
+        type: 'selected',
+        data: this.result,
+      })
+    },
+  },
   methods: {
     toggle(index) {
-      // 保持只有一个选项
-      if (this.lastIndex > -1 && index !== this.lastIndex) {
-        this.$refs.checkboxes[this.lastIndex].toggle(false)
-      }
-      this.lastIndex = index
-
       this.$refs.checkboxes[index].toggle()
     },
     onSubmit() {
@@ -118,18 +106,6 @@ export default {
         color: #ec5330;
         font-size: 26px;
         line-height: 44px;
-      }
-    }
-    .submit {
-      position: fixed;
-      bottom: 0px;
-      padding: 10px 40px 24px;
-      width: 100%;
-      background-color: #fff;
-      /deep/.sp-button {
-        width: 670px;
-        height: 104px;
-        border-radius: 8px;
       }
     }
     .sp-cell {

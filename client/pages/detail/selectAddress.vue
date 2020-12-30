@@ -1,7 +1,14 @@
 <template>
   <div class="select-address">
-    <div class="top">
+    <div
+      class="top"
+      :class="{ 'safe-area-inset-top': !isInApp }"
+      :style="{
+        'padding-top': headerPaddingTop,
+      }"
+    >
       <sp-top-nav-bar
+        class="search-nav"
         @on-click-left="onClickLeft"
         @on-click-right="onClickRight"
       >
@@ -85,6 +92,9 @@
         </sp-list>
       </sp-pull-refresh>
     </div>
+    <div class="footer">
+      <sp-button color="#4974F5" block @click="onSubmit"> 确认选择 </sp-button>
+    </div>
   </div>
 </template>
 <script>
@@ -93,13 +103,12 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import {
   TopNavBar,
   NavSearch,
-  Toast,
-  Icon,
   DropdownMenu,
   DropdownItem,
   Sticky,
   List,
   PullRefresh,
+  Button,
 } from '@chipspc/vant-dgg'
 import PriceFilterComponents from '@/components/common/filters/PriceFilterComponents'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
@@ -119,13 +128,12 @@ export default {
   components: {
     [TopNavBar.name]: TopNavBar,
     [NavSearch.name]: NavSearch,
-    [Toast.name]: Toast,
-    [Icon.name]: Icon,
     [DropdownItem.name]: DropdownItem,
     [DropdownMenu.name]: DropdownMenu,
     [Sticky.name]: Sticky,
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
+    [Button.name]: Button,
     PriceFilterComponents,
     BottomConfirm,
     AddressList,
@@ -148,6 +156,7 @@ export default {
       priceOption: [],
       sortOption: [],
       addressList: [],
+      selectedItem: null, // 选择的项
       redirect: this.$route.query.redirect, // 返回跳转的位置
       redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去
     }
@@ -155,6 +164,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
 
     formatSortOption() {
@@ -201,6 +211,14 @@ export default {
         isAsc = !!ext2
       }
       return { searchKey, goodsPriceStart, goodsPriceEnd, orderBy, isAsc }
+    },
+    headerPaddingTop() {
+      if (this.appInfo && this.appInfo.statusbarheight)
+        return this.appInfo.statusbarheight + 'px'
+      else if (this.isInApp) {
+        return '20px'
+      }
+      return '0'
     },
   },
   watch: {
@@ -250,7 +268,12 @@ export default {
         .catch((error) => {
           this.error = true
           this.loading = false
-          Toast('加载失败')
+          this.$xToast.show({
+            message: '加载失败',
+            duration: 1000,
+            icon: 'toast_ic_error',
+            forbidClick: true,
+          })
           console.log(error)
         })
     },
@@ -319,9 +342,23 @@ export default {
     handleOperation(value) {
       const { type, data } = value || {}
       switch (type) {
-        case 'confirm':
-          this.uPGoBack(data)
+        case 'selected':
+          this.selectedItem = data
+          break
       }
+    },
+
+    onSubmit() {
+      if (!this.selectedItem) {
+        this.$xToast.show({
+          message: '请选择',
+          duration: 1000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        return
+      }
+      this.uPGoBack(this.selectedItem)
     },
 
     // 平台不同，跳转方式不同
@@ -342,7 +379,12 @@ export default {
             }
             this.$appFn.dggCloseWebView((res) => {
               if (!res || res.code !== 200) {
-                Toast('返回失败！')
+                this.$xToast.show({
+                  message: '返回失败',
+                  duration: 1000,
+                  icon: 'toast_ic_error',
+                  forbidClick: true,
+                })
               }
             })
           }
@@ -351,17 +393,14 @@ export default {
       }
 
       // 在浏览器里 返回
-      if (data) {
-        // 判断是路劲还是name
-        if (this.redirect) {
-          const isPath = /\//.test(this.redirect + '')
-          const pushParams = {
-            path: isPath ? this.redirect : null,
-            name: isPath ? null : this.redirect,
-            params: { data },
-          }
-          this.$router.replace(pushParams)
+      if (this.redirect) {
+        const isPath = /\//.test(this.redirect + '')
+        const pushParams = {
+          path: isPath ? this.redirect : null,
+          name: isPath ? null : this.redirect,
+          params: { data },
         }
+        this.$router.replace(pushParams)
       } else {
         this.$router.back(-1)
       }
@@ -394,6 +433,7 @@ export default {
         if (this.refreshing) {
           this.addressList = []
           this.refreshing = false
+          this.selectedItem = null
         }
         if (data) {
           if (!Array.isArray(data.records)) data.records = []
@@ -432,10 +472,13 @@ export default {
 </script>
 <style lang="less" scoped>
 .select-address {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   .top {
-    padding: 16px 0 0 0;
-    /deep/.iconfont {
-      font-weight: 400;
+    background-color: #ffffff;
+    .search-nav {
+      margin-top: 16px;
     }
     /deep/.sp-top-nav-bar__title {
       // 搜索框样式
@@ -461,6 +504,7 @@ export default {
       border-bottom-width: 0;
     }
   }
+
   /deep/.title-style {
     // 下拉选择显示标题样式
     font-size: 26px;
@@ -472,7 +516,17 @@ export default {
     padding: 56px 40px 84px 40px;
   }
   .result-list {
-    padding-bottom: 130px;
+    flex: 1;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
+  .footer {
+    padding: 10px 40px 24px;
+  }
+}
+.safe-area-inset-top {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
 }
 </style>
