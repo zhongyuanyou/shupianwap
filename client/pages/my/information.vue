@@ -20,12 +20,12 @@
       <div class="information_con_tp">
         <div class="avatar_con" @click="handleClick(1)">
           <sp-uploader
-            v-if="isUpdateAvatar"
             v-model="uploader"
             class="uploader"
             upload-text="点击上传"
             :max-count="1"
             :max-size="20 * 1024 * 1024"
+            :after-read="afterRead"
             @oversize="onOversize"
           />
           <div class="cell">
@@ -37,7 +37,7 @@
                 height="0.88rem"
                 fit="cover"
                 class="avatar"
-                src="https://img.yzcdn.cn/vant/cat.jpeg"
+                :src="avatar ? avatar : 'https://img.yzcdn.cn/vant/cat.jpeg'"
               />
               <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
             </div>
@@ -122,7 +122,7 @@ import ImgSelected from '~/components/my/information/ImgSelected'
 import SexSelected from '~/components/my/information/SexSelected'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
 import BirthdaySelected from '~/components/my/information/BirthdaySelected'
-import { userinfoApi } from '@/api'
+import { ossApi, userinfoApi } from '@/api'
 import SpToast from '@/components/common/spToast/SpToast'
 export default {
   name: 'Information',
@@ -155,6 +155,7 @@ export default {
       }, // 用户信息
       isUpdateName: false, // 能否修改昵称
       isUpdateAvatar: false, // 能否修改头像
+      avatar: '', // 头像
     }
   },
   computed: {
@@ -208,14 +209,14 @@ export default {
       } else if (val === 3) {
         this.birthShow = true
       } else if (val === 1) {
-        if (!this.isUpdateAvatar) {
-          // 如果不能修改
-          this.$refs.spToast.show({
-            message: '抱歉，头像暂不支持修改',
-            duration: 1500,
-            forbidClick: true,
-          })
-        }
+        // if (!this.isUpdateAvatar) {
+        //   // 如果不能修改
+        //   this.$refs.spToast.show({
+        //     message: '抱歉，头像暂不支持修改',
+        //     duration: 1500,
+        //     forbidClick: true,
+        //   })
+        // }
       }
     },
     async select(data) {
@@ -311,6 +312,21 @@ export default {
           this.isUpdateAvatar = res.data === '1'
         }
       } catch (err) {}
+    },
+    afterRead(file) {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+      const formData = new FormData()
+      formData.append('uploadatalog', 'sp-pt/wap/images')
+      formData.append('file', file.file)
+      this.$axios.post(ossApi.add, formData, config).then((res) => {
+        if (res.code === 200) {
+          this.avatar = res.data.url
+        }
+      })
     },
   },
 }

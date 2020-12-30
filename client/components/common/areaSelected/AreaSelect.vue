@@ -135,6 +135,7 @@ import { Popup, IndexAnchor, IndexBar, Icon } from '@chipspc/vant-dgg'
 import pyjs from 'js-pinyin'
 import Header from '~/components/common/areaSelected/components/Header'
 import { cityCopy } from '~/utils/city'
+import { dict } from '~/api'
 export default {
   name: 'CitySelect',
   components: {
@@ -166,6 +167,7 @@ export default {
       indexList: [], // 所有有城市的索引集合
       cityArr: [],
       city: [], // 所有有数据的城市集合
+      cityList: [],
       FristPin: [
         'A',
         'B',
@@ -209,11 +211,6 @@ export default {
       focusInfo: null, // 已经数据中当前聚焦的数据
     }
   },
-  computed: {
-    cityList() {
-      return cityCopy
-    },
-  },
   watch: {
     show: {
       handler(newVal, oldVal) {
@@ -244,6 +241,7 @@ export default {
     },
   },
   mounted() {
+    this.getCityList()
     this.initCity(this.cityList)
   },
   methods: {
@@ -346,6 +344,15 @@ export default {
           this.initCity(this.selectList[0].children)
         }
       })
+    },
+    async getCityList() {
+      try {
+        const res = await dict.findCmsTier(
+          { axios: this.$axios },
+          { code: '2147483647' }
+        )
+        this.cityList = res || []
+      } catch (err) {}
     },
   },
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="goods-item" @click="jumpUrl">
     <div class="goods-item-left">
-      <img src="" alt="" class="goods-img" />
+      <img :src="itemData.goodsImg" alt="" class="goods-img" />
       <!--<span class="tag">急售</span>-->
     </div>
     <div class="goods-right">

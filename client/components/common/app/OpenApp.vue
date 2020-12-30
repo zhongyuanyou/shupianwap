@@ -29,18 +29,20 @@
       <p>薯片找人APP</p>
       <p>找人服务，尽在薯片找人</p>
     </div>
-    <div class="open-app-btn" @click="openApp($event)">
-      <span v-if="!isIOS">立即打开</span>
-      <a
+    <div class="open-app-btn" @click="clickBtn">
+      <!--<span v-if="!isIOS">立即打开</span>-->
+      <span>立即打开</span>
+      <!--<a
         v-else
         href='dggcustomerapp://{"androidRoute":"/dgg/android/MainActivity","androidParams":{},"iosRoute":"DGGCustomer:DGGCustomer/MainActivity///push/animation/","iosParams":{},"isLogin":"0"}'
         >立即打开</a
-      >
+      >-->
     </div>
   </div>
 </template>
 
 <script>
+import h5Openapp from 'h5-openapp'
 import openapp from '@/mixins/openapp'
 export default {
   name: 'OpenApp',
@@ -73,6 +75,36 @@ export default {
       !!navigator.userAgent.match(/UCBrowser/g)
   },
   methods: {
+    clickBtn() {
+      h5Openapp({
+        scheme:
+          'dggcustomerapp://{"androidRoute":"/dgg/android/MainActivity","androidParams":{},"iosRoute":"DGGCustomer:DGGCustomer/MainActivity///push/animation/","iosParams":{},"isLogin":"0"}', // eg: myapp:///mypath?key1=value1&key2=value2
+        download: {
+          // 默认 scheme 跳转无效，便前往下载, 设置 onTimeout 回调时, 不执行下载逻辑
+          ios: 'https://itunes.apple.com/app/apple-store/id1462879855?mt=8', // ios 下载链接
+          android: 'https://a.app.qq.com/o/simple.jsp?pkgname=net.dgg.fitax', // android 下载链接
+          other: 'https://a.app.qq.com/o/simple.jsp?pkgname=net.dgg.fitax', // 其他渠道 下载链接
+        },
+        delay: 3000, // 等待时间, 超时后执行 onTimeout,  default: 3000
+        disabledScheme: [], // scheme 被禁用的 APP, eg: ['MicroMessenger', 'DingTalk', '...'] (iOS 9+ 深链接不会被禁)
+        onDisabled(appTag) {
+          // 当打开网页的 APP 为 disabledApp 中的任一个，并且未设置深链接时
+          if (appTag === 'MicroMessenger') {
+            console.log('微信不支持 scheme 跳转')
+            // 如果是微信打开的页面，则跳应用宝
+            window.location.href =
+              'https://a.app.qq.com/o/simple.jsp?pkgname=net.dgg.fitax'
+          } else if (appTag === 'DingTalk') {
+            console.log('钉钉不支持 scheme 跳转')
+          } else {
+            console.log(appTag)
+          }
+        },
+        onBeforeOpen() {
+          // 在执行打开 app 逻辑前触发
+        },
+      })
+    },
     closeOpenApp() {
       // this.isShow = false
       this.$store.commit('app/SET_IS_SHOW_OPEN_APP', false)
