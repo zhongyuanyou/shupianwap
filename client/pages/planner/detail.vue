@@ -2,14 +2,14 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-25 18:26:02
+ * @LastEditTime: 2020-12-30 11:05:04
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/detail.vue
 -->
 
 <template>
   <div class="detail">
-    <div class="head">
+    <div v-if="!hideHeader" class="head">
       <Header title="规划师">
         <template #right>
           <my-icon
@@ -199,6 +199,7 @@ export default {
       detailData: {},
       shareOptions: [],
       showShare: false,
+      hideHeader: !!this.$route.query.hideHeader || false,
     }
   },
   computed: {
@@ -234,7 +235,7 @@ export default {
       console.log('IM ')
       this.uPIM({
         mchUserId: this.detailData.id,
-        userName: this.itemData.userName,
+        userName: this.detailData.userName,
       })
     },
 
@@ -359,6 +360,9 @@ export default {
         return Promise.reject(error)
       }
     },
+  },
+  head: {
+    title: '规划师',
   },
 }
 </script>

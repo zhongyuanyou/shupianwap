@@ -73,7 +73,7 @@ class PlannerController extends Controller {
       limit,
       page,
       sort,
-      userCenterIds: [userId],
+      userCenterIds: userId ? [userId] : [],
     };
     // 先查询列表
     const listResult = await service.planner.getPlannerList(listParams);
