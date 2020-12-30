@@ -11,6 +11,7 @@ export const mutations = {
   },
   SET_UA_INFO(state, val) {
     state.isInApp = val
+    if (state.isInApp) state.isShowOpenApp = false
   },
   SET_APP_INFO(state, val) {
     state.appInfo = val

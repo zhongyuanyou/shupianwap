@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="$store.state.app.isShowOpenApp"
+    v-if="$store.state.app.isShowOpenApp && isShow"
     class="open-app"
     :style="{
       bottom: `${bottom}px`,
@@ -13,9 +13,18 @@
           size="0.56rem"
           color="rgba(0, 0, 0, 0.4)"
         ></my-icon>
+        <my-icon
+          name="login_ic_clear"
+          size="0.22rem"
+          color="rgba(255, 255, 255, 0.1)"
+        ></my-icon>
       </client-only>
     </div>
-    <img class="sp-icon-img" src="" alt="" />
+    <img
+      class="sp-icon-img"
+      :src="$ossImgSet(30, 30, 'g6trabnxtg80000.png')"
+      alt=""
+    />
     <div class="desc">
       <p>薯片找人APP</p>
       <p>找人服务，尽在薯片找人</p>
@@ -46,13 +55,19 @@ export default {
   },
   data() {
     return {
-      isShow: false,
+      isShow: true,
       isIOS: false,
       thisType: 'openapp',
-      noRoute: [],
+      noRoute: ['/my'],
     }
   },
+  watch: {
+    $route(to, from) {
+      this.checkRoute(to.path)
+    },
+  },
   mounted() {
+    this.checkRoute(this.$route.fullPath)
     this.isIOS =
       !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) ||
       !!navigator.userAgent.match(/UCBrowser/g)
@@ -64,15 +79,11 @@ export default {
     },
     checkRoute(path) {
       // 如果当前的router是不显示该顶部栏的，则隐藏顶部栏
-      const _index = this.noRoute.findIndex((str) => {
-        return path === str
-      })
-      if (_index === -1 && this.$store.state.isShowOpenApp) {
-        // this.isShow = true
-        this.$store.commit('SET_IS_SHOW_OPEN_APP', true)
+      const _index = this.noRoute.indexOf(path)
+      if (_index === -1 && this.$store.state.app.isShowOpenApp) {
+        this.isShow = true
       } else {
-        // this.isShow = false
-        this.$store.commit('SET_IS_SHOW_OPEN_APP', false)
+        this.isShow = false
       }
     },
   },
@@ -90,7 +101,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.8);
   left: 0;
   bottom: 0;
-  z-index: 10;
+  z-index: 20;
   .closeApp {
     display: inline-block;
     position: absolute;
@@ -102,6 +113,11 @@ export default {
     align-items: normal;
     i {
       display: block;
+    }
+    .spiconfont-login_ic_clear {
+      position: absolute;
+      top: 8px;
+      left: 6px;
     }
   }
   .sp-iconfont {
@@ -115,7 +131,6 @@ export default {
   .sp-icon-img {
     width: 60px;
     height: 60px;
-    background-color: #fff;
     margin-left: 40px;
   }
   .desc {

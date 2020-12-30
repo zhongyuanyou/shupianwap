@@ -1,9 +1,12 @@
 <template>
   <div class="nav-layout">
     <nuxt />
-    <openApp v-if="!isInApp" :bottom="bottom" />
+    <openApp v-if="!isInApp && showApp" :bottom="bottom" />
     <Bottombar v-if="!isInApp" ref="bottombar" />
-    <div class="nav-placeholder"></div>
+    <div
+      class="nav-placeholder"
+      :class="isShowOpenApp ? 'show-open-app' : ''"
+    ></div>
   </div>
 </template>
 <script>
@@ -18,16 +21,19 @@ export default {
   data() {
     return {
       bottom: 0,
+      showApp: false,
     }
   },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      isShowOpenApp: (state) => state.app.isShowOpenApp,
     }),
   },
   mounted() {
     this.$nextTick(() => {
       this.bottom = this.$refs.bottombar.$el.getBoundingClientRect().height
+      this.showApp = true
     })
   },
 }
@@ -45,6 +51,11 @@ export default {
       display: block;
       width: 100%;
       height: 98px;
+    }
+  }
+  .show-open-app {
+    &::after {
+      height: 198px;
     }
   }
 }
