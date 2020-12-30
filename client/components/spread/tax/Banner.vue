@@ -147,11 +147,7 @@ export default {
       // 未选中时的样式
       smallfont: { small: true },
       // 下弹窗选项内容
-      actions: [
-        { name: '代理类', className: 'bold' },
-        { name: '咨询类' },
-        { name: '审计类' },
-      ],
+      actions: [{ name: '代理类' }, { name: '咨询类' }, { name: '审计类' }],
       // 咨询数量
       count: 126,
       // 验证码按钮内容
