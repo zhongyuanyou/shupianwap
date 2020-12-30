@@ -81,6 +81,9 @@ export default {
 
 <style lang="less" scoped>
 .recommend-dialog {
+  .recommend-dialog-content {
+    overflow: hidden;
+  }
   &_wrap {
     background-color: transparent;
   }

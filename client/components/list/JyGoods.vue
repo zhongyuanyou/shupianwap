@@ -69,6 +69,7 @@
       title="新上商品通知"
       desc="填写手机号,相关商品上架第一时间通知"
     />
+    <openApp />
   </div>
 </template>
 
@@ -80,11 +81,13 @@ import Subscribe from '@/components/list/Subscribe'
 import JyFilters from '@/components/list/JyFilters'
 import searchList from '@/mixins/searchList'
 import clone from '~/utils/clone'
+import openApp from '@/components/common/app/OpenApp.vue'
 
 export default {
   name: 'JyGoods',
   components: {
     GoodsItem,
+    openApp,
     [List.name]: List,
     InstallApp,
     Subscribe,
@@ -379,6 +382,9 @@ export default {
         border-color: transparent transparent #4974f5 #4974f5 !important;
       }
     }
+  }
+  /deep/.sp-dropdown-item {
+    z-index: 30 !important;
   }
   /*height: calc(100% - 200px);*/
   /deep/.sp-dropdown-item__content {

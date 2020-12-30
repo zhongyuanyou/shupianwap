@@ -1,14 +1,19 @@
 <template>
   <div class="planner">
-    <sp-sticky>
-      <sp-top-nav-bar title="我的规划师" ellipsis @on-click-left="onLeftClick">
+    <div class="head">
+      <Header title="我的规划师">
         <template #left>
-          <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-          </div>
+          <my-icon
+            name="nav_ic_back"
+            class="back-icon"
+            size="0.4rem"
+            color="#1A1A1A"
+            @click.native="onLeftClick"
+          />
         </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
+      </Header>
+    </div>
+
     <div class="body">
       <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
         <sp-list
@@ -122,6 +127,7 @@ import {
 } from '@chipspc/vant-dgg'
 
 import SpToast from '@/components/common/spToast/SpToast'
+import Header from '@/components/common/head/header'
 
 import imHandle from '@/mixins/imHandle'
 
@@ -145,6 +151,7 @@ export default {
     [Tag.name]: Tag,
     [Sticky.name]: Sticky,
     [TopNavBar.name]: TopNavBar,
+    Header,
     SpToast,
   },
   mixins: [imHandle],
@@ -279,8 +286,7 @@ export default {
 
     async getList(currentPage) {
       const { limit } = this.pageOption
-      // TODO 测试userID
-      const { userId } = { userId: '607997598875151734' } // this.userInfo || {}
+      const { userId } = this.userInfo || {} // { userId: '607997598875151734' }
       if (!userId) {
         this.$refs.spToast.show({
           message: `请先登录`,

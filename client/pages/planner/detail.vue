@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-30 11:05:04
+ * @LastEditTime: 2020-12-30 11:49:44
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/detail.vue
 -->
@@ -533,6 +533,10 @@ export default {
         height: 32px;
         background-color: transparent;
         border: none;
+        &:active::before {
+          opacity: 1;
+          background-color: transparent;
+        }
       }
       .horizontal-line {
         .horizontal-line(@width:208px; @bgColor:#DFD4CA; @skewX:0deg; @height:2px;);

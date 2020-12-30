@@ -10,7 +10,11 @@
   <div class="install-app-dialog">
     <RecommendDialog v-model="visible" v-bind="$attrs" v-on="$listeners">
       <div class="install-app">
-        <img src="" alt="logo" class="install-app_logo" />
+        <img
+          :src="$ossImgSet(160, 160, 'g6trabnxtg80000.png')"
+          alt=""
+          class="install-app_logo"
+        />
         <h4 class="install-app_title">薯片找人APP</h4>
         <p class="install-app_descript">找人服务，尽在薯片找人</p>
         <sp-button
@@ -69,6 +73,7 @@ export default {
 
 <style lang="less" scoped>
 .install-app-dialog {
+  overflow: hidden;
   /deep/.recommend-dialog-content_body {
     border-radius: 24px;
     width: 580px;
@@ -78,7 +83,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    height: 100%;
     &_logo {
       width: 140px;
       height: 140px;
