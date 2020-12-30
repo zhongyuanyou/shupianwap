@@ -59,7 +59,13 @@
             placeholder="信息保护中，仅官方可见"
             type="text"
             data-name="税务筹划表单_手机号"
+            maxlength="11"
             @focus="focus"
+            @input="
+              () => {
+                tel = tel.replace(/[^\d]/g, '')
+              }
+            "
           />
         </div>
         <div v-if="isshow" class="banner-bottom-form-div">
@@ -72,6 +78,12 @@
             class="banner-bottom-form-input banner-bottom-form-inputspe"
             placeholder="请输入验证码"
             type="text"
+            maxlength="6"
+            @input="
+              () => {
+                code = code.replace(/[^0-9A-Za-z]/g, '')
+              }
+            "
           />
           <a
             v-md-map
@@ -296,7 +308,7 @@ export default {
             form_name: '税务筹划表单_提交',
           })
         } else {
-          console.log(res)
+          Toast(res.msg)
         }
       })
     },
