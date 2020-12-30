@@ -501,24 +501,34 @@ class homeController extends Controller {
         }
       }
 
-      // 根据产品分类code查询产品分类详情
-      const classDetauls = await service.common.tradingProduct.getClassfiyDetail(
-        classCodeList
-      );
-      if (classDetauls.code === 200 && classDetauls.data.length) {
-        classDetauls.data.forEach((item) => {
-          productData.goodsList.forEach((key) => {
-            if (
-              item.code === key.classCode &&
-              Array.isArray(
-                item.classOperatingResponse.defaultProductFileIdUrls
-              )
-            ) {
-              key.defaultImg =
-                item.classOperatingResponse.defaultProductFileIdUrls[0];
-            }
+      // 根据产品分类code查询产品分类详情(为交易产品设置图片)
+      if (classCodeList.length) {
+        // 数组去重
+        function unique(arr) {
+          // 如果新数组的当前元素的索引值 == 该元素在原始数组中的第一个索引，则返回当前元素
+          return arr.filter(function (item, index) {
+            return arr.indexOf(item, 0) === index;
           });
-        });
+        }
+        classCodeList = unique(classCodeList);
+        const classDetauls = await service.common.tradingProduct.getClassfiyDetail(
+          classCodeList
+        );
+        if (classDetauls.code === 200 && classDetauls.data.length) {
+          classDetauls.data.forEach((item) => {
+            productData.goodsList.forEach((key) => {
+              if (
+                item.code === key.classCode &&
+                Array.isArray(
+                  item.classOperatingResponse.defaultProductFileIdUrls
+                )
+              ) {
+                key.defaultImg =
+                  item.classOperatingResponse.defaultProductFileIdUrls[0];
+              }
+            });
+          });
+        }
       }
       ctx.helper.success({
         ctx,
