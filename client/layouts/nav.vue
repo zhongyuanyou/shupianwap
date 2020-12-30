@@ -1,7 +1,7 @@
 <template>
   <div class="nav-layout">
     <nuxt />
-    <openApp v-if="!isInApp" :bottom="bottom" />
+    <openApp v-if="!isInApp && showApp" :bottom="bottom" />
     <Bottombar v-if="!isInApp" ref="bottombar" />
     <div class="nav-placeholder"></div>
   </div>
@@ -18,6 +18,7 @@ export default {
   data() {
     return {
       bottom: 0,
+      showApp: false,
     }
   },
   computed: {
@@ -28,6 +29,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.bottom = this.$refs.bottombar.$el.getBoundingClientRect().height
+      this.showApp = true
     })
   },
 }
