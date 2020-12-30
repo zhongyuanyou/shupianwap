@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-02-21 04:16:27
- * @LastEditTime: 2020-12-29 20:13:44
+ * @LastEditTime: 2020-12-30 16:01:28
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /chips-wap/client/plugins/router.js
@@ -58,7 +58,7 @@ export default ({ app, store }) => {
           appHandler.dggGetUserInfo((res) => {
             if (res.code === 200) {
               try {
-                const userInfo = res.data
+                const userInfo = res.data || {}
                 if (userInfo && userInfo.userId && userInfo.token) {
                   store.commit('user/SET_USER', userInfo)
                 }

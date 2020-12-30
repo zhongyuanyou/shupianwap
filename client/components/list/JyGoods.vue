@@ -81,13 +81,11 @@ import Subscribe from '@/components/list/Subscribe'
 import JyFilters from '@/components/list/JyFilters'
 import searchList from '@/mixins/searchList'
 import clone from '~/utils/clone'
-import openApp from '@/components/common/app/OpenApp.vue'
 
 export default {
   name: 'JyGoods',
   components: {
     GoodsItem,
-    openApp,
     [List.name]: List,
     InstallApp,
     Subscribe,

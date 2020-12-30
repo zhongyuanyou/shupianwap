@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-30 15:05:42
+ * @LastEditTime: 2020-12-30 16:29:14
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -111,6 +111,7 @@
       </sp-pull-refresh>
     </div>
     <sp-toast ref="spToast" />
+    <openApp />
   </div>
 </template>
 
@@ -232,6 +233,7 @@ export default {
     ...mapState({
       currentCity: (state) => state.city.currentCity,
       isInApp: (state) => state.app.isInApp,
+      userInfo: (state) => state.user.userInfo,
     }),
     formatSearch() {
       const { sortId, keywords, region } = this.search
@@ -269,6 +271,7 @@ export default {
   methods: {
     ...mapMutations({
       SET_CITY: 'city/SET_CITY',
+      SET_USERY: 'user/SET_USERY',
     }),
 
     onLeftClick() {
@@ -413,31 +416,77 @@ export default {
     },
 
     // 发起聊天
-    uPIM(data = {}) {
+    async uPIM(data = {}) {
       const { mchUserId, userName } = data
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
-        this.$appFn.dggOpenIM(
-          {
-            name: userName,
-            userId: mchUserId,
-            userType: 'MERCHANT_USER',
-          },
-          (res) => {
-            const { code } = res || {}
-            if (code !== 200)
-              this.$refs.spToast.show({
-                message: `联系失败`,
-                duration: 1000,
-                forbidClick: true,
-                icon: 'toast_ic_remind',
-              })
-          }
-        )
+        try {
+          // 需要判断登陆没有，没有登录就是调用登录
+          await this.getUserInfo()
+          this.$appFn.dggOpenIM(
+            {
+              name: userName,
+              userId: mchUserId,
+              userType: 'MERCHANT_USER',
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$refs.spToast.show({
+                  message: `联系失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            }
+          )
+        } catch (error) {
+          console.error('uPIM error:', error)
+        }
         return
       }
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
       this.creatImSessionMixin({ imUserId: mchUserId, imUserType })
+    },
+
+    // app获取用户信息
+    getUserInfo() {
+      return new Promise((resolve, reject) => {
+        if (this.userInfo.userId) {
+          resolve(this.userInfo.userId)
+          return
+        }
+        this.$appFn.dggGetUserInfo((res) => {
+          const { code, data } = res || {}
+          // 未登录需要登录
+          if (code !== 200) {
+            this.$appFn.dggLogin((loginRes) => {
+              if (loginRes && loginRes.code === 200) {
+                console.log('loginRes : ', loginRes)
+                if (
+                  loginRes.data &&
+                  loginRes.data.userId &&
+                  loginRes.data.token
+                ) {
+                  this.SET_USERY(loginRes.data)
+                  resolve(loginRes.data.userId)
+                  return
+                }
+                reject(new Error('登录后userId或者token缺失'))
+                return
+              }
+              reject(new Error('登录失败'))
+            })
+            return
+          }
+          if (data && data.userId && data.token) {
+            this.SET_USERY(data)
+            resolve(data.userId)
+            return
+          }
+          reject(new Error('用户信息中userId或者token缺失'))
+        })
+      })
     },
 
     async getList(currentPage) {
