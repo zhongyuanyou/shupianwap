@@ -12,11 +12,9 @@
 <script>
 import { mapState } from 'vuex'
 import Bottombar from '@/components/common/nav/Bottombar'
-import openApp from '@/components/common/app/OpenApp.vue'
 export default {
   components: {
     Bottombar,
-    openApp,
   },
   data() {
     return {

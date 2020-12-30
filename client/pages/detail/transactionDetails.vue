@@ -34,9 +34,7 @@ export default {
           },
         }
       )
-      console.log('错误打印', code, message)
       if (code === 200) {
-        console.log(data)
         tcProductDetailData = data
         // 获取钻展规划师
         // 获取用户唯一标识

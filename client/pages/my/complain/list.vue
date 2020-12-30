@@ -138,6 +138,8 @@ export default {
 
 <style lang="less" scoped>
 .complaintList {
+  height: 100%;
+  background-color: #fff;
   .back_icon {
     margin-left: 40px;
   }

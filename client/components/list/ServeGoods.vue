@@ -104,13 +104,11 @@ import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
 import clone from '~/utils/clone'
 import searchList from '@/mixins/searchList'
-import openApp from '@/components/common/app/OpenApp.vue'
 
 export default {
   name: 'ServeGoods',
   components: {
     GoodsItem,
-    openApp,
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
     [List.name]: List,

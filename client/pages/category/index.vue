@@ -80,6 +80,7 @@
     </div>
     <Loading-center v-show="loading" />
     <!--E 内容区-->
+    <openApp />
   </div>
 </template>
 
@@ -89,6 +90,7 @@ import Better from 'better-scroll'
 import { Swipe, SwipeItem, Image } from '@chipspc/vant-dgg'
 import { category } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+
 export default {
   name: 'Index',
   components: {
