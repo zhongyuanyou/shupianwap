@@ -14,10 +14,8 @@
         <span>无烂坏账</span>
         <span>小规模</span>
       </div>
-      <div class="goods-sku">
-        <span v-for="(item, index) in goodsData.fieldList" :key="index">{{
-          item
-        }}</span>
+      <div v-if="goodsData.fieldList.length" class="goods-sku">
+        {{ description }}
       </div>
       <div class="goods-price">
         <span class="sales-proce">
@@ -49,6 +47,15 @@ export default {
   },
   data() {
     return {}
+  },
+  computed: {
+    description() {
+      if (this.goodsData.fieldList && this.goodsData.fieldList.length) {
+        return this.goodsData.fieldList.join(' | ')
+      } else {
+        return ''
+      }
+    },
   },
   methods: {
     priceRest(index = 0) {
@@ -172,26 +179,13 @@ export default {
     }
     .goods-sku {
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-top: 8px;
-      word-break: break-all;
-      word-wrap: break-word;
-      > span {
-        display: flex;
-        align-items: center;
-        height: 23px;
-        font-size: 22px;
-        font-family: PingFang SC;
-        font-weight: 400;
-        color: #222222;
-        padding-right: 12px;
-        border-right: 1px solid #222222;
-        margin: 8px 12px 8px 0;
-        &:last-child {
-          border-right: none;
-        }
-      }
+      flex-wrap: nowrap;
+      margin-top: 16px;
+      font-size: 22px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #222222;
+      .textOverflow(1);
     }
     .goods-price {
       flex: 1;

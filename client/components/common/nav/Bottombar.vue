@@ -164,13 +164,13 @@ export default {
           position: absolute;
           left: 50%;
           top: -6px;
-          min-width: 32px;
+          min-width: 36px;
           background: #f1524e;
           border: 4px solid #ffffff;
           border-radius: 18px;
           color: #fff;
           font-size: 20px;
-          padding: 0 3px;
+          padding: 0 4px;
           box-sizing: border-box;
           text-align: center;
         }
