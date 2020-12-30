@@ -2,15 +2,18 @@
   <div class="nav-layout">
     <nuxt />
     <Bottombar v-if="!isInApp" />
+    <OpenApp />
     <div class="nav-placeholder"></div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
 import Bottombar from '@/components/common/nav/Bottombar'
+import OpenApp from '@/components/common/app/OpenApp'
 export default {
   components: {
     Bottombar,
+    OpenApp,
   },
   computed: {
     ...mapState({
