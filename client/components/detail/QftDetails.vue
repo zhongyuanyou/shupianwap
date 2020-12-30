@@ -84,6 +84,7 @@ export default {
       color: #999999;
       border: 1px solid rgba(205, 205, 205, 0.4);
       text-align: center;
+      border-collapse: collapse;
     }
   }
 }

@@ -9,6 +9,36 @@ const { Get, Prefix } = require('egg-shell-decorators');
 const { productApi } = require('./../../config/serveApi/index');
 const rules = require('../validate/tcProduct');
 
+// 经营时间转换
+function businessHours(ctx, time) {
+  const businessHours = ctx.helper.moment(+new Date() - (+new Date() - +new Date(time))).fromNow(true);
+  return businessHours;
+}
+// 注册资本转换
+function registCapitalFormat(ctx, capital) {
+  const capitalY = ctx.helper.priceFixed(`${capital}/100`, 2);
+  if (capitalY < 10000) {
+    return '1万以下';
+  } else if (capitalY >= 10000 && capitalY < 20000) {
+    return '1-2万';
+  } else if (capitalY >= 20000 && capitalY < 50000) {
+    return '2-5万';
+  } else if (capitalY >= 50000 && capitalY <= 100000) {
+    return '5-10万';
+  } else if (capitalY > 100000) {
+    return '10万以上';
+  }
+}
+// 地址转换
+function addressFormat(address) {
+  let addressStr = '';
+  try {
+    addressStr = address.split(',').join('');
+  } catch (e) {
+    addressStr = address;
+  }
+  return addressStr;
+}
 @Prefix('/nk/tc_product')
 class TcProductController extends Controller {
   @Get('/v1/detail.do')
@@ -60,7 +90,8 @@ class TcProductController extends Controller {
           'applicable_items', // 适用项目
           'similar_group', // 类似群组
         ],
-        'CATE-JYZY-ZL': [ 'patent_type', // 类型
+        'CATE-JYZY-ZL': [
+          'patent_type', // 类型
           'code', // 专利号
           'patent_status', // 状态
           'patent_classification', // 分类
@@ -74,6 +105,7 @@ class TcProductController extends Controller {
           'safety_production_license', // 安许证
           'qualification_registered_capital', // 注册资本
           'qualification_type', // 资质分类
+          'tax_type', // 纳税类型
         ],
       };
       /** *todo:********基本信息************/
@@ -82,13 +114,26 @@ class TcProductController extends Controller {
       // 获取到当前分类的数据字典
       const currentDict = dictCodeList.filter(dict => dict.ext1 === data.classCodeLevelList[0]);
       // 根据获取到的数据字典,匹配到当前分类对应的数据
-      const baseData = data.fieldList.filter(item => {
+      const baseData = [];
+      data.fieldList.forEach(item => {
         // 当前是资质时,获取到filedList中的资质信息,单独提出
         if (currentDict[0].code === 'CATE-JYZY-ZZ' && item.fieldCode === 'qualification_type') {
           data.qftDetails = item;
-          return false;
+          return;
         }
-        return baseDataKeys[currentDict[0].code].includes(item.fieldCode);
+        // 假如该字段是前端需要的自动
+        if (baseDataKeys[currentDict[0].code].includes(item.fieldCode)) {
+          if (item.fieldCode === 'qualification_registration_area' || item.fieldCode === 'registration_area') {
+            item.fieldValueCn = addressFormat(item.fieldValueCn);
+          } else if (item.fieldCode === 'registered_capital' || item.fieldCode === 'qualification_registered_capital') {
+            item.fieldValueCn = registCapitalFormat(ctx, item.fieldValueCn);
+          } else if (item.fieldCode === 'registration_time') {
+            item.fieldValueCn = businessHours(ctx, item.fieldValueCn);
+          } else if (item.fieldCode === 'qualification_expire_date') {
+            item.fieldValueCn = `${item.fieldValueCn ? item.fieldValueCn : item.fieldValue}年`;
+          }
+          baseData.push(item);
+        }
       });
       // 过滤好的交易产品属性
       data.fieldList = baseData;
