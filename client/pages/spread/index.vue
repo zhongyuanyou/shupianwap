@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <Header title="工商财税" />
+    <Header title="工商首页" />
     <!-- START 轮播图-->
     <Banner :images="images" />
     <!-- END 轮播图-->

@@ -27,10 +27,12 @@
             <span>{{ listCounts.operating.actualSales }}</span>
             <div>在线咨询</div>
           </div>
+          <div class="list-count_line"></div>
           <div class="list-count_item">
             <span>{{ listCounts.operating.actualViews }}</span>
             <div>累计成交</div>
           </div>
+          <div class="list-count_line"></div>
           <div class="list-count_item">
             <span>{{ listCounts.operating.defaultSales }}</span>
             <div>成功案例</div>
@@ -154,7 +156,7 @@ export default {
       .list-count {
         display: flex;
         justify-content: space-between;
-        padding: 216px 82px 78px;
+        padding: 206px 82px 30px;
         position: relative;
         .list-count_item {
           font-size: 34px;
@@ -174,11 +176,18 @@ export default {
             line-height: 52px;
           }
         }
+        .list-count_line {
+          width: 1px;
+          height: 34px;
+          margin-top: 46px;
+          background: #f4f4f4;
+        }
       }
       .list-advisory {
         display: flex;
         justify-content: space-between;
-        padding: 0px 32px 46px;
+        border-top: 1px dashed #f4f4f4;
+        padding: 24px 32px 24px;
         .price {
           font-size: 24px;
           font-weight: bold;

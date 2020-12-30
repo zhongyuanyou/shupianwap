@@ -66,10 +66,13 @@
         <a
           v-for="(item, index) of sericeImg"
           :key="index"
+          v-md-map
+          v-md:webClick
+          :data-name="item.name"
           @click="onService('', index)"
-          ><span v-md-map v-md:webClick :data-name="item.name">
-            <sp-image :src="item.img" /> </span
-        ></a>
+        >
+          <sp-image :src="item.img"
+        /></a>
       </div>
     </div>
     <!-- E其他服务 -->
@@ -559,6 +562,7 @@ export default {
   width: 750px;
   margin: 0 auto;
   position: relative;
+  font-family: PingFang SC;
   .banner-img {
     /deep/.my-swipe .sp-swipe-item {
       color: #fff;
@@ -578,21 +582,32 @@ export default {
     h5 {
       font-size: 40px;
       margin-bottom: 32px;
+      height: 40px;
+      line-height: 40px;
+    }
+  }
+  .norm {
+    padding: 64px 42px 0 38px;
+    h5 {
+      margin-bottom: 32px;
     }
   }
   .introduction {
-    padding-top: 64px;
+    padding-top: 56px;
+    h5 {
+      margin-bottom: 32px;
+    }
     .more {
       text-align: center;
       font-size: 28px;
       font-weight: 400;
       color: #555555;
       line-height: 44px;
-      padding: 8px 0 40px 0;
+      padding: 12px 0 0 0;
     }
   }
   .service {
-    padding-top: 14px;
+    padding-top: 20px;
     margin: 0 auto;
     .serice-item {
       margin: 0 auto;
@@ -600,9 +615,9 @@ export default {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      span {
+      a {
         width: 207px;
-        height: 187px;
+        height: 187px !important;
         background: #ffffff;
         box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.08);
         /deep/.sp-image {
@@ -615,6 +630,11 @@ export default {
   .help {
     /deep/.cousulttel-title {
       text-align: left;
+    }
+  }
+  .refer {
+    .planner {
+      padding-top: 6px;
     }
   }
 }

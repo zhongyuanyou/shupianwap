@@ -32,6 +32,7 @@
             data-form_name="工商注册_表单_手机号"
             type="digit"
             :border="false"
+            maxlength="11"
             label="手机号"
             placeholder="信息保护中，仅官方可见"
             label-class="style-phone"
@@ -45,6 +46,8 @@
             data-form_name="工商注册_表单_验证码"
             center
             clearable
+            maxlength="6"
+            @input="inputVal($event)"
             label="验证码"
             placeholder="请输入验证码"
             label-class="style-phone"
@@ -140,6 +143,9 @@ export default {
     }
   },
   methods: {
+    inputVal(val) {
+      this.sms = this.sms.replace(/[^0-9A-Za-z]/g, '')
+    },
     onSelect(item) {
       // 默认情况下点击选项时不会自动收起
       // 可以通过 close-on-click-action 属性开启自动收起
@@ -377,6 +383,9 @@ export default {
       .sp-button {
         padding: 44px 0;
         width: 594px;
+        font-size: 32px;
+        font-weight: bold;
+        color: #ffffff;
       }
     }
     /deep/.flow {
