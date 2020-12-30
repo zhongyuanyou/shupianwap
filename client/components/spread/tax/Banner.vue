@@ -175,6 +175,7 @@ export default {
     // 电话号码输入框聚焦显示获取验证码
     focus() {
       this.isshow = true
+      console.log(this.$parent.isFixed)
     },
     // 验证 电话号码
     testMsg() {
