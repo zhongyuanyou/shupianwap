@@ -110,7 +110,7 @@ export default {
     submitSubscribe() {
       // 提交订阅
       if (this.isLogin) {
-        this.$refs.spToast.show({
+        this.$xToast.show({
           message: '提交成功',
           duration: 1500,
           icon: 'toast_ic_comp',
@@ -122,7 +122,7 @@ export default {
     },
     getSMS() {
       if (!checkPhone(this.tel)) {
-        this.$refs.spToast.show({
+        this.$xToast.show({
           message: '请输入正确的手机号',
           duration: 1500,
           icon: 'toast_ic_remind',
@@ -144,7 +144,7 @@ export default {
             this.countDown()
           })
           .catch(() => {
-            this.$refs.spToast.show({
+            this.$xToast.show({
               message: '网络错误，请稍后再试',
               duration: 1000,
               icon: 'toast_ic_error',
@@ -155,7 +155,7 @@ export default {
     },
     checkSms() {
       if (!checkAuthCode(this.sms)) {
-        this.$refs.spToast.show({
+        this.$xToast.show({
           message: '请填写正确的验证码',
           duration: 1000,
           icon: 'toast_ic_error',
@@ -175,7 +175,7 @@ export default {
         .then((res) => {
           console.log(res)
           if (res.code === 200) {
-            this.$refs.spToast.show({
+            this.$xToast.show({
               message: '提交成功',
               duration: 1500,
               icon: 'toast_ic_comp',

@@ -172,12 +172,19 @@ export default {
         this.isInput = true
       }
       // 处理存储路由的query
-      const query = this.$router.history.current.query
-      const path = this.$router.history.current.path // 对象的拷
-      const newQuery = JSON.parse(JSON.stringify(query))
-      newQuery.keywords = this.formData.searchText
-      this.$router.replace({ path, query: newQuery })
-      this.addSearchHistoryMixin({ name: this.currentInputText, isJumpLink: 0 })
+      if (
+        this.$router.history.current.query.keywords !== this.formData.searchText
+      ) {
+        const query = this.$router.history.current.query
+        const path = this.$router.history.current.path // 对象的拷
+        const newQuery = JSON.parse(JSON.stringify(query))
+        newQuery.keywords = this.formData.searchText
+        this.$router.replace({ path, query: newQuery })
+        this.addSearchHistoryMixin({
+          name: this.currentInputText,
+          isJumpLink: 0,
+        })
+      }
     },
     searchInputHandle() {},
     getTabVue(key, val) {

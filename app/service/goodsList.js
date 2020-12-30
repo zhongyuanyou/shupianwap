@@ -79,57 +79,61 @@ class goodsListService extends Service {
         delete params.needGoodsList
         delete params.sortBy
         const result = await service.curl.curlPost(listUrl, params);
-        let tagArr = []
-        // console.log(result)
-        let arr = []
-        result.data.records.forEach((item) => {
-          let {
-            id,
-            name,
-            salesSum,
-            classCode,
-            className,
-            referencePrice,
-            tags,
-            clientDetails,
-            productDescription,
-            productNo,
-          } = item
-          if (tags) {
-            tags.forEach((item) => {
-              tagArr.push(item.tagId)
+        if (result.code == 200) {
+          let tagArr = []
+          // console.log(result)
+          let arr = []
+          result.data.records.forEach((item) => {
+            let {
+              id,
+              name,
+              salesSum,
+              classCode,
+              className,
+              referencePrice,
+              tags,
+              clientDetails,
+              productDescription,
+              productNo,
+            } = item
+            if (tags) {
+              tags.forEach((item) => {
+                tagArr.push(item.tagId)
+              })
+            }
+            // tagArr.push.call(tagArr, ...tags)
+            // todo referencePrice金额需要转换成元，在这里是分
+            referencePrice = this.ctx.helper.calculate(`${referencePrice}/100`)
+            arr.push({
+              id,
+              name,
+              salesSum,
+              classCode,
+              className,
+              referencePrice,
+              tags,
+              clientDetails,
+              productDescription,
+              productNo,
             })
-          }
-          // tagArr.push.call(tagArr, ...tags)
-          // todo referencePrice金额需要转换成元，在这里是分
-          referencePrice = this.ctx.helper.calculate(`${referencePrice}/100`)
-          arr.push({
-            id,
-            name,
-            salesSum,
-            classCode,
-            className,
-            referencePrice,
-            tags,
-            clientDetails,
-            productDescription,
-            productNo,
           })
-        })
-        tagArr = [...new Set(tagArr)]
-        // console.log(tagArr)
-        // console.log(tagArr.length)
-        const tagsResult = await service.curl.curlPost(tagsUrl, {tagIds: tagArr});
-        let resetResult = [] // 标签
-        // console.log('asdssssssssss', tagsResult)
-        // 这里判断标签数据是否成功返回
-        if (tagsResult.code === 200 && tagsResult.data.records.length) {
-          resetResult = resetServeTags(tagsResult.data.records, arr)
+          tagArr = [...new Set(tagArr)]
+          // console.log(tagArr)
+          // console.log(tagArr.length)
+          const tagsResult = await service.curl.curlPost(tagsUrl, {tagIds: tagArr});
+          let resetResult = [] // 标签
+          // console.log('asdssssssssss', tagsResult)
+          // 这里判断标签数据是否成功返回
+          if (tagsResult.code === 200 && tagsResult.data.records.length) {
+            resetResult = resetServeTags(tagsResult.data.records, arr)
+          } else {
+            resetResult = arr
+          }
+          result.data.records = resetResult;
+          resolve(result);
         } else {
-          resetResult = arr
+          resolve(result);
         }
-        result.data.records = resetResult;
-        resolve(result);
       } catch (err) {
         ctx.logger.error(err);
         resolve(ctx.helper.errMessage(err));
@@ -191,31 +195,35 @@ class goodsListService extends Service {
         delete params.dictCode
         params.withFieldDetail = 1 // 需要属性详情
         const result = await service.curl.curlPost(url, params);
-        let arr = []
-        result.data && result.data.records.forEach((item) => {
-          let {
-            id,
-            name,
-            classCode,
-            goodsCode,
-            platformPrice,
-            fieldList,
-          } = item
-          // console.log('fieldList', fieldList)
-          fieldList = resetJyField(params.classCode,  fieldList)
-          // todo platformPrice金额需要转换成元，在这里是分
-          platformPrice = this.ctx.helper.calculate(`${platformPrice}/100`)
-          arr.push({
-            id,
-            name,
-            classCode,
-            referencePrice: platformPrice,
-            fieldList,
-            productNo: goodsCode,
+        if (result.code == 200) {
+          let arr = []
+          result.data && result.data.records.forEach((item) => {
+            let {
+              id,
+              name,
+              classCode,
+              goodsCode,
+              platformPrice,
+              fieldList,
+            } = item
+            // console.log('fieldList', fieldList)
+            fieldList = resetJyField(params.classCode,  fieldList)
+            // todo platformPrice金额需要转换成元，在这里是分
+            platformPrice = this.ctx.helper.calculate(`${platformPrice}/100`)
+            arr.push({
+              id,
+              name,
+              classCode,
+              referencePrice: platformPrice,
+              fieldList,
+              productNo: goodsCode,
+            })
           })
-        })
-        result.data.records = arr;
-        resolve(result);
+          result.data.records = arr;
+          resolve(result);
+        } else {
+          resolve(result);
+        }
       } catch (err) {
         ctx.logger.error(err);
         resolve(ctx.helper.errMessage(err));
