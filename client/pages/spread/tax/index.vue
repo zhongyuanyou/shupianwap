@@ -32,7 +32,7 @@
     <!--  立即咨询  -->
     <!--  底部  -->
     <shu-pian-zhao-ren></shu-pian-zhao-ren>
-    <fixed-bottom :planner="fixedBottomData"></fixed-bottom>
+    <fixed-bottom v-show="isFixed" :planner="fixedBottomData"></fixed-bottom>
     <!--  底部  -->
     <!--  IM  -->
     <dgg-im-company></dgg-im-company>
@@ -417,6 +417,28 @@ export default {
           locationCodeLocType: 2,
         },
       ],
+      isFixed: true,
+      // 默认屏幕高度
+      docmHeight: 0, // 一开始的屏幕高度
+      showHeight: 0, // 实时屏幕高度
+    }
+  },
+  watch: {
+    showHeight() {
+      if (this.docmHeight > this.showHeight) {
+        this.isFixed = false
+      } else if (this.docmHeight <= this.showHeight) {
+        this.isFixed = true
+      }
+    },
+  },
+  mounted() {
+    this.docmHeight = document.body.clientHeight
+    // window.onresize监听页面高度的变化
+    window.onresize = () => {
+      return (() => {
+        this.showHeight = document.body.clientHeight
+      })()
     }
   },
   created() {
