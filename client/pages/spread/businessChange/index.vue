@@ -659,7 +659,7 @@ export default {
       margin-left: -375px;
     }
   }
-  /deep/.sp-popup--bottom {
+  /deep/.sp-popup--round {
     width: 750px;
     left: 50%;
     margin-left: -375px;
