@@ -41,19 +41,9 @@
       >
         <div v-for="item in city" :key="item.name">
           <!-- S 索引标题 -->
-          <sp-index-anchor
-            :index="item.code"
-            :class="[
-              'title_con',
-              {
-                hot_title: item.code === '热',
-                normal_title: item.code !== '热',
-              },
-            ]"
-            >{{
-              item.code === '热' ? item.info.name : item.code
-            }}</sp-index-anchor
-          >
+          <sp-index-anchor :index="item.code" :class="['title_con']">{{
+            item.code
+          }}</sp-index-anchor>
           <!-- E 索引标题 -->
           <!-- S 热门城市 -->
           <div v-if="item.code != '热'">
@@ -119,7 +109,7 @@
               class="popup_con_hot_item"
               @click="select(cItem, index)"
             >
-              {{ cItem.name }}
+              {{ cItem.name }}12
             </div>
           </div>
           <!-- E 城市 -->
@@ -134,7 +124,6 @@
 import { Popup, IndexAnchor, IndexBar, Icon } from '@chipspc/vant-dgg'
 import pyjs from 'js-pinyin'
 import Header from '~/components/common/areaSelected/components/Header'
-import { cityCopy } from '~/utils/city'
 import { dict } from '~/api'
 export default {
   name: 'CitySelect',
@@ -273,13 +262,13 @@ export default {
         }
       })
       // 判断是否有热门城市数据，若有，则添加到对应的索引
-      if (this.hotCity) {
-        indexs.unshift('热')
-        citys.unshift({
-          code: '热',
-          info: this.hotCity,
-        })
-      }
+      // if (this.hotCity) {
+      //   indexs.unshift('热')
+      //   citys.unshift({
+      //     code: '热',
+      //     info: this.hotCity,
+      //   })
+      // }
       this.indexList = indexs
       this.city = citys
     },
@@ -297,6 +286,15 @@ export default {
     },
     select(item, index) {
       // 选择城市
+      const spCitys = [
+        '北京市',
+        '澳门特别行政区',
+        '台湾省',
+        '天津市',
+        '上海市',
+        '香港特别行政区',
+        '重庆市',
+      ]
       const arr = this.selectList
       if (this.step === 0) {
         this.clear()
@@ -305,6 +303,11 @@ export default {
           arr.length = 1
         }
         this.selectList = arr
+        if (spCitys.includes(item.name)) {
+          arr[1] = { name: '', code: '' }
+          this.$emit('select', this.selectList)
+          this.closePopup()
+        }
         this.initCity(item.children)
         // 设置步骤
         this.step++
@@ -402,6 +405,8 @@ export default {
         }
       }
       /deep/ .sp-index-bar__sidebar {
+        z-index: 6;
+        top: calc(100vh - 483px);
         span {
           font-size: 19px;
           margin-bottom: 31px;

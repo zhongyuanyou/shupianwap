@@ -239,7 +239,7 @@ export default {
         ...this.ruleForm,
         addressProvince: this.areaList.length ? this.areaList[0].name : '',
         addressCity: this.areaList.length > 1 ? this.areaList[1].name : '',
-        addressArea: '船山区',
+        addressArea: '',
       }
       try {
         await this.$axios.post(userinfoApi.updateAddress, params)
@@ -253,7 +253,7 @@ export default {
         ...this.ruleForm,
         addressProvince: this.areaList.length ? this.areaList[0].name : '',
         addressCity: this.areaList.length > 1 ? this.areaList[1].name : '',
-        addressArea: '船山区',
+        addressArea: '',
         userId: this.userId,
       }
       try {
