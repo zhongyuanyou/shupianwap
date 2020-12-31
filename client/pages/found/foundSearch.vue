@@ -44,6 +44,7 @@
 <script>
 import FoundHeader from '~/components/found/common/FoundHeader'
 export default {
+  layout: 'keepAlive',
   name: 'FoundSearch',
   components: { FoundHeader },
   data() {

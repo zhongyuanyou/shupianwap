@@ -29,6 +29,7 @@
             <div v-show="TabNavList == index" class="line"></div>
             {{ item.name }}
           </li>
+          <li class="category_con_lf_item"></li>
         </ul>
       </aside>
       <!--S 侧边栏区域-->
@@ -74,6 +75,7 @@
               </div>
             </div>
           </div>
+          <div class="bot"></div>
         </div>
       </section>
       <!--E 二级分类区域-->
@@ -329,6 +331,10 @@ export default {
       overflow-y: scroll;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
+      .bot {
+        width: 100%;
+        height: 120px;
+      }
       .swiper {
         height: 164px;
         width: 100%;

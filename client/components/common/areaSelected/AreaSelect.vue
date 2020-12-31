@@ -11,7 +11,7 @@
     <!-- E 头部 -->
     <div v-if="selectList.length" class="select">
       <div
-        v-for="(item, index) in selectList"
+        v-for="(item, index) in selectList.slice(0, 2)"
         :key="item.name"
         :style="{
           color:
@@ -30,7 +30,10 @@
     <!-- S 内容 -->
     <div
       class="popup_con"
-      :style="{ top: selectList.length ? '2.06rem' : '1.32rem' }"
+      :style="{
+        height: selectList.length ? '8.61rem' : '9.35rem',
+        marginTop: selectList.length ? '2.06rem' : '1.32rem',
+      }"
     >
       <!--被选中的省市显示区域-->
       <sp-index-bar
@@ -378,7 +381,7 @@ export default {
     top: 132px;
     left: 0;
     right: 0;
-    z-index: 5;
+    z-index: 2;
     &_item {
       font-size: 28px;
       font-weight: bold;
@@ -386,14 +389,16 @@ export default {
     }
   }
   &_con {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
+    //overflow-y: scroll;
+    //overflow-x: hidden;
+    //-webkit-overflow-scrolling: touch;
     padding: 0;
+    /deep/ .popup_con_bar {
+      height: 100%;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
     &_bar {
       padding: 0;
       .title_con {
@@ -405,11 +410,12 @@ export default {
         }
       }
       /deep/ .sp-index-bar__sidebar {
-        z-index: 6;
-        top: calc(100vh - 483px);
+        position: absolute;
+        transform: translateY(-45%);
+        z-index: 999;
         span {
           font-size: 19px;
-          margin-bottom: 31px;
+          margin-bottom: 15px;
         }
       }
     }
