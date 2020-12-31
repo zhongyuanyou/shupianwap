@@ -126,8 +126,11 @@ export default {
         .catch((err) => {
           // todo 提示没有数据
           this.listShow = false
+          this.$xToast.error('网络错误，请刷新后重试')
           this.isReq[this.currentTabJyCode] = false
-          this.jyGoodsListData[this.currentTabJyCode] = []
+          if (this.formData[this.currentTabJyCode].start === 1) {
+            this.jyGoodsListData[this.currentTabJyCode] = []
+          }
           console.error(err)
         })
     },

@@ -76,6 +76,17 @@ export default {
       lowLineCode: ['CONDITION-JY-SB-FL'],
     }
   },
+  computed: {
+    isShowLowLine() {
+      // 一行筛选行是否只显示三个筛选项
+      const _index = this.lowLineCode.indexOf(this.filterData.code)
+      if (_index > -1) {
+        return true
+      } else {
+        return false
+      }
+    },
+  },
   watch: {
     activeItems(val) {
       const arr = val
@@ -105,17 +116,6 @@ export default {
         if (!this.isSelectMore) {
           this.getBottomConfirmHeight(0)
         }
-      }
-    },
-  },
-  computed: {
-    isShowLowLine() {
-      // 一行筛选行是否只显示三个筛选项
-      const _index = this.lowLineCode.indexOf(this.filterData.code)
-      if (_index > -1) {
-        return true
-      } else {
-        return false
       }
     },
   },
