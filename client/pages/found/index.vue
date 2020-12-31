@@ -27,7 +27,7 @@
         :banner="information_banner"
         :list="information_list"
         :category-code="categoryCode"
-        :refreshStatus="refreshStatus"
+        :refresh-status="refreshStatus"
         @refresh="refresh"
       />
     </div>

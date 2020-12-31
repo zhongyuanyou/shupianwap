@@ -37,7 +37,9 @@
                 height="0.88rem"
                 fit="cover"
                 class="avatar"
-                :src="avatar ? avatar : 'https://img.yzcdn.cn/vant/cat.jpeg'"
+                :src="
+                  info.url ? info.url : 'https://img.yzcdn.cn/vant/cat.jpeg'
+                "
               />
               <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
             </div>
@@ -122,7 +124,6 @@
 <script>
 import { TopNavBar, Cell, Uploader, Image } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import DggOSS from '@dgg/oss'
 import ImgSelected from '~/components/my/information/ImgSelected'
 import SexSelected from '~/components/my/information/SexSelected'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
@@ -157,6 +158,7 @@ export default {
         email: '',
         province: '',
         city: '',
+        url: '',
       }, // 用户信息
       isUpdateName: false, // 能否修改昵称
       isUpdateAvatar: false, // 能否修改头像
@@ -323,24 +325,19 @@ export default {
       } catch (err) {}
     },
     afterRead(file) {
-      // const config = {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data',
-      //   },
-      // }
-      // const formData = new FormData()
-      // formData.append('uploadatalog', 'sp-pt/wap/images')
-      // formData.append('file', file.file)
-      // this.$axios.post(ossApi.add, formData, config).then((res) => {
-      //   if (res.code === 200) {
-      //     this.avatar = res.data.url
-      //   }
-      // })
-      const dggOSS = new DggOSS({
-        env: 'T',
-        bucket: 'dggtechtest',
-        sysCode: 'zky-api',
-        secret: 'e97bd82e0f7ff420d0728a41773f3ec7',
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+      const formData = new FormData()
+      formData.append('uploadatalog', 'sp-pt/wap/images')
+      formData.append(`${this.info.fileId}`, file.file)
+      this.$axios.post(ossApi.add, formData, config).then((res) => {
+        console.log('ressss', res)
+        if (res.code === 200) {
+          this.avatar = res.data.url
+        }
       })
     },
   },

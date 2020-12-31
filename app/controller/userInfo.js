@@ -46,16 +46,35 @@ class MyController extends Controller {
   async info() {
     // 查询用户信息
     const { ctx, service, app } = this;
+    let infoData = null;
     // 参数校验
     getValiErrors(app, ctx, dataInfo, ctx.query);
     // 参数校验通过,正常响应
     const { id } = ctx.query;
     const url = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], userApi.dataInfo);
-    const { data } = await service.curl.curlGet(url, {
+    const res = await service.curl.curlGet(url, {
       id,
     }
     );
-    ctx.helper.success({ ctx, code: 200, res: data || {} });
+    if (res.code === 200) {
+      // 请求文件地址接口
+      infoData = res.data;
+      const addressUrl = ctx.helper.assembleUrl(app.config.apiClient.APPID[3], userApi.fileAddress);
+      const { code, message, data } = await service.curl.curlPost(addressUrl, {
+        userId: res.data.id,
+        fileType: 'HEAD_NORMAL',
+      }
+      );
+      if (code === 200) {
+        infoData.fileId = data.fileId;
+        infoData.url = data.url;
+        ctx.helper.success({ ctx, code: 200, res: infoData || {} });
+      } else {
+        ctx.logger.error(code, message);
+      }
+    } else {
+      ctx.logger.error(res.code, res.message);
+    }
   }
 }
 module.exports = MyController;
