@@ -83,7 +83,7 @@
     </div>
     <!-- E立即咨询 -->
     <div class="foot">
-      <FixedBottom v-if="isFixed" :planner="planner" />
+      <FixedBottom :planner="planner" />
     </div>
     <dgg-im-company></dgg-im-company>
   </div>
@@ -378,10 +378,6 @@ export default {
   data() {
     return {
       isMore: false,
-      isFixed: false, // 是否固定定位
-      // 默认屏幕高度
-      docmHeight: 0, // 一开始的屏幕高度
-      showHeight: 0, // 一开始的屏幕高度
       bannerImages: [
         {
           code: 1,
@@ -468,31 +464,10 @@ export default {
       tel: '4000-962540',
     }
   },
-  watch: {
-    showHeight() {
-      const that = this
-      if (that.docmHeight > that.showHeight) {
-        this.isFixed = false
-      } else if (that.docmHeight <= that.showHeight) {
-        this.isFixed = true
-      }
-    },
-  },
   created() {
     if (this.resultData.data !== 0) {
       this.ListCount(this.resultData.data || [])
       this.plannerData(this.resultData.data.planlerList || [])
-    }
-  },
-  mounted() {
-    this.docmHeight = document.body.clientHeight
-    this.isFixed = true
-    window.onresize = () => {
-      return (() => {
-        window.screenHeight = document.body.clientHeight
-        this.showHeight = window.screenHeight
-        console.log(window.screenHeight)
-      })()
     }
   },
   methods: {
