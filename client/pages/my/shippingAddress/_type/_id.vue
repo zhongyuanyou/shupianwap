@@ -175,7 +175,8 @@ export default {
       } else if (val === 2) {
         this.$appFn.dggLocation((res) => {
           // 拿到app定位后端数据并赋值
-          const addressJSON = JSON.parse(res.address)
+          const addressJSON = res.data
+          console.log('addressJSON', addressJSON)
           this.areaTxt =
             addressJSON.province + addressJSON.city + addressJSON.district
           this.areaList[0] = { name: addressJSON.province, code: '' }

@@ -180,10 +180,10 @@ export default {
     this.tabItems.forEach((item) => {
       this.isReq[item.code] = false
     })
-    console.log('jygood', this.typeCodeIndex)
+    // console.log('jygood', this.typeCodeIndex)
     this.activeTabIndex = this.typeCodeIndex
     this.currentTabJyCode = this.tabItems[this.typeCodeIndex].code
-    this.isReq[this.currentTabJyCode] = true
+    // this.isReq[this.currentTabJyCode] = true
     this.filterItem[this.tabItems[this.typeCodeIndex].code] = {}
     this.formData[this.tabItems[this.typeCodeIndex].code] = {
       start: 1,
@@ -244,7 +244,7 @@ export default {
     },
     resetAllSelect(currentCode) {
       // 重置筛选项
-      console.log('this.$refs.dropDownMenu', this.$refs.dropDownMenu)
+      // console.log('this.$refs.dropDownMenu', this.$refs.dropDownMenu)
       if (this.$refs.dropDownMenu) {
         this.$refs.dropDownMenu.forEach((item) => {
           if (item.filterData[0].pcode !== currentCode) {

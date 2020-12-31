@@ -14,7 +14,8 @@ module.exports.userApi = {
   register: "/nk/register/v1/register_user.do",
   reset: "/nk/account/v1/reset_password_by_user_id.do",
   updateInfo: "/yk/user/v1/update_user_by_type.do", // 修改用户信息
-  dataInfo: "/yk/user/v1/find_user_decrypt_by_id.do", // 查询用户信息
+  dataInfo: "/nk/user/v1/find_user_by_id.do", // 查询用户信息
+  fileAddress: "/yk/user/v1/get_file_address.do", // 获取文件地址
   updateShippingAddress: "/yk/profile/v1/update_user_address.do", // 编辑收货地址
   newShippingAddress: "/yk/profile/v1/save_user_address.do", // 新增收货地址
   listShippingAddress: "/yk/profile/v1/find_shopping_address_list.do", // 收货地址列表

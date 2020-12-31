@@ -37,7 +37,9 @@
                 height="0.88rem"
                 fit="cover"
                 class="avatar"
-                :src="avatar ? avatar : 'https://img.yzcdn.cn/vant/cat.jpeg'"
+                :src="
+                  info.url ? info.url : 'https://img.yzcdn.cn/vant/cat.jpeg'
+                "
               />
               <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
             </div>
@@ -82,7 +84,11 @@
           <div class="right_icon">
             <p class="txt">
               {{
-                info.province ? info.province + ' ' + info.city + ' ' : '未设置'
+                info.province
+                  ? `${info.province ? info.province : ''} ${
+                      info.city ? info.city : ''
+                    }`
+                  : '未设置'
               }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
@@ -152,6 +158,7 @@ export default {
         email: '',
         province: '',
         city: '',
+        url: '',
       }, // 用户信息
       isUpdateName: false, // 能否修改昵称
       isUpdateAvatar: false, // 能否修改头像
@@ -278,10 +285,14 @@ export default {
         }
         const data = await this.$axios.get(userinfoApi.info, { params })
         this.info = data.data
-        if (data.data.province && data.data.city) {
-          this.$set(this.area, 0, { name: data.data.province, code: '' })
-          this.$set(this.area, 1, { name: data.data.city, code: '' })
-        }
+        this.$set(this.area, 0, {
+          name: data.data.province ? data.data.province : '',
+          code: '',
+        })
+        this.$set(this.area, 1, {
+          name: data.data.city ? data.data.city : '',
+          code: '',
+        })
       } catch (err) {}
     },
     async getConfig() {
@@ -321,8 +332,9 @@ export default {
       }
       const formData = new FormData()
       formData.append('uploadatalog', 'sp-pt/wap/images')
-      formData.append('file', file.file)
+      formData.append(`${this.info.fileId}`, file.file)
       this.$axios.post(ossApi.add, formData, config).then((res) => {
+        console.log('ressss', res)
         if (res.code === 200) {
           this.avatar = res.data.url
         }

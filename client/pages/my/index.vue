@@ -9,7 +9,7 @@
           height="1.06rem"
           fit="cover"
           class="my_tp_info_img"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          :src="info.url ? info.url : 'https://img.yzcdn.cn/vant/cat.jpeg'"
           @click="handleAvatar"
         />
         <p class="txt" @click="handleClickLogin">
@@ -86,6 +86,7 @@ export default {
     return {
       info: {
         fullName: '', // 用户昵称
+        url: '', // 头像
       }, // 用户信息
       loginStatus: false, // 弹框显示状态
       Field7: {

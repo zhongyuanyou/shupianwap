@@ -9,6 +9,7 @@
 const Controller = require('egg').Controller;
 const { contentApi, productApi } = require('../../config/serveApi/index');
 const { RULES } = require('../../config/constant/jyFieldRules');
+const { GOODSLIST } = require('../../config/constant/defaultGoodsImg');
 const { productRules } = require('../validate/home');
 const { Get, Prefix, Post } = require('egg-shell-decorators');
 const { BASE_CACHE_TIME } = require('../../config/constant/cacheTime');
@@ -278,15 +279,17 @@ class homeController extends Controller {
   async findRecomList() {
     const { ctx, service, app } = this;
     // 定义参数校验规则
-    const rules = {
-      findType: { type: 'integer', required: true, min: 0, max: 2 }, // 查询类型：0：初始查询广告+数据字典+推荐商品  1：查询广告+推荐商品 2：只查推荐商品
+    const findTypeRules = {
+      findType: { type: 'integer', required: true, min: 0, max: 2 }, // 查询类型：0：初始查询广告+数据字典  1：查询广告+推荐商品 2：只查推荐商品
     };
-    const nweRules = Object.assign(rules, productRules);
     // 参数校验
-    const valiErrors = app.validator.validate(nweRules, ctx.request.body);
+    const findTypeValiErrors = app.validator.validate(
+      findTypeRules,
+      ctx.request.body
+    );
     // 参数校验未通过
-    if (valiErrors) {
-      ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+    if (findTypeValiErrors) {
+      ctx.helper.fail({ ctx, code: 422, res: findTypeValiErrors });
       return;
     }
     // 查询推荐产品所需参数
@@ -314,10 +317,7 @@ class homeController extends Controller {
         // 查询广告
         const findadData = getBannerList(ctx, service, [locationCode]);
         const resArr = await Promise.all([findadData, findRecom]);
-        const adCode =
-          ctx.request.body.findType === 0
-            ? productData.dictData[0].ext1
-            : ctx.request.body.locationCode;
+        const adCode = ctx.request.body.locationCode;
         if (resArr[0].code === 200) {
           productData.adData = resArr[0].data[adCode]
             ? resArr[0].data[adCode].sortMaterialList
@@ -329,20 +329,31 @@ class homeController extends Controller {
       }
     };
     try {
-      // 初始查询广告+数据字典+推荐商品
+      // findType === 0 初始查询广告+数据字典
       if (ctx.request.body.findType === 0) {
         // 定义参数校验规则
-        const rules = {
+        const dictionaryCodeRules = {
           dictionaryCode: {
             type: 'string',
             required: true,
           }, // 查讯数据字典的code
+          limit: {
+            type: 'integer',
+            required: true,
+          },
+          page: {
+            type: 'integer',
+            required: true,
+          },
         };
         // 参数校验
-        const valiErrors = app.validator.validate(rules, ctx.request.body);
+        const dictionaryCodeValiErrors = app.validator.validate(
+          dictionaryCodeRules,
+          ctx.request.body
+        );
         // 参数校验未通过
-        if (valiErrors) {
-          ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+        if (dictionaryCodeValiErrors) {
+          ctx.helper.fail({ ctx, code: 422, res: dictionaryCodeValiErrors });
           return;
         }
 
@@ -395,38 +406,50 @@ class homeController extends Controller {
         }
 
         if (productData.dictData.length) {
-          params.formatId = productData.dictData[0].ext3; // 获取产品分类编码
           locationCode = productData.dictData[0].ext1; // 获取广告位code
-          await findAdAndproduct();
+          const findadData = await getBannerList(ctx, service, [locationCode]);
+          if (findadData.code === 200) {
+            productData.adData = findadData.data[locationCode]
+              ? findadData.data[locationCode].sortMaterialList
+              : []; // 广告数据
+          }
         }
       }
-      // 查询广告+推荐商品
+      //  findType === 1 查询广告+推荐商品
       if (ctx.request.body.findType === 1) {
         // 定义参数校验规则
-        const rules = {
+        const adRules = {
           locationCode: { type: 'string', required: true }, // 查询广告的位置code
           formatId: { type: 'string', required: true }, // 分类code
         };
+        const adAndRocRules = Object.assign(adRules, productRules);
         // 参数校验
-        const valiErrors = app.validator.validate(rules, ctx.request.body);
+        const adAndRocValiErrors = app.validator.validate(
+          adAndRocRules,
+          ctx.request.body
+        );
         // 参数校验未通过
-        if (valiErrors) {
-          ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+        if (adAndRocValiErrors) {
+          ctx.helper.fail({ ctx, code: 422, res: adAndRocValiErrors });
           return;
         }
         await findAdAndproduct();
       }
-      // 只查推荐商品
+      // findType === 2  只查推荐商品
       if (ctx.request.body.findType === 2) {
         // 定义参数校验规则
-        const rules = {
+        const rpcRules = {
           formatId: { type: 'string', required: true }, // 分类code
         };
+        const nweRules = Object.assign(rpcRules, productRules);
         // 参数校验
-        const valiErrors = app.validator.validate(rules, ctx.request.body);
+        const rpcValiErrors = app.validator.validate(
+          nweRules,
+          ctx.request.body
+        );
         // 参数校验未通过
-        if (valiErrors) {
-          ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+        if (rpcValiErrors) {
+          ctx.helper.fail({ ctx, code: 422, res: rpcValiErrors });
           return;
         }
         // 获取推荐产品ids
@@ -469,7 +492,7 @@ class homeController extends Controller {
       }
 
       // 从算法部获取到推荐产品id成功
-      if (findRomReq.code === 200) {
+      if (ctx.request.body.findType !== 0 && findRomReq.code === 200) {
         // 根据前台的分页参数，动态选取一部分id
         const start = (ctx.request.body.page - 1) * ctx.request.body.limit;
         const end = ctx.request.body.page * ctx.request.body.limit;
@@ -484,7 +507,11 @@ class homeController extends Controller {
         }
       }
       // 从算法部获取到推荐产品id失败
-      if (!productData.goodsList.length && ctx.request.body.page === 1) {
+      if (
+        ctx.request.body.findType !== 0 &&
+        !productData.goodsList.length &&
+        ctx.request.body.page === 1
+      ) {
         const sysCode = app.config.apiClient.APPID[1];
         const address = productApi.getJyServeList;
         const url = ctx.helper.assembleUrl(sysCode, address);
@@ -502,7 +529,7 @@ class homeController extends Controller {
       }
 
       // 根据产品分类code查询产品分类详情(为交易产品设置图片)
-      if (classCodeList.length) {
+      if (ctx.request.body.findType !== 0 && classCodeList.length) {
         // 数组去重
         function unique(arr) {
           // 如果新数组的当前元素的索引值 == 该元素在原始数组中的第一个索引，则返回当前元素
@@ -514,8 +541,6 @@ class homeController extends Controller {
         const classDetauls = await service.common.tradingProduct.getClassfiyDetail(
           classCodeList
         );
-        const defaultImg =
-          'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'; // 交易产品默认图
         if (classDetauls.code === 200 && classDetauls.data.length) {
           classDetauls.data.forEach((item) => {
             productData.goodsList.forEach((key) => {
@@ -529,7 +554,7 @@ class homeController extends Controller {
                   key.defaultImg =
                     item.classOperatingResponse.defaultProductFileIdUrls[0];
                 } else {
-                  key.defaultImg = defaultImg;
+                  key.defaultImg = GOODSLIST; // 交易产品默认图
                 }
               }
             });
