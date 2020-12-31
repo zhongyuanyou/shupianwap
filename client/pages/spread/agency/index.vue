@@ -456,10 +456,11 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .agency {
   width: 750px;
   margin: 0 auto;
+  position: relative;
   /deep/.fixed-head {
     /deep/.my-head {
       width: 750px;

@@ -162,7 +162,6 @@ export default {
       time: '',
     }
   },
-
   methods: {
     // 下弹窗显示
     showPopup() {
