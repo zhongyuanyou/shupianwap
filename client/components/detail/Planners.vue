@@ -5,7 +5,7 @@
       v-for="(item, index) in info"
       :key="item.userCenterId"
       class="planners_item"
-      :style="{ marginTop: index === 0 ? '0.48rem' : '0.66rem' }"
+      :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
     >
       <div class="planners_item_lf">
         <sp-image
@@ -122,7 +122,7 @@ export default {
 <style lang="less" scoped>
 .planners {
   border-top: 24px solid #f8f8f8;
-  padding: 48px 40px 56px 40px;
+  padding: 41px 40px 56px 40px;
   background-color: #fff;
   border-bottom: 24px solid #f8f8f8;
   .icon {
