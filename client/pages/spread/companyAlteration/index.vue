@@ -28,6 +28,10 @@
         @onSelectActive="onTransact"
       />
       <!-- E办理 -->
+      <button class="form-button">下一步(1/2)</button>
+      <div class="button">
+        <sp-button type="primary" size="large">大号按钮</sp-button>
+      </div>
     </div>
   </div>
 </template>
@@ -41,6 +45,7 @@ import {
   SwipeItem,
   Lazyload,
   Image,
+  Button,
 } from '@chipspc/vant-dgg'
 import TopLocation from '@/components/spread/companyAlteration/TopLocation'
 import CompanySelec from '@/components/spread/companyAlteration/CompanySelect'
@@ -55,6 +60,7 @@ export default {
     [SwipeItem.name]: SwipeItem,
     [Lazyload.name]: Lazyload,
     [Image.name]: Image,
+    [Button.name]: Button,
     TopLocation,
     CompanySelec,
     SelectDesired,

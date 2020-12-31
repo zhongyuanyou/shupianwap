@@ -16,7 +16,7 @@
     <button class="banner-button" @click="tabCity">
       {{ city }}
       <my-icon
-        name="tap_ic_pen_n"
+        name="tap_ic_pesSn_n"
         color="#ffffff"
         size="0.14rem"
         class="icon banner-button-icon"

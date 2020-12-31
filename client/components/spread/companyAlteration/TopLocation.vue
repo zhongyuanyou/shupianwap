@@ -1,8 +1,8 @@
 <template>
   <div class="company-register">
-    <div class="company-top">
+    <div class="company-top" :style="{ backgroundImage: 'url(' + bgImg + ')' }">
       <sp-top-nav-bar
-        background="#4653E0"
+        background="rgba(255, 255, 255, 0)"
         ellipsis
         @on-click-left="onClickLeft"
       >
@@ -12,35 +12,21 @@
       </sp-top-nav-bar>
       <span class="location" @click="onMore"
         >{{ cityName }}
-        <my-icon name="tap_ic_pen_n" size="0.08rem" color="#ffffff"></my-icon>
+        <my-icon name="tap_ic_pen_n" size="0.14rem" color="#ffffff"></my-icon>
       </span>
     </div>
   </div>
 </template>
 <script>
-import {
-  TopNavBar,
-  Icon,
-  Toast,
-  Swipe,
-  SwipeItem,
-  Lazyload,
-  Image,
-} from '@chipspc/vant-dgg'
+import { TopNavBar } from '@chipspc/vant-dgg'
 export default {
   components: {
     [TopNavBar.name]: TopNavBar,
-    [Icon.name]: Icon,
-    // 待删除--
-    [Toast.name]: Toast,
-    [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
-    [Lazyload.name]: Lazyload,
-    [Image.name]: Image,
   },
   data() {
     return {
       cityName: '成都',
+      bgImg: require('~/assets/spreadImages/companyRegister/Step1-img-banner.jpg'),
     }
   },
   methods: {
@@ -48,7 +34,7 @@ export default {
       this.$router.go(-1)
     },
     onMore() {
-      console.log(123)
+      this.$router.push({ path: '/city/choiceCity' })
     },
   },
 }
@@ -57,7 +43,8 @@ export default {
 .company-register {
   /deep/.company-top {
     height: 378px;
-    background-color: #4653e0;
+    background-position: center center;
+    background-size: 100% 100%;
     position: relative;
     .sp-hairline--bottom::after {
       border-bottom-width: 0;
