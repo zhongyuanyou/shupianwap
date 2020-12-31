@@ -82,7 +82,9 @@
       <ShuPianZhaoRen />
     </div>
     <!-- E立即咨询 -->
-    <div class="foot"><FixedBottom :planner="planner" /></div>
+    <div class="foot">
+      <FixedBottom :planner="planner" />
+    </div>
     <dgg-im-company></dgg-im-company>
   </div>
 </template>
@@ -96,6 +98,7 @@ import {
   SwipeItem,
   Lazyload,
   Image,
+  Sticky,
 } from '@chipspc/vant-dgg'
 import Card from '@/components/spread/companyRegistry/Card.vue'
 import Registerlist from '@/components/spread/companyRegistry/Registerlist.vue'
@@ -559,7 +562,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .company-registry {
-  width: 750px;
+  width: @spread-page-width;
   margin: 0 auto;
   position: relative;
   font-family: PingFang SC;

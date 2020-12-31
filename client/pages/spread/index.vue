@@ -1115,9 +1115,8 @@ export default {
   font-family: PingFang SC;
 
   /deep/ .my-head {
-    // .my-head设置了固定定位，百分比相对于窗口。
-    width: @spread-page-width;
-    left: auto;
+    width: @spread-page-width !important;
+    left: auto !important;
   }
 
   /deep/ .sp-overlay {

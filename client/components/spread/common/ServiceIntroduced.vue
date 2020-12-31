@@ -76,10 +76,12 @@
 
 <script>
 export default {
-  data() {
-    return {
-      servicelist: [
-        {
+  props: {
+    servicelist: {
+      type: Object,
+      required: true,
+      default: () => {
+        return {
           id: '',
           actualViews: '7295',
           defaultSales: '5173',
@@ -92,14 +94,34 @@ export default {
             name: '',
             jobNum: '',
             telephone: '',
-            imgSrc: '',
-            avatarImg:
+            imgSrc:
               'http://fastdfs.dggvip.net:8080/group1/M00/02/C0/wKiyYlubWPyEbXyQAAAAAH6D3Zw879.jpg',
           },
-          plannerName: '',
-        },
-      ],
-    }
+        }
+      },
+    },
+    md: {
+      type: Object,
+      default: () => {
+        return {
+          imMd: {
+            name: '代理记账服务介绍_小规模纳税人代理记账_在线咨询',
+            type: '售前',
+          },
+          telMd: {
+            name: '代理记账服务介绍_小规模纳税人代理记账_拨打电话',
+            type: '售前',
+          },
+          clickMd: {
+            name: '代理记账服务介绍_小规模纳税人代理记账',
+            type: '售前',
+          },
+        }
+      },
+    },
+  },
+  data() {
+    return {}
   },
   methods: {
     call(tel) {
