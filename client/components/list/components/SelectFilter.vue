@@ -20,6 +20,8 @@
         :is-show-all="true"
         :is-select-more="isSelectMore"
         :self-active-item="activeItems"
+        :col-span="isShowLowLine ? 8 : 6"
+        :line-length="isShowLowLine ? 3 : 4"
         @selectItems="selectItems"
         @isShowBtnHandle="isShowBtnHandle"
       />
@@ -71,6 +73,7 @@ export default {
       activeItems: [], // 默认激活的
       saveActiveItems: [], // 存储的筛选项数据
       contentMaxHeight: 0, // 内容的最大高
+      lowLineCode: ['CONDITION-JY-SB-FL'],
     }
   },
   watch: {
@@ -102,6 +105,17 @@ export default {
         if (!this.isSelectMore) {
           this.getBottomConfirmHeight(0)
         }
+      }
+    },
+  },
+  computed: {
+    isShowLowLine() {
+      // 一行筛选行是否只显示三个筛选项
+      const _index = this.lowLineCode.indexOf(this.filterData.code)
+      if (_index > -1) {
+        return true
+      } else {
+        return false
       }
     },
   },
