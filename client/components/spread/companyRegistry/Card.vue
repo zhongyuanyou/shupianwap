@@ -47,10 +47,10 @@
             center
             clearable
             maxlength="6"
-            @input="inputVal($event)"
             label="验证码"
             placeholder="请输入验证码"
             label-class="style-phone"
+            @input="inputVal($event)"
           >
             <template #button>
               <span
