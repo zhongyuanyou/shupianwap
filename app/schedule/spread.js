@@ -64,6 +64,8 @@ async function setData(ctx) {
       let toDayNum = await ctx.service.redis.get(cacheKeyToday);
       if (toDayNum) {
         toDayNum = Number(toDayNum) + obj.stepNum;
+        // 初始化线上测试环境数据
+        toDayNum = obj.today;
       } else toDayNum = obj.today;
       ctx.service.redis.set(
         cacheKeyToday,
@@ -72,7 +74,9 @@ async function setData(ctx) {
       );
       let totalNum = await ctx.service.redis.get(cacheKeyTotal);
       if (totalNum) {
-        totalNum = Number(totalNum) + obj.stepNum;
+        // totalNum = Number(totalNum) + obj.stepNum;
+        // 初始化线上测试环境数据
+        totalNum = obj.total;
       } else totalNum = obj.total;
       ctx.service.redis.set(
         cacheKeyTotal,
@@ -82,7 +86,7 @@ async function setData(ctx) {
     }
   }
 }
-module.exports = (app) => {
+module.exports = () => {
   return {
     schedule: {
       interval: '1h',
