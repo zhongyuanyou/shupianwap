@@ -129,6 +129,7 @@ class helpController extends Controller {
           platformCode: ctx.request.body.platformCode,
           terminalCode: ctx.request.body.terminalCode,
           includeField: ctx.request.body.includeField,
+          sortOrder: 'isTop=desc',
         });
         console.log(111, articleRes);
         if (articleRes.code === 200) {

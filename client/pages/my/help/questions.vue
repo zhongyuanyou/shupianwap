@@ -24,6 +24,7 @@
 import { foundApi } from '~/api'
 import Header from '@/components/common/head/header'
 export default {
+  layout: 'keepAlive',
   name: 'Questions',
   components: { Header },
   async asyncData({ $axios, query }) {

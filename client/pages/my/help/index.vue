@@ -122,13 +122,14 @@ import {
   TopNavBar,
   Sticky,
 } from '@chipspc/vant-dgg'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
 import { helpApi } from '@/api'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import Header from '@/components/common/head/header'
 
 export default {
+  layout: 'keepAlive',
   name: 'Help',
   components: {
     LoadingDown,
@@ -197,6 +198,7 @@ export default {
     }),
   },
   mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'Help' })
     if (!this.isInApp) {
       this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
     } else {
@@ -210,6 +212,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     // tab切换
     tabsClickHandle(index) {
       if (!this.tabData[index].articleData.length) {
@@ -412,9 +417,8 @@ export default {
     /deep/ .sp-work-tab {
       padding: 0 32px;
       padding-top: 29px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
+      display: inline !important;
+      flex: none !important;
       .sp-work-tab__text {
         font-size: 32px;
         line-height: 32px;
