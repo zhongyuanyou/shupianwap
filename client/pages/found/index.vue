@@ -22,11 +22,13 @@
         <sp-icon name="search" size="20" @click="onClickRight" />
       </template>
     </sp-top-nav-bar>
-    <div :style="{ marginTop: 0, height: '100%' }">
+    <div :style="{ marginTop: 0 }">
       <Con
         :banner="information_banner"
         :list="information_list"
         :category-code="categoryCode"
+        :refreshStatus="refreshStatus"
+        @refresh="refresh"
       />
     </div>
   </div>
@@ -34,12 +36,12 @@
 
 <script>
 import { WorkTab, WorkTabs, Icon, TopNavBar, Toast } from '@chipspc/vant-dgg'
-import { mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import Con from '~/components/found/found/Cons'
 import { foundApi } from '@/api'
 export default {
-  layout: 'nav',
-  name: 'Index',
+  layout: 'keepAlive',
+  name: 'Found',
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
@@ -68,6 +70,7 @@ export default {
       information_banner: [], // 广告数据
       information_list: [], // 资讯列表
       categoryCode: '', // code码
+      refreshStatus: false,
     }
   },
   computed: {
@@ -93,12 +96,27 @@ export default {
         ? this.homeData.information_list
         : []
   },
+  // 离开时 路由拦截
+  beforeRouteLeave(to, from, next) {
+    if (['found-detail-id', 'found-foundSearch'].includes(to.name)) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'Found' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'Found' })
+    }
+    next()
+  },
   methods: {
-    async onClickTap(index, title) {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
+    async onClickTap(index, isRefresh) {
       // 切换按钮回滚到顶部
       window.scrollTo(0, 0)
-      this.information_banner = []
-      this.information_list = []
+      if (!isRefresh) {
+        this.information_banner = []
+        this.information_list = []
+      }
+      this.refreshStatus = true
       // 点击tab标签
       try {
         this.categoryCode = this.information_class[index].code
@@ -106,6 +124,7 @@ export default {
           categoryCode: this.categoryCode,
         }
         const res = await this.$axios.get(foundApi.screenRequest, { params })
+        this.refreshStatus = false
         if (res.code === 200) {
           this.information_banner = res.data.information_banner
           this.information_list = res.data.information_list
@@ -114,6 +133,10 @@ export default {
     },
     onClickRight() {
       this.$router.push('/found/foundSearch')
+    },
+    refresh() {
+      this.onClickTap(this.activeTab, true)
+      console.log('刷新了')
     },
   },
 }

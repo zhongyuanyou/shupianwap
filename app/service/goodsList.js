@@ -2,6 +2,7 @@
 const Service = require("egg").Service;
 const { productApi } = require('./../../config/serveApi/index');
 const { RULES } =require('./../../config/constant/jyFieldRules')
+const { GOODSLIST } = require('./../../config/constant/defaultGoodsImg.js')
 // 处理交易不同业态的属性
 function resetJyField(typeCode, fieldData) {
   // 获取的规则
@@ -41,6 +42,7 @@ function resetServeTags(tagsData, result) {
 // 处理服务标签
 function resetImg(imgsData, result) {
   const imgCode = {}
+  let imgSrc
   imgsData.forEach((item) => {
     // 对查询到的图片数据进行分类
     imgCode[item.code] =
@@ -48,7 +50,8 @@ function resetImg(imgsData, result) {
       item.classOperatingResponse.defaultProductFileIdUrls[0]
   })
   result.forEach((item) => {
-    item.goodsImg = imgCode[item.classCode]
+    imgSrc = imgCode[item.classCode] ? imgCode[item.classCode] : GOODSLIST
+    item.goodsImg = imgSrc
   })
   return result
 }

@@ -48,7 +48,7 @@ export default {
   /deep/ .sp-swipe {
     width: 100%;
     height: 520px;
-    background-color: #999;
+    /*background-color: #999;*/
     overflow: hidden;
     position: relative;
     margin-top: -88px;

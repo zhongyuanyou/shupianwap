@@ -12,7 +12,17 @@
             <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
           </div>
         </template>
-        <template #right></template>
+        <template #right>
+          <div>
+            <my-icon
+              class="head__icon-share"
+              name="nav_ic_share"
+              size="0.4rem"
+              color="#1A1A1A"
+              @click.native="onClickRight"
+            />
+          </div>
+        </template>
       </sp-top-nav-bar>
     </sp-sticky>
     <!--E 导航栏-->
@@ -86,6 +96,13 @@
       :im-jump-query="imJumpQuery"
       :planner-info="tcPlannerBooth"
     />
+    <!--    分享组件-->
+    <sp-share-sheet
+      v-model="showShare"
+      title="立即分享给好友"
+      :options="shareOptions"
+      @select="onSelect"
+    />
   </div>
 </template>
 
@@ -98,6 +115,7 @@ import {
   BottombarIcon,
   BottombarInfo,
   List,
+  ShareSheet,
 } from '@chipspc/vant-dgg'
 import Banner from '~/components/detail/Banner'
 import Title from '~/components/detail/Title'
@@ -127,6 +145,7 @@ export default {
     [BottombarIcon.name]: BottombarIcon,
     [BottombarInfo.name]: BottombarInfo,
     [List.name]: List,
+    [ShareSheet.name]: ShareSheet,
     Banner,
     Title,
     Basic,
@@ -193,6 +212,8 @@ export default {
       similarRecommend: [], // 同类推荐产品
       tcBasicData, // 基本信息的key
       fieldList: [],
+      showShare: false, // 是否弹起分享组件
+      shareOptions: [{ name: '复制链接', icon: 'link' }],
     }
   },
   computed: {
@@ -331,6 +352,14 @@ export default {
       console.log(tcBasicDataArr)
       this.fieldList = tcBasicDataArr
     },
+    //  分享
+    onClickRight() {
+      this.showShare = true
+    },
+    // 关闭分享
+    onSelect() {
+      this.showShare = false
+    },
   },
 }
 </script>
@@ -356,5 +385,9 @@ export default {
     flex-wrap: wrap;
     margin-top: 15px;
   }
+}
+/deep/ .sp-top-nav-bar__left,
+/deep/ .sp-top-nav-bar__right {
+  font-weight: initial;
 }
 </style>

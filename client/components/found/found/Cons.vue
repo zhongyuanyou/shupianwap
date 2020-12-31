@@ -94,6 +94,12 @@ export default {
         return []
       },
     },
+    refreshStatus: {
+      type: Boolean,
+      default: () => {
+        return false
+      },
+    },
     categoryCode: {
       type: String,
       default: '',
@@ -106,7 +112,7 @@ export default {
         'https://img.yzcdn.cn/vant/apple-2.jpg',
       ],
       current: 0,
-      refreshing: false,
+      refreshing: this.refreshStatus,
       loading: false,
       finished: false,
       limit: 10, // 每页显示条数
@@ -131,6 +137,10 @@ export default {
     categoryCode(newVal) {
       this.code = newVal
     },
+    refreshStatus(newVal) {
+      console.log('refreshing', newVal)
+      this.refreshing = newVal
+    },
   },
   methods: {
     onChange(index) {
@@ -149,9 +159,8 @@ export default {
       this.$router.push(`/found/detail/${item.id}`)
     },
     onRefresh() {
-      setTimeout(() => {
-        this.refreshing = false
-      }, 2000)
+      this.page = 2
+      this.$emit('refresh')
     },
     async onLoad() {
       // 上滑加载更多资讯列表

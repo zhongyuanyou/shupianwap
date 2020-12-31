@@ -37,6 +37,9 @@ export default {
   }
   &-content {
     font-size: 24px;
+    /deep/ img {
+      max-width: 100%;
+    }
   }
 }
 </style>

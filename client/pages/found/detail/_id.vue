@@ -85,6 +85,7 @@ import { foundApi } from '~/api'
 import Header from '@/components/common/head/header'
 
 export default {
+  layout: 'keepAlive',
   name: 'Detail',
   components: {
     [TopNavBar.name]: TopNavBar,
