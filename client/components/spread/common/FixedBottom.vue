@@ -113,9 +113,9 @@ export default {
 <style lang="less" scoped>
 // .my-sp-bottombar覆写了组件原本的样式
 .my-sp-bottombar {
-  width: calc(@spread-page-width - 80px);
-  left: auto;
-  right: auto;
+  width: calc(@spread-page-width - 80px) !important;
+  left: auto !important;
+  right: auto !important;
 }
 
 /deep/ .sp-bottombar {
