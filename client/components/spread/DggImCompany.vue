@@ -587,8 +587,8 @@ export default {
 // 该组件居中是因为父组件设置了居中
 .chat {
   z-index: 9999;
-  width: @spread-page-width;
-  left: auto;
+  width: @spread-page-width !important;
+  left: auto !important;
 }
 
 .chat-box {

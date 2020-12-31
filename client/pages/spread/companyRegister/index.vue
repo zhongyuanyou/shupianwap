@@ -98,6 +98,7 @@ import {
   SwipeItem,
   Lazyload,
   Image,
+  Sticky,
 } from '@chipspc/vant-dgg'
 import Card from '@/components/spread/companyRegistry/Card.vue'
 import Registerlist from '@/components/spread/companyRegistry/Registerlist.vue'

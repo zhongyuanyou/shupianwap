@@ -182,8 +182,8 @@ module.exports = {
       rk: ')',
     };
     f.ooo = [
-      [[f.mlt], [f.div], [f.mod], [f.exp]],
-      [[f.add], [f.sub], [f.lk], [f.rk]],
+      [[ f.mlt ], [ f.div ], [ f.mod ], [ f.exp ]],
+      [[ f.add ], [ f.sub ], [ f.lk ], [ f.rk ]],
     ];
 
     input = input.replace(/[^0-9%^*\/\-+.]/g, ''); // 清除不必要的字符
@@ -293,7 +293,7 @@ module.exports = {
     const { ctx, app } = this;
     const upInstances = [];
     if (app.eurekaInstances) {
-      const instances = app.eurekaInstances['crisps-app-wap-bff-tgapi'];
+      const instances = app.eurekaInstances['crisps-app-wap-bff-api'];
       if (instances && instances.length > 0) {
         for (const i of instances) {
           if (i.status.toUpperCase() === 'UP') {

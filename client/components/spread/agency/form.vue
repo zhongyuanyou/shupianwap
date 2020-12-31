@@ -100,7 +100,7 @@
       <!-- s 处理事件统计 -->
       <div class="statistical">
         <span
-          >今日进行 <span>{{ nums.todayNum }}</span
+          >今日进行<span>{{ nums.todayNum }}</span
           >件</span
         >
         <div class="line"></div>
