@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-30 19:50:42
+ * @LastEditTime: 2020-12-31 10:49:14
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -97,7 +97,11 @@
         <!-- E 下拉筛选条件 -->
       </div>
 
-      <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <sp-pull-refresh
+        v-model="refreshing"
+        class="list-refresh"
+        @refresh="onRefresh"
+      >
         <sp-list
           v-model="loading"
           error-text="请求失败，点击重新加载"
@@ -127,6 +131,13 @@
               </template>
             </div>
           </template>
+          <!-- S 自定义加载控件 -->
+          <template #loading>
+            <div>
+              <LoadingDown v-show="!refreshing && loading" :loading="true" />
+            </div>
+          </template>
+          <!-- E 自定义加载控件 -->
         </sp-list>
       </sp-pull-refresh>
     </div>
@@ -157,6 +168,7 @@ import Header from '@/components/common/head/header'
 import SearchPopup from '@/components/planner/SearchPopup'
 import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
 import SpToast from '@/components/common/spToast/SpToast'
+import LoadingDown from '@/components/common/loading/LoadingDown'
 
 import imHandle from '@/mixins/imHandle'
 
@@ -226,6 +238,7 @@ export default {
     SearchPopup,
     PlannerSearchItem,
     SpToast,
+    LoadingDown,
   },
   mixins: [imHandle],
   data() {
@@ -243,7 +256,7 @@ export default {
       sortOption: SORT_CONFIG,
       regionsOption: [],
       refreshing: false,
-      loading: false,
+      loading: true,
       error: false,
       finished: false,
       pageOption: DEFAULT_PAGE,
@@ -280,6 +293,7 @@ export default {
   created() {
     if (process && process.client) {
       this.uPGetRegion()
+      this.onLoad()
     }
   },
   mounted() {
@@ -580,6 +594,8 @@ export default {
 .list {
   height: 100%;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+
   .head {
     background: #ffffff;
   }
@@ -671,6 +687,9 @@ export default {
         left: 0;
         right: 0;
       }
+    }
+    .list-refresh {
+      overflow: initial;
     }
   }
 

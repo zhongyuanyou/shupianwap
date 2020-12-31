@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-02-21 04:16:27
- * @LastEditTime: 2020-12-30 16:01:28
+ * @LastEditTime: 2020-12-31 11:11:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /chips-wap/client/plugins/router.js
@@ -14,6 +14,7 @@ const infoList = [
   'my-shippingAddress', // 收货地址列表页面
   'my-interviewRecord', // 面谈记录列表页面
   'my-complain', // 新增吐槽页面
+  'my-planner', // 我的规划师页面
   'shoppingCar', // 购物车页面
 ]
 // const getInfo = function () {

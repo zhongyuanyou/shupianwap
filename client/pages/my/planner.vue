@@ -15,7 +15,13 @@
     </div>
 
     <div class="body">
-      <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <sp-pull-refresh
+        v-model="refreshing"
+        pulling-text="下拉就可刷新..."
+        loosing-text="释放即可刷新..."
+        class="planner-refresh"
+        @refresh="onRefresh"
+      >
         <sp-list
           v-model="loading"
           error-text="请求失败，点击重新加载"
@@ -45,9 +51,11 @@
                       <span class="name">{{ item.userName }}</span>
                       <span class="title">
                         <span class="title-content">
-                          <span v-if="item.title" class="title-content__item">{{
-                            item.title
-                          }}</span>
+                          <span
+                            v-if="!!item.title"
+                            class="title-content__item"
+                            >{{ item.title }}</span
+                          >
                           <!--  <i class="icon exclusive_icon"></i> -->
                           <!-- <i class="icon certificates_icon"></i> -->
                         </span>
@@ -104,6 +112,13 @@
               </template>
             </div>
           </template>
+          <!-- S 自定义加载控件 -->
+          <template #loading>
+            <div>
+              <LoadingDown v-show="!refreshing && loading" :loading="true" />
+            </div>
+          </template>
+          <!-- E 自定义加载控件 -->
         </sp-list>
       </sp-pull-refresh>
     </div>
@@ -128,6 +143,7 @@ import {
 
 import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
+import LoadingDown from '@/components/common/loading/LoadingDown'
 
 import imHandle from '@/mixins/imHandle'
 
@@ -153,12 +169,13 @@ export default {
     [TopNavBar.name]: TopNavBar,
     Header,
     SpToast,
+    LoadingDown,
   },
   mixins: [imHandle],
   data() {
     return {
       list: [],
-      loading: false,
+      loading: true, // 为了初始页面加载loading
       error: false,
       finished: false,
       refreshing: false,
@@ -170,6 +187,12 @@ export default {
       isInApp: (state) => state.app.isInApp,
       userInfo: (state) => state.user.userInfo,
     }),
+  },
+  created() {
+    if (process && process.client) {
+      // 因为设置loading默认为true,list控件不会主动触发onload,需要手动触发加载
+      this.onLoad()
+    }
   },
   methods: {
     onLeftClick() {
@@ -353,6 +376,7 @@ export default {
 .planner {
   height: 100%;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   .body {
     padding: 0;
     /deep/.sp-cell {
@@ -462,6 +486,9 @@ export default {
         }
       }
     }
+  }
+  &-refresh {
+    // overflow: initial;
   }
   .icon {
     display: inline-block;
