@@ -63,7 +63,7 @@ export default {
   computed: {
     description() {
       // 描述，包括
-      console.log(this.itemData)
+      // console.log(this.itemData)
       if (this.itemData.productDescription) {
         return this.itemData.productDescription
       }
