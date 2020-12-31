@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-30 11:49:44
+ * @LastEditTime: 2020-12-31 10:28:44
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/detail.vue
 -->
@@ -36,9 +36,11 @@
                     fit="cover"
                     :src="detailData.img"
                   />
-                  <span class="detail-content__title">{{
-                    detailData.title
-                  }}</span>
+                  <span
+                    v-if="!!detailData.title"
+                    class="detail-content__title"
+                    >{{ detailData.title }}</span
+                  >
                 </div>
                 <div>
                   <h4 class="detail-content__name">{{ detailData.name }}</h4>

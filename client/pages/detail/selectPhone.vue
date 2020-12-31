@@ -97,6 +97,7 @@
       <sp-pull-refresh
         v-model="refreshing"
         success-text="刷新成功"
+        class="list-refresh"
         @refresh="onRefresh"
       >
         <sp-list
@@ -108,6 +109,13 @@
           @load="onLoad"
         >
           <PhoneList :list="list" @operation="handleOperation" />
+          <!-- S 自定义加载控件 -->
+          <template #loading>
+            <div>
+              <LoadingDown v-show="!refreshing && loading" :loading="true" />
+            </div>
+          </template>
+          <!-- E 自定义加载控件 -->
         </sp-list>
       </sp-pull-refresh>
     </div>
@@ -135,6 +143,7 @@ import {
 import PriceFilterComponents from '@/components/common/filters/PriceFilterComponents'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import PhoneList from '@/components/detail/PhoneList'
+import LoadingDown from '@/components/common/loading/LoadingDown'
 
 import { shoppingCar, dict } from '@/api'
 
@@ -161,6 +170,7 @@ export default {
     PriceFilterComponents,
     BottomConfirm,
     PhoneList,
+    LoadingDown,
   },
   data() {
     return {
@@ -577,7 +587,9 @@ export default {
     overflow-y: scroll;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    // padding-bottom: 130px;
+    .list-refresh {
+      overflow: initial;
+    }
   }
   .footer {
     padding: 10px 40px 24px;
