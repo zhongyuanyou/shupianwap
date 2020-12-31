@@ -514,17 +514,23 @@ class homeController extends Controller {
         const classDetauls = await service.common.tradingProduct.getClassfiyDetail(
           classCodeList
         );
+        const defaultImg =
+          'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'; // 交易产品默认图
         if (classDetauls.code === 200 && classDetauls.data.length) {
           classDetauls.data.forEach((item) => {
             productData.goodsList.forEach((key) => {
-              if (
-                item.code === key.classCode &&
-                Array.isArray(
-                  item.classOperatingResponse.defaultProductFileIdUrls
-                )
-              ) {
-                key.defaultImg =
-                  item.classOperatingResponse.defaultProductFileIdUrls[0];
+              if (item.code === key.classCode) {
+                if (
+                  Array.isArray(
+                    item.classOperatingResponse.defaultProductFileIdUrls
+                  ) &&
+                  item.classOperatingResponse.defaultProductFileIdUrls.length
+                ) {
+                  key.defaultImg =
+                    item.classOperatingResponse.defaultProductFileIdUrls[0];
+                } else {
+                  key.defaultImg = defaultImg;
+                }
               }
             });
           });

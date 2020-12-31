@@ -48,12 +48,14 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { Search, Cell, CellGroup, TopNavBar, Sticky } from '@chipspc/vant-dgg'
 import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
 import { helpApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import Header from '@/components/common/head/header'
 export default {
+  layout: 'keepAlive',
   name: 'HelpCenter',
   components: {
     LoadingCenter,
@@ -83,7 +85,13 @@ export default {
       noData: false,
     }
   },
+  mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'HelpCenter' })
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     onServiceTouch(id) {
       this.$router.push({
         path: '/my/help/questions',
