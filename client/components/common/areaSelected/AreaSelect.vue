@@ -216,7 +216,7 @@ export default {
     },
     cityData(newVal) {
       this.selectList = newVal
-      if (newVal.length) {
+      if (newVal.length && this.cityList.length) {
         let tIndex = ''
         this.cityList.forEach((item, index) => {
           if (item.name.indexOf(this.selectList[0].name) > -1) {
@@ -234,7 +234,6 @@ export default {
   },
   mounted() {
     this.getCityList()
-    this.initCity(this.cityList)
   },
   methods: {
     initCity(cityList) {
@@ -358,6 +357,7 @@ export default {
           { code: '2147483647' }
         )
         this.cityList = res || []
+        this.initCity(this.cityList)
       } catch (err) {}
     },
   },

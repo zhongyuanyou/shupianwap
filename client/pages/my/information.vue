@@ -82,7 +82,11 @@
           <div class="right_icon">
             <p class="txt">
               {{
-                info.province ? info.province + ' ' + info.city + ' ' : '未设置'
+                info.province
+                  ? `${info.province ? info.province : ''} ${
+                      info.city ? info.city : ''
+                    }`
+                  : '未设置'
               }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
@@ -118,6 +122,7 @@
 <script>
 import { TopNavBar, Cell, Uploader, Image } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
+import DggOSS from '@dgg/oss'
 import ImgSelected from '~/components/my/information/ImgSelected'
 import SexSelected from '~/components/my/information/SexSelected'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
@@ -278,10 +283,14 @@ export default {
         }
         const data = await this.$axios.get(userinfoApi.info, { params })
         this.info = data.data
-        if (data.data.province && data.data.city) {
-          this.$set(this.area, 0, { name: data.data.province, code: '' })
-          this.$set(this.area, 1, { name: data.data.city, code: '' })
-        }
+        this.$set(this.area, 0, {
+          name: data.data.province ? data.data.province : '',
+          code: '',
+        })
+        this.$set(this.area, 1, {
+          name: data.data.city ? data.data.city : '',
+          code: '',
+        })
       } catch (err) {}
     },
     async getConfig() {
@@ -314,18 +323,24 @@ export default {
       } catch (err) {}
     },
     afterRead(file) {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-      const formData = new FormData()
-      formData.append('uploadatalog', 'sp-pt/wap/images')
-      formData.append('file', file.file)
-      this.$axios.post(ossApi.add, formData, config).then((res) => {
-        if (res.code === 200) {
-          this.avatar = res.data.url
-        }
+      // const config = {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // }
+      // const formData = new FormData()
+      // formData.append('uploadatalog', 'sp-pt/wap/images')
+      // formData.append('file', file.file)
+      // this.$axios.post(ossApi.add, formData, config).then((res) => {
+      //   if (res.code === 200) {
+      //     this.avatar = res.data.url
+      //   }
+      // })
+      const dggOSS = new DggOSS({
+        env: 'T',
+        bucket: 'dggtechtest',
+        sysCode: 'zky-api',
+        secret: 'e97bd82e0f7ff420d0728a41773f3ec7',
       })
     },
   },
