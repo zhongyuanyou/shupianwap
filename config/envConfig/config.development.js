@@ -19,7 +19,7 @@ function getIPAdress() {
     }
   }
 }
-module.exports = (appInfo) => {
+module.exports = appInfo => {
   /**
    * built-in config
    * @type {Egg.EggAppConfig}
@@ -35,7 +35,7 @@ module.exports = (appInfo) => {
     },
   };
   // 在此处添加中间件配置
-  config.middleware = ['nuxt', 'gzip', 'errFilter', 'eureka', 'dggCache'];
+  config.middleware = [ 'nuxt', 'gzip', 'errFilter', 'eureka', 'dggCache' ];
   config.gzip = {
     threshold: 1024, // 小于 1k 的响应体不压缩
   };
@@ -104,13 +104,13 @@ module.exports = (appInfo) => {
       'cloud-recomd-api', // 算法
       // 架构中心
       'tac-external-platform-server', // 第三方系统对接平台API
-      'crisps-app-wap-bff-tgapi', //薯片
+      'crisps-app-wap-bff-api', // 薯片
     ],
   };
   // eureka相关配置
   config.eureka = {
     instance: {
-      app: 'crisps-app-wap-bff-tgapi',
+      app: 'crisps-app-wap-bff-api',
       instanceId: `${getIPAdress()}:7001`, // 本地IP和端口
       hostName: getIPAdress(),
       ipAddr: getIPAdress(),
@@ -121,7 +121,7 @@ module.exports = (appInfo) => {
       homePageUrl: null,
       statusPageUrl: `http://${getIPAdress()}:7001/`, // 状态页面(判断心跳),
       healthCheckUrl: null,
-      vipAddress: 'crisps-app-wap-bff-tgapi',
+      vipAddress: 'crisps-app-wap-bff-api',
       dataCenterInfo: {
         '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
         name: 'MyOwn',

@@ -57,7 +57,7 @@
             v-md:webClick
             class="banner-bottom-form-input"
             placeholder="信息保护中，仅官方可见"
-            type="text"
+            type="tel"
             data-name="税务筹划表单_手机号"
             maxlength="11"
             @focus="focus"
@@ -77,7 +77,7 @@
             data-name="税务筹划表单_验证码"
             class="banner-bottom-form-input banner-bottom-form-inputspe"
             placeholder="请输入验证码"
-            type="text"
+            type="tel"
             maxlength="6"
             @input="
               () => {
@@ -162,7 +162,6 @@ export default {
       time: '',
     }
   },
-
   methods: {
     // 下弹窗显示
     showPopup() {
@@ -503,6 +502,18 @@ a {
 // 表单下拉框的选择内容样式
 /deep/ .sp-cell__value {
   text-align: left;
+}
+//下拉弹出层的最大宽度
+/deep/ .sp-popup {
+  width: 750px;
+  left: 50%;
+  margin-left: -375px;
+}
+//下拉弹出遮罩层
+/deep/ .sp-overlay {
+  width: 750px;
+  left: 50%;
+  margin-left: -375px;
 }
 .gray {
   color: #cccccc;

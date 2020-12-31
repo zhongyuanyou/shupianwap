@@ -540,4 +540,8 @@ export default {
   width: 750px;
   margin: 0 auto;
 }
+/deep/ .my-head {
+  width: 750px !important;
+  left: auto !important;
+}
 </style>

@@ -46,11 +46,12 @@
             data-form_name="工商注册_表单_验证码"
             center
             clearable
+            type="tel"
             maxlength="6"
-            @input="inputVal($event)"
             label="验证码"
             placeholder="请输入验证码"
             label-class="style-phone"
+            @input="inputVal($event)"
           >
             <template #button>
               <span
@@ -175,7 +176,7 @@ export default {
     },
     // 发送验证码
     getMsg(setData) {
-      if (this.test === '获取验证码' || this.test === '重新发送') {
+      if (this.test === '获取验证码') {
         window.promotion.privat.getSmsCode(setData, (res) => {
           if (res.error === 0) {
             let i = 59
@@ -185,7 +186,7 @@ export default {
                 i--
                 this.test = i + 's'
               } else {
-                this.test = '重新发送'
+                this.test = '获取验证码'
                 clearInterval(this.time)
               }
             }, 1000)
@@ -269,7 +270,7 @@ export default {
           this.selectValue = '请选择'
           this.sms = ''
           this.phoneValue = ''
-          this.test = '重新发送'
+          this.test = '获取验证码'
           // 表单成功买点
           window.getTrackRow('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
@@ -388,6 +389,7 @@ export default {
         color: #ffffff;
       }
     }
+
     /deep/.flow {
       font-size: 26px;
       color: #555555;
@@ -395,6 +397,12 @@ export default {
       display: flex;
       justify-content: space-between;
       padding: 34px 19px 0 19px;
+    }
+    /deep/ .sp-overlay,
+    .sp-popup--bottom {
+      margin-left: -375px;
+      width: @spread-page-width;
+      left: 50%;
     }
   }
   // 选中样式

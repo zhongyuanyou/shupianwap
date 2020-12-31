@@ -37,6 +37,8 @@
           placeholder="请输入公司名称"
           data-name="代理记账表单_公司名称"
           data-form_type="咨询表单"
+          maxlength="20"
+          :formatter="companyTest"
         />
         <!-- s 手机号输入框 -->
         <sp-field
@@ -153,6 +155,9 @@ export default {
     this.nums.todayNum = this.nums.todayNum.toLocaleString()
   },
   methods: {
+    companyTest(value) {
+      return value.replace(/[^\dA-Za-z\u3007\u4E00-\u9FCB\uE815-\uE864]/, '')
+    },
     telephoneTest(value) {
       return value.replace(/[^\d]/, '')
     },
@@ -228,10 +233,11 @@ export default {
       const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       const contentStr = {
         LinesScope: this.scope,
+        companyName: this.company,
       }
       const params = {
         formId, // formId,唯一ID提交资源中心
-        name: this.company,
+        name: '匿名用户',
         tel: _tel, // 电话
         url: webUrl, // 当前页面地址。用于后台判断ip发送验证码次数
         type: 'kjdl', // 业态编码。
