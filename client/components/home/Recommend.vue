@@ -147,8 +147,9 @@ export default {
       }
     },
   },
-  created() {
+  async created() {
     if (process.client) {
+      this.params.deviceId = await getUserSign() // 获取用户唯一标识
       this.findRecomList(this.curentItem)
     }
   },
@@ -222,31 +223,42 @@ export default {
       e.stopImmediatePropagation() // 阻止冒泡
     },
     // 查询推荐商品
-    async findRecomList(index) {
-      // 获取用户唯一标识
-      if (!this.params.deviceId) {
-        this.params.deviceId = await getUserSign()
+    findRecomList(index) {
+      const params = {}
+      // 初始化查询字典+广告需要的参数
+      if (this.params.findType === 0) {
+        params.findType = this.params.findType
+        params.dictionaryCode = this.params.dictionaryCode
+        params.limit = this.params.limit
+        params.page = this.params.page
       }
 
-      // 若不是初始化查询，需获取选中项的参数
+      // 查询推荐产品需要的参数
       if (this.params.findType !== 0) {
-        this.params.formatId = this.tabBtn[index].ext3
-        this.params.limit = this.tabBtn[index].limit
-        this.params.page = this.tabBtn[index].page
-        this.params.areaCode = this.cityCode
+        params.findType = this.params.findType
+        params.formatId = this.tabBtn[index].ext3
+        params.limit = this.tabBtn[index].limit
+        params.page = this.tabBtn[index].page
+        params.areaCode = this.cityCode
+        params.deviceId = this.params.deviceId
+        params.sceneId = this.params.sceneId
+        params.maxsize = this.params.maxsize
+        params.platform = this.params.platform
       }
-      // 获取选中项的广告位code
+
+      // 广告位code
       if (this.params.findType === 1) {
-        this.params.locationCode = this.tabBtn[index].ext1
+        params.locationCode = this.tabBtn[index].ext1
       }
-      this.$axios.post(homeApi.findRecomList, this.params).then((res) => {
+
+      this.$axios.post(homeApi.findRecomList, params).then((res) => {
         this.loading = false
-        if (res.code === 200 && this.params.findType === 0) {
+        if (res.code === 200 && params.findType === 0) {
           res.data.dictData[0].adData = res.data.adData
           this.tabBtn = res.data.dictData
           return
         }
-        if (res.code === 200 && this.params.findType === 1) {
+        if (res.code === 200 && params.findType === 1) {
           this.tabBtn[index].adData = res.data.adData
           this.tabBtn[index].goodsList = res.data.goodsList
           this.tabBtn[index].noData = res.data.goodsList.length === 0
@@ -254,11 +266,7 @@ export default {
         }
 
         // 初始查询第一个分类产品无任何数据
-        if (
-          index === 0 &&
-          this.params.page === 1 &&
-          !res.data.goodsList.length
-        ) {
+        if (index === 0 && params.page === 1 && !res.data.goodsList.length) {
           this.tabBtn[index].noData = res.data.goodsList.length === 0
           return
         }

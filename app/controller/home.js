@@ -279,14 +279,17 @@ class homeController extends Controller {
   async findRecomList() {
     const { ctx, service, app } = this;
     // 定义参数校验规则
-    const rules = {
+    const findTypeRules = {
       findType: { type: 'integer', required: true, min: 0, max: 2 }, // 查询类型：0：初始查询广告+数据字典  1：查询广告+推荐商品 2：只查推荐商品
     };
     // 参数校验
-    const valiErrors = app.validator.validate(rules, ctx.request.body);
+    const findTypeValiErrors = app.validator.validate(
+      findTypeRules,
+      ctx.request.body
+    );
     // 参数校验未通过
-    if (valiErrors) {
-      ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+    if (findTypeValiErrors) {
+      ctx.helper.fail({ ctx, code: 422, res: findTypeValiErrors });
       return;
     }
     // 查询推荐产品所需参数
@@ -329,17 +332,28 @@ class homeController extends Controller {
       // findType === 0 初始查询广告+数据字典
       if (ctx.request.body.findType === 0) {
         // 定义参数校验规则
-        const rules = {
+        const dictionaryCodeRules = {
           dictionaryCode: {
             type: 'string',
             required: true,
           }, // 查讯数据字典的code
+          limit: {
+            type: 'integer',
+            required: true,
+          },
+          page: {
+            type: 'integer',
+            required: true,
+          },
         };
         // 参数校验
-        const valiErrors = app.validator.validate(rules, ctx.request.body);
+        const dictionaryCodeValiErrors = app.validator.validate(
+          dictionaryCodeRules,
+          ctx.request.body
+        );
         // 参数校验未通过
-        if (valiErrors) {
-          ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+        if (dictionaryCodeValiErrors) {
+          ctx.helper.fail({ ctx, code: 422, res: dictionaryCodeValiErrors });
           return;
         }
 
@@ -404,16 +418,19 @@ class homeController extends Controller {
       //  findType === 1 查询广告+推荐商品
       if (ctx.request.body.findType === 1) {
         // 定义参数校验规则
-        const rules = {
+        const adRules = {
           locationCode: { type: 'string', required: true }, // 查询广告的位置code
           formatId: { type: 'string', required: true }, // 分类code
         };
-        const nweRules = Object.assign(rules, productRules);
+        const adAndRocRules = Object.assign(adRules, productRules);
         // 参数校验
-        const valiErrors = app.validator.validate(nweRules, ctx.request.body);
+        const adAndRocValiErrors = app.validator.validate(
+          adAndRocRules,
+          ctx.request.body
+        );
         // 参数校验未通过
-        if (valiErrors) {
-          ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+        if (adAndRocValiErrors) {
+          ctx.helper.fail({ ctx, code: 422, res: adAndRocValiErrors });
           return;
         }
         await findAdAndproduct();
@@ -421,15 +438,18 @@ class homeController extends Controller {
       // findType === 2  只查推荐商品
       if (ctx.request.body.findType === 2) {
         // 定义参数校验规则
-        const rules = {
+        const rpcRules = {
           formatId: { type: 'string', required: true }, // 分类code
         };
-        const nweRules = Object.assign(rules, productRules);
+        const nweRules = Object.assign(rpcRules, productRules);
         // 参数校验
-        const valiErrors = app.validator.validate(nweRules, ctx.request.body);
+        const rpcValiErrors = app.validator.validate(
+          nweRules,
+          ctx.request.body
+        );
         // 参数校验未通过
-        if (valiErrors) {
-          ctx.helper.fail({ ctx, code: 422, res: valiErrors });
+        if (rpcValiErrors) {
+          ctx.helper.fail({ ctx, code: 422, res: rpcValiErrors });
           return;
         }
         // 获取推荐产品ids
