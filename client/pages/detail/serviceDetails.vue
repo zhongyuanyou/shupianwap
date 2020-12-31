@@ -12,7 +12,17 @@
             <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
           </div>
         </template>
-        <template #right></template>
+        <template #right>
+          <div>
+            <my-icon
+              class="head__icon-share"
+              name="nav_ic_share"
+              size="0.4rem"
+              color="#1A1A1A"
+              @click.native="onClickRight"
+            />
+          </div>
+        </template>
       </sp-top-nav-bar>
     </sp-sticky>
     <!--   banner -->
@@ -52,11 +62,25 @@
       :im-jump-query="imJumpQuery"
       :planner-info="scPlannerDetailData"
     />
+    <!--    分享组件-->
+    <sp-share-sheet
+      v-model="showShare"
+      title="立即分享给好友"
+      :options="shareOptions"
+      @select="onSelect"
+    />
   </div>
 </template>
 
 <script>
-import { Sticky, TopNavBar, Button, List, PullRefresh } from '@chipspc/vant-dgg'
+import {
+  Sticky,
+  TopNavBar,
+  Button,
+  List,
+  PullRefresh,
+  ShareSheet,
+} from '@chipspc/vant-dgg'
 import Banner from '~/components/detail/Banner'
 import BasicInfo from '~/components/detail/service/BasicInfo'
 import ServiceItems from '~/components/detail/service/ServiceItems'
@@ -74,6 +98,7 @@ export default {
     [Button.name]: Button,
     [List.name]: List,
     [PullRefresh.name]: PullRefresh,
+    [ShareSheet.name]: ShareSheet,
     Banner,
     BasicInfo,
     ServiceItems,
@@ -179,6 +204,8 @@ export default {
       productPage: 1, // 产品分页
       productCount: 0, // 推荐产品总条数
       recommendProduct: [], // 推荐产品‘
+      showShare: false, // 是否弹起分享组件
+      shareOptions: [{ name: '复制链接', icon: 'link' }],
     }
   },
   computed: {
@@ -310,6 +337,14 @@ export default {
           console.log(err)
         })
     },
+    //  分享
+    onClickRight() {
+      this.showShare = true
+    },
+    // 关闭分享
+    onSelect() {
+      this.showShare = false
+    },
   },
 }
 </script>
@@ -376,6 +411,10 @@ export default {
         }
       }
     }
+  }
+  /deep/ .sp-top-nav-bar__left,
+  /deep/ .sp-top-nav-bar__right {
+    font-weight: initial;
   }
 }
 </style>
