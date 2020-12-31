@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-30 11:55:00
+ * @LastEditTime: 2020-12-31 17:48:13
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -22,9 +22,12 @@
           />
         </template>
         <template #right>
-          <span class="head__operation" @click="onClickRight">{{
-            shoppingCarStatus === 'edit' ? '完成' : '管理'
-          }}</span>
+          <span
+            v-show="list && list.length"
+            class="head__operation"
+            @click="onClickRight"
+            >{{ shoppingCarStatus === 'edit' ? '完成' : '管理' }}</span
+          >
         </template>
       </Header>
     </div>
@@ -76,14 +79,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import {
-  TopNavBar,
-  Button,
-  Toast,
-  PullRefresh,
-  List,
-  Loading,
-} from '@chipspc/vant-dgg'
+import { TopNavBar, Button, PullRefresh, List } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 
 import GoodsItem from '@/components/shoppingCar/GoodsItem'
@@ -107,7 +103,6 @@ export default {
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
-    [Loading.name]: Loading,
     Header,
     GoodsPopup,
     GoodsItem,
@@ -119,7 +114,7 @@ export default {
     return {
       list: [],
       refreshing: false,
-      loading: false,
+      loading: true,
       error: false,
       finished: false,
       shoppingCarStatus: 'completed', // edit: 编辑
@@ -156,6 +151,17 @@ export default {
   created() {
     if (process && process.client) {
       this.postUpdate({ type: 'init' })
+      this.onLoad()
+    }
+  },
+  mounted() {
+    // 注册一个方法，app里面使用
+    if (this.isInApp) {
+      console.log('registHandler refresh start')
+      this.$appFn.registHandler('refresh', (data) => {
+        console.log('refresh:', data)
+        this.onRefresh()
+      })
     }
   },
 
@@ -294,7 +300,12 @@ export default {
     // 全删除
     deteleAllItem() {
       if (this.currentSelectedCartIds.length === 0) {
-        Toast('请选择需要删除的商品')
+        this.$xToast({
+          message: '请选择需要删除的商品',
+          duration: 1000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
         return
       }
       const cartId = this.currentSelectedCartIds.join(',')
@@ -341,7 +352,12 @@ export default {
           (res) => {
             const { code } = res || {}
             if (code !== 200) {
-              Toast('结算失败')
+              this.$xToast({
+                message: '结算失败',
+                duration: 1000,
+                icon: 'toast_ic_error',
+                forbidClick: true,
+              })
             }
           }
         )

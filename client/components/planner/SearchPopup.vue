@@ -83,7 +83,7 @@ export default {
     },
     handleSearch() {
       // 确认发送异步请求
-      if (!this.search.keywords) return
+      // if (!this.search.keywords) return
 
       this.$emit('onSearch', { keywords: this.search.keywords })
       this.search.keywords = ''

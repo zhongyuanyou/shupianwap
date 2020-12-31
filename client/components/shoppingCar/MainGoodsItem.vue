@@ -2,17 +2,19 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-29 16:17:03
+ * @LastEditTime: 2020-12-31 17:36:37
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/MainGoodsItem.vue
 -->
 <template>
   <div class="main-goods-item">
-    <div class="goods-lable-img">
+    <div class="goods-lable-img" @click="handleGoDetail">
       <img alt="img" :src="mainData.img" />
     </div>
     <div class="goods-info">
-      <strong class="goods-name"> {{ mainData.name }}</strong>
+      <strong class="goods-name" @click="handleGoDetail">
+        {{ mainData.name }}</strong
+      >
       <div class="goods-sku">
         <sp-tag
           color="#F8F8F8"
@@ -74,6 +76,8 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from 'vuex'
+
 import {
   SwipeCell,
   Card,
@@ -108,7 +112,11 @@ export default {
       countStatus: 'blur', // foucs
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   watch: {
     // 'mainData.goodsNumber': {
     //   handler(newVal, oldVal) {
@@ -172,6 +180,64 @@ export default {
         })
       }
       this.countStatus = 'blur'
+    },
+
+    // 跳转到详情页面
+    handleGoDetail() {
+      this.uPGoDetail()
+    },
+
+    // 统一跳转详情app详情路由
+    uPGoDetail() {
+      // TODO 测试 后面需要
+      const { productId } = this.mainData || {}
+      if (!productId) {
+        this.$xToast({
+          message: '缺少productId',
+          duration: 1000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        return
+      }
+
+      if (this.isInApp) {
+        const iOSRouter = {
+          path:
+            'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
+          parameter: {
+            routerPath: 'cpsc/goods/details/service',
+            parameter: { productId },
+          },
+        }
+        const androidRouter = {
+          path: '/flutter/main',
+          parameter: {
+            routerPath: 'cpsc/goods/details/service',
+            parameter: { productId },
+          },
+        }
+        const iOSRouterStr = JSON.stringify(iOSRouter)
+        const androidRouterStr = JSON.stringify(androidRouter)
+        this.$appFn.dggJumpRoute(
+          {
+            iOSRouter: iOSRouterStr,
+            androidRouter: androidRouterStr,
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast({
+                message: '跳转失败',
+                duration: 1000,
+                icon: 'toast_ic_error',
+                forbidClick: true,
+              })
+            }
+          }
+        )
+      }
+      // 暂不需要在浏览器中
     },
   },
 }

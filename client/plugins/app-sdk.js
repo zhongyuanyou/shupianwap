@@ -196,7 +196,11 @@ const appHandler = {
 const registHandler = (handlerName, fn = () => {}) => {
   handlerName
     ? Bridge.registerHandler(handlerName, (data, responseCallback) => {
-        fn(data, responseCallback)
+        try {
+          fn(data, responseCallback)
+        } catch (error) {
+          console.error('handlerName error:', error)
+        }
       })
     : appHandler.dgg_errorTip({ msg: '请注册方法名' })
 }

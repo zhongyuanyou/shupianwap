@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-29 19:46:44
+ * @LastEditTime: 2020-12-31 17:07:11
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -89,7 +89,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 
-import { SwipeCell, Card, Button, Toast } from '@chipspc/vant-dgg'
+import { SwipeCell, Card, Button } from '@chipspc/vant-dgg'
 
 import MainGoodsItem from './MainGoodsItem'
 import ViceGoodsItem from './ViceGoodsItem'
@@ -347,15 +347,22 @@ export default {
       skuAttrList = skuAttrList.filter((item) => !inactivedList.includes(item))
       //
       const currentSkuAttr = skuAttrList.join(',')
-
+      this.loading = true
       this.getGoodsDetail(currentSkuAttr)
         .then((data) => {
           this.tempGoods.skuAttrKey = currentSkuAttr
           // 每次请求sku 增值服务需要清空
           this.tempGoods.addServiceList = []
+          this.loading = false
         })
         .catch(() => {
-          Toast('选择失败！')
+          this.$xToast.show({
+            message: '选择失败',
+            duration: 1000,
+            icon: 'toast_ic_remind',
+            forbidClick: true,
+          })
+          this.loading = false
         })
     },
 
@@ -448,7 +455,12 @@ export default {
           })
         })
         .catch(() => {
-          Toast('加入购物车失败')
+          this.$xToast.show({
+            message: '加入购物车失败',
+            duration: 1000,
+            icon: 'toast_ic_remind',
+            forbidClick: true,
+          })
         })
     },
 
