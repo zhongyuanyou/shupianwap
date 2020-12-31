@@ -8,7 +8,7 @@
       <sp-col
         v-for="(item, _index) in arr"
         :key="_index"
-        span="6"
+        :span="colSpan"
         :style="{
           visibility: item.id ? 'visible' : 'hidden',
         }"
@@ -78,6 +78,20 @@ export default {
         return []
       },
     },
+    colSpan: {
+      // 列所占的宽度百分比
+      type: Number,
+      default() {
+        return 6
+      },
+    },
+    lineLength: {
+      // 一行多少个
+      type: Number,
+      default() {
+        return 4
+      },
+    },
   },
   data() {
     return {
@@ -100,7 +114,7 @@ export default {
       if (this.isShowAllOption) {
         arr.unshift({ name: '不限', id: 'all' })
       }
-      this.renderArr = this.handleRenderArr(chunkArr(arr, 4))
+      this.renderArr = this.handleRenderArr(chunkArr(arr, this.lineLength))
     },
     renderArr(val) {
       if (val.length > 4 && !this.isShowAll) {
@@ -122,7 +136,7 @@ export default {
       if (this.isShowAllOption) {
         arr.unshift({ name: '不限', id: 'all' })
       }
-      this.renderArr = this.handleRenderArr(chunkArr(arr, 4))
+      this.renderArr = this.handleRenderArr(chunkArr(arr, this.lineLength))
     }
     // 初始化激活筛选项
     if (this.selfActiveItem && this.selfActiveItem.length) {
@@ -170,9 +184,9 @@ export default {
     },
     handleRenderArr(arr) {
       const len = arr[arr.length - 1].length
-      if (len < 4) {
+      if (len < this.lineLength) {
         // 如果数组最后一个元素的长度小于4个则用空对象填满
-        while (arr[arr.length - 1].length < 4) {
+        while (arr[arr.length - 1].length < this.lineLength) {
           arr[arr.length - 1].push({ id: undefined, name: undefined })
         }
       }

@@ -136,7 +136,7 @@ export default {
     height: 160px;
     min-width: 160px;
     min-height: 160px;
-    background: #f8f8f8;
+    /*background: #f8f8f8;*/
     border-radius: 4px;
     margin: 40px 32px 0 40px;
     .goods-img {
