@@ -12,6 +12,9 @@ const {
   productApi,
 } = require('./../../config/serveApi/index');
 const rules = require('./../validate/recommend');
+const tagsKeys = require('./../../config/constant/tcProductTags');
+// 默认图片
+const defaultGoodsImg = require('./../../config/constant/defaultGoodsImg');
 
 async function getMchSettled(ctx) {
   // 假如算法接口异常或者是算法没数据需要获取用户中心规划师列表兜底
@@ -148,19 +151,23 @@ class RecommendController extends Controller {
             codes: plannerIds,
             filePath: true,
           });
-          // 头像获取成功,将头像设置到
-          if (plannerIcon.code === 200 && plannerIcon.data) {
+          /** todo:***头像获取成功,将头像设置到响应数据中*****/
             // 将头像的code作为key存储
-            const plannerIconObj = {};
+          const plannerIconObj = {};
+          if (plannerIcon.code === 200 && plannerIcon.data) {
             plannerIcon.data.forEach(item => {
-              plannerIconObj[item.code] = item.filepath;
-            });
-            // 使用规划师列表的id去匹配对应的头像
-            plannerList.data.records.forEach((item, idx) => {
-              plannerList.data.records[idx].portrait = plannerIconObj[item.userCenterId];
+              // 返回了图片就是用返回的图片,未返回使用默认的
+              plannerIconObj[item.code] = item.filepath ? item.filepath : defaultGoodsImg.GOODSLIST;
             });
           }
-          // 将得到的推荐数据存入缓存一小时失效
+          // 使用规划师列表的id去匹配对应的头像
+          plannerList.data.records.forEach((item, idx) => {
+            // 当没有匹配到头像，使用默认头像
+            plannerList.data.records[idx].portrait = plannerIconObj[item.userCenterId] ?
+              plannerIconObj[item.userCenterId] :
+              defaultGoodsImg.GOODSLIST;
+          });
+          /** ***todo:***将得到的推荐数据存入缓存一小时失效****/
           ctx.service.redis.set(sceneId, plannerList.data, 60 * 60);
           ctx.helper.success({
             ctx,
@@ -216,8 +223,6 @@ class RecommendController extends Controller {
       page,
       limit,
     } = ctx.query;
-
-    // 假如缓存没有数据,获取推荐算法重新查询并缓存
     // 获取到推荐产品请求的Url
     const url = ctx.helper.assembleUrl(
       app.config.apiClient.APPID[6],
@@ -250,6 +255,9 @@ class RecommendController extends Controller {
           productApi.getTradingListToIds
         );
         params.fieldDetail = 1;
+        params.costDetail = 1; // 成本详情  0不需要(默认) 1需要
+        params.originalData = 0; // 脱敏字段原数据  0不需要(默认) 1需要
+        params.classifyConfig = 1;// 交易资源分类配置  0不需要(默认) 1需要
         params.ids = data.productInfoList;
       //  2是服务
       } else {
@@ -260,56 +268,44 @@ class RecommendController extends Controller {
         params.productIds = data.productInfoList;
         params.needRefConfig = false;
       }
-
-      // 查询出所有推荐的规划师数据信息
+      /** todo:查询到推荐产品***********/
       const productList = await service.curl.curlPost(productUrl, params);
       if (productList.code === 200 && productList.data.length > 0) {
         try {
-          // 获取显示标签
-          const tagsKeys = {
-            'CATE-JYZY-GS': [
-              'company_industry', // 公司行业
-              'taxpayer_type', // 纳税类型
-              'registered_capital', // 注册资本
-              'registration_time', // 注册时间
-            ],
-            'CATE-JYZY-SB': [
-              'trademark_type', // 商标分类
-              'similar_group', // 组合类型
-            ],
-            'CATE-JYZY-ZL': [
-              'patent_type', // 专利类型
-              'patent_industry', // 专利行业
-              'patent_status', // 状态
-            ],
-            'CATE-JYZY-ZZ': [
-              'qualification_registration_area', // 区域
-              'qualification_expire_date', // 到期时间
-              'safety_production_license', // 安许证
-              'qualification_registered_capital', // 注册资本
-            ],
-          };
-          // 将得到的推荐数据存入缓存一小时失效
           const productListData = productList.data;
           // 获取数据字典
           const dictCodeList = await ctx.service.findDict.findDictChild('CATE-JYZY');
           // 获取到当前分类的数据字典
           const dictObj = {};
           dictCodeList.forEach(dict => {
-            dictObj[dict.code] = dict;
+            dictObj[dict.ext1] = dict;
           });
+          // 当查询交易产品时
           if (searchType === 1) {
             // 推荐产品需要展示的属性字段
             productListData.forEach((list, index) => {
+              // 格式化价格
+              productListData[index].goodsPrice = ctx.helper.priceFixed(`${productListData[index].goodsPrice}/100`, 2);
+              productListData[index].platformPrice = ctx.helper.priceFixed(`${productListData[index].platformPrice}/100`, 2);
+              // 筛选filedList
               productListData[index].fieldList = list.fieldList.filter(item => {
-                if (list.classCodeLevelList && tagsKeys[list.classCodeLevelList[0]]) {
-                  return tagsKeys[
-                    dictObj[list.classCodeLevelList[0]]
-                  ].includes(item.fieldCode);
+                if (dictObj[list.classCodeLevelList[0]]) {
+                  return tagsKeys[dictObj[list.classCodeLevelList[0]].code].includes(item.fieldCode);
                 }
                 return false;
               });
+              //  格式化产品图片
+              productListData[index].productImgArr = list.transactionConfig.classOperatingResponse.defaultProductFileIdUrls ?
+                list.transactionConfig.classOperatingResponse.defaultProductFileIdUrls :
+                [ defaultGoodsImg.GOODSLIST ];
+              productListData[index].transactionConfig = null;
             });
+          } else {
+            productListData.forEach((list, index) => {
+              productListData[index].referencePrice = ctx.helper.priceFixed(`${productListData[index].referencePrice}/100`, 2);
+            });
+
+          //   服务产品
           }
           const limitProductData = [ ...productListData ].slice((page - 1) * limit, page * limit);
           ctx.helper.success({

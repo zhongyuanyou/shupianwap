@@ -7,7 +7,7 @@
           height="0.8rem"
           round
           fit="cover"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          :src="plannerInfo.portrait"
         />
         <div class="commodityConsult-containner-userInfo-name">
           <p>{{ plannerInfo.userName }}</p>

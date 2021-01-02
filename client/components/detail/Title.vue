@@ -24,14 +24,6 @@
 export default {
   name: 'Title',
   props: {
-    info: {
-      type: Object,
-      default: () => {
-        return {
-          tags: [],
-        }
-      },
-    },
     tcProductDetailData: {
       type: Object,
       default: () => {

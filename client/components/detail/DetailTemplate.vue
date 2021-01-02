@@ -27,10 +27,10 @@
     </sp-sticky>
     <!--E 导航栏-->
     <!--S banner-->
-    <Banner :images="info.images" />
+    <Banner :images="tcProductDetailData.productImgArr" />
     <!--S banner-->
     <!--S 第一板块-->
-    <Title :tc-product-detail-data="tcProductDetailData" :info="{ ...info }" />
+    <Title :tc-product-detail-data="tcProductDetailData" />
     <!--E 第一板块-->
     <!--S 第二板块 基本信息-->
     <Basic :tc-product-detail-data="{ tcProductDetailData }">
@@ -55,25 +55,24 @@
     <Report :class-code-dict="tcProductDetailData.dictCode" />
     <!--E 第三板块 评估报告-->
     <!--S 第四板块 交易服务保障承诺-->
-    <Commitment :info="{ ...info }" />
+    <Commitment />
     <!--E 第四板块 交易服务保障承诺-->
     <!--S 第五板块 推荐规划师-->
-    <Planners :im-jump-query="imJumpQuery" :info="recommendPlanner" />
+    <Planners
+      :im-jump-query="imJumpQuery"
+      :recommend-planner="recommendPlanner"
+    />
     <!--E 第五板块 推荐规划师-->
     <!--S 第六板块 商品动态-->
-    <Dynamic :info="{ ...info }" />
+    <Dynamic />
     <!--E 第六板块 商品动态-->
     <!--S 第七板块 常见问题-->
-    <Question
-      :class-code-dict="tcProductDetailData.dictCode"
-      :info="{ ...info }"
-    />
+    <Question :class-code-dict="tcProductDetailData.dictCode" />
     <!--E 第七板块 常见问题-->
     <!--S 第八板块 成功案例-->
     <Case
       :class-code-dict="tcProductDetailData.dictCode"
       :detail-type="detailType"
-      :info="{ ...info }"
     />
     <!--E 第八板块 成功案例-->
     <!--S 第九板块 同类推荐-->
@@ -135,6 +134,7 @@ import { recommendApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import BasicItem from '~/components/detail/BasicItem'
 import QftDetails from '~/components/detail/QftDetails'
+import { copyToClipboard } from '~/utils/common'
 export default {
   name: 'DetailTemplate',
   components: {
@@ -163,12 +163,6 @@ export default {
     QftDetails,
   },
   props: {
-    info: {
-      type: Object,
-      default: () => {
-        return {}
-      },
-    },
     detailType: {
       type: String,
       default: () => {
@@ -262,7 +256,7 @@ export default {
             areaCode: this.city.code, // 区域编码
             sceneId: 'app-jycpxq-02', // 场景ID
             productId: this.tcProductDetailData.id, // 产品ID（产品详情页必传）
-            productType: 'FL20201116000003', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
+            productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.tcProductDetailData.name, // 产品名称（产品详情页传、咨询页等）
             platform: 'APP', // 平台（app,m,pc）
             page: this.productPage,
@@ -310,7 +304,7 @@ export default {
             areaCode: this.city.code, // 区域编码
             sceneId: 'app-jycpxq-01', // 场景ID
             productId: this.tcProductDetailData.id, // 产品ID（产品详情页必传）
-            productType: 'FL20201116000003', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
+            productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.tcProductDetailData.name, // 产品名称（产品详情页传、咨询页等）
             platform: 'APP', // 平台（app,m,pc）
             page: 1,
@@ -356,9 +350,15 @@ export default {
     onClickRight() {
       this.showShare = true
     },
-    // 关闭分享
+    // 点击分享
     onSelect() {
-      this.showShare = false
+      const result = copyToClipboard(location.href)
+      if (result) {
+        this.$xToast.success('链接复制成功')
+        return
+      }
+      this.$xToast.error('链接复制失败,请重试')
+      // this.showShare = false
     },
   },
 }

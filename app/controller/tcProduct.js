@@ -8,6 +8,7 @@ const Controller = require('egg').Controller;
 const { Get, Prefix } = require('egg-shell-decorators');
 const { productApi } = require('./../../config/serveApi/index');
 const rules = require('../validate/tcProduct');
+const defaultGoodsImg = require('./../../config/constant/defaultGoodsImg');
 
 // 经营时间转换
 function businessHours(ctx, time) {
@@ -59,9 +60,9 @@ class TcProductController extends Controller {
     const {
       productId, // 产品ID
       fieldDetail = 1, // 字段详情  0不需要(默认) 1需要
-      costDetail = 0, // 成本详情  0不需要(默认) 1需要
+      costDetail = 1, // 成本详情  0不需要(默认) 1需要
       originalData = 0, // 脱敏字段原数据  0不需要(默认) 1需要
-      classifyConfig = 0, // 交易资源分类配置  0不需要(默认) 1需要
+      classifyConfig = 1, // 交易资源分类配置  0不需要(默认) 1需要
     } = ctx.query;
     const { code, message, data } = await service.curl.curlPost(url, {
       id: productId,
@@ -141,6 +142,11 @@ class TcProductController extends Controller {
       data.dictCode = currentDict[0].code;
       // 处理价格
       data.platformPrice = ctx.helper.priceFixed(`${data.platformPrice}/100`, 2);
+      // 获取产品图片,获取不到使用默认的cdn图片
+      data.productImgArr = data.transactionConfig.classOperatingResponse.defaultProductFileIdUrls ?
+        data.transactionConfig.classOperatingResponse.defaultProductFileIdUrls :
+        [ defaultGoodsImg.GOODSDETAIL ];
+      data.transactionConfig = null;
       // 响应结果数据
       ctx.helper.success({ ctx, code: 200, res: data });
     } else {

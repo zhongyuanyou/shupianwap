@@ -311,7 +311,7 @@ module.exports = {
    * @return {String}
    */
   priceFixed(num, bit) {
-    let numObj = '0';
+    let numObj = Number(0);
     if (Number(this.calculate(num))) {
       numObj = Number(this.calculate(num));
     }

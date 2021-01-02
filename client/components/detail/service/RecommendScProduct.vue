@@ -1,34 +1,42 @@
 <template>
   <div class="need">
     <p class="need_title">猜您需要</p>
-    <div v-for="item in recommendProductData" :key="item.id" class="need_item">
-      <div class="need_item_img">
-        <sp-image
-          width="1.6rem"
-          height="1.6rem"
-          fit="cover"
-          radius="0.04rem"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
-        />
-      </div>
-      <div class="need_item_rt">
-        <p class="title">
-          {{ item.name }}
-        </p>
-        <div class="label">
-          <span>{{ item.operating ? item.operating.slogan : null }}</span>
+    <div v-for="item in recommendProductData" :key="item.id">
+      <nuxt-link
+        class="need_item"
+        :to="{
+          path: '/detail/serviceDetails',
+          query: { productId: item.id },
+        }"
+      >
+        <div class="need_item_img">
+          <sp-image
+            width="1.6rem"
+            height="1.6rem"
+            fit="cover"
+            radius="0.04rem"
+            src="https://img.yzcdn.cn/vant/cat.jpeg"
+          />
         </div>
-        <div class="tags">
-          <div
-            v-for="tItem in tagsFilter(item.tags)"
-            :key="tItem.id"
-            class="tags_item"
-          >
-            {{ tItem.name }}
+        <div class="need_item_rt">
+          <p class="title">
+            {{ item.name }}
+          </p>
+          <div class="label">
+            <span>{{ item.operating ? item.operating.slogan : null }}</span>
           </div>
+          <div class="tags">
+            <div
+              v-for="tItem in tagsFilter(item.tags)"
+              :key="tItem.id"
+              class="tags_item"
+            >
+              {{ tItem.name }}
+            </div>
+          </div>
+          <p class="money">{{ item.referencePrice }}元</p>
         </div>
-        <p class="money">{{ item.referencePrice }}元</p>
-      </div>
+      </nuxt-link>
     </div>
   </div>
 </template>
