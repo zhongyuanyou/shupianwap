@@ -32,7 +32,8 @@
                 width="1.6rem"
                 height="1.6rem"
                 fit="cover"
-                src="https://img.yzcdn.cn/vant/cat.jpeg"
+                lazy-load
+                :src="item.productImgArr[0]"
               />
             </div>
             <div class="swipe_item_con_rt">
@@ -175,6 +176,9 @@ export default {
         flex-direction: row;
         margin-top: 2px;
         margin-bottom: 9px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
         span {
           font-size: 22px;
           font-family: PingFang SC;

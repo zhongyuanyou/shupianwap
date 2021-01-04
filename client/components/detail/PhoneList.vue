@@ -1,6 +1,6 @@
 <template>
   <div class="check-box-list">
-    <sp-checkbox-group v-model="result">
+    <sp-radio-group v-model="result">
       <sp-cell-group>
         <sp-cell
           v-for="(item, index) in list"
@@ -11,33 +11,39 @@
           @click="toggle(index)"
         >
           <template #right-icon>
-            <sp-checkbox ref="checkboxes" :name="item" />
+            <sp-radio ref="radioItem" :name="item">
+              <template #icon="{ checked }">
+                <sp-icon
+                  class-prefix="spiconfont"
+                  size="0.28rem"
+                  :name="checked ? 'login_ic_radio_s' : 'login_ic_radio_n'"
+                  :color="checked ? '#4974F5' : '#CCCCCC'"
+                />
+              </template>
+            </sp-radio>
           </template>
         </sp-cell>
       </sp-cell-group>
-    </sp-checkbox-group>
-    <div class="submit">
-      <sp-button color="#4974F5" block @click="onSubmit()">
-        确认选择
-      </sp-button>
-    </div>
+    </sp-radio-group>
   </div>
 </template>
 <script>
 import {
-  Checkbox,
-  CheckboxGroup,
+  Radio,
+  RadioGroup,
   Cell,
   CellGroup,
   Button,
+  Icon,
 } from '@chipspc/vant-dgg'
 export default {
   components: {
-    [Checkbox.name]: Checkbox,
-    [CheckboxGroup.name]: CheckboxGroup,
+    [Radio.name]: Radio,
+    [RadioGroup.name]: RadioGroup,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
     [Button.name]: Button,
+    [Icon.name]: Icon,
   },
   props: {
     list: {
@@ -50,27 +56,21 @@ export default {
   data() {
     return {
       // 存储选择的结果
-      result: [],
-      lastIndex: -1,
+      result: {},
     }
+  },
+  watch: {
+    result(newVal) {
+      console.log('newVal:', newVal)
+      this.$emit('operation', {
+        type: 'selected',
+        data: this.result,
+      })
+    },
   },
   methods: {
     toggle(index) {
-      // 保持只有一个选项
-      if (this.lastIndex > -1 && index !== this.lastIndex) {
-        this.$refs.checkboxes[this.lastIndex].toggle(false)
-      }
-      this.lastIndex = index
-
-      this.$refs.checkboxes[index].toggle()
-    },
-    onSubmit() {
-      // 提交选择信息
-      console.log(this.result)
-      this.$emit('operation', {
-        type: 'confirm',
-        data: this.result[0],
-      })
+      this.$refs.radioItem[index].toggle()
     },
   },
 }
@@ -87,18 +87,6 @@ export default {
   }
   .sp-cell:first-child {
     padding-top: 7px;
-  }
-  .submit {
-    position: fixed;
-    bottom: 0px;
-    padding: 10px 40px 24px;
-    width: 100%;
-    background-color: #fff;
-    /deep/.sp-button {
-      width: 670px;
-      height: 104px;
-      border-radius: 8px;
-    }
   }
 }
 </style>

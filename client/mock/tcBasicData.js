@@ -104,8 +104,12 @@ export default {
       listName: '注册资本',
     },
     {
-      listKey: 'qualification_type',
-      listName: '资质分类',
+      listKey: 'tax_type',
+      listName: '纳税类型',
     },
+    // {
+    //   listKey: 'qualification_type',
+    //   listName: '资质分类',
+    // },
   ],
 }

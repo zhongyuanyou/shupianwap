@@ -1,10 +1,15 @@
 <template>
   <div class="help-page">
     <!-- S 头部 -->
-    <Header title="帮助中心">
+    <Header ref="headerRef" title="帮助中心">
       <template #left>
         <div @click="back">
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
         </div>
       </template>
     </Header>
@@ -117,13 +122,14 @@ import {
   TopNavBar,
   Sticky,
 } from '@chipspc/vant-dgg'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
 import { helpApi } from '@/api'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import Header from '@/components/common/head/header'
 
 export default {
+  layout: 'keepAlive',
   name: 'Help',
   components: {
     LoadingDown,
@@ -192,6 +198,7 @@ export default {
     }),
   },
   mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'Help' })
     if (!this.isInApp) {
       this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
     } else {
@@ -205,6 +212,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     // tab切换
     tabsClickHandle(index) {
       if (!this.tabData[index].articleData.length) {
@@ -316,6 +326,9 @@ export default {
 <style lang="less" scoped>
 .help-page {
   width: 100%;
+  .back_icon {
+    margin-left: 40px;
+  }
   .help-bn {
     width: 100%;
     height: 320px;
@@ -404,9 +417,8 @@ export default {
     /deep/ .sp-work-tab {
       padding: 0 32px;
       padding-top: 29px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
+      display: inline !important;
+      flex: none !important;
       .sp-work-tab__text {
         font-size: 32px;
         line-height: 32px;

@@ -2,7 +2,7 @@
   <a href="javascript:void(0);" class="goods-item" @click="jumpPage">
     <div class="goods-lable-img">
       <span v-if="false" class="lable">2千元成交礼</span>
-      <img v-lazy="defaultImg" alt="" />
+      <img v-lazy="goodsData.defaultImg + $ossImgSet(240, 240)" alt="" />
     </div>
     <div class="goods-info">
       <strong class="goods-name">
@@ -48,14 +48,12 @@ export default {
     },
   },
   data() {
-    return {
-      defaultImg: 'https://img.yzcdn.cn/vant/cat.jpeg',
-    }
+    return {}
   },
   methods: {
     priceRest(index = 0) {
       if (!this.goodsData.platformPrice) return 0
-      const isFlot = this.goodsData.platformPrice.indexOf('1')
+      const isFlot = this.goodsData.platformPrice.indexOf('.')
       if (isFlot !== -1) {
         return this.goodsData.platformPrice.split('.')[index]
       }
@@ -80,6 +78,7 @@ export default {
   width: 100%;
   padding: 32px 0;
   display: flex;
+  overflow: hidden;
   .goods-lable-img {
     position: relative;
     width: 240px;
@@ -173,22 +172,30 @@ export default {
     }
     .goods-sku {
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-top: 8px;
+      margin-top: 12px;
+      color: #222222;
+      .textOverflow(1);
       > span {
-        display: flex;
+        position: relative;
+        display: inline;
         align-items: center;
-        height: 23px;
         font-size: 22px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #222222;
         padding-right: 12px;
-        border-right: 1px solid #222222;
-        margin: 8px 12px 8px 0;
-        &:last-child {
-          border-right: none;
+        margin: 8px 0 8px 0;
+        &:not(:last-child) {
+          &::after {
+            content: '';
+            position: relative;
+            top: 4px;
+            display: inline-block;
+            margin-left: 12px;
+            width: 0;
+            height: 23px;
+            border-right: 1px solid #222222;
+          }
         }
       }
     }

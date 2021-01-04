@@ -1,7 +1,7 @@
 <template>
   <div class="search">
     <!--S 搜索框-->
-    <FoundHeader @inputChange="inputChange" />
+    <FoundHeader @inputChange="inputChange" @handelKeydown="handelKeydown" />
     <!--E 搜索框-->
     <!--S 内容-->
     <div class="search_con">
@@ -9,7 +9,9 @@
       <div v-show="historySearch.length && !keywords" class="has_history">
         <div class="has_history_title">
           <p>搜索历史</p>
-          <my-icon name="search_ic_deleted" size="0.22rem" color="#1a1a1a" />
+          <p @click="clearHistory">
+            <my-icon name="search_ic_deleted" size="0.32rem" color="#1a1a1a" />
+          </p>
         </div>
         <div class="has_history_con">
           <div
@@ -24,7 +26,8 @@
       </div>
       <!--E 有搜索历史-->
       <!--S 无搜索历史-->
-      <div v-show="!historySearch.length && !keywords" class="no_history">
+      <div v-show="!historySearch.length && !keywords" class="no-data">
+        <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
         <p>没有任何搜索历史</p>
       </div>
       <!--E 无搜索历史-->
@@ -47,28 +50,48 @@
 <script>
 import FoundHeader from '~/components/found/common/FoundHeader'
 export default {
+  layout: 'keepAlive',
   name: 'FoundSearch',
   components: { FoundHeader },
   data() {
     return {
-      historySearch: [
-        '科技公司',
-        '账目干净',
-        '成立三年',
-        '小规模记账',
-        '纳税人代理记账',
-      ], // 搜索历史
+      historySearch: [], // 搜索历史
       keywords: '', // 搜索检索关键字
+    }
+  },
+  mounted() {
+    try {
+      this.historySearch = this.$cookies.get('foundHistory')
+        ? this.$cookies.get('foundHistory')
+        : []
+    } catch (err) {
+      console.log(err)
     }
   },
   methods: {
     handleClick(keywords) {
       // 带参跳转到搜索结果页
-      this.$router.push(`/found/${keywords}`)
+      const history = this.historySearch
+      const isHas = history.some((item) => {
+        return item === keywords
+      })
+      if (!isHas && keywords) {
+        history.push(keywords)
+      }
+      this.$cookies.set('foundHistory', history)
+      this.$router.push(`/found/${keywords || ' '}`)
     },
     inputChange(data) {
       // input改变事件
       this.keywords = data
+    },
+    clearHistory() {
+      // 清除数据
+      this.$cookies.remove('foundHistory')
+      this.historySearch = []
+    },
+    handelKeydown(data) {
+      this.handleClick(data)
     },
   },
 }
@@ -77,6 +100,23 @@ export default {
 <style lang="less" scoped>
 .search {
   padding: 0 40px;
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    img {
+      width: 340px;
+      height: 340px;
+      margin-top: 270px;
+    }
+    > p {
+      font-size: 30px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #1a1a1a;
+    }
+  }
   &_con {
     margin-top: 128px;
     display: flex;
@@ -95,18 +135,23 @@ export default {
       }
     }
     .has_history {
+      width: 100%;
       margin-top: 49px;
       &_title {
+        width: 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-direction: row;
         p {
-          font-size: 36px;
-          font-family: PingFang SC;
-          font-weight: bold;
-          color: #1a1a1a;
           line-height: 44px;
+          font-size: 36px;
+          &:first-child {
+            font-size: 36px;
+            font-family: PingFang SC;
+            font-weight: bold;
+            color: #1a1a1a;
+          }
         }
       }
       &_con {
@@ -140,7 +185,7 @@ export default {
       flex-direction: row;
       height: 102px;
       border-bottom: 1px solid #f4f4f4;
-      p {
+      > p {
         font-size: 30px;
         font-family: PingFang SC;
         font-weight: bold;
@@ -148,6 +193,12 @@ export default {
         span {
           color: #4974f5;
         }
+      }
+      > div {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-direction: row;
       }
     }
   }

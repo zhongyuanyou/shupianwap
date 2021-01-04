@@ -5,11 +5,12 @@
     <!--E 搜索-->
     <!--S 内容-->
     <div class="safe_con">
-      <div class="keyword_con">
-        <div class="keyword_con_title">相关新闻</div>
+      <div class="safe_con_con">
+        <div class="safe_con_con_title">相关新闻</div>
         <sp-list
           v-model="loading"
           :finished="finished"
+          offset="0"
           finished-text="没有更多了"
           @load="onLoad"
         >
@@ -49,10 +50,13 @@ export default {
     // this.getInfoList()
   },
   methods: {
-    inputChange() {
+    inputChange(data) {
+      this.keywords = data
+      this.page = 1
       this.getInfoList()
     },
     async getInfoList() {
+      console.log(1212)
       // 获取资讯列表
       const params = {
         keyword: this.keywords,
@@ -67,7 +71,7 @@ export default {
     async onLoad() {
       const page = this.page++
       const params = {
-        keyword: this.keywords,
+        keyword: this.keywords === ' ' ? '' : this.keywords,
         limit: this.limit,
         page,
       }

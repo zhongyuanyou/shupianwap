@@ -5,6 +5,7 @@
         <sp-work-tabs
           v-model="activeTab"
           mask
+          swipeable
           title-active-color="#222"
           @click="onClickTap"
         >
@@ -26,19 +27,23 @@
         :banner="information_banner"
         :list="information_list"
         :category-code="categoryCode"
+        :refresh-status="refreshStatus"
+        @refresh="refresh"
       />
     </div>
+    <Bottombar ref="bottombar" />
   </div>
 </template>
 
 <script>
 import { WorkTab, WorkTabs, Icon, TopNavBar, Toast } from '@chipspc/vant-dgg'
-import { mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import Con from '~/components/found/found/Cons'
 import { foundApi } from '@/api'
+import Bottombar from '@/components/common/nav/Bottombar'
 export default {
-  layout: 'nav',
-  name: 'Index',
+  layout: 'keepAlive',
+  name: 'Found',
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
@@ -46,6 +51,7 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [Toast.name]: Toast,
     Con,
+    Bottombar,
   },
   async asyncData({ $axios }) {
     try {
@@ -67,6 +73,7 @@ export default {
       information_banner: [], // 广告数据
       information_list: [], // 资讯列表
       categoryCode: '', // code码
+      refreshStatus: false,
     }
   },
   computed: {
@@ -92,23 +99,46 @@ export default {
         ? this.homeData.information_list
         : []
   },
+  // 离开时 路由拦截
+  beforeRouteLeave(to, from, next) {
+    if (['found-detail-id', 'found-foundSearch'].includes(to.name)) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'Found' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'Found' })
+    }
+    next()
+  },
   methods: {
-    async onClickTap(index, title) {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
+    async onClickTap(index, isRefresh) {
       // 切换按钮回滚到顶部
       window.scrollTo(0, 0)
+      if (!isRefresh) {
+        this.information_banner = []
+        this.information_list = []
+      }
+      this.refreshStatus = true
       // 点击tab标签
-      this.categoryCode = this.information_class[index].code
-      const params = {
-        categoryCode: this.categoryCode,
-      }
-      const res = await this.$axios.get(foundApi.screenRequest, { params })
-      if (res.code === 200) {
-        this.information_banner = res.data.information_banner
-        this.information_list = res.data.information_list
-      }
+      try {
+        this.categoryCode = this.information_class[index].code
+        const params = {
+          categoryCode: this.categoryCode,
+        }
+        const res = await this.$axios.get(foundApi.screenRequest, { params })
+        this.refreshStatus = false
+        if (res.code === 200) {
+          this.information_banner = res.data.information_banner
+          this.information_list = res.data.information_list
+        }
+      } catch (err) {}
     },
     onClickRight() {
       this.$router.push('/found/foundSearch')
+    },
+    refresh() {
+      this.onClickTap(this.activeTab, true)
     },
   },
 }
@@ -116,6 +146,7 @@ export default {
 
 <style lang="less" scoped>
 .found {
+  padding-bottom: 98px;
   /deep/ .sp-top-nav-bar {
     padding-top: constant(safe-area-inset-top);
     padding-top: env(safe-area-inset-top);

@@ -4,29 +4,31 @@
     :class="{ 'fixed-head': fixed }"
     :style="{
       height: headHeight,
-      'padding-top': safeTop,
+      'padding-top': safeTop + 'px',
       'box-sizing': 'content-box',
     }"
   >
     <div
       class="my-head"
       :class="headClass"
-      :style="{ height: headHeight, 'margin-top': safeTop }"
+      :style="{ height: headHeight, 'padding-top': safeTop + 'px' }"
     >
-      <div class="slot-left">
-        <slot name="left">
-          <my-icon
-            class="back-icon"
-            name="nav_ic_back"
-            size="0.4rem"
-            color="#1A1A1A"
-            @click.native="onLeftClick"
-          ></my-icon>
-        </slot>
-      </div>
-      <strong class="title">{{ title }}</strong>
-      <div class="slot-right">
-        <slot name="right"></slot>
+      <div class="my-head-row">
+        <div class="slot-left">
+          <slot name="left">
+            <my-icon
+              class="back-icon"
+              name="nav_ic_back"
+              size="0.4rem"
+              color="#1A1A1A"
+              @click.native="onLeftClick"
+            ></my-icon>
+          </slot>
+        </div>
+        <strong class="title">{{ title }}</strong>
+        <div class="slot-right">
+          <slot name="right"></slot>
+        </div>
       </div>
     </div>
   </div>
@@ -65,7 +67,7 @@ export default {
   data() {
     return {
       isShow: true,
-      safeTop: '20px', // 顶部安全区的高度
+      safeTop: 20, // 顶部安全区的高度
     }
   },
   computed: {
@@ -80,7 +82,8 @@ export default {
       return this.height
     },
   },
-  created() {
+  mounted() {
+    console.log(1)
     this.getTopMargin()
   },
   methods: {
@@ -90,8 +93,7 @@ export default {
     getTopMargin() {
       if (process && process.client) {
         let safeTop = safeAreaInsets.top
-        if (this.isInApp && !safeTop)
-          safeTop = this.appInfo.statusBarHeight + 'px'
+        if (this.isInApp) safeTop = this.appInfo.statusBarHeight
         this.safeTop = safeTop
       }
     },
@@ -100,16 +102,23 @@ export default {
 </script>
 <style lang="less" scoped>
 .my-head {
-  position: relative;
-  display: flex;
-  align-items: center;
-  background-color: #fff;
+  // position: relative;
+  // display: flex;
+  // align-items: center;
   font-size: 24px;
   box-shadow: 0px 1px 0px 0px #f4f4f4;
+  background-color: #ffffff;
+  &-row {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
   .slot-left {
     display: flex;
     position: absolute;
-    left: 40px;
+    left: 0;
     top: 50%;
     z-index: 2;
     transform: translateY(-50%);
@@ -128,7 +137,7 @@ export default {
   .slot-right {
     display: flex;
     position: absolute;
-    right: 40px;
+    right: 0;
     top: 50%;
     z-index: 2;
     transform: translateY(-50%);
@@ -137,6 +146,7 @@ export default {
 .fixed-head {
   width: 100%;
   .my-head {
+    box-sizing: content-box;
     width: 100%;
     position: fixed;
     left: 0;

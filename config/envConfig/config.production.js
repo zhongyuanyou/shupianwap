@@ -44,10 +44,6 @@ module.exports = appInfo => {
   config.bodyParser = {
     match: '/service',
   };
-  // 关闭跨域校验(注意:默认开启的话,跨域调用API必须进行token校验)
-  config.security = {
-    csrf: false,
-  };
   // 开发环境日志写入路径
   config.logger = {
     level: 'INFO',
@@ -77,6 +73,42 @@ module.exports = appInfo => {
           db: '0', // 数据库名称,redis默认16个数据库0-16
           weakDependent: true,
         },
+        {
+          // 可以配置多Redis节点
+          host: '172.16.32.4', // IP地址
+          port: '7003', // 端口号
+          family: 'root', // 用户名
+          password: '', // 用户密码
+          db: '0', // 数据库名称,redis默认16个数据库0-16
+          weakDependent: true,
+        },
+        {
+          // 可以配置多Redis节点
+          host: '172.16.32.4', // IP地址
+          port: '7004', // 端口号
+          family: 'root', // 用户名
+          password: '', // 用户密码
+          db: '0', // 数据库名称,redis默认16个数据库0-16
+          weakDependent: true,
+        },
+        {
+          // 可以配置多Redis节点
+          host: '172.16.32.7', // IP地址
+          port: '7005', // 端口号
+          family: 'root', // 用户名
+          password: '', // 用户密码
+          db: '0', // 数据库名称,redis默认16个数据库0-16
+          weakDependent: true,
+        },
+        {
+          // 可以配置多Redis节点
+          host: '172.16.32.7', // IP地址
+          port: '7006', // 端口号
+          family: 'root', // 用户名
+          password: '', // 用户密码
+          db: '0', // 数据库名称,redis默认16个数据库0-16
+          weakDependent: true,
+        },
       ],
     },
   };
@@ -94,6 +126,8 @@ module.exports = appInfo => {
       // 商户中心
       'merchant-center-manager',
       'cloud-recomd-api', // 算法
+      // 架构中心
+      'tac-external-platform-server', // 第三方系统对接平台API
     ],
   };
   // eureka相关配置

@@ -1,7 +1,7 @@
 import qs from 'qs'
 import { saveAxiosInstance } from '@/utils/request'
 const BASE = require('~/config/index.js')
-export default function ({ $axios, redirect, app }) {
+export default function ({ $axios, redirect, app, store }) {
   // 设置基本URL
   if (process.server) {
     $axios.defaults.baseURL = BASE.baseURL
@@ -33,6 +33,16 @@ export default function ({ $axios, redirect, app }) {
       }
       // config.headers['X-Auth-Token'] = '607991860798845556'
       // config.headers['X-Req-UserId'] = '607991757719633892'
+
+      // 请求头设置站点code
+      const cityCode = app.$cookies.get('currentCity', {
+        path: '/',
+      })
+      if (cityCode && cityCode !== '{}') {
+        config.headers.areaCode = JSON.parse(cityCode).code
+      } else {
+        config.headers.areaCode = store.state.city.defaultCity.code
+      }
       return config
     },
     (error) => {

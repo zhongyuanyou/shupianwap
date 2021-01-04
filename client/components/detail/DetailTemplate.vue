@@ -12,15 +12,25 @@
             <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
           </div>
         </template>
-        <template #right></template>
+        <template #right>
+          <div>
+            <my-icon
+              class="head__icon-share"
+              name="nav_ic_share"
+              size="0.4rem"
+              color="#1A1A1A"
+              @click.native="onClickRight"
+            />
+          </div>
+        </template>
       </sp-top-nav-bar>
     </sp-sticky>
     <!--E 导航栏-->
     <!--S banner-->
-    <Banner :images="info.images" />
+    <Banner :images="tcProductDetailData.productImgArr" />
     <!--S banner-->
     <!--S 第一板块-->
-    <Title :tc-product-detail-data="tcProductDetailData" :info="{ ...info }" />
+    <Title :tc-product-detail-data="tcProductDetailData" />
     <!--E 第一板块-->
     <!--S 第二板块 基本信息-->
     <Basic :tc-product-detail-data="{ tcProductDetailData }">
@@ -31,37 +41,38 @@
             :key="idx"
             :base-data-list="baseDataList"
           />
-          <!--          <div v-for="(baseDataList, idx) in fieldList" :key="idx" class="item">-->
-          <!--            <em>{{ baseDataList.listName }}:</em>-->
-          <!--          </div>-->
         </div>
       </div>
     </Basic>
     <!--E 第二板块 基本信息-->
     <slot name="qualification"></slot>
+    <!--资质信息-->
+    <QftDetails
+      v-if="tcProductDetailData.dictCode === 'CATE-JYZY-ZZ'"
+      :qft-details-data="tcProductDetailData.qftDetails"
+    />
     <!--S 第三板块 评估报告-->
     <Report :class-code-dict="tcProductDetailData.dictCode" />
     <!--E 第三板块 评估报告-->
     <!--S 第四板块 交易服务保障承诺-->
-    <Commitment :info="{ ...info }" />
+    <Commitment />
     <!--E 第四板块 交易服务保障承诺-->
     <!--S 第五板块 推荐规划师-->
-    <Planners :im-jump-query="imJumpQuery" :info="recommendPlanner" />
+    <Planners
+      :im-jump-query="imJumpQuery"
+      :recommend-planner="recommendPlanner"
+    />
     <!--E 第五板块 推荐规划师-->
     <!--S 第六板块 商品动态-->
-    <Dynamic :info="{ ...info }" />
+    <Dynamic />
     <!--E 第六板块 商品动态-->
     <!--S 第七板块 常见问题-->
-    <Question
-      :class-code-dict="tcProductDetailData.dictCode"
-      :info="{ ...info }"
-    />
+    <Question :class-code-dict="tcProductDetailData.dictCode" />
     <!--E 第七板块 常见问题-->
     <!--S 第八板块 成功案例-->
     <Case
       :class-code-dict="tcProductDetailData.dictCode"
       :detail-type="detailType"
-      :info="{ ...info }"
     />
     <!--E 第八板块 成功案例-->
     <!--S 第九板块 同类推荐-->
@@ -84,6 +95,13 @@
       :im-jump-query="imJumpQuery"
       :planner-info="tcPlannerBooth"
     />
+    <!--    分享组件-->
+    <sp-share-sheet
+      v-model="showShare"
+      title="立即分享给好友"
+      :options="shareOptions"
+      @select="onSelect"
+    />
   </div>
 </template>
 
@@ -96,6 +114,7 @@ import {
   BottombarIcon,
   BottombarInfo,
   List,
+  ShareSheet,
 } from '@chipspc/vant-dgg'
 import Banner from '~/components/detail/Banner'
 import Title from '~/components/detail/Title'
@@ -114,6 +133,8 @@ import tcBasicData from '~/mock/tcBasicData'
 import { recommendApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import BasicItem from '~/components/detail/BasicItem'
+import QftDetails from '~/components/detail/QftDetails'
+import { copyToClipboard } from '~/utils/common'
 export default {
   name: 'DetailTemplate',
   components: {
@@ -124,6 +145,7 @@ export default {
     [BottombarIcon.name]: BottombarIcon,
     [BottombarInfo.name]: BottombarInfo,
     [List.name]: List,
+    [ShareSheet.name]: ShareSheet,
     Banner,
     Title,
     Basic,
@@ -138,14 +160,9 @@ export default {
     commodityConsultation,
     MyIcon,
     BasicItem,
+    QftDetails,
   },
   props: {
-    info: {
-      type: Object,
-      default: () => {
-        return {}
-      },
-    },
     detailType: {
       type: String,
       default: () => {
@@ -189,6 +206,8 @@ export default {
       similarRecommend: [], // 同类推荐产品
       tcBasicData, // 基本信息的key
       fieldList: [],
+      showShare: false, // 是否弹起分享组件
+      shareOptions: [{ name: '复制链接', icon: 'link' }],
     }
   },
   computed: {
@@ -237,7 +256,7 @@ export default {
             areaCode: this.city.code, // 区域编码
             sceneId: 'app-jycpxq-02', // 场景ID
             productId: this.tcProductDetailData.id, // 产品ID（产品详情页必传）
-            productType: 'FL20201116000003', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
+            productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.tcProductDetailData.name, // 产品名称（产品详情页传、咨询页等）
             platform: 'APP', // 平台（app,m,pc）
             page: this.productPage,
@@ -285,7 +304,7 @@ export default {
             areaCode: this.city.code, // 区域编码
             sceneId: 'app-jycpxq-01', // 场景ID
             productId: this.tcProductDetailData.id, // 产品ID（产品详情页必传）
-            productType: 'FL20201116000003', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
+            productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.tcProductDetailData.name, // 产品名称（产品详情页传、咨询页等）
             platform: 'APP', // 平台（app,m,pc）
             page: 1,
@@ -327,6 +346,20 @@ export default {
       console.log(tcBasicDataArr)
       this.fieldList = tcBasicDataArr
     },
+    //  分享
+    onClickRight() {
+      this.showShare = true
+    },
+    // 点击分享
+    onSelect() {
+      const result = copyToClipboard(location.href)
+      if (result) {
+        this.$xToast.success('链接复制成功')
+        return
+      }
+      this.$xToast.error('链接复制失败,请重试')
+      // this.showShare = false
+    },
   },
 }
 </script>
@@ -352,5 +385,9 @@ export default {
     flex-wrap: wrap;
     margin-top: 15px;
   }
+}
+/deep/ .sp-top-nav-bar__left,
+/deep/ .sp-top-nav-bar__right {
+  font-weight: initial;
 }
 </style>

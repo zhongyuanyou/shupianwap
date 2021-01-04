@@ -8,6 +8,8 @@ const Controller = require('egg').Controller;
 const { Post, Get, Prefix } = require('egg-shell-decorators');
 const { productApi, contentApi } = require('./../../config/serveApi/index');
 const rules = require('../validate/scProduct');
+// 默认图片
+const defaultGoodsImg = require('./../../config/constant/defaultGoodsImg');
 
 @Prefix('/nk/sc_product')
 class ScProductDetailsController extends Controller {
@@ -97,7 +99,8 @@ class ScProductDetailsController extends Controller {
       /** todo:获取产品标签****/
       const tagsObj = {};
       // 获取到各类型的标签ID
-      tags.forEach(item => {
+      const tagsArr = tags ? tags : [];
+      tagsArr.forEach(item => {
         if (tagsObj[item.tagType]) {
           tagsObj[item.tagType].push(item.tagId);
         } else {
@@ -149,6 +152,7 @@ class ScProductDetailsController extends Controller {
           referencePrice: ctx.helper.priceFixed(`${referencePrice}/ 100`, 2), // 处理价格
           productDescription,
         },
+        productImgArr: (data.clientDetails[0] && data.clientDetails[0].imgUrlList !== null) ? data.clientDetails[0].imgUrlList : [ defaultGoodsImg.GOODSDETAIL ],
         attrs,
         tags: tagArr,
         operating: operatingData,

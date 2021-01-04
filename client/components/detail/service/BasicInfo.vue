@@ -61,7 +61,7 @@ export default {
 <style lang="less" scoped>
 .basic {
   background-color: #fff;
-  padding: 63px 41px 47px 41px;
+  padding: 60px 41px 45px 41px;
   &-name {
     font-size: 44px;
     font-weight: bold;
@@ -71,8 +71,8 @@ export default {
   &-label {
     display: flex;
     justify-content: left;
-    margin-top: 15px;
-    margin-bottom: 29px;
+    margin-top: 13px;
+    flex-wrap: wrap;
     a {
       display: inline-block;
       /*width: 119px;*/
@@ -87,6 +87,7 @@ export default {
       color: #5c7499;
       text-align: center;
       margin-right: 12px;
+      margin-bottom: 28px;
     }
   }
   &-describe {
@@ -94,18 +95,18 @@ export default {
     font-size: 26px;
     font-weight: 400;
     color: #999999;
-    line-height: 38px;
+    line-height: 40px;
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
   }
   &-price {
-    margin-top: 50px;
+    margin-top: 47px;
     font-style: normal;
     display: flex;
     justify-content: space-between;
-    line-height: 52px;
+    line-height: 44px;
     p,
     div {
       font-size: 44px;

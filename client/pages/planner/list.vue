@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 11:54:19
+ * @LastEditTime: 2021-01-04 09:33:15
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -64,20 +64,44 @@
               />
             </sp-dropdown-item>
             <sp-dropdown-item
-              v-model="search.sortId"
+              ref="sortDropdown"
+              class="search__dropdown-sort"
               :title-class="
                 search.sortId > 0 ? 'sp-dropdown-menu__title--selected' : ''
               "
-              class="search__dropdown-sort"
-              :options="sortOption"
-              @change="handleSortChange"
-            />
+              :title="search.sortText"
+            >
+              <div class="search__dropdown-sort-content">
+                <sp-cell
+                  v-for="(item, index) in sortOption"
+                  :key="index"
+                  :title="item.text"
+                  :class="{
+                    active: item.value === search.sortId,
+                  }"
+                  @click="handleSortChange(item)"
+                >
+                  <template #right-icon>
+                    <my-icon
+                      v-show="item.value === search.sortId"
+                      name="tab_ic_check"
+                      size="0.22rem"
+                      color="#4974f5"
+                    />
+                  </template>
+                </sp-cell>
+              </div>
+            </sp-dropdown-item>
           </sp-dropdown-menu>
         </sp-sticky>
         <!-- E 下拉筛选条件 -->
       </div>
 
-      <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <sp-pull-refresh
+        v-model="refreshing"
+        class="list-refresh"
+        @refresh="onRefresh"
+      >
         <sp-list
           v-model="loading"
           error-text="请求失败，点击重新加载"
@@ -107,10 +131,18 @@
               </template>
             </div>
           </template>
+          <!-- S 自定义加载控件 -->
+          <template #loading>
+            <div>
+              <LoadingDown v-show="!refreshing && loading" :loading="true" />
+            </div>
+          </template>
+          <!-- E 自定义加载控件 -->
         </sp-list>
       </sp-pull-refresh>
     </div>
     <sp-toast ref="spToast" />
+    <openApp />
   </div>
 </template>
 
@@ -136,6 +168,7 @@ import Header from '@/components/common/head/header'
 import SearchPopup from '@/components/planner/SearchPopup'
 import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
 import SpToast from '@/components/common/spToast/SpToast'
+import LoadingDown from '@/components/common/loading/LoadingDown'
 
 import imHandle from '@/mixins/imHandle'
 
@@ -145,37 +178,37 @@ import { callPhone, parseTel } from '@/utils/common'
 const SORT_CONFIG = [
   {
     type: 'pointSort', // 排序类型
-    sortValue: 1, // 升序
+    sortValue: 2, // 降序
     text: '薯片分从高到底',
     value: 0,
   },
   {
     type: 'pointSort',
-    sortValue: 2, // 降序
+    sortValue: 1, // 升序
     text: '薯片分从底到高',
     value: 1,
   },
   {
     type: 'reputationSort',
-    sortValue: 1, // 升序
+    sortValue: 2, // 降序
     text: '客户评价分从高到低',
     value: 2,
   },
   {
     type: 'reputationSort',
-    sortValue: 2, // 降序
+    sortValue: 1, // 升序
     text: '客户评价分从低到高',
     value: 3,
   },
   {
     type: 'payNumSort',
-    sortValue: 1, // 升序
+    sortValue: 2, // 降序
     text: '成交量从高到低',
     value: 4,
   },
   {
     type: 'payNumSort',
-    sortValue: 2, // 降序
+    sortValue: 1, // 升序
     text: '成交量从低到高',
     value: 5,
   },
@@ -205,6 +238,7 @@ export default {
     SearchPopup,
     PlannerSearchItem,
     SpToast,
+    LoadingDown,
   },
   mixins: [imHandle],
   data() {
@@ -213,6 +247,7 @@ export default {
       search: {
         keywords: '',
         sortId: 0,
+        sortText: '薯片分从高到底',
         region: {
           name: '区域',
           code: '',
@@ -221,7 +256,7 @@ export default {
       sortOption: SORT_CONFIG,
       regionsOption: [],
       refreshing: false,
-      loading: false,
+      loading: true,
       error: false,
       finished: false,
       pageOption: DEFAULT_PAGE,
@@ -232,6 +267,7 @@ export default {
     ...mapState({
       currentCity: (state) => state.city.currentCity,
       isInApp: (state) => state.app.isInApp,
+      userInfo: (state) => state.user.userInfo,
     }),
     formatSearch() {
       const { sortId, keywords, region } = this.search
@@ -242,31 +278,35 @@ export default {
         value: matched.sortValue,
       }
       const code = region.name === '区域' ? this.currentCity.code : region.code
-      // const regionDto = {
-      //   codeState: region.name === '区域' ? 2 : 3,
-      //   regions: [code],
-      // }
-      // TODO 测试数据
       const regionDto = {
-        codeState: 1,
-        regions: ['110000'],
+        codeState: region.name === '区域' ? 2 : 3,
+        regions: [code],
       }
-
+      // TODO 测试数据
+      // const regionDto = {
+      //   codeState: 1,
+      //   regions: ['110000'],
+      // }
       return { sort, plannerName: keywords, regionDto }
     },
   },
   created() {
     if (process && process.client) {
       this.uPGetRegion()
+      this.onLoad()
     }
   },
   mounted() {
-    this.headHeight = this.$refs.head.offsetHeight
-    console.log('head', this.$refs.head.offsetHeight)
+    console.log(2)
+    this.$nextTick(() => {
+      this.headHeight = this.$refs.head.clientHeight
+      console.log('this.headHeight:', this.headHeight)
+    })
   },
   methods: {
     ...mapMutations({
       SET_CITY: 'city/SET_CITY',
+      SET_USERY: 'user/SET_USERY',
     }),
 
     onLeftClick() {
@@ -284,10 +324,13 @@ export default {
       this.$refs.regionsDropdownItem.toggle()
       this.handleSearch()
     },
-    handleSortChange(value) {
+    handleSortChange(item) {
+      const { value, text } = item || {}
       console.log(value)
-      // 触发 formatSearch 计算
+      // 触发 formatSearchParams 计算
+      this.search.sortText = text
       this.search.sortId = value
+      this.$refs.sortDropdown.toggle()
       this.handleSearch()
     },
     onLoad() {
@@ -411,31 +454,77 @@ export default {
     },
 
     // 发起聊天
-    uPIM(data = {}) {
+    async uPIM(data = {}) {
       const { mchUserId, userName } = data
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
-        this.$appFn.dggOpenIM(
-          {
-            name: userName,
-            userId: mchUserId,
-            userType: 'MERCHANT_USER',
-          },
-          (res) => {
-            const { code } = res || {}
-            if (code !== 200)
-              this.$refs.spToast.show({
-                message: `联系失败`,
-                duration: 1000,
-                forbidClick: true,
-                icon: 'toast_ic_remind',
-              })
-          }
-        )
+        try {
+          // 需要判断登陆没有，没有登录就是调用登录
+          await this.getUserInfo()
+          this.$appFn.dggOpenIM(
+            {
+              name: userName,
+              userId: mchUserId,
+              userType: 'MERCHANT_USER',
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$refs.spToast.show({
+                  message: `联系失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            }
+          )
+        } catch (error) {
+          console.error('uPIM error:', error)
+        }
         return
       }
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
       this.creatImSessionMixin({ imUserId: mchUserId, imUserType })
+    },
+
+    // app获取用户信息
+    getUserInfo() {
+      return new Promise((resolve, reject) => {
+        if (this.userInfo.userId) {
+          resolve(this.userInfo.userId)
+          return
+        }
+        this.$appFn.dggGetUserInfo((res) => {
+          const { code, data } = res || {}
+          // 未登录需要登录
+          if (code !== 200) {
+            this.$appFn.dggLogin((loginRes) => {
+              if (loginRes && loginRes.code === 200) {
+                console.log('loginRes : ', loginRes)
+                if (
+                  loginRes.data &&
+                  loginRes.data.userId &&
+                  loginRes.data.token
+                ) {
+                  this.SET_USERY(loginRes.data)
+                  resolve(loginRes.data.userId)
+                  return
+                }
+                reject(new Error('登录后userId或者token缺失'))
+                return
+              }
+              reject(new Error('登录失败'))
+            })
+            return
+          }
+          if (data && data.userId && data.token) {
+            this.SET_USERY(data)
+            resolve(data.userId)
+            return
+          }
+          reject(new Error('用户信息中userId或者token缺失'))
+        })
+      })
     },
 
     async getList(currentPage) {
@@ -453,12 +542,15 @@ export default {
           const { limit, currentPage = 1, totalCount = 0, records = [] } = data
           this.pageOption = { limit, totalCount, page: currentPage }
           this.list.push(...records)
-          this.$refs.spToast.show({
-            message: `共找到${totalCount}个规划师`,
-            duration: 1000,
-            forbidClick: true,
-            icon: 'toast_ic_comp',
-          })
+          // 第一页面请求提示
+          if (currentPage === 1) {
+            this.$refs.spToast.show({
+              message: `共找到${totalCount}个规划师`,
+              duration: 1000,
+              forbidClick: true,
+              icon: 'toast_ic_comp',
+            })
+          }
         }
         return data
       } catch (error) {
@@ -501,10 +593,18 @@ export default {
 
 .list {
   height: 100%;
-  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
   .head {
+    background: #ffffff;
   }
   .body {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
     padding: 0;
     .search {
       &__input {
@@ -513,6 +613,24 @@ export default {
         /deep/.sp-field__control {
           font-size: 30px;
           font-weight: bold;
+        }
+      }
+      &__dropdown {
+        background-color: #ffffff;
+      }
+      &__dropdown-sort-content {
+        .sp-cell {
+          padding: 18px 40px;
+          &::after {
+            display: none;
+          }
+          &:last-child {
+            margin-bottom: 40px;
+          }
+          &.active {
+            font-weight: bold;
+            color: #4974f5;
+          }
         }
       }
       /deep/.sticky-dropdown {
@@ -566,7 +684,7 @@ export default {
           line-height: 28px;
           .sp-ellipsis {
             font-weight: bold;
-            font-size: 32px;
+            font-size: 26px;
           }
         }
       }
@@ -574,6 +692,9 @@ export default {
         left: 0;
         right: 0;
       }
+    }
+    .list-refresh {
+      min-height: calc(100% - 218px);
     }
   }
 

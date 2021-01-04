@@ -2,15 +2,24 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-25 18:26:02
+ * @LastEditTime: 2021-01-04 10:30:45
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/detail.vue
 -->
 
 <template>
   <div class="detail">
-    <div class="head">
+    <div v-if="!hideHeader" class="head">
       <Header title="规划师">
+        <template #left>
+          <my-icon
+            name="nav_ic_back"
+            size="0.4rem"
+            color="#1A1A1A"
+            class="head__icon-back"
+            @click.native="onClickLeft"
+          ></my-icon>
+        </template>
         <template #right>
           <my-icon
             class="head__icon-share"
@@ -36,9 +45,11 @@
                     fit="cover"
                     :src="detailData.img"
                   />
-                  <span class="detail-content__title">{{
-                    detailData.title
-                  }}</span>
+                  <span
+                    v-if="!!detailData.title"
+                    class="detail-content__title"
+                    >{{ detailData.title }}</span
+                  >
                 </div>
                 <div>
                   <h4 class="detail-content__name">{{ detailData.name }}</h4>
@@ -149,7 +160,7 @@
     </div>
     <sp-share-sheet
       v-model="showShare"
-      title="立即分享给好友"
+      title="分享"
       :options="shareOptions"
       @select="onSelect"
     />
@@ -199,6 +210,8 @@ export default {
       detailData: {},
       shareOptions: [],
       showShare: false,
+      hideHeader: !!this.$route.query.hideHeader || false,
+      redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去
     }
   },
   computed: {
@@ -209,7 +222,6 @@ export default {
       const tagList = this.detailData.tagList
       if (!Array.isArray(tagList)) return []
       const formatData = tagList.slice(0, 2)
-      formatData.push('时代峰峻水电费水电费')
       return formatData
     },
   },
@@ -221,6 +233,7 @@ export default {
   methods: {
     onClickLeft() {
       console.log('nav onClickLeft')
+      this.uPGoBack()
     },
     onClickRight() {
       console.log('nav onClickRight')
@@ -234,7 +247,7 @@ export default {
       console.log('IM ')
       this.uPIM({
         mchUserId: this.detailData.id,
-        userName: this.itemData.userName,
+        userName: this.detailData.userName,
       })
     },
 
@@ -256,7 +269,15 @@ export default {
         this.showShare = false
         return
       }
-      copyToClipboard(location && location.href)
+      const isSuccess = copyToClipboard(location && location.href)
+      if (isSuccess) {
+        this.$xToast.show({
+          message: '复制成功',
+          duration: 1500,
+          icon: 'toast_ic_comp',
+          forbidClick: true,
+        })
+      }
       this.showShare = false
     },
 
@@ -330,6 +351,26 @@ export default {
       this.creatImSessionMixin({ imUserId: mchUserId, imUserType })
     },
 
+    // 平台不同，跳转方式不同
+    uPGoBack() {
+      if (this.isInApp && this.redirectType === 'app') {
+        this.$appFn.dggCloseWebView((res) => {
+          if (!res || res.code !== 200) {
+            this.$xToast.show({
+              message: '返回失败',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
+        return
+      }
+
+      // 在浏览器里 返回
+      this.$router.back(-1)
+    },
+
     // 获取详情数据
     async getDetail() {
       try {
@@ -360,6 +401,9 @@ export default {
       }
     },
   },
+  head: {
+    title: '规划师',
+  },
 }
 </script>
 
@@ -389,8 +433,11 @@ export default {
 
 .detail {
   height: 100%;
-  overflow-y: scroll;
+  background-color: #ffffff;
   .head {
+    &__icon-back {
+      margin-left: 40px;
+    }
     &__icon-share {
       margin-right: 40px;
     }
@@ -529,6 +576,10 @@ export default {
         height: 32px;
         background-color: transparent;
         border: none;
+        &:active::before {
+          opacity: 1;
+          background-color: transparent;
+        }
       }
       .horizontal-line {
         .horizontal-line(@width:208px; @bgColor:#DFD4CA; @skewX:0deg; @height:2px;);

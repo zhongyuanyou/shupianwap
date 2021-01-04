@@ -6,10 +6,16 @@
  * @Description: In User Settings Edit
  * @FilePath: /chips-wap/client/store/module/city.js
  */
+import { Toast } from '@chipspc/vant-dgg'
 import getPosition from '~/utils/position'
 export const state = () => ({
+  // 默认城市
+  defaultCity: {
+    code: '510100',
+    name: '成都市',
+  },
   currentCity: {}, // 当前选择的城市
-  positionCityName: '', // 当前定位城市
+  positionCityName: '', // 当前定位城市的名称
   positionStatus: null, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
 })
 export const mutations = {
@@ -44,6 +50,15 @@ export const actions = {
     // 调用城市定位方法
     getPosition()
       .then((res) => {
+        if (type === 'rest') {
+          // 轻提示
+          Toast.success({
+            duration: 2000,
+            message: '定位成功',
+            forbidClick: true,
+            className: 'my-toast-style',
+          })
+        }
         // 定位成功
         const { city } = res
         if (cityList.length) {
@@ -62,21 +77,24 @@ export const actions = {
         commit('SET_POSITION_CITY', city)
         commit('SET_POSITION_STATUS', 1)
         if (type === 'rest') return // 若是重新定位，定位后不重置当前城市
-        commit('SET_CITY', {
-          code: '510100',
-          name: '成都市',
-        })
+        commit('SET_CITY', state.defaultCity)
       })
       .catch((err) => {
         console.log(err)
+        if (type === 'rest') {
+          // 轻提示
+          Toast.fail({
+            duration: 2000,
+            message: '定位失败，建议清除浏览器缓存后再试',
+            forbidClick: true,
+            className: 'my-toast-style',
+          })
+        }
         // 定位失败，设置默认城市为成都
         commit('SET_POSITION_CITY', '')
         commit('SET_POSITION_STATUS', 0)
         if (type === 'rest' && state.currentCity.name) return // 若是重新定位，定位失败并且当前有已选城市不重置当前城市
-        commit('SET_CITY', {
-          code: '510100',
-          name: '成都市',
-        })
+        commit('SET_CITY', state.defaultCity)
       })
   },
 }

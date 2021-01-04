@@ -17,7 +17,7 @@ export function imInit(data = {}) {
     // 开发、测试环境
     development: 'D',
     // 预发布环境
-    release: 'Y',
+    release: 'D',
     // 生产环境
     production: 'P',
   }

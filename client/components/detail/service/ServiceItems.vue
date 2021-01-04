@@ -57,30 +57,6 @@ export default {
   data() {
     return {
       showRoundCorner: false,
-      options: [
-        {
-          text: '由顶呱呱作为居间担保，12年专业企服领域，大品牌，值得信赖',
-          title: '1.担保交易',
-        },
-        {
-          text: '为保障交易双方权益和交易产物安全，交易时需签署买卖交易合同',
-          title: '2.签署合同',
-        },
-        {
-          text:
-            '交易时资金需暂时托管到薯片，待买方确认交易信息完全无误或买方签署合同并确认之后，打款到卖方，全程公平公正',
-          title: '3.资金保障',
-        },
-        {
-          text: '为保障交易双方权益和交易产物安全，交易时需签署买卖交易合同',
-          title: '2.签署合同',
-        },
-        {
-          text:
-            '交易时资金需暂时托管到薯片，待买方确认交易信息完全无误或买方签署合同并确认之后，打款到卖方，全程公平公正',
-          title: '3.资金保障',
-        },
-      ],
       iconPrefix: 'sp-iconfont',
     }
   },
@@ -109,7 +85,7 @@ export default {
 
 <style lang="less" scoped>
 .serviceItems {
-  padding-top: 47px;
+  padding-top: 41px;
   background-color: #fff;
   margin-top: 24px;
   &-title {
@@ -120,14 +96,20 @@ export default {
     display: flex;
     justify-content: space-between;
     padding: 0px 41px;
+    span {
+      font-size: 40px;
+    }
     a {
       font-size: 26px;
       font-weight: 400;
       color: #999999;
+      i {
+        margin-left: 3px;
+      }
     }
   }
   &-list {
-    margin-top: 16px;
+    margin-top: 10px;
     li {
       height: 88px;
       line-height: 88px;
@@ -155,16 +137,31 @@ export default {
   }
   /deep/ .sp-popup {
     border-radius: 24px 24px 0px 0px;
-    padding: 56px 40px 125px 40px !important;
+    padding: 58px 40px 125px 40px !important;
     .sp-popup__close-icon {
       font-weight: bold;
     }
     .sp-safeguard__icon {
       display: none;
     }
+    /deep/ .sp-popup__title {
+      padding: 0px 0 6px 0;
+      font-size: 40px;
+      color: #1a1a1a;
+    }
   }
   /deep/ .sp-safeguard__list li {
     display: block;
+    padding-top: 47px;
+    padding-bottom: 0px;
+  }
+  /deep/ .sp-popup__close-icon--top-right {
+    top: 40px;
+    right: 40px;
+  }
+  /deep/ .sp-safeguard__title {
+    font-size: 32px;
+    color: #222222;
   }
 }
 </style>

@@ -5,11 +5,17 @@
       <ul v-if="fiexdNav && fiexdNav.length" class="fixed-nav">
         <li v-for="(item, index) in fiexdNav" :key="index">
           <a v-if="item.navigationWay === 2" :href="jumpHandle(item)">
-            <img v-lazy="item.navigationImageUrl" alt="" />
+            <img
+              v-lazy="item.navigationImageUrl + $ossImgSet(104, 72)"
+              alt=""
+            />
             <span>{{ item.name }}</span>
           </a>
           <nuxt-link v-else :to="jumpHandle(item)">
-            <img v-lazy="item.navigationImageUrl" alt="" />
+            <img
+              v-lazy="item.navigationImageUrl + $ossImgSet(104, 72)"
+              alt=""
+            />
             <span>{{ item.name }}</span>
           </nuxt-link>
         </li>
@@ -20,11 +26,17 @@
         <ul v-if="rollNav && rollNav.length" class="scroll-nav">
           <li v-for="(item, index) in rollNav" :key="index">
             <a v-if="item.navigationWay === 2" :href="jumpHandle(item)">
-              <img v-lazy="item.navigationImageUrl" alt="" />
+              <img
+                v-lazy="item.navigationImageUrl + $ossImgSet(48, 48)"
+                alt=""
+              />
               <span>{{ item.name }}</span>
             </a>
             <nuxt-link v-else :to="jumpHandle(item)">
-              <img v-lazy="item.navigationImageUrl" alt="" />
+              <img
+                v-lazy="item.navigationImageUrl + $ossImgSet(48, 48)"
+                alt=""
+              />
               <span>{{ item.name }}</span>
             </nuxt-link>
           </li>
@@ -36,7 +48,7 @@
         <span><i :style="{ left: scroLeft + '%' }"></i></span>
       </div>
       <div
-        v-else-if="rollNav.length && rollNav.length < 10"
+        v-else-if="rollNav.length && rollNav.length <= 10"
         class="scroll-box"
       ></div>
       <!-- E 自定义滚动条 -->

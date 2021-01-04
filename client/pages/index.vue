@@ -1,5 +1,5 @@
 <template>
-  <div ref="homeRef" class="page-content">
+  <div ref="homeRef" class="home-page-content">
     <!-- S 搜索 + 大banner -->
     <SearchBanner
       ref="searchBannerRef"
@@ -34,6 +34,14 @@
     <!-- S 悬浮按钮 -->
     <FiexdBtn />
     <!-- E 悬浮按钮 -->
+    <!-- S 下载app弹框 -->
+    <InstallAppDialog
+      v-if="!closeAppOpen"
+      v-model="showInstallAppDialog"
+      :close-on-click-overlay="false"
+      @closed="handleDialogClosed"
+    />
+    <!-- E 下载app弹框 -->
   </div>
 </template>
 
@@ -49,6 +57,7 @@ import Information from '@/components/home/Information'
 import HotServe from '@/components/home/HotServe'
 import Recommend from '@/components/home/Recommend'
 import FiexdBtn from '@/components/home/FiexdBtn'
+import InstallAppDialog from '@/components/common/app/InstallAppDialog'
 export default {
   layout: 'nav',
   name: 'Home',
@@ -62,8 +71,14 @@ export default {
     HotServe,
     Recommend,
     FiexdBtn,
+    InstallAppDialog,
   },
-  async asyncData({ $axios, redirect }) {
+  async asyncData({ $axios, redirect, app }) {
+    // 获取用户是否手动关闭过下载app的弹框，手动关闭过不再弹出
+    const closeAppOpen = app.$cookies.get('closeAppOpen', {
+      path: '/',
+    })
+
     const fiexdAdCode = 'ad100234' // 顶部固定banner的code
     const rollAdCode = 'ad100237' // 导航下方轮播banner code
     const helpAdCode = 'ad100238' // 帮我找下方banner code(服务榜单)
@@ -105,10 +120,12 @@ export default {
     }
     return {
       initData,
+      closeAppOpen,
     }
   },
   data() {
     return {
+      showInstallAppDialog: true,
       adModuleOne: ['ad100235', 'ad100236'], // 限时特惠板块
       adModuleTwo: ['ad100239', 'ad100240', 'ad100241', 'ad100242'], // 热门服务板块
       asyncReqParams: {
@@ -156,10 +173,25 @@ export default {
         })
     }
   },
+  methods: {
+    // 用户手动关闭下载app提示弹框后，记录状态到cookie，刷新页面不再弹出，使用默认过期时间（关闭浏览器过期，下次再访问，再次弹出）
+    handleDialogClosed() {
+      this.$cookies.set('closeAppOpen', true, {
+        path: '/',
+      })
+    },
+  },
 }
 </script>
+<style lang="less">
+.home-page-content + .open-app {
+  max-width: 1000px;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+}
+</style>
 <style lang="less" scoped>
-.page-content {
+.home-page-content {
   max-width: 1000px;
   margin: auto;
   overflow: hidden;

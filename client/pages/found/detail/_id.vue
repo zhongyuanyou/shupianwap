@@ -1,26 +1,25 @@
 <template>
   <div class="detail">
     <!--S 导航-->
-    <sp-sticky v-if="!isInApp">
-      <sp-top-nav-bar ellipsis :fixed="true" @on-click-right="onClickRight">
-        <template #left>
-          <div @click="back">
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-          </div>
-        </template>
-
-        <template #right>
-          <div>
-            <my-icon name="nav_ic_share" size="0.35rem" />
-          </div>
-        </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
+    <Header v-if="!isInApp">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+      <template #right>
+        <div @click="onClickRight">
+          <my-icon class="head_title" name="nav_ic_share" size="0.35rem" />
+        </div>
+      </template>
+    </Header>
     <!--E 导航-->
-    <div
-      class="detail_con"
-      :style="{ paddingTop: isInApp ? '0.64rem' : '1.52rem' }"
-    >
+    <div class="detail_con">
       <sp-skeleton title :row="10" :loading="loading">
         <div class="detail_con_title">
           {{ info.title }}
@@ -68,6 +67,7 @@
         @select="handleSelect"
       />
     </div>
+    <openApp />
   </div>
 </template>
 
@@ -82,7 +82,10 @@ import {
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { foundApi } from '~/api'
+import Header from '@/components/common/head/header'
+
 export default {
+  layout: 'keepAlive',
   name: 'Detail',
   components: {
     [TopNavBar.name]: TopNavBar,
@@ -91,6 +94,7 @@ export default {
     [ShareSheet.name]: ShareSheet,
     [Skeleton.name]: Skeleton,
     [Sticky.name]: Sticky,
+    Header,
   },
   data() {
     return {
@@ -157,8 +161,14 @@ export default {
   /deep/ img {
     max-width: 100%;
   }
+  .back_icon {
+    margin-left: 40px;
+  }
+  .head_title {
+    margin-right: 40px;
+  }
   &_con {
-    padding: 0 40px 128px 40px;
+    padding: 64px 40px 128px 40px;
     &_title {
       font-size: 44px;
       font-family: PingFang SC;

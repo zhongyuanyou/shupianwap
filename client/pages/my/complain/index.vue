@@ -11,7 +11,12 @@
     <Header title="我要吐槽">
       <template #left>
         <div @click="back">
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
         </div>
       </template>
       <template #right>
@@ -71,19 +76,11 @@
         </div>
       </div>
       <sp-bottombar safe-area-inset-bottom>
-        <sp-bottombar-button
-          type="primary"
-          text="提交"
-          :disabled="
-            formData.content.length < 10 || formData.feedbackTypeId === ''
-              ? true
-              : false
-          "
-          @click="submit"
-        />
+        <sp-bottombar-button type="primary" text="提交" @click="submit" />
       </sp-bottombar>
     </div>
     <sp-toast ref="spToast"></sp-toast>
+    <Loading-center v-show="loading" />
   </div>
 </template>
 <script>
@@ -97,9 +94,10 @@ import {
   BottombarButton,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { complain, commonApi } from '~/api'
+import { complain, commonApi, ossApi } from '~/api'
 import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'AddComplaint',
   components: {
@@ -111,6 +109,7 @@ export default {
     [Sticky.name]: Sticky,
     SpToast,
     Header,
+    LoadingCenter,
   },
   data() {
     return {
@@ -123,11 +122,13 @@ export default {
         content: '', // 内容
         feedbackTypeId: '', // 吐槽类型
         userId: this.userId || '', // 用户id
-        terminalCode: 'adadasdasd', // 终端编码
-        terminalName: 'dadasd', // 终端名称
-        platformCode: 'adasdad', // 平台编码
-        platformName: 'asdasdas', // 平台名称
+        terminalCode: '', // 终端编码
+        terminalName: '', // 终端名称
+        platformCode: '', // 平台编码
+        platformName: '', // 平台名称
       },
+      loading: false, // 加载效果状态
+      images: [], // 图片集合
     }
   },
   computed: {
@@ -145,7 +146,12 @@ export default {
         },
         (res) => {}
       )
+      // 设置终端和平台
     }
+    this.formData.terminalCode = this.isInApp
+      ? 'COMDIC_TERMINAL_APP'
+      : 'COMDIC_TERMINAL_WAP'
+    this.formData.terminalCode = this.isInApp ? 'APP' : 'WAP'
     this.formData.userId = this.userId
     this.getComplainCategory()
   },
@@ -166,11 +172,22 @@ export default {
     // 提交
     async submit() {
       if (this.formData.content.length < 10) {
-        Toast.fail('描述问题为必填，长度为10-200个字')
+        this.$refs.spToast.show({
+          message: '描述问题为必填，长度为10-200个字',
+          duration: 1500,
+          forbidClick: true,
+        })
       } else if (this.formData.feedbackTypeId === '') {
-        Toast.fail('请选择反馈或建议的类型')
+        this.$refs.spToast.show({
+          message: '请选择反馈或建议的类型',
+          duration: 1500,
+          forbidClick: true,
+        })
       } else {
         try {
+          if (this.images.length) {
+            this.formData.imgs = this.images.toString()
+          }
           const params = {
             ...this.formData,
           }
@@ -183,7 +200,9 @@ export default {
             terminalName: 'dadasd', // 终端名称
             platformCode: 'adasdad', // 平台编码
             platformName: 'asdasdas', // 平台名称
+            images: [],
           }
+          this.uploader = []
           this.$refs.spToast.show({
             message: '提交成功，感谢您的反馈',
             duration: 1500,
@@ -198,20 +217,38 @@ export default {
       Toast('文件大小不能超过20M')
     },
     afterRead(file) {
-      console.log('file', file)
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+      const imgs = this.images
+      const formData = new FormData()
+      formData.append('uploadatalog', 'sp-pt/wap/images')
+      formData.append('file', file.file)
+      this.loading = true
+      this.$axios.post(ossApi.add, formData, config).then((res) => {
+        this.loading = false
+        if (res.code === 200) {
+          imgs.push(res.data.url)
+          this.images = imgs
+        }
+      })
     },
     async getComplainCategory() {
+      this.loading = true
       // 获取吐槽分类
       try {
         const params = {
           code: 'fed100026',
         }
         const res = await this.$axios.get(commonApi.detail, { params })
+        this.loading = false
         if (res.code === 200) {
           this.complainCategory = res.data.childrenList
         }
       } catch (err) {
-        console.log('报错了')
+        this.loading = false
       }
     },
   },
@@ -220,16 +257,18 @@ export default {
 
 <style lang="less" scoped>
 .complaint {
-  width: 100%;
-  padding-bottom: 160px;
-  /deep/.sp-top-nav-bar__right {
-    font-size: 28px;
+  height: 100%;
+  background-color: #fff;
+  overflow-y: scroll;
+  .back_icon {
+    margin-left: 40px;
   }
   .process {
     font-size: 28px;
     font-family: PingFang SC;
     font-weight: bold;
     color: #1a1a1a;
+    margin-right: 40px;
   }
   &-box {
     padding: 0px 40px 30px 40px;

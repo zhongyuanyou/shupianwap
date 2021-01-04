@@ -1,5 +1,11 @@
 <template>
-  <div v-if="$store.state.app.isShowOpenApp" class="open-app">
+  <div
+    v-if="$store.state.app.isShowOpenApp && isShow"
+    class="open-app"
+    :style="{
+      bottom: `${bottom}px`,
+    }"
+  >
     <div class="closeApp" @click="closeOpenApp">
       <client-only>
         <my-icon
@@ -7,66 +13,109 @@
           size="0.56rem"
           color="rgba(0, 0, 0, 0.4)"
         ></my-icon>
+        <my-icon
+          name="login_ic_clear"
+          size="0.22rem"
+          color="rgba(255, 255, 255, 0.1)"
+        ></my-icon>
       </client-only>
     </div>
-    <img class="sp-icon-img" src="" alt="" />
+    <img
+      class="sp-icon-img"
+      :src="$ossImgSet(30, 30, 'g6trabnxtg80000.png')"
+      alt=""
+    />
     <div class="desc">
       <p>薯片找人APP</p>
       <p>找人服务，尽在薯片找人</p>
     </div>
-    <div class="open-app-btn" @click="openApp($event)">
-      <span v-if="!isIOS">立即打开</span>
-      <a
+    <div class="open-app-btn" @click="clickBtn">
+      <!--<span v-if="!isIOS">立即打开</span>-->
+      <span>立即打开</span>
+      <!--<a
         v-else
         href='dggcustomerapp://{"androidRoute":"/dgg/android/MainActivity","androidParams":{},"iosRoute":"DGGCustomer:DGGCustomer/MainActivity///push/animation/","iosParams":{},"isLogin":"0"}'
         >立即打开</a
-      >
+      >-->
     </div>
   </div>
 </template>
 
 <script>
+import h5Openapp from 'h5-openapp'
 import openapp from '@/mixins/openapp'
 export default {
   name: 'OpenApp',
   mixins: [openapp],
+  props: {
+    bottom: {
+      type: Number,
+      default() {
+        return 0
+      },
+    },
+  },
   data() {
     return {
-      isShow: false,
+      isShow: true,
       isIOS: false,
       thisType: 'openapp',
-      noRoute: [
-        '/order/confirmOrder',
-        '/order/payFail',
-        '/order/submitOrder',
-        '/order/paySuccess',
-        '/activity/20200825/writeOff',
-        '/order/previewContractApp',
-        '/number',
-      ],
+      noRoute: ['/my'],
     }
   },
+  watch: {
+    $route(to, from) {
+      this.checkRoute(to.path)
+    },
+  },
   mounted() {
+    this.checkRoute(this.$route.fullPath)
     this.isIOS =
       !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) ||
       !!navigator.userAgent.match(/UCBrowser/g)
   },
   methods: {
+    clickBtn() {
+      h5Openapp({
+        scheme:
+          'dggcustomerapp://{"androidRoute":"/dgg/android/MainActivity","androidParams":{},"iosRoute":"DGGCustomer:DGGCustomer/MainActivity///push/animation/","iosParams":{},"isLogin":"0"}', // eg: myapp:///mypath?key1=value1&key2=value2
+        download: {
+          // 默认 scheme 跳转无效，便前往下载, 设置 onTimeout 回调时, 不执行下载逻辑
+          ios: 'https://itunes.apple.com/app/apple-store/id1462879855?mt=8', // ios 下载链接
+          android: 'https://a.app.qq.com/o/simple.jsp?pkgname=net.dgg.fitax', // android 下载链接
+          other: 'https://a.app.qq.com/o/simple.jsp?pkgname=net.dgg.fitax', // 其他渠道 下载链接
+        },
+        delay: 3000, // 等待时间, 超时后执行 onTimeout,  default: 3000
+        disabledScheme: [], // scheme 被禁用的 APP, eg: ['MicroMessenger', 'DingTalk', '...'] (iOS 9+ 深链接不会被禁)
+        onDisabled(appTag) {
+          // 当打开网页的 APP 为 disabledApp 中的任一个，并且未设置深链接时
+          if (appTag === 'MicroMessenger') {
+            console.log('微信不支持 scheme 跳转')
+            // 如果是微信打开的页面，则跳应用宝
+            window.location.href =
+              'https://a.app.qq.com/o/simple.jsp?pkgname=net.dgg.fitax'
+          } else if (appTag === 'DingTalk') {
+            console.log('钉钉不支持 scheme 跳转')
+          } else {
+            console.log(appTag)
+          }
+        },
+        onBeforeOpen() {
+          // 在执行打开 app 逻辑前触发
+        },
+      })
+    },
     closeOpenApp() {
       // this.isShow = false
       this.$store.commit('app/SET_IS_SHOW_OPEN_APP', false)
     },
     checkRoute(path) {
       // 如果当前的router是不显示该顶部栏的，则隐藏顶部栏
-      const _index = this.noRoute.findIndex((str) => {
-        return path === str
-      })
-      if (_index === -1 && this.$store.state.isShowOpenApp) {
-        // this.isShow = true
-        this.$store.commit('SET_IS_SHOW_OPEN_APP', true)
+      const _index = this.noRoute.indexOf(path)
+      if (_index === -1 && this.$store.state.app.isShowOpenApp) {
+        this.isShow = true
       } else {
-        // this.isShow = false
-        this.$store.commit('SET_IS_SHOW_OPEN_APP', false)
+        this.isShow = false
       }
     },
   },
@@ -76,11 +125,15 @@ export default {
 <style lang="less" scoped>
 /*@import '@/assets/styles/vant.var.less';*/
 .open-app {
+  position: fixed;
   display: flex;
   align-items: center;
   height: 100px;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.8);
+  left: 0;
+  bottom: 0;
+  z-index: 20;
   .closeApp {
     display: inline-block;
     position: absolute;
@@ -90,6 +143,14 @@ export default {
     width: 56px;
     /*background-color: rgba(0, 0, 0, 0.4);*/
     align-items: normal;
+    i {
+      display: block;
+    }
+    .spiconfont-login_ic_clear {
+      position: absolute;
+      top: 8px;
+      left: 6px;
+    }
   }
   .sp-iconfont {
     position: absolute;
@@ -102,7 +163,6 @@ export default {
   .sp-icon-img {
     width: 60px;
     height: 60px;
-    background-color: #fff;
     margin-left: 40px;
   }
   .desc {

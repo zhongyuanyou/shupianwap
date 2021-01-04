@@ -39,6 +39,7 @@
           center
           type="number"
           label="手机号"
+          :maxLength="11"
           placeholder="请填写收货人手机号"
         >
         </sp-field>
@@ -174,7 +175,8 @@ export default {
       } else if (val === 2) {
         this.$appFn.dggLocation((res) => {
           // 拿到app定位后端数据并赋值
-          const addressJSON = JSON.parse(res.address)
+          const addressJSON = res.data
+          console.log('addressJSON', addressJSON)
           this.areaTxt =
             addressJSON.province + addressJSON.city + addressJSON.district
           this.areaList[0] = { name: addressJSON.province, code: '' }
@@ -238,7 +240,7 @@ export default {
         ...this.ruleForm,
         addressProvince: this.areaList.length ? this.areaList[0].name : '',
         addressCity: this.areaList.length > 1 ? this.areaList[1].name : '',
-        addressArea: '船山区',
+        addressArea: '',
       }
       try {
         await this.$axios.post(userinfoApi.updateAddress, params)
@@ -252,7 +254,7 @@ export default {
         ...this.ruleForm,
         addressProvince: this.areaList.length ? this.areaList[0].name : '',
         addressCity: this.areaList.length > 1 ? this.areaList[1].name : '',
-        addressArea: '船山区',
+        addressArea: '',
         userId: this.userId,
       }
       try {

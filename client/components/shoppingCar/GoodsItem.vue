@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 16:08:59
+ * @LastEditTime: 2020-12-31 17:07:11
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
 -->
@@ -52,13 +52,14 @@
       </div>
       <template #right>
         <div class="goods-item__operation">
-          <sp-button
+          <!-- 一期没有 -->
+          <!-- <sp-button
             square
             type="primary"
             text="移入关注"
             class="goods-item__operation-attention"
             @click="handleAttention"
-          />
+          /> -->
           <sp-button
             square
             type="danger"
@@ -77,29 +78,31 @@
       <span class="division-line">·</span>
       <span class="goods-item--disable-tip__en">off shelf</span>
     </div>
+    <!--S loding-->
+    <LoadingCenter v-show="loading" />
+    <!--E loding-->
+    <!--S 中间轻提示-->
+    <SpToast ref="spToast" />
+    <!--E 中间轻提示-->
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 
-import { SwipeCell, Card, Button, Toast } from '@chipspc/vant-dgg'
+import { SwipeCell, Card, Button } from '@chipspc/vant-dgg'
 
 import MainGoodsItem from './MainGoodsItem'
 import ViceGoodsItem from './ViceGoodsItem'
 import SkuService from '@/components/common/sku/SkuService'
 import AsyncCheckbox from '@/components/common/checkbox/AsyncCheckbox'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import SpToast from '@/components/common/spToast/SpToast'
 
 import clone from '@/utils/clone'
 import fingerprint from '@/utils/fingerprint'
 
 import { shoppingCar } from '@/api'
-
-// 资源服务 与 查询相关列表 classCode  对应关系， key(资源服务的) ： value(相关列表查询的)
-const RESOURCE_ITEM_CODE_MAP = {
-  FL20201214095005: 'FL20201202065046', // 400电话
-  FL20201211085087: 'FL20201211085087', // 注册地址
-}
 
 export default {
   name: 'GoodsItem',
@@ -111,6 +114,8 @@ export default {
     ViceGoodsItem,
     SkuService,
     AsyncCheckbox,
+    LoadingCenter,
+    SpToast,
   },
   props: {
     commodityData: {
@@ -127,6 +132,7 @@ export default {
   data() {
     return {
       show: false,
+      loading: false,
       skuData: {
         productId: '',
         name: '',
@@ -160,6 +166,7 @@ export default {
     ...mapState({
       cityCode: (state) => state.city.currentCity.code,
       userInfo: (state) => state.user.userInfo,
+      isInApp: (state) => state.app.isInApp,
     }),
     checked() {
       return !!this.commodityData.shopIsSelected
@@ -296,13 +303,8 @@ export default {
           this.changeSkuCount(data)
           break
         case 'resourceServiceSelect': // sku弹出框里资源服务
-          // this.selecteResourceService(data)
-
           this.$emit('operation', {
-            data: {
-              ...data,
-              classCode: RESOURCE_ITEM_CODE_MAP[data.classCode],
-            },
+            data,
             type,
             cartId,
             index: this.index,
@@ -310,9 +312,9 @@ export default {
           break
       }
     },
-    openSku() {
+    async openSku() {
       if (!this.skuData.skuAttrList || !this.skuData.skuAttrList.length) {
-        this.getSkuData()
+        await this.getSkuData()
       }
       const {
         skuId,
@@ -346,15 +348,22 @@ export default {
       skuAttrList = skuAttrList.filter((item) => !inactivedList.includes(item))
       //
       const currentSkuAttr = skuAttrList.join(',')
-
+      this.loading = true
       this.getGoodsDetail(currentSkuAttr)
         .then((data) => {
           this.tempGoods.skuAttrKey = currentSkuAttr
           // 每次请求sku 增值服务需要清空
           this.tempGoods.addServiceList = []
+          this.loading = false
         })
         .catch(() => {
-          Toast('选择失败！')
+          this.$xToast.show({
+            message: '选择失败',
+            duration: 1000,
+            icon: 'toast_ic_remind',
+            forbidClick: true,
+          })
+          this.loading = false
         })
     },
 
@@ -447,7 +456,12 @@ export default {
           })
         })
         .catch(() => {
-          Toast('加入购物车失败')
+          this.$xToast.show({
+            message: '加入购物车失败',
+            duration: 1000,
+            icon: 'toast_ic_remind',
+            forbidClick: true,
+          })
         })
     },
 
@@ -458,10 +472,8 @@ export default {
 
     // 资源服务的选择
     selecteResourceService(data = {}) {
-      const { id, code, name, goodsPrice } = data
-      const classCode = Object.keys(RESOURCE_ITEM_CODE_MAP).find(
-        (item) => RESOURCE_ITEM_CODE_MAP[item] === data.classCode
-      )
+      const { id, name, goodsPrice, classCode } = data
+
       if (!classCode) return
       const { serviceResourceList = [] } = this.tempGoods
       const matchedItem = this.skuData.serviceGoodsClassList.find(
@@ -491,26 +503,64 @@ export default {
       let reqArea = ''
       let terminalCode = ''
 
-      // TODO 获取当前的运行环境
-      if (this.runEnv === 'app') {
+      // 在app运行环境
+      if (this.isInApp) {
         terminalCode = 'COMDIC_TERMINAL_APP'
+        const devicePromise = this.getAppDeviceInfo()
+        const regionPromise = this.getAppRegion()
+        ;[deviceCode, reqArea] = await Promise.all([
+          devicePromise,
+          regionPromise,
+        ])
       } else {
-        reqArea = this.cityCode
         terminalCode = 'COMDIC_TERMINAL_WAP'
+        reqArea = this.cityCode
         deviceCode = await fingerprint()
-        userId = this.userInfo.userId
       }
+      userId = this.userInfo.userId
       const config = { userId, deviceCode, reqArea, terminalCode }
       this.config = config
       return config
     },
 
+    // 在app中获取Code
+    getAppDeviceInfo() {
+      return new Promise((resolve, reject) => {
+        this.$appFn.dggDeviceInfo((res) => {
+          console.log('dggDeviceInfo res:', res)
+          const { code, data = {} } = res
+          if (code === 200) {
+            resolve(data['X-Device-Code'])
+            return
+          }
+          reject(res)
+        })
+      })
+    },
+
+    // 获取app当前的站点
+    getAppRegion() {
+      return new Promise((resolve, reject) => {
+        this.$appFn.dggCityCode((res) => {
+          console.log('dggCityCode:', res)
+          const { code, data } = res || {}
+          if (code === 200) {
+            const { adCode } = data
+            resolve(adCode)
+            return
+          }
+          reject(res)
+        })
+      })
+    },
+
     // 第一次获取sku属性
     async getSkuData() {
       try {
+        this.loading = true
         const config = await this.uPGetConfig()
-        const productId = this.commodityData.productId || '607991345402771561' // '607991345402771561'
-        const attrValKey = this.commodityData.skuAttrKey || 'SXZ20201211050014' // SXZ20201211050014
+        const productId = this.commodityData.productId // '607991345402771561'
+        const attrValKey = this.commodityData.skuAttrKey // SXZ20201211050014
         const productPromise = shoppingCar.productDetail({ productId }, config)
         const skuPromise = this.getGoodsDetail(attrValKey)
         const [productDetail = {}, skuDetail = {}] = await Promise.all([
@@ -540,10 +590,18 @@ export default {
           ...skuDetail,
         }
         this.skuData = data
+        this.loading = false
         console.log(data)
         return data
       } catch (error) {
         console.error('getList:', error)
+        this.loading = false
+        this.$refs.spToast.show({
+          message: '获取sku失败',
+          duration: 1000,
+          forbidClick: false,
+          icon: 'toast_ic_remind',
+        })
         return Promise.reject(error)
       }
     },
@@ -586,7 +644,14 @@ export default {
       let params = {}
       switch (type) {
         case 'updateSkuItem':
-          params = { serviceList, skuAttr, skuId, goodsNumber: value }
+          // 修改sku,默认选中
+          params = {
+            serviceList,
+            skuAttr,
+            skuId,
+            goodsNumber: value,
+            selectFlag: 1,
+          }
           break
       }
       try {
@@ -697,6 +762,11 @@ export default {
     &-line--top {
       padding: 32px 0;
     }
+    /deep/&-line--top.sp-hairline--top {
+      &::after {
+        border-top-style: dashed !important;
+      }
+    }
   }
   &__operation {
     display: flex;
@@ -710,11 +780,6 @@ export default {
     &-delete {
       width: 120px;
       height: 100%;
-    }
-  }
-  /deep/.sp-hairline--top {
-    &::after {
-      border-top-style: dashed !important;
     }
   }
 }

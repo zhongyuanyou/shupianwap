@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 20:32:33
+ * @LastEditTime: 2021-01-04 14:17:25
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -22,48 +22,57 @@
           />
         </template>
         <template #right>
-          <span class="head__operation" @click="onClickRight">{{
-            shoppingCarStatus === 'edit' ? '完成' : '管理'
-          }}</span>
+          <span
+            v-show="list && list.length"
+            class="head__operation"
+            @click="onClickRight"
+            >{{ shoppingCarStatus === 'edit' ? '完成' : '管理' }}</span
+          >
         </template>
       </Header>
     </div>
     <div class="body">
-      <div class="shopping-car__content">
-        <sp-pull-refresh
-          v-model="refreshing"
-          :disabled="true"
-          @refresh="onRefresh"
+      <!-- :disabled="true" -->
+      <sp-pull-refresh
+        v-model="refreshing"
+        class="shopping-car__refresh"
+        @refresh="onRefresh"
+      >
+        <sp-list
+          v-model="loading"
+          class="shopping-car__goods"
+          error-text="请求失败，点击重新加载"
+          :error.sync="error"
+          :finished="finished"
+          @load="onLoad"
         >
-          <sp-list
-            v-model="loading"
-            class="shopping-car__goods"
-            error-text="请求失败，点击重新加载"
-            :error.sync="error"
-            :finished="finished"
-            @load="onLoad"
+          <div
+            v-for="(item, index) in list"
+            :key="item.cartId"
+            class="shopping-car__goods-item"
           >
-            <div
-              v-for="(item, index) in list"
-              :key="item.cartId"
-              class="shopping-car__goods-item"
-            >
-              <GoodsItem
-                ref="goodsItem"
-                :commodity-data="item"
-                :index="index"
-                @operation="handleItemOperation"
-              />
+            <GoodsItem
+              ref="goodsItem"
+              :commodity-data="item"
+              :index="index"
+              @operation="handleItemOperation"
+            />
+          </div>
+          <template #finished>
+            <span v-if="list && list.length">没有更多了</span>
+            <ShoppingCarNull v-else />
+          </template>
+          <!-- S 自定义加载控件 -->
+          <template #loading>
+            <div>
+              <LoadingDown v-show="!refreshing && loading" :loading="true" />
             </div>
-            <template #finished>
-              <span v-if="list && list.length">没有更多了</span>
-              <ShoppingCarNull v-else />
-            </template>
-          </sp-list>
-        </sp-pull-refresh>
-      </div>
+          </template>
+          <!-- E 自定义加载控件 -->
+        </sp-list>
+      </sp-pull-refresh>
     </div>
-    <div class="footer sp-hairline--top">
+    <div v-if="list && list.length" class="footer sp-hairline--top">
       <Bottombar
         :status="shoppingCarStatus"
         :bottom-data="bottomData"
@@ -76,14 +85,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import {
-  TopNavBar,
-  Button,
-  Toast,
-  PullRefresh,
-  List,
-  Loading,
-} from '@chipspc/vant-dgg'
+import { TopNavBar, Button, PullRefresh, List } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 
 import GoodsItem from '@/components/shoppingCar/GoodsItem'
@@ -91,6 +93,7 @@ import Bottombar from '@/components/shoppingCar/Bottombar'
 import GoodsPopup from '@/components/shoppingCar/GoodsPopup'
 import ShoppingCarNull from '@/components/shoppingCar/ShoppingCarNull'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import LoadingDown from '@/components/common/loading/LoadingDown'
 
 import { shoppingCar } from '@/api'
 
@@ -107,19 +110,19 @@ export default {
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
-    [Loading.name]: Loading,
     Header,
     GoodsPopup,
     GoodsItem,
     Bottombar,
     ShoppingCarNull,
     LoadingCenter,
+    LoadingDown,
   },
   data() {
     return {
       list: [],
       refreshing: false,
-      loading: false,
+      loading: true,
       error: false,
       finished: false,
       shoppingCarStatus: 'completed', // edit: 编辑
@@ -156,20 +159,28 @@ export default {
   created() {
     if (process && process.client) {
       this.postUpdate({ type: 'init' })
+      this.onLoad()
+    }
+  },
+  mounted() {
+    // 注册一个方法，app里面使用
+    if (this.isInApp) {
+      console.log('registHandler refresh start')
+      this.$appFn.registHandler('refresh', (data) => {
+        console.log('refresh:', data)
+        this.onRefresh()
+      })
     }
   },
 
   // 在keep-alive中起作用，刷新从400或者地址获取到数据后刷新状态
   activated() {
     console.log('activated:', this.$route.params)
-    const { id, code, name, goodsPrice, classCode } =
-      this.$route.params.data || {}
-    console.log('classCode : ', classCode)
+    const { id, name, goodsPrice, classCode } = this.$route.params.data || {}
     const goodsItemInstance = this.$refs.goodsItem[this.skuOpenIndex]
     if (!goodsItemInstance) return
     goodsItemInstance.selecteResourceService({
       id,
-      code,
       name,
       goodsPrice,
       classCode,
@@ -297,7 +308,12 @@ export default {
     // 全删除
     deteleAllItem() {
       if (this.currentSelectedCartIds.length === 0) {
-        Toast('请选择需要删除的商品')
+        this.$xToast({
+          message: '请选择需要删除的商品',
+          duration: 1000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
         return
       }
       const cartId = this.currentSelectedCartIds.join(',')
@@ -310,7 +326,14 @@ export default {
     selectAll(data) {
       const cartIdArray = this.list.map((item) => item.cartId)
       const cartId = cartIdArray.join()
-      this.selectItem(cartId, data)
+      this.selectItem(cartId, data).catch((error) => {
+        this.$xToast.show({
+          message: error.message || '选择失败',
+          duration: 1000,
+          icon: 'toast_ic_error',
+          forbidClick: true,
+        })
+      })
     },
 
     // 统一的结算
@@ -327,16 +350,29 @@ export default {
             parameter: { cartId: cartIdsStr, type: 1 },
           },
         }
+        const androidRouter = {
+          path: '/flutter/main',
+          parameter: {
+            routerPath: 'cps/place_order',
+            parameter: { cartId: cartIdsStr, type: 1 },
+          },
+        }
         const iOSRouterStr = JSON.stringify(iOSRouter)
+        const androidRouterStr = JSON.stringify(androidRouter)
         this.$appFn.dggJumpRoute(
           {
             iOSRouter: iOSRouterStr,
-            androidRouter: '',
+            androidRouter: androidRouterStr,
           },
           (res) => {
             const { code } = res || {}
             if (code !== 200) {
-              Toast('结算失败')
+              this.$xToast({
+                message: '结算失败',
+                duration: 1000,
+                icon: 'toast_ic_error',
+                forbidClick: true,
+              })
             }
           }
         )
@@ -345,22 +381,10 @@ export default {
 
     // 资源服务的选择
     selecteResourceService(cartId, value, index) {
-      const { type, classCode } = value
+      const { type, classCode, url } = value
       this.skuOpenIndex = index
-      switch (type) {
-        case 'registerAddress':
-          this.$router.replace({
-            name: 'detail-selectAddress',
-            query: { classCode, redirectType: 'wap', redirect: 'shoppingCar' },
-          })
-          break
-        case 'phone':
-          this.$router.replace({
-            name: 'detail-selectPhone',
-            query: { classCode, redirectType: 'wap', redirect: 'shoppingCar' },
-          })
-          break
-      }
+      // 通过后台接口配置的跳转400或者注册地址查询页面
+      this.$router.replace(`${url}&redirect=shoppingCar`)
     },
 
     // 选择
@@ -389,7 +413,9 @@ export default {
           cartArray.includes(item.cartId) && (shopIsSelected = value)
           return { ...item, shopIsSelected }
         })
-      } catch (error) {}
+      } catch (error) {
+        return Promise.reject(error)
+      }
     },
     // 数量操作
     async countOperation(cartId, data) {
@@ -414,7 +440,13 @@ export default {
           }
           return { ...item, goodsNumber, shopIsSelected }
         })
-      } catch (error) {}
+      } catch (error) {
+        console.log('countOperation', error)
+        // 为了通知MainGoodsItem 组件更新为原来的数量
+        this.list = this.list.map((item) => {
+          return { ...item }
+        })
+      }
     },
 
     // 请求购物车列表
@@ -443,7 +475,14 @@ export default {
         case 'remove':
           break
         case 'updateSkuItem':
-          params = { serviceList, skuAttr, skuId, goodsNumber: value }
+          // 修改sku,默认选中
+          params = {
+            serviceList,
+            skuAttr,
+            skuId,
+            goodsNumber: value,
+            selectFlag: 1,
+          }
           break
         case 'select':
           params = { selectFlag: +value } // 将boolean转换为数字（1：选中 ,0：取消选中）
@@ -484,9 +523,10 @@ export default {
 
 .shopping-car {
   height: 100%;
-  overflow-y: scroll;
+  // overflow-y: scroll;
   display: flex;
   flex-direction: column;
+  background-color: #ffffff;
   .head {
     &__icon-back {
       padding-left: 32px;
@@ -500,25 +540,13 @@ export default {
   .body {
     flex: 1;
     padding: 0;
+    overflow-x: hidden;
     overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
     position: relative;
-    // TODO  遮罩层 有问题
-    .update-loading {
-      position: absolute;
-      width: auto;
-      height: auto;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      text-align: center;
-      &__content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
+  }
+  &__refresh {
+    min-height: 100%;
   }
   &__goods {
     &-item {
@@ -527,16 +555,6 @@ export default {
   }
   .footer {
     flex: 128px 0 0;
-  }
-  .recommend {
-    &__title {
-      padding: 0 40px;
-      font-size: 40px;
-      font-weight: bold;
-      color: @title-text-color;
-      line-height: 44px;
-      margin-bottom: 6px;
-    }
   }
   .item-wrap {
     padding: 40px;

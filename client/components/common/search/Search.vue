@@ -27,6 +27,7 @@
         v-model="visible"
         :type="type"
         :placeholder="placeholder"
+        :maxlength="maxlength"
         @input="searchInputHandle"
         @blur="searchBlurHandle"
         @focus="searchFocusHandle"
@@ -49,6 +50,11 @@ export default {
     event: 'valChangeHandle',
   },
   props: {
+    // 输入框的如如长度限制
+    maxlength: {
+      type: Number,
+      default: 100,
+    },
     // 输入框绑定的值
     value: {
       type: String,

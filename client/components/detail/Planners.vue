@@ -2,10 +2,10 @@
   <div class="planners">
     <p class="planners_title">推荐规划师</p>
     <div
-      v-for="(item, index) in info"
+      v-for="(item, index) in recommendPlanner"
       :key="item.userCenterId"
       class="planners_item"
-      :style="{ marginTop: index === 0 ? '0.48rem' : '0.66rem' }"
+      :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
     >
       <div class="planners_item_lf">
         <sp-image
@@ -13,7 +13,8 @@
           height="0.8rem"
           round
           fit="cover"
-          :src="item.avatar"
+          lazy-load
+          :src="item.portrait"
         />
         <div class="info">
           <div class="info_tp">
@@ -62,7 +63,7 @@ export default {
   },
   mixins: [imHandle],
   props: {
-    info: {
+    recommendPlanner: {
       type: Array,
       default: () => [],
     },
@@ -122,7 +123,7 @@ export default {
 <style lang="less" scoped>
 .planners {
   border-top: 24px solid #f8f8f8;
-  padding: 48px 40px 56px 40px;
+  padding: 41px 40px 56px 40px;
   background-color: #fff;
   border-bottom: 24px solid #f8f8f8;
   .icon {

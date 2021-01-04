@@ -35,7 +35,9 @@
                   @click="adJumpHandleMixin(key.materialList[0])"
                 >
                   <img
-                    v-lazy="key.materialList[0].materialUrl"
+                    v-lazy="
+                      key.materialList[0].materialUrl + $ossImgSet(262, 144)
+                    "
                     class="recom-img"
                     alt=""
                   />
@@ -117,7 +119,7 @@ export default {
         maxsize: 100, // 要求推荐产品的数量
         platform: 'APP', // 平台（app,m,pc）
         formatId: '', // 产品类别
-        limit: 5, // 分页条数
+        limit: 10, // 分页条数
         page: 1, // 当前页
         locationCode: '', // 查询广告的位置code
       },
@@ -127,15 +129,27 @@ export default {
     cityCode() {
       return this.$store.state.city.currentCity.code
     },
-  },
-  watch: {
-    cityCode(newVal) {
-      this.params.areaCode = newVal
-      this.findRecomList(this.curentItem)
+    isSendReq() {
+      const cityCode = this.$store.state.city.currentCity.code
+      if (cityCode && this.tabBtn.length && !this.tabBtn[0].goodsList.length) {
+        return true
+      } else {
+        return false
+      }
     },
   },
-  created() {
-    if (process.client && this.cityCode) {
+  watch: {
+    // 监听城市定位成功，且字典数据请求完成够再获取字典第一个分类下的产品数据
+    isSendReq(val) {
+      if (val) {
+        this.params.findType = 2
+        this.findRecomList(0)
+      }
+    },
+  },
+  async created() {
+    if (process.client) {
+      this.params.deviceId = await getUserSign() // 获取用户唯一标识
       this.findRecomList(this.curentItem)
     }
   },
@@ -209,43 +223,54 @@ export default {
       e.stopImmediatePropagation() // 阻止冒泡
     },
     // 查询推荐商品
-    async findRecomList(index) {
-      // 获取用户唯一标识
-      if (!this.params.deviceId) {
-        this.params.deviceId = await getUserSign()
+    findRecomList(index) {
+      const params = {}
+      // 初始化查询字典+广告需要的参数
+      if (this.params.findType === 0) {
+        params.findType = this.params.findType
+        params.dictionaryCode = this.params.dictionaryCode
+        params.limit = this.params.limit
+        params.page = this.params.page
       }
-      // 设置站点编码
-      if (!this.params.areaCode) {
-        this.params.areaCode = this.cityCode
-      }
-      // 若不是初始化查询，需获取选中项的参数
+
+      // 查询推荐产品需要的参数
       if (this.params.findType !== 0) {
-        this.params.formatId = this.tabBtn[index].ext3
-        this.params.limit = this.tabBtn[index].limit
-        this.params.page = this.tabBtn[index].page
+        params.findType = this.params.findType
+        params.formatId = this.tabBtn[index].ext3
+        params.limit = this.tabBtn[index].limit
+        params.page = this.tabBtn[index].page
+        params.areaCode = this.cityCode
+        params.deviceId = this.params.deviceId
+        params.sceneId = this.params.sceneId
+        params.maxsize = this.params.maxsize
+        params.platform = this.params.platform
       }
-      // 获取选中项的广告位code
+
+      // 广告位code
       if (this.params.findType === 1) {
-        this.params.locationCode = this.tabBtn[index].ext1
+        params.locationCode = this.tabBtn[index].ext1
       }
-      this.$axios.post(homeApi.findRecomList, this.params).then((res) => {
-        // console.log(index, res.data)
+
+      this.$axios.post(homeApi.findRecomList, params).then((res) => {
         this.loading = false
-        if (res.code === 200 && this.params.findType === 0) {
+        if (res.code === 200 && params.findType === 0) {
           res.data.dictData[0].adData = res.data.adData
-          res.data.dictData[0].goodsList = res.data.goodsList
           this.tabBtn = res.data.dictData
-          this.tabBtn[0].noData = res.data.goodsList.length === 0
           return
         }
-        if (res.code === 200 && this.params.findType === 1) {
+        if (res.code === 200 && params.findType === 1) {
           this.tabBtn[index].adData = res.data.adData
           this.tabBtn[index].goodsList = res.data.goodsList
           this.tabBtn[index].noData = res.data.goodsList.length === 0
           return
         }
 
-        // 无更多数据
+        // 初始查询第一个分类产品无任何数据
+        if (index === 0 && params.page === 1 && !res.data.goodsList.length) {
+          this.tabBtn[index].noData = res.data.goodsList.length === 0
+          return
+        }
+        // 加载更多时无更多数据
         if (!res.data.goodsList.length) {
           this.tabBtn[index].noMore = true
           return

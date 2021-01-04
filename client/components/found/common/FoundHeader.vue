@@ -19,6 +19,7 @@
             type="text"
             placeholder="请输入搜索内容"
             @input="inputChange"
+            @keydown="handelKeydown"
           />
         </div>
       </div>
@@ -56,6 +57,11 @@ export default {
     handleLeft() {
       // 点击返回按钮
       this.$router.back()
+    },
+    handelKeydown(e) {
+      if (e.keyCode === 13) {
+        this.$emit('handelKeydown', this.keyword)
+      }
     },
   },
 }

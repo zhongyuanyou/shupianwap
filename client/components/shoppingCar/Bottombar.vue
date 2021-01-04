@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-28 11:00:06
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-16 16:27:42
+ * @LastEditTime: 2021-01-04 10:53:01
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/Bottombar.vue
 -->
@@ -26,20 +26,24 @@
       >
     </div>
     <div v-if="status === 'completed'" class="bottombar__middle">
-      <div class="bottombar__price flex-r-s flex-r-a-b">
+      <div
+        v-if="bottomData.totalAmount"
+        class="bottombar__price flex-r-s flex-r-a-b"
+      >
         <span class="bottombar__price-label">合计:</span>
         <span class="bottombar__price-number">{{
           bottomData.totalAmount
         }}</span>
         <span class="bottombar__price-unit">元</span>
       </div>
-      <div class="bottombar__discounts flex-r-s flex-r-a-b">
+      <!-- 一期没有 -->
+      <!-- <div class="bottombar__discounts flex-r-s flex-r-a-b">
         <span class="bottombar__discounts-label">优惠减</span>
         <span class="bottombar__discounts-number">{{
           bottomData.discountsAmount
         }}</span>
         <span class="bottombar__discounts-unit">元</span>
-      </div>
+      </div> -->
     </div>
     <div class="bottombar__right">
       <sp-button
@@ -48,7 +52,8 @@
         @click="handleOperation({ type: 'bill' })"
         >去结算<span>({{ bottomData.totalCount }})</span></sp-button
       >
-      <sp-button
+      <!-- 一期没有 -->
+      <!-- <sp-button
         v-if="status === 'edit'"
         plain
         hairline
@@ -56,7 +61,7 @@
         class="remove-btn"
         @click="handleOperation({ type: 'attentionAll' })"
         >移入关注</sp-button
-      >
+      > -->
       <sp-button
         v-if="status === 'edit'"
         plain

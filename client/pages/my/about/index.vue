@@ -57,13 +57,13 @@ export default {
     onServiceTouch() {
       this.$router.push({
         name: 'login-protocol',
-        query: { categoryCode: 'protocol100122', hideHeader: true },
+        query: { categoryCode: 'protocol100122' },
       })
     },
     onPrivacyTouch() {
       this.$router.push({
         name: 'login-protocol',
-        query: { categoryCode: 'protocol100121', hideHeader: true },
+        query: { categoryCode: 'protocol100121' },
       })
     },
   },
@@ -96,6 +96,10 @@ export default {
         align-items: center;
         justify-content: center;
         margin: 0 auto;
+        > img {
+          width: 100%;
+          height: 100%;
+        }
       }
       .versionText {
         width: 191px;

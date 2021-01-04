@@ -19,3 +19,8 @@ export const CHIPS_APP_BASE_URL = `/${CHIPS_APP_INSTANCE_NAME}/${CHIPS_APP_SERVI
 
 export const CHIPS_PLATFORM_CODE = 'COMDIC_PLATFORM_CRISPS' // 薯片平台code
 export const WAP_TERMINAL_CODE = 'COMDIC_TERMINAL_WAP' // WAP终端code
+
+export const GOODSDETAIL =
+  'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg' // 产品详情默认图片
+export const GOODSLIST =
+  'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg' // 产品列表默认图片

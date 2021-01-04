@@ -2,19 +2,27 @@
   <div class="con">
     <!--S banner-->
     <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <div class="con_banner">
+      <div
+        v-if="banner.length && banner[0].sortMaterialList"
+        class="con_banner"
+      >
         <sp-swipe :autoplay="3000" class="con_banner_list" @change="onChange">
           <sp-swipe-item
-            v-for="(image, index) in images"
+            v-for="(image, index) in banner[0].sortMaterialList"
             :key="index"
             class="con_banner_list_item"
+            @click="handleImage(image)"
           >
-            <sp-image height="2.58rem" fit="cover" :src="image" />
+            <sp-image
+              height="2.58rem"
+              fit="cover"
+              :src="image.materialList[0].materialUrl"
+            />
           </sp-swipe-item>
           <template #indicator>
             <div class="custom-indicator">
               <div
-                v-for="(item, index) in images"
+                v-for="(item, index) in banner[0].sortMaterialList"
                 :key="index"
                 :class="[
                   'custom-indicator_item',
@@ -29,8 +37,10 @@
       <!--S 列表-->
       <div class="con_list">
         <sp-list
+          v-if="infoList.length"
           v-model="loading"
           :finished="finished"
+          offset="0"
           finished-text="没有更多了"
           @load="onLoad"
         >
@@ -43,6 +53,10 @@
             />
           </sp-cell>
         </sp-list>
+        <div v-if="!infoList.length" class="no-data">
+          <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
+          <p>暂无数据</p>
+        </div>
       </div>
     </sp-pull-refresh>
     <!--E 列表-->
@@ -63,6 +77,7 @@ import {
 import { mapState } from 'vuex'
 import CardItem from '~/components/common/cardItem/CardItem'
 import { foundApi } from '@/api'
+import { baseURL } from '~/config/index'
 Vue.use(Lazyload)
 export default {
   name: 'Con',
@@ -88,6 +103,12 @@ export default {
         return []
       },
     },
+    refreshStatus: {
+      type: Boolean,
+      default: () => {
+        return false
+      },
+    },
     categoryCode: {
       type: String,
       default: '',
@@ -95,18 +116,15 @@ export default {
   },
   data() {
     return {
-      images: [
-        'https://img.yzcdn.cn/vant/apple-1.jpg',
-        'https://img.yzcdn.cn/vant/apple-2.jpg',
-      ],
       current: 0,
-      refreshing: false,
+      refreshing: this.refreshStatus,
       loading: false,
       finished: false,
       limit: 10, // 每页显示条数
       page: 2, // 当前页
       infoList: this.list, // 资讯列表
       bannerList: this.banner, // 广告集合
+      code: this.categoryCode,
     }
   },
   computed: {
@@ -121,6 +139,12 @@ export default {
     list(newVal) {
       this.infoList = newVal
     },
+    categoryCode(newVal) {
+      this.code = newVal
+    },
+    refreshStatus(newVal) {
+      this.refreshing = newVal
+    },
   },
   methods: {
     onChange(index) {
@@ -131,25 +155,22 @@ export default {
       // 点击
       if (this.isInApp) {
         this.$appFn.dggOpenNewWeb(
-          { urlString: `http://172.16.139.140:7001/found/detail/${item.id}` },
-          (res) => {
-            console.log('res', res)
-          }
+          { urlString: `${baseURL}/found/detail/${item.id}` },
+          (res) => {}
         )
         return
       }
       this.$router.push(`/found/detail/${item.id}`)
     },
     onRefresh() {
-      setTimeout(() => {
-        this.refreshing = false
-      }, 2000)
+      this.page = 2
+      this.$emit('refresh')
     },
     async onLoad() {
       // 上滑加载更多资讯列表
       const page = this.page++
       const params = {
-        categoryCode: this.categoryCode,
+        categoryCode: this.code,
         limit: this.limit,
         page,
       }
@@ -162,6 +183,18 @@ export default {
           this.finished = true
         }
       }
+    },
+    handleImage(item) {
+      // 点击图片
+      if (this.isInApp) {
+        // 若是在app中
+        this.$appFn.dggJumpRoute({
+          iOSRouter: item.materialList[0].iosLink,
+          androidRouter: item.materialList[0].androidLink,
+        })
+        return
+      }
+      this.$router.push(item.materialList[0].wapLink)
     },
   },
 }
@@ -187,6 +220,9 @@ export default {
         width: 100%;
         height: 258px;
         background-color: #f8f8f8;
+        /deep/ .sp-image__img {
+          border-radius: 12px;
+        }
       }
       .custom-indicator {
         position: absolute;
@@ -217,6 +253,22 @@ export default {
   }
   &_list {
     margin-top: 40px;
+    .no-data {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      img {
+        width: 340px;
+        height: 340px;
+      }
+      > p {
+        font-size: 30px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #1a1a1a;
+      }
+    }
   }
 }
 </style>

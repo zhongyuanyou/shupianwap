@@ -17,7 +17,8 @@
             height="1.6rem"
             fit="cover"
             radius="0.04rem"
-            :src="item.portrait"
+            lazy-load
+            :src="item.productImgArr[0]"
           />
         </div>
         <div class="need_item_rt">
@@ -124,6 +125,10 @@ export default {
         align-items: center;
         flex-direction: row;
         margin-top: 2px;
+        width: 4.78rem;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
         span {
           font-size: 22px;
           font-family: PingFang SC;

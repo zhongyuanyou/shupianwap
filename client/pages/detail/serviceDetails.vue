@@ -12,11 +12,21 @@
             <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
           </div>
         </template>
-        <template #right></template>
+        <template #right>
+          <div>
+            <my-icon
+              class="head__icon-share"
+              name="nav_ic_share"
+              size="0.4rem"
+              color="#1A1A1A"
+              @click.native="onClickRight"
+            />
+          </div>
+        </template>
       </sp-top-nav-bar>
     </sp-sticky>
     <!--   banner -->
-    <Banner :images="info.images" />
+    <Banner :images="scProductDetailData.productImgArr" />
     <!--   BasicInfo(基本信息)-->
     <BasicInfo
       :base-data="scProductDetailData.baseData"
@@ -29,7 +39,7 @@
     <ServiceInfo :client-details-data="scProductDetailData.clientDetails" />
     <!--    推荐规划师-->
     <div class="planners-box">
-      <Planners :im-jump-query="imJumpQuery" :info="planners" />
+      <Planners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
       <!--   暂时取消此表单   -->
       <!--      <div class="planners-box-quiz">-->
       <!--        <h2>您的疑问，第一时间为您解答</h2>-->
@@ -52,11 +62,25 @@
       :im-jump-query="imJumpQuery"
       :planner-info="scPlannerDetailData"
     />
+    <!--    分享组件-->
+    <sp-share-sheet
+      v-model="showShare"
+      title="立即分享给好友"
+      :options="shareOptions"
+      @select="onSelect"
+    />
   </div>
 </template>
 
 <script>
-import { Sticky, TopNavBar, Button, List, PullRefresh } from '@chipspc/vant-dgg'
+import {
+  Sticky,
+  TopNavBar,
+  Button,
+  List,
+  PullRefresh,
+  ShareSheet,
+} from '@chipspc/vant-dgg'
 import Banner from '~/components/detail/Banner'
 import BasicInfo from '~/components/detail/service/BasicInfo'
 import ServiceItems from '~/components/detail/service/ServiceItems'
@@ -66,6 +90,7 @@ import RecommendScProduct from '~/components/detail/service/RecommendScProduct'
 import commodityConsultation from '~/components/common/commodityConsultation/commodityConsultation'
 import getUserSign from '~/utils/fingerprint'
 import { productDetailsApi, recommendApi } from '~/api'
+import { copyToClipboard } from '~/utils/common'
 export default {
   name: 'ServiceDetails',
   components: {
@@ -74,6 +99,7 @@ export default {
     [Button.name]: Button,
     [List.name]: List,
     [PullRefresh.name]: PullRefresh,
+    [ShareSheet.name]: ShareSheet,
     Banner,
     BasicInfo,
     ServiceItems,
@@ -83,6 +109,7 @@ export default {
     commodityConsultation,
   },
   layout: 'keepAlive',
+  watchQuery: ['productId'],
   async asyncData({ $axios, query, app }) {
     try {
       let scProductDetailData = {}
@@ -102,6 +129,7 @@ export default {
           needTag: 'true',
         }
       )
+      console.log(productDetailRes.data)
       if (productDetailRes.code === 200) {
         scProductDetailData = productDetailRes.data
         // 获取钻展规划师
@@ -117,7 +145,7 @@ export default {
               ? productDetailRes.data.baseData.parentClassCode.split(',')[1]
               : null, // 二级产品分类
             login_name: null, // 规划师ID(选填)
-            productType: 'FL20201116000002', // 产品类型
+            productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
             sceneId: 'app-cpxqye-02', // 场景ID
             user_id: app.$cookies.get('userId'), // 用户ID(选填)
             platform: 'app', // 平台（app,m,pc）
@@ -142,6 +170,7 @@ export default {
       // 服务详情数据
       scProductDetailData: {
         baseData: {}, // 基本信息
+        scProductDetailData: [], // 产品图片
         attrs: [], // 产品属性
         tags: {}, // 产品标签
         operating: {}, // 运营信息
@@ -152,12 +181,6 @@ export default {
       },
       scPlannerDetailData: {}, // 钻展规划师
       planners: [],
-      info: {
-        images: [
-          'https://img.yzcdn.cn/vant/cat.jpeg',
-          'https://img.yzcdn.cn/vant/cat.jpeg',
-        ],
-      },
       card: {
         imgSrc: 'http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg',
         cardName: '王深林',
@@ -179,6 +202,8 @@ export default {
       productPage: 1, // 产品分页
       productCount: 0, // 推荐产品总条数
       recommendProduct: [], // 推荐产品‘
+      showShare: false, // 是否弹起分享组件
+      shareOptions: [{ name: '复制链接', icon: 'link' }],
     }
   },
   computed: {
@@ -239,7 +264,7 @@ export default {
               ? this.scProductDetailData.baseData.parentClassCode.split(',')[1]
               : null, // 二级产品分类
             login_name: null, // 规划师ID(选填)
-            productType: 'FL20201116000002', // 产品类型
+            productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId'), // 用户ID(选填)
             platform: 'app', // 平台（app,m,pc）
@@ -275,10 +300,10 @@ export default {
             userId: this.$cookies.get('userId'), // 用户id
             deviceId: this.deviceId, // 设备ID
             formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
-            areaCode: '370400', // 区域编码
+            areaCode: this.city.code, // 区域编码
             sceneId: 'app-fwcpxq-01', // 场景ID
             productId: this.$route.query.productId, // 产品ID（产品详情页必传）
-            productType: 'FL20201116000002', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
+            productType: 'PRO_CLASS_TYPE_SERVICE', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
             title: this.scProductDetailData.baseData.name, // 产品名称（产品详情页传、咨询页等）
             platform: 'APP', // 平台（app,m,pc）
             page: this.productPage,
@@ -309,6 +334,20 @@ export default {
           this.finished = true
           console.log(err)
         })
+    },
+    //  分享
+    onClickRight() {
+      this.showShare = true
+    },
+    // 点击分享
+    onSelect() {
+      const result = copyToClipboard(location.href)
+      if (result) {
+        this.$xToast.success('链接复制成功')
+        return
+      }
+      this.$xToast.error('链接复制失败,请重试')
+      // this.showShare = false
     },
   },
 }
@@ -376,6 +415,10 @@ export default {
         }
       }
     }
+  }
+  /deep/ .sp-top-nav-bar__left,
+  /deep/ .sp-top-nav-bar__right {
+    font-weight: initial;
   }
 }
 </style>

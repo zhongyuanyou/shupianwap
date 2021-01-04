@@ -34,8 +34,8 @@ export default {
               this.listShow = true
             }
           } else {
-            // todo 提示没有数据
             this.listShow = false
+            this.searchToast('共找到0条资源')
           }
           this.skeletonLoading = false
           this.$nextTick(() => {
@@ -49,7 +49,7 @@ export default {
           })
         })
         .catch((err) => {
-          // todo 提示没有数据
+          this.searchToast('共找到0条资源')
           this.listShow = false
           this.skeletonLoading = false
           console.error(err)
@@ -76,22 +76,27 @@ export default {
             this.$set(this.jyFilterData, this.currentTabJyCode, data.filters)
             this.formData[this.currentTabJyCode].needTypes = 0
           }
+
           if (JSON.stringify(data.goods) !== '{}') {
             // 数据里面商品有值
             this.jyGoodsListData[this.currentTabJyCode] = [
               ...this.jyGoodsListData[this.currentTabJyCode],
               ...data.goods.records,
             ]
-          } else {
+            if (this.formData[this.currentTabJyCode].start === 1) {
+              // 只有首次查询的时候才显示
+              // 提示查找到多少条资源
+              this.searchToast(`共找到${data.goods.totalCount}条资源`)
+            }
+          } else if (this.formData[this.currentTabJyCode].start === 1) {
             this.jyGoodsListData[this.currentTabJyCode] = []
-          }
-          if (this.formData[this.currentTabJyCode].start === 1) {
-            // 提示查找到多少条资源
-            this.searchToast(`共找到${data.goods.totalCount}条资源`)
+            this.searchToast(`共找到0条资源`)
+          } else {
+            this.$xToast.error('网络错误，请稍后重试')
           }
           if (
-            data.goods.records.length < 10 ||
-            JSON.stringify(data.goods) === '{}'
+            JSON.stringify(data.goods) === '{}' ||
+            data.goods.records.length < 10
           ) {
             this.finished = true
           } else {
@@ -121,8 +126,11 @@ export default {
         .catch((err) => {
           // todo 提示没有数据
           this.listShow = false
+          this.$xToast.error('网络错误，请刷新后重试')
           this.isReq[this.currentTabJyCode] = false
-          this.jyGoodsListData[this.currentTabJyCode] = []
+          if (this.formData[this.currentTabJyCode].start === 1) {
+            this.jyGoodsListData[this.currentTabJyCode] = []
+          }
           console.error(err)
         })
     },
@@ -146,7 +154,7 @@ export default {
     },
     searchToast(message) {
       // 轻提示
-      this.$refs.spToast.show({
+      this.$xToast.show({
         message,
         duration: 1500,
         icon: 'toast_ic_comp',

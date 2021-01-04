@@ -3,7 +3,12 @@
     <Header title="帮助中心">
       <template #left>
         <div @click="back">
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
         </div>
       </template>
     </Header>
@@ -36,19 +41,21 @@
         <img :src="$ossImgSet(340, 340, '9vnk3u2qlk80000.png')" alt="" />
       </div>
       <span class="firstSpan">抱歉，未找到相关问题</span>
-      <span class="lastSpan">联系客服</span>
+      <!-- <span class="lastSpan">联系客服</span> -->
     </div>
     <Loading-center v-show="loading" />
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { Search, Cell, CellGroup, TopNavBar, Sticky } from '@chipspc/vant-dgg'
 import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
 import { helpApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import Header from '@/components/common/head/header'
 export default {
+  layout: 'keepAlive',
   name: 'HelpCenter',
   components: {
     LoadingCenter,
@@ -78,7 +85,13 @@ export default {
       noData: false,
     }
   },
+  mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'HelpCenter' })
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     onServiceTouch(id) {
       this.$router.push({
         path: '/my/help/questions',
@@ -116,6 +129,9 @@ export default {
 </script>
 <style lang="less" scoped>
 .wrapper {
+  .back_icon {
+    margin-left: 40px;
+  }
   .custom-title {
     .textOverflow(1);
   }

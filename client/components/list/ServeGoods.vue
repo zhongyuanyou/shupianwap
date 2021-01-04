@@ -68,6 +68,7 @@
         v-for="(item, index) in serveGoodsListData"
         :key="index"
         :item-data="item"
+        :search-key="formData.keywords"
       />
     </sp-list>
     <div>
@@ -84,9 +85,7 @@
     <!--S订阅-->
     <Subscribe v-show="!listShow && !skeletonLoading" />
     <!--E订阅-->
-    <!--S中间轻提示-->
-    <sp-toast ref="spToast" />
-    <!--E中间轻提示-->
+    <openApp />
   </div>
 </template>
 
@@ -105,7 +104,6 @@ import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
 import clone from '~/utils/clone'
 import searchList from '@/mixins/searchList'
-import SpToast from '@/components/common/spToast/SpToast'
 
 export default {
   name: 'ServeGoods',
@@ -120,7 +118,6 @@ export default {
     BottomConfirm,
     InstallApp,
     Subscribe,
-    SpToast,
   },
   mixins: [searchList],
   props: {
@@ -359,6 +356,9 @@ export default {
       font-weight: bold;
       color: #4974f5;
     }
+  }
+  /deep/.sp-dropdown-item {
+    z-index: 30 !important;
   }
   /*height: calc(100% - 200px);*/
   /deep/.sp-dropdown-item__content {

@@ -2,19 +2,14 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:55
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-16 19:21:40
+ * @LastEditTime: 2020-12-31 15:47:07
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/ViceGoodsItem.vue
 -->
 <template>
   <div class="vice-goods-item">
     <div class="vice-goods-item__left">
-      <span class="vice-goods-item__lable">急售</span>
-      <img
-        class="vice-goods-item__img"
-        alt=""
-        :src="viceData.img || 'https://img.yzcdn.cn/vant/cat.jpeg'"
-      />
+      <img class="vice-goods-item__img" alt="" :src="viceData.img" />
     </div>
     <div class="vice-goods-item__right">
       <div class="vice-goods-item__name-price">
@@ -105,22 +100,6 @@ export default {
   &__img {
     width: 100%;
     height: 100%;
-  }
-  &__lable {
-    position: absolute;
-    left: 0;
-    top: 0;
-    display: flex;
-    align-items: center;
-    z-index: 2;
-    font-size: 22px;
-    font-family: PingFang SC;
-    font-weight: bold;
-    color: #ffffff;
-    height: 44px;
-    padding: 0 12px;
-    background: #ec5330;
-    border-radius: 8px 0px 8px 0px;
   }
 
   &__name-price {

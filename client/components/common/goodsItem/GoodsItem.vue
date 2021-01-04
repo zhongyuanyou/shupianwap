@@ -1,18 +1,17 @@
 <template>
   <div class="goods-item" @click="jumpUrl">
     <div class="goods-item-left">
-      <img src="" alt="" class="goods-img" />
+      <img :src="itemData.goodsImg" alt="" class="goods-img" />
       <!--<span class="tag">急售</span>-->
     </div>
     <div class="goods-right">
-      <h3>{{ itemData.name }}</h3>
+      <h3 v-html="heightLightHtml(itemData.name)"></h3>
       <p
         :style="{
           visibility: description ? 'visible' : 'hidden',
         }"
-      >
-        {{ description }}
-      </p>
+        v-html="heightLightHtml(description)"
+      ></p>
       <div
         class="tags"
         :style="{
@@ -35,6 +34,13 @@
 export default {
   name: 'GoodsItem',
   props: {
+    searchKey: {
+      // 用户搜索的关键词
+      type: String,
+      default() {
+        return ''
+      },
+    },
     goodstype: {
       type: Object,
       default() {
@@ -57,14 +63,24 @@ export default {
   computed: {
     description() {
       // 描述，包括
+      // console.log(this.itemData)
       if (this.itemData.productDescription) {
         return this.itemData.productDescription
       }
       if (this.itemData.fieldList && this.itemData.fieldList.length) {
         const desc = []
-        this.itemData.fieldList.forEach((item) =>
-          desc.push(item.fieldValueCn || item.fieldValueList[0])
-        )
+        this.itemData.fieldList.forEach((item) => {
+          let val = ''
+          // 处理无字段数据的情况
+          if (item.fieldValueCn) {
+            val = item.fieldValueCn
+          } else if (item.fieldValueList && item.fieldValueList[0]) {
+            val = item.fieldValueList[0]
+          } else {
+            val = ''
+          }
+          if (val) desc.push(val)
+        })
         return desc.join(' | ')
       }
       return ''
@@ -92,6 +108,18 @@ export default {
         )
       }
     },
+    heightLightHtml(str) {
+      // 高亮显示
+      if (this.searchKey !== '' && str.indexOf(this.searchKey) !== -1) {
+        const _str = str.replace(
+          new RegExp(this.searchKey, 'g'),
+          `<span style="color: #4974f5;">${this.searchKey}</span>`
+        )
+        return _str
+      } else {
+        return str
+      }
+    },
   },
 }
 </script>
@@ -108,7 +136,7 @@ export default {
     height: 160px;
     min-width: 160px;
     min-height: 160px;
-    background: #f8f8f8;
+    /*background: #f8f8f8;*/
     border-radius: 4px;
     margin: 40px 32px 0 40px;
     .goods-img {

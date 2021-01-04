@@ -1,7 +1,6 @@
 <template>
   <div class="company">
     <DetailTemplate
-      :info="info"
       :tc-product-detail-data="tcProductDetailData"
       :tc-planner-booth="tcPlannerBooth"
       :recommend-planner="planners"
@@ -34,9 +33,9 @@ export default {
           },
         }
       )
-      console.log('错误打印', code, message)
       if (code === 200) {
         tcProductDetailData = data
+        console.log(data)
         // 获取钻展规划师
         // 获取用户唯一标识
         const deviceId = await getUserSign()
@@ -74,42 +73,17 @@ export default {
         classCodeLevelList: [],
         platformPrice: '0',
         classCodeLevel: '',
+        qftDetails: {
+          fieldValueCn: '',
+          fieldValue: '',
+          fieldValueList: [],
+        },
       },
       tcPlannerBooth: {},
       deviceId: null, // 设备唯一码
       planners: [], // 规划师列表
       plannerLimit: 3,
       plannerPage: 1,
-      info: {
-        images: [
-          'https://img.yzcdn.cn/vant/apple-1.jpg',
-          'https://img.yzcdn.cn/vant/apple-2.jpg',
-          'https://img.yzcdn.cn/vant/cat.jpeg',
-        ],
-        tags: ['公司干净', '无债权债务'],
-        title: '深圳区块科技技术有限公司，优质老店2字商标名字',
-        money: '25.00',
-        planners: [
-          {
-            name: '黄成',
-            avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          },
-          {
-            name: '黄成',
-            avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          },
-          {
-            name: '黄成',
-            avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          },
-        ],
-        req: [
-          'https://img.yzcdn.cn/vant/cat.jpeg',
-          'https://img.yzcdn.cn/vant/cat.jpeg',
-          'https://img.yzcdn.cn/vant/cat.jpeg',
-          'https://img.yzcdn.cn/vant/cat.jpeg',
-        ],
-      },
     }
   },
   computed: {
@@ -151,7 +125,7 @@ export default {
               ? this.tcProductDetailData.classCodeLevel.split(',')[1]
               : null, // 二级产品分类
             login_name: null, // 规划师ID(选填)
-            productType: 'FL20201116000003', // 产品类型
+            productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId'), // 用户ID(选填)
             platform: 'app', // 平台（app,m,pc）

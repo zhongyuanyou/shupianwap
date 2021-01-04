@@ -48,6 +48,7 @@
               :item-type="itemType"
               :item-data="_item"
               :goodstype="{ type: 'jy', typeCode: item.ext4 }"
+              :search-key="searchText"
             />
           </sp-list>
           <!--E商品列表-->
@@ -68,7 +69,7 @@
       title="新上商品通知"
       desc="填写手机号,相关商品上架第一时间通知"
     />
-    <sp-toast ref="spToast" />
+    <openApp />
   </div>
 </template>
 
@@ -79,7 +80,6 @@ import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
 import JyFilters from '@/components/list/JyFilters'
 import searchList from '@/mixins/searchList'
-import SpToast from '@/components/common/spToast/SpToast'
 import clone from '~/utils/clone'
 
 export default {
@@ -93,7 +93,6 @@ export default {
     [Tabs.name]: Tabs,
     [Tab.name]: Tab,
     [Skeleton.name]: Skeleton,
-    SpToast,
   },
   mixins: [searchList],
   props: {
@@ -181,10 +180,10 @@ export default {
     this.tabItems.forEach((item) => {
       this.isReq[item.code] = false
     })
-    console.log('jygood', this.typeCodeIndex)
+    // console.log('jygood', this.typeCodeIndex)
     this.activeTabIndex = this.typeCodeIndex
     this.currentTabJyCode = this.tabItems[this.typeCodeIndex].code
-    this.isReq[this.currentTabJyCode] = true
+    // this.isReq[this.currentTabJyCode] = true
     this.filterItem[this.tabItems[this.typeCodeIndex].code] = {}
     this.formData[this.tabItems[this.typeCodeIndex].code] = {
       start: 1,
@@ -245,7 +244,7 @@ export default {
     },
     resetAllSelect(currentCode) {
       // 重置筛选项
-      console.log('this.$refs.dropDownMenu', this.$refs.dropDownMenu)
+      // console.log('this.$refs.dropDownMenu', this.$refs.dropDownMenu)
       if (this.$refs.dropDownMenu) {
         this.$refs.dropDownMenu.forEach((item) => {
           if (item.filterData[0].pcode !== currentCode) {
@@ -381,6 +380,9 @@ export default {
         border-color: transparent transparent #4974f5 #4974f5 !important;
       }
     }
+  }
+  /deep/.sp-dropdown-item {
+    z-index: 30 !important;
   }
   /*height: calc(100% - 200px);*/
   /deep/.sp-dropdown-item__content {

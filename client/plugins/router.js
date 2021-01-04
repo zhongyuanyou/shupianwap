@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-02-21 04:16:27
- * @LastEditTime: 2020-12-23 14:24:39
+ * @LastEditTime: 2020-12-31 11:11:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /chips-wap/client/plugins/router.js
@@ -9,10 +9,12 @@
 import Vue from 'vue'
 import { appHandler } from './app-sdk'
 import { imInit } from '@/utils/im'
+import routerBlackList from '@/config/routerBlackList'
 const infoList = [
   'my-shippingAddress', // 收货地址列表页面
   'my-interviewRecord', // 面谈记录列表页面
   'my-complain', // 新增吐槽页面
+  'my-planner', // 我的规划师页面
   'shoppingCar', // 购物车页面
 ]
 // const getInfo = function () {
@@ -28,26 +30,48 @@ const infoList = [
 export default ({ app, store }) => {
   app.router.beforeEach((to, from, next) => {
     if (process.client) {
-      if (store.state.app.isInApp && infoList.includes(to.name)) {
-        // 若跳转的页面在infoList中，则需要执行app请求用户信息操作
-        appHandler.dggGetUserInfo((res) => {
-          if (res.code === 200) {
-            try {
-              const userInfo = res.data
-              console.log('userInfo', userInfo)
-              if (userInfo.userId && userInfo.token) {
-                store.commit('user/SET_USER', userInfo)
-              }
-              next()
-            } catch (err) {
-              next()
-            }
+      const loginRoutePath = '/login' // 登录路由
+      const defaultRoutePath = '/' // 首页路由
+      // 路由守卫
+      const token = app.$cookies.get('token') // 获取缓存用户token
+      if (!store.state.app.isInApp) {
+        if (token) {
+          if (to.path === loginRoutePath) {
+            // 如果跳转登录页面，将被重定向到首页
+            next({
+              path: defaultRoutePath,
+            })
           } else {
-            alert('不是200')
+            next()
           }
-        })
+        } else if (routerBlackList.includes(to.path)) {
+          next({
+            path: loginRoutePath,
+          })
+        } else {
+          next()
+        }
       } else {
-        next()
+        // 验证跳转页面是否嵌入app中后是否需获取app中到用户详情
+        // eslint-disable-next-line no-lonely-if
+        if (store.state.app.isInApp && infoList.includes(to.name)) {
+          // 若跳转的页面在infoList中，则需要执行app请求用户信息操作
+          appHandler.dggGetUserInfo((res) => {
+            if (res.code === 200) {
+              try {
+                const userInfo = res.data || {}
+                if (userInfo && userInfo.userId && userInfo.token) {
+                  store.commit('user/SET_USER', userInfo)
+                }
+                next()
+              } catch (err) {
+                next()
+              }
+            }
+          })
+        } else {
+          next()
+        }
       }
       Vue.nextTick(() => {
         dggSensors.quick('autoTrackSinglePage')
@@ -64,8 +88,8 @@ export default ({ app, store }) => {
         }
       })
     }
-    if (!store.state.app.isInApp) {
-      next()
-    }
+    // if (!store.state.app.isInApp) {
+    //   next()
+    // }
   })
 }

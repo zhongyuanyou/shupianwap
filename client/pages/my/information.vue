@@ -16,16 +16,16 @@
     </sp-top-nav-bar>
     <!--E 头部-->
     <!--S 内容-->
-    <div v-if="info" class="information_con">
+    <div class="information_con">
       <div class="information_con_tp">
         <div class="avatar_con" @click="handleClick(1)">
           <sp-uploader
-            v-if="isUpdateAvatar"
             v-model="uploader"
             class="uploader"
             upload-text="点击上传"
             :max-count="1"
             :max-size="20 * 1024 * 1024"
+            :after-read="afterRead"
             @oversize="onOversize"
           />
           <div class="cell">
@@ -37,7 +37,9 @@
                 height="0.88rem"
                 fit="cover"
                 class="avatar"
-                src="https://img.yzcdn.cn/vant/cat.jpeg"
+                :src="
+                  info.url ? info.url : 'https://img.yzcdn.cn/vant/cat.jpeg'
+                "
               />
               <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
             </div>
@@ -82,7 +84,11 @@
           <div class="right_icon">
             <p class="txt">
               {{
-                info.province ? info.province + ' ' + info.city + ' ' : '未设置'
+                info.province
+                  ? `${info.province ? info.province : ''} ${
+                      info.city ? info.city : ''
+                    }`
+                  : '未设置'
               }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
@@ -118,11 +124,12 @@
 <script>
 import { TopNavBar, Cell, Uploader, Image } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
+import DggOSS from '@dgg/oss'
 import ImgSelected from '~/components/my/information/ImgSelected'
 import SexSelected from '~/components/my/information/SexSelected'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
 import BirthdaySelected from '~/components/my/information/BirthdaySelected'
-import { userinfoApi } from '@/api'
+import { ossApi, userinfoApi } from '@/api'
 import SpToast from '@/components/common/spToast/SpToast'
 export default {
   name: 'Information',
@@ -145,9 +152,18 @@ export default {
       birthShow: false, // 显示生日选择
       area: [], // 地区
       uploader: [],
-      info: null, // 用户信息
+      info: {
+        nickName: '',
+        birthday: '',
+        sex: 0,
+        email: '',
+        province: '',
+        city: '',
+        url: '',
+      }, // 用户信息
       isUpdateName: false, // 能否修改昵称
       isUpdateAvatar: false, // 能否修改头像
+      avatar: '', // 头像
     }
   },
   computed: {
@@ -171,7 +187,14 @@ export default {
         type: 3,
         value: this.info.sex,
       }
-      await this.$axios.post(userinfoApi.update, params)
+      const res = await this.$axios.post(userinfoApi.update, params)
+      if (res.code === 200) {
+        this.$refs.spToast.show({
+          message: '设置成功',
+          duration: 1500,
+          forbidClick: true,
+        })
+      }
     },
     handleClick(val) {
       if (val === 2) {
@@ -194,14 +217,14 @@ export default {
       } else if (val === 3) {
         this.birthShow = true
       } else if (val === 1) {
-        if (!this.isUpdateAvatar) {
-          // 如果不能修改
-          this.$refs.spToast.show({
-            message: '抱歉，头像暂不支持修改',
-            duration: 1500,
-            forbidClick: true,
-          })
-        }
+        // if (!this.isUpdateAvatar) {
+        //   // 如果不能修改
+        //   this.$refs.spToast.show({
+        //     message: '抱歉，头像暂不支持修改',
+        //     duration: 1500,
+        //     forbidClick: true,
+        //   })
+        // }
       }
     },
     async select(data) {
@@ -214,7 +237,14 @@ export default {
         type: 5,
         value: `${this.info.province},${this.info.city},船山区`,
       }
-      await this.$axios.post(userinfoApi.update, params)
+      const res = await this.$axios.post(userinfoApi.update, params)
+      if (res.code === 200) {
+        this.$refs.spToast.show({
+          message: '设置成功',
+          duration: 1500,
+          forbidClick: true,
+        })
+      }
     },
     GMTToStr(time) {
       const date = new Date(time)
@@ -238,7 +268,14 @@ export default {
         type: 2,
         value: this.info.birthday,
       }
-      await this.$axios.post(userinfoApi.update, params)
+      const res = await this.$axios.post(userinfoApi.update, params)
+      if (res.code === 200) {
+        this.$refs.spToast.show({
+          message: '设置成功',
+          duration: 1500,
+          forbidClick: true,
+        })
+      }
     },
     onOversize() {},
     async getUserInfo() {
@@ -249,10 +286,14 @@ export default {
         }
         const data = await this.$axios.get(userinfoApi.info, { params })
         this.info = data.data
-        if (data.data.province && data.data.city) {
-          this.$set(this.area, 0, { name: data.data.province, code: '' })
-          this.$set(this.area, 1, { name: data.data.city, code: '' })
-        }
+        this.$set(this.area, 0, {
+          name: data.data.province ? data.data.province : '',
+          code: '',
+        })
+        this.$set(this.area, 1, {
+          name: data.data.city ? data.data.city : '',
+          code: '',
+        })
       } catch (err) {}
     },
     async getConfig() {
@@ -283,6 +324,51 @@ export default {
           this.isUpdateAvatar = res.data === '1'
         }
       } catch (err) {}
+    },
+    afterRead(file) {
+      // const config = {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // }
+      // const formData = new FormData()
+      // formData.append('uploadatalog', 'sp-pt/wap/images')
+      // formData.append(`${this.info.fileId}`, file.file)
+      // this.$axios.post(ossApi.add, formData, config).then((res) => {
+      //   console.log('ressss', res)
+      //   if (res.code === 200) {
+      //     this.avatar = res.data.url
+      //   }
+      // })
+      // const dggOSS = new DggOSS({
+      //   env: 'T',
+      //   bucket: 'dggtechtest',
+      //   sysCode: 'zky-api',
+      //   secret: 'e97bd82e0f7ff420d0728a41773f3ec7',
+      // })
+      // dggOSS.initOSS({
+      //   callback: (res) => {
+      //     if (res.code !== 200) {
+      //       console.log('初始化失败', res.msg)
+      //     } else {
+      //       dggOSS.uploadFile({
+      //         file: file.file,
+      //         fileId: this.info.fileId,
+      //         uploadatalog: 'sp-pt/wap/images',
+      //         callback: (res) => {
+      //           if (res.code !== 200) {
+      //             console.log('简单上传文件失败', res.msg)
+      //           } else {
+      //             this.info.url = res.data.oss_filePath
+      //             console.log('简单上传文件成功', res)
+      //           }
+      //         },
+      //       })
+      //       console.log('初始化成功', res)
+      //       // 初始化成功之后才能调用oss对应的功能
+      //     }
+      //   },
+      // })
     },
   },
 }

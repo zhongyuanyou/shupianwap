@@ -2,17 +2,19 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 15:56:57
+ * @LastEditTime: 2020-12-31 17:36:37
  * @Description: file content
  * @FilePath: /chips-wap/client/components/shoppingCar/MainGoodsItem.vue
 -->
 <template>
   <div class="main-goods-item">
-    <div class="goods-lable-img">
+    <div class="goods-lable-img" @click="handleGoDetail">
       <img alt="img" :src="mainData.img" />
     </div>
     <div class="goods-info">
-      <strong class="goods-name"> {{ mainData.name }}</strong>
+      <strong class="goods-name" @click="handleGoDetail">
+        {{ mainData.name }}</strong
+      >
       <div class="goods-sku">
         <sp-tag
           color="#F8F8F8"
@@ -45,6 +47,8 @@
           :max="!mainData.numFlag && mainData.maxNum ? mainData.maxNum : 99"
           :async-change="true"
           @change="handleCountChange"
+          @focus="handleCountFoucs"
+          @blur="handleCountBlur"
         />
       </div>
       <div v-if="mainData.addServiceList.length" class="goods-service">
@@ -72,6 +76,8 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from 'vuex'
+
 import {
   SwipeCell,
   Card,
@@ -103,15 +109,30 @@ export default {
     return {
       checked: false,
       goodsCount: 1,
+      countStatus: 'blur', // foucs
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   watch: {
-    'mainData.goodsNumber': {
+    // 'mainData.goodsNumber': {
+    //   handler(newVal, oldVal) {
+    //     console.log('goodsNumber newVal:', newVal)
+    //     if (newVal === oldVal) return
+    //     this.goodsCount = newVal || 0
+    //   },
+    //   immediate: true,
+    // },
+    mainData: {
       handler(newVal, oldVal) {
-        console.log('goodsNumber newVal:', newVal)
-        if (newVal === oldVal) return
-        this.goodsCount = newVal || 0
+        console.log('mainData newVal:', newVal)
+        const { goodsNumber } = newVal || {}
+        if (goodsNumber !== this.goodsCount) {
+          this.goodsCount = goodsNumber || 0
+        }
       },
       immediate: true,
     },
@@ -127,8 +148,13 @@ export default {
     handleCountChange(value) {
       console.log('handleCountChange value:', value)
       if (this.goodsCount === value) return
-      // TODO异步校验
-      // this.goodsCount = value
+
+      // 聚焦不校验，在失去焦点才校验
+      if (this.countStatus === 'foucs') {
+        this.goodsCount = value
+        return
+      }
+      // 异步校验
       console.log('handleCountChange value:', value)
 
       // 人为修改,通知父组件
@@ -136,6 +162,82 @@ export default {
         type: 'count',
         data: { value },
       })
+    },
+    // 输入框失去焦点
+    handleCountFoucs() {
+      console.log('handleCountFoucs')
+      this.countStatus = 'foucs'
+    },
+
+    // 输入框获取焦点
+    handleCountBlur() {
+      console.log('handleCountBlur')
+      const value = this.goodsCount
+      if (value !== this.mainData.goodsNumber) {
+        this.$emit('operation', {
+          type: 'count',
+          data: { value },
+        })
+      }
+      this.countStatus = 'blur'
+    },
+
+    // 跳转到详情页面
+    handleGoDetail() {
+      this.uPGoDetail()
+    },
+
+    // 统一跳转详情app详情路由
+    uPGoDetail() {
+      // TODO 测试 后面需要
+      const { productId } = this.mainData || {}
+      if (!productId) {
+        this.$xToast({
+          message: '缺少productId',
+          duration: 1000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        return
+      }
+
+      if (this.isInApp) {
+        const iOSRouter = {
+          path:
+            'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
+          parameter: {
+            routerPath: 'cpsc/goods/details/service',
+            parameter: { productId },
+          },
+        }
+        const androidRouter = {
+          path: '/flutter/main',
+          parameter: {
+            routerPath: 'cpsc/goods/details/service',
+            parameter: { productId },
+          },
+        }
+        const iOSRouterStr = JSON.stringify(iOSRouter)
+        const androidRouterStr = JSON.stringify(androidRouter)
+        this.$appFn.dggJumpRoute(
+          {
+            iOSRouter: iOSRouterStr,
+            androidRouter: androidRouterStr,
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast({
+                message: '跳转失败',
+                duration: 1000,
+                icon: 'toast_ic_error',
+                forbidClick: true,
+              })
+            }
+          }
+        )
+      }
+      // 暂不需要在浏览器中
     },
   },
 }

@@ -1,7 +1,14 @@
 <template>
   <div class="select-address">
-    <div class="top">
+    <div
+      class="top"
+      :class="{ 'safe-area-inset-top': !isInApp }"
+      :style="{
+        'padding-top': headerPaddingTop,
+      }"
+    >
       <sp-top-nav-bar
+        class="search-nav"
         @on-click-left="onClickLeft"
         @on-click-right="onClickRight"
       >
@@ -51,17 +58,40 @@
               @confirmFilters="confirmFilters"
             />
           </sp-dropdown-item>
+          <!-- S 排序选择 -->
           <sp-dropdown-item
-            v-model="search.sortValue"
+            ref="sortDropdown"
             :title-class="
               formatSortOption[0] &&
               formatSortOption[0].value !== search.sortValue
                 ? 'title-style'
                 : ''
             "
-            :options="formatSortOption"
-            @change="handleSortChange"
-          />
+            :disabled="!formatSortOption || !formatSortOption.length"
+            :title="dropdownSortTitle"
+          >
+            <div class="sort-content">
+              <sp-cell
+                v-for="(item, index) in formatSortOption"
+                :key="index"
+                :title="item.text"
+                :class="{
+                  active: item.value === search.sortValue,
+                }"
+                @click="handleSortChange(item, index)"
+              >
+                <template #right-icon>
+                  <my-icon
+                    v-show="item.value === search.sortValue"
+                    name="tab_ic_check"
+                    size="0.22rem"
+                    color="#4974f5"
+                  />
+                </template>
+              </sp-cell>
+            </div>
+          </sp-dropdown-item>
+          <!-- E 排序选择 -->
         </sp-dropdown-menu>
       </sp-sticky>
     </div>
@@ -70,6 +100,7 @@
       <sp-pull-refresh
         v-model="refreshing"
         success-text="刷新成功"
+        class="list-refresh"
         @refresh="onRefresh"
       >
         <sp-list
@@ -80,9 +111,21 @@
           :finished="finished"
           @load="onLoad"
         >
-          <AddressList :list="addressList" @operation="handleOperation" />
+          <template #default>
+            <AddressList :list="addressList" @operation="handleOperation" />
+          </template>
+          <!-- S 自定义加载控件 -->
+          <template #loading>
+            <div>
+              <LoadingDown v-show="!refreshing && loading" :loading="true" />
+            </div>
+          </template>
+          <!-- E 自定义加载控件 -->
         </sp-list>
       </sp-pull-refresh>
+    </div>
+    <div class="footer">
+      <sp-button color="#4974F5" block @click="onSubmit"> 确认选择 </sp-button>
     </div>
   </div>
 </template>
@@ -92,17 +135,18 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import {
   TopNavBar,
   NavSearch,
-  Toast,
-  Icon,
   DropdownMenu,
   DropdownItem,
   Sticky,
   List,
   PullRefresh,
+  Button,
+  Cell,
 } from '@chipspc/vant-dgg'
 import PriceFilterComponents from '@/components/common/filters/PriceFilterComponents'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import AddressList from '@/components/detail/AddressList'
+import LoadingDown from '@/components/common/loading/LoadingDown'
 
 import { shoppingCar, dict } from '@/api'
 
@@ -118,16 +162,17 @@ export default {
   components: {
     [TopNavBar.name]: TopNavBar,
     [NavSearch.name]: NavSearch,
-    [Toast.name]: Toast,
-    [Icon.name]: Icon,
     [DropdownItem.name]: DropdownItem,
     [DropdownMenu.name]: DropdownMenu,
     [Sticky.name]: Sticky,
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
+    [Button.name]: Button,
+    [Cell.name]: Cell,
     PriceFilterComponents,
     BottomConfirm,
     AddressList,
+    LoadingDown,
   },
   data() {
     return {
@@ -139,6 +184,7 @@ export default {
         maxPrice: '',
       },
       dropdownPriceTitle: '价格',
+      dropdownSortTitle: '',
       loading: false,
       error: false,
       finished: false,
@@ -147,6 +193,7 @@ export default {
       priceOption: [],
       sortOption: [],
       addressList: [],
+      selectedItem: null, // 选择的项
       redirect: this.$route.query.redirect, // 返回跳转的位置
       redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去
     }
@@ -154,6 +201,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
 
     formatSortOption() {
@@ -201,12 +249,21 @@ export default {
       }
       return { searchKey, goodsPriceStart, goodsPriceEnd, orderBy, isAsc }
     },
+    headerPaddingTop() {
+      if (this.appInfo && this.appInfo.statusbarheight)
+        return this.appInfo.statusbarheight + 'px'
+      else if (this.isInApp) {
+        return '20px'
+      }
+      return '0'
+    },
   },
   watch: {
     formatSortOption: {
       handler(newVal, oldVal) {
         if (!this.search.sortValue) {
           this.search.sortValue = newVal[0] && newVal[0].value
+          this.dropdownSortTitle = newVal[0] && newVal[0].text
         }
       },
       immediate: true,
@@ -218,10 +275,13 @@ export default {
     }
   },
   methods: {
-    handleSortChange(value) {
+    handleSortChange(item) {
+      const { value, text } = item || {}
       console.log(value)
       // 触发 formatSearchParams 计算
+      this.dropdownSortTitle = text
       this.search.sortValue = value
+      this.$refs.sortDropdown.toggle()
       this.handleSearch()
     },
     handleSearch() {
@@ -249,7 +309,12 @@ export default {
         .catch((error) => {
           this.error = true
           this.loading = false
-          Toast('加载失败')
+          this.$xToast.show({
+            message: '加载失败',
+            duration: 1000,
+            icon: 'toast_ic_error',
+            forbidClick: true,
+          })
           console.log(error)
         })
     },
@@ -318,9 +383,23 @@ export default {
     handleOperation(value) {
       const { type, data } = value || {}
       switch (type) {
-        case 'confirm':
-          this.uPGoBack(data)
+        case 'selected':
+          this.selectedItem = data
+          break
       }
+    },
+
+    onSubmit() {
+      if (!this.selectedItem) {
+        this.$xToast.show({
+          message: '请选择',
+          duration: 1000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        return
+      }
+      this.uPGoBack(this.selectedItem)
     },
 
     // 平台不同，跳转方式不同
@@ -341,7 +420,12 @@ export default {
             }
             this.$appFn.dggCloseWebView((res) => {
               if (!res || res.code !== 200) {
-                Toast('返回失败！')
+                this.$xToast.show({
+                  message: '返回失败',
+                  duration: 1000,
+                  icon: 'toast_ic_error',
+                  forbidClick: true,
+                })
               }
             })
           }
@@ -350,17 +434,14 @@ export default {
       }
 
       // 在浏览器里 返回
-      if (data) {
-        // 判断是路劲还是name
-        if (this.redirect) {
-          const isPath = /\//.test(this.redirect + '')
-          const pushParams = {
-            path: isPath ? this.redirect : null,
-            name: isPath ? null : this.redirect,
-            params: { data },
-          }
-          this.$router.replace(pushParams)
+      if (this.redirect) {
+        const isPath = /\//.test(this.redirect + '')
+        const pushParams = {
+          path: isPath ? this.redirect : null,
+          name: isPath ? null : this.redirect,
+          params: { data },
         }
+        this.$router.replace(pushParams)
       } else {
         this.$router.back(-1)
       }
@@ -393,6 +474,7 @@ export default {
         if (this.refreshing) {
           this.addressList = []
           this.refreshing = false
+          this.selectedItem = null
         }
         if (data) {
           if (!Array.isArray(data.records)) data.records = []
@@ -417,11 +499,9 @@ export default {
             codes: 'CRISPS-C-CONDITION-400-JG,CRISPS-C-CONDITION-400-PX',
           }
         )
-        // console.log(data)
-        const dataObj = JSON.parse(data)
-        console.log(dataObj)
-        this.sortOption = dataObj['CRISPS-C-CONDITION-400-PX']
-        this.priceOption = dataObj['CRISPS-C-CONDITION-400-JG']
+        console.log(data)
+        this.sortOption = data['CRISPS-C-CONDITION-400-PX']
+        this.priceOption = data['CRISPS-C-CONDITION-400-JG']
         return data || {}
       } catch (error) {
         console.error('getFilterOption:', error)
@@ -433,10 +513,14 @@ export default {
 </script>
 <style lang="less" scoped>
 .select-address {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
   .top {
-    padding: 16px 0 0 0;
-    /deep/.iconfont {
-      font-weight: 400;
+    background-color: #ffffff;
+    .search-nav {
+      margin-top: 16px;
     }
     /deep/.sp-top-nav-bar__title {
       // 搜索框样式
@@ -462,6 +546,23 @@ export default {
       border-bottom-width: 0;
     }
   }
+
+  .sort-content {
+    .sp-cell {
+      padding: 18px 40px;
+      &::after {
+        display: none;
+      }
+      &:last-child {
+        margin-bottom: 40px;
+      }
+      &.active {
+        font-weight: bold;
+        color: #4974f5;
+      }
+    }
+  }
+
   /deep/.title-style {
     // 下拉选择显示标题样式
     font-size: 26px;
@@ -473,7 +574,20 @@ export default {
     padding: 56px 40px 84px 40px;
   }
   .result-list {
-    padding-bottom: 130px;
+    flex: 1;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    .list-refresh {
+      min-height: 100%;
+    }
   }
+  .footer {
+    padding: 10px 40px 24px;
+  }
+}
+.safe-area-inset-top {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
 }
 </style>

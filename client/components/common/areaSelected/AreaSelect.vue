@@ -11,7 +11,7 @@
     <!-- E 头部 -->
     <div v-if="selectList.length" class="select">
       <div
-        v-for="(item, index) in selectList"
+        v-for="(item, index) in selectList.slice(0, 2)"
         :key="item.name"
         :style="{
           color:
@@ -30,7 +30,10 @@
     <!-- S 内容 -->
     <div
       class="popup_con"
-      :style="{ top: selectList.length ? '2.06rem' : '1.32rem' }"
+      :style="{
+        height: selectList.length ? '8.61rem' : '9.35rem',
+        marginTop: selectList.length ? '2.06rem' : '1.32rem',
+      }"
     >
       <!--被选中的省市显示区域-->
       <sp-index-bar
@@ -41,19 +44,9 @@
       >
         <div v-for="item in city" :key="item.name">
           <!-- S 索引标题 -->
-          <sp-index-anchor
-            :index="item.code"
-            :class="[
-              'title_con',
-              {
-                hot_title: item.code === '热',
-                normal_title: item.code !== '热',
-              },
-            ]"
-            >{{
-              item.code === '热' ? item.info.name : item.code
-            }}</sp-index-anchor
-          >
+          <sp-index-anchor :index="item.code" :class="['title_con']">{{
+            item.code
+          }}</sp-index-anchor>
           <!-- E 索引标题 -->
           <!-- S 热门城市 -->
           <div v-if="item.code != '热'">
@@ -119,7 +112,7 @@
               class="popup_con_hot_item"
               @click="select(cItem, index)"
             >
-              {{ cItem.name }}
+              {{ cItem.name }}12
             </div>
           </div>
           <!-- E 城市 -->
@@ -134,7 +127,7 @@
 import { Popup, IndexAnchor, IndexBar, Icon } from '@chipspc/vant-dgg'
 import pyjs from 'js-pinyin'
 import Header from '~/components/common/areaSelected/components/Header'
-import { cityCopy } from '~/utils/city'
+import { dict } from '~/api'
 export default {
   name: 'CitySelect',
   components: {
@@ -166,6 +159,7 @@ export default {
       indexList: [], // 所有有城市的索引集合
       cityArr: [],
       city: [], // 所有有数据的城市集合
+      cityList: [],
       FristPin: [
         'A',
         'B',
@@ -209,11 +203,6 @@ export default {
       focusInfo: null, // 已经数据中当前聚焦的数据
     }
   },
-  computed: {
-    cityList() {
-      return cityCopy
-    },
-  },
   watch: {
     show: {
       handler(newVal, oldVal) {
@@ -227,7 +216,7 @@ export default {
     },
     cityData(newVal) {
       this.selectList = newVal
-      if (newVal.length) {
+      if (newVal.length && this.cityList.length) {
         let tIndex = ''
         this.cityList.forEach((item, index) => {
           if (item.name.indexOf(this.selectList[0].name) > -1) {
@@ -244,7 +233,7 @@ export default {
     },
   },
   mounted() {
-    this.initCity(this.cityList)
+    this.getCityList()
   },
   methods: {
     initCity(cityList) {
@@ -275,13 +264,13 @@ export default {
         }
       })
       // 判断是否有热门城市数据，若有，则添加到对应的索引
-      if (this.hotCity) {
-        indexs.unshift('热')
-        citys.unshift({
-          code: '热',
-          info: this.hotCity,
-        })
-      }
+      // if (this.hotCity) {
+      //   indexs.unshift('热')
+      //   citys.unshift({
+      //     code: '热',
+      //     info: this.hotCity,
+      //   })
+      // }
       this.indexList = indexs
       this.city = citys
     },
@@ -299,6 +288,15 @@ export default {
     },
     select(item, index) {
       // 选择城市
+      const spCitys = [
+        '北京市',
+        '澳门特别行政区',
+        '台湾省',
+        '天津市',
+        '上海市',
+        '香港特别行政区',
+        '重庆市',
+      ]
       const arr = this.selectList
       if (this.step === 0) {
         this.clear()
@@ -307,6 +305,11 @@ export default {
           arr.length = 1
         }
         this.selectList = arr
+        if (spCitys.includes(item.name)) {
+          arr[1] = { name: '', code: '' }
+          this.$emit('select', this.selectList)
+          this.closePopup()
+        }
         this.initCity(item.children)
         // 设置步骤
         this.step++
@@ -347,6 +350,16 @@ export default {
         }
       })
     },
+    async getCityList() {
+      try {
+        const res = await dict.findCmsTier(
+          { axios: this.$axios },
+          { code: '2147483647' }
+        )
+        this.cityList = res || []
+        this.initCity(this.cityList)
+      } catch (err) {}
+    },
   },
 }
 </script>
@@ -368,7 +381,7 @@ export default {
     top: 132px;
     left: 0;
     right: 0;
-    z-index: 5;
+    z-index: 2;
     &_item {
       font-size: 28px;
       font-weight: bold;
@@ -376,14 +389,16 @@ export default {
     }
   }
   &_con {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
+    //overflow-y: scroll;
+    //overflow-x: hidden;
+    //-webkit-overflow-scrolling: touch;
     padding: 0;
+    /deep/ .popup_con_bar {
+      height: 100%;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
     &_bar {
       padding: 0;
       .title_con {
@@ -395,9 +410,12 @@ export default {
         }
       }
       /deep/ .sp-index-bar__sidebar {
+        position: absolute;
+        transform: translateY(-45%);
+        z-index: 999;
         span {
           font-size: 19px;
-          margin-bottom: 31px;
+          margin-bottom: 15px;
         }
       }
     }

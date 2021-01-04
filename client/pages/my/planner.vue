@@ -1,16 +1,27 @@
 <template>
   <div class="planner">
-    <sp-sticky>
-      <sp-top-nav-bar title="我的规划师" ellipsis @on-click-left="onLeftClick">
+    <div class="head">
+      <Header title="我的规划师">
         <template #left>
-          <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-          </div>
+          <my-icon
+            name="nav_ic_back"
+            class="back-icon"
+            size="0.4rem"
+            color="#1A1A1A"
+            @click.native="onLeftClick"
+          />
         </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
+      </Header>
+    </div>
+
     <div class="body">
-      <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <sp-pull-refresh
+        v-model="refreshing"
+        pulling-text="下拉就可刷新..."
+        loosing-text="释放即可刷新..."
+        class="planner-refresh"
+        @refresh="onRefresh"
+      >
         <sp-list
           v-model="loading"
           error-text="请求失败，点击重新加载"
@@ -40,9 +51,11 @@
                       <span class="name">{{ item.userName }}</span>
                       <span class="title">
                         <span class="title-content">
-                          <span v-if="item.title" class="title-content__item">{{
-                            item.title
-                          }}</span>
+                          <span
+                            v-if="!!item.title"
+                            class="title-content__item"
+                            >{{ item.title }}</span
+                          >
                           <!--  <i class="icon exclusive_icon"></i> -->
                           <!-- <i class="icon certificates_icon"></i> -->
                         </span>
@@ -99,6 +112,13 @@
               </template>
             </div>
           </template>
+          <!-- S 自定义加载控件 -->
+          <template #loading>
+            <div>
+              <LoadingDown v-show="!refreshing && loading" :loading="true" />
+            </div>
+          </template>
+          <!-- E 自定义加载控件 -->
         </sp-list>
       </sp-pull-refresh>
     </div>
@@ -122,6 +142,8 @@ import {
 } from '@chipspc/vant-dgg'
 
 import SpToast from '@/components/common/spToast/SpToast'
+import Header from '@/components/common/head/header'
+import LoadingDown from '@/components/common/loading/LoadingDown'
 
 import imHandle from '@/mixins/imHandle'
 
@@ -145,13 +167,15 @@ export default {
     [Tag.name]: Tag,
     [Sticky.name]: Sticky,
     [TopNavBar.name]: TopNavBar,
+    Header,
     SpToast,
+    LoadingDown,
   },
   mixins: [imHandle],
   data() {
     return {
       list: [],
-      loading: false,
+      loading: true, // 为了初始页面加载loading
       error: false,
       finished: false,
       refreshing: false,
@@ -163,6 +187,12 @@ export default {
       isInApp: (state) => state.app.isInApp,
       userInfo: (state) => state.user.userInfo,
     }),
+  },
+  created() {
+    if (process && process.client) {
+      // 因为设置loading默认为true,list控件不会主动触发onload,需要手动触发加载
+      this.onLoad()
+    }
   },
   methods: {
     onLeftClick() {
@@ -279,8 +309,7 @@ export default {
 
     async getList(currentPage) {
       const { limit } = this.pageOption
-      // TODO 测试userID
-      const { userId } = { userId: '607997598875151734' } // this.userInfo || {}
+      const { userId } = this.userInfo || {} // { userId: '607997598875151734' }
       if (!userId) {
         this.$refs.spToast.show({
           message: `请先登录`,
@@ -346,8 +375,14 @@ export default {
 
 .planner {
   height: 100%;
-  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
   .body {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
     padding: 0;
     /deep/.sp-cell {
       padding: 40px;
@@ -456,6 +491,9 @@ export default {
         }
       }
     }
+  }
+  &-refresh {
+    min-height: 100%;
   }
   .icon {
     display: inline-block;

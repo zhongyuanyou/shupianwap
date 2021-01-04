@@ -5,14 +5,9 @@
       <div class="icon" @click="back">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a" />
       </div>
-      <div class="category_header_con">
+      <div class="category_header_con" @click="goSearch">
         <my-icon name="sear_ic_sear" size="0.28rem" color="#999" />
-        <input
-          v-model="keywords"
-          type="text"
-          placeholder="请输入搜索内容"
-          @input="inputChange"
-        />
+        <div class="input_con">请输入搜索内容</div>
       </div>
     </div>
     <!--E 头部-->
@@ -34,6 +29,7 @@
             <div v-show="TabNavList == index" class="line"></div>
             {{ item.name }}
           </li>
+          <li class="category_con_lf_item"></li>
         </ul>
       </aside>
       <!--S 侧边栏区域-->
@@ -51,6 +47,7 @@
                 <sp-swipe-item
                   v-for="(item, index) of recommendData"
                   :key="index"
+                  @click="handleImage(item)"
                 >
                   <sp-image
                     fit="cover"
@@ -79,24 +76,31 @@
               </div>
             </div>
           </div>
+          <div class="bot"></div>
         </div>
       </section>
       <!--E 二级分类区域-->
     </div>
+    <Loading-center v-show="loading" />
     <!--E 内容区-->
+    <openApp />
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Better from 'better-scroll'
 import { Swipe, SwipeItem, Image } from '@chipspc/vant-dgg'
 import { category } from '@/api'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
+
 export default {
   name: 'Index',
   components: {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
     [Image.name]: Image,
+    LoadingCenter,
   },
   data() {
     return {
@@ -112,7 +116,13 @@ export default {
       TabNavList: 0, // 左右联动取值
       flag: true,
       categoryData: [], // 当前点击的分类相关数据
+      loading: false,
     }
+  },
+  computed: {
+    ...mapState({
+      currentCity: (state) => state.city.currentCity,
+    }),
   },
   // created() {
   //   this.getCategoryList()
@@ -121,7 +131,6 @@ export default {
     this.getCategoryList()
   },
   methods: {
-    inputChange() {},
     _initScroll() {
       // 初始化滚动事件
       this.left = new Better(this.$refs.l_list, {
@@ -175,25 +184,47 @@ export default {
       }, 100)
     },
     async getCategoryList() {
+      this.loading = true
       // 获取产品分类集合
-      const params = {
-        isRecommend: 0,
+      try {
+        const params = {
+          isRecommend: 0,
+        }
+        const data = await category.home({ axios: this.$axios }, params)
+        this.loading = false
+        this.categoryList = data.categoryList
+        this.recommendData = data.recommendData
+        this.$nextTick(() => {
+          this._initScroll()
+          this._getHeight()
+        })
+      } catch (err) {
+        this.loading = false
       }
-      const data = await category.home({ axios: this.$axios }, params)
-      this.categoryList = data.categoryList
-      this.recommendData = data.recommendData
-      this.$nextTick(() => {
-        this._initScroll()
-        this._getHeight()
-      })
     },
     handleItem(item) {
       // 点击每一个二级分类
-      sessionStorage.categoryData = JSON.stringify(item)
-      this.$router.push('/list/serveList')
+      if (item.level === 2) {
+        sessionStorage.categoryData = JSON.stringify(item)
+        this.$router.push('/list/serveList')
+      } else {
+        this.$router.push({
+          name: 'list-jyList',
+          query: {
+            typeCode: item.code,
+          },
+        })
+      }
     },
     back() {
       this.$router.back()
+    },
+    goSearch() {
+      this.$router.push('/search')
+    },
+    handleImage(item) {
+      // 点击广告图片
+      this.$router.push(item.materialList[0].wapLink)
     },
   },
 }
@@ -237,19 +268,18 @@ export default {
       box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
       border-radius: 8px;
       padding: 0 24px;
-      input {
+      .input_con {
         width: 100%;
         height: 92px;
-        text-indent: 15px;
         border: none;
         font-size: 30px;
         color: #1a1a1a;
         font-weight: bold;
-        &:focus {
-          outline: none;
-        }
-        //去除点击时候的背景色
-        -webkit-tap-highlight-color: rgba(255, 0, 0, 0);
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: row;
+        padding-left: 15px;
       }
     }
   }
@@ -306,6 +336,10 @@ export default {
       overflow-y: scroll;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
+      .bot {
+        width: 100%;
+        height: 120px;
+      }
       .swiper {
         height: 164px;
         width: 100%;
@@ -319,13 +353,17 @@ export default {
         color: #fff;
         text-align: center;
         background-color: #f8f8f8;
+        height: 164px;
         .swipe_img {
           width: 100%;
-          height: 100%;
+          height: 164px;
         }
       }
       .proList {
         padding-top: 48px;
+        &:first-child {
+          padding-top: 0;
+        }
         .title {
           font-size: 30px;
           font-family: PingFang SC;
