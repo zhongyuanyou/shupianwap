@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 09:33:15
+ * @LastEditTime: 2021-01-04 22:17:56
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/planner/list.vue
+ * @FilePath: /chips-wap/pages/planner/list.vue
 -->
 
 <template>
@@ -142,7 +142,9 @@
       </sp-pull-refresh>
     </div>
     <sp-toast ref="spToast" />
-    <openApp />
+    <client-only>
+      <openApp />
+    </client-only>
   </div>
 </template>
 

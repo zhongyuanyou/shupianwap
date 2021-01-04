@@ -83,7 +83,9 @@
     </div>
     <Loading-center v-show="loading" />
     <!--E 内容区-->
-    <openApp />
+    <client-only>
+      <openApp />
+    </client-only>
   </div>
 </template>
 
