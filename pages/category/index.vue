@@ -36,7 +36,7 @@
       <!--S 二级分类区域-->
       <section ref="r_list" class="category_con_rt">
         <div>
-          <div ref="good" v-if="recommendData.length" class="proList swiper">
+          <div v-if="recommendData.length" ref="good" class="proList swiper">
             <div class="swiper_con">
               <sp-swipe
                 class="my-swipe"
@@ -166,7 +166,6 @@ export default {
     _getHeight() {
       // 集合右侧内容模块高度
       const rightItems = this.$refs.r_list.getElementsByClassName('proList')
-      console.log('rightItems', rightItems)
       setTimeout(() => {
         // 根据betterScroll定义滚动
         if (rightItems && rightItems.length > 0) {
@@ -179,7 +178,6 @@ export default {
           }
         }
       }, 600)
-      console.log('arr', this.arr)
     },
     handleClick(index) {
       this.flag = false
@@ -314,6 +312,7 @@ export default {
         height: 124px;
         font-size: 26px;
         font-family: PingFang SC;
+        padding: 0 20px;
         font-weight: 400;
         color: #555555;
         text-align: center;
@@ -384,17 +383,16 @@ export default {
           flex-direction: row;
           flex-wrap: wrap;
           &_child {
-            height: 60px;
             background: #ffffff;
             border: 1px solid #cdcdcd;
             border-radius: 4px;
-            line-height: 60px;
+            line-height: 25px;
             margin: 32px 32px 0 0;
             font-size: 24px;
             font-family: PingFang SC;
             font-weight: 400;
             color: #555555;
-            padding: 0 21px;
+            padding: 21px;
           }
         }
       }
