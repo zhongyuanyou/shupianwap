@@ -75,18 +75,28 @@
         <a href="javascript:;" @click="next()">下一步(1/2)</a>
       </div>
     </div>
-    <DropDown v-show="isShow" :title="title" />
+    <sp-popup v-model="isShow" position="bottom" :style="{ height: '55%' }">
+      <sp-picker
+        title="选择区域"
+        show-toolbar
+        :default-index="3"
+        :columns="columns"
+        @confirm="onConfirm"
+        @cancel="onCancel"
+        @change="onChange"
+      />
+    </sp-popup>
   </div>
 </template>
 <script>
-import { Field } from 'vant'
+import { Popup, Field, Picker } from '@chipspc/vant-dgg'
 import Header from '../../../components/spread/registeredDemandCard/header'
-import DropDown from '../../../components/spread/common/DropDownChoose'
 export default {
   components: {
     Header,
-    DropDown,
+    [Popup.name]: Popup,
     [Field.name]: Field,
+    [Picker.name]: Picker,
   },
   data() {
     return {
@@ -101,13 +111,32 @@ export default {
       istsransact: '1月内',
       area: '',
       isShow: false,
-      title: '选择区域',
+      columns: [
+        '杭州',
+        '宁波',
+        '温州',
+        '不限',
+        '绍兴',
+        '湖州',
+        '嘉兴',
+        '金华',
+        '衢州',
+      ],
     }
   },
-  watch() {},
   methods: {
     show() {
       this.isShow = true
+    },
+    onConfirm(value, index) {
+      this.area = value
+      this.isShow = false
+    },
+    onChange(picker, value, index) {
+      this.area = value
+    },
+    onCancel() {
+      this.isShow = false
     },
     isChoose(index) {
       this.chooseActived = index
@@ -121,7 +150,9 @@ export default {
       this.transactActived = index
       this.istsransact = this.times[index]
     },
-    next() {},
+    next() {
+      this.$router.push('/spread/second')
+    },
   },
   head() {
     return {

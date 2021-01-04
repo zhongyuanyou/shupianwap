@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-31 17:36:37
+ * @LastEditTime: 2021-01-04 18:46:05
  * @Description: file content
- * @FilePath: /chips-wap/client/components/shoppingCar/MainGoodsItem.vue
+ * @FilePath: /chips-wap/components/shoppingCar/MainGoodsItem.vue
 -->
 <template>
   <div class="main-goods-item">
@@ -64,9 +64,9 @@
             }}</span>
             <span class="goods-service__content"></span>
             <span class="goods-service__count">{{
-              `${
-                addService.serviceItemName ? addService.serviceItemName : '--'
-              }元  x${addService.num}`
+              `${addService.price ? addService.price : '--'}元  x${
+                addService.num
+              }`
             }}</span>
           </div>
         </div>
