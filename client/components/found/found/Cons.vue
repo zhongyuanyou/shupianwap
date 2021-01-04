@@ -2,14 +2,22 @@
   <div class="con">
     <!--S banner-->
     <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <div class="con_banner">
+      <div
+        v-if="banner.length && banner[0].sortMaterialList"
+        class="con_banner"
+      >
         <sp-swipe :autoplay="3000" class="con_banner_list" @change="onChange">
           <sp-swipe-item
-            v-for="(image, index) in images"
+            v-for="(image, index) in banner[0].sortMaterialList"
             :key="index"
             class="con_banner_list_item"
+            @click="handleImage(image)"
           >
-            <sp-image height="2.58rem" fit="cover" :src="image" />
+            <sp-image
+              height="2.58rem"
+              fit="cover"
+              :src="image.materialList[0].materialUrl"
+            />
           </sp-swipe-item>
           <template #indicator>
             <div class="custom-indicator">
@@ -178,6 +186,18 @@ export default {
           this.finished = true
         }
       }
+    },
+    handleImage(item) {
+      // 点击图片
+      if (this.isInApp) {
+        // 若是在app中
+        this.$appFn.dggJumpRoute({
+          iOSRouter: item.materialList[0].iosLink,
+          androidRouter: item.materialList[0].androidLink,
+        })
+        return
+      }
+      this.$router.push(item.materialList[0].wapLink)
     },
   },
 }

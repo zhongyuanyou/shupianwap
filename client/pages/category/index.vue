@@ -47,6 +47,7 @@
                 <sp-swipe-item
                   v-for="(item, index) of recommendData"
                   :key="index"
+                  @click="handleImage(item)"
                 >
                   <sp-image
                     fit="cover"
@@ -221,6 +222,10 @@ export default {
     goSearch() {
       this.$router.push('/search')
     },
+    handleImage(item) {
+      // 点击广告图片
+      this.$router.push(item.materialList[0].wapLink)
+    },
   },
 }
 </script>
@@ -348,13 +353,17 @@ export default {
         color: #fff;
         text-align: center;
         background-color: #f8f8f8;
+        height: 164px;
         .swipe_img {
           width: 100%;
-          height: 100%;
+          height: 164px;
         }
       }
       .proList {
         padding-top: 48px;
+        &:first-child {
+          padding-top: 0;
+        }
         .title {
           font-size: 30px;
           font-family: PingFang SC;
