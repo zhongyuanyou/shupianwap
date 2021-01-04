@@ -6,7 +6,7 @@
       <!-- 公司成立区域 -->
       <div class="company-area">
         <span class="company-area-title">您的公司打算成立在哪个区域？</span>
-        <div class="company-area-input">
+        <div class="company-area-input" @click="show">
           <input
             v-model="area"
             type="text"
@@ -75,17 +75,17 @@
         <a href="javascript:;" @click="next()">下一步(1/2)</a>
       </div>
     </div>
-    <AreaSelect :show="isshow" />
+    <DropDown v-show="isShow" :title="title" />
   </div>
 </template>
 <script>
 import { Field } from 'vant'
 import Header from '../../../components/spread/registeredDemandCard/header'
-import AreaSelect from '../../../components/common/areaSelected/AreaSelect'
+import DropDown from '../../../components/spread/common/DropDownChoose'
 export default {
   components: {
-    AreaSelect,
     Header,
+    DropDown,
     [Field.name]: Field,
   },
   data() {
@@ -100,10 +100,15 @@ export default {
       isconfirm: '是',
       istsransact: '1月内',
       area: '',
-      isshow: false,
+      isShow: false,
+      title: '选择区域',
     }
   },
+  watch() {},
   methods: {
+    show() {
+      this.isShow = true
+    },
     isChoose(index) {
       this.chooseActived = index
       this.ishave = this.choose[index]
@@ -111,12 +116,10 @@ export default {
     confirm(index) {
       this.confirmActived = index
       this.isconfirm = this.choose[index]
-      console.log(this.isconfirm)
     },
     isTransact(index) {
       this.transactActived = index
       this.istsransact = this.times[index]
-      console.log(this.istsransact)
     },
     next() {},
   },
@@ -283,15 +286,16 @@ export default {
       }
     }
     .box {
-      width: 100%;
+      width: 670px;
       height: 168px;
     }
     .footer-btn {
+      width: 670px;
       height: 136px;
-      padding: 24px;
+      // padding: 24px 40px;
       position: fixed;
-      left: 0;
-      right: 0;
+      margin-left: -335px;
+      left: 50%;
       bottom: 0;
       > a {
         display: block;

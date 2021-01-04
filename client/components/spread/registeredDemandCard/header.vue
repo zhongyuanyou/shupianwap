@@ -4,7 +4,7 @@
     <Header :title="title" />
     <div class="content">
       <a href="javascript:;" @click="chooseCity()">
-        <span>{{ currentCity }}</span>
+        <span>{{ currentCity || '成都市' }}</span>
         <my-icon
           name="tap_ic_pen_n"
           color="#ffffff"
@@ -36,10 +36,9 @@ export default {
   computed: {
     ...mapState({
       currentCity: (state) => state.city.currentCity.name, // 当前选择的城市
-      positionCityName: (state) => state.city.positionCityName, // 当前定位城市
-      positionStatus: (state) => state.city.positionStatus, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
     }),
   },
+
   methods: {
     chooseCity() {
       this.$router.push('/city/choiceCity')
@@ -75,7 +74,7 @@ export default {
       z-index: 1;
       bottom: 50px;
       display: block;
-      width: 113px;
+      // width: 113px;
       height: 44px;
       background: rgba(255, 255, 255, 0.2);
       border-radius: 22px;
@@ -84,7 +83,7 @@ export default {
       justify-content: center;
       margin-left: 48px;
       margin-top: 39px;
-      padding-right: 5px;
+      padding: 10px 20px;
       > span {
         display: block;
         font-size: 24px;
