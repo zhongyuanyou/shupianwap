@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-31 18:26:08
+ * @LastEditTime: 2021-01-04 10:30:45
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/detail.vue
 -->
@@ -160,7 +160,7 @@
     </div>
     <sp-share-sheet
       v-model="showShare"
-      title="立即分享给好友"
+      title="分享"
       :options="shareOptions"
       @select="onSelect"
     />
@@ -222,7 +222,6 @@ export default {
       const tagList = this.detailData.tagList
       if (!Array.isArray(tagList)) return []
       const formatData = tagList.slice(0, 2)
-      formatData.push('时代峰峻水电费水电费')
       return formatData
     },
   },
@@ -270,7 +269,15 @@ export default {
         this.showShare = false
         return
       }
-      copyToClipboard(location && location.href)
+      const isSuccess = copyToClipboard(location && location.href)
+      if (isSuccess) {
+        this.$xToast.show({
+          message: '复制成功',
+          duration: 1500,
+          icon: 'toast_ic_comp',
+          forbidClick: true,
+        })
+      }
       this.showShare = false
     },
 
@@ -426,7 +433,7 @@ export default {
 
 .detail {
   height: 100%;
-  overflow-y: scroll;
+  background-color: #ffffff;
   .head {
     &__icon-back {
       margin-left: 40px;

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-23 17:07:19
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 08:46:03
+ * @LastEditTime: 2021-01-04 10:27:20
  * @Description: file content
  * @FilePath: /chips-wap/client/utils/common.js
  */
@@ -14,6 +14,28 @@
 
 import CryptoJS from 'crypto-js'
 import Qs from 'qs'
+
+/**
+ * @description input, textarea自带的select()方法在苹果端无法进行选择，所以需要自己去写一个类似的方法
+ * 选择文本。createTextRange(setSelectionRange)是input, textarea方法
+ * @param {htmlelement} textbox
+ * @param {number} startIndex
+ * @param {number} stopIndex
+ */
+function selectText(textbox, startIndex, stopIndex) {
+  if (textbox.createTextRange) {
+    // ie
+    const range = textbox.createTextRange()
+    range.collapse(true)
+    range.moveStart('character', startIndex) // 起始光标
+    range.moveEnd('character', stopIndex - startIndex) // 结束光标
+    range.select() // 不兼容苹果
+  } else {
+    // firefox/chrome
+    textbox.setSelectionRange(startIndex, stopIndex)
+    textbox.focus()
+  }
+}
 
 export const callPhone = (tel) => {
   window && (window.location.href = `tel:${tel}`)
@@ -28,9 +50,13 @@ export const copyToClipboard = (text) => {
   textareaEl.setAttribute('readonly', 'readonly') // 防止手机上弹出软键盘
   textareaEl.value = text
   document.body.appendChild(textareaEl)
-  textareaEl.select()
+  textareaEl.focus()
+  const valueLength = text.length
+  // textareaEl.select()  // safari
+  selectText(textareaEl, 0, valueLength)
   const res = document.execCommand('copy')
   document.body.removeChild(textareaEl)
+  textareaEl.blur()
   console.log('复制是否成功：', res)
   return res
 }
