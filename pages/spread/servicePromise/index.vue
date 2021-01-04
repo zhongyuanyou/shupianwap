@@ -38,7 +38,7 @@ export default {
   },
   data() {
     return {
-      data: [
+      /* data: [
         {
           img: require('~/assets/spreadImages/servicePromise/ic_zsfw.png'),
           title: '专属服务',
@@ -79,7 +79,7 @@ export default {
           text:
             '服务交付结果有任何不满意的地方，请联系客服反映您的诉求，或拨打24小时投诉热线。平台24小时投诉热线：400-1616902，',
         },
-      ],
+      ], */
     }
   },
 }
@@ -105,7 +105,7 @@ export default {
   .content-bg {
     width: 100%;
     height: 300px;
-    background-image: url('~assets/spreadImages/servicePromise/bj.jpg');
+    /*background-image: url('~assets/spreadImages/servicePromise/bj.jpg');*/
   }
 
   .content-all {
