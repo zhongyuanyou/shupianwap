@@ -1,5 +1,5 @@
 <template>
-  <sp-bottombar safe-area-inset-bottom>
+  <sp-bottombar v-show="isFixed" safe-area-inset-bottom class="my-sp-bottombar">
     <sp-bottombar-info title avatar :card="card" />
     <sp-bottombar-button
       v-md-map
@@ -73,6 +73,28 @@ export default {
       card: {},
       text1: '在线咨询',
       text2: '电话咨询',
+      isFixed: true,
+      // 默认屏幕高度
+      docmHeight: 0, // 一开始的屏幕高度
+      showHeight: 0, // 实时屏幕高度
+    }
+  },
+  watch: {
+    showHeight() {
+      if (this.docmHeight > this.showHeight) {
+        this.isFixed = false
+      } else if (this.docmHeight <= this.showHeight) {
+        this.isFixed = true
+      }
+    },
+  },
+  mounted() {
+    this.docmHeight = document.body.clientHeight
+    // window.onresize监听页面高度的变化
+    window.onresize = () => {
+      return (() => {
+        this.showHeight = document.body.clientHeight
+      })()
     }
   },
   created() {
@@ -111,6 +133,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+// .my-sp-bottombar覆写了组件原本的样式
+.my-sp-bottombar {
+  width: calc(@spread-page-width - 80px) !important;
+  left: auto !important;
+  right: auto !important;
+}
+
+/deep/ .sp-bottombar {
+}
 /deep/ .sp-bottombar-info__name {
   display: flex;
 }

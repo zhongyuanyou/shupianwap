@@ -36,54 +36,60 @@ async function setData(ctx) {
   // * extendAccount 代理记账
   const pageCodes = [
     {
-      today: 0,
+      today: 118,
       total: 1100,
-      code: 'extendBankServer',
-      ratio: 0.5, // 增长系数
+      code: 'extendTaxPlanning',
+      stepNum: 11,
     },
     {
-      today: 0,
-      total: 26000,
+      today: 346,
+      total: 350829,
       code: 'extendAccount',
-      ratio: 2,
+      stepNum: 12,
     },
   ];
   for (let i = 0; i < pageCodes.length; i++) {
-    const rangeNum = Math.ceil((Math.random() * 5 + 1) * pageCodes[i].ratio);
     const Hours = new Date().getHours();
     const obj = pageCodes[i];
     const cacheKeyToday = ctx.helper.cacheKey(obj.code + 'today');
     const cacheKeyTotal = ctx.helper.cacheKey(obj.code + 'total');
-    if (Hours >= 0 && Hours < 9) {
-      // 凌晨至早上9点不更新累计数据
-      if (Hours === 0) {
-        // 凌晨初始化今日数据
-        ctx.service.redis.set(
-          cacheKeyToday,
-          obj.today,
-          app.config.redisCacheTime
-        );
-      }
+    if (Hours === 0) {
+      // 凌晨初始化今日数据
+      ctx.service.redis.set(
+        cacheKeyToday,
+        obj.today,
+        ctx.app.config.redisCacheTime
+      );
     } else {
       let toDayNum = await ctx.service.redis.get(cacheKeyToday);
       if (toDayNum) {
-        toDayNum = Number(toDayNum) + rangeNum;
-        toDayNum = rangeNum;
-      } else toDayNum = rangeNum;
-      ctx.service.redis.set(cacheKeyToday, toDayNum, app.config.redisCacheTime);
+        toDayNum = Number(toDayNum) + obj.stepNum;
+        // 初始化线上测试环境数据
+        toDayNum = obj.today;
+      } else toDayNum = obj.today;
+      ctx.service.redis.set(
+        cacheKeyToday,
+        toDayNum,
+        ctx.app.config.redisCacheTime
+      );
       let totalNum = await ctx.service.redis.get(cacheKeyTotal);
       if (totalNum) {
-        totalNum = Number(totalNum) + rangeNum;
+        // totalNum = Number(totalNum) + obj.stepNum;
+        // 初始化线上测试环境数据
         totalNum = obj.total;
       } else totalNum = obj.total;
-      ctx.service.redis.set(cacheKeyTotal, totalNum, app.config.redisCacheTime);
+      ctx.service.redis.set(
+        cacheKeyTotal,
+        totalNum,
+        ctx.app.config.redisCacheTime
+      );
     }
   }
 }
-module.exports = (app) => {
+module.exports = () => {
   return {
     schedule: {
-      interval: '10s',
+      interval: '1h',
       type: 'worker',
       immediate: true,
     },
@@ -94,7 +100,7 @@ module.exports = (app) => {
         // 启动服务时无法及时获取到节点信息
         setData(ctx);
       } else {
-        if (instance.length > 0 && instance[0].instanceId === localIp) {
+        if (instance[0].instanceId.match(localIp)) {
           setData(ctx);
         }
       }

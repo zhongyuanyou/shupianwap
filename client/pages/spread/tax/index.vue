@@ -152,9 +152,7 @@ export default {
         {
           bg: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchlist1.jpg') +
-              ')',
+              'url(https://cdn.shupian.cn/sp-pt/wap/21cjuvpuz5vk000.jpg)',
           },
           num1: '',
           num2: '',
@@ -170,9 +168,7 @@ export default {
         {
           bg: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchlist2.jpg') +
-              ')',
+              'url(https://cdn.shupian.cn/sp-pt/wap/3i3g8eyy7q20000.jpg)',
           },
           num1: '',
           num2: '',
@@ -187,9 +183,7 @@ export default {
         {
           bg: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_img_swchlist3.jpg') +
-              ')',
+              'url(https://cdn.shupian.cn/sp-pt/wap/fab76tq8cnk0000.jpg)',
           },
           num1: '',
           num2: '',
@@ -427,7 +421,7 @@ export default {
   },
   created() {
     // 请求回来的数据替代本地
-    if (this.result !== '') {
+    if (this.result !== '' && this.result !== undefined) {
       if (this.result.planlerList.length !== 0) {
         this.planlerList = this.result.planlerList
       }
@@ -545,5 +539,9 @@ export default {
 .center {
   width: 750px;
   margin: 0 auto;
+}
+/deep/ .my-head {
+  width: 750px !important;
+  left: auto !important;
 }
 </style>

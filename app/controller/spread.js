@@ -183,7 +183,7 @@ class SpreadController extends Controller {
     let numsRes;
     if (
       ctx.query.pageCode === 'extendAccount' ||
-      ctx.query.pageCode === 'extendBankServer'
+      ctx.query.pageCode === 'extendTaxPlanning'
     ) {
       const cacheKeyToday = ctx.helper.cacheKey(ctx.query.pageCode + 'today');
       const nums1Res = ctx.service.redis.get(cacheKeyToday);

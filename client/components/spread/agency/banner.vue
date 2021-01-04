@@ -20,13 +20,7 @@ export default {
   props: {
     imglist: {
       type: Array,
-      default: () => {
-        return {
-          code: 1,
-          url: '',
-          img: require('~/assets/spreadImages/agency/busi_img_dljzbanner@1,5x.jpg'),
-        }
-      },
+      default: () => {},
     },
   },
   data() {

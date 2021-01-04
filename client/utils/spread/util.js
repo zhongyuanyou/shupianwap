@@ -1,3 +1,5 @@
+import { checkPhone } from '../check'
+
 const formatTime = (date) => {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -274,6 +276,10 @@ const getIPAdress = () => {
     }
   }
 }
+// 验证手机号码
+const checkMobile = (mobile) => {
+  return /^1[3456789]\d{9}$/.test(mobile)
+}
 export default {
   formatTime,
   numberSuitScanf,
@@ -291,4 +297,6 @@ export default {
   transformTime,
   getIPAdress,
   regFenToYuan,
+  checkPhone,
+  checkMobile,
 }

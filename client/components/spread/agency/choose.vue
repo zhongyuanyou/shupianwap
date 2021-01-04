@@ -4,7 +4,10 @@
     <div class="contrast">
       <div>自己记账</div>
       <div>专业代理</div>
-      <img src="~/assets/spreadImages/agency/busi_img_dljzpk@1,5x.png" alt="" />
+      <img
+        src="https://cdn.shupian.cn/sp-pt/wap/images/5ldzblot0280000.png"
+        alt=""
+      />
     </div>
     <div class="content">
       <div class="contentleft">
@@ -12,7 +15,7 @@
           <li v-for="(item, index) in oneself" :key="index">
             <span>{{ item }}</span
             ><img
-              src="~/assets/spreadImages/agency/busi_img_dljzzjpoint@1,5x.png"
+              src="https://cdn.shupian.cn/sp-pt/wap/images/97lpow21c180000.png"
               alt=""
             />
           </li>
@@ -23,7 +26,7 @@
         <ul>
           <li v-for="(item, index) in agent" :key="index">
             <img
-              src="~/assets/spreadImages/agency/busi_img_dljzzypoint@1,5x.png"
+              src="https://cdn.shupian.cn/sp-pt/wap/images/4v599nr8p8c0000.png"
               alt=""
             /><span>{{ item }}</span>
           </li>

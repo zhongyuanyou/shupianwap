@@ -32,6 +32,7 @@
             data-form_name="工商注册_表单_手机号"
             type="digit"
             :border="false"
+            maxlength="11"
             label="手机号"
             placeholder="信息保护中，仅官方可见"
             label-class="style-phone"
@@ -45,9 +46,12 @@
             data-form_name="工商注册_表单_验证码"
             center
             clearable
+            type="tel"
+            maxlength="6"
             label="验证码"
             placeholder="请输入验证码"
             label-class="style-phone"
+            @input="inputVal($event)"
           >
             <template #button>
               <span
@@ -140,14 +144,18 @@ export default {
     }
   },
   methods: {
+    inputVal(val) {
+      this.sms = this.sms.replace(/[^0-9A-Za-z]/g, '')
+    },
     onSelect(item) {
       // 默认情况下点击选项时不会自动收起
       // 可以通过 close-on-click-action 属性开启自动收起
       this.downShow = false
       this.selectValue = item.name
       this.actions.forEach((element) => {
-        if (element.name === this.selectValue) element.color = '#5a79e8'
-        else element.color = '#232124'
+        if (element.name === this.selectValue)
+          element.className = 'action-style'
+        else element.className = ''
       })
     },
     // 验证码 发送前验证
@@ -168,7 +176,7 @@ export default {
     },
     // 发送验证码
     getMsg(setData) {
-      if (this.test === '获取验证码' || this.test === '重新发送') {
+      if (this.test === '获取验证码') {
         window.promotion.privat.getSmsCode(setData, (res) => {
           if (res.error === 0) {
             let i = 59
@@ -178,7 +186,7 @@ export default {
                 i--
                 this.test = i + 's'
               } else {
-                this.test = '重新发送'
+                this.test = '获取验证码'
                 clearInterval(this.time)
               }
             }, 1000)
@@ -262,7 +270,7 @@ export default {
           this.selectValue = '请选择'
           this.sms = ''
           this.phoneValue = ''
-          this.test = '重新发送'
+          this.test = '获取验证码'
           // 表单成功买点
           window.getTrackRow('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
@@ -274,28 +282,6 @@ export default {
           Toast('验证码错误,请重试')
         }
       })
-      //  待修改
-      // window.promotion.privat.consultForm(params, function (res) {
-      //   if (res.error === 0) {
-      //     window.getTrackRow('p_formSubmitResult', {
-      //       even_name: 'p_formSubmitResult',
-      //       form_type: '咨询',
-      //       form_sn: 'ZL077',
-      //       form_name: '顶部表单-转让专利',
-      //     })
-      //     if (that.index2 === 0) {
-      //       that.isSuccess = false
-      //     } else {
-      //       that.isSuccess = true
-      //       setTimeout(function () {
-      //         that.initForm()
-      //       }, 3000)
-      //     }
-      //     that.showMask = true
-      //   } else {
-      //     Toast('提交成功，请注意接听电话')
-      //   }
-      // })
     },
   },
 }
@@ -398,8 +384,12 @@ export default {
       .sp-button {
         padding: 44px 0;
         width: 594px;
+        font-size: 32px;
+        font-weight: bold;
+        color: #ffffff;
       }
     }
+
     /deep/.flow {
       font-size: 26px;
       color: #555555;
@@ -408,6 +398,17 @@ export default {
       justify-content: space-between;
       padding: 34px 19px 0 19px;
     }
+    /deep/ .sp-overlay,
+    .sp-popup--bottom {
+      margin-left: -375px;
+      width: @spread-page-width;
+      left: 50%;
+    }
+  }
+  // 选中样式
+  .action-style {
+    color: #5a79e8;
+    font-weight: bold;
   }
 }
 </style>

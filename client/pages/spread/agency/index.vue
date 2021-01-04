@@ -225,8 +225,7 @@ export default {
       const res = await $axios.get(spreadApi.list, {
         params: { pageCode: type },
       })
-
-      console.log(`Spread.Api 代理记账: ${res.code} - ${res.message}`)
+      // console.log(`Spread.Api 代理记账: ${res.code} - ${res.message}`)
       if (res.code === 200) {
         return {
           result: res,
@@ -247,6 +246,11 @@ export default {
         imName: '代理记账咨询规划师_在线咨询',
         telName: '代理记账咨询规划师_拨打电话',
       },
+      serviceBg: [
+        'https://cdn.shupian.cn/sp-pt/wap/images/98njyijmjzg0000.jpg',
+        'https://cdn.shupian.cn/sp-pt/wap/images/g9qto371i600000.jpg',
+        'https://cdn.shupian.cn/sp-pt/wap/images/3nw97vec94s0000.jpg',
+      ],
       nums: null,
       planner: {
         id: '',
@@ -262,7 +266,7 @@ export default {
         {
           code: 1,
           url: '',
-          img: require('~/assets/spreadImages/agency/busi_img_dljzbanner@1,5x.jpg'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/dshrn46ces00000.jpg',
         },
       ],
       // 服务介绍列表
@@ -273,8 +277,16 @@ export default {
           defaultSales: '5173',
           actualSales: '5173',
           price: '2288',
-          bgimage: require('~/assets/spreadImages/agency/busi_img_dljzcp01@1,5x.jpg'),
-          planner: {},
+          bgimage:
+            'https://cdn.shupian.cn/sp-pt/wap/images/98njyijmjzg0000.jpg',
+          planner: {
+            id: '',
+            name: '',
+            jobNum: '',
+            telephone: '',
+            imgSrc: '',
+            avatarImg: '',
+          },
           plannerName: '',
         },
         {
@@ -283,7 +295,8 @@ export default {
           defaultSales: '642',
           actualSales: '642',
           price: '1500',
-          bgimage: require('~/assets/spreadImages/agency/busi_img_dljzcp02@1,5x.jpg'),
+          bgimage:
+            'https://cdn.shupian.cn/sp-pt/wap/images/g9qto371i600000.jpg',
           planner: '',
           plannerName: '',
         },
@@ -293,7 +306,8 @@ export default {
           defaultSales: '937',
           actualSales: '937',
           price: '6988',
-          bgimage: require('~/assets/spreadImages/agency/busi_img_dljzcp03@1,5x.jpg'),
+          bgimage:
+            'https://cdn.shupian.cn/sp-pt/wap/images/3nw97vec94s0000.jpg',
           planner: '',
           plannerName: '',
         },
@@ -373,9 +387,7 @@ export default {
             actualSales:
               item.materialList[0].productDetail.operating.actualSales,
             price: item.materialList[0].productDetail.referencePrice,
-            bgimage: require(`~/assets/spreadImages/agency/busi_img_dljzcp0${
-              index + 1
-            }@1,5x.jpg`),
+            bgimage: this.serviceBg[index],
             planner: this.plannersList[
               `${index < this.plannersList.length ? index : 0}`
             ],
@@ -444,9 +456,17 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .agency {
   width: 750px;
   margin: 0 auto;
+  position: relative;
+  /deep/.fixed-head {
+    /deep/.my-head {
+      width: 750px;
+      left: 50%;
+      margin-left: -375px;
+    }
+  }
 }
 </style>

@@ -3,24 +3,24 @@
     <div class="form-box">
       <div class="form-title">
         <img
-          src="~/assets/spreadImages/agency/busi_img_dljztitrleft@1,5x.png"
+          src="https://cdn.shupian.cn/sp-pt/wap/images/36v8fqlnh5y0000.png"
           alt=""
         />
         <h4>定制代账方案</h4>
         <img
-          src="~/assets/spreadImages/agency/busi_img_dljztitright@1,5x.png"
+          src="https://cdn.shupian.cn/sp-pt/wap/images/4nq906nfv760000.png"
           alt=""
         />
       </div>
       <span class="form-content">请输入公司年营业额，我们为您灵活制定方案</span>
       <div class="lines-scope">
-        <div>企业类型</div>
         <div
           v-for="(item, index) in LinesScope"
           :key="index"
           v-md-map
+          v-md:WebClick
           :class="[actived == index + 1 ? 'isactive' : '']"
-          :data-name="`代理记账表单${item.scope}`"
+          :data-name="`代理记账表单_${item.scope}`"
           data-form_type="咨询表单"
           @click="selected(item.code)"
         >
@@ -37,6 +37,8 @@
           placeholder="请输入公司名称"
           data-name="代理记账表单_公司名称"
           data-form_type="咨询表单"
+          maxlength="20"
+          :formatter="companyTest"
         />
         <!-- s 手机号输入框 -->
         <sp-field
@@ -48,6 +50,8 @@
           label="手机号"
           placeholder="信息保护中，仅官方可见"
           maxlength="11"
+          type="tel"
+          :formatter="telephoneTest"
           @focus="() => (isshow = true)"
         />
         <!-- s 获取验证码 -->
@@ -61,6 +65,9 @@
             placeholder="请输入验证码"
             data-name="代理记账表单_验证码"
             data-form_type="咨询表单"
+            maxlength="6"
+            type="tel"
+            :formatter="formatter"
           />
           <!-- s 倒计时 -->
           <span
@@ -93,7 +100,7 @@
       <!-- s 处理事件统计 -->
       <div class="statistical">
         <span
-          >今日进行 <span>{{ nums.todayNum }}</span
+          >今日进行<span>{{ nums.todayNum }}</span
           >件</span
         >
         <div class="line"></div>
@@ -121,10 +128,7 @@ export default {
     nums: {
       type: Object,
       default: () => {
-        return {
-          todayNum: 12528,
-          totalNum: 652517,
-        }
+        return {}
       },
     },
   },
@@ -146,8 +150,21 @@ export default {
       company: '',
     }
   },
-  created() {},
+  created() {
+    this.nums.totalNum = this.nums.totalNum.toLocaleString()
+    this.nums.todayNum = this.nums.todayNum.toLocaleString()
+  },
   methods: {
+    companyTest(value) {
+      return value.replace(/[^\dA-Za-z\u3007\u4E00-\u9FCB\uE815-\uE864]/, '')
+    },
+    telephoneTest(value) {
+      return value.replace(/[^\d]/, '')
+    },
+    formatter(value) {
+      // 过滤输入的特殊字符及汉字
+      return value.replace(/[^a-z0-9A-Z]/, '')
+    },
     selected(index) {
       this.actived = index
       return (this.scope = this.LinesScope[index - 1].scope)
@@ -216,10 +233,11 @@ export default {
       const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       const contentStr = {
         LinesScope: this.scope,
+        companyName: this.company,
       }
       const params = {
         formId, // formId,唯一ID提交资源中心
-        name: this.company,
+        name: '匿名用户',
         tel: _tel, // 电话
         url: webUrl, // 当前页面地址。用于后台判断ip发送验证码次数
         type: 'kjdl', // 业态编码。
@@ -238,6 +256,7 @@ export default {
           this.sms = ''
           this.countdown = -1
           this.company = ''
+          this.actived = 1
           window.getTrackRow('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
@@ -339,10 +358,10 @@ export default {
     }
     .lines-scope {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       margin-top: 40px;
       > div {
+        flex: 1;
         width: 186px;
         height: 80px;
         background: #f8f8f8;
@@ -354,10 +373,7 @@ export default {
         text-align: center;
         line-height: 80px;
         &:first-child {
-          font-size: 28px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #1a1a1a;
+          margin-right: 16px;
         }
       }
       .isactive {

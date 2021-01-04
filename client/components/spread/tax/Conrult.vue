@@ -44,72 +44,56 @@ export default {
         {
           style: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_ic_swchicon1.png') +
-              ')',
+              'url(https://cdn.shupian.cn/sp-pt/wap/dwjitgbei3k0000.png)',
           },
           title: '微商、直播',
         },
         {
           style: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_ic_swchicon2.png') +
-              ')',
+              'url(https://cdn.shupian.cn/sp-pt/wap/5ran59i389g0000.png)',
           },
           title: '技术服务',
         },
         {
           style: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_ic_swchicon3.png') +
-              ')',
+              'url(https://cdn.shupian.cn/sp-pt/wap/g0cwcc9k5680000.png)',
           },
           title: '营销推广',
         },
         {
           style: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_ic_swchicon4.png') +
-              ')',
+              'url(https://cdn.shupian.cn/sp-pt/wap/4i3mbwkbx820000.png)',
           },
           title: '金融服务',
         },
         {
           style: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_ic_swchicon5.png') +
-              ')',
+              'url(https://cdn.shupian.cn/sp-pt/wap/el9rneqv9bk0000.png)',
           },
           title: '商贸物流',
         },
         {
           style: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_ic_swchicon6.png') +
-              ')',
+              'url(https://cdn.shupian.cn/sp-pt/wap/ff6ws0k6sbs0000.png)',
           },
           title: '设计服务',
         },
         {
           style: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_ic_swchicon7.png') +
-              ')',
+              'url(https://cdn.shupian.cn/sp-pt/wap/853cftf7nhc0000.png)',
           },
           title: '咨询服务',
         },
         {
           style: {
             backgroundImage:
-              'url(' +
-              require('~/assets/spreadImages/tax/busi_ic_swchicon8.png') +
-              ')',
+              'url(https://cdn.shupian.cn/sp-pt/wap/2nbkqpgj2nu0000.png)',
           },
           title: '建筑及安装',
         },

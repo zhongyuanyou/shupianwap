@@ -78,6 +78,36 @@
         </li>
       </ul>
     </div>
+    <div
+      v-show="servicelist.length > 3"
+      class="show-more-btn"
+      @click="showMore"
+    >
+      <span
+        v-show="more"
+        v-md-map
+        v-md:webClick
+        data-name="工商变更页面_更多服务"
+        >更多服务</span
+      >
+      <span v-show="close" v-md-map v-md:webClick data-name="工商变更页面_收起"
+        >收起</span
+      >
+      <my-icon
+        v-show="more"
+        name="tab_ic_all_n"
+        size="0.2rem"
+        class="input-ic-open"
+        color="#cccccc"
+      ></my-icon>
+      <my-icon
+        v-show="close"
+        name="tab_ic_all_s"
+        size="0.2rem"
+        class="input-ic-open"
+        color="#cccccc"
+      ></my-icon>
+    </div>
   </div>
 </template>
 
@@ -93,12 +123,26 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      more: true,
+      close: false,
+    }
   },
   created() {
     const a = this.servicelist
   },
   methods: {
+    showMore() {
+      if (this.more) {
+        this.close = true
+        this.more = false
+        this.num = this.servicelist.length
+      } else {
+        this.close = false
+        this.more = true
+        this.num = 2
+      }
+    },
     plannerIm(planner) {
       const guiHuaShi = planner
       this.$root.$emit(
@@ -184,7 +228,7 @@ export default {
         }
         .line {
           width: 100%;
-          border: 1px dashed #f4f4f4;
+          border-top: 1px dashed #f4f4f4;
           position: absolute;
           bottom: 26.32%;
         }

@@ -18,7 +18,7 @@ export default function ({ $axios, redirect, app, store }) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
-      config.headers.sysCode = 'crisps-app-wap-bff-api'
+      config.headers.sysCode = 'crisps-app-wap-bff-tgapi'
       if (
         app.$cookies.get('token', {
           path: '/',

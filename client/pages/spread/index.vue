@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <Header title="工商财税" />
+    <Header title="工商首页" />
     <!-- START 轮播图-->
     <Banner :images="images" />
     <!-- END 轮播图-->
@@ -825,11 +825,7 @@ export default {
   },
   data() {
     return {
-      images: [
-        require('~/assets/spreadImages/home/busi_img_gscsbanner01.jpg'),
-        require('~/assets/spreadImages/home/busi_img_gscsbanner01.jpg'),
-        require('~/assets/spreadImages/home/busi_img_gscsbanner01.jpg'),
-      ],
+      images: ['https://cdn.shupian.cn/sp-pt/wap/images/4jy3z5c6p5e0000.jpg'],
       guiHuaShiList: [
         {
           id: '7862495547640840192',
@@ -868,7 +864,7 @@ export default {
       hotSaleProductList: [
         {
           id: 1,
-          img: require('~/assets/spreadImages/home/busi_img_gscsrx01.jpg'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/dbncd0ezu600000.jpg',
           imgWidth: 225,
           imgHeight: 348,
           marginRight: true,
@@ -877,7 +873,7 @@ export default {
         },
         {
           id: 2,
-          img: require('~/assets/spreadImages/home/busi_img_gscsrx02.jpg'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/3urnn152hfi0000.jpg',
           imgWidth: 210,
           imgHeight: 168,
           marginRight: true,
@@ -886,7 +882,7 @@ export default {
         },
         {
           id: 3,
-          img: require('~/assets/spreadImages/home/busi_img_gscsrx03.jpg'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/68n10hoy3q40000.jpg',
           imgWidth: 210,
           imgHeight: 168,
           marginRight: true,
@@ -895,7 +891,7 @@ export default {
         },
         {
           id: 4,
-          img: require('~/assets/spreadImages/home/busi_img_gscsrx04.jpg'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/3h0es39zr680000.jpg',
           imgWidth: 210,
           imgHeight: 168,
           marginRight: false,
@@ -904,7 +900,7 @@ export default {
         },
         {
           id: 5,
-          img: require('~/assets/spreadImages/home/busi_img_gscsrx05.jpg'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/19ylkrra1hy8000.jpg',
           imgWidth: 210,
           imgHeight: 168,
           marginRight: false,
@@ -915,7 +911,7 @@ export default {
       chuChuangProductList: [
         {
           id: 1,
-          img: require('~/assets/spreadImages/home/busi_img_gscscc01.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/e3eayfqxups0000.png',
           imgWidth: 329,
           imgHeight: 188,
           marginRight: true,
@@ -923,7 +919,7 @@ export default {
         },
         {
           id: 2,
-          img: require('~/assets/spreadImages/home/busi_img_gscscc02.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/4d88mjrmr7c0000.png',
           imgWidth: 329,
           imgHeight: 188,
           marginRight: false,
@@ -931,7 +927,7 @@ export default {
         },
         {
           id: 3,
-          img: require('~/assets/spreadImages/home/busi_img_gscscc03.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/pfgfe1z1mj4000.png',
           imgWidth: 215,
           imgHeight: 188,
           marginRight: true,
@@ -939,7 +935,7 @@ export default {
         },
         {
           id: 4,
-          img: require('~/assets/spreadImages/home/busi_img_gscscc04.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/9k8t4keugy00000.png',
           imgWidth: 215,
           imgHeight: 188,
           marginRight: true,
@@ -947,7 +943,7 @@ export default {
         },
         {
           id: 5,
-          img: require('~/assets/spreadImages/home/busi_img_gscscc05.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/4w4emrwfryq000.png',
           imgWidth: 215,
           imgHeight: 188,
           marginRight: false,
@@ -957,7 +953,7 @@ export default {
       jingYingProductList: [
         {
           id: 1,
-          img: require('~/assets/spreadImages/home/busi_img_gscsjy01.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/co0mgghziu00000.png',
           imgWidth: 215,
           imgHeight: 170,
           marginRight: true,
@@ -966,7 +962,7 @@ export default {
         },
         {
           id: 2,
-          img: require('~/assets/spreadImages/home/busi_img_gscsjy02.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/43eo2mteh3k0000.png',
           imgWidth: 215,
           imgHeight: 170,
           marginRight: true,
@@ -975,7 +971,7 @@ export default {
         },
         {
           id: 3,
-          img: require('~/assets/spreadImages/home/busi_img_gscsjy03.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/7wcwpartakw0000.png',
           imgWidth: 215,
           imgHeight: 170,
           marginRight: false,
@@ -984,7 +980,7 @@ export default {
         },
         {
           id: 4,
-          img: require('~/assets/spreadImages/home/busi_img_gscsjy04.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/clh4vbrvajk0000.png',
           imgWidth: 215,
           imgHeight: 170,
           marginRight: true,
@@ -993,7 +989,7 @@ export default {
         },
         {
           id: 5,
-          img: require('~/assets/spreadImages/home/busi_img_gscsjy05.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/333ypwki89k0000.png',
           imgWidth: 215,
           imgHeight: 170,
           marginRight: true,
@@ -1002,7 +998,7 @@ export default {
         },
         {
           id: 6,
-          img: require('~/assets/spreadImages/home/busi_img_gscsjy06.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/3ip4jvjm6s80000.png',
           imgWidth: 215,
           imgHeight: 170,
           marginRight: false,
@@ -1114,8 +1110,19 @@ export default {
 
 <style lang="less" scoped>
 .page-content {
-  width: 750px;
+  width: @spread-page-width;
   margin: 0 auto;
   font-family: PingFang SC;
+
+  /deep/ .my-head {
+    width: @spread-page-width !important;
+    left: auto !important;
+  }
+
+  /deep/ .sp-overlay {
+    width: @spread-page-width;
+    left: auto;
+    right: auto;
+  }
 }
 </style>

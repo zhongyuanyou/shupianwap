@@ -67,7 +67,6 @@ export default {
   },
   data() {
     return {
-      img: require('~/assets/spreadImages/tax/busi_img_swchbg01.png'),
       tabs: ['工商注册', '财税咨询', '税务筹划'],
     }
   },
@@ -106,7 +105,7 @@ export default {
       &-left {
         width: 660px;
         height: 207px;
-        background: url('~assets/spreadImages/tax/busi_img_swchbg01.png');
+        background: url('https://cdn.shupian.cn/sp-pt/wap/5ejpgusuwn80000.png');
         background-size: 100% 100%;
         border: 1px solid rgba(205, 205, 205, 0.4);
         box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);

@@ -6,7 +6,7 @@
       <ul>
         <li><i></i><span>3-5个公司名称</span></li>
         <li><i></i><span>企业经营范围</span></li>
-        <li><i></i><span>企业经营范围</span></li>
+        <li><i></i><span>公司地址</span></li>
         <li><i></i><span>注册资金及比例</span></li>
       </ul>
     </div>
@@ -52,22 +52,22 @@ export default {
         {
           title: '大品牌',
           content: '覆盖全国14个城市',
-          img: require('~/assets/spreadImages/company_registry/busi_img_ptys_dpp.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/a2nf8wfz7wk0000.png',
         },
         {
           title: '更专业',
           content: '30万+专业规划师',
-          img: require('~/assets/spreadImages/company_registry/busi_img_ptys_gzy.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/2nn1kdoblmw0000.png',
         },
         {
           title: '更省时',
           content: '2小时内响应',
-          img: require('~/assets/spreadImages/company_registry/busi_img_ptys_gss.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/fh0eavpg2lc0000.png',
         },
         {
           title: '零风险',
           content: '急速售后 急速退款',
-          img: require('~/assets/spreadImages/company_registry/busi_img_ptys_lfx.png'),
+          img: 'https://cdn.shupian.cn/sp-pt/wap/8czcet6qcj40000.png',
         },
       ],
     }
@@ -82,8 +82,9 @@ export default {
     font-size: 40px;
     font-weight: bold;
     color: #1a1a1a;
-    line-height: 52px;
-    padding-bottom: 32px;
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 32px;
   }
   .message {
     margin-bottom: 24px;
@@ -91,7 +92,7 @@ export default {
       width: 669px;
       height: 80px;
       margin: 0 auto;
-      background: url(~assets/spreadImages/company_registry/busi_img_zegs_gsxx.png)
+      background: url(https://cdn.shupian.cn/sp-pt/wap/5s8vuoqf6r80000.png)
         no-repeat;
       background-size: contain;
       span {
@@ -103,12 +104,13 @@ export default {
       }
     }
     ul {
-      background: #fffcfefe;
+      background: rgba(244, 252, 252, 0.3);
       font-size: 50px;
+      color: #555555;
       li {
         float: left;
         width: 50%;
-        height: 90px;
+        height: 88px;
         line-height: 90px;
         padding: 0 32px;
         i {
@@ -117,7 +119,8 @@ export default {
           display: inline-block;
           background: #48c5c5;
           opacity: 0.5;
-          margin-right: 12px;
+          margin-right: 18px;
+          margin-bottom: 3px;
           border-radius: 50%;
         }
         span {
@@ -133,8 +136,9 @@ export default {
       }
     }
     &:nth-child(3) {
+      padding: 8px 0px;
       p {
-        background: url(~assets/spreadImages/company_registry/busi_img_zcxx_wjcl.png)
+        background: url(https://cdn.shupian.cn/sp-pt/wap/4jt8fmvm9zw0000.png)
           no-repeat;
         background-size: contain;
         span {
@@ -144,7 +148,7 @@ export default {
       ul {
         li {
           width: 100%;
-          background: #fffcfefe;
+          background: rgba(255, 250, 245, 0.4);
           i {
             background: #fea252;
           }
@@ -153,7 +157,7 @@ export default {
     }
     &:nth-child(4) {
       p {
-        background: url(~assets/spreadImages/company_registry/busi_img_zegs_zcdz.png)
+        background: url(https://cdn.shupian.cn/sp-pt/wap/eeezqprbugg0000.png)
           no-repeat;
         background-size: contain;
         span {
@@ -163,7 +167,7 @@ export default {
       ul {
         li {
           width: 100%;
-          background: #fffcfefe;
+          background: rgba(248, 246, 253, 0.4);
           i {
             background: #9273e3;
           }
@@ -172,8 +176,9 @@ export default {
     }
   }
   .superiority {
+    margin-bottom: 32px;
     h3 {
-      padding-top: 38px;
+      margin-top: 64px;
     }
     .superiority-item {
       ul {

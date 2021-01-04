@@ -10,7 +10,7 @@ export default {
   name: 'Process',
   data() {
     return {
-      img: require('~/assets/spreadImages/tax/busi_img_swchlc.jpg'),
+      img: 'https://cdn.shupian.cn/sp-pt/wap/f0ud5mka9ag0000.jpg',
     }
   },
 }
