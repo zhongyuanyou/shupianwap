@@ -1,6 +1,6 @@
 <template>
   <div class="banner" :style="{ backgroundImage: 'url(' + bg + ')' }">
-    <!--  头部  -->
+    <!--    头部  -->
     <sp-top-nav-bar
       title=""
       background="transparent"
@@ -12,16 +12,16 @@
         <my-icon name="nav_ic_back" size="0.40rem" color="#e5e8fa"></my-icon>
       </div>
     </sp-top-nav-bar>
-    <!--  城市按钮  -->
-    <button class="banner-button" @click="tabCity">
+    <!--    城市按钮  -->
+    <div class="banner-button" @click="tabCity">
       {{ currentCity.name || '成都' }}
       <my-icon
-        name="tap_ic_pesSn_n"
+        name="tap_ic_pen_n"
         color="#ffffff"
         size="0.14rem"
         class="icon banner-button-icon"
       ></my-icon>
-    </button>
+    </div>
   </div>
 </template>
 

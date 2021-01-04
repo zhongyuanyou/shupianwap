@@ -969,10 +969,10 @@
   dependencies:
     "@better-scroll/core" "^2.1.0"
 
-"@chipspc/vant-dgg@^2.21.1", "@chipspc/vant-dgg@^2.21.5":
-  version "2.21.7"
-  resolved "http://tmobile.dgg188.cn/@chipspc/vant-dgg/download/@chipspc/vant-dgg-2.21.7.tgz#943a3f912b70bf75b0c3cd20adfb35272a103a18"
-  integrity sha1-lDo/kStwv3Www80grfs1JyoQOhg=
+"@chipspc/vant-dgg@^2.21.1", "@chipspc/vant-dgg@^2.21.8":
+  version "2.21.8"
+  resolved "http://tmobile.dgg188.cn/@chipspc/vant-dgg/download/@chipspc/vant-dgg-2.21.8.tgz#9b1126d18330f7c0195f5660106b5b9415d48d6e"
+  integrity sha1-mxEm0YMw98AZX1ZgEGtblBXUjW4=
   dependencies:
     "@babel/runtime" "7.x"
     "@chipspc/vant-dgg" "^2.21.1"
@@ -7293,6 +7293,11 @@ inquirer@^7.3.3:
     string-width "^4.1.0"
     strip-ansi "^6.0.0"
     through "^2.3.6"
+
+install@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.npm.taobao.org/install/download/install-0.13.0.tgz#6af6e9da9dd0987de2ab420f78e60d9c17260776"
+  integrity sha1-avbp2p3QmH3iq0IPeOYNnBcmB3Y=
 
 invariant@^2.2.2:
   version "2.2.4"
