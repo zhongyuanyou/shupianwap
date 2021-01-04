@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 14:17:25
+ * @LastEditTime: 2021-01-04 20:04:13
  * @Description: 购物车页面
- * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
+ * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
 
 <template>
@@ -36,6 +36,7 @@
       <sp-pull-refresh
         v-model="refreshing"
         class="shopping-car__refresh"
+        :disabled="disableRefresh"
         @refresh="onRefresh"
       >
         <sp-list
@@ -135,6 +136,7 @@ export default {
         discountsAmount: '0.00',
       },
       skuOpenIndex: -1, // 记录当前打开的sku的序列号
+      skuStatus: '',
     }
   },
   computed: {
@@ -142,6 +144,9 @@ export default {
       userInfo: (state) => state.user.userInfo,
       isInApp: (state) => state.app.isInApp,
     }),
+    disableRefresh() {
+      return this.skuStatus === 'open'
+    },
   },
   watch: {
     currentSelectedCartIds: {
@@ -277,6 +282,12 @@ export default {
           break
         case 'resourceServiceSelect': // sku弹出框里资源服务
           this.selecteResourceService(cartId, data, index)
+          break
+        case 'skuOpen':
+          this.skuStatus = 'open'
+          break
+        case 'skuClosed':
+          this.skuStatus = 'close'
           break
       }
     },

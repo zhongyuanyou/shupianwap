@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-31 17:07:11
+ * @LastEditTime: 2021-01-04 20:10:49
  * @Description: file content
- * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
+ * @FilePath: /chips-wap/components/shoppingCar/GoodsItem.vue
 -->
 <template>
   <div
@@ -18,6 +18,8 @@
       :sku-data="formateSkuData"
       :goods="tempGoods"
       @operation="handleOperation"
+      @open="handleOpenSku"
+      @closed="handleClosedSku"
     />
     <sp-swipe-cell
       ref="swipeCell"
@@ -145,8 +147,6 @@ export default {
         goodsId: '',
         goodsNo: '',
         specialItemList: [], // 增值服务项
-        salesPriceSum: '',
-        settlementPriceSum: '',
       },
       tempGoods: {
         goodsId: '',
@@ -312,6 +312,22 @@ export default {
           break
       }
     },
+    handleOpenSku() {
+      const { cartId } = this.commodityData
+      this.$emit('operation', {
+        type: 'skuOpen',
+        cartId,
+        index: this.index,
+      })
+    },
+    handleClosedSku() {
+      const { cartId } = this.commodityData
+      this.$emit('operation', {
+        type: 'skuClosed',
+        cartId,
+        index: this.index,
+      })
+    },
     async openSku() {
       if (!this.skuData.skuAttrList || !this.skuData.skuAttrList.length) {
         await this.getSkuData()
@@ -319,6 +335,7 @@ export default {
       const {
         skuId,
         skuAttrKey,
+        goodsNo,
         goodsNumber,
         serviceResourceList,
         price,
@@ -329,6 +346,7 @@ export default {
       this.tempGoods = {
         goodsId: skuId,
         skuAttrKey,
+        goodsNo,
         goodsNumber,
         price,
         productId,
@@ -417,7 +435,6 @@ export default {
 
     // 加入购物车
     addShoppingCar(data = {}) {
-      // const {} = data
       console.log(data)
       const {
         goodsId,
@@ -440,7 +457,7 @@ export default {
           type: 2,
         })
       })
-
+      this.loading = true
       this.postUpdate({
         value: goodsNumber,
         cartId: this.commodityData.cartId,
@@ -450,12 +467,17 @@ export default {
         type: 'updateSkuItem',
       })
         .then((data) => {
+          this.loading = false
           this.show = false
-          this.$emit('operation', {
-            type: 'refresh',
-          })
+          // 关闭动画有300ms，等动画关闭完，再刷新
+          setTimeout(() => {
+            this.$emit('operation', {
+              type: 'refresh',
+            })
+          }, 250)
         })
         .catch(() => {
+          this.loading = false
           this.$xToast.show({
             message: '加入购物车失败',
             duration: 1000,
@@ -618,16 +640,18 @@ export default {
           id,
           specialItemList, // 增值服务项
           goodsNo,
-          salesPriceSum, // 销售价格
-          settlementPriceSum, // 结算价格
+          priceResult = {},
         } = goodsDetail
+
+        const {
+          salesPriceSum, // 销售价格
+        } = priceResult
+
         const data = {
           goodsId: id,
           goodsNo,
           productId,
           specialItemList,
-          salesPriceSum,
-          settlementPriceSum,
         }
         this.tempGoods = { ...this.tempGoods, ...data, price: salesPriceSum }
         console.log(data)

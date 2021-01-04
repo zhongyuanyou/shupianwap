@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 15:10:43
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-29 19:55:32
+ * @LastEditTime: 2021-01-04 17:41:20
  * @Description: file content
- * @FilePath: /chips-wap/client/components/common/sku/SkuServiceRow.vue
+ * @FilePath: /chips-wap/components/common/sku/SkuServiceRow.vue
 -->
 <template>
   <div class="sku-row" :class="{ 'sp-hairline--bottom': !isSub }">
@@ -20,6 +20,7 @@
               :key="item.id"
               :sku-value="item"
               :actived="item.actived"
+              :is-cancel="isCancel"
               @skuItemSelect="handleSelect"
             />
           </template>
@@ -74,6 +75,11 @@ export default {
     },
     // 异步选择
     asyncSelect: {
+      type: Boolean,
+      default: true,
+    },
+    // 是否像radio， 选中后不能取消, 默认能取消
+    isCancel: {
       type: Boolean,
       default: true,
     },
