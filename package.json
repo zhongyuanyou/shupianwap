@@ -7,10 +7,10 @@
     "declarations": true
   },
   "dependencies": {
-    "@chipspc/vant-dgg": "^2.21.5",
-    "@dgg/sp-im-sdk": "^1.0.0-beat5",
+    "@chipspc/vant-dgg": "^2.21.6",
     "@dgg/http-sign": "^1.0.4",
     "@dgg/im-sdk": "^1.3.0",
+    "@dgg/sp-im-sdk": "^1.0.0-beat5",
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/style-resources": "^1.0.0",
     "autoprefixer": "^9.7.6",

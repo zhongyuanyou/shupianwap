@@ -10,7 +10,7 @@
         @click="showDropdownList"
       >
         <span class="dropdown-menu-content-prefix">我需要</span>
-        <span class="dropdown-menu-content-val">{{ dropdownValue.name }}</span>
+        <span class="dropdown-menu-content-val">{{ dropdownValue }}</span>
         <my-icon
           class="dropdown-menu-content-img"
           name="sear_ic_open"
@@ -18,28 +18,40 @@
           color="#cccccc"
         ></my-icon>
       </div>
-      <sp-action-sheet
-        v-model="dropdownMenuIsShow"
-        style=""
-        :actions="dropList"
-        @select="onSelect"
-      />
+      <sp-popup v-model="dropdownMenuIsShow" round position="bottom">
+        <sp-picker
+          title="选择"
+          show-toolbar
+          :columns="columns"
+          @confirm="onConfirm"
+          @cancel="onCancel"
+        />
+      </sp-popup>
     </div>
   </div>
 </template>
 
 <script>
-import { ActionSheet, Button } from '@chipspc/vant-dgg'
+import { Picker, Popup } from '@chipspc/vant-dgg'
 
 export default {
   name: 'Dropdown',
   components: {
-    [ActionSheet.name]: ActionSheet,
-    [Button.name]: Button,
+    [Picker.name]: Picker,
+    [Popup.name]: Popup,
   },
   data() {
     return {
       title: '您公司的主营业务是什么',
+      columns: [
+        '公司注册',
+        '工商变更',
+        '代理记账',
+        '印章刻制',
+        '银行服务',
+        '许可证办理',
+        '其他服务',
+      ],
       // 下拉
       dropList: [
         { id: 1, name: '公司注册', color: '#5a79e8' },
@@ -68,6 +80,13 @@ export default {
           obj.color = '#222222'
         }
       })
+    },
+    onCancel() {
+      this.dropdownMenuIsShow = false
+    },
+    onConfirm(value, index) {
+      this.dropdownMenuIsShow = false
+      this.dropdownValue = value
     },
     showDropdownList() {
       this.dropdownMenuIsShow = true

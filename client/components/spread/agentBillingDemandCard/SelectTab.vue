@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     clickTab(value) {
-      this.value = value
+      this.$emit('update:value', value)
     },
   },
 }

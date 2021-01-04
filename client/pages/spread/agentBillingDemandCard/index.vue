@@ -20,6 +20,19 @@ export default {
   data() {
     return {}
   },
+  head() {
+    return {
+      title: '代理记账需求卡',
+      script: [
+        {
+          src: '/js/spread/businessHome-md-config.js',
+        },
+        {
+          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
+        },
+      ],
+    }
+  },
 }
 </script>
 
