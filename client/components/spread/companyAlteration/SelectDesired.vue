@@ -3,12 +3,12 @@
     <h6 v-text="titleName"></h6>
     <div class="select-item">
       <span
-        class="select-list"
         v-for="(item, index) of selectList"
         :key="index"
         :class="index === selectActive ? 'select-list--active' : ''"
-        v-text="item.name"
+        class="select-list"
         @click="onSelectActive(item, index)"
+        v-text="item.name"
       >
       </span>
     </div>

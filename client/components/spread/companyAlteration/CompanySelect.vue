@@ -4,20 +4,23 @@
     <sp-cell
       border
       is-link
-      @click="showPopup"
       :title="title"
       title-style="color:#222222;"
+      @click="showPopup"
     >
       <template #right-icon>
         <my-icon name="tap_ic_pen_n" size="0.08rem" color="#cccccc"></my-icon>
       </template>
     </sp-cell>
-    <sp-action-sheet
-      v-model="show"
-      :close-on-click-action="true"
-      :actions="actions"
-      @select="onSelect"
-    />
+    <sp-action-sheet v-model="show" @select="onSelect"
+      ><sp-picker
+        title="请选择专业"
+        show-toolbar
+        :columns="columns"
+        @confirm="onConfirm"
+        @cancel="onCancel"
+      />
+    </sp-action-sheet>
   </div>
 </template>
 <script>
@@ -29,6 +32,7 @@ import {
   Cell,
   Popup,
   ActionSheet,
+  Picker,
 } from '@chipspc/vant-dgg'
 export default {
   components: {
@@ -40,6 +44,7 @@ export default {
     [Cell.name]: Cell,
     [Popup.name]: Popup,
     [ActionSheet.name]: ActionSheet,
+    [Picker.name]: Picker,
   },
   props: {
     titleName: {
@@ -48,10 +53,19 @@ export default {
         return '您需要办理哪项业务的变更服务？'
       },
     },
-    actions: {
+    columns: {
       type: Array,
       default: () => {
-        return [{ name: '选项一' }, { name: '选项二' }, { name: '选项三' }]
+        return [
+          '建造工程',
+          '铁路工程',
+          '港口和航道工程',
+          '水利水电工程',
+          '电力工程',
+          '港口和航道工程',
+          '水利水电工程',
+          '电力工程',
+        ]
       },
     },
   },
@@ -68,6 +82,21 @@ export default {
     onSelect(item) {
       this.$emit('onSelect', item.name)
       this.title = item.name
+      this.actions.forEach((element) => {
+        if (element.name === this.title) element.className = 'action-style'
+        else element.className = ''
+      })
+    },
+    onConfirm(value, index) {
+      this.title = value
+      this.show = false
+      // Toast(`当前值：${value}, 当前索引：${index}`)
+    },
+    // onChange(picker, value, index) {
+    //   // this.title = value
+    // },
+    onCancel() {
+      this.show = false
     },
   },
 }
@@ -89,6 +118,11 @@ export default {
     opacity: 0.5;
     border-radius: 4px;
     padding: 10px 24px;
+  }
+  // 选中样式
+  .action-style {
+    color: #5a79e8;
+    font-weight: bold;
   }
 }
 </style>

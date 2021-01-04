@@ -11,7 +11,7 @@
         </div>
       </sp-top-nav-bar>
       <span class="location" @click="onMore"
-        >{{ cityName }}
+        >{{ currentCity }}
         <my-icon name="tap_ic_pen_n" size="0.14rem" color="#ffffff"></my-icon>
       </span>
     </div>
@@ -19,15 +19,23 @@
 </template>
 <script>
 import { TopNavBar } from '@chipspc/vant-dgg'
+import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   components: {
     [TopNavBar.name]: TopNavBar,
   },
   data() {
     return {
-      cityName: '成都',
+      // cityName: '成都',
       bgImg: require('~/assets/spreadImages/companyRegister/Step1-img-banner.jpg'),
     }
+  },
+  computed: {
+    ...mapState({
+      currentCity: (state) => state.city.currentCity.name, // 当前选择的城市
+      positionCityName: (state) => state.city.positionCityName, // 当前定位城市
+      positionStatus: (state) => state.city.positionStatus, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
+    }),
   },
   methods: {
     onClickLeft() {
