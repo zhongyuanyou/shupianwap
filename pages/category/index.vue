@@ -349,6 +349,7 @@ export default {
         width: 100%;
         overflow: hidden;
         border-radius: 8px;
+        padding-top: 0;
         &_con {
           padding-top: 16px;
         }
@@ -368,9 +369,6 @@ export default {
       }
       .proList {
         padding-top: 48px;
-        &:first-child {
-          padding-top: 0;
-        }
         .title {
           font-size: 30px;
           font-family: PingFang SC;
