@@ -36,8 +36,8 @@
       <!--S 二级分类区域-->
       <section ref="r_list" class="category_con_rt">
         <div>
-          <div v-if="recommendData.length" class="swiper">
-            <div class="proList swiper_con">
+          <div ref="good" v-if="recommendData.length" class="proList swiper">
+            <div class="swiper_con">
               <sp-swipe
                 class="my-swipe"
                 :autoplay="3000"
@@ -154,7 +154,7 @@ export default {
                 this.$refs.l_list,
                 100,
                 0,
-                this.TabNavList * 68
+                this.TabNavList * 62
               )
             }
           }
@@ -164,11 +164,12 @@ export default {
     _getHeight() {
       // 集合右侧内容模块高度
       const rightItems = this.$refs.r_list.getElementsByClassName('proList')
+      console.log('rightItems', rightItems)
       setTimeout(() => {
         // 根据betterScroll定义滚动
         if (rightItems && rightItems.length > 0) {
           let height = 0
-          this.arr.push(height)
+          // this.arr.push(height)
           for (let i = 0; i < rightItems.length; i++) {
             const item = rightItems[i]
             height += item.clientHeight
@@ -176,6 +177,7 @@ export default {
           }
         }
       }, 600)
+      console.log('arr', this.arr)
     },
     handleClick(index) {
       this.flag = false
@@ -356,6 +358,9 @@ export default {
         text-align: center;
         background-color: #f8f8f8;
         height: 164px;
+        /deep/ .sp-image__img {
+          border-radius: 8px;
+        }
         .swipe_img {
           width: 100%;
           height: 164px;
