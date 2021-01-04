@@ -136,7 +136,6 @@ export default {
     },
     refresh() {
       this.onClickTap(this.activeTab, true)
-      console.log('刷新了')
     },
   },
 }

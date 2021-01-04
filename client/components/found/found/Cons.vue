@@ -138,7 +138,6 @@ export default {
       this.code = newVal
     },
     refreshStatus(newVal) {
-      console.log('refreshing', newVal)
       this.refreshing = newVal
     },
   },

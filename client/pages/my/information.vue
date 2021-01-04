@@ -124,6 +124,7 @@
 <script>
 import { TopNavBar, Cell, Uploader, Image } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
+import DggOSS from '@dgg/oss'
 import ImgSelected from '~/components/my/information/ImgSelected'
 import SexSelected from '~/components/my/information/SexSelected'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
@@ -325,20 +326,49 @@ export default {
       } catch (err) {}
     },
     afterRead(file) {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-      const formData = new FormData()
-      formData.append('uploadatalog', 'sp-pt/wap/images')
-      formData.append(`${this.info.fileId}`, file.file)
-      this.$axios.post(ossApi.add, formData, config).then((res) => {
-        console.log('ressss', res)
-        if (res.code === 200) {
-          this.avatar = res.data.url
-        }
-      })
+      // const config = {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // }
+      // const formData = new FormData()
+      // formData.append('uploadatalog', 'sp-pt/wap/images')
+      // formData.append(`${this.info.fileId}`, file.file)
+      // this.$axios.post(ossApi.add, formData, config).then((res) => {
+      //   console.log('ressss', res)
+      //   if (res.code === 200) {
+      //     this.avatar = res.data.url
+      //   }
+      // })
+      // const dggOSS = new DggOSS({
+      //   env: 'T',
+      //   bucket: 'dggtechtest',
+      //   sysCode: 'zky-api',
+      //   secret: 'e97bd82e0f7ff420d0728a41773f3ec7',
+      // })
+      // dggOSS.initOSS({
+      //   callback: (res) => {
+      //     if (res.code !== 200) {
+      //       console.log('初始化失败', res.msg)
+      //     } else {
+      //       dggOSS.uploadFile({
+      //         file: file.file,
+      //         fileId: this.info.fileId,
+      //         uploadatalog: 'sp-pt/wap/images',
+      //         callback: (res) => {
+      //           if (res.code !== 200) {
+      //             console.log('简单上传文件失败', res.msg)
+      //           } else {
+      //             this.info.url = res.data.oss_filePath
+      //             console.log('简单上传文件成功', res)
+      //           }
+      //         },
+      //       })
+      //       console.log('初始化成功', res)
+      //       // 初始化成功之后才能调用oss对应的功能
+      //     }
+      //   },
+      // })
     },
   },
 }
