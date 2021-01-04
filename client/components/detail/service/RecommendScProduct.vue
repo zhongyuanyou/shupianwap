@@ -77,6 +77,7 @@ export default {
 .need {
   background-color: #fff;
   padding: 48px 40px 0 40px;
+  overflow: hidden;
   &_title {
     font-size: 40px;
     font-family: PingFang SC;

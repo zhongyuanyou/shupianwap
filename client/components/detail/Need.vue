@@ -125,6 +125,7 @@ export default {
         align-items: center;
         flex-direction: row;
         margin-top: 2px;
+        width: 4.78rem;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;

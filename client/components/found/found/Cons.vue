@@ -2,19 +2,27 @@
   <div class="con">
     <!--S banner-->
     <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <div class="con_banner">
+      <div
+        v-if="banner.length && banner[0].sortMaterialList"
+        class="con_banner"
+      >
         <sp-swipe :autoplay="3000" class="con_banner_list" @change="onChange">
           <sp-swipe-item
-            v-for="(image, index) in images"
+            v-for="(image, index) in banner[0].sortMaterialList"
             :key="index"
             class="con_banner_list_item"
+            @click="handleImage(image)"
           >
-            <sp-image height="2.58rem" fit="cover" :src="image" />
+            <sp-image
+              height="2.58rem"
+              fit="cover"
+              :src="image.materialList[0].materialUrl"
+            />
           </sp-swipe-item>
           <template #indicator>
             <div class="custom-indicator">
               <div
-                v-for="(item, index) in images"
+                v-for="(item, index) in banner[0].sortMaterialList"
                 :key="index"
                 :class="[
                   'custom-indicator_item',
@@ -69,6 +77,7 @@ import {
 import { mapState } from 'vuex'
 import CardItem from '~/components/common/cardItem/CardItem'
 import { foundApi } from '@/api'
+import { baseURL } from '~/config/index'
 Vue.use(Lazyload)
 export default {
   name: 'Con',
@@ -107,10 +116,6 @@ export default {
   },
   data() {
     return {
-      images: [
-        'https://img.yzcdn.cn/vant/apple-1.jpg',
-        'https://img.yzcdn.cn/vant/apple-2.jpg',
-      ],
       current: 0,
       refreshing: this.refreshStatus,
       loading: false,
@@ -138,7 +143,6 @@ export default {
       this.code = newVal
     },
     refreshStatus(newVal) {
-      console.log('refreshing', newVal)
       this.refreshing = newVal
     },
   },
@@ -151,7 +155,7 @@ export default {
       // 点击
       if (this.isInApp) {
         this.$appFn.dggOpenNewWeb(
-          { urlString: `http://172.16.139.140:7001/found/detail/${item.id}` },
+          { urlString: `${baseURL}/found/detail/${item.id}` },
           (res) => {}
         )
         return
@@ -180,6 +184,18 @@ export default {
         }
       }
     },
+    handleImage(item) {
+      // 点击图片
+      if (this.isInApp) {
+        // 若是在app中
+        this.$appFn.dggJumpRoute({
+          iOSRouter: item.materialList[0].iosLink,
+          androidRouter: item.materialList[0].androidLink,
+        })
+        return
+      }
+      this.$router.push(item.materialList[0].wapLink)
+    },
   },
 }
 </script>
@@ -204,6 +220,9 @@ export default {
         width: 100%;
         height: 258px;
         background-color: #f8f8f8;
+        /deep/ .sp-image__img {
+          border-radius: 12px;
+        }
       }
       .custom-indicator {
         position: absolute;

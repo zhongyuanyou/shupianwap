@@ -46,8 +46,8 @@ class ContentController extends Controller {
       ctx.helper.fail({ ctx, code: 422, res: valiErrors });
       return;
     }
-    const { id } = ctx.query;
-    const { status, data } = await service.common.content.detail(id);
+    const { id, code } = ctx.query;
+    const { status, data } = await service.common.content.detail({ id, code });
     if (status === 200 && data.code === 200) {
       ctx.helper.success({
         ctx,

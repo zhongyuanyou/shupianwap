@@ -72,7 +72,7 @@ export default {
     display: flex;
     justify-content: left;
     margin-top: 13px;
-    margin-bottom: 28px;
+    flex-wrap: wrap;
     a {
       display: inline-block;
       /*width: 119px;*/
@@ -87,6 +87,7 @@ export default {
       color: #5c7499;
       text-align: center;
       margin-right: 12px;
+      margin-bottom: 28px;
     }
   }
   &-describe {

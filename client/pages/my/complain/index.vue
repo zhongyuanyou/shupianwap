@@ -122,10 +122,10 @@ export default {
         content: '', // 内容
         feedbackTypeId: '', // 吐槽类型
         userId: this.userId || '', // 用户id
-        terminalCode: 'adadasdasd', // 终端编码
-        terminalName: 'dadasd', // 终端名称
-        platformCode: 'adasdad', // 平台编码
-        platformName: 'asdasdas', // 平台名称
+        terminalCode: '', // 终端编码
+        terminalName: '', // 终端名称
+        platformCode: '', // 平台编码
+        platformName: '', // 平台名称
       },
       loading: false, // 加载效果状态
       images: [], // 图片集合
@@ -146,7 +146,12 @@ export default {
         },
         (res) => {}
       )
+      // 设置终端和平台
     }
+    this.formData.terminalCode = this.isInApp
+      ? 'COMDIC_TERMINAL_APP'
+      : 'COMDIC_TERMINAL_WAP'
+    this.formData.terminalCode = this.isInApp ? 'APP' : 'WAP'
     this.formData.userId = this.userId
     this.getComplainCategory()
   },

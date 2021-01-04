@@ -33,9 +33,11 @@ async function getMchSettled(ctx) {
 }
 async function resDefaultObj(ctx) {
 // 接口报错,请求商户中心规返回空数据
-  const { limit, page, sceneId } = ctx.query;
+  const { limit, page, userId, deviceId, formatId, areaCode, sceneId, storeId, productId, productType, title, platform } = ctx.query;
+  // 生成一个缓存的key
+  const cacheKey = ctx.helper.cacheKey(userId, deviceId, formatId, areaCode, sceneId, storeId, productId, productType, title, platform);
   // 先从缓存中获取推荐产品列表
-  const recommendProduct = await ctx.service.redis.get(sceneId);
+  const recommendProduct = await ctx.service.redis.get(cacheKey);
   // 获取到缓存数据
   if (recommendProduct) {
     await ctx.helper.success({
@@ -91,7 +93,9 @@ class RecommendController extends Controller {
       limit,
     } = ctx.query;
     // 先从缓存中获取推荐规划师列表
-    const recommendPlanner = await ctx.service.redis.get(sceneId);
+    // 生成一个缓存的key
+    const cacheKey = ctx.helper.cacheKey(area, deviceId, level_2_ID, login_name, productType, sceneId, user_id, platform);
+    const recommendPlanner = await ctx.service.redis.get(cacheKey);
     // 获取到缓存数据
     if (recommendPlanner) {
       ctx.helper.success({
@@ -167,8 +171,8 @@ class RecommendController extends Controller {
               plannerIconObj[item.userCenterId] :
               defaultGoodsImg.GOODSLIST;
           });
-          /** ***todo:***将得到的推荐数据存入缓存一小时失效****/
-          ctx.service.redis.set(sceneId, plannerList.data, 60 * 60);
+          /** ***todo:***将得到的推荐数据存入缓存3分钟失效****/
+          ctx.service.redis.set(cacheKey, plannerList.data, 60 * 5);
           ctx.helper.success({
             ctx,
             code: 200,
@@ -319,7 +323,9 @@ class RecommendController extends Controller {
               records: limitProductData,
             },
           });
-          ctx.service.redis.set(sceneId, productListData);
+          // 生成一个缓存的key
+          const cacheKey = ctx.helper.cacheKey(userId, deviceId, formatId, areaCode, sceneId, storeId, productId, productType, title, platform);
+          ctx.service.redis.set(cacheKey, productListData);
           return;
         } catch (err) {
           ctx.logger.error(err);

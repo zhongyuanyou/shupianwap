@@ -31,6 +31,7 @@
         @refresh="refresh"
       />
     </div>
+    <Bottombar ref="bottombar" />
   </div>
 </template>
 
@@ -39,6 +40,7 @@ import { WorkTab, WorkTabs, Icon, TopNavBar, Toast } from '@chipspc/vant-dgg'
 import { mapMutations, mapState } from 'vuex'
 import Con from '~/components/found/found/Cons'
 import { foundApi } from '@/api'
+import Bottombar from '@/components/common/nav/Bottombar'
 export default {
   layout: 'keepAlive',
   name: 'Found',
@@ -49,6 +51,7 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [Toast.name]: Toast,
     Con,
+    Bottombar,
   },
   async asyncData({ $axios }) {
     try {
@@ -136,7 +139,6 @@ export default {
     },
     refresh() {
       this.onClickTap(this.activeTab, true)
-      console.log('刷新了')
     },
   },
 }
@@ -144,6 +146,7 @@ export default {
 
 <style lang="less" scoped>
 .found {
+  padding-bottom: 98px;
   /deep/ .sp-top-nav-bar {
     padding-top: constant(safe-area-inset-top);
     padding-top: env(safe-area-inset-top);

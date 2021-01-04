@@ -39,7 +39,7 @@
           center
           type="number"
           label="手机号"
-          maxLength="11"
+          :maxLength="11"
           placeholder="请填写收货人手机号"
         >
         </sp-field>
