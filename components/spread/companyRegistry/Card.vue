@@ -30,12 +30,13 @@
             v-md-map
             v-md:WebClick
             data-form_name="工商注册_表单_手机号"
-            type="digit"
+            type="tel"
             :border="false"
             maxlength="11"
             label="手机号"
             placeholder="信息保护中，仅官方可见"
             label-class="style-phone"
+            @input="inputPhone($event)"
           />
         </sp-cell-group>
         <div v-show="verificationShow" class="input-verification">
@@ -146,6 +147,9 @@ export default {
   methods: {
     inputVal(val) {
       this.sms = this.sms.replace(/[^0-9A-Za-z]/g, '')
+    },
+    inputPhone(val) {
+      this.phoneValue = val.replace(/[^\d]/g, '')
     },
     onSelect(item) {
       // 默认情况下点击选项时不会自动收起
