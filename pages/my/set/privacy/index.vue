@@ -43,9 +43,27 @@ export default {
       isInApp: (state) => state.app.isInApp,
     }),
   },
+  mounted() {
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle(
+        {
+          title: '用户隐私与规则中心',
+        },
+        (res) => {}
+      )
+    }
+  },
   methods: {
     handleClick(index) {
       // 跳转
+      if (this.isInApp) {
+        this.$appFn.dggSetTitle(
+          {
+            title: index ? '薯片隐私政策' : '薯片用户服务协议',
+          },
+          (res) => {}
+        )
+      }
       this.$router.push({
         name: 'login-protocol',
         query: {

@@ -6,7 +6,12 @@
         v-if="banner.length && banner[0].sortMaterialList"
         class="con_banner"
       >
-        <sp-swipe :autoplay="3000" class="con_banner_list" @change="onChange">
+        <sp-swipe
+          :autoplay="3000"
+          :loop="true"
+          class="con_banner_list"
+          @change="onChange"
+        >
           <sp-swipe-item
             v-for="(image, index) in banner[0].sortMaterialList"
             :key="index"
@@ -221,7 +226,9 @@ export default {
         width: 100%;
         height: 258px;
         background-color: #f8f8f8;
+        overflow: hidden;
         /deep/ .sp-image__img {
+          width: 100%;
           border-radius: 12px;
         }
       }
