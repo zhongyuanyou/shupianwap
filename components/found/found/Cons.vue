@@ -213,6 +213,7 @@ export default {
   }
   &_banner {
     width: 100%;
+    padding: 0 40px;
     display: flex;
     justify-content: center;
     align-items: center;
