@@ -11,7 +11,11 @@
             v-for="(image, index) in banner[0].sortMaterialList"
             :key="index"
             class="con_banner_list_item"
-            @click="handleImage(image)"
+            @click="
+              isInApp
+                ? handleImage(image)
+                : adJumpHandleMixin(image.materialList[0])
+            "
           >
             <sp-image
               height="2.58rem"
@@ -77,6 +81,7 @@ import {
 import { mapState } from 'vuex'
 import CardItem from '~/components/common/cardItem/CardItem'
 import { foundApi } from '@/api'
+import adJumpHandle from '~/mixins/adJumpHandle'
 import { baseURL } from '~/config/index'
 Vue.use(Lazyload)
 export default {
@@ -90,6 +95,7 @@ export default {
     [Image.name]: Image,
     CardItem,
   },
+  mixins: [adJumpHandle],
   props: {
     banner: {
       type: Array,
@@ -186,15 +192,10 @@ export default {
     },
     handleImage(item) {
       // 点击图片
-      if (this.isInApp) {
-        // 若是在app中
-        this.$appFn.dggJumpRoute({
-          iOSRouter: item.materialList[0].iosLink,
-          androidRouter: item.materialList[0].androidLink,
-        })
-        return
-      }
-      this.$router.push(item.materialList[0].wapLink)
+      this.$appFn.dggJumpRoute({
+        iOSRouter: item.materialList[0].iosLink,
+        androidRouter: item.materialList[0].androidLink,
+      })
     },
   },
 }

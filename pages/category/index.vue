@@ -47,7 +47,7 @@
                 <sp-swipe-item
                   v-for="(item, index) of recommendData"
                   :key="index"
-                  @click="handleImage(item)"
+                  @click="adJumpHandleMixin(item.materialList[0])"
                 >
                   <sp-image
                     fit="cover"
@@ -93,6 +93,7 @@ import Better from 'better-scroll'
 import { Swipe, SwipeItem, Image } from '@chipspc/vant-dgg'
 import { category } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import adJumpHandle from '~/mixins/adJumpHandle'
 
 export default {
   name: 'Index',
@@ -102,6 +103,7 @@ export default {
     [Image.name]: Image,
     LoadingCenter,
   },
+  mixins: [adJumpHandle],
   data() {
     return {
       keywords: '',

@@ -123,6 +123,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      userId: (state) => state.user.userInfo.userId,
     }),
   },
   mounted() {
@@ -146,16 +147,27 @@ export default {
       } catch (err) {}
     },
     async handleInterStatus(val) {
-      try {
-        const params = {
-          id: this.info.id,
-          type: val,
-        }
-        const res = await this.$axios.post(interviewApi.cancel, params)
-        if (res.code === 200) {
-          this.getInterviewDetail()
-        }
-      } catch (err) {}
+      if (this.userId) {
+        // 若用户已登录
+        try {
+          const params = {
+            id: this.info.id,
+            type: val,
+          }
+          const res = await this.$axios.post(interviewApi.cancel, params)
+          if (res.code === 200) {
+            this.getInterviewDetail()
+          }
+        } catch (err) {}
+      } else if (this.isInApp) {
+        // 如果是在app中
+        this.$appFn.dggLogin((res) => {})
+      } else {
+        this.$router.push({
+          name: 'login',
+          query: { redirect: this.$route.fullPath },
+        })
+      }
     },
   },
 }
