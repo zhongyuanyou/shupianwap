@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 10:09:30
+ * @LastEditTime: 2021-01-04 14:17:25
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -32,41 +32,47 @@
       </Header>
     </div>
     <div class="body">
-      <div class="shopping-car__content">
-        <sp-pull-refresh
-          v-model="refreshing"
-          :disabled="true"
-          @refresh="onRefresh"
+      <!-- :disabled="true" -->
+      <sp-pull-refresh
+        v-model="refreshing"
+        class="shopping-car__refresh"
+        @refresh="onRefresh"
+      >
+        <sp-list
+          v-model="loading"
+          class="shopping-car__goods"
+          error-text="请求失败，点击重新加载"
+          :error.sync="error"
+          :finished="finished"
+          @load="onLoad"
         >
-          <sp-list
-            v-model="loading"
-            class="shopping-car__goods"
-            error-text="请求失败，点击重新加载"
-            :error.sync="error"
-            :finished="finished"
-            @load="onLoad"
+          <div
+            v-for="(item, index) in list"
+            :key="item.cartId"
+            class="shopping-car__goods-item"
           >
-            <div
-              v-for="(item, index) in list"
-              :key="item.cartId"
-              class="shopping-car__goods-item"
-            >
-              <GoodsItem
-                ref="goodsItem"
-                :commodity-data="item"
-                :index="index"
-                @operation="handleItemOperation"
-              />
+            <GoodsItem
+              ref="goodsItem"
+              :commodity-data="item"
+              :index="index"
+              @operation="handleItemOperation"
+            />
+          </div>
+          <template #finished>
+            <span v-if="list && list.length">没有更多了</span>
+            <ShoppingCarNull v-else />
+          </template>
+          <!-- S 自定义加载控件 -->
+          <template #loading>
+            <div>
+              <LoadingDown v-show="!refreshing && loading" :loading="true" />
             </div>
-            <template #finished>
-              <span v-if="list && list.length">没有更多了</span>
-              <ShoppingCarNull v-else />
-            </template>
-          </sp-list>
-        </sp-pull-refresh>
-      </div>
+          </template>
+          <!-- E 自定义加载控件 -->
+        </sp-list>
+      </sp-pull-refresh>
     </div>
-    <div class="footer sp-hairline--top">
+    <div v-if="list && list.length" class="footer sp-hairline--top">
       <Bottombar
         :status="shoppingCarStatus"
         :bottom-data="bottomData"
@@ -87,6 +93,7 @@ import Bottombar from '@/components/shoppingCar/Bottombar'
 import GoodsPopup from '@/components/shoppingCar/GoodsPopup'
 import ShoppingCarNull from '@/components/shoppingCar/ShoppingCarNull'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import LoadingDown from '@/components/common/loading/LoadingDown'
 
 import { shoppingCar } from '@/api'
 
@@ -109,6 +116,7 @@ export default {
     Bottombar,
     ShoppingCarNull,
     LoadingCenter,
+    LoadingDown,
   },
   data() {
     return {
@@ -318,7 +326,14 @@ export default {
     selectAll(data) {
       const cartIdArray = this.list.map((item) => item.cartId)
       const cartId = cartIdArray.join()
-      this.selectItem(cartId, data)
+      this.selectItem(cartId, data).catch((error) => {
+        this.$xToast.show({
+          message: error.message || '选择失败',
+          duration: 1000,
+          icon: 'toast_ic_error',
+          forbidClick: true,
+        })
+      })
     },
 
     // 统一的结算
@@ -398,7 +413,9 @@ export default {
           cartArray.includes(item.cartId) && (shopIsSelected = value)
           return { ...item, shopIsSelected }
         })
-      } catch (error) {}
+      } catch (error) {
+        return Promise.reject(error)
+      }
     },
     // 数量操作
     async countOperation(cartId, data) {
@@ -506,7 +523,7 @@ export default {
 
 .shopping-car {
   height: 100%;
-  overflow-y: scroll;
+  // overflow-y: scroll;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
@@ -523,25 +540,13 @@ export default {
   .body {
     flex: 1;
     padding: 0;
+    overflow-x: hidden;
     overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
     position: relative;
-    // TODO  遮罩层 有问题
-    .update-loading {
-      position: absolute;
-      width: auto;
-      height: auto;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      text-align: center;
-      &__content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
+  }
+  &__refresh {
+    min-height: 100%;
   }
   &__goods {
     &-item {
@@ -550,16 +555,6 @@ export default {
   }
   .footer {
     flex: 128px 0 0;
-  }
-  .recommend {
-    &__title {
-      padding: 0 40px;
-      font-size: 40px;
-      font-weight: bold;
-      color: @title-text-color;
-      line-height: 44px;
-      margin-bottom: 6px;
-    }
   }
   .item-wrap {
     padding: 40px;

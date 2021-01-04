@@ -52,13 +52,14 @@
       </div>
       <template #right>
         <div class="goods-item__operation">
-          <sp-button
+          <!-- 一期没有 -->
+          <!-- <sp-button
             square
             type="primary"
             text="移入关注"
             class="goods-item__operation-attention"
             @click="handleAttention"
-          />
+          /> -->
           <sp-button
             square
             type="danger"
