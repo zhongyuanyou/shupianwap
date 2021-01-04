@@ -5,7 +5,12 @@
     <!-- e 头部分 -->
     <!-- s 内容 -->
     <div class="content-main">
-      <div v-for="(item, index) of ContentList" :key="index" class="content">
+      <div
+        v-for="(item, index) of ContentList"
+        :key="index"
+        class="content"
+        @click="handleClick(index)"
+      >
         <div class="content-title">{{ item }}</div>
         <my-icon
           name="notify_ic_next"
@@ -31,6 +36,18 @@ export default {
     return {
       ContentList: ['薯片用户服务协议', '薯片隐私政策'],
     }
+  },
+  methods: {
+    handleClick(index) {
+      // 跳转
+      this.$router.push({
+        name: 'login-protocol',
+        query: {
+          categoryCode: index ? 'protocol100121' : 'protocol100122',
+          hideHeader: true,
+        },
+      })
+    },
   },
 }
 </script>

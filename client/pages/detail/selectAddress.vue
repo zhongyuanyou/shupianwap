@@ -516,6 +516,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #ffffff;
   .top {
     background-color: #ffffff;
     .search-nav {
@@ -578,7 +579,7 @@ export default {
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     .list-refresh {
-      overflow: initial;
+      min-height: 100%;
     }
   }
   .footer {

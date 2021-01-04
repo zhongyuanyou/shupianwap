@@ -37,7 +37,7 @@
           </div>
         </div>
       </div>
-      <div class="detail-content-answer" v-if="info.revertTime">
+      <div v-if="info.revertTime" class="detail-content-answer">
         <div class="detail-content-answer-title">解决方案</div>
         <div class="detail-content-answer-time">
           解决时间：{{ info.revertTime }}

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-31 17:48:13
+ * @LastEditTime: 2021-01-04 10:09:30
  * @Description: 购物车页面
  * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
 -->
@@ -509,6 +509,7 @@ export default {
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
+  background-color: #ffffff;
   .head {
     &__icon-back {
       padding-left: 32px;

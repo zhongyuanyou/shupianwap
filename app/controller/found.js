@@ -112,7 +112,7 @@ class FoundController extends Controller {
       service,
       bannerApi,
       listApi,
-      new Array('ad100026'),
+      new Array('ad100245'),
       information_class[0].code,
       ctx,
       true
@@ -180,7 +180,7 @@ class FoundController extends Controller {
         service,
         bannerApi,
         listApi,
-        new Array('ad100026'),
+        new Array('ad100245'),
         categoryCode,
         ctx,
         false

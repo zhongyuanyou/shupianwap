@@ -25,6 +25,12 @@
         </div>
       </div>
       <!--E 有搜索历史-->
+      <!--S 无搜索历史-->
+      <div v-show="!historySearch.length && !keywords" class="no-data">
+        <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
+        <p>没有任何搜索历史</p>
+      </div>
+      <!--E 无搜索历史-->
       <!--S 搜索检索-->
       <div v-show="keywords" class="keyword" @click="handleClick(keywords)">
         <p>
@@ -94,6 +100,23 @@ export default {
 <style lang="less" scoped>
 .search {
   padding: 0 40px;
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    img {
+      width: 340px;
+      height: 340px;
+      margin-top: 270px;
+    }
+    > p {
+      font-size: 30px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #1a1a1a;
+    }
+  }
   &_con {
     margin-top: 128px;
     display: flex;
