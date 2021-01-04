@@ -212,6 +212,7 @@ export default {
     padding: 40px 32px;
   }
   &_banner {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -220,7 +221,7 @@ export default {
     border-radius: 12px;
     overflow: hidden;
     &_list {
-      width: 670px;
+      width: 100%;
       height: 284px;
       &_item {
         width: 100%;
