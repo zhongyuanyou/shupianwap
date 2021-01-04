@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 14:23:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 14:22:56
+ * @LastEditTime: 2021-01-04 13:28:55
  * @Description: file content
  * @FilePath: /chips-wap/client/components/login/PhoneField.vue
 -->
@@ -10,12 +10,13 @@
 <template>
   <sp-field
     key="tel"
-    v-model="tel"
     clearable
     type="tel"
     name="telephone"
     placeholder="请输入手机号"
     class="phone-field"
+    maxlength="13"
+    :value="tel"
     @input="handleTelInput"
   >
     <template v-if="type === 'codeBtn'" #button>
@@ -79,15 +80,26 @@ export default {
   computed: {
     tel: {
       get() {
-        return this.value
+        const formatValue = ('' + this.value)
+          .replace(/\s/g, '')
+          .replace(/(\d{3})(\d{0,4})(\d{0,4})/, (match, p1, p2, p3) => {
+            let result = p1
+            result += p2 ? ' ' + p2 : ''
+            result += p3 ? ' ' + p3 : ''
+            return result
+          })
+        console.log('formatValue:', formatValue, formatValue.length)
+        return formatValue
       },
       set(newVal) {
         this.$emit('update', newVal)
       },
     },
   },
+
   methods: {
     handleTelInput(value) {
+      value = value.replace(/\s/g, '')
       this.isValidTel = checkPhone(value)
       this.tel = value
       this.$emit('input', { value, valid: this.isValidTel })
@@ -131,8 +143,9 @@ export default {
 
     async sendSmsCode() {
       if (!this.smsCodeType) return console.error('smsCode发送失败,缺少type!')
+      const phone = this.tel.replace(/\s/g, '')
       const params = {
-        phone: this.tel,
+        phone,
         type: this.smsCodeType,
       }
       try {
