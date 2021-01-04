@@ -6,11 +6,11 @@
 </template>
 
 <script>
-import banner from '~/components/spread/transactions/Banner'
+import Banner from '~/components/spread/transactions/Banner'
 import MyForm from '~/components/spread/transactions/MyForm'
 export default {
   name: 'Index',
-  components: { banner, MyForm },
+  components: { Banner, MyForm },
   head() {
     return {
       title: '公司交易',

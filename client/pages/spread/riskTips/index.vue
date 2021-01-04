@@ -5,6 +5,11 @@
     <!--  头部  -->
     <!-- 主体 -->
     <div class="content">
+      <img
+        src="../../../assets/spreadImages/riskTips/bg.png"
+        alt=""
+        class="content-bg"
+      />
       <div class="content-title">重要风险提示</div>
       <div class="content-body">
         ai join fioasdn fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods
@@ -99,24 +104,45 @@ export default {
 .content {
   padding: 80px 40px 40px;
   background: #eff1f8;
+  position: relative;
+  &-bg {
+    height: 393px;
+    width: 750px;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
   &-title {
-    margin: 0 0 50px 0;
-    font-size: 60px;
+    margin: 0 0 75px 0;
     font-weight: bold;
-    line-height: 60px;
+    line-height: 68px;
+    font-size: 68px;
+    font-weight: bold;
+    color: #222222;
+    position: relative;
+    z-index: 999;
   }
   &-body {
-    border-radius: 15px;
-    background: #ffffff;
-    margin-bottom: 40px;
-    box-shadow: -16px 16px 16px -16px rgba(0, 0, 0, 0.1);
-    padding: 40px;
+    border-radius: 8px;
+    padding: 52px 47px 38px;
     font-size: 23px;
     font-weight: 400;
+    box-shadow: 18px 0px 8px rgba(87, 130, 230, 0.08);
+    position: relative;
+    background: #ffffff;
+    z-index: 999;
   }
 }
 // 头部组件多出线条的修改
 /deep/ .sp-hairline--bottom::after {
   border: none;
+}
+// 头部组件左边的icon样式
+/deep/ .sp-top-nav-bar__left {
+  color: #333333;
+}
+/deep/ .sp-top-nav-bar__arrow {
+  font-size: 32px;
+  font-weight: bold;
 }
 </style>

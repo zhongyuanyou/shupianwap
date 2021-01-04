@@ -14,7 +14,7 @@
     </sp-top-nav-bar>
     <!--  城市按钮  -->
     <button class="banner-button" @click="tabCity">
-      {{ city }}
+      {{ currentCity.name || '成都' }}
       <my-icon
         name="tap_ic_pen_n"
         color="#ffffff"
@@ -27,14 +27,20 @@
 
 <script>
 import { TopNavBar } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 export default {
   name: 'Banner',
   components: { [TopNavBar.name]: TopNavBar },
   data() {
     return {
-      city: '成都',
       bg: require('../../../assets/spreadImages/transactions/Step1-img-banner.jpg'),
+      city: '成都',
     }
+  },
+  computed: {
+    ...mapState({
+      currentCity: (state) => state.city.currentCity,
+    }),
   },
   methods: {
     onClickLeft() {
@@ -58,11 +64,9 @@ export default {
     font-weight: lighter;
   }
   &-button {
-    width: 113px;
-    height: 44px;
+    padding: 10px 20px;
     background: rgba(255, 255, 255, 0.2);
     border-radius: 22px;
-    padding: 0;
     position: absolute;
     left: 48px;
     bottom: 58px;
