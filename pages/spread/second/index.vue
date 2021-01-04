@@ -5,7 +5,7 @@
       <div class="form-title">您还有一些额外需求要告知我们？</div>
       <sp-field
         v-model="message"
-        rows="7"
+        rows="4"
         autosize
         type="textarea"
         maxlength="300"
@@ -21,12 +21,13 @@
             color="#2E73F5"
             class="icon"
           ></my-icon>
-          订阅专属服务
+          <span>订阅专属服务</span>
         </div>
         <div class="form-read-second">
           为您匹配到合适服务时，将在第一时间联系您
         </div>
       </div>
+      <button class="form-button">生成需求卡</button>
     </div>
   </div>
 </template>
@@ -57,6 +58,7 @@ export default {
 }
 .form {
   padding: 64px 40px 24px;
+  font-size: 0;
   &-title {
     font-size: 36px;
     font-weight: bold;
@@ -73,12 +75,18 @@ export default {
     background: #f8f8f8;
     border-radius: 8px;
     padding: 32px 0 0 24px;
+    margin-bottom: 212px;
     &-first {
-      font-size: 28px;
-      font-weight: 400;
-      color: #222222;
-      line-height: 32px;
+      font-size: 0;
       margin: 0 0 16px 0;
+      text-align: left;
+      & > span {
+        margin-left: 17px;
+        font-size: 28px;
+        font-weight: 400;
+        color: #222222;
+        line-height: 32px;
+      }
     }
     &-second {
       font-size: 28px;
@@ -87,6 +95,16 @@ export default {
       line-height: 28px;
       margin: 0 0 31px 49px;
     }
+  }
+  &-button {
+    background: #4974f5;
+    border-radius: 8px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffffff;
+    padding: 0;
+    width: 100%;
+    height: 88px;
   }
 }
 // 纯文本输入框容器
@@ -102,7 +120,6 @@ export default {
   font-size: 28px;
   font-weight: 400;
   color: #cccccc;
-  line-height: 28px;
 }
 // 纯文本输入框布局
 /deep/ .sp-cell__value {
@@ -113,6 +130,10 @@ export default {
 /deep/ .sp-field__body {
   flex: 1;
   display: block;
+  overflow: scroll;
+}
+/deep/ .sp-field__body::-webkit-scrollbar {
+  display: none;
 }
 //统计字数
 /deep/ .sp-field__word-limit {

@@ -74,11 +74,10 @@ export default {
     }
   }
   &-white {
-    width: 686px;
     border-bottom: 32px solid transparent;
-    border-left: 680px solid #ffffff;
+    border-left: 710px solid #ffffff;
     position: relative;
-    bottom: 40px;
+    bottom: 42px;
   }
 }
 
