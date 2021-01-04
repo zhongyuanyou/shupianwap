@@ -310,6 +310,7 @@ export default {
         height: 124px;
         font-size: 26px;
         font-family: PingFang SC;
+        padding: 0 20px;
         font-weight: 400;
         color: #555555;
         text-align: center;
