@@ -3,13 +3,14 @@
     <em>{{ baseDataList.listName }}:</em>
     <div
       :class="{
-        'item-dropDown': baseDataList.listDropDown,
+        'item-dropDown':
+          baseDataList.listDropDown && baseDataList.listVal.length > 40,
         'item-itemDown': isShow,
       }"
     >
       <span class="dropDownContent">{{ baseDataList.listVal }}</span>
       <span
-        v-if="baseDataList.listDropDown"
+        v-if="baseDataList.listDropDown && baseDataList.listVal.length > 40"
         class="more-icon-btn"
         @click="handlToggleDropDown"
       >
@@ -74,6 +75,15 @@ export default {
     flex: 1;
     position: relative;
     margin-bottom: 95px;
+    &::after {
+      content: '...';
+      display: inline-block;
+      position: absolute;
+      width: 40px;
+      background-color: #fff;
+      bottom: 0px;
+      right: 0px;
+    }
     .dropDownContent {
       color: #222222;
       max-height: 80px;
@@ -83,7 +93,6 @@ export default {
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       transition: all 0.3s;
-      position: relative;
     }
     .more-icon-btn {
       position: absolute;
@@ -110,6 +119,9 @@ export default {
     }
   }
   &-itemDown {
+    &::after {
+      display: none;
+    }
     .dropDownContent {
       max-height: 1300px;
     }
