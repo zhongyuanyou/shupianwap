@@ -135,9 +135,11 @@ export default {
     ...mapState({
       userId: (state) => state.user.userInfo.userId,
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
   mounted() {
+    console.log('appInfo', this.appInfo)
     if (this.isInApp) {
       // 设置app导航名称
       this.$appFn.dggSetTitle(
@@ -151,7 +153,17 @@ export default {
     this.formData.terminalCode = this.isInApp
       ? 'COMDIC_TERMINAL_APP'
       : 'COMDIC_TERMINAL_WAP'
-    this.formData.terminalCode = this.isInApp ? 'APP' : 'WAP'
+    this.formData.terminalName = this.isInApp ? 'APP' : 'WAP'
+    this.formData.platformCode = this.isInApp
+      ? this.appInfo.platformCode
+      : 'COMDIC_PLATFORM_CRISPS'
+    this.formData.platformName = this.isInApp
+      ? this.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
+        ? '企大宝'
+        : this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
+        ? '薯片'
+        : '企大顺'
+      : '薯片'
     this.formData.userId = this.userId
     this.getComplainCategory()
   },
@@ -196,10 +208,10 @@ export default {
             content: '', // 内容
             feedbackTypeId: '', // 吐槽类型
             userId: this.userId, // 用户id
-            terminalCode: 'adadasdasd', // 终端编码
-            terminalName: 'dadasd', // 终端名称
-            platformCode: 'adasdad', // 平台编码
-            platformName: 'asdasdas', // 平台名称
+            terminalCode: '', // 终端编码
+            terminalName: '', // 终端名称
+            platformCode: '', // 平台编码
+            platformName: '', // 平台名称
             images: [],
           }
           this.uploader = []

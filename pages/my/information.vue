@@ -1,19 +1,7 @@
 <template>
   <div class="information">
     <!--S 头部-->
-    <sp-top-nav-bar
-      :title="'个人信息'"
-      left-arrow
-      ellipsis
-      :fixed="true"
-      @on-click-left="onClickLeft"
-    >
-      <template #left>
-        <div>
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
-        </div>
-      </template>
-    </sp-top-nav-bar>
+    <Header title="个人信息" />
     <!--E 头部-->
     <!--S 内容-->
     <div class="information_con">
@@ -131,6 +119,7 @@ import AreaSelect from '~/components/common/areaSelected/AreaSelect'
 import BirthdaySelected from '~/components/my/information/BirthdaySelected'
 import { ossApi, userinfoApi } from '@/api'
 import SpToast from '@/components/common/spToast/SpToast'
+import Header from '@/components/common/head/header'
 export default {
   name: 'Information',
   components: {
@@ -143,6 +132,7 @@ export default {
     AreaSelect,
     BirthdaySelected,
     SpToast,
+    Header,
   },
   data() {
     return {
@@ -383,7 +373,6 @@ export default {
     height: 88px;
   }
   &_con {
-    padding-top: 88px;
     display: flex;
     flex-direction: column;
     &_tp {

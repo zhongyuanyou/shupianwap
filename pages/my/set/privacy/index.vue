@@ -1,7 +1,7 @@
 <template>
   <div class="user-privacy">
     <!-- s 头部分 -->
-    <Header title="用户隐私与规则中心" />
+    <Header title="用户隐私与规则中心" v-if="!isInApp" />
     <!-- e 头部分 -->
     <!-- s 内容 -->
     <div class="content-main">
@@ -26,6 +26,7 @@
 
 <script>
 import { NavBar } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import Header from '@/components/common/head/header'
 export default {
   components: {
@@ -37,9 +38,32 @@ export default {
       ContentList: ['薯片用户服务协议', '薯片隐私政策'],
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
+  mounted() {
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle(
+        {
+          title: '用户隐私与规则中心',
+        },
+        (res) => {}
+      )
+    }
+  },
   methods: {
     handleClick(index) {
       // 跳转
+      if (this.isInApp) {
+        this.$appFn.dggSetTitle(
+          {
+            title: index ? '薯片隐私政策' : '薯片用户服务协议',
+          },
+          (res) => {}
+        )
+      }
       this.$router.push({
         name: 'login-protocol',
         query: {
