@@ -384,7 +384,7 @@ export default {
             background: #ffffff;
             border: 1px solid #cdcdcd;
             border-radius: 4px;
-            line-height: 60px;
+            line-height: 25px;
             margin: 32px 32px 0 0;
             font-size: 24px;
             font-family: PingFang SC;
