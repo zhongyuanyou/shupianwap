@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-31 10:49:14
+ * @LastEditTime: 2021-01-04 09:33:15
  * @Description: file content
  * @FilePath: /chips-wap/client/pages/planner/list.vue
 -->
@@ -593,13 +593,18 @@ export default {
 
 .list {
   height: 100%;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
 
   .head {
     background: #ffffff;
   }
   .body {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
     padding: 0;
     .search {
       &__input {
@@ -689,7 +694,7 @@ export default {
       }
     }
     .list-refresh {
-      overflow: initial;
+      min-height: calc(100% - 218px);
     }
   }
 

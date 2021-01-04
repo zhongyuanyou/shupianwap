@@ -578,7 +578,7 @@ export default {
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     .list-refresh {
-      overflow: initial;
+      min-height: 100%;
     }
   }
   .footer {
