@@ -94,6 +94,7 @@ export default {
   flex-direction: column;
   width: 100%;
   height: 100%;
+  background-color: #ffffff;
   .top {
     flex: 88px 0 0;
   }

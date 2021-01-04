@@ -375,9 +375,14 @@ export default {
 
 .planner {
   height: 100%;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
   .body {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
     padding: 0;
     /deep/.sp-cell {
       padding: 40px;
@@ -488,7 +493,7 @@ export default {
     }
   }
   &-refresh {
-    // overflow: initial;
+    min-height: 100%;
   }
   .icon {
     display: inline-block;
