@@ -33,9 +33,11 @@ export default {
             } else {
               this.listShow = true
             }
-          } else {
+          } else if (this.formData.start === 1) {
             this.listShow = false
             this.searchToast('共找到0条资源')
+          } else {
+            this.searchToast('网络错误，请稍后重试')
           }
           this.skeletonLoading = false
           this.$nextTick(() => {
