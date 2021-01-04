@@ -1,7 +1,10 @@
 <template>
   <div class="card_item" @click="handleClick">
     <div v-if="!layout || !image">
-      <p class="title">
+      <p
+        class="title"
+        :style="{ color: hasLook.includes(favour.id) ? '#999999' : '#333' }"
+      >
         <span v-if="favour.hot" class="hot">热门</span>{{ favour.title }}
       </p>
       <sp-image
@@ -26,7 +29,10 @@
     </div>
     <div v-else class="space_item">
       <div class="space_item_lf">
-        <p :class="['title', 'space_title']">
+        <p
+          :class="['title', 'space_title']"
+          :style="{ color: hasLook.includes(favour.id) ? '#999999' : '#333' }"
+        >
           <span v-if="favour.hot" class="hot">热门</span>{{ favour.title }}
         </p>
         <p class="space_lf">
@@ -84,9 +90,24 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      hasLook: [], // 当前被点击过的文章id
+    }
+  },
   methods: {
     handleClick() {
       // 点击
+      if (!this.hasLook.length) {
+        this.hasLook.push(this.favour.id)
+      } else {
+        const isHas = this.hasLook.some((item) => {
+          return item.id === this.favour.id
+        })
+        if (!isHas) {
+          this.hasLook.push(this.favour.id)
+        }
+      }
       this.$emit('click')
     },
   },
@@ -95,6 +116,9 @@ export default {
 
 <style lang="less" scoped>
 .card_item {
+  .gray_title {
+    color: red;
+  }
   .sp-cell {
     padding: 40px 32px;
   }

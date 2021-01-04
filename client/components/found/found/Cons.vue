@@ -22,7 +22,7 @@
           <template #indicator>
             <div class="custom-indicator">
               <div
-                v-for="(item, index) in images"
+                v-for="(item, index) in banner[0].sortMaterialList"
                 :key="index"
                 :class="[
                   'custom-indicator_item',
@@ -77,6 +77,7 @@ import {
 import { mapState } from 'vuex'
 import CardItem from '~/components/common/cardItem/CardItem'
 import { foundApi } from '@/api'
+import { baseURL } from '~/config/index'
 Vue.use(Lazyload)
 export default {
   name: 'Con',
@@ -115,10 +116,6 @@ export default {
   },
   data() {
     return {
-      images: [
-        'https://img.yzcdn.cn/vant/apple-1.jpg',
-        'https://img.yzcdn.cn/vant/apple-2.jpg',
-      ],
       current: 0,
       refreshing: this.refreshStatus,
       loading: false,
@@ -158,7 +155,7 @@ export default {
       // 点击
       if (this.isInApp) {
         this.$appFn.dggOpenNewWeb(
-          { urlString: `http://172.16.139.140:7001/found/detail/${item.id}` },
+          { urlString: `${baseURL}/found/detail/${item.id}` },
           (res) => {}
         )
         return
@@ -223,6 +220,9 @@ export default {
         width: 100%;
         height: 258px;
         background-color: #f8f8f8;
+        /deep/ .sp-image__img {
+          border-radius: 12px;
+        }
       }
       .custom-indicator {
         position: absolute;

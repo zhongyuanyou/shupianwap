@@ -50,10 +50,13 @@ export default {
     // this.getInfoList()
   },
   methods: {
-    inputChange() {
+    inputChange(data) {
+      this.keywords = data
+      this.page = 1
       this.getInfoList()
     },
     async getInfoList() {
+      console.log(1212)
       // 获取资讯列表
       const params = {
         keyword: this.keywords,
