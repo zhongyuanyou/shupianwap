@@ -11,47 +11,7 @@
         class="content-bg"
       />
       <div class="content-title">重要风险提示</div>
-      <div class="content-body">
-        ai join fioasdn fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods
-        nfadsn fian ioenio rneioNIN oinsfdion
-        isoafn你覅水泥地哦年山东你发哪兄弟是南方熊十多年穷水电费ai join fioasdn
-        fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods nfadsn fian ioenio
-        rneioNIN oinsfdion
-        isoafn你覅水泥地哦年山东你发哪兄弟是南方熊十多年穷水电费ai join fioasdn
-        fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods nfadsn fian ioenio
-        rneioNIN oinsfdion
-        isoafn你覅水泥地哦年山东你发哪兄弟是南方熊十多年穷水电费ai join fioasdn
-        fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods nfadsn fian ioenio
-        rneioNIN oinsfdion
-        isoafn你覅水泥地哦年山东你发哪兄弟是南方熊十多年穷水电费ai join fioasdn
-        fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods nfadsn fian ioenio
-        rneioNIN oinsfdion
-        isoafn你覅水泥地哦年山东你发哪兄弟是南方熊十多年穷水电费ai join fioasdn
-        fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods nfadsn fian ioenio
-        rneioNIN oinsfdion
-        isoafn你覅水泥地哦年山东你发哪兄弟是南方熊十多年穷水电费ai join fioasdn
-        fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods nfadsn fian ioenio
-        rneioNIN oinsfdion
-        isoafn你覅水泥地哦年山东你发哪兄弟是南方熊十多年穷水电费ai join fioasdn
-        fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods nfadsn fian ioenio
-        rneioNIN oinsfdio rneioNIN oinsfdion
-        isoafn你覅水泥地哦年山东你发哪兄弟是南方熊十多年穷水电费ai join fioasdn
-        fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods nfadsn fian ioenio
-        rneioNIN oinsfdion
-        isoafn你覅水泥地哦年山东你发哪兄弟是南方熊十多年穷水电费ai join fioasdn
-        fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods nfadsn fian ioenio
-        rneioNIN oinsfdion
-        isoafn你覅水泥地哦年山东你发哪兄弟是南方熊十多年穷水电费ai join fioasdn
-        fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods nfadsn fian ioenio
-        rneioNIN oinsfdion
-        isoafn你覅水泥地哦年山东你发哪兄弟是南方熊十多年穷水电费ai join fioasdn
-        fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods nfadsn fian ioenio
-        rneioNIN oinsfdion
-        isoafn你覅水泥地哦年山东你发哪兄弟是南方熊十多年穷水电费ai join fioasdn
-        fioan iofna oijfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaods nfadsn fian ioenio
-        rneioNIN oinsfdion
-        isoafn你覅水泥地哦年山东你发哪兄弟是南方熊十多年穷水电费ai join fioasdn
-      </div>
+      <div class="content-body"></div>
     </div>
     <!-- 主体 -->
   </div>
@@ -64,15 +24,16 @@ export default {
   name: 'Index',
   components: { [TopNavBar.name]: TopNavBar },
   async asyncData({ $axios }) {
-    const id = 1
     try {
       const res = await $axios.get(riskTipsApi.list, {
         params: {
-          id,
+          categoryCode: 'protocol100001',
+          includeField: 'content,title',
         },
       })
       if (res.code === 200) {
         console.log(res.data)
+        return { getMessage: res.data.rows[0].content }
       }
     } catch (error) {
       console.log('error', error)
@@ -82,6 +43,11 @@ export default {
     return {
       text: '',
     }
+  },
+  mounted() {
+    document.getElementsByClassName(
+      'content-body'
+    )[0].innerHTML = this.getMessage
   },
   methods: {
     onClickLeft() {
@@ -125,7 +91,7 @@ export default {
   &-body {
     border-radius: 8px;
     padding: 52px 47px 38px;
-    font-size: 23px;
+    font-size: 28px;
     font-weight: 400;
     box-shadow: 18px 0px 8px rgba(87, 130, 230, 0.08);
     position: relative;

@@ -253,31 +253,36 @@ export default {
 
       this.$axios.post(homeApi.findRecomList, params).then((res) => {
         this.loading = false
-        if (res.code === 200 && params.findType === 0) {
-          res.data.dictData[0].adData = res.data.adData
-          this.tabBtn = res.data.dictData
-          return
+        if (res.code === 200) {
+          if (params.findType === 0) {
+            res.data.dictData[0].adData = res.data.adData
+            this.tabBtn = res.data.dictData
+            return
+          }
+          if (params.findType === 1) {
+            this.tabBtn[index].adData = res.data.adData
+            this.tabBtn[index].goodsList = res.data.goodsList
+            this.tabBtn[index].noData = res.data.goodsList.length === 0
+            return
+          }
+          // 初始查询第一个分类产品无任何数据
+          if (
+            index === 0 &&
+            params.page === 1 &&
+            res.data.goodsList.length === 0
+          ) {
+            this.$set(this.tabBtn[index], 'noData', true)
+            return
+          }
+          // 加载更多时无更多数据
+          if (!res.data.goodsList.length) {
+            this.tabBtn[index].noMore = true
+            return
+          }
+          this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
+            res.data.goodsList
+          )
         }
-        if (res.code === 200 && params.findType === 1) {
-          this.tabBtn[index].adData = res.data.adData
-          this.tabBtn[index].goodsList = res.data.goodsList
-          this.tabBtn[index].noData = res.data.goodsList.length === 0
-          return
-        }
-
-        // 初始查询第一个分类产品无任何数据
-        if (index === 0 && params.page === 1 && !res.data.goodsList.length) {
-          this.tabBtn[index].noData = res.data.goodsList.length === 0
-          return
-        }
-        // 加载更多时无更多数据
-        if (!res.data.goodsList.length) {
-          this.tabBtn[index].noMore = true
-          return
-        }
-        this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
-          res.data.goodsList
-        )
       })
     },
   },

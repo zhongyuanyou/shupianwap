@@ -31,7 +31,7 @@
         @refresh="refresh"
       />
     </div>
-    <Bottombar ref="bottombar" />
+    <Bottombar ref="bottombar" v-if="!isInApp" />
   </div>
 </template>
 

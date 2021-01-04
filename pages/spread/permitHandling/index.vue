@@ -8,13 +8,14 @@
         title-name="您需要办理哪项业务的变更服务？"
         @onSelect="onSelectServe"
       />
-      <!-- E主要决策人 -->
+      <!-- E您需要办理的许可证业务 -->
+      <!-- S主要决策人 -->
       <SelectDesired
         :select-list="selectActive"
-        title-name="你的身份？"
+        title-name="您是否为主要决策人？"
         @onSelectActive="onDistrict"
       />
-      <!-- S主要决策人 -->
+      <!-- E主要决策人 -->
       <!-- S办理时间 -->
       <SelectDesired
         :select-list="selectTransact"
@@ -31,17 +32,7 @@
   </div>
 </template>
 <script>
-import {
-  TopNavBar,
-  NavSearch,
-  Icon,
-  Toast,
-  Swipe,
-  SwipeItem,
-  Lazyload,
-  Image,
-  Button,
-} from '@chipspc/vant-dgg'
+import { TopNavBar, NavSearch, Icon, Toast, Button } from '@chipspc/vant-dgg'
 import TopLocation from '@/components/spread/companyAlteration/TopLocation'
 import CompanySelec from '@/components/spread/companyAlteration/CompanySelect'
 import SelectDesired from '@/components/spread/companyAlteration/SelectDesired'
@@ -51,10 +42,6 @@ export default {
     [NavSearch.name]: NavSearch,
     [Icon.name]: Icon,
     [Toast.name]: Toast,
-    [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
-    [Lazyload.name]: Lazyload,
-    [Image.name]: Image,
     [Button.name]: Button,
     TopLocation,
     CompanySelec,
@@ -62,7 +49,7 @@ export default {
   },
   data() {
     return {
-      // 选择服务
+      // 选择变更服务
       actionsServe: [
         '建造工程',
         '铁路工程',
@@ -73,7 +60,7 @@ export default {
         '水利水电工程',
         '电力工程',
       ],
-      // 区域
+      // 是否决策人
       selectActive: [
         {
           name: '是',
@@ -97,23 +84,43 @@ export default {
           name: '1年内',
         },
       ],
+      // 变更业务
+      permission: '不限',
+      // 是否决策人
+      isDecision: '是',
+      // 办理时间
+      handlingTime: '一个月内',
     }
   },
   methods: {
     onSelectServe(val) {
       // 变更服务
+      this.xkzlz = val
       console.log(val)
     },
     onDistrict(item) {
-      // 注册在哪个区
+      // 是否决策人
+      this.isDecision = item.name
       console.log(item)
     },
     onTransact(item) {
       // 办理时间
+      this.handlingTime = item.name
       console.log(item)
     },
     onButton() {
-      this.$router.push({ path: '/spread/companyAlteration/requisitionForm' })
+      const obj = JSON.stringify({
+        content: [
+          { name: 'xkz1', value: `主要决策人：${this.isDecision}` },
+          { name: 'xkz2', value: `办理时间：${this.handlingTime}` },
+        ],
+        param: [
+          { name: 'type', value: 'xkx' },
+          { name: 'xkzlx', value: this.permission },
+        ],
+      })
+      localStorage.setItem('currentGroupId', obj)
+      this.$router.push({ path: '/spread/second' })
     },
   },
 }

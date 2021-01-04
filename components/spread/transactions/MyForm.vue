@@ -55,7 +55,7 @@
       />
     </div>
     <!--  按钮  -->
-    <button class="form-button">下一步(1/2)</button>
+    <button class="form-button" @click="next">下一步(1/2)</button>
   </div>
 </template>
 
@@ -103,6 +103,10 @@ export default {
           item.className = ''
         }
       }
+    },
+    // 下一步
+    next() {
+      this.$router.push('/spread/second')
     },
   },
 }
