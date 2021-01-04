@@ -2,18 +2,26 @@
   <div class="header">
     <Header title="" :fixed="false" head-class="head-icon" />
     <div class="city-btn" @click="choiceCity">
-      <span class="city-name">成都</span>
+      <span class="city-name">{{ currentCity }}</span>
       <my-icon name="sear_ic_open" size="0.14rem" color="#cccccc"></my-icon>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Header from '@/components/common/head/header'
 export default {
   name: 'HeaderBg',
   components: {
     Header,
+  },
+  computed: {
+    // 将接受的state混合进组件局部计算属性
+    // 监听接受的state值
+    ...mapState({
+      currentCity: (state) => state.city.currentCity.name,
+    }),
   },
   methods: {
     choiceCity() {
@@ -40,7 +48,7 @@ export default {
   }
 
   .city-btn {
-    width: 113px;
+    padding: 0 20px;
     height: 44px;
     background: rgba(255, 255, 255, 0.2);
     border-radius: 22px;

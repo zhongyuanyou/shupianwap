@@ -7,6 +7,7 @@
       data-form_type="咨询表单"
       data-form_name="工商聚合页_表单"
       type="primary"
+      @click="nextStep"
     >
       下一步(1/2)
     </sp-button>
@@ -19,6 +20,11 @@ export default {
   name: 'FixedBottomBtn',
   components: {
     [Button.name]: Button,
+  },
+  methods: {
+    nextStep() {
+      // 下一步
+    },
   },
 }
 </script>
