@@ -37,7 +37,7 @@ export default {
             this.listShow = false
             this.searchToast('共找到0条资源')
           } else {
-            this.searchToast('网络错误，请稍后重试')
+            this.$xToast.error('网络错误，请稍后重试')
           }
           this.skeletonLoading = false
           this.$nextTick(() => {
