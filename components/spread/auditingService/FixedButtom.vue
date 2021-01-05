@@ -18,13 +18,25 @@
 
 <script>
 import { Button } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 export default {
   name: 'FixedBottomBtn',
   components: {
     [Button.name]: Button,
   },
   data() {
-    return {}
+    return {
+      data: {
+        city: '',
+        type: 'swch',
+        content: {
+          期望城市: '北京',
+          办理业务: '土地评估',
+          公司年营收: '[50, 200]',
+          公司行业: '科技信息',
+        },
+      },
+    }
   },
   computed: {},
   watch: {},
@@ -32,6 +44,8 @@ export default {
   mounted() {},
   methods: {
     nextStep() {
+      this.data.city = this.$store.state.city.currentCity.name
+      localStorage.setItem('data', JSON.stringify(this.data))
       this.$router.push('/spread/second')
     },
   },

@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div v-for="item in data" :key="item.title">
+    <div v-for="(item, index) in data" :key="index">
       <RevenueRadio
         v-if="item.type === 'tab'"
         :value.sync="item.value"
@@ -8,12 +8,15 @@
         :title="item.title"
         :tab-width-class="item.tabWidthClass"
         :no-margin-right="item.noMarginRight"
+        @update:value="radioValue"
       />
       <Dropdown
         v-if="item.type === 'dropdown'"
+        :index="index"
         :title="item.title"
         :tabs="item.options"
         :select-title="item.selectTitle"
+        @dropdownValue="handleValue"
       />
     </div>
   </div>
@@ -100,7 +103,25 @@ export default {
           value: '主营业务1',
         },
       ],
+      content: {
+        revenue: '[0,50]', // 营收金额
+        business: '', // 是什么业务
+        industry: '', // 是什么行业
+      },
     }
+  },
+  methods: {
+    radioValue(value) {
+      const res = String(value.split('-')).replace('万', '')
+      this.content.revenue = '[' + res + ']'
+    },
+    handleValue(value, index) {
+      if (index === 0) {
+        this.content.business = value
+      } else if (index === 2) {
+        this.content.industry = value
+      }
+    },
   },
 }
 </script>

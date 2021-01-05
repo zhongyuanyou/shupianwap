@@ -40,6 +40,12 @@ export default {
     [Popup.name]: Popup,
   },
   props: {
+    index: {
+      type: Number,
+      default: () => {
+        return ''
+      },
+    },
     title: {
       type: String,
       default: () => {
@@ -61,10 +67,11 @@ export default {
   },
   data() {
     return {
-      dropdownValue: '', // 输入框选中的值
+      dropdownValue: '', // 下拉框选中的值
       dropdownShow: false, // 唤起下部弹框
       columns: [], // 数据列表
       defaultActive: 0, // 默认选择下标
+      type: 0,
     }
   },
   methods: {
@@ -81,6 +88,7 @@ export default {
       this.dropdownShow = false
       this.dropdownValue = value
       this.defaultActive = index
+      this.$emit('dropdownValue', this.dropdownValue, this.index)
     },
     // 点击取消时候的事件
     handleCancel() {
