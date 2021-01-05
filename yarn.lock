@@ -1041,10 +1041,10 @@
   dependencies:
     babel-runtime "^6.23.0"
 
-"@fe/sp-ui-mobile@^0.0.4":
-  version "0.0.4"
-  resolved "http://tmobile.dgg188.cn/@fe/sp-ui-mobile/download/@fe/sp-ui-mobile-0.0.4.tgz#b1274382a292c23ae2370c4fe498c681966d62d7"
-  integrity sha1-sSdDgqKSwjriNwxP5JjGgZZtYtc=
+"@fe/sp-ui-mobile@^0.0.6":
+  version "0.0.6"
+  resolved "http://tmobile.dgg188.cn/@fe/sp-ui-mobile/download/@fe/sp-ui-mobile-0.0.6.tgz#dcab2ce2509a6d260c45853ed2dd162bf3e96510"
+  integrity sha1-3Kss4lCabSYMRYU+0t0WK/PpZRA=
   dependencies:
     "@fe/common" "^0.0.8"
     ali-oss "^6.12.0"
