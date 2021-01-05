@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       title: '',
-      imgSrc: require('~/assets/spreadImages/registeredDemandCard/Step1-img-banner.jpg'),
+      imgSrc: 'https://cdn.shupian.cn/sp-pt/wap/images/cu5su70wtu80000.jpg',
     }
   },
   computed: {
