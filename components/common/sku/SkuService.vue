@@ -6,6 +6,7 @@
       round
       position="bottom"
       :safe-area-inset-bottom="true"
+      v-on="$listeners"
     >
       <div class="sku-container">
         <div class="sku-header sp-hairline--bottom">
@@ -25,16 +26,22 @@
           </div>
         </div>
         <div class="sku-body" :style="{ 'max-height': '400px' }">
+          <!-- S 属性 -->
           <div class="sku-group">
+            <!-- 因为 sku必须选择一个, 所以选择后不能取消 is-cancel="false" -->
             <SkuServiceRow
               v-for="treeItem of formatSkuTree"
               :key="treeItem.k_id"
               :sku-row="treeItem"
               :actived="formatSkuAttr"
+              :is-cancel="false"
               :close-on-click-overlay="false"
               @selectChange="handleSelectChange"
             />
           </div>
+          <!-- E 属性 -->
+          <!-- S 数量 -->
+
           <div class="sku-stepper-wrap sp-hairline--bottom">
             <SkuServiceStepper
               :selected-num="goods.goodsNumber"
@@ -44,7 +51,9 @@
               @overLimit="handleStepperLimit"
             />
           </div>
+          <!-- E 数量 -->
           <div class="sku-group">
+            <!-- S 服务资源 -->
             <SkuServiceRow :sku-row="{ k: '服务资源' }">
               <div class="sku-resource">
                 <sp-cell
@@ -78,6 +87,8 @@
                 </sp-cell>
               </div>
             </SkuServiceRow>
+            <!-- E 服务资源 -->
+            <!-- S 增值服务 -->
             <div v-if="formatSkuAddService.length" class="sku-add">
               <div class="sku-add__title">增值服务</div>
               <div class="sku-add__item">
@@ -93,6 +104,7 @@
                 </SkuServiceRow>
               </div>
             </div>
+            <!-- E 增值服务 -->
           </div>
         </div>
         <div class="sku-actions sp-hairline--top">

@@ -83,6 +83,7 @@ import {
 import { mapState } from 'vuex'
 import { foundApi } from '~/api'
 import Header from '@/components/common/head/header'
+import { copyToClipboard } from '~/utils/common'
 
 export default {
   layout: 'keepAlive',
@@ -149,7 +150,12 @@ export default {
     handleSelect(option, index) {
       // 点击分享
       if (option.name === '链接') {
-        console.log('index', option)
+        const result = copyToClipboard(location.href)
+        if (result) {
+          this.$xToast.success('链接复制成功')
+          return
+        }
+        this.$xToast.error('链接复制失败,请重试')
       }
     },
   },

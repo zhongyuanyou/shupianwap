@@ -1,7 +1,7 @@
 <template>
   <div class="user-privacy">
     <!-- s 头部分 -->
-    <Header title="用户隐私与规则中心">
+    <Header title="证件资质中心">
       <template #left>
         <div @click="back">
           <my-icon
@@ -46,7 +46,11 @@ export default {
   },
   data() {
     return {
-      ContentList: ['薯片用户服务协议', '薯片隐私政策'],
+      ContentList: [
+        '薯片WAP-证照资质中心-ICP证书',
+        '薯片WAP-证照资质中心-营业执照',
+        '薯片WAP-证照资质中心-网络文化经营许可证',
+      ],
     }
   },
   computed: {
@@ -59,7 +63,7 @@ export default {
       if (this.isInApp) {
         this.$appFn.dggSetTitle(
           {
-            title: '用户隐私与规则中心',
+            title: '证照资质中心',
           },
           (res) => {}
         )
@@ -72,7 +76,12 @@ export default {
       if (this.isInApp) {
         this.$appFn.dggSetTitle(
           {
-            title: index ? '薯片隐私政策' : '薯片用户服务协议',
+            title:
+              index === 0
+                ? '薯片WAP-证照资质中心-ICP证书'
+                : index === 1
+                ? '薯片WAP-证照资质中心-营业执照'
+                : '薯片WAP-证照资质中心-网络文化经营许可证',
           },
           (res) => {}
         )
@@ -80,7 +89,12 @@ export default {
       this.$router.push({
         name: 'login-protocol',
         query: {
-          categoryCode: index ? 'protocol100121' : 'protocol100122',
+          categoryCode:
+            index === 0
+              ? 'protocol100005'
+              : index === 1
+              ? 'protocol100004'
+              : 'protocol100006',
         },
       })
     },
@@ -114,7 +128,7 @@ export default {
   align-items: center;
   border-bottom: 1px solid #f4f4f4;
   .content-title {
-    width: 300px;
+    max-width: 500px;
     font-size: 32px;
     font-family: PingFang SC;
     font-weight: 400;

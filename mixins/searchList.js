@@ -33,9 +33,11 @@ export default {
             } else {
               this.listShow = true
             }
-          } else {
+          } else if (this.formData.start === 1) {
             this.listShow = false
             this.searchToast('共找到0条资源')
+          } else {
+            this.$xToast.error('网络错误，请刷新后重试')
           }
           this.skeletonLoading = false
           this.$nextTick(() => {
@@ -49,7 +51,7 @@ export default {
           })
         })
         .catch((err) => {
-          this.searchToast('共找到0条资源')
+          this.$xToast.error('网络错误，请刷新后重试')
           this.listShow = false
           this.skeletonLoading = false
           console.error(err)
@@ -92,7 +94,7 @@ export default {
             this.jyGoodsListData[this.currentTabJyCode] = []
             this.searchToast(`共找到0条资源`)
           } else {
-            this.$xToast.error('网络错误，请稍后重试')
+            this.$xToast.error('网络错误，请刷新后重试')
           }
           if (
             JSON.stringify(data.goods) === '{}' ||

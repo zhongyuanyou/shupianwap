@@ -1,25 +1,26 @@
-'use strict';
+'use strict'
 
-const path = require('path');
+const path = require('path')
 
-const BASE = require('./config/index.js');
-const NODE_ENV = process.env.NODE_ENV;
-const baseUrl = BASE.baseURL;
+const BASE = require('./config/index.js')
+const NODE_ENV = process.env.NODE_ENV
+const baseUrl = BASE.baseURL
 console.log('baseUrl', baseUrl)
 const bablePlugin = [
   [
     'import',
     {
       libraryName: '@chipspc/vant-dgg',
-      style: name => `${name}/style/less`,
+      style: (name) => `${name}/style/less`,
     },
     '@chipspc/vant-dgg',
   ],
-];
+]
 if (NODE_ENV === 'production') {
-  bablePlugin.push('transform-remove-console');
+  bablePlugin.push('transform-remove-console')
 }
 module.exports = {
+  telemetry: false,
   server: {
     port: 3001, // default: 3001
     host: 'localhost', // default: localhost,
@@ -78,26 +79,26 @@ module.exports = {
         type: 'text/javascript',
         charset: 'utf-8',
       },
-      {
-        src: 'https://res.wx.qq.com/open/js/jweixin-1.4.0.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
-      {
-        src:
-          'https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-2.0.18.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
-      {
-        src:
-          'https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
+      //   {
+      //     src: 'https://res.wx.qq.com/open/js/jweixin-1.4.0.js',
+      //     ssr: false,
+      //     type: 'text/javascript',
+      //     charset: 'utf-8',
+      //   },
+      //   {
+      //     src:
+      //       'https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-2.0.18.js',
+      //     ssr: false,
+      //     type: 'text/javascript',
+      //     charset: 'utf-8',
+      //   },
+      //   {
+      //     src:
+      //       'https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js',
+      //     ssr: false,
+      //     type: 'text/javascript',
+      //     charset: 'utf-8',
+      //   },
     ],
   },
   loading: { color: '#4974F5' },
@@ -114,7 +115,7 @@ module.exports = {
     { src: '@/plugins/router', ssr: false },
     { src: '@/plugins/dgg-md', ssr: false },
     { src: '@/plugins/my-icon', ssr: true },
-    // { src: '@/plugins/vconsole', ssr: false },
+    { src: '@/plugins/vconsole', ssr: false },
     { src: '@/plugins/app-sdk', ssr: false },
     { src: '@/plugins/lazyload', ssr: true },
     { src: '@/plugins/oss', ssr: true },
@@ -123,13 +124,13 @@ module.exports = {
   router: {
     middleware: 'appDock',
   },
-  buildModules: [ '@nuxtjs/eslint-module' ],
+  buildModules: ['@nuxtjs/eslint-module'],
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     '@nuxtjs/style-resources',
     'cookie-universal-nuxt',
-    [ 'cookie-universal-nuxt', { parseJSON: true }],
+    ['cookie-universal-nuxt', { parseJSON: true }],
   ],
   axios: {
     proxy: true,
@@ -147,7 +148,7 @@ module.exports = {
     },
   },
   build: {
-    transpile: [ /vant.*?less/ ],
+    transpile: [/vant.*?less/],
     postcss: {
       plugins: {
         'postcss-pxtorem': {
@@ -158,12 +159,13 @@ module.exports = {
         },
       },
       preset: {
-        browsers: [ 'Android >= 4.0', 'iOS >= 7' ],
+        browsers: ['Android >= 4.0', 'iOS >= 7'],
       },
     },
     babel: {
       plugins: bablePlugin,
     },
+    extractCSS: { ignoreOrder: true },
     loaders: {
       less: {
         // VantUI 定制主题配置
@@ -183,14 +185,14 @@ module.exports = {
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
           exclude: /(node_modules)/,
-        });
+        })
       }
 
       if (ctx.isClient) {
         if (NODE_ENV === 'development') {
-          config.devtool = 'cheap-module-eval-source-map';
+          config.devtool = 'cheap-module-eval-source-map'
         } else {
-          config.devtool = 'hidden-source-map';
+          config.devtool = 'hidden-source-map'
         }
       }
     },
@@ -202,4 +204,4 @@ module.exports = {
       ignored: /node_modules/,
     },
   },
-};
+}
