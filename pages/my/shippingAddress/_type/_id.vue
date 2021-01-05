@@ -88,6 +88,8 @@
       @confirm="confirm"
     />
     <!--E 弹框-->
+    <sp-toast ref="spToast"></sp-toast>
+    <Loading-center v-show="loading" />
   </div>
 </template>
 
@@ -108,6 +110,8 @@ import { mapState } from 'vuex'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
 import { userinfoApi } from '@/api'
 import Header from '@/components/common/head/header'
+import SpToast from '@/components/common/spToast/SpToast'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'Id',
   components: {
@@ -123,6 +127,8 @@ export default {
     [Sticky.name]: Sticky,
     AreaSelect,
     Header,
+    LoadingCenter,
+    SpToast,
   },
   data() {
     return {
@@ -140,6 +146,7 @@ export default {
       },
       areaList: [], // 地区集合
       areaTxt: '', // 地区字符串
+      loading: false,
     }
   },
   computed: {
@@ -237,6 +244,7 @@ export default {
     },
     async saveEdit() {
       // 保存编辑内容
+      this.loading = true
       this.ruleForm.defaultAddress = this.ruleForm.defaultAddress ? 1 : 0
       const params = {
         ...this.ruleForm,
@@ -245,12 +253,24 @@ export default {
         addressArea: '',
       }
       try {
-        await this.$axios.post(userinfoApi.updateAddress, params)
-        this.$router.back()
-      } catch (err) {}
+        const res = await this.$axios.post(userinfoApi.updateAddress, params)
+        this.loading = false
+        if (res.code === 200) {
+          this.$router.back()
+        } else {
+          this.$refs.spToast.show({
+            message: res.message,
+            duration: 1500,
+            forbidClick: true,
+          })
+        }
+      } catch (err) {
+        this.loading = false
+      }
     },
     async saveNew() {
       // 保存新增内容
+      this.loading = true
       this.ruleForm.defaultAddress = this.ruleForm.defaultAddress ? 1 : 0
       const params = {
         ...this.ruleForm,
@@ -260,9 +280,20 @@ export default {
         userId: this.userId,
       }
       try {
-        await this.$axios.post(userinfoApi.updateAddress, params)
-        this.$router.back()
-      } catch (err) {}
+        const res = await this.$axios.post(userinfoApi.updateAddress, params)
+        this.loading = false
+        if (res.code === 200) {
+          this.$router.back()
+        } else {
+          this.$refs.spToast.show({
+            message: res.message,
+            duration: 1500,
+            forbidClick: true,
+          })
+        }
+      } catch (err) {
+        this.loading = false
+      }
     },
     async confirm() {
       // 确定删除
