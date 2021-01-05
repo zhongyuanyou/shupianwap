@@ -1,7 +1,7 @@
 <template>
   <footer class="footer-nav">
     <client-only>
-      <openApp :noFixed="true" />
+      <openApp :no-fixed="true" />
     </client-only>
     <ul>
       <li
