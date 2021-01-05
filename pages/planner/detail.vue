@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 10:30:45
+ * @LastEditTime: 2021-01-05 13:34:08
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/planner/detail.vue
+ * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
 
 <template>
@@ -448,8 +448,8 @@ export default {
       &__bg {
         padding: 40px;
         position: relative;
-        background: url(~assets/images/planner/detail_bg.png) top center/100%
-          auto no-repeat;
+        background: url(https://cdn.shupian.cn/sp-pt/wap/images/fmyco4fucsg0000.png)
+          top center/100% auto no-repeat;
       }
       &__wrap {
         height: 768px;

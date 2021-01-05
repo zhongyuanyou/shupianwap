@@ -56,8 +56,6 @@
                             class="title-content__item"
                             >{{ item.title }}</span
                           >
-                          <!--  <i class="icon exclusive_icon"></i> -->
-                          <!-- <i class="icon certificates_icon"></i> -->
                         </span>
                       </span>
                     </h4>
@@ -105,7 +103,7 @@
               <sp-image
                 class="no-data__icon"
                 fit="cover"
-                :src="require('../../assets/images/search-null.png')"
+                src="https://cdn.shupian.cn/sp-pt/wap/images/9cxcgh1a0t80000.png"
               />
               <template v-if="!error">
                 <div class="no-data__descript">您暂未有联系过的规划师</div>
@@ -431,27 +429,6 @@ export default {
                 line-height: 30px;
                 .textOverflow(1);
                 vertical-align: middle;
-              }
-              .icon {
-                margin-right: 8px;
-                &:last-child {
-                  margin-right: 0;
-                }
-              }
-              .exclusive_icon {
-                width: 134px;
-                height: 28px;
-                background-image: url('~assets/images/planner/per_img_exclusive.png');
-              }
-              .gold_icon {
-                width: 114px;
-                height: 28px;
-                background-image: url('~assets/images/planner/per_img_gold.png');
-              }
-              .certificates_icon {
-                width: 40px;
-                height: 28px;
-                background-image: url('~assets/images/planner/per_img_certificates.png');
               }
             }
           }
