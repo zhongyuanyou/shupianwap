@@ -6,4 +6,5 @@ module.exports = {
   mchCoding: '20190620000111',
   imBaseUrl: 'https://im.shupian.cn', // IM 地址
   domainUrl: 'https://dm.shupian.cn/', // 域名
+  ossUrl: 'https://dspapi.shupian.cn', // oss域名
 }
