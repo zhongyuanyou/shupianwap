@@ -40,7 +40,7 @@
                     <span class="title">
                       <span class="title-content">
                         <img
-                          :src="$ossImgSet(112, 20, '3fjjj54kqz20000.png')"
+                          :src="$ossImgSet(106, 20, '3fjjj54kqz20000.png')"
                           alt=""
                         />
                         <img
@@ -286,6 +286,14 @@ export default {
       // 调起IM
       const imUserId = this.userId // 商户用户ID
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      const imUserName = item.inviterName
+      if (this.isInApp) {
+        this.$appFn.dgg_openIM(
+          { name: imUserName, userId: imUserId, userType: imUserType },
+          (res) => {}
+        )
+        return
+      }
       this.creatImSessionMixin({ imUserId, imUserType })
     },
   },
@@ -338,6 +346,12 @@ export default {
                 white-space: nowrap;
                 z-index: 1;
                 line-height: 1;
+                .icon {
+                  margin-right: 8px;
+                  &:last-child {
+                    margin-right: 0;
+                  }
+                }
               }
             }
           }
