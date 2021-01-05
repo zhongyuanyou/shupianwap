@@ -15,7 +15,7 @@
             height="1.6rem"
             fit="cover"
             radius="0.04rem"
-            src="https://img.yzcdn.cn/vant/cat.jpeg"
+            :src="item.productImgArr[0]"
           />
         </div>
         <div class="need_item_rt">

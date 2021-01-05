@@ -313,6 +313,7 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
+            console.log(res.data)
             if (res.data.records.length === 0) {
               this.finished = true
             }
