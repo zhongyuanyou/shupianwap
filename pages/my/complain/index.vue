@@ -239,13 +239,17 @@ export default {
       formData.append('uploadatalog', 'sp-pt/wap/images')
       formData.append('file', file.file)
       this.loading = true
-      this.$axios.post(ossApi.add, formData, config).then((res) => {
+      try {
+        this.$axios.post(ossApi.add, formData, config).then((res) => {
+          this.loading = false
+          if (res.code === 200) {
+            imgs.push(res.data.url)
+            this.images = imgs
+          }
+        })
+      } catch (err) {
         this.loading = false
-        if (res.code === 200) {
-          imgs.push(res.data.url)
-          this.images = imgs
-        }
-      })
+      }
     },
     async getComplainCategory() {
       this.loading = true

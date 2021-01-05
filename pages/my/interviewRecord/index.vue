@@ -1,14 +1,17 @@
 <template>
   <div class="interview">
-    <sp-sticky v-if="!isInApp">
-      <sp-top-nav-bar title="面谈记录" ellipsis @on-click-left="back">
-        <template #left>
-          <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-          </div>
-        </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
+    <Header title="面谈记录">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <div class="body">
       <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
         <sp-list
@@ -39,8 +42,14 @@
                     <span class="name">{{ item.inviterName }}</span>
                     <span class="title">
                       <span class="title-content">
-                        <i class="icon gold_icon"></i>
-                        <i class="icon certificates_icon"></i>
+                        <img
+                          :src="$ossImgSet(106, 20, '3fjjj54kqz20000.png')"
+                          alt=""
+                        />
+                        <img
+                          :src="$ossImgSet(32, 20, '48gdkcbncui0000.png')"
+                          alt=""
+                        />
                       </span>
                     </span>
                   </h4>
@@ -139,7 +148,7 @@ import {
 import { mapState } from 'vuex'
 import { interviewApi, publicApi } from '~/api'
 import imHandle from '@/mixins/imHandle'
-// import { parseTel } from '~/utils/common'
+import Header from '@/components/common/head/header'
 
 export default {
   name: 'Interview',
@@ -153,6 +162,7 @@ export default {
     [Sticky.name]: Sticky,
     [TopNavBar.name]: TopNavBar,
     [CenterPopup.name]: CenterPopup,
+    Header,
   },
   mixins: [imHandle],
   data() {
@@ -161,7 +171,7 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
-      page: 1, // 当前页
+      page: 2, // 当前页
       limit: 10, // 每页显示条数
       cancelStatus: false,
       interId: '', // 面谈id
@@ -186,7 +196,7 @@ export default {
         (res) => {}
       )
     }
-    // this.getInterviewList()
+    this.getInterviewList()
   },
   methods: {
     back() {
@@ -233,7 +243,6 @@ export default {
         const res = await this.$axios.post(interviewApi.cancel, params)
         if (res.code === 200) {
           this.page = 1
-          this.list = []
           this.getInterviewList()
         }
       } catch (err) {}
@@ -267,10 +276,12 @@ export default {
       // 获取面谈记录列表
       const params = {
         limit: this.limit,
-        page: this.page,
+        page: 1,
       }
       const res = await this.$axios.get(interviewApi.list, { params })
-      this.list = res.data.records
+      if (res.code === 200) {
+        this.list = res.data.records
+      }
     },
     handleClick(item) {
       // 点击面谈记录
@@ -280,6 +291,14 @@ export default {
       // 调起IM
       const imUserId = this.userId // 商户用户ID
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      const imUserName = item.inviterName
+      if (this.isInApp) {
+        this.$appFn.dgg_openIM(
+          { name: imUserName, userId: imUserId, userType: imUserType },
+          (res) => {}
+        )
+        return
+      }
       this.creatImSessionMixin({ imUserId, imUserType })
     },
   },
@@ -294,6 +313,9 @@ export default {
 .interview {
   height: 100%;
   overflow-y: scroll;
+  .back_icon {
+    margin-left: 40px;
+  }
   .body {
     padding: 0;
     /deep/.sp-cell {
@@ -337,17 +359,6 @@ export default {
                   &:last-child {
                     margin-right: 0;
                   }
-                }
-                .gold_icon {
-                  width: 114px;
-                  height: 28px;
-                  line-height: 28px;
-                  background-image: url('~assets/images/planner/per_img_gold.png');
-                }
-                .certificates_icon {
-                  width: 40px;
-                  height: 28px;
-                  background-image: url('~assets/images/planner/per_img_certificates.png');
                 }
               }
             }

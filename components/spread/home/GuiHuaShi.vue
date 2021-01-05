@@ -62,7 +62,7 @@ export default {
       list: [
         {
           id: 1,
-          avatarImg: require('~/assets/spreadImages/home/busi_img_gscsrx01.jpg'),
+          avatarImg: '',
           name: '郭亮亮',
           shuPianFen: 11,
           serverNum: 250,
@@ -71,7 +71,7 @@ export default {
         },
         {
           id: 2,
-          avatarImg: require('~/assets/spreadImages/home/busi_img_gscsrx01.jpg'),
+          avatarImg: '',
           name: '郭亮亮',
           shuPianFen: 11,
           serverNum: 250,
@@ -81,7 +81,7 @@ export default {
         {
           id: 3,
           type: '金牌规划师',
-          avatarImg: require('~/assets/spreadImages/home/busi_img_gscsrx01.jpg'),
+          avatarImg: '',
           name: '郭亮亮',
           shuPianFen: 11,
           serverNum: 250,

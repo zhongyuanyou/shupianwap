@@ -27,7 +27,7 @@ export default {
   layout: 'keepAlive',
   name: 'Questions',
   components: { Header },
-  async asyncData({ $axios, query }) {
+  async asyncData({ $axios, query, redirect }) {
     let detailData = {}
     try {
       const res = await $axios.get(foundApi.infoDetail, {
@@ -35,6 +35,8 @@ export default {
       })
       if (res.code === 200) {
         detailData = res.data
+      } else {
+        redirect('/404')
       }
     } catch (error) {}
     return detailData

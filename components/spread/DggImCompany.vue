@@ -76,7 +76,7 @@
           class="inputText"
           placeholder="请输入"
           rows="1"
-          @keyup.enter="addMessageClick"
+          @input="closeEmoji"
         ></textarea>
         <!--          <div-->
         <!--            ref="msgInput"-->
@@ -176,7 +176,7 @@ export default {
     },
     isPopupShow(newVal) {
       if (!newVal) {
-        // 当关闭对话框时，清除聊天数据，下次打开接口获取
+        // 当关闭对话框时，除了第一句问好，清除聊天数据，下次打开接口获取
         this.currentChatData = [
           {
             text:
@@ -185,6 +185,8 @@ export default {
             isUser: false,
           },
         ]
+        // 当关闭对话框时，关闭表情框
+        this.emojishow = false
       }
     },
     // isPopupShow(val) {
@@ -436,6 +438,8 @@ export default {
                 },
               ]
             }
+            // 重新打开聊天框获取聊天记录后，聊天记录滑到最下面
+            that.chatBoxToBottom()
           }
         }
       )
@@ -444,6 +448,10 @@ export default {
     // 打开表情
     emoji() {
       this.emojishow ? (this.emojishow = false) : (this.emojishow = true)
+    },
+    // 关闭表情框
+    closeEmoji() {
+      this.emojishow = false
     },
     // 点击表情发送
     emojiTap(e) {

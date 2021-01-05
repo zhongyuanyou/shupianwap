@@ -112,6 +112,8 @@ export default {
 <style lang="less" scoped>
 .user-privacy {
   width: 100%;
+  height: 100%;
+  background-color: #fff;
 }
 .content-main {
   width: 100%;

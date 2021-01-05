@@ -26,7 +26,7 @@
         arrow-direction="down"
         is-link
         class="form-input"
-        :title-class="selectName1 === '不限' ? { gray: true } : { black: true }"
+        title-class="form-leftTitle"
         @click="show1 = true"
       />
       <sp-action-sheet v-model="show1">
@@ -48,7 +48,7 @@
         arrow-direction="down"
         is-link
         class="form-input"
-        :title-class="selectName2 === '不限' ? { gray: true } : { black: true }"
+        title-class="form-leftTitle"
         @click="show2 = true"
       />
       <sp-action-sheet v-model="show2"
@@ -104,6 +104,7 @@ export default {
         '佛山',
         '宜昌',
         '东莞',
+        '不限',
       ],
       actions2: [
         '科技信息',
@@ -149,14 +150,6 @@ export default {
     },
     // 下一步
     next() {
-      if (this.selectName1 === '不限') {
-        Toast('您想要的公司注册城市不能为空')
-        return
-      }
-      if (this.selectName2 === '不限') {
-        Toast('您期待的公司行业不能为空')
-        return
-      }
       this.$emit('changeData', {
         购买预算: `[${this.minMoney}, ${this.maxMoney}]`,
         期望成立年限: `[${this.minYear}, ${this.maxYear}]`,
@@ -178,6 +171,11 @@ export default {
     font-weight: bold;
     color: #1a1a1a;
     margin-top: 63px;
+  }
+  &-leftTitle {
+    font-size: 24px;
+    font-weight: 400;
+    color: #222;
   }
   &-blue {
     margin: 50px 0 38px 0;
@@ -209,16 +207,6 @@ export default {
     font-weight: bold;
     color: #ffffff;
   }
-}
-.gray {
-  font-size: 24px;
-  font-weight: 400;
-  color: #ccc;
-}
-.black {
-  font-size: 24px;
-  font-weight: 400;
-  color: #222;
 }
 // 修改input组件的title
 ///deep/ .sp-cell__title {

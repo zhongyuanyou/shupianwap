@@ -1,12 +1,23 @@
 <template>
   <div class="address">
     <!--S 头部-->
-    <Header title="我的收货地址" />
+    <Header title="我的收货地址">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!--E 头部-->
     <!--S 内容-->
     <div class="address_con">
       <div v-if="!addressList.length" class="no_address">
-        <img src="~/assets/images/default_img_nopoint.png" />
+        <img :src="$ossImgSet(170, 170, '21107zqqvf40000.png')" alt="" />
         <p class="prompt">未添加收货地址</p>
         <p class="new_address" @click="handleNew">新建地址</p>
       </div>
@@ -237,6 +248,13 @@ export default {
         await this.getShippingAddressList()
       } catch (err) {}
     },
+    back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      this.$router.back()
+    },
   },
 }
 </script>
@@ -246,6 +264,9 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  .back_icon {
+    margin-left: 40px;
+  }
   &_con {
     display: flex;
     flex-direction: column;

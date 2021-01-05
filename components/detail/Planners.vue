@@ -156,7 +156,8 @@ export default {
       display: block;
       width: 34px;
       height: 34px;
-      background: url('~assets/images/planner/per_img_gold.png') no-repeat;
+      background: url(https://cdn.shupian.cn/sp-pt/wap/images/7cwzjbxvkhs0000.png)
+        no-repeat;
       background-size: 34px 34px;
       position: absolute;
       left: -1px;
