@@ -335,7 +335,7 @@ export default {
       } catch (err) {}
     },
     success(fileList) {
-      console.log('fileList', fileList)
+      this.info.url = fileList.oss_filePath
     },
   },
 }
