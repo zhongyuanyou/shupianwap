@@ -33,7 +33,7 @@ export default {
   components: { [TopNavBar.name]: TopNavBar },
   data() {
     return {
-      bg: require('../../../assets/spreadImages/transactions/Step1-img-banner.jpg'),
+      bg: 'https://cdn.shupian.cn/sp-pt/wap/images/cu5su70wtu80000.jpg',
       city: '成都',
     }
   },

@@ -56,7 +56,6 @@
             v-md:webClick
             data-name="工商聚合页_表单_验证码"
             center
-            clearable
             label="验证码"
             type="tel"
             placeholder="请输入验证码"
