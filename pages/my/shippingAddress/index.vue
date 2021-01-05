@@ -1,24 +1,10 @@
 <template>
   <div class="address">
     <!--S 头部-->
-    <sp-sticky v-if="!isInApp">
-      <sp-top-nav-bar
-        :title="'我的收货地址'"
-        left-arrow
-        ellipsis
-        :fixed="true"
-        @on-click-left="onClickLeft"
-      >
-        <template #left>
-          <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
-          </div>
-        </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
+    <Header v-if="!isInApp" title="我的收货地址" />
     <!--E 头部-->
     <!--S 内容-->
-    <div class="address_con" :style="{ paddingTop: isInApp ? 0 : '0.88rem' }">
+    <div class="address_con">
       <div v-if="!addressList.length" class="no_address">
         <img src="~/assets/images/default_img_nopoint.png" />
         <p class="prompt">未添加收货地址</p>
@@ -119,6 +105,7 @@ import { mapState } from 'vuex'
 import { userinfoApi } from '@/api'
 import SpToast from '@/components/common/spToast/SpToast'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import Header from '@/components/common/head/header'
 export default {
   name: 'Index',
   components: {
@@ -132,6 +119,7 @@ export default {
     [Sticky.name]: Sticky,
     SpToast,
     LoadingCenter,
+    Header,
   },
   data() {
     return {
@@ -258,11 +246,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
-  /deep/ .sp-top-nav-bar {
-    height: 88px;
-  }
   &_con {
-    padding-top: 88px;
     display: flex;
     flex-direction: column;
     padding-bottom: 160px;
