@@ -53,14 +53,14 @@ export default {
       topTitle: '轻松找服务',
       // 选择变更服务
       actionsServe: [
-        '建造工程',
-        '铁路工程',
-        '港口和航道工程',
-        '水利水电工程',
-        '电力工程',
-        '港口和航道工程',
-        '水利水电工程',
-        '电力工程',
+        '卫生许可证',
+        '道路运输许可证',
+        '医疗器械许可证',
+        '进出口许可证',
+        '食品通道许可证 HOT',
+        '餐饮服务许可证',
+        '医疗器械许可二类备案',
+        '其他许可证',
       ],
       // 是否决策人
       selectActive: [
@@ -148,6 +148,9 @@ export default {
     font-family: PingFang SC;
     font-weight: bold;
     color: #ffffff;
+    .sp-button {
+      border-radius: 8px;
+    }
   }
 }
 </style>

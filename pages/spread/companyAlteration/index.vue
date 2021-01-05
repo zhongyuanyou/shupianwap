@@ -57,14 +57,20 @@ export default {
       topTitle: '轻松找服务',
       // 选择服务
       actionsServe: [
-        '建造工程',
-        '铁路工程',
-        '港口和航道工程',
-        '水利水电工程',
-        '电力工程',
-        '港口和航道工程',
-        '水利水电工程',
-        '电力工程',
+        '法人变更',
+        '股东变更',
+        '任职变更',
+        '公司名称变更',
+        '经营范围变更',
+        '跨区地址变更',
+        '同区地址变更',
+        '注册资金增加变更',
+        '注册资金减少变更',
+        '公司类型变更',
+        '个体变更',
+        '股权变更',
+        '认缴年限变更',
+        '其他变更',
       ],
       // 区域
       actionsRegion: [
@@ -174,6 +180,9 @@ export default {
     font-family: PingFang SC;
     font-weight: bold;
     color: #ffffff;
+    .sp-button {
+      border-radius: 8px;
+    }
   }
 }
 </style>

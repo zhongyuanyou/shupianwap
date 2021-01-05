@@ -111,7 +111,9 @@ export default {
       background: #ffffff;
       border: 3px solid #000000;
       width: 143px;
-      line-height: 64px;
+      color: #222;
+      height: 66px;
+      line-height: 66px;
       border-radius: 8px;
     }
   }

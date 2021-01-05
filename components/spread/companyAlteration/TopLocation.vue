@@ -6,25 +6,26 @@
       :title="topTitle"
     >
       <template #left>
-        <my-icon
-          class="nav-back"
-          name="nav_ic_back"
-          size="0.40rem"
-          color="#000000"
-          @on-click-left="onClickLeft"
-        />
+        <a @click="onClickLeft"
+          ><my-icon
+            class="nav-back"
+            name="nav_ic_back"
+            size="0.40rem"
+            color="#000000"
+        /></a>
+
         <sp-icon
           class="nav-back"
           name="cross"
           size="0.40rem"
           color="#000000"
-          @on-click-left="onClickLeft"
+          @click="onClickEsc"
         />
       </template>
     </sp-top-nav-bar>
     <div class="company-top" :style="{ backgroundImage: 'url(' + bgImg + ')' }">
       <span class="location" @click="onMore"
-        >{{ positionCityName || currentCity }}
+        >{{ currentCity || positionCityName || '成都' }}
         <my-icon name="tap_ic_pen_n" size="0.14rem" color="#ffffff"></my-icon>
       </span>
     </div>
@@ -66,6 +67,9 @@ export default {
     onClickLeft() {
       this.$router.go(-1)
     },
+    onClickEsc() {
+      window.open('about:blank', '_self').close()
+    },
     onMore() {
       this.$router.push({ path: '/city/choiceCity' })
     },
@@ -98,17 +102,16 @@ export default {
       /deep/.spiconfont-tap_ic_pen_n {
         font-weight: 400;
         display: inline-block;
-        transform:translate(0,-3px)
-        // transform: scale(0.69);
+        transform: translate(0, -3px);
       }
     }
   }
   .sp-hairline--bottom::after {
-      border-bottom-width: 0;
-    }
-    .nav-back {
-      font-weight: 400;
-      margin-right: 34px;
-    }
+    border-bottom-width: 0;
+  }
+  .nav-back {
+    font-weight: 400;
+    margin-right: 34px;
+  }
 }
 </style>
