@@ -79,14 +79,14 @@ export default {
       city: '成都',
     }
   },
-  mounted() {
-    this.data = JSON.parse(localStorage.getItem('data'))
-    console.log(this.data)
-  },
   computed: {
     ...mapState({
       currentCity: (state) => state.city.currentCity,
     }),
+  },
+  mounted() {
+    this.data = JSON.parse(localStorage.getItem('data'))
+    console.log(this.data)
   },
   methods: {
     // 回退

@@ -21,7 +21,7 @@ if (NODE_ENV === 'production') {
 }
 module.exports = {
   server: {
-    port: 3002, // default: 3001
+    port: 3001, // default: 3001
     host: 'localhost', // default: localhost,
   },
   env: {
