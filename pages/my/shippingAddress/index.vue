@@ -1,7 +1,18 @@
 <template>
   <div class="address">
     <!--S 头部-->
-    <Header title="我的收货地址" />
+    <Header title="我的收货地址">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!--E 头部-->
     <!--S 内容-->
     <div class="address_con">
@@ -237,6 +248,13 @@ export default {
         await this.getShippingAddressList()
       } catch (err) {}
     },
+    back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      this.$router.back()
+    },
   },
 }
 </script>
@@ -246,6 +264,9 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  .back_icon {
+    margin-left: 40px;
+  }
   &_con {
     display: flex;
     flex-direction: column;

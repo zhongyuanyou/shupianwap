@@ -1,14 +1,17 @@
 <template>
   <div class="detail">
-    <sp-sticky v-if="!isInApp">
-      <sp-top-nav-bar title="面谈确认" ellipsis @on-click-left="back">
-        <template #left>
-          <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-          </div>
-        </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
+    <Header title="面谈确认">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!--S banner-->
     <div class="detail-banner"></div>
     <!--E banner-->
@@ -102,12 +105,14 @@
 import { Sticky, TopNavBar, Button } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { interviewApi } from '~/api'
+import Header from '@/components/common/head/header'
 export default {
   name: 'Detail',
   components: {
     [Sticky.name]: Sticky,
     [TopNavBar.name]: TopNavBar,
     [Button.name]: Button,
+    Header,
   },
   data() {
     return {
