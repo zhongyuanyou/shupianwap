@@ -1,7 +1,7 @@
 <template>
   <div class="user-privacy">
     <!-- s 头部分 -->
-    <Header title="用户隐私与规则中心" v-if="!isInApp" />
+    <Header title="用户隐私与规则中心" />
     <!-- e 头部分 -->
     <!-- s 内容 -->
     <div class="content-main">
@@ -68,7 +68,6 @@ export default {
         name: 'login-protocol',
         query: {
           categoryCode: index ? 'protocol100121' : 'protocol100122',
-          hideHeader: true,
         },
       })
     },

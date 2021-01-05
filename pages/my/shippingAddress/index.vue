@@ -1,7 +1,7 @@
 <template>
   <div class="address">
     <!--S 头部-->
-    <Header v-if="!isInApp" title="我的收货地址" />
+    <Header title="我的收货地址" />
     <!--E 头部-->
     <!--S 内容-->
     <div class="address_con">
