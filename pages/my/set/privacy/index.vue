@@ -1,7 +1,18 @@
 <template>
   <div class="user-privacy">
     <!-- s 头部分 -->
-    <Header title="用户隐私与规则中心" />
+    <Header title="用户隐私与规则中心">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!-- e 头部分 -->
     <!-- s 内容 -->
     <div class="content-main">
@@ -73,6 +84,13 @@ export default {
         },
       })
     },
+    back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      this.$router.back()
+    },
   },
 }
 </script>
@@ -84,6 +102,9 @@ export default {
 .content-main {
   width: 100%;
   padding-left: 40px;
+}
+.back_icon {
+  margin-left: 40px;
 }
 .content {
   width: 100%;

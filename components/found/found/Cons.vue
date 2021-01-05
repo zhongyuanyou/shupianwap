@@ -1,7 +1,11 @@
 <template>
   <div class="con">
     <!--S banner-->
-    <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+    <sp-pull-refresh
+      v-model="refreshing"
+      style="min-height: calc(100vh - 88px)"
+      @refresh="onRefresh"
+    >
       <div
         v-if="banner.length && banner[0].sortMaterialList"
         class="con_banner"
