@@ -31,9 +31,6 @@
         @refresh="refresh"
       />
     </div>
-    <client-only>
-      <open-app :bottom="bottom" />
-    </client-only>
     <Bottombar v-if="!isInApp" ref="bottombar" />
   </div>
 </template>
@@ -77,7 +74,6 @@ export default {
       information_list: [], // 资讯列表
       categoryCode: '', // code码
       refreshStatus: false,
-      bottom: 0,
     }
   },
   computed: {
@@ -86,9 +82,6 @@ export default {
     }),
   },
   mounted() {
-    this.$nextTick(() => {
-      this.bottom = this.$refs.bottombar.$el.getBoundingClientRect().height
-    })
     this.information_class =
       this.homeData && this.homeData.information_class
         ? this.homeData.information_class

@@ -57,6 +57,7 @@ export default {
       },
     },
     filterMaxHeight: {
+      // 中间筛选项的最大高度
       type: Number,
       default() {
         return 0
