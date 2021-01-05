@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 22:23:18
+ * @LastEditTime: 2021-01-05 09:47:09
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/list.vue
 -->
@@ -13,10 +13,10 @@
       <Header title="在线直选规划师">
         <template #left>
           <my-icon
-            class="back-icon"
             name="nav_ic_back"
             size="0.4rem"
             color="#1A1A1A"
+            style="margin-left: 0.4rem"
             @click.native="onLeftClick"
           ></my-icon>
         </template>
