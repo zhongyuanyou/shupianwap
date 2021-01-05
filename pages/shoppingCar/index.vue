@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-05 14:52:38
+ * @LastEditTime: 2021-01-05 19:09:10
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -500,7 +500,7 @@ export default {
           break
         case 'init':
           // TODO id, createrId 为空
-          params = { id: '12233', createrId: '324' }
+          params = { id: '12233', createrId: this.userInfo.userId }
       }
       try {
         this.updateLoading = true
