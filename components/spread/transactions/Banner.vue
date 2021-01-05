@@ -6,10 +6,13 @@
       background="transparent"
       title-color="#1A1A1A"
       ellipsis
+      :fixed="true"
+      :placeholder="true"
+      z-index="999"
       @on-click-left="onClickLeft"
     >
       <div slot="left" class="head">
-        <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
+        <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>
       </div>
     </sp-top-nav-bar>
     <div class="banner">

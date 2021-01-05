@@ -36,7 +36,7 @@ export default {
   width: 100%;
   height: 418px;
   margin-bottom: 64px;
-  background-image: url('~assets/spreadImages/agentBillingDemandCard/Step1-img-banner.jpg');
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/cu5su70wtu80000.jpg');
   background-size: 100% 418px;
   position: relative;
   /deep/ .my-head {
