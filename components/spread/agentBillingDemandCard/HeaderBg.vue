@@ -1,6 +1,5 @@
 <template>
   <div class="header">
-    <Header title="" :fixed="false" head-class="head-icon" />
     <div class="city-btn" @click="choiceCity">
       <span class="city-name">{{ currentCity }}</span>
       <my-icon name="sear_ic_open" size="0.14rem" color="#cccccc"></my-icon>
@@ -13,9 +12,7 @@ import { mapState } from 'vuex'
 import Header from '@/components/common/head/header'
 export default {
   name: 'HeaderBg',
-  components: {
-    Header,
-  },
+  components: {},
   computed: {
     // 将接受的state混合进组件局部计算属性
     // 监听接受的state值
@@ -34,18 +31,18 @@ export default {
 <style lang="less" scoped>
 .header {
   width: 100%;
-  height: 418px;
+  height: 320px;
   margin-bottom: 32px;
-  background-image: url('~assets/spreadImages/agentBillingDemandCard/Step1-img-banner.jpg');
-  background-size: 100% 418px;
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/13zjhce6649s000.jpg');
+  background-size: 100% 320px;
   position: relative;
-  /deep/ .my-head {
-    background: transparent;
-    box-shadow: none;
-  }
-  /deep/ .back-icon {
-    color: #ffffff !important;
-  }
+  ///deep/ .my-head {
+  //  background: transparent;
+  //  box-shadow: none;
+  //}
+  ///deep/ .back-icon {
+  //  color: #ffffff !important;
+  //}
 
   .city-btn {
     padding: 0 20px;

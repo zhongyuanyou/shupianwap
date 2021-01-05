@@ -1,5 +1,6 @@
 <template>
   <div class="page-content">
+    <Header title="轻松找服务" :fixed="false" head-class="head-icon" />
     <HeaderBg />
     <Question />
     <FixedBottomBtn />
@@ -10,9 +11,11 @@
 import HeaderBg from '@/components/spread/agentBillingDemandCard/HeaderBg'
 import FixedBottomBtn from '@/components/spread/agentBillingDemandCard/FixedBottomBtn'
 import Question from '@/components/spread/agentBillingDemandCard/Question'
+import Header from '~/components/common/head/header'
 export default {
   name: 'Index',
   components: {
+    Header,
     HeaderBg,
     FixedBottomBtn,
     Question,
