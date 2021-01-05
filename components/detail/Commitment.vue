@@ -1,6 +1,16 @@
 <template>
   <div class="commitment">
-    <sp-cell title="交易服务保障承诺" is-link to="" />
+    <sp-cell title="交易服务保障承诺" is-link to="/spread/servicePromise">
+      <template #title>
+        <my-icon
+          name="trading_ic_trading"
+          color="#4974F5"
+          size="0.48rem"
+          class="icon"
+        />
+        <span class="custom-title">交易服务保障承诺</span>
+      </template>
+    </sp-cell>
   </div>
 </template>
 
@@ -28,6 +38,7 @@ export default {
       font-family: PingFang SC;
       font-weight: 500;
       color: #1a1a1a;
+      display: flex;
     }
   }
   /deep/ .sp-icon {
@@ -35,6 +46,10 @@ export default {
   }
   /deep/ .sp-icon {
     line-height: 110px;
+  }
+  .custom-title {
+    line-height: 110px;
+    padding-left: 17px;
   }
 }
 </style>

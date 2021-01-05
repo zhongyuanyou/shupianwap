@@ -4,12 +4,19 @@
     <slot name="basic"></slot>
     <div class="basic_offer">
       <div class="user">
-        <sp-image
-          fit="cover"
-          width="0.38rem"
-          height="0.38rem"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
-        /><span>186***2232 等10人已出价</span>
+        <my-icon
+          name="trading_ic_price"
+          color="#4974F5"
+          size="0.38rem"
+          class="icon"
+        />
+        <!--        <sp-image-->
+        <!--          fit="cover"-->
+        <!--          width="0.38rem"-->
+        <!--          height="0.38rem"-->
+        <!--          src="https://img.yzcdn.cn/vant/cat.jpeg"-->
+        <!--        />-->
+        <span>186***2232 等10人已出价</span>
       </div>
       <sp-button plain type="primary" size="small">去出价</sp-button>
     </div>

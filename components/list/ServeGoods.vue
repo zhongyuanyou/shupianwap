@@ -54,6 +54,7 @@
     <!--S商品列表-->
     <sp-list
       v-show="listShow"
+      ref="splist"
       v-model="loading"
       :finished="finished"
       :style="{
@@ -351,6 +352,19 @@ export default {
       this.removeClass('active', 1)
       // this.selectValue = this.option[0].value
       this.dropdownTitle1 = '全部服务'
+    },
+    computedHeight() {
+      // 计算列表的最大高
+      const top = this.$refs.splist.$el.getBoundingClientRect().top
+      this.maxHeight = document.body.clientHeight - top
+      // console.log('this.$refs.splist', this.$refs.splist)
+      // const installAPPHeight = this.$refs.installApp.$el.clientHeight
+      // const installAPPTop = this.$refs.installApp.$el.getBoundingClientRect()
+      //   .top
+      // const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
+      // const topHeight = this.$el.getBoundingClientRect().top
+      // this.maxHeight =
+      //   document.body.clientHeight - installAPPHeight - installAPPTop
     },
   },
 }

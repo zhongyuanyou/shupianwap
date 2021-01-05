@@ -32,6 +32,7 @@
           <!--S商品列表-->
           <sp-list
             v-show="listShow"
+            ref="spList"
             v-model="loading"
             :finished="finished"
             :style="{
@@ -331,7 +332,9 @@ export default {
     },
     computedHeight() {
       // 计算列表的最大高
-      const installAPPHeight = this.$refs.installApp
+      const top = this.$refs.spList[0].$el.getBoundingClientRect().top
+      this.maxHeight = document.body.clientHeight - top + 'px'
+      /* const installAPPHeight = this.$refs.installApp
         ? this.$refs.installApp[0].$el.clientHeight
         : 10000
       const dropDownMenuHeight = this.$refs.dropDownMenu
@@ -343,14 +346,14 @@ export default {
       )[0]
         ? document.querySelectorAll('.sp-tabs-self .sp-tabs__wrap')[0]
             .clientHeight
-        : 0
-      this.maxHeight =
+        : 0 */
+      /* this.maxHeight =
         document.body.clientHeight -
         installAPPHeight -
         dropDownMenuHeight -
         spTabsHeight -
         topHeight +
-        'px'
+        'px' */
     },
   },
 }
