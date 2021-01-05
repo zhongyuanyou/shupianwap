@@ -1,7 +1,11 @@
 <template>
   <div class="con">
     <!--S banner-->
-    <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+    <sp-pull-refresh
+      v-model="refreshing"
+      style="min-height: calc(100vh - 88px)"
+      @refresh="onRefresh"
+    >
       <div
         v-if="banner.length && banner[0].sortMaterialList"
         class="con_banner"
@@ -87,7 +91,7 @@ import { mapState } from 'vuex'
 import CardItem from '~/components/common/cardItem/CardItem'
 import { foundApi } from '@/api'
 import adJumpHandle from '~/mixins/adJumpHandle'
-import { baseURL } from '~/config/index'
+import { domainUrl } from '~/config/index'
 Vue.use(Lazyload)
 export default {
   name: 'Con',
@@ -166,7 +170,7 @@ export default {
       // 点击
       if (this.isInApp) {
         this.$appFn.dggOpenNewWeb(
-          { urlString: `${baseURL}/found/detail/${item.id}` },
+          { urlString: `${domainUrl}/found/detail/${item.id}` },
           (res) => {}
         )
         return

@@ -5,4 +5,5 @@ module.exports = {
   mchMerchantSgin: 'A604FF1CEEFE030F4D6CB1D452CA8B56',
   mchCoding: '20190620000111',
   imBaseUrl: 'https://im.shupian.cn', // IM 地址
+  domainUrl: 'https://m.shupian.cn/', // 域名
 }
