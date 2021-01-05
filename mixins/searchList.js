@@ -8,6 +8,7 @@ export default {
     getServeListReq() {
       console.log('serveGoodsListData', this.serveGoodsListData)
       // this.skeletonLoading = true
+      this.formData.areaCodes = this.cityCode.code
       goods
         .searchServeGoodsList({ axios: this.$axios }, this.formData)
         .then((data) => {
