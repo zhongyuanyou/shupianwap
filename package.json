@@ -9,6 +9,7 @@
     "@dgg/im-sdk": "^1.3.0",
     "@dgg/oss": "^1.0.2",
     "@dgg/sp-im-sdk": "^1.0.0-beat7",
+    "@fe/sp-ui-mobile": "^0.0.4",
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/style-resources": "^1.0.0",
     "autoprefixer": "^9.7.6",

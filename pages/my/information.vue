@@ -120,6 +120,7 @@ import BirthdaySelected from '~/components/my/information/BirthdaySelected'
 import { ossApi, userinfoApi } from '@/api'
 import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
+import '@fe/sp-ui-mobile/lib/index.css'
 export default {
   name: 'Information',
   components: {
