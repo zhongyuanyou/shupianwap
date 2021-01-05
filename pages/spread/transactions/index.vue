@@ -1,7 +1,7 @@
 <template>
   <div class="center">
-    <banner></banner>
-    <my-form></my-form>
+    <banner @changeCity="changeCity"></banner>
+    <my-form @changeData="changeData"></my-form>
   </div>
 </template>
 
@@ -11,6 +11,23 @@ import MyForm from '~/components/spread/transactions/MyForm'
 export default {
   name: 'Index',
   components: { Banner, MyForm },
+  data() {
+    return {
+      city: '成都市',
+    }
+  },
+  methods: {
+    changeCity(val) {
+      this.city = val
+    },
+    changeData(data) {
+      const datas = {}
+      datas.content = data
+      datas.place = this.city
+      datas.type = 'gszr'
+      localStorage.setItem('data', JSON.stringify(datas))
+    },
+  },
   head() {
     return {
       title: '公司交易',

@@ -1,6 +1,6 @@
 <template>
   <div class="company-register">
-    <TopLocation />
+    <TopLocation :title="topTitle" @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理哪项业务的变更服务 -->
       <CompanySelec
@@ -54,16 +54,23 @@ export default {
   },
   data() {
     return {
+      topTitle: '轻松找服务',
       // 选择服务
       actionsServe: [
-        '建造工程',
-        '铁路工程',
-        '港口和航道工程',
-        '水利水电工程',
-        '电力工程',
-        '港口和航道工程',
-        '水利水电工程',
-        '电力工程',
+        '法人变更',
+        '股东变更',
+        '任职变更',
+        '公司名称变更',
+        '经营范围变更',
+        '跨区地址变更',
+        '同区地址变更',
+        '注册资金增加变更',
+        '注册资金减少变更',
+        '公司类型变更',
+        '个体变更',
+        '股权变更',
+        '认缴年限变更',
+        '其他变更',
       ],
       // 区域
       actionsRegion: [
@@ -111,9 +118,21 @@ export default {
       identity: '经办人',
       // 办理时间
       handlingTime: '1个月内',
+
+      // 城市
+      cityVal: {
+        code: '510100',
+        name: '成都市',
+      },
     }
   },
   methods: {
+    // 城市
+    onCity(val) {
+      console.log(val)
+      this.cityVal = val
+      console.log(val)
+    },
     onSelectServe(val) {
       // 变更服务
       this.permission = val
@@ -135,24 +154,17 @@ export default {
       console.log(item)
     },
     onButton() {
-      // console.log(
-      //   this.permission,
-      //   this.district,
-      //   this.identity,
-      //   this.handlingTime
-      // )
       const obj = JSON.stringify({
-        content: [
-          { name: 'gsbg1', value: `注册区域：${this.district}` },
-          { name: 'gsbg2', value: `身份：${this.identity}` },
-          { name: 'gsbg3', value: `办理时间：${this.identity}` },
-        ],
-        param: [
-          { name: 'type', value: 'gsbg' },
-          { name: 'bgxm', value: this.permission },
-        ],
+        place: this.cityVal.name,
+        type: 'gsbg',
+        bgxm: this.permission,
+        content: {
+          注册区域: this.district,
+          身份: this.identity,
+          办理时间: this.identity,
+        },
       })
-      localStorage.setItem('currentGroupId', obj)
+      localStorage.setItem('data', obj)
       this.$router.push({ path: '/spread/second' })
     },
   },
@@ -163,11 +175,14 @@ export default {
   font-size: 36px;
   .button {
     padding: 24px 40px;
-    margin-top: 174px;
+    margin-top: 32px;
     font-size: 32px;
     font-family: PingFang SC;
     font-weight: bold;
     color: #ffffff;
+    .sp-button {
+      border-radius: 8px;
+    }
   }
 }
 </style>

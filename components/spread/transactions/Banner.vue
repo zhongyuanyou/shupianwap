@@ -1,26 +1,31 @@
 <template>
-  <div class="banner" :style="{ backgroundImage: 'url(' + bg + ')' }">
+  <div>
     <!--    头部  -->
     <sp-top-nav-bar
-      title=""
+      title="轻松找服务"
       background="transparent"
       title-color="#1A1A1A"
       ellipsis
+      :fixed="true"
+      :placeholder="true"
+      z-index="999"
       @on-click-left="onClickLeft"
     >
-      <div slot="left" class="banner-head">
-        <my-icon name="nav_ic_back" size="0.40rem" color="#e5e8fa"></my-icon>
+      <div slot="left" class="head">
+        <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>
       </div>
     </sp-top-nav-bar>
-    <!--    城市按钮  -->
-    <div class="banner-button" @click="tabCity">
-      {{ currentCity.name || '成都' }}
-      <my-icon
-        name="tap_ic_pen_n"
-        color="#ffffff"
-        size="0.14rem"
-        class="icon banner-button-icon"
-      ></my-icon>
+    <div class="banner">
+      <!--    城市按钮  -->
+      <div class="banner-button" @click="tabCity">
+        <div class="banner-button-city">{{ currentCity.name || '成都' }}</div>
+        <my-icon
+          name="tap_ic_pen_n"
+          color="#ffffff"
+          size="0.14rem"
+          class="icon banner-button-icon"
+        ></my-icon>
+      </div>
     </div>
   </div>
 </template>
@@ -33,7 +38,6 @@ export default {
   components: { [TopNavBar.name]: TopNavBar },
   data() {
     return {
-      bg: require('../../../assets/spreadImages/transactions/Step1-img-banner.jpg'),
       city: '成都',
     }
   },
@@ -41,6 +45,15 @@ export default {
     ...mapState({
       currentCity: (state) => state.city.currentCity,
     }),
+  },
+  watch: {
+    currentCity: {
+      handler(newName, oldName) {
+        this.$emit('changeCity', newName.name)
+      },
+      immediate: true,
+      deep: true,
+    },
   },
   methods: {
     onClickLeft() {
@@ -54,15 +67,16 @@ export default {
 </script>
 
 <style scoped lang="less">
+.head {
+  font-weight: lighter;
+}
 .banner {
-  height: 378px;
+  height: 320px;
   font-size: 0;
   position: relative;
   background-position: center center;
   background-size: 100% 100%;
-  &-head {
-    font-weight: lighter;
-  }
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/13zjhce6649s000.jpg');
   &-button {
     padding: 10px 20px;
     background: rgba(255, 255, 255, 0.2);
@@ -73,8 +87,10 @@ export default {
     font-size: 24px;
     font-weight: bold;
     color: #ffffff;
+    display: flex;
+    align-items: center;
     &-icon {
-      margin-left: 10px;
+      margin-left: 12px;
     }
   }
 }

@@ -26,15 +26,19 @@
         arrow-direction="down"
         is-link
         class="form-input"
-        :title-class="selectName1 === '不限' ? { gray: true } : { black: true }"
+        title-class="form-leftTitle"
         @click="show1 = true"
       />
-      <sp-action-sheet
-        v-model="show1"
-        :actions="actions1"
-        close-on-click-action
-        @select="onSelect(1, $event)"
-      />
+      <sp-action-sheet v-model="show1">
+        <sp-picker
+          show-toolbar
+          title="城市"
+          :columns="actions1"
+          :default-index="2"
+          @confirm="onConfirm1"
+          @cancel="onCancel"
+        />
+      </sp-action-sheet>
     </div>
     <!--  第四层  -->
     <div>
@@ -44,15 +48,18 @@
         arrow-direction="down"
         is-link
         class="form-input"
-        :title-class="selectName2 === '不限' ? { gray: true } : { black: true }"
+        title-class="form-leftTitle"
         @click="show2 = true"
       />
-      <sp-action-sheet
-        v-model="show2"
-        :actions="actions2"
-        close-on-click-action
-        @select="onSelect(2, $event)"
-      />
+      <sp-action-sheet v-model="show2"
+        ><sp-picker
+          show-toolbar
+          title="行业"
+          :columns="actions2"
+          :default-index="2"
+          @confirm="onConfirm2"
+          @cancel="onCancel"
+      /></sp-action-sheet>
     </div>
     <!--  按钮  -->
     <button class="form-button" @click="next">下一步(1/2)</button>
@@ -60,7 +67,7 @@
 </template>
 
 <script>
-import { Cell, ActionSheet } from '@chipspc/vant-dgg'
+import { Cell, ActionSheet, Picker, Toast } from '@chipspc/vant-dgg'
 import slider from '~/components/spread/transactions/Slider'
 export default {
   name: 'Form',
@@ -68,6 +75,8 @@ export default {
     slider,
     [Cell.name]: Cell,
     [ActionSheet.name]: ActionSheet,
+    [Picker.name]: Picker,
+    [Toast.name]: Toast,
   },
   data() {
     return {
@@ -79,33 +88,74 @@ export default {
       maxYear: 15,
       show1: false,
       show2: false,
-      actions1: [{ name: '选项一' }, { name: '选项二' }, { name: '选项三' }],
-      actions2: [{ name: '选项四' }, { name: '选项五' }, { name: '选项六' }],
+      actions1: [
+        '全国',
+        '成都',
+        '北京',
+        '上海',
+        '广州',
+        '深圳',
+        '武汉',
+        '长沙',
+        '重庆',
+        '杭州',
+        '郑州',
+        '石家庄',
+        '佛山',
+        '宜昌',
+        '东莞',
+        '不限',
+      ],
+      actions2: [
+        '科技信息',
+        '广告媒体',
+        '金融投资',
+        '电子贸易',
+        '教育培训',
+        '物业地产',
+        '经济中介',
+        '建筑装饰',
+        '家居建材',
+        '通讯网络',
+        '实业生产',
+        '珠宝服饰',
+        '文化出版',
+        '印刷包装',
+        '餐饮美容',
+        '咨询服务',
+        '食品农业',
+        '会务展览',
+        '物流供应链',
+        '商标资质',
+        '其他行业',
+      ],
       selectName1: '不限',
       selectName2: '不限',
     }
   },
   methods: {
-    // 改变选中样式
-    onSelect(i, e) {
-      let items
-      if (i === 1) {
-        items = this.actions1
-        this.selectName1 = e.name
-      } else if (i === 2) {
-        items = this.actions2
-        this.selectName2 = e.name
-      }
-      for (const item of items) {
-        if (item.name === e.name) {
-          item.className = 'bold'
-        } else {
-          item.className = ''
-        }
-      }
+    // 选中后的数据更改
+    onConfirm1(value) {
+      this.show1 = false
+      this.selectName1 = value
+    },
+    onConfirm2(value) {
+      this.show2 = false
+      this.selectName2 = value
+    },
+    // 关闭
+    onCancel() {
+      this.show1 = false
+      this.show2 = false
     },
     // 下一步
     next() {
+      this.$emit('changeData', {
+        购买预算: `[${this.minMoney}, ${this.maxMoney}]`,
+        期望成立年限: `[${this.minYear}, ${this.maxYear}]`,
+        期望城市: this.selectName1,
+        期望行业: this.selectName2,
+      })
       this.$router.push('/spread/second')
     },
   },
@@ -122,9 +172,15 @@ export default {
     color: #1a1a1a;
     margin-top: 63px;
   }
+  &-leftTitle {
+    font-size: 24px;
+    font-weight: 400;
+    color: #222;
+  }
   &-blue {
     margin: 50px 0 38px 0;
     font-size: 44px;
+    line-height: 44px;
     font-weight: bold;
     color: #4974f5;
     text-align: center;
@@ -133,10 +189,9 @@ export default {
     display: flex;
     justify-content: space-between;
     font-size: 22px;
-    line-heigth: 22px;
+    line-height: 22px;
     font-weight: bold;
     color: #999999;
-    margin-top: 11px;
   }
   &-input {
     margin-top: 31px;
@@ -153,19 +208,6 @@ export default {
     color: #ffffff;
   }
 }
-.bold {
-  font-weight: bold;
-  color: #5a79e8;
-}
-.gray {
-  font-size: 24px;
-  font-weight: 400;
-  color: #222222;
-}
-.black {
-  color: #1a1a1a;
-  font-weight: bold;
-}
 // 修改input组件的title
 ///deep/ .sp-cell__title {
 //  font-size: 24px;
@@ -174,10 +216,35 @@ export default {
 //}
 // 修改input组件的容器
 /deep/ .sp-cell {
-  padding: 0 10px;
+  padding: 0 24px;
   height: 72px;
   align-items: center;
   border: 1px solid rgba(205, 205, 205, 0.5);
   border-radius: 4px;
 }
+//下拉弹出层的最大宽度
+/deep/ .sp-popup {
+  width: 750px;
+  left: 50%;
+  margin-left: -375px;
+}
+//下拉弹出遮罩层
+/deep/ .sp-overlay {
+  width: 750px;
+  left: 50%;
+  margin-left: -375px;
+}
+// 未选中时候
+/deep/ .sp-picker-column__item {
+  color: #555;
+}
+// 选中时候
+/deep/ .sp-picker-column__item--selected {
+  color: #222;
+  font-weight: lighter;
+}
+//下拉弹窗标题样式
+///deep/ .sp-action-sheet__header--title {
+//  font-weight: bold;
+//}
 </style>

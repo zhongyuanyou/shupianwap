@@ -1,23 +1,23 @@
-'use strict';
+'use strict'
 
-const path = require('path');
+const path = require('path')
 
-const BASE = require('./config/index.js');
-const NODE_ENV = process.env.NODE_ENV;
-const baseUrl = BASE.baseURL;
+const BASE = require('./config/index.js')
+const NODE_ENV = process.env.NODE_ENV
+const baseUrl = BASE.baseURL
 console.log('baseUrl', baseUrl)
 const bablePlugin = [
   [
     'import',
     {
       libraryName: '@chipspc/vant-dgg',
-      style: name => `${name}/style/less`,
+      style: (name) => `${name}/style/less`,
     },
     '@chipspc/vant-dgg',
   ],
-];
+]
 if (NODE_ENV === 'production') {
-  bablePlugin.push('transform-remove-console');
+  bablePlugin.push('transform-remove-console')
 }
 module.exports = {
   server: {
@@ -123,13 +123,13 @@ module.exports = {
   router: {
     middleware: 'appDock',
   },
-  buildModules: [ '@nuxtjs/eslint-module' ],
+  buildModules: ['@nuxtjs/eslint-module'],
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     '@nuxtjs/style-resources',
     'cookie-universal-nuxt',
-    [ 'cookie-universal-nuxt', { parseJSON: true }],
+    ['cookie-universal-nuxt', { parseJSON: true }],
   ],
   axios: {
     proxy: true,
@@ -147,7 +147,7 @@ module.exports = {
     },
   },
   build: {
-    transpile: [ /vant.*?less/ ],
+    transpile: [/vant.*?less/],
     postcss: {
       plugins: {
         'postcss-pxtorem': {
@@ -158,7 +158,7 @@ module.exports = {
         },
       },
       preset: {
-        browsers: [ 'Android >= 4.0', 'iOS >= 7' ],
+        browsers: ['Android >= 4.0', 'iOS >= 7'],
       },
     },
     babel: {
@@ -183,14 +183,14 @@ module.exports = {
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
           exclude: /(node_modules)/,
-        });
+        })
       }
 
       if (ctx.isClient) {
         if (NODE_ENV === 'development') {
-          config.devtool = 'cheap-module-eval-source-map';
+          config.devtool = 'cheap-module-eval-source-map'
         } else {
-          config.devtool = 'hidden-source-map';
+          config.devtool = 'hidden-source-map'
         }
       }
     },
@@ -202,4 +202,4 @@ module.exports = {
       ignored: /node_modules/,
     },
   },
-};
+}

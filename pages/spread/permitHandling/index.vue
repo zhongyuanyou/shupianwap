@@ -1,11 +1,11 @@
 <template>
   <div class="permit-handling">
-    <TopLocation />
+    <TopLocation :title="topTitle" @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理的许可证业务 -->
       <CompanySelec
         :columns="actionsServe"
-        title-name="您需要办理哪项业务的变更服务？"
+        title-name="您需要办理的许可证业务是什么？"
         @onSelect="onSelectServe"
       />
       <!-- E您需要办理的许可证业务 -->
@@ -33,6 +33,7 @@
 </template>
 <script>
 import { TopNavBar, NavSearch, Icon, Toast, Button } from '@chipspc/vant-dgg'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import TopLocation from '@/components/spread/companyAlteration/TopLocation'
 import CompanySelec from '@/components/spread/companyAlteration/CompanySelect'
 import SelectDesired from '@/components/spread/companyAlteration/SelectDesired'
@@ -49,16 +50,17 @@ export default {
   },
   data() {
     return {
+      topTitle: '轻松找服务',
       // 选择变更服务
       actionsServe: [
-        '建造工程',
-        '铁路工程',
-        '港口和航道工程',
-        '水利水电工程',
-        '电力工程',
-        '港口和航道工程',
-        '水利水电工程',
-        '电力工程',
+        '卫生许可证',
+        '道路运输许可证',
+        '医疗器械许可证',
+        '进出口许可证',
+        '食品通道许可证 HOT',
+        '餐饮服务许可证',
+        '医疗器械许可二类备案',
+        '其他许可证',
       ],
       // 是否决策人
       selectActive: [
@@ -90,9 +92,21 @@ export default {
       isDecision: '是',
       // 办理时间
       handlingTime: '一个月内',
+
+      // 城市
+      cityVal: {
+        code: '510100',
+        name: '成都市',
+      },
     }
   },
   methods: {
+    // 城市
+    onCity(val) {
+      console.log(val)
+      this.cityVal = val
+      console.log(val)
+    },
     onSelectServe(val) {
       // 变更服务
       this.xkzlz = val
@@ -110,16 +124,15 @@ export default {
     },
     onButton() {
       const obj = JSON.stringify({
-        content: [
-          { name: 'xkz1', value: `主要决策人：${this.isDecision}` },
-          { name: 'xkz2', value: `办理时间：${this.handlingTime}` },
-        ],
-        param: [
-          { name: 'type', value: 'xkx' },
-          { name: 'xkzlx', value: this.permission },
-        ],
+        place: this.cityVal.name,
+        type: 'xkx',
+        xkzlx: this.permission,
+        content: {
+          主要决策人: this.isDecision,
+          办理时: this.handlingTime,
+        },
       })
-      localStorage.setItem('currentGroupId', obj)
+      localStorage.setItem('data', obj)
       this.$router.push({ path: '/spread/second' })
     },
   },
@@ -135,6 +148,9 @@ export default {
     font-family: PingFang SC;
     font-weight: bold;
     color: #ffffff;
+    .sp-button {
+      border-radius: 8px;
+    }
   }
 }
 </style>
