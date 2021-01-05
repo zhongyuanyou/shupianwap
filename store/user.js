@@ -34,7 +34,9 @@ export const mutations = {
     state.userType = data.userType
   },
   CLEAR_USER(state) {
-    this.$cookies.removeAll()
+    this.$cookies.remove('token')
+    this.$cookies.remove('userId')
+    this.$cookies.remove('userType')
     state.token = ''
     state.userId = ''
     state.userType = ''

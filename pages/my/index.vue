@@ -170,6 +170,7 @@ export default {
       const res = await this.$axios.get(userinfoApi.loginOut, { params })
       if (res.code === 200) {
         // 清除cookie中的数据
+        this.info.url = ''
         this.$store.dispatch('user/clearUser')
       }
     },

@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <!--S 导航-->
-    <Header v-if="!isInApp">
+    <Header v-if="!isInApp" title="">
       <template #left>
         <div @click="back">
           <my-icon
