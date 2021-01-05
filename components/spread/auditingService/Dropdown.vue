@@ -35,6 +35,10 @@
 import { Picker, Popup } from '@chipspc/vant-dgg'
 export default {
   name: 'Dropdown',
+  components: {
+    [Picker.name]: Picker,
+    [Popup.name]: Popup,
+  },
   props: {
     title: {
       type: String,
@@ -54,10 +58,6 @@ export default {
         return ''
       },
     },
-  },
-  components: {
-    [Picker.name]: Picker,
-    [Popup.name]: Popup,
   },
   data() {
     return {

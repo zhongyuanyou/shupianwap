@@ -84,7 +84,9 @@ export default {
     .content-item-one-tab {
       width: 150px;
       height: 72px;
-      line-height: 72px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       background: #f8f8f8;
       border-radius: 8px;
       font-size: 24px;
