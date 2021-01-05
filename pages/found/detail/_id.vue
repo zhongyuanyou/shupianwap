@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <!--S 导航-->
-    <Header v-if="!isInApp" title="">
+    <Header title="">
       <template #left>
         <div @click="back">
           <my-icon
@@ -145,6 +145,19 @@ export default {
       } catch (err) {}
     },
     onClickRight() {
+      console.log(this.info)
+      if (this.isInApp) {
+        this.$appFn.dggShare(
+          {
+            image: this.info.imageUrl,
+            title: this.info.title,
+            subTitle: '',
+            url: window && window.location.href,
+          },
+          (res) => {}
+        )
+        return
+      }
       this.showShare = true
     },
     handleSelect(option, index) {
