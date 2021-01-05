@@ -1,8 +1,8 @@
 <template>
   <div class="audit">
     <HeaderNeed />
-    <Content />
-    <FixedButtom />
+    <Content @content="contentObj" />
+    <FixedButtom :content="content" />
   </div>
 </template>
 
@@ -17,12 +17,18 @@ export default {
     Content,
     FixedButtom,
   },
-  props: {},
   data() {
-    return {}
+    return {
+      content: {}, // 跳转第二页所传参数
+    }
   },
   computed: {},
-  methods: {},
+  methods: {
+    // 获取content组件传来的用户输入值
+    contentObj(value) {
+      this.content = value
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

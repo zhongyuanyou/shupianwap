@@ -24,17 +24,20 @@ export default {
   components: {
     [Button.name]: Button,
   },
+  props: {
+    content: {
+      type: Object,
+      default: () => {
+        return ''
+      },
+    },
+  },
   data() {
     return {
       data: {
         city: '',
         type: 'swch',
-        content: {
-          期望城市: '北京',
-          办理业务: '土地评估',
-          公司年营收: '[50, 200]',
-          公司行业: '科技信息',
-        },
+        content: {},
       },
     }
   },
@@ -44,7 +47,15 @@ export default {
   mounted() {},
   methods: {
     nextStep() {
+      // 获取vuex里城市name
       this.data.city = this.$store.state.city.currentCity.name
+      // 获取用户输入的值
+      this.data.content = {
+        办理业务: this.content.business,
+        公司年营收: this.content.revenue,
+        公司行业: this.content.industry,
+      }
+      // 本地存储数据
       localStorage.setItem('data', JSON.stringify(this.data))
       this.$router.push('/spread/second')
     },

@@ -111,16 +111,20 @@ export default {
     }
   },
   methods: {
+    // 处理由子组件RevenueRadio传来的营收金额
     radioValue(value) {
       const res = String(value.split('-')).replace('万', '')
       this.content.revenue = '[' + res + ']'
+      this.$emit('content', this.content)
     },
+    // 处理由子组件Dropdown传来的值 为0时是业务 为2是行业
     handleValue(value, index) {
       if (index === 0) {
         this.content.business = value
       } else if (index === 2) {
         this.content.industry = value
       }
+      this.$emit('content', this.content)
     },
   },
 }
