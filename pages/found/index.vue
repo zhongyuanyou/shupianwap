@@ -31,8 +31,10 @@
         @refresh="refresh"
       />
     </div>
-    <open-app :bottom="bottom" />
-    <Bottombar ref="bottombar" v-if="!isInApp" />
+    <client-only>
+      <open-app :bottom="bottom" />
+    </client-only>
+    <Bottombar v-if="!isInApp" ref="bottombar" />
   </div>
 </template>
 

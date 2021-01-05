@@ -43,14 +43,16 @@ export default {
       isInApp: (state) => state.app.isInApp,
     }),
   },
-  mounted() {
-    if (this.isInApp) {
-      this.$appFn.dggSetTitle(
-        {
-          title: '用户隐私与规则中心',
-        },
-        (res) => {}
-      )
+  created() {
+    if (process.client) {
+      if (this.isInApp) {
+        this.$appFn.dggSetTitle(
+          {
+            title: '用户隐私与规则中心',
+          },
+          (res) => {}
+        )
+      }
     }
   },
   methods: {
