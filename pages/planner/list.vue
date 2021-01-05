@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-05 09:47:09
+ * @LastEditTime: 2021-01-05 14:34:47
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/list.vue
 -->
@@ -123,7 +123,7 @@
               <sp-image
                 class="no-data__icon"
                 fit="cover"
-                :src="require('../../assets/images/search-null.png')"
+                src="https://cdn.shupian.cn/sp-pt/wap/images/9cxcgh1a0t80000.png"
               />
               <template v-if="!error">
                 <div class="no-data__descript">抱歉，未搜索到对应的规划师</div>

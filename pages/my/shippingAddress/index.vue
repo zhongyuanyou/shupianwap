@@ -6,7 +6,7 @@
     <!--S 内容-->
     <div class="address_con">
       <div v-if="!addressList.length" class="no_address">
-        <img src="~/assets/images/default_img_nopoint.png" />
+        <img :src="$ossImgSet(170, 170, '21107zqqvf40000.png')" alt="" />
         <p class="prompt">未添加收货地址</p>
         <p class="new_address" @click="handleNew">新建地址</p>
       </div>
