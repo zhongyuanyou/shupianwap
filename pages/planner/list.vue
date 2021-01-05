@@ -2,13 +2,15 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-05 14:34:47
+ * @LastEditTime: 2021-01-05 19:00:49
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/list.vue
 -->
 
 <template>
   <div class="list">
+    <!-- 放在输入框一堆堆，在iphone里面有问题 ，只能放在页面最外层了-->
+    <SearchPopup ref="searchPopup" @onSearch="handleKeywordsSearch" />
     <div ref="head" class="head">
       <Header title="在线直选规划师">
         <template #left>
@@ -23,7 +25,6 @@
       </Header>
     </div>
     <div class="body">
-      <SearchPopup ref="searchPopup" @onSearch="handleKeywordsSearch" />
       <div class="search">
         <!-- S 搜索输入框 -->
         <sp-nav-search

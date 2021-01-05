@@ -251,6 +251,7 @@ export default {
       const page = this.page++
       const params = {
         limit: this.limit,
+        userId: this.userId,
         page,
       }
       const res = await this.$axios.get(interviewApi.list, { params })
@@ -277,6 +278,7 @@ export default {
       const params = {
         limit: this.limit,
         page: 1,
+        userId: this.userId,
       }
       const res = await this.$axios.get(interviewApi.list, { params })
       if (res.code === 200) {
