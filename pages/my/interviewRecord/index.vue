@@ -39,8 +39,14 @@
                     <span class="name">{{ item.inviterName }}</span>
                     <span class="title">
                       <span class="title-content">
-                        <i class="icon gold_icon"></i>
-                        <i class="icon certificates_icon"></i>
+                        <img
+                          :src="$ossImgSet(112, 20, '3fjjj54kqz20000.png')"
+                          alt=""
+                        />
+                        <img
+                          :src="$ossImgSet(32, 20, '48gdkcbncui0000.png')"
+                          alt=""
+                        />
                       </span>
                     </span>
                   </h4>
@@ -332,23 +338,6 @@ export default {
                 white-space: nowrap;
                 z-index: 1;
                 line-height: 1;
-                .icon {
-                  margin-right: 8px;
-                  &:last-child {
-                    margin-right: 0;
-                  }
-                }
-                .gold_icon {
-                  width: 114px;
-                  height: 28px;
-                  line-height: 28px;
-                  background-image: url('~assets/images/planner/per_img_gold.png');
-                }
-                .certificates_icon {
-                  width: 40px;
-                  height: 28px;
-                  background-image: url('~assets/images/planner/per_img_certificates.png');
-                }
               }
             }
           }
