@@ -11,7 +11,7 @@
       <template #button>
         <div class="slider-button">
           <img
-            src="~assets/spreadImages/transactions/Step1-img-slide.png"
+            src="https://cdn.shupian.cn/sp-pt/wap/images/dq0rxv4pt9s0000.png"
             alt=""
           />
         </div>

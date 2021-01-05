@@ -1,7 +1,7 @@
 <template>
   <div class="center">
     <!--  头部  -->
-    <headHeader :title="headTitle"></headHeader>
+    <Header :title="headTitle"></Header>
     <!--  头部  -->
     <!--  轮播/表单  -->
     <banner></banner>
@@ -20,15 +20,15 @@
     <!--  服务流程  -->
     <!--  规划师  -->
     <gui-hua-shi-swipe
-      :planners-data="plannersData"
       :planners-common="plannersCommon"
+      :planners-data="plannersData"
     ></gui-hua-shi-swipe>
     <!--  规划师  -->
     <!--  可能需要  -->
     <maby></maby>
     <!--  可能需要  -->
     <!--  立即咨询  -->
-    <consult-tel :title="consultTitle" :tel="consultTel"></consult-tel>
+    <consult-tel :tel="consultTel" :title="consultTitle"></consult-tel>
     <!--  立即咨询  -->
     <!--  底部  -->
     <shu-pian-zhao-ren></shu-pian-zhao-ren>
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import headHeader from '~/components/common/head/header'
+import Header from '~/components/common/head/header'
 import banner from '~/components/spread/tax/Banner'
 import serve from '~/components/spread/tax/Serve'
 import conrult from '~/components/spread/tax/Conrult'
@@ -60,7 +60,7 @@ import { spreadApi } from '@/api/spread'
 export default {
   name: 'TaxVue',
   components: {
-    headHeader,
+    Header,
     banner,
     serve,
     conrult,
@@ -540,6 +540,7 @@ export default {
   width: 750px;
   margin: 0 auto;
 }
+
 /deep/ .my-head {
   width: 750px !important;
   left: auto !important;
