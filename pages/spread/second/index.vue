@@ -1,6 +1,35 @@
 <template>
   <div class="center">
-    <banner></banner>
+    <div>
+      <!--    头部  -->
+      <sp-top-nav-bar
+        title="轻松找服务"
+        background="transparent"
+        title-color="#1A1A1A"
+        ellipsis
+        :fixed="true"
+        :placeholder="true"
+        z-index="999"
+        @on-click-left="back"
+      >
+        <div slot="left" class="head">
+          <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>
+          <sp-icon name="cross" size="0.4rem" @click="close" />
+        </div>
+      </sp-top-nav-bar>
+      <div class="banner">
+        <!--    城市按钮  -->
+        <div class="banner-button" @click="tabCity">
+          <div class="banner-button-city">{{ currentCity.name || '成都' }}</div>
+          <my-icon
+            name="tap_ic_pen_n"
+            color="#ffffff"
+            size="0.14rem"
+            class="icon banner-button-icon"
+          ></my-icon>
+        </div>
+      </div>
+    </div>
     <div class="form">
       <div class="form-title">您还有一些额外需求要告知我们？</div>
       <sp-field
@@ -33,22 +62,41 @@
 </template>
 
 <script>
-import { Field, Toast } from '@chipspc/vant-dgg'
-import Banner from '~/components/spread/transactions/Banner'
+import { Field, Toast, TopNavBar, Icon } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 export default {
   name: 'Index',
-  components: { Banner, [Field.name]: Field },
+  components: {
+    [Field.name]: Field,
+    [Toast.name]: Toast,
+    [TopNavBar.name]: TopNavBar,
+    [Icon.name]: Icon,
+  },
   data() {
     return {
       message: '',
       data: {},
+      city: '成都',
     }
   },
   mounted() {
     this.data = JSON.parse(localStorage.getItem('data'))
     console.log(this.data)
   },
+  computed: {
+    ...mapState({
+      currentCity: (state) => state.city.currentCity,
+    }),
+  },
   methods: {
+    // 回退
+    back() {
+      this.$router.go(-1)
+    },
+    // 选择城市
+    tabCity() {
+      this.$router.push({ path: '/city/choiceCity' })
+    },
     // 获取当前时间作为 后台判断唯一标识
     getDate() {
       const timeStamp = new Date()
@@ -75,13 +123,12 @@ export default {
     consultForm() {
       this.data.content['更多需求'] = this.message
       localStorage.setItem('data', '') // 清空数据
-      this.data.content = JSON.stringify(this.data.content)
-      this.data.type = 'gszr'
-      this.data.url = window.open
-      this.data.name = '匿名客户'
       this.data.formId = this.getDate() // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
+      this.data.name = '匿名客户'
+      this.data.url = window.open
       this.data.device = 'wap' // 设备：pc,wap
       this.data.web = 'SP' // 归属渠道：xmt,zytg,wxgzh
+      this.data.content = JSON.stringify(this.data.content)
       window.promotion.privat.consultForm(this.data, (res) => {
         if (res.error === 0) {
           // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
@@ -157,6 +204,37 @@ export default {
     width: 100%;
     height: 88px;
   }
+}
+.head {
+  font-weight: lighter;
+}
+.banner {
+  height: 320px;
+  font-size: 0;
+  position: relative;
+  background-position: center center;
+  background-size: 100% 100%;
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/13zjhce6649s000.jpg');
+  &-button {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 22px;
+    position: absolute;
+    left: 48px;
+    bottom: 58px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    &-icon {
+      margin-left: 12px;
+    }
+  }
+}
+// 头部组件多出线条的修改
+/deep/ .sp-hairline--bottom::after {
+  border: none;
 }
 // 纯文本输入框容器
 /deep/ .sp-field {

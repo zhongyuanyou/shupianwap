@@ -23,7 +23,7 @@ export default {
     changeData(data) {
       const datas = {}
       datas.content = data
-      datas.city = this.city
+      datas.place = this.city
       datas.type = 'gszr'
       localStorage.setItem('data', JSON.stringify(datas))
     },
