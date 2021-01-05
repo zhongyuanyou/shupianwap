@@ -10,19 +10,36 @@
         <!--          {{ item }}-->
         <!--        </div>-->
       </div>
-      <div class="title_tags_remind">降价提醒</div>
+      <div class="title_tags_remind">
+        <my-icon
+          name="notify_ic_clock1"
+          color="#9399A5"
+          size="0.32rem"
+          class="icon"
+        />降价提醒
+      </div>
     </div>
     <p class="title_btitle">{{ tcProductDetailData.name }}</p>
     <div class="imp_remind">
-      <i class="icon certificates_icon"></i><span>重要提醒</span>
+      <nuxt-link to="/spread/riskTips">
+        <sp-image
+          src="https://cdn.shupian.cn/sp-pt/wap/images/4eevblk9nmy0000.png?x-oss-process=image/resize,m_fill,w_40,h_30,limit_0"
+          fit="cover"
+        />
+        <span>重要提醒</span>
+      </nuxt-link>
     </div>
     <p class="money">{{ tcProductDetailData.platformPrice }}元</p>
   </div>
 </template>
 
 <script>
+import { Image } from '@chipspc/vant-dgg'
 export default {
   name: 'Title',
+  components: {
+    [Image.name]: Image,
+  },
   props: {
     tcProductDetailData: {
       type: Object,
@@ -63,6 +80,10 @@ export default {
       font-weight: 400;
       color: #222222;
       line-height: 36px;
+      display: flex;
+      .icon {
+        margin-right: 12px;
+      }
     }
     &_con {
       display: flex;
@@ -101,8 +122,17 @@ export default {
     justify-content: flex-start;
     align-items: center;
     flex-direction: row;
+    a {
+      display: flex;
+      color: #222222;
+      /deep/img {
+        width: 40px;
+        height: 30px;
+      }
+    }
     span {
       margin-left: 9px;
+      color: #222222;
     }
   }
   .money {

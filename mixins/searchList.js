@@ -41,15 +41,11 @@ export default {
             this.$xToast.error('网络错误，请刷新后重试')
           }
           this.skeletonLoading = false
-          this.$nextTick(() => {
-            const installAPPHeight = this.$refs.installApp.$el.clientHeight
-            const installAPPTop = this.$refs.installApp.$el.getBoundingClientRect()
-              .top
-            // const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
-            // const topHeight = this.$el.getBoundingClientRect().top
-            this.maxHeight =
-              document.body.clientHeight - installAPPHeight - installAPPTop
-          })
+          if (this.maxHeight <= 0) {
+            this.$nextTick(() => {
+              this.computedHeight()
+            })
+          }
         })
         .catch((err) => {
           this.$xToast.error('网络错误，请刷新后重试')
