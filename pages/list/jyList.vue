@@ -89,6 +89,9 @@ export default {
             : item.ext4
           return item.ext4 === typeCode
         })
+        if (index === -1) {
+          this.$router.replace('/500')
+        }
         this.typeCodeIndex = index
       }
     },
