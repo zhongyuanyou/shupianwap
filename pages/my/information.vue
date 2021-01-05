@@ -7,14 +7,24 @@
     <div class="information_con">
       <div class="information_con_tp">
         <div class="avatar_con" @click="handleClick(1)">
-          <sp-uploader
-            v-model="uploader"
+          <!--          <sp-uploader-->
+          <!--            v-model="uploader"-->
+          <!--            class="uploader"-->
+          <!--            upload-text="点击上传"-->
+          <!--            :max-count="1"-->
+          <!--            :max-size="20 * 1024 * 1024"-->
+          <!--            :after-read="afterRead"-->
+          <!--            @oversize="onOversize"-->
+          <!--          />-->
+          <spMobileUpload
+            ref="SpUpLoad"
+            tip="仅图片上传："
+            :file-id="info.fileId"
+            is-add-watermark
             class="uploader"
-            upload-text="点击上传"
-            :max-count="1"
-            :max-size="20 * 1024 * 1024"
-            :after-read="afterRead"
-            @oversize="onOversize"
+            list-url="https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/find"
+            delete-url="https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/deleteSingle"
+            call-back-url="https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/callback"
           />
           <div class="cell">
             <p class="title">头像</p>
@@ -112,7 +122,6 @@
 <script>
 import { TopNavBar, Cell, Uploader, Image } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import DggOSS from '@dgg/oss'
 import ImgSelected from '~/components/my/information/ImgSelected'
 import SexSelected from '~/components/my/information/SexSelected'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
@@ -120,6 +129,7 @@ import BirthdaySelected from '~/components/my/information/BirthdaySelected'
 import { ossApi, userinfoApi } from '@/api'
 import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
+import '@fe/sp-ui-mobile/lib/index.css'
 export default {
   name: 'Information',
   components: {
@@ -441,10 +451,9 @@ export default {
           position: absolute;
           left: 0;
           right: 0;
-          top: 0;
           bottom: 2px;
           z-index: 10;
-          opacity: 1;
+          opacity: 0;
           overflow: hidden;
         }
       }

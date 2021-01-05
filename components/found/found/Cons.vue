@@ -170,7 +170,7 @@ export default {
       // 点击
       if (this.isInApp) {
         this.$appFn.dggOpenNewWeb(
-          { urlString: `${domainUrl}/found/detail/${item.id}` },
+          { urlString: `${domainUrl}found/detail/${item.id}` },
           (res) => {}
         )
         return

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 20:04:13
+ * @LastEditTime: 2021-01-05 14:52:38
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -17,7 +17,7 @@
             name="nav_ic_back"
             size="0.4rem"
             color="#1A1A1A"
-            class="head__icon-back"
+            style="padding-left: 32px"
             @click.native="onClickLeft"
           />
         </template>
@@ -539,9 +539,6 @@ export default {
   flex-direction: column;
   background-color: #ffffff;
   .head {
-    &__icon-back {
-      padding-left: 32px;
-    }
     &__operation {
       padding-right: 40px;
       font-size: 28px;

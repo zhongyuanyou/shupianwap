@@ -4,7 +4,6 @@
       <sp-top-nav-bar title="服务承诺" left-arrow ellipsis />
     </div>
     <div class="content">
-      <div class="content-bg"></div>
       <div class="content-all">
         <div class="content-all-items">
           <div
@@ -13,7 +12,7 @@
             class="content-item"
             :style="{
               borderBottom:
-                index == data.length - 1 ? 'none' : '2px solid #f4f4f4',
+                index == data.length - 1 ? 'none' : '1px solid #f4f4f4',
             }"
           >
             <img class="content-item-img" :src="item.img" />
@@ -24,6 +23,7 @@
           </div>
         </div>
       </div>
+      <div class="content-bg"></div>
     </div>
   </div>
 </template>
@@ -43,7 +43,7 @@ export default {
           img: require('~/assets/spreadImages/servicePromise/ic_zsfw.png'),
           title: '专属服务',
           text:
-            '每个订单有顾问专人负责，让客户全程无忧，保证7×24小时的专业客户服务，让用户在这里享受到更愉快的交易体验，安全、高效、专业、',
+            '每个订单有顾问专人负责，让客户全程无忧，保证7×24小时的专业客户服务，让用户在这里享受到更愉快的交易体验，安全、高效、专业、贴心的服务质量。',
         },
         {
           img: require('~/assets/spreadImages/servicePromise/ic_jstk.png'),
@@ -58,7 +58,7 @@ export default {
         },
         {
           img: require('~/assets/spreadImages/servicePromise/ic_aqxx.png'),
-          title: '',
+          title: '信息安全',
           text:
             '薯片平台将运用各种安全技术和程序建立完善的管理制度加密保障您的信息安全，以免遭受未经授权的访问、使用或披露。',
         },
@@ -71,13 +71,13 @@ export default {
           img: require('~/assets/spreadImages/servicePromise/ic_zjbz.png'),
           title: '资金保障',
           text:
-            '为保障用户的资金安全，薯片内部制定了严格的资金管理流程和完善的系统，进行监督监控，降低操作风险。在交易过程中，资金全程在我平台',
+            '为保障用户的资金安全，薯片内部制定了严格的资金管理流程和完善的系统，进行监督监控，降低操作风险。在交易过程中，资金全程在我平台担保，确保资金的安全问题，交易完成确认一切妥当无误之后放款于卖家。',
         },
         {
           img: require('~/assets/spreadImages/servicePromise/ic_shwy.png'),
           title: '售后无忧',
           text:
-            '服务交付结果有任何不满意的地方，请联系客服反映您的诉求，或拨打24小时投诉热线。平台24小时投诉热线：400-1616902，',
+            '服务交付结果有任何不满意的地方，请联系客服反映您的诉求，或拨打24小时投诉热线。平台24小时投诉热线：400-1616902，100%受理，100%解决。',
         },
       ], */
     }
@@ -109,7 +109,10 @@ export default {
   }
 
   .content-all {
-    background: #f8f8f8;
+    background-color: #f8f8f8;
+    background-image: url('~assets/spreadImages/servicePromise/bj1.png');
+    background-repeat: no-repeat;
+    background-size: 100% 300px;
   }
   .content-all-items {
     width: calc(100% - 80px);
@@ -118,7 +121,7 @@ export default {
     margin: 0 auto;
     background: #ffffff;
     position: relative;
-    top: -114px;
+    top: 186px;
     .content-item {
       margin: 0 40px;
       padding: 48px 0;

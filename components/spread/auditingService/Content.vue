@@ -13,7 +13,7 @@
         v-if="item.type === 'dropdown'"
         :title="item.title"
         :tabs="item.options"
-        :selectTitle="item.selectTitle"
+        :select-title="item.selectTitle"
       />
     </div>
   </div>
@@ -23,7 +23,7 @@
 import RevenueRadio from '@/components/spread/auditingService/RevenueRadio'
 import Dropdown from '@/components/spread/auditingService/Dropdown'
 export default {
-  name: 'content',
+  name: 'Content',
   components: {
     RevenueRadio,
     Dropdown,

@@ -39,8 +39,14 @@
                     <span class="name">{{ item.inviterName }}</span>
                     <span class="title">
                       <span class="title-content">
-                        <i class="icon gold_icon"></i>
-                        <i class="icon certificates_icon"></i>
+                        <img
+                          :src="$ossImgSet(106, 20, '3fjjj54kqz20000.png')"
+                          alt=""
+                        />
+                        <img
+                          :src="$ossImgSet(32, 20, '48gdkcbncui0000.png')"
+                          alt=""
+                        />
                       </span>
                     </span>
                   </h4>
@@ -280,6 +286,14 @@ export default {
       // 调起IM
       const imUserId = this.userId // 商户用户ID
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      const imUserName = item.inviterName
+      if (this.isInApp) {
+        this.$appFn.dgg_openIM(
+          { name: imUserName, userId: imUserId, userType: imUserType },
+          (res) => {}
+        )
+        return
+      }
       this.creatImSessionMixin({ imUserId, imUserType })
     },
   },
@@ -337,17 +351,6 @@ export default {
                   &:last-child {
                     margin-right: 0;
                   }
-                }
-                .gold_icon {
-                  width: 114px;
-                  height: 28px;
-                  line-height: 28px;
-                  background-image: url(https://cdn.shupian.cn/sp-pt/wap/images/7cwzjbxvkhs0000.png);
-                }
-                .certificates_icon {
-                  width: 40px;
-                  height: 28px;
-                  background-image: url(https://cdn.shupian.cn/sp-pt/wap/images/3llegqu9ofs0000.png);
                 }
               }
             }

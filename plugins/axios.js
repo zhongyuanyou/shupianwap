@@ -1,7 +1,7 @@
 import qs from 'qs'
 import { saveAxiosInstance } from '@/utils/request'
-const BASE = require('~/config/index.js')
 const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
+const BASE = require('~/config/index.js')
 export default function ({ $axios, redirect, app, store }) {
   // 设置基本URL
   if (process.server) {
@@ -11,7 +11,6 @@ export default function ({ $axios, redirect, app, store }) {
   }
   $axios.interceptors.request.use(
     (config) => {
-      console.log('config', config)
       if (
         config.method === 'post' &&
         config.headers['Content-Type'] ===

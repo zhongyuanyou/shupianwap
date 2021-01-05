@@ -173,6 +173,9 @@ export default {
         this.initGoodsList()
       }
     },
+    isShowTabs(val) {
+      if (!val) this.$refs.spTabs.$refs.nav.parentNode.style.display = 'none'
+    },
   },
   mounted() {
     this.$emit('goodsList', 'jy', this)
