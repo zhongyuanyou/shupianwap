@@ -1,5 +1,6 @@
 import qs from 'qs'
 import { saveAxiosInstance } from '@/utils/request'
+const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
 const BASE = require('~/config/index.js')
 export default function ({ $axios, redirect, app, store }) {
   // 设置基本URL
@@ -18,7 +19,9 @@ export default function ({ $axios, redirect, app, store }) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
-      config.headers.sysCode = 'crisps-app-wap-bff-api'
+      if (DGG_SERVER_ENV === 'development') {
+        config.headers.sysCode = 'crisps-app-wap-bff-api'
+      }
       if (
         app.$cookies.get('token', {
           path: '/',
