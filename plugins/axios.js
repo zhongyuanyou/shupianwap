@@ -58,11 +58,13 @@ export default function ({ $axios, redirect, app, store }) {
       const result = response.data
       const code = result.code
       if (process.env.NODE_ENV === 'production') {
-        // 清空登录信息
-        store.commit('user/CLEAR_USER')
         // 在登录失效的情况下，wap里面跳转到 我的
-        if (code === 5223 && !store.state.app.isInApp) {
-          redirect('/my')
+        if (code === 5223) {
+          // 清空登录信息
+          store.commit('user/CLEAR_USER')
+          if (!store.state.app.isInApp) {
+            redirect('/my')
+          }
         }
       }
       return result
