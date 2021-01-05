@@ -62,10 +62,12 @@
                   color: selectList.length
                     ? step == 0
                       ? selectList[0] &&
+                        selectList[0].name &&
                         cItem.name.indexOf(selectList[0].name) > -1
                         ? '#4974F5'
                         : '#222'
                       : selectList[1] &&
+                        selectList[1].name &&
                         cItem.name.indexOf(selectList[1].name) > -1
                       ? '#4974F5'
                       : '#222'
@@ -73,10 +75,12 @@
                   fontWeight: selectList.length
                     ? step == 0
                       ? selectList[0] &&
+                        selectList[0].name &&
                         cItem.name.indexOf(selectList[0].name) > -1
                         ? 'bold'
                         : 'normal'
                       : selectList[1] &&
+                        selectList[1].name &&
                         cItem.name.indexOf(selectList[1].name) > -1
                       ? 'bold'
                       : 'normal'
@@ -91,9 +95,11 @@
                     selectList.length &&
                     ((step == 0 &&
                       selectList[0] &&
+                      selectList[0].name &&
                       cItem.name.indexOf(selectList[0].name) > -1) ||
                       (step == 1 &&
                         selectList[1] &&
+                        selectList[1].name &&
                         cItem.name.indexOf(selectList[1].name) > -1))
                   "
                   name="success"
