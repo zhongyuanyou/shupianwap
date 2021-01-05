@@ -9,7 +9,7 @@
       @click="showPopup"
     >
       <template #right-icon>
-        <my-icon name="tap_ic_pen_n" size="0.08rem" color="#cccccc"></my-icon>
+        <my-icon name="tap_ic_pen_n" size="0.18rem" color="#cccccc"></my-icon>
       </template>
     </sp-cell>
     <sp-action-sheet v-model="show" @select="onSelect"
@@ -90,11 +90,7 @@ export default {
     onConfirm(value, index) {
       this.title = value
       this.show = false
-      // Toast(`当前值：${value}, 当前索引：${index}`)
     },
-    // onChange(picker, value, index) {
-    //   // this.title = value
-    // },
     onCancel() {
       this.show = false
     },
