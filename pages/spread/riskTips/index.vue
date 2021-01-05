@@ -1,12 +1,20 @@
 <template>
   <div class="center">
     <!--  头部  -->
-    <sp-top-nav-bar title="" left-arrow ellipsis @on-click-left="onClickLeft" />
+    <sp-top-nav-bar
+      title=""
+      left-arrow
+      ellipsis
+      :fixed="true"
+      :placeholder="true"
+      z-index="999"
+      @on-click-left="onClickLeft"
+    />
     <!--  头部  -->
     <!-- 主体 -->
     <div class="content">
       <img
-        src="../../../assets/spreadImages/riskTips/bg.png"
+        src="https://cdn.shupian.cn/sp-pt/wap/images/fto4vsxab1k0000.png"
         alt=""
         class="content-bg"
       />
@@ -27,12 +35,11 @@ export default {
     try {
       const res = await $axios.get(riskTipsApi.list, {
         params: {
-          categoryCode: 'protocol100001',
-          includeField: 'content,title',
+          categoryCode: 'con100061',
+          includeField: 'title,content',
         },
       })
       if (res.code === 200) {
-        console.log(res.data)
         return { getMessage: res.data.rows[0].content }
       }
     } catch (error) {
@@ -86,9 +93,10 @@ export default {
     font-weight: bold;
     color: #222222;
     position: relative;
-    z-index: 999;
+    z-index: 998;
   }
   &-body {
+    min-height: 1349px;
     border-radius: 8px;
     padding: 52px 47px 38px;
     font-size: 28px;
@@ -96,7 +104,7 @@ export default {
     box-shadow: 18px 0px 8px rgba(87, 130, 230, 0.08);
     position: relative;
     background: #ffffff;
-    z-index: 999;
+    z-index: 2;
   }
 }
 // 头部组件多出线条的修改
