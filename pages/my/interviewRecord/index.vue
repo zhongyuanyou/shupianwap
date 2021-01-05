@@ -342,12 +342,12 @@ export default {
                   width: 114px;
                   height: 28px;
                   line-height: 28px;
-                  background-image: url('~assets/images/planner/per_img_gold.png');
+                  background-image: url(https://cdn.shupian.cn/sp-pt/wap/images/7cwzjbxvkhs0000.png);
                 }
                 .certificates_icon {
                   width: 40px;
                   height: 28px;
-                  background-image: url('~assets/images/planner/per_img_certificates.png');
+                  background-image: url(https://cdn.shupian.cn/sp-pt/wap/images/3llegqu9ofs0000.png);
                 }
               }
             }

@@ -49,7 +49,7 @@ export default {
   .certificates_icon {
     width: 40px;
     height: 28px;
-    background-image: url('~assets/images/planner/per_img_certificates.png');
+    background-image: url(https://cdn.shupian.cn/sp-pt/wap/images/3llegqu9ofs0000.png);
   }
   &_tags {
     width: 100%;
