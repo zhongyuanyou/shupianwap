@@ -1,5 +1,8 @@
 <template>
   <footer class="footer-nav">
+    <clent-only>
+      <openApp :noFixed="true" />
+    </clent-only>
     <ul>
       <li
         v-for="(item, index) in tabBarData"

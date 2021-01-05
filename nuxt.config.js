@@ -79,26 +79,26 @@ module.exports = {
         type: 'text/javascript',
         charset: 'utf-8',
       },
-      {
-        src: 'https://res.wx.qq.com/open/js/jweixin-1.4.0.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
-      {
-        src:
-          'https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-2.0.18.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
-      {
-        src:
-          'https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
+      //   {
+      //     src: 'https://res.wx.qq.com/open/js/jweixin-1.4.0.js',
+      //     ssr: false,
+      //     type: 'text/javascript',
+      //     charset: 'utf-8',
+      //   },
+      //   {
+      //     src:
+      //       'https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-2.0.18.js',
+      //     ssr: false,
+      //     type: 'text/javascript',
+      //     charset: 'utf-8',
+      //   },
+      //   {
+      //     src:
+      //       'https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js',
+      //     ssr: false,
+      //     type: 'text/javascript',
+      //     charset: 'utf-8',
+      //   },
     ],
   },
   loading: { color: '#4974F5' },
@@ -165,6 +165,7 @@ module.exports = {
     babel: {
       plugins: bablePlugin,
     },
+    extractCSS: { ignoreOrder: true },
     loaders: {
       less: {
         // VantUI 定制主题配置
