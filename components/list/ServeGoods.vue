@@ -177,6 +177,13 @@ export default {
       typeData: [],
     }
   },
+  computed: {
+    cityCode() {
+      const cityObj = this.$store.state.city.currentCity
+      console.log('cityObj', cityObj)
+      return cityObj
+    },
+  },
   watch: {
     searchText(val) {
       this.formData.keywords = val

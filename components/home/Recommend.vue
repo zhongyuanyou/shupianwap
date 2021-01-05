@@ -149,8 +149,8 @@ export default {
   },
   async created() {
     if (process.client) {
-      this.params.deviceId = await getUserSign() // 获取用户唯一标识
       this.findRecomList(this.curentItem)
+      this.params.deviceId = await getUserSign() // 获取用户唯一标识
     }
   },
   mounted() {
