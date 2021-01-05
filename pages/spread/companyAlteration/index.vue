@@ -43,6 +43,7 @@ import { TopNavBar, NavSearch, Button } from '@chipspc/vant-dgg'
 import TopLocation from '@/components/spread/companyAlteration/TopLocation'
 import CompanySelec from '@/components/spread/companyAlteration/CompanySelect'
 import SelectDesired from '@/components/spread/companyAlteration/SelectDesired'
+import { planner, dict } from '@/api'
 export default {
   components: {
     [TopNavBar.name]: TopNavBar,
@@ -52,6 +53,7 @@ export default {
     CompanySelec,
     SelectDesired,
   },
+
   data() {
     return {
       topTitle: '轻松找服务',
@@ -118,7 +120,6 @@ export default {
       identity: '经办人',
       // 办理时间
       handlingTime: '1个月内',
-
       // 城市
       cityVal: {
         code: '510100',
@@ -129,10 +130,11 @@ export default {
   methods: {
     // 城市
     onCity(val) {
-      console.log(val)
+      console.log(val.code)
       this.cityVal = val
-      console.log(val)
+      this.getRegionList(val.code)
     },
+
     onSelectServe(val) {
       // 变更服务
       this.permission = val
@@ -166,6 +168,26 @@ export default {
       })
       localStorage.setItem('data', obj)
       this.$router.push({ path: '/spread/second' })
+    },
+    // 获取区域
+    async getRegionList(code) {
+      try {
+        const data = await dict.findCmsTier({ axios: this.$axios }, { code })
+        console.log(data)
+        if (Array.isArray(data) && data.length) {
+          this.regionsOption = [
+            {
+              ...this.currentCity,
+              children: Array.isArray(data) ? data : [],
+            },
+          ]
+        }
+
+        return data
+      } catch (error) {
+        console.error('getRegionList:', error)
+        return Promise.reject(error)
+      }
     },
   },
 }
