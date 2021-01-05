@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import { Sticky, IndexBar, IndexAnchor, Cell } from '@chipspc/vant-dgg'
+import { Sticky, IndexBar, IndexAnchor, Cell, Toast } from '@chipspc/vant-dgg'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import pyjs from 'js-pinyin'
 import { homeApi } from '@/api'
@@ -142,15 +142,20 @@ export default {
           },
         })
         .then((res) => {
-          console.log(res)
+          this.loading = false
           if (res.code === 200) {
-            this.loading = false
             this.cityList = res.data.cityList
-            console.log(777, this.cityList)
             if (this.cityList.length) {
               // 格式化城市数据
               this.nweCityList = this.getBrands(this.cityList)
             }
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
           }
         })
     }
