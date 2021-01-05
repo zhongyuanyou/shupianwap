@@ -25,7 +25,7 @@
             list-url="https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/find"
             delete-url="https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/deleteSingle"
             call-back-url="https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/callback"
-            @init="init"
+            @onSuccess="success"
           />
           <div class="cell">
             <p class="title">头像</p>
@@ -334,7 +334,7 @@ export default {
         }
       } catch (err) {}
     },
-    init(fileList) {
+    success(fileList) {
       console.log('fileList', fileList)
     },
   },
