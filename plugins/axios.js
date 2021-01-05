@@ -20,7 +20,7 @@ export default function ({ $axios, redirect, app, store }) {
       }
       config.params = config.params || {}
       if (DGG_SERVER_ENV === 'development') {
-        config.headers.sysCode = 'ml-api'
+        config.headers.sysCode = 'crisps-app-wap-bff-api'
       }
       if (
         app.$cookies.get('token', {
