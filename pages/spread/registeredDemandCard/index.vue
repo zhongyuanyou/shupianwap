@@ -1,7 +1,7 @@
 <template>
   <div class="regdemand">
     <!-- 头部加banner -->
-    <Header />
+    <Header @onCity="onCity" />
     <div class="content">
       <!-- 公司成立区域 -->
       <div class="company-area">
@@ -75,12 +75,13 @@
         <a href="javascript:;" @click="next()">下一步(1/2)</a>
       </div>
     </div>
+    <!-- 底部调起列表 -->
     <sp-popup v-model="isShow" position="bottom" :style="{ height: '55%' }">
       <sp-picker
         title="选择区域"
         show-toolbar
         :default-index="3"
-        :columns="columns"
+        :columns="actionsRegion"
         @confirm="onConfirm"
         @cancel="onCancel"
         @change="onChange"
@@ -91,6 +92,7 @@
 <script>
 import { Popup, Field, Picker } from '@chipspc/vant-dgg'
 import Header from '../../../components/spread/registeredDemandCard/header'
+import { planner, dict } from '@/api'
 export default {
   components: {
     Header,
@@ -100,34 +102,48 @@ export default {
   },
   data() {
     return {
-      obj: {},
       times: ['1个月内', '2个月内', '半年内', '1年内'],
       choose: ['是', '否'],
       chooseActived: 0,
       confirmActived: 0,
       transactActived: 0,
-      ishave: '是',
-      isconfirm: '是',
-      istsransact: '1月内',
+      ishave: '是', // 是否有地址
+      isconfirm: '是', // 公司信息是否确认完毕
+      istsransact: '1月内', // 打算办理时间
       area: '',
       isShow: false,
-      columns: [
-        '杭州',
-        '宁波',
-        '温州',
-        '不限',
-        '绍兴',
-        '湖州',
-        '嘉兴',
-        '金华',
-        '衢州',
-      ],
+      actionsRegion: [],
+      cityVal: {
+        code: '510100',
+        name: '成都市',
+      },
     }
   },
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: '免费帮找页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+  },
   methods: {
+    // 获取地区
+    onCity(val) {
+      if (this.getRegionList.length === 0) {
+        this.getRegionList(this.cityVal.code)
+      } else {
+        this.cityVal = val
+        this.getRegionList(this.cityVal.code)
+      }
+    },
+    // 显示下拉框
     show() {
       this.isShow = true
     },
+    // 选择区域返回到输入框
     onConfirm(value, index) {
       this.area = value
       this.isShow = false
@@ -138,20 +154,52 @@ export default {
     onCancel() {
       this.isShow = false
     },
+    // 获取公司是否有地址的选择
     isChoose(index) {
       this.chooseActived = index
       this.ishave = this.choose[index]
     },
+    // 获取公司信息是否完成的选择
     confirm(index) {
       this.confirmActived = index
       this.isconfirm = this.choose[index]
     },
+    // 获取打算办理时间的选择
     isTransact(index) {
       this.transactActived = index
       this.istsransact = this.times[index]
     },
+    // 跳转到下一页
     next() {
-      this.$router.push('/spread/second')
+      const obj = JSON.stringify({
+        place: this.cityVal.name,
+        type: 'gszc',
+        yxblqy: this.area,
+        sydz: this.ishave,
+        content: {
+          公司信息确认完毕: this.isconfirm,
+          办理时间: this.istsransact,
+        },
+      })
+      localStorage.setItem('data', obj)
+      this.$router.push({ path: '/spread/second' })
+    },
+    // 获取区域信息列表
+    async getRegionList(code) {
+      try {
+        const data = await dict.findCmsTier({ axios: this.$axios }, { code })
+        if (Array.isArray(data) && data.length) {
+          const cityData = []
+          data.forEach((resultArray) => {
+            cityData.push(resultArray.name)
+          })
+          this.actionsRegion = cityData
+        }
+        return
+      } catch (error) {
+        console.error('getRegionList:', error)
+        return Promise.reject(error)
+      }
     },
   },
   head() {
@@ -316,18 +364,13 @@ export default {
         }
       }
     }
-    .box {
-      width: 670px;
-      height: 168px;
-    }
     .footer-btn {
       width: 670px;
       height: 136px;
-      // padding: 24px 40px;
-      position: fixed;
-      margin-left: -335px;
-      left: 50%;
-      bottom: 0;
+      padding: 24px 0;
+      background: #ffffff;
+      margin: 0 auto;
+      margin-top: 32px;
       > a {
         display: block;
         width: 100%;
