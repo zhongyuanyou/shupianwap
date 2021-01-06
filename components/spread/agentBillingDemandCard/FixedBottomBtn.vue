@@ -1,16 +1,6 @@
 <template>
   <footer class="footer">
-    <sp-button
-      v-md-map
-      v-md:p_formSubmit
-      data-event_name="p_formSubmit"
-      data-form_type="咨询表单"
-      data-form_name="工商聚合页_表单"
-      type="primary"
-      @click="nextStep"
-    >
-      下一步(1/2)
-    </sp-button>
+    <sp-button type="primary" @click="nextStep"> 下一步(1/2) </sp-button>
   </footer>
 </template>
 
@@ -23,7 +13,20 @@ export default {
   },
   methods: {
     nextStep() {
+      // 将数据存储
+      const data = this.$parent.questionData
+      const str = JSON.stringify({
+        type: 'kjdl',
+        content: {
+          注册时间: data[0].value,
+          主营业务: data[1].value,
+          是否支持开票: data[2].value,
+          公司年收入: data[3].value,
+        },
+      })
+      localStorage.setItem('data', str)
       // 下一步
+      this.$router.push({ path: '/spread/second' })
     },
   },
 }
@@ -31,16 +34,11 @@ export default {
 
 <style lang="less" scoped>
 .footer {
-  height: 136px;
   display: flex;
   justify-content: center;
   align-items: center;
   background: #ffffff;
-  // 固定定位
-  width: @spread-page-width;
-  padding: 0 40px;
-  position: fixed;
-  bottom: 0;
+  padding: 24px 40px;
 
   /deep/ .sp-button {
     width: 100%;
