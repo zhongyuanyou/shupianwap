@@ -1,5 +1,5 @@
 <template>
-  <div class="company-register">
+  <div class="company-alteration">
     <TopLocation :title="topTitle" @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理哪项业务的变更服务 -->
@@ -39,15 +39,13 @@
   </div>
 </template>
 <script>
-import { TopNavBar, NavSearch, Button } from '@chipspc/vant-dgg'
+import { Button } from '@chipspc/vant-dgg'
 import TopLocation from '@/components/spread/companyAlteration/TopLocation'
 import CompanySelec from '@/components/spread/companyAlteration/CompanySelect'
 import SelectDesired from '@/components/spread/companyAlteration/SelectDesired'
 import { planner, dict } from '@/api'
 export default {
   components: {
-    [TopNavBar.name]: TopNavBar,
-    [NavSearch.name]: NavSearch,
     [Button.name]: Button,
     TopLocation,
     CompanySelec,
@@ -127,6 +125,16 @@ export default {
       },
     }
   },
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: '免费帮找页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+  },
   methods: {
     // 城市
     onCity(val) {
@@ -182,10 +190,15 @@ export default {
       }
     },
   },
+  header() {
+    return {
+      title: '许可证办理',
+    }
+  },
 }
 </script>
 <style lang="less" scoped>
-.company-register {
+.company-alteration {
   width: @spread-page-width;
   margin: 0 auto;
   font-size: 36px;

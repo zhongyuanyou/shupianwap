@@ -4,8 +4,8 @@
     <sp-cell
       border
       is-link
-      :title="title"
       title-style="color:#222222;"
+      :title="title"
       @click="showPopup"
     >
       <template #right-icon>
@@ -44,14 +44,14 @@ export default {
       type: Array,
       default: () => {
         return [
-          '建造工程',
-          '铁路工程',
-          '港口和航道工程',
-          '水利水电工程',
-          '电力工程',
-          '港口和航道工程',
-          '水利水电工程',
-          '电力工程',
+          '卫生许可证',
+          '道路运输许可证',
+          '医疗器械许可证',
+          '进出口许可证',
+          '食品通道许可证 HOT',
+          '餐饮服务许可证',
+          '医疗器械许可二类备案',
+          '其他许可证',
         ]
       },
     },

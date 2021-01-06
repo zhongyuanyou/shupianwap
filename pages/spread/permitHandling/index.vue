@@ -100,27 +100,32 @@ export default {
       },
     }
   },
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: '免费帮找页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+  },
   methods: {
     // 城市
     onCity(val) {
-      console.log(val)
       this.cityVal = val
-      console.log(val)
     },
     onSelectServe(val) {
       // 变更服务
       this.xkzlz = val
-      console.log(val)
     },
     onDistrict(item) {
       // 是否决策人
       this.isDecision = item.name
-      console.log(item)
     },
     onTransact(item) {
       // 办理时间
       this.handlingTime = item.name
-      console.log(item)
     },
     onButton() {
       const obj = JSON.stringify({
@@ -139,14 +144,6 @@ export default {
   head() {
     return {
       title: '许可办理',
-      script: [
-        {
-          src: '/js/spread/companyRegister-md-config.js',
-        },
-        {
-          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
-        },
-      ],
     }
   },
 }
