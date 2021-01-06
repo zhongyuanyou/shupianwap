@@ -1,6 +1,6 @@
 <template>
   <div class="company-alteration">
-    <TopLocation :title="topTitle" @onCity="onCity" />
+    <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理哪项业务的变更服务 -->
       <CompanySelec
@@ -54,7 +54,6 @@ export default {
 
   data() {
     return {
-      topTitle: '轻松找服务',
       // 选择服务
       actionsServe: [
         '法人变更',
@@ -151,7 +150,6 @@ export default {
     },
     onButton() {
       const obj = JSON.stringify({
-        place: this.cityVal.name,
         type: 'gsbg',
         bgxm: this.permission,
         content: {

@@ -9,7 +9,7 @@
       @click="showPopup"
     >
       <template #right-icon>
-        <my-icon name="tap_ic_pen_n" size="0.18rem" color="#cccccc"></my-icon>
+        <my-icon name="sear_ic_open" size="0.18rem" color="#cccccc"></my-icon>
       </template>
     </sp-cell>
     <sp-action-sheet v-model="show" @select="onSelect"
@@ -97,10 +97,12 @@ export default {
   }
   /deep/.sp-cell {
     background: #ffffff;
-    border: 1px solid #cdcdcd;
-    opacity: 0.5;
+    border: 1px solid rgba(205, 205, 205, 0.5);
     border-radius: 4px;
     padding: 10px 24px;
+    .sp-cell__title span {
+      color: #222;
+    }
   }
   // 选中样式
   .action-style {
@@ -117,10 +119,16 @@ export default {
     padding: 34px 19px 0 19px;
   }
   /deep/ .sp-overlay,
-  .sp-popup--bottom {
+  /deep/ .sp-popup--bottom {
     margin-left: -375px;
     width: @spread-page-width;
     left: 50%;
+    .sp-picker-column__item {
+      color: #555;
+    }
+    .sp-picker-column__item--selected {
+      color: #222;
+    }
   }
 }
 </style>

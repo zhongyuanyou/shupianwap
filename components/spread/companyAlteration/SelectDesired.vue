@@ -78,13 +78,13 @@ export default {
     margin-bottom: 32px;
   }
   .select-item {
-    display: flex;
     .select-list {
-      display: inline-block;
+      display: inline-flex;
+      justify-content: center;
+      align-self: center;
+      align-items: center;
       width: 149px;
       height: 72px;
-      line-height: 72px;
-      align-self: flex-end;
       text-align: center;
       background: #f8f8f8;
       border-radius: 8px;
@@ -102,7 +102,6 @@ export default {
       width: 143px;
       color: #222;
       height: 66px;
-      line-height: 63px;
       border-radius: 8px;
     }
   }

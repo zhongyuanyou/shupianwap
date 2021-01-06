@@ -1,6 +1,6 @@
 <template>
   <div class="permit-handling">
-    <TopLocation :title="topTitle" @onCity="onCity" />
+    <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理的许可证业务 -->
       <CompanySelec
@@ -32,17 +32,13 @@
   </div>
 </template>
 <script>
-import { TopNavBar, NavSearch, Icon, Toast, Button } from '@chipspc/vant-dgg'
+import { Button } from '@chipspc/vant-dgg'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import TopLocation from '@/components/spread/companyAlteration/TopLocation'
 import CompanySelec from '@/components/spread/companyAlteration/CompanySelect'
 import SelectDesired from '@/components/spread/companyAlteration/SelectDesired'
 export default {
   components: {
-    [TopNavBar.name]: TopNavBar,
-    [NavSearch.name]: NavSearch,
-    [Icon.name]: Icon,
-    [Toast.name]: Toast,
     [Button.name]: Button,
     TopLocation,
     CompanySelec,
@@ -50,7 +46,6 @@ export default {
   },
   data() {
     return {
-      topTitle: '轻松找服务',
       // 选择变更服务
       actionsServe: [
         '卫生许可证',
@@ -129,7 +124,6 @@ export default {
     },
     onButton() {
       const obj = JSON.stringify({
-        place: this.cityVal.name,
         type: 'xkx',
         xkzlx: this.permission,
         content: {

@@ -1,44 +1,20 @@
 <template>
   <div class="company-register">
-    <sp-top-nav-bar
-      background="rgba(255, 255, 255, 0)"
-      ellipsis
-      :title="topTitle"
-    >
-      <template #left>
-        <a @click="onClickLeft"
-          ><my-icon
-            class="nav-back"
-            name="nav_ic_back"
-            size="0.40rem"
-            color="#000000"
-        /></a>
-      </template>
-    </sp-top-nav-bar>
     <div class="company-top" :style="{ backgroundImage: 'url(' + bgImg + ')' }">
       <span class="location" @click="onMore"
         >{{ currentCity || '成都市' }}
-        <my-icon name="tap_ic_pen_n" size="0.14rem" color="#ffffff"></my-icon>
+        <my-icon name="sear_ic_open" size="0.14rem" color="#ffffff"></my-icon>
       </span>
     </div>
   </div>
 </template>
 <script>
-import { TopNavBar, Icon } from '@chipspc/vant-dgg'
+import { Icon } from '@chipspc/vant-dgg'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import needVue from '../agency/need.vue'
 export default {
   components: {
-    [TopNavBar.name]: TopNavBar,
     [Icon.name]: Icon,
-  },
-  props: {
-    topTitle: {
-      type: String,
-      default: () => {
-        return '轻松找服务'
-      },
-    },
   },
   data() {
     return {
@@ -88,10 +64,10 @@ export default {
       display: block;
       color: #ffffff;
       text-align: center;
-      /deep/.spiconfont-tap_ic_pen_n {
+      /deep/.spiconfont {
         font-weight: 400;
         display: inline-block;
-        transform: translate(0, -3px);
+        transform: translate(0, -4px);
       }
     }
   }

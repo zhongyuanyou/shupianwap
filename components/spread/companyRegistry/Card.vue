@@ -45,8 +45,6 @@
             v-md-map
             v-md:WebClick
             data-form_name="工商注册_表单_验证码"
-            center
-            clearable
             type="tel"
             maxlength="6"
             label="验证码"
