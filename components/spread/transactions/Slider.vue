@@ -7,6 +7,7 @@
       active-color="#4974f5"
       inactive-color="#f8f8f8"
       @input="onInput"
+      @startTouchstart="startTouchstart"
     >
       <template #button>
         <div class="slider-button">
@@ -54,6 +55,9 @@ export default {
         this.$parent.minYear = Math.round(0.2 * min)
         this.$parent.maxYear = Math.round(0.2 * max)
       }
+    },
+    startTouchstart() {
+      console.log(1)
     },
   },
 }

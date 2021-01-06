@@ -47,10 +47,8 @@ import serve from '~/components/spread/tax/Serve'
 import conrult from '~/components/spread/tax/Conrult'
 import good from '~/components/spread/tax/Good'
 import process from '~/components/spread/tax/Process'
-// import planner from '~/components/spread/tax/Planner'
 import guiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
 import maby from '~/components/spread/tax/Maby'
-// import bottom from '~/components/spread/tax/Bottom'
 import dggImCompany from '~/components/spread/DggImCompany'
 import shuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
 import fixedBottom from '~/components/spread/common/FixedBottom'
@@ -66,10 +64,8 @@ export default {
     conrult,
     good,
     process,
-    // planner,
     guiHuaShiSwipe,
     maby,
-    // bottom,
     dggImCompany,
     shuPianZhaoRen,
     fixedBottom,

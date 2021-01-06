@@ -54,6 +54,13 @@ export default {
 .header {
   width: 100%;
   position: relative;
+  /deep/.my-head {
+    width: 750px;
+    position: fixed;
+    left: 50%;
+    margin-left: -375px;
+    box-shadow: 0px 0px 0px 0px;
+  }
   .content {
     height: 320px;
     background-size: 100% 100%;

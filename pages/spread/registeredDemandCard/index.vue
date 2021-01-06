@@ -132,12 +132,8 @@ export default {
   methods: {
     // 获取地区
     onCity(val) {
-      if (this.getRegionList.length === 0) {
-        this.getRegionList(this.cityVal.code)
-      } else {
-        this.cityVal = val
-        this.getRegionList(this.cityVal.code)
-      }
+      if (val.code !== undefined) this.cityVal = val
+      this.getRegionList(this.cityVal.code)
     },
     // 显示下拉框
     show() {
@@ -169,10 +165,9 @@ export default {
       this.transactActived = index
       this.istsransact = this.times[index]
     },
-    // 跳转到下一页
+    // 跳转到下一页,存储当前页面信息
     next() {
       const obj = JSON.stringify({
-        place: this.cityVal.name,
         type: 'gszc',
         yxblqy: this.area,
         sydz: this.ishave,
@@ -197,7 +192,6 @@ export default {
         }
         return
       } catch (error) {
-        console.error('getRegionList:', error)
         return Promise.reject(error)
       }
     },
@@ -385,6 +379,18 @@ export default {
         line-height: 88px;
       }
     }
+  }
+  /deep/.sp-popup {
+    width: 750px;
+    position: absolute;
+    left: 50%;
+    margin-left: -375px;
+  }
+  /deep/.sp-overlay {
+    width: 750px;
+    position: absolute;
+    left: 50%;
+    margin-left: -375px;
   }
 }
 </style>
