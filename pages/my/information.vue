@@ -19,6 +19,7 @@
           <spMobileUpload
             ref="SpUpLoad"
             tip="仅图片上传："
+            v-if="isUpdateAvatar"
             :file-id="info.fileId"
             is-add-watermark
             class="uploader"
@@ -226,14 +227,14 @@ export default {
       } else if (val === 3) {
         this.birthShow = true
       } else if (val === 1) {
-        // if (!this.isUpdateAvatar) {
-        //   // 如果不能修改
-        //   this.$refs.spToast.show({
-        //     message: '抱歉，头像暂不支持修改',
-        //     duration: 1500,
-        //     forbidClick: true,
-        //   })
-        // }
+        if (!this.isUpdateAvatar) {
+          // 如果不能修改
+          this.$refs.spToast.show({
+            message: '抱歉，头像暂不支持修改',
+            duration: 1500,
+            forbidClick: true,
+          })
+        }
       }
     },
     async select(data) {

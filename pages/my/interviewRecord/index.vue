@@ -13,7 +13,11 @@
       </template>
     </Header>
     <div class="body">
-      <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <sp-pull-refresh
+        v-model="refreshing"
+        style="min-height: calc(100vh - 88px)"
+        @refresh="onRefresh"
+      >
         <sp-list
           v-model="loading"
           :finished="finished"
@@ -115,7 +119,7 @@
                 >您在{{ item.cancelTime }}已取消面谈</span
               >
               <span v-else-if="item.inviteStatus === 3">您已取消面谈</span>
-              <span v-else>您在{{ item.completeTime }}已完成面谈</span>
+              <span v-else>您在{{ item.confirmCompleteTime }}已完成面谈</span>
             </div>
           </sp-cell>
         </sp-list>
