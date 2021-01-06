@@ -3,7 +3,7 @@
     <!--    头部  -->
     <sp-top-nav-bar
       title="轻松找服务"
-      background="transparent"
+      background="#ffffff"
       title-color="#1A1A1A"
       ellipsis
       :fixed="true"
@@ -17,11 +17,7 @@
     </sp-top-nav-bar>
     <div class="banner">
       <!--    城市按钮  -->
-      <div
-        v-sensorsTrack:webClick="mdData"
-        class="banner-button"
-        @click="tabCity"
-      >
+      <div class="banner-button" @click="tabCity">
         <div class="banner-button-city">{{ currentCity.name || '成都' }}</div>
         <my-icon
           name="tap_ic_pen_n"
@@ -43,7 +39,6 @@ export default {
   data() {
     return {
       city: '成都',
-      mdData: { name: '轻松找服务_城市' },
     }
   },
   computed: {

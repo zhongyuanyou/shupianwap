@@ -3,7 +3,7 @@ sensors.init({
   // 神策系统配置
   server_url: 'https://shence.dgg.cn:6443/sa?project=default', // 数据接收地址
   is_track_single_page: true, // 单页应用页面浏览事件采集(url改变就触发)
-  show_log: true, // 控制台显示数据开关
+  show_log: false, // 控制台显示数据开关
   heatmap: {
     // 热图设置 default开启 not_collect关闭（详细配置解释看官方文档）
     clickmap: 'default', // 点击热图，收集点击事件
@@ -11,12 +11,4 @@ sensors.init({
   },
 })
 window.sensors = sensors
-const param = {
-  platform_type: 'WEB', // 平台类型：App，H5，Web
-  app_name: '薯片科技', // 应用名称
-  product_line: '轻松找服务',
-  current_url: location.href,
-  referrer: document.referrer,
-}
-window.sensors.registerPage(param) // 设置公共属性
 module.exports = sensors
