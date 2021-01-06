@@ -173,17 +173,14 @@ export default {
     async getRegionList(code) {
       try {
         const data = await dict.findCmsTier({ axios: this.$axios }, { code })
-        console.log(data)
         if (Array.isArray(data) && data.length) {
-          this.regionsOption = [
-            {
-              ...this.currentCity,
-              children: Array.isArray(data) ? data : [],
-            },
-          ]
+          const cityData = []
+          data.forEach((resultArray) => {
+            cityData.push(resultArray.name)
+          })
+          this.actionsRegion = cityData
         }
-
-        return data
+        return
       } catch (error) {
         console.error('getRegionList:', error)
         return Promise.reject(error)
@@ -194,6 +191,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .company-register {
+  width: @spread-page-width;
+  margin: 0 auto;
   font-size: 36px;
   .button {
     padding: 24px 40px;
