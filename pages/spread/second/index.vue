@@ -2,26 +2,28 @@
   <div class="center">
     <div>
       <!--    头部  -->
-      <sp-top-nav-bar
-        title="轻松找服务"
-        background="#ffffff"
-        title-color="#1A1A1A"
-        ellipsis
-        :fixed="true"
-        :placeholder="true"
-        z-index="999"
-      >
-        <template #left>
-          <div class="margin" @click="back">
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>
-          </div>
-          <sp-icon name="cross" size="0.4rem" @click="close" />
-        </template>
-      </sp-top-nav-bar>
+      <!--      <sp-top-nav-bar-->
+      <!--        title="轻松找服务"-->
+      <!--        background="#ffffff"-->
+      <!--        title-color="#1A1A1A"-->
+      <!--        ellipsis-->
+      <!--        :fixed="true"-->
+      <!--        :placeholder="true"-->
+      <!--        z-index="999"-->
+      <!--      >-->
+      <!--        <template #left>-->
+      <!--          <div class="margin" @click="back">-->
+      <!--            <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>-->
+      <!--          </div>-->
+      <!--          <sp-icon name="cross" size="0.4rem" @click="close" />-->
+      <!--        </template>-->
+      <!--      </sp-top-nav-bar>-->
       <div class="banner">
         <!--    城市按钮  -->
         <div class="banner-button" @click="tabCity">
-          <div class="banner-button-city">{{ currentCity.name || '成都' }}</div>
+          <div class="banner-button-city">
+            {{ currentCity.name || '成都市' }}
+          </div>
           <my-icon
             name="tap_ic_pen_n"
             color="#ffffff"
@@ -35,13 +37,14 @@
       <div class="form-title">您还有一些额外需求要告知我们？</div>
       <sp-field
         v-model="message"
-        rows="4"
-        autosize
+        rows="5"
+        :autofocus="true"
         type="textarea"
         maxlength="300"
         placeholder="更准确的描述需求，将有助于我们为您更好的服务"
         :show-word-limit="true"
         class="form-text"
+        @input="changeFont"
       />
       <div class="form-read" @click="select">
         <div class="form-read-first">
@@ -53,7 +56,14 @@
               class="icon"
             ></my-icon>
           </div>
-          <div v-else class="form-read-first-white"></div>
+          <div v-else class="form-read-first-icon">
+            <my-icon
+              name="shop_ic_radio_n"
+              size="0.32rem"
+              color="#999999"
+              class="icon"
+            ></my-icon>
+          </div>
           <span>订阅专属服务</span>
         </div>
         <div class="form-read-second">
@@ -161,6 +171,15 @@ export default {
         }
       })
     },
+    // 输入框文字发生改变
+    changeFont(val) {
+      const font = document.getElementsByClassName('sp-field__word-num')[0]
+      if (val === '') {
+        font.style.color = '#999999'
+      } else {
+        font.style.color = '#222222'
+      }
+    },
   },
   head() {
     return {
@@ -177,7 +196,7 @@ export default {
 
 <style scoped lang="less">
 .center {
-  width: 750px;
+  width: @spread-page-width;
   margin: 0 auto;
 }
 .margin {
@@ -186,6 +205,9 @@ export default {
 .form {
   padding: 64px 40px 24px;
   font-size: 0;
+  &-text::placeholder {
+    color: red;
+  }
   &-title {
     font-size: 36px;
     line-height: 36px;
@@ -206,12 +228,6 @@ export default {
       display: flex;
       align-items: center;
       height: 34px;
-      &-white {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: #ffffff;
-      }
       & > span {
         margin-left: 17px;
         font-size: 28px;
@@ -258,25 +274,27 @@ export default {
     color: #ffffff;
     display: flex;
     align-items: center;
+    line-height: 24px;
+    height: 44px;
     &-icon {
       margin-left: 12px;
     }
   }
 }
-// 顶部导航左侧箭头字重
-/deep/ .sp-top-nav-bar__left {
-  font-weight: lighter;
-}
-// 顶部组件居中
-/deep/ .sp-top-nav-bar--fixed {
-  width: 750px;
-  margin-left: 50%;
-  transform: translateX(-375px);
-}
-// 头部组件多出线条的修改
-/deep/ .sp-hairline--bottom::after {
-  border: none;
-}
+//// 顶部导航左侧箭头字重
+///deep/ .sp-top-nav-bar__left {
+//  font-weight: lighter;
+//}
+//// 顶部组件居中
+///deep/ .sp-top-nav-bar--fixed {
+//  width: @spread-page-width;
+//  margin-left: 50%;
+//  transform: translateX(-375px);
+//}
+//// 头部组件多出线条的修改
+///deep/ .sp-hairline--bottom::after {
+//  border: none;
+//}
 // 纯文本输入框容器
 /deep/ .sp-field {
   padding: 20px 24px 24px;
@@ -290,7 +308,6 @@ export default {
   font-size: 28px;
   font-weight: 400;
   line-height: 36px;
-  color: #cccccc;
 }
 // 纯文本输入框布局
 /deep/ .sp-cell__value {
@@ -310,7 +327,23 @@ export default {
 /deep/ .sp-field__word-limit {
   font-size: 28px;
   font-weight: 400;
-  color: #cccccc;
+  color: #999999;
   line-height: 28px;
+}
+//输入框下面的多余线条
+/deep/ .sp-cell::after {
+  border-bottom: 0;
+}
+//输入字体颜色
+/deep/ .sp-field__control {
+  color: #222222;
+}
+//占位字的颜色
+/deep/ .sp-field__control::placeholder {
+  color: #999999;
+}
+//动态计数字体
+/deep/ .sp-field__word-num {
+  color: #999999;
 }
 </style>

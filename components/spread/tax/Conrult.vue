@@ -117,7 +117,7 @@ export default {
 <style scoped lang="less">
 .conrult {
   margin-top: 32px;
-  width: 750px;
+  width: @spread-page-width;
   padding: 32px 40px;
   font-size: 0;
   &-title {

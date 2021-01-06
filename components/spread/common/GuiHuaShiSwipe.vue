@@ -165,7 +165,7 @@ export default {
 
 <style scoped lang="less">
 .planner {
-  width: 750px;
+  width: @spread-page-width;
   height: 349px;
   padding: 30px 0 0 40px;
   &-title {

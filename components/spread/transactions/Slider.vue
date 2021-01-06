@@ -7,7 +7,6 @@
       active-color="#4974f5"
       inactive-color="#f8f8f8"
       @input="onInput"
-      @startTouchstart="startTouchstart"
     >
       <template #button>
         <div class="slider-button">
@@ -47,17 +46,17 @@ export default {
     onInput(value) {
       const min = value[0]
       const max = value[1]
-      // if(max<=(min+2)){}
       if (this.type === 'money') {
-        this.$parent.minMoney = 2 * min
+        if (min < 1) {
+          this.$parent.minMoney = 2
+        } else {
+          this.$parent.minMoney = 2 * min
+        }
         this.$parent.maxMoney = 2 * max
       } else if (this.type === 'year') {
         this.$parent.minYear = Math.round(0.2 * min)
         this.$parent.maxYear = Math.round(0.2 * max)
       }
-    },
-    startTouchstart() {
-      console.log(1)
     },
   },
 }

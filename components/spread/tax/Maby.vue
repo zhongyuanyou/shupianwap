@@ -63,7 +63,7 @@ export default {
 <style scoped lang="less">
 .maby {
   padding: 31px 40px 0;
-  width: 750px;
+  width: @spread-page-width;
   &-title {
     font-size: 40px;
     font-family: PingFang SC;

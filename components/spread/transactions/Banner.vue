@@ -1,24 +1,24 @@
 <template>
   <div>
     <!--    头部  -->
-    <sp-top-nav-bar
-      title="轻松找服务"
-      background="#ffffff"
-      title-color="#1A1A1A"
-      ellipsis
-      :fixed="true"
-      :placeholder="true"
-      z-index="999"
-      @on-click-left="onClickLeft"
-    >
-      <div slot="left" class="head">
-        <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>
-      </div>
-    </sp-top-nav-bar>
+    <!--    <sp-top-nav-bar-->
+    <!--      title="轻松找服务"-->
+    <!--      background="#ffffff"-->
+    <!--      title-color="#1A1A1A"-->
+    <!--      ellipsis-->
+    <!--      :fixed="true"-->
+    <!--      :placeholder="true"-->
+    <!--      z-index="999"-->
+    <!--      @on-click-left="onClickLeft"-->
+    <!--    >-->
+    <!--      <div slot="left" class="head">-->
+    <!--        <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>-->
+    <!--      </div>-->
+    <!--    </sp-top-nav-bar>-->
     <div class="banner">
       <!--    城市按钮  -->
       <div class="banner-button" @click="tabCity">
-        <div class="banner-button-city">{{ currentCity.name || '成都' }}</div>
+        <div class="banner-button-city">{{ currentCity.name || '成都市' }}</div>
         <my-icon
           name="tap_ic_pen_n"
           color="#ffffff"
@@ -80,18 +80,20 @@ export default {
     color: #ffffff;
     display: flex;
     align-items: center;
+    line-height: 24px;
+    height: 44px;
     &-icon {
       margin-left: 12px;
     }
   }
 }
-/deep/ .sp-top-nav-bar--fixed {
-  width: 750px;
-  margin-left: 50%;
-  transform: translateX(-375px);
-}
-// 头部组件多出线条的修改
-/deep/ .sp-hairline--bottom::after {
-  border: none;
-}
+///deep/ .sp-top-nav-bar--fixed {
+//  width: 750px;
+//  margin-left: 50%;
+//  transform: translateX(-375px);
+//}
+//// 头部组件多出线条的修改
+///deep/ .sp-hairline--bottom::after {
+//  border: none;
+//}
 </style>
