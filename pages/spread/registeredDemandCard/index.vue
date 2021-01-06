@@ -76,7 +76,12 @@
       </div>
     </div>
     <!-- 底部调起列表 -->
-    <sp-popup v-model="isShow" position="bottom" :style="{ height: '55%' }">
+    <sp-popup
+      v-model="isShow"
+      position="bottom"
+      round
+      :style="{ height: '55%' }"
+    >
       <sp-picker
         title="选择区域"
         show-toolbar
@@ -400,7 +405,6 @@ export default {
     position: absolute;
     left: 50%;
     margin-left: -375px;
-    border-radius: 20px 20px 0 0;
   }
   /deep/.sp-overlay {
     width: 750px;
