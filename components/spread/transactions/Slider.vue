@@ -46,6 +46,7 @@ export default {
     onInput(value) {
       const min = value[0]
       const max = value[1]
+      // if(max<=(min+2)){}
       if (this.type === 'money') {
         this.$parent.minMoney = 2 * min
         this.$parent.maxMoney = 2 * max
