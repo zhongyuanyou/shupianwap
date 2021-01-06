@@ -13,19 +13,11 @@
             size="0.40rem"
             color="#000000"
         /></a>
-
-        <sp-icon
-          class="nav-back"
-          name="cross"
-          size="0.40rem"
-          color="#000000"
-          @click="onClickEsc"
-        />
       </template>
     </sp-top-nav-bar>
     <div class="company-top" :style="{ backgroundImage: 'url(' + bgImg + ')' }">
       <span class="location" @click="onMore"
-        >{{ currentCity || positionCityName || '成都' }}
+        >{{ currentCity || '成都市' }}
         <my-icon name="tap_ic_pen_n" size="0.14rem" color="#ffffff"></my-icon>
       </span>
     </div>
@@ -67,9 +59,6 @@ export default {
     onClickLeft() {
       this.$router.go(-1)
     },
-    onClickEsc() {
-      window.open('about:blank', '_self').close()
-    },
     onMore() {
       this.$router.push({ path: '/city/choiceCity' })
     },
@@ -88,7 +77,7 @@ export default {
       position: absolute;
       left: 48px;
       bottom: 58px;
-      width: 113px;
+      padding: 0 20px;
       height: 44px;
       line-height: 44px;
       background: rgba(255, 255, 255, 0.2);
@@ -111,7 +100,6 @@ export default {
   }
   .nav-back {
     font-weight: 400;
-    margin-right: 34px;
   }
 }
 </style>

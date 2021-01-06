@@ -130,7 +130,6 @@ export default {
   methods: {
     // 城市
     onCity(val) {
-      console.log(val.code)
       this.cityVal = val
       this.getRegionList(val.code)
     },
@@ -138,22 +137,18 @@ export default {
     onSelectServe(val) {
       // 变更服务
       this.permission = val
-      console.log(val)
     },
     onSelectDistrict(val) {
       // 区域
       this.district = val
-      console.log(val)
     },
     onDistrict(item) {
       // 注册在哪个区
       this.identity = item.name
-      console.log(item)
     },
     onTransact(item) {
       // 办理时间
       this.handlingTime = item.name
-      console.log(item)
     },
     onButton() {
       const obj = JSON.stringify({

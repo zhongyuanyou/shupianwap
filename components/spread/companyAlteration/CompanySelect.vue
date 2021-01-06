@@ -24,23 +24,10 @@
   </div>
 </template>
 <script>
-import {
-  TopNavBar,
-  Icon,
-  Toast,
-  Image,
-  Cell,
-  Popup,
-  ActionSheet,
-  Picker,
-} from '@chipspc/vant-dgg'
+import { TopNavBar, Cell, Popup, ActionSheet, Picker } from '@chipspc/vant-dgg'
 export default {
   components: {
     [TopNavBar.name]: TopNavBar,
-    [Icon.name]: Icon,
-    // 待删除--
-    [Toast.name]: Toast,
-    [Image.name]: Image,
     [Cell.name]: Cell,
     [Popup.name]: Popup,
     [ActionSheet.name]: ActionSheet,
