@@ -210,7 +210,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .regdemand {
-  width: 750px;
+  width: @spread-page-width;
   margin: 0 auto;
   position: relative;
   .content {
@@ -401,16 +401,16 @@ export default {
     }
   }
   /deep/.sp-popup {
-    width: 750px;
+    width: @spread-page-width;
     position: absolute;
     left: 50%;
-    margin-left: -375px;
+    margin-left: calc(-@spread-page-width / 2);
   }
   /deep/.sp-overlay {
-    width: 750px;
+    width: @spread-page-width;
     position: absolute;
     left: 50%;
-    margin-left: -375px;
+    margin-left: calc(-@spread-page-width / 2);
   }
 }
 </style>
