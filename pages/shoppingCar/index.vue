@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-06 10:39:36
+ * @LastEditTime: 2021-01-06 11:57:22
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -32,7 +32,6 @@
       </Header>
     </div>
     <div class="body">
-      <!-- :disabled="true" -->
       <sp-pull-refresh
         v-model="refreshing"
         class="shopping-car__refresh"
@@ -571,10 +570,6 @@ export default {
   .body {
     flex: 1;
     padding: 0;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-    position: relative;
   }
   &__refresh {
     min-height: 100%;
