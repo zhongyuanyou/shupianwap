@@ -1,8 +1,8 @@
 <template>
-  <div class="header" :style="{ backgroundImage: 'url(' + imgSrc + ')' }">
+  <div class="header">
     <!-- 头部分 -->
-    <Header :title="title" />
-    <div class="content">
+    <Header :title="title" class="head" />
+    <div class="content" :style="{ backgroundImage: 'url(' + imgSrc + ')' }">
       <a href="javascript:;" @click="chooseCity()">
         <span>{{ currentCity || '成都市' }}</span>
         <my-icon
@@ -29,13 +29,16 @@ export default {
   },
   data() {
     return {
-      title: '',
-      imgSrc: 'https://cdn.shupian.cn/sp-pt/wap/images/cu5su70wtu80000.jpg',
+      title: '轻松找服务',
+      imgSrc: 'https://cdn.shupian.cn/sp-pt/wap/images/13zjhce6649s000.jpg',
     }
   },
   computed: {
     ...mapState({
-      currentCity: (state) => state.city.currentCity.name, // 当前选择的城市
+      currentCity(state) {
+        this.$emit('onCity', state.city.currentCity)
+        return state.city.currentCity.name
+      }, // 当前选择的城市
     }),
   },
 
@@ -50,28 +53,15 @@ export default {
 <style lang="less" scoped>
 .header {
   width: 100%;
-  height: 378px;
-  background-size: 100% 100%;
   position: relative;
-  /deep/.fixed-head {
-    /deep/.my-head {
-      background: transparent;
-      width: 750px;
-      left: 50%;
-      margin-left: -375px;
-      box-shadow: 0 0 0 0;
-      position: absolute;
-      z-index: 2;
-    }
-    /deep/.back-icon {
-      color: #ffffff !important;
-    }
-  }
   .content {
-    height: 290px;
+    height: 320px;
+    background-size: 100% 100%;
+    position: relative;
+    z-index: 2;
     a {
       position: absolute;
-      z-index: 1;
+      z-index: 3;
       bottom: 50px;
       display: block;
       // width: 113px;
