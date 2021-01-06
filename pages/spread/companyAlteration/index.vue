@@ -73,16 +73,7 @@ export default {
         '其他变更',
       ],
       // 区域
-      actionsRegion: [
-        '杭州',
-        '宁波',
-        '温州',
-        '绍兴',
-        '湖州',
-        '嘉兴',
-        '金华',
-        '衢州',
-      ],
+      actionsRegion: [],
       // 身份
       selectActive: [
         {
@@ -138,8 +129,8 @@ export default {
   methods: {
     // 城市
     onCity(val) {
-      this.cityVal = val
-      this.getRegionList(val.code)
+      if (val.code !== undefined) this.cityVal = val
+      this.getRegionList(this.cityVal.code)
     },
 
     onSelectServe(val) {
@@ -190,9 +181,9 @@ export default {
       }
     },
   },
-  header() {
+  head() {
     return {
-      title: '许可证办理',
+      title: '工商变更',
     }
   },
 }

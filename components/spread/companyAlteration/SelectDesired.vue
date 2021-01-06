@@ -84,6 +84,7 @@ export default {
       width: 149px;
       height: 72px;
       line-height: 72px;
+      align-self: flex-end;
       text-align: center;
       background: #f8f8f8;
       border-radius: 8px;
@@ -101,7 +102,7 @@ export default {
       width: 143px;
       color: #222;
       height: 66px;
-      line-height: 66px;
+      line-height: 63px;
       border-radius: 8px;
     }
   }

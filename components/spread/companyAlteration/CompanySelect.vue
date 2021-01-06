@@ -14,7 +14,7 @@
     </sp-cell>
     <sp-action-sheet v-model="show" @select="onSelect"
       ><sp-picker
-        title="请选择专业"
+        title="选择"
         show-toolbar
         :columns="columns"
         @confirm="onConfirm"
@@ -106,6 +106,21 @@ export default {
   .action-style {
     color: #5a79e8;
     font-weight: bold;
+  }
+  // 下弹窗
+  /deep/.flow {
+    font-size: 26px;
+    color: #555555;
+    font-weight: 400;
+    display: flex;
+    justify-content: space-between;
+    padding: 34px 19px 0 19px;
+  }
+  /deep/ .sp-overlay,
+  .sp-popup--bottom {
+    margin-left: -375px;
+    width: @spread-page-width;
+    left: 50%;
   }
 }
 </style>
