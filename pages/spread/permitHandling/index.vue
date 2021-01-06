@@ -136,10 +136,25 @@ export default {
       this.$router.push({ path: '/spread/second' })
     },
   },
+  head() {
+    return {
+      title: '许可办理',
+      script: [
+        {
+          src: '/js/spread/companyRegister-md-config.js',
+        },
+        {
+          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
+        },
+      ],
+    }
+  },
 }
 </script>
 <style lang="less" scoped>
 .permit-handling {
+  width: @spread-page-width;
+  margin: 0 auto;
   font-size: 36px;
   .button {
     padding: 24px 40px;

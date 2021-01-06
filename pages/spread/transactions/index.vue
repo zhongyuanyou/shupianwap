@@ -16,6 +16,16 @@ export default {
       city: '成都市',
     }
   },
+  mounted() {
+    const param = {
+      platform_type: 'WEB', // 平台类型：App，H5，Web
+      app_name: '薯片科技', // 应用名称
+      product_line: '轻松找服务',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+  },
   methods: {
     changeCity(val) {
       this.city = val
