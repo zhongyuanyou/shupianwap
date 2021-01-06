@@ -99,7 +99,10 @@
       </div>
     </div>
     <!--E content-->
-    <p class="bot">薯片找人 | 日常五福，尽在薯片！</p>
+    <div>
+      <p class="bot">薯片找人 | 日常五福，尽在薯片！</p>
+      <sp-toast ref="spToast"></sp-toast>
+    </div>
   </div>
 </template>
 
@@ -108,6 +111,7 @@ import { Sticky, TopNavBar, Button } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { interviewApi } from '~/api'
 import Header from '@/components/common/head/header'
+import SpToast from '@/components/common/spToast/SpToast'
 export default {
   name: 'Detail',
   components: {
@@ -115,6 +119,7 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [Button.name]: Button,
     Header,
+    SpToast,
   },
   data() {
     return {
@@ -161,10 +166,17 @@ export default {
           const params = {
             id: this.info.id,
             type: val,
+            userId: this.userId,
           }
           const res = await this.$axios.post(interviewApi.cancel, params)
           if (res.code === 200) {
             this.getInterviewDetail()
+          } else {
+            this.$refs.spToast.show({
+              message: res.data.error,
+              duration: 1000,
+              forbidClick: true,
+            })
           }
         } catch (err) {}
       } else if (this.isInApp) {

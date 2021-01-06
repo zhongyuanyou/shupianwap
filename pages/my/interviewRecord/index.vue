@@ -272,13 +272,18 @@ export default {
           this.loading = true
           // this.finished = false
 
-          this.list = res.data.records
+          this.list = res.data.records || null
+          if (!this.list || !this.list.length) {
+            this.finished = true
+          }
         } else if (res.data.records.length) {
           this.loading = false
           this.list = this.list.concat(res.data.records)
         } else {
           this.finished = true
         }
+      } else {
+        this.finished = true
       }
     },
     onRefresh() {
