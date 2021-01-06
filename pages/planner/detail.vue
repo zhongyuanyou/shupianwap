@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-05 13:34:08
+ * @LastEditTime: 2021-01-06 17:02:37
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -294,7 +294,7 @@ export default {
           (res) => {
             const { code } = res || {}
             if (code !== 200) {
-              this.$refs.spToast.show({
+              this.$xToast.show({
                 message: '分享失败！',
                 duration: 1500,
                 forbidClick: false,
@@ -337,7 +337,7 @@ export default {
           (res) => {
             const { code } = res || {}
             if (code !== 200)
-              this.$refs.spToast.show({
+              this.$xToast.show({
                 message: `联系失败`,
                 duration: 1000,
                 forbidClick: true,
@@ -376,7 +376,7 @@ export default {
       try {
         const { mchUserId } = this.$route.query
         if (mchUserId == null) {
-          this.$refs.spToast.show({
+          this.$xToast.show({
             message: '缺少规划师参数!',
             duration: 1000,
             forbidClick: false,
@@ -386,7 +386,6 @@ export default {
         }
         const params = { id: mchUserId }
         const data = await planner.detail(params)
-        console.log(data)
         this.detailData = data || {}
         return data
       } catch (error) {

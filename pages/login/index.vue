@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 15:44:34
+ * @LastEditTime: 2021-01-06 17:01:01
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/login/index.vue
+ * @FilePath: /chips-wap/pages/login/index.vue
 -->
 <template>
   <div class="login">
@@ -326,17 +326,20 @@ export default {
         this.loading = false
         const { code } = error
         // 需要验证码
-        if (code === '10408') {
+        if (code === 10408) {
           ImgAuthDialog()
             .then((result) => {
+              // 获取验证码后，再调用一次登录
               const { data } = result
               this.loginForm.imgCaptcha = data
+              this.login()
             })
             .catch(() => {
               this.loginForm.imgCaptcha = ''
             })
-          return
+          return Promise.reject(new Error('需要验证'))
         }
+        this.loginForm.imgCaptcha = ''
         this.loginToast(error.message)
         return Promise.reject(error)
       }
