@@ -209,7 +209,7 @@ export default {
       box-shadow: 0 6px 10px 0 rgba(183, 183, 183, 0.1);
       border-radius: 12px;
       margin-top: -131px;
-      padding: 64px 0 0 40px;
+      padding: 64px 0 0 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -219,9 +219,12 @@ export default {
         font-family: PingFang-SC-Bold, PingFang-SC;
         font-weight: bold;
         color: #222222;
+        width: 100%;
+        text-align: center;
       }
       &__items {
         width: 100%;
+        padding-left: 40px;
         .item {
           width: 100%;
           height: 108px;
