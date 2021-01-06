@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-06 10:34:14
+ * @LastEditTime: 2021-01-06 19:04:27
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/GoodsItem.vue
 -->
@@ -298,7 +298,7 @@ export default {
           this.changeSkuCount(data)
           break
         case 'resourceServiceSelect': // sku弹出框里资源服务
-          this.$emit('operation', {
+          this.openResourceService({
             data,
             type,
             cartId,
@@ -486,6 +486,20 @@ export default {
     // 修改sku弹出框 商品的数量
     changeSkuCount(value) {
       this.tempGoods.goodsNumber = value
+    },
+
+    // 打开资源服务选择页面
+    openResourceService(value) {
+      if (this.tempGoods.goodsNumber > 1) {
+        this.$xToast.show({
+          message: '服务资源不支持单次多个购买，请先将购买数设置为1',
+          duration: 1500,
+          forbidClick: false,
+          icon: 'toast_ic_remind',
+        })
+        return
+      }
+      this.$emit('operation', value)
     },
 
     // 资源服务的选择

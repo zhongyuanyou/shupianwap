@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 19:13:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-19 15:25:06
+ * @LastEditTime: 2021-01-06 20:28:53
  * @Description: file content
- * @FilePath: /chips-wap/client/components/common/sku/SkuServiceStepper.vue
+ * @FilePath: /chips-wap/components/common/sku/SkuServiceStepper.vue
 -->
 
 <template>
@@ -19,6 +19,7 @@
       :min="stepperMinLimit"
       :max="stepperLimit"
       :disable-input="disableStepperInput"
+      :disabled="disabled"
       @overlimit="onOverLimit"
       @change="onChange"
     />
@@ -43,6 +44,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     maxNum: {
       type: Number,
       default: 50,
@@ -62,10 +67,15 @@ export default {
       return this.minNum || 1
     },
     stepperLimit() {
-      return this.maxNum || 2
+      return this.maxNum || 99
     },
   },
-  watch: {},
+  watch: {
+    selectedNum(newVal, oldVal) {
+      if (newVal === oldVal) return
+      this.currentNum = newVal
+    },
+  },
   created() {
     this.checkState(this.stepperMinLimit, this.stepperLimit)
   },

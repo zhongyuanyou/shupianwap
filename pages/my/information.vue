@@ -241,11 +241,13 @@ export default {
       // 地区选择
       this.info.province = data[0].name
       this.info.city = data[1].name
+      const pCode = data[0].code
+      const cCode = data[1].code
       this.$set(this.area, 0, { name: data[0].name, code: data[0].code })
       this.$set(this.area, 1, { name: data[1].name, code: data[1].code })
       const params = {
         type: 5,
-        value: `${this.info.province},${this.info.city},船山区`,
+        value: `${pCode},${cCode}`,
       }
       const res = await this.$axios.post(userinfoApi.update, params)
       if (res.code === 200) {
