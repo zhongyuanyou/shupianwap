@@ -1,5 +1,6 @@
 <template>
   <div class="audit">
+    <Header title="轻松找服务" :fixed="false" head-class="head-icon" />
     <HeaderNeed />
     <Content @content="contentObj" />
     <FixedButtom :content="content" />
@@ -10,12 +11,14 @@
 import HeaderNeed from '@/components/spread/auditingService/HeaderNeed'
 import Content from '@/components/spread/auditingService/Content'
 import FixedButtom from '@/components/spread/auditingService/FixedButtom'
+import Header from '~/components/common/head/header'
 export default {
   name: 'Index',
   components: {
     HeaderNeed,
     Content,
     FixedButtom,
+    Header,
   },
   data() {
     return {

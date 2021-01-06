@@ -153,6 +153,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .permit-handling {
+  width: @spread-page-width;
+  margin: 0 auto;
   font-size: 36px;
   .button {
     padding: 24px 40px;

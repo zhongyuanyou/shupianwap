@@ -10,12 +10,13 @@
         :fixed="true"
         :placeholder="true"
         z-index="999"
-        @on-click-left="back"
       >
-        <div slot="left" class="head">
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>
+        <template #left>
+          <div class="margin" @click="back">
+            <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>
+          </div>
           <sp-icon name="cross" size="0.4rem" @click="close" />
-        </div>
+        </template>
       </sp-top-nav-bar>
       <div class="banner">
         <!--    城市按钮  -->
@@ -86,12 +87,15 @@ export default {
   },
   mounted() {
     this.data = JSON.parse(localStorage.getItem('data'))
-    console.log(this.data)
   },
   methods: {
     // 回退
     back() {
       this.$router.go(-1)
+    },
+    // 关闭
+    close() {
+      window.close()
     },
     // 选择城市
     tabCity() {
@@ -158,6 +162,9 @@ export default {
   width: 750px;
   margin: 0 auto;
 }
+.margin {
+  margin-right: 38px;
+}
 .form {
   padding: 64px 40px 24px;
   font-size: 0;
@@ -205,9 +212,6 @@ export default {
     height: 88px;
   }
 }
-.head {
-  font-weight: lighter;
-}
 .banner {
   height: 320px;
   font-size: 0;
@@ -231,6 +235,16 @@ export default {
       margin-left: 12px;
     }
   }
+}
+// 顶部导航左侧箭头字重
+/deep/ .sp-top-nav-bar__left {
+  font-weight: lighter;
+}
+// 顶部组件居中
+/deep/ .sp-top-nav-bar--fixed {
+  width: 750px;
+  margin-left: 50%;
+  transform: translateX(-375px);
 }
 // 头部组件多出线条的修改
 /deep/ .sp-hairline--bottom::after {
