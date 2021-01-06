@@ -171,7 +171,7 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
-      page: 2, // 当前页
+      page: 1, // 当前页
       limit: 10, // 每页显示条数
       cancelStatus: false,
       interId: '', // 面谈id
@@ -196,7 +196,7 @@ export default {
         (res) => {}
       )
     }
-    this.getInterviewList()
+    // this.getInterviewList()
   },
   methods: {
     back() {
@@ -251,6 +251,7 @@ export default {
       const page = this.page++
       const params = {
         limit: this.limit,
+        userId: this.userId,
         page,
       }
       const res = await this.$axios.get(interviewApi.list, { params })
@@ -277,6 +278,7 @@ export default {
       const params = {
         limit: this.limit,
         page: 1,
+        userId: this.userId,
       }
       const res = await this.$axios.get(interviewApi.list, { params })
       if (res.code === 200) {
@@ -289,11 +291,13 @@ export default {
     },
     handleIm(item) {
       // 调起IM
-      const imUserId = this.userId // 商户用户ID
+      const imUserId = item.inviterId // 商户用户ID
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
       const imUserName = item.inviterName
+      console.log('item', item)
+      console.log('userId', this.userId)
       if (this.isInApp) {
-        this.$appFn.dgg_openIM(
+        this.$appFn.dggOpenIM(
           { name: imUserName, userId: imUserId, userType: imUserType },
           (res) => {}
         )
