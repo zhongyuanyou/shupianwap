@@ -9,7 +9,6 @@
         class="dropdown-menu-content"
         @click="showDropdownList"
       >
-        <span class="dropdown-menu-content-prefix">我需要</span>
         <span class="dropdown-menu-content-val">{{ dropdownValue }}</span>
         <my-icon
           class="dropdown-menu-content-img"
@@ -67,7 +66,7 @@ export default {
   },
   data() {
     return {
-      dropdownValue: '', // 下拉框选中的值
+      dropdownValue: '不限', // 下拉框选中的值
       dropdownShow: false, // 唤起下部弹框
       columns: [], // 数据列表
       defaultActive: 0, // 默认选择下标

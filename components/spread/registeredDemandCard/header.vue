@@ -1,12 +1,10 @@
 <template>
   <div class="header">
-    <!-- 头部分 -->
-    <Header :title="title" class="head" />
     <div class="content" :style="{ backgroundImage: 'url(' + imgSrc + ')' }">
       <a href="javascript:;" @click="chooseCity()">
         <span>{{ currentCity || '成都市' }}</span>
         <my-icon
-          name="tap_ic_pen_n"
+          name="sear_ic_open"
           color="#ffffff"
           size="0.14rem"
           class="icon"
@@ -20,11 +18,8 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import MyIcon from '../../common/myIcon/MyIcon.vue'
-import Header from '@/components/common/head/header.vue'
-
 export default {
   components: {
-    Header,
     MyIcon,
   },
   data() {
@@ -64,7 +59,6 @@ export default {
       z-index: 3;
       bottom: 50px;
       display: block;
-      // width: 113px;
       height: 44px;
       background: rgba(255, 255, 255, 0.2);
       border-radius: 22px;
@@ -80,10 +74,6 @@ export default {
         font-family: PingFang SC;
         font-weight: bold;
         color: #ffffff;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 1;
-        overflow: hidden;
       }
       .icon {
         margin-left: 12px;

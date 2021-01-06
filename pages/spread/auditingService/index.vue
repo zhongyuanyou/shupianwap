@@ -2,35 +2,33 @@
   <div class="audit">
     <Header title="轻松找服务" :fixed="false" head-class="head-icon" />
     <HeaderNeed />
-    <Content @content="contentObj" />
-    <FixedButtom :content="content" />
+    <Content />
   </div>
 </template>
 
 <script>
 import HeaderNeed from '@/components/spread/auditingService/HeaderNeed'
 import Content from '@/components/spread/auditingService/Content'
-import FixedButtom from '@/components/spread/auditingService/FixedButtom'
 import Header from '~/components/common/head/header'
 export default {
   name: 'Index',
   components: {
     HeaderNeed,
     Content,
-    FixedButtom,
     Header,
   },
   data() {
-    return {
-      content: {}, // 跳转第二页所传参数
-    }
+    return {}
   },
-  computed: {},
-  methods: {
-    // 获取content组件传来的用户输入值
-    contentObj(value) {
-      this.content = value
-    },
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: '免费帮找页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
   },
 }
 </script>
