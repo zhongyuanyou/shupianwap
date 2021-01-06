@@ -21,18 +21,19 @@
         color="#999999"
         :style="{ marginLeft: iconLeft + 'rem' }"
       ></my-icon>
-      <input
-        v-if="!disabled"
-        ref="inputRef"
-        v-model="visible"
-        :type="type"
-        :placeholder="placeholder"
-        :maxlength="maxlength"
-        @input="searchInputHandle"
-        @blur="searchBlurHandle"
-        @focus="searchFocusHandle"
-        @keydown="searchKeydownHandle"
-      />
+      <form action="javascript:return true" v-if="!disabled">
+        <input
+          ref="inputRef"
+          v-model="visible"
+          :type="type"
+          :placeholder="placeholder"
+          :maxlength="maxlength"
+          @input="searchInputHandle"
+          @blur="searchBlurHandle"
+          @focus="searchFocusHandle"
+          @keydown="searchKeydownHandle"
+        />
+      </form>
       <!-- s 禁用输入框时，隐藏真实输入款，模拟一个输入框 -->
       <span v-else class="imitate-input" @click="clickInputHandle">{{
         placeholder
