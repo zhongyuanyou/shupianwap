@@ -147,7 +147,7 @@ export default {
         }
         const res = await this.$axios.get(interviewApi.detail, { params })
         if (res.code === 200) {
-          this.info = res.data
+          this.info = res.data || this.info
         }
       } catch (err) {}
     },
@@ -183,6 +183,9 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  .back_icon {
+    margin-left: 40px;
+  }
   &-banner {
     width: 100%;
     height: 346px;

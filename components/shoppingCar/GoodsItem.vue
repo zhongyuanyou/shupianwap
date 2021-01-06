@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 20:10:49
+ * @LastEditTime: 2021-01-06 10:34:14
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/GoodsItem.vue
 -->
@@ -83,9 +83,6 @@
     <!--S loding-->
     <LoadingCenter v-show="loading" />
     <!--E loding-->
-    <!--S 中间轻提示-->
-    <SpToast ref="spToast" />
-    <!--E 中间轻提示-->
   </div>
 </template>
 
@@ -99,7 +96,6 @@ import ViceGoodsItem from './ViceGoodsItem'
 import SkuService from '@/components/common/sku/SkuService'
 import AsyncCheckbox from '@/components/common/checkbox/AsyncCheckbox'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
-import SpToast from '@/components/common/spToast/SpToast'
 
 import clone from '@/utils/clone'
 import fingerprint from '@/utils/fingerprint'
@@ -117,7 +113,6 @@ export default {
     SkuService,
     AsyncCheckbox,
     LoadingCenter,
-    SpToast,
   },
   props: {
     commodityData: {
@@ -473,6 +468,7 @@ export default {
           setTimeout(() => {
             this.$emit('operation', {
               type: 'refresh',
+              data,
             })
           }, 250)
         })
@@ -618,7 +614,7 @@ export default {
       } catch (error) {
         console.error('getList:', error)
         this.loading = false
-        this.$refs.spToast.show({
+        this.$xToast.show({
           message: '获取sku失败',
           duration: 1000,
           forbidClick: false,
