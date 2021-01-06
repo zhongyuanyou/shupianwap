@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-05 19:09:10
+ * @LastEditTime: 2021-01-06 10:39:36
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -278,6 +278,11 @@ export default {
           break
         case 'refresh':
           this.refreshing = true
+          this.bottomData = {
+            ...this.bottomData,
+            totalAmount: data.total,
+            totalCount: data.totalCount,
+          }
           this.onRefresh()
           break
         case 'resourceServiceSelect': // sku弹出框里资源服务
@@ -349,6 +354,15 @@ export default {
 
     // 统一的结算
     uPBill() {
+      if (!this.currentSelectedCartIds.length) {
+        this.$xToast.show({
+          message: '您还没有选择商品哦',
+          duration: 1000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        return
+      }
       const cartIdsStr = this.currentSelectedCartIds.join(',') // 多个cartId 用逗号凭借为一个
       console.log(cartIdsStr)
       // 在app中
@@ -378,7 +392,7 @@ export default {
           (res) => {
             const { code } = res || {}
             if (code !== 200) {
-              this.$xToast({
+              this.$xToast.show({
                 message: '结算失败',
                 duration: 1000,
                 icon: 'toast_ic_error',
@@ -393,6 +407,15 @@ export default {
     // 资源服务的选择
     selecteResourceService(cartId, value, index) {
       const { type, classCode, url } = value
+      if (!url) {
+        this.$xToast.show({
+          message: '选择无效',
+          duration: 1000,
+          icon: 'toast_ic_error',
+          forbidClick: true,
+        })
+        return
+      }
       this.skuOpenIndex = index
       // 通过后台接口配置的跳转400或者注册地址查询页面
       this.$router.replace(`${url}&redirect=shoppingCar`)
