@@ -17,7 +17,11 @@
     </sp-top-nav-bar>
     <div class="banner">
       <!--    城市按钮  -->
-      <div class="banner-button" @click="tabCity">
+      <div
+        v-sensorsTrack:webClick="mdData"
+        class="banner-button"
+        @click="tabCity"
+      >
         <div class="banner-button-city">{{ currentCity.name || '成都' }}</div>
         <my-icon
           name="tap_ic_pen_n"
@@ -39,6 +43,7 @@ export default {
   data() {
     return {
       city: '成都',
+      mdData: { name: '轻松找服务_城市' },
     }
   },
   computed: {
@@ -93,6 +98,11 @@ export default {
       margin-left: 12px;
     }
   }
+}
+/deep/ .sp-top-nav-bar--fixed {
+  width: 750px;
+  margin-left: 50%;
+  transform: translateX(-375px);
 }
 // 头部组件多出线条的修改
 /deep/ .sp-hairline--bottom::after {
