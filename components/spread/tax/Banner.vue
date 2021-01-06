@@ -314,12 +314,12 @@ export default {
 <style lang="less" scoped>
 .banner {
   &-top {
-    width: 750px;
+    width: @spread-page-width;
     height: 392px;
     margin-bottom: -81px;
 
     &-img {
-      width: 750px;
+      width: @spread-page-width;
       height: 392px;
     }
   }
@@ -505,13 +505,13 @@ a {
 }
 //下拉弹出层的最大宽度
 /deep/ .sp-popup {
-  width: 750px;
+  width: @spread-page-width;
   left: 50%;
   margin-left: -375px;
 }
 //下拉弹出遮罩层
 /deep/ .sp-overlay {
-  width: 750px;
+  width: @spread-page-width;
   left: 50%;
   margin-left: -375px;
 }

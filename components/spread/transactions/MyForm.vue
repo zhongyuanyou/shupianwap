@@ -24,11 +24,19 @@
       <sp-cell
         :title="selectName1"
         arrow-direction="down"
-        is-link
+        :is-link="false"
         class="form-input"
         title-class="form-leftTitle"
         @click="show1 = true"
-      />
+      >
+        <my-icon
+          name="sear_ic_open"
+          color="#CCCCCC"
+          size="0.183rem"
+          class="icon"
+        >
+        </my-icon
+      ></sp-cell>
       <sp-action-sheet v-model="show1">
         <sp-picker
           show-toolbar
@@ -46,11 +54,19 @@
       <sp-cell
         :title="selectName2"
         arrow-direction="down"
-        is-link
+        :is-link="false"
         class="form-input"
         title-class="form-leftTitle"
         @click="show2 = true"
-      />
+      >
+        <my-icon
+          name="sear_ic_open"
+          color="#CCCCCC"
+          size="0.183rem"
+          class="icon"
+        >
+        </my-icon
+      ></sp-cell>
       <sp-action-sheet v-model="show2"
         ><sp-picker
           show-toolbar
@@ -104,7 +120,6 @@ export default {
         '佛山',
         '宜昌',
         '东莞',
-        '不限',
       ],
       actions2: [
         '科技信息',
@@ -227,13 +242,13 @@ export default {
 }
 //下拉弹出层的最大宽度
 /deep/ .sp-popup {
-  width: 750px;
+  width: @spread-page-width;
   left: 50%;
   margin-left: -375px;
 }
 //下拉弹出遮罩层
 /deep/ .sp-overlay {
-  width: 750px;
+  width: @spread-page-width;
   left: 50%;
   margin-left: -375px;
 }

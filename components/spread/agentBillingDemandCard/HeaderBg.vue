@@ -17,7 +17,7 @@ export default {
     // 将接受的state混合进组件局部计算属性
     // 监听接受的state值
     ...mapState({
-      currentCity: (state) => state.city.currentCity.name,
+      currentCity: (state) => state.city.currentCity.name || '成都',
     }),
   },
   methods: {
@@ -32,7 +32,7 @@ export default {
 .header {
   width: 100%;
   height: 320px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/13zjhce6649s000.jpg');
   background-size: 100% 320px;
   position: relative;

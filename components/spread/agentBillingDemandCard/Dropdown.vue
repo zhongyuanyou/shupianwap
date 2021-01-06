@@ -2,14 +2,8 @@
   <div class="dropdown-all">
     <div class="content-item-title">{{ title }}</div>
     <div class="dropdown-menu">
-      <div
-        v-md-map
-        v-md:webClick
-        data-name="工商聚合页_表单_我需要"
-        class="dropdown-menu-content"
-        @click="showDropdownList"
-      >
-        <span class="dropdown-menu-content-prefix">我需要</span>
+      <div class="dropdown-menu-content" @click="showDropdownList">
+        <span class="dropdown-menu-content-prefix">请选择</span>
         <span class="dropdown-menu-content-val">{{ dropdownValue }}</span>
         <my-icon
           class="dropdown-menu-content-img"
@@ -18,11 +12,17 @@
           color="#cccccc"
         ></my-icon>
       </div>
-      <sp-popup v-model="dropdownMenuIsShow" round position="bottom">
+      <sp-popup
+        v-model="dropdownMenuIsShow"
+        round
+        position="bottom"
+        :style="{ height: '55%' }"
+      >
         <sp-picker
-          title="选择"
+          title="选择主营业务"
           show-toolbar
-          :columns="columns"
+          :default-index="Math.floor(dropList.length / 2)"
+          :columns="dropList"
           @confirm="onConfirm"
           @cancel="onCancel"
         />
@@ -42,31 +42,36 @@ export default {
   },
   data() {
     return {
-      title: '您公司的主营业务是什么',
-      columns: [
-        '公司注册',
-        '工商变更',
-        '代理记账',
-        '印章刻制',
-        '银行服务',
-        '许可证办理',
-        '其他服务',
-      ],
-      // 下拉
+      title: '您公司的主营业务是什么?',
       dropList: [
-        { id: 1, name: '公司注册', color: '#5a79e8' },
-        { id: 2, name: '工商变更', color: '#222222' },
-        { id: 3, name: '代理记账', color: '#222222' },
-        { id: 4, name: '印章刻制', color: '#222222' },
-        { id: 5, name: '银行服务', color: '#222222' },
-        { id: 6, name: '许可证办理', color: '#222222' },
-        { id: 7, name: '其他服务', color: '#222222' },
+        '不限',
+        '科技信息',
+        '广告传媒',
+        '金融投资',
+        '电子贸易',
+        '教育培训',
+        '物业地产',
+        '经济中介',
+        '建筑装饰',
+        '家居建材',
+        '通讯网络',
+        '实业生产',
+        '珠宝服饰',
+        '文化初版',
+        '印刷包装',
+        '餐饮美容',
+        '咨询服务',
+        '食品农业',
+        '会务展览',
+        '物流供应链',
+        '其他',
       ],
       dropdownValue: '',
       dropdownMenuIsShow: false,
     }
   },
   methods: {
+    onChange() {},
     // @--下拉
     onSelect(item) {
       // 默认情况下点击选项时不会自动收起
@@ -97,7 +102,8 @@ export default {
 
 <style lang="less" scoped>
 .dropdown-all {
-  margin-bottom: 64px;
+  padding-top: 40px;
+  padding-bottom: 24px;
 }
 .content-item-title {
   height: 34px;
@@ -124,7 +130,7 @@ export default {
       flex: none;
       font-size: 28px;
       font-weight: 400;
-      color: #1a1a1a;
+      color: #222222;
       margin-right: 33px;
     }
     .dropdown-menu-content-val {
@@ -139,18 +145,20 @@ export default {
       right: 24px;
     }
   }
-  /deep/ .sp-popup--bottom {
-    width: @spread-page-width;
-    left: 50%;
-    right: auto;
-    transform: translateX(-@spread-page-width / 2);
-    //transform: translateX(-126px); // 该属性因为组件样式未知bug，导致左侧出来一部分。且距离是一直固定是63px，不能转成rem
-  }
-  /deep/ .sp-overlay {
-    width: @spread-page-width;
-    left: 50%;
-    right: auto;
-    transform: translateX(-@spread-page-width / 2);
-  }
+}
+/deep/ .sp-popup--bottom {
+  width: @spread-page-width;
+  left: 50%;
+  right: auto;
+  margin-left: calc(-@spread-page-width / 2);
+  //transform: translateX(-@spread-page-width / 2); // 不用transform是因为将过渡给覆盖了。。。
+  //transform: translateX(-126px); // 该属性因为组件样式未知bug，导致左侧出来一部分。且距离是一直固定是63px，不能转成rem
+}
+/deep/ .sp-overlay {
+  width: @spread-page-width;
+  left: 50%;
+  right: auto;
+  transform: translateX();
+  margin-left: calc(-@spread-page-width / 2);
 }
 </style>

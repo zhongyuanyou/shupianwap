@@ -18,7 +18,7 @@ export default {
 
 <style scoped lang="less">
 .process {
-  width: 750px;
+  width: @spread-page-width;
   height: 255px;
   padding: 30px 0 0;
   &-title {
@@ -30,7 +30,7 @@ export default {
     line-height: 40px;
   }
   img {
-    width: 750px;
+    width: @spread-page-width;
     height: 170px;
   }
 }

@@ -54,7 +54,7 @@ export default {
 
 <style scoped lang="less">
 .super {
-  width: 750px;
+  width: @spread-page-width;
   padding: 31px 40px 26px;
   &-title {
     font-size: 40px;

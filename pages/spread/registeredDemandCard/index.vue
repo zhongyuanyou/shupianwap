@@ -14,9 +14,9 @@
             readonly="readonly"
           />
           <my-icon
-            name="tap_ic_pen_n"
+            name="sear_ic_open"
             color="#CCCCCC"
-            size="0.18rem"
+            size="0.183rem"
             class="icon"
           >
           </my-icon>
@@ -32,7 +32,7 @@
             :class="[chooseActived === index ? 'isActived' : '']"
             @click="isChoose(index)"
           >
-            {{ item }}
+            <span>{{ item }}</span>
           </div>
         </div>
       </div>
@@ -49,7 +49,7 @@
             :class="[confirmActived === index ? 'isActived' : '']"
             @click="confirm(index)"
           >
-            {{ item }}
+            <span>{{ item }}</span>
           </div>
         </div>
       </div>
@@ -64,7 +64,7 @@
             :class="[transactActived === index ? 'isActived' : '']"
             @click="isTransact(index)"
           >
-            {{ item }}
+            <span>{{ item }}</span>
           </div>
         </div>
       </div>
@@ -76,7 +76,12 @@
       </div>
     </div>
     <!-- 底部调起列表 -->
-    <sp-popup v-model="isShow" position="bottom" :style="{ height: '55%' }">
+    <sp-popup
+      v-model="isShow"
+      position="bottom"
+      round
+      :style="{ height: '55%' }"
+    >
       <sp-picker
         title="选择区域"
         show-toolbar
@@ -205,7 +210,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .regdemand {
-  width: 750px;
+  width: @spread-page-width;
   margin: 0 auto;
   position: relative;
   .content {
@@ -266,12 +271,17 @@ export default {
           height: 72px;
           background: #f8f8f8;
           border-radius: 8px;
-          font-size: 24px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #1a1a1a;
-          text-align: center;
-          line-height: 72px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          > span {
+            display: block;
+            font-size: 24px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #1a1a1a;
+            text-align: center;
+          }
           &:last-child {
             margin-left: 24px;
           }
@@ -310,12 +320,17 @@ export default {
           height: 72px;
           background: #f8f8f8;
           border-radius: 8px;
-          font-size: 24px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #1a1a1a;
-          text-align: center;
-          line-height: 72px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          > span {
+            display: block;
+            font-size: 24px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #1a1a1a;
+            text-align: center;
+          }
           &:last-child {
             margin-left: 24px;
           }
@@ -345,12 +360,17 @@ export default {
           height: 72px;
           background: #f8f8f8;
           border-radius: 8px;
-          font-size: 24px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #1a1a1a;
-          text-align: center;
-          line-height: 72px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          > span {
+            display: block;
+            font-size: 24px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #1a1a1a;
+            text-align: center;
+          }
         }
         .isActived {
           background: #ffffff;
@@ -381,16 +401,16 @@ export default {
     }
   }
   /deep/.sp-popup {
-    width: 750px;
+    width: @spread-page-width;
     position: absolute;
     left: 50%;
-    margin-left: -375px;
+    margin-left: calc(-@spread-page-width / 2);
   }
   /deep/.sp-overlay {
-    width: 750px;
+    width: @spread-page-width;
     position: absolute;
     left: 50%;
-    margin-left: -375px;
+    margin-left: calc(-@spread-page-width / 2);
   }
 }
 </style>

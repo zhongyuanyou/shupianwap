@@ -1,6 +1,6 @@
 <template>
   <div class="permit-handling">
-    <TopLocation :title="topTitle" @onCity="onCity" />
+    <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理的许可证业务 -->
       <CompanySelec
@@ -32,17 +32,13 @@
   </div>
 </template>
 <script>
-import { TopNavBar, NavSearch, Icon, Toast, Button } from '@chipspc/vant-dgg'
+import { Button } from '@chipspc/vant-dgg'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import TopLocation from '@/components/spread/companyAlteration/TopLocation'
 import CompanySelec from '@/components/spread/companyAlteration/CompanySelect'
 import SelectDesired from '@/components/spread/companyAlteration/SelectDesired'
 export default {
   components: {
-    [TopNavBar.name]: TopNavBar,
-    [NavSearch.name]: NavSearch,
-    [Icon.name]: Icon,
-    [Toast.name]: Toast,
     [Button.name]: Button,
     TopLocation,
     CompanySelec,
@@ -50,7 +46,6 @@ export default {
   },
   data() {
     return {
-      topTitle: '轻松找服务',
       // 选择变更服务
       actionsServe: [
         '卫生许可证',
@@ -100,31 +95,35 @@ export default {
       },
     }
   },
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: '免费帮找页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+  },
   methods: {
     // 城市
     onCity(val) {
-      console.log(val)
       this.cityVal = val
-      console.log(val)
     },
     onSelectServe(val) {
       // 变更服务
       this.xkzlz = val
-      console.log(val)
     },
     onDistrict(item) {
       // 是否决策人
       this.isDecision = item.name
-      console.log(item)
     },
     onTransact(item) {
       // 办理时间
       this.handlingTime = item.name
-      console.log(item)
     },
     onButton() {
       const obj = JSON.stringify({
-        place: this.cityVal.name,
         type: 'xkx',
         xkzlx: this.permission,
         content: {
@@ -139,14 +138,6 @@ export default {
   head() {
     return {
       title: '许可办理',
-      script: [
-        {
-          src: '/js/spread/companyRegister-md-config.js',
-        },
-        {
-          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
-        },
-      ],
     }
   },
 }

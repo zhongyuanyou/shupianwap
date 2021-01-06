@@ -1,6 +1,6 @@
 <template>
-  <div class="company-register">
-    <TopLocation :title="topTitle" @onCity="onCity" />
+  <div class="company-alteration">
+    <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理哪项业务的变更服务 -->
       <CompanySelec
@@ -39,15 +39,13 @@
   </div>
 </template>
 <script>
-import { TopNavBar, NavSearch, Button } from '@chipspc/vant-dgg'
+import { Button } from '@chipspc/vant-dgg'
 import TopLocation from '@/components/spread/companyAlteration/TopLocation'
 import CompanySelec from '@/components/spread/companyAlteration/CompanySelect'
 import SelectDesired from '@/components/spread/companyAlteration/SelectDesired'
 import { planner, dict } from '@/api'
 export default {
   components: {
-    [TopNavBar.name]: TopNavBar,
-    [NavSearch.name]: NavSearch,
     [Button.name]: Button,
     TopLocation,
     CompanySelec,
@@ -56,7 +54,6 @@ export default {
 
   data() {
     return {
-      topTitle: '轻松找服务',
       // 选择服务
       actionsServe: [
         '法人变更',
@@ -75,16 +72,7 @@ export default {
         '其他变更',
       ],
       // 区域
-      actionsRegion: [
-        '杭州',
-        '宁波',
-        '温州',
-        '绍兴',
-        '湖州',
-        '嘉兴',
-        '金华',
-        '衢州',
-      ],
+      actionsRegion: [],
       // 身份
       selectActive: [
         {
@@ -127,37 +115,41 @@ export default {
       },
     }
   },
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: '免费帮找页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+  },
   methods: {
     // 城市
     onCity(val) {
-      console.log(val.code)
-      this.cityVal = val
-      this.getRegionList(val.code)
+      if (val.code !== undefined) this.cityVal = val
+      this.getRegionList(this.cityVal.code)
     },
 
     onSelectServe(val) {
       // 变更服务
       this.permission = val
-      console.log(val)
     },
     onSelectDistrict(val) {
       // 区域
       this.district = val
-      console.log(val)
     },
     onDistrict(item) {
       // 注册在哪个区
       this.identity = item.name
-      console.log(item)
     },
     onTransact(item) {
       // 办理时间
       this.handlingTime = item.name
-      console.log(item)
     },
     onButton() {
       const obj = JSON.stringify({
-        place: this.cityVal.name,
         type: 'gsbg',
         bgxm: this.permission,
         content: {
@@ -187,10 +179,15 @@ export default {
       }
     },
   },
+  head() {
+    return {
+      title: '工商变更',
+    }
+  },
 }
 </script>
 <style lang="less" scoped>
-.company-register {
+.company-alteration {
   width: @spread-page-width;
   margin: 0 auto;
   font-size: 36px;
