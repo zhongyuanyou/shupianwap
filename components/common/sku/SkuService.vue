@@ -41,11 +41,14 @@
           </div>
           <!-- E 属性 -->
           <!-- S 数量 -->
-
           <div class="sku-stepper-wrap sp-hairline--bottom">
             <SkuServiceStepper
               :selected-num="goods.goodsNumber"
               :disable-stepper-input="false"
+              :disabled="
+                goods.serviceResourceList &&
+                goods.serviceResourceList.length >= 1
+              "
               :max-num="skuData.shopRestrictionNumber"
               @change="handleStepperChange"
               @overLimit="handleStepperLimit"
@@ -310,8 +313,33 @@ export default {
         data: value,
       })
     },
+    // 超过限制的数量后触发
     handleStepperLimit(data) {
       console.log('handleStepperLimit:', data)
+      let message = ''
+      const { type } = data || {}
+      switch (type) {
+        case 'minus':
+          message = '已经是最小购买数了'
+          break
+        case 'plus':
+          message = '已经是最大购买数了'
+          break
+      }
+      const { serviceResourceList = [] } = this.goods || {}
+
+      if (
+        Array.isArray(serviceResourceList) &&
+        serviceResourceList.length >= 1
+      ) {
+        message = '选择资源服务后，商品数量不能修改'
+      }
+      this.$xToast.show({
+        message,
+        duration: 1000,
+        icon: 'toast_ic_remind',
+        forbidClick: true,
+      })
     },
 
     // 选择服务资源
