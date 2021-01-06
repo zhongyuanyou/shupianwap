@@ -15,22 +15,10 @@
   </div>
 </template>
 <script>
-import {
-  TopNavBar,
-  Icon,
-  Toast,
-  Image,
-  Cell,
-  Popup,
-  ActionSheet,
-} from '@chipspc/vant-dgg'
+import { TopNavBar, Cell, Popup, ActionSheet } from '@chipspc/vant-dgg'
 export default {
   components: {
     [TopNavBar.name]: TopNavBar,
-    [Icon.name]: Icon,
-    // 待删除--
-    [Toast.name]: Toast,
-    [Image.name]: Image,
     [Cell.name]: Cell,
     [Popup.name]: Popup,
     [ActionSheet.name]: ActionSheet,
@@ -90,12 +78,13 @@ export default {
     margin-bottom: 32px;
   }
   .select-item {
-    display: flex;
     .select-list {
-      display: inline-block;
+      display: inline-flex;
+      justify-content: center;
+      align-self: center;
+      align-items: center;
       width: 149px;
       height: 72px;
-      line-height: 72px;
       text-align: center;
       background: #f8f8f8;
       border-radius: 8px;
@@ -113,7 +102,6 @@ export default {
       width: 143px;
       color: #222;
       height: 66px;
-      line-height: 66px;
       border-radius: 8px;
     }
   }
