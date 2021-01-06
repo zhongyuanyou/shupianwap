@@ -21,7 +21,7 @@
         color="#999999"
         :style="{ marginLeft: iconLeft + 'rem' }"
       ></my-icon>
-      <form action="javascript:return true" v-if="!disabled">
+      <form v-if="!disabled" action="javascript:return true">
         <input
           ref="inputRef"
           v-model="visible"
