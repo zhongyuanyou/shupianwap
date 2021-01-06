@@ -18,7 +18,6 @@
 
 <script>
 import { Button } from '@chipspc/vant-dgg'
-import { mapState } from 'vuex'
 export default {
   name: 'FixedBottomBtn',
   components: {
@@ -35,7 +34,7 @@ export default {
   data() {
     return {
       data: {
-        city: '',
+        place: '',
         type: 'swch',
         content: {},
       },
@@ -48,7 +47,7 @@ export default {
   methods: {
     nextStep() {
       // 获取vuex里城市name
-      this.data.city = this.$store.state.city.currentCity.name
+      this.data.place = this.$store.state.city.currentCity.name
       // 获取用户输入的值
       this.data.content = {
         办理业务: this.content.business,

@@ -19,17 +19,20 @@
         @dropdownValue="handleValue"
       />
     </div>
+    <FixedButtom :content="content" />
   </div>
 </template>
 
 <script>
 import RevenueRadio from '@/components/spread/auditingService/RevenueRadio'
 import Dropdown from '@/components/spread/auditingService/Dropdown'
+import FixedButtom from '@/components/spread/auditingService/FixedButtom'
 export default {
   name: 'Content',
   components: {
     RevenueRadio,
     Dropdown,
+    FixedButtom,
   },
   data() {
     return {
@@ -105,26 +108,25 @@ export default {
       ],
       content: {
         revenue: '[0,50]', // 营收金额
-        business: '', // 是什么业务
-        industry: '', // 是什么行业
+        business: '不限', // 是什么业务
+        industry: '不限', // 是什么行业
       },
     }
   },
   methods: {
     // 处理由子组件RevenueRadio传来的营收金额
     radioValue(value) {
-      const res = String(value.split('-')).replace('万', '')
+      const res = String(value).replace('万', '').replace('-', ',')
+      // const res = String(value.split('-')).replace('万', '')
       this.content.revenue = '[' + res + ']'
-      this.$emit('content', this.content)
     },
-    // 处理由子组件Dropdown传来的值 为0时是业务 为2是行业
+    // 处理由子组件Dropdown传来的值 index为0时是办理业务 index为2时是公司行业
     handleValue(value, index) {
       if (index === 0) {
         this.content.business = value
       } else if (index === 2) {
         this.content.industry = value
       }
-      this.$emit('content', this.content)
     },
   },
 }
