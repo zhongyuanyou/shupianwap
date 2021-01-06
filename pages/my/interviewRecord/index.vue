@@ -200,6 +200,10 @@ export default {
   },
   methods: {
     back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
       this.$router.back()
     },
     // 查看规划师详情
@@ -221,7 +225,11 @@ export default {
         }
         const res = await this.$axios.get(publicApi.descrptionPhone, { params })
         if (res.code === 200 && res.data) {
-          window.location.href = 'tel:' + res.data
+          if (this.isInApp) {
+            this.$appFn.dggCallPhone({ phone: res.data }, (res) => {})
+          } else {
+            window.location.href = 'tel:' + res.data
+          }
         }
       } catch (err) {}
     },
@@ -247,7 +255,10 @@ export default {
         }
       } catch (err) {}
     },
-    async onLoad() {
+    async onLoad(isRefresh) {
+      if (isRefresh) {
+        this.refreshing = true
+      }
       const page = this.page++
       const params = {
         limit: this.limit,
@@ -255,13 +266,24 @@ export default {
         page,
       }
       const res = await this.$axios.get(interviewApi.list, { params })
+      this.refreshing = false
       if (res.code === 200) {
-        if (res.data.records.length) {
+        if (isRefresh) {
+          this.loading = true
+          // this.finished = false
+
+          this.list = res.data.records || null
+          if (!this.list || !this.list.length) {
+            this.finished = true
+          }
+        } else if (res.data.records.length) {
           this.loading = false
           this.list = this.list.concat(res.data.records)
         } else {
           this.finished = true
         }
+      } else {
+        this.finished = true
       }
     },
     onRefresh() {
@@ -271,7 +293,8 @@ export default {
       // // 重新加载数据
       // // 将 loading 设置为 true，表示处于加载状态
       // this.loading = true
-      // this.onLoad()
+      this.page = 1
+      this.onLoad(true)
     },
     async getInterviewList() {
       // 获取面谈记录列表
@@ -294,8 +317,6 @@ export default {
       const imUserId = item.inviterId // 商户用户ID
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
       const imUserName = item.inviterName
-      console.log('item', item)
-      console.log('userId', this.userId)
       if (this.isInApp) {
         this.$appFn.dggOpenIM(
           { name: imUserName, userId: imUserId, userType: imUserType },

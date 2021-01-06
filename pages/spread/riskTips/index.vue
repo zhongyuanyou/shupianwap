@@ -2,6 +2,7 @@
   <div class="center">
     <!--  头部  -->
     <sp-top-nav-bar
+      v-if="hideHeader !== 'true'"
       title=""
       left-arrow
       ellipsis
@@ -35,7 +36,7 @@ export default {
     try {
       const res = await $axios.get(riskTipsApi.list, {
         params: {
-          categoryCode: 'con100061',
+          categoryCode: 'protocol100007',
           includeField: 'title,content',
         },
       })
@@ -51,7 +52,13 @@ export default {
       text: '',
     }
   },
+  computed: {
+    hideHeader() {
+      return this.$route.query.hideHeader
+    },
+  },
   mounted() {
+    console.log(this.hideHeader)
     document.getElementsByClassName(
       'content-body'
     )[0].innerHTML = this.getMessage
