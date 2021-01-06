@@ -4,7 +4,7 @@
       <!--    头部  -->
       <sp-top-nav-bar
         title="轻松找服务"
-        background="transparent"
+        background="#ffffff"
         title-color="#1A1A1A"
         ellipsis
         :fixed="true"
@@ -87,6 +87,14 @@ export default {
   },
   mounted() {
     this.data = JSON.parse(localStorage.getItem('data'))
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: '免费帮找页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
   },
   methods: {
     // 回退

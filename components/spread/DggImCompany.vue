@@ -73,10 +73,11 @@
         <textarea
           ref="msgInput"
           v-model="userText"
+          style="softinputnavbar: none"
           class="inputText"
           placeholder="请输入"
           rows="1"
-          @input="closeEmoji"
+          @focus="closeEmoji"
         ></textarea>
         <!--          <div-->
         <!--            ref="msgInput"-->
@@ -218,6 +219,22 @@ export default {
     this.currentAlbumKeys = currentAlbumKeys
   },
   mounted() {
+    //
+    // window.addEventListener('keydown', function (event) {
+    //   console.log(event)
+    //   if (event.keyCode === 9) {
+    //     event.keyCode = 0
+    //     return false
+    //   }
+    // })
+    // window.addEventListener('keyup', function (event) {
+    //   console.log(event)
+    //   if (event.keyCode === 9) {
+    //     event.keyCode = 0
+    //     return false
+    //   }
+    // })
+    // document.activeElement.blur()
     // 创建网络在线/离线监听事件
     window.addEventListener('online', this.updateWebSocketStatus)
     window.addEventListener('offline', this.updateWebSocketStatus)
