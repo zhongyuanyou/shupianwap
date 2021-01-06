@@ -43,14 +43,17 @@
         :show-word-limit="true"
         class="form-text"
       />
-      <div class="form-read">
+      <div class="form-read" @click="select">
         <div class="form-read-first">
-          <my-icon
-            name="pay_ic_success"
-            size="0.32rem"
-            color="#2E73F5"
-            class="icon"
-          ></my-icon>
+          <div v-if="isSelect" class="form-read-first-icon">
+            <my-icon
+              name="pay_ic_success"
+              size="0.32rem"
+              color="#2E73F5"
+              class="icon"
+            ></my-icon>
+          </div>
+          <div v-else class="form-read-first-white"></div>
           <span>订阅专属服务</span>
         </div>
         <div class="form-read-second">
@@ -78,6 +81,7 @@ export default {
       message: '',
       data: {},
       city: '成都',
+      isSelect: true,
     }
   },
   computed: {
@@ -97,6 +101,10 @@ export default {
     window.sensors.registerPage(param) // 设置公共属性
   },
   methods: {
+    // 选中
+    select() {
+      this.isSelect = !this.isSelect
+    },
     // 回退
     back() {
       this.$router.go(-1)
@@ -138,9 +146,11 @@ export default {
       this.data.formId = this.getDate() // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       this.data.name = '匿名客户'
       this.data.url = window.open
+      this.data.place = this.currentCity.name
       this.data.device = 'wap' // 设备：pc,wap
       this.data.web = 'SP' // 归属渠道：xmt,zytg,wxgzh
       this.data.content = JSON.stringify(this.data.content)
+      console.log(this.data)
       window.promotion.privat.consultForm(this.data, (res) => {
         if (res.error === 0) {
           // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
@@ -193,6 +203,15 @@ export default {
       font-size: 0;
       margin: 0 0 16px 0;
       text-align: left;
+      display: flex;
+      align-items: center;
+      height: 34px;
+      &-white {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #ffffff;
+      }
       & > span {
         margin-left: 17px;
         font-size: 28px;

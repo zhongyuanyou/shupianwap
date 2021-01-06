@@ -150,12 +150,15 @@ export default {
     },
     // 下一步
     next() {
-      this.$emit('changeData', {
+      const data = {}
+      data.content = {
         购买预算: `[${this.minMoney}, ${this.maxMoney}]`,
         期望成立年限: `[${this.minYear}, ${this.maxYear}]`,
         期望城市: this.selectName1,
         期望行业: this.selectName2,
-      })
+      }
+      data.type = 'gszr'
+      localStorage.setItem('data', JSON.stringify(data))
       this.$router.push('/spread/second')
     },
   },

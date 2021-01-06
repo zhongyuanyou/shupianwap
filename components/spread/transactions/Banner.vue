@@ -46,15 +46,6 @@ export default {
       currentCity: (state) => state.city.currentCity,
     }),
   },
-  watch: {
-    currentCity: {
-      handler(newName, oldName) {
-        this.$emit('changeCity', newName.name)
-      },
-      immediate: true,
-      deep: true,
-    },
-  },
   methods: {
     onClickLeft() {
       this.$router.go(-1)

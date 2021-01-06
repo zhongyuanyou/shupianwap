@@ -1,7 +1,7 @@
 <template>
   <div class="center">
-    <banner @changeCity="changeCity"></banner>
-    <my-form @changeData="changeData"></my-form>
+    <banner></banner>
+    <my-form></my-form>
   </div>
 </template>
 
@@ -11,11 +11,6 @@ import MyForm from '~/components/spread/transactions/MyForm'
 export default {
   name: 'Index',
   components: { Banner, MyForm },
-  data() {
-    return {
-      city: '成都市',
-    }
-  },
   mounted() {
     const param = {
       platform_type: 'H5', // 平台类型：App，H5，Web
@@ -25,18 +20,6 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
-  },
-  methods: {
-    changeCity(val) {
-      this.city = val
-    },
-    changeData(data) {
-      const datas = {}
-      datas.content = data
-      datas.place = this.city
-      datas.type = 'gszr'
-      localStorage.setItem('data', JSON.stringify(datas))
-    },
   },
   head() {
     return {
