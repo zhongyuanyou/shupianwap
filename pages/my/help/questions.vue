@@ -30,9 +30,17 @@ export default {
   async asyncData({ $axios, query, redirect }) {
     let detailData = {}
     try {
-      const res = await $axios.get(foundApi.infoDetail, {
-        params: { id: query.id, includeField: 'id,title,content' },
-      })
+      const res = await $axios.get(
+        foundApi.infoDetail,
+        {
+          params: { id: query.id, includeField: 'id,title,content' },
+        },
+        {
+          headers: {
+            'x-cache-control': 'cache',
+          },
+        }
+      )
       if (res.code === 200) {
         detailData = res.data
       } else {
