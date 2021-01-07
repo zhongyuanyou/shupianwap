@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-06 19:04:27
+ * @LastEditTime: 2021-01-07 10:19:16
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/GoodsItem.vue
 -->
@@ -132,6 +132,7 @@ export default {
       loading: false,
       skuData: {
         productId: '',
+        picture: '',
         name: '',
         productNo: '',
         referencePrice: '', // 参考价格
@@ -139,19 +140,17 @@ export default {
         shopRestriction: '', // 限制购买
         skuAttrList: [], // 属性列表
         serviceGoodsClassList: [], // 服务资源列表
-        goodsId: '',
-        goodsNo: '',
         specialItemList: [], // 增值服务项
       },
       tempGoods: {
+        picture: '',
         goodsId: '',
         goodsNo: '',
-        name: '',
         skuAttrKey: '', // 选中sku列表逗号隔开
         goodsNumber: 0,
-        serviceResourceList: [], // 服务资源
         price: '',
         productId: '',
+        serviceResourceList: [], // 服务资源
         addServiceList: [], // 增值服务
       },
       config: { userId: '', deviceCode: '', reqArea: '', terminalCode: '' }, // 不同平台的配置
@@ -338,7 +337,10 @@ export default {
         addServiceList,
       } = this.commodityData
 
+      const { picture } = this.skuData
+
       this.tempGoods = {
+        picture,
         goodsId: skuId,
         skuAttrKey,
         goodsNo,
@@ -370,13 +372,13 @@ export default {
           this.loading = false
         })
         .catch(() => {
+          this.loading = false
           this.$xToast.show({
             message: '选择失败',
             duration: 1000,
             icon: 'toast_ic_remind',
             forbidClick: true,
           })
-          this.loading = false
         })
     },
 
@@ -591,8 +593,8 @@ export default {
       try {
         this.loading = true
         const config = await this.uPGetConfig()
-        const productId = this.commodityData.productId // '607991345402771561'
-        const attrValKey = this.commodityData.skuAttrKey // SXZ20201211050014
+        const productId = this.commodityData.productId
+        const attrValKey = this.commodityData.skuAttrKey
         const productPromise = shoppingCar.productDetail({ productId }, config)
         const skuPromise = this.getGoodsDetail(attrValKey)
         const [productDetail = {}, skuDetail = {}] = await Promise.all([
@@ -601,17 +603,32 @@ export default {
         ])
 
         const {
-          skuAttrList, // 属性列表
-          serviceGoodsClassList, // 服务资源列表
           name,
           referencePrice, // 参考价格
           productNo,
+          id,
+          skuAttrList, // 属性列表
+          serviceGoodsClassList, // 服务资源列表
           operating = {},
+          clientDetails = [], // 图片地址列表
         } = productDetail
 
-        const { shopRestrictionNumber, shopRestriction } = operating
+        let picture = ''
+        // 后端过来的数据嵌套太他妈深了，为了获取一张图片，一堆判断
+        if (
+          Array.isArray(clientDetails) &&
+          clientDetails[0] &&
+          Array.isArray(clientDetails[0].imgUrlList) &&
+          clientDetails[0].imgUrlList[0]
+        ) {
+          picture = clientDetails[0].imgUrlList[0]
+        }
 
+        const { shopRestrictionNumber, shopRestriction } = operating
+        const { specialItemList } = skuDetail || {}
         const data = {
+          productId: id,
+          picture,
           name,
           productNo,
           referencePrice,
@@ -619,7 +636,7 @@ export default {
           shopRestriction,
           skuAttrList,
           serviceGoodsClassList,
-          ...skuDetail,
+          specialItemList,
         }
         this.skuData = data
         this.loading = false
