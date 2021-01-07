@@ -190,6 +190,12 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // 认证
+  dggGetRealNameAuthAddress: (fn = () => {}) => {
+    Bridge.callHandler('dgg_GetRealNameAuthAddress', {}, (res) => {
+      handleRequest(res, fn)
+    })
+  },
 }
 
 // 注册APP调用的js方法
