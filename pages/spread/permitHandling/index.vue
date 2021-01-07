@@ -128,7 +128,7 @@ export default {
         xkzlx: this.permission,
         content: {
           主要决策人: this.isDecision,
-          办理时: this.handlingTime,
+          办理时间: this.handlingTime,
         },
       })
       localStorage.setItem('data', obj)
