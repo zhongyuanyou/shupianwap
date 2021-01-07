@@ -24,17 +24,17 @@
           class="list-count"
         >
           <div class="list-count_item">
-            <span>{{ listCounts.operating.actualSales }}</span>
+            <span>{{ listCounts.operating.actualViews }}</span>
             <div>在线咨询</div>
           </div>
           <div class="list-count_line"></div>
           <div class="list-count_item">
-            <span>{{ listCounts.operating.actualViews }}</span>
+            <span>{{ listCounts.operating.defaultSales }}</span>
             <div>累计成交</div>
           </div>
           <div class="list-count_line"></div>
           <div class="list-count_item">
-            <span>{{ listCounts.operating.defaultSales }}</span>
+            <span>{{ listCounts.operating.actualSales }}</span>
             <div>成功案例</div>
           </div>
         </div>
@@ -219,7 +219,7 @@ export default {
     max-height: 10000px;
   }
   .register-list_max--active {
-    max-height: 1610px;
+    max-height: 1450px;
   }
 }
 </style>
