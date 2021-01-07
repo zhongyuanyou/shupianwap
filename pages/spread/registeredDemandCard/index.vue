@@ -117,7 +117,21 @@ export default {
       istsransact: '1月内', // 打算办理时间
       area: '',
       isShow: false,
-      actionsRegion: [],
+      actionsRegion: [
+        '锦江区',
+        '青羊区',
+        '金牛区',
+        '武侯区',
+        '成华区',
+        '成都高新区',
+        '成都天府新区',
+        '青白江',
+        '龙泉驿',
+        '郫都',
+        '新都',
+        '温江',
+        '双流',
+      ],
       cityVal: {
         code: '510100',
         name: '成都市',
