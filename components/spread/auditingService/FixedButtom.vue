@@ -23,8 +23,21 @@ export default {
   components: {
     [Button.name]: Button,
   },
+  props: {
+    content: {
+      type: Object,
+      default: () => {
+        return ''
+      },
+    },
+  },
   data() {
-    return {}
+    return {
+      data: {
+        type: 'swch',
+        content: {},
+      },
+    }
   },
   computed: {},
   watch: {},
@@ -32,6 +45,14 @@ export default {
   mounted() {},
   methods: {
     nextStep() {
+      // 获取用户输入的值
+      this.data.content = {
+        办理业务: this.content.business,
+        公司年营收: this.content.revenue,
+        公司行业: this.content.industry,
+      }
+      // 本地存储数据
+      localStorage.setItem('data', JSON.stringify(this.data))
       this.$router.push('/spread/second')
     },
   },
@@ -46,7 +67,7 @@ export default {
   background: #ffffff;
   // 固定定位
   width: @spread-page-width;
-  padding: 0 40px;
+  padding-right: 80px;
   position: fixed;
   bottom: 0;
 

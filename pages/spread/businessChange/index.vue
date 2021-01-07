@@ -570,7 +570,7 @@ export default {
         const fuWuList = []
         data.forEach((item, index) => {
           const obj = {
-            id: item.id,
+            id: item.materialList[0].productDetail.id,
             actualViews:
               item.materialList[0].productDetail.operating.actualViews,
             defaultSales:
@@ -580,7 +580,11 @@ export default {
             price: item.materialList[0].productDetail.referencePrice,
             bgimage: this.serviceBG[index],
             planner: this.plannersList[
-              `${index < this.plannersList.length ? index : 0}`
+              `${
+                index < this.plannersList.length
+                  ? index
+                  : Math.floor(Math.random() * this.plannersList.length)
+              }`
             ],
             plannerName: item.materialList[0].productDetail.operating.showName,
           }

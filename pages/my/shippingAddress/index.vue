@@ -19,7 +19,6 @@
       <div v-if="!addressList.length" class="no_address">
         <img :src="$ossImgSet(170, 170, '21107zqqvf40000.png')" alt="" />
         <p class="prompt">未添加收货地址</p>
-        <p class="new_address" @click="handleNew">新建地址</p>
       </div>
       <div v-if="addressList.length" class="address_con_list">
         <sp-swipe-cell
@@ -71,7 +70,7 @@
     </div>
     <!--E 内容-->
     <!--S 底部-->
-    <sp-bottombar v-if="addressList.length" safe-area-inset-bottom>
+    <sp-bottombar safe-area-inset-bottom>
       <sp-bottombar-button
         type="primary"
         icon="plus"

@@ -389,7 +389,11 @@ export default {
             price: item.materialList[0].productDetail.referencePrice,
             bgimage: this.serviceBg[index],
             planner: this.plannersList[
-              `${index < this.plannersList.length ? index : 0}`
+              `${
+                index < this.plannersList.length
+                  ? index
+                  : Math.floor(Math.random() * this.plannersList.length)
+              }`
             ],
             plannerName: item.materialList[0].productDetail.operating.showName,
           }

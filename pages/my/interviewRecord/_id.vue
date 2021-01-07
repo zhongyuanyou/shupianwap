@@ -102,6 +102,7 @@
     <div>
       <p class="bot">薯片找人 | 日常五福，尽在薯片！</p>
       <sp-toast ref="spToast"></sp-toast>
+      <Loading-center v-show="loading" />
     </div>
   </div>
 </template>
@@ -112,6 +113,7 @@ import { mapState } from 'vuex'
 import { interviewApi } from '~/api'
 import Header from '@/components/common/head/header'
 import SpToast from '@/components/common/spToast/SpToast'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'Detail',
   components: {
@@ -120,6 +122,7 @@ export default {
     [Button.name]: Button,
     Header,
     SpToast,
+    LoadingCenter,
   },
   data() {
     return {
@@ -130,6 +133,7 @@ export default {
         inviteStatus: 0, // 面谈状态
         inviterName: '', // 规划师
       }, // 面谈详情
+      loading: false,
     }
   },
   computed: {
@@ -160,6 +164,7 @@ export default {
       } catch (err) {}
     },
     async handleInterStatus(val) {
+      this.loading = true
       if (this.userId) {
         // 若用户已登录
         try {
@@ -169,6 +174,7 @@ export default {
             userId: this.userId,
           }
           const res = await this.$axios.post(interviewApi.cancel, params)
+          this.loading = false
           if (res.code === 200) {
             this.getInterviewDetail()
           } else {
@@ -180,6 +186,7 @@ export default {
           }
         } catch (err) {}
       } else if (this.isInApp) {
+        this.loading = false
         // 如果是在app中
         this.$appFn.dggLogin((res) => {
           try {
@@ -192,6 +199,7 @@ export default {
           } catch (err) {}
         })
       } else {
+        this.loading = false
         this.$router.push({
           name: 'login',
           query: { redirect: this.$route.fullPath },

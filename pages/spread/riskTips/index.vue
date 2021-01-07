@@ -78,7 +78,7 @@ export default {
 
 <style scoped lang="less">
 .center {
-  width: 750px;
+  width: @spread-page-width;
   margin: 0 auto;
 }
 .content {
@@ -87,7 +87,7 @@ export default {
   position: relative;
   &-bg {
     height: 393px;
-    width: 750px;
+    width: @spread-page-width;
     position: absolute;
     top: 0;
     left: 0;
@@ -125,5 +125,10 @@ export default {
 /deep/ .sp-top-nav-bar__arrow {
   font-size: 32px;
   font-weight: bold;
+}
+/deep/ .sp-top-nav-bar--fixed {
+  width: 750px;
+  margin-left: 50%;
+  transform: translateX(-375px);
 }
 </style>

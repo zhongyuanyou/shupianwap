@@ -22,7 +22,7 @@
         <sp-icon name="search" size="20" @click="onClickRight" />
       </template>
     </sp-top-nav-bar>
-    <div :style="{ marginTop: isInApp ? '0.88rem' : 0 }">
+    <div>
       <Con
         :banner="information_banner"
         :list="information_list"

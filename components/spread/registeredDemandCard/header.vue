@@ -1,12 +1,10 @@
 <template>
-  <div class="header" :style="{ backgroundImage: 'url(' + imgSrc + ')' }">
-    <!-- 头部分 -->
-    <Header :title="title" />
-    <div class="content">
+  <div class="header">
+    <div class="content" :style="{ backgroundImage: 'url(' + imgSrc + ')' }">
       <a href="javascript:;" @click="chooseCity()">
         <span>{{ currentCity || '成都市' }}</span>
         <my-icon
-          name="tap_ic_pen_n"
+          name="sear_ic_open"
           color="#ffffff"
           size="0.14rem"
           class="icon"
@@ -20,22 +18,22 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import MyIcon from '../../common/myIcon/MyIcon.vue'
-import Header from '@/components/common/head/header.vue'
-
 export default {
   components: {
-    Header,
     MyIcon,
   },
   data() {
     return {
-      title: '',
-      imgSrc: 'https://cdn.shupian.cn/sp-pt/wap/images/cu5su70wtu80000.jpg',
+      title: '轻松找服务',
+      imgSrc: 'https://cdn.shupian.cn/sp-pt/wap/images/13zjhce6649s000.jpg',
     }
   },
   computed: {
     ...mapState({
-      currentCity: (state) => state.city.currentCity.name, // 当前选择的城市
+      currentCity(state) {
+        this.$emit('onCity', state.city.currentCity)
+        return state.city.currentCity.name
+      }, // 当前选择的城市
     }),
   },
 
@@ -50,31 +48,17 @@ export default {
 <style lang="less" scoped>
 .header {
   width: 100%;
-  height: 378px;
-  background-size: 100% 100%;
   position: relative;
-  /deep/.fixed-head {
-    /deep/.my-head {
-      background: transparent;
-      width: 750px;
-      left: 50%;
-      margin-left: -375px;
-      box-shadow: 0 0 0 0;
-      position: absolute;
-      z-index: 2;
-    }
-    /deep/.back-icon {
-      color: #ffffff !important;
-    }
-  }
   .content {
-    height: 290px;
+    height: 320px;
+    background-size: 100% 100%;
+    position: relative;
+    z-index: 2;
     a {
       position: absolute;
-      z-index: 1;
-      bottom: 50px;
+      z-index: 3;
+      bottom: 58px;
       display: block;
-      // width: 113px;
       height: 44px;
       background: rgba(255, 255, 255, 0.2);
       border-radius: 22px;
@@ -90,10 +74,6 @@ export default {
         font-family: PingFang SC;
         font-weight: bold;
         color: #ffffff;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 1;
-        overflow: hidden;
       }
       .icon {
         margin-left: 12px;

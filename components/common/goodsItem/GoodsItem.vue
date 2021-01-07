@@ -5,7 +5,7 @@
       <!--<span class="tag">急售</span>-->
     </div>
     <div class="goods-right">
-      <h3 v-html="heightLightHtml(itemData.name)"></h3>
+      <h3 v-html="getGoodsName()"></h3>
       <p
         :style="{
           visibility: description ? 'visible' : 'hidden',
@@ -66,8 +66,8 @@ export default {
     description() {
       // 描述，包括
       // console.log(this.itemData)
-      if (this.itemData.productDescription) {
-        return this.itemData.productDescription
+      if (this.itemData.operating) {
+        return this.itemData.operating.slogan
       }
       if (this.itemData.fieldList && this.itemData.fieldList.length) {
         const desc = []
@@ -87,6 +87,18 @@ export default {
                 desc.push(utils.resetTimeField(val))
                 break
               case 'registered_capital':
+                desc.push(utils.priceHandle(val))
+                break
+              case 'qualification_registration_area':
+                desc.push(val.split(',')[0])
+                break
+              case 'qualification_expire_date':
+                desc.push(val.split('-')[0] + '年')
+                break
+              case 'safety_production_license':
+                desc.push(val === '是' ? '有安许证' : '无安许证')
+                break
+              case 'qualification_registered_capital':
                 desc.push(utils.priceHandle(val))
                 break
               default:
@@ -110,6 +122,18 @@ export default {
     },
   },
   methods: {
+    getGoodsName() {
+      // 获取商品名
+      let goodsName = ''
+      if (this.itemData.operating) {
+        goodsName = this.itemData.operating.showName
+          ? this.itemData.operating.showName
+          : this.itemData.name
+      } else {
+        goodsName = this.itemData.name
+      }
+      return this.heightLightHtml(goodsName)
+    },
     jumpUrl() {
       if (this.goodstype.type === 'serve') {
         this.$router.push(

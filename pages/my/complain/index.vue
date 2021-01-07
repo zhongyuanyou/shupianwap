@@ -149,8 +149,22 @@ export default {
         },
         (res) => {}
       )
-      // 设置终端和平台
     }
+    // 设置终端和平台
+    this.formData.terminalCode = this.isInApp
+      ? 'COMDIC_TERMINAL_APP'
+      : 'COMDIC_TERMINAL_WAP'
+    this.formData.terminalName = this.isInApp ? 'APP' : 'WAP'
+    this.formData.platformCode = this.isInApp
+      ? this.appInfo.platformCode
+      : 'COMDIC_PLATFORM_CRISPS'
+    this.formData.platformName = this.isInApp
+      ? this.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
+        ? '企大宝'
+        : this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
+        ? '薯片'
+        : '企大顺'
+      : '薯片'
     this.getComplainCategory()
   },
   methods: {
@@ -169,6 +183,7 @@ export default {
     },
     // 提交
     async submit() {
+      this.formData.userId = this.userId
       if (this.formData.content.length < 10) {
         this.$refs.spToast.show({
           message: '描述问题为必填，长度为10-200个字',
@@ -247,21 +262,6 @@ export default {
       }
     },
     async getComplainCategory() {
-      this.formData.terminalCode = this.isInApp
-        ? 'COMDIC_TERMINAL_APP'
-        : 'COMDIC_TERMINAL_WAP'
-      this.formData.terminalName = this.isInApp ? 'APP' : 'WAP'
-      this.formData.platformCode = this.isInApp
-        ? this.appInfo.platformCode
-        : 'COMDIC_PLATFORM_CRISPS'
-      this.formData.platformName = this.isInApp
-        ? this.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
-          ? '企大宝'
-          : this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
-          ? '薯片'
-          : '企大顺'
-        : '薯片'
-      this.formData.userId = this.userId
       this.loading = true
       // 获取吐槽分类
       try {
@@ -320,8 +320,7 @@ export default {
       justify-content: flex-start;
       &-item {
         margin-top: 26px;
-        height: 64px;
-        line-height: 64px;
+        line-height: 30px;
         display: block;
         background: #ffffff;
         border: 1px solid #cdcdcd;
@@ -330,7 +329,7 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #555555;
-        padding: 0px 20px;
+        padding: 20px;
         &:not(:last-child) {
           margin-right: 24px;
         }

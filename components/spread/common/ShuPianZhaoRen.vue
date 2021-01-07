@@ -3,11 +3,11 @@
     <div class="zhaoren-content">
       <div class="title">
         <div class="title-line"></div>
-        <p class="title-name">薯片找人</p>
+        <p class="title-name">顶呱呱</p>
         <div class="title-line"></div>
       </div>
-      <p class="content">薯片找人企业服务平台，2800万用户的选择</p>
-      <p class="footer">薯片科技版权所有</p>
+      <p class="content">顶呱呱企业服务平台，2800万用户的选择</p>
+      <p class="footer">顶呱呱科技股份版权所有</p>
     </div>
     <div class="bottom-height"></div>
   </div>
