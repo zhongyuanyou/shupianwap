@@ -39,6 +39,7 @@
 import { NavBar } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import Header from '@/components/common/head/header'
+import { domainUrl } from '~/config/index'
 export default {
   components: {
     [NavBar.name]: NavBar,
@@ -46,11 +47,7 @@ export default {
   },
   data() {
     return {
-      ContentList: [
-        '薯片WAP-证照资质中心-ICP证书',
-        '薯片WAP-证照资质中心-营业执照',
-        '薯片WAP-证照资质中心-网络文化经营许可证',
-      ],
+      ContentList: ['ICP证书', '营业执照', '网络文化经营许可证'],
     }
   },
   computed: {
@@ -74,29 +71,38 @@ export default {
     handleClick(index) {
       // 跳转
       if (this.isInApp) {
-        this.$appFn.dggSetTitle(
+        this.$appFn.dggOpenNewWeb(
           {
+            urlString: `${domainUrl}login/protocol?categoryCode=${
+              index === 0
+                ? 'protocol100005'
+                : index === 1
+                ? 'protocol100004'
+                : 'protocol100006'
+            }&hideHeader=true`,
             title:
               index === 0
-                ? '薯片WAP-证照资质中心-ICP证书'
+                ? 'ICP证书'
                 : index === 1
-                ? '薯片WAP-证照资质中心-营业执照'
-                : '薯片WAP-证照资质中心-网络文化经营许可证',
+                ? '营业执照'
+                : '网络文化经营许可证',
           },
           (res) => {}
         )
+      } else {
+        this.$router.push({
+          name: 'login-protocol',
+          query: {
+            categoryCode:
+              index === 0
+                ? 'protocol100005'
+                : index === 1
+                ? 'protocol100004'
+                : 'protocol100006',
+            hideHeader: true,
+          },
+        })
       }
-      this.$router.push({
-        name: 'login-protocol',
-        query: {
-          categoryCode:
-            index === 0
-              ? 'protocol100005'
-              : index === 1
-              ? 'protocol100004'
-              : 'protocol100006',
-        },
-      })
     },
     back() {
       if (this.isInApp) {

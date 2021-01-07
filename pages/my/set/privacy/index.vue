@@ -39,6 +39,7 @@
 import { NavBar } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import Header from '@/components/common/head/header'
+import { domainUrl } from '~/config/index'
 export default {
   components: {
     [NavBar.name]: NavBar,
@@ -70,19 +71,24 @@ export default {
     handleClick(index) {
       // 跳转
       if (this.isInApp) {
-        this.$appFn.dggSetTitle(
+        this.$appFn.dggOpenNewWeb(
           {
+            urlString: `${domainUrl}login/protocol?categoryCode=${
+              index ? 'protocol100121' : 'protocol100122'
+            }&hideHeader=true`,
             title: index ? '薯片隐私政策' : '薯片用户服务协议',
           },
           (res) => {}
         )
+      } else {
+        this.$router.push({
+          name: 'login-protocol',
+          query: {
+            categoryCode: index ? 'protocol100121' : 'protocol100122',
+            hideHeader: true,
+          },
+        })
       }
-      this.$router.push({
-        name: 'login-protocol',
-        query: {
-          categoryCode: index ? 'protocol100121' : 'protocol100122',
-        },
-      })
     },
     back() {
       if (this.isInApp) {

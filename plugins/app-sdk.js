@@ -137,7 +137,7 @@ const appHandler = {
   },
   // 打开新的webView
   dggOpenNewWeb: (
-    data = { urlString: 'https://www.baidu.com' },
+    data = { urlString: 'https://www.baidu.com', title: '' },
     fn = () => {}
   ) => {
     Bridge.callHandler('dgg_openNewWeb', data, (res) => {

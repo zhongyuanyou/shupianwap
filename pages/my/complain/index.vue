@@ -320,8 +320,7 @@ export default {
       justify-content: flex-start;
       &-item {
         margin-top: 26px;
-        height: 64px;
-        line-height: 64px;
+        line-height: 30px;
         display: block;
         background: #ffffff;
         border: 1px solid #cdcdcd;
@@ -330,7 +329,7 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #555555;
-        padding: 0px 20px;
+        padding: 20px;
         &:not(:last-child) {
           margin-right: 24px;
         }
