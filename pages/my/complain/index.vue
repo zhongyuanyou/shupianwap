@@ -203,33 +203,31 @@ export default {
           const params = {
             ...this.formData,
           }
-          const res = await complain.add({ axios: this.$axios }, params)
-          if (res.code === 200) {
-            this.formData = {
-              content: '', // 内容
-              feedbackTypeId: '', // 吐槽类型
-              userId: this.userId, // 用户id
-              terminalCode: '', // 终端编码
-              terminalName: '', // 终端名称
-              platformCode: '', // 平台编码
-              platformName: '', // 平台名称
-              images: [],
-            }
-            this.uploader = []
-            this.$refs.spToast.show({
-              message: '提交成功，感谢您的反馈',
-              duration: 1500,
-              forbidClick: true,
-              icon: 'spiconfont-tab_ic_check',
-            })
-          } else {
-            this.$refs.spToast.show({
-              message: res.message,
-              duration: 1500,
-              forbidClick: true,
-            })
+          await complain.add({ axios: this.$axios }, params)
+          this.formData = {
+            content: '', // 内容
+            feedbackTypeId: '', // 吐槽类型
+            userId: this.userId, // 用户id
+            terminalCode: '', // 终端编码
+            terminalName: '', // 终端名称
+            platformCode: '', // 平台编码
+            platformName: '', // 平台名称
+            images: [],
           }
-        } catch (err) {}
+          this.uploader = []
+          this.$refs.spToast.show({
+            message: '提交成功，感谢您的反馈',
+            duration: 1500,
+            forbidClick: true,
+            icon: 'spiconfont-tab_ic_check',
+          })
+        } catch (err) {
+          this.$refs.spToast.show({
+            message: err.message || '添加失败',
+            duration: 1500,
+            forbidClick: true,
+          })
+        }
       }
     },
     // 限制图片大小
