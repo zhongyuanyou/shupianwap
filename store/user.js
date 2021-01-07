@@ -63,4 +63,7 @@ export const actions = {
   clearUser({ commit }) {
     commit('CLEAR_USER')
   },
+  setUser({ commit }, data) {
+    commit('SET_USER', data)
+  },
 }

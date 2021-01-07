@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <div style="width: 100%">
-      <Header title="面谈确认">
+      <Header v-if="!isInApp" title="面谈确认">
         <template #left>
           <div @click="back">
             <my-icon
@@ -181,7 +181,16 @@ export default {
         } catch (err) {}
       } else if (this.isInApp) {
         // 如果是在app中
-        this.$appFn.dggLogin((res) => {})
+        this.$appFn.dggLogin((res) => {
+          try {
+            if (res.code === 200) {
+              const userInfo = res.data || {}
+              if (userInfo && userInfo.userId && userInfo.token) {
+                this.$store.dispatch('user/setUser', userInfo)
+              }
+            }
+          } catch (err) {}
+        })
       } else {
         this.$router.push({
           name: 'login',
