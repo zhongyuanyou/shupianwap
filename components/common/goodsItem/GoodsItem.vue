@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import Moment from 'moment'
+import utils from '@/utils/spread/util.js'
 export default {
   name: 'GoodsItem',
   props: {
@@ -74,12 +76,23 @@ export default {
           // 处理无字段数据的情况
           if (item.fieldValueCn) {
             val = item.fieldValueCn
-          } else if (item.fieldValueList && item.fieldValueList[0]) {
-            val = item.fieldValueList[0]
+          } else if (item.fieldValue) {
+            val = item.fieldValue
           } else {
             val = ''
           }
-          if (val) desc.push(val)
+          if (val) {
+            switch (item.fieldCode) {
+              case 'registration_time':
+                desc.push(utils.resetTimeField(val))
+                break
+              case 'registered_capital':
+                desc.push(utils.priceHandle(val))
+                break
+              default:
+                desc.push(val)
+            }
+          }
         })
         return desc.join(' | ')
       }
