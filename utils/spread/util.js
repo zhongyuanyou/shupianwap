@@ -284,7 +284,7 @@ const checkMobile = (mobile) => {
 // 产品属性处理
 // 属性价格展示处理
 const priceHandle = (price) => {
-  let str = ''
+  let str = price
   if (price < 1000000) {
     str = '100以万下'
   }
@@ -343,6 +343,7 @@ const resetTimeField = (str) => {
     // 3年以上
     return '3年以上'
   }
+  return str
 }
 export default {
   priceHandle,
