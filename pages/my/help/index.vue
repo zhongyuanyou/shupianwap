@@ -302,6 +302,14 @@ export default {
             ? androisUpdatePassword
             : androisSetPassword,
         })
+      } else if (val === 1) {
+        this.$appFn.dggOpenNewWeb(
+          {
+            urlString:
+              'https://person-auth.qiyuesuo.me?ticket=BUjB2FKAaXueIyvjjWDPIPZ9ir9r%2FaKehlnCpAbEiu44vT4yJADrITLOxnOkvf0%2B&channel=PRIVATE',
+          },
+          (res) => {}
+        )
       }
     },
     handleTel() {

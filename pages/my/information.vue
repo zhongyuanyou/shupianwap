@@ -17,9 +17,9 @@
           <!--            @oversize="onOversize"-->
           <!--          />-->
           <spMobileUpload
+            v-if="isUpdateAvatar"
             ref="SpUpLoad"
             tip="仅图片上传："
-            v-if="isUpdateAvatar"
             :file-id="info.fileId"
             is-add-watermark
             class="uploader"
