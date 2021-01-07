@@ -1,6 +1,6 @@
 <template>
   <div class="choose">
-    <span class="title"> 为什么选择薯片平台 </span>
+    <span class="title"> 代理记账服务优势 </span>
     <div class="contrast">
       <div>自己记账</div>
       <div>专业代理</div>
