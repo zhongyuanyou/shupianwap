@@ -409,7 +409,8 @@ export default {
       guiHuaShiList: [
         {
           id: '7862495547640840192',
-          avatarImg: '',
+          avatarImg:
+            'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
           name: '张毅',
           shuPianFen: 11,
           serverNum: 250,
@@ -497,7 +498,8 @@ export default {
         name: '张毅',
         jobNum: '107547',
         telephone: '18402858698',
-        imgSrc: '',
+        imgSrc:
+          'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
       },
       myTitle: '有疑问？千万企服专家为您免费解答',
       tel: '4000-962540',
@@ -584,6 +586,7 @@ export default {
             name: item.realName,
             shuPianFen: 11,
             serverNum: 250,
+
             telephone: item.userPhone,
             labels: ['工商注册', '财税咨询', '税务筹划'],
             jobNum: item.loginName,
