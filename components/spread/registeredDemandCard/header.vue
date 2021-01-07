@@ -57,7 +57,7 @@ export default {
     a {
       position: absolute;
       z-index: 3;
-      bottom: 50px;
+      bottom: 58px;
       display: block;
       height: 44px;
       background: rgba(255, 255, 255, 0.2);
