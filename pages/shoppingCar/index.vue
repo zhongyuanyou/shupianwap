@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-07 11:19:01
+ * @LastEditTime: 2021-01-07 15:22:33
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -31,9 +31,13 @@
         </template>
       </Header>
     </div>
-    <!-- 在sku 等弹窗时候，锁住滚动 -->
-    <div class="body" :class="{ 'sp-overflow-hidden': disableRefresh }">
-      <div class="body-container">
+
+    <div class="body">
+      <!-- 在sku 等弹窗时候，锁住滚动 -->
+      <div
+        class="body-container"
+        :class="{ 'sp-overflow-hidden': disableRefresh }"
+      >
         <sp-pull-refresh
           v-model="refreshing"
           class="shopping-car__refresh"
@@ -247,6 +251,7 @@ export default {
         .catch(() => {
           this.error = true
           this.loading = false
+          this.refreshing = false
         })
     },
     onRefresh() {
