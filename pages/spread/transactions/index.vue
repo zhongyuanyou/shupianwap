@@ -1,7 +1,11 @@
 <template>
   <div class="center">
+    <!--  banner  -->
     <banner></banner>
+    <!--  banner  -->
+    <!--  表单  -->
     <my-form></my-form>
+    <!--  表单  -->
   </div>
 </template>
 
