@@ -10,7 +10,7 @@
           :data-name="needlist[index]"
           @click="
             () => {
-              $parent.openIM(url)
+              $parent.openIM(item.url)
             }
           "
           ><img :src="item.img" alt=""
@@ -63,12 +63,12 @@ export default {
         {
           code: 1,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/6tk67e93mps0000.jpg',
-          url: '',
+          url: 'https://shupian.dgg.cn/spread/companyRegister',
         },
         {
           code: 2,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/8422jrgzzyo0000.jpg',
-          url: '',
+          url: 'https://shupian.dgg.cn/spread/tax',
         },
         {
           code: 3,

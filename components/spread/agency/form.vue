@@ -233,7 +233,7 @@ export default {
       const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       const contentStr = {
         LinesScope: this.scope,
-        companyName: this.company,
+        公司名称: this.company,
       }
       const params = {
         formId, // formId,唯一ID提交资源中心
