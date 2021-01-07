@@ -24,7 +24,7 @@
           {{ currentCity.name || '成都市' }}
         </div>
         <my-icon
-          name="tap_ic_pen_n"
+          name="sear_ic_open"
           color="#ffffff"
           size="0.14rem"
           class="icon banner-button-icon"
@@ -151,9 +151,11 @@ export default {
     consultForm() {
       if (typeof this.data.content === 'object') {
         this.data.content['更多需求'] = this.message
+        this.data.content['是否允许电话联系'] = this.isSelect ? '是' : '否'
       } else {
         this.data.content = JSON.parse(this.data.content)
         this.data.content['更多需求'] = this.message
+        this.data.content['是否允许电话联系'] = this.isSelect ? '是' : '否'
       }
       this.data.formId = this.getDate() // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       this.data.name = '匿名客户'
@@ -162,7 +164,7 @@ export default {
       this.data.device = 'wap' // 设备：pc,wap
       this.data.web = 'SP' // 归属渠道：xmt,zytg,wxgzh
       this.data.content = JSON.stringify(this.data.content)
-      // console.log(this.data)
+      console.log(this.data)
       window.promotion.privat.consultForm(this.data, (res) => {
         if (res.error === 0) {
           localStorage.setItem('data', '') // 清空数据
