@@ -129,6 +129,10 @@ export default {
   methods: {
     back() {
       // 返回上一页
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
       this.$router.back()
     },
     async getInfoDetail() {

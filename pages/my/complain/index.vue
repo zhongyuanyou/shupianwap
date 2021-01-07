@@ -47,6 +47,7 @@
           placeholder="请描述您的问题，有助于快速处理您的反馈额~(最少10个字符)"
           maxlength="200"
           @input="changeText"
+          @blur="textBlur"
         />
         <span class="complaint-content-label"
           >{{ formData.content.length }}/200</span
@@ -181,6 +182,7 @@ export default {
           forbidClick: true,
         })
       } else {
+        this.loading = true
         try {
           if (this.images.length) {
             this.formData.imgs = this.images.toString()
@@ -189,6 +191,7 @@ export default {
             ...this.formData,
           }
           await complain.add({ axios: this.$axios }, params)
+          this.loading = false
           this.formData = {
             content: '', // 内容
             feedbackTypeId: '', // 吐槽类型
@@ -207,6 +210,7 @@ export default {
             icon: 'spiconfont-tab_ic_check',
           })
         } catch (err) {
+          this.loading = false
           this.$refs.spToast.show({
             message: err.message || '添加失败',
             duration: 1500,
@@ -275,6 +279,10 @@ export default {
     },
     changeText() {
       this.formData.content = this.formData.content.substring(0, 200)
+    },
+    textBlur() {
+      // 输入框失焦
+      window.scroll(0, 0)
     },
   },
 }
