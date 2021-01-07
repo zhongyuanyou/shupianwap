@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-06 20:41:29
+ * @LastEditTime: 2021-01-07 18:14:13
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/MainGoodsItem.vue
 -->
@@ -171,13 +171,13 @@ export default {
         data: { value },
       })
     },
-    // 输入框失去焦点
+    // 输入框获取焦点
     handleCountFoucs() {
       console.log('handleCountFoucs')
       this.countStatus = 'foucs'
     },
 
-    // 输入框获取焦点
+    // 输入框失去焦点
     handleCountBlur() {
       console.log('handleCountBlur')
       const value = this.goodsCount
