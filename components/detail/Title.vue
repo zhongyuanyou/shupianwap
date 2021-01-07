@@ -13,7 +13,7 @@
       <div class="title_tags_remind">
         <my-icon
           name="notify_ic_clock1"
-          color="#9399A5"
+          color="#4974f5"
           size="0.32rem"
           class="icon"
         />降价提醒

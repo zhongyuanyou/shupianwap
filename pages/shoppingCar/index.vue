@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-06 11:57:22
+ * @LastEditTime: 2021-01-07 11:19:01
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -31,46 +31,49 @@
         </template>
       </Header>
     </div>
-    <div class="body">
-      <sp-pull-refresh
-        v-model="refreshing"
-        class="shopping-car__refresh"
-        :disabled="disableRefresh"
-        @refresh="onRefresh"
-      >
-        <sp-list
-          v-model="loading"
-          class="shopping-car__goods"
-          error-text="请求失败，点击重新加载"
-          :error.sync="error"
-          :finished="finished"
-          @load="onLoad"
+    <!-- 在sku 等弹窗时候，锁住滚动 -->
+    <div class="body" :class="{ 'sp-overflow-hidden': disableRefresh }">
+      <div class="body-container">
+        <sp-pull-refresh
+          v-model="refreshing"
+          class="shopping-car__refresh"
+          :disabled="disableRefresh"
+          @refresh="onRefresh"
         >
-          <div
-            v-for="(item, index) in list"
-            :key="item.cartId"
-            class="shopping-car__goods-item"
+          <sp-list
+            v-model="loading"
+            class="shopping-car__goods"
+            error-text="请求失败，点击重新加载"
+            :error.sync="error"
+            :finished="finished"
+            @load="onLoad"
           >
-            <GoodsItem
-              ref="goodsItem"
-              :commodity-data="item"
-              :index="index"
-              @operation="handleItemOperation"
-            />
-          </div>
-          <template #finished>
-            <span v-if="list && list.length">没有更多了</span>
-            <ShoppingCarNull v-else />
-          </template>
-          <!-- S 自定义加载控件 -->
-          <template #loading>
-            <div>
-              <LoadingDown v-show="!refreshing && loading" :loading="true" />
+            <div
+              v-for="(item, index) in list"
+              :key="item.cartId"
+              class="shopping-car__goods-item"
+            >
+              <GoodsItem
+                ref="goodsItem"
+                :commodity-data="item"
+                :index="index"
+                @operation="handleItemOperation"
+              />
             </div>
-          </template>
-          <!-- E 自定义加载控件 -->
-        </sp-list>
-      </sp-pull-refresh>
+            <template #finished>
+              <span v-if="list && list.length">没有更多了</span>
+              <ShoppingCarNull v-else />
+            </template>
+            <!-- S 自定义加载控件 -->
+            <template #loading>
+              <div>
+                <LoadingDown v-show="!refreshing && loading" :loading="true" />
+              </div>
+            </template>
+            <!-- E 自定义加载控件 -->
+          </sp-list>
+        </sp-pull-refresh>
+      </div>
     </div>
     <div v-if="list && list.length" class="footer sp-hairline--top">
       <Bottombar
@@ -172,6 +175,7 @@ export default {
       console.log('registHandler refresh start')
       this.$appFn.registHandler('refresh', (data) => {
         console.log('refresh:', data)
+        this.postUpdate({ type: 'init' })
         this.onRefresh()
       })
     }
@@ -556,7 +560,6 @@ export default {
 
 .shopping-car {
   height: 100%;
-  // overflow-y: scroll;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
@@ -570,6 +573,17 @@ export default {
   .body {
     flex: 1;
     padding: 0;
+    position: relative;
+    &-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+    }
   }
   &__refresh {
     min-height: 100%;
