@@ -93,31 +93,33 @@
       </sp-dropdown-menu>
     </div>
     <div class="result-List">
-      <!-- 搜索结果列表 -->
-      <sp-pull-refresh
-        v-model="refreshing"
-        success-text="刷新成功"
-        class="list-refresh"
-        @refresh="onRefresh"
-      >
-        <sp-list
-          v-model="loading"
-          finished-text="没有更多了"
-          error-text="请求失败，点击重新加载"
-          :error.sync="error"
-          :finished="finished"
-          @load="onLoad"
+      <div class="result-List-container">
+        <!-- 搜索结果列表 -->
+        <sp-pull-refresh
+          v-model="refreshing"
+          success-text="刷新成功"
+          class="list-refresh"
+          @refresh="onRefresh"
         >
-          <PhoneList :list="list" @operation="handleOperation" />
-          <!-- S 自定义加载控件 -->
-          <template #loading>
-            <div>
-              <LoadingDown v-show="!refreshing && loading" :loading="true" />
-            </div>
-          </template>
-          <!-- E 自定义加载控件 -->
-        </sp-list>
-      </sp-pull-refresh>
+          <sp-list
+            v-model="loading"
+            finished-text="没有更多了"
+            error-text="请求失败，点击重新加载"
+            :error.sync="error"
+            :finished="finished"
+            @load="onLoad"
+          >
+            <PhoneList :list="list" @operation="handleOperation" />
+            <!-- S 自定义加载控件 -->
+            <template #loading>
+              <div>
+                <LoadingDown v-show="!refreshing && loading" :loading="true" />
+              </div>
+            </template>
+            <!-- E 自定义加载控件 -->
+          </sp-list>
+        </sp-pull-refresh>
+      </div>
     </div>
     <div class="footer">
       <sp-button color="#4974F5" block @click="onSubmit"> 确认选择 </sp-button>
@@ -332,7 +334,7 @@ export default {
       // 最小输入框
       console.log(val)
       this.search.price = {}
-      this.search.minInput = val
+      this.search.minPrice = val
     },
     maxInput(val) {
       // 最大输入框
@@ -342,14 +344,14 @@ export default {
     },
     selectedAllPrices(item, items) {
       const { name, id } = item
-      this.search.minInput = ''
+      this.search.minPrice = ''
       this.search.maxPrice = ''
       this.search.price = { name, id }
     },
     selectedPrices(item) {
       // 选择价格标题显示
       const { name, id } = item
-      this.search.minInput = ''
+      this.search.minPrice = ''
       this.search.maxPrice = ''
       this.search.price = { name, id }
     },
@@ -357,20 +359,20 @@ export default {
       // 重置价格
       this.dropdownPriceTitle = '价格'
       this.search.price = {}
-      this.search.minInput = ''
+      this.search.minPrice = ''
       this.search.maxPrice = ''
       this.$refs.PriceFilter.clearInput()
     },
     confirmPrice() {
       // 确认价格
       this.$refs.isShowPrice.toggle()
-      const { minInput, maxPrice, price } = this.search
+      const { minPrice, maxPrice, price } = this.search
       let dropdownPriceTitle = '价格'
       if (price.name) {
         dropdownPriceTitle = price.name
-      } else if (minInput || maxPrice) {
-        dropdownPriceTitle = minInput
-          ? `${minInput}-${maxPrice}`
+      } else if (minPrice || maxPrice) {
+        dropdownPriceTitle = minPrice
+          ? `${minPrice}-${maxPrice}`
           : `${maxPrice}`
       }
 
@@ -585,9 +587,17 @@ export default {
   }
   .result-List {
     flex: 1;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
+    position: relative;
+    &-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
     .list-refresh {
       min-height: 100%;
     }

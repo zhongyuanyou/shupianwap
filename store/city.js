@@ -58,6 +58,7 @@ export const actions = {
     getPosition()
       .then((res) => {
         if (type === 'rest') {
+          commit('UPDATE_LOADING_STADUS', false) // 隐藏loading
           // 轻提示
           Toast.success({
             duration: 2000,
