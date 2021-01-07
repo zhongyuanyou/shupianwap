@@ -521,7 +521,7 @@ export default {
           const operatingVal = elem.materialList[0].productDetail.operating
           this.listCount[index].pric = priceVal
           this.listCount[index].operating = operatingVal
-          if (data.planlerList.length > index) {
+          if (data.planlerList.length >= index) {
             this.listCount[index].id =
               data.planlerList[
                 `${
