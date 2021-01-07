@@ -424,10 +424,11 @@ export default {
       },
       planner: {
         id: '7862495547640840192',
-        name: '张毅',
+        name: '李劲',
         jobNum: '107547',
         telephone: '18402858698',
-        imgSrc: '',
+        imgSrc:
+          'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
       },
 
       // 轮播列表
@@ -525,32 +526,18 @@ export default {
         {
           id: 1,
           type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
+          avatarImg:
+            'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          name: '李劲',
           shuPianFen: 11,
           serverNum: 250,
-          telephone: 12345679985,
+          telephone: 18402858698,
           labels: ['工商注册', '财税咨询', '税务筹划'],
-        },
-        {
-          id: 2,
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-        },
-        {
-          id: 3,
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
+          im: {
+            id: '7887200447257313280',
+            name: '李劲',
+            num: '108862',
+          },
         },
       ],
     }
@@ -570,7 +557,7 @@ export default {
         const fuWuList = []
         data.forEach((item, index) => {
           const obj = {
-            id: item.id,
+            id: item.materialList[0].productDetail.id,
             actualViews:
               item.materialList[0].productDetail.operating.actualViews,
             defaultSales:
@@ -580,7 +567,11 @@ export default {
             price: item.materialList[0].productDetail.referencePrice,
             bgimage: this.serviceBG[index],
             planner: this.plannersList[
-              `${index < this.plannersList.length ? index : 0}`
+              `${
+                index < this.plannersList.length
+                  ? index
+                  : Math.floor(Math.random() * this.plannersList.length)
+              }`
             ],
             plannerName: item.materialList[0].productDetail.operating.showName,
           }
@@ -608,24 +599,28 @@ export default {
     // 规划师处理
     plannerHandleData(data) {
       // 规划师列表
-      const guiHuaShiList = []
-      data.forEach((item) => {
-        const obj = {
-          id: item.userCentreId,
-          avatarImg: item.userHeadUrl,
-          name: item.realName,
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: item.userPhone,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          jobNum: item.loginName,
-          imgSrc: item.userHeadUrl,
-        }
-        guiHuaShiList.push(obj)
-      })
-      this.plannersList = guiHuaShiList
-      // 转站规划师
-      this.planner = this.plannersList[0]
+      if (data.length !== 0) {
+        const guiHuaShiList = []
+        data.forEach((item) => {
+          const obj = {
+            id: item.userCentreId,
+            avatarImg: item.userHeadUrl,
+            name: item.realName,
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: item.userPhone,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+            jobNum: item.loginName,
+            imgSrc: item.userHeadUrl,
+          }
+          guiHuaShiList.push(obj)
+        })
+        this.plannersList = guiHuaShiList
+        // 转站规划师
+        this.planner = this.plannersList[0]
+      } else {
+        return this.planner
+      }
     },
   },
   head() {
