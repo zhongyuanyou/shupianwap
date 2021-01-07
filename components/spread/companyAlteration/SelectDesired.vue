@@ -15,14 +15,7 @@
   </div>
 </template>
 <script>
-import { TopNavBar, Cell, Popup, ActionSheet } from '@chipspc/vant-dgg'
 export default {
-  components: {
-    [TopNavBar.name]: TopNavBar,
-    [Cell.name]: Cell,
-    [Popup.name]: Popup,
-    [ActionSheet.name]: ActionSheet,
-  },
   props: {
     titleName: {
       type: String,

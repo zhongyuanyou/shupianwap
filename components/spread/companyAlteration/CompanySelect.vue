@@ -6,13 +6,13 @@
       is-link
       title-style="color:#222222;"
       :title="title"
-      @click="showPopup"
+      @click="showPopup = show = true"
     >
       <template #right-icon>
         <my-icon name="sear_ic_open" size="0.18rem" color="#cccccc"></my-icon>
       </template>
     </sp-cell>
-    <sp-action-sheet v-model="show" @select="onSelect"
+    <sp-action-sheet v-model="show"
       ><sp-picker
         title="选择"
         show-toolbar
@@ -24,12 +24,10 @@
   </div>
 </template>
 <script>
-import { TopNavBar, Cell, Popup, ActionSheet, Picker } from '@chipspc/vant-dgg'
+import { Cell, ActionSheet, Picker } from '@chipspc/vant-dgg'
 export default {
   components: {
-    [TopNavBar.name]: TopNavBar,
     [Cell.name]: Cell,
-    [Popup.name]: Popup,
     [ActionSheet.name]: ActionSheet,
     [Picker.name]: Picker,
   },
@@ -63,18 +61,8 @@ export default {
     }
   },
   methods: {
-    showPopup() {
-      this.show = true
-    },
-    onSelect(item) {
-      this.$emit('onSelect', item.name)
-      this.title = item.name
-      this.actions.forEach((element) => {
-        if (element.name === this.title) element.className = 'action-style'
-        else element.className = ''
-      })
-    },
     onConfirm(value, index) {
+      this.$emit('onSelect', value)
       this.title = value
       this.show = false
     },
@@ -104,11 +92,6 @@ export default {
       color: #222;
     }
   }
-  // 选中样式
-  .action-style {
-    color: #5a79e8;
-    font-weight: bold;
-  }
   // 下弹窗
   /deep/.flow {
     font-size: 26px;
@@ -120,12 +103,13 @@ export default {
   }
   /deep/ .sp-overlay,
   /deep/ .sp-popup--bottom {
-    margin-left: -375px;
+    margin-left: -(@spread-page-width / 2);
     width: @spread-page-width;
     left: 50%;
     .sp-picker-column__item {
       color: #555;
     }
+    // 选中后
     .sp-picker-column__item--selected {
       color: #222;
     }

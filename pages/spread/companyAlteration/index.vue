@@ -72,7 +72,29 @@ export default {
         '其他变更',
       ],
       // 区域
-      actionsRegion: [],
+      actionsRegion: [
+        '锦江区',
+        '青羊区',
+        '金牛区',
+        '武侯区',
+        '成华区',
+        '龙泉驿区',
+        '青白江区',
+        '新都区',
+        '温江区',
+        '金堂县',
+        '双流县',
+        '郫都区',
+        '大邑县',
+        '蒲江县',
+        '新津县',
+        '都江堰市',
+        '彭州市',
+        '邛崃市',
+        '崇州市',
+        '高新区',
+        '天府新区',
+      ],
       // 身份
       selectActive: [
         {
@@ -155,7 +177,7 @@ export default {
         content: {
           注册区域: this.district,
           身份: this.identity,
-          办理时间: this.identity,
+          办理时间: this.handlingTime,
         },
       })
       localStorage.setItem('data', obj)
