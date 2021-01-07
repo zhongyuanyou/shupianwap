@@ -1,8 +1,8 @@
 import axios from 'axios'
 export default () => {
   const amapKey = '5111f49d979a509f1e96420a1b456ff4' // 高德地图key
-  const regeoUrl = 'https://restapi.amap.com/v3/geocode/regeo' // 高德地图逆地理编码接口服务（根据经纬度获取城市信息）
-  const ipUrl = 'https://restapi.amap.com/v3/ip' // 高德地图根据用户请求地址ip获取所在城市
+  const regeoUrl = '/gdmap/v3/geocode/regeo' // 高德地图逆地理编码接口服务（根据经纬度获取城市信息）
+  const ipUrl = '/gdmap/v3/ip' // 高德地图根据用户请求地址ip获取所在城市
   return new Promise((resolve, reject) => {
     const errorData = {
       type: 0,
