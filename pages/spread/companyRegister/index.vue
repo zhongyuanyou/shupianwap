@@ -522,7 +522,6 @@ export default {
           this.listCount[index].pric = priceVal
           this.listCount[index].operating = operatingVal
           if (data.planlerList.length > index) {
-            console.log(data.planlerList)
             this.listCount[index].id =
               data.planlerList[
                 `${
