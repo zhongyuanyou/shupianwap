@@ -49,7 +49,7 @@ export default {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/4wb4vrnwjo80000.png',
           imgWidth: 225,
           imgHeight: 348,
-          url: '',
+          url: 'https://shupian.dgg.cn/spread/tax',
         },
         {
           id: 4,
