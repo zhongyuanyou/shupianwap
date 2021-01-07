@@ -40,7 +40,7 @@
               <p class="title">{{ item.name }}</p>
               <div class="label">
                 <span v-for="(lItem, index) in item.fieldList" :key="index">{{
-                  `${lItem.fieldValueList ? lItem.fieldValueList[0] : ''}${
+                  `${lItem.fieldValueCn}${
                     index === item.fieldList.length - 1 ? '' : '|'
                   }`
                 }}</span>
