@@ -40,7 +40,7 @@
 
 <script>
 import { Field } from '@chipspc/vant-dgg'
-import { auth, userinfoApi } from '@/api'
+import { auth, userinfoApi, consult } from '@/api'
 import { checkPhone, checkAuthCode } from '@/utils/check.js'
 
 export default {
@@ -138,6 +138,24 @@ export default {
           phone: this.tel,
           type: 'default',
         }
+        // consult
+        //   .getCMSCode({
+        //     tel: this.tel,
+        //     type: 'zc',
+        //   })
+        //   .then((res) => {
+        //     console.log(res)
+        //     this.isSendSMS = true
+        //     this.countDown()
+        //   })
+        //   .catch(() => {
+        //     this.$xToast.show({
+        //       message: '网络错误，请稍后再试',
+        //       duration: 1000,
+        //       icon: 'toast_ic_error',
+        //       forbidClick: true,
+        //     })
+        //   })
         auth
           .smsCode({ axios: this.$axios }, params)
           .then((res) => {
