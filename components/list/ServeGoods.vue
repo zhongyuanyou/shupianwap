@@ -104,7 +104,6 @@ import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
-// import xs from '@/components/common/shareSheet/XShareSheet.vue'
 import clone from '~/utils/clone'
 import searchList from '@/mixins/searchList'
 
