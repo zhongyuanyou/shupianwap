@@ -69,7 +69,7 @@
           v-md-map
           v-md:webClick
           :data-name="item.name"
-          @click="onService('', index)"
+          @click="onService(item.url, index)"
         >
           <sp-image :src="item.img"
         /></a>
@@ -395,14 +395,17 @@ export default {
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/f67zabgy4w00000.png',
           name: '工商注册_你可能还需要其他服务_税务筹划',
+          url: 'https://shupian.dgg.cn/spread/tax',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/7mdee1enz8s0000.png',
           name: '工商注册_你可能还需要其他服务_代理记账',
+          url: 'https://shupian.dgg.cn/spread/agency/',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/86kmcgq4i1s0000.png',
           name: '工商注册_你可能还需要其他服务_其他服务',
+          url: '',
         },
       ],
       // 规划师轮播列表
@@ -521,7 +524,7 @@ export default {
           const operatingVal = elem.materialList[0].productDetail.operating
           this.listCount[index].pric = priceVal
           this.listCount[index].operating = operatingVal
-          if (data.planlerList.length >= index) {
+          if (data.planlerList.length >= 0) {
             this.listCount[index].id =
               data.planlerList[
                 `${
