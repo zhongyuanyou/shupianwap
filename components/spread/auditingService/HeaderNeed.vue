@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="city-btn" @click="choiceCity">
-      <span class="city-name">{{ currentCity }}</span>
+      <span class="city-name">{{ currentCity || '成都市' }}</span>
       <my-icon name="sear_ic_open" size="0.14rem" color="#cccccc"></my-icon>
     </div>
   </div>

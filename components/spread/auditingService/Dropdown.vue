@@ -132,8 +132,7 @@ export default {
     .dropdown-menu-content-val {
       flex: none;
       font-size: 28px;
-      font-weight: bold;
-      color: #1a1a1a;
+      color: #222222;
     }
     .dropdown-menu-content-img {
       flex: none;

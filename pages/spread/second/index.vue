@@ -1,36 +1,34 @@
 <template>
   <div class="center">
-    <div>
-      <!--    头部  -->
-      <!--      <sp-top-nav-bar-->
-      <!--        title="轻松找服务"-->
-      <!--        background="#ffffff"-->
-      <!--        title-color="#1A1A1A"-->
-      <!--        ellipsis-->
-      <!--        :fixed="true"-->
-      <!--        :placeholder="true"-->
-      <!--        z-index="999"-->
-      <!--      >-->
-      <!--        <template #left>-->
-      <!--          <div class="margin" @click="back">-->
-      <!--            <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>-->
-      <!--          </div>-->
-      <!--          <sp-icon name="cross" size="0.4rem" @click="close" />-->
-      <!--        </template>-->
-      <!--      </sp-top-nav-bar>-->
-      <div class="banner">
-        <!--    城市按钮  -->
-        <div class="banner-button" @click="tabCity">
-          <div class="banner-button-city">
-            {{ currentCity.name || '成都市' }}
-          </div>
-          <my-icon
-            name="tap_ic_pen_n"
-            color="#ffffff"
-            size="0.14rem"
-            class="icon banner-button-icon"
-          ></my-icon>
+    <!--    头部  -->
+    <!--      <sp-top-nav-bar-->
+    <!--        title="轻松找服务"-->
+    <!--        background="#ffffff"-->
+    <!--        title-color="#1A1A1A"-->
+    <!--        ellipsis-->
+    <!--        :fixed="true"-->
+    <!--        :placeholder="true"-->
+    <!--        z-index="999"-->
+    <!--      >-->
+    <!--        <template #left>-->
+    <!--          <div class="margin" @click="back">-->
+    <!--            <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>-->
+    <!--          </div>-->
+    <!--          <sp-icon name="cross" size="0.4rem" @click="close" />-->
+    <!--        </template>-->
+    <!--      </sp-top-nav-bar>-->
+    <div class="banner">
+      <!--    城市按钮  -->
+      <div class="banner-button" @click="tabCity">
+        <div class="banner-button-city">
+          {{ currentCity.name || '成都市' }}
         </div>
+        <my-icon
+          name="tap_ic_pen_n"
+          color="#ffffff"
+          size="0.14rem"
+          class="icon banner-button-icon"
+        ></my-icon>
       </div>
     </div>
     <div class="form">
@@ -90,7 +88,6 @@ export default {
     return {
       message: '',
       data: {},
-      city: '成都',
       isSelect: true,
     }
   },
@@ -115,14 +112,15 @@ export default {
     select() {
       this.isSelect = !this.isSelect
     },
-    // 回退
-    back() {
-      this.$router.go(-1)
-    },
-    // 关闭
-    close() {
-      window.close()
-    },
+    // // 回退
+    // back() {
+    //   this.$router.go(-1)
+    // },
+    // // 关闭
+    // close() {
+    //   window.close()
+    // },
+
     // 选择城市
     tabCity() {
       this.$router.push({ path: '/city/choiceCity' })
@@ -151,8 +149,12 @@ export default {
     },
     // 提交表单
     consultForm() {
-      this.data.content['更多需求'] = this.message
-      localStorage.setItem('data', '') // 清空数据
+      if (typeof this.data.content === 'object') {
+        this.data.content['更多需求'] = this.message
+      } else {
+        this.data.content = JSON.parse(this.data.content)
+        this.data.content['更多需求'] = this.message
+      }
       this.data.formId = this.getDate() // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       this.data.name = '匿名客户'
       this.data.url = window.open
@@ -160,12 +162,12 @@ export default {
       this.data.device = 'wap' // 设备：pc,wap
       this.data.web = 'SP' // 归属渠道：xmt,zytg,wxgzh
       this.data.content = JSON.stringify(this.data.content)
-      console.log(this.data)
+      // console.log(this.data)
       window.promotion.privat.consultForm(this.data, (res) => {
         if (res.error === 0) {
-          // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
-          Toast('提交成功，请注意接听电话')
+          localStorage.setItem('data', '') // 清空数据
           this.message = ''
+          Toast('提交成功，请注意接听电话')
         } else {
           Toast(res.msg)
         }

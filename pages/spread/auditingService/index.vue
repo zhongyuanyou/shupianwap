@@ -1,6 +1,5 @@
 <template>
   <div class="audit">
-    <Header title="轻松找服务" :fixed="false" head-class="head-icon" />
     <HeaderNeed />
     <Content />
   </div>
@@ -9,13 +8,11 @@
 <script>
 import HeaderNeed from '@/components/spread/auditingService/HeaderNeed'
 import Content from '@/components/spread/auditingService/Content'
-import Header from '~/components/common/head/header'
 export default {
   name: 'Index',
   components: {
     HeaderNeed,
     Content,
-    Header,
   },
   data() {
     return {}
