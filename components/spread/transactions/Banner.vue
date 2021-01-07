@@ -20,7 +20,7 @@
       <div class="banner-button" @click="tabCity">
         <div class="banner-button-city">{{ currentCity.name || '成都市' }}</div>
         <my-icon
-          name="tap_ic_pen_n"
+          name="sear_ic_open"
           color="#ffffff"
           size="0.14rem"
           class="icon banner-button-icon"
