@@ -89,6 +89,18 @@ export default {
               case 'registered_capital':
                 desc.push(utils.priceHandle(val))
                 break
+              case 'qualification_registration_area':
+                desc.push(val.split(',')[0])
+                break
+              case 'qualification_expire_date':
+                desc.push(val.split('-')[0] + '年')
+                break
+              case 'safety_production_license':
+                desc.push(val === '是' ? '有安许证' : '无安许证')
+                break
+              case 'qualification_registered_capital':
+                desc.push(utils.priceHandle(val))
+                break
               default:
                 desc.push(val)
             }
