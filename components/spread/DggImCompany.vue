@@ -183,7 +183,7 @@ export default {
             text:
               '您好，欢迎来到【顶呱呱平台】，我是您的专属接待客服，请问有什么可以帮助您呢？',
             createTime: new Date().getTime(),
-            isUser: false,
+            isUser: false, // true是用户，false是规划师
           },
         ]
         // 当关闭对话框时，关闭表情框
@@ -360,16 +360,15 @@ export default {
         extContent
       )
     },
-    // 接收消息、发送消息成功的回调
+    // 接收消息、发送消息成功的回调：将聊天记录存储进session
     onMessage(res) {
       const that = this
       console.log('onmessage', res)
       if (res.code === 200) {
-        // debugger
         const data = res.data
         const obj = {
-          text: data.content.text,
-          isUser: that.userInfo.imUserId === data.sender,
+          text: data.content.text, // 消息内容对象
+          isUser: that.userInfo.imUserId === data.sender, // isUser为true是用户，为false是规划师。
           createTime: new Date().getTime(),
         }
         // 规划师发来消息 并且 聊天框没有展开 显示红点
@@ -382,6 +381,18 @@ export default {
         that.currentChatData.push(obj)
         that.userText = ''
         that.chatBoxToBottom()
+
+        // 2021-01-07修改
+        // 1、IM的sessionStorage键值命名：ChatData + 规划师id + 客户id
+        // 2、清除之前和规划师的sessionStorage，将新值存储进去
+        sessionStorage.removeItem(
+          `ChatData-${this.recommendPlannerId}-${this.userInfo.userId}`
+        )
+        // 3、将聊天记录新值存储进去
+        sessionStorage.setItem(
+          `ChatData-${this.recommendPlannerId}-${this.userInfo.userId}`,
+          JSON.stringify(that.currentChatData)
+        )
       }
     },
     // 我的消息回调
@@ -391,7 +402,7 @@ export default {
       if (id) {
         that.userInfo = {
           imUserId: res.data.imUserId,
-          userId: id,
+          userId: id, // 客户的id
         }
       } else {
         sessionStorage.setItem('userId', res.data.userId)
@@ -405,12 +416,26 @@ export default {
       that.recommendPlannerId = id
       that.recommendPlannerName = name
       that.recommendPlannerNum = num
+      // 1、根据规划师id创建对话
+      // 2、根据创建的对话id查询 客户与该规划师之间的聊天记录
       await that.nimSdk.createSession(id, (res) => {
         console.log('createSession', res)
         if (res.code === 200) {
           // localStorage.setItem('currentGroupId', res.data)
-          that.groupId = res.data
-          that.getHistoryMsg()
+          // 1、根据规划师id，先从sessionStorage里取聊天记录
+          const data = JSON.parse(
+            sessionStorage.getItem(
+              `ChatData-${this.recommendPlannerId}-${this.userInfo.userId}`
+            )
+          )
+          // 2、sessionStorage里聊天记录为空时，才调取接口
+          if (data.length > 1) {
+            that.currentChatData = data
+            that.chatBoxToBottom()
+            that.isPopupShow = true
+          } else {
+            that.getHistoryMsg()
+          }
         }
       })
     },
