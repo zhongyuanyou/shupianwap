@@ -21,7 +21,11 @@ export default function ({ $axios, redirect, app, store }) {
       }
       config.params = config.params || {}
       if (DGG_SERVER_ENV === 'development') {
-        config.headers.sysCode = 'zdm-api'
+        // 本地根据自己的需求进行配置
+        config.headers.sysCode = 'crisps-app-wap-bff-api'
+      } else {
+        // 在app正式上线未做负载前,此sysCode不修改
+        config.headers.sysCode = 'crisps-app-wap-bff-api'
       }
       if (
         app.$cookies.get('token', {
