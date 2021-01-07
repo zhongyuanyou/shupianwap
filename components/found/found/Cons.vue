@@ -169,8 +169,12 @@ export default {
     handleClick(item, index) {
       // 点击
       if (this.isInApp) {
-        this.$appFn.dggOpenNewWeb(
-          { urlString: `${domainUrl}found/detail/${item.id}` },
+        const iosRouter =
+          '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
+          `${domainUrl}found/detail/${item.id}` +
+          '","isHideNav":1},"isLogin":"1","version":"1.0.0"}'
+        this.$appFn.dggJumpRoute(
+          { iOSRouter: iosRouter, androidRouter: '' },
           (res) => {}
         )
         return

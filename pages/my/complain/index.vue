@@ -46,6 +46,7 @@
           class="complaint-content-textarea"
           placeholder="请描述您的问题，有助于快速处理您的反馈额~(最少10个字符)"
           maxlength="200"
+          @input="changeText"
         />
         <span class="complaint-content-label"
           >{{ formData.content.length }}/200</span
@@ -138,16 +139,7 @@ export default {
       appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
-  watch: {
-    formData: {
-      deep: true,
-      handler(newV, oldV) {
-        this.formData.content = newV.content.Substring(0, 200)
-      },
-    },
-  },
   mounted() {
-    console.log('appInfo', this.appInfo)
     if (this.isInApp) {
       // 设置app导航名称
       this.$appFn.dggSetTitle(
@@ -158,21 +150,6 @@ export default {
       )
       // 设置终端和平台
     }
-    this.formData.terminalCode = this.isInApp
-      ? 'COMDIC_TERMINAL_APP'
-      : 'COMDIC_TERMINAL_WAP'
-    this.formData.terminalName = this.isInApp ? 'APP' : 'WAP'
-    this.formData.platformCode = this.isInApp
-      ? this.appInfo.platformCode
-      : 'COMDIC_PLATFORM_CRISPS'
-    this.formData.platformName = this.isInApp
-      ? this.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
-        ? '企大宝'
-        : this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
-        ? '薯片'
-        : '企大顺'
-      : '薯片'
-    this.formData.userId = this.userId
     this.getComplainCategory()
   },
   methods: {
@@ -266,6 +243,21 @@ export default {
       }
     },
     async getComplainCategory() {
+      this.formData.terminalCode = this.isInApp
+        ? 'COMDIC_TERMINAL_APP'
+        : 'COMDIC_TERMINAL_WAP'
+      this.formData.terminalName = this.isInApp ? 'APP' : 'WAP'
+      this.formData.platformCode = this.isInApp
+        ? this.appInfo.platformCode
+        : 'COMDIC_PLATFORM_CRISPS'
+      this.formData.platformName = this.isInApp
+        ? this.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
+          ? '企大宝'
+          : this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
+          ? '薯片'
+          : '企大顺'
+        : '薯片'
+      this.formData.userId = this.userId
       this.loading = true
       // 获取吐槽分类
       try {
@@ -280,6 +272,9 @@ export default {
       } catch (err) {
         this.loading = false
       }
+    },
+    changeText() {
+      this.formData.content = this.formData.content.substring(0, 200)
     },
   },
 }
