@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 18:46:05
+ * @LastEditTime: 2021-01-06 20:41:29
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/MainGoodsItem.vue
 -->
@@ -37,18 +37,26 @@
           <span class="big-value">{{ mainData.price }}</span>
           <span class="unit">元</span>
         </span>
+
         <sp-stepper
           integer
           step="1"
           button-size="0.40rem"
           input-width="0.80rem"
           min="1"
+          class="goods-count-stepper"
           :value="goodsCount"
           :max="!mainData.numFlag && mainData.maxNum ? mainData.maxNum : 99"
           :async-change="true"
+          :disabled="
+            mainData &&
+            mainData.serviceResourceList &&
+            mainData.serviceResourceList.length >= 1
+          "
           @change="handleCountChange"
           @focus="handleCountFoucs"
           @blur="handleCountBlur"
+          @overlimit="handleOverlimit"
         />
       </div>
       <div v-if="mainData.addServiceList.length" class="goods-service">
@@ -180,6 +188,32 @@ export default {
         })
       }
       this.countStatus = 'blur'
+    },
+
+    // 超过购买限制后的触发
+    handleOverlimit(action) {
+      const { serviceResourceList = [] } = this.mainData || {}
+      let message = ''
+      switch (action) {
+        case 'minus':
+          message = '已经是最小购买数了'
+          break
+        case 'plus':
+          message = '已经是最大购买数了'
+          break
+      }
+      if (
+        Array.isArray(serviceResourceList) &&
+        serviceResourceList.length >= 1
+      ) {
+        message = '选择资源服务后，商品数量不能修改'
+      }
+      this.$xToast.show({
+        message,
+        duration: 1000,
+        icon: 'toast_ic_remind',
+        forbidClick: true,
+      })
     },
 
     // 跳转到详情页面
@@ -345,6 +379,9 @@ export default {
           &::after {
             background-color: #cccccc;
           }
+        }
+        &__input:disabled {
+          color: #1a1a1a;
         }
       }
     }
