@@ -97,15 +97,15 @@ export default {
       headTitle: '税务筹划',
       plannersData: [
         {
-          id: '',
+          id: '7862495547640840192',
           type: '金牌规划师',
           avatarImg: '',
-          name: '',
-          shuPianFen: 138,
-          serverNum: 258,
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
           telephone: 12345679985,
           labels: ['工商注册', '财税咨询', '税务筹划'],
-          jobNum: '',
+          jobNum: '107547',
         },
       ],
       plannersCommon: {
@@ -414,21 +414,23 @@ export default {
     },
     // 规划师模块数据处理
     getPlannersData() {
-      const length =
-        this.result.planlerList.length && this.result.planlerList.length !== 0
-          ? this.result.planlerList.length
-          : 1
+      const length = this.result.planlerList.length
+      if (length > 0) {
+        this.plannersData = []
+      }
       for (let i = 0; i < length; i++) {
-        // 循环头像
-        this.plannersData[i].avatarImg = this.planlerList[i].userHeadUrl
-        // 循环id
-        this.plannersData[i].id = this.planlerList[i].userCentreId
-        // 循环名字
-        this.plannersData[i].name = this.planlerList[i].realName
-        // 循环工号
-        this.plannersData[i].jobNum = this.planlerList[i].loginName
-        // 循环电话
-        this.plannersData[i].telePhone = this.planlerList[i].userPhone
+        const obj = {
+          id: this.planlerList[i].userCentreId,
+          type: '金牌规划师',
+          avatarImg: this.planlerList[i].userHeadUrl,
+          name: this.planlerList[i].realName,
+          shuPianFen: 138,
+          serverNum: 258,
+          telephone: this.planlerList[i].userPhone,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+          jobNum: this.planlerList[i].loginName,
+        }
+        this.plannersData.push(obj)
       }
     },
     // 底部模块数据处理
