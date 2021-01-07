@@ -36,11 +36,11 @@
     <div class="chips">
       <div>
         <div></div>
-        <span>薯片找人</span>
+        <span>顶呱呱</span>
         <div></div>
       </div>
-      <span class="service">薯片找人企业服务平台，2800万用户的选择</span>
-      <span>薯片科技版权所有</span>
+      <span class="service">顶呱呱企业服务平台，2800万用户的选择</span>
+      <span>顶呱呱科技股份版权所有</span>
     </div>
     <div class="positionbox"></div>
   </div>
