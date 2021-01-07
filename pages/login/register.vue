@@ -300,10 +300,16 @@ export default {
 @hint-text-color: #cccccc;
 
 .register {
+  height: 100%;
   .head {
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    /deep/.sp-top-nav-bar {
+      &__left,
+      &__right {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
   }
   .body {
     padding: 58px 60px 0;

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-06 17:01:01
+ * @LastEditTime: 2021-01-07 19:54:09
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/index.vue
 -->
@@ -414,10 +414,16 @@ export default {
 @hint-text-color: #cccccc;
 
 .login {
+  height: 100%;
   .head {
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    /deep/.sp-top-nav-bar {
+      &__left,
+      &__right {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
   }
   .body {
     padding: 58px 60px 0;

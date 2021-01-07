@@ -388,6 +388,8 @@ export default {
     &__img-wrap {
       width: 180px;
       height: 180px;
+      border-radius: 8px;
+      overflow: hidden;
     }
     &__goods-info {
       margin-left: 24px;
@@ -515,8 +517,8 @@ export default {
   }
   &-close {
     position: absolute;
-    top: 32px;
-    right: 32px;
+    top: 46px;
+    right: 46px;
     z-index: 1;
     color: #c8c9cc;
     font-size: 22px;

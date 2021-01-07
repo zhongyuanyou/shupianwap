@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 19:13:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-07 16:10:53
+ * @LastEditTime: 2021-01-07 18:32:56
  * @Description: file content
  * @FilePath: /chips-wap/components/common/sku/SkuServiceStepper.vue
 -->
@@ -127,6 +127,7 @@ export default {
       font-weight: bold;
       color: #222222;
       line-height: 34px;
+      background: #f4f4f4;
     }
   }
 }

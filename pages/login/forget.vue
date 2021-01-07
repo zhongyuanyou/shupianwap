@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 15:48:30
+ * @LastEditTime: 2021-01-07 19:57:35
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/login/forget.vue
+ * @FilePath: /chips-wap/pages/login/forget.vue
 -->
 
 <template>
@@ -257,20 +257,15 @@ export default {
 @hint-text-color: #cccccc;
 
 .forget {
+  height: 100%;
   .head {
-    padding: 0 30px;
-    width: 100%;
-    height: 88px;
-    padding: 24px 30px;
-    .close-btn {
-      line-height: 40px;
-    }
-    .page-title {
-      font-size: 36px;
-      font-weight: bold;
-      color: @title-text-color;
-      line-height: 40px;
-      text-align: center;
+    /deep/.sp-top-nav-bar {
+      &__left,
+      &__right {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
     }
   }
   .body {
