@@ -46,6 +46,7 @@
           class="complaint-content-textarea"
           placeholder="请描述您的问题，有助于快速处理您的反馈额~(最少10个字符)"
           maxlength="200"
+          @input="changeText"
         />
         <span class="complaint-content-label"
           >{{ formData.content.length }}/200</span
@@ -139,7 +140,6 @@ export default {
     }),
   },
   mounted() {
-    console.log('appInfo', this.appInfo)
     if (this.isInApp) {
       // 设置app导航名称
       this.$appFn.dggSetTitle(
@@ -150,21 +150,6 @@ export default {
       )
       // 设置终端和平台
     }
-    this.formData.terminalCode = this.isInApp
-      ? 'COMDIC_TERMINAL_APP'
-      : 'COMDIC_TERMINAL_WAP'
-    this.formData.terminalName = this.isInApp ? 'APP' : 'WAP'
-    this.formData.platformCode = this.isInApp
-      ? this.appInfo.platformCode
-      : 'COMDIC_PLATFORM_CRISPS'
-    this.formData.platformName = this.isInApp
-      ? this.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
-        ? '企大宝'
-        : this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
-        ? '薯片'
-        : '企大顺'
-      : '薯片'
-    this.formData.userId = this.userId
     this.getComplainCategory()
   },
   methods: {
@@ -203,33 +188,31 @@ export default {
           const params = {
             ...this.formData,
           }
-          const res = await complain.add({ axios: this.$axios }, params)
-          if (res.code === 200) {
-            this.formData = {
-              content: '', // 内容
-              feedbackTypeId: '', // 吐槽类型
-              userId: this.userId, // 用户id
-              terminalCode: '', // 终端编码
-              terminalName: '', // 终端名称
-              platformCode: '', // 平台编码
-              platformName: '', // 平台名称
-              images: [],
-            }
-            this.uploader = []
-            this.$refs.spToast.show({
-              message: '提交成功，感谢您的反馈',
-              duration: 1500,
-              forbidClick: true,
-              icon: 'spiconfont-tab_ic_check',
-            })
-          } else {
-            this.$refs.spToast.show({
-              message: res.message,
-              duration: 1500,
-              forbidClick: true,
-            })
+          await complain.add({ axios: this.$axios }, params)
+          this.formData = {
+            content: '', // 内容
+            feedbackTypeId: '', // 吐槽类型
+            userId: this.userId, // 用户id
+            terminalCode: '', // 终端编码
+            terminalName: '', // 终端名称
+            platformCode: '', // 平台编码
+            platformName: '', // 平台名称
+            images: [],
           }
-        } catch (err) {}
+          this.uploader = []
+          this.$refs.spToast.show({
+            message: '提交成功，感谢您的反馈',
+            duration: 1500,
+            forbidClick: true,
+            icon: 'spiconfont-tab_ic_check',
+          })
+        } catch (err) {
+          this.$refs.spToast.show({
+            message: err.message || '添加失败',
+            duration: 1500,
+            forbidClick: true,
+          })
+        }
       }
     },
     // 限制图片大小
@@ -260,6 +243,21 @@ export default {
       }
     },
     async getComplainCategory() {
+      this.formData.terminalCode = this.isInApp
+        ? 'COMDIC_TERMINAL_APP'
+        : 'COMDIC_TERMINAL_WAP'
+      this.formData.terminalName = this.isInApp ? 'APP' : 'WAP'
+      this.formData.platformCode = this.isInApp
+        ? this.appInfo.platformCode
+        : 'COMDIC_PLATFORM_CRISPS'
+      this.formData.platformName = this.isInApp
+        ? this.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
+          ? '企大宝'
+          : this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
+          ? '薯片'
+          : '企大顺'
+        : '薯片'
+      this.formData.userId = this.userId
       this.loading = true
       // 获取吐槽分类
       try {
@@ -274,6 +272,9 @@ export default {
       } catch (err) {
         this.loading = false
       }
+    },
+    changeText() {
+      this.formData.content = this.formData.content.substring(0, 200)
     },
   },
 }

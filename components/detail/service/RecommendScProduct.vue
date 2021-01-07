@@ -140,6 +140,7 @@ export default {
         align-items: center;
         flex-direction: row;
         margin-top: 7px;
+        flex-wrap: wrap;
         &_item {
           padding: 5px 10px;
           background: #f0f2f5;
@@ -149,6 +150,7 @@ export default {
           font-family: PingFang SC;
           font-weight: 400;
           color: #5c7499;
+          margin-bottom: 9px;
         }
       }
       .money {
@@ -156,7 +158,6 @@ export default {
         font-family: PingFang SC;
         font-weight: bold;
         color: #ec5330;
-        margin-top: 9px;
       }
     }
   }
