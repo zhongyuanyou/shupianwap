@@ -57,17 +57,17 @@ export default {
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dt7pia9wkts0000.png',
             name: '工商注册',
-            url: '',
+            url: 'https://shupian.dgg.cn/spread/companyRegister',
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/10ojanu72x40000.png',
             name: '工商变更',
-            url: '',
+            url: 'https://shupian.dgg.cn/spread/businessChange',
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/ffka718bhns0000.png',
             name: '代理记账',
-            url: '',
+            url: 'https://shupian.dgg.cn/spread/agency/',
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/46heblny7180000.png',
@@ -87,7 +87,7 @@ export default {
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/eytmu5t49wo0000.png',
             name: '税收筹划',
-            url: '',
+            url: 'https://shupian.dgg.cn/spread/tax',
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/3vx9o5l3v5w0000.png',
