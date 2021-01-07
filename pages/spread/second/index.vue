@@ -1,55 +1,67 @@
 <template>
   <div class="center">
-    <div>
-      <!--    头部  -->
-      <sp-top-nav-bar
-        title="轻松找服务"
-        background="transparent"
-        title-color="#1A1A1A"
-        ellipsis
-        :fixed="true"
-        :placeholder="true"
-        z-index="999"
-        @on-click-left="back"
-      >
-        <div slot="left" class="head">
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>
-          <sp-icon name="cross" size="0.4rem" @click="close" />
+    <!--    头部  -->
+    <!--      <sp-top-nav-bar-->
+    <!--        title="轻松找服务"-->
+    <!--        background="#ffffff"-->
+    <!--        title-color="#1A1A1A"-->
+    <!--        ellipsis-->
+    <!--        :fixed="true"-->
+    <!--        :placeholder="true"-->
+    <!--        z-index="999"-->
+    <!--      >-->
+    <!--        <template #left>-->
+    <!--          <div class="margin" @click="back">-->
+    <!--            <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>-->
+    <!--          </div>-->
+    <!--          <sp-icon name="cross" size="0.4rem" @click="close" />-->
+    <!--        </template>-->
+    <!--      </sp-top-nav-bar>-->
+    <div class="banner">
+      <!--    城市按钮  -->
+      <div class="banner-button" @click="tabCity">
+        <div class="banner-button-city">
+          {{ currentCity.name || '成都市' }}
         </div>
-      </sp-top-nav-bar>
-      <div class="banner">
-        <!--    城市按钮  -->
-        <div class="banner-button" @click="tabCity">
-          <div class="banner-button-city">{{ currentCity.name || '成都' }}</div>
-          <my-icon
-            name="tap_ic_pen_n"
-            color="#ffffff"
-            size="0.14rem"
-            class="icon banner-button-icon"
-          ></my-icon>
-        </div>
+        <my-icon
+          name="sear_ic_open"
+          color="#ffffff"
+          size="0.14rem"
+          class="icon banner-button-icon"
+        ></my-icon>
       </div>
     </div>
     <div class="form">
       <div class="form-title">您还有一些额外需求要告知我们？</div>
       <sp-field
         v-model="message"
-        rows="4"
-        autosize
+        rows="5"
+        :autofocus="true"
         type="textarea"
         maxlength="300"
         placeholder="更准确的描述需求，将有助于我们为您更好的服务"
         :show-word-limit="true"
         class="form-text"
+        @input="changeFont"
       />
-      <div class="form-read">
+      <div class="form-read" @click="select">
         <div class="form-read-first">
-          <my-icon
-            name="pay_ic_success"
-            size="0.32rem"
-            color="#2E73F5"
-            class="icon"
-          ></my-icon>
+          <div v-if="isSelect" class="form-read-first-icon">
+            <my-icon
+              name="pay_ic_success"
+              size="0.32rem"
+              color="#2E73F5"
+              class="icon"
+            ></my-icon>
+          </div>
+          <div v-else class="form-read-first-icon">
+            <my-icon
+              name="shop_ic_radio_n"
+              size="0.32rem"
+              color="#999999"
+              class="icon"
+            ></my-icon>
+          </div>
           <span>订阅专属服务</span>
         </div>
         <div class="form-read-second">
@@ -76,7 +88,7 @@ export default {
     return {
       message: '',
       data: {},
-      city: '成都',
+      isSelect: true,
     }
   },
   computed: {
@@ -86,13 +98,29 @@ export default {
   },
   mounted() {
     this.data = JSON.parse(localStorage.getItem('data'))
-    console.log(this.data)
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: '免费帮找页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
   },
   methods: {
-    // 回退
-    back() {
-      this.$router.go(-1)
+    // 选中
+    select() {
+      this.isSelect = !this.isSelect
     },
+    // // 回退
+    // back() {
+    //   this.$router.go(-1)
+    // },
+    // // 关闭
+    // close() {
+    //   window.close()
+    // },
+
     // 选择城市
     tabCity() {
       this.$router.push({ path: '/city/choiceCity' })
@@ -121,23 +149,40 @@ export default {
     },
     // 提交表单
     consultForm() {
-      this.data.content['更多需求'] = this.message
-      localStorage.setItem('data', '') // 清空数据
+      if (typeof this.data.content === 'object') {
+        this.data.content['更多需求'] = this.message
+        this.data.content['是否允许电话联系'] = this.isSelect ? '是' : '否'
+      } else {
+        this.data.content = JSON.parse(this.data.content)
+        this.data.content['更多需求'] = this.message
+        this.data.content['是否允许电话联系'] = this.isSelect ? '是' : '否'
+      }
       this.data.formId = this.getDate() // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       this.data.name = '匿名客户'
       this.data.url = window.open
+      this.data.place = this.currentCity.name
       this.data.device = 'wap' // 设备：pc,wap
       this.data.web = 'SP' // 归属渠道：xmt,zytg,wxgzh
       this.data.content = JSON.stringify(this.data.content)
+      console.log(this.data)
       window.promotion.privat.consultForm(this.data, (res) => {
         if (res.error === 0) {
-          // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
-          Toast('提交成功，请注意接听电话')
+          localStorage.setItem('data', '') // 清空数据
           this.message = ''
+          Toast('提交成功，请注意接听电话')
         } else {
           Toast(res.msg)
         }
       })
+    },
+    // 输入框文字发生改变
+    changeFont(val) {
+      const font = document.getElementsByClassName('sp-field__word-num')[0]
+      if (val === '') {
+        font.style.color = '#999999'
+      } else {
+        font.style.color = '#222222'
+      }
     },
   },
   head() {
@@ -155,12 +200,18 @@ export default {
 
 <style scoped lang="less">
 .center {
-  width: 750px;
+  width: @spread-page-width;
   margin: 0 auto;
+}
+.margin {
+  margin-right: 38px;
 }
 .form {
   padding: 64px 40px 24px;
   font-size: 0;
+  &-text::placeholder {
+    color: red;
+  }
   &-title {
     font-size: 36px;
     line-height: 36px;
@@ -178,6 +229,9 @@ export default {
       font-size: 0;
       margin: 0 0 16px 0;
       text-align: left;
+      display: flex;
+      align-items: center;
+      height: 34px;
       & > span {
         margin-left: 17px;
         font-size: 28px;
@@ -205,9 +259,6 @@ export default {
     height: 88px;
   }
 }
-.head {
-  font-weight: lighter;
-}
 .banner {
   height: 320px;
   font-size: 0;
@@ -227,15 +278,27 @@ export default {
     color: #ffffff;
     display: flex;
     align-items: center;
+    line-height: 24px;
+    height: 44px;
     &-icon {
       margin-left: 12px;
     }
   }
 }
-// 头部组件多出线条的修改
-/deep/ .sp-hairline--bottom::after {
-  border: none;
-}
+//// 顶部导航左侧箭头字重
+///deep/ .sp-top-nav-bar__left {
+//  font-weight: lighter;
+//}
+//// 顶部组件居中
+///deep/ .sp-top-nav-bar--fixed {
+//  width: @spread-page-width;
+//  margin-left: 50%;
+//  transform: translateX(-375px);
+//}
+//// 头部组件多出线条的修改
+///deep/ .sp-hairline--bottom::after {
+//  border: none;
+//}
 // 纯文本输入框容器
 /deep/ .sp-field {
   padding: 20px 24px 24px;
@@ -249,7 +312,6 @@ export default {
   font-size: 28px;
   font-weight: 400;
   line-height: 36px;
-  color: #cccccc;
 }
 // 纯文本输入框布局
 /deep/ .sp-cell__value {
@@ -269,7 +331,23 @@ export default {
 /deep/ .sp-field__word-limit {
   font-size: 28px;
   font-weight: 400;
-  color: #cccccc;
+  color: #999999;
   line-height: 28px;
+}
+//输入框下面的多余线条
+/deep/ .sp-cell::after {
+  border-bottom: 0;
+}
+//输入字体颜色
+/deep/ .sp-field__control {
+  color: #222222;
+}
+//占位字的颜色
+/deep/ .sp-field__control::placeholder {
+  color: #999999;
+}
+//动态计数字体
+/deep/ .sp-field__word-num {
+  color: #999999;
 }
 </style>

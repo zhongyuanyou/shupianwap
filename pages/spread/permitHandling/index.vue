@@ -1,6 +1,6 @@
 <template>
   <div class="permit-handling">
-    <TopLocation :title="topTitle" @onCity="onCity" />
+    <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理的许可证业务 -->
       <CompanySelec
@@ -32,17 +32,13 @@
   </div>
 </template>
 <script>
-import { TopNavBar, NavSearch, Icon, Toast, Button } from '@chipspc/vant-dgg'
+import { Button } from '@chipspc/vant-dgg'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import TopLocation from '@/components/spread/companyAlteration/TopLocation'
 import CompanySelec from '@/components/spread/companyAlteration/CompanySelect'
 import SelectDesired from '@/components/spread/companyAlteration/SelectDesired'
 export default {
   components: {
-    [TopNavBar.name]: TopNavBar,
-    [NavSearch.name]: NavSearch,
-    [Icon.name]: Icon,
-    [Toast.name]: Toast,
     [Button.name]: Button,
     TopLocation,
     CompanySelec,
@@ -50,17 +46,16 @@ export default {
   },
   data() {
     return {
-      topTitle: '轻松找服务',
       // 选择变更服务
       actionsServe: [
-        '建造工程',
-        '铁路工程',
-        '港口和航道工程',
-        '水利水电工程',
-        '电力工程',
-        '港口和航道工程',
-        '水利水电工程',
-        '电力工程',
+        '卫生许可证',
+        '道路运输许可证',
+        '医疗器械许可证',
+        '进出口许可证',
+        '食品通道许可证 HOT',
+        '餐饮服务许可证',
+        '医疗器械许可二类备案',
+        '其他许可证',
       ],
       // 是否决策人
       selectActive: [
@@ -100,46 +95,57 @@ export default {
       },
     }
   },
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: '免费帮找页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+  },
   methods: {
     // 城市
     onCity(val) {
-      console.log(val)
       this.cityVal = val
-      console.log(val)
     },
     onSelectServe(val) {
       // 变更服务
       this.xkzlz = val
-      console.log(val)
     },
     onDistrict(item) {
       // 是否决策人
       this.isDecision = item.name
-      console.log(item)
     },
     onTransact(item) {
       // 办理时间
       this.handlingTime = item.name
-      console.log(item)
     },
     onButton() {
       const obj = JSON.stringify({
-        place: this.cityVal.name,
         type: 'xkx',
         xkzlx: this.permission,
         content: {
           主要决策人: this.isDecision,
-          办理时: this.handlingTime,
+          办理时间: this.handlingTime,
         },
       })
       localStorage.setItem('data', obj)
       this.$router.push({ path: '/spread/second' })
     },
   },
+  head() {
+    return {
+      title: '许可办理',
+    }
+  },
 }
 </script>
 <style lang="less" scoped>
 .permit-handling {
+  width: @spread-page-width;
+  margin: 0 auto;
   font-size: 36px;
   .button {
     padding: 24px 40px;
@@ -148,6 +154,9 @@ export default {
     font-family: PingFang SC;
     font-weight: bold;
     color: #ffffff;
+    .sp-button {
+      border-radius: 8px;
+    }
   }
 }
 </style>

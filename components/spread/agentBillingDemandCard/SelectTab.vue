@@ -69,7 +69,7 @@ export default {
 
 <style lang="less" scoped>
 .content-item {
-  margin-bottom: 40px;
+  padding-top: 40px;
   .content-item-title {
     height: 34px;
     font-size: 36px;
@@ -79,7 +79,6 @@ export default {
   }
   .content-item-all-tab {
     display: flex;
-    //justify-content: center;
     flex-wrap: wrap;
     .content-item-one-tab {
       width: 150px;

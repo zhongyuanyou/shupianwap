@@ -2,27 +2,31 @@
   <div class="audit">
     <HeaderNeed />
     <Content />
-    <FixedButtom />
   </div>
 </template>
 
 <script>
 import HeaderNeed from '@/components/spread/auditingService/HeaderNeed'
 import Content from '@/components/spread/auditingService/Content'
-import FixedButtom from '@/components/spread/auditingService/FixedButtom'
 export default {
   name: 'Index',
   components: {
     HeaderNeed,
     Content,
-    FixedButtom,
   },
-  props: {},
   data() {
     return {}
   },
-  computed: {},
-  methods: {},
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: '免费帮找页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+  },
 }
 </script>
 <style lang="less" scoped>

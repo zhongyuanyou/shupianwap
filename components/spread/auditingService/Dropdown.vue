@@ -9,7 +9,6 @@
         class="dropdown-menu-content"
         @click="showDropdownList"
       >
-        <span class="dropdown-menu-content-prefix">我需要</span>
         <span class="dropdown-menu-content-val">{{ dropdownValue }}</span>
         <my-icon
           class="dropdown-menu-content-img"
@@ -40,6 +39,12 @@ export default {
     [Popup.name]: Popup,
   },
   props: {
+    index: {
+      type: Number,
+      default: () => {
+        return ''
+      },
+    },
     title: {
       type: String,
       default: () => {
@@ -61,10 +66,11 @@ export default {
   },
   data() {
     return {
-      dropdownValue: '', // 输入框选中的值
+      dropdownValue: '不限', // 下拉框选中的值
       dropdownShow: false, // 唤起下部弹框
       columns: [], // 数据列表
       defaultActive: 0, // 默认选择下标
+      type: 0,
     }
   },
   methods: {
@@ -81,6 +87,7 @@ export default {
       this.dropdownShow = false
       this.dropdownValue = value
       this.defaultActive = index
+      this.$emit('dropdownValue', this.dropdownValue, this.index)
     },
     // 点击取消时候的事件
     handleCancel() {
@@ -125,8 +132,7 @@ export default {
     .dropdown-menu-content-val {
       flex: none;
       font-size: 28px;
-      font-weight: bold;
-      color: #1a1a1a;
+      color: #222222;
     }
     .dropdown-menu-content-img {
       flex: none;

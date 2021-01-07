@@ -25,7 +25,7 @@
               </div>
               <div>
                 <span>{{ item.actualSales }}</span>
-                <span>成功注册</span>
+                <span>成功案例</span>
               </div>
             </div>
           </div>
@@ -292,7 +292,6 @@ export default {
               }
             }
             > a:first-child {
-              background: #4974f5;
               border-radius: 50%;
               margin-left: 8px;
               display: flex;
