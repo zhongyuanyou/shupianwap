@@ -149,23 +149,22 @@ export default {
         },
         (res) => {}
       )
-      // 设置终端和平台
-      this.formData.terminalCode = this.isInApp
-        ? 'COMDIC_TERMINAL_APP'
-        : 'COMDIC_TERMINAL_WAP'
-      this.formData.terminalName = this.isInApp ? 'APP' : 'WAP'
-      this.formData.platformCode = this.isInApp
-        ? this.appInfo.platformCode
-        : 'COMDIC_PLATFORM_CRISPS'
-      this.formData.platformName = this.isInApp
-        ? this.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
-          ? '企大宝'
-          : this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
-          ? '薯片'
-          : '企大顺'
-        : '薯片'
-      this.formData.userId = this.userId
     }
+    // 设置终端和平台
+    this.formData.terminalCode = this.isInApp
+      ? 'COMDIC_TERMINAL_APP'
+      : 'COMDIC_TERMINAL_WAP'
+    this.formData.terminalName = this.isInApp ? 'APP' : 'WAP'
+    this.formData.platformCode = this.isInApp
+      ? this.appInfo.platformCode
+      : 'COMDIC_PLATFORM_CRISPS'
+    this.formData.platformName = this.isInApp
+      ? this.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
+        ? '企大宝'
+        : this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
+        ? '薯片'
+        : '企大顺'
+      : '薯片'
     this.getComplainCategory()
   },
   methods: {
@@ -184,6 +183,7 @@ export default {
     },
     // 提交
     async submit() {
+      this.formData.userId = this.userId
       if (this.formData.content.length < 10) {
         this.$refs.spToast.show({
           message: '描述问题为必填，长度为10-200个字',
