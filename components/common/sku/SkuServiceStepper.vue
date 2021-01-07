@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 19:13:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-06 20:28:53
+ * @LastEditTime: 2021-01-07 16:10:53
  * @Description: file content
  * @FilePath: /chips-wap/components/common/sku/SkuServiceStepper.vue
 -->
@@ -50,7 +50,7 @@ export default {
     },
     maxNum: {
       type: Number,
-      default: 50,
+      default: 99,
     },
     minNum: {
       type: Number,
