@@ -228,6 +228,8 @@ export default {
     &_list {
       width: 100%;
       height: 284px;
+      border-radius: 12px;
+      overflow: hidden;
       &_item {
         width: 100%;
         height: 258px;

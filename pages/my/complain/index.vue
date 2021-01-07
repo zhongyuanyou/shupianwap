@@ -138,6 +138,14 @@ export default {
       appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
+  watch: {
+    formData: {
+      deep: true,
+      handler(newV, oldV) {
+        this.formData.content = newV.content.Substring(0, 200)
+      },
+    },
+  },
   mounted() {
     console.log('appInfo', this.appInfo)
     if (this.isInApp) {
