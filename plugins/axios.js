@@ -20,9 +20,7 @@ export default function ({ $axios, redirect, app, store }) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
-      if (DGG_SERVER_ENV === 'development') {
-        config.headers.sysCode = 'zdm-api'
-      }
+      config.headers.sysCode = 'crisps-app-wap-bff-api'
       if (
         app.$cookies.get('token', {
           path: '/',
