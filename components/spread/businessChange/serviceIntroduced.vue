@@ -25,7 +25,7 @@
               </div>
               <div>
                 <span>{{ item.actualSales }}</span>
-                <span>成功注册</span>
+                <span>成功案例</span>
               </div>
             </div>
           </div>
