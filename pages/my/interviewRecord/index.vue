@@ -251,6 +251,7 @@ export default {
         const params = {
           id: this.interId,
           type: 0,
+          userId: this.userId,
         }
         const res = await this.$axios.post(interviewApi.cancel, params)
         if (res.code === 200) {
