@@ -584,7 +584,7 @@ export default {
     // 跳转判断
     openIM(url) {
       if (url) {
-        window.open(url, '_blank')
+        window.location.href = url
       } else {
         const planner = this.planner
         this.$root.$emit(
