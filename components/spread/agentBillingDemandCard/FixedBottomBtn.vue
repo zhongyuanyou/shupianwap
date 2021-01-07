@@ -24,6 +24,7 @@ export default {
           公司年收入: data[3].value,
         },
       })
+      console.log(JSON.parse(str))
       localStorage.setItem('data', str)
       // 下一步
       this.$router.push({ path: '/spread/second' })

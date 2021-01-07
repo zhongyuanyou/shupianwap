@@ -3,8 +3,8 @@
     <div class="content-item-title">{{ title }}</div>
     <div class="dropdown-menu">
       <div class="dropdown-menu-content" @click="showDropdownList">
-        <span class="dropdown-menu-content-prefix">请选择</span>
-        <span class="dropdown-menu-content-val">{{ dropdownValue }}</span>
+        <span v-if="!value" class="dropdown-menu-content-prefix">请选择</span>
+        <span v-if="value" class="dropdown-menu-content-val">{{ value }}</span>
         <my-icon
           class="dropdown-menu-content-img"
           name="sear_ic_open"
@@ -21,8 +21,8 @@
         <sp-picker
           title="选择主营业务"
           show-toolbar
-          :default-index="Math.floor(dropList.length / 2)"
-          :columns="dropList"
+          :default-index="Math.floor(options.length / 2)"
+          :columns="options"
           @confirm="onConfirm"
           @cancel="onCancel"
         />
@@ -40,58 +40,62 @@ export default {
     [Picker.name]: Picker,
     [Popup.name]: Popup,
   },
+  props: {
+    title: {
+      type: String,
+      default: () => {
+        return ''
+      },
+    },
+    value: {
+      type: String,
+      default: () => {
+        return ''
+      },
+    },
+    options: {
+      type: Array,
+      default: () => {
+        return [
+          '不限',
+          '科技信息',
+          '广告传媒',
+          '金融投资',
+          '电子贸易',
+          '教育培训',
+          '物业地产',
+          '经济中介',
+          '建筑装饰',
+          '家居建材',
+          '通讯网络',
+          '实业生产',
+          '珠宝服饰',
+          '文化初版',
+          '印刷包装',
+          '餐饮美容',
+          '咨询服务',
+          '食品农业',
+          '会务展览',
+          '物流供应链',
+          '其他',
+        ]
+      },
+    },
+  },
   data() {
     return {
-      title: '您公司的主营业务是什么?',
-      dropList: [
-        '不限',
-        '科技信息',
-        '广告传媒',
-        '金融投资',
-        '电子贸易',
-        '教育培训',
-        '物业地产',
-        '经济中介',
-        '建筑装饰',
-        '家居建材',
-        '通讯网络',
-        '实业生产',
-        '珠宝服饰',
-        '文化初版',
-        '印刷包装',
-        '餐饮美容',
-        '咨询服务',
-        '食品农业',
-        '会务展览',
-        '物流供应链',
-        '其他',
-      ],
-      dropdownValue: '',
       dropdownMenuIsShow: false,
     }
   },
   methods: {
     onChange() {},
     // @--下拉
-    onSelect(item) {
-      // 默认情况下点击选项时不会自动收起
-      // 可以通过 close-on-click-action 属性开启自动收起
-      this.dropdownMenuIsShow = false
-      this.dropdownValue = item
-      this.dropList.forEach((obj) => {
-        if (obj.name === item.name) {
-          obj.color = '#5a79e8'
-        } else {
-          obj.color = '#222222'
-        }
-      })
-    },
     onCancel() {
       this.dropdownMenuIsShow = false
     },
     onConfirm(value, index) {
       this.dropdownMenuIsShow = false
-      this.dropdownValue = value
+      this.$emit('update:value', value)
     },
     showDropdownList() {
       this.dropdownMenuIsShow = true
@@ -122,8 +126,7 @@ export default {
     align-items: center;
     position: relative;
     background: #ffffff;
-    opacity: 0.5;
-    border: 1px solid #cdcdcd;
+    border: 1px solid rgba(205, 205, 205, 0.5);
     border-radius: 4px;
     padding: 0 24px;
     .dropdown-menu-content-prefix {
@@ -136,8 +139,8 @@ export default {
     .dropdown-menu-content-val {
       flex: none;
       font-size: 28px;
-      font-weight: bold;
       color: #1a1a1a;
+      font-weight: 400;
     }
     .dropdown-menu-content-img {
       flex: none;

@@ -9,7 +9,12 @@
         :tab-width-class="item.tabWidthClass"
         :no-margin-right="item.noMarginRight"
       />
-      <Dropdown v-if="item.type === 'dropdown'" />
+      <Dropdown
+        v-if="item.type === 'dropdown'"
+        :title="item.title"
+        :options="item.options"
+        :value.sync="item.value"
+      />
     </div>
   </div>
 </template>
