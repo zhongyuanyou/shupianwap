@@ -509,6 +509,7 @@ export default {
       flex: 1;
       height: 100px;
       background: #ec5330;
+      border: none;
       border-radius: 8px;
     }
   }

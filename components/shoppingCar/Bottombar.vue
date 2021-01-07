@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-28 11:00:06
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-06 10:27:51
+ * @LastEditTime: 2021-01-07 16:24:57
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/Bottombar.vue
 -->
@@ -164,6 +164,7 @@ export default {
       height: 80px;
       background: #ec5330;
       border-radius: 8px;
+      border: none;
       font-size: 28px;
       font-weight: bold;
       color: #ffffff;
