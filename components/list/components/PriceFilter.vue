@@ -174,9 +174,9 @@ export default {
         emitData.fieldValue.end = Number(this.echoData.maxValue) * 100
       } else if (this.echoData.activeItems.length) {
         emitData.fieldValue.start =
-          Number(this.echoData.activeItems[0].ext2.split('-')[0]) * 100
+          Number(this.echoData.activeItems[0].ext2.split('-')[0])
         emitData.fieldValue.end =
-          Number(this.echoData.activeItems[0].ext2.split('-')[1]) * 100
+          Number(this.echoData.activeItems[0].ext2.split('-')[1])
       } else {
         emitData = ''
       }
