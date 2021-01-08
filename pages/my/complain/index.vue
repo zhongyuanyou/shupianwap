@@ -46,6 +46,8 @@
           class="complaint-content-textarea"
           placeholder="请描述您的问题，有助于快速处理您的反馈额~(最少10个字符)"
           maxlength="200"
+          @input="changeText"
+          @blur="textBlur"
         />
         <span class="complaint-content-label"
           >{{ formData.content.length }}/200</span
@@ -59,6 +61,7 @@
             :max-count="3"
             :max-size="20 * 1024 * 1024"
             :after-read="afterRead"
+            :before-delete="beforeDelete"
             @oversize="onOversize"
           >
             <template>
@@ -135,6 +138,9 @@ export default {
     ...mapState({
       userId: (state) => state.user.userInfo.userId,
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
+      appPlatform: (state) => state.app.appPlatform,
+      userInfo: (state) => state.user.userInfo, // 用户信息
     }),
   },
   mounted() {
@@ -146,13 +152,26 @@ export default {
         },
         (res) => {}
       )
-      // 设置终端和平台
+      // 调用安卓权限
+      this.$appFn.dggPermission((res) => {
+        console.log('ress', res)
+      })
     }
+    // 设置终端和平台
     this.formData.terminalCode = this.isInApp
       ? 'COMDIC_TERMINAL_APP'
       : 'COMDIC_TERMINAL_WAP'
-    this.formData.terminalCode = this.isInApp ? 'APP' : 'WAP'
-    this.formData.userId = this.userId
+    this.formData.terminalName = this.isInApp ? 'APP' : 'WAP'
+    this.formData.platformCode = this.isInApp
+      ? this.appInfo.platformCode
+      : 'COMDIC_PLATFORM_CRISPS'
+    this.formData.platformName = this.isInApp
+      ? this.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
+        ? '企大宝'
+        : this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
+        ? '薯片'
+        : '企大顺'
+      : '薯片'
     this.getComplainCategory()
   },
   methods: {
@@ -171,6 +190,7 @@ export default {
     },
     // 提交
     async submit() {
+      this.formData.userId = this.userId
       if (this.formData.content.length < 10) {
         this.$refs.spToast.show({
           message: '描述问题为必填，长度为10-200个字',
@@ -184,6 +204,7 @@ export default {
           forbidClick: true,
         })
       } else {
+        this.loading = true
         try {
           if (this.images.length) {
             this.formData.imgs = this.images.toString()
@@ -191,15 +212,16 @@ export default {
           const params = {
             ...this.formData,
           }
-          const data = await complain.add({ axios: this.$axios }, params)
+          await complain.add({ axios: this.$axios }, params)
+          this.loading = false
           this.formData = {
             content: '', // 内容
             feedbackTypeId: '', // 吐槽类型
             userId: this.userId, // 用户id
-            terminalCode: 'adadasdasd', // 终端编码
-            terminalName: 'dadasd', // 终端名称
-            platformCode: 'adasdad', // 平台编码
-            platformName: 'asdasdas', // 平台名称
+            terminalCode: '', // 终端编码
+            terminalName: '', // 终端名称
+            platformCode: '', // 平台编码
+            platformName: '', // 平台名称
             images: [],
           }
           this.uploader = []
@@ -209,7 +231,14 @@ export default {
             forbidClick: true,
             icon: 'spiconfont-tab_ic_check',
           })
-        } catch (err) {}
+        } catch (err) {
+          this.loading = false
+          this.$refs.spToast.show({
+            message: err.message || '添加失败',
+            duration: 1500,
+            forbidClick: true,
+          })
+        }
       }
     },
     // 限制图片大小
@@ -226,14 +255,19 @@ export default {
       const formData = new FormData()
       formData.append('uploadatalog', 'sp-pt/wap/images')
       formData.append('file', file.file)
+      console.log('file', file)
       this.loading = true
-      this.$axios.post(ossApi.add, formData, config).then((res) => {
+      try {
+        this.$axios.post(ossApi.add, formData, config).then((res) => {
+          this.loading = false
+          if (res.code === 200) {
+            imgs.push(res.data.url)
+            this.images = imgs
+          }
+        })
+      } catch (err) {
         this.loading = false
-        if (res.code === 200) {
-          imgs.push(res.data.url)
-          this.images = imgs
-        }
-      })
+      }
     },
     async getComplainCategory() {
       this.loading = true
@@ -250,6 +284,36 @@ export default {
       } catch (err) {
         this.loading = false
       }
+    },
+    changeText() {
+      this.formData.content = this.formData.content.substring(0, 200)
+    },
+    textBlur() {
+      // 输入框失焦
+      window.scroll(0, 0)
+    },
+    handleImage() {
+      // 上传图片
+      const isAndroid = this.appPlatform.indexOf('iphone')
+      if (isAndroid < 0) {
+        const imgs = this.images
+        this.$appFn.dggPhoneAlbum({ fileId: this.userInfo.fileId }, (res) => {
+          console.log('uploader', res)
+          imgs.push(res.data.filePath)
+          this.images = imgs
+          const obj = {
+            file: {},
+            message: '',
+            content: res.data.filePath,
+          }
+          this.uploader.push(obj)
+        })
+      }
+    },
+    beforeDelete(file, detail) {
+      // 删除图片
+      this.images.splice(detail.index, 1)
+      this.uploader.splice(detail.index, 1)
     },
   },
 }
@@ -287,8 +351,7 @@ export default {
       justify-content: flex-start;
       &-item {
         margin-top: 26px;
-        height: 64px;
-        line-height: 64px;
+        line-height: 30px;
         display: block;
         background: #ffffff;
         border: 1px solid #cdcdcd;
@@ -297,7 +360,7 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #555555;
-        padding: 0px 20px;
+        padding: 20px;
         &:not(:last-child) {
           margin-right: 24px;
         }

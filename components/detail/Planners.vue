@@ -8,17 +8,31 @@
       :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
     >
       <div class="planners_item_lf">
-        <sp-image
-          width="0.8rem"
-          height="0.8rem"
-          round
-          fit="cover"
-          lazy-load
-          :src="item.portrait"
-        />
+        <nuxt-link
+          :to="{
+            path: '/planner/detail',
+            query: { mchUserId: item.mchUserId },
+          }"
+        >
+          <sp-image
+            width="0.8rem"
+            height="0.8rem"
+            round
+            fit="cover"
+            lazy-load
+            :src="item.portrait"
+          />
+        </nuxt-link>
         <div class="info">
           <div class="info_tp">
-            <p class="name">{{ item.userName }}</p>
+            <nuxt-link
+              :to="{
+                path: '/planner/detail',
+                query: { mchUserId: item.mchUserId },
+              }"
+            >
+              <p class="name">{{ item.userName }}</p>
+            </nuxt-link>
             <i class="gold_icon">{{ item.postName }}</i>
           </div>
           <div class="info_bot">
@@ -156,7 +170,8 @@ export default {
       display: block;
       width: 34px;
       height: 34px;
-      background: url('~assets/images/planner/per_img_gold.png') no-repeat;
+      background: url(https://cdn.shupian.cn/sp-pt/wap/images/7cwzjbxvkhs0000.png)
+        no-repeat;
       background-size: 34px 34px;
       position: absolute;
       left: -1px;

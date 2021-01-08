@@ -2,13 +2,13 @@
   <div class="regdemand">
     <!-- 头部加banner -->
     <Header @onCity="onCity" />
-    <div class="content">
+    <div v-show="curentPage === 1" class="content">
       <!-- 公司成立区域 -->
       <div class="company-area">
         <span class="company-area-title">您的公司打算成立在哪个区域？</span>
         <div class="company-area-input" @click="show">
           <input
-            v-model="area"
+            v-model="formData.content.yxblqy"
             type="text"
             placeholder="不限"
             readonly="readonly"
@@ -87,75 +87,111 @@
         show-toolbar
         :default-index="3"
         :columns="actionsRegion"
-        @confirm="onConfirm"
+        @confirm="onCancel"
         @cancel="onCancel"
         @change="onChange"
       />
     </sp-popup>
+    <div v-show="curentPage === 2" class="two-form">
+      <div class="two-form-title">您还有一些额外需求要告知我们？</div>
+      <sp-field
+        v-model="formData.content['备注']"
+        rows="5"
+        :autofocus="true"
+        type="textarea"
+        maxlength="300"
+        placeholder="更准确的描述需求，将有助于我们为您更好的服务"
+        :show-word-limit="true"
+        class="two-form-text"
+        @input="changeFont"
+      />
+      <div class="two-form-read" @click="selectHandle">
+        <div class="two-form-read-first">
+          <div
+            v-if="formData.content['是否允许电话联系'] === '是'"
+            class="two-form-read-first-icon"
+          >
+            <my-icon
+              name="pay_ic_success"
+              size="0.32rem"
+              color="#2E73F5"
+              class="icon"
+            ></my-icon>
+          </div>
+          <div v-else class="two-form-read-first-icon">
+            <my-icon
+              name="shop_ic_radio_n"
+              size="0.32rem"
+              color="#999999"
+              class="icon"
+            ></my-icon>
+          </div>
+          <span>订阅专属服务</span>
+        </div>
+        <div class="two-form-read-second">
+          为您匹配到合适服务时，将在第一时间联系您
+        </div>
+      </div>
+      <button class="two-form-button" @click="consultForm">生成需求卡</button>
+    </div>
+    <Loading-center v-show="loading" title="提交中..." />
   </div>
 </template>
 <script>
-import { Popup, Field, Picker } from '@chipspc/vant-dgg'
-import Header from '../../../components/spread/myDemandCard/companyRegister/header'
-import { planner, dict } from '@/api'
+import { Popup, Field, Picker, Toast, Icon } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import Header from '@/components/spread/myDemandCard/companyRegister/header'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import { planner, dict, userinfoApi, consult } from '@/api'
 export default {
   components: {
     Header,
+    LoadingCenter,
     [Popup.name]: Popup,
     [Field.name]: Field,
     [Picker.name]: Picker,
+    [Toast.name]: Toast,
+    [Icon.name]: Icon,
   },
   data() {
     return {
+      loading: false,
+      curentPage: 1,
       times: ['1个月内', '2个月内', '半年内', '1年内'],
       choose: ['是', '否'],
       chooseActived: 0,
       confirmActived: 0,
       transactActived: 0,
-      ishave: '是', // 是否有地址
-      isconfirm: '是', // 公司信息是否确认完毕
-      istsransact: '1月内', // 打算办理时间
-      area: '',
       isShow: false,
-      actionsRegion: [
-        '锦江区',
-        '青羊区',
-        '金牛区',
-        '武侯区',
-        '成华区',
-        '龙泉驿区',
-        '青白江区',
-        '新都区',
-        '温江区',
-        '金堂县',
-        '双流县',
-        '郫都区',
-        '大邑县',
-        '蒲江县',
-        '新津县',
-        '都江堰市',
-        '彭州市',
-        '邛崃市',
-        '崇州市',
-        '高新区',
-        '天府新区',
-      ],
+      actionsRegion: [],
       cityVal: {
         code: '510100',
         name: '成都市',
       },
+      formData: {
+        type: 'gszc',
+        tel: '', // 电话
+        name: '', // 姓名
+        web: 'sp', // 归属（原网站类型）
+        place: 'all',
+        url: '',
+        content: {
+          yxblqy: '',
+          sydz: '是',
+          公司信息确认完毕: '是',
+          办理时间: '1月内',
+          备注: '',
+          是否允许电话联系: '是',
+        },
+      },
     }
   },
-  mounted() {
-    const param = {
-      platform_type: 'H5', // 平台类型：App，H5，Web
-      app_name: '薯片wap端', // 应用名称
-      product_line: '免费帮找页',
-      current_url: location.href,
-      referrer: document.referrer,
-    }
-    window.sensors.registerPage(param) // 设置公共属性
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+    }),
   },
+  mounted() {},
   methods: {
     // 获取地区
     onCity(val) {
@@ -166,13 +202,8 @@ export default {
     show() {
       this.isShow = true
     },
-    // 选择区域返回到输入框
-    onConfirm(value, index) {
-      this.area = value
-      this.isShow = false
-    },
     onChange(picker, value, index) {
-      this.area = value
+      this.formData.content.yxblqy = value
     },
     onCancel() {
       this.isShow = false
@@ -180,31 +211,21 @@ export default {
     // 获取公司是否有地址的选择
     isChoose(index) {
       this.chooseActived = index
-      this.ishave = this.choose[index]
+      this.formData.content.sydz = this.choose[index]
     },
     // 获取公司信息是否完成的选择
     confirm(index) {
       this.confirmActived = index
-      this.isconfirm = this.choose[index]
+      this.formData.content['公司信息确认完毕'] = this.choose[index]
     },
     // 获取打算办理时间的选择
     isTransact(index) {
       this.transactActived = index
-      this.istsransact = this.times[index]
+      this.formData.content['办理时间'] = this.times[index]
     },
     // 跳转到下一页,存储当前页面信息
     next() {
-      const obj = JSON.stringify({
-        type: 'gszc',
-        yxblqy: this.area,
-        sydz: this.ishave,
-        content: {
-          公司信息确认完毕: this.isconfirm,
-          办理时间: this.istsransact,
-        },
-      })
-      localStorage.setItem('data', obj)
-      this.$router.push({ path: '/spread/myDemandCard/second' })
+      this.curentPage = 2
     },
     // 获取区域信息列表
     async getRegionList(code) {
@@ -220,6 +241,104 @@ export default {
         return
       } catch (error) {
         return Promise.reject(error)
+      }
+    },
+    // 选中
+    selectHandle() {
+      this.formData.content['是否允许电话联系'] =
+        this.formData.content['是否允许电话联系'] === '是' ? '否' : '是'
+    },
+    // 获取当前时间作为 后台判断唯一标识
+    getDate() {
+      const timeStamp = new Date()
+      // 获取当前年
+      const currentYear = JSON.stringify(timeStamp.getFullYear())
+      // 获取当前月
+      const currentMonth = JSON.stringify(timeStamp.getMonth() + 1)
+      // 获取当前日
+      const currentDate = JSON.stringify(timeStamp.getDate())
+      const currentHour = JSON.stringify(timeStamp.getHours()) // 获取当前小时数(0-23)
+      const currentMin = JSON.stringify(timeStamp.getMinutes()) // 获取当前分钟数(0-59)
+      const currentSeconds = JSON.stringify(timeStamp.getSeconds())
+      // 获取当前时间
+      const nowTimeString =
+        currentYear +
+        currentMonth +
+        currentDate +
+        currentHour +
+        currentMin +
+        currentSeconds
+      return nowTimeString
+    },
+    getUserInfo(userId) {
+      return new Promise((resolve) => {
+        // 获取用户信息
+        this.$axios
+          .get(userinfoApi.info, {
+            params: { id: userId },
+          })
+          .then((res) => {
+            if (res.code === 200) {
+              resolve(res.data)
+            } else {
+              this.$xToast.error('获取当前登陆用户的信息失败')
+            }
+          })
+      })
+    },
+    // 提交表单
+    async consultForm() {
+      if (this.loading) {
+        return
+      }
+      const { decodePhone, fullName } = await this.getUserInfo(this.userId)
+      const newFormData = JSON.parse(JSON.stringify(this.formData))
+      newFormData.url = window.location.href
+      newFormData.tel = decodePhone
+      newFormData.name = fullName
+      newFormData.content = JSON.stringify(newFormData.content)
+      this.loading = true
+      // 提交表单
+      consult
+        .consultAdd(newFormData)
+        .then((res) => {
+          this.loading = false
+          this.$xToast.success('添加成功')
+          this.formData = {
+            type: 'gszc',
+            tel: '', // 电话
+            name: '', // 姓名
+            web: 'sp', // 归属（原网站类型）
+            place: 'all',
+            url: '',
+            content: {
+              yxblqy: '',
+              sydz: '是',
+              公司信息确认完毕: '是',
+              办理时间: '1月内',
+              备注: '',
+              是否允许电话联系: '是',
+            },
+          }
+          this.curentPage = 1
+        })
+        .catch((res) => {
+          this.loading = false
+          this.$xToast.show({
+            message: res.message,
+            duration: 1000,
+            icon: 'toast_ic_error',
+            forbidClick: true,
+          })
+        })
+    },
+    // 输入框文字发生改变
+    changeFont(val) {
+      const font = document.getElementsByClassName('sp-field__word-num')[0]
+      if (val === '') {
+        font.style.color = '#999999'
+      } else {
+        font.style.color = '#222222'
       }
     },
   },
@@ -433,6 +552,110 @@ export default {
     position: absolute;
     left: 50%;
     margin-left: calc(-@spread-page-width / 2);
+  }
+}
+.two-form {
+  padding: 64px 40px 24px;
+  font-size: 0;
+  &-text::placeholder {
+    color: red;
+  }
+  &-title {
+    font-size: 36px;
+    line-height: 36px;
+    font-weight: bold;
+    color: #1a1a1a;
+  }
+  &-read {
+    width: 670px;
+    height: 140px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 32px 0 0 24px;
+    margin-bottom: 212px;
+    &-first {
+      font-size: 0;
+      margin: 0 0 16px 0;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      height: 34px;
+      & > span {
+        margin-left: 17px;
+        font-size: 28px;
+        font-weight: 400;
+        color: #222222;
+        line-height: 32px;
+      }
+    }
+    &-second {
+      font-size: 28px;
+      font-weight: 400;
+      color: #999999;
+      line-height: 28px;
+      margin: 0 0 31px 49px;
+    }
+  }
+  &-button {
+    background: #4974f5;
+    border-radius: 8px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffffff;
+    padding: 0;
+    width: 100%;
+    height: 88px;
+  }
+  // 纯文本输入框容器
+  /deep/ .sp-field {
+    padding: 20px 24px 24px;
+    margin: 32px 0;
+    height: 290px;
+    border: 1px solid rgba(205, 205, 205, 0.5);
+    border-radius: 4px;
+  }
+  //文本框字体
+  /deep/ .sp-cell {
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 36px;
+  }
+  // 纯文本输入框布局
+  /deep/ .sp-cell__value {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  /deep/ .sp-field__body {
+    flex: 1;
+    display: block;
+    overflow: scroll;
+  }
+  /deep/ .sp-field__body::-webkit-scrollbar {
+    display: none;
+  }
+  //统计字数
+  /deep/ .sp-field__word-limit {
+    font-size: 28px;
+    font-weight: 400;
+    color: #999999;
+    line-height: 28px;
+  }
+  //输入框下面的多余线条
+  /deep/ .sp-cell::after {
+    border-bottom: 0;
+  }
+  //输入字体颜色
+  /deep/ .sp-field__control {
+    color: #222222;
+  }
+  //占位字的颜色
+  /deep/ .sp-field__control::placeholder {
+    color: #999999;
+  }
+  //动态计数字体
+  /deep/ .sp-field__word-num {
+    color: #999999;
   }
 }
 </style>

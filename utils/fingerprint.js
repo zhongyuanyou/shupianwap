@@ -3,18 +3,16 @@ import Fingerprint from 'fingerprintjs2'
 export default () => {
   return new Promise((resolve, reject) => {
     try {
-      setTimeout(function () {
-        Fingerprint.get(function (components) {
-          // console.log(components) // an array of components: {key: ..., value: ...}
-          const values = components.map(function (component) {
-            return component.value
-          })
-          const key = Fingerprint.x64hash128(values.join(''), 31)
-          resolve(key)
+      Fingerprint.get((components) => {
+        // console.log(components) // an array of components: {key: ..., value: ...}
+        const values = components.map(function (component) {
+          return component.value
         })
-      }, 500)
+        const key = Fingerprint.x64hash128(values.join(''), 31)
+        resolve(key)
+      })
     } catch (error) {
-      reject(new Error(''))
+      resolve('')
     }
   })
 }

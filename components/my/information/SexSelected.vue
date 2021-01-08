@@ -14,8 +14,8 @@
         男
       </div>
       <div
-        :class="['popup_tp_item', 'no_line', { active_item: sex === 2 }]"
-        @click="handleClick(2)"
+        :class="['popup_tp_item', 'no_line', { active_item: sex === 0 }]"
+        @click="handleClick(0)"
       >
         女
       </div>

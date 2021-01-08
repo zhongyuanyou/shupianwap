@@ -17,6 +17,7 @@ export const state = () => ({
   currentCity: {}, // 当前选择的城市
   positionCityName: '', // 当前定位城市的名称
   positionStatus: null, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
+  positionLoading: false, // 重新定位loading弹框
 })
 export const mutations = {
   // 设置当前选择城市
@@ -43,14 +44,21 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
   },
+  UPDATE_LOADING_STADUS(state, boole) {
+    state.positionLoading = boole
+  },
 }
 
 export const actions = {
   POSITION_CITY({ commit, state }, { cityList, type }) {
+    if (type === 'rest') {
+      commit('UPDATE_LOADING_STADUS', true) // 显示loading
+    }
     // 调用城市定位方法
     getPosition()
       .then((res) => {
         if (type === 'rest') {
+          commit('UPDATE_LOADING_STADUS', false) // 隐藏loading
           // 轻提示
           Toast.success({
             duration: 2000,
@@ -82,6 +90,7 @@ export const actions = {
       .catch((err) => {
         console.log(err)
         if (type === 'rest') {
+          commit('UPDATE_LOADING_STADUS', false) // 隐藏loading
           // 轻提示
           Toast.fail({
             duration: 2000,

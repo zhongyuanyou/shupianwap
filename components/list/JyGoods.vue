@@ -32,10 +32,12 @@
           <!--S商品列表-->
           <sp-list
             v-show="listShow"
+            ref="spList"
             v-model="loading"
             :finished="finished"
             :style="{
               maxHeight: maxHeight,
+              paddingBottom: isShowOpenApp ? '45px' : '0',
             }"
             finished-text="没有更多了"
             class="goods-content"
@@ -45,7 +47,6 @@
             <goods-item
               v-for="(_item, _index) in jyGoodsListData[item.code]"
               :key="_index"
-              :item-type="itemType"
               :item-data="_item"
               :goodstype="{ type: 'jy', typeCode: item.ext4 }"
               :search-key="searchText"
@@ -137,16 +138,6 @@ export default {
         return ''
       },
     },
-    itemType: {
-      // 商品列表的类型
-      type: Object,
-      default() {
-        return {
-          type: 'jy',
-          classify: 'wd',
-        }
-      },
-    },
   },
   data() {
     return {
@@ -164,6 +155,11 @@ export default {
       isReq: {}, // 存储当前业态是否已经进行过搜索
     }
   },
+  computed: {
+    isShowOpenApp() {
+      return this.$store.state.app.isShowOpenApp
+    },
+  },
   watch: {
     searchText(val) {
       // 搜索框发生变化时
@@ -172,6 +168,9 @@ export default {
         this.resetAllSelect(this.currentTabJyCode)
         this.initGoodsList()
       }
+    },
+    isShowTabs(val) {
+      if (!val) this.$refs.spTabs.$refs.nav.parentNode.style.display = 'none'
     },
   },
   mounted() {
@@ -328,7 +327,10 @@ export default {
     },
     computedHeight() {
       // 计算列表的最大高
-      const installAPPHeight = this.$refs.installApp
+      const top = this.$refs.spList[0].$el.getBoundingClientRect().top
+      console.log('top', top)
+      this.maxHeight = document.body.clientHeight - top + 'px'
+      /* const installAPPHeight = this.$refs.installApp
         ? this.$refs.installApp[0].$el.clientHeight
         : 10000
       const dropDownMenuHeight = this.$refs.dropDownMenu
@@ -340,14 +342,14 @@ export default {
       )[0]
         ? document.querySelectorAll('.sp-tabs-self .sp-tabs__wrap')[0]
             .clientHeight
-        : 0
-      this.maxHeight =
+        : 0 */
+      /* this.maxHeight =
         document.body.clientHeight -
         installAPPHeight -
         dropDownMenuHeight -
         spTabsHeight -
         topHeight +
-        'px'
+        'px' */
     },
   },
 }

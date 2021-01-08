@@ -67,6 +67,7 @@
       @confirm="exitConfirm"
     />
     <!--E 弹框-->
+    <Loading-center v-show="loading" />
   </div>
 </template>
 
@@ -74,6 +75,7 @@
 import { Button, Image, CenterPopup } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { userinfoApi } from '@/api'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   layout: 'nav',
   name: 'Index',
@@ -81,6 +83,7 @@ export default {
     [Button.name]: Button,
     [Image.name]: Image,
     [CenterPopup.name]: CenterPopup,
+    LoadingCenter,
   },
   data() {
     return {
@@ -93,6 +96,7 @@ export default {
         type: 'functional',
         title: '确定退出吗？',
       },
+      loading: false,
     }
   },
   computed: {
@@ -110,12 +114,12 @@ export default {
     handleAvatar() {
       // 点击头像
       if (!this.userId) {
-        this.$router.push({
+        this.$router.replace({
           name: 'login',
           query: { redirect: this.$route.fullPath },
         })
       } else {
-        this.$router.push('/my/information')
+        this.$router.replace('/my/information')
       }
     },
     handleClickLogin() {
@@ -126,6 +130,7 @@ export default {
       })
     },
     async getUserInfo() {
+      this.loading = true
       // 获取用户信息
       try {
         const params = {
@@ -133,13 +138,16 @@ export default {
           id: this.userId,
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
+        this.loading = false
         if (res.code === 200 && res.data && typeof res.data === 'object') {
           this.info = res.data
         } else {
           // 清除用户缓存信息
           this.$store.dispatch('user/clearUser')
         }
-      } catch (err) {}
+      } catch (err) {
+        this.loading = false
+      }
     },
     handleClick(val) {
       if (val === 2) {
@@ -162,6 +170,7 @@ export default {
       const res = await this.$axios.get(userinfoApi.loginOut, { params })
       if (res.code === 200) {
         // 清除cookie中的数据
+        this.info.url = ''
         this.$store.dispatch('user/clearUser')
       }
     },

@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="isShow"
-    :class="{ 'fixed-head': fixed }"
+    :class="{ 'fixed-head': fixed, 'safe-area-top': useSafeAreaClass }"
     :style="{
       height: headHeight,
       'padding-top': safeTop + 'px',
@@ -10,7 +10,7 @@
   >
     <div
       class="my-head"
-      :class="headClass"
+      :class="myHeadClass"
       :style="{ height: headHeight, 'padding-top': safeTop + 'px' }"
     >
       <div class="my-head-row">
@@ -68,6 +68,7 @@ export default {
     return {
       isShow: true,
       safeTop: 20, // 顶部安全区的高度
+      useSafeAreaClass: false,
     }
   },
   computed: {
@@ -81,9 +82,20 @@ export default {
       }
       return this.height
     },
+    myHeadClass() {
+      return this.useSafeAreaClass
+        ? `${this.headClass} safe-area-top`
+        : this.headClass
+    },
+  },
+  created() {
+    // 因为通过中间件ua获取到了 isInApp 的值，故可以在服务端设置，避免页面上头部抖动
+    if (process && process.server && !this.isInApp) {
+      this.safeTop = 0
+      this.useSafeAreaClass = true
+    }
   },
   mounted() {
-    console.log(1)
     this.getTopMargin()
   },
   methods: {
@@ -141,6 +153,10 @@ export default {
     top: 50%;
     z-index: 2;
     transform: translateY(-50%);
+  }
+  .safe-area-top {
+    padding-top: constant(safe-area-inset-top);
+    padding-top: env(safe-area-inset-top);
   }
 }
 .fixed-head {

@@ -62,10 +62,12 @@
                   color: selectList.length
                     ? step == 0
                       ? selectList[0] &&
+                        selectList[0].name &&
                         cItem.name.indexOf(selectList[0].name) > -1
                         ? '#4974F5'
                         : '#222'
                       : selectList[1] &&
+                        selectList[1].name &&
                         cItem.name.indexOf(selectList[1].name) > -1
                       ? '#4974F5'
                       : '#222'
@@ -73,10 +75,12 @@
                   fontWeight: selectList.length
                     ? step == 0
                       ? selectList[0] &&
+                        selectList[0].name &&
                         cItem.name.indexOf(selectList[0].name) > -1
                         ? 'bold'
                         : 'normal'
                       : selectList[1] &&
+                        selectList[1].name &&
                         cItem.name.indexOf(selectList[1].name) > -1
                       ? 'bold'
                       : 'normal'
@@ -91,9 +95,11 @@
                     selectList.length &&
                     ((step == 0 &&
                       selectList[0] &&
+                      selectList[0].name &&
                       cItem.name.indexOf(selectList[0].name) > -1) ||
                       (step == 1 &&
                         selectList[1] &&
+                        selectList[1].name &&
                         cItem.name.indexOf(selectList[1].name) > -1))
                   "
                   name="success"
@@ -120,6 +126,7 @@
       </sp-index-bar>
     </div>
     <!-- E 内容 -->
+    <LoadingCenter v-show="loading" />
   </sp-popup>
 </template>
 
@@ -128,6 +135,7 @@ import { Popup, IndexAnchor, IndexBar, Icon } from '@chipspc/vant-dgg'
 import pyjs from 'js-pinyin'
 import Header from '~/components/common/areaSelected/components/Header'
 import { dict } from '~/api'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'CitySelect',
   components: {
@@ -136,6 +144,7 @@ export default {
     SpIndexBar: IndexBar,
     SpIcon: Icon,
     Header,
+    LoadingCenter,
   },
   props: {
     show: {
@@ -160,6 +169,7 @@ export default {
       cityArr: [],
       city: [], // 所有有数据的城市集合
       cityList: [],
+      loading: false, // 加载状态
       FristPin: [
         'A',
         'B',
@@ -351,14 +361,19 @@ export default {
       })
     },
     async getCityList() {
+      this.loading = true
       try {
         const res = await dict.findCmsTier(
           { axios: this.$axios },
           { code: '2147483647' }
         )
-        this.cityList = res || []
+        this.loading = false
+        this.cityList = res
         this.initCity(this.cityList)
-      } catch (err) {}
+      } catch (err) {
+        this.loading = false
+        this.cityList = []
+      }
     },
   },
 }

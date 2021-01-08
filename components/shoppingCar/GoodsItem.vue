@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-31 17:07:11
+ * @LastEditTime: 2021-01-08 09:56:17
  * @Description: file content
- * @FilePath: /chips-wap/client/components/shoppingCar/GoodsItem.vue
+ * @FilePath: /chips-wap/components/shoppingCar/GoodsItem.vue
 -->
 <template>
   <div
@@ -18,6 +18,8 @@
       :sku-data="formateSkuData"
       :goods="tempGoods"
       @operation="handleOperation"
+      @open="handleOpenSku"
+      @closed="handleClosedSku"
     />
     <sp-swipe-cell
       ref="swipeCell"
@@ -81,9 +83,6 @@
     <!--S loding-->
     <LoadingCenter v-show="loading" />
     <!--E loding-->
-    <!--S 中间轻提示-->
-    <SpToast ref="spToast" />
-    <!--E 中间轻提示-->
   </div>
 </template>
 
@@ -97,12 +96,17 @@ import ViceGoodsItem from './ViceGoodsItem'
 import SkuService from '@/components/common/sku/SkuService'
 import AsyncCheckbox from '@/components/common/checkbox/AsyncCheckbox'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
-import SpToast from '@/components/common/spToast/SpToast'
 
 import clone from '@/utils/clone'
 import fingerprint from '@/utils/fingerprint'
 
 import { shoppingCar } from '@/api'
+
+const SHOP_RESTRICTION = {
+  unrestricted: 'PRO_SHOP_RESTRICTION_ALL', // 无限制
+  restrictedNumber: 'PRO_SHOP_RESTRICTION_NUMBER', // 限制数量
+  forbid: 'PRO_SHOP_RESTRICTION_NO', // 禁止购买
+}
 
 export default {
   name: 'GoodsItem',
@@ -115,7 +119,6 @@ export default {
     SkuService,
     AsyncCheckbox,
     LoadingCenter,
-    SpToast,
   },
   props: {
     commodityData: {
@@ -135,6 +138,7 @@ export default {
       loading: false,
       skuData: {
         productId: '',
+        picture: '',
         name: '',
         productNo: '',
         referencePrice: '', // 参考价格
@@ -142,21 +146,17 @@ export default {
         shopRestriction: '', // 限制购买
         skuAttrList: [], // 属性列表
         serviceGoodsClassList: [], // 服务资源列表
-        goodsId: '',
-        goodsNo: '',
         specialItemList: [], // 增值服务项
-        salesPriceSum: '',
-        settlementPriceSum: '',
       },
       tempGoods: {
+        picture: '',
         goodsId: '',
         goodsNo: '',
-        name: '',
         skuAttrKey: '', // 选中sku列表逗号隔开
         goodsNumber: 0,
-        serviceResourceList: [], // 服务资源
         price: '',
         productId: '',
+        serviceResourceList: [], // 服务资源
         addServiceList: [], // 增值服务
       },
       config: { userId: '', deviceCode: '', reqArea: '', terminalCode: '' }, // 不同平台的配置
@@ -177,6 +177,8 @@ export default {
         productId,
         name,
         productNo,
+        shopRestrictionNumber,
+        shopRestriction,
         referencePrice,
         skuAttrList,
         serviceGoodsClassList,
@@ -237,6 +239,15 @@ export default {
           })
         : []
 
+      // 获取购买的最大数量
+      let maxNumber =
+        shopRestriction === SHOP_RESTRICTION.restrictedNumber &&
+        shopRestrictionNumber
+          ? shopRestrictionNumber
+          : 99
+      maxNumber = Number(maxNumber)
+      if (isNaN(maxNumber)) maxNumber = 1
+
       return {
         tree,
         resourceServiceList,
@@ -245,6 +256,7 @@ export default {
         name,
         productNo,
         referencePrice,
+        maxNumber,
       }
     },
   },
@@ -303,7 +315,7 @@ export default {
           this.changeSkuCount(data)
           break
         case 'resourceServiceSelect': // sku弹出框里资源服务
-          this.$emit('operation', {
+          this.openResourceService({
             data,
             type,
             cartId,
@@ -312,6 +324,22 @@ export default {
           break
       }
     },
+    handleOpenSku() {
+      const { cartId } = this.commodityData
+      this.$emit('operation', {
+        type: 'skuOpen',
+        cartId,
+        index: this.index,
+      })
+    },
+    handleClosedSku() {
+      const { cartId } = this.commodityData
+      this.$emit('operation', {
+        type: 'skuClosed',
+        cartId,
+        index: this.index,
+      })
+    },
     async openSku() {
       if (!this.skuData.skuAttrList || !this.skuData.skuAttrList.length) {
         await this.getSkuData()
@@ -319,6 +347,7 @@ export default {
       const {
         skuId,
         skuAttrKey,
+        goodsNo,
         goodsNumber,
         serviceResourceList,
         price,
@@ -326,9 +355,13 @@ export default {
         addServiceList,
       } = this.commodityData
 
+      const { picture } = this.skuData
+
       this.tempGoods = {
+        picture,
         goodsId: skuId,
         skuAttrKey,
+        goodsNo,
         goodsNumber,
         price,
         productId,
@@ -357,13 +390,13 @@ export default {
           this.loading = false
         })
         .catch(() => {
+          this.loading = false
           this.$xToast.show({
             message: '选择失败',
             duration: 1000,
             icon: 'toast_ic_remind',
             forbidClick: true,
           })
-          this.loading = false
         })
     },
 
@@ -417,7 +450,6 @@ export default {
 
     // 加入购物车
     addShoppingCar(data = {}) {
-      // const {} = data
       console.log(data)
       const {
         goodsId,
@@ -440,7 +472,7 @@ export default {
           type: 2,
         })
       })
-
+      this.loading = true
       this.postUpdate({
         value: goodsNumber,
         cartId: this.commodityData.cartId,
@@ -450,12 +482,18 @@ export default {
         type: 'updateSkuItem',
       })
         .then((data) => {
+          this.loading = false
           this.show = false
-          this.$emit('operation', {
-            type: 'refresh',
-          })
+          // 关闭动画有300ms，等动画关闭完，再刷新
+          setTimeout(() => {
+            this.$emit('operation', {
+              type: 'refresh',
+              data,
+            })
+          }, 250)
         })
         .catch(() => {
+          this.loading = false
           this.$xToast.show({
             message: '加入购物车失败',
             duration: 1000,
@@ -468,6 +506,20 @@ export default {
     // 修改sku弹出框 商品的数量
     changeSkuCount(value) {
       this.tempGoods.goodsNumber = value
+    },
+
+    // 打开资源服务选择页面
+    openResourceService(value) {
+      if (this.tempGoods.goodsNumber > 1) {
+        this.$xToast.show({
+          message: '服务资源不支持单次多个购买，请先将购买数设置为1',
+          duration: 1500,
+          forbidClick: false,
+          icon: 'toast_ic_remind',
+        })
+        return
+      }
+      this.$emit('operation', value)
     },
 
     // 资源服务的选择
@@ -559,8 +611,8 @@ export default {
       try {
         this.loading = true
         const config = await this.uPGetConfig()
-        const productId = this.commodityData.productId // '607991345402771561'
-        const attrValKey = this.commodityData.skuAttrKey // SXZ20201211050014
+        const productId = this.commodityData.productId
+        const attrValKey = this.commodityData.skuAttrKey
         const productPromise = shoppingCar.productDetail({ productId }, config)
         const skuPromise = this.getGoodsDetail(attrValKey)
         const [productDetail = {}, skuDetail = {}] = await Promise.all([
@@ -569,17 +621,32 @@ export default {
         ])
 
         const {
-          skuAttrList, // 属性列表
-          serviceGoodsClassList, // 服务资源列表
           name,
           referencePrice, // 参考价格
           productNo,
+          id,
+          skuAttrList, // 属性列表
+          serviceGoodsClassList, // 服务资源列表
           operating = {},
+          clientDetails = [], // 图片地址列表
         } = productDetail
 
-        const { shopRestrictionNumber, shopRestriction } = operating
+        let picture = ''
+        // 后端过来的数据嵌套太他妈深了，为了获取一张图片，一堆判断
+        if (
+          Array.isArray(clientDetails) &&
+          clientDetails[0] &&
+          Array.isArray(clientDetails[0].imgUrlList) &&
+          clientDetails[0].imgUrlList[0]
+        ) {
+          picture = clientDetails[0].imgUrlList[0]
+        }
 
+        const { shopRestrictionNumber, shopRestriction } = operating
+        const { specialItemList } = skuDetail || {}
         const data = {
+          productId: id,
+          picture,
           name,
           productNo,
           referencePrice,
@@ -587,7 +654,7 @@ export default {
           shopRestriction,
           skuAttrList,
           serviceGoodsClassList,
-          ...skuDetail,
+          specialItemList,
         }
         this.skuData = data
         this.loading = false
@@ -596,7 +663,7 @@ export default {
       } catch (error) {
         console.error('getList:', error)
         this.loading = false
-        this.$refs.spToast.show({
+        this.$xToast.show({
           message: '获取sku失败',
           duration: 1000,
           forbidClick: false,
@@ -618,16 +685,18 @@ export default {
           id,
           specialItemList, // 增值服务项
           goodsNo,
-          salesPriceSum, // 销售价格
-          settlementPriceSum, // 结算价格
+          priceResult = {},
         } = goodsDetail
+
+        const {
+          salesPriceSum, // 销售价格
+        } = priceResult
+
         const data = {
           goodsId: id,
           goodsNo,
           productId,
           specialItemList,
-          salesPriceSum,
-          settlementPriceSum,
         }
         this.tempGoods = { ...this.tempGoods, ...data, price: salesPriceSum }
         console.log(data)

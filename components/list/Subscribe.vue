@@ -29,7 +29,7 @@
         </sp-field>
       </template>
       <div v-else class="already-login">
-        <span>{{ phone }}</span>
+        <span>{{ userPhone }}</span>
       </div>
       <div class="submit" @click="submitSubscribe">
         <span>免费订阅通知</span>
@@ -40,9 +40,8 @@
 
 <script>
 import { Field } from '@chipspc/vant-dgg'
-import { auth, userinfoApi } from '@/api'
+import { auth, userinfoApi, consult } from '@/api'
 import { checkPhone, checkAuthCode } from '@/utils/check.js'
-import util from '@/utils/spread/util'
 
 export default {
   name: 'Subscribe',
@@ -71,13 +70,16 @@ export default {
       smsStr: '获取验证码',
       count: 60,
       isSendSMS: false,
-      userInfo: null,
+      userInfo: {},
       phone: '',
     }
   },
-  watch: {
-    userInfo(val) {
-      this.phone = util.numberSuitScanf(val.mainAccount)
+  computed: {
+    userPhone() {
+      const { userInfo } = this
+      if ('decodePhone' in userInfo) return userInfo.decodePhone
+      if ('nickName' in userInfo) return userInfo.nickName
+      return ''
     },
   },
   mounted() {
@@ -136,6 +138,24 @@ export default {
           phone: this.tel,
           type: 'default',
         }
+        // consult
+        //   .getCMSCode({
+        //     tel: this.tel,
+        //     type: 'zc',
+        //   })
+        //   .then((res) => {
+        //     console.log(res)
+        //     this.isSendSMS = true
+        //     this.countDown()
+        //   })
+        //   .catch(() => {
+        //     this.$xToast.show({
+        //       message: '网络错误，请稍后再试',
+        //       duration: 1000,
+        //       icon: 'toast_ic_error',
+        //       forbidClick: true,
+        //     })
+        //   })
         auth
           .smsCode({ axios: this.$axios }, params)
           .then((res) => {

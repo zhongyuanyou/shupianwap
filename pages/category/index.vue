@@ -36,18 +36,24 @@
       <!--S 二级分类区域-->
       <section ref="r_list" class="category_con_rt">
         <div>
-          <div v-if="recommendData.length" class="swiper">
-            <div class="proList swiper_con">
+          <div
+            v-if="recommendData.length"
+            ref="good"
+            class="proList swiper"
+            style="padding-top: 0"
+          >
+            <div class="swiper_con">
               <sp-swipe
                 class="my-swipe"
                 :autoplay="3000"
                 indicator-color="white"
                 :show-indicators="false"
+                :touchable="false"
               >
                 <sp-swipe-item
                   v-for="(item, index) of recommendData"
                   :key="index"
-                  @click="handleImage(item)"
+                  @click="adJumpHandleMixin(item.materialList[0])"
                 >
                   <sp-image
                     fit="cover"
@@ -83,7 +89,9 @@
     </div>
     <Loading-center v-show="loading" />
     <!--E 内容区-->
-    <openApp />
+    <client-only>
+      <openApp />
+    </client-only>
   </div>
 </template>
 
@@ -93,6 +101,7 @@ import Better from 'better-scroll'
 import { Swipe, SwipeItem, Image } from '@chipspc/vant-dgg'
 import { category } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import adJumpHandle from '~/mixins/adJumpHandle'
 
 export default {
   name: 'Index',
@@ -102,6 +111,7 @@ export default {
     [Image.name]: Image,
     LoadingCenter,
   },
+  mixins: [adJumpHandle],
   data() {
     return {
       keywords: '',
@@ -152,7 +162,7 @@ export default {
                 this.$refs.l_list,
                 100,
                 0,
-                this.TabNavList * 68
+                this.TabNavList * 62
               )
             }
           }
@@ -166,7 +176,7 @@ export default {
         // 根据betterScroll定义滚动
         if (rightItems && rightItems.length > 0) {
           let height = 0
-          this.arr.push(height)
+          // this.arr.push(height)
           for (let i = 0; i < rightItems.length; i++) {
             const item = rightItems[i]
             height += item.clientHeight
@@ -221,10 +231,6 @@ export default {
     },
     goSearch() {
       this.$router.push('/search')
-    },
-    handleImage(item) {
-      // 点击广告图片
-      this.$router.push(item.materialList[0].wapLink)
     },
   },
 }
@@ -308,6 +314,7 @@ export default {
         height: 124px;
         font-size: 26px;
         font-family: PingFang SC;
+        padding: 0 20px;
         font-weight: 400;
         color: #555555;
         text-align: center;
@@ -345,6 +352,7 @@ export default {
         width: 100%;
         overflow: hidden;
         border-radius: 8px;
+        padding-top: 0;
         &_con {
           padding-top: 16px;
         }
@@ -354,6 +362,9 @@ export default {
         text-align: center;
         background-color: #f8f8f8;
         height: 164px;
+        /deep/ .sp-image__img {
+          border-radius: 8px;
+        }
         .swipe_img {
           width: 100%;
           height: 164px;
@@ -361,9 +372,6 @@ export default {
       }
       .proList {
         padding-top: 48px;
-        &:first-child {
-          padding-top: 0;
-        }
         .title {
           font-size: 30px;
           font-family: PingFang SC;
@@ -377,17 +385,16 @@ export default {
           flex-direction: row;
           flex-wrap: wrap;
           &_child {
-            height: 60px;
             background: #ffffff;
             border: 1px solid #cdcdcd;
             border-radius: 4px;
-            line-height: 60px;
+            line-height: 25px;
             margin: 32px 32px 0 0;
             font-size: 24px;
             font-family: PingFang SC;
             font-weight: 400;
             color: #555555;
-            padding: 0 21px;
+            padding: 21px;
           }
         }
       }

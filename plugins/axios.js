@@ -1,7 +1,9 @@
 import qs from 'qs'
 import { saveAxiosInstance } from '@/utils/request'
+const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
 const BASE = require('~/config/index.js')
 export default function ({ $axios, redirect, app, store }) {
+  $axios.defaults.withCredentials = false
   // 设置基本URL
   if (process.server) {
     $axios.defaults.baseURL = BASE.baseURL
@@ -18,7 +20,13 @@ export default function ({ $axios, redirect, app, store }) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
-      config.headers.sysCode = 'crisps-app-wap-bff-tgapi'
+      if (DGG_SERVER_ENV === 'development') {
+        // 本地根据自己的需求进行配置
+        config.headers.sysCode = 'crisps-app-wap-bff-api'
+      } else {
+        // 在app正式上线未做负载前,此sysCode不修改
+        config.headers.sysCode = 'crisps-app-wap-bff-api'
+      }
       if (
         app.$cookies.get('token', {
           path: '/',
@@ -55,8 +63,13 @@ export default function ({ $axios, redirect, app, store }) {
       const result = response.data
       const code = result.code
       if (process.env.NODE_ENV === 'production') {
+        // 在登录失效的情况下，wap里面跳转到 我的
         if (code === 5223) {
-          redirect('/404')
+          // 清空登录信息
+          store.commit('user/CLEAR_USER')
+          if (!store.state.app.isInApp) {
+            redirect('/my')
+          }
         }
       }
       return result
