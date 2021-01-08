@@ -4,11 +4,12 @@
     <div class="sidebar-navbar-list">
       <sp-sidebar v-model="activeKey" @change="onChange">
         <sp-sidebar-item
-          v-for="(item, index) of 5"
+          v-for="(item, index) of 4"
           :key="index"
-          :title="`标签${index}`"
+          :title="`咨询分${index}`"
         />
       </sp-sidebar>
+      <div class="sidebar-navbar-list-content">12321</div>
     </div>
   </div>
 </template>
@@ -59,19 +60,40 @@ export default {
     line-height: 40px;
   }
   &-list {
+    position: relative;
     margin: 0 40px;
     width: 670px;
     height: 416px;
     background: #ffffff;
     border: 1px solid rgba(205, 205, 205, 0.5);
     border-radius: 4px 4px 12px 12px;
+    &-content {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: inline-block;
+      width: 502px;
+      height: 416px;
+      border: 1px solid red;
+    }
   }
   /deep/.sp-sidebar {
+    height: 100%;
+    background-color: #f4f4f4;
     .sp-sidebar-item {
-      padding: 32px 0 32px 32px;
+      width: 168px;
+      line-height: 25px;
+      padding: 32px 8px 32px 32px;
+      background-color: #f4f4f4;
     }
     .sp-sidebar-item--select {
       color: #4974f5;
+      background-color: #ffffff;
+      &::before {
+        width: 4px;
+        height: 22px;
+        background: #4974f5;
+      }
     }
   }
 }
