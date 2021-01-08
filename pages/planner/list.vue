@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-06 14:40:12
+ * @LastEditTime: 2021-01-08 12:03:21
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/list.vue
 -->
@@ -295,8 +295,11 @@ export default {
   },
   created() {
     if (process && process.client) {
-      this.uPGetRegion()
-      this.onLoad()
+      this.uPGetCurrentRegion().then((data) => {
+        const { code } = data || {}
+        this.onLoad()
+        this.getRegionList(code)
+      })
     }
   },
   mounted() {
@@ -406,32 +409,35 @@ export default {
     },
 
     // 统一平台 区域设置
-    uPGetRegion() {
-      // app 上获取区域code
-      if (this.isInApp) {
-        this.$appFn.dggCityCode((res) => {
-          const { code, data } = res || {}
-          if (code !== 200) {
-            this.$xToast.show({
-              message: '当前区域获取失败',
-              duration: 1000,
-              forbidClick: true,
-              icon: 'toast_ic_remind',
-            })
-            return
-          }
+    uPGetCurrentRegion() {
+      return new Promise((resolve, reject) => {
+        const { code } = this.currentCity || {}
+        if (code) {
+          resolve({ code })
+          return
+        }
+        // app 上获取区域code
+        if (this.isInApp) {
+          this.$appFn.dggCityCode((res) => {
+            const { code, data } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '当前区域获取失败',
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_remind',
+              })
+              reject(res)
+              return
+            }
 
-          const { adCode, cityName } = data
-          console.log('dggCityCode:', res)
-          this.getRegionList(adCode)
-          this.SET_CITY({ code: adCode, name: cityName }) // 设置当前的定位到vuex中
-        })
-        return
-      }
-
-      // 浏览器上逻辑
-      const { code } = this.currentCity || {}
-      this.getRegionList(code)
+            const { adCode, cityName } = data
+            console.log('dggCityCode:', res)
+            this.SET_CITY({ code: adCode, name: cityName }) // 设置当前的定位到vuex中
+            resolve({ code: adCode })
+          })
+        }
+      })
     },
 
     // 拨打电话号码
