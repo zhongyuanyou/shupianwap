@@ -174,7 +174,7 @@ export default {
       }
       data.type = 'gszr'
       localStorage.setItem('data', JSON.stringify(data))
-      this.$router.push('/spread/second')
+      this.$router.push('/spread/myDemandCard/second')
     },
   },
 }
