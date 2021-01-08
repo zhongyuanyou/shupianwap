@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-07 18:14:13
+ * @LastEditTime: 2021-01-08 09:40:51
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/MainGoodsItem.vue
 -->
@@ -46,7 +46,7 @@
           min="1"
           class="goods-count-stepper"
           :value="goodsCount"
-          :max="!mainData.numFlag && mainData.maxNum ? mainData.maxNum : 99"
+          :max="maxNum"
           :async-change="true"
           :disabled="
             mainData &&
@@ -95,6 +95,12 @@ import {
   Stepper,
 } from '@chipspc/vant-dgg'
 
+const SHOP_RESTRICTION = {
+  unrestricted: 'PRO_SHOP_RESTRICTION_ALL', // 无限制
+  restrictedNumber: 'PRO_SHOP_RESTRICTION_NUMBER', // 限制数量
+  forbid: 'PRO_SHOP_RESTRICTION_NO', // 禁止购买
+}
+
 export default {
   name: 'MainGoodsItem',
   components: {
@@ -124,6 +130,15 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
     }),
+
+    maxNum() {
+      const { numFlag, maxNum } = this.mainData || {}
+      let max =
+        numFlag === SHOP_RESTRICTION.restrictedNumber && maxNum ? maxNum : 99
+      max = Number(max)
+      if (isNaN(max)) max = 1
+      return max
+    },
   },
   watch: {
     // 'mainData.goodsNumber': {

@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import SelectTab from '@/components/spread/agentBillingDemandCard/SelectTab'
-import Dropdown from '@/components/spread/agentBillingDemandCard/Dropdown'
+import SelectTab from '~/components/spread/myDemandCard/agentBilling/SelectTab'
+import Dropdown from '~/components/spread/myDemandCard/agentBilling/Dropdown'
 export default {
   name: 'Question',
   components: {

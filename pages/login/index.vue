@@ -219,7 +219,7 @@ export default {
           return
         }
 
-        this.$router.push(this.redirect)
+        this.$router.replace(this.redirect)
       })
     },
     handleSwitchLookPassword() {
@@ -228,7 +228,8 @@ export default {
     },
     onClickLeft() {
       console.log('关闭')
-      this.$router.push(this.redirect)
+      // this.$router.push(this.redirect)
+      this.$router.back()
     },
     handleClickCodeBtn(isValidTel) {
       if (!isValidTel) {

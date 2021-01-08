@@ -17,9 +17,9 @@
 </template>
 
 <script>
-import HeaderBg from '@/components/spread/agentBillingDemandCard/HeaderBg'
-import FixedBottomBtn from '@/components/spread/agentBillingDemandCard/FixedBottomBtn'
-import Question from '@/components/spread/agentBillingDemandCard/Question'
+import HeaderBg from '@/components/spread/myDemandCard/agentBilling/HeaderBg'
+import FixedBottomBtn from '@/components/spread/myDemandCard/agentBilling/FixedBottomBtn'
+import Question from '@/components/spread/myDemandCard/agentBilling/Question'
 import Header from '~/components/common/head/header'
 export default {
   name: 'Index',

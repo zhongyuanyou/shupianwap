@@ -49,7 +49,7 @@
                 goods.serviceResourceList &&
                 goods.serviceResourceList.length >= 1
               "
-              :max-num="skuData.shopRestrictionNumber"
+              :max-num="skuData.maxNumber"
               @change="handleStepperChange"
               @overLimit="handleStepperLimit"
             />
