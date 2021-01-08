@@ -11,7 +11,7 @@
         </div>
         <img :src="$ossImgSet(85, 85, 'b61p961nyiw0000.png')" alt="" />
       </div>
-      <a href="javascript:void(0);">免费帮找</a>
+      <a href="javascript:void(0);" @click="jumpPage">免费帮找</a>
     </div>
     <div v-if="helpBannerData.length" class="help-moudle-bottom">
       <a
@@ -58,7 +58,11 @@ export default {
   data() {
     return {}
   },
-  methods: {},
+  methods: {
+    jumpPage() {
+      //   this.$router.push('/spread/myDemandCard/companyRegister')
+    },
+  },
 }
 </script>
 
