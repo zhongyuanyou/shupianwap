@@ -55,7 +55,7 @@
       </div>
       <div class="complaint-image">
         <div class="complaint-image-title">上传照片</div>
-        <div class="complaint-image-upload">
+        <div class="complaint-image-upload" @click="handleImage">
           <sp-uploader
             v-model="uploader"
             :max-count="3"
@@ -138,6 +138,7 @@ export default {
       userId: (state) => state.user.userInfo.userId,
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo, // app信息
+      appPlatform: (state) => state.app.appPlatform,
     }),
   },
   mounted() {
@@ -149,6 +150,7 @@ export default {
         },
         (res) => {}
       )
+      console.log('appPlatform', this.appPlatform)
     }
     // 设置终端和平台
     this.formData.terminalCode = this.isInApp
@@ -283,6 +285,35 @@ export default {
     textBlur() {
       // 输入框失焦
       window.scroll(0, 0)
+    },
+    handleImage() {
+      // 上传图片
+      // const isAndroid = this.appPlatform.indexOf('iphone')
+      // if (isAndroid < 0) {
+      //   this.$appFn.dggPhoneAlbum((res) => {
+      //     const config = {
+      //       headers: {
+      //         'Content-Type': 'multipart/form-data',
+      //       },
+      //     }
+      //     const imgs = this.images
+      //     const formData = new FormData()
+      //     formData.append('uploadatalog', 'sp-pt/wap/images')
+      //     formData.append('file', res.data.filePath)
+      //     this.loading = true
+      //     try {
+      //       this.$axios.post(ossApi.add, formData, config).then((res) => {
+      //         this.loading = false
+      //         if (res.code === 200) {
+      //           imgs.push(res.data.url)
+      //           this.images = imgs
+      //         }
+      //       })
+      //     } catch (err) {
+      //       this.loading = false
+      //     }
+      //   })
+      // }
     },
   },
 }
