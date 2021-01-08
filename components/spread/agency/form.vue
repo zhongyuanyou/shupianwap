@@ -128,7 +128,10 @@ export default {
     nums: {
       type: Object,
       default: () => {
-        return {}
+        return {
+          totalNum: 640116,
+          todayNum: 123,
+        }
       },
     },
   },
