@@ -391,7 +391,7 @@ export default {
         this.result.nums.todayNum !== undefined
       ) {
         nbool = true
-        this.nums = this.result.nums
+        this.todayNum = this.result.nums.todayNum
       }
     }
     // 各个数据都返回后再处理各个模块的数据
