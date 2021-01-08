@@ -78,12 +78,6 @@
         <sp-button
           v-if="info.inviteStatus === 0"
           type="primary"
-          @click="handleInterStatus(1)"
-          >确认，已完成面谈</sp-button
-        >
-        <sp-button
-          v-if="info.inviteStatus === 0"
-          type="primary"
           @click="handleInterStatus(0)"
           >取消面谈</sp-button
         >
@@ -301,12 +295,9 @@ export default {
     /deep/ .sp-button--primary {
       width: 100%;
       margin-top: 84px;
-      &:last-child {
-        margin-top: 40px;
-        background-color: rgba(73, 116, 245, 0.1);
-        border: 1px solid rgba(73, 116, 245, 0.1);
-        color: #4974f5;
-      }
+      background-color: rgba(73, 116, 245, 0.1);
+      border: 1px solid rgba(73, 116, 245, 0.1);
+      color: #4974f5;
     }
     .status {
       width: 100%;

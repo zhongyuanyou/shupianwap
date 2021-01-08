@@ -315,7 +315,7 @@ export default {
     },
     handleClick(item) {
       // 点击面谈记录
-      this.$router.push(`/my/interviewRecord/${item.id}`)
+      this.$router.push(`/my/interviewRecord/confirm/${item.id}`)
     },
     handleIm(item) {
       // 调起IM

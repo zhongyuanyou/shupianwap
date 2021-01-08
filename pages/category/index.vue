@@ -48,6 +48,7 @@
                 :autoplay="3000"
                 indicator-color="white"
                 :show-indicators="false"
+                :touchable="false"
               >
                 <sp-swipe-item
                   v-for="(item, index) of recommendData"
@@ -230,10 +231,6 @@ export default {
     },
     goSearch() {
       this.$router.push('/search')
-    },
-    handleImage(item) {
-      // 点击广告图片
-      this.$router.push(item.materialList[0].wapLink)
     },
   },
 }
