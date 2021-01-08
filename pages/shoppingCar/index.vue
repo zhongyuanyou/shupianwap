@@ -4,7 +4,7 @@
  * @LastEditors: Please set LastEditors
  * @LastEditTime: 2021-01-04 14:17:25
  * @Description: 购物车页面
- * @FilePath: /chips-wap/client/pages/shoppingCar/index.vue
+ * @FilePath: /chips-wap/client/pages/shoppingCar/permitHandling.vue
 -->
 
 <template>

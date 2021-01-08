@@ -34,9 +34,9 @@
 <script>
 import { Button } from '@chipspc/vant-dgg'
 import { mapState, mapMutations, mapActions } from 'vuex'
-import TopLocation from '@/components/spread/companyAlteration/TopLocation'
-import CompanySelec from '@/components/spread/companyAlteration/CompanySelect'
-import SelectDesired from '@/components/spread/companyAlteration/SelectDesired'
+import TopLocation from '@/components/spread/myDemandCard/companyAlteration/TopLocation'
+import CompanySelec from '@/components/spread/myDemandCard/companyAlteration/CompanySelect'
+import SelectDesired from '@/components/spread/myDemandCard/companyAlteration/SelectDesired'
 export default {
   components: {
     [Button.name]: Button,

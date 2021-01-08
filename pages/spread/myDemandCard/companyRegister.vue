@@ -96,7 +96,7 @@
 </template>
 <script>
 import { Popup, Field, Picker } from '@chipspc/vant-dgg'
-import Header from '../../../components/spread/registeredDemandCard/header'
+import Header from '../../../components/spread/myDemandCard/companyRegister/header'
 import { planner, dict } from '@/api'
 export default {
   components: {
