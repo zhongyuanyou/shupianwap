@@ -53,7 +53,7 @@ export default {
       }
       // 本地存储数据
       localStorage.setItem('data', JSON.stringify(this.data))
-      this.$router.push('/spread/second')
+      this.$router.push('/spread/myDemandCard/second')
     },
   },
 }
