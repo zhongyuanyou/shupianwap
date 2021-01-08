@@ -159,9 +159,9 @@ export default {
               (errorObject = { key, message: '验证码有误' })
             break
           case 'newPassword':
-            // 至少6-15个字符，至少1个大写字母，1个小写字母和1个数字
-            // checkPassword(newPassword) &&
-            //   (errorObject = { key, message: '密码格式有误' })
+            // 至少6-15个字符
+            !checkPassword(newPassword) &&
+              (errorObject = { key, message: '密码格式有误' })
             break
           case 'confirmPassword':
             confirmPassword !== newPassword &&
