@@ -216,7 +216,7 @@ export default {
             if (res.error === 0) {
               vm.countDownFun()
             }
-            console.log(res.msg)
+            Toast(res.msg)
           })
         }
       }
@@ -395,10 +395,9 @@ export default {
         }
         /deep/ .sp-popup--bottom {
           width: @spread-page-width;
-          left: 50%;
+          left: auto;
           right: auto;
           //transform: translateX(-126px); // 该属性因为组件样式未知bug，导致左侧出来一部分。且距离是一直固定是63px，不能转成rem
-          margin-left: calc(-@spread-page-width / 2);
         }
         /deep/ .sp-overlay {
           width: @spread-page-width;
