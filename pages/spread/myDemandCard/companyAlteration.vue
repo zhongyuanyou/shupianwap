@@ -40,9 +40,9 @@
 </template>
 <script>
 import { Button } from '@chipspc/vant-dgg'
-import TopLocation from '@/components/spread/companyAlteration/TopLocation'
-import CompanySelec from '@/components/spread/companyAlteration/CompanySelect'
-import SelectDesired from '@/components/spread/companyAlteration/SelectDesired'
+import TopLocation from '@/components/spread/myDemandCard/companyAlteration/TopLocation'
+import CompanySelec from '@/components/spread/myDemandCard/companyAlteration/CompanySelect'
+import SelectDesired from '@/components/spread/myDemandCard/companyAlteration/SelectDesired'
 import { planner, dict } from '@/api'
 export default {
   components: {

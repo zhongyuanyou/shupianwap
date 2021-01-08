@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-07 10:19:16
+ * @LastEditTime: 2021-01-08 09:56:17
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/GoodsItem.vue
 -->
@@ -102,6 +102,12 @@ import fingerprint from '@/utils/fingerprint'
 
 import { shoppingCar } from '@/api'
 
+const SHOP_RESTRICTION = {
+  unrestricted: 'PRO_SHOP_RESTRICTION_ALL', // 无限制
+  restrictedNumber: 'PRO_SHOP_RESTRICTION_NUMBER', // 限制数量
+  forbid: 'PRO_SHOP_RESTRICTION_NO', // 禁止购买
+}
+
 export default {
   name: 'GoodsItem',
   components: {
@@ -171,6 +177,8 @@ export default {
         productId,
         name,
         productNo,
+        shopRestrictionNumber,
+        shopRestriction,
         referencePrice,
         skuAttrList,
         serviceGoodsClassList,
@@ -231,6 +239,15 @@ export default {
           })
         : []
 
+      // 获取购买的最大数量
+      let maxNumber =
+        shopRestriction === SHOP_RESTRICTION.restrictedNumber &&
+        shopRestrictionNumber
+          ? shopRestrictionNumber
+          : 99
+      maxNumber = Number(maxNumber)
+      if (isNaN(maxNumber)) maxNumber = 1
+
       return {
         tree,
         resourceServiceList,
@@ -239,6 +256,7 @@ export default {
         name,
         productNo,
         referencePrice,
+        maxNumber,
       }
     },
   },

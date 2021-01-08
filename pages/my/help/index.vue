@@ -304,7 +304,6 @@ export default {
         })
       } else if (val === 1) {
         this.$appFn.dggGetRealNameAuthAddress((res) => {
-          console.log('resss', res)
           if (res.code === 200) {
             this.$appFn.dggOpenNewWeb(
               {

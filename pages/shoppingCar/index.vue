@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-07 15:22:33
+ * @LastEditTime: 2021-01-08 10:57:12
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -179,7 +179,6 @@ export default {
       console.log('registHandler refresh start')
       this.$appFn.registHandler('refresh', (data) => {
         console.log('refresh:', data)
-        this.postUpdate({ type: 'init' })
         this.onRefresh()
       })
     }
@@ -254,9 +253,12 @@ export default {
           this.refreshing = false
         })
     },
-    onRefresh() {
+    onRefresh({ type } = {}) {
       this.finished = false
       this.loading = true
+      if (type !== 'list') {
+        this.postUpdate({ type: 'init' })
+      }
       this.onLoad()
     },
     handleItemOperation(value = {}) {
@@ -291,7 +293,7 @@ export default {
             totalAmount: data.total,
             totalCount: data.totalCount,
           }
-          this.onRefresh()
+          this.onRefresh({ type: 'list' })
           break
         case 'resourceServiceSelect': // sku弹出框里资源服务
           this.selecteResourceService(cartId, data, index)
@@ -508,6 +510,7 @@ export default {
     // 更新购物车数据
     async postUpdate(data = {}) {
       const { type, cartId, value, serviceList, skuAttr, skuId } = data
+      this.updateLoading = true
       let params = {}
       switch (type) {
         case 'updateNum':
@@ -530,11 +533,11 @@ export default {
           params = { selectFlag: +value } // 将boolean转换为数字（1：选中 ,0：取消选中）
           break
         case 'init':
-          // TODO id, createrId 为空
+          // TODO 根据后台要求，id不能为空，虽然不用，所以随便传
           params = { id: '12233', createrId: this.userInfo.userId }
+          this.updateLoading = false // 获取初始不用loading
       }
       try {
-        this.updateLoading = true
         const userId = this.userInfo.userId
         const defalutParams = {
           id: cartId,
