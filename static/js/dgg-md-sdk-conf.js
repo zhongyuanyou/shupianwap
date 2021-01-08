@@ -1,4 +1,5 @@
 // 线上求地址 https://shence.dgg.cn:6443/sa?project=production
+
 let currentDo = location.origin
 var DGGCONFIG ={
     platform_type: 'WAP', // 类型
