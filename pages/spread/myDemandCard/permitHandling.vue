@@ -132,7 +132,7 @@ export default {
         },
       })
       localStorage.setItem('data', obj)
-      this.$router.push({ path: '/spread/second' })
+      this.$router.push({ path: '/spread/myDemandCard/second' })
     },
   },
   head() {

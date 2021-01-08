@@ -55,12 +55,13 @@
       </div>
       <div class="complaint-image">
         <div class="complaint-image-title">上传照片</div>
-        <div class="complaint-image-upload" @click="handleImage">
+        <div class="complaint-image-upload">
           <sp-uploader
             v-model="uploader"
             :max-count="3"
             :max-size="20 * 1024 * 1024"
             :after-read="afterRead"
+            :before-delete="beforeDelete"
             @oversize="onOversize"
           >
             <template>
@@ -139,6 +140,7 @@ export default {
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo, // app信息
       appPlatform: (state) => state.app.appPlatform,
+      userInfo: (state) => state.user.userInfo, // 用户信息
     }),
   },
   mounted() {
@@ -150,7 +152,10 @@ export default {
         },
         (res) => {}
       )
-      console.log('appPlatform', this.appPlatform)
+      // 调用安卓权限
+      this.$appFn.dggPermission((res) => {
+        console.log('ress', res)
+      })
     }
     // 设置终端和平台
     this.formData.terminalCode = this.isInApp
@@ -167,6 +172,17 @@ export default {
         ? '薯片'
         : '企大顺'
       : '薯片'
+    if (this.isInApp) {
+      this.$appFn.dggDeviceInfo((res) => {
+        if (res.code === 200) {
+          this.formData.equipment = res.data['X-Device-Type']
+        } else {
+          this.formData.equipment = '未获取到设备信息'
+        }
+      })
+    } else {
+      this.formData.equipment = '浏览器'
+    }
     this.getComplainCategory()
   },
   methods: {
@@ -207,6 +223,7 @@ export default {
           const params = {
             ...this.formData,
           }
+          console.log('params', params)
           await complain.add({ axios: this.$axios }, params)
           this.loading = false
           this.formData = {
@@ -250,6 +267,7 @@ export default {
       const formData = new FormData()
       formData.append('uploadatalog', 'sp-pt/wap/images')
       formData.append('file', file.file)
+      console.log('file', file)
       this.loading = true
       try {
         this.$axios.post(ossApi.add, formData, config).then((res) => {
@@ -288,32 +306,26 @@ export default {
     },
     handleImage() {
       // 上传图片
-      // const isAndroid = this.appPlatform.indexOf('iphone')
-      // if (isAndroid < 0) {
-      //   this.$appFn.dggPhoneAlbum((res) => {
-      //     const config = {
-      //       headers: {
-      //         'Content-Type': 'multipart/form-data',
-      //       },
-      //     }
-      //     const imgs = this.images
-      //     const formData = new FormData()
-      //     formData.append('uploadatalog', 'sp-pt/wap/images')
-      //     formData.append('file', res.data.filePath)
-      //     this.loading = true
-      //     try {
-      //       this.$axios.post(ossApi.add, formData, config).then((res) => {
-      //         this.loading = false
-      //         if (res.code === 200) {
-      //           imgs.push(res.data.url)
-      //           this.images = imgs
-      //         }
-      //       })
-      //     } catch (err) {
-      //       this.loading = false
-      //     }
-      //   })
-      // }
+      const isAndroid = this.appPlatform.indexOf('iphone')
+      if (isAndroid < 0) {
+        const imgs = this.images
+        this.$appFn.dggPhoneAlbum({ fileId: this.userInfo.fileId }, (res) => {
+          console.log('uploader', res)
+          imgs.push(res.data.filePath)
+          this.images = imgs
+          const obj = {
+            file: {},
+            message: '',
+            content: res.data.filePath,
+          }
+          this.uploader.push(obj)
+        })
+      }
+    },
+    beforeDelete(file, detail) {
+      // 删除图片
+      this.images.splice(detail.index, 1)
+      this.uploader.splice(detail.index, 1)
     },
   },
 }

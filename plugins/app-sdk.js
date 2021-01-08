@@ -197,8 +197,14 @@ const appHandler = {
     })
   },
   // 调用安卓相册
-  dggPhoneAlbum: (fn = () => {}) => {
-    Bridge.callHandler('dgg_phoneAlbum', {}, (res) => {
+  dggPhoneAlbum: (data = { fileId: '' }, fn = () => {}) => {
+    Bridge.callHandler('dgg_phoneAlbum', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // 调用安卓权限
+  dggPermission: (fn = () => {}) => {
+    Bridge.callHandler('dgg_Permission', {}, (res) => {
       handleRequest(res, fn)
     })
   },
