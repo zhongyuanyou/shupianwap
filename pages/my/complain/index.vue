@@ -101,7 +101,6 @@ import { complain, commonApi, ossApi } from '~/api'
 import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
-import { parseTel } from '~/utils/common'
 export default {
   name: 'AddComplaint',
   components: {
@@ -293,24 +292,24 @@ export default {
       // 输入框失焦
       window.scroll(0, 0)
     },
-    // handleImage() {
-    //   // 上传图片
-    //   const isAndroid = this.appPlatform.indexOf('iphone')
-    //   if (isAndroid < 0) {
-    //     const imgs = this.images
-    //     this.$appFn.dggPhoneAlbum({ fileId: this.userInfo.fileId }, (res) => {
-    //       console.log('uploader', res)
-    //       imgs.push(res.data.filePath)
-    //       this.images = imgs
-    //       const obj = {
-    //         file: {},
-    //         message: '',
-    //         content: parseTel(res.data.filePath),
-    //       }
-    //       this.uploader.push(obj)
-    //     })
-    //   }
-    // },
+    handleImage() {
+      // 上传图片
+      const isAndroid = this.appPlatform.indexOf('iphone')
+      if (isAndroid < 0) {
+        const imgs = this.images
+        this.$appFn.dggPhoneAlbum({ fileId: this.userInfo.fileId }, (res) => {
+          console.log('uploader', res)
+          imgs.push(res.data.filePath)
+          this.images = imgs
+          const obj = {
+            file: {},
+            message: '',
+            content: res.data.filePath,
+          }
+          this.uploader.push(obj)
+        })
+      }
+    },
     beforeDelete(file, detail) {
       // 删除图片
       this.images.splice(detail.index, 1)
