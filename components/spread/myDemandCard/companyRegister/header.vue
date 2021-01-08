@@ -17,7 +17,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import MyIcon from '../../common/myIcon/MyIcon.vue'
+import MyIcon from '../../../common/myIcon/MyIcon.vue'
 export default {
   components: {
     MyIcon,

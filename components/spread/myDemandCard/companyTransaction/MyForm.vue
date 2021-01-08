@@ -84,7 +84,7 @@
 
 <script>
 import { Cell, ActionSheet, Picker, Toast } from '@chipspc/vant-dgg'
-import slider from '~/components/spread/transactions/Slider'
+import slider from '~/components/spread/myDemandCard/companyTransaction/Slider'
 export default {
   name: 'Form',
   components: {

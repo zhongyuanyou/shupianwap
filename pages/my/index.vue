@@ -114,12 +114,12 @@ export default {
     handleAvatar() {
       // 点击头像
       if (!this.userId) {
-        this.$router.push({
+        this.$router.replace({
           name: 'login',
           query: { redirect: this.$route.fullPath },
         })
       } else {
-        this.$router.push('/my/information')
+        this.$router.replace('/my/information')
       }
     },
     handleClickLogin() {

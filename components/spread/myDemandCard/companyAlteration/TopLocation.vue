@@ -11,7 +11,7 @@
 <script>
 import { Icon } from '@chipspc/vant-dgg'
 import { mapState, mapMutations, mapActions } from 'vuex'
-import needVue from '../agency/need.vue'
+import needVue from '../../agency/need.vue'
 export default {
   components: {
     [Icon.name]: Icon,

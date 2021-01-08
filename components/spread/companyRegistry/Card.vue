@@ -139,7 +139,7 @@ export default {
       verificationShow: false,
       test: '获取验证码',
       downShow: false,
-      actions: [{ name: '个体注册' }, { name: '工商注册' }],
+      actions: [{ name: '个体注册' }, { name: '企业注册' }],
     }
   },
   methods: {

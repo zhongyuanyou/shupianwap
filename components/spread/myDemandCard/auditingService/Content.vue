@@ -24,9 +24,9 @@
 </template>
 
 <script>
-import RevenueRadio from '@/components/spread/auditingService/RevenueRadio'
-import Dropdown from '@/components/spread/auditingService/Dropdown'
-import FixedButtom from '@/components/spread/auditingService/FixedButtom'
+import RevenueRadio from '~/components/spread/myDemandCard/auditingService/RevenueRadio'
+import Dropdown from '~/components/spread/myDemandCard/auditingService/Dropdown'
+import FixedButtom from '~/components/spread/myDemandCard/auditingService/FixedButtom'
 export default {
   name: 'Content',
   components: {

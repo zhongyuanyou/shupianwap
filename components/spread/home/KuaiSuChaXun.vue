@@ -30,7 +30,6 @@
           </div>
           <sp-action-sheet
             v-model="dropdownMenuIsShow"
-            style="transform: translateX(-63px)"
             :actions="dropList"
             @select="onSelect"
           />
@@ -396,15 +395,16 @@ export default {
         }
         /deep/ .sp-popup--bottom {
           width: @spread-page-width;
-          left: auto;
+          left: 50%;
           right: auto;
           //transform: translateX(-126px); // 该属性因为组件样式未知bug，导致左侧出来一部分。且距离是一直固定是63px，不能转成rem
+          margin-left: calc(-@spread-page-width / 2);
         }
         /deep/ .sp-overlay {
           width: @spread-page-width;
           left: 50%;
           right: auto;
-          transform: translateX(-@spread-page-width / 2);
+          margin-left: calc(-@spread-page-width / 2);
         }
       }
       .input-all {
