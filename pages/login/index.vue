@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-07 19:54:09
+ * @LastEditTime: 2021-01-08 13:44:18
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/index.vue
 -->
@@ -369,9 +369,9 @@ export default {
               (errorObject = { key, message: '手机号码有误' })
             break
           case 'password':
-            // 至少6-15个字符，至少1个大写字母，1个小写字母和1个数字
-            // checkPassword(password) &&
-            //   (errorObject = { key, message: '密码格式有误' })
+            // 至少6-15个字符
+            !checkPassword(password) &&
+              (errorObject = { key, message: '密码格式有误' })
             break
           case 'readed':
             !readed && (errorObject = { key, message: '请勾选同意协议' })
