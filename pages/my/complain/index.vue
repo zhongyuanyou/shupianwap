@@ -172,6 +172,17 @@ export default {
         ? '薯片'
         : '企大顺'
       : '薯片'
+    if (this.isInApp) {
+      this.$appFn.dggDeviceInfo((res) => {
+        if (res.code === 200) {
+          this.formData.equipment = res.data['X-Device-Type']
+        } else {
+          this.formData.equipment = '未获取到设备信息'
+        }
+      })
+    } else {
+      this.formData.equipment = '浏览器'
+    }
     this.getComplainCategory()
   },
   methods: {
@@ -212,6 +223,7 @@ export default {
           const params = {
             ...this.formData,
           }
+          console.log('params', params)
           await complain.add({ axios: this.$axios }, params)
           this.loading = false
           this.formData = {
