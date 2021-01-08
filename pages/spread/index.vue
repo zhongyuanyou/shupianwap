@@ -1118,11 +1118,5 @@ export default {
     width: @spread-page-width !important;
     left: auto !important;
   }
-
-  /deep/ .sp-overlay {
-    width: @spread-page-width;
-    left: auto;
-    right: auto;
-  }
 }
 </style>
