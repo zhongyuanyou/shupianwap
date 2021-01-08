@@ -10,7 +10,7 @@
         class="maby-banner-item"
         :style="item.bg"
         :data-name="`这些业务您可能也需要_${item.title}`"
-        @click="openImUrl"
+        @click="openImUrl(item.url)"
       ></div>
     </div>
   </div>
@@ -28,6 +28,7 @@ export default {
             backgroundImage:
               'url(https://cdn.shupian.cn/sp-pt/wap/3d8d9tdlhuy0000.png)',
           },
+          url: 'https://shupian.dgg.cn/spread/tax',
         },
         {
           title: '代理记账',
@@ -35,6 +36,7 @@ export default {
             backgroundImage:
               'url(https://cdn.shupian.cn/sp-pt/wap/21vfp6qa0i1s000.png)',
           },
+          url: 'https://shupian.dgg.cn/spread/agency/',
         },
         {
           title: '银行服务',
@@ -44,14 +46,13 @@ export default {
           },
         },
       ],
-      url: '',
     }
   },
   methods: {
     // 点击该模块判断是否进行跳转，如果不跳转就调用IM
-    openImUrl() {
-      if (this.url !== '') {
-        window.open = this.url
+    openImUrl(url) {
+      if (url !== '') {
+        window.location.href = url
       } else {
         this.$parent.openIm()
       }

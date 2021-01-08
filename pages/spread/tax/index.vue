@@ -97,37 +97,15 @@ export default {
       headTitle: '税务筹划',
       plannersData: [
         {
-          id: '',
+          id: '7862495547640840192',
           type: '金牌规划师',
           avatarImg: '',
-          name: '',
-          shuPianFen: 138,
-          serverNum: 258,
+          name: '郭亮亮',
+          shuPianFen: 11,
+          serverNum: 250,
           telephone: 12345679985,
           labels: ['工商注册', '财税咨询', '税务筹划'],
-          jobNum: '',
-        },
-        {
-          id: '',
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '',
-          shuPianFen: 138,
-          serverNum: 258,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          jobNum: '',
-        },
-        {
-          id: '',
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '',
-          shuPianFen: 138,
-          serverNum: 258,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          jobNum: '',
+          jobNum: '107547',
         },
       ],
       plannersCommon: {
@@ -246,42 +224,6 @@ export default {
           busPerformance: 12192,
           busPerformanceValue: 86.706115,
           abilityValue: 72.229634,
-          formatType: '工商',
-        },
-        {
-          id: 30158,
-          userId: '43999',
-          userCentreId: '7704199733711282176',
-          loginName: '96352931',
-          realName: '岳雪冬',
-          userHeadUrl:
-            'http://fastdfs.dggvip.net:8080/group1/M00/02/C0/wKiyYlubWPyEbXyQAAAAAH6D3Zw879.jpg',
-          userPhone: '13908231675',
-          cvr: 0.140625,
-          cvrValue: 64.197653,
-          orderBus: 9,
-          orderBusValue: 51.522266,
-          busPerformance: 24742,
-          busPerformanceValue: 97.482166,
-          abilityValue: 73.212083,
-          formatType: '工商',
-        },
-        {
-          id: 30165,
-          userId: '66475',
-          userCentreId: '66475',
-          loginName: '38798340',
-          realName: '钟霞',
-          userHeadUrl:
-            'http://fastdfs.dggvip.net:8080/group1/M00/0F/E7/CgAAB19jRe-EZCmnAAAAAOB-9qQ642.jpg',
-          userPhone: '13730634929',
-          cvr: 0.157895,
-          cvrValue: 65.427034,
-          orderBus: 9,
-          orderBusValue: 51.522266,
-          busPerformance: 20770,
-          busPerformanceValue: 95.658559,
-          abilityValue: 73.270253,
           formatType: '工商',
         },
       ],
@@ -419,7 +361,15 @@ export default {
     // 请求回来的数据替代本地
     if (this.result !== '' && this.result !== undefined) {
       if (this.result.planlerList.length !== 0) {
-        this.planlerList = this.result.planlerList
+        if (this.result.planlerList.length < 3) {
+          this.planlerList.forEach((item, index) => {
+            this.planlerList[index] = this.result.planlerList[
+              index % this.result.planlerList.length
+            ]
+          })
+        } else {
+          this.planlerList = this.result.planlerList
+        }
       }
       if (this.result.adList.length !== 0) {
         this.adList = this.result.adList
@@ -464,20 +414,26 @@ export default {
     },
     // 规划师模块数据处理
     getPlannersData() {
-      for (let i = 0; i < this.plannersData.length; i++) {
-        // 循环头像
-        this.plannersData[i].avatarImg = this.planlerList[i].userHeadUrl
-        // 循环id
-        this.plannersData[i].id = this.planlerList[i].userCentreId
-        // 循环名字
-        this.plannersData[i].name = this.planlerList[i].realName
-        // 循环工号
-        this.plannersData[i].jobNum = this.planlerList[i].loginName
-        // 循环电话
-        this.plannersData[i].telePhone = this.planlerList[i].userPhone
+      const length = this.result.planlerList.length
+      if (length > 0) {
+        this.plannersData = []
+      }
+      for (let i = 0; i < length; i++) {
+        const obj = {
+          id: this.planlerList[i].userCentreId,
+          type: '金牌规划师',
+          avatarImg: this.planlerList[i].userHeadUrl,
+          name: this.planlerList[i].realName,
+          shuPianFen: 138,
+          serverNum: 258,
+          telephone: this.planlerList[i].userPhone,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+          jobNum: this.planlerList[i].loginName,
+        }
+        this.plannersData.push(obj)
       }
     },
-    // 规划师模块数据处理
+    // 底部模块数据处理
     getfixedBottomData() {
       // 循环头像
       this.fixedBottomData.imgSrc = this.planlerList[0].userHeadUrl

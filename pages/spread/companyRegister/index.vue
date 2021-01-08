@@ -69,7 +69,7 @@
           v-md-map
           v-md:webClick
           :data-name="item.name"
-          @click="onService('', index)"
+          @click="onService(item.url, index)"
         >
           <sp-image :src="item.img"
         /></a>
@@ -395,21 +395,25 @@ export default {
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/f67zabgy4w00000.png',
           name: '工商注册_你可能还需要其他服务_税务筹划',
+          url: 'https://shupian.dgg.cn/spread/tax',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/7mdee1enz8s0000.png',
           name: '工商注册_你可能还需要其他服务_代理记账',
+          url: 'https://shupian.dgg.cn/spread/agency/',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/86kmcgq4i1s0000.png',
           name: '工商注册_你可能还需要其他服务_其他服务',
+          url: '',
         },
       ],
       // 规划师轮播列表
       guiHuaShiList: [
         {
           id: '7862495547640840192',
-          avatarImg: '',
+          avatarImg:
+            'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
           name: '张毅',
           shuPianFen: 11,
           serverNum: 250,
@@ -428,6 +432,8 @@ export default {
         {
           pric: 4000,
           bgImg: 'https://cdn.shupian.cn/sp-pt/wap/a0761uxgsiw0000.png',
+          imgSrc:
+            'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
           operating: {
             actualViews: 3291,
             defaultSales: 1837,
@@ -437,6 +443,8 @@ export default {
         {
           pric: 5000,
           bgImg: 'https://cdn.shupian.cn/sp-pt/wap/kbpgoqhkn58000.png',
+          imgSrc:
+            'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
           operating: {
             actualViews: 3291,
             defaultSales: 1837,
@@ -446,6 +454,41 @@ export default {
         {
           pric: 7000,
           bgImg: 'https://cdn.shupian.cn/sp-pt/wap/v5qbb7umt7k000.png',
+          imgSrc:
+            'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          operating: {
+            actualViews: 3291,
+            defaultSales: 1837,
+            actualSales: 1832,
+          },
+        },
+        {
+          pric: 7000,
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/2d721lqgmtz4000.png',
+          imgSrc:
+            'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          operating: {
+            actualViews: 3291,
+            defaultSales: 1837,
+            actualSales: 1832,
+          },
+        },
+        {
+          pric: 7000,
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/9odvjxumogs0000.png',
+          imgSrc:
+            'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          operating: {
+            actualViews: 3291,
+            defaultSales: 1837,
+            actualSales: 1832,
+          },
+        },
+        {
+          pric: 7000,
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/d8yaj7dckgw0000.png',
+          imgSrc:
+            'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
           operating: {
             actualViews: 3291,
             defaultSales: 1837,
@@ -458,7 +501,8 @@ export default {
         name: '张毅',
         jobNum: '107547',
         telephone: '18402858698',
-        imgSrc: '',
+        imgSrc:
+          'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
       },
       myTitle: '有疑问？千万企服专家为您免费解答',
       tel: '4000-962540',
@@ -480,12 +524,47 @@ export default {
           const operatingVal = elem.materialList[0].productDetail.operating
           this.listCount[index].pric = priceVal
           this.listCount[index].operating = operatingVal
-          if (data.planlerList.length !== 0) {
-            this.listCount[index].id = data.planlerList[index].userCentreId
-            this.listCount[index].name = data.planlerList[index].realName
-            this.listCount[index].jobNum = data.planlerList[index].loginName
-            this.listCount[index].telephone = data.planlerList[index].userPhone
-            this.listCount[index].imgSrc = data.planlerList[index].userHeadUrl
+          if (data.planlerList.length >= 0) {
+            this.listCount[index].id =
+              data.planlerList[
+                `${
+                  index < data.planlerList.length
+                    ? index
+                    : Math.floor(Math.random() * data.planlerList.length)
+                }`
+              ].userCentreId
+            this.listCount[index].name =
+              data.planlerList[
+                `${
+                  index < data.planlerList.length
+                    ? index
+                    : Math.floor(Math.random() * data.planlerList.length)
+                }`
+              ].realName
+            this.listCount[index].jobNum =
+              data.planlerList[
+                `${
+                  index < data.planlerList.length
+                    ? index
+                    : Math.floor(Math.random() * data.planlerList.length)
+                }`
+              ].loginName
+            this.listCount[index].telephone =
+              data.planlerList[
+                `${
+                  index < data.planlerList.length
+                    ? index
+                    : Math.floor(Math.random() * data.planlerList.length)
+                }`
+              ].userPhone
+            this.listCount[index].imgSrc =
+              data.planlerList[
+                `${
+                  index < data.planlerList.length
+                    ? index
+                    : Math.floor(Math.random() * data.planlerList.length)
+                }`
+              ].userHeadUrl
           }
         })
       }
@@ -509,6 +588,7 @@ export default {
             name: item.realName,
             shuPianFen: 11,
             serverNum: 250,
+
             telephone: item.userPhone,
             labels: ['工商注册', '财税咨询', '税务筹划'],
             jobNum: item.loginName,

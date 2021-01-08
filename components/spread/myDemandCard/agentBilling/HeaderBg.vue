@@ -9,7 +9,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import Header from '@/components/common/head/header'
+import Header from '~/components/common/head/header'
 export default {
   name: 'HeaderBg',
   components: {},
