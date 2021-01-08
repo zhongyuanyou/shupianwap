@@ -6,15 +6,21 @@
 
 <script>
 import { Button } from '@chipspc/vant-dgg'
+import { Toast } from '@chipspc/vant-dgg'
 export default {
   name: 'FixedBottomBtn',
   components: {
     [Button.name]: Button,
+    [Toast.name]: Toast,
   },
   methods: {
     nextStep() {
-      // 将数据存储
       const data = this.$parent.questionData
+      if (!data[1].value) {
+        Toast('请选择主营业务')
+        return
+      }
+      // 将数据存储
       const str = JSON.stringify({
         type: 'kjdl',
         content: {
@@ -27,7 +33,7 @@ export default {
       console.log(JSON.parse(str))
       localStorage.setItem('data', str)
       // 下一步
-      this.$router.push({ path: '/spread/second' })
+      this.$router.push({ path: '/spread/myDemandCard/second' })
     },
   },
 }
