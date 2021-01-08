@@ -39,11 +39,12 @@ export default {
           url: 'https://shupian.dgg.cn/spread/agency/',
         },
         {
-          title: '银行服务',
+          title: '其他服务',
           bg: {
             backgroundImage:
-              'url(https://cdn.shupian.cn/sp-pt/wap/4xen249owug0000.png)',
+              'url(https://cdn.shupian.cn/sp-pt/wap/images/fuwvgf0lbig0000.png)',
           },
+          url: '',
         },
       ],
     }
