@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 17:22:12
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 15:51:10
+ * @LastEditTime: 2021-01-08 14:36:09
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/login/register.vue
+ * @FilePath: /chips-wap/pages/login/register.vue
 -->
 <template>
   <div class="register">
@@ -254,9 +254,9 @@ export default {
               (errorObject = { key, message: '验证码有误' })
             break
           case 'password':
-            // 至少6-15个字符，至少1个大写字母，1个小写字母和1个数字
-            // checkPassword(password) &&
-            //   (errorObject = { key, message: '密码格式有误' })
+            // 至少6-15个字符
+            !checkPassword(password) &&
+              (errorObject = { key, message: '密码格式有误' })
             break
           case 'readed':
             !readed && (errorObject = { key, message: '请勾选同意协议' })
