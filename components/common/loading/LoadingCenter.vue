@@ -38,7 +38,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 229px;
+    padding: 0 20px;
     height: 92px;
     background: #000000;
     box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.3);
