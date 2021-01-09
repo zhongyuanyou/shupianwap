@@ -10,7 +10,7 @@
         <!--          {{ item }}-->
         <!--        </div>-->
       </div>
-      <div class="title_tags_remind">
+      <div class="title_tags_remind" @click="handleShowPriceRed">
         <my-icon
           name="notify_ic_clock1"
           color="#4974f5"
@@ -30,15 +30,18 @@
       </nuxt-link>
     </div>
     <p class="money">{{ tcProductDetailData.platformPrice }}元</p>
+    <PriceReduction :show="priceRedIsShow"></PriceReduction>
   </div>
 </template>
 
 <script>
 import { Image } from '@chipspc/vant-dgg'
+import PriceReduction from '~/components/detail/PriceReduction'
 export default {
   name: 'Title',
   components: {
     [Image.name]: Image,
+    PriceReduction,
   },
   props: {
     tcProductDetailData: {
@@ -46,6 +49,16 @@ export default {
       default: () => {
         return {}
       },
+    },
+  },
+  data() {
+    return {
+      priceRedIsShow: false,
+    }
+  },
+  methods: {
+    handleShowPriceRed() {
+      this.priceRedIsShow = true
     },
   },
 }

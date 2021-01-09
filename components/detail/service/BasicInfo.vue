@@ -7,7 +7,7 @@
       }}</a>
     </div>
     <div class="basic-describe">
-      {{ baseData.productDescription }}
+      {{ operatingData.productDescribe }}
     </div>
     <div class="basic-price">
       <div>{{ baseData.referencePrice }}元<span>起</span></div>
