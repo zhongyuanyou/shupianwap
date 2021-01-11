@@ -155,14 +155,18 @@ export default {
         this.activeItems.splice(_index, 1)
         return
       }
-      if (item.id === 'all') {
+      if (item.id === 'all' || item.name === '不限') {
         this.activeItems = [item]
         this.$emit('selectItems', item, this.activeItems)
         return
       }
       if (this.isSelectMore) {
         // 是否多选
-        if (this.activeItems.length && this.activeItems[0].id === 'all') {
+        if (
+          this.activeItems.length &&
+          (this.activeItems[0].id === 'all' ||
+            this.activeItems[0].name === '不限')
+        ) {
           this.activeItems = []
         }
         const _index = this.activeItems.findIndex(
@@ -171,9 +175,8 @@ export default {
         if (_index > -1) {
           this.activeItems.splice(_index, 1)
           this.$emit('cancelItem', item, this.activeItems)
-        } else {
+        } else if (item.id !== 'all' && item.name !== '不限') {
           this.activeItems.push(item)
-          // console.log('selectItems', item, this.activeItems)
           this.$emit('selectItems', item, this.activeItems)
         }
       } else {
