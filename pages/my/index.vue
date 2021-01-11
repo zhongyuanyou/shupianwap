@@ -13,7 +13,7 @@
           @click="handleAvatar"
         />
         <p class="txt" @click="handleClickLogin">
-          {{ userId ? '欢迎你，' + info.fullName || '' : '登录/注册' }}
+          {{ userId ? '欢迎你，' + info.nickName || '' : '登录/注册' }}
         </p>
       </div>
     </div>
