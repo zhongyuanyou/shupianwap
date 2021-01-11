@@ -10,7 +10,6 @@
     <Card :card-title="'体系认证 费用测算'" />
     <!-- E 表单 -->
     <!-- S 列表 -->
-    <!-- <SystemList /> -->
     <ServiceIntroduced
       class="systemList"
       :servicelist="servicelist"
@@ -70,18 +69,16 @@ import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import BannerSwipe from '@/components/spread/system/BannerSwiper'
 import Card from '@/components/spread/system/Card'
-// import SystemList from '@/components/spread/system/ListSystem'
 import ServiceIntroduced from '@/components/spread/common/ServiceIntroduced.vue'
 import SidebarNavbar from '@/components/spread/system/SidebarNavbar'
-import ConsultPhone from '~/components/spread/system/ConsultPhone'
-import Benefit from '~/components/spread/system/Benefit'
-import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
-import ConsultTel from '~/components/spread/common/ConsultTel'
-import ShuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
+import ConsultPhone from '@/components/spread/system/ConsultPhone'
+import Benefit from '@/components/spread/system/Benefit'
+import GuiHuaShiSwipe from '@/components/spread/common/GuiHuaShiSwipe'
+import ConsultTel from '@/components/spread/common/ConsultTel'
+import ShuPianZhaoRen from '@/components/spread/common/ShuPianZhaoRen'
 import FixedBottom from '@/components/spread/common/FixedBottom'
-import dggImCompany from '~/components/spread/DggImCompany'
+import dggImCompany from '@/components/spread/DggImCompany'
 import { spreadApi } from '@/api/spread'
-
 export default {
   components: {
     [Image.name]: Image,
@@ -89,7 +86,6 @@ export default {
 
     BannerSwipe,
     Card,
-    // SystemList,
     ServiceIntroduced,
     SidebarNavbar,
     ConsultPhone,
@@ -99,6 +95,252 @@ export default {
     ShuPianZhaoRen,
     FixedBottom,
     dggImCompany,
+  },
+  async asyncData({ $axios }) {
+    const type = 'extendBussineReg'
+    const defaultRes = {
+      code: 200,
+      message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
+      data: {
+        adList: [
+          {
+            pageCode: 'extendSysAuth',
+            locationShowTypeCode: 'GGWZXSS_GDXS',
+            locationName: 'wap-推广页-体系认证广告',
+            locationId: '8027896820880179200',
+            locationAddressCode: '',
+            sortMaterialList: [
+              {
+                locationSort: 1,
+                materialList: [
+                  {
+                    materialTypeCode: 'GGLX_TP',
+                    materialUrl:
+                      'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+                    imgLink: '',
+                    materialLink: 'https://www.baidu.com/',
+                    materialCode: 'src100302',
+                    materialHeight: 1334,
+                    materialId: 0,
+                    materialDescription: '',
+                    materialName: '体系认证广告物料1-1',
+                    androidLink: '',
+                    materialWidth: 750,
+                    iosLink: '',
+                    linkType: 2,
+                    wapLink: '',
+                    executeParam: '',
+                    productId: 'extendSysAuth1',
+                    productDetail: {
+                      id: 'extendSysAuth1',
+                      name: 'ISO9001质量管理体系',
+                      referencePrice: 4000,
+                      operating: {
+                        showName: 'ISO9001质量管理体系',
+                        slogan: '证明管理系统整合上已达到了国际标准',
+                        productDescribe: '证明管理系统整合上已达到了国际标准',
+                        actualViews: 299,
+                        defaultSales: 136,
+                        actualSales: 130,
+                      },
+                    },
+                  },
+                ],
+              },
+              {
+                locationSort: 2,
+                materialList: [
+                  {
+                    materialTypeCode: 'GGLX_TP',
+                    materialUrl:
+                      'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+                    imgLink: '',
+                    materialLink: 'https://www.baidu.com/',
+                    materialCode: 'src100302',
+                    materialHeight: 1334,
+                    materialId: 0,
+                    materialDescription: '',
+                    materialName: '体系认证广告物料1-2',
+                    androidLink: '',
+                    materialWidth: 750,
+                    iosLink: '',
+                    linkType: 2,
+                    wapLink: '',
+                    executeParam: '',
+                    productId: 'extendSysAuth2',
+                    productDetail: {
+                      id: 'extendSysAuth2',
+                      name: 'ISO14001 环境管理体系',
+                      referencePrice: 8000,
+                      operating: {
+                        showName: 'ISO14001 环境管理体系',
+                        slogan: '制定实施环境方针，并管理其环境因素',
+                        productDescribe: '制定实施环境方针，并管理其环境因素',
+                        actualViews: 138,
+                        defaultSales: 76,
+                        actualSales: 70,
+                      },
+                    },
+                  },
+                ],
+              },
+              {
+                locationSort: 3,
+                materialList: [
+                  {
+                    materialTypeCode: 'GGLX_TP',
+                    materialUrl:
+                      'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+                    imgLink: '',
+                    materialLink: 'https://www.baidu.com/',
+                    materialCode: 'src100302',
+                    materialHeight: 1334,
+                    materialId: 0,
+                    materialDescription: '',
+                    materialName: '体系认证广告物料1-3',
+                    androidLink: '',
+                    materialWidth: 750,
+                    iosLink: '',
+                    linkType: 2,
+                    wapLink: '',
+                    executeParam: '',
+                    productId: 'extendSysAuth3',
+                    productDetail: {
+                      id: 'extendSysAuth3',
+                      name: 'ISO50430 工程建设施工管理体系',
+                      referencePrice: 8000,
+                      operating: {
+                        showName: 'ISO50430 工程建设施工管理体系',
+                        slogan: '证明建筑施工企业质量管理水平',
+                        productDescribe: '证明建筑施工企业质量管理水平',
+                        actualViews: 147,
+                        defaultSales: 99,
+                        actualSales: 96,
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+            locationCode: 'ad100230',
+            locationCodeLocType: 2,
+          },
+        ],
+        planlerList: [
+          {
+            id: 35,
+            userId: '66475',
+            userCentreId: '66475',
+            loginName: '38798340',
+            realName: '钟霞',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13730634929',
+            cvr: 0.086207,
+            cvrValue: 60.206605,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 15278,
+            busPerformanceValue: 90.996225,
+            abilityValue: 68.653875,
+            formatType: '工商',
+          },
+          {
+            id: 6,
+            userId: '3394',
+            userCentreId: '3394',
+            loginName: '2022554',
+            realName: '刘琴',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13350072314',
+            cvr: 0.090909,
+            cvrValue: 60.557728,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 7612.4,
+            busPerformanceValue: 77.299492,
+            abilityValue: 64.379694,
+            formatType: '工商',
+          },
+          {
+            id: 182,
+            userId: '7930253930943676416',
+            userCentreId: '7930253930615472128',
+            loginName: '109870',
+            realName: '李海怡',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13696057459',
+            cvr: 0.106383,
+            cvrValue: 61.705406,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 17770,
+            busPerformanceValue: 93.504073,
+            abilityValue: 70.2655,
+            formatType: '工商',
+          },
+          {
+            id: 169,
+            userId: '7887200447593906176',
+            userCentreId: '7887200447257313280',
+            loginName: '108862',
+            realName: '李劲',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '18884259139',
+            cvr: 0.162791,
+            cvrValue: 65.771926,
+            orderBus: 7,
+            orderBusValue: 50.378921,
+            busPerformance: 8544,
+            busPerformanceValue: 79.535461,
+            abilityValue: 68.038005,
+            formatType: '工商',
+          },
+          {
+            id: 28,
+            userId: '43999',
+            userCentreId: '7704199733711282176',
+            loginName: '96352931',
+            realName: '岳雪冬',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13908231675',
+            cvr: 0.127273,
+            cvrValue: 63.23411,
+            orderBus: 7,
+            orderBusValue: 50.378921,
+            busPerformance: 15348,
+            busPerformanceValue: 91.077286,
+            abilityValue: 70.450657,
+            formatType: '工商',
+          },
+        ],
+      },
+    }
+    try {
+      const res = await $axios.get(spreadApi.list, {
+        params: {
+          pageCode: type,
+        },
+      })
+      if (res.code === 200) {
+        console.log('请求成功')
+        return {
+          resultData: res.data,
+        }
+      } else {
+        console.log('请求异常')
+        return {
+          resultData: defaultRes.data,
+        }
+      }
+    } catch (error) {
+      console.log(error)
+      return { resultData: defaultRes.data }
+    }
   },
   data() {
     return {
@@ -142,6 +384,7 @@ export default {
           defaultSales: '992',
           actualSales: '992',
           price: 600,
+          bgimg: '',
           planner: {
             id: '7862495547640840192',
             name: '李劲',
@@ -158,7 +401,7 @@ export default {
           defaultSales: '421',
           actualSales: '416',
           price: 600,
-          // bgimg: 'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
+          bgimg: '',
           planner: {
             id: '7862495547640840192',
             name: '李劲',
@@ -175,7 +418,7 @@ export default {
           defaultSales: '108',
           actualSales: '108',
           price: 600,
-          // bgimg: 'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
+          bgimg: '',
           planner: {
             id: '7862495547640840192',
             name: '李劲',
@@ -205,7 +448,7 @@ export default {
       labelStyle: {
         icon: 'https://cdn.shupian.cn/sp-pt/wap/8xzqfak5fos0000.png',
         style: 'row',
-        title: '银行服务介绍',
+        title: '服务介绍',
       },
       // 底部规划师
       planner: {
@@ -251,40 +494,91 @@ export default {
       ],
     }
   },
+  created() {
+    if (this.resultData.length !== 0) {
+      this.serverList(this.resultData || [])
+      this.plannerData(this.resultData.plannerList || [])
+    }
+  },
   methods: {
+    // 处理后台列表数据
+    serverList(data) {
+      const listAll = data.adList[0].sortMaterialList
+      console.log(listAll)
+      if (listAll.length !== 0 && listAll[0].materialList[0].length !== 0) {
+        listAll.forEach((eleme, index) => {
+          const titleList = eleme.materialList[0].productDetail
+          const indexList = this.servicelist[index]
+          indexList.title = titleList.operating.showName
+          indexList.titleContent = titleList.operating.slogan
+          indexList.actualViews = titleList.operating.actualViews
+          indexList.defaultSales = titleList.operating.defaultSales
+          indexList.actualSales = titleList.operating.actualSales
+          indexList.price = titleList.referencePrice
+          if (data.planlerList.length > 0) {
+            // const dataPlanner =
+            //   data.plannerList[
+            //     `${
+            //       index < listAll.length
+            //         ? index
+            //         : Math.floor(Math.random() * listAll.length)
+            //     }`
+            //   ]
+            // indexList.planner.id = dataPlanner.userCentreId
+            // indexList.planner.name = dataPlanner.realName
+            // indexList.planner.jobNum = dataPlanner.loginName
+            // indexList.planner.telephone = dataPlanner.userPhone
+            // indexList.planner.imgSrc = dataPlanner.userHeadUrl
+          }
+        })
+      }
+    },
+    // 处理后台规划师数据
+    plannerData() {},
+    // 其他服务的跳转判断
     onService(url, index) {
       if (url !== '') {
         window.location.href = url
       } else {
         this.$root.$emit(
           'openIMM',
-          '7862495547640840192',
-          '张毅',
-          '107547',
-          'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png'
-          // this.listCount[index].id,
-          // this.listCount[index].name,
-          // this.listCount[index].jobNum,
-          // this.listCount[index].imgSrc
+          this.planner.id,
+          this.planner.name,
+          this.planner.jobNum,
+          this.planner.imgSrc
         )
       }
     },
+  },
+  head() {
+    return {
+      title: '体系认证',
+      script: [
+        {
+          src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
+        },
+      ],
+    }
   },
 }
 </script>
 
 <style lang="less" scoped>
 .system {
+  // 列表
   /deep/.systemList {
     .serviceList-content {
       background: url(https://cdn.shupian.cn/sp-pt/wap/1pyws4fkw79c000.png);
       background-size: 101%;
       background-position-x: -1px;
-      .serviceList-content-head-title {
-        // img {
-        //   display: none;
-        // }
-      }
+    }
+    .show-more-btn {
+      border: none;
+      margin: 0 auto;
+      padding: 0px;
+      height: 26px;
+      margin-top: 20px;
+      line-height: 26px;
     }
   }
   // 其他服务

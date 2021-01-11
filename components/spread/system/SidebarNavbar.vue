@@ -4,9 +4,9 @@
     <div class="sidebar-navbar-list">
       <sp-sidebar v-model="activeKey" @change="onChange">
         <sp-sidebar-item
-          v-for="(item, index) of 4"
+          v-for="(item, index) of activeKeyTitle"
           :key="index"
-          :title="`咨询分${index}`"
+          :title="item"
         />
       </sp-sidebar>
       <div class="sidebar-navbar-list-content">
@@ -43,25 +43,35 @@ export default {
   data() {
     return {
       activeKey: 0,
+      activeKeyTitle: ['咨询分析', '准备资料', '提交审核', '领取证书'],
       contents: [
         {
-          content: `<h5>薯片为您提供:</h5> <p>（1）发起人符合法定人数，其中须有半数以上的发起人在中国境内有住所。</p>
-            <p>（2）有符合公司章程规定的全体发起人认购的股本数额或者募集的实收股本总额。</p>
-            <p>（3）股份发行、筹办事项符合法律规定，在发起人认购的股份缴足前，不得向他人募集股份。</p>
+          content: `<h5>我们为您提供:</h5> <p><span>①</span> 专业一对一咨询，精确分析企业情况</p>
+            <p><span>②</span> 根据企业情况和认证范围选择更合适的体系认证</p>
             <h5>您只需准备：</h5>
-            <p>（1）有公司名称，建立符合股份有限公司要求的组织机构。</p>`,
+            <p><span>①</span> 企业营业执照</p>`,
           flag: true,
         },
         {
-          content: '3213',
+          content: `<h5>我们为您提供:</h5>
+            <p><span>①</span> 办理前期准备工作，在相关单位备案</p>
+            <p><span>①</span> 了解相关政策，一站式办理省时省心</p>
+            <h5>您只需准备：</h5>
+            <p><span>①</span> 有效的资质证明</p>
+            <p><span>②</span> 认证体系覆盖的产品和服务的接收准则清单或说明</p>`,
           flag: false,
         },
         {
-          content: '4863',
+          content: `<h5>我们为您提供:</h5> <p><span>①</span> 绿色通道快速办理，拿证更快</p>
+          <p><span>②</span> 客户信息严格保密，避免外泄</p>`,
+
           flag: false,
         },
         {
-          content: '6984',
+          content: `<h5>我们为您提供:</h5> <p><span>①</span> 专业一对一咨询，精确分析企业情况</p>
+            <p><span>②</span> 根据企业情况和认证范围选择更合适的体系认证</p>
+            <h5>您只需准备：</h5>
+            <p><span>①</span> 企业营业执照</p>`,
           flag: false,
         },
       ],
@@ -98,7 +108,7 @@ export default {
     border: 1px solid rgba(205, 205, 205, 0.5);
     border-radius: 4px 4px 12px 12px;
     /deep/&-content {
-      padding: 0px 28px 32px 24px;
+      padding: 0px 28px 0px 24px;
       position: absolute;
       top: 0;
       right: 0;
@@ -112,14 +122,26 @@ export default {
         font-size: 26px;
         font-weight: bold;
         color: #333333;
-        margin-bottom: 34px;
+        margin-bottom: 20px;
         margin-top: 32px;
+      }
+      h5:not(:first-child) {
+        margin-top: 24px;
       }
       p {
         font-size: 24px;
         font-weight: 400;
         color: #666666;
-        line-height: 36px;
+        line-height: 45px;
+        margin-bottom: 12px;
+        display: flex;
+        span {
+          margin-right: 14px;
+          color: #999999;
+          font-size: 30px;
+          height: 35px;
+          line-height: 40px;
+        }
       }
     }
   }
