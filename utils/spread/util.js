@@ -1,3 +1,4 @@
+import Moment from 'moment'
 import { checkPhone } from '../check'
 
 const formatTime = (date) => {
@@ -280,7 +281,73 @@ const getIPAdress = () => {
 const checkMobile = (mobile) => {
   return /^1[3456789]\d{9}$/.test(mobile)
 }
+// 产品属性处理
+// 属性价格展示处理
+const priceHandle = (price) => {
+  let str = price
+  if (price < 1000000) {
+    str = '100以万下'
+  }
+  if (price >= 1000000 && price < 5000000) {
+    str = '100-500万'
+  }
+  if (price >= 5000000 && price < 10000000) {
+    str = '500-1000万'
+  }
+  if (price > 10000000) {
+    str = '1000万以上'
+  }
+  return str
+}
+const resetField = (field) => {
+  let val = ''
+  // 处理无字段数据的情况
+  if (field.fieldValueCn) {
+    val = field.fieldValueCn
+  } else if (field.fieldValue) {
+    val = field.fieldValue
+  } else {
+    val = ''
+  }
+  if (val) {
+    switch (field.fieldCode) {
+      case 'registration_time':
+        val = resetTimeField(val)
+        break
+      case 'registered_capital':
+        val = priceHandle(val)
+        break
+    }
+  }
+  return val
+}
+const resetTimeField = (str) => {
+  const timeArr = str.split('-').map((item) => +item)
+  timeArr[1] -= 1
+  const a = Moment()
+  const b = Moment(timeArr)
+  const diifTime = a.diff(b, 'years', true)
+  if (diifTime < 1) {
+    // 1年以下
+    return '1年以下'
+  }
+  if (diifTime >= 1 && diifTime < 2) {
+    // 1-2年
+    return '1-2年'
+  }
+  if (diifTime >= 2 && diifTime < 3) {
+    // 2-3年
+    return '2-3年'
+  }
+  if (diifTime >= 3) {
+    // 3年以上
+    return '3年以上'
+  }
+  return str
+}
 export default {
+  priceHandle,
+  resetTimeField,
   formatTime,
   numberSuitScanf,
   checkUserIsLogin,

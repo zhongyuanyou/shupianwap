@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <div class="header">
+    <div v-if="hideHeader !== 'true'" class="header">
       <sp-top-nav-bar
         title="服务承诺"
         left-arrow
@@ -86,6 +86,11 @@ export default {
         },
       ],
     }
+  },
+  computed: {
+    hideHeader() {
+      return this.$route.query.hideHeader
+    },
   },
   methods: {
     onClickLeft() {

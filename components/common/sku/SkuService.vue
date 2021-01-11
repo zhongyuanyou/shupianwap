@@ -6,6 +6,7 @@
       round
       position="bottom"
       :safe-area-inset-bottom="true"
+      v-on="$listeners"
     >
       <div class="sku-container">
         <div class="sku-header sp-hairline--bottom">
@@ -25,26 +26,37 @@
           </div>
         </div>
         <div class="sku-body" :style="{ 'max-height': '400px' }">
+          <!-- S 属性 -->
           <div class="sku-group">
+            <!-- 因为 sku必须选择一个, 所以选择后不能取消 is-cancel="false" -->
             <SkuServiceRow
               v-for="treeItem of formatSkuTree"
               :key="treeItem.k_id"
               :sku-row="treeItem"
               :actived="formatSkuAttr"
+              :is-cancel="false"
               :close-on-click-overlay="false"
               @selectChange="handleSelectChange"
             />
           </div>
+          <!-- E 属性 -->
+          <!-- S 数量 -->
           <div class="sku-stepper-wrap sp-hairline--bottom">
             <SkuServiceStepper
               :selected-num="goods.goodsNumber"
               :disable-stepper-input="false"
-              :max-num="skuData.shopRestrictionNumber"
+              :disabled="
+                goods.serviceResourceList &&
+                goods.serviceResourceList.length >= 1
+              "
+              :max-num="skuData.maxNumber"
               @change="handleStepperChange"
               @overLimit="handleStepperLimit"
             />
           </div>
+          <!-- E 数量 -->
           <div class="sku-group">
+            <!-- S 服务资源 -->
             <SkuServiceRow :sku-row="{ k: '服务资源' }">
               <div class="sku-resource">
                 <sp-cell
@@ -78,6 +90,8 @@
                 </sp-cell>
               </div>
             </SkuServiceRow>
+            <!-- E 服务资源 -->
+            <!-- S 增值服务 -->
             <div v-if="formatSkuAddService.length" class="sku-add">
               <div class="sku-add__title">增值服务</div>
               <div class="sku-add__item">
@@ -93,6 +107,7 @@
                 </SkuServiceRow>
               </div>
             </div>
+            <!-- E 增值服务 -->
           </div>
         </div>
         <div class="sku-actions sp-hairline--top">
@@ -298,8 +313,33 @@ export default {
         data: value,
       })
     },
+    // 超过限制的数量后触发
     handleStepperLimit(data) {
       console.log('handleStepperLimit:', data)
+      let message = ''
+      const { type } = data || {}
+      switch (type) {
+        case 'minus':
+          message = '已经是最小购买数了'
+          break
+        case 'plus':
+          message = '已经是最大购买数了'
+          break
+      }
+      const { serviceResourceList = [] } = this.goods || {}
+
+      if (
+        Array.isArray(serviceResourceList) &&
+        serviceResourceList.length >= 1
+      ) {
+        message = '选择资源服务后，商品数量不能修改'
+      }
+      this.$xToast.show({
+        message,
+        duration: 1000,
+        icon: 'toast_ic_remind',
+        forbidClick: true,
+      })
     },
 
     // 选择服务资源
@@ -348,6 +388,8 @@ export default {
     &__img-wrap {
       width: 180px;
       height: 180px;
+      border-radius: 8px;
+      overflow: hidden;
     }
     &__goods-info {
       margin-left: 24px;
@@ -469,13 +511,14 @@ export default {
       flex: 1;
       height: 100px;
       background: #ec5330;
+      border: none;
       border-radius: 8px;
     }
   }
   &-close {
     position: absolute;
-    top: 32px;
-    right: 32px;
+    top: 46px;
+    right: 46px;
     z-index: 1;
     color: #c8c9cc;
     font-size: 22px;

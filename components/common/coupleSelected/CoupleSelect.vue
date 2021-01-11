@@ -33,7 +33,10 @@
           }"
           @click="handleCity(item, index)"
         >
-          {{ item.name }}
+          <div>{{ item.name }}</div>
+          <div v-show="isLocation && cIndex == index">
+            <sp-icon name="success" color="#4974F5" size="0.2rem" />
+          </div>
         </div>
       </div>
     </div>
@@ -466,7 +469,11 @@ export default {
     .flex_item {
       width: calc(100vw - 162px);
       text-align: left;
-      padding-left: 40px;
+      padding: 0 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-direction: row;
     }
   }
   &_region {

@@ -1,7 +1,6 @@
 <template>
   <div class="nav-layout">
     <nuxt />
-    <openApp v-if="!isInApp && showApp" :bottom="bottom" />
     <Bottombar v-if="!isInApp" ref="bottombar" />
     <div
       class="nav-placeholder"

@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 14:17:25
+ * @LastEditTime: 2021-01-08 10:57:12
  * @Description: 购物车页面
- * @FilePath: /chips-wap/client/pages/shoppingCar/permitHandling.vue
+ * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
 
 <template>
@@ -17,7 +17,7 @@
             name="nav_ic_back"
             size="0.4rem"
             color="#1A1A1A"
-            class="head__icon-back"
+            style="padding-left: 32px"
             @click.native="onClickLeft"
           />
         </template>
@@ -31,46 +31,53 @@
         </template>
       </Header>
     </div>
+
     <div class="body">
-      <!-- :disabled="true" -->
-      <sp-pull-refresh
-        v-model="refreshing"
-        class="shopping-car__refresh"
-        @refresh="onRefresh"
+      <!-- 在sku 等弹窗时候，锁住滚动 -->
+      <div
+        class="body-container"
+        :class="{ 'sp-overflow-hidden': disableRefresh }"
       >
-        <sp-list
-          v-model="loading"
-          class="shopping-car__goods"
-          error-text="请求失败，点击重新加载"
-          :error.sync="error"
-          :finished="finished"
-          @load="onLoad"
+        <sp-pull-refresh
+          v-model="refreshing"
+          class="shopping-car__refresh"
+          :disabled="disableRefresh"
+          @refresh="onRefresh"
         >
-          <div
-            v-for="(item, index) in list"
-            :key="item.cartId"
-            class="shopping-car__goods-item"
+          <sp-list
+            v-model="loading"
+            class="shopping-car__goods"
+            error-text="请求失败，点击重新加载"
+            :error.sync="error"
+            :finished="finished"
+            @load="onLoad"
           >
-            <GoodsItem
-              ref="goodsItem"
-              :commodity-data="item"
-              :index="index"
-              @operation="handleItemOperation"
-            />
-          </div>
-          <template #finished>
-            <span v-if="list && list.length">没有更多了</span>
-            <ShoppingCarNull v-else />
-          </template>
-          <!-- S 自定义加载控件 -->
-          <template #loading>
-            <div>
-              <LoadingDown v-show="!refreshing && loading" :loading="true" />
+            <div
+              v-for="(item, index) in list"
+              :key="item.cartId"
+              class="shopping-car__goods-item"
+            >
+              <GoodsItem
+                ref="goodsItem"
+                :commodity-data="item"
+                :index="index"
+                @operation="handleItemOperation"
+              />
             </div>
-          </template>
-          <!-- E 自定义加载控件 -->
-        </sp-list>
-      </sp-pull-refresh>
+            <template #finished>
+              <span v-if="list && list.length">没有更多了</span>
+              <ShoppingCarNull v-else />
+            </template>
+            <!-- S 自定义加载控件 -->
+            <template #loading>
+              <div>
+                <LoadingDown v-show="!refreshing && loading" :loading="true" />
+              </div>
+            </template>
+            <!-- E 自定义加载控件 -->
+          </sp-list>
+        </sp-pull-refresh>
+      </div>
     </div>
     <div v-if="list && list.length" class="footer sp-hairline--top">
       <Bottombar
@@ -135,6 +142,7 @@ export default {
         discountsAmount: '0.00',
       },
       skuOpenIndex: -1, // 记录当前打开的sku的序列号
+      skuStatus: '',
     }
   },
   computed: {
@@ -142,6 +150,9 @@ export default {
       userInfo: (state) => state.user.userInfo,
       isInApp: (state) => state.app.isInApp,
     }),
+    disableRefresh() {
+      return this.skuStatus === 'open'
+    },
   },
   watch: {
     currentSelectedCartIds: {
@@ -239,11 +250,15 @@ export default {
         .catch(() => {
           this.error = true
           this.loading = false
+          this.refreshing = false
         })
     },
-    onRefresh() {
+    onRefresh({ type } = {}) {
       this.finished = false
       this.loading = true
+      if (type !== 'list') {
+        this.postUpdate({ type: 'init' })
+      }
       this.onLoad()
     },
     handleItemOperation(value = {}) {
@@ -273,10 +288,21 @@ export default {
           break
         case 'refresh':
           this.refreshing = true
-          this.onRefresh()
+          this.bottomData = {
+            ...this.bottomData,
+            totalAmount: data.total,
+            totalCount: data.totalCount,
+          }
+          this.onRefresh({ type: 'list' })
           break
         case 'resourceServiceSelect': // sku弹出框里资源服务
           this.selecteResourceService(cartId, data, index)
+          break
+        case 'skuOpen':
+          this.skuStatus = 'open'
+          break
+        case 'skuClosed':
+          this.skuStatus = 'close'
           break
       }
     },
@@ -338,6 +364,15 @@ export default {
 
     // 统一的结算
     uPBill() {
+      if (!this.currentSelectedCartIds.length) {
+        this.$xToast.show({
+          message: '您还没有选择商品哦',
+          duration: 1000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        return
+      }
       const cartIdsStr = this.currentSelectedCartIds.join(',') // 多个cartId 用逗号凭借为一个
       console.log(cartIdsStr)
       // 在app中
@@ -367,7 +402,7 @@ export default {
           (res) => {
             const { code } = res || {}
             if (code !== 200) {
-              this.$xToast({
+              this.$xToast.show({
                 message: '结算失败',
                 duration: 1000,
                 icon: 'toast_ic_error',
@@ -382,6 +417,15 @@ export default {
     // 资源服务的选择
     selecteResourceService(cartId, value, index) {
       const { type, classCode, url } = value
+      if (!url) {
+        this.$xToast.show({
+          message: '选择无效',
+          duration: 1000,
+          icon: 'toast_ic_error',
+          forbidClick: true,
+        })
+        return
+      }
       this.skuOpenIndex = index
       // 通过后台接口配置的跳转400或者注册地址查询页面
       this.$router.replace(`${url}&redirect=shoppingCar`)
@@ -466,6 +510,7 @@ export default {
     // 更新购物车数据
     async postUpdate(data = {}) {
       const { type, cartId, value, serviceList, skuAttr, skuId } = data
+      this.updateLoading = true
       let params = {}
       switch (type) {
         case 'updateNum':
@@ -488,11 +533,11 @@ export default {
           params = { selectFlag: +value } // 将boolean转换为数字（1：选中 ,0：取消选中）
           break
         case 'init':
-          // TODO id, createrId 为空
-          params = { id: '12233', createrId: '324' }
+          // TODO 根据后台要求，id不能为空，虽然不用，所以随便传
+          params = { id: '12233', createrId: this.userInfo.userId }
+          this.updateLoading = false // 获取初始不用loading
       }
       try {
-        this.updateLoading = true
         const userId = this.userInfo.userId
         const defalutParams = {
           id: cartId,
@@ -523,14 +568,10 @@ export default {
 
 .shopping-car {
   height: 100%;
-  // overflow-y: scroll;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
   .head {
-    &__icon-back {
-      padding-left: 32px;
-    }
     &__operation {
       padding-right: 40px;
       font-size: 28px;
@@ -540,10 +581,17 @@ export default {
   .body {
     flex: 1;
     padding: 0;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
     position: relative;
+    &-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+    }
   }
   &__refresh {
     min-height: 100%;

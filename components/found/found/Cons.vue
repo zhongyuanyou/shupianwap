@@ -1,17 +1,30 @@
 <template>
   <div class="con">
     <!--S banner-->
-    <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+    <sp-pull-refresh
+      v-model="refreshing"
+      style="min-height: calc(100vh - 88px)"
+      @refresh="onRefresh"
+    >
       <div
         v-if="banner.length && banner[0].sortMaterialList"
         class="con_banner"
       >
-        <sp-swipe :autoplay="3000" class="con_banner_list" @change="onChange">
+        <sp-swipe
+          :autoplay="3000"
+          :loop="true"
+          class="con_banner_list"
+          @change="onChange"
+        >
           <sp-swipe-item
             v-for="(image, index) in banner[0].sortMaterialList"
             :key="index"
             class="con_banner_list_item"
-            @click="handleImage(image)"
+            @click="
+              isInApp
+                ? handleImage(image)
+                : adJumpHandleMixin(image.materialList[0])
+            "
           >
             <sp-image
               height="2.58rem"
@@ -77,7 +90,8 @@ import {
 import { mapState } from 'vuex'
 import CardItem from '~/components/common/cardItem/CardItem'
 import { foundApi } from '@/api'
-import { baseURL } from '~/config/index'
+import adJumpHandle from '~/mixins/adJumpHandle'
+import { domainUrl } from '~/config/index'
 Vue.use(Lazyload)
 export default {
   name: 'Con',
@@ -90,6 +104,7 @@ export default {
     [Image.name]: Image,
     CardItem,
   },
+  mixins: [adJumpHandle],
   props: {
     banner: {
       type: Array,
@@ -154,8 +169,12 @@ export default {
     handleClick(item, index) {
       // 点击
       if (this.isInApp) {
-        this.$appFn.dggOpenNewWeb(
-          { urlString: `${baseURL}/found/detail/${item.id}` },
+        const iosRouter =
+          '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
+          `${domainUrl}found/detail/${item.id}` +
+          '","isHideNav":1},"isLogin":"1","version":"1.0.0"}'
+        this.$appFn.dggJumpRoute(
+          { iOSRouter: iosRouter, androidRouter: '' },
           (res) => {}
         )
         return
@@ -186,15 +205,10 @@ export default {
     },
     handleImage(item) {
       // 点击图片
-      if (this.isInApp) {
-        // 若是在app中
-        this.$appFn.dggJumpRoute({
-          iOSRouter: item.materialList[0].iosLink,
-          androidRouter: item.materialList[0].androidLink,
-        })
-        return
-      }
-      this.$router.push(item.materialList[0].wapLink)
+      this.$appFn.dggJumpRoute({
+        iOSRouter: item.materialList[0].iosLink,
+        androidRouter: item.materialList[0].androidLink,
+      })
     },
   },
 }
@@ -205,7 +219,11 @@ export default {
   /deep/.sp-cell {
     padding: 40px 32px;
   }
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
   &_banner {
+    width: 100%;
+    padding: 0 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -214,13 +232,17 @@ export default {
     border-radius: 12px;
     overflow: hidden;
     &_list {
-      width: 670px;
+      width: 100%;
       height: 284px;
+      border-radius: 12px;
+      overflow: hidden;
       &_item {
         width: 100%;
         height: 258px;
         background-color: #f8f8f8;
+        overflow: hidden;
         /deep/ .sp-image__img {
+          width: 100%;
           border-radius: 12px;
         }
       }
