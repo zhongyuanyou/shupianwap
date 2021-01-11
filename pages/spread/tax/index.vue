@@ -359,6 +359,7 @@ export default {
     }
   },
   created() {
+    console.log('111', this.result)
     let pbool = false // 确定数据返回
     let abool = false // 确定数据返回
     let nbool = false // 确定数据返回
