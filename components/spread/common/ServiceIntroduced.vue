@@ -6,11 +6,7 @@
       v-show="index > num ? false : true"
       :key="index"
       class="serviceList-content"
-      @click="
-        () => {
-          $parent.openIM(item.url)
-        }
-      "
+      @click="plannerIm(item.planner)"
     >
       <div
         class="serviceList-content-head"
@@ -79,11 +75,6 @@
               color="#4974F5"
               size="0.4rem"
               class="icon"
-              @click="
-                () => {
-                  $parent.openIM(item.url)
-                }
-              "
             >
             </my-icon>
           </a>
@@ -168,6 +159,16 @@ export default {
         this.more = true
         this.num = 2
       }
+    },
+    plannerIm(planner) {
+      const guiHuaShi = planner
+      this.$root.$emit(
+        'openIMM',
+        guiHuaShi.id,
+        guiHuaShi.name || '',
+        guiHuaShi.jobNum || '',
+        planner.imgSrc || ''
+      )
     },
   },
 }
