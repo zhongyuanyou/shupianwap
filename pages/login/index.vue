@@ -43,7 +43,7 @@
             v-model="loginForm.authCode"
             type="number"
             name="authCode"
-            clearable
+            :clearable="false"
             placeholder="请输入验证码"
             maxlength="6"
             @input="handleAuthCodeInput"
@@ -62,7 +62,6 @@
             key="password"
             v-model="loginForm.password"
             name="password"
-            clearable
             placeholder="请输入密码"
             :type="passwordFieldType"
             @input="handlePasswordInput"
