@@ -11,7 +11,12 @@
     <!-- E 表单 -->
     <!-- S 列表 -->
     <!-- <SystemList /> -->
-    <!-- <ServiceIntroduced /> -->
+    <ServiceIntroduced
+      class="systemList"
+      :servicelist="servicelist"
+      :lables="lables"
+      :label-style="labelStyle"
+    />
     <!-- E 列表 -->
     <!-- S 侧边导航 -->
     <SidebarNavbar />
@@ -66,7 +71,7 @@ import Header from '@/components/common/head/header'
 import BannerSwipe from '@/components/spread/system/BannerSwiper'
 import Card from '@/components/spread/system/Card'
 // import SystemList from '@/components/spread/system/ListSystem'
-// import ServiceIntroduced from '@/compnents/spread/common/ServiceIntroduced'
+import ServiceIntroduced from '@/components/spread/common/ServiceIntroduced.vue'
 import SidebarNavbar from '@/components/spread/system/SidebarNavbar'
 import ConsultPhone from '~/components/spread/system/ConsultPhone'
 import Benefit from '~/components/spread/system/Benefit'
@@ -85,7 +90,7 @@ export default {
     BannerSwipe,
     Card,
     // SystemList,
-    // ServiceIntroduced,
+    ServiceIntroduced,
     SidebarNavbar,
     ConsultPhone,
     Benefit,
@@ -122,10 +127,85 @@ export default {
           jobNum: '107547',
         },
       ],
+      // 规划师埋点
       plannersCommon: {
         title: '咨询规划师',
         imName: '工商注册_咨询规划师_在线咨询',
         telName: '工商注册_咨询规划师_电话',
+      },
+      // 服务列表
+      servicelist: [
+        {
+          title: '基本开户',
+          titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
+          actualViews: '1402',
+          defaultSales: '992',
+          actualSales: '992',
+          price: 600,
+          planner: {
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+        },
+        {
+          title: '一般户开户',
+          titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
+          actualViews: '632',
+          defaultSales: '421',
+          actualSales: '416',
+          price: 600,
+          // bgimg: 'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
+          planner: {
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+        },
+        {
+          title: '银行销户',
+          titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
+          actualViews: '152',
+          defaultSales: '108',
+          actualSales: '108',
+          price: 600,
+          // bgimg: 'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
+          planner: {
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+        },
+      ],
+      // 服务列表标签
+      lables: [
+        {
+          title: '公司成立3月以上',
+          content: '有营业执照',
+        },
+        {
+          title: '效资质证明',
+          content: '临时场所清单',
+        },
+        {
+          title: '相关法律证明',
+          content: '管理体系成文信息',
+        },
+      ],
+      // 服务列表标签样式+背景图
+      labelStyle: {
+        icon: 'https://cdn.shupian.cn/sp-pt/wap/8xzqfak5fos0000.png',
+        style: 'row',
+        title: '银行服务介绍',
       },
       // 底部规划师
       planner: {
@@ -195,6 +275,19 @@ export default {
 
 <style lang="less" scoped>
 .system {
+  /deep/.systemList {
+    .serviceList-content {
+      background: url(https://cdn.shupian.cn/sp-pt/wap/1pyws4fkw79c000.png);
+      background-size: 101%;
+      background-position-x: -1px;
+      .serviceList-content-head-title {
+        // img {
+        //   display: none;
+        // }
+      }
+    }
+  }
+  // 其他服务
   .service {
     padding-top: 22px;
     margin: 0 auto;
