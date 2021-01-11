@@ -336,6 +336,7 @@ export default {
   height: 100%;
   background-color: #fff;
   overflow-y: scroll;
+  padding-bottom: 140px;
   .back_icon {
     margin-left: 40px;
   }
