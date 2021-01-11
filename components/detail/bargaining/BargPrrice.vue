@@ -1,11 +1,6 @@
 <template>
   <div class="bargFrom">
-    <sp-field
-      v-model="value2"
-      type="number"
-      maxlength="6"
-      placeholder="意向价格(元)"
-    />
+    <sp-field v-model="price" type="number" placeholder="意向价格(元)" />
   </div>
 </template>
 
@@ -18,7 +13,7 @@ export default {
   },
   data() {
     return {
-      value2: null,
+      price: null,
     }
   },
 }

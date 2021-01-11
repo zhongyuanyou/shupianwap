@@ -130,7 +130,7 @@ import Need from '~/components/detail/Need'
 import commodityConsultation from '@/components/common/commodityConsultation/commodityConsultation'
 import getUserSign from '~/utils/fingerprint'
 import tcBasicData from '~/mock/tcBasicData'
-import { recommendApi } from '~/api'
+import { recommendApi, userinfoApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import BasicItem from '~/components/detail/BasicItem'
 import QftDetails from '~/components/detail/QftDetails'
@@ -208,6 +208,10 @@ export default {
       fieldList: [],
       showShare: false, // 是否弹起分享组件
       shareOptions: [{ name: '复制链接', icon: 'link' }],
+      userInfoData: {
+        decodePhone: null,
+        fullName: null,
+      },
     }
   },
   computed: {
@@ -221,6 +225,7 @@ export default {
     // 获取同类推荐
     this.getSimilarRecommend()
     this.fieldListFun() // 加载基本信息
+    this.getUserIndo()
   },
   methods: {
     scrollHandle({ scrollTop }) {
@@ -363,6 +368,29 @@ export default {
       }
       this.$xToast.error('链接复制失败,请重试')
       // this.showShare = false
+    },
+    // 获取手机号
+    getUserIndo() {
+      if (this.token) {
+        this.$axios
+          .get(userinfoApi.info, {
+            params: {
+              id: this.userInfo.userId,
+            },
+          })
+          .then((res) => {
+            if (res.code === 200) {
+              this.userInfoData = res.data
+            } else {
+              this.$xToast.show({
+                message: '网络错误,请刷稍后再试',
+                duration: 1000,
+                icon: 'toast_ic_error',
+                forbidClick: true,
+              })
+            }
+          })
+      }
     },
   },
 }
