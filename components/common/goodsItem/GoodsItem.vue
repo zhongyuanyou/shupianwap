@@ -147,7 +147,7 @@ export default {
     },
     heightLightHtml(str) {
       // 高亮显示
-      if (this.searchKey !== '' && str.indexOf(this.searchKey) !== -1) {
+      if (this.searchKey !== '' && str && str.indexOf(this.searchKey) !== -1) {
         const _str = str.replace(
           new RegExp(this.searchKey, 'g'),
           `<span style="color: #4974f5;">${this.searchKey}</span>`
