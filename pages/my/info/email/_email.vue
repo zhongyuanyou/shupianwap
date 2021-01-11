@@ -52,6 +52,8 @@ export default {
   },
   mounted() {
     this.email = this.$route.params.email
+    const status = checkEmail(this.email)
+    this.emailRight = status
   },
   methods: {
     onClickLeft() {

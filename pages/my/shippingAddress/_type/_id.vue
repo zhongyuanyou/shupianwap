@@ -180,7 +180,7 @@ export default {
     handleEnd(val) {
       // 点击右边区域
       if (val === 1) {
-        this.ruleForm.name = ''
+        this.ruleForm.contactName = ''
       } else if (val === 2) {
         this.$appFn.dggLocation((res) => {
           // 拿到app定位后端数据并赋值
@@ -236,11 +236,44 @@ export default {
     },
     handleSave() {
       // 保存
-      if (this.$route.params.type === 'edit') {
-        this.saveEdit()
-        return
+      const req = /^1[3|4|5|6|7|8|9][0-9]{9}$/
+      if (!this.ruleForm.contactName) {
+        this.$refs.spToast.show({
+          message: '请填写收货人姓名',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else if (!this.ruleForm.phone) {
+        this.$refs.spToast.show({
+          message: '请填写收货人手机号',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else if (!req.test(this.ruleForm.phone)) {
+        this.$refs.spToast.show({
+          message: '手机号格式不正确，请重新输入',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else if (!this.areaTxt) {
+        this.$refs.spToast.show({
+          message: '请填写收货地址',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else if (!this.ruleForm.address) {
+        this.$refs.spToast.show({
+          message: '请填写详细地址',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else {
+        if (this.$route.params.type === 'edit') {
+          this.saveEdit()
+          return
+        }
+        this.saveNew()
       }
-      this.saveNew()
     },
     async saveEdit() {
       // 保存编辑内容
@@ -304,6 +337,11 @@ export default {
         await this.$axios.get(userinfoApi.delAddress, { params })
         this.$router.back()
       } catch (err) {}
+    },
+    clearName() {
+      // 清除名称
+      console.log(123)
+      this.ruleForm.contactName = ''
     },
   },
 }

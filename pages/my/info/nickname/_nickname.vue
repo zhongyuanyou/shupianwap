@@ -61,10 +61,25 @@ export default {
     },
     async onClickRight() {
       // 点击保存
+      const regCn = new RegExp(
+        "[`~!@#$^&*()=|{}':;',\\[\\].<>《》/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]"
+      )
       if (!this.nickname) {
         // 未填写用户昵称
         this.$refs.spToast.show({
           message: '没有输入昵称呢，请重新输入',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else if (this.nickname.length < 2 || this.nickname.length > 20) {
+        this.$refs.spToast.show({
+          message: '昵称字数限制为2-20位',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else if (regCn.test(this.nickname)) {
+        this.$refs.spToast.show({
+          message: '昵称不能输入特殊字符',
           duration: 1500,
           forbidClick: true,
         })
