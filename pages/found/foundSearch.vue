@@ -69,21 +69,21 @@ export default {
     }
   },
   methods: {
-    handleClick(keywords) {
+    handleClick(keyword) {
       // 带参跳转到搜索结果页
       const history = this.historySearch
       const isHas = history.some((item) => {
-        return item === keywords
+        return item === keyword
       })
-      if (!isHas && keywords) {
-        history.push(keywords)
+      if (!isHas && keyword) {
+        history.push(keyword)
       }
       this.$cookies.set('foundHistory', history)
       // this.$router.push(`/found/${keywords || ' '}`)
       this.$router.push({
         path: '/found/keywords',
         query: {
-          keywords,
+          keywords: keyword,
         },
       })
     },
