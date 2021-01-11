@@ -13,7 +13,7 @@
     <consult-tel :tel="consultTel" title=""></consult-tel>
     <!--  立即咨询  -->
     <!--  服务介绍  -->
-    <serve></serve>
+    <ServiceIntroduced></ServiceIntroduced>
     <!--  服务介绍  -->
     <!--  规划师  -->
     <gui-hua-shi-swipe
@@ -32,9 +32,9 @@ import Header from '~/components/common/head/header'
 import Banner from '~/components/spread/seal/Banner'
 import sealServe from '~/components/spread/seal/SealServe'
 import consultTel from '@/components/spread/common/ConsultTel'
-import serve from '~/components/spread/seal/Serve'
 import guiHuaShiSwipe from '@/components/spread/common/GuiHuaShiSwipe'
 import process from '~/components/spread/seal/Process'
+import ServiceIntroduced from '@/components/spread/common/ServiceIntroduced'
 export default {
   name: 'Idnex',
   components: {
@@ -42,9 +42,9 @@ export default {
     Banner,
     sealServe,
     consultTel,
-    serve,
     guiHuaShiSwipe,
     process,
+    ServiceIntroduced,
   },
   data() {
     return {
