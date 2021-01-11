@@ -5,8 +5,7 @@
 </template>
 
 <script>
-import { Button } from '@chipspc/vant-dgg'
-import { Toast } from '@chipspc/vant-dgg'
+import { Button, Toast } from '@chipspc/vant-dgg'
 export default {
   name: 'FixedBottomBtn',
   components: {

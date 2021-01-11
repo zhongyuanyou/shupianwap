@@ -79,6 +79,7 @@ export default {
           fieldValueList: [],
         },
       },
+      fieldList: [],
       tcPlannerBooth: {},
       deviceId: null, // 设备唯一码
       planners: [], // 规划师列表
