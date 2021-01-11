@@ -55,9 +55,8 @@
           @focus="() => (isshow = true)"
         />
         <!-- s 获取验证码 -->
-        <div class="verification-box">
+        <div v-show="isshow" class="verification-box">
           <sp-field
-            v-show="isshow"
             v-model="sms"
             v-md-map
             v-md:webClick
