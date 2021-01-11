@@ -9,7 +9,11 @@
           :title="`咨询分${index}`"
         />
       </sp-sidebar>
-      <div class="sidebar-navbar-list-content">12321</div>
+      <div class="sidebar-navbar-list-content">
+        <div v-for="(item, index) of contents" :key="index">
+          <div v-show="item.flag" v-html="item.content"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -39,17 +43,43 @@ export default {
   data() {
     return {
       activeKey: 0,
+      contents: [
+        {
+          content: `<h5>薯片为您提供:</h5> <p>（1）发起人符合法定人数，其中须有半数以上的发起人在中国境内有住所。</p>
+            <p>（2）有符合公司章程规定的全体发起人认购的股本数额或者募集的实收股本总额。</p>
+            <p>（3）股份发行、筹办事项符合法律规定，在发起人认购的股份缴足前，不得向他人募集股份。</p>
+            <h5>您只需准备：</h5>
+            <p>（1）有公司名称，建立符合股份有限公司要求的组织机构。</p>`,
+          flag: true,
+        },
+        {
+          content: '3213',
+          flag: false,
+        },
+        {
+          content: '4863',
+          flag: false,
+        },
+        {
+          content: '6984',
+          flag: false,
+        },
+      ],
     }
   },
   methods: {
     onChange(index) {
-      Toast(index)
+      this.contents.forEach((element) => {
+        element.flag = false
+      })
+      this.contents[index].flag = true
     },
   },
 }
 </script>
 <style lang="less" scoped>
 .sidebar-navbar {
+  font-size: 40px;
   h5 {
     // 待改
     margin: 56px 0 32px 42px;
@@ -67,14 +97,30 @@ export default {
     background: #ffffff;
     border: 1px solid rgba(205, 205, 205, 0.5);
     border-radius: 4px 4px 12px 12px;
-    &-content {
+    /deep/&-content {
+      padding: 0px 28px 32px 24px;
       position: absolute;
       top: 0;
       right: 0;
       display: inline-block;
       width: 502px;
       height: 416px;
-      border: 1px solid red;
+      overflow-x: auto;
+      h5 {
+        height: 26px;
+        line-height: 24px;
+        font-size: 26px;
+        font-weight: bold;
+        color: #333333;
+        margin-bottom: 34px;
+        margin-top: 32px;
+      }
+      p {
+        font-size: 24px;
+        font-weight: 400;
+        color: #666666;
+        line-height: 36px;
+      }
     }
   }
   /deep/.sp-sidebar {

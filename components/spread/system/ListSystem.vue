@@ -5,7 +5,7 @@
       class="list-systemt_hidden"
       :class="isMore ? 'register-list_max' : 'register-list_max--active'"
     >
-      <div class="list-box" v-for="(item, index) of 3" :key="index">
+      <div v-for="(item, index) of 3" :key="index" class="list-box">
         <div>
           <p>ISO9001质量管理体系</p>
           <p>证明管理系统整合上已达到了国际标准</p>
