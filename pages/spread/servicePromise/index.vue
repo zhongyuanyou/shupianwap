@@ -20,7 +20,9 @@
                 index == data.length - 1 ? 'none' : '1px solid #f4f4f4',
             }"
           >
-            <img class="content-item-img" :src="item.img" />
+            <div class="content-item-left-img">
+              <img class="content-item-img" :src="item.img" />
+            </div>
             <div>
               <div class="content-item-title">{{ item.title }}</div>
               <div class="context-item-text">{{ item.text }}</div>
@@ -143,10 +145,14 @@ export default {
       border-bottom: 2px solid #f4f4f4;
       display: flex;
       align-items: flex-start;
-      .content-item-img {
+      .content-item-left-img {
         width: 88px;
         height: 88px;
         margin-right: 32px;
+      }
+      .content-item-img {
+        width: 88px;
+        height: 88px;
       }
       .content-item-title {
         font-size: 32px;
