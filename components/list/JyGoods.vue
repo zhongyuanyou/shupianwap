@@ -298,9 +298,38 @@ export default {
             ][key].id
             break
           case 'moreFilter':
-            if (this.filterItem[this.currentTabJyCode][key].length) {
+            if (
+              this.filterItem[this.currentTabJyCode][key].filterKeyValArr.length
+            ) {
               // 处理更多筛选
-              arr = [...arr, ...this.filterItem[this.currentTabJyCode][key]]
+              arr = [
+                ...arr,
+                ...this.filterItem[this.currentTabJyCode][key].filterKeyValArr,
+              ]
+            }
+            if (
+              'nameLengthStart' in
+              this.filterItem[this.currentTabJyCode][key].charLength
+            ) {
+              this.formData[
+                this.currentTabJyCode
+              ].nameLengthStart = this.filterItem[this.currentTabJyCode][
+                key
+              ].charLength.nameLengthStart
+            } else {
+              delete this.formData[this.currentTabJyCode].nameLengthStart
+            }
+            if (
+              'nameLengthEnd' in
+              this.filterItem[this.currentTabJyCode][key].charLength
+            ) {
+              this.formData[
+                this.currentTabJyCode
+              ].nameLengthEnd = this.filterItem[this.currentTabJyCode][
+                key
+              ].charLength.nameLengthEnd
+            } else {
+              delete this.formData[this.currentTabJyCode].nameLengthEnd
             }
             break
           case 'priceFilter':
