@@ -18,6 +18,7 @@
             v-model="keyword"
             type="text"
             placeholder="请输入搜索内容"
+            :maxlength="100"
             @input="inputChange"
             @keydown="handelKeydown"
           />

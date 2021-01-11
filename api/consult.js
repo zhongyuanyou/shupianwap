@@ -13,7 +13,7 @@ const consult = {
     return request({
       params,
       method: 'post',
-      url: CHIPS_APP_BASE_URL + '/yk/trade/consult/get_sms_code2.do',
+      url: CHIPS_APP_BASE_URL + '/nk/trade/consult/get_sms_code2.do',
     })
   },
   consultAddLogin(params) {
@@ -21,7 +21,7 @@ const consult = {
     return request({
       params,
       method: 'post',
-      url: CHIPS_APP_BASE_URL + '/yk/trade/consult/add1.do',
+      url: CHIPS_APP_BASE_URL + '/nk/trade/consult/add1.do',
     })
   },
   consultAdd(params) {
@@ -29,16 +29,10 @@ const consult = {
     return request({
       params,
       method: 'post',
-      url: CHIPS_APP_BASE_URL + '/yk/trade/consult/consult.do',
+      url: CHIPS_APP_BASE_URL + '/nk/trade/consult/consult.do',
     })
   },
-  cmsAddConsult(params) {
-    // cms的增加留言接口（提交到智企）
-    return request({
-      params,
-      method: 'post',
-      url: CHIPS_APP_BASE_URL + '/yk/trade/consult/cms_add_consult.do',
-    })
-  },
+  // cms的增加留言接口（提交到智企）
+  cmsAddConsult: CHIPS_APP_BASE_URL + '/nk/trade/consult/cms_add_consult.do',
 }
 export default consult
