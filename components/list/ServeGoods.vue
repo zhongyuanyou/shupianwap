@@ -85,7 +85,11 @@
     </div>
     <!--E商品列表-->
     <!--S订阅-->
-    <Subscribe v-show="!listShow && !skeletonLoading" />
+    <Subscribe
+      v-show="!listShow && !skeletonLoading"
+      :content="saveActiveData"
+      :search-text="searchText"
+    />
     <!--E订阅-->
     <openApp />
   </div>

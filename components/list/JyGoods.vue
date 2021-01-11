@@ -69,6 +69,8 @@
       v-show="!listShow"
       title="新上商品通知"
       desc="填写手机号,相关商品上架第一时间通知"
+      :content="typeText"
+      :search-text="searchText"
     />
     <openApp />
   </div>
@@ -147,6 +149,7 @@ export default {
       maxHeight: 0,
       activeTabIndex: 0,
       formData: {},
+      typeText: '',
       skeletonLoading: true,
       jyFilterData: {}, // 保存所有交易业态的筛选项数据
       jyGoodsListData: {}, // 保存所有交易业态的列表数据
@@ -179,6 +182,7 @@ export default {
     this.tabItems.forEach((item) => {
       this.isReq[item.code] = false
     })
+    this.typeText = this.tabItems[0].name + '交易'
     // console.log('jygood', this.typeCodeIndex)
     this.activeTabIndex = this.typeCodeIndex
     this.currentTabJyCode = this.tabItems[this.typeCodeIndex].code
@@ -213,6 +217,8 @@ export default {
       // 切换业态tab
       if (this.reqType !== 'jy') return
       console.log(this.tabItems[name])
+      console.log(title)
+      this.typeText = title
       this.currentTabJyCode = this.tabItems[name].code
       // 如果已经存储的有筛选数据则不需要再去请求筛选数据
       if (this.jyFilterData[this.currentTabJyCode]) {

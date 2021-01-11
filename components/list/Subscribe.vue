@@ -61,6 +61,18 @@ export default {
         return '留下您的联系方式,专属规划师为您1对1服务'
       },
     },
+    content: {
+      type: [Object, String, Array],
+      default() {
+        return null
+      },
+    },
+    searchText: {
+      type: String,
+      default() {
+        return ''
+      },
+    },
   },
   data() {
     return {
@@ -111,15 +123,14 @@ export default {
   methods: {
     submitSubscribe() {
       // 提交订阅
-      if (this.isLogin) {
-        this.$xToast.show({
-          message: '提交成功',
-          duration: 1500,
-          icon: 'toast_ic_comp',
-          forbidClick: true,
-        })
+      const _self = this
+      this.$xToast.showLoading({ message: '提交中', forbidClick: true })
+      // 登录状态
+      if (_self.isLogin) {
+        this.cmsAddConsultHandle()
       } else {
-        this.checkSms()
+        // 未登录状态
+        _self.checkSms()
       }
     },
     getSMS() {
@@ -138,28 +149,9 @@ export default {
           phone: this.tel,
           type: 'default',
         }
-        // consult
-        //   .getCMSCode({
-        //     tel: this.tel,
-        //     type: 'zc',
-        //   })
-        //   .then((res) => {
-        //     console.log(res)
-        //     this.isSendSMS = true
-        //     this.countDown()
-        //   })
-        //   .catch(() => {
-        //     this.$xToast.show({
-        //       message: '网络错误，请稍后再试',
-        //       duration: 1000,
-        //       icon: 'toast_ic_error',
-        //       forbidClick: true,
-        //     })
-        //   })
         auth
           .smsCode({ axios: this.$axios }, params)
           .then((res) => {
-            console.log(res)
             this.isSendSMS = true
             this.countDown()
           })
@@ -175,6 +167,7 @@ export default {
     },
     checkSms() {
       if (!checkAuthCode(this.sms)) {
+        this.$xToast.hideLoading()
         this.$xToast.show({
           message: '请填写正确的验证码',
           duration: 1000,
@@ -187,21 +180,55 @@ export default {
         .checkSmsCode(
           { axios: this.$axios },
           {
-            phone: this.phone,
+            phone: this.tel,
             userType: 'ORDINARY_USER',
             smsCode: this.sms,
           }
         )
         .then((res) => {
           console.log(res)
+          this.cmsAddConsultHandle()
+        })
+        .catch((e) => {
+          console.log(e)
+          this.$xToast.hideLoading()
+          this.$xToast.show({
+            message: e.message,
+            duration: 1500,
+            icon: 'toast_ic_error',
+            forbidClick: true,
+          })
+        })
+    },
+    cmsAddConsultHandle() {
+      const _self = this
+      const params = {
+        consultationContent: _self.resetContent(),
+        customerName: _self.userInfo.fullName,
+        customerNumber: _self.tel || _self.userInfo.mainAccount,
+        customerSourceChannel: 'EXPERT_APPOINTMENT_CUSTOMER_CHANNEL',
+        msgSourceChannel: 'WAP_MSG_CHANNEL',
+        sourceAddr: location.href,
+        web: 'crisps',
+      }
+      this.$axios
+        .post(consult.cmsAddConsult, params)
+        .then((res) => {
+          this.$xToast.hideLoading()
           if (res.code === 200) {
-            this.$xToast.show({
+            _self.$xToast.show({
               message: '提交成功',
               duration: 1500,
               icon: 'toast_ic_comp',
-              forbidClick: true,
+              forbidClick: false,
             })
+          } else {
+            _self.$xToast.error('提交失败，请重新提交')
           }
+        })
+        .catch((e) => {
+          this.$xToast.hideLoading()
+          _self.$xToast.error('提交失败，请重新提交')
         })
     },
     // 倒计时
@@ -215,6 +242,56 @@ export default {
           this.countDown()
         }, 1000)
       }
+    },
+    resetContent() {
+      // 拼接提交内容
+      let str1 = ''
+      let str2 = ''
+      let str3 = ''
+      if (Array.isArray(this.content) && this.content.length > 0) {
+        str1 = this.concatStr(this.content)
+      } else if (typeof this.content === 'string' && this.content) {
+        str1 = this.content
+      }
+      if (this.searchText !== '') {
+        str2 = this.searchText
+      }
+      str3 = this.$parent.reqType === 'serve' ? '企业服务' : '资产交易'
+      if (str2 !== '') {
+        str3 = `${str3}:搜索内容-${str2}`
+      }
+      if (str1 !== '') {
+        str3 = `${str3}-${str1}`
+      }
+      return str3
+    },
+    concatStr(val) {
+      let str1 = ''
+      if (!val.length) {
+        str1 = '全部服务'
+      }
+      if (val[1] && val[1].services && val[1].services.length > 1) {
+        str1 = '多选'
+      } else if (
+        val[1] &&
+        val[1].services &&
+        val[1].services.length === 1 &&
+        val[1].services[0]
+      ) {
+        if (val[0].text === '不限') {
+          str1 = '全部服务'
+        } else {
+          str1 = val[0].text + '-' + val[1].services[0].text
+        }
+      } else if (
+        !val[1] ||
+        !val[1].services ||
+        !val[1].services.length ||
+        (!val[1].services[0] && val[0])
+      ) {
+        str1 = val[0].text
+      }
+      return str1
     },
   },
 }
