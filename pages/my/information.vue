@@ -211,10 +211,22 @@ export default {
             forbidClick: true,
           })
         } else {
-          this.$router.push(`/my/info/nickname/${this.info.nickName}`)
+          // this.$router.push(`/my/info/nickname/${this.info.nickName}`)
+          this.$router.push({
+            path: '/my/info/nickname',
+            query: {
+              nickName: this.info.nickName,
+            },
+          })
         }
       } else if (val === 5) {
-        this.$router.push(`/my/info/email/${this.info.email}`)
+        // this.$router.push(`/my/info/email/${this.info.email}`)
+        this.$router.push({
+          path: '/my/info/email',
+          query: {
+            email: this.info.email,
+          },
+        })
       } else if (val === 4) {
         this.sexShow = true
       } else if (val === 6) {

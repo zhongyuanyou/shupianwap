@@ -1,8 +1,8 @@
 <template>
-  <div class="nickname">
+  <div class="email">
     <!--S 头部-->
     <sp-top-nav-bar
-      :title="'昵称'"
+      :title="'电子邮箱'"
       ellipsis
       :fixed="true"
       :right-text="'保存'"
@@ -17,42 +17,43 @@
     </sp-top-nav-bar>
     <!--E 头部-->
     <!--S 内容-->
-    <div class="nickname_con">
-      <div class="nickname_con_item">
-        <input v-model="nickname" placeholder="请输入您的昵称" type="text" />
-        <div class="nickname_con_item_close" @click="clear">
+    <div class="email_con">
+      <div class="email_con_item">
+        <input
+          v-model="email"
+          placeholder="请输入您的电子邮箱地址"
+          type="text"
+          @change="checkEmai"
+        />
+        <div class="email_con_item_close" @click="clear">
           <my-icon name="pay_ic_fail" size="0.32rem" color="#ccc" />
         </div>
       </div>
     </div>
     <!--E 内容-->
-    <sp-toast ref="spToast"></sp-toast>
   </div>
 </template>
 
 <script>
-import { TopNavBar } from '@chipspc/vant-dgg'
-import { mapState } from 'vuex'
+import { TopNavBar, Toast } from '@chipspc/vant-dgg'
+import { checkEmail } from '~/utils/check'
 import { userinfoApi } from '~/api'
-import SpToast from '@/components/common/spToast/SpToast'
 export default {
-  name: 'NickName',
+  name: 'Email',
   components: {
     [TopNavBar.name]: TopNavBar,
-    SpToast,
+    [Toast.name]: Toast,
   },
   data() {
     return {
-      nickname: '',
+      email: '',
+      emailRight: false, // 邮箱格式是否正确
     }
   },
-  computed: {
-    ...mapState({
-      userId: (state) => state.user.userInfo.userId || null,
-    }),
-  },
   mounted() {
-    this.nickname = this.$route.params.nickname
+    this.email = this.$route.query.email
+    const status = checkEmail(this.email)
+    this.emailRight = status
   },
   methods: {
     onClickLeft() {
@@ -61,47 +62,45 @@ export default {
     },
     async onClickRight() {
       // 点击保存
-      const regCn = new RegExp(
-        "[`~!@#$^&*()=|{}':;',\\[\\].<>《》/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]"
-      )
-      if (!this.nickname) {
-        // 未填写用户昵称
-        this.$refs.spToast.show({
-          message: '没有输入昵称呢，请重新输入',
-          duration: 1500,
-          forbidClick: true,
+      if (!this.emailRight) {
+        Toast({
+          message: '请输入有效邮箱号码',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
         })
-      } else if (this.nickname.length < 2 || this.nickname.length > 20) {
-        this.$refs.spToast.show({
-          message: '昵称字数限制为2-20位',
-          duration: 1500,
-          forbidClick: true,
-        })
-      } else if (regCn.test(this.nickname)) {
-        this.$refs.spToast.show({
-          message: '昵称不能输入特殊字符',
-          duration: 1500,
-          forbidClick: true,
-        })
-      } else {
-        const params = {
-          type: 1,
-          value: this.nickname,
-        }
-        await this.$axios.post(userinfoApi.update, params)
-        this.$router.back()
+        return
       }
+      const params = {
+        type: 4,
+        value: this.email,
+      }
+      await this.$axios.post(userinfoApi.update, params)
+      this.$router.back()
     },
     clear() {
       // 清除昵称
-      this.nickname = ''
+      this.email = ''
+    },
+    checkEmai() {
+      // 校验邮箱格式
+      const status = checkEmail(this.email)
+      if (!status) {
+        Toast({
+          message: '请输入有效邮箱号码',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+        this.emailRight = false
+        return
+      }
+      this.emailRight = true
     },
   },
 }
 </script>
 
 <style lang="less" scoped>
-.nickname {
+.email {
   width: 100%;
   height: 100%;
   background-color: #f8f8f8;
