@@ -35,7 +35,6 @@ export default {
       )
       if (code === 200) {
         tcProductDetailData = data
-        console.log(data)
         // 获取钻展规划师
         // 获取用户唯一标识
         const deviceId = await getUserSign()

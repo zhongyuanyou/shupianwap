@@ -20,7 +20,13 @@
         <p>规划师通过虚拟号码联系您，隐私安全不打扰</p>
       </div>
       <div class="remind-btn">
-        <sp-button type="primary" block @click="handleSub">确定</sp-button>
+        <sp-button
+          type="primary"
+          :disabled="isBtnDisabled"
+          block
+          @click="handleSub"
+          >确定</sp-button
+        >
       </div>
     </div>
   </sp-action-sheet>
@@ -47,8 +53,10 @@ export default {
       checked: true,
       componentName: 'PriceFrom',
       userInfoData: {
-        decodePhone: '***********',
+        decodePhone: null,
+        fullName: null,
       },
+      isBtnDisabled: false,
     }
   },
   computed: {
@@ -56,7 +64,6 @@ export default {
       return this.$store.state.user.token
     },
     userInfo() {
-      console.log(this.$store.state.user.userInfo)
       return this.$store.state.user.userInfo
     },
   },
@@ -78,7 +85,8 @@ export default {
       return true
     },
     handleSub() {
-      if (this.$refs.priceFrom.regFun() && this.checkedReg()) {
+      // 未登录
+      if (!this.token && this.$refs.priceFrom.regFun() && this.checkedReg()) {
         this.$axios
           .post(transactionConsApi.add_consult, {
             web: 'flczmh', // 归属（原网站类型
@@ -111,29 +119,61 @@ export default {
               })
             }
           })
-        console.log('开始提交')
+      } else if (this.checkedReg() && this.token) {
+        //  登录用户
+        this.$axios
+          .post(transactionConsApi.consult, {
+            web: 'flczmh', // 归属（原网站类型
+            type: 'flzx', // 业务代码
+            tel: this.userInfoData.decodePhone, // 未加密的电话号码
+            name: this.userInfoData.fullName, // 客户名
+            content: '研发测试留言', // 以前的留言内容
+            // device: 'wap', // 设备来源
+            place: 'all', // 地区代码，城市声母，如cd,bj
+            url: location.href, // 留言所在页面的URL
+          })
+          .then((res) => {
+            if (res.code === 200) {
+              this.isBtnDisabled = true
+              this.$xToast.show({
+                message: '信息提交成功',
+                duration: 1000,
+                icon: 'toast_ic_comp',
+                forbidClick: true,
+              })
+            } else {
+              this.$xToast.show({
+                message: '信息提交失败,请稍后重试',
+                duration: 1000,
+                icon: 'toast_ic_error',
+                forbidClick: true,
+              })
+            }
+          })
       }
     },
     // 获取手机号
     getUserIndo() {
-      this.$axios
-        .get(userinfoApi.info, {
-          params: {
-            id: this.userInfo.userId,
-          },
-        })
-        .then((res) => {
-          if (res.code === 200) {
-            this.userInfoData = res.data
-          } else {
-            this.$xToast.show({
-              message: '网络错误,请刷稍后再试',
-              duration: 1000,
-              icon: 'toast_ic_error',
-              forbidClick: true,
-            })
-          }
-        })
+      if (this.token) {
+        this.$axios
+          .get(userinfoApi.info, {
+            params: {
+              id: this.userInfo.userId,
+            },
+          })
+          .then((res) => {
+            if (res.code === 200) {
+              this.userInfoData = res.data
+            } else {
+              this.$xToast.show({
+                message: '网络错误,请刷稍后再试',
+                duration: 1000,
+                icon: 'toast_ic_error',
+                forbidClick: true,
+              })
+            }
+          })
+      }
     },
   },
 }
