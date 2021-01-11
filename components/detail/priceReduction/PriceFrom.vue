@@ -1,18 +1,21 @@
 <template>
   <div class="priceFrom">
     <sp-field
-      v-model="sms"
+      v-model="phone"
       maxlength="11"
       type="number"
       placeholder="请输入手机号"
     >
       <template #button>
         <span
-          class="getCodeBtn"
+          :class="{
+            getCodeBtn: true,
+            btnDisable: btnDisable,
+          }"
           size="small"
           type="primary"
           @click="handleGetCode"
-          >获取验证码</span
+          >{{ setCodeTitle }}</span
         >
       </template>
     </sp-field>
@@ -27,6 +30,7 @@
 
 <script>
 import { Field } from '@chipspc/vant-dgg'
+import { transactionConsApi } from '@/api/transactionConsultation'
 export default {
   name: 'PriceFrom',
   components: {
@@ -34,12 +38,72 @@ export default {
   },
   data() {
     return {
-      sms: null,
+      phone: null,
       value2: null,
+      setCodeTitle: '获取验证码',
+      codeNum: 60,
+      btnDisable: false,
     }
   },
   methods: {
-    handleGetCode() {},
+    // 手机号验证
+    phoneReg() {
+      if (!/^1[3456789]\d{9}$/.test(this.phone)) {
+        this.$xToast.show({
+          message: '请输入正确的手机号',
+          duration: 1000,
+          icon: 'toast_ic_error',
+          forbidClick: true,
+        })
+        return false
+      }
+    },
+    // 手机号验证
+    codeReg() {
+      if (!/^\d{6}$/.test(this.value2)) {
+        this.$xToast.show({
+          message: '请输入正确的验证码',
+          duration: 1000,
+          icon: 'toast_ic_error',
+          forbidClick: true,
+        })
+        return false
+      }
+    },
+    handleGetCode() {
+      if (this.phoneReg()) {
+        return
+      }
+      this.codeNum = 60
+      this.btnDisable = true
+      const timer = setInterval(() => {
+        if (this.codeNum <= 1) {
+          this.setCodeTitle = '获取验证码'
+          this.codeNum = 60
+          this.btnDisable = false
+          clearInterval(timer)
+        } else {
+          this.codeNum--
+          this.setCodeTitle = `${this.codeNum}S`
+        }
+      }, 1000)
+      this.$axios
+        .get(transactionConsApi.get_sms_code, {
+          params: {
+            tel: this.phone,
+            type: 'zc',
+          },
+        })
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          this.setCodeTitle = '获取验证码'
+          this.codeNum = 60
+          this.btnDisable = true
+          console.log(err)
+        })
+    },
   },
 }
 </script>
@@ -47,6 +111,10 @@ export default {
 <style scoped lang="less">
 .priceFrom {
   margin-top: 62px;
+  .btnDisable {
+    pointer-events: none;
+    color: #999999;
+  }
 }
 /deep/.sp-cell {
   padding: 25px 0px;
@@ -89,6 +157,9 @@ export default {
   }
 }
 .getCodeBtn {
+  display: inline-block;
+  width: 150px;
+  text-align: center;
   font-size: 28px;
   font-family: PingFang SC;
   font-weight: 400;
