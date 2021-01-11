@@ -133,7 +133,12 @@ export default {
         this.$appFn.dggWebGoBack((res) => {})
         return
       }
-      this.$router.back()
+      if (window.history.length <= 1) {
+        this.$router.replace('/found')
+        return false
+      } else {
+        this.$router.back()
+      }
     },
     async getInfoDetail() {
       // 获取资讯详情
