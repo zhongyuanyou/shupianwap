@@ -184,6 +184,10 @@ export default {
   /deep/ img {
     max-width: 100%;
   }
+  /deep/ p {
+    word-wrap: break-word;
+    word-break: normal;
+  }
   .back_icon {
     margin-left: 40px;
   }
