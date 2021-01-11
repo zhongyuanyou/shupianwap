@@ -12,22 +12,34 @@
         <ul>
           <li v-for="(item, index) in oneself" :key="index">
             <span>{{ item }}</span>
-            <img
-              src="https://cdn.shupian.cn/sp-pt/wap/images/97lpow21c180000.png"
-              alt=""
-            />
+            <div class="contentright-img">
+              <img
+                src="https://cdn.shupian.cn/sp-pt/wap/images/97lpow21c180000.png"
+                alt=""
+              />
+            </div>
           </li>
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/images/dun26d2e9y80000.png"
+            alt=""
+          />
         </ul>
       </div>
       <div class="contentright">
         <ul>
           <li v-for="(item, index) in agent" :key="index">
-            <img
-              src="https://cdn.shupian.cn/sp-pt/wap/images/4v599nr8p8c0000.png"
-              alt=""
-            />
+            <div class="contentright-img">
+              <img
+                src="https://cdn.shupian.cn/sp-pt/wap/images/4v599nr8p8c0000.png"
+                alt=""
+              />
+            </div>
             <span>{{ item }}</span>
           </li>
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/images/9ufskcum58o0000.png"
+            alt=""
+          />
         </ul>
       </div>
     </div>
@@ -97,13 +109,16 @@ export default {
         width: 100%;
         height: 100%;
         padding: 40px 32px 40px 84px;
+        position: relative;
         > li {
           display: flex;
           justify-content: flex-end;
+          position: relative;
+          z-index: 2;
           &:not(:first-child) {
             margin-top: 23px;
           }
-          &:last-child {
+          &:nth-child(4) {
             margin-top: 58px;
           }
           > span {
@@ -119,12 +134,26 @@ export default {
             margin-top: -4px;
             flex-shrink: 1;
           }
-          > img {
+          .contentright-img {
             width: 12px;
             height: 13px;
+            display: flex;
             margin-top: 5px;
             flex-shrink: 0;
+            > img {
+              width: 100%;
+              height: 100%;
+              flex-shrink: 0;
+            }
           }
+        }
+        > img {
+          width: 120px;
+          height: 108px;
+          position: absolute;
+          right: 12px;
+          bottom: 12px;
+          z-index: 0;
         }
       }
     }
@@ -133,8 +162,11 @@ export default {
         width: 100%;
         height: 100%;
         padding: 40px 32px 40px 32px;
+        position: relative;
         > li {
           display: flex;
+          position: relative;
+          z-index: 2;
           &:not(:first-child) {
             margin-top: 23px;
           }
@@ -149,12 +181,26 @@ export default {
             margin-top: -4px;
             margin-left: 17px;
           }
-          > img {
-            flex-shrink: 0;
+          .contentright-img {
             width: 12px;
-            height: 14px;
-            margin-top: 6px;
+            height: 13px;
+            display: flex;
+            margin-top: 5px;
+            flex-shrink: 0;
+            > img {
+              flex-shrink: 0;
+              width: 100%;
+              height: 100%;
+            }
           }
+        }
+        > img {
+          width: 120px;
+          height: 108px;
+          position: absolute;
+          right: 12px;
+          bottom: 12px;
+          z-index: 1;
         }
       }
     }

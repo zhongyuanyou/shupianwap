@@ -18,7 +18,11 @@
       >
         <div class="serviceList-content-head-title">
           <span>{{ item.title }}</span>
-          <img :src="item.titlelable" alt="" />
+          <img
+            v-show="item.titlelable !== undefined"
+            :src="item.titlelable"
+            alt=""
+          />
         </div>
         <span>{{ item.titleContent }}</span>
       </div>
@@ -258,7 +262,6 @@ export default {
         font-weight: 400;
         color: #555555;
         line-height: 24px;
-
         display: block;
       }
     }
