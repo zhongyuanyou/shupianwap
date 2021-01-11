@@ -38,7 +38,7 @@ export default {
   },
   data() {
     return {
-      keywords: this.$route.params.keywords, // 资讯搜索关键字
+      keywords: this.$route.query.keywords || '', // 资讯搜索关键字
       list: [], // 通过关键字查询的资讯列表
       limit: 10, // 每页显示条数
       page: 1, // 当前页
