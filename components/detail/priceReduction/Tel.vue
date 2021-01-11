@@ -1,10 +1,23 @@
 <template>
-  <div class="tel">183***5525</div>
+  <div class="tel">{{ userInfo.decodePhone }}</div>
 </template>
 
 <script>
+import { userinfoApi } from '~/api'
 export default {
   name: 'Tel',
+  props: {
+    userInfo: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+  },
+  data() {
+    return {}
+  },
+  methods: {},
 }
 </script>
 

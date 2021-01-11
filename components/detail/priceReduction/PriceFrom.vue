@@ -43,6 +43,7 @@ export default {
       setCodeTitle: '获取验证码',
       codeNum: 60,
       btnDisable: false,
+      timer: null,
     }
   },
   methods: {
@@ -57,6 +58,7 @@ export default {
         })
         return false
       }
+      return true
     },
     // 手机号验证
     codeReg() {
@@ -69,33 +71,51 @@ export default {
         })
         return false
       }
+      return true
     },
     handleGetCode() {
-      if (this.phoneReg()) {
+      if (!this.phoneReg()) {
         return
       }
       this.codeNum = 60
       this.btnDisable = true
-      const timer = setInterval(() => {
+      this.timer = setInterval(() => {
         if (this.codeNum <= 1) {
-          this.setCodeTitle = '获取验证码'
-          this.codeNum = 60
-          this.btnDisable = false
-          clearInterval(timer)
+          this.clearTiemer()
         } else {
           this.codeNum--
           this.setCodeTitle = `${this.codeNum}S`
         }
       }, 1000)
       this.$axios
-        .get(transactionConsApi.get_sms_code, {
-          params: {
+        .post(
+          transactionConsApi.get_sms_code,
+          {
             tel: this.phone,
-            type: 'zc',
           },
-        })
+          {
+            headers: {
+              platformCode: 'COMDIC_PLATFORM_CRISPS',
+              terminalCode: 'COMDIC_TERMINAL_WAP',
+            },
+          }
+        )
         .then((res) => {
-          console.log(res)
+          if (res.code === 200) {
+            this.$xToast.show({
+              message: res.data,
+              duration: 1000,
+              icon: 'toast_ic_comp',
+              forbidClick: true,
+            })
+          } else {
+            this.$xToast.show({
+              message: res.data,
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
         })
         .catch((err) => {
           this.setCodeTitle = '获取验证码'
@@ -103,6 +123,19 @@ export default {
           this.btnDisable = true
           console.log(err)
         })
+    },
+    regFun() {
+      if (this.phoneReg() && this.codeReg()) {
+        return true
+      }
+      return false
+    },
+    //   清除定时器
+    clearTiemer() {
+      this.setCodeTitle = '获取验证码'
+      this.codeNum = 60
+      this.btnDisable = false
+      clearInterval(this.timer)
     },
   },
 }
