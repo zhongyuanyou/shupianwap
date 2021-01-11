@@ -6,43 +6,49 @@
         产品价格变动时，将第一时间提醒您，不再错过降价
       </p>
       <div class="priceRed-content">
-        <component :is="token ? 'Tel' : 'PriceFrom'"></component>
+        <component
+          :is="token ? 'Tel' : 'PriceFrom'"
+          ref="priceFrom"
+          :user-info="userInfoData"
+        ></component>
       </div>
       <div class="priceRed-remind">
         <h4>
-          <sp-radio-group v-model="radio">
-            <sp-radio name="1" />
-          </sp-radio-group>
+          <sp-checkbox v-model="checked" />
           允许我们将致电为您详细分析
         </h4>
         <p>规划师通过虚拟号码联系您，隐私安全不打扰</p>
       </div>
       <div class="remind-btn">
-        <sp-button type="primary" block>确定</sp-button>
+        <sp-button type="primary" block @click="handleSub">确定</sp-button>
       </div>
     </div>
   </sp-action-sheet>
 </template>
 
 <script>
-import { ActionSheet, Button, RadioGroup, Radio } from '@chipspc/vant-dgg'
+import { ActionSheet, Button, Checkbox } from '@chipspc/vant-dgg'
 import Tel from '~/components/detail/priceReduction/Tel'
 import PriceFrom from '~/components/detail/priceReduction/PriceFrom'
+import { transactionConsApi } from '@/api/transactionConsultation'
+import { userinfoApi } from '~/api'
 export default {
   name: 'PriceReduction',
   components: {
     [ActionSheet.name]: ActionSheet,
     [Button.name]: Button,
-    [RadioGroup.name]: RadioGroup,
-    [Radio.name]: Radio,
+    [Checkbox.name]: Checkbox,
     Tel,
     PriceFrom,
   },
   data() {
     return {
       show: false,
-      radio: '1',
+      checked: true,
       componentName: 'PriceFrom',
+      userInfoData: {
+        decodePhone: '***********',
+      },
     }
   },
   computed: {
@@ -50,7 +56,84 @@ export default {
       return this.$store.state.user.token
     },
     userInfo() {
+      console.log(this.$store.state.user.userInfo)
       return this.$store.state.user.userInfo
+    },
+  },
+  mounted() {
+    this.getUserIndo()
+  },
+  methods: {
+    // 复选框
+    checkedReg() {
+      if (!this.checked) {
+        this.$xToast.show({
+          message: '勾选确认框后,才能进行更多操作',
+          duration: 1000,
+          icon: 'toast_ic_error',
+          forbidClick: true,
+        })
+        return false
+      }
+      return true
+    },
+    handleSub() {
+      if (this.$refs.priceFrom.regFun() && this.checkedReg()) {
+        this.$axios
+          .post(transactionConsApi.add_consult, {
+            web: 'flczmh', // 归属（原网站类型
+            type: 'flzx', // 业务代码
+            tel: this.$refs.priceFrom.phone, // 未加密的电话号码
+            name: '未登录测试用户', // 客户名
+            smsCode: this.$refs.priceFrom.value2, // 短信验证码
+            content: '研发测试留言', // 以前的留言内容
+            device: 'wap', // 设备来源
+            place: 'all', // 地区代码，城市声母，如cd,bj
+            url: location.href, // 留言所在页面的URL
+          })
+          .then((res) => {
+            if (res.code === 200) {
+              this.$refs.priceFrom.phone = null
+              this.$refs.priceFrom.value2 = null
+              this.$refs.priceFrom.clearTiemer()
+              this.$xToast.show({
+                message: '信息提交成功',
+                duration: 1000,
+                icon: 'toast_ic_comp',
+                forbidClick: true,
+              })
+            } else {
+              this.$xToast.show({
+                message: '信息提交失败,请稍后重试',
+                duration: 1000,
+                icon: 'toast_ic_error',
+                forbidClick: true,
+              })
+            }
+          })
+        console.log('开始提交')
+      }
+    },
+    // 获取手机号
+    getUserIndo() {
+      this.$axios
+        .get(userinfoApi.info, {
+          params: {
+            id: this.userInfo.userId,
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.userInfoData = res.data
+          } else {
+            this.$xToast.show({
+              message: '网络错误,请刷稍后再试',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
     },
   },
 }
@@ -85,7 +168,7 @@ export default {
     margin-bottom: 71px;
     margin-top: 32px;
     h4 {
-      height: 26px;
+      height: 30px;
       line-height: 30px;
       font-size: 28px;
       font-family: PingFang SC;
