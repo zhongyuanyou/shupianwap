@@ -5,7 +5,9 @@
       <p class="priceRed-desc">
         产品价格变动时，将第一时间提醒您，不再错过降价
       </p>
-      <div class="priceRed-content"></div>
+      <div class="priceRed-content">
+        <component :is="token ? 'Tel' : 'PriceFrom'"></component>
+      </div>
       <div class="priceRed-remind">
         <h4>
           <sp-radio-group v-model="radio">
@@ -24,6 +26,8 @@
 
 <script>
 import { ActionSheet, Button, RadioGroup, Radio } from '@chipspc/vant-dgg'
+import Tel from '~/components/detail/priceReduction/Tel'
+import PriceFrom from '~/components/detail/priceReduction/PriceFrom'
 export default {
   name: 'PriceReduction',
   components: {
@@ -31,17 +35,23 @@ export default {
     [Button.name]: Button,
     [RadioGroup.name]: RadioGroup,
     [Radio.name]: Radio,
-  },
-  props: {
-    show: {
-      type: Boolean,
-      default: false,
-    },
+    Tel,
+    PriceFrom,
   },
   data() {
     return {
+      show: false,
       radio: '1',
+      componentName: 'PriceFrom',
     }
+  },
+  computed: {
+    token() {
+      return this.$store.state.user.token
+    },
+    userInfo() {
+      return this.$store.state.user.userInfo
+    },
   },
 }
 </script>

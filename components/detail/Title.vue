@@ -30,7 +30,7 @@
       </nuxt-link>
     </div>
     <p class="money">{{ tcProductDetailData.platformPrice }}元</p>
-    <PriceReduction :show="priceRedIsShow"></PriceReduction>
+    <PriceReduction ref="priceR"></PriceReduction>
   </div>
 </template>
 
@@ -52,13 +52,11 @@ export default {
     },
   },
   data() {
-    return {
-      priceRedIsShow: false,
-    }
+    return {}
   },
   methods: {
     handleShowPriceRed() {
-      this.priceRedIsShow = true
+      this.$refs.priceR.show = true
     },
   },
 }
