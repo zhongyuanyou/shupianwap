@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      show: true,
+      show: false,
       radio: '1',
       componentName: 'PriceFrom',
     }
