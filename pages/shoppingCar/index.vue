@@ -420,7 +420,7 @@ export default {
 
     // 资源服务的选择
     selecteResourceService(cartId, value, index) {
-      const { type, classCode, url } = value
+      const { type, classCode, url, areaCode } = value
       if (!url) {
         this.$xToast.show({
           message: '选择无效',
@@ -432,7 +432,10 @@ export default {
       }
       this.skuOpenIndex = index
       // 通过后台接口配置的跳转400或者注册地址查询页面
-      this.$router.replace(`${url}&redirect=shoppingCar`)
+      const fullPath = areaCode
+        ? `${url}&areaCode=${areaCode}&redirect=shoppingCar`
+        : `${url}&redirect=shoppingCar`
+      this.$router.replace(fullPath)
     },
 
     // 选择

@@ -479,6 +479,21 @@ export default {
       } = this.formatSearchParams
       try {
         const classCode = this.$route.query.classCode
+        const areaCode = this.$route.query.areaCode
+        if (!classCode) {
+          return Promise.reject(new Error('缺少必要的参数classCode'))
+        }
+
+        const fieldList = areaCode
+          ? [
+              {
+                fieldCode: 'area',
+                matchType: 'MATCH_TYPE_MULTI',
+                fieldValue: [areaCode],
+              },
+            ]
+          : null
+
         const data = await shoppingCar.resourceList({
           classCode,
           limit,
@@ -489,6 +504,7 @@ export default {
           orderBy,
           isAsc,
           withFieldFlg: 1, // 需要属性
+          fieldList,
         })
         console.log(data)
         if (this.refreshing) {
