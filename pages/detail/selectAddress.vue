@@ -185,7 +185,7 @@ export default {
         maxPrice: '',
       },
       dropdownPriceTitle: '价格',
-      dropdownSortTitle: '',
+      dropdownSortTitle: '默认排序',
       loading: false,
       error: false,
       finished: false,
@@ -246,7 +246,7 @@ export default {
       if (matchedSort) {
         const { ext1, ext2 } = matchedSort
         orderBy = ext1
-        isAsc = !!ext2
+        isAsc = !!+ext2 // 字符串的 0 与 1 ，需要转换为 boolean
       }
       return { searchKey, goodsPriceStart, goodsPriceEnd, orderBy, isAsc }
     },
@@ -337,13 +337,21 @@ export default {
       // 最小输入框
       console.log(val)
       this.search.price = {}
-      this.search.minPrice = val
+      let numberVal = +val
+      if (!isNaN(numberVal)) {
+        numberVal = numberVal * 100 // 元转为分
+      }
+      this.search.minPrice = numberVal
     },
     maxInput(val) {
       // 最大输入框
       console.log(val)
       this.search.price = {}
-      this.search.maxPrice = val
+      let numberVal = +val
+      if (!isNaN(numberVal)) {
+        numberVal = numberVal * 100 // 元转为分
+      }
+      this.search.maxPrice = numberVal
     },
     selectAllPrice(item) {
       // 选择不限显示标题
@@ -370,13 +378,22 @@ export default {
     confirmFilters() {
       // 价格区间确认
       this.$refs.isShowPrice.toggle()
-      const { minPrice, maxPrice, price } = this.search
+      const { price } = this.search
+      let { minPrice, maxPrice } = this.search
+      if (!isNaN(minPrice)) {
+        minPrice = minPrice / 100
+      }
+
+      if (!isNaN(maxPrice)) {
+        maxPrice = maxPrice / 100
+      }
+
       let dropdownPriceTitle = '价格'
       if (price.name) {
         dropdownPriceTitle = price.name
       } else if (minPrice || maxPrice) {
         dropdownPriceTitle = minPrice
-          ? `${minPrice}-${maxPrice}`
+          ? `${minPrice}${maxPrice ? '-' + maxPrice : ''}`
           : `${maxPrice}`
       }
 

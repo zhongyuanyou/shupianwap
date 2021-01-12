@@ -467,7 +467,7 @@ export default {
     // 发起聊天
     async uPIM(data = {}) {
       const { mchUserId, userName } = data
-      // 如果当前页面在app中，则调用原生拨打电话的方法
+      // 如果当前页面在app中，则调用原生IM的方法
       if (this.isInApp) {
         try {
           // 需要判断登陆没有，没有登录就是调用登录
