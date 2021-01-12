@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-06 18:48:40
+ * @LastEditTime: 2021-01-12 10:15:52
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -125,7 +125,12 @@
               <div class="detail-content__explain">
                 <span>
                   什么是薯片分
-                  <my-icon name="per_ic_help" size="0.24rem" color="#666666" />
+                  <my-icon
+                    name="per_ic_help"
+                    size="0.24rem"
+                    color="#666666"
+                    @click="handlePoint"
+                  />
                 </span>
                 <sp-button
                   class="detail-content__explain-btn"
@@ -223,6 +228,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      userInfo: (state) => state.user.userInfo,
     }),
     formatTagList() {
       const tagList = this.detailData.tagList
@@ -237,6 +243,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      SET_USERY: 'user/SET_USERY',
+    }),
     onClickLeft() {
       console.log('nav onClickLeft')
       this.uPGoBack()
@@ -330,27 +339,33 @@ export default {
     },
 
     // 发起聊天
-    uPIM(data = {}) {
+    async uPIM(data = {}) {
       const { mchUserId, userName } = data
-      // 如果当前页面在app中，则调用原生拨打电话的方法
+      // 如果当前页面在app中，则调用原生IM的方法
       if (this.isInApp) {
-        this.$appFn.dggOpenIM(
-          {
-            name: userName,
-            userId: mchUserId,
-            userType: 'MERCHANT_USER',
-          },
-          (res) => {
-            const { code } = res || {}
-            if (code !== 200)
-              this.$xToast.show({
-                message: `联系失败`,
-                duration: 1000,
-                forbidClick: true,
-                icon: 'toast_ic_remind',
-              })
-          }
-        )
+        try {
+          // 需要判断登陆没有，没有登录就是调用登录
+          await this.getUserInfo()
+          this.$appFn.dggOpenIM(
+            {
+              name: userName,
+              userId: mchUserId,
+              userType: 'MERCHANT_USER',
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `联系失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            }
+          )
+        } catch (error) {
+          console.error('uPIM error:', error)
+        }
         return
       }
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
@@ -375,6 +390,46 @@ export default {
 
       // 在浏览器里 返回
       this.$router.back(-1)
+    },
+
+    // app获取用户信息
+    getUserInfo() {
+      return new Promise((resolve, reject) => {
+        if (this.userInfo.userId) {
+          resolve(this.userInfo.userId)
+          return
+        }
+        this.$appFn.dggGetUserInfo((res) => {
+          const { code, data } = res || {}
+          // 未登录需要登录
+          if (code !== 200) {
+            this.$appFn.dggLogin((loginRes) => {
+              if (loginRes && loginRes.code === 200) {
+                console.log('loginRes : ', loginRes)
+                if (
+                  loginRes.data &&
+                  loginRes.data.userId &&
+                  loginRes.data.token
+                ) {
+                  this.SET_USERY(loginRes.data)
+                  resolve(loginRes.data.userId)
+                  return
+                }
+                reject(new Error('登录后userId或者token缺失'))
+                return
+              }
+              reject(new Error('登录失败'))
+            })
+            return
+          }
+          if (data && data.userId && data.token) {
+            this.SET_USERY(data)
+            resolve(data.userId)
+            return
+          }
+          reject(new Error('用户信息中userId或者token缺失'))
+        })
+      })
     },
 
     // 获取详情数据
