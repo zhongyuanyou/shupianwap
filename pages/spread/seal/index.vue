@@ -15,8 +15,7 @@
     <!--  服务介绍  -->
     <ServiceIntroduced
       :service-list="serviceList"
-      :label-style="labelStyle"
-      :lables="lables"
+      :service-title="serviceTitle"
     ></ServiceIntroduced>
     <!--  服务介绍  -->
     <!--  规划师  -->
@@ -28,27 +27,43 @@
     <!--  服务流程  -->
     <process></process>
     <!--  服务流程  -->
+    <!--  平台优势  -->
+    <goods></goods>
+    <!--  平台优势  -->
+    <!--  可能需要  -->
+    <maby></maby>
+    <!--  可能需要  -->
+    <!--  立即咨询  -->
+    <consult-tel
+      :tel="consultTel"
+      title="还有疑问？企服专家为您免费解答"
+    ></consult-tel>
+    <!--  立即咨询  -->
   </div>
 </template>
 
 <script>
 import Header from '~/components/common/head/header'
-import Banner from '~/components/spread/seal/Banner'
+import banner from '~/components/spread/seal/Banner'
 import sealServe from '~/components/spread/seal/SealServe'
 import consultTel from '@/components/spread/common/ConsultTel'
 import guiHuaShiSwipe from '@/components/spread/common/GuiHuaShiSwipe'
 import process from '~/components/spread/seal/Process'
 import ServiceIntroduced from '@/components/spread/common/ServiceIntroduced'
+import goods from '~/components/spread/seal/Goods'
+import maby from '~/components/spread/seal/Maby'
 export default {
   name: 'Idnex',
   components: {
     Header,
-    Banner,
+    banner,
     sealServe,
     consultTel,
     guiHuaShiSwipe,
     process,
     ServiceIntroduced,
+    goods,
+    maby,
   },
   data() {
     return {
@@ -76,11 +91,11 @@ export default {
       serviceList: [
         {
           title: '公章',
-          titleLable:
-            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
+          titleLabel:
+            'https://cdn.shupian.cn/sp-pt/wap/images/7vjh29crwc00000.png',
           titleContent: '公司对外事务时需要加盖',
           actualViews: '9万+',
-          defaultSales: '8万+',
+          defaultSales: '9万+',
           actualSales: '8万+',
           price: 230,
           bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
@@ -92,118 +107,21 @@ export default {
             imgSrc:
               'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
           },
-        },
-        {
-          title: '公章',
-          titleLable:
-            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
-          titleContent: '公司对外事务时需要加盖',
-          actualViews: '9万+',
-          defaultSales: '8万+',
-          actualSales: '8万+',
-          price: 230,
-          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
-          planner: {
-            id: '7862495547640840192',
-            name: '李劲',
-            jobNum: '107547',
-            telephone: '18402858698',
-            imgSrc:
-              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-          },
-        },
-        {
-          title: '公章',
-          titleLable:
-            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
-          titleContent: '公司对外事务时需要加盖',
-          actualViews: '9万+',
-          defaultSales: '8万+',
-          actualSales: '8万+',
-          price: 230,
-          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
-          planner: {
-            id: '7862495547640840192',
-            name: '李劲',
-            jobNum: '107547',
-            telephone: '18402858698',
-            imgSrc:
-              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-          },
-        },
-        {
-          title: '公章',
-          titleLable:
-            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
-          titleContent: '公司对外事务时需要加盖',
-          actualViews: '9万+',
-          defaultSales: '8万+',
-          actualSales: '8万+',
-          price: 230,
-          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
-          planner: {
-            id: '7862495547640840192',
-            name: '李劲',
-            jobNum: '107547',
-            telephone: '18402858698',
-            imgSrc:
-              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-          },
-        },
-        {
-          title: '公章',
-          titleLable:
-            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
-          titleContent: '公司对外事务时需要加盖',
-          actualViews: '9万+',
-          defaultSales: '8万+',
-          actualSales: '8万+',
-          price: 230,
-          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
-          planner: {
-            id: '7862495547640840192',
-            name: '李劲',
-            jobNum: '107547',
-            telephone: '18402858698',
-            imgSrc:
-              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-          },
-        },
-        {
-          title: '公章',
-          titleLable:
-            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
-          titleContent: '公司对外事务时需要加盖',
-          actualViews: '9万+',
-          defaultSales: '8万+',
-          actualSales: '8万+',
-          price: 230,
-          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
-          planner: {
-            id: '7862495547640840192',
-            name: '李劲',
-            jobNum: '107547',
-            telephone: '18402858698',
-            imgSrc:
-              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          labelsType: 'row',
+          colLabels: [
+            {
+              icon: '',
+              title: '',
+              content: [],
+            },
+          ],
+          rowLabels: {
+            icon: 'https://cdn.shupian.cn/sp-pt/wap/images/5rm0wj4crok0000.png',
+            text: ['办理快至六小时', '新公司必备', '送章上门'],
           },
         },
       ],
-      // 服务列表标签
-      lables: [
-        ['办理快至六小时', '新公司必备', '送章上门'],
-        ['办理快至六小时', '新公司必备', '送章上门'],
-        ['办理快至六小时', '新公司必备', '送章上门'],
-        ['办理快至六小时', '新公司必备', '送章上门'],
-        ['办理快至六小时', '新公司必备', '送章上门'],
-        ['办理快至六小时', '新公司必备', '送章上门'],
-      ],
-      // 服务列表标签样式+背景图
-      labelStyle: {
-        icon: 'https://cdn.shupian.cn/sp-pt/wap/images/5rm0wj4crok0000.png',
-        style: 'row',
-        title: '服务介绍',
-      },
+      serviceTitle: '服务介绍',
     }
   },
   head() {
