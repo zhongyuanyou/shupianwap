@@ -2,7 +2,6 @@
   <div class="select-address">
     <div
       class="top"
-      :class="{ 'safe-area-inset-top': !isInApp }"
       :style="{
         'padding-top': headerPaddingTop,
       }"
@@ -25,7 +24,7 @@
             <template #left-icon>
               <my-icon
                 name="sear_ic_sear"
-                size="0.4rem"
+                size="0.3rem"
                 color="#999999"
               ></my-icon>
             </template>
@@ -252,12 +251,13 @@ export default {
       return { searchKey, goodsPriceStart, goodsPriceEnd, orderBy, isAsc }
     },
     headerPaddingTop() {
-      if (this.appInfo && this.appInfo.statusbarheight)
-        return this.appInfo.statusbarheight + 'px'
+      if (this.appInfo && this.appInfo.statusBarHeight)
+        return this.appInfo.statusBarHeight + 'px'
       else if (this.isInApp) {
         return '20px'
+      } else {
+        return ['constant(safe-area-inset-top)', 'env(safe-area-inset-top)']
       }
-      return '0'
     },
   },
   watch: {
@@ -596,9 +596,5 @@ export default {
   .footer {
     padding: 10px 40px 24px;
   }
-}
-.safe-area-inset-top {
-  padding-top: constant(safe-area-inset-top);
-  padding-top: env(safe-area-inset-top);
 }
 </style>
