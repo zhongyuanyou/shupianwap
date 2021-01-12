@@ -33,7 +33,7 @@
       <!--E 无搜索历史-->
       <!--S 搜索检索-->
       <div v-show="keywords" class="keyword" @click="handleClick(keywords)">
-        <p>
+        <p style="width: 90%">
           搜索"<span>{{ keywords }}</span
           >"
         </p>
@@ -69,17 +69,23 @@ export default {
     }
   },
   methods: {
-    handleClick(keywords) {
+    handleClick(keyword) {
       // 带参跳转到搜索结果页
       const history = this.historySearch
       const isHas = history.some((item) => {
-        return item === keywords
+        return item === keyword
       })
-      if (!isHas && keywords) {
-        history.push(keywords)
+      if (!isHas && keyword) {
+        history.push(keyword)
       }
       this.$cookies.set('foundHistory', history)
-      this.$router.push(`/found/${keywords || ' '}`)
+      // this.$router.push(`/found/${keywords || ' '}`)
+      this.$router.push({
+        path: '/found/keywords',
+        query: {
+          keyword,
+        },
+      })
     },
     inputChange(data) {
       // input改变事件
@@ -162,18 +168,21 @@ export default {
         flex-wrap: wrap;
         margin-top: 17px;
         &_item {
-          height: 64px;
+          max-width: 100%;
           background: #f9f9f9;
           border-radius: 4px;
-          padding: 0 25px;
+          padding: 20px 25px;
           margin-right: 16px;
           font-size: 24px;
           font-family: PingFang SC;
           font-weight: 400;
           color: #222222;
           text-align: center;
-          line-height: 64px;
+          line-height: 32px;
           margin-top: 16px;
+          word-wrap: break-word;
+          word-break: normal;
+          text-align: left;
         }
       }
     }
@@ -190,6 +199,7 @@ export default {
         font-family: PingFang SC;
         font-weight: bold;
         color: #1a1a1a;
+        .textOverflow(1);
         span {
           color: #4974f5;
         }

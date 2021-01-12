@@ -18,23 +18,28 @@
         <!--        />-->
         <span>186***2232 等10人已出价</span>
       </div>
-      <sp-button plain type="primary" size="small">去出价</sp-button>
+      <sp-button plain type="primary" size="small" @click="handleShowBarg"
+        >去出价</sp-button
+      >
     </div>
     <div class="open_app">
       <Open />
     </div>
+    <Bargaining ref="barg" />
   </div>
 </template>
 
 <script>
 import { Image, Button } from '@chipspc/vant-dgg'
 import Open from '~/components/common/openApp/Open'
+import Bargaining from '~/components/detail/Bargaining'
 export default {
   name: 'Basic',
   components: {
     [Image.name]: Image,
     [Button.name]: Button,
     Open,
+    Bargaining,
   },
   props: {
     tcProductDetailData: {
@@ -42,6 +47,16 @@ export default {
       default: () => {
         return {}
       },
+    },
+  },
+  data() {
+    return {
+      priceRedIsBarg: false,
+    }
+  },
+  methods: {
+    handleShowBarg() {
+      this.$refs.barg.show = true
     },
   },
 }

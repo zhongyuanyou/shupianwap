@@ -55,11 +55,13 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { DropdownItem } from '@chipspc/vant-dgg'
 import SelectCheckBox from '@/components/common/filters/SelectCheckBox'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import clone from '~/utils/clone'
 import addRemoveClass from '@/mixins/addRemoveClass'
+
 export default {
   name: 'MoreFilter',
   components: {
@@ -178,14 +180,14 @@ export default {
     confirmFilters() {
       // 确认筛选
       this.saveActiveItems = clone(this.activeItems, true)
-      let emitData = this.resultHandle()
-      emitData = emitData.length ? emitData : ''
+      const emitData = this.resultHandle()
       this.$emit('activeItem', emitData, 'moreFilter')
       this.$refs.item.toggle()
     },
     resultHandle() {
       // 处理结果
       const filterKeyValArr = []
+      const charLength = {}
       this.saveActiveItems.forEach((item) => {
         const emitData = {
           fieldCode: '',
@@ -194,14 +196,120 @@ export default {
         }
         if (item.length) {
           item.forEach((_item) => {
-            emitData.fieldCode = _item.ext1
-            // 像地区这种ext2没有值，就需要去取字典上面的code
-            emitData.fieldValue.push(_item.ext2 ? _item.ext2 : _item.code)
+            switch (_item.pcode) {
+              case 'CONDITION-JY-SB-GD-ZFCD':
+                // 字符长度
+                if (_item.ext2.indexOf('-') > -1) {
+                  charLength.nameLengthStart = _item.ext2.split('-')[0]
+                  if (_item.ext2.split('-')[1])
+                    charLength.nameLengthEnd = _item.ext2.split('-')[1]
+                } else {
+                  charLength.nameLengthStart = _item.ext2
+                  charLength.nameLengthEnd = _item.ext2
+                }
+                break
+              case 'JY-GS-GD-ZCZB':
+                // 注册资本
+                if (_item.id !== 'all' && _item.name !== '不限') {
+                  emitData.fieldCode = _item.ext1
+                  emitData.fieldValue = {
+                    start: _item.ext2.split('-')[0],
+                    end: _item.ext2.split('-')[1],
+                  }
+                  emitData.matchType = 'MATCH_TYPE_RANGE'
+                }
+                break
+              case 'CONDITION-JY-SB-GD-ZCNX':
+              case 'JY-GS-GD-JYSJ':
+                // 经营时间
+                // const current = moment("MM-DD-YYYY")
+                if (_item.id !== 'all' && _item.name !== '不限') {
+                  emitData.fieldCode = _item.ext1
+                  const timeArr = moment().format('YYYY-MM-DD').split('-')
+                  // debugger
+                  if (_item.name.indexOf('-') > -1) {
+                    const a = parseInt(_item.name.split('-')[0])
+                    const b = parseInt(_item.name.split('-')[1])
+                    const one = moment([
+                      parseInt(timeArr[0]) - a,
+                      timeArr[1],
+                      timeArr[2],
+                    ]).unix()
+                    let two = ''
+                    if (b) {
+                      two = moment([
+                        parseInt(timeArr[0]) - b,
+                        timeArr[1],
+                        timeArr[2],
+                      ]).unix()
+                    }
+                    emitData.fieldValue = {
+                      start: two,
+                      end: one,
+                    }
+                  } else if (
+                    _item.name.indexOf('以下') > -1 ||
+                    _item.name.indexOf('以内') > -1
+                  ) {
+                    // 年以下
+                    const a = parseInt(_item.name)
+                    const one = moment([
+                      parseInt(timeArr[0]) - a,
+                      timeArr[1],
+                      timeArr[2],
+                    ]).unix()
+                    const two = moment().unix()
+                    emitData.fieldValue = {
+                      start: one,
+                      end: two,
+                    }
+                  } else if (_item.name.indexOf('以上') > -1) {
+                    // 年以上
+                    const a = parseInt(_item.name)
+                    const one = moment([
+                      parseInt(timeArr[0]) - a,
+                      timeArr[1],
+                      timeArr[2],
+                    ]).unix()
+                    const two = moment().unix()
+                    emitData.fieldValue = {
+                      // start: one,
+                      end: one,
+                    }
+                  }
+                  emitData.matchType = 'MATCH_TYPE_RANGE'
+                }
+                break
+              default:
+                if (_item.id !== 'all' && _item.name !== '不限') {
+                  emitData.fieldCode = _item.ext1
+                  // 像地区这种ext2没有值，就需要去取字典上面的code
+                  emitData.fieldValue.push(_item.ext2 ? _item.ext2 : _item.code)
+                }
+            }
+
+            // if (_item.pcode === 'CONDITION-JY-SB-GD-ZFCD') {
+            //   // 该筛选项为字节筛选项
+            //   if (_item.code !== 'JY-SB-GD-ZFCD-BX') {
+            //     if (_item.ext2.indexOf('-') > -1) {
+            //       charLength.nameLengthStart = _item.ext2.split('-')[0]
+            //       if (_item.ext2.split('-')[1])
+            //         charLength.nameLengthEnd = _item.ext2.split('-')[1]
+            //     } else {
+            //       charLength.nameLengthStart = _item.ext2
+            //       charLength.nameLengthEnd = _item.ext2
+            //     }
+            //   }
+            // } else if (_item.id !== 'all' && _item.name !== '不限') {
+            //   emitData.fieldCode = _item.ext1
+            //   // 像地区这种ext2没有值，就需要去取字典上面的code
+            //   emitData.fieldValue.push(_item.ext2 ? _item.ext2 : _item.code)
+            // }
           })
-          filterKeyValArr.push(emitData)
+          if (emitData.fieldCode) filterKeyValArr.push(emitData)
         }
       })
-      return filterKeyValArr
+      return { filterKeyValArr, charLength }
     },
     getBottomConfirmHeight(height) {
       // 获取底部确认按钮的高度

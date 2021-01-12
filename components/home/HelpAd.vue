@@ -61,6 +61,7 @@ export default {
   methods: {
     jumpPage() {
       //   this.$router.push('/spread/myDemandCard/companyRegister')
+      this.$router.push('/spread/myDemandCard')
     },
   },
 }
