@@ -223,7 +223,6 @@ export default {
           const params = {
             ...this.formData,
           }
-          console.log('params', params)
           await complain.add({ axios: this.$axios }, params)
           this.loading = false
           this.formData = {
@@ -291,7 +290,7 @@ export default {
         const res = await this.$axios.get(commonApi.detail, { params })
         this.loading = false
         if (res.code === 200) {
-          this.complainCategory = res.data.childrenList
+          this.complainCategory = res.data.childrenList || []
         }
       } catch (err) {
         this.loading = false

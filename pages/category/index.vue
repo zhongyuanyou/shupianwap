@@ -99,7 +99,7 @@
 import { mapState } from 'vuex'
 import Better from 'better-scroll'
 import { Swipe, SwipeItem, Image } from '@chipspc/vant-dgg'
-import { Swiper, SwiperSlide, directive } from 'vue-awesome-swiper'
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import { category } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import adJumpHandle from '~/mixins/adJumpHandle'
