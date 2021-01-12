@@ -114,7 +114,7 @@ export default {
     handleAvatar() {
       // 点击头像
       if (!this.userId) {
-        this.$router.replace({
+        this.$router.push({
           name: 'login',
           query: { redirect: this.$route.fullPath },
         })
