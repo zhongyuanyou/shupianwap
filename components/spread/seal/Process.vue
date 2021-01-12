@@ -1,6 +1,7 @@
 <template>
   <div class="seal-process">
     <div class="seal-process-title">服务流程</div>
+    <div class="seal-process-content"></div>
   </div>
 </template>
 
@@ -12,7 +13,7 @@ export default {
 
 <style scoped lang="less">
 .seal-process {
-  margin: 23px 40px 0;
+  margin: 23px 40px 31px;
   &-title {
     font-size: 40px;
     line-height: 40px;

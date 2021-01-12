@@ -6,7 +6,7 @@
           src="https://cdn.shupian.cn/sp-pt/wap/images/62to3cpd7h40000.png"
           alt=""
         />
-        <h4>立即预约专属规划师</h4>
+        <h4>立即预约银行服务</h4>
         <img
           src="https://cdn.shupian.cn/sp-pt/wap/images/x5o8jch38cg000.png"
           alt=""
@@ -16,11 +16,7 @@
         <!-- s行业下拉框 -->
         <sp-field
           v-model="value"
-          v-md-map
-          v-md:WebClick
-          data-name="工商变更表单_下拉表单"
-          data-form_type="咨询表单"
-          label="变更项目"
+          label="我需要"
           :readonly="read"
           @click="selectshow = true"
         />
@@ -48,11 +44,7 @@
         <!-- e下拉选项框  -->
         <sp-field
           v-model="telephone"
-          v-md-map
-          v-md:WebClick
           type="tel"
-          data-name="工商变更表单_手机号"
-          data-form_type="咨询表单"
           label="手机号"
           placeholder="信息保护中，仅官方可见"
           maxlength="11"
@@ -60,14 +52,7 @@
           @focus="() => (isshow = true)"
         />
         <!-- s 获取验证码 -->
-        <div
-          v-show="isshow"
-          v-md-map
-          v-md:WebClick
-          class="verification-box"
-          data-name="工商变更表单_验证码"
-          data-form_type="咨询表单"
-        >
+        <div v-show="isshow" class="verification-box">
           <sp-field
             v-model="sms"
             label="验证码"
@@ -78,14 +63,7 @@
           />
 
           <!-- s 倒计时 -->
-          <span
-            v-md-map
-            v-md:WebClick
-            class="seconds"
-            data-name="工商变更表单_获取验证码"
-            data-form_type="咨询表单"
-            @click="sendSms"
-          >
+          <span class="seconds" @click="sendSms">
             {{ countdown > 0 ? `${countdown}s` : '发送验证码' }}</span
           >
           <!-- e 倒计时 -->
@@ -93,17 +71,8 @@
         <!-- e 获取验证码 -->
       </div>
       <!-- s 按钮 -->
-      <button
-        v-md:WebClick
-        v-md:p_formSubmit
-        v-md-map
-        class="free-btn"
-        data-event_name="p_formSubmit"
-        data-form_type="咨询表单"
-        data-form_name="工商变更表单_提交表单"
-        @click="freeBtn()"
-      >
-        <span>立即获取方案</span>
+      <button class="free-btn" @click="freeBtn()">
+        <span>获取报价</span>
       </button>
       <!-- e 按钮 -->
       <div class="bottom-lables">
@@ -135,7 +104,7 @@ export default {
   data() {
     return {
       read: true,
-      value: '法人变更', // 行业信息
+      value: '基本开户', // 行业信息
       telephone: '', // 电话号码
       sms: '', // 验证码
       number: '',
@@ -144,21 +113,13 @@ export default {
       countdown: -1, // 发送验证码倒计时60秒
       countdownTimer: null,
       actions: [
-        { name: '法人变更', color: '#5a79e8' },
-        { name: '股东变更', color: '#222222' },
-        { name: '任职变更', color: '#222222' },
-        { name: '公司名称变更', color: '#222222' },
-        { name: '经营范围变更', color: '#222222' },
-        { name: '跨区地址变更', color: '#222222' },
-        { name: '同区地址变更', color: '#222222' },
-        { name: '注册资金减少变更', color: '#222222' },
-        { name: '公司类型变更', color: '#222222' },
-        { name: '个体变更', color: '#222222' },
-        { name: '股权变更', color: '#222222' },
-        { name: '认缴年限变更', color: '#222222' },
-        { name: '其他变更', color: '#222222' },
+        { name: '基本开户', color: '#5a79e8' },
+        { name: '一般户开户', color: '#222222' },
+        { name: '基本户开户', color: '#222222' },
+        { name: '银行销户', color: '#222222' },
+        { name: '其它服务', color: '#222222' },
       ],
-      lables: ['流程透明', '信息安全', '官方服务'],
+      lables: ['一站式解决', '资料代审', '全程代办'],
     }
   },
   created() {},
@@ -210,7 +171,7 @@ export default {
             if (res.error === 0) {
               vm.countDown()
             }
-            Toast(res.msg)
+            console.log(res.msg)
           })
         }
       }

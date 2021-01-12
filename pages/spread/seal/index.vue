@@ -13,7 +13,11 @@
     <consult-tel :tel="consultTel" title=""></consult-tel>
     <!--  立即咨询  -->
     <!--  服务介绍  -->
-    <ServiceIntroduced></ServiceIntroduced>
+    <ServiceIntroduced
+      :service-list="serviceList"
+      :label-style="labelStyle"
+      :lables="lables"
+    ></ServiceIntroduced>
     <!--  服务介绍  -->
     <!--  规划师  -->
     <gui-hua-shi-swipe
@@ -68,6 +72,138 @@ export default {
         imName: '税务筹划_咨询规划师_在线咨询',
         telName: '税务筹划_咨询规划师_拨打电话',
       },
+      // 服务列表
+      serviceList: [
+        {
+          title: '公章',
+          titleLable:
+            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
+          titleContent: '公司对外事务时需要加盖',
+          actualViews: '9万+',
+          defaultSales: '8万+',
+          actualSales: '8万+',
+          price: 230,
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
+          planner: {
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+        },
+        {
+          title: '公章',
+          titleLable:
+            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
+          titleContent: '公司对外事务时需要加盖',
+          actualViews: '9万+',
+          defaultSales: '8万+',
+          actualSales: '8万+',
+          price: 230,
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
+          planner: {
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+        },
+        {
+          title: '公章',
+          titleLable:
+            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
+          titleContent: '公司对外事务时需要加盖',
+          actualViews: '9万+',
+          defaultSales: '8万+',
+          actualSales: '8万+',
+          price: 230,
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
+          planner: {
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+        },
+        {
+          title: '公章',
+          titleLable:
+            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
+          titleContent: '公司对外事务时需要加盖',
+          actualViews: '9万+',
+          defaultSales: '8万+',
+          actualSales: '8万+',
+          price: 230,
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
+          planner: {
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+        },
+        {
+          title: '公章',
+          titleLable:
+            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
+          titleContent: '公司对外事务时需要加盖',
+          actualViews: '9万+',
+          defaultSales: '8万+',
+          actualSales: '8万+',
+          price: 230,
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
+          planner: {
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+        },
+        {
+          title: '公章',
+          titleLable:
+            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
+          titleContent: '公司对外事务时需要加盖',
+          actualViews: '9万+',
+          defaultSales: '8万+',
+          actualSales: '8万+',
+          price: 230,
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
+          planner: {
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+        },
+      ],
+      // 服务列表标签
+      lables: [
+        ['办理快至六小时', '新公司必备', '送章上门'],
+        ['办理快至六小时', '新公司必备', '送章上门'],
+        ['办理快至六小时', '新公司必备', '送章上门'],
+        ['办理快至六小时', '新公司必备', '送章上门'],
+        ['办理快至六小时', '新公司必备', '送章上门'],
+        ['办理快至六小时', '新公司必备', '送章上门'],
+      ],
+      // 服务列表标签样式+背景图
+      labelStyle: {
+        icon: 'https://cdn.shupian.cn/sp-pt/wap/images/5rm0wj4crok0000.png',
+        style: 'row',
+        title: '服务介绍',
+      },
     }
   },
   head() {
@@ -97,5 +233,8 @@ export default {
     width: 750px !important;
     left: auto !important;
   }
+}
+/deep/ .serviceList-content-head-title > span {
+  color: #ffffff !important;
 }
 </style>
