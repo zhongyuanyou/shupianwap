@@ -7,11 +7,7 @@
     <!-- 表单 -->
     <From />
     <!-- 服务列表 -->
-    <Service
-      :service-list="serviceList"
-      :lables="lables"
-      :label-style="labelStyle"
-    >
+    <Service :service-list="serviceList" :service-title="serviceTitle">
     </Service>
     <!-- 为什么选择薯片平台 -->
     <Choose />
@@ -298,6 +294,7 @@ export default {
   data() {
     return {
       title: '银行服务',
+      serviceTitle: '银行服务介绍',
       // banner图列表
       imgList: [
         {
@@ -332,7 +329,6 @@ export default {
               'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
           },
           labelsType: 'col',
-          mainTitle: '银行服务介绍',
           rowLabels: {
             title: '注意事项',
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
@@ -361,7 +357,6 @@ export default {
               'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
           },
           labelsType: 'col',
-          mainTitle: '银行服务介绍',
           rowLabels: {
             title: '所需资料',
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
@@ -387,7 +382,6 @@ export default {
               'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
           },
           labelsType: 'col',
-          mainTitle: '银行服务介绍',
           rowLabels: {
             title: '所需资料',
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
@@ -422,12 +416,6 @@ export default {
           ],
         },
       ],
-      // 服务列表标签样式+背景图
-      labelStyle: {
-        icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
-        style: 'col',
-        title: '银行服务介绍',
-      },
       // 规划师title
       plannersTitle: {
         title: '咨询规划师',
@@ -541,8 +529,6 @@ export default {
                     : Math.floor(Math.random() * vm.lables.length)
                 }`
               ],
-            mainTitle: '银行服务介绍',
-            icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
           }
           serviceList.push(obj)
         })

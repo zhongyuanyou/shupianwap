@@ -1,6 +1,6 @@
 <template>
   <div class="serviceList">
-    <span class="serviceList-title">{{ serviceList[0].mainTitle }}</span>
+    <span class="serviceList-title">{{ serviceTitle }}</span>
     <slot name="dropDown"></slot>
     <div
       v-for="(item, index) in serviceList"
@@ -136,17 +136,14 @@ export default {
       type: Array,
       default: () => {},
     },
-    // 服务列表title+bg+标签样式
-    labelStyle: {
-      type: Object,
+    // 服务列表主title
+    serviceTitle: {
+      type: String,
       default: () => {
-        return {}
+        return {
+          serviceTitle: '服务介绍',
+        }
       },
-    },
-    // 服务介绍列表 标签
-    lables: {
-      type: Array,
-      default: () => {},
     },
   },
   data() {
@@ -201,7 +198,7 @@ export default {
   }
   .serviceList-content {
     background: #ffffff;
-    border: 1px solid rgba(205, 205, 205, 0.5);
+    border: 1px solid rgba(205, 205, 205, 0.3);
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     margin-top: 31px;
@@ -224,7 +221,7 @@ export default {
     margin-bottom: 32px;
     .serviceList-content-head-title {
       display: flex;
-      align-items: center;
+
       > span {
         font-size: 32px;
         font-family: PingFang SC;
@@ -237,6 +234,7 @@ export default {
         width: 96px;
         height: 32px;
         margin-left: 15px;
+        margin-top: -3px;
       }
     }
     > span {
