@@ -230,8 +230,6 @@ export default {
       // this.$router.back()
       if (window.history.length <= 1) {
         this.$router.replace('/')
-      } else if (this.redirect) {
-        this.$router.replace(this.redirect)
       } else {
         this.$router.back()
       }
