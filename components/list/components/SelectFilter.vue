@@ -74,7 +74,7 @@ export default {
       activeItems: [], // 默认激活的
       saveActiveItems: [], // 存储的筛选项数据
       contentMaxHeight: 0, // 内容的最大高
-      lowLineCode: ['CONDITION-JY-SB-FL'],
+      lowLineCode: [],
     }
   },
   computed: {
