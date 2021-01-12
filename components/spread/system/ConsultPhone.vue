@@ -16,10 +16,8 @@
         >
       </div>
       <button
-        v-md-map
-        v-md:webClick
+        v-sensorsTrack:webClick="{ name: '对体系认证还有疑问_立即咨询' }"
         class="cousulttel-content-button"
-        data-name="对代理记账还有疑问_立即咨询"
         @click="telPhone"
       >
         立即咨询

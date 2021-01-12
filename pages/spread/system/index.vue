@@ -41,8 +41,6 @@
         <a
           v-for="(item, index) of sericeImg"
           :key="index"
-          v-md-map
-          v-md:webClick
           :data-name="item.name"
           @click="onService(item.url, index)"
         >
@@ -326,12 +324,10 @@ export default {
         },
       })
       if (res.code === 200) {
-        console.log('请求成功')
         return {
           resultData: res.data,
         }
       } else {
-        console.log('服务异常')
         return {
           resultData: defaultRes.data,
         }
@@ -443,6 +439,29 @@ export default {
               'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
           },
         },
+        {
+          title: '银行销户',
+          titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
+          actualViews: '152',
+          defaultSales: '108',
+          actualSales: '108',
+          price: 600,
+          bgImg: '',
+          labelsType: 'row',
+          rowLabels: {
+            icon: 'https://cdn.shupian.cn/sp-pt/wap/8xzqfak5fos0000.png',
+            text: ['相关法律证明', '管理体系成文信息'],
+          },
+
+          planner: {
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+        },
       ],
       serviceTitle: '服务介绍',
       // 服务列表标签
@@ -471,32 +490,32 @@ export default {
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/fbnkmcxvxqg0000.png',
           name: '工商注册_你可能还需要其他服务_税务筹划',
-          url: 'https://shupian.dgg.cn/spread/tax',
+          url: '/spread/tax',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/2dv958uknitc000.png',
           name: '工商注册_你可能还需要其他服务_代理记账',
-          url: 'https://shupian.dgg.cn/spread/agency/',
+          url: '/spread/agency/',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/72gbx82vsnk0000.png',
           name: '工商注册_你可能还需要其他服务_其他服务',
-          url: '',
+          url: '/spread/businessChange',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/d4jmafpuy5s0000.png',
           name: '工商注册_你可能还需要其他服务_代理记账',
-          url: 'https://shupian.dgg.cn/spread/agency/',
+          url: '/spread/agency/',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/elaeb6is89s0000.png',
           name: '工商注册_你可能还需要其他服务_代理记账',
-          url: 'https://shupian.dgg.cn/spread/agency/',
+          url: '/spread/agency/',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/2ni7sgi4kii0000.png',
           name: '工商注册_你可能还需要其他服务_代理记账',
-          url: 'https://shupian.dgg.cn/spread/agency/',
+          url: '',
         },
       ],
     }
@@ -605,7 +624,11 @@ export default {
     // 其他服务的跳转判断
     onService(url, index) {
       if (url !== '') {
-        window.location.href = url
+        this.$router.push({
+          path: `${url}`,
+        })
+        // window.location.href = url
+        console.log(this.$route)
       } else {
         this.$root.$emit(
           'openIMM',
@@ -632,6 +655,8 @@ export default {
 
 <style lang="less" scoped>
 .system {
+  width: @spread-page-width;
+  margin: 0 auto;
   // 列表
   /deep/.systemList {
     .serviceList-content {

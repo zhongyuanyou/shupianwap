@@ -2,7 +2,12 @@
   <div class="card">
     <div class="card-content">
       <h3 v-text="cardTitle"></h3>
-      <a v-sensorsTrack:webClick="{ form_name: '体系认证_表单_我需要' }">
+      <a
+        v-sensorsTrack:webClick="{
+          form_name: '体系认证表单_下拉表单',
+          form_type: '咨询表单',
+        }"
+      >
         <sp-cell
           title-class="down-left"
           :border="false"
@@ -24,7 +29,12 @@
       />
       <div class="input-phone">
         <sp-cell-group @click="verificationShow = true">
-          <a v-sensorsTrack:webClick="{ form_name: '体系认证_表单_手机号' }">
+          <a
+            v-sensorsTrack:webClick="{
+              form_name: '体系认证表单_手机号',
+              form_type: '咨询表单',
+            }"
+          >
             <sp-field
               v-model="phoneValue"
               type="tel"
@@ -37,8 +47,12 @@
           /></a>
         </sp-cell-group>
         <div v-show="verificationShow" class="input-verification">
-          <a v-sensorsTrack:webClick="{ form_name: '体系认证_表单_验证码' }">
+          <a>
             <sp-field
+              v-sensorsTrack:webClick="{
+                form_name: '体系认证表单_验证码',
+                form_type: '咨询表单',
+              }"
               v-model="sms"
               type="tel"
               maxlength="6"
@@ -48,7 +62,14 @@
               @input="inputVal($event)"
             >
               <template #button>
-                <span class="verification" @click="onSms">{{ test }}</span>
+                <a
+                  v-sensorsTrack:webClick="{
+                    form_name: '体系认证表单_获取验证码',
+                    form_type: '咨询表单',
+                  }"
+                >
+                  <span class="verification" @click="onSms">{{ test }}</span></a
+                >
               </template>
             </sp-field>
           </a>
@@ -288,7 +309,7 @@ export default {
           window.getTrackRow('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
-            form_name: '工商注册_表单',
+            form_name: '表单提交结果',
           })
         } else {
           // ------------
