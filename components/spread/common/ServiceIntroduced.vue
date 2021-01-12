@@ -6,7 +6,13 @@
       v-for="(item, index) in serviceList"
       v-show="index > num ? false : true"
       :key="index"
+      v-sensorsTrack:webClick="{
+        eventName: 'wap元素点击',
+        type: '售前',
+        name: `${serviceTitle}_${item.title}_在线咨询`,
+      }"
       class="serviceList-content"
+      href="javascript:;"
       @click="plannerIm(item.planner)"
     >
       <div
@@ -16,8 +22,8 @@
         <div class="serviceList-content-head-title">
           <span>{{ item.title }}</span>
           <img
-            v-show="item.titleLable !== undefined"
-            :src="item.titleLable"
+            v-show="item.titleLabel !== undefined"
+            :src="item.titleLabel"
             alt=""
           />
         </div>
@@ -76,6 +82,11 @@
           </a>
           <a>
             <my-icon
+              v-sensorsTrack:p_IMClick="{
+                eventName: '在线咨询',
+                type: '售前',
+                name: `${serviceTitle}_${item.title}_在线咨询`,
+              }"
               name="notify_ic_chat"
               color="#4974F5"
               size="0.4rem"
@@ -90,6 +101,11 @@
           </a>
           <a href="javascript:;" @click="call(item.planner.telephone)">
             <my-icon
+              v-sensorsTrack:webClick="{
+                eventName: 'wap元素点击',
+                type: '售前',
+                name: `${serviceTitle}_${item.title}_拨打电话`,
+              }"
               name="notify_ic_tel"
               color="#4974F5"
               size="0.4rem"
@@ -106,8 +122,26 @@
       class="show-more-btn"
       @click="showMore"
     >
-      <span v-show="more">更多服务</span>
-      <span v-show="close">收起</span>
+      <a
+        v-show="more"
+        v-sensorsTrack:webClick="{
+          eventName: 'wap元素点击',
+          type: '售前',
+          name: `${pageTitle}页面_更多服务`,
+        }"
+        href="javascript:;"
+        >更多服务</a
+      >
+      <a
+        v-show="close"
+        v-sensorsTrack:webClick="{
+          eventName: 'wap元素点击',
+          type: '售前',
+          name: `${pageTitle}页面_收起`,
+        }"
+        href="javascript:;"
+        >收起</a
+      >
       <my-icon
         v-show="more"
         name="tab_ic_all_n"
@@ -134,16 +168,47 @@ export default {
     // 服务介绍列表
     serviceList: {
       type: Array,
-      default: () => {},
+      default: () => {
+        return {
+          title: '银行销户',
+          titleLabel:
+            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
+          titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
+          actualViews: '152',
+          defaultSales: '108',
+          actualSales: '108',
+          price: 600,
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
+          planner: {
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+          labelsType: 'col',
+          rowLabels: {
+            title: '所需资料',
+            icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
+            content: [
+              '由法人代表及直接出具销户报告',
+              '各种未使用的重要空白票据及结算凭证',
+            ],
+          },
+        }
+      },
     },
     // 服务列表主title
     serviceTitle: {
       type: String,
       default: () => {
-        return {
-          serviceTitle: '服务介绍',
-        }
+        return '服务介绍'
       },
+    },
+    pageTitle: {
+      type: String,
+      default: () => {},
     },
   },
   data() {
@@ -163,7 +228,7 @@ export default {
       if (this.more) {
         this.close = true
         this.more = false
-        this.num = this.servicelist.length
+        this.num = this.serviceList.length
       } else {
         this.close = false
         this.more = true
@@ -197,6 +262,7 @@ export default {
     display: block;
   }
   .serviceList-content {
+    display: block;
     background: #ffffff;
     border: 1px solid rgba(205, 205, 205, 0.3);
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
@@ -327,6 +393,8 @@ export default {
           height: 40px;
           background: #f4f4f4;
           left: -25px;
+          top: 50%;
+          margin-top: -20px;
         }
         > span {
           display: block;
@@ -432,7 +500,7 @@ export default {
     justify-content: center;
     padding: 19px 0;
     margin-top: 40px;
-    > span {
+    > a {
       display: block;
       font-size: 28px;
       font-family: PingFang SC;

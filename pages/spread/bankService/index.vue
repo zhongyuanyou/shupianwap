@@ -24,12 +24,12 @@
 
 <script>
 import Header from '../../../components/common/head/header'
-import Banner from '../../../components/spread/bankService/bannerSwipe'
-import From from '../../../components/spread/bankService/form'
+import Banner from '../../../components/spread/bankService/BannerSwipe'
+import From from '../../../components/spread/bankService/Form'
 import Service from '../../../components/spread/common/ServiceIntroduced'
-import Choose from '../../../components/spread/bankService/choose'
+import Choose from '../../../components/spread/bankService/Choose'
 import Planner from '../../../components/spread/common/GuiHuaShiSwipe'
-import Need from '../../../components/spread/bankService/mayNeed'
+import Need from '../../../components/spread/bankService/MayNeed'
 import Bottom from '../../../components/spread/common/FixedBottom'
 import dggImCompany from '../../../components/spread/DggImCompany'
 import { spreadApi } from '@/api/spread'
@@ -312,7 +312,7 @@ export default {
       serviceList: [
         {
           title: '基本开户',
-          titleLable:
+          titleLabel:
             'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
           titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
           actualViews: '1402',
@@ -340,7 +340,7 @@ export default {
         },
         {
           title: '一般户开户',
-          titleLable:
+          titleLabel:
             'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
           titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
           actualViews: '632',
@@ -365,7 +365,7 @@ export default {
         },
         {
           title: '银行销户',
-          titleLable:
+          titleLabel:
             'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
           titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
           actualViews: '152',
@@ -473,6 +473,16 @@ export default {
     this.planner = this.plannersList[0]
     this.plannerHandleData(this.result.data.planlerList || [])
   },
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端推广页', // 应用名称
+      product_line: '银行服务',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+  },
   methods: {
     // 跳转判断
     openIM(url) {
@@ -500,7 +510,7 @@ export default {
           const obj = {
             id: item.materialList[0].productId,
             title: item.materialList[0].productDetail.operating.showName,
-            titleLable:
+            titleLabel:
               'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
             titleContent:
               item.materialList[0].productDetail.operating.productDescribe,

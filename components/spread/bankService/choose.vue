@@ -158,6 +158,7 @@ export default {
       }
     }
     .contentright {
+      background: rgba(73, 116, 245, 0.06);
       > ul {
         width: 100%;
         height: 100%;
@@ -174,7 +175,7 @@ export default {
             font-size: 26px;
             font-family: PingFang SC;
             font-weight: 400;
-            color: #555555;
+            color: #4974f5;
             line-height: 25px;
             display: block;
             line-height: 34px;
