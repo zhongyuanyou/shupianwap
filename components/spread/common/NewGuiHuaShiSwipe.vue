@@ -116,6 +116,13 @@ export default {
         }
       },
     },
+    // 判断新老埋点
+    type: {
+      type: String,
+      default: () => {
+        return ''
+      },
+    },
   },
   data() {
     return {

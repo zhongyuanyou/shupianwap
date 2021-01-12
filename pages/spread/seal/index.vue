@@ -10,7 +10,13 @@
     <seal-serve></seal-serve>
     <!--  刻章服务  -->
     <!--  立即咨询  -->
-    <consult-tel :tel="consultTel" title=""></consult-tel>
+    <consult-tel
+      :tel="consultTel"
+      title=""
+      button="免费咨询"
+      md-type="new"
+      md-name="专业刻章服务_免费咨询"
+    ></consult-tel>
     <!--  立即咨询  -->
     <!--  服务介绍  -->
     <ServiceIntroduced
@@ -37,6 +43,8 @@
     <consult-tel
       :tel="consultTel"
       title="还有疑问？企服专家为您免费解答"
+      md-type="new"
+      md-name="专业刻章服务_免费咨询"
     ></consult-tel>
     <!--  立即咨询  -->
     <!--  薯片找人  -->
@@ -116,7 +124,7 @@ export default {
             'https://cdn.shupian.cn/sp-pt/wap/images/7vjh29crwc00000.png',
           titleContent: '公司对外事务时需要加盖',
           actualViews: '9万+',
-          defaultSales: '9万+',
+          defaultSales: '8万+',
           actualSales: '8万+',
           price: 230,
           bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
@@ -138,7 +146,7 @@ export default {
           ],
           rowLabels: {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/5rm0wj4crok0000.png',
-            text: ['办理快至六小时', '新公司必备', '送章上门'],
+            text: ['办理快至2小时', '新公司必备', '送章上门'],
           },
         },
         {
@@ -146,10 +154,10 @@ export default {
           titleLabel:
             'https://cdn.shupian.cn/sp-pt/wap/images/7vjh29crwc00000.png',
           titleContent: '一般用于银行预留印鉴或者代替法人签名',
-          actualViews: '9万+',
-          defaultSales: '9万+',
-          actualSales: '8万+',
-          price: 230,
+          actualViews: '8万+',
+          defaultSales: '7万+',
+          actualSales: '7万+',
+          price: 120,
           bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
           planner: {
             id: '7862495547640840192',
@@ -169,7 +177,7 @@ export default {
           ],
           rowLabels: {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/5rm0wj4crok0000.png',
-            text: ['办理快至六小时', '新公司必备', '送章上门'],
+            text: ['办理快至2小时', '新公司必备', '送章上门'],
           },
         },
         {
@@ -177,9 +185,9 @@ export default {
           titleLabel:
             'https://cdn.shupian.cn/sp-pt/wap/images/7vjh29crwc00000.png',
           titleContent: '公司票据、支票出具时需要财务章',
-          actualViews: '9万+',
-          defaultSales: '9万+',
-          actualSales: '8万+',
+          actualViews: '8万+',
+          defaultSales: '7万+',
+          actualSales: '7万+',
           price: 230,
           bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
           planner: {
@@ -200,7 +208,7 @@ export default {
           ],
           rowLabels: {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/5rm0wj4crok0000.png',
-            text: ['办理快至六小时', '新公司必备', '送章上门'],
+            text: ['办理快至2小时', '新公司必备', '送章上门'],
           },
         },
         {
@@ -208,9 +216,9 @@ export default {
           titleLabel:
             'https://cdn.shupian.cn/sp-pt/wap/images/7vjh29crwc00000.png',
           titleContent: '购买和开具发票时须加盖此章',
-          actualViews: '9万+',
-          defaultSales: '9万+',
-          actualSales: '8万+',
+          actualViews: '6万+',
+          defaultSales: '5万+',
+          actualSales: '5万+',
           price: 230,
           bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
           planner: {
@@ -231,7 +239,7 @@ export default {
           ],
           rowLabels: {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/5rm0wj4crok0000.png',
-            text: ['办理快至六小时', '新公司必备', '送章上门'],
+            text: ['办理快至2小时', '新公司必备', '送章上门'],
           },
         },
         {
@@ -239,9 +247,9 @@ export default {
           titleLabel:
             'https://cdn.shupian.cn/sp-pt/wap/images/7vjh29crwc00000.png',
           titleContent: '单位对外签订合同时使用',
-          actualViews: '9万+',
-          defaultSales: '9万+',
-          actualSales: '8万+',
+          actualViews: '1万+',
+          defaultSales: '8千+',
+          actualSales: '8千+',
           price: 230,
           bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
           planner: {
@@ -262,7 +270,7 @@ export default {
           ],
           rowLabels: {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/5rm0wj4crok0000.png',
-            text: ['办理快至六小时', '新公司必备', '送章上门'],
+            text: ['办理快至2小时', '新公司必备', '送章上门'],
           },
         },
         {
@@ -270,9 +278,9 @@ export default {
           titleLabel:
             'https://cdn.shupian.cn/sp-pt/wap/images/7vjh29crwc00000.png',
           titleContent: '印章遗失后进行补办',
-          actualViews: '9万+',
-          defaultSales: '9万+',
-          actualSales: '8万+',
+          actualViews: '6千+',
+          defaultSales: '5千+',
+          actualSales: '5千+',
           price: 230,
           bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/8jllc0prmmw0000.jpg',
           planner: {
@@ -293,7 +301,7 @@ export default {
           ],
           rowLabels: {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/5rm0wj4crok0000.png',
-            text: ['办理快至六小时', '新公司必备', '送章上门'],
+            text: ['办理快至2小时', '新公司必备', '送章上门'],
           },
         },
       ],
@@ -307,6 +315,16 @@ export default {
         imgSrc: '',
       },
     }
+  },
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端印章服务推广页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
   },
   head() {
     return {
@@ -329,16 +347,6 @@ export default {
       ],
     }
   },
-  mounted() {
-    const param = {
-      platform_type: 'H5', // 平台类型：App，H5，Web
-      app_name: '薯片wap端', // 应用名称
-      product_line: '印章刻制',
-      current_url: location.href,
-      referrer: document.referrer,
-    }
-    window.sensors.registerPage(param) // 设置公共属性
-  },
 }
 </script>
 
@@ -351,10 +359,27 @@ export default {
     left: auto !important;
   }
 }
+// 服务组件字体颜色
 /deep/ .serviceList-content-head-title > span {
   color: #ffffff !important;
 }
+/deep/ .serviceList-content-head > span {
+  color: #cccccc !important;
+}
+//咨询外边距
 /deep/ .cousulttel-title {
   margin: 0 0 24px;
+}
+//咨询内边距
+/deep/ .cousulttel {
+  padding-bottom: 0;
+}
+//轮播规划师组件圆角
+/deep/ .planner-content-item-shadow {
+  border-radius: 8px;
+}
+// 规划师组件上边距
+/deep/ .planner {
+  padding-top: 64px;
 }
 </style>

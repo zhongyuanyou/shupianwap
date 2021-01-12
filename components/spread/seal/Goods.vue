@@ -64,7 +64,7 @@ export default {
       width: 323px;
       height: 144px;
       background: #ffffff;
-      border: 1px solid rgba(205, 205, 205, 0.5);
+      border: 1px solid rgba(205, 205, 205, 0.3);
       box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
       border-radius: 8px;
       margin-bottom: 24px;

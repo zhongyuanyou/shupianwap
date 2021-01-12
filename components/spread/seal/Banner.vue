@@ -34,7 +34,7 @@
           >
             <a
               v-sensorsTrack:webClick="{
-                name: `印章刻制表单_表头选择栏_${item}`,
+                name: `印章服务表单_${item}`,
               }"
               href="javascript:;"
             >
@@ -46,12 +46,12 @@
           <span>手机号</span>
           <input
             v-model="tel"
-            v-md-map
-            v-md:webClick
+            v-sensorsTrack:webClick="{
+              form_name: `印章服务表单_手机号`,
+            }"
             class="seal-banner-form-content-input-tel"
             placeholder="信息保护中，仅官方可见"
             type="tel"
-            data-name="税务筹划表单_手机号"
             maxlength="11"
             @focus="telFocus"
             @input="
@@ -65,9 +65,9 @@
           <span>验证码</span>
           <input
             v-model="code"
-            v-md-map
-            v-md:webClick
-            data-name="税务筹划表单_验证码"
+            v-sensorsTrack:webClick="{
+              form_name: `印章服务表单_验证码`,
+            }"
             class="seal-banner-form-content-input-tel seal-banner-form-content-input-code"
             placeholder="请输入验证码"
             type="tel"
@@ -79,16 +79,24 @@
             "
           />
           <a
-            v-md-map
-            v-md:webClick
+            v-sensorsTrack:webClick="{
+              form_name: `印章服务表单_获取验证码`,
+            }"
             class="seal-banner-form-content-input-a"
             href="javascript:;"
-            data-name="税务筹划表单_获取验证码"
             @click="testTel"
             >{{ text }}</a
           >
         </div>
-        <button class="seal-banner-form-content-button" @click="consultForm">
+        <button
+          v-sensorsTrack:p_formSubmit="{
+            event_name: 'p_formSubmit',
+            form_type: '咨询表单',
+            form_name: `印章服务表单_提交`,
+          }"
+          class="seal-banner-form-content-button"
+          @click="consultForm"
+        >
           立即提交
         </button>
       </div>
@@ -307,7 +315,7 @@ a {
     width: 670px;
     margin: 0 40px;
     padding: 47px 40px 31px;
-    border: 1px solid rgba(205, 205, 205, 0.5);
+    border: 1px solid rgba(205, 205, 205, 0.3);
     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
     border-radius: 8px;
     font-size: 0;
@@ -443,5 +451,8 @@ a {
       }
     }
   }
+}
+/deep/ .sp-swipe__indicators {
+  bottom: 102px;
 }
 </style>

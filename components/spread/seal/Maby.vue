@@ -46,7 +46,7 @@ export default {
       width: 215px;
       height: 163px;
       background: #f8f8f8;
-      border: 1px solid rgba(205, 205, 205, 0.5);
+      border: 1px solid rgba(205, 205, 205, 0.3);
       border-radius: 8px;
       margin-bottom: 12px;
       background-size: 100% 100%;
