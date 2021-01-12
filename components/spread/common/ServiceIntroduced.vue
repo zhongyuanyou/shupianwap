@@ -190,7 +190,7 @@ export default {
       if (this.more) {
         this.close = true
         this.more = false
-        this.num = this.servicelist.length
+        this.num = this.serviceList.length
       } else {
         this.close = false
         this.more = true

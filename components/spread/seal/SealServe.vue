@@ -51,7 +51,7 @@ export default {
 
 <style scoped lang="less">
 .seal-sealServe {
-  margin: 0 40px -36px;
+  margin: 0 40px -14px;
   &-title {
     font-size: 40px;
     line-height: 40px;
