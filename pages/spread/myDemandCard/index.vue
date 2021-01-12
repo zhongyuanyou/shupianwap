@@ -1,14 +1,14 @@
 <template>
   <div class="page-content">
     <!-- 1、START 头部Header-->
-    <Header title="" :fixed="true" head-class="head-icon">
-      <template v-slot:right>
-        <span class="my-customize-header" @click="choiceCity">
-          <span class="my-customize-header-text">{{ currentCity }}</span>
-          <my-icon name="sear_ic_open" size="0.18rem" color="#cccccc"></my-icon>
-        </span>
-      </template>
-    </Header>
+    <!--    <Header title="" :fixed="true" head-class="head-icon">-->
+    <!--      <template v-slot:right>-->
+    <!--        <span class="my-customize-header" @click="choiceCity">-->
+    <!--          <span class="my-customize-header-text">{{ currentCity }}</span>-->
+    <!--          <my-icon name="sear_ic_open" size="0.18rem" color="#cccccc"></my-icon>-->
+    <!--        </span>-->
+    <!--      </template>-->
+    <!--    </Header>-->
     <!-- 1、END 头部Header-->
 
     <!-- 2、START banner和导航-->
@@ -44,12 +44,11 @@
 
 <script>
 import { WorkTab, WorkTabs, Button } from '@chipspc/vant-dgg'
-import { mapState } from 'vuex'
-import Header from '~/components/common/head/header'
+// import { mapState } from 'vuex'
+// import Header from '~/components/common/head/header'
 export default {
   name: 'Index',
   components: {
-    Header,
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
     [Button.name]: Button,
@@ -70,9 +69,9 @@ export default {
   computed: {
     // 将接受的state混合进组件局部计算属性
     // 监听接受的state值
-    ...mapState({
-      currentCity: (state) => state.city.currentCity.name || '成都',
-    }),
+    // ...mapState({
+    //   currentCity: (state) => state.city.currentCity.name || '成都',
+    // }),
   },
   methods: {
     // 选择城市
@@ -149,12 +148,21 @@ export default {
       position: absolute;
       bottom: 0;
       width: 100%;
+      // 穿透-导航组件
       /deep/ .sp-work-tabs__nav--line {
         background: transparent;
       }
       /deep/ .sp-work-tab {
         font-size: 32px;
         font-weight: bold;
+        padding: 0 20px;
+      }
+      // 穿透-导航组件：左右间距保持40px
+      /deep/ .sp-work-tab:nth-of-type(1) {
+        padding-left: 40px !important;
+      }
+      /deep/ .sp-work-tab:last-child {
+        padding-right: 40px !important;
       }
     }
   }
@@ -181,6 +189,7 @@ export default {
         line-height: 45px;
       }
     }
+    // 穿透修改-按钮：定制需求按钮
     /deep/ .sp-button {
       width: 264px;
       height: 80px;
@@ -189,6 +198,14 @@ export default {
       font-size: 32px !important;
       font-weight: bold;
       line-height: 80px;
+      user-select: none;
+    }
+    // 穿透-按钮：当手指点击按钮时显示蓝底白字，移开手指恢复之前样式
+    /deep/ .sp-button:active {
+      background: #4974f5 !important;
+      color: #ffffff !important;
+      transition: all 0.1s;
+      -moz-transition: all 0.1s;
     }
   }
 }
