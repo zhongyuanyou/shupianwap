@@ -16,8 +16,8 @@
 <script>
 import { Loading } from '@chipspc/vant-dgg'
 import Banner from '@/components/spread/common/TopBanner'
-import Serve from '@/components/spread/common//Serve'
-import { bangDanApi } from '@/api/bangDan'
+import Serve from '@/components/spread/common/Serve'
+import { bangDanApi } from '~/api/bangDan'
 export default {
   name: 'Index',
   components: {
@@ -28,7 +28,7 @@ export default {
   async asyncData({ $axios }) {
     const limit = 10
     const page = 1
-    const pcode = 'CRISPS-C-BIIIBOARD-FW'
+    const pcode = 'CRISPS-C-BIIIBOARD-JY'
     try {
       const res = await $axios.get(bangDanApi.list, {
         params: {
@@ -70,14 +70,14 @@ export default {
   data() {
     return {
       bannerData: {
-        tabs: ['会计财税', '知识产权', '工商代办'],
-        title: ['服务', '热卖榜'],
+        tabs: ['公司榜', '商标榜', '资质榜', '专利榜'],
+        title: ['交易', '热卖榜'],
       },
       serveData: {
         productList: [],
-        type: 'hot',
+        type: 'transactions',
       },
-      selected: '会计财税',
+      selected: '公司榜',
       reqInfos: [],
       loaded: true,
     }
@@ -134,7 +134,7 @@ export default {
           params: {
             limit: 10,
             currentPage,
-            pcode: 'CRISPS-C-BIIIBOARD-FW',
+            pcode: 'CRISPS-C-BIIIBOARD-JY',
             code,
           },
         })
@@ -144,6 +144,7 @@ export default {
         }
       } catch (err) {
         console.log('err', err)
+        this.loaded = true
       }
     },
   },
