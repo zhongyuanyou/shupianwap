@@ -6,6 +6,11 @@
       v-for="(item, index) in serviceList"
       v-show="index > num ? false : true"
       :key="index"
+      v-sensorsTrack:webClick="{
+        eventName: 'wap元素点击',
+        type: '售前',
+        name: `${serviceTitle}_${item.title}_在线咨询`,
+      }"
       class="serviceList-content"
       @click="plannerIm(item.planner)"
     >
@@ -76,6 +81,11 @@
           </a>
           <a>
             <my-icon
+              v-sensorsTrack:p_IMClick="{
+                eventName: '在线咨询',
+                type: '售前',
+                name: `${serviceTitle}_${item.title}_在线咨询`,
+              }"
               name="notify_ic_chat"
               color="#4974F5"
               size="0.4rem"
@@ -90,6 +100,11 @@
           </a>
           <a href="javascript:;" @click="call(item.planner.telephone)">
             <my-icon
+              v-sensorsTrack:webClick="{
+                eventName: 'wap元素点击',
+                type: '售前',
+                name: `${serviceTitle}_${item.title}_拨打电话`,
+              }"
               name="notify_ic_tel"
               color="#4974F5"
               size="0.4rem"
@@ -106,8 +121,24 @@
       class="show-more-btn"
       @click="showMore"
     >
-      <span v-show="more">更多服务</span>
-      <span v-show="close">收起</span>
+      <span
+        v-show="more"
+        v-sensorsTrack:webClick="{
+          eventName: 'wap元素点击',
+          type: '售前',
+          name: `银行服务页面_更多服务`,
+        }"
+        >更多服务</span
+      >
+      <span
+        v-show="close"
+        v-sensorsTrack:webClick="{
+          eventName: 'wap元素点击',
+          type: '售前',
+          name: `银行服务页面_收起`,
+        }"
+        >收起</span
+      >
       <my-icon
         v-show="more"
         name="tab_ic_all_n"
@@ -172,6 +203,10 @@ export default {
         return '服务介绍'
       },
     },
+    pageTitle: {
+      type: String,
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -190,7 +225,7 @@ export default {
       if (this.more) {
         this.close = true
         this.more = false
-        this.num = this.servicelist.length
+        this.num = this.serviceList.length
       } else {
         this.close = false
         this.more = true
@@ -354,6 +389,8 @@ export default {
           height: 40px;
           background: #f4f4f4;
           left: -25px;
+          top: 50%;
+          margin-top: -20px;
         }
         > span {
           display: block;

@@ -16,6 +16,11 @@
         <!-- s行业下拉框 -->
         <sp-field
           v-model="value"
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '咨询表单',
+            name: '银行服务_下拉表单',
+          }"
           label="我需要"
           :readonly="read"
           @click="selectshow = true"
@@ -44,6 +49,11 @@
         <!-- e下拉选项框  -->
         <sp-field
           v-model="telephone"
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '咨询表单',
+            name: '银行服务_手机号',
+          }"
           type="tel"
           label="手机号"
           placeholder="信息保护中，仅官方可见"
@@ -55,6 +65,11 @@
         <div v-show="isshow" class="verification-box">
           <sp-field
             v-model="sms"
+            v-sensorsTrack:webClick="{
+              eventName: 'wap元素点击',
+              type: '咨询表单',
+              name: '银行服务_验证码',
+            }"
             label="验证码"
             placeholder="请输入验证码"
             maxlength="6"
@@ -63,7 +78,15 @@
           />
 
           <!-- s 倒计时 -->
-          <span class="seconds" @click="sendSms">
+          <span
+            v-sensorsTrack:webClick="{
+              eventName: 'wap元素点击',
+              type: '咨询表单',
+              name: '银行服务_获取验证码',
+            }"
+            class="seconds"
+            @click="sendSms"
+          >
             {{ countdown > 0 ? `${countdown}s` : '发送验证码' }}</span
           >
           <!-- e 倒计时 -->
@@ -71,7 +94,15 @@
         <!-- e 获取验证码 -->
       </div>
       <!-- s 按钮 -->
-      <button class="free-btn" @click="freeBtn()">
+      <button
+        v-sensorsTrack="{
+          eventName: '提交表单',
+          type: '咨询表单',
+          name: '银行服务_提交表单',
+        }"
+        class="free-btn"
+        @click="freeBtn()"
+      >
         <span>获取报价</span>
       </button>
       <!-- e 按钮 -->
@@ -123,16 +154,6 @@ export default {
     }
   },
   created() {},
-  mounted() {
-    const param = {
-      platform_type: 'H5', // 平台类型：App，H5，Web
-      app_name: '薯片wap端', // 应用名称
-      product_line: '免费帮找页',
-      current_url: location.href,
-      referrer: document.referrer,
-    }
-    window.sensors.registerPage(param) // 设置公共属性
-  },
   methods: {
     telephoneTest(value) {
       return value.replace(/[^\d]/, '')
@@ -242,7 +263,7 @@ export default {
         name: '匿名客户',
         tel: _tel, // 电话
         url: webUrl, // 当前页面地址。用于后台判断ip发送验证码次数
-        type: 'gsbg', // 业态编码。
+        type: 'gszc', // 业态编码。
         place: 'cd', // 定位城市。
         device: 'wap', // 设备：pc,wap。
         web: 'SP', // 归属渠道：xmt,zytg,wxgzh。
@@ -381,6 +402,7 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #4974f5;
+        line-height: 27px;
         top: 26px;
         right: 34px;
       }
@@ -390,6 +412,7 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #4974f5;
+        line-height: 27px;
         top: 26px;
         right: 34px;
       }

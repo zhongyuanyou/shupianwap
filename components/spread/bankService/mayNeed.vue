@@ -1,9 +1,14 @@
 <template>
   <div class="need">
-    <span class="title">你可能还需要办理</span>
+    <span class="title">您可能还需要办理</span>
     <ul class="productlist">
       <li v-for="(item, index) in ProductList" :key="index">
         <a
+          v-sensorsTrack="{
+            eventName: 'wap元素点击',
+            type: '售前',
+            name: `银行服务_您可能还需要办理_${item.title}`,
+          }"
           href="javascript:;"
           @click="
             () => {
@@ -21,7 +26,16 @@
         <span>电话咨询：</span>
         <span>4000 - 962540</span>
       </div>
-      <a href="javascript:;" @click="call()"><span>立即咨询</span></a>
+      <a
+        v-sensorsTrack="{
+          eventName: 'wap元素点击',
+          type: '售前',
+          name: '银行服务_还有疑问_立即咨询',
+        }"
+        href="javascript:;"
+        @click="call()"
+        ><span>立即咨询</span></a
+      >
     </div>
     <div class="chips">
       <div>
@@ -49,31 +63,37 @@ export default {
           code: 1,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/6rs29o764540000.png',
           url: '',
+          title: '体系认证',
         },
         {
           code: 2,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/82vsavebgnk0000.jpg',
           url: 'https://shupian.dgg.cn/spread/agency/',
+          title: '代理记账',
         },
         {
           code: 3,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/30xrqmq3bey0000.jpg',
           url: '',
+          title: '许可证办理',
         },
         {
           code: 4,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/akgnqp1al0g0000.jpg',
           url: '',
+          title: '互联网资质',
         },
         {
           code: 5,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/6f1d205sae40000.jpg',
           url: 'https://shupian.dgg.cn/spread/tax',
+          title: '财务税筹',
         },
         {
           code: 6,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/3yl3jyk5e5c0000.jpg',
           url: '',
+          title: '银行服务',
         },
       ],
     }
@@ -109,11 +129,15 @@ export default {
       background: #f8f8f8;
       border-radius: 8px;
       &:nth-child(3) ~ li {
-        margin-top: 7px;
+        margin-top: 12px;
       }
       > a {
+        width: 100%;
+        height: 100%;
+
         > img {
           width: 100%;
+          border-radius: 8px;
         }
       }
     }
