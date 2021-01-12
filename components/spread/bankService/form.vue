@@ -171,7 +171,7 @@ export default {
             if (res.error === 0) {
               vm.countDown()
             }
-            console.log(res.msg)
+            Toast(res.msg)
           })
         }
       }
@@ -249,12 +249,12 @@ export default {
           this.sms = ''
           this.countdown = -1
           this.value = '法人变更'
-          window.getTrackRow('p_formSubmitResult', {
-            even_name: 'p_formSubmitResult',
-            form_type: '咨询表单',
-            form_sn: 'ZL077',
-            form_name: '工商变更表单_提交表单',
-          })
+          // window.getTrackRow('p_formSubmitResult', {
+          //   even_name: 'p_formSubmitResult',
+          //   form_type: '咨询表单',
+          //   form_sn: 'ZL077',
+          //   form_name: '工商变更表单_提交表单',
+          // })
           Toast('提交成功，请注意接听电话')
         } else {
           Toast(res.msg)

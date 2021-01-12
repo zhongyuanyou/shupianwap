@@ -1,6 +1,6 @@
 <template>
   <div class="serviceList">
-    <span class="serviceList-title">{{ labelStyle.title }}</span>
+    <span class="serviceList-title">{{ serviceTitle }}</span>
     <slot name="dropDown"></slot>
     <div
       v-for="(item, index) in serviceList"
@@ -23,24 +23,28 @@
         </div>
         <span>{{ item.titleContent }}</span>
       </div>
-      <div v-if="labelStyle.style === col" class="lable-box">
-        <span class="lable-title">{{ lables[index].title }}</span>
+      <div v-if="item.labelsType === col" class="lable-box">
+        <span class="lable-title">{{ item.colLabels.title }}</span>
         <div
-          v-for="(lable, nums) in lables[index].content"
+          v-for="(lable, nums) in item.colLabels.content"
           :key="nums"
           class="lable-content"
         >
-          <img :src="labelStyle.icon" alt="" />
+          <img :src="item.colLabels.icon" alt="" />
           <span>{{ lable }}</span>
         </div>
       </div>
       <div v-else class="lable-row-box">
         <div
-          v-for="(lable, nums) in lables[index]"
+          v-for="(lable, nums) in item.rowLabels.text"
           :key="nums"
           class="lable-row-content"
         >
-          <img class="lable-row-content-img" :src="labelStyle.icon" alt="" />
+          <img
+            class="lable-row-content-img"
+            :src="item.rowLabels.icon"
+            alt=""
+          />
           <span class="lable-row-content-msg">{{ lable }}</span>
         </div>
       </div>
@@ -132,17 +136,14 @@ export default {
       type: Array,
       default: () => {},
     },
-    // 服务列表title+bg+标签样式
-    labelStyle: {
-      type: Object,
+    // 服务列表主title
+    serviceTitle: {
+      type: String,
       default: () => {
-        return {}
+        return {
+          serviceTitle: '服务介绍',
+        }
       },
-    },
-    // 服务介绍列表 标签
-    lables: {
-      type: Array,
-      default: () => {},
     },
   },
   data() {
@@ -197,7 +198,7 @@ export default {
   }
   .serviceList-content {
     background: #ffffff;
-    border: 1px solid rgba(205, 205, 205, 0.5);
+    border: 1px solid rgba(205, 205, 205, 0.3);
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     margin-top: 31px;
@@ -220,7 +221,7 @@ export default {
     margin-bottom: 32px;
     .serviceList-content-head-title {
       display: flex;
-      align-items: center;
+
       > span {
         font-size: 32px;
         font-family: PingFang SC;
@@ -233,6 +234,7 @@ export default {
         width: 96px;
         height: 32px;
         margin-left: 15px;
+        margin-top: -3px;
       }
     }
     > span {

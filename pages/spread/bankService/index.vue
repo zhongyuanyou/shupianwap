@@ -7,11 +7,7 @@
     <!-- 表单 -->
     <From />
     <!-- 服务列表 -->
-    <Service
-      :service-list="serviceList"
-      :lables="lables"
-      :label-style="labelStyle"
-    >
+    <Service :service-list="serviceList" :service-title="serviceTitle">
     </Service>
     <!-- 为什么选择薯片平台 -->
     <Choose />
@@ -298,6 +294,7 @@ export default {
   data() {
     return {
       title: '银行服务',
+      serviceTitle: '银行服务介绍',
       // banner图列表
       imgList: [
         {
@@ -331,6 +328,15 @@ export default {
             imgSrc:
               'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
           },
+          labelsType: 'col',
+          rowLabels: {
+            title: '注意事项',
+            icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
+            content: [
+              '要求法人到场面核，需要全体股东身份证原件',
+              '合作银行不同，所需资料及流程不同',
+            ],
+          },
         },
         {
           title: '一般户开户',
@@ -349,6 +355,12 @@ export default {
             telephone: '18402858698',
             imgSrc:
               'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+          labelsType: 'col',
+          rowLabels: {
+            title: '所需资料',
+            icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
+            content: ['营业执照正副本原件，三章', '法人、经办人身份证原件'],
           },
         },
         {
@@ -369,12 +381,22 @@ export default {
             imgSrc:
               'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
           },
+          labelsType: 'col',
+          rowLabels: {
+            title: '所需资料',
+            icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
+            content: [
+              '由法人代表及直接出具销户报告',
+              '各种未使用的重要空白票据及结算凭证',
+            ],
+          },
         },
       ],
       // 服务列表标签
       lables: [
         {
           title: '注意事项',
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
           content: [
             '要求法人到场面核，需要全体股东身份证原件',
             '合作银行不同，所需资料及流程不同',
@@ -382,22 +404,18 @@ export default {
         },
         {
           title: '所需资料',
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
           content: ['营业执照正副本原件，三章', '法人、经办人身份证原件'],
         },
         {
           title: '所需资料',
+          icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
           content: [
             '由法人代表及直接出具销户报告',
             '各种未使用的重要空白票据及结算凭证',
           ],
         },
       ],
-      // 服务列表标签样式+背景图
-      labelStyle: {
-        icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
-        style: 'col',
-        title: '银行服务介绍',
-      },
       // 规划师title
       plannersTitle: {
         title: '咨询规划师',
@@ -473,6 +491,7 @@ export default {
     },
     // 处理服务列表数据
     productDetail(data) {
+      const vm = this
       this.plannerHandleData(this.result.data.planlerList || [])
       if (data.length === 0) {
       } else {
@@ -501,6 +520,15 @@ export default {
                   : Math.floor(Math.random() * this.plannersList.length)
               }`
             ],
+            labelsType: 'col',
+            colLabels:
+              vm.lables[
+                `${
+                  index < vm.lables.length
+                    ? index
+                    : Math.floor(Math.random() * vm.lables.length)
+                }`
+              ],
           }
           serviceList.push(obj)
         })
