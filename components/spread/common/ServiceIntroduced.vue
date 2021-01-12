@@ -16,8 +16,8 @@
         <div class="serviceList-content-head-title">
           <span>{{ item.title }}</span>
           <img
-            v-show="item.titleLable !== undefined"
-            :src="item.titleLable"
+            v-show="item.titleLabel !== undefined"
+            :src="item.titleLabel"
             alt=""
           />
         </div>
@@ -134,15 +134,42 @@ export default {
     // 服务介绍列表
     serviceList: {
       type: Array,
-      default: () => {},
+      default: () => {
+        return {
+          title: '银行销户',
+          titleLabel:
+            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
+          titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
+          actualViews: '152',
+          defaultSales: '108',
+          actualSales: '108',
+          price: 600,
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
+          planner: {
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+          labelsType: 'col',
+          rowLabels: {
+            title: '所需资料',
+            icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
+            content: [
+              '由法人代表及直接出具销户报告',
+              '各种未使用的重要空白票据及结算凭证',
+            ],
+          },
+        }
+      },
     },
     // 服务列表主title
     serviceTitle: {
       type: String,
       default: () => {
-        return {
-          serviceTitle: '服务介绍',
-        }
+        return '服务介绍'
       },
     },
   },
