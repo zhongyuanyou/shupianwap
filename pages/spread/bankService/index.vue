@@ -473,6 +473,16 @@ export default {
     this.planner = this.plannersList[0]
     this.plannerHandleData(this.result.data.planlerList || [])
   },
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端推广页', // 应用名称
+      product_line: '银行服务',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+  },
   methods: {
     // 跳转判断
     openIM(url) {
