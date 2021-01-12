@@ -1,6 +1,8 @@
 <template>
   <div class="basic">
-    <h1 class="basic-name">{{ baseData.name }}</h1>
+    <h1 class="basic-name">
+      {{ operatingData.showName ? operatingData.showName : baseData.name }}
+    </h1>
     <div class="basic-label">
       <a v-for="tag in proSalesTag" :key="tag.id" href="javascript:void(0)">{{
         tag.name

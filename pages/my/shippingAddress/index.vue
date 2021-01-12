@@ -32,7 +32,7 @@
               <div class="info">
                 <div class="name">{{ item.contactName }}</div>
                 <div class="tel">{{ item.phone }}</div>
-                <span v-if="item.defaultAddress" class="default">默认</span>
+                <div v-if="item.defaultAddress" class="default">默认</div>
               </div>
               <div class="address">{{ item.address }}</div>
             </div>
@@ -334,7 +334,6 @@ export default {
             font-family: PingFang SC;
             font-weight: bold;
             color: #1a1a1a;
-            line-height: 44px;
             font-size: 30px;
             margin-top: 30px;
             display: flex;
@@ -358,7 +357,7 @@ export default {
               font-family: PingFang SC;
               font-weight: 400;
               color: #fefefe;
-              padding: 4px 6px;
+              padding: 0 6px;
               vertical-align: bottom;
             }
           }
