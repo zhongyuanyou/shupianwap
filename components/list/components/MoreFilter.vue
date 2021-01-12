@@ -219,6 +219,7 @@ export default {
                   emitData.matchType = 'MATCH_TYPE_RANGE'
                 }
                 break
+              case 'CONDITION-JY-SB-GD-ZCNX':
               case 'JY-GS-GD-JYSJ':
                 // 经营时间
                 // const current = moment("MM-DD-YYYY")
@@ -246,7 +247,10 @@ export default {
                       start: two,
                       end: one,
                     }
-                  } else if (_item.name.indexOf('以下') > -1) {
+                  } else if (
+                    _item.name.indexOf('以下') > -1 ||
+                    _item.name.indexOf('以内') > -1
+                  ) {
                     // 年以下
                     const a = parseInt(_item.name)
                     const one = moment([
