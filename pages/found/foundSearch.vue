@@ -83,7 +83,7 @@ export default {
       this.$router.push({
         path: '/found/keywords',
         query: {
-          keywords: keyword,
+          keyword,
         },
       })
     },
