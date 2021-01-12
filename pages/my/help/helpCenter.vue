@@ -118,6 +118,9 @@ export default {
       })
     },
     back() {
+      this.params.keyword = ''
+      this.noData = false
+      this.searchResult = []
       if (this.isInApp) {
         this.$appFn.dggWebGoBack((res) => {})
         return
