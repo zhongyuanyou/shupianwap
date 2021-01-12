@@ -99,27 +99,21 @@ export default {
   },
   watch: {
     activeItems(val) {
-      const arr = val.flat(1)
-      if (arr.length === 1) {
-        // 选中的选项只有一项
-        this.dropdownTitle = arr[0].name
-        this.addClass('active')
-      } else if (arr.length > 1) {
-        // 选中的选项有多个
-        this.dropdownTitle = '多选'
-        this.addClass('active')
-      } else if (arr.length === 0) {
-        // 选中的选项为0项
-        this.removeClass('moreText')
-        this.removeClass('active')
-        this.dropdownTitle = this.filterData.name
-      }
-      // 如果筛选名字个数超过了4个那么需要加样式
-      /* if (this.dropdownTitle.length >= 4) {
-        this.addClass('moreText')
-      } else {
-        this.removeClass('moreText')
-      } */
+      // const arr = val.flat(1)
+      // if (arr.length === 1 && arr[0].name !== '不限') {
+      //   // 选中的选项只有一项
+      //   this.dropdownTitle = arr[0].name
+      //   this.addClass('active')
+      // } else if (arr.length > 1) {
+      //   // 选中的选项有多个
+      //   this.dropdownTitle = '多选'
+      //   this.addClass('active')
+      // } else if (arr.length === 0) {
+      //   // 选中的选项为0项
+      //   this.removeClass('moreText')
+      //   this.removeClass('active')
+      //   this.dropdownTitle = this.filterData.name
+      // }
     },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
@@ -180,6 +174,7 @@ export default {
     confirmFilters() {
       // 确认筛选
       this.saveActiveItems = clone(this.activeItems, true)
+      this.resetTitle(this.saveActiveItems)
       const emitData = this.resultHandle()
       this.$emit('activeItem', emitData, 'moreFilter')
       this.$refs.item.toggle()
@@ -310,6 +305,23 @@ export default {
         }
       })
       return { filterKeyValArr, charLength }
+    },
+    resetTitle(val) {
+      const arr = val.flat(1)
+      if (arr.length === 1 && arr[0].name !== '不限') {
+        // 选中的选项只有一项
+        this.dropdownTitle = arr[0].name
+        this.addClass('active')
+      } else if (arr.length > 1) {
+        // 选中的选项有多个
+        this.dropdownTitle = '多选'
+        this.addClass('active')
+      } else if (arr.length === 0) {
+        // 选中的选项为0项
+        this.removeClass('moreText')
+        this.removeClass('active')
+        this.dropdownTitle = this.filterData.name
+      }
     },
     getBottomConfirmHeight(height) {
       // 获取底部确认按钮的高度

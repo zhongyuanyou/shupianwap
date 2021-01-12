@@ -1,5 +1,6 @@
 import Moment from 'moment'
 import { checkPhone } from '../check'
+import computed from '../computed'
 
 const formatTime = (date) => {
   const year = date.getFullYear()
@@ -283,7 +284,8 @@ const checkMobile = (mobile) => {
 }
 // 产品属性处理
 // 属性价格展示处理
-const priceHandle = (price) => {
+const priceHandle = (p) => {
+  const price = computed.calculate(`${p} / 100`)
   let str = price
   if (price < 500000) {
     str = '50以万下'
