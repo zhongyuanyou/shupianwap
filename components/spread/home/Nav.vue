@@ -71,7 +71,7 @@ export default {
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/46heblny7180000.png',
-            name: '刻制印章',
+            name: '印章服务',
             url: '',
           },
           {

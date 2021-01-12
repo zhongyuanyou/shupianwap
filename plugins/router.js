@@ -48,6 +48,7 @@ export default ({ app, store }) => {
         } else if (routerBlackList.includes(to.path)) {
           next({
             path: loginRoutePath,
+            query: { redirect: to.path },
           })
         } else {
           next()
