@@ -226,9 +226,15 @@ export default {
         this.passwordFieldType === 'password' ? 'text' : 'password'
     },
     onClickLeft() {
-      console.log('关闭')
       // this.$router.push(this.redirect)
-      this.$router.back()
+      // this.$router.back()
+      if (window.history.length <= -1) {
+        this.$router.replace('/')
+      } else if (this.redirect) {
+        this.$router.replace(this.redirect)
+      } else {
+        this.$router.back()
+      }
     },
     handleClickCodeBtn(isValidTel) {
       if (!isValidTel) {
