@@ -12,6 +12,7 @@
         name: `${serviceTitle}_${item.title}_在线咨询`,
       }"
       class="serviceList-content"
+      href="javascript:;"
       @click="plannerIm(item.planner)"
     >
       <div
@@ -121,23 +122,25 @@
       class="show-more-btn"
       @click="showMore"
     >
-      <span
+      <a
         v-show="more"
         v-sensorsTrack:webClick="{
           eventName: 'wap元素点击',
           type: '售前',
-          name: `银行服务页面_更多服务`,
+          name: `${pageTitle}页面_更多服务`,
         }"
-        >更多服务</span
+        href="javascript:;"
+        >更多服务</a
       >
-      <span
+      <a
         v-show="close"
         v-sensorsTrack:webClick="{
           eventName: 'wap元素点击',
           type: '售前',
-          name: `银行服务页面_收起`,
+          name: `${pageTitle}页面_收起`,
         }"
-        >收起</span
+        href="javascript:;"
+        >收起</a
       >
       <my-icon
         v-show="more"
@@ -259,6 +262,7 @@ export default {
     display: block;
   }
   .serviceList-content {
+    display: block;
     background: #ffffff;
     border: 1px solid rgba(205, 205, 205, 0.3);
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
@@ -496,7 +500,7 @@ export default {
     justify-content: center;
     padding: 19px 0;
     margin-top: 40px;
-    > span {
+    > a {
       display: block;
       font-size: 28px;
       font-family: PingFang SC;

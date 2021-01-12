@@ -27,7 +27,7 @@
         <span>4000 - 962540</span>
       </div>
       <a
-        v-sensorsTrack="{
+        v-sensorsTrack:wapClick="{
           eventName: 'wap元素点击',
           type: '售前',
           name: '银行服务_还有疑问_立即咨询',
