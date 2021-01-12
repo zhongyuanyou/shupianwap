@@ -133,10 +133,15 @@ export default {
       categoryData: [], // 当前点击的分类相关数据
       loading: false,
       swiperOptions: {
-        autoplay: {
-          disableOnInteraction: false,
-          delay: 1000,
-        },
+        autoplay: true,
+        initialSlide: 0,
+        speed: 400,
+        direction: 'horizontal',
+        paginationClickable: true,
+        mousewheelControl: true,
+        passiveListeners: false, // 用来提升swiper在移动设备的中的scroll表现（Passive Event Listeners），但是会和e.preventDefault冲突，所以有时候你需要关掉它。
+        touchAngle: 30, // 允许触发拖动的角度值。默认45度，即使触摸方向不是完全水平也能拖动slide。
+        threshold: 12,
       },
     }
   },
