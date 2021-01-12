@@ -1,6 +1,6 @@
 <template>
   <div class="serviceList">
-    <span class="serviceList-title">{{ labelStyle.title }}</span>
+    <span class="serviceList-title">{{ serviceList[0].mainTitle }}</span>
     <slot name="dropDown"></slot>
     <div
       v-for="(item, index) in serviceList"
@@ -23,24 +23,28 @@
         </div>
         <span>{{ item.titleContent }}</span>
       </div>
-      <div v-if="labelStyle.style === col" class="lable-box">
-        <span class="lable-title">{{ lables[index].title }}</span>
+      <div v-if="item.labelsType === col" class="lable-box">
+        <span class="lable-title">{{ item.colLabels.title }}</span>
         <div
-          v-for="(lable, nums) in lables[index].content"
+          v-for="(lable, nums) in item.colLabels.content"
           :key="nums"
           class="lable-content"
         >
-          <img :src="labelStyle.icon" alt="" />
+          <img :src="item.colLabels.icon" alt="" />
           <span>{{ lable }}</span>
         </div>
       </div>
       <div v-else class="lable-row-box">
         <div
-          v-for="(lable, nums) in lables[index]"
+          v-for="(lable, nums) in item.rowLabels.text"
           :key="nums"
           class="lable-row-content"
         >
-          <img class="lable-row-content-img" :src="labelStyle.icon" alt="" />
+          <img
+            class="lable-row-content-img"
+            :src="item.rowLabels.icon"
+            alt=""
+          />
           <span class="lable-row-content-msg">{{ lable }}</span>
         </div>
       </div>
