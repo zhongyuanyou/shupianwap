@@ -1,49 +1,50 @@
 <template>
   <div class="serviceList">
-    <span class="serviceList-title">{{ labelStyle.title }}</span>
+    <span class="serviceList-title">{{ serviceList[0].mainTitle }}</span>
+    <slot name="dropDown"></slot>
     <div
-      v-for="(item, index) in servicelist"
+      v-for="(item, index) in serviceList"
       v-show="index > num ? false : true"
       :key="index"
       class="serviceList-content"
-      @click="
-        () => {
-          $parent.openIM(item.url)
-        }
-      "
+      @click="plannerIm(item.planner)"
     >
       <div
         class="serviceList-content-head"
-        :style="{ backgroundImage: 'url(' + item.bgimg + ')' }"
+        :style="{ backgroundImage: 'url(' + item.bgImg + ')' }"
       >
         <div class="serviceList-content-head-title">
           <span>{{ item.title }}</span>
           <img
-            v-show="item.titlelable !== undefined"
-            :src="item.titlelable"
+            v-show="item.titleLable !== undefined"
+            :src="item.titleLable"
             alt=""
           />
         </div>
         <span>{{ item.titleContent }}</span>
       </div>
-      <div v-if="labelStyle.style === col" class="lable-box">
-        <span class="lable-title">{{ lables[index].title }}</span>
+      <div v-if="item.labelsType === col" class="lable-box">
+        <span class="lable-title">{{ item.colLabels.title }}</span>
         <div
-          v-for="(lable, nums) in lables[index].content"
+          v-for="(lable, nums) in item.colLabels.content"
           :key="nums"
           class="lable-content"
         >
-          <img :src="labelStyle.icon" alt="" />
+          <img :src="item.colLabels.icon" alt="" />
           <span>{{ lable }}</span>
         </div>
       </div>
       <div v-else class="lable-row-box">
         <div
-          v-for="(lable, nums) in lables[index]"
+          v-for="(lable, nums) in item.rowLabels.text"
           :key="nums"
           class="lable-row-content"
         >
-          <img class="lable-row-content-img" :src="labelStyle.icon" alt="" />
+          <img
+            class="lable-row-content-img"
+            :src="item.rowLabels.icon"
+            alt=""
+          />
           <span class="lable-row-content-msg">{{ lable }}</span>
         </div>
       </div>
@@ -101,7 +102,7 @@
     </div>
     <!-- 查看更多 -->
     <div
-      v-show="servicelist.length > 3"
+      v-show="serviceList.length > 3"
       class="show-more-btn"
       @click="showMore"
     >
@@ -130,16 +131,19 @@ import MyIcon from '../../common/myIcon/MyIcon.vue'
 export default {
   components: { MyIcon },
   props: {
-    servicelist: {
+    // 服务介绍列表
+    serviceList: {
       type: Array,
       default: () => {},
     },
+    // 服务列表title+bg+标签样式
     labelStyle: {
       type: Object,
       default: () => {
         return {}
       },
     },
+    // 服务介绍列表 标签
     lables: {
       type: Array,
       default: () => {},
@@ -168,6 +172,16 @@ export default {
         this.more = true
         this.num = 2
       }
+    },
+    plannerIm(planner) {
+      const guiHuaShi = planner
+      this.$root.$emit(
+        'openIMM',
+        guiHuaShi.id,
+        guiHuaShi.name || '',
+        guiHuaShi.jobNum || '',
+        planner.imgSrc || ''
+      )
     },
   },
 }
