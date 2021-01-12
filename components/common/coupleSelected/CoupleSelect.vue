@@ -443,6 +443,9 @@ export default {
       text-align: center;
       line-height: 84px;
       font-size: 28px;
+      max-width: 100%;
+      padding: 0 10px;
+      .textOverflow(1);
       &:first-child {
         margin-top: 28px;
       }

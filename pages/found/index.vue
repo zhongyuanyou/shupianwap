@@ -152,5 +152,14 @@ export default {
     padding-top: env(safe-area-inset-top);
     z-index: 5;
   }
+  /deep/ .sp-work-tab {
+    font-size: 32px;
+  }
+  /deep/ .sp-work-tab--active {
+    font-size: 40px;
+  }
+  /deep/ .sp-hairline--bottom::after {
+    border-bottom: none;
+  }
 }
 </style>

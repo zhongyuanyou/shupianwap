@@ -4,6 +4,7 @@
     <Search
       v-model="currentInputText"
       placeholder="请输入搜索内容"
+      :maxlength="50"
       @searchKeydownHandle="searchKeydownHandle"
     >
       <div slot="left" class="nav-back" @click="$router.go(-1)">

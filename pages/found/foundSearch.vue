@@ -81,7 +81,7 @@ export default {
       this.$cookies.set('foundHistory', history)
       // this.$router.push(`/found/${keywords || ' '}`)
       this.$router.push({
-        path: '/found/keywords',
+        path: '/found/kword',
         query: {
           keyword,
         },

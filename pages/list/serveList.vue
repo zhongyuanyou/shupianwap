@@ -3,6 +3,7 @@
     <!--S搜索框-->
     <Search
       v-model="searchText"
+      :maxlength="50"
       placeholder="请输入搜索内容"
       @searchKeydownHandle="searchKeydownHandle"
     >
