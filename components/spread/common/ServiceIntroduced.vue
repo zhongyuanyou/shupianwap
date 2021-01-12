@@ -1,8 +1,9 @@
 <template>
   <div class="serviceList">
     <span class="serviceList-title">{{ labelStyle.title }}</span>
+    <slot name="dropDown"></slot>
     <div
-      v-for="(item, index) in servicelist"
+      v-for="(item, index) in serviceList"
       v-show="index > num ? false : true"
       :key="index"
       class="serviceList-content"
@@ -10,13 +11,13 @@
     >
       <div
         class="serviceList-content-head"
-        :style="{ backgroundImage: 'url(' + item.bgimg + ')' }"
+        :style="{ backgroundImage: 'url(' + item.bgImg + ')' }"
       >
         <div class="serviceList-content-head-title">
           <span>{{ item.title }}</span>
           <img
-            v-show="item.titlelable !== undefined"
-            :src="item.titlelable"
+            v-show="item.titleLable !== undefined"
+            :src="item.titleLable"
             alt=""
           />
         </div>
@@ -75,6 +76,11 @@
               color="#4974F5"
               size="0.4rem"
               class="icon"
+              @click="
+                () => {
+                  $parent.openIM(item.url)
+                }
+              "
             >
             </my-icon>
           </a>
@@ -92,7 +98,7 @@
     </div>
     <!-- 查看更多 -->
     <div
-      v-show="servicelist.length > 3"
+      v-show="serviceList.length > 3"
       class="show-more-btn"
       @click="showMore"
     >
@@ -121,16 +127,19 @@ import MyIcon from '../../common/myIcon/MyIcon.vue'
 export default {
   components: { MyIcon },
   props: {
-    servicelist: {
+    // 服务介绍列表
+    serviceList: {
       type: Array,
       default: () => {},
     },
+    // 服务列表title+bg+标签样式
     labelStyle: {
       type: Object,
       default: () => {
         return {}
       },
     },
+    // 服务介绍列表 标签
     lables: {
       type: Array,
       default: () => {},

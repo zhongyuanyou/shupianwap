@@ -444,10 +444,13 @@ export default {
         padding-top: 1px;
         position: relative;
         margin-right: 10px;
+        display: flex;
+        flex-shrink: 0;
         > img {
           position: absolute;
           width: 23px;
           height: 23px;
+          flex-shrink: 0;
         }
       }
       > span {

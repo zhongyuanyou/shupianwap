@@ -114,7 +114,7 @@ export default {
           display: flex;
           justify-content: flex-end;
           position: relative;
-          z-index: 2;
+          z-index: 1;
           &:not(:first-child) {
             margin-top: 23px;
           }
@@ -166,7 +166,7 @@ export default {
         > li {
           display: flex;
           position: relative;
-          z-index: 2;
+          z-index: 1;
           &:not(:first-child) {
             margin-top: 23px;
           }
@@ -200,7 +200,7 @@ export default {
           position: absolute;
           right: 12px;
           bottom: 12px;
-          z-index: 1;
+          z-index: 0;
         }
       }
     }

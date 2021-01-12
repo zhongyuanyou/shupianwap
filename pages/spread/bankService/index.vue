@@ -8,7 +8,7 @@
     <From />
     <!-- 服务列表 -->
     <Service
-      :servicelist="servicelist"
+      :service-list="serviceList"
       :lables="lables"
       :label-style="labelStyle"
     >
@@ -36,6 +36,7 @@ import Planner from '../../../components/spread/common/GuiHuaShiSwipe'
 import Need from '../../../components/spread/bankService/mayNeed'
 import Bottom from '../../../components/spread/common/FixedBottom'
 import dggImCompany from '../../../components/spread/DggImCompany'
+import { spreadApi } from '@/api/spread'
 export default {
   components: {
     Header,
@@ -47,6 +48,252 @@ export default {
     Need,
     Bottom,
     dggImCompany,
+  },
+  async asyncData({ $axios }) {
+    const result = {
+      code: 200,
+      message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
+      data: {
+        adList: [
+          {
+            pageCode: 'extendBankServer',
+            locationShowTypeCode: 'GGWZXSS_GDXS',
+            locationName: 'wap-推广页-银行服务广告',
+            locationId: '8027896820880179200',
+            locationAddressCode: '',
+            sortMaterialList: [
+              {
+                locationSort: 1,
+                materialList: [
+                  {
+                    materialTypeCode: 'GGLX_TP',
+                    materialUrl:
+                      'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+                    imgLink: '',
+                    materialLink: 'https://www.baidu.com/',
+                    materialCode: 'src100302',
+                    materialHeight: 1334,
+                    materialId: 0,
+                    materialDescription: '',
+                    materialName: '推广页银行服务广告1-1',
+                    androidLink: '',
+                    materialWidth: 750,
+                    iosLink: '',
+                    linkType: 2,
+                    wapLink: '',
+                    executeParam: '',
+                    productId: 'extendBankServer1',
+                    productDetail: {
+                      id: 'extendBankServer1',
+                      name: '基本开户',
+                      referencePrice: 600,
+                      operating: {
+                        showName: '基本开户',
+                        slogan: '',
+                        productDescribe:
+                          '企事业单位进行日常转账结算和现金收付的主板账户',
+                        actualViews: 1402,
+                        defaultSales: 992,
+                        actualSales: 992,
+                      },
+                    },
+                  },
+                ],
+              },
+              {
+                locationSort: 2,
+                materialList: [
+                  {
+                    materialTypeCode: 'GGLX_TP',
+                    materialUrl:
+                      'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+                    imgLink: '',
+                    materialLink: 'https://www.baidu.com/',
+                    materialCode: 'src100302',
+                    materialHeight: 1334,
+                    materialId: 0,
+                    materialDescription: '',
+                    materialName: '推广页银行服务广告1-2',
+                    androidLink: '',
+                    materialWidth: 750,
+                    iosLink: '',
+                    linkType: 2,
+                    wapLink: '',
+                    executeParam: '',
+                    productId: 'extendBankServer2',
+                    productDetail: {
+                      id: 'extendBankServer2',
+                      name: '一般户开户',
+                      referencePrice: 600,
+                      operating: {
+                        showName: '一般户开户',
+                        slogan: '',
+                        productDescribe:
+                          '只能办理转账结算和现金存缴，不能支取现金',
+                        defaultSales: 632,
+                        actualSales: 421,
+                        actualViews: 416,
+                      },
+                    },
+                  },
+                ],
+              },
+              {
+                locationSort: 3,
+                materialList: [
+                  {
+                    materialTypeCode: 'GGLX_TP',
+                    materialUrl:
+                      'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+                    imgLink: '',
+                    materialLink: 'https://www.baidu.com/',
+                    materialCode: 'src100302',
+                    materialHeight: 1334,
+                    materialId: 0,
+                    materialDescription: '',
+                    materialName: '推广页银行服务广告1-3',
+                    androidLink: '',
+                    materialWidth: 750,
+                    iosLink: '',
+                    linkType: 2,
+                    wapLink: '',
+                    executeParam: '',
+                    productId: 'extendBankServer3',
+                    productDetail: {
+                      id: 'extendBankServer3',
+                      name: '银行销户',
+                      referencePrice: 800,
+                      operating: {
+                        showName: '一般户开户',
+                        slogan: '',
+                        productDescribe:
+                          '不再使用银行提供的服务，对账户信息进行删除销毁处理',
+                        defaultSales: 152,
+                        actualSales: 108,
+                        actualViews: 108,
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+            locationCode: 'ad100230',
+            locationCodeLocType: 2,
+          },
+        ],
+        planlerList: [
+          {
+            id: 169,
+            userId: '7887200447593906176',
+            userCentreId: '7887200447257313280',
+            loginName: '108862',
+            realName: '李劲',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '18884259139',
+            cvr: 0.162791,
+            cvrValue: 65.771926,
+            orderBus: 7,
+            orderBusValue: 50.378921,
+            busPerformance: 8544,
+            busPerformanceValue: 79.535461,
+            abilityValue: 68.038005,
+            formatType: '工商',
+          },
+          {
+            id: 28,
+            userId: '43999',
+            userCentreId: '7704199733711282176',
+            loginName: '96352931',
+            realName: '岳雪冬',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13908231675',
+            cvr: 0.127273,
+            cvrValue: 63.23411,
+            orderBus: 7,
+            orderBusValue: 50.378921,
+            busPerformance: 15348,
+            busPerformanceValue: 91.077286,
+            abilityValue: 70.450657,
+            formatType: '工商',
+          },
+          {
+            id: 182,
+            userId: '7930253930943676416',
+            userCentreId: '7930253930615472128',
+            loginName: '109870',
+            realName: '李海怡',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13696057459',
+            cvr: 0.106383,
+            cvrValue: 61.705406,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 17770,
+            busPerformanceValue: 93.504073,
+            abilityValue: 70.2655,
+            formatType: '工商',
+          },
+          {
+            id: 6,
+            userId: '3394',
+            userCentreId: '3394',
+            loginName: '2022554',
+            realName: '刘琴',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13350072314',
+            cvr: 0.090909,
+            cvrValue: 60.557728,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 7612.4,
+            busPerformanceValue: 77.299492,
+            abilityValue: 64.379694,
+            formatType: '工商',
+          },
+          {
+            id: 35,
+            userId: '66475',
+            userCentreId: '66475',
+            loginName: '38798340',
+            realName: '钟霞',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13730634929',
+            cvr: 0.086207,
+            cvrValue: 60.206605,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 15278,
+            busPerformanceValue: 90.996225,
+            abilityValue: 68.653875,
+            formatType: '工商',
+          },
+        ],
+      },
+    }
+    const type = 'extendBankServer'
+    try {
+      const res = await $axios.get(spreadApi.list, {
+        params: { pageCode: type },
+      })
+      if (res.code === 200) {
+        console.log(res)
+        return {
+          result: res,
+        }
+      } else {
+        return {
+          result,
+        }
+      }
+    } catch (error) {
+      console.log('error', error)
+      return { result }
+    }
   },
   data() {
     return {
@@ -65,17 +312,17 @@ export default {
         },
       ],
       // 服务列表
-      servicelist: [
+      serviceList: [
         {
           title: '基本开户',
-          titlelable:
+          titleLable:
             'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
           titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
           actualViews: '1402',
           defaultSales: '992',
           actualSales: '992',
           price: 600,
-          bgimg: 'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
           planner: {
             id: '7862495547640840192',
             name: '李劲',
@@ -87,14 +334,14 @@ export default {
         },
         {
           title: '一般户开户',
-          titlelable:
+          titleLable:
             'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
           titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
           actualViews: '632',
           defaultSales: '421',
           actualSales: '416',
           price: 600,
-          bgimg: 'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
           planner: {
             id: '7862495547640840192',
             name: '李劲',
@@ -106,14 +353,14 @@ export default {
         },
         {
           title: '银行销户',
-          titlelable:
+          titleLable:
             'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
           titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
           actualViews: '152',
           defaultSales: '108',
           actualSales: '108',
           price: 600,
-          bgimg: 'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
           planner: {
             id: '7862495547640840192',
             name: '李劲',
@@ -203,6 +450,11 @@ export default {
       },
     }
   },
+  created() {
+    this.productDetail(this.result.data.adList[0].sortMaterialList)
+    this.planner = this.plannersList[0]
+    this.plannerHandleData(this.result.data.planlerList || [])
+  },
   methods: {
     // 跳转判断
     openIM(url) {
@@ -217,6 +469,68 @@ export default {
           planner.jobNum || '',
           planner.imgSrc || ''
         )
+      }
+    },
+    // 处理服务列表数据
+    productDetail(data) {
+      this.plannerHandleData(this.result.data.planlerList || [])
+      if (data.length === 0) {
+      } else {
+        const serviceList = []
+        data.forEach((item, index) => {
+          const obj = {
+            id: item.materialList[0].productId,
+            title: item.materialList[0].productDetail.operating.showName,
+            titleLable:
+              'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
+            titleContent:
+              item.materialList[0].productDetail.operating.productDescribe,
+            actualViews:
+              item.materialList[0].productDetail.operating.actualViews,
+            defaultSales:
+              item.materialList[0].productDetail.operating.defaultSales,
+            actualSales:
+              item.materialList[0].productDetail.operating.actualSales,
+            price: item.materialList[0].productDetail.referencePrice,
+            bgImg:
+              'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
+            planner: this.plannersList[
+              `${
+                index < this.plannersList.length
+                  ? index
+                  : Math.floor(Math.random() * this.plannersList.length)
+              }`
+            ],
+          }
+          serviceList.push(obj)
+        })
+        this.serviceList = serviceList
+      }
+    },
+    // 规划师处理
+    plannerHandleData(data) {
+      // 规划师列表
+      if (data.length !== 0) {
+        const guiHuaShiList = []
+        data.forEach((item) => {
+          const obj = {
+            id: item.userCentreId,
+            type: '金牌规划师',
+            avatarImg: item.userHeadUrl,
+            imgSrc: item.userHeadUrl,
+            name: item.realName,
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: item.userPhone,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+            jobNum: item.loginName,
+          }
+          guiHuaShiList.push(obj)
+        })
+        this.plannersList = guiHuaShiList
+        this.planner = this.plannersList[0]
+      } else {
+        return this.plannersList
       }
     },
   },
@@ -254,16 +568,8 @@ export default {
     left: 50%;
     margin-left: -375px;
   }
-  .servicelist {
-    margin-top: 63px;
-    .servicelist-title {
-      padding-left: 40px;
-      font-size: 40px;
-      font-family: PingFang SC;
-      font-weight: bold;
-      color: #1a1a1a;
-      display: block;
-    }
+  /deep/.my-sp-bottombar {
+    z-index: 2;
   }
 }
 </style>

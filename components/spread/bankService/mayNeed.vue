@@ -14,7 +14,7 @@
         /></a>
       </li>
     </ul>
-    <span class="answer">对代理记账有疑问？企服专家为您免费解答</span>
+    <span class="answer">还有疑问？企服专家为您免费解答</span>
     <div class="phone">
       <my-icon name="notify_ic_tel" size="0.36rem" color="#4974F5"></my-icon>
       <div class="phonenumber">
@@ -44,11 +44,6 @@ export default {
     return {
       telephone: '4000-962540',
       url: '',
-      // needlist: [
-      //   '工商变更_您可能还需要办理_工商注册',
-      //   '工商变更_您可能还需要办理_税务筹划',
-      //   '工商变更_您可能还需要办理_其他服务',
-      // ],
       ProductList: [
         {
           code: 1,
@@ -58,7 +53,7 @@ export default {
         {
           code: 2,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/82vsavebgnk0000.jpg',
-          url: '',
+          url: 'https://shupian.dgg.cn/spread/agency/',
         },
         {
           code: 3,
@@ -73,7 +68,7 @@ export default {
         {
           code: 5,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/6f1d205sae40000.jpg',
-          url: '',
+          url: 'https://shupian.dgg.cn/spread/tax',
         },
         {
           code: 6,
