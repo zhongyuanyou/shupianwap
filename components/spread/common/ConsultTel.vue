@@ -63,7 +63,6 @@ export default {
     font-weight: bold;
     color: #1a1a1a;
     margin: 39px 0 31px 0;
-    text-align: center;
     height: 30px;
     line-height: 30px;
   }
