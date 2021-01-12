@@ -13,20 +13,33 @@
     <!--    第二层-->
     <div class="seal-banner-form">
       <div class="seal-banner-form-title">
-        <img src="" alt="" />
+        <img
+          src="https://cdn.shupian.cn/sp-pt/wap/images/77m52vjaz9s0000.png"
+          alt=""
+        />
         <span>立即预约刻章</span>
-        <img src="" alt="" />
+        <img
+          src="https://cdn.shupian.cn/sp-pt/wap/images/366mn8vq3pc0000.png"
+          alt=""
+        />
       </div>
       <!--      表单-->
       <div class="seal-banner-form-content">
         <div class="seal-banner-form-content-block">
           <div
-            v-for="(item, i) of blocks"
+            v-for="(item, i) of sealTypes"
             :key="i"
             :class="isSelect === i ? blue : gray"
             @click="changeBlock(i)"
           >
-            {{ item }}
+            <a
+              v-sensorsTrack:webClick="{
+                name: `印章刻制表单_表头选择栏_${item}`,
+              }"
+              href="javascript:;"
+            >
+              {{ item }}
+            </a>
           </div>
         </div>
         <div class="seal-banner-form-content-input">
@@ -75,7 +88,9 @@
             >{{ text }}</a
           >
         </div>
-        <button class="seal-banner-form-content-button">立即提交</button>
+        <button class="seal-banner-form-content-button" @click="consultForm">
+          立即提交
+        </button>
       </div>
       <div class="seal-banner-form-tabs">
         <div v-for="(item, index) of tabs" :key="index">
@@ -115,10 +130,12 @@ export default {
       tel: '',
       // 验证码
       code: '',
+      // 印章类型
+      sealType: '法人章',
       // 验证码计时器
       time: '',
       // 表单选项内容
-      blocks: [
+      sealTypes: [
         '法人章',
         '公章',
         '财务章',
@@ -141,6 +158,7 @@ export default {
     // 改变表单选中状态
     changeBlock(i) {
       this.isSelect = i
+      this.sealType = this.sealTypes[i]
     },
     // 电话号码输入框聚焦显示获取验证码
     telFocus() {
@@ -209,61 +227,70 @@ export default {
       return nowTimeString
     },
     // 提交表单
-    // consultForm() {
-    //   const _tel = this.tel
-    //   const _code = this.code
-    //   const _telReg = /^1[3,4,5,6,7,8,9]\d{9}$/
-    //   const webUrl = window.open
-    //   const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
-    //   if (!_tel) {
-    //     Toast('请输入电话号码')
-    //     return
-    //   }
-    //   if (!_telReg.test(_tel)) {
-    //     Toast('请输入正确的电话号码')
-    //     return
-    //   }
-    //   if (!_code) {
-    //     Toast('请输入验证码')
-    //     return
-    //   }
-    //   // 没有明确参数名的，全放content中作为备注信息
-    //   const contentStr = {}
-    //   const params = {
-    //     formId, // formId,唯一ID提交资源中心
-    //     name: '匿名客户',
-    //     tel: _tel, // 电话
-    //     url: webUrl, // 链接
-    //     type: 'swch', // 业态编码
-    //     place: 'cd',
-    //     device: 'wap', // 设备：pc,wap
-    //     web: 'SP', // 归属渠道：xmt,zytg,wxgzh
-    //     smsCode: _code, // 验证码
-    //     content: JSON.stringify(contentStr), // 把const备注信息json化
-    //   }
-    //   window.promotion.privat.consultForm(params, (res) => {
-    //     if (res.error === 0) {
-    //       // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
-    //       Toast('提交成功，请注意接听电话')
-    //       clearInterval(this.time)
-    //       this.tel = ''
-    //       this.code = ''
-    //       this.text = '发送验证码'
-    //       window.getTrackRow('p_formSubmitResult', {
-    //         even_name: 'p_formSubmitResult',
-    //         form_type: '咨询表单',
-    //         form_name: '税务筹划表单_提交',
-    //       })
-    //     } else {
-    //       Toast(res.msg)
-    //     }
-    //   })
-    // },
+    consultForm() {
+      const _tel = this.tel
+      const _code = this.code
+      const sealType = this.sealType
+      const _telReg = /^1[3,4,5,6,7,8,9]\d{9}$/
+      const webUrl = window.open
+      const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
+      if (!_tel) {
+        Toast('请输入电话号码')
+        return
+      }
+      if (!_telReg.test(_tel)) {
+        Toast('请输入正确的电话号码')
+        return
+      }
+      if (!_code) {
+        Toast('请输入验证码')
+        return
+      }
+      // 没有明确参数名的，全放content中作为备注信息
+      const contentStr = {
+        sealType,
+      }
+      const params = {
+        formId, // formId,唯一ID提交资源中心
+        name: '匿名客户',
+        tel: _tel, // 电话
+        url: webUrl, // 链接
+        type: 'gszc', // 业态编码
+        place: 'cd',
+        device: 'wap', // 设备：pc,wap
+        web: 'SP', // 归属渠道：xmt,zytg,wxgzh
+        smsCode: _code, // 验证码
+        content: JSON.stringify(contentStr), // 把const备注信息json化
+      }
+      window.promotion.privat.consultForm(params, (res) => {
+        if (res.error === 0) {
+          // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
+          Toast('提交成功，请注意接听电话')
+          clearInterval(this.time)
+          this.isSelect = 0
+          this.sealType = this.sealTypes[this.isSelect]
+          this.tel = ''
+          this.code = ''
+          this.text = '发送验证码'
+          // window.getTrackRow('p_formSubmitResult', {
+          //   even_name: 'p_formSubmitResult',
+          //   form_type: '咨询表单',
+          //   form_name: '税务筹划表单_提交',
+          // })
+        } else {
+          Toast(res.msg)
+        }
+      })
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
+a {
+  text-decoration: none;
+  color: inherit;
+}
 .seal-banner {
   margin-bottom: 63px;
   &-swipe {
@@ -292,6 +319,16 @@ export default {
       color: #1a1a1a;
       line-height: 32px;
       text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      > img {
+        width: 48px;
+        height: 2px;
+      }
+      > span {
+        margin: 0 17px;
+      }
     }
     &-content {
       &-block {
