@@ -1,6 +1,6 @@
 <template>
-  <div class="component">
-    <div class="title">服务流程</div>
+  <div class="component-all">
+    <div class="title">你还可能需要办理</div>
     <div class="content">
       <div v-for="(item, index) in data" :key="index" class="item">
         <img :src="item.img" />
@@ -46,7 +46,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.component {
+.component-all {
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -13,11 +13,11 @@
     <!-- END   表单-->
 
     <!-- START 热门办理业务-->
-    <HotBanLiYeWu />
+    <HotBanLiYeWu class="component-margin1" />
     <!-- END   热门办理业务-->
 
     <!-- START 规划师-->
-    <GuiHuaShiSwipe title="" />
+    <GuiHuaShiSwipe planners-common="{title: ''}" />
     <!-- END   规划师-->
 
     <!-- START 热门行业推荐-->
@@ -26,7 +26,7 @@
     <!-- END   热门行业推荐-->
 
     <!-- START 常见问题-->
-    <CommonQuestion class="component-margin" />
+    <CommonQuestion class="component-margin2" />
     <!-- END   常见问题-->
 
     <!-- START 免费咨询-->
@@ -34,15 +34,15 @@
     <!-- END   免费咨询-->
 
     <!-- START 服务流程-->
-    <ServiceProcess />
+    <ServiceProcess class="component-margin3" />
     <!-- END   服务流程-->
 
     <!-- START 咨询规划师-->
-    <GuiHuaShiSwipe title="咨询规划师" />
+    <GuiHuaShiSwipe planners-common="{title: '咨询规划师'}" />
     <!-- END   咨询规划师-->
 
     <!-- START 你可能还需要办理-->
-    <PossibleHandle />
+    <PossibleHandle class="component-margin4" />
     <!-- END   你可能还需要办理-->
 
     <!-- START 有疑问-->
@@ -169,28 +169,23 @@ export default {
   margin: 0 auto;
   font-family: PingFang SC;
 
-  .component-margin {
+  .component-margin1 {
+    margin-top: 30px;
+  }
+  .component-margin2 {
     margin-top: 64px;
+    margin-bottom: 60px;
   }
 
+  .component-margin3 {
+    margin-top: 30px;
+  }
+  .component-margin4 {
+    margin-top: 30px;
+  }
   /deep/ .my-head {
     width: @spread-page-width !important;
     left: auto !important;
-  }
-
-  // 穿透-遮罩
-  /deep/ .sp-popup--bottom {
-    width: @spread-page-width;
-    left: 50%;
-    right: auto;
-    margin-left: calc(-@spread-page-width / 2);
-    //transform: translateX(-126px); // 该属性因为组件样式未知bug，导致左侧出来一部分。且距离是一直固定是63px，不能转成rem
-  }
-  /deep/ .sp-overlay {
-    width: @spread-page-width;
-    left: 50%;
-    right: auto;
-    margin-left: calc(-@spread-page-width / 2);
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="component">
+  <div class="component-all">
     <div class="title">热门办理业务</div>
     <div class="content">
       <div
@@ -69,10 +69,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.component {
+.component-all {
   width: calc(100% - 80px);
   margin: 0 auto;
-  padding-top: 30px;
   .title {
     font-size: 40px;
     font-weight: 600;

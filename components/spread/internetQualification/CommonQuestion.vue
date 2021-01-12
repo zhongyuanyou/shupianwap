@@ -1,5 +1,5 @@
 <template>
-  <div class="component">
+  <div class="component-all">
     <div class="title">常见问题</div>
     <div class="content">
       <div v-for="(item, index) in questions" :key="index" class="item">
@@ -22,7 +22,13 @@
         <div class="item-btn">咨询更多>></div>
       </div>
     </div>
-    <sp-button plain type="primary">展开更多</sp-button>
+    <sp-button plain type="primary"
+      >展开更多
+      <img
+        class="btn-img"
+        src="https://cdn.shupian.cn/sp-pt/wap/images/4ehy9youej60000.png"
+      />
+    </sp-button>
   </div>
 </template>
 
@@ -48,9 +54,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.component {
+.component-all {
   width: calc(100% - 80px);
   margin: 0 auto;
+  text-align: center;
   .title {
     font-size: 40px;
     font-weight: 600;
@@ -105,6 +112,10 @@ export default {
         margin-left: 54px;
       }
     }
+  }
+  .btn-img {
+    width: 20px;
+    height: 11px;
   }
   // 穿透修改-按钮：定制需求按钮
   /deep/ .sp-button {

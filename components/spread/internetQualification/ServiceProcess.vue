@@ -1,5 +1,5 @@
 <template>
-  <div class="component">
+  <div class="component-all">
     <div class="title">服务流程</div>
     <div class="content">
       <div v-for="(item, index) in process" :key="index" class="item">
@@ -44,7 +44,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.component {
+.component-all {
   width: calc(100% - 80px);
   margin: 0 auto;
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="component">
+  <div class="component-all">
     <ServiceIntroduced :service-list="hotYeWuList" service-title="热门行业推荐">
       <template v-slot:dropDown>
         <Dropdown
@@ -67,7 +67,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.component {
+.component-all {
   /deep/ .serviceList-content-head-title > span {
     color: #ffffff !important;
   }
