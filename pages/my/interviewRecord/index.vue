@@ -44,18 +44,16 @@
                 <div class="item-info_detail">
                   <h4>
                     <span class="name">{{ item.inviterName }}</span>
-                    <span class="title">
-                      <span class="title-content">
+                    <div class="title">
+                      <div class="title-content">
+                        <div class="gold">金牌规划师</div>
                         <img
-                          :src="$ossImgSet(106, 20, '3fjjj54kqz20000.png')"
+                          :src="$ossImgSet(20, 14, '48gdkcbncui0000.png')"
                           alt=""
+                          style="margin-top: 0.06rem"
                         />
-                        <img
-                          :src="$ossImgSet(32, 20, '48gdkcbncui0000.png')"
-                          alt=""
-                        />
-                      </span>
-                    </span>
+                      </div>
+                    </div>
                   </h4>
                   <p>
                     面谈时间：<span>{{ item.inviteTime }}</span>
@@ -377,6 +375,10 @@ export default {
             }
             .title {
               position: relative;
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              flex-direction: row;
               .title-content {
                 position: absolute;
                 left: 0;
@@ -384,6 +386,25 @@ export default {
                 white-space: nowrap;
                 z-index: 1;
                 line-height: 1;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                flex-direction: row;
+                .gold {
+                  width: 144px;
+                  height: 32px;
+                  background: linear-gradient(135deg, #ffeab9, #edcf98);
+                  border: 1px solid #dfb45a;
+                  border-radius: 14px;
+                  margin-top: 6px;
+                  text-align: center;
+                  font-size: 18px;
+                  font-family: PingFang SC;
+                  font-weight: bold;
+                  color: #9b6809;
+                  line-height: 32px;
+                  margin-right: 8px;
+                }
                 .icon {
                   margin-right: 8px;
                   &:last-child {
