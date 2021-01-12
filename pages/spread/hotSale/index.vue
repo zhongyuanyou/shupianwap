@@ -147,6 +147,11 @@ export default {
       }
     },
   },
+  head() {
+    return {
+      title: '服务热卖榜单',
+    }
+  },
 }
 </script>
 

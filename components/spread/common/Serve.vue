@@ -41,7 +41,7 @@
         <div class="hotSale-serve-tab-img">
           <sp-image
             width="2.66rem"
-            height="2.66rem"
+            height="100%"
             lazy-load
             fit="cover"
             :src="item.productImgArr[0]"
