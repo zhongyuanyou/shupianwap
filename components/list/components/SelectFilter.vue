@@ -174,7 +174,7 @@ export default {
         // 如果该筛选项是产品分类查询出来的，value需要取code，如果不是则需要取ext2
         const _flag = this.filterData.ext3 === '1'
         this.activeItems.forEach((item) => {
-          emitData.fieldValue.push(_flag ? item.code : item.ext2)
+          emitData.fieldValue.push(_flag ? item.name : item.ext2)
         })
       } else {
         emitData = ''
