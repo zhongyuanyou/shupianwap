@@ -1,7 +1,18 @@
 <template>
   <div class="agency">
     <!-- s 头部导航 -->
-    <Header :title="title" />
+    <Header :title="title">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!-- e 头部导航 -->
     <!-- s Banner -->
     <Banner :imglist="imgList" />
@@ -28,13 +39,14 @@
     <Need />
     <!-- e 可能需要 -->
     <!-- s 底部导航 -->
-    <Bottom :planner="planner" :md="md" />
+    <Bottom :planner="planner" :md="fixedMd" />
     <!-- e 底部导航 -->
     <dgg-im-company></dgg-im-company>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Header from '../../../components/common/head/header'
 import Banner from '../../../components/spread/agency/banner'
 import Form from '../../../components/spread/agency/form'
@@ -332,17 +344,22 @@ export default {
         },
       ],
       // 埋点
-      md: {
-        elMd: {
-          name: ' ',
+      fixedMd: {
+        telMd: {
+          name: '代理记账_钻石展位_拨打电话',
           type: '售前',
         },
         imMd: {
-          name: '代理记账_底部_在线咨询',
+          name: '代理记账_钻石展位_在线咨询',
           type: '售前',
         },
       },
     }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
   created() {
     this.productDetail(this.result.data.adList[0].sortMaterialList)
@@ -352,6 +369,19 @@ export default {
     }
   },
   methods: {
+    back() {
+      // 返回上一页
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/spread')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
     // 商品数据处理
     productDetail(data) {
       this.plannerHandleData(this.result.data.planlerList || [])
@@ -455,6 +485,9 @@ export default {
       left: 50%;
       margin-left: -375px;
     }
+  }
+  .back_icon {
+    margin-left: 40px;
   }
 }
 </style>
