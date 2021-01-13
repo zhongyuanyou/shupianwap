@@ -51,8 +51,9 @@ export default {
         公司年营收: this.content.revenue,
         公司行业: this.content.industry,
       }
+      this.data.url = window.location.href
       // 本地存储数据
-      localStorage.setItem('data', JSON.stringify(this.data))
+      localStorage.setItem('formData', JSON.stringify(this.data))
       this.$router.push('/spread/myDemandCard/second')
     },
   },

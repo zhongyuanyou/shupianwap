@@ -191,7 +191,6 @@ export default {
         })
       })
     }
-    console.log(this.formData)
   },
   methods: {
     backHandle() {

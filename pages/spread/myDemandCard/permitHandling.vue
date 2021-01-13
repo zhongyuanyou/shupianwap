@@ -5,6 +5,7 @@
     <div class="company-select">
       <!-- S您需要办理的许可证业务 -->
       <CompanySelec
+        ref="companySelec"
         :columns="actionsServe"
         title-name="您需要办理的许可证业务是什么？"
         @onSelect="onSelectServe"
@@ -12,6 +13,7 @@
       <!-- E您需要办理的许可证业务 -->
       <!-- S主要决策人 -->
       <SelectDesired
+        ref="select1"
         :select-list="selectActive"
         title-name="您是否为主要决策人？"
         @onSelectActive="onDistrict"
@@ -19,6 +21,7 @@
       <!-- E主要决策人 -->
       <!-- S办理时间 -->
       <SelectDesired
+        ref="select2"
         :select-list="selectTransact"
         title-name="您打算什么时候办理？"
         @onSelectActive="onTransact"
@@ -109,6 +112,30 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
+
+    // 数据回显
+    const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
+    if (localStorageFormData) {
+      this.$nextTick(() => {
+        console.log(localStorageFormData)
+        this.$refs.companySelec.title = localStorageFormData.content.xkzlx
+        this.permission = localStorageFormData.content.xkzlx
+        this.isDecision = localStorageFormData.content['主要决策人']
+        for (let index = 0; index < this.selectActive.length; index++) {
+          if (this.selectActive[index].name === this.isDecision) {
+            this.$refs.select1.selectActive = index
+            break
+          }
+        }
+        this.handlingTime = localStorageFormData.content['办理时间']
+        for (let index = 0; index < this.selectTransact.length; index++) {
+          if (this.selectTransact[index].name === this.handlingTime) {
+            this.$refs.select2.selectActive = index
+            break
+          }
+        }
+      })
+    }
   },
   methods: {
     backHandle() {
@@ -120,7 +147,7 @@ export default {
     },
     onSelectServe(val) {
       // 变更服务
-      this.xkzlz = val
+      this.permission = val
     },
     onDistrict(item) {
       // 是否决策人
@@ -131,15 +158,18 @@ export default {
       this.handlingTime = item.name
     },
     onButton() {
-      const obj = JSON.stringify({
+      const data = {
         type: 'xkx',
-        xkzlx: this.permission,
+        url: window.location.href,
         content: {
+          xkzlx: this.permission,
           主要决策人: this.isDecision,
           办理时间: this.handlingTime,
         },
-      })
-      localStorage.setItem('data', obj)
+      }
+      // 本地存储数据
+      const obj = JSON.stringify(data)
+      localStorage.setItem('formData', obj)
       this.$router.push({ path: '/spread/myDemandCard/second' })
     },
   },
