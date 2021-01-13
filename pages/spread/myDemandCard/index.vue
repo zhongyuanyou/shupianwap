@@ -1,5 +1,8 @@
 <template>
   <div class="page-content">
+    <!-- S 头部 -->
+    <Header ref="headerRef" title="轻松找服务" />
+    <!-- E 头部 -->
     <!-- 1、START 头部Header-->
     <!--    <Header title="" :fixed="true" head-class="head-icon">-->
     <!--      <template v-slot:right>-->
@@ -44,14 +47,16 @@
 
 <script>
 import { WorkTab, WorkTabs, Button } from '@chipspc/vant-dgg'
-// import { mapState } from 'vuex'
-// import Header from '~/components/common/head/header'
+import { mapMutations } from 'vuex'
+import Header from '@/components/common/head/header'
 export default {
-  name: 'Index',
+  layout: 'keepAlive',
+  name: 'NeedCard',
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
     [Button.name]: Button,
+    Header,
   },
   data() {
     return {
@@ -73,7 +78,13 @@ export default {
     //   currentCity: (state) => state.city.currentCity.name || '成都',
     // }),
   },
+  mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'NeedCard' })
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     // 选择城市
     choiceCity() {
       this.$router.push({ path: '/city/choiceCity' })

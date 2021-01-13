@@ -17,7 +17,7 @@
     <SwiperBanner :swiper-data="initData.rollBannerData" />
     <!-- E 轮播banner -->
     <!-- S 帮我找服务 -->
-    <Help :help-banner-data="initData.helpBannerData" />
+    <Help ref="showScollHeight" :help-banner-data="initData.helpBannerData" />
     <!-- E 帮我找服务 -->
     <client-only>
       <!-- S 限时特惠 -->

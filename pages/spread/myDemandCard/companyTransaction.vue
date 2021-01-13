@@ -1,5 +1,6 @@
 <template>
   <div class="center">
+    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
     <!--  banner  -->
     <banner></banner>
     <!--  banner  -->
@@ -12,9 +13,11 @@
 <script>
 import Banner from '~/components/spread/myDemandCard/companyTransaction/Banner'
 import MyForm from '~/components/spread/myDemandCard/companyTransaction/MyForm'
+import Header from '@/components/common/head/header'
 export default {
-  name: 'Index',
-  components: { Banner, MyForm },
+  layout: 'keepAlive',
+  name: 'CompanyTransaction',
+  components: { Banner, MyForm, Header },
   mounted() {
     const param = {
       platform_type: 'H5', // 平台类型：App，H5，Web
@@ -24,6 +27,11 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
+  },
+  methods: {
+    backHandle() {
+      localStorage.removeItem('formData')
+    },
   },
   head() {
     return {

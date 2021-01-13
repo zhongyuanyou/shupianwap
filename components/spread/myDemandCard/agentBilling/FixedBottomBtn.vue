@@ -14,23 +14,29 @@ export default {
   },
   methods: {
     nextStep() {
+      const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
       const data = this.$parent.questionData
-      if (!data[1].value) {
-        Toast('请选择主营业务')
-        return
+      //   if (!data[1].value) {
+      //     Toast('请选择主营业务')
+      //     return
+      //   }
+      let content = {
+        注册时间: data[0].value,
+        主营业务: data[1].value,
+        是否支持开票: data[2].value,
+        公司年收入: data[3].value,
+      }
+      // 合并两个页面之间缓存的数据
+      if (localStorageFormData) {
+        content = Object.assign(localStorageFormData.content, content)
       }
       // 将数据存储
       const str = JSON.stringify({
         type: 'kjdl',
-        content: {
-          注册时间: data[0].value,
-          主营业务: data[1].value,
-          是否支持开票: data[2].value,
-          公司年收入: data[3].value,
-        },
+        url: window.location.href,
+        content,
       })
-      console.log(JSON.parse(str))
-      localStorage.setItem('data', str)
+      localStorage.setItem('formData', str)
       // 下一步
       this.$router.push({ path: '/spread/myDemandCard/second' })
     },

@@ -1,5 +1,6 @@
 <template>
   <div class="audit">
+    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
     <HeaderNeed />
     <Content />
   </div>
@@ -8,11 +9,14 @@
 <script>
 import HeaderNeed from '@/components/spread/myDemandCard/auditingService/HeaderNeed'
 import Content from '@/components/spread/myDemandCard/auditingService/Content'
+import Header from '@/components/common/head/header'
 export default {
-  name: 'Index',
+  layout: 'keepAlive',
+  name: 'AuditingService',
   components: {
     HeaderNeed,
     Content,
+    Header,
   },
   data() {
     return {}
@@ -26,6 +30,11 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
+  },
+  methods: {
+    backHandle() {
+      localStorage.removeItem('formData')
+    },
   },
 }
 </script>

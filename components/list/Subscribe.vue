@@ -18,9 +18,15 @@
           v-model="tel"
           type="number"
           maxlength="11"
+          :clearable="true"
           placeholder="请输入手机号码"
         />
-        <sp-field v-model="sms" center placeholder="请输入验证码">
+        <sp-field
+          v-model="sms"
+          :clearable="true"
+          center
+          placeholder="请输入验证码"
+        >
           <template #button>
             <span :class="{ no_get: isSendSMS }" @click="getSMS">{{
               isSendSMS ? `(${count})重新获取` : '获取验证码'

@@ -97,6 +97,8 @@ export default {
             max = min + 5
           }
         }
+        console.log(min)
+        console.log(max)
         this.$parent.minYear = 0.2 * min
         this.$parent.maxYear = 0.2 * max
       }
