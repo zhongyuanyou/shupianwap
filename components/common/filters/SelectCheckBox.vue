@@ -100,12 +100,13 @@ export default {
       currentRenderArr: [], // 当前渲染的数据
       isShowAllBtn: false, // 是否需要显示全部按钮
       selfIsShowAll: false, // 内部属性，是否显示了全部数据
+      a: [],
     }
   },
   watch: {
     selfActiveItem(val) {
       // console.log('selfActiveItem', val)
-      if (val) {
+      if (val && val.length) {
         this.activeItems = val
       }
     },
@@ -115,6 +116,8 @@ export default {
         arr.unshift({ name: '不限', id: 'all' })
       }
       this.renderArr = this.handleRenderArr(chunkArr(arr, this.lineLength))
+      this.$set(this.activeItems, 0, arr[0])
+      console.log('this.activeItems', this.activeItems)
     },
     renderArr(val) {
       if (val.length > 4 && !this.isShowAll) {
@@ -137,6 +140,8 @@ export default {
         arr.unshift({ name: '不限', id: 'all' })
       }
       this.renderArr = this.handleRenderArr(chunkArr(arr, this.lineLength))
+      this.$set(this.activeItems, 0, arr[0])
+      // console.log('this.activeItems', this.activeItems)
     }
     // 初始化激活筛选项
     if (this.selfActiveItem && this.selfActiveItem.length) {
@@ -152,17 +157,26 @@ export default {
         const _index = this.activeItems.findIndex(
           (_item) => _item.id === item.id
         )
-        this.activeItems.splice(_index, 1)
+        if (this.isSelectMore) {
+          this.activeItems.splice(_index, 1)
+          if (this.activeItems.length === 0) {
+            this.activeItems = [this.selectList[0]]
+          }
+        }
         return
       }
-      if (item.id === 'all') {
+      if (item.id === 'all' || item.name === '不限') {
         this.activeItems = [item]
         this.$emit('selectItems', item, this.activeItems)
         return
       }
       if (this.isSelectMore) {
         // 是否多选
-        if (this.activeItems.length && this.activeItems[0].id === 'all') {
+        if (
+          this.activeItems.length &&
+          (this.activeItems[0].id === 'all' ||
+            this.activeItems[0].name === '不限')
+        ) {
           this.activeItems = []
         }
         const _index = this.activeItems.findIndex(
@@ -171,9 +185,8 @@ export default {
         if (_index > -1) {
           this.activeItems.splice(_index, 1)
           this.$emit('cancelItem', item, this.activeItems)
-        } else {
+        } else if (item.id !== 'all' && item.name !== '不限') {
           this.activeItems.push(item)
-          // console.log('selectItems', item, this.activeItems)
           this.$emit('selectItems', item, this.activeItems)
         }
       } else {
@@ -212,10 +225,14 @@ export default {
       }
       this.selfIsShowAll = false
     },
-    clearSelect() {
+    clearSelect(_flag = false) {
       // 对外函数
       // 清除所有的选中项
-      this.activeItems = []
+      if (_flag) {
+        this.activeItems = []
+      } else {
+        this.activeItems = [this.selectList[0]]
+      }
     },
   },
 }

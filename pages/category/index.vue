@@ -43,25 +43,25 @@
             style="padding-top: 0"
           >
             <div class="swiper_con">
-              <sp-swipe
+              <swiper
+                ref="mySwiper"
                 class="my-swipe"
-                :autoplay="3000"
-                indicator-color="white"
-                :show-indicators="false"
-                :touchable="false"
+                :autoplay="true"
+                :options="swiperOptions"
+                @click-slide="handleClickSlide"
               >
-                <sp-swipe-item
+                <swiper-slide
                   v-for="(item, index) of recommendData"
                   :key="index"
-                  @click="adJumpHandleMixin(item.materialList[0])"
                 >
                   <sp-image
                     fit="cover"
                     class="swipe_img"
                     :src="item.materialList[0].materialUrl"
                   />
-                </sp-swipe-item>
-              </sp-swipe>
+                </swiper-slide>
+                <div slot="pagination" class="swiper-pagination"></div>
+              </swiper>
             </div>
           </div>
           <div
@@ -99,10 +99,11 @@
 import { mapState } from 'vuex'
 import Better from 'better-scroll'
 import { Swipe, SwipeItem, Image } from '@chipspc/vant-dgg'
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import { category } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import adJumpHandle from '~/mixins/adJumpHandle'
-
+import 'swiper/swiper-bundle.css'
 export default {
   name: 'Index',
   components: {
@@ -110,6 +111,10 @@ export default {
     [SwipeItem.name]: SwipeItem,
     [Image.name]: Image,
     LoadingCenter,
+    // eslint-disable-next-line vue/no-unused-components
+    Swiper,
+    // eslint-disable-next-line vue/no-unused-components
+    SwiperSlide,
   },
   mixins: [adJumpHandle],
   data() {
@@ -127,6 +132,17 @@ export default {
       flag: true,
       categoryData: [], // 当前点击的分类相关数据
       loading: false,
+      swiperOptions: {
+        autoplay: true,
+        initialSlide: 0,
+        speed: 400,
+        direction: 'horizontal',
+        paginationClickable: true,
+        mousewheelControl: true,
+        passiveListeners: false, // 用来提升swiper在移动设备的中的scroll表现（Passive Event Listeners），但是会和e.preventDefault冲突，所以有时候你需要关掉它。
+        touchAngle: 30, // 允许触发拖动的角度值。默认45度，即使触摸方向不是完全水平也能拖动slide。
+        threshold: 12,
+      },
     }
   },
   computed: {
@@ -134,9 +150,6 @@ export default {
       currentCity: (state) => state.city.currentCity,
     }),
   },
-  // created() {
-  //   this.getCategoryList()
-  // },
   mounted() {
     this.getCategoryList()
   },
@@ -231,6 +244,9 @@ export default {
     },
     goSearch() {
       this.$router.push('/search')
+    },
+    handleClickSlide(index) {
+      this.adJumpHandleMixin(this.recommendData[index].materialList[0])
     },
   },
 }
@@ -348,20 +364,24 @@ export default {
         height: 120px;
       }
       .swiper {
-        height: 164px;
+        height: 180px;
         width: 100%;
         overflow: hidden;
         border-radius: 8px;
         padding-top: 0;
         &_con {
           padding-top: 16px;
+          overflow: hidden;
+          border-radius: 8px;
         }
       }
-      .my-swipe .sp-swipe-item {
+      .my-swipe .swiper-slide {
         color: #fff;
         text-align: center;
         background-color: #f8f8f8;
-        height: 164px;
+        height: 180px;
+        border-radius: 8px;
+        overflow: hidden;
         /deep/ .sp-image__img {
           border-radius: 8px;
         }

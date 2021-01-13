@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-08 10:57:12
+ * @LastEditTime: 2021-01-08 19:56:04
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -32,11 +32,11 @@
       </Header>
     </div>
 
-    <div class="body">
+    <div class="body" :class="{ 'shopping-car--disable': refreshing }">
       <!-- 在sku 等弹窗时候，锁住滚动 -->
       <div
         class="body-container"
-        :class="{ 'sp-overflow-hidden': disableRefresh }"
+        :class="{ 'sp-overflow-hidden': disableRefresh || refreshing }"
       >
         <sp-pull-refresh
           v-model="refreshing"
@@ -79,7 +79,11 @@
         </sp-pull-refresh>
       </div>
     </div>
-    <div v-if="list && list.length" class="footer sp-hairline--top">
+    <div
+      v-if="list && list.length"
+      class="footer sp-hairline--top"
+      :class="{ 'shopping-car--disable': refreshing }"
+    >
       <Bottombar
         :status="shoppingCarStatus"
         :bottom-data="bottomData"
@@ -416,7 +420,7 @@ export default {
 
     // 资源服务的选择
     selecteResourceService(cartId, value, index) {
-      const { type, classCode, url } = value
+      const { type, classCode, url, areaCode } = value
       if (!url) {
         this.$xToast.show({
           message: '选择无效',
@@ -428,7 +432,10 @@ export default {
       }
       this.skuOpenIndex = index
       // 通过后台接口配置的跳转400或者注册地址查询页面
-      this.$router.replace(`${url}&redirect=shoppingCar`)
+      const fullPath = areaCode
+        ? `${url}&areaCode=${areaCode}&redirect=shoppingCar`
+        : `${url}&redirect=shoppingCar`
+      this.$router.replace(fullPath)
     },
 
     // 选择
@@ -606,6 +613,9 @@ export default {
   }
   .item-wrap {
     padding: 40px;
+  }
+  &--disable {
+    pointer-events: none;
   }
 }
 </style>

@@ -1,5 +1,6 @@
 import Moment from 'moment'
 import { checkPhone } from '../check'
+import computed from '../computed'
 
 const formatTime = (date) => {
   const year = date.getFullYear()
@@ -283,10 +284,14 @@ const checkMobile = (mobile) => {
 }
 // 产品属性处理
 // 属性价格展示处理
-const priceHandle = (price) => {
+const priceHandle = (p) => {
+  const price = computed.calculate(`${p} / 100`)
   let str = price
-  if (price < 1000000) {
-    str = '100以万下'
+  if (price < 500000) {
+    str = '50以万下'
+  }
+  if (price >= 500000 && price < 1000000) {
+    str = '50-100万'
   }
   if (price >= 1000000 && price < 5000000) {
     str = '100-500万'
@@ -294,7 +299,7 @@ const priceHandle = (price) => {
   if (price >= 5000000 && price < 10000000) {
     str = '500-1000万'
   }
-  if (price > 10000000) {
+  if (price >= 10000000) {
     str = '1000万以上'
   }
   return str

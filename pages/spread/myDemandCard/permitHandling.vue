@@ -1,5 +1,6 @@
 <template>
   <div class="permit-handling">
+    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
     <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理的许可证业务 -->
@@ -33,16 +34,20 @@
 </template>
 <script>
 import { Button } from '@chipspc/vant-dgg'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import TopLocation from '@/components/spread/myDemandCard/companyAlteration/TopLocation'
 import CompanySelec from '@/components/spread/myDemandCard/companyAlteration/CompanySelect'
 import SelectDesired from '@/components/spread/myDemandCard/companyAlteration/SelectDesired'
+import Header from '@/components/common/head/header'
 export default {
+  layout: 'keepAlive',
+  name: 'PermitHandling',
   components: {
     [Button.name]: Button,
     TopLocation,
     CompanySelec,
     SelectDesired,
+    Header,
   },
   data() {
     return {
@@ -106,6 +111,9 @@ export default {
     window.sensors.registerPage(param) // 设置公共属性
   },
   methods: {
+    backHandle() {
+      localStorage.removeItem('formData')
+    },
     // 城市
     onCity(val) {
       this.cityVal = val

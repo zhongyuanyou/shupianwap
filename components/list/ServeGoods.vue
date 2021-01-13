@@ -85,7 +85,11 @@
     </div>
     <!--E商品列表-->
     <!--S订阅-->
-    <Subscribe v-show="!listShow && !skeletonLoading" />
+    <Subscribe
+      v-show="!listShow && !skeletonLoading"
+      :content="saveActiveData"
+      :search-text="searchText"
+    />
     <!--E订阅-->
     <openApp />
   </div>
@@ -206,7 +210,9 @@ export default {
       })
       // 分类数据
       this.typeData = clone(val.typeData)
-      // this.selectValue = this.option[0].value
+      // 初始化
+      this.formData.sortBy = this.option[0].value
+      this.initGoodsList()
     },
     activeData(val) {
       if (this.saveActiveData.length && this.saveActiveData[0].code !== -1) {
@@ -224,7 +230,6 @@ export default {
       this.formData.classCodes = this.sessionCategory.code
     }
     this.formData.keywords = this.searchText
-    this.initGoodsList()
   },
   methods: {
     handleSelect(val) {

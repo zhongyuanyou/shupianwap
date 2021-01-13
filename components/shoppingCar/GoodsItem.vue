@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-08 09:56:17
+ * @LastEditTime: 2021-01-12 19:20:09
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/GoodsItem.vue
 -->
@@ -385,8 +385,9 @@ export default {
       this.getGoodsDetail(currentSkuAttr)
         .then((data) => {
           this.tempGoods.skuAttrKey = currentSkuAttr
-          // 每次请求sku 增值服务需要清空
+          // 每次请求sku 增值服务, 资源服务需要清空
           this.tempGoods.addServiceList = []
+          this.tempGoods.serviceResourceList = []
           this.loading = false
         })
         .catch(() => {
@@ -519,7 +520,45 @@ export default {
         })
         return
       }
-      this.$emit('operation', value)
+
+      // 获取当前选择的区域code
+      const { skuAttrList = [] } = this.skuData || {}
+      let areaCode = ''
+
+      const matchedSkuAttr =
+        Array.isArray(skuAttrList) &&
+        skuAttrList.find((item) => item.code === 'PRO_ATTR_DATA_TYPE_AREA') //    PRO_ATTR_DATA_TYPE_AREA  510100
+      if (matchedSkuAttr) {
+        const { attrValList = [] } = matchedSkuAttr
+
+        const { skuAttrKey } = this.tempGoods
+        const skuAttrKeyArray = skuAttrKey.split(',')
+
+        let matchedRegionSkuAttr = null
+        if (Array.isArray(attrValList) && Array.isArray(skuAttrKeyArray)) {
+          matchedRegionSkuAttr = attrValList.filter((item) => {
+            const { code } = item || {}
+            return skuAttrKeyArray.includes(code)
+          })
+        }
+        if (Array.isArray(matchedRegionSkuAttr)) {
+          areaCode = matchedRegionSkuAttr[0] && matchedRegionSkuAttr[0].code // 正常有一个数据 取第一个就行了
+        }
+
+        if (!areaCode) {
+          this.$xToast.show({
+            message: '未找到对应的区域code',
+            duration: 1000,
+            forbidClick: false,
+            icon: 'toast_ic_remind',
+          })
+          return
+        }
+      }
+
+      let { data = {} } = value || {}
+      data = { ...data, areaCode }
+      this.$emit('operation', { ...value, data })
     },
 
     // 资源服务的选择
