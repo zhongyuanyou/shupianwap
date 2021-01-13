@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-08 19:56:04
+ * @LastEditTime: 2021-01-13 14:19:22
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -32,13 +32,18 @@
       </Header>
     </div>
 
-    <div class="body" :class="{ 'shopping-car--disable': refreshing }">
+    <div
+      class="body"
+      :class="{ 'shopping-car--disable': refreshing }"
+      @click.capture="handleCaptureClick"
+    >
       <!-- 在sku 等弹窗时候，锁住滚动 -->
       <div
         class="body-container"
         :class="{ 'sp-overflow-hidden': disableRefresh || refreshing }"
       >
         <sp-pull-refresh
+          ref="pullRefresh"
           v-model="refreshing"
           class="shopping-car__refresh"
           :disabled="disableRefresh"
@@ -217,6 +222,23 @@ export default {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
+
+    // notice: 在使用下拉刷新后，拉到最底部，马上使用手指点击，会导致pull-refresh组件中的touchend事件没触发，
+    // 致使刷新没有执行，且refreshing也为false,这是若里面被点击，弹出poup,样式布局全部乱掉，
+    // 目前想到的办法就是在：点击事件的捕获阶段，通过 .sp-pull-refresh__track 这个div的transform是否有值，来判断若是下拉状态，就阻止点击
+    handleCaptureClick(event) {
+      if (!this.$refs.pullRefresh) return
+      const el = this.$refs.pullRefresh.$el
+      const trackEl = el.querySelector('.sp-pull-refresh__track')
+      if (!trackEl || !window) return
+      const transformStyle = window
+        .getComputedStyle(trackEl, null)
+        .getPropertyValue('transform')
+
+      if (transformStyle === 'none') return
+      event.stopPropagation()
+      event.preventDefault()
+    },
     onClickLeft() {
       console.log('nav onClickLeft')
       if (this.isInApp) {
@@ -540,7 +562,7 @@ export default {
           params = { selectFlag: +value } // 将boolean转换为数字（1：选中 ,0：取消选中）
           break
         case 'init':
-          // TODO 根据后台要求，id不能为空，虽然不用，所以随便传
+          // 根据后台要求，id不能为空，虽然不用，所以随便传
           params = { id: '12233', createrId: this.userInfo.userId }
           this.updateLoading = false // 获取初始不用loading
       }
