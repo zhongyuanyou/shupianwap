@@ -1,5 +1,6 @@
 <template>
   <div class="page-content">
+    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
     <!--    <Header title="轻松找服务" :fixed="false" head-class="head-icon" />-->
 
     <!-- START banner-->
@@ -22,11 +23,13 @@ import FixedBottomBtn from '@/components/spread/myDemandCard/agentBilling/FixedB
 import Question from '@/components/spread/myDemandCard/agentBilling/Question'
 import Header from '~/components/common/head/header'
 export default {
-  name: 'Index',
+  layout: 'keepAlive',
+  name: 'AgentBilling',
   components: {
     HeaderBg,
     FixedBottomBtn,
     Question,
+    Header,
   },
   data() {
     return {
@@ -87,7 +90,6 @@ export default {
   },
   mounted() {
     const formData = JSON.parse(localStorage.getItem('formData'))
-    console.log(formData)
     if (formData) {
       this.questionData[0].value =
         formData.content['注册时间'] || this.questionData[0].value
@@ -106,6 +108,11 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
+  },
+  methods: {
+    backHandle() {
+      localStorage.removeItem('formData')
+    },
   },
   head() {
     return {

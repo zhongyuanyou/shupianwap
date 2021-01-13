@@ -1,22 +1,8 @@
 <template>
   <div class="center">
-    <!--    头部  -->
-    <!--      <sp-top-nav-bar-->
-    <!--        title="轻松找服务"-->
-    <!--        background="#ffffff"-->
-    <!--        title-color="#1A1A1A"-->
-    <!--        ellipsis-->
-    <!--        :fixed="true"-->
-    <!--        :placeholder="true"-->
-    <!--        z-index="999"-->
-    <!--      >-->
-    <!--        <template #left>-->
-    <!--          <div class="margin" @click="back">-->
-    <!--            <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>-->
-    <!--          </div>-->
-    <!--          <sp-icon name="cross" size="0.4rem" @click="close" />-->
-    <!--        </template>-->
-    <!--      </sp-top-nav-bar>-->
+    <!-- S 头部 -->
+    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <!-- E 头部 -->
     <div class="banner">
       <!--    城市按钮  -->
       <div class="banner-button" @click="tabCity">
@@ -79,17 +65,20 @@
 
 <script>
 import { Field, Toast, TopNavBar, Icon } from '@chipspc/vant-dgg'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { userinfoApi, consult } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import Header from '@/components/common/head/header'
 export default {
-  name: 'Index',
+  layout: 'keepAlive',
+  name: 'Second',
   components: {
     [Field.name]: Field,
     [Toast.name]: Toast,
     [TopNavBar.name]: TopNavBar,
     [Icon.name]: Icon,
     LoadingCenter,
+    Header,
   },
   data() {
     return {
@@ -115,27 +104,34 @@ export default {
     }),
   },
   mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'Second' })
     const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
-    localStorageFormData.content = Object.assign(
-      this.formData.content,
-      localStorageFormData.content
-    )
-    this.formData = Object.assign(this.formData, localStorageFormData)
+    if (localStorageFormData) {
+      localStorageFormData.content = Object.assign(
+        this.formData.content,
+        localStorageFormData.content
+      )
+      this.formData = Object.assign(this.formData, localStorageFormData)
+    }
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     // 选中
     select() {
       this.formData.content['是否允许电话联系'] =
         this.formData.content['是否允许电话联系'] === '是' ? '否' : '是'
     },
-    // // 回退
-    // back() {
-    //   this.$router.go(-1)
-    // },
-    // // 关闭
-    // close() {
-    //   window.close()
-    // },
+    // 返回时缓存数据
+    backHandle() {
+      let data = JSON.parse(localStorage.getItem('formData'))
+      if (data) {
+        data.content = this.formData.content
+        data = JSON.stringify(data)
+        localStorage.setItem('formData', data)
+      }
+    },
     // 选择城市
     tabCity() {
       this.$router.push({ path: '/city/choiceCity' })

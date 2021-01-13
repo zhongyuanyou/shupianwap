@@ -1,5 +1,6 @@
 <template>
   <div class="company-alteration">
+    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
     <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理哪项业务的变更服务 -->
@@ -44,12 +45,16 @@ import TopLocation from '@/components/spread/myDemandCard/companyAlteration/TopL
 import CompanySelec from '@/components/spread/myDemandCard/companyAlteration/CompanySelect'
 import SelectDesired from '@/components/spread/myDemandCard/companyAlteration/SelectDesired'
 import { planner, dict } from '@/api'
+import Header from '@/components/common/head/header'
 export default {
+  layout: 'keepAlive',
+  name: 'CompanyAlteration',
   components: {
     [Button.name]: Button,
     TopLocation,
     CompanySelec,
     SelectDesired,
+    Header,
   },
 
   data() {
@@ -148,12 +153,14 @@ export default {
     window.sensors.registerPage(param) // 设置公共属性
   },
   methods: {
+    backHandle() {
+      localStorage.removeItem('formData')
+    },
     // 城市
     onCity(val) {
       if (val.code !== undefined) this.cityVal = val
       this.getRegionList(this.cityVal.code)
     },
-
     onSelectServe(val) {
       // 变更服务
       this.permission = val

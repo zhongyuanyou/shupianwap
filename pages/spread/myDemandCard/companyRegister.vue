@@ -1,7 +1,10 @@
 <template>
   <div class="regdemand">
+    <!-- S 头部 -->
+    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <!-- E 头部 -->
     <!-- 头部加banner -->
-    <Header @onCity="onCity" />
+    <Banner @onCity="onCity" />
     <div v-show="curentPage === 1" class="content">
       <!-- 公司成立区域 -->
       <div class="company-area">
@@ -140,11 +143,15 @@
 <script>
 import { Popup, Field, Picker, Toast, Icon } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import Header from '@/components/spread/myDemandCard/companyRegister/header'
+import Banner from '@/components/spread/myDemandCard/companyRegister/header'
+import Header from '@/components/common/head/header'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { planner, dict, userinfoApi, consult } from '@/api'
 export default {
+  layout: 'keepAlive',
+  name: 'CompanyRegister',
   components: {
+    Banner,
     Header,
     LoadingCenter,
     [Popup.name]: Popup,
@@ -191,8 +198,10 @@ export default {
       userId: (state) => state.user.userId,
     }),
   },
-  mounted() {},
   methods: {
+    backHandle() {
+      localStorage.removeItem('formData')
+    },
     // 获取地区
     onCity(val) {
       if (val.code !== undefined) this.cityVal = val

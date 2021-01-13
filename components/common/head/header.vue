@@ -101,6 +101,7 @@ export default {
   methods: {
     onLeftClick() {
       this.$router.back(-1)
+      this.$emit('backHandle')
     },
     getTopMargin() {
       if (process && process.client) {
