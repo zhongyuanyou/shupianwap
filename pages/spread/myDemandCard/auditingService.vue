@@ -1,6 +1,6 @@
 <template>
   <div class="audit">
-    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <Header ref="headerRef" title="审计业务" @backHandle="backHandle" />
     <HeaderNeed />
     <Content />
   </div>

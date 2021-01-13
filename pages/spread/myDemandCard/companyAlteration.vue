@@ -1,10 +1,11 @@
 <template>
   <div class="company-alteration">
-    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <Header ref="headerRef" title="工商变更" @backHandle="backHandle" />
     <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理哪项业务的变更服务 -->
       <CompanySelec
+        ref="businessRef"
         :columns="actionsServe"
         title-name="您需要办理哪项业务的变更服务？"
         @onSelect="onSelectServe"
@@ -12,6 +13,7 @@
       <!-- E您需要办理哪项业务的变更服务 -->
       <!-- S您公司的注册在哪个区？ -->
       <CompanySelec
+        ref="districtRef"
         :columns="actionsRegion"
         title-name="您公司的注册在哪个区？"
         @onSelect="onSelectDistrict"
@@ -19,6 +21,7 @@
       <!-- E您公司的注册在哪个区？ -->
       <!-- S您的身份？ -->
       <SelectDesired
+        ref="identityRef"
         :select-list="selectActive"
         title-name="你的身份？"
         @onSelectActive="onDistrict"
@@ -26,6 +29,7 @@
       <!-- E您的身份？ -->
       <!-- S办理 -->
       <SelectDesired
+        ref="timeRef"
         :select-list="selectTransact"
         title-name="您打算什么时候办理？"
         @onSelectActive="onTransact"
@@ -77,29 +81,7 @@ export default {
         '其他变更',
       ],
       // 区域
-      actionsRegion: [
-        '锦江区',
-        '青羊区',
-        '金牛区',
-        '武侯区',
-        '成华区',
-        '龙泉驿区',
-        '青白江区',
-        '新都区',
-        '温江区',
-        '金堂县',
-        '双流县',
-        '郫都区',
-        '大邑县',
-        '蒲江县',
-        '新津县',
-        '都江堰市',
-        '彭州市',
-        '邛崃市',
-        '崇州市',
-        '高新区',
-        '天府新区',
-      ],
+      actionsRegion: [],
       // 身份
       selectActive: [
         {
@@ -142,6 +124,39 @@ export default {
       },
     }
   },
+  computed: {
+    isCityChange() {
+      let num = 0
+      let isHave = false
+      let { district } = this
+      const regionLength = this.actionsRegion.length
+      if (district && district !== '不限' && regionLength) {
+        for (let i = 0; i < this.actionsRegion.length; i++) {
+          if (this.actionsRegion[i] === district) {
+            num = i
+            isHave = true
+            break
+          }
+        }
+        // 若之前选择的区域在当前区域列表中未找到，清空数据，取消回显
+        if (!isHave) {
+          district = '不限'
+        }
+      }
+      return {
+        num,
+        district,
+      }
+    },
+  },
+  watch: {
+    isCityChange: {
+      handler(newVal) {
+        this.$refs.districtRef.defaultIndex = newVal.num
+        this.$refs.districtRef.title = newVal.district
+      },
+    },
+  },
   mounted() {
     const param = {
       platform_type: 'H5', // 平台类型：App，H5，Web
@@ -151,6 +166,40 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
+
+    // 数据回显
+    const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
+    if (localStorageFormData) {
+      this.$nextTick(() => {
+        this.permission = localStorageFormData.content.bgxm || this.permission
+        this.$refs.businessRef.title = this.permission
+        if (this.permission && this.permission !== '不限') {
+          for (let index = 0; index < this.actionsServe.length; index++) {
+            if (this.actionsServe[index] === this.permission) {
+              this.$refs.businessRef.defaultIndex = index
+            }
+          }
+        }
+        this.district =
+          localStorageFormData.content['注册区域'] || this.district
+        this.$refs.districtRef.title = this.district
+        this.identity = localStorageFormData.content['身份'] || this.identity
+        for (let index = 0; index < this.selectActive.length; index++) {
+          if (this.identity === this.selectActive[index].name) {
+            this.$refs.identityRef.selectActive = index
+            break
+          }
+        }
+        this.handlingTime =
+          localStorageFormData.content['办理时间'] || this.handlingTime
+        for (let index = 0; index < this.selectTransact.length; index++) {
+          if (this.handlingTime === this.selectTransact[index].name) {
+            this.$refs.timeRef.selectActive = index
+            break
+          }
+        }
+      })
+    }
   },
   methods: {
     backHandle() {
@@ -180,14 +229,15 @@ export default {
     onButton() {
       const obj = JSON.stringify({
         type: 'gsbg',
-        bgxm: this.permission,
+        url: window.location.href,
         content: {
+          bgxm: this.permission,
           注册区域: this.district,
           身份: this.identity,
           办理时间: this.handlingTime,
         },
       })
-      localStorage.setItem('data', obj)
+      localStorage.setItem('formData', obj)
       this.$router.push({ path: '/spread/myDemandCard/second' })
     },
     // 获取区域

@@ -70,7 +70,6 @@ import { userinfoApi, consult } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import Header from '@/components/common/head/header'
 export default {
-  layout: 'keepAlive',
   name: 'Second',
   components: {
     [Field.name]: Field,
@@ -104,7 +103,6 @@ export default {
     }),
   },
   mounted() {
-    this.SET_KEEP_ALIVE({ type: 'add', name: 'Second' })
     const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
     if (localStorageFormData) {
       localStorageFormData.content = Object.assign(
@@ -115,9 +113,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
-      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
-    }),
     // 选中
     select() {
       this.formData.content['是否允许电话联系'] =
@@ -127,7 +122,7 @@ export default {
     backHandle() {
       let data = JSON.parse(localStorage.getItem('formData'))
       if (data) {
-        data.content = this.formData.content
+        data.content = Object.assign(this.formData.content, data.content)
         data = JSON.stringify(data)
         localStorage.setItem('formData', data)
       }
