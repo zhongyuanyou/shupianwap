@@ -12,10 +12,10 @@
     <!--  立即咨询  -->
     <consult-tel
       :tel="consultTel"
-      title=""
       button="免费咨询"
-      md-type="new"
       md-name="专业刻章服务_免费咨询"
+      md-type="new"
+      title=""
     ></consult-tel>
     <!--  立即咨询  -->
     <!--  服务介绍  -->
@@ -43,9 +43,9 @@
     <!--  立即咨询  -->
     <consult-tel
       :tel="consultTel"
-      title="还有疑问？企服专家为您免费解答"
-      md-type="new"
       md-name="印章服务_疑问咨询"
+      md-type="new"
+      title="还有疑问？企服专家为您免费解答"
     ></consult-tel>
     <!--  立即咨询  -->
     <!--  薯片找人  -->
@@ -53,8 +53,8 @@
     <!--  薯片找人  -->
     <!--  底部咨询  -->
     <fixedBottom
-      :planner="fixedBottomData"
       :md="fixedMd"
+      :planner="fixedBottomData"
       md-type="new"
     ></fixedBottom>
     <!--  底部咨询  -->
@@ -77,6 +77,7 @@ import maby from '~/components/spread/seal/Maby'
 import shuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
 import fixedBottom from '~/components/spread/common/FixedBottom'
 import dggImCompany from '~/components/spread/DggImCompany'
+
 export default {
   name: 'Idnex',
   components: {
@@ -336,7 +337,7 @@ export default {
       },
     }
   },
-  Mounted() {
+  mounted() {
     const param = {
       platform_type: 'H5', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
@@ -370,34 +371,41 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .seal {
   width: 750px;
   margin: 0 auto;
+
   /deep/ .my-head {
     width: 750px !important;
     left: auto !important;
   }
 }
+
 // 服务组件字体颜色
 /deep/ .serviceList-content-head-title > span {
   color: #ffffff !important;
 }
+
 /deep/ .serviceList-content-head > span {
   color: #cccccc !important;
 }
+
 //咨询外边距
 /deep/ .cousulttel-title {
   margin: 0 0 24px;
 }
+
 //咨询内边距
 /deep/ .cousulttel {
   padding-bottom: 0;
 }
+
 //轮播规划师组件圆角
 /deep/ .planner-content-item-shadow {
   border-radius: 8px;
 }
+
 // 规划师组件上边距
 /deep/ .planner {
   padding-top: 64px;

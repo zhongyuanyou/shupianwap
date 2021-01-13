@@ -2,14 +2,11 @@
   <div class="sidebar-navbar">
     <h5>服务介绍</h5>
     <div class="sidebar-navbar-list">
-      <sp-sidebar
-        v-model="activeKey"
-        v-sensorsTrack:webClick="{ name: '体系认证_办理标准_查看更多' }"
-        @change="onChange"
-      >
+      <sp-sidebar v-model="activeKey" @change="onChange">
         <sp-sidebar-item
           v-for="(item, index) of activeKeyTitle"
           :key="index"
+          v-sensorsTrack:webClick="{ name: `体系认证服务流程_${item}` }"
           :title="item"
         />
       </sp-sidebar>
