@@ -5,113 +5,112 @@
       v-model="visible"
       round
       position="bottom"
+      class="sku-container"
       :safe-area-inset-bottom="true"
       v-on="$listeners"
     >
-      <div class="sku-container">
-        <div class="sku-header sp-hairline--bottom">
-          <sp-image
-            fit="cover"
-            class="sku-header__img-wrap"
-            :src="goods.picture"
+      <div class="sku-header sp-hairline--bottom">
+        <sp-image
+          fit="cover"
+          class="sku-header__img-wrap"
+          :src="goods.picture"
+        />
+        <div class="sku-header__goods-info">
+          <div class="sku__goods-price">
+            <span class="sku__price-num">{{ goods.price }}</span>
+            <span class="sku__price-unit">元</span>
+          </div>
+          <div class="sku-header-item">
+            <div class="sku__number">编号:{{ goods.goodsNo }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="sku-body" :style="{ 'max-height': '400px' }">
+        <!-- S 属性 -->
+        <div class="sku-group">
+          <!-- 因为 sku必须选择一个, 所以选择后不能取消 is-cancel="false" -->
+          <SkuServiceRow
+            v-for="treeItem of formatSkuTree"
+            :key="treeItem.k_id"
+            :sku-row="treeItem"
+            :actived="formatSkuAttr"
+            :is-cancel="false"
+            :close-on-click-overlay="false"
+            @selectChange="handleSelectChange"
           />
-          <div class="sku-header__goods-info">
-            <div class="sku__goods-price">
-              <span class="sku__price-num">{{ goods.price }}</span>
-              <span class="sku__price-unit">元</span>
-            </div>
-            <div class="sku-header-item">
-              <div class="sku__number">编号:{{ goods.goodsNo }}</div>
-            </div>
-          </div>
         </div>
-        <div class="sku-body" :style="{ 'max-height': '400px' }">
-          <!-- S 属性 -->
-          <div class="sku-group">
-            <!-- 因为 sku必须选择一个, 所以选择后不能取消 is-cancel="false" -->
-            <SkuServiceRow
-              v-for="treeItem of formatSkuTree"
-              :key="treeItem.k_id"
-              :sku-row="treeItem"
-              :actived="formatSkuAttr"
-              :is-cancel="false"
-              :close-on-click-overlay="false"
-              @selectChange="handleSelectChange"
-            />
-          </div>
-          <!-- E 属性 -->
-          <!-- S 数量 -->
-          <div class="sku-stepper-wrap sp-hairline--bottom">
-            <SkuServiceStepper
-              :selected-num="goods.goodsNumber"
-              :disable-stepper-input="false"
-              :disabled="
-                goods.serviceResourceList &&
-                goods.serviceResourceList.length >= 1
-              "
-              :max-num="skuData.maxNumber"
-              @change="handleStepperChange"
-              @overLimit="handleStepperLimit"
-            />
-          </div>
-          <!-- E 数量 -->
-          <div class="sku-group">
-            <!-- S 服务资源 -->
-            <SkuServiceRow :sku-row="{ k: '服务资源' }">
-              <div class="sku-resource">
-                <sp-cell
-                  v-for="resourceService of formatSkuResourceService"
-                  :key="resourceService.classCode"
-                  class="sku-resource__item"
-                  is-link
-                  @click="handleResourceClick(resourceService)"
-                >
-                  <template #title>
-                    <span class="sku-resource__item-title"
-                      >{{ resourceService.className }}：</span
-                    >
-                    <span class="sku-resource__item-content">{{
-                      resourceService.serviceItemValName || ''
-                    }}</span>
-                  </template>
-                  <template #default>
-                    <span
-                      class="sku-resource__item-operation"
-                      :class="{
-                        'sku-resource__item-operation--placehodler': !resourceService.serviceItemValId,
-                      }"
-                      >{{
-                        resourceService.serviceItemValId
-                          ? '￥' + resourceService.price
-                          : '请选择'
-                      }}</span
-                    >
-                  </template>
-                </sp-cell>
-              </div>
-            </SkuServiceRow>
-            <!-- E 服务资源 -->
-            <!-- S 增值服务 -->
-            <div v-if="formatSkuAddService.length" class="sku-add">
-              <div class="sku-add__title">增值服务</div>
-              <div class="sku-add__item">
-                <SkuServiceRow
-                  v-for="addService of formatSkuAddService"
-                  :key="addService.k_id"
-                  class="sku-add__sub-row"
-                  :sku-row="addService"
-                  :is-sub="true"
-                  :actived="addService.activedList"
-                  @selectChange="handleAddSelectChange"
-                >
-                </SkuServiceRow>
-              </div>
-            </div>
-            <!-- E 增值服务 -->
-          </div>
+        <!-- E 属性 -->
+        <!-- S 数量 -->
+        <div class="sku-stepper-wrap sp-hairline--bottom">
+          <SkuServiceStepper
+            :selected-num="goods.goodsNumber"
+            :disable-stepper-input="false"
+            :disabled="
+              goods.serviceResourceList && goods.serviceResourceList.length >= 1
+            "
+            :max-num="skuData.maxNumber"
+            @change="handleStepperChange"
+            @overLimit="handleStepperLimit"
+          />
         </div>
-        <div class="sku-actions sp-hairline--top">
-          <!-- <sp-button
+        <!-- E 数量 -->
+        <div class="sku-group">
+          <!-- S 服务资源 -->
+          <SkuServiceRow :sku-row="{ k: '服务资源' }">
+            <div class="sku-resource">
+              <sp-cell
+                v-for="resourceService of formatSkuResourceService"
+                :key="resourceService.classCode"
+                class="sku-resource__item"
+                is-link
+                @click="handleResourceClick(resourceService)"
+              >
+                <template #title>
+                  <span class="sku-resource__item-title"
+                    >{{ resourceService.className }}：</span
+                  >
+                  <span class="sku-resource__item-content">{{
+                    resourceService.serviceItemValName || ''
+                  }}</span>
+                </template>
+                <template #default>
+                  <span
+                    class="sku-resource__item-operation"
+                    :class="{
+                      'sku-resource__item-operation--placehodler': !resourceService.serviceItemValId,
+                    }"
+                    >{{
+                      resourceService.serviceItemValId
+                        ? '￥' + resourceService.price
+                        : '请选择'
+                    }}</span
+                  >
+                </template>
+              </sp-cell>
+            </div>
+          </SkuServiceRow>
+          <!-- E 服务资源 -->
+          <!-- S 增值服务 -->
+          <div v-if="formatSkuAddService.length" class="sku-add">
+            <div class="sku-add__title">增值服务</div>
+            <div class="sku-add__item">
+              <SkuServiceRow
+                v-for="addService of formatSkuAddService"
+                :key="addService.k_id"
+                class="sku-add__sub-row"
+                :sku-row="addService"
+                :is-sub="true"
+                :actived="addService.activedList"
+                @selectChange="handleAddSelectChange"
+              >
+              </SkuServiceRow>
+            </div>
+          </div>
+          <!-- E 增值服务 -->
+        </div>
+      </div>
+      <div class="sku-actions sp-hairline--top">
+        <!-- <sp-button
             class="sku-service-actions__car-btn"
             size="large"
             type="warning"
@@ -127,25 +126,24 @@
           >
             立即购买
           </sp-button> -->
-          <sp-button
-            class="sku-actions__comfirm-btn"
-            size="large"
-            type="warning"
-            @click="handleAddShoppingCar"
-          >
-            确定
-          </sp-button>
-        </div>
-
-        <sp-icon
-          class="sku-close"
-          class-prefix="spiconfont"
-          size="0.28rem"
-          name="popup_ic_close"
-          color="#1A1A1A"
-          @click="handleClose"
-        />
+        <sp-button
+          class="sku-actions__comfirm-btn"
+          size="large"
+          type="warning"
+          @click="handleAddShoppingCar"
+        >
+          确定
+        </sp-button>
       </div>
+
+      <sp-icon
+        class="sku-close"
+        class-prefix="spiconfont"
+        size="0.28rem"
+        name="popup_ic_close"
+        color="#1A1A1A"
+        @click="handleClose"
+      />
     </sp-popup>
   </div>
 </template>
@@ -378,6 +376,7 @@ export default {
     padding: 40px 40px 0;
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     min-height: 40%;
     max-height: 80%;
   }
