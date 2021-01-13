@@ -68,6 +68,7 @@
             clearable
             icon-prefix="spiconfont"
             clear-icon="login_ic_clear"
+            maxlength="15"
             :type="passwordFieldType"
             @input="handlePasswordInput"
           >

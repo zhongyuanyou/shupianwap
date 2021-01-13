@@ -33,7 +33,7 @@
           clear-icon="login_ic_clear"
           name="authCode"
           placeholder="请输入验证码"
-          max-length="6"
+          maxlength="6"
           @input="handleCodeInput"
         />
         <sp-field
@@ -44,6 +44,7 @@
           clear-icon="login_ic_clear"
           name="newPassword"
           placeholder="请输入新密码(6-15位数字/字母/标点符号)"
+          maxlength="15"
           @input="handleNewPasswordInput"
         >
         </sp-field>
@@ -55,6 +56,7 @@
           icon-prefix="spiconfont"
           clear-icon="login_ic_clear"
           placeholder="确认新密码"
+          maxlength="15"
           @input="handleConfirmPasswordInput"
         >
         </sp-field>

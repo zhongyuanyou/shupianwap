@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 17:22:12
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-13 19:22:42
+ * @LastEditTime: 2021-01-13 20:44:54
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/register.vue
 -->
@@ -44,6 +44,7 @@
           icon-prefix="spiconfont"
           clear-icon="login_ic_clear"
           placeholder="请输入新密码(6-15位数字/字母/标点符号)"
+          maxlength="15"
           @input="handlePasswordInput"
         >
           <template #button>
