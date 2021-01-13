@@ -216,7 +216,7 @@ export default {
                 break
               case 'CONDITION-JY-SB-GD-ZCNX':
               case 'JY-GS-GD-JYSJ':
-                // 经营时间
+                // 注册年限 || 经营时间
                 // const current = moment("MM-DD-YYYY")
                 if (_item.id !== 'all' && _item.name !== '不限') {
                   emitData.fieldCode = _item.ext1

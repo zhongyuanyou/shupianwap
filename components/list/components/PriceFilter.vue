@@ -169,10 +169,13 @@ export default {
         matchType: 'MATCH_TYPE_RANGE',
       }
       if (this.echoData.maxValue || this.echoData.minValue) {
-        // 如果有
+        // 如果输入框有值
         emitData.fieldValue.start = Number(this.echoData.minValue) * 100
         emitData.fieldValue.end = Number(this.echoData.maxValue) * 100
-        if (emitData.fieldValue.start > emitData.fieldValue.end) {
+        if (
+          this.echoData.maxValue !== '' &&
+          emitData.fieldValue.start > emitData.fieldValue.end
+        ) {
           ;[emitData.fieldValue.start, emitData.fieldValue.end] = [
             emitData.fieldValue.end,
             emitData.fieldValue.start,
