@@ -280,11 +280,11 @@ export default {
           this.tel = ''
           this.code = ''
           this.text = '发送验证码'
-          // window.getTrackRow('p_formSubmitResult', {
-          //   even_name: 'p_formSubmitResult',
-          //   form_type: '咨询表单',
-          //   form_name: '税务筹划表单_提交',
-          // })
+          window.sensors.track('p_formSubmitResult', {
+            even_name: 'p_formSubmitResult',
+            form_type: '咨询表单',
+            form_name: '印章服务表单_提交',
+          })
         } else {
           Toast(res.msg)
         }
