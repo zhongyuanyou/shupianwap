@@ -28,7 +28,7 @@
     <Need />
     <!-- e 可能需要 -->
     <!-- s 底部导航 -->
-    <Bottom :planner="planner" />
+    <Bottom :planner="planner" :md="md" />
     <!-- e 底部导航 -->
     <dgg-im-company></dgg-im-company>
   </div>
@@ -331,6 +331,17 @@ export default {
           },
         },
       ],
+      // 埋点
+      md: {
+        elMd: {
+          name: ' ',
+          type: '售前',
+        },
+        imMd: {
+          name: '代理记账_底部_在线咨询',
+          type: '售前',
+        },
+      },
     }
   },
   created() {
