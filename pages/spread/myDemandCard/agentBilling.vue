@@ -86,6 +86,18 @@ export default {
     }
   },
   mounted() {
+    const formData = JSON.parse(localStorage.getItem('formData'))
+    console.log(formData)
+    if (formData) {
+      this.questionData[0].value =
+        formData.content['注册时间'] || this.questionData[0].value
+      this.questionData[1].value =
+        formData.content['主营业务'] || this.questionData[1].value
+      this.questionData[2].value =
+        formData.content['是否支持开票'] || this.questionData[2].value
+      this.questionData[3].value =
+        formData.content['公司年收入'] || this.questionData[3].value
+    }
     const param = {
       platform_type: 'H5', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称

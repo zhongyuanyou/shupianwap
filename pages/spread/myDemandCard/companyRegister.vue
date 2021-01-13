@@ -303,7 +303,7 @@ export default {
         .consultAdd(newFormData)
         .then((res) => {
           this.loading = false
-          this.$xToast.success('添加成功')
+          this.$xToast.success('提交成功，请注意接听电话')
           this.formData = {
             type: 'gszc',
             tel: '', // 电话

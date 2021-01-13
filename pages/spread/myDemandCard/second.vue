@@ -34,7 +34,7 @@
     <div class="form">
       <div class="form-title">您还有一些额外需求要告知我们？</div>
       <sp-field
-        v-model="message"
+        v-model="formData.content['备注']"
         rows="5"
         :autofocus="true"
         type="textarea"
@@ -46,7 +46,10 @@
       />
       <div class="form-read" @click="select">
         <div class="form-read-first">
-          <div v-if="isSelect" class="form-read-first-icon">
+          <div
+            v-if="formData.content['是否允许电话联系'] === '是'"
+            class="form-read-first-icon"
+          >
             <my-icon
               name="pay_ic_success"
               size="0.32rem"
@@ -70,12 +73,15 @@
       </div>
       <button class="form-button" @click="consultForm">生成需求卡</button>
     </div>
+    <Loading-center v-show="loading" title="提交中..." />
   </div>
 </template>
 
 <script>
 import { Field, Toast, TopNavBar, Icon } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
+import { userinfoApi, consult } from '@/api'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'Index',
   components: {
@@ -83,34 +89,44 @@ export default {
     [Toast.name]: Toast,
     [TopNavBar.name]: TopNavBar,
     [Icon.name]: Icon,
+    LoadingCenter,
   },
   data() {
     return {
-      message: '',
-      data: {},
-      isSelect: true,
+      loading: false,
+      formData: {
+        type: 'gszc',
+        tel: '', // 电话
+        name: '', // 姓名
+        web: 'sp', // 归属（原网站类型）
+        place: 'all',
+        url: '',
+        content: {
+          备注: '',
+          是否允许电话联系: '是',
+        },
+      },
     }
   },
   computed: {
     ...mapState({
       currentCity: (state) => state.city.currentCity,
+      userId: (state) => state.user.userId,
     }),
   },
   mounted() {
-    this.data = JSON.parse(localStorage.getItem('data'))
-    const param = {
-      platform_type: 'H5', // 平台类型：App，H5，Web
-      app_name: '薯片wap端', // 应用名称
-      product_line: '免费帮找页',
-      current_url: location.href,
-      referrer: document.referrer,
-    }
-    window.sensors.registerPage(param) // 设置公共属性
+    const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
+    localStorageFormData.content = Object.assign(
+      this.formData.content,
+      localStorageFormData.content
+    )
+    this.formData = Object.assign(this.formData, localStorageFormData)
   },
   methods: {
     // 选中
     select() {
-      this.isSelect = !this.isSelect
+      this.formData.content['是否允许电话联系'] =
+        this.formData.content['是否允许电话联系'] === '是' ? '否' : '是'
     },
     // // 回退
     // back() {
@@ -120,7 +136,6 @@ export default {
     // close() {
     //   window.close()
     // },
-
     // 选择城市
     tabCity() {
       this.$router.push({ path: '/city/choiceCity' })
@@ -147,33 +162,65 @@ export default {
         currentSeconds
       return nowTimeString
     },
-    // 提交表单
-    consultForm() {
-      if (typeof this.data.content === 'object') {
-        this.data.content['更多需求'] = this.message
-        this.data.content['是否允许电话联系'] = this.isSelect ? '是' : '否'
-      } else {
-        this.data.content = JSON.parse(this.data.content)
-        this.data.content['更多需求'] = this.message
-        this.data.content['是否允许电话联系'] = this.isSelect ? '是' : '否'
-      }
-      this.data.formId = this.getDate() // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
-      this.data.name = '匿名客户'
-      this.data.url = window.open
-      this.data.place = this.currentCity.name
-      this.data.device = 'wap' // 设备：pc,wap
-      this.data.web = 'SP' // 归属渠道：xmt,zytg,wxgzh
-      this.data.content = JSON.stringify(this.data.content)
-      console.log(this.data)
-      window.promotion.privat.consultForm(this.data, (res) => {
-        if (res.error === 0) {
-          localStorage.setItem('data', '') // 清空数据
-          this.message = ''
-          Toast('提交成功，请注意接听电话')
-        } else {
-          Toast(res.msg)
-        }
+    getUserInfo(userId) {
+      return new Promise((resolve) => {
+        // 获取用户信息
+        this.$axios
+          .get(userinfoApi.info, {
+            params: { id: userId },
+          })
+          .then((res) => {
+            if (res.code === 200) {
+              resolve(res.data)
+            } else {
+              this.loading = false
+              this.$xToast.error('获取当前登陆用户的信息失败')
+            }
+          })
       })
+    },
+    // 提交表单
+    async consultForm() {
+      if (this.loading) {
+        return
+      }
+      this.loading = true
+      const { decodePhone, fullName } = await this.getUserInfo(this.userId)
+      this.formData.name = fullName
+      this.formData.tel = decodePhone
+      const newFormData = JSON.parse(JSON.stringify(this.formData))
+      newFormData.content = JSON.stringify(newFormData.content)
+      this.loading = false
+      // 提交表单
+      consult
+        .consultAdd(newFormData)
+        .then((res) => {
+          this.loading = false
+          this.$xToast.success('提交成功，请注意接听电话')
+          localStorage.removeItem('formData')
+          this.formData = {
+            type: 'gszc',
+            tel: '', // 电话
+            name: '', // 姓名
+            web: 'sp', // 归属（原网站类型）
+            place: 'all',
+            url: '',
+            content: {
+              备注: '',
+              是否允许电话联系: '是',
+            },
+          }
+          this.$router.back()
+        })
+        .catch((res) => {
+          this.loading = false
+          this.$xToast.show({
+            message: res.message,
+            duration: 1000,
+            icon: 'toast_ic_error',
+            forbidClick: true,
+          })
+        })
     },
     // 输入框文字发生改变
     changeFont(val) {

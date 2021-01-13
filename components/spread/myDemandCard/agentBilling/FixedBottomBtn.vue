@@ -15,13 +15,14 @@ export default {
   methods: {
     nextStep() {
       const data = this.$parent.questionData
-      if (!data[1].value) {
-        Toast('请选择主营业务')
-        return
-      }
+      //   if (!data[1].value) {
+      //     Toast('请选择主营业务')
+      //     return
+      //   }
       // 将数据存储
       const str = JSON.stringify({
         type: 'kjdl',
+        url: window.location.href,
         content: {
           注册时间: data[0].value,
           主营业务: data[1].value,
@@ -30,7 +31,7 @@ export default {
         },
       })
       console.log(JSON.parse(str))
-      localStorage.setItem('data', str)
+      localStorage.setItem('formData', str)
       // 下一步
       this.$router.push({ path: '/spread/myDemandCard/second' })
     },
