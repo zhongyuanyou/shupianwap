@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 19:13:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-07 18:32:56
+ * @LastEditTime: 2021-01-13 14:42:04
  * @Description: file content
  * @FilePath: /chips-wap/components/common/sku/SkuServiceStepper.vue
 -->
@@ -22,17 +22,35 @@
       :disabled="disabled"
       @overlimit="onOverLimit"
       @change="onChange"
-    />
+    >
+      <template #minus-icon="{ disabled: iconDisabled }">
+        <sp-icon
+          class-prefix="spiconfont"
+          name="shop_ic_reduce"
+          size="0.28rem"
+          :color="iconDisabled ? '#cccccc' : '#1a1a1a'"
+        />
+      </template>
+      <template #plus-icon="{ disabled: iconDisabled }">
+        <sp-icon
+          class-prefix="spiconfont"
+          name="shop_ic_add"
+          size="0.28rem"
+          :color="iconDisabled ? '#cccccc' : '#1a1a1a'"
+        />
+      </template>
+    </sp-stepper>
   </div>
 </template>
 
 <script>
-import { Stepper } from '@chipspc/vant-dgg'
+import { Stepper, Icon } from '@chipspc/vant-dgg'
 
 export default {
   name: 'SkuServiceStepper',
   components: {
     [Stepper.name]: Stepper,
+    [Icon.name]: Icon,
   },
 
   props: {

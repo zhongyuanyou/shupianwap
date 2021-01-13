@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-08 09:40:51
+ * @LastEditTime: 2021-01-13 14:37:28
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/MainGoodsItem.vue
 -->
@@ -57,7 +57,24 @@
           @focus="handleCountFoucs"
           @blur="handleCountBlur"
           @overlimit="handleOverlimit"
-        />
+        >
+          <template #minus-icon="{ disabled }">
+            <sp-icon
+              class-prefix="spiconfont"
+              name="shop_ic_reduce"
+              size="0.28rem"
+              :color="disabled ? '#cccccc' : '#1a1a1a'"
+            />
+          </template>
+          <template #plus-icon="{ disabled }">
+            <sp-icon
+              class-prefix="spiconfont"
+              name="shop_ic_add"
+              size="0.28rem"
+              :color="disabled ? '#cccccc' : '#1a1a1a'"
+            />
+          </template>
+        </sp-stepper>
       </div>
       <div v-if="mainData.addServiceList.length" class="goods-service">
         <div class="goods-service__row-left">增值服务</div>
@@ -93,6 +110,7 @@ import {
   Checkbox,
   Tag,
   Stepper,
+  Icon,
 } from '@chipspc/vant-dgg'
 
 const SHOP_RESTRICTION = {
@@ -110,6 +128,7 @@ export default {
     [Checkbox.name]: Checkbox,
     [Tag.name]: Tag,
     [Stepper.name]: Stepper,
+    [Icon.name]: Icon,
   },
   props: {
     mainData: {

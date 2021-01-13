@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-08 13:44:18
+ * @LastEditTime: 2021-01-13 16:01:51
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/index.vue
 -->
@@ -43,7 +43,9 @@
             v-model="loginForm.authCode"
             type="number"
             name="authCode"
-            :clearable="false"
+            clearable
+            icon-prefix="spiconfont"
+            clear-icon="login_ic_clear"
             placeholder="请输入验证码"
             maxlength="6"
             @input="handleAuthCodeInput"
@@ -63,6 +65,9 @@
             v-model="loginForm.password"
             name="password"
             placeholder="请输入密码"
+            clearable
+            icon-prefix="spiconfont"
+            clear-icon="login_ic_clear"
             :type="passwordFieldType"
             @input="handlePasswordInput"
           >
@@ -465,21 +470,9 @@ export default {
           font-weight: 400;
         }
         .sp-field__clear {
-          width: 24px;
-          height: 24px;
-          line-height: 24px;
-          box-sizing: content-box;
-          color: @hint-text-color;
-          font-family: 'iconfont' !important;
-          font-size: 0.16rem;
-          font-style: normal;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          &::before {
-            content: '\e65b'; // 此处直接找的login_ic_clear:before iconfont css 替换的
-            width: 24px;
-            height: 24px;
-          }
+          margin-right: -16px;
+          padding: 0 16px;
+          line-height: inherit;
         }
       }
       .submit-wrap {

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 17:22:12
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-08 14:36:09
+ * @LastEditTime: 2021-01-13 19:22:42
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/register.vue
 -->
@@ -29,6 +29,8 @@
           type="number"
           name="authCode"
           clearable
+          icon-prefix="spiconfont"
+          clear-icon="login_ic_clear"
           placeholder="请输入验证码"
           maxlength="6"
           @input="handleAuthCodeInput"
@@ -39,6 +41,8 @@
           class="end-btn-cell"
           name="password"
           clearable
+          icon-prefix="spiconfont"
+          clear-icon="login_ic_clear"
           placeholder="请输入新密码(6-15位数字/字母/标点符号)"
           @input="handlePasswordInput"
         >
@@ -347,6 +351,7 @@ export default {
         padding: 0;
         &::after {
           left: 0;
+          right: 0;
         }
         .sp-field__control {
           line-height: 36px;
@@ -354,22 +359,9 @@ export default {
           font-weight: 400;
         }
         .sp-field__clear {
-          width: 24px;
-          height: 24px;
-          line-height: 24px;
-          box-sizing: content-box;
-          color: @hint-text-color;
-          // background-color: transparent;
-          font-family: 'iconfont' !important;
-          font-size: 0.16rem;
-          font-style: normal;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          &::before {
-            content: '\e65b'; // 此处直接找的login_ic_clear:before iconfont css 替换的
-            width: 24px;
-            height: 24px;
-          }
+          margin-right: -16px;
+          padding: 0 16px;
+          line-height: inherit;
         }
       }
       .submit-wrap {
