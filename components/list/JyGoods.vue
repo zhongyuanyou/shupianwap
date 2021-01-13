@@ -210,14 +210,14 @@ export default {
       this.initGoodsList()
     },
     onLoad() {
-      console.log(1)
+      // console.log(1)
       this.searchKeydownHandle()
     },
     changeTabs(name, title) {
       // 切换业态tab
       if (this.reqType !== 'jy') return
-      console.log(this.tabItems[name])
-      console.log(title)
+      // console.log(this.tabItems[name])
+      // console.log(title)
       this.typeText = title
       this.currentTabJyCode = this.tabItems[name].code
       // 如果已经存储的有筛选数据则不需要再去请求筛选数据
