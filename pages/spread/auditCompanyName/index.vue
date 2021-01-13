@@ -63,7 +63,7 @@ export default {
           id: '7862495547640840193',
           type: '金牌规划师',
           avatarImg: '',
-          name: '郭亮亮',
+          name: '郭亮',
           shuPianFen: 11,
           serverNum: 250,
           telephone: 12345679985,
