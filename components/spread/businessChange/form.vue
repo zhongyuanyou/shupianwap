@@ -210,7 +210,7 @@ export default {
             if (res.error === 0) {
               vm.countDown()
             }
-            console.log(res.msg)
+            Toast(res.msg)
           })
         }
       }

@@ -1,5 +1,5 @@
 // 线上求地址 https://shence.dgg.cn:6443/sa?project=production
-if (window.currentDo) delete currentDo
+
 let currentDo = location.origin
 var DGGCONFIG = {
   platform_type: '专利wap端', // 类型

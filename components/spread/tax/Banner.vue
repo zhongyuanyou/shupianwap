@@ -107,7 +107,7 @@
           咨询获取节税方案
         </button>
         <div class="banner-bottom-form-lastdiv">
-          今日已提供方案：<span>{{ count }}</span
+          今日已提供方案：<span>{{ todayNum }}</span
           >份
         </div>
       </div>
@@ -126,6 +126,14 @@ export default {
     [ActionSheet.name]: ActionSheet,
     [Cell.name]: Cell,
     [Toast.name]: Toast,
+  },
+  props: {
+    todayNum: {
+      type: Number,
+      default: () => {
+        return 118
+      },
+    },
   },
   data() {
     return {

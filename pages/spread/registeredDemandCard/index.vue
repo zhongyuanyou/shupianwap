@@ -146,16 +146,6 @@ export default {
       },
     }
   },
-  mounted() {
-    const param = {
-      platform_type: 'H5', // 平台类型：App，H5，Web
-      app_name: '薯片wap端', // 应用名称
-      product_line: '免费帮找页',
-      current_url: location.href,
-      referrer: document.referrer,
-    }
-    window.sensors.registerPage(param) // 设置公共属性
-  },
   methods: {
     // 获取地区
     onCity(val) {

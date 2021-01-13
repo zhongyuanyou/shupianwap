@@ -132,7 +132,7 @@ export default {
     FixedBottom,
   },
   async asyncData({ $axios }) {
-    const type = 'extendBussineReg'
+    const type = 'extendSysAuth'
     const defaultRes = {
       code: 200,
       message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',

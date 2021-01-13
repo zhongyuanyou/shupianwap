@@ -38,7 +38,6 @@
             v-md-map
             v-md:p_IMClick
             data-im_type="售前"
-            data-form_type="售前"
             class="serve-card-second-right-person"
             :style="
               item.person === ''
@@ -53,7 +52,6 @@
             v-md-map
             v-md:p_IMClick
             data-im_type="售前"
-            data-form_type="售前"
             class="serve-card-second-right-rap"
             @click="openIm(i, $event)"
           >

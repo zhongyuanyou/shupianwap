@@ -4,7 +4,7 @@
     <Header :title="headTitle"></Header>
     <!--  头部  -->
     <!--  轮播/表单  -->
-    <banner></banner>
+    <banner :today-num="todayNum"></banner>
     <!--  轮播/表单  -->
     <!--  服务  -->
     <serve :serve-data="serveData"></serve>
@@ -32,7 +32,7 @@
     <!--  立即咨询  -->
     <!--  底部  -->
     <shu-pian-zhao-ren></shu-pian-zhao-ren>
-    <fixed-bottom :planner="fixedBottomData"></fixed-bottom>
+    <fixed-bottom :planner="fixedBottomData" :md="fixedMd"></fixed-bottom>
     <!--  底部  -->
     <!--  IM  -->
     <dgg-im-company></dgg-im-company>
@@ -119,6 +119,16 @@ export default {
         jobNum: '',
         telephone: '18402858698',
         imgSrc: '',
+      },
+      fixedMd: {
+        telMd: {
+          name: '税务筹划_钻石展位_拨打电话',
+          type: '售前',
+        },
+        imMd: {
+          name: '税务筹划_钻石展位_在线咨询',
+          type: '售前',
+        },
       },
       consultTitle: '对于代理记账还有疑问？企服专家为您免费解答',
       consultTel: '4000-962540',
@@ -355,12 +365,20 @@ export default {
           locationCodeLocType: 2,
         },
       ],
+      todayNum: 118,
     }
   },
   created() {
+    let pbool = false // 确定数据返回
+    let abool = false // 确定数据返回
+    let nbool = false // 确定数据返回
     // 请求回来的数据替代本地
     if (this.result !== '' && this.result !== undefined) {
-      if (this.result.planlerList.length !== 0) {
+      if (
+        this.result.planlerList.length !== 0 &&
+        this.result.planlerList.length !== undefined
+      ) {
+        pbool = true
         if (this.result.planlerList.length < 3) {
           this.planlerList.forEach((item, index) => {
             this.planlerList[index] = this.result.planlerList[
@@ -371,14 +389,27 @@ export default {
           this.planlerList = this.result.planlerList
         }
       }
-      if (this.result.adList.length !== 0) {
+      if (
+        this.result.adList.length !== 0 &&
+        this.result.adList.length !== undefined
+      ) {
+        abool = true
         this.adList = this.result.adList
       }
+      if (
+        this.result.nums.todayNum !== '' &&
+        this.result.nums.todayNum !== undefined
+      ) {
+        nbool = true
+        this.nums = this.result.nums
+      }
     }
-    // 处理各个模块的数据
-    this.getServeData()
-    this.getPlannersData()
-    this.getfixedBottomData()
+    // 各个数据都返回后再处理各个模块的数据
+    if (pbool && abool && nbool) {
+      this.getServeData()
+      this.getPlannersData()
+      this.getfixedBottomData()
+    }
   },
   methods: {
     // 服务模块数据处理

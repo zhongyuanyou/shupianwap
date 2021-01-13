@@ -66,18 +66,18 @@ module.exports = {
         type: 'text/javascript',
         charset: 'utf-8',
       },
-      {
-        src: '/js/dgg-md-sdk-conf.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
-      {
-        src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
+      // {
+      //   src: '/js/dgg-md-sdk-conf.js',
+      //   ssr: false,
+      //   type: 'text/javascript',
+      //   charset: 'utf-8',
+      // },
+      // {
+      //   src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
+      //   ssr: false,
+      //   type: 'text/javascript',
+      //   charset: 'utf-8',
+      // },
       {
         src: 'https://res.wx.qq.com/open/js/jweixin-1.4.0.js',
         ssr: false,
