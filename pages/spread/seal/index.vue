@@ -58,6 +58,9 @@
       md-type="new"
     ></fixedBottom>
     <!--  底部咨询  -->
+    <!--  IM  -->
+    <dgg-im-company></dgg-im-company>
+    <!--  IM  -->
   </div>
 </template>
 
@@ -73,6 +76,7 @@ import goods from '~/components/spread/seal/Goods'
 import maby from '~/components/spread/seal/Maby'
 import shuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
 import fixedBottom from '~/components/spread/common/FixedBottom'
+import dggImCompany from '~/components/spread/DggImCompany'
 export default {
   name: 'Idnex',
   components: {
@@ -87,6 +91,7 @@ export default {
     maby,
     shuPianZhaoRen,
     fixedBottom,
+    dggImCompany,
   },
   data() {
     return {
@@ -331,7 +336,7 @@ export default {
       },
     }
   },
-  mounted() {
+  Mounted() {
     const param = {
       platform_type: 'H5', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
