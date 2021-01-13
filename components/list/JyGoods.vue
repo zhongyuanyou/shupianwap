@@ -205,12 +205,16 @@ export default {
   methods: {
     getFilterHandle(data, filrerName) {
       // 获取筛选项数据
-      this.$set(this.filterItem[this.currentTabJyCode], filrerName, data)
+      if (data) {
+        this.$set(this.filterItem[this.currentTabJyCode], filrerName, data)
+      } else {
+        delete this.filterItem[this.currentTabJyCode][filrerName]
+      }
+      console.log('----', this.filterItem[this.currentTabJyCode])
       this.filterItemHandle()
       this.initGoodsList()
     },
     onLoad() {
-      // console.log(1)
       this.searchKeydownHandle()
     },
     changeTabs(name, title) {
