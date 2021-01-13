@@ -7,7 +7,7 @@
     <Banner :imglist="imgList"></Banner>
     <!-- e banner -->
     <!-- s 表单 -->
-    <AuditCompanyNameFrom />
+    <AuditCompanyNameFrom :city="cityList" />
     <!-- e 表单 -->
 
     <!-- s 公司起名禁忌列表 -->
@@ -141,15 +141,8 @@ export default {
         },
       })
       .then((res) => {
-        console.log(res)
         if (res.code === 200) {
-          this.loading = false
           this.cityList = res.data.cityList
-          console.log(777, this.cityList)
-          if (this.cityList.length) {
-            // 格式化城市数据
-            // this.nweCityList = this.getBrands(this.cityList)
-          }
         }
       })
   },

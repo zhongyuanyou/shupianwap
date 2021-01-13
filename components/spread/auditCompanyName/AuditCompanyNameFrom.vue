@@ -20,17 +20,25 @@
         </h1>
 
         <div class="audit-company-name-from__center__input">
-          <div
-            class="audit-company-name-from__center__input__city"
-            @click="swichCityHandle"
-          >
-            <span>城市</span>
-            <div>{{ cityName ? cityName : '定位中' }}</div>
-            <sp-icon name="arrow-down" />
-          </div>
+          <a href="javascript:;">
+            <div
+              v-sensorsTrack:webClick="{
+                form_name: `核名表单_城市下拉表单`,
+              }"
+              class="audit-company-name-from__center__input__city"
+              @click="isShowCity = true"
+            >
+              <span>城市</span>
+              <div>{{ cityName ? cityName : '成都' }}</div>
+              <sp-icon name="arrow-down" />
+            </div>
+          </a>
           <sp-cell-group>
             <sp-field
               v-model="companyName"
+              v-sensorsTrack:webClick="{
+                form_name: `核名表单_公司名称`,
+              }"
               label="公司名称"
               :maxlength="5"
               :formatter="companyTest"
@@ -38,6 +46,9 @@
             />
             <sp-field
               v-model="industry"
+              v-sensorsTrack:webClick="{
+                form_name: `核名表单_行业下拉表单`,
+              }"
               label="行业"
               placeholder="如技术"
               right-icon="arrow-down"
@@ -60,6 +71,12 @@
               >次
             </p>
           </div>
+          <!-- 城市弹窗 -->
+          <sp-action-sheet
+            v-model="isShowCity"
+            :actions="city"
+            @select="onCitySelect"
+          />
           <!-- 行业弹窗 -->
           <sp-action-sheet
             v-model="isShow"
@@ -94,6 +111,9 @@
           <sp-cell-group>
             <sp-field
               v-model="tel"
+              v-sensorsTrack:webClick="{
+                form_name: `核名表单_手机号`,
+              }"
               type="tel"
               label="手机号"
               :formatter="telephoneTest"
@@ -102,6 +122,9 @@
             />
             <sp-field
               v-model="sms"
+              v-sensorsTrack:webClick="{
+                form_name: `核名表单_验证码`,
+              }"
               center
               clearable
               type="number"
@@ -111,14 +134,30 @@
               :formatter="formatter"
             >
               <template #button>
-                <sp-button size="small" type="primary" @click="onSmsCode">{{
-                  countdown > 0 ? `${countdown}s` : '获取验证码'
-                }}</sp-button>
+                <sp-button
+                  v-sensorsTrack:webClick="{
+                    form_name: `核名表单_获取验证码`,
+                  }"
+                  size="small"
+                  type="primary"
+                  @click="onSmsCode"
+                  >{{
+                    countdown > 0 ? `${countdown}s` : '获取验证码'
+                  }}</sp-button
+                >
               </template>
             </sp-field>
           </sp-cell-group>
         </sp-form>
-        <sp-button type="primary" size="large" @click="checkFormData"
+        <sp-button
+          v-sensorsTrack:p_formSubmit="{
+            event_name: 'p_formSubmit',
+            form_type: '咨询表单',
+            form_name: `核名表单_提交表单`,
+          }"
+          type="primary"
+          size="large"
+          @click="checkFormData"
           >立即获取核名结果</sp-button
         >
       </div>
@@ -160,10 +199,10 @@ export default {
     [CountDown.name]: CountDown,
   },
   props: {
-    // citynaem: {
-    //   type: Array,
-    //   default: () => [],
-    // },
+    city: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
@@ -171,38 +210,19 @@ export default {
       industry: '',
       isShow: false,
       isOverlay: false,
+      isShowCity: false,
       sms: '',
       tel: '',
+      cityName: '',
       countdown: -1, // 发送验证码倒计时60秒
       countdownTimer: null,
       actions: [{ name: '选项一' }, { name: '选项二' }, { name: '选项三' }],
-      // 站点列表
-      cityData: {
-        type: Array,
-        default: () => {
-          return []
-        },
-      },
       addUpAuditNameSum: 69201,
       auditNameSum: 118, // 每日默认
     }
   },
-  computed: {
-    ...mapState({
-      cityName: (state) => state.city.currentCity.name,
-    }),
-  },
-  watch: {
-    cityData(arr) {
-      // 初始化定位
-      if (arr.length && !this.cityName) {
-        this.POSITION_CITY({
-          type: 'init',
-          cityList: arr,
-        })
-      }
-    },
-  },
+  computed: {},
+  watch: {},
 
   methods: {
     ...mapActions({
@@ -210,13 +230,10 @@ export default {
       GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
     }),
     // 选择城市
-    swichCityHandle() {
-      // if (!this.cityName) {
-      //   return
-      // }
-      this.$router.push('/city/choiceCity')
+    onCitySelect(item) {
+      this.cityName = item.name
+      this.isShowCity = false
     },
-
     //  行业选择
     onSelect(item) {
       // 默认情况下点击选项时不会自动收起
@@ -224,7 +241,7 @@ export default {
       this.industry = item.name
       this.isShow = false
     },
-    // 表单提交
+    //  手机号弹窗提交
     onInquire() {
       if (this.cityName === undefined) {
         this.$router.push('/city/choiceCity')
@@ -236,7 +253,7 @@ export default {
         this.isOverlay = true
       }
     },
-    //  手机号弹窗提交
+    // 表单提交
     checkFormData() {
       if (this.tel === '') {
         Toast('手机号不能为空')
@@ -275,6 +292,11 @@ export default {
             this.industry = ''
             this.companyName = ''
             this.countdown = -1
+            window.sensosr.track('p_fromSubmitResult', {
+              even_name: 'p_fromSubmitResult',
+              from_type: '咨询表单',
+              from_name: '核名表单_提交表单',
+            })
           } else {
             this.countdown = -1
             Toast(res.msg)
@@ -290,7 +312,6 @@ export default {
       if (!checkPhone(this.tel)) {
         Toast('手机号格式错误')
       } else if (this.countDown > -1) {
-        console.log(this.countDown)
         Toast('验证码已发送')
       } else {
         const _data = {
@@ -359,6 +380,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+a {
+  text-decoration: none;
+  color: inherit;
+}
 .audit-company-name-from {
   position: absolute;
   top: 410px;
