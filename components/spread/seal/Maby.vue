@@ -2,11 +2,15 @@
   <div class="seal-maby">
     <div class="seal-maby-title">你可能还需要办理</div>
     <div class="seal-maby-content">
-      <div
-        v-for="(item, index) of tabs"
-        :key="index"
-        :style="{ backgroundImage: 'url(' + item + ')' }"
-      ></div>
+      <a v-for="(item, index) of tabs" :key="index" href="javascript:;">
+        <div
+          v-sensorsTrack:webClick="{
+            name: `可能还需要办理_${item.name}`,
+          }"
+          :style="{ backgroundImage: 'url(' + item.img + ')' }"
+          class="seal-maby-content-item"
+        ></div>
+      </a>
     </div>
   </div>
 </template>
@@ -17,12 +21,30 @@ export default {
   data() {
     return {
       tabs: [
-        'https://cdn.shupian.cn/sp-pt/wap/images/9plp8m0xtck0000.jpg',
-        'https://cdn.shupian.cn/sp-pt/wap/images/fv759tm5sq00000.jpg',
-        'https://cdn.shupian.cn/sp-pt/wap/images/7b66y39y3500000.jpg',
-        'https://cdn.shupian.cn/sp-pt/wap/images/citl4m2kkxs0000.jpg',
-        'https://cdn.shupian.cn/sp-pt/wap/images/3im1v31i6180000.jpg',
-        'https://cdn.shupian.cn/sp-pt/wap/images/admktawxnq00000.jpg',
+        {
+          name: '工商注销',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/9plp8m0xtck0000.jpg',
+        },
+        {
+          name: '代理记账',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/fv759tm5sq00000.jpg',
+        },
+        {
+          name: '许可证办理',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/7b66y39y3500000.jpg',
+        },
+        {
+          name: '互联网资质',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/citl4m2kkxs0000.jpg',
+        },
+        {
+          name: '财务稅筹',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/3im1v31i6180000.jpg',
+        },
+        {
+          name: '银行服务',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/admktawxnq00000.jpg',
+        },
       ],
     }
   },
@@ -30,6 +52,10 @@ export default {
 </script>
 
 <style scoped lang="less">
+a {
+  text-decoration: none;
+  color: inherit;
+}
 .seal-maby {
   margin: 0 40px 52px;
   &-title {
@@ -42,7 +68,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    > div {
+    &-item {
       width: 215px;
       height: 163px;
       background: #f8f8f8;

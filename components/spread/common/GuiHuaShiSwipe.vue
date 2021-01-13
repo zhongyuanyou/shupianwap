@@ -87,7 +87,7 @@
           v-for="(item, i) of plannersData"
           :key="i"
           v-sensorsTrack:p_IMClick="{
-            name: `plannersCommon.imName`,
+            name: `${plannersCommon.imName}`,
             im_type: '售前',
           }"
           class="planner-content-item"
@@ -132,7 +132,7 @@
                 </div>
                 <div
                   v-sensorsTrack:webClick="{
-                    name: `plannersCommon.telName`,
+                    name: `${plannersCommon.telName}`,
                   }"
                   @click="tel(i, $event)"
                 >

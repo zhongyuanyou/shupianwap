@@ -45,14 +45,18 @@
       :tel="consultTel"
       title="还有疑问？企服专家为您免费解答"
       md-type="new"
-      md-name="专业刻章服务_免费咨询"
+      md-name="印章服务_疑问咨询"
     ></consult-tel>
     <!--  立即咨询  -->
     <!--  薯片找人  -->
     <shuPianZhaoRen></shuPianZhaoRen>
     <!--  薯片找人  -->
     <!--  底部咨询  -->
-    <fixedBottom :planner="fixedBottomData"></fixedBottom>
+    <fixedBottom
+      :planner="fixedBottomData"
+      :md="fixedMd"
+      md-type="new"
+    ></fixedBottom>
     <!--  底部咨询  -->
   </div>
 </template>
@@ -314,6 +318,16 @@ export default {
         jobNum: '',
         telephone: '18402858698',
         imgSrc: '',
+      },
+      fixedMd: {
+        telMd: {
+          name: '印章服务_钻石展位_拔打电话',
+          type: '售前',
+        },
+        imMd: {
+          name: '印章服务_钻石展位_在线咨询',
+          type: '售前',
+        },
       },
     }
   },
