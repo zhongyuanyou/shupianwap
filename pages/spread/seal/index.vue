@@ -28,6 +28,7 @@
     <gui-hua-shi-swipe
       :planners-common="plannersCommon"
       :planners-data="plannersData"
+      md-type="new"
     ></gui-hua-shi-swipe>
     <!--  规划师  -->
     <!--  服务流程  -->
@@ -113,8 +114,8 @@ export default {
       ],
       plannersCommon: {
         title: '咨询规划师',
-        imName: '税务筹划_咨询规划师_在线咨询',
-        telName: '税务筹划_咨询规划师_拨打电话',
+        imName: '印章服务_咨询规划师_在线咨询',
+        telName: '印章服务_咨询规划师_拨打电话',
       },
       // 服务列表
       serviceList: [
