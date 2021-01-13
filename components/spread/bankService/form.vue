@@ -95,9 +95,9 @@
       </div>
       <!-- s 按钮 -->
       <button
-        v-sensorsTrack="{
+        v-sensorsTrack:p_formSubmit="{
           eventName: '提交表单',
-          type: '咨询表单',
+          from_type: '咨询表单',
           name: '银行服务_提交表单',
         }"
         class="free-btn"
