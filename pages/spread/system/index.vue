@@ -12,9 +12,9 @@
     <!-- S 列表 -->
     <ServiceIntroduced
       class="systemList"
-      :servicelist="servicelist"
-      :lables="lables"
-      :label-style="labelStyle"
+      :service-list="serviceList"
+      :service-title="serviceTitle"
+      :page-title="'体系认证'"
     />
     <!-- E 列表 -->
     <!-- S 侧边导航 -->
@@ -31,6 +31,7 @@
       <GuiHuaShiSwipe
         :planners-data="guiHuaShiList"
         :planners-common="plannersCommon"
+        md-type="new"
       ></GuiHuaShiSwipe>
     </div>
     <!-- E咨询规划师 -->
@@ -41,8 +42,7 @@
         <a
           v-for="(item, index) of sericeImg"
           :key="index"
-          v-md-map
-          v-md:webClick
+          v-sensorsTrack:webClick="{ name: `${item.name}` }"
           :data-name="item.name"
           @click="onService(item.url, index)"
         >
@@ -51,15 +51,18 @@
       </div>
     </div>
     <!-- E其他服务 -->
-    <!-- S立即咨询 -->
+    <!-- S免费咨询 -->
     <ConsultTel
       :title="'有疑问？千万企服规划师为您免费解答'"
       :tel="'4000 - 535800'"
+      button="免费咨询"
+      md-type="售前"
+      md-name="体系认证_还有疑问_立即咨询"
     />
     <ShuPianZhaoRen />
-    <!-- S立即咨询 -->
+    <!-- S免费咨询 -->
     <!-- S底部咨询 -->
-    <FixedBottom :planner="planner" />
+    <FixedBottom :planner="planner" :md="fixedMd" md-type="new" />
     <!-- E底部咨询 -->
     <dgg-im-company></dgg-im-company>
   </div>
@@ -83,7 +86,6 @@ export default {
   components: {
     [Image.name]: Image,
     Header,
-
     BannerSwipe,
     Card,
     ServiceIntroduced,
@@ -97,7 +99,7 @@ export default {
     dggImCompany,
   },
   async asyncData({ $axios }) {
-    const type = 'extendBussineReg'
+    const type = 'extendSysAuth'
     const defaultRes = {
       code: 200,
       message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
@@ -327,12 +329,10 @@ export default {
         },
       })
       if (res.code === 200) {
-        console.log('请求成功')
         return {
           resultData: res.data,
         }
       } else {
-        console.log('请求异常')
         return {
           resultData: defaultRes.data,
         }
@@ -375,8 +375,19 @@ export default {
         imName: '工商注册_咨询规划师_在线咨询',
         telName: '工商注册_咨询规划师_电话',
       },
+      // 底部规划师埋点
+      fixedMd: {
+        telMd: {
+          name: '体系认证_钻石展位_拨打电话',
+          type: '售前',
+        },
+        imMd: {
+          name: '体系认证_钻石展位_在线咨询',
+          type: '售前',
+        },
+      },
       // 服务列表
-      servicelist: [
+      serviceList: [
         {
           title: '基本开户',
           titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
@@ -384,7 +395,12 @@ export default {
           defaultSales: '992',
           actualSales: '992',
           price: 600,
-          bgimg: '',
+          bgImg: '',
+          labelsType: 'row',
+          rowLabels: {
+            icon: 'https://cdn.shupian.cn/sp-pt/wap/8xzqfak5fos0000.png',
+            text: ['公司成立3月以上', '有营业执照'],
+          },
           planner: {
             id: '7862495547640840192',
             name: '李劲',
@@ -401,7 +417,12 @@ export default {
           defaultSales: '421',
           actualSales: '416',
           price: 600,
-          bgimg: '',
+          bgImg: '',
+          labelsType: 'row',
+          rowLabels: {
+            icon: 'https://cdn.shupian.cn/sp-pt/wap/8xzqfak5fos0000.png',
+            text: ['效资质证明', '临时场所清单'],
+          },
           planner: {
             id: '7862495547640840192',
             name: '李劲',
@@ -418,7 +439,36 @@ export default {
           defaultSales: '108',
           actualSales: '108',
           price: 600,
-          bgimg: '',
+          bgImg: '',
+          labelsType: 'row',
+          rowLabels: {
+            icon: 'https://cdn.shupian.cn/sp-pt/wap/8xzqfak5fos0000.png',
+            text: ['相关法律证明', '管理体系成文信息'],
+          },
+
+          planner: {
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+        },
+        {
+          title: '银行销户',
+          titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
+          actualViews: '152',
+          defaultSales: '108',
+          actualSales: '108',
+          price: 600,
+          bgImg: '',
+          labelsType: 'row',
+          rowLabels: {
+            icon: 'https://cdn.shupian.cn/sp-pt/wap/8xzqfak5fos0000.png',
+            text: ['相关法律证明', '管理体系成文信息'],
+          },
+
           planner: {
             id: '7862495547640840192',
             name: '李劲',
@@ -429,20 +479,12 @@ export default {
           },
         },
       ],
+      serviceTitle: '服务介绍',
       // 服务列表标签
-      lables: [
-        {
-          title: '公司成立3月以上',
-          content: '有营业执照',
-        },
-        {
-          title: '效资质证明',
-          content: '临时场所清单',
-        },
-        {
-          title: '相关法律证明',
-          content: '管理体系成文信息',
-        },
+      labels: [
+        ['公司成立3月以上', '有营业执照'],
+        ['效资质证明', '临时场所清单'],
+        ['相关法律证明', '管理体系成文信息'],
       ],
       // 服务列表标签样式+背景图
       labelStyle: {
@@ -463,33 +505,33 @@ export default {
       sericeImg: [
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/fbnkmcxvxqg0000.png',
-          name: '工商注册_你可能还需要其他服务_税务筹划',
-          url: 'https://shupian.dgg.cn/spread/tax',
+          name: '体系认证_还需要办理_许可证办理',
+          url: '/spread/tax',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/2dv958uknitc000.png',
-          name: '工商注册_你可能还需要其他服务_代理记账',
-          url: 'https://shupian.dgg.cn/spread/agency/',
+          name: '体系认证_还需要办理_工商注销',
+          url: '/spread/agency/',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/72gbx82vsnk0000.png',
-          name: '工商注册_你可能还需要其他服务_其他服务',
-          url: '',
+          name: '体系认证_还需要办理_工商变更',
+          url: '/spread/businessChange',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/d4jmafpuy5s0000.png',
-          name: '工商注册_你可能还需要其他服务_代理记账',
-          url: 'https://shupian.dgg.cn/spread/agency/',
+          name: '体系认证_还需要办理_互联网资质',
+          url: '/spread/agency/',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/elaeb6is89s0000.png',
-          name: '工商注册_你可能还需要其他服务_代理记账',
-          url: 'https://shupian.dgg.cn/spread/agency/',
+          name: '体系认证_还需要办理_代理记账',
+          url: '/spread/agency/',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/2ni7sgi4kii0000.png',
-          name: '工商注册_你可能还需要其他服务_代理记账',
-          url: 'https://shupian.dgg.cn/spread/agency/',
+          name: '体系认证_还需要办理_银行服务',
+          url: '',
         },
       ],
     }
@@ -497,48 +539,112 @@ export default {
   created() {
     if (this.resultData.length !== 0) {
       this.serverList(this.resultData || [])
-      this.plannerData(this.resultData.plannerList || [])
+      this.plannerData(this.resultData.planlerList || [])
     }
+  },
+  mounted() {
+    const param = {
+      platform_type: 'Wep端', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'wap端体系认证推广页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
   },
   methods: {
     // 处理后台列表数据
     serverList(data) {
       const listAll = data.adList[0].sortMaterialList
-      console.log(listAll)
-      if (listAll.length !== 0 && listAll[0].materialList[0].length !== 0) {
+      if (listAll.length !== 0) {
+        const dataList = []
         listAll.forEach((eleme, index) => {
+          // 随机下标
+          const subscript = `${
+            index < this.labels.length
+              ? index
+              : Math.floor(Math.random() * this.labels.length)
+          }`
           const titleList = eleme.materialList[0].productDetail
-          const indexList = this.servicelist[index]
-          indexList.title = titleList.operating.showName
-          indexList.titleContent = titleList.operating.slogan
-          indexList.actualViews = titleList.operating.actualViews
-          indexList.defaultSales = titleList.operating.defaultSales
-          indexList.actualSales = titleList.operating.actualSales
-          indexList.price = titleList.referencePrice
-          if (data.planlerList.length > 0) {
-            // const dataPlanner =
-            //   data.plannerList[
-            //     `${
-            //       index < listAll.length
-            //         ? index
-            //         : Math.floor(Math.random() * listAll.length)
-            //     }`
-            //   ]
-            // indexList.planner.id = dataPlanner.userCentreId
-            // indexList.planner.name = dataPlanner.realName
-            // indexList.planner.jobNum = dataPlanner.loginName
-            // indexList.planner.telephone = dataPlanner.userPhone
-            // indexList.planner.imgSrc = dataPlanner.userHeadUrl
+          const obj = {
+            title: titleList.operating.showName,
+            titleContent: titleList.operating.slogan,
+            actualViews: titleList.operating.actualViews,
+            defaultSales: titleList.operating.defaultSales,
+            actualSales: titleList.operating.actualSales,
+            price: titleList.referencePrice,
+            labelsType: 'row',
+            rowLabels: {
+              icon: 'https://cdn.shupian.cn/sp-pt/wap/8xzqfak5fos0000.png',
+              text: this.labels[subscript],
+            },
+            planner: {
+              id: '66475',
+              name: '钟霞',
+              jobNum: '38798340',
+              telephone: '13730634929',
+              imgSrc:
+                'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            },
           }
+          if (data.planlerList.length > 0) {
+            const subPlanner =
+              data.planlerList[
+                `${
+                  index < data.planlerList.length
+                    ? index
+                    : Math.floor(Math.random() * data.planlerList.length)
+                }`
+              ]
+            obj.planner.id = subPlanner.userCentreId
+            obj.planner.name = subPlanner.realName
+            obj.planner.jobNum = subPlanner.loginName
+            obj.planner.telephone = subPlanner.userPhone
+            obj.planner.imgSrc = subPlanner.userHeadUrl
+          } else {
+            return null
+          }
+          dataList.push(obj)
         })
+        this.serviceList = dataList
       }
     },
     // 处理后台规划师数据
-    plannerData() {},
+    plannerData(data) {
+      if (data.length !== 0) {
+        this.planner = data[0] && {
+          id: data[0].userCentreId,
+          name: data[0].realName,
+          jobNum: data[0].loginName,
+          telephone: data[0].userPhone,
+          imgSrc: data[0].userHeadUrl,
+        }
+        // 规划师轮播列表
+        const guiHuaShiList = []
+        data.forEach((item) => {
+          const obj = {
+            id: item.userCentreId,
+            avatarImg: item.userHeadUrl,
+            name: item.realName,
+            shuPianFen: 22,
+            serverNum: 250,
+            telephone: item.userPhone,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+            jobNum: item.loginName,
+          }
+          guiHuaShiList.push(obj)
+        })
+        this.guiHuaShiList = guiHuaShiList
+      }
+    },
     // 其他服务的跳转判断
     onService(url, index) {
       if (url !== '') {
-        window.location.href = url
+        this.$router.push({
+          path: `${url}`,
+        })
+        // window.location.href = url
+        console.log(this.$route)
       } else {
         this.$root.$emit(
           'openIMM',
@@ -557,6 +663,12 @@ export default {
         {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
         },
+        // {
+        //   src: '/js/spread/companyRegister-md-config.js',
+        // },
+        // {
+        //   src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
+        // },
       ],
     }
   },
@@ -565,6 +677,8 @@ export default {
 
 <style lang="less" scoped>
 .system {
+  width: @spread-page-width;
+  margin: 0 auto;
   // 列表
   /deep/.systemList {
     .serviceList-content {

@@ -12,12 +12,7 @@
         <ul>
           <li v-for="(item, index) in oneself" :key="index">
             <span>{{ item }}</span>
-            <div class="contentright-img">
-              <img
-                src="https://cdn.shupian.cn/sp-pt/wap/images/97lpow21c180000.png"
-                alt=""
-              />
-            </div>
+            <div class="contentright-dian"><div></div></div>
           </li>
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/images/dun26d2e9y80000.png"
@@ -28,11 +23,8 @@
       <div class="contentright">
         <ul>
           <li v-for="(item, index) in agent" :key="index">
-            <div class="contentright-img">
-              <img
-                src="https://cdn.shupian.cn/sp-pt/wap/images/4v599nr8p8c0000.png"
-                alt=""
-              />
+            <div class="contentright-dian">
+              <div></div>
             </div>
             <span>{{ item }}</span>
           </li>
@@ -108,42 +100,44 @@ export default {
       > ul {
         width: 100%;
         height: 100%;
-        padding: 40px 32px 40px 84px;
+        padding: 40px 32px 40px 80px;
         position: relative;
         > li {
           display: flex;
           justify-content: flex-end;
+          font-size: 0;
           position: relative;
           z-index: 1;
           &:not(:first-child) {
             margin-top: 23px;
           }
           &:nth-child(4) {
-            margin-top: 58px;
+            margin-top: 60px;
           }
           > span {
             font-size: 26px;
             font-family: PingFang SC;
             font-weight: 400;
             color: #555555;
-            line-height: 25px;
             display: block;
             text-align: right;
-            margin-right: 16px;
+            margin-right: 12px;
             line-height: 34px;
             margin-top: -4px;
-            flex-shrink: 1;
           }
-          .contentright-img {
-            width: 12px;
-            height: 13px;
+          .contentright-dian {
+            width: 20px;
+            height: 20px;
+
             display: flex;
-            margin-top: 5px;
+            justify-content: center;
+            align-items: center;
             flex-shrink: 0;
-            > img {
-              width: 100%;
-              height: 100%;
-              flex-shrink: 0;
+            > div {
+              width: 12px;
+              height: 12px;
+              background: #cdcdcd;
+              border-radius: 12px;
             }
           }
         }
@@ -158,39 +152,47 @@ export default {
       }
     }
     .contentright {
+      background: rgba(73, 116, 245, 0.06);
       > ul {
         width: 100%;
         height: 100%;
-        padding: 40px 32px 40px 32px;
+        padding: 40px 30px 40px 30px;
         position: relative;
+
         > li {
-          display: flex;
+          font-size: 0;
           position: relative;
           z-index: 1;
+          display: flex;
+          justify-content: space-between;
           &:not(:first-child) {
-            margin-top: 23px;
+            margin-top: 24px;
           }
           > span {
             font-size: 26px;
             font-family: PingFang SC;
             font-weight: 400;
-            color: #555555;
-            line-height: 25px;
+            color: #4974f5;
             display: block;
             line-height: 34px;
             margin-top: -4px;
-            margin-left: 17px;
+            margin-left: 13px;
+            flex: 1;
+            position: relative;
           }
-          .contentright-img {
-            width: 12px;
-            height: 13px;
-            display: flex;
-            margin-top: 5px;
+          .contentright-dian {
+            width: 20px;
+            height: 20px;
+
             flex-shrink: 0;
-            > img {
-              flex-shrink: 0;
-              width: 100%;
-              height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            > div {
+              width: 12px;
+              height: 12px;
+              background: #92acf9;
+              border-radius: 12px;
             }
           }
         }

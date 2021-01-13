@@ -32,7 +32,7 @@
     <!--  立即咨询  -->
     <!--  底部  -->
     <shu-pian-zhao-ren></shu-pian-zhao-ren>
-    <fixed-bottom :planner="fixedBottomData"></fixed-bottom>
+    <fixed-bottom :planner="fixedBottomData" :md="fixedMd"></fixed-bottom>
     <!--  底部  -->
     <!--  IM  -->
     <dgg-im-company></dgg-im-company>
@@ -119,6 +119,16 @@ export default {
         jobNum: '',
         telephone: '18402858698',
         imgSrc: '',
+      },
+      fixedMd: {
+        telMd: {
+          name: '税务筹划_钻石展位_拨打电话',
+          type: '售前',
+        },
+        imMd: {
+          name: '税务筹划_钻石展位_在线咨询',
+          type: '售前',
+        },
       },
       consultTitle: '对于代理记账还有疑问？企服专家为您免费解答',
       consultTel: '4000-962540',

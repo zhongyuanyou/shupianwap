@@ -6,6 +6,7 @@
         <sp-sidebar-item
           v-for="(item, index) of activeKeyTitle"
           :key="index"
+          v-sensorsTrack:webClick="{ name: `体系认证服务流程_${item}` }"
           :title="item"
         />
       </sp-sidebar>

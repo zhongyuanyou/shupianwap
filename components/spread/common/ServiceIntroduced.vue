@@ -6,7 +6,13 @@
       v-for="(item, index) in serviceList"
       v-show="index > num ? false : true"
       :key="index"
+      v-sensorsTrack:webClick="{
+        eventName: 'wap元素点击',
+        type: '售前',
+        name: `${serviceTitle}_${item.title}_在线咨询`,
+      }"
       class="serviceList-content"
+      href="javascript:;"
       @click="plannerIm(item.planner)"
     >
       <div
@@ -76,6 +82,11 @@
           </a>
           <a>
             <my-icon
+              v-sensorsTrack:p_IMClick="{
+                eventName: '在线咨询',
+                type: '售前',
+                name: `${serviceTitle}_${item.title}_在线咨询`,
+              }"
               name="notify_ic_chat"
               color="#4974F5"
               size="0.4rem"
@@ -90,6 +101,11 @@
           </a>
           <a href="javascript:;" @click="call(item.planner.telephone)">
             <my-icon
+              v-sensorsTrack:webClick="{
+                eventName: 'wap元素点击',
+                type: '售前',
+                name: `${serviceTitle}_${item.title}_拨打电话`,
+              }"
               name="notify_ic_tel"
               color="#4974F5"
               size="0.4rem"
@@ -106,8 +122,26 @@
       class="show-more-btn"
       @click="showMore"
     >
-      <span v-show="more">更多服务</span>
-      <span v-show="close">收起</span>
+      <a
+        v-show="more"
+        v-sensorsTrack:webClick="{
+          eventName: 'wap元素点击',
+          type: '售前',
+          name: `${pageTitle}页面_更多服务`,
+        }"
+        href="javascript:;"
+        >更多服务</a
+      >
+      <a
+        v-show="close"
+        v-sensorsTrack:webClick="{
+          eventName: 'wap元素点击',
+          type: '售前',
+          name: `${pageTitle}页面_收起`,
+        }"
+        href="javascript:;"
+        >收起</a
+      >
       <my-icon
         v-show="more"
         name="tab_ic_all_n"
@@ -172,6 +206,10 @@ export default {
         return '服务介绍'
       },
     },
+    pageTitle: {
+      type: String,
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -190,7 +228,7 @@ export default {
       if (this.more) {
         this.close = true
         this.more = false
-        this.num = this.servicelist.length
+        this.num = this.serviceList.length
       } else {
         this.close = false
         this.more = true
@@ -224,6 +262,7 @@ export default {
     display: block;
   }
   .serviceList-content {
+    display: block;
     background: #ffffff;
     border: 1px solid rgba(205, 205, 205, 0.3);
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
@@ -354,6 +393,8 @@ export default {
           height: 40px;
           background: #f4f4f4;
           left: -25px;
+          top: 50%;
+          margin-top: -20px;
         }
         > span {
           display: block;
@@ -459,7 +500,7 @@ export default {
     justify-content: center;
     padding: 19px 0;
     margin-top: 40px;
-    > span {
+    > a {
       display: block;
       font-size: 28px;
       font-family: PingFang SC;

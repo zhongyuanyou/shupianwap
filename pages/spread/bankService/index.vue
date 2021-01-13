@@ -12,7 +12,11 @@
     <!-- 为什么选择薯片平台 -->
     <Choose />
     <!-- 咨询规划师  -->
-    <Planner :planners-data="plannersList" :planners-common="plannersTitle" />
+    <Planner
+      :planners-data="plannersList"
+      :planners-common="plannersTitle"
+      :page-title="title"
+    />
     <!-- 您可能还需要办理 -->
     <Need />
     <!-- 底部导航 -->
@@ -472,6 +476,16 @@ export default {
     this.productDetail(this.result.data.adList[0].sortMaterialList)
     this.planner = this.plannersList[0]
     this.plannerHandleData(this.result.data.planlerList || [])
+  },
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端银行服务推广页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
   },
   methods: {
     // 跳转判断

@@ -1,10 +1,10 @@
 <template>
   <div class="planner">
-    <div class="planner-title">{{ plannersCommon.title }}</div>
+    <div class="planner_title">
+      <h2>{{ plannersCommon.title }}</h2>
+    </div>
     <div class="planner-flex">
-      <!--   老埋点   -->
       <sp-swipe
-        v-if="mdType === 'old'"
         :autoplay="3000"
         indicator-color="white"
         :show-indicators="false"
@@ -13,10 +13,6 @@
         <sp-swipe-item
           v-for="(item, i) of plannersData"
           :key="i"
-          v-md-map
-          v-md:p_IMClick
-          data_im_type="售前"
-          :data-name="plannersCommon.imName"
           class="planner-content-item"
           @click="openIm(i)"
         >
@@ -74,82 +70,6 @@
           <div class="planner-content-item-space"></div>
         </sp-swipe-item>
       </sp-swipe>
-      <!--   老埋点   -->
-      <!--   新埋点   -->
-      <sp-swipe
-        v-else
-        :autoplay="3000"
-        indicator-color="white"
-        :show-indicators="false"
-        class="planner-content my-swipe"
-      >
-        <sp-swipe-item
-          v-for="(item, i) of plannersData"
-          :key="i"
-          v-sensorsTrack:p_IMClick="{
-            name: `${plannersCommon.imName}`,
-            im_type: '售前',
-          }"
-          class="planner-content-item"
-          @click="openIm(i)"
-        >
-          <a href="javascript:;">
-            <div class="planner-content-item-shadow">
-              <div class="planner-content-item-shadow-person">
-                <div
-                  class="planner-content-item-shadow-person-img"
-                  :style="
-                    item.avatarImg === ''
-                      ? {
-                          backgroundImage: `url(http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg)`,
-                        }
-                      : { backgroundImage: `url(${item.avatarImg})` }
-                  "
-                ></div>
-                <div class="planner-content-item-shadow-person-font">
-                  金牌规划师
-                </div>
-              </div>
-              <div class="planner-content-item-shadow-content">
-                <div class="planner-content-item-shadow-content-name">
-                  {{ item.name }}
-                </div>
-                <div class="planner-content-item-shadow-content-count">
-                  薯片分 {{ item.shuPianFen }} | 服务次数 {{ item.serverNum }}
-                </div>
-                <div class="planner-content-item-shadow-content-tab">
-                  <div v-for="(tab, j) of item.labels" :key="j">{{ tab }}</div>
-                </div>
-              </div>
-              <div class="planner-content-item-shadow-icon">
-                <div style="margin-right: 0.2rem">
-                  <my-icon
-                    name="notify_ic_chat"
-                    color="#4974F5"
-                    size="0.32rem"
-                    class="icon line"
-                  ></my-icon>
-                </div>
-                <div
-                  v-sensorsTrack:webClick="{
-                    name: `${plannersCommon.telName}`,
-                  }"
-                  @click="tel(i, $event)"
-                >
-                  <my-icon
-                    name="notify_ic_tel"
-                    color="#4974F5"
-                    size="0.32rem"
-                    class="icon line"
-                  ></my-icon>
-                </div>
-              </div>
-            </div>
-          </a>
-          <div class="planner-content-item-space"></div>
-        </sp-swipe-item>
-      </sp-swipe>
-      <!--   新埋点   -->
       <div class="planner-right"></div>
     </div>
   </div>
@@ -176,7 +96,29 @@ export default {
             name: '郭亮亮',
             shuPianFen: 11,
             serverNum: 250,
-            telephone: 12345679985,
+            telephone: 17717888696,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+            jobNum: '107547',
+          },
+          {
+            id: '7862495547640840192',
+            type: '金牌规划师',
+            avatarImg: '',
+            name: '郭美美',
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: 17717999666,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+            jobNum: '107547',
+          },
+          {
+            id: '7862495547640840192',
+            type: '金牌规划师',
+            avatarImg: '',
+            name: '郭津津',
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: 17717111222,
             labels: ['工商注册', '财税咨询', '税务筹划'],
             jobNum: '107547',
           },
@@ -188,17 +130,10 @@ export default {
       type: Object,
       default: () => {
         return {
-          title: '规划师',
+          title: '企服专家咨询',
           imName: '税务筹划_咨询规划师_在线咨询',
           telName: '税务筹划_咨询规划师_拨打电话',
         }
-      },
-    },
-    // 判断新老埋点
-    mdType: {
-      type: String,
-      default: () => {
-        return 'old'
       },
     },
   },
@@ -227,14 +162,10 @@ export default {
 </script>
 
 <style scoped lang="less">
-a {
-  text-decoration: none;
-  color: inherit;
-}
 .planner {
   width: @spread-page-width;
-  height: 349px;
-  padding: 30px 0 0 40px;
+  // height: 349px;
+  padding: 0px 0 0 40px;
   &-title {
     font-size: 40px;
     line-height: 40px;
@@ -260,7 +191,7 @@ a {
         border-radius: 4px;
         display: flex;
         position: relative;
-        margin-bottom: 40px;
+        // margin-bottom: 40px;
         &-person {
           margin: 0 -15px 27px 0;
           width: 180px;
@@ -357,6 +288,21 @@ a {
     height: 207px;
     background: #c1d4fc;
     border-radius: 2px;
+  }
+}
+/deep/ .planner_title {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin-top: 64px;
+  margin-bottom: 27px;
+  > h2 {
+    font-size: 40px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #1a1a1a;
+    text-align: center;
+    padding-bottom: 5px;
   }
 }
 </style>

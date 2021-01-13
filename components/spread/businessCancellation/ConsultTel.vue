@@ -1,6 +1,6 @@
 <template>
   <div class="cousulttel">
-    <div class="cousulttel-title">
+    <div v-if="title" class="cousulttel-title">
       {{ title }}
     </div>
     <div class="cousulttel-content">
@@ -11,16 +11,28 @@
           size="0.36rem"
           class="icon"
         ></my-icon>
-        <span class="cousulttel-content-left-text"
-          >有疑问？我们第一时间为您解答</span
-        >
+        <span class="cousulttel-content-left-text">{{ desc }}</span>
+        <span class="cousulttel-content-left-number">{{ tel }}</span>
       </div>
       <button
-        v-sensorsTrack:webClick="{ name: '对体系认证还有疑问_立即咨询' }"
+        v-if="mdType === 'old'"
+        v-md-map
+        v-md:webClick
+        class="cousulttel-content-button"
+        data-name="对代理记账还有疑问_立即咨询"
+        @click="telPhone"
+      >
+        {{ button }}
+      </button>
+      <button
+        v-else
+        v-sensorsTrack:webClick="{
+          name: `${mdName}`,
+        }"
         class="cousulttel-content-button"
         @click="telPhone"
       >
-        立即咨询
+        {{ button }}
       </button>
     </div>
   </div>
@@ -34,7 +46,37 @@ export default {
       type: String,
       required: true,
       default: () => {
-        return '对于代理记账还有疑问？企服专家为您免费解答'
+        return ''
+      },
+    },
+    tel: {
+      type: String,
+      default: () => {
+        return '4000-962540'
+      },
+    },
+    button: {
+      type: String,
+      default: () => {
+        return '立即咨询'
+      },
+    },
+    mdType: {
+      type: String,
+      default: () => {
+        return 'old'
+      },
+    },
+    mdName: {
+      type: String,
+      default: () => {
+        return '专业刻章服务_免费咨询'
+      },
+    },
+    desc: {
+      type: String,
+      default: () => {
+        return '杜绝风险:'
       },
     },
   },
@@ -55,7 +97,6 @@ export default {
     font-weight: bold;
     color: #1a1a1a;
     margin: 39px 0 31px 0;
-    text-align: left;
     height: 30px;
     line-height: 30px;
   }
@@ -78,6 +119,13 @@ export default {
         font-weight: 400;
         color: #666666;
         margin: 0 14px;
+      }
+      &-number {
+        font-size: 40px;
+        line-height: 40px;
+        font-family: @Bebas;
+        font-weight: 400;
+        color: #4974f5;
       }
     }
     &-button {

@@ -2,22 +2,26 @@
   <div class="card">
     <div class="card-content">
       <h3 v-text="cardTitle"></h3>
-      <sp-cell
-        v-md-map
-        v-md:WebClick
-        data-form_name="工商注册_表单_我需要"
-        title-class="down-left"
-        :border="false"
-        :value-class="
-          selectValue == '请选择' ? 'down-right' : 'down-right--active'
-        "
-        :value="selectValue"
-        is-link
-        arrow-direction="down"
-        title="注册类型"
-        @click="downShow = true"
+      <a
+        v-sensorsTrack:webClick="{
+          form_name: '体系认证表单_下拉表单',
+          form_type: '咨询表单',
+        }"
       >
-      </sp-cell>
+        <sp-cell
+          title-class="down-left"
+          :border="false"
+          :value-class="
+            selectValue == '请选择' ? 'down-right' : 'down-right--active'
+          "
+          :value="selectValue"
+          is-link
+          arrow-direction="down"
+          title="注册类型"
+          @click="downShow = true"
+        >
+        </sp-cell
+      ></a>
       <sp-action-sheet
         v-model="downShow"
         :actions="actions"
@@ -27,9 +31,6 @@
         <sp-cell-group @click="verificationShow = true">
           <sp-field
             v-model="phoneValue"
-            v-md-map
-            v-md:WebClick
-            data-form_name="工商注册_表单_手机号"
             type="tel"
             :border="false"
             maxlength="11"
@@ -42,9 +43,10 @@
         <div v-show="verificationShow" class="input-verification">
           <sp-field
             v-model="sms"
-            v-md-map
-            v-md:WebClick
-            data-form_name="工商注册_表单_验证码"
+            v-sensorsTrack:webClick="{
+              form_name: '体系认证表单_验证码',
+              form_type: '咨询表单',
+            }"
             type="tel"
             maxlength="6"
             label="验证码"
@@ -53,27 +55,29 @@
             @input="inputVal($event)"
           >
             <template #button>
-              <span
-                v-md-map
-                v-md:WebClick
-                class="verification"
-                @click="onSms"
-                >{{ test }}</span
+              <a
+                v-sensorsTrack:webClick="{
+                  form_name: '体系认证表单_获取验证码',
+                  form_type: '提交表单',
+                }"
               >
+                <span class="verification" @click="onSms">{{ test }}</span>
+              </a>
             </template>
           </sp-field>
         </div>
       </div>
-      <div
-        v-md-map
-        v-md:WebClick
-        v-md:p_formSubmit
-        data-event_name="p_formSubmit"
-        data-form_type="咨询表单"
-        data-form_name="工商注册_表单"
-        class="button"
-      >
-        <sp-button type="primary" block size="small" @click="onForm"
+      <div class="button">
+        <sp-button
+          v-sensorsTrack:p_formSubmit="{
+            event_name: 'p_formSubmit',
+            form_type: '咨询表单',
+            form_name: '体系认证表单_提交表单',
+          }"
+          type="primary"
+          block
+          size="small"
+          @click="onForm"
           >立即查询</sp-button
         >
       </div>
@@ -148,7 +152,18 @@ export default {
       verificationShow: false,
       test: '获取验证码',
       downShow: false,
-      actions: [{ name: '个体注册' }, { name: '企业注册' }],
+      actions: [
+        { name: 'ISO45001认证' },
+        { name: 'ISO14001认证' },
+        { name: 'ISO9001认证' },
+        { name: 'ISO50430认证' },
+        { name: 'ISO27001认证' },
+        { name: 'ISO13485认证' },
+        { name: '认证年审' },
+        { name: '三体系认证' },
+        { name: '双体系认证' },
+        { name: '其他认证' },
+      ],
     }
   },
   methods: {
@@ -159,6 +174,7 @@ export default {
       this.phoneValue = val.replace(/[^\d]/g, '')
     },
     onSelect(item) {
+      console.log(item)
       // 默认情况下点击选项时不会自动收起
       // 可以通过 close-on-click-action 属性开启自动收起
       this.downShow = false
@@ -255,7 +271,7 @@ export default {
       }
       // 若一级表单中存在二级属性字段（如公司名称、类别等）时，需将之放入对象，并转化为json字符串，在content属性中传入，这样即使用户没有提交二级表单也能把相关属性传入，若有二级表单，也和二级表单提交的属性不冲突
       const contentStr = {
-        companyRegistry: this.selectValue,
+        rzlx: this.selectValue,
       }
       if (contentStr.companyRegistry === '请选择') {
         Toast('请选择注册类型')
@@ -266,7 +282,7 @@ export default {
         name: '匿名用户', // 姓名
         tel: _tel, // 电话
         url: webUrl, // 链接
-        type: 'gszc', // 业态编码
+        type: 'txrz', // 业态编码
         place: _city, // 地区编码（需传编码）cd
         device: 'wap', // 设备：pc,wap
         web: 'SP', // 归属渠道：xmt,zytg,wxgzh
@@ -286,7 +302,7 @@ export default {
           window.getTrackRow('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
-            form_name: '工商注册_表单',
+            form_name: '表单提交结果',
           })
         } else {
           // ------------
