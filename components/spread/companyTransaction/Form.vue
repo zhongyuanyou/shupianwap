@@ -11,23 +11,60 @@
         />
       </div>
       <div class="form-inputs">
-        <!-- 1、下拉框-->
+        <!-- 1、公司类型下拉框-->
         <div class="dropdown-menu">
           <div class="dropdown-menu-content" @click="showDropdownList">
             <span class="dropdown-menu-content-prefix">我需要</span>
-            <span class="dropdown-menu-content-val">{{
-              dropdownValue.name
-            }}</span>
+            <span v-if="dropdownValue" class="dropdown-menu-content-val">
+              {{ dropdownValue }}
+            </span>
+            <span
+              v-if="!dropdownValue"
+              class="dropdown-menu-content-placeholder"
+            >
+              请选择
+            </span>
             <img
               class="dropdown-menu-content-img"
               src="https://cdn.shupian.cn/sp-pt/wap/images/4ehy9youej60000.png"
             />
           </div>
-          <sp-action-sheet
-            v-model="dropdownMenuIsShow"
-            :actions="dropList"
-            @select="onSelect"
-          />
+          <sp-popup v-model="dropdownMenuIsShow" round position="bottom">
+            <sp-picker
+              title="选择公司类型"
+              show-toolbar
+              :default-index="Math.floor(dropList.length / 2)"
+              :columns="dropList"
+              @confirm="onConfirm"
+              @cancel="onCancel"
+            />
+          </sp-popup>
+        </div>
+        <!-- 1、城市下拉框-->
+        <div class="dropdown-menu dropdown-menu-margin">
+          <div class="dropdown-menu-content" @click="showCityDropdownList">
+            <span class="dropdown-menu-content-prefix">城市</span>
+            <span v-if="cityValue" class="dropdown-menu-content-val">{{
+              cityValue
+            }}</span>
+            <span v-if="!cityValue" class="dropdown-menu-content-placeholder">
+              请选择
+            </span>
+            <img
+              class="dropdown-menu-content-img"
+              src="https://cdn.shupian.cn/sp-pt/wap/images/4ehy9youej60000.png"
+            />
+          </div>
+          <sp-popup v-model="cityMenuIsShow" round position="bottom">
+            <sp-picker
+              title="选择城市"
+              show-toolbar
+              :default-index="Math.floor(cityList.length / 2)"
+              :columns="cityList"
+              @confirm="onCityConfirm"
+              @cancel="onCancel"
+            />
+          </sp-popup>
         </div>
         <!-- 2、输入框-手机号码-->
         <div class="form-input-tel">
@@ -61,7 +98,17 @@
         </div>
         <!-- 4、提交按钮-->
         <div class="form-submit">
-          <sp-button type="primary" @click="submitForm">免费预约</sp-button>
+          <sp-button
+            v-sensorsTrack:p_formSubmit="{
+              track_code: 'SPTG000003',
+              event_name: 'p_formSubmit',
+              form_type: '咨询',
+              form_name: `一键适配公司表单提交`,
+            }"
+            type="primary"
+            @click="submitForm"
+            >免费预约
+          </sp-button>
         </div>
       </div>
       <div class="form-note-all">
@@ -78,12 +125,23 @@
 </template>
 
 <script>
-import { ActionSheet, Field, Button, CellGroup, Toast } from '@chipspc/vant-dgg'
+import {
+  Popup,
+  Picker,
+  ActionSheet,
+  Field,
+  Button,
+  CellGroup,
+  Toast,
+} from '@chipspc/vant-dgg'
+import { dict } from '~/api'
 
 export default {
   name: 'Form',
   components: {
     [ActionSheet.name]: ActionSheet,
+    [Popup.name]: Popup,
+    [Picker.name]: Picker,
     [Field.name]: Field,
     [Button.name]: Button,
     [CellGroup.name]: CellGroup,
@@ -91,18 +149,32 @@ export default {
   },
   data() {
     return {
-      // 下拉
-      dropList: [
-        { id: 1, name: '公司注册', color: '#5a79e8' },
-        { id: 2, name: '工商变更', color: '#222222' },
-        { id: 3, name: '代理记账', color: '#222222' },
-        { id: 4, name: '印章刻制', color: '#222222' },
-        { id: 5, name: '银行服务', color: '#222222' },
-        { id: 6, name: '许可证办理', color: '#222222' },
-        { id: 7, name: '其他服务', color: '#222222' },
-      ],
+      // 公司类型下拉
+      dropList: ['有限责任公司', '股份有限公司', '无限公司'],
       dropdownValue: '',
       dropdownMenuIsShow: false,
+      // 城市下拉
+      cityNameList: [],
+      cityList: [
+        '全国',
+        '成都',
+        '重庆',
+        '长沙',
+        '武汉',
+        '上海',
+        '北京',
+        '深圳',
+        '广州',
+        '杭州',
+        '郑州',
+        '佛山',
+        '东莞',
+        '宜昌',
+        '石家庄',
+        '其他城市',
+      ],
+      cityValue: '',
+      cityMenuIsShow: false,
       // 手机号
       telephone: '',
       // 验证码
@@ -129,26 +201,26 @@ export default {
       countdownTimer: null,
     }
   },
-  created() {
-    this.dropdownValue = this.dropList[0]
-  },
+  created() {},
   methods: {
     // @--下拉
-    onSelect(item) {
-      // 默认情况下点击选项时不会自动收起
-      // 可以通过 close-on-click-action 属性开启自动收起
-      this.dropdownMenuIsShow = false
-      this.dropdownValue = item
-      this.dropList.forEach((obj) => {
-        if (obj.name === item.name) {
-          obj.color = '#5a79e8'
-        } else {
-          obj.color = '#222222'
-        }
-      })
-    },
     showDropdownList() {
       this.dropdownMenuIsShow = true
+    },
+    showCityDropdownList() {
+      this.cityMenuIsShow = true
+    },
+    onCancel() {
+      this.dropdownMenuIsShow = false
+      this.cityMenuIsShow = false
+    },
+    onConfirm(value, index) {
+      this.dropdownMenuIsShow = false
+      this.dropdownValue = value
+    },
+    onCityConfirm(value, index) {
+      this.cityMenuIsShow = false
+      this.cityValue = value
     },
     // @--表单验证
     // 手机号输入时验证：不能输入格式不符的字符
@@ -217,6 +289,14 @@ export default {
       const _tel = this.telephone
       const _code = this.sms
       const _telReg = /^1[3,4,5,6,7,8,9]\d{9}$/
+      if (this.dropdownValue === '请选择') {
+        Toast('请选择公司类型')
+        return
+      }
+      if (this.cityValue === '请选择') {
+        Toast('请选择城市')
+        return
+      }
       if (!_tel) {
         Toast('请输入电话号码')
         return
@@ -229,23 +309,20 @@ export default {
         Toast('请输入验证码')
         return
       }
-      if (this.select === '选择税务类型') {
-        Toast('请选择税务类型')
-        return
-      }
       // 2、整合表单数据
       const webUrl = window.location.href
       const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       const contentStr = {
-        yeWuLeiXing: this.dropdownValue.name,
+        yeWuLeiXing: this.dropdownValue,
+        city: this.cityValue,
       }
       const params = {
         formId, // formId,唯一ID提交资源中心
         name: '匿名客户',
         tel: _tel, // 电话
         url: webUrl, // 当前页面地址。用于后台判断ip发送验证码次数
-        type: 'gszc', // 业态编码。固定几个业态编码。
-        place: 'cd', // 定位城市。
+        type: 'zhgszr', // 业态编码。固定几个业态编码。
+        place: 'cd', // 定位城市。地区编码，需传编码
         device: 'wap', // 设备：pc,wap。
         web: 'SP', // 归属渠道：xmt,zytg,wxgzh。
         smsCode: _code, // 验证码
@@ -260,6 +337,8 @@ export default {
           // 2、表单主动埋点
           vm.formMaiDian()
           // 3、清空表单和清楚倒计时定时器
+          vm.dropdownValue = ''
+          vm.cityValue = ''
           vm.telephone = ''
           vm.sms = ''
           vm.countdown = -1
@@ -294,12 +373,21 @@ export default {
     },
     // 表单提交有结果后，主动埋点
     formMaiDian() {
-      window.getTrackRow('p_formSubmitResult', {
-        even_name: 'p_formSubmitResult',
-        form_type: '咨询表单',
-        form_name: '工商聚合页_表单',
-      })
+      // window.getTrackRow('p_formSubmitResult', {
+      //   even_name: 'p_formSubmitResult',
+      //   form_type: '咨询表单',
+      //   form_name: '工商聚合页_表单',
+      // })
     },
+  },
+  head() {
+    return {
+      script: [
+        {
+          src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
+        },
+      ],
+    }
   },
 }
 </script>
@@ -354,12 +442,18 @@ export default {
             font-weight: 400;
             color: #1a1a1a;
             margin-right: 33px;
+            width: 86px;
           }
           .dropdown-menu-content-val {
             flex: none;
             font-size: 28px;
             font-weight: bold;
             color: #1a1a1a;
+          }
+          .dropdown-menu-content-placeholder {
+            flex: none;
+            font-size: 28px;
+            color: #cccccc;
           }
           .dropdown-menu-content-img {
             flex: none;
@@ -384,6 +478,9 @@ export default {
           margin-left: calc(-@spread-page-width / 2);
         }
       }
+      .dropdown-menu-margin {
+        margin-top: 24px;
+      }
       .form-input-tel {
         width: 100%;
         height: 80px;
@@ -398,10 +495,12 @@ export default {
         border-radius: 8px;
         // 穿透-发送验证码按钮：固定宽高
         /deep/ .sp-button {
-          width: 140px;
+          width: 145px;
           height: 80px;
           background-color: transparent;
           border: none;
+
+          font-size: 28px;
           color: #4974f5;
         }
         /deep/ .sp-button--small {
@@ -452,10 +551,12 @@ export default {
     background: #f8f8f8;
     height: 80px;
     padding-right: 32px;
+    font-size: 28px;
     // 手机号输入框-左边前缀（手机号）
     .sp-field__label {
       width: auto;
       margin-right: 33px;
+      color: #1a1a1a;
     }
     // 手机号输入框-右边按钮
     .sp-button__content {

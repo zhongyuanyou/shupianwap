@@ -3,6 +3,10 @@
     <a
       v-for="(item, index) in data"
       :key="index"
+      v-sensorsTrack:webClick="{
+        name: `${item.text}顶部金刚区按钮点击`,
+        track_code: 'SPTG000001',
+      }"
       class="item"
       :class="index > 4 ? 'item-no-margin' : ''"
     >
@@ -10,9 +14,7 @@
         class="item-img-big"
         :class="index > 4 ? 'item-img-small' : 'item-img-big'"
       >
-        <img
-          src="https://cdn.shupian.cn/sp-pt/wap/images/7b9uok6ghx80000.png"
-        />
+        <img :src="item.img" />
       </div>
       <div class="item-text">{{ item.text }}</div>
       <div v-if="item.marketingImg" class="item-marketing">
@@ -29,52 +31,52 @@ export default {
     return {
       data: [
         {
-          img: '',
-          text: '科技信息',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/axroobu5a740000.png',
+          text: '热门公司',
           marketingImg: '',
         },
         {
-          img: '',
-          text: '电子贸易',
-          marketingImg: '',
-        },
-        {
-          img: '',
-          text: '广告传媒',
-          marketingImg: '',
-        },
-        {
-          img: '',
-          text: '餐饮美容',
-          marketingImg: '',
-        },
-        {
-          img: '',
-          text: '教育培训',
-          marketingImg: '',
-        },
-        {
-          img: '',
-          text: '独家公司',
-          marketingImg: '',
-        },
-        {
-          img: '',
-          text: '急售公司',
-          marketingImg: '',
-        },
-        {
-          img: '',
-          text: '特价公司',
-          marketingImg: '',
-        },
-        {
-          img: '',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/fg2ksxx000o0000.png',
           text: '优质公司',
           marketingImg: '',
         },
         {
-          img: '',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/8jhr24e0irw000.png',
+          text: '特价公司',
+          marketingImg: '',
+        },
+        {
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/1zjw4j2cor34000.png',
+          text: '精品公司',
+          marketingImg: '',
+        },
+        {
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/1887y4q19x9c000.png',
+          text: '人气公司',
+          marketingImg: '',
+        },
+        {
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/7ry6zqnzmtg0000.png',
+          text: '科技信息',
+          marketingImg: '',
+        },
+        {
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/5fly9lt75bs0000.png',
+          text: '电子贸易',
+          marketingImg: '',
+        },
+        {
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/6ral3star6s0000.png',
+          text: '广告传媒',
+          marketingImg: '',
+        },
+        {
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/4dn7hmjqqcq0000.png',
+          text: '教育培训',
+          marketingImg: '',
+        },
+        {
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/44l5cj3uoxk0000.png',
           text: '出售公司',
           marketingImg: '',
         },

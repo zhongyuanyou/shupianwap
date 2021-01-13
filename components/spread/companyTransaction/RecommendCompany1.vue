@@ -6,11 +6,16 @@
       class="tab-curve"
       :offset-top="searchDomHeight"
       :tab-list="tabBtnList"
-      :need-fixed="true"
+      :need-fixed="false"
       :right="0.54"
       name-field="name"
       @selectTabHandle="selectTabHandle"
     ></TabCurve>
+    <Loading-down
+      v-if="tabBtnList.length"
+      :loading="loading && !tabBtnList[currentItem].noMore"
+      :no-data="tabBtnList[currentItem].noMore"
+    />
 
     <sp-swipe
       ref="recomRef"
@@ -18,54 +23,54 @@
       :show-indicators="false"
       @change="onChange"
     >
-      <sp-swipe-item v-for="(item, index) in tabBtnList" :key="index">
+      <sp-swipe-item v-for="(item, index) in tabBtn" :key="index">
         <div v-show="index === currentItem">
-          <!-- START 推荐内容滚动区 -->
-          <div
-            class="scroll-recommend"
-            @touchstart="preventTouch"
-            @touchmove="preventTouch"
-          >
-            <div class="marks">
-              <span v-for="(item, index) in marks" :key="index" class="mark">
-                {{ item }}
-              </span>
-            </div>
-          </div>
-          <!-- END   推荐内容滚动区 -->
-
-          <!-- START 推荐商品列表 -->
-          <div ref="goodList" class="goods-list">
-            <sp-skeleton
-              v-for="val in 10"
-              :key="val + 'a'"
-              avatar-shape="square"
-              avatar-size="2.4rem"
-              title
-              title-width="100%"
-              avatar
-              :row="3"
-              :row-width="['80%', '70%', '50%']"
-              :loading="goodList.length > 0 ? false : true"
-            >
-            </sp-skeleton>
+          <!-- S 推荐商品列表 -->
+          <div class="goods-list">
+            <!--            <sp-skeleton-->
+            <!--              v-for="val in tabBtn[index].limit"-->
+            <!--              :key="val + 'a'"-->
+            <!--              avatar-shape="square"-->
+            <!--              avatar-size="2.4rem"-->
+            <!--              title-->
+            <!--              title-width="100%"-->
+            <!--              avatar-->
+            <!--              :row="3"-->
+            <!--              :row-width="['80%', '70%', '50%']"-->
+            <!--              :loading="-->
+            <!--                item.goodsList.length > 0 ? false : true && !item.noData-->
+            <!--              "-->
+            <!--            >-->
+            <!--            </sp-skeleton>-->
+            <!--            <GoodsPro-->
+            <!--              v-for="(goodsitem, sub) in item.goodsList"-->
+            <!--              :key="sub"-->
+            <!--              :goods-data="goodsitem"-->
+            <!--            />-->
             <GoodItem
               v-for="(good, index) in goodList"
               :key="index"
               :good="good"
             />
+            <div v-if="item.noData" class="no-data">
+              <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
+              <p>暂无数据</p>
+            </div>
           </div>
-          <!-- END   推荐商品列表 -->
+          <!-- E 推荐商品列表 -->
         </div>
       </sp-swipe-item>
     </sp-swipe>
-    <div class="btn"><a>查看更多公司</a></div>
+    <div class="btn"><a>查看全部公司</a></div>
   </div>
 </template>
 
 <script>
 import { Swipe, swipeItem, Skeleton } from '@chipspc/vant-dgg'
+import getUserSign from '@/utils/fingerprint'
+import { homeApi } from '@/api'
 import TabCurve from '@/components/common/tab/TabCurve'
+import GoodsPro from '@/components/common/goodsItem/GoodsPro'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import adJumpHandle from '~/mixins/adJumpHandle'
 
@@ -76,7 +81,8 @@ export default {
     [swipeItem.name]: swipeItem,
     [Skeleton.name]: Skeleton,
     TabCurve,
-    // LoadingDown,
+    // GoodsPro,
+    LoadingDown,
     GoodItem,
   },
   mixins: [adJumpHandle],
@@ -112,20 +118,6 @@ export default {
         limit: 10,
       },
       goodList: [],
-      marks: [
-        '空壳公司',
-        '实体公司',
-        '小规模',
-        '高新技术',
-        '有限公司',
-        '降价',
-        '带商标',
-        '带专利',
-        '无经营',
-        '发票',
-      ],
-      scrollAction: { x: 'undefined', y: 'undefined' },
-      scrollDirection: '',
     }
   },
   computed: {
@@ -141,51 +133,35 @@ export default {
       }
     },
   },
-  watch: {},
-  created() {
+  watch: {
+    // 监听城市定位成功，且字典数据请求完成够再获取字典第一个分类下的产品数据
+    isSendReq(val) {
+      if (val) {
+        this.params.findType = 2
+        this.findRecomList(0)
+      }
+    },
+  },
+  async created() {
     if (process.client) {
+      this.findRecomList(this.currentItem) // 根据默认tab，请求商品数据
+      this.params.deviceId = await getUserSign() // 获取用户唯一标识
       this.getGoodList({ type: 0 })
     }
   },
   mounted() {
-    // try {
-    //   // this.searchDomHeight = this.$parent.$refs.header.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
-    //   window.addEventListener('scroll', this.scrollMd) // 监听滚动
-    // } catch (error) {
-    //   console.log(error)
-    // }
+    try {
+      this.searchDomHeight =
+        this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
+      window.addEventListener('scroll', this.handleScroll) // 监听滚动
+    } catch (error) {
+      console.log(error)
+    }
   },
   beforeDestroy() {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
-    // 滚动浏览埋点
-    scrollMd(event) {},
-    scrollFunc() {
-      if (typeof this.scrollAction.x === 'undefined') {
-        this.scrollAction.x = window.pageXOffset
-        this.scrollAction.y = window.pageYOffset
-      }
-      const diffX = this.scrollAction.x - window.pageXOffset
-      const diffY = this.scrollAction.y - window.pageYOffset
-      if (diffX < 0) {
-        // Scroll right
-        this.scrollDirection = 'right'
-      } else if (diffX > 0) {
-        // Scroll left
-        this.scrollDirection = 'left'
-      } else if (diffY < 0) {
-        // Scroll down
-        this.scrollDirection = 'down'
-      } else if (diffY > 0) {
-        // Scroll up
-        this.scrollDirection = 'up'
-      } else {
-        // First scroll event
-      }
-      this.scrollAction.x = window.pageXOffset
-      this.scrollAction.y = window.pageYOffset
-    },
     // 滚动加载更多
     handleScroll() {
       if (
@@ -231,16 +207,88 @@ export default {
       this.currentItem = index
     },
     switchHandle(index) {
+      // 切换没有数据时加载数据
+      // if (
+      //   !this.tabBtn[index].goodsList.length &&
+      //   !this.tabBtn[index].adData.length
+      // ) {
+      //   this.params.findType = 1
+      //   this.findRecomList(index)
+      // }
       if (!this.goodList.length) {
+        // this.params.findType = 1
         this.getGoodList({ type: this.tabBtnList[index].type })
       }
     },
     preventTouch(e) {
       e.stopImmediatePropagation() // 阻止冒泡
     },
+    // 查询推荐商品
+    findRecomList(index) {
+      const params = {}
+      // 初始化查询字典+广告需要的参数
+      if (this.params.findType === 0) {
+        params.findType = this.params.findType
+        params.dictionaryCode = this.params.dictionaryCode
+        params.limit = this.params.limit
+        params.page = this.params.page
+      }
+
+      // 查询推荐产品需要的参数
+      if (this.params.findType !== 0) {
+        params.findType = this.params.findType
+        params.formatId = this.tabBtn[index].ext3
+        params.limit = this.tabBtn[index].limit
+        params.page = this.tabBtn[index].page
+        params.areaCode = this.cityCode
+        params.deviceId = this.params.deviceId
+        params.sceneId = this.params.sceneId
+        params.maxsize = this.params.maxsize
+        params.platform = this.params.platform
+      }
+
+      // 广告位code
+      if (this.params.findType === 1) {
+        params.locationCode = this.tabBtn[index].ext1
+      }
+
+      this.$axios.post(homeApi.findRecomList, params).then((res) => {
+        this.loading = false
+        if (res.code === 200) {
+          if (params.findType === 0) {
+            res.data.dictData[0].adData = res.data.adData
+            this.tabBtn = res.data.dictData
+            return
+          }
+          if (params.findType === 1) {
+            this.tabBtn[index].adData = res.data.adData
+            this.tabBtn[index].goodsList = res.data.goodsList
+            this.tabBtn[index].noData = res.data.goodsList.length === 0
+            return
+          }
+          // 初始查询第一个分类产品无任何数据
+          if (
+            index === 0 &&
+            params.page === 1 &&
+            res.data.goodsList.length === 0
+          ) {
+            this.$set(this.tabBtn[index], 'noData', true)
+            return
+          }
+          // 加载更多时无更多数据
+          if (!res.data.goodsList.length) {
+            this.tabBtn[index].noMore = true
+            return
+          }
+          this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
+            res.data.goodsList
+          )
+        }
+      })
+    },
+
     // 根据接口获取商品列表
     getGoodList({ type = 0, page = 1, limit = 10 }) {
-      this.loading = true
       const param = `?type=${type}&page=${page}&limit=${limit}`
       const api = '/tradingApi/WapCompany/find/newList'
       const cdn = 'https://mjy.dgg.cn'
@@ -249,8 +297,8 @@ export default {
         console.log(res.data.searchList.records)
         if (res.code === 'SYS_0000') {
           // 获取商品后，处理商品数据
-          this.goodList = res.data.searchList.records
-          // this.goodList = this.goodList.concat(res.data.searchList.records)
+          // this.goodList = res.data.searchList.records
+          this.goodList = this.goodList.concat(res.data.searchList.records)
         }
       })
     },
@@ -262,11 +310,8 @@ export default {
 @skeleton-row-margin-top: 0;
 
 .my-component {
-  width: 100%;
-  padding-bottom: 40px;
   .btn {
-    margin: 0 auto;
-    width: calc(100% - 80px);
+    width: 100%;
     height: 0.88rem;
     background: #ebf2ff;
     opacity: 0.7;
@@ -278,49 +323,53 @@ export default {
     color: #387cee;
   }
 }
-.scroll-recommend {
-  width: 100%;
+.scroll-recom {
+  padding: 22px 0 32px 40px;
   display: flex;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  .scroll-recommend::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     /*滚动条整体样式*/
     display: none;
   }
-
-  .marks {
-    width: 100%;
+  ul {
     display: flex;
-    padding-left: 40px;
-    .mark {
-      flex: none;
-      height: 68px;
-      background: #f8f8f8;
-      border-radius: 4px;
-      font-size: 26px;
-      line-height: 68px;
-      font-weight: 400;
-      color: #222222;
-      padding: 0 20px;
-      margin-right: 24px;
+    li {
+      margin-right: 12px;
+      &:last-child {
+        margin-right: 40px;
+      }
+      a {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        width: 262px;
+        height: 144px;
+        background: #ffffff;
+        border: 1px solid #cdcdcd;
+        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
+        .recom-img {
+          width: 100%;
+          height: 100%;
+        }
+      }
     }
   }
 }
-.tab-curve::after {
-  display: block;
-  content: '';
-  width: 100%;
-  height: 1px;
-  background: #f4f4f4;
-  margin-bottom: 24px;
-  margin-top: 12px;
-}
-
 .goods-list {
   position: relative;
   width: 100%;
-  padding: 0 40px;
+  padding: 0 40px 0 40px;
+  &::before {
+    display: block;
+    content: '';
+    width: 100%;
+    height: 1px;
+    background: #f4f4f4;
+  }
   .no-data {
     display: flex;
     flex-direction: column;
