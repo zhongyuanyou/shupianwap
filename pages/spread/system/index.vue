@@ -12,9 +12,9 @@
     <!-- S 列表 -->
     <ServiceIntroduced
       class="systemList"
-      :serviceList="serviceList"
+      :service-list="serviceList"
       :service-title="serviceTitle"
-      :pageTitle="'体系认证'"
+      :page-title="'体系认证'"
     />
     <!-- E 列表 -->
     <!-- S 侧边导航 -->
@@ -31,6 +31,7 @@
       <GuiHuaShiSwipe
         :planners-data="guiHuaShiList"
         :planners-common="plannersCommon"
+        md-type="new"
       ></GuiHuaShiSwipe>
     </div>
     <!-- E咨询规划师 -->
@@ -41,6 +42,7 @@
         <a
           v-for="(item, index) of sericeImg"
           :key="index"
+          v-sensorsTrack:webClick="{ name: `${item.name}` }"
           :data-name="item.name"
           @click="onService(item.url, index)"
         >
@@ -49,15 +51,18 @@
       </div>
     </div>
     <!-- E其他服务 -->
-    <!-- S立即咨询 -->
+    <!-- S免费咨询 -->
     <ConsultTel
       :title="'有疑问？千万企服规划师为您免费解答'"
       :tel="'4000 - 535800'"
+      button="免费咨询"
+      md-type="售前"
+      md-name="体系认证_还有疑问_立即咨询"
     />
     <ShuPianZhaoRen />
-    <!-- S立即咨询 -->
+    <!-- S免费咨询 -->
     <!-- S底部咨询 -->
-    <FixedBottom :planner="planner" />
+    <FixedBottom :planner="planner" :md="fixedMd" md-type="new" />
     <!-- E底部咨询 -->
     <dgg-im-company></dgg-im-company>
   </div>
@@ -370,6 +375,17 @@ export default {
         imName: '工商注册_咨询规划师_在线咨询',
         telName: '工商注册_咨询规划师_电话',
       },
+      // 底部规划师埋点
+      fixedMd: {
+        telMd: {
+          name: '体系认证_钻石展位_拨打电话',
+          type: '售前',
+        },
+        imMd: {
+          name: '体系认证_钻石展位_在线咨询',
+          type: '售前',
+        },
+      },
       // 服务列表
       serviceList: [
         {
@@ -489,32 +505,32 @@ export default {
       sericeImg: [
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/fbnkmcxvxqg0000.png',
-          name: '工商注册_你可能还需要其他服务_税务筹划',
+          name: '体系认证_还需要办理_许可证办理',
           url: '/spread/tax',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/2dv958uknitc000.png',
-          name: '工商注册_你可能还需要其他服务_代理记账',
+          name: '体系认证_还需要办理_工商注销',
           url: '/spread/agency/',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/72gbx82vsnk0000.png',
-          name: '工商注册_你可能还需要其他服务_其他服务',
+          name: '体系认证_还需要办理_工商变更',
           url: '/spread/businessChange',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/d4jmafpuy5s0000.png',
-          name: '工商注册_你可能还需要其他服务_代理记账',
+          name: '体系认证_还需要办理_互联网资质',
           url: '/spread/agency/',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/elaeb6is89s0000.png',
-          name: '工商注册_你可能还需要其他服务_代理记账',
+          name: '体系认证_还需要办理_代理记账',
           url: '/spread/agency/',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/2ni7sgi4kii0000.png',
-          name: '工商注册_你可能还需要其他服务_代理记账',
+          name: '体系认证_还需要办理_银行服务',
           url: '',
         },
       ],
@@ -647,6 +663,12 @@ export default {
         {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
         },
+        // {
+        //   src: '/js/spread/companyRegister-md-config.js',
+        // },
+        // {
+        //   src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
+        // },
       ],
     }
   },

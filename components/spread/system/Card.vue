@@ -29,58 +29,50 @@
       />
       <div class="input-phone">
         <sp-cell-group @click="verificationShow = true">
-          <a
-            v-sensorsTrack:webClick="{
-              form_name: '体系认证表单_手机号',
-              form_type: '咨询表单',
-            }"
-          >
-            <sp-field
-              v-model="phoneValue"
-              type="tel"
-              :border="false"
-              maxlength="11"
-              label="手机号"
-              placeholder="信息保护中，仅官方可见"
-              label-class="style-phone"
-              @input="inputPhone($event)"
-          /></a>
+          <sp-field
+            v-model="phoneValue"
+            type="tel"
+            :border="false"
+            maxlength="11"
+            label="手机号"
+            placeholder="信息保护中，仅官方可见"
+            label-class="style-phone"
+            @input="inputPhone($event)"
+          />
         </sp-cell-group>
         <div v-show="verificationShow" class="input-verification">
-          <a>
-            <sp-field
-              v-sensorsTrack:webClick="{
-                form_name: '体系认证表单_验证码',
-                form_type: '咨询表单',
-              }"
-              v-model="sms"
-              type="tel"
-              maxlength="6"
-              label="验证码"
-              placeholder="请输入验证码"
-              label-class="style-phone"
-              @input="inputVal($event)"
-            >
-              <template #button>
-                <a
-                  v-sensorsTrack:webClick="{
-                    form_name: '体系认证表单_获取验证码',
-                    form_type: '咨询表单',
-                  }"
-                >
-                  <span class="verification" @click="onSms">{{ test }}</span></a
-                >
-              </template>
-            </sp-field>
-          </a>
+          <sp-field
+            v-model="sms"
+            v-sensorsTrack:webClick="{
+              form_name: '体系认证表单_验证码',
+              form_type: '咨询表单',
+            }"
+            type="tel"
+            maxlength="6"
+            label="验证码"
+            placeholder="请输入验证码"
+            label-class="style-phone"
+            @input="inputVal($event)"
+          >
+            <template #button>
+              <a
+                v-sensorsTrack:webClick="{
+                  form_name: '体系认证表单_获取验证码',
+                  form_type: '提交表单',
+                }"
+              >
+                <span class="verification" @click="onSms">{{ test }}</span>
+              </a>
+            </template>
+          </sp-field>
         </div>
       </div>
       <div class="button">
         <sp-button
-          v-sensorsTrack:webClick="{
+          v-sensorsTrack:p_formSubmit="{
             event_name: 'p_formSubmit',
             form_type: '咨询表单',
-            form_name: '体系认证_表单',
+            form_name: '体系认证表单_提交表单',
           }"
           type="primary"
           block
@@ -182,6 +174,7 @@ export default {
       this.phoneValue = val.replace(/[^\d]/g, '')
     },
     onSelect(item) {
+      console.log(item)
       // 默认情况下点击选项时不会自动收起
       // 可以通过 close-on-click-action 属性开启自动收起
       this.downShow = false
