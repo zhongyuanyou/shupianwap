@@ -1,6 +1,6 @@
 <template>
   <div class="center">
-    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <Header ref="headerRef" title="公司交易" @backHandle="backHandle" />
     <!--  banner  -->
     <banner></banner>
     <!--  banner  -->

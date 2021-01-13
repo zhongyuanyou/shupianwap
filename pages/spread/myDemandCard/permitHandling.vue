@@ -1,6 +1,6 @@
 <template>
   <div class="permit-handling">
-    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <Header ref="headerRef" title="许可证办理" @backHandle="backHandle" />
     <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理的许可证业务 -->

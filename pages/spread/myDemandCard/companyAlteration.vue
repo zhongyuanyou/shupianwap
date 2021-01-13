@@ -1,6 +1,6 @@
 <template>
   <div class="company-alteration">
-    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <Header ref="headerRef" title="工商变更" @backHandle="backHandle" />
     <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理哪项业务的变更服务 -->

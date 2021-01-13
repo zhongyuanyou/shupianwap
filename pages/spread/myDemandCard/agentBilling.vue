@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <Header ref="headerRef" title="代理记账" @backHandle="backHandle" />
     <!--    <Header title="轻松找服务" :fixed="false" head-class="head-icon" />-->
 
     <!-- START banner-->

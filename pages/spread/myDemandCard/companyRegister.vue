@@ -1,7 +1,7 @@
 <template>
   <div class="regdemand">
     <!-- S 头部 -->
-    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <Header ref="headerRef" title="公司注册" @backHandle="backHandle" />
     <!-- E 头部 -->
     <!-- 头部加banner -->
     <Banner @onCity="onCity" />
