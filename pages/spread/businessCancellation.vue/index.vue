@@ -1,7 +1,7 @@
 <template>
   <div class="page-content">
     <!-- 头部 -->
-    <Header v-show="!isInApp" title="工商注销" :fixed="false">
+    <Header v-show="!isInApp" title="工商注销">
       <template #left>
         <div @click="back">
           <my-icon
@@ -507,5 +507,13 @@ export default {
 }
 /deep/ .cousulttel-content-left-text {
   margin-right: 16px;
+}
+
+/deep/.fixed-head {
+  /deep/.my-head {
+    width: 750px;
+    left: 50%;
+    margin-left: -375px;
+  }
 }
 </style>
