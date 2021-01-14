@@ -38,12 +38,12 @@ export default {
       needData: [
         {
           background: 'https://cdn.shupian.cn/sp-pt/wap/3le2fgutr1q0000.png',
-          url: '/',
+          url: '/spread/system',
           mdName: '工商注销_还需要办理_体系认证',
         },
         {
           background: 'https://cdn.shupian.cn/sp-pt/wap/dpsgk5q0c5c0000.png',
-          url: '/',
+          url: '/licence',
           mdName: '工商注销_还需要办理_许可证办理',
         },
         {
@@ -63,7 +63,7 @@ export default {
         },
         {
           background: 'https://cdn.shupian.cn/sp-pt/wap/7yz1bmsxurk0000.png',
-          url: '/',
+          url: '/bankService',
           mdName: '工商注销_还需要办理_银行服务',
         },
       ],
