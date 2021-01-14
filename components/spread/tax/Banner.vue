@@ -24,25 +24,29 @@
           style="width: 195px"
           @click="change(i)"
         >
-          {{ item }}
+          <a href="javascript:;">
+            {{ item }}
+          </a>
         </div>
       </div>
       <div class="banner-bottom-text">为您定制稅筹方案，可降低成本40%-90%</div>
       <!--      表单-->
       <div class="banner-bottom-form">
-        <sp-cell
-          v-sensorsTrack:webClick="{
-            form_name: `税务筹划表单_下拉表单`,
-          }"
-          title="请选择"
-          :value="selectName"
-          arrow-direction="down"
-          is-link
-          :value-class="
-            selectName === '税务类型' ? { gray: true } : { black: true }
-          "
-          @click="show = true"
-        />
+        <a href="javascript:;">
+          <sp-cell
+            v-sensorsTrack:webClick="{
+              form_name: `税务筹划表单_下拉表单`,
+            }"
+            title="请选择"
+            :value="selectName"
+            arrow-direction="down"
+            is-link
+            :value-class="
+              selectName === '税务类型' ? { gray: true } : { black: true }
+            "
+            @click="show = true"
+          />
+        </a>
         <sp-action-sheet
           v-model="show"
           :actions="actions"
