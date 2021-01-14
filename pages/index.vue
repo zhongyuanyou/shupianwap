@@ -83,7 +83,7 @@ export default {
 
     const fiexdAdCode = 'ad100234' // 顶部固定banner的code
     const rollAdCode = 'ad100237' // 导航下方轮播banner code
-    const helpAdCode = 'ad100238' // 帮我找下方banner code(服务榜单)
+    const helpAdCode = 'ad113183' // 帮我找下方banner code(服务榜单)
     // 首屏请求导航和广告的参数
     const initReqParams = {
       locationCodeList: [fiexdAdCode, rollAdCode, helpAdCode], // 广告位code列表
@@ -104,11 +104,7 @@ export default {
       rollNavData: [], // 滚动导航
     }
     try {
-      const res = await $axios.post(homeApi.initRequest, initReqParams, {
-        headers: {
-          'x-cache-control': 'cache',
-        },
-      })
+      const res = await $axios.post(homeApi.initRequest, initReqParams)
       console.log('服务端', res)
       if (res.code === 200) {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
@@ -117,6 +113,11 @@ export default {
         initData.fiexdNavData = res.data.fixedNavList || []
         initData.rollNavData = res.data.rollNavList || []
       }
+      //   , {
+      //     headers: {
+      //       'x-cache-control': 'cache',
+      //     },
+      //   }
     } catch (error) {
       redirect('/500')
     }
@@ -152,12 +153,13 @@ export default {
         this.adModuleTwo
       )
       // 获取非首屏数据（广告 + 资讯）
+      //   , {
+      //       headers: {
+      //         'x-cache-control': 'cache',
+      //       },
+      //     }
       this.$axios
-        .post(homeApi.asyncRequest, this.asyncReqParams, {
-          headers: {
-            'x-cache-control': 'cache',
-          },
-        })
+        .post(homeApi.asyncRequest, this.asyncReqParams)
         .then((res) => {
           //   console.log('客户端：', res.data)
           this.asyncData.cityData = res.data.cityList
