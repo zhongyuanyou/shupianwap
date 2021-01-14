@@ -9,6 +9,7 @@
           }"
           :style="{ backgroundImage: 'url(' + item.img + ')' }"
           class="seal-maby-content-item"
+          @click="tabUrl(item.url)"
         ></div>
       </a>
     </div>
@@ -24,29 +25,42 @@ export default {
         {
           name: '工商注销',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/9plp8m0xtck0000.jpg',
+          url: '/spread/businessCancellation',
         },
         {
           name: '代理记账',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/fv759tm5sq00000.jpg',
+          url: '/spread/agency',
         },
         {
           name: '许可证办理',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/7b66y39y3500000.jpg',
+          url: '/spread/licence',
         },
         {
           name: '互联网资质',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/citl4m2kkxs0000.jpg',
+          url: '',
         },
         {
           name: '财务稅筹',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/3im1v31i6180000.jpg',
+          url: '/spread/tax',
         },
         {
           name: '银行服务',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/admktawxnq00000.jpg',
+          url: '/spread/bankService',
         },
       ],
     }
+  },
+  methods: {
+    // 点击该模块判断是否进行跳转，如果不跳转就调用IM
+    openImUrl(url) {
+      this.$router.push(url)
+      // window.location.href = url
+    },
   },
 }
 </script>

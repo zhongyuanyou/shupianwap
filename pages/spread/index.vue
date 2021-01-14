@@ -1031,7 +1031,7 @@ export default {
   methods: {
     jumpLink(url) {
       if (url) {
-        window.open(url, '_blank')
+        this.$router.push(url)
       } else {
         const planner = this.pagePlanner
         this.$root.$emit(

@@ -32,7 +32,7 @@ export default {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/dzwkf02u3vc0000.png',
           imgWidth: 225,
           imgHeight: 348,
-          url: '',
+          url: '/spread/auditCompanyName ',
         },
         {
           id: 2,
@@ -40,7 +40,7 @@ export default {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/378pqy54zuq0000.png',
           imgWidth: 225,
           imgHeight: 348,
-          url: '',
+          url: '/spread/companyRegistrationStandards',
         },
         {
           id: 3,
@@ -48,7 +48,7 @@ export default {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/4wb4vrnwjo80000.png',
           imgWidth: 225,
           imgHeight: 348,
-          url: 'https://shupian.dgg.cn/spread/tax',
+          url: '/spread/tax',
         },
         {
           id: 4,
