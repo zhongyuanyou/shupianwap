@@ -135,9 +135,9 @@ export default {
           lowerPrice: '2500',
           tags: ['快至30个工作日', '成功率高，省心省钱'],
           number: [
-            { content: '在线咨询', num: 180020 },
-            { content: '累计成交', num: 150000 },
-            { content: '成功案例', num: 159090 },
+            { content: '在线咨询', num: 484 },
+            { content: '累计成交', num: 302 },
+            { content: '成功案例', num: 293 },
           ],
           planner: {
             id: '7862495547640840192',
@@ -155,9 +155,9 @@ export default {
           lowerPrice: '1000',
           tags: ['快至30个工作日', '流程手续正规化'],
           number: [
-            { content: '在线咨询', num: 120020 },
-            { content: '累计成交', num: 100000 },
-            { content: '成功案例', num: 100320 },
+            { content: '在线咨询', num: 370 },
+            { content: '累计成交', num: 296 },
+            { content: '成功案例', num: 290 },
           ],
           planner: {
             id: '7862495547640840192',
@@ -175,9 +175,9 @@ export default {
           lowerPrice: '2000',
           tags: ['快至30个工作日', '专业团队申请，快速高效'],
           number: [
-            { content: '在线咨询', num: 130020 },
-            { content: '累计成交', num: 120000 },
-            { content: '成功案例', num: 129090 },
+            { content: '在线咨询', num: 334 },
+            { content: '累计成交', num: 316 },
+            { content: '成功案例', num: 316 },
           ],
           planner: {
             id: '7862495547640840192',
@@ -195,9 +195,9 @@ export default {
           lowerPrice: '998',
           tags: ['快至30个工作日', '流程透明化，节点清晰可查'],
           number: [
-            { content: '在线咨询', num: 50020 },
-            { content: '累计成交', num: 44000 },
-            { content: '成功案例', num: 44909 },
+            { content: '在线咨询', num: 135 },
+            { content: '累计成交', num: 107 },
+            { content: '成功案例', num: 102 },
           ],
           planner: {
             id: '7862495547640840192',
@@ -336,7 +336,6 @@ export default {
       color: #222222;
       line-height: 31px;
       margin-bottom: 12px;
-      text-align: center;
     }
     &-desc {
       font-size: 22px;

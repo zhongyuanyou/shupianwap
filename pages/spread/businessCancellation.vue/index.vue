@@ -25,6 +25,7 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import MySwipe from '@/components/spread/businessCancellation/MySwipe'
 import Appointment from '@/components/spread/businessCancellation/Appointment'
 import Influence from '@/components/spread/businessCancellation/Influence'
@@ -37,6 +38,7 @@ import ShuPian from '@/components/spread/common/ShuPianZhaoRen'
 import FixedBottom from '@/components/spread/common/FixedBottom'
 import DggImCompany from '@/components/spread/DggImCompany'
 import { spreadApi } from '@/api/spread'
+
 export default {
   components: {
     MySwipe,
@@ -368,7 +370,11 @@ export default {
       },
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   watch: {},
   created() {
     // this.serviceList(this.resultData)
@@ -384,59 +390,74 @@ export default {
     window.sensors.registerPage(param) // 设置公共属性
   },
   methods: {
+    /** 返回上一页 */
+    back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/found')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
     /** 业务介绍数据处理 */
     serviceList(data) {
       const listAll = data.adList[0].sortMaterialList
-      const dataList = []
-      listAll.forEach((item, index) => {
-        /** 获取随机下标，当lables长度不够时 */
-        const subscript = `${
-          index < this.lables.length
-            ? index
-            : Math.floor(Math.random() * this.lables.length)
-        }`
-        const list = item.materialList[0].productDetail
-        const obj = {
-          title: list.operating.showName,
-          titlelable:
-            'https://cdn.shupian.cn/sp-pt/wap/images/cr4yfd0fvhk0000.png',
-          titleContent: list.operating.slogan,
-          lowerPrice: list.referencePrice,
-          tags: this.lables[subscript],
-          number: [
-            { content: '在线咨询', num: list.operating.actualViews },
-            { content: '累计成交', num: list.operating.defaultSales },
-            { content: '成功案例', num: list.operating.actualSales },
-          ],
-          planner: {
-            id: '66475',
-            name: '钟霞',
-            jobNum: '38798340',
-            telephone: '13730634929',
-            imgSrc:
-              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.gw_defult/xdy-xcx/my/trueAndFalse/gw_defult.png',
-          },
-        }
-        if (data.planlerList.length > 0) {
-          const subPlanner =
-            data.planlerList[
-              `${
-                index < data.planlerList.length
-                  ? index
-                  : Math.floor(Math.random() * data.planlerList.length)
-              }`
-            ]
-          obj.planner.id = subPlanner.userCentreId
-          obj.planner.name = subPlanner.realName
-          obj.planner.jobNum = subPlanner.loginName
-          obj.planner.telephone = subPlanner.userPhone
-          obj.planner.imgSrc = subPlanner.userHeadUrl
-        } else {
-          return null
-        }
-        dataList.push(obj)
-      })
-      this.serviceListData = dataList
+      if (listAll.length !== 0) {
+        const dataList = []
+        listAll.forEach((item, index) => {
+          /** 获取随机下标，当lables长度不够时 */
+          const subscript = `${
+            index < this.lables.length
+              ? index
+              : Math.floor(Math.random() * this.lables.length)
+          }`
+          const list = item.materialList[0].productDetail
+          const obj = {
+            title: list.operating.showName,
+            titlelable:
+              'https://cdn.shupian.cn/sp-pt/wap/images/cr4yfd0fvhk0000.png',
+            titleContent: list.operating.slogan,
+            lowerPrice: list.referencePrice,
+            tags: this.lables[subscript],
+            number: [
+              { content: '在线咨询', num: list.operating.actualViews },
+              { content: '累计成交', num: list.operating.defaultSales },
+              { content: '成功案例', num: list.operating.actualSales },
+            ],
+            planner: {
+              id: '66475',
+              name: '钟霞',
+              jobNum: '38798340',
+              telephone: '13730634929',
+              imgSrc:
+                'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.gw_defult/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            },
+          }
+          if (data.planlerList.length > 0) {
+            const subPlanner =
+              data.planlerList[
+                `${
+                  index < data.planlerList.length
+                    ? index
+                    : Math.floor(Math.random() * data.planlerList.length)
+                }`
+              ]
+            obj.planner.id = subPlanner.userCentreId
+            obj.planner.name = subPlanner.realName
+            obj.planner.jobNum = subPlanner.loginName
+            obj.planner.telephone = subPlanner.userPhone
+            obj.planner.imgSrc = subPlanner.userHeadUrl
+          } else {
+            return null
+          }
+          dataList.push(obj)
+        })
+        this.serviceListData = dataList
+      }
     },
   },
   head() {
