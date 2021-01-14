@@ -1,7 +1,7 @@
 <template>
   <div class="swipe">
     <sp-swipe class="my-swipe" :autoplay="3000" :show-indicators="false">
-      <sp-swipe-item v-for="(item, i) of imgs" :key="i">
+      <sp-swipe-item v-for="(item, i) of banners" :key="i">
         <nuxt-link :to="item.url">
           <img :src="item.img" alt="" />
         </nuxt-link>
@@ -17,16 +17,14 @@ export default {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
   },
-  props: {},
+  props: {
+    banners: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
-    return {
-      imgs: [
-        {
-          url: '',
-          img: 'https://cdn.shupian.cn/sp-pt/wap/8beijb7x3aw0000.png',
-        },
-      ],
-    }
+    return {}
   },
   computed: {},
   watch: {},

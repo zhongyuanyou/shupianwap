@@ -1,6 +1,6 @@
 <template>
   <div class="price-filter">
-    <p>价格区间(万)</p>
+    <p>价格区间</p>
     <div class="input-box">
       <sp-field
         v-model="minPrice"
@@ -78,10 +78,10 @@ export default {
       this.activeItems = val.activeItems
     },
     minPrice(val) {
-      val && this.$refs.selectCheckBox.clearSelect()
+      val && this.$refs.selectCheckBox.clearSelect(true)
     },
     maxPrice(val) {
-      val && this.$refs.selectCheckBox.clearSelect()
+      val && this.$refs.selectCheckBox.clearSelect(true)
     },
   },
   mounted() {
@@ -102,9 +102,15 @@ export default {
       this.$refs.selectCheckBox.clearSelect()
     },
     minInput(val) {
+      if (!val && !this.maxPrice) {
+        this.$refs.selectCheckBox.clearSelect()
+      }
       this.$emit('minInput', val)
     },
     maxInput(val) {
+      if (!val && !this.minPrice) {
+        this.$refs.selectCheckBox.clearSelect()
+      }
       this.$emit('maxInput', val)
     },
     formatter(value) {

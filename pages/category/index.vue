@@ -36,26 +36,32 @@
       <!--S 二级分类区域-->
       <section ref="r_list" class="category_con_rt">
         <div>
-          <div v-if="recommendData.length" class="swiper">
-            <div class="proList swiper_con">
-              <sp-swipe
+          <div
+            v-if="recommendData.length"
+            ref="good"
+            class="proList swiper"
+            style="padding-top: 0"
+          >
+            <div class="swiper_con">
+              <swiper
+                ref="mySwiper"
                 class="my-swipe"
-                :autoplay="3000"
-                indicator-color="white"
-                :show-indicators="false"
+                :autoplay="true"
+                :options="swiperOptions"
+                @click-slide="handleClickSlide"
               >
-                <sp-swipe-item
+                <swiper-slide
                   v-for="(item, index) of recommendData"
                   :key="index"
-                  @click="handleImage(item)"
                 >
                   <sp-image
                     fit="cover"
                     class="swipe_img"
                     :src="item.materialList[0].materialUrl"
                   />
-                </sp-swipe-item>
-              </sp-swipe>
+                </swiper-slide>
+                <div slot="pagination" class="swiper-pagination"></div>
+              </swiper>
             </div>
           </div>
           <div
@@ -83,7 +89,9 @@
     </div>
     <Loading-center v-show="loading" />
     <!--E 内容区-->
-    <openApp />
+    <client-only>
+      <openApp />
+    </client-only>
   </div>
 </template>
 
@@ -91,9 +99,11 @@
 import { mapState } from 'vuex'
 import Better from 'better-scroll'
 import { Swipe, SwipeItem, Image } from '@chipspc/vant-dgg'
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import { category } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
-
+import adJumpHandle from '~/mixins/adJumpHandle'
+import 'swiper/swiper-bundle.css'
 export default {
   name: 'Index',
   components: {
@@ -101,7 +111,12 @@ export default {
     [SwipeItem.name]: SwipeItem,
     [Image.name]: Image,
     LoadingCenter,
+    // eslint-disable-next-line vue/no-unused-components
+    Swiper,
+    // eslint-disable-next-line vue/no-unused-components
+    SwiperSlide,
   },
+  mixins: [adJumpHandle],
   data() {
     return {
       keywords: '',
@@ -117,6 +132,17 @@ export default {
       flag: true,
       categoryData: [], // 当前点击的分类相关数据
       loading: false,
+      swiperOptions: {
+        autoplay: true,
+        initialSlide: 0,
+        speed: 400,
+        direction: 'horizontal',
+        paginationClickable: true,
+        mousewheelControl: true,
+        passiveListeners: false, // 用来提升swiper在移动设备的中的scroll表现（Passive Event Listeners），但是会和e.preventDefault冲突，所以有时候你需要关掉它。
+        touchAngle: 30, // 允许触发拖动的角度值。默认45度，即使触摸方向不是完全水平也能拖动slide。
+        threshold: 12,
+      },
     }
   },
   computed: {
@@ -124,9 +150,6 @@ export default {
       currentCity: (state) => state.city.currentCity,
     }),
   },
-  // created() {
-  //   this.getCategoryList()
-  // },
   mounted() {
     this.getCategoryList()
   },
@@ -152,7 +175,7 @@ export default {
                 this.$refs.l_list,
                 100,
                 0,
-                this.TabNavList * 68
+                this.TabNavList * 62
               )
             }
           }
@@ -166,7 +189,7 @@ export default {
         // 根据betterScroll定义滚动
         if (rightItems && rightItems.length > 0) {
           let height = 0
-          this.arr.push(height)
+          // this.arr.push(height)
           for (let i = 0; i < rightItems.length; i++) {
             const item = rightItems[i]
             height += item.clientHeight
@@ -222,9 +245,8 @@ export default {
     goSearch() {
       this.$router.push('/search')
     },
-    handleImage(item) {
-      // 点击广告图片
-      this.$router.push(item.materialList[0].wapLink)
+    handleClickSlide(index) {
+      this.adJumpHandleMixin(this.recommendData[index].materialList[0])
     },
   },
 }
@@ -308,6 +330,7 @@ export default {
         height: 124px;
         font-size: 26px;
         font-family: PingFang SC;
+        padding: 0 20px;
         font-weight: 400;
         color: #555555;
         text-align: center;
@@ -341,19 +364,27 @@ export default {
         height: 120px;
       }
       .swiper {
-        height: 164px;
+        height: 180px;
         width: 100%;
         overflow: hidden;
         border-radius: 8px;
+        padding-top: 0;
         &_con {
           padding-top: 16px;
+          overflow: hidden;
+          border-radius: 8px;
         }
       }
-      .my-swipe .sp-swipe-item {
+      .my-swipe .swiper-slide {
         color: #fff;
         text-align: center;
         background-color: #f8f8f8;
-        height: 164px;
+        height: 180px;
+        border-radius: 8px;
+        overflow: hidden;
+        /deep/ .sp-image__img {
+          border-radius: 8px;
+        }
         .swipe_img {
           width: 100%;
           height: 164px;
@@ -361,9 +392,6 @@ export default {
       }
       .proList {
         padding-top: 48px;
-        &:first-child {
-          padding-top: 0;
-        }
         .title {
           font-size: 30px;
           font-family: PingFang SC;
@@ -377,17 +405,16 @@ export default {
           flex-direction: row;
           flex-wrap: wrap;
           &_child {
-            height: 60px;
             background: #ffffff;
             border: 1px solid #cdcdcd;
             border-radius: 4px;
-            line-height: 60px;
+            line-height: 25px;
             margin: 32px 32px 0 0;
             font-size: 24px;
             font-family: PingFang SC;
             font-weight: 400;
             color: #555555;
-            padding: 0 21px;
+            padding: 21px;
           }
         }
       }

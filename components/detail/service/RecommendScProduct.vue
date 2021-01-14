@@ -15,7 +15,7 @@
             height="1.6rem"
             fit="cover"
             radius="0.04rem"
-            src="https://img.yzcdn.cn/vant/cat.jpeg"
+            :src="item.productImgArr[0]"
           />
         </div>
         <div class="need_item_rt">
@@ -140,6 +140,7 @@ export default {
         align-items: center;
         flex-direction: row;
         margin-top: 7px;
+        flex-wrap: wrap;
         &_item {
           padding: 5px 10px;
           background: #f0f2f5;
@@ -149,6 +150,7 @@ export default {
           font-family: PingFang SC;
           font-weight: 400;
           color: #5c7499;
+          margin-bottom: 9px;
         }
       }
       .money {
@@ -156,7 +158,6 @@ export default {
         font-family: PingFang SC;
         font-weight: bold;
         color: #ec5330;
-        margin-top: 9px;
       }
     }
   }

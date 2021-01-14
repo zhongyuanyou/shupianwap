@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 09:33:15
+ * @LastEditTime: 2021-01-08 12:03:21
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/planner/list.vue
+ * @FilePath: /chips-wap/pages/planner/list.vue
 -->
 
 <template>
@@ -13,136 +13,141 @@
       <Header title="在线直选规划师">
         <template #left>
           <my-icon
-            class="back-icon"
             name="nav_ic_back"
             size="0.4rem"
             color="#1A1A1A"
+            style="margin-left: 0.4rem"
             @click.native="onLeftClick"
           ></my-icon>
         </template>
       </Header>
     </div>
     <div class="body">
+      <!-- 放在输入框一堆堆，在iphone里面有问题，需要放在滚动区域外面，否在样式有问题 ，只能放在页面最外层了-->
       <SearchPopup ref="searchPopup" @onSearch="handleKeywordsSearch" />
-      <div class="search">
-        <!-- S 搜索输入框 -->
-        <sp-nav-search
-          v-model="search.keywords"
-          border
-          special-label
-          class="search__input"
-          placeholder="请输入规划师姓名"
-          :disabled="true"
-          @click="handleSearchFocus"
+      <div class="body-container">
+        <div class="search">
+          <!-- S 搜索输入框 -->
+          <sp-nav-search
+            v-model="search.keywords"
+            border
+            special-label
+            class="search__input"
+            placeholder="请输入规划师姓名"
+            :disabled="true"
+            @click="handleSearchFocus"
+          >
+            <template #left-icon>
+              <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
+            </template>
+          </sp-nav-search>
+          <!-- E 搜索输入框 -->
+          <!-- S 下拉筛选条件 -->
+          <sp-sticky class="sticky-dropdown" :offset-top="headHeight">
+            <sp-dropdown-menu class="search__dropdown">
+              <sp-dropdown-item
+                ref="regionsDropdownItem"
+                :disabled="!regionsOption || !regionsOption.length"
+                :title-class="
+                  search.region.name != '区域'
+                    ? 'sp-dropdown-menu__title--selected '
+                    : ''
+                "
+                class="search__dropdown-regoin"
+              >
+                <template #title>
+                  <span>{{ search.region.name }}</span>
+                </template>
+                <CoupleSelect
+                  :multiple="false"
+                  :city-data="regionsOption"
+                  :is-location="true"
+                  @select="handleRegionsSelect"
+                />
+              </sp-dropdown-item>
+              <sp-dropdown-item
+                ref="sortDropdown"
+                class="search__dropdown-sort"
+                :title-class="
+                  search.sortId > 0 ? 'sp-dropdown-menu__title--selected' : ''
+                "
+                :title="search.sortText"
+              >
+                <div class="search__dropdown-sort-content">
+                  <sp-cell
+                    v-for="(item, index) in sortOption"
+                    :key="index"
+                    :title="item.text"
+                    :class="{
+                      active: item.value === search.sortId,
+                    }"
+                    @click="handleSortChange(item)"
+                  >
+                    <template #right-icon>
+                      <my-icon
+                        v-show="item.value === search.sortId"
+                        name="tab_ic_check"
+                        size="0.22rem"
+                        color="#4974f5"
+                      />
+                    </template>
+                  </sp-cell>
+                </div>
+              </sp-dropdown-item>
+            </sp-dropdown-menu>
+          </sp-sticky>
+          <!-- E 下拉筛选条件 -->
+        </div>
+        <sp-pull-refresh
+          v-model="refreshing"
+          class="list-refresh"
+          @refresh="onRefresh"
         >
-          <template #left-icon>
-            <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
-          </template>
-        </sp-nav-search>
-        <!-- E 搜索输入框 -->
-        <!-- S 下拉筛选条件 -->
-        <sp-sticky class="sticky-dropdown" :offset-top="headHeight">
-          <sp-dropdown-menu class="search__dropdown">
-            <sp-dropdown-item
-              ref="regionsDropdownItem"
-              :disabled="!regionsOption || !regionsOption.length"
-              :title-class="
-                search.region.name != '区域'
-                  ? 'sp-dropdown-menu__title--selected '
-                  : ''
-              "
-              class="search__dropdown-regoin"
-            >
-              <template #title>
-                <span>{{ search.region.name }}</span>
-              </template>
-              <CoupleSelect
-                :multiple="false"
-                :city-data="regionsOption"
-                :is-location="true"
-                @select="handleRegionsSelect"
-              />
-            </sp-dropdown-item>
-            <sp-dropdown-item
-              ref="sortDropdown"
-              class="search__dropdown-sort"
-              :title-class="
-                search.sortId > 0 ? 'sp-dropdown-menu__title--selected' : ''
-              "
-              :title="search.sortText"
-            >
-              <div class="search__dropdown-sort-content">
-                <sp-cell
-                  v-for="(item, index) in sortOption"
-                  :key="index"
-                  :title="item.text"
-                  :class="{
-                    active: item.value === search.sortId,
-                  }"
-                  @click="handleSortChange(item)"
-                >
-                  <template #right-icon>
-                    <my-icon
-                      v-show="item.value === search.sortId"
-                      name="tab_ic_check"
-                      size="0.22rem"
-                      color="#4974f5"
-                    />
-                  </template>
-                </sp-cell>
+          <sp-list
+            v-model="loading"
+            error-text="请求失败，点击重新加载"
+            :error.sync="error"
+            :finished="finished"
+            :finished-text="list.length > 0 ? '没有更多了' : ''"
+            @load="onLoad"
+          >
+            <template v-if="list && list.length">
+              <sp-cell v-for="item in list" :key="item.mchUserId">
+                <PlannerSearchItem
+                  :item-data="item"
+                  @operation="handleOperation"
+                />
+              </sp-cell>
+            </template>
+            <template v-else-if="!loading">
+              <div class="no-data">
+                <sp-image
+                  class="no-data__icon"
+                  fit="cover"
+                  src="https://cdn.shupian.cn/sp-pt/wap/images/9cxcgh1a0t80000.png"
+                />
+                <template v-if="!error">
+                  <div class="no-data__descript">
+                    抱歉，未搜索到对应的规划师
+                  </div>
+                  <div class="no-data__tip">换个条件试试</div>
+                </template>
               </div>
-            </sp-dropdown-item>
-          </sp-dropdown-menu>
-        </sp-sticky>
-        <!-- E 下拉筛选条件 -->
+            </template>
+            <!-- S 自定义加载控件 -->
+            <template #loading>
+              <div>
+                <LoadingDown v-show="!refreshing && loading" :loading="true" />
+              </div>
+            </template>
+            <!-- E 自定义加载控件 -->
+          </sp-list>
+        </sp-pull-refresh>
       </div>
-
-      <sp-pull-refresh
-        v-model="refreshing"
-        class="list-refresh"
-        @refresh="onRefresh"
-      >
-        <sp-list
-          v-model="loading"
-          error-text="请求失败，点击重新加载"
-          :error.sync="error"
-          :finished="finished"
-          :finished-text="list.length > 0 ? '没有更多了' : ''"
-          @load="onLoad"
-        >
-          <template v-if="list && list.length">
-            <sp-cell v-for="item in list" :key="item.mchUserId">
-              <PlannerSearchItem
-                :item-data="item"
-                @operation="handleOperation"
-              />
-            </sp-cell>
-          </template>
-          <template v-else-if="!loading">
-            <div class="no-data">
-              <sp-image
-                class="no-data__icon"
-                fit="cover"
-                :src="require('../../assets/images/search-null.png')"
-              />
-              <template v-if="!error">
-                <div class="no-data__descript">抱歉，未搜索到对应的规划师</div>
-                <div class="no-data__tip">换个条件试试</div>
-              </template>
-            </div>
-          </template>
-          <!-- S 自定义加载控件 -->
-          <template #loading>
-            <div>
-              <LoadingDown v-show="!refreshing && loading" :loading="true" />
-            </div>
-          </template>
-          <!-- E 自定义加载控件 -->
-        </sp-list>
-      </sp-pull-refresh>
     </div>
-    <sp-toast ref="spToast" />
-    <openApp />
+    <client-only>
+      <openApp />
+    </client-only>
   </div>
 </template>
 
@@ -167,7 +172,6 @@ import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
 import Header from '@/components/common/head/header'
 import SearchPopup from '@/components/planner/SearchPopup'
 import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
-import SpToast from '@/components/common/spToast/SpToast'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 
 import imHandle from '@/mixins/imHandle'
@@ -237,7 +241,6 @@ export default {
     CoupleSelect,
     SearchPopup,
     PlannerSearchItem,
-    SpToast,
     LoadingDown,
   },
   mixins: [imHandle],
@@ -292,12 +295,14 @@ export default {
   },
   created() {
     if (process && process.client) {
-      this.uPGetRegion()
-      this.onLoad()
+      this.uPGetCurrentRegion().then((data) => {
+        const { code } = data || {}
+        this.onLoad()
+        this.getRegionList(code)
+      })
     }
   },
   mounted() {
-    console.log(2)
     this.$nextTick(() => {
       this.headHeight = this.$refs.head.clientHeight
       console.log('this.headHeight:', this.headHeight)
@@ -404,29 +409,35 @@ export default {
     },
 
     // 统一平台 区域设置
-    uPGetRegion() {
-      // app 上获取区域code
-      if (this.isInApp) {
-        this.$appFn.dggCityCode((res) => {
-          const { code, data } = res || {}
-          if (code !== 200)
-            return this.$refs.spToast.show({
-              message: '当前区域获取失败',
-              duration: 1000,
-              forbidClick: true,
-              icon: 'toast_ic_remind',
-            })
-          const { adCode, cityName } = data
-          console.log('dggCityCode:', res)
-          this.getRegionList(adCode)
-          this.SET_CITY({ code: adCode, name: cityName }) // 设置当前的定位到vuex中
-        })
-        return
-      }
+    uPGetCurrentRegion() {
+      return new Promise((resolve, reject) => {
+        const { code } = this.currentCity || {}
+        if (code) {
+          resolve({ code })
+          return
+        }
+        // app 上获取区域code
+        if (this.isInApp) {
+          this.$appFn.dggCityCode((res) => {
+            const { code, data } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '当前区域获取失败',
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_remind',
+              })
+              reject(res)
+              return
+            }
 
-      // 浏览器上逻辑
-      const { code } = this.currentCity || {}
-      this.getRegionList(code)
+            const { adCode, cityName } = data
+            console.log('dggCityCode:', res)
+            this.SET_CITY({ code: adCode, name: cityName }) // 设置当前的定位到vuex中
+            resolve({ code: adCode })
+          })
+        }
+      })
     },
 
     // 拨打电话号码
@@ -439,7 +450,7 @@ export default {
         this.$appFn.dggCallPhone({ phone: telNumber }, (res) => {
           const { code } = res || {}
           if (code !== 200) {
-            this.$refs.spToast.show({
+            this.$xToast.show({
               message: '拨号失败！',
               duration: 1000,
               forbidClick: true,
@@ -456,7 +467,7 @@ export default {
     // 发起聊天
     async uPIM(data = {}) {
       const { mchUserId, userName } = data
-      // 如果当前页面在app中，则调用原生拨打电话的方法
+      // 如果当前页面在app中，则调用原生IM的方法
       if (this.isInApp) {
         try {
           // 需要判断登陆没有，没有登录就是调用登录
@@ -470,7 +481,7 @@ export default {
             (res) => {
               const { code } = res || {}
               if (code !== 200)
-                this.$refs.spToast.show({
+                this.$xToast.show({
                   message: `联系失败`,
                   duration: 1000,
                   forbidClick: true,
@@ -544,7 +555,7 @@ export default {
           this.list.push(...records)
           // 第一页面请求提示
           if (currentPage === 1) {
-            this.$refs.spToast.show({
+            this.$xToast.show({
               message: `共找到${totalCount}个规划师`,
               duration: 1000,
               forbidClick: true,
@@ -601,11 +612,20 @@ export default {
   }
   .body {
     flex: 1;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-
     padding: 0;
+    position: relative;
+    &-container {
+      // 为了在flex：1中，解决height:100%失效的问题
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      // 为了ios 滚动流畅
+      overflow-y: scroll;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
     .search {
       &__input {
         height: 96px;

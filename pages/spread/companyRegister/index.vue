@@ -100,6 +100,8 @@ import {
   Image,
   Sticky,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+// import { foundApi } from '~/api'
 import Card from '@/components/spread/companyRegistry/Card.vue'
 import Registerlist from '@/components/spread/companyRegistry/Registerlist.vue'
 import Standard from '@/components/spread/companyRegistry/Standard'
@@ -508,12 +510,18 @@ export default {
       tel: '4000-962540',
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   created() {
     if (this.resultData.data !== 0) {
       this.ListCount(this.resultData.data || [])
       this.plannerData(this.resultData.data.planlerList || [])
     }
   },
+
   methods: {
     // listCout列表数据处理
     ListCount(data) {
@@ -599,7 +607,18 @@ export default {
       }
     },
     onClickLeft() {
-      this.$router.go(-1)
+      console.log(window.history)
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 2) {
+        this.$router.replace('/spread')
+        return false
+      } else {
+        console.log(123)
+        // this.$router.back()
+      }
     },
     onMore() {
       this.isMore ? (this.isMore = false) : (this.isMore = true)

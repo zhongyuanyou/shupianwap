@@ -6,10 +6,12 @@
         <span
           v-for="item in ContentTitle"
           :key="item.code"
-          v-md-map
-          v-md:webClick
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '售前',
+            name: `代理记账服务内容_选项卡_${item.title}`,
+          }"
           :class="[actived == item.code ? 'isactive' : '']"
-          data-name="代理记账服务内容_选项卡_item.title"
           @click="select(item.code)"
           >{{ item.title }}</span
         >
@@ -30,12 +32,12 @@
     </div>
     <div class="consultingbtn">
       <a
-        v-md-map
-        v-md:WebClick
-        v-md:p_IMClick
+        v-sensorsTrack:p_IMClick="{
+          eventName: '在线咨询',
+          type: '售前',
+          name: '代理记账页面_一键代办咨询',
+        }"
         href="javascript:;"
-        data-im_type="售前"
-        data-form_type="售前"
         @click="call"
       >
         <img

@@ -130,7 +130,7 @@ import Need from '~/components/detail/Need'
 import commodityConsultation from '@/components/common/commodityConsultation/commodityConsultation'
 import getUserSign from '~/utils/fingerprint'
 import tcBasicData from '~/mock/tcBasicData'
-import { recommendApi } from '~/api'
+import { recommendApi, userinfoApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import BasicItem from '~/components/detail/BasicItem'
 import QftDetails from '~/components/detail/QftDetails'
@@ -208,6 +208,10 @@ export default {
       fieldList: [],
       showShare: false, // 是否弹起分享组件
       shareOptions: [{ name: '复制链接', icon: 'link' }],
+      userInfoData: {
+        decodePhone: null,
+        fullName: null,
+      },
     }
   },
   computed: {
@@ -221,6 +225,7 @@ export default {
     // 获取同类推荐
     this.getSimilarRecommend()
     this.fieldListFun() // 加载基本信息
+    this.getUserIndo()
   },
   methods: {
     scrollHandle({ scrollTop }) {
@@ -244,6 +249,7 @@ export default {
       if (!this.deviceId) {
         this.deviceId = await getUserSign()
       }
+      const formatId1 = this.tcProductDetailData.classCodeLevel.split(',')[0] // 产品二级分类
       const formatId2 = this.tcProductDetailData.classCodeLevel.split(',')[1] // 产品二级分类
       const formatId3 = this.tcProductDetailData.classCodeLevel.split(',')[2] // 产品三级分类
       const formatId = formatId3 || formatId2
@@ -253,6 +259,7 @@ export default {
             userId: this.$cookies.get('userId'), // 用户id
             deviceId: this.deviceId, // 设备ID
             formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
+            classCode: formatId1,
             areaCode: this.city.code, // 区域编码
             sceneId: 'app-jycpxq-02', // 场景ID
             productId: this.tcProductDetailData.id, // 产品ID（产品详情页必传）
@@ -292,6 +299,7 @@ export default {
       if (!this.deviceId) {
         this.deviceId = await getUserSign()
       }
+      const formatId1 = this.tcProductDetailData.classCodeLevel.split(',')[0] // 产品二级分类
       const formatId2 = this.tcProductDetailData.classCodeLevel.split(',')[1] // 产品二级分类
       const formatId3 = this.tcProductDetailData.classCodeLevel.split(',')[2] // 产品三级分类
       const formatId = formatId3 || formatId2
@@ -302,6 +310,7 @@ export default {
             deviceId: this.deviceId, // 设备ID
             formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
             areaCode: this.city.code, // 区域编码
+            classCode: formatId1,
             sceneId: 'app-jycpxq-01', // 场景ID
             productId: this.tcProductDetailData.id, // 产品ID（产品详情页必传）
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
@@ -359,6 +368,29 @@ export default {
       }
       this.$xToast.error('链接复制失败,请重试')
       // this.showShare = false
+    },
+    // 获取手机号
+    getUserIndo() {
+      if (this.token) {
+        this.$axios
+          .get(userinfoApi.info, {
+            params: {
+              id: this.userInfo.userId,
+            },
+          })
+          .then((res) => {
+            if (res.code === 200) {
+              this.userInfoData = res.data
+            } else {
+              this.$xToast.show({
+                message: '网络错误,请刷稍后再试',
+                duration: 1000,
+                icon: 'toast_ic_error',
+                forbidClick: true,
+              })
+            }
+          })
+      }
     },
   },
 }

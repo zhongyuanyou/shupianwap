@@ -14,18 +14,20 @@
         <span class="cousulttel-content-left-text">服务热线:</span>
         <span class="cousulttel-content-left-number">{{ tel }}</span>
       </div>
+      <!--      老埋点-->
+      <!--      <button-->
+      <!--        v-if="mdType === 'old'"-->
+      <!--        v-md-map-->
+      <!--        v-md:webClick-->
+      <!--        class="cousulttel-content-button"-->
+      <!--        data-name="对代理记账还有疑问_立即咨询"-->
+      <!--        @click="telPhone"-->
+      <!--      >-->
+      <!--        {{ button }}-->
+      <!--      </button>-->
+      <!--      老埋点-->
+      <!--      新埋点-->
       <button
-        v-if="mdType === 'old'"
-        v-md-map
-        v-md:webClick
-        class="cousulttel-content-button"
-        data-name="对代理记账还有疑问_立即咨询"
-        @click="telPhone"
-      >
-        {{ button }}
-      </button>
-      <button
-        v-else
         v-sensorsTrack:webClick="{
           name: `${mdName}`,
         }"
@@ -34,6 +36,7 @@
       >
         {{ button }}
       </button>
+      <!--      新埋点-->
     </div>
   </div>
 </template>
@@ -65,7 +68,7 @@ export default {
     mdType: {
       type: String,
       default: () => {
-        return 'old'
+        return 'new'
       },
     },
     mdName: {

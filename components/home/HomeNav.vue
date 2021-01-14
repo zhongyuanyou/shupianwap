@@ -129,7 +129,7 @@ export default {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 28px 16px 20px 16px;
+    padding: 28px 16px 0 16px;
     li {
       width: 20%;
       a {
@@ -156,6 +156,7 @@ export default {
   .scroll-centent {
     overflow-x: auto;
     overflow-y: hidden;
+    padding-top: 20px;
     padding-left: 16px;
     -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {

@@ -12,7 +12,6 @@
         name: `${serviceTitle}_${item.title}_在线咨询`,
       }"
       class="serviceList-content"
-      href="javascript:;"
       @click="plannerIm(item.planner)"
     >
       <div
@@ -260,6 +259,7 @@ export default {
     font-weight: bold;
     color: #1a1a1a;
     display: block;
+    line-height: 39px;
   }
   .serviceList-content {
     display: block;

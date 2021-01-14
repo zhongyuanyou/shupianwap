@@ -57,6 +57,7 @@ export default {
       },
     },
     filterMaxHeight: {
+      // 中间筛选项的最大高度
       type: Number,
       default() {
         return 0
@@ -73,7 +74,7 @@ export default {
       activeItems: [], // 默认激活的
       saveActiveItems: [], // 存储的筛选项数据
       contentMaxHeight: 0, // 内容的最大高
-      lowLineCode: ['CONDITION-JY-SB-FL'],
+      lowLineCode: [],
     }
   },
   computed: {
@@ -153,7 +154,7 @@ export default {
       // 确认筛选
       this.saveActiveItems = clone(this.activeItems, true)
       const emitData = this.resultHandle()
-      this.$emit('activeItem', emitData, 'selectFilter')
+      this.$emit('activeItem', emitData, 'selectFilter' + this.filterData.name)
       this.$refs.item.toggle()
     },
     resultHandle() {
@@ -173,7 +174,7 @@ export default {
         // 如果该筛选项是产品分类查询出来的，value需要取code，如果不是则需要取ext2
         const _flag = this.filterData.ext3 === '1'
         this.activeItems.forEach((item) => {
-          emitData.fieldValue.push(_flag ? item.code : item.ext2)
+          emitData.fieldValue.push(_flag ? item.name : item.ext2)
         })
       } else {
         emitData = ''

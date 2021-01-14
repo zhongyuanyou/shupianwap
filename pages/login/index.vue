@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 15:44:34
+ * @LastEditTime: 2021-01-08 13:44:18
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/login/index.vue
+ * @FilePath: /chips-wap/pages/login/index.vue
 -->
 <template>
   <div class="login">
@@ -43,7 +43,7 @@
             v-model="loginForm.authCode"
             type="number"
             name="authCode"
-            clearable
+            :clearable="false"
             placeholder="请输入验证码"
             maxlength="6"
             @input="handleAuthCodeInput"
@@ -62,7 +62,6 @@
             key="password"
             v-model="loginForm.password"
             name="password"
-            clearable
             placeholder="请输入密码"
             :type="passwordFieldType"
             @input="handlePasswordInput"
@@ -219,7 +218,7 @@ export default {
           return
         }
 
-        this.$router.push(this.redirect)
+        this.$router.replace(this.redirect)
       })
     },
     handleSwitchLookPassword() {
@@ -227,8 +226,13 @@ export default {
         this.passwordFieldType === 'password' ? 'text' : 'password'
     },
     onClickLeft() {
-      console.log('关闭')
-      this.$router.push(this.redirect)
+      // this.$router.push(this.redirect)
+      // this.$router.back()
+      if (window.history.length <= 1) {
+        this.$router.replace('/')
+      } else {
+        this.$router.back()
+      }
     },
     handleClickCodeBtn(isValidTel) {
       if (!isValidTel) {
@@ -326,17 +330,20 @@ export default {
         this.loading = false
         const { code } = error
         // 需要验证码
-        if (code === '10408') {
+        if (code === 10408) {
           ImgAuthDialog()
             .then((result) => {
+              // 获取验证码后，再调用一次登录
               const { data } = result
               this.loginForm.imgCaptcha = data
+              this.login()
             })
             .catch(() => {
               this.loginForm.imgCaptcha = ''
             })
-          return
+          return Promise.reject(new Error('需要验证'))
         }
+        this.loginForm.imgCaptcha = ''
         this.loginToast(error.message)
         return Promise.reject(error)
       }
@@ -365,9 +372,9 @@ export default {
               (errorObject = { key, message: '手机号码有误' })
             break
           case 'password':
-            // 至少6-15个字符，至少1个大写字母，1个小写字母和1个数字
-            // checkPassword(password) &&
-            //   (errorObject = { key, message: '密码格式有误' })
+            // 至少6-15个字符
+            !checkPassword(password) &&
+              (errorObject = { key, message: '密码格式有误' })
             break
           case 'readed':
             !readed && (errorObject = { key, message: '请勾选同意协议' })
@@ -411,10 +418,16 @@ export default {
 @hint-text-color: #cccccc;
 
 .login {
+  height: 100%;
   .head {
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    /deep/.sp-top-nav-bar {
+      &__left,
+      &__right {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
   }
   .body {
     padding: 58px 60px 0;

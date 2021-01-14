@@ -2,20 +2,19 @@
   <sp-bottombar safe-area-inset-bottom class="my-sp-bottombar">
     <sp-bottombar-info title avatar :card="card" />
     <!--  老埋点  -->
-    <sp-bottombar-button
-      v-if="mdType === 'old'"
-      v-md-map
-      v-md:p_IMClick
-      :data-im-name="md.imMd.name"
-      :data-im_type="md.imMd.type"
-      type="info"
-      :text="text1"
-      @click="onClickButton1"
-    ></sp-bottombar-button>
+    <!--    <sp-bottombar-button-->
+    <!--      v-if="mdType === 'old'"-->
+    <!--      v-md-map-->
+    <!--      v-md:p_IMClick-->
+    <!--      :data-im-name="md.imMd.name"-->
+    <!--      :data-im_type="md.imMd.type"-->
+    <!--      type="info"-->
+    <!--      :text="text1"-->
+    <!--      @click="onClickButton1"-->
+    <!--    ></sp-bottombar-button>-->
     <!--  老埋点  -->
     <!--  新埋点  -->
     <sp-bottombar-button
-      v-else
       v-sensorsTrack:p_IMClick="{
         name: `${md.imMd.name}`,
         im_type: `${md.imMd.type}`,
@@ -27,20 +26,19 @@
     </sp-bottombar-button>
     <!--  新埋点  -->
     <!--  老埋点  -->
-    <sp-bottombar-button
-      v-if="mdType === 'old'"
-      v-md-map
-      v-md:webClick
-      :data-name="md.telMd.name"
-      type="primary"
-      :text="text2"
-      @click="onClickButton2"
-    >
-    </sp-bottombar-button>
+    <!--    <sp-bottombar-button-->
+    <!--      v-if="mdType === 'old'"-->
+    <!--      v-md-map-->
+    <!--      v-md:webClick-->
+    <!--      :data-name="md.telMd.name"-->
+    <!--      type="primary"-->
+    <!--      :text="text2"-->
+    <!--      @click="onClickButton2"-->
+    <!--    >-->
+    <!--    </sp-bottombar-button>-->
     <!--  老埋点  -->
     <!--  新埋点  -->
     <sp-bottombar-button
-      v-else
       v-sensorsTrack:webClick="{
         name: `${md.telMd.name}`,
       }"
@@ -100,7 +98,7 @@ export default {
     mdType: {
       type: String,
       default: () => {
-        return 'old'
+        return 'new'
       },
     },
   },
