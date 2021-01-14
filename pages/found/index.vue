@@ -21,15 +21,13 @@
         <sp-icon name="search" size="20" @click="onClickRight" />
       </template>
     </sp-top-nav-bar>
-    <div>
-      <Con
-        :banner="information_banner"
-        :list="information_list"
-        :category-code="categoryCode"
-        :refresh-status="refreshStatus"
-        @refresh="refresh"
-      />
-    </div>
+    <Con
+      :banner="information_banner"
+      :list="information_list"
+      :category-code="categoryCode"
+      :refresh-status="refreshStatus"
+      @refresh="refresh"
+    />
     <Bottombar v-if="!isInApp" ref="bottombar" />
   </div>
 </template>
