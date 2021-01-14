@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-12 19:20:09
+ * @LastEditTime: 2021-01-14 11:48:25
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/GoodsItem.vue
 -->
@@ -225,7 +225,7 @@ export default {
                   } = val || {}
                   return {
                     id,
-                    name: `${name}  ￥${originalPrice}`,
+                    name: `${name}  ￥${salesPrice}`,
                   }
                 })
               : []
@@ -429,7 +429,7 @@ export default {
                   ...item,
                   serviceItemValId: activedVal.id,
                   serviceItemValName: name,
-                  price: originalPrice,
+                  price: salesPrice,
                 }
               }
               return { ...item }
@@ -445,7 +445,7 @@ export default {
         serviceItemName: activedItem.name,
         serviceItemValId: activedVal.id,
         serviceItemValName: name,
-        price: originalPrice,
+        price: salesPrice,
       })
     },
 
