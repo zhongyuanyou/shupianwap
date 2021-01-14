@@ -43,7 +43,7 @@
       <div>
         <strong>猜您需要</strong>
         <my-icon
-          v-if="searchTop.length > 2"
+          v-if="searchTop.length"
           name="search_ic_re"
           size="0.32rem"
           color="#CCCCCC"
@@ -133,7 +133,6 @@ export default {
       this.historyData = this.$cookies.get('searchHistory')
         ? this.$cookies.get('searchHistory')
         : []
-      console.log(123, this.historyData)
     }
   },
   methods: {
@@ -166,10 +165,26 @@ export default {
         .get(searchApi.findKeywords, { params: this.params })
         .then((res) => {
           this.loading = false
+          // findType == 1；点击刷新置顶关键词；
           if (res.code === 200 && this.params.findType === 1) {
+            // 若查询关键词为空，并且不是第一页，说明查询到了最后一页；将topPage设为1，重复查询第一页数据
             if (!res.data.topUnHeightList.length && this.params.topPage > 1) {
               this.params.topPage = 1
               this.getInitData()
+              return
+            }
+            // 若查询出的数据相同，说明没有更多数据
+            if (
+              this.searchTop.length === res.data.topUnHeightList.length &&
+              this.searchTop[0].id === res.data.topUnHeightList[0].id
+            ) {
+              this.$xToast.show({
+                message: '暂无更多数据',
+                duration: 1000,
+                icon: 'toast_ic_remind',
+                forbidClick: false,
+              })
+
               return
             }
             this.searchTop = res.data.topUnHeightList
