@@ -1,7 +1,18 @@
 <template>
-  <div class="system">
+  <div v-show="!isInApp" class="system">
     <!-- S 头部分 -->
-    <Header :title="TopTitle" />
+    <Header :title="TopTitle">
+      <template #left>
+        <div @click="onClickLeft">
+          <my-icon
+            class="back-icon"
+            name="nav_ic_back"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!-- E 头部分 -->
     <!-- S banner轮播 -->
     <BannerSwipe :banner-images="bannerImages" />
@@ -69,6 +80,8 @@
 </template>
 <script>
 import { Image } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import { foundApi } from '~/api'
 import Header from '@/components/common/head/header'
 import BannerSwipe from '@/components/spread/system/BannerSwiper'
 import Card from '@/components/spread/system/Card'
@@ -506,12 +519,12 @@ export default {
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/fbnkmcxvxqg0000.png',
           name: '体系认证_还需要办理_许可证办理',
-          url: '/spread/tax',
+          url: '/spread/licence',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/2dv958uknitc000.png',
           name: '体系认证_还需要办理_工商注销',
-          url: '/spread/agency/',
+          url: '/spread/businessCancellation',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/72gbx82vsnk0000.png',
@@ -521,20 +534,25 @@ export default {
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/d4jmafpuy5s0000.png',
           name: '体系认证_还需要办理_互联网资质',
-          url: '/spread/agency/',
+          url: ' /spread/licence',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/elaeb6is89s0000.png',
           name: '体系认证_还需要办理_代理记账',
-          url: '/spread/agency/',
+          url: '/spread/agency',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/2ni7sgi4kii0000.png',
           name: '体系认证_还需要办理_银行服务',
-          url: '',
+          url: '/spread/bankService',
         },
       ],
     }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp, // 是否app中
+    }),
   },
   created() {
     if (this.resultData.length !== 0) {
@@ -544,7 +562,7 @@ export default {
   },
   mounted() {
     const param = {
-      platform_type: 'Wep端', // 平台类型：App，H5，Web
+      platform_type: 'wap端', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
       product_line: 'wap端体系认证推广页',
       current_url: location.href,
@@ -553,6 +571,18 @@ export default {
     window.sensors.registerPage(param) // 设置公共属性
   },
   methods: {
+    onClickLeft() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/spread')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
     // 处理后台列表数据
     serverList(data) {
       const listAll = data.adList[0].sortMaterialList
@@ -679,6 +709,9 @@ export default {
 .system {
   width: @spread-page-width;
   margin: 0 auto;
+  .back-icon {
+    width: 750px;
+  }
   // 列表
   /deep/.systemList {
     .serviceList-content {
@@ -721,6 +754,9 @@ export default {
           width: 208px;
           height: 188px;
         }
+      }
+      a:first-child {
+        margin-bottom: 24px;
       }
     }
   }
