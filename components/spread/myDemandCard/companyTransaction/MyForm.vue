@@ -149,7 +149,7 @@ export default {
     }
   },
   mounted() {
-    const formData = JSON.parse(localStorage.getItem('formData'))
+    const formData = JSON.parse(sessionStorage.getItem('formData'))
     if (formData) {
       this.selectName1 = formData.content['期望城市'] || this.selectName1
       this.selectName2 = formData.content['期望行业'] || this.selectName2
@@ -189,7 +189,9 @@ export default {
     },
     // 下一步
     next() {
-      const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
+      const sessionStorageFormData = JSON.parse(
+        sessionStorage.getItem('formData')
+      )
       const data = {}
       data.content = {
         购买预算: `${this.minMoney}-${this.maxMoney}万元`,
@@ -198,12 +200,15 @@ export default {
         期望行业: this.selectName2,
       }
       // 合并两个页面之间缓存的数据
-      if (localStorageFormData) {
-        data.content = Object.assign(localStorageFormData.content, data.content)
+      if (sessionStorageFormData) {
+        data.content = Object.assign(
+          sessionStorageFormData.content,
+          data.content
+        )
       }
       data.type = 'gszr'
       data.url = window.location.href
-      localStorage.setItem('formData', JSON.stringify(data))
+      sessionStorage.setItem('formData', JSON.stringify(data))
       this.$router.push('/spread/myDemandCard/second')
     },
   },

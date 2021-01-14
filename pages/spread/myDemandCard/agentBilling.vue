@@ -89,7 +89,7 @@ export default {
     }
   },
   mounted() {
-    const formData = JSON.parse(localStorage.getItem('formData'))
+    const formData = JSON.parse(sessionStorage.getItem('formData'))
     if (formData) {
       this.questionData[0].value =
         formData.content['注册时间'] || this.questionData[0].value

@@ -116,17 +116,19 @@ export default {
   },
   mounted() {
     // 数据回显
-    const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
-    if (localStorageFormData) {
+    const sessionStorageFormData = JSON.parse(
+      sessionStorage.getItem('formData')
+    )
+    if (sessionStorageFormData) {
       this.$nextTick(() => {
         this.$refs.revenueRef[0].dropdownValue =
-          localStorageFormData.content['办理业务']
-        this.content.business = localStorageFormData.content['办理业务']
-        this.data[1].value = localStorageFormData.content['公司年营收']
-        this.content.revenue = localStorageFormData.content['公司年营收']
+          sessionStorageFormData.content['办理业务']
+        this.content.business = sessionStorageFormData.content['办理业务']
+        this.data[1].value = sessionStorageFormData.content['公司年营收']
+        this.content.revenue = sessionStorageFormData.content['公司年营收']
         this.$refs.revenueRef[1].dropdownValue =
-          localStorageFormData.content['公司行业']
-        this.content.industry = localStorageFormData.content['公司行业']
+          sessionStorageFormData.content['公司行业']
+        this.content.industry = sessionStorageFormData.content['公司行业']
       })
     }
   },

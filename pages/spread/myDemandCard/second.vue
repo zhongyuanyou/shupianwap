@@ -105,22 +105,24 @@ export default {
   },
   mounted() {
     // 进入页面回显数据
-    const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
-    if (localStorageFormData) {
-      localStorageFormData.content = Object.assign(
+    const sessionStorageFormData = JSON.parse(
+      sessionStorage.getItem('formData')
+    )
+    if (sessionStorageFormData) {
+      sessionStorageFormData.content = Object.assign(
         this.formData.content,
-        localStorageFormData.content
+        sessionStorageFormData.content
       )
-      this.formData = Object.assign(this.formData, localStorageFormData)
+      this.formData = Object.assign(this.formData, sessionStorageFormData)
     }
   },
   destroyed() {
     // 缓存表单填写的数据
-    let data = JSON.parse(localStorage.getItem('formData'))
+    let data = JSON.parse(sessionStorage.getItem('formData'))
     if (data) {
       data.content = Object.assign(data.content, this.formData.content)
       data = JSON.stringify(data)
-      localStorage.setItem('formData', data)
+      sessionStorage.setItem('formData', data)
     }
   },
   methods: {
@@ -190,7 +192,7 @@ export default {
         .then((res) => {
           this.loading = false
           this.$xToast.success('提交成功，请注意接听电话')
-          localStorage.removeItem('formData')
+          sessionStorage.removeItem('formData')
           this.formData = {
             type: 'gszc',
             tel: '', // 电话

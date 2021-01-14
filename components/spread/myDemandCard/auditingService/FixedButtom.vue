@@ -51,17 +51,19 @@ export default {
         公司年营收: this.content.revenue,
         公司行业: this.content.industry,
       }
-      const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
+      const sessionStorageFormData = JSON.parse(
+        sessionStorage.getItem('formData')
+      )
       // 合并两个页面之间缓存的数据
-      if (localStorageFormData) {
+      if (sessionStorageFormData) {
         this.data.content = Object.assign(
-          localStorageFormData.content,
+          sessionStorageFormData.content,
           this.data.content
         )
       }
       this.data.url = window.location.href
       // 本地存储数据
-      localStorage.setItem('formData', JSON.stringify(this.data))
+      sessionStorage.setItem('formData', JSON.stringify(this.data))
       this.$router.push('/spread/myDemandCard/second')
     },
   },

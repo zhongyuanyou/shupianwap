@@ -83,7 +83,7 @@ export default {
       handler(to, from) {
         if (to.path === '/spread/myDemandCard') {
           this.$nextTick(() => {
-            localStorage.removeItem('formData')
+            sessionStorage.removeItem('formData')
           })
         }
       },

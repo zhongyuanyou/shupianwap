@@ -163,18 +163,20 @@ export default {
   },
   mounted() {
     // 数据回显
-    const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
-    if (localStorageFormData) {
+    const sessionStorageFormData = JSON.parse(
+      sessionStorage.getItem('formData')
+    )
+    if (sessionStorageFormData) {
       this.$nextTick(() => {
         this.formData.content.yxblqy =
-          localStorageFormData.content.yxblqy || this.formData.content.yxblqy
+          sessionStorageFormData.content.yxblqy || this.formData.content.yxblqy
         this.formData.content.sydz =
-          localStorageFormData.content.sydz || this.formData.content.sydz
+          sessionStorageFormData.content.sydz || this.formData.content.sydz
         this.formData.content['公司信息确认完毕'] =
-          localStorageFormData.content['公司信息确认完毕'] ||
+          sessionStorageFormData.content['公司信息确认完毕'] ||
           this.formData.content['公司信息确认完毕']
         this.formData.content['办理时间'] =
-          localStorageFormData.content['办理时间'] ||
+          sessionStorageFormData.content['办理时间'] ||
           this.formData.content['办理时间']
         this.choose.forEach((item, index) => {
           if (item === this.formData.content.sydz) {
@@ -226,17 +228,19 @@ export default {
     // 跳转到下一页,存储当前页面信息
     next() {
       this.formData.url = window.location.href
-      const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
+      const sessionStorageFormData = JSON.parse(
+        sessionStorage.getItem('formData')
+      )
       // 合并两个页面之间缓存的数据
-      if (localStorageFormData) {
+      if (sessionStorageFormData) {
         this.formData.content = Object.assign(
-          localStorageFormData.content,
+          sessionStorageFormData.content,
           this.formData.content
         )
       }
       const newFormData = JSON.stringify(this.formData)
       // 将数据存储
-      localStorage.setItem('formData', newFormData)
+      sessionStorage.setItem('formData', newFormData)
       this.$router.push({ path: '/spread/myDemandCard/second' })
     },
     // 获取区域信息列表
