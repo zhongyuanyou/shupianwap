@@ -155,7 +155,7 @@ export default {
     confirmFilters() {
       this.saveEchoData = clone(this.echoData, true)
       const emitData = this.resultHandle()
-      this.$emit('activeItem', emitData, 'priceFilter')
+      this.$emit('activeItem', emitData, 'priceFilter-' + this.filterData.code)
       this.$refs.item.toggle()
     },
     resultHandle() {

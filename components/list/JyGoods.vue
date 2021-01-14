@@ -210,7 +210,6 @@ export default {
       } else {
         delete this.filterItem[this.currentTabJyCode][filrerName]
       }
-      console.log('----', this.filterItem[this.currentTabJyCode])
       this.filterItemHandle()
       this.initGoodsList()
     },
@@ -294,7 +293,8 @@ export default {
       // 处理筛选数据，拼成筛选项
       let arr = []
       for (const key in this.filterItem[this.currentTabJyCode]) {
-        switch (key) {
+        const keyStr = key.split('-')[0] // 处理筛选名字，获取筛选名字中的组件名
+        switch (keyStr) {
           case 'sortFilter':
             // 处理排序筛选
             this.formData[this.currentTabJyCode].sortBy = this.filterItem[
@@ -311,6 +311,7 @@ export default {
                 ...this.filterItem[this.currentTabJyCode][key].filterKeyValArr,
               ]
             }
+            // 处理文字长度筛选项
             if (
               'nameLengthStart' in
               this.filterItem[this.currentTabJyCode][key].charLength
@@ -350,7 +351,7 @@ export default {
                 key
               ].fieldValue.end
             } else if (this.filterItem[this.currentTabJyCode][key] === '') {
-              // 处理价格筛选
+              // 删除价格筛选
               delete this.formData[this.currentTabJyCode].platformPriceStart
               delete this.formData[this.currentTabJyCode].platformPriceEnd
             }
