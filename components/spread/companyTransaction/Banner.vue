@@ -1,10 +1,12 @@
 <template>
-  <div class="my-component">
-    <sp-swipe class="banner-swipe" :loop="true" autoplay="5000">
-      <sp-swipe-item v-for="(item, index) in images" :key="index">
-        <sp-image fit="cover" :src="item" />
-      </sp-swipe-item>
-    </sp-swipe>
+  <div>
+    <div class="my-component">
+      <sp-swipe class="banner-swipe" :loop="true" autoplay="5000">
+        <sp-swipe-item v-for="(item, index) in images" :key="index">
+          <sp-image fit="cover" :src="item" />
+        </sp-swipe-item>
+      </sp-swipe>
+    </div>
   </div>
 </template>
 

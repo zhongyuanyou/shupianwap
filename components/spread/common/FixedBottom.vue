@@ -2,20 +2,19 @@
   <sp-bottombar safe-area-inset-bottom class="my-sp-bottombar">
     <sp-bottombar-info title avatar :card="card" />
     <!--  老埋点  -->
-    <sp-bottombar-button
-      v-if="mdType === 'old'"
-      v-md-map
-      v-md:p_IMClick
-      :data-im-name="md.imMd.name"
-      :data-im_type="md.imMd.type"
-      type="info"
-      :text="text1"
-      @click="onClickButton1"
-    ></sp-bottombar-button>
+    <!--    <sp-bottombar-button-->
+    <!--      v-if="mdType === 'old'"-->
+    <!--      v-md-map-->
+    <!--      v-md:p_IMClick-->
+    <!--      :data-im-name="md.imMd.name"-->
+    <!--      :data-im_type="md.imMd.type"-->
+    <!--      type="info"-->
+    <!--      :text="text1"-->
+    <!--      @click="onClickButton1"-->
+    <!--    ></sp-bottombar-button>-->
     <!--  老埋点  -->
     <!--  新埋点  -->
     <sp-bottombar-button
-      v-else
       v-sensorsTrack:p_IMClick="{
         name: `${md.imMd.name}`,
         im_type: `${md.imMd.type}`,
@@ -27,20 +26,19 @@
     </sp-bottombar-button>
     <!--  新埋点  -->
     <!--  老埋点  -->
-    <sp-bottombar-button
-      v-if="mdType === 'old'"
-      v-md-map
-      v-md:webClick
-      :data-name="md.telMd.name"
-      type="primary"
-      :text="text2"
-      @click="onClickButton2"
-    >
-    </sp-bottombar-button>
+    <!--    <sp-bottombar-button-->
+    <!--      v-if="mdType === 'old'"-->
+    <!--      v-md-map-->
+    <!--      v-md:webClick-->
+    <!--      :data-name="md.telMd.name"-->
+    <!--      type="primary"-->
+    <!--      :text="text2"-->
+    <!--      @click="onClickButton2"-->
+    <!--    >-->
+    <!--    </sp-bottombar-button>-->
     <!--  老埋点  -->
     <!--  新埋点  -->
     <sp-bottombar-button
-      v-else
       v-sensorsTrack:webClick="{
         name: `${md.telMd.name}`,
       }"
@@ -78,7 +76,8 @@ export default {
           name: '张毅',
           jobNum: '107547',
           telephone: '18402858698',
-          imgSrc: '',
+          imgSrc:
+            'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg',
         }
       },
     },
@@ -100,13 +99,12 @@ export default {
     mdType: {
       type: String,
       default: () => {
-        return 'old'
+        return 'new'
       },
     },
   },
   data() {
     return {
-      card: {},
       text1: '在线咨询',
       text2: '电话咨询',
       // isFixed: true,
@@ -114,6 +112,20 @@ export default {
       // docmHeight: 0, // 一开始的屏幕高度
       // showHeight: 0, // 实时屏幕高度
     }
+  },
+  computed: {
+    card() {
+      return {
+        imgSrc:
+          this.planner.imgSrc ||
+          'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg',
+        cardName: this.planner.name,
+        cardSign: '金牌规划师',
+        icon: '',
+        round: true,
+        avatarSize: 40,
+      }
+    },
   },
   // watch: {
   //   showHeight() {
@@ -133,18 +145,6 @@ export default {
   //     })()
   //   }
   // },
-  created() {
-    this.card = {
-      imgSrc:
-        this.planner.imgSrc ||
-        'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg',
-      cardName: this.planner.name,
-      cardSign: '金牌规划师',
-      icon: '',
-      round: true,
-      avatarSize: 40,
-    }
-  },
   methods: {
     // @--在线咨询
     onClickButton1() {
@@ -172,8 +172,11 @@ export default {
 // .my-sp-bottombar覆写了组件原本的样式
 .my-sp-bottombar {
   width: calc(@spread-page-width - 80px) !important;
+  //width: @spread-page-width;
+  padding: 24px 40px;
   left: auto !important;
   right: auto !important;
+  background: #ffffff;
 }
 
 /deep/ .sp-bottombar {

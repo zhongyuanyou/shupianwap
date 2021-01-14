@@ -1,20 +1,27 @@
 <template>
-  <div class="my-component">
-    <div class="title">附带资产类型</div>
-    <div class="content">
-      <div
-        v-for="(item, index) in data"
-        :key="index"
-        class="item"
-        :class="index > 1 ? 'item-no-margin' : ''"
-        :style="{
-          backgroundImage: `url(${item.img})`,
-          width: `${item.imgWidth / 100}rem`,
-          height: `${item.imgHeight / 100}rem`,
-        }"
-      >
-        <p class="item-title">{{ item.title }}</p>
-        <p class="item-desc">{{ item.desc }}</p>
+  <div>
+    <div class="my-component">
+      <div class="title">附带资产类型</div>
+      <div class="content">
+        <a
+          v-for="(item, index) in data"
+          :key="index"
+          class="item"
+          :class="index > 1 ? 'item-no-margin' : ''"
+          :style="{
+            backgroundImage: `url(${item.img})`,
+            width: `${item.imgWidth / 100}rem`,
+            height: `${item.imgHeight / 100}rem`,
+          }"
+          @click="
+            () => {
+              $parent.jumpLink(item.url)
+            }
+          "
+        >
+          <p class="item-title">{{ item.title }}</p>
+          <p class="item-desc">{{ item.desc }}</p>
+        </a>
       </div>
     </div>
   </div>
@@ -88,10 +95,9 @@ export default {
   .content {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-between;
     .item {
-      width: 215px;
-      height: 130px;
+      flex: none;
       background-repeat: no-repeat;
       background-size: cover;
       padding-left: 24px;

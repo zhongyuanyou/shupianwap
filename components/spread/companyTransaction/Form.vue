@@ -1,123 +1,129 @@
 <template>
-  <div class="my-component">
-    <div class="form-box">
-      <div class="form-box-title">
-        <img
-          src="https://cdn.shupian.cn/sp-pt/wap/images/7ccgcy48cv40000.png"
-        />
-        <p class="form-box-title-name">只需5秒 一键为您适配公司</p>
-        <img
-          src="https://cdn.shupian.cn/sp-pt/wap/images/drylv5blkoo0000.png"
-        />
-      </div>
-      <div class="form-inputs">
-        <!-- 1、公司类型下拉框-->
-        <div class="dropdown-menu">
-          <div class="dropdown-menu-content" @click="showDropdownList">
-            <span class="dropdown-menu-content-prefix">我需要</span>
-            <span v-if="dropdownValue" class="dropdown-menu-content-val">
-              {{ dropdownValue }}
-            </span>
-            <span
-              v-if="!dropdownValue"
-              class="dropdown-menu-content-placeholder"
-            >
-              请选择
-            </span>
-            <img
-              class="dropdown-menu-content-img"
-              src="https://cdn.shupian.cn/sp-pt/wap/images/4ehy9youej60000.png"
-            />
-          </div>
-          <sp-popup v-model="dropdownMenuIsShow" round position="bottom">
-            <sp-picker
-              title="选择公司类型"
-              show-toolbar
-              :default-index="Math.floor(dropList.length / 2)"
-              :columns="dropList"
-              @confirm="onConfirm"
-              @cancel="onCancel"
-            />
-          </sp-popup>
-        </div>
-        <!-- 1、城市下拉框-->
-        <div class="dropdown-menu dropdown-menu-margin">
-          <div class="dropdown-menu-content" @click="showCityDropdownList">
-            <span class="dropdown-menu-content-prefix">城市</span>
-            <span v-if="cityValue" class="dropdown-menu-content-val">{{
-              cityValue
-            }}</span>
-            <span v-if="!cityValue" class="dropdown-menu-content-placeholder">
-              请选择
-            </span>
-            <img
-              class="dropdown-menu-content-img"
-              src="https://cdn.shupian.cn/sp-pt/wap/images/4ehy9youej60000.png"
-            />
-          </div>
-          <sp-popup v-model="cityMenuIsShow" round position="bottom">
-            <sp-picker
-              title="选择城市"
-              show-toolbar
-              :default-index="Math.floor(cityList.length / 2)"
-              :columns="cityList"
-              @confirm="onCityConfirm"
-              @cancel="onCancel"
-            />
-          </sp-popup>
-        </div>
-        <!-- 2、输入框-手机号码-->
-        <div class="form-input-tel">
-          <sp-field
-            v-model="telephone"
-            label="手机号"
-            type="tel"
-            maxlength="11"
-            :formatter="telTypingVerify"
-            placeholder="信息保护中，仅官方可见"
-            @focus="() => (smsInputIsShow = true)"
-          />
-        </div>
-        <!-- 3、输入框-验证码-->
-        <div v-if="smsInputIsShow" class="form-input-sms">
-          <sp-field
-            v-model="sms"
-            center
-            label="验证码"
-            type="tel"
-            placeholder="请输入验证码"
-            maxlength="6"
-            :formatter="smsTypingVerify"
-          >
-            <template #button>
-              <sp-button size="small" type="primary" @click="sendSms">
-                {{ countdown > 0 ? `${countdown}s` : '发送验证码' }}</sp-button
-              >
-            </template>
-          </sp-field>
-        </div>
-        <!-- 4、提交按钮-->
-        <div class="form-submit">
-          <sp-button
-            v-sensorsTrack:p_formSubmit="{
-              track_code: 'SPTG000003',
-              event_name: 'p_formSubmit',
-              form_type: '咨询',
-              form_name: `一键适配公司表单提交`,
-            }"
-            type="primary"
-            @click="submitForm"
-            >免费预约
-          </sp-button>
-        </div>
-      </div>
-      <div class="form-note-all">
-        <div v-for="item in formNotes" :key="item.id" class="form-note-item">
+  <div>
+    <div class="my-component">
+      <div class="form-box">
+        <div class="form-box-title">
           <img
-            class="form-note-item-img"
-            src="https://cdn.shupian.cn/sp-pt/wap/images/7debdq96t480000.png"
+            src="https://cdn.shupian.cn/sp-pt/wap/images/7ccgcy48cv40000.png"
           />
-          <span class="form-note-item-name">{{ item.name }}</span>
+          <p class="form-box-title-name">只需5秒 一键为您适配公司</p>
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/images/drylv5blkoo0000.png"
+          />
+        </div>
+        <div class="form-inputs">
+          <!-- 1、公司类型下拉框-->
+          <div class="dropdown-menu">
+            <div class="dropdown-menu-content" @click="showDropdownList">
+              <span class="dropdown-menu-content-prefix">我需要</span>
+              <span v-if="dropdownValue" class="dropdown-menu-content-val">
+                {{ dropdownValue }}
+              </span>
+              <span
+                v-if="!dropdownValue"
+                class="dropdown-menu-content-placeholder"
+              >
+                请选择
+              </span>
+              <img
+                class="dropdown-menu-content-img"
+                src="https://cdn.shupian.cn/sp-pt/wap/images/4ehy9youej60000.png"
+              />
+            </div>
+            <sp-popup v-model="dropdownMenuIsShow" round position="bottom">
+              <sp-picker
+                title="选择公司类型"
+                show-toolbar
+                :default-index="Math.floor(dropList.length / 2)"
+                :columns="dropList"
+                @confirm="onConfirm"
+                @cancel="onCancel"
+              />
+            </sp-popup>
+          </div>
+          <!-- 1、城市下拉框-->
+          <div class="dropdown-menu dropdown-menu-margin">
+            <div class="dropdown-menu-content" @click="showCityDropdownList">
+              <span class="dropdown-menu-content-prefix">城市</span>
+              <span v-if="cityValue" class="dropdown-menu-content-val">{{
+                cityValue
+              }}</span>
+              <span v-if="!cityValue" class="dropdown-menu-content-placeholder">
+                请选择
+              </span>
+              <img
+                class="dropdown-menu-content-img"
+                src="https://cdn.shupian.cn/sp-pt/wap/images/4ehy9youej60000.png"
+              />
+            </div>
+            <sp-popup v-model="cityMenuIsShow" round position="bottom">
+              <sp-picker
+                title="选择城市"
+                show-toolbar
+                :default-index="Math.floor(cityList.length / 2)"
+                :columns="cityList"
+                @confirm="onCityConfirm"
+                @cancel="onCancel"
+              />
+            </sp-popup>
+          </div>
+          <!-- 2、输入框-手机号码-->
+          <div class="form-input-tel">
+            <sp-field
+              v-model="telephone"
+              label="手机号"
+              type="tel"
+              maxlength="11"
+              :formatter="telTypingVerify"
+              placeholder="信息保护中，仅官方可见"
+              @focus="() => (smsInputIsShow = true)"
+            />
+          </div>
+          <!-- 3、输入框-验证码-->
+          <div v-if="smsInputIsShow" class="form-input-sms">
+            <sp-field
+              v-model="sms"
+              center
+              label="验证码"
+              type="tel"
+              placeholder="请输入验证码"
+              maxlength="6"
+              :formatter="smsTypingVerify"
+            >
+              <template #button>
+                <sp-button size="small" type="primary" @click="sendSms">
+                  {{
+                    countdown > 0 ? `${countdown}s` : '发送验证码'
+                  }}</sp-button
+                >
+              </template>
+            </sp-field>
+          </div>
+          <!-- 4、提交按钮-->
+          <div class="form-submit">
+            <sp-button
+              v-sensorsTrack:p_formSubmit="{
+                track_code: 'SPTG000003',
+                event_name: 'p_formSubmit',
+                form_type: '咨询',
+                form_name: `一键适配公司表单提交`,
+              }"
+              type="primary"
+              @click="submitForm"
+              >立即获取
+            </sp-button>
+          </div>
+        </div>
+        <div class="form-note-all">
+          <div v-for="item in formNotes" :key="item.id" class="form-note-item">
+            <div class="form-note-item-div-img">
+              <img
+                class="form-note-item-img"
+                src="https://cdn.shupian.cn/sp-pt/wap/images/7debdq96t480000.png"
+              />
+            </div>
+            <span class="form-note-item-name">{{ item.name }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -157,7 +163,6 @@ export default {
       cityNameList: [],
       cityList: [
         '全国',
-        '成都',
         '重庆',
         '长沙',
         '武汉',
@@ -165,6 +170,7 @@ export default {
         '北京',
         '深圳',
         '广州',
+        '成都',
         '杭州',
         '郑州',
         '佛山',
@@ -523,13 +529,18 @@ export default {
       .form-note-item {
         display: flex;
         align-items: center;
-        .form-note-item-img {
-          width: 23px;
-          height: 23px;
+        .form-note-item-div-img {
+          width: 24px;
+          height: 24px;
           margin-right: 13px;
+          .form-note-item-img {
+            display: flex;
+            width: 24px;
+            height: 24px;
+          }
         }
         .form-note-item-name {
-          font-size: 24px;
+          font-size: 26px;
           font-weight: 400;
           color: #555555;
         }

@@ -1,26 +1,33 @@
 <template>
-  <div class="my-component">
-    <a
-      v-for="(item, index) in data"
-      :key="index"
-      v-sensorsTrack:webClick="{
-        name: `${item.text}顶部金刚区按钮点击`,
-        track_code: 'SPTG000001',
-      }"
-      class="item"
-      :class="index > 4 ? 'item-no-margin' : ''"
-    >
-      <div
-        class="item-img-big"
-        :class="index > 4 ? 'item-img-small' : 'item-img-big'"
+  <div>
+    <div class="my-component">
+      <a
+        v-for="(item, index) in data"
+        :key="index"
+        v-sensorsTrack:webClick="{
+          name: `${item.text}顶部金刚区按钮点击`,
+          track_code: 'SPTG000001',
+        }"
+        class="item"
+        :class="index > 4 ? 'item-no-margin' : ''"
+        @click="
+          () => {
+            $parent.jumpLink(item.url)
+          }
+        "
       >
-        <img :src="item.img" />
-      </div>
-      <div class="item-text">{{ item.text }}</div>
-      <div v-if="item.marketingImg" class="item-marketing">
-        <img :src="item.marketingImg" />
-      </div>
-    </a>
+        <div
+          class="item-img-big"
+          :class="index > 4 ? 'item-img-small' : 'item-img-big'"
+        >
+          <img :src="item.img" />
+        </div>
+        <div class="item-text">{{ item.text }}</div>
+        <div v-if="item.marketingImg" class="item-marketing">
+          <img :src="item.marketingImg" />
+        </div>
+      </a>
+    </div>
   </div>
 </template>
 
@@ -34,51 +41,61 @@ export default {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/axroobu5a740000.png',
           text: '热门公司',
           marketingImg: '',
+          url: '',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/fg2ksxx000o0000.png',
           text: '优质公司',
           marketingImg: '',
+          url: '',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/8jhr24e0irw000.png',
           text: '特价公司',
           marketingImg: '',
+          url: '',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/1zjw4j2cor34000.png',
           text: '精品公司',
           marketingImg: '',
+          url: '',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/1887y4q19x9c000.png',
           text: '人气公司',
           marketingImg: '',
+          url: '',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/7ry6zqnzmtg0000.png',
           text: '科技信息',
           marketingImg: '',
+          url: '',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/5fly9lt75bs0000.png',
           text: '电子贸易',
           marketingImg: '',
+          url: '',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/6ral3star6s0000.png',
           text: '广告传媒',
           marketingImg: '',
+          url: '',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/4dn7hmjqqcq0000.png',
           text: '教育培训',
           marketingImg: '',
+          url: '',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/44l5cj3uoxk0000.png',
           text: '出售公司',
           marketingImg: '',
+          url: '',
         },
       ],
     }

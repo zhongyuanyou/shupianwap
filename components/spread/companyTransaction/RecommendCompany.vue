@@ -1,65 +1,76 @@
 <template>
-  <div class="my-component">
-    <TabCurve
-      ref="tabCurveRef"
-      v-model="currentItem"
-      class="tab-curve"
-      :offset-top="searchDomHeight"
-      :tab-list="tabBtnList"
-      :need-fixed="true"
-      :right="0.54"
-      name-field="name"
-      @selectTabHandle="selectTabHandle"
-    ></TabCurve>
+  <div>
+    <div class="my-component">
+      <TabCurve
+        ref="tabCurveRef"
+        v-model="currentItem"
+        class="tab-curve"
+        :offset-top="searchDomHeight"
+        :tab-list="tabBtnList"
+        :need-fixed="true"
+        :right="0.54"
+        name-field="name"
+        @selectTabHandle="selectTabHandle"
+      ></TabCurve>
 
-    <sp-swipe
-      ref="recomRef"
-      class="my-swipe"
-      :show-indicators="false"
-      @change="onChange"
-    >
-      <sp-swipe-item v-for="(item, index) in tabBtnList" :key="index">
-        <div v-show="index === currentItem">
-          <!-- START 推荐内容滚动区 -->
-          <div
-            class="scroll-recommend"
-            @touchstart="preventTouch"
-            @touchmove="preventTouch"
-          >
-            <div class="marks">
-              <span v-for="(item, index) in marks" :key="index" class="mark">
-                {{ item }}
-              </span>
-            </div>
-          </div>
-          <!-- END   推荐内容滚动区 -->
-
-          <!-- START 推荐商品列表 -->
-          <div ref="goodList" class="goods-list">
-            <sp-skeleton
-              v-for="val in 10"
-              :key="val + 'a'"
-              avatar-shape="square"
-              avatar-size="2.4rem"
-              title
-              title-width="100%"
-              avatar
-              :row="3"
-              :row-width="['80%', '70%', '50%']"
-              :loading="goodList.length > 0 ? false : true"
+      <sp-swipe
+        ref="recomRef"
+        class="my-swipe"
+        :show-indicators="false"
+        @change="onChange"
+      >
+        <sp-swipe-item v-for="(item, index) in tabBtnList" :key="index">
+          <div v-show="index === currentItem">
+            <!-- START 推荐内容滚动区 -->
+            <div
+              class="scroll-recommend"
+              @touchstart="preventTouch"
+              @touchmove="preventTouch"
             >
-            </sp-skeleton>
-            <GoodItem
-              v-for="(good, index) in goodList"
-              :key="index"
-              :good="good"
-            />
+              <div class="marks">
+                <a
+                  v-for="(item, index) in marks"
+                  :key="index"
+                  class="mark"
+                  @click="
+                    () => {
+                      $parent.jumpLink('')
+                    }
+                  "
+                >
+                  {{ item }}
+                </a>
+              </div>
+            </div>
+            <!-- END   推荐内容滚动区 -->
+
+            <!-- START 推荐商品列表 -->
+            <div ref="goodList" class="goods-list">
+              <sp-skeleton
+                v-for="val in 10"
+                :key="val + 'a'"
+                avatar-shape="square"
+                avatar-size="2.4rem"
+                title
+                title-width="100%"
+                avatar
+                :row="3"
+                :row-width="['80%', '70%', '50%']"
+                :loading="goodList.length > 0 ? false : true"
+              >
+              </sp-skeleton>
+              <GoodItem
+                v-for="(good, index) in goodList"
+                :key="index"
+                :good="good"
+              />
+            </div>
+            <!-- END   推荐商品列表 -->
           </div>
-          <!-- END   推荐商品列表 -->
-        </div>
-      </sp-swipe-item>
-    </sp-swipe>
-    <div class="btn"><a>查看更多公司</a></div>
+        </sp-swipe-item>
+      </sp-swipe>
+      <div class="btn"><a>查看更多公司</a></div>
+    </div>
   </div>
 </template>
 
@@ -263,7 +274,7 @@ export default {
 
 .my-component {
   width: 100%;
-  padding-bottom: 40px;
+  padding-bottom: 164px;
   .btn {
     margin: 0 auto;
     width: calc(100% - 80px);
@@ -345,5 +356,9 @@ export default {
   /deep/ .sp-skeleton__content {
     padding-top: 0;
   }
+}
+/deep/ .sp-sticky--fixed {
+  width: @spread-page-width;
+  margin: 0 auto;
 }
 </style>

@@ -16,17 +16,29 @@
     </MyHeader>
     <!-- END   头部Header-->
 
+    <!-- START 导航部-金刚区-->
     <NavBtns class="nav-btn-margin" />
+    <!-- END   导航部-金刚区-->
 
+    <!-- START 轮播Banner-->
     <Banner class="banner-margin" />
+    <!-- END   轮播Banner-->
 
+    <!-- START 表单-->
     <Form />
+    <!-- END   表单-->
 
+    <!-- START 热门行业-->
     <HotIndustry class="banner-margin" />
+    <!-- END   热门行业-->
 
+    <!-- START 附带资产类型-->
     <WithAssetsType class="with-assets-type-margin" />
+    <!-- END   附带资产类型-->
 
+    <!-- START 推荐公司-->
     <RecommendCompany />
+    <!-- END   推荐公司-->
 
     <!-- START 固定底部-->
     <FixedBottom
@@ -49,6 +61,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { plannerApi } from '@/api/spread'
 import MyHeader from '@/components/common/head/header'
 import NavBtns from '@/components/spread/companyTransaction/NavBtns'
 import Banner from '@/components/spread/companyTransaction/Banner'
@@ -80,6 +93,7 @@ export default {
   },
   data() {
     return {
+      // 推荐规划师：默认数据
       pagePlanner: {
         id: '7862495547640840192',
         name: '张毅',
@@ -93,20 +107,20 @@ export default {
     this.getPagePlanner()
   },
   mounted() {
-    const param = {
+    // @--神策埋点-设置公共属性
+    window.sensors.registerPage({
       platform_type: 'H5', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
       product_line: '公司交易聚合页',
       current_url: location.href,
       referrer: document.referrer,
-    }
-    window.sensors.registerPage(param) // 设置公共属性
-
-    // 神策埋点-浏览-一次
+    })
+    // @--神策埋点-浏览事件-只执行一次
     window.sensors.track('pageview', {
       name: `推广公司交易聚合页浏览`,
       track_code: 'SPTG000002',
     })
+    // @--神策埋点-浏览事件-只执行一次
     window.sensors.track('p_plannerBoothVisit', {
       name: `推荐规划师浏览`,
       track_code: 'SPTG000006',
@@ -134,17 +148,25 @@ export default {
         )
       }
     },
-    getPagePlanner() {
-      // const url = 'https://tbigdataapiservice.dgg.cn/planner/recommend'
-      const url = 'https://tmjy.dgg.cn/bigData'
-      this.$axios.get(url).then((res) => {
-        console.log(res.data)
-      })
-      // this.$axios({ url: '/bigData', method: 'get' }).then((res) => {
-      //   console.log(res.data)
-      //   // this.plannerName = res.data.realName
-      //   // this.plannerId = res.data.userCentreId
-      // })
+    async getPagePlanner() {
+      try {
+        const res = await this.$axios.get(`${plannerApi.planner}`)
+        console.log(
+          'plannerApi.planner success：',
+          res.code + '--' + res.message
+        )
+        if (res.code === 200) {
+          this.pagePlanner = {
+            id: res.data.list[0].userCentreId,
+            name: res.data.list[0].realName,
+            jobNum: res.data.list[0].loginName,
+            telephone: res.data.list[0].userPhone,
+            imgSrc: res.data.list[0].userHeadUrl,
+          }
+        }
+      } catch (error) {
+        console.log('plannerApi.planner error：', error.message)
+      }
     },
   },
 }

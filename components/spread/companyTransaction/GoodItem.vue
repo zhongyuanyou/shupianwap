@@ -1,48 +1,54 @@
 <template>
-  <a
-    ref="goodItem"
-    v-sensorsTrack:p_commodityClick="{
-      name: `推荐公司点击`,
-      track_code: 'SPTG000005',
-      commodity_type: good.compantType, // 商品类型
-      commodity_number: good.companyId, // 商品编号
-      commodity_name: good.companyName, // 商品名称
-      n_now_price: good.transferPrice, // 商品售价
-    }"
-    class="my-component"
-  >
-    <div class="item-img"><img :src="data.industryImg" /></div>
-    <div class="item-content">
-      <p class="item-title">{{ data.name }}</p>
-      <div class="item-tabs">
-        <span v-for="(item, index) in data.tabs" :key="index" class="item-tab">
-          {{ item }}
-        </span>
+  <div>
+    <a
+      ref="goodItem"
+      v-sensorsTrack:p_commodityClick="{
+        name: `推荐公司点击`,
+        track_code: 'SPTG000005',
+        commodity_type: good.compantType, // 商品类型
+        commodity_number: good.companyId, // 商品编号
+        commodity_name: good.companyName, // 商品名称
+        n_now_price: good.transferPrice, // 商品售价
+      }"
+      class="my-component"
+    >
+      <div class="item-img"><img :src="data.industryImg" /></div>
+      <div class="item-content">
+        <p class="item-title">{{ data.name }}</p>
+        <div class="item-tabs">
+          <span
+            v-for="(item, index) in data.tabs"
+            :key="index"
+            class="item-tab"
+          >
+            {{ item }}
+          </span>
+        </div>
+        <div class="item-notes">
+          <span
+            v-for="(item, index) in data.notes"
+            :key="index"
+            class="item-note"
+          >
+            {{ item }}
+            <label v-if="index != data.notes.length - 1">|</label>
+          </span>
+        </div>
+        <p class="item-price">
+          <span class="item-price-num">{{ data.price }}</span>
+          <span class="item-price-unit">元</span>
+        </p>
+        <div class="item-divide"></div>
+        <div class="item-recommend">
+          <img
+            class="item-recommend-img"
+            src="https://cdn.shupian.cn/sp-pt/wap/images/e8pqebimcbs0000.png"
+          />
+          <span class="item-recommend-text">{{ data.recommendText }}</span>
+        </div>
       </div>
-      <div class="item-notes">
-        <span
-          v-for="(item, index) in data.notes"
-          :key="index"
-          class="item-note"
-        >
-          {{ item }}
-          <label v-if="index != data.notes.length - 1">|</label>
-        </span>
-      </div>
-      <p class="item-price">
-        <span class="item-price-num">{{ data.price }}</span>
-        <span class="item-price-unit">元</span>
-      </p>
-      <div class="item-divide"></div>
-      <div class="item-recommend">
-        <img
-          class="item-recommend-img"
-          src="https://cdn.shupian.cn/sp-pt/wap/images/e8pqebimcbs0000.png"
-        />
-        <span class="item-recommend-text">{{ data.recommendText }}</span>
-      </div>
-    </div>
-  </a>
+    </a>
+  </div>
 </template>
 
 <script>
