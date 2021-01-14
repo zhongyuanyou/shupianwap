@@ -63,6 +63,7 @@ export default {
     goToPage(index) {
       switch (index) {
         case 0:
+          this.$router.push('/spread/system')
           break
         case 1:
           this.$router.push('/spread/businessCancellation/')
@@ -71,11 +72,13 @@ export default {
           this.$router.push('/spread/businessChange/')
           break
         case 3:
+          this.$router.push('/spread/internetQualification')
           break
         case 4:
           this.$router.push('/spread/agency/')
           break
         case 5:
+          this.$router.push('/spread/bankService')
           break
         default:
           break
