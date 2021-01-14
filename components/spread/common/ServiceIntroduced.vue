@@ -6,6 +6,7 @@
       v-for="(item, index) in serviceList"
       v-show="index > num ? false : true"
       :key="index"
+      v-md-map
       v-sensorsTrack:webClick="{
         eventName: 'wap元素点击',
         type: '售前',
@@ -260,6 +261,7 @@ export default {
     font-weight: bold;
     color: #1a1a1a;
     display: block;
+    line-height: 39px;
   }
   .serviceList-content {
     display: block;

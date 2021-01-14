@@ -8,5 +8,5 @@ var DGGCONFIG = {
     currentDo === 'https://shupian.dgg.cn'
       ? 'https://shence.dgg.cn:6443/sa?project=production'
       : 'https://shence.dgg.cn:6443/sa?token=default', // 请求地址
-  show_log: true, // 打印日志
+  show_log: false, // 打印日志
 }

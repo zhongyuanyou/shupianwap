@@ -16,11 +16,12 @@
       :planners-data="plannersList"
       :planners-common="plannersTitle"
       :page-title="title"
+      md-type="new"
     />
     <!-- 您可能还需要办理 -->
     <Need />
     <!-- 底部导航 -->
-    <Bottom :planner="planner" />
+    <Bottom :planner="planner" md-type="new" :md="fixedMd" />
     <!-- im对话框 -->
     <dgg-im-company></dgg-im-company>
   </div>
@@ -470,6 +471,16 @@ export default {
         imgSrc:
           'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
       },
+      fixedMd: {
+        telMd: {
+          name: '银行服务_钻石展位_拔打电话',
+          type: '售前',
+        },
+        imMd: {
+          name: '银行服务_钻石展位_在线咨询',
+          type: '售前',
+        },
+      },
     }
   },
   created() {
@@ -479,7 +490,7 @@ export default {
   },
   mounted() {
     const param = {
-      platform_type: 'H5', // 平台类型：App，H5，Web
+      platform_type: 'wap端', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
       product_line: 'Wap端银行服务推广页',
       current_url: location.href,

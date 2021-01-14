@@ -233,6 +233,7 @@ a {
 }
 .planner {
   width: @spread-page-width;
+  height: 349px;
   padding: 30px 0 0 40px;
   &-title {
     font-size: 40px;
@@ -243,14 +244,16 @@ a {
     margin-bottom: 32px;
   }
   &-flex {
-    position: relative;
     display: flex;
+    position: relative;
+    height: 207px;
   }
   &-content {
     width: 688px;
     position: absolute;
     left: 0;
     &-item {
+      display: flex;
       &-shadow {
         width: 660px;
         height: 207px;
@@ -261,7 +264,6 @@ a {
         border-radius: 4px;
         display: flex;
         position: relative;
-        border-radius: 8px;
         margin-bottom: 40px;
         &-person {
           margin: 0 -15px 27px 0;

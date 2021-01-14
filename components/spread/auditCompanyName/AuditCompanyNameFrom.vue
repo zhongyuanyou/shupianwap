@@ -3,6 +3,7 @@
     <!--s  查询表单 -->
     <div class="audit-company-name-from">
       <div class="audit-company-name-from__center">
+        <!--s 表单标题 -->
         <h1 class="audit-company-name-from__center__title">
           <i>
             <img
@@ -18,37 +19,54 @@
             />
           </i>
         </h1>
-
+        <!--e 表单标题 -->
         <div class="audit-company-name-from__center__input">
-          <div
-            class="audit-company-name-from__center__input__city"
-            @click="swichCityHandle"
-          >
-            <span>城市</span>
-            <div>{{ cityName ? cityName : '定位中' }}</div>
-            <sp-icon name="arrow-down" />
-          </div>
+          <!-- s城市选择 -->
+          <a href="javascript:;">
+            <div
+              v-sensorsTrack:webClick="{
+                name: `核名表单_城市下拉表单`,
+              }"
+              class="audit-company-name-from__center__input__city"
+              @click="isShowCity = true"
+            >
+              <span>城市</span>
+              <div>{{ cityName ? cityName : '成都' }}</div>
+              <sp-icon name="arrow-down" />
+            </div>
+          </a>
+          <!-- e城市选择 -->
           <sp-cell-group>
+            <!-- s公司名称 -->
             <sp-field
               v-model="companyName"
+              v-sensorsTrack:webClick="{
+                form_name: `核名表单_公司名称`,
+              }"
               label="公司名称"
               :maxlength="5"
               :formatter="companyTest"
               placeholder="3-5个"
             />
+            <!-- e公司名称 -->
+            <!-- s行业选择 -->
             <sp-field
               v-model="industry"
+              v-sensorsTrack:webClick="{
+                form_name: `核名表单_行业下拉表单`,
+              }"
               label="行业"
               placeholder="如技术"
               right-icon="arrow-down"
               readonly
               @click="isShow = true"
             />
+            <!-- s行业选择 -->
           </sp-cell-group>
           <sp-button type="primary" size="large" @click="onInquire"
             >马上查询</sp-button
           >
-          <!-- 核名数据 -->
+          <!-- s 核名数据 -->
           <div class="audit-company-name-from__center__input__audit">
             <p>
               今日核名<span>{{ auditNameSum }}</span
@@ -60,12 +78,22 @@
               >次
             </p>
           </div>
-          <!-- 行业弹窗 -->
+          <!-- e 核名数据 -->
+          <!--s城市弹窗 -->
+          <sp-action-sheet
+            v-model="isShowCity"
+            :actions="city"
+            @select="onCitySelect"
+          />
+          <!--e城市弹窗 -->
+
+          <!-- s行业弹窗 -->
           <sp-action-sheet
             v-model="isShow"
             :actions="actions"
             @select="onSelect"
           />
+          <!-- e行业弹窗 -->
         </div>
       </div>
     </div>
@@ -73,6 +101,7 @@
     <!--s 手机号弹窗 -->
     <div v-show="isOverlay" class="wrapper">
       <div class="wrapper__verify">
+        <!--s 手机号弹窗标题 -->
         <h1>
           <i>
             <img
@@ -89,11 +118,16 @@
             />
           </i>
         </h1>
+        <!-- e 手机号弹窗标题 -->
         <p>千万补贴进行中，公司注册超值优惠</p>
+        <!-- s手机号表单 -->
         <sp-form>
           <sp-cell-group>
             <sp-field
               v-model="tel"
+              v-sensorsTrack:webClick="{
+                form_name: `核名表单_手机号`,
+              }"
               type="tel"
               label="手机号"
               :formatter="telephoneTest"
@@ -102,6 +136,9 @@
             />
             <sp-field
               v-model="sms"
+              v-sensorsTrack:webClick="{
+                form_name: `核名表单_验证码`,
+              }"
               center
               clearable
               type="number"
@@ -111,14 +148,31 @@
               :formatter="formatter"
             >
               <template #button>
-                <sp-button size="small" type="primary" @click="onSmsCode">{{
-                  countdown > 0 ? `${countdown}s` : '获取验证码'
-                }}</sp-button>
+                <sp-button
+                  v-sensorsTrack:webClick="{
+                    form_name: `核名表单_获取验证码`,
+                  }"
+                  size="small"
+                  type="primary"
+                  @click="onSmsCode"
+                  >{{
+                    countdown > 0 ? `${countdown}s` : '获取验证码'
+                  }}</sp-button
+                >
               </template>
             </sp-field>
           </sp-cell-group>
         </sp-form>
-        <sp-button type="primary" size="large" @click="checkFormData"
+        <!-- e 手机号表单 -->
+        <sp-button
+          v-sensorsTrack:p_formSubmit="{
+            event_name: 'p_formSubmit',
+            form_type: '咨询表单',
+            form_name: `核名表单_提交表单`,
+          }"
+          type="primary"
+          size="large"
+          @click="checkFormData"
           >立即获取核名结果</sp-button
         >
       </div>
@@ -159,50 +213,98 @@ export default {
     [Form.name]: Form,
     [CountDown.name]: CountDown,
   },
-  props: {
-    // citynaem: {
-    //   type: Array,
-    //   default: () => [],
-    // },
-  },
+  props: {},
   data() {
     return {
+      city: [
+        {
+          id: 1,
+          name: '成都',
+          color: '#5a79e8',
+        },
+        {
+          id: 2,
+          name: '重庆',
+          color: '#222222',
+        },
+        {
+          id: 3,
+          name: '长沙',
+          color: '#222222',
+        },
+        {
+          id: 4,
+          name: '武汉',
+          color: '#222222',
+        },
+        {
+          id: 5,
+          name: '上海',
+          color: '#222222',
+        },
+        {
+          id: 6,
+          name: '北京',
+          color: '#222222',
+        },
+        {
+          id: 7,
+          name: '深圳',
+          color: '#222222',
+        },
+        {
+          id: 8,
+          name: '广州',
+          color: '#222222',
+        },
+        {
+          id: 9,
+          name: '杭州',
+          color: '#222222',
+        },
+        {
+          id: 10,
+          name: '郑州',
+          color: '#222222',
+        },
+        {
+          id: 11,
+          name: '佛山',
+          color: '#222222',
+        },
+        {
+          id: 12,
+          name: '东莞',
+          color: '#222222',
+        },
+        {
+          id: 13,
+          name: '宜昌',
+          color: '#222222',
+        },
+        {
+          id: 14,
+          name: '石家庄',
+          color: '#222222',
+        },
+      ],
       companyName: '',
       industry: '',
       isShow: false,
       isOverlay: false,
+      isShowCity: false,
       sms: '',
       tel: '',
+      cityName: '成都',
       countdown: -1, // 发送验证码倒计时60秒
       countdownTimer: null,
       actions: [{ name: '选项一' }, { name: '选项二' }, { name: '选项三' }],
-      // 站点列表
-      cityData: {
-        type: Array,
-        default: () => {
-          return []
-        },
-      },
       addUpAuditNameSum: 69201,
       auditNameSum: 118, // 每日默认
     }
   },
-  computed: {
-    ...mapState({
-      cityName: (state) => state.city.currentCity.name,
-    }),
-  },
-  watch: {
-    cityData(arr) {
-      // 初始化定位
-      if (arr.length && !this.cityName) {
-        this.POSITION_CITY({
-          type: 'init',
-          cityList: arr,
-        })
-      }
-    },
-  },
+  computed: {},
+  watch: {},
 
   methods: {
     ...mapActions({
@@ -210,13 +312,10 @@ export default {
       GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
     }),
     // 选择城市
-    swichCityHandle() {
-      // if (!this.cityName) {
-      //   return
-      // }
-      this.$router.push('/city/choiceCity')
+    onCitySelect(item) {
+      this.cityName = item.name
+      this.isShowCity = false
     },
-
     //  行业选择
     onSelect(item) {
       // 默认情况下点击选项时不会自动收起
@@ -224,7 +323,7 @@ export default {
       this.industry = item.name
       this.isShow = false
     },
-    // 表单提交
+    //  手机号弹窗提交
     onInquire() {
       if (this.cityName === undefined) {
         this.$router.push('/city/choiceCity')
@@ -236,7 +335,7 @@ export default {
         this.isOverlay = true
       }
     },
-    //  手机号弹窗提交
+    // 表单提交
     checkFormData() {
       if (this.tel === '') {
         Toast('手机号不能为空')
@@ -268,6 +367,7 @@ export default {
         }
         window.promotion.privat.consultForm(params, (res) => {
           if (res.error === 0) {
+            console.log(params)
             // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
             Toast('提交成功，请注意接听电话')
             this.isOverlay = false
@@ -275,6 +375,11 @@ export default {
             this.industry = ''
             this.companyName = ''
             this.countdown = -1
+            window.sensors.track('p_fromSubmitResult', {
+              even_name: 'p_fromSubmitResult',
+              from_type: '咨询表单',
+              from_name: '核名表单_提交表单',
+            })
           } else {
             this.countdown = -1
             Toast(res.msg)
@@ -290,7 +395,6 @@ export default {
       if (!checkPhone(this.tel)) {
         Toast('手机号格式错误')
       } else if (this.countDown > -1) {
-        console.log(this.countDown)
         Toast('验证码已发送')
       } else {
         const _data = {
@@ -359,6 +463,15 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+a {
+  text-decoration: none;
+  color: inherit;
+}
+.sp-popup--bottom {
+  max-width: 750px;
+  margin: 0 auto;
+  right: 0;
+}
 .audit-company-name-from {
   position: absolute;
   top: 410px;
@@ -411,7 +524,7 @@ export default {
           font-size: 30px;
           color: rgba(204, 204, 204, 1);
           position: absolute;
-          top: 30px;
+          top: 28px;
           right: 24px;
         }
       }
@@ -457,7 +570,7 @@ export default {
                 color: rgba(204, 204, 204, 1);
                 position: absolute;
                 top: 31%;
-                right: 24px;
+                right: 23px;
               }
             }
           }

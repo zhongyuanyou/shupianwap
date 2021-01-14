@@ -1,6 +1,5 @@
 <template>
   <div class="planner">
-    <div class="planner-title">{{ plannersCommon.title }}</div>
     <div class="planner-flex">
       <!--   老埋点   -->
       <sp-swipe
@@ -227,10 +226,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-a {
-  text-decoration: none;
-  color: inherit;
-}
 .planner {
   width: @spread-page-width;
   padding: 30px 0 0 40px;
@@ -245,6 +240,7 @@ a {
   &-flex {
     position: relative;
     display: flex;
+    height: 207px;
   }
   &-content {
     width: 688px;
@@ -261,8 +257,6 @@ a {
         border-radius: 4px;
         display: flex;
         position: relative;
-        border-radius: 8px;
-        margin-bottom: 40px;
         &-person {
           margin: 0 -15px 27px 0;
           width: 180px;
@@ -363,5 +357,9 @@ a {
     right: 24px;
     z-index: -1;
   }
+}
+a {
+  text-decoration: none;
+  color: inherit;
 }
 </style>
