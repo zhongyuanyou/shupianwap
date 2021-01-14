@@ -17,7 +17,7 @@
     <!-- END   热门办理业务-->
 
     <!-- START 规划师-->
-    <GuiHuaShiSwipe planners-common="{title: ''}" />
+    <GuiHuaShiSwipe :planners-common="{ title: '' }" />
     <!-- END   规划师-->
 
     <!-- START 热门行业推荐-->
@@ -38,7 +38,7 @@
     <!-- END   服务流程-->
 
     <!-- START 咨询规划师-->
-    <GuiHuaShiSwipe planners-common="{title: '咨询规划师'}" />
+    <GuiHuaShiSwipe :planners-common="{ title: '咨询规划师' }" />
     <!-- END   咨询规划师-->
 
     <!-- START 你可能还需要办理-->
@@ -156,6 +156,34 @@ export default {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/coj92paiae00000.png',
             text: ['注册资金100万', '有安全保障措施'],
           },
+        },
+      ],
+      pagePlanner: {
+        id: '7862495547640840192',
+        name: '张毅',
+        jobNum: '107547',
+        telephone: '18402858698',
+        imgSrc: '',
+      },
+      fixedBottomMd: {
+        telMd: {
+          name: '工商聚合页_底部_电话联系',
+        },
+        imMd: {
+          name: '工商聚合页_底部_在线咨询',
+          type: '售前',
+        },
+      },
+      guiHuaShiList: [
+        {
+          id: '7862495547640840192',
+          avatarImg: '',
+          name: '张毅',
+          shuPianFen: 11,
+          serverNum: 250,
+          telephone: 12345679985,
+          labels: ['工商注册', '财税咨询', '税务筹划'],
+          jobNum: '107547',
         },
       ],
     }
