@@ -1,7 +1,7 @@
 <template>
   <div class="page-content">
     <!-- S 头部 -->
-    <Header ref="headerRef" title="轻松找服务" />
+    <Header ref="headerRef" title="" />
     <!-- E 头部 -->
     <!-- 1、START 头部Header-->
     <!--    <Header title="" :fixed="true" head-class="head-icon">-->
@@ -77,6 +77,18 @@ export default {
     // ...mapState({
     //   currentCity: (state) => state.city.currentCity.name || '成都',
     // }),
+  },
+  watch: {
+    $route: {
+      handler(to, from) {
+        if (to.path === '/spread/myDemandCard') {
+          this.$nextTick(() => {
+            localStorage.removeItem('formData')
+          })
+        }
+      },
+      immediate: true,
+    },
   },
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'NeedCard' })

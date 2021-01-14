@@ -1,6 +1,6 @@
 <template>
   <div class="center">
-    <Header ref="headerRef" title="公司交易" @backHandle="backHandle" />
+    <Header ref="headerRef" title="轻松找服务" />
     <!--  banner  -->
     <banner></banner>
     <!--  banner  -->
@@ -27,11 +27,6 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
-  },
-  methods: {
-    backHandle() {
-      localStorage.removeItem('formData')
-    },
   },
   head() {
     return {

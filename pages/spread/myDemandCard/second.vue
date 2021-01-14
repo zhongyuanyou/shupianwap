@@ -70,6 +70,7 @@ import { userinfoApi, consult } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import Header from '@/components/common/head/header'
 export default {
+  layout: 'keepAlive',
   name: 'Second',
   components: {
     [Field.name]: Field,

@@ -1,6 +1,6 @@
 <template>
   <div class="audit">
-    <Header ref="headerRef" title="审计业务" @backHandle="backHandle" />
+    <Header ref="headerRef" title="轻松找服务" />
     <HeaderNeed />
     <Content />
   </div>
@@ -30,11 +30,6 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
-  },
-  methods: {
-    backHandle() {
-      localStorage.removeItem('formData')
-    },
   },
 }
 </script>

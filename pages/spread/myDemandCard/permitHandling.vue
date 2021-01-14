@@ -1,6 +1,6 @@
 <template>
   <div class="permit-handling">
-    <Header ref="headerRef" title="许可证办理" @backHandle="backHandle" />
+    <Header ref="headerRef" title="轻松找服务" />
     <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理的许可证业务 -->
@@ -138,9 +138,6 @@ export default {
     }
   },
   methods: {
-    backHandle() {
-      localStorage.removeItem('formData')
-    },
     // 城市
     onCity(val) {
       this.cityVal = val
@@ -166,6 +163,11 @@ export default {
           主要决策人: this.isDecision,
           办理时间: this.handlingTime,
         },
+      }
+      const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
+      // 合并两个页面之间缓存的数据
+      if (localStorageFormData) {
+        data.content = Object.assign(localStorageFormData.content, data.content)
       }
       // 本地存储数据
       const obj = JSON.stringify(data)

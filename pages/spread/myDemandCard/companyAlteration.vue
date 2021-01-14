@@ -1,6 +1,6 @@
 <template>
   <div class="company-alteration">
-    <Header ref="headerRef" title="工商变更" @backHandle="backHandle" />
+    <Header ref="headerRef" title="轻松找服务" />
     <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理哪项业务的变更服务 -->
@@ -202,9 +202,6 @@ export default {
     }
   },
   methods: {
-    backHandle() {
-      localStorage.removeItem('formData')
-    },
     // 城市
     onCity(val) {
       if (val.code !== undefined) this.cityVal = val
@@ -227,15 +224,21 @@ export default {
       this.handlingTime = item.name
     },
     onButton() {
+      let content = {
+        bgxm: this.permission,
+        注册区域: this.district,
+        身份: this.identity,
+        办理时间: this.handlingTime,
+      }
+      const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
+      // 合并两个页面之间缓存的数据
+      if (localStorageFormData) {
+        content = Object.assign(localStorageFormData.content, content)
+      }
       const obj = JSON.stringify({
         type: 'gsbg',
         url: window.location.href,
-        content: {
-          bgxm: this.permission,
-          注册区域: this.district,
-          身份: this.identity,
-          办理时间: this.handlingTime,
-        },
+        content,
       })
       localStorage.setItem('formData', obj)
       this.$router.push({ path: '/spread/myDemandCard/second' })
