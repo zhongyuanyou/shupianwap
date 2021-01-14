@@ -80,7 +80,7 @@ export default {
         {
           code: 4,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/akgnqp1al0g0000.jpg',
-          url: '',
+          url: '/spread/internetQualification',
           title: '互联网资质',
         },
         {
