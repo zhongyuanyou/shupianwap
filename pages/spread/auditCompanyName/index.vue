@@ -1,7 +1,7 @@
 <template>
   <div class="audit-company-name">
     <!-- s 头部导航 -->
-    <Header :title="title">
+    <Header v-show="!isInApp" :title="title">
       <template #left>
         <div @click="back">
           <my-icon
