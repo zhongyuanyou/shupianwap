@@ -261,6 +261,7 @@ export default {
     font-weight: bold;
     color: #1a1a1a;
     display: block;
+    line-height: 39px;
   }
   .serviceList-content {
     display: block;
