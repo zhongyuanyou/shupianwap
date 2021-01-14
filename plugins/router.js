@@ -31,30 +31,33 @@ const infoList = [
 // }
 export default ({ app, store }) => {
   app.router.beforeEach((to, from, next) => {
-    if (process.client) {
-      const loginRoutePath = '/login' // 登录路由
-      const defaultRoutePath = '/' // 首页路由
-      // 路由守卫
-      const token = app.$cookies.get('token') // 获取缓存用户token
-      if (!store.state.app.isInApp) {
-        if (token) {
-          if (to.path === loginRoutePath) {
-            // 如果跳转登录页面，将被重定向到首页
-            next({
-              path: defaultRoutePath,
-            })
-          } else {
-            next()
-          }
-        } else if (routerBlackList.includes(to.path)) {
+    const loginRoutePath = '/login' // 登录路由
+    const defaultRoutePath = '/' // 首页路由
+    // 第三方跳转登录页清除token
+    if (to.query.sourcePlatform) {
+      store.dispatch('user/clearUser')
+    }
+    // 路由守卫
+    const token = app.$cookies.get('token') // 获取缓存用户token
+    if (!store.state.app.isInApp) {
+      if (token) {
+        if (to.path === loginRoutePath) {
+          // 如果跳转登录页面，将被重定向到首页
           next({
-            path: loginRoutePath,
-            query: { redirect: to.path },
+            path: defaultRoutePath,
           })
         } else {
           next()
         }
+      } else if (routerBlackList.includes(to.path)) {
+        next({
+          path: loginRoutePath,
+          query: { redirect: to.path },
+        })
       } else {
+        next()
+      }
+      if (process.client) {
         // 验证跳转页面是否嵌入app中后是否需获取app中到用户详情
         // eslint-disable-next-line no-lonely-if
         if (store.state.app.isInApp && infoList.includes(to.name)) {

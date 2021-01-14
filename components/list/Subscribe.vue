@@ -150,6 +150,7 @@ export default {
         return
       }
       if (!this.isSendSMS) {
+        this.$xToast.showLoading({ message: '发送中' })
         // 获取验证码
         const params = {
           phone: this.tel,
@@ -160,10 +161,12 @@ export default {
           .then((res) => {
             this.isSendSMS = true
             this.countDown()
+            this.$xToast.hideLoading()
           })
-          .catch(() => {
+          .catch((e) => {
+            this.$xToast.hideLoading()
             this.$xToast.show({
-              message: '网络错误，请稍后再试',
+              message: e.message,
               duration: 1000,
               icon: 'toast_ic_error',
               forbidClick: true,
@@ -196,7 +199,6 @@ export default {
           this.cmsAddConsultHandle()
         })
         .catch((e) => {
-          console.log(e)
           this.$xToast.hideLoading()
           this.$xToast.show({
             message: e.message,
