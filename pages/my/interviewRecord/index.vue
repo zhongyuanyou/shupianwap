@@ -1,16 +1,23 @@
 <template>
   <div class="interview">
-    <sp-sticky v-if="!isInApp">
-      <sp-top-nav-bar title="面谈记录" ellipsis @on-click-left="back">
-        <template #left>
-          <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-          </div>
-        </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
+    <Header title="面谈记录">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <div class="body">
-      <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <sp-pull-refresh
+        v-model="refreshing"
+        style="min-height: calc(100vh - 88px)"
+        @refresh="onRefresh"
+      >
         <sp-list
           v-model="loading"
           :finished="finished"
@@ -37,12 +44,16 @@
                 <div class="item-info_detail">
                   <h4>
                     <span class="name">{{ item.inviterName }}</span>
-                    <span class="title">
-                      <span class="title-content">
-                        <i class="icon gold_icon"></i>
-                        <i class="icon certificates_icon"></i>
-                      </span>
-                    </span>
+                    <div class="title">
+                      <div class="title-content">
+                        <div class="gold">金牌规划师</div>
+                        <img
+                          :src="$ossImgSet(20, 14, '48gdkcbncui0000.png')"
+                          alt=""
+                          style="margin-top: 0.06rem"
+                        />
+                      </div>
+                    </div>
                   </h4>
                   <p>
                     面谈时间：<span>{{ item.inviteTime }}</span>
@@ -106,7 +117,7 @@
                 >您在{{ item.cancelTime }}已取消面谈</span
               >
               <span v-else-if="item.inviteStatus === 3">您已取消面谈</span>
-              <span v-else>您在{{ item.completeTime }}已完成面谈</span>
+              <span v-else>您在{{ item.confirmCompleteTime }}已完成面谈</span>
             </div>
           </sp-cell>
         </sp-list>
@@ -139,7 +150,7 @@ import {
 import { mapState } from 'vuex'
 import { interviewApi, publicApi } from '~/api'
 import imHandle from '@/mixins/imHandle'
-// import { parseTel } from '~/utils/common'
+import Header from '@/components/common/head/header'
 
 export default {
   name: 'Interview',
@@ -153,6 +164,7 @@ export default {
     [Sticky.name]: Sticky,
     [TopNavBar.name]: TopNavBar,
     [CenterPopup.name]: CenterPopup,
+    Header,
   },
   mixins: [imHandle],
   data() {
@@ -190,6 +202,10 @@ export default {
   },
   methods: {
     back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
       this.$router.back()
     },
     // 查看规划师详情
@@ -211,7 +227,11 @@ export default {
         }
         const res = await this.$axios.get(publicApi.descrptionPhone, { params })
         if (res.code === 200 && res.data) {
-          window.location.href = 'tel:' + res.data
+          if (this.isInApp) {
+            this.$appFn.dggCallPhone({ phone: res.data }, (res) => {})
+          } else {
+            window.location.href = 'tel:' + res.data
+          }
         }
       } catch (err) {}
     },
@@ -229,29 +249,44 @@ export default {
         const params = {
           id: this.interId,
           type: 0,
+          userId: this.userId,
         }
         const res = await this.$axios.post(interviewApi.cancel, params)
         if (res.code === 200) {
           this.page = 1
-          this.list = []
           this.getInterviewList()
         }
       } catch (err) {}
     },
-    async onLoad() {
+    async onLoad(isRefresh) {
+      if (isRefresh) {
+        this.refreshing = true
+      }
       const page = this.page++
       const params = {
         limit: this.limit,
+        userId: this.userId,
         page,
       }
       const res = await this.$axios.get(interviewApi.list, { params })
+      this.refreshing = false
       if (res.code === 200) {
-        if (res.data.records.length) {
+        if (isRefresh) {
+          this.loading = true
+          // this.finished = false
+
+          this.list = res.data.records || null
+          if (!this.list || !this.list.length) {
+            this.finished = true
+          }
+        } else if (res.data.records.length) {
           this.loading = false
           this.list = this.list.concat(res.data.records)
         } else {
           this.finished = true
         }
+      } else {
+        this.finished = true
       }
     },
     onRefresh() {
@@ -261,25 +296,37 @@ export default {
       // // 重新加载数据
       // // 将 loading 设置为 true，表示处于加载状态
       // this.loading = true
-      // this.onLoad()
+      this.page = 1
+      this.onLoad(true)
     },
     async getInterviewList() {
       // 获取面谈记录列表
       const params = {
         limit: this.limit,
-        page: this.page,
+        page: 1,
+        userId: this.userId,
       }
       const res = await this.$axios.get(interviewApi.list, { params })
-      this.list = res.data.records
+      if (res.code === 200) {
+        this.list = res.data.records
+      }
     },
     handleClick(item) {
       // 点击面谈记录
-      this.$router.push(`/my/interviewRecord/${item.id}`)
+      this.$router.push(`/my/interviewRecord/confirm/${item.id}`)
     },
     handleIm(item) {
       // 调起IM
-      const imUserId = this.userId // 商户用户ID
+      const imUserId = item.inviterId // 商户用户ID
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      const imUserName = item.inviterName
+      if (this.isInApp) {
+        this.$appFn.dggOpenIM(
+          { name: imUserName, userId: imUserId, userType: imUserType },
+          (res) => {}
+        )
+        return
+      }
       this.creatImSessionMixin({ imUserId, imUserType })
     },
   },
@@ -294,6 +341,9 @@ export default {
 .interview {
   height: 100%;
   overflow-y: scroll;
+  .back_icon {
+    margin-left: 40px;
+  }
   .body {
     padding: 0;
     /deep/.sp-cell {
@@ -325,6 +375,10 @@ export default {
             }
             .title {
               position: relative;
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              flex-direction: row;
               .title-content {
                 position: absolute;
                 left: 0;
@@ -332,22 +386,30 @@ export default {
                 white-space: nowrap;
                 z-index: 1;
                 line-height: 1;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                flex-direction: row;
+                .gold {
+                  width: 144px;
+                  height: 32px;
+                  background: linear-gradient(135deg, #ffeab9, #edcf98);
+                  border: 1px solid #dfb45a;
+                  border-radius: 14px;
+                  margin-top: 6px;
+                  text-align: center;
+                  font-size: 18px;
+                  font-family: PingFang SC;
+                  font-weight: bold;
+                  color: #9b6809;
+                  line-height: 32px;
+                  margin-right: 8px;
+                }
                 .icon {
                   margin-right: 8px;
                   &:last-child {
                     margin-right: 0;
                   }
-                }
-                .gold_icon {
-                  width: 114px;
-                  height: 28px;
-                  line-height: 28px;
-                  background-image: url('~assets/images/planner/per_img_gold.png');
-                }
-                .certificates_icon {
-                  width: 40px;
-                  height: 28px;
-                  background-image: url('~assets/images/planner/per_img_certificates.png');
                 }
               }
             }

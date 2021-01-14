@@ -1,26 +1,26 @@
 <template>
   <div class="address">
     <!--S 头部-->
-    <sp-sticky v-if="!isInApp">
-      <sp-top-nav-bar
-        :title="$route.params.type === 'add' ? '新增收货地址' : '编辑收货地址'"
-        left-arrow
-        ellipsis
-        :fixed="true"
-        :right-text="$route.params.type === 'edit' ? '删除' : null"
-        @on-click-left="onClickLeft"
-        @on-click-right="onClickRight"
-      >
-        <template #left>
-          <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
-          </div>
-        </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
+    <Header
+      :title="$route.params.type === 'add' ? '新增收货地址' : '编辑收货地址'"
+    >
+      <template #left>
+        <div @click="onClickLeft">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+      <template v-if="$route.params.type === 'edit'" #right>
+        <p class="process" @click="onClickRight">删除</p>
+      </template>
+    </Header>
     <!--E 头部-->
     <!--S 内容-->
-    <div class="address_con" :style="{ paddingTop: isInApp ? 0 : '0.88rem' }">
+    <div class="address_con">
       <sp-form class="address_con_tp">
         <sp-field
           v-model="ruleForm.contactName"
@@ -39,7 +39,7 @@
           center
           type="number"
           label="手机号"
-          :maxLength="11"
+          maxlength="11"
           placeholder="请填写收货人手机号"
         >
         </sp-field>
@@ -88,6 +88,8 @@
       @confirm="confirm"
     />
     <!--E 弹框-->
+    <sp-toast ref="spToast"></sp-toast>
+    <Loading-center v-show="loading" />
   </div>
 </template>
 
@@ -107,6 +109,9 @@ import {
 import { mapState } from 'vuex'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
 import { userinfoApi } from '@/api'
+import Header from '@/components/common/head/header'
+import SpToast from '@/components/common/spToast/SpToast'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'Id',
   components: {
@@ -121,6 +126,9 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [Sticky.name]: Sticky,
     AreaSelect,
+    Header,
+    LoadingCenter,
+    SpToast,
   },
   data() {
     return {
@@ -138,6 +146,7 @@ export default {
       },
       areaList: [], // 地区集合
       areaTxt: '', // 地区字符串
+      loading: false,
     }
   },
   computed: {
@@ -171,7 +180,7 @@ export default {
     handleEnd(val) {
       // 点击右边区域
       if (val === 1) {
-        this.ruleForm.name = ''
+        this.ruleForm.contactName = ''
       } else if (val === 2) {
         this.$appFn.dggLocation((res) => {
           // 拿到app定位后端数据并赋值
@@ -227,14 +236,48 @@ export default {
     },
     handleSave() {
       // 保存
-      if (this.$route.params.type === 'edit') {
-        this.saveEdit()
-        return
+      const req = /^1[3|4|5|6|7|8|9][0-9]{9}$/
+      if (!this.ruleForm.contactName) {
+        this.$refs.spToast.show({
+          message: '请填写收货人姓名',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else if (!this.ruleForm.phone) {
+        this.$refs.spToast.show({
+          message: '请填写收货人手机号',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else if (!req.test(this.ruleForm.phone)) {
+        this.$refs.spToast.show({
+          message: '手机号格式不正确，请重新输入',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else if (!this.areaTxt) {
+        this.$refs.spToast.show({
+          message: '请填写收货地址',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else if (!this.ruleForm.address) {
+        this.$refs.spToast.show({
+          message: '请填写详细地址',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else {
+        if (this.$route.params.type === 'edit') {
+          this.saveEdit()
+          return
+        }
+        this.saveNew()
       }
-      this.saveNew()
     },
     async saveEdit() {
       // 保存编辑内容
+      this.loading = true
       this.ruleForm.defaultAddress = this.ruleForm.defaultAddress ? 1 : 0
       const params = {
         ...this.ruleForm,
@@ -243,12 +286,24 @@ export default {
         addressArea: '',
       }
       try {
-        await this.$axios.post(userinfoApi.updateAddress, params)
-        this.$router.back()
-      } catch (err) {}
+        const res = await this.$axios.post(userinfoApi.updateAddress, params)
+        this.loading = false
+        if (res.code === 200) {
+          this.$router.back()
+        } else {
+          this.$refs.spToast.show({
+            message: res.message,
+            duration: 1500,
+            forbidClick: true,
+          })
+        }
+      } catch (err) {
+        this.loading = false
+      }
     },
     async saveNew() {
       // 保存新增内容
+      this.loading = true
       this.ruleForm.defaultAddress = this.ruleForm.defaultAddress ? 1 : 0
       const params = {
         ...this.ruleForm,
@@ -258,9 +313,20 @@ export default {
         userId: this.userId,
       }
       try {
-        await this.$axios.post(userinfoApi.updateAddress, params)
-        this.$router.back()
-      } catch (err) {}
+        const res = await this.$axios.post(userinfoApi.updateAddress, params)
+        this.loading = false
+        if (res.code === 200) {
+          this.$router.back()
+        } else {
+          this.$refs.spToast.show({
+            message: res.message,
+            duration: 1500,
+            forbidClick: true,
+          })
+        }
+      } catch (err) {
+        this.loading = false
+      }
     },
     async confirm() {
       // 确定删除
@@ -272,6 +338,11 @@ export default {
         this.$router.back()
       } catch (err) {}
     },
+    clearName() {
+      // 清除名称
+      console.log(123)
+      this.ruleForm.contactName = ''
+    },
   },
 }
 </script>
@@ -281,11 +352,20 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #f8f8f8;
+  .back_icon {
+    margin-left: 40px;
+  }
+  .process {
+    font-size: 28px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #1a1a1a;
+    margin-right: 40px;
+  }
   /deep/ .sp-top-nav-bar {
     height: 88px;
   }
   &_con {
-    padding-top: 88px;
     display: flex;
     flex-direction: column;
     padding-bottom: 160px;

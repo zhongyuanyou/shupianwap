@@ -1,5 +1,6 @@
 import auth from './auth'
 import shoppingCar from './shoppingCar'
+import consult from './consult'
 import planner from './planner'
 import category from './category'
 import { userinfoApi } from './userInfo' // 用户信息接口
@@ -20,6 +21,7 @@ import { ossApi } from './oss'
 export { auth, shoppingCar, planner }
 export { category }
 export { userinfoApi }
+export { consult }
 export { goods }
 export { homeApi }
 export { foundApi }

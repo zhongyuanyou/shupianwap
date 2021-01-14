@@ -20,6 +20,7 @@ if (NODE_ENV === 'production') {
   bablePlugin.push('transform-remove-console')
 }
 module.exports = {
+  telemetry: false,
   server: {
     port: 3001, // default: 3001
     host: 'localhost', // default: localhost,
@@ -114,7 +115,7 @@ module.exports = {
     { src: '@/plugins/router', ssr: false },
     { src: '@/plugins/dgg-md', ssr: false },
     { src: '@/plugins/my-icon', ssr: true },
-    // { src: '@/plugins/vconsole', ssr: false },
+    { src: '@/plugins/vconsole', ssr: false },
     { src: '@/plugins/app-sdk', ssr: false },
     { src: '@/plugins/lazyload', ssr: true },
     { src: '@/plugins/oss', ssr: true },
@@ -147,6 +148,15 @@ module.exports = {
         '^/api': '/', // 把 /api 替换成 /
       },
     },
+    '/gdmap': {
+      target: 'https://restapi.amap.com', // 高德地图代理
+      secure: false,
+      changeOrigin: true, // 表示是否跨域
+      logLevel: 'debug',
+      pathRewrite: {
+        '^/gdmap': '/',
+      },
+    },
   },
   build: {
     transpile: [/vant.*?less/],
@@ -166,6 +176,7 @@ module.exports = {
     babel: {
       plugins: bablePlugin,
     },
+    extractCSS: { ignoreOrder: true },
     loaders: {
       less: {
         // VantUI 定制主题配置

@@ -40,7 +40,9 @@ export default {
         window.pageYOffset ||
         document.documentElement.scrollTop ||
         document.body.scrollTop
-      if (scrollTop > 820 && scrollTop < this.recommendTop) {
+      const showScollHeight =
+        this.$parent.$refs.showScollHeight.$el.offsetTop - this.headHeight
+      if (scrollTop > showScollHeight && scrollTop < this.recommendTop) {
         this.btnData.isShow = true
         this.btnData.text = '推荐'
         this.btnData.iconName = 'buoy_ic_recom'

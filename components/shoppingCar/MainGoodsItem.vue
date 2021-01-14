@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-31 17:36:37
+ * @LastEditTime: 2021-01-08 09:40:51
  * @Description: file content
- * @FilePath: /chips-wap/client/components/shoppingCar/MainGoodsItem.vue
+ * @FilePath: /chips-wap/components/shoppingCar/MainGoodsItem.vue
 -->
 <template>
   <div class="main-goods-item">
@@ -37,18 +37,26 @@
           <span class="big-value">{{ mainData.price }}</span>
           <span class="unit">元</span>
         </span>
+
         <sp-stepper
           integer
           step="1"
           button-size="0.40rem"
           input-width="0.80rem"
           min="1"
+          class="goods-count-stepper"
           :value="goodsCount"
-          :max="!mainData.numFlag && mainData.maxNum ? mainData.maxNum : 99"
+          :max="maxNum"
           :async-change="true"
+          :disabled="
+            mainData &&
+            mainData.serviceResourceList &&
+            mainData.serviceResourceList.length >= 1
+          "
           @change="handleCountChange"
           @focus="handleCountFoucs"
           @blur="handleCountBlur"
+          @overlimit="handleOverlimit"
         />
       </div>
       <div v-if="mainData.addServiceList.length" class="goods-service">
@@ -64,9 +72,9 @@
             }}</span>
             <span class="goods-service__content"></span>
             <span class="goods-service__count">{{
-              `${
-                addService.serviceItemName ? addService.serviceItemName : '--'
-              }元  x${addService.num}`
+              `${addService.price ? addService.price : '--'}元  x${
+                addService.num
+              }`
             }}</span>
           </div>
         </div>
@@ -86,6 +94,12 @@ import {
   Tag,
   Stepper,
 } from '@chipspc/vant-dgg'
+
+const SHOP_RESTRICTION = {
+  unrestricted: 'PRO_SHOP_RESTRICTION_ALL', // 无限制
+  restrictedNumber: 'PRO_SHOP_RESTRICTION_NUMBER', // 限制数量
+  forbid: 'PRO_SHOP_RESTRICTION_NO', // 禁止购买
+}
 
 export default {
   name: 'MainGoodsItem',
@@ -116,6 +130,15 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
     }),
+
+    maxNum() {
+      const { numFlag, maxNum } = this.mainData || {}
+      let max =
+        numFlag === SHOP_RESTRICTION.restrictedNumber && maxNum ? maxNum : 99
+      max = Number(max)
+      if (isNaN(max)) max = 1
+      return max
+    },
   },
   watch: {
     // 'mainData.goodsNumber': {
@@ -163,13 +186,13 @@ export default {
         data: { value },
       })
     },
-    // 输入框失去焦点
+    // 输入框获取焦点
     handleCountFoucs() {
       console.log('handleCountFoucs')
       this.countStatus = 'foucs'
     },
 
-    // 输入框获取焦点
+    // 输入框失去焦点
     handleCountBlur() {
       console.log('handleCountBlur')
       const value = this.goodsCount
@@ -180,6 +203,32 @@ export default {
         })
       }
       this.countStatus = 'blur'
+    },
+
+    // 超过购买限制后的触发
+    handleOverlimit(action) {
+      const { serviceResourceList = [] } = this.mainData || {}
+      let message = ''
+      switch (action) {
+        case 'minus':
+          message = '已经是最小购买数了'
+          break
+        case 'plus':
+          message = '已经是最大购买数了'
+          break
+      }
+      if (
+        Array.isArray(serviceResourceList) &&
+        serviceResourceList.length >= 1
+      ) {
+        message = '选择资源服务后，商品数量不能修改'
+      }
+      this.$xToast.show({
+        message,
+        duration: 1000,
+        icon: 'toast_ic_remind',
+        forbidClick: true,
+      })
     },
 
     // 跳转到详情页面
@@ -345,6 +394,9 @@ export default {
           &::after {
             background-color: #cccccc;
           }
+        }
+        &__input:disabled {
+          color: #1a1a1a;
         }
       }
     }

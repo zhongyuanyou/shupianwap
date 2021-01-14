@@ -9,6 +9,8 @@ export default function ({ app, req, redirect, route, store }) {
             req.headers['user-agent'].split('AppInfo:')[1]
           )
           store.dispatch('app/setAppInfo', info)
+          const platform = req.headers['user-agent'].split('AppInfo:')[0]
+          store.dispatch('app/setAppPlatform', platform)
         }
       }
     }

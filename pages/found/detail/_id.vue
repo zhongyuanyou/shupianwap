@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <!--S 导航-->
-    <Header v-if="!isInApp">
+    <Header title="">
       <template #left>
         <div @click="back">
           <my-icon
@@ -83,6 +83,7 @@ import {
 import { mapState } from 'vuex'
 import { foundApi } from '~/api'
 import Header from '@/components/common/head/header'
+import { copyToClipboard } from '~/utils/common'
 
 export default {
   layout: 'keepAlive',
@@ -128,7 +129,16 @@ export default {
   methods: {
     back() {
       // 返回上一页
-      this.$router.back()
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/found')
+        return false
+      } else {
+        this.$router.back()
+      }
     },
     async getInfoDetail() {
       // 获取资讯详情
@@ -144,12 +154,30 @@ export default {
       } catch (err) {}
     },
     onClickRight() {
+      console.log(this.info)
+      if (this.isInApp) {
+        this.$appFn.dggShare(
+          {
+            image: this.info.imageUrl,
+            title: this.info.title,
+            subTitle: '',
+            url: window && window.location.href,
+          },
+          (res) => {}
+        )
+        return
+      }
       this.showShare = true
     },
     handleSelect(option, index) {
       // 点击分享
       if (option.name === '链接') {
-        console.log('index', option)
+        const result = copyToClipboard(location.href)
+        if (result) {
+          this.$xToast.success('链接复制成功')
+          return
+        }
+        this.$xToast.error('链接复制失败,请重试')
       }
     },
   },
@@ -160,6 +188,10 @@ export default {
 .detail {
   /deep/ img {
     max-width: 100%;
+  }
+  /deep/ p {
+    word-wrap: break-word;
+    word-break: normal;
   }
   .back_icon {
     margin-left: 40px;

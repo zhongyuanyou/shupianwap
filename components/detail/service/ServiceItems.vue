@@ -121,6 +121,9 @@ export default {
       span {
         font-weight: 400;
         color: #999999;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       em {
         font-weight: 400;
@@ -129,6 +132,9 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        flex: 1;
+        padding-left: 20px;
+        text-align: right;
       }
     }
   }

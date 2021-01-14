@@ -54,28 +54,17 @@ export default {
     }
   },
   watch: {
-    selectValue(val) {
-      if (JSON.stringify(val) !== '{}') {
-        this.dropdownTitle = val.name
-        this.moreTextCss = 'jyDropdownFilter active'
-        // 如果文字大于4个字需要添加样式
-        /* if (val.name.length >= 4) {
-          this.moreTextCss.indexOf('moreText') === -1 &&
-            (this.moreTextCss += ' moreText')
-        } else {
-          this.moreTextCss = this.moreTextCss.split(' ').splice(0, 2).join(' ')
-        } */
-      }
-    },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
         this.initOption(val)
+        this.selectValue = this.option[0]
       }
     },
   },
   mounted() {
     if (this.filterData && JSON.stringify(this.filterData) !== '{}') {
       this.initOption(this.filterData)
+      this.selectValue = this.option[0]
     }
   },
   methods: {
@@ -86,6 +75,8 @@ export default {
       // console.log(item, index)
       this.selectValue = item
       this.$emit('activeItem', this.selectValue, 'sortFilter')
+      this.dropdownTitle = this.selectValue.name
+      this.moreTextCss = 'jyDropdownFilter active'
       this.$refs.item.toggle()
     },
     initOption(data) {

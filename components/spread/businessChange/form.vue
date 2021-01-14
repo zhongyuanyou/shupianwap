@@ -209,8 +209,9 @@ export default {
             // 发送成功，倒计时开始
             if (res.error === 0) {
               vm.countDown()
+            } else {
+              Toast(res.msg)
             }
-            Toast(res.msg)
           })
         }
       }

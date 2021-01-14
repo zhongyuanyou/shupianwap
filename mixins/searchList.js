@@ -8,6 +8,7 @@ export default {
     getServeListReq() {
       console.log('serveGoodsListData', this.serveGoodsListData)
       // this.skeletonLoading = true
+      this.formData.areaCodes = this.cityCode.code
       goods
         .searchServeGoodsList({ axios: this.$axios }, this.formData)
         .then((data) => {
@@ -33,23 +34,21 @@ export default {
             } else {
               this.listShow = true
             }
-          } else {
+          } else if (this.formData.start === 1) {
             this.listShow = false
             this.searchToast('共找到0条资源')
+          } else {
+            this.$xToast.error('网络错误，请刷新后重试')
           }
           this.skeletonLoading = false
-          this.$nextTick(() => {
-            const installAPPHeight = this.$refs.installApp.$el.clientHeight
-            const installAPPTop = this.$refs.installApp.$el.getBoundingClientRect()
-              .top
-            // const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
-            // const topHeight = this.$el.getBoundingClientRect().top
-            this.maxHeight =
-              document.body.clientHeight - installAPPHeight - installAPPTop
-          })
+          if (this.maxHeight <= 0) {
+            this.$nextTick(() => {
+              this.computedHeight()
+            })
+          }
         })
         .catch((err) => {
-          this.searchToast('共找到0条资源')
+          this.$xToast.error('网络错误，请刷新后重试')
           this.listShow = false
           this.skeletonLoading = false
           console.error(err)
@@ -92,7 +91,7 @@ export default {
             this.jyGoodsListData[this.currentTabJyCode] = []
             this.searchToast(`共找到0条资源`)
           } else {
-            this.$xToast.error('网络错误，请稍后重试')
+            this.$xToast.error('网络错误，请刷新后重试')
           }
           if (
             JSON.stringify(data.goods) === '{}' ||

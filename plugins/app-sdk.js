@@ -137,7 +137,7 @@ const appHandler = {
   },
   // 打开新的webView
   dggOpenNewWeb: (
-    data = { urlString: 'https://www.baidu.com' },
+    data = { urlString: 'https://www.baidu.com', title: '' },
     fn = () => {}
   ) => {
     Bridge.callHandler('dgg_openNewWeb', data, (res) => {
@@ -187,6 +187,24 @@ const appHandler = {
     fn = () => {}
   ) => {
     Bridge.callHandler('dgg_openIM', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // 认证
+  dggGetRealNameAuthAddress: (fn = () => {}) => {
+    Bridge.callHandler('dgg_GetRealNameAuthAddress', {}, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // 调用安卓相册
+  dggPhoneAlbum: (data = { fileId: '' }, fn = () => {}) => {
+    Bridge.callHandler('dgg_phoneAlbum', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // 调用安卓权限
+  dggPermission: (fn = () => {}) => {
+    Bridge.callHandler('dgg_Permission', {}, (res) => {
       handleRequest(res, fn)
     })
   },
