@@ -2,16 +2,16 @@
   <div class="maby">
     <div class="maby-title">这些业务您可能也需要</div>
     <div class="maby-banner">
-      <div
-        v-for="(item, i) of imgs"
-        :key="i"
-        v-md-map
-        v-md:webClick
-        class="maby-banner-item"
-        :style="item.bg"
-        :data-name="`这些业务您可能也需要_${item.title}`"
-        @click="openImUrl(item.url)"
-      ></div>
+      <a v-for="(item, i) of imgs" :key="i" href="javascript:;">
+        <div
+          v-sensorsTrack:webClick="{
+            name: `这些业务您可能也需要_${item.title}`,
+          }"
+          class="maby-banner-item"
+          :style="item.bg"
+          @click="openImUrl(item.url)"
+        ></div>
+      </a>
     </div>
   </div>
 </template>
@@ -28,7 +28,7 @@ export default {
             backgroundImage:
               'url(https://cdn.shupian.cn/sp-pt/wap/3d8d9tdlhuy0000.png)',
           },
-          url: 'https://shupian.dgg.cn/spread/tax',
+          url: '/spread/tax',
         },
         {
           title: '代理记账',
@@ -36,7 +36,7 @@ export default {
             backgroundImage:
               'url(https://cdn.shupian.cn/sp-pt/wap/21vfp6qa0i1s000.png)',
           },
-          url: 'https://shupian.dgg.cn/spread/agency/',
+          url: '/spread/agency/',
         },
         {
           title: '其他服务',
@@ -53,7 +53,8 @@ export default {
     // 点击该模块判断是否进行跳转，如果不跳转就调用IM
     openImUrl(url) {
       if (url !== '') {
-        window.location.href = url
+        this.$router.push(url)
+        // window.location.href = url
       } else {
         this.$parent.openIm()
       }

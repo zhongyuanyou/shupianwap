@@ -14,39 +14,42 @@
       </div>
       <span class="form-content">请输入公司年营业额，我们为您灵活制定方案</span>
       <div class="lines-scope">
-        <div
+        <a
           v-for="(item, index) in LinesScope"
           :key="index"
-          v-md-map
-          v-md:WebClick
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '咨询表单',
+            name: `代理记账表单_${item.scope}`,
+          }"
           :class="[actived == index + 1 ? 'isactive' : '']"
-          :data-name="`代理记账表单_${item.scope}`"
-          data-form_type="咨询表单"
           @click="selected(item.code)"
         >
           {{ item.scope }}
-        </div>
+        </a>
       </div>
       <div class="input-box">
         <!-- s 公司名称 -->
         <sp-field
           v-model="company"
-          v-md-map
-          v-md:webClick
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '咨询表单',
+            name: '代理记账表单_公司名称',
+          }"
           label="公司名称"
           placeholder="请输入公司名称"
-          data-name="代理记账表单_公司名称"
-          data-form_type="咨询表单"
           maxlength="20"
           :formatter="companyTest"
         />
         <!-- s 手机号输入框 -->
         <sp-field
           v-model="telephone"
-          v-md-map
-          v-md:webClick
-          data-name="代理记账表单_手机号"
-          data-form_type="咨询表单"
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '咨询表单',
+            name: '代理记账表单_手机号',
+          }"
           label="手机号"
           placeholder="信息保护中，仅官方可见"
           maxlength="11"
@@ -55,27 +58,28 @@
           @focus="() => (isshow = true)"
         />
         <!-- s 获取验证码 -->
-        <div class="verification-box">
+        <div v-show="isshow" class="verification-box">
           <sp-field
-            v-show="isshow"
             v-model="sms"
-            v-md-map
-            v-md:webClick
+            v-sensorsTrack:webClick="{
+              eventName: 'wap元素点击',
+              type: '咨询表单',
+              name: '代理记账表单_验证码',
+            }"
             label="验证码"
             placeholder="请输入验证码"
-            data-name="代理记账表单_验证码"
-            data-form_type="咨询表单"
             maxlength="6"
             type="tel"
             :formatter="formatter"
           />
           <!-- s 倒计时 -->
           <span
-            v-md-map
-            v-md:webClick
+            v-sensorsTrack:webClick="{
+              eventName: 'wap元素点击',
+              type: '咨询表单',
+              name: '代理记账表单_获取验证码',
+            }"
             class="seconds"
-            data-name="代理记账表单_获取验证码"
-            data-form_type="咨询表单"
             @click="sendSms"
           >
             {{ countdown > 0 ? `${countdown}s` : '发送验证码' }}</span
@@ -88,10 +92,12 @@
       <button
         v-md-map
         v-md:p_formSubmit
+        v-sensorsTrack:p_formSubmit="{
+          eventName: 'p_formSubmit',
+          type: '咨询表单',
+          form_name: '代理记账_提交表单',
+        }"
         class="free-btn"
-        data-event_name="p_formSubmit"
-        data-form_type="咨询表单"
-        data-form_name="代理记账_提交表单"
         @click="FreeBtn()"
       >
         <span>免费定制方案</span>
@@ -261,10 +267,9 @@ export default {
           this.countdown = -1
           this.company = ''
           this.actived = 1
-          window.getTrackRow('p_formSubmitResult', {
+          window.sensors.track('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
-            form_sn: 'ZL077',
             form_name: '代理记账表单_提交表单',
           })
           console.log(params)
@@ -364,7 +369,8 @@ export default {
       display: flex;
       align-items: center;
       margin-top: 40px;
-      > div {
+      > a {
+        display: block;
         flex: 1;
         width: 186px;
         height: 80px;
