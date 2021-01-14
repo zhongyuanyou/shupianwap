@@ -14,7 +14,7 @@
       </div>
       <span class="form-content">请输入公司年营业额，我们为您灵活制定方案</span>
       <div class="lines-scope">
-        <div
+        <a
           v-for="(item, index) in LinesScope"
           :key="index"
           v-sensorsTrack:webClick="{
@@ -26,7 +26,7 @@
           @click="selected(item.code)"
         >
           {{ item.scope }}
-        </div>
+        </a>
       </div>
       <div class="input-box">
         <!-- s 公司名称 -->
@@ -369,7 +369,8 @@ export default {
       display: flex;
       align-items: center;
       margin-top: 40px;
-      > div {
+      > a {
+        display: block;
         flex: 1;
         width: 186px;
         height: 80px;

@@ -699,6 +699,9 @@ export default {
       margin-left: -375px;
     }
   }
+  .back_icon {
+    margin-left: 40px;
+  }
   /deep/.sp-popup--round {
     width: 750px;
     left: 50%;
