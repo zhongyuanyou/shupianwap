@@ -90,23 +90,23 @@
       class="show-more-btn"
       @click="showMore"
     >
-      <span
+      <a
         v-show="more"
         v-sensorsTrack:webClick="{
           eventName: 'wap元素点击',
           type: '售前',
           name: `工商变更页面_更多服务`,
         }"
-        >更多服务</span
+        >更多服务</a
       >
-      <span
+      <a
         v-show="close"
         v-sensorsTrack:webClick="{
           eventName: 'wap元素点击',
           type: '售前',
           name: `工商变更页面_收起`,
         }"
-        >收起</span
+        >收起</a
       >
       <my-icon
         v-show="more"
@@ -339,7 +339,7 @@ export default {
     justify-content: center;
     padding: 19px 0;
     margin-top: 40px;
-    > span {
+    > a {
       display: block;
       font-size: 28px;
       font-family: PingFang SC;

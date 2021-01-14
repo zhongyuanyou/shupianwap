@@ -1,8 +1,19 @@
 <template>
   <div class="company">
-    <!-- 头部 start -->
-    <Header title="公司注册标准" :fixed="false" head-class="head-icon" />
-    <!-- 头部 end -->
+    <!-- 头部内容 start -->
+    <Header v-show="!isInApp" title="公司注册标准" :fixed="false">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1a1a1a"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
+    <!-- 头部内容 end -->
     <!-- banner start -->
     <div class="banner">
       <sp-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
@@ -40,12 +51,14 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Swipe, SwipeItem } from '@chipspc/vant-dgg'
 import DggImCompany from '@/components/spread/DggImCompany'
 import Planner from '@/components/spread/companyRegistrationStandards/GuiHuaShiSwipe'
 import Type from '@/components/spread/companyRegistrationStandards/Type'
 import ConsultTel from '@/components/spread/common/ConsultTel'
 import Header from '~/components/common/head/header'
+import MyIcon from '@/components/common/myIcon/MyIcon'
 export default {
   components: {
     [Swipe.name]: Swipe,
@@ -216,7 +229,11 @@ export default {
       ],
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   watch: {},
   created() {},
   mounted() {
@@ -229,7 +246,21 @@ export default {
     }
     window.sensors.registerPage(param) // 设置公共属性
   },
-  methods: {},
+  methods: {
+    back() {
+      // 返回上一页
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/spread')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
+  },
   head() {
     return {
       title: '公司注册标准',
@@ -246,6 +277,9 @@ export default {
   margin: 0 auto;
   /deep/.cousulttel-content {
     box-shadow: 0px 8px 12px 0px rgba(73, 116, 245, 0.15);
+  }
+  .back_icon {
+    margin-left: 40px;
   }
 }
 .banner {

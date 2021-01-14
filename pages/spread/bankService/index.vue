@@ -1,7 +1,7 @@
 <template>
   <div class="bankService">
     <!-- 头部导航 -->
-    <Header :title="title">
+    <Header v-if="!isInApp" :title="title">
       <template #left>
         <div @click="back">
           <my-icon

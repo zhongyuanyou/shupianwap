@@ -3,7 +3,7 @@
     <span class="title">服务内容</span>
     <div class="content">
       <div class="content-title">
-        <span
+        <a
           v-for="item in ContentTitle"
           :key="item.code"
           v-sensorsTrack:webClick="{
@@ -13,7 +13,7 @@
           }"
           :class="[actived == item.code ? 'isactive' : '']"
           @click="select(item.code)"
-          >{{ item.title }}</span
+          >{{ item.title }}</a
         >
       </div>
       <div class="content-msg">
@@ -141,7 +141,7 @@ export default {
     .content-title {
       display: flex;
       align-items: center;
-      > span {
+      > a {
         display: block;
         flex: 1;
         text-align: center;

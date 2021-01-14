@@ -6,15 +6,16 @@
         <sp-grid-item
           v-for="(item, i) of banners"
           :key="i"
+          v-sensorsTrack:$webClick="{
+            name: `量身打造各行业税收解决方案-${item.title}`,
+          }"
           v-sensorsTrack:webClick="{
             name: `量身打造各行业税收解决方案-${item.title}`,
           }"
           @click="openIMurl()"
         >
-          <a href="javascript:;">
-            <div class="conrult-banner-img" :style="item.style"></div>
-            <div class="conrult-banner-font">{{ item.title }}</div>
-          </a>
+          <div class="conrult-banner-img" :style="item.style"></div>
+          <div class="conrult-banner-font">{{ item.title }}</div>
         </sp-grid-item>
       </sp-grid>
     </div>

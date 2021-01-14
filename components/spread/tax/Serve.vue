@@ -4,6 +4,9 @@
     <div
       v-for="(item, i) of serveData"
       :key="i"
+      v-sensorsTrack:$webClick="{
+        name: `税筹服务介绍_${item.productName}`,
+      }"
       v-sensorsTrack:webClick="{
         name: `税筹服务介绍_${item.productName}`,
       }"
@@ -11,83 +14,81 @@
       :style="item.bg"
       @click="openImUrl(i)"
     >
-      <a href="javascript:;">
-        <div class="serve-card-first">
-          <div>
-            <div class="serve-card-first-big">{{ item.num1 }}</div>
-            <div class="serve-card-first-small">在线咨询</div>
-          </div>
-          <div class="serve-card-first-hr"></div>
-          <div>
-            <div class="serve-card-first-big">{{ item.num2 }}</div>
-            <div class="serve-card-first-small">累计成交</div>
-          </div>
-          <div class="serve-card-first-hr"></div>
-          <div>
-            <div class="serve-card-first-big">{{ item.num3 }}</div>
-            <div class="serve-card-first-small">成功案列</div>
-          </div>
+      <div class="serve-card-first">
+        <div>
+          <div class="serve-card-first-big">{{ item.num1 }}</div>
+          <div class="serve-card-first-small">在线咨询</div>
         </div>
-        <div class="serve-card-second">
-          <div class="serve-card-second-left">
-            <span>{{ item.price }}</span
-            ><span>元起</span>
-            <!--          <strike>488.00元</strike>-->
-          </div>
-          <div class="serve-card-second-right">
-            <a href="javascript:;">
-              <div
-                v-sensorsTrack:p_IMClick="{
-                  name: `税筹服务介绍_增值税筹划_在线咨询`,
-                  im_type: '售前',
-                }"
-                class="serve-card-second-right-person"
-                :style="
-                  item.person === ''
-                    ? {
-                        backgroundImage: `url(http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg)`,
-                      }
-                    : { backgroundImage: `url(${item.person})` }
-                "
-                @click="openIm(i, $event)"
-              ></div>
-            </a>
-            <a href="javascript:;">
-              <div
-                v-sensorsTrack:p_IMClick="{
-                  name: `税筹服务介绍_增值税筹划_在线咨询`,
-                  im_type: '售前',
-                }"
-                class="serve-card-second-right-rap"
-                @click="openIm(i, $event)"
-              >
-                <my-icon
-                  name="notify_ic_chat"
-                  color="#4974F5"
-                  size="0.4rem"
-                  class="icon"
-                ></my-icon>
-              </div>
-            </a>
-            <a href="javascript:;">
-              <div
-                v-sensorsTrack:webClick="{
-                  name: `税筹服务介绍_增值税筹划_拔打电话`,
-                }"
-                class="serve-card-second-right-rap"
-                @click="call(i, $event)"
-              >
-                <my-icon
-                  name="notify_ic_tel"
-                  color="#4974F5"
-                  size="0.4rem"
-                  class="icon"
-                ></my-icon>
-              </div>
-            </a>
-          </div>
+        <div class="serve-card-first-hr"></div>
+        <div>
+          <div class="serve-card-first-big">{{ item.num2 }}</div>
+          <div class="serve-card-first-small">累计成交</div>
         </div>
-      </a>
+        <div class="serve-card-first-hr"></div>
+        <div>
+          <div class="serve-card-first-big">{{ item.num3 }}</div>
+          <div class="serve-card-first-small">成功案列</div>
+        </div>
+      </div>
+      <div class="serve-card-second">
+        <div class="serve-card-second-left">
+          <span>{{ item.price }}</span
+          ><span>元起</span>
+          <!--          <strike>488.00元</strike>-->
+        </div>
+        <div class="serve-card-second-right">
+          <a href="javascript:;">
+            <div
+              v-sensorsTrack:p_IMClick="{
+                name: `税筹服务介绍_增值税筹划_在线咨询`,
+                im_type: '售前',
+              }"
+              class="serve-card-second-right-person"
+              :style="
+                item.person === ''
+                  ? {
+                      backgroundImage: `url(http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg)`,
+                    }
+                  : { backgroundImage: `url(${item.person})` }
+              "
+              @click="openIm(i, $event)"
+            ></div>
+          </a>
+          <a href="javascript:;">
+            <div
+              v-sensorsTrack:p_IMClick="{
+                name: `税筹服务介绍_增值税筹划_在线咨询`,
+                im_type: '售前',
+              }"
+              class="serve-card-second-right-rap"
+              @click="openIm(i, $event)"
+            >
+              <my-icon
+                name="notify_ic_chat"
+                color="#4974F5"
+                size="0.4rem"
+                class="icon"
+              ></my-icon>
+            </div>
+          </a>
+          <a href="javascript:;">
+            <div
+              v-sensorsTrack:webClick="{
+                name: `税筹服务介绍_增值税筹划_拔打电话`,
+              }"
+              class="serve-card-second-right-rap"
+              @click="call(i, $event)"
+            >
+              <my-icon
+                name="notify_ic_tel"
+                color="#4974F5"
+                size="0.4rem"
+                class="icon"
+              ></my-icon>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </template>

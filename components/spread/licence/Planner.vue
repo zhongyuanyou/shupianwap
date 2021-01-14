@@ -14,7 +14,6 @@
           v-for="(item, i) of plannersData"
           :key="i"
           class="planner-content-item"
-          @click="openIm(i)"
         >
           <div class="planner-content-item-shadow">
             <div class="planner-content-item-shadow-person">
@@ -44,27 +43,38 @@
               </div>
             </div>
             <div class="planner-content-item-shadow-icon">
-              <div style="margin-right: 0.2rem">
-                <my-icon
-                  name="notify_ic_chat"
-                  color="#4974F5"
-                  size="0.32rem"
-                  class="icon line"
-                ></my-icon>
-              </div>
-              <div
-                v-md-map
-                v-md:webClick
-                :data-name="plannersCommon.telName"
+              <a
+                v-sensorsTrack:p_IMClick="{
+                  name: `许可证咨询规划师_在线咨询`,
+                  im_type: '售前',
+                }"
+                href="javascript:void(0)"
+                @click="openIm(i)"
+              >
+                <div style="margin-right: 0.2rem">
+                  <my-icon
+                    name="notify_ic_chat"
+                    color="#4974F5"
+                    size="0.32rem"
+                    class="icon line"
+                  ></my-icon></div
+              ></a>
+              <a
+                v-sensorsTrack:p_IMClick="{
+                  name: `许可证咨询规划师_拨打电话`,
+                  im_type: '售前',
+                }"
+                href="javascript:void(0)"
                 @click="tel(i, $event)"
               >
-                <my-icon
-                  name="notify_ic_tel"
-                  color="#4974F5"
-                  size="0.32rem"
-                  class="icon line"
-                ></my-icon>
-              </div>
+                <div>
+                  <my-icon
+                    name="notify_ic_tel"
+                    color="#4974F5"
+                    size="0.32rem"
+                    class="icon line"
+                  ></my-icon></div
+              ></a>
             </div>
           </div>
           <div class="planner-content-item-space"></div>
@@ -154,7 +164,6 @@ export default {
       )
     },
     tel(i, e) {
-      e.stopPropagation()
       window.location.href = `tel:${this.plannersData[i].telephone}`
     },
   },
@@ -176,9 +185,13 @@ export default {
   }
   &-flex {
     display: flex;
+    position: relative;
+    height: 207px;
   }
   &-content {
     width: 688px;
+    position: absolute;
+    left: 0;
     &-item {
       display: flex;
       &-shadow {
@@ -288,6 +301,9 @@ export default {
     height: 207px;
     background: #c1d4fc;
     border-radius: 2px;
+    position: absolute;
+    right: 24px;
+    z-index: -1;
   }
 }
 /deep/ .planner_title {

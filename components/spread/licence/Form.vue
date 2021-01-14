@@ -16,20 +16,31 @@
       <div class="form_content_input">
         <sp-field
           v-model="value"
+          v-sensorsTrack:webClick="{
+            form_name: `许可证表单_下拉表单`,
+          }"
           label="我需要"
           class="ineed"
           :readonly="true"
           @click="handleSelectShow"
         />
         <!-- 向下箭头 -->
-        <div @click="handleSelectShow">
-          <my-icon
-            name="tab_ic_all_n"
-            size="0.2rem"
-            class="form_content_input_icon"
-            color="#cccccc"
-          ></my-icon>
-        </div>
+        <a
+          v-sensorsTrack:webClick="{
+            form_name: `许可证表单_下拉表单`,
+          }"
+          href="javascript:void(0)"
+          @click="handleSelectShow"
+        >
+          <div>
+            <my-icon
+              name="tab_ic_all_n"
+              size="0.2rem"
+              class="form_content_input_icon"
+              color="#cccccc"
+            ></my-icon></div
+        ></a>
+
         <!-- 下拉框 -->
         <sp-action-sheet
           v-model="selectShow"
@@ -38,6 +49,9 @@
         />
         <sp-field
           v-model="telephone"
+          v-sensorsTrack:webClick="{
+            form_name: `许可证表单_手机号`,
+          }"
           label="手机号"
           maxlength="11"
           placeholder="信息保护中，仅官方可见"
@@ -52,6 +66,9 @@
         <div v-show="isCode" class="form_content_input_codebox">
           <sp-field
             v-model="code"
+            v-sensorsTrack:webClick="{
+              form_name: `许可证表单_验证码`,
+            }"
             label="验证码"
             placeholder="请输入验证码"
             maxlength="6"
@@ -59,11 +76,23 @@
             :formatter="formatterCode"
           />
           <!-- S 倒计时 -->
-          <span class="seconds" @click="requestCode"> {{ countDown }}</span>
+          <a
+            v-sensorsTrack:webClick="{
+              name: `许可证表单_获取验证码`,
+            }"
+            href="javascript:void(0)"
+            @click="requestCode"
+            ><span class="seconds"> {{ countDown }}</span></a
+          >
           <!-- E 倒计时 -->
         </div>
         <!-- E 按钮 -->
         <button
+          v-sensorsTrack:p_formSubmit="{
+            event_name: 'p_formSubmit',
+            form_type: '咨询表单',
+            form_name: `许可证表单_提交`,
+          }"
           data-event_name="p_formSubmit"
           class="form_content_input_bottonbox"
           @click="getGuotes"
@@ -247,14 +276,13 @@ export default {
         if (res.error === 0) {
           // 提交完成后更新表单
           this.telephone = ''
-          this.sms = ''
+          this.code = ''
           this.totalTime = 60
           this.value = '食品行业许可证'
-          window.getTrackRow('p_formSubmitResult', {
+          window.sensors.track('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
-            form_sn: 'ZL077',
-            form_name: '许可证表单_提交表单',
+            form_name: '许可证表单_提交',
           })
           Toast('提交成功，请注意接听电话')
         } else {
