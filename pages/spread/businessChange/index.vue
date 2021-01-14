@@ -1,7 +1,7 @@
 <template>
   <div class="businesschange">
     <!-- s 头部分 -->
-    <Header :title="title">
+    <Header v-if="!isInApp" :title="title">
       <template #left>
         <div @click="back">
           <my-icon

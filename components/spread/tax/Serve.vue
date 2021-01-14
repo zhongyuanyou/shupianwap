@@ -4,6 +4,9 @@
     <div
       v-for="(item, i) of serveData"
       :key="i"
+      v-sensorsTrack:$webClick="{
+        name: `税筹服务介绍_${item.productName}`,
+      }"
       v-sensorsTrack:webClick="{
         name: `税筹服务介绍_${item.productName}`,
       }"
