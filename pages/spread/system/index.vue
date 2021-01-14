@@ -534,7 +534,7 @@ export default {
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/d4jmafpuy5s0000.png',
           name: '体系认证_还需要办理_互联网资质',
-          url: ' /spread/licence',
+          url: '/spread/internetQualification',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/elaeb6is89s0000.png',
