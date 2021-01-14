@@ -397,7 +397,7 @@ export default {
         return
       }
       if (window.history.length <= 1) {
-        this.$router.replace('/found')
+        this.$router.replace('/spread')
         return false
       } else {
         this.$router.back()
