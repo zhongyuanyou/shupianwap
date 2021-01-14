@@ -74,7 +74,7 @@ export default {
         {
           code: 3,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/30xrqmq3bey0000.jpg',
-          url: '/spread/system',
+          url: '/spread/licence',
           title: '许可证办理',
         },
         {
