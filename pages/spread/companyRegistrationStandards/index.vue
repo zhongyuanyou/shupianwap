@@ -1,7 +1,7 @@
 <template>
   <div class="company">
     <!-- 头部内容 start -->
-    <Header v-show="!isInApp" title="公司注册标准" :fixed="false">
+    <Header v-show="!isInApp" title="公司注册标准">
       <template #left>
         <div @click="back">
           <my-icon
@@ -270,6 +270,13 @@ export default {
 </script>
 <style lang="less" scoped>
 .company {
+  /deep/.fixed-head {
+    /deep/.my-head {
+      width: 750px;
+      left: 50%;
+      margin-left: -375px;
+    }
+  }
   font-family: PingFang SC;
   padding-bottom: 224px;
   width: 100%;
