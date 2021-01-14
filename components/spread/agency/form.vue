@@ -455,6 +455,7 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #1a1a1a;
+        flex: none;
         width: 115px !important;
       }
       /deep/.sp-field__control {
