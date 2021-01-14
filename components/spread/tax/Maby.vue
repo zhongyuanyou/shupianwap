@@ -2,16 +2,16 @@
   <div class="maby">
     <div class="maby-title">这些业务您可能也需要</div>
     <div class="maby-banner">
-      <a v-for="(item, i) of imgs" :key="i" href="javascript:;">
-        <div
-          v-sensorsTrack:webClick="{
-            name: `这些业务您可能也需要_${item.title}`,
-          }"
-          class="maby-banner-item"
-          :style="item.bg"
-          @click="openImUrl(item.url)"
-        ></div>
-      </a>
+      <div
+        v-for="(item, i) of imgs"
+        :key="i"
+        v-sensorsTrack:webClick="{
+          name: `这些业务您可能也需要_${item.title}`,
+        }"
+        class="maby-banner-item"
+        :style="item.bg"
+        @click="openImUrl(item.url)"
+      ></div>
     </div>
   </div>
 </template>

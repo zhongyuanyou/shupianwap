@@ -11,10 +11,8 @@
           }"
           @click="openIMurl()"
         >
-          <a href="javascript:;">
-            <div class="conrult-banner-img" :style="item.style"></div>
-            <div class="conrult-banner-font">{{ item.title }}</div>
-          </a>
+          <div class="conrult-banner-img" :style="item.style"></div>
+          <div class="conrult-banner-font">{{ item.title }}</div>
         </sp-grid-item>
       </sp-grid>
     </div>
