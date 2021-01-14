@@ -29,10 +29,9 @@
       :planners-common="plannersCommon"
       :planners-data="plannersData"
       md-type="new"
-    >
-    </GuiHuaShiSwipe>
+    />
     <!-- e 规划师 -->
-    <DggImCompany></DggImCompany>
+    <DggImCompany />
   </div>
 </template>
 

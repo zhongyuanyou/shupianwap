@@ -121,48 +121,44 @@
         <!-- e 手机号弹窗标题 -->
         <p>千万补贴进行中，公司注册超值优惠</p>
         <!-- s手机号表单 -->
-        <sp-form>
-          <sp-cell-group>
-            <sp-field
-              v-model="tel"
-              v-sensorsTrack:webClick="{
-                form_name: `核名表单_手机号`,
-              }"
-              type="tel"
-              label="手机号"
-              :formatter="telephoneTest"
-              :maxlength="11"
-              placeholder="信息保护中，请放心填写"
-            />
-            <sp-field
-              v-model="sms"
-              v-sensorsTrack:webClick="{
-                form_name: `核名表单_验证码`,
-              }"
-              center
-              clearable
-              type="number"
-              :maxlength="6"
-              label="验证码"
-              placeholder="请输入验证码"
-              :formatter="formatter"
-            >
-              <template #button>
-                <sp-button
-                  v-sensorsTrack:webClick="{
-                    form_name: `核名表单_获取验证码`,
-                  }"
-                  size="small"
-                  type="primary"
-                  @click="onSmsCode"
-                  >{{
-                    countdown > 0 ? `${countdown}s` : '获取验证码'
-                  }}</sp-button
-                >
-              </template>
-            </sp-field>
-          </sp-cell-group>
-        </sp-form>
+        <sp-cell-group>
+          <sp-field
+            v-model="tel"
+            v-sensorsTrack:webClick="{
+              form_name: `核名表单_手机号`,
+            }"
+            type="tel"
+            label="手机号"
+            :formatter="telephoneTest"
+            :maxlength="11"
+            placeholder="信息保护中，请放心填写"
+          />
+          <sp-field
+            v-model="sms"
+            v-sensorsTrack:webClick="{
+              form_name: `核名表单_验证码`,
+            }"
+            center
+            clearable
+            type="number"
+            :maxlength="6"
+            label="验证码"
+            placeholder="请输入验证码"
+            :formatter="formatter"
+          >
+            <template #button>
+              <sp-button
+                v-sensorsTrack:webClick="{
+                  form_name: `核名表单_获取验证码`,
+                }"
+                size="small"
+                type="primary"
+                @click="onSmsCode"
+                >{{ countdown > 0 ? `${countdown}s` : '获取验证码' }}</sp-button
+              >
+            </template>
+          </sp-field>
+        </sp-cell-group>
         <!-- e 手机号表单 -->
         <sp-button
           v-sensorsTrack:p_formSubmit="{
@@ -461,6 +457,7 @@ export default {
         }
       }, 1000)
     },
+
     // 输入框过滤
     companyTest(value) {
       return value.replace(/[^\dA-Za-z\u3007\u4E00-\u9FCB\uE815-\uE864]/, '')
