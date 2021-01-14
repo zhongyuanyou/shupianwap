@@ -101,17 +101,7 @@
           </div>
           <!-- 4、提交按钮-->
           <div class="form-submit">
-            <sp-button
-              v-sensorsTrack:p_formSubmit="{
-                track_code: 'SPTG000003',
-                event_name: 'p_formSubmit',
-                form_type: '咨询',
-                form_name: `一键适配公司表单提交`,
-              }"
-              type="primary"
-              @click="submitForm"
-              >立即获取
-            </sp-button>
+            <sp-button type="primary" @click="submitForm">立即获取 </sp-button>
           </div>
         </div>
         <div class="form-note-all">
@@ -379,11 +369,12 @@ export default {
     },
     // 表单提交有结果后，主动埋点
     formMaiDian() {
-      // window.getTrackRow('p_formSubmitResult', {
-      //   even_name: 'p_formSubmitResult',
-      //   form_type: '咨询表单',
-      //   form_name: '工商聚合页_表单',
-      // })
+      window.sensors.track('p_formSubmitResult', {
+        even_name: 'p_formSubmit',
+        form_type: '咨询',
+        form_name: '一键适配公司表单提交',
+        track_code: 'SPTG000003',
+      })
     },
   },
   head() {
