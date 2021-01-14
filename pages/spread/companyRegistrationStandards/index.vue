@@ -1,6 +1,6 @@
 <template>
   <div class="company">
-    <!-- 头部 start -->
+    <!-- 头部内容 start -->
     <Header v-show="!isInApp" title="公司注册标准" :fixed="false">
       <template #left>
         <div @click="back">
@@ -13,7 +13,7 @@
         </div>
       </template>
     </Header>
-    <!-- 头部 end -->
+    <!-- 头部内容 end -->
     <!-- banner start -->
     <div class="banner">
       <sp-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
