@@ -64,12 +64,12 @@ export default {
         {
           code: 1,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/4sydiz0knhg0000.jpg',
-          url: 'https://shupian.dgg.cn/spread/companyRegister',
+          url: '/spread/companyRegister',
         },
         {
           code: 2,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/6q2l9tmcb7g0000.jpg',
-          url: 'https://shupian.dgg.cn/spread/tax',
+          url: '/spread/tax',
         },
         {
           code: 3,

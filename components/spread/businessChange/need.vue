@@ -67,12 +67,12 @@ export default {
         {
           code: 1,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/6tk67e93mps0000.jpg',
-          url: 'https://shupian.dgg.cn/spread/companyRegister',
+          url: '/spread/companyRegister',
         },
         {
           code: 2,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/8422jrgzzyo0000.jpg',
-          url: 'https://shupian.dgg.cn/spread/tax',
+          url: '/spread/tax',
         },
         {
           code: 3,
