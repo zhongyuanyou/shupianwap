@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-13 14:19:22
+ * @LastEditTime: 2021-01-14 09:21:08
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -17,7 +17,7 @@
             name="nav_ic_back"
             size="0.4rem"
             color="#1A1A1A"
-            style="padding-left: 32px"
+            style="padding-left: 0.4rem"
             @click.native="onClickLeft"
           />
         </template>

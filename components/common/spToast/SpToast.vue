@@ -83,6 +83,7 @@ export default {
       this.checkType('type', type)
       this.checkType('forbidClick', forbidClick)
       cb && this.checkType('cb', cb)
+      this.forbidClick = forbidClick
       this.message = message
       this.isShow = true
       this.isLoading = true

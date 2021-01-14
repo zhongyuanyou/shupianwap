@@ -176,7 +176,7 @@ export default {
       this.saveActiveItems = clone(this.activeItems, true)
       this.resetTitle(this.saveActiveItems)
       const emitData = this.resultHandle()
-      this.$emit('activeItem', emitData, 'moreFilter')
+      this.$emit('activeItem', emitData, 'moreFilter-' + this.filterData.code)
       this.$refs.item.toggle()
     },
     resultHandle() {
