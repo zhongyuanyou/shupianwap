@@ -76,7 +76,8 @@ export default {
           name: '张毅',
           jobNum: '107547',
           telephone: '18402858698',
-          imgSrc: '',
+          imgSrc:
+            'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg',
         }
       },
     },
@@ -104,7 +105,6 @@ export default {
   },
   data() {
     return {
-      card: {},
       text1: '在线咨询',
       text2: '电话咨询',
       // isFixed: true,
@@ -112,6 +112,20 @@ export default {
       // docmHeight: 0, // 一开始的屏幕高度
       // showHeight: 0, // 实时屏幕高度
     }
+  },
+  computed: {
+    card() {
+      return {
+        imgSrc:
+          this.planner.imgSrc ||
+          'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg',
+        cardName: this.planner.name,
+        cardSign: '金牌规划师',
+        icon: '',
+        round: true,
+        avatarSize: 40,
+      }
+    },
   },
   // watch: {
   //   showHeight() {
@@ -131,18 +145,6 @@ export default {
   //     })()
   //   }
   // },
-  created() {
-    this.card = {
-      imgSrc:
-        this.planner.imgSrc ||
-        'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg',
-      cardName: this.planner.name,
-      cardSign: '金牌规划师',
-      icon: '',
-      round: true,
-      avatarSize: 40,
-    }
-  },
   methods: {
     // @--在线咨询
     onClickButton1() {
@@ -170,8 +172,11 @@ export default {
 // .my-sp-bottombar覆写了组件原本的样式
 .my-sp-bottombar {
   width: calc(@spread-page-width - 80px) !important;
+  //width: @spread-page-width;
+  padding: 24px 40px;
   left: auto !important;
   right: auto !important;
+  background: #ffffff;
 }
 
 /deep/ .sp-bottombar {

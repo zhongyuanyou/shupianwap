@@ -6,9 +6,6 @@
         <sp-grid-item
           v-for="(item, i) of banners"
           :key="i"
-          v-sensorsTrack:$webClick="{
-            name: `量身打造各行业税收解决方案-${item.title}`,
-          }"
           v-sensorsTrack:webClick="{
             name: `量身打造各行业税收解决方案-${item.title}`,
           }"

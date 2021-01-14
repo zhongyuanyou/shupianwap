@@ -1,6 +1,7 @@
 <template>
   <div class="company-registry">
     <sp-top-nav-bar
+      v-show="!isInApp"
       title="公司注册"
       background="#FFFFFF"
       title-color="#1A1A1A"
@@ -27,18 +28,17 @@
       <h5>服务介绍</h5>
       <Registerlist :list-count="listCount" :is-more="isMore" />
       <p v-show="listCount.length > 3" class="more">
-        <span
-          v-md-map
-          v-md:webClick
-          data-name="工商注册_服务介绍_展开更多"
-          @click="onMore"
-          >更多服务
-          <my-icon
-            :name="isMore ? 'tab_ic_all_s' : 'tab_ic_all_n'"
-            size="13px"
-            color="#555555"
-          ></my-icon
-        ></span>
+        <a href="javascript:;">
+          <span
+            v-sensorsTrack:webClick="{ name: '工商注册_服务介绍_展开更多' }"
+            @click="onMore"
+            >更多服务
+            <my-icon
+              :name="isMore ? 'tab_ic_all_s' : 'tab_ic_all_n'"
+              size="13px"
+              color="#555555"
+            ></my-icon></span
+        ></a>
       </p>
     </div>
     <div class="norm">
@@ -46,7 +46,15 @@
       <Standard />
     </div>
     <!-- S立即咨询 -->
-    <div class="help"><ConsultTel :title="myTitle" :tel="tel" /></div>
+    <div class="help">
+      <ConsultTel
+        :title="'有疑问？千万企服规划师为您免费解答'"
+        :tel="'4000-962540'"
+        button="免费咨询"
+        md-type="售前"
+        md-name="工商注册_还有疑问_立即咨询"
+      />
+    </div>
     <!-- E立即咨询 -->
     <!-- S注册公司准备工作-平台优势 -->
     <RegisterReady />
@@ -66,9 +74,7 @@
         <a
           v-for="(item, index) of sericeImg"
           :key="index"
-          v-md-map
-          v-md:webClick
-          :data-name="item.name"
+          v-sensorsTrack:webClick="{ name: `${item.name}` }"
           @click="onService(item.url, index)"
         >
           <sp-image :src="item.img"
@@ -78,12 +84,18 @@
     <!-- E其他服务 -->
     <!-- S立即咨询 -->
     <div class="help">
-      <ConsultTel :title="myTitle" :tel="tel" />
+      <ConsultTel
+        :title="'有疑问？千万企服规划师为您免费解答'"
+        :tel="'4000-962540'"
+        button="免费咨询"
+        md-type="售前"
+        md-name="工商注册_还有疑问_立即咨询"
+      />
       <ShuPianZhaoRen />
     </div>
     <!-- E立即咨询 -->
     <div class="foot">
-      <FixedBottom :planner="planner" />
+      <FixedBottom :planner="planner" :md="fixedMd" />
     </div>
     <dgg-im-company></dgg-im-company>
   </div>
@@ -101,7 +113,7 @@ import {
   Sticky,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-// import { foundApi } from '~/api'
+import { foundApi } from '~/api'
 import Card from '@/components/spread/companyRegistry/Card.vue'
 import Registerlist from '@/components/spread/companyRegistry/Registerlist.vue'
 import Standard from '@/components/spread/companyRegistry/Standard'
@@ -397,12 +409,12 @@ export default {
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/f67zabgy4w00000.png',
           name: '工商注册_你可能还需要其他服务_税务筹划',
-          url: 'https://shupian.dgg.cn/spread/tax',
+          url: '/spread/tax',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/7mdee1enz8s0000.png',
           name: '工商注册_你可能还需要其他服务_代理记账',
-          url: 'https://shupian.dgg.cn/spread/agency/',
+          url: '/spread/agency',
         },
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/86kmcgq4i1s0000.png',
@@ -506,13 +518,23 @@ export default {
         imgSrc:
           'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
       },
-      myTitle: '有疑问？千万企服专家为您免费解答',
-      tel: '4000-962540',
+      // 底部规划师埋点
+      fixedMd: {
+        telMd: {
+          name: '工商注册_钻石展位_拨打电话',
+          type: '售前',
+        },
+        imMd: {
+          name: '工商注册_钻石展位_在线咨询',
+          type: '售前',
+        },
+      },
     }
   },
   computed: {
     ...mapState({
-      isInApp: (state) => state.app.isInApp,
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      // appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
   created() {
@@ -521,7 +543,19 @@ export default {
       this.plannerData(this.resultData.data.planlerList || [])
     }
   },
-
+  mounted() {
+    const param = {
+      platform_type: 'wap端', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'wap端工商注册推广页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+  },
+  destroyed() {
+    this.$appFn.dggHideNav((res) => {})
+  },
   methods: {
     // listCout列表数据处理
     ListCount(data) {
@@ -607,17 +641,15 @@ export default {
       }
     },
     onClickLeft() {
-      console.log(window.history)
       if (this.isInApp) {
         this.$appFn.dggWebGoBack((res) => {})
         return
       }
-      if (window.history.length <= 2) {
+      if (window.history.length <= 1) {
         this.$router.replace('/spread')
         return false
       } else {
-        console.log(123)
-        // this.$router.back()
+        this.$router.back()
       }
     },
     onMore() {
@@ -648,12 +680,12 @@ export default {
           type: 'text/javascript',
           charset: 'utf-8',
         },
-        {
-          src: '/js/spread/companyRegister-md-config.js',
-        },
-        {
-          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
-        },
+        // {
+        //   src: '/js/spread/companyRegister-md-config.js',
+        // },
+        // {
+        //   src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
+        // },
       ],
     }
   },
@@ -706,6 +738,9 @@ export default {
       color: #555555;
       line-height: 44px;
       padding: 12px 0 0 0;
+      span {
+        color: #555555;
+      }
     }
   }
   .service {

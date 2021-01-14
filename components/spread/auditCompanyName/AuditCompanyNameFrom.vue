@@ -140,9 +140,9 @@
             }"
             center
             clearable
-            type="number"
             :maxlength="6"
             label="验证码"
+            type="tel"
             placeholder="请输入验证码"
             :formatter="formatter"
           >
@@ -192,10 +192,7 @@ import {
   Form,
   CountDown,
 } from '@chipspc/vant-dgg'
-import { mapState, mapActions } from 'vuex'
 import { checkPhone } from '~/utils/check'
-import toast from '~/components/common/spToast/install'
-import { state } from '~/store/app'
 export default {
   name: 'AuditCompanyNameFrom',
   components: {
@@ -325,10 +322,6 @@ export default {
   watch: {},
 
   methods: {
-    ...mapActions({
-      POSITION_CITY: 'city/POSITION_CITY',
-      GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
-    }),
     // 选择城市
     onCitySelect(item) {
       this.cityName = item.name

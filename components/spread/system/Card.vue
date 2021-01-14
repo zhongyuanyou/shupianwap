@@ -31,6 +31,10 @@
         <sp-cell-group @click="verificationShow = true">
           <sp-field
             v-model="phoneValue"
+            v-sensorsTrack:webClick="{
+              form_name: '体系认证表单_手机号',
+              form_type: '咨询表单',
+            }"
             type="tel"
             :border="false"
             maxlength="11"
@@ -38,7 +42,7 @@
             placeholder="信息保护中，仅官方可见"
             label-class="style-phone"
             @input="inputPhone($event)"
-          />
+          ></sp-field>
         </sp-cell-group>
         <div v-show="verificationShow" class="input-verification">
           <sp-field
@@ -193,7 +197,7 @@ export default {
         return Toast('请输入手机号码')
       }
       if (!_reg.test(_tel)) {
-        return Toast('请输入正确的验证码')
+        return Toast('请输入正确的手机号码')
       }
       const setData = {
         tel: _tel,
@@ -299,10 +303,10 @@ export default {
           this.phoneValue = ''
           this.test = '获取验证码'
           // 表单成功买点
-          window.getTrackRow('p_formSubmitResult', {
+          window.sensors.track('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
-            form_name: '表单提交结果',
+            form_name: '体系认证表单_提交',
           })
         } else {
           // ------------

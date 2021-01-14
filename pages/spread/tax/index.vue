@@ -94,7 +94,7 @@ export default {
       })
       if (res.code === 200) {
         return {
-          result: '',
+          result: 'res.data',
         }
       }
     } catch (error) {
@@ -386,11 +386,12 @@ export default {
     }),
   },
   created() {
+    console.log(this.result.planlerList)
     // 请求回来的数据替代本地
     if (this.result !== '' && this.result !== undefined) {
       if (
-        this.result.planlerList.length !== 0 &&
-        this.result.planlerList.length !== undefined
+        this.result.planlerList !== undefined &&
+        this.result.planlerList.length !== 0
       ) {
         if (this.result.planlerList.length < 3) {
           this.planlerList.forEach((item, index) => {
@@ -403,13 +404,10 @@ export default {
         }
         this.getPlannersData()
       }
-      if (
-        this.result.adList.length !== 0 &&
-        this.result.adList.length !== undefined
-      ) {
+      if (this.result.adList !== undefined && this.result.adList.length !== 0) {
         this.adList = this.result.adList
       }
-      if (this.result.nums !== '' && this.result.nums !== undefined) {
+      if (this.result.nums !== undefined && this.result.nums.length !== 0) {
         this.todayNum = this.result.nums.todayNum
       }
     }
