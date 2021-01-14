@@ -673,8 +673,6 @@ export default {
         this.$router.push({
           path: `${url}`,
         })
-        // window.location.href = url
-        console.log(this.$route)
       } else {
         this.$root.$emit(
           'openIMM',
@@ -709,8 +707,9 @@ export default {
 .system {
   width: @spread-page-width;
   margin: 0 auto;
-  .back-icon {
-    width: 750px;
+  /deep/ .my-head {
+    width: @spread-page-width !important;
+    left: auto !important;
   }
   // 列表
   /deep/.systemList {
