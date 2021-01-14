@@ -3,6 +3,7 @@
     <!--s  查询表单 -->
     <div class="audit-company-name-from">
       <div class="audit-company-name-from__center">
+        <!--s 表单标题 -->
         <h1 class="audit-company-name-from__center__title">
           <i>
             <img
@@ -18,12 +19,13 @@
             />
           </i>
         </h1>
-
+        <!--e 表单标题 -->
         <div class="audit-company-name-from__center__input">
+          <!-- s城市选择 -->
           <a href="javascript:;">
             <div
               v-sensorsTrack:webClick="{
-                form_name: `核名表单_城市下拉表单`,
+                name: `核名表单_城市下拉表单`,
               }"
               class="audit-company-name-from__center__input__city"
               @click="isShowCity = true"
@@ -33,7 +35,9 @@
               <sp-icon name="arrow-down" />
             </div>
           </a>
+          <!-- e城市选择 -->
           <sp-cell-group>
+            <!-- s公司名称 -->
             <sp-field
               v-model="companyName"
               v-sensorsTrack:webClick="{
@@ -44,6 +48,8 @@
               :formatter="companyTest"
               placeholder="3-5个"
             />
+            <!-- e公司名称 -->
+            <!-- s行业选择 -->
             <sp-field
               v-model="industry"
               v-sensorsTrack:webClick="{
@@ -55,11 +61,12 @@
               readonly
               @click="isShow = true"
             />
+            <!-- s行业选择 -->
           </sp-cell-group>
           <sp-button type="primary" size="large" @click="onInquire"
             >马上查询</sp-button
           >
-          <!-- 核名数据 -->
+          <!-- s 核名数据 -->
           <div class="audit-company-name-from__center__input__audit">
             <p>
               今日核名<span>{{ auditNameSum }}</span
@@ -71,18 +78,22 @@
               >次
             </p>
           </div>
-          <!-- 城市弹窗 -->
+          <!-- e 核名数据 -->
+          <!--s城市弹窗 -->
           <sp-action-sheet
             v-model="isShowCity"
             :actions="city"
             @select="onCitySelect"
           />
-          <!-- 行业弹窗 -->
+          <!--e城市弹窗 -->
+
+          <!-- s行业弹窗 -->
           <sp-action-sheet
             v-model="isShow"
             :actions="actions"
             @select="onSelect"
           />
+          <!-- e行业弹窗 -->
         </div>
       </div>
     </div>
@@ -90,6 +101,7 @@
     <!--s 手机号弹窗 -->
     <div v-show="isOverlay" class="wrapper">
       <div class="wrapper__verify">
+        <!--s 手机号弹窗标题 -->
         <h1>
           <i>
             <img
@@ -106,7 +118,9 @@
             />
           </i>
         </h1>
+        <!-- e 手机号弹窗标题 -->
         <p>千万补贴进行中，公司注册超值优惠</p>
+        <!-- s手机号表单 -->
         <sp-form>
           <sp-cell-group>
             <sp-field
@@ -149,6 +163,7 @@
             </sp-field>
           </sp-cell-group>
         </sp-form>
+        <!-- e 手机号表单 -->
         <sp-button
           v-sensorsTrack:p_formSubmit="{
             event_name: 'p_formSubmit',
@@ -213,7 +228,7 @@ export default {
       isShowCity: false,
       sms: '',
       tel: '',
-      cityName: '',
+      cityName: '成都',
       countdown: -1, // 发送验证码倒计时60秒
       countdownTimer: null,
       actions: [{ name: '选项一' }, { name: '选项二' }, { name: '选项三' }],
@@ -285,6 +300,7 @@ export default {
         }
         window.promotion.privat.consultForm(params, (res) => {
           if (res.error === 0) {
+            console.log(params)
             // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
             Toast('提交成功，请注意接听电话')
             this.isOverlay = false
@@ -292,7 +308,7 @@ export default {
             this.industry = ''
             this.companyName = ''
             this.countdown = -1
-            window.sensosr.track('p_fromSubmitResult', {
+            window.sensors.track('p_fromSubmitResult', {
               even_name: 'p_fromSubmitResult',
               from_type: '咨询表单',
               from_name: '核名表单_提交表单',
@@ -383,6 +399,11 @@ export default {
 a {
   text-decoration: none;
   color: inherit;
+}
+.sp-popup--bottom {
+  max-width: 750px;
+  margin: 0 auto;
+  right: 0;
 }
 .audit-company-name-from {
   position: absolute;
