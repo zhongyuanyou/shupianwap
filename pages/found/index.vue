@@ -5,7 +5,6 @@
         <sp-work-tabs
           v-model="activeTab"
           mask
-          swipeable
           title-active-color="#222"
           @click="onClickTap"
         >
@@ -146,6 +145,8 @@ export default {
 
 <style lang="less" scoped>
 .found {
+  width: 100%;
+  height: 100%;
   padding-bottom: 98px;
   /deep/ .sp-top-nav-bar {
     padding-top: constant(safe-area-inset-top);
