@@ -1,7 +1,18 @@
 <template>
   <div class="company">
     <!-- 头部 start -->
-    <Header title="公司注册标准" :fixed="false" head-class="head-icon" />
+    <Header v-show="!isInApp" title="公司注册标准" :fixed="false">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1a1a1a"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!-- 头部 end -->
     <!-- banner start -->
     <div class="banner">
@@ -47,6 +58,7 @@ import Planner from '@/components/spread/companyRegistrationStandards/GuiHuaShiS
 import Type from '@/components/spread/companyRegistrationStandards/Type'
 import ConsultTel from '@/components/spread/common/ConsultTel'
 import Header from '~/components/common/head/header'
+import MyIcon from '@/components/common/myIcon/MyIcon'
 export default {
   components: {
     [Swipe.name]: Swipe,
@@ -265,6 +277,9 @@ export default {
   margin: 0 auto;
   /deep/.cousulttel-content {
     box-shadow: 0px 8px 12px 0px rgba(73, 116, 245, 0.15);
+  }
+  .back_icon {
+    margin-left: 40px;
   }
 }
 .banner {
