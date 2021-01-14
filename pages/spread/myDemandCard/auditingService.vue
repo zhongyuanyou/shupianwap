@@ -1,6 +1,6 @@
 <template>
   <div class="audit">
-    <Header ref="headerRef" title="审计业务" @backHandle="backHandle" />
+    <Header ref="headerRef" title="轻松找服务" />
     <HeaderNeed />
     <Content />
   </div>
@@ -31,11 +31,6 @@ export default {
     }
     window.sensors.registerPage(param) // 设置公共属性
   },
-  methods: {
-    backHandle() {
-      localStorage.removeItem('formData')
-    },
-  },
 }
 </script>
 <style lang="less" scoped>
@@ -43,5 +38,10 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   font-family: PingFang SC;
+  /deep/ .my-head {
+    width: @spread-page-width;
+    left: 50%;
+    margin-left: -375px;
+  }
 }
 </style>

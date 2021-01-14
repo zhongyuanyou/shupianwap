@@ -1,6 +1,6 @@
 <template>
   <div class="company-alteration">
-    <Header ref="headerRef" title="工商变更" @backHandle="backHandle" />
+    <Header ref="headerRef" title="轻松找服务" />
     <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理哪项业务的变更服务 -->
@@ -168,10 +168,12 @@ export default {
     window.sensors.registerPage(param) // 设置公共属性
 
     // 数据回显
-    const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
-    if (localStorageFormData) {
+    const sessionStorageFormData = JSON.parse(
+      sessionStorage.getItem('formData')
+    )
+    if (sessionStorageFormData) {
       this.$nextTick(() => {
-        this.permission = localStorageFormData.content.bgxm || this.permission
+        this.permission = sessionStorageFormData.content.bgxm || this.permission
         this.$refs.businessRef.title = this.permission
         if (this.permission && this.permission !== '不限') {
           for (let index = 0; index < this.actionsServe.length; index++) {
@@ -181,9 +183,9 @@ export default {
           }
         }
         this.district =
-          localStorageFormData.content['注册区域'] || this.district
+          sessionStorageFormData.content['注册区域'] || this.district
         this.$refs.districtRef.title = this.district
-        this.identity = localStorageFormData.content['身份'] || this.identity
+        this.identity = sessionStorageFormData.content['身份'] || this.identity
         for (let index = 0; index < this.selectActive.length; index++) {
           if (this.identity === this.selectActive[index].name) {
             this.$refs.identityRef.selectActive = index
@@ -191,7 +193,7 @@ export default {
           }
         }
         this.handlingTime =
-          localStorageFormData.content['办理时间'] || this.handlingTime
+          sessionStorageFormData.content['办理时间'] || this.handlingTime
         for (let index = 0; index < this.selectTransact.length; index++) {
           if (this.handlingTime === this.selectTransact[index].name) {
             this.$refs.timeRef.selectActive = index
@@ -202,9 +204,6 @@ export default {
     }
   },
   methods: {
-    backHandle() {
-      localStorage.removeItem('formData')
-    },
     // 城市
     onCity(val) {
       if (val.code !== undefined) this.cityVal = val
@@ -227,17 +226,25 @@ export default {
       this.handlingTime = item.name
     },
     onButton() {
+      let content = {
+        bgxm: this.permission,
+        注册区域: this.district,
+        身份: this.identity,
+        办理时间: this.handlingTime,
+      }
+      const sessionStorageFormData = JSON.parse(
+        sessionStorage.getItem('formData')
+      )
+      // 合并两个页面之间缓存的数据
+      if (sessionStorageFormData) {
+        content = Object.assign(sessionStorageFormData.content, content)
+      }
       const obj = JSON.stringify({
         type: 'gsbg',
         url: window.location.href,
-        content: {
-          bgxm: this.permission,
-          注册区域: this.district,
-          身份: this.identity,
-          办理时间: this.handlingTime,
-        },
+        content,
       })
-      localStorage.setItem('formData', obj)
+      sessionStorage.setItem('formData', obj)
       this.$router.push({ path: '/spread/myDemandCard/second' })
     },
     // 获取区域

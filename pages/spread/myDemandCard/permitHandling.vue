@@ -1,6 +1,6 @@
 <template>
   <div class="permit-handling">
-    <Header ref="headerRef" title="许可证办理" @backHandle="backHandle" />
+    <Header ref="headerRef" title="轻松找服务" />
     <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理的许可证业务 -->
@@ -114,20 +114,22 @@ export default {
     window.sensors.registerPage(param) // 设置公共属性
 
     // 数据回显
-    const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
-    if (localStorageFormData) {
+    const sessionStorageFormData = JSON.parse(
+      sessionStorage.getItem('formData')
+    )
+    if (sessionStorageFormData) {
       this.$nextTick(() => {
-        console.log(localStorageFormData)
-        this.$refs.companySelec.title = localStorageFormData.content.xkzlx
-        this.permission = localStorageFormData.content.xkzlx
-        this.isDecision = localStorageFormData.content['主要决策人']
+        console.log(sessionStorageFormData)
+        this.$refs.companySelec.title = sessionStorageFormData.content.xkzlx
+        this.permission = sessionStorageFormData.content.xkzlx
+        this.isDecision = sessionStorageFormData.content['主要决策人']
         for (let index = 0; index < this.selectActive.length; index++) {
           if (this.selectActive[index].name === this.isDecision) {
             this.$refs.select1.selectActive = index
             break
           }
         }
-        this.handlingTime = localStorageFormData.content['办理时间']
+        this.handlingTime = sessionStorageFormData.content['办理时间']
         for (let index = 0; index < this.selectTransact.length; index++) {
           if (this.selectTransact[index].name === this.handlingTime) {
             this.$refs.select2.selectActive = index
@@ -138,9 +140,6 @@ export default {
     }
   },
   methods: {
-    backHandle() {
-      localStorage.removeItem('formData')
-    },
     // 城市
     onCity(val) {
       this.cityVal = val
@@ -167,9 +166,19 @@ export default {
           办理时间: this.handlingTime,
         },
       }
+      const sessionStorageFormData = JSON.parse(
+        sessionStorage.getItem('formData')
+      )
+      // 合并两个页面之间缓存的数据
+      if (sessionStorageFormData) {
+        data.content = Object.assign(
+          sessionStorageFormData.content,
+          data.content
+        )
+      }
       // 本地存储数据
       const obj = JSON.stringify(data)
-      localStorage.setItem('formData', obj)
+      sessionStorage.setItem('formData', obj)
       this.$router.push({ path: '/spread/myDemandCard/second' })
     },
   },

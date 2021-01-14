@@ -100,7 +100,6 @@
 <script>
 import { Sticky, IndexBar, IndexAnchor, Cell, Toast } from '@chipspc/vant-dgg'
 import { mapState, mapMutations, mapActions } from 'vuex'
-import pyjs from 'js-pinyin'
 import { homeApi } from '@/api'
 import Search from '@/components/common/search/Search'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
@@ -193,14 +192,13 @@ export default {
       const tempItem = []
       const tempTitleArray = []
       data.forEach(function (obj, index) {
-        const str = pyjs.getCamelChars(obj.name).substr(0, 1) // 拿到城市首字母，并保存
         const t = {}
-        t.key = str
+        t.key = obj.initial
         t.cityName = obj.name
-        t.keyword = obj.code.substring(8)
+        // t.keyword = obj.code.substring(8)
         t.code = obj.code
         tempItem.push(t)
-        tempTitleArray.push(str)
+        tempTitleArray.push(obj.initial)
       })
       // 数组去重
       const titleArray = []

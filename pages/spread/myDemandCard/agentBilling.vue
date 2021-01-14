@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <Header ref="headerRef" title="代理记账" @backHandle="backHandle" />
+    <Header ref="headerRef" title="轻松找服务" />
     <!--    <Header title="轻松找服务" :fixed="false" head-class="head-icon" />-->
 
     <!-- START banner-->
@@ -89,7 +89,7 @@ export default {
     }
   },
   mounted() {
-    const formData = JSON.parse(localStorage.getItem('formData'))
+    const formData = JSON.parse(sessionStorage.getItem('formData'))
     if (formData) {
       this.questionData[0].value =
         formData.content['注册时间'] || this.questionData[0].value
@@ -108,11 +108,6 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
-  },
-  methods: {
-    backHandle() {
-      localStorage.removeItem('formData')
-    },
   },
   head() {
     return {

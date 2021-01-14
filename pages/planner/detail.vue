@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-12 19:53:26
+ * @LastEditTime: 2021-01-14 17:44:39
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -142,15 +142,8 @@
           </div>
         </div>
       </div>
-      <div v-if="recommendList && recommendList.length" class="recommend">
-        <h3 class="recommend__title">为您推荐</h3>
-        <div class="recommend-list">
-          <GoodsPro
-            v-for="item in recommendList"
-            :key="item"
-            class="item-wrap"
-          />
-        </div>
+      <div class="recommend" style="padding-bottom: 75px">
+        <RecommendList :mch-detail-id="detailData.mchDetailId" />
       </div>
     </div>
     <div class="footer">
@@ -158,12 +151,14 @@
         <sp-bottombar-button
           type="primary"
           text="电话联系"
+          :disabled="!detailData.phone"
           @click="handleCall"
         />
         <sp-bottombar-button
           v-if="!hideIM"
           type="info"
           text="在线联系"
+          :disabled="!detailData.id"
           @click="handleIM"
         />
       </sp-bottombar>
@@ -192,8 +187,8 @@ import {
 } from '@chipspc/vant-dgg'
 
 import Header from '@/components/common/head/header'
-import GoodsPro from '@/components/planner/GoodsPro'
 import SpToast from '@/components/common/spToast/SpToast'
+import RecommendList from '@/components/planner/RecommendList'
 
 import { planner } from '@/api'
 import imHandle from '@/mixins/imHandle'
@@ -209,13 +204,12 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [ShareSheet.name]: ShareSheet,
     Header,
-    GoodsPro,
+    RecommendList,
     SpToast,
   },
   mixins: [imHandle],
   data() {
     return {
-      recommendList: [],
       loading: true,
       detailData: {},
       shareOptions: [],
@@ -655,14 +649,6 @@ export default {
     }
   }
   .recommend {
-    &__title {
-      padding: 0 40px;
-      font-size: 40px;
-      font-weight: bold;
-      color: @title-text-color;
-      line-height: 44px;
-      margin-bottom: 6px;
-    }
   }
   .item-wrap {
     padding: 40px;

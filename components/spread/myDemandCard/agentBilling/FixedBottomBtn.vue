@@ -14,7 +14,9 @@ export default {
   },
   methods: {
     nextStep() {
-      const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
+      const sessionStorageFormData = JSON.parse(
+        sessionStorage.getItem('formData')
+      )
       const data = this.$parent.questionData
       //   if (!data[1].value) {
       //     Toast('请选择主营业务')
@@ -27,8 +29,8 @@ export default {
         公司年收入: data[3].value,
       }
       // 合并两个页面之间缓存的数据
-      if (localStorageFormData) {
-        content = Object.assign(localStorageFormData.content, content)
+      if (sessionStorageFormData) {
+        content = Object.assign(sessionStorageFormData.content, content)
       }
       // 将数据存储
       const str = JSON.stringify({
@@ -36,7 +38,7 @@ export default {
         url: window.location.href,
         content,
       })
-      localStorage.setItem('formData', str)
+      sessionStorage.setItem('formData', str)
       // 下一步
       this.$router.push({ path: '/spread/myDemandCard/second' })
     },
