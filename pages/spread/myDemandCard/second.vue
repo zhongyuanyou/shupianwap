@@ -1,7 +1,7 @@
 <template>
   <div class="center">
     <!-- S 头部 -->
-    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <Header ref="headerRef" title="轻松找服务" />
     <!-- E 头部 -->
     <div class="banner">
       <!--    城市按钮  -->
@@ -103,6 +103,7 @@ export default {
     }),
   },
   mounted() {
+    // 进入页面回显数据
     const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
     if (localStorageFormData) {
       localStorageFormData.content = Object.assign(
@@ -112,20 +113,20 @@ export default {
       this.formData = Object.assign(this.formData, localStorageFormData)
     }
   },
+  destroyed() {
+    // 缓存表单填写的数据
+    let data = JSON.parse(localStorage.getItem('formData'))
+    if (data) {
+      data.content = Object.assign(data.content, this.formData.content)
+      data = JSON.stringify(data)
+      localStorage.setItem('formData', data)
+    }
+  },
   methods: {
     // 选中
     select() {
       this.formData.content['是否允许电话联系'] =
         this.formData.content['是否允许电话联系'] === '是' ? '否' : '是'
-    },
-    // 返回时缓存数据
-    backHandle() {
-      let data = JSON.parse(localStorage.getItem('formData'))
-      if (data) {
-        data.content = Object.assign(this.formData.content, data.content)
-        data = JSON.stringify(data)
-        localStorage.setItem('formData', data)
-      }
     },
     // 选择城市
     tabCity() {
