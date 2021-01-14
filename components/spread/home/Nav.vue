@@ -5,9 +5,10 @@
       <ul v-if="navList && navList.length <= num" class="fixed-nav">
         <li v-for="(item, index) in navList" :key="index">
           <a
-            v-md-map
-            v-md:webClick
-            :data-name="`工商聚合页-${item.name}`"
+            v-sensorsTrack:webClick="{
+              eventName: 'wap元素点击',
+              name: `工商聚合页-${item.name}`,
+            }"
             href="javascript:void(0);"
             @click="
               () => {
@@ -26,9 +27,10 @@
         <ul v-if="navList && navList.length > num" class="scroll-nav">
           <li v-for="(item, index) in navList" :key="index" class="nav-item">
             <a
-              v-md-map
-              v-md:webClick
-              :data-name="`工商聚合页-${item.name}`"
+              v-sensorsTrack:webClick="{
+                eventName: 'wap元素点击',
+                name: `工商聚合页-${item.name}`,
+              }"
               href="javascript:void(0);"
               @click="
                 () => {
