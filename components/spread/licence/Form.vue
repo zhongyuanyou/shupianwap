@@ -244,7 +244,7 @@ export default {
         return
       }
       if (!telRes.test(_tel)) {
-        Toast('请输入正确的电话号码')
+        Toast('请输入正确的手机号码')
         return
       }
       if (!sms) {
