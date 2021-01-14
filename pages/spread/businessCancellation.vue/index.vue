@@ -1,5 +1,18 @@
 <template>
   <div class="page-content">
+    <!-- 头部 -->
+    <Header v-show="!isInApp" title="工商注销" :fixed="false">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1a1a1a"
+          />
+        </div>
+      </template>
+    </Header>
     <!-- 轮播图区域 -->
     <My-swipe :banners="banners" />
     <!-- 预约区域 -->
@@ -26,6 +39,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import Header from '@/components/common/head/header'
 import MySwipe from '@/components/spread/businessCancellation/MySwipe'
 import Appointment from '@/components/spread/businessCancellation/Appointment'
 import Influence from '@/components/spread/businessCancellation/Influence'
@@ -37,10 +51,12 @@ import YouNeed from '@/components/spread/businessCancellation/YouNeed'
 import ShuPian from '@/components/spread/common/ShuPianZhaoRen'
 import FixedBottom from '@/components/spread/common/FixedBottom'
 import DggImCompany from '@/components/spread/DggImCompany'
+import MyIcon from '@/components/common/myIcon/MyIcon'
 import { spreadApi } from '@/api/spread'
 
 export default {
   components: {
+    Header,
     MySwipe,
     Appointment,
     Influence,
@@ -52,6 +68,7 @@ export default {
     ShuPian,
     FixedBottom,
     DggImCompany,
+    MyIcon,
   },
   // async asyncData({ $axios }) {
   //   const type = 'extendBussineWithdraw'
@@ -477,6 +494,9 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   font-family: PingFang SC;
+}
+.back_icon {
+  margin-left: 40px;
 }
 /deep/ .sp-bottombar-info__sign {
   display: flex;
