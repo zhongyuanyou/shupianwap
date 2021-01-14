@@ -2,29 +2,33 @@
  * @Author: xiao pu
  * @Date: 2020-11-20 10:16:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-26 14:46:05
+ * @LastEditTime: 2021-01-06 17:01:36
  * @Description: file content
- * @FilePath: /chips-wap/client/components/common/imgAuth/ImgAuthInput.vue
+ * @FilePath: /chips-wap/components/common/imgAuth/ImgAuthInput.vue
 -->
 
 <template>
   <div class="img-auth-input">
-    <sp-cell-group>
-      <sp-field v-model="text" clearable placeholder="看不清？点击图片换一张">
-        <template #right-icon>
-          <div class="icon-wrap">
-            <sp-loading v-show="imageLoading"> </sp-loading>
-            <span
-              v-show="!imageLoading"
-              class="img"
-              @click="handleChangeImage"
-              v-html="imgSrc"
-            >
-            </span>
-          </div>
-        </template>
-      </sp-field>
-    </sp-cell-group>
+    <sp-field
+      v-model="text"
+      clearable
+      placeholder="看不清？点击图片换一张"
+      class="img-auth-input__field"
+      maxlength="4"
+    >
+      <template #right-icon>
+        <div class="icon-wrap">
+          <sp-loading v-show="imageLoading"> </sp-loading>
+          <span
+            v-show="!imageLoading"
+            class="img"
+            @click="handleChangeImage"
+            v-html="imgSrc"
+          >
+          </span>
+        </div>
+      </template>
+    </sp-field>
   </div>
 </template>
 
@@ -98,9 +102,24 @@ export default {
 
 <style lang="less" scoped>
 .img-auth-input {
-  /deep/.sp-cell-group {
-    .sp-cell {
-      padding: 8px;
+  position: relative;
+  // 1px 边框
+  &::after {
+    content: ' ';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    border: 1px solid #cdcdcd;
+    border-radius: 16px;
+    transform: scale(0.5);
+    transform-origin: top left;
+    pointer-events: none;
+  }
+  &__field {
+    padding: 8px 8px 8px 16px;
+    /deep/.sp-field__control {
       font-size: 22px;
     }
   }
@@ -112,6 +131,8 @@ export default {
       display: inline-block;
       width: 100%;
       height: 100%;
+      border-radius: 4px;
+      overflow: hidden;
     }
   }
 }

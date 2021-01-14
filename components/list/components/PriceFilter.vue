@@ -170,8 +170,14 @@ export default {
       }
       if (this.echoData.maxValue || this.echoData.minValue) {
         // 如果有
-        emitData.fieldValue.start = Number(this.echoData.minValue)
-        emitData.fieldValue.end = Number(this.echoData.maxValue)
+        emitData.fieldValue.start = Number(this.echoData.minValue) * 100
+        emitData.fieldValue.end = Number(this.echoData.maxValue) * 100
+        if (emitData.fieldValue.start > emitData.fieldValue.end) {
+          ;[emitData.fieldValue.start, emitData.fieldValue.end] = [
+            emitData.fieldValue.end,
+            emitData.fieldValue.start,
+          ]
+        }
       } else if (this.echoData.activeItems.length) {
         emitData.fieldValue.start = Number(
           this.echoData.activeItems[0].ext2.split('-')[0]

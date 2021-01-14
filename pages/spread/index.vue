@@ -825,7 +825,7 @@ export default {
   },
   data() {
     return {
-      images: ['https://cdn.shupian.cn/sp-pt/wap/images/4jy3z5c6p5e0000.jpg'],
+      images: ['https://cdn.shupian.cn/sp-pt/wap/images/1orfon5hb1ds000.jpg'],
       guiHuaShiList: [
         {
           id: '7862495547640840192',
@@ -1117,12 +1117,6 @@ export default {
   /deep/ .my-head {
     width: @spread-page-width !important;
     left: auto !important;
-  }
-
-  /deep/ .sp-overlay {
-    width: @spread-page-width;
-    left: auto;
-    right: auto;
   }
 }
 </style>

@@ -1,100 +1,109 @@
 <template>
   <div class="detail">
-    <sp-sticky v-if="!isInApp">
-      <sp-top-nav-bar title="面谈确认" ellipsis @on-click-left="back">
+    <div style="width: 100%">
+      <Header v-if="!isInApp" title="面谈确认">
         <template #left>
-          <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          <div @click="back">
+            <my-icon
+              name="nav_ic_back"
+              class="back_icon"
+              size="0.4rem"
+              color="#1A1A1A"
+            ></my-icon>
           </div>
         </template>
-      </sp-top-nav-bar>
-    </sp-sticky>
-    <!--S banner-->
-    <div class="detail-banner"></div>
-    <!--E banner-->
-    <!--S content-->
-    <div class="detail-content">
-      <div class="detail-content__form">
-        <p>请确认以下面谈信息</p>
-        <div class="detail-content__form__items">
-          <div class="item">
-            <div class="item__lf">
-              <my-icon
-                name="nav_ic_back"
-                size="0.26rem"
-                color="#1A1A1A"
-              ></my-icon>
-              <p>规划师</p>
+      </Header>
+      <!--S banner-->
+      <div class="detail-banner"></div>
+      <!--E banner-->
+      <!--S content-->
+      <div class="detail-content">
+        <div class="detail-content__form">
+          <p>请确认以下面谈信息</p>
+          <div class="detail-content__form__items">
+            <div class="item">
+              <div class="item__lf">
+                <my-icon
+                  name="commodity_ic_tplanner"
+                  size="0.26rem"
+                  color="#1A1A1A"
+                ></my-icon>
+                <p>规划师</p>
+              </div>
+              <div class="item__rt">
+                <p>{{ info.inviterName }}</p>
+              </div>
             </div>
-            <div class="item__rt">
-              <p>{{ info.inviterName }}</p>
+            <div class="item">
+              <div class="item__lf">
+                <my-icon
+                  name="commodity_ic_ttime"
+                  size="0.3rem"
+                  color="#1A1A1A"
+                ></my-icon>
+                <p>面谈时间</p>
+              </div>
+              <div class="item__rt">
+                <p>{{ info.inviteTime }}</p>
+              </div>
             </div>
-          </div>
-          <div class="item">
-            <div class="item__lf">
-              <my-icon
-                name="nav_ic_back"
-                size="0.26rem"
-                color="#1A1A1A"
-              ></my-icon>
-              <p>面谈时间</p>
+            <div class="item">
+              <div class="item__lf">
+                <my-icon
+                  name="commodity_ic_tmap"
+                  size="0.26rem"
+                  color="#1A1A1A"
+                ></my-icon>
+                <p>面谈地点</p>
+              </div>
+              <div class="item__rt">
+                <p>{{ info.inviteAddress }}</p>
+              </div>
             </div>
-            <div class="item__rt">
-              <p>{{ info.inviteTime }}</p>
-            </div>
-          </div>
-          <div class="item">
-            <div class="item__lf">
-              <my-icon
-                name="nav_ic_back"
-                size="0.26rem"
-                color="#1A1A1A"
-              ></my-icon>
-              <p>面谈地点</p>
-            </div>
-            <div class="item__rt">
-              <p>{{ info.inviteAddress }}</p>
-            </div>
-          </div>
-          <div class="item">
-            <div class="item__lf">
-              <my-icon
-                name="nav_ic_back"
-                size="0.26rem"
-                color="#1A1A1A"
-              ></my-icon>
-              <p>陪谈人</p>
-            </div>
-            <div class="item__rt">
-              <p>{{ info.accompanyName }}</p>
+            <div class="item">
+              <div class="item__lf">
+                <my-icon
+                  name="commodity_ic_tman"
+                  size="0.3rem"
+                  color="#1A1A1A"
+                ></my-icon>
+                <p>陪谈人</p>
+              </div>
+              <div class="item__rt">
+                <p>{{ info.accompanyName }}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <sp-button
-        v-if="info.inviteStatus === 0"
-        type="primary"
-        @click="handleInterStatus(1)"
-        >确认，已完成面谈</sp-button
-      >
-      <sp-button
-        v-if="info.inviteStatus === 0"
-        type="primary"
-        @click="handleInterStatus(0)"
-        >取消面谈</sp-button
-      >
-      <div v-if="info.inviteStatus !== 0" class="status">
-        {{
-          info.inviteStatus === 1
-            ? '已面谈'
-            : info.inviteStatus === 2
-            ? '已评价'
-            : '已取消'
-        }}
+        <sp-button
+          v-if="info.inviteStatus === 0"
+          type="primary"
+          @click="handleInterStatus(1)"
+          >确认，已完成面谈</sp-button
+        >
+        <sp-button
+          v-if="info.inviteStatus === 0"
+          type="primary"
+          @click="handleInterStatus(0)"
+          >取消面谈</sp-button
+        >
+        <div v-if="info.inviteStatus !== 0" class="status">
+          {{
+            info.inviteStatus === 1
+              ? '已面谈'
+              : info.inviteStatus === 2
+              ? '已评价'
+              : '已取消'
+          }}
+        </div>
       </div>
     </div>
     <!--E content-->
-    <p class="bot">薯片找人 | 日常五福，尽在薯片！</p>
+    <div>
+      <p class="bot">薯片找人 | 日常五福，尽在薯片！</p>
+      <sp-toast ref="spToast"></sp-toast>
+      <Loading-center v-show="loading" />
+    </div>
   </div>
 </template>
 
@@ -102,12 +111,18 @@
 import { Sticky, TopNavBar, Button } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { interviewApi } from '~/api'
+import Header from '@/components/common/head/header'
+import SpToast from '@/components/common/spToast/SpToast'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'Detail',
   components: {
     [Sticky.name]: Sticky,
     [TopNavBar.name]: TopNavBar,
     [Button.name]: Button,
+    Header,
+    SpToast,
+    LoadingCenter,
   },
   data() {
     return {
@@ -118,14 +133,23 @@ export default {
         inviteStatus: 0, // 面谈状态
         inviterName: '', // 规划师
       }, // 面谈详情
+      loading: false,
     }
   },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      userId: (state) => state.user.userInfo.userId,
     }),
   },
   mounted() {
+    if (this.isInApp) {
+      this.$appFn.dggGetUserInfo((res) => {
+        if (res.code === 200 && res.data.userId && res.data.token) {
+          this.$store.dispatch('user/setUser', res.data)
+        }
+      })
+    }
     this.getInterviewDetail()
   },
   methods: {
@@ -141,21 +165,52 @@ export default {
         }
         const res = await this.$axios.get(interviewApi.detail, { params })
         if (res.code === 200) {
-          this.info = res.data
+          this.info = res.data || this.info
         }
       } catch (err) {}
     },
     async handleInterStatus(val) {
-      try {
-        const params = {
-          id: this.info.id,
-          type: val,
-        }
-        const res = await this.$axios.post(interviewApi.cancel, params)
-        if (res.code === 200) {
-          this.getInterviewDetail()
-        }
-      } catch (err) {}
+      this.loading = true
+      if (this.userId) {
+        // 若用户已登录
+        try {
+          const params = {
+            id: this.info.id,
+            type: val,
+            userId: this.userId,
+          }
+          const res = await this.$axios.post(interviewApi.cancel, params)
+          this.loading = false
+          if (res.code === 200) {
+            this.getInterviewDetail()
+          } else {
+            this.$refs.spToast.show({
+              message: res.data.error,
+              duration: 1000,
+              forbidClick: true,
+            })
+          }
+        } catch (err) {}
+      } else if (this.isInApp) {
+        this.loading = false
+        // 如果是在app中
+        this.$appFn.dggLogin((res) => {
+          try {
+            if (res.code === 200) {
+              const userInfo = res.data || {}
+              if (userInfo && userInfo.userId && userInfo.token) {
+                this.$store.dispatch('user/setUser', userInfo)
+              }
+            }
+          } catch (err) {}
+        })
+      } else {
+        this.loading = false
+        this.$router.push({
+          name: 'login',
+          query: { redirect: this.$route.fullPath },
+        })
+      }
     },
   },
 }
@@ -166,21 +221,30 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  .back_icon {
+    margin-left: 40px;
+  }
   &-banner {
     width: 100%;
     height: 346px;
-    background-color: #f4f4f4;
+    background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/bq4tcjzziw80000.jpg');
+    background-size: cover;
   }
   &-content {
+    width: 100%;
     padding: 0 40px;
     &__form {
       width: 100%;
       height: 563px;
-      background: #ffffff;
+      background-color: #ffffff;
       box-shadow: 0 6px 10px 0 rgba(183, 183, 183, 0.1);
       border-radius: 12px;
       margin-top: -131px;
-      padding: 64px 0 0 40px;
+      padding: 64px 0 0 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -190,9 +254,12 @@ export default {
         font-family: PingFang-SC-Bold, PingFang-SC;
         font-weight: bold;
         color: #222222;
+        width: 100%;
+        text-align: center;
       }
       &__items {
         width: 100%;
+        padding-left: 40px;
         .item {
           width: 100%;
           height: 108px;
@@ -256,7 +323,7 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #4974f5;
-    margin-top: 144px;
+    margin-bottom: 48px;
   }
 }
 </style>

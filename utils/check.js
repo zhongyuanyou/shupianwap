@@ -64,7 +64,10 @@ export function checkPhone(telephoneNumber) {
  */
 export function checkPassword(password) {
   // 至少6-15个字符，至少1个大写字母，1个小写字母和1个数字，其他可以是任意字符
-  const Regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{6,15}$/
+  // const Regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{6,15}$/
+  // 至少6-15个字符 可以包含\"#$%&'()*+,-./:;<=>?@[]^_`{|}~等特殊字符
+  // eslint-disable-next-line
+  const Regex = /^[A-Za-z0-9!\\"#\$%&'\(\)\*\+,-.\/\:;<=>\?@\[\]\^_`\{\|\}\~]{6,15}$/
   return Regex.test(password)
 }
 

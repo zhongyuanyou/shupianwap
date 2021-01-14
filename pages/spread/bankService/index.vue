@@ -16,11 +16,12 @@
       :planners-data="plannersList"
       :planners-common="plannersTitle"
       :page-title="title"
+      md-type="new"
     />
     <!-- 您可能还需要办理 -->
     <Need />
     <!-- 底部导航 -->
-    <Bottom :planner="planner" />
+    <Bottom :planner="planner" md-type="new" :md="fixedMd" />
     <!-- im对话框 -->
     <dgg-im-company></dgg-im-company>
   </div>
@@ -469,6 +470,16 @@ export default {
         telephone: '18402858698',
         imgSrc:
           'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+      },
+      fixedMd: {
+        telMd: {
+          name: '银行服务_钻石展位_拔打电话',
+          type: '售前',
+        },
+        imMd: {
+          name: '银行服务_钻石展位_在线咨询',
+          type: '售前',
+        },
       },
     }
   },

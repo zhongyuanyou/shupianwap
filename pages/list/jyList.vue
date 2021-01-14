@@ -4,6 +4,7 @@
     <Search
       v-model="currentInputText"
       placeholder="请输入搜索内容"
+      :maxlength="50"
       @searchKeydownHandle="searchKeydownHandle"
     >
       <div slot="left" class="nav-back" @click="$router.go(-1)">
@@ -61,6 +62,15 @@ export default {
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'JyList' })
     this.getJyType()
+    document.body.addEventListener('focusout', () => {
+      // 监听软键盘关闭事件
+      // 解決ios端用微信打开页面，收起软键盘后，底部出现空白问题
+      setTimeout(() => {
+        const scrollHeight =
+          document.documentElement.scrollTop || document.body.scrollTop || 0
+        window.scrollTo(0, Math.max(scrollHeight - 1, 0))
+      }, 100)
+    })
   },
   methods: {
     ...mapMutations({
@@ -89,6 +99,9 @@ export default {
             : item.ext4
           return item.ext4 === typeCode
         })
+        if (index === -1) {
+          this.$router.replace('/500')
+        }
         this.typeCodeIndex = index
       }
     },
