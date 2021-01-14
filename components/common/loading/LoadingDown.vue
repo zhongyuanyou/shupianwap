@@ -42,13 +42,14 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 60px;
-  line-height: 60px;
+  height: 100px;
+  line-height: 100px;
+  background-color: #f4f4f4;
   .no-data {
     font-size: 24px;
     font-family: PingFang SC;
     font-weight: 400;
-    color: #999999;
+    color: #969799;
   }
 }
 </style>

@@ -13,6 +13,7 @@ toast.install = function (Vue, option) {
   Vue.prototype.$xToast.loading = toastInstance.loading
   Vue.prototype.$xToast.showLoading = toastInstance.showLoading
   Vue.prototype.$xToast.hideLoading = toastInstance.hideLoading
+  Vue.prototype.$xToast.warning = toastInstance.warning
 }
 
 export default toast

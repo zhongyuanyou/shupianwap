@@ -74,6 +74,18 @@ export default {
       this.icon = 'toast_ic_error'
       this._hidToast(duration, cb)
     },
+    warning(message, duration = 1500, forbidClick = false, cb) {
+      // 警告
+      this.checkType('message', message)
+      this.checkType('duration', duration)
+      this.checkType('forbidClick', forbidClick)
+      cb && this.checkType('cb', cb)
+      this.message = message
+      this.isShow = true
+      this.forbidClick = forbidClick
+      this.icon = 'toast_ic_remind'
+      this._hidToast(duration, cb)
+    },
     showLoading(
       { message = '加载中', type = 'loading', forbidClick = false },
       cb
