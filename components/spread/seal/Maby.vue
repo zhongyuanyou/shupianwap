@@ -40,7 +40,7 @@ export default {
         {
           name: '互联网资质',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/citl4m2kkxs0000.jpg',
-          url: '',
+          url: '/spread/internetQualification ',
         },
         {
           name: '财务稅筹',
@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     // 点击该模块判断是否进行跳转，如果不跳转就调用IM
-    openImUrl(url) {
+    tabUrl(url) {
       this.$router.push(url)
       // window.location.href = url
     },
