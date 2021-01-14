@@ -90,7 +90,7 @@
         show-toolbar
         :default-index="isCityChange"
         :columns="actionsRegion"
-        @confirm="onCancel"
+        @confirm="onConfirm"
         @cancel="onCancel"
         @change="onChange"
       />
@@ -214,6 +214,9 @@ export default {
     isChoose(index) {
       this.chooseActived = index
       this.formData.content.sydz = this.choose[index]
+    },
+    onConfirm(value) {
+      this.formData.content.yxblqy = value
     },
     // 获取公司信息是否完成的选择
     confirm(index) {
