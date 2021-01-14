@@ -43,12 +43,12 @@ export default {
         },
         {
           background: 'https://cdn.shupian.cn/sp-pt/wap/dpsgk5q0c5c0000.png',
-          url: '/licence',
+          url: '/spread/licence',
           mdName: '工商注销_还需要办理_许可证办理',
         },
         {
           background: 'https://cdn.shupian.cn/sp-pt/wap/3z1ra7t3h4u0000.png',
-          url: '/',
+          url: '/spread/tax',
           mdName: '工商注销_还需要办理_财务税筹',
         },
         {
@@ -58,12 +58,12 @@ export default {
         },
         {
           background: 'https://cdn.shupian.cn/sp-pt/wap/dkjzwaiiokg0000.png',
-          url: '/',
+          url: '/spread/agency',
           mdName: '工商注销_还需要办理_代理记账',
         },
         {
           background: 'https://cdn.shupian.cn/sp-pt/wap/7yz1bmsxurk0000.png',
-          url: '/bankService',
+          url: '/spread/bankService',
           mdName: '工商注销_还需要办理_银行服务',
         },
       ],

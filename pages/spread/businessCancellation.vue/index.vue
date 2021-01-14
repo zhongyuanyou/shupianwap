@@ -1,5 +1,18 @@
 <template>
   <div class="page-content">
+    <!-- 头部 -->
+    <Header v-show="!isInApp" title="工商注销" :fixed="false">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1a1a1a"
+          />
+        </div>
+      </template>
+    </Header>
     <!-- 轮播图区域 -->
     <My-swipe :banners="banners" />
     <!-- 预约区域 -->
@@ -25,6 +38,8 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
+import Header from '@/components/common/head/header'
 import MySwipe from '@/components/spread/businessCancellation/MySwipe'
 import Appointment from '@/components/spread/businessCancellation/Appointment'
 import Influence from '@/components/spread/businessCancellation/Influence'
@@ -36,9 +51,12 @@ import YouNeed from '@/components/spread/businessCancellation/YouNeed'
 import ShuPian from '@/components/spread/common/ShuPianZhaoRen'
 import FixedBottom from '@/components/spread/common/FixedBottom'
 import DggImCompany from '@/components/spread/DggImCompany'
+import MyIcon from '@/components/common/myIcon/MyIcon'
 import { spreadApi } from '@/api/spread'
+
 export default {
   components: {
+    Header,
     MySwipe,
     Appointment,
     Influence,
@@ -50,6 +68,7 @@ export default {
     ShuPian,
     FixedBottom,
     DggImCompany,
+    MyIcon,
   },
   // async asyncData({ $axios }) {
   //   const type = 'extendBussineWithdraw'
@@ -368,7 +387,11 @@ export default {
       },
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   watch: {},
   created() {
     // this.serviceList(this.resultData)
@@ -384,59 +407,74 @@ export default {
     window.sensors.registerPage(param) // 设置公共属性
   },
   methods: {
+    /** 返回上一页 */
+    back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/spread')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
     /** 业务介绍数据处理 */
     serviceList(data) {
       const listAll = data.adList[0].sortMaterialList
-      const dataList = []
-      listAll.forEach((item, index) => {
-        /** 获取随机下标，当lables长度不够时 */
-        const subscript = `${
-          index < this.lables.length
-            ? index
-            : Math.floor(Math.random() * this.lables.length)
-        }`
-        const list = item.materialList[0].productDetail
-        const obj = {
-          title: list.operating.showName,
-          titlelable:
-            'https://cdn.shupian.cn/sp-pt/wap/images/cr4yfd0fvhk0000.png',
-          titleContent: list.operating.slogan,
-          lowerPrice: list.referencePrice,
-          tags: this.lables[subscript],
-          number: [
-            { content: '在线咨询', num: list.operating.actualViews },
-            { content: '累计成交', num: list.operating.defaultSales },
-            { content: '成功案例', num: list.operating.actualSales },
-          ],
-          planner: {
-            id: '66475',
-            name: '钟霞',
-            jobNum: '38798340',
-            telephone: '13730634929',
-            imgSrc:
-              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.gw_defult/xdy-xcx/my/trueAndFalse/gw_defult.png',
-          },
-        }
-        if (data.planlerList.length > 0) {
-          const subPlanner =
-            data.planlerList[
-              `${
-                index < data.planlerList.length
-                  ? index
-                  : Math.floor(Math.random() * data.planlerList.length)
-              }`
-            ]
-          obj.planner.id = subPlanner.userCentreId
-          obj.planner.name = subPlanner.realName
-          obj.planner.jobNum = subPlanner.loginName
-          obj.planner.telephone = subPlanner.userPhone
-          obj.planner.imgSrc = subPlanner.userHeadUrl
-        } else {
-          return null
-        }
-        dataList.push(obj)
-      })
-      this.serviceListData = dataList
+      if (listAll.length !== 0) {
+        const dataList = []
+        listAll.forEach((item, index) => {
+          /** 获取随机下标，当lables长度不够时 */
+          const subscript = `${
+            index < this.lables.length
+              ? index
+              : Math.floor(Math.random() * this.lables.length)
+          }`
+          const list = item.materialList[0].productDetail
+          const obj = {
+            title: list.operating.showName,
+            titlelable:
+              'https://cdn.shupian.cn/sp-pt/wap/images/cr4yfd0fvhk0000.png',
+            titleContent: list.operating.slogan,
+            lowerPrice: list.referencePrice,
+            tags: this.lables[subscript],
+            number: [
+              { content: '在线咨询', num: list.operating.actualViews },
+              { content: '累计成交', num: list.operating.defaultSales },
+              { content: '成功案例', num: list.operating.actualSales },
+            ],
+            planner: {
+              id: '66475',
+              name: '钟霞',
+              jobNum: '38798340',
+              telephone: '13730634929',
+              imgSrc:
+                'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.gw_defult/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            },
+          }
+          if (data.planlerList.length > 0) {
+            const subPlanner =
+              data.planlerList[
+                `${
+                  index < data.planlerList.length
+                    ? index
+                    : Math.floor(Math.random() * data.planlerList.length)
+                }`
+              ]
+            obj.planner.id = subPlanner.userCentreId
+            obj.planner.name = subPlanner.realName
+            obj.planner.jobNum = subPlanner.loginName
+            obj.planner.telephone = subPlanner.userPhone
+            obj.planner.imgSrc = subPlanner.userHeadUrl
+          } else {
+            return null
+          }
+          dataList.push(obj)
+        })
+        this.serviceListData = dataList
+      }
     },
   },
   head() {
@@ -456,6 +494,9 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   font-family: PingFang SC;
+}
+.back_icon {
+  margin-left: 40px;
 }
 /deep/ .sp-bottombar-info__sign {
   display: flex;

@@ -22,7 +22,7 @@
         <sp-icon name="search" size="20" @click="onClickRight" />
       </template>
     </sp-top-nav-bar>
-    <div :style="{ marginTop: 0 }">
+    <div>
       <Con
         :banner="information_banner"
         :list="information_list"
@@ -31,7 +31,7 @@
         @refresh="refresh"
       />
     </div>
-    <Bottombar ref="bottombar" />
+    <Bottombar v-if="!isInApp" ref="bottombar" />
   </div>
 </template>
 
@@ -151,6 +151,15 @@ export default {
     padding-top: constant(safe-area-inset-top);
     padding-top: env(safe-area-inset-top);
     z-index: 5;
+  }
+  /deep/ .sp-work-tab {
+    font-size: 32px;
+  }
+  /deep/ .sp-work-tab--active {
+    font-size: 40px;
+  }
+  /deep/ .sp-hairline--bottom::after {
+    border-bottom: none;
   }
 }
 </style>

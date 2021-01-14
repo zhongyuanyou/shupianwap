@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-28 11:00:06
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 10:53:01
+ * @LastEditTime: 2021-01-07 16:24:57
  * @Description: file content
- * @FilePath: /chips-wap/client/components/shoppingCar/Bottombar.vue
+ * @FilePath: /chips-wap/components/shoppingCar/Bottombar.vue
 -->
 <!--
  * @Author: xiao pu
@@ -160,10 +160,11 @@ export default {
       }
     }
     .comfirm-btn {
-      width: 191px;
+      min-width: 191px;
       height: 80px;
       background: #ec5330;
       border-radius: 8px;
+      border: none;
       font-size: 28px;
       font-weight: bold;
       color: #ffffff;
@@ -173,7 +174,6 @@ export default {
       width: 184px;
       height: 80px;
       background: #ffffff;
-      // border: 1px solid #4974f5;
       border-radius: 8px;
       color: #4974f5;
     }
@@ -181,7 +181,6 @@ export default {
       width: 184px;
       height: 80px;
       background: #ffffff;
-      // border: 1px solid #f1524e;
       border-radius: 8px;
       color: #f1524e;
     }

@@ -17,31 +17,33 @@
     <SwiperBanner :swiper-data="initData.rollBannerData" />
     <!-- E 轮播banner -->
     <!-- S 帮我找服务 -->
-    <Help :help-banner-data="initData.helpBannerData" />
+    <Help ref="showScollHeight" :help-banner-data="initData.helpBannerData" />
     <!-- E 帮我找服务 -->
-    <!-- S 限时特惠 -->
-    <Preferential :init-data="asyncData.preferential" />
-    <!-- E 限时特惠 -->
-    <!-- S 资讯精选 -->
-    <Information :info-data="asyncData.information" />
-    <!-- E 资讯精选 -->
-    <!-- S 热门服务 -->
-    <HotServe :hot-data="asyncData.rotationAd" />
-    <!-- E 热门服务 -->
-    <!-- S 推荐服务 -->
-    <Recommend ref="recommendRef" />
-    <!-- E 推荐服务 -->
-    <!-- S 悬浮按钮 -->
-    <FiexdBtn />
-    <!-- E 悬浮按钮 -->
-    <!-- S 下载app弹框 -->
-    <InstallAppDialog
-      v-if="!closeAppOpen"
-      v-model="showInstallAppDialog"
-      :close-on-click-overlay="false"
-      @closed="handleDialogClosed"
-    />
-    <!-- E 下载app弹框 -->
+    <client-only>
+      <!-- S 限时特惠 -->
+      <Preferential :init-data="asyncData.preferential" />
+      <!-- E 限时特惠 -->
+      <!-- S 资讯精选 -->
+      <Information :info-data="asyncData.information" />
+      <!-- E 资讯精选 -->
+      <!-- S 热门服务 -->
+      <HotServe :hot-data="asyncData.rotationAd" />
+      <!-- E 热门服务 -->
+      <!-- S 推荐服务 -->
+      <Recommend ref="recommendRef" />
+      <!-- E 推荐服务 -->
+      <!-- S 悬浮按钮 -->
+      <FiexdBtn />
+      <!-- E 悬浮按钮 -->
+      <!-- S 下载app弹框 -->
+      <InstallAppDialog
+        v-if="!closeAppOpen"
+        v-model="showInstallAppDialog"
+        :close-on-click-overlay="false"
+        @closed="handleDialogClosed"
+      />
+      <!-- E 下载app弹框 -->
+    </client-only>
   </div>
 </template>
 

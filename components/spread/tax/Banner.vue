@@ -17,32 +17,36 @@
         <div
           v-for="(item, i) of tabs"
           :key="i"
-          v-md-map
-          v-md:webClick
+          v-sensorsTrack:webClick="{
+            form_name: `税务筹划表单_表头选择栏_${item}`,
+          }"
           :class="active == i ? bigfont : smallfont"
           style="width: 195px"
-          :data-name="`税务筹划表单_表头选择栏_${item}`"
           @click="change(i)"
         >
-          {{ item }}
+          <a href="javascript:;">
+            {{ item }}
+          </a>
         </div>
       </div>
       <div class="banner-bottom-text">为您定制稅筹方案，可降低成本40%-90%</div>
       <!--      表单-->
       <div class="banner-bottom-form">
-        <sp-cell
-          v-md-map
-          v-md:webClick
-          title="请选择"
-          :value="selectName"
-          arrow-direction="down"
-          is-link
-          data-name="税务筹划表单_下拉表单"
-          :value-class="
-            selectName === '税务类型' ? { gray: true } : { black: true }
-          "
-          @click="show = true"
-        />
+        <a href="javascript:;">
+          <sp-cell
+            v-sensorsTrack:webClick="{
+              form_name: `税务筹划表单_下拉表单`,
+            }"
+            title="请选择"
+            :value="selectName"
+            arrow-direction="down"
+            is-link
+            :value-class="
+              selectName === '税务类型' ? { gray: true } : { black: true }
+            "
+            @click="show = true"
+          />
+        </a>
         <sp-action-sheet
           v-model="show"
           :actions="actions"
@@ -53,12 +57,12 @@
           <span>手机号</span>
           <input
             v-model="tel"
-            v-md-map
-            v-md:webClick
+            v-sensorsTrack:webClick="{
+              form_name: `税务筹划表单_手机号`,
+            }"
             class="banner-bottom-form-input"
             placeholder="信息保护中，仅官方可见"
             type="tel"
-            data-name="税务筹划表单_手机号"
             maxlength="11"
             @focus="focus"
             @input="
@@ -72,9 +76,9 @@
           <span>验证码</span>
           <input
             v-model="code"
-            v-md-map
-            v-md:webClick
-            data-name="税务筹划表单_验证码"
+            v-sensorsTrack:webClick="{
+              form_name: `税务筹划表单_验证码`,
+            }"
             class="banner-bottom-form-input banner-bottom-form-inputspe"
             placeholder="请输入验证码"
             type="tel"
@@ -86,21 +90,21 @@
             "
           />
           <a
-            v-md-map
-            v-md:webClick
+            v-sensorsTrack:webClick="{
+              form_name: `税务筹划表单_获取验证码`,
+            }"
             class="banner-bottom-form-div-a"
             href="javascript:;"
-            data-name="税务筹划表单_获取验证码"
             @click="testMsg"
             >{{ text }}</a
           >
         </div>
         <button
-          v-md:p_formSubmit
-          v-md-map
-          data-event_name="p_formSubmit"
-          data-form_type="咨询表单"
-          data-form_name="税务筹划表单_验证码"
+          v-sensorsTrack:p_formSubmit="{
+            event_name: 'p_formSubmit',
+            form_type: '咨询表单',
+            form_name: `税务筹划表单_提交`,
+          }"
           class="banner-bottom-form-button"
           @click="consultForm"
         >
@@ -305,7 +309,7 @@ export default {
           this.code = ''
           this.text = '发送验证码'
           this.selectName = ''
-          window.getTrackRow('p_formSubmitResult', {
+          window.sensors.track('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
             form_name: '税务筹划表单_提交',
@@ -320,6 +324,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+a {
+  text-decoration: none;
+  color: inherit;
+}
 .banner {
   &-top {
     width: @spread-page-width;
@@ -394,6 +402,9 @@ export default {
           position: absolute;
           right: 0;
           margin: 0 33px;
+          font-size: 28px;
+          font-weight: 400;
+          color: #4974f5;
         }
       }
 
@@ -459,13 +470,6 @@ export default {
   font-family: PingFang SC;
   font-weight: 400;
   color: #1a1a1a;
-}
-
-a {
-  font-size: 28px;
-  font-family: PingFang SC;
-  font-weight: 400;
-  color: #4974f5;
 }
 
 .big {

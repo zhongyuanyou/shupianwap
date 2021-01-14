@@ -181,6 +181,7 @@ export default {
     popupShow() {
       this.showPicker = true
     },
+    /** 弹出框点击确定 */
     onConfirm(val) {
       this.need = val
       this.showPicker = false

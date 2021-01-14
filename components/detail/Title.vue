@@ -10,25 +10,53 @@
         <!--          {{ item }}-->
         <!--        </div>-->
       </div>
-      <div class="title_tags_remind">降价提醒</div>
+      <div class="title_tags_remind" @click="handleShowPriceRed">
+        <my-icon
+          name="notify_ic_clock1"
+          color="#4974f5"
+          size="0.32rem"
+          class="icon"
+        />降价提醒
+      </div>
     </div>
     <p class="title_btitle">{{ tcProductDetailData.name }}</p>
     <div class="imp_remind">
-      <i class="icon certificates_icon"></i><span>重要提醒</span>
+      <nuxt-link to="/spread/riskTips">
+        <sp-image
+          src="https://cdn.shupian.cn/sp-pt/wap/images/4eevblk9nmy0000.png?x-oss-process=image/resize,m_fill,w_40,h_30,limit_0"
+          fit="cover"
+        />
+        <span>重要提醒</span>
+      </nuxt-link>
     </div>
     <p class="money">{{ tcProductDetailData.platformPrice }}元</p>
+    <PriceReduction ref="priceR"></PriceReduction>
   </div>
 </template>
 
 <script>
+import { Image } from '@chipspc/vant-dgg'
+import PriceReduction from '~/components/detail/PriceReduction'
 export default {
   name: 'Title',
+  components: {
+    [Image.name]: Image,
+    PriceReduction,
+  },
   props: {
     tcProductDetailData: {
       type: Object,
       default: () => {
         return {}
       },
+    },
+  },
+  data() {
+    return {}
+  },
+  methods: {
+    handleShowPriceRed() {
+      this.$refs.priceR.show = true
     },
   },
 }
@@ -49,7 +77,7 @@ export default {
   .certificates_icon {
     width: 40px;
     height: 28px;
-    background-image: url('~assets/images/planner/per_img_certificates.png');
+    background-image: url(https://cdn.shupian.cn/sp-pt/wap/images/3llegqu9ofs0000.png);
   }
   &_tags {
     width: 100%;
@@ -63,6 +91,10 @@ export default {
       font-weight: 400;
       color: #222222;
       line-height: 36px;
+      display: flex;
+      .icon {
+        margin-right: 12px;
+      }
     }
     &_con {
       display: flex;
@@ -101,8 +133,17 @@ export default {
     justify-content: flex-start;
     align-items: center;
     flex-direction: row;
+    a {
+      display: flex;
+      color: #222222;
+      /deep/img {
+        width: 40px;
+        height: 30px;
+      }
+    }
     span {
       margin-left: 9px;
+      color: #222222;
     }
   }
   .money {

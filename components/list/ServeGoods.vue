@@ -54,10 +54,12 @@
     <!--S商品列表-->
     <sp-list
       v-show="listShow"
+      ref="splist"
       v-model="loading"
       :finished="finished"
       :style="{
         maxHeight: `${maxHeight}px`,
+        paddingBottom: isShowOpenApp ? '45px' : '0',
       }"
       finished-text="没有更多了"
       class="goods-content"
@@ -83,7 +85,11 @@
     </div>
     <!--E商品列表-->
     <!--S订阅-->
-    <Subscribe v-show="!listShow && !skeletonLoading" />
+    <Subscribe
+      v-show="!listShow && !skeletonLoading"
+      :content="saveActiveData"
+      :search-text="searchText"
+    />
     <!--E订阅-->
     <openApp />
   </div>
@@ -177,6 +183,16 @@ export default {
       typeData: [],
     }
   },
+  computed: {
+    cityCode() {
+      const cityObj = this.$store.state.city.currentCity
+      console.log('cityObj', cityObj)
+      return cityObj
+    },
+    isShowOpenApp() {
+      return this.$store.state.app.isShowOpenApp
+    },
+  },
   watch: {
     searchText(val) {
       this.formData.keywords = val
@@ -194,7 +210,9 @@ export default {
       })
       // 分类数据
       this.typeData = clone(val.typeData)
-      // this.selectValue = this.option[0].value
+      // 初始化
+      this.formData.sortBy = this.option[0].value
+      this.initGoodsList()
     },
     activeData(val) {
       if (this.saveActiveData.length && this.saveActiveData[0].code !== -1) {
@@ -212,7 +230,6 @@ export default {
       this.formData.classCodes = this.sessionCategory.code
     }
     this.formData.keywords = this.searchText
-    this.initGoodsList()
   },
   methods: {
     handleSelect(val) {
@@ -344,6 +361,20 @@ export default {
       this.removeClass('active', 1)
       // this.selectValue = this.option[0].value
       this.dropdownTitle1 = '全部服务'
+    },
+    computedHeight() {
+      // 计算列表的最大高
+      const top = this.$refs.splist.$el.getBoundingClientRect().top
+      console.log('top', top)
+      this.maxHeight = document.body.clientHeight - top
+      // console.log('this.$refs.splist', this.$refs.splist)
+      // const installAPPHeight = this.$refs.installApp.$el.clientHeight
+      // const installAPPTop = this.$refs.installApp.$el.getBoundingClientRect()
+      //   .top
+      // const dropDownMenuHeight = this.$refs.dropDownMenu.$el.clientHeight
+      // const topHeight = this.$el.getBoundingClientRect().top
+      // this.maxHeight =
+      //   document.body.clientHeight - installAPPHeight - installAPPTop
     },
   },
 }

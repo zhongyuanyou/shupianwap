@@ -6,9 +6,12 @@
         <sp-grid-item
           v-for="(item, i) of banners"
           :key="i"
-          v-md-map
-          v-md:webClick
-          :data-name="`量身打造各行业税收解决方案-${item.title}`"
+          v-sensorsTrack:$webClick="{
+            name: `量身打造各行业税收解决方案-${item.title}`,
+          }"
+          v-sensorsTrack:webClick="{
+            name: `量身打造各行业税收解决方案-${item.title}`,
+          }"
           @click="openIMurl()"
         >
           <div class="conrult-banner-img" :style="item.style"></div>
@@ -18,11 +21,11 @@
     </div>
     <div class="conrult-gray">更多行业解决方案</div>
     <button
-      v-md-map
-      v-md:p_IMClick
+      v-sensorsTrack:p_IMClick="{
+        name: `量身打造各行业税收解决方案-立即咨询`,
+        im_type: '售前',
+      }"
       class="conrult-button"
-      data-im_type="售前"
-      data-name="量身打造各行业税收解决方案-立即咨询"
       @click="$parent.openIm"
     >
       立即咨询

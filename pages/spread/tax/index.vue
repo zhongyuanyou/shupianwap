@@ -1,7 +1,18 @@
 <template>
   <div class="center">
     <!--  头部  -->
-    <Header :title="headTitle"></Header>
+    <Header v-show="!isInApp" :title="headTitle">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!--  头部  -->
     <!--  轮播/表单  -->
     <banner :today-num="todayNum"></banner>
@@ -41,6 +52,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Header from '~/components/common/head/header'
 import banner from '~/components/spread/tax/Banner'
 import serve from '~/components/spread/tax/Serve'
@@ -82,7 +94,7 @@ export default {
       })
       if (res.code === 200) {
         return {
-          result: res.data,
+          result: '',
         }
       }
     } catch (error) {
@@ -114,10 +126,10 @@ export default {
         telName: '税务筹划_咨询规划师_拨打电话',
       },
       fixedBottomData: {
-        id: '',
-        name: '',
-        jobNum: '',
-        telephone: '18402858698',
+        id: '7862495547640840192',
+        name: '郭亮亮',
+        jobNum: '107547',
+        telephone: '12345679985',
         imgSrc: '',
       },
       fixedMd: {
@@ -368,17 +380,18 @@ export default {
       todayNum: 118,
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   created() {
-    let pbool = false // 确定数据返回
-    let abool = false // 确定数据返回
-    let nbool = false // 确定数据返回
     // 请求回来的数据替代本地
     if (this.result !== '' && this.result !== undefined) {
       if (
         this.result.planlerList.length !== 0 &&
         this.result.planlerList.length !== undefined
       ) {
-        pbool = true
         if (this.result.planlerList.length < 3) {
           this.planlerList.forEach((item, index) => {
             this.planlerList[index] = this.result.planlerList[
@@ -388,30 +401,46 @@ export default {
         } else {
           this.planlerList = this.result.planlerList
         }
+        this.getPlannersData()
       }
       if (
         this.result.adList.length !== 0 &&
         this.result.adList.length !== undefined
       ) {
-        abool = true
         this.adList = this.result.adList
       }
-      if (
-        this.result.nums.todayNum !== '' &&
-        this.result.nums.todayNum !== undefined
-      ) {
-        nbool = true
-        this.nums = this.result.nums
+      if (this.result.nums !== '' && this.result.nums !== undefined) {
+        this.todayNum = this.result.nums.todayNum
       }
     }
-    // 各个数据都返回后再处理各个模块的数据
-    if (pbool && abool && nbool) {
-      this.getServeData()
-      this.getPlannersData()
-      this.getfixedBottomData()
+    this.getServeData()
+    this.getfixedBottomData()
+  },
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端税务筹划推广页',
+      current_url: location.href,
+      referrer: document.referrer,
     }
+    window.sensors.registerPage(param) // 设置公共属性
   },
   methods: {
+    // 头部返回
+    back() {
+      // 返回上一页
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/spread')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
     // 服务模块数据处理
     getServeData() {
       for (let i = 0; i < this.serveData.length; i++) {
@@ -506,22 +535,19 @@ export default {
         {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
         },
-        {
-          src: '/js/spread/tax-md-config.js',
-        },
-        {
-          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
-        },
       ],
     }
   },
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .center {
   width: 750px;
   margin: 0 auto;
+  .back_icon {
+    margin-left: 40px;
+  }
 }
 
 /deep/ .my-head {

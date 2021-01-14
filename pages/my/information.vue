@@ -1,32 +1,23 @@
 <template>
   <div class="information">
     <!--S 头部-->
-    <sp-top-nav-bar
-      :title="'个人信息'"
-      left-arrow
-      ellipsis
-      :fixed="true"
-      @on-click-left="onClickLeft"
-    >
-      <template #left>
-        <div>
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
-        </div>
-      </template>
-    </sp-top-nav-bar>
+    <Header title="个人信息" />
     <!--E 头部-->
     <!--S 内容-->
     <div class="information_con">
       <div class="information_con_tp">
         <div class="avatar_con" @click="handleClick(1)">
-          <sp-uploader
-            v-model="uploader"
+          <spMobileUpload
+            v-if="isUpdateAvatar"
+            ref="SpUpLoad"
+            tip="仅图片上传："
+            :file-id="info.fileId"
+            is-add-watermark
             class="uploader"
-            upload-text="点击上传"
-            :max-count="1"
-            :max-size="20 * 1024 * 1024"
-            :after-read="afterRead"
-            @oversize="onOversize"
+            list-url="https://spmicrouag.shupian.cn/tac-external-platform-server/oss/find"
+            delete-url="https://spmicrouag.shupian.cn/tac-external-platform-server/oss/deleteSingle"
+            call-back-url="https://spmicrouag.shupian.cn/tac-external-platform-server/oss/callback"
+            @onSuccess="success"
           />
           <div class="cell">
             <p class="title">头像</p>
@@ -65,7 +56,15 @@
           <p class="title">性别</p>
           <div class="right_icon">
             <p class="txt">
-              {{ info ? (info.sex === 1 ? '男' : '女' || '未设置') : '未设置' }}
+              {{
+                info
+                  ? info.sex === 1
+                    ? '男'
+                    : info.sex === 0
+                    ? '女'
+                    : '未知' || '未知'
+                  : '未知'
+              }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
@@ -124,13 +123,15 @@
 <script>
 import { TopNavBar, Cell, Uploader, Image } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import DggOSS from '@dgg/oss'
 import ImgSelected from '~/components/my/information/ImgSelected'
 import SexSelected from '~/components/my/information/SexSelected'
 import AreaSelect from '~/components/common/areaSelected/AreaSelect'
 import BirthdaySelected from '~/components/my/information/BirthdaySelected'
 import { ossApi, userinfoApi } from '@/api'
 import SpToast from '@/components/common/spToast/SpToast'
+import Header from '@/components/common/head/header'
+import '@fe/sp-ui-mobile/lib/index.css'
+import { baseURL } from '~/config/index'
 export default {
   name: 'Information',
   components: {
@@ -143,6 +144,7 @@ export default {
     AreaSelect,
     BirthdaySelected,
     SpToast,
+    Header,
   },
   data() {
     return {
@@ -170,6 +172,9 @@ export default {
     ...mapState({
       userId: (state) => state.user.userInfo.userId,
     }),
+    baseURL() {
+      return baseURL
+    },
   },
   mounted() {
     this.getUserInfo()
@@ -206,10 +211,22 @@ export default {
             forbidClick: true,
           })
         } else {
-          this.$router.push(`/my/info/nickname/${this.info.nickName}`)
+          // this.$router.push(`/my/info/nickname/${this.info.nickName}`)
+          this.$router.push({
+            path: '/my/info/nickname',
+            query: {
+              nickName: this.info.nickName,
+            },
+          })
         }
       } else if (val === 5) {
-        this.$router.push(`/my/info/email/${this.info.email}`)
+        // this.$router.push(`/my/info/email/${this.info.email}`)
+        this.$router.push({
+          path: '/my/info/email',
+          query: {
+            email: this.info.email,
+          },
+        })
       } else if (val === 4) {
         this.sexShow = true
       } else if (val === 6) {
@@ -217,25 +234,27 @@ export default {
       } else if (val === 3) {
         this.birthShow = true
       } else if (val === 1) {
-        // if (!this.isUpdateAvatar) {
-        //   // 如果不能修改
-        //   this.$refs.spToast.show({
-        //     message: '抱歉，头像暂不支持修改',
-        //     duration: 1500,
-        //     forbidClick: true,
-        //   })
-        // }
+        if (!this.isUpdateAvatar) {
+          // 如果不能修改
+          this.$refs.spToast.show({
+            message: '抱歉，头像暂不支持修改',
+            duration: 1500,
+            forbidClick: true,
+          })
+        }
       }
     },
     async select(data) {
       // 地区选择
       this.info.province = data[0].name
       this.info.city = data[1].name
+      const pCode = data[0].code
+      const cCode = data[1].code
       this.$set(this.area, 0, { name: data[0].name, code: data[0].code })
       this.$set(this.area, 1, { name: data[1].name, code: data[1].code })
       const params = {
         type: 5,
-        value: `${this.info.province},${this.info.city},船山区`,
+        value: `${pCode},${cCode}`,
       }
       const res = await this.$axios.post(userinfoApi.update, params)
       if (res.code === 200) {
@@ -325,50 +344,8 @@ export default {
         }
       } catch (err) {}
     },
-    afterRead(file) {
-      // const config = {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data',
-      //   },
-      // }
-      // const formData = new FormData()
-      // formData.append('uploadatalog', 'sp-pt/wap/images')
-      // formData.append(`${this.info.fileId}`, file.file)
-      // this.$axios.post(ossApi.add, formData, config).then((res) => {
-      //   console.log('ressss', res)
-      //   if (res.code === 200) {
-      //     this.avatar = res.data.url
-      //   }
-      // })
-      // const dggOSS = new DggOSS({
-      //   env: 'T',
-      //   bucket: 'dggtechtest',
-      //   sysCode: 'zky-api',
-      //   secret: 'e97bd82e0f7ff420d0728a41773f3ec7',
-      // })
-      // dggOSS.initOSS({
-      //   callback: (res) => {
-      //     if (res.code !== 200) {
-      //       console.log('初始化失败', res.msg)
-      //     } else {
-      //       dggOSS.uploadFile({
-      //         file: file.file,
-      //         fileId: this.info.fileId,
-      //         uploadatalog: 'sp-pt/wap/images',
-      //         callback: (res) => {
-      //           if (res.code !== 200) {
-      //             console.log('简单上传文件失败', res.msg)
-      //           } else {
-      //             this.info.url = res.data.oss_filePath
-      //             console.log('简单上传文件成功', res)
-      //           }
-      //         },
-      //       })
-      //       console.log('初始化成功', res)
-      //       // 初始化成功之后才能调用oss对应的功能
-      //     }
-      //   },
-      // })
+    success(fileList) {
+      this.info.url = fileList.oss_filePath
     },
   },
 }
@@ -383,7 +360,6 @@ export default {
     height: 88px;
   }
   &_con {
-    padding-top: 88px;
     display: flex;
     flex-direction: column;
     &_tp {
@@ -452,10 +428,9 @@ export default {
           position: absolute;
           left: 0;
           right: 0;
-          top: 0;
           bottom: 2px;
           z-index: 10;
-          opacity: 1;
+          opacity: 0;
           overflow: hidden;
         }
       }

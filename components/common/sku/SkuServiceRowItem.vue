@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 15:03:56
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-19 10:54:53
+ * @LastEditTime: 2021-01-04 18:35:24
  * @Description: file content
- * @FilePath: /chips-wap/client/components/common/sku/SkuServiceRowItem.vue
+ * @FilePath: /chips-wap/components/common/sku/SkuServiceRowItem.vue
 -->
 <template>
   <div
@@ -49,7 +49,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    multiple: {
+    isCancel: {
       type: Boolean,
       default: true,
     },
@@ -74,7 +74,7 @@ export default {
       console.log('sdf')
       if (this.disabled) return
       // 单选激活状态 再点击不触发
-      if (!this.multiple && this.isActive) return
+      if (!this.isCancel && this.isActive) return
       // this.isActive = !this.isActive
       this.$emit('skuItemSelect', { ...this.skuValue, actived: !this.isActive })
     },

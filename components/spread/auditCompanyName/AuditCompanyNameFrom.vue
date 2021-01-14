@@ -121,48 +121,44 @@
         <!-- e 手机号弹窗标题 -->
         <p>千万补贴进行中，公司注册超值优惠</p>
         <!-- s手机号表单 -->
-        <sp-form>
-          <sp-cell-group>
-            <sp-field
-              v-model="tel"
-              v-sensorsTrack:webClick="{
-                form_name: `核名表单_手机号`,
-              }"
-              type="tel"
-              label="手机号"
-              :formatter="telephoneTest"
-              :maxlength="11"
-              placeholder="信息保护中，请放心填写"
-            />
-            <sp-field
-              v-model="sms"
-              v-sensorsTrack:webClick="{
-                form_name: `核名表单_验证码`,
-              }"
-              center
-              clearable
-              type="number"
-              :maxlength="6"
-              label="验证码"
-              placeholder="请输入验证码"
-              :formatter="formatter"
-            >
-              <template #button>
-                <sp-button
-                  v-sensorsTrack:webClick="{
-                    form_name: `核名表单_获取验证码`,
-                  }"
-                  size="small"
-                  type="primary"
-                  @click="onSmsCode"
-                  >{{
-                    countdown > 0 ? `${countdown}s` : '获取验证码'
-                  }}</sp-button
-                >
-              </template>
-            </sp-field>
-          </sp-cell-group>
-        </sp-form>
+        <sp-cell-group>
+          <sp-field
+            v-model="tel"
+            v-sensorsTrack:webClick="{
+              form_name: `核名表单_手机号`,
+            }"
+            type="tel"
+            label="手机号"
+            :formatter="telephoneTest"
+            :maxlength="11"
+            placeholder="信息保护中，请放心填写"
+          />
+          <sp-field
+            v-model="sms"
+            v-sensorsTrack:webClick="{
+              form_name: `核名表单_验证码`,
+            }"
+            center
+            clearable
+            type="number"
+            :maxlength="6"
+            label="验证码"
+            placeholder="请输入验证码"
+            :formatter="formatter"
+          >
+            <template #button>
+              <sp-button
+                v-sensorsTrack:webClick="{
+                  form_name: `核名表单_获取验证码`,
+                }"
+                size="small"
+                type="primary"
+                @click="onSmsCode"
+                >{{ countdown > 0 ? `${countdown}s` : '获取验证码' }}</sp-button
+              >
+            </template>
+          </sp-field>
+        </sp-cell-group>
         <!-- e 手机号表单 -->
         <sp-button
           v-sensorsTrack:p_formSubmit="{
@@ -298,7 +294,29 @@ export default {
       cityName: '成都',
       countdown: -1, // 发送验证码倒计时60秒
       countdownTimer: null,
-      actions: [{ name: '选项一' }, { name: '选项二' }, { name: '选项三' }],
+      actions: [
+        { name: '科技信息', color: '#222222' },
+        { name: '广告传媒', color: '#222222' },
+        { name: '金融投资', color: '#222222' },
+        { name: '电子贸易', color: '#222222' },
+        { name: '教育培训', color: '#222222' },
+        { name: '物业地产', color: '#222222' },
+        { name: '经济中介', color: '#222222' },
+        { name: '建筑装饰', color: '#222222' },
+        { name: '家居建材', color: '#222222' },
+        { name: '通讯网络', color: '#222222' },
+        { name: '实业生产', color: '#222222' },
+        { name: '珠宝服饰', color: '#222222' },
+        { name: '文化初版', color: '#222222' },
+        { name: '印刷包装', color: '#222222' },
+        { name: '餐饮美容', color: '#222222' },
+        { name: '咨询服务', color: '#222222' },
+        { name: '食品农业', color: '#222222' },
+        { name: '会务展览', color: '#222222' },
+        { name: '物流供应链', color: '#222222' },
+        { name: '商标资质', color: '#222222' },
+        { name: '其他', color: '#222222' },
+      ],
       addUpAuditNameSum: 69201,
       auditNameSum: 118, // 每日默认
     }
@@ -315,6 +333,13 @@ export default {
     onCitySelect(item) {
       this.cityName = item.name
       this.isShowCity = false
+      this.city.forEach((obj) => {
+        if (obj.name === item.name) {
+          obj.color = '#5a79e8'
+        } else {
+          obj.color = '#222222'
+        }
+      })
     },
     //  行业选择
     onSelect(item) {
@@ -322,13 +347,21 @@ export default {
       // 可以通过 close-on-click-action 属性开启自动收起
       this.industry = item.name
       this.isShow = false
+      this.actions.forEach((obj) => {
+        if (obj.name === item.name) {
+          obj.color = '#5a79e8'
+        } else {
+          obj.color = '#222222'
+        }
+      })
     },
     //  手机号弹窗提交
     onInquire() {
-      if (this.cityName === undefined) {
-        this.$router.push('/city/choiceCity')
-      } else if (this.companyName === '') {
+      const inputValue = this.companyName.split('')
+      if (this.companyName === '') {
         Toast('请填写公司名')
+      } else if (inputValue.length < 3) {
+        Toast('公司名格式不正确')
       } else if (this.industry === '') {
         Toast('请选择行业')
       } else {
@@ -424,6 +457,7 @@ export default {
         }
       }, 1000)
     },
+
     // 输入框过滤
     companyTest(value) {
       return value.replace(/[^\dA-Za-z\u3007\u4E00-\u9FCB\uE815-\uE864]/, '')
@@ -546,7 +580,7 @@ a {
           /deep/.sp-field__label {
             width: auto;
             margin-left: 33px;
-            margin-right: 33px;
+            margin-right: 22px;
             display: flex;
             align-items: center;
             span {

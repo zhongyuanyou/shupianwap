@@ -40,6 +40,7 @@
       <Search
         ref="searchPage"
         v-model="currentInputText"
+        :maxlength="50"
         placeholder="请输入搜索内容"
         @searchKeydownHandle="searchKeydownHandle"
         @searchInputHandle="searchInputHandle"

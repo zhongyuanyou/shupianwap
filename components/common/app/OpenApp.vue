@@ -3,6 +3,7 @@
     v-if="$store.state.app.isShowOpenApp && isShow"
     class="open-app"
     :style="{
+      position: noFixed ? 'relative' : 'fixed',
       bottom: `${bottom}px`,
     }"
   >
@@ -48,6 +49,12 @@ export default {
   name: 'OpenApp',
   mixins: [openapp],
   props: {
+    noFixed: {
+      type: Boolean,
+      default() {
+        return false
+      },
+    },
     bottom: {
       type: Number,
       default() {

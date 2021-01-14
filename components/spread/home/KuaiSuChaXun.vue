@@ -13,9 +13,11 @@
       <div class="form">
         <div class="dropdown-menu">
           <div
-            v-md-map
-            v-md:webClick
-            data-name="工商聚合页_表单_我需要"
+            v-sensorsTrack:webClick="{
+              eventName: 'wap元素点击',
+              type: '咨询表单',
+              name: '工商聚合页_表单_我需要',
+            }"
             class="dropdown-menu-content"
             @click="showDropdownList"
           >
@@ -30,7 +32,6 @@
           </div>
           <sp-action-sheet
             v-model="dropdownMenuIsShow"
-            style="transform: translateX(-63px)"
             :actions="dropList"
             @select="onSelect"
           />
@@ -38,9 +39,11 @@
         <div class="input-all">
           <sp-field
             v-model="telephone"
-            v-md-map
-            v-md:webClick
-            data-name="工商聚合页_表单_手机号"
+            v-sensorsTrack:webClick="{
+              eventName: 'wap元素点击',
+              type: '咨询表单',
+              name: '工商聚合页_表单_手机号',
+            }"
             label="手机号"
             type="tel"
             maxlength="11"
@@ -52,9 +55,11 @@
         <div v-if="smsInputIsShow" class="input-all1">
           <sp-field
             v-model="sms"
-            v-md-map
-            v-md:webClick
-            data-name="工商聚合页_表单_验证码"
+            v-sensorsTrack:webClick="{
+              eventName: 'wap元素点击',
+              type: '咨询表单',
+              name: '工商聚合页_表单_验证码',
+            }"
             center
             label="验证码"
             type="tel"
@@ -64,9 +69,11 @@
           >
             <template #button>
               <sp-button
-                v-md-map
-                v-md:webClick
-                data-name="工商聚合页_表单_获取验证码"
+                v-sensorsTrack:webClick="{
+                  eventName: 'wap元素点击',
+                  type: '咨询表单',
+                  name: '工商聚合页_表单_获取验证码',
+                }"
                 size="small"
                 type="primary"
                 @click="sendSms"
@@ -78,11 +85,11 @@
         </div>
         <div class="submit">
           <sp-button
-            v-md-map
-            v-md:p_formSubmit
-            data-event_name="p_formSubmit"
-            data-form_type="咨询表单"
-            data-form_name="工商聚合页_表单"
+            v-sensorsTrack:p_formSubmit="{
+              eventName: 'p_formSubmit',
+              form_type: '咨询表单',
+              name: '工商聚合页_表单',
+            }"
             type="primary"
             @click="submitForm"
             >免费预约</sp-button
@@ -217,7 +224,7 @@ export default {
             if (res.error === 0) {
               vm.countDownFun()
             }
-            console.log(res.msg)
+            Toast(res.msg)
           })
         }
       }
@@ -319,10 +326,10 @@ export default {
     },
     // 表单提交有结果后，主动埋点
     formMaiDian() {
-      window.getTrackRow('p_formSubmitResult', {
+      window.sensors.track('p_formSubmitResult', {
         even_name: 'p_formSubmitResult',
         form_type: '咨询表单',
-        form_name: '工商聚合页_表单',
+        form_name: '工商首页表单_提交表单',
       })
     },
   },
@@ -396,15 +403,16 @@ export default {
         }
         /deep/ .sp-popup--bottom {
           width: @spread-page-width;
-          left: auto;
+          left: 50%;
           right: auto;
+          margin-left: calc(-@spread-page-width / 2);
           //transform: translateX(-126px); // 该属性因为组件样式未知bug，导致左侧出来一部分。且距离是一直固定是63px，不能转成rem
         }
         /deep/ .sp-overlay {
           width: @spread-page-width;
           left: 50%;
           right: auto;
-          transform: translateX(-@spread-page-width / 2);
+          margin-left: calc(-@spread-page-width / 2);
         }
       }
       .input-all {
