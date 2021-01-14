@@ -59,52 +59,52 @@ export default {
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/dt7pia9wkts0000.png',
             name: '工商注册',
-            url: 'https://shupian.dgg.cn/spread/companyRegister',
+            url: '/spread/companyRegister',
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/10ojanu72x40000.png',
             name: '工商变更',
-            url: 'https://shupian.dgg.cn/spread/businessChange',
+            url: '/spread/businessChange',
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/ffka718bhns0000.png',
             name: '代理记账',
-            url: 'https://shupian.dgg.cn/spread/agency/',
+            url: '/spread/agency/',
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/46heblny7180000.png',
             name: '印章服务',
-            url: '',
+            url: '/spread/seal',
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/cy2h2qcju7c0000.png',
             name: '许可证办理',
-            url: '',
+            url: '/spread/licence',
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/8ev3h7s27dc0000.png',
             name: '互联网资质',
-            url: '',
+            url: '/spread/internetQualification',
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/eytmu5t49wo0000.png',
             name: '税收筹划',
-            url: 'https://shupian.dgg.cn/spread/tax',
+            url: '/spread/tax',
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/3vx9o5l3v5w0000.png',
             name: '银行服务',
-            url: '',
+            url: '/spread/bankService',
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/88uaz9bxsss0000.png',
             name: '体系认证',
-            url: '',
+            url: '/spread/system',
           },
           {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/8ljb0jox7xg0000.png',
             name: '工商注销',
-            url: '',
+            url: '/spread/businessCancellation',
           },
         ]
       },
