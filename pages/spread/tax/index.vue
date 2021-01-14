@@ -94,7 +94,7 @@ export default {
       })
       if (res.code === 200) {
         return {
-          result: 'res.data',
+          result: res.data,
         }
       }
     } catch (error) {

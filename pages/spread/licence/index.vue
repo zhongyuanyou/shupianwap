@@ -49,8 +49,8 @@
 <script>
 import { mapState } from 'vuex'
 import Header from '~/components/common/head/header'
-import Banner from '@/components/spread/licence/banner'
-import Form from '@/components/spread/licence/form'
+import Banner from '@/components/spread/licence/Banner'
+import Form from '@/components/spread/licence/Form'
 import HandleType from '@/components/spread/licence/HandleType'
 import Question from '@/components/spread/licence/Question'
 import Select from '@/components/spread/licence/Select'
@@ -59,7 +59,7 @@ import Need from '@/components/spread/licence/Need'
 import ConsultTel from '~/components/spread/common/ConsultTel'
 import ShuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
 import FixedBottom from '~/components/spread/common/FixedBottom'
-import dggImCompany from '~/components/spread/DggImCompany'
+import DggImCompany from '~/components/spread/DggImCompany'
 export default {
   components: {
     Header, // 头部
@@ -73,12 +73,12 @@ export default {
     ConsultTel, //  立即咨询
     ShuPianZhaoRen, //  薯片找人
     FixedBottom, //  底部推荐按钮
-    dggImCompany, // IM弹框
+    DggImCompany, // IM弹框
   },
   props: {},
   data() {
     return {
-      title: '许可证',
+      title: '许可证办理',
       titles: '还有疑问？企服专家为您免费解答',
       tel: '4000-962540', // 电话号码
 
