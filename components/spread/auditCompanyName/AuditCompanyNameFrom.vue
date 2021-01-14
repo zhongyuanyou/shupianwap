@@ -213,14 +213,81 @@ export default {
     [Form.name]: Form,
     [CountDown.name]: CountDown,
   },
-  props: {
-    city: {
-      type: Array,
-      default: () => [],
-    },
-  },
+  props: {},
   data() {
     return {
+      city: [
+        {
+          id: 1,
+          name: '成都',
+          color: '#5a79e8',
+        },
+        {
+          id: 2,
+          name: '重庆',
+          color: '#222222',
+        },
+        {
+          id: 3,
+          name: '长沙',
+          color: '#222222',
+        },
+        {
+          id: 4,
+          name: '武汉',
+          color: '#222222',
+        },
+        {
+          id: 5,
+          name: '上海',
+          color: '#222222',
+        },
+        {
+          id: 6,
+          name: '北京',
+          color: '#222222',
+        },
+        {
+          id: 7,
+          name: '深圳',
+          color: '#222222',
+        },
+        {
+          id: 8,
+          name: '广州',
+          color: '#222222',
+        },
+        {
+          id: 9,
+          name: '杭州',
+          color: '#222222',
+        },
+        {
+          id: 10,
+          name: '郑州',
+          color: '#222222',
+        },
+        {
+          id: 11,
+          name: '佛山',
+          color: '#222222',
+        },
+        {
+          id: 12,
+          name: '东莞',
+          color: '#222222',
+        },
+        {
+          id: 13,
+          name: '宜昌',
+          color: '#222222',
+        },
+        {
+          id: 14,
+          name: '石家庄',
+          color: '#222222',
+        },
+      ],
       companyName: '',
       industry: '',
       isShow: false,
@@ -457,7 +524,7 @@ a {
           font-size: 30px;
           color: rgba(204, 204, 204, 1);
           position: absolute;
-          top: 30px;
+          top: 28px;
           right: 24px;
         }
       }
@@ -503,7 +570,7 @@ a {
                 color: rgba(204, 204, 204, 1);
                 position: absolute;
                 top: 31%;
-                right: 24px;
+                right: 23px;
               }
             }
           }
