@@ -154,7 +154,7 @@ export default {
       // 确认筛选
       this.saveActiveItems = clone(this.activeItems, true)
       const emitData = this.resultHandle()
-      this.$emit('activeItem', emitData, 'selectFilter' + this.filterData.name)
+      this.$emit('activeItem', emitData, 'selectFilter-' + this.filterData.code)
       this.$refs.item.toggle()
     },
     resultHandle() {

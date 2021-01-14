@@ -143,6 +143,11 @@ export default {
       userInfo: (state) => state.user.userInfo, // 用户信息
     }),
   },
+  created() {
+    if (process.client) {
+      this.loading = true
+    }
+  },
   mounted() {
     if (this.isInApp) {
       // 设置app导航名称
@@ -281,7 +286,6 @@ export default {
       }
     },
     async getComplainCategory() {
-      this.loading = true
       // 获取吐槽分类
       try {
         const params = {
@@ -309,7 +313,6 @@ export default {
       if (isAndroid < 0) {
         const imgs = this.images
         this.$appFn.dggPhoneAlbum({ fileId: this.userInfo.fileId }, (res) => {
-          console.log('uploader', res)
           imgs.push(res.data.filePath)
           this.images = imgs
           const obj = {
