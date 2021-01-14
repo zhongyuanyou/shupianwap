@@ -1,7 +1,7 @@
 <template>
   <div class="center">
     <!--  头部  -->
-    <Header :title="headTitle">
+    <Header v-show="!isInApp" :title="headTitle">
       <template #left>
         <div @click="back">
           <my-icon
