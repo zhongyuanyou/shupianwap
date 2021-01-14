@@ -40,7 +40,7 @@ export default {
         {
           name: '互联网资质',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/citl4m2kkxs0000.jpg',
-          url: '/spread/internetQualification ',
+          url: '/spread/internetQualification',
         },
         {
           name: '财务稅筹',
