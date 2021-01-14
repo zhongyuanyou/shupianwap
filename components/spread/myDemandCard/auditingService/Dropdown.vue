@@ -118,7 +118,6 @@ export default {
     align-items: center;
     position: relative;
     background: #ffffff;
-    opacity: 0.5;
     border: 1px solid #cdcdcd;
     border-radius: 4px;
     padding: 0 24px;
@@ -132,7 +131,7 @@ export default {
     .dropdown-menu-content-val {
       flex: none;
       font-size: 28px;
-      color: #222222;
+      color: #1a1a1a;
     }
     .dropdown-menu-content-img {
       flex: none;
@@ -145,7 +144,6 @@ export default {
     left: 50%;
     right: auto;
     transform: translateX(-@spread-page-width / 2);
-    //transform: translateX(-126px); // 该属性因为组件样式未知bug，导致左侧出来一部分。且距离是一直固定是63px，不能转成rem
   }
   /deep/ .sp-overlay {
     width: @spread-page-width;

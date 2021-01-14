@@ -38,5 +38,10 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   font-family: PingFang SC;
+  /deep/ .my-head {
+    width: @spread-page-width;
+    left: 50%;
+    margin-left: -375px;
+  }
 }
 </style>
