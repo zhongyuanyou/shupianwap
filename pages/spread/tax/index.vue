@@ -411,6 +411,16 @@ export default {
       this.getfixedBottomData()
     }
   },
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端税务筹划推广页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+  },
   methods: {
     // 服务模块数据处理
     getServeData() {
@@ -505,12 +515,6 @@ export default {
       script: [
         {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
-        },
-        {
-          src: '/js/spread/tax-md-config.js',
-        },
-        {
-          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
         },
       ],
     }
