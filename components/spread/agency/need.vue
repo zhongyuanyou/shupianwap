@@ -4,10 +4,12 @@
     <ul class="productlist">
       <li v-for="(item, index) in ProductList" :key="index">
         <a
-          v-md-map
-          v-md:webClick
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '售前',
+            name: `${needlist[index]}`,
+          }"
           href="javascript:;"
-          data-name="needlist[index]"
           @click="
             () => {
               $parent.openIM(item.url)

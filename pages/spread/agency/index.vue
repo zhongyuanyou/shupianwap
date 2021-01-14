@@ -340,6 +340,16 @@ export default {
       this.plannerHandleData(this.result.data.planlerList || [])
     }
   },
+  mounted() {
+    const param = {
+      platform_type: 'wap端', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端代理记账推广页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+  },
   methods: {
     // 商品数据处理
     productDetail(data) {
@@ -420,12 +430,6 @@ export default {
       script: [
         {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
-        },
-        {
-          src: '/js/spread/businessAgency-md-config.js',
-        },
-        {
-          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
         },
       ],
     }

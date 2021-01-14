@@ -6,10 +6,12 @@
         <li
           v-for="(item, index) in servicelist"
           :key="index"
-          v-md-map
-          v-md:webClick
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '售前',
+            name: `代理记账服务介绍_${item.plannerName}_在线咨询`,
+          }"
           :style="{ backgroundImage: 'url(' + item.bgimage + ')' }"
-          :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
           @click="plannerIm(item.planner)"
         >
           <div class="total">
@@ -44,11 +46,12 @@
                 <img :src="item.planner.avatarImg" alt="" />
               </a>
               <a
-                v-md-map
-                v-md:p_IMClick
+                v-sensorsTrack:p_IMClick="{
+                  eventName: '在线咨询',
+                  type: '售前',
+                  name: `代理记账服务介绍_${item.plannerName}_在线咨询`,
+                }"
                 href="javascript:;"
-                data-im_type="售前"
-                :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
               >
                 <my-icon
                   name="notify_ic_chat"
@@ -59,10 +62,12 @@
                 </my-icon>
               </a>
               <a
-                v-md-map
-                v-md:webClick
+                v-sensorsTrack:webClick="{
+                  eventName: 'wap元素点击',
+                  type: '售前',
+                  name: `代理记账服务介绍_${item.plannerName}_拨打电话`,
+                }"
                 href="javascript:;"
-                :data-name="`变更服务介绍_${item.plannerName}_拨打电话`"
                 @click="call(item.planner.telephone)"
               >
                 <my-icon
@@ -85,12 +90,20 @@
     >
       <span
         v-show="more"
-        v-md-map
-        v-md:webClick
-        data-name="工商变更页面_更多服务"
+        v-sensorsTrack:webClick="{
+          eventName: 'wap元素点击',
+          type: '售前',
+          name: '代理记账页面_更多服务',
+        }"
         >更多服务</span
       >
-      <span v-show="close" v-md-map v-md:webClick data-name="工商变更页面_收起"
+      <span
+        v-show="close"
+        v-sensorsTrack:webClick="{
+          eventName: 'wap元素点击',
+          type: '售前',
+          name: `代理记账页面_收起`,
+        }"
         >收起</span
       >
       <my-icon

@@ -6,14 +6,12 @@
       v-for="(item, index) in serviceList"
       v-show="index > num ? false : true"
       :key="index"
-      v-md-map
       v-sensorsTrack:webClick="{
         eventName: 'wap元素点击',
         type: '售前',
         name: `${serviceTitle}_${item.title}_在线咨询`,
       }"
       class="serviceList-content"
-      href="javascript:;"
       @click="plannerIm(item.planner)"
     >
       <div
