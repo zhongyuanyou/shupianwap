@@ -22,9 +22,13 @@
       </ul>
       <!-- E 固定导航 -->
       <!-- S 可滚动导航 -->
-      <div ref="refScroll" class="scroll-centent" @scroll="scrollHandle">
-        <ul v-if="rollNav && rollNav.length" class="scroll-nav">
-          <li v-for="(item, index) in rollNav" :key="index">
+      <div
+        ref="refScroll"
+        :class="rollNavHandle.length > 10 ? 'up-and-down' : 'left-and-right'"
+        @scroll="scrollHandle"
+      >
+        <ul v-if="rollNavHandle && rollNavHandle.length" class="scroll-nav">
+          <li v-for="(item, index) in rollNavHandle" :key="index">
             <a v-if="item.navigationWay === 2" :href="jumpHandle(item)">
               <img
                 v-lazy="item.navigationImageUrl + $ossImgSet(48, 48)"
@@ -44,11 +48,11 @@
       </div>
       <!-- E 可滚动导航 -->
       <!-- S 自定义滚动条 -->
-      <div v-if="rollNav.length > 10" class="scroll-box">
+      <div v-if="rollNavHandle.length > 10" class="scroll-box">
         <span><i :style="{ left: scroLeft + '%' }"></i></span>
       </div>
       <div
-        v-else-if="rollNav.length && rollNav.length <= 10"
+        v-else-if="rollNavHandle.length && rollNavHandle.length <= 10"
         class="scroll-box"
       ></div>
       <!-- E 自定义滚动条 -->
@@ -79,6 +83,27 @@ export default {
       canScrollWidth: 0,
       scroLeft: 0,
     }
+  },
+  computed: {
+    // 滚共导航数处理；个数小于等于10，横向排列；个数大于10，前10个横向排列，后面上下排列
+    rollNavHandle() {
+      const { rollNav } = this
+      if (rollNav.length <= 10) {
+        return rollNav
+      }
+      // 超过10个，改变前10个的排列顺序
+      const newRollNav = JSON.parse(JSON.stringify(rollNav))
+      // 取前10个中的奇数项
+      const oddNavArr = rollNav.filter((item, index) => {
+        return (index + 1) % 2 !== 0 && index < 10
+      })
+      // 取前10个的偶数项
+      const evenNavArr = rollNav.filter((item, index) => {
+        return (index + 1) % 2 === 0 && index < 10
+      })
+      newRollNav.splice(0, 10, ...oddNavArr.concat(evenNavArr))
+      return newRollNav
+    },
   },
   mounted() {
     const scrollWidth = this.$refs.refScroll.scrollWidth // 容器文档总宽
@@ -153,7 +178,54 @@ export default {
       }
     }
   }
-  .scroll-centent {
+  .left-and-right {
+    overflow: hidden;
+    padding: 20px 16px 0;
+    ul {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      li {
+        height: 92px;
+        margin: 20px 0;
+        width: 20%;
+        &:last-child {
+          position: relative;
+          &::before {
+            position: absolute;
+            right: -16px;
+            top: 0;
+            content: '';
+            width: 16px;
+            height: 16px;
+          }
+        }
+        a {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          align-content: space-between;
+          img {
+            width: 48px;
+            height: 48px;
+          }
+          span {
+            font-size: 24px;
+            line-height: 32px;
+            font-family: PingFang SC;
+            font-weight: bold;
+            color: #222222;
+            margin-top: 16px;
+            white-space: nowrap;
+            .textOverflow(1);
+          }
+        }
+      }
+    }
+  }
+  .up-and-down {
     overflow-x: auto;
     overflow-y: hidden;
     padding-top: 20px;
