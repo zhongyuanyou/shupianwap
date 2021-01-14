@@ -25,13 +25,7 @@
           <p class="title">
             {{ item.name }}
           </p>
-          <div class="label">
-            <span v-for="(lItem, index) in item.fieldList" :key="index">{{
-              `${lItem.fieldValueCn ? lItem.fieldValueCn : lItem.fieldValue}${
-                index === item.fieldList.length - 1 ? '' : '|'
-              }`
-            }}</span>
-          </div>
+          <div class="label">{{ getItemList(item.fieldList).join(' | ') }}</div>
           <div class="tags">
             <div v-for="(tItem, index) in 0" :key="index" class="tags_item">
               {{ tItem }}
@@ -68,6 +62,19 @@ export default {
       label: ['四川成都', '2025到期', '有安许证'],
       tags: ['公司干净', '总包公司', '市政三级'],
     }
+  },
+  methods: {
+    getItemList(list) {
+      const listArr = []
+      list.forEach((item) => {
+        if (item.fieldValueCn && item.fieldValueCn !== null) {
+          listArr.push(item.fieldValueCn)
+        } else if (item.fieldValue && item.fieldValueCn !== null) {
+          listArr.push(item.fieldValue)
+        }
+      })
+      return listArr
+    },
   },
 }
 </script>
@@ -120,7 +127,6 @@ export default {
         .textOverflow(2);
       }
       .label {
-        display: flex;
         justify-content: flex-start;
         align-items: center;
         flex-direction: row;
@@ -129,13 +135,11 @@ export default {
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        span {
-          font-size: 22px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #222222;
-          white-space: nowrap;
-        }
+        font-size: 22px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #222222;
+        white-space: nowrap;
       }
       .tags {
         display: flex;

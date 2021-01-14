@@ -135,9 +135,13 @@ export default {
     margin-left: 40px;
   }
   &-content {
+    width: 100%;
     padding: 36px 40px;
     &-complain {
+      width: 100%;
       &-title {
+        width: 100%;
+        word-break: break-all;
         font-size: 32px;
         font-family: PingFang SC;
         font-weight: bold;

@@ -2,15 +2,29 @@
   <div class="commodityConsult">
     <div class="commodityConsult-containner">
       <div class="commodityConsult-containner-userInfo">
-        <sp-image
-          width="0.8rem"
-          height="0.8rem"
-          round
-          fit="cover"
-          :src="plannerInfo.portrait"
-        />
+        <nuxt-link
+          :to="{
+            path: '/planner/detail',
+            query: { mchUserId: plannerInfo.mchUserId },
+          }"
+        >
+          <sp-image
+            width="0.8rem"
+            height="0.8rem"
+            round
+            fit="cover"
+            :src="plannerInfo.portrait"
+          />
+        </nuxt-link>
         <div class="commodityConsult-containner-userInfo-name">
-          <p>{{ plannerInfo.userName }}</p>
+          <nuxt-link
+            :to="{
+              path: '/planner/detail',
+              query: { mchUserId: plannerInfo.mchUserId },
+            }"
+          >
+            <p>{{ plannerInfo.userName }}</p>
+          </nuxt-link>
           <span>{{ plannerInfo.postName }}</span>
         </div>
       </div>

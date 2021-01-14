@@ -18,42 +18,49 @@
         </nuxt-link>
       </div>
     </div>
-    <sp-swipe :loop="false" :width="315.5" :show-indicators="false">
-      <sp-swipe-item v-for="item in similarRecommendData" :key="item.id">
-        <nuxt-link
-          :to="{
-            path: '/detail/transactionDetails',
-            query: { type: detailType, productId: item.id },
-          }"
-        >
-          <div class="swipe_item_con">
-            <div class="swipe_item_con_img">
-              <sp-image
-                width="1.6rem"
-                height="1.6rem"
-                fit="cover"
-                lazy-load
-                :src="item.productImgArr[0]"
-              />
-            </div>
-            <div class="swipe_item_con_rt">
-              <p class="title">{{ item.name }}</p>
-              <div class="label">
-                <span v-for="(lItem, index) in item.fieldList" :key="index">{{
-                  `${lItem.fieldValueList ? lItem.fieldValueList[0] : ''}${
-                    index === item.fieldList.length - 1 ? '' : '|'
-                  }`
-                }}</span>
+    <div class="recommend-blank">
+      <div class="swipe">
+        <div class="swipe-box">
+          <div
+            v-for="item in similarRecommendData"
+            :key="item.id"
+            class="swipe-list"
+          >
+            <nuxt-link
+              class="swipe_item_con"
+              :to="{
+                path: '/detail/transactionDetails',
+                query: { type: detailType, productId: item.id },
+              }"
+            >
+              <div class="swipe_item_con_img">
+                <sp-image
+                  width="1.6rem"
+                  height="1.6rem"
+                  fit="cover"
+                  lazy-load
+                  :src="item.productImgArr[0]"
+                />
               </div>
-              <div class="swipe_item_con_rt_bot">
-                <p class="money">{{ item.platformPrice }}元</p>
-                <!-- <p class="province">四川省</p>-->
+              <div class="swipe_item_con_rt">
+                <p class="title">{{ item.name }}</p>
+                <div class="label">
+                  {{ getItemList(item.fieldList).join(' | ') }}
+                </div>
+                <div class="swipe_item_con_rt_bot">
+                  <p class="money">{{ item.platformPrice }}元</p>
+                  <!-- <p class="province">四川省</p>-->
+                </div>
               </div>
-            </div>
+            </nuxt-link>
           </div>
-        </nuxt-link>
-      </sp-swipe-item>
-    </sp-swipe>
+        </div>
+      </div>
+    </div>
+    <!--    <sp-swipe :loop="false" width="5.91rem" :show-indicators="false">-->
+    <!--      <sp-swipe-item v-for="item in similarRecommendData" :key="item.id">-->
+    <!--      </sp-swipe-item>-->
+    <!--    </sp-swipe>-->
   </div>
 </template>
 
@@ -78,13 +85,26 @@ export default {
       },
     },
   },
+  methods: {
+    getItemList(list) {
+      const listArr = []
+      list.forEach((item) => {
+        if (item.fieldValueCn && item.fieldValueCn !== null) {
+          listArr.push(item.fieldValueCn)
+        } else if (item.fieldValue && item.fieldValueCn !== null) {
+          listArr.push(item.fieldValue)
+        }
+      })
+      return listArr
+    },
+  },
 }
 </script>
 
 <style lang="less" scoped>
 .recommend {
   background-color: #fff;
-  padding: 48px 0 40px 0;
+  padding: 48px 0 28px 0;
   border-bottom: 24px solid #f8f8f8;
   &_tp {
     width: 100%;
@@ -132,79 +152,98 @@ export default {
       padding-right: 40px;
     }
   }
-  .swipe_item_con {
-    width: 591px;
-    height: 224px;
-    background: #ffffff;
-    border: 1px solid rgba(205, 205, 205, 0.5);
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
-    padding: 32px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-direction: row;
-    overflow: hidden;
-    &_rt {
-      width: 100%;
-      /*height: 160px;*/
-      margin-left: 23px;
+  &-blank {
+    padding-bottom: 12px;
+    margin-top: 27px;
+    height: 250px;
+    overflow-y: hidden;
+    .swipe {
+      overflow-x: auto;
+      overflow-y: hidden;
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-direction: column;
-      .title {
-        font-size: 0.32rem;
-        font-family: PingFang SC;
-        font-weight: bold;
-        color: #222222;
-        margin-top: -0.06rem;
-        line-height: 0.44rem;
-        -webkit-line-clamp: 2;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        text-overflow: ellipsis;
-        word-break: break-all;
-        overflow: hidden;
-        white-space: normal;
-        .textOverflow(2);
-      }
-      .label {
+      padding-bottom: 200px;
+      padding-top: 12px;
+      &-box {
         display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        flex-direction: row;
-        margin-top: 2px;
-        margin-bottom: 9px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        span {
-          font-size: 22px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #222222;
-        }
+        padding-right: 16px;
+        padding-left: 40px;
       }
-      &_bot {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-direction: row;
-        width: 100%;
-        .money {
-          font-size: 0.3rem;
-          font-family: PingFang SC;
-          font-weight: bold;
-          color: #ec5330;
-          margin-top: 0.09rem;
-        }
-        .province {
-          font-size: 24px;
-          font-family: PingFang SC;
-          font-weight: 400;
-          color: #999999;
-          line-height: 36px;
+      &-list {
+        margin-right: 24px;
+        .swipe_item_con {
+          width: 591px;
+          height: 224px;
+          background: #ffffff;
+          border: 1px solid rgba(205, 205, 205, 0.5);
+          box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.05);
+          border-radius: 8px;
+          padding: 32px;
+          display: flex;
+          justify-content: flex-start;
+          align-items: flex-start;
+          flex-direction: row;
+          overflow: hidden;
+          &_rt {
+            width: 345px;
+            /*height: 160px;*/
+            margin-left: 23px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-direction: column;
+            .title {
+              font-size: 0.32rem;
+              font-family: PingFang SC;
+              font-weight: bold;
+              color: #222222;
+              margin-top: -0.06rem;
+              line-height: 0.44rem;
+              -webkit-line-clamp: 2;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              text-overflow: ellipsis;
+              word-break: break-all;
+              overflow: hidden;
+              white-space: normal;
+              .textOverflow(2);
+            }
+            .label {
+              width: 100%;
+              justify-content: flex-start;
+              align-items: center;
+              flex-direction: row;
+              margin-top: 2px;
+              margin-bottom: 9px;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+              font-size: 22px;
+              font-family: PingFang SC;
+              font-weight: 400;
+              color: #222222;
+            }
+            &_bot {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              flex-direction: row;
+              width: 100%;
+              .money {
+                font-size: 0.3rem;
+                font-family: PingFang SC;
+                font-weight: bold;
+                color: #ec5330;
+                margin-top: 0.09rem;
+              }
+              .province {
+                font-size: 24px;
+                font-family: PingFang SC;
+                font-weight: 400;
+                color: #999999;
+                line-height: 36px;
+              }
+            }
+          }
         }
       }
     }

@@ -287,20 +287,34 @@ export default {
         this.$appFn.dggJumpRoute({
           iOSRouter:
             '{"path":"CPSCustomer:CPSCustomer/CPSVerificationViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}',
-          androidRouter: '',
+          androidRouter:
+            '{"path":"/account_security/bind_newPhone","parameter":{"":""},"isLogin":"1","version":"1.0.0"}',
         })
       } else if (val === 0) {
         const iosSetPassword =
           '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
-        const androisSetPassword = ''
+        const androisSetPassword =
+          '{"path":"/login/set_password","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
         const iosUpdatePassword =
           '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
-        const androisUpdatePassword = ''
+        const androisUpdatePassword =
+          '{"path":"/account_security/change_password","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
         this.$appFn.dggJumpRoute({
           iOSRouter: this.isPassword ? iosUpdatePassword : iosSetPassword,
           androidRouter: this.isPassword
             ? androisUpdatePassword
             : androisSetPassword,
+        })
+      } else if (val === 1) {
+        this.$appFn.dggGetRealNameAuthAddress((res) => {
+          if (res.code === 200) {
+            this.$appFn.dggOpenNewWeb(
+              {
+                urlString: res.data.url,
+              },
+              (response) => {}
+            )
+          }
         })
       }
     },
@@ -308,10 +322,10 @@ export default {
       // 拨打电话
       if (this.isInApp) {
         // 如果当前页面在app中，则调用原生拨打电话的方法
-        this.$appFn.dggCallPhone({ phone: '17755021122' }, (res) => {})
+        this.$appFn.dggCallPhone({ phone: '400-0962-540' }, (res) => {})
         return
       }
-      window.location.href = 'tel:17755021122'
+      window.location.href = 'tel:400-0962-540'
     },
     back() {
       if (this.isInApp) {

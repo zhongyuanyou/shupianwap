@@ -75,8 +75,8 @@ export default {
       display: inline-block;
       width: 340px;
       height: 340px;
-      background: url(../../assets/images/shopping-car-null.png) no-repeat
-        center center;
+      background: url(https://cdn.shupian.cn/sp-pt/wap/images/fkq0rmg6kko0000.png)
+        no-repeat center center;
       background-size: 100%;
     }
   }
