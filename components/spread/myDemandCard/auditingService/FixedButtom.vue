@@ -81,11 +81,13 @@ export default {
   padding-right: 80px;
   position: fixed;
   bottom: 0;
-
   /deep/ .sp-button {
     width: 100%;
     height: 88px;
     border-radius: 8px;
+  }
+  /deep/.sp-button__text {
+    font-weight: bold;
   }
 }
 </style>
