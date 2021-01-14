@@ -1,0 +1,398 @@
+<template>
+  <div class="my-component">
+    <TabCurve
+      ref="tabCurveRef"
+      v-model="currentItem"
+      class="tab-curve"
+      :offset-top="searchDomHeight"
+      :tab-list="tabBtnList"
+      :need-fixed="false"
+      :right="0.54"
+      name-field="name"
+      @selectTabHandle="selectTabHandle"
+    ></TabCurve>
+    <Loading-down
+      v-if="tabBtnList.length"
+      :loading="loading && !tabBtnList[currentItem].noMore"
+      :no-data="tabBtnList[currentItem].noMore"
+    />
+
+    <sp-swipe
+      ref="recomRef"
+      class="my-swipe"
+      :show-indicators="false"
+      @change="onChange"
+    >
+      <sp-swipe-item v-for="(item, index) in tabBtn" :key="index">
+        <div v-show="index === currentItem">
+          <!-- S 推荐商品列表 -->
+          <div class="goods-list">
+            <!--            <sp-skeleton-->
+            <!--              v-for="val in tabBtn[index].limit"-->
+            <!--              :key="val + 'a'"-->
+            <!--              avatar-shape="square"-->
+            <!--              avatar-size="2.4rem"-->
+            <!--              title-->
+            <!--              title-width="100%"-->
+            <!--              avatar-->
+            <!--              :row="3"-->
+            <!--              :row-width="['80%', '70%', '50%']"-->
+            <!--              :loading="-->
+            <!--                item.goodsList.length > 0 ? false : true && !item.noData-->
+            <!--              "-->
+            <!--            >-->
+            <!--            </sp-skeleton>-->
+            <!--            <GoodsPro-->
+            <!--              v-for="(goodsitem, sub) in item.goodsList"-->
+            <!--              :key="sub"-->
+            <!--              :goods-data="goodsitem"-->
+            <!--            />-->
+            <GoodItem
+              v-for="(good, index) in goodList"
+              :key="index"
+              :good="good"
+            />
+            <div v-if="item.noData" class="no-data">
+              <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
+              <p>暂无数据</p>
+            </div>
+          </div>
+          <!-- E 推荐商品列表 -->
+        </div>
+      </sp-swipe-item>
+    </sp-swipe>
+    <div class="btn"><a>查看全部公司</a></div>
+  </div>
+</template>
+
+<script>
+import { Swipe, swipeItem, Skeleton } from '@chipspc/vant-dgg'
+import getUserSign from '@/utils/fingerprint'
+import { homeApi } from '@/api'
+import TabCurve from '@/components/common/tab/TabCurve'
+import GoodsPro from '@/components/common/goodsItem/GoodsPro'
+import LoadingDown from '@/components/common/loading/LoadingDown'
+import adJumpHandle from '~/mixins/adJumpHandle'
+
+import GoodItem from '@/components/spread/companyTransaction/GoodItem'
+export default {
+  components: {
+    [Swipe.name]: Swipe,
+    [swipeItem.name]: swipeItem,
+    [Skeleton.name]: Skeleton,
+    TabCurve,
+    // GoodsPro,
+    LoadingDown,
+    GoodItem,
+  },
+  mixins: [adJumpHandle],
+  data() {
+    return {
+      tabBtn: [], // 对象有goodsList字段是商品列表
+      loading: false, // 加载按钮，调接口时为true
+      currentItem: 0, // 默认tabs选中第一个
+      searchDomHeight: 0, // 选项卡吸顶时与顶部的距离
+      params: {
+        dictionaryCode: 'C-SY-RMJY-GG', // 查询数据字典的code
+        findType: 0, // 查询类型：0：初始查询广告+数据字典+推荐商品  1：查询广告+推荐商品 2：只查推荐商品
+        userId: '', // 用户id
+        deviceId: '', // 设备ID（用户唯一标识） 0022ef1a-f685-469a-93a8-5409892207a2
+        areaCode: '', // 区域编码
+        sceneId: 'app-mainye-01', // 场景ID
+        maxsize: 100, // 要求推荐产品的数量
+        platform: 'APP', // 平台（app,m,pc）
+        formatId: '', // 产品类别
+        limit: 10, // 分页条数
+        page: 1, // 当前页
+        locationCode: '', // 查询广告的位置code
+      },
+
+      tabBtnList: [
+        { name: '推荐公司', type: 0, goodList: [] },
+        { name: '热卖公司', type: 9, goodList: [] },
+        { name: '降价急售', type: 1, goodList: [] },
+      ],
+      goodListParams: {
+        type: 0,
+        page: 1,
+        limit: 10,
+      },
+      goodList: [],
+    }
+  },
+  computed: {
+    cityCode() {
+      return this.$store.state.city.currentCity.code
+    },
+    isSendReq() {
+      const cityCode = this.$store.state.city.currentCity.code
+      if (cityCode && this.tabBtn.length && !this.tabBtn[0].goodsList.length) {
+        return true
+      } else {
+        return false
+      }
+    },
+  },
+  watch: {
+    // 监听城市定位成功，且字典数据请求完成够再获取字典第一个分类下的产品数据
+    isSendReq(val) {
+      if (val) {
+        this.params.findType = 2
+        this.findRecomList(0)
+      }
+    },
+  },
+  async created() {
+    if (process.client) {
+      this.findRecomList(this.currentItem) // 根据默认tab，请求商品数据
+      this.params.deviceId = await getUserSign() // 获取用户唯一标识
+      this.getGoodList({ type: 0 })
+    }
+  },
+  mounted() {
+    try {
+      this.searchDomHeight =
+        this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
+      window.addEventListener('scroll', this.handleScroll) // 监听滚动
+    } catch (error) {
+      console.log(error)
+    }
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
+  methods: {
+    // 滚动加载更多
+    handleScroll() {
+      if (
+        this.tabBtn.length &&
+        this.tabBtn[this.currentItem].goodsList.length &&
+        !this.loading &&
+        !this.tabBtn[this.currentItem].noMore
+      ) {
+        const pageScrollTop =
+          window.pageYOffset ||
+          document.documentElement.scrollTop ||
+          document.body.scrollTop // 滚动条距离顶部的位置
+        const pageScrollHeight = document.body.scrollHeight // 页面文档的总高度
+        const pageClientHeight = window.innerHeight // 窗口文档显示区域的高度
+        // 监听页面是否滚动到底部加载更多数据
+        if (Math.ceil(pageScrollTop + pageClientHeight) >= pageScrollHeight) {
+          this.loading = true
+          this.tabBtn[this.currentItem].page += 1
+          this.params.findType = 2
+          this.getGoodList({})
+        }
+      }
+    },
+    // 选项卡选择某项：切换轮播，显示不同内容
+    selectTabHandle({ index, type }) {
+      this.goodList = []
+      this.$refs.recomRef.swipeTo(index)
+    },
+    // 切换轮播时触发
+    onChange(index) {
+      this.switchHandle(index)
+      if (this.$refs.tabCurveRef.isFixed) {
+        this.$nextTick(() => {
+          const tabCurveDomHeight = this.$refs.tabCurveRef.$el.clientHeight // 获取吸顶头部tab栏高度
+          this.listOffsetTop =
+            this.$refs.recomRef.$el.offsetTop -
+            this.searchDomHeight -
+            tabCurveDomHeight // 推荐列表距离顶部的距离 - 搜索栏高度 - tab栏高度 （用于切换tab重置列表滚动位置）
+          document.documentElement.scrollTop = this.listOffsetTop + 1
+          document.body.scrollTop = this.listOffsetTop + 1
+        })
+      }
+      this.currentItem = index
+    },
+    switchHandle(index) {
+      // 切换没有数据时加载数据
+      // if (
+      //   !this.tabBtn[index].goodsList.length &&
+      //   !this.tabBtn[index].adData.length
+      // ) {
+      //   this.params.findType = 1
+      //   this.findRecomList(index)
+      // }
+      if (!this.goodList.length) {
+        // this.params.findType = 1
+        this.getGoodList({ type: this.tabBtnList[index].type })
+      }
+    },
+    preventTouch(e) {
+      e.stopImmediatePropagation() // 阻止冒泡
+    },
+    // 查询推荐商品
+    findRecomList(index) {
+      const params = {}
+      // 初始化查询字典+广告需要的参数
+      if (this.params.findType === 0) {
+        params.findType = this.params.findType
+        params.dictionaryCode = this.params.dictionaryCode
+        params.limit = this.params.limit
+        params.page = this.params.page
+      }
+
+      // 查询推荐产品需要的参数
+      if (this.params.findType !== 0) {
+        params.findType = this.params.findType
+        params.formatId = this.tabBtn[index].ext3
+        params.limit = this.tabBtn[index].limit
+        params.page = this.tabBtn[index].page
+        params.areaCode = this.cityCode
+        params.deviceId = this.params.deviceId
+        params.sceneId = this.params.sceneId
+        params.maxsize = this.params.maxsize
+        params.platform = this.params.platform
+      }
+
+      // 广告位code
+      if (this.params.findType === 1) {
+        params.locationCode = this.tabBtn[index].ext1
+      }
+
+      this.$axios.post(homeApi.findRecomList, params).then((res) => {
+        this.loading = false
+        if (res.code === 200) {
+          if (params.findType === 0) {
+            res.data.dictData[0].adData = res.data.adData
+            this.tabBtn = res.data.dictData
+            return
+          }
+          if (params.findType === 1) {
+            this.tabBtn[index].adData = res.data.adData
+            this.tabBtn[index].goodsList = res.data.goodsList
+            this.tabBtn[index].noData = res.data.goodsList.length === 0
+            return
+          }
+          // 初始查询第一个分类产品无任何数据
+          if (
+            index === 0 &&
+            params.page === 1 &&
+            res.data.goodsList.length === 0
+          ) {
+            this.$set(this.tabBtn[index], 'noData', true)
+            return
+          }
+          // 加载更多时无更多数据
+          if (!res.data.goodsList.length) {
+            this.tabBtn[index].noMore = true
+            return
+          }
+          this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
+            res.data.goodsList
+          )
+        }
+      })
+    },
+
+    // 根据接口获取商品列表
+    getGoodList({ type = 0, page = 1, limit = 10 }) {
+      const param = `?type=${type}&page=${page}&limit=${limit}`
+      const api = '/tradingApi/WapCompany/find/newList'
+      const cdn = 'https://mjy.dgg.cn'
+      this.$axios.get(cdn + api + param).then((res) => {
+        this.loading = false
+        console.log(res.data.searchList.records)
+        if (res.code === 'SYS_0000') {
+          // 获取商品后，处理商品数据
+          // this.goodList = res.data.searchList.records
+          this.goodList = this.goodList.concat(res.data.searchList.records)
+        }
+      })
+    },
+  },
+}
+</script>
+
+<style scoped lang="less">
+@skeleton-row-margin-top: 0;
+
+.my-component {
+  .btn {
+    width: 100%;
+    height: 0.88rem;
+    background: #ebf2ff;
+    opacity: 0.7;
+    border-radius: 0.08rem;
+    line-height: 0.88rem;
+    text-align: center;
+    font-size: 0.28rem;
+    font-weight: 700;
+    color: #387cee;
+  }
+}
+.scroll-recom {
+  padding: 22px 0 32px 40px;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    display: none;
+  }
+  ul {
+    display: flex;
+    li {
+      margin-right: 12px;
+      &:last-child {
+        margin-right: 40px;
+      }
+      a {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        width: 262px;
+        height: 144px;
+        background: #ffffff;
+        border: 1px solid #cdcdcd;
+        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
+        .recom-img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+}
+.goods-list {
+  position: relative;
+  width: 100%;
+  padding: 0 40px 0 40px;
+  &::before {
+    display: block;
+    content: '';
+    width: 100%;
+    height: 1px;
+    background: #f4f4f4;
+  }
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    img {
+      width: 340px;
+      height: 340px;
+    }
+    > p {
+      font-size: 30px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #1a1a1a;
+    }
+  }
+}
+.my-swipe {
+  /deep/ .sp-skeleton {
+    padding: 32px 0;
+  }
+  /deep/ .sp-skeleton__content {
+    padding-top: 0;
+  }
+}
+</style>
