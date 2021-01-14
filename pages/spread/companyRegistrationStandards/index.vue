@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Swipe, SwipeItem } from '@chipspc/vant-dgg'
 import DggImCompany from '@/components/spread/DggImCompany'
 import Planner from '@/components/spread/companyRegistrationStandards/GuiHuaShiSwipe'
@@ -216,7 +217,11 @@ export default {
       ],
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   watch: {},
   created() {},
   mounted() {
@@ -229,7 +234,21 @@ export default {
     }
     window.sensors.registerPage(param) // 设置公共属性
   },
-  methods: {},
+  methods: {
+    back() {
+      // 返回上一页
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/spread')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
+  },
   head() {
     return {
       title: '公司注册标准',
