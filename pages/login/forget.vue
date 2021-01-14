@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-13 19:00:55
+ * @LastEditTime: 2021-01-14 20:25:00
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/forget.vue
 -->
@@ -232,6 +232,7 @@ export default {
       } catch (error) {
         this.loading = false
         this.loginToast(error.message)
+        return Promise.reject(error)
       }
     },
     // 自定义提示框
