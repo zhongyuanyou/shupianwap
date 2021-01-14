@@ -680,12 +680,12 @@ export default {
           type: 'text/javascript',
           charset: 'utf-8',
         },
-        {
-          src: '/js/spread/companyRegister-md-config.js',
-        },
-        {
-          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
-        },
+        // {
+        //   src: '/js/spread/companyRegister-md-config.js',
+        // },
+        // {
+        //   src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
+        // },
       ],
     }
   },

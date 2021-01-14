@@ -3,13 +3,15 @@
     <div class="open_lf">
       <sp-image
         fit="cover"
-        width="0.57rem"
-        height="0.57rem"
-        src="https://img.yzcdn.cn/vant/cat.jpeg"
+        width="0.67rem"
+        height="0.67rem"
+        src="https://cdn.shupian.cn/sp-pt/wap/images/g6trabnxtg80000.png?x-oss-process=image/resize,m_fill,w_67,h_67,limit_0"
       />
       <span>薯片找人APP</span>
     </div>
-    <sp-button type="primary" size="small" @click="openApp">立即打开</sp-button>
+    <sp-button class="openBtn" type="primary" size="small" @click="openApp"
+      >立即打开</sp-button
+    >
   </div>
 </template>
 
@@ -47,6 +49,10 @@ export default {
       font-weight: bold;
       color: #1a1a1a;
     }
+  }
+  .openBtn {
+    width: 170px;
+    font-size: 28px;
   }
 }
 </style>

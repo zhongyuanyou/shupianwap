@@ -32,10 +32,12 @@
           <!--S商品列表-->
           <sp-list
             v-show="listShow"
+            ref="spList"
             v-model="loading"
             :finished="finished"
             :style="{
               maxHeight: maxHeight,
+              paddingBottom: isShowOpenApp ? '45px' : '0',
             }"
             finished-text="没有更多了"
             class="goods-content"
@@ -45,7 +47,6 @@
             <goods-item
               v-for="(_item, _index) in jyGoodsListData[item.code]"
               :key="_index"
-              :item-type="itemType"
               :item-data="_item"
               :goodstype="{ type: 'jy', typeCode: item.ext4 }"
               :search-key="searchText"
@@ -68,6 +69,8 @@
       v-show="!listShow"
       title="新上商品通知"
       desc="填写手机号,相关商品上架第一时间通知"
+      :content="typeText"
+      :search-text="searchText"
     />
     <openApp />
   </div>
@@ -137,16 +140,6 @@ export default {
         return ''
       },
     },
-    itemType: {
-      // 商品列表的类型
-      type: Object,
-      default() {
-        return {
-          type: 'jy',
-          classify: 'wd',
-        }
-      },
-    },
   },
   data() {
     return {
@@ -156,6 +149,7 @@ export default {
       maxHeight: 0,
       activeTabIndex: 0,
       formData: {},
+      typeText: '',
       skeletonLoading: true,
       jyFilterData: {}, // 保存所有交易业态的筛选项数据
       jyGoodsListData: {}, // 保存所有交易业态的列表数据
@@ -163,6 +157,11 @@ export default {
       filterItem: {}, // 保存所有交易业态的已筛选数据
       isReq: {}, // 存储当前业态是否已经进行过搜索
     }
+  },
+  computed: {
+    isShowOpenApp() {
+      return this.$store.state.app.isShowOpenApp
+    },
   },
   watch: {
     searchText(val) {
@@ -173,6 +172,9 @@ export default {
         this.initGoodsList()
       }
     },
+    isShowTabs(val) {
+      if (!val) this.$refs.spTabs.$refs.nav.parentNode.style.display = 'none'
+    },
   },
   mounted() {
     this.$emit('goodsList', 'jy', this)
@@ -180,6 +182,7 @@ export default {
     this.tabItems.forEach((item) => {
       this.isReq[item.code] = false
     })
+    this.typeText = this.tabItems[0].name + '交易'
     // console.log('jygood', this.typeCodeIndex)
     this.activeTabIndex = this.typeCodeIndex
     this.currentTabJyCode = this.tabItems[this.typeCodeIndex].code
@@ -207,13 +210,15 @@ export default {
       this.initGoodsList()
     },
     onLoad() {
-      console.log(1)
+      // console.log(1)
       this.searchKeydownHandle()
     },
     changeTabs(name, title) {
       // 切换业态tab
       if (this.reqType !== 'jy') return
-      console.log(this.tabItems[name])
+      // console.log(this.tabItems[name])
+      // console.log(title)
+      this.typeText = title
       this.currentTabJyCode = this.tabItems[name].code
       // 如果已经存储的有筛选数据则不需要再去请求筛选数据
       if (this.jyFilterData[this.currentTabJyCode]) {
@@ -293,9 +298,38 @@ export default {
             ][key].id
             break
           case 'moreFilter':
-            if (this.filterItem[this.currentTabJyCode][key].length) {
+            if (
+              this.filterItem[this.currentTabJyCode][key].filterKeyValArr.length
+            ) {
               // 处理更多筛选
-              arr = [...arr, ...this.filterItem[this.currentTabJyCode][key]]
+              arr = [
+                ...arr,
+                ...this.filterItem[this.currentTabJyCode][key].filterKeyValArr,
+              ]
+            }
+            if (
+              'nameLengthStart' in
+              this.filterItem[this.currentTabJyCode][key].charLength
+            ) {
+              this.formData[
+                this.currentTabJyCode
+              ].nameLengthStart = this.filterItem[this.currentTabJyCode][
+                key
+              ].charLength.nameLengthStart
+            } else {
+              delete this.formData[this.currentTabJyCode].nameLengthStart
+            }
+            if (
+              'nameLengthEnd' in
+              this.filterItem[this.currentTabJyCode][key].charLength
+            ) {
+              this.formData[
+                this.currentTabJyCode
+              ].nameLengthEnd = this.filterItem[this.currentTabJyCode][
+                key
+              ].charLength.nameLengthEnd
+            } else {
+              delete this.formData[this.currentTabJyCode].nameLengthEnd
             }
             break
           case 'priceFilter':
@@ -328,7 +362,10 @@ export default {
     },
     computedHeight() {
       // 计算列表的最大高
-      const installAPPHeight = this.$refs.installApp
+      const top = this.$refs.spList[0].$el.getBoundingClientRect().top
+      console.log('top', top)
+      this.maxHeight = document.body.clientHeight - top + 'px'
+      /* const installAPPHeight = this.$refs.installApp
         ? this.$refs.installApp[0].$el.clientHeight
         : 10000
       const dropDownMenuHeight = this.$refs.dropDownMenu
@@ -340,14 +377,14 @@ export default {
       )[0]
         ? document.querySelectorAll('.sp-tabs-self .sp-tabs__wrap')[0]
             .clientHeight
-        : 0
-      this.maxHeight =
+        : 0 */
+      /* this.maxHeight =
         document.body.clientHeight -
         installAPPHeight -
         dropDownMenuHeight -
         spTabsHeight -
         topHeight +
-        'px'
+        'px' */
     },
   },
 }

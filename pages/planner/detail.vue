@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 10:30:45
+ * @LastEditTime: 2021-01-12 19:53:26
  * @Description: file content
- * @FilePath: /chips-wap/client/pages/planner/detail.vue
+ * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
 
 <template>
@@ -125,7 +125,12 @@
               <div class="detail-content__explain">
                 <span>
                   什么是薯片分
-                  <my-icon name="per_ic_help" size="0.24rem" color="#666666" />
+                  <my-icon
+                    name="per_ic_help"
+                    size="0.24rem"
+                    color="#666666"
+                    @click="handlePoint"
+                  />
                 </span>
                 <sp-button
                   class="detail-content__explain-btn"
@@ -155,7 +160,12 @@
           text="电话联系"
           @click="handleCall"
         />
-        <sp-bottombar-button type="info" text="在线联系" @click="handleIM" />
+        <sp-bottombar-button
+          v-if="!hideIM"
+          type="info"
+          text="在线联系"
+          @click="handleIM"
+        />
       </sp-bottombar>
     </div>
     <sp-share-sheet
@@ -210,6 +220,7 @@ export default {
       detailData: {},
       shareOptions: [],
       showShare: false,
+      hideIM: this.$route.query.imUserId === this.$route.query.mchUserId, // 目前是 获取到imUserId与mchUserId相等，说明是自己与自己聊天，不显示IM
       hideHeader: !!this.$route.query.hideHeader || false,
       redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去
     }
@@ -217,6 +228,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      userInfo: (state) => state.user.userInfo,
     }),
     formatTagList() {
       const tagList = this.detailData.tagList
@@ -231,6 +243,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      SET_USERY: 'user/SET_USERY',
+    }),
     onClickLeft() {
       console.log('nav onClickLeft')
       this.uPGoBack()
@@ -294,7 +309,7 @@ export default {
           (res) => {
             const { code } = res || {}
             if (code !== 200) {
-              this.$refs.spToast.show({
+              this.$xToast.show({
                 message: '分享失败！',
                 duration: 1500,
                 forbidClick: false,
@@ -324,27 +339,33 @@ export default {
     },
 
     // 发起聊天
-    uPIM(data = {}) {
+    async uPIM(data = {}) {
       const { mchUserId, userName } = data
-      // 如果当前页面在app中，则调用原生拨打电话的方法
+      // 如果当前页面在app中，则调用原生IM的方法
       if (this.isInApp) {
-        this.$appFn.dggOpenIM(
-          {
-            name: userName,
-            userId: mchUserId,
-            userType: 'MERCHANT_USER',
-          },
-          (res) => {
-            const { code } = res || {}
-            if (code !== 200)
-              this.$refs.spToast.show({
-                message: `联系失败`,
-                duration: 1000,
-                forbidClick: true,
-                icon: 'toast_ic_remind',
-              })
-          }
-        )
+        try {
+          // 需要判断登陆没有，没有登录就是调用登录
+          await this.getUserInfo()
+          this.$appFn.dggOpenIM(
+            {
+              name: userName,
+              userId: mchUserId,
+              userType: 'MERCHANT_USER',
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `联系失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            }
+          )
+        } catch (error) {
+          console.error('uPIM error:', error)
+        }
         return
       }
       const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
@@ -371,12 +392,52 @@ export default {
       this.$router.back(-1)
     },
 
+    // app获取用户信息
+    getUserInfo() {
+      return new Promise((resolve, reject) => {
+        if (this.userInfo.userId) {
+          resolve(this.userInfo.userId)
+          return
+        }
+        this.$appFn.dggGetUserInfo((res) => {
+          const { code, data } = res || {}
+          // 未登录需要登录
+          if (code !== 200) {
+            this.$appFn.dggLogin((loginRes) => {
+              if (loginRes && loginRes.code === 200) {
+                console.log('loginRes : ', loginRes)
+                if (
+                  loginRes.data &&
+                  loginRes.data.userId &&
+                  loginRes.data.token
+                ) {
+                  this.SET_USERY(loginRes.data)
+                  resolve(loginRes.data.userId)
+                  return
+                }
+                reject(new Error('登录后userId或者token缺失'))
+                return
+              }
+              reject(new Error('登录失败'))
+            })
+            return
+          }
+          if (data && data.userId && data.token) {
+            this.SET_USERY(data)
+            resolve(data.userId)
+            return
+          }
+          reject(new Error('用户信息中userId或者token缺失'))
+        })
+      })
+    },
+
     // 获取详情数据
     async getDetail() {
       try {
         const { mchUserId } = this.$route.query
         if (mchUserId == null) {
-          this.$refs.spToast.show({
+          this.$xToast.show({
             message: '缺少规划师参数!',
             duration: 1000,
             forbidClick: false,
@@ -386,7 +447,6 @@ export default {
         }
         const params = { id: mchUserId }
         const data = await planner.detail(params)
-        console.log(data)
         this.detailData = data || {}
         return data
       } catch (error) {
@@ -448,8 +508,8 @@ export default {
       &__bg {
         padding: 40px;
         position: relative;
-        background: url(~assets/images/planner/detail_bg.png) top center/100%
-          auto no-repeat;
+        background: url(https://cdn.shupian.cn/sp-pt/wap/images/fmyco4fucsg0000.png)
+          top center/100% auto no-repeat;
       }
       &__wrap {
         height: 768px;
@@ -519,9 +579,8 @@ export default {
           margin-left: 12px;
           font-size: 24px;
           font-weight: 400;
-          white-space: nowrap;
-          word-break: normal;
           .textOverflow(1);
+          white-space: nowrap;
           &:first-child {
             margin-left: 0;
           }

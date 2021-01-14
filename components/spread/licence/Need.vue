@@ -5,12 +5,16 @@
     </div>
     <div class="need_content">
       <ul>
-        <li
-          v-for="(item, index) in imgList"
-          :key="index"
-          @click="goToPage(index)"
-        >
-          <a href="javascript:void(0);"><img :src="item" alt="" /></a>
+        <li v-for="(item, index) in imgList" :key="index">
+          <a
+            v-sensorsTrack:p_IMClick="{
+              name: `许可证_还需要办理_${item.title}`,
+              im_type: '售前',
+            }"
+            href="javascript:void(0);"
+            @click="goToPage(index)"
+            ><img :src="item.img" alt=""
+          /></a>
         </li>
       </ul>
     </div>
@@ -24,12 +28,30 @@ export default {
   data() {
     return {
       imgList: [
-        'https://cdn.shupian.cn/sp-pt/wap/images/38rgy1dmhcm0000.png',
-        'https://cdn.shupian.cn/sp-pt/wap/images/1sd3zeh3d9q8000.png',
-        'https://cdn.shupian.cn/sp-pt/wap/images/ficcz0jmdfk0000.png',
-        'https://cdn.shupian.cn/sp-pt/wap/images/4wj1s23avw80000.png',
-        'https://cdn.shupian.cn/sp-pt/wap/images/55xajsk0xzw0000.png',
-        'https://cdn.shupian.cn/sp-pt/wap/images/98gk33nvdyo0000.png',
+        {
+          title: '体系认证',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/38rgy1dmhcm0000.png',
+        },
+        {
+          title: '工商注销',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/1sd3zeh3d9q8000.png',
+        },
+        {
+          title: '工商变更',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/ficcz0jmdfk0000.png',
+        },
+        {
+          title: '互联网资质',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/4wj1s23avw80000.png',
+        },
+        {
+          title: '代理记账',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/55xajsk0xzw0000.png',
+        },
+        {
+          title: '银行服务',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/98gk33nvdyo0000.png',
+        },
       ],
     }
   },

@@ -22,7 +22,7 @@ export default {
     },
     {
       listKey: 'registration_area',
-      listName: '地址',
+      listName: '注册区域',
     },
     {
       listKey: 'business_scope',
@@ -85,7 +85,7 @@ export default {
   'CATE-JYZY-ZZ': [
     {
       listKey: 'qualification_registration_area',
-      listName: '地区',
+      listName: '注册区域',
     },
     {
       listKey: 'qualification_expire_date',

@@ -14,7 +14,6 @@
       :tel="consultTel"
       button="免费咨询"
       md-name="专业刻章服务_免费咨询"
-      md-type="new"
       title=""
     ></consult-tel>
     <!--  立即咨询  -->
@@ -28,7 +27,6 @@
     <gui-hua-shi-swipe
       :planners-common="plannersCommon"
       :planners-data="plannersData"
-      md-type="new"
     ></gui-hua-shi-swipe>
     <!--  规划师  -->
     <!--  服务流程  -->
@@ -44,7 +42,6 @@
     <consult-tel
       :tel="consultTel"
       md-name="印章服务_疑问咨询"
-      md-type="new"
       title="还有疑问？企服专家为您免费解答"
     ></consult-tel>
     <!--  立即咨询  -->
@@ -52,11 +49,7 @@
     <shuPianZhaoRen></shuPianZhaoRen>
     <!--  薯片找人  -->
     <!--  底部咨询  -->
-    <fixedBottom
-      :md="fixedMd"
-      :planner="fixedBottomData"
-      md-type="new"
-    ></fixedBottom>
+    <fixedBottom :md="fixedMd" :planner="fixedBottomData"></fixedBottom>
     <!--  底部咨询  -->
     <!--  IM  -->
     <dgg-im-company></dgg-im-company>

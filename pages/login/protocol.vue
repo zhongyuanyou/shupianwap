@@ -97,6 +97,14 @@ export default {
   background-color: #ffffff;
   .top {
     flex: 88px 0 0;
+    /deep/.sp-top-nav-bar {
+      &__left,
+      &__right {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
   }
   /deep/.content {
     flex: 1;

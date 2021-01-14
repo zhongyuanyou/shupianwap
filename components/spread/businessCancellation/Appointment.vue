@@ -81,7 +81,7 @@
           </template>
           <template #right>
             <!-- 验证 / 倒计时 -->
-            <a class="a-clear">
+            <a href="javascript:;" class="a-clear">
               <span
                 v-sensorsTrack:webClick="{
                   name: '工商注销表单_获取验证码',
@@ -181,6 +181,7 @@ export default {
     popupShow() {
       this.showPicker = true
     },
+    /** 弹出框点击确定 */
     onConfirm(val) {
       this.need = val
       this.showPicker = false

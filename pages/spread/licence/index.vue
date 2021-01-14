@@ -1,7 +1,18 @@
 <template>
   <div class="licence-content">
     <!-- S 头部导航 -->
-    <!-- <Header :title="title" /> -->
+    <Header v-show="!isInApp" :title="title">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!-- E 头部导航 -->
     <!-- E 轮播图 -->
     <Banner :img-list="imgList" />
@@ -36,7 +47,8 @@
 </template>
 
 <script>
-// import Header from '~/components/common/head/header'
+import { mapState } from 'vuex'
+import Header from '~/components/common/head/header'
 import Banner from '@/components/spread/licence/banner'
 import Form from '@/components/spread/licence/form'
 import HandleType from '@/components/spread/licence/HandleType'
@@ -50,7 +62,7 @@ import FixedBottom from '~/components/spread/common/FixedBottom'
 import dggImCompany from '~/components/spread/DggImCompany'
 export default {
   components: {
-    // Header, // 头部
+    Header, // 头部
     Banner, // 轮播
     Form, // 表单
     HandleType, // 办理类型
@@ -69,6 +81,7 @@ export default {
       title: '许可证',
       titles: '还有疑问？企服专家为您免费解答',
       tel: '4000-962540', // 电话号码
+
       // 推荐规划师
       planner: {
         id: '7862495547640840192',
@@ -87,11 +100,30 @@ export default {
       ],
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   watch: {},
   created() {},
   mounted() {},
-  methods: {},
+  methods: {
+    // 头部返回
+    back() {
+      // 返回上一页
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/spread')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
+  },
   head() {
     return {
       title: '许可证办理',
@@ -124,5 +156,8 @@ export default {
 /deep/.cousulttel-title[data-v-024b2072] {
   margin: 29px 0 31px 0;
   text-align: left;
+}
+/deep/ .back_icon {
+  margin-left: 40px;
 }
 </style>

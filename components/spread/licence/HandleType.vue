@@ -9,13 +9,17 @@
     <div class="handleType_content">
       <div class="handleType_content_nav">
         <ul>
-          <li
-            v-for="(items, index) in titleList"
-            :key="index"
-            :class="active === index ? 'liactive' : ''"
-            @click="handleNav(index)"
-          >
-            <span> {{ items }}</span>
+          <li v-for="(items, index) in titleList" :key="index">
+            <a
+              v-sensorsTrack:webClick="{
+                name: `许可证办理类型_${items}`,
+              }"
+              href="javascript:void(0)"
+              :class="active === index ? 'liactive' : ''"
+              @click="handleNav(index)"
+            >
+              <span> {{ items }}</span></a
+            >
           </li>
         </ul>
       </div>
@@ -81,10 +85,24 @@
             <div class="handleType_content_detail_box_head_relation">
               <span>{{ title.referencePrice }}<i>元起</i></span>
               <div>
-                <a href="javascript:;" @click="plannerIm(title)">
+                <a
+                  v-sensorsTrack:p_IMClick="{
+                    name: `许可证办理类型_${title.operating.showName}_在线咨询`,
+                    im_type: '售前',
+                  }"
+                  href="javascript:void(0)"
+                  @click="plannerIm(title)"
+                >
                   <img :src="title.portraitImg" alt="" />
                 </a>
-                <a @click="plannerIm(title)">
+                <a
+                  v-sensorsTrack:p_IMClick="{
+                    name: `许可证办理类型_${title.operating.showName}_在线咨询`,
+                    im_type: '售前',
+                  }"
+                  href="javascript:void(0)"
+                  @click="plannerIm(title)"
+                >
                   <my-icon
                     name="notify_ic_chat"
                     color="#4974F5"
@@ -93,7 +111,14 @@
                   >
                   </my-icon>
                 </a>
-                <a href="javascript:;" @click="call(title.telephone)">
+                <a
+                  v-sensorsTrack:p_IMClick="{
+                    name: `许可证办理类型_${title.operating.showName}_拨打电话`,
+                    im_type: '售前',
+                  }"
+                  href="javascript:void(0)"
+                  @click="call(title.telephone)"
+                >
                   <my-icon
                     name="notify_ic_tel"
                     color="#4974F5"
@@ -276,7 +301,7 @@ export default {
     // 拨打电话
     call(tel) {
       window.location.href = `tel:${tel}`
-      event.stopPropagation()
+      // event.stopPropagation()
     },
   },
 }
@@ -312,17 +337,24 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #222222;
-        padding: 12px 25px;
         border-radius: 8px;
-      }
-      .liactive {
-        font-size: 24px;
-        font-family: PingFang SC;
-        font-weight: 400;
-        color: #4974f5;
-        padding: 12px 25px;
-        font-weight: bold;
-        background: #ecf1fe;
+        > a {
+          font-size: 24px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          color: #222222;
+          padding: 12px 25px;
+          border-radius: 8px;
+        }
+        .liactive {
+          font-size: 24px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          color: #4974f5;
+          padding: 12px 25px;
+          font-weight: bold;
+          background: #ecf1fe;
+        }
       }
     }
     &_detail {

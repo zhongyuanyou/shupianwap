@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <Header title="工商首页" />
+    <Header v-if="!isInApp" title="工商首页" />
     <!-- START 轮播图-->
     <Banner :images="images" />
     <!-- END 轮播图-->
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import dggImCompany from '~/components/spread/DggImCompany'
 import Header from '@/components/common/head/header'
 import Banner from '@/components/spread/home/Banner'
@@ -825,7 +826,7 @@ export default {
   },
   data() {
     return {
-      images: ['https://cdn.shupian.cn/sp-pt/wap/images/4jy3z5c6p5e0000.jpg'],
+      images: ['https://cdn.shupian.cn/sp-pt/wap/images/1orfon5hb1ds000.jpg'],
       guiHuaShiList: [
         {
           id: '7862495547640840192',
@@ -1008,9 +1009,24 @@ export default {
       ],
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   created() {
     this.adHandleData(this.resultData.data.adList || [])
     this.plannerHandleData(this.resultData.data.planlerList || [])
+  },
+  mounted() {
+    const param = {
+      platform_type: 'wap端', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端工商首页推广页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
   },
   methods: {
     jumpLink(url) {
@@ -1091,12 +1107,6 @@ export default {
       title: '工商首页',
       script: [
         {
-          src: '/js/spread/businessHome-md-config.js',
-        },
-        {
-          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
-        },
-        {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
           ssr: false,
           type: 'text/javascript',
@@ -1117,12 +1127,6 @@ export default {
   /deep/ .my-head {
     width: @spread-page-width !important;
     left: auto !important;
-  }
-
-  /deep/ .sp-overlay {
-    width: @spread-page-width;
-    left: auto;
-    right: auto;
   }
 }
 </style>

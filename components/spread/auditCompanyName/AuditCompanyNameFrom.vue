@@ -3,6 +3,7 @@
     <!--s  查询表单 -->
     <div class="audit-company-name-from">
       <div class="audit-company-name-from__center">
+        <!--s 表单标题 -->
         <h1 class="audit-company-name-from__center__title">
           <i>
             <img
@@ -18,12 +19,13 @@
             />
           </i>
         </h1>
-
+        <!--e 表单标题 -->
         <div class="audit-company-name-from__center__input">
+          <!-- s城市选择 -->
           <a href="javascript:;">
             <div
               v-sensorsTrack:webClick="{
-                form_name: `核名表单_城市下拉表单`,
+                name: `核名表单_城市下拉表单`,
               }"
               class="audit-company-name-from__center__input__city"
               @click="isShowCity = true"
@@ -33,7 +35,9 @@
               <sp-icon name="arrow-down" />
             </div>
           </a>
+          <!-- e城市选择 -->
           <sp-cell-group>
+            <!-- s公司名称 -->
             <sp-field
               v-model="companyName"
               v-sensorsTrack:webClick="{
@@ -44,6 +48,8 @@
               :formatter="companyTest"
               placeholder="3-5个"
             />
+            <!-- e公司名称 -->
+            <!-- s行业选择 -->
             <sp-field
               v-model="industry"
               v-sensorsTrack:webClick="{
@@ -55,11 +61,12 @@
               readonly
               @click="isShow = true"
             />
+            <!-- s行业选择 -->
           </sp-cell-group>
           <sp-button type="primary" size="large" @click="onInquire"
             >马上查询</sp-button
           >
-          <!-- 核名数据 -->
+          <!-- s 核名数据 -->
           <div class="audit-company-name-from__center__input__audit">
             <p>
               今日核名<span>{{ auditNameSum }}</span
@@ -71,18 +78,22 @@
               >次
             </p>
           </div>
-          <!-- 城市弹窗 -->
+          <!-- e 核名数据 -->
+          <!--s城市弹窗 -->
           <sp-action-sheet
             v-model="isShowCity"
             :actions="city"
             @select="onCitySelect"
           />
-          <!-- 行业弹窗 -->
+          <!--e城市弹窗 -->
+
+          <!-- s行业弹窗 -->
           <sp-action-sheet
             v-model="isShow"
             :actions="actions"
             @select="onSelect"
           />
+          <!-- e行业弹窗 -->
         </div>
       </div>
     </div>
@@ -90,6 +101,7 @@
     <!--s 手机号弹窗 -->
     <div v-show="isOverlay" class="wrapper">
       <div class="wrapper__verify">
+        <!--s 手机号弹窗标题 -->
         <h1>
           <i>
             <img
@@ -106,49 +118,48 @@
             />
           </i>
         </h1>
+        <!-- e 手机号弹窗标题 -->
         <p>千万补贴进行中，公司注册超值优惠</p>
-        <sp-form>
-          <sp-cell-group>
-            <sp-field
-              v-model="tel"
-              v-sensorsTrack:webClick="{
-                form_name: `核名表单_手机号`,
-              }"
-              type="tel"
-              label="手机号"
-              :formatter="telephoneTest"
-              :maxlength="11"
-              placeholder="信息保护中，请放心填写"
-            />
-            <sp-field
-              v-model="sms"
-              v-sensorsTrack:webClick="{
-                form_name: `核名表单_验证码`,
-              }"
-              center
-              clearable
-              type="number"
-              :maxlength="6"
-              label="验证码"
-              placeholder="请输入验证码"
-              :formatter="formatter"
-            >
-              <template #button>
-                <sp-button
-                  v-sensorsTrack:webClick="{
-                    form_name: `核名表单_获取验证码`,
-                  }"
-                  size="small"
-                  type="primary"
-                  @click="onSmsCode"
-                  >{{
-                    countdown > 0 ? `${countdown}s` : '获取验证码'
-                  }}</sp-button
-                >
-              </template>
-            </sp-field>
-          </sp-cell-group>
-        </sp-form>
+        <!-- s手机号表单 -->
+        <sp-cell-group>
+          <sp-field
+            v-model="tel"
+            v-sensorsTrack:webClick="{
+              form_name: `核名表单_手机号`,
+            }"
+            type="tel"
+            label="手机号"
+            :formatter="telephoneTest"
+            :maxlength="11"
+            placeholder="信息保护中，请放心填写"
+          />
+          <sp-field
+            v-model="sms"
+            v-sensorsTrack:webClick="{
+              form_name: `核名表单_验证码`,
+            }"
+            center
+            clearable
+            type="number"
+            :maxlength="6"
+            label="验证码"
+            placeholder="请输入验证码"
+            :formatter="formatter"
+          >
+            <template #button>
+              <sp-button
+                v-sensorsTrack:webClick="{
+                  form_name: `核名表单_获取验证码`,
+                }"
+                size="small"
+                type="primary"
+                @click="onSmsCode"
+                >{{ countdown > 0 ? `${countdown}s` : '获取验证码' }}</sp-button
+              >
+            </template>
+          </sp-field>
+        </sp-cell-group>
+        <!-- e 手机号表单 -->
         <sp-button
           v-sensorsTrack:p_formSubmit="{
             event_name: 'p_formSubmit',
@@ -198,14 +209,81 @@ export default {
     [Form.name]: Form,
     [CountDown.name]: CountDown,
   },
-  props: {
-    city: {
-      type: Array,
-      default: () => [],
-    },
-  },
+  props: {},
   data() {
     return {
+      city: [
+        {
+          id: 1,
+          name: '成都',
+          color: '#5a79e8',
+        },
+        {
+          id: 2,
+          name: '重庆',
+          color: '#222222',
+        },
+        {
+          id: 3,
+          name: '长沙',
+          color: '#222222',
+        },
+        {
+          id: 4,
+          name: '武汉',
+          color: '#222222',
+        },
+        {
+          id: 5,
+          name: '上海',
+          color: '#222222',
+        },
+        {
+          id: 6,
+          name: '北京',
+          color: '#222222',
+        },
+        {
+          id: 7,
+          name: '深圳',
+          color: '#222222',
+        },
+        {
+          id: 8,
+          name: '广州',
+          color: '#222222',
+        },
+        {
+          id: 9,
+          name: '杭州',
+          color: '#222222',
+        },
+        {
+          id: 10,
+          name: '郑州',
+          color: '#222222',
+        },
+        {
+          id: 11,
+          name: '佛山',
+          color: '#222222',
+        },
+        {
+          id: 12,
+          name: '东莞',
+          color: '#222222',
+        },
+        {
+          id: 13,
+          name: '宜昌',
+          color: '#222222',
+        },
+        {
+          id: 14,
+          name: '石家庄',
+          color: '#222222',
+        },
+      ],
       companyName: '',
       industry: '',
       isShow: false,
@@ -213,10 +291,32 @@ export default {
       isShowCity: false,
       sms: '',
       tel: '',
-      cityName: '',
+      cityName: '成都',
       countdown: -1, // 发送验证码倒计时60秒
       countdownTimer: null,
-      actions: [{ name: '选项一' }, { name: '选项二' }, { name: '选项三' }],
+      actions: [
+        { name: '科技信息', color: '#222222' },
+        { name: '广告传媒', color: '#222222' },
+        { name: '金融投资', color: '#222222' },
+        { name: '电子贸易', color: '#222222' },
+        { name: '教育培训', color: '#222222' },
+        { name: '物业地产', color: '#222222' },
+        { name: '经济中介', color: '#222222' },
+        { name: '建筑装饰', color: '#222222' },
+        { name: '家居建材', color: '#222222' },
+        { name: '通讯网络', color: '#222222' },
+        { name: '实业生产', color: '#222222' },
+        { name: '珠宝服饰', color: '#222222' },
+        { name: '文化初版', color: '#222222' },
+        { name: '印刷包装', color: '#222222' },
+        { name: '餐饮美容', color: '#222222' },
+        { name: '咨询服务', color: '#222222' },
+        { name: '食品农业', color: '#222222' },
+        { name: '会务展览', color: '#222222' },
+        { name: '物流供应链', color: '#222222' },
+        { name: '商标资质', color: '#222222' },
+        { name: '其他', color: '#222222' },
+      ],
       addUpAuditNameSum: 69201,
       auditNameSum: 118, // 每日默认
     }
@@ -233,6 +333,13 @@ export default {
     onCitySelect(item) {
       this.cityName = item.name
       this.isShowCity = false
+      this.city.forEach((obj) => {
+        if (obj.name === item.name) {
+          obj.color = '#5a79e8'
+        } else {
+          obj.color = '#222222'
+        }
+      })
     },
     //  行业选择
     onSelect(item) {
@@ -240,13 +347,21 @@ export default {
       // 可以通过 close-on-click-action 属性开启自动收起
       this.industry = item.name
       this.isShow = false
+      this.actions.forEach((obj) => {
+        if (obj.name === item.name) {
+          obj.color = '#5a79e8'
+        } else {
+          obj.color = '#222222'
+        }
+      })
     },
     //  手机号弹窗提交
     onInquire() {
-      if (this.cityName === undefined) {
-        this.$router.push('/city/choiceCity')
-      } else if (this.companyName === '') {
+      const inputValue = this.companyName.split('')
+      if (this.companyName === '') {
         Toast('请填写公司名')
+      } else if (inputValue.length < 3) {
+        Toast('公司名格式不正确')
       } else if (this.industry === '') {
         Toast('请选择行业')
       } else {
@@ -285,6 +400,7 @@ export default {
         }
         window.promotion.privat.consultForm(params, (res) => {
           if (res.error === 0) {
+            console.log(params)
             // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
             Toast('提交成功，请注意接听电话')
             this.isOverlay = false
@@ -292,7 +408,7 @@ export default {
             this.industry = ''
             this.companyName = ''
             this.countdown = -1
-            window.sensosr.track('p_fromSubmitResult', {
+            window.sensors.track('p_fromSubmitResult', {
               even_name: 'p_fromSubmitResult',
               from_type: '咨询表单',
               from_name: '核名表单_提交表单',
@@ -341,6 +457,7 @@ export default {
         }
       }, 1000)
     },
+
     // 输入框过滤
     companyTest(value) {
       return value.replace(/[^\dA-Za-z\u3007\u4E00-\u9FCB\uE815-\uE864]/, '')
@@ -383,6 +500,11 @@ export default {
 a {
   text-decoration: none;
   color: inherit;
+}
+.sp-popup--bottom {
+  max-width: 750px;
+  margin: 0 auto;
+  right: 0;
 }
 .audit-company-name-from {
   position: absolute;
@@ -436,7 +558,7 @@ a {
           font-size: 30px;
           color: rgba(204, 204, 204, 1);
           position: absolute;
-          top: 30px;
+          top: 28px;
           right: 24px;
         }
       }
@@ -458,7 +580,7 @@ a {
           /deep/.sp-field__label {
             width: auto;
             margin-left: 33px;
-            margin-right: 33px;
+            margin-right: 22px;
             display: flex;
             align-items: center;
             span {
@@ -482,7 +604,7 @@ a {
                 color: rgba(204, 204, 204, 1);
                 position: absolute;
                 top: 31%;
-                right: 24px;
+                right: 23px;
               }
             }
           }

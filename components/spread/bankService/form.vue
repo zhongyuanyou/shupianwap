@@ -62,14 +62,17 @@
           @focus="() => (isshow = true)"
         />
         <!-- s 获取验证码 -->
-        <div v-show="isshow" class="verification-box">
+        <div
+          v-show="isshow"
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '咨询表单',
+            name: '银行服务_验证码',
+          }"
+          class="verification-box"
+        >
           <sp-field
             v-model="sms"
-            v-sensorsTrack:webClick="{
-              eventName: 'wap元素点击',
-              type: '咨询表单',
-              name: '银行服务_验证码',
-            }"
             label="验证码"
             placeholder="请输入验证码"
             maxlength="6"
@@ -96,8 +99,8 @@
       <!-- s 按钮 -->
       <button
         v-sensorsTrack:p_formSubmit="{
-          eventName: '提交表单',
-          from_type: '咨询表单',
+          eventName: 'p_formSubmit',
+          form_type: '咨询表单',
           name: '银行服务_提交表单',
         }"
         class="free-btn"
@@ -279,13 +282,12 @@ export default {
           this.telephone = ''
           this.sms = ''
           this.countdown = -1
-          this.value = '法人变更'
-          // window.getTrackRow('p_formSubmitResult', {
-          //   even_name: 'p_formSubmitResult',
-          //   form_type: '咨询表单',
-          //   form_sn: 'ZL077',
-          //   form_name: '工商变更表单_提交表单',
-          // })
+          this.value = '基本开户'
+          window.sensors.track('p_formSubmitResult', {
+            even_name: 'p_formSubmitResult',
+            form_type: '咨询表单',
+            form_name: '银行服务表单_提交表单',
+          })
           Toast('提交成功，请注意接听电话')
         } else {
           Toast(res.msg)

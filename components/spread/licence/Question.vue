@@ -19,11 +19,27 @@
         alt=""
       />
       <p>{{ item.explain }}</p>
-      <p @click="plannerIm"><a href="javascript:void(0)">咨询更多 >></a></p>
+      <p @click="plannerIm">
+        <a
+          v-sensorsTrack:p_IMClick="{
+            name: `许可证办理常见问题_咨询更多`,
+            im_type: '售前',
+          }"
+          href="javascript:void(0)"
+          >咨询更多 >></a
+        >
+      </p>
     </div>
     <div class="question_more" @click="showAll = !showAll">
       <span
-        ><a href="javascript:void(0)">{{ advisory }}</a>
+        ><a
+          v-sensorsTrack:p_IMClick="{
+            name: `许可证办理常见问题_${advisory}`,
+            im_type: '售前',
+          }"
+          href="javascript:void(0)"
+          >{{ advisory }}</a
+        >
         <my-icon
           v-show="!showAll"
           name="tab_ic_all_n"
@@ -189,12 +205,14 @@ export default {
       justify-content: center;
       align-items: center;
       a {
+        height: 44px;
         display: block;
         font-size: 28px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #999999;
         padding-right: 13px;
+        line-height: 44px;
       }
     }
   }

@@ -1,7 +1,18 @@
 <template>
   <div class="audit-company-name">
     <!-- s 头部导航 -->
-    <Header :title="title" />
+    <Header v-show="!isInApp" :title="title">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!-- e 头部导航 -->
     <!-- s banner -->
     <Banner :imglist="imgList"></Banner>
@@ -18,21 +29,20 @@
       :planners-common="plannersCommon"
       :planners-data="plannersData"
       md-type="new"
-    >
-    </GuiHuaShiSwipe>
+    />
     <!-- e 规划师 -->
-    <DggImCompany></DggImCompany>
+    <DggImCompany />
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import GuiHuaShiSwipe from '@/components/spread/auditCompanyName/GuiHuaShiSwipe'
 import AuditCompanyNameFrom from '@/components/spread/auditCompanyName/AuditCompanyNameFrom.vue'
 import Header from '@/components/common/head/header'
 import AuditCompanyNameTaboo from '@/components/spread/auditCompanyName/AuditCompanyNameTaboo.vue'
 import DggImCompany from '@/components/spread/DggImCompany'
 import Banner from '@/components/spread/agency/banner'
-import { homeApi } from '@/api'
 export default {
   name: 'Index',
   components: {
@@ -63,7 +73,7 @@ export default {
           id: '7862495547640840193',
           type: '金牌规划师',
           avatarImg: '',
-          name: '郭亮亮',
+          name: '郭亮',
           shuPianFen: 11,
           serverNum: 250,
           telephone: 12345679985,
@@ -131,21 +141,13 @@ export default {
       cityList: [],
     }
   },
-  computed: {},
-  watch: {},
-  created() {
-    this.$axios
-      .get(homeApi.findSiteList, {
-        headers: {
-          'x-cache-control': 'cache',
-        },
-      })
-      .then((res) => {
-        if (res.code === 200) {
-          this.cityList = res.data.cityList
-        }
-      })
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
+  watch: {},
+  created() {},
   mounted() {
     const param = {
       platform_type: 'H5', // 平台类型：App，H5，Web
@@ -156,7 +158,22 @@ export default {
     }
     window.sensors.registerPage() // 设置公共属性
   },
-  methods: {},
+  methods: {
+    back() {
+      // 返回上一页
+      console.log(window.history.length)
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/spread')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
+  },
   head() {
     return {
       title: '免费核名',
@@ -180,6 +197,9 @@ export default {
       width: 750px;
       left: 50%;
       margin-left: -375px;
+      .slot-left {
+        left: 32px;
+      }
     }
   }
 }

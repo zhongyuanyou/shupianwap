@@ -18,32 +18,26 @@
         </template>
       </Header>
       <div class="search">
-        <sp-nav-search
-          ref="searchVal"
+        <Search
           v-model="search.keywords"
           v-myFocus
-          border
-          special-label
           placeholder="请输入规划师姓名"
-          @search="handleSearch"
-        >
-          <template #left-icon>
-            <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
-          </template>
-        </sp-nav-search>
+          @searchKeydownHandle="handleSearch"
+        />
       </div>
     </sp-popup>
   </div>
 </template>
 <script>
-import { Popup, NavSearch } from '@chipspc/vant-dgg'
+import { Popup } from '@chipspc/vant-dgg'
 
 import Header from '@/components/common/head/header'
+import Search from '@/components/common/search/Search'
 
 export default {
   components: {
-    [NavSearch.name]: NavSearch,
     [Popup.name]: Popup,
+    Search,
     Header,
   },
   directives: {
@@ -109,10 +103,6 @@ export default {
   /deep/.sp-field__control {
     font-size: 30px;
     font-weight: bold;
-  }
-
-  .search {
-    padding: 16px 40px;
   }
 }
 </style>

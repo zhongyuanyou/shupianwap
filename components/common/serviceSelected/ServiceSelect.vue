@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-11-21 15:13:44
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-11 18:09:54
+ * @LastEditTime: 2021-01-04 21:17:15
  * @Description: file content
- * @FilePath: /chips-wap/client/components/common/serviceSelected/ServiceSelect.vue
+ * @FilePath: /chips-wap/components/common/serviceSelected/ServiceSelect.vue
 -->
 <template>
   <div class="service-select">
@@ -180,24 +180,19 @@ export default {
   watch: {
     activeData: {
       handler(newVal, odlVal) {
-        console.log('1')
         if (objectDiff.diffOwnProperties(newVal, odlVal).changed === 'equal') {
           return
         }
-        console.log('2')
         if (
           objectDiff.diffOwnProperties(newVal, this.selectData).changed ===
           'equal'
         ) {
           return
         }
-        console.log('3')
         if (!Array.isArray(newVal) || !newVal[0]) {
           this.resetSelectData()
-          console.log('4')
         } else {
           this.selectData = clone(newVal, true)
-          console.log('5')
         }
         this.formatItems.forEach((item, index) => {
           if (this.selectData[0].id === item.id) {
@@ -251,6 +246,11 @@ export default {
         services = services
           .concat({ ...item })
           .filter((service) => service.id !== firstItem.id) // 只要点击其他项 选中的里面有不限，则删除不限
+      }
+
+      // 当一个都不选择时候，默认选择第一个
+      if (services && !services.length) {
+        services = [firstItem]
       }
 
       this.$set(this.selectData, 1, { services })

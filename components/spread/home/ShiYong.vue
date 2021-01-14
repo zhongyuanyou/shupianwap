@@ -5,7 +5,6 @@
       <a
         v-for="item in list"
         :key="item.id"
-        v-md-map
         class="tool"
         href="javascript:void(0);"
         @click="

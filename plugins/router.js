@@ -16,6 +16,8 @@ const infoList = [
   'my-complain', // 新增吐槽页面
   'my-planner', // 我的规划师页面
   'shoppingCar', // 购物车页面
+  'my-help', // 帮助中心
+  'spread-myDemandCard', // 免费找
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {
@@ -47,6 +49,7 @@ export default ({ app, store }) => {
         } else if (routerBlackList.includes(to.path)) {
           next({
             path: loginRoutePath,
+            query: { redirect: to.path },
           })
         } else {
           next()

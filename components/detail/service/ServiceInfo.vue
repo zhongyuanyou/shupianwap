@@ -36,7 +36,8 @@ export default {
     color: #1a1a1a;
   }
   &-content {
-    font-size: 24px;
+    font-size: 26px;
+    color: #595959;
     /deep/ img {
       max-width: 100%;
     }
