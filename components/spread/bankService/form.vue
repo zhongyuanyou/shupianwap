@@ -62,14 +62,17 @@
           @focus="() => (isshow = true)"
         />
         <!-- s 获取验证码 -->
-        <div v-show="isshow" class="verification-box">
+        <div
+          v-show="isshow"
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '咨询表单',
+            name: '银行服务_验证码',
+          }"
+          class="verification-box"
+        >
           <sp-field
             v-model="sms"
-            v-sensorsTrack:webClick="{
-              eventName: 'wap元素点击',
-              type: '咨询表单',
-              name: '银行服务_验证码',
-            }"
             label="验证码"
             placeholder="请输入验证码"
             maxlength="6"
@@ -96,7 +99,7 @@
       <!-- s 按钮 -->
       <button
         v-sensorsTrack:p_formSubmit="{
-          eventName: '提交表单',
+          eventName: 'p_formSubmit',
           form_type: '咨询表单',
           name: '银行服务_提交表单',
         }"

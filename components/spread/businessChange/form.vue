@@ -16,10 +16,11 @@
         <!-- s行业下拉框 -->
         <sp-field
           v-model="value"
-          v-md-map
-          v-md:WebClick
-          data-name="工商变更表单_下拉表单"
-          data-form_type="咨询表单"
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '咨询表单',
+            name: '工商变更_下拉表单',
+          }"
           label="变更项目"
           :readonly="read"
           @click="selectshow = true"
@@ -48,11 +49,12 @@
         <!-- e下拉选项框  -->
         <sp-field
           v-model="telephone"
-          v-md-map
-          v-md:WebClick
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '咨询表单',
+            name: '工商变更表单_手机号',
+          }"
           type="tel"
-          data-name="工商变更表单_手机号"
-          data-form_type="咨询表单"
           label="手机号"
           placeholder="信息保护中，仅官方可见"
           maxlength="11"
@@ -62,11 +64,12 @@
         <!-- s 获取验证码 -->
         <div
           v-show="isshow"
-          v-md-map
-          v-md:WebClick
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '咨询表单',
+            name: '工商变更表单_验证码',
+          }"
           class="verification-box"
-          data-name="工商变更表单_验证码"
-          data-form_type="咨询表单"
         >
           <sp-field
             v-model="sms"
@@ -79,11 +82,12 @@
 
           <!-- s 倒计时 -->
           <span
-            v-md-map
-            v-md:WebClick
+            v-sensorsTrack:webClick="{
+              eventName: 'wap元素点击',
+              type: '咨询表单',
+              name: '商变更表单_获取验证码',
+            }"
             class="seconds"
-            data-name="工商变更表单_获取验证码"
-            data-form_type="咨询表单"
             @click="sendSms"
           >
             {{ countdown > 0 ? `${countdown}s` : '发送验证码' }}</span
@@ -94,13 +98,12 @@
       </div>
       <!-- s 按钮 -->
       <button
-        v-md:WebClick
-        v-md:p_formSubmit
-        v-md-map
+        v-sensorsTrack:p_formSubmit="{
+          eventName: 'p_formSubmit',
+          form_type: '咨询表单',
+          name: '工商变更表单_提交表单',
+        }"
         class="free-btn"
-        data-event_name="p_formSubmit"
-        data-form_type="咨询表单"
-        data-form_name="工商变更表单_提交表单"
         @click="freeBtn()"
       >
         <span>立即获取方案</span>
@@ -289,10 +292,9 @@ export default {
           this.sms = ''
           this.countdown = -1
           this.value = '法人变更'
-          window.getTrackRow('p_formSubmitResult', {
+          window.sensors.track('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
-            form_sn: 'ZL077',
             form_name: '工商变更表单_提交表单',
           })
           Toast('提交成功，请注意接听电话')
@@ -411,6 +413,7 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #4974f5;
+        line-height: 27px;
         top: 26px;
         right: 34px;
       }
@@ -420,6 +423,7 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #4974f5;
+        line-height: 27px;
         top: 26px;
         right: 34px;
       }

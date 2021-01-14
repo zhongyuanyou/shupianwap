@@ -1,7 +1,18 @@
 <template>
   <div class="bankService">
     <!-- 头部导航 -->
-    <Header :title="title" />
+    <Header :title="title">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!-- banner图 -->
     <Banner :imglist="imgList" />
     <!-- 表单 -->
@@ -28,6 +39,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Header from '../../../components/common/head/header'
 import Banner from '../../../components/spread/bankService/BannerSwipe'
 import From from '../../../components/spread/bankService/Form'
@@ -483,6 +495,11 @@ export default {
       },
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   created() {
     this.productDetail(this.result.data.adList[0].sortMaterialList)
     this.planner = this.plannersList[0]
@@ -499,6 +516,19 @@ export default {
     window.sensors.registerPage(param) // 设置公共属性
   },
   methods: {
+    back() {
+      // 返回上一页
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/spread')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
     // 跳转判断
     openIM(url) {
       if (url) {
@@ -623,6 +653,9 @@ export default {
   }
   /deep/.my-sp-bottombar {
     z-index: 2;
+  }
+  .back_icon {
+    margin-left: 40px;
   }
 }
 </style>
