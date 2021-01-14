@@ -1,7 +1,7 @@
 <template>
   <div class="center">
     <!--  头部  -->
-    <Header :title="headTitle">
+    <Header v-show="!isInApp" :title="headTitle">
       <template #left>
         <div @click="back">
           <my-icon
@@ -386,16 +386,12 @@ export default {
     }),
   },
   created() {
-    let pbool = false // 确定数据返回
-    let abool = false // 确定数据返回
-    let nbool = false // 确定数据返回
     // 请求回来的数据替代本地
     if (this.result !== '' && this.result !== undefined) {
       if (
         this.result.planlerList.length !== 0 &&
         this.result.planlerList.length !== undefined
       ) {
-        pbool = true
         if (this.result.planlerList.length < 3) {
           this.planlerList.forEach((item, index) => {
             this.planlerList[index] = this.result.planlerList[
@@ -411,23 +407,14 @@ export default {
         this.result.adList.length !== 0 &&
         this.result.adList.length !== undefined
       ) {
-        abool = true
         this.adList = this.result.adList
       }
-      if (
-        this.result.nums.todayNum !== '' &&
-        this.result.nums.todayNum !== undefined
-      ) {
-        nbool = true
-        this.nums = this.result.nums
+      if (this.result.nums !== '' && this.result.nums !== undefined) {
+        this.todayNum = this.result.nums.todayNum
       }
     }
-    // 各个数据都返回后再处理各个模块的数据
-    if (pbool && abool && nbool) {
-      this.getServeData()
-      this.getPlannersData()
-      this.getfixedBottomData()
-    }
+    this.getServeData()
+    this.getfixedBottomData()
   },
   mounted() {
     const param = {
