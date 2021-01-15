@@ -152,10 +152,6 @@ export default {
       iocnName: ['加急办理', '各行各业', '专业代办'],
     }
   },
-  computed: {},
-  watch: {},
-  created() {},
-  mounted() {},
   methods: {
     // 唤起下拉弹框
     handleSelectShow() {
@@ -181,19 +177,7 @@ export default {
         }
       })
     },
-    // 获取验证码
-    getCode() {
-      if (this.timer) clearInterval(this.timer)
-      this.timer = setInterval(() => {
-        this.totalTime--
-        this.countDown = this.totalTime + 's'
-        if (this.totalTime < 1) {
-          this.countDown = '发送验证码'
-          this.totalTime = 60
-          clearInterval(this.timer)
-        }
-      }, 1000)
-    },
+
     // 手机号码验证
     verification() {
       const res = /^1[3,4,5,6,7,8,9]\d{9}$/
@@ -223,9 +207,22 @@ export default {
           if (res.error === 0) {
             this.getCode()
           }
-          Toast(res.msg)
+          // Toast(res.msg)
         })
       }
+    },
+    // 获取验证码
+    getCode() {
+      if (this.timer) clearInterval(this.timer)
+      this.timer = setInterval(() => {
+        this.totalTime--
+        this.countDown = this.totalTime + 's'
+        if (this.totalTime < 1) {
+          this.countDown = '发送验证码'
+          this.totalTime = 60
+          clearInterval(this.timer)
+        }
+      }, 1000)
     },
     // 免费获取报价
     getGuotes() {
@@ -265,6 +262,13 @@ export default {
       }
       // 2.提交表单
       window.promotion.privat.consultForm(params, (res) => {
+        for (let i = 0; i < this.actions.length; i++) {
+          if (i === 0) {
+            this.actions[i].color = '#5a79e8'
+          } else {
+            this.actions[i].color = '#222222'
+          }
+        }
         if (res.error === 0) {
           // 提交完成后更新表单
           this.telephone = ''
@@ -373,7 +377,6 @@ export default {
           font-weight: 400;
           color: #4974f5;
           line-height: 44px;
-          z-index: 1;
         }
       }
       &_bottonbox {
