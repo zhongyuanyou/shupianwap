@@ -288,6 +288,9 @@ export default {
             form_type: '咨询表单',
             form_name: '银行服务表单_提交表单',
           })
+          this.actions.forEach((item, index) => {
+            item.color = `${index > 0 ? '#222222' : '#5a79e8'}`
+          })
           Toast('提交成功，请注意接听电话')
         } else {
           Toast(res.msg)

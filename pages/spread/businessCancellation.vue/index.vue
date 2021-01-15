@@ -497,8 +497,6 @@ export default {
         })
         this.plannersData = guihuashiList
         this.planner = guihuashiList[0]
-      } else {
-        return this.plannersData
       }
     },
   },
@@ -519,6 +517,7 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   font-family: PingFang SC;
+  background-color: #fff;
 }
 .back_icon {
   margin-left: 40px;
