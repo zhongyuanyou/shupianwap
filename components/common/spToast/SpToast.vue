@@ -1,6 +1,11 @@
 <template>
   <transition name="toast-fade">
-    <div v-show="isShow" class="my-toast" :class="{ 'no-event': forbidClick }">
+    <div
+      v-show="isShow"
+      class="my-toast"
+      :class="{ 'no-event': forbidClick }"
+      @touchmove="noEvent($event)"
+    >
       <div class="my-toast__content">
         <sp-loading v-if="isLoading" size="20" color="#fff" :type="spinner" />
         <i
@@ -106,6 +111,7 @@ export default {
       this.isShow = true
       this.isLoading = true
       this.spinner = type
+      cb && cb()
     },
     hideLoading() {
       this.isLoading = false
@@ -132,6 +138,9 @@ export default {
       this.forbidClick = forbidClick
       this.isLoading = true
       this._hidToast(duration, cb)
+    },
+    noEvent(e) {
+      !this.forbidClick && e.preventDefault()
     },
     checkType(typeStr, typeData) {
       const checkFn = {
