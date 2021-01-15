@@ -398,13 +398,16 @@ export default {
   },
   mounted() {
     const param = {
-      platform_type: 'H5', // 平台类型：App，H5，Web
+      platform_type: 'wap端', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
       product_line: 'Wap端工商注销推广页',
       current_url: location.href,
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle({ title: '工商注销' }, () => {})
+    }
   },
   methods: {
     /** 返回上一页 */

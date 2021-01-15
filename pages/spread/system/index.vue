@@ -1,7 +1,7 @@
 <template>
-  <div v-show="!isInApp" class="system">
+  <div>
     <!-- S 头部分 -->
-    <Header :title="TopTitle">
+    <Header v-show="!isInApp" class="system" :title="TopTitle">
       <template #left>
         <div @click="onClickLeft">
           <my-icon
@@ -569,6 +569,10 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle({ title: '体系认证' }, () => {})
+      console.log('dsdad')
+    }
   },
   methods: {
     onClickLeft() {
