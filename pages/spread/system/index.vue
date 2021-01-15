@@ -1,7 +1,7 @@
 <template>
-  <div v-show="!isInApp" class="system">
+  <div>
     <!-- S 头部分 -->
-    <Header :title="TopTitle">
+    <Header v-show="!isInApp" class="system" :title="TopTitle">
       <template #left>
         <div @click="onClickLeft">
           <my-icon
