@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-14 17:44:39
+ * @LastEditTime: 2021-01-15 15:35:12
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
