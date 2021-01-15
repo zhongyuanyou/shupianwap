@@ -20,13 +20,13 @@
     <!-- 影响 -->
     <Influence />
     <!-- 业务介绍 -->
-    <Introduce />
+    <Introduce :service-list="serviceListData" />
     <!-- 注销资料 -->
     <Material />
     <!-- 服务流程 -->
     <Process />
     <!-- 咨询规划师 -->
-    <Consult />
+    <Consult :planners-data="plannersData" />
     <!-- 还需办理 -->
     <You-need />
     <!-- 薯片找人 -->
@@ -70,294 +70,288 @@ export default {
     DggImCompany,
     MyIcon,
   },
-  // async asyncData({ $axios }) {
-  //   const type = 'extendBussineWithdraw'
-  //   const defaultRes = {
-  //     code: 200,
-  //     message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
-  //     data: {
-  //       adList: [
-  //         {
-  //           pageCode: 'extendBussineWithdraw',
-  //           locationShowTypeCode: 'GGWZXSS_GDXS',
-  //           locationName: 'wap-推广页-工商注销广告',
-  //           locationId: '8027896820880179200',
-  //           locationAddressCode: '',
-  //           sortMaterialList: [
-  //             {
-  //               locationSort: 1,
-  //               materialList: [
-  //                 {
-  //                   materialTypeCode: 'GGLX_TP',
-  //                   materialUrl:
-  //                     'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
-  //                   imgLink: '',
-  //                   materialLink: 'https://www.baidu.com/',
-  //                   materialCode: 'src100302',
-  //                   materialHeight: 1334,
-  //                   materialId: 0,
-  //                   materialDescription: '',
-  //                   materialName: '推广页工商注销广告1-1',
-  //                   androidLink: '',
-  //                   materialWidth: 750,
-  //                   iosLink: '',
-  //                   linkType: 2,
-  //                   wapLink: '',
-  //                   executeParam: '',
-  //                   productId: 'extendBussineWithdraw1',
-  //                   productDetail: {
-  //                     id: 'extendBussineWithdraw1',
-  //                     name: '公司注销',
-  //                     referencePrice: 2500,
-  //                     operating: {
-  //                       showName: '公司注销',
-  //                       slogan: '当公司不经营时申请注销，终止公司法人资格。',
-  //                       productDescribe:
-  //                         '当公司不经营时申请注销，终止公司法人资格。',
-  //                       actualViews: 484,
-  //                       defaultSales: 302,
-  //                       actualSales: 293,
-  //                     },
-  //                   },
-  //                 },
-  //               ],
-  //             },
-  //             {
-  //               locationSort: 2,
-  //               materialList: [
-  //                 {
-  //                   materialTypeCode: 'GGLX_TP',
-  //                   materialUrl:
-  //                     'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
-  //                   imgLink: '',
-  //                   materialLink: 'https://www.baidu.com/',
-  //                   materialCode: 'src100302',
-  //                   materialHeight: 1334,
-  //                   materialId: 0,
-  //                   materialDescription: '',
-  //                   materialName: '推广页工商注销广告1-2',
-  //                   androidLink: '',
-  //                   materialWidth: 750,
-  //                   iosLink: '',
-  //                   linkType: 2,
-  //                   wapLink: '',
-  //                   executeParam: '',
-  //                   productId: 'extendBussineWithdraw2',
-  //                   productDetail: {
-  //                     id: 'extendBussineWithdraw2',
-  //                     name: '工商注销',
-  //                     referencePrice: 1000,
-  //                     operating: {
-  //                       showName: '工商注销',
-  //                       slogan: '企业税务或税务已清税的情况下的营业执照注销。',
-  //                       productDescribe:
-  //                         '企业税务或税务已清税的情况下的营业执照注销。',
-  //                       actualViews: 370,
-  //                       defaultSales: 296,
-  //                       actualSales: 290,
-  //                     },
-  //                   },
-  //                 },
-  //               ],
-  //             },
-  //             {
-  //               locationSort: 3,
-  //               materialList: [
-  //                 {
-  //                   materialTypeCode: 'GGLX_TP',
-  //                   materialUrl:
-  //                     'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
-  //                   imgLink: '',
-  //                   materialLink: 'https://www.baidu.com/',
-  //                   materialCode: 'src100302',
-  //                   materialHeight: 1334,
-  //                   materialId: 0,
-  //                   materialDescription: '',
-  //                   materialName: '推广页工商注销广告1-3',
-  //                   androidLink: '',
-  //                   materialWidth: 750,
-  //                   iosLink: '',
-  //                   linkType: 2,
-  //                   wapLink: '',
-  //                   executeParam: '',
-  //                   productId: 'extendBussineWithdraw3',
-  //                   productDetail: {
-  //                     id: 'extendBussineWithdraw3',
-  //                     name: '个体注销',
-  //                     referencePrice: 2000,
-  //                     operating: {
-  //                       showName: '工商注销',
-  //                       slogan: '企业税务或税务已清税的情况下的营业执照注销。',
-  //                       productDescribe:
-  //                         '企业税务或税务已清税的情况下的营业执照注销。',
-  //                       actualViews: 334,
-  //                       defaultSales: 316,
-  //                       actualSales: 316,
-  //                     },
-  //                   },
-  //                 },
-  //               ],
-  //             },
-  //             {
-  //               locationSort: 4,
-  //               materialList: [
-  //                 {
-  //                   materialTypeCode: 'GGLX_TP',
-  //                   materialUrl:
-  //                     'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
-  //                   imgLink: '',
-  //                   materialLink: 'https://www.baidu.com/',
-  //                   materialCode: 'src100302',
-  //                   materialHeight: 1334,
-  //                   materialId: 0,
-  //                   materialDescription: '',
-  //                   materialName: '推广页工商注销广告1-4',
-  //                   androidLink: '',
-  //                   materialWidth: 750,
-  //                   iosLink: '',
-  //                   linkType: 2,
-  //                   wapLink: '',
-  //                   executeParam: '',
-  //                   productId: 'extendBussineWithdraw4',
-  //                   productDetail: {
-  //                     id: 'extendBussineWithdraw4',
-  //                     name: '简易注销',
-  //                     referencePrice: 998,
-  //                     operating: {
-  //                       showName: '简易注销',
-  //                       slogan: '企业无经营活动，无债权债务的企业注销。',
-  //                       productDescribe:
-  //                         '企业无经营活动，无债权债务的企业注销。',
-  //                       actualViews: 135,
-  //                       defaultSales: 107,
-  //                       actualSales: 102,
-  //                     },
-  //                   },
-  //                 },
-  //               ],
-  //             },
-  //           ],
-  //           locationCode: 'ad100230',
-  //           locationCodeLocType: 3,
-  //         },
-  //       ],
-  //       planlerList: [
-  //         {
-  //           id: 314,
-  //           userId: '7930253930943676416',
-  //           userCentreId: '7930253930615472128',
-  //           loginName: '109870',
-  //           realName: '李海怡',
-  //           userHeadUrl:
-  //             'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-  //           userPhone: '13696057459',
-  //           cvr: 0.108696,
-  //           cvrValue: 61.875876,
-  //           orderBus: 5,
-  //           orderBusValue: 49.23518,
-  //           busPerformance: 17770,
-  //           busPerformanceValue: 93.504073,
-  //           abilityValue: 70.355913,
-  //           formatType: '工商',
-  //         },
-  //         {
-  //           id: 160,
-  //           userId: '43999',
-  //           userCentreId: '7704199733711282176',
-  //           loginName: '96352931',
-  //           realName: '岳雪冬',
-  //           userHeadUrl:
-  //             'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-  //           userPhone: '13908231675',
-  //           cvr: 0.132075,
-  //           cvrValue: 63.58191,
-  //           orderBus: 7,
-  //           orderBusValue: 50.378921,
-  //           busPerformance: 15348,
-  //           busPerformanceValue: 91.077286,
-  //           abilityValue: 70.635122,
-  //           formatType: '工商',
-  //         },
-  //         {
-  //           id: 138,
-  //           userId: '3394',
-  //           userCentreId: '3394',
-  //           loginName: '2022554',
-  //           realName: '刘琴',
-  //           userHeadUrl:
-  //             'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-  //           userPhone: '13350072314',
-  //           cvr: 0.092593,
-  //           cvrValue: 60.683218,
-  //           orderBus: 5,
-  //           orderBusValue: 49.23518,
-  //           busPerformance: 7612.4,
-  //           busPerformanceValue: 77.299492,
-  //           abilityValue: 64.446251,
-  //           formatType: '工商',
-  //         },
-  //         {
-  //           id: 167,
-  //           userId: '66475',
-  //           userCentreId: '66475',
-  //           loginName: '38798340',
-  //           realName: '钟霞',
-  //           userHeadUrl:
-  //             'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-  //           userPhone: '13730634929',
-  //           cvr: 0.086207,
-  //           cvrValue: 60.206605,
-  //           orderBus: 5,
-  //           orderBusValue: 49.23518,
-  //           busPerformance: 15278,
-  //           busPerformanceValue: 90.996225,
-  //           abilityValue: 68.653875,
-  //           formatType: '工商',
-  //         },
-  //         {
-  //           id: 301,
-  //           userId: '7887200447593906176',
-  //           userCentreId: '7887200447257313280',
-  //           loginName: '108862',
-  //           realName: '李劲',
-  //           userHeadUrl:
-  //             'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-  //           userPhone: '18884259139',
-  //           cvr: 0.155556,
-  //           cvrValue: 65.261689,
-  //           orderBus: 7,
-  //           orderBusValue: 50.378921,
-  //           busPerformance: 8544,
-  //           busPerformanceValue: 79.535461,
-  //           abilityValue: 67.767387,
-  //           formatType: '工商',
-  //         },
-  //       ],
-  //     },
-  //   }
-  //   try {
-  //     const res = await $axios.get(spreadApi.list, {
-  //       params: { pageCode: type },
-  //     })
-  //     if (res.code === 200) {
-  //       return { resultData: res.data }
-  //     } else {
-  //       return { resultData: defaultRes }
-  //     }
-  //   } catch (error) {
-  //     return { resultData: defaultRes }
-  //   }
-  //   return { resultData: defaultRes }
-  // },
+  async asyncData({ $axios }) {
+    const type = 'extendBussineWithdraw'
+    const defaultRes = {
+      code: 200,
+      message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
+      data: {
+        adList: [
+          {
+            pageCode: 'extendBussineWithdraw',
+            locationShowTypeCode: 'GGWZXSS_GDXS',
+            locationName: 'wap-推广页-工商注销广告',
+            locationId: '8027896820880179200',
+            locationAddressCode: '',
+            sortMaterialList: [
+              {
+                locationSort: 1,
+                materialList: [
+                  {
+                    materialTypeCode: 'GGLX_TP',
+                    materialUrl:
+                      'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+                    imgLink: '',
+                    materialLink: 'https://www.baidu.com/',
+                    materialCode: 'src100302',
+                    materialHeight: 1334,
+                    materialId: 0,
+                    materialDescription: '',
+                    materialName: '推广页工商注销广告1-1',
+                    androidLink: '',
+                    materialWidth: 750,
+                    iosLink: '',
+                    linkType: 2,
+                    wapLink: '',
+                    executeParam: '',
+                    productId: 'extendBussineWithdraw1',
+                    productDetail: {
+                      id: 'extendBussineWithdraw1',
+                      name: '公司注销',
+                      referencePrice: 2500,
+                      operating: {
+                        showName: '公司注销',
+                        slogan: '当公司不经营时申请注销，终止公司法人资格。',
+                        productDescribe:
+                          '当公司不经营时申请注销，终止公司法人资格。',
+                        actualViews: 484,
+                        defaultSales: 302,
+                        actualSales: 293,
+                      },
+                    },
+                  },
+                ],
+              },
+              {
+                locationSort: 2,
+                materialList: [
+                  {
+                    materialTypeCode: 'GGLX_TP',
+                    materialUrl:
+                      'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+                    imgLink: '',
+                    materialLink: 'https://www.baidu.com/',
+                    materialCode: 'src100302',
+                    materialHeight: 1334,
+                    materialId: 0,
+                    materialDescription: '',
+                    materialName: '推广页工商注销广告1-2',
+                    androidLink: '',
+                    materialWidth: 750,
+                    iosLink: '',
+                    linkType: 2,
+                    wapLink: '',
+                    executeParam: '',
+                    productId: 'extendBussineWithdraw2',
+                    productDetail: {
+                      id: 'extendBussineWithdraw2',
+                      name: '工商注销',
+                      referencePrice: 1000,
+                      operating: {
+                        showName: '工商注销',
+                        slogan: '企业税务或税务已清税的情况下的营业执照注销。',
+                        productDescribe:
+                          '企业税务或税务已清税的情况下的营业执照注销。',
+                        actualViews: 370,
+                        defaultSales: 296,
+                        actualSales: 290,
+                      },
+                    },
+                  },
+                ],
+              },
+              {
+                locationSort: 3,
+                materialList: [
+                  {
+                    materialTypeCode: 'GGLX_TP',
+                    materialUrl:
+                      'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+                    imgLink: '',
+                    materialLink: 'https://www.baidu.com/',
+                    materialCode: 'src100302',
+                    materialHeight: 1334,
+                    materialId: 0,
+                    materialDescription: '',
+                    materialName: '推广页工商注销广告1-3',
+                    androidLink: '',
+                    materialWidth: 750,
+                    iosLink: '',
+                    linkType: 2,
+                    wapLink: '',
+                    executeParam: '',
+                    productId: 'extendBussineWithdraw3',
+                    productDetail: {
+                      id: 'extendBussineWithdraw3',
+                      name: '个体注销',
+                      referencePrice: 2000,
+                      operating: {
+                        showName: '工商注销',
+                        slogan: '企业税务或税务已清税的情况下的营业执照注销。',
+                        productDescribe:
+                          '企业税务或税务已清税的情况下的营业执照注销。',
+                        actualViews: 334,
+                        defaultSales: 316,
+                        actualSales: 316,
+                      },
+                    },
+                  },
+                ],
+              },
+              {
+                locationSort: 4,
+                materialList: [
+                  {
+                    materialTypeCode: 'GGLX_TP',
+                    materialUrl:
+                      'https://img10.dgg.cn/sp/cms/5kw3il8k3h80000.jpg',
+                    imgLink: '',
+                    materialLink: 'https://www.baidu.com/',
+                    materialCode: 'src100302',
+                    materialHeight: 1334,
+                    materialId: 0,
+                    materialDescription: '',
+                    materialName: '推广页工商注销广告1-4',
+                    androidLink: '',
+                    materialWidth: 750,
+                    iosLink: '',
+                    linkType: 2,
+                    wapLink: '',
+                    executeParam: '',
+                    productId: 'extendBussineWithdraw4',
+                    productDetail: {
+                      id: 'extendBussineWithdraw4',
+                      name: '简易注销',
+                      referencePrice: 998,
+                      operating: {
+                        showName: '简易注销',
+                        slogan: '企业无经营活动，无债权债务的企业注销。',
+                        productDescribe:
+                          '企业无经营活动，无债权债务的企业注销。',
+                        actualViews: 135,
+                        defaultSales: 107,
+                        actualSales: 102,
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+            locationCode: 'ad100230',
+            locationCodeLocType: 3,
+          },
+        ],
+        planlerList: [
+          {
+            id: 30134,
+            userId: '3394',
+            userCentreId: '3394',
+            loginName: '2022554',
+            realName: '刘琴',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13350072314',
+            cvr: 0.092593,
+            cvrValue: 60.683218,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 12112.4,
+            busPerformanceValue: 86.575363,
+            abilityValue: 67.466985,
+            formatType: '工商',
+          },
+          {
+            id: 30156,
+            userId: '43999',
+            userCentreId: '7704199733711282176',
+            loginName: '96352931',
+            realName: '岳雪冬',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13908231675',
+            cvr: 0.145455,
+            cvrValue: 64.543449,
+            orderBus: 8,
+            orderBusValue: 50.950718,
+            busPerformance: 15623,
+            busPerformanceValue: 91.389398,
+            abilityValue: 71.329062,
+            formatType: '工商',
+          },
+          {
+            id: 30310,
+            userId: '7930253930943676416',
+            userCentreId: '7930253930615472128',
+            loginName: '109870',
+            realName: '李海怡',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13696057459',
+            cvr: 0.106383,
+            cvrValue: 61.705406,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 17770,
+            busPerformanceValue: 93.504073,
+            abilityValue: 70.2655,
+            formatType: '工商',
+          },
+          {
+            id: 30297,
+            userId: '7887200447593906176',
+            userCentreId: '7887200447257313280',
+            loginName: '108862',
+            realName: '李劲',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '18884259139',
+            cvr: 0.159091,
+            cvrValue: 65.511436,
+            orderBus: 7,
+            orderBusValue: 50.378921,
+            busPerformance: 8744,
+            busPerformanceValue: 79.993572,
+            abilityValue: 68.049033,
+            formatType: '工商',
+          },
+          {
+            id: 30163,
+            userId: '66475',
+            userCentreId: '66475',
+            loginName: '38798340',
+            realName: '钟霞',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13730634929',
+            cvr: 0.1,
+            cvrValue: 61.23349,
+            orderBus: 6,
+            orderBusValue: 49.807025,
+            busPerformance: 15278,
+            busPerformanceValue: 90.996225,
+            abilityValue: 69.28084,
+            formatType: '工商',
+          },
+        ],
+      },
+    }
+    try {
+      const res = await $axios.get(spreadApi.list, {
+        params: { pageCode: type },
+      })
+      if (res.code === 200) {
+        return { resultData: res.data }
+      } else {
+        return { resultData: defaultRes.data }
+      }
+    } catch (error) {
+      return { resultData: defaultRes.data }
+    }
+  },
   data() {
     return {
-      planner: {
-        id: '7862495547640840192',
-        name: '张毅',
-        jobNum: '107547',
-        telephone: '18402858698',
-        imgSrc: '',
-      },
+      /** 底部规划师数据 */
+      planner: {},
       /** 轮播图数据 */
       banners: [
         {
@@ -385,6 +379,8 @@ export default {
           type: '售前',
         },
       },
+      /** 轮播规划师数据 */
+      plannersData: [],
     }
   },
   computed: {
@@ -394,7 +390,8 @@ export default {
   },
   watch: {},
   created() {
-    // this.serviceList(this.resultData)
+    this.serviceList(this.resultData)
+    this.plannerHandle(this.resultData.planlerList)
   },
   mounted() {
     const param = {
@@ -477,6 +474,31 @@ export default {
           dataList.push(obj)
         })
         this.serviceListData = dataList
+      }
+    },
+    /** 规划师数据处理 */
+    plannerHandle(data) {
+      if (data.length !== 0) {
+        const guihuashiList = []
+        data.forEach((item, i) => {
+          const obj = {
+            id: item.userCentreId,
+            type: '金牌规划师',
+            imgSrc: item.userHeadUrl,
+            avatarImg: item.userHeadUrl,
+            name: item.realName,
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: item.userPhone,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+            jobNum: item.userPhoneloginName,
+          }
+          guihuashiList.push(obj)
+        })
+        this.plannersData = guihuashiList
+        this.planner = guihuashiList[0]
+      } else {
+        return this.plannersData
       }
     },
   },
