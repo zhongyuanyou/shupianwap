@@ -313,7 +313,7 @@ export default {
       serviceTitle: '服务介绍',
       fixedBottomData: {
         id: '',
-        name: '奥特曼',
+        name: '郭亮亮',
         jobNum: '',
         telephone: '18402858698',
         imgSrc: '',
