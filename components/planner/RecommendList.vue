@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2021-01-14 13:58:34
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-14 17:43:48
+ * @LastEditTime: 2021-01-15 15:32:46
  * @Description: file content
  * @FilePath: /chips-wap/components/planner/RecommendList.vue
 -->
@@ -107,6 +107,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      POSITION_CITY: 'city/POSITION_CITY',
+    }),
     tagsFilter(tags) {
       let tagsarr = []
       if (!tags) return
@@ -158,6 +161,11 @@ export default {
           regionPromise,
         ])
       } else {
+        if (!this.cityCode) {
+          await this.POSITION_CITY({
+            type: 'init',
+          })
+        }
         reqArea = this.cityCode
         deviceCode = await fingerprint()
       }
@@ -261,6 +269,7 @@ export default {
           deviceId: deviceCode,
           areaCode: reqArea,
           sceneId: 'app-ghszy-01',
+          storeId: this.mchDetailId,
           platform: 'APP',
           searchType: 2,
           page: current,

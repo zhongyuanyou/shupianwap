@@ -6,7 +6,7 @@ import { goods } from '@/api/index'
 export default {
   methods: {
     getServeListReq() {
-      console.log('serveGoodsListData', this.serveGoodsListData)
+      // console.log('serveGoodsListData', this.serveGoodsListData)
       // this.skeletonLoading = true
       this.formData.areaCodes = this.cityCode.code
       goods
@@ -55,10 +55,10 @@ export default {
         })
     },
     getJyListReq() {
-      console.log(
-        'jyGoodsListData',
-        this.jyGoodsListData[this.currentTabJyCode]
-      )
+      // console.log(
+      //   'jyGoodsListData',
+      //   this.jyGoodsListData[this.currentTabJyCode]
+      // )
       goods
         .searchJyGoodsList(
           { axios: this.$axios },

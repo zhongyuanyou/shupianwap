@@ -435,7 +435,7 @@ export default {
     box-shadow: none;
     margin: 0 30px;
     margin-left: -8px;
-    border-bottom: 1px solid #f4f4f4;
+    /*border-bottom: 1px solid #f4f4f4;*/
     /*border-top: 1px solid #f4f4f4;*/
     .sp-dropdown-menu__item {
       text-align: right;

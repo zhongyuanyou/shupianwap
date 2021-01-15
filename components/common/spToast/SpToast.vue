@@ -32,6 +32,12 @@ export default {
       isLoading: false,
     }
   },
+  beforeDestroy() {
+    const parent = this.$el.parentNode
+    if (parent) {
+      parent.removeChild(this.$el)
+    }
+  },
   methods: {
     show(
       { duration = 1000, message = '', icon = '', forbidClick = false },

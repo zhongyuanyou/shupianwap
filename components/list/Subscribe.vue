@@ -346,6 +346,9 @@ export default {
       padding: 0 0 19px 0;
       border-bottom: 1px solid #f4f4f4;
       margin-bottom: 44px;
+      &::after {
+        display: none;
+      }
       /deep/.sp-field__button {
         font-size: 28px;
         font-family: PingFang SC;
