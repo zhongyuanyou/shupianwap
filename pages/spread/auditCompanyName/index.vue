@@ -157,6 +157,9 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage() // 设置公共属性
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle({ title: '免费核名' }, () => {})
+    }
   },
   methods: {
     back() {

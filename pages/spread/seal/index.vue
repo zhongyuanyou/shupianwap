@@ -1,7 +1,18 @@
 <template>
   <div class="seal">
     <!--  头部  -->
-    <Header :title="headTitle"></Header>
+    <Header v-show="!isInApp" :title="headTitle">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!--  头部  -->
     <!--  轮播/表单  -->
     <banner></banner>
@@ -58,6 +69,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Header from '~/components/common/head/header'
 import banner from '~/components/spread/seal/Banner'
 import sealServe from '~/components/spread/seal/SealServe'
@@ -86,6 +98,11 @@ export default {
     shuPianZhaoRen,
     fixedBottom,
     dggImCompany,
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
   data() {
     return {
@@ -339,6 +356,9 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle({ title: '工商首页' }, () => {})
+    }
   },
   head() {
     return {
@@ -368,7 +388,9 @@ export default {
 .seal {
   width: 750px;
   margin: 0 auto;
-
+  .back_icon {
+    margin-left: 40px;
+  }
   /deep/ .my-head {
     width: 750px !important;
     left: auto !important;

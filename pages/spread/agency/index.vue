@@ -377,6 +377,10 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
+    // 设置app中导航title
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle({ title: '代理记账' }, () => {})
+    }
   },
   methods: {
     back() {
