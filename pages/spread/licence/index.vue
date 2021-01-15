@@ -30,7 +30,7 @@
     <Select />
     <!-- E 为什么选择薯片平台 -->
     <!-- S 咨询规划师 -->
-    <Planner :planners-data="plannerList" :planners-common="plannerList" />
+    <Planner :planners-data="plannerList" />
     <!-- E 咨询规划师 -->
     <!-- S 您可能还需要办理 -->
     <Need />
