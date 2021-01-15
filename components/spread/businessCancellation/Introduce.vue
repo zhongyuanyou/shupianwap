@@ -120,6 +120,9 @@ export default {
     serviceList: {
       type: Array,
       requried: true,
+      default: () => {
+        return []
+      },
     },
   },
   data() {
