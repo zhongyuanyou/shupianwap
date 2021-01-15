@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-13 16:01:51
+ * @LastEditTime: 2021-01-15 17:56:26
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/index.vue
 -->
@@ -199,8 +199,7 @@ export default {
     ...mapMutations({
       setUserInfo: 'user/SET_USER',
     }),
-    onSubmit(values) {
-      console.log('submit', values)
+    onSubmit() {
       const error = this.checkFormData()
       if (error) {
         const { message } = error
@@ -342,7 +341,7 @@ export default {
               // 获取验证码后，再调用一次登录
               const { data } = result
               this.loginForm.imgCaptcha = data
-              this.login()
+              this.onSubmit()
             })
             .catch(() => {
               this.loginForm.imgCaptcha = ''
