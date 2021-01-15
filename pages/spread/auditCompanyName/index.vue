@@ -14,12 +14,14 @@
       </template>
     </Header>
     <!-- e 头部导航 -->
-    <!-- s banner -->
-    <Banner :imglist="imgList"></Banner>
-    <!-- e banner -->
-    <!-- s 表单 -->
-    <AuditCompanyNameFrom :city="cityList" />
-    <!-- e 表单 -->
+    <div class="audit-company-name__centenr">
+      <!-- s banner -->
+      <Banner :imglist="imgList"></Banner>
+      <!-- e banner -->
+      <!-- s 表单 -->
+      <AuditCompanyNameFrom :city="cityList" />
+      <!-- e 表单 -->
+    </div>
 
     <!-- s 公司起名禁忌列表 -->
     <AuditCompanyNameTaboo :audittaboo="auditTaboo" />
@@ -195,6 +197,10 @@ export default {
   margin: 0 auto;
   position: relative;
   background-color: #ffffff;
+  &__centenr {
+    height: 900px;
+    position: relative;
+  }
   /deep/.fixed-head {
     .my-head {
       width: 750px;

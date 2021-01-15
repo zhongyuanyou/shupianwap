@@ -504,7 +504,7 @@ a {
 }
 .audit-company-name-from {
   position: absolute;
-  top: 410px;
+  top: 315px;
   left: 40px;
   margin: 0 auto;
   text-align: center;
