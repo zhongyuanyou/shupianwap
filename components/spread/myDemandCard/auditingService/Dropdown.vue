@@ -73,14 +73,43 @@ export default {
       type: 0,
     }
   },
+  mounted() {
+    // 返回时候数据回显
+    const sessionStorageFormData = JSON.parse(
+      sessionStorage.getItem('formData')
+    )
+    if (sessionStorageFormData) {
+      this.tabs.forEach((item, index) => {
+        this.columns.push(item.name)
+      })
+      //  办理业务
+      if (this.index === 0) {
+        const business = sessionStorageFormData.content['办理业务']
+        for (let i = 0; i < this.columns.length; i++) {
+          if (this.columns[i] === business) {
+            this.defaultActive = i
+          }
+        }
+      } else if (this.index === 2) {
+        // 公司行业
+        const industry = sessionStorageFormData.content['公司行业']
+        for (let i = 0; i < this.columns.length; i++) {
+          if (this.columns[i] === industry) {
+            this.defaultActive = i
+          }
+        }
+      }
+    }
+  },
   methods: {
     // 唤起下拉菜单的事件
     showDropdownList() {
       this.dropdownShow = true
-      this.tabs.forEach((item, index) => {
-        const res = item.name
-        this.columns.push(res)
-      })
+      if (this.columns.length === 0) {
+        this.tabs.forEach((item, index) => {
+          this.columns.push(item.name)
+        })
+      }
     },
     // 点击确定时候的事件
     handleConfirm(value, index) {
