@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-15 15:35:12
+ * @LastEditTime: 2021-01-15 15:39:57
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -75,29 +75,27 @@
               <div class="detail-content__section-title">个人信息</div>
               <ul class="detail-content__section-content">
                 <li>
-                  <span class="label">服务人数：</span>
+                  <span class="label">服务次数：</span>
                   <span class="content">{{
-                    detailData.serveNum ? `${detailData.serveNum}人` : '--'
+                    detailData.serveNum ? `${detailData.serveNum}次` : '--'
                   }}</span>
                 </li>
                 <li>
                   <span class="label">好评率：</span>
                   <span class="content">{{
                     detailData.goodReputation
-                      ? `${detailData.goodReputation}次`
+                      ? `${detailData.goodReputation}%`
                       : '--'
                   }}</span>
                 </li>
                 <li>
                   <span class="label">服务经验：</span>
-                  <span class="content">{{
-                    detailData.serveAge ? `${detailData.serveAge}年` : '--'
-                  }}</span>
+                  <span class="content">{{ formatServeAgeText }}</span>
                 </li>
                 <li>
                   <span class="label">成交记录：</span>
                   <span class="content">{{
-                    detailData.serveAge ? `${detailData.serveAge}次` : '--'
+                    detailData.payNum ? `${detailData.payNum}次` : '--'
                   }}</span>
                 </li>
                 <li>
@@ -229,6 +227,31 @@ export default {
       if (!Array.isArray(tagList)) return []
       const formatData = tagList.slice(0, 2)
       return formatData
+    },
+    formatServeAgeText() {
+      const serveAge = this.detailData.serveAge
+      if (serveAge == null) {
+        return '--'
+      }
+      if (serveAge < 1) {
+        return '小于1年'
+      }
+      if (serveAge >= 1 && serveAge < 2) {
+        return '1-2年'
+      }
+      if (serveAge >= 2 && serveAge < 3) {
+        return '2-3年'
+      }
+      if (serveAge >= 3 && serveAge < 4) {
+        return '3-4年'
+      }
+      if (serveAge >= 4 && serveAge < 5) {
+        return '4-5年'
+      }
+      if (serveAge >= 5) {
+        return '5年以上'
+      }
+      return ''
     },
   },
   created() {
