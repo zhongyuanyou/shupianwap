@@ -592,6 +592,7 @@ export default {
 
 <style lang="less" scoped>
 .seal {
+  background: #ffffff;
   width: 750px;
   margin: 0 auto;
   .back_icon {

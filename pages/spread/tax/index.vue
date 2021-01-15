@@ -467,6 +467,7 @@ export default {
 
 <style scoped lang="less">
 .center {
+  background: #ffffff;
   width: 750px;
   margin: 0 auto;
   .back_icon {
