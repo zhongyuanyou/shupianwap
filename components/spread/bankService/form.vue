@@ -138,7 +138,7 @@ export default {
   data() {
     return {
       read: true,
-      value: '基本开户', // 行业信息
+      value: '银行服务', // 行业信息
       telephone: '', // 电话号码
       sms: '', // 验证码
       number: '',
@@ -147,7 +147,7 @@ export default {
       countdown: -1, // 发送验证码倒计时60秒
       countdownTimer: null,
       actions: [
-        { name: '基本开户', color: '#5a79e8' },
+        { name: '银行服务', color: '#5a79e8' },
         { name: '一般户开户', color: '#222222' },
         { name: '基本户开户', color: '#222222' },
         { name: '银行销户', color: '#222222' },
@@ -282,7 +282,7 @@ export default {
           this.telephone = ''
           this.sms = ''
           this.countdown = -1
-          this.value = '基本开户'
+          this.value = '银行服务'
           window.sensors.track('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
