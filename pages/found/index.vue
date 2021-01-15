@@ -144,7 +144,6 @@ export default {
 <style lang="less" scoped>
 .found {
   width: 100%;
-  height: 100%;
   padding-bottom: 98px;
   /deep/ .sp-top-nav-bar {
     padding-top: constant(safe-area-inset-top);

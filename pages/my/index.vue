@@ -12,8 +12,12 @@
           :src="info.url ? info.url : avatar"
           @click="handleAvatar"
         />
-        <p v-if="info.nickName" class="txt" @click="handleClickLogin">
-          {{ userId ? '欢迎你，' + info.nickName || '' : '登录/注册' }}
+        <p class="txt" @click="handleClickLogin">
+          {{
+            userId && info.nickName
+              ? '欢迎你，' + info.nickName || ''
+              : '登录/注册'
+          }}
         </p>
       </div>
     </div>
