@@ -317,7 +317,7 @@ export default {
   },
   mounted() {
     const param = {
-      platform_type: 'wap端', // 平台类型：App，H5，Web
+      platform_type: 'wap端', // 平台类型：App，H5，Web，wap
       app_name: '薯片wap端', // 应用名称
       product_line: '公司注册标准',
       current_url: location.href,
