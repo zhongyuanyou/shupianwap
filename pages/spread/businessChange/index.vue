@@ -694,6 +694,7 @@ export default {
 
 <style lang="less" scoped>
 .businesschange {
+  background: #ffffff;
   width: 750px;
   margin: 0 auto;
   position: relative;

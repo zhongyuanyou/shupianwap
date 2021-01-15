@@ -639,6 +639,7 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   position: relative;
+  background: #ffffff;
   /deep/.my-head {
     width: @spread-page-width;
     position: fixed;
