@@ -1,5 +1,8 @@
 import qs from 'qs'
 import { saveAxiosInstance } from '@/utils/request'
+
+import xToast from '@/components/common/spToast'
+
 const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
 const BASE = require('~/config/index.js')
 
@@ -68,7 +71,14 @@ export default function ({ $axios, redirect, app, store }) {
         // 清空登录信息
         store.commit('user/CLEAR_USER')
         if (!store.state.app.isInApp) {
-          redirect('/my')
+          if (process && process.client) {
+            xToast.error('登录失效，请重新登录')
+            setTimeout(() => {
+              redirect('/my')
+            }, 1500)
+          } else {
+            redirect('/my')
+          }
         }
       }
 
