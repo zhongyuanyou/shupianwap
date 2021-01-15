@@ -307,7 +307,7 @@ export default {
           clearInterval(this.time)
           this.tel = ''
           this.code = ''
-          this.text = '发送验证码'
+          this.text = '获取验证码'
           this.selectName = '税务类型'
           for (const item of this.actions) {
             item.className = ''
