@@ -118,7 +118,7 @@
               class="popup_con_hot_item"
               @click="select(cItem, index)"
             >
-              {{ cItem.name }}12
+              {{ cItem.name }}
             </div>
           </div>
           <!-- E 城市 -->
@@ -454,6 +454,12 @@ export default {
       .title {
         color: #222;
         font-size: 28px;
+      }
+      > div {
+        height: 74px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
     &_hot {
