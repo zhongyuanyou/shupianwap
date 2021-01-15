@@ -144,7 +144,6 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.cityList = res.data.cityList
-            console.log(5, this.cityList)
             if (this.cityList.length) {
               // 格式化城市数据
               this.nweCityList = this.getBrands(this.cityList)
