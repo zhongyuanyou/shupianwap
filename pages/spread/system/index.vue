@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="system">
     <!-- S 头部分 -->
-    <Header v-show="!isInApp" class="system" :title="TopTitle">
+    <Header v-show="!isInApp" :title="TopTitle">
       <template #left>
         <div @click="onClickLeft">
           <my-icon
@@ -711,6 +711,8 @@ export default {
 .system {
   width: @spread-page-width;
   margin: 0 auto;
+  position: relative;
+  font-family: PingFang SC;
   /deep/ .my-head {
     width: @spread-page-width !important;
     left: auto !important;
