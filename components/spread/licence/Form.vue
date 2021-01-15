@@ -171,7 +171,6 @@ export default {
     },
     // 下拉数据选择时改变颜色
     onSelect(item) {
-      console.log(1)
       this.selectShow = false
       this.value = item.name
       this.actions.forEach((obj) => {
@@ -187,10 +186,8 @@ export default {
       if (this.timer) clearInterval(this.timer)
       this.timer = setInterval(() => {
         this.totalTime--
-        console.log(this.countDown)
-        this.countDown = this.totalTime + 's后重新获取'
+        this.countDown = this.totalTime + 's'
         if (this.totalTime < 1) {
-          console.log(this.countDown)
           this.countDown = '发送验证码'
           this.totalTime = 60
           clearInterval(this.timer)
@@ -217,18 +214,15 @@ export default {
           _tel: this.telephone,
           type: 'gs',
         }
-        console.log(this.telephone)
         if (this.totalTime > 0 && this.totalTime < 60) {
           Toast('请稍后再试')
           return
         }
         window.promotion.privat.getSmsCode(data, (res) => {
           // 发送成功，倒计时开始
-          console.log(res)
           if (res.error === 0) {
             this.getCode()
           }
-          console.log('错误')
           Toast(res.msg)
         })
       }
@@ -269,16 +263,16 @@ export default {
         smsCode: sms, // 验证码
         content: JSON.stringify(contentArr),
       }
-      console.log(params)
       // 2.提交表单
       window.promotion.privat.consultForm(params, (res) => {
-        console.log(res)
         if (res.error === 0) {
           // 提交完成后更新表单
           this.telephone = ''
           this.code = ''
-          this.totalTime = 60
           this.value = '食品行业许可证'
+          this.countDown = '发送验证码'
+          this.totalTime = 60
+          if (this.timer) clearInterval(this.timer)
           window.sensors.track('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
@@ -287,8 +281,10 @@ export default {
           Toast('提交成功，请注意接听电话')
         } else {
           Toast(res.msg)
-          this.sms = ''
+          if (this.timer) clearInterval(this.timer)
+          this.countDown = '发送验证码'
           this.totalTime = 60
+          this.sms = ''
         }
       })
     },
@@ -377,7 +373,7 @@ export default {
           font-weight: 400;
           color: #4974f5;
           line-height: 44px;
-          z-index: 99;
+          z-index: 1;
         }
       }
       &_bottonbox {
@@ -453,10 +449,9 @@ export default {
     font-weight: normal;
   }
 }
-// /deep/ .sp-field__value {
-//   display: flex;
-//   align-items: center;
-// }
+/deep/ .sp-cell__title {
+  flex: none;
+}
 /deep/ .sp-popup--round {
   width: @spread-page-width;
   max-height: 80%;

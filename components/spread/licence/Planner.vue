@@ -137,7 +137,7 @@ export default {
     },
     // 该模块的标题
     plannersCommon: {
-      type: Object,
+      type: Array,
       default: () => {
         return {
           title: '企服专家咨询',
@@ -192,6 +192,7 @@ export default {
     width: 688px;
     position: absolute;
     left: 0;
+    z-index: 3;
     &-item {
       display: flex;
       &-shadow {
@@ -303,7 +304,7 @@ export default {
     border-radius: 2px;
     position: absolute;
     right: 24px;
-    z-index: -1;
+    z-index: 1;
   }
 }
 /deep/ .planner_title {

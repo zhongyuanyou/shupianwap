@@ -31,7 +31,7 @@
           class="handleType_content_detail_box"
         >
           <div
-            v-for="(title, ind) in item.congtenlist"
+            v-for="(title, ind) in item"
             :key="ind"
             class="handleType_content_detail_box_head"
           >
@@ -54,14 +54,14 @@
                   src="https://cdn.shupian.cn/sp-pt/wap/images/q1hyl5ug50g000.png"
                   alt=""
                 />
-                <span>{{ title.operating.standard }}</span>
+                <span>{{ title.operating.flow }}</span>
               </div>
               <div class="imgbox">
                 <img
                   src="https://cdn.shupian.cn/sp-pt/wap/images/q1hyl5ug50g000.png"
                   alt=""
                 />
-                <span>{{ title.operating.flow }}</span>
+                <span>{{ title.operating.standard }}</span>
               </div>
             </div>
             <!-- 在线咨询 -->
@@ -87,21 +87,21 @@
               <div>
                 <a
                   v-sensorsTrack:p_IMClick="{
-                    name: `许可证办理类型_${title.operating.showName}_在线咨询`,
+                    name: `许可证办理类型_${title.operating.planner.name}_在线咨询`,
                     im_type: '售前',
                   }"
                   href="javascript:void(0)"
-                  @click="plannerIm(title)"
+                  @click="plannerIm(title.operating.planner)"
                 >
-                  <img :src="title.portraitImg" alt="" />
+                  <img :src="title.operating.planner.avatarImg" alt="" />
                 </a>
                 <a
                   v-sensorsTrack:p_IMClick="{
-                    name: `许可证办理类型_${title.operating.showName}_在线咨询`,
+                    name: `许可证办理类型_${title.operating.planner.name}_在线咨询`,
                     im_type: '售前',
                   }"
                   href="javascript:void(0)"
-                  @click="plannerIm(title)"
+                  @click="plannerIm(title.operating.planner)"
                 >
                   <my-icon
                     name="notify_ic_chat"
@@ -113,11 +113,11 @@
                 </a>
                 <a
                   v-sensorsTrack:p_IMClick="{
-                    name: `许可证办理类型_${title.operating.showName}_拨打电话`,
+                    name: `许可证办理类型_${title.operating.planner.telephone}_拨打电话`,
                     im_type: '售前',
                   }"
                   href="javascript:void(0)"
-                  @click="call(title.telephone)"
+                  @click="call(title.operating.planner.telephone)"
                 >
                   <my-icon
                     name="notify_ic_tel"
@@ -141,138 +141,14 @@
 import MyIcon from '../../common/myIcon/MyIcon.vue'
 export default {
   components: { MyIcon },
-  props: {},
+  props: {
+    typeList: {
+      type: Array,
+      default: () => {},
+    },
+  },
   data() {
     return {
-      typeList: [
-        {
-          congtenlist: [
-            {
-              id: 'extendBussineChange1',
-              name: '刘德华',
-              telephone: '17717888696',
-              referencePrice: 1800,
-              portraitImg:
-                'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-              plannerName: '',
-              operating: {
-                showName: '食品经营许可证',
-                slogan: '从事食品销售和餐饮服务活动的都需要依法取得',
-                productDescribe:
-                  '因公司经营变化、业务拓展等原因需要变更公司名称',
-                actualViews: '10万+',
-                defaultSales: '9.6万+',
-                actualSales: '9.6万+',
-                standard: '有相应场所',
-                flow: '有相应设备等',
-              },
-            },
-            {
-              id: 'extendBussineChange1',
-              telephone: '17717888696',
-              name: '张学友',
-              referencePrice: 1800,
-              portraitImg:
-                'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-              operating: {
-                showName: '食品生产许可证',
-                slogan: '从事食品加工业务需要办理',
-                productDescribe:
-                  '因公司经营变化、业务拓展等原因需要变更公司名称',
-                actualViews: '8万+',
-                defaultSales: '7万+',
-                actualSales: '7万+',
-                standard: '符合食品安全标准',
-                flow: '有标准工艺流程',
-              },
-            },
-          ],
-        },
-        {
-          congtenlist: [
-            {
-              id: 'extendBussineChange1',
-              name: '郭富城',
-              telephone: '17717888696',
-              referencePrice: 25000,
-              portraitImg:
-                'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-              operating: {
-                showName: '人力资源服务许可证',
-                slogan: '经营性人力资源机构的需要办理',
-                productDescribe:
-                  '因公司经营变化、业务拓展等原因需要变更公司名称',
-                actualViews: '9万+',
-                defaultSales: '8.4万+',
-                actualSales: '8.4万+',
-                standard: '有规范名称',
-                flow: '有5名专职人员',
-              },
-            },
-            {
-              id: 'extendBussineChange1',
-              name: '黎明',
-              telephone: '17717888696',
-              referencePrice: 25000,
-              portraitImg:
-                'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-              operating: {
-                showName: '劳务派遣许可证',
-                slogan: '经营劳务派遣的公司需要办理',
-                productDescribe:
-                  '因公司经营变化、业务拓展等原因需要变更公司名称',
-                actualViews: '6万+',
-                defaultSales: '5.7万+',
-                actualSales: '5.7万+',
-                standard: '注册资金200万',
-                flow: '有经营场所',
-              },
-            },
-          ],
-        },
-        {
-          congtenlist: [
-            {
-              id: 'extendBussineChange1',
-              name: '范冰冰',
-              telephone: '17717888696',
-              referencePrice: 28000,
-              portraitImg:
-                'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-              operating: {
-                showName: '医疗器械经营许可证',
-                slogan: '售卖医用电子设备等需要办理',
-                productDescribe:
-                  '因公司经营变化、业务拓展等原因需要变更公司名称',
-                actualViews: '9千+',
-                defaultSales: '8千+',
-                actualSales: '8千+',
-                standard: '有贮存场所',
-                flow: '有相应管理制度',
-              },
-            },
-            {
-              id: 'extendBussineChange1',
-              name: '章子怡',
-              telephone: '17717888696',
-              referencePrice: 12000,
-              portraitImg:
-                'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-              operating: {
-                showName: '互联网药品信息服务许可证',
-                slogan: '通过互联网提供药品信息等服务需要办理',
-                productDescribe:
-                  '因公司经营变化、业务拓展等原因需要变更公司名称',
-                actualViews: '2千+',
-                defaultSales: '1千+',
-                actualSales: '1千+',
-                standard: '依法设立的组织',
-                flow: '有2名相关技术人员',
-              },
-            },
-          ],
-        },
-      ],
       titleList: ['食品经营', '人力资源', '医疗药品'],
       active: 0,
     }
@@ -288,7 +164,7 @@ export default {
     },
     //  唤起IM
     plannerIm(planner) {
-      console.log(planner)
+      console.log(planner, 666666666666666)
       const guiHuaShi = planner
       this.$root.$emit(
         'openIMM',
