@@ -93,7 +93,7 @@
         </div>
       </sp-index-bar>
     </div>
-    <Loading-center v-show="loading || positionLoading" :title="loadingTitle" />
+    <Loading-center v-show="loading" title="加载中" />
   </div>
 </template>
 
@@ -116,7 +116,6 @@ export default {
   data() {
     return {
       loading: false,
-      loadingTitle: '加载中',
       cityHistory: [], // 历史选择
       cityList: [], // 站点列表
       nweCityList: [], // 带首字母的站点列表
@@ -130,16 +129,6 @@ export default {
       positionCityName: (state) => state.city.positionCityName, // 当前定位城市
       positionStatus: (state) => state.city.positionStatus, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
     }),
-    positionLoading() {
-      return this.$store.state.city.positionLoading
-    },
-  },
-  watch: {
-    positionLoading(val) {
-      if (val) {
-        this.loadingTitle = '定位中'
-      }
-    },
   },
   created() {
     if (process.client) {

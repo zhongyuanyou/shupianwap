@@ -6,7 +6,7 @@
  * @Description: In User Settings Edit
  * @FilePath: /chips-wap/client/store/module/city.js
  */
-import { Toast } from '@chipspc/vant-dgg'
+import myToast from '@/components/common/spToast'
 import { getPositonCity } from '@/utils/position'
 export const state = () => ({
   // 默认城市
@@ -17,7 +17,6 @@ export const state = () => ({
   currentCity: {}, // 当前选择的城市
   positionCityName: '', // 当前定位城市的名称
   positionStatus: null, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
-  positionLoading: false, // 重新定位loading弹框
 })
 export const mutations = {
   // 设置当前选择城市
@@ -44,29 +43,30 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
   },
-  UPDATE_LOADING_STADUS(state, boole) {
-    state.positionLoading = boole
-  },
 }
 
 export const actions = {
-  async POSITION_CITY({ commit, state }, { type }) {
+  /** @description 获取当前定位城市
+   * @params type == 'init' : 无loading，无成功失败提示，定位失败或成功都会重置当前选择城市 currentCity
+   * @params type == 'rest' : 有loading，有成功失败提示，定位失败或成功不会重置当前选择城市 currentCity
+   */
+  async POSITION_CITY({ commit, state }, { type = null }) {
     if (type === 'rest') {
-      commit('UPDATE_LOADING_STADUS', true) // 显示loading
+      myToast.showLoading({
+        message: '加载中',
+        type: 'loading',
+        forbidClick: false,
+      })
     }
+
     const { code, data, message } = await getPositonCity()
     // 定位成功,且匹配到开通服务的站点
     if (code === 200) {
       commit('SET_POSITION_CITY', data.name)
       commit('SET_POSITION_STATUS', 2)
       if (type === 'rest') {
-        commit('UPDATE_LOADING_STADUS', false) // 隐藏loading
-        Toast.success({
-          duration: 2000,
-          message: '定位成功',
-          forbidClick: true,
-          className: 'my-toast-style',
-        })
+        myToast.hideLoading()
+        myToast.success('定位成功')
         return
       }
       // 切换当前选择城市到定位的城市
@@ -81,13 +81,8 @@ export const actions = {
       commit('SET_POSITION_CITY', data.name)
       commit('SET_POSITION_STATUS', 1)
       if (type === 'rest') {
-        commit('UPDATE_LOADING_STADUS', false) // 隐藏loading
-        Toast.success({
-          duration: 2000,
-          message: '定位成功',
-          forbidClick: true,
-          className: 'my-toast-style',
-        })
+        myToast.hideLoading()
+        myToast.success('定位成功')
         return
       }
       // 若是重新定位，定位后不重置当前城市
@@ -97,14 +92,8 @@ export const actions = {
 
     // 定位失败
     if (type === 'rest') {
-      commit('UPDATE_LOADING_STADUS', false) // 隐藏loading
-      // 轻提示
-      Toast.fail({
-        duration: 2000,
-        message: '定位失败，建议清除浏览器缓存后再试',
-        forbidClick: true,
-        className: 'my-toast-style',
-      })
+      myToast.hideLoading()
+      myToast.error('定位失败，建议清除浏览器缓存后再试')
     }
     console.log(message)
     // 定位失败，设置默认城市为成都
