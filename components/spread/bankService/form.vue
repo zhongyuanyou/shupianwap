@@ -431,7 +431,7 @@ export default {
       font-weight: 400;
       color: #1a1a1a;
       flex: none;
-      width: 115px !important;
+      width: 85px !important;
     }
     /deep/.sp-field__control {
       font-size: 28px;
