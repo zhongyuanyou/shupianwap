@@ -206,7 +206,12 @@ export default {
     [Form.name]: Form,
     [CountDown.name]: CountDown,
   },
-  props: {},
+  props: {
+    total: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
       city: [
@@ -314,16 +319,24 @@ export default {
         { name: '商标资质', color: '#222222' },
         { name: '其他', color: '#222222' },
       ],
-      addUpAuditNameSum: 69201,
+      addUpAuditNameSum: '69,201',
       auditNameSum: 118, // 每日默认
     }
   },
   watch: {},
   created() {
+    console.log(this.total)
+    if (this.total.todayNum !== '' && this.total.totalNum !== '') {
+      this.auditNameSum = (this.total.todayNum || 0)
+        .toString()
+        .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+      this.addUpAuditNameSum = (this.total.totalNum || 0)
+        .toString()
+        .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+    }
     this.addUpAuditNameSum = (this.addUpAuditNameSum || 0)
       .toString()
       .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-    console.log(this.addUpAuditNameSum)
   },
 
   methods: {
@@ -617,17 +630,14 @@ a {
         font-size: 24px;
         position: relative;
         text-align: center;
+        align-content: center;
         justify-content: space-evenly;
         padding: 0 25px 0 53px;
-
-        &::before {
-          content: ''; /*CSS伪类用法*/
-          position: absolute; /*定位背景横线的位置*/
-          background: #f4f4f4; /*宽和高做出来的背景横线*/
+        i {
+          margin-top: 6px;
           width: 1px;
-          left: 50%;
           height: 20px;
-          top: 25%;
+          background-color: #f4f4f4;
         }
         span {
           color: rgba(236, 83, 48, 1);
