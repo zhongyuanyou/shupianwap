@@ -272,7 +272,8 @@ export default {
             form_type: '咨询表单',
             form_name: '代理记账表单_提交表单',
           })
-          console.log(params)
+          clearInterval(this.countdownTimer)
+          this.countdownTimer = null
           Toast('提交成功，请注意接听电话')
         } else {
           Toast(res.msg)

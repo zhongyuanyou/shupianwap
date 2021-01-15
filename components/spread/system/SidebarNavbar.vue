@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar-navbar">
-    <h5>服务介绍</h5>
+    <h5>服务流程</h5>
     <div class="sidebar-navbar-list">
       <sp-sidebar v-model="activeKey" @change="onChange">
         <sp-sidebar-item
@@ -27,20 +27,7 @@ export default {
     [Sidebar.name]: Sidebar,
     [SidebarItem.name]: SidebarItem,
   },
-  props: {
-    //     listCount: {
-    //       type: Array,
-    //       default: () => {
-    //         return []
-    //       },
-    //     },
-    //     isMore: {
-    //       type: Boolean,
-    //       default: () => {
-    //         return false
-    //       },
-    //     },
-  },
+  props: {},
   data() {
     return {
       activeKey: 0,
@@ -69,10 +56,7 @@ export default {
           flag: false,
         },
         {
-          content: `<h5>我们为您提供:</h5> <p><span>①</span> 专业一对一咨询，精确分析企业情况</p>
-            <p><span>②</span> 根据企业情况和认证范围选择更合适的体系认证</p>
-            <h5>您只需准备：</h5>
-            <p><span>①</span> 企业营业执照</p>`,
+          content: `<h5>我们为您提供:</h5> <p><span>①</span>品质售后，服务有保障</p>`,
           flag: false,
         },
       ],

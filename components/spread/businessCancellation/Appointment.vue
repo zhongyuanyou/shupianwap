@@ -134,6 +134,7 @@
     <!-- 弹出层 -->
     <sp-popup v-model="showPicker" position="bottom">
       <sp-picker
+        ref="picker"
         show-toolbar
         title="我需要"
         :columns="columns"
@@ -246,6 +247,7 @@ export default {
     /** 表单提交 */
     submit() {
       /** 1. 验证格式 */
+      const vm = this
       const _tel = this.tel
       const _code = this.shortMessage
       const _telReg = /^1[3-9]\d{9}$/
@@ -294,6 +296,9 @@ export default {
             form_name: '工商注销表单_提交表单',
           })
           Toast('提交成功，请注意接听电话')
+          clearInterval(vm.countDownTimer)
+          vm.countDownTimer = null
+          this.$refs.picker.setColumnValue(0, vm.need)
         } else {
           Toast(res.msg)
           this.shortMessage = ''
@@ -332,6 +337,7 @@ export default {
   background: transparent;
 }
 .form-box {
+  position: relative;
   width: 670px;
   margin: 0 auto;
   margin-top: -80px;
@@ -339,6 +345,7 @@ export default {
   background: #ffffff;
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.08);
   border-radius: 10px;
+  z-index: 2;
 }
 .form-title {
   position: relative;

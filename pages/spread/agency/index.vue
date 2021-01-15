@@ -487,6 +487,7 @@ export default {
   width: 750px;
   margin: 0 auto;
   position: relative;
+  background: #ffffff;
   /deep/.fixed-head {
     /deep/.my-head {
       width: 750px;

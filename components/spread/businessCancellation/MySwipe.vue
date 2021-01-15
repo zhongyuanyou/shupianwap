@@ -40,7 +40,7 @@ export default {
 }
 .my-swipe,
 .sp-swipe-item {
-  z-index: -5;
+  z-index: 1;
   width: 100%;
   height: 100%;
   a {
