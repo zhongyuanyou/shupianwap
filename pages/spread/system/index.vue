@@ -713,6 +713,7 @@ export default {
   margin: 0 auto;
   position: relative;
   font-family: PingFang SC;
+  background-color: #ffffff;
   /deep/ .my-head {
     width: @spread-page-width !important;
     left: auto !important;
