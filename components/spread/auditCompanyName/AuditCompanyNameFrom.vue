@@ -318,8 +318,13 @@ export default {
       auditNameSum: 118, // 每日默认
     }
   },
-  computed: {},
   watch: {},
+  created() {
+    this.addUpAuditNameSum = (this.addUpAuditNameSum || 0)
+      .toString()
+      .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+    console.log(this.addUpAuditNameSum)
+  },
 
   methods: {
     // 选择城市

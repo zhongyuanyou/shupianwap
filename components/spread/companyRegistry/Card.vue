@@ -72,24 +72,14 @@
         </div>
       </div>
       <div
-        v-md-map
-        v-md:WebClick
-        v-md:p_formSubmit
-        data-event_name="p_formSubmit"
-        data-form_type="咨询表单"
-        data-form_name="工商注册_表单"
+        v-sensorsTrack:p_formSubmit="{
+          event_name: 'p_formSubmit',
+          form_type: '咨询表单',
+          form_name: '体系认证表单_提交表单',
+        }"
         class="button"
       >
-        <sp-button
-          v-sensorsTrack:p_formSubmit="{
-            event_name: 'p_formSubmit',
-            form_type: '咨询表单',
-            form_name: '体系认证表单_提交表单',
-          }"
-          type="primary"
-          block
-          size="small"
-          @click="onForm"
+        <sp-button type="primary" block size="small" @click="onForm"
           >立即查询</sp-button
         >
       </div>
