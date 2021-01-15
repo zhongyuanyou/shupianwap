@@ -324,8 +324,8 @@ export default {
     }
   },
   watch: {},
+  // 处理核名数据
   created() {
-    console.log(this.total)
     if (this.total.todayNum !== '' && this.total.totalNum !== '') {
       this.auditNameSum = (this.total.todayNum || 0)
         .toString()
@@ -412,11 +412,11 @@ export default {
             console.log(params)
             // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
             Toast('提交成功，请注意接听电话')
-            this.isOverlay = false
             this.tel = ''
             this.industry = ''
             this.companyName = ''
             this.countdown = -1
+            this.isOverlay = false
             window.sensors.track('p_fromSubmitResult', {
               even_name: 'p_fromSubmitResult',
               from_type: '咨询表单',
