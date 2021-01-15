@@ -18,9 +18,7 @@
     <div class="banner">
       <sp-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
         <sp-swipe-item v-for="(item, index) of banner" :key="index">
-          <nuxt-link to="item.url">
-            <img :src="item.img" />
-          </nuxt-link>
+          <img :src="item.img" />
         </sp-swipe-item>
       </sp-swipe>
     </div>
@@ -304,7 +302,6 @@ export default {
       banner: [
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/2fyx09tup3wg000.jpg',
-          url: '',
         },
       ],
     }
