@@ -178,7 +178,6 @@ export default {
       this.phoneValue = val.replace(/[^\d]/g, '')
     },
     onSelect(item) {
-      console.log(item)
       // 默认情况下点击选项时不会自动收起
       // 可以通过 close-on-click-action 属性开启自动收起
       this.downShow = false
@@ -302,6 +301,7 @@ export default {
           this.sms = ''
           this.phoneValue = ''
           this.test = '获取验证码'
+          this.onSelect({ name: '请选择' })
           // 表单成功买点
           window.sensors.track('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
@@ -441,6 +441,7 @@ export default {
     color: #5a79e8;
     font-weight: bold;
   }
+  // 跳转冲突解决
   /deep/ .sp-cell__title {
     flex: none;
   }

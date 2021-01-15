@@ -117,97 +117,97 @@ export default {
     MyIcon,
   },
   props: {
-    // serviceList: {
-    //   type: Array,
-    //   requried: true,
-    // },
+    serviceList: {
+      type: Array,
+      requried: true,
+    },
   },
   data() {
     return {
       showCount: 2,
       isMore: false,
-      serviceList: [
-        {
-          title: '公司注销',
-          titlelable:
-            'https://cdn.shupian.cn/sp-pt/wap/images/cr4yfd0fvhk0000.png',
-          titleContent: '当公司不经营时申请注销，终止公司法人资格。',
-          lowerPrice: '2500',
-          tags: ['快至30个工作日', '成功率高，省心省钱'],
-          number: [
-            { content: '在线咨询', num: 484 },
-            { content: '累计成交', num: 302 },
-            { content: '成功案例', num: 293 },
-          ],
-          planner: {
-            id: '7862495547640840192',
-            name: '李劲',
-            jobNum: '107547',
-            telephone: '18402858698',
-            imgSrc: 'https://mgs.dgg.cn/_nuxt/img/gs_img_gwman.1e0eb6a.jpg',
-          },
-        },
-        {
-          title: '工商注销',
-          titlelable:
-            'https://cdn.shupian.cn/sp-pt/wap/images/cr4yfd0fvhk0000.png',
-          titleContent: '企业税务或税务已清税的情况下的营业执照注销。',
-          lowerPrice: '1000',
-          tags: ['快至30个工作日', '流程手续正规化'],
-          number: [
-            { content: '在线咨询', num: 370 },
-            { content: '累计成交', num: 296 },
-            { content: '成功案例', num: 290 },
-          ],
-          planner: {
-            id: '7862495547640840192',
-            name: '李劲',
-            jobNum: '107547',
-            telephone: '18402858698',
-            imgSrc: 'https://mgs.dgg.cn/_nuxt/img/gs_img_gwman.1e0eb6a.jpg',
-          },
-        },
-        {
-          title: '个体注销',
-          titlelable:
-            'https://cdn.shupian.cn/sp-pt/wap/images/cr4yfd0fvhk0000.png',
-          titleContent: '个体工商户不再从事经营活动办理的注销登记。',
-          lowerPrice: '2000',
-          tags: ['快至30个工作日', '专业团队申请，快速高效'],
-          number: [
-            { content: '在线咨询', num: 334 },
-            { content: '累计成交', num: 316 },
-            { content: '成功案例', num: 316 },
-          ],
-          planner: {
-            id: '7862495547640840192',
-            name: '李劲',
-            jobNum: '107547',
-            telephone: '18402858698',
-            imgSrc: 'https://mgs.dgg.cn/_nuxt/img/gs_img_gwman.1e0eb6a.jpg',
-          },
-        },
-        {
-          title: '简易注销',
-          titlelable:
-            'https://cdn.shupian.cn/sp-pt/wap/images/cr4yfd0fvhk0000.png',
-          titleContent: '企业无经营活动，无债权债务的企业注销。',
-          lowerPrice: '998',
-          tags: ['快至30个工作日', '流程透明化，节点清晰可查'],
-          number: [
-            { content: '在线咨询', num: 135 },
-            { content: '累计成交', num: 107 },
-            { content: '成功案例', num: 102 },
-          ],
-          planner: {
-            id: '7862495547640840192',
-            name: '李劲',
-            jobNum: '107547',
-            telephone: '18402858698',
-            imgSrc: 'https://mgs.dgg.cn/_nuxt/img/gs_img_gwman.1e0eb6a.jpg',
-          },
-        },
-      ],
+      // serviceList: [
+      //   {
+      //     title: '公司注销',
+      //     titlelable:
+      //       'https://cdn.shupian.cn/sp-pt/wap/images/cr4yfd0fvhk0000.png',
+      //     titleContent: '当公司不经营时申请注销，终止公司法人资格。',
+      //     lowerPrice: '2500',
+      //     tags: ['快至30个工作日', '成功率高，省心省钱'],
+      //     number: [
+      //       { content: '在线咨询', num: 484 },
+      //       { content: '累计成交', num: 302 },
+      //       { content: '成功案例', num: 293 },
+      //     ],
+      //     planner: {
+      //       id: '7862495547640840192',
+      //       name: '李劲',
+      //       jobNum: '107547',
+      //       telephone: '18402858698',
+      //       imgSrc: 'https://mgs.dgg.cn/_nuxt/img/gs_img_gwman.1e0eb6a.jpg',
+      //     },
+      //   },
+      //   {
+      //     title: '工商注销',
+      //     titlelable:
+      //       'https://cdn.shupian.cn/sp-pt/wap/images/cr4yfd0fvhk0000.png',
+      //     titleContent: '企业税务或税务已清税的情况下的营业执照注销。',
+      //     lowerPrice: '1000',
+      //     tags: ['快至30个工作日', '流程手续正规化'],
+      //     number: [
+      //       { content: '在线咨询', num: 370 },
+      //       { content: '累计成交', num: 296 },
+      //       { content: '成功案例', num: 290 },
+      //     ],
+      //     planner: {
+      //       id: '7862495547640840192',
+      //       name: '李劲',
+      //       jobNum: '107547',
+      //       telephone: '18402858698',
+      //       imgSrc: 'https://mgs.dgg.cn/_nuxt/img/gs_img_gwman.1e0eb6a.jpg',
+      //     },
+      //   },
+      //   {
+      //     title: '个体注销',
+      //     titlelable:
+      //       'https://cdn.shupian.cn/sp-pt/wap/images/cr4yfd0fvhk0000.png',
+      //     titleContent: '个体工商户不再从事经营活动办理的注销登记。',
+      //     lowerPrice: '2000',
+      //     tags: ['快至30个工作日', '专业团队申请，快速高效'],
+      //     number: [
+      //       { content: '在线咨询', num: 334 },
+      //       { content: '累计成交', num: 316 },
+      //       { content: '成功案例', num: 316 },
+      //     ],
+      //     planner: {
+      //       id: '7862495547640840192',
+      //       name: '李劲',
+      //       jobNum: '107547',
+      //       telephone: '18402858698',
+      //       imgSrc: 'https://mgs.dgg.cn/_nuxt/img/gs_img_gwman.1e0eb6a.jpg',
+      //     },
+      //   },
+      //   {
+      //     title: '简易注销',
+      //     titlelable:
+      //       'https://cdn.shupian.cn/sp-pt/wap/images/cr4yfd0fvhk0000.png',
+      //     titleContent: '企业无经营活动，无债权债务的企业注销。',
+      //     lowerPrice: '998',
+      //     tags: ['快至30个工作日', '流程透明化，节点清晰可查'],
+      //     number: [
+      //       { content: '在线咨询', num: 135 },
+      //       { content: '累计成交', num: 107 },
+      //       { content: '成功案例', num: 102 },
+      //     ],
+      //     planner: {
+      //       id: '7862495547640840192',
+      //       name: '李劲',
+      //       jobNum: '107547',
+      //       telephone: '18402858698',
+      //       imgSrc: 'https://mgs.dgg.cn/_nuxt/img/gs_img_gwman.1e0eb6a.jpg',
+      //     },
+      //   },
+      // ],
     }
   },
   computed: {},

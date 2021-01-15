@@ -639,6 +639,7 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   position: relative;
+  background: #ffffff;
   /deep/.my-head {
     width: @spread-page-width;
     position: fixed;
@@ -661,5 +662,17 @@ export default {
   .back_icon {
     margin-left: 40px;
   }
+  // // 隐藏服务列表第三个热销标签
+  // /deep/.serviceList {
+  //   > div:nth-child(4) {
+  //     .serviceList-content-head {
+  //       .serviceList-content-head-title {
+  //         > img {
+  //           display: none;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 }
 </style>

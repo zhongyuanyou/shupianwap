@@ -19,7 +19,7 @@
       <Banner :imglist="imgList"></Banner>
       <!-- e banner -->
       <!-- s 表单 -->
-      <AuditCompanyNameFrom :city="cityList" />
+      <AuditCompanyNameFrom :total="resultData.nums" />
       <!-- e 表单 -->
     </div>
 
@@ -40,11 +40,12 @@
 <script>
 import { mapState } from 'vuex'
 import GuiHuaShiSwipe from '@/components/spread/auditCompanyName/GuiHuaShiSwipe'
-import AuditCompanyNameFrom from '@/components/spread/auditCompanyName/AuditCompanyNameFrom.vue'
+import AuditCompanyNameFrom from '@/components/spread/auditCompanyName/AuditCompanyNameFrom'
 import Header from '@/components/common/head/header'
-import AuditCompanyNameTaboo from '@/components/spread/auditCompanyName/AuditCompanyNameTaboo.vue'
+import AuditCompanyNameTaboo from '@/components/spread/auditCompanyName/AuditCompanyNameTaboo'
 import DggImCompany from '@/components/spread/DggImCompany'
 import Banner from '@/components/spread/agency/banner'
+import { spreadApi } from '@/api/spread'
 export default {
   name: 'Index',
   components: {
@@ -56,37 +57,139 @@ export default {
     Banner,
   },
   props: {},
+
+  // 服务端渲染请求数据
+  async asyncData({ $axios }) {
+    const type = 'extendAuthName'
+    const defaultRes = {
+      code: 200,
+      message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
+      data: {
+        adList: [],
+        nums: {
+          todayNum: 143,
+          totalNum: 168996,
+        },
+        planlerList: [
+          {
+            id: 30134,
+            userId: '3394',
+            userCentreId: '3394',
+            loginName: '2022554',
+            realName: '刘琴',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13350072314',
+            cvr: 0.092593,
+            cvrValue: 60.683218,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 12112.4,
+            busPerformanceValue: 86.575363,
+            abilityValue: 67.466985,
+            formatType: '工商',
+          },
+          {
+            id: 30156,
+            userId: '43999',
+            userCentreId: '7704199733711282176',
+            loginName: '96352931',
+            realName: '岳雪冬',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13908231675',
+            cvr: 0.145455,
+            cvrValue: 64.543449,
+            orderBus: 8,
+            orderBusValue: 50.950718,
+            busPerformance: 15623,
+            busPerformanceValue: 91.389398,
+            abilityValue: 71.329062,
+            formatType: '工商',
+          },
+          {
+            id: 30310,
+            userId: '7930253930943676416',
+            userCentreId: '7930253930615472128',
+            loginName: '109870',
+            realName: '李海怡',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13696057459',
+            cvr: 0.106383,
+            cvrValue: 61.705406,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 17770,
+            busPerformanceValue: 93.504073,
+            abilityValue: 70.2655,
+            formatType: '工商',
+          },
+          {
+            id: 30297,
+            userId: '7887200447593906176',
+            userCentreId: '7887200447257313280',
+            loginName: '108862',
+            realName: '李劲',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '18884259139',
+            cvr: 0.159091,
+            cvrValue: 65.511436,
+            orderBus: 7,
+            orderBusValue: 50.378921,
+            busPerformance: 8744,
+            busPerformanceValue: 79.993572,
+            abilityValue: 68.049033,
+            formatType: '工商',
+          },
+          {
+            id: 30163,
+            userId: '66475',
+            userCentreId: '66475',
+            loginName: '38798340',
+            realName: '钟霞',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13730634929',
+            cvr: 0.1,
+            cvrValue: 61.23349,
+            orderBus: 6,
+            orderBusValue: 49.807025,
+            busPerformance: 15278,
+            busPerformanceValue: 90.996225,
+            abilityValue: 69.28084,
+            formatType: '工商',
+          },
+        ],
+      },
+    }
+    try {
+      const res = await $axios.get(spreadApi.list, {
+        params: { pageCode: type },
+      })
+      // 如果请求成功 把请求到的数据返回 否则把defaultRes的假数据返回
+      if (res.code === 2000) {
+        return { resultData: res.data }
+      } else {
+        return { resultData: defaultRes.data }
+      }
+      // 如果请求报错 把defaultRes的假数据返回
+    } catch (error) {
+      console.log(error)
+      return { resultData: defaultRes.data }
+    }
+  },
+
   data() {
     return {
       title: '免费核名',
-      plannersData: [
-        {
-          id: '7862495547640840192',
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          jobNum: '107547',
-        },
-        {
-          id: '7862495547640840193',
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          jobNum: '107547',
-        },
-      ],
+      /** 轮播规划师数据 */
+      plannersData: [],
       plannersCommon: {
         title: '咨询规划师',
-        imName: '税务筹划_咨询规划师_在线咨询',
-        telName: '税务筹划_咨询规划师_拨打电话',
+        imName: '免费核名_咨询规划师_在线咨询',
+        telName: '免费核名_咨询规划师_拨打电话',
       },
       auditTaboo: {
         title: '公司起名，这些禁忌不能犯',
@@ -140,7 +243,6 @@ export default {
           img: 'https://cdn.shupian.cn/sp-pt/wap/591qqekl2f40000.png',
         },
       ],
-      cityList: [],
     }
   },
   computed: {
@@ -149,7 +251,10 @@ export default {
     }),
   },
   watch: {},
-  created() {},
+  created() {
+    // 请求回来的数据替代本地
+    this.plannerHandle(this.resultData.planlerList)
+  },
   mounted() {
     const param = {
       platform_type: 'H5', // 平台类型：App，H5，Web
@@ -164,6 +269,32 @@ export default {
     }
   },
   methods: {
+    /** 规划师数据处理 */
+    plannerHandle(data) {
+      if (data.length !== 0) {
+        const guihuashiList = []
+        data.forEach((item, i) => {
+          const obj = {
+            id: item.userCentreId,
+            type: '金牌规划师',
+            imgSrc: item.userHeadUrl,
+            avatarImg: item.userHeadUrl,
+            name: item.realName,
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: item.userPhone,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+            jobNum: item.userPhoneloginName,
+          }
+          guihuashiList.push(obj)
+        })
+        this.plannersData = guihuashiList
+        this.planner = guihuashiList[0]
+      } else {
+        return this.plannersData
+      }
+    },
+
     back() {
       // 返回上一页
       console.log(window.history.length)

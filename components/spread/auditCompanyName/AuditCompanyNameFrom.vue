@@ -139,7 +139,6 @@
               form_name: `核名表单_验证码`,
             }"
             center
-            clearable
             :maxlength="6"
             label="验证码"
             type="tel"
@@ -206,7 +205,12 @@ export default {
     [Form.name]: Form,
     [CountDown.name]: CountDown,
   },
-  props: {},
+  props: {
+    total: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
       city: [
@@ -314,16 +318,24 @@ export default {
         { name: '商标资质', color: '#222222' },
         { name: '其他', color: '#222222' },
       ],
-      addUpAuditNameSum: 69201,
+      addUpAuditNameSum: '69,201',
       auditNameSum: 118, // 每日默认
     }
   },
   watch: {},
+  // 处理核名数据
   created() {
+    if (this.total.todayNum !== '' && this.total.totalNum !== '') {
+      this.auditNameSum = (this.total.todayNum || 0)
+        .toString()
+        .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+      this.addUpAuditNameSum = (this.total.totalNum || 0)
+        .toString()
+        .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+    }
     this.addUpAuditNameSum = (this.addUpAuditNameSum || 0)
       .toString()
       .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-    console.log(this.addUpAuditNameSum)
   },
 
   methods: {
@@ -331,22 +343,19 @@ export default {
     onCitySelect(item) {
       this.cityName = item.name
       this.isShowCity = false
-      this.city.forEach((obj) => {
-        if (obj.name === item.name) {
-          obj.color = '#5a79e8'
-        } else {
-          obj.color = '#222222'
-        }
-      })
+      this.onStyle(this.city, item.name)
     },
     //  行业选择
     onSelect(item) {
-      // 默认情况下点击选项时不会自动收起
-      // 可以通过 close-on-click-action 属性开启自动收起
       this.industry = item.name
       this.isShow = false
-      this.actions.forEach((obj) => {
-        if (obj.name === item.name) {
+      this.onStyle(this.actions, item.name)
+    },
+    // 选中样式
+
+    onStyle(data, value) {
+      data.forEach((obj) => {
+        if (obj.name === value) {
           obj.color = '#5a79e8'
         } else {
           obj.color = '#222222'
@@ -396,14 +405,19 @@ export default {
         }
         window.promotion.privat.consultForm(params, (res) => {
           if (res.error === 0) {
-            console.log(params)
             // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
             Toast('提交成功，请注意接听电话')
-            this.isOverlay = false
             this.tel = ''
             this.industry = ''
             this.companyName = ''
             this.countdown = -1
+            clearInterval(this.countdownTimer)
+            this.countdownTimer = null
+            this.sms = ''
+            this.cityName = '成都'
+            this.onStyle(this.actions, this.industry)
+            this.onStyle(this.city, this.cityName)
+            this.isOverlay = false
             window.sensors.track('p_fromSubmitResult', {
               even_name: 'p_fromSubmitResult',
               from_type: '咨询表单',
@@ -421,9 +435,10 @@ export default {
     },
     // 发送验证码
     onSmsCode() {
+      console.log(this.countdown)
       if (!checkPhone(this.tel)) {
         Toast('手机号格式错误')
-      } else if (this.countDown > -1) {
+      } else if (this.countdown > -1) {
         Toast('验证码已发送')
       } else {
         const _data = {
@@ -617,17 +632,14 @@ a {
         font-size: 24px;
         position: relative;
         text-align: center;
+        align-content: center;
         justify-content: space-evenly;
         padding: 0 25px 0 53px;
-
-        &::before {
-          content: ''; /*CSS伪类用法*/
-          position: absolute; /*定位背景横线的位置*/
-          background: #f4f4f4; /*宽和高做出来的背景横线*/
+        i {
+          margin-top: 6px;
           width: 1px;
-          left: 50%;
           height: 20px;
-          top: 25%;
+          background-color: #f4f4f4;
         }
         span {
           color: rgba(236, 83, 48, 1);

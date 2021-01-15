@@ -18,9 +18,7 @@
     <div class="banner">
       <sp-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
         <sp-swipe-item v-for="(item, index) of banner" :key="index">
-          <nuxt-link to="item.url">
-            <img :src="item.img" />
-          </nuxt-link>
+          <img :src="item.img" />
         </sp-swipe-item>
       </sp-swipe>
     </div>
@@ -59,6 +57,7 @@ import Type from '@/components/spread/companyRegistrationStandards/Type'
 import ConsultTel from '@/components/spread/common/ConsultTel'
 import Header from '~/components/common/head/header'
 import MyIcon from '@/components/common/myIcon/MyIcon'
+import { spreadApi } from '@/api/spread'
 export default {
   components: {
     [Swipe.name]: Swipe,
@@ -70,6 +69,119 @@ export default {
     DggImCompany,
   },
   props: {},
+  async asyncData({ $axios }) {
+    const type = 'extendBussineWithdraw'
+    const defaultRes = {
+      code: 200,
+      message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
+      data: {
+        planlerList: [
+          {
+            id: 30134,
+            userId: '3394',
+            userCentreId: '3394',
+            loginName: '2022554',
+            realName: '刘琴',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13350072314',
+            cvr: 0.092593,
+            cvrValue: 60.683218,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 12112.4,
+            busPerformanceValue: 86.575363,
+            abilityValue: 67.466985,
+            formatType: '工商',
+          },
+          {
+            id: 30156,
+            userId: '43999',
+            userCentreId: '7704199733711282176',
+            loginName: '96352931',
+            realName: '岳雪冬',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13908231675',
+            cvr: 0.145455,
+            cvrValue: 64.543449,
+            orderBus: 8,
+            orderBusValue: 50.950718,
+            busPerformance: 15623,
+            busPerformanceValue: 91.389398,
+            abilityValue: 71.329062,
+            formatType: '工商',
+          },
+          {
+            id: 30310,
+            userId: '7930253930943676416',
+            userCentreId: '7930253930615472128',
+            loginName: '109870',
+            realName: '李海怡',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13696057459',
+            cvr: 0.106383,
+            cvrValue: 61.705406,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 17770,
+            busPerformanceValue: 93.504073,
+            abilityValue: 70.2655,
+            formatType: '工商',
+          },
+          {
+            id: 30297,
+            userId: '7887200447593906176',
+            userCentreId: '7887200447257313280',
+            loginName: '108862',
+            realName: '李劲',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '18884259139',
+            cvr: 0.159091,
+            cvrValue: 65.511436,
+            orderBus: 7,
+            orderBusValue: 50.378921,
+            busPerformance: 8744,
+            busPerformanceValue: 79.993572,
+            abilityValue: 68.049033,
+            formatType: '工商',
+          },
+          {
+            id: 30163,
+            userId: '66475',
+            userCentreId: '66475',
+            loginName: '38798340',
+            realName: '钟霞',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13730634929',
+            cvr: 0.1,
+            cvrValue: 61.23349,
+            orderBus: 6,
+            orderBusValue: 49.807025,
+            busPerformance: 15278,
+            busPerformanceValue: 90.996225,
+            abilityValue: 69.28084,
+            formatType: '工商',
+          },
+        ],
+      },
+    }
+    try {
+      const res = await $axios.get(spreadApi.list, {
+        params: { pageCode: type },
+      })
+      if (res.code === 200) {
+        return { resultData: res.data }
+      } else {
+        return { resultData: defaultRes.data }
+      }
+    } catch (error) {
+      return { resultData: defaultRes.data }
+    }
+  },
   data() {
     return {
       // 公司注册标准的文字内容
@@ -78,11 +190,11 @@ export default {
         {
           // 注册标准
           rs: [
-            '（1）股东符合法定人数共同出资设立；',
+            '（1）股东符合法定人数共同出资设立',
             '（2）股东出资达到法定资本最低限度（不同公司最低限度不同）',
-            '（3）股东共同制定公司章程；',
-            '（4）有公司名称；',
-            '（5）有固定的生产经营场所和必要的生产经营条件。',
+            '（3）股东共同制定公司章程',
+            '（4）有公司名称',
+            '（5）有固定的生产经营场所和必要的生产经营条件',
           ],
           // 所需材料
           material: [
@@ -98,7 +210,7 @@ export default {
           // 注册标准
           rs: [
             '（1）注册资金：没有最低要求',
-            '（2）名称要求：可以使用名称，也可以不用名称，但使用名称的个体工商户，需要申请并核准登记后才可以使用。',
+            '（2）名称要求：可以使用名称，也可以不用名称，但使用名称的个体工商户，需要申请并核准登记后才可以使用',
           ],
           // 所需材料
           material: [
@@ -111,11 +223,11 @@ export default {
         {
           // 注册标准
           rs: [
-            '（1）发起人符合法定人数，其中须有半数以上的发起人在中国境内有住所。',
-            '（2）有符合公司章程规定的全体发起人认购的股本数额或者募集的实收股本总额。',
-            '（3）股份发行、筹办事项符合法律规定，在发起人认购的股份缴足前，不得向他人募集股份。',
-            '（4）发起人制订公司章程，同时要载明公司法第81规定的事项。',
-            '（5）有公司名称，建立符合股份有限公司要求的组织机构。',
+            '（1）发起人符合法定人数，其中须有半数以上的发起人在中国境内有住所',
+            '（2）有符合公司章程规定的全体发起人认购的股本数额或者募集的实收股本总额',
+            '（3）股份发行、筹办事项符合法律规定，在发起人认购的股份缴足前，不得向他人募集股份',
+            '（4）发起人制订公司章程，同时要载明公司法第81规定的事项',
+            '（5）有公司名称，建立符合股份有限公司要求的组织机构',
           ],
           // 所需材料
           material: [
@@ -136,7 +248,7 @@ export default {
           ],
           // 所需材料
           material: [
-            '总公司营业执照副本复印件3份(加盖总公司鲜章)；',
+            '总公司营业执照副本复印件3份(加盖总公司鲜章)',
             '总公司在登记机关的提档档案一套（加盖工商局提档章、总公司鲜章）',
             '总公司法人身份证复印件3份（加盖总公司鲜章）',
             '分公司负责人身份证复印件3份',
@@ -180,41 +292,7 @@ export default {
         },
       ],
       // 规划师
-      plannersData: [
-        {
-          id: '7862495547640840192',
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭美美',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          jobNum: '107547',
-        },
-        {
-          id: '7862495547640840192',
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭晶晶',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          jobNum: '107547',
-        },
-        {
-          id: '7862495547640840192',
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          jobNum: '107547',
-        },
-      ],
+      plannersData: [],
       plannersCommon: {
         title: '咨询规划师',
         imName: '核名_咨询规划师_在线咨询',
@@ -224,7 +302,6 @@ export default {
       banner: [
         {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/2fyx09tup3wg000.jpg',
-          url: '',
         },
       ],
     }
@@ -235,12 +312,14 @@ export default {
     }),
   },
   watch: {},
-  created() {},
+  created() {
+    this.plannerHandle(this.resultData.planlerList)
+  },
   mounted() {
     const param = {
-      platform_type: 'wap端', // 平台类型：App，H5，Web
+      platform_type: 'wap端', // 平台类型：App，H5，Web，wap
       app_name: '薯片wap端', // 应用名称
-      product_line: 'Wap端公司注册标准页',
+      product_line: '公司注册标准',
       current_url: location.href,
       referrer: document.referrer,
     }
@@ -250,6 +329,27 @@ export default {
     }
   },
   methods: {
+    plannerHandle(data) {
+      if (data.length !== 0) {
+        const guihuashiList = []
+        data.forEach((item, i) => {
+          const obj = {
+            id: item.userCentreId,
+            type: '金牌规划师',
+            imgSrc: item.userHeadUrl,
+            avatarImg: item.userHeadUrl,
+            name: item.realName,
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: item.userPhone,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+            jobNum: item.userPhoneloginName,
+          }
+          guihuashiList.push(obj)
+        })
+        this.plannersData = guihuashiList
+      }
+    },
     back() {
       // 返回上一页
       if (this.isInApp) {
@@ -273,6 +373,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .company {
+  background: #fff;
   /deep/.fixed-head {
     /deep/.my-head {
       width: 750px;

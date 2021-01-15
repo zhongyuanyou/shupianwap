@@ -297,6 +297,11 @@ export default {
             form_type: '咨询表单',
             form_name: '工商变更表单_提交表单',
           })
+          this.actions.forEach((item, index) => {
+            item.color = `${index > 0 ? '#222222' : '#5a79e8'}`
+          })
+          clearInterval(this.countdownTimer)
+          this.countdownTimer = null
           Toast('提交成功，请注意接听电话')
         } else {
           Toast(res.msg)

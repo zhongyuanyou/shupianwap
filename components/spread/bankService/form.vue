@@ -288,6 +288,11 @@ export default {
             form_type: '咨询表单',
             form_name: '银行服务表单_提交表单',
           })
+          this.actions.forEach((item, index) => {
+            item.color = `${index > 0 ? '#222222' : '#5a79e8'}`
+          })
+          clearInterval(this.countdownTimer)
+          this.countdownTimer = null
           Toast('提交成功，请注意接听电话')
         } else {
           Toast(res.msg)
@@ -426,7 +431,7 @@ export default {
       font-weight: 400;
       color: #1a1a1a;
       flex: none;
-      width: 115px !important;
+      width: 85px !important;
     }
     /deep/.sp-field__control {
       font-size: 28px;
