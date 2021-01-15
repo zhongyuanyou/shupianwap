@@ -296,8 +296,9 @@ export default {
             form_name: '工商注销表单_提交表单',
           })
           Toast('提交成功，请注意接听电话')
-          vm.$refs.picker.setColumnValue(0, vm.need)
           clearInterval(vm.countDownTimer)
+          vm.countDownTimer = null
+          this.$refs.picker.setColumnValue(0, vm.need)
         } else {
           Toast(res.msg)
           this.shortMessage = ''
