@@ -297,6 +297,7 @@ export default {
           })
           Toast('提交成功，请注意接听电话')
           vm.$refs.picker.setColumnValue(0, vm.need)
+          clearInterval(vm.countDownTimer)
         } else {
           Toast(res.msg)
           this.shortMessage = ''
