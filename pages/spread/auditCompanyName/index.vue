@@ -56,6 +56,8 @@ export default {
     GuiHuaShiSwipe,
     Banner,
   },
+  props: {},
+
   // 服务端渲染请求数据
   async asyncData({ $axios }) {
     const type = 'extendAuthName'
@@ -77,7 +79,6 @@ export default {
       }
     }
   },
-  props: {},
 
   data() {
     return {
