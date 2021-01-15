@@ -411,6 +411,8 @@ export default {
             this.industry = ''
             this.companyName = ''
             this.countdown = -1
+            clearInterval(this.countdownTimer)
+            this.countdownTimer = null
             this.sms = ''
             this.cityName = '成都'
             this.onStyle(this.actions, this.industry)
