@@ -265,6 +265,7 @@ export default {
   background-color: #fff;
   /deep/ .sp-bottombar-button {
     font-size: 32px;
+    font-weight: bold;
   }
   .back_icon {
     margin-left: 40px;

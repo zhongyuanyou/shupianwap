@@ -139,7 +139,6 @@ export default {
         locationCodeList: [], // 广告编码
       },
       asyncData: {
-        cityData: [], // 站点列表
         preferential: [], // 限时特惠
         information: [], // 资讯精选
         rotationAd: [], // 热门服务
@@ -161,7 +160,6 @@ export default {
         .post(homeApi.asyncRequest, this.asyncReqParams)
         .then((res) => {
           //   console.log('客户端：', res.data)
-          this.asyncData.cityData = res.data.cityList
           this.adModuleOne.forEach((item) => {
             if (res.data.advertising[item]) {
               this.asyncData.preferential.push(res.data.advertising[item])

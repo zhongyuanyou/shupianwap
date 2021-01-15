@@ -33,7 +33,7 @@
               height="0.88rem"
               fit="cover"
               class="detail_con_info_logo_con_logo"
-              src="https://img.yzcdn.cn/vant/apple-1.jpg"
+              :src="avatar"
             />
           </div>
           <div class="detail_con_info_content">
@@ -67,7 +67,6 @@
         @select="handleSelect"
       />
     </div>
-    <openApp />
   </div>
 </template>
 
@@ -84,7 +83,7 @@ import { mapState } from 'vuex'
 import { foundApi } from '~/api'
 import Header from '@/components/common/head/header'
 import { copyToClipboard } from '~/utils/common'
-
+import { GOODSLIST } from '~/config/constant'
 export default {
   layout: 'keepAlive',
   name: 'Detail',
@@ -119,6 +118,9 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
     }),
+    avatar() {
+      return GOODSLIST
+    },
   },
   mounted() {
     this.getInfoDetail()

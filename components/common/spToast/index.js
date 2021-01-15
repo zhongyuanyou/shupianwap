@@ -26,6 +26,9 @@ function createInstance() {
     // toastInstance.$mount(document.createElement('div'))
     // document.body.appendChild(instance.$el)
     Vue.prototype.$xToast = instance
+    Vue.prototype.$xToast.$_destroy = () => {
+      instance.$destroy()
+    }
     // Vue.prototype.$xToast.show = toastInstance.show
     // Vue.prototype.$xToast.success = toastInstance.success
     // Vue.prototype.$xToast.error = toastInstance.error

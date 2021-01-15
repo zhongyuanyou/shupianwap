@@ -1,6 +1,11 @@
 <template>
   <transition name="toast-fade">
-    <div v-show="isShow" class="my-toast" :class="{ 'no-event': forbidClick }">
+    <div
+      v-show="isShow"
+      class="my-toast"
+      :class="{ 'no-event': forbidClick }"
+      @touchmove="noEvent($event)"
+    >
       <div class="my-toast__content">
         <sp-loading v-if="isLoading" size="20" color="#fff" :type="spinner" />
         <i
@@ -92,15 +97,11 @@ export default {
       this.icon = 'toast_ic_remind'
       this._hidToast(duration, cb)
     },
-    showLoading(
-      { message = '加载中', type = 'loading', forbidClick = false },
-      cb
-    ) {
+    showLoading({ message = '加载中', type = 'loading', forbidClick = false }) {
       // loading
       this.checkType('message', message)
       this.checkType('type', type)
       this.checkType('forbidClick', forbidClick)
-      cb && this.checkType('cb', cb)
       this.forbidClick = forbidClick
       this.message = message
       this.isShow = true
@@ -111,15 +112,13 @@ export default {
       this.isLoading = false
       this.isShow = false
     },
-    loading(
-      {
-        message = '加载中',
-        type = 'loading',
-        duration = 1500,
-        forbidClick = false,
-      },
-      cb
-    ) {
+    loading({
+      message = '加载中',
+      type = 'loading',
+      duration = 1500,
+      forbidClick = false,
+      cb,
+    }) {
       // loading
       this.checkType('message', message)
       this.checkType('duration', duration)
@@ -132,6 +131,9 @@ export default {
       this.forbidClick = forbidClick
       this.isLoading = true
       this._hidToast(duration, cb)
+    },
+    noEvent(e) {
+      !this.forbidClick && e.preventDefault()
     },
     checkType(typeStr, typeData) {
       const checkFn = {
