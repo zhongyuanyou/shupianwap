@@ -107,31 +107,13 @@ export default {
   data() {
     return {
       headTitle: '税务筹划',
-      plannersData: [
-        {
-          id: '7862495547640840192',
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          jobNum: '107547',
-        },
-      ],
+      plannersData: [],
       plannersCommon: {
         title: '咨询规划师',
         imName: '税务筹划_咨询规划师_在线咨询',
         telName: '税务筹划_咨询规划师_拨打电话',
       },
-      fixedBottomData: {
-        id: '7862495547640840192',
-        name: '郭亮亮',
-        jobNum: '107547',
-        telephone: '12345679985',
-        imgSrc: '',
-      },
+      fixedBottomData: {},
       fixedMd: {
         telMd: {
           name: '税务筹划_钻石展位_拨打电话',
@@ -144,54 +126,7 @@ export default {
       },
       consultTitle: '对于代理记账还有疑问？企服专家为您免费解答',
       consultTel: '4000-962540',
-      serveData: [
-        {
-          bg: {
-            backgroundImage:
-              'url(https://cdn.shupian.cn/sp-pt/wap/21cjuvpuz5vk000.jpg)',
-          },
-          num1: '',
-          num2: '',
-          num3: '',
-          price: '',
-          person: '',
-          id: '',
-          name: '',
-          jobNum: '',
-          productName: '增值税筹划',
-          phone: '',
-        },
-        {
-          bg: {
-            backgroundImage:
-              'url(https://cdn.shupian.cn/sp-pt/wap/3i3g8eyy7q20000.jpg)',
-          },
-          num1: '',
-          num2: '',
-          num3: '',
-          price: '',
-          person: '',
-          id: '',
-          name: '',
-          jobNum: '',
-          productName: '企业所得税筹划',
-        },
-        {
-          bg: {
-            backgroundImage:
-              'url(https://cdn.shupian.cn/sp-pt/wap/fab76tq8cnk0000.jpg)',
-          },
-          num1: '',
-          num2: '',
-          num3: '',
-          price: '',
-          person: '',
-          id: '',
-          name: '',
-          jobNum: '',
-          productName: '个人所得税筹划',
-        },
-      ],
+      serveData: [],
       // 请求失败的备用数据
       planlerList: [
         {
@@ -386,23 +321,13 @@ export default {
     }),
   },
   created() {
-    console.log(this.result.planlerList)
     // 请求回来的数据替代本地
     if (this.result !== '' && this.result !== undefined) {
       if (
         this.result.planlerList !== undefined &&
         this.result.planlerList.length !== 0
       ) {
-        if (this.result.planlerList.length < 3) {
-          this.planlerList.forEach((item, index) => {
-            this.planlerList[index] = this.result.planlerList[
-              index % this.result.planlerList.length
-            ]
-          })
-        } else {
-          this.planlerList = this.result.planlerList
-        }
-        this.getPlannersData()
+        this.planlerList = this.result.planlerList
       }
       if (this.result.adList !== undefined && this.result.adList.length !== 0) {
         this.adList = this.result.adList
@@ -411,6 +336,7 @@ export default {
         this.todayNum = this.result.nums.todayNum
       }
     }
+    this.getPlannersData()
     this.getServeData()
     this.getfixedBottomData()
   },
@@ -444,41 +370,41 @@ export default {
     },
     // 服务模块数据处理
     getServeData() {
-      for (let i = 0; i < this.serveData.length; i++) {
-        // 循环价格
-        this.serveData[i].price = this.adList[0].sortMaterialList[
-          i
-        ].materialList[0].productDetail.referencePrice
-        // 循环在线咨询
-        this.serveData[i].num1 = this.adList[0].sortMaterialList[
-          i
-        ].materialList[0].productDetail.operating.actualViews
-        // 循环累计成交
-        this.serveData[i].num2 = this.adList[0].sortMaterialList[
-          i
-        ].materialList[0].productDetail.operating.defaultSales
-        // 循环成功案例
-        this.serveData[i].num3 = this.adList[0].sortMaterialList[
-          i
-        ].materialList[0].productDetail.operating.actualSales
-        // 循环头像
-        this.serveData[i].person = this.planlerList[i].userHeadUrl
-        // 循环id
-        this.serveData[i].id = this.planlerList[i].userCentreId
-        // 循环名字
-        this.serveData[i].name = this.planlerList[i].realName
-        // 循环工号
-        this.serveData[i].jobNum = this.planlerList[i].loginName
-        // 循环电话号码
-        this.serveData[i].phone = this.planlerList[i].userPhone
+      // const length = this.adList[0].sortMaterialList.length
+      for (let i = 0; i < 3; i++) {
+        let bgImg
+        if (i === 0) {
+          bgImg = 'url(https://cdn.shupian.cn/sp-pt/wap/21cjuvpuz5vk000.jpg)'
+        } else if (i === 1) {
+          bgImg = 'url(https://cdn.shupian.cn/sp-pt/wap/3i3g8eyy7q20000.jpg)'
+        } else if (i === 2) {
+          bgImg = 'url(https://cdn.shupian.cn/sp-pt/wap/fab76tq8cnk0000.jpg)'
+        }
+        const obj = {
+          bg: {
+            backgroundImage: bgImg,
+          },
+          num1: this.adList[0].sortMaterialList[i].materialList[0].productDetail
+            .operating.actualViews,
+          num2: this.adList[0].sortMaterialList[i].materialList[0].productDetail
+            .operating.defaultSales,
+          num3: this.adList[0].sortMaterialList[i].materialList[0].productDetail
+            .operating.actualSales,
+          price: this.adList[0].sortMaterialList[i].materialList[0]
+            .productDetail.referencePrice,
+          person: this.planlerList[i % this.planlerList.length].userHeadUrl,
+          id: this.planlerList[i % this.planlerList.length].userCentreId,
+          name: this.planlerList[i % this.planlerList.length].realName,
+          jobNum: this.planlerList[i % this.planlerList.length].loginName,
+          productName: '增值税筹划',
+          phone: this.planlerList[i % this.planlerList.length].userPhone,
+        }
+        this.serveData.push(obj)
       }
     },
     // 规划师模块数据处理
     getPlannersData() {
-      const length = this.result.planlerList.length
-      if (length > 0) {
-        this.plannersData = []
-      }
+      const length = this.planlerList.length
       for (let i = 0; i < length; i++) {
         const obj = {
           id: this.planlerList[i].userCentreId,
@@ -496,16 +422,13 @@ export default {
     },
     // 底部模块数据处理
     getfixedBottomData() {
-      // 循环头像
-      this.fixedBottomData.imgSrc = this.planlerList[0].userHeadUrl
-      // 循环id
-      this.fixedBottomData.id = this.planlerList[0].userCentreId
-      // 循环名字
-      this.fixedBottomData.name = this.planlerList[0].realName
-      // 循环工号
-      this.fixedBottomData.jobNum = this.planlerList[0].loginName
-      // 循环工号
-      this.fixedBottomData.telephone = this.planlerList[0].userPhone
+      this.fixedBottomData = {
+        id: this.planlerList[0].userCentreId,
+        name: this.planlerList[0].realName,
+        jobNum: this.planlerList[0].loginName,
+        telephone: this.planlerList[0].userPhone,
+        imgSrc: this.planlerList[0].userHeadUrl,
+      }
     },
     // 这个页面统一调用IM时的信息
     openIm() {

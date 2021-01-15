@@ -30,13 +30,13 @@
             v-for="(item, i) of sealTypes"
             :key="i"
             :class="isSelect === i ? blue : gray"
-            @click="changeBlock(i)"
           >
             <a
               v-sensorsTrack:webClick="{
                 name: `印章服务表单_${item}`,
               }"
               href="javascript:;"
+              @click="changeBlock(i)"
             >
               {{ item }}
             </a>
