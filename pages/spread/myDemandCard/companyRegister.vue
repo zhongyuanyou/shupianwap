@@ -210,14 +210,17 @@ export default {
     onCancel() {
       this.isShow = false
     },
+    // 点确定回显城市
+    onConfirm(value) {
+      this.formData.content.yxblqy = value
+      this.isShow = false
+    },
     // 获取公司是否有地址的选择
     isChoose(index) {
       this.chooseActived = index
       this.formData.content.sydz = this.choose[index]
     },
-    onConfirm(value) {
-      this.formData.content.yxblqy = value
-    },
+
     // 获取公司信息是否完成的选择
     confirm(index) {
       this.confirmActived = index
