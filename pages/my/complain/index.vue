@@ -349,6 +349,10 @@ export default {
     color: #1a1a1a;
     margin-right: 40px;
   }
+  /deep/ .sp-bottombar-button {
+    font-size: 32px;
+    font-weight: bold;
+  }
   &-box {
     padding: 0px 40px 30px 40px;
   }

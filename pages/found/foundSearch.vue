@@ -105,6 +105,9 @@ export default {
 
 <style lang="less" scoped>
 .search {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
   padding: 0 40px;
   .no-data {
     display: flex;

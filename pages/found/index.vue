@@ -29,6 +29,7 @@
       @refresh="refresh"
     />
     <Bottombar v-if="!isInApp" ref="bottombar" />
+    <Loading-center v-show="loading" />
   </div>
 </template>
 
@@ -38,6 +39,7 @@ import { mapMutations, mapState } from 'vuex'
 import Con from '~/components/found/found/Cons'
 import { foundApi } from '@/api'
 import Bottombar from '@/components/common/nav/Bottombar'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   layout: 'keepAlive',
   name: 'Found',
@@ -49,6 +51,7 @@ export default {
     [Toast.name]: Toast,
     Con,
     Bottombar,
+    LoadingCenter,
   },
   async asyncData({ $axios }) {
     try {
@@ -71,6 +74,7 @@ export default {
       information_list: [], // 资讯列表
       categoryCode: '', // code码
       refreshStatus: false,
+      loading: false,
     }
   },
   computed: {
@@ -116,7 +120,7 @@ export default {
         this.information_banner = []
         this.information_list = []
       }
-      this.refreshStatus = true
+      this.loading = true
       // 点击tab标签
       try {
         this.categoryCode = this.information_class[index].code
@@ -124,7 +128,7 @@ export default {
           categoryCode: this.categoryCode,
         }
         const res = await this.$axios.get(foundApi.screenRequest, { params })
-        this.refreshStatus = false
+        this.loading = false
         if (res.code === 200) {
           this.information_banner = res.data.information_banner
           this.information_list = res.data.information_list

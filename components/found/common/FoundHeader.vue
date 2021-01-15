@@ -85,7 +85,8 @@ export default {
     justify-content: space-between;
     align-items: center;
     flex-direction: row;
-    padding: 16px 40px;
+    padding: 0 40px;
+    height: 128px;
     background-color: #fff;
     &_lf {
       display: flex;

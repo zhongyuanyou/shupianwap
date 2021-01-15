@@ -356,13 +356,20 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #f8f8f8;
+  /deep/ .sp-field__label {
+    width: 150px;
+  }
   /deep/ .sp-field__body {
     > input::-webkit-input-placeholder {
       color: #cccccc;
     }
   }
+  /deep/ .sp-bottombar {
+    z-index: 999;
+  }
   /deep/ .sp-bottombar-button {
     font-size: 32px;
+    font-weight: bold;
   }
   .back_icon {
     margin-left: 40px;
