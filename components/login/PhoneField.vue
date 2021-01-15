@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 14:23:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-13 19:14:26
+ * @LastEditTime: 2021-01-15 10:57:17
  * @Description: file content
  * @FilePath: /chips-wap/components/login/PhoneField.vue
 -->
@@ -78,34 +78,44 @@ export default {
       codeBtnText: '获取验证码',
       duration: DURATION,
       timer: null,
+      tel: '',
     }
   },
-  computed: {
-    tel: {
-      get() {
-        const formatValue = ('' + this.value)
-          .replace(/\s/g, '')
-          .replace(/(\d{3})(\d{0,4})(\d{0,4})/, (match, p1, p2, p3) => {
-            let result = p1
-            result += p2 ? ' ' + p2 : ''
-            result += p3 ? ' ' + p3 : ''
-            return result
-          })
-        console.log('formatValue:', formatValue, formatValue.length)
-        return formatValue
+  computed: {},
+  watch: {
+    value: {
+      handler(newVal, oldVal) {
+        if (newVal === oldVal) return
+        this.tel = this.formatTel(newVal)
       },
-      set(newVal) {
-        this.$emit('update', newVal)
-      },
+      immediate: true,
     },
   },
 
   methods: {
     handleTelInput(value) {
-      value = value.replace(/\s/g, '')
+      this.tel = this.formatTel(value)
+      this.$forceUpdate() // 不调用只能在失焦更新，会让测试不满意的
+      value = this.tel.replace(/\s/g, '')
       this.isValidTel = checkPhone(value)
-      this.tel = value
+      this.$emit('update', value)
       this.$emit('input', { value, valid: this.isValidTel })
+    },
+
+    formatTel(value) {
+      const valueStr = '' + value
+      const regex = /^1/
+      if (!regex.test(valueStr)) return '' // 检测电话号码的首位非就清空
+      const formatValue = valueStr
+        .replace(/\s|\D/g, '')
+        .replace(/(\d{3})(\d{0,4})(\d{0,4})/, (match, p1, p2, p3) => {
+          let result = p1
+          result += p2 ? ' ' + p2 : ''
+          result += p3 ? ' ' + p3 : ''
+          return result
+        })
+      console.log('formatValue:', formatValue, formatValue.length)
+      return formatValue
     },
 
     handleCodeBtnClick() {
