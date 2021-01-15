@@ -69,10 +69,7 @@ export default {
           flag: false,
         },
         {
-          content: `<h5>我们为您提供:</h5> <p><span>①</span> 专业一对一咨询，精确分析企业情况</p>
-            <p><span>②</span> 根据企业情况和认证范围选择更合适的体系认证</p>
-            <h5>您只需准备：</h5>
-            <p><span>①</span> 企业营业执照</p>`,
+          content: `<h5>我们为您提供:</h5> <p><span>①</span>品质售后，服务有保障</p>`,
           flag: false,
         },
       ],
