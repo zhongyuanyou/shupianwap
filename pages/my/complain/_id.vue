@@ -177,8 +177,10 @@ export default {
           font-family: PingFang SC;
           font-weight: 400;
           color: #4974f5;
-          line-height: 36px;
           padding: 0px 16px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
       }
     }
