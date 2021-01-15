@@ -1,6 +1,6 @@
 <template>
   <div class="price-filter">
-    <p>价格区间</p>
+    <p>价格区间(元)</p>
     <div class="input-box">
       <sp-field
         v-model="minPrice"

@@ -81,31 +81,31 @@ export default {
     }
   },
   watch: {
-    echoData: {
-      deep: true,
-      handler(val) {
-        const minValue = val.minValue
-        const maxValue = val.maxValue
-        const activeItems = val.activeItems
-        if (activeItems.length) {
-          this.dropdownTitle = activeItems[0].name
-          this.addClass('active')
-        } else if (activeItems.length === 0 && (minValue || maxValue)) {
-          this.dropdownTitle = Number(minValue) + '-' + Number(maxValue)
-          this.addClass('active')
-        } else {
-          this.dropdownTitle = this.filterData.name
-          this.removeClass('moreText')
-          this.removeClass('active')
-        }
-        // 如果筛选名字个数超过了4个那么需要加样式
-        /* if (this.dropdownTitle.length >= 4) {
-          this.addClass('moreText')
-        } else {
-          this.removeClass('moreText')
-        } */
-      },
-    },
+    // echoData: {
+    //   deep: true,
+    //   handler(val) {
+    //     const minValue = val.minValue
+    //     const maxValue = val.maxValue
+    //     const activeItems = val.activeItems
+    //     if (activeItems.length) {
+    //       this.dropdownTitle = activeItems[0].name
+    //       this.addClass('active')
+    //     } else if (activeItems.length === 0 && (minValue || maxValue)) {
+    //       this.dropdownTitle = Number(minValue) + '-' + Number(maxValue)
+    //       this.addClass('active')
+    //     } else {
+    //       this.dropdownTitle = this.filterData.name
+    //       this.removeClass('moreText')
+    //       this.removeClass('active')
+    //     }
+    //     // 如果筛选名字个数超过了4个那么需要加样式
+    //     /* if (this.dropdownTitle.length >= 4) {
+    //       this.addClass('moreText')
+    //     } else {
+    //       this.removeClass('moreText')
+    //     } */
+    //   },
+    // },
     filterData(val) {
       if (val && JSON.stringify(val) !== '{}') {
         this.dropdownTitle = val.name
@@ -155,6 +155,7 @@ export default {
     confirmFilters() {
       this.saveEchoData = clone(this.echoData, true)
       const emitData = this.resultHandle()
+      this.handlePriceTitle(this.echoData)
       this.$emit('activeItem', emitData, 'priceFilter-' + this.filterData.code)
       this.$refs.item.toggle()
     },
@@ -192,6 +193,29 @@ export default {
         emitData = ''
       }
       return emitData
+    },
+    handlePriceTitle(val) {
+      // 处理价格的title
+      const minValue = val.minValue
+      const maxValue = val.maxValue
+      const activeItems = val.activeItems
+      if (activeItems.length) {
+        if (activeItems[0].name === '不限') {
+          this.dropdownTitle = this.filterData.name
+          this.removeClass('moreText')
+          this.removeClass('active')
+        } else {
+          this.dropdownTitle = activeItems[0].name
+          this.addClass('active')
+        }
+      } else if (activeItems.length === 0 && (minValue || maxValue)) {
+        this.dropdownTitle = Number(minValue) + '元-' + Number(maxValue) + '元'
+        this.addClass('active')
+      } else {
+        this.dropdownTitle = this.filterData.name
+        this.removeClass('moreText')
+        this.removeClass('active')
+      }
     },
     getBottomConfirmHeight(height) {
       // 获取底部确认按钮的高度
