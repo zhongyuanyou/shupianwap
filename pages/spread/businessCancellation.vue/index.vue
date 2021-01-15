@@ -498,6 +498,7 @@ export default {
 .back_icon {
   margin-left: 40px;
 }
+
 /deep/ .sp-bottombar-info__sign {
   display: flex;
   align-items: center;
@@ -508,7 +509,6 @@ export default {
 /deep/ .cousulttel-content-left-text {
   margin-right: 16px;
 }
-
 /deep/.fixed-head {
   /deep/.my-head {
     width: 750px;

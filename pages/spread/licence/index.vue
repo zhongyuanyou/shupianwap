@@ -78,7 +78,7 @@ export default {
   props: {},
   data() {
     return {
-      title: '许可证',
+      title: '许可证办理',
       titles: '还有疑问？企服专家为您免费解答',
       tel: '4000-962540', // 电话号码
 

@@ -568,6 +568,9 @@ a {
           padding: 0;
           align-content: center;
           background-color: rgba(248, 248, 248, 1);
+          /deep/.sp-cell__title {
+            flex: none;
+          }
           /deep/.sp-field__label {
             width: auto;
             margin-left: 33px;
@@ -582,6 +585,7 @@ a {
           &::after {
             border: 0px solid transparent;
           }
+
           /deep/.sp-cell__value {
             display: flex;
             align-items: center;
