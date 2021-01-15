@@ -252,6 +252,7 @@ a {
     width: 688px;
     position: absolute;
     left: 0;
+    z-index: 3;
     &-item {
       display: flex;
       &-shadow {
@@ -363,7 +364,7 @@ a {
     border-radius: 2px;
     position: absolute;
     right: 24px;
-    z-index: -1;
+    z-index: 1;
   }
 }
 </style>

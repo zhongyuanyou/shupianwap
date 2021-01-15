@@ -76,7 +76,7 @@ export default {
       show: false,
       actions: [
         { name: '有限责任公司', color: '#5a79e8' },
-        { name: '个体公司', color: '#000' },
+        { name: '个体工商户', color: '#000' },
         { name: '股份有限公司', color: '#000' },
         { name: '分公司注册', color: '#000' },
         { name: '外资公司注册', color: '#000' },
