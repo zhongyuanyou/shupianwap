@@ -34,7 +34,6 @@ export default {
 </script>
 <style lang="less" scoped>
 .audit-company-name-taboo {
-  margin-top: 500px;
   font-weight: bold;
   font-size: 28px;
   position: relative;
