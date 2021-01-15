@@ -107,7 +107,19 @@ export default {
   },
   watch: {},
   created() {},
-  mounted() {},
+  mounted() {
+    const param = {
+      platform_type: 'H5', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端许可证办理推广页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle({ title: '许可证办理' }, () => {})
+    }
+  },
   methods: {
     // 头部返回
     back() {
