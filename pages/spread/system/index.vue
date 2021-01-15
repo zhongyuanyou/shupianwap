@@ -65,7 +65,7 @@
     <!-- S免费咨询 -->
     <ConsultTel
       :title="'有疑问？千万企服规划师为您免费解答'"
-      :tel="'4000 - 535800'"
+      :tel="'400-962540'"
       button="免费咨询"
       md-type="售前"
       md-name="体系认证_还有疑问_立即咨询"
@@ -713,6 +713,7 @@ export default {
   margin: 0 auto;
   position: relative;
   font-family: PingFang SC;
+  background-color: #ffffff;
   /deep/ .my-head {
     width: @spread-page-width !important;
     left: auto !important;

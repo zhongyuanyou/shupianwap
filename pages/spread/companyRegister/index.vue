@@ -701,6 +701,7 @@ export default {
   margin: 0 auto;
   position: relative;
   font-family: PingFang SC;
+  background-color: #ffffff;
   .banner-img {
     /deep/.my-swipe .sp-swipe-item {
       color: #fff;

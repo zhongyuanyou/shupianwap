@@ -344,22 +344,19 @@ export default {
     onCitySelect(item) {
       this.cityName = item.name
       this.isShowCity = false
-      this.city.forEach((obj) => {
-        if (obj.name === item.name) {
-          obj.color = '#5a79e8'
-        } else {
-          obj.color = '#222222'
-        }
-      })
+      this.onStyle(this.city, item.name)
     },
     //  行业选择
     onSelect(item) {
-      // 默认情况下点击选项时不会自动收起
-      // 可以通过 close-on-click-action 属性开启自动收起
       this.industry = item.name
       this.isShow = false
-      this.actions.forEach((obj) => {
-        if (obj.name === item.name) {
+      this.onStyle(this.actions, item.name)
+    },
+    // 选中样式
+
+    onStyle(data, value) {
+      data.forEach((obj) => {
+        if (obj.name === value) {
           obj.color = '#5a79e8'
         } else {
           obj.color = '#222222'
@@ -409,13 +406,15 @@ export default {
         }
         window.promotion.privat.consultForm(params, (res) => {
           if (res.error === 0) {
-            console.log(params)
             // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
             Toast('提交成功，请注意接听电话')
             this.tel = ''
             this.industry = ''
             this.companyName = ''
             this.countdown = -1
+            this.cityName = '成都'
+            this.onStyle(this.actions, this.industry)
+            this.onStyle(this.city, this.cityName)
             this.isOverlay = false
             window.sensors.track('p_fromSubmitResult', {
               even_name: 'p_fromSubmitResult',
