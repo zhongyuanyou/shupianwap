@@ -332,6 +332,7 @@ export default {
   background: transparent;
 }
 .form-box {
+  position: relative;
   width: 670px;
   margin: 0 auto;
   margin-top: -80px;
@@ -339,6 +340,7 @@ export default {
   background: #ffffff;
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.08);
   border-radius: 10px;
+  z-index: 2;
 }
 .form-title {
   position: relative;
