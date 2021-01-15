@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar-navbar">
-    <h5>服务介绍</h5>
+    <h5>服务流程</h5>
     <div class="sidebar-navbar-list">
       <sp-sidebar v-model="activeKey" @change="onChange">
         <sp-sidebar-item
@@ -27,20 +27,7 @@ export default {
     [Sidebar.name]: Sidebar,
     [SidebarItem.name]: SidebarItem,
   },
-  props: {
-    //     listCount: {
-    //       type: Array,
-    //       default: () => {
-    //         return []
-    //       },
-    //     },
-    //     isMore: {
-    //       type: Boolean,
-    //       default: () => {
-    //         return false
-    //       },
-    //     },
-  },
+  props: {},
   data() {
     return {
       activeKey: 0,
