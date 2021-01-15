@@ -554,7 +554,7 @@ export default {
         data.forEach((item, index) => {
           const obj = {
             id: item.materialList[0].productId,
-            title: item.materialList[0].productDetail.operating.showName,
+            title: item.materialList[0].productDetail.name,
             titleLabel:
               'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
             titleContent:
