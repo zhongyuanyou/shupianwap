@@ -4,7 +4,6 @@
     <SearchBanner
       ref="searchBannerRef"
       :fiexd-banner-data="initData.fiexdBannerData"
-      :city-data="asyncData.cityData"
     />
     <!-- E 搜索 + 大banner -->
     <!-- S 金刚区nav -->

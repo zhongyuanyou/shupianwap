@@ -181,6 +181,7 @@ export default {
       height: 160px;
       min-width: 160px;
       min-height: 160px;
+      border-radius: 4px;
     }
     .tag {
       position: absolute;
