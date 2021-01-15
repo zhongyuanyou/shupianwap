@@ -1,6 +1,8 @@
 <template>
-  <div class="banner">
-    <img src="https://cdn.shupian.cn/sp-pt/wap/images/19tgzqenoug0000.png" />
+  <div>
+    <div class="my-component">
+      <img src="https://cdn.shupian.cn/sp-pt/wap/images/19tgzqenoug0000.png" />
+    </div>
   </div>
 </template>
 
@@ -11,7 +13,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.banner {
+.my-component {
   img {
     width: 100%;
     height: 392px;

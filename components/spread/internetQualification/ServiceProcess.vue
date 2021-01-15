@@ -1,11 +1,18 @@
 <template>
-  <div class="component-all">
-    <div class="title">服务流程</div>
-    <div class="content">
-      <div v-for="(item, index) in process" :key="index" class="item">
-        <div class="item-img"><img :src="item.img" /></div>
-        <p class="item-title">{{ item.title }}</p>
-        <p class="item-desc">{{ item.desc }}</p>
+  <div>
+    <div class="my-component">
+      <div class="title">服务流程</div>
+      <div class="content">
+        <div
+          v-for="(item, index) in process"
+          :key="index"
+          class="item"
+          :class="index > 1 ? 'item-no-margin' : ''"
+        >
+          <div class="item-img"><img :src="item.img" /></div>
+          <p class="item-title">{{ item.title }}</p>
+          <p class="item-desc">{{ item.desc }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -18,22 +25,22 @@ export default {
     return {
       process: [
         {
-          img: 'https://cdn.shupian.cn/sp-pt/wap/images/euyda65cxeg0000.png',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/ecyrpz0b99k0000.png',
           title: '线上申请',
-          desc: '一键下单，规划师快速 响应',
+          desc: '一键下单，规划师快速响应',
         },
         {
-          img: 'https://cdn.shupian.cn/sp-pt/wap/images/6sye15ws3zg0000.png',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/dyh25hbc8u80000.png',
           title: '材料编写',
-          desc: '专业工作人员准备申请 材料',
+          desc: '专业工作人员准备申请材料',
         },
         {
-          img: 'https://cdn.shupian.cn/sp-pt/wap/images/67701z2mxkg0000.png',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/2nh6jiunnfe0000.png',
           title: '资料上交',
           desc: '绿色通道，快速办理',
         },
         {
-          img: 'https://cdn.shupian.cn/sp-pt/wap/images/562jlh6ug500000.png',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/dyh25hbc8u80000.png',
           title: '领取证书',
           desc: '领取互联网资质证书',
         },
@@ -44,7 +51,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.component-all {
+.my-component {
   width: calc(100% - 80px);
   margin: 0 auto;
 
@@ -59,7 +66,7 @@ export default {
   .content {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-between;
     .item {
       width: 324px;
       flex: none;
@@ -90,6 +97,9 @@ export default {
         font-weight: 400;
         color: #999999;
       }
+    }
+    .item-no-margin {
+      margin-bottom: 0;
     }
   }
 }

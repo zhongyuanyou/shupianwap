@@ -1,76 +1,121 @@
 <template>
-  <div class="form">
-    <div class="form-box">
-      <div class="form-box-title">
-        <img
-          src="https://cdn.shupian.cn/sp-pt/wap/images/7ccgcy48cv40000.png"
-        />
-        <p class="form-box-title-name">办理报价</p>
-        <img
-          src="https://cdn.shupian.cn/sp-pt/wap/images/drylv5blkoo0000.png"
-        />
-      </div>
-      <div class="form-inputs">
-        <!-- 1、下拉框-->
-        <div class="dropdown-menu">
-          <div class="dropdown-menu-content" @click="showDropdownList">
-            <span class="dropdown-menu-content-prefix">我需要</span>
-            <span class="dropdown-menu-content-val">{{
-              dropdownValue.name
-            }}</span>
-            <img
-              class="dropdown-menu-content-img"
-              src="https://cdn.shupian.cn/sp-pt/wap/images/4ehy9youej60000.png"
+  <div>
+    <div class="my-component">
+      <div class="form-box">
+        <div class="form-box-title">
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/images/7ccgcy48cv40000.png"
+          />
+          <p class="form-box-title-name">办理报价</p>
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/images/drylv5blkoo0000.png"
+          />
+        </div>
+        <div class="form-inputs">
+          <!-- 1、下拉框-->
+          <div class="dropdown-menu">
+            <a
+              v-sensorsTrack:webClick="{
+                form_name: '互联网资质表单_下拉表单',
+                form_type: '咨询表单',
+              }"
+              class="dropdown-menu-content"
+              @click="showDropdownList"
+            >
+              <span class="dropdown-menu-content-prefix">我需要</span>
+              <span class="dropdown-menu-content-val">{{
+                dropdownValue.name
+              }}</span>
+              <img
+                class="dropdown-menu-content-img"
+                src="https://cdn.shupian.cn/sp-pt/wap/images/4ehy9youej60000.png"
+              />
+            </a>
+            <sp-action-sheet
+              v-model="dropdownMenuIsShow"
+              :actions="dropList"
+              @select="onSelect"
             />
           </div>
-          <sp-action-sheet
-            v-model="dropdownMenuIsShow"
-            :actions="dropList"
-            @select="onSelect"
-          />
-        </div>
-        <!-- 2、输入框-手机号码-->
-        <div class="form-input-tel">
-          <sp-field
-            v-model="telephone"
-            label="手机号"
-            type="tel"
-            maxlength="11"
-            :formatter="telTypingVerify"
-            placeholder="信息保护中，仅官方可见"
-            @focus="() => (smsInputIsShow = true)"
-          />
-        </div>
-        <!-- 3、输入框-验证码-->
-        <div v-if="smsInputIsShow" class="form-input-sms">
-          <sp-field
-            v-model="sms"
-            center
-            label="验证码"
-            type="tel"
-            placeholder="请输入验证码"
-            maxlength="6"
-            :formatter="smsTypingVerify"
+          <!-- 2、输入框-手机号码-->
+          <div
+            v-sensorsTrack:webClick="{
+              form_name: '互联网资质表单_手机号',
+              form_type: '咨询表单',
+            }"
+            class="form-input-tel"
           >
-            <template #button>
-              <sp-button size="small" type="primary" @click="sendSms">
-                {{ countdown > 0 ? `${countdown}s` : '发送验证码' }}</sp-button
-              >
-            </template>
-          </sp-field>
+            <sp-field
+              v-model="telephone"
+              label="手机号"
+              type="tel"
+              maxlength="11"
+              :formatter="telTypingVerify"
+              placeholder="信息保护中，仅官方可见"
+              @focus="() => (smsInputIsShow = true)"
+            />
+          </div>
+          <!-- 3、输入框-验证码-->
+          <div
+            v-if="smsInputIsShow"
+            v-sensorsTrack:webClick="{
+              form_name: '互联网资质表单_验证码',
+              form_type: '咨询表单',
+            }"
+            class="form-input-sms"
+          >
+            <sp-field
+              v-model="sms"
+              center
+              label="验证码"
+              type="tel"
+              placeholder="请输入验证码"
+              maxlength="6"
+              :formatter="smsTypingVerify"
+            >
+              <template #button>
+                <sp-button
+                  v-sensorsTrack:webClick="{
+                    form_name: '互联网资质表单_获取验证码',
+                    form_type: '咨询表单',
+                  }"
+                  size="small"
+                  type="primary"
+                  @click="sendSms"
+                >
+                  {{
+                    countdown > 0 ? `${countdown}s` : '发送验证码'
+                  }}</sp-button
+                >
+              </template>
+            </sp-field>
+          </div>
+          <!-- 4、提交按钮-->
+          <div class="form-submit">
+            <sp-button
+              v-sensorsTrack:webClick="{
+                form_name: '互联网资质表单_提交表单',
+                form_type: '咨询表单',
+              }"
+              v-sensorsTrack:p_formSubmit="{
+                event_name: 'p_formSubmit',
+                form_name: `互联网资质表单_提交表单`,
+                form_type: '咨询表单',
+              }"
+              type="primary"
+              @click="submitForm"
+              >免费预约</sp-button
+            >
+          </div>
         </div>
-        <!-- 4、提交按钮-->
-        <div class="form-submit">
-          <sp-button type="primary" @click="submitForm">免费预约</sp-button>
-        </div>
-      </div>
-      <div class="form-note-all">
-        <div v-for="item in formNotes" :key="item.id" class="form-note-item">
-          <img
-            class="form-note-item-img"
-            src="https://cdn.shupian.cn/sp-pt/wap/images/7debdq96t480000.png"
-          />
-          <span class="form-note-item-name">{{ item.name }}</span>
+        <div class="form-note-all">
+          <div v-for="item in formNotes" :key="item.id" class="form-note-item">
+            <img
+              class="form-note-item-img"
+              src="https://cdn.shupian.cn/sp-pt/wap/images/7debdq96t480000.png"
+            />
+            <span class="form-note-item-name">{{ item.name }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -93,13 +138,15 @@ export default {
     return {
       // 下拉
       dropList: [
-        { id: 1, name: '公司注册', color: '#5a79e8' },
-        { id: 2, name: '工商变更', color: '#222222' },
-        { id: 3, name: '代理记账', color: '#222222' },
-        { id: 4, name: '印章刻制', color: '#222222' },
-        { id: 5, name: '银行服务', color: '#222222' },
-        { id: 6, name: '许可证办理', color: '#222222' },
-        { id: 7, name: '其他服务', color: '#222222' },
+        { name: 'ICP许可证', color: '#5a79e8' },
+        { name: 'EDI许可证', color: '#222222' },
+        { name: 'IDC许可证', color: '#222222' },
+        { name: 'SP许可证', color: '#222222' },
+        { name: 'ISP许可证', color: '#222222' },
+        { name: '网络文化经营许可证', color: '#222222' },
+        { name: '呼叫中心许可证', color: '#222222' },
+        { name: '游戏软件著作权', color: '#222222' },
+        { name: '其他许可', color: '#222222' },
       ],
       dropdownValue: '',
       dropdownMenuIsShow: false,
@@ -112,17 +159,17 @@ export default {
         {
           id: 1,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/7debdq96t480000.png',
-          name: '资金担保',
+          name: '专业核对',
         },
         {
           id: 2,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/7debdq96t480000.png',
-          name: '信息安全',
+          name: '全程代理',
         },
         {
           id: 3,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/7debdq96t480000.png',
-          name: '平台服务',
+          name: '省时省力',
         },
       ],
       countdown: -1, // 发送验证码倒计时60秒
@@ -192,6 +239,7 @@ export default {
             if (res.error === 0) {
               vm.countDownFun()
             }
+            Toast(res.msg)
             console.log(res.msg)
           })
         }
@@ -237,14 +285,14 @@ export default {
       const webUrl = window.location.href
       const formId = this.getDate() + _tel // 生成表单唯一识别ID，后端用于判断二级表单与一级表单关联性（当前时间+手机号码）
       const contentStr = {
-        yeWuLeiXing: this.dropdownValue.name,
+        zzlx: this.dropdownValue.name,
       }
       const params = {
         formId, // formId,唯一ID提交资源中心
         name: '匿名客户',
         tel: _tel, // 电话
         url: webUrl, // 当前页面地址。用于后台判断ip发送验证码次数
-        type: 'gszc', // 业态编码。固定几个业态编码。
+        type: 'hlwzz', // 业态编码。固定几个业态编码。
         place: 'cd', // 定位城市。
         device: 'wap', // 设备：pc,wap。
         web: 'SP', // 归属渠道：xmt,zytg,wxgzh。
@@ -260,6 +308,10 @@ export default {
           // 2、表单主动埋点
           vm.formMaiDian()
           // 3、清空表单和清楚倒计时定时器
+          const activeColor = vm.dropdownValue.color
+          vm.dropdownValue.color = vm.dropList[0].color
+          vm.dropList[0].color = activeColor
+          vm.dropdownValue = vm.dropList[0]
           vm.telephone = ''
           vm.sms = ''
           vm.countdown = -1
@@ -294,10 +346,10 @@ export default {
     },
     // 表单提交有结果后，主动埋点
     formMaiDian() {
-      window.getTrackRow('p_formSubmitResult', {
+      window.sensors.track('p_formSubmitResult', {
         even_name: 'p_formSubmitResult',
         form_type: '咨询表单',
-        form_name: '工商聚合页_表单',
+        form_name: '互联网资质表单_提交表单',
       })
     },
   },
@@ -305,7 +357,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.form {
+.my-component {
   width: 100%;
   padding-bottom: 30px;
   margin-top: -90px;
@@ -458,6 +510,10 @@ export default {
     .sp-field__label {
       width: auto;
       margin-right: 33px;
+      font-size: 28px;
+      font-weight: 400;
+      color: #1a1a1a;
+      flex: none !important;
     }
     // 手机号输入框-右边按钮
     .sp-button__content {
