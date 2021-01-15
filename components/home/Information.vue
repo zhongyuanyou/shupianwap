@@ -156,7 +156,7 @@ export default {
           position: absolute;
           left: 0;
           top: 0;
-          background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), #000000);
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), #000000);
         }
         h6 {
           position: absolute;
