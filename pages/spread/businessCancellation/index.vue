@@ -394,6 +394,7 @@ export default {
     this.plannerHandle(this.resultData.planlerList)
   },
   mounted() {
+    console.log(this.$refs.picker)
     const param = {
       platform_type: 'wap端', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
@@ -539,5 +540,8 @@ export default {
     left: 50%;
     margin-left: -375px;
   }
+}
+/deep/ .sp-bottombar {
+  z-index: 99;
 }
 </style>
