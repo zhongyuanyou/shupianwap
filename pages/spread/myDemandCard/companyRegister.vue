@@ -1,7 +1,7 @@
 <template>
   <div class="regdemand">
     <!-- S 头部 -->
-    <Header ref="headerRef" title="轻松找服务" />
+    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
     <!-- E 头部 -->
     <!-- 头部加banner -->
     <Banner @onCity="onCity" />
@@ -99,6 +99,7 @@
 </template>
 <script>
 import { Popup, Field, Picker, Toast, Icon } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import Banner from '@/components/spread/myDemandCard/companyRegister/header'
 import Header from '@/components/common/head/header'
 import { planner, dict } from '@/api'
@@ -160,6 +161,9 @@ export default {
       }
       return num
     },
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
   mounted() {
     // 数据回显
@@ -305,6 +309,7 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   position: relative;
+  background-color: #fff;
   .content {
     padding: 0 40px;
     .company-area {
