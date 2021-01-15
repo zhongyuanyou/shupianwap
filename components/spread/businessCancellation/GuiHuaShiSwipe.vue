@@ -246,6 +246,7 @@ export default {
     width: 688px;
     position: absolute;
     left: 0;
+    z-index: 3;
     &-item {
       &-shadow {
         width: 660px;
@@ -355,7 +356,7 @@ export default {
     border-radius: 2px;
     position: absolute;
     right: 24px;
-    z-index: -1;
+    z-index: 2;
   }
 }
 a {
