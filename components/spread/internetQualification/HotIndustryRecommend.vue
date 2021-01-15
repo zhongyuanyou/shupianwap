@@ -1,14 +1,24 @@
 <template>
-  <div class="component-all">
-    <ServiceIntroduced :service-list="hotYeWuList" service-title="热门行业推荐">
-      <template v-slot:dropDown>
-        <Dropdown
-          v-model="industry"
-          class="drop-margin"
-          :options="industryList"
-        />
-      </template>
-    </ServiceIntroduced>
+  <div>
+    <div class="my-component">
+      <ServiceIntroduced
+        :service-list="currentIndustryList"
+        service-title="热门行业推荐"
+      >
+        <template v-slot:dropDown>
+          <Dropdown
+            v-model="industry"
+            v-sensorsTrack:webClick="{
+              name: `互联网资质业务介绍_下拉表单`,
+              type: '售前',
+            }"
+            class="drop-margin"
+            :options="industryList"
+            @select="onSelect"
+          />
+        </template>
+      </ServiceIntroduced>
+    </div>
   </div>
 </template>
 
@@ -27,7 +37,7 @@ export default {
       hotYeWuList: [
         {
           title: '增值电信业务经营许可证（ICP）',
-          titleLable:
+          titleLabel:
             'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
           titleContent: '线上交易、收费性网站需要办理',
           actualViews: '45万+',
@@ -51,28 +61,39 @@ export default {
         },
       ],
       industryList: [
-        { name: 'ICP许可证', color: '#5a79e8' },
-        { name: 'ICP许可证1', color: '#222222' },
-        { name: 'ICP许可证2', color: '#222222' },
-        { name: 'ICP许可证3', color: '#222222' },
-        { name: 'ICP许可证4', color: '#222222' },
+        { index: 0, name: 'ICP许可证', color: '#5a79e8' },
+        { index: 1, name: 'EDI许可证', color: '#222222' },
+        { index: 2, name: 'IDC许可证', color: '#222222' },
+        { index: 3, name: 'SP许可证', color: '#222222' },
+        { index: 4, name: 'ISP许可证', color: '#222222' },
+        { index: 5, name: '网络文化经营许可证', color: '#222222' },
       ],
       industry: null,
+      currentIndustryList: [],
     }
   },
   created() {
     this.industry = this.industryList[0]
+    this.currentIndustryList = [this.$parent.hotIndustryRecommendList[0]]
+  },
+  methods: {
+    onSelect({ index }) {
+      this.currentIndustryList = [this.$parent.hotIndustryRecommendList[index]]
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
-.component-all {
+.my-component {
   /deep/ .serviceList-content-head-title > span {
     color: #ffffff !important;
   }
   /deep/ .serviceList-content-head > span {
     color: #cccccc !important;
+  }
+  /deep/ .serviceList {
+    margin-top: 0;
   }
   .drop-margin {
     margin: 30px 0 16px 0;

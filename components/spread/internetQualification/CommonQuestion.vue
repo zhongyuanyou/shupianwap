@@ -1,34 +1,70 @@
 <template>
-  <div class="component-all">
-    <div class="title">常见问题</div>
-    <div class="content">
-      <div v-for="(item, index) in questions" :key="index" class="item">
-        <div class="item-row">
-          <div class="item-img">
-            <img
-              src="https://cdn.shupian.cn/sp-pt/wap/images/es4fhh9woko0000.png"
-            />
+  <div>
+    <div class="my-component">
+      <div class="title">常见问题</div>
+      <div class="content">
+        <div
+          v-for="(item, index) in questions"
+          v-show="index === 0 || isShowMore"
+          :key="index"
+          class="item"
+        >
+          <div class="item-row">
+            <div class="item-img">
+              <img
+                src="https://cdn.shupian.cn/sp-pt/wap/images/3vrq0g6tpts0000.png"
+              />
+            </div>
+            <div class="item-question-desc">{{ item.question }}</div>
           </div>
-          <div class="item-question-desc">{{ item.question }}</div>
-        </div>
-        <div class="item-row">
-          <div class="item-img">
-            <img
-              src="https://cdn.shupian.cn/sp-pt/wap/images/4n0lt7hu7b40000.png"
-            />
+          <div class="item-row">
+            <div class="item-img">
+              <img
+                src="https://cdn.shupian.cn/sp-pt/wap/images/ajnj64n43340000.png"
+              />
+            </div>
+            <div class="item-answer-desc">{{ item.answer }}</div>
           </div>
-          <div class="item-answer-desc">{{ item.answer }}</div>
+          <a
+            v-sensorsTrack:webClick="{
+              name: `互联网资质常见问题_咨询更多`,
+              type: '售前',
+            }"
+            v-sensorsTrack:p_IMClick="{
+              name: `互联网资质常见问题_咨询更多`,
+              im_type: '售前',
+            }"
+            class="item-btn"
+            @click="
+              () => {
+                $parent.jumpLink('')
+              }
+            "
+            >咨询更多>></a
+          >
         </div>
-        <div class="item-btn">咨询更多>></div>
+      </div>
+      <div v-show="!isShowMore" class="btn-div">
+        <sp-button
+          v-sensorsTrack:webClick="{
+            name: `互联网资质常见问题_展开更多`,
+            type: '售前',
+          }"
+          plain
+          type="primary"
+          @click="
+            () => {
+              isShowMore = true
+            }
+          "
+          >展开更多
+          <img
+            class="btn-img"
+            src="https://cdn.shupian.cn/sp-pt/wap/images/4ehy9youej60000.png"
+          />
+        </sp-button>
       </div>
     </div>
-    <sp-button plain type="primary"
-      >展开更多
-      <img
-        class="btn-img"
-        src="https://cdn.shupian.cn/sp-pt/wap/images/4ehy9youej60000.png"
-      />
-    </sp-button>
   </div>
 </template>
 
@@ -43,21 +79,24 @@ export default {
     return {
       questions: [
         {
-          question:
-            '不符合当地文化管理部门的最低技术人才要求 怎么办怎么办怎么办怎么办',
+          question: '不符合当地文化管理部门的最低技术人才要求怎么办？',
           answer: '薯片APP人才库可为您解决',
         },
+        {
+          question: '企业的组建要求不能满足当地通管局的规定条件？',
+          answer: '薯片APP是一站式商业服务平台，可为您解决办理过程中所有难题',
+        },
       ],
+      isShowMore: false,
     }
   },
 }
 </script>
 
 <style lang="less" scoped>
-.component-all {
+.my-component {
   width: calc(100% - 80px);
   margin: 0 auto;
-  text-align: center;
   .title {
     font-size: 40px;
     font-weight: 600;
@@ -110,12 +149,20 @@ export default {
         color: #4974f5;
         line-height: 36px;
         margin-left: 54px;
+        display: flex;
       }
     }
   }
-  .btn-img {
-    width: 20px;
-    height: 11px;
+
+  .btn-div {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+
+    .btn-img {
+      width: 20px;
+      height: 11px;
+    }
   }
   // 穿透修改-按钮：定制需求按钮
   /deep/ .sp-button {

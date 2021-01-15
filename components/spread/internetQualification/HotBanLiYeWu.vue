@@ -1,20 +1,22 @@
 <template>
-  <div class="component-all">
-    <div class="title">热门办理业务</div>
-    <div class="content">
-      <div
-        v-for="(item, index) in data"
-        :key="index"
-        class="item"
-        :class="index < 3 ? 'item-margin-bottom' : ''"
-      >
-        <div class="item-div-img">
-          <img class="item-img" :src="item.img" />
+  <div>
+    <div class="my-component">
+      <div class="title">热门办理业务</div>
+      <div class="content">
+        <div
+          v-for="(item, index) in $parent.hotBanLiYeWuList"
+          :key="index"
+          class="item"
+          :class="index < 3 ? 'item-margin-bottom' : ''"
+        >
+          <div class="item-div-img">
+            <img class="item-img" :src="item.img" />
+          </div>
+          <p class="item-title">{{ item.title }}</p>
+          <p class="item-desc">{{ item.desc }}</p>
+          <div class="item-line"></div>
+          <p class="item-price">{{ item.price }}<span>元起</span></p>
         </div>
-        <p class="item-title">{{ item.title }}</p>
-        <p class="item-desc">{{ item.desc }}</p>
-        <div class="item-line"></div>
-        <p class="item-price">{{ item.price }}<span>元起</span></p>
       </div>
     </div>
   </div>
@@ -69,7 +71,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.component-all {
+.my-component {
   width: calc(100% - 80px);
   margin: 0 auto;
   .title {
@@ -87,8 +89,9 @@ export default {
       flex: none;
       width: 212px;
       background: #ffffff;
-      border: 1px solid #cdcdcd;
+      border: 1px solid rgba(205, 205, 205, 0.5);
       border-radius: 4px;
+
       .item-div-img {
         width: 210px;
         height: 210px;
@@ -125,8 +128,8 @@ export default {
       }
       .item-line {
         height: 1px;
-        border: 1px solid #f4f4f4;
         margin: 16px;
+        background: #f4f4f4;
       }
       .item-price {
         font-size: 24px;

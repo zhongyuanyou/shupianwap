@@ -1,12 +1,12 @@
 <template>
   <div class="dropdown-menu">
-    <div class="dropdown-menu-content" @click="showDropdownMenu">
+    <a class="dropdown-menu-content" @click="showDropdownMenu">
       <span class="dropdown-menu-content-val">{{ showValue }}</span>
       <img
         class="dropdown-menu-content-img"
         src="https://cdn.shupian.cn/sp-pt/wap/images/4ehy9youej60000.png"
       />
-    </div>
+    </a>
     <sp-action-sheet
       v-model="menuIsShow"
       :actions="dropList"
@@ -41,19 +41,6 @@ export default {
         ]
       },
     },
-    // 当数组里的是对象时，下列值必要
-    onlyKey: {
-      type: String,
-      default: () => {
-        return 'id'
-      },
-    },
-    showKey: {
-      type: String,
-      default: () => {
-        return 'name'
-      },
-    },
   },
   data() {
     return {
@@ -71,7 +58,6 @@ export default {
   methods: {
     onSelect(item) {
       this.menuIsShow = false
-      this.showValue = item.name
       this.$emit('input', item)
       this.$emit('select', item)
 

@@ -8,8 +8,10 @@
       :key="index"
       v-sensorsTrack:webClick="{
         eventName: 'wap元素点击',
-        type: '售前',
-        name: `${serviceTitle}_${item.title}_在线咨询`,
+        type: item.md ? item.md.imMd.type : '售前',
+        name: item.md
+          ? item.md.imMd.name
+          : `${serviceTitle}_${item.title}_在线咨询`,
       }"
       class="serviceList-content"
       @click="plannerIm(item.planner)"
@@ -83,8 +85,10 @@
             <my-icon
               v-sensorsTrack:p_IMClick="{
                 eventName: '在线咨询',
-                type: '售前',
-                name: `${serviceTitle}_${item.title}_在线咨询`,
+                type: item.md ? item.md.imMd.type : '售前',
+                name: item.md
+                  ? item.md.imMd.name
+                  : `${serviceTitle}_${item.title}_在线咨询`,
               }"
               name="notify_ic_chat"
               color="#4974F5"
@@ -102,8 +106,10 @@
             <my-icon
               v-sensorsTrack:webClick="{
                 eventName: 'wap元素点击',
-                type: '售前',
-                name: `${serviceTitle}_${item.title}_拨打电话`,
+                type: item.md ? item.md.imMd.type : '售前',
+                name: item.md
+                  ? item.md.imMd.name
+                  : `${serviceTitle}_${item.title}_在线咨询`,
               }"
               name="notify_ic_tel"
               color="#4974F5"
@@ -168,34 +174,48 @@ export default {
     serviceList: {
       type: Array,
       default: () => {
-        return {
-          title: '银行销户',
-          titleLabel:
-            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
-          titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
-          actualViews: '152',
-          defaultSales: '108',
-          actualSales: '108',
-          price: 600,
-          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
-          planner: {
-            id: '7862495547640840192',
-            name: '李劲',
-            jobNum: '107547',
-            telephone: '18402858698',
-            imgSrc:
-              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+        return [
+          {
+            title: '银行销户',
+            titleLabel:
+              'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
+            titleContent: '企事业单位进行日常转账结算和现金收付的主板账户',
+            actualViews: '152',
+            defaultSales: '108',
+            actualSales: '108',
+            price: 600,
+            bgImg:
+              'https://cdn.shupian.cn/sp-pt/wap/images/62j4vzw5ivk0000.png',
+            planner: {
+              id: '7862495547640840192',
+              name: '李劲',
+              jobNum: '107547',
+              telephone: '18402858698',
+              imgSrc:
+                'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            },
+            labelsType: 'col',
+            rowLabels: {
+              title: '所需资料',
+              icon:
+                'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
+              content: [
+                '由法人代表及直接出具销户报告',
+                '各种未使用的重要空白票据及结算凭证',
+              ],
+            },
+            md: {
+              telMd: {
+                name: '',
+                type: '',
+              },
+              imMd: {
+                name: '',
+                type: '',
+              },
+            },
           },
-          labelsType: 'col',
-          rowLabels: {
-            title: '所需资料',
-            icon: 'https://cdn.shupian.cn/sp-pt/wap/images/f48bh6kpgm80000.png',
-            content: [
-              '由法人代表及直接出具销户报告',
-              '各种未使用的重要空白票据及结算凭证',
-            ],
-          },
-        }
+        ]
       },
     },
     // 服务列表主title
