@@ -68,7 +68,4 @@ export default {
   margin-left: -40px;
   margin-top: -33px;
 }
-// /deep/ .planner-right {
-//   background-color: #fff;
-// }
 </style>

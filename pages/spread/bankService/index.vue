@@ -514,6 +514,9 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle({ title: '银行服务' }, () => {})
+    }
   },
   methods: {
     back() {
@@ -554,7 +557,7 @@ export default {
         data.forEach((item, index) => {
           const obj = {
             id: item.materialList[0].productId,
-            title: item.materialList[0].productDetail.operating.showName,
+            title: item.materialList[0].productDetail.name,
             titleLabel:
               'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
             titleContent:
