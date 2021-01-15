@@ -1,6 +1,6 @@
 <template>
   <div class="permit-handling">
-    <Header ref="headerRef" title="轻松找服务" />
+    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
     <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理的许可证业务 -->
@@ -103,6 +103,11 @@ export default {
       },
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   mounted() {
     const param = {
       platform_type: 'H5', // 平台类型：App，H5，Web
@@ -194,6 +199,7 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   font-size: 36px;
+  background-color: #fff;
   .button {
     padding: 24px 40px;
     margin-top: 174px;

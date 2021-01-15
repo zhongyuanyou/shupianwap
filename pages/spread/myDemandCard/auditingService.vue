@@ -1,12 +1,13 @@
 <template>
   <div class="audit">
-    <Header ref="headerRef" title="轻松找服务" />
+    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
     <HeaderNeed />
     <Content />
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import HeaderNeed from '@/components/spread/myDemandCard/auditingService/HeaderNeed'
 import Content from '@/components/spread/myDemandCard/auditingService/Content'
 import Header from '@/components/common/head/header'
@@ -20,6 +21,11 @@ export default {
   },
   data() {
     return {}
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
   mounted() {
     const param = {
@@ -38,6 +44,7 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   font-family: PingFang SC;
+  background-color: #fff;
   /deep/ .my-head {
     width: @spread-page-width;
     left: 50%;

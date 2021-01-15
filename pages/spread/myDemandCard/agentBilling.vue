@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <Header ref="headerRef" title="轻松找服务" />
+    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
     <!--    <Header title="轻松找服务" :fixed="false" head-class="head-icon" />-->
 
     <!-- START banner-->
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import HeaderBg from '@/components/spread/myDemandCard/agentBilling/HeaderBg'
 import FixedBottomBtn from '@/components/spread/myDemandCard/agentBilling/FixedBottomBtn'
 import Question from '@/components/spread/myDemandCard/agentBilling/Question'
@@ -88,6 +89,11 @@ export default {
       ],
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   mounted() {
     const formData = JSON.parse(sessionStorage.getItem('formData'))
     if (formData) {
@@ -122,5 +128,6 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   font-family: PingFang SC;
+  background-color: #fff;
 }
 </style>

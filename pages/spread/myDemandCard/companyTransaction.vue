@@ -1,6 +1,6 @@
 <template>
   <div class="center">
-    <Header ref="headerRef" title="轻松找服务" />
+    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
     <!--  banner  -->
     <banner></banner>
     <!--  banner  -->
@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Banner from '~/components/spread/myDemandCard/companyTransaction/Banner'
 import MyForm from '~/components/spread/myDemandCard/companyTransaction/MyForm'
 import Header from '@/components/common/head/header'
@@ -18,6 +19,11 @@ export default {
   layout: 'keepAlive',
   name: 'CompanyTransaction',
   components: { Banner, MyForm, Header },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   mounted() {
     const param = {
       platform_type: 'H5', // 平台类型：App，H5，Web
@@ -40,5 +46,6 @@ export default {
 .center {
   width: 750px;
   margin: 0 auto;
+  background-color: #fff;
 }
 </style>

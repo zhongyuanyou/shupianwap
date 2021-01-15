@@ -1,7 +1,7 @@
 <template>
   <div class="center">
     <!-- S 头部 -->
-    <Header ref="headerRef" title="轻松找服务" />
+    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
     <!-- E 头部 -->
     <div class="banner">
       <!--    城市按钮  -->
@@ -101,6 +101,7 @@ export default {
     ...mapState({
       currentCity: (state) => state.city.currentCity,
       userId: (state) => state.user.userId,
+      isInApp: (state) => state.app.isInApp,
     }),
   },
   mounted() {
@@ -244,6 +245,7 @@ export default {
 .center {
   width: @spread-page-width;
   margin: 0 auto;
+  background-color: #fff;
 }
 .margin {
   margin-right: 38px;

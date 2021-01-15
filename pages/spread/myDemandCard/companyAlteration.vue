@@ -1,6 +1,6 @@
 <template>
   <div class="company-alteration">
-    <Header ref="headerRef" title="轻松找服务" />
+    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
     <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理哪项业务的变更服务 -->
@@ -45,6 +45,7 @@
 </template>
 <script>
 import { Button } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import TopLocation from '@/components/spread/myDemandCard/companyAlteration/TopLocation'
 import CompanySelec from '@/components/spread/myDemandCard/companyAlteration/CompanySelect'
 import SelectDesired from '@/components/spread/myDemandCard/companyAlteration/SelectDesired'
@@ -148,6 +149,9 @@ export default {
         district,
       }
     },
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
   watch: {
     isCityChange: {
@@ -277,6 +281,7 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   font-size: 36px;
+  background-color: #fff;
   .button {
     padding: 24px 40px;
     margin-top: 32px;

@@ -1,7 +1,7 @@
 <template>
   <div class="page-content">
     <!-- S 头部 -->
-    <Header ref="headerRef" title="" />
+    <Header v-if="!isInApp" ref="headerRef" title="" />
     <!-- E 头部 -->
     <!-- 1、START 头部Header-->
     <!--    <Header title="" :fixed="true" head-class="head-icon">-->
@@ -47,7 +47,7 @@
 
 <script>
 import { WorkTab, WorkTabs, Button } from '@chipspc/vant-dgg'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import Header from '@/components/common/head/header'
 export default {
   layout: 'keepAlive',
@@ -77,6 +77,9 @@ export default {
     // ...mapState({
     //   currentCity: (state) => state.city.currentCity.name || '成都',
     // }),
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
   watch: {
     $route: {
@@ -89,6 +92,11 @@ export default {
       },
       immediate: true,
     },
+  },
+  created() {
+    if (process.client) {
+      this.$appFn.dggSetTitle({ title: '轻松找服务' }, (res) => {})
+    }
   },
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'NeedCard' })
@@ -138,8 +146,9 @@ export default {
 .page-content {
   width: @spread-page-width;
   margin: 0 auto;
+  height: 100%;
   font-family: PingFang SC;
-
+  background-color: #fff;
   /deep/ .my-head {
     width: @spread-page-width !important;
     left: auto !important;
