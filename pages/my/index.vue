@@ -127,7 +127,7 @@ export default {
           query: { redirect: this.$route.fullPath },
         })
       } else {
-        this.$router.replace('/my/information')
+        this.$router.push('/my/information')
       }
     },
     handleClickLogin() {

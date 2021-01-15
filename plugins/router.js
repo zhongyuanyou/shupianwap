@@ -66,7 +66,13 @@ export default ({ app, store }) => {
           appHandler.dggGetUserInfo((res) => {
             if (res.code === 200) {
               try {
-                const userInfo = res.data || {}
+                // const userInfo = res.data || {}
+                let userInfo = {}
+                if (typeof res.data === 'string') {
+                  userInfo = JSON.parse(res.data)
+                } else {
+                  userInfo = res.data
+                }
                 if (userInfo && userInfo.userId && userInfo.token) {
                   store.commit('user/SET_USER', userInfo)
                 }
