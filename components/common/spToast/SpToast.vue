@@ -97,35 +97,28 @@ export default {
       this.icon = 'toast_ic_remind'
       this._hidToast(duration, cb)
     },
-    showLoading(
-      { message = '加载中', type = 'loading', forbidClick = false },
-      cb
-    ) {
+    showLoading({ message = '加载中', type = 'loading', forbidClick = false }) {
       // loading
       this.checkType('message', message)
       this.checkType('type', type)
       this.checkType('forbidClick', forbidClick)
-      cb && this.checkType('cb', cb)
       this.forbidClick = forbidClick
       this.message = message
       this.isShow = true
       this.isLoading = true
       this.spinner = type
-      cb && cb()
     },
     hideLoading() {
       this.isLoading = false
       this.isShow = false
     },
-    loading(
-      {
-        message = '加载中',
-        type = 'loading',
-        duration = 1500,
-        forbidClick = false,
-      },
-      cb
-    ) {
+    loading({
+      message = '加载中',
+      type = 'loading',
+      duration = 1500,
+      forbidClick = false,
+      cb,
+    }) {
       // loading
       this.checkType('message', message)
       this.checkType('duration', duration)
