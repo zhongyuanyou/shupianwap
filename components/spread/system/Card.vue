@@ -441,5 +441,8 @@ export default {
     color: #5a79e8;
     font-weight: bold;
   }
+  /deep/ .sp-cell__title {
+    flex: none;
+  }
 }
 </style>

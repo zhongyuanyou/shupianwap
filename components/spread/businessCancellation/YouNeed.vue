@@ -53,7 +53,7 @@ export default {
         },
         {
           background: 'https://cdn.shupian.cn/sp-pt/wap/2elyy3kkyg74000.png',
-          url: '/',
+          url: '/spread/internetQualification',
           mdName: '工商注销_还需要办理_互联网资质',
         },
         {

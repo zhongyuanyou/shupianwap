@@ -12,7 +12,7 @@
               im_type: '售前',
             }"
             href="javascript:void(0);"
-            @click="goToPage(index)"
+            @click="goToPage(item.url)"
             ><img :src="item.img" alt=""
           /></a>
         </li>
@@ -31,26 +31,32 @@ export default {
         {
           title: '体系认证',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/38rgy1dmhcm0000.png',
+          url: '/spread/system',
         },
         {
           title: '工商注销',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/1sd3zeh3d9q8000.png',
+          url: '/spread/businessCancellation',
         },
         {
           title: '工商变更',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/ficcz0jmdfk0000.png',
+          url: '/spread/businessChange',
         },
         {
           title: '互联网资质',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/4wj1s23avw80000.png',
+          url: '/spread/internetQualification',
         },
         {
           title: '代理记账',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/55xajsk0xzw0000.png',
+          url: '/spread/agency',
         },
         {
           title: '银行服务',
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/98gk33nvdyo0000.png',
+          url: '/spread/bankService',
         },
       ],
     }
@@ -60,29 +66,8 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    goToPage(index) {
-      switch (index) {
-        case 0:
-          this.$router.push('/spread/system')
-          break
-        case 1:
-          this.$router.push('/spread/businessCancellation/')
-          break
-        case 2:
-          this.$router.push('/spread/businessChange/')
-          break
-        case 3:
-          this.$router.push('/spread/internetQualification')
-          break
-        case 4:
-          this.$router.push('/spread/agency/')
-          break
-        case 5:
-          this.$router.push('/spread/bankService')
-          break
-        default:
-          break
-      }
+    goToPage(url) {
+      this.$router.push(url)
     },
   },
 }
