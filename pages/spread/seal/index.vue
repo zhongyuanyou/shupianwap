@@ -339,6 +339,9 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle({ title: '工商首页' }, () => {})
+    }
   },
   head() {
     return {
