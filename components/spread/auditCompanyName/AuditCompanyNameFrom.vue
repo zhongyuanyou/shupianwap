@@ -139,7 +139,6 @@
               form_name: `核名表单_验证码`,
             }"
             center
-            clearable
             :maxlength="6"
             label="验证码"
             type="tel"
@@ -412,6 +411,7 @@ export default {
             this.industry = ''
             this.companyName = ''
             this.countdown = -1
+            this.sms = ''
             this.cityName = '成都'
             this.onStyle(this.actions, this.industry)
             this.onStyle(this.city, this.cityName)
@@ -433,9 +433,10 @@ export default {
     },
     // 发送验证码
     onSmsCode() {
+      console.log(this.countdown)
       if (!checkPhone(this.tel)) {
         Toast('手机号格式错误')
-      } else if (this.countDown > -1) {
+      } else if (this.countdown > -1) {
         Toast('验证码已发送')
       } else {
         const _data = {

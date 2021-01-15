@@ -253,7 +253,6 @@ export default {
   watch: {},
   created() {
     // 请求回来的数据替代本地
-    console.log(this.resultData)
     this.plannerHandle(this.resultData.planlerList)
   },
   mounted() {
