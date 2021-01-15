@@ -19,7 +19,7 @@
       <Banner :imglist="imgList"></Banner>
       <!-- e banner -->
       <!-- s 表单 -->
-      <AuditCompanyNameFrom :total="result.nums" />
+      <AuditCompanyNameFrom :total="resultData.nums" />
       <!-- e 表单 -->
     </div>
 
@@ -61,85 +61,131 @@ export default {
   // 服务端渲染请求数据
   async asyncData({ $axios }) {
     const type = 'extendAuthName'
+    const defaultRes = {
+      code: 200,
+      message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
+      data: {
+        adList: [],
+        nums: {
+          todayNum: 143,
+          totalNum: 168996,
+        },
+        planlerList: [
+          {
+            id: 30134,
+            userId: '3394',
+            userCentreId: '3394',
+            loginName: '2022554',
+            realName: '刘琴',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13350072314',
+            cvr: 0.092593,
+            cvrValue: 60.683218,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 12112.4,
+            busPerformanceValue: 86.575363,
+            abilityValue: 67.466985,
+            formatType: '工商',
+          },
+          {
+            id: 30156,
+            userId: '43999',
+            userCentreId: '7704199733711282176',
+            loginName: '96352931',
+            realName: '岳雪冬',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13908231675',
+            cvr: 0.145455,
+            cvrValue: 64.543449,
+            orderBus: 8,
+            orderBusValue: 50.950718,
+            busPerformance: 15623,
+            busPerformanceValue: 91.389398,
+            abilityValue: 71.329062,
+            formatType: '工商',
+          },
+          {
+            id: 30310,
+            userId: '7930253930943676416',
+            userCentreId: '7930253930615472128',
+            loginName: '109870',
+            realName: '李海怡',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13696057459',
+            cvr: 0.106383,
+            cvrValue: 61.705406,
+            orderBus: 5,
+            orderBusValue: 49.23518,
+            busPerformance: 17770,
+            busPerformanceValue: 93.504073,
+            abilityValue: 70.2655,
+            formatType: '工商',
+          },
+          {
+            id: 30297,
+            userId: '7887200447593906176',
+            userCentreId: '7887200447257313280',
+            loginName: '108862',
+            realName: '李劲',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '18884259139',
+            cvr: 0.159091,
+            cvrValue: 65.511436,
+            orderBus: 7,
+            orderBusValue: 50.378921,
+            busPerformance: 8744,
+            busPerformanceValue: 79.993572,
+            abilityValue: 68.049033,
+            formatType: '工商',
+          },
+          {
+            id: 30163,
+            userId: '66475',
+            userCentreId: '66475',
+            loginName: '38798340',
+            realName: '钟霞',
+            userHeadUrl:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+            userPhone: '13730634929',
+            cvr: 0.1,
+            cvrValue: 61.23349,
+            orderBus: 6,
+            orderBusValue: 49.807025,
+            busPerformance: 15278,
+            busPerformanceValue: 90.996225,
+            abilityValue: 69.28084,
+            formatType: '工商',
+          },
+        ],
+      },
+    }
     try {
       const res = await $axios.get(spreadApi.list, {
-        params: {
-          pageCode: type,
-        },
+        params: { pageCode: type },
       })
-      if (res.code === 200) {
-        return {
-          result: res.data,
-        }
+      // 如果请求成功 把请求到的数据返回 否则把defaultRes的假数据返回
+      if (res.code === 2000) {
+        return { resultData: res.data }
+      } else {
+        return { resultData: defaultRes.data }
       }
+      // 如果请求报错 把defaultRes的假数据返回
     } catch (error) {
-      console.log('error', error)
-      return {
-        result: '',
-      }
+      console.log(error)
+      return { resultData: defaultRes.data }
     }
   },
 
   data() {
     return {
       title: '免费核名',
-      // 请求失败的备用数据
-      planlerList: [
-        {
-          id: 30312,
-          userId: '7930253930943676416',
-          userCentreId: '7930253930615472128',
-          loginName: '109870',
-          realName: '李海怡',
-          userHeadUrl:
-            'http://fastdfs.dggvip.net:8080/group1/M00/0F/60/CgAAB18_I3GEbQtUAAAAAF_T27Q303.jpg',
-          userPhone: '13696057459',
-          cvr: 0.146341,
-          cvrValue: 64.606717,
-          orderBus: 6,
-          orderBusValue: 49.807025,
-          busPerformance: 13492,
-          busPerformanceValue: 88.692524,
-          abilityValue: 70.319713,
-          formatType: '工商',
-        },
-        {
-          id: 30136,
-          userId: '3394',
-          userCentreId: '3394',
-          loginName: '2022554',
-          realName: '刘琴',
-          userHeadUrl:
-            'http://fastdfs.dggvip.net:8080/group1/M00/0F/72/CgAAB19ExY6EVv-6AAAAAG6SJVc351.jpg',
-          userPhone: '13350072314',
-          cvr: 0.06383,
-          cvrValue: 58.521736,
-          orderBus: 3,
-          orderBusValue: 48.092239,
-          busPerformance: 4412.4,
-          busPerformanceValue: 68.377345,
-          abilityValue: 60.229761,
-          formatType: '工商',
-        },
-        {
-          id: 30299,
-          userId: '7887200447593906176',
-          userCentreId: '7887200447257313280',
-          loginName: '108862',
-          realName: '李劲',
-          userHeadUrl:
-            'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-          userPhone: '18884259139',
-          cvr: 0.209302,
-          cvrValue: 68.96185,
-          orderBus: 9,
-          orderBusValue: 51.522266,
-          busPerformance: 12192,
-          busPerformanceValue: 86.706115,
-          abilityValue: 72.229634,
-          formatType: '工商',
-        },
-      ],
+      /** 轮播规划师数据 */
+      plannersData: [],
       plannersCommon: {
         title: '咨询规划师',
         imName: '免费核名_咨询规划师_在线咨询',
@@ -207,31 +253,8 @@ export default {
   watch: {},
   created() {
     // 请求回来的数据替代本地
-
-    if (this.result !== '' && this.result !== undefined) {
-      if (
-        this.result.planlerList !== undefined &&
-        this.result.planlerList.length !== 0
-      ) {
-        if (this.result.planlerList.length < 3) {
-          this.planlerList.forEach((item, index) => {
-            this.planlerList[index] = this.result.planlerList[
-              index % this.result.planlerList.length
-            ]
-          })
-        } else {
-          this.planlerList = this.result.planlerList
-        }
-        console.log(this.planlerList)
-        this.getPlannersData()
-      }
-      if (this.result.adList !== undefined && this.result.adList.length !== 0) {
-        this.adList = this.result.adList
-      }
-      if (this.result.nums !== undefined && this.result.nums.length !== 0) {
-        this.todayNum = this.result.nums.todayNum
-      }
-    }
+    console.log(this.resultData)
+    this.plannerHandle(this.resultData.planlerList)
   },
   mounted() {
     const param = {
@@ -247,27 +270,32 @@ export default {
     }
   },
   methods: {
-    // 规划师模块数据处理
-    getPlannersData() {
-      const length = this.result.planlerList.length
-      if (length > 0) {
-        this.plannersData = []
-      }
-      for (let i = 0; i < length; i++) {
-        const obj = {
-          id: this.planlerList[i].userCentreId,
-          type: '金牌规划师',
-          avatarImg: this.planlerList[i].userHeadUrl,
-          name: this.planlerList[i].realName,
-          shuPianFen: 138,
-          serverNum: 258,
-          telephone: this.planlerList[i].userPhone,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          jobNum: this.planlerList[i].loginName,
-        }
-        this.plannersData.push(obj)
+    /** 规划师数据处理 */
+    plannerHandle(data) {
+      if (data.length !== 0) {
+        const guihuashiList = []
+        data.forEach((item, i) => {
+          const obj = {
+            id: item.userCentreId,
+            type: '金牌规划师',
+            imgSrc: item.userHeadUrl,
+            avatarImg: item.userHeadUrl,
+            name: item.realName,
+            shuPianFen: 11,
+            serverNum: 250,
+            telephone: item.userPhone,
+            labels: ['工商注册', '财税咨询', '税务筹划'],
+            jobNum: item.userPhoneloginName,
+          }
+          guihuashiList.push(obj)
+        })
+        this.plannersData = guihuashiList
+        this.planner = guihuashiList[0]
+      } else {
+        return this.plannersData
       }
     },
+
     back() {
       // 返回上一页
       console.log(window.history.length)
