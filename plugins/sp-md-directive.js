@@ -1,15 +1,13 @@
 import Vue from 'vue'
 Vue.directive('sensorsTrack', {
   bind: (el, binding, vnode) => {
-    el.addEventListener('click', () => {
+    el.myClick = () => {
       const { arg = '', value } = binding
       window.sensors.track(arg, value)
-    })
+    }
+    el.addEventListener('click', el.myClick)
   },
   unbind: (el, binding) => {
-    el.removeEventListener('click', () => {
-      const { arg = '', value } = binding
-      window.sensors.track(arg, value)
-    })
+    el.removeEventListener('click', el.myClick)
   },
 })
