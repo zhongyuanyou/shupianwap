@@ -2,15 +2,16 @@
  * @Author: xiao pu
  * @Date: 2020-12-12 15:34:40
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 15:10:55
+ * @LastEditTime: 2021-01-18 14:49:57
  * @Description: file content
- * @FilePath: /chips-wap/client/components/common/checkbox/AsyncCheckbox.vue
+ * @FilePath: /chips-wap/components/common/checkbox/AsyncCheckbox.vue
 -->
 
 <template>
   <sp-checkbox
     class="async-checkbox"
     :value="checkedVal"
+    :disabled="disabled"
     v-bind="$attrs"
     @change="handleChange"
     @click="handleClick"
@@ -22,9 +23,9 @@
       <slot name="icon" :checked="checked">
         <sp-icon
           class-prefix="spiconfont"
-          size="0.28rem"
+          size="0.32rem"
+          class="async-checkbox__icon"
           :name="checked ? 'login_ic_radio_s' : 'login_ic_radio_n'"
-          :color="checked ? '#4974F5' : '#CCCCCC'"
         />
       </slot>
     </template>
@@ -53,6 +54,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -76,7 +81,7 @@ export default {
     },
 
     handleClick(event) {
-      //   console.log('handleClick:', event)
+      if (this.disabled) return
       const lastValue = this.checkedVal
       if (!this.asyncChange) {
         this.checkedVal = !lastValue
@@ -90,5 +95,22 @@ export default {
 
 <style lang="less" scoped>
 .async-checkbox {
+  /deep/.sp-checkbox__icon--disabled {
+    .async-checkbox__icon {
+      background-color: rgba(204, 204, 204, 0.32);
+      color: #c8c9cc !important;
+    }
+  }
+  /deep/.sp-checkbox__icon--checked {
+    .async-checkbox__icon {
+      color: #4974f5;
+    }
+  }
+  &__icon {
+    color: #cccccc;
+    background-color: #ffffff;
+    border-radius: 100%;
+    overflow: hidden;
+  }
 }
 </style>
