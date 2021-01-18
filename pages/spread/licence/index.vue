@@ -24,7 +24,7 @@
     <HandleType :typeList="typeList" />
     <!-- E 选择办理类型 -->
     <!-- S 许可证常见的办理问题 -->
-    <Question />
+    <Question :planner="plannerOne" />
     <!-- E 许可证常见的办理问题 -->
     <!-- S 为什么选择薯片平台 -->
     <Select />
@@ -441,7 +441,8 @@ export default {
         name: '张毅',
         jobNum: '107547',
         telephone: '18402858698',
-        imgSrc: '',
+        imgSrc:
+          'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg',
       },
       plannerLsit: [
         {
