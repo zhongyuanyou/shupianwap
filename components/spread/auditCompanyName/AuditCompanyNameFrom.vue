@@ -58,6 +58,7 @@
               label="行业"
               placeholder="如技术"
               right-icon="arrow-down"
+              :maxlength="4"
               readonly
               @click="isShow = true"
             />
@@ -352,7 +353,6 @@ export default {
       this.onStyle(this.actions, item.name)
     },
     // 选中样式
-
     onStyle(data, value) {
       data.forEach((obj) => {
         if (obj.name === value) {
@@ -509,6 +509,27 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+/deep/input {
+  font-weight: bold;
+}
+/deep/input::-webkit-input-placeholder {
+  /* WebKit browsers */
+  font-weight: 400;
+}
+/deep/input:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  font-weight: 400;
+  opacity: 1 !important;
+}
+/deep/input::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  font-weight: 400;
+  opacity: 1 !important;
+}
+/deep/input:-ms-input-placeholder {
+  /* Internet Explorer 10+ */
+  font-weight: 400;
+}
 a {
   text-decoration: none;
   color: inherit;
@@ -610,6 +631,11 @@ a {
           /deep/.sp-cell__value {
             display: flex;
             align-items: center;
+            // .sp-field__body {
+            //   .sp-field__control {
+            //     font-weight: bold;
+            //   }
+            // }
             .sp-field__right-icon {
               padding: 0;
               .sp-icon {

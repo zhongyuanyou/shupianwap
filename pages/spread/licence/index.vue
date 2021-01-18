@@ -482,8 +482,8 @@ export default {
               actualViews: 299,
               defaultSales: 256,
               actualSales: 249,
-              flow: '有相应场所',
-              standard: '有相应设备等',
+              standard: '有相应场所',
+              flow: '有相应设备等',
             },
           },
           {
@@ -496,28 +496,28 @@ export default {
               actualViews: 167,
               defaultSales: 126,
               actualSales: 125,
-              flow: '符合食品安全标准',
-              standard: '有标准工艺流程',
+              standard: '符合食品安全标准',
+              flow: '有标准工艺流程',
             },
           },
         ],
         [
           {
-            referencePrice: 1800,
+            referencePrice: 25000,
             operating: {
               planner: {},
               showName: '人力资源服务许可证',
-              slogan: '经营性人力资源机构的需要办理',
+              slogan: '经营人力资源机构的需要办理',
               productDescribe: '经营性人力资源机构的需要办理',
               actualViews: 43,
               defaultSales: 36,
               actualSales: 36,
-              flow: '有规范名称',
-              standard: '有5名专职人员',
+              standard: '有规范名称',
+              flow: '有5名专职人员',
             },
           },
           {
-            referencePrice: 1800,
+            referencePrice: 25000,
             operating: {
               planner: {},
               showName: '劳务派遣许可证',
@@ -526,14 +526,14 @@ export default {
               actualViews: 39,
               defaultSales: 22,
               actualSales: 22,
-              flow: '注册资金200万',
-              standard: '有经营场所',
+              standard: '注册资金200万',
+              flow: '有经营场所',
             },
           },
         ],
         [
           {
-            referencePrice: 1800,
+            referencePrice: 28000,
             operating: {
               planner: {},
               showName: '医疗器械经营许可证',
@@ -542,12 +542,12 @@ export default {
               actualViews: 83,
               defaultSales: 65,
               actualSales: 65,
-              flow: '有贮存场所',
-              standard: '有相应管理制度',
+              standard: '有贮存场所',
+              flow: '有相应管理制度',
             },
           },
           {
-            referencePrice: 1800,
+            referencePrice: 12000,
             operating: {
               planner: {},
               showName: '互联网药品信息服务许可证',
@@ -556,8 +556,8 @@ export default {
               actualViews: 26,
               defaultSales: 12,
               actualSales: 12,
-              flow: '依法设立的组织',
-              standard: '有2名相关技术人员',
+              standard: '依法设立的组织',
+              flow: '有2名相关技术人员',
             },
           },
         ],
@@ -601,7 +601,7 @@ export default {
   },
   mounted() {
     const param = {
-      platform_type: 'H5', // 平台类型：App，H5，Web
+      platform_type: 'wap端', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
       product_line: 'Wap端许可证办理推广页',
       current_url: location.href,
@@ -635,7 +635,7 @@ export default {
         data.forEach((item, index) => {
           const res = item.materialList[0].productDetail
           const obj = {
-            referencePrice: 1800,
+            referencePrice: res.referencePrice,
             operating: {
               showName: res.operating.showName,
               slogan: res.operating.slogan,
