@@ -90,10 +90,7 @@
             </li>
           </ul>
           <Loading-down
-            v-if="
-              tabData.length &&
-              tabData[active].articleData.length > params.limit
-            "
+            v-if="tabData.length"
             :loading="loading && !tabData[active].noMore"
             :no-data="tabData[active].noMore"
             bg-color="#fff"
@@ -251,11 +248,6 @@ export default {
       this.params = Object.assign(this.params, params)
       this.$axios.post(helpApi.findArticle, this.params).then((res) => {
         this.loading = false
-        // 无更多数据
-        if (!res.data.articleData.length) {
-          this.tabData[index].noMore = true
-          return
-        }
         // 切换加载
         if (res.code === 200 && type === 1) {
           const obj = {
@@ -263,13 +255,16 @@ export default {
             articleData: res.data.articleData,
           }
           this.$set(this.tabData, index, obj)
-          return
         }
         // 触底加载更多
         if (res.code === 200 && type === 2) {
           this.tabData[index].articleData = this.tabData[
             index
           ].articleData.concat(res.data.articleData)
+        }
+        // 无更多数据
+        if (res.data.articleData.length < this.tabData[index].limit) {
+          this.tabData[index].noMore = true
         }
       })
     },
