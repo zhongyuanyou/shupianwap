@@ -3,7 +3,7 @@
     <div class="type-box">
       <p class="type-box-title">选择您想注册的公司类型</p>
       <div class="type-select">
-        <div class="type-select-title">
+        <div class="type-select-title" @click="show = true">
           {{ actions[key].name }}
           <a
             v-sensorsTrack:webClick="{
@@ -12,7 +12,7 @@
             }"
             class="a-clear"
           >
-            <div @click="show = true">
+            <div>
               <my-icon
                 name="input_ic_open"
                 size="0.2rem"

@@ -91,9 +91,9 @@ export default {
         },
         {
           code: 6,
-          img: 'https://cdn.shupian.cn/sp-pt/wap/images/3yl3jyk5e5c0000.jpg',
-          url: '/spread/bankService',
-          title: '银行服务',
+          img: 'https://cdn.shupian.cn/sp-pt/wap/images/fazszc8imvk0000.jpg',
+          url: '/spread/businessCancellation',
+          title: '工商注销',
         },
       ],
     }

@@ -516,15 +516,17 @@ export default {
   /* WebKit browsers */
   font-weight: 400;
 }
-input:-moz-placeholder {
+/deep/input:-moz-placeholder {
   /* Mozilla Firefox 4 to 18 */
   font-weight: 400;
+  opacity: 1 !important;
 }
-input::-moz-placeholder {
+/deep/input::-moz-placeholder {
   /* Mozilla Firefox 19+ */
   font-weight: 400;
+  opacity: 1 !important;
 }
-input:-ms-input-placeholder {
+/deep/input:-ms-input-placeholder {
   /* Internet Explorer 10+ */
   font-weight: 400;
 }
