@@ -135,7 +135,7 @@ export default {
       isCode: false, // 是否显示验证码
       code: '', // 验证码
       countDown: '获取验证码', // 验证码
-      totalTime: 60, // 倒计时
+      totalTime: 59, // 倒计时
       timer: null, // 验证码定时器
       value: '食品行业许可证',
       selectShow: false,
@@ -198,28 +198,29 @@ export default {
           _tel: this.telephone,
           type: 'gs',
         }
-        if (this.totalTime > 0 && this.totalTime < 60) {
+        if (this.countDown === '获取验证码') {
+          window.promotion.privat.getSmsCode(data, (res) => {
+            // 发送成功，倒计时开始
+            if (res.error === 0) {
+              this.getCode()
+            }
+            Toast(res.msg)
+          })
+        } else {
           Toast('请稍后再试')
-          return
         }
-        window.promotion.privat.getSmsCode(data, (res) => {
-          // 发送成功，倒计时开始
-          if (res.error === 0) {
-            this.getCode()
-          }
-          Toast(res.msg)
-        })
       }
     },
     // 获取验证码
     getCode() {
       if (this.timer) clearInterval(this.timer)
+      this.countDown = this.totalTime + 's'
       this.timer = setInterval(() => {
         this.totalTime--
         this.countDown = this.totalTime + 's'
         if (this.totalTime < 1) {
-          this.countDown = '发送验证码'
-          this.totalTime = 60
+          this.countDown = '获取验证码'
+          this.totalTime = 59
           clearInterval(this.timer)
         }
       }, 1000)
@@ -274,8 +275,8 @@ export default {
           this.telephone = ''
           this.code = ''
           this.value = '食品行业许可证'
-          this.countDown = '发送验证码'
-          this.totalTime = 60
+          this.countDown = '获取验证码'
+          this.totalTime = 59
           if (this.timer) clearInterval(this.timer)
           window.sensors.track('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
@@ -286,8 +287,8 @@ export default {
         } else {
           Toast(res.msg)
           if (this.timer) clearInterval(this.timer)
-          this.countDown = '发送验证码'
-          this.totalTime = 60
+          this.countDown = '获取验证码'
+          this.totalTime = 59
           this.sms = ''
         }
       })
