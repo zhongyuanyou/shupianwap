@@ -128,6 +128,7 @@ export default {
           categoryCode: this.categoryCode,
         }
         const res = await this.$axios.get(foundApi.screenRequest, { params })
+        this.refreshStatus = false
         this.loading = false
         if (res.code === 200) {
           this.information_banner = res.data.information_banner
@@ -139,6 +140,7 @@ export default {
       this.$router.push('/found/foundSearch')
     },
     refresh() {
+      this.refreshStatus = true
       this.onClickTap(this.activeTab, true)
     },
   },
