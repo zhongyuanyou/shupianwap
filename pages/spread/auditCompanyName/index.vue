@@ -257,7 +257,7 @@ export default {
   },
   mounted() {
     const param = {
-      platform_type: 'H5', // 平台类型：App，H5，Web
+      platform_type: 'wap端', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
       product_line: '免费核名',
       current_url: location.href,
