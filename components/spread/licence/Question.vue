@@ -66,7 +66,21 @@ export default {
   components: {
     MyIcon,
   },
-  props: {},
+  props: {
+    planner: {
+      type: Object,
+      default: () => {
+        return {
+          id: '7862495547640840192',
+          name: '张毅',
+          jobNum: '107547',
+          telephone: '18402858698',
+          imgSrc:
+            'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg',
+        }
+      },
+    },
+  },
   data() {
     return {
       showAll: false, // 不完全展示的时候(只展示一个问题的时候)
@@ -116,15 +130,15 @@ export default {
   mounted() {},
   methods: {
     //  唤起IM
-    plannerIm(planner) {
-      console.log(1)
-      const guiHuaShi = planner
+    plannerIm() {
+      const guiHuaShi = this.planner
+      console.log(this.planner)
       this.$root.$emit(
         'openIMM',
         guiHuaShi.id,
         guiHuaShi.name || '',
         guiHuaShi.jobNum || '',
-        planner.imgSrc || ''
+        guiHuaShi.imgSrc || ''
       )
     },
   },

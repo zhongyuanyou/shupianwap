@@ -21,10 +21,10 @@
     <Form />
     <!-- E 表单 -->
     <!-- S 选择办理类型 -->
-    <HandleType :typeList="typeList" />
+    <HandleType :type-list="typeList" />
     <!-- E 选择办理类型 -->
     <!-- S 许可证常见的办理问题 -->
-    <Question />
+    <Question :planner="plannerOne" />
     <!-- E 许可证常见的办理问题 -->
     <!-- S 为什么选择薯片平台 -->
     <Select />
@@ -441,7 +441,8 @@ export default {
         name: '张毅',
         jobNum: '107547',
         telephone: '18402858698',
-        imgSrc: '',
+        imgSrc:
+          'https://tenant-assets.meiqiausercontent.com/avatars/16984/5uyI/HqRHeYKk3pkWUn04xfOB.jpg',
       },
       plannerLsit: [
         {
@@ -481,8 +482,8 @@ export default {
               actualViews: 299,
               defaultSales: 256,
               actualSales: 249,
-              flow: '有相应场所',
-              standard: '有相应设备等',
+              standard: '有相应场所',
+              flow: '有相应设备等',
             },
           },
           {
@@ -495,8 +496,8 @@ export default {
               actualViews: 167,
               defaultSales: 126,
               actualSales: 125,
-              flow: '符合食品安全标准',
-              standard: '有标准工艺流程',
+              standard: '符合食品安全标准',
+              flow: '有标准工艺流程',
             },
           },
         ],
@@ -511,8 +512,8 @@ export default {
               actualViews: 43,
               defaultSales: 36,
               actualSales: 36,
-              flow: '有规范名称',
-              standard: '有5名专职人员',
+              standard: '有规范名称',
+              flow: '有5名专职人员',
             },
           },
           {
@@ -525,8 +526,8 @@ export default {
               actualViews: 39,
               defaultSales: 22,
               actualSales: 22,
-              flow: '注册资金200万',
-              standard: '有经营场所',
+              standard: '注册资金200万',
+              flow: '有经营场所',
             },
           },
         ],
@@ -541,8 +542,8 @@ export default {
               actualViews: 83,
               defaultSales: 65,
               actualSales: 65,
-              flow: '有贮存场所',
-              standard: '有相应管理制度',
+              standard: '有贮存场所',
+              flow: '有相应管理制度',
             },
           },
           {
@@ -555,8 +556,8 @@ export default {
               actualViews: 26,
               defaultSales: 12,
               actualSales: 12,
-              flow: '依法设立的组织',
-              standard: '有2名相关技术人员',
+              standard: '依法设立的组织',
+              flow: '有2名相关技术人员',
             },
           },
         ],

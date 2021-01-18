@@ -269,6 +269,8 @@ export default {
     countDownFun() {
       const vm = this
       this.countdown = 59
+      clearInterval(vm.countdownTimer)
+      vm.countdownTimer = null
       this.countdownTimer = setInterval(function () {
         if (vm.countdown === 0) {
           vm.countdown = -1
