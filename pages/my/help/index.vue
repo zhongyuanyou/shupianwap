@@ -96,6 +96,7 @@
             "
             :loading="loading && !tabData[active].noMore"
             :no-data="tabData[active].noMore"
+            bg-color="#fff"
           />
         </div>
         <!-- E 列表 -->

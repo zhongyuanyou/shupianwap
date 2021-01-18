@@ -176,7 +176,7 @@ export default {
       .textOverflow(1);
     }
     .search-icon {
-      margin-right: 17px;
+      margin-right: 12px;
     }
   }
 }
