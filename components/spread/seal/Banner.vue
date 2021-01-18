@@ -194,6 +194,7 @@ export default {
         window.promotion.privat.getSmsCode(data, (res) => {
           if (res.error === 0) {
             // 发送成功后的操作
+            clearInterval(this.time)
             let i = 59
             this.text = i + 's'
             this.time = setInterval(() => {
@@ -279,7 +280,7 @@ export default {
           this.sealType = this.sealTypes[this.isSelect]
           this.tel = ''
           this.code = ''
-          this.text = '发送验证码'
+          this.text = '获取验证码'
           window.sensors.track('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
