@@ -94,7 +94,7 @@
         v-md:p_formSubmit
         v-sensorsTrack:p_formSubmit="{
           eventName: 'p_formSubmit',
-          type: '咨询表单',
+          form_type: '咨询表单',
           form_name: '代理记账_提交表单',
         }"
         class="free-btn"

@@ -101,7 +101,7 @@
         v-sensorsTrack:p_formSubmit="{
           eventName: 'p_formSubmit',
           form_type: '咨询表单',
-          name: '银行服务_提交表单',
+          form_name: '银行服务_提交表单',
         }"
         class="free-btn"
         @click="freeBtn()"
