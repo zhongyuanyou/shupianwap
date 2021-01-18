@@ -207,7 +207,7 @@ export default {
           if (res.error === 0) {
             this.getCode()
           }
-          // Toast(res.msg)
+          Toast(res.msg)
         })
       }
     },

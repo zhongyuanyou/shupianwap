@@ -14,6 +14,7 @@
           v-for="(item, i) of plannersData"
           :key="i"
           class="planner-content-item"
+          @click="openIm(i)"
         >
           <div class="planner-content-item-shadow">
             <div class="planner-content-item-shadow-person">
@@ -49,7 +50,7 @@
                   im_type: '售前',
                 }"
                 href="javascript:void(0)"
-                @click="openIm(i)"
+                @click.stop="openIm(i)"
               >
                 <div style="margin-right: 0.2rem">
                   <my-icon
@@ -65,7 +66,7 @@
                   im_type: '售前',
                 }"
                 href="javascript:void(0)"
-                @click="tel(i, $event)"
+                @click.stop="tel(i, $event)"
               >
                 <div>
                   <my-icon
@@ -136,20 +137,15 @@ export default {
       },
     },
     // 该模块的标题
-    plannersCommon: {
-      type: Array,
-      default: () => {
-        return {
-          title: '企服专家咨询',
-          imName: '税务筹划_咨询规划师_在线咨询',
-          telName: '税务筹划_咨询规划师_拨打电话',
-        }
-      },
-    },
   },
   data() {
     return {
       url: '',
+      plannersCommon: {
+        title: '企服专家咨询',
+        imName: '税务筹划_咨询规划师_在线咨询',
+        telName: '税务筹划_咨询规划师_拨打电话',
+      },
     }
   },
   methods: {
@@ -278,16 +274,19 @@ export default {
           position: absolute;
           top: 32px;
           right: 32px;
-          div {
-            width: 64px;
-            height: 64px;
-            background: #ebf3ff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            .line {
-              line-height: 32px;
+          a {
+            z-index: 1;
+            div {
+              width: 64px;
+              height: 64px;
+              background: #ebf3ff;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              .line {
+                line-height: 32px;
+              }
             }
           }
         }

@@ -181,7 +181,9 @@ export default {
     // 验证码倒计时
     countDown() {
       const vm = this
-      this.countdown = 60
+      this.countdown = 59
+      clearInterval(vm.countdownTimer)
+      vm.countdownTimer = null
       this.countdownTimer = setInterval(function () {
         if (vm.countdown === 0) {
           vm.countdown = -1
