@@ -80,11 +80,11 @@ export default {
       questions: [
         {
           question: '不符合当地文化管理部门的最低技术人才要求怎么办？',
-          answer: '薯片APP人才库可为您解决',
+          answer: '我们专有人才库可为您解决',
         },
         {
           question: '企业的组建要求不能满足当地通管局的规定条件？',
-          answer: '薯片APP是一站式商业服务平台，可为您解决办理过程中所有难题',
+          answer: '我们是一站式商业服务平台，可为您解决办理过程中所有难题',
         },
       ],
       isShowMore: false,

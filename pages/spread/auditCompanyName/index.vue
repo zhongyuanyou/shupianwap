@@ -187,8 +187,8 @@ export default {
       plannersData: [],
       plannersCommon: {
         title: '咨询规划师',
-        imName: '免费核名_咨询规划师_在线咨询',
-        telName: '免费核名_咨询规划师_拨打电话',
+        imName: '核名_咨询规划师_在线咨询',
+        telName: '核名_咨询规划师_拨打电话',
       },
       // 起名禁忌数据
       auditTaboo: {

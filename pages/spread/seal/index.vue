@@ -23,9 +23,9 @@
     <!--  立即咨询  -->
     <consult-tel
       :tel="consultTel"
-      button="免费咨询"
       md-name="专业刻章服务_免费咨询"
       title=""
+      button="免费咨询"
     ></consult-tel>
     <!--  立即咨询  -->
     <!--  服务介绍  -->
@@ -468,7 +468,7 @@ export default {
   mounted() {
     console.log(this.result)
     const param = {
-      platform_type: 'H5', // 平台类型：App，H5，Web
+      platform_type: 'wap端', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
       product_line: 'Wap端印章服务推广页',
       current_url: location.href,
