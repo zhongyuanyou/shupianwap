@@ -279,7 +279,7 @@ export default {
           this.sealType = this.sealTypes[this.isSelect]
           this.tel = ''
           this.code = ''
-          this.text = '发送验证码'
+          this.text = '获取验证码'
           window.sensors.track('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
