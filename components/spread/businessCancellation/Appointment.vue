@@ -50,7 +50,6 @@
           :max="11"
           :formatter="telControl"
           placeholder="信息保护中，仅官方可见"
-          @click="changeShow"
         >
           <template #left>
             <img
@@ -62,7 +61,6 @@
         </my-field>
         <!-- 获取验证码 -->
         <my-field
-          v-if="messageShow"
           v-model="shortMessage"
           v-sensorsTrack:webClick="{
             form_name: '工商注销表单_验证码',
@@ -165,8 +163,6 @@ export default {
       tel: '',
       /** 验证码内容 */
       shortMessage: '',
-      /** 短信验证码框显示与否 */
-      messageShow: false,
       /** 验证码倒计时 */
       countDown: -1,
       /** 倒计时定时器 */
@@ -187,10 +183,6 @@ export default {
     onConfirm(val) {
       this.need = val
       this.showPicker = false
-    },
-    /** 改变短信息框显示隐藏 */
-    changeShow() {
-      this.messageShow = true
     },
     /** 手机输入控制 */
     telControl(val) {

@@ -59,8 +59,8 @@
           placeholder="信息保护中，仅官方可见"
           maxlength="11"
           :formatter="telephoneTest"
-          @focus="() => (isshow = true)"
         />
+        <!-- @focus="() => (isshow = true)" -->
         <!-- s 获取验证码 -->
         <div
           v-show="isshow"
@@ -101,7 +101,7 @@
         v-sensorsTrack:p_formSubmit="{
           eventName: 'p_formSubmit',
           form_type: '咨询表单',
-          name: '工商变更表单_提交表单',
+          form_name: '工商变更表单_提交表单',
         }"
         class="free-btn"
         @click="freeBtn()"
@@ -142,7 +142,7 @@ export default {
       telephone: '', // 电话号码
       sms: '', // 验证码
       number: '',
-      isshow: false, // 验证码框是否显示
+      isshow: true, // 验证码框是否显示
       selectshow: false, // 下拉选择框是否显示
       countdown: -1, // 发送验证码倒计时60秒
       countdownTimer: null,

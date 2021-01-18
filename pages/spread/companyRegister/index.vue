@@ -97,7 +97,7 @@
     <div class="foot">
       <FixedBottom :planner="planner" :md="fixedMd" />
     </div>
-    <dgg-im-company></dgg-im-company>
+    <DggImCompany />
   </div>
 </template>
 <script>
@@ -122,7 +122,7 @@ import FixedBottom from '@/components/spread/common/FixedBottom'
 import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
 import ConsultTel from '~/components/spread/common/ConsultTel'
 import ShuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
-import dggImCompany from '~/components/spread/DggImCompany'
+import DggImCompany from '@/components/spread/DggImCompany'
 import { spreadApi } from '@/api/spread'
 export default {
   name: 'Index',
@@ -142,11 +142,11 @@ export default {
     ConsultTel,
     ShuPianZhaoRen,
     GuiHuaShiSwipe,
-    dggImCompany,
+    DggImCompany,
     FixedBottom,
   },
   async asyncData({ $axios }) {
-    const type = 'extendSysAuth'
+    const type = 'extendBussineReg'
     const defaultRes = {
       code: 200,
       message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
@@ -570,7 +570,9 @@ export default {
           const operatingVal = elem.materialList[0].productDetail.operating
           this.listCount[index].pric = priceVal
           this.listCount[index].operating = operatingVal
-          if (data.planlerList.length >= 0) {
+          console.log(index)
+
+          if (data.planlerList.length > 0) {
             this.listCount[index].id =
               data.planlerList[
                 `${

@@ -19,7 +19,7 @@
       <Banner :imglist="imgList"></Banner>
       <!-- e banner -->
       <!-- s 表单 -->
-      <AuditCompanyNameFrom :total="resultData.nums" />
+      <AuditCompanyNameFrom :total="auditNums" />
       <!-- e 表单 -->
     </div>
 
@@ -67,8 +67,8 @@ export default {
       data: {
         adList: [],
         nums: {
-          todayNum: 143,
-          totalNum: 168996,
+          todayNum: 82,
+          totalNum: 9280,
         },
         planlerList: [
           {
@@ -169,14 +169,13 @@ export default {
         params: { pageCode: type },
       })
       // 如果请求成功 把请求到的数据返回 否则把defaultRes的假数据返回
-      if (res.code === 2000) {
+      if (res.code === 200) {
         return { resultData: res.data }
       } else {
         return { resultData: defaultRes.data }
       }
       // 如果请求报错 把defaultRes的假数据返回
     } catch (error) {
-      console.log(error)
       return { resultData: defaultRes.data }
     }
   },
@@ -191,6 +190,7 @@ export default {
         imName: '免费核名_咨询规划师_在线咨询',
         telName: '免费核名_咨询规划师_拨打电话',
       },
+      // 起名禁忌数据
       auditTaboo: {
         title: '公司起名，这些禁忌不能犯',
         taboo: [
@@ -236,6 +236,7 @@ export default {
           },
         ],
       },
+      // banner 背景图
       imgList: [
         {
           code: 1,
@@ -243,6 +244,8 @@ export default {
           img: 'https://cdn.shupian.cn/sp-pt/wap/591qqekl2f40000.png',
         },
       ],
+      // 核名数据
+      auditNums: {},
     }
   },
   computed: {
@@ -254,6 +257,7 @@ export default {
   created() {
     // 请求回来的数据替代本地
     this.plannerHandle(this.resultData.planlerList)
+    this.toAdiut(this.resultData.nums)
   },
   mounted() {
     const param = {
@@ -294,7 +298,17 @@ export default {
         return this.plannersData
       }
     },
-
+    /** 处理核名数据 */
+    toAdiut(data) {
+      this.auditNums = {
+        auditNameSum: (data.todayNum || 0)
+          .toString()
+          .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'),
+        addUpAuditNameSum: (data.totalNum || 0)
+          .toString()
+          .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'),
+      }
+    },
     back() {
       // 返回上一页
       console.log(window.history.length)

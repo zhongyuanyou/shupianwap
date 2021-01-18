@@ -70,12 +70,12 @@
           <!-- s 核名数据 -->
           <div class="audit-company-name-from__center__input__audit">
             <p>
-              今日核名<span>{{ auditNameSum }}</span
+              今日核名<span>{{ total.auditNameSum }}</span
               >次
             </p>
             <i></i>
             <p>
-              累计核名<span>{{ addUpAuditNameSum }}</span
+              累计核名<span>{{ total.addUpAuditNameSum }}</span
               >次
             </p>
           </div>
@@ -319,25 +319,12 @@ export default {
         { name: '商标资质', color: '#222222' },
         { name: '其他', color: '#222222' },
       ],
-      addUpAuditNameSum: '69,201',
-      auditNameSum: 118, // 每日默认
+      addUpAuditNameSum: '9,280',
+      auditNameSum: 82, // 每日默认
     }
   },
   watch: {},
-  // 处理核名数据
-  created() {
-    if (this.total.todayNum !== '' && this.total.totalNum !== '') {
-      this.auditNameSum = (this.total.todayNum || 0)
-        .toString()
-        .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-      this.addUpAuditNameSum = (this.total.totalNum || 0)
-        .toString()
-        .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-    }
-    this.addUpAuditNameSum = (this.addUpAuditNameSum || 0)
-      .toString()
-      .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-  },
+  created() {},
 
   methods: {
     // 选择城市
@@ -516,15 +503,17 @@ export default {
   /* WebKit browsers */
   font-weight: 400;
 }
-input:-moz-placeholder {
+/deep/input:-moz-placeholder {
   /* Mozilla Firefox 4 to 18 */
   font-weight: 400;
+  opacity: 1 !important;
 }
-input::-moz-placeholder {
+/deep/input::-moz-placeholder {
   /* Mozilla Firefox 19+ */
   font-weight: 400;
+  opacity: 1 !important;
 }
-input:-ms-input-placeholder {
+/deep/input:-ms-input-placeholder {
   /* Internet Explorer 10+ */
   font-weight: 400;
 }

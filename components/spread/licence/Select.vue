@@ -1,11 +1,11 @@
 <template>
   <div class="select">
     <div class="select_title">
-      <h2>为什么选择薯片平台</h2>
+      <h2>为什么选择许可证代办</h2>
     </div>
     <div class="select_content">
       <img
-        src="https://cdn.shupian.cn/sp-pt/wap/images/29t8gvqyztq800.png"
+        src="https://cdn.shupian.cn/sp-pt/wap/images/bxqc55od5k00000.png"
         alt=""
       />
     </div>

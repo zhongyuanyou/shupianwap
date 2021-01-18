@@ -119,6 +119,7 @@ export default {
   },
   methods: {
     onMessage(url, index, e) {
+      console.log(index)
       if (e.target.dataset.stop !== 'stop') {
         if (url !== '') {
           window.location.href = url
