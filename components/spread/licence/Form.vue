@@ -56,14 +56,9 @@
           maxlength="11"
           placeholder="信息保护中，仅官方可见"
           :formatter="formatterTel"
-          @click="
-            () => {
-              isCode = true
-            }
-          "
         />
         <!-- S 获取验证码 -->
-        <div v-show="isCode" class="form_content_input_codebox">
+        <div class="form_content_input_codebox">
           <sp-field
             v-model="code"
             v-sensorsTrack:webClick="{
@@ -132,7 +127,6 @@ export default {
   data() {
     return {
       telephone: '', // 手机号码
-      isCode: false, // 是否显示验证码
       code: '', // 验证码
       countDown: '获取验证码', // 验证码
       totalTime: 59, // 倒计时

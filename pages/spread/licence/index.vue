@@ -503,11 +503,11 @@ export default {
         ],
         [
           {
-            referencePrice: 1800,
+            referencePrice: 25000,
             operating: {
               planner: {},
               showName: '人力资源服务许可证',
-              slogan: '经营性人力资源机构的需要办理',
+              slogan: '经营人力资源机构的需要办理',
               productDescribe: '经营性人力资源机构的需要办理',
               actualViews: 43,
               defaultSales: 36,
@@ -517,7 +517,7 @@ export default {
             },
           },
           {
-            referencePrice: 1800,
+            referencePrice: 25000,
             operating: {
               planner: {},
               showName: '劳务派遣许可证',
@@ -533,7 +533,7 @@ export default {
         ],
         [
           {
-            referencePrice: 1800,
+            referencePrice: 28000,
             operating: {
               planner: {},
               showName: '医疗器械经营许可证',
@@ -547,7 +547,7 @@ export default {
             },
           },
           {
-            referencePrice: 1800,
+            referencePrice: 12000,
             operating: {
               planner: {},
               showName: '互联网药品信息服务许可证',
@@ -635,7 +635,7 @@ export default {
         data.forEach((item, index) => {
           const res = item.materialList[0].productDetail
           const obj = {
-            referencePrice: 1800,
+            referencePrice: res.referencePrice,
             operating: {
               showName: res.operating.showName,
               slogan: res.operating.slogan,
