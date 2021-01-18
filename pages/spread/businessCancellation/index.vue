@@ -186,10 +186,10 @@ export default {
                       name: '个体注销',
                       referencePrice: 2000,
                       operating: {
-                        showName: '工商注销',
-                        slogan: '企业税务或税务已清税的情况下的营业执照注销。',
+                        showName: '个体注销',
+                        slogan: '个体工商户不再从事经营活动办理的注销登记',
                         productDescribe:
-                          '企业税务或税务已清税的情况下的营业执照注销。',
+                          '个体工商户不再从事经营活动办理的注销登记',
                         actualViews: 334,
                         defaultSales: 316,
                         actualSales: 316,
