@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-15 15:39:57
+ * @LastEditTime: 2021-01-18 19:08:03
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -111,7 +111,7 @@
             <div class="detail-content__wrap-footer">
               <div class="detail-content__section-title flex-r-sb flex-r-a-c">
                 <i class="horizontal-line"></i>
-                <span>薯片分</span>
+                <span class="detail-content__section-title-text">薯片分</span>
                 <i class="horizontal-line"></i>
               </div>
               <div class="detail-content__sp-score">
@@ -124,7 +124,7 @@
                 <span>
                   什么是薯片分
                   <my-icon
-                    name="per_ic_help"
+                    name="plan_ic_explain"
                     size="0.24rem"
                     color="#666666"
                     @click="handlePoint"
@@ -367,7 +367,7 @@ export default {
             {
               name: userName,
               userId: mchUserId,
-              userType: 'MERCHANT_USER',
+              userType: 'MERCHANT_B',
             },
             (res) => {
               const { code } = res || {}
@@ -607,6 +607,9 @@ export default {
         font-size: 28px;
         font-weight: bold;
         line-height: 32px;
+        &-text {
+          margin: 0 40px;
+        }
       }
       &__section-content {
         display: flex;
@@ -659,6 +662,8 @@ export default {
       }
       .horizontal-line {
         .horizontal-line(@width:208px; @bgColor:#DFD4CA; @skewX:0deg; @height:2px;);
+        flex: 1;
+        width: auto;
       }
     }
   }
