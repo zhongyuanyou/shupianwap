@@ -37,6 +37,7 @@
         />
         <sp-field
           v-model="registerForm.password"
+          v-forbid-copy-paste
           :type="passwordFieldType"
           class="end-btn-cell"
           name="password"
@@ -126,6 +127,7 @@ import PhoneField from '@/components/login/PhoneField'
 import ProtocolField from '@/components/login/ProtocolField'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
+import formHandle from '@/mixins/formHandle'
 import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
 
@@ -141,6 +143,7 @@ export default {
     ProtocolField,
     LoadingCenter,
   },
+  mixins: [formHandle],
   data() {
     return {
       registerForm: {
