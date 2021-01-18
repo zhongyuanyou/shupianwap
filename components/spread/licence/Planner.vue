@@ -13,8 +13,8 @@
         <sp-swipe-item
           v-for="(item, i) of plannersData"
           :key="i"
-          @click="openIm(i)"
           class="planner-content-item"
+          @click="openIm(i)"
         >
           <div class="planner-content-item-shadow">
             <div class="planner-content-item-shadow-person">

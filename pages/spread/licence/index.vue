@@ -21,7 +21,7 @@
     <Form />
     <!-- E 表单 -->
     <!-- S 选择办理类型 -->
-    <HandleType :typeList="typeList" />
+    <HandleType :type-list="typeList" />
     <!-- E 选择办理类型 -->
     <!-- S 许可证常见的办理问题 -->
     <Question :planner="plannerOne" />
