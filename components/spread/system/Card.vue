@@ -209,6 +209,7 @@ export default {
       if (this.test === '获取验证码') {
         window.promotion.privat.getSmsCode(setData, (res) => {
           if (res.error === 0) {
+            clearInterval(this.time)
             let i = 59
             this.test = i + 's'
             this.time = setInterval(() => {

@@ -213,6 +213,7 @@ export default {
     },
     // 获取验证码
     getCode() {
+      if (this.timer) clearInterval(this.timer)
       this.timer = setInterval(() => {
         this.totalTime--
         this.countDown = this.totalTime + 's'

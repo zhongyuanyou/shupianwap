@@ -194,6 +194,7 @@ export default {
         window.promotion.privat.getSmsCode(data, (res) => {
           if (res.error === 0) {
             // 发送成功后的操作
+            clearInterval(this.time)
             let i = 59
             this.text = i + 's'
             this.time = setInterval(() => {
