@@ -208,6 +208,18 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // 修改登录密码
+  dggChangePwd: (fn = () => {}) => {
+    Bridge.callHandler('dgg_changePwd', {}, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // 修改手机号
+  dggChangePhone: (fn = () => {}) => {
+    Bridge.callHandler('dgg_changePhone', {}, (res) => {
+      handleRequest(res, fn)
+    })
+  },
 }
 
 // 注册APP调用的js方法
