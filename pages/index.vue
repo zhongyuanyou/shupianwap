@@ -23,10 +23,16 @@
       <Preferential :init-data="asyncData.preferential" />
       <!-- E 限时特惠 -->
       <!-- S 资讯精选 -->
-      <Information :info-data="asyncData.information" />
+      <Information
+        v-if="asyncData.information.length"
+        :info-data="asyncData.information"
+      />
       <!-- E 资讯精选 -->
       <!-- S 热门服务 -->
-      <HotServe :hot-data="asyncData.rotationAd" />
+      <HotServe
+        v-if="asyncData.rotationAd.length"
+        :hot-data="asyncData.rotationAd"
+      />
       <!-- E 热门服务 -->
       <!-- S 推荐服务 -->
       <Recommend ref="recommendRef" />
@@ -133,7 +139,7 @@ export default {
       asyncReqParams: {
         infoLimit: 3, // 资讯每页数量
         infoPage: 1, // 资讯当前页
-        categoryCode: '', // 查询资讯的分类code
+        categoryCode: 'con100032', // 查询资讯的分类code
         platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
         terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
         locationCodeList: [], // 广告编码

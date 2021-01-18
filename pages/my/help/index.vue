@@ -79,7 +79,7 @@
             <li
               v-for="(item, index) in tabData[active].articleData"
               :key="index"
-              @click="onServiceTouch(item.id)"
+              @click="onServiceTouch(item)"
             >
               <span>{{ item.title }}</span>
               <my-icon
@@ -149,21 +149,18 @@ export default {
       findType: 0, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
       locationCode: 'ad100006', // 广告位code
       code: 'con100873', // 获取分类列表选项的code
-      limit: 10,
+      limit: 15,
       page: 1,
       categoryCode: '', // 分类code赛选文章
       terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
       platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
-      includeField: 'id,title', // 必须要输出的内容字段
+      includeField:
+        'id,title,linkType,wapRoute,link,jumpImageUrl,iosRoute,androidRoute', // 必须要输出的内容字段
     }
     let tabData = []
     let adData = {}
     try {
-      const res = await $axios.post(helpApi.findArticle, params, {
-        headers: {
-          'x-cache-control': 'cache',
-        },
-      })
+      const res = await $axios.post(helpApi.findArticle, params)
       if (res.code === 200) {
         res.data.categoryList.forEach((item, imdex) => {
           item.limit = params.limit
@@ -276,11 +273,42 @@ export default {
         }
       })
     },
-    onServiceTouch(id) {
-      this.$router.push({
-        path: '/my/help/questions',
-        query: { id },
-      })
+    onServiceTouch(data) {
+      // linkType跳转链接类型 1、跳转文章详情,2、跳转内链,3、跳转外链,4、跳转图片链接
+      switch (data.linkType) {
+        // 跳转文章详情
+        case 1:
+          this.$router.push({
+            path: '/my/help/questions',
+            query: { id: data.id },
+          })
+          break
+        // 跳转内链
+        case 2:
+          this.$router.push({
+            path: `${data.wapRoute}`,
+          })
+          break
+        // 跳转外链
+        case 3:
+          window.location.href = data.link
+          break
+        // 跳转图片链接
+        case 4:
+          this.$router.push({
+            name: 'img',
+            params: {
+              url: data.jumpImageUrl,
+            },
+          })
+          break
+        default:
+          this.$router.push({
+            path: '/my/help/questions',
+            query: { id: data.id },
+          })
+          break
+      }
     },
     handleClick(val) {
       if (val === 3) {
