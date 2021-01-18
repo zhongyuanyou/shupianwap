@@ -58,6 +58,7 @@
               label="行业"
               placeholder="如技术"
               right-icon="arrow-down"
+              :maxlength="4"
               readonly
               @click="isShow = true"
             />
