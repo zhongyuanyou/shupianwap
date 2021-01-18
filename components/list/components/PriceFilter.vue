@@ -127,7 +127,7 @@ export default {
     },
     open() {},
     close() {
-      this.echoData = clone(this.saveEchoData, true)
+      // this.echoData = clone(this.saveEchoData, true)
     },
     minInput(val) {
       // this.minValue = val
@@ -181,6 +181,13 @@ export default {
             emitData.fieldValue.end,
             emitData.fieldValue.start,
           ]
+          // 将页面显示的输入框调整为最小和最大的显示
+          this.echoData.minValue = emitData.fieldValue.start / 100
+          this.echoData.maxValue = emitData.fieldValue.end / 100
+          this.priceComponent.setPrice(
+            emitData.fieldValue.start / 100,
+            emitData.fieldValue.end / 100
+          )
         }
       } else if (this.echoData.activeItems.length) {
         emitData.fieldValue.start = Number(

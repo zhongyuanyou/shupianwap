@@ -137,7 +137,10 @@ export default {
       // console.log('this.searchText', this.searchText)
       // console.log('formData', this.formData)
       console.log('reqType', this.reqType)
-      // this.listShow = true
+      // 埋点数据
+      // Todo 埋点sdk还未知
+      // keyword_type = '商品'
+      // keyword = this.searchText
       if (this.reqType === 'serve') {
         this.getServeListReq()
       } else {
