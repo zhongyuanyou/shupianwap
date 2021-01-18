@@ -234,6 +234,7 @@ export default {
     },
     /** 倒计时函数 */
     countStart() {
+      clearInterval(this.countDownTimer)
       this.countDown = 60
       this.countDownTimer = setInterval(() => {
         if (this.countDown === 0) {

@@ -435,7 +435,6 @@ export default {
     },
     // 发送验证码
     onSmsCode() {
-      console.log(this.countdown)
       if (!checkPhone(this.tel)) {
         Toast('手机号格式错误')
       } else if (this.countdown > -1) {
@@ -457,7 +456,9 @@ export default {
     // 倒计时
     countDown() {
       const vm = this
-      this.countdown = 60
+      this.countdown = 59
+      clearInterval(vm.countdownTimer)
+      vm.countdownTimer = null
       this.countdownTimer = setInterval(function () {
         if (vm.countdown === 0) {
           vm.countdown = -1

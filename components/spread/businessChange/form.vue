@@ -184,7 +184,9 @@ export default {
     // 验证码倒计时
     countDown() {
       const vm = this
-      this.countdown = 60
+      this.countdown = 59
+      clearInterval(vm.countdownTimer)
+      vm.countdownTimer = null
       this.countdownTimer = setInterval(function () {
         if (vm.countdown === 0) {
           vm.countdown = -1
@@ -284,7 +286,6 @@ export default {
       }
       // 3、提交表单
       window.promotion.privat.consultForm(params, (res) => {
-        console.log(params)
         if (res.error === 0) {
           // 这里写表单提交成功后的函数，如二级表单弹出，提示提交成功，清空DOM中表单的数据等
           console.log(res)

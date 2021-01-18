@@ -136,6 +136,7 @@ export default {
         }
         .item-answer-desc {
           flex: none;
+          width: calc(100% - 54px);
           font-size: 24px;
           font-weight: 400;
           color: #555555;
