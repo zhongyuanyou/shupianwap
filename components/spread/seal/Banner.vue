@@ -53,7 +53,6 @@
             placeholder="信息保护中，仅官方可见"
             type="tel"
             maxlength="11"
-            @focus="telFocus"
             @input="
               () => {
                 tel = tel.replace(/[^\d]/g, '')
@@ -61,7 +60,7 @@
             "
           />
         </div>
-        <div v-if="isshow" class="seal-banner-form-content-input">
+        <div class="seal-banner-form-content-input">
           <span>验证码</span>
           <input
             v-model="code"
@@ -130,8 +129,6 @@ export default {
         'https://cdn.shupian.cn/sp-pt/wap/images/eb6ko3c8ql40000.jpg',
         'https://cdn.shupian.cn/sp-pt/wap/images/9xkzckscv6o0000.jpg',
       ],
-      // 验证码输入框显示状态
-      isshow: false,
       // 验证码按钮内容
       text: '获取验证码',
       // 电话
@@ -167,10 +164,6 @@ export default {
     changeBlock(i) {
       this.isSelect = i
       this.sealType = this.sealTypes[i]
-    },
-    // 电话号码输入框聚焦显示获取验证码
-    telFocus() {
-      this.isshow = true
     },
     // 验证 电话号码
     testTel() {

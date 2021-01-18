@@ -64,7 +64,6 @@
             placeholder="信息保护中，仅官方可见"
             type="tel"
             maxlength="11"
-            @focus="focus"
             @input="
               () => {
                 tel = tel.replace(/[^\d]/g, '')
@@ -72,7 +71,7 @@
             "
           />
         </div>
-        <div v-if="isshow" class="banner-bottom-form-div">
+        <div class="banner-bottom-form-div">
           <span>验证码</span>
           <input
             v-model="code"
@@ -148,8 +147,6 @@ export default {
       ],
       // 下弹窗选项栏显示状态
       show: false,
-      // 验证码输入框显示状态
-      isshow: false,
       // 导航选项内容
       tabs: ['增值稅筹划', '企业所得稅筹划', '个人所得稅筹划'],
       // 导航选项判断状态码
@@ -182,10 +179,6 @@ export default {
     // 表头导航选项切换
     change(i) {
       this.active = i
-    },
-    // 电话号码输入框聚焦显示获取验证码
-    focus() {
-      this.isshow = true
     },
     // 验证 电话号码
     testMsg() {
