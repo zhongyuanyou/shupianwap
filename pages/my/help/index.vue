@@ -309,26 +309,33 @@ export default {
       if (val === 3) {
         this.$router.push('/my/complain')
       } else if (val === 2) {
-        this.$appFn.dggJumpRoute({
-          iOSRouter:
-            '{"path":"CPSCustomer:CPSCustomer/CPSVerificationViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}',
-          androidRouter:
-            '{"path":"/account_security/bind_newPhone","parameter":{"":""},"isLogin":"1","version":"1.0.0"}',
+        // this.$appFn.dggJumpRoute({
+        //   iOSRouter:
+        //     '{"path":"CPSCustomer:CPSCustomer/CPSVerificationViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}',
+        //   androidRouter:
+        //     '{"path":"/account_security/bind_newPhone","parameter":{"":""},"isLogin":"1","version":"1.0.0"}',
+        // })
+        // 修改手机号
+        this.$appFn.dggChangePhone((res) => {
+          console.log('phone', res)
         })
       } else if (val === 0) {
-        const iosSetPassword =
-          '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
-        const androisSetPassword =
-          '{"path":"/login/set_password","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
-        const iosUpdatePassword =
-          '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
-        const androisUpdatePassword =
-          '{"path":"/account_security/change_password","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
-        this.$appFn.dggJumpRoute({
-          iOSRouter: this.isPassword ? iosUpdatePassword : iosSetPassword,
-          androidRouter: this.isPassword
-            ? androisUpdatePassword
-            : androisSetPassword,
+        // const iosSetPassword =
+        //   '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
+        // const androisSetPassword =
+        //   '{"path":"/login/set_password","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
+        // const iosUpdatePassword =
+        //   '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
+        // const androisUpdatePassword =
+        //   '{"path":"/account_security/change_password","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
+        // this.$appFn.dggJumpRoute({
+        //   iOSRouter: this.isPassword ? iosUpdatePassword : iosSetPassword,
+        //   androidRouter: this.isPassword
+        //     ? androisUpdatePassword
+        //     : androisSetPassword,
+        // })
+        this.$appFn.dggChangePwd((res) => {
+          console.log('pwd', res)
         })
       } else if (val === 1) {
         this.$appFn.dggGetRealNameAuthAddress((res) => {
