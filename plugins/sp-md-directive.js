@@ -7,6 +7,9 @@ Vue.directive('sensorsTrack', {
     })
   },
   unbind: (el, binding) => {
-    el.removeEventListener('click')
+    el.removeEventListener('click', () => {
+      const { arg = '', value } = binding
+      window.sensors.track(arg, value)
+    })
   },
 })
