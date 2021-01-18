@@ -188,6 +188,8 @@ export default {
         window.promotion.privat.getSmsCode(setData, (res) => {
           if (res.error === 0) {
             let i = 59
+            clearInterval(this.time)
+
             this.test = i + 's'
             this.time = setInterval(() => {
               if (i > 1) {
