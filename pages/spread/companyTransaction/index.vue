@@ -109,7 +109,7 @@ export default {
   mounted() {
     // @--神策埋点-设置公共属性
     window.sensors.registerPage({
-      platform_type: 'H5', // 平台类型：App，H5，Web
+      platform_type: 'wap端', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
       product_line: '公司交易聚合页',
       current_url: location.href,
