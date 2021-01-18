@@ -32,7 +32,7 @@ export default {
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/dzwkf02u3vc0000.png',
           imgWidth: 225,
           imgHeight: 348,
-          url: '/spread/auditCompanyName ',
+          url: '/spread/auditCompanyName',
         },
         {
           id: 2,

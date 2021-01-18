@@ -52,7 +52,7 @@
             @focus="() => (smsInputIsShow = true)"
           />
         </div>
-        <div v-if="smsInputIsShow" class="input-all1">
+        <div class="input-all1">
           <sp-field
             v-model="sms"
             v-sensorsTrack:webClick="{

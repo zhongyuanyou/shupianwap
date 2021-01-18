@@ -121,13 +121,12 @@ export default {
         industryName: obj.companyIndustryName,
         recommendText: this.getArrayItems(this.slogans, 3).join(','),
         price: obj.transferPrice,
-        name: obj.companyName,
+        name: obj.showName,
         tabs: this.getArrayItems(this.slogans, 3),
         notes: [
           obj.companyIndustryName,
           obj.payTaxesTypeName,
           obj.establishDate,
-          obj.registeredCapital,
         ],
       }
       switch (obj.companyIndustryName) {

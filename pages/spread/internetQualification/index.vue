@@ -683,14 +683,14 @@ export default {
           },
         },
         {
-          title: '网络文化经营许可证（文网文）',
+          title: 'EDI许可证',
           titleLabel:
             'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
-          titleContent: '从事音乐、动漫等业务的准入资质',
+          titleContent: '互联网交易处理业务许可',
           actualViews: '45万+',
           defaultSales: '44万+',
           actualSales: '44万+',
-          price: 14000,
+          price: 12000,
           bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/fo9dtjg9pxc0000.png',
           planner: {
             id: '7862495547640840192',
@@ -703,15 +703,15 @@ export default {
           labelsType: 'row',
           rowLabels: {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/coj92paiae00000.png',
-            text: ['注册资金100万', '有8名以上技术人员'],
+            text: ['注册资本100万', '属于内资企业'],
           },
           md: {
             telMd: {
-              name: '互联网资质业务介绍_网络文化经营许可证_拨打电话',
+              name: '互联网资质业务介绍_EDI许可证_拨打电话',
               type: '售前',
             },
             imMd: {
-              name: '互联网资质业务介绍_网络文化经营许可证_在线咨询',
+              name: '互联网资质业务介绍_EDI许可证_在线咨询',
               type: '售前',
             },
           },
@@ -751,40 +751,6 @@ export default {
           },
         },
         {
-          title: 'ISP许可证',
-          titleLabel:
-            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
-          titleContent: '因特网接入服务业务许可',
-          actualViews: '45万+',
-          defaultSales: '44万+',
-          actualSales: '44万+',
-          price: 10000,
-          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/fo9dtjg9pxc0000.png',
-          planner: {
-            id: '7862495547640840192',
-            name: '张毅',
-            jobNum: '107547',
-            telephone: '18402858698',
-            imgSrc:
-              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
-          },
-          labelsType: 'row',
-          rowLabels: {
-            icon: 'https://cdn.shupian.cn/sp-pt/wap/images/coj92paiae00000.png',
-            text: ['有安全管理系统', '有资源和管理系统'],
-          },
-          md: {
-            telMd: {
-              name: '互联网资质业务介绍_ISP许可证_拨打电话',
-              type: '售前',
-            },
-            imMd: {
-              name: '互联网资质业务介绍_ISP许可证_在线咨询',
-              type: '售前',
-            },
-          },
-        },
-        {
           title: 'SP许可证',
           titleLabel:
             'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
@@ -819,14 +785,14 @@ export default {
           },
         },
         {
-          title: 'EDI许可证',
+          title: 'ISP许可证',
           titleLabel:
             'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
-          titleContent: '互联网交易处理业务许可',
+          titleContent: '因特网接入服务业务许可',
           actualViews: '45万+',
           defaultSales: '44万+',
           actualSales: '44万+',
-          price: 12000,
+          price: 10000,
           bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/fo9dtjg9pxc0000.png',
           planner: {
             id: '7862495547640840192',
@@ -839,15 +805,49 @@ export default {
           labelsType: 'row',
           rowLabels: {
             icon: 'https://cdn.shupian.cn/sp-pt/wap/images/coj92paiae00000.png',
-            text: ['注册资本100万', '属于内资企业'],
+            text: ['有安全管理系统', '有资源和管理系统'],
           },
           md: {
             telMd: {
-              name: '互联网资质业务介绍_EDI许可证_拨打电话',
+              name: '互联网资质业务介绍_ISP许可证_拨打电话',
               type: '售前',
             },
             imMd: {
-              name: '互联网资质业务介绍_EDI许可证_在线咨询',
+              name: '互联网资质业务介绍_ISP许可证_在线咨询',
+              type: '售前',
+            },
+          },
+        },
+        {
+          title: '网络文化经营许可证（文网文）',
+          titleLabel:
+            'https://cdn.shupian.cn/sp-pt/wap/images/af20f9cgvc40000.png',
+          titleContent: '从事音乐、动漫等业务的准入资质',
+          actualViews: '45万+',
+          defaultSales: '44万+',
+          actualSales: '44万+',
+          price: 14000,
+          bgImg: 'https://cdn.shupian.cn/sp-pt/wap/images/fo9dtjg9pxc0000.png',
+          planner: {
+            id: '7862495547640840192',
+            name: '张毅',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
+          },
+          labelsType: 'row',
+          rowLabels: {
+            icon: 'https://cdn.shupian.cn/sp-pt/wap/images/coj92paiae00000.png',
+            text: ['注册资金100万', '有8名以上技术人员'],
+          },
+          md: {
+            telMd: {
+              name: '互联网资质业务介绍_网络文化经营许可证_拨打电话',
+              type: '售前',
+            },
+            imMd: {
+              name: '互联网资质业务介绍_网络文化经营许可证_在线咨询',
               type: '售前',
             },
           },

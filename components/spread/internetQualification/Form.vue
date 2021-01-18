@@ -57,7 +57,6 @@
           </div>
           <!-- 3、输入框-验证码-->
           <div
-            v-if="smsInputIsShow"
             v-sensorsTrack:webClick="{
               form_name: '互联网资质表单_验证码',
               form_type: '咨询表单',
