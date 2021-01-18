@@ -55,8 +55,8 @@
           maxlength="11"
           type="tel"
           :formatter="telephoneTest"
-          @focus="() => (isshow = true)"
         />
+        <!-- @focus="() => (isshow = true)" -->
         <!-- s 获取验证码 -->
         <div v-show="isshow" class="verification-box">
           <sp-field
@@ -152,7 +152,7 @@ export default {
       scope: '小规模纳税人',
       telephone: '', // 电话号码
       sms: '', // 验证码
-      isshow: false, // 验证码框是否显示
+      isshow: true, // 验证码框是否显示
       selectshow: false, // 下拉选择框是否显示
       countdown: -1, // 发送验证码倒计时60秒
       countdownTimer: null,
