@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-14 09:21:08
+ * @LastEditTime: 2021-01-18 14:45:46
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -66,6 +66,7 @@
                 ref="goodsItem"
                 :commodity-data="item"
                 :index="index"
+                :shopping-car-status="shoppingCarStatus"
                 @operation="handleItemOperation"
               />
             </div>
@@ -390,7 +391,18 @@ export default {
 
     // 统一的结算
     uPBill() {
-      if (!this.currentSelectedCartIds.length) {
+      const billCarIds = this.list.reduce((accumulator, item) => {
+        // 结算时候需要过滤掉非上架产品
+        if (
+          this.currentSelectedCartIds.includes(item.cartId) &&
+          item.status === 'GOODS_STATUS_ON_SHELF'
+        ) {
+          accumulator.push(item.cartId)
+        }
+        return accumulator
+      }, [])
+
+      if (!billCarIds.length) {
         this.$xToast.show({
           message: '您还没有选择商品哦',
           duration: 1000,
@@ -399,7 +411,8 @@ export default {
         })
         return
       }
-      const cartIdsStr = this.currentSelectedCartIds.join(',') // 多个cartId 用逗号凭借为一个
+
+      const cartIdsStr = billCarIds.join(',') // 多个cartId 用逗号凭借为一个
       console.log(cartIdsStr)
       // 在app中
       if (this.isInApp) {
