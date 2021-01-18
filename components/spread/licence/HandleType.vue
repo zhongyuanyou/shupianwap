@@ -54,14 +54,14 @@
                   src="https://cdn.shupian.cn/sp-pt/wap/images/q1hyl5ug50g000.png"
                   alt=""
                 />
-                <span>{{ title.operating.flow }}</span>
+                <span>{{ title.operating.standard }}</span>
               </div>
               <div class="imgbox">
                 <img
                   src="https://cdn.shupian.cn/sp-pt/wap/images/q1hyl5ug50g000.png"
                   alt=""
                 />
-                <span>{{ title.operating.standard }}</span>
+                <span>{{ title.operating.flow }}</span>
               </div>
             </div>
             <!-- 在线咨询 -->
