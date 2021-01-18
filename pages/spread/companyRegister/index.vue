@@ -122,7 +122,7 @@ import FixedBottom from '@/components/spread/common/FixedBottom'
 import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
 import ConsultTel from '~/components/spread/common/ConsultTel'
 import ShuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
-import dggImCompany from '~/components/spread/DggImCompany'
+import dggImCompany from '@/components/spread/DggImCompany'
 import { spreadApi } from '@/api/spread'
 export default {
   name: 'Index',
