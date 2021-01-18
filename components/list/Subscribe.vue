@@ -164,6 +164,7 @@ export default {
             this.$xToast.hideLoading()
           })
           .catch((e) => {
+            console.log('---', e)
             this.$xToast.hideLoading()
             this.$xToast.show({
               message: e.message,
@@ -225,18 +226,22 @@ export default {
           this.$xToast.hideLoading()
           if (res.code === 200) {
             _self.$xToast.show({
-              message: '提交成功',
+              message: '提交订阅成功',
               duration: 1500,
               icon: 'toast_ic_comp',
               forbidClick: false,
             })
+            if (!_self.isLogin) {
+              this.tel = ''
+              this.sms = ''
+            }
           } else {
-            _self.$xToast.error('提交失败，请重新提交')
+            _self.$xToast.error(res.message)
           }
         })
         .catch((e) => {
           this.$xToast.hideLoading()
-          _self.$xToast.error('提交失败，请重新提交')
+          _self.$xToast.error(e.message)
         })
     },
     // 倒计时

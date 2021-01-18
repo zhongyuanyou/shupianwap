@@ -109,8 +109,10 @@ export default {
       this.spinner = type
     },
     hideLoading() {
-      this.isLoading = false
       this.isShow = false
+      setTimeout(() => {
+        this.isLoading = false
+      }, 0)
     },
     loading({
       message = '加载中',
