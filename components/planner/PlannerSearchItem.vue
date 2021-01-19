@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-14 10:48:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-19 10:52:29
+ * @LastEditTime: 2021-01-19 14:34:55
  * @Description: file content
  * @FilePath: /chips-wap/components/planner/PlannerSearchItem.vue
 -->
@@ -111,7 +111,7 @@ export default {
           data = await this.getTel()
           break
         case 'detail':
-          data = { mchUserId: this.itemData.mchUserId }
+          data = { mchUserId: this.itemData.mchUserId, isShare: 0 }
           break
       }
       if (data) {

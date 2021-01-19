@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-19 10:11:10
+ * @LastEditTime: 2021-01-19 14:48:13
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -33,7 +33,10 @@
     </div>
     <div class="body">
       <div class="detail-content">
-        <div class="detail-content__bg">
+        <div
+          class="detail-content__bg"
+          :class="{ 'detail-content__bg-show-point': formatShowPoint }"
+        >
           <div class="detail-content__wrap">
             <div class="detail-content__wrap-head">
               <div class="flex-r-s flex-r-a-c">
@@ -108,7 +111,7 @@
                 </li>
               </ul>
             </div>
-            <div v-show="detailData.show" class="detail-content__wrap-footer">
+            <div v-show="formatShowPoint" class="detail-content__wrap-footer">
               <div class="detail-content__section-title flex-r-sb flex-r-a-c">
                 <i class="horizontal-line"></i>
                 <span class="detail-content__section-title-text">薯片分</span>
@@ -212,6 +215,7 @@ export default {
       detailData: {},
       shareOptions: [],
       showShare: false,
+      isShare: Number(this.$route.query.isShare) !== 0, // 默认是分享页面，从规划师列表进来就不是分享
       hideIM: this.$route.query.imUserId === this.$route.query.mchUserId, // 目前是 获取到imUserId与mchUserId相等，说明是自己与自己聊天，不显示IM
       hideHeader: !!this.$route.query.hideHeader || false,
       redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去
@@ -252,6 +256,14 @@ export default {
         return '5年以上'
       }
       return ''
+    },
+    formatShowPoint() {
+      const { show } = this.detailData || {}
+      // 分享的页面需要 show:1 才展示薯片分
+      if (this.isShare && show !== 1) {
+        return false
+      }
+      return true
     },
   },
   created() {
@@ -527,9 +539,13 @@ export default {
         position: relative;
         background: url(https://cdn.shupian.cn/sp-pt/wap/images/fmyco4fucsg0000.png)
           top center/100% auto no-repeat;
+        background-position-y: -286px;
+      }
+      &__bg-show-point {
+        background-position-y: 0;
       }
       &__wrap {
-        height: 768px;
+        // height: 768px;
         background: linear-gradient(135deg, #f9f1e8, #f9f1e8, #e3d1c3);
         border-radius: 8px;
         padding: 48px 40px;
