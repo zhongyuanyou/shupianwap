@@ -135,13 +135,19 @@ export default {
           categoryCode: this.categoryCode,
         }
         const res = await this.$axios.get(foundApi.screenRequest, { params })
-        this.refreshStatus = false
-        this.loading = false
+        // this.refreshStatus = false
+        // this.loading = false
         if (res.code === 200) {
           this.information_banner = res.data.information_banner
           this.information_list = res.data.information_list
+        } else {
+          this.refreshStatus = false
+          this.loading = false
         }
-      } catch (err) {}
+      } catch (err) {
+        this.refreshStatus = false
+        this.loading = false
+      }
     },
     onClickRight() {
       this.$router.push('/found/foundSearch')
