@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-19 14:48:13
+ * @LastEditTime: 2021-01-19 15:08:00
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -313,7 +313,9 @@ export default {
         this.showShare = false
         return
       }
-      const isSuccess = copyToClipboard(location && location.href)
+      const isSuccess = copyToClipboard(
+        location && location.href + '&isShare=1'
+      )
       if (isSuccess) {
         this.$xToast.show({
           message: '复制成功',
@@ -333,7 +335,7 @@ export default {
             image: this.detailData.img,
             title: '规划师',
             subTitle: '',
-            url: window && window.location.href,
+            url: window && window.location.href + '&isShare=1',
           },
           (res) => {
             const { code } = res || {}
