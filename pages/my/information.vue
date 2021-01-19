@@ -7,15 +7,6 @@
     <div class="information_con">
       <div class="information_con_tp">
         <div class="avatar_con" @click="handleClick(1)">
-          <!--          <sp-uploader-->
-          <!--            v-model="uploader"-->
-          <!--            class="uploader"-->
-          <!--            upload-text="点击上传"-->
-          <!--            :max-count="1"-->
-          <!--            :max-size="20 * 1024 * 1024"-->
-          <!--            :after-read="afterRead"-->
-          <!--            @oversize="onOversize"-->
-          <!--          />-->
           <spMobileUpload
             v-if="isUpdateAvatar"
             ref="SpUpLoad"
@@ -23,9 +14,9 @@
             :file-id="info.fileId"
             is-add-watermark
             class="uploader"
-            list-url="https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/find"
-            delete-url="https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/deleteSingle"
-            call-back-url="https://dspmicrouag.shupian.cn/tac-external-platform-server/oss/callback"
+            list-url="https://spmicrouag.shupian.cn/tac-external-platform-server/oss/find"
+            delete-url="https://spmicrouag.shupian.cn/tac-external-platform-server/oss/deleteSingle"
+            call-back-url="https://spmicrouag.shupian.cn/tac-external-platform-server/oss/callback"
             @onSuccess="success"
           />
           <div class="cell">
@@ -140,6 +131,7 @@ import { ossApi, userinfoApi } from '@/api'
 import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
 import '@fe/sp-ui-mobile/lib/index.css'
+import { baseURL } from '~/config/index'
 export default {
   name: 'Information',
   components: {
@@ -180,6 +172,9 @@ export default {
     ...mapState({
       userId: (state) => state.user.userInfo.userId,
     }),
+    baseURL() {
+      return baseURL
+    },
   },
   mounted() {
     this.getUserInfo()
@@ -216,10 +211,22 @@ export default {
             forbidClick: true,
           })
         } else {
-          this.$router.push(`/my/info/nickname/${this.info.nickName}`)
+          // this.$router.push(`/my/info/nickname/${this.info.nickName}`)
+          this.$router.push({
+            path: '/my/info/nickname',
+            query: {
+              nickName: this.info.nickName,
+            },
+          })
         }
       } else if (val === 5) {
-        this.$router.push(`/my/info/email/${this.info.email}`)
+        // this.$router.push(`/my/info/email/${this.info.email}`)
+        this.$router.push({
+          path: '/my/info/email',
+          query: {
+            email: this.info.email,
+          },
+        })
       } else if (val === 4) {
         this.sexShow = true
       } else if (val === 6) {

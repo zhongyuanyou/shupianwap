@@ -4,7 +4,7 @@
     <div>
       <div class="form-title">您购买公司的预算是?</div>
       <div class="form-blue">{{ minMoney }}-{{ maxMoney }}万元</div>
-      <slider type="money"></slider>
+      <slider ref="moneyRef" type="money"></slider>
       <div class="form-value">
         <div v-for="(item, index) of moneys" :key="index">{{ item }}</div>
       </div>
@@ -13,7 +13,7 @@
     <div>
       <div class="form-title">你想购买成立多少年的公司</div>
       <div class="form-blue">{{ minYear }}-{{ maxYear }}年</div>
-      <slider type="year"></slider>
+      <slider ref="yearRef" type="year"></slider>
       <div class="form-value">
         <div v-for="(item, index) of years" :key="index">{{ item }}</div>
       </div>
@@ -148,6 +148,30 @@ export default {
       selectName2: '不限',
     }
   },
+  mounted() {
+    const formData = JSON.parse(localStorage.getItem('formData'))
+    if (formData) {
+      this.selectName1 = formData.content['期望城市'] || this.selectName1
+      this.selectName2 = formData.content['期望行业'] || this.selectName2
+      const gmys = formData.content['购买预算']
+      const qwnx = formData.content['期望成立年限']
+      const gmysStart = gmys.indexOf('-')
+      const gmysEnd = gmys.indexOf('万')
+      this.minMoney = Number(gmys.substring(0, gmysStart))
+      this.maxMoney = Number(gmys.substring(gmysStart + 1, gmysEnd))
+      const qwnxStart = qwnx.indexOf('-')
+      const qwnxEnd = qwnx.indexOf('年')
+      this.minYear = Number(qwnx.substring(0, qwnxStart))
+      this.maxYear = Number(qwnx.substring(qwnxStart + 1, qwnxEnd))
+      this.$nextTick(() => {
+        this.$refs.moneyRef.value = [
+          parseInt(this.minMoney / 2),
+          parseInt(this.maxMoney / 2),
+        ]
+        this.$refs.yearRef.value = [this.minYear * 5, this.maxYear * 5]
+      })
+    }
+  },
   methods: {
     // 选中后的数据更改
     onConfirm1(value) {
@@ -165,15 +189,21 @@ export default {
     },
     // 下一步
     next() {
+      const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
       const data = {}
       data.content = {
-        购买预算: `[${this.minMoney}, ${this.maxMoney}]`,
-        期望成立年限: `[${this.minYear}, ${this.maxYear}]`,
+        购买预算: `${this.minMoney}-${this.maxMoney}万元`,
+        期望成立年限: `${this.minYear}-${this.maxYear}年`,
         期望城市: this.selectName1,
         期望行业: this.selectName2,
       }
+      // 合并两个页面之间缓存的数据
+      if (localStorageFormData) {
+        data.content = Object.assign(localStorageFormData.content, data.content)
+      }
       data.type = 'gszr'
-      localStorage.setItem('data', JSON.stringify(data))
+      data.url = window.location.href
+      localStorage.setItem('formData', JSON.stringify(data))
       this.$router.push('/spread/myDemandCard/second')
     },
   },

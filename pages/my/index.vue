@@ -13,25 +13,25 @@
           @click="handleAvatar"
         />
         <p class="txt" @click="handleClickLogin">
-          {{ userId ? '欢迎你，' + info.fullName || '' : '登录/注册' }}
+          {{ userId ? '欢迎你，' + info.nickName || '' : '登录/注册' }}
         </p>
       </div>
     </div>
     <!--E 顶部-->
     <!--S 按钮区-->
     <div class="my_btns">
-      <div class="my_btns_item" @click="handleClick(0)">
-        <div class="my_btns_item_icon">
-          <my-icon name="per_ic_entrust" size="0.36rem" color="#4974F5" />
-        </div>
-        <div class="my_btns_item_con">委托出售</div>
-      </div>
-      <div class="my_btns_item" @click="handleClick(1)">
-        <div class="my_btns_item_icon">
-          <my-icon name="per_ic_cooperation" size="0.36rem" color="#FE8C29" />
-        </div>
-        <div class="my_btns_item_con">我要合作</div>
-      </div>
+      <!--      <div class="my_btns_item" @click="handleClick(0)">-->
+      <!--        <div class="my_btns_item_icon">-->
+      <!--          <my-icon name="per_ic_entrust" size="0.36rem" color="#4974F5" />-->
+      <!--        </div>-->
+      <!--        <div class="my_btns_item_con">委托出售</div>-->
+      <!--      </div>-->
+      <!--      <div class="my_btns_item" @click="handleClick(1)">-->
+      <!--        <div class="my_btns_item_icon">-->
+      <!--          <my-icon name="per_ic_cooperation" size="0.36rem" color="#FE8C29" />-->
+      <!--        </div>-->
+      <!--        <div class="my_btns_item_con">我要合作</div>-->
+      <!--      </div>-->
       <div class="my_btns_item" @click="handleClick(2)">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_help" size="0.36rem" color="#00B365" />
@@ -114,7 +114,7 @@ export default {
     handleAvatar() {
       // 点击头像
       if (!this.userId) {
-        this.$router.replace({
+        this.$router.push({
           name: 'login',
           query: { redirect: this.$route.fullPath },
         })

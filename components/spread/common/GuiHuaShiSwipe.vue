@@ -2,6 +2,87 @@
   <div class="planner">
     <div class="planner-title">{{ plannersCommon.title }}</div>
     <div class="planner-flex">
+      <!--   老埋点   -->
+      <!--      <sp-swipe-->
+      <!--        v-if="mdType === 'old'"-->
+      <!--        :autoplay="3000"-->
+      <!--        indicator-color="white"-->
+      <!--        :show-indicators="false"-->
+      <!--        class="planner-content my-swipe"-->
+      <!--      >-->
+      <!--        <sp-swipe-item-->
+      <!--          v-for="(item, i) of plannersData"-->
+      <!--          :key="i"-->
+      <!--          v-md-map-->
+      <!--          v-md:p_IMClick-->
+      <!--          data_im_type="售前"-->
+      <!--          :data-name="plannersCommon.imName"-->
+      <!--          class="planner-content-item"-->
+      <!--          @click="openIm(i, $event)"-->
+      <!--        >-->
+      <!--          <div class="planner-content-item-shadow">-->
+      <!--            <div class="planner-content-item-shadow-person">-->
+      <!--              <div-->
+      <!--                class="planner-content-item-shadow-person-img"-->
+      <!--                :style="-->
+      <!--                  item.avatarImg === ''-->
+      <!--                    ? {-->
+      <!--                        backgroundImage: `url(http://pic.sc.chinaz.com/files/pic/pic9/202009/hpic2975.jpg)`,-->
+      <!--                      }-->
+      <!--                    : { backgroundImage: `url(${item.avatarImg})` }-->
+      <!--                "-->
+      <!--              ></div>-->
+      <!--              <div class="planner-content-item-shadow-person-font">-->
+      <!--                金牌规划师-->
+      <!--              </div>-->
+      <!--            </div>-->
+      <!--            <div class="planner-content-item-shadow-content">-->
+      <!--              <div class="planner-content-item-shadow-content-name">-->
+      <!--                {{ item.name }}-->
+      <!--              </div>-->
+      <!--              <div class="planner-content-item-shadow-content-count">-->
+      <!--                薯片分 {{ item.shuPianFen }} | 服务次数 {{ item.serverNum }}-->
+      <!--              </div>-->
+      <!--              <div class="planner-content-item-shadow-content-tab">-->
+      <!--                <div v-for="(tab, j) of item.labels" :key="j">{{ tab }}</div>-->
+      <!--              </div>-->
+      <!--            </div>-->
+      <!--            <div class="planner-content-item-shadow-icon">-->
+      <!--              <div-->
+      <!--                v-md-map-->
+      <!--                v-md:p_IMClick-->
+      <!--                data_im_type="售前"-->
+      <!--                :data-name="plannersCommon.imName"-->
+      <!--                style="margin-right: 0.2rem"-->
+      <!--                @click="openIm(i, $event)"-->
+      <!--              >-->
+      <!--                <my-icon-->
+      <!--                  name="notify_ic_chat"-->
+      <!--                  color="#4974F5"-->
+      <!--                  size="0.32rem"-->
+      <!--                  class="icon line"-->
+      <!--                ></my-icon>-->
+      <!--              </div>-->
+      <!--              <div-->
+      <!--                v-md-map-->
+      <!--                v-md:webClick-->
+      <!--                :data-name="plannersCommon.telName"-->
+      <!--                @click="tel(i, $event)"-->
+      <!--              >-->
+      <!--                <my-icon-->
+      <!--                  name="notify_ic_tel"-->
+      <!--                  color="#4974F5"-->
+      <!--                  size="0.32rem"-->
+      <!--                  class="icon line"-->
+      <!--                ></my-icon>-->
+      <!--              </div>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div class="planner-content-item-space"></div>-->
+      <!--        </sp-swipe-item>-->
+      <!--      </sp-swipe>-->
+      <!--   老埋点   -->
+      <!--   新埋点   -->
       <sp-swipe
         :autoplay="3000"
         indicator-color="white"
@@ -11,12 +92,12 @@
         <sp-swipe-item
           v-for="(item, i) of plannersData"
           :key="i"
-          v-md-map
-          v-md:p_IMClick
-          data_im_type="售前"
-          :data-name="plannersCommon.imName"
+          v-sensorsTrack:p_IMClick="{
+            name: `${plannersCommon.imName}`,
+            im_type: '售前',
+          }"
           class="planner-content-item"
-          @click="openIm(i)"
+          @click="openIm(i, $event)"
         >
           <div class="planner-content-item-shadow">
             <div class="planner-content-item-shadow-person">
@@ -47,31 +128,43 @@
             </div>
             <div class="planner-content-item-shadow-icon">
               <div style="margin-right: 0.2rem">
-                <my-icon
-                  name="notify_ic_chat"
-                  color="#4974F5"
-                  size="0.32rem"
-                  class="icon line"
-                ></my-icon>
+                <a
+                  v-sensorsTrack:p_IMClick="{
+                    name: `${plannersCommon.imName}`,
+                    im_type: '售前',
+                  }"
+                  href="javascript:;"
+                  @click="openIm(i, $event)"
+                >
+                  <my-icon
+                    name="notify_ic_chat"
+                    color="#4974F5"
+                    size="0.32rem"
+                    class="icon line"
+                  ></my-icon>
+                </a>
               </div>
               <div
-                v-md-map
-                v-md:webClick
-                :data-name="plannersCommon.telName"
+                v-sensorsTrack:webClick="{
+                  name: `${plannersCommon.telName}`,
+                }"
                 @click="tel(i, $event)"
               >
-                <my-icon
-                  name="notify_ic_tel"
-                  color="#4974F5"
-                  size="0.32rem"
-                  class="icon line"
-                ></my-icon>
+                <a href="javascript:;">
+                  <my-icon
+                    name="notify_ic_tel"
+                    color="#4974F5"
+                    size="0.32rem"
+                    class="icon line"
+                  ></my-icon>
+                </a>
               </div>
             </div>
           </div>
           <div class="planner-content-item-space"></div>
         </sp-swipe-item>
       </sp-swipe>
+      <!--   新埋点   -->
       <div class="planner-right"></div>
     </div>
   </div>
@@ -116,6 +209,13 @@ export default {
         }
       },
     },
+    // 判断新老埋点
+    mdType: {
+      type: String,
+      default: () => {
+        return 'new'
+      },
+    },
   },
   data() {
     return {
@@ -124,7 +224,8 @@ export default {
   },
   methods: {
     // icon点击触发，无需判断
-    openIm(i) {
+    openIm(i, e) {
+      e.stopPropagation()
       this.$root.$emit(
         'openIMM',
         this.plannersData[i].id,
@@ -142,6 +243,11 @@ export default {
 </script>
 
 <style scoped lang="less">
+a {
+  text-decoration: none;
+  display: flex;
+  color: inherit;
+}
 .planner {
   width: @spread-page-width;
   height: 349px;

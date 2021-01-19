@@ -14,7 +14,7 @@
               <div>
                 <!-- 循环属性 -->
                 <span v-for="field of item.fieldList" :key="field.fieldCode">{{
-                  `${field.fieldName}:${field.fieldValue}`
+                  `${field.fieldName}:${field.fieldValueCn}`
                 }}</span>
               </div>
               <div>销售价：<span v-text="item.goodsPrice"></span></div>

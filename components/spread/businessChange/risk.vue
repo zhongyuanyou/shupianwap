@@ -15,12 +15,12 @@
     <div class="consulting-box">
       <span>我面临这些问题，我要解决</span>
       <a
-        v-md-map
-        v-md:WebClick
-        v-md:p_IMClick
+        v-sensorsTrack:p_IMClick="{
+          eventName: '在线咨询',
+          type: '售前',
+          name: `工商不变更风险_立即咨询`,
+        }"
         href="JavaScript:;"
-        data-im_type="售前"
-        data-name="工商不变更风险_立即咨询"
         @click="call()"
         >立即咨询</a
       >

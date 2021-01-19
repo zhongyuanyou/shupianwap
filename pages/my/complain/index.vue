@@ -172,6 +172,17 @@ export default {
         ? '薯片'
         : '企大顺'
       : '薯片'
+    if (this.isInApp) {
+      this.$appFn.dggDeviceInfo((res) => {
+        if (res.code === 200) {
+          this.formData.equipment = res.data['X-Device-Type']
+        } else {
+          this.formData.equipment = '未获取到设备信息'
+        }
+      })
+    } else {
+      this.formData.equipment = '浏览器'
+    }
     this.getComplainCategory()
   },
   methods: {
@@ -279,7 +290,7 @@ export default {
         const res = await this.$axios.get(commonApi.detail, { params })
         this.loading = false
         if (res.code === 200) {
-          this.complainCategory = res.data.childrenList
+          this.complainCategory = res.data.childrenList || []
         }
       } catch (err) {
         this.loading = false
@@ -324,6 +335,7 @@ export default {
   height: 100%;
   background-color: #fff;
   overflow-y: scroll;
+  padding-bottom: 140px;
   .back_icon {
     margin-left: 40px;
   }

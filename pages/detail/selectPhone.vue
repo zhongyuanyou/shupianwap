@@ -2,7 +2,6 @@
   <div class="select-phone">
     <div
       class="top"
-      :class="{ 'safe-area-inset-top': !isInApp }"
       :style="{
         'padding-top': headerPaddingTop,
       }"
@@ -25,7 +24,7 @@
             <template #left-icon>
               <my-icon
                 name="sear_ic_sear"
-                size="0.4rem"
+                size="0.3rem"
                 color="#999999"
               ></my-icon>
             </template>
@@ -184,7 +183,7 @@ export default {
         maxPrice: '',
       },
       dropdownPriceTitle: '价格',
-      dropdownSortTitle: '',
+      dropdownSortTitle: '默认排序',
       loading: false,
       error: false,
       finished: false,
@@ -244,18 +243,19 @@ export default {
       if (matchedSort) {
         const { ext1, ext2 } = matchedSort
         orderBy = ext1
-        isAsc = !!ext2
+        isAsc = !!+ext2 // 字符串的 0 与 1 ，需要转换为 boolean
       }
       return { searchKey, goodsPriceStart, goodsPriceEnd, orderBy, isAsc }
     },
 
     headerPaddingTop() {
-      if (this.appInfo && this.appInfo.statusbarheight)
-        return this.appInfo.statusbarheight + 'px'
+      if (this.appInfo && this.appInfo.statusBarHeight)
+        return this.appInfo.statusBarHeight + 'px'
       else if (this.isInApp) {
         return '20px'
+      } else {
+        return ['constant(safe-area-inset-top)', 'env(safe-area-inset-top)']
       }
-      return '0'
     },
   },
   watch: {
@@ -334,13 +334,21 @@ export default {
       // 最小输入框
       console.log(val)
       this.search.price = {}
-      this.search.minPrice = val
+      let numberVal = +val
+      if (!isNaN(numberVal)) {
+        numberVal = numberVal * 100 // 元转为分
+      }
+      this.search.minPrice = numberVal
     },
     maxInput(val) {
       // 最大输入框
       console.log(val)
       this.search.price = {}
-      this.search.maxPrice = val
+      let numberVal = +val
+      if (!isNaN(numberVal)) {
+        numberVal = numberVal * 100 // 元转为分
+      }
+      this.search.maxPrice = numberVal
     },
     selectedAllPrices(item, items) {
       const { name, id } = item
@@ -366,13 +374,20 @@ export default {
     confirmPrice() {
       // 确认价格
       this.$refs.isShowPrice.toggle()
-      const { minPrice, maxPrice, price } = this.search
+      const { price } = this.search
+      let { minPrice, maxPrice } = this.search
+      if (!isNaN(minPrice)) {
+        minPrice = minPrice / 100
+      }
+      if (!isNaN(maxPrice)) {
+        maxPrice = maxPrice / 100
+      }
       let dropdownPriceTitle = '价格'
       if (price.name) {
         dropdownPriceTitle = price.name
       } else if (minPrice || maxPrice) {
         dropdownPriceTitle = minPrice
-          ? `${minPrice}-${maxPrice}`
+          ? `${minPrice}${maxPrice ? '-' + maxPrice : ''}`
           : `${maxPrice}`
       }
 
@@ -605,9 +620,5 @@ export default {
   .footer {
     padding: 10px 40px 24px;
   }
-}
-.safe-area-inset-top {
-  padding-top: constant(safe-area-inset-top);
-  padding-top: env(safe-area-inset-top);
 }
 </style>

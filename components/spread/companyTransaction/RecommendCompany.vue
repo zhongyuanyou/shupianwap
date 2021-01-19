@@ -158,45 +158,10 @@ export default {
       this.getGoodList({ type: 0 })
     }
   },
-  mounted() {
-    // try {
-    //   // this.searchDomHeight = this.$parent.$refs.header.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
-    //   window.addEventListener('scroll', this.scrollMd) // 监听滚动
-    // } catch (error) {
-    //   console.log(error)
-    // }
-  },
   beforeDestroy() {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
-    // 滚动浏览埋点
-    scrollMd(event) {},
-    scrollFunc() {
-      if (typeof this.scrollAction.x === 'undefined') {
-        this.scrollAction.x = window.pageXOffset
-        this.scrollAction.y = window.pageYOffset
-      }
-      const diffX = this.scrollAction.x - window.pageXOffset
-      const diffY = this.scrollAction.y - window.pageYOffset
-      if (diffX < 0) {
-        // Scroll right
-        this.scrollDirection = 'right'
-      } else if (diffX > 0) {
-        // Scroll left
-        this.scrollDirection = 'left'
-      } else if (diffY < 0) {
-        // Scroll down
-        this.scrollDirection = 'down'
-      } else if (diffY > 0) {
-        // Scroll up
-        this.scrollDirection = 'up'
-      } else {
-        // First scroll event
-      }
-      this.scrollAction.x = window.pageXOffset
-      this.scrollAction.y = window.pageYOffset
-    },
     // 滚动加载更多
     handleScroll() {
       if (

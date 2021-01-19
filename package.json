@@ -9,10 +9,11 @@
     "@dgg/im-sdk": "^1.3.0",
     "@dgg/oss": "^1.0.2",
     "@dgg/sp-im-sdk": "^1.0.0-beat7",
-    "@fe/sp-ui-mobile": "^0.0.6",
+    "@fe/sp-ui-mobile": "^0.0.8",
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/style-resources": "^1.0.0",
     "autoprefixer": "^9.7.6",
+    "axios": "^0.21.1",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "better-scroll": "^2.0.5",
     "cookie-universal-nuxt": "^2.1.4",
@@ -34,8 +35,10 @@
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
     "svg-captcha": "^1.4.0",
+    "swiper": "^6.4.5",
     "vant": "^2.10.7",
-    "vconsole": "^3.3.4"
+    "vconsole": "^3.3.4",
+    "vue-awesome-swiper": "^4.1.1"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^2.0.2",

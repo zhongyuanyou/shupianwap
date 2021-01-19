@@ -4,10 +4,12 @@
     <ul class="productlist">
       <li v-for="(item, index) in ProductList" :key="index">
         <a
-          v-md-map
-          v-md:webClick
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '售前',
+            name: `${needlist[index]}`,
+          }"
           href="javascript:;"
-          data-name="needlist[index]"
           @click="
             () => {
               $parent.openIM(item.url)
@@ -62,12 +64,12 @@ export default {
         {
           code: 1,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/4sydiz0knhg0000.jpg',
-          url: 'https://shupian.dgg.cn/spread/companyRegister',
+          url: '/spread/companyRegister',
         },
         {
           code: 2,
           img: 'https://cdn.shupian.cn/sp-pt/wap/images/6q2l9tmcb7g0000.jpg',
-          url: 'https://shupian.dgg.cn/spread/tax',
+          url: '/spread/tax',
         },
         {
           code: 3,
