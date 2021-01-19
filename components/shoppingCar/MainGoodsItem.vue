@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-14 10:14:14
+ * @LastEditTime: 2021-01-19 19:45:17
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/MainGoodsItem.vue
 -->
@@ -357,6 +357,7 @@ export default {
       align-items: center;
       &__text {
         .textOverflow(1);
+        font-size: 22px;
       }
       .ic__sku-open {
         margin-left: 8px;
