@@ -6,7 +6,7 @@
         v-model="currentItem"
         class="tab-curve"
         :offset-top="searchDomHeight"
-        :tab-list="data.tabBtnList"
+        :tab-list="tabBtnList"
         :need-fixed="true"
         :right="0.54"
         name-field="name"
@@ -19,7 +19,7 @@
         :show-indicators="false"
         @change="onChange"
       >
-        <sp-swipe-item v-for="(item, index) in data.tabBtnList" :key="index">
+        <sp-swipe-item v-for="(item, index) in tabBtnList" :key="index">
           <div v-show="index === currentItem">
             <!-- START 推荐内容滚动区 -->
             <div
@@ -29,11 +29,14 @@
             >
               <div class="marks">
                 <a
-                  v-for="(item, index) in data.marks"
+                  v-for="(item, index) in marks"
                   :key="index"
                   class="mark"
-                  href="javascript:;"
-                  @click="jumpLink('')"
+                  @click="
+                    () => {
+                      $parent.jumpLink('')
+                    }
+                  "
                 >
                   {{ item }}
                 </a>
@@ -73,51 +76,21 @@
 
 <script>
 import { Swipe, swipeItem, Skeleton } from '@chipspc/vant-dgg'
-import TabCurve from '@/components/common/tab/TabCurve'
+import TabCurve from '~/components/common/tab/TabCurve'
+import LoadingDown from '~/components/common/loading/LoadingDown'
 import adJumpHandle from '~/mixins/adJumpHandle'
-import GoodItem from '~/components/spread/common1/productItem'
+
+import GoodItem from '~/components/spread/transaction/companyTransaction/GoodItem'
 export default {
   components: {
     [Swipe.name]: Swipe,
     [swipeItem.name]: swipeItem,
     [Skeleton.name]: Skeleton,
     TabCurve,
+    // LoadingDown,
     GoodItem,
   },
   mixins: [adJumpHandle],
-  props: {
-    data: {
-      type: Object,
-      default: () => {
-        return {
-          tabBtnList: [
-            { name: '推荐公司', type: 0, goodList: [] },
-            { name: '热卖公司', type: 9, goodList: [] },
-            { name: '降价急售', type: 1, goodList: [] },
-          ],
-          marks: [
-            '空壳公司',
-            '实体公司',
-            '小规模',
-            '高新技术',
-            '有限公司',
-            '降价',
-            '带商标',
-            '带专利',
-            '无经营',
-            '发票',
-          ],
-          planner: {
-            id: '7862495547640840192',
-            name: '张毅',
-            jobNum: '107547',
-            telephone: '18402858698',
-            imgSrc: '',
-          },
-        }
-      },
-    },
-  },
   data() {
     return {
       tabBtn: [], // 对象有goodsList字段是商品列表
@@ -138,12 +111,30 @@ export default {
         page: 1, // 当前页
         locationCode: '', // 查询广告的位置code
       },
+
+      tabBtnList: [
+        { name: '推荐公司', type: 0, goodList: [] },
+        { name: '热卖公司', type: 9, goodList: [] },
+        { name: '降价急售', type: 1, goodList: [] },
+      ],
       goodListParams: {
         type: 0,
         page: 1,
         limit: 10,
       },
       goodList: [],
+      marks: [
+        '空壳公司',
+        '实体公司',
+        '小规模',
+        '高新技术',
+        '有限公司',
+        '降价',
+        '带商标',
+        '带专利',
+        '无经营',
+        '发票',
+      ],
       scrollAction: { x: 'undefined', y: 'undefined' },
       scrollDirection: '',
     }
@@ -161,6 +152,7 @@ export default {
       }
     },
   },
+  watch: {},
   created() {
     if (process.client) {
       this.getGoodList({ type: 0 })
@@ -170,33 +162,6 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
-    // 滚动浏览埋点
-    scrollMd(event) {},
-    scrollFunc() {
-      if (typeof this.scrollAction.x === 'undefined') {
-        this.scrollAction.x = window.pageXOffset
-        this.scrollAction.y = window.pageYOffset
-      }
-      const diffX = this.scrollAction.x - window.pageXOffset
-      const diffY = this.scrollAction.y - window.pageYOffset
-      if (diffX < 0) {
-        // Scroll right
-        this.scrollDirection = 'right'
-      } else if (diffX > 0) {
-        // Scroll left
-        this.scrollDirection = 'left'
-      } else if (diffY < 0) {
-        // Scroll down
-        this.scrollDirection = 'down'
-      } else if (diffY > 0) {
-        // Scroll up
-        this.scrollDirection = 'up'
-      } else {
-        // First scroll event
-      }
-      this.scrollAction.x = window.pageXOffset
-      this.scrollAction.y = window.pageYOffset
-    },
     // 滚动加载更多
     handleScroll() {
       if (
@@ -243,7 +208,7 @@ export default {
     },
     switchHandle(index) {
       if (!this.goodList.length) {
-        this.getGoodList({ type: this.data.tabBtnList[index].type })
+        this.getGoodList({ type: this.tabBtnList[index].type })
       }
     },
     preventTouch(e) {
@@ -264,19 +229,6 @@ export default {
           // this.goodList = this.goodList.concat(res.data.searchList.records)
         }
       })
-    },
-    jumpLink(url) {
-      if (url) {
-        window.open(url, '_blank')
-      } else {
-        this.$root.$emit(
-          'openIMM',
-          this.data.planner.id,
-          this.data.planner.name || '',
-          this.data.planner.jobNum || '',
-          this.data.planner.imgSrc || ''
-        )
-      }
     },
   },
 }

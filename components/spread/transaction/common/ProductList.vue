@@ -6,7 +6,7 @@
         v-model="currentItem"
         class="tab-curve"
         :offset-top="searchDomHeight"
-        :tab-list="tabBtnList"
+        :tab-list="data.tabBtnList"
         :need-fixed="true"
         :right="0.54"
         name-field="name"
@@ -19,7 +19,7 @@
         :show-indicators="false"
         @change="onChange"
       >
-        <sp-swipe-item v-for="(item, index) in tabBtnList" :key="index">
+        <sp-swipe-item v-for="(item, index) in data.tabBtnList" :key="index">
           <div v-show="index === currentItem">
             <!-- START 推荐内容滚动区 -->
             <div
@@ -29,14 +29,11 @@
             >
               <div class="marks">
                 <a
-                  v-for="(item, index) in marks"
+                  v-for="(item, index) in data.marks"
                   :key="index"
                   class="mark"
-                  @click="
-                    () => {
-                      $parent.jumpLink('')
-                    }
-                  "
+                  href="javascript:;"
+                  @click="jumpLink('')"
                 >
                   {{ item }}
                 </a>
@@ -76,21 +73,52 @@
 
 <script>
 import { Swipe, swipeItem, Skeleton } from '@chipspc/vant-dgg'
-import TabCurve from '@/components/common/tab/TabCurve'
-import LoadingDown from '@/components/common/loading/LoadingDown'
+import TabCurve from '~/components/common/tab/TabCurve'
 import adJumpHandle from '~/mixins/adJumpHandle'
-
-import GoodItem from '@/components/spread/companyTransaction/GoodItem'
+import GoodItem from '~/components/spread/transaction/common/ProductItem'
 export default {
   components: {
     [Swipe.name]: Swipe,
     [swipeItem.name]: swipeItem,
     [Skeleton.name]: Skeleton,
     TabCurve,
-    // LoadingDown,
     GoodItem,
   },
   mixins: [adJumpHandle],
+  props: {
+    data: {
+      type: Object,
+      default: () => {
+        return {
+          tabBtnList: [
+            { name: '推荐公司', type: 0 },
+            { name: '热卖公司', type: 9 },
+            { name: '降价急售', type: 1 },
+          ],
+          marks: [
+            '空壳公司',
+            '实体公司',
+            '小规模',
+            '高新技术',
+            '有限公司',
+            '降价',
+            '带商标',
+            '带专利',
+            '无经营',
+            '发票',
+          ],
+          planner: {
+            id: '7862495547640840192',
+            name: '张毅',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc: '',
+          },
+          apiUrl: '/tradingApi/WapCompany/find/newList',
+        }
+      },
+    },
+  },
   data() {
     return {
       tabBtn: [], // 对象有goodsList字段是商品列表
@@ -111,30 +139,12 @@ export default {
         page: 1, // 当前页
         locationCode: '', // 查询广告的位置code
       },
-
-      tabBtnList: [
-        { name: '推荐公司', type: 0, goodList: [] },
-        { name: '热卖公司', type: 9, goodList: [] },
-        { name: '降价急售', type: 1, goodList: [] },
-      ],
       goodListParams: {
         type: 0,
         page: 1,
         limit: 10,
       },
       goodList: [],
-      marks: [
-        '空壳公司',
-        '实体公司',
-        '小规模',
-        '高新技术',
-        '有限公司',
-        '降价',
-        '带商标',
-        '带专利',
-        '无经营',
-        '发票',
-      ],
       scrollAction: { x: 'undefined', y: 'undefined' },
       scrollDirection: '',
     }
@@ -152,7 +162,6 @@ export default {
       }
     },
   },
-  watch: {},
   created() {
     if (process.client) {
       this.getGoodList({ type: 0 })
@@ -208,7 +217,7 @@ export default {
     },
     switchHandle(index) {
       if (!this.goodList.length) {
-        this.getGoodList({ type: this.tabBtnList[index].type })
+        this.getGoodList({ type: this.data.tabBtnList[index].type })
       }
     },
     preventTouch(e) {
@@ -218,7 +227,7 @@ export default {
     getGoodList({ type = 0, page = 1, limit = 10 }) {
       this.loading = true
       const param = `?type=${type}&page=${page}&limit=${limit}`
-      const api = '/tradingApi/WapCompany/find/newList'
+      const api = this.data.apiUrl || '/tradingApi/WapCompany/find/newList'
       const cdn = 'https://mjy.dgg.cn'
       this.$axios.get(cdn + api + param).then((res) => {
         this.loading = false
@@ -229,6 +238,19 @@ export default {
           // this.goodList = this.goodList.concat(res.data.searchList.records)
         }
       })
+    },
+    jumpLink(url) {
+      if (url) {
+        window.open(url, '_blank')
+      } else {
+        this.$root.$emit(
+          'openIMM',
+          this.data.planner.id,
+          this.data.planner.name || '',
+          this.data.planner.jobNum || '',
+          this.data.planner.imgSrc || ''
+        )
+      }
     },
   },
 }

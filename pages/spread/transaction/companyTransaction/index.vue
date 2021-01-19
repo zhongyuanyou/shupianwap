@@ -61,14 +61,14 @@
 
 <script>
 import { mapState } from 'vuex'
-import { plannerApi } from '@/api/spread'
-import MyHeader from '@/components/common/head/header'
-import NavBtns from '@/components/spread/companyTransaction/NavBtns'
-import Banner from '@/components/spread/companyTransaction/Banner'
-import Form from '@/components/spread/companyTransaction/Form'
-import HotIndustry from '@/components/spread/companyTransaction/HotIndustry'
-import WithAssetsType from '@/components/spread/companyTransaction/WithAssetsType'
-import RecommendCompany from '@/components/spread/companyTransaction/RecommendCompany'
+import { plannerApi } from '~/api/spread'
+import MyHeader from '~/components/common/head/header'
+import NavBtns from '~/components/spread/transaction/companyTransaction/NavBtns'
+import Banner from '~/components/spread/transaction/companyTransaction/Banner'
+import Form from '~/components/spread/transaction/companyTransaction/Form'
+import HotIndustry from '~/components/spread/transaction/companyTransaction/HotIndustry'
+import WithAssetsType from '~/components/spread/transaction/companyTransaction/WithAssetsType'
+import RecommendCompany from '~/components/spread/transaction/companyTransaction/RecommendCompany'
 import DggImCompany from '~/components/spread/DggImCompany'
 import FixedBottom from '~/components/spread/common/FixedBottom'
 export default {

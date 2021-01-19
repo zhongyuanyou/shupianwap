@@ -38,11 +38,11 @@
 
 <script>
 import { mapState } from 'vuex'
-import MyHeader from '@/components/common/head/header'
-import juheNavBar from '~/components/spread/common1/juheNavBar'
-import juheBanner from '~/components/spread/common1/juheBanner'
-import juheForm from '~/components/spread/common1/juheForm'
-import juheProduct from '~/components/spread/common1/juheProduct'
+import MyHeader from '~/components/common/head/header'
+import juheNavBar from '~/components/spread/transaction/common/NavBar'
+import juheBanner from '~/components/spread/transaction/common/Banner'
+import juheForm from '~/components/spread/transaction/common/Form'
+import juheProduct from '~/components/spread/transaction/common/ProductList'
 import DggImCompany from '~/components/spread/DggImCompany'
 import FixedBottom from '~/components/spread/common/FixedBottom'
 export default {
