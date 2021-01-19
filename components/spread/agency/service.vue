@@ -36,13 +36,7 @@
               <span>元起</span>
             </div>
             <div class="contact-btn">
-              <a
-                v-md-map
-                v-md:p_IMClick
-                href="javascript:;"
-                data-im_type="售前"
-                :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
-              >
+              <a href="javascript:;">
                 <img :src="item.planner.avatarImg" alt="" />
               </a>
               <a

@@ -40,7 +40,7 @@
     <ShuPianZhaoRen />
     <!-- E 薯片找人 -->
     <!-- S 底部 -->
-    <FixedBottom :planner="plannerOne" />
+    <FixedBottom :planner="plannerOne" :md="fixedMd" />
     <!-- E 底部 -->
     <dgg-im-company></dgg-im-company>
   </div>
@@ -434,7 +434,17 @@ export default {
       title: '许可证办理',
       titles: '还有疑问？企服专家为您免费解答',
       tel: '4000-962540', // 电话号码
-
+      // 埋点
+      fixedMd: {
+        telMd: {
+          name: '许可证办理_钻石展位_拨打电话',
+          type: '售前',
+        },
+        imMd: {
+          name: '许可证办理_钻石展位_在线咨询',
+          type: '售前',
+        },
+      },
       // 推荐规划师
       plannerOne: {
         id: '7862495547640840192',
@@ -508,7 +518,7 @@ export default {
               planner: {},
               showName: '人力资源服务许可证',
               slogan: '经营人力资源机构的需要办理',
-              productDescribe: '经营性人力资源机构的需要办理',
+              productDescribe: '经营人力资源机构的需要办理',
               actualViews: 43,
               defaultSales: 36,
               actualSales: 36,
