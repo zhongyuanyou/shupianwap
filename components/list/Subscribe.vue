@@ -130,7 +130,7 @@ export default {
     submitSubscribe() {
       // 提交订阅
       const _self = this
-      this.$xToast.showLoading({ message: '提交中', forbidClick: true })
+      this.$xToast.showLoading({ message: '提交中', forbidClick: false })
       // 登录状态
       if (_self.isLogin) {
         this.cmsAddConsultHandle()
