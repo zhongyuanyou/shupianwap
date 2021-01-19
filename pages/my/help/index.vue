@@ -79,7 +79,7 @@
             <li
               v-for="(item, index) in tabData[active].articleData"
               :key="index"
-              @click="onServiceTouch(item.id)"
+              @click="onServiceTouch(item)"
             >
               <span>{{ item.title }}</span>
               <my-icon
@@ -90,12 +90,10 @@
             </li>
           </ul>
           <Loading-down
-            v-if="
-              tabData.length &&
-              tabData[active].articleData.length > params.limit
-            "
+            v-if="tabData.length"
             :loading="loading && !tabData[active].noMore"
             :no-data="tabData[active].noMore"
+            bg-color="#fff"
           />
         </div>
         <!-- E 列表 -->
@@ -148,21 +146,18 @@ export default {
       findType: 0, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
       locationCode: 'ad100006', // 广告位code
       code: 'con100873', // 获取分类列表选项的code
-      limit: 10,
+      limit: 15,
       page: 1,
       categoryCode: '', // 分类code赛选文章
       terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
       platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
-      includeField: 'id,title', // 必须要输出的内容字段
+      includeField:
+        'id,title,linkType,wapRoute,link,jumpImageUrl,iosRoute,androidRoute', // 必须要输出的内容字段
     }
     let tabData = []
     let adData = {}
     try {
-      const res = await $axios.post(helpApi.findArticle, params, {
-        headers: {
-          'x-cache-control': 'cache',
-        },
-      })
+      const res = await $axios.post(helpApi.findArticle, params)
       if (res.code === 200) {
         res.data.categoryList.forEach((item, imdex) => {
           item.limit = params.limit
@@ -223,6 +218,7 @@ export default {
     },
     // 监听滚动吸顶与触底加载更多
     searchHandle({ scrollTop, isFixed }) {
+      this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
       this.isFixed = isFixed
       if (
         this.tabData.length &&
@@ -252,11 +248,6 @@ export default {
       this.params = Object.assign(this.params, params)
       this.$axios.post(helpApi.findArticle, this.params).then((res) => {
         this.loading = false
-        // 无更多数据
-        if (!res.data.articleData.length) {
-          this.tabData[index].noMore = true
-          return
-        }
         // 切换加载
         if (res.code === 200 && type === 1) {
           const obj = {
@@ -264,7 +255,6 @@ export default {
             articleData: res.data.articleData,
           }
           this.$set(this.tabData, index, obj)
-          return
         }
         // 触底加载更多
         if (res.code === 200 && type === 2) {
@@ -272,38 +262,80 @@ export default {
             index
           ].articleData.concat(res.data.articleData)
         }
+        // 无更多数据
+        if (res.data.articleData.length < this.tabData[index].limit) {
+          this.tabData[index].noMore = true
+        }
       })
     },
-    onServiceTouch(id) {
-      this.$router.push({
-        path: '/my/help/questions',
-        query: { id },
-      })
+    onServiceTouch(data) {
+      // linkType跳转链接类型 1、跳转文章详情,2、跳转内链,3、跳转外链,4、跳转图片链接
+      switch (data.linkType) {
+        // 跳转文章详情
+        case 1:
+          this.$router.push({
+            path: '/my/help/questions',
+            query: { id: data.id },
+          })
+          break
+        // 跳转内链
+        case 2:
+          this.$router.push({
+            path: `${data.wapRoute}`,
+          })
+          break
+        // 跳转外链
+        case 3:
+          window.location.href = data.link
+          break
+        // 跳转图片链接
+        case 4:
+          this.$router.push({
+            name: 'img',
+            params: {
+              url: data.jumpImageUrl,
+            },
+          })
+          break
+        default:
+          this.$router.push({
+            path: '/my/help/questions',
+            query: { id: data.id },
+          })
+          break
+      }
     },
     handleClick(val) {
       if (val === 3) {
         this.$router.push('/my/complain')
       } else if (val === 2) {
-        this.$appFn.dggJumpRoute({
-          iOSRouter:
-            '{"path":"CPSCustomer:CPSCustomer/CPSVerificationViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}',
-          androidRouter:
-            '{"path":"/account_security/bind_newPhone","parameter":{"":""},"isLogin":"1","version":"1.0.0"}',
+        // this.$appFn.dggJumpRoute({
+        //   iOSRouter:
+        //     '{"path":"CPSCustomer:CPSCustomer/CPSVerificationViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}',
+        //   androidRouter:
+        //     '{"path":"/account_security/bind_newPhone","parameter":{"":""},"isLogin":"1","version":"1.0.0"}',
+        // })
+        // 修改手机号
+        this.$appFn.dggChangePhone((res) => {
+          console.log('phone', res)
         })
       } else if (val === 0) {
-        const iosSetPassword =
-          '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
-        const androisSetPassword =
-          '{"path":"/login/set_password","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
-        const iosUpdatePassword =
-          '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
-        const androisUpdatePassword =
-          '{"path":"/account_security/change_password","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
-        this.$appFn.dggJumpRoute({
-          iOSRouter: this.isPassword ? iosUpdatePassword : iosSetPassword,
-          androidRouter: this.isPassword
-            ? androisUpdatePassword
-            : androisSetPassword,
+        // const iosSetPassword =
+        //   '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
+        // const androisSetPassword =
+        //   '{"path":"/login/set_password","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
+        // const iosUpdatePassword =
+        //   '{"path":"CPSCustomer:CPSCustomer/CPSSettingOrChangePwdViewController///push/animation","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
+        // const androisUpdatePassword =
+        //   '{"path":"/account_security/change_password","parameter":{"":""},"isLogin":"1","version":"1.0.0"}'
+        // this.$appFn.dggJumpRoute({
+        //   iOSRouter: this.isPassword ? iosUpdatePassword : iosSetPassword,
+        //   androidRouter: this.isPassword
+        //     ? androisUpdatePassword
+        //     : androisSetPassword,
+        // })
+        this.$appFn.dggChangePwd((res) => {
+          console.log('pwd', res)
         })
       } else if (val === 1) {
         this.$appFn.dggGetRealNameAuthAddress((res) => {

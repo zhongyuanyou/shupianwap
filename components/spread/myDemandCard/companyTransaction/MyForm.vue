@@ -42,7 +42,7 @@
           show-toolbar
           title="城市"
           :columns="actions1"
-          :default-index="2"
+          :default-index="i1"
           @confirm="onConfirm1"
           @cancel="onCancel"
         />
@@ -67,12 +67,12 @@
         >
         </my-icon
       ></sp-cell>
-      <sp-action-sheet v-model="show2"
-        ><sp-picker
+      <sp-action-sheet v-model="show2">
+        <sp-picker
           show-toolbar
           title="行业"
           :columns="actions2"
-          :default-index="2"
+          :default-index="i2"
           @confirm="onConfirm2"
           @cancel="onCancel"
       /></sp-action-sheet>
@@ -84,6 +84,7 @@
 
 <script>
 import { Cell, ActionSheet, Picker, Toast } from '@chipspc/vant-dgg'
+import { mapMutations } from 'vuex'
 import slider from '~/components/spread/myDemandCard/companyTransaction/Slider'
 export default {
   name: 'Form',
@@ -146,10 +147,12 @@ export default {
       ],
       selectName1: '不限',
       selectName2: '不限',
+      i1: 2,
+      i2: 2,
     }
   },
   mounted() {
-    const formData = JSON.parse(localStorage.getItem('formData'))
+    const formData = JSON.parse(sessionStorage.getItem('formData'))
     if (formData) {
       this.selectName1 = formData.content['期望城市'] || this.selectName1
       this.selectName2 = formData.content['期望行业'] || this.selectName2
@@ -170,6 +173,9 @@ export default {
         ]
         this.$refs.yearRef.value = [this.minYear * 5, this.maxYear * 5]
       })
+      // 选项卡中回显同步数据
+      this.i1 = this.actions1.indexOf(this.selectName1)
+      this.i2 = this.actions2.indexOf(this.selectName2)
     }
   },
   methods: {
@@ -189,7 +195,9 @@ export default {
     },
     // 下一步
     next() {
-      const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
+      const sessionStorageFormData = JSON.parse(
+        sessionStorage.getItem('formData')
+      )
       const data = {}
       data.content = {
         购买预算: `${this.minMoney}-${this.maxMoney}万元`,
@@ -198,12 +206,15 @@ export default {
         期望行业: this.selectName2,
       }
       // 合并两个页面之间缓存的数据
-      if (localStorageFormData) {
-        data.content = Object.assign(localStorageFormData.content, data.content)
+      if (sessionStorageFormData) {
+        data.content = Object.assign(
+          sessionStorageFormData.content,
+          data.content
+        )
       }
       data.type = 'gszr'
       data.url = window.location.href
-      localStorage.setItem('formData', JSON.stringify(data))
+      sessionStorage.setItem('formData', JSON.stringify(data))
       this.$router.push('/spread/myDemandCard/second')
     },
   },

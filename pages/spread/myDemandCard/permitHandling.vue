@@ -1,10 +1,11 @@
 <template>
   <div class="permit-handling">
-    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
     <TopLocation @onCity="onCity" />
     <div class="company-select">
       <!-- S您需要办理的许可证业务 -->
       <CompanySelec
+        ref="companySelec"
         :columns="actionsServe"
         title-name="您需要办理的许可证业务是什么？"
         @onSelect="onSelectServe"
@@ -12,6 +13,7 @@
       <!-- E您需要办理的许可证业务 -->
       <!-- S主要决策人 -->
       <SelectDesired
+        ref="select1"
         :select-list="selectActive"
         title-name="您是否为主要决策人？"
         @onSelectActive="onDistrict"
@@ -19,6 +21,7 @@
       <!-- E主要决策人 -->
       <!-- S办理时间 -->
       <SelectDesired
+        ref="select2"
         :select-list="selectTransact"
         title-name="您打算什么时候办理？"
         @onSelectActive="onTransact"
@@ -100,6 +103,11 @@ export default {
       },
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   mounted() {
     const param = {
       platform_type: 'H5', // 平台类型：App，H5，Web
@@ -109,18 +117,41 @@ export default {
       referrer: document.referrer,
     }
     window.sensors.registerPage(param) // 设置公共属性
+
+    // 数据回显
+    const sessionStorageFormData = JSON.parse(
+      sessionStorage.getItem('formData')
+    )
+    if (sessionStorageFormData) {
+      this.$nextTick(() => {
+        console.log(sessionStorageFormData)
+        this.$refs.companySelec.title = sessionStorageFormData.content.xkzlx
+        this.permission = sessionStorageFormData.content.xkzlx
+        this.isDecision = sessionStorageFormData.content['主要决策人']
+        for (let index = 0; index < this.selectActive.length; index++) {
+          if (this.selectActive[index].name === this.isDecision) {
+            this.$refs.select1.selectActive = index
+            break
+          }
+        }
+        this.handlingTime = sessionStorageFormData.content['办理时间']
+        for (let index = 0; index < this.selectTransact.length; index++) {
+          if (this.selectTransact[index].name === this.handlingTime) {
+            this.$refs.select2.selectActive = index
+            break
+          }
+        }
+      })
+    }
   },
   methods: {
-    backHandle() {
-      localStorage.removeItem('formData')
-    },
     // 城市
     onCity(val) {
       this.cityVal = val
     },
     onSelectServe(val) {
       // 变更服务
-      this.xkzlz = val
+      this.permission = val
     },
     onDistrict(item) {
       // 是否决策人
@@ -131,15 +162,28 @@ export default {
       this.handlingTime = item.name
     },
     onButton() {
-      const obj = JSON.stringify({
+      const data = {
         type: 'xkx',
-        xkzlx: this.permission,
+        url: window.location.href,
         content: {
+          xkzlx: this.permission,
           主要决策人: this.isDecision,
           办理时间: this.handlingTime,
         },
-      })
-      localStorage.setItem('data', obj)
+      }
+      const sessionStorageFormData = JSON.parse(
+        sessionStorage.getItem('formData')
+      )
+      // 合并两个页面之间缓存的数据
+      if (sessionStorageFormData) {
+        data.content = Object.assign(
+          sessionStorageFormData.content,
+          data.content
+        )
+      }
+      // 本地存储数据
+      const obj = JSON.stringify(data)
+      sessionStorage.setItem('formData', obj)
       this.$router.push({ path: '/spread/myDemandCard/second' })
     },
   },
@@ -155,6 +199,7 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   font-size: 36px;
+  background-color: #fff;
   .button {
     padding: 24px 40px;
     margin-top: 174px;

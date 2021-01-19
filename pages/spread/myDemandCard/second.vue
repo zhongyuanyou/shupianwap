@@ -1,7 +1,7 @@
 <template>
   <div class="center">
     <!-- S 头部 -->
-    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
     <!-- E 头部 -->
     <div class="banner">
       <!--    城市按钮  -->
@@ -101,36 +101,36 @@ export default {
     ...mapState({
       currentCity: (state) => state.city.currentCity,
       userId: (state) => state.user.userId,
+      isInApp: (state) => state.app.isInApp,
     }),
   },
   mounted() {
-    this.SET_KEEP_ALIVE({ type: 'add', name: 'Second' })
-    const localStorageFormData = JSON.parse(localStorage.getItem('formData'))
-    if (localStorageFormData) {
-      localStorageFormData.content = Object.assign(
+    // 进入页面回显数据
+    const sessionStorageFormData = JSON.parse(
+      sessionStorage.getItem('formData')
+    )
+    if (sessionStorageFormData) {
+      sessionStorageFormData.content = Object.assign(
         this.formData.content,
-        localStorageFormData.content
+        sessionStorageFormData.content
       )
-      this.formData = Object.assign(this.formData, localStorageFormData)
+      this.formData = Object.assign(this.formData, sessionStorageFormData)
+    }
+  },
+  destroyed() {
+    // 缓存表单填写的数据
+    let data = JSON.parse(sessionStorage.getItem('formData'))
+    if (data) {
+      data.content = Object.assign(data.content, this.formData.content)
+      data = JSON.stringify(data)
+      sessionStorage.setItem('formData', data)
     }
   },
   methods: {
-    ...mapMutations({
-      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
-    }),
     // 选中
     select() {
       this.formData.content['是否允许电话联系'] =
         this.formData.content['是否允许电话联系'] === '是' ? '否' : '是'
-    },
-    // 返回时缓存数据
-    backHandle() {
-      let data = JSON.parse(localStorage.getItem('formData'))
-      if (data) {
-        data.content = this.formData.content
-        data = JSON.stringify(data)
-        localStorage.setItem('formData', data)
-      }
     },
     // 选择城市
     tabCity() {
@@ -193,7 +193,7 @@ export default {
         .then((res) => {
           this.loading = false
           this.$xToast.success('提交成功，请注意接听电话')
-          localStorage.removeItem('formData')
+          sessionStorage.removeItem('formData')
           this.formData = {
             type: 'gszc',
             tel: '', // 电话
@@ -245,6 +245,7 @@ export default {
 .center {
   width: @spread-page-width;
   margin: 0 auto;
+  background-color: #fff;
 }
 .margin {
   margin-right: 38px;

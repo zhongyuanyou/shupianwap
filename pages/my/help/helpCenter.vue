@@ -66,7 +66,6 @@ export default {
     [Sticky.name]: Sticky,
     Header,
   },
-  props: {},
   data() {
     return {
       loading: false,
@@ -84,6 +83,16 @@ export default {
       searchResult: [],
       noData: false,
     }
+  },
+  watch: {
+    $route(to, from) {
+      // 返回帮助首页清空数据
+      if (to.path === '/my/help') {
+        this.params.keyword = ''
+        this.noData = false
+        this.searchResult = []
+      }
+    },
   },
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'HelpCenter' })
@@ -118,9 +127,6 @@ export default {
       })
     },
     back() {
-      this.params.keyword = ''
-      this.noData = false
-      this.searchResult = []
       if (this.isInApp) {
         this.$appFn.dggWebGoBack((res) => {})
         return

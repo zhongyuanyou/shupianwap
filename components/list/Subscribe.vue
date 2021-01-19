@@ -18,9 +18,15 @@
           v-model="tel"
           type="number"
           maxlength="11"
+          :clearable="true"
           placeholder="请输入手机号码"
         />
-        <sp-field v-model="sms" center placeholder="请输入验证码">
+        <sp-field
+          v-model="sms"
+          :clearable="true"
+          center
+          placeholder="请输入验证码"
+        >
           <template #button>
             <span :class="{ no_get: isSendSMS }" @click="getSMS">{{
               isSendSMS ? `(${count})重新获取` : '获取验证码'
@@ -144,6 +150,7 @@ export default {
         return
       }
       if (!this.isSendSMS) {
+        this.$xToast.showLoading({ message: '发送中' })
         // 获取验证码
         const params = {
           phone: this.tel,
@@ -154,10 +161,13 @@ export default {
           .then((res) => {
             this.isSendSMS = true
             this.countDown()
+            this.$xToast.hideLoading()
           })
-          .catch(() => {
+          .catch((e) => {
+            console.log('---', e)
+            this.$xToast.hideLoading()
             this.$xToast.show({
-              message: '网络错误，请稍后再试',
+              message: e.message,
               duration: 1000,
               icon: 'toast_ic_error',
               forbidClick: true,
@@ -190,7 +200,6 @@ export default {
           this.cmsAddConsultHandle()
         })
         .catch((e) => {
-          console.log(e)
           this.$xToast.hideLoading()
           this.$xToast.show({
             message: e.message,
@@ -217,18 +226,22 @@ export default {
           this.$xToast.hideLoading()
           if (res.code === 200) {
             _self.$xToast.show({
-              message: '提交成功',
+              message: '提交订阅成功',
               duration: 1500,
               icon: 'toast_ic_comp',
               forbidClick: false,
             })
+            if (!_self.isLogin) {
+              this.tel = ''
+              this.sms = ''
+            }
           } else {
-            _self.$xToast.error('提交失败，请重新提交')
+            _self.$xToast.error(res.message)
           }
         })
         .catch((e) => {
           this.$xToast.hideLoading()
-          _self.$xToast.error('提交失败，请重新提交')
+          _self.$xToast.error(e.message)
         })
     },
     // 倒计时
@@ -338,6 +351,9 @@ export default {
       padding: 0 0 19px 0;
       border-bottom: 1px solid #f4f4f4;
       margin-bottom: 44px;
+      &::after {
+        display: none;
+      }
       /deep/.sp-field__button {
         font-size: 28px;
         font-family: PingFang SC;

@@ -18,7 +18,7 @@
         v-show="index < infoParams.limit"
         :key="index"
         class="information-item"
-        @click="jumpPage(item.id)"
+        @click="jumpPage(item)"
       >
         <div class="text-box">
           <p v-if="index !== 0">{{ item.description }}</p>
@@ -76,14 +76,45 @@ export default {
   },
   methods: {
     // 跳转资讯详情
-    jumpPage(id) {
-      this.$router.push({
-        path: `/found/detail/${id}`,
-      })
+    jumpPage(data) {
+      // linkType跳转链接类型 1、跳转文章详情,2、跳转内链,3、跳转外链,4、跳转图片链接
+      switch (data.linkType) {
+        // 跳转文章详情
+        case 1:
+          this.$router.push({
+            path: `/found/detail/${data.id}`,
+          })
+          break
+        // 跳转内链
+        case 2:
+          this.$router.push({
+            path: `${data.wapRoute}`,
+          })
+          break
+        // 跳转外链
+        case 3:
+          window.location.href = data.link
+          break
+        // 跳转图片链接
+        case 4:
+          this.$router.push({
+            name: 'img',
+            params: {
+              url: data.jumpImageUrl,
+            },
+          })
+          break
+        default:
+          this.$router.push({
+            path: `/found/detail/${data.id}`,
+          })
+          break
+      }
     },
     // 换一换
     updateInfo() {
       this.infoParams.page += 1
+      this.infoParams.categoryCode = this.$parent.asyncReqParams.categoryCode
       this.$axios
         .get(homeApi.findInfo, {
           params: this.infoParams,
@@ -156,7 +187,7 @@ export default {
           position: absolute;
           left: 0;
           top: 0;
-          background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), #000000);
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), #000000);
         }
         h6 {
           position: absolute;

@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
     <!--    <Header title="轻松找服务" :fixed="false" head-class="head-icon" />-->
 
     <!-- START banner-->
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import HeaderBg from '@/components/spread/myDemandCard/agentBilling/HeaderBg'
 import FixedBottomBtn from '@/components/spread/myDemandCard/agentBilling/FixedBottomBtn'
 import Question from '@/components/spread/myDemandCard/agentBilling/Question'
@@ -88,8 +89,13 @@ export default {
       ],
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   mounted() {
-    const formData = JSON.parse(localStorage.getItem('formData'))
+    const formData = JSON.parse(sessionStorage.getItem('formData'))
     if (formData) {
       this.questionData[0].value =
         formData.content['注册时间'] || this.questionData[0].value
@@ -109,11 +115,6 @@ export default {
     }
     window.sensors.registerPage(param) // 设置公共属性
   },
-  methods: {
-    backHandle() {
-      localStorage.removeItem('formData')
-    },
-  },
   head() {
     return {
       title: '代理记账需求卡',
@@ -127,5 +128,6 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   font-family: PingFang SC;
+  background-color: #fff;
 }
 </style>

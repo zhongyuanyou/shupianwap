@@ -1,12 +1,13 @@
 <template>
   <div class="audit">
-    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
     <HeaderNeed />
     <Content />
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import HeaderNeed from '@/components/spread/myDemandCard/auditingService/HeaderNeed'
 import Content from '@/components/spread/myDemandCard/auditingService/Content'
 import Header from '@/components/common/head/header'
@@ -21,6 +22,11 @@ export default {
   data() {
     return {}
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   mounted() {
     const param = {
       platform_type: 'H5', // 平台类型：App，H5，Web
@@ -31,11 +37,6 @@ export default {
     }
     window.sensors.registerPage(param) // 设置公共属性
   },
-  methods: {
-    backHandle() {
-      localStorage.removeItem('formData')
-    },
-  },
 }
 </script>
 <style lang="less" scoped>
@@ -43,5 +44,11 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   font-family: PingFang SC;
+  background-color: #fff;
+  /deep/ .my-head {
+    width: @spread-page-width;
+    left: 50%;
+    margin-left: -375px;
+  }
 }
 </style>

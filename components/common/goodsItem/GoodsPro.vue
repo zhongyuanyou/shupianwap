@@ -235,6 +235,9 @@ export default {
         font-weight: 400;
         color: #999999;
         margin-left: 16px;
+        line-height: 30px;
+        transform: translateY(5px);
+        .textOverflow(1);
       }
     }
     .recommend {

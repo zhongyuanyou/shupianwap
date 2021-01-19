@@ -970,9 +970,9 @@
     "@better-scroll/core" "^2.1.0"
 
 "@chipspc/vant-dgg@^2.21.1", "@chipspc/vant-dgg@^2.21.8":
-  version "2.21.9"
-  resolved "http://tmobile.dgg188.cn/@chipspc/vant-dgg/download/@chipspc/vant-dgg-2.21.9.tgz#a911294cd41f9f1b375ba4b5d3287eb22b7ecfc2"
-  integrity sha1-qREpTNQfnxs3W6S10yh+sit+z8I=
+  version "2.22.0"
+  resolved "http://tmobile.dgg188.cn/@chipspc/vant-dgg/download/@chipspc/vant-dgg-2.22.0.tgz#f04ba48a9b24663842b70aefdc8970e0b3ac0590"
+  integrity sha1-8EukipskZjhCtwrv3Ilw4LOsBZA=
   dependencies:
     "@babel/runtime" "7.x"
     "@chipspc/vant-dgg" "^2.21.1"

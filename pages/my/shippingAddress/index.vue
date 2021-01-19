@@ -1,7 +1,7 @@
 <template>
   <div class="address">
     <!--S 头部-->
-    <Header title="我的收货地址">
+    <Header :title="addressList.length ? '我的收货地址' : '无收货地址'">
       <template #left>
         <div @click="back">
           <my-icon
@@ -39,7 +39,7 @@
             <div @click="handleEdit(item)">
               <my-icon
                 class="icon"
-                name="per_ic_edit"
+                name="per_ic_addeditor"
                 size="0.24rem"
                 color="#222"
               />
@@ -263,6 +263,10 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  /deep/ .sp-bottombar-button {
+    font-size: 32px;
+    font-weight: bold;
+  }
   .back_icon {
     margin-left: 40px;
   }
@@ -284,7 +288,7 @@ export default {
       }
     }
     .prompt {
-      font-size: 34px;
+      font-size: 30px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #1a1a1a;

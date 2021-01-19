@@ -1,11 +1,11 @@
 <template>
   <div class="regdemand">
     <!-- S 头部 -->
-    <Header ref="headerRef" title="轻松找服务" @backHandle="backHandle" />
+    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
     <!-- E 头部 -->
     <!-- 头部加banner -->
     <Banner @onCity="onCity" />
-    <div v-show="curentPage === 1" class="content">
+    <div class="content">
       <!-- 公司成立区域 -->
       <div class="company-area">
         <span class="company-area-title">您的公司打算成立在哪个区域？</span>
@@ -88,56 +88,13 @@
       <sp-picker
         title="选择区域"
         show-toolbar
-        :default-index="3"
+        :default-index="isCityChange"
         :columns="actionsRegion"
-        @confirm="onCancel"
+        @confirm="onConfirm"
         @cancel="onCancel"
         @change="onChange"
       />
     </sp-popup>
-    <div v-show="curentPage === 2" class="two-form">
-      <div class="two-form-title">您还有一些额外需求要告知我们？</div>
-      <sp-field
-        v-model="formData.content['备注']"
-        rows="5"
-        :autofocus="true"
-        type="textarea"
-        maxlength="300"
-        placeholder="更准确的描述需求，将有助于我们为您更好的服务"
-        :show-word-limit="true"
-        class="two-form-text"
-        @input="changeFont"
-      />
-      <div class="two-form-read" @click="selectHandle">
-        <div class="two-form-read-first">
-          <div
-            v-if="formData.content['是否允许电话联系'] === '是'"
-            class="two-form-read-first-icon"
-          >
-            <my-icon
-              name="pay_ic_success"
-              size="0.32rem"
-              color="#2E73F5"
-              class="icon"
-            ></my-icon>
-          </div>
-          <div v-else class="two-form-read-first-icon">
-            <my-icon
-              name="shop_ic_radio_n"
-              size="0.32rem"
-              color="#999999"
-              class="icon"
-            ></my-icon>
-          </div>
-          <span>订阅专属服务</span>
-        </div>
-        <div class="two-form-read-second">
-          为您匹配到合适服务时，将在第一时间联系您
-        </div>
-      </div>
-      <button class="two-form-button" @click="consultForm">生成需求卡</button>
-    </div>
-    <Loading-center v-show="loading" title="提交中..." />
   </div>
 </template>
 <script>
@@ -145,15 +102,13 @@ import { Popup, Field, Picker, Toast, Icon } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import Banner from '@/components/spread/myDemandCard/companyRegister/header'
 import Header from '@/components/common/head/header'
-import LoadingCenter from '@/components/common/loading/LoadingCenter'
-import { planner, dict, userinfoApi, consult } from '@/api'
+import { planner, dict } from '@/api'
 export default {
   layout: 'keepAlive',
   name: 'CompanyRegister',
   components: {
     Banner,
     Header,
-    LoadingCenter,
     [Popup.name]: Popup,
     [Field.name]: Field,
     [Picker.name]: Picker,
@@ -162,8 +117,6 @@ export default {
   },
   data() {
     return {
-      loading: false,
-      curentPage: 1,
       times: ['1个月内', '2个月内', '半年内', '1年内'],
       choose: ['是', '否'],
       chooseActived: 0,
@@ -177,31 +130,75 @@ export default {
       },
       formData: {
         type: 'gszc',
-        tel: '', // 电话
-        name: '', // 姓名
-        web: 'sp', // 归属（原网站类型）
-        place: 'all',
         url: '',
         content: {
           yxblqy: '',
           sydz: '是',
           公司信息确认完毕: '是',
           办理时间: '1月内',
-          备注: '',
-          是否允许电话联系: '是',
         },
       },
     }
   },
   computed: {
+    isCityChange() {
+      let num = 0
+      let isHave = false
+      const { content } = this.formData
+      const regionLength = this.actionsRegion.length
+      if (content.yxblqy && regionLength) {
+        for (let i = 0; i < this.actionsRegion.length; i++) {
+          if (this.actionsRegion[i] === content.yxblqy) {
+            num = i
+            isHave = true
+            break
+          }
+        }
+        // 若之前选择的区域在当前区域列表中未找到，清空数据，取消回显
+        if (!isHave) {
+          content.yxblqy = ''
+        }
+      }
+      return num
+    },
     ...mapState({
-      userId: (state) => state.user.userId,
+      isInApp: (state) => state.app.isInApp,
     }),
   },
+  mounted() {
+    // 数据回显
+    const sessionStorageFormData = JSON.parse(
+      sessionStorage.getItem('formData')
+    )
+    if (sessionStorageFormData) {
+      this.$nextTick(() => {
+        this.formData.content.yxblqy =
+          sessionStorageFormData.content.yxblqy || this.formData.content.yxblqy
+        this.formData.content.sydz =
+          sessionStorageFormData.content.sydz || this.formData.content.sydz
+        this.formData.content['公司信息确认完毕'] =
+          sessionStorageFormData.content['公司信息确认完毕'] ||
+          this.formData.content['公司信息确认完毕']
+        this.formData.content['办理时间'] =
+          sessionStorageFormData.content['办理时间'] ||
+          this.formData.content['办理时间']
+        this.choose.forEach((item, index) => {
+          if (item === this.formData.content.sydz) {
+            this.chooseActived = index
+          }
+          if (item === this.formData.content['公司信息确认完毕']) {
+            this.confirmActived = index
+          }
+        })
+        this.times.forEach((item, index) => {
+          if (item === this.formData.content['办理时间']) {
+            this.transactActived = index
+          }
+        })
+      })
+    }
+  },
   methods: {
-    backHandle() {
-      localStorage.removeItem('formData')
-    },
     // 获取地区
     onCity(val) {
       if (val.code !== undefined) this.cityVal = val
@@ -217,11 +214,17 @@ export default {
     onCancel() {
       this.isShow = false
     },
+    // 点确定回显城市
+    onConfirm(value) {
+      this.formData.content.yxblqy = value
+      this.isShow = false
+    },
     // 获取公司是否有地址的选择
     isChoose(index) {
       this.chooseActived = index
       this.formData.content.sydz = this.choose[index]
     },
+
     // 获取公司信息是否完成的选择
     confirm(index) {
       this.confirmActived = index
@@ -234,7 +237,21 @@ export default {
     },
     // 跳转到下一页,存储当前页面信息
     next() {
-      this.curentPage = 2
+      this.formData.url = window.location.href
+      const sessionStorageFormData = JSON.parse(
+        sessionStorage.getItem('formData')
+      )
+      // 合并两个页面之间缓存的数据
+      if (sessionStorageFormData) {
+        this.formData.content = Object.assign(
+          sessionStorageFormData.content,
+          this.formData.content
+        )
+      }
+      const newFormData = JSON.stringify(this.formData)
+      // 将数据存储
+      sessionStorage.setItem('formData', newFormData)
+      this.$router.push({ path: '/spread/myDemandCard/second' })
     },
     // 获取区域信息列表
     async getRegionList(code) {
@@ -279,77 +296,6 @@ export default {
         currentSeconds
       return nowTimeString
     },
-    getUserInfo(userId) {
-      return new Promise((resolve) => {
-        // 获取用户信息
-        this.$axios
-          .get(userinfoApi.info, {
-            params: { id: userId },
-          })
-          .then((res) => {
-            if (res.code === 200) {
-              resolve(res.data)
-            } else {
-              this.$xToast.error('获取当前登陆用户的信息失败')
-            }
-          })
-      })
-    },
-    // 提交表单
-    async consultForm() {
-      if (this.loading) {
-        return
-      }
-      const { decodePhone, fullName } = await this.getUserInfo(this.userId)
-      const newFormData = JSON.parse(JSON.stringify(this.formData))
-      newFormData.url = window.location.href
-      newFormData.tel = decodePhone
-      newFormData.name = fullName
-      newFormData.content = JSON.stringify(newFormData.content)
-      this.loading = true
-      // 提交表单
-      consult
-        .consultAdd(newFormData)
-        .then((res) => {
-          this.loading = false
-          this.$xToast.success('提交成功，请注意接听电话')
-          this.formData = {
-            type: 'gszc',
-            tel: '', // 电话
-            name: '', // 姓名
-            web: 'sp', // 归属（原网站类型）
-            place: 'all',
-            url: '',
-            content: {
-              yxblqy: '',
-              sydz: '是',
-              公司信息确认完毕: '是',
-              办理时间: '1月内',
-              备注: '',
-              是否允许电话联系: '是',
-            },
-          }
-          this.curentPage = 1
-        })
-        .catch((res) => {
-          this.loading = false
-          this.$xToast.show({
-            message: res.message,
-            duration: 1000,
-            icon: 'toast_ic_error',
-            forbidClick: true,
-          })
-        })
-    },
-    // 输入框文字发生改变
-    changeFont(val) {
-      const font = document.getElementsByClassName('sp-field__word-num')[0]
-      if (val === '') {
-        font.style.color = '#999999'
-      } else {
-        font.style.color = '#222222'
-      }
-    },
   },
   head() {
     return {
@@ -363,6 +309,7 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   position: relative;
+  background-color: #fff;
   .content {
     padding: 0 40px;
     .company-area {

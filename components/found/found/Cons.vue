@@ -28,7 +28,7 @@
           >
             <sp-image
               height="2.58rem"
-              fit="cover"
+              fit="fill"
               :src="image.materialList[0].materialUrl"
             />
           </sp-swipe-item>

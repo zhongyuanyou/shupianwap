@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-07 19:57:35
+ * @LastEditTime: 2021-01-18 16:53:01
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/forget.vue
 -->
@@ -29,29 +29,36 @@
           v-model="forgetForm.authCode"
           type="number"
           clearable
-          clear-trigger="always"
+          icon-prefix="spiconfont"
+          clear-icon="login_ic_clear"
           name="authCode"
           placeholder="请输入验证码"
-          max-length="6"
+          maxlength="6"
           @input="handleCodeInput"
         />
         <sp-field
           v-model="forgetForm.newPassword"
+          v-forbid-copy-paste
           type="password"
-          clear-trigger="always"
-          name="newPassword"
           clearable
+          icon-prefix="spiconfont"
+          clear-icon="login_ic_clear"
+          name="newPassword"
           placeholder="请输入新密码(6-15位数字/字母/标点符号)"
+          maxlength="15"
           @input="handleNewPasswordInput"
         >
         </sp-field>
         <sp-field
           v-model="forgetForm.confirmPassword"
+          v-forbid-copy-paste
           type="password"
-          clear-trigger="always"
           name="confirmPassword"
           clearable
+          icon-prefix="spiconfont"
+          clear-icon="login_ic_clear"
           placeholder="确认新密码"
+          maxlength="15"
           @input="handleConfirmPasswordInput"
         >
         </sp-field>
@@ -88,6 +95,7 @@ import { TopNavBar, Form, Button, Field, Toast } from '@chipspc/vant-dgg'
 import PhoneField from '@/components/login/PhoneField'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
+import formHandle from '@/mixins/formHandle'
 import { auth } from '@/api'
 import { checkPhone, checkPassword, checkAuthCode } from '@/utils/check.js'
 
@@ -101,6 +109,7 @@ export default {
     PhoneField,
     LoadingCenter,
   },
+  mixins: [formHandle],
   data() {
     return {
       forgetForm: {
@@ -227,6 +236,7 @@ export default {
       } catch (error) {
         this.loading = false
         this.loginToast(error.message)
+        return Promise.reject(error)
       }
     },
     // 自定义提示框
@@ -299,21 +309,9 @@ export default {
           font-weight: 400;
         }
         .sp-field__clear {
-          width: 24px;
-          height: 24px;
-          line-height: 24px;
-          box-sizing: content-box;
-          color: @hint-text-color;
-          font-family: 'iconfont' !important;
-          font-size: 0.16rem;
-          font-style: normal;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          &::before {
-            content: '\e65b'; // 此处直接找的login_ic_clear:before iconfont css 替换的
-            width: 24px;
-            height: 24px;
-          }
+          margin-right: -16px;
+          padding: 0 16px;
+          line-height: inherit;
         }
       }
       .submit-wrap {

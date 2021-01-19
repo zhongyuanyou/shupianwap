@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-12 19:53:26
+ * @LastEditTime: 2021-01-18 19:08:03
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -75,29 +75,27 @@
               <div class="detail-content__section-title">个人信息</div>
               <ul class="detail-content__section-content">
                 <li>
-                  <span class="label">服务人数：</span>
+                  <span class="label">服务次数：</span>
                   <span class="content">{{
-                    detailData.serveNum ? `${detailData.serveNum}人` : '--'
+                    detailData.serveNum ? `${detailData.serveNum}次` : '--'
                   }}</span>
                 </li>
                 <li>
                   <span class="label">好评率：</span>
                   <span class="content">{{
                     detailData.goodReputation
-                      ? `${detailData.goodReputation}次`
+                      ? `${detailData.goodReputation}%`
                       : '--'
                   }}</span>
                 </li>
                 <li>
                   <span class="label">服务经验：</span>
-                  <span class="content">{{
-                    detailData.serveAge ? `${detailData.serveAge}年` : '--'
-                  }}</span>
+                  <span class="content">{{ formatServeAgeText }}</span>
                 </li>
                 <li>
                   <span class="label">成交记录：</span>
                   <span class="content">{{
-                    detailData.serveAge ? `${detailData.serveAge}次` : '--'
+                    detailData.payNum ? `${detailData.payNum}次` : '--'
                   }}</span>
                 </li>
                 <li>
@@ -113,7 +111,7 @@
             <div class="detail-content__wrap-footer">
               <div class="detail-content__section-title flex-r-sb flex-r-a-c">
                 <i class="horizontal-line"></i>
-                <span>薯片分</span>
+                <span class="detail-content__section-title-text">薯片分</span>
                 <i class="horizontal-line"></i>
               </div>
               <div class="detail-content__sp-score">
@@ -126,7 +124,7 @@
                 <span>
                   什么是薯片分
                   <my-icon
-                    name="per_ic_help"
+                    name="plan_ic_explain"
                     size="0.24rem"
                     color="#666666"
                     @click="handlePoint"
@@ -142,15 +140,8 @@
           </div>
         </div>
       </div>
-      <div v-if="recommendList && recommendList.length" class="recommend">
-        <h3 class="recommend__title">为您推荐</h3>
-        <div class="recommend-list">
-          <GoodsPro
-            v-for="item in recommendList"
-            :key="item"
-            class="item-wrap"
-          />
-        </div>
+      <div class="recommend" style="padding-bottom: 75px">
+        <RecommendList :mch-detail-id="detailData.mchDetailId" />
       </div>
     </div>
     <div class="footer">
@@ -158,12 +149,14 @@
         <sp-bottombar-button
           type="primary"
           text="电话联系"
+          :disabled="!detailData.phone"
           @click="handleCall"
         />
         <sp-bottombar-button
           v-if="!hideIM"
           type="info"
           text="在线联系"
+          :disabled="!detailData.id"
           @click="handleIM"
         />
       </sp-bottombar>
@@ -192,8 +185,8 @@ import {
 } from '@chipspc/vant-dgg'
 
 import Header from '@/components/common/head/header'
-import GoodsPro from '@/components/planner/GoodsPro'
 import SpToast from '@/components/common/spToast/SpToast'
+import RecommendList from '@/components/planner/RecommendList'
 
 import { planner } from '@/api'
 import imHandle from '@/mixins/imHandle'
@@ -209,13 +202,12 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [ShareSheet.name]: ShareSheet,
     Header,
-    GoodsPro,
+    RecommendList,
     SpToast,
   },
   mixins: [imHandle],
   data() {
     return {
-      recommendList: [],
       loading: true,
       detailData: {},
       shareOptions: [],
@@ -235,6 +227,31 @@ export default {
       if (!Array.isArray(tagList)) return []
       const formatData = tagList.slice(0, 2)
       return formatData
+    },
+    formatServeAgeText() {
+      const serveAge = this.detailData.serveAge
+      if (serveAge == null) {
+        return '--'
+      }
+      if (serveAge < 1) {
+        return '小于1年'
+      }
+      if (serveAge >= 1 && serveAge < 2) {
+        return '1-2年'
+      }
+      if (serveAge >= 2 && serveAge < 3) {
+        return '2-3年'
+      }
+      if (serveAge >= 3 && serveAge < 4) {
+        return '3-4年'
+      }
+      if (serveAge >= 4 && serveAge < 5) {
+        return '4-5年'
+      }
+      if (serveAge >= 5) {
+        return '5年以上'
+      }
+      return ''
     },
   },
   created() {
@@ -350,7 +367,7 @@ export default {
             {
               name: userName,
               userId: mchUserId,
-              userType: 'MERCHANT_USER',
+              userType: 'MERCHANT_B',
             },
             (res) => {
               const { code } = res || {}
@@ -590,6 +607,9 @@ export default {
         font-size: 28px;
         font-weight: bold;
         line-height: 32px;
+        &-text {
+          margin: 0 40px;
+        }
       }
       &__section-content {
         display: flex;
@@ -642,6 +662,8 @@ export default {
       }
       .horizontal-line {
         .horizontal-line(@width:208px; @bgColor:#DFD4CA; @skewX:0deg; @height:2px;);
+        flex: 1;
+        width: auto;
       }
     }
   }
@@ -655,14 +677,6 @@ export default {
     }
   }
   .recommend {
-    &__title {
-      padding: 0 40px;
-      font-size: 40px;
-      font-weight: bold;
-      color: @title-text-color;
-      line-height: 44px;
-      margin-bottom: 6px;
-    }
   }
   .item-wrap {
     padding: 40px;

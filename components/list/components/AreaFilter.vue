@@ -67,22 +67,22 @@ export default {
   },
   watch: {
     activeItems(val) {
-      const arr = val
-      if (val.length === 0) {
-        this.removeClass('moreText')
-        this.removeClass('active')
-        this.dropdownTitle = this.filterData.name
-      } else if (arr[2].regions.length === 0) {
-        this.dropdownTitle = arr[0].name + '-' + arr[1].name
-        this.addClass('active')
-      } else if (arr[2].regions.length === 1) {
-        this.dropdownTitle =
-          arr[0].name + '-' + arr[1].name + arr[2].regions.name
-        this.addClass('active')
-      } else if (arr[2].regions.length > 1) {
-        this.dropdownTitle = '多选'
-        this.addClass('active')
-      }
+      // const arr = val
+      // if (val.length === 0) {
+      //   this.removeClass('moreText')
+      //   this.removeClass('active')
+      //   this.dropdownTitle = this.filterData.name
+      // } else if (arr[2].regions.length === 0) {
+      //   this.dropdownTitle = arr[0].name + '-' + arr[1].name
+      //   this.addClass('active')
+      // } else if (arr[2].regions.length === 1) {
+      //   this.dropdownTitle =
+      //     arr[0].name + '-' + arr[1].name + arr[2].regions.name
+      //   this.addClass('active')
+      // } else if (arr[2].regions.length > 1) {
+      //   this.dropdownTitle = '多选'
+      //   this.addClass('active')
+      // }
       // 如果筛选名字个数超过了4个那么需要加样式
       /* if (this.dropdownTitle.length >= 4) {
         this.addClass('moreText')
@@ -121,7 +121,8 @@ export default {
       // 确认筛选
       this.saveActiveItems = clone(this.activeItems, true)
       const emitData = this.resultHandle()
-      this.$emit('activeItem', emitData, 'areaFilter')
+      this.handleAreaTitle(this.activeItems)
+      this.$emit('activeItem', emitData, 'areaFilter-' + this.filterData.code)
       this.$refs.item.toggle()
     },
     resultHandle() {
@@ -154,6 +155,30 @@ export default {
         emitData = ''
       }
       return emitData
+    },
+    handleAreaTitle(val) {
+      // 处理地区的title
+      const arr = val
+      if (val.length === 0) {
+        this.removeClass('moreText')
+        this.removeClass('active')
+        this.dropdownTitle = this.filterData.name
+      } else if (arr[1].name === '不限') {
+        this.dropdownTitle = arr[0].name
+        this.addClass('active')
+      } else if (arr[2].regions.length && arr[2].regions[0].name === '不限') {
+        this.dropdownTitle = arr[1].name
+        this.addClass('active')
+      } else if (
+        arr[2].regions.length === 1 &&
+        arr[2].regions[0].name !== '不限'
+      ) {
+        this.dropdownTitle = arr[2].regions[0].name
+        this.addClass('active')
+      } else if (arr[2].regions.length > 1) {
+        this.dropdownTitle = '多选'
+        this.addClass('active')
+      }
     },
     getCoupleSelectVue(_this) {
       this.coupleSelectVue = _this

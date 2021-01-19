@@ -12,6 +12,7 @@
       />
       <Dropdown
         v-if="item.type === 'dropdown'"
+        ref="revenueRef"
         :index="index"
         :title="item.title"
         :tabs="item.options"
@@ -107,18 +108,34 @@ export default {
         },
       ],
       content: {
-        revenue: '[0,50]', // 营收金额
+        revenue: '0-50万', // 营收金额
         business: '不限', // 是什么业务
         industry: '不限', // 是什么行业
       },
     }
   },
+  mounted() {
+    // 数据回显
+    const sessionStorageFormData = JSON.parse(
+      sessionStorage.getItem('formData')
+    )
+    if (sessionStorageFormData) {
+      this.$nextTick(() => {
+        this.$refs.revenueRef[0].dropdownValue =
+          sessionStorageFormData.content['办理业务']
+        this.content.business = sessionStorageFormData.content['办理业务']
+        this.data[1].value = sessionStorageFormData.content['公司年营收']
+        this.content.revenue = sessionStorageFormData.content['公司年营收']
+        this.$refs.revenueRef[1].dropdownValue =
+          sessionStorageFormData.content['公司行业']
+        this.content.industry = sessionStorageFormData.content['公司行业']
+      })
+    }
+  },
   methods: {
     // 处理由子组件RevenueRadio传来的营收金额
     radioValue(value) {
-      const res = String(value).replace('万', '').replace('-', ',')
-      // const res = String(value.split('-')).replace('万', '')
-      this.content.revenue = '[' + res + ']'
+      this.content.revenue = value
     },
     // 处理由子组件Dropdown传来的值 index为0时是办理业务 index为2时是公司行业
     handleValue(value, index) {

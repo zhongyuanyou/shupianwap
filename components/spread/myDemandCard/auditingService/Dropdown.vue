@@ -73,14 +73,43 @@ export default {
       type: 0,
     }
   },
+  mounted() {
+    // 返回时候数据回显
+    const sessionStorageFormData = JSON.parse(
+      sessionStorage.getItem('formData')
+    )
+    if (sessionStorageFormData) {
+      this.tabs.forEach((item, index) => {
+        this.columns.push(item.name)
+      })
+      //  办理业务
+      if (this.index === 0) {
+        const business = sessionStorageFormData.content['办理业务']
+        for (let i = 0; i < this.columns.length; i++) {
+          if (this.columns[i] === business) {
+            this.defaultActive = i
+          }
+        }
+      } else if (this.index === 2) {
+        // 公司行业
+        const industry = sessionStorageFormData.content['公司行业']
+        for (let i = 0; i < this.columns.length; i++) {
+          if (this.columns[i] === industry) {
+            this.defaultActive = i
+          }
+        }
+      }
+    }
+  },
   methods: {
     // 唤起下拉菜单的事件
     showDropdownList() {
       this.dropdownShow = true
-      this.tabs.forEach((item, index) => {
-        const res = item.name
-        this.columns.push(res)
-      })
+      if (this.columns.length === 0) {
+        this.tabs.forEach((item, index) => {
+          this.columns.push(item.name)
+        })
+      }
     },
     // 点击确定时候的事件
     handleConfirm(value, index) {
@@ -118,7 +147,6 @@ export default {
     align-items: center;
     position: relative;
     background: #ffffff;
-    opacity: 0.5;
     border: 1px solid #cdcdcd;
     border-radius: 4px;
     padding: 0 24px;
@@ -132,7 +160,7 @@ export default {
     .dropdown-menu-content-val {
       flex: none;
       font-size: 28px;
-      color: #222222;
+      color: #1a1a1a;
     }
     .dropdown-menu-content-img {
       flex: none;
@@ -145,7 +173,6 @@ export default {
     left: 50%;
     right: auto;
     transform: translateX(-@spread-page-width / 2);
-    //transform: translateX(-126px); // 该属性因为组件样式未知bug，导致左侧出来一部分。且距离是一直固定是63px，不能转成rem
   }
   /deep/ .sp-overlay {
     width: @spread-page-width;

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-08 13:44:18
+ * @LastEditTime: 2021-01-18 16:56:36
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/index.vue
 -->
@@ -43,7 +43,9 @@
             v-model="loginForm.authCode"
             type="number"
             name="authCode"
-            :clearable="false"
+            clearable
+            icon-prefix="spiconfont"
+            clear-icon="login_ic_clear"
             placeholder="请输入验证码"
             maxlength="6"
             @input="handleAuthCodeInput"
@@ -61,8 +63,13 @@
           <sp-field
             key="password"
             v-model="loginForm.password"
+            v-forbid-copy-paste
             name="password"
             placeholder="请输入密码"
+            clearable
+            icon-prefix="spiconfont"
+            clear-icon="login_ic_clear"
+            maxlength="15"
             :type="passwordFieldType"
             @input="handlePasswordInput"
           >
@@ -151,6 +158,7 @@ import ProtocolField from '@/components/login/ProtocolField'
 import PhoneField from '@/components/login/PhoneField'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
+import formHandle from '@/mixins/formHandle'
 import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
 import { openLink } from '@/utils/common.js'
@@ -171,6 +179,7 @@ export default {
     ProtocolField,
     LoadingCenter,
   },
+  mixins: [formHandle],
   data() {
     return {
       loginForm: {
@@ -193,8 +202,7 @@ export default {
     ...mapMutations({
       setUserInfo: 'user/SET_USER',
     }),
-    onSubmit(values) {
-      console.log('submit', values)
+    onSubmit() {
       const error = this.checkFormData()
       if (error) {
         const { message } = error
@@ -336,7 +344,7 @@ export default {
               // 获取验证码后，再调用一次登录
               const { data } = result
               this.loginForm.imgCaptcha = data
-              this.login()
+              this.onSubmit()
             })
             .catch(() => {
               this.loginForm.imgCaptcha = ''
@@ -465,21 +473,9 @@ export default {
           font-weight: 400;
         }
         .sp-field__clear {
-          width: 24px;
-          height: 24px;
-          line-height: 24px;
-          box-sizing: content-box;
-          color: @hint-text-color;
-          font-family: 'iconfont' !important;
-          font-size: 0.16rem;
-          font-style: normal;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          &::before {
-            content: '\e65b'; // 此处直接找的login_ic_clear:before iconfont css 替换的
-            width: 24px;
-            height: 24px;
-          }
+          margin-right: -16px;
+          padding: 0 16px;
+          line-height: inherit;
         }
       }
       .submit-wrap {

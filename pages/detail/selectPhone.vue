@@ -538,31 +538,29 @@ export default {
     .search-nav {
       margin-top: 16px;
     }
-    /deep/.iconfont {
-      font-weight: 400;
-    }
-    /deep/.sp-top-nav-bar__title {
-      // 搜索框样式
-      margin: 0 144px 4px 104px;
-      .search {
-        width: 502px;
-        .sp-field__control {
-          font-size: 30px;
+    /deep/.sp-top-nav-bar {
+      &__title {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0 144px 4px 104px;
+        .search {
+          .sp-field__control {
+            font-size: 30px;
+          }
         }
       }
-    }
-    /deep/.sp-top-nav-bar__right {
-      // 右边搜索样式
-      font-size: 32px;
-      color: #1a1a1a;
-      padding: 0 42px;
-    }
-    /deep/.sp-top-nav-bar__left {
-      // 左边返回样式
-      padding: 0px 32px;
-    }
-    /deep/.sp-hairline--bottom::after {
-      border-bottom-width: 0;
+      &__right {
+        font-size: 32px;
+        color: #1a1a1a;
+        padding: 0 42px;
+      }
+      &__left {
+        padding: 0px 32px;
+      }
+      &::after {
+        content: none;
+      }
     }
   }
   .dropdown-list {
