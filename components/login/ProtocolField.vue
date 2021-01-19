@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 11:43:42
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-28 14:58:58
+ * @LastEditTime: 2021-01-19 15:52:01
  * @Description: file content
- * @FilePath: /chips-wap/client/components/login/ProtocolField.vue
+ * @FilePath: /chips-wap/components/login/ProtocolField.vue
 -->
 
 <template>
@@ -115,7 +115,7 @@ export default {
     font-size: 26px;
     font-weight: 400;
     color: @subtitle-text-color;
-    line-height: 30px;
+    line-height: 34px;
   }
   .text-decor--underline {
     text-decoration: underline;
