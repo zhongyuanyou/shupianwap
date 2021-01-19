@@ -28,7 +28,7 @@
         @select="onSelect"
       />
       <div class="input-phone">
-        <sp-cell-group @click="verificationShow = true">
+        <sp-cell-group>
           <sp-field
             v-model="phoneValue"
             v-sensorsTrack:webClick="{
@@ -44,7 +44,7 @@
             @input="inputPhone($event)"
           ></sp-field>
         </sp-cell-group>
-        <div v-show="verificationShow" class="input-verification">
+        <div class="input-verification">
           <sp-field
             v-model="sms"
             v-sensorsTrack:webClick="{
@@ -142,7 +142,6 @@ export default {
       selectValue: '请选择',
       phoneValue: '',
       sms: '',
-      verificationShow: false,
       test: '获取验证码',
       downShow: false,
       actions: [{ name: '个体注册' }, { name: '企业注册' }],

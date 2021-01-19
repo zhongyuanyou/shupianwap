@@ -23,9 +23,9 @@
     <!--  立即咨询  -->
     <consult-tel
       :tel="consultTel"
-      button="免费咨询"
       md-name="专业刻章服务_免费咨询"
       title=""
+      button="免费咨询"
     ></consult-tel>
     <!--  立即咨询  -->
     <!--  服务介绍  -->
@@ -111,7 +111,7 @@ export default {
       })
       if (res.code === 200) {
         return {
-          result: res.data,
+          result: '',
         }
       }
     } catch (error) {
@@ -221,16 +221,7 @@ export default {
                   imgLink: '',
                   materialLink: 'https://www.baidu.com/',
                   materialCode: 'src100302',
-                  materialHeight: 1334,
-                  materialId: 0,
-                  materialDescription: '',
                   materialName: '推广页印章刻制1-1',
-                  androidLink: '',
-                  materialWidth: 750,
-                  iosLink: '',
-                  linkType: 2,
-                  wapLink: '',
-                  executeParam: '',
                   productId: 'extendSealEngraving1',
                   productDetail: {
                     id: 'extendSealEngraving1',
@@ -258,21 +249,12 @@ export default {
                   imgLink: '',
                   materialLink: 'https://www.baidu.com/',
                   materialCode: 'src100302',
-                  materialHeight: 1334,
-                  materialId: 0,
-                  materialDescription: '',
                   materialName: '推广页印章刻制1-2',
-                  androidLink: '',
-                  materialWidth: 750,
-                  iosLink: '',
-                  linkType: 2,
-                  wapLink: '',
-                  executeParam: '',
                   productId: 'extendSealEngraving2',
                   productDetail: {
                     id: 'extendSealEngraving2',
                     name: '法人章',
-                    referencePrice: 230,
+                    referencePrice: 120,
                     operating: {
                       showName: '法人章',
                       slogan: '一般用于银行预留印鉴或者代替法人签名',
@@ -295,35 +277,26 @@ export default {
                   imgLink: '',
                   materialLink: 'https://www.baidu.com/',
                   materialCode: 'src100302',
-                  materialHeight: 1334,
-                  materialId: 0,
-                  materialDescription: '',
                   materialName: '推广页印章刻制1-3',
-                  androidLink: '',
-                  materialWidth: 750,
-                  iosLink: '',
-                  linkType: 2,
-                  wapLink: '',
-                  executeParam: '',
                   productId: 'extendSealEngraving3',
                   productDetail: {
                     id: 'extendSealEngraving3',
                     name: '财务章',
                     referencePrice: 230,
                     operating: {
-                      showName: '法人章',
-                      slogan: '一般用于银行预留印鉴或者代替法人签名',
-                      productDescribe: '一般用于银行预留印鉴或者代替法人签名',
-                      actualViews: 1783,
-                      defaultSales: 1302,
-                      actualSales: 1298,
+                      showName: '财务章',
+                      slogan: '公司票据、支票出具时需要财务章',
+                      productDescribe: '公司票据、支票出具时需要财务章',
+                      actualViews: 1520,
+                      defaultSales: 1209,
+                      actualSales: 1203,
                     },
                   },
                 },
               ],
             },
             {
-              locationSort: 1,
+              locationSort: 4,
               materialList: [
                 {
                   materialTypeCode: 'GGLX_TP',
@@ -332,35 +305,26 @@ export default {
                   imgLink: '',
                   materialLink: 'https://www.baidu.com/',
                   materialCode: 'src100302',
-                  materialHeight: 1334,
-                  materialId: 0,
-                  materialDescription: '',
-                  materialName: '推广页印章刻制1-1',
-                  androidLink: '',
-                  materialWidth: 750,
-                  iosLink: '',
-                  linkType: 2,
-                  wapLink: '',
-                  executeParam: '',
-                  productId: 'extendSealEngraving1',
+                  materialName: '推广页印章刻制1-4',
+                  productId: 'extendSealEngraving4',
                   productDetail: {
-                    id: 'extendSealEngraving1',
-                    name: '公章',
+                    id: 'extendSealEngraving4',
+                    name: '发票章',
                     referencePrice: 230,
                     operating: {
-                      showName: '公章',
-                      slogan: '公司对外事务时需要加盖',
-                      productDescribe: '公司对外事务时需要加盖',
-                      actualViews: 1802,
-                      defaultSales: 1454,
-                      actualSales: 1450,
+                      showName: '发票章',
+                      slogan: '',
+                      productDescribe: '购买和开具发票时须加盖此章',
+                      actualViews: 1105,
+                      defaultSales: 834,
+                      actualSales: 825,
                     },
                   },
                 },
               ],
             },
             {
-              locationSort: 2,
+              locationSort: 5,
               materialList: [
                 {
                   materialTypeCode: 'GGLX_TP',
@@ -369,35 +333,26 @@ export default {
                   imgLink: '',
                   materialLink: 'https://www.baidu.com/',
                   materialCode: 'src100302',
-                  materialHeight: 1334,
-                  materialId: 0,
-                  materialDescription: '',
-                  materialName: '推广页印章刻制1-2',
-                  androidLink: '',
-                  materialWidth: 750,
-                  iosLink: '',
-                  linkType: 2,
-                  wapLink: '',
-                  executeParam: '',
-                  productId: 'extendSealEngraving2',
+                  materialName: '推广页印章刻制1-5',
+                  productId: 'extendSealEngraving5',
                   productDetail: {
-                    id: 'extendSealEngraving2',
-                    name: '法人章',
+                    id: 'extendSealEngraving5',
+                    name: '合同章',
                     referencePrice: 230,
                     operating: {
-                      showName: '法人章',
-                      slogan: '一般用于银行预留印鉴或者代替法人签名',
-                      productDescribe: '一般用于银行预留印鉴或者代替法人签名',
-                      actualViews: 1783,
-                      defaultSales: 1302,
-                      actualSales: 1298,
+                      showName: '合同章',
+                      slogan: '',
+                      productDescribe: '单位对外签订合同时使用',
+                      actualViews: 429,
+                      defaultSales: 280,
+                      actualSales: 275,
                     },
                   },
                 },
               ],
             },
             {
-              locationSort: 3,
+              locationSort: 6,
               materialList: [
                 {
                   materialTypeCode: 'GGLX_TP',
@@ -406,36 +361,25 @@ export default {
                   imgLink: '',
                   materialLink: 'https://www.baidu.com/',
                   materialCode: 'src100302',
-                  materialHeight: 1334,
-                  materialId: 0,
-                  materialDescription: '',
-                  materialName: '推广页印章刻制1-3',
-                  androidLink: '',
-                  materialWidth: 750,
-                  iosLink: '',
-                  linkType: 2,
-                  wapLink: '',
-                  executeParam: '',
-                  productId: 'extendSealEngraving3',
+                  materialName: '推广页印章刻制1-6',
+                  productId: 'extendSealEngraving6',
                   productDetail: {
-                    id: 'extendSealEngraving3',
-                    name: '财务章',
+                    id: 'extendSealEngraving6',
+                    name: '遗失补办印章',
                     referencePrice: 230,
                     operating: {
-                      showName: '法人章',
-                      slogan: '一般用于银行预留印鉴或者代替法人签名',
-                      productDescribe: '一般用于银行预留印鉴或者代替法人签名',
-                      actualViews: 1783,
-                      defaultSales: 1302,
-                      actualSales: 1298,
+                      showName: '遗失补办印章',
+                      slogan: '',
+                      productDescribe: '印章遗失后进行补',
+                      actualViews: 79,
+                      defaultSales: 58,
+                      actualSales: 58,
                     },
                   },
                 },
               ],
             },
           ],
-          locationCode: 'ad100230',
-          locationCodeLocType: 2,
         },
       ],
     }
@@ -468,7 +412,7 @@ export default {
   mounted() {
     console.log(this.result)
     const param = {
-      platform_type: 'H5', // 平台类型：App，H5，Web
+      platform_type: 'wap端', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
       product_line: 'Wap端印章服务推广页',
       current_url: location.href,

@@ -70,12 +70,12 @@
           <!-- s 核名数据 -->
           <div class="audit-company-name-from__center__input__audit">
             <p>
-              今日核名<span>{{ auditNameSum }}</span
+              今日核名<span>{{ total.auditNameSum }}</span
               >次
             </p>
             <i></i>
             <p>
-              累计核名<span>{{ addUpAuditNameSum }}</span
+              累计核名<span>{{ total.addUpAuditNameSum }}</span
               >次
             </p>
           </div>
@@ -214,6 +214,7 @@ export default {
   },
   data() {
     return {
+      // 城市
       city: [
         {
           id: 1,
@@ -286,16 +287,27 @@ export default {
           color: '#222222',
         },
       ],
+      // 公司名
       companyName: '',
+      // 选择的行业
       industry: '',
+      // 是否打开行业弹窗
       isShow: false,
+      // 是否打开手机号弹窗
       isOverlay: false,
+      // 是否打开城市弹窗
       isShowCity: false,
+      // 验证码
       sms: '',
+      // 手机号
       tel: '',
+      // 选择的城市
       cityName: '成都',
-      countdown: -1, // 发送验证码倒计时60秒
+      // 发送验证码倒计时60秒
+      countdown: -1,
+      // 验证码定时器
       countdownTimer: null,
+      // 行业
       actions: [
         { name: '科技信息', color: '#222222' },
         { name: '广告传媒', color: '#222222' },
@@ -319,25 +331,13 @@ export default {
         { name: '商标资质', color: '#222222' },
         { name: '其他', color: '#222222' },
       ],
-      addUpAuditNameSum: '69,201',
-      auditNameSum: 118, // 每日默认
+      // 默认核名数据
+      addUpAuditNameSum: '9,280',
+      auditNameSum: 82, // 每日默认
     }
   },
   watch: {},
-  // 处理核名数据
-  created() {
-    if (this.total.todayNum !== '' && this.total.totalNum !== '') {
-      this.auditNameSum = (this.total.todayNum || 0)
-        .toString()
-        .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-      this.addUpAuditNameSum = (this.total.totalNum || 0)
-        .toString()
-        .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-    }
-    this.addUpAuditNameSum = (this.addUpAuditNameSum || 0)
-      .toString()
-      .replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-  },
+  created() {},
 
   methods: {
     // 选择城市

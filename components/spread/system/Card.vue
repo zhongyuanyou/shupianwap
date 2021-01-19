@@ -28,7 +28,7 @@
         @select="onSelect"
       />
       <div class="input-phone">
-        <sp-cell-group @click="verificationShow = true">
+        <sp-cell-group>
           <sp-field
             v-model="phoneValue"
             v-sensorsTrack:webClick="{
@@ -44,7 +44,7 @@
             @input="inputPhone($event)"
           ></sp-field>
         </sp-cell-group>
-        <div v-show="verificationShow" class="input-verification">
+        <div class="input-verification">
           <sp-field
             v-model="sms"
             v-sensorsTrack:webClick="{
@@ -82,7 +82,7 @@
           block
           size="small"
           @click="onForm"
-          >立即查询</sp-button
+          >提交获取优惠报价</sp-button
         >
       </div>
       <div class="flow">
@@ -93,7 +93,7 @@
             size="14px"
             color="#00B365"
           />
-          流程透明</span
+          明码标价</span
         >
         <span
           ><my-icon
@@ -102,7 +102,7 @@
             color="#00B365"
             name="details_ic_Completed"
           />
-          信息安全</span
+          品质售后</span
         >
         <span
           ><my-icon
@@ -111,7 +111,7 @@
             color="#00B365"
             name="details_ic_Completed"
           />
-          平台服务</span
+          一站服务</span
         >
       </div>
     </div>
@@ -153,7 +153,6 @@ export default {
       selectValue: '请选择',
       phoneValue: '',
       sms: '',
-      verificationShow: false,
       test: '获取验证码',
       downShow: false,
       actions: [

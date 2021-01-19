@@ -97,7 +97,7 @@
     <div class="foot">
       <FixedBottom :planner="planner" :md="fixedMd" />
     </div>
-    <dgg-im-company></dgg-im-company>
+    <DggImCompany />
   </div>
 </template>
 <script>
@@ -122,7 +122,7 @@ import FixedBottom from '@/components/spread/common/FixedBottom'
 import GuiHuaShiSwipe from '~/components/spread/common/GuiHuaShiSwipe'
 import ConsultTel from '~/components/spread/common/ConsultTel'
 import ShuPianZhaoRen from '~/components/spread/common/ShuPianZhaoRen'
-import dggImCompany from '~/components/spread/DggImCompany'
+import DggImCompany from '@/components/spread/DggImCompany'
 import { spreadApi } from '@/api/spread'
 export default {
   name: 'Index',
@@ -142,11 +142,11 @@ export default {
     ConsultTel,
     ShuPianZhaoRen,
     GuiHuaShiSwipe,
-    dggImCompany,
+    DggImCompany,
     FixedBottom,
   },
   async asyncData({ $axios }) {
-    const type = 'extendSysAuth'
+    const type = 'extendBussineReg'
     const defaultRes = {
       code: 200,
       message: '请求成功。客户端向服务器请求数据，服务器返回相关数据',
@@ -510,6 +510,14 @@ export default {
           },
         },
       ],
+      imgPlanner: [
+        { bgImg: 'https://cdn.shupian.cn/sp-pt/wap/a0761uxgsiw0000.png' },
+        { bgImg: 'https://cdn.shupian.cn/sp-pt/wap/kbpgoqhkn58000.png' },
+        { bgImg: 'https://cdn.shupian.cn/sp-pt/wap/v5qbb7umt7k000.png' },
+        { bgImg: 'https://cdn.shupian.cn/sp-pt/wap/2d721lqgmtz4000.png' },
+        { bgImg: 'https://cdn.shupian.cn/sp-pt/wap/9odvjxumogs0000.png' },
+        { bgImg: 'https://cdn.shupian.cn/sp-pt/wap/d8yaj7dckgw0000.png' },
+      ],
       planner: {
         id: '7862495547640840192',
         name: '张毅',
@@ -565,54 +573,42 @@ export default {
     ListCount(data) {
       const listAll = data.adList[0].sortMaterialList
       if (listAll.length !== 0) {
+        const listCount = []
         listAll.forEach((elem, index) => {
-          const priceVal = elem.materialList[0].productDetail.referencePrice
-          const operatingVal = elem.materialList[0].productDetail.operating
-          this.listCount[index].pric = priceVal
-          this.listCount[index].operating = operatingVal
-          if (data.planlerList.length >= 0) {
-            this.listCount[index].id =
-              data.planlerList[
-                `${
-                  index < data.planlerList.length
-                    ? index
-                    : Math.floor(Math.random() * data.planlerList.length)
-                }`
-              ].userCentreId
-            this.listCount[index].name =
-              data.planlerList[
-                `${
-                  index < data.planlerList.length
-                    ? index
-                    : Math.floor(Math.random() * data.planlerList.length)
-                }`
-              ].realName
-            this.listCount[index].jobNum =
-              data.planlerList[
-                `${
-                  index < data.planlerList.length
-                    ? index
-                    : Math.floor(Math.random() * data.planlerList.length)
-                }`
-              ].loginName
-            this.listCount[index].telephone =
-              data.planlerList[
-                `${
-                  index < data.planlerList.length
-                    ? index
-                    : Math.floor(Math.random() * data.planlerList.length)
-                }`
-              ].userPhone
-            this.listCount[index].imgSrc =
-              data.planlerList[
-                `${
-                  index < data.planlerList.length
-                    ? index
-                    : Math.floor(Math.random() * data.planlerList.length)
-                }`
-              ].userHeadUrl
+          const valueObj = elem.materialList[0].productDetail
+          const obj = {
+            pric: valueObj.referencePrice,
+            bgImg: this.imgPlanner[
+              index < this.imgPlanner.length
+                ? index
+                : Math.floor(Math.random() * this.imgPlanner.length)
+            ].bgImg,
+            operating: valueObj.operating,
+            id: '7862495547640840192',
+            name: '李劲',
+            jobNum: '107547',
+            telephone: '18402858698',
+            imgSrc:
+              'https://dgg-xiaodingyun.oss-cn-beijing.aliyuncs.com/xdy-xcx/my/trueAndFalse/gw_defult.png',
           }
+          if (data.planlerList.length > 0) {
+            const subPlanner =
+              data.planlerList[
+                `${
+                  index < data.planlerList.length
+                    ? index
+                    : Math.floor(Math.random() * data.planlerList.length)
+                }`
+              ]
+            obj.id = subPlanner.userCentreId
+            obj.name = subPlanner.realName
+            obj.jobNum = subPlanner.loginName
+            obj.telephone = subPlanner.userPhone
+            obj.imgSrc = subPlanner.userHeadUrl
+          }
+          listCount.push(obj)
         })
+        this.listCount = listCount
       }
     },
     // 规划师数据

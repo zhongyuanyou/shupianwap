@@ -80,7 +80,7 @@
             />
           </div>
           <!-- 3、输入框-验证码-->
-          <div v-if="smsInputIsShow" class="form-input-sms">
+          <div class="form-input-sms">
             <sp-field
               v-model="sms"
               center
