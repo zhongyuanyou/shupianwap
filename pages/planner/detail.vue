@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-19 15:08:00
+ * @LastEditTime: 2021-01-19 15:28:30
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -570,8 +570,7 @@ export default {
       &__title {
         content: '';
         display: block;
-        max-width: 98px;
-        max-width: 120px;
+        max-width: 150px;
         position: absolute;
         bottom: 0;
         left: 50%;
