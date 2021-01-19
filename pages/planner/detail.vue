@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-18 19:08:03
+ * @LastEditTime: 2021-01-19 10:11:10
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -108,7 +108,7 @@
                 </li>
               </ul>
             </div>
-            <div class="detail-content__wrap-footer">
+            <div v-show="detailData.show" class="detail-content__wrap-footer">
               <div class="detail-content__section-title flex-r-sb flex-r-a-c">
                 <i class="horizontal-line"></i>
                 <span class="detail-content__section-title-text">薯片分</span>

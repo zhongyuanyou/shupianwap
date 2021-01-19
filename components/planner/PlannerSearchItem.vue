@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-12-14 10:48:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-25 17:34:34
+ * @LastEditTime: 2021-01-19 10:52:29
  * @Description: file content
- * @FilePath: /chips-wap/client/components/planner/PlannerSearchItem.vue
+ * @FilePath: /chips-wap/components/planner/PlannerSearchItem.vue
 -->
 <template>
   <div class="planner-search-item" @click.stop="handleClick('detail')">
@@ -228,8 +228,11 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
-    width: 150px;
+    width: 152px;
+    display: flex;
+    justify-content: space-between;
     .contact-btn {
+      border: none;
       width: 64px;
       height: 64px;
       background: #ebf3ff;
