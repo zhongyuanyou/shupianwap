@@ -2,9 +2,9 @@
  * @Author: ma liang
  * @Date: 2020-11-22 10:13:23
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-26 10:13:23
+ * @LastEditTime: 2021-01-19 11:18:15
  * @Description: Search
- * @FilePath: /chips-wap/client/components/common/search/Search.vue
+ * @FilePath: /chips-wap/components/common/search/Search.vue
 -->
 <template>
   <div
@@ -36,7 +36,7 @@
       </form>
       <!-- s 禁用输入框时，隐藏真实输入款，模拟一个输入框 -->
       <span v-else class="imitate-input" @click="clickInputHandle">{{
-        placeholder
+        visible || placeholder
       }}</span>
     </div>
     <slot name="right"></slot>

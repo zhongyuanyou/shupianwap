@@ -126,7 +126,7 @@
           <sp-image
             class="no_data__icon"
             fit="cover"
-            src="https://cdn.shupian.cn/sp-pt/wap/images/9cxcgh1a0t80000.png"
+            src="https://cdn.shupian.cn/sp-pt/wap/images/65sgigx3lig0000.png"
           />
           <p>暂无面谈记录</p>
         </div>

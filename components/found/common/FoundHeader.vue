@@ -14,14 +14,16 @@
           }"
         >
           <my-icon name="sear_ic_sear" size="0.28rem" color="#999" />
-          <input
-            v-model="keyword"
-            type="text"
-            placeholder="请输入搜索内容"
-            :maxlength="100"
-            @input="inputChange"
-            @keydown="handelKeydown"
-          />
+          <form action="javascript:return true">
+            <input
+              v-model="keyword"
+              type="text"
+              placeholder="请输入搜索内容"
+              :maxlength="100"
+              @input="inputChange"
+              @keydown="handelKeydown"
+            />
+          </form>
         </div>
       </div>
       <p class="cancel" @click="handleLeft">取消</p>
@@ -111,26 +113,35 @@ export default {
         align-items: center;
         flex-direction: row;
         padding: 0 27px;
-        input {
+        > form {
           width: 100%;
           height: 92px;
-          text-indent: 15px;
-          border: none;
-          font-size: 30px;
-          color: #1a1a1a;
-          font-weight: bold;
-          &:focus {
-            outline: none;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: row;
+          padding: 0;
+          input {
+            width: 100%;
+            height: 92px;
+            text-indent: 15px;
+            border: none;
+            font-size: 30px;
+            color: #1a1a1a;
+            font-weight: bold;
+            &:focus {
+              outline: none;
+            }
+            //去除点击时候的背景色
+            -webkit-tap-highlight-color: rgba(255, 0, 0, 0);
           }
-          //去除点击时候的背景色
-          -webkit-tap-highlight-color: rgba(255, 0, 0, 0);
-        }
-        //修改input-placeholder样式
-        ::-webkit-input-placeholder {
-          font-size: 30px;
-          font-family: PingFang SC;
-          font-weight: bold;
-          color: #999999;
+          //修改input-placeholder样式
+          ::-webkit-input-placeholder {
+            font-size: 30px;
+            font-family: PingFang SC;
+            font-weight: bold;
+            color: #999999;
+          }
         }
       }
     }
