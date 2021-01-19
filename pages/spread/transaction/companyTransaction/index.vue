@@ -84,13 +84,6 @@ export default {
     FixedBottom,
     DggImCompany,
   },
-  computed: {
-    // 将接受的state混合进组件局部计算属性
-    // 监听接受的state值
-    ...mapState({
-      currentCity: (state) => state.city.currentCity.name || '成都',
-    }),
-  },
   data() {
     return {
       // 推荐规划师：默认数据
@@ -102,6 +95,13 @@ export default {
         imgSrc: '',
       },
     }
+  },
+  computed: {
+    // 将接受的state混合进组件局部计算属性
+    // 监听接受的state值
+    ...mapState({
+      currentCity: (state) => state.city.currentCity.name || '成都',
+    }),
   },
   created() {
     this.getPagePlanner()

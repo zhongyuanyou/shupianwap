@@ -29,13 +29,13 @@
             >
               <div class="marks">
                 <a
-                  v-for="(item, index) in data.marks"
-                  :key="index"
+                  v-for="(mark, markIndex) in data.marks"
+                  :key="markIndex"
                   class="mark"
                   href="javascript:;"
                   @click="jumpLink('')"
                 >
-                  {{ item }}
+                  {{ mark }}
                 </a>
               </div>
             </div>
@@ -57,8 +57,8 @@
               >
               </sp-skeleton>
               <GoodItem
-                v-for="(good, index) in goodList"
-                :key="index"
+                v-for="(good, goodIndex) in goodList"
+                :key="goodIndex"
                 :good="good"
               />
             </div>
