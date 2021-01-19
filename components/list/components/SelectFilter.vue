@@ -173,8 +173,15 @@ export default {
       } else if (this.activeItems.length) {
         // 如果该筛选项是产品分类查询出来的，value需要取code，如果不是则需要取ext2
         const _flag = this.filterData.ext3 === '1'
+        // 资质下面的类别需要code筛选才能筛选出数据，而其他业态下面的分类需要name字段进行筛选
+        const keyStr =
+          this.filterData.code === 'CONDITION-JY-ZZ-LB'
+            ? 'code'
+            : _flag
+            ? 'name'
+            : 'ext2'
         this.activeItems.forEach((item) => {
-          emitData.fieldValue.push(_flag ? item.name : item.ext2)
+          emitData.fieldValue.push(item[keyStr])
         })
       } else {
         emitData = ''

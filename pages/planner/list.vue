@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-08 12:03:21
+ * @LastEditTime: 2021-01-19 11:33:33
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/list.vue
 -->
@@ -28,19 +28,12 @@
       <div class="body-container">
         <div class="search">
           <!-- S 搜索输入框 -->
-          <sp-nav-search
+          <Search
             v-model="search.keywords"
-            border
-            special-label
-            class="search__input"
             placeholder="请输入规划师姓名"
             :disabled="true"
-            @click="handleSearchFocus"
-          >
-            <template #left-icon>
-              <my-icon name="sear_ic_sear" size="0.4rem" color="#999999" />
-            </template>
-          </sp-nav-search>
+            @clickInputHandle="handleSearchFocus"
+          />
           <!-- E 搜索输入框 -->
           <!-- S 下拉筛选条件 -->
           <sp-sticky class="sticky-dropdown" :offset-top="headHeight">
@@ -112,7 +105,11 @@
             @load="onLoad"
           >
             <template v-if="list && list.length">
-              <sp-cell v-for="item in list" :key="item.mchUserId">
+              <sp-cell
+                v-for="item in list"
+                :key="item.mchUserId"
+                class="list-cell"
+              >
                 <PlannerSearchItem
                   :item-data="item"
                   @operation="handleOperation"
@@ -159,7 +156,6 @@ import {
   Button,
   DropdownMenu,
   DropdownItem,
-  NavSearch,
   Toast,
   PullRefresh,
   List,
@@ -170,6 +166,7 @@ import {
 
 import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
 import Header from '@/components/common/head/header'
+import Search from '@/components/common/search/Search'
 import SearchPopup from '@/components/planner/SearchPopup'
 import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
 import LoadingDown from '@/components/common/loading/LoadingDown'
@@ -183,13 +180,13 @@ const SORT_CONFIG = [
   {
     type: 'pointSort', // 排序类型
     sortValue: 2, // 降序
-    text: '薯片分从高到底',
+    text: '薯片分从高到低',
     value: 0,
   },
   {
     type: 'pointSort',
     sortValue: 1, // 升序
-    text: '薯片分从底到高',
+    text: '薯片分从低到高',
     value: 1,
   },
   {
@@ -234,7 +231,6 @@ export default {
     [Cell.name]: Cell,
     [Image.name]: Image,
     [Tag.name]: Tag,
-    [NavSearch.name]: NavSearch,
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
     Header,
@@ -242,6 +238,7 @@ export default {
     SearchPopup,
     PlannerSearchItem,
     LoadingDown,
+    Search,
   },
   mixins: [imHandle],
   data() {
@@ -250,7 +247,7 @@ export default {
       search: {
         keywords: '',
         sortId: 0,
-        sortText: '薯片分从高到底',
+        sortText: '薯片分从高到低',
         region: {
           name: '区域',
           code: '',
@@ -627,14 +624,6 @@ export default {
       -webkit-overflow-scrolling: touch;
     }
     .search {
-      &__input {
-        height: 96px;
-        margin: 16px 40px;
-        /deep/.sp-field__control {
-          font-size: 30px;
-          font-weight: bold;
-        }
-      }
       &__dropdown {
         background-color: #ffffff;
       }
@@ -671,6 +660,7 @@ export default {
           height: 1px;
           background-color: #ebedf0;
           transform: scale(0.5);
+          z-index: 1;
         }
         &__bar {
           box-shadow: none;
@@ -706,6 +696,9 @@ export default {
             font-weight: bold;
             font-size: 26px;
           }
+          &::after {
+            border-color: transparent transparent #4974f5 #4974f5;
+          }
         }
       }
       &::after {
@@ -715,6 +708,9 @@ export default {
     }
     .list-refresh {
       min-height: calc(100% - 218px);
+    }
+    .list-cell {
+      padding: 40px;
     }
   }
 
@@ -730,21 +726,21 @@ export default {
     &__icon {
       width: 340px;
       height: 202px;
-      margin-top: 64px;
+      margin-top: 66px;
     }
     &__descript {
       font-size: 28px;
       font-weight: 400;
       color: #222222;
       line-height: 32px;
-      margin-top: 38px;
+      margin-top: 24px;
     }
     &__tip {
       font-size: 24px;
       font-weight: 400;
       color: #cdcdcd;
       line-height: 28px;
-      margin-top: 16px;
+      margin-top: 32px;
     }
   }
 }

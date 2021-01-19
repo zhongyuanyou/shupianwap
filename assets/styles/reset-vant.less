@@ -1,4 +1,24 @@
 /*重置sp-vant部分样式*/
-.sp-datetime-picker .sp-picker__toolbar .sp-picker__cancel{
+.sp-datetime-picker .sp-picker__toolbar .sp-picker__cancel {
   color: #555;
+}
+
+.sp-list {
+  &__loading,
+  &__finished-text,
+  &__error-text {
+    color: #999999;
+    font-size: 24px !important;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+
+.sp-pull-refresh__head {
+  .sp-loading {
+    &__text {
+      color: #999999;
+      font-size: 24px;
+    }
+  }
 }

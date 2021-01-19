@@ -2,9 +2,11 @@
   <div class="standard">
     <div class="standard-item">
       <sp-cell
-        v-md-map
-        v-md:webClick
-        data-name="工商注册_办理标准_查看更多"
+        v-sensorsTrack:webClick="{
+          eventName: 'wap元素点击',
+          type: '售前',
+          name: `工商注册_办理标准_查看更多`,
+        }"
         value-class="right-value"
         title-class="left-title"
         :title="title"

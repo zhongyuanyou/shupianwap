@@ -19,6 +19,7 @@
         @refresh="onRefresh"
       >
         <sp-list
+          v-if="list.length"
           v-model="loading"
           :finished="finished"
           finished-text="没有更多了"
@@ -121,6 +122,14 @@
             </div>
           </sp-cell>
         </sp-list>
+        <div v-else class="no_data">
+          <sp-image
+            class="no_data__icon"
+            fit="cover"
+            src="https://cdn.shupian.cn/sp-pt/wap/images/65sgigx3lig0000.png"
+          />
+          <p>暂无面谈记录</p>
+        </div>
       </sp-pull-refresh>
     </div>
     <!--S 弹框-->
@@ -498,6 +507,24 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     vertical-align: middle;
+  }
+  .no_data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    &__icon {
+      width: 340px;
+      height: 202px;
+      margin-top: 177px;
+    }
+    > p {
+      font-size: 30px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #1a1a1a;
+      margin-top: 24px;
+    }
   }
 }
 </style>

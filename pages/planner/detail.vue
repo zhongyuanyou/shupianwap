@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-15 15:39:57
+ * @LastEditTime: 2021-01-19 15:28:30
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -33,7 +33,10 @@
     </div>
     <div class="body">
       <div class="detail-content">
-        <div class="detail-content__bg">
+        <div
+          class="detail-content__bg"
+          :class="{ 'detail-content__bg-show-point': formatShowPoint }"
+        >
           <div class="detail-content__wrap">
             <div class="detail-content__wrap-head">
               <div class="flex-r-s flex-r-a-c">
@@ -108,10 +111,10 @@
                 </li>
               </ul>
             </div>
-            <div class="detail-content__wrap-footer">
+            <div v-show="formatShowPoint" class="detail-content__wrap-footer">
               <div class="detail-content__section-title flex-r-sb flex-r-a-c">
                 <i class="horizontal-line"></i>
-                <span>薯片分</span>
+                <span class="detail-content__section-title-text">薯片分</span>
                 <i class="horizontal-line"></i>
               </div>
               <div class="detail-content__sp-score">
@@ -124,7 +127,7 @@
                 <span>
                   什么是薯片分
                   <my-icon
-                    name="per_ic_help"
+                    name="plan_ic_explain"
                     size="0.24rem"
                     color="#666666"
                     @click="handlePoint"
@@ -212,6 +215,7 @@ export default {
       detailData: {},
       shareOptions: [],
       showShare: false,
+      isShare: Number(this.$route.query.isShare) !== 0, // 默认是分享页面，从规划师列表进来就不是分享
       hideIM: this.$route.query.imUserId === this.$route.query.mchUserId, // 目前是 获取到imUserId与mchUserId相等，说明是自己与自己聊天，不显示IM
       hideHeader: !!this.$route.query.hideHeader || false,
       redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去
@@ -252,6 +256,14 @@ export default {
         return '5年以上'
       }
       return ''
+    },
+    formatShowPoint() {
+      const { show } = this.detailData || {}
+      // 分享的页面需要 show:1 才展示薯片分
+      if (this.isShare && show !== 1) {
+        return false
+      }
+      return true
     },
   },
   created() {
@@ -301,7 +313,9 @@ export default {
         this.showShare = false
         return
       }
-      const isSuccess = copyToClipboard(location && location.href)
+      const isSuccess = copyToClipboard(
+        location && location.href + '&isShare=1'
+      )
       if (isSuccess) {
         this.$xToast.show({
           message: '复制成功',
@@ -321,7 +335,7 @@ export default {
             image: this.detailData.img,
             title: '规划师',
             subTitle: '',
-            url: window && window.location.href,
+            url: window && window.location.href + '&isShare=1',
           },
           (res) => {
             const { code } = res || {}
@@ -367,7 +381,7 @@ export default {
             {
               name: userName,
               userId: mchUserId,
-              userType: 'MERCHANT_USER',
+              userType: 'MERCHANT_B',
             },
             (res) => {
               const { code } = res || {}
@@ -527,9 +541,13 @@ export default {
         position: relative;
         background: url(https://cdn.shupian.cn/sp-pt/wap/images/fmyco4fucsg0000.png)
           top center/100% auto no-repeat;
+        background-position-y: -286px;
+      }
+      &__bg-show-point {
+        background-position-y: 0;
       }
       &__wrap {
-        height: 768px;
+        // height: 768px;
         background: linear-gradient(135deg, #f9f1e8, #f9f1e8, #e3d1c3);
         border-radius: 8px;
         padding: 48px 40px;
@@ -552,8 +570,7 @@ export default {
       &__title {
         content: '';
         display: block;
-        max-width: 98px;
-        max-width: 120px;
+        max-width: 150px;
         position: absolute;
         bottom: 0;
         left: 50%;
@@ -607,6 +624,9 @@ export default {
         font-size: 28px;
         font-weight: bold;
         line-height: 32px;
+        &-text {
+          margin: 0 40px;
+        }
       }
       &__section-content {
         display: flex;
@@ -659,6 +679,8 @@ export default {
       }
       .horizontal-line {
         .horizontal-line(@width:208px; @bgColor:#DFD4CA; @skewX:0deg; @height:2px;);
+        flex: 1;
+        width: auto;
       }
     }
   }
