@@ -229,7 +229,6 @@ export default {
   },
   head() {
     return {
-      title: '第二步',
       script: [
         {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
