@@ -61,14 +61,14 @@
 
 <script>
 import { mapState } from 'vuex'
-import { plannerApi } from '@/api/spread'
-import MyHeader from '@/components/common/head/header'
-import NavBtns from '@/components/spread/companyTransaction/NavBtns'
-import Banner from '@/components/spread/companyTransaction/Banner'
-import Form from '@/components/spread/companyTransaction/Form'
-import HotIndustry from '@/components/spread/companyTransaction/HotIndustry'
-import WithAssetsType from '@/components/spread/companyTransaction/WithAssetsType'
-import RecommendCompany from '@/components/spread/companyTransaction/RecommendCompany'
+import { plannerApi } from '~/api/spread'
+import MyHeader from '~/components/common/head/header'
+import NavBtns from '~/components/spread/transaction/companyTransaction/NavBtns'
+import Banner from '~/components/spread/transaction/companyTransaction/Banner'
+import Form from '~/components/spread/transaction/companyTransaction/Form'
+import HotIndustry from '~/components/spread/transaction/companyTransaction/HotIndustry'
+import WithAssetsType from '~/components/spread/transaction/companyTransaction/WithAssetsType'
+import RecommendCompany from '~/components/spread/transaction/companyTransaction/RecommendCompany'
 import DggImCompany from '~/components/spread/DggImCompany'
 import FixedBottom from '~/components/spread/common/FixedBottom'
 export default {
@@ -84,13 +84,6 @@ export default {
     FixedBottom,
     DggImCompany,
   },
-  computed: {
-    // 将接受的state混合进组件局部计算属性
-    // 监听接受的state值
-    ...mapState({
-      currentCity: (state) => state.city.currentCity.name || '成都',
-    }),
-  },
   data() {
     return {
       // 推荐规划师：默认数据
@@ -102,6 +95,13 @@ export default {
         imgSrc: '',
       },
     }
+  },
+  computed: {
+    // 将接受的state混合进组件局部计算属性
+    // 监听接受的state值
+    ...mapState({
+      currentCity: (state) => state.city.currentCity.name || '成都',
+    }),
   },
   created() {
     this.getPagePlanner()

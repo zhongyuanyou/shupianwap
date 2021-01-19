@@ -60,6 +60,9 @@ export default {
         platformCode: store.state.app.isInApp
           ? store.state.app.appInfo.platformCode
           : 'COMDIC_PLATFORM_CRISPS',
+        terminalCode: store.state.app.isInApp
+          ? 'COMDIC_TERMINAL_APP'
+          : 'COMDIC_TERMINAL_WAP',
       }
       const res = await $axios.get(foundApi.initRequest, { params })
       if (res.code === 200) {

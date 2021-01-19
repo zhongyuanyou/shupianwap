@@ -1,7 +1,11 @@
 <template>
   <div class="keyword">
     <!--S 搜索-->
-    <FoundHeader :left="true" :keywords="keywords" @inputChange="inputChange" />
+    <FoundHeader
+      :left="true"
+      :keywords="keywords"
+      @handelKeydown="handelKeydown"
+    />
     <!--E 搜索-->
     <!--S 内容-->
     <div class="safe_con">
@@ -44,14 +48,28 @@ export default {
       page: 1, // 当前页
       loading: false,
       finished: false,
+      historySearch: [],
     }
   },
   mounted() {
+    try {
+      this.historySearch = this.$cookies.get('foundHistory')
+        ? this.$cookies.get('foundHistory')
+        : []
+    } catch (err) {}
     // this.getInfoList()
   },
   methods: {
-    inputChange(data) {
+    handelKeydown(data) {
       this.keywords = data
+      const history = this.historySearch
+      const isHas = history.some((item) => {
+        return item === this.keywords
+      })
+      if (!isHas && this.keywords) {
+        history.unshift(this.keywords)
+      }
+      this.$cookies.set('foundHistory', history)
       this.page = 1
       this.getInfoList()
     },
