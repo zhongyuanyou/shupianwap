@@ -87,6 +87,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo,
     }),
   },
   mounted() {
@@ -133,16 +134,19 @@ export default {
         this.categoryCode = this.information_class[index].code
         const params = {
           categoryCode: this.categoryCode,
+          platformCode: this.isInApp
+            ? this.appInfo.platformCode
+            : 'COMDIC_PLATFORM_CRISPS',
+          terminalCode: this.isInApp
+            ? 'COMDIC_TERMINAL_APP'
+            : 'COMDIC_TERMINAL_WAP',
         }
         const res = await this.$axios.get(foundApi.screenRequest, { params })
-        // this.refreshStatus = false
-        // this.loading = false
+        this.refreshStatus = false
+        this.loading = false
         if (res.code === 200) {
           this.information_banner = res.data.information_banner
           this.information_list = res.data.information_list
-        } else {
-          this.refreshStatus = false
-          this.loading = false
         }
       } catch (err) {
         this.refreshStatus = false
