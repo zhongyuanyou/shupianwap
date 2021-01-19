@@ -67,14 +67,14 @@
 
 <script>
 import { Swipe, swipeItem, Skeleton } from '@chipspc/vant-dgg'
-import getUserSign from '@/utils/fingerprint'
-import { homeApi } from '@/api'
-import TabCurve from '@/components/common/tab/TabCurve'
-import GoodsPro from '@/components/common/goodsItem/GoodsPro'
-import LoadingDown from '@/components/common/loading/LoadingDown'
+import getUserSign from '~/utils/fingerprint'
+import { homeApi } from '~/api'
+import TabCurve from '~/components/common/tab/TabCurve'
+import GoodsPro from '~/components/common/goodsItem/GoodsPro'
+import LoadingDown from '~/components/common/loading/LoadingDown'
 import adJumpHandle from '~/mixins/adJumpHandle'
 
-import GoodItem from '@/components/spread/companyTransaction/GoodItem'
+import GoodItem from '~/components/spread/transaction/companyTransaction/GoodItem'
 export default {
   components: {
     [Swipe.name]: Swipe,
