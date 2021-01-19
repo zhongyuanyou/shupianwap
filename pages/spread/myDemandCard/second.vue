@@ -186,7 +186,6 @@ export default {
       this.formData.tel = decodePhone
       const newFormData = JSON.parse(JSON.stringify(this.formData))
       newFormData.content = JSON.stringify(newFormData.content)
-      this.loading = false
       // 提交表单
       consult
         .consultAdd(newFormData)
@@ -206,7 +205,7 @@ export default {
               是否允许电话联系: '是',
             },
           }
-          this.$router.back()
+          this.$router.go(-2)
         })
         .catch((res) => {
           this.loading = false
@@ -230,7 +229,6 @@ export default {
   },
   head() {
     return {
-      title: '第二步',
       script: [
         {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',

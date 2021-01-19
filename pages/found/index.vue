@@ -87,6 +87,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo,
     }),
   },
   mounted() {
@@ -133,6 +134,12 @@ export default {
         this.categoryCode = this.information_class[index].code
         const params = {
           categoryCode: this.categoryCode,
+          platformCode: this.isInApp
+            ? this.appInfo.platformCode
+            : 'COMDIC_PLATFORM_CRISPS',
+          terminalCode: this.isInApp
+            ? 'COMDIC_TERMINAL_APP'
+            : 'COMDIC_TERMINAL_WAP',
         }
         const res = await this.$axios.get(foundApi.screenRequest, { params })
         this.refreshStatus = false
@@ -141,7 +148,10 @@ export default {
           this.information_banner = res.data.information_banner
           this.information_list = res.data.information_list
         }
-      } catch (err) {}
+      } catch (err) {
+        this.refreshStatus = false
+        this.loading = false
+      }
     },
     onClickRight() {
       this.$router.push('/found/foundSearch')
