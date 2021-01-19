@@ -105,7 +105,7 @@ export default {
   &__name-price {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     font-weight: bold;
   }
   &__name {

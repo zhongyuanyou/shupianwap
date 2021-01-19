@@ -26,6 +26,7 @@
           v-model="ruleForm.contactName"
           center
           label="联系人"
+          maxlength="25"
           placeholder="请填写收货人姓名"
         >
           <template #button>

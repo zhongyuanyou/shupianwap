@@ -53,7 +53,7 @@ export const actions = {
   async POSITION_CITY({ commit, state }, { type = null }) {
     if (type === 'rest') {
       myToast.showLoading({
-        message: '加载中',
+        message: '定位中',
         type: 'loading',
         forbidClick: false,
       })

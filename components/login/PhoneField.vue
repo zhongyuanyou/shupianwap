@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 14:23:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-15 11:24:11
+ * @LastEditTime: 2021-01-19 16:51:54
  * @Description: file content
  * @FilePath: /chips-wap/components/login/PhoneField.vue
 -->
@@ -130,7 +130,7 @@ export default {
     startInterval() {
       // 说明计时器没有结束
       if (this.codeBtnText !== '获取验证码') return false
-      this.codeBtnText = `${this.duration}s后`
+      this.codeBtnText = `(${this.duration})重新获取`
       this.timer = setInterval(() => {
         if (this.duration <= 0) {
           this.closeInterval()
@@ -138,7 +138,7 @@ export default {
         }
 
         this.duration--
-        this.codeBtnText = `${this.duration}s后`
+        this.codeBtnText = `(${this.duration})重新获取`
       }, 1000)
 
       this.$once('hook:beforeDestroy', () => {

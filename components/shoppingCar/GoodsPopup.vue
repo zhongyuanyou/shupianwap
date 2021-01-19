@@ -2,15 +2,16 @@
  * @Author: xiao pu
  * @Date: 2020-11-28 17:00:32
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-11-30 09:25:20
+ * @LastEditTime: 2021-01-19 20:03:43
  * @Description: file content
- * @FilePath: /chips-wap/client/components/shoppingCar/GoodsPopup.vue
+ * @FilePath: /chips-wap/components/shoppingCar/GoodsPopup.vue
 -->
 <template>
-  <div class="goods-item">
+  <div class="goods-popup">
     <sp-center-popup
       v-model="showPopup"
       button-type="confirm"
+      class="goods-popup__container"
       :field="popupConfig"
       @confirm="handlePopupComfirm"
       @cancel="handlePopupCancel"
@@ -74,4 +75,12 @@ export default {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.goods-popup {
+  &__container {
+    /deep/.sp-center-popup__containerConfirm {
+      width: 540px;
+    }
+  }
+}
+</style>

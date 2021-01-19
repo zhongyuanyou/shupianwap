@@ -233,6 +233,9 @@ export default {
         platformCode: this.isInApp
           ? this.appInfo.platformCode
           : 'COMDIC_PLATFORM_CRISPS',
+        terminalCode: this.isInApp
+          ? 'COMDIC_TERMINAL_APP'
+          : 'COMDIC_TERMINAL_WAP',
       }
       const res = await this.$axios.get(foundApi.infoList, { params })
       if (res.code === 200) {

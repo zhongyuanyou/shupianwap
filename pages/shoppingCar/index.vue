@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-18 14:45:46
+ * @LastEditTime: 2021-01-19 20:05:37
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -355,6 +355,7 @@ export default {
           this.list = this.list.filter((item) => {
             return !cartArray.includes(item.cartId)
           })
+          this.$xToast.success('删除成功')
         })
     },
 
@@ -633,10 +634,14 @@ export default {
       overflow-x: hidden;
       overflow-y: scroll;
       -webkit-overflow-scrolling: touch;
+      background-color: #f8f8f8;
     }
   }
   &__refresh {
     min-height: 100%;
+    padding-bottom: 18px;
+    background-color: #ffffff;
+    background-clip: content-box;
   }
   &__goods {
     &-item {

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-18 16:53:01
+ * @LastEditTime: 2021-01-19 16:47:33
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/forget.vue
 -->
@@ -12,11 +12,15 @@
     <div class="head">
       <sp-top-nav-bar ellipsis title="找回密码" @on-click-left="onClickLeft">
         <template #left>
-          <my-icon name="login_ic_clear" size="0.4rem" color="#1A1A1A" />
+          <sp-icon
+            class-prefix="spiconfont"
+            size="0.4rem"
+            name="nav_ic_close"
+          />
         </template>
       </sp-top-nav-bar>
     </div>
-    <div ref="body" class="body">
+    <div class="body">
       <sp-form validate-first class="form" @submit="onSubmit">
         <PhoneField
           key="tel"
@@ -91,7 +95,7 @@
 </template>
 
 <script>
-import { TopNavBar, Form, Button, Field, Toast } from '@chipspc/vant-dgg'
+import { TopNavBar, Form, Button, Field, Icon } from '@chipspc/vant-dgg'
 import PhoneField from '@/components/login/PhoneField'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
@@ -106,6 +110,7 @@ export default {
     [Button.name]: Button,
     [Form.name]: Form,
     [Field.name]: Field,
+    [Icon.name]: Icon,
     PhoneField,
     LoadingCenter,
   },
@@ -148,10 +153,10 @@ export default {
     handleCodeBtnClick(isValidTel) {
       console.log(isValidTel)
       if (!isValidTel) {
-        this.loginToast('手机号码有误')
+        this.$xToast.warning('手机号码有误')
         return
       }
-      this.loginToast('验证码已发送')
+      this.$xToast.success('验证码已发送')
     },
     checkFormData() {
       const { tel, authCode, newPassword, confirmPassword } = this.forgetForm
@@ -190,7 +195,7 @@ export default {
       const error = this.checkFormData()
       if (error) {
         const { message } = error
-        this.loginToast(message)
+        this.$xToast.warning(message)
         return
       }
       this.reset().then(() => {
@@ -235,27 +240,9 @@ export default {
         return data
       } catch (error) {
         this.loading = false
-        this.loginToast(error.message)
+        this.$xToast.warning(error.message)
         return Promise.reject(error)
       }
-    },
-    // 自定义提示框
-    loginToast(
-      message = '',
-      className = 'toast',
-      icon = 'toast_ic_remind',
-      duration = 1000
-    ) {
-      Toast({
-        duration,
-        className,
-        message,
-        icon, // 图标有点烦人
-        iconPrefix: 'spiconfont',
-        getContainer: () => {
-          return this.$refs.body
-        },
-      })
     },
   },
 }
@@ -275,6 +262,10 @@ export default {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
+        font-weight: 400;
+      }
+      &::after {
+        content: none;
       }
     }
   }
@@ -350,6 +341,10 @@ export default {
         font-size: 26px;
         line-height: 1em;
       }
+      &:active::before {
+        opacity: 1;
+        background-color: transparent;
+      }
     }
     .vertical-line {
       display: inline-block;
@@ -357,32 +352,6 @@ export default {
       height: 27px;
       background-color: #f4f4f4;
       vertical-align: middle;
-    }
-  }
-
-  // 提示框样式
-  /deep/.toast {
-    background: rgba(0, 0, 0, 0.9);
-    box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    font-size: 32px;
-    line-height: 36px;
-    font-weight: bold;
-    color: #ffffff;
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    align-items: center;
-    min-width: 390px;
-    max-width: 440px;
-    min-height: 92px;
-    max-height: 130px;
-    box-sizing: border-box;
-    .sp-toast__icon {
-      font-size: 40px;
-    }
-    .sp-toast__text {
-      margin: 0 0 0 18px;
     }
   }
 }
