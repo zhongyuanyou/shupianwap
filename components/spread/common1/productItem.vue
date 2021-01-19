@@ -44,12 +44,13 @@
           <span class="item-price-unit">元</span>
         </p>
         <div
-          v-if="textData.borderBottom"
           class="item-divide"
           :style="
-            textData.info
-              ? { margin: '0.15rem 0 0.19rem' }
-              : { margin: '0.32rem 0 0' }
+            textData.info && textData.borderBottom
+              ? { margin: '0.15rem 0 0.19rem', background: '#f4f4f4' }
+              : textData.borderBottom
+              ? { margin: '0.32rem 0 0', background: '#f4f4f4' }
+              : { margin: '0.32rem 0 0', background: 'transparent' }
           "
         ></div>
         <div v-if="textData.info" class="item-recommend">
@@ -79,7 +80,7 @@ export default {
       default: () => {
         return {
           info: '',
-          borderBottom: true,
+          borderBottom: false,
         }
       },
     },
@@ -333,7 +334,6 @@ export default {
     }
     .item-divide {
       height: 1px;
-      background: #f4f4f4;
     }
     .item-recommend {
       display: flex;
