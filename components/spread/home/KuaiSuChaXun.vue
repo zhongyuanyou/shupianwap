@@ -13,9 +13,11 @@
       <div class="form">
         <div class="dropdown-menu">
           <div
-            v-md-map
-            v-md:webClick
-            data-name="工商聚合页_表单_我需要"
+            v-sensorsTrack:webClick="{
+              eventName: 'wap元素点击',
+              type: '咨询表单',
+              name: '工商聚合页_表单_我需要',
+            }"
             class="dropdown-menu-content"
             @click="showDropdownList"
           >
@@ -37,9 +39,11 @@
         <div class="input-all">
           <sp-field
             v-model="telephone"
-            v-md-map
-            v-md:webClick
-            data-name="工商聚合页_表单_手机号"
+            v-sensorsTrack:webClick="{
+              eventName: 'wap元素点击',
+              type: '咨询表单',
+              name: '工商聚合页_表单_手机号',
+            }"
             label="手机号"
             type="tel"
             maxlength="11"
@@ -48,12 +52,14 @@
             @focus="() => (smsInputIsShow = true)"
           />
         </div>
-        <div v-if="smsInputIsShow" class="input-all1">
+        <div class="input-all1">
           <sp-field
             v-model="sms"
-            v-md-map
-            v-md:webClick
-            data-name="工商聚合页_表单_验证码"
+            v-sensorsTrack:webClick="{
+              eventName: 'wap元素点击',
+              type: '咨询表单',
+              name: '工商聚合页_表单_验证码',
+            }"
             center
             label="验证码"
             type="tel"
@@ -63,9 +69,11 @@
           >
             <template #button>
               <sp-button
-                v-md-map
-                v-md:webClick
-                data-name="工商聚合页_表单_获取验证码"
+                v-sensorsTrack:webClick="{
+                  eventName: 'wap元素点击',
+                  type: '咨询表单',
+                  name: '工商聚合页_表单_获取验证码',
+                }"
                 size="small"
                 type="primary"
                 @click="sendSms"
@@ -77,11 +85,11 @@
         </div>
         <div class="submit">
           <sp-button
-            v-md-map
-            v-md:p_formSubmit
-            data-event_name="p_formSubmit"
-            data-form_type="咨询表单"
-            data-form_name="工商聚合页_表单"
+            v-sensorsTrack:p_formSubmit="{
+              eventName: 'p_formSubmit',
+              form_type: '咨询表单',
+              name: '工商聚合页_表单',
+            }"
             type="primary"
             @click="submitForm"
             >免费预约</sp-button
@@ -225,6 +233,8 @@ export default {
     countDownFun() {
       const vm = this
       this.countdown = 59
+      clearInterval(vm.countdownTimer)
+      vm.countdownTimer = null
       this.countdownTimer = setInterval(function () {
         if (vm.countdown === 0) {
           vm.countdown = -1
@@ -318,10 +328,10 @@ export default {
     },
     // 表单提交有结果后，主动埋点
     formMaiDian() {
-      window.getTrackRow('p_formSubmitResult', {
+      window.sensors.track('p_formSubmitResult', {
         even_name: 'p_formSubmitResult',
         form_type: '咨询表单',
-        form_name: '工商聚合页_表单',
+        form_name: '工商首页表单_提交表单',
       })
     },
   },

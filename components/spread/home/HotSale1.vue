@@ -5,7 +5,6 @@
       <a
         v-for="product in productList"
         :key="product.id"
-        v-md-map
         class="product-item"
         :style="{
           backgroundImage: 'url(' + product.img + ')',

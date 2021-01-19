@@ -1,7 +1,18 @@
 <template>
   <div class="center">
     <!--  头部  -->
-    <Header :title="headTitle"></Header>
+    <Header v-show="!isInApp" :title="headTitle">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!--  头部  -->
     <!--  轮播/表单  -->
     <banner :today-num="todayNum"></banner>
@@ -32,7 +43,7 @@
     <!--  立即咨询  -->
     <!--  底部  -->
     <shu-pian-zhao-ren></shu-pian-zhao-ren>
-    <fixed-bottom :planner="fixedBottomData"></fixed-bottom>
+    <fixed-bottom :planner="fixedBottomData" :md="fixedMd"></fixed-bottom>
     <!--  底部  -->
     <!--  IM  -->
     <dgg-im-company></dgg-im-company>
@@ -41,6 +52,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Header from '~/components/common/head/header'
 import banner from '~/components/spread/tax/Banner'
 import serve from '~/components/spread/tax/Serve'
@@ -95,81 +107,26 @@ export default {
   data() {
     return {
       headTitle: '税务筹划',
-      plannersData: [
-        {
-          id: '7862495547640840192',
-          type: '金牌规划师',
-          avatarImg: '',
-          name: '郭亮亮',
-          shuPianFen: 11,
-          serverNum: 250,
-          telephone: 12345679985,
-          labels: ['工商注册', '财税咨询', '税务筹划'],
-          jobNum: '107547',
-        },
-      ],
+      plannersData: [],
       plannersCommon: {
         title: '咨询规划师',
         imName: '税务筹划_咨询规划师_在线咨询',
         telName: '税务筹划_咨询规划师_拨打电话',
       },
-      fixedBottomData: {
-        id: '',
-        name: '',
-        jobNum: '',
-        telephone: '18402858698',
-        imgSrc: '',
+      fixedBottomData: {},
+      fixedMd: {
+        telMd: {
+          name: '税务筹划_钻石展位_拨打电话',
+          type: '售前',
+        },
+        imMd: {
+          name: '税务筹划_钻石展位_在线咨询',
+          type: '售前',
+        },
       },
       consultTitle: '对于代理记账还有疑问？企服专家为您免费解答',
       consultTel: '4000-962540',
-      serveData: [
-        {
-          bg: {
-            backgroundImage:
-              'url(https://cdn.shupian.cn/sp-pt/wap/21cjuvpuz5vk000.jpg)',
-          },
-          num1: '',
-          num2: '',
-          num3: '',
-          price: '',
-          person: '',
-          id: '',
-          name: '',
-          jobNum: '',
-          productName: '增值税筹划',
-          phone: '',
-        },
-        {
-          bg: {
-            backgroundImage:
-              'url(https://cdn.shupian.cn/sp-pt/wap/3i3g8eyy7q20000.jpg)',
-          },
-          num1: '',
-          num2: '',
-          num3: '',
-          price: '',
-          person: '',
-          id: '',
-          name: '',
-          jobNum: '',
-          productName: '企业所得税筹划',
-        },
-        {
-          bg: {
-            backgroundImage:
-              'url(https://cdn.shupian.cn/sp-pt/wap/fab76tq8cnk0000.jpg)',
-          },
-          num1: '',
-          num2: '',
-          num3: '',
-          price: '',
-          person: '',
-          id: '',
-          name: '',
-          jobNum: '',
-          productName: '个人所得税筹划',
-        },
-      ],
+      serveData: [],
       // 请求失败的备用数据
       planlerList: [
         {
@@ -358,87 +315,96 @@ export default {
       todayNum: 118,
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   created() {
-    let pbool = false // 确定数据返回
-    let abool = false // 确定数据返回
-    let nbool = false // 确定数据返回
     // 请求回来的数据替代本地
     if (this.result !== '' && this.result !== undefined) {
       if (
-        this.result.planlerList.length !== 0 &&
-        this.result.planlerList.length !== undefined
+        this.result.planlerList !== undefined &&
+        this.result.planlerList.length !== 0
       ) {
-        pbool = true
-        if (this.result.planlerList.length < 3) {
-          this.planlerList.forEach((item, index) => {
-            this.planlerList[index] = this.result.planlerList[
-              index % this.result.planlerList.length
-            ]
-          })
-        } else {
-          this.planlerList = this.result.planlerList
-        }
+        this.planlerList = this.result.planlerList
       }
-      if (
-        this.result.adList.length !== 0 &&
-        this.result.adList.length !== undefined
-      ) {
-        abool = true
+      if (this.result.adList !== undefined && this.result.adList.length !== 0) {
         this.adList = this.result.adList
       }
-      if (
-        this.result.nums.todayNum !== '' &&
-        this.result.nums.todayNum !== undefined
-      ) {
-        nbool = true
+      if (this.result.nums !== undefined && this.result.nums.length !== 0) {
         this.todayNum = this.result.nums.todayNum
       }
     }
-    // 各个数据都返回后再处理各个模块的数据
-    if (pbool && abool && nbool) {
-      this.getServeData()
-      this.getPlannersData()
-      this.getfixedBottomData()
+    this.getPlannersData()
+    this.getServeData()
+    this.getfixedBottomData()
+  },
+  mounted() {
+    const param = {
+      platform_type: 'wap端', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端税务筹划推广页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle({ title: '税务筹划' }, () => {})
     }
   },
   methods: {
+    // 头部返回
+    back() {
+      // 返回上一页
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/spread')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
     // 服务模块数据处理
     getServeData() {
-      for (let i = 0; i < this.serveData.length; i++) {
-        // 循环价格
-        this.serveData[i].price = this.adList[0].sortMaterialList[
-          i
-        ].materialList[0].productDetail.referencePrice
-        // 循环在线咨询
-        this.serveData[i].num1 = this.adList[0].sortMaterialList[
-          i
-        ].materialList[0].productDetail.operating.actualViews
-        // 循环累计成交
-        this.serveData[i].num2 = this.adList[0].sortMaterialList[
-          i
-        ].materialList[0].productDetail.operating.defaultSales
-        // 循环成功案例
-        this.serveData[i].num3 = this.adList[0].sortMaterialList[
-          i
-        ].materialList[0].productDetail.operating.actualSales
-        // 循环头像
-        this.serveData[i].person = this.planlerList[i].userHeadUrl
-        // 循环id
-        this.serveData[i].id = this.planlerList[i].userCentreId
-        // 循环名字
-        this.serveData[i].name = this.planlerList[i].realName
-        // 循环工号
-        this.serveData[i].jobNum = this.planlerList[i].loginName
-        // 循环电话号码
-        this.serveData[i].phone = this.planlerList[i].userPhone
+      // const length = this.adList[0].sortMaterialList.length
+      for (let i = 0; i < 3; i++) {
+        let bgImg
+        if (i === 0) {
+          bgImg = 'url(https://cdn.shupian.cn/sp-pt/wap/21cjuvpuz5vk000.jpg)'
+        } else if (i === 1) {
+          bgImg = 'url(https://cdn.shupian.cn/sp-pt/wap/3i3g8eyy7q20000.jpg)'
+        } else if (i === 2) {
+          bgImg = 'url(https://cdn.shupian.cn/sp-pt/wap/fab76tq8cnk0000.jpg)'
+        }
+        const obj = {
+          bg: {
+            backgroundImage: bgImg,
+          },
+          num1: this.adList[0].sortMaterialList[i].materialList[0].productDetail
+            .operating.actualViews,
+          num2: this.adList[0].sortMaterialList[i].materialList[0].productDetail
+            .operating.defaultSales,
+          num3: this.adList[0].sortMaterialList[i].materialList[0].productDetail
+            .operating.actualSales,
+          price: this.adList[0].sortMaterialList[i].materialList[0]
+            .productDetail.referencePrice,
+          person: this.planlerList[i % this.planlerList.length].userHeadUrl,
+          id: this.planlerList[i % this.planlerList.length].userCentreId,
+          name: this.planlerList[i % this.planlerList.length].realName,
+          jobNum: this.planlerList[i % this.planlerList.length].loginName,
+          productName: '增值税筹划',
+          phone: this.planlerList[i % this.planlerList.length].userPhone,
+        }
+        this.serveData.push(obj)
       }
     },
     // 规划师模块数据处理
     getPlannersData() {
-      const length = this.result.planlerList.length
-      if (length > 0) {
-        this.plannersData = []
-      }
+      const length = this.planlerList.length
       for (let i = 0; i < length; i++) {
         const obj = {
           id: this.planlerList[i].userCentreId,
@@ -456,16 +422,13 @@ export default {
     },
     // 底部模块数据处理
     getfixedBottomData() {
-      // 循环头像
-      this.fixedBottomData.imgSrc = this.planlerList[0].userHeadUrl
-      // 循环id
-      this.fixedBottomData.id = this.planlerList[0].userCentreId
-      // 循环名字
-      this.fixedBottomData.name = this.planlerList[0].realName
-      // 循环工号
-      this.fixedBottomData.jobNum = this.planlerList[0].loginName
-      // 循环工号
-      this.fixedBottomData.telephone = this.planlerList[0].userPhone
+      this.fixedBottomData = {
+        id: this.planlerList[0].userCentreId,
+        name: this.planlerList[0].realName,
+        jobNum: this.planlerList[0].loginName,
+        telephone: this.planlerList[0].userPhone,
+        imgSrc: this.planlerList[0].userHeadUrl,
+      }
     },
     // 这个页面统一调用IM时的信息
     openIm() {
@@ -496,22 +459,20 @@ export default {
         {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
         },
-        {
-          src: '/js/spread/tax-md-config.js',
-        },
-        {
-          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
-        },
       ],
     }
   },
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .center {
+  background: #ffffff;
   width: 750px;
   margin: 0 auto;
+  .back_icon {
+    margin-left: 40px;
+  }
 }
 
 /deep/ .my-head {

@@ -2,34 +2,39 @@
   <div class="card">
     <div class="card-content">
       <h3>免费查询公司名称能否注册</h3>
-      <sp-cell
-        v-md-map
-        v-md:WebClick
-        data-form_name="工商注册_表单_我需要"
-        title-class="down-left"
-        :border="false"
-        :value-class="
-          selectValue == '请选择' ? 'down-right' : 'down-right--active'
-        "
-        :value="selectValue"
-        is-link
-        arrow-direction="down"
-        title="注册类型"
-        @click="downShow = true"
+      <a
+        v-sensorsTrack:webClick="{
+          form_name: '工商注册_表单_我需要',
+          form_type: '咨询表单',
+        }"
       >
-      </sp-cell>
+        <sp-cell
+          title-class="down-left"
+          :border="false"
+          :value-class="
+            selectValue == '请选择' ? 'down-right' : 'down-right--active'
+          "
+          :value="selectValue"
+          is-link
+          arrow-direction="down"
+          title="注册类型"
+          @click="downShow = true"
+        >
+        </sp-cell
+      ></a>
       <sp-action-sheet
         v-model="downShow"
         :actions="actions"
         @select="onSelect"
       />
       <div class="input-phone">
-        <sp-cell-group @click="verificationShow = true">
+        <sp-cell-group>
           <sp-field
             v-model="phoneValue"
-            v-md-map
-            v-md:WebClick
-            data-form_name="工商注册_表单_手机号"
+            v-sensorsTrack:webClick="{
+              form_name: '工商注册_表单_手机号',
+              form_type: '咨询表单',
+            }"
             type="tel"
             :border="false"
             maxlength="11"
@@ -37,14 +42,15 @@
             placeholder="信息保护中，仅官方可见"
             label-class="style-phone"
             @input="inputPhone($event)"
-          />
+          ></sp-field>
         </sp-cell-group>
-        <div v-show="verificationShow" class="input-verification">
+        <div class="input-verification">
           <sp-field
             v-model="sms"
-            v-md-map
-            v-md:WebClick
-            data-form_name="工商注册_表单_验证码"
+            v-sensorsTrack:webClick="{
+              form_name: '工商注册_表单_验证码',
+              form_type: '咨询表单',
+            }"
             type="tel"
             maxlength="6"
             label="验证码"
@@ -53,24 +59,24 @@
             @input="inputVal($event)"
           >
             <template #button>
-              <span
-                v-md-map
-                v-md:WebClick
-                class="verification"
-                @click="onSms"
-                >{{ test }}</span
+              <a
+                v-sensorsTrack:webClick="{
+                  form_name: '工商注册表单_获取验证码',
+                  form_type: '提交表单',
+                }"
               >
+                <span class="verification" @click="onSms">{{ test }}</span>
+              </a>
             </template>
           </sp-field>
         </div>
       </div>
       <div
-        v-md-map
-        v-md:WebClick
-        v-md:p_formSubmit
-        data-event_name="p_formSubmit"
-        data-form_type="咨询表单"
-        data-form_name="工商注册_表单"
+        v-sensorsTrack:p_formSubmit="{
+          event_name: 'p_formSubmit',
+          form_type: '咨询表单',
+          form_name: '体系认证表单_提交表单',
+        }"
         class="button"
       >
         <sp-button type="primary" block size="small" @click="onForm"
@@ -136,7 +142,6 @@ export default {
       selectValue: '请选择',
       phoneValue: '',
       sms: '',
-      verificationShow: false,
       test: '获取验证码',
       downShow: false,
       actions: [{ name: '个体注册' }, { name: '企业注册' }],
@@ -168,7 +173,7 @@ export default {
         return Toast('请输入手机号码')
       }
       if (!_reg.test(_tel)) {
-        return Toast('请输入正确的验证码')
+        return Toast('请输入正确手机号码')
       }
       const setData = {
         tel: _tel,
@@ -182,6 +187,8 @@ export default {
         window.promotion.privat.getSmsCode(setData, (res) => {
           if (res.error === 0) {
             let i = 59
+            clearInterval(this.time)
+
             this.test = i + 's'
             this.time = setInterval(() => {
               if (i > 1) {
@@ -273,11 +280,12 @@ export default {
           this.sms = ''
           this.phoneValue = ''
           this.test = '获取验证码'
+          this.onSelect({ name: '请选择' })
           // 表单成功买点
-          window.getTrackRow('p_formSubmitResult', {
+          window.sensors.track('p_formSubmitResult', {
             even_name: 'p_formSubmitResult',
             form_type: '咨询表单',
-            form_name: '工商注册_表单',
+            form_name: '工商注册表单_提交',
           })
         } else {
           // ------------
@@ -411,6 +419,10 @@ export default {
   .action-style {
     color: #5a79e8;
     font-weight: bold;
+  }
+  // 跳转冲突解决
+  /deep/ .sp-cell__title {
+    flex: none;
   }
 }
 </style>
