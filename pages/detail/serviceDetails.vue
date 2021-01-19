@@ -91,6 +91,7 @@ import commodityConsultation from '~/components/common/commodityConsultation/com
 import getUserSign from '~/utils/fingerprint'
 import { productDetailsApi, recommendApi } from '~/api'
 import { copyToClipboard } from '~/utils/common'
+import { GOODSLIST } from '~/config/constant'
 export default {
   name: 'ServiceDetails',
   components: {
@@ -129,7 +130,6 @@ export default {
           needTag: 'true',
         }
       )
-      console.log(productDetailRes.data)
       if (productDetailRes.code === 200) {
         scProductDetailData = productDetailRes.data
         // 获取钻展规划师
@@ -170,7 +170,7 @@ export default {
       // 服务详情数据
       scProductDetailData: {
         baseData: {}, // 基本信息
-        scProductDetailData: [], // 产品图片
+        productImgArr: [], // 产品图片
         attrs: [], // 产品属性
         tags: {}, // 产品标签
         operating: {}, // 运营信息
@@ -217,7 +217,9 @@ export default {
         price: `${this.scProductDetailData.baseData.referencePrice}元`, // 价格
         forwardAbstract: this.scProductDetailData.baseData.productDescription, // 摘要信息，可与显示内容保持一致
         routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
-        imageUrl: 'https://img.yzcdn.cn/vant/cat.jpeg', // 产品图片
+        imageUrl: this.scProductDetailData.productImgArr
+          ? this.scProductDetailData.productImgArr
+          : [GOODSLIST], // 产品图片
         unit: `${
           this.scProductDetailData.baseData.referencePrice
             ? this.scProductDetailData.baseData.referencePrice.split('.')[1]
