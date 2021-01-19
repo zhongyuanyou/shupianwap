@@ -53,11 +53,15 @@ export default {
     Bottombar,
     LoadingCenter,
   },
-  async asyncData({ $axios }) {
+  async asyncData({ store, $axios }) {
     try {
       let homeData = {}
-      const params = {}
-      const res = await $axios.get(foundApi.initRequest, params)
+      const params = {
+        platformCode: store.state.app.isInApp
+          ? store.state.app.appInfo.platformCode
+          : 'COMDIC_PLATFORM_CRISPS',
+      }
+      const res = await $axios.get(foundApi.initRequest, { params })
       if (res.code === 200) {
         homeData = res.data || {}
       }

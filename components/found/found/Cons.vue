@@ -183,7 +183,40 @@ export default {
         )
         return
       }
-      this.$router.push(`/found/detail/${item.id}`)
+      // linkType跳转链接类型 1、跳转文章详情,2、跳转内链,3、跳转外链,4、跳转图片链接
+      switch (item.linkType) {
+        // 跳转文章详情
+        case 1:
+          this.$router.push({
+            path: `/found/detail/${item.id}`,
+          })
+          break
+        // 跳转内链
+        case 2:
+          this.$router.push({
+            path: `${item.wapRoute}`,
+          })
+          break
+        // 跳转外链
+        case 3:
+          window.location.href = item.link
+          break
+        // 跳转图片链接
+        case 4:
+          this.$router.push({
+            name: 'img',
+            params: {
+              url: item.jumpImageUrl,
+            },
+          })
+          break
+        default:
+          this.$router.push({
+            path: `/found/detail/${item.id}`,
+          })
+          break
+      }
+      // this.$router.push(`/found/detail/${item.id}`)
     },
     onRefresh() {
       this.page = 2
