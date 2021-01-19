@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 17:22:12
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-13 20:44:54
+ * @LastEditTime: 2021-01-19 17:01:14
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/register.vue
 -->
@@ -11,11 +11,15 @@
     <div class="head">
       <sp-top-nav-bar ellipsis title="注册账号" @on-click-left="onClickLeft">
         <template #left>
-          <my-icon name="login_ic_clear" size="0.4rem" color="#1A1A1A" />
+          <sp-icon
+            class-prefix="spiconfont"
+            size="0.4rem"
+            name="nav_ic_close"
+          />
         </template>
       </sp-top-nav-bar>
     </div>
-    <div ref="body" class="body">
+    <div class="body">
       <sp-form validate-first class="register-form" @submit="onSubmit">
         <PhoneField
           key="tel"
@@ -54,17 +58,15 @@
               native-type="button"
               @click="handleSwitchLookPassword"
             >
-              <my-icon
-                v-if="passwordFieldType === 'password'"
-                name="login_ic_dislook"
+              <sp-icon
+                class-prefix="spiconfont"
                 size="0.24rem"
                 color="#CCCCCC"
-              />
-              <my-icon
-                v-if="passwordFieldType === 'text'"
-                name="login_ic_look"
-                size="0.24rem"
-                color="#CCCCCC"
+                :name="
+                  passwordFieldType === 'password'
+                    ? 'login_ic_dislook'
+                    : 'login_ic_look'
+                "
               />
             </sp-button>
           </template>
@@ -121,7 +123,7 @@ import {
   Button,
   Field,
   Checkbox,
-  Toast,
+  Icon,
 } from '@chipspc/vant-dgg'
 import PhoneField from '@/components/login/PhoneField'
 import ProtocolField from '@/components/login/ProtocolField'
@@ -139,6 +141,7 @@ export default {
     [Form.name]: Form,
     [Field.name]: Field,
     [Checkbox.name]: Checkbox,
+    [Icon.name]: Icon,
     PhoneField,
     ProtocolField,
     LoadingCenter,
@@ -168,17 +171,17 @@ export default {
     },
     handleClickCodeBtn(isValidTel) {
       if (!isValidTel) {
-        this.loginToast('手机号码有误')
+        this.$xToast.warning('手机号码有误')
         return
       }
-      this.loginToast('验证码已发送')
+      this.$xToast.success('验证码已发送')
     },
     onSubmit(values) {
       console.log('submit', values)
       const error = this.checkFormData()
       if (error) {
         const { message } = error
-        this.loginToast(message)
+        this.$xToast.warning(message)
         return
       }
       this.register().then(() => {
@@ -243,7 +246,7 @@ export default {
         return data
       } catch (error) {
         this.loading = false
-        this.loginToast(error && error.message)
+        this.$xToast.warning(error && error.message)
       }
     },
     // 数据验证
@@ -279,25 +282,6 @@ export default {
       this.isValidSubmit = isValid
       return errorObject
     },
-
-    // 自定义提示框
-    loginToast(
-      message = '',
-      className = 'toast',
-      icon = 'toast_ic_remind',
-      duration = 1000
-    ) {
-      Toast({
-        duration,
-        className,
-        message,
-        icon, // 图标有点烦人
-        iconPrefix: 'spiconfont',
-        getContainer: () => {
-          return this.$refs.body
-        },
-      })
-    },
   },
 }
 </script>
@@ -316,6 +300,10 @@ export default {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
+        font-weight: 400;
+      }
+      &::after {
+        content: none;
       }
     }
   }
@@ -409,6 +397,10 @@ export default {
         font-size: 26px;
         line-height: 1em;
       }
+      &:active::before {
+        opacity: 1;
+        background-color: transparent;
+      }
     }
     .vertical-line {
       display: inline-block;
@@ -416,31 +408,6 @@ export default {
       height: 27px;
       background-color: #f4f4f4;
       vertical-align: middle;
-    }
-  }
-  // 提示框样式
-  /deep/.toast {
-    background: rgba(0, 0, 0, 0.9);
-    box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    font-size: 32px;
-    line-height: 36px;
-    font-weight: bold;
-    color: #ffffff;
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    align-items: center;
-    min-width: 390px;
-    max-width: 440px;
-    min-height: 92px;
-    max-height: 130px;
-    box-sizing: border-box;
-    .sp-toast__icon {
-      font-size: 40px;
-    }
-    .sp-toast__text {
-      margin: 0 0 0 18px;
     }
   }
 }
