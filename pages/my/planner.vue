@@ -17,8 +17,6 @@
     <div class="body">
       <sp-pull-refresh
         v-model="refreshing"
-        pulling-text="下拉就可刷新..."
-        loosing-text="释放即可刷新..."
         class="planner-refresh"
         @refresh="onRefresh"
       >
@@ -32,12 +30,9 @@
         >
           <template v-if="list && list.length">
             <sp-cell v-for="(item, index) in list" :key="index">
-              <div class="item">
+              <div class="item" @click="handleScanDetail(item.mchUserId)">
                 <div class="left">
-                  <div
-                    class="item_avatar"
-                    @click="handleScanDetail(item.mchUserId)"
-                  >
+                  <div class="item_avatar">
                     <sp-image
                       round
                       width="0.8rem"
@@ -60,7 +55,7 @@
                       </span>
                     </h4>
                     <p>{{ item.recentCompany }}</p>
-                    <div class="tag-list">
+                    <div v-if="item.tagList.length" class="tag-list">
                       <sp-tag
                         v-for="tag of item.tagList.slice(0, 2)"
                         :key="tag"
@@ -106,7 +101,7 @@
                 src="https://cdn.shupian.cn/sp-pt/wap/images/9cxcgh1a0t80000.png"
               />
               <template v-if="!error">
-                <div class="no-data__descript">您暂未有联系过的规划师</div>
+                <div class="no-data__descript">暂无您关注的规划师</div>
               </template>
             </div>
           </template>
@@ -120,7 +115,6 @@
         </sp-list>
       </sp-pull-refresh>
     </div>
-    <sp-toast ref="spToast" />
   </div>
 </template>
 
@@ -139,7 +133,6 @@ import {
   TopNavBar,
 } from '@chipspc/vant-dgg'
 
-import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 
@@ -166,7 +159,6 @@ export default {
     [Sticky.name]: Sticky,
     [TopNavBar.name]: TopNavBar,
     Header,
-    SpToast,
     LoadingDown,
   },
   mixins: [imHandle],
@@ -263,12 +255,7 @@ export default {
         this.$appFn.dggCallPhone({ phone: telNumber }, (res) => {
           const { code } = res || {}
           if (code !== 200) {
-            this.$refs.spToast.show({
-              message: '拨号失败！',
-              duration: 1000,
-              forbidClick: true,
-              icon: 'toast_ic_remind',
-            })
+            this.$xToast.warn('拨号失败！')
           }
         })
         return
@@ -290,13 +277,7 @@ export default {
           },
           (res) => {
             const { code } = res || {}
-            if (code !== 200)
-              this.$refs.spToast.show({
-                message: `联系失败`,
-                duration: 1000,
-                forbidClick: true,
-                icon: 'toast_ic_remind',
-              })
+            if (code !== 200) this.$xToast.warn('联系失败！')
           }
         )
         return
@@ -309,12 +290,7 @@ export default {
       const { limit } = this.pageOption
       const { userId } = this.userInfo || {} // { userId: '607997598875151734' }
       if (!userId) {
-        this.$refs.spToast.show({
-          message: `请先登录`,
-          duration: 1000,
-          forbidClick: true,
-          icon: 'toast_ic_remind',
-        })
+        this.$xToast.warn('请先登录！')
         return
       }
       const params = { userId, limit, page: currentPage }
@@ -329,24 +305,15 @@ export default {
           const { limit, currentPage = 1, totalCount = 0, records = [] } = data
           this.pageOption = { limit, totalCount, page: currentPage }
           this.list.push(...records)
-          this.$refs.spToast.show({
-            message: `共找到${totalCount}个规划师`,
-            duration: 1000,
-            forbidClick: true,
-            icon: 'toast_ic_comp',
-          })
+
+          currentPage === 1 &&
+            this.$xToast.success(`共找到${totalCount}个规划师`)
         }
         return data
       } catch (error) {
         if (this.refreshing) {
           this.refreshing = false
         }
-        this.$refs.spToast.show({
-          message: `获取电话号码失败`,
-          duration: 1000,
-          forbidClick: true,
-          icon: 'toast_ic_remind',
-        })
         console.error('getList:', error)
         return Promise.reject(error)
       }
@@ -462,6 +429,7 @@ export default {
           width: 64px;
           height: 64px;
           background: #ebf3ff;
+          border: none;
           &:last-child {
             float: right;
           }
@@ -486,14 +454,14 @@ export default {
     &__icon {
       width: 340px;
       height: 202px;
-      margin-top: 64px;
+      margin-top: 176px;
     }
     &__descript {
-      font-size: 28px;
-      font-weight: 400;
-      color: #222222;
+      margin-top: 24px;
       line-height: 32px;
-      margin-top: 38px;
+      font-size: 30px;
+      font-weight: bold;
+      color: #1a1a1a;
     }
     &__tip {
       font-size: 24px;
