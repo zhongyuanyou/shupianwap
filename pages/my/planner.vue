@@ -202,7 +202,7 @@ export default {
     handleScanDetail(mchUserId) {
       this.$router.push({
         name: 'planner-detail',
-        query: { mchUserId },
+        query: { mchUserId, isShare: 0 },
       })
     },
     // 打电话

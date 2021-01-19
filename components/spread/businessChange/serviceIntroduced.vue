@@ -7,10 +7,12 @@
           v-for="(item, index) in servicelist"
           v-show="index > num ? false : true"
           :key="index"
-          v-md-map
-          v-md:webClick
+          v-sensorsTrack:webClick="{
+            eventName: 'wap元素点击',
+            type: '售前',
+            name: `变更服务介绍_${item.plannerName}_在线咨询`,
+          }"
           :style="{ backgroundImage: 'url(' + item.bgimage + ')' }"
-          :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
           @click="plannerIm(item.planner)"
         >
           <div class="total">
@@ -37,11 +39,7 @@
             </div>
             <div class="contact-btn">
               <a
-                v-md-map
-                v-md:p_IMClick
                 href="javascript:;"
-                data-im_type="售前"
-                :data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
                 @click="
                   () => {
                     $parent.openIM(item.url)
@@ -51,10 +49,11 @@
                 <img :src="item.planner.avatarImg" alt="" />
               </a>
               <a
-                v-md-map
-                v-md:p_IMClick
-                data-im_type="售前"
-                data-name="`变更服务介绍_${item.plannerName}_在线咨询`"
+                v-sensorsTrack:p_IMClick="{
+                  eventName: '在线咨询',
+                  type: '售前',
+                  name: `变更服务介绍_${item.plannerName}_在线咨询`,
+                }"
               >
                 <my-icon
                   name="notify_ic_chat"
@@ -65,10 +64,12 @@
                 </my-icon>
               </a>
               <a
-                v-md-map
-                v-md:webClick
+                v-sensorsTrack:webClick="{
+                  eventName: 'wap元素点击',
+                  type: '售前',
+                  name: `变更服务介绍_${item.plannerName}_拨打电话`,
+                }"
                 href="javascript:;"
-                data-name="`变更服务介绍_${item.plannerName}_拨打电话"
                 @click="call(item.planner.telephone)"
               >
                 <my-icon
@@ -89,15 +90,23 @@
       class="show-more-btn"
       @click="showMore"
     >
-      <span
+      <a
         v-show="more"
-        v-md-map
-        v-md:webClick
-        data-name="工商变更页面_更多服务"
-        >更多服务</span
+        v-sensorsTrack:webClick="{
+          eventName: 'wap元素点击',
+          type: '售前',
+          name: `工商变更页面_更多服务`,
+        }"
+        >更多服务</a
       >
-      <span v-show="close" v-md-map v-md:webClick data-name="工商变更页面_收起"
-        >收起</span
+      <a
+        v-show="close"
+        v-sensorsTrack:webClick="{
+          eventName: 'wap元素点击',
+          type: '售前',
+          name: `工商变更页面_收起`,
+        }"
+        >收起</a
       >
       <my-icon
         v-show="more"
@@ -330,7 +339,7 @@ export default {
     justify-content: center;
     padding: 19px 0;
     margin-top: 40px;
-    > span {
+    > a {
       display: block;
       font-size: 28px;
       font-family: PingFang SC;

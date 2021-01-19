@@ -14,13 +14,12 @@
         class="list"
         @click="onMessage('', index, $event)"
       >
-        <div
-          v-md-map
-          v-md:WebClick
-          v-md:p_IMClick
-          data-im_type="售前"
-          data-form_type="售前"
-          data-name="工商注册_服务介绍_在线咨询"
+        <a
+          v-sensorsTrack:p_IMClick="{
+            eventName: '在线咨询',
+            type: '售前',
+            name: `工商注册_服务介绍_在线咨询`,
+          }"
           class="list-count"
         >
           <div class="list-count_item">
@@ -37,49 +36,48 @@
             <span>{{ listCounts.operating.actualSales }}</span>
             <div>成功案例</div>
           </div>
-        </div>
+        </a>
         <div class="list-advisory">
           <span
-            v-md-map
-            v-md:WebClick
-            v-md:p_IMClick
-            data-im_type="售前"
-            data-form_type="售前"
-            data-name="工商注册_服务介绍_在线咨询"
+            v-sensorsTrack:p_IMClick="{
+              eventName: '在线咨询',
+              type: '售前',
+              name: `工商注册_服务介绍_在线咨询`,
+            }"
             class="price"
             ><span>{{ listCounts.pric }}</span
             >元起</span
           >
           <div class="advisory">
             <sp-image
-              v-md-map
-              v-md:WebClick
-              v-md:p_IMClick
-              data-im_type="售前"
-              data-form_type="售前"
-              data-name="工商注册_服务介绍_在线咨询"
+              v-sensorsTrack:p_IMClick="{
+                eventName: '在线咨询',
+                type: '售前',
+                name: `工商注册_服务介绍_在线咨询`,
+              }"
               round
               width="28px"
               height="28px"
               :src="listCounts.imgSrc"
             />
-            <span
-              v-md-map
-              v-md:WebClick
-              v-md:p_IMClick
-              data-im_type="售前"
-              data-form_type="售前"
-              data-name="工商注册_服务介绍_在线咨询"
+            <a
+              v-sensorsTrack:p_IMClick="{
+                eventName: '在线咨询',
+                type: '售前',
+                name: `工商注册_服务介绍_在线咨询`,
+              }"
               ><my-icon
                 name="notify_ic_chat"
                 size="20px"
                 color="#4974F5"
               ></my-icon
-            ></span>
-            <span
-              v-md-map
-              v-md:webClick
-              data-name="工商注册_服务介绍_电话"
+            ></a>
+            <a
+              v-sensorsTrack:webClick="{
+                eventName: 'wap元素点击',
+                type: '售前',
+                name: `工商注册_服务介绍_电话`,
+              }"
               type="primary"
               @click="onPhone(index)"
             >
@@ -89,7 +87,7 @@
                 color="#4974F5"
                 data-stop="stop"
               ></my-icon
-            ></span>
+            ></a>
           </div>
         </div>
       </div>
@@ -206,7 +204,8 @@ export default {
           justify-content: space-between;
           align-items: center;
           padding: 0 28px 0 8px;
-          > span {
+          > a {
+            display: inline-block;
             height: 72px;
             line-height: 35px;
           }

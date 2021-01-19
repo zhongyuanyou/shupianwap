@@ -14,15 +14,29 @@
         <span class="cousulttel-content-left-text">服务热线:</span>
         <span class="cousulttel-content-left-number">{{ tel }}</span>
       </div>
+      <!--      老埋点-->
+      <!--      <button-->
+      <!--        v-if="mdType === 'old'"-->
+      <!--        v-md-map-->
+      <!--        v-md:webClick-->
+      <!--        class="cousulttel-content-button"-->
+      <!--        data-name="对代理记账还有疑问_立即咨询"-->
+      <!--        @click="telPhone"-->
+      <!--      >-->
+      <!--        {{ button }}-->
+      <!--      </button>-->
+      <!--      老埋点-->
+      <!--      新埋点-->
       <button
-        v-md-map
-        v-md:webClick
+        v-sensorsTrack:webClick="{
+          name: `${mdName}`,
+        }"
         class="cousulttel-content-button"
-        data-name="对代理记账还有疑问_立即咨询"
         @click="telPhone"
       >
-        立即咨询
+        {{ button }}
       </button>
+      <!--      新埋点-->
     </div>
   </div>
 </template>
@@ -45,6 +59,24 @@ export default {
         return '4000-962540'
       },
     },
+    button: {
+      type: String,
+      default: () => {
+        return '立即咨询'
+      },
+    },
+    mdType: {
+      type: String,
+      default: () => {
+        return 'new'
+      },
+    },
+    mdName: {
+      type: String,
+      default: () => {
+        return '专业刻章服务_免费咨询'
+      },
+    },
   },
   methods: {
     telPhone() {
@@ -63,7 +95,6 @@ export default {
     font-weight: bold;
     color: #1a1a1a;
     margin: 39px 0 31px 0;
-    text-align: center;
     height: 30px;
     line-height: 30px;
   }

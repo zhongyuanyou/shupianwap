@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2021-01-14 13:58:34
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-18 19:47:24
+ * @LastEditTime: 2021-01-19 09:11:56
  * @Description: file content
  * @FilePath: /chips-wap/components/planner/RecommendList.vue
 -->
@@ -194,7 +194,7 @@ export default {
         let androidRouter = {}
 
         switch (platformCode) {
-          case 'COMDIC_PLATFORM_QIDABAO': // 企大顺
+          case 'COMDIC_PLATFORM_QIDABAO': // 企大包
             break
           case 'COMDIC_PLATFORM_CRISPS': // 薯片
             iOSRouter = {
@@ -215,6 +215,7 @@ export default {
             break
           case 'crisps-qds-app': // 企大顺
             iOSRouter = {
+              type: 'Flutter', // 只有企大顺有
               path:
                 'CPSPlanner:CPSPlanner/CPSFlutterRouterViewController///push/animation',
               parameter: {
@@ -223,6 +224,7 @@ export default {
               },
             }
             androidRouter = {
+              type: 'Flutter',
               path: '/flutter/main',
               parameter: {
                 routerPath: 'cpsplanner/product/service_product_detail',

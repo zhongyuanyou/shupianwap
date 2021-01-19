@@ -1,7 +1,18 @@
 <template>
   <div class="agency">
     <!-- s 头部导航 -->
-    <Header :title="title" />
+    <Header v-if="!isInApp" :title="title">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!-- e 头部导航 -->
     <!-- s Banner -->
     <Banner :imglist="imgList" />
@@ -28,13 +39,14 @@
     <Need />
     <!-- e 可能需要 -->
     <!-- s 底部导航 -->
-    <Bottom :planner="planner" />
+    <Bottom :planner="planner" :md="fixedMd" />
     <!-- e 底部导航 -->
     <dgg-im-company></dgg-im-company>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Header from '../../../components/common/head/header'
 import Banner from '../../../components/spread/agency/banner'
 import Form from '../../../components/spread/agency/form'
@@ -331,7 +343,23 @@ export default {
           },
         },
       ],
+      // 埋点
+      fixedMd: {
+        telMd: {
+          name: '代理记账_钻石展位_拨打电话',
+          type: '售前',
+        },
+        imMd: {
+          name: '代理记账_钻石展位_在线咨询',
+          type: '售前',
+        },
+      },
     }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
   created() {
     this.productDetail(this.result.data.adList[0].sortMaterialList)
@@ -340,7 +368,34 @@ export default {
       this.plannerHandleData(this.result.data.planlerList || [])
     }
   },
+  mounted() {
+    const param = {
+      platform_type: 'wap端', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端代理记账推广页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+    // 设置嵌入app时头部title
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle({ title: '代理记账' }, () => {})
+    }
+  },
   methods: {
+    back() {
+      // 返回上一页
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/spread')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
     // 商品数据处理
     productDetail(data) {
       this.plannerHandleData(this.result.data.planlerList || [])
@@ -421,12 +476,6 @@ export default {
         {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
         },
-        {
-          src: '/js/spread/businessAgency-md-config.js',
-        },
-        {
-          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
-        },
       ],
     }
   },
@@ -438,12 +487,16 @@ export default {
   width: 750px;
   margin: 0 auto;
   position: relative;
+  background: #ffffff;
   /deep/.fixed-head {
     /deep/.my-head {
       width: 750px;
       left: 50%;
       margin-left: -375px;
     }
+  }
+  .back_icon {
+    margin-left: 40px;
   }
 }
 </style>
