@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-14 20:25:00
+ * @LastEditTime: 2021-01-18 16:53:01
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/forget.vue
 -->
@@ -38,6 +38,7 @@
         />
         <sp-field
           v-model="forgetForm.newPassword"
+          v-forbid-copy-paste
           type="password"
           clearable
           icon-prefix="spiconfont"
@@ -50,6 +51,7 @@
         </sp-field>
         <sp-field
           v-model="forgetForm.confirmPassword"
+          v-forbid-copy-paste
           type="password"
           name="confirmPassword"
           clearable
@@ -93,6 +95,7 @@ import { TopNavBar, Form, Button, Field, Toast } from '@chipspc/vant-dgg'
 import PhoneField from '@/components/login/PhoneField'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
+import formHandle from '@/mixins/formHandle'
 import { auth } from '@/api'
 import { checkPhone, checkPassword, checkAuthCode } from '@/utils/check.js'
 
@@ -106,6 +109,7 @@ export default {
     PhoneField,
     LoadingCenter,
   },
+  mixins: [formHandle],
   data() {
     return {
       forgetForm: {

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-15 17:56:26
+ * @LastEditTime: 2021-01-18 16:56:36
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/index.vue
 -->
@@ -63,6 +63,7 @@
           <sp-field
             key="password"
             v-model="loginForm.password"
+            v-forbid-copy-paste
             name="password"
             placeholder="请输入密码"
             clearable
@@ -157,6 +158,7 @@ import ProtocolField from '@/components/login/ProtocolField'
 import PhoneField from '@/components/login/PhoneField'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
+import formHandle from '@/mixins/formHandle'
 import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
 import { openLink } from '@/utils/common.js'
@@ -177,6 +179,7 @@ export default {
     ProtocolField,
     LoadingCenter,
   },
+  mixins: [formHandle],
   data() {
     return {
       loginForm: {
