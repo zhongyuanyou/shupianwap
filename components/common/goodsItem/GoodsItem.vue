@@ -64,7 +64,6 @@ export default {
   },
   computed: {
     mdData() {
-      // Todo 目前还不知道埋点的sdk怎么使用
       // 埋点数据组装
       const { itemData } = this
       const mdData = {}
@@ -78,7 +77,7 @@ export default {
           ? '服务商品'
           : '交易商品' // 商品类型 服务商品、交易商品、服务资源
       }
-      console.log(mdData)
+      // console.log(mdData)
       return mdData
     },
     description() {
@@ -155,6 +154,7 @@ export default {
       return goodsName
     },
     jumpUrl() {
+      window.sensors.track('p_commodityClick', { ...this.mdData })
       if (this.goodstype.type === 'serve') {
         this.$router.push(
           `/detail/serviceDetails?productId=${this.itemData.id}`

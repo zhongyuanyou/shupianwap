@@ -29,8 +29,8 @@
             >
               <div class="marks">
                 <a
-                  v-for="(item, index) in marks"
-                  :key="index"
+                  v-for="(mark, markIndex) in marks"
+                  :key="markIndex"
                   class="mark"
                   @click="
                     () => {
@@ -38,7 +38,7 @@
                     }
                   "
                 >
-                  {{ item }}
+                  {{ mark }}
                 </a>
               </div>
             </div>
@@ -60,8 +60,8 @@
               >
               </sp-skeleton>
               <GoodItem
-                v-for="(good, index) in goodList"
-                :key="index"
+                v-for="(good, goodIndex) in goodList"
+                :key="goodIndex"
                 :good="good"
               />
             </div>
@@ -76,11 +76,11 @@
 
 <script>
 import { Swipe, swipeItem, Skeleton } from '@chipspc/vant-dgg'
-import TabCurve from '@/components/common/tab/TabCurve'
-import LoadingDown from '@/components/common/loading/LoadingDown'
+import TabCurve from '~/components/common/tab/TabCurve'
+import LoadingDown from '~/components/common/loading/LoadingDown'
 import adJumpHandle from '~/mixins/adJumpHandle'
 
-import GoodItem from '@/components/spread/companyTransaction/GoodItem'
+import GoodItem from '~/components/spread/transaction/companyTransaction/GoodItem'
 export default {
   components: {
     [Swipe.name]: Swipe,
