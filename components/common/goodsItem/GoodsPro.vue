@@ -1,5 +1,20 @@
 <template>
-  <a href="javascript:void(0);" class="goods-item" @click="jumpPage">
+  <a
+    v-sensorsTrack:webClick="{
+      recommend_number: goodsData.recomNo,
+      com_level_1_code: goodsData.classCodeLevelList[0] || '',
+      com_level_2_code: goodsData.classCodeLevelList[1] || '',
+      commodity_level_1: '',
+      commodity_level_2: '',
+      commodity_type: '交易商品',
+      commodity_number: goodsData.code,
+      commodity_name: goodsData.name,
+      n_now_price: goodsData.platformPrice,
+    }"
+    href="javascript:void(0);"
+    class="goods-item"
+    @click="jumpPage"
+  >
     <div class="goods-lable-img">
       <span v-if="false" class="lable">2千元成交礼</span>
       <img v-lazy="goodsData.defaultImg + $ossImgSet(240, 240)" alt="" />
