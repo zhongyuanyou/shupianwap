@@ -56,7 +56,10 @@
         <!-- E 数量 -->
         <div class="sku-group">
           <!-- S 服务资源 -->
-          <SkuServiceRow :sku-row="{ k: '服务资源' }">
+          <SkuServiceRow
+            v-if="formatSkuResourceService.length"
+            :sku-row="{ k: '服务资源' }"
+          >
             <div class="sku-resource">
               <sp-cell
                 v-for="resourceService of formatSkuResourceService"
