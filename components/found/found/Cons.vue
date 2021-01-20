@@ -128,6 +128,12 @@ export default {
       type: String,
       default: '',
     },
+    activeTab: {
+      type: Number || String,
+      default: () => {
+        return 0
+      },
+    },
   },
   data() {
     return {
@@ -160,6 +166,11 @@ export default {
     },
     refreshStatus(newVal) {
       this.refreshing = newVal
+    },
+    activeTab() {
+      this.loading = false
+      this.finished = false
+      this.page = 2
     },
   },
   methods: {
@@ -220,7 +231,7 @@ export default {
       // this.$router.push(`/found/detail/${item.id}`)
     },
     onRefresh() {
-      this.page = 2
+      this.page = 1
       this.$emit('refresh')
     },
     async onLoad() {
@@ -241,6 +252,7 @@ export default {
       if (res.code === 200) {
         if (res.data.information_list.length) {
           this.loading = false
+          this.finished = false
           this.infoList = this.infoList.concat(res.data.information_list)
         } else {
           this.finished = true
