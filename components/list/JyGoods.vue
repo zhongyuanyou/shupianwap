@@ -216,6 +216,7 @@ export default {
     getFilterHandle(data, filrerName) {
       // 获取筛选项数据
       if (data) {
+        // 如果有数据设置数据
         this.$set(this.filterItem[this.currentTabJyCode], filrerName, data)
       } else {
         delete this.filterItem[this.currentTabJyCode][filrerName]
@@ -349,7 +350,10 @@ export default {
             }
             break
           case 'priceFilter':
-            if (this.filterItem[this.currentTabJyCode][key]) {
+            if (
+              this.filterItem[this.currentTabJyCode][key].fieldValue.start ||
+              this.filterItem[this.currentTabJyCode][key].fieldValue.end
+            ) {
               // 处理价格筛选
               this.formData[
                 this.currentTabJyCode
@@ -361,7 +365,7 @@ export default {
               ].platformPriceEnd = this.filterItem[this.currentTabJyCode][
                 key
               ].fieldValue.end
-            } else if (this.filterItem[this.currentTabJyCode][key] === '') {
+            } else {
               // 删除价格筛选
               delete this.formData[this.currentTabJyCode].platformPriceStart
               delete this.formData[this.currentTabJyCode].platformPriceEnd
