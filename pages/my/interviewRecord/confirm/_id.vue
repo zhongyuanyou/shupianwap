@@ -57,10 +57,10 @@
                 <p>面谈地点</p>
               </div>
               <div class="item__rt">
-                <p>{{ info.inviteAddress }}</p>
+                <p>{{ info.inviteAddress }}12312312312312312</p>
               </div>
             </div>
-            <div class="item">
+            <div v-if="info.accompanyName" class="item">
               <div class="item__lf">
                 <my-icon
                   name="commodity_ic_tman"
@@ -233,7 +233,6 @@ export default {
     padding: 0 40px;
     &__form {
       width: 100%;
-      height: 563px;
       background-color: #ffffff;
       box-shadow: 0 6px 10px 0 rgba(183, 183, 183, 0.1);
       border-radius: 12px;
@@ -256,7 +255,7 @@ export default {
         padding-left: 40px;
         .item {
           width: 100%;
-          height: 108px;
+          padding: 38px 0;
           border-bottom: 1px solid #f4f4f4;
           display: flex;
           justify-content: space-between;
@@ -286,7 +285,8 @@ export default {
               font-family: PingFang-SC-Bold, PingFang-SC;
               font-weight: bold;
               color: #1a1a1a;
-              .textOverflow(1);
+              word-wrap: break-word;
+              word-break: normal;
             }
           }
         }

@@ -64,7 +64,7 @@
                   </p>
                   <p>
                     面谈方式：<span>{{
-                      item.inviteType ? '外出拜访' : '客户上门'
+                      item.inviteType ? '到访面谈' : '去店面谈'
                     }}</span>
                   </p>
                 </div>
@@ -86,24 +86,15 @@
                   @click.stop="tel(item.inviterContact)"
                   ><my-icon name="notify_ic_tel" size="0.32rem" color="#4974F5"
                 /></sp-button>
-                <sp-tag
-                  v-if="
-                    item.inviteStatus === 1 ||
-                    item.inviteStatus === 2 ||
-                    item.inviteStatus === 3
-                  "
-                  color="#F8F8F8"
-                  text-color="#999999"
-                  >{{
-                    item.inviteStatus === 0
-                      ? '待面谈'
-                      : item.inviteStatus === 1
-                      ? '已面谈'
-                      : item.inviteStatus === 2
-                      ? '已评价'
-                      : '已取消'
-                  }}</sp-tag
-                >
+                <sp-tag color="#F8F8F8" text-color="#999999">{{
+                  item.inviteStatus === 0
+                    ? '待面谈'
+                    : item.inviteStatus === 1
+                    ? '已面谈'
+                    : item.inviteStatus === 2
+                    ? '已评价'
+                    : '已取消'
+                }}</sp-tag>
               </div>
             </div>
             <div class="item-status">
@@ -206,7 +197,13 @@ export default {
         },
         (res) => {}
       )
+      this.$appFn.dggGetUserInfo((res) => {
+        if (res.code === 200 && res.data.userId && res.data.token) {
+          this.$store.dispatch('user/setUser', res.data)
+        }
+      })
     }
+    this.onLoad(true)
     // this.getInterviewList()
   },
   methods: {
@@ -281,20 +278,23 @@ export default {
       this.refreshing = false
       if (res.code === 200) {
         if (isRefresh) {
-          this.loading = true
-          // this.finished = false
+          this.loading = false
+          this.finished = false
 
           this.list = res.data.records || null
-          if (!this.list || !this.list.length) {
-            this.finished = true
-          }
+          // if (!this.list || !this.list.length) {
+          //   this.finished = true
+          // }
         } else if (res.data.records.length) {
           this.loading = false
+          this.finished = false
           this.list = this.list.concat(res.data.records)
         } else {
           this.finished = true
+          this.loading = true
         }
       } else {
+        this.loading = true
         this.finished = true
       }
     },
