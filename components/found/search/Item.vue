@@ -35,7 +35,7 @@
           <p class="name">{{ info.updaterName }}</p>
         </div>
         <div class="item_bot_rt">
-          {{ info.updateTime }}
+          {{ info.createTime }}
         </div>
       </div>
     </div>
