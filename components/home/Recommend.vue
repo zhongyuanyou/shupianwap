@@ -79,6 +79,7 @@
     </sp-swipe>
     <Loading-down
       v-if="tabBtn.length"
+      :bg-color="tabBtn[curentItem].noData ? '#ffffff' : '#f4f4f4'"
       :loading="loading && !tabBtn[curentItem].noMore"
       :no-data="tabBtn[curentItem].noMore"
     />
@@ -282,6 +283,8 @@ export default {
           this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
             res.data.goodsList
           )
+        } else {
+          this.$xToast.error(res.message)
         }
       })
     },
