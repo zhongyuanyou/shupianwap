@@ -86,24 +86,15 @@
                   @click.stop="tel(item.inviterContact)"
                   ><my-icon name="notify_ic_tel" size="0.32rem" color="#4974F5"
                 /></sp-button>
-                <sp-tag
-                  v-if="
-                    item.inviteStatus === 1 ||
-                    item.inviteStatus === 2 ||
-                    item.inviteStatus === 3
-                  "
-                  color="#F8F8F8"
-                  text-color="#999999"
-                  >{{
-                    item.inviteStatus === 0
-                      ? '待面谈'
-                      : item.inviteStatus === 1
-                      ? '已面谈'
-                      : item.inviteStatus === 2
-                      ? '已评价'
-                      : '已取消'
-                  }}</sp-tag
-                >
+                <sp-tag color="#F8F8F8" text-color="#999999">{{
+                  item.inviteStatus === 0
+                    ? '待面谈'
+                    : item.inviteStatus === 1
+                    ? '已面谈'
+                    : item.inviteStatus === 2
+                    ? '已评价'
+                    : '已取消'
+                }}</sp-tag>
               </div>
             </div>
             <div class="item-status">
@@ -206,6 +197,11 @@ export default {
         },
         (res) => {}
       )
+      this.$appFn.dggGetUserInfo((res) => {
+        if (res.code === 200 && res.data.userId && res.data.token) {
+          this.$store.dispatch('user/setUser', res.data)
+        }
+      })
     }
     // this.getInterviewList()
   },

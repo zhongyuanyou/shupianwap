@@ -193,16 +193,19 @@ export default {
           case 2:
             url = `${item.wapRoute}`
             hide = 0
+            this.$appFn.dggSetTitle({ title: '' }, () => {})
             break
           // 跳转外链
           case 3:
             url = item.link
             hide = 0
+            this.$appFn.dggSetTitle({ title: '' }, () => {})
             break
           // 跳转图片链接
           case 4:
             url = item.jumpImageUrl
             hide = 0
+            this.$appFn.dggSetTitle({ title: '' }, () => {})
             break
           default:
             url = `${domainUrl}/found/detail/${item.id}`
@@ -214,13 +217,13 @@ export default {
           `${url}` +
           '","isHideNav":' +
           hide +
-          '},"isLogin":"1","version":"1.0.0"}'
+          ',"emptyTitle":"标题"},"isLogin":"1","version":"1.0.0"}'
         const adRouter =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
           `${url}` +
           '","isHideNav":' +
           hide +
-          '},"isLogin":"1","version":"1.0.0"}'
+          ',"emptyTitle":"标题"},"isLogin":"1","version":"1.0.0"}'
         this.$appFn.dggJumpRoute(
           { iOSRouter: iosRouter, androidRouter: adRouter },
           (res) => {}

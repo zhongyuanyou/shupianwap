@@ -65,6 +65,7 @@
         </sp-field>
         <sp-field
           v-model="ruleForm.address"
+          maxlength="100"
           center
           label="详细地址"
           placeholder="请填写详细地址"
