@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-19 16:47:33
+ * @LastEditTime: 2021-01-20 14:02:24
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/forget.vue
 -->
@@ -49,6 +49,7 @@
           clear-icon="login_ic_clear"
           name="newPassword"
           placeholder="请输入新密码(6-15位数字/字母/标点符号)"
+          autocomplete="off"
           maxlength="15"
           @input="handleNewPasswordInput"
         >
@@ -62,6 +63,7 @@
           icon-prefix="spiconfont"
           clear-icon="login_ic_clear"
           placeholder="确认新密码"
+          autocomplete="off"
           maxlength="15"
           @input="handleConfirmPasswordInput"
         >
@@ -303,6 +305,7 @@ export default {
           margin-right: -16px;
           padding: 0 16px;
           line-height: inherit;
+          font-size: 24px;
         }
       }
       .submit-wrap {

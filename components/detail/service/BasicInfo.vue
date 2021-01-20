@@ -75,6 +75,8 @@ export default {
     justify-content: left;
     margin-top: 13px;
     flex-wrap: wrap;
+    height: 68px;
+    overflow: hidden;
     a {
       display: inline-block;
       /*width: 119px;*/
@@ -90,6 +92,8 @@ export default {
       text-align: center;
       margin-right: 12px;
       margin-bottom: 28px;
+      display: inline-block;
+      height: 42px;
     }
   }
   &-describe {

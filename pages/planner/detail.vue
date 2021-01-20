@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-19 15:28:30
+ * @LastEditTime: 2021-01-20 15:24:53
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -215,7 +215,7 @@ export default {
       detailData: {},
       shareOptions: [],
       showShare: false,
-      isShare: Number(this.$route.query.isShare) !== 0, // 默认是分享页面，从规划师列表进来就不是分享
+      isShare: Number(this.$route.query.isShare) === 1, // 默认不是分享页面，从规划师列表进来就不是分享
       hideIM: this.$route.query.imUserId === this.$route.query.mchUserId, // 目前是 获取到imUserId与mchUserId相等，说明是自己与自己聊天，不显示IM
       hideHeader: !!this.$route.query.hideHeader || false,
       redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去

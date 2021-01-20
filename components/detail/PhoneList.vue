@@ -1,11 +1,12 @@
 <template>
-  <div class="check-box-list">
+  <div class="phone-list">
     <sp-radio-group v-model="result">
-      <sp-cell-group>
+      <sp-cell-group class="phone-list__cell-group">
         <sp-cell
           v-for="(item, index) in list"
           :key="item.id"
           clickable
+          class="phone-list__cell-group-item"
           :title="`${item.name}`"
           :label="`售价: ${item.goodsPrice}`"
           @click="toggle(index)"
@@ -15,7 +16,7 @@
               <template #icon="{ checked }">
                 <sp-icon
                   class-prefix="spiconfont"
-                  size="0.28rem"
+                  size="0.30rem"
                   :name="checked ? 'login_ic_radio_s' : 'login_ic_radio_n'"
                   :color="checked ? '#4974F5' : '#CCCCCC'"
                 />
@@ -76,17 +77,17 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.check-box-list {
-  // 列表内容样式
-  .sp-cell {
-    padding: 31px 40px 31px 40px;
+.phone-list {
+  &__cell-group {
+    &::after {
+      content: none;
+    }
+    &-item {
+      padding: 30px 40px;
+    }
     /deep/.sp-cell__label {
       color: #ec5330 !important;
-      // padding: 31px 8px 31px 9px;
     }
-  }
-  .sp-cell:first-child {
-    padding-top: 7px;
   }
 }
 </style>
