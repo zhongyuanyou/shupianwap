@@ -216,5 +216,6 @@ export default {
   padding: 0 16px !important;
   margin-right: 0 !important;
   line-height: inherit;
+  font-size: 24px;
 }
 </style>

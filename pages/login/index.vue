@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-19 17:23:49
+ * @LastEditTime: 2021-01-20 15:04:11
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/index.vue
 -->
@@ -468,6 +468,7 @@ export default {
           margin-right: -16px;
           padding: 0 16px;
           line-height: inherit;
+          font-size: 24px;
         }
       }
       .submit-wrap {

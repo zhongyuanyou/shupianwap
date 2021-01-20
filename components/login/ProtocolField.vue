@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 11:43:42
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-20 13:29:03
+ * @LastEditTime: 2021-01-20 15:02:53
  * @Description: file content
  * @FilePath: /chips-wap/components/login/ProtocolField.vue
 -->
@@ -111,6 +111,9 @@ export default {
     flex: 30px 0 0;
     .sp-field__control--custom {
       min-height: auto;
+      .sp-checkbox__icon {
+        font-size: 30px;
+      }
     }
   }
   .protocol {

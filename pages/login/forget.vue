@@ -305,6 +305,7 @@ export default {
           margin-right: -16px;
           padding: 0 16px;
           line-height: inherit;
+          font-size: 24px;
         }
       }
       .submit-wrap {
