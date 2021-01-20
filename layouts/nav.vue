@@ -1,10 +1,16 @@
 <template>
   <div class="nav-layout">
+    <span style="font-size: 12px"></span>
     <nuxt />
     <Bottombar v-if="!isInApp" ref="bottombar" />
     <div
       class="nav-placeholder"
-      :class="isShowOpenApp ? 'show-open-app' : ''"
+      :class="[
+        {
+          'show-open-app': isShowOpenApp && $route.path !== '/my',
+          'nav-placeholder-app': $route.path !== '/my',
+        },
+      ]"
     ></div>
   </div>
 </template>
@@ -43,6 +49,8 @@ export default {
     width: 100%;
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
+  }
+  & .nav-placeholder-app {
     &::after {
       content: '';
       display: block;
