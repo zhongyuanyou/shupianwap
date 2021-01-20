@@ -49,6 +49,7 @@
           icon-prefix="spiconfont"
           clear-icon="login_ic_clear"
           placeholder="请输入新密码(6-15位数字/字母/标点符号)"
+          autocomplete="off"
           maxlength="15"
           @input="handlePasswordInput"
         >

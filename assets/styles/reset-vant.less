@@ -22,7 +22,12 @@
     }
   }
 }
-
-input::-webkit-input-placeholder {
+// 设置input的placeholder的字体样式
+input::-webkit-input-placeholder,
+input::-moz-placeholder {
   color: #cccccc;
+}
+// 设置input的自动填充背景颜色
+input:-webkit-autofill {
+  box-shadow: 0 0 1000px 1000px #ffffff inset !important;
 }

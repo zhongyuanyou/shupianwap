@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 11:43:42
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-19 15:52:01
+ * @LastEditTime: 2021-01-20 13:29:03
  * @Description: file content
  * @FilePath: /chips-wap/components/login/ProtocolField.vue
 -->
@@ -107,10 +107,14 @@ export default {
   &::after {
     display: none;
   }
-  /deep/.sp-field__control--custom {
-    min-height: auto;
+  /deep/.sp-cell__value {
+    flex: 30px 0 0;
+    .sp-field__control--custom {
+      min-height: auto;
+    }
   }
   .protocol {
+    flex: 1;
     padding-left: 16px;
     font-size: 26px;
     font-weight: 400;

@@ -70,6 +70,7 @@
             v-forbid-copy-paste
             name="password"
             placeholder="请输入密码"
+            autocomplete="off"
             clearable
             icon-prefix="spiconfont"
             clear-icon="login_ic_clear"
