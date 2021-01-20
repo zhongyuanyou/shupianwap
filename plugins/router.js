@@ -87,7 +87,6 @@ export default ({ app, store }) => {
         }
       }
       Vue.nextTick(() => {
-        dggSensors.quick('autoTrackSinglePage')
         // 已登录用户，若未初始化IM，进行IM初始化
         const { token, userId, userType } = store.state.user.userInfo
         if (!store.state.im.imSdk && token) {
