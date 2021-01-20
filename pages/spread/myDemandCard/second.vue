@@ -181,9 +181,9 @@ export default {
         return
       }
       this.loading = true
-      const { decodePhone, fullName } = await this.getUserInfo(this.userId)
+      const { mainAccountFull, fullName } = await this.getUserInfo(this.userId)
       this.formData.name = fullName
-      this.formData.tel = decodePhone
+      this.formData.tel = mainAccountFull
       const newFormData = JSON.parse(JSON.stringify(this.formData))
       newFormData.content = JSON.stringify(newFormData.content)
       // 提交表单
