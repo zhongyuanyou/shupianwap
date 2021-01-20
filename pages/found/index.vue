@@ -26,7 +26,7 @@
       :list="information_list"
       :category-code="categoryCode"
       :refresh-status="refreshStatus"
-      :activeTab="activeTab"
+      :active-tab="activeTab"
       @refresh="refresh"
     />
     <Bottombar v-if="!isInApp" ref="bottombar" />
