@@ -128,6 +128,12 @@ export default {
       type: String,
       default: '',
     },
+    activeTab: {
+      type: Number || String,
+      default: () => {
+        return 0
+      },
+    },
   },
   data() {
     return {
@@ -161,6 +167,11 @@ export default {
     refreshStatus(newVal) {
       this.refreshing = newVal
     },
+    activeTab() {
+      this.loading = false
+      this.finished = false
+      this.page = 2
+    },
   },
   methods: {
     onChange(index) {
@@ -170,14 +181,46 @@ export default {
     handleClick(item, index) {
       // 点击
       if (this.isInApp) {
+        let url = ''
+        let hide = 0
+        switch (item.linkType) {
+          // 跳转文章详情
+          case 1:
+            url = `${domainUrl}/found/detail/${item.id}`
+            hide = 1
+            break
+          // 跳转内链
+          case 2:
+            url = `${item.wapRoute}`
+            hide = 0
+            break
+          // 跳转外链
+          case 3:
+            url = item.link
+            hide = 0
+            break
+          // 跳转图片链接
+          case 4:
+            url = item.jumpImageUrl
+            hide = 0
+            break
+          default:
+            url = `${domainUrl}/found/detail/${item.id}`
+            hide = 1
+            break
+        }
         const iosRouter =
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
-          `${domainUrl}found/detail/${item.id}` +
-          '","isHideNav":1},"isLogin":"1","version":"1.0.0"}'
+          `${url}` +
+          '","isHideNav":' +
+          hide +
+          '},"isLogin":"1","version":"1.0.0"}'
         const adRouter =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
-          `${domainUrl}found/detail/${item.id}` +
-          '","isHideNav":1},"isLogin":"1","version":"1.0.0"}'
+          `${url}` +
+          '","isHideNav":' +
+          hide +
+          '},"isLogin":"1","version":"1.0.0"}'
         this.$appFn.dggJumpRoute(
           { iOSRouter: iosRouter, androidRouter: adRouter },
           (res) => {}
@@ -220,7 +263,7 @@ export default {
       // this.$router.push(`/found/detail/${item.id}`)
     },
     onRefresh() {
-      this.page = 2
+      this.page = 1
       this.$emit('refresh')
     },
     async onLoad() {
@@ -241,6 +284,7 @@ export default {
       if (res.code === 200) {
         if (res.data.information_list.length) {
           this.loading = false
+          this.finished = false
           this.infoList = this.infoList.concat(res.data.information_list)
         } else {
           this.finished = true

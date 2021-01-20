@@ -26,10 +26,11 @@
       :list="information_list"
       :category-code="categoryCode"
       :refresh-status="refreshStatus"
+      :active-tab="activeTab"
       @refresh="refresh"
     />
     <Bottombar v-if="!isInApp" ref="bottombar" />
-    <Loading-center v-show="loading" />
+    <Loading-center v-show="loadingIndex" />
   </div>
 </template>
 
@@ -81,7 +82,7 @@ export default {
       information_list: [], // 资讯列表
       categoryCode: '', // code码
       refreshStatus: false,
-      loading: false,
+      loadingIndex: false,
     }
   },
   computed: {
@@ -128,7 +129,7 @@ export default {
         this.information_banner = []
         this.information_list = []
       }
-      this.loading = true
+      this.loadingIndex = true
       // 点击tab标签
       try {
         this.categoryCode = this.information_class[index].code
@@ -143,14 +144,14 @@ export default {
         }
         const res = await this.$axios.get(foundApi.screenRequest, { params })
         this.refreshStatus = false
-        this.loading = false
+        this.loadingIndex = false
         if (res.code === 200) {
           this.information_banner = res.data.information_banner
           this.information_list = res.data.information_list
         }
       } catch (err) {
         this.refreshStatus = false
-        this.loading = false
+        this.loadingIndex = false
       }
     },
     onClickRight() {

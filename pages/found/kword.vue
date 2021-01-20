@@ -30,6 +30,7 @@
 
 <script>
 import { List } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import FoundHeader from '~/components/found/common/FoundHeader'
 import Item from '~/components/found/search/Item'
 import { foundApi } from '@/api'
@@ -50,6 +51,12 @@ export default {
       finished: false,
       historySearch: [],
     }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo,
+    }),
   },
   mounted() {
     try {
@@ -74,12 +81,17 @@ export default {
       this.getInfoList()
     },
     async getInfoList() {
-      console.log(1212)
       // 获取资讯列表
       const params = {
         keyword: this.keywords,
         limit: this.limit,
         page: this.page,
+        platformCode: this.isInApp
+          ? this.platformCode
+          : 'COMDIC_PLATFORM_CRISPS',
+        terminalCode: this.isInApp
+          ? 'COMDIC_TERMINAL_APP'
+          : 'COMDIC_TERMINAL_WAP',
       }
       const res = await this.$axios.get(foundApi.infoList, { params })
       if (res.code === 200) {
@@ -89,9 +101,15 @@ export default {
     async onLoad() {
       const page = this.page++
       const params = {
-        keyword: this.keywords === ' ' ? '' : this.keywords,
+        keyword: this.keywords,
         limit: this.limit,
         page,
+        platformCode: this.isInApp
+          ? this.platformCode
+          : 'COMDIC_PLATFORM_CRISPS',
+        terminalCode: this.isInApp
+          ? 'COMDIC_TERMINAL_APP'
+          : 'COMDIC_TERMINAL_WAP',
       }
       const res = await this.$axios.get(foundApi.infoList, { params })
       if (res.code === 200) {

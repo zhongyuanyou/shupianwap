@@ -49,14 +49,14 @@
           ><my-icon
             class=""
             name="notify_ic_chat"
-            size="0.32rem"
+            size="0.424rem"
             color="#4974F5"
         /></sp-button>
         <sp-button round class="contact-btn" @click="handleTel(item.mchUserId)"
           ><my-icon
             class=""
             name="notify_ic_tel"
-            size="0.32rem"
+            size="0.423rem"
             color="#4974F5"
         /></sp-button>
       </div>
@@ -115,7 +115,6 @@ export default {
         imUserId: mchUserId, // 商户用户ID
         imUserType: 'MERCHANT_USER', // 用户类型
       }
-      console.log()
       const msgParams = {
         sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
         msgType: 'im_tmplate', // 消息类型
@@ -125,9 +124,10 @@ export default {
         price: this.imJumpQuery.price, // 价格
         forwardAbstract: this.imJumpQuery.forwardAbstract, // 摘要信息，可与显示内容保持一致
         routerId: this.imJumpQuery.routerId, // 路由ID
-        imageUrl: this.imJumpQuery.imageUrl, // 产品图片
+        imageUrl: this.imJumpQuery.imageUrl[0], // 产品图片
         unit: this.imJumpQuery.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
       }
+      // 延时一秒,防止消息异步未获取到
       this.sendTemplateMsgMixin({ sessionParams, msgParams })
     },
   },

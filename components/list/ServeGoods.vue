@@ -224,6 +224,15 @@ export default {
     },
   },
   mounted() {
+    // 当前页面公共属性注册
+    const param = {
+      platform_type: 'wap端', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端搜索列表页', // 当前页面或服务名称
+      current_url: location.href, // 发生地址
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
     this.$emit('goodsList', 'serve', this)
     // 处理如果是从分类页进来的session中有分类数据
     if (this.sessionCategory && JSON.stringify(this.sessionCategory) !== '{}') {
@@ -355,7 +364,7 @@ export default {
     resetAllSelect() {
       this.saveActiveData = []
       this.activeData = []
-      this.formData.sortBy = ''
+      this.formData.sortBy = this.option[0].value
       this.formData.classCodes = ''
       this.formData.start = 1
       this.removeClass('active', 1)

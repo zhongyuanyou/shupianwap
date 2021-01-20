@@ -141,6 +141,10 @@ export default {
       // Todo 埋点sdk还未知
       // keyword_type = '商品'
       // keyword = this.searchText
+      window.sensors.track('p_searchClick', {
+        keyword_type: '商品',
+        keyword: this.searchText,
+      })
       if (this.reqType === 'serve') {
         this.getServeListReq()
       } else {

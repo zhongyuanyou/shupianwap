@@ -14,6 +14,7 @@
 import DetailTemplate from '~/components/detail/DetailTemplate'
 import { productDetailsApi } from '~/api'
 import getUserSign from '~/utils/fingerprint'
+import { GOODSLIST } from '~/config/constant'
 export default {
   name: 'Id',
   components: {
@@ -97,7 +98,9 @@ export default {
         price: `${this.tcProductDetailData.platformPrice}元`, // 价格
         forwardAbstract: this.tcProductDetailData.name, // 摘要信息，可与显示内容保持一致
         routerId: 'IMRouter_APP_ProductDetail_Trade', // 路由ID
-        imageUrl: 'https://img.yzcdn.cn/vant/cat.jpeg', // 产品图片
+        imageUrl: this.tcProductDetailData.productImgArr
+          ? this.tcProductDetailData.productImgArr
+          : [GOODSLIST], // 产品图片
         unit: `${this.tcProductDetailData.platformPrice.split('.')[1]}元`, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
       }
       return imdata

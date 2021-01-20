@@ -171,6 +171,8 @@ export default {
         flex-direction: row;
         flex-wrap: wrap;
         margin-top: 17px;
+        height: 160px;
+        overflow: hidden;
         &_item {
           max-width: 100%;
           background: #f9f9f9;

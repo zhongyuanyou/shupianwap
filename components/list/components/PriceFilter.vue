@@ -161,7 +161,7 @@ export default {
     },
     resultHandle() {
       // 处理结果
-      let emitData = {
+      const emitData = {
         fieldCode: this.filterData.children[0].ext1,
         fieldValue: {
           start: '',
@@ -196,8 +196,6 @@ export default {
         emitData.fieldValue.end = Number(
           this.echoData.activeItems[0].ext2.split('-')[1]
         )
-      } else {
-        emitData = ''
       }
       return emitData
     },
