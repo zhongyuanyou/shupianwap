@@ -1,40 +1,40 @@
 <template>
   <div class="address-list">
-    <div class="addres-item">
-      <sp-radio-group v-model="result">
-        <sp-cell-group>
-          <sp-cell
-            v-for="(item, index) in list"
-            :key="index"
-            clickable
-            @click="toggle(index)"
-          >
-            <div class="content">
-              <div v-text="item.title"></div>
-              <div>
-                <!-- 循环属性 -->
-                <span v-for="field of item.fieldList" :key="field.fieldCode">{{
-                  `${field.fieldName}:${field.fieldValueCn}`
-                }}</span>
-              </div>
-              <div>销售价：<span v-text="item.goodsPrice"></span></div>
+    <sp-radio-group v-model="result">
+      <sp-cell-group class="address-list__cell-group">
+        <sp-cell
+          v-for="(item, index) in list"
+          :key="index"
+          clickable
+          class="address-list__cell-group-item"
+          @click="toggle(index)"
+        >
+          <div class="address-list__item">
+            <div class="address-list__item-name">{{ item.name }}</div>
+            <div class="address-list__item-field">
+              <span v-for="field of item.fieldList" :key="field.fieldCode">{{
+                `${field.fieldName}:${field.fieldValueCn}`
+              }}</span>
             </div>
-            <template #right-icon>
-              <sp-radio ref="checkboxes" :name="item">
-                <template #icon="{ checked }">
-                  <sp-icon
-                    class-prefix="spiconfont"
-                    size="0.28rem"
-                    :name="checked ? 'login_ic_radio_s' : 'login_ic_radio_n'"
-                    :color="checked ? '#4974F5' : '#CCCCCC'"
-                  />
-                </template>
-              </sp-radio>
-            </template>
-          </sp-cell>
-        </sp-cell-group>
-      </sp-radio-group>
-    </div>
+            <div class="address-list__item-price">
+              销售价：<span v-text="item.goodsPrice"></span>
+            </div>
+          </div>
+          <template #right-icon>
+            <sp-radio ref="checkboxes" :name="item">
+              <template #icon="{ checked }">
+                <sp-icon
+                  class-prefix="spiconfont"
+                  size="0.30rem"
+                  :name="checked ? 'login_ic_radio_s' : 'login_ic_radio_n'"
+                  :color="checked ? '#4974F5' : '#CCCCCC'"
+                />
+              </template>
+            </sp-radio>
+          </template>
+        </sp-cell>
+      </sp-cell-group>
+    </sp-radio-group>
   </div>
 </template>
 <script>
@@ -87,33 +87,33 @@ export default {
 </script>
 <style lang="less" scoped>
 .address-list {
-  .addres-item {
-    .content {
-      div:first-child {
-        color: #1a1a1a;
-        font-size: 30px;
-        line-height: 38px;
-      }
-      div:nth-child(2) {
-        color: #222222;
-        font-size: 22px;
-        line-height: 44px;
-        span:not(:last-child):after {
-          content: ' | ';
-        }
-      }
-      div:last-child {
-        color: #ec5330;
-        font-size: 26px;
-        line-height: 44px;
+  &__cell-group {
+    &::after {
+      content: none;
+    }
+    &-item {
+      padding: 30px 40px;
+    }
+  }
+  &__item {
+    &-name {
+      color: #1a1a1a;
+      font-size: 30px;
+      line-height: 38px;
+      .textOverflow(2);
+    }
+    &-field {
+      color: #222222;
+      font-size: 22px;
+      line-height: 44px;
+      span:not(:last-child):after {
+        content: ' | ';
       }
     }
-    .sp-cell {
-      padding: 31px 40px 31px 43px;
-    }
-
-    .sp-cell:first-child {
-      padding-top: 15px;
+    &-price {
+      color: #ec5330;
+      font-size: 26px;
+      line-height: 44px;
     }
   }
 }
