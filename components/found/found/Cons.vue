@@ -28,7 +28,7 @@
           >
             <sp-image
               height="2.58rem"
-              fit="cover"
+              fit="fill"
               :src="image.materialList[0].materialUrl"
             />
           </sp-swipe-item>
@@ -128,6 +128,12 @@ export default {
       type: String,
       default: '',
     },
+    activeTab: {
+      type: Number || String,
+      default: () => {
+        return 0
+      },
+    },
   },
   data() {
     return {
@@ -145,6 +151,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo,
     }),
   },
   watch: {
@@ -160,6 +167,11 @@ export default {
     refreshStatus(newVal) {
       this.refreshing = newVal
     },
+    activeTab() {
+      this.loading = false
+      this.finished = false
+      this.page = 2
+    },
   },
   methods: {
     onChange(index) {
@@ -169,24 +181,89 @@ export default {
     handleClick(item, index) {
       // 点击
       if (this.isInApp) {
+        let url = ''
+        let hide = 0
+        switch (item.linkType) {
+          // 跳转文章详情
+          case 1:
+            url = `${domainUrl}/found/detail/${item.id}`
+            hide = 1
+            break
+          // 跳转内链
+          case 2:
+            url = `${item.wapRoute}`
+            hide = 0
+            break
+          // 跳转外链
+          case 3:
+            url = item.link
+            hide = 0
+            break
+          // 跳转图片链接
+          case 4:
+            url = item.jumpImageUrl
+            hide = 0
+            break
+          default:
+            url = `${domainUrl}/found/detail/${item.id}`
+            hide = 1
+            break
+        }
         const iosRouter =
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
-          `${domainUrl}found/detail/${item.id}` +
-          '","isHideNav":1},"isLogin":"1","version":"1.0.0"}'
+          `${url}` +
+          '","isHideNav":' +
+          hide +
+          '},"isLogin":"1","version":"1.0.0"}'
         const adRouter =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
-          `${domainUrl}found/detail/${item.id}` +
-          '","isHideNav":1},"isLogin":"1","version":"1.0.0"}'
+          `${url}` +
+          '","isHideNav":' +
+          hide +
+          '},"isLogin":"1","version":"1.0.0"}'
         this.$appFn.dggJumpRoute(
           { iOSRouter: iosRouter, androidRouter: adRouter },
           (res) => {}
         )
         return
       }
-      this.$router.push(`/found/detail/${item.id}`)
+      // linkType跳转链接类型 1、跳转文章详情,2、跳转内链,3、跳转外链,4、跳转图片链接
+      switch (item.linkType) {
+        // 跳转文章详情
+        case 1:
+          this.$router.push({
+            path: `/found/detail/${item.id}`,
+          })
+          break
+        // 跳转内链
+        case 2:
+          this.$router.push({
+            path: `${item.wapRoute}`,
+          })
+          break
+        // 跳转外链
+        case 3:
+          window.location.href = item.link
+          break
+        // 跳转图片链接
+        case 4:
+          this.$router.push({
+            name: 'img',
+            params: {
+              url: item.jumpImageUrl,
+            },
+          })
+          break
+        default:
+          this.$router.push({
+            path: `/found/detail/${item.id}`,
+          })
+          break
+      }
+      // this.$router.push(`/found/detail/${item.id}`)
     },
     onRefresh() {
-      this.page = 2
+      this.page = 1
       this.$emit('refresh')
     },
     async onLoad() {
@@ -196,11 +273,18 @@ export default {
         categoryCode: this.code,
         limit: this.limit,
         page,
+        platformCode: this.isInApp
+          ? this.appInfo.platformCode
+          : 'COMDIC_PLATFORM_CRISPS',
+        terminalCode: this.isInApp
+          ? 'COMDIC_TERMINAL_APP'
+          : 'COMDIC_TERMINAL_WAP',
       }
       const res = await this.$axios.get(foundApi.infoList, { params })
       if (res.code === 200) {
         if (res.data.information_list.length) {
           this.loading = false
+          this.finished = false
           this.infoList = this.infoList.concat(res.data.information_list)
         } else {
           this.finished = true

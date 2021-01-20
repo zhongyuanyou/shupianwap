@@ -1,48 +1,56 @@
 <template>
   <div class="select-address">
     <div
-      class="top"
+      class="head"
       :style="{
         'padding-top': headerPaddingTop,
       }"
     >
       <sp-top-nav-bar
-        class="search-nav"
+        class="select-address__search"
         @on-click-left="onClickLeft"
         @on-click-right="onClickRight"
       >
         <template #left>
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+          <sp-icon
+            class-prefix="spiconfont"
+            size="0.4rem"
+            color="#1A1A1A"
+            name="nav_ic_back"
+          />
         </template>
         <template #title>
           <sp-nav-search
             v-model="search.searchKey"
             border
             placeholder="请输入您想注册的地址"
-            class="search"
+            class="select-address__search-input"
           >
             <template #left-icon>
-              <my-icon
-                name="sear_ic_sear"
+              <sp-icon
+                class-prefix="spiconfont"
                 size="0.3rem"
                 color="#999999"
-              ></my-icon>
+                name="sear_ic_sear"
+              />
             </template>
           </sp-nav-search>
         </template>
         <template #right> 搜索 </template>
       </sp-top-nav-bar>
     </div>
-    <div class="dropdown-list">
+    <div class="dropdown">
       <sp-sticky>
-        <sp-dropdown-menu>
-          <!-- 选择价格区间 -->
+        <sp-dropdown-menu class="dropdown__menu sp-hairline--bottom">
+          <!-- S 选择价格区间 -->
           <sp-dropdown-item
             ref="isShowPrice"
-            :title-class="dropdownPriceTitle != '价格' ? 'title-style' : ''"
+            :title-class="
+              dropdownPriceTitle != '价格' ? 'dropdown__menu-bar--active' : ''
+            "
             :title="dropdownPriceTitle"
           >
-            <div class="select-price">
+            <div class="dropdown__item-price">
               <PriceFilterComponents
                 ref="PriceFilter"
                 :price-list="formatPriceOption"
@@ -57,19 +65,20 @@
               @confirmFilters="confirmFilters"
             />
           </sp-dropdown-item>
+          <!-- E 选择价格区间 -->
           <!-- S 排序选择 -->
           <sp-dropdown-item
             ref="sortDropdown"
             :title-class="
               formatSortOption[0] &&
               formatSortOption[0].value !== search.sortValue
-                ? 'title-style'
+                ? 'dropdown__menu-bar--active'
                 : ''
             "
             :disabled="!formatSortOption || !formatSortOption.length"
             :title="dropdownSortTitle"
           >
-            <div class="sort-content">
+            <div class="dropdown__item-sort">
               <sp-cell
                 v-for="(item, index) in formatSortOption"
                 :key="index"
@@ -80,8 +89,9 @@
                 @click="handleSortChange(item, index)"
               >
                 <template #right-icon>
-                  <my-icon
+                  <sp-icon
                     v-show="item.value === search.sortValue"
+                    class-prefix="spiconfont"
                     name="tab_ic_check"
                     size="0.22rem"
                     color="#4974f5"
@@ -94,13 +104,13 @@
         </sp-dropdown-menu>
       </sp-sticky>
     </div>
-    <div class="result-list">
-      <div class="result-list-container">
+    <div class="select-address-list">
+      <div class="select-address-list__container">
         <!-- 搜索结果列表 -->
         <sp-pull-refresh
           v-model="refreshing"
           success-text="刷新成功"
-          class="list-refresh"
+          class="select-address-list__refresh"
           @refresh="onRefresh"
         >
           <sp-list
@@ -143,6 +153,7 @@ import {
   PullRefresh,
   Button,
   Cell,
+  Icon,
 } from '@chipspc/vant-dgg'
 import PriceFilterComponents from '@/components/common/filters/PriceFilterComponents'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
@@ -170,6 +181,7 @@ export default {
     [List.name]: List,
     [Button.name]: Button,
     [Cell.name]: Cell,
+    [Icon.name]: Icon,
     PriceFilterComponents,
     BottomConfirm,
     AddressList,
@@ -522,6 +534,9 @@ export default {
         return data || {}
       } catch (error) {
         console.error('getList:', error)
+        if (this.refreshing) {
+          this.refreshing = false
+        }
         return Promise.reject(error)
       }
     },
@@ -553,66 +568,81 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  .top {
+  .head {
     background-color: #ffffff;
-    .search-nav {
-      margin-top: 16px;
+  }
+  &__search {
+    margin-top: 16px;
+    &-input {
+      /deep/.sp-field__control {
+        font-size: 30px;
+      }
     }
-    /deep/.sp-top-nav-bar__title {
-      // 搜索框样式
+  }
+  /deep/.sp-top-nav-bar {
+    &__title {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
       margin: 0 144px 4px 104px;
-      .search {
-        width: 502px;
-        .sp-field__control {
-          font-size: 30px;
-        }
-      }
-      /deep/.sp-top-nav-bar__right {
-        // 右边搜索样式
-        font-size: 32px;
-        color: #1a1a1a;
-        padding: 0 42px;
-      }
-      /deep/.sp-top-nav-bar__left {
-        // 左边返回样式
-        padding: 0px 32px;
-      }
     }
-    /deep/.sp-hairline--bottom::after {
-      border-bottom-width: 0;
+    &__right {
+      font-size: 32px;
+      color: #1a1a1a;
+      padding: 0 42px;
+    }
+    &__left {
+      padding: 0px 32px;
+    }
+    &::after {
+      content: none;
     }
   }
 
-  .sort-content {
-    .sp-cell {
-      padding: 18px 40px;
+  .dropdown {
+    &__menu {
       &::after {
-        display: none;
+        border-color: #f4f4f4;
       }
-      &:last-child {
-        margin-bottom: 40px;
-      }
-      &.active {
+      /deep/.dropdown__menu-bar--active {
+        font-size: 26px;
+        font-family: PingFang SC;
         font-weight: bold;
         color: #4974f5;
+        &::after {
+          border-color: transparent transparent #4974f5 #4974f5;
+        }
+      }
+      /deep/.sp-dropdown-menu {
+        &__bar {
+          box-shadow: 0 0.5px 0px #f4f4f4;
+        }
+      }
+    }
+    &__item-price {
+      padding: 56px 40px 84px 40px;
+    }
+    &__item-sort {
+      .sp-cell {
+        padding: 18px 40px;
+        &::after {
+          display: none;
+        }
+        &:last-child {
+          margin-bottom: 40px;
+        }
+        &.active {
+          font-weight: bold;
+          color: #4974f5;
+        }
       }
     }
   }
 
-  /deep/.title-style {
-    // 下拉选择显示标题样式
-    font-size: 26px;
-    font-family: PingFang SC;
-    font-weight: bold;
-    color: #4974f5;
-  }
-  .select-price {
-    padding: 56px 40px 84px 40px;
-  }
-  .result-list {
+  &-list {
     flex: 1;
     position: relative;
-    &-container {
+    &__container {
       position: absolute;
       top: 0;
       left: 0;
@@ -622,7 +652,7 @@ export default {
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
     }
-    .list-refresh {
+    &__refresh {
       min-height: 100%;
     }
   }

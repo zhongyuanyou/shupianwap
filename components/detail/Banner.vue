@@ -1,6 +1,6 @@
 <template>
   <div class="banner">
-    <sp-swipe @change="onChange">
+    <sp-swipe :autoplay="3000" @change="onChange">
       <sp-swipe-item v-for="(item, index) in images" :key="index">
         <sp-image fit="cover" lazy-load :src="item" />
       </sp-swipe-item>

@@ -177,6 +177,15 @@ export default {
     },
   },
   mounted() {
+    // 当前页面公共属性注册
+    const param = {
+      platform_type: 'wap端', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端搜索列表页', // 当前页面或服务名称
+      current_url: location.href, // 发生地址
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
     this.$emit('goodsList', 'jy', this)
     // 默认请求的数据
     this.tabItems.forEach((item) => {
@@ -195,6 +204,7 @@ export default {
       classCode: this.tabItems[this.typeCodeIndex].ext4,
       dictCode: this.tabItems[this.typeCodeIndex].code,
       searchKey: this.searchText,
+      statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
       fieldList: [],
     }
     this.initGoodsList()
@@ -205,12 +215,16 @@ export default {
   methods: {
     getFilterHandle(data, filrerName) {
       // 获取筛选项数据
-      this.$set(this.filterItem[this.currentTabJyCode], filrerName, data)
+      if (data) {
+        // 如果有数据设置数据
+        this.$set(this.filterItem[this.currentTabJyCode], filrerName, data)
+      } else {
+        delete this.filterItem[this.currentTabJyCode][filrerName]
+      }
       this.filterItemHandle()
       this.initGoodsList()
     },
     onLoad() {
-      // console.log(1)
       this.searchKeydownHandle()
     },
     changeTabs(name, title) {
@@ -239,6 +253,7 @@ export default {
           classCode: this.tabItems[name].ext4,
           dictCode: this.tabItems[name].code,
           searchKey: this.searchText,
+          statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
           fieldList: [],
         }
       }
@@ -290,7 +305,8 @@ export default {
       // 处理筛选数据，拼成筛选项
       let arr = []
       for (const key in this.filterItem[this.currentTabJyCode]) {
-        switch (key) {
+        const keyStr = key.split('-')[0] // 处理筛选名字，获取筛选名字中的组件名
+        switch (keyStr) {
           case 'sortFilter':
             // 处理排序筛选
             this.formData[this.currentTabJyCode].sortBy = this.filterItem[
@@ -307,6 +323,7 @@ export default {
                 ...this.filterItem[this.currentTabJyCode][key].filterKeyValArr,
               ]
             }
+            // 处理文字长度筛选项
             if (
               'nameLengthStart' in
               this.filterItem[this.currentTabJyCode][key].charLength
@@ -333,7 +350,10 @@ export default {
             }
             break
           case 'priceFilter':
-            if (this.filterItem[this.currentTabJyCode][key]) {
+            if (
+              this.filterItem[this.currentTabJyCode][key].fieldValue.start ||
+              this.filterItem[this.currentTabJyCode][key].fieldValue.end
+            ) {
               // 处理价格筛选
               this.formData[
                 this.currentTabJyCode
@@ -345,8 +365,8 @@ export default {
               ].platformPriceEnd = this.filterItem[this.currentTabJyCode][
                 key
               ].fieldValue.end
-            } else if (this.filterItem[this.currentTabJyCode][key] === '') {
-              // 处理价格筛选
+            } else {
+              // 删除价格筛选
               delete this.formData[this.currentTabJyCode].platformPriceStart
               delete this.formData[this.currentTabJyCode].platformPriceEnd
             }
@@ -430,7 +450,7 @@ export default {
     box-shadow: none;
     margin: 0 30px;
     margin-left: -8px;
-    border-bottom: 1px solid #f4f4f4;
+    /*border-bottom: 1px solid #f4f4f4;*/
     /*border-top: 1px solid #f4f4f4;*/
     .sp-dropdown-menu__item {
       text-align: right;

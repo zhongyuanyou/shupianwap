@@ -35,6 +35,10 @@ export default ({ app, store }) => {
       const loginRoutePath = '/login' // 登录路由
       const defaultRoutePath = '/' // 首页路由
       // 路由守卫
+      // 第三方跳转登录页清除token
+      if (to.query.sourcePlatform) {
+        store.dispatch('user/clearUser')
+      }
       const token = app.$cookies.get('token') // 获取缓存用户token
       if (!store.state.app.isInApp) {
         if (token) {
@@ -62,7 +66,13 @@ export default ({ app, store }) => {
           appHandler.dggGetUserInfo((res) => {
             if (res.code === 200) {
               try {
-                const userInfo = res.data || {}
+                // const userInfo = res.data || {}
+                let userInfo = {}
+                if (typeof res.data === 'string') {
+                  userInfo = JSON.parse(res.data)
+                } else {
+                  userInfo = res.data
+                }
                 if (userInfo && userInfo.userId && userInfo.token) {
                   store.commit('user/SET_USER', userInfo)
                 }

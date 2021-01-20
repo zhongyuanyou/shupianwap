@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-07 19:57:35
+ * @LastEditTime: 2021-01-20 14:02:24
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/forget.vue
 -->
@@ -12,11 +12,15 @@
     <div class="head">
       <sp-top-nav-bar ellipsis title="找回密码" @on-click-left="onClickLeft">
         <template #left>
-          <my-icon name="login_ic_clear" size="0.4rem" color="#1A1A1A" />
+          <sp-icon
+            class-prefix="spiconfont"
+            size="0.4rem"
+            name="nav_ic_close"
+          />
         </template>
       </sp-top-nav-bar>
     </div>
-    <div ref="body" class="body">
+    <div class="body">
       <sp-form validate-first class="form" @submit="onSubmit">
         <PhoneField
           key="tel"
@@ -29,29 +33,38 @@
           v-model="forgetForm.authCode"
           type="number"
           clearable
-          clear-trigger="always"
+          icon-prefix="spiconfont"
+          clear-icon="login_ic_clear"
           name="authCode"
           placeholder="请输入验证码"
-          max-length="6"
+          maxlength="6"
           @input="handleCodeInput"
         />
         <sp-field
           v-model="forgetForm.newPassword"
+          v-forbid-copy-paste
           type="password"
-          clear-trigger="always"
-          name="newPassword"
           clearable
+          icon-prefix="spiconfont"
+          clear-icon="login_ic_clear"
+          name="newPassword"
           placeholder="请输入新密码(6-15位数字/字母/标点符号)"
+          autocomplete="off"
+          maxlength="15"
           @input="handleNewPasswordInput"
         >
         </sp-field>
         <sp-field
           v-model="forgetForm.confirmPassword"
+          v-forbid-copy-paste
           type="password"
-          clear-trigger="always"
           name="confirmPassword"
           clearable
+          icon-prefix="spiconfont"
+          clear-icon="login_ic_clear"
           placeholder="确认新密码"
+          autocomplete="off"
+          maxlength="15"
           @input="handleConfirmPasswordInput"
         >
         </sp-field>
@@ -84,10 +97,11 @@
 </template>
 
 <script>
-import { TopNavBar, Form, Button, Field, Toast } from '@chipspc/vant-dgg'
+import { TopNavBar, Form, Button, Field, Icon } from '@chipspc/vant-dgg'
 import PhoneField from '@/components/login/PhoneField'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
+import formHandle from '@/mixins/formHandle'
 import { auth } from '@/api'
 import { checkPhone, checkPassword, checkAuthCode } from '@/utils/check.js'
 
@@ -98,9 +112,11 @@ export default {
     [Button.name]: Button,
     [Form.name]: Form,
     [Field.name]: Field,
+    [Icon.name]: Icon,
     PhoneField,
     LoadingCenter,
   },
+  mixins: [formHandle],
   data() {
     return {
       forgetForm: {
@@ -139,10 +155,10 @@ export default {
     handleCodeBtnClick(isValidTel) {
       console.log(isValidTel)
       if (!isValidTel) {
-        this.loginToast('手机号码有误')
+        this.$xToast.warning('手机号码有误')
         return
       }
-      this.loginToast('验证码已发送')
+      this.$xToast.success('验证码已发送')
     },
     checkFormData() {
       const { tel, authCode, newPassword, confirmPassword } = this.forgetForm
@@ -181,7 +197,7 @@ export default {
       const error = this.checkFormData()
       if (error) {
         const { message } = error
-        this.loginToast(message)
+        this.$xToast.warning(message)
         return
       }
       this.reset().then(() => {
@@ -226,26 +242,9 @@ export default {
         return data
       } catch (error) {
         this.loading = false
-        this.loginToast(error.message)
+        this.$xToast.warning(error.message)
+        return Promise.reject(error)
       }
-    },
-    // 自定义提示框
-    loginToast(
-      message = '',
-      className = 'toast',
-      icon = 'toast_ic_remind',
-      duration = 1000
-    ) {
-      Toast({
-        duration,
-        className,
-        message,
-        icon, // 图标有点烦人
-        iconPrefix: 'spiconfont',
-        getContainer: () => {
-          return this.$refs.body
-        },
-      })
     },
   },
 }
@@ -265,6 +264,10 @@ export default {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
+        font-weight: 400;
+      }
+      &::after {
+        content: none;
       }
     }
   }
@@ -299,21 +302,10 @@ export default {
           font-weight: 400;
         }
         .sp-field__clear {
-          width: 24px;
-          height: 24px;
-          line-height: 24px;
-          box-sizing: content-box;
-          color: @hint-text-color;
-          font-family: 'iconfont' !important;
-          font-size: 0.16rem;
-          font-style: normal;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          &::before {
-            content: '\e65b'; // 此处直接找的login_ic_clear:before iconfont css 替换的
-            width: 24px;
-            height: 24px;
-          }
+          margin-right: -16px;
+          padding: 0 16px;
+          line-height: inherit;
+          font-size: 24px;
         }
       }
       .submit-wrap {
@@ -352,6 +344,10 @@ export default {
         font-size: 26px;
         line-height: 1em;
       }
+      &:active::before {
+        opacity: 1;
+        background-color: transparent;
+      }
     }
     .vertical-line {
       display: inline-block;
@@ -359,32 +355,6 @@ export default {
       height: 27px;
       background-color: #f4f4f4;
       vertical-align: middle;
-    }
-  }
-
-  // 提示框样式
-  /deep/.toast {
-    background: rgba(0, 0, 0, 0.9);
-    box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    font-size: 32px;
-    line-height: 36px;
-    font-weight: bold;
-    color: #ffffff;
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    align-items: center;
-    min-width: 390px;
-    max-width: 440px;
-    min-height: 92px;
-    max-height: 130px;
-    box-sizing: border-box;
-    .sp-toast__icon {
-      font-size: 40px;
-    }
-    .sp-toast__text {
-      margin: 0 0 0 18px;
     }
   }
 }

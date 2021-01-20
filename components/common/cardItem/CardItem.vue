@@ -17,7 +17,8 @@
       />
       <div class="card_item_bot">
         <p class="card_item_bot_lf">
-          {{ favour.createrName }}<span>{{ favour.createTime }}</span>
+          {{ favour.createrName
+          }}<span>{{ favour.createTime | dateTime }}</span>
         </p>
         <div class="hot_con">
           <my-icon name="news_ic_heat" color="#fff" size="0.17rem" />
@@ -36,7 +37,8 @@
           <span v-if="favour.hot" class="hot">热门</span>{{ favour.title }}
         </p>
         <p class="space_lf">
-          {{ favour.createrName }}<span>{{ favour.createTime }}</span>
+          {{ favour.createrName
+          }}<span>{{ favour.createTime | dateTime }}</span>
         </p>
       </div>
       <div class="space_img_con">
@@ -65,6 +67,11 @@ export default {
   name: 'CardItem',
   components: {
     [Image.name]: Image,
+  },
+  filters: {
+    dateTime(time) {
+      return time.replace(/-/g, '.')
+    },
   },
   props: {
     favour: {

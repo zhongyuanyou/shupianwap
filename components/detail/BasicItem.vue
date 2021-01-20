@@ -136,5 +136,8 @@ export default {
       }
     }
   }
+  & > div {
+    flex: 1;
+  }
 }
 </style>

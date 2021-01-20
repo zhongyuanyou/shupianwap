@@ -1,5 +1,5 @@
 <template>
-  <div class="loading-content">
+  <div class="loading-content" @touchmove="noEvent($event)">
     <div class="mantle">
       <sp-loading size="0.39rem" color="#ffffff" text-size="0.32rem">{{
         title
@@ -19,6 +19,11 @@ export default {
     title: {
       type: String,
       default: '加载中',
+    },
+  },
+  methods: {
+    noEvent(e) {
+      e.preventDefault()
     },
   },
 }

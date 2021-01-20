@@ -26,11 +26,11 @@
           value-class="complaintList-item-value"
           label-class="complaintList-item-label"
           :title="item.content"
-          :label="item.createTime"
+          :label="item.createTime | dateTime"
           is-link
           center
           border
-          :value="item.status"
+          :value="item.isDispose ? '已处理' : '未处理'"
           :to="{ path: '/my/complain/' + item.id }"
         />
       </sp-list>
@@ -61,6 +61,11 @@ export default {
     [Cell.name]: Cell,
     [Sticky.name]: Sticky,
     Header,
+  },
+  filters: {
+    dateTime(time) {
+      return time.replace(/-/g, '.')
+    },
   },
   data() {
     return {

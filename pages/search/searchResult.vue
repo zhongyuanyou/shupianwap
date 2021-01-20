@@ -120,6 +120,15 @@ export default {
     },
   },
   mounted() {
+    // 当前页面公共属性注册
+    const param = {
+      platform_type: 'wap端', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端搜索列表页', // 当前页面或服务名称
+      current_url: location.href, // 发生地址
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
     // SearchResult
     this.SET_KEEP_ALIVE({ type: 'add', name: 'SearchResult' })
     this.getInitData()

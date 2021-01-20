@@ -2,34 +2,37 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 14:23:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 13:28:55
+ * @LastEditTime: 2021-01-20 13:39:58
  * @Description: file content
- * @FilePath: /chips-wap/client/components/login/PhoneField.vue
+ * @FilePath: /chips-wap/components/login/PhoneField.vue
 -->
 
 <template>
-  <sp-field
-    key="tel"
-    clearable
-    type="tel"
-    name="telephone"
-    placeholder="请输入手机号"
-    class="phone-field"
-    maxlength="13"
-    :value="tel"
-    @input="handleTelInput"
-  >
-    <template v-if="type === 'codeBtn'" #button>
-      <sp-button
-        class="code-btn"
-        native-type="button"
-        :class="{ 'code-btn--disabled': !isValidTel }"
-        @click="handleCodeBtnClick"
-      >
-        {{ codeBtnText }}
-      </sp-button>
-    </template>
-  </sp-field>
+  <div class="phone-field">
+    <sp-field
+      key="tel"
+      clearable
+      type="tel"
+      name="telephone"
+      placeholder="请输入手机号"
+      maxlength="13"
+      icon-prefix="spiconfont"
+      clear-icon="login_ic_clear"
+      :value="tel"
+      @input="handleTelInput"
+    >
+      <template v-if="type === 'codeBtn'" #button>
+        <sp-button
+          class="code-btn"
+          native-type="button"
+          :class="{ 'code-btn--disabled': !isValidTel }"
+          @click="handleCodeBtnClick"
+        >
+          {{ codeBtnText }}
+        </sp-button>
+      </template>
+    </sp-field>
+  </div>
 </template>
 
 <script>
@@ -75,34 +78,44 @@ export default {
       codeBtnText: '获取验证码',
       duration: DURATION,
       timer: null,
+      tel: '',
     }
   },
-  computed: {
-    tel: {
-      get() {
-        const formatValue = ('' + this.value)
-          .replace(/\s/g, '')
-          .replace(/(\d{3})(\d{0,4})(\d{0,4})/, (match, p1, p2, p3) => {
-            let result = p1
-            result += p2 ? ' ' + p2 : ''
-            result += p3 ? ' ' + p3 : ''
-            return result
-          })
-        console.log('formatValue:', formatValue, formatValue.length)
-        return formatValue
+  computed: {},
+  watch: {
+    value: {
+      handler(newVal, oldVal) {
+        if (newVal === oldVal) return
+        this.tel = this.formatTel(newVal)
       },
-      set(newVal) {
-        this.$emit('update', newVal)
-      },
+      immediate: true,
     },
   },
 
   methods: {
     handleTelInput(value) {
-      value = value.replace(/\s/g, '')
+      this.tel = this.formatTel(value)
+      this.$forceUpdate() // 不调用只能在失焦更新，会让测试不满意的
+      value = this.tel.replace(/\s/g, '')
       this.isValidTel = checkPhone(value)
-      this.tel = value
+      this.$emit('update', value)
       this.$emit('input', { value, valid: this.isValidTel })
+    },
+
+    formatTel(value) {
+      const valueStr = '' + value
+      const regex = /^1/
+      if (!regex.test(valueStr)) return '' // 检测电话号码的首位非就清空
+      const formatValue = valueStr
+        .replace(/\s|\D/g, '')
+        .replace(/(\d{3})(\d{0,4})(\d{0,4})/, (match, p1, p2, p3) => {
+          let result = p1
+          result += p2 ? ' ' + p2 : ''
+          result += p3 ? ' ' + p3 : ''
+          return result
+        })
+      console.log('formatValue:', formatValue, formatValue.length)
+      return formatValue
     },
 
     handleCodeBtnClick() {
@@ -117,7 +130,7 @@ export default {
     startInterval() {
       // 说明计时器没有结束
       if (this.codeBtnText !== '获取验证码') return false
-      this.codeBtnText = `${this.duration}s后`
+      this.codeBtnText = `(${this.duration})重新获取`
       this.timer = setInterval(() => {
         if (this.duration <= 0) {
           this.closeInterval()
@@ -125,7 +138,7 @@ export default {
         }
 
         this.duration--
-        this.codeBtnText = `${this.duration}s后`
+        this.codeBtnText = `(${this.duration})重新获取`
       }, 1000)
 
       this.$once('hook:beforeDestroy', () => {
@@ -153,6 +166,7 @@ export default {
         return data
       } catch (error) {
         console.log('验证码发送失败：', error)
+        this.$xToast.error((error && error.message) || '验证码发送失败')
         this.closeInterval()
       }
     },
@@ -166,10 +180,25 @@ export default {
 @hint-text-color: #cccccc;
 
 .phone-field {
+  position: relative;
+  &::after {
+    position: absolute;
+    box-sizing: border-box;
+    content: ' ';
+    pointer-events: none;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-bottom: 1px solid #ebedf0;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+  }
   .code-btn {
     border: none;
     font-weight: 400;
     color: #999999;
+    white-space: nowrap;
+    min-width: 220px;
     .sp-button__text {
       font-size: 32px;
     }
@@ -182,37 +211,11 @@ export default {
     opacity: 0.4;
   }
 }
-/deep/.sp-cell {
-  display: flex;
-  align-items: center;
-  height: 100px;
-  padding: 0;
-  &::after {
-    content: ' ';
-    left: 0;
-    right: 0;
-  }
-  .sp-field__control {
-    line-height: 36px;
-    font-size: 32px;
-    font-weight: 400;
-  }
-  .sp-field__clear {
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    box-sizing: content-box;
-    color: @hint-text-color;
-    font-family: 'iconfont' !important;
-    font-size: 0.16rem;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    &::before {
-      content: '\e65b'; // 此处直接找的login_ic_clear:before iconfont css 替换的
-      width: 24px;
-      height: 24px;
-    }
-  }
+
+/deep/.sp-field__clear {
+  padding: 0 16px !important;
+  margin-right: 0 !important;
+  line-height: inherit;
+  font-size: 24px;
 }
 </style>

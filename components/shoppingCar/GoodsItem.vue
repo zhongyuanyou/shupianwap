@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-12 19:20:09
+ * @LastEditTime: 2021-01-18 14:16:13
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/GoodsItem.vue
 -->
@@ -10,47 +10,53 @@
   <div
     class="goods-item"
     :class="{
-      'goods-item--disable': commodityData.status === 'GOODS_STATUS_OFF_SHELF',
+      'goods-item--disable':
+        formatGoodsStatusData.status !== 'GOODS_STATUS_ON_SHELF',
     }"
   >
     <SkuService
       v-model="show"
-      :sku-data="formateSkuData"
+      :sku-data="formatSkuData"
       :goods="tempGoods"
       @operation="handleOperation"
       @open="handleOpenSku"
       @closed="handleClosedSku"
     />
-    <sp-swipe-cell
-      ref="swipeCell"
-      :disabled="commodityData.status === 'GOODS_STATUS_OFF_SHELF'"
-      :before-close="beforeClose"
-    >
+    <sp-swipe-cell ref="swipeCell" :before-close="beforeClose">
       <div class="goods-item__content">
-        <div class="goods-item__content-line-bottom sp-hairline--bottom">
-          <div class="goods-item__main">
-            <AsyncCheckbox
-              v-model="checked"
-              icon-size="0.32rem"
-              class="goods-item__check"
-              @change="handleAsyncCheckboxChange"
-            >
-            </AsyncCheckbox>
-            <MainGoodsItem
-              :main-data="commodityData"
-              @operation="handleOperation"
-            />
-          </div>
-          <div
-            v-for="serviceResource of commodityData.serviceResourceList"
-            :key="serviceResource.serviceItemId"
-            class="goods-item__vice"
+        <div class="goods-item__main">
+          <!-- 购物车在完成下，不是上架产品都不能选择  -->
+          <AsyncCheckbox
+            v-model="checked"
+            icon-size="0.32rem"
+            class="goods-item__check"
+            :disabled="
+              formatGoodsStatusData.status !== 'GOODS_STATUS_ON_SHELF' &&
+              shoppingCarStatus === 'completed'
+            "
+            @change="handleAsyncCheckboxChange"
           >
-            <div class="goods-item__vice-line--top sp-hairline--top">
-              <ViceGoodsItem :vice-data="serviceResource" />
-            </div>
-          </div>
+          </AsyncCheckbox>
+          <MainGoodsItem
+            class="goods-item__main-item"
+            :main-data="commodityData"
+            @operation="handleOperation"
+          />
         </div>
+        <!-- S 状态提示 -->
+        <div
+          v-if="formatGoodsStatusData.status !== 'GOODS_STATUS_ON_SHELF'"
+          class="goods-item--disable-tip flex-c-c flex-c-a-c"
+        >
+          <span class="goods-item--disable-tip__zh">{{
+            formatGoodsStatusData.statusTextZh
+          }}</span>
+          <span class="division-line">·</span>
+          <span class="goods-item--disable-tip__en">{{
+            formatGoodsStatusData.statusTextEn
+          }}</span>
+        </div>
+        <!-- E 状态提示 -->
       </div>
       <template #right>
         <div class="goods-item__operation">
@@ -72,13 +78,21 @@
         </div>
       </template>
     </sp-swipe-cell>
-    <div
-      v-if="commodityData.status === 'GOODS_STATUS_OFF_SHELF'"
-      class="goods-item--disable-tip flex-c-c flex-c-a-c"
-    >
-      <span class="goods-item--disable-tip__zh">已下架</span>
-      <span class="division-line">·</span>
-      <span class="goods-item--disable-tip__en">off shelf</span>
+    <div class="goods-item__extra sp-hairline--bottom">
+      <!-- S 资源服务 -->
+      <div
+        v-for="serviceResource of commodityData.serviceResourceList"
+        :key="serviceResource.serviceItemId"
+        class="goods-item__vice"
+      >
+        <div class="goods-item__vice-line--top sp-hairline--top">
+          <ViceGoodsItem
+            class="goods-item__vice-item"
+            :vice-data="serviceResource"
+          />
+        </div>
+      </div>
+      <!-- E 资源服务 -->
     </div>
     <!--S loding-->
     <LoadingCenter v-show="loading" />
@@ -131,6 +145,11 @@ export default {
       type: Number,
       default: -1,
     },
+    // 购物车当前状态
+    shoppingCarStatus: {
+      type: String,
+      default: 'completed', // edit 与 completed
+    },
   },
   data() {
     return {
@@ -169,9 +188,18 @@ export default {
       isInApp: (state) => state.app.isInApp,
     }),
     checked() {
+      // 在购物车是完成状态，只能是上架的商品才能被选中，
+      // 因为 shopIsSelected 为后台维护的选中的状态，在计算选中的数量与金额是排除了下架与删除的商品
+      // 所以 在前端只是通过ui控制在购物车完成状态的 商品选中效果被禁用
+      if (this.shoppingCarStatus === 'completed') {
+        return (
+          this.formatGoodsStatusData.status === 'GOODS_STATUS_ON_SHELF' &&
+          !!this.commodityData.shopIsSelected
+        )
+      }
       return !!this.commodityData.shopIsSelected
     },
-    formateSkuData() {
+    formatSkuData() {
       if (!this.skuData) return { tree: [] }
       const {
         productId,
@@ -225,7 +253,7 @@ export default {
                   } = val || {}
                   return {
                     id,
-                    name: `${name}  ￥${originalPrice}`,
+                    name: `${name}  ￥${salesPrice}`,
                   }
                 })
               : []
@@ -259,14 +287,44 @@ export default {
         maxNumber,
       }
     },
+    formatGoodsStatusData() {
+      const { status } = this.commodityData || {}
+      let stautsData = {
+        status,
+        statusTextZh: '--',
+        statusTextEn: '--',
+      }
+      switch (status) {
+        case 'GOODS_STATUS_ON_SHELF':
+          stautsData = {
+            status,
+            statusTextZh: '上架',
+            statusTextEn: 'on shelf',
+          }
+          break
+        case 'GOODS_STATUS_OFF_SHELF':
+          stautsData = {
+            status,
+            statusTextZh: '已下架',
+            statusTextEn: 'off shelf',
+          }
+          break
+        case 'GOODS_STATUS_DEL':
+          stautsData = {
+            status,
+            statusTextZh: '已删除',
+            statusTextEn: 'deleted',
+          }
+          break
+      }
+      return stautsData
+    },
   },
 
   methods: {
     handleAsyncCheckboxChange(value) {
       console.log('handleAsyncCheckboxChange:', value)
       this.handleOperation({ type: 'select', data: { value } })
-      // TODO 异步处理
-      // this.checked = value
     },
     beforeClose({ position, instance }) {
       console.log('position:', position)
@@ -429,7 +487,7 @@ export default {
                   ...item,
                   serviceItemValId: activedVal.id,
                   serviceItemValName: name,
-                  price: originalPrice,
+                  price: salesPrice,
                 }
               }
               return { ...item }
@@ -445,7 +503,7 @@ export default {
         serviceItemName: activedItem.name,
         serviceItemValId: activedVal.id,
         serviceItemValName: name,
-        price: originalPrice,
+        price: salesPrice,
       })
     },
 
@@ -796,9 +854,13 @@ export default {
 }
 
 .goods-item--disable {
-  filter: grayscale(100%);
-  position: relative;
-  &::after {
+  .goods-item__main-item,
+  .goods-item__vice-item {
+    filter: grayscale(100%);
+    position: relative;
+  }
+  .goods-item__main-item::after,
+  .goods-item__vice-item::after {
     content: '';
     position: absolute;
     left: 0;
@@ -821,11 +883,9 @@ export default {
     color: #ffffff;
     z-index: 11;
     &__zh {
-      content: '已下架';
       font-size: 24px;
     }
     &__en {
-      content: 'off shelf';
       font-size: 18px;
     }
   }
@@ -846,10 +906,7 @@ export default {
 
 .goods-item {
   &__content {
-    padding: 0 40px 0 32px;
-    &-line-bottom {
-      margin-left: 64px;
-    }
+    padding: 0 40px 0 96px;
   }
   &__main {
     font-size: 24px;
@@ -864,9 +921,11 @@ export default {
       left: -64px;
     }
   }
+  &__extra {
+    margin: 0 40px 0 96px;
+  }
   &__vice {
     width: 100%;
-    padding-left: 0;
     &-line--top {
       padding: 32px 0;
     }

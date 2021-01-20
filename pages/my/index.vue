@@ -9,11 +9,15 @@
           height="1.06rem"
           fit="cover"
           class="my_tp_info_img"
-          :src="info.url ? info.url : 'https://img.yzcdn.cn/vant/cat.jpeg'"
+          :src="info.url ? info.url : avatar"
           @click="handleAvatar"
         />
         <p class="txt" @click="handleClickLogin">
-          {{ userId ? '欢迎你，' + info.nickName || '' : '登录/注册' }}
+          {{
+            userId && info.nickName
+              ? '欢迎你，' + info.nickName || ''
+              : '登录/注册'
+          }}
         </p>
       </div>
     </div>
@@ -76,6 +80,7 @@ import { Button, Image, CenterPopup } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { userinfoApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import { GOODSLIST } from '~/config/constant'
 export default {
   layout: 'nav',
   name: 'Index',
@@ -104,6 +109,9 @@ export default {
       userId: (state) => state.user.userInfo.userId,
       token: (state) => state.user.userInfo.token,
     }),
+    avatar() {
+      return GOODSLIST
+    },
   },
   mounted() {
     if (this.userId) {
@@ -119,7 +127,7 @@ export default {
           query: { redirect: this.$route.fullPath },
         })
       } else {
-        this.$router.replace('/my/information')
+        this.$router.push('/my/information')
       }
     },
     handleClickLogin() {

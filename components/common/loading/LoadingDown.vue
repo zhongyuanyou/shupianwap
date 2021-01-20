@@ -1,5 +1,5 @@
 <template>
-  <div class="loading-content">
+  <div class="loading-content" :style="{ backgroundColor: bgColor }">
     <sp-loading
       v-show="loading"
       size="0.24rem"
@@ -31,6 +31,12 @@ export default {
         return false
       },
     },
+    bgColor: {
+      type: String,
+      default: () => {
+        return '#f4f4f4'
+      },
+    },
   },
   data() {
     return {}
@@ -42,13 +48,13 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 60px;
-  line-height: 60px;
+  height: 100px;
+  line-height: 100px;
   .no-data {
     font-size: 24px;
     font-family: PingFang SC;
     font-weight: 400;
-    color: #999999;
+    color: #969799;
   }
 }
 </style>

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-08 13:44:18
+ * @LastEditTime: 2021-01-20 15:04:11
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/index.vue
 -->
@@ -15,14 +15,18 @@
         @on-click-right="handleClick('register')"
       >
         <template #left>
-          <my-icon name="login_ic_clear" size="0.4rem" color="#1A1A1A" />
+          <sp-icon
+            class-prefix="spiconfont"
+            size="0.4rem"
+            name="nav_ic_close"
+          />
         </template>
         <template #right>
           <span>注册</span>
         </template>
       </sp-top-nav-bar>
     </div>
-    <div ref="loginBody" class="body">
+    <div class="body">
       <div class="title">
         {{ loginType === 'account' ? '账号密码登录' : '手机快捷登录' }}
       </div>
@@ -43,7 +47,9 @@
             v-model="loginForm.authCode"
             type="number"
             name="authCode"
-            :clearable="false"
+            clearable
+            icon-prefix="spiconfont"
+            clear-icon="login_ic_clear"
             placeholder="请输入验证码"
             maxlength="6"
             @input="handleAuthCodeInput"
@@ -61,8 +67,14 @@
           <sp-field
             key="password"
             v-model="loginForm.password"
+            v-forbid-copy-paste
             name="password"
             placeholder="请输入密码"
+            autocomplete="off"
+            clearable
+            icon-prefix="spiconfont"
+            clear-icon="login_ic_clear"
+            maxlength="15"
             :type="passwordFieldType"
             @input="handlePasswordInput"
           >
@@ -73,7 +85,8 @@
                 native-type="button"
                 @click="handleSwitchLookPassword"
               >
-                <my-icon
+                <sp-icon
+                  class-prefix="spiconfont"
                   size="0.24rem"
                   color="#CCCCCC"
                   :name="
@@ -145,12 +158,13 @@ import {
   Button,
   Field,
   Checkbox,
-  Toast,
+  Icon,
 } from '@chipspc/vant-dgg'
 import ProtocolField from '@/components/login/ProtocolField'
 import PhoneField from '@/components/login/PhoneField'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
+import formHandle from '@/mixins/formHandle'
 import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
 import { openLink } from '@/utils/common.js'
@@ -167,10 +181,12 @@ export default {
     [Form.name]: Form,
     [Field.name]: Field,
     [Checkbox.name]: Checkbox,
+    [Icon.name]: Icon,
     PhoneField,
     ProtocolField,
     LoadingCenter,
   },
+  mixins: [formHandle],
   data() {
     return {
       loginForm: {
@@ -193,12 +209,11 @@ export default {
     ...mapMutations({
       setUserInfo: 'user/SET_USER',
     }),
-    onSubmit(values) {
-      console.log('submit', values)
+    onSubmit() {
       const error = this.checkFormData()
       if (error) {
         const { message } = error
-        this.loginToast(message)
+        this.$xToast.warning(message)
         return
       }
       this.login().then((data) => {
@@ -236,10 +251,10 @@ export default {
     },
     handleClickCodeBtn(isValidTel) {
       if (!isValidTel) {
-        this.loginToast('手机号码有误')
+        this.$xToast.warning('手机号码有误')
         return
       }
-      this.loginToast('验证码已发送')
+      this.$xToast.success('验证码已发送')
     },
     handleProtocolChange(value) {
       console.log('handleProtocolChange:', value)
@@ -336,7 +351,7 @@ export default {
               // 获取验证码后，再调用一次登录
               const { data } = result
               this.loginForm.imgCaptcha = data
-              this.login()
+              this.onSubmit()
             })
             .catch(() => {
               this.loginForm.imgCaptcha = ''
@@ -344,7 +359,7 @@ export default {
           return Promise.reject(new Error('需要验证'))
         }
         this.loginForm.imgCaptcha = ''
-        this.loginToast(error.message)
+        this.$xToast.warning(error.message)
         return Promise.reject(error)
       }
     },
@@ -389,25 +404,6 @@ export default {
       this.isValidSubmit = isValid
       return errorObject
     },
-
-    // 自定义提示框
-    loginToast(
-      message = '',
-      className = 'toast',
-      icon = 'toast_ic_remind',
-      duration = 1000
-    ) {
-      Toast({
-        duration,
-        className,
-        message,
-        icon, // 图标有点烦人
-        iconPrefix: 'spiconfont',
-        getContainer: () => {
-          return this.$refs.loginBody
-        },
-      })
-    },
   },
 }
 </script>
@@ -426,6 +422,10 @@ export default {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
+        font-weight: 400;
+      }
+      &::after {
+        content: none;
       }
     }
   }
@@ -465,21 +465,10 @@ export default {
           font-weight: 400;
         }
         .sp-field__clear {
-          width: 24px;
-          height: 24px;
-          line-height: 24px;
-          box-sizing: content-box;
-          color: @hint-text-color;
-          font-family: 'iconfont' !important;
-          font-size: 0.16rem;
-          font-style: normal;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          &::before {
-            content: '\e65b'; // 此处直接找的login_ic_clear:before iconfont css 替换的
-            width: 24px;
-            height: 24px;
-          }
+          margin-right: -16px;
+          padding: 0 16px;
+          line-height: inherit;
+          font-size: 24px;
         }
       }
       .submit-wrap {
@@ -535,31 +524,6 @@ export default {
       height: 27px;
       background-color: #f4f4f4;
       vertical-align: middle;
-    }
-  }
-  // 提示框样式
-  /deep/.toast {
-    background: rgba(0, 0, 0, 0.9);
-    box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    font-size: 32px;
-    line-height: 36px;
-    font-weight: bold;
-    color: #ffffff;
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    align-items: center;
-    min-width: 390px;
-    max-width: 440px;
-    min-height: 92px;
-    max-height: 130px;
-    box-sizing: border-box;
-    .sp-toast__icon {
-      font-size: 40px;
-    }
-    .sp-toast__text {
-      margin: 0 0 0 18px;
     }
   }
 }

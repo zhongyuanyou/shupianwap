@@ -1,13 +1,13 @@
 <template>
   <div class="price-filter">
-    <p>价格区间</p>
+    <p>价格区间(元)</p>
     <div class="input-box">
       <sp-field
         v-model="minPrice"
         class="number-field"
         placeholder="最小"
         type="number"
-        maxlength="9"
+        maxlength="8"
         input-align="center"
         :formatter="formatter"
         @input="minInput"
@@ -129,6 +129,11 @@ export default {
     selectAllItems(item) {
       console.log(item)
       this.$emit('selectAllItems', item)
+    },
+    setPrice(minPrice, maxPrice) {
+      console.log('123', minPrice, maxPrice)
+      this.minPrice = minPrice
+      this.maxPrice = maxPrice
     },
   },
 }

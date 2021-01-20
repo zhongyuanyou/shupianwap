@@ -1,7 +1,18 @@
 <template>
   <div class="businesschange">
     <!-- s 头部分 -->
-    <Header :title="title" />
+    <Header v-if="!isInApp" :title="title">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
     <!-- e 头部分 -->
     <!-- s banner轮播 -->
     <BannerSwipe :imglist="imgList" />
@@ -25,13 +36,14 @@
     <Need />
     <!-- e 可能需要办理 -->
     <!-- s 底部导航 -->
-    <Bottom :planner="planner" />
+    <Bottom :planner="planner" :md="fixedMd" />
     <!-- e 底部导航 -->
     <dgg-im-company></dgg-im-company>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Header from '../../../components/common/head/header'
 import BannerSwipe from '../../../components/spread/businessChange/bannerSwipe'
 import Form from '../../../components/spread/businessChange/form'
@@ -540,7 +552,23 @@ export default {
           },
         },
       ],
+      // 埋点
+      fixedMd: {
+        telMd: {
+          name: '工商变更_钻石展位_拨打电话',
+          type: '售前',
+        },
+        imMd: {
+          name: '工商变更_钻石展位_在线咨询',
+          type: '售前',
+        },
+      },
     }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
   created() {
     this.productDetail(this.result.data.adList[0].sortMaterialList)
@@ -549,7 +577,34 @@ export default {
       this.plannerHandleData(this.result.data.planlerList || [])
     }
   },
+  mounted() {
+    const param = {
+      platform_type: 'wap端', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端工商变更推广页',
+      current_url: location.href,
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
+    // 设置app中导航title
+    if (this.isInApp) {
+      this.$appFn.dggSetTitle({ title: '工商变更' }, () => {})
+    }
+  },
   methods: {
+    back() {
+      // 返回上一页
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/spread')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
     productDetail(data) {
       this.plannerHandleData(this.result.data.planlerList || [])
       if (data.length === 0) {
@@ -584,7 +639,8 @@ export default {
     // 跳转判断
     openIM(url) {
       if (url) {
-        window.location.href = url
+        this.$router.push(url)
+        // window.location.href = url
       } else {
         const planner = this.planner
         this.$root.$emit(
@@ -630,12 +686,6 @@ export default {
         {
           src: 'https://tgform.dgg.cn/form/new_form/promotion-sdk-v1.0.min.js',
         },
-        {
-          src: '/js/spread/businessChange-md-config.js',
-        },
-        {
-          src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
-        },
       ],
     }
   },
@@ -644,6 +694,7 @@ export default {
 
 <style lang="less" scoped>
 .businesschange {
+  background: #ffffff;
   width: 750px;
   margin: 0 auto;
   position: relative;
@@ -653,6 +704,9 @@ export default {
       left: 50%;
       margin-left: -375px;
     }
+  }
+  .back_icon {
+    margin-left: 40px;
   }
   /deep/.sp-popup--round {
     width: 750px;

@@ -14,6 +14,7 @@
     </sp-cell>
     <sp-action-sheet v-model="show"
       ><sp-picker
+        :default-index="defaultIndex"
         title="选择"
         show-toolbar
         :columns="columns"
@@ -58,6 +59,7 @@ export default {
     return {
       show: false,
       title: '不限',
+      defaultIndex: 0,
     }
   },
   methods: {

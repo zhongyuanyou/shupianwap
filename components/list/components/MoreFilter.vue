@@ -176,7 +176,7 @@ export default {
       this.saveActiveItems = clone(this.activeItems, true)
       this.resetTitle(this.saveActiveItems)
       const emitData = this.resultHandle()
-      this.$emit('activeItem', emitData, 'moreFilter')
+      this.$emit('activeItem', emitData, 'moreFilter-' + this.filterData.code)
       this.$refs.item.toggle()
     },
     resultHandle() {
@@ -216,7 +216,7 @@ export default {
                 break
               case 'CONDITION-JY-SB-GD-ZCNX':
               case 'JY-GS-GD-JYSJ':
-                // 经营时间
+                // 注册年限 || 经营时间
                 // const current = moment("MM-DD-YYYY")
                 if (_item.id !== 'all' && _item.name !== '不限') {
                   emitData.fieldCode = _item.ext1

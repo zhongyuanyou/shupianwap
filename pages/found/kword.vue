@@ -1,7 +1,11 @@
 <template>
   <div class="keyword">
     <!--S 搜索-->
-    <FoundHeader :left="true" :keywords="keywords" @inputChange="inputChange" />
+    <FoundHeader
+      :left="true"
+      :keywords="keywords"
+      @handelKeydown="handelKeydown"
+    />
     <!--E 搜索-->
     <!--S 内容-->
     <div class="safe_con">
@@ -26,6 +30,7 @@
 
 <script>
 import { List } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import FoundHeader from '~/components/found/common/FoundHeader'
 import Item from '~/components/found/search/Item'
 import { foundApi } from '@/api'
@@ -44,24 +49,49 @@ export default {
       page: 1, // 当前页
       loading: false,
       finished: false,
+      historySearch: [],
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo,
+    }),
+  },
   mounted() {
+    try {
+      this.historySearch = this.$cookies.get('foundHistory')
+        ? this.$cookies.get('foundHistory')
+        : []
+    } catch (err) {}
     // this.getInfoList()
   },
   methods: {
-    inputChange(data) {
+    handelKeydown(data) {
       this.keywords = data
+      const history = this.historySearch
+      const isHas = history.some((item) => {
+        return item === this.keywords
+      })
+      if (!isHas && this.keywords) {
+        history.unshift(this.keywords)
+      }
+      this.$cookies.set('foundHistory', history)
       this.page = 1
       this.getInfoList()
     },
     async getInfoList() {
-      console.log(1212)
       // 获取资讯列表
       const params = {
         keyword: this.keywords,
         limit: this.limit,
         page: this.page,
+        platformCode: this.isInApp
+          ? this.platformCode
+          : 'COMDIC_PLATFORM_CRISPS',
+        terminalCode: this.isInApp
+          ? 'COMDIC_TERMINAL_APP'
+          : 'COMDIC_TERMINAL_WAP',
       }
       const res = await this.$axios.get(foundApi.infoList, { params })
       if (res.code === 200) {
@@ -71,9 +101,15 @@ export default {
     async onLoad() {
       const page = this.page++
       const params = {
-        keyword: this.keywords === ' ' ? '' : this.keywords,
+        keyword: this.keywords,
         limit: this.limit,
         page,
+        platformCode: this.isInApp
+          ? this.platformCode
+          : 'COMDIC_PLATFORM_CRISPS',
+        terminalCode: this.isInApp
+          ? 'COMDIC_TERMINAL_APP'
+          : 'COMDIC_TERMINAL_WAP',
       }
       const res = await this.$axios.get(foundApi.infoList, { params })
       if (res.code === 200) {
@@ -91,6 +127,9 @@ export default {
 
 <style lang="less" scoped>
 .keyword {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
   padding: 0 40px;
   .safe_con {
     padding-top: constant(safe-area-inset-top);

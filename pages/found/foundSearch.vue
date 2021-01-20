@@ -27,7 +27,10 @@
       <!--E 有搜索历史-->
       <!--S 无搜索历史-->
       <div v-show="!historySearch.length && !keywords" class="no-data">
-        <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
+        <img
+          src="https://cdn.shupian.cn/sp-pt/wap/images/cmp4sba01080000.png"
+          alt=""
+        />
         <p>没有任何搜索历史</p>
       </div>
       <!--E 无搜索历史-->
@@ -64,9 +67,7 @@ export default {
       this.historySearch = this.$cookies.get('foundHistory')
         ? this.$cookies.get('foundHistory')
         : []
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   },
   methods: {
     handleClick(keyword) {
@@ -76,7 +77,7 @@ export default {
         return item === keyword
       })
       if (!isHas && keyword) {
-        history.push(keyword)
+        history.unshift(keyword)
       }
       this.$cookies.set('foundHistory', history)
       // this.$router.push(`/found/${keywords || ' '}`)
@@ -105,6 +106,9 @@ export default {
 
 <style lang="less" scoped>
 .search {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
   padding: 0 40px;
   .no-data {
     display: flex;
@@ -167,22 +171,26 @@ export default {
         flex-direction: row;
         flex-wrap: wrap;
         margin-top: 17px;
+        height: 160px;
+        overflow: hidden;
         &_item {
           max-width: 100%;
           background: #f9f9f9;
           border-radius: 4px;
-          padding: 20px 25px;
+          padding: 0 25px;
           margin-right: 16px;
           font-size: 24px;
+          height: 64px;
+          line-height: 64px;
           font-family: PingFang SC;
           font-weight: 400;
           color: #222222;
           text-align: center;
-          line-height: 32px;
           margin-top: 16px;
           word-wrap: break-word;
           word-break: normal;
           text-align: left;
+          .textOverflow(1);
         }
       }
     }

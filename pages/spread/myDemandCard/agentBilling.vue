@@ -1,5 +1,6 @@
 <template>
   <div class="page-content">
+    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
     <!--    <Header title="轻松找服务" :fixed="false" head-class="head-icon" />-->
 
     <!-- START banner-->
@@ -17,16 +18,19 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import HeaderBg from '@/components/spread/myDemandCard/agentBilling/HeaderBg'
 import FixedBottomBtn from '@/components/spread/myDemandCard/agentBilling/FixedBottomBtn'
 import Question from '@/components/spread/myDemandCard/agentBilling/Question'
 import Header from '~/components/common/head/header'
 export default {
-  name: 'Index',
+  layout: 'keepAlive',
+  name: 'AgentBilling',
   components: {
     HeaderBg,
     FixedBottomBtn,
     Question,
+    Header,
   },
   data() {
     return {
@@ -85,7 +89,23 @@ export default {
       ],
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   mounted() {
+    const formData = JSON.parse(sessionStorage.getItem('formData'))
+    if (formData) {
+      this.questionData[0].value =
+        formData.content['注册时间'] || this.questionData[0].value
+      this.questionData[1].value =
+        formData.content['主营业务'] || this.questionData[1].value
+      this.questionData[2].value =
+        formData.content['是否支持开票'] || this.questionData[2].value
+      this.questionData[3].value =
+        formData.content['公司年收入'] || this.questionData[3].value
+    }
     const param = {
       platform_type: 'H5', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
@@ -108,5 +128,6 @@ export default {
   width: @spread-page-width;
   margin: 0 auto;
   font-family: PingFang SC;
+  background-color: #fff;
 }
 </style>

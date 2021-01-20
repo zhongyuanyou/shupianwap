@@ -53,13 +53,6 @@ export default {
   },
   mixins: [adJumpHandle],
   props: {
-    // 站点列表
-    cityData: {
-      type: Array,
-      default: () => {
-        return []
-      },
-    },
     // 固定广告数据
     fiexdBannerData: {
       type: Array,
@@ -79,18 +72,13 @@ export default {
       cityName: (state) => state.city.currentCity.name,
     }),
   },
-  watch: {
-    cityData(arr) {
-      // 初始化定位
-      if (arr.length && !this.cityName) {
-        this.POSITION_CITY({
-          type: 'init',
-          cityList: arr,
-        })
-      }
-    },
-  },
   created() {
+    // 初始化定位
+    if (process.client && !this.cityName) {
+      this.POSITION_CITY({
+        type: 'init',
+      })
+    }
     // 存在banner大图，设置搜索栏透明度
     if (!this.fiexdBannerData.length) {
       this.opacity = 1

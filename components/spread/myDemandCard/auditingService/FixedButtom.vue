@@ -51,8 +51,19 @@ export default {
         公司年营收: this.content.revenue,
         公司行业: this.content.industry,
       }
+      const sessionStorageFormData = JSON.parse(
+        sessionStorage.getItem('formData')
+      )
+      // 合并两个页面之间缓存的数据
+      if (sessionStorageFormData) {
+        this.data.content = Object.assign(
+          sessionStorageFormData.content,
+          this.data.content
+        )
+      }
+      this.data.url = window.location.href
       // 本地存储数据
-      localStorage.setItem('data', JSON.stringify(this.data))
+      sessionStorage.setItem('formData', JSON.stringify(this.data))
       this.$router.push('/spread/myDemandCard/second')
     },
   },
@@ -70,11 +81,13 @@ export default {
   padding-right: 80px;
   position: fixed;
   bottom: 0;
-
   /deep/ .sp-button {
     width: 100%;
     height: 88px;
     border-radius: 8px;
+  }
+  /deep/.sp-button__text {
+    font-weight: bold;
   }
 }
 </style>

@@ -969,10 +969,22 @@
   dependencies:
     "@better-scroll/core" "^2.1.0"
 
-"@chipspc/vant-dgg@^2.21.1", "@chipspc/vant-dgg@^2.21.8":
-  version "2.21.9"
-  resolved "http://tmobile.dgg188.cn/@chipspc/vant-dgg/download/@chipspc/vant-dgg-2.21.9.tgz#a911294cd41f9f1b375ba4b5d3287eb22b7ecfc2"
-  integrity sha1-qREpTNQfnxs3W6S10yh+sit+z8I=
+"@chipspc/vant-dgg@^2.21.1":
+  version "2.22.0"
+  resolved "http://tmobile.dgg188.cn/@chipspc/vant-dgg/download/@chipspc/vant-dgg-2.22.0.tgz#f04ba48a9b24663842b70aefdc8970e0b3ac0590"
+  integrity sha1-8EukipskZjhCtwrv3Ilw4LOsBZA=
+  dependencies:
+    "@babel/runtime" "7.x"
+    "@chipspc/vant-dgg" "^2.21.1"
+    "@vant/icons" "1.3.0"
+    "@vue/babel-helper-vue-jsx-merge-props" "^1.0.0"
+    file-loader "^6.1.1"
+    vue-lazyload "1.2.3"
+
+"@chipspc/vant-dgg@^2.22.1":
+  version "2.22.1"
+  resolved "http://tmobile.dgg188.cn/@chipspc/vant-dgg/download/@chipspc/vant-dgg-2.22.1.tgz#3ba89f77b36bf228bd1218b1c5c93cc513352a7b"
+  integrity sha1-O6ifd7Nr8ii9Ehixxck8xRM1Kns=
   dependencies:
     "@babel/runtime" "7.x"
     "@chipspc/vant-dgg" "^2.21.1"
@@ -2735,7 +2747,7 @@ axios-retry@^3.1.9:
   dependencies:
     is-retry-allowed "^1.1.0"
 
-axios@^0.21.0:
+axios@^0.21.0, axios@^0.21.1:
   version "0.21.1"
   resolved "https://registry.npm.taobao.org/axios/download/axios-0.21.1.tgz?cache=0&sync_timestamp=1608609294136&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Faxios%2Fdownload%2Faxios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
   integrity sha1-IlY0gZYvTWvemnbVFu8OXTwJsrg=

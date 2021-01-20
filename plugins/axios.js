@@ -1,7 +1,11 @@
 import qs from 'qs'
 import { saveAxiosInstance } from '@/utils/request'
+
+import xToast from '@/components/common/spToast'
+
 const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
 const BASE = require('~/config/index.js')
+
 export default function ({ $axios, redirect, app, store }) {
   $axios.defaults.withCredentials = false
   // 设置基本URL
@@ -62,16 +66,22 @@ export default function ({ $axios, redirect, app, store }) {
     (response) => {
       const result = response.data
       const code = result.code
-      if (process.env.NODE_ENV === 'production') {
-        // 在登录失效的情况下，wap里面跳转到 我的
-        if (code === 5223) {
-          // 清空登录信息
-          store.commit('user/CLEAR_USER')
-          if (!store.state.app.isInApp) {
+      // 网关会对带有yk地址的请求做token有效性验证，若失效，网关直接抛出5223，wap里面跳转到 我的
+      if (code === 5223) {
+        // 清空登录信息
+        store.commit('user/CLEAR_USER')
+        if (!store.state.app.isInApp) {
+          if (process && process.client) {
+            xToast.error('登录失效，请重新登录')
+            setTimeout(() => {
+              redirect('/my')
+            }, 1500)
+          } else {
             redirect('/my')
           }
         }
       }
+
       return result
     },
     (error) => {

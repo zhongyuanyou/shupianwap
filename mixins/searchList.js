@@ -6,7 +6,7 @@ import { goods } from '@/api/index'
 export default {
   methods: {
     getServeListReq() {
-      console.log('serveGoodsListData', this.serveGoodsListData)
+      // console.log('serveGoodsListData', this.serveGoodsListData)
       // this.skeletonLoading = true
       this.formData.areaCodes = this.cityCode.code
       goods
@@ -55,10 +55,10 @@ export default {
         })
     },
     getJyListReq() {
-      console.log(
-        'jyGoodsListData',
-        this.jyGoodsListData[this.currentTabJyCode]
-      )
+      // console.log(
+      //   'jyGoodsListData',
+      //   this.jyGoodsListData[this.currentTabJyCode]
+      // )
       goods
         .searchJyGoodsList(
           { axios: this.$axios },
@@ -137,7 +137,14 @@ export default {
       // console.log('this.searchText', this.searchText)
       // console.log('formData', this.formData)
       console.log('reqType', this.reqType)
-      // this.listShow = true
+      // 埋点数据
+      // Todo 埋点sdk还未知
+      // keyword_type = '商品'
+      // keyword = this.searchText
+      window.sensors.track('p_searchClick', {
+        keyword_type: '商品',
+        keyword: this.searchText,
+      })
       if (this.reqType === 'serve') {
         this.getServeListReq()
       } else {

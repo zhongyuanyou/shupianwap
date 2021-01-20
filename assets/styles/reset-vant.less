@@ -1,4 +1,33 @@
 /*重置sp-vant部分样式*/
-.sp-datetime-picker .sp-picker__toolbar .sp-picker__cancel{
+.sp-datetime-picker .sp-picker__toolbar .sp-picker__cancel {
   color: #555;
+}
+
+.sp-list {
+  &__loading,
+  &__finished-text,
+  &__error-text {
+    color: #999999;
+    font-size: 24px !important;
+    line-height: 50px;
+    text-align: center;
+  }
+}
+
+.sp-pull-refresh__head {
+  .sp-loading {
+    &__text {
+      color: #999999;
+      font-size: 24px;
+    }
+  }
+}
+// 设置input的placeholder的字体样式
+input::-webkit-input-placeholder,
+input::-moz-placeholder {
+  color: #cccccc;
+}
+// 设置input的自动填充背景颜色
+input:-webkit-autofill {
+  box-shadow: 0 0 1000px 1000px #ffffff inset !important;
 }

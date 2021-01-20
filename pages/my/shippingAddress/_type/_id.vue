@@ -26,10 +26,15 @@
           v-model="ruleForm.contactName"
           center
           label="联系人"
+          maxlength="25"
           placeholder="请填写收货人姓名"
         >
           <template #button>
-            <div class="end" @click="handleEnd(1)">
+            <div
+              v-show="ruleForm.contactName"
+              class="end"
+              @click="handleEnd(1)"
+            >
               <my-icon name="pay_ic_fail" color="#ccc" size="0.28rem" />
             </div>
           </template>
@@ -352,6 +357,21 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #f8f8f8;
+  /deep/ .sp-field__label {
+    width: 150px;
+  }
+  /deep/ .sp-field__body {
+    > input::-webkit-input-placeholder {
+      color: #cccccc;
+    }
+  }
+  /deep/ .sp-bottombar {
+    z-index: 999;
+  }
+  /deep/ .sp-bottombar-button {
+    font-size: 32px;
+    font-weight: bold;
+  }
   .back_icon {
     margin-left: 40px;
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="address">
     <!--S 头部-->
-    <Header title="我的收货地址">
+    <Header :title="addressList.length ? '我的收货地址' : '无收货地址'">
       <template #left>
         <div @click="back">
           <my-icon
@@ -39,7 +39,7 @@
             <div @click="handleEdit(item)">
               <my-icon
                 class="icon"
-                name="per_ic_edit"
+                name="per_ic_addeditor"
                 size="0.24rem"
                 color="#222"
               />
@@ -187,15 +187,23 @@ export default {
     },
     handleNew() {
       // 新建收货地址
-      if (this.isInApp) {
-        this.$appFn.dggSetTitle(
-          {
-            title: '新建收货地址',
-          },
-          (res) => {}
-        )
+      if (this.addressList.length < 10) {
+        if (this.isInApp) {
+          this.$appFn.dggSetTitle(
+            {
+              title: '新建收货地址',
+            },
+            (res) => {}
+          )
+        }
+        this.$router.push('/my/shippingAddress/add/1')
+      } else {
+        this.$refs.spToast.show({
+          message: '收货地址最多可以添加10个',
+          duration: 1500,
+          forbidClick: true,
+        })
       }
-      this.$router.push('/my/shippingAddress/add/1')
     },
     handleEdit(item) {
       // 编辑收货地址
@@ -263,6 +271,10 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  /deep/ .sp-bottombar-button {
+    font-size: 32px;
+    font-weight: bold;
+  }
   .back_icon {
     margin-left: 40px;
   }
@@ -284,7 +296,7 @@ export default {
       }
     }
     .prompt {
-      font-size: 34px;
+      font-size: 30px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #1a1a1a;

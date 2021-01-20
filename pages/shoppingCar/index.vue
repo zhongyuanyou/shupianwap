@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-08 19:56:04
+ * @LastEditTime: 2021-01-19 20:05:37
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -17,7 +17,7 @@
             name="nav_ic_back"
             size="0.4rem"
             color="#1A1A1A"
-            style="padding-left: 32px"
+            style="padding-left: 0.4rem"
             @click.native="onClickLeft"
           />
         </template>
@@ -32,13 +32,18 @@
       </Header>
     </div>
 
-    <div class="body" :class="{ 'shopping-car--disable': refreshing }">
+    <div
+      class="body"
+      :class="{ 'shopping-car--disable': refreshing }"
+      @click.capture="handleCaptureClick"
+    >
       <!-- 在sku 等弹窗时候，锁住滚动 -->
       <div
         class="body-container"
         :class="{ 'sp-overflow-hidden': disableRefresh || refreshing }"
       >
         <sp-pull-refresh
+          ref="pullRefresh"
           v-model="refreshing"
           class="shopping-car__refresh"
           :disabled="disableRefresh"
@@ -61,6 +66,7 @@
                 ref="goodsItem"
                 :commodity-data="item"
                 :index="index"
+                :shopping-car-status="shoppingCarStatus"
                 @operation="handleItemOperation"
               />
             </div>
@@ -217,6 +223,23 @@ export default {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
+
+    // notice: 在使用下拉刷新后，拉到最底部，马上使用手指点击，会导致pull-refresh组件中的touchend事件没触发，
+    // 致使刷新没有执行，且refreshing也为false,这是若里面被点击，弹出poup,样式布局全部乱掉，
+    // 目前想到的办法就是在：点击事件的捕获阶段，通过 .sp-pull-refresh__track 这个div的transform是否有值，来判断若是下拉状态，就阻止点击
+    handleCaptureClick(event) {
+      if (!this.$refs.pullRefresh) return
+      const el = this.$refs.pullRefresh.$el
+      const trackEl = el.querySelector('.sp-pull-refresh__track')
+      if (!trackEl || !window) return
+      const transformStyle = window
+        .getComputedStyle(trackEl, null)
+        .getPropertyValue('transform')
+
+      if (transformStyle === 'none') return
+      event.stopPropagation()
+      event.preventDefault()
+    },
     onClickLeft() {
       console.log('nav onClickLeft')
       if (this.isInApp) {
@@ -332,6 +355,7 @@ export default {
           this.list = this.list.filter((item) => {
             return !cartArray.includes(item.cartId)
           })
+          this.$xToast.success('删除成功')
         })
     },
 
@@ -368,7 +392,18 @@ export default {
 
     // 统一的结算
     uPBill() {
-      if (!this.currentSelectedCartIds.length) {
+      const billCarIds = this.list.reduce((accumulator, item) => {
+        // 结算时候需要过滤掉非上架产品
+        if (
+          this.currentSelectedCartIds.includes(item.cartId) &&
+          item.status === 'GOODS_STATUS_ON_SHELF'
+        ) {
+          accumulator.push(item.cartId)
+        }
+        return accumulator
+      }, [])
+
+      if (!billCarIds.length) {
         this.$xToast.show({
           message: '您还没有选择商品哦',
           duration: 1000,
@@ -377,7 +412,8 @@ export default {
         })
         return
       }
-      const cartIdsStr = this.currentSelectedCartIds.join(',') // 多个cartId 用逗号凭借为一个
+
+      const cartIdsStr = billCarIds.join(',') // 多个cartId 用逗号凭借为一个
       console.log(cartIdsStr)
       // 在app中
       if (this.isInApp) {
@@ -540,7 +576,7 @@ export default {
           params = { selectFlag: +value } // 将boolean转换为数字（1：选中 ,0：取消选中）
           break
         case 'init':
-          // TODO 根据后台要求，id不能为空，虽然不用，所以随便传
+          // 根据后台要求，id不能为空，虽然不用，所以随便传
           params = { id: '12233', createrId: this.userInfo.userId }
           this.updateLoading = false // 获取初始不用loading
       }
@@ -598,10 +634,14 @@ export default {
       overflow-x: hidden;
       overflow-y: scroll;
       -webkit-overflow-scrolling: touch;
+      background-color: #f8f8f8;
     }
   }
   &__refresh {
     min-height: 100%;
+    padding-bottom: 18px;
+    background-color: #ffffff;
+    background-clip: content-box;
   }
   &__goods {
     &-item {

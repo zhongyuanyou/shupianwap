@@ -5,7 +5,7 @@
       <!--<span class="tag">急售</span>-->
     </div>
     <div class="goods-right">
-      <h3 v-html="getGoodsName()"></h3>
+      <h3 v-html="heightLightHtml(getGoodsName())"></h3>
       <p
         :style="{
           visibility: description ? 'visible' : 'hidden',
@@ -63,6 +63,23 @@ export default {
     return {}
   },
   computed: {
+    mdData() {
+      // 埋点数据组装
+      const { itemData } = this
+      const mdData = {}
+      if (itemData) {
+        mdData.commodity_level_1 = itemData.parentClassCode.split(',')[0] // 1级分类
+        mdData.commodity_level_2 = itemData.parentClassCode.split(',')[1] // 2级分类
+        mdData.n_now_price = itemData.referencePrice // 商品售价
+        mdData.commodity_number = itemData.productNo // 商品编号
+        mdData.commodity_name = this.getGoodsName() // 商品名
+        mdData.commodity_type = this.itemData.operating
+          ? '服务商品'
+          : '交易商品' // 商品类型 服务商品、交易商品、服务资源
+      }
+      // console.log(mdData)
+      return mdData
+    },
     description() {
       // 描述，包括
       // console.log(this.itemData)
@@ -126,15 +143,18 @@ export default {
       // 获取商品名
       let goodsName = ''
       if (this.itemData.operating) {
+        // 服务商品的名字需要从operating中去取showName，如果没有值，则去外层取name
         goodsName = this.itemData.operating.showName
           ? this.itemData.operating.showName
           : this.itemData.name
       } else {
+        // 交易商品直接去取name
         goodsName = this.itemData.name
       }
-      return this.heightLightHtml(goodsName)
+      return goodsName
     },
     jumpUrl() {
+      window.sensors.track('p_commodityClick', { ...this.mdData })
       if (this.goodstype.type === 'serve') {
         this.$router.push(
           `/detail/serviceDetails?productId=${this.itemData.id}`
@@ -181,6 +201,7 @@ export default {
       height: 160px;
       min-width: 160px;
       min-height: 160px;
+      border-radius: 4px;
     }
     .tag {
       position: absolute;

@@ -1,5 +1,8 @@
 <template>
   <div class="page-content">
+    <!-- S 头部 -->
+    <Header v-if="!isInApp" ref="headerRef" title="" />
+    <!-- E 头部 -->
     <!-- 1、START 头部Header-->
     <!--    <Header title="" :fixed="true" head-class="head-icon">-->
     <!--      <template v-slot:right>-->
@@ -44,14 +47,16 @@
 
 <script>
 import { WorkTab, WorkTabs, Button } from '@chipspc/vant-dgg'
-// import { mapState } from 'vuex'
-// import Header from '~/components/common/head/header'
+import { mapMutations, mapState } from 'vuex'
+import Header from '@/components/common/head/header'
 export default {
-  name: 'Index',
+  layout: 'keepAlive',
+  name: 'NeedCard',
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
     [Button.name]: Button,
+    Header,
   },
   data() {
     return {
@@ -72,8 +77,34 @@ export default {
     // ...mapState({
     //   currentCity: (state) => state.city.currentCity.name || '成都',
     // }),
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
+  watch: {
+    $route: {
+      handler(to, from) {
+        if (to.path === '/spread/myDemandCard') {
+          this.$nextTick(() => {
+            sessionStorage.removeItem('formData')
+          })
+        }
+      },
+      immediate: true,
+    },
+  },
+  created() {
+    if (process.client) {
+      this.$appFn.dggSetTitle({ title: '轻松找服务' }, (res) => {})
+    }
+  },
+  mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'NeedCard' })
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     // 选择城市
     choiceCity() {
       this.$router.push({ path: '/city/choiceCity' })
@@ -115,8 +146,9 @@ export default {
 .page-content {
   width: @spread-page-width;
   margin: 0 auto;
+  height: 100%;
   font-family: PingFang SC;
-
+  background-color: #fff;
   /deep/ .my-head {
     width: @spread-page-width !important;
     left: auto !important;
