@@ -187,15 +187,23 @@ export default {
     },
     handleNew() {
       // 新建收货地址
-      if (this.isInApp) {
-        this.$appFn.dggSetTitle(
-          {
-            title: '新建收货地址',
-          },
-          (res) => {}
-        )
+      if (this.addressList.length < 10) {
+        if (this.isInApp) {
+          this.$appFn.dggSetTitle(
+            {
+              title: '新建收货地址',
+            },
+            (res) => {}
+          )
+        }
+        this.$router.push('/my/shippingAddress/add/1')
+      } else {
+        this.$refs.spToast.show({
+          message: '收货地址最多可以添加10个',
+          duration: 1500,
+          forbidClick: true,
+        })
       }
-      this.$router.push('/my/shippingAddress/add/1')
     },
     handleEdit(item) {
       // 编辑收货地址
