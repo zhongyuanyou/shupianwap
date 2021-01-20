@@ -64,7 +64,7 @@
                   </p>
                   <p>
                     面谈方式：<span>{{
-                      item.inviteType ? '外出拜访' : '客户上门'
+                      item.inviteType ? '到访面谈' : '去店面谈'
                     }}</span>
                   </p>
                 </div>
