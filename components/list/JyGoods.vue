@@ -177,6 +177,15 @@ export default {
     },
   },
   mounted() {
+    // 当前页面公共属性注册
+    const param = {
+      platform_type: 'wap端', // 平台类型：App，H5，Web
+      app_name: '薯片wap端', // 应用名称
+      product_line: 'Wap端搜索列表页', // 当前页面或服务名称
+      current_url: location.href, // 发生地址
+      referrer: document.referrer,
+    }
+    window.sensors.registerPage(param) // 设置公共属性
     this.$emit('goodsList', 'jy', this)
     // 默认请求的数据
     this.tabItems.forEach((item) => {
@@ -195,6 +204,7 @@ export default {
       classCode: this.tabItems[this.typeCodeIndex].ext4,
       dictCode: this.tabItems[this.typeCodeIndex].code,
       searchKey: this.searchText,
+      statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
       fieldList: [],
     }
     this.initGoodsList()
@@ -242,6 +252,7 @@ export default {
           classCode: this.tabItems[name].ext4,
           dictCode: this.tabItems[name].code,
           searchKey: this.searchText,
+          statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
           fieldList: [],
         }
       }

@@ -124,7 +124,7 @@ export default {
     const param = {
       platform_type: 'wap端', // 平台类型：App，H5，Web
       app_name: '薯片wap端', // 应用名称
-      product_line: 'Wap端工商注销推广页', // 当前页面或服务名称
+      product_line: 'Wap端搜索列表页', // 当前页面或服务名称
       current_url: location.href, // 发生地址
       referrer: document.referrer,
     }
