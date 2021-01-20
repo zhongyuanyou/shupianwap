@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-19 20:05:37
+ * @LastEditTime: 2021-01-20 17:18:25
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -340,7 +340,7 @@ export default {
         .open('detele')
         .then(() => {
           console.log('发起请求')
-          console.log('countOperation:', cartId, data)
+          console.log('deteleItem:', cartId, data)
           cartId = '' + cartId
           return this.postUpdate({ cartId, type: 'remove' })
         })
@@ -519,13 +519,18 @@ export default {
 
         this.list = this.list.map((item) => {
           let goodsNumber = item.goodsNumber
-          // 增加数量， 减少数量， 默认选中
+          // 增加数量， 减少数量， 默认选中,且增值服务的数量也随主产品数量一致
           let shopIsSelected = item.shopIsSelected
+          let addServiceList = item.addServiceList || []
           if (cartArray.includes(item.cartId)) {
             goodsNumber = value
             shopIsSelected = true
+            addServiceList = addServiceList.map((addItem = {}) => ({
+              ...addItem,
+              num: value,
+            }))
           }
-          return { ...item, goodsNumber, shopIsSelected }
+          return { ...item, goodsNumber, shopIsSelected, addServiceList }
         })
       } catch (error) {
         console.log('countOperation', error)

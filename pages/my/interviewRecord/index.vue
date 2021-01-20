@@ -203,6 +203,7 @@ export default {
         }
       })
     }
+    this.onLoad(true)
     // this.getInterviewList()
   },
   methods: {
@@ -277,20 +278,23 @@ export default {
       this.refreshing = false
       if (res.code === 200) {
         if (isRefresh) {
-          this.loading = true
-          // this.finished = false
+          this.loading = false
+          this.finished = false
 
           this.list = res.data.records || null
-          if (!this.list || !this.list.length) {
-            this.finished = true
-          }
+          // if (!this.list || !this.list.length) {
+          //   this.finished = true
+          // }
         } else if (res.data.records.length) {
           this.loading = false
+          this.finished = false
           this.list = this.list.concat(res.data.records)
         } else {
           this.finished = true
+          this.loading = true
         }
       } else {
+        this.loading = true
         this.finished = true
       }
     },

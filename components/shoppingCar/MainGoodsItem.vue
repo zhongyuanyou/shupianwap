@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-19 19:45:17
+ * @LastEditTime: 2021-01-20 17:29:24
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/MainGoodsItem.vue
 -->
@@ -463,6 +463,7 @@ export default {
         font-weight: bold;
         color: #222222;
         line-height: 26px;
+        white-space: nowrap;
       }
     }
   }

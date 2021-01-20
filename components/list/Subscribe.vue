@@ -214,7 +214,7 @@ export default {
       const params = {
         consultationContent: _self.resetContent(),
         customerName: _self.userInfo.fullName,
-        customerNumber: _self.tel || _self.userInfo.mainAccount,
+        customerNumber: _self.tel || _self.userInfo.mainAccountFull,
         customerSourceChannel: 'EXPERT_APPOINTMENT_CUSTOMER_CHANNEL',
         msgSourceChannel: 'WAP_MSG_CHANNEL',
         sourceAddr: location.href,
