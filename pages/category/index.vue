@@ -211,7 +211,7 @@ export default {
       // 获取产品分类集合
       try {
         const params = {
-          isRecommend: 0,
+          isRecommend: 1,
         }
         const data = await category.home({ axios: this.$axios }, params)
         this.loading = false
