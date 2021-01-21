@@ -113,7 +113,7 @@
             </div>
           </sp-cell>
         </sp-list>
-        <div v-else class="no_data">
+        <div v-if="!list.length && ending" class="no_data">
           <sp-image
             class="no_data__icon"
             fit="cover"
@@ -181,6 +181,7 @@ export default {
         type: 'functional',
         title: '确定取消面谈吗？',
       },
+      ending: false,
     }
   },
   computed: {
@@ -276,6 +277,7 @@ export default {
       }
       const res = await this.$axios.get(interviewApi.list, { params })
       this.refreshing = false
+      this.ending = true
       if (res.code === 200) {
         if (isRefresh) {
           this.loading = false

@@ -57,7 +57,7 @@
                 <p>面谈地点</p>
               </div>
               <div class="item__rt">
-                <p>{{ info.inviteAddress }}12312312312312312</p>
+                <p>{{ info.inviteAddress }}</p>
               </div>
             </div>
             <div v-if="info.accompanyName" class="item">
