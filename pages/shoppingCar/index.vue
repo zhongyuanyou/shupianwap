@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-20 17:18:25
+ * @LastEditTime: 2021-01-21 16:13:58
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -647,6 +647,7 @@ export default {
     padding-bottom: 18px;
     background-color: #ffffff;
     background-clip: content-box;
+    -webkit-background-clip: content-box;
   }
   &__goods {
     &-item {
