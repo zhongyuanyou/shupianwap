@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2021-01-14 13:58:34
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-19 09:11:56
+ * @LastEditTime: 2021-01-21 11:55:55
  * @Description: file content
  * @FilePath: /chips-wap/components/planner/RecommendList.vue
 -->
@@ -412,6 +412,8 @@ export default {
           font-weight: 400;
           color: #5c7499;
           margin-bottom: 9px;
+          .textOverflow(1);
+          max-width: 280px;
         }
       }
       .money {
