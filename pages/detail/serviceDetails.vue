@@ -111,7 +111,7 @@ export default {
   },
   layout: 'keepAlive',
   watchQuery: ['productId'],
-  async asyncData({ $axios, query, app }) {
+  async asyncData({ $axios, query, app, store }) {
     try {
       let scProductDetailData = {}
       let scPlannerDetailData = {}
@@ -139,7 +139,7 @@ export default {
           params: {
             limit: 1,
             page: 1,
-            area: productDetailRes.data.baseData.areaCode, // 区域编码
+            area: store.state.city.currentCity.code, // 区域编码
             deviceId, // 设备ID
             level_2_ID: productDetailRes.data.baseData.parentClassCode
               ? productDetailRes.data.baseData.parentClassCode.split(',')[1]
