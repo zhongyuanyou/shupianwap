@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 14:23:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-20 13:39:58
+ * @LastEditTime: 2021-01-21 15:07:11
  * @Description: file content
  * @FilePath: /chips-wap/components/login/PhoneField.vue
 -->
@@ -189,7 +189,7 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
-    border-bottom: 1px solid #ebedf0;
+    border-bottom: 1px solid @border-color;
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
   }
