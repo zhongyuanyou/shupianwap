@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-14 10:48:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-19 14:34:55
+ * @LastEditTime: 2021-01-21 11:53:13
  * @Description: file content
  * @FilePath: /chips-wap/components/planner/PlannerSearchItem.vue
 -->
@@ -187,7 +187,9 @@ export default {
     }
     &--tag {
       max-width: 148px;
-      height: 32px;
+      min-height: 32px;
+      padding: 0 8px;
+      line-height: 32px;
       margin-left: 12px;
       .textOverflow(1);
       &:first-child {

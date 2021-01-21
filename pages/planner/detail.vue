@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-20 15:24:53
+ * @LastEditTime: 2021-01-21 11:26:24
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -66,10 +66,7 @@
                 <sp-tag
                   v-for="tag of formatTagList"
                   :key="tag"
-                  size="large"
-                  color="#EADACD"
-                  text-color="#222222"
-                  class="detail-content__tag"
+                  class="detail-content__tag-list-item"
                   >{{ tag }}</sp-tag
                 >
               </div>
@@ -608,13 +605,18 @@ export default {
         line-height: 1em;
         font-size: 0;
         display: flex;
-        /deep/.sp-tag {
-          max-width: 280px;
-          margin-left: 12px;
+        &-item {
+          background-color: #eadacd;
+          color: #222222;
           font-size: 24px;
           font-weight: 400;
+          line-height: 50px;
+          margin-left: 12px;
+          padding: 0 18px;
+          border-radius: 4px;
+          max-width: 280px;
+          min-height: 50px;
           .textOverflow(1);
-          white-space: nowrap;
           &:first-child {
             margin-left: 0;
           }
