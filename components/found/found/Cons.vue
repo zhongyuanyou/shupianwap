@@ -266,7 +266,9 @@ export default {
       // this.$router.push(`/found/detail/${item.id}`)
     },
     onRefresh() {
-      this.page = 1
+      this.page = 2
+      this.loading = false
+      this.finished = false
       this.$emit('refresh')
     },
     async onLoad() {
