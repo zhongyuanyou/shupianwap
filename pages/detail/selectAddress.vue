@@ -41,7 +41,7 @@
     </div>
     <div class="dropdown">
       <sp-sticky>
-        <sp-dropdown-menu class="dropdown__menu sp-hairline--bottom">
+        <sp-dropdown-menu class="dropdown__menu">
           <!-- S 选择价格区间 -->
           <sp-dropdown-item
             ref="isShowPrice"
@@ -615,7 +615,21 @@ export default {
       }
       /deep/.sp-dropdown-menu {
         &__bar {
-          box-shadow: 0 0.5px 0px #f4f4f4;
+          box-shadow: none;
+          position: relative;
+          &::after {
+            position: absolute;
+            box-sizing: border-box;
+            content: ' ';
+            pointer-events: none;
+            bottom: 0;
+            right: -50%;
+            left: -50%;
+            height: 1px;
+            background-color: #f4f4f4;
+            transform: scale(0.5);
+            z-index: 1;
+          }
         }
       }
     }
