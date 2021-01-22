@@ -15,7 +15,7 @@
             height="1.6rem"
             fit="cover"
             radius="0.04rem"
-            :src="item.productImgArr[0]"
+            :src="`${item.productImgArr[0]}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
           />
         </div>
         <div class="need_item_rt">
@@ -141,6 +141,8 @@ export default {
         flex-direction: row;
         margin-top: 7px;
         flex-wrap: wrap;
+        height: 51px;
+        overflow: hidden;
         &_item {
           padding: 5px 10px;
           background: #f0f2f5;
@@ -151,6 +153,7 @@ export default {
           font-weight: 400;
           color: #5c7499;
           margin-bottom: 9px;
+          height: 42px;
         }
       }
       .money {

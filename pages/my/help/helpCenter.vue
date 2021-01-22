@@ -149,9 +149,10 @@ export default {
   /deep/ .sp-field__control {
     transform: translateY(2px);
   }
-  /deep/ .sp-field__control:disabled {
-    color: #cccccc !important;
-    -webkit-text-fill-color: #cccccc !important;
+  /deep/ .sp-field__control {
+    &::placeholder {
+      color: #cccccc !important;
+    }
   }
   /deep/ .sp-hairline--top-bottom {
     &[class*='sp-hairline']::after {

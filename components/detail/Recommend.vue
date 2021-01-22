@@ -39,7 +39,7 @@
                   height="1.6rem"
                   fit="cover"
                   lazy-load
-                  :src="item.productImgArr[0]"
+                  :src="`${item.productImgArr[0]}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
                 />
               </div>
               <div class="swipe_item_con_rt">

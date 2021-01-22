@@ -18,7 +18,7 @@
             fit="cover"
             radius="0.04rem"
             lazy-load
-            :src="item.productImgArr[0]"
+            :src="`${item.productImgArr[0]}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
           />
         </div>
         <div class="need_item_rt">

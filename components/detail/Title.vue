@@ -81,17 +81,20 @@ export default {
   }
   &_tags {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-content: center;
-    flex-direction: row;
+    /*margin-bottom: 19px;*/
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    /*align-content: center;*/
+    /*flex-direction: row;*/
     &_remind {
+      float: right;
       font-size: 24px;
       font-family: PingFang SC;
       font-weight: 400;
       color: #222222;
       line-height: 36px;
       display: flex;
+      margin-top: 5px;
       .icon {
         margin-right: 12px;
       }
@@ -121,7 +124,6 @@ export default {
     font-weight: bold;
     color: #222222;
     line-height: 56px;
-    margin-top: 19px;
   }
   .imp_remind {
     margin-top: 30px;
