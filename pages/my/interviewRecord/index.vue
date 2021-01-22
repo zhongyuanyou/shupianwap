@@ -39,7 +39,7 @@
                     width="0.8rem"
                     height="0.8rem"
                     fit="cover"
-                    :src="item.avatar"
+                    :src="item.imgUrl"
                   />
                 </div>
                 <div class="item-info_detail">

@@ -100,7 +100,11 @@ export default {
   },
   methods: {
     onLeftClick() {
-      this.$router.back(-1)
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+      } else {
+        this.$router.back(-1)
+      }
       this.$emit('backHandle')
     },
     getTopMargin() {
