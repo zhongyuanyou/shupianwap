@@ -1,7 +1,7 @@
 <template>
   <div class="address">
     <!--S 头部-->
-    <Header :title="addressList.length ? '我的收货地址' : '无收货地址'">
+    <Header title="我的收货地址">
       <template #left>
         <div @click="back">
           <my-icon
@@ -17,7 +17,12 @@
     <!--S 内容-->
     <div class="address_con">
       <div v-if="!addressList.length" class="no_address">
-        <img :src="$ossImgSet(170, 170, '21107zqqvf40000.png')" alt="" />
+        <sp-image
+          class="no_data__icon"
+          fit="cover"
+          src="https://cdn.shupian.cn/sp-pt/wap/images/21107zqqvf40000.png"
+        />
+        <!--        <img :src="$ossImgSet(170, 170, '21107zqqvf40000.png')" alt="" />-->
         <p class="prompt">未添加收货地址</p>
       </div>
       <div v-if="addressList.length" class="address_con_list">
@@ -110,6 +115,7 @@ import {
   BottombarButton,
   Toast,
   Sticky,
+  Image,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { userinfoApi } from '@/api'
@@ -127,6 +133,7 @@ export default {
     [BottombarButton.name]: BottombarButton,
     [Toast.name]: Toast,
     [Sticky.name]: Sticky,
+    [Image.name]: Image,
     SpToast,
     LoadingCenter,
     Header,
@@ -289,7 +296,7 @@ export default {
     .no_address {
       width: 100%;
       text-align: center;
-      > img {
+      .no_data__icon {
         width: 340px;
         height: 340px;
         margin-top: 176px;
