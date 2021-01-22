@@ -141,7 +141,7 @@ export default {
     flex: 1;
     height: 100%;
     background: #ffffff;
-    border: 1px solid #cdcdcd;
+    border: 1px solid rgba(205, 205, 205, 0.8);
     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
     border-radius: 8px;
     input {
