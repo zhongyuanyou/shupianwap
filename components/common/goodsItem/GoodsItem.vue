@@ -1,7 +1,7 @@
 <template>
   <div class="goods-item" @click="jumpUrl">
     <div class="goods-item-left">
-      <img :src="itemData.goodsImg" alt="" class="goods-img" />
+      <img :src="sbGoodsImg || itemData.goodsImg" alt="" class="goods-img" />
       <!--<span class="tag">急售</span>-->
     </div>
     <div class="goods-right">
@@ -60,7 +60,9 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      sbGoodsImg: '', // 商标图片
+    }
   },
   computed: {
     mdData() {
@@ -84,9 +86,11 @@ export default {
       // 描述，包括
       // console.log(this.itemData)
       if (this.itemData.operating) {
+        // 服务商品
         return this.itemData.operating.slogan
       }
       if (this.itemData.fieldList && this.itemData.fieldList.length) {
+        // 交易商品
         const desc = []
         this.itemData.fieldList.forEach((item) => {
           let val = ''
@@ -100,23 +104,36 @@ export default {
           }
           if (val) {
             switch (item.fieldCode) {
+              // 注册时间
               case 'registration_time':
                 desc.push(utils.resetTimeField(val))
                 break
+              // 注册资本
+              case 'qualification_registered_capital':
               case 'registered_capital':
                 desc.push(utils.priceHandle(val))
                 break
+              // 区域
               case 'qualification_registration_area':
                 desc.push(val.split(',')[0])
                 break
+              // 到期时间
               case 'qualification_expire_date':
                 desc.push(val.split('-')[0] + '年')
                 break
+              // 安许证
               case 'safety_production_license':
                 desc.push(val === '是' ? '有安许证' : '无安许证')
                 break
-              case 'qualification_registered_capital':
-                desc.push(utils.priceHandle(val))
+              // 商标图片
+              case 'logo_image':
+                if (item.resourceIdPathUrls) {
+                  this.sbGoodsImg = item.resourceIdPathUrls
+                    .split(';')[0]
+                    .split(',')[1]
+                } else {
+                  this.sbGoodsImg = this.itemData.goodsImg
+                }
                 break
               default:
                 desc.push(val)
