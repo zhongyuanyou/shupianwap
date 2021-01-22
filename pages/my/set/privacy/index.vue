@@ -25,7 +25,7 @@
         <div class="content-title">{{ item }}</div>
         <my-icon
           name="notify_ic_next"
-          size="0.1rem"
+          size="0.24rem"
           color="#CCCCCC"
           class="content-icon"
         ></my-icon>
