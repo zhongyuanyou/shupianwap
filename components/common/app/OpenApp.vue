@@ -14,11 +14,6 @@
           size="0.54rem"
           color="rgba(0, 0, 0, 0.4)"
         ></my-icon>
-        <my-icon
-          name="login_ic_clear"
-          size="0.20rem"
-          color="rgba(255, 255, 255, 0.1)"
-        ></my-icon>
       </client-only>
     </div>
     <!--<img-->
