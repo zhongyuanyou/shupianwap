@@ -2,7 +2,10 @@
   <div class="banner">
     <sp-swipe :autoplay="3000" @change="onChange">
       <sp-swipe-item v-for="(item, index) in images" :key="index">
-        <sp-image fit="cover" lazy-load :src="item" />
+        <sp-image
+          fit="cover"
+          :src="`${item}?x-oss-process=image/resize,m_fill,w_750,h_520,limit_0`"
+        />
       </sp-swipe-item>
       <template #indicator>
         <div class="custom-indicator">
