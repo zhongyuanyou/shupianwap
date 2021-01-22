@@ -35,7 +35,12 @@
         >
           <div>{{ item.name }}</div>
           <div v-show="isLocation && cIndex == index">
-            <sp-icon name="success" color="#4974F5" size="0.2rem" />
+            <sp-icon
+              class-prefix="spiconfont"
+              name="tab_ic_check"
+              color="#4974F5"
+              size="0.2rem"
+            />
           </div>
         </div>
       </div>
