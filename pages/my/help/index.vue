@@ -15,7 +15,7 @@
     </Header>
     <!-- E 头部 -->
     <!-- S 广告位 -->
-    <div class="help-bn">
+    <div v-if="adData.materialUrl" class="help-bn">
       <img :src="adData.materialUrl" alt="" />
     </div>
     <!-- E 广告位 -->
@@ -48,7 +48,15 @@
           :disabled="true"
           placeholder="搜索您遇到的问题"
           @click="$router.push('/my/help/helpCenter')"
-        />
+        >
+          <template #left-icon>
+            <my-icon
+              name="notify_ic_search"
+              size="0.24rem"
+              color="#999999"
+            ></my-icon>
+          </template>
+        </sp-search>
       </div>
       <!-- E 搜索 -->
       <div class="tab-content">
@@ -144,11 +152,11 @@ export default {
   async asyncData({ store, $axios }) {
     const params = {
       findType: 0, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
-      locationCode: 'ad100006', // 广告位code
-      code: this.isInApp
-        ? this.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
+      locationCode: 'ad113195', // 广告位code
+      code: store.state.app.isInApp
+        ? store.state.app.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
           ? 'con100120'
-          : this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
+          : store.state.app.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
           ? 'con100029'
           : 'con100045'
         : 'con100873', // 获取分类列表选项的code
@@ -409,6 +417,13 @@ export default {
       align-items: center;
       padding: 0 40px;
       margin-bottom: 20px;
+      /deep/ .sp-field__control {
+        transform: translateY(2px);
+      }
+      /deep/ .sp-field__control:disabled {
+        color: #cccccc !important;
+        -webkit-text-fill-color: #cccccc !important;
+      }
       > strong {
         font-size: 40px;
         font-family: PingFang SC;
@@ -520,6 +535,10 @@ export default {
       width: 100%;
       height: 140px;
     }
+  }
+  /deep/ .sp-button__text {
+    font-size: 32px;
+    font-weight: bold;
   }
 }
 </style>

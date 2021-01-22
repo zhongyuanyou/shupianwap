@@ -247,6 +247,13 @@ export default {
             forbidClick: true,
             icon: 'spiconfont-tab_ic_check',
           })
+          setTimeout(() => {
+            if (this.isInApp) {
+              this.$appFn.dggWebGoBack((res) => {})
+            } else {
+              this.$router.back()
+            }
+          }, 1500)
         } catch (err) {
           this.loading = false
           this.$refs.spToast.show({

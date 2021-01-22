@@ -127,7 +127,7 @@ export default {
     },
     open() {},
     close() {
-      // this.echoData = clone(this.saveEchoData, true)
+      this.echoData = clone(this.saveEchoData, true)
     },
     minInput(val) {
       // this.minValue = val
@@ -153,9 +153,9 @@ export default {
       this.echoData.minValue = ''
     },
     confirmFilters() {
-      this.saveEchoData = clone(this.echoData, true)
       const emitData = this.resultHandle()
       this.handlePriceTitle(this.echoData)
+      this.saveEchoData = clone(this.echoData, true)
       this.$emit('activeItem', emitData, 'priceFilter-' + this.filterData.code)
       this.$refs.item.toggle()
     },
@@ -177,6 +177,7 @@ export default {
           this.echoData.maxValue !== '' &&
           emitData.fieldValue.start > emitData.fieldValue.end
         ) {
+          // 当输入
           ;[emitData.fieldValue.start, emitData.fieldValue.end] = [
             emitData.fieldValue.end,
             emitData.fieldValue.start,

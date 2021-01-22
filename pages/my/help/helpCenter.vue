@@ -21,7 +21,15 @@
       reverse
       :maxlength="20"
       @search="searchFuc"
-    />
+    >
+      <template #left-icon>
+        <my-icon
+          name="notify_ic_search"
+          size="0.24rem"
+          color="#999999"
+        ></my-icon>
+      </template>
+    </sp-search>
     <sp-cell-group>
       <sp-cell
         v-for="(item, index) in searchResult"
@@ -138,6 +146,18 @@ export default {
 </script>
 <style lang="less" scoped>
 .wrapper {
+  /deep/ .sp-field__control {
+    transform: translateY(2px);
+  }
+  /deep/ .sp-field__control:disabled {
+    color: #cccccc !important;
+    -webkit-text-fill-color: #cccccc !important;
+  }
+  /deep/ .sp-hairline--top-bottom {
+    &[class*='sp-hairline']::after {
+      border: none;
+    }
+  }
   .back_icon {
     margin-left: 40px;
   }

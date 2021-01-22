@@ -17,13 +17,13 @@
               <my-icon
                 class="my-icon"
                 name="tab_ic_act"
-                size="0.5rem"
+                size="0.4rem"
                 color="#4974f5"
               ></my-icon>
               <my-icon
                 class="my-icon icon-white"
                 name="tab_ic_act"
-                size="0.5rem"
+                size="0.4rem"
                 color="#ffffff"
               ></my-icon>
             </div>
@@ -46,13 +46,13 @@
             <my-icon
               class="my-icon"
               name="tab_ic_act"
-              size="0.5rem"
+              size="0.4rem"
               color="#4974f5"
             ></my-icon>
             <my-icon
               class="my-icon icon-white"
               name="tab_ic_act"
-              size="0.5rem"
+              size="0.4rem"
               color="#ffffff"
             ></my-icon>
           </div>
@@ -200,9 +200,9 @@ export default {
   overflow: hidden;
   z-index: 3;
   position: relative;
-  width: 50px;
-  height: 50px;
-  margin: -6px auto 0;
+  width: 40px;
+  height: 40px;
+  margin: -3px auto 0;
   .my-icon {
     position: absolute;
     left: 0;

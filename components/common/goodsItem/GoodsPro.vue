@@ -1,6 +1,6 @@
 <template>
   <a
-    v-sensorsTrack:webClick="{
+    v-sensorsTrack:p_commodityClick="{
       recommend_number: goodsData.recomNo,
       com_level_1_code: goodsData.classCodeLevelList[0] || '',
       com_level_2_code: goodsData.classCodeLevelList[1] || '',
