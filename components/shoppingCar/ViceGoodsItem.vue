@@ -2,14 +2,21 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:55
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-31 15:47:07
+ * @LastEditTime: 2021-01-22 10:15:57
  * @Description: file content
- * @FilePath: /chips-wap/client/components/shoppingCar/ViceGoodsItem.vue
+ * @FilePath: /chips-wap/components/shoppingCar/ViceGoodsItem.vue
 -->
 <template>
   <div class="vice-goods-item">
     <div class="vice-goods-item__left">
-      <img class="vice-goods-item__img" alt="" :src="viceData.img" />
+      <img
+        class="vice-goods-item__img"
+        alt=""
+        :src="
+          viceData.img ||
+          'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
+        "
+      />
     </div>
     <div class="vice-goods-item__right">
       <div class="vice-goods-item__name-price">
