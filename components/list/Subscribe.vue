@@ -365,6 +365,7 @@ export default {
       text-align: center;
       margin: 48px 4px 0 4px;
       span {
+        position: relative;
         display: inherit;
         width: 100%;
         height: 96px;
@@ -375,6 +376,21 @@ export default {
         font-family: PingFang SC;
         font-weight: bold;
         color: #ffffff;
+        &::before {
+          content: ' ';
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border: inherit;
+          background-color: #000;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          opacity: 0;
+        }
+        &:active::before {
+          opacity: 0.4;
+        }
       }
     }
   }

@@ -71,7 +71,9 @@
             class="proList"
           >
             <div class="title">{{ item.name }}</div>
-            <div class="item_con">
+            <div
+              :class="['item_con', { hidden_child: item.name == '为您推荐' }]"
+            >
               <div
                 v-for="(cItem, cIndex) in item.children"
                 :key="cIndex"
@@ -408,14 +410,21 @@ export default {
             background: #ffffff;
             border: 1px solid #cdcdcd;
             border-radius: 4px;
-            line-height: 25px;
+            line-height: 60px;
             margin: 32px 32px 0 0;
             font-size: 24px;
             font-family: PingFang SC;
             font-weight: 400;
             color: #555555;
-            padding: 21px;
+            padding: 0 21px;
+            height: 60px;
+            max-width: 100%;
+            .textOverflow(1);
           }
+        }
+        .hidden_child {
+          height: 184px;
+          overflow: hidden;
         }
       }
     }

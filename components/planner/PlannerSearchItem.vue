@@ -14,7 +14,10 @@
           width="1.2rem"
           height="1.6rem"
           fit="cover"
-          :src="itemData.img"
+          :src="
+            itemData.img ||
+            'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
+          "
         />
       </div>
       <div class="planner-search-item_detail">

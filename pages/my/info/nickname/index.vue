@@ -19,7 +19,12 @@
     <!--S 内容-->
     <div class="nickname_con">
       <div class="nickname_con_item">
-        <input v-model="nickname" placeholder="请输入您的昵称" type="text" />
+        <input
+          v-model="nickname"
+          maxlength="20"
+          placeholder="请输入您的昵称"
+          type="text"
+        />
         <div class="nickname_con_item_close" @click="clear">
           <my-icon name="pay_ic_fail" size="0.32rem" color="#ccc" />
         </div>

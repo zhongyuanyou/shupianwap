@@ -181,8 +181,8 @@ export default {
         return
       }
       this.loading = true
-      const { mainAccountFull, fullName } = await this.getUserInfo(this.userId)
-      this.formData.name = fullName
+      const { mainAccountFull, nickName } = await this.getUserInfo(this.userId)
+      this.formData.name = nickName
       this.formData.tel = mainAccountFull
       const newFormData = JSON.parse(JSON.stringify(this.formData))
       newFormData.content = JSON.stringify(newFormData.content)
@@ -197,7 +197,7 @@ export default {
             type: 'gszc',
             tel: '', // 电话
             name: '', // 姓名
-            web: 'sp', // 归属（原网站类型）
+            web: 'SPAPP', // 归属（原网站类型）
             place: 'all',
             url: '',
             content: {

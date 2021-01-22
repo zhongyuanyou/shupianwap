@@ -38,7 +38,7 @@
           </div>
           <div class="detail_con_info_content">
             <p class="title">{{ info.updaterName }}</p>
-            <p class="time">{{ info.updateTime }}</p>
+            <p class="time">{{ info.createTime }}</p>
           </div>
         </div>
         <!--E 账号信息-->

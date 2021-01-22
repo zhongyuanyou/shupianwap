@@ -43,63 +43,16 @@
       <sp-sticky>
         <sp-dropdown-menu class="dropdown__menu">
           <!-- S 选择价格区间 -->
-          <sp-dropdown-item
-            ref="isShowPrice"
-            :title-class="
-              dropdownPriceTitle != '价格' ? 'dropdown__menu-bar--active' : ''
-            "
-            :title="dropdownPriceTitle"
-          >
-            <div class="dropdown__item-price">
-              <PriceFilterComponents
-                ref="PriceFilter"
-                :price-list="formatPriceOption"
-                @minInput="minInput"
-                @maxInput="maxInput"
-                @selectItems="selectedPrice"
-                @selectAllItems="selectAllPrice"
-              />
-            </div>
-            <BottomConfirm
-              @resetFilters="resetFilters"
-              @confirmFilters="confirmFilters"
-            />
-          </sp-dropdown-item>
+          <ResourcePriceFilter
+            :filter-data="formatPriceOption"
+            @activeItem="handlePriceChange"
+          />
           <!-- E 选择价格区间 -->
           <!-- S 排序选择 -->
-          <sp-dropdown-item
-            ref="sortDropdown"
-            :title-class="
-              formatSortOption[0] &&
-              formatSortOption[0].value !== search.sortValue
-                ? 'dropdown__menu-bar--active'
-                : ''
-            "
-            :disabled="!formatSortOption || !formatSortOption.length"
-            :title="dropdownSortTitle"
-          >
-            <div class="dropdown__item-sort">
-              <sp-cell
-                v-for="(item, index) in formatSortOption"
-                :key="index"
-                :title="item.text"
-                :class="{
-                  active: item.value === search.sortValue,
-                }"
-                @click="handleSortChange(item, index)"
-              >
-                <template #right-icon>
-                  <sp-icon
-                    v-show="item.value === search.sortValue"
-                    class-prefix="spiconfont"
-                    name="tab_ic_check"
-                    size="0.22rem"
-                    color="#4974f5"
-                  />
-                </template>
-              </sp-cell>
-            </div>
-          </sp-dropdown-item>
+          <ResourceSortFilter
+            :filter-data="formatSortOption"
+            @activeItem="handleSortChange"
+          />
           <!-- E 排序选择 -->
         </sp-dropdown-menu>
       </sp-sticky>
@@ -147,17 +100,15 @@ import {
   TopNavBar,
   NavSearch,
   DropdownMenu,
-  DropdownItem,
   Sticky,
   List,
   PullRefresh,
   Button,
-  Cell,
   Icon,
 } from '@chipspc/vant-dgg'
-import PriceFilterComponents from '@/components/common/filters/PriceFilterComponents'
-import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import AddressList from '@/components/detail/AddressList'
+import ResourcePriceFilter from '@/components/detail/ResourcePriceFilter'
+import ResourceSortFilter from '@/components/detail/ResourceSortFilter'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 
 import { shoppingCar, dict } from '@/api'
@@ -174,30 +125,25 @@ export default {
   components: {
     [TopNavBar.name]: TopNavBar,
     [NavSearch.name]: NavSearch,
-    [DropdownItem.name]: DropdownItem,
     [DropdownMenu.name]: DropdownMenu,
     [Sticky.name]: Sticky,
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
     [Button.name]: Button,
-    [Cell.name]: Cell,
     [Icon.name]: Icon,
-    PriceFilterComponents,
-    BottomConfirm,
     AddressList,
     LoadingDown,
+    ResourcePriceFilter,
+    ResourceSortFilter,
   },
   data() {
     return {
       search: {
         searchKey: '',
         sortValue: 0,
-        price: {},
         minPrice: '',
         maxPrice: '',
       },
-      dropdownPriceTitle: '价格',
-      dropdownSortTitle: '默认排序',
       loading: false,
       error: false,
       finished: false,
@@ -218,39 +164,33 @@ export default {
     }),
 
     formatSortOption() {
-      if (!Array.isArray(this.sortOption)) return []
-      return this.sortOption.map((item) => {
-        const { name, code } = item || {}
-        return { text: name, value: code }
-      })
-    },
-
-    formatPriceOption() {
-      if (!Array.isArray(this.priceOption)) return []
-      return this.priceOption.map((item) => {
+      if (!Array.isArray(this.sortOption))
+        return { name: '默认排序', children: [] }
+      const children = this.sortOption.map((item) => {
         const { name, code } = item || {}
         return { name, id: code }
       })
+      return { name: '默认排序', children }
+    },
+
+    formatPriceOption() {
+      if (!Array.isArray(this.priceOption))
+        return { name: '价格', children: [] }
+      const children = this.priceOption.map((item) => {
+        const { name, code, ext1, ext2 } = item || {}
+        return { name, id: code, ext1, ext2 }
+      })
+      return { name: '价格', children }
     },
 
     // 格式化查询条件
     formatSearchParams() {
-      const { searchKey, minPrice, maxPrice, price, sortValue } = this.search
-      let goodsPriceStart = null
-      let goodsPriceEnd = null
+      const { searchKey, minPrice, maxPrice, sortValue } = this.search
+      const goodsPriceStart = minPrice || null
+      const goodsPriceEnd = maxPrice || null
+
       let orderBy = null
       let isAsc = false
-      if (price.id) {
-        const matchedPrice =
-          this.priceOption.find((item) => item.code === price.id) || {}
-        // notice: 价格 需要在cms 数据字典配置 扩展第二字段  如 ext2:‘1000-2000’
-        const { ext1, ext2 } = matchedPrice
-        goodsPriceStart = ext1 || null
-        goodsPriceEnd = ext2 || null
-      } else {
-        goodsPriceStart = minPrice || null
-        goodsPriceEnd = maxPrice || null
-      }
 
       const matchedSort = this.sortOption.find(
         (item) => item.code === sortValue
@@ -289,13 +229,19 @@ export default {
     }
   },
   methods: {
+    handlePriceChange(item) {
+      console.log('handleFilter:', item)
+      const { fieldValue } = item || {}
+      const { start, end } = fieldValue || {}
+      this.search.minPrice = start
+      this.search.maxPrice = end
+      this.handleSearch()
+    },
     handleSortChange(item) {
-      const { value, text } = item || {}
-      console.log(value)
+      const { id, name } = item || {}
+      console.log(item)
       // 触发 formatSearchParams 计算
-      this.dropdownSortTitle = text
-      this.search.sortValue = value
-      this.$refs.sortDropdown.toggle()
+      this.search.sortValue = id
       this.handleSearch()
     },
     handleSearch() {
@@ -345,73 +291,7 @@ export default {
       // 搜索按钮
       this.handleSearch()
     },
-    minInput(val) {
-      // 最小输入框
-      console.log(val)
-      this.search.price = {}
-      let numberVal = +val
-      if (!isNaN(numberVal)) {
-        numberVal = numberVal * 100 // 元转为分
-      }
-      this.search.minPrice = numberVal
-    },
-    maxInput(val) {
-      // 最大输入框
-      console.log(val)
-      this.search.price = {}
-      let numberVal = +val
-      if (!isNaN(numberVal)) {
-        numberVal = numberVal * 100 // 元转为分
-      }
-      this.search.maxPrice = numberVal
-    },
-    selectAllPrice(item) {
-      // 选择不限显示标题
-      const { name, id } = item
-      this.search.minPrice = ''
-      this.search.maxPrice = ''
-      this.search.price = { name, id }
-    },
-    selectedPrice(item) {
-      // 修改选中价格区间标题显示
-      const { name, id } = item
-      this.search.minPrice = ''
-      this.search.maxPrice = ''
-      this.search.price = { name, id }
-    },
-    resetFilters() {
-      // 重置价格
-      this.dropdownPriceTitle = '价格'
-      this.search.price = {}
-      this.search.minPrice = ''
-      this.search.maxPrice = ''
-      this.$refs.PriceFilter.clearInput()
-    },
-    confirmFilters() {
-      // 价格区间确认
-      this.$refs.isShowPrice.toggle()
-      const { price } = this.search
-      let { minPrice, maxPrice } = this.search
-      if (!isNaN(minPrice)) {
-        minPrice = minPrice / 100
-      }
 
-      if (!isNaN(maxPrice)) {
-        maxPrice = maxPrice / 100
-      }
-
-      let dropdownPriceTitle = '价格'
-      if (price.name) {
-        dropdownPriceTitle = price.name
-      } else if (minPrice || maxPrice) {
-        dropdownPriceTitle = minPrice
-          ? `${minPrice}${maxPrice ? '-' + maxPrice : ''}`
-          : `${maxPrice}`
-      }
-
-      this.dropdownPriceTitle = dropdownPriceTitle
-      this.handleSearch()
-    },
     handleOperation(value) {
       const { type, data } = value || {}
       switch (type) {
@@ -630,24 +510,6 @@ export default {
             transform: scale(0.5);
             z-index: 1;
           }
-        }
-      }
-    }
-    &__item-price {
-      padding: 56px 40px 84px 40px;
-    }
-    &__item-sort {
-      .sp-cell {
-        padding: 18px 40px;
-        &::after {
-          display: none;
-        }
-        &:last-child {
-          margin-bottom: 40px;
-        }
-        &.active {
-          font-weight: bold;
-          color: #4974f5;
         }
       }
     }

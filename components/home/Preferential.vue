@@ -83,6 +83,9 @@ export default {
     padding-left: 40px;
     -webkit-overflow-scrolling: touch;
     margin-top: 16px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
     ul {
       display: flex;
       li {

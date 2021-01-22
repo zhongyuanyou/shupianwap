@@ -24,10 +24,10 @@
       >
         <div class="content-title">{{ item }}</div>
         <my-icon
-          name="notify_ic_next"
-          size="0.1rem"
-          color="#CCCCCC"
           class="content-icon"
+          name="order_ic_listnext"
+          size="0.21rem"
+          color="#CCCCCC"
         ></my-icon>
       </div>
     </div>
@@ -130,8 +130,6 @@ export default {
     line-height: 44px;
   }
   .content-icon {
-    width: 24px;
-    height: 24px;
     margin-right: 40px;
   }
 }
