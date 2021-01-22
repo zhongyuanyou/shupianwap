@@ -20,7 +20,7 @@
             round
             fit="cover"
             lazy-load
-            :src="item.portrait"
+            :src="`${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
           />
         </nuxt-link>
         <div class="info">

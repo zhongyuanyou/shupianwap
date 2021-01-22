@@ -1,6 +1,6 @@
 <template>
   <div class="case">
-    <p class="case_title">成功案例</p>
+    <p class="case_title">成交案例</p>
     <div class="case_con">
       <p class="case_con_title">{{ caseData.name }}</p>
       <div class="case_con_info">
