@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-21 14:15:50
+ * @LastEditTime: 2021-01-22 09:53:44
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/list.vue
 -->
@@ -288,7 +288,8 @@ export default {
   },
   created() {
     if (process && process.client) {
-      this.uPGetCurrentRegion().then((data) => {
+      this.uPGetCurrentRegion({ type: 'init' }).then((data) => {
+        console.log('uPGetCurrentRegion data:', data)
         const { code } = data || {}
         this.onLoad()
         this.getRegionList(code)
@@ -402,16 +403,19 @@ export default {
     },
 
     // 统一平台 区域设置
-    uPGetCurrentRegion() {
+    uPGetCurrentRegion({ type }) {
       return new Promise((resolve, reject) => {
         const { code } = this.currentCity || {}
-        if (code) {
+        // 因为 app中每次关闭webview的cookie是未清除的，导致app原生中切换城市，未同步到cookie,
+        // 所以 在app中每次打开页面需要调用方法获取一次，设置到页面里
+        if (code && (type !== 'init' || !this.isInApp)) {
           resolve({ code })
           return
         }
         // app 上获取区域code
         if (this.isInApp) {
           this.$appFn.dggCityCode((res) => {
+            console.log('dggCityCode:', res)
             const { code, data } = res || {}
             if (code !== 200) {
               this.$xToast.show({
@@ -423,9 +427,7 @@ export default {
               reject(res)
               return
             }
-
             const { adCode, cityName } = data
-            console.log('dggCityCode:', res)
             this.SET_CITY({ code: adCode, name: cityName }) // 设置当前的定位到vuex中
             resolve({ code: adCode })
           })
