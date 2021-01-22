@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-21 11:26:24
+ * @LastEditTime: 2021-01-22 10:13:35
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -46,7 +46,10 @@
                     width="1.2rem"
                     height="1.2rem"
                     fit="cover"
-                    :src="detailData.img"
+                    :src="
+                      detailData.img ||
+                      'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
+                    "
                   />
                   <span
                     v-if="!!detailData.title"

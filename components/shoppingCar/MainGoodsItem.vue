@@ -2,14 +2,20 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-20 17:29:24
+ * @LastEditTime: 2021-01-22 10:21:03
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/MainGoodsItem.vue
 -->
 <template>
   <div class="main-goods-item">
     <div class="goods-lable-img" @click="handleGoDetail">
-      <img alt="img" :src="mainData.img" />
+      <img
+        alt="img"
+        :src="
+          mainData.img ||
+          'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
+        "
+      />
     </div>
     <div class="goods-info">
       <strong class="goods-name" @click="handleGoDetail">
@@ -320,7 +326,7 @@ export default {
     position: relative;
     width: 160px;
     height: 160px;
-    border-radius: 4px;
+    border-radius: 8px;
     overflow: hidden;
     margin-right: 32px;
     &::before {

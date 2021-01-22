@@ -45,6 +45,7 @@ export default {
     }
   }
   .confirm-btn {
+    position: relative;
     width: 574px;
     height: 96px;
     background: #4974f5;
@@ -55,6 +56,21 @@ export default {
     color: #ffffff;
     text-align: center;
     line-height: 96px;
+    &::before {
+      content: ' ';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: inherit;
+      background-color: #000;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+    }
+    &:active::before {
+      opacity: 0.4;
+    }
   }
   .iconfont-box {
     text-align: center;
