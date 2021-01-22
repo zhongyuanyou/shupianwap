@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-21 16:13:58
+ * @LastEditTime: 2021-01-22 16:23:24
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -71,7 +71,7 @@
               />
             </div>
             <template #finished>
-              <span v-if="list && list.length">没有更多了</span>
+              <span v-if="list && list.length">没有更多数据</span>
               <ShoppingCarNull v-else />
             </template>
             <!-- S 自定义加载控件 -->
@@ -87,7 +87,7 @@
     </div>
     <div
       v-if="list && list.length"
-      class="footer sp-hairline--top"
+      class="footer"
       :class="{ 'shopping-car--disable': refreshing }"
     >
       <Bottombar
@@ -644,10 +644,10 @@ export default {
   }
   &__refresh {
     min-height: 100%;
-    padding-bottom: 18px;
-    background-color: #ffffff;
-    background-clip: content-box;
-    -webkit-background-clip: content-box;
+    // padding-bottom: 18px;
+    // background-color: #ffffff;
+    // background-clip: content-box;
+    // -webkit-background-clip: content-box;
   }
   &__goods {
     &-item {
