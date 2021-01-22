@@ -15,7 +15,7 @@
     </Header>
     <!-- E 头部 -->
     <!-- S 广告位 -->
-    <div class="help-bn">
+    <div v-if="adData.materialUrl" class="help-bn">
       <img :src="adData.materialUrl" alt="" />
     </div>
     <!-- E 广告位 -->
