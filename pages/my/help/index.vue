@@ -145,10 +145,10 @@ export default {
     const params = {
       findType: 0, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
       locationCode: 'ad100006', // 广告位code
-      code: this.isInApp
-        ? this.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
+      code: store.state.app.isInApp
+        ? store.state.app.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
           ? 'con100120'
-          : this.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
+          : store.state.app.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
           ? 'con100029'
           : 'con100045'
         : 'con100873', // 获取分类列表选项的code
