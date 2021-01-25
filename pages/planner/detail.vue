@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-22 10:13:35
+ * @LastEditTime: 2021-01-25 16:49:43
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -130,14 +130,15 @@
                     name="plan_ic_explain"
                     size="0.24rem"
                     color="#666666"
-                    @click="handlePoint"
+                    @click.native="handlePoint"
                   />
                 </span>
-                <sp-button
+                <!-- 一期没有 详情页面只能影藏掉 -->
+                <!-- <sp-button
                   class="detail-content__explain-btn"
                   @click="handlePoint"
                   >查看详情</sp-button
-                >
+                > -->
               </div>
             </div>
           </div>
