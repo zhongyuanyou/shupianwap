@@ -62,6 +62,19 @@ module.exports = {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     script: [
       {
+        src: '/js/sppt-mdweb-sdk-conf.js',
+        ssr: false,
+        type: 'text/javascript',
+        charset: 'utf-8',
+      },
+      {
+        src:
+          'https://cdn.shupian.cn/sppt/md/sppt-mdweb-sdk.min.js',
+        ssr: false,
+        type: 'text/javascript',
+        charset: 'utf-8',
+      },
+      {
         src: '/js/flexible.js',
         ssr: false,
         type: 'text/javascript',
@@ -108,7 +121,7 @@ module.exports = {
     { src: '@/plugins/lazyload', ssr: true },
     { src: '@/plugins/oss', ssr: true },
     { src: '@/plugins/install-components', ssr: false },
-    { src: '@/plugins/sp-md-jdk', ssr: false },
+    // { src: '@/plugins/sp-md-jdk', ssr: false },
     { src: '@/plugins/sp-md-directive', ssr: false },
   ],
   router: {

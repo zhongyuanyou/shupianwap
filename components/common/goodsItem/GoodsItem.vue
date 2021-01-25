@@ -171,7 +171,8 @@ export default {
       return goodsName
     },
     jumpUrl() {
-      window.sensors.track('p_commodityClick', { ...this.mdData })
+      window.spptMd.spptTrackRow('P_goodsClick', { ...this.mdData })
+      // window.sensors.track('p_commodityClick', { ...this.mdData })
       if (this.goodstype.type === 'serve') {
         this.$router.push(
           `/detail/serviceDetails?productId=${this.itemData.id}`
