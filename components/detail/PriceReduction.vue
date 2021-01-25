@@ -38,6 +38,7 @@ import Tel from '~/components/detail/priceReduction/Tel'
 import PriceFrom from '~/components/detail/priceReduction/PriceFrom'
 import { transactionConsApi } from '@/api/transactionConsultation'
 import { userinfoApi } from '~/api'
+import { productResourceType } from '~/utils/productResourceType'
 export default {
   name: 'PriceReduction',
   components: {
@@ -66,6 +67,9 @@ export default {
     userInfo() {
       return this.$store.state.user.userInfo
     },
+    dictCode() {
+      return this.$store.state.tcProductDetail.detailData.dictCode
+    },
   },
   mounted() {
     this.getUserIndo()
@@ -85,72 +89,67 @@ export default {
       return true
     },
     handleSub() {
-      // 未登录
-      if (!this.token && this.$refs.priceFrom.regFun() && this.checkedReg()) {
-        this.$axios
-          .post(transactionConsApi.add_consult, {
-            web: 'flczmh', // 归属（原网站类型
-            type: 'flzx', // 业务代码
-            tel: this.$refs.priceFrom.phone, // 未加密的电话号码
-            name: '未登录测试用户', // 客户名
-            smsCode: this.$refs.priceFrom.value2, // 短信验证码
-            content: '研发测试留言', // 以前的留言内容
-            device: 'wap', // 设备来源
-            place: 'all', // 地区代码，城市声母，如cd,bj
-            url: location.href, // 留言所在页面的URL
-          })
-          .then((res) => {
-            if (res.code === 200) {
-              this.$refs.priceFrom.phone = null
-              this.$refs.priceFrom.value2 = null
-              this.$refs.priceFrom.clearTiemer()
-              this.$xToast.show({
-                message: '信息提交成功',
-                duration: 1000,
-                icon: 'toast_ic_comp',
-                forbidClick: true,
-              })
-            } else {
-              this.$xToast.show({
-                message: '信息提交失败,请稍后重试',
-                duration: 1000,
-                icon: 'toast_ic_error',
-                forbidClick: true,
-              })
-            }
-          })
-      } else if (this.checkedReg() && this.token) {
-        //  登录用户
-        this.$axios
-          .post(transactionConsApi.consult, {
-            web: 'flczmh', // 归属（原网站类型
-            type: 'flzx', // 业务代码
-            tel: this.userInfoData.decodePhone, // 未加密的电话号码
-            name: this.userInfoData.fullName, // 客户名
-            content: '研发测试留言', // 以前的留言内容
-            // device: 'wap', // 设备来源
-            place: 'all', // 地区代码，城市声母，如cd,bj
-            url: location.href, // 留言所在页面的URL
-          })
-          .then((res) => {
-            if (res.code === 200) {
-              this.isBtnDisabled = true
-              this.$xToast.show({
-                message: '信息提交成功',
-                duration: 1000,
-                icon: 'toast_ic_comp',
-                forbidClick: true,
-              })
-            } else {
-              this.$xToast.show({
-                message: '信息提交失败,请稍后重试',
-                duration: 1000,
-                icon: 'toast_ic_error',
-                forbidClick: true,
-              })
-            }
-          })
+      if (!this.checkedReg()) {
+        return
       }
+      let fromData = {}
+      let subMitUrl = transactionConsApi.consult
+      // 未登录
+      if (!this.token && this.$refs.priceFrom.regFun()) {
+        fromData = {
+          web: 'SPAPP', // 归属（原网站类型
+          type: productResourceType(this.dictCode), // 业务代码
+          tel: this.$refs.priceFrom.phone, // 未加密的电话号码
+          name: '未登录用户', // 客户名
+          smsCode: this.$refs.priceFrom.value2, // 短信验证码
+          content: '研发测试留言', // 以前的留言内容
+          device: 'wap', // 设备来源
+          place: 'all', // 地区代码，城市声母，如cd,bj
+          url: location.href, // 留言所在页面的URL
+        }
+        subMitUrl = transactionConsApi.add_consult
+        this.isBtnDisabled = true
+      } else if (this.token) {
+        fromData = {
+          web: 'SPAPP', // 归属（原网站类型
+          type: productResourceType(this.dictCode), // 业务代码
+          tel: this.userInfoData.mainAccountFull, // 未加密的电话号码
+          name: this.userInfoData.fullName, // 客户名
+          content: '', // 以前的留言内容
+          place: 'all', // 地区代码，城市声母，如cd,bj
+          url: location.href, // 留言所在页面的URL
+        }
+        subMitUrl = transactionConsApi.consult
+        this.isBtnDisabled = true
+      } else {
+        this.isBtnDisabled = false
+        return
+      }
+      this.$axios.post(subMitUrl, fromData).then((res) => {
+        if (res.code === 200) {
+          // 初始化表单数据
+          if (!this.token) {
+            this.$refs.priceFrom.phone = null
+            this.$refs.priceFrom.value2 = null
+            this.$refs.priceFrom.clearTiemer()
+            this.isBtnDisabled = false
+          }
+          this.$xToast.show({
+            message: '信息提交成功',
+            duration: 1000,
+            icon: 'toast_ic_comp',
+            forbidClick: true,
+          })
+        } else {
+          this.isBtnDisabled = false
+          this.$xToast.show({
+            message: '信息提交失败,请稍后重试',
+            duration: 1000,
+            icon: 'toast_ic_error',
+            forbidClick: true,
+          })
+        }
+      })
     },
     // 获取手机号
     getUserIndo() {
@@ -227,6 +226,20 @@ export default {
       font-weight: 400;
       color: #999999;
       line-height: 38px;
+    }
+  }
+  /deep/input {
+    font-size: 28px;
+    font-family: PingFang SC;
+    font-weight: 400;
+    color: #222222;
+    height: 38px;
+    line-height: 38px;
+    &::-webkit-input-placeholder,
+    &::-moz-placeholder,
+    &:-moz-placeholder,
+    &:-ms-input-placeholder {
+      color: #ccc;
     }
   }
 }

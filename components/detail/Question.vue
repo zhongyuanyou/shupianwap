@@ -26,16 +26,15 @@
 import problemMockData from '~/mock/problem'
 export default {
   name: 'Question',
-  props: {
-    classCodeDict: {
-      type: String,
-      default: '',
-    },
-  },
   data() {
     return {
       problemData: {},
     }
+  },
+  computed: {
+    classCodeDict() {
+      return this.$store.state.tcProductDetail.detailData.dictCode
+    },
   },
   mounted() {
     this.getMockData(this.classCodeDict)
@@ -114,6 +113,7 @@ export default {
         color: #999999;
         line-height: 38px;
         margin-left: 16px;
+        text-align: justify;
       }
     }
   }
