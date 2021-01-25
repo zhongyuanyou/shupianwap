@@ -176,7 +176,14 @@ export default {
               // 发送模板消息
               this.imExample.sendTemplateMsg(tepMsgParams, (resData) => {
                 if (resData.code === 200) {
-                  window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
+                  // 延时1s进入IM,避免模板消息未发生完成就已进入IM
+                  this.$xToast.showLoading({ message: '正在联系规划师...' })
+                  const timer = setTimeout(() => {
+                    clearTimeout(timer)
+                    this.$xToast.hideLoading()
+                    window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
+                  }, 2000)
+                  // window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
                 } else {
                   this.loginToast(resData.msg)
                 }

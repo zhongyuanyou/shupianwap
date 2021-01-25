@@ -70,6 +70,9 @@ export default {
     dictCode() {
       return this.$store.state.tcProductDetail.detailData.dictCode
     },
+    city() {
+      return this.$store.state.city.currentCity
+    },
   },
   mounted() {
     this.getUserIndo()
@@ -104,7 +107,7 @@ export default {
           smsCode: this.$refs.priceFrom.value2, // 短信验证码
           content: '研发测试留言', // 以前的留言内容
           device: 'wap', // 设备来源
-          place: 'all', // 地区代码，城市声母，如cd,bj
+          place: this.city.code, // 地区代码，城市声母，如cd,bj
           url: location.href, // 留言所在页面的URL
         }
         subMitUrl = transactionConsApi.add_consult
@@ -116,7 +119,7 @@ export default {
           tel: this.userInfoData.mainAccountFull, // 未加密的电话号码
           name: this.userInfoData.fullName, // 客户名
           content: '', // 以前的留言内容
-          place: 'all', // 地区代码，城市声母，如cd,bj
+          place: this.city.code, // 地区代码，城市声母，如cd,bj
           url: location.href, // 留言所在页面的URL
         }
         subMitUrl = transactionConsApi.consult
