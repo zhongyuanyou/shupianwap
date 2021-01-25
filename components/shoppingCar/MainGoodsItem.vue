@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 16:40:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-22 10:21:03
+ * @LastEditTime: 2021-01-22 16:15:13
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/MainGoodsItem.vue
 -->
@@ -68,7 +68,7 @@
             <sp-icon
               class-prefix="spiconfont"
               name="shop_ic_reduce"
-              size="0.28rem"
+              size="0.20rem"
               :color="disabled ? '#cccccc' : '#1a1a1a'"
             />
           </template>
@@ -76,7 +76,7 @@
             <sp-icon
               class-prefix="spiconfont"
               name="shop_ic_add"
-              size="0.28rem"
+              size="0.20rem"
               :color="disabled ? '#cccccc' : '#1a1a1a'"
             />
           </template>

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-30 19:13:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-13 14:42:04
+ * @LastEditTime: 2021-01-22 16:27:57
  * @Description: file content
  * @FilePath: /chips-wap/components/common/sku/SkuServiceStepper.vue
 -->
@@ -27,7 +27,7 @@
         <sp-icon
           class-prefix="spiconfont"
           name="shop_ic_reduce"
-          size="0.28rem"
+          size="0.20rem"
           :color="iconDisabled ? '#cccccc' : '#1a1a1a'"
         />
       </template>
@@ -35,7 +35,7 @@
         <sp-icon
           class-prefix="spiconfont"
           name="shop_ic_add"
-          size="0.28rem"
+          size="0.20rem"
           :color="iconDisabled ? '#cccccc' : '#1a1a1a'"
         />
       </template>

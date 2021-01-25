@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-28 17:00:32
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-19 20:03:43
+ * @LastEditTime: 2021-01-22 17:30:56
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/GoodsPopup.vue
 -->
@@ -80,6 +80,17 @@ export default {
   &__container {
     /deep/.sp-center-popup__containerConfirm {
       width: 540px;
+      .sp-center-popup__title {
+        margin: 64px 10px 50px !important;
+        font-size: 28px;
+        line-height: 30px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #222222;
+      }
+      .sp-center-popup__cancel {
+        color: #999999;
+      }
     }
   }
 }

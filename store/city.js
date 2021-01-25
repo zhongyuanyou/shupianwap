@@ -93,7 +93,7 @@ export const actions = {
     // 定位失败
     if (type === 'rest') {
       myToast.hideLoading()
-      myToast.error('定位失败，建议清除浏览器缓存后再试')
+      myToast.error('定位失败，建议检查GPS是否打开或清除浏览器缓存再试')
     }
     console.log(message)
     // 定位失败，设置默认城市为成都

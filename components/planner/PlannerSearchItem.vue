@@ -2,45 +2,47 @@
  * @Author: xiao pu
  * @Date: 2020-12-14 10:48:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-21 11:53:13
+ * @LastEditTime: 2021-01-25 11:03:11
  * @Description: file content
  * @FilePath: /chips-wap/components/planner/PlannerSearchItem.vue
 -->
 <template>
   <div class="planner-search-item" @click.stop="handleClick('detail')">
     <div class="left">
-      <div class="planner-search-item_avatar">
+      <div class="planner-search-item__avatar">
         <sp-image
           width="1.2rem"
           height="1.6rem"
           fit="cover"
+          class="planner-search-item__avatar-image"
+          lazy-load
           :src="
             itemData.img ||
             'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
           "
         />
       </div>
-      <div class="planner-search-item_detail">
+      <div class="planner-search-item__detail">
         <h4>
-          <span class="planner-search-item_detail--name">{{
+          <span class="planner-search-item__detail-name">{{
             itemData.userName
           }}</span>
         </h4>
 
-        <p class="planner-search-item_detail--address">
+        <p class="planner-search-item__detail-address">
           {{ itemData.recentCompany }}
         </p>
-        <div class="planner-search-item_detail--tag-list">
+        <div class="planner-search-item__detail-tag-list">
           <sp-tag
             v-for="tag of formatTagList"
             :key="tag"
-            class="planner-search-item_detail--tag"
+            class="planner-search-item__detail-tag"
             color="#F8F8F8"
             text-color="#999999"
             >{{ tag }}</sp-tag
           >
         </div>
-        <div class="planner-search-item_detail--data">
+        <div class="planner-search-item__detail-data">
           <div class="data-item">
             <h5>{{ itemData.payNum || '--' }}</h5>
             <p>历史成交</p>
@@ -59,7 +61,7 @@
       </div>
     </div>
     <div class="right">
-      <div class="planner-search-item_contact">
+      <div class="planner-search-item__contact">
         <sp-button round class="contact-btn" @click.stop="handleClick('IM')"
           ><my-icon name="notify_ic_chat" size="0.32rem" color="#4974F5"
         /></sp-button>
@@ -154,17 +156,18 @@ export default {
     position: relative;
     flex: 100px 0 1;
   }
-  &_avatar {
-    img {
+  &__avatar {
+    &-image {
       border-radius: 4px;
+      overflow: hidden;
     }
   }
-  &_detail {
+  &__detail {
     padding-left: 34px;
     h4 {
       display: flex;
     }
-    &--name {
+    &-name {
       font-size: 32px;
       font-weight: bold;
       color: @title-text-color;
@@ -173,7 +176,7 @@ export default {
       max-width: 330px;
       .textOverflow(1);
     }
-    &--address {
+    &-address {
       max-width: 330px;
       font-size: 24px;
       font-weight: 400;
@@ -182,13 +185,13 @@ export default {
       margin-top: 20px;
       .textOverflow(1);
     }
-    &--tag-list {
+    &-tag-list {
       margin-top: 12px;
       line-height: 1;
       font-size: 22px;
       display: flex;
     }
-    &--tag {
+    &-tag {
       max-width: 148px;
       min-height: 32px;
       padding: 0 8px;
@@ -199,7 +202,7 @@ export default {
         margin-left: 0;
       }
     }
-    &--data {
+    &-data {
       display: flex;
       margin-top: 20px;
       .data-item {
@@ -229,7 +232,7 @@ export default {
       }
     }
   }
-  &_contact {
+  &__contact {
     position: absolute;
     top: 0;
     right: 0;

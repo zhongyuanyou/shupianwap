@@ -39,7 +39,7 @@
                 <div class="tel">{{ item.phone }}</div>
                 <div v-if="item.defaultAddress" class="default">默认</div>
               </div>
-              <div class="address">{{ item.address }}</div>
+              <div class="address_pro">{{ item.address }}</div>
             </div>
             <div @click="handleEdit(item)">
               <my-icon
@@ -380,13 +380,13 @@ export default {
               vertical-align: bottom;
             }
           }
-          .address {
+          .address_pro {
             font-size: 24px;
             font-family: PingFang SC;
             font-weight: 400;
             color: #999999;
             line-height: 34px;
-            margin-top: 22px;
+            margin-top: 5px;
           }
         }
         .icon {

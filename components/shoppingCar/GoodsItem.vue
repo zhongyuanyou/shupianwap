@@ -905,6 +905,7 @@ export default {
 }
 
 .goods-item {
+  background-color: #ffffff;
   &__content {
     padding: 0 40px 0 96px;
   }
