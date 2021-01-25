@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-22 09:53:44
+ * @LastEditTime: 2021-01-25 13:51:57
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/list.vue
 -->
@@ -134,7 +134,11 @@
             <!-- S 自定义加载控件 -->
             <template #loading>
               <div>
-                <LoadingDown v-show="!refreshing && loading" :loading="true" />
+                <LoadingDown
+                  v-show="!refreshing && loading"
+                  bg-color="transparent"
+                  :loading="true"
+                />
               </div>
             </template>
             <!-- E 自定义加载控件 -->
@@ -667,43 +671,41 @@ export default {
           }
         }
         &__item {
-          flex: 100px 0 1;
+          flex-basis: auto;
+          flex-grow: initial;
+          flex-shrink: 1;
           padding: 0 20px;
           justify-content: flex-start;
           &:first-child {
-            flex-basis: 200px;
+            flex-shrink: 0;
           }
           &:last-child {
-            margin-left: 40px;
-            flex-basis: 350px;
+            margin-left: 66px;
           }
         }
         &__title {
           color: #222222;
+          line-height: 28px;
           &--active {
             color: @main-color;
           }
           .sp-ellipsis {
+            padding: 8px 0;
             font-size: 26px;
             font-weight: 400;
           }
         }
         // 选中的样式
         .sp-dropdown-menu__title--selected {
-          color: #4974f5;
-          line-height: 28px;
+          color: @main-color;
           .sp-ellipsis {
             font-weight: bold;
             font-size: 26px;
           }
           &::after {
-            border-color: transparent transparent #4974f5 #4974f5;
+            border-color: transparent transparent @main-color @main-color;
           }
         }
-      }
-      &::after {
-        left: 0;
-        right: 0;
       }
     }
     .list-refresh {
@@ -725,8 +727,8 @@ export default {
     align-items: center;
     &__icon {
       width: 340px;
-      height: 202px;
-      margin-top: 66px;
+      height: 340px;
+      margin-top: 176px;
     }
     &__descript {
       font-size: 28px;
