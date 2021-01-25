@@ -186,7 +186,7 @@ export default {
         switch (item.linkType) {
           // 跳转文章详情
           case 1:
-            url = `${domainUrl}/found/detail/${item.id}`
+            url = `${domainUrl}found/detail/${item.id}`
             hide = 1
             break
           // 跳转内链
@@ -208,7 +208,7 @@ export default {
             this.$appFn.dggSetTitle({ title: '' }, () => {})
             break
           default:
-            url = `${domainUrl}/found/detail/${item.id}`
+            url = `${domainUrl}found/detail/${item.id}`
             hide = 1
             break
         }
