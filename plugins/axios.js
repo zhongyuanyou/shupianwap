@@ -8,6 +8,8 @@ const BASE = require('~/config/index.js')
 
 export default function ({ $axios, redirect, app, store }) {
   $axios.defaults.withCredentials = false
+  $axios.defaults.timeout = 12000
+
   // 设置基本URL
   if (process.server) {
     $axios.defaults.baseURL = BASE.baseURL
