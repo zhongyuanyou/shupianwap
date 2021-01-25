@@ -1,7 +1,10 @@
 <template>
   <div class="banner">
     <sp-swipe :autoplay="3000" @change="onChange">
-      <sp-swipe-item v-for="(item, index) in images" :key="index">
+      <sp-swipe-item
+        v-for="(item, index) in proDetail.productImgArr"
+        :key="index"
+      >
         <sp-image
           fit="cover"
           :src="`${item}?x-oss-process=image/resize,m_fill,w_750,h_520,limit_0`"
@@ -9,7 +12,7 @@
       </sp-swipe-item>
       <template #indicator>
         <div class="custom-indicator">
-          {{ current + 1 }}/{{ images.length }}
+          {{ current + 1 }}/{{ proDetail.productImgArr.length }}
         </div>
       </template>
     </sp-swipe>
@@ -26,19 +29,16 @@ export default {
     [SwipeItem.name]: SwipeItem,
     [Image.name]: Image,
   },
-  props: {
-    images: {
-      type: Array,
-      default: () => {
-        return []
-      },
-    },
-  },
   data() {
     return {
       current: 0, // banner下标
       GOODSDETAIL, // 详情默认图片
     }
+  },
+  computed: {
+    proDetail() {
+      return this.$store.state.tcProductDetail.detailData
+    },
   },
   methods: {
     onChange(index) {

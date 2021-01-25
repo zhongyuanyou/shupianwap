@@ -41,14 +41,6 @@ export default {
     Open,
     Bargaining,
   },
-  props: {
-    tcProductDetailData: {
-      type: Object,
-      default: () => {
-        return {}
-      },
-    },
-  },
   data() {
     return {
       priceRedIsBarg: false,

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 17:22:12
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-20 15:11:24
+ * @LastEditTime: 2021-01-25 15:25:00
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/register.vue
 -->
@@ -187,7 +187,7 @@ export default {
       }
       this.register().then(() => {
         // 登录后 从哪里来到哪里去
-        this.$router.push(this.redirect)
+        this.$router.replace(this.redirect)
       })
     },
     handleTelInput(valueObj = {}) {

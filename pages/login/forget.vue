@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 09:33:28
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-20 14:02:24
+ * @LastEditTime: 2021-01-25 15:18:22
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/forget.vue
 -->
@@ -201,10 +201,14 @@ export default {
         return
       }
       this.reset().then(() => {
-        this.$router.replace({
-          name: 'login',
-          query: { redirect: this.redirect },
-        })
+        this.$xToast.success('密码重置成功')
+        // 为了提示用户，密码重置成功，需要等待1.5s再跳转
+        setTimeout(() => {
+          this.$router.replace({
+            name: 'login',
+            query: { redirect: this.redirect },
+          })
+        }, 1500)
       })
     },
     handleClick(type) {

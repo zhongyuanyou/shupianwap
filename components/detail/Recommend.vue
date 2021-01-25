@@ -78,11 +78,10 @@ export default {
       type: Array,
       default: () => [],
     },
-    detailType: {
-      type: String,
-      default: () => {
-        return this.$route.query.type ? this.$route.query.type : null
-      },
+  },
+  computed: {
+    detailType() {
+      return this.$route.query.type
     },
   },
   methods: {
