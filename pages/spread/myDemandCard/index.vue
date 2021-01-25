@@ -94,9 +94,9 @@ export default {
     },
   },
   created() {
-    if (process.client) {
-      this.$appFn.dggSetTitle({ title: '轻松找服务' }, (res) => {})
-    }
+    // if (process.client) {
+    //   this.$appFn.dggSetTitle({ title: '轻松找服务' }, (res) => {})
+    // }
   },
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'NeedCard' })
