@@ -110,6 +110,7 @@ export default {
       sessionStorage.getItem('formData')
     )
     if (sessionStorageFormData) {
+      this.formData.place = this.currentCity.code
       sessionStorageFormData.content = Object.assign(
         this.formData.content,
         sessionStorageFormData.content
@@ -198,7 +199,7 @@ export default {
             tel: '', // 电话
             name: '', // 姓名
             web: 'SPAPP', // 归属（原网站类型）
-            place: 'all',
+            place: this.currentCity.code,
             url: '',
             content: {
               备注: '',
