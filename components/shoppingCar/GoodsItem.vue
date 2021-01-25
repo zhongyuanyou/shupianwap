@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-18 14:16:13
+ * @LastEditTime: 2021-01-25 16:10:51
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/GoodsItem.vue
 -->
@@ -858,6 +858,7 @@ export default {
   .goods-item__vice-item {
     filter: grayscale(100%);
     position: relative;
+    pointer-events: none;
   }
   .goods-item__main-item::after,
   .goods-item__vice-item::after {
@@ -865,7 +866,7 @@ export default {
     position: absolute;
     left: 0;
     right: 0;
-    top: 0;
+    top: -10px; // 有些手机端字体超出了
     bottom: 0;
     display: block;
     background-color: rgba(255, 255, 255, 0.8);
