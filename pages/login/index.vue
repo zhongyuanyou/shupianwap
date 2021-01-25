@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-20 15:04:11
+ * @LastEditTime: 2021-01-25 15:21:36
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/index.vue
 -->
@@ -217,23 +217,27 @@ export default {
         return
       }
       this.login().then((data) => {
-        // 跳转外连接
-        if (this.sourcePlatform) {
-          const keyList = SOURCE_PLATFROM_PARAMS[this.sourcePlatform]
-          const query = Array.isArray(keyList)
-            ? keyList.reduce((accumulator, key) => {
-                data = data || {}
-                if (data[key]) {
-                  accumulator[key] = data[key]
-                }
-                return accumulator
-              }, {})
-            : {}
-          openLink(this.redirect, query)
-          return
-        }
+        this.$xToast.success('登录成功！')
+        // 使用定时器，等待提示信息展示1.5s 再跳转
+        setTimeout(() => {
+          // 跳转外连接
+          if (this.sourcePlatform) {
+            const keyList = SOURCE_PLATFROM_PARAMS[this.sourcePlatform]
+            const query = Array.isArray(keyList)
+              ? keyList.reduce((accumulator, key) => {
+                  data = data || {}
+                  if (data[key]) {
+                    accumulator[key] = data[key]
+                  }
+                  return accumulator
+                }, {})
+              : {}
+            openLink(this.redirect, query)
+            return
+          }
 
-        this.$router.replace(this.redirect)
+          this.$router.replace(this.redirect)
+        }, 1500)
       })
     },
     handleSwitchLookPassword() {
