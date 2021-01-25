@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-22 16:23:24
+ * @LastEditTime: 2021-01-25 09:34:37
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -40,7 +40,10 @@
       <!-- 在sku 等弹窗时候，锁住滚动 -->
       <div
         class="body-container"
-        :class="{ 'sp-overflow-hidden': disableRefresh || refreshing }"
+        :class="{
+          'sp-overflow-hidden': disableRefresh || refreshing,
+          'null-bg': !list.length,
+        }"
       >
         <sp-pull-refresh
           ref="pullRefresh"
@@ -70,14 +73,20 @@
                 @operation="handleItemOperation"
               />
             </div>
+            <!-- S 自定义完成控件 -->
             <template #finished>
               <span v-if="list && list.length">没有更多数据</span>
               <ShoppingCarNull v-else />
             </template>
+            <!-- E 自定义完成控件 -->
             <!-- S 自定义加载控件 -->
             <template #loading>
               <div>
-                <LoadingDown v-show="!refreshing && loading" :loading="true" />
+                <LoadingDown
+                  v-show="!refreshing && loading"
+                  bg-color="transparent"
+                  :loading="true"
+                />
               </div>
             </template>
             <!-- E 自定义加载控件 -->
@@ -641,13 +650,12 @@ export default {
       -webkit-overflow-scrolling: touch;
       background-color: #f8f8f8;
     }
+    .null-bg {
+      background-color: #ffffff;
+    }
   }
   &__refresh {
     min-height: 100%;
-    // padding-bottom: 18px;
-    // background-color: #ffffff;
-    // background-clip: content-box;
-    // -webkit-background-clip: content-box;
   }
   &__goods {
     &-item {
