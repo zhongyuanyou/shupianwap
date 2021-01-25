@@ -66,6 +66,7 @@ module.exports = {
         ssr: false,
         type: 'text/javascript',
         charset: 'utf-8',
+        defer: 'defer'
       },
       {
         src:
@@ -73,6 +74,7 @@ module.exports = {
         ssr: false,
         type: 'text/javascript',
         charset: 'utf-8',
+        defer: 'defer'
       },
       {
         src: '/js/flexible.js',
@@ -114,7 +116,7 @@ module.exports = {
   plugins: [
     { src: '@/plugins/axios', ssr: true },
     { src: '@/plugins/router', ssr: false },
-    { src: '@/plugins/dgg-md', ssr: false },
+    // { src: '@/plugins/dgg-md', ssr: false },
     { src: '@/plugins/my-icon', ssr: true },
     // { src: '@/plugins/vconsole', ssr: false },
     { src: '@/plugins/app-sdk', ssr: false },

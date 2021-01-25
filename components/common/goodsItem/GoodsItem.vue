@@ -1,5 +1,16 @@
 <template>
-  <div class="goods-item" @click="jumpUrl">
+  <a
+    class="goods-item"
+    v-md:P_goodsClick
+    data-even_name="P_goodsClick"
+    :data-commodity_level_1="mdData.commodity_level_1"
+    :data-commodity_level_2="mdData.commodity_level_2"
+    :data-n_now_price="mdData.n_now_price"
+    :data-commodity_number="mdData.commodity_number"
+    :data-commodity_name="mdData.commodity_name"
+    :data-commodity_type="mdData.commodity_type"
+    @click="jumpUrl"
+  >
     <div class="goods-item-left">
       <img :src="sbGoodsImg || itemData.goodsImg" alt="" class="goods-img" />
       <!--<span class="tag">急售</span>-->
@@ -27,7 +38,7 @@
         >
       </div>
     </div>
-  </div>
+  </a>
 </template>
 
 <script>
@@ -171,7 +182,7 @@ export default {
       return goodsName
     },
     jumpUrl() {
-      window.spptMd.spptTrackRow('P_goodsClick', { ...this.mdData })
+      // window.spptMd.spptTrackRow('P_goodsClick', { ...this.mdData })
       // window.sensors.track('p_commodityClick', { ...this.mdData })
       if (this.goodstype.type === 'serve') {
         this.$router.push(

@@ -1,16 +1,3 @@
-// import Vue from 'vue'
-// Vue.directive('sensorsTrack', {
-//   bind: (el, binding, vnode) => {
-//     el.myClick = () => {
-//       const { arg = '', value } = binding
-//       window.sensors.track(arg, value)
-//     }
-//     el.addEventListener('click', el.myClick)
-//   },
-//   unbind: (el, binding) => {
-//     el.removeEventListener('click', el.myClick)
-//   },
-// })
 import Vue from 'vue'
 /**
  * 埋点指令
@@ -22,7 +9,7 @@ import Vue from 'vue'
  */
 Vue.directive('md', {
   inserted(el, binding) {
-    el.myClick = () => {
+    el.mdClick = function () {
       const getDataset = this.dataset
       const setData = {}
       for (const key in getDataset) {
@@ -36,13 +23,13 @@ Vue.directive('md', {
       }
       if (binding.arg) {
         setData.even_name = binding.arg
-        window.spptMd.getTrackRow(binding.arg, setData)
+        window.spptMd.spptTrackRow(binding.arg, setData)
       }
     }
-    el.addEventListener('click', el.myClick)
+    el.addEventListener('click', el.mdClick)
   },
   unbind: (el, binding) => {
-    el.removeEventListener('click', el.myClick)
+    el.removeEventListener('click', el.mdClick)
   },
 })
 /**
@@ -52,8 +39,12 @@ Vue.directive('md', {
  */
 Vue.directive('md-map', {
   inserted(el) {
-    el.addEventListener('click', function () {
+    el.mdMapClick = function () {
       window.spptMd.quick('trackHeatMap', this)
-    })
+    }
+    el.addEventListener('click', el.mdMapClick)
+  },
+  unbind: (el, binding) => {
+    el.removeEventListener('click', el.mdMapClick)
   },
 })
