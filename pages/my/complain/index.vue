@@ -412,7 +412,7 @@ export default {
       font-weight: 400;
       color: #1a1a1a;
       line-height: 42px;
-      padding: 28px 25px;
+      padding: 28px 25px 60px 25px;
       vertical-align: baseline;
       caret-color: #1a1a1a;
       resize: none;
