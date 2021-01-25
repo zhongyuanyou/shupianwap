@@ -1,6 +1,11 @@
 <template>
   <div class="bargFrom">
-    <sp-field v-model="price" type="number" placeholder="意向价格(元)" />
+    <sp-field
+      v-model="price"
+      maxlength="9"
+      type="number"
+      placeholder="意向价格(元)"
+    />
   </div>
 </template>
 
@@ -28,29 +33,6 @@ export default {
 /deep/.sp-cell {
   padding: 25px 0px;
   margin-top: 32px;
-  /deep/input {
-    font-size: 28px;
-    font-family: PingFang SC;
-    font-weight: 400;
-    color: #cccccc;
-    height: 38px;
-    line-height: 38px;
-    &::-webkit-input-placeholder {
-      color: #ccc;
-    }
-    &::-moz-placeholder {
-      /* Mozilla Firefox 19+ */
-      color: #ccc;
-    }
-    &:-moz-placeholder {
-      /* Mozilla Firefox 4 to 18 */
-      color: #ccc;
-    }
-    &:-ms-input-placeholder {
-      /* Internet Explorer 10-11 */
-      color: #ccc;
-    }
-  }
   /deep/&::after {
     left: 0px;
     width: 100%;

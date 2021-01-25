@@ -1,7 +1,6 @@
 <template>
   <div class="company">
     <DetailTemplate
-      :tc-product-detail-data="tcProductDetailData"
       :tc-planner-booth="tcPlannerBooth"
       :recommend-planner="planners"
       :detail-type="$route.query.type"
@@ -59,6 +58,7 @@ export default {
         if (plannerRes.code === 200) {
           tcPlannerBooth = plannerRes.data.records[0]
         }
+        store.commit('tcProductDetail/SET_TCPRODUCT_DETAIL', data)
         return { tcProductDetailData, tcPlannerBooth }
       } else {
         console.log(code, message)

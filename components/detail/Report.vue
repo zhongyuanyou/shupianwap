@@ -44,12 +44,6 @@ export default {
   components: {
     [Progress.name]: Progress,
   },
-  props: {
-    classCodeDict: {
-      type: String,
-      default: '',
-    },
-  },
   data() {
     return {
       MockData: {
@@ -61,6 +55,9 @@ export default {
     }
   },
   computed: {
+    classCodeDict() {
+      return this.$store.state.tcProductDetail.detailData.dictCode
+    },
     proportion1() {
       return this.MockData.values[2] ? this.MockData.values[2] * 10 : 0
     },

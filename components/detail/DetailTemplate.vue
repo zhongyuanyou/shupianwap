@@ -27,17 +27,17 @@
     </sp-sticky>
     <!--E 导航栏-->
     <!--S banner-->
-    <Banner :images="tcProductDetailData.productImgArr" />
+    <Banner />
     <!--S banner-->
     <!--S 第一板块-->
-    <Title :tc-product-detail-data="tcProductDetailData" />
+    <Title />
     <!--E 第一板块-->
     <!--S 第二板块 基本信息-->
-    <Basic :tc-product-detail-data="{ tcProductDetailData }">
+    <Basic>
       <div slot="basic">
         <div class="company_info">
           <BasicItem
-            v-for="(baseDataList, idx) in fieldList"
+            v-for="(baseDataList, idx) in fieldListFun()"
             :key="idx"
             :base-data-list="baseDataList"
           />
@@ -47,12 +47,9 @@
     <!--E 第二板块 基本信息-->
     <slot name="qualification"></slot>
     <!--资质信息-->
-    <QftDetails
-      v-if="tcProductDetailData.dictCode === 'CATE-JYZY-ZZ'"
-      :qft-details-data="tcProductDetailData.qftDetails"
-    />
+    <QftDetails v-if="proDetail.dictCode === 'CATE-JYZY-ZZ'" />
     <!--S 第三板块 评估报告-->
-    <Report :class-code-dict="tcProductDetailData.dictCode" />
+    <Report />
     <!--E 第三板块 评估报告-->
     <!--S 第四板块 交易服务保障承诺-->
     <Commitment />
@@ -67,19 +64,13 @@
     <Dynamic />
     <!--E 第六板块 商品动态-->
     <!--S 第七板块 常见问题-->
-    <Question :class-code-dict="tcProductDetailData.dictCode" />
+    <Question />
     <!--E 第七板块 常见问题-->
     <!--S 第八板块 成功案例-->
-    <Case
-      :class-code-dict="tcProductDetailData.dictCode"
-      :detail-type="detailType"
-    />
+    <Case />
     <!--E 第八板块 成功案例-->
     <!--S 第九板块 同类推荐-->
-    <Recommend
-      :detail-type="detailType"
-      :similar-recommend-data="similarRecommend"
-    />
+    <Recommend :similar-recommend-data="similarRecommend" />
     <!--E 第九板块 同类推荐-->
     <!--S 第十板块 猜你需要-->
     <sp-list
@@ -169,12 +160,6 @@ export default {
         return null
       },
     },
-    tcProductDetailData: {
-      type: Object,
-      default: () => {
-        return {}
-      },
-    },
     tcPlannerBooth: {
       type: Object,
       default: () => {
@@ -205,7 +190,6 @@ export default {
       recommendProduct: [],
       similarRecommend: [], // 同类推荐产品
       tcBasicData, // 基本信息的key
-      fieldList: [],
       showShare: false, // 是否弹起分享组件
       shareOptions: [{ name: '复制链接', icon: 'link' }],
       userInfoData: {
@@ -215,6 +199,10 @@ export default {
     }
   },
   computed: {
+    // 产品详情
+    proDetail() {
+      return this.$store.state.tcProductDetail.detailData
+    },
     city() {
       return this.$store.state.city.currentCity
     },
@@ -249,9 +237,9 @@ export default {
       if (!this.deviceId) {
         this.deviceId = await getUserSign()
       }
-      const formatId1 = this.tcProductDetailData.classCodeLevel.split(',')[0] // 产品二级分类
-      const formatId2 = this.tcProductDetailData.classCodeLevel.split(',')[1] // 产品二级分类
-      const formatId3 = this.tcProductDetailData.classCodeLevel.split(',')[2] // 产品三级分类
+      const formatId1 = this.proDetail.classCodeLevel.split(',')[0] // 产品二级分类
+      const formatId2 = this.proDetail.classCodeLevel.split(',')[1] // 产品二级分类
+      const formatId3 = this.proDetail.classCodeLevel.split(',')[2] // 产品三级分类
       const formatId = formatId3 || formatId2
       this.$axios
         .get(recommendApi.recommendProduct, {
@@ -262,9 +250,9 @@ export default {
             classCode: formatId1,
             areaCode: this.city.code, // 区域编码
             sceneId: 'app-jycpxq-02', // 场景ID
-            productId: this.tcProductDetailData.id, // 产品ID（产品详情页必传）
+            productId: this.proDetail.id, // 产品ID（产品详情页必传）
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
-            title: this.tcProductDetailData.name, // 产品名称（产品详情页传、咨询页等）
+            title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
             platform: 'APP', // 平台（app,m,pc）
             page: this.productPage,
             limit: this.productLimit,
@@ -299,9 +287,9 @@ export default {
       if (!this.deviceId) {
         this.deviceId = await getUserSign()
       }
-      const formatId1 = this.tcProductDetailData.classCodeLevel.split(',')[0] // 产品二级分类
-      const formatId2 = this.tcProductDetailData.classCodeLevel.split(',')[1] // 产品二级分类
-      const formatId3 = this.tcProductDetailData.classCodeLevel.split(',')[2] // 产品三级分类
+      const formatId1 = this.proDetail.classCodeLevel.split(',')[0] // 产品二级分类
+      const formatId2 = this.proDetail.classCodeLevel.split(',')[1] // 产品二级分类
+      const formatId3 = this.proDetail.classCodeLevel.split(',')[2] // 产品三级分类
       const formatId = formatId3 || formatId2
       this.$axios
         .get(recommendApi.recommendProduct, {
@@ -312,9 +300,9 @@ export default {
             areaCode: this.city.code, // 区域编码
             classCode: formatId1,
             sceneId: 'app-jycpxq-01', // 场景ID
-            productId: this.tcProductDetailData.id, // 产品ID（产品详情页必传）
+            productId: this.proDetail.id, // 产品ID（产品详情页必传）
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
-            title: this.tcProductDetailData.name, // 产品名称（产品详情页传、咨询页等）
+            title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
             platform: 'APP', // 平台（app,m,pc）
             page: 1,
             limit: 5,
@@ -333,10 +321,10 @@ export default {
     },
     fieldListFun() {
       const fieldList = {}
-      this.tcProductDetailData.fieldList.forEach((list) => {
+      this.proDetail.fieldList.forEach((list) => {
         fieldList[list.fieldCode] = list
       })
-      const tcBasicDataArr = [...tcBasicData[this.tcProductDetailData.dictCode]]
+      const tcBasicDataArr = [...tcBasicData[this.proDetail.dictCode]]
       tcBasicDataArr.forEach((item, idx) => {
         // 有翻译的值,显示翻译的值
         if (fieldList[item.listKey] && fieldList[item.listKey].fieldValueCn) {
@@ -352,8 +340,7 @@ export default {
           tcBasicDataArr[idx].listVal = '/'
         }
       })
-      console.log(tcBasicDataArr)
-      this.fieldList = tcBasicDataArr
+      return tcBasicDataArr
     },
     //  分享
     onClickRight() {
@@ -397,6 +384,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.sp-sticky {
+  border: 1px solid #f4f4f4;
+}
 .template {
   width: 100%;
   height: 100%;

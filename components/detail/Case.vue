@@ -35,12 +35,6 @@ export default {
   components: {
     [Rate.name]: Rate,
   },
-  props: {
-    classCodeDict: {
-      type: String,
-      default: '',
-    },
-  },
   data() {
     return {
       caseData: {
@@ -52,6 +46,11 @@ export default {
         originalPrice: '-',
       },
     }
+  },
+  computed: {
+    classCodeDict() {
+      return this.$store.state.tcProductDetail.detailData.dictCode
+    },
   },
   mounted() {
     this.getCase()

@@ -19,7 +19,7 @@
         />降价提醒
       </div>
     </div>
-    <p class="title_btitle">{{ tcProductDetailData.name }}</p>
+    <p class="title_btitle">{{ proDetail.name }}</p>
     <div class="imp_remind">
       <nuxt-link to="/spread/riskTips">
         <sp-image
@@ -29,7 +29,7 @@
         <span>重要提醒</span>
       </nuxt-link>
     </div>
-    <p class="money">{{ tcProductDetailData.platformPrice }}元</p>
+    <p class="money">{{ proDetail.platformPrice }}元</p>
     <PriceReduction ref="priceR"></PriceReduction>
   </div>
 </template>
@@ -43,16 +43,13 @@ export default {
     [Image.name]: Image,
     PriceReduction,
   },
-  props: {
-    tcProductDetailData: {
-      type: Object,
-      default: () => {
-        return {}
-      },
-    },
-  },
   data() {
     return {}
+  },
+  computed: {
+    proDetail() {
+      return this.$store.state.tcProductDetail.detailData
+    },
   },
   methods: {
     handleShowPriceRed() {

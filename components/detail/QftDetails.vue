@@ -23,25 +23,16 @@
 <script>
 export default {
   name: 'QftDetails',
-  props: {
-    qftDetailsData: {
-      type: Object,
-      default: () => {
-        return {
-          fieldValueCn: '',
-          fieldValue: '',
-          fieldValueList: [],
-        }
-      },
-    },
-  },
   computed: {
+    proDetail() {
+      return this.$store.state.tcProductDetail.detailData
+    },
     qftDetailsList() {
       let qftData = ''
-      if (this.qftDetailsData.fieldValueCn !== '') {
-        qftData = this.qftDetailsData.fieldValueCn
+      if (this.proDetail.qftDetails.fieldValueCn !== '') {
+        qftData = this.proDetail.qftDetails.fieldValueCn
       } else {
-        qftData = this.qftDetailsData.fieldValue
+        qftData = this.proDetail.qftDetails.ieldValue
       }
       const qftDataList = qftData.split(';')
       const qftDataArr = qftDataList.map((list) => list.split(','))
