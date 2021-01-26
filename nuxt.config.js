@@ -116,14 +116,12 @@ module.exports = {
   plugins: [
     { src: '@/plugins/axios', ssr: true },
     { src: '@/plugins/router', ssr: false },
-    // { src: '@/plugins/dgg-md', ssr: false },
     { src: '@/plugins/my-icon', ssr: true },
     // { src: '@/plugins/vconsole', ssr: false },
     { src: '@/plugins/app-sdk', ssr: false },
     { src: '@/plugins/lazyload', ssr: true },
     { src: '@/plugins/oss', ssr: true },
     { src: '@/plugins/install-components', ssr: false },
-    // { src: '@/plugins/sp-md-jdk', ssr: false },
     { src: '@/plugins/sp-md-directive', ssr: false },
   ],
   router: {

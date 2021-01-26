@@ -138,11 +138,16 @@ export default {
       // console.log('formData', this.formData)
       console.log('reqType', this.reqType)
       // 埋点数据
-      // Todo 埋点sdk还未知
-      // window.sensors.track('p_searchClick', {
-      //   keyword_type: '商品',
-      //   keyword: this.searchText,
-      // })
+      try {
+        if (this.searchText) {
+          window.spptMd.spptTrackRow('p_searchClick', {
+            keyword_type: '商品',
+            keyword: this.searchText,
+          })
+        }
+      } catch (e) {
+        console.error('埋点错误：', e)
+      }
       if (this.reqType === 'serve') {
         this.getServeListReq()
       } else {
