@@ -5,9 +5,9 @@
         <template #left>
           <my-icon
             name="nav_ic_back"
-            class="back-icon"
             size="0.4rem"
             color="#1A1A1A"
+            style="margin-left: 0.4rem"
             @click.native="onLeftClick"
           />
         </template>
