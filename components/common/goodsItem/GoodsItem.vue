@@ -2,9 +2,11 @@
   <a
     v-md:p_commodityClick
     class="goods-item"
-    data-even_name="P_goodsClick"
-    :data-commodity_level_1="mdData.commodity_level_1"
-    :data-commodity_level_2="mdData.commodity_level_2"
+    data-even_name="p_commodityClick"
+    :data-com_level_1_code="mdData.commodity_level_1"
+    :data-com_level_2_code="mdData.commodity_level_2"
+    data-commodity_level_1=""
+    data-commodity_level_2=""
     :data-n_now_price="mdData.n_now_price"
     :data-commodity_number="mdData.commodity_number"
     :data-commodity_name="mdData.commodity_name"
