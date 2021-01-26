@@ -4,6 +4,7 @@
     <FoundHeader
       :left="true"
       :keywords="keywords"
+      @handleLeft="handleLeft"
       @handelKeydown="handelKeydown"
     />
     <!--E 搜索-->
@@ -120,6 +121,13 @@ export default {
           this.finished = true
         }
       }
+    },
+    handleLeft() {
+      if (this.isInApp) {
+        this.$appFn.dggCloseWebView((res) => {})
+        return
+      }
+      this.$router.go(-1)
     },
   },
 }
