@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-25 13:51:57
+ * @LastEditTime: 2021-01-26 14:27:30
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/list.vue
 -->
@@ -309,7 +309,7 @@ export default {
   methods: {
     ...mapMutations({
       SET_CITY: 'city/SET_CITY',
-      SET_USERY: 'user/SET_USERY',
+      setUserInfo: 'user/SET_USER',
     }),
 
     onLeftClick() {
@@ -465,7 +465,7 @@ export default {
 
     // 发起聊天
     async uPIM(data = {}) {
-      const { mchUserId, userName } = data
+      const { mchUserId, userName, type } = data
       // 如果当前页面在app中，则调用原生IM的方法
       if (this.isInApp) {
         try {
@@ -475,7 +475,7 @@ export default {
             {
               name: userName,
               userId: mchUserId,
-              userType: 'MERCHANT_USER',
+              userType: type,
             },
             (res) => {
               const { code } = res || {}
@@ -493,7 +493,7 @@ export default {
         }
         return
       }
-      const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_B 启大顺 ;MERCHANT_S 启大包
       this.creatImSessionMixin({ imUserId: mchUserId, imUserType })
     },
 
@@ -516,7 +516,7 @@ export default {
                   loginRes.data.userId &&
                   loginRes.data.token
                 ) {
-                  this.SET_USERY(loginRes.data)
+                  this.setUserInfo(loginRes.data)
                   resolve(loginRes.data.userId)
                   return
                 }
@@ -528,7 +528,7 @@ export default {
             return
           }
           if (data && data.userId && data.token) {
-            this.SET_USERY(data)
+            this.setUserInfo(data)
             resolve(data.userId)
             return
           }

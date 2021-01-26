@@ -318,7 +318,8 @@ export default {
         width: 262px;
         height: 144px;
         background: #ffffff;
-        border: 1px solid #cdcdcd;
+        // border: 1px solid #cdcdcd;
+        border: 1px solid rgba(205, 205, 205, 0.6);
         box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
         border-radius: 8px;
         overflow: hidden;

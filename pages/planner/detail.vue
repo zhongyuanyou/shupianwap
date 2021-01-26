@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-25 16:49:43
+ * @LastEditTime: 2021-01-26 14:23:25
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -151,6 +151,11 @@
     <div class="footer">
       <sp-bottombar safe-area-inset-bottom>
         <sp-bottombar-button
+          v-md:p_IMClick
+          data-im_type="售前"
+          :data-planner_number="detailData.id"
+          :data-planner_name="detailData.name"
+          :data-crisps_fraction="detailData.point"
           type="primary"
           text="电话联系"
           :disabled="!detailData.phone"
@@ -158,6 +163,11 @@
         />
         <sp-bottombar-button
           v-if="!hideIM"
+          v-md:p_IMClick
+          data-im_type="售前"
+          :data-planner_number="detailData.id"
+          :data-planner_name="detailData.name"
+          :data-crisps_fraction="detailData.point"
           type="info"
           text="在线联系"
           :disabled="!detailData.id"
@@ -180,7 +190,6 @@ import { mapState, mapMutations } from 'vuex'
 
 import {
   Button,
-  Toast,
   Image,
   Tag,
   Bottombar,
@@ -274,7 +283,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      SET_USERY: 'user/SET_USERY',
+      setUserInfo: 'user/SET_USER',
     }),
     onClickLeft() {
       console.log('nav onClickLeft')
@@ -293,6 +302,7 @@ export default {
       this.uPIM({
         mchUserId: this.detailData.id,
         userName: this.detailData.userName,
+        type: this.detailData.mchClass,
       })
     },
 
@@ -362,7 +372,7 @@ export default {
       if (this.isInApp) {
         this.$appFn.dggCallPhone({ phone: telNumber }, (res) => {
           const { code } = res || {}
-          if (code !== 200) Toast('拨号失败！')
+          if (code !== 200) this.$xToast.error('拨号失败！')
         })
         return
       }
@@ -372,7 +382,7 @@ export default {
 
     // 发起聊天
     async uPIM(data = {}) {
-      const { mchUserId, userName } = data
+      const { mchUserId, userName, type } = data
       // 如果当前页面在app中，则调用原生IM的方法
       if (this.isInApp) {
         try {
@@ -382,7 +392,7 @@ export default {
             {
               name: userName,
               userId: mchUserId,
-              userType: 'MERCHANT_B',
+              userType: type || 'MERCHANT_B',
             },
             (res) => {
               const { code } = res || {}
@@ -400,7 +410,7 @@ export default {
         }
         return
       }
-      const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
       this.creatImSessionMixin({ imUserId: mchUserId, imUserType })
     },
 
@@ -443,7 +453,7 @@ export default {
                   loginRes.data.userId &&
                   loginRes.data.token
                 ) {
-                  this.SET_USERY(loginRes.data)
+                  this.setUserInfo(loginRes.data)
                   resolve(loginRes.data.userId)
                   return
                 }
@@ -455,7 +465,7 @@ export default {
             return
           }
           if (data && data.userId && data.token) {
-            this.SET_USERY(data)
+            this.setUserInfo(data)
             resolve(data.userId)
             return
           }

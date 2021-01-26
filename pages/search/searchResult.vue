@@ -10,7 +10,14 @@
       <div slot="left" class="nav-back" @click="$router.go(-1)">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a" />
       </div>
-      <div slot="right" class="info" @click="jumpImMixin">
+      <div
+        slot="right"
+        v-md:p_IMClick
+        data-im_type="售前"
+        :data-commodity_type="reqType === 'serve' ? '服务商品' : '交易商品'"
+        class="info"
+        @click="jumpImMixin"
+      >
         <my-icon name="nav_ic_msg" size="0.40rem" color="#1a1a1a" />
       </div>
     </Search>
@@ -121,14 +128,14 @@ export default {
   },
   mounted() {
     // 当前页面公共属性注册
-    const param = {
-      platform_type: 'wap端', // 平台类型：App，H5，Web
-      app_name: '薯片wap端', // 应用名称
-      product_line: 'Wap端搜索列表页', // 当前页面或服务名称
-      current_url: location.href, // 发生地址
-      referrer: document.referrer,
-    }
-    window.sensors.registerPage(param) // 设置公共属性
+    // const param = {
+    //   platform_type: 'wap端', // 平台类型：App，H5，Web
+    //   app_name: '薯片wap端', // 应用名称
+    //   product_line: 'Wap端搜索列表页', // 当前页面或服务名称
+    //   current_url: location.href, // 发生地址
+    //   referrer: document.referrer,
+    // }
+    // window.sensors.registerPage(param) // 设置公共属性
     // SearchResult
     this.SET_KEEP_ALIVE({ type: 'add', name: 'SearchResult' })
     this.getInitData()

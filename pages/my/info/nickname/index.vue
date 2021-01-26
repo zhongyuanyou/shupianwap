@@ -21,7 +21,7 @@
       <div class="nickname_con_item">
         <input
           v-model="nickname"
-          maxlength="20"
+          maxlength="14"
           placeholder="请输入您的昵称"
           type="text"
         />
@@ -76,9 +76,9 @@ export default {
           duration: 1500,
           forbidClick: true,
         })
-      } else if (this.nickname.length < 2 || this.nickname.length > 20) {
+      } else if (this.nickname.length < 2 || this.nickname.length > 14) {
         this.$refs.spToast.show({
-          message: '昵称字数限制为2-20位',
+          message: '昵称字数限制为2-14位',
           duration: 1500,
           forbidClick: true,
         })

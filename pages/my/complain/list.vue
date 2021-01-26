@@ -12,7 +12,11 @@
         </div>
       </template>
     </Header>
-    <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+    <sp-pull-refresh
+      v-model="refreshing"
+      style="min-height: 100%"
+      @refresh="onRefresh"
+    >
       <sp-list
         v-model="loading"
         :finished="finished"

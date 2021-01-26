@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { Button, Toast, Image, Tag } from '@chipspc/vant-dgg'
+import { Button, Image, Tag } from '@chipspc/vant-dgg'
 
 import { planner } from '@/api'
 
@@ -110,6 +110,7 @@ export default {
           data = {
             mchUserId: this.itemData.mchUserId,
             userName: this.itemData.userName,
+            type: this.itemData.type,
           }
           break
         case 'tel':
