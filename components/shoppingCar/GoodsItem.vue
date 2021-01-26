@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 14:45:51
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-25 16:10:51
+ * @LastEditTime: 2021-01-26 15:22:12
  * @Description: file content
  * @FilePath: /chips-wap/components/shoppingCar/GoodsItem.vue
 -->
@@ -921,6 +921,7 @@ export default {
       position: absolute;
       top: 96px;
       left: -64px;
+      overflow: visible;
     }
   }
   &__extra {
