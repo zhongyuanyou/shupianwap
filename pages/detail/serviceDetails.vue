@@ -148,6 +148,7 @@ export default {
             productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
             sceneId: 'app-cpxqye-02', // 场景ID
             user_id: app.$cookies.get('userId'), // 用户ID(选填)
+
             platform: 'app', // 平台（app,m,pc）
             productId: productDetailRes.data.baseData.id, // 产品id
           },
@@ -155,7 +156,7 @@ export default {
         if (plannerRes.code === 200) {
           scPlannerDetailData = plannerRes.data.records[0]
         }
-        console.log({ scProductDetailData })
+        // console.log({ scProductDetailData })
         return { scProductDetailData, scPlannerDetailData }
       } else {
         console.log(productDetailRes)

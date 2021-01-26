@@ -208,6 +208,7 @@ export default {
   methods: {
     ...mapMutations({
       setUserInfo: 'user/SET_USER',
+      setImSdk: 'im/SET_IM_SDK',
     }),
     onSubmit() {
       const error = this.checkFormData()
@@ -218,6 +219,7 @@ export default {
       }
       this.login().then((data) => {
         this.$xToast.success('登录成功！')
+        this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
         // 使用定时器，等待提示信息展示1.5s 再跳转
         setTimeout(() => {
           // 跳转外连接

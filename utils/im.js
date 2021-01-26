@@ -22,6 +22,7 @@ export function imInit(data = {}) {
     production: 'P',
   }
   const env = BASE[DGG_SERVER_ENV]
+  imSdk.sdkInstance = null // 初始化前先重置
   const initSdk = imSdk.instance({
     env, // 'D|T|Y|P'
     token: data.token,
