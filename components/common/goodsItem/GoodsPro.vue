@@ -1,16 +1,15 @@
 <template>
   <a
-    v-sensorsTrack:p_commodityClick="{
-      recommend_number: goodsData.recomNo,
-      com_level_1_code: goodsData.classCodeLevelList[0] || '',
-      com_level_2_code: goodsData.classCodeLevelList[1] || '',
-      commodity_level_1: '',
-      commodity_level_2: '',
-      commodity_type: '交易商品',
-      commodity_number: goodsData.code,
-      commodity_name: goodsData.name,
-      n_now_price: goodsData.platformPrice,
-    }"
+    v-md:p_commodityClick
+    data-even_name="p_commodityClick"
+    :data-com_level_1_code="goodsData.classCodeLevelList[0]"
+    :data-com_level_2_code="goodsData.classCodeLevelList[1]"
+    data-commodity_level_1=""
+    data-commodity_level_2=""
+    data-commodity_type="交易商品"
+    :data-commodity_number="goodsData.code"
+    :data-commodity_name="goodsData.name"
+    :data-n_now_price="goodsData.platformPrice"
     href="javascript:void(0);"
     class="goods-item"
     @click="jumpPage"
