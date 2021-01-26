@@ -41,6 +41,7 @@ import Con from '~/components/found/found/Cons'
 import { foundApi } from '@/api'
 import Bottombar from '@/components/common/nav/Bottombar'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import { domainUrl } from '@/config'
 export default {
   layout: 'keepAlive',
   name: 'Found',
@@ -155,6 +156,15 @@ export default {
       }
     },
     onClickRight() {
+      if (this.isInApp) {
+        const ios =
+          '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
+          `${domainUrl}found/foundSearch` +
+          '","isHideNav":1,"isHideBack":1},"isLogin":"1","version":"1.0.0"}'
+        const android = ''
+        this.$appFn.dggJumpRoute({ iOSRouter: ios, androidRouter: android })
+        return
+      }
       this.$router.push('/found/foundSearch')
     },
     refresh() {
