@@ -247,7 +247,13 @@ export default {
     },
     onClickLeft() {
       // 返回上一页
-      this.$router.back()
+      if (window.history.length < 2) {
+        this.$router.push({
+          path: '/search/searchResult?keywords=',
+        })
+      } else {
+        this.$router.back()
+      }
     },
     // 获取推荐规划师
     async handleGetRecPlanner() {
