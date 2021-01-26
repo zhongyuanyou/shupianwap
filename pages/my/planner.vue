@@ -206,8 +206,8 @@ export default {
     },
     // 唤起IM
     handleIm(item) {
-      const { mchUserId, userName } = item || {}
-      this.uPIM({ mchUserId, userName })
+      const { mchUserId, userName, type } = item || {}
+      this.uPIM({ mchUserId, userName, type })
     },
     onLoad() {
       let currentPage = this.pageOption.page
@@ -266,14 +266,14 @@ export default {
 
     // 发起聊天
     uPIM(data = {}) {
-      const { mchUserId, userName } = data
+      const { mchUserId, userName, type } = data
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
         this.$appFn.dggOpenIM(
           {
             name: userName,
             userId: mchUserId,
-            userType: 'MERCHANT_USER',
+            userType: type || 'MERCHANT_B',
           },
           (res) => {
             const { code } = res || {}
@@ -282,7 +282,7 @@ export default {
         )
         return
       }
-      const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
       this.creatImSessionMixin({ imUserId: mchUserId, imUserType })
     },
 

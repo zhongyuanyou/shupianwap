@@ -11,10 +11,10 @@
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a" />
       </div>
       <div
+        slot="right"
         v-md:p_IMClick
         data-im_type="售前"
         :data-commodity_type="reqType === 'serve' ? '服务商品' : '交易商品'"
-        slot="right"
         class="info"
         @click="jumpImMixin"
       >

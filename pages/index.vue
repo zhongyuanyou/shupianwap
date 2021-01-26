@@ -180,17 +180,6 @@ export default {
         })
     }
   },
-  mounted() {
-    // 埋点-当前页面公共属性注册
-    const param = {
-      platform_type: 'wap端', // 平台类型：App，H5，Web
-      app_name: '薯片wap端', // 应用名称
-      product_line: 'Wap端首页', // 当前页面或服务名称
-      current_url: location.href, // 发生地址
-      referrer: document.referrer,
-    }
-    window.sensors.registerPage(param) // 设置公共属性
-  },
   methods: {
     // 用户手动关闭下载app提示弹框后，记录状态到cookie，刷新页面不再弹出，使用默认过期时间（关闭浏览器过期，下次再访问，再次弹出）
     handleDialogClosed() {

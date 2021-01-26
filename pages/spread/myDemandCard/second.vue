@@ -87,7 +87,7 @@ export default {
         type: 'gszc',
         tel: '', // 电话
         name: '', // 姓名
-        web: 'sp', // 归属（原网站类型）
+        web: 'SPAPP', // 归属（原网站类型）
         place: 'all',
         url: '',
         content: {
