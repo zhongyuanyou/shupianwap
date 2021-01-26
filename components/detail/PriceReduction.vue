@@ -143,6 +143,8 @@ export default {
             icon: 'toast_ic_comp',
             forbidClick: true,
           })
+          // 关闭弹窗
+          this.show = false
         } else {
           this.isBtnDisabled = false
           this.$xToast.show({

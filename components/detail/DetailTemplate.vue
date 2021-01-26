@@ -222,7 +222,15 @@ export default {
     },
     onClickLeft() {
       // 返回上一页
-      this.$router.back()
+
+      console.log(window.history.length)
+      if (window.history.length < 2) {
+        this.$router.push({
+          path: '/search/searchResult?keywords=',
+        })
+      } else {
+        this.$router.back()
+      }
     },
     //
     onLoad() {
