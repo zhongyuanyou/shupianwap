@@ -30,6 +30,11 @@ const infoList = [
 //   })
 // }
 export default ({ app, store }) => {
+  app.router.afterEach(() => {
+    Vue.nextTick(() => {
+      window.spptMd.quick('autoTrackSinglePage')
+    })
+  })
   app.router.beforeEach((to, from, next) => {
     if (process.client) {
       const loginRoutePath = '/login' // 登录路由

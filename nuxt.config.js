@@ -62,6 +62,21 @@ module.exports = {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     script: [
       {
+        src: '/js/sppt-mdweb-sdk-conf.js',
+        ssr: false,
+        type: 'text/javascript',
+        charset: 'utf-8',
+        defer: 'defer'
+      },
+      {
+        src:
+          'https://cdn.shupian.cn/sppt/md/sppt-mdweb-sdk.min.js',
+        ssr: false,
+        type: 'text/javascript',
+        charset: 'utf-8',
+        defer: 'defer'
+      },
+      {
         src: '/js/flexible.js',
         ssr: false,
         type: 'text/javascript',
@@ -101,14 +116,14 @@ module.exports = {
   plugins: [
     { src: '@/plugins/axios', ssr: true },
     { src: '@/plugins/router', ssr: false },
-    { src: '@/plugins/dgg-md', ssr: false },
+    // { src: '@/plugins/dgg-md', ssr: false },
     { src: '@/plugins/my-icon', ssr: true },
     // { src: '@/plugins/vconsole', ssr: false },
     { src: '@/plugins/app-sdk', ssr: false },
     { src: '@/plugins/lazyload', ssr: true },
     { src: '@/plugins/oss', ssr: true },
     { src: '@/plugins/install-components', ssr: false },
-    { src: '@/plugins/sp-md-jdk', ssr: false },
+    // { src: '@/plugins/sp-md-jdk', ssr: false },
     { src: '@/plugins/sp-md-directive', ssr: false },
   ],
   router: {
