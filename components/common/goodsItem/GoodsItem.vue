@@ -1,7 +1,7 @@
 <template>
   <a
     class="goods-item"
-    v-md:P_goodsClick
+    v-md:p_commodityClick
     data-even_name="P_goodsClick"
     :data-commodity_level_1="mdData.commodity_level_1"
     :data-commodity_level_2="mdData.commodity_level_2"
