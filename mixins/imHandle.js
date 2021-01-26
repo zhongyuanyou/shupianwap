@@ -92,6 +92,13 @@ export default {
           this.imExample.createSession(params, (res) => {
             if (res.code === 200) {
               window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
+            } else if (res.code === 5223) {
+              this.$router.push({
+                path: '/login',
+                query: {
+                  redirect: this.$route.fullPath,
+                },
+              })
             } else {
               this.loginToast(res.msg)
             }
@@ -187,6 +194,13 @@ export default {
                 } else {
                   this.loginToast(resData.msg)
                 }
+              })
+            } else if (res.code === 5223) {
+              this.$router.push({
+                path: '/login',
+                query: {
+                  redirect: this.$route.fullPath,
+                },
               })
             } else {
               this.loginToast(res.msg)

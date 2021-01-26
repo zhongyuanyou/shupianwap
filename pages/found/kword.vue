@@ -87,7 +87,7 @@ export default {
         limit: this.limit,
         page: this.page,
         platformCode: this.isInApp
-          ? this.platformCode
+          ? this.appInfo.platformCode
           : 'COMDIC_PLATFORM_CRISPS',
         terminalCode: this.isInApp
           ? 'COMDIC_TERMINAL_APP'
@@ -99,13 +99,13 @@ export default {
       }
     },
     async onLoad() {
-      const page = this.page++
+      const page = 1
       const params = {
         keyword: this.keywords,
         limit: this.limit,
         page,
         platformCode: this.isInApp
-          ? this.platformCode
+          ? this.appInfo.platformCode
           : 'COMDIC_PLATFORM_CRISPS',
         terminalCode: this.isInApp
           ? 'COMDIC_TERMINAL_APP'
