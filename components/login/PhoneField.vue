@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 14:23:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-21 15:07:11
+ * @LastEditTime: 2021-01-26 19:13:54
  * @Description: file content
  * @FilePath: /chips-wap/components/login/PhoneField.vue
 -->
@@ -168,6 +168,7 @@ export default {
         console.log('验证码发送失败：', error)
         this.$xToast.error((error && error.message) || '验证码发送失败')
         this.closeInterval()
+        return Promise.reject(error)
       }
     },
   },
