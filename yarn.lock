@@ -1036,10 +1036,10 @@
     "@dgg/oss" "^1.0.0"
     ali-oss "6.9.1"
 
-"@dgg/sp-im-sdk@^1.0.0-beat7":
-  version "1.0.0-beat9"
-  resolved "http://tmobile.dgg188.cn/@dgg/sp-im-sdk/download/@dgg/sp-im-sdk-1.0.0-beat9.tgz#b6c82c4ac3d3b0d1ef709a7ac5482b8266fa09fe"
-  integrity sha1-tsgsSsPTsNHvcJp6xUgrgmb6Cf4=
+"@dgg/sp-im-sdk@^1.0.0-beat19":
+  version "1.0.0-beat19"
+  resolved "http://tmobile.dgg188.cn/@dgg/sp-im-sdk/download/@dgg/sp-im-sdk-1.0.0-beat19.tgz#bb3abff7d39bd64c1566cacf12275dcb09c4053a"
+  integrity sha1-uzq/99Ob1kwVZsrPEiddywnEBTo=
   dependencies:
     rollup-plugin-filesize "^9.0.2"
     rollup-plugin-serve "^1.0.4"
@@ -9099,6 +9099,7 @@ minipass-fetch@^1.3.0, minipass-fetch@^1.3.2:
   resolved "https://registry.npm.taobao.org/minipass-fetch/download/minipass-fetch-1.3.2.tgz#573766fb1ae86e30df916a6b060bc2e801bf8f37"
   integrity sha1-Vzdm+xrobjDfkWprBgvC6AG/jzc=
   dependencies:
+    encoding "^0.1.12"
     minipass "^3.1.0"
     minipass-sized "^1.0.3"
     minizlib "^2.0.0"

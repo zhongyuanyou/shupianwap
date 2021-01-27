@@ -32,6 +32,15 @@ export default {
         iconPrefix: 'spiconfont',
       })
     },
+    clearUserInfoAndJumpLoging() {
+      this.$store.commit('user/CLEAR_USER')
+      this.$router.push({
+        path: '/login',
+        query: {
+          redirect: this.$route.fullPath,
+        },
+      })
+    },
     // 判断是否登录
     judgeLoginMixin(needUserInfo = false) {
       return new Promise((resolve) => {
@@ -53,12 +62,7 @@ export default {
             resolve(true)
           }
         } else {
-          this.$router.push({
-            path: '/login',
-            query: {
-              redirect: this.$route.fullPath,
-            },
-          })
+          this.clearUserInfoAndJumpLoging()
         }
       })
     },
@@ -89,16 +93,12 @@ export default {
             },
           }
           params = Object.assign(params, data)
+          params.imUserType = this.userType
           this.imExample.createSession(params, (res) => {
             if (res.code === 200) {
               window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
             } else if (res.code === 5223) {
-              this.$router.push({
-                path: '/login',
-                query: {
-                  redirect: this.$route.fullPath,
-                },
-              })
+              this.clearUserInfoAndJumpLoging()
             } else {
               this.loginToast(res.msg)
             }
@@ -135,7 +135,7 @@ export default {
         if (userInfo) {
           let params = {
             imUserId: '',
-            imUserType: 'MERCHANT_USER',
+            imUserType: '',
             ext: {
               intentionType: '',
               intentionCity: '',
@@ -145,6 +145,7 @@ export default {
             },
           }
           params = Object.assign(params, sessionParams)
+          params.imUserType = this.userType
           // 发送模板消息前先创建会话
           this.imExample.createSession(params, (res) => {
             if (res.code === 200) {
@@ -192,23 +193,13 @@ export default {
                   }, 2000)
                   // window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
                 } else if (res.code === 5223) {
-                  this.$router.push({
-                    path: '/login',
-                    query: {
-                      redirect: this.$route.fullPath,
-                    },
-                  })
+                  this.clearUserInfoAndJumpLoging()
                 } else {
                   this.loginToast(resData.msg)
                 }
               })
             } else if (res.code === 5223) {
-              this.$router.push({
-                path: '/login',
-                query: {
-                  redirect: this.$route.fullPath,
-                },
-              })
+              this.clearUserInfoAndJumpLoging()
             } else {
               this.loginToast(res.msg)
             }
