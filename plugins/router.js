@@ -93,7 +93,9 @@ export default ({ app, store }) => {
       }
       Vue.nextTick(() => {
         // 已登录用户，若未初始化IM，进行IM初始化
-        const { token, userId, userType } = store.state.user.userInfo
+        const token = app.$cookies.get('token', { path: '/' })
+        const userId = app.$cookies.get('userId', { path: '/' })
+        const userType = app.$cookies.get('userType', { path: '/' })
         if (!store.state.im.imExample && token) {
           // 初始化IM
           const initImSdk = imInit({
@@ -101,6 +103,7 @@ export default ({ app, store }) => {
             userId,
             userType,
           })
+          console.log(2, initImSdk)
           store.commit('im/SET_IM_SDK', initImSdk)
         }
       })
