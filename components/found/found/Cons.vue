@@ -367,7 +367,6 @@ export default {
     }
   }
   &_list {
-    margin-top: 40px;
     .no-data {
       display: flex;
       flex-direction: column;

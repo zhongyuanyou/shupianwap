@@ -159,7 +159,7 @@ export default {
       if (this.isInApp) {
         const ios =
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
-          `${domainUrl}found/foundSearch` +
+          `http://172.16.139.140:3001/found/foundSearch` +
           '","isHideNav":1,"isHideBack":1},"isLogin":"1","version":"1.0.0"}'
         const android =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +

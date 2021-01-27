@@ -38,7 +38,7 @@
           </div>
           <div class="detail_con_info_content">
             <p class="title">{{ info.updaterName }}</p>
-            <p class="time">{{ info.createTime }}</p>
+            <p class="time">{{ info.createTime | dateTime }}</p>
           </div>
         </div>
         <!--E 账号信息-->
@@ -96,6 +96,11 @@ export default {
     [Sticky.name]: Sticky,
     Header,
   },
+  filters: {
+    dateTime(time) {
+      return time.replace(/-/g, '.')
+    },
+  },
   data() {
     return {
       info: {
@@ -103,6 +108,7 @@ export default {
         updaterName: '',
         updateTime: '',
         content: '',
+        createTime: '',
       }, // 资讯详情
       showShare: false, // 显示分享面板
       options: [
