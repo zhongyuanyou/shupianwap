@@ -7,7 +7,7 @@
 export function productResourceType(type) {
   switch (type) {
     case 'CATE-JYZY-GS':
-      return 'gsjy'
+      return 'zhgszr'
     case 'CATE-JYZY-ZZ':
       return 'zzzr'
     case 'CATE-JYZY-SB':
