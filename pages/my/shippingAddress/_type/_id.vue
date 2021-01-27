@@ -26,7 +26,7 @@
           v-model="ruleForm.contactName"
           center
           label="联系人"
-          maxlength="25"
+          maxlength="20"
           placeholder="请填写收货人姓名"
         >
           <template #button>
@@ -243,9 +243,25 @@ export default {
     handleSave() {
       // 保存
       const req = /^1[3|4|5|6|7|8|9][0-9]{9}$/
+      const regCn = /[^A-Za-z0-9\u4E00-\u9FA5]+/
       if (!this.ruleForm.contactName) {
         this.$refs.spToast.show({
           message: '请填写收货人姓名',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else if (
+        this.ruleForm.contactName.length < 2 ||
+        this.ruleForm.contactName > 20
+      ) {
+        this.$refs.spToast.show({
+          message: '姓名限制为2-20位',
+          duration: 1500,
+          forbidClick: true,
+        })
+      } else if (regCn.test(this.ruleForm.contactName)) {
+        this.$refs.spToast.show({
+          message: '姓名不能输入特殊字符',
           duration: 1500,
           forbidClick: true,
         })
