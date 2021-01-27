@@ -127,7 +127,7 @@ export default {
     color: red;
   }
   .sp-cell {
-    padding: 40px 32px;
+    padding: 32px 40px;
   }
   &_bot {
     display: flex;

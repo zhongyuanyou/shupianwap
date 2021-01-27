@@ -100,7 +100,7 @@ export default {
       }
     },
     async onLoad() {
-      const page = 1
+      const page = this.page++
       const params = {
         keyword: this.keywords,
         limit: this.limit,
@@ -123,11 +123,7 @@ export default {
       }
     },
     handleLeft() {
-      if (this.isInApp) {
-        this.$appFn.dggCloseWebView((res) => {})
-        return
-      }
-      this.$router.go(-1)
+      this.$router.back()
     },
   },
 }
@@ -136,14 +132,13 @@ export default {
 <style lang="less" scoped>
 .keyword {
   width: 100%;
-  height: 100%;
   background-color: #fff;
-  padding: 0 40px;
+  padding: 128px 40px 0 40px;
   .safe_con {
     padding-top: constant(safe-area-inset-top);
     padding-top: env(safe-area-inset-top);
     &_con {
-      margin-top: 128px;
+      //margin-top: 128px;
       padding-top: 33px;
       &_title {
         font-size: 40px;
