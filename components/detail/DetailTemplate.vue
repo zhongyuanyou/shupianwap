@@ -1,15 +1,21 @@
 <template>
   <div class="template">
     <!--S 导航栏-->
-    <sp-sticky z-index="5" @scroll="scrollHandle">
+    <sp-sticky
+      z-index="5"
+      :class="{
+        scroTopStyle: Boolean(opacity),
+      }"
+      @scroll="scrollHandle"
+    >
       <sp-top-nav-bar
         ellipsis
-        :background="`rgba(255,255,255,${opacity})`"
+        :background="`rgba(255,255,255,0)`"
         @on-click-left="onClickLeft"
       >
         <template #left>
           <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+            <my-icon name="nav_ic_back" size="0.4rem" color="#fff"></my-icon>
           </div>
         </template>
         <template #right>
@@ -18,7 +24,7 @@
               class="head__icon-share"
               name="nav_ic_share"
               size="0.4rem"
-              color="#1A1A1A"
+              color="#fff"
               @click.native="onClickRight"
             />
           </div>
@@ -27,7 +33,7 @@
     </sp-sticky>
     <!--E 导航栏-->
     <!--S banner-->
-    <Banner />
+    <Banner :images="proDetail.productImgArr" />
     <!--S banner-->
     <!--S 第一板块-->
     <Title />
@@ -55,10 +61,7 @@
     <Commitment />
     <!--E 第四板块 交易服务保障承诺-->
     <!--S 第五板块 推荐规划师-->
-    <Planners
-      :im-jump-query="imJumpQuery"
-      :recommend-planner="recommendPlanner"
-    />
+    <Planners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
     <!--E 第五板块 推荐规划师-->
     <!--S 第六板块 商品动态-->
     <Dynamic />
@@ -70,7 +73,7 @@
     <Case />
     <!--E 第八板块 成功案例-->
     <!--S 第九板块 同类推荐-->
-    <Recommend :similar-recommend-data="similarRecommend" />
+    <Recommend ref="recLoading" :similar-recommend-data="similarRecommend" />
     <!--E 第九板块 同类推荐-->
     <!--S 第十板块 猜你需要-->
     <sp-list
@@ -79,7 +82,7 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <Need :detail-type="detailType" :product-data="recommendProduct" />
+      <Need ref="remNeed" :product-data="recommendProduct" />
     </sp-list>
     <!--E 第十板块 猜你需要-->
     <commodityConsultation
@@ -107,6 +110,7 @@ import {
   List,
   ShareSheet,
 } from '@chipspc/vant-dgg'
+import { mapActions } from 'vuex'
 import Banner from '~/components/detail/Banner'
 import Title from '~/components/detail/Title'
 import Basic from '~/components/detail/Basic'
@@ -121,7 +125,7 @@ import Need from '~/components/detail/Need'
 import commodityConsultation from '@/components/common/commodityConsultation/commodityConsultation'
 import getUserSign from '~/utils/fingerprint'
 import tcBasicData from '~/mock/tcBasicData'
-import { recommendApi, userinfoApi } from '~/api'
+import { productDetailsApi, recommendApi, userinfoApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import BasicItem from '~/components/detail/BasicItem'
 import QftDetails from '~/components/detail/QftDetails'
@@ -154,22 +158,6 @@ export default {
     QftDetails,
   },
   props: {
-    detailType: {
-      type: String,
-      default: () => {
-        return null
-      },
-    },
-    tcPlannerBooth: {
-      type: Object,
-      default: () => {
-        return {}
-      },
-    },
-    recommendPlanner: {
-      type: Array,
-      default: () => [],
-    },
     imJumpQuery: {
       type: Object,
       default: () => {
@@ -196,6 +184,11 @@ export default {
         decodePhone: null,
         fullName: null,
       },
+      planners: [], // 规划师列表
+      plannerLimit: 3,
+      plannerPage: 1,
+      tcPlannerBooth: {},
+      deviceId: null, // 设备唯一码
     }
   },
   computed: {
@@ -207,34 +200,46 @@ export default {
       return this.$store.state.city.currentCity
     },
   },
-  mounted() {
+  async mounted() {
+    this.fieldListFun() // 加载基本信息
+    this.getUserIndo()
+    // 假如未获取到站点信息,再获取地理位置
+    if (!this.city.code) {
+      await this.POSITION_CITY({ type: 'init' })
+    }
     // 获取推荐产品
     this.getrecommendProduct()
     // 获取同类推荐
     this.getSimilarRecommend()
-    this.fieldListFun() // 加载基本信息
-    this.getUserIndo()
+    // 推荐规划师
+    this.getRecommendPlanner()
+    // 获取钻展
+    this.getRecPlanner()
   },
   methods: {
+    ...mapActions({
+      POSITION_CITY: 'city/POSITION_CITY',
+    }),
     scrollHandle({ scrollTop }) {
       // 滚动事件
-      this.opacity = scrollTop / 120
+      if (scrollTop > 216) {
+        this.opacity = 1
+      } else {
+        this.opacity = 0
+      }
     },
     onClickLeft() {
       // 返回上一页
-
-      console.log(window.history.length)
-      if (window.history.length < 2) {
-        this.$router.push({
-          path: '/search/searchResult?keywords=',
-        })
-      } else {
-        this.$router.back()
-      }
+      this.$router.push({
+        path: '/search/searchResult?keywords=',
+      })
     },
     //
-    onLoad() {
-      this.productPage += 1
+    async onLoad() {
+      // 假如未获取到站点信息,再获取地理位置
+      if (!this.city.code) {
+        await this.POSITION_CITY({ type: 'init' })
+      }
       // 加载更多推荐
       this.getrecommendProduct()
     },
@@ -269,6 +274,9 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
+            // 关闭骨架屏
+            this.$refs.remNeed.needLoading = false
+            this.productPage += 1
             if (res.data.records.length === 0) {
               this.finished = true
             }
@@ -319,6 +327,7 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
+            this.$refs.recLoading.recLoading = false
             this.similarRecommend = res.data.records
           }
         })
@@ -326,6 +335,64 @@ export default {
           this.loading = false
           console.log(err)
         })
+    },
+    //  获取推荐规划师
+    async getRecommendPlanner() {
+      // 获取用户唯一标识
+      if (!this.deviceId) {
+        this.deviceId = await getUserSign()
+      }
+      this.$axios
+        .get(productDetailsApi.recPlanner, {
+          params: {
+            limit: this.plannerLimit,
+            page: this.plannerPage,
+            area: this.city.code, // 区域编码
+            deviceId: this.deviceId, // 设备ID
+            level_2_ID: this.proDetail.classCodeLevel
+              ? this.proDetail.classCodeLevel.split(',')[1]
+              : null, // 二级产品分类
+            login_name: null, // 规划师ID(选填)
+            productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
+            sceneId: 'app-cpxqye-01', // 场景ID
+            user_id: this.$cookies.get('userId'), // 用户ID(选填)
+            platform: 'app', // 平台（app,m,pc）
+            productId: this.proDetail.id, // 产品id
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.planners = res.data.records
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    // 获取钻展规划师
+    async getRecPlanner() {
+      // 获取用户唯一标识
+      const deviceId = await getUserSign()
+      const plannerRes = await this.$axios.get(productDetailsApi.recPlanner, {
+        params: {
+          limit: 1,
+          page: 1,
+          area: this.city.code, // 区域编码
+          deviceId, // 设备ID
+          level_2_ID: this.proDetail.classCodeLevel
+            ? this.proDetail.classCodeLevel.split(',')[1]
+            : null, // 二级产品分类
+          login_name: null, // 规划师ID(选填)
+          productType: 'FL20201116000003', // 产品类型
+          sceneId: 'app-cpxqye-02', // 场景ID
+          user_id: this.$cookies.get('userId'), // 用户ID(选填)
+          platform: 'app', // 平台（app,m,pc）
+          productId: this.proDetail.id, // 产品id
+        },
+      })
+      if (plannerRes.code === 200) {
+        this.tcPlannerBooth = plannerRes.data.records[0]
+      }
     },
     fieldListFun() {
       const fieldList = {}
@@ -392,9 +459,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/deep/.sp-sticky {
-  border: 1px solid #f4f4f4;
+.scroTopStyle {
+  /deep/.sp-sticky {
+    border: 1px solid #f4f4f4;
+    .sp-top-nav-bar {
+      background-color: #fff !important;
+      .spiconfont {
+        color: #1a1a1a !important;
+      }
+    }
+  }
 }
+
 .template {
   width: 100%;
   height: 100%;

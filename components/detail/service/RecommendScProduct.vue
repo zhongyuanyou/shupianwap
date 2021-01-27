@@ -1,52 +1,61 @@
 <template>
   <div class="need">
     <p class="need_title">猜您需要</p>
-    <div v-for="item in recommendProductData" :key="item.id">
-      <nuxt-link
-        class="need_item"
-        :to="{
-          path: '/detail/serviceDetails',
-          query: { productId: item.id },
-        }"
-      >
-        <div class="need_item_img">
-          <sp-image
-            width="1.6rem"
-            height="1.6rem"
-            fit="cover"
-            radius="0.04rem"
-            :src="`${item.productImgArr[0]}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
-          />
-        </div>
-        <div class="need_item_rt">
-          <p class="title">
-            {{ item.name }}
-          </p>
-          <div class="label">
-            <span>{{ item.operating ? item.operating.slogan : null }}</span>
+
+    <sp-skeleton :row="20" :loading="scProLoading">
+      <div v-for="item in recommendProductData" :key="item.id">
+        <nuxt-link
+          class="need_item"
+          :to="{
+            path: '/detail/serviceDetails',
+            query: { productId: item.id },
+          }"
+        >
+          <div class="need_item_img">
+            <sp-image
+              width="1.6rem"
+              height="1.6rem"
+              fit="cover"
+              radius="0.04rem"
+              :src="
+                item.productImgArr
+                  ? `${item.productImgArr[0]}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`
+                  : defaultProImg
+              "
+            />
           </div>
-          <div class="tags">
-            <div
-              v-for="tItem in tagsFilter(item.tags)"
-              :key="tItem.id"
-              class="tags_item"
-            >
-              {{ tItem.name }}
+          <div class="need_item_rt">
+            <p class="title">
+              {{ item.name }}
+            </p>
+            <div class="label">
+              <span>{{ item.operating ? item.operating.slogan : null }}</span>
             </div>
+            <div class="tags">
+              <div
+                v-for="tItem in tagsFilter(item.tags)"
+                :key="tItem.id"
+                class="tags_item"
+              >
+                {{ tItem.name }}
+              </div>
+            </div>
+            <p class="money">{{ item.referencePrice }}元</p>
           </div>
-          <p class="money">{{ item.referencePrice }}元</p>
-        </div>
-      </nuxt-link>
-    </div>
+        </nuxt-link>
+      </div>
+    </sp-skeleton>
   </div>
 </template>
 
 <script>
-import { Image } from '@chipspc/vant-dgg'
+import { Image, Skeleton } from '@chipspc/vant-dgg'
+import { GOODSLIST } from '~/config/constant'
 export default {
-  name: 'Need',
+  name: 'RecommendScProduct',
   components: {
     [Image.name]: Image,
+    [Skeleton.name]: Skeleton,
   },
   props: {
     recommendProductData: {
@@ -56,9 +65,14 @@ export default {
   },
   data() {
     return {
-      label: ['四川成都', '2025到期', '有安许证'],
-      tags: ['公司干净', '总包公司', '市政三级'],
+      scProLoading: true,
+      defaultProImg: GOODSLIST,
     }
+  },
+  watch: {
+    recommendProductData(data) {
+      console.log(data)
+    },
   },
   methods: {
     tagsFilter(tags) {
@@ -78,6 +92,9 @@ export default {
   background-color: #fff;
   padding: 48px 40px 0 40px;
   overflow: hidden;
+  /deep/.sp-skeleton {
+    margin-top: 64px;
+  }
   &_title {
     font-size: 40px;
     font-family: PingFang SC;

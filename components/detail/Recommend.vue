@@ -21,39 +21,42 @@
     <div class="recommend-blank">
       <div class="swipe">
         <div class="swipe-box">
-          <div
-            v-for="item in similarRecommendData"
-            :key="item.id"
-            class="swipe-list"
-          >
-            <nuxt-link
-              class="swipe_item_con"
-              :to="{
-                path: '/detail/transactionDetails',
-                query: { type: detailType, productId: item.id },
-              }"
+          <sp-skeleton :row="3" :loading="recLoading">
+            <div
+              v-for="item in similarRecommendData"
+              :key="item.id"
+              class="swipe-list"
             >
-              <div class="swipe_item_con_img">
-                <sp-image
-                  width="1.6rem"
-                  height="1.6rem"
-                  fit="cover"
-                  lazy-load
-                  :src="`${item.productImgArr[0]}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
-                />
-              </div>
-              <div class="swipe_item_con_rt">
-                <p class="title">{{ item.name }}</p>
-                <div class="label">
-                  {{ getItemList(item.fieldList).join(' | ') }}
+              <nuxt-link
+                class="swipe_item_con"
+                :to="{
+                  path: '/detail/transactionDetails',
+                  query: { type: detailType, productId: item.id },
+                }"
+              >
+                <div class="swipe_item_con_img">
+                  <sp-image
+                    width="1.6rem"
+                    height="1.6rem"
+                    radius="0.04rem"
+                    fit="cover"
+                    lazy-load
+                    :src="`${item.productImgArr[0]}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
+                  />
                 </div>
-                <div class="swipe_item_con_rt_bot">
-                  <p class="money">{{ item.platformPrice }}元</p>
-                  <!-- <p class="province">四川省</p>-->
+                <div class="swipe_item_con_rt">
+                  <p class="title">{{ item.name }}</p>
+                  <div class="label">
+                    {{ getItemList(item.fieldList).join(' | ') }}
+                  </div>
+                  <div class="swipe_item_con_rt_bot">
+                    <p class="money">{{ item.platformPrice }}元</p>
+                    <!-- <p class="province">四川省</p>-->
+                  </div>
                 </div>
-              </div>
-            </nuxt-link>
-          </div>
+              </nuxt-link>
+            </div>
+          </sp-skeleton>
         </div>
       </div>
     </div>
@@ -65,19 +68,25 @@
 </template>
 
 <script>
-import { Swipe, SwipeItem, Image } from '@chipspc/vant-dgg'
+import { Swipe, SwipeItem, Image, Skeleton } from '@chipspc/vant-dgg'
 export default {
   name: 'Recommend',
   components: {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
     [Image.name]: Image,
+    [Skeleton.name]: Skeleton,
   },
   props: {
     similarRecommendData: {
       type: Array,
       default: () => [],
     },
+  },
+  data() {
+    return {
+      recLoading: true,
+    }
   },
   computed: {
     detailType() {
@@ -105,6 +114,10 @@ export default {
   background-color: #fff;
   padding: 48px 0 28px 0;
   border-bottom: 24px solid #f8f8f8;
+  /deep/.sp-skeleton {
+    width: 591px;
+    margin-top: 12px;
+  }
   &_tp {
     width: 100%;
     display: flex;

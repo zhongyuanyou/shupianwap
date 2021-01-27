@@ -1,15 +1,21 @@
 <template>
   <div class="serviceDetails">
     <!-- 导航栏-->
-    <sp-sticky z-index="5" @scroll="scrollHandle">
+    <sp-sticky
+      :class="{
+        scroTopStyle: Boolean(opacity),
+      }"
+      z-index="5"
+      @scroll="scrollHandle"
+    >
       <sp-top-nav-bar
         ellipsis
-        :background="`rgba(255,255,255,${opacity})`"
+        :background="`rgba(255,255,255,0)`"
         @on-click-left="onClickLeft"
       >
         <template #left>
           <div>
-            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
+            <my-icon name="nav_ic_back" size="0.4rem" color="#fff"></my-icon>
           </div>
         </template>
         <template #right>
@@ -18,7 +24,7 @@
               class="head__icon-share"
               name="nav_ic_share"
               size="0.4rem"
-              color="#1A1A1A"
+              color="#fff"
               @click.native="onClickRight"
             />
           </div>
@@ -56,7 +62,10 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <RecommendScProduct :recommend-product-data="recommendProduct" />
+      <RecommendScProduct
+        ref="recommendScProduct"
+        :recommend-product-data="recommendProduct"
+      />
     </sp-list>
     <commodityConsultation
       :im-jump-query="imJumpQuery"
@@ -81,6 +90,7 @@ import {
   PullRefresh,
   ShareSheet,
 } from '@chipspc/vant-dgg'
+import { mapActions } from 'vuex'
 import Banner from '~/components/detail/Banner'
 import BasicInfo from '~/components/detail/service/BasicInfo'
 import ServiceItems from '~/components/detail/service/ServiceItems'
@@ -92,6 +102,7 @@ import getUserSign from '~/utils/fingerprint'
 import { productDetailsApi, recommendApi } from '~/api'
 import { copyToClipboard } from '~/utils/common'
 import { GOODSLIST } from '~/config/constant'
+
 export default {
   name: 'ServiceDetails',
   components: {
@@ -113,8 +124,6 @@ export default {
   watchQuery: ['productId'],
   async asyncData({ $axios, query, app, store }) {
     try {
-      let scProductDetailData = {}
-      let scPlannerDetailData = {}
       // 获取产品详情
       const productDetailRes = await $axios.post(
         productDetailsApi.scProductDetail,
@@ -131,33 +140,7 @@ export default {
         }
       )
       if (productDetailRes.code === 200) {
-        scProductDetailData = productDetailRes.data
-        // 获取钻展规划师
-        // 获取用户唯一标识
-        const deviceId = await getUserSign()
-        const plannerRes = await $axios.get(productDetailsApi.recPlanner, {
-          params: {
-            limit: 1,
-            page: 1,
-            area: store.state.city.currentCity.code, // 区域编码
-            deviceId, // 设备ID
-            level_2_ID: productDetailRes.data.baseData.parentClassCode
-              ? productDetailRes.data.baseData.parentClassCode.split(',')[1]
-              : null, // 二级产品分类
-            login_name: null, // 规划师ID(选填)
-            productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
-            sceneId: 'app-cpxqye-02', // 场景ID
-            user_id: app.$cookies.get('userId'), // 用户ID(选填)
-
-            platform: 'app', // 平台（app,m,pc）
-            productId: productDetailRes.data.baseData.id, // 产品id
-          },
-        })
-        if (plannerRes.code === 200) {
-          scPlannerDetailData = plannerRes.data.records[0]
-        }
-        // console.log({ scProductDetailData })
-        return { scProductDetailData, scPlannerDetailData }
+        return { scProductDetailData: productDetailRes.data }
       } else {
         console.log(productDetailRes)
       }
@@ -189,8 +172,6 @@ export default {
         round: true,
         avatarSize: 40,
       },
-      consultText1: '在线咨询',
-      consultText2: '电话咨询',
       list: [],
       loading: false,
       finished: false,
@@ -230,31 +211,42 @@ export default {
       return imdata
     },
   },
-  mounted() {
+  async mounted() {
+    // 假如未获取到站点信息,再获取地理位置
+    if (!this.city.code) {
+      await this.POSITION_CITY({ type: 'init' })
+    }
     // 获取推荐规划师
     this.handleGetRecPlanner()
     // 获取推荐产品
     this.handleGetRecProduct()
+    // 获取钻展规划师
+    this.getRemPlanner()
   },
   methods: {
+    ...mapActions({
+      POSITION_CITY: 'city/POSITION_CITY',
+    }),
     scrollHandle({ scrollTop }) {
       // 滚动事件
-      this.opacity = scrollTop / 120
+      if (scrollTop > 216) {
+        this.opacity = 1
+      } else {
+        this.opacity = 0
+      }
     },
-    onLoad() {
-      // 加载更多
-      this.productPage += 1
+    async onLoad() {
+      // 假如未获取到站点信息,再获取地理位置
+      if (!this.city.code) {
+        await this.POSITION_CITY({ type: 'init' })
+      }
       this.handleGetRecProduct()
     },
     onClickLeft() {
       // 返回上一页
-      if (window.history.length < 2) {
-        this.$router.push({
-          path: '/search/searchResult?keywords=',
-        })
-      } else {
-        this.$router.back()
-      }
+      this.$router.push({
+        path: '/search/searchResult?keywords=',
+      })
     },
     // 获取推荐规划师
     async handleGetRecPlanner() {
@@ -322,16 +314,18 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            console.log(res.data)
-            if (res.data.records.length === 0) {
-              this.finished = true
-            }
+            // 关闭骨架屏
+            this.$refs.recommendScProduct.scProLoading = false
+            // 加载更多
+            this.productPage += 1
             this.productCount = res.data.totalCount // 推荐产品总条数
             this.recommendProduct = [...this.recommendProduct].concat(
               res.data.records
             ) // 推荐产品列表
-            if (this.recommendProduct.length >= 30) {
-              console.log(1212)
+            if (
+              this.recommendProduct.length >= 30 ||
+              res.data.records.length === 0
+            ) {
               this.finished = true
             } else {
               this.loading = false
@@ -344,6 +338,33 @@ export default {
           this.finished = true
           console.log(err)
         })
+    },
+    //   获取钻展规划师
+    async getRemPlanner() {
+      // 获取钻展规划师
+      // 获取用户唯一标识
+      const deviceId = await getUserSign()
+      const plannerRes = await this.$axios.get(productDetailsApi.recPlanner, {
+        params: {
+          limit: 1,
+          page: 1,
+          area: this.city.code, // 区域编码
+          deviceId, // 设备ID
+          level_2_ID: this.scProductDetailData.baseData.parentClassCode
+            ? this.scProductDetailData.baseData.parentClassCode.split(',')[1]
+            : null, // 二级产品分类
+          login_name: null, // 规划师ID(选填)
+          productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
+          sceneId: 'app-cpxqye-02', // 场景ID
+          user_id: this.$cookies.get('userId'), // 用户ID(选填)
+
+          platform: 'app', // 平台（app,m,pc）
+          productId: this.scProductDetailData.baseData.id, // 产品id
+        },
+      })
+      if (plannerRes.code === 200) {
+        this.scPlannerDetailData = plannerRes.data.records[0]
+      }
     },
     //  分享
     onClickRight() {
@@ -368,6 +389,17 @@ export default {
   background: #f8f8f8;
   /deep/ .sp-hairline--bottom::after {
     border-bottom: none;
+  }
+  .scroTopStyle {
+    /deep/.sp-sticky {
+      border: 1px solid #f4f4f4;
+      .sp-top-nav-bar {
+        background-color: #fff !important;
+        .spiconfont {
+          color: #1a1a1a !important;
+        }
+      }
+    }
   }
   .planners-box {
     margin-bottom: 24px;
