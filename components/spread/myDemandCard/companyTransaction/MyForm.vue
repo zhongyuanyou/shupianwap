@@ -212,7 +212,7 @@ export default {
           data.content
         )
       }
-      data.type = 'gszr'
+      data.type = 'zhgszr'
       data.url = window.location.href
       sessionStorage.setItem('formData', JSON.stringify(data))
       this.$router.push('/spread/myDemandCard/second')
