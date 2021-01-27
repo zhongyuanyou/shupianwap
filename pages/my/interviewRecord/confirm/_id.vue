@@ -149,7 +149,12 @@ export default {
   methods: {
     back() {
       // 返回上一页
-      this.$router.back()
+      if (window.history.length <= 1) {
+        this.$router.replace('/my/interviewRecord/index')
+        return false
+      } else {
+        this.$router.back()
+      }
     },
     async getInterviewDetail() {
       // 获取面谈详情
