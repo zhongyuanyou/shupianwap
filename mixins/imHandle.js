@@ -191,6 +191,13 @@ export default {
                     window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
                   }, 2000)
                   // window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
+                } else if (res.code === 5223) {
+                  this.$router.push({
+                    path: '/login',
+                    query: {
+                      redirect: this.$route.fullPath,
+                    },
+                  })
                 } else {
                   this.loginToast(resData.msg)
                 }
