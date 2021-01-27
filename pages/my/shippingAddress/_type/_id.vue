@@ -58,7 +58,7 @@
         >
           <template #button>
             <div class="end" @click="handleEnd(2)">
-              <my-icon name="commodity_ic_tmap" color="#999" size="0.32rem" />
+              <my-icon name="commodity_ic_tmap" color="#ccc" size="0.32rem" />
               <p class="txt">定位</p>
             </div>
           </template>

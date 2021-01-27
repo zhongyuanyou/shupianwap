@@ -312,8 +312,8 @@ export default {
   /deep/.sp-cell {
     padding: 40px 32px;
   }
-  padding-top: constant(safe-area-inset-top);
-  padding-top: env(safe-area-inset-top);
+  //padding-top: constant(safe-area-inset-top);
+  //padding-top: env(safe-area-inset-top);
   &_banner {
     width: 100%;
     padding: 0 40px;
@@ -367,7 +367,6 @@ export default {
     }
   }
   &_list {
-    margin-top: 40px;
     .no-data {
       display: flex;
       flex-direction: column;

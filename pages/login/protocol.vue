@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-import { Toast, TopNavBar, NavSearch, Icon, Skeleton } from '@chipspc/vant-dgg'
+import { TopNavBar, NavSearch, Icon, Skeleton } from '@chipspc/vant-dgg'
 
 import { auth } from '@/api'
 
@@ -64,7 +64,7 @@ export default {
 
     async getProtocol(categoryCode) {
       if (!categoryCode) {
-        Toast('请传入需要获取的协议!')
+        this.$xToast.warn('请传入需要获取的协议!')
         return
       }
       const params = {
@@ -80,7 +80,7 @@ export default {
         this.loading = false
         return rows[0] || {}
       } catch (error) {
-        Toast(error.message)
+        this.$xToast.error(error.message || '请求失败')
         return Promise.reject(error)
       }
     },
@@ -98,11 +98,14 @@ export default {
   .top {
     flex: 88px 0 0;
     /deep/.sp-top-nav-bar {
+      height: 88px;
+      min-height: auto;
       &__left,
       &__right {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
+        font-weight: 400;
       }
     }
   }
@@ -115,7 +118,15 @@ export default {
     &-text {
       font-size: 32px;
       line-height: 42px;
-      text-indent: 2em;
+      // text-indent: 2em;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    * {
+      word-wrap: break-word;
+      word-break: break-all;
     }
   }
 }

@@ -159,7 +159,7 @@ export default {
       if (this.isInApp) {
         const ios =
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
-          `${domainUrl}found/foundSearch` +
+          `http://172.16.139.140:3001/found/foundSearch` +
           '","isHideNav":1,"isHideBack":1},"isLogin":"1","version":"1.0.0"}'
         const android =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
@@ -191,6 +191,12 @@ export default {
     font-size: 32px;
     color: #222222;
     font-weight: bold;
+    &:first-child {
+      padding-left: 0;
+    }
+  }
+  /deep/ .sp-tabs__nav--complete {
+    padding-left: 0;
   }
   /deep/ .sp-tab--active {
     font-size: 40px;
