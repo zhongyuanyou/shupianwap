@@ -121,6 +121,7 @@ export default {
     font-weight: bold;
     color: #222222;
     line-height: 56px;
+    word-break: break-all;
   }
   .imp_remind {
     margin-top: 30px;

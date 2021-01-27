@@ -8,7 +8,7 @@
     "@dgg/http-sign": "^1.0.4",
     "@dgg/im-sdk": "^1.3.0",
     "@dgg/oss": "^1.0.2",
-    "@dgg/sp-im-sdk": "^1.0.0-beat7",
+    "@dgg/sp-im-sdk": "^1.0.0-beat19",
     "@fe/sp-ui-mobile": "^0.0.8",
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/style-resources": "^1.0.0",

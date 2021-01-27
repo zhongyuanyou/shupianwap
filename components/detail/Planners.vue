@@ -1,71 +1,76 @@
 <template>
   <div class="planners">
     <p class="planners_title">推荐规划师</p>
-    <div
-      v-for="(item, index) in recommendPlanner"
-      :key="item.userCenterId"
-      class="planners_item"
-      :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
-    >
-      <div class="planners_item_lf">
-        <nuxt-link
-          :to="{
-            path: '/planner/detail',
-            query: { mchUserId: item.mchUserId },
-          }"
-        >
-          <sp-image
-            width="0.8rem"
-            height="0.8rem"
-            round
-            fit="cover"
-            lazy-load
-            :src="`${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
-          />
-        </nuxt-link>
-        <div class="info">
-          <div class="info_tp">
-            <nuxt-link
-              :to="{
-                path: '/planner/detail',
-                query: { mchUserId: item.mchUserId },
-              }"
-            >
-              <p class="name">{{ item.userName }}</p>
-            </nuxt-link>
-            <i class="gold_icon">{{ item.postName }}</i>
-          </div>
-          <div class="info_bot">
-            <span class="num">{{ Number(item.point) }}</span
-            ><span class="txt">薯片分 | {{ Number(item.payNum) }}次服务</span>
+    <sp-skeleton :row="6" :loading="recommendPlanner.length == 0">
+      <div
+        v-for="(item, index) in recommendPlanner"
+        :key="item.userCenterId"
+        class="planners_item"
+        :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
+      >
+        <div class="planners_item_lf">
+          <nuxt-link
+            :to="{
+              path: '/planner/detail',
+              query: { mchUserId: item.mchUserId },
+            }"
+          >
+            <sp-image
+              width="0.8rem"
+              height="0.8rem"
+              round
+              fit="cover"
+              lazy-load
+              :src="`${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
+            />
+          </nuxt-link>
+          <div class="info">
+            <div class="info_tp">
+              <nuxt-link
+                :to="{
+                  path: '/planner/detail',
+                  query: { mchUserId: item.mchUserId },
+                }"
+              >
+                <p class="name">{{ item.userName }}</p>
+              </nuxt-link>
+              <i class="gold_icon">{{ item.postName }}</i>
+            </div>
+            <div class="info_bot">
+              <span class="num">{{ Number(item.point) }}</span
+              ><span class="txt">薯片分 | {{ Number(item.payNum) }}次服务</span>
+            </div>
           </div>
         </div>
+        <div class="planners_item_rt">
+          <sp-button
+            round
+            class="contact-btn"
+            @click="sendTemplateMsgWithImg(item.mchUserId)"
+            ><my-icon
+              class=""
+              name="notify_ic_chat"
+              size="0.424rem"
+              color="#4974F5"
+          /></sp-button>
+          <sp-button
+            round
+            class="contact-btn"
+            @click="handleTel(item.mchUserId)"
+            ><my-icon
+              class=""
+              name="notify_ic_tel"
+              size="0.423rem"
+              color="#4974F5"
+          /></sp-button>
+        </div>
       </div>
-      <div class="planners_item_rt">
-        <sp-button
-          round
-          class="contact-btn"
-          @click="sendTemplateMsgWithImg(item.mchUserId)"
-          ><my-icon
-            class=""
-            name="notify_ic_chat"
-            size="0.424rem"
-            color="#4974F5"
-        /></sp-button>
-        <sp-button round class="contact-btn" @click="handleTel(item.mchUserId)"
-          ><my-icon
-            class=""
-            name="notify_ic_tel"
-            size="0.423rem"
-            color="#4974F5"
-        /></sp-button>
-      </div>
-    </div>
+    </sp-skeleton>
   </div>
 </template>
 
 <script>
-import { Image, Button, Toast } from '@chipspc/vant-dgg'
+import { Image, Button, Toast, Skeleton } from '@chipspc/vant-dgg'
 import { parseTel } from '~/utils/common'
 import { planner } from '~/api'
 import imHandle from '~/mixins/imHandle'
@@ -74,6 +79,7 @@ export default {
   components: {
     [Image.name]: Image,
     [Button.name]: Button,
+    [Skeleton.name]: Skeleton,
   },
   mixins: [imHandle],
   props: {
@@ -140,6 +146,9 @@ export default {
   padding: 41px 40px 56px 40px;
   background-color: #fff;
   border-bottom: 24px solid #f8f8f8;
+  /deep/.sp-skeleton {
+    margin-top: 48px;
+  }
   .icon {
     display: inline-block;
     background-repeat: no-repeat;
@@ -210,7 +219,7 @@ export default {
           flex-direction: row;
           height: 32px;
           .name {
-            max-width: 200px;
+            max-width: 150px;
             font-size: 32px;
             text-overflow: ellipsis;
             overflow: hidden;
