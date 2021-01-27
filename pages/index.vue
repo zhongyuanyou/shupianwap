@@ -41,11 +41,9 @@
       <FiexdBtn />
       <!-- E 悬浮按钮 -->
       <!-- S 下载app弹框 -->
-      <InstallAppDialog
+      <DownloadApp
         v-if="!closeAppOpen"
-        v-model="showInstallAppDialog"
-        :close-on-click-overlay="false"
-        @closed="handleDialogClosed"
+        @handleDialogClosed="handleDialogClosed"
       />
       <!-- E 下载app弹框 -->
     </client-only>
@@ -64,7 +62,7 @@ import Information from '@/components/home/Information'
 import HotServe from '@/components/home/HotServe'
 import Recommend from '@/components/home/Recommend'
 import FiexdBtn from '@/components/home/FiexdBtn'
-import InstallAppDialog from '@/components/common/app/InstallAppDialog'
+import DownloadApp from '@/components/common/app/DownloadApp'
 export default {
   layout: 'nav',
   name: 'Home',
@@ -78,14 +76,13 @@ export default {
     HotServe,
     Recommend,
     FiexdBtn,
-    InstallAppDialog,
+    DownloadApp,
   },
   async asyncData({ $axios, redirect, app }) {
     // 获取用户是否手动关闭过下载app的弹框，手动关闭过不再弹出
     const closeAppOpen = app.$cookies.get('closeAppOpen', {
       path: '/',
     })
-
     const fiexdAdCode = 'ad100234' // 顶部固定banner的code
     const rollAdCode = 'ad100237' // 导航下方轮播banner code
     const helpAdCode = 'ad113183' // 帮我找下方banner code(服务榜单)
@@ -133,7 +130,6 @@ export default {
   },
   data() {
     return {
-      showInstallAppDialog: true,
       adModuleOne: ['ad100235', 'ad100236'], // 限时特惠板块
       adModuleTwo: ['ad100239', 'ad100240', 'ad100241', 'ad100242'], // 热门服务板块
       asyncReqParams: {
@@ -183,6 +179,7 @@ export default {
   methods: {
     // 用户手动关闭下载app提示弹框后，记录状态到cookie，刷新页面不再弹出，使用默认过期时间（关闭浏览器过期，下次再访问，再次弹出）
     handleDialogClosed() {
+      this.closeAppOpen = true
       this.$cookies.set('closeAppOpen', true, {
         path: '/',
       })

@@ -163,7 +163,7 @@ export default {
     },
     onButton() {
       const data = {
-        type: 'xkx',
+        type: 'gsxkz',
         url: window.location.href,
         content: {
           xkzlx: this.permission,
