@@ -230,9 +230,13 @@ export default {
     },
     onClickLeft() {
       // 返回上一页
-      this.$router.push({
-        path: '/search/searchResult?keywords=',
-      })
+      if (history.length < 2) {
+        this.$router.push({
+          path: '/search/searchResult?keywords=',
+        })
+      } else {
+        this.$router.back()
+      }
     },
     //
     async onLoad() {
