@@ -9,11 +9,15 @@
         :style="{ marginTop: index === 0 ? '0.42rem' : '0.66rem' }"
       >
         <div class="planners_item_lf">
-          <nuxt-link
-            :to="{
-              path: '/planner/detail',
-              query: { mchUserId: item.mchUserId },
-            }"
+          <a
+            v-md:p_plannerBoothClick
+            data-even_name="p_plannerBoothClick"
+            :data-recommend_number="item.dggPlannerRecomLog"
+            :data-planner_number="item.userCenterNo"
+            :data-planner_name="item.userName"
+            :data-crisps_fraction="item.point"
+            href="javascript:void(0);"
+            @click="plannerInfoUrlJump(item.mchUserId)"
           >
             <sp-image
               width="0.8rem"
@@ -23,17 +27,21 @@
               lazy-load
               :src="`${item.portrait}?x-oss-process=image/resize,m_fill,w_80,h_80,limit_0`"
             />
-          </nuxt-link>
+          </a>
           <div class="info">
             <div class="info_tp">
-              <nuxt-link
-                :to="{
-                  path: '/planner/detail',
-                  query: { mchUserId: item.mchUserId },
-                }"
+              <a
+                v-md:p_plannerBoothClick
+                data-even_name="p_plannerBoothClick"
+                :data-recommend_number="item.dggPlannerRecomLog"
+                :data-planner_number="item.userCenterNo"
+                :data-planner_name="item.userName"
+                :data-crisps_fraction="item.point"
+                href="javascript:void(0);"
+                @click="plannerInfoUrlJump(item.mchUserId)"
               >
                 <p class="name">{{ item.userName }}</p>
-              </nuxt-link>
+              </a>
               <i class="gold_icon">{{ item.postName }}</i>
             </div>
             <div class="info_bot">
@@ -44,6 +52,21 @@
         </div>
         <div class="planners_item_rt">
           <sp-button
+            v-md:p_IMClick
+            data-even_name="p_IMClick"
+            :data-recommend_number="item.dggPlannerRecomLog"
+            data-im_type="售前"
+            :data-commodity_number="baseData.productNo"
+            :data-commodity_name="operatingData.showName"
+            data-commodity_type="服务商品"
+            data-commodity_level_1=""
+            :data-com_level_1_code="baseData.parentClassCode.split(',')[0]"
+            data-commodity_level_2=""
+            :data-com_level_2_code="baseData.parentClassCode.split(',')[1]"
+            :data-n_now_price="baseData.referencePrice"
+            :data-planner_number="item.userCenterNo"
+            :data-crisps_fraction="item.point"
+            :data-planner_name="item.userName"
             round
             class="contact-btn"
             @click="sendTemplateMsgWithImg(item.mchUserId)"
@@ -93,8 +116,27 @@ export default {
         return {}
       },
     },
+    baseData: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+    operatingData: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
   },
   methods: {
+    // 规划师详情跳转
+    plannerInfoUrlJump(mchUserId) {
+      this.$router.push({
+        path: '/planner/detail',
+        query: { mchUserId },
+      })
+    },
     async handleTel(mchUserId) {
       try {
         const telData = await planner.tel({

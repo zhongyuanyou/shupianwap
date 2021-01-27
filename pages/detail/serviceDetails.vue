@@ -45,7 +45,12 @@
     <ServiceInfo :client-details-data="scProductDetailData.clientDetails" />
     <!--    推荐规划师-->
     <div class="planners-box">
-      <Planners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
+      <Planners
+        :base-data="scProductDetailData.baseData"
+        :operating-data="scProductDetailData.operating"
+        :im-jump-query="imJumpQuery"
+        :recommend-planner="planners"
+      />
       <!--   暂时取消此表单   -->
       <!--      <div class="planners-box-quiz">-->
       <!--        <h2>您的疑问，第一时间为您解答</h2>-->
@@ -68,6 +73,8 @@
       />
     </sp-list>
     <commodityConsultation
+      :base-data="scProductDetailData.baseData"
+      :operating-data="scProductDetailData.operating"
       :im-jump-query="imJumpQuery"
       :planner-info="scPlannerDetailData"
     />

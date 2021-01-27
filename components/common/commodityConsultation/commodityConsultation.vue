@@ -2,11 +2,15 @@
   <div class="commodityConsult">
     <div class="commodityConsult-containner">
       <div class="commodityConsult-containner-userInfo">
-        <nuxt-link
-          :to="{
-            path: '/planner/detail',
-            query: { mchUserId: plannerInfo.mchUserId },
-          }"
+        <a
+          v-md:p_plannerBoothClick
+          data-even_name="p_plannerBoothClick"
+          :data-recommend_number="plannerInfo.dggPlannerRecomLog"
+          :data-planner_number="plannerInfo.userCenterNo"
+          :data-planner_name="plannerInfo.userName"
+          :data-crisps_fraction="plannerInfo.point"
+          href="javascript:void(0);"
+          @click="plannerInfoUrlJump(plannerInfo.mchUserId)"
         >
           <sp-image
             width="0.8rem"
@@ -15,21 +19,40 @@
             fit="cover"
             :src="plannerInfo.portrait"
           />
-        </nuxt-link>
+        </a>
         <div class="commodityConsult-containner-userInfo-name">
-          <nuxt-link
-            :to="{
-              path: '/planner/detail',
-              query: { mchUserId: plannerInfo.mchUserId },
-            }"
+          <a
+            v-md:p_plannerBoothClick
+            data-even_name="p_plannerBoothClick"
+            :data-recommend_number="plannerInfo.dggPlannerRecomLog"
+            :data-planner_number="plannerInfo.userCenterNo"
+            :data-planner_name="plannerInfo.userName"
+            :data-crisps_fraction="plannerInfo.point"
+            href="javascript:void(0);"
+            @click="plannerInfoUrlJump(plannerInfo.mchUserId)"
           >
             <p>{{ plannerInfo.userName }}</p>
-          </nuxt-link>
+          </a>
           <span>{{ plannerInfo.postName }}</span>
         </div>
       </div>
       <div class="commodityConsult-containner-handle">
         <sp-button
+          v-md:p_IMClick
+          data-even_name="p_IMClick"
+          :data-recommend_number="plannerInfo.dggPlannerRecomLog"
+          data-im_type="售前"
+          :data-commodity_number="baseData.productNo"
+          :data-commodity_name="operatingData.showName"
+          data-commodity_type="服务商品"
+          data-commodity_level_1=""
+          :data-com_level_1_code="baseData.parentClassCode.split(',')[0]"
+          data-commodity_level_2=""
+          :data-com_level_2_code="baseData.parentClassCode.split(',')[1]"
+          :data-n_now_price="baseData.referencePrice"
+          :data-planner_number="plannerInfo.userCenterNo"
+          :data-crisps_fraction="plannerInfo.point"
+          :data-planner_name="plannerInfo.userName"
           type="primary"
           @click="sendTemplateMsgWithImg(plannerInfo.mchUserId)"
         >
@@ -56,6 +79,18 @@ export default {
   },
   mixins: [imHandle],
   props: {
+    baseData: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+    operatingData: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
     plannerInfo: {
       type: Object,
       default: () => {
@@ -70,6 +105,13 @@ export default {
     },
   },
   methods: {
+    // 规划师详情跳转
+    plannerInfoUrlJump(mchUserId) {
+      this.$router.push({
+        path: '/planner/detail',
+        query: { mchUserId },
+      })
+    },
     // 拨打电话
     async handleTel(mchUserId) {
       try {

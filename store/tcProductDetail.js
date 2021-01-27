@@ -5,6 +5,7 @@
  */
 export const state = () => ({
   detailData: {
+    baseData: {},
     classCodeLevelList: [],
     platformPrice: '0',
     classCodeLevel: '',
