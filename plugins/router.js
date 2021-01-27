@@ -103,7 +103,6 @@ export default ({ app, store }) => {
             userId,
             userType,
           })
-          console.log(2, initImSdk)
           store.commit('im/SET_IM_SDK', initImSdk)
         }
       })

@@ -107,7 +107,7 @@ export default {
       position: absolute;
       left: 0;
       top: 0;
-      background: rgba(0, 0, 0, 0.2);
+      //   background: rgba(0, 0, 0, 0.2);
     }
     > img {
       width: 100%;
