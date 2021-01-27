@@ -108,7 +108,11 @@
           <!-- S 自定义加载控件 -->
           <template #loading>
             <div>
-              <LoadingDown v-show="!refreshing && loading" :loading="true" />
+              <LoadingDown
+                v-show="!refreshing && loading"
+                bg-color="transparent"
+                :loading="true"
+              />
             </div>
           </template>
           <!-- E 自定义加载控件 -->
