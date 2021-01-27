@@ -43,8 +43,8 @@ export function checkCode(tel, code) {
 
 export function checkEmail(email) {
   // /^[a-zA-Z0-9_-]+@([a-zA-Z0-9]+\.)+(com|cn|net|org)$/
-  const Regex = /^[a-zA-Z0-9_-]+@((qq|163|sina|sohu|gmail|msn|live)+\.)+(com|cn|net|org)$/
-  return Regex.test(email)
+  const regex = /^[a-zA-Z0-9_-]+@((qq|163|sina|sohu|gmail|msn|live)+\.)+(com|cn|net|org)$/
+  return regex.test(email)
 }
 
 /**
@@ -53,8 +53,10 @@ export function checkEmail(email) {
  * @returns  boolean
  */
 export function checkPhone(telephoneNumber) {
-  const Regex = /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[3-8]{1})|(18[0-9]{1})|(19[0-9]{1})|(14[5-7]{1}))+\d{8})$/
-  return Regex.test(telephoneNumber)
+  // const regex = /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[3-8]{1})|(18[0-9]{1})|(19[0-9]{1})|(14[5-7]{1}))+\d{8})$/
+  // 电话号码规则为： 1开头，总共11位数字就行
+  const regex = /^1\d{10}$/
+  return regex.test(telephoneNumber)
 }
 
 /**
@@ -67,8 +69,8 @@ export function checkPassword(password) {
   // const Regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{6,15}$/
   // 至少6-15个字符 可以包含\"#$%&'()*+,-./:;<=>?@[]^_`{|}~等特殊字符
   // eslint-disable-next-line
-  const Regex = /^[A-Za-z0-9!\\"#\$%&'\(\)\*\+,-.\/\:;<=>\?@\[\]\^_`\{\|\}\~]{6,15}$/
-  return Regex.test(password)
+  const regex = /^[A-Za-z0-9!\\"#\$%&'\(\)\*\+,-.\/\:;<=>\?@\[\]\^_`\{\|\}\~]{6,15}$/
+  return regex.test(password)
 }
 
 /**
@@ -78,6 +80,6 @@ export function checkPassword(password) {
  */
 export function checkAuthCode(authCode) {
   // 6个数字
-  const Regex = /\d{6}/
-  return Regex.test(authCode)
+  const regex = /\d{6}/
+  return regex.test(authCode)
 }

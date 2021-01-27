@@ -161,7 +161,10 @@ export default {
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
           `${domainUrl}found/foundSearch` +
           '","isHideNav":1,"isHideBack":1},"isLogin":"1","version":"1.0.0"}'
-        const android = ''
+        const android =
+          '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
+          `${domainUrl}found/foundSearch` +
+          '","isHideNav":1,"emptyTitle":"标题"},"isLogin":"1","version":"1.0.0"}'
         this.$appFn.dggJumpRoute({ iOSRouter: ios, androidRouter: android })
         return
       }

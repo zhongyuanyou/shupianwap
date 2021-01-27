@@ -1,7 +1,11 @@
 <template>
   <div class="search">
     <!--S 搜索框-->
-    <FoundHeader @inputChange="inputChange" @handelKeydown="handelKeydown" />
+    <FoundHeader
+      @inputChange="inputChange"
+      @handleLeft="handleLeft"
+      @handelKeydown="handelKeydown"
+    />
     <!--E 搜索框-->
     <!--S 内容-->
     <div class="search_con">
@@ -51,6 +55,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import FoundHeader from '~/components/found/common/FoundHeader'
 export default {
   layout: 'keepAlive',
@@ -61,6 +66,11 @@ export default {
       historySearch: [], // 搜索历史
       keywords: '', // 搜索检索关键字
     }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
   mounted() {
     try {
@@ -99,6 +109,13 @@ export default {
     },
     handelKeydown(data) {
       this.handleClick(data)
+    },
+    handleLeft() {
+      if (this.isInApp) {
+        this.$appFn.dggCloseWebView((res) => {})
+        return
+      }
+      this.$router.back()
     },
   },
 }

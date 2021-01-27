@@ -1,67 +1,70 @@
 <template>
   <div class="need">
     <p class="need_title">猜您需要</p>
-    <div v-for="item in productData" :key="item.id" class="need_item">
-      <nuxt-link
-        :to="{
-          path: '/detail/transactionDetails',
-          query: {
-            type: detailType,
-            productId: item.id,
-          },
-        }"
-      >
-        <div class="need_item_img">
-          <sp-image
-            width="1.6rem"
-            height="1.6rem"
-            fit="cover"
-            radius="0.04rem"
-            lazy-load
-            :src="`${item.productImgArr[0]}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
-          />
-        </div>
-        <div class="need_item_rt">
-          <p class="title">
-            {{ item.name }}
-          </p>
-          <div class="label">{{ getItemList(item.fieldList).join(' | ') }}</div>
-          <div class="tags">
-            <div v-for="(tItem, index) in 0" :key="index" class="tags_item">
-              {{ tItem }}
-            </div>
+    <sp-skeleton :row="20" :loading="needLoading">
+      <div v-for="item in productData" :key="item.id" class="need_item">
+        <nuxt-link
+          :to="{
+            path: '/detail/transactionDetails',
+            query: {
+              type: detailType,
+              productId: item.id,
+            },
+          }"
+        >
+          <div class="need_item_img">
+            <sp-image
+              width="1.6rem"
+              height="1.6rem"
+              fit="cover"
+              radius="0.04rem"
+              lazy-load
+              :src="`${item.productImgArr[0]}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
+            />
           </div>
-          <p class="money">{{ item.platformPrice }}元</p>
-        </div>
-      </nuxt-link>
-    </div>
+          <div class="need_item_rt">
+            <p class="title">
+              {{ item.name }}
+            </p>
+            <div class="label">
+              {{ getItemList(item.fieldList).join(' | ') }}
+            </div>
+            <div class="tags">
+              <div v-for="(tItem, index) in 0" :key="index" class="tags_item">
+                {{ tItem }}
+              </div>
+            </div>
+            <p class="money">{{ item.platformPrice }}元</p>
+          </div>
+        </nuxt-link>
+      </div>
+    </sp-skeleton>
   </div>
 </template>
 
 <script>
-import { Image } from '@chipspc/vant-dgg'
+import { Image, Skeleton } from '@chipspc/vant-dgg'
 export default {
   name: 'Need',
   components: {
     [Image.name]: Image,
+    [Skeleton.name]: Skeleton,
   },
   props: {
     productData: {
       type: Array,
       default: () => [],
     },
-    detailType: {
-      type: String,
-      default: () => {
-        return this.$route.query.type ? this.$route.query.type : null
-      },
-    },
   },
   data() {
     return {
-      label: ['四川成都', '2025到期', '有安许证'],
-      tags: ['公司干净', '总包公司', '市政三级'],
+      needLoading: true,
     }
+  },
+  computed: {
+    detailType() {
+      return this.$route.query.type ? this.$route.query.type : null
+    },
   },
   methods: {
     getItemList(list) {
@@ -83,6 +86,9 @@ export default {
 .need {
   background-color: #fff;
   padding: 48px 40px 0 40px;
+  /deep/.sp-skeleton {
+    margin-top: 64px;
+  }
   &_title {
     font-size: 40px;
     font-family: PingFang SC;

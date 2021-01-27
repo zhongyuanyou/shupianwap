@@ -66,15 +66,14 @@ module.exports = {
         ssr: false,
         type: 'text/javascript',
         charset: 'utf-8',
-        defer: 'defer'
+        defer: 'defer',
       },
       {
-        src:
-          'https://cdn.shupian.cn/sppt/md/sppt-mdweb-sdk.min.js',
+        src: 'https://cdn.shupian.cn/sppt/md/sppt-mdweb-sdk.min.js',
         ssr: false,
         type: 'text/javascript',
         charset: 'utf-8',
-        defer: 'defer'
+        defer: 'defer',
       },
       {
         src: '/js/flexible.js',
@@ -132,7 +131,6 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     '@nuxtjs/style-resources',
-    'cookie-universal-nuxt',
     ['cookie-universal-nuxt', { parseJSON: true }],
   ],
   axios: {

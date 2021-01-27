@@ -69,6 +69,7 @@ export default {
     font-weight: bold;
     color: #222222;
     line-height: 52px;
+    word-break: break-all;
   }
   &-label {
     display: flex;

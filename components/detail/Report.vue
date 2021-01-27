@@ -9,6 +9,7 @@
         <p class="score">{{ MockData.values[1] }}</p>
         <p class="txt">评估结果：<span>优秀</span></p>
       </div>
+      <div class="dividing"></div>
       <div class="process">
         <div class="process_item" style="margin-top: 0">
           <p class="title">{{ MockData.keys[0] }}</p>
@@ -118,20 +119,20 @@ export default {
   }
   &_con {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     flex-direction: row;
     margin-top: 54px;
-    position: relative;
+    /*position: relative;*/
     .result {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-direction: column;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
+      /*position: absolute;*/
+      /*left: 0;*/
+      /*top: 0;*/
+      /*bottom: 0;*/
       .score {
         font-size: 66px;
         font-family: Bebas;
@@ -143,13 +144,28 @@ export default {
         font-family: PingFang SC;
         font-weight: bold;
         color: #1a1a1a;
+        margin-top: 32px;
         span {
           color: #4974f5;
         }
       }
     }
+    .dividing {
+      height: 130px;
+      border-right: 1px solid #f4f4f4;
+    }
     .process {
-      width: 450px;
+      width: 440px;
+      /*position: relative;*/
+      /*&::after {*/
+      /*  content: '';*/
+      /*  display: inline-block;*/
+      /*  height: 130px;*/
+      /*  border-right: 1px solid #f4f4f4;*/
+      /*  position: absolute;*/
+      /*  bottom: 1px;*/
+      /*  left: -35px;*/
+      /*}*/
       &_item {
         width: 100%;
         display: flex;

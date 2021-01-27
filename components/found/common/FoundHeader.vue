@@ -59,7 +59,7 @@ export default {
     },
     handleLeft() {
       // 点击返回按钮
-      this.$router.back()
+      this.$emit('handleLeft')
     },
     handelKeydown(e) {
       if (e.keyCode === 13) {
