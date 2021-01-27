@@ -191,6 +191,12 @@ export default {
     font-size: 32px;
     color: #222222;
     font-weight: bold;
+    &:first-child {
+      padding-left: 0;
+    }
+  }
+  /deep/ .sp-tabs__nav--complete {
+    padding-left: 0;
   }
   /deep/ .sp-tab--active {
     font-size: 40px;

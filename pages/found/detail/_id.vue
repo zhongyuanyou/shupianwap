@@ -33,7 +33,7 @@
               height="0.88rem"
               fit="cover"
               class="detail_con_info_logo_con_logo"
-              :src="avatar"
+              src="https://cdn.shupian.cn/sp-pt/wap/images/chc1l64fweo0000.png"
             />
           </div>
           <div class="detail_con_info_content">
