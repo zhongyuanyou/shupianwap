@@ -11,7 +11,7 @@
       }"
     >
       <div class="search_input_con_lf">
-        <div v-if="left" class="icon" @click="handleLeft">
+        <div v-if="left" class="icon" @click="handleLeft(false)">
           <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
         </div>
         <div
@@ -34,7 +34,7 @@
           </form>
         </div>
       </div>
-      <p class="cancel" @click="handleLeft">取消</p>
+      <p class="cancel" @click="handleLeft(true)">取消</p>
     </div>
   </div>
   <!--E 搜索框-->
@@ -82,9 +82,9 @@ export default {
       // input改变事件
       this.$emit('inputChange', this.keyword)
     },
-    handleLeft() {
+    handleLeft(val) {
       // 点击返回按钮
-      this.$emit('handleLeft')
+      this.$emit('handleLeft', val)
     },
     handelKeydown(e) {
       if (e.keyCode === 13) {

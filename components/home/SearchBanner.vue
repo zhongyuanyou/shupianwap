@@ -15,7 +15,7 @@
         alt=""
       />
     </a>
-    <sp-sticky @scroll="searchHandle">
+    <sp-sticky>
       <Search
         ref="searchRef"
         :icon-left="0.24"
@@ -84,15 +84,19 @@ export default {
       this.opacity = 1
     }
   },
+  mounted() {
+    if (this.fiexdBannerData.length) {
+      this.$parent.$refs.homeRef.addEventListener('scroll', this.searchHandle) // 监听滚动
+    }
+  },
   methods: {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
     }),
     // 滚动改变搜索栏透明度
-    searchHandle({ scrollTop }) {
-      if (this.fiexdBannerData.length) {
-        this.opacity = scrollTop / this.scollPercentage
-      }
+    searchHandle() {
+      const scrollTop = this.$parent.$refs.homeRef.scrollTop // 滚动条距离顶部的位置
+      this.opacity = scrollTop / this.scollPercentage
     },
     // 选择城市
     swichCityHandle() {
@@ -114,12 +118,16 @@ export default {
   font-size: 24px;
   position: relative;
   width: 100%;
-  img {
+  > a {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 552px;
+    img {
+      width: 100%;
+      height: 552px;
+    }
   }
 }
 .city-box {

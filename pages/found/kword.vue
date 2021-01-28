@@ -130,7 +130,11 @@ export default {
         }
       }
     },
-    handleLeft() {
+    handleLeft(data) {
+      if (data) {
+        this.$router.go(-2)
+        return
+      }
       this.$router.back()
     },
   },

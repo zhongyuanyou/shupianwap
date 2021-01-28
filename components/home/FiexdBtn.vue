@@ -24,22 +24,16 @@ export default {
   },
   mounted() {
     // 监听页面滚动
-    window.addEventListener('scroll', this.scrollToTop)
+    this.$parent.$refs.homeRef.addEventListener('scroll', this.scrollToTop)
     // 动态获取头部搜索栏高度
     this.headHeight = this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight
-  },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.scrollToTop)
   },
   methods: {
     scrollToTop() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
       this.recommendTop =
         this.$parent.$refs.recommendRef.$el.offsetTop - this.headHeight
-      const scrollTop =
-        window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop
+      const scrollTop = this.$parent.$refs.homeRef.scrollTop // 滚动条距离顶部的位置
       const showScollHeight =
         this.$parent.$refs.showScollHeight.$el.offsetTop - this.headHeight
       if (scrollTop > showScollHeight && scrollTop < this.recommendTop) {
@@ -57,20 +51,20 @@ export default {
       this.btnData.isShow = false
     },
     scrollHandle(text) {
-      let top = document.documentElement.scrollTop || document.body.scrollTop
+      let top = this.$parent.$refs.homeRef.scrollTop
       // 获取推荐板块到顶部的距离 减 搜索栏高度
       this.recommendTop =
         this.$parent.$refs.recommendRef.$el.offsetTop - this.headHeight
       const timer = setInterval(() => {
         if (text === '推荐') {
-          document.body.scrollTop = document.documentElement.scrollTop = top += 80
+          this.$parent.$refs.homeRef.scrollTop = top += 80
           if (top >= this.recommendTop) {
-            document.body.scrollTop = document.documentElement.scrollTop = this.recommendTop
+            this.$parent.$refs.homeRef.scrollTop = this.recommendTop
             clearInterval(timer)
           }
           return
         }
-        document.body.scrollTop = document.documentElement.scrollTop = top -= 200
+        this.$parent.$refs.homeRef.scrollTop = top -= 200
         if (top <= 0) {
           clearInterval(timer)
         }
