@@ -9,7 +9,15 @@
     />
     <!--E 搜索-->
     <!--S 内容-->
-    <div class="safe_con">
+    <div
+      class="safe_con"
+      :style="{
+        paddingTop:
+          appInfo && appInfo.statusBarHeight
+            ? appInfo.statusBarHeight + 'px'
+            : 0,
+      }"
+    >
       <div class="safe_con_con">
         <div class="safe_con_con_title">相关新闻</div>
         <sp-list

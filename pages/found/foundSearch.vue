@@ -8,7 +8,15 @@
     />
     <!--E 搜索框-->
     <!--S 内容-->
-    <div class="search_con">
+    <div
+      class="search_con"
+      :style="{
+        paddingTop:
+          appInfo && appInfo.statusBarHeight
+            ? appInfo.statusBarHeight + 'px'
+            : 0,
+      }"
+    >
       <!--S 有搜索历史-->
       <div v-show="historySearch.length && !keywords" class="has_history">
         <div class="has_history_title">
@@ -70,6 +78,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
   mounted() {
@@ -124,9 +133,8 @@ export default {
 <style lang="less" scoped>
 .search {
   width: 100%;
-  height: 100%;
   background-color: #fff;
-  padding: 0 40px;
+  padding: 128px 40px 0 40px;
   .no-data {
     display: flex;
     flex-direction: column;
@@ -145,10 +153,9 @@ export default {
     }
   }
   &_con {
-    margin-top: 128px;
     display: flex;
-    padding-top: constant(safe-area-inset-top);
-    padding-top: env(safe-area-inset-top);
+    //padding-top: constant(safe-area-inset-top);
+    //padding-top: env(safe-area-inset-top);
     .no_history {
       margin-top: 279px;
       display: flex;
