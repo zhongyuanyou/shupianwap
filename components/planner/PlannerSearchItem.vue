@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-14 10:48:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-25 11:03:11
+ * @LastEditTime: 2021-01-28 14:37:26
  * @Description: file content
  * @FilePath: /chips-wap/components/planner/PlannerSearchItem.vue
 -->
@@ -99,7 +99,8 @@ export default {
   computed: {
     formatTagList() {
       if (!Array.isArray(this.itemData.tagList)) return []
-      return this.itemData.tagList.slice(0, 2)
+      const formatData = this.itemData.tagList.slice(0, 5)
+      return formatData
     },
   },
   methods: {
@@ -191,6 +192,9 @@ export default {
       line-height: 1;
       font-size: 22px;
       display: flex;
+      flex-wrap: wrap;
+      overflow: hidden;
+      max-height: 40px;
     }
     &-tag {
       max-width: 148px;
@@ -198,6 +202,7 @@ export default {
       padding: 0 8px;
       line-height: 32px;
       margin-left: 12px;
+      margin-bottom: 12px;
       .textOverflow(1);
       &:first-child {
         margin-left: 0;

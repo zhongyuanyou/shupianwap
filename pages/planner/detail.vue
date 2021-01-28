@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-28 13:38:57
+ * @LastEditTime: 2021-01-28 14:41:29
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -244,7 +244,7 @@ export default {
     formatTagList() {
       const tagList = this.detailData.tagList
       if (!Array.isArray(tagList)) return []
-      const formatData = tagList.slice(0, 2)
+      const formatData = tagList.slice(0, 5)
       return formatData
     },
     formatServeAgeText() {
@@ -622,13 +622,18 @@ export default {
         line-height: 1em;
         font-size: 0;
         display: flex;
+        flex-wrap: wrap;
+        overflow: hidden;
+        max-height: 60px;
         &-item {
+          flex-shrink: 0;
           background-color: #eadacd;
           color: #222222;
           font-size: 24px;
           font-weight: 400;
           line-height: 50px;
           margin-left: 12px;
+          margin-bottom: 12px;
           padding: 0 18px;
           border-radius: 4px;
           max-width: 280px;
