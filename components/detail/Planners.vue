@@ -60,9 +60,13 @@
             :data-commodity_name="operatingData.showName"
             data-commodity_type="服务商品"
             data-commodity_level_1=""
-            :data-com_level_1_code="baseData.parentClassCode.split(',')[0]"
+            :data-com_level_1_code="
+              baseData.parentClassCode && baseData.parentClassCode.split(',')[0]
+            "
             data-commodity_level_2=""
-            :data-com_level_2_code="baseData.parentClassCode.split(',')[1]"
+            :data-com_level_2_code="
+              baseData.parentClassCode && baseData.parentClassCode.split(',')[1]
+            "
             :data-n_now_price="baseData.referencePrice"
             :data-planner_number="item.userCenterNo"
             :data-crisps_fraction="item.point"
