@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-27 08:51:52
+ * @LastEditTime: 2021-01-28 13:38:57
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -12,20 +12,23 @@
     <div v-if="!hideHeader" class="head">
       <Header title="规划师">
         <template #left>
-          <my-icon
+          <sp-icon
+            class-prefix="spiconfont"
             name="nav_ic_back"
             size="0.4rem"
             color="#1A1A1A"
-            class="head__icon-back"
+            style="margin-left: 0.4rem"
             @click.native="onClickLeft"
-          ></my-icon>
+          />
         </template>
         <template #right>
-          <my-icon
+          <sp-icon
+            class-prefix="spiconfont"
             class="head__icon-share"
             name="nav_ic_share"
             size="0.4rem"
             color="#1A1A1A"
+            style="margin-right: 0.4rem"
             @click.native="onClickRight"
           />
         </template>
@@ -189,6 +192,7 @@
 import { mapState, mapMutations } from 'vuex'
 
 import {
+  Icon,
   Button,
   Image,
   Tag,
@@ -208,6 +212,7 @@ import { callPhone, copyToClipboard } from '@/utils/common'
 export default {
   name: 'List',
   components: {
+    [Icon.name]: Icon,
     [Button.name]: Button,
     [Image.name]: Image,
     [Tag.name]: Tag,
@@ -430,7 +435,11 @@ export default {
         return
       }
 
-      // 在浏览器里 返回
+      // 在浏览器里 返回, 若没返回记录了，就跳转到首页
+      if (window && window.history && window.history.length <= 1) {
+        this.$router.replace('/')
+        return
+      }
       this.$router.back(-1)
     },
 
@@ -537,12 +546,6 @@ export default {
   height: 100%;
   background-color: #ffffff;
   .head {
-    &__icon-back {
-      margin-left: 40px;
-    }
-    &__icon-share {
-      margin-right: 40px;
-    }
   }
   .body {
     padding: 0;
