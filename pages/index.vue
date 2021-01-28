@@ -64,7 +64,7 @@ import Recommend from '@/components/home/Recommend'
 import FiexdBtn from '@/components/home/FiexdBtn'
 import DownloadApp from '@/components/common/app/DownloadApp'
 export default {
-  layout: 'nav',
+  layout: 'newNav',
   name: 'Home',
   components: {
     SearchBanner,
@@ -197,8 +197,10 @@ export default {
 <style lang="less" scoped>
 .home-page-content {
   max-width: 1000px;
-  margin: auto;
-  overflow: hidden;
+  margin: 0 auto;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   /deep/ .sp-sticky--fixed {
     max-width: 1000px;
     width: 100%;

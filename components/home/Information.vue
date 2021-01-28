@@ -140,7 +140,6 @@ export default {
   width: 100%;
   padding: 32px 40px 32px 40px;
   box-sizing: border-box;
-  overflow: hidden;
   .titel-btn {
     display: flex;
     align-items: center;
