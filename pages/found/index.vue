@@ -159,11 +159,11 @@ export default {
       if (this.isInApp) {
         const ios =
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
-          `http://172.16.139.140:3001/found/foundSearch` +
+          `${domainUrl}found/foundSearch` +
           '","isHideNav":1,"isHideBack":1},"isLogin":"0","version":"1.0.0"}'
         const android =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
-          `http://172.16.139.140:3001/found/foundSearch` +
+          `${domainUrl}found/foundSearch` +
           '","isHideNav":1,"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
         this.$appFn.dggJumpRoute({ iOSRouter: ios, androidRouter: android })
         return
