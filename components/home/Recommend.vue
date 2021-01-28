@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Swipe, swipeItem, Skeleton } from '@chipspc/vant-dgg'
 import getUserSign from '@/utils/fingerprint'
 import { homeApi } from '@/api'
@@ -127,6 +128,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+    }),
     cityCode() {
       return this.$store.state.city.currentCity.code
     },
@@ -158,13 +162,10 @@ export default {
     try {
       this.searchDomHeight =
         this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
-      window.addEventListener('scroll', this.handleScroll) // 监听滚动
+      this.$parent.$refs.homeRef.addEventListener('scroll', this.handleScroll) // 监听滚动
     } catch (error) {
       console.log(error)
     }
-  },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     // 滚动加载更多
@@ -175,12 +176,9 @@ export default {
         !this.loading &&
         !this.tabBtn[this.curentItem].noMore
       ) {
-        const pageScrollTop =
-          window.pageYOffset ||
-          document.documentElement.scrollTop ||
-          document.body.scrollTop // 滚动条距离顶部的位置
-        const pageScrollHeight = document.body.scrollHeight // 页面文档的总高度
-        const pageClientHeight = window.innerHeight // 窗口文档显示区域的高度
+        const pageScrollTop = this.$parent.$refs.homeRef.scrollTop // 滚动条距离顶部的位置
+        const pageScrollHeight = this.$parent.$refs.homeRef.scrollHeight // 页面文档的总高度
+        const pageClientHeight = this.$parent.$refs.homeRef.clientHeight // 文档显示区域的高度
         // 监听页面是否滚动到底部加载更多数据
         if (Math.ceil(pageScrollTop + pageClientHeight) >= pageScrollHeight) {
           this.loading = true
@@ -204,8 +202,7 @@ export default {
             this.$refs.recomRef.$el.offsetTop -
             this.searchDomHeight -
             tabCurveDomHeight // 推荐列表距离顶部的距离 - 搜索栏高度 - tab栏高度 （用于切换tab重置列表滚动位置）
-          document.documentElement.scrollTop = this.listOffsetTop + 1
-          document.body.scrollTop = this.listOffsetTop + 1
+          this.$parent.$refs.homeRef.scrollTop = this.listOffsetTop + 1
         })
       }
       this.curentItem = index
@@ -245,6 +242,7 @@ export default {
         params.sceneId = this.params.sceneId
         params.maxsize = this.params.maxsize
         params.platform = this.params.platform
+        params.userId = this.userId || null
       }
 
       // 广告位code

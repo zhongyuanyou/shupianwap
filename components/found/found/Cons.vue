@@ -217,13 +217,13 @@ export default {
           `${url}` +
           '","isHideNav":' +
           hide +
-          ',"emptyTitle":"标题"},"isLogin":"1","version":"1.0.0"}'
+          ',"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
         const adRouter =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
           `${url}` +
           '","isHideNav":' +
           hide +
-          ',"emptyTitle":"标题"},"isLogin":"1","version":"1.0.0"}'
+          ',"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
         this.$appFn.dggJumpRoute(
           { iOSRouter: iosRouter, androidRouter: adRouter },
           (res) => {}

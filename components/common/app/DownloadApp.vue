@@ -48,7 +48,7 @@ export default {
   left: 0;
   top: 0;
   background-color: rgba(0, 0, 0, 0.7);
-  z-index: 2001;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -102,8 +102,6 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 76px;
-      height: 76px;
       border: none;
       background-color: transparent;
       margin: 48px auto 0;

@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-26 14:27:30
+ * @LastEditTime: 2021-01-28 14:46:10
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/list.vue
 -->
@@ -160,7 +160,6 @@ import {
   Button,
   DropdownMenu,
   DropdownItem,
-  Toast,
   PullRefresh,
   List,
   Cell,
@@ -578,9 +577,11 @@ export default {
         const data = await dict.findCmsTier({ axios: this.$axios }, { code })
         console.log(data)
         if (Array.isArray(data) && data.length) {
+          const { code: currentCityCode } = this.currentCity || {}
           this.regionsOption = [
             {
-              ...this.currentCity,
+              name: '区域',
+              code: currentCityCode,
               children: Array.isArray(data) ? data : [],
             },
           ]

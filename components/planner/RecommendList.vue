@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2021-01-14 13:58:34
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-26 10:50:32
+ * @LastEditTime: 2021-01-28 10:27:51
  * @Description: file content
  * @FilePath: /chips-wap/components/planner/RecommendList.vue
 -->
@@ -20,11 +20,18 @@
     >
       <div class="recommend-list__contianer">
         <div v-for="item in list" :key="item.id">
+          <!-- TODO: 目前缺少classCodeLevel 字段，需要赵东明确定 -->
           <div
             v-md:p_commodityClick
-            :data-recommend_number="item.id"
-            :data-commodity_level_1="item.commodity_level_1"
-            :data-commodity_level_2="item.commodity_level_2"
+            data-commodity_level_1=""
+            data-commodity_level_2=""
+            :data-com_level_1_code="
+              item.classCodeLevel && item.classCodeLevel.split(',')[0]
+            "
+            :data-com_level_2_code="
+              item.classCodeLevel && item.classCodeLevel.split(',')[1]
+            "
+            :data-recommend_number="item.dggProductRecomLog"
             :data-commodity_type="'服务商品'"
             :data-commodity_number="item.productNo"
             :data-commodity_name="item.name"
