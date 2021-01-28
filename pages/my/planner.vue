@@ -57,7 +57,7 @@
                     <p>{{ item.recentCompany }}</p>
                     <div v-if="item.tagList.length" class="tag-list">
                       <sp-tag
-                        v-for="tag of item.tagList.slice(0, 2)"
+                        v-for="tag of item.tagList.slice(0, 5)"
                         :key="tag"
                         class="tag"
                         color="#F0F2F5"
@@ -416,10 +416,16 @@ export default {
           line-height: 1;
           font-size: 22px;
           display: flex;
+          flex-wrap: wrap;
+          max-height: 40px;
+          overflow: hidden;
           .tag {
             max-width: 148px;
-            height: 32px;
+            min-height: 32px;
+            padding: 0 8px;
+            line-height: 32px;
             margin-left: 12px;
+            margin-bottom: 12px;
             .textOverflow(1);
             &:first-child {
               margin-left: 0;
