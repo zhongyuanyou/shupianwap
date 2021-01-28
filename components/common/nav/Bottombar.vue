@@ -82,13 +82,18 @@ export default {
       const path = this.$route.path
       this.active = path
     },
+    userInfo(val) {
+      if (!val.token) {
+        this.unreadNum = 0
+      }
+    },
   },
   created() {
     const path = this.$route.path
     this.active = path
   },
   mounted() {
-    if (this.imExample) {
+    if (this.imExample && this.userInfo.token) {
       //  获取IM未读消息总数
       pullUnreadMsgCount(this.imExample).then((res) => {
         console.log('IM消息未读数：', res)

@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Swipe, swipeItem, Skeleton } from '@chipspc/vant-dgg'
 import getUserSign from '@/utils/fingerprint'
 import { homeApi } from '@/api'
@@ -127,6 +128,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+    }),
     cityCode() {
       return this.$store.state.city.currentCity.code
     },
@@ -238,6 +242,7 @@ export default {
         params.sceneId = this.params.sceneId
         params.maxsize = this.params.maxsize
         params.platform = this.params.platform
+        params.userId = this.userId || null
       }
 
       // 广告位code
