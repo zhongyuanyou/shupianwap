@@ -1,7 +1,15 @@
 <template>
   <!--S 搜索框-->
   <div class="search_header">
-    <div class="search_input_con">
+    <div
+      class="search_input_con"
+      :style="{
+        paddingTop:
+          appInfo && appInfo.statusBarHeight
+            ? appInfo.statusBarHeight + 'px'
+            : 0,
+      }"
+    >
       <div class="search_input_con_lf">
         <div v-if="left" class="icon" @click="handleLeft">
           <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
@@ -33,6 +41,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'Header',
   props: {
@@ -50,6 +60,21 @@ export default {
   data() {
     return {
       keyword: this.keywords,
+      safeTop: 20, // 顶部安全区的高度
+      useSafeAreaClass: false,
+    }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
+    }),
+  },
+  created() {
+    // 因为通过中间件ua获取到了 isInApp 的值，故可以在服务端设置，避免页面上头部抖动
+    if (process && process.server && !this.isInApp) {
+      this.safeTop = 0
+      this.useSafeAreaClass = true
     }
   },
   methods: {
@@ -78,8 +103,6 @@ export default {
   right: 0;
   width: 100%;
   z-index: 3;
-  padding-top: constant(safe-area-inset-top);
-  padding-top: env(safe-area-inset-top);
   background-color: #fff;
   .search_input_con {
     width: 100%;
@@ -88,13 +111,13 @@ export default {
     align-items: center;
     flex-direction: row;
     padding: 0 40px;
-    height: 128px;
     background-color: #fff;
     &_lf {
       display: flex;
       justify-content: flex-start;
       align-items: center;
       flex-direction: row;
+      height: 128px;
       .icon {
         height: 96px;
         display: flex;
@@ -150,7 +173,8 @@ export default {
       font-family: PingFang SC;
       font-weight: bold;
       color: #1a1a1a;
-      line-height: 44px;
+      line-height: 128px;
+      height: 128px;
     }
   }
 }
