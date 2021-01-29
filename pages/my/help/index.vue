@@ -79,19 +79,19 @@
           :offset-top="headHeight - 0.5"
           @scroll="searchHandle"
         >
-          <sp-work-tabs
+          <sp-tabs
             v-model="active"
             :ellipsis="false"
             :scrollspy="false"
             @click="tabsClickHandle"
           >
-            <sp-work-tab
+            <sp-tab
               v-for="(item, index) in tabData"
               :key="index"
               :title="item.name"
               :name="index"
-            ></sp-work-tab>
-          </sp-work-tabs>
+            ></sp-tab>
+          </sp-tabs>
         </sp-sticky>
         <!-- E tab -->
         <!-- S 列表 -->
@@ -133,8 +133,8 @@
 <script>
 import {
   Search,
-  WorkTab,
-  WorkTabs,
+  Tab,
+  Tabs,
   Bottombar,
   BottombarButton,
   BottombarIcon,
@@ -155,8 +155,8 @@ export default {
     LoadingDown,
     [Sticky.name]: Sticky,
     [Search.name]: Search,
-    [WorkTab.name]: WorkTab,
-    [WorkTabs.name]: WorkTabs,
+    [Tab.name]: Tab,
+    [Tabs.name]: Tabs,
     [Bottombar.name]: Bottombar,
     [BottombarButton.name]: BottombarButton,
     [BottombarIcon.name]: BottombarIcon,
@@ -482,25 +482,25 @@ export default {
     }
   }
   .tab-content {
-    /deep/ .sp-work-tabs__nav {
+    /deep/ .sp-tabs__nav {
       padding-left: 8px;
     }
     .isBorder {
-      /deep/ .sp-work-tabs__wrap {
+      /deep/ .sp-tabs__wrap {
         border-bottom: none;
       }
     }
-    /deep/ .sp-work-tabs__wrap {
+    /deep/ .sp-tabs__wrap {
       height: 100px;
       padding-right: 8px;
       border-bottom: 1px solid #f4f4f4;
     }
-    /deep/ .sp-work-tab {
+    /deep/ .sp-tab {
       padding: 0 32px;
       padding-top: 29px;
       display: inline !important;
       flex: none !important;
-      .sp-work-tab__text {
+      .sp-tab__text {
         font-size: 32px;
         line-height: 32px;
         font-family: PingFang SC;
@@ -508,19 +508,19 @@ export default {
         color: #222222;
       }
     }
-    /deep/ .sp-work-tabs__nav .sp-work-tab {
+    /deep/ .sp-tabs__nav .sp-tab {
       &:last-child {
         padding-right: 40px !important;
       }
     }
-    /deep/ .sp-work-tabs__line {
+    /deep/ .sp-tabs__line {
       width: 32px;
       height: 6px;
       background: #4974f5;
       border-radius: 3px;
-      bottom: 14px;
+      bottom: 44px;
     }
-    /deep/ .sp-work-tab--active .sp-work-tab__text {
+    /deep/ .sp-tab--active .sp-tab__text {
       color: #4974f5;
     }
   }
