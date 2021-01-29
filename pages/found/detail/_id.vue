@@ -162,7 +162,6 @@ export default {
       } catch (err) {}
     },
     onClickRight() {
-      console.log(this.info)
       if (this.isInApp) {
         this.$appFn.dggShare(
           {

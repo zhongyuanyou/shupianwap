@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-28 18:33:21
+ * @LastEditTime: 2021-01-29 16:09:52
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/list.vue
 -->
@@ -291,6 +291,12 @@ export default {
   },
   created() {
     if (process && process.client) {
+      // notice:
+      // store中的用户信息默认来自cookie，会从cookie中获取；因为在wap中， userInfo中的token与userId等 保存在cookie中，
+      // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
+      // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
+      this.isInApp && this.clearUserInfo()
+
       this.uPGetCurrentRegion({ type: 'init' }).then((data) => {
         console.log('uPGetCurrentRegion data:', data)
         const { code } = data || {}
@@ -309,6 +315,7 @@ export default {
     ...mapMutations({
       SET_CITY: 'city/SET_CITY',
       setUserInfo: 'user/SET_USER',
+      clearUserInfo: 'user/CLEAR_USER',
     }),
 
     onLeftClick() {

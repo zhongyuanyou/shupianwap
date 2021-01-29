@@ -106,8 +106,11 @@ export default {
       rollNavData: [], // 滚动导航
     }
     try {
-      const res = await $axios.post(homeApi.initRequest, initReqParams)
-      console.log('服务端', res)
+      const res = await $axios.post(homeApi.initRequest, initReqParams, {
+        headers: {
+          'x-cache-control': 'cache',
+        },
+      })
       if (res.code === 200) {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
         initData.rollBannerData = res.data.advertising[rollAdCode] || []
@@ -115,11 +118,6 @@ export default {
         initData.fiexdNavData = res.data.fixedNavList || []
         initData.rollNavData = res.data.rollNavList || []
       }
-      //   , {
-      //     headers: {
-      //       'x-cache-control': 'cache',
-      //     },
-      //   }
     } catch (error) {
       redirect('/500')
     }
@@ -153,13 +151,12 @@ export default {
         this.adModuleTwo
       )
       // 获取非首屏数据（广告 + 资讯）
-      //   , {
-      //       headers: {
-      //         'x-cache-control': 'cache',
-      //       },
-      //     }
       this.$axios
-        .post(homeApi.asyncRequest, this.asyncReqParams)
+        .post(homeApi.asyncRequest, this.asyncReqParams, {
+          headers: {
+            'x-cache-control': 'cache',
+          },
+        })
         .then((res) => {
           //   console.log('客户端：', res.data)
           this.adModuleOne.forEach((item) => {

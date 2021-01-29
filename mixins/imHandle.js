@@ -93,7 +93,6 @@ export default {
             },
           }
           params = Object.assign(params, data)
-          params.imUserType = this.userType
           this.imExample.createSession(params, (res) => {
             if (res.code === 200) {
               window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
@@ -145,7 +144,6 @@ export default {
             },
           }
           params = Object.assign(params, sessionParams)
-          params.imUserType = this.userType
           // 发送模板消息前先创建会话
           this.imExample.createSession(params, (res) => {
             if (res.code === 200) {

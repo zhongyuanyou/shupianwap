@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-29 11:17:28
+ * @LastEditTime: 2021-01-29 16:21:54
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -41,109 +41,117 @@
           :class="{ 'detail-content__bg-show-point': formatShowPoint }"
         >
           <div class="detail-content__wrap">
-            <div class="detail-content__wrap-head">
-              <div class="flex-r-s flex-r-a-c">
-                <div class="detail-content__avatar">
-                  <sp-image
-                    round
-                    width="1.2rem"
-                    height="1.2rem"
-                    fit="cover"
-                    :src="
-                      detailData.img ||
-                      'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
-                    "
-                  />
-                  <span
-                    v-if="!!detailData.title"
-                    class="detail-content__title"
-                    >{{ detailData.title }}</span
+            <sp-skeleton
+              title
+              avatar
+              avatar-size="1.2rem"
+              :row="formatShowPoint ? 10 : 7"
+              :loading="loading"
+            >
+              <div class="detail-content__wrap-head">
+                <div class="flex-r-s flex-r-a-c">
+                  <div class="detail-content__avatar">
+                    <sp-image
+                      round
+                      width="1.2rem"
+                      height="1.2rem"
+                      fit="cover"
+                      :src="
+                        detailData.img ||
+                        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg?x-oss-process=image/resize,m_fill,w_240,h_240,limit_0'
+                      "
+                    />
+                    <span
+                      v-if="!!detailData.title"
+                      class="detail-content__title"
+                      >{{ detailData.title }}</span
+                    >
+                  </div>
+                  <div>
+                    <h4 class="detail-content__name">{{ detailData.name }}</h4>
+                    <p class="detail-content__discript">
+                      {{ detailData.synopsis }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="detail-content__tag-list">
+                  <sp-tag
+                    v-for="tag of formatTagList"
+                    :key="tag"
+                    class="detail-content__tag-list-item"
+                    >{{ tag }}</sp-tag
                   >
                 </div>
-                <div>
-                  <h4 class="detail-content__name">{{ detailData.name }}</h4>
-                  <p class="detail-content__discript">
-                    {{ detailData.synopsis }}
-                  </p>
+              </div>
+              <div class="detail-content__wrap-body">
+                <div class="detail-content__section-title">个人信息</div>
+                <ul class="detail-content__section-content">
+                  <li>
+                    <span class="label">服务次数：</span>
+                    <span class="content">{{
+                      detailData.serveNum ? `${detailData.serveNum}次` : '--'
+                    }}</span>
+                  </li>
+                  <li>
+                    <span class="label">好评率：</span>
+                    <span class="content">{{
+                      detailData.goodReputation
+                        ? `${detailData.goodReputation}%`
+                        : '--'
+                    }}</span>
+                  </li>
+                  <li>
+                    <span class="label">服务经验：</span>
+                    <span class="content">{{ formatServeAgeText }}</span>
+                  </li>
+                  <li>
+                    <span class="label">成交记录：</span>
+                    <span class="content">{{
+                      detailData.payNum ? `${detailData.payNum}次` : '--'
+                    }}</span>
+                  </li>
+                  <li>
+                    <span class="label">平均响应时间：</span>
+                    <span class="content">{{
+                      detailData.averageResponseTime
+                        ? `${detailData.averageResponseTime}s`
+                        : '--'
+                    }}</span>
+                  </li>
+                </ul>
+              </div>
+              <div v-show="formatShowPoint" class="detail-content__wrap-footer">
+                <div class="detail-content__section-title flex-r-sb flex-r-a-c">
+                  <i class="horizontal-line"></i>
+                  <span class="detail-content__section-title-text">薯片分</span>
+                  <i class="horizontal-line"></i>
                 </div>
-              </div>
-
-              <div class="detail-content__tag-list">
-                <sp-tag
-                  v-for="tag of formatTagList"
-                  :key="tag"
-                  class="detail-content__tag-list-item"
-                  >{{ tag }}</sp-tag
-                >
-              </div>
-            </div>
-            <div class="detail-content__wrap-body">
-              <div class="detail-content__section-title">个人信息</div>
-              <ul class="detail-content__section-content">
-                <li>
-                  <span class="label">服务次数：</span>
-                  <span class="content">{{
-                    detailData.serveNum ? `${detailData.serveNum}次` : '--'
-                  }}</span>
-                </li>
-                <li>
-                  <span class="label">好评率：</span>
-                  <span class="content">{{
-                    detailData.goodReputation
-                      ? `${detailData.goodReputation}%`
-                      : '--'
-                  }}</span>
-                </li>
-                <li>
-                  <span class="label">服务经验：</span>
-                  <span class="content">{{ formatServeAgeText }}</span>
-                </li>
-                <li>
-                  <span class="label">成交记录：</span>
-                  <span class="content">{{
-                    detailData.payNum ? `${detailData.payNum}次` : '--'
-                  }}</span>
-                </li>
-                <li>
-                  <span class="label">平均响应时间：</span>
-                  <span class="content">{{
-                    detailData.averageResponseTime
-                      ? `${detailData.averageResponseTime}s`
-                      : '--'
-                  }}</span>
-                </li>
-              </ul>
-            </div>
-            <div v-show="formatShowPoint" class="detail-content__wrap-footer">
-              <div class="detail-content__section-title flex-r-sb flex-r-a-c">
-                <i class="horizontal-line"></i>
-                <span class="detail-content__section-title-text">薯片分</span>
-                <i class="horizontal-line"></i>
-              </div>
-              <div class="detail-content__sp-score">
-                {{ detailData.point || '--' }}
-              </div>
-              <div class="detail-content__level">
-                打败{{ detailData.prop }}的规划师
-              </div>
-              <div class="detail-content__explain">
-                <span>
-                  什么是薯片分
-                  <my-icon
-                    name="plan_ic_explain"
-                    size="0.24rem"
-                    color="#666666"
-                    @click.native="handlePoint"
-                  />
-                </span>
-                <!-- 一期没有 详情页面只能影藏掉 -->
-                <!-- <sp-button
+                <div class="detail-content__sp-score">
+                  {{ detailData.point || '--' }}
+                </div>
+                <div class="detail-content__level">
+                  打败{{ detailData.prop }}的规划师
+                </div>
+                <div class="detail-content__explain">
+                  <span>
+                    什么是薯片分
+                    <my-icon
+                      name="plan_ic_explain"
+                      size="0.24rem"
+                      color="#666666"
+                      @click.native="handlePoint"
+                    />
+                  </span>
+                  <!-- 一期没有 详情页面只能影藏掉 -->
+                  <!-- <sp-button
                   class="detail-content__explain-btn"
                   @click="handlePoint"
                   >查看详情</sp-button
                 > -->
+                </div>
               </div>
-            </div>
+            </sp-skeleton>
           </div>
         </div>
       </div>
@@ -194,6 +202,7 @@ import { mapState, mapMutations } from 'vuex'
 import {
   Icon,
   Button,
+  Skeleton,
   Image,
   Tag,
   Bottombar,
@@ -214,6 +223,7 @@ export default {
   components: {
     [Icon.name]: Icon,
     [Button.name]: Button,
+    [Skeleton.name]: Skeleton,
     [Image.name]: Image,
     [Tag.name]: Tag,
     [Bottombar.name]: Bottombar,
@@ -283,12 +293,21 @@ export default {
   },
   created() {
     if (process && process.client) {
-      this.getDetail()
+      // notice:
+      // store中的用户信息默认来自cookie，会从cookie中获取；因为在wap中， userInfo中的token与userId等 保存在cookie中，
+      // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
+      // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
+      this.isInApp && this.clearUserInfo()
+
+      this.getDetail().finally(() => {
+        this.loading = false
+      })
     }
   },
   methods: {
     ...mapMutations({
       setUserInfo: 'user/SET_USER',
+      clearUserInfo: 'user/CLEAR_USER',
     }),
     onClickLeft() {
       console.log('nav onClickLeft')

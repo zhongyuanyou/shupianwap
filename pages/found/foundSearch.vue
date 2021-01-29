@@ -82,11 +82,23 @@ export default {
     }),
   },
   mounted() {
-    try {
-      this.historySearch = this.$cookies.get('foundHistory')
-        ? this.$cookies.get('foundHistory')
-        : []
-    } catch (err) {}
+    if (this.isInApp) {
+      try {
+        this.$appFn.dggGotWapData({ key: 'foundHistory' }, (res) => {
+          if (res.code === 200) {
+            this.historySearch = JSON.parse(res.data)
+          } else {
+            this.historySearch = []
+          }
+        })
+      } catch (err) {}
+    } else {
+      try {
+        if (localStorage.getItem('foundHistory')) {
+          this.historySearch = JSON.parse(localStorage.getItem('foundHistory'))
+        }
+      } catch (err) {}
+    }
   },
   methods: {
     handleClick(keyword) {
@@ -98,7 +110,15 @@ export default {
       if (!isHas && keyword) {
         history.unshift(keyword)
       }
-      this.$cookies.set('foundHistory', history)
+      if (this.isInApp) {
+        this.$appFn.dggSaveWapData(
+          { key: 'foundHistory', data: JSON.stringify(history) },
+          (res) => {}
+        )
+      } else {
+        localStorage.setItem('foundHistory', JSON.stringify(history))
+      }
+      // this.$cookies.set('foundHistory', history)
       // this.$router.push(`/found/${keywords || ' '}`)
       this.$router.push({
         path: '/found/kword',
@@ -113,7 +133,8 @@ export default {
     },
     clearHistory() {
       // 清除数据
-      this.$cookies.remove('foundHistory')
+      // this.$cookies.remove('foundHistory')
+      localStorage.removeItem('foundHistory')
       this.historySearch = []
     },
     handelKeydown(data) {

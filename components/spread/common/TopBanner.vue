@@ -1,25 +1,22 @@
 <template>
   <div class="hotSale-banner">
-    <!--  头部  -->
-    <sp-top-nav-bar
-      title="服务热卖榜"
-      background="#ffffff"
-      title-color="#1A1A1A"
-      ellipsis
-      :fixed="true"
-      :placeholder="true"
-      z-index="999"
-    >
+    <Header title="">
       <template #left>
-        <div class="hotSale-banner-top-left" @click="back">
-          <my-icon name="nav_ic_back" size="0.4rem" color="#1a1a1a"></my-icon>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#1A1A1A"
+          ></my-icon>
         </div>
-        <my-icon name="notify_ic_close" size="0.4rem" color="#1a1a1a"></my-icon>
       </template>
       <template #right>
-        <my-icon name="nav_ic_share1" size="0.4rem" color="#1a1a1a" />
+        <div @click="onClickRight">
+          <my-icon class="head_title" name="nav_ic_share" size="0.35rem" />
+        </div>
       </template>
-    </sp-top-nav-bar>
+    </Header>
     <!--  头部  -->
     <!--  吸顶  -->
     <sp-sticky offset-top="44px" @scroll="searchHandle">
@@ -66,12 +63,15 @@
 
 <script>
 import { Sticky, TopNavBar, Icon } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import Header from '@/components/common/head/header'
 export default {
   name: 'Banner',
   components: {
     [Sticky.name]: Sticky,
     [TopNavBar.name]: TopNavBar,
     [Icon.name]: Icon,
+    Header,
   },
   props: {
     bannerData: {
@@ -84,6 +84,11 @@ export default {
       },
     },
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
+  },
   data() {
     return {
       isSelect: 0,
@@ -94,7 +99,20 @@ export default {
   methods: {
     // 返回
     back() {
-      this.$router.go(-1)
+      // 返回上一页
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack((res) => {})
+        return
+      }
+      if (window.history.length <= 1) {
+        this.$router.replace('/')
+        return false
+      } else {
+        this.$router.back()
+      }
+    },
+    onClickRight() {
+      this.$emit('share')
     },
     // 关闭
     close() {},
@@ -119,6 +137,12 @@ export default {
 
 <style scoped lang="less">
 .hotSale-banner {
+  .back_icon {
+    margin-left: 40px;
+  }
+  .head_title {
+    margin-right: 40px;
+  }
   &-top {
     &-left {
       margin-right: 36px;

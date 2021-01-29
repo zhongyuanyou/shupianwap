@@ -237,6 +237,7 @@ export default {
     onRefresh() {
       this.finished = false
       this.loading = true
+      this.error = false
       this.onLoad()
     },
 
