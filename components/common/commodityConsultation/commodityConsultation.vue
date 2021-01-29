@@ -31,9 +31,13 @@
             href="javascript:void(0);"
             @click="plannerInfoUrlJump(plannerInfo.mchUserId)"
           >
-            <p>{{ plannerInfo.userName }}</p>
+            <p :class="{ isTitle: plannerInfo.postName ? false : true }">
+              {{ plannerInfo.userName }}
+            </p>
           </a>
-          <span>{{ plannerInfo.postName }}</span>
+          <span v-if="plannerInfo.postName ? true : false">
+            {{ plannerInfo.postName }}
+          </span>
         </div>
       </div>
       <div class="commodityConsult-containner-handle">
@@ -201,6 +205,9 @@ export default {
           text-overflow: ellipsis;
           white-space: nowrap;
           max-width: 150px;
+          &.isTitle {
+            margin-top: 25px;
+          }
         }
         span {
           height: 32px;

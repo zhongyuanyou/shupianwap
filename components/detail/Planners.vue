@@ -42,7 +42,9 @@
               >
                 <p class="name">{{ item.userName }}</p>
               </a>
-              <i class="gold_icon">{{ item.postName }}</i>
+              <i v-if="item.postName ? true : false" class="gold_icon">
+                {{ item.postName }}
+              </i>
             </div>
             <div class="info_bot">
               <span class="num">{{ Number(item.point) }}</span
