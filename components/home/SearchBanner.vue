@@ -3,18 +3,26 @@
     class="activity-bn"
     :style="{ height: fiexdBannerData.length ? '5.52rem' : '1.28rem' }"
   >
-    <a
-      v-if="fiexdBannerData.length"
-      href="javascript:void(0)"
-      @click="adJumpHandleMixin(fiexdBannerData[0].materialList[0])"
-    >
-      <img
-        :src="
-          fiexdBannerData[0].materialList[0].materialUrl + $ossImgSet(750, 552)
-        "
-        alt=""
-      />
-    </a>
+    <div v-if="fiexdBannerData.length" class="swiper-content">
+      <sp-swipe
+        class="my-swipe"
+        :autoplay="autoplay"
+        :show-indicators="indicators"
+      >
+        <sp-swipe-item v-for="(item, index) in fiexdBannerData" :key="index">
+          <a
+            href="javascript:void(0)"
+            class="swiper-box"
+            @click="adJumpHandleMixin(item.materialList[0])"
+          >
+            <img
+              :src="item.materialList[0].materialUrl + $ossImgSet(750, 552)"
+              alt=""
+            />
+          </a>
+        </sp-swipe-item>
+      </sp-swipe>
+    </div>
     <sp-sticky>
       <Search
         ref="searchRef"
@@ -42,13 +50,15 @@
 </template>
 
 <script>
-import { Sticky } from '@chipspc/vant-dgg'
+import { Sticky, Swipe, swipeItem } from '@chipspc/vant-dgg'
 import { mapState, mapActions } from 'vuex'
 import Search from '@/components/common/search/Search'
 import adJumpHandle from '~/mixins/adJumpHandle'
 export default {
   components: {
     [Sticky.name]: Sticky,
+    [Swipe.name]: Swipe,
+    [swipeItem.name]: swipeItem,
     Search,
   },
   mixins: [adJumpHandle],
@@ -63,6 +73,8 @@ export default {
   },
   data() {
     return {
+      autoplay: 5000, // 切换间隔
+      indicators: true, // 是否需要指示器
       scollPercentage: 120, // 滚动多少距离，搜索栏背景色渐变
       opacity: 0,
     }
@@ -118,15 +130,21 @@ export default {
   font-size: 24px;
   position: relative;
   width: 100%;
-  > a {
+  > .swiper-content {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 552px;
-    img {
+    .swiper-box {
+      display: block;
       width: 100%;
       height: 552px;
+      overflow: hidden;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 }
