@@ -61,7 +61,7 @@
     <Commitment />
     <!--E 第四板块 交易服务保障承诺-->
     <!--S 第五板块 推荐规划师-->
-    <Planners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
+    <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
     <!--E 第五板块 推荐规划师-->
     <!--S 第六板块 商品动态-->
     <Dynamic />
@@ -85,7 +85,7 @@
       <Need ref="remNeed" :product-data="recommendProduct" />
     </sp-list>
     <!--E 第十板块 猜你需要-->
-    <commodityConsultation
+    <tcCommodityConsultation
       :im-jump-query="imJumpQuery"
       :planner-info="tcPlannerBooth"
     />
@@ -116,13 +116,13 @@ import Title from '~/components/detail/Title'
 import Basic from '~/components/detail/Basic'
 import Report from '~/components/detail/Report'
 import Commitment from '~/components/detail/Commitment'
-import Planners from '~/components/detail/Planners'
+import TcPlanners from '~/components/detail/TcPlanners'
 import Dynamic from '~/components/detail/Dynamic'
 import Question from '~/components/detail/Question'
 import Case from '~/components/detail/Case'
 import Recommend from '~/components/detail/Recommend'
 import Need from '~/components/detail/Need'
-import commodityConsultation from '@/components/common/commodityConsultation/commodityConsultation'
+import tcCommodityConsultation from '@/components/common/commodityConsultation/tcCommodityConsultation'
 import getUserSign from '~/utils/fingerprint'
 import tcBasicData from '~/mock/tcBasicData'
 import { productDetailsApi, recommendApi, userinfoApi } from '~/api'
@@ -146,13 +146,13 @@ export default {
     Basic,
     Report,
     Commitment,
-    Planners,
+    TcPlanners,
     Dynamic,
     Question,
     Case,
     Recommend,
     Need,
-    commodityConsultation,
+    tcCommodityConsultation,
     MyIcon,
     BasicItem,
     QftDetails,
