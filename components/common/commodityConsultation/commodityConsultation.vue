@@ -62,7 +62,9 @@
           :data-crisps_fraction="plannerInfo.point"
           :data-planner_name="plannerInfo.userName"
           type="primary"
-          @click="sendTemplateMsgWithImg(plannerInfo.mchUserId)"
+          @click="
+            sendTemplateMsgWithImg(plannerInfo.mchUserId, plannerInfo.type)
+          "
         >
           在线咨询
         </sp-button>
@@ -134,6 +136,11 @@ export default {
       },
     },
   },
+  computed: {
+    city() {
+      return this.$store.state.city.currentCity
+    },
+  },
   methods: {
     // 规划师详情跳转
     plannerInfoUrlJump(mchUserId) {
@@ -162,12 +169,25 @@ export default {
     },
     // 调起IM
     // 发送模板消息(带图片)
-    sendTemplateMsgWithImg(mchUserId) {
+    sendTemplateMsgWithImg(mchUserId, type) {
       // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
       // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
       const sessionParams = {
         imUserId: mchUserId, // 商户用户ID
-        imUserType: 'MERCHANT_USER', // 用户类型
+        imUserType: type, // 用户类型
+        ext: {
+          intentionType: {
+            classCode:
+              this.baseData.parentClassCode &&
+              this.baseData.parentClassCode.split(',')[0],
+            className: this.baseData.className,
+          }, // 意向业务 非必传
+          intentionCity: {
+            areaOfChoice: this.city.code,
+            areaOfChoiceName: this.city.name,
+          }, // 意向城市 非必传
+          startUserType: 'cps-app', //
+        },
       }
       const msgParams = {
         sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息

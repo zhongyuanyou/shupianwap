@@ -1,7 +1,7 @@
 <template>
   <div class="hotSale">
     <!--  banner  -->
-    <banner :banner-data="bannerData"></banner>
+    <banner :banner-data="bannerData" @share="share"></banner>
     <!--  banner  -->
     <!--  选项卡  -->
     <serve :serve-data="serveData" :current="selected"></serve>
@@ -10,20 +10,27 @@
     <div v-if="loaded" class="hotSale-load">已加载完毕</div>
     <sp-loading v-else size="24px" vertical>加载中...</sp-loading>
     <!--  加载样式  -->
+    <sp-share-sheet
+      v-model="showShare"
+      :options="options"
+      @select="handleSelect"
+    />
   </div>
 </template>
 
 <script>
-import { Loading } from '@chipspc/vant-dgg'
+import { Loading, ShareSheet } from '@chipspc/vant-dgg'
 import Banner from '@/components/spread/common/TopBanner'
 import Serve from '@/components/spread/common/Serve'
 import { bangDanApi } from '~/api/bangDan'
+import { copyToClipboard } from '@/utils/common'
 export default {
   name: 'Index',
   components: {
     Banner,
     Serve,
     [Loading.name]: Loading,
+    [ShareSheet.name]: ShareSheet,
   },
   async asyncData({ $axios }) {
     const limit = 10
@@ -80,6 +87,13 @@ export default {
       selected: '公司榜',
       reqInfos: [],
       loaded: true,
+      showShare: false,
+      options: [
+        {
+          name: '链接',
+          icon: 'link',
+        },
+      ],
     }
   },
   watch: {
@@ -145,6 +159,32 @@ export default {
       } catch (err) {
         console.log('err', err)
         this.loaded = true
+      }
+    },
+    share() {
+      if (this.isInApp) {
+        this.$appFn.dggShare(
+          {
+            image: '',
+            title: '',
+            subTitle: '',
+            url: window && window.location.href,
+          },
+          (res) => {}
+        )
+        return
+      }
+      this.showShare = true
+    },
+    handleSelect(option, index) {
+      // 点击分享
+      if (option.name === '链接') {
+        const result = copyToClipboard(location.href)
+        if (result) {
+          this.$xToast.success('链接复制成功')
+          return
+        }
+        this.$xToast.error('链接复制失败,请重试')
       }
     },
   },
