@@ -77,7 +77,7 @@ export default {
       font-weight: 400;
       color: #999999;
       span {
-        margin-left: 17px;
+        margin-left: 15px;
       }
     }
   }

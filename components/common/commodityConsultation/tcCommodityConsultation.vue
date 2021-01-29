@@ -3,12 +3,6 @@
     <div class="commodityConsult-containner">
       <div class="commodityConsult-containner-userInfo">
         <a
-          v-md:p_plannerBoothClick
-          data-even_name="p_plannerBoothClick"
-          :data-recommend_number="plannerInfo.dggPlannerRecomLog"
-          :data-planner_number="plannerInfo.userCenterNo"
-          :data-planner_name="plannerInfo.userName"
-          :data-crisps_fraction="plannerInfo.point"
           href="javascript:void(0);"
           @click="plannerInfoUrlJump(plannerInfo.mchUserId)"
         >
@@ -22,12 +16,6 @@
         </a>
         <div class="commodityConsult-containner-userInfo-name">
           <a
-            v-md:p_plannerBoothClick
-            data-even_name="p_plannerBoothClick"
-            :data-recommend_number="plannerInfo.dggPlannerRecomLog"
-            :data-planner_number="plannerInfo.userCenterNo"
-            :data-planner_name="plannerInfo.userName"
-            :data-crisps_fraction="plannerInfo.point"
             href="javascript:void(0);"
             @click="plannerInfoUrlJump(plannerInfo.mchUserId)"
           >
@@ -42,53 +30,12 @@
       </div>
       <div class="commodityConsult-containner-handle">
         <sp-button
-          v-md:p_IMClick
-          data-even_name="p_IMClick"
-          :data-recommend_number="plannerInfo.dggPlannerRecomLog"
-          data-im_type="售前"
-          :data-commodity_number="baseData.productNo"
-          :data-commodity_name="operatingData.showName"
-          data-commodity_type="服务商品"
-          data-commodity_level_1=""
-          :data-com_level_1_code="
-            baseData.parentClassCode && baseData.parentClassCode.split(',')[0]
-          "
-          data-commodity_level_2=""
-          :data-com_level_2_code="
-            baseData.parentClassCode && baseData.parentClassCode.split(',')[1]
-          "
-          :data-n_now_price="baseData.referencePrice"
-          :data-planner_number="plannerInfo.userCenterNo"
-          :data-crisps_fraction="plannerInfo.point"
-          :data-planner_name="plannerInfo.userName"
           type="primary"
           @click="sendTemplateMsgWithImg(plannerInfo.mchUserId)"
         >
           在线咨询
         </sp-button>
-        <sp-button
-          v-md:p_IMClick
-          data-even_name="p_IMClick"
-          :data-recommend_number="plannerInfo.dggPlannerRecomLog"
-          data-im_type="售前"
-          :data-commodity_number="baseData.productNo"
-          :data-commodity_name="operatingData.showName"
-          data-commodity_type="服务商品"
-          data-commodity_level_1=""
-          :data-com_level_1_code="
-            baseData.parentClassCode && baseData.parentClassCode.split(',')[0]
-          "
-          data-commodity_level_2=""
-          :data-com_level_2_code="
-            baseData.parentClassCode && baseData.parentClassCode.split(',')[1]
-          "
-          :data-n_now_price="baseData.referencePrice"
-          :data-planner_number="plannerInfo.userCenterNo"
-          :data-crisps_fraction="plannerInfo.point"
-          :data-planner_name="plannerInfo.userName"
-          type="info"
-          @click="handleTel(plannerInfo.mchUserId)"
-        >
+        <sp-button type="info" @click="handleTel(plannerInfo.mchUserId)">
           电话联系
         </sp-button>
       </div>
@@ -102,7 +49,7 @@ import { planner } from '~/api'
 import { parseTel } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
 export default {
-  name: 'CommodityConsultation',
+  name: 'TcCommodityConsultation',
   components: {
     [Image.name]: Image,
     [Button.name]: Button,

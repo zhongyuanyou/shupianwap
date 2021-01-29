@@ -2,9 +2,9 @@
  * @Author: xiao pu
  * @Date: 2020-12-23 17:07:19
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-04 10:27:20
+ * @LastEditTime: 2021-01-28 23:57:27
  * @Description: file content
- * @FilePath: /chips-wap/client/utils/common.js
+ * @FilePath: /chips-wap/utils/common.js
  */
 
 /**
@@ -76,4 +76,14 @@ export const openLink = (link, data) => {
   window &&
     (window.location.href =
       link.indexOf('?') > -1 ? `${link}&${dataStr}` : `${link}?${dataStr}`)
+}
+
+export const setUrlParams = (url, data = {}) => {
+  const urlObj = new URL('', url)
+  const { search, origin, pathname } = urlObj || {}
+  // search中的？解析忽略
+  const searchObj = Qs.parse(search, { ignoreQueryPrefix: true }) || {}
+  const newSearchObj = { ...searchObj, ...data }
+  const newSearch = Qs.stringify(newSearchObj)
+  return origin + pathname + '?' + newSearch
 }

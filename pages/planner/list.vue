@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-28 14:46:10
+ * @LastEditTime: 2021-01-28 18:33:21
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/list.vue
 -->
@@ -360,6 +360,7 @@ export default {
     onRefresh() {
       this.finished = false
       this.loading = true
+      this.error = false
       this.onLoad()
     },
     handleSearchFocus() {

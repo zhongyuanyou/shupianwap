@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-28 14:41:29
+ * @LastEditTime: 2021-01-29 11:17:28
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -207,7 +207,7 @@ import RecommendList from '@/components/planner/RecommendList'
 
 import { planner } from '@/api'
 import imHandle from '@/mixins/imHandle'
-import { callPhone, copyToClipboard } from '@/utils/common'
+import { callPhone, copyToClipboard, setUrlParams } from '@/utils/common'
 
 export default {
   name: 'List',
@@ -329,9 +329,11 @@ export default {
         this.showShare = false
         return
       }
-      const isSuccess = copyToClipboard(
-        location && location.href + '&isShare=1'
-      )
+      const url = window && window.location.href
+      const sharedUrl = setUrlParams(url, { isShare: 1 })
+      console.log('sharedUrl:', sharedUrl)
+
+      const isSuccess = copyToClipboard(sharedUrl)
       if (isSuccess) {
         this.$xToast.show({
           message: '复制成功',
@@ -346,12 +348,15 @@ export default {
     // 分享
     uPShareOption() {
       if (this.isInApp) {
+        const url = window && window.location.href
+        const sharedUrl = setUrlParams(url, { isShare: 1 })
+        console.log('sharedUrl:', sharedUrl)
         this.$appFn.dggShare(
           {
             image: this.detailData.img,
             title: '规划师',
             subTitle: '',
-            url: window && window.location.href + '&isShare=1',
+            url: sharedUrl,
           },
           (res) => {
             const { code } = res || {}
@@ -457,13 +462,21 @@ export default {
             this.$appFn.dggLogin((loginRes) => {
               if (loginRes && loginRes.code === 200) {
                 console.log('loginRes : ', loginRes)
-                if (
-                  loginRes.data &&
-                  loginRes.data.userId &&
-                  loginRes.data.token
-                ) {
-                  this.setUserInfo(loginRes.data)
-                  resolve(loginRes.data.userId)
+
+                let loginResData = {}
+                // 为了兼容 企大顺
+                if (typeof loginRes.data === 'string') {
+                  try {
+                    loginResData = JSON.parse(loginRes.data)
+                  } catch (error) {
+                    console.error(error)
+                  }
+                } else {
+                  loginResData = loginRes.data
+                }
+                if (loginResData && loginResData.userId && loginResData.token) {
+                  this.setUserInfo(loginResData)
+                  resolve(loginResData.userId)
                   return
                 }
                 reject(new Error('登录后userId或者token缺失'))
@@ -473,9 +486,19 @@ export default {
             })
             return
           }
-          if (data && data.userId && data.token) {
-            this.setUserInfo(data)
-            resolve(data.userId)
+          let userInfo = {}
+          if (typeof data === 'string') {
+            try {
+              userInfo = JSON.parse(data)
+            } catch (error) {
+              console.error(error)
+            }
+          } else {
+            userInfo = data
+          }
+          if (userInfo && userInfo.userId && userInfo.token) {
+            this.setUserInfo(userInfo)
+            resolve(userInfo.userId)
             return
           }
           reject(new Error('用户信息中userId或者token缺失'))

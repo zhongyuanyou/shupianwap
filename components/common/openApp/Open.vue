@@ -53,6 +53,9 @@ export default {
   .openBtn {
     width: 170px;
     font-size: 28px;
+    border-radius: 8px;
+    height: 64px;
+    line-height: 64px;
   }
 }
 </style>

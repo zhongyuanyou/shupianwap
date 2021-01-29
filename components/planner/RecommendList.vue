@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2021-01-14 13:58:34
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-28 10:27:51
+ * @LastEditTime: 2021-01-29 11:37:01
  * @Description: file content
  * @FilePath: /chips-wap/components/planner/RecommendList.vue
 -->
@@ -286,8 +286,21 @@ export default {
         this.$appFn.dggDeviceInfo((res) => {
           console.log('dggDeviceInfo res:', res)
           const { code, data = {} } = res
+
+          let deviceResData = {}
+          // 为了兼容 企大顺
+          if (typeof data === 'string') {
+            try {
+              deviceResData = JSON.parse(data)
+            } catch (error) {
+              console.error(error)
+            }
+          } else {
+            deviceResData = data
+          }
+
           if (code === 200) {
-            resolve(data['X-Device-Code'])
+            resolve(deviceResData['X-Device-Code'])
             return
           }
           reject(res)
@@ -301,8 +314,21 @@ export default {
         this.$appFn.dggCityCode((res) => {
           console.log('dggCityCode:', res)
           const { code, data } = res || {}
+
+          let regionResData = {}
+          // 为了兼容 企大顺
+          if (typeof data === 'string') {
+            try {
+              regionResData = JSON.parse(data)
+            } catch (error) {
+              console.error(error)
+            }
+          } else {
+            regionResData = data
+          }
+
           if (code === 200) {
-            const { adCode } = data
+            const { adCode } = regionResData
             resolve(adCode)
             return
           }
