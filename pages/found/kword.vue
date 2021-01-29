@@ -135,7 +135,7 @@ export default {
         if (this.isInApp) {
           this.$appFn.dggCloseWebView(() => {})
         } else {
-          this.$router.go(-2)
+          this.$router.replace('/found')
         }
       } else {
         this.$router.back()
