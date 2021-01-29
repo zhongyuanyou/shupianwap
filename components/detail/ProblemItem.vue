@@ -6,7 +6,7 @@
     }"
   >
     <h2 class="problem-list-title" @click="handleShowItem">
-      <my-icon size="0.32rem" color="#4974F5" name="command_img_questions" />
+      <my-icon name="command_img_questions" size="0.32rem" color="#4974F5" />
       <span>{{ itemData.title }}</span>
       <em class="more-icon">
         <my-icon size="0.32rem" color="#969799" name="notify_ic_next" />
@@ -54,8 +54,8 @@ export default {
       justify-content: space-between;
       font-size: 30px;
       font-family: PingFang SC;
-      font-weight: bold;
       color: #1a1a1a;
+      font-weight: normal;
       line-height: 40px;
       span {
         flex: 1;
@@ -64,6 +64,7 @@ export default {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+        font-weight: bold;
       }
       & > i {
         margin-right: 14px;

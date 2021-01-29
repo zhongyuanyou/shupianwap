@@ -2,6 +2,7 @@
   <a
     v-md:p_commodityClick
     data-even_name="p_commodityClick"
+    :data-recommend_number="goodsData.recomNo"
     :data-com_level_1_code="goodsData.classCodeLevelList[0]"
     :data-com_level_2_code="goodsData.classCodeLevelList[1]"
     data-commodity_level_1=""

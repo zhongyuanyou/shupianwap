@@ -190,6 +190,11 @@ export default {
     },
     // 选项卡选择某项
     selectTabHandle({ index }) {
+      if (!this.cityCode) {
+        this.curentItem = 0
+        this.$xToast.warning('定位中，请稍后...')
+        return
+      }
       this.$refs.recomRef.swipeTo(index)
     },
     // 切换轮播

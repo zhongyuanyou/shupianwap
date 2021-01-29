@@ -132,10 +132,14 @@ export default {
     },
     handleLeft(data) {
       if (data) {
-        this.$router.go(-2)
-        return
+        if (this.isInApp) {
+          this.$appFn.dggCloseWebView(() => {})
+        } else {
+          this.$router.replace('/found')
+        }
+      } else {
+        this.$router.back()
       }
-      this.$router.back()
     },
   },
 }

@@ -1,5 +1,5 @@
 <template>
-  <sp-action-sheet v-model="show" title=" ">
+  <sp-action-sheet v-model="show" title=" " style="overflow: hidden">
     <div class="priceRed">
       <h1 class="priceRed-title">降价提醒</h1>
       <p class="priceRed-desc">
@@ -209,16 +209,16 @@ export default {
     padding: 31px 24px 29px 24px;
     background: #f8f8f8;
     border-radius: 8px;
-    margin-bottom: 71px;
+    margin-bottom: 69px;
     margin-top: 32px;
     h4 {
-      height: 30px;
-      line-height: 30px;
+      height: 34px;
+      line-height: 34px;
       font-size: 28px;
       font-family: PingFang SC;
       font-weight: 400;
       color: #222222;
-      margin-bottom: 15px;
+      margin-bottom: 13px;
       display: flex;
       & > div {
         margin-right: 16px;
