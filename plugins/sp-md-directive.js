@@ -26,7 +26,7 @@ Vue.directive('md', {
         window.spptMd.spptTrackRow(binding.arg, setData)
       }
     }
-    el.addEventListener('click', el.mdClick)
+    el.addEventListener('click', el.mdClick, true)
   },
   unbind: (el, binding) => {
     el.removeEventListener('click', el.mdClick)
@@ -42,7 +42,7 @@ Vue.directive('md-map', {
     el.mdMapClick = function () {
       window.spptMd.quick('trackHeatMap', this)
     }
-    el.addEventListener('click', el.mdMapClick)
+    el.addEventListener('click', el.mdMapClick, true)
   },
   unbind: (el, binding) => {
     el.removeEventListener('click', el.mdMapClick)
