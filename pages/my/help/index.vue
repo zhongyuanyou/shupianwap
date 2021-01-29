@@ -59,7 +59,7 @@
         </sp-search>
       </div>
       <!-- E 搜索 -->
-      <div class="tab-content">
+      <div v-if="tabData.length" class="tab-content">
         <!-- S tab -->
         <sp-sticky
           :class="{ isBorder: isFixed }"
@@ -150,16 +150,20 @@ export default {
     Header,
   },
   async asyncData({ store, $axios }) {
+    const qdaCode = 'con100120' // 企大宝(案加)
+    const spAppCode = 'con100029' // 薯片app
+    const qdsCode = 'con100045' // 企大顺
+    const wapCode = 'con100029' //  薯片wap
     const params = {
       findType: 0, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
       locationCode: 'ad113195', // 广告位code
       code: store.state.app.isInApp
         ? store.state.app.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
-          ? 'con100120'
+          ? qdaCode
           : store.state.app.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
-          ? 'con100029'
-          : 'con100045'
-        : 'con100873', // 获取分类列表选项的code
+          ? spAppCode
+          : qdsCode
+        : wapCode, // 获取分类列表选项的code
       limit: 15,
       page: 1,
       categoryCode: '', // 分类code赛选文章
@@ -177,16 +181,18 @@ export default {
     try {
       const res = await $axios.post(helpApi.findArticle, params)
       if (res.code === 200) {
-        res.data.categoryList.forEach((item, imdex) => {
-          item.limit = params.limit
-          item.page = params.page
-          item.noMore =
-            imdex === 0 && res.data.articleData.length < params.limit
-          item.articleData = []
-        })
-        tabData = res.data.categoryList
-        tabData[0].articleData = res.data.articleData
         adData = res.data.adListData[0].materialList[0]
+        if (res.data.categoryList.length) {
+          res.data.categoryList.forEach((item, imdex) => {
+            item.limit = params.limit
+            item.page = params.page
+            item.noMore =
+              imdex === 0 && res.data.articleData.length < params.limit
+            item.articleData = []
+          })
+          tabData = res.data.categoryList
+          tabData[0].articleData = res.data.articleData
+        }
       }
     } catch (error) {}
     return {
