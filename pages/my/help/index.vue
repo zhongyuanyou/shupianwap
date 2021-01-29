@@ -123,7 +123,7 @@
     <!-- S footer -->
     <sp-bottombar safe-area-inset-bottom>
       <sp-bottombar-icon icon="phone-o" text="致电" @click="handleTel" />
-      <sp-bottombar-button type="primary" text="在线客服" />
+      <sp-bottombar-button type="primary" text="在线客服" @click="openDggKf" />
     </sp-bottombar>
     <!-- E footer -->
     <div class="empty-box"></div>
@@ -387,6 +387,9 @@ export default {
         return
       }
       this.$router.back()
+    },
+    openDggKf() {
+      this.$dggkefu()
     },
   },
 }
