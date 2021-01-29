@@ -69,11 +69,15 @@ export default {
       if (this.isInApp) {
         const iosRouter =
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
-          `${domainUrl}found/detail/${this.info.id}` +
+          `${domainUrl}found/detail/${this.info.cName || '系统管理员'}/${
+            this.info.id
+          }` +
           '","isHideNav":1},"isLogin":"1","version":"1.0.0"}'
         const adRouter =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
-          `${domainUrl}found/detail/${this.info.id}` +
+          `${domainUrl}found/detail/${this.info.cName || '系统管理员'}/${
+            this.info.id
+          }` +
           '","isHideNav":1},"isLogin":"1","version":"1.0.0"}'
         this.$appFn.dggJumpRoute(
           { iOSRouter: iosRouter, androidRouter: adRouter },
@@ -86,7 +90,9 @@ export default {
         // 跳转文章详情
         case 1:
           this.$router.push({
-            path: `/found/detail/${this.info.id}`,
+            path: `/found/detail/${this.info.cName || '系统管理员'}/${
+              this.info.id
+            }`,
           })
           break
         // 跳转内链
@@ -110,7 +116,9 @@ export default {
           break
         default:
           this.$router.push({
-            path: `/found/detail/${this.info.id}`,
+            path: `/found/detail/${this.info.cName || '系统管理员'}/${
+              this.info.id
+            }`,
           })
           break
       }

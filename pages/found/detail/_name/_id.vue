@@ -37,7 +37,7 @@
             />
           </div>
           <div class="detail_con_info_content">
-            <p class="title">{{ info.updaterName }}</p>
+            <p class="title">{{ $route.params.name }}</p>
             <p class="time">{{ info.createTime | dateTime }}</p>
           </div>
         </div>
@@ -80,10 +80,10 @@ import {
   Sticky,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
-import { foundApi } from '~/api'
+import { foundApi } from '@/api'
 import Header from '@/components/common/head/header'
-import { copyToClipboard } from '~/utils/common'
-import { GOODSLIST } from '~/config/constant'
+import { copyToClipboard } from '@/utils/common'
+import { GOODSLIST } from '@/config/constant'
 export default {
   layout: 'keepAlive',
   name: 'Detail',
