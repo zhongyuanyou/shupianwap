@@ -386,7 +386,7 @@ export default {
         this.$appFn.dggWebGoBack((res) => {})
         return
       }
-      this.$router.back()
+      this.$router.push('/my')
     },
     openDggKf() {
       // eslint-disable-next-line
