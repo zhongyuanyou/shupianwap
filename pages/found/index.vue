@@ -78,7 +78,11 @@ export default {
   data() {
     return {
       activeTab: 0,
-      information_class: [], // 产品分类
+      information_class: [
+        { code: 'con100032', name: '行业资讯' },
+        { code: 'con100034', name: '政策分析' },
+        { code: 'con100033', name: '商业头条' },
+      ], // 产品分类
       information_banner: [], // 广告数据
       information_list: [], // 资讯列表
       categoryCode: '', // code码
@@ -93,10 +97,10 @@ export default {
     }),
   },
   mounted() {
-    this.information_class =
-      this.homeData && this.homeData.information_class
-        ? this.homeData.information_class
-        : []
+    // this.information_class =
+    //   this.homeData && this.homeData.information_class
+    //     ? this.homeData.information_class
+    //     : []
     this.categoryCode =
       this.information_class && this.information_class.length
         ? this.information_class[0].code
@@ -159,7 +163,7 @@ export default {
       if (this.isInApp) {
         const ios =
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
-          `${domainUrl}found/foundSearch` +
+          `http://172.16.139.140:3001/found/foundSearch` +
           '","isHideNav":1,"isHideBack":1},"isLogin":"0","version":"1.0.0"}'
         const android =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
