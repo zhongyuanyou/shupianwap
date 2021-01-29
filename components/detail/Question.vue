@@ -3,10 +3,9 @@
     <div class="question_tp">
       <p class="question_tp_title">常见问题</p>
       <div class="question_tp_more" @click="handlToProblemList">
-        查看更多
-        <span>
-          <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
-        </span>
+        查看更多<span
+          ><my-icon name="order_ic_listnext" size="0.21rem" color="#ccc"
+        /></span>
       </div>
     </div>
     <div class="question_item">
@@ -78,7 +77,7 @@ export default {
       font-weight: 400;
       color: #999999;
       span {
-        margin-left: 19px;
+        margin-left: 17px;
       }
     }
   }

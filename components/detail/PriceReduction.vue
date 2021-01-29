@@ -1,5 +1,5 @@
 <template>
-  <sp-action-sheet v-model="show" title=" ">
+  <sp-action-sheet v-model="show" title=" " style="overflow: hidden">
     <div class="priceRed">
       <h1 class="priceRed-title">降价提醒</h1>
       <p class="priceRed-desc">
