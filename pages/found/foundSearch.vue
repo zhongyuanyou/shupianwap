@@ -83,13 +83,15 @@ export default {
   },
   mounted() {
     if (this.isInApp) {
-      this.$appFn.dggGotWapData({ key: 'foundHistory' }, (res) => {
-        if (res.code === 200) {
-          this.historySearch = JSON.parse(res.data)
-        } else {
-          this.historySearch = []
-        }
-      })
+      try {
+        this.$appFn.dggGotWapData({ key: 'foundHistory' }, (res) => {
+          if (res.code === 200) {
+            this.historySearch = JSON.parse(res.data)
+          } else {
+            this.historySearch = []
+          }
+        })
+      } catch (err) {}
     } else {
       try {
         if (localStorage.getItem('foundHistory')) {
