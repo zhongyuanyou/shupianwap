@@ -31,7 +31,9 @@
       <div class="commodityConsult-containner-handle">
         <sp-button
           type="primary"
-          @click="sendTemplateMsgWithImg(plannerInfo.mchUserId)"
+          @click="
+            sendTemplateMsgWithImg(plannerInfo.mchUserId, plannerInfo.type)
+          "
         >
           在线咨询
         </sp-button>
@@ -48,6 +50,7 @@ import { Image, Button, Toast } from '@chipspc/vant-dgg'
 import { planner } from '~/api'
 import { parseTel } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
+import { codeTranslate } from '~/utils/codeTranslate'
 export default {
   name: 'TcCommodityConsultation',
   components: {
@@ -81,6 +84,15 @@ export default {
       },
     },
   },
+  computed: {
+    // 产品详情
+    proDetail() {
+      return this.$store.state.tcProductDetail.detailData
+    },
+    city() {
+      return this.$store.state.city.currentCity
+    },
+  },
   methods: {
     // 规划师详情跳转
     plannerInfoUrlJump(mchUserId) {
@@ -109,12 +121,25 @@ export default {
     },
     // 调起IM
     // 发送模板消息(带图片)
-    sendTemplateMsgWithImg(mchUserId) {
+    sendTemplateMsgWithImg(mchUserId, type) {
       // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
       // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
       const sessionParams = {
         imUserId: mchUserId, // 商户用户ID
-        imUserType: 'MERCHANT_USER', // 用户类型
+        imUserType: type, // 用户类型
+        ext: {
+          intentionType: {
+            classCode:
+              this.proDetail.classCodeLevel &&
+              this.proDetail.classCodeLevel.split(',')[0],
+            className: codeTranslate(this.proDetail.dictCode),
+          }, // 意向业务 非必传
+          intentionCity: {
+            areaOfChoice: this.city.code,
+            areaOfChoiceName: this.city.name,
+          }, // 意向城市 非必传
+          startUserType: 'cps-app', //
+        },
       }
       const msgParams = {
         sendType: 0, // 发送模板消息类型 0：商品详情带图片的模板消息 1：商品详情不带图片的模板消息
