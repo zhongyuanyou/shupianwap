@@ -10,12 +10,6 @@
       >
         <div class="planners_item_lf">
           <a
-            v-md:p_plannerBoothClick
-            data-even_name="p_plannerBoothClick"
-            :data-recommend_number="item.dggPlannerRecomLog"
-            :data-planner_number="item.userCenterNo"
-            :data-planner_name="item.userName"
-            :data-crisps_fraction="item.point"
             href="javascript:void(0);"
             @click="plannerInfoUrlJump(item.mchUserId)"
           >
@@ -31,12 +25,6 @@
           <div class="info">
             <div class="info_tp">
               <a
-                v-md:p_plannerBoothClick
-                data-even_name="p_plannerBoothClick"
-                :data-recommend_number="item.dggPlannerRecomLog"
-                :data-planner_number="item.userCenterNo"
-                :data-planner_name="item.userName"
-                :data-crisps_fraction="item.point"
                 href="javascript:void(0);"
                 @click="plannerInfoUrlJump(item.mchUserId)"
               >
@@ -54,25 +42,6 @@
         </div>
         <div class="planners_item_rt">
           <sp-button
-            v-md:p_IMClick
-            data-even_name="p_IMClick"
-            :data-recommend_number="item.dggPlannerRecomLog"
-            data-im_type="售前"
-            :data-commodity_number="baseData.productNo"
-            :data-commodity_name="operatingData.showName"
-            data-commodity_type="服务商品"
-            data-commodity_level_1=""
-            :data-com_level_1_code="
-              baseData.parentClassCode && baseData.parentClassCode.split(',')[0]
-            "
-            data-commodity_level_2=""
-            :data-com_level_2_code="
-              baseData.parentClassCode && baseData.parentClassCode.split(',')[1]
-            "
-            :data-n_now_price="baseData.referencePrice"
-            :data-planner_number="item.userCenterNo"
-            :data-crisps_fraction="item.point"
-            :data-planner_name="item.userName"
             round
             class="contact-btn"
             @click="sendTemplateMsgWithImg(item.mchUserId)"
@@ -83,25 +52,6 @@
               color="#4974F5"
           /></sp-button>
           <sp-button
-            v-md:p_IMClick
-            data-even_name="p_IMClick"
-            :data-recommend_number="item.dggPlannerRecomLog"
-            data-im_type="售前"
-            :data-commodity_number="baseData.productNo"
-            :data-commodity_name="operatingData.showName"
-            data-commodity_type="服务商品"
-            data-commodity_level_1=""
-            :data-com_level_1_code="
-              baseData.parentClassCode && baseData.parentClassCode.split(',')[0]
-            "
-            data-commodity_level_2=""
-            :data-com_level_2_code="
-              baseData.parentClassCode && baseData.parentClassCode.split(',')[1]
-            "
-            :data-n_now_price="baseData.referencePrice"
-            :data-planner_number="item.userCenterNo"
-            :data-crisps_fraction="item.point"
-            :data-planner_name="item.userName"
             round
             class="contact-btn"
             @click="handleTel(item.mchUserId)"
@@ -123,7 +73,7 @@ import { parseTel } from '~/utils/common'
 import { planner } from '~/api'
 import imHandle from '~/mixins/imHandle'
 export default {
-  name: 'Planners',
+  name: 'TcPlanners',
   components: {
     [Image.name]: Image,
     [Button.name]: Button,

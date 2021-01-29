@@ -20,7 +20,7 @@
             color="#FF624F"
             void-color="#bbb"
           />
-          <span>{{ caseData.star }}</span>
+          <span>{{ Number(caseData.star).toFixed(1) }}</span>
         </div>
       </div>
     </div>
