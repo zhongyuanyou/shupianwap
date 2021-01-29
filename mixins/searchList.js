@@ -143,6 +143,7 @@ export default {
           window.spptMd.spptTrackRow('p_searchClick', {
             keyword_type: '商品',
             keyword: this.searchText,
+            track_code: 'SPW000023',
           })
         }
       } catch (e) {

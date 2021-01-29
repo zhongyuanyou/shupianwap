@@ -68,12 +68,21 @@ export default {
     }),
   },
   mounted() {
-    try {
-      this.historySearch = this.$cookies.get('foundHistory')
-        ? this.$cookies.get('foundHistory')
-        : []
-    } catch (err) {}
-    // this.getInfoList()
+    if (this.isInApp) {
+      this.$appFn.dggGotWapData({ key: 'foundHistory' }, (res) => {
+        if (res.code === 200) {
+          this.historySearch = JSON.parse(res.data)
+        } else {
+          this.historySearch = []
+        }
+      })
+    } else {
+      try {
+        if (localStorage.getItem('foundHistory')) {
+          this.historySearch = JSON.parse(localStorage.getItem('foundHistory'))
+        }
+      } catch (err) {}
+    }
   },
   methods: {
     handelKeydown(data) {
@@ -85,7 +94,15 @@ export default {
       if (!isHas && this.keywords) {
         history.unshift(this.keywords)
       }
-      this.$cookies.set('foundHistory', history)
+      // this.$cookies.set('foundHistory', history)
+      if (this.isInApp) {
+        this.$appFn.dggSaveWapData(
+          { key: 'foundHistory', data: JSON.stringify(history) },
+          (res) => {}
+        )
+      } else {
+        localStorage.setItem('foundHistory', JSON.stringify(history))
+      }
       this.page = 1
       this.getInfoList()
     },

@@ -220,6 +220,21 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // 存储wap数据到App本地
+  dggSaveWapData: (
+    params = { key: 'foundHistory', data: '' },
+    fn = () => {}
+  ) => {
+    Bridge.callHandler('dgg_SaveWapData', params, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // 获取存储到App本地的wap数据
+  dggGotWapData: (data = { key: 'foundHistory' }, fn = () => {}) => {
+    Bridge.callHandler('dgg_GotWapData', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
 }
 
 // 注册APP调用的js方法

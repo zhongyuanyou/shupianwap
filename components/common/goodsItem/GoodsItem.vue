@@ -11,6 +11,7 @@
     :data-commodity_number="mdData.commodity_number"
     :data-commodity_name="mdData.commodity_name"
     :data-commodity_type="mdData.commodity_type"
+    :data-track_code="goodstype.type === 'serve' ? 'SPW000026' : 'SPW000027'"
     @click="jumpUrl"
   >
     <div class="goods-item-left">
