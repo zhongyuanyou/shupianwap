@@ -389,8 +389,25 @@ export default {
       this.$router.back()
     },
     openDggKf() {
-      this.$dggkefu()
+      // eslint-disable-next-line
+      dggMi.showPanel({
+        type: 'groupToken',
+        value: '',
+      })
     },
+  },
+  head() {
+    return {
+      title: '帮助中心',
+      script: [
+        {
+          src: 'https://cdn.shupian.cn/sp-pt/wap/files/23ef8zvw9sww000.js', // 美洽客服临时文件
+          ssr: false,
+          type: 'text/javascript',
+          charset: 'utf-8',
+        },
+      ],
+    }
   },
 }
 </script>

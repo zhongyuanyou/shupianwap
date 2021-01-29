@@ -101,13 +101,6 @@ module.exports = {
         type: 'text/javascript',
         charset: 'utf-8',
       },
-      {
-        src: 'https://cdn.shupian.cn/sp-pt/wap/files/23ef8zvw9sww000.js', // 美洽临时用
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-        defer: 'defer',
-      },
     ],
   },
   loading: { color: '#4974F5' },
@@ -129,10 +122,6 @@ module.exports = {
     { src: '@/plugins/oss', ssr: true },
     { src: '@/plugins/install-components', ssr: false },
     { src: '@/plugins/sp-md-directive', ssr: false },
-    {
-      src: '@/plugins/dgg-kefu',
-      ssr: false,
-    },
   ],
   router: {
     middleware: 'appDock',
