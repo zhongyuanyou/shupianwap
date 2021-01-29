@@ -198,7 +198,7 @@ export default {
           font-weight: bold;
           color: #ffffff;
           padding: 0 24px 0 24px;
-          .textOverflow(4);
+          .textOverflow(2);
         }
         > .img-label {
           position: relative;

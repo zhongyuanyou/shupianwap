@@ -18,7 +18,12 @@
         <!--        />-->
         <span>186***2232 等10人已出价</span>
       </div>
-      <sp-button plain type="primary" size="small" @click="handleShowBarg"
+      <sp-button
+        plain
+        type="primary"
+        size="small"
+        style="height: 0.56rem"
+        @click="handleShowBarg"
         >去出价</sp-button
       >
     </div>

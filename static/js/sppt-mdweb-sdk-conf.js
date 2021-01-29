@@ -1,6 +1,6 @@
 var SPPTMDCONFIG = {
   platform_type: "Web", // 类型
-  app_name: "薯片平台", // 名称
+  app_name: "薯片WAP", // 名称
   server_url: window.location.href === 'https://m.shupian.com'
     ? 'https://shence.dgg.cn:6443/sa?project=product'
     : 'https://shence.dgg.cn:6443/sa?project=default', // 请求地址, // 数据接收地址, // 请求地址

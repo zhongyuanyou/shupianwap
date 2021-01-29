@@ -43,8 +43,8 @@ export default {
   data() {
     return {
       visible: false,
-      minDate: new Date(new Date().getFullYear() - 18, 0, 1),
-      maxDate: new Date(),
+      minDate: new Date(1000, 0, 1),
+      maxDate: new Date(new Date().getFullYear() - 18, 11, 31),
       currentDate: '',
     }
   },

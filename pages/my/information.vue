@@ -117,6 +117,7 @@
     />
     <!--S 选择生日popup-->
     <sp-toast ref="spToast"></sp-toast>
+    <Loading-center v-show="loading" />
   </div>
 </template>
 
@@ -132,6 +133,7 @@ import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
 import '@fe/sp-ui-mobile/lib/index.css'
 import { baseURL } from '~/config/index'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'Information',
   components: {
@@ -145,6 +147,7 @@ export default {
     BirthdaySelected,
     SpToast,
     Header,
+    LoadingCenter,
   },
   data() {
     return {
@@ -166,6 +169,7 @@ export default {
       isUpdateName: false, // 能否修改昵称
       isUpdateAvatar: false, // 能否修改头像
       avatar: '', // 头像
+      loading: true,
     }
   },
   computed: {
@@ -300,11 +304,13 @@ export default {
     async getUserInfo() {
       // 获取用户信息
       try {
+        this.loading = true
         const params = {
           id: this.userId,
         }
         const data = await this.$axios.get(userinfoApi.info, { params })
         this.info = data.data
+        this.loading = false
         this.$set(this.area, 0, {
           name: data.data.province ? data.data.province : '',
           code: '',
@@ -313,7 +319,9 @@ export default {
           name: data.data.city ? data.data.city : '',
           code: '',
         })
-      } catch (err) {}
+      } catch (err) {
+        this.loading = false
+      }
     },
     async getConfig() {
       // 获取用户配置
