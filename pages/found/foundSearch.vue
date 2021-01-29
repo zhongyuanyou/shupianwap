@@ -124,7 +124,8 @@ export default {
         this.$appFn.dggCloseWebView((res) => {})
         return
       }
-      this.$router.back()
+      this.$router.replace('/found')
+      // this.$router.back()
     },
   },
 }

@@ -78,7 +78,7 @@ export default {
 .fixed-botton {
   position: fixed;
   right: 24px;
-  bottom: 262px;
+  bottom: 270px;
   z-index: 999;
   width: 96px;
   height: 96px;
