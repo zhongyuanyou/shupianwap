@@ -329,7 +329,7 @@ export default {
     handleIm(item) {
       // 调起IM
       const imUserId = item.inviterId // 商户用户ID
-      const imUserType = 'MERCHANT_USER' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      const imUserType = this.isInApp ? 'MERCHANT_USER' : 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
       const imUserName = item.inviterName
       if (this.isInApp) {
         this.$appFn.dggOpenIM(
