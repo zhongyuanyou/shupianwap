@@ -25,3 +25,5 @@ export const GOODSDETAIL =
   'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg' // 产品详情默认图片
 export const GOODSLIST =
   'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg' // 产品列表默认图片
+
+export const APPISPROD = false // APP是否上线
