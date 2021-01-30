@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-30 10:45:54
+ * @LastEditTime: 2021-01-30 17:13:03
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -215,7 +215,7 @@ import imHandle from '@/mixins/imHandle'
 import { callPhone, copyToClipboard, setUrlParams } from '@/utils/common'
 
 export default {
-  name: 'List',
+  name: 'Detail',
   components: {
     [Icon.name]: Icon,
     [Button.name]: Button,
