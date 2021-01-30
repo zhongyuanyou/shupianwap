@@ -12,24 +12,26 @@
         </div>
       </template>
     </Header>
-    <sp-search
-      v-model="params.keyword"
-      placeholder="搜索您遇到的问题"
-      background="#f8f8f8"
-      class="search"
-      clearable
-      reverse
-      :maxlength="20"
-      @search="searchFuc"
-    >
-      <template #left-icon>
-        <my-icon
-          name="notify_ic_search"
-          size="0.24rem"
-          color="#999999"
-        ></my-icon>
-      </template>
-    </sp-search>
+    <form action="javascript:return true">
+      <sp-search
+        v-model="params.keyword"
+        placeholder="搜索您遇到的问题"
+        background="#f8f8f8"
+        class="search"
+        clearable
+        reverse
+        :maxlength="20"
+        @search="searchFuc"
+      >
+        <template #left-icon>
+          <my-icon
+            name="notify_ic_search"
+            size="0.24rem"
+            color="#999999"
+          ></my-icon>
+        </template>
+      </sp-search>
+    </form>
     <sp-cell-group>
       <sp-cell
         v-for="(item, index) in searchResult"
