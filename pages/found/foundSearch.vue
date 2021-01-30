@@ -53,7 +53,7 @@
           >"
         </p>
         <div>
-          <my-icon name="shop_ic_next" color="#ccc" size="0.25rem" />
+          <my-icon name="list_ic_next" color="#ccc" size="0.25rem" />
         </div>
       </div>
       <!--E 搜索检索-->
