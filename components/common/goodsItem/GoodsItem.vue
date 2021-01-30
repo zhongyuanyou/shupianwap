@@ -163,7 +163,7 @@ export default {
         'PRO_SALES_TAG' in this.itemData &&
         this.itemData.PRO_SALES_TAG.length
       ) {
-        return this.itemData.PRO_SALES_TAG
+        return this.itemData.PRO_SALES_TAG.slice(0, 3)
       } else {
         return []
       }
