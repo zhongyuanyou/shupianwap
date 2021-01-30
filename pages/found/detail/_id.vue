@@ -240,7 +240,6 @@ export default {
         flex-direction: column;
         height: 88px;
         margin-left: 24px;
-        padding: 9px 0;
         .title {
           font-size: 34px;
           font-family: PingFang SC;

@@ -36,6 +36,7 @@
             :data-commodity_number="item.productNo"
             :data-commodity_name="item.name"
             :data-n_now_price="item.referencePrice"
+            :data-track_code="isInApp ? 'SPP000039' : 'SPW000035'"
             class="recommend-list__item"
             @click="handleDetail(item)"
           >
