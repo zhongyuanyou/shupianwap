@@ -27,7 +27,7 @@
         >去出价</sp-button
       >
     </div>
-    <div class="open_app">
+    <div v-if="appIsProd" class="open_app">
       <Open />
     </div>
     <Bargaining ref="barg" />
@@ -38,6 +38,7 @@
 import { Image, Button } from '@chipspc/vant-dgg'
 import Open from '~/components/common/openApp/Open'
 import Bargaining from '~/components/detail/Bargaining'
+import { APPISPROD } from '~/config/constant'
 export default {
   name: 'Basic',
   components: {
@@ -49,6 +50,7 @@ export default {
   data() {
     return {
       priceRedIsBarg: false,
+      appIsProd: APPISPROD,
     }
   },
   methods: {
