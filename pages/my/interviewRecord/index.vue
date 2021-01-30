@@ -211,9 +211,11 @@ export default {
     back() {
       if (this.isInApp) {
         this.$appFn.dggWebGoBack((res) => {})
-        return
+      } else if (window.history.length <= 1) {
+        this.$router.replace('/')
+      } else {
+        this.$router.back()
       }
-      this.$router.back()
     },
     // 查看规划师详情
     scanDetail(item) {
