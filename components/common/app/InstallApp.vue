@@ -1,5 +1,5 @@
 <template>
-  <div class="install-app">
+  <div class="install-app" v-if="false">
     <p>保存搜索条件，重建找到心仪服务</p>
     <div class="install-app-btn" @click="openApp($event)">
       <span>安装APP</span>

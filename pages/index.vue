@@ -123,7 +123,7 @@ export default {
     }
     return {
       initData,
-      closeAppOpen,
+      closeAppOpen: true,
     }
   },
   data() {
