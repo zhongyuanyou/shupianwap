@@ -12,7 +12,11 @@
           @click="toggle(index)"
         >
           <template #right-icon>
-            <sp-radio ref="radioItem" :name="item">
+            <sp-radio
+              ref="radioItem"
+              class="phone-list__item-radio"
+              :name="item"
+            >
               <template #icon="{ checked }">
                 <sp-icon
                   class-prefix="spiconfont"
@@ -88,6 +92,9 @@ export default {
     /deep/.sp-cell__label {
       color: #ec5330 !important;
     }
+  }
+  &__item-radio {
+    overflow: visible;
   }
 }
 </style>
