@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-29 16:21:54
+ * @LastEditTime: 2021-01-30 10:45:54
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -162,11 +162,6 @@
     <div class="footer">
       <sp-bottombar safe-area-inset-bottom>
         <sp-bottombar-button
-          v-md:p_IMClick
-          data-im_type="售前"
-          :data-planner_number="detailData.id"
-          :data-planner_name="detailData.name"
-          :data-crisps_fraction="detailData.point"
           type="primary"
           text="电话联系"
           :disabled="!detailData.phone"
@@ -179,6 +174,7 @@
           :data-planner_number="detailData.id"
           :data-planner_name="detailData.name"
           :data-crisps_fraction="detailData.point"
+          :data-track_code="isInApp ? 'SPP000040' : 'SPW000036'"
           type="info"
           text="在线联系"
           :disabled="!detailData.id"

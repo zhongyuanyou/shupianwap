@@ -12,6 +12,7 @@
           <a
             v-md:p_plannerBoothClick
             data-even_name="p_plannerBoothClick"
+            data-track_code="SPW000033"
             :data-recommend_number="item.dggPlannerRecomLog"
             :data-planner_number="item.userCenterNo"
             :data-planner_name="item.userName"
@@ -33,6 +34,7 @@
               <a
                 v-md:p_plannerBoothClick
                 data-even_name="p_plannerBoothClick"
+                data-track_code="SPW000033"
                 :data-recommend_number="item.dggPlannerRecomLog"
                 :data-planner_number="item.userCenterNo"
                 :data-planner_name="item.userName"
@@ -56,6 +58,7 @@
           <sp-button
             v-md:p_IMClick
             data-even_name="p_IMClick"
+            data-track_code="SPW000031"
             :data-recommend_number="item.dggPlannerRecomLog"
             data-im_type="售前"
             :data-commodity_number="baseData.productNo"
@@ -85,6 +88,7 @@
           <sp-button
             v-md:p_IMClick
             data-even_name="p_IMClick"
+            data-track_code="SPW000031"
             :data-recommend_number="item.dggPlannerRecomLog"
             data-im_type="售前"
             :data-commodity_number="baseData.productNo"
