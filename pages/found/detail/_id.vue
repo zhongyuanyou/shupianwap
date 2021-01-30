@@ -37,7 +37,7 @@
             />
           </div>
           <div class="detail_con_info_content">
-            <p class="title">{{ $route.params.name }}</p>
+            <p class="title">{{ nameList[info.id % 30] }}</p>
             <p class="time">{{ info.createTime | dateTime }}</p>
           </div>
         </div>
@@ -84,6 +84,7 @@ import { foundApi } from '@/api'
 import Header from '@/components/common/head/header'
 import { copyToClipboard } from '@/utils/common'
 import { GOODSLIST } from '@/config/constant'
+import nameList from '@/config/nameList'
 export default {
   layout: 'keepAlive',
   name: 'Detail',
@@ -126,6 +127,9 @@ export default {
     }),
     avatar() {
       return GOODSLIST
+    },
+    nameList() {
+      return nameList
     },
   },
   mounted() {
