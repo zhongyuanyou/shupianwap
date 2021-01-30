@@ -5,7 +5,7 @@
     <!-- E 头部 -->
     <div class="banner">
       <!--    城市按钮  -->
-      <div class="banner-button" @click="tabCity">
+      <!-- <div class="banner-button" @click="tabCity">
         <div class="banner-button-city">
           {{ currentCity.name || '成都市' }}
         </div>
@@ -15,7 +15,7 @@
           size="0.14rem"
           class="icon banner-button-icon"
         ></my-icon>
-      </div>
+      </div> -->
     </div>
     <div class="form">
       <div class="form-title">您还有一些额外需求要告知我们？</div>
@@ -134,9 +134,9 @@ export default {
         this.formData.content['是否允许电话联系'] === '是' ? '否' : '是'
     },
     // 选择城市
-    tabCity() {
-      this.$router.push({ path: '/city/choiceCity' })
-    },
+    // tabCity() {
+    //   this.$router.push({ path: '/city/choiceCity' })
+    // },
     // 获取当前时间作为 后台判断唯一标识
     getDate() {
       const timeStamp = new Date()
