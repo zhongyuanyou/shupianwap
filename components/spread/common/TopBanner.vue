@@ -84,17 +84,17 @@ export default {
       },
     },
   },
-  computed: {
-    ...mapState({
-      isInApp: (state) => state.app.isInApp,
-    }),
-  },
   data() {
     return {
       isSelect: 0,
       tabBg: 'transparent',
       isFont: 0,
     }
+  },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
   },
   methods: {
     // 返回

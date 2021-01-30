@@ -152,8 +152,7 @@ export default {
     back() {
       // 返回上一页
       if (window.history.length <= 1) {
-        this.$router.replace('/my/interviewRecord/index')
-        return false
+        this.$router.replace('/my/interviewRecord')
       } else {
         this.$router.back()
       }
