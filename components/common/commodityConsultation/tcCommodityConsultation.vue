@@ -124,20 +124,22 @@ export default {
     sendTemplateMsgWithImg(mchUserId, type) {
       // 服务产品路由ID：IMRouter_APP_ProductDetail_Service
       // 交易产品路由ID：IMRouter_APP_ProductDetail_Trade
+      const intentionType = {}
+      intentionType[
+        this.proDetail.classCodeLevel &&
+          this.proDetail.classCodeLevel.split(',')[0]
+      ] = codeTranslate(this.proDetail.dictCode)
+      // 意向城市
+      const intentionCity = {}
+      intentionCity[this.city.code] = this.city.name
       const sessionParams = {
         imUserId: mchUserId, // 商户用户ID
         imUserType: type, // 用户类型
         ext: {
-          intentionType: {
-            classCode:
-              this.proDetail.classCodeLevel &&
-              this.proDetail.classCodeLevel.split(',')[0],
-            className: codeTranslate(this.proDetail.dictCode),
-          }, // 意向业务 非必传
-          intentionCity: {
-            areaOfChoice: this.city.code,
-            areaOfChoiceName: this.city.name,
-          }, // 意向城市 非必传
+          intentionType, // 意向业务 非必传
+          intentionCity, // 意向城市 非必传
+          recommendId: '',
+          recommendAttrJson: {},
           startUserType: 'cps-app', //
         },
       }
