@@ -32,7 +32,7 @@
             fit="cover"
             :src="info.imageUrl"
           />
-          <p class="name">{{ info.updaterName }}</p>
+          <p class="name">{{ nameList[info.id % 30] }}</p>
         </div>
         <div class="item_bot_rt">
           {{ info.createTime }}
@@ -46,6 +46,7 @@
 import { Image } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { domainUrl } from '@/config'
+import nameList from '@/config/nameList'
 export default {
   name: 'Item',
   components: { [Image.name]: Image },
@@ -62,6 +63,9 @@ export default {
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo,
     }),
+    nameList() {
+      return nameList
+    },
   },
   methods: {
     handleClick() {
@@ -69,15 +73,11 @@ export default {
       if (this.isInApp) {
         const iosRouter =
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
-          `${domainUrl}found/detail/${this.info.cName || '系统管理员'}/${
-            this.info.id
-          }` +
+          `${domainUrl}found/detail/${this.info.id}` +
           '","isHideNav":1},"isLogin":"1","version":"1.0.0"}'
         const adRouter =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
-          `${domainUrl}found/detail/${this.info.cName || '系统管理员'}/${
-            this.info.id
-          }` +
+          `${domainUrl}found/detail/${this.info.id}` +
           '","isHideNav":1},"isLogin":"1","version":"1.0.0"}'
         this.$appFn.dggJumpRoute(
           { iOSRouter: iosRouter, androidRouter: adRouter },
@@ -90,9 +90,7 @@ export default {
         // 跳转文章详情
         case 1:
           this.$router.push({
-            path: `/found/detail/${this.info.cName || '系统管理员'}/${
-              this.info.id
-            }`,
+            path: `/found/detail/${this.info.id}`,
           })
           break
         // 跳转内链
@@ -116,9 +114,7 @@ export default {
           break
         default:
           this.$router.push({
-            path: `/found/detail/${this.info.cName || '系统管理员'}/${
-              this.info.id
-            }`,
+            path: `/found/detail/${this.info.id}`,
           })
           break
       }
