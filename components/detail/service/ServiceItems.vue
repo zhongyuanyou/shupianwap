@@ -13,7 +13,7 @@
         <em>{{ item.description }}</em>
       </li>
     </ul>
-    <div class="open_app">
+    <div v-if="appIsProd" class="open_app">
       <Open />
     </div>
     <sp-popup
@@ -38,6 +38,8 @@
 import { Safeguard, Popup } from '@chipspc/vant-dgg'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import Open from '~/components/common/openApp/Open'
+import { APPISPROD } from '~/config/constant'
+
 export default {
   name: 'ServiceItems',
   components: {
@@ -58,6 +60,7 @@ export default {
     return {
       showRoundCorner: false,
       iconPrefix: 'sp-iconfont',
+      appIsProd: APPISPROD,
     }
   },
   computed: {
@@ -88,6 +91,7 @@ export default {
   padding-top: 41px;
   background-color: #fff;
   margin-top: 24px;
+  padding-bottom: 40px;
   &-title {
     font-size: 40px;
     font-weight: bold;
@@ -139,7 +143,7 @@ export default {
     }
   }
   .open_app {
-    padding: 32px 47px 40px 48px;
+    padding: 32px 47px 0px 48px;
   }
   /deep/ .sp-popup {
     border-radius: 24px 24px 0px 0px;

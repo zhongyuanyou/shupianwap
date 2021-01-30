@@ -186,7 +186,7 @@ export default {
         }
       })
     } else {
-      this.formData.equipment = '浏览器'
+      this.formData.equipment = 'wap端'
     }
     this.getComplainCategory()
   },

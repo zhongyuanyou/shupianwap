@@ -1,5 +1,5 @@
 export const state = () => ({
-  isShowOpenApp: true, // 底部打开app显示和隐藏
+  isShowOpenApp: false, // 底部打开app显示和隐藏
   isInApp: false, // 是否在APP中
   appInfo: {}, // app信息
   appPlatform: '', // app类型信息

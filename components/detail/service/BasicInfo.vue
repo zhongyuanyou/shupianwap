@@ -54,7 +54,10 @@ export default {
       )
     },
     proSalesTag() {
-      return this.tagsData.PRO_SALES_TAG ? this.tagsData.PRO_SALES_TAG : []
+      const tagArr = this.tagsData.PRO_SALES_TAG
+        ? this.tagsData.PRO_SALES_TAG
+        : []
+      return tagArr.slice(0, 3)
     },
   },
 }

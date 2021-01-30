@@ -383,7 +383,17 @@ export default {
     },
     back() {
       if (this.isInApp) {
-        this.$appFn.dggWebGoBack((res) => {})
+        // this.$appFn.dggWebGoBack((res) => {})
+        this.$appFn.dggCloseWebView((res) => {
+          if (!res || res.code !== 200) {
+            this.$xToast.show({
+              message: '返回失败',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
         return
       }
       this.$router.push('/my')
