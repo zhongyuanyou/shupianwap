@@ -21,7 +21,7 @@
             </div>
           </div>
           <template #right-icon>
-            <sp-radio ref="checkboxes" :name="item">
+            <sp-radio ref="radio" class="address-list__item-radio" :name="item">
               <template #icon="{ checked }">
                 <sp-icon
                   class-prefix="spiconfont"
@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     toggle(index) {
-      this.$refs.checkboxes[index].toggle()
+      this.$refs.radio[index].toggle()
     },
     onSubmit() {
       //  提交选择信息
@@ -114,6 +114,9 @@ export default {
       color: #ec5330;
       font-size: 26px;
       line-height: 44px;
+    }
+    &-radio {
+      overflow: visible;
     }
   }
 }

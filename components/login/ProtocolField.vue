@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-12-02 11:43:42
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-20 15:02:53
+ * @LastEditTime: 2021-01-30 15:24:09
  * @Description: file content
  * @FilePath: /chips-wap/components/login/ProtocolField.vue
 -->
@@ -11,7 +11,12 @@
   <div class="protocol-field">
     <sp-field name="readed" class="protocol-field__content">
       <template #input>
-        <sp-checkbox v-model="readed" shape="round" @change="handleChange">
+        <sp-checkbox
+          v-model="readed"
+          shape="round"
+          class="protocol-field__content-checkbox"
+          @change="handleChange"
+        >
           <template #icon="{ checked }">
             <sp-icon
               class-prefix="spiconfont"
@@ -103,6 +108,9 @@ export default {
     display: flex;
     align-items: flex-start !important;
     height: auto !important;
+    &-checkbox {
+      overflow: visible;
+    }
   }
   &::after {
     display: none;
