@@ -134,7 +134,15 @@ export default {
     clearHistory() {
       // 清除数据
       // this.$cookies.remove('foundHistory')
-      localStorage.removeItem('foundHistory')
+      if (this.isInApp) {
+        const history = []
+        this.$appFn.dggSaveWapData(
+          { key: 'foundHistory', data: JSON.stringify(history) },
+          (res) => {}
+        )
+      } else {
+        localStorage.removeItem('foundHistory')
+      }
       this.historySearch = []
     },
     handelKeydown(data) {
