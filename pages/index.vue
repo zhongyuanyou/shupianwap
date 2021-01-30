@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
+import { PLATFORM_CODE, TERMINAL_CODE } from '@/config/constant'
 import { homeApi } from '@/api'
 import SearchBanner from '@/components/home/SearchBanner'
 import HomeNav from '@/components/home/HomeNav'
@@ -95,8 +95,8 @@ export default {
       fixedLimit: 5, // 固定导航每页条数
       fixedNavCategoryCode: 'nav100007', // 固定导航分类code
       rollNavCategoryCode: 'nav100012', // 滚动导航分类code
-      platformCode: CHIPS_PLATFORM_CODE, // 平台code
-      terminalCode: WAP_TERMINAL_CODE, // 终端code
+      platformCode: PLATFORM_CODE.wap, // 平台code
+      terminalCode: TERMINAL_CODE.wap, // 终端code
     }
     const initData = {
       fiexdBannerData: [], // 固定广告
@@ -134,8 +134,8 @@ export default {
         infoLimit: 3, // 资讯每页数量
         infoPage: 1, // 资讯当前页
         categoryCode: 'con100032', // 查询资讯的分类code
-        platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
-        terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
+        platformCode: PLATFORM_CODE.wap, // 查询资讯的平台code
+        terminalCode: TERMINAL_CODE.wap, // 查询资讯的终端code
         locationCodeList: [], // 广告编码
       },
       asyncData: {

@@ -93,7 +93,7 @@
 
 <script>
 import { Sticky } from '@chipspc/vant-dgg'
-import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
+import { PLATFORM_CODE, TERMINAL_CODE } from '@/config/constant'
 import { searchApi } from '@/api'
 import Search from '@/components/common/search/Search'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
@@ -122,8 +122,8 @@ export default {
         heightPage: 1, // 查询置顶+高亮的每页数量
         hotLimit: 5, // 查询热搜的每页数量
         hotPage: 1, // 查询热搜的当前页
-        terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
-        platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
+        platformCode: PLATFORM_CODE.wap, // 查询资讯的平台code
+        terminalCode: TERMINAL_CODE.wap, // 查询资讯的终端code
       },
     }
   },

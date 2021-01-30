@@ -144,7 +144,11 @@ import {
   swipeItem,
 } from '@chipspc/vant-dgg'
 import { mapState, mapMutations } from 'vuex'
-import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
+import {
+  PLATFORM_CODE,
+  TERMINAL_CODE,
+  HELP_CLASS_CODE,
+} from '@/config/constant'
 import { helpApi } from '@/api'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import Header from '@/components/common/head/header'
@@ -166,29 +170,25 @@ export default {
     Header,
   },
   async asyncData({ store, $axios }) {
-    const qdaCode = 'con100120' // 企大宝(案加)
-    const spAppCode = 'con100029' // 薯片app
-    const qdsCode = 'con100045' // 企大顺
-    const wapCode = 'con100029' //  薯片wap
     const params = {
       findType: 0, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
       locationCode: 'ad113195', // 广告位code
       code: store.state.app.isInApp
         ? store.state.app.appInfo.platformCode === 'COMDIC_PLATFORM_QIDABAO'
-          ? qdaCode
+          ? HELP_CLASS_CODE.qdaCode
           : store.state.app.appInfo.platformCode === 'COMDIC_PLATFORM_CRISPS'
-          ? spAppCode
-          : qdsCode
-        : wapCode, // 获取分类列表选项的code
+          ? HELP_CLASS_CODE.spAppCode
+          : HELP_CLASS_CODE.qdsCode
+        : HELP_CLASS_CODE.wapCode, // 获取分类列表选项的code
       limit: 15,
       page: 1,
       categoryCode: '', // 分类code赛选文章
       terminalCode: store.state.app.isInApp
-        ? 'COMDIC_TERMINAL_APP'
-        : 'COMDIC_TERMINAL_WAP', // 查询资讯的终端code
+        ? TERMINAL_CODE.app
+        : TERMINAL_CODE.wap, // 查询资讯的终端code
       platformCode: store.state.app.isInApp
         ? store.state.app.appInfo.platformCode
-        : 'COMDIC_PLATFORM_CRISPS', // 查询资讯的平台code
+        : PLATFORM_CODE.wap, // 查询资讯的平台code
       includeField:
         'id,title,linkType,wapRoute,link,jumpImageUrl,iosRoute,androidRoute', // 必须要输出的内容字段
     }
