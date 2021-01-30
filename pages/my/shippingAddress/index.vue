@@ -16,7 +16,7 @@
     <!--E 头部-->
     <!--S 内容-->
     <div class="address_con">
-      <div v-if="!addressList.length" class="no_address">
+      <div v-if="!addressList.length && ending" class="no_address">
         <sp-image
           class="no_data__icon"
           fit="cover"
@@ -30,7 +30,7 @@
           v-for="(item, index) in addressList"
           :key="index"
           :stop-propagation="true"
-          :right-width="116"
+          :right-width="!item.defaultAddress ? 116 : 58"
         >
           <div class="address_con_list_item">
             <div class="address_con_list_item_lf">
@@ -52,6 +52,7 @@
           </div>
           <template #right>
             <sp-button
+              v-if="!item.defaultAddress"
               square
               text="默认"
               type="default"
@@ -154,6 +155,7 @@ export default {
       addressId: '', // 被选中的收货地址id
       defaultStatus: false,
       loading: false, // 加载效果状态
+      ending: false,
     }
   },
   computed: {
@@ -234,6 +236,7 @@ export default {
         }
         const res = await this.$axios.get(userinfoApi.addressList, { params })
         this.loading = false
+        this.ending = true
         if (res.code === 200) {
           this.addressList = res.data
         }

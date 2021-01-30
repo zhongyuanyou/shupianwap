@@ -28,9 +28,7 @@
                 height="0.88rem"
                 fit="cover"
                 class="avatar"
-                :src="
-                  info.url ? info.url : 'https://img.yzcdn.cn/vant/cat.jpeg'
-                "
+                :src="info.url ? info.url : avatars"
               />
               <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
             </div>
@@ -134,6 +132,7 @@ import Header from '@/components/common/head/header'
 import '@fe/sp-ui-mobile/lib/index.css'
 import { baseURL } from '~/config/index'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import { GOODSLIST } from '~/config/constant'
 export default {
   name: 'Information',
   components: {
@@ -178,6 +177,9 @@ export default {
     }),
     baseURL() {
       return baseURL
+    },
+    avatars() {
+      return GOODSLIST
     },
   },
   mounted() {

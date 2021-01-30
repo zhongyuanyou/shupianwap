@@ -368,10 +368,9 @@ export default {
   }
   &_list {
     .no-data {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      margin-top: 176px;
       width: 100%;
+      text-align: center;
       img {
         width: 340px;
         height: 340px;

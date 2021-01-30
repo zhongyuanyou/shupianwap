@@ -147,7 +147,6 @@ export default {
       }
       if (window.history.length <= 1) {
         this.$router.replace('/found')
-        return false
       } else {
         this.$router.back()
       }

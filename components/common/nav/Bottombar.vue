@@ -124,7 +124,7 @@ export default {
       if (path === item.path) {
         return
       }
-      this.$router.replace({
+      this.$router.push({
         path: item.path,
       })
     },
