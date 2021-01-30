@@ -17,7 +17,8 @@
       />
       <div class="card_item_bot">
         <p class="card_item_bot_lf">
-          {{ favour.cName }}<span>{{ favour.createTime | dateTime }}</span>
+          {{ nameList[favour.id % 30]
+          }}<span>{{ favour.createTime | dateTime }}</span>
         </p>
         <div class="hot_con">
           <my-icon name="news_ic_heat" color="#fff" size="0.17rem" />
@@ -36,7 +37,8 @@
           <span v-if="favour.hot" class="hot">热门</span>{{ favour.title }}
         </p>
         <p class="space_lf">
-          {{ favour.cName }}<span>{{ favour.createTime | dateTime }}</span>
+          {{ nameList[favour.id % 30]
+          }}<span>{{ favour.createTime | dateTime }}</span>
         </p>
       </div>
       <div class="space_img_con">
@@ -61,6 +63,7 @@
 
 <script>
 import { Image } from '@chipspc/vant-dgg'
+import nameList from '@/config/nameList'
 export default {
   name: 'CardItem',
   components: {
@@ -100,6 +103,11 @@ export default {
     return {
       hasLook: [], // 当前被点击过的文章id
     }
+  },
+  computed: {
+    nameList() {
+      return nameList
+    },
   },
   methods: {
     handleClick() {
