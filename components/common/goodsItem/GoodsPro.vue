@@ -11,6 +11,7 @@
     :data-commodity_number="goodsData.code"
     :data-commodity_name="goodsData.name"
     :data-n_now_price="goodsData.platformPrice"
+    data-track_code="SPW000020"
     href="javascript:void(0);"
     class="goods-item"
     @click="jumpPage"
