@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
+import { PLATFORM_CODE, TERMINAL_CODE } from '@/config/constant'
 import { homeApi } from '@/api'
 export default {
   props: {
@@ -56,8 +56,8 @@ export default {
       infoParams: {
         limit: 3, // 每页条数
         page: 1, // 当前页
-        platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
-        terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
+        platformCode: PLATFORM_CODE.wap, // 查询资讯的平台code
+        terminalCode: TERMINAL_CODE.wap, // 查询资讯的终端code
         categoryCode: '', // 查询资讯的分类code
       },
     }

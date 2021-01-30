@@ -58,7 +58,11 @@
 <script>
 import { mapMutations } from 'vuex'
 import { Search, Cell, CellGroup, TopNavBar, Sticky } from '@chipspc/vant-dgg'
-import { CHIPS_PLATFORM_CODE, WAP_TERMINAL_CODE } from '@/config/constant'
+import {
+  PLATFORM_CODE,
+  TERMINAL_CODE,
+  HELP_CLASS_CODE,
+} from '@/config/constant'
 import { helpApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import Header from '@/components/common/head/header'
@@ -80,12 +84,12 @@ export default {
       params: {
         keyword: '',
         findType: 1, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
-        categoryCode: 'con100873',
+        categoryCode: '',
         limit: 1000,
         page: 1,
         keywordField: 'title', // 需要检索的字段
-        terminalCode: WAP_TERMINAL_CODE, // 查询资讯的终端code
-        platformCode: CHIPS_PLATFORM_CODE, // 查询资讯的平台code
+        terminalCode: '', // 查询资讯的终端code
+        platformCode: '', // 查询资讯的平台code
         includeField: 'id,title', // 必须要输出的内容字段
       },
       searchResult: [],
@@ -120,6 +124,21 @@ export default {
       if (!this.params.keyword) {
         return
       }
+      this.params.categoryCode = this.$store.state.app.isInApp
+        ? this.$store.state.app.appInfo.platformCode ===
+          'COMDIC_PLATFORM_QIDABAO'
+          ? HELP_CLASS_CODE.qdaCode
+          : this.$store.state.app.appInfo.platformCode ===
+            'COMDIC_PLATFORM_CRISPS'
+          ? HELP_CLASS_CODE.spAppCode
+          : HELP_CLASS_CODE.qdsCode
+        : HELP_CLASS_CODE.wapCode // 获取分类列表选项的code
+      this.params.terminalCode = this.$store.state.app.isInApp
+        ? TERMINAL_CODE.app
+        : TERMINAL_CODE.wap // 查询资讯的终端code
+      this.params.platformCode = this.$store.state.app.isInApp
+        ? this.$store.state.app.appInfo.platformCode
+        : PLATFORM_CODE.wap // 查询资讯的平台code
       this.loading = true
       this.$axios.post(helpApi.findArticle, this.params).then((res) => {
         if (res.code === 200) {
