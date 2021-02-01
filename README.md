@@ -1,51 +1,24 @@
-# DGG
+# install dependencies
+$ yarn install
 
-查看[中文文档][cn]
+# serve with hot reload at localhost:3001
+# 开发环境，默认T环境
+$ yarn run dev
 
-## QuickStart
+# build for development and launch server
+# 测试环境T
+$ yarn run build
+$ yarn run start
 
-<!-- add docs here for user -->
+# build for release and launch server
+# 预发布环境
+$ yarn run build:release
+$ yarn run start:release
 
-see [egg docs][egg] for more detail.
+# build for production and launch server
+# 线上环境
+$ yarn run build:production
+$ yarn run start:production
 
-### Development
-
-```bash
-$ npm i
-$ npm run dev
-$ open http://localhost:7001/
-```
-
-### Testing
-
-```bash
-$ npm build
-$ npm start
-$ npm stop
-```
-
-### Release
-
-```bash
-$ npm build:release
-$ npm start:release
-$ npm stop
-```
-
-### Deploy
-
-```bash
-$ npm build:production
-$ npm start:production
-$ npm stop
-```
-
-### npm scripts
-
-- Use `npm run lint` to check code style.
-- Use `npm test` to run unit test.
-- Use `npm run autod` to auto detect dependencies upgrade, see [autod](https://www.npmjs.com/package/autod) for more detail.
-
-
-[egg]: https://eggjs.org
-[cn]: http://172.16.0.25/dgg-platform/egg-nuxt/blob/master/README.zh-CN.md
+# generate static project
+$ yarn run generate

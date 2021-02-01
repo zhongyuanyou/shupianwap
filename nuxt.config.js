@@ -1,38 +1,41 @@
-'use strict';
+'use strict'
 
-const path = require('path');
+const path = require('path')
 
-const BASE = require('./client/config/index.js');
-const NODE_ENV = process.env.NODE_ENV;
-const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV;
-const baseUrl = BASE[DGG_SERVER_ENV].baseURL;
+const BASE = require('./config/index.js')
+const NODE_ENV = process.env.NODE_ENV
+const baseUrl = BASE.baseURL
+console.log('baseUrl', baseUrl)
 const bablePlugin = [
-  [ 'import', {
-    libraryName: 'vant',
-    style: name => `${name}/style/less`,
-  }, 'vant' ],
-];
+  [
+    'import',
+    {
+      libraryName: '@chipspc/vant-dgg',
+      style: (name) => `${name}/style/less`,
+    },
+    '@chipspc/vant-dgg',
+  ],
+]
 if (NODE_ENV === 'production') {
-  bablePlugin.push('transform-remove-console');
+  bablePlugin.push('transform-remove-console')
 }
 module.exports = {
-  /** ***融合EGG.js关键配置(切勿覆盖和删除)*****/
   telemetry: false,
-  srcDir: 'client/',
-  /** ***********end**************/
-  // mode: 'universal',
-  // ssr: false,
+  server: {
+    port: 3001, // default: 3001
+    host: 'localhost', // default: localhost,
+  },
   env: {
     DGG_SERVER_ENV: process.env.DGG_SERVER_ENV,
   },
   head: {
-    title: process.env.npm_package_name || '',
+    title: '薯片·让更多人生活更美好！',
     meta: [
       { charset: 'utf-8' },
       {
         name: 'viewport',
         content:
-          'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover',
+          'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, shrink-to-fit=no, viewport-fit=cover',
       },
       {
         hid: 'description',
@@ -59,19 +62,21 @@ module.exports = {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     script: [
       {
+        src: '/js/sppt-mdweb-sdk-conf.js',
+        ssr: false,
+        type: 'text/javascript',
+        charset: 'utf-8',
+        defer: 'defer',
+      },
+      {
+        src: 'https://cdn.shupian.cn/sppt/md/sppt-mdweb-sdk.min.js',
+        ssr: false,
+        type: 'text/javascript',
+        charset: 'utf-8',
+        defer: 'defer',
+      },
+      {
         src: '/js/flexible.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
-      {
-        src: '/js/dgg-md-sdk-conf.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
-      {
-        src: 'https://ptcdn.dgg.cn/md/dgg-md-sdk.min.js',
         ssr: false,
         type: 'text/javascript',
         charset: 'utf-8',
@@ -98,18 +103,35 @@ module.exports = {
       },
     ],
   },
-  loading: { color: '#fff' },
-  css: [],
+  loading: { color: '#4974F5' },
+  css: [
+    'assets/css/reset.css',
+    'assets/icons/iconfont.css',
+    'assets/styles/reset-vant.less',
+  ],
+  styleResources: {
+    less: 'assets/styles/variables.less',
+  },
   plugins: [
     { src: '@/plugins/axios', ssr: true },
     { src: '@/plugins/router', ssr: false },
-    { src: '@/plugins/dgg-md', ssr: false },
+    { src: '@/plugins/my-icon', ssr: true },
+    // { src: '@/plugins/vconsole', ssr: false },
+    { src: '@/plugins/app-sdk', ssr: false },
+    { src: '@/plugins/lazyload', ssr: true },
+    { src: '@/plugins/oss', ssr: true },
+    { src: '@/plugins/install-components', ssr: false },
+    { src: '@/plugins/sp-md-directive', ssr: false },
   ],
-  buildModules: [ '@nuxtjs/eslint-module' ],
+  router: {
+    middleware: 'appDock',
+  },
+  buildModules: ['@nuxtjs/eslint-module'],
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     '@nuxtjs/style-resources',
+    ['cookie-universal-nuxt', { parseJSON: true }],
   ],
   axios: {
     proxy: true,
@@ -125,31 +147,43 @@ module.exports = {
         '^/api': '/', // 把 /api 替换成 /
       },
     },
+    '/gdmap': {
+      target: 'https://restapi.amap.com', // 高德地图代理
+      secure: false,
+      changeOrigin: true, // 表示是否跨域
+      logLevel: 'debug',
+      pathRewrite: {
+        '^/gdmap': '/',
+      },
+    },
   },
   build: {
-    transpile: [ /vant.*?less/ ],
+    transpile: [/vant.*?less/],
     postcss: {
       plugins: {
         'postcss-pxtorem': {
-          rootValue: 50,
+          rootValue: 100,
           minPixelValue: 2,
           propWhiteList: [],
+          exclude: /(node_modules)/,
         },
       },
       preset: {
-        browsers: [ 'Android >= 4.0', 'iOS >= 7' ],
+        browsers: ['Android >= 4.0', 'iOS >= 7'],
       },
     },
     babel: {
       plugins: bablePlugin,
     },
+    extractCSS: { ignoreOrder: true },
     loaders: {
-      less: {// VantUI 定制主题配置
+      less: {
+        // VantUI 定制主题配置
         javascriptEnabled: true, // 开启 Less 行内 JavaScript 支持
         modifyVars: {
           hack: `true; @import "${path.join(
             __dirname,
-            './client/assets/styles/vant.var.less'
+            './assets/styles/vant.var.less'
           )}";`,
         },
       },
@@ -161,14 +195,14 @@ module.exports = {
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
           exclude: /(node_modules)/,
-        });
+        })
       }
 
       if (ctx.isClient) {
         if (NODE_ENV === 'development') {
-          config.devtool = 'cheap-module-eval-source-map';
+          config.devtool = 'cheap-module-eval-source-map'
         } else {
-          config.devtool = 'hidden-source-map';
+          config.devtool = 'hidden-source-map'
         }
       }
     },
@@ -180,4 +214,4 @@ module.exports = {
       ignored: /node_modules/,
     },
   },
-};
+}
