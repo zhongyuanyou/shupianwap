@@ -1,0 +1,224 @@
+<template>
+  <div class="register-list">
+    <div
+      class="register-list_hidden"
+      :class="isMore ? 'register-list_max' : 'register-list_max--active'"
+    >
+      <div
+        v-for="(listCounts, index) of listCount"
+        :key="index"
+        :style="{
+          background:
+            'url(' + listCounts.bgImg + ')' + 'top center/100% auto no-repeat',
+        }"
+        class="list"
+        @click="onMessage('', index, $event)"
+      >
+        <a
+          v-sensorsTrack:p_IMClick="{
+            eventName: '在线咨询',
+            type: '售前',
+            name: `工商注册_服务介绍_在线咨询`,
+          }"
+          class="list-count"
+        >
+          <div class="list-count_item">
+            <span>{{ listCounts.operating.actualViews }}</span>
+            <div>在线咨询</div>
+          </div>
+          <div class="list-count_line"></div>
+          <div class="list-count_item">
+            <span>{{ listCounts.operating.defaultSales }}</span>
+            <div>累计成交</div>
+          </div>
+          <div class="list-count_line"></div>
+          <div class="list-count_item">
+            <span>{{ listCounts.operating.actualSales }}</span>
+            <div>成功案例</div>
+          </div>
+        </a>
+        <div class="list-advisory">
+          <span
+            v-sensorsTrack:p_IMClick="{
+              eventName: '在线咨询',
+              type: '售前',
+              name: `工商注册_服务介绍_在线咨询`,
+            }"
+            class="price"
+            ><span>{{ listCounts.pric }}</span
+            >元起</span
+          >
+          <div class="advisory">
+            <sp-image
+              v-sensorsTrack:p_IMClick="{
+                eventName: '在线咨询',
+                type: '售前',
+                name: `工商注册_服务介绍_在线咨询`,
+              }"
+              round
+              width="28px"
+              height="28px"
+              :src="listCounts.imgSrc"
+            />
+            <a
+              v-sensorsTrack:p_IMClick="{
+                eventName: '在线咨询',
+                type: '售前',
+                name: `工商注册_服务介绍_在线咨询`,
+              }"
+              ><my-icon
+                name="notify_ic_chat"
+                size="20px"
+                color="#4974F5"
+              ></my-icon
+            ></a>
+            <a
+              v-sensorsTrack:webClick="{
+                eventName: 'wap元素点击',
+                type: '售前',
+                name: `工商注册_服务介绍_电话`,
+              }"
+              type="primary"
+              @click="onPhone(index)"
+            >
+              <my-icon
+                name="notify_ic_tel"
+                size="20px"
+                color="#4974F5"
+                data-stop="stop"
+              ></my-icon
+            ></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import { Icon, Image, Toast } from '@chipspc/vant-dgg'
+export default {
+  name: 'Introduction',
+  components: {
+    [Icon.name]: Icon,
+    [Image.name]: Image,
+    [Toast.name]: Toast,
+  },
+  props: {
+    listCount: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+    isMore: {
+      type: Boolean,
+      default: () => {
+        return false
+      },
+    },
+  },
+  methods: {
+    onMessage(url, index, e) {
+      if (e.target.dataset.stop !== 'stop') {
+        if (url !== '') {
+          window.location.href = url
+        } else {
+          this.$root.$emit(
+            'openIMM',
+            this.listCount[index].id,
+            this.listCount[index].name,
+            this.listCount[index].jobNum,
+            this.listCount[index].imgSrc
+          )
+        }
+      }
+    },
+    onPhone(index) {
+      window.location.href = `tel:${this.listCount[index].telephone}`
+    },
+  },
+}
+</script>
+<style lang="less" scoped>
+.register-list {
+  .register-list_hidden {
+    overflow-y: hidden;
+    .list:last-child {
+      margin-bottom: 0px;
+    }
+    .list {
+      width: 670px;
+      border: 1px solid rgba(205, 205, 205, 0.3);
+      border-radius: 8px;
+      margin-bottom: 25px;
+      .list-count {
+        display: flex;
+        justify-content: space-between;
+        padding: 206px 82px 30px;
+        position: relative;
+        .list-count_item {
+          font-size: 34px;
+          font-weight: bold;
+          color: #222222;
+          line-height: 52px;
+          span {
+            font-size: 34px;
+            font-weight: bold;
+            color: #222222;
+            line-height: 52px;
+          }
+          div {
+            font-size: 22px;
+            font-weight: 400;
+            color: #999999;
+            line-height: 52px;
+          }
+        }
+        .list-count_line {
+          width: 1px;
+          height: 34px;
+          margin-top: 46px;
+          background: #f4f4f4;
+        }
+      }
+      .list-advisory {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px dashed #f4f4f4;
+        padding: 24px 32px 24px;
+        .price {
+          font-size: 24px;
+          font-weight: bold;
+          color: #ec5330;
+          span {
+            font-size: 40px;
+          }
+        }
+        .advisory {
+          width: 240px;
+          height: 72px;
+          background-color: #4974f5;
+          background: #ebf3ff;
+          border-radius: 36px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0 28px 0 8px;
+          > a {
+            display: inline-block;
+            height: 72px;
+            line-height: 35px;
+          }
+        }
+      }
+    }
+  }
+  // 选择更多高度
+  .register-list_max {
+    max-height: 10000px;
+  }
+  .register-list_max--active {
+    max-height: 1450px;
+  }
+}
+</style>

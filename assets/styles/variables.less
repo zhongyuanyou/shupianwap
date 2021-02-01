@@ -1,0 +1,34 @@
+// 多行文字隐藏
+.textOverflow(@num) {
+    -webkit-line-clamp: @num; // 超过多少行 以 ... 形式展示
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    overflow: hidden;
+    white-space: normal;
+}
+
+.vertical-line(@height: 66px; @bgColor: #E5E5E5; @skewX: 0deg; @width: 1px) {
+    display: inline-block;
+    vertical-align: middle;
+    width: @width;
+    height: @height;
+    background-color: @bgColor;
+    transform: skewX(@skewX);
+}
+
+.horizontal-line(@width: 208px; @bgColor: #E5E5E5; @skewX: 0deg; @height: 1px; ) {
+    display: inline-block;
+    vertical-align: middle;
+    width: @width;
+    height: @height;
+    background-color: @bgColor;
+    transform: skewX(@skewX);
+}
+
+.my-toast-style {
+    .sp-toast__text {
+        line-height: 1.2;
+    }
+}
