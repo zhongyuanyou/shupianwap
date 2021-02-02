@@ -12,8 +12,11 @@
       </div>
       <div class="item_bot">
         <div class="item_bot_lf">
-          <img class="avatar" :src="info.imageUrl" />
-          <p class="name">{{ info.updaterName }}</p>
+          <img
+            class="avatar"
+            src="https://cdn.shupian.cn/sp-pt/wap/images/chc1l64fweo0000.png"
+          />
+          <p class="name">{{ nameList[info.id % 30] }}</p>
         </div>
         <div class="item_bot_rt">
           {{ info.createTime }}
@@ -30,7 +33,7 @@
             height="0.48rem"
             radius="0.24rem"
             fit="cover"
-            :src="info.imageUrl"
+            src="https://cdn.shupian.cn/sp-pt/wap/images/chc1l64fweo0000.png"
           />
           <p class="name">{{ nameList[info.id % 30] }}</p>
         </div>
