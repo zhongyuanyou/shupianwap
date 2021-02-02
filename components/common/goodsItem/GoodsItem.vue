@@ -99,7 +99,7 @@ export default {
         mdData.commodity_type = this.itemData.operating
           ? '服务商品'
           : '交易商品' // 商品类型 服务商品、交易商品、服务资源
-        mdData.track_code = this.isList
+        mdData.track_code = !this.isList
           ? 'SPW000022'
           : this.goodstype.type === 'serve'
           ? 'SPW000026'
