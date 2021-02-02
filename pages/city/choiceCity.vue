@@ -33,7 +33,7 @@
       <span>当前选择</span>
     </div>
     <!-- S 当前定位城市 -->
-    <div class="position-city">
+    <div v-if="!isInApp" class="position-city">
       <div v-if="!positionStatus" class="no-position">
         <my-icon
           name="toast_ic_remind"
@@ -128,6 +128,7 @@ export default {
       currentCity: (state) => state.city.currentCity.name, // 当前选择的城市
       positionCityName: (state) => state.city.positionCityName, // 当前定位城市
       positionStatus: (state) => state.city.positionStatus, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
+      isInApp: (state) => state.app.isInApp, // 是否在app中打开此页
     }),
   },
   created() {

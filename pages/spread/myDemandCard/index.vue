@@ -94,9 +94,22 @@ export default {
     },
   },
   created() {
-    // if (process.client) {
-    //   this.$appFn.dggSetTitle({ title: '轻松找服务' }, (res) => {})
-    // }
+    if (process.client) {
+      //   this.$appFn.dggSetTitle({ title: '轻松找服务' }, (res) => {})
+      try {
+        // 在app中打开此页面时，设置当前选择的城市
+        if (this.isInApp) {
+          this.$appFn.dggCityCode((res) => {
+            if (res.code === 200) {
+              this.SET_CITY({
+                code: res.data.adCode,
+                name: res.data.cityName,
+              })
+            }
+          })
+        }
+      } catch (error) {}
+    }
   },
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'NeedCard' })
@@ -104,6 +117,7 @@ export default {
   methods: {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+      SET_CITY: 'city/SET_CITY',
     }),
     // 选择城市
     choiceCity() {
