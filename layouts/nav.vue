@@ -1,6 +1,5 @@
 <template>
   <div class="nav-layout">
-    <span style="font-size: 12px"></span>
     <nuxt />
     <Bottombar v-if="!isInApp" ref="bottombar" />
     <div

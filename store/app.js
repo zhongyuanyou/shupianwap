@@ -3,6 +3,7 @@ export const state = () => ({
   isInApp: false, // 是否在APP中
   appInfo: {}, // app信息
   appPlatform: '', // app类型信息
+  isApplets: false, // 是否在小程序中
 })
 
 export const mutations = {
@@ -20,6 +21,9 @@ export const mutations = {
   SET_APP_PLATFORM(state, val) {
     state.appPlatform = val
   },
+  SET_APPLETS(state, val) {
+    state.isApplets = val
+  },
 }
 
 export const actions = {
@@ -35,5 +39,8 @@ export const actions = {
   },
   setAppPlatform({ commit }, data) {
     commit('SET_APP_PLATFORM', data)
+  },
+  setApplets({ commit }, data) {
+    commit('SET_APPLETS', data)
   },
 }

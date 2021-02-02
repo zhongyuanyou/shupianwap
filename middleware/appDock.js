@@ -15,5 +15,8 @@ export default function ({ app, req, redirect, route, store }) {
       }
     }
   }
+  if (route.query.isApplets) {
+    store.dispatch('app/setApplets', true)
+  }
   // const erminal = req.headers['user-agent'] // 访问用户的设备终端
 }

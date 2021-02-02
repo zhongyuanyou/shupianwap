@@ -29,7 +29,7 @@
       :active-tab="activeTab"
       @refresh="refresh"
     />
-    <Bottombar v-if="!isInApp" ref="bottombar" />
+    <Bottombar v-if="!isInApp && !isApplets" ref="bottombar" />
     <Loading-center v-show="loadingIndex" />
   </div>
 </template>
@@ -94,6 +94,7 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo,
+      isApplets: (state) => state.app.isApplets,
     }),
   },
   mounted() {
