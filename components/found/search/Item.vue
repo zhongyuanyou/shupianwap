@@ -77,11 +77,11 @@ export default {
         const iosRouter =
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
           `${domainUrl}found/detail/${this.info.id}` +
-          '","isHideNav":1},"isLogin":"1","version":"1.0.0"}'
+          '","isHideNav":1},"isLogin":"0","version":"1.0.0"}'
         const adRouter =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
           `${domainUrl}found/detail/${this.info.id}` +
-          '","isHideNav":1},"isLogin":"1","version":"1.0.0"}'
+          '","isHideNav":1},"isLogin":"0","version":"1.0.0"}'
         this.$appFn.dggJumpRoute(
           { iOSRouter: iosRouter, androidRouter: adRouter },
           (res) => {}
