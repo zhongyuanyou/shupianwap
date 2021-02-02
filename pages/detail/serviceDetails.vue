@@ -392,6 +392,9 @@ export default {
       // this.showShare = false
     },
   },
+  head: {
+    meta: [{ name: 'spptmd-track_code', content: 'SPW000013' }],
+  },
 }
 </script>
 
