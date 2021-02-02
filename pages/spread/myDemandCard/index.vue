@@ -49,6 +49,7 @@
 import { WorkTab, WorkTabs, Button } from '@chipspc/vant-dgg'
 import { mapMutations, mapState } from 'vuex'
 import Header from '@/components/common/head/header'
+import { domainUrl } from '~/config/index'
 export default {
   layout: 'keepAlive',
   name: 'NeedCard',
@@ -125,6 +126,61 @@ export default {
     },
     // 根据选项跳转页面
     toDemandCardPage() {
+      if (this.isInApp) {
+        switch (this.navTabs[this.activeNavTabIndex]) {
+          case '公司注册': {
+            this.$appFn.dggOpenNewWeb(
+              { urlString: `${domainUrl}spread/myDemandCard/companyRegister` },
+              (res) => {}
+            )
+            break
+          }
+          case '代理记账': {
+            this.$appFn.dggOpenNewWeb(
+              { urlString: `${domainUrl}spread/myDemandCard/agentBilling` },
+              (res) => {}
+            )
+            break
+          }
+          case '公司交易': {
+            this.$appFn.dggOpenNewWeb(
+              {
+                urlString: `${domainUrl}spread/myDemandCard/companyTransaction`,
+              },
+              (res) => {}
+            )
+            break
+          }
+          case '工商变更': {
+            this.$appFn.dggOpenNewWeb(
+              {
+                urlString: `${domainUrl}spread/myDemandCard/companyAlteration`,
+              },
+              (res) => {}
+            )
+            break
+          }
+          case '审计业务': {
+            this.$appFn.dggOpenNewWeb(
+              {
+                urlString: `${domainUrl}spread/myDemandCard/auditingService`,
+              },
+              (res) => {}
+            )
+            break
+          }
+          case '许可证办理': {
+            this.$appFn.dggOpenNewWeb(
+              {
+                urlString: `${domainUrl}spread/myDemandCard/permitHandling`,
+              },
+              (res) => {}
+            )
+            break
+          }
+        }
+        return
+      }
       switch (this.navTabs[this.activeNavTabIndex]) {
         case '公司注册': {
           this.$router.push({ path: '/spread/myDemandCard/companyRegister' })
