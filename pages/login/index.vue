@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-23 10:18:38
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-25 15:21:36
+ * @LastEditTime: 2021-02-02 16:06:09
  * @Description: file content
  * @FilePath: /chips-wap/pages/login/index.vue
 -->
@@ -410,6 +410,16 @@ export default {
       this.isValidSubmit = isValid
       return errorObject
     },
+  },
+  head() {
+    return {
+      meta: [
+        {
+          name: 'spptmd-track_code',
+          content: 'SPW000002',
+        },
+      ],
+    }
   },
 }
 </script>

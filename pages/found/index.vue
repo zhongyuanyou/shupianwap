@@ -180,6 +180,16 @@ export default {
       this.onClickTap(this.activeTab, true)
     },
   },
+  head() {
+    return {
+      meta: [
+        {
+          name: 'spptmd-track_code',
+          content: this.isInApp ? 'SPP000007' : 'SPW000007',
+        },
+      ],
+    }
+  },
 }
 </script>
 

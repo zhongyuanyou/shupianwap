@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-24 18:40:14
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-29 16:09:52
+ * @LastEditTime: 2021-02-02 16:26:34
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/list.vue
 -->
@@ -601,6 +601,16 @@ export default {
         return Promise.reject(error)
       }
     },
+  },
+  head() {
+    return {
+      meta: [
+        {
+          name: 'spptmd-track_code',
+          content: this.isInApp ? 'SPP000018' : 'SPW000019',
+        },
+      ],
+    }
   },
 }
 </script>
