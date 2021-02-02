@@ -50,6 +50,7 @@
               :item-data="_item"
               :goodstype="{ type: 'jy', typeCode: item.ext4 }"
               :search-key="searchText"
+              :is-list="isList"
             />
           </sp-list>
           <!--E商品列表-->
@@ -99,6 +100,13 @@ export default {
   },
   mixins: [searchList],
   props: {
+    isList: {
+      // 是否是列表页
+      type: Boolean,
+      default() {
+        return false
+      },
+    },
     tabItems: {
       // 可选业态数组数据
       type: Array,

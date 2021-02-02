@@ -28,6 +28,7 @@
       :search-text="formData.searchText"
       :req-type="reqType"
       :session-category="sessionCategory"
+      :is-list="true"
     />
     <!--E筛选栏-->
   </div>
