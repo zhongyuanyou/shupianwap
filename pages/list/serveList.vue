@@ -105,6 +105,9 @@ export default {
         .catch()
     },
   },
+  head: {
+    meta: [{ name: 'spptmd-track_code', content: 'SPW000011' }],
+  },
 }
 </script>
 

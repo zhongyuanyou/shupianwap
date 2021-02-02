@@ -228,6 +228,9 @@ export default {
       this.currentInputText = this.formData.searchText
     },
   },
+  head: {
+    meta: [{ name: 'spptmd-track_code', content: 'SPW000006' }],
+  },
 }
 </script>
 
