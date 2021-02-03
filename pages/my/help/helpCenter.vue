@@ -14,6 +14,7 @@
     </Header>
     <form action="javascript:return true">
       <sp-search
+        ref="searchRef"
         v-model="params.keyword"
         placeholder="搜索您遇到的问题"
         background="#f8f8f8"
@@ -106,15 +107,31 @@ export default {
         this.noData = false
         this.searchResult = []
       }
+      if (to.path === '/my/help/helpCenter' && this.params.keyword === '') {
+        this.inputFocus() // 打开页面弹出软键盘
+      }
     },
   },
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'HelpCenter' })
+    this.inputFocus() // 打开页面弹出软键盘
   },
   methods: {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
+    inputFocus() {
+      try {
+        setTimeout(() => {
+          this.$nextTick(() => {
+            const inputEl = this.$refs.searchRef.getElementsByClassName(
+              'sp-field__control'
+            )[0]
+            inputEl.focus()
+          })
+        }, 100)
+      } catch (error) {}
+    },
     onServiceTouch(id) {
       this.$router.push({
         path: '/my/help/questions',
@@ -124,6 +141,7 @@ export default {
     // 搜索
     searchFuc() {
       if (!this.params.keyword) {
+        this.searchResult = []
         return
       }
       this.params.categoryCode = this.$store.state.app.isInApp
