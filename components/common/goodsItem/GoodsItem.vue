@@ -11,7 +11,7 @@
     :data-commodity_number="mdData.commodity_number"
     :data-commodity_name="mdData.commodity_name"
     :data-commodity_type="mdData.commodity_type"
-    :data-track_code="goodstype.type === 'serve' ? 'SPW000026' : 'SPW000027'"
+    :data-track_code="mdData.track_code"
     @click="jumpUrl"
   >
     <div class="goods-item-left">
@@ -50,6 +50,13 @@ import utils from '@/utils/spread/util.js'
 export default {
   name: 'GoodsItem',
   props: {
+    isList: {
+      // 是否是列表页
+      type: Boolean,
+      default() {
+        return false
+      },
+    },
     searchKey: {
       // 用户搜索的关键词
       type: String,
@@ -92,6 +99,11 @@ export default {
         mdData.commodity_type = this.itemData.operating
           ? '服务商品'
           : '交易商品' // 商品类型 服务商品、交易商品、服务资源
+        mdData.track_code = !this.isList
+          ? 'SPW000022'
+          : this.goodstype.type === 'serve'
+          ? 'SPW000026'
+          : 'SPW000027'
       }
       // console.log(mdData)
       return mdData

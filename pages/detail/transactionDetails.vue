@@ -14,8 +14,6 @@ export default {
   components: {
     DetailTemplate,
   },
-  layout: 'keepAlive',
-  watchQuery: ['productId'],
   async asyncData({ $axios, query, app, store }) {
     try {
       let tcProductDetailData = {}
@@ -71,6 +69,11 @@ export default {
       return imdata
     },
   },
+  head: {
+    meta: [{ name: 'spptmd-track_code', content: 'SPW000014' }],
+  },
+  layout: 'keepAlive',
+  watchQuery: ['productId'],
 }
 </script>
 

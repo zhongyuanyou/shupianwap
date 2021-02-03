@@ -550,8 +550,16 @@ export default {
       }
     },
   },
-  head: {
-    title: '规划师',
+  head() {
+    return {
+      title: '规划师',
+      meta: [
+        {
+          name: 'spptmd-track_code',
+          content: this.isInApp ? 'SPP000019' : 'SPW000019',
+        },
+      ],
+    }
   },
 }
 </script>

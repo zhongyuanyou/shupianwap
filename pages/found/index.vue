@@ -29,7 +29,7 @@
       :active-tab="activeTab"
       @refresh="refresh"
     />
-    <Bottombar v-if="!isInApp" ref="bottombar" />
+    <Bottombar v-if="!isInApp && !isApplets" ref="bottombar" />
     <Loading-center v-show="loadingIndex" />
   </div>
 </template>
@@ -94,6 +94,7 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo,
+      isApplets: (state) => state.app.isApplets,
     }),
   },
   mounted() {
@@ -178,6 +179,16 @@ export default {
       this.refreshStatus = true
       this.onClickTap(this.activeTab, true)
     },
+  },
+  head() {
+    return {
+      meta: [
+        {
+          name: 'spptmd-track_code',
+          content: this.isInApp ? 'SPP000007' : 'SPW000007',
+        },
+      ],
+    }
   },
 }
 </script>

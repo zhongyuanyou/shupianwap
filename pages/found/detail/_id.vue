@@ -191,6 +191,16 @@ export default {
       }
     },
   },
+  head() {
+    return {
+      meta: [
+        {
+          name: 'spptmd-track_code',
+          content: this.isInApp ? 'SPP000009' : 'SPW000009',
+        },
+      ],
+    }
+  },
 }
 </script>
 

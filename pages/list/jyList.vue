@@ -29,6 +29,7 @@
       :type-code-index="typeCodeIndex"
       :req-type="reqType"
       :search-text="searchText"
+      :is-list="true"
     />
   </div>
 </template>

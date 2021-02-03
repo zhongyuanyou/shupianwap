@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-26 11:50:25
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-25 09:34:37
+ * @LastEditTime: 2021-02-02 16:29:08
  * @Description: 购物车页面
  * @FilePath: /chips-wap/pages/shoppingCar/index.vue
 -->
@@ -614,6 +614,16 @@ export default {
         return Promise.reject(error)
       }
     },
+  },
+  head() {
+    return {
+      meta: [
+        {
+          name: 'spptmd-track_code',
+          content: this.isInApp ? 'SPP000020' : '',
+        },
+      ],
+    }
   },
 }
 </script>

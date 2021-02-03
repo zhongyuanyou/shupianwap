@@ -71,6 +71,7 @@
         :key="index"
         :item-data="item"
         :search-key="formData.keywords"
+        :is-list="isList"
       />
     </sp-list>
     <div>
@@ -127,6 +128,13 @@ export default {
   },
   mixins: [searchList],
   props: {
+    isList: {
+      // 是否是列表页
+      type: Boolean,
+      default() {
+        return false
+      },
+    },
     reqType: {
       // 搜索结果页的顶部tab类型
       type: String,
