@@ -13,7 +13,7 @@
     </div>
     <div class="content">
       <sp-skeleton title :row="10" :loading="loading">
-        <p class="content-text" v-html="article.content"></p>
+        <div class="content-text" v-html="article.content"></div>
       </sp-skeleton>
     </div>
   </div>
@@ -117,8 +117,7 @@ export default {
     padding: 40px;
     &-text {
       font-size: 32px;
-      line-height: 42px;
-      // text-indent: 2em;
+      line-height: 1.6;
     }
     img {
       max-width: 100%;
