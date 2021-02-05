@@ -2,7 +2,7 @@
  * @Author: xiao pu
  * @Date: 2020-11-25 15:28:35
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-30 17:13:03
+ * @LastEditTime: 2021-02-05 16:33:16
  * @Description: file content
  * @FilePath: /chips-wap/pages/planner/detail.vue
 -->
@@ -130,7 +130,7 @@
                 <div class="detail-content__sp-score">
                   {{ detailData.point || '--' }}
                 </div>
-                <div class="detail-content__level">
+                <div v-if="detailData.prop" class="detail-content__level">
                   打败{{ detailData.prop }}的规划师
                 </div>
                 <div class="detail-content__explain">
