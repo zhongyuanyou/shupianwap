@@ -1,9 +1,27 @@
 import vue from 'vue'
 import SpToast from './SpToast'
 
-// const toast = {}
 let instance
 
+/**
+ * @description 创建自定义的toast实例
+ * @returns {object} instance
+ * @returns {function} instance.show
+ * @returns {function} instance.success
+ * @returns {function} instance.error
+ * @returns {function} instance.warning
+ * @returns {function} instance.loading
+ * @returns {function} instance.showLoading
+ * @returns {function} instance.hideLoading
+ *
+ * @example this.$xToast.show({
+ *                message: '信息提交成功',
+ *                duration: 1000,
+ *                icon: 'toast_ic_comp',
+ *                forbidClick: true,
+ *          })
+ *
+ */
 function createInstance() {
   if (process && process.server) {
     return {}
@@ -20,22 +38,12 @@ function createInstance() {
     el: document.createElement('div'),
   })
   document.body.appendChild(instance.$el)
+
   instance.install = function (Vue, option) {
-    // const ToastExtend = Vue.extend(SpToast)
-    // const toastInstance = new ToastExtend()
-    // toastInstance.$mount(document.createElement('div'))
-    // document.body.appendChild(instance.$el)
     Vue.prototype.$xToast = instance
     Vue.prototype.$xToast.$_destroy = () => {
       instance.$destroy()
     }
-    // Vue.prototype.$xToast.show = toastInstance.show
-    // Vue.prototype.$xToast.success = toastInstance.success
-    // Vue.prototype.$xToast.error = toastInstance.error
-    // Vue.prototype.$xToast.loading = toastInstance.loading
-    // Vue.prototype.$xToast.showLoading = toastInstance.showLoading
-    // Vue.prototype.$xToast.hideLoading = toastInstance.hideLoading
-    // Vue.prototype.$xToast.warning = toastInstance.warning
   }
 
   return instance
