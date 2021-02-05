@@ -20,7 +20,7 @@
       <div class="search">
         <Search
           v-model="search.keywords"
-          v-myFocus
+          v-focus="focusCommand"
           placeholder="请输入规划师姓名"
           @searchKeydownHandle="handleSearch"
         />
@@ -41,20 +41,82 @@ export default {
     Header,
   },
   directives: {
-    myFocus: {
-      inserted(el) {
-        let inputDom = el
-        if (el.tagName !== 'INPUT') {
-          inputDom = el.querySelector('input')
+    focus: {
+      bind(el, binding, vnode) {
+        el.focusHandler = (event) => {
+          console.log('focusHandler!')
+          const { context } = vnode
+          const { expression } = binding
+          if (!context[expression]) {
+            context[expression] = true
+          }
         }
-        inputDom.tagName === 'INPUT' && inputDom.focus()
+        el.blurHandler = (event) => {
+          console.log('blurHandler!')
+          const { context } = vnode
+          const { expression } = binding
+          if (context[expression]) {
+            context[expression] = false
+          }
+        }
+
+        el.addFocus = (element) => {
+          if (!element) return
+          el.removeFocus(element)
+          element.addEventListener('focus', el.focusHandler)
+        }
+        el.addBlur = (element) => {
+          if (!element) return
+          el.removeBlur(element)
+          element.addEventListener('blur', el.blurHandler)
+        }
+
+        el.removeFocus = (element) => {
+          if (!element) return
+          element.removeEventListener('focus', el.focusHandler)
+        }
+        el.removeBlur = (element) => {
+          if (!element) return
+          element.removeEventListener('blur', el.blurHandler)
+        }
+
+        el.getInput = (element) => {
+          let inputDom = element
+          if (inputDom.tagName !== 'INPUT') {
+            inputDom = element.querySelector('input')
+          }
+          if (inputDom.tagName === 'INPUT') return inputDom
+          return null
+        }
       },
-      update(el) {
-        let inputDom = el
-        if (el.tagName !== 'INPUT') {
-          inputDom = el.querySelector('input')
-        }
-        inputDom.tagName === 'INPUT' && inputDom.focus()
+      inserted(el, binding) {
+        console.log('focus dirctive inserted')
+        const inputDom = el.getInput(el)
+        if (!inputDom) return
+        el.inputDom = inputDom
+        const { value, expression } = binding
+        value || !expression ? inputDom.focus() : inputDom.blur()
+        el.addFocus(inputDom)
+        el.addBlur(inputDom)
+      },
+
+      update(el, binding, vnode) {
+        console.log('focus dirctive update')
+        const inputDom = el.getInput(el)
+        if (!inputDom) return
+        el.inputDom = inputDom
+        const { value, expression } = binding
+        console.log('value:', value)
+        el.removeFocus(inputDom)
+        el.removeBlur(inputDom)
+        value || !expression ? inputDom.focus() : inputDom.blur()
+        el.addFocus(inputDom)
+        el.addBlur(inputDom)
+      },
+
+      unbind(el) {
+        el.removeFocus(el.inputDom)
+        el.removeBlur(el.inputDom)
       },
     },
   },
@@ -62,19 +124,21 @@ export default {
     return {
       popupShow: false,
       search: { keywords: '' },
+      focusCommand: true,
     }
   },
   methods: {
     onLeftClick() {
       this.popupShow = false
+      this.focusCommand = false
     },
+    // 外部调用控制
     openSearchPopup() {
       // 弹窗打开关闭
       this.popupShow = true
+      this.focusCommand = true
     },
-    onClickPopupLeft() {
-      this.popupShow = false
-    },
+
     handleSearch() {
       // 确认发送异步请求
       // if (!this.search.keywords) return
@@ -82,6 +146,7 @@ export default {
       this.$emit('onSearch', { keywords: this.search.keywords })
       this.search.keywords = ''
       this.popupShow = false
+      this.focusCommand = false
     },
   },
 }
