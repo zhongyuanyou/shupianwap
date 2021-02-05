@@ -121,7 +121,7 @@ module.exports = {
     { src: '@/plugins/lazyload', ssr: true },
     { src: '@/plugins/oss', ssr: true },
     { src: '@/plugins/install-components', ssr: false },
-    { src: '@/plugins/sp-md-directive', ssr: false },
+    { src: '@/plugins/directive.js', ssr: false },
   ],
   router: {
     middleware: 'appDock',
