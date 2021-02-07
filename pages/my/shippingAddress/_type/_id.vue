@@ -3,6 +3,7 @@
     <!--S 头部-->
     <Header
       :title="$route.params.type === 'add' ? '新增收货地址' : '编辑收货地址'"
+      :head-style="fixHeadStyle"
     >
       <template #left>
         <div @click="onClickLeft">
@@ -118,6 +119,9 @@ import { userinfoApi } from '@/api'
 import Header from '@/components/common/head/header'
 import SpToast from '@/components/common/spToast/SpToast'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+
+import noBounce from '@/utils/noBounce'
+
 export default {
   name: 'Id',
   components: {
@@ -138,6 +142,7 @@ export default {
   },
   data() {
     return {
+      fixHeadStyle: null,
       ruleForm: {
         contactName: '',
         phone: '',
@@ -177,8 +182,33 @@ export default {
         (res) => {}
       )
     }
+    this.keepHeadView()
   },
+
   methods: {
+    // 让顶部导航始终在视野最上面
+    keepHeadView() {
+      this.onScorll()
+      noBounce.enable() // 因为橡皮筋效果，也会触发滚动，导致通过滚动判断是否键盘弹起有误，所以阻止橡皮筋效果
+      this.$once('hook:beforeDestroy', () => {
+        noBounce.disable()
+      })
+    },
+
+    // 处理当键盘弹起后，在ios12中，网页自动滚动，导致head位置移动
+    onScorll() {
+      const scrollHandler = () => {
+        // 在IOS下document.body.scrollTop 一直为0，要用document.documentElement.scrollTop
+        const scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop
+        this.fixHeadStyle = { top: scrollTop + 'px' }
+      }
+
+      window && window.addEventListener('scroll', scrollHandler)
+      this.$once('hook:beforeDestroy', () => {
+        window.removeEventListener('scroll', scrollHandler)
+      })
+    },
     onClickLeft() {
       // 点击返回
       this.$router.back()
@@ -374,6 +404,8 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #f8f8f8;
+  -webkit-overflow-scrolling: auto;
+  overscroll-behavior-y: none;
   /deep/ .sp-field__label {
     width: 150px;
   }

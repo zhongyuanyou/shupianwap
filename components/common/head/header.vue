@@ -11,7 +11,11 @@
     <div
       class="my-head"
       :class="myHeadClass"
-      :style="{ height: headHeight, 'padding-top': safeTop + 'px' }"
+      :style="{
+        height: headHeight,
+        'padding-top': safeTop + 'px',
+        ...myHeadStyle,
+      }"
     >
       <div class="my-head-row">
         <div class="slot-left">
@@ -63,6 +67,13 @@ export default {
       type: String,
       default: () => '',
     },
+    // 自定义样式
+    headStyle: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
   },
   data() {
     return {
@@ -86,6 +97,11 @@ export default {
       return this.useSafeAreaClass
         ? `${this.headClass} safe-area-top`
         : this.headClass
+    },
+    myHeadStyle() {
+      return this.headStyle && typeof this.headStyle === 'object'
+        ? this.headStyle
+        : {}
     },
   },
   created() {
