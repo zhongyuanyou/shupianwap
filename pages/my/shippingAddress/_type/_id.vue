@@ -456,13 +456,15 @@ export default {
         color: #1a1a1a;
         line-height: 44px;
       }
-      /deep/ .sp-field__control {
+      /deep/.sp-field__body {
+        height: 119px;
+      }
+      /deep/.sp-field__control {
         font-size: 32px;
         font-family: PingFang SC;
         font-weight: 400;
         color: #1a1a1a;
-        height: 119px;
-        line-height: 119px;
+        line-height: 34px;
         &:focus {
           outline: none;
         }
