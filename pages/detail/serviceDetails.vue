@@ -2,6 +2,7 @@
   <div class="serviceDetails">
     <!-- 导航栏-->
     <sp-sticky
+      v-if="!isApplets"
       :class="{
         scroTopStyle: Boolean(opacity),
       }"
@@ -97,7 +98,7 @@ import {
   PullRefresh,
   ShareSheet,
 } from '@chipspc/vant-dgg'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import Banner from '~/components/detail/Banner'
 import BasicInfo from '~/components/detail/service/BasicInfo'
 import ServiceItems from '~/components/detail/service/ServiceItems'
@@ -217,6 +218,9 @@ export default {
       }
       return imdata
     },
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
   },
   async mounted() {
     // 假如未获取到站点信息,再获取地理位置
