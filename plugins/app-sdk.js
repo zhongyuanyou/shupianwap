@@ -11,6 +11,8 @@ const isAndroid =
   navigator.userAgent.indexOf('Adr') > -1
 // 验证是否为ios
 const isiOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+// 验证是否为小程序
+const miniProgram = navigator.userAgent.indexOf('miniProgram') > -1
 
 function dggSetBridge(callback) {
   if (isAndroid) {

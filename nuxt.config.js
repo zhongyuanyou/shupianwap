@@ -122,6 +122,7 @@ module.exports = {
     { src: '@/plugins/oss', ssr: true },
     { src: '@/plugins/install-components', ssr: false },
     { src: '@/plugins/directive.js', ssr: false },
+    { src: '@/plugins/uni.js', ssr: false },
   ],
   router: {
     middleware: 'appDock',
