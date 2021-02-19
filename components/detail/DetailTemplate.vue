@@ -2,6 +2,7 @@
   <div class="template">
     <!--S 导航栏-->
     <sp-sticky
+      v-if="!isApplets"
       z-index="5"
       :class="{
         scroTopStyle: Boolean(opacity),
@@ -110,7 +111,7 @@ import {
   List,
   ShareSheet,
 } from '@chipspc/vant-dgg'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import Banner from '~/components/detail/Banner'
 import Title from '~/components/detail/Title'
 import Basic from '~/components/detail/Basic'
@@ -199,6 +200,9 @@ export default {
     city() {
       return this.$store.state.city.currentCity
     },
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
   },
   async mounted() {
     this.fieldListFun() // 加载基本信息
