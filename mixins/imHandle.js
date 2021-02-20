@@ -15,6 +15,7 @@ export default {
       userId: (state) => state.user.userId,
       userType: (state) => state.user.userType,
       imExample: (state) => state.im.imExample, // IM 实例
+      isApplets: (state) => state.app.isApplets, // 是否在小程序中
     }),
   },
   methods: {
@@ -34,6 +35,13 @@ export default {
     },
     clearUserInfoAndJumpLoging() {
       this.$store.commit('user/CLEAR_USER')
+      if (this.isApplets) {
+        // 若是在小程序中
+        this.uni.navigateTo({
+          url: '/pages/my_son/login/wxLogin',
+        })
+        return
+      }
       this.$router.push({
         path: '/login',
         query: {

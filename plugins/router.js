@@ -45,7 +45,8 @@ export default ({ app, store }) => {
         store.dispatch('user/clearUser')
       }
       const token = app.$cookies.get('token') // 获取缓存用户token
-      if (!store.state.app.isInApp) {
+      if (!store.state.app.isInApp && !store.state.app.isApplets) {
+        // wap页面中
         if (token) {
           if (to.path === loginRoutePath) {
             // 如果跳转登录页面，将被重定向到首页
@@ -63,7 +64,12 @@ export default ({ app, store }) => {
         } else {
           next()
         }
+      } else if (store.state.app.isApplets && !store.state.app.isInApp) {
+        // 小程序中
+        // 获取小程序中本地缓存的用户信息
+        next()
       } else {
+        // app中
         // 验证跳转页面是否嵌入app中后是否需获取app中到用户详情
         // eslint-disable-next-line no-lonely-if
         if (store.state.app.isInApp && infoList.includes(to.name)) {

@@ -104,6 +104,7 @@
 
 <script>
 import { Image, Button, Toast } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import { planner } from '~/api'
 import { parseTel } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
@@ -144,6 +145,9 @@ export default {
     city() {
       return this.$store.state.city.currentCity
     },
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
   },
   methods: {
     // 规划师详情跳转
@@ -162,6 +166,13 @@ export default {
         })
         // 解密电话
         const tel = parseTel(telData.ciphertext)
+        if (this.isApplets) {
+          // 若是在小程序中
+          this.uni.makePhoneCall({
+            phoneNumber: tel, // 仅为示例
+          })
+          return
+        }
         window.location.href = `tel://${tel}`
       } catch (err) {
         Toast({
