@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <!--S 导航-->
-    <Header title="">
+    <Header v-if="!isApplets" title="">
       <template #left>
         <div @click="back">
           <my-icon
@@ -124,6 +124,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      isApplets: (state) => state.app.isApplets,
     }),
     avatar() {
       return GOODSLIST

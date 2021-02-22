@@ -152,6 +152,7 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo,
+      isApplets: (state) => state.app.isApplets,
     }),
   },
   watch: {
@@ -180,7 +181,7 @@ export default {
     },
     handleClick(item, index) {
       // 点击
-      if (this.isInApp) {
+      if (this.isInApp || this.isApplets) {
         let url = ''
         let hide = 0
         switch (item.linkType) {
@@ -224,8 +225,17 @@ export default {
           '","isHideNav":' +
           hide +
           ',"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
+        let miniRouter = ''
+        if (this.isApplets) {
+          // 若在小程序中
+          miniRouter = '/pages/found_son/detail/index?id=' + item.id
+        }
         this.$appFn.dggJumpRoute(
-          { iOSRouter: iosRouter, androidRouter: adRouter },
+          {
+            iOSRouter: iosRouter,
+            androidRouter: adRouter,
+            miniRouter,
+          },
           (res) => {}
         )
         return

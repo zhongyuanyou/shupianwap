@@ -4,7 +4,7 @@
  */
 
 import Vue from 'vue'
-
+const uni = require('~/static/js/uni.webview')
 // 验证是否为android
 const isAndroid =
   navigator.userAgent.indexOf('Android') > -1 ||
@@ -112,9 +112,15 @@ const appHandler = {
   },
   // 跳转App页面
   dggJumpRoute: (
-    data = { iOSRouter: '', androidRouter: '' },
+    data = { iOSRouter: '', androidRouter: '', miniRouter: '' },
     fn = () => {}
   ) => {
+    if (miniProgram) {
+      uni.navigateTo({
+        url: data.miniRouter,
+      })
+      return
+    }
     Bridge.callHandler('dgg_jumpRoute', data, (res) => {
       handleRequest(res, fn)
     })

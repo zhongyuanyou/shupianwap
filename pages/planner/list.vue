@@ -10,7 +10,7 @@
 <template>
   <div class="list">
     <div ref="head" class="head">
-      <Header title="在线直选规划师">
+      <Header v-if="!isApplets" title="在线直选规划师">
         <template #left>
           <my-icon
             name="nav_ic_back"
@@ -271,6 +271,7 @@ export default {
       currentCity: (state) => state.city.currentCity,
       isInApp: (state) => state.app.isInApp,
       userInfo: (state) => state.user.userInfo,
+      isApplets: (state) => state.app.isApplets,
     }),
     formatSearch() {
       const { sortId, keywords, region } = this.search
