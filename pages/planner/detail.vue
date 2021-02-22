@@ -9,7 +9,7 @@
 
 <template>
   <div class="detail">
-    <div v-if="!hideHeader" class="head">
+    <div v-if="!hideHeader && !isApplets" class="head">
       <Header title="规划师">
         <template #left>
           <sp-icon
@@ -246,6 +246,7 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       userInfo: (state) => state.user.userInfo,
+      isApplets: (state) => state.app.isApplets,
     }),
     formatTagList() {
       const tagList = this.detailData.tagList

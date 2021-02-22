@@ -384,15 +384,21 @@ export default {
       const { type, data } = value
       switch (type) {
         case 'IM':
-          console.log('发起IM', data)
           this.uPIM(data)
           break
         case 'tel':
-          console.log('想打电话：', data)
           this.uPCall(data)
           break
         case 'detail':
-          console.log('看看详情：', data)
+          if (this.isApplets) {
+            const miniRouter =
+              '/pages/home_son/planner/plannerHome?mchUserId=' +
+              data.mchUserId +
+              '&isShare=' +
+              data.isShare
+            this.$appFn.dggJumpRoute({ miniRouter })
+            return
+          }
           this.$router.push({
             name: 'planner-detail',
             query: data,
