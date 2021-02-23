@@ -1,7 +1,8 @@
 import qs from 'qs'
+import Vue from 'vue'
 import { saveAxiosInstance } from '@/utils/request'
-
 import xToast from '@/components/common/spToast'
+// import uni from '@/plugins/uni'
 
 const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
 const BASE = require('~/config/index.js')
@@ -28,7 +29,7 @@ export default function ({ $axios, redirect, app, store }) {
       config.params = config.params || {}
       if (DGG_SERVER_ENV === 'development') {
         // 本地根据自己的需求进行配置
-        config.headers.sysCode = 'crisps-app-wap-bff-api'
+        config.headers.sysCode = 'zky-api'
       } else {
         // 在app正式上线未做负载前,此sysCode不修改
         config.headers.sysCode = 'crisps-app-wap-bff-api'
@@ -73,7 +74,12 @@ export default function ({ $axios, redirect, app, store }) {
         // 清空登录信息
         store.commit('user/CLEAR_USER')
         if (!store.state.app.isInApp) {
-          if (process && process.client) {
+          if (store.state.app.isApplets) {
+            const uni = Vue.prototype.uni
+            uni.navigateTo({
+              url: '/pages/my_son/login/wxLogin',
+            })
+          } else if (process && process.client) {
             xToast.error('登录失效，请重新登录')
             setTimeout(() => {
               redirect('/my')
