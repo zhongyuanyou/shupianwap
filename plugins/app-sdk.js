@@ -160,14 +160,6 @@ const appHandler = {
   },
   // 拨打电话
   dggCallPhone: (data = { phone: '17755021122' }, fn = () => {}) => {
-    if (miniProgram) {
-      try {
-        uni.makePhoneCall({
-          phoneNumber: data.phone,
-        })
-      } catch (e) {}
-      return
-    }
     Bridge.callHandler('dgg_callPhone', data, (res) => {
       handleRequest(res, fn)
     })

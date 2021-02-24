@@ -73,7 +73,7 @@ export default {
   methods: {
     handleClick() {
       // 点击跳转详情
-      if (this.isInApp) {
+      if (this.isInApp || this.isApplets) {
         const iosRouter =
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
           `${domainUrl}found/detail/${this.info.id}` +
@@ -82,8 +82,16 @@ export default {
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
           `${domainUrl}found/detail/${this.info.id}` +
           '","isHideNav":1},"isLogin":"0","version":"1.0.0"}'
+        let miniRouter = ''
+        if (this.isApplets) {
+          // 若在小程序中
+          miniRouter =
+            '/pages/common_son/webview/index?id=' +
+            this.info.id +
+            '&dt=true&url=found/detail/'
+        }
         this.$appFn.dggJumpRoute(
-          { iOSRouter: iosRouter, androidRouter: adRouter },
+          { iOSRouter: iosRouter, androidRouter: adRouter, miniRouter },
           (res) => {}
         )
         return

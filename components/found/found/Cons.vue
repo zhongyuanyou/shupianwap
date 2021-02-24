@@ -228,7 +228,10 @@ export default {
         let miniRouter = ''
         if (this.isApplets) {
           // 若在小程序中
-          miniRouter = '/pages/found_son/detail/index?id=' + item.id
+          miniRouter =
+            '/pages/common_son/webview/index?id=' +
+            item.id +
+            '&dt=true&url=found/detail/'
         }
         this.$appFn.dggJumpRoute(
           {
