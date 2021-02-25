@@ -67,16 +67,17 @@ export default ({ app, store }) => {
       } else if (store.state.app.isApplets && !store.state.app.isInApp) {
         // 小程序中
         // 获取小程序中本地缓存的用户信息
-        if (routerBlackList.includes(to.path)) {
-          if (store.state.user.token && store.state.user.userId) {
-            next()
-          } else {
-            const uni = Vue.prototype.uni
-            uni.navigateTo({
-              url: '/pages/my_son/login/wxLogin',
-            })
-          }
-        }
+        // if (routerBlackList.includes(to.path)) {
+        //   if (store.state.user.token && store.state.user.userId) {
+        //     next()
+        //   } else {
+        //     const uni = Vue.prototype.uni
+        //     uni.navigateTo({
+        //       url: '/pages/my_son/login/wxLogin',
+        //     })
+        //   }
+        // }
+        next()
       } else {
         // app中
         // 验证跳转页面是否嵌入app中后是否需获取app中到用户详情
