@@ -252,17 +252,6 @@ export default {
           break
         default:
           url = `/search/searchResult`
-          if (this.isApplets) {
-            const miniRouter =
-              '/pages/common_son/link/result?keywords=' + item.name
-            this.$appFn.dggJumpRoute(
-              {
-                miniRouter,
-              },
-              (res) => {}
-            )
-            return
-          }
           this.$router.push({
             path: url,
             query: {

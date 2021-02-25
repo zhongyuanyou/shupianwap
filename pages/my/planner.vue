@@ -1,7 +1,7 @@
 <template>
   <div class="planner">
     <div class="head">
-      <Header title="我的规划师">
+      <Header v-if="!isApplets" title="我的规划师">
         <template #left>
           <my-icon
             name="nav_ic_back"
@@ -180,6 +180,7 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       userInfo: (state) => state.user.userInfo,
+      isApplets: (state) => state.app.isApplets,
     }),
   },
   created() {
