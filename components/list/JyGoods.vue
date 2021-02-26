@@ -79,6 +79,7 @@
 
 <script>
 import { List, Tabs, Tab, Skeleton } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import InstallApp from '@/components/common/app/InstallApp'
 import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
@@ -170,6 +171,9 @@ export default {
     isShowOpenApp() {
       return this.$store.state.app.isShowOpenApp
     },
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
   },
   watch: {
     searchText(val) {
@@ -194,6 +198,9 @@ export default {
     //   referrer: document.referrer,
     // }
     // window.sensors.registerPage(param) // 设置公共属性
+    if (this.isApplets) {
+      this.formData.showClient = 'COMDIC_TERMINAL_APPLET'
+    }
     this.$emit('goodsList', 'jy', this)
     // 默认请求的数据
     this.tabItems.forEach((item) => {

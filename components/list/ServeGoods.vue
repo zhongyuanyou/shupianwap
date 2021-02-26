@@ -104,6 +104,7 @@ import {
   Skeleton,
   Cell,
 } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import InstallApp from '@/components/common/app/InstallApp'
 import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
@@ -200,6 +201,9 @@ export default {
     isShowOpenApp() {
       return this.$store.state.app.isShowOpenApp
     },
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
   },
   watch: {
     searchText(val) {
@@ -241,6 +245,9 @@ export default {
     //   referrer: document.referrer,
     // }
     // window.sensors.registerPage(param) // 设置公共属性
+    if (this.isApplets) {
+      this.formData.showClient = 'COMDIC_TERMINAL_APPLET'
+    }
     this.$emit('goodsList', 'serve', this)
     // 处理如果是从分类页进来的session中有分类数据
     if (this.sessionCategory && JSON.stringify(this.sessionCategory) !== '{}') {

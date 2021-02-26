@@ -99,7 +99,6 @@ export default {
       goods
         .searchServeGoodsList({ axios: this.$axios }, this.formData)
         .then((data) => {
-          console.log(data)
           this.serveGoodsListData = data
         })
         .catch()
