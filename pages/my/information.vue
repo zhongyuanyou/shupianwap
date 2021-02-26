@@ -1,7 +1,7 @@
 <template>
   <div class="information">
     <!--S 头部-->
-    <Header title="个人信息" />
+    <Header v-if="!isApplets" title="个人信息" />
     <!--E 头部-->
     <!--S 内容-->
     <div class="information_con">
@@ -174,6 +174,7 @@ export default {
   computed: {
     ...mapState({
       userId: (state) => state.user.userInfo.userId,
+      isApplets: (state) => state.app.isApplets,
     }),
     baseURL() {
       return baseURL

@@ -2,7 +2,7 @@
   <div class="category">
     <!--S 头部-->
     <div class="category_header">
-      <div class="icon" @click="back">
+      <div v-if="!isApplets" class="icon" @click="back">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a" />
       </div>
       <div class="category_header_con" @click="goSearch">
@@ -150,6 +150,7 @@ export default {
   computed: {
     ...mapState({
       currentCity: (state) => state.city.currentCity,
+      isApplets: (state) => state.app.isApplets,
     }),
   },
   mounted() {
@@ -288,7 +289,7 @@ export default {
       justify-content: flex-start;
       align-items: center;
       flex-direction: row;
-      width: 606px;
+      flex: 1;
       height: 96px;
       background: #ffffff;
       border: 1px solid #cdcdcd;
