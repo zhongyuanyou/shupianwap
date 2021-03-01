@@ -65,6 +65,7 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo,
+      isApplets: (state) => state.app.isApplets,
     }),
     nameList() {
       return nameList
