@@ -1,6 +1,6 @@
 <template>
   <div class="protocol">
-    <div v-if="!hideHeader" class="top">
+    <div v-if="!hideHeader && !isApplets" class="top">
       <sp-top-nav-bar
         ellipsis
         :title="article.title || '协议'"
@@ -21,6 +21,7 @@
 <script>
 import { TopNavBar, NavSearch, Icon, Skeleton } from '@chipspc/vant-dgg'
 
+import { mapState } from 'vuex'
 import { auth } from '@/api'
 
 export default {
@@ -42,6 +43,11 @@ export default {
       categoryCode: this.$route.query.categoryCode,
       redirect: this.$route.query.redirect || '', // 登录后需要跳转的地址
     }
+  },
+  computed: {
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
   },
   created() {
     if (process && process.client) {
