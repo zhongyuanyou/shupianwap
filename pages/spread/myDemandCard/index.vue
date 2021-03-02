@@ -1,7 +1,7 @@
 <template>
   <div class="page-content">
     <!-- S 头部 -->
-    <Header v-if="!isInApp" ref="headerRef" title="" />
+    <Header v-if="!isInApp && !isApplets" ref="headerRef" title="" />
     <!-- E 头部 -->
     <!-- 1、START 头部Header-->
     <!--    <Header title="" :fixed="true" head-class="head-icon">-->
@@ -80,6 +80,7 @@ export default {
     // }),
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      isApplets: (state) => state.app.isApplets,
     }),
   },
   watch: {
