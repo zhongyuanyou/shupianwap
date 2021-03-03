@@ -124,9 +124,6 @@ export default {
         this.$emit('update', val)
       },
     },
-    pageScrollTop() {
-      return this.$store.app.pageScrollTop
-    },
   },
   methods: {
     // 选择某项
@@ -145,16 +142,15 @@ export default {
 <style lang="less" scoped>
 .tab-curve {
   width: 100%;
-  background-color: #fff;
   font-size: 24px;
   &-list {
     display: flex;
     flex-wrap: nowrap;
     width: 100%;
-    height: 104px;
+    height: 84px;
     overflow-x: auto;
     overflow-y: hidden;
-    padding-top: 37px;
+    padding-top: 30px;
     padding-left: 40px;
     -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
@@ -170,33 +166,30 @@ export default {
       span {
         font-family: PingFang SC;
         font-weight: bold;
-        color: #222222;
+        color: rgba(153, 153, 153, 1);
         font-size: 32px;
         line-height: 32px;
-        background: #fff;
         position: relative;
         z-index: 4;
       }
       .tab-curve-active {
-        display: block;
-        font-size: 40px;
+        font-size: 34px;
         font-family: PingFang SC;
         font-weight: bold;
-        color: #4974f5;
-        margin-top: -2px;
-        & + .svg-content {
-          display: block !important;
-        }
+        color: rgba(34, 34, 34, 1);
+        // & + .svg-content {
+        //   display: block !important;
+        // }
       }
     }
   }
 }
 .fixed-tab {
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.04);
-  background-color: white;
+  background: white;
   .tab-curve-list {
-    height: 112px;
-    padding-top: 44px;
+    height: 80px;
+    padding-top: 30px;
   }
 }
 .svg-content {

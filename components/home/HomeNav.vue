@@ -22,39 +22,41 @@
       </ul>
       <!-- E 固定导航 -->
       <!-- S 可滚动导航 -->
-      <div
-        ref="refScroll"
-        :class="rollNavHandle.length > 10 ? 'up-and-down' : 'left-and-right'"
-        @scroll="scrollHandle"
-      >
-        <ul v-if="rollNavHandle && rollNavHandle.length" class="scroll-nav">
-          <li v-for="(item, index) in rollNavHandle" :key="index">
-            <a v-if="item.navigationWay === 2" :href="jumpHandle(item)">
-              <img
-                v-lazy="item.navigationImageUrl + $ossImgSet(48, 48)"
-                alt=""
-              />
-              <span>{{ item.name }}</span>
-            </a>
-            <nuxt-link v-else :to="jumpHandle(item)">
-              <img
-                v-lazy="item.navigationImageUrl + $ossImgSet(48, 48)"
-                alt=""
-              />
-              <span>{{ item.name }}</span>
-            </nuxt-link>
-          </li>
-        </ul>
+      <div class="scroll-container">
+        <div
+          ref="refScroll"
+          :class="rollNavHandle.length > 10 ? 'up-and-down' : 'left-and-right'"
+          @scroll="scrollHandle"
+        >
+          <ul v-if="rollNavHandle && rollNavHandle.length" class="scroll-nav">
+            <li v-for="(item, index) in rollNavHandle" :key="index">
+              <a v-if="item.navigationWay === 2" :href="jumpHandle(item)">
+                <img
+                  v-lazy="item.navigationImageUrl + $ossImgSet(48, 48)"
+                  alt=""
+                />
+                <span>{{ item.name }}</span>
+              </a>
+              <nuxt-link v-else :to="jumpHandle(item)">
+                <img
+                  v-lazy="item.navigationImageUrl + $ossImgSet(48, 48)"
+                  alt=""
+                />
+                <span>{{ item.name }}</span>
+              </nuxt-link>
+            </li>
+          </ul>
+        </div>
+        <!-- E 可滚动导航 -->
+        <!-- S 自定义滚动条 -->
+        <div v-if="rollNavHandle.length > 10" class="scroll-box">
+          <span><i :style="{ left: scroLeft + '%' }"></i></span>
+        </div>
+        <div
+          v-else-if="rollNavHandle.length && rollNavHandle.length <= 10"
+          class="scroll-box"
+        ></div>
       </div>
-      <!-- E 可滚动导航 -->
-      <!-- S 自定义滚动条 -->
-      <div v-if="rollNavHandle.length > 10" class="scroll-box">
-        <span><i :style="{ left: scroLeft + '%' }"></i></span>
-      </div>
-      <div
-        v-else-if="rollNavHandle.length && rollNavHandle.length <= 10"
-        class="scroll-box"
-      ></div>
       <!-- E 自定义滚动条 -->
     </nav>
   </div>
@@ -225,6 +227,12 @@ export default {
       }
     }
   }
+  .scroll-container {
+    background: white;
+    width: 710px;
+    margin: 16px auto;
+    border-radius: 16px;
+  }
   .up-and-down {
     overflow-x: auto;
     overflow-y: hidden;
@@ -236,6 +244,8 @@ export default {
       display: none;
     }
     .scroll-nav {
+      box-sizing: border-box;
+      background: white;
       display: flex;
       flex-flow: column wrap;
       align-content: flex-start;
@@ -285,7 +295,7 @@ export default {
     display: flex;
     justify-content: center;
     width: 100%;
-    height: 49px;
+    height: 29px;
     padding-top: 3px;
     span {
       position: relative;
