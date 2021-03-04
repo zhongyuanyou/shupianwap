@@ -1,6 +1,6 @@
 <template>
   <div class="page-head">
-    <div class="bg-area">
+    <div class="bg-area" :class="fiexdBannerData.length ? '' : 'bg-activity'">
       <span class="logo"></span>
       <span class="span-2">薯片</span>
       <span class="span-3">·企业服务大平台</span>
@@ -11,15 +11,36 @@
         </span>
       </div>
     </div>
+    <div v-if="fiexdBannerData.length" class="swiper-content">
+      <sp-swipe
+        class="my-swipe"
+        :autoplay="autoplay"
+        :show-indicators="indicators"
+      >
+        <sp-swipe-item v-for="(item, index) in fiexdBannerData" :key="index">
+          <a
+            href="javascript:void(0)"
+            class="swiper-box"
+            @click="adJumpHandleMixin(item.materialList[0])"
+          >
+            <img
+              :src="item.materialList[0].materialUrl + $ossImgSet(750, 552)"
+              alt=""
+            />
+          </a>
+        </sp-swipe-item>
+      </sp-swipe>
+    </div>
     <sp-sticky>
       <Search
         ref="searchRef"
         :icon-left="0.24"
         :disabled="true"
+        :opacity="opacity"
         placeholder="搜索您想找的服务"
         @clickInputHandle="clickInputHandle"
       >
-        <template v-if="pageScrollTop > 70" v-slot:center>
+        <template v-if="showSearchCityBtn" v-slot:center>
           <div class="city-box" @click="swichCityHandle">
             <span class="current-city">{{
               cityName ? cityName : '定位中'
@@ -43,6 +64,8 @@ import Search from '@/components/common/search/Search'
 export default {
   components: {
     [Sticky.name]: Sticky,
+    [Swipe.name]: Swipe,
+    [swipeItem.name]: swipeItem,
     Search,
   },
   props: {
@@ -50,21 +73,51 @@ export default {
       type: Number,
       default: 0,
     },
+    // 固定广告数据
+    fiexdBannerData: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+  },
+  data() {
+    return {
+      indicators: true, // 是否需要指示器
+      autoplay: 5000,
+    }
   },
   computed: {
     ...mapState({
       cityName: (state) => state.city.currentCity.name,
     }),
+    opacity: {
+      get() {
+        if (this.fiexdBannerData.length) {
+          return this.pageScrollTop / 320
+        } else {
+          return this.pageScrollTop / 80
+        }
+      },
+    },
+    showSearchCityBtn: {
+      get() {
+        return this.pageScrollTop > 80
+      },
+    },
+  },
+  created() {
+    // 初始化定位
+    if (process.client && !this.cityName) {
+      this.POSITION_CITY({
+        type: 'init',
+      })
+    }
   },
   methods: {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
     }),
-    // 滚动改变搜索栏透明度
-    searchHandle() {
-      const scrollTop = this.$parent.$refs.homeRef.scrollTop // 滚动条距离顶部的位置
-      this.opacity = scrollTop / this.scollPercentage
-    },
     // 选择城市
     swichCityHandle() {
       if (!this.cityName) {
@@ -86,10 +139,11 @@ export default {
   .bg-area {
     background: linear-gradient(rgba(86, 126, 246, 1), rgba(73, 116, 245, 1));
     width: 100%;
-    height: 104px;
+    height: 84px;
     font-size: 36px;
     position: relative;
-    padding: 16px 20px 0 20px;
+    padding: 20px 20px 0 20px;
+    z-index: 2;
     span {
       display: inline-block;
     }
@@ -102,16 +156,15 @@ export default {
       border-radius: 50%;
       position: absolute;
       left: 20px;
-      top: 20px;
+      top: 24px;
+      font-size: 36px;
     }
     .span-2 {
       margin-left: 60px;
       color: #fff;
-      font-size: 30px;
     }
     .span-3 {
       color: #dfdfdf;
-      font-size: 36px;
     }
     .btn-city {
       position: absolute;
@@ -119,7 +172,7 @@ export default {
       color: white;
       font-size: 28px;
       padding-left: 30px;
-      top: 20px;
+      top: 24px;
       font-size: 28px;
       .local-icon {
         transform: scale(0.6);
@@ -134,19 +187,22 @@ export default {
         background-size: 100% 100%;
         content: '';
         left: 0;
-        top: 8px;
+        top: 6px;
         width: 18px;
         height: 24px;
       }
     }
+  }
+  .bg-activity {
+    height: 94px;
     &::after {
       position: absolute;
-      background: white;
+      background: #f5f5f5;
       content: '';
       width: 100%;
-      height: 24px;
-      border-radius: 30px 30px 0 0;
-      bottom: 0;
+      height: 16px;
+      border-radius: 20px 20px 0 0;
+      bottom: 0px;
       left: 0;
     }
   }
@@ -172,6 +228,20 @@ export default {
       font-weight: bold;
       color: #1a1a1a;
       margin-right: 12px;
+    }
+  }
+  .swiper-content {
+    width: 100%;
+    height: 552px;
+    .swiper-box {
+      display: block;
+      width: 100%;
+      height: 552px;
+      overflow: hidden;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 }

@@ -1,6 +1,10 @@
 <template>
   <div ref="homeRef" class="home-page-content">
-    <Head ref="searchBannerRef" :page-scroll-top="pageScrollTop" />
+    <Head
+      ref="searchBannerRef"
+      :page-scroll-top="pageScrollTop"
+      :fiexd-banner-data="[]"
+    />
     <!-- S 搜索 + 大banner -->
     <!-- <SearchBanner
       ref="searchBannerRef"
@@ -39,13 +43,13 @@
       /> -->
       <!-- E 热门服务 -->
       <!-- S 营销入口区域 -->
-      <Marketing />
+      <Marketing ref="showScollHeight" />
       <!-- E 营销入口区域 -->
       <!-- S 推荐服务 -->
       <Recommend ref="recommendRef" />
       <!-- E 推荐服务 -->
       <!-- S 悬浮按钮 -->
-      <FiexdBtn />
+      <FiexdBtn :page-scroll-top="pageScrollTop" />
       <!-- E 悬浮按钮 -->
       <!-- S 下载app弹框 -->
       <DownloadApp
@@ -61,7 +65,7 @@
 import { PLATFORM_CODE, TERMINAL_CODE } from '@/config/constant'
 import { homeApi } from '@/api'
 import Head from '@/components/home/Head'
-// import SearchBanner from '@/components/home/SearchBanner'
+import SearchBanner from '@/components/home/SearchBanner'
 import HomeNav from '@/components/home/HomeNav'
 import SkillGroup from '@/components/home/SkillGroup'
 // import SwiperBanner from '@/components/home/SwiperAd'
@@ -209,12 +213,14 @@ export default {
 }
 .sp-main-box {
   width: 100%;
-  border-radius: 16px;
-  background: white;
-  width: 710px;
-  height: auto;
-  margin: 20px auto;
-  overflow: hidden;
+  margin: 0 auto 20px auto;
+  padding: 0 20px;
+  .inner {
+    background: white;
+    overflow: hidden;
+    border-radius: 16px;
+    width: 100%;
+  }
   img {
     width: 100%;
     height: 100%;

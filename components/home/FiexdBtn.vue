@@ -11,6 +11,12 @@
 
 <script>
 export default {
+  props: {
+    pageScrollTop: {
+      type: Number,
+      default: 0,
+    },
+  },
   data() {
     return {
       headHeight: 0,

@@ -1,35 +1,37 @@
 <template>
   <div class="sp-main-box">
-    <div v-for="(item, index) in list" :key="index" class="sp-item">
-      <p class="sp-goods-title">
-        {{ item.productName }}
-        <span v-if="item.titleIcon" class="title-bar">
-          {{ item.titleIcon }}
-        </span>
-      </p>
-      <p class="sp-goods-slogan">
-        {{ item.slogan }}
-      </p>
-      <p v-if="item.productDescript" class="sp-goods-des">
-        {{ item.productDescript }}
-      </p>
-      <div v-if="item.imgs && item.imgs.length" class="imgs">
-        <img
-          v-for="(imgItem, imgIndex) in item.imgs"
-          :key="imgIndex"
-          :src="imgItem"
-          alt=""
-          srcset=""
+    <div class="inner">
+      <div v-for="(item, index) in list" :key="index" class="sp-item">
+        <p class="sp-goods-title">
+          {{ item.productName }}
+          <span v-if="item.titleIcon" class="title-bar">
+            {{ item.titleIcon }}
+          </span>
+        </p>
+        <p class="sp-goods-slogan">
+          {{ item.slogan }}
+        </p>
+        <p v-if="item.productDescript" class="sp-goods-des">
+          {{ item.productDescript }}
+        </p>
+        <div v-if="item.imgs && item.imgs.length" class="imgs">
+          <img
+            v-for="(imgItem, imgIndex) in item.imgs"
+            :key="imgIndex"
+            :src="imgItem"
+            alt=""
+            srcset=""
+            @click="linkUrl(item.url)"
+          />
+        </div>
+        <sp-button
+          v-if="item.buttonText"
+          type="primary"
+          class="sp-goods-btn"
           @click="linkUrl(item.url)"
-        />
+          >{{ item.buttonText }}</sp-button
+        >
       </div>
-      <sp-button
-        v-if="item.buttonText"
-        type="primary"
-        class="sp-goods-btn"
-        @click="linkUrl(item.url)"
-        >{{ item.buttonText }}</sp-button
-      >
     </div>
   </div>
 </template>

@@ -367,7 +367,7 @@ export default {
   .goods-item {
     padding: 20px;
     background: white;
-    margin: 20px auto 0 auto;
+    margin: 0 auto 20px auto;
     border-radius: 24px;
   }
   &::before {

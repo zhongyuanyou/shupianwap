@@ -25,6 +25,7 @@
       <div class="scroll-container">
         <div
           ref="refScroll"
+          class="inner"
           :class="rollNavHandle.length > 10 ? 'up-and-down' : 'left-and-right'"
           @scroll="scrollHandle"
         >
@@ -228,10 +229,12 @@ export default {
     }
   }
   .scroll-container {
-    background: white;
-    width: 710px;
-    margin: 16px auto;
-    border-radius: 16px;
+    padding: 20px 20px 0 20px;
+    margin: 20px auto 0 auto;
+    .inner {
+      background: white;
+      border-radius: 16px;
+    }
   }
   .up-and-down {
     overflow-x: auto;

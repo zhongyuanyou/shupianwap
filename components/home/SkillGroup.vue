@@ -1,24 +1,26 @@
 <template>
   <div v-if="skillData.length" class="sp-main-box">
-    <p class="sp-home-title">
-      限时秒杀
-      <a class="to-more" href="/category">更多 <sp-icon name="arrow" /></a>
-    </p>
-    <sp-swipe
-      class="my-swipe"
-      :autoplay="autoplay"
-      :show-indicators="indicators"
-    >
-      <sp-swipe-item v-for="(item, index) in skillData" :key="index">
-        <a
-          href="javascript:void(0)"
-          class="swiper-box"
-          @click="adJumpHandleMixin(item.materialList[0])"
-        >
-          <img :src="item.materialList[0].materialUrl" alt="" />
-        </a>
-      </sp-swipe-item>
-    </sp-swipe>
+    <div class="inner">
+      <p class="sp-home-title">
+        限时秒杀
+        <a class="to-more" href="/category">更多 <sp-icon name="arrow" /></a>
+      </p>
+      <sp-swipe
+        class="my-swipe"
+        :autoplay="autoplay"
+        :show-indicators="indicators"
+      >
+        <sp-swipe-item v-for="(item, index) in skillData" :key="index">
+          <a
+            href="javascript:void(0)"
+            class="swiper-box"
+            @click="adJumpHandleMixin(item.materialList[0])"
+          >
+            <img :src="item.materialList[0].materialUrl" alt="" />
+          </a>
+        </sp-swipe-item>
+      </sp-swipe>
+    </div>
   </div>
 </template>
 
