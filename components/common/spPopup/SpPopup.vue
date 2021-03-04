@@ -24,7 +24,7 @@
                 <div @click.stop="showInception">
                   <my-icon
                     name="notify_ic_close"
-                    size="24rpx"
+                    size="0.24rem"
                     color="#f4f4f4"
                   ></my-icon>
                 </div>
@@ -173,7 +173,7 @@ export default {
     position: fixed;
     right: 40px;
     bottom: 200px;
-    z-index: 999;
+    z-index: 9999;
 
     > img {
       width: 142px;
@@ -190,10 +190,10 @@ export default {
     position: fixed;
     left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
     background-color: rgba(0, 0, 0, 0.4);
-    z-index: 999;
+    z-index: 9999;
 
     &-popup {
       width: 630px;
