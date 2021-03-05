@@ -18,7 +18,7 @@
       }"
     >
       <div class="my-head-row">
-        <div class="slot-left">
+        <div v-if="!hideBack" class="slot-left">
           <slot name="left">
             <my-icon
               class="back-icon"
@@ -50,6 +50,11 @@ export default {
     title: {
       type: String,
       default: () => '帮助中心',
+    },
+    // 是否隐藏回退按钮
+    hideBack: {
+      type: Boolean,
+      default: false,
     },
     // 头部高度
     height: {

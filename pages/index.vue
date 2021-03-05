@@ -65,7 +65,7 @@
 import { PLATFORM_CODE, TERMINAL_CODE } from '@/config/constant'
 import { homeApi } from '@/api'
 import Head from '@/components/home/Head'
-import SearchBanner from '@/components/home/SearchBanner'
+// import SearchBanner from '@/components/home/SearchBanner'
 import HomeNav from '@/components/home/HomeNav'
 import SkillGroup from '@/components/home/SkillGroup'
 // import SwiperBanner from '@/components/home/SwiperAd'

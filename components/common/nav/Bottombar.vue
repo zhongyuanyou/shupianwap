@@ -64,6 +64,11 @@ export default {
           path: '/msg',
         },
         {
+          name: '订单',
+          iconName: 'tabbar_ic_order',
+          path: '/order/',
+        },
+        {
           name: '我的',
           iconName: 'tabbar_ic_personal',
           path: '/my',
