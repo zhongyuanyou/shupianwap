@@ -76,6 +76,7 @@
             >
               <div
                 v-for="(cItem, cIndex) in item.children"
+                v-show="isApplets ? cItem.name != '资质交易' : true"
                 :key="cIndex"
                 class="item_con_child"
                 @click="handleItem(cItem)"
