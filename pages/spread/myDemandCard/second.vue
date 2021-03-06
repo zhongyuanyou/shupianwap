@@ -1,7 +1,7 @@
 <template>
   <div class="center">
     <!-- S 头部 -->
-    <Header v-if="!isInApp" ref="headerRef" title="轻松找服务" />
+    <Header v-if="!isInApp && !isApplets" ref="headerRef" title="轻松找服务" />
     <!-- E 头部 -->
     <div class="banner">
       <!--    城市按钮  -->
@@ -102,6 +102,7 @@ export default {
       currentCity: (state) => state.city.currentCity,
       userId: (state) => state.user.userId,
       isInApp: (state) => state.app.isInApp,
+      isApplets: (state) => state.app.isApplets,
     }),
   },
   mounted() {
