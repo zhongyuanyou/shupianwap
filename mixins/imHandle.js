@@ -195,7 +195,11 @@ export default {
                   const timer = setTimeout(() => {
                     clearTimeout(timer)
                     this.$xToast.hideLoading()
-                    window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
+                    if (this.isApplets) {
+                      window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}&isApplets=true`
+                    } else {
+                      window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
+                    }
                   }, 2000)
                   // window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
                 } else if (res.code === 5223) {
