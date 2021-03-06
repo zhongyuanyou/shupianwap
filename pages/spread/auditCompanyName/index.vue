@@ -1,7 +1,7 @@
 <template>
   <div class="audit-company-name">
     <!-- s 头部导航 -->
-    <Header v-show="!isInApp" :title="title">
+    <Header v-if="!isInApp && !isApplets" :title="title">
       <template #left>
         <div @click="back">
           <my-icon
@@ -250,6 +250,7 @@ export default {
   },
   computed: {
     ...mapState({
+      isApplets: (state) => state.app.isApplets,
       isInApp: (state) => state.app.isInApp,
     }),
   },

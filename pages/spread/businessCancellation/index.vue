@@ -1,7 +1,7 @@
 <template>
   <div class="page-content">
     <!-- 头部 -->
-    <Header v-show="!isInApp" title="工商注销">
+    <Header v-if="!isInApp && !isApplets" title="工商注销">
       <template #left>
         <div @click="back">
           <my-icon
@@ -385,6 +385,7 @@ export default {
   },
   computed: {
     ...mapState({
+      isApplets: (state) => state.app.isApplets,
       isInApp: (state) => state.app.isInApp,
     }),
   },

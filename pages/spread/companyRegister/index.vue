@@ -1,7 +1,7 @@
 <template>
   <div class="company-registry">
     <sp-top-nav-bar
-      v-show="!isInApp"
+      v-if="!isInApp && !isApplets"
       title="公司注册"
       background="#FFFFFF"
       title-color="#1A1A1A"
@@ -541,6 +541,7 @@ export default {
   },
   computed: {
     ...mapState({
+      isApplets: (state) => state.app.isApplets,
       isInApp: (state) => state.app.isInApp, // 是否app中
       // appInfo: (state) => state.app.appInfo, // app信息
     }),
