@@ -1,7 +1,7 @@
 <template>
   <div class="bankService">
     <!-- 头部导航 -->
-    <Header v-if="!isInApp" :title="title">
+    <Header v-if="!isInApp && !isApplets" :title="title">
       <template #left>
         <div @click="back">
           <my-icon
@@ -497,6 +497,7 @@ export default {
   },
   computed: {
     ...mapState({
+      isApplets: (state) => state.app.isApplets,
       isInApp: (state) => state.app.isInApp,
     }),
   },

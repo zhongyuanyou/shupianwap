@@ -1,7 +1,7 @@
 <template>
   <div class="page-content">
     <!-- START 头部-->
-    <Header title="互联网资质" />
+    <Header v-if="!isInApp && !isApplets" title="互联网资质" />
     <!-- END   头部-->
 
     <!-- START Banner-->
@@ -857,6 +857,7 @@ export default {
   },
   computed: {
     ...mapState({
+      isApplets: (state) => state.app.isApplets,
       isInApp: (state) => state.app.isInApp,
     }),
   },

@@ -2,6 +2,7 @@
   <div class="page-content">
     <!-- START 头部Header-->
     <MyHeader
+      v-if="!isInApp && !isApplets"
       ref="header"
       title="公司交易"
       :fixed="false"
@@ -100,6 +101,8 @@ export default {
     // 将接受的state混合进组件局部计算属性
     // 监听接受的state值
     ...mapState({
+      isApplets: (state) => state.app.isApplets,
+      isInApp: (state) => state.app.isInApp,
       currentCity: (state) => state.city.currentCity.name || '成都',
     }),
   },
