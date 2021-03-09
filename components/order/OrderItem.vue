@@ -1,62 +1,66 @@
 <template>
   <div class="item">
-    <p class="order-no-area">
-      <span class="orderNo"> 订单编号: {{ data.orderNo }} </span>
-      <span class="order-status">{{ data.orderStatusName }}</span>
-    </p>
-    <div class="order-infos">
-      <div class="img">
-        <img
-          src="https://static.leetcode-cn.com/cn-assets/webpack_bundles/images/lcci_bg.7bfafcf36.png"
-          alt=""
-          srcset=""
-        />
-      </div>
-      <div class="right">
-        <p class="goods-name">
-          <span class="name"> {{ data.productVo[0].name }}</span>
-          <span class="money1"> {{ data.productVo[0].price }}元 </span>
-        </p>
-        <p class="sku-info">
-          <span
-            v-for="(item, index) in data.productVo[0].fieldList"
-            :key="index"
-            class="sku-item"
-            >{{ item.fieldValue }};</span
-          >
-          <span class="goods-num">{{ data.productVo[0].goodsNumber }}</span>
-        </p>
-        <div class="sku-sercice">
-          <div
-            v-if="
-              data.productVo[0].serviceResourceList &&
-              data.productVo[0].serviceResourceList.length
-            "
-            class="title"
-          >
-            增值服务
-          </div>
-          <div class="sku-r">
-            <p
-              v-for="(item, index) in data.productVo[0].serviceResourceList"
-              :key="index"
-            >
-              <span class="serve-name">
-                {{ item.serviceItemValName }}
-              </span>
-              <span class="serve-price"> {{ item.price }}元 </span>
-              <span clss="serve-num"> ×{{ item.num }} </span>
-            </p>
-          </div>
+    <div @click="toDetail">
+      <p class="order-no-area">
+        <span class="orderNo"> 订单编号: {{ data.orderNo }} </span>
+        <span class="order-status">{{ data.orderStatusName }}</span>
+      </p>
+      <div
+        v-for="(item, index) in data.productVo"
+        :key="index"
+        class="order-infos"
+        :class="index !== 0 ? 'border-top' : ''"
+      >
+        <div class="img">
+          <img
+            src="https://static.leetcode-cn.com/cn-assets/webpack_bundles/images/lcci_bg.7bfafcf36.png"
+            alt=""
+            srcset=""
+          />
         </div>
-        <div class="total-price-area">
-          <p class="inner">
-            <span class="price1"> 总价 {{ data.orderTotalMoney }}元，</span>
-            <span class="price2"> 优惠 {{ data.orderDiscountMoney }}元，</span>
-            <span class="price3"> 合计 {{ data.orderPayableMoney }}元</span>
+        <div class="right">
+          <p class="goods-name">
+            <span class="name"> {{ item.name }}</span>
+            <span class="money1"> {{ item.price }}元 </span>
           </p>
+          <p class="sku-info">
+            <span
+              v-for="(item2, index2) in data.productVo[0].fieldList"
+              :key="index2"
+              class="sku-item"
+              >{{ item2.fieldValue }};</span
+            >
+            <span class="goods-num">{{ item.goodsNumber }}</span>
+          </p>
+          <div class="sku-sercice">
+            <div
+              v-if="item.serviceResourceList && item.serviceResourceList.length"
+              class="title"
+            >
+              增值服务
+            </div>
+            <div class="sku-r">
+              <p
+                v-for="(item3, index3) in item.serviceResourceList"
+                :key="index3"
+              >
+                <span class="serve-name">
+                  {{ item3.serviceItemValName }}
+                </span>
+                <span class="serve-price"> {{ item3.price }}元 </span>
+                <span clss="serve-num"> ×{{ item3.num }} </span>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="total-price-area">
+      <p class="inner">
+        <span class="price1"> 总价 {{ data.orderTotalMoney }}元，</span>
+        <span class="price2"> 优惠 {{ data.orderDiscountMoney }}元，</span>
+        <span class="price3"> 合计 {{ data.orderPayableMoney }}元</span>
+      </p>
     </div>
     <div class="btn-area">
       <div class="inner">
@@ -119,10 +123,14 @@ export default {
   },
   methods: {
     handleClickItem(type) {
-      if (type === 3) {
-        this.$store.dispatch('order/setOrderData', this.data)
-        this.$router.push('/order/waitPay')
-      } else this.$emit('handleClickItem', type, this.data)
+      this.$emit('handleClickItem', type, this.data)
+    },
+    toDetail() {
+      this.$router.push({
+        path: '/order/detail',
+        query: { id: this.data.orderId || this.data.id || '13131' },
+      })
+      this.$store.dispatch('order/setOrderData', this.data)
     },
   },
 }
@@ -157,7 +165,7 @@ export default {
   .order-infos {
     height: auto;
     display: flex;
-    margin-top: 10px;
+    padding: 40px 0;
     .img {
       width: 130px;
       height: 130px;
@@ -204,6 +212,9 @@ export default {
       }
     }
   }
+  .border-top {
+    border-top: 1px solid #ccc;
+  }
   .sku-sercice {
     display: flex;
     justify-content: space-between;
@@ -237,7 +248,6 @@ export default {
     height: auto;
     overflow: hidden;
     width: 100%;
-    margin-top: 20px;
     .inner {
       width: auto;
       height: 34px;
@@ -259,6 +269,8 @@ export default {
     .inner {
       float: right;
       margin-bottom: 10px;
+      height: 110px;
+      margin-top: -20px;
       .sp-button {
         height: 64px;
         background: #ffffff;
@@ -266,6 +278,8 @@ export default {
         border-radius: 32px;
         padding: 0 25px;
         color: #999999;
+        line-height: 1;
+        margin: 0;
       }
     }
   }
