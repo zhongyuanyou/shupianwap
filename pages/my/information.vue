@@ -312,7 +312,15 @@ export default {
           id: this.userId,
         }
         const data = await this.$axios.get(userinfoApi.info, { params })
-        this.info = data.data
+        this.info = data.data || {
+          nickName: '',
+          birthday: '',
+          sex: 0,
+          email: '',
+          province: '',
+          city: '',
+          url: '',
+        }
         this.loading = false
         this.$set(this.area, 0, {
           name: data.data.province ? data.data.province : '',
