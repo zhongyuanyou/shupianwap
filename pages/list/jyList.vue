@@ -7,7 +7,12 @@
       :maxlength="50"
       @searchKeydownHandle="searchKeydownHandle"
     >
-      <div slot="left" class="nav-back" @click="$router.go(-1)">
+      <div
+        v-if="!isApplets"
+        slot="left"
+        class="nav-back"
+        @click="$router.go(-1)"
+      >
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
       <div
@@ -35,7 +40,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import { WorkTabs, WorkTab, Badge } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import JyGoods from '@/components/list/JyGoods'
@@ -66,6 +71,11 @@ export default {
         limit: 10,
       },
     }
+  },
+  computed: {
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
   },
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'JyList' })
