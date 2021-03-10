@@ -353,8 +353,8 @@
     }
   }
   .container-body {
-    width: 750px;
-    height: 1720px;
+    width: 100%;
+    height: auto;
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
     z-index: 1;
