@@ -272,6 +272,7 @@ export default {
       isInApp: (state) => state.app.isInApp,
       userInfo: (state) => state.user.userInfo,
       isApplets: (state) => state.app.isApplets,
+      code: (state) => state.city.code,
     }),
     formatSearch() {
       const { sortId, keywords, region } = this.search
@@ -578,9 +579,13 @@ export default {
     },
 
     // 获取区域数据
-    async getRegionList(code) {
+    async getRegionList(codes) {
+      const cityCode = this.isApplets ? this.code : codes
       try {
-        const data = await dict.findCmsTier({ axios: this.$axios }, { code })
+        const data = await dict.findCmsTier(
+          { axios: this.$axios },
+          { cityCode }
+        )
         console.log(data)
         if (Array.isArray(data) && data.length) {
           const { code: currentCityCode } = this.currentCity || {}
