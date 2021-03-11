@@ -253,8 +253,11 @@ export default {
       this.adJumpHandleMixin(this.recommendData[index].materialList[0])
     },
   },
-  head: {
-    meta: [{ name: 'spptmd-track_code', content: 'SPW000010' }],
+  head() {
+    return {
+      title: '全部分类',
+      meta: [{ name: 'spptmd-track_code', content: 'SPW000010' }],
+    }
   },
 }
 </script>
