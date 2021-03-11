@@ -231,7 +231,7 @@ export default {
           miniRouter =
             '/pages/common_son/webview/index?id=' +
             item.id +
-            '&dt=true&url=found/detail/'
+            '&dt=true&url=found/detail'
           // miniRouter =
           //   '/pages/common_son/webview/index?type=23123&productId=4234234&url=detail/transactionDetails'
         }
