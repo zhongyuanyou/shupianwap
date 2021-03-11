@@ -25,8 +25,8 @@ export default function ({ app, req, redirect, route, store }) {
         userType: 'ORDINARY_USER',
       })
     }
-    if (route.query.code) {
-      store.dispatch('city/setCode', route.query.code)
+    if (route.query.typeCode) {
+      store.dispatch('city/setCode', route.query.typeCode)
     }
   }
   // const erminal = req.headers['user-agent'] // 访问用户的设备终端

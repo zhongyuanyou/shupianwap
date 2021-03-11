@@ -212,7 +212,7 @@ export default {
     // }
     // window.sensors.registerPage(param) // 设置公共属性
     if (this.isApplets) {
-      this.formData.showClient = 'COMDIC_TERMINAL_APPLET'
+      // this.formData.showClient = 'COMDIC_TERMINAL_APPLET'
     }
     this.$emit('goodsList', 'jy', this)
     // 默认请求的数据
