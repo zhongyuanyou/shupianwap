@@ -75,10 +75,10 @@ export default function ({ $axios, redirect, app, store }) {
         store.commit('user/CLEAR_USER')
         if (!store.state.app.isInApp) {
           if (store.state.app.isApplets) {
-            const uni = Vue.prototype.uni
-            uni.navigateTo({
-              url: '/pages/my_son/login/wxLogin',
-            })
+            // const uni = Vue.prototype.uni
+            // uni.navigateTo({
+            //   url: '/pages/my_son/login/wxLogin',
+            // })
           } else if (process && process.client) {
             xToast.error('登录失效，请重新登录')
             setTimeout(() => {

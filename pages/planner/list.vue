@@ -272,6 +272,7 @@ export default {
       isInApp: (state) => state.app.isInApp,
       userInfo: (state) => state.user.userInfo,
       isApplets: (state) => state.app.isApplets,
+      code: (state) => state.city.code,
     }),
     formatSearch() {
       const { sortId, keywords, region } = this.search
@@ -390,6 +391,16 @@ export default {
           this.uPCall(data)
           break
         case 'detail':
+          // if (this.isApplets) {
+          //   this.uni.navigateTo({
+          //     url:
+          //       '/pages/common_son/webview/index?mchUserId=' +
+          //       data.mchUserId +
+          //       '&url=planner/detail/&isShare=' +
+          //       data.isShare,
+          //   })
+          //   return
+          // }
           this.$router.push({
             name: 'planner-detail',
             query: data,
@@ -499,7 +510,11 @@ export default {
         return
       }
       const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_B 启大顺 ;MERCHANT_S 启大包
-      this.creatImSessionMixin({ imUserId: mchUserId, imUserType })
+      this.creatImSessionMixin({
+        imUserId: mchUserId,
+        imUserType,
+        url: 'planner/list',
+      })
     },
 
     // app获取用户信息
@@ -578,9 +593,14 @@ export default {
     },
 
     // 获取区域数据
-    async getRegionList(code) {
+    async getRegionList(codes) {
+      console.log('codes', this.code)
+      const cityCode = this.isApplets ? this.code : codes
       try {
-        const data = await dict.findCmsTier({ axios: this.$axios }, { code })
+        const data = await dict.findCmsTier(
+          { axios: this.$axios },
+          { cityCode }
+        )
         console.log(data)
         if (Array.isArray(data) && data.length) {
           const { code: currentCityCode } = this.currentCity || {}

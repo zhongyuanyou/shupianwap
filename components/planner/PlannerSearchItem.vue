@@ -76,6 +76,7 @@
 <script>
 import { Button, Image, Tag } from '@chipspc/vant-dgg'
 
+import { mapState } from 'vuex'
 import { planner } from '@/api'
 
 export default {
@@ -102,6 +103,9 @@ export default {
       const formatData = this.itemData.tagList.slice(0, 5)
       return formatData
     },
+    ...mapState({
+      userInfo: (state) => state.user.userInfo,
+    }),
   },
   methods: {
     async handleClick(type) {

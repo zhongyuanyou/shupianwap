@@ -33,12 +33,12 @@ export default {
         iconPrefix: 'spiconfont',
       })
     },
-    clearUserInfoAndJumpLoging() {
+    clearUserInfoAndJumpLoging(url) {
       this.$store.commit('user/CLEAR_USER')
       if (this.isApplets) {
         // 若是在小程序中
-        this.uni.navigateTo({
-          url: '/pages/my_son/login/wxLogin',
+        this.uni.redirectTo({
+          url: '/pages/my_son/login/wxLogin?url=' + url,
         })
         return
       }
@@ -50,7 +50,7 @@ export default {
       })
     },
     // 判断是否登录
-    judgeLoginMixin(needUserInfo = false) {
+    judgeLoginMixin(needUserInfo = false, url) {
       return new Promise((resolve) => {
         if (this.userId && this.token && this.userType) {
           if (needUserInfo) {
@@ -70,7 +70,15 @@ export default {
             resolve(true)
           }
         } else {
-          this.clearUserInfoAndJumpLoging()
+          let url = this.$route.path.split('')
+          url.splice(0, 1)
+          url = url.join('')
+          if (this.$route.query) {
+            for (const key in this.$route.query) {
+              url += `&${key}=${this.$route.query[key]}`
+            }
+          }
+          this.clearUserInfoAndJumpLoging(url)
         }
       })
     },
@@ -87,7 +95,7 @@ export default {
      * @return: void
      */
     creatImSessionMixin(data) {
-      this.judgeLoginMixin().then((userInfo) => {
+      this.judgeLoginMixin(true, data.url).then((userInfo) => {
         if (userInfo) {
           let params = {
             imUserId: '',
