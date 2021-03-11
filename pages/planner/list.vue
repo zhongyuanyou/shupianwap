@@ -594,12 +594,11 @@ export default {
 
     // 获取区域数据
     async getRegionList(codes) {
-      console.log('codes', this.code)
       const cityCode = this.isApplets ? this.code : codes
       try {
         const data = await dict.findCmsTier(
           { axios: this.$axios },
-          { cityCode }
+          { code: cityCode }
         )
         console.log(data)
         if (Array.isArray(data) && data.length) {

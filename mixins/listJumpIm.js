@@ -10,7 +10,7 @@ export default {
       userInfo: null,
       token: '',
       userId: '',
-      isApplets: false,
+      // isApplets: false,
     }
   },
   beforeMount() {
@@ -33,8 +33,19 @@ export default {
         window.location.href = `${config.imBaseUrl}/index?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
       } else {
         if (this.isApplets) {
-          uni.navigateTo({
-            url: '/pages/my_son/login/wxLogin',
+          let url = this.$route.path.split('')
+          url.splice(0, 1)
+          url = url.join('')
+          if (this.$route.query) {
+            for (const key in this.$route.query) {
+              url += `&${key}=${this.$route.query[key]}`
+            }
+          }
+          this.uni.redirectTo({
+            url:
+              '/pages/my_son/login/wxLogin?url=' +
+              url +
+              '&firstLevel=true=true',
           })
           return
         }
