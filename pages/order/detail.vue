@@ -2,7 +2,10 @@
   <div class="pay-page">
     <Banner :order-type="orderType" :order-status="orderStatus" />
     <div class="order-area">
-      <ServeItem v-if="orderType !== 3" :order-data="orderData" />
+      <!-- 服务商品、 -->
+      <ServeList v-if="orderType === 1" :order-data="orderData" />
+      <!-- 交易商品 -->
+      <TradeList v-else class="goods-info" :order-data="orderData" />
       <div class="price-area">
         <p>
           <span> 商品总额 </span>
@@ -43,28 +46,44 @@
     </div>
 
     <div class="order-info">
-      <p>
+      <p class="order-item">
         <span class="label">订单编号</span>
         <span class="text">{{ orderData.orderNo || '21321313' }}</span>
-        <span class="btn">复制</span>
+        <span class="btn" @click="copy">复制</span>
       </p>
-      <p>
+      <p class="order-item">
         <span class="label">下单时间</span>
         <span class="text">{{ orderData.createTime || '2021-02-02' }}</span>
       </p>
-      <p>
+      <p class="order-item">
         <span class="label">支付状态</span>
-        <span class="text">未支付</span>
+        <span class="text">{{
+          orderStatus === 1 ? '待支付' : '部分付款'
+        }}</span>
       </p>
-      <p>
+      <div v-if="orderStatus !== 1" class="pay-detail-area">
+        <p class="has-pay">
+          <span class="span1">首款：</span>
+          <span class="span2">3000</span>
+          <span class="span4">元</span>
+          <span class="span3">已于2021-04-23支付</span>
+        </p>
+        <p class="no-pay">
+          <span class="span1">尾款：</span>
+          <span class="span2">5000</span>
+          <span class="span4">元</span>
+          <span class="span3">请于2021-05-23前支付</span>
+        </p>
+      </div>
+      <p class="order-item">
         <span class="label">合同</span>
         <span class="text">暂无</span>
       </p>
-      <p>
+      <p class="order-item">
         <span class="label">发票</span>
         <span class="text">暂无</span>
       </p>
-      <p class="last-p">
+      <p class="order-item last-p">
         <span class="label">备注</span>
         <span class="text"
           >搞快点啊，等不及了搞快点啊，等不及了搞快点啊，等不及了搞快点啊，等不及了搞快点啊，等不及了搞快点啊，等不及了搞快点啊，等不及了</span
@@ -86,10 +105,21 @@
     </div>
     <div class="btn-area">
       <div class="inner">
-        <sp-button @click="handleClickItem(1)">取消订单</sp-button>
+        <sp-button v-if="orderStatus === 1" @click="handleClickItem(1)"
+          >取消订单</sp-button
+        >
         <sp-button @click="handleClickItem(2)">签署合同</sp-button>
-        <sp-button class="btn-pay" @click="handleClickItem(3)"
+        <sp-button
+          v-if="orderStatus === 1"
+          class="btn-pay"
+          @click="handleClickItem(3)"
           >立即支付</sp-button
+        >
+        <sp-button
+          v-if="orderStatus === 2"
+          class="btn-pay"
+          @click="handleClickItem(4)"
+          >支付余款</sp-button
         >
       </div>
     </div>
@@ -98,21 +128,27 @@
       :order-id="orderData.cusOrderId"
       :order-sku-list="orderData.selectedOrderSkuList"
     />
+    <PayModal ref="payModal" :order-data="orderData" />
   </div>
 </template>
 
 <script>
 import { Button } from '@chipspc/vant-dgg'
-import { mapMutations, mapState } from 'vuex'
 import Banner from '@/components/order/detail/Banner'
-import ServeItem from '@/components/order/detail/ServeItem'
+// 服务订单
+import ServeList from '@/components/order/detail/ServeList'
+// 交易订单
+import TradeList from '@/components/order/detail/TradeList'
 import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
+import PayModal from '@/components/order/PayModal' // 支付弹窗
 export default {
   components: {
     [Button.name]: Button,
     Banner,
-    ServeItem,
+    ServeList,
+    TradeList,
     CancelOrder,
+    PayModal,
   },
   data() {
     return {
@@ -217,14 +253,13 @@ export default {
   },
   mounted() {
     this.orderData = this.$store.state.order.orderData
-    console.log('this.$route', this.$route)
     this.orderId = this.$route.query.id
     this.orderType = parseInt(this.orderId.charAt(this.orderId.length - 1))
     console.log('this.$orderData', this.orderData)
   },
   methods: {
     onLeftClick() {
-      this.$router.go(-1)
+      this.$router.back(-1)
     },
     handleClickItem(type, order) {
       this.selectedOrder = order
@@ -252,11 +287,26 @@ export default {
             this.$refs.cancleOrderModel.modalType = 2
           }
           break
+        case 4:
+          // 支付余款 尾款 服务商品定金尾款适用
+          // 有关联订单则弹起弹窗
+          // 弹起定金尾款付费提示弹窗
+          this.$refs.payModal.showPayModal = true
+          break
       }
     },
     // 查询是否有关联订单  0 无 1有
     checkHasOtherOrder() {
       return Math.floor(Math.random(0, 1) * 2)
+    },
+    copy() {
+      const oInput = document.createElement('input')
+      oInput.value = this.orderData.orderNo
+      document.body.appendChild(oInput)
+      oInput.select() // 选择对象;
+      document.execCommand('Copy') // 执行浏览器复制命令
+      oInput.remove()
+      this.$xToast.success('复制成功')
     },
   },
 }
@@ -304,7 +354,7 @@ export default {
   background: white;
   padding: 40px;
   font-size: 26px;
-  p {
+  .order-item {
     font-size: 26px;
     font-family: PingFang SC;
     font-weight: 400;
@@ -339,6 +389,66 @@ export default {
     .text {
       flex: 1;
       line-height: 36px;
+    }
+  }
+  .pay-detail-area {
+    width: 100%;
+    height: auto;
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    p {
+      font-size: 24px;
+      span {
+        display: block;
+        float: left;
+      }
+      height: 32px;
+      .span4 {
+        transform: scale(0.8);
+        transform-origin: 20% 100%;
+        line-height: 32px;
+        width: 24px;
+        height: 100%;
+      }
+    }
+    .has-pay {
+      color: rgba(153, 153, 153, 1);
+      font-size: 24px;
+      .span1 {
+        width: 140px;
+      }
+      .span2 {
+        font-size: 28px;
+      }
+      .span3 {
+        display: block;
+        float: right;
+      }
+      .span4 {
+        transform: scale(0.8);
+        transform-origin: 20% 100%;
+      }
+    }
+    .no-pay {
+      font-size: 24px;
+      font-family: PingFang SC;
+      color: #ec5330;
+      margin-top: 20px;
+      .span1 {
+        color: rgba(34, 34, 34, 1);
+        width: 140px;
+      }
+      .span2 {
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .span3 {
+        display: block;
+        float: right;
+        color: #222222;
+      }
     }
   }
 }

@@ -1,13 +1,18 @@
 <template>
   <div class="order-page">
-    <Header title="我的订单" :hide-back="true" />
-    <sp-tabs v-model="orderType" @click="changeTab">
-      <sp-tab title="全部"></sp-tab>
-      <sp-tab title="待付款"></sp-tab>
-      <sp-tab title="办理中"></sp-tab>
-      <sp-tab title="已完成"></sp-tab>
-      <sp-tab title="已取消"></sp-tab>
-    </sp-tabs>
+    <Header v-if="!isInApp && !isApplets" title="我的订单" :hide-back="true" />
+    <div
+      class="top-nav"
+      :style="{ top: !isInApp && !isApplets ? '44px' : '0' }"
+    >
+      <sp-tabs v-model="orderType" @click="changeTab">
+        <sp-tab title="全部"></sp-tab>
+        <sp-tab title="待付款"></sp-tab>
+        <sp-tab title="办理中"></sp-tab>
+        <sp-tab title="已完成"></sp-tab>
+        <sp-tab title="已取消"></sp-tab>
+      </sp-tabs>
+    </div>
     <div class="list">
       <orderItem
         v-for="(item, index) in list"
@@ -35,7 +40,7 @@ import { Tab, Tabs } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import OrderItem from '@/components/order/OrderItem'
 import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
-import PayModal from '@/components/order/PayModal' // 取消订单弹窗
+import PayModal from '@/components/order/PayModal' // 支付弹窗
 import Bottombar from '@/components/common/nav/Bottombar'
 export default {
   components: {
@@ -214,6 +219,71 @@ export default {
                 { fieldValue: '成都市办理' },
               ],
             },
+            {
+              name: '商标注册服务1',
+              goodsNumber: 1,
+              price: 500,
+              serviceResourceList: [
+                // 服务资源数据
+                { num: 1, price: 200, serviceItemValName: '加急办理' },
+                { num: 1, price: 100, serviceItemValName: 'vip贵宾服务' },
+              ],
+              fieldList: [
+                // 交易属性值
+                { fieldValue: '无附带资产' },
+                { fieldValue: '成都市办理' },
+              ],
+            },
+            {
+              name: '公司注册服务2',
+              goodsNumber: 1,
+              price: 500,
+              serviceResourceList: [
+                // 服务资源数据
+                { num: 1, price: 200, serviceItemValName: '加急办理' },
+                { num: 1, price: 100, serviceItemValName: 'vip贵宾服务' },
+              ],
+              fieldList: [
+                // 交易属性值
+                { fieldValue: '无附带资产' },
+                {
+                  fieldValue: '成都市办理2，成都市办理2成都市办理2成都市办理2',
+                },
+                { fieldValue: '成都市办理' },
+                { fieldValue: '成都市办理' },
+                { fieldValue: '成都市办理' },
+              ],
+            },
+            {
+              name: '公司注册服务3',
+              goodsNumber: 1,
+              price: 400,
+              serviceResourceList: [
+                // 服务资源数据
+                { num: 1, price: 200, serviceItemValName: '加急办理' },
+                { num: 1, price: 100, serviceItemValName: 'vip贵宾服务' },
+              ],
+              fieldList: [
+                // 交易属性值
+                { fieldValue: '无附带资产' },
+                { fieldValue: '成都市办理' },
+              ],
+            },
+            {
+              name: '公司注册服务4',
+              goodsNumber: 1,
+              price: 400,
+              serviceResourceList: [
+                // 服务资源数据
+                { num: 1, price: 200, serviceItemValName: '加急办理' },
+                { num: 1, price: 100, serviceItemValName: 'vip贵宾服务' },
+              ],
+              fieldList: [
+                // 交易属性值
+                { fieldValue: '无附带资产' },
+                { fieldValue: '成都市办理' },
+              ],
+            },
           ],
         },
         {
@@ -312,6 +382,16 @@ export default {
       appInfo: (state) => state.app.appInfo,
       isApplets: (state) => state.app.isApplets,
     }),
+    navTop() {
+      return 44
+    },
+  },
+  mounted() {
+    let num = 6
+    console.log(num.toString(2))
+    num = 9
+    console.log(num.toString(2))
+    console.log('操作符', 6 & 9)
   },
   methods: {
     changeTab(name, title) {
@@ -380,8 +460,29 @@ export default {
 .order-page {
   min-height: 100%;
   background: #f5f5f5;
+  /deep/ .top-nav {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    height: 88px;
+    z-index: 2;
+    overflow: hidden;
+    border-bottom: 1px solid #f0f0f0;
+    .sp-tab--active {
+      color: rgba(73, 116, 245, 1);
+    }
+    .sp-tab--active .sp-tab__text {
+      color: #4974f5;
+      font-weight: bold;
+    }
+    .sp-tabs__line {
+      bottom: 40px;
+      width: 32px;
+    }
+  }
   .list {
     padding-bottom: 180px;
+    margin-top: 108px;
   }
 }
 </style>
