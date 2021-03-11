@@ -622,6 +622,7 @@ export default {
   },
   head() {
     return {
+      title: '在线直选规划师',
       meta: [
         {
           name: 'spptmd-track_code',

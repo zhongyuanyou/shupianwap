@@ -211,6 +211,7 @@ export default {
     },
   },
   head: {
+    title: '帮找服务',
     meta: [{ name: 'spptmd-track_code', content: 'SPW000005' }],
   },
 }
