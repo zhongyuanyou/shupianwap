@@ -32,7 +32,12 @@
     <div class="pay_list">
       <div class="list_item">
         <div class="list_lf">
-          <div class="pay_icon"></div>
+          <my-icon
+            name="pay_ic_alipay"
+            color="#1797ec"
+            size="0.48rem"
+            class="pay_icon"
+          ></my-icon>
           <div class="content">支付宝支付</div>
         </div>
         <div class="checkbox">
@@ -41,7 +46,12 @@
       </div>
       <div class="list_item">
         <div class="list_lf">
-          <div class="pay_icon"></div>
+          <my-icon
+            name="pay_ic_wechat"
+            color="#29AF12"
+            size="0.48rem"
+            class="pay_icon"
+          ></my-icon>
           <div class="content">微信支付</div>
         </div>
         <div class="checkbox">
@@ -50,7 +60,12 @@
       </div>
       <div class="list_item">
         <div class="list_lf">
-          <div class="pay_icon"></div>
+          <my-icon
+            name="pay_ic_bank"
+            color="#FF853C"
+            size="0.48rem"
+            class="pay_icon"
+          ></my-icon>
           <div class="content">银行卡转账</div>
         </div>
         <div class="checkbox">
@@ -197,7 +212,6 @@
         .pay_icon {
           width: 48px;
           height: 48px;
-          background: #1797ec;
           margin-right: 31px;
         }
         .content {
@@ -272,6 +286,12 @@ export default {
       wechat_checked: false,
       checked: false,
     }
+  },
+  mounted() {
+    this.countDown(new Date().getTime() + 60 * 60 * 24 * 1000)
+  },
+  methods: {
+    countDown(endTimeStamp) {},
   },
 }
 </script>

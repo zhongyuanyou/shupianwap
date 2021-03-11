@@ -25,14 +25,15 @@
           </p>
           <p class="sku-info">
             <span
-              v-for="(item2, index2) in data.productVo[0].fieldList"
+              v-for="(item2, index2) in item.fieldList"
               :key="index2"
               class="sku-item"
               >{{ item2.fieldValue }};</span
             >
-            <span class="goods-num">{{ item.goodsNumber }}</span>
+            <span class="goods-num">×{{ item.goodsNumber }}</span>
           </p>
-          <div class="sku-sercice">
+          <!-- 增值服务产品中心2期已去掉 2021.03.10 -->
+          <!-- <div class="sku-sercice">
             <div
               v-if="item.serviceResourceList && item.serviceResourceList.length"
               class="title"
@@ -51,7 +52,7 @@
                 <span clss="serve-num"> ×{{ item3.num }} </span>
               </p>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -82,10 +83,7 @@
           @click="handleClickItem(2)"
           >查看合同</sp-button
         >
-        <sp-button
-          v-if="orderType === 1"
-          type="default"
-          @click="handleClickItem(3)"
+        <sp-button type="default" @click="handleClickItem(3)"
           >立即付款</sp-button
         >
         <sp-button
@@ -213,7 +211,7 @@ export default {
     }
   }
   .border-top {
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #f4f4f4;
   }
   .sku-sercice {
     display: flex;

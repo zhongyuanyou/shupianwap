@@ -64,8 +64,6 @@ export default {
     }
   },
   mounted() {
-    console.log('this.orderType', this.orderType)
-    console.log('this.orderStatus', this.orderStatus)
     const that = this
     this.countDown(new Date().getTime() + 67890000)
   },

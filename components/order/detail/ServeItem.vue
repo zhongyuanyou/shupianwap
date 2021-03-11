@@ -1,33 +1,45 @@
 <template>
-  <section>
-    <div
-      v-for="(item, index) in orderData.productVo"
-      :key="index"
-      class="item"
-      :class="index !== 0 ? 'border-top' : ''"
-    >
-      <div class="img">
-        <img
-          src="https://static.leetcode-cn.com/cn-assets/webpack_bundles/images/lcci_bg.7bfafcf36.png"
-          alt=""
-          srcset=""
-        />
-      </div>
-      <div class="right">
-        <p class="goods-name">
-          <span class="name"> {{ item.name }}</span>
-          <span class="money1"> {{ item.price }}元 </span>
-        </p>
-        <p class="sku-info">
-          <span
+  <div class="item-inner">
+    <div class="img">
+      <img
+        src="https://static.leetcode-cn.com/cn-assets/webpack_bundles/images/lcci_bg.7bfafcf36.png"
+        alt=""
+        srcset=""
+      />
+    </div>
+    <div class="right">
+      <p class="goods-name">
+        <span class="name"> {{ item.name }}</span>
+        <span class="money1"> {{ item.price }}元 </span>
+      </p>
+      <div class="sku-info">
+        <p class="sku-l">
+          {{ getValue(item.fieldList) }}
+          <span class="btn-more" @click="showMoSku">
+            <my-icon
+              v-if="getValue(item.fieldList).length > 40"
+              name="input_ic_open"
+              size="0.28rem"
+              color="rgba(0,0,0,0.6)"
+            ></my-icon>
+          </span>
+          <!-- <span
             v-for="(item2, index2) in item.fieldList"
             :key="index2"
             class="sku-item"
             >{{ item2.fieldValue }};</span
-          >
-          <span class="goods-num">{{ item.goodsNumber }}</span>
+          > -->
         </p>
-        <!-- <div
+        <span class="goods-num">×{{ item.goodsNumber }}</span>
+      </div>
+      <div class="item-btn-area">
+        <div class="inner">
+          <sp-button @click="handleClickBtn(1)">查看底单</sp-button>
+          <sp-button @click="handleClickBtn(2)">办理进度</sp-button>
+          <sp-button @click="handleClickBtn">确认完成</sp-button>
+        </div>
+      </div>
+      <!-- <div
           v-if="item.serviceResourceList && item.serviceResourceList.length"
           class="sku-sercice"
         >
@@ -45,7 +57,8 @@
             </p>
           </div>
         </div> -->
-        <div
+      <!-- 增值服务-产品中心已删除 -->
+      <!-- <div
           v-if="item.serviceResourceList && item.serviceResourceList.length"
           class="sku-sercice"
         >
@@ -62,33 +75,58 @@
               <span clss="serve-num"> ×{{ item3.num }} </span>
             </p>
           </div>
-        </div>
-      </div>
+        </div> -->
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
+// 服务商品支付方式分为全款，定金尾款，按节点付费，完结付费
+// 定金胃口，按节点付费，完结付费有办理进度
+import { Popup, Button } from '@chipspc/vant-dgg'
 export default {
+  components: {
+    [Button.name]: Button,
+  },
   props: {
-    orderData: {
+    // 当前商品产品
+    item: {
       type: Object,
       default() {
         return {}
       },
     },
   },
+  methods: {
+    handleClickBtn(type) {
+      switch (type) {
+        // 办理进度
+        case 2:
+          this.$router.push('/order/process')
+          break
+        default:
+          console.log('type', type)
+      }
+    },
+    // 解析属性信息
+    getValue(arr) {
+      let str = ''
+      for (let i = 0; i < arr.length; i++) {
+        str += arr[i].fieldValue
+      }
+      return str
+    },
+    showMoSku() {
+      this.$emit('showSkuModal', this.item)
+    },
+  },
 }
 </script>
 
 <style lang="less" scoped>
-.border-top {
-  border-top: 1px solid #f4f4f4;
-}
-.item {
-  padding: 20px 0;
+.item-inner {
+  width: 100%;
   height: auto;
-  margin-bottom: 20px;
   display: flex;
   .img {
     width: 130px;
@@ -126,13 +164,28 @@ export default {
     font-family: PingFang SC;
     font-weight: 400;
     color: #999999;
-    margin: 10px 0 20px 0;
+    margin: 10px 0 10px 0;
+    height: 100px;
+    display: flex !important;
+    .sku-l {
+      flex: 1;
+      height: 60px;
+      .textOverflow(2);
+      position: relative;
+      .btn-more {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 28px;
+        height: 28px;
+      }
+      padding-right: 40px;
+    }
     .sku-item {
       margin-right: 10px;
     }
     .goods-num {
       display: block;
-      float: right;
     }
   }
   .sku-sercice {
@@ -167,20 +220,26 @@ export default {
     }
   }
 }
-.price-area {
-  margin-top: 40px;
-  p {
-    margin-bottom: 20px;
-    font-size: 26px;
-    font-family: PingFang SC;
-    font-weight: 400;
-    color: #222222;
-    line-height: 48px;
-    display: flex;
-    justify-content: space-between;
-    .money {
-      font-weight: bold;
-      color: #1a1a1a;
+
+.item-btn-area {
+  width: 100%;
+  height: 60px;
+  .inner {
+    float: right;
+    width: auto;
+    height: 100%;
+    .sp-button {
+      width: auto;
+      height: auto;
+      padding: 10px 20px;
+      background: #ffffff;
+      border: 1px solid #cdcdcd;
+      border-radius: 24px;
+      display: block;
+      float: left;
+      font-size: 24px;
+      color: #222;
+      margin-left: 20px;
     }
   }
 }
