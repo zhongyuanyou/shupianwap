@@ -103,8 +103,18 @@ export default {
           type: 1,
           value: this.nickname,
         }
-        await this.$axios.post(userinfoApi.update, params)
-        this.$router.back()
+        await this.$axios
+          .post(userinfoApi.update, params)
+          .then((res) => {
+            console.log('res', res)
+            if (res.code === 200) {
+              this.$xToast.success('修改成功')
+              this.$router.back()
+            }
+          })
+          .catch((err) => {
+            this.$xToast.error(err.message)
+          })
       }
     },
     clear() {
