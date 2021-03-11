@@ -2,7 +2,7 @@
   <div class="center">
     <!--  头部  -->
     <sp-top-nav-bar
-      v-if="hideHeader !== 'true'"
+      v-if="hideHeader !== 'true' && !isApplets"
       title=""
       left-arrow
       ellipsis
@@ -28,6 +28,7 @@
 
 <script>
 import { TopNavBar } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import { riskTipsApi } from '@/api/riskTips'
 export default {
   name: 'Index',
@@ -56,6 +57,9 @@ export default {
     hideHeader() {
       return this.$route.query.hideHeader
     },
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
   },
   mounted() {
     console.log(this.hideHeader)

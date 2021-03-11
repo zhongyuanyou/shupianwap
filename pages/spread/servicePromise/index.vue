@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <div v-if="hideHeader !== 'true'" class="header">
+    <div v-if="hideHeader !== 'true' && !isApplets" class="header">
       <sp-top-nav-bar
         title="服务承诺"
         left-arrow
@@ -37,6 +37,7 @@
 
 <script>
 import { TopNavBar } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Index',
@@ -93,6 +94,9 @@ export default {
     hideHeader() {
       return this.$route.query.hideHeader
     },
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
   },
   methods: {
     onClickLeft() {
