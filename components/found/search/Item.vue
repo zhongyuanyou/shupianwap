@@ -89,7 +89,7 @@ export default {
           miniRouter =
             '/pages/common_son/webview/index?id=' +
             this.info.id +
-            '&dt=true&url=found/detail/'
+            '&dt=true&url=found/detail'
         }
         this.$appFn.dggJumpRoute(
           { iOSRouter: iosRouter, androidRouter: adRouter, miniRouter },
