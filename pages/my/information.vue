@@ -100,7 +100,7 @@
     <!--S 上传图片popup-->
     <SexSelected
       :show.sync="sexShow"
-      :sex="info ? info.sex : 1"
+      :sex="info && info.sex != 2 ? info.sex : 1"
       @changeSex="changeSex"
     />
     <!--E 上传图片popup-->
