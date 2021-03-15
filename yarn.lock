@@ -1053,10 +1053,10 @@
   dependencies:
     babel-runtime "^6.23.0"
 
-"@fe/sp-ui-mobile@^0.0.8":
-  version "0.0.8"
-  resolved "http://tmobile.dgg188.cn/@fe/sp-ui-mobile/download/@fe/sp-ui-mobile-0.0.8.tgz#bba8fefaff41887563eea69a33e42a8a9229665b"
-  integrity sha1-u6j++v9BiHVj7qaaM+QqipIpZls=
+"@fe/sp-ui-mobile@^0.0.20":
+  version "0.0.20"
+  resolved "http://tmobile.dgg188.cn/@fe/sp-ui-mobile/download/@fe/sp-ui-mobile-0.0.20.tgz#1acca85172af2ffa13b8494564cf1ad255d5d575"
+  integrity sha1-GsyoUXKvL/oTuElFZM8a0lXV1XU=
   dependencies:
     "@fe/common" "^0.0.8"
     ali-oss "^6.12.0"
@@ -9099,7 +9099,6 @@ minipass-fetch@^1.3.0, minipass-fetch@^1.3.2:
   resolved "https://registry.npm.taobao.org/minipass-fetch/download/minipass-fetch-1.3.2.tgz#573766fb1ae86e30df916a6b060bc2e801bf8f37"
   integrity sha1-Vzdm+xrobjDfkWprBgvC6AG/jzc=
   dependencies:
-    encoding "^0.1.12"
     minipass "^3.1.0"
     minipass-sized "^1.0.3"
     minizlib "^2.0.0"

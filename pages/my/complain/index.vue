@@ -337,6 +337,11 @@ export default {
       this.uploader.splice(detail.index, 1)
     },
   },
+  head() {
+    return {
+      title: '我要吐槽',
+    }
+  },
 }
 </script>
 

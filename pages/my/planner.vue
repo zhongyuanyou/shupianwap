@@ -336,6 +336,11 @@ export default {
       }
     },
   },
+  head() {
+    return {
+      title: '我的规划师',
+    }
+  },
 }
 </script>
 
