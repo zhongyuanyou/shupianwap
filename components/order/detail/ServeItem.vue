@@ -1,0 +1,246 @@
+<template>
+  <div class="item-inner">
+    <div class="img">
+      <img
+        src="https://static.leetcode-cn.com/cn-assets/webpack_bundles/images/lcci_bg.7bfafcf36.png"
+        alt=""
+        srcset=""
+      />
+    </div>
+    <div class="right">
+      <p class="goods-name">
+        <span class="name"> {{ item.name }}</span>
+        <span class="money1"> {{ item.price }}元 </span>
+      </p>
+      <div class="sku-info">
+        <p class="sku-l">
+          {{ getValue(item.fieldList) }}
+          <span class="btn-more" @click="showMoSku">
+            <my-icon
+              v-if="getValue(item.fieldList).length > 40"
+              name="input_ic_open"
+              size="0.28rem"
+              color="rgba(0,0,0,0.6)"
+            ></my-icon>
+          </span>
+          <!-- <span
+            v-for="(item2, index2) in item.fieldList"
+            :key="index2"
+            class="sku-item"
+            >{{ item2.fieldValue }};</span
+          > -->
+        </p>
+        <span class="goods-num">×{{ item.goodsNumber }}</span>
+      </div>
+      <div class="item-btn-area">
+        <div class="inner">
+          <sp-button @click="handleClickBtn(1)">查看底单</sp-button>
+          <sp-button @click="handleClickBtn(2)">办理进度</sp-button>
+          <sp-button @click="handleClickBtn">确认完成</sp-button>
+        </div>
+      </div>
+      <!-- <div
+          v-if="item.serviceResourceList && item.serviceResourceList.length"
+          class="sku-sercice"
+        >
+          <div class="title">服务明细</div>
+          <div class="sku-r">
+            <p
+              v-for="(item3, index3) in item.serviceResourceList"
+              :key="index3"
+            >
+              <span class="serve-name">
+                {{ item3.serviceItemValName }}
+              </span>
+              <span class="serve-price"> {{ item3.price }}元 </span>
+              <span clss="serve-num"> ×{{ item3.num }} </span>
+            </p>
+          </div>
+        </div> -->
+      <!-- 增值服务-产品中心已删除 -->
+      <!-- <div
+          v-if="item.serviceResourceList && item.serviceResourceList.length"
+          class="sku-sercice"
+        >
+          <div class="title">增值服务</div>
+          <div class="sku-r">
+            <p
+              v-for="(item3, index3) in item.serviceResourceList"
+              :key="index3"
+            >
+              <span class="serve-name">
+                {{ item3.serviceItemValName }}
+              </span>
+              <span class="serve-price"> {{ item3.price }}元 </span>
+              <span clss="serve-num"> ×{{ item3.num }} </span>
+            </p>
+          </div>
+        </div> -->
+    </div>
+  </div>
+</template>
+
+<script>
+// 服务商品支付方式分为全款，定金尾款，按节点付费，完结付费
+// 定金胃口，按节点付费，完结付费有办理进度
+import { Popup, Button } from '@chipspc/vant-dgg'
+export default {
+  components: {
+    [Button.name]: Button,
+  },
+  props: {
+    // 当前商品产品
+    item: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
+  },
+  methods: {
+    handleClickBtn(type) {
+      switch (type) {
+        // 办理进度
+        case 2:
+          this.$router.push('/order/process')
+          break
+        default:
+          console.log('type', type)
+      }
+    },
+    // 解析属性信息
+    getValue(arr) {
+      let str = ''
+      for (let i = 0; i < arr.length; i++) {
+        str += arr[i].fieldValue
+      }
+      return str
+    },
+    showMoSku() {
+      this.$emit('showSkuModal', this.item)
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped>
+.item-inner {
+  width: 100%;
+  height: auto;
+  display: flex;
+  .img {
+    width: 130px;
+    height: 130px;
+    background: rgba(0, 0, 0, 0.16);
+    border-radius: 8px;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .right {
+    flex: 1;
+    padding-left: 20px;
+  }
+  .goods-name {
+    display: flex;
+    font-size: 28px;
+    font-family: PingFang SC;
+    line-height: 36px;
+    color: #222222;
+    .name {
+      font-weight: bold;
+      flex: 1;
+      .textOverflow(1);
+      padding-right: 20px;
+    }
+    .money1 {
+      font-weight: normal;
+    }
+  }
+  .sku-info {
+    font-size: 24px;
+    font-family: PingFang SC;
+    font-weight: 400;
+    color: #999999;
+    margin: 10px 0 10px 0;
+    height: 100px;
+    display: flex !important;
+    .sku-l {
+      flex: 1;
+      height: 60px;
+      .textOverflow(2);
+      position: relative;
+      .btn-more {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 28px;
+        height: 28px;
+      }
+      padding-right: 40px;
+    }
+    .sku-item {
+      margin-right: 10px;
+    }
+    .goods-num {
+      display: block;
+    }
+  }
+  .sku-sercice {
+    display: flex;
+    justify-content: space-between;
+    min-height: 20px;
+    .title {
+      font-size: 22px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #222222;
+      line-height: 36px;
+      padding-right: 20px;
+    }
+    .sku-r {
+      flex: 1;
+      p {
+        display: flex;
+        font-size: 22px;
+        line-height: 36px;
+        font-family: PingFang SC;
+        color: #222222;
+        font-weight: 400;
+        .serve-name {
+          .textOverflow(1);
+          padding-right: 40px;
+          padding-right: 20px;
+          flex: 1;
+          text-align: left;
+        }
+      }
+    }
+  }
+}
+
+.item-btn-area {
+  width: 100%;
+  height: 60px;
+  .inner {
+    float: right;
+    width: auto;
+    height: 100%;
+    .sp-button {
+      width: auto;
+      height: auto;
+      padding: 10px 20px;
+      background: #ffffff;
+      border: 1px solid #cdcdcd;
+      border-radius: 24px;
+      display: block;
+      float: left;
+      font-size: 24px;
+      color: #222;
+      margin-left: 20px;
+    }
+  }
+}
+</style>

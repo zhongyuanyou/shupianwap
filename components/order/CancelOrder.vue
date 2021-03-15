@@ -2,8 +2,8 @@
   <sp-popup v-model="showPop" position="bottom">
     <div class="page-inner">
       <div v-if="step === 1" class="step1">
-        <p class="title">以下订单会一起取消</p>
-        <p class="msg">由于以下订单具有同属关系，将会一起被取消</p>
+        <p class="title">{{ modalTitle }}</p>
+        <p class="msg">{{ modalToast }}</p>
         <div class="order-list">
           <div class="inner">
             <div
@@ -56,18 +56,20 @@
         </sp-radio-group>
       </div>
       <div class="btn-area">
-        <sp-button type="default" class="btn1" @click="cancel"
-          >暂不取消</sp-button
-        >
-        <sp-button type="primary" class="btn2" @click="submit"
-          >确定取消</sp-button
-        >
+        <sp-button type="default" class="btn1" @click="cancel">{{
+          cancelText
+        }}</sp-button>
+        <sp-button type="primary" class="btn2" @click="submit">{{
+          confirmText
+        }}</sp-button>
       </div>
     </div>
   </sp-popup>
 </template>
 
 <script>
+// 有关联订单时的取消订单和支付提示弹窗
+// 关联订单提示弹窗
 import { Popup, Button, RadioGroup, Radio, Cell } from '@chipspc/vant-dgg'
 let timer
 export default {
@@ -190,6 +192,8 @@ export default {
     return {
       showPop: false,
       step: 1,
+      // 弹窗业务类型 1为取消订单 2为立即
+      modalType: 1,
       reasonList: [
         {
           code: '031131',
@@ -217,12 +221,38 @@ export default {
       },
     }
   },
+  computed: {
+    modalTitle() {
+      return this.modalType === 1 ? '以下订单会一起取消' : '以下订单需一起付款'
+    },
+    modalToast() {
+      return this.modalType === 1
+        ? '由于以下订单具有同属关系，将会一起被取消'
+        : '由于以下订单具有同属关系，需要一起付款'
+    },
+    cancelText() {
+      return this.modalType === 1 ? '暂不取消' : '暂不支付'
+    },
+    confirmText() {
+      return this.modalType === 1 ? ' 确定取消' : '立即支付'
+    },
+  },
   beforeDestroy() {
     if (timer) clearTimeout(timer)
   },
   methods: {
     submit() {
-      if (this.step === 1) this.step = 2
+      if (this.modalType === 1) {
+        // 取消订单
+        if (this.step === 1) this.step = 2
+        else {
+          this.$xToast.success('取消订单成功')
+          this.cancel()
+        }
+      } else if (this.modalType === 2) {
+        // 立即支付
+        this.$router.push('/order/pay')
+      }
     },
     cancel() {
       this.showPop = false

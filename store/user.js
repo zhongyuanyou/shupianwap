@@ -19,14 +19,17 @@ export const mutations = {
     this.$cookies.set('token', data.token, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
+      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('userId', data.userId, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
+      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('userType', data.userType, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
+      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     state.userInfo = data
     state.token = data.token
