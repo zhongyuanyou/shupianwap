@@ -13,7 +13,7 @@
       </div>
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
-    <div class="cell" @click="skuShow = true">
+    <div class="cell" @click="openSku">
       <div class="cell_left">
         <div class="label">选择</div>
         <div class="content">锦江区，其它，有注册经营地址</div>
@@ -117,8 +117,22 @@
           </div>
         </div>
         <div class="cart_buy_box">
-          <div class="bt" @click="addCart">加入购物车</div>
-          <div class="bt" @click="nowBuy">立即购买</div>
+          <div
+            v-if="type !== 3"
+            class="bt"
+            :class="{ width100: type === 2 }"
+            @click="addCart"
+          >
+            加入购物车
+          </div>
+          <div
+            v-if="type !== 2"
+            class="bt buy"
+            :class="{ width100: type === 3 }"
+            @click="nowBuy"
+          >
+            立即购买
+          </div>
         </div>
       </div>
     </sp-popup>
@@ -148,6 +162,7 @@ export default {
   },
   data() {
     return {
+      type: 1, // 1 加入购物车、立即购买  2 加入购物车  3 立即购买
       vouchers: '满400元减10元， 满1000元减30元',
       show: false,
       skuShow: false,
@@ -183,6 +198,10 @@ export default {
     // 增加数量
     countAdd() {
       this.num++
+    },
+    openSku(type = 1) {
+      this.type = type
+      this.skuShow = true
     },
     // 加入购物车
     addCart() {},
@@ -390,9 +409,12 @@ export default {
         width: 327px;
         border-radius: 8px;
         background-color: #fe8c29;
-        &:last-child {
-          background-color: #ec5330;
-        }
+      }
+      .buy {
+        background-color: #ec5330;
+      }
+      .width100 {
+        width: 100%;
       }
     }
   }

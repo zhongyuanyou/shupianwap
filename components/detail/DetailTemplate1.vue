@@ -46,9 +46,9 @@
     <!--S 第一板块-->
     <Title />
     <!--E 第一板块-->
-    <!--S 第二板块 领券 地址-->
-    <VouchersSelect />
-    <!--E 第二板块 领券 地址-->
+    <!--S 第二板块 领券 SKU-->
+    <VouchersSelect ref="sku" />
+    <!--E 第二板块 领券 SKU-->
     <!--S 第三板块 包含项目-->
     <ContainProject />
     <!--E 第三板块 包含项目-->
@@ -61,42 +61,10 @@
     <!--S 第五板块 推荐规划师-->
     <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
     <!--E 第五板块 推荐规划师-->
-    <!--S 第二板块 基本信息-->
-    <!-- <Basic>
-      <div slot="basic">
-        <div class="company_info">
-          <BasicItem
-            v-for="(baseDataList, idx) in fieldListFun()"
-            :key="idx"
-            :base-data-list="baseDataList"
-          />
-        </div>
-      </div>
-    </Basic> -->
-    <!--E 第二板块 基本信息-->
-    <!-- <slot name="qualification"></slot> -->
-    <!--资质信息-->
-    <!-- <QftDetails v-if="proDetail.dictCode === 'CATE-JYZY-ZZ'" /> -->
-    <!--S 第三板块 评估报告-->
-    <!-- <Report /> -->
-    <!--E 第三板块 评估报告-->
-    <!--S 第四板块 交易服务保障承诺-->
-    <!-- <Commitment /> -->
-    <!--E 第四板块 交易服务保障承诺-->
-    <!--S 第六板块 商品动态-->
-    <!-- <Dynamic /> -->
-    <!--E 第六板块 商品动态-->
-    <!--S 第七板块 常见问题-->
-    <!-- <Question /> -->
-    <!--E 第七板块 常见问题-->
-    <!--S 第八板块 成功案例-->
-    <!-- <Case /> -->
-    <!--E 第八板块 成功案例-->
-    <!--S 第九板块 同类推荐-->
-    <!-- <Recommend ref="recLoading" :similar-recommend-data="similarRecommend" /> -->
-    <!--E 第九板块 同类推荐-->
-    <!--S 第十板块 猜你需要-->
+    <!--S 第十板块 服务详情-->
     <ServiceDetail />
+    <!--S 第十板块 服务详情-->
+    <!--S 第十板块 猜你需要-->
     <sp-list
       v-model="loading"
       :finished="finished"
@@ -106,10 +74,7 @@
       <RelatedRecommend ref="remNeed" :product-data="recommendProduct" />
     </sp-list>
     <!--E 第十板块 猜你需要-->
-    <tcCommodityConsultation
-      :im-jump-query="imJumpQuery"
-      :planner-info="tcPlannerBooth"
-    />
+    <bottomBar :im-jump-query="imJumpQuery" :planner-info="tcPlannerBooth" />
     <!--    分享组件-->
     <sp-share-sheet
       v-model="showShare"
@@ -121,16 +86,7 @@
 </template>
 
 <script>
-import {
-  TopNavBar,
-  Sticky,
-  Bottombar,
-  BottombarButton,
-  BottombarIcon,
-  BottombarInfo,
-  List,
-  ShareSheet,
-} from '@chipspc/vant-dgg'
+import { TopNavBar, Sticky, List, ShareSheet } from '@chipspc/vant-dgg'
 import { mapActions } from 'vuex'
 import Banner from '~/components/detail/Banner'
 import Title from '~/components/detail/Title1'
@@ -139,32 +95,19 @@ import ContainProject from '~/components/detail/ContainProject'
 import ContainService from '~/components/detail/ContainService'
 import ContainContent from '~/components/detail/ContainContent'
 import TcPlanners from '~/components/detail/TcPlanners1'
-import Basic from '~/components/detail/Basic'
-import Report from '~/components/detail/Report'
-import Commitment from '~/components/detail/Commitment'
-import Dynamic from '~/components/detail/Dynamic'
-import Question from '~/components/detail/Question'
-import Case from '~/components/detail/Case'
 import ServiceDetail from '~/components/detail/ServiceDetail'
-import Recommend from '~/components/detail/Recommend'
 import RelatedRecommend from '~/components/detail/RelatedRecommend'
-import tcCommodityConsultation from '@/components/common/commodityConsultation/tcCommodityConsultation'
+import bottomBar from '@/components/detail/bottomBar/index'
 import getUserSign from '~/utils/fingerprint'
 import tcBasicData from '~/mock/tcBasicData'
 import { productDetailsApi, recommendApi, userinfoApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
-import BasicItem from '~/components/detail/BasicItem'
-import QftDetails from '~/components/detail/QftDetails'
 import { copyToClipboard } from '~/utils/common'
 export default {
   name: 'DetailTemplate',
   components: {
     [TopNavBar.name]: TopNavBar,
     [Sticky.name]: Sticky,
-    [Bottombar.name]: Bottombar,
-    [BottombarButton.name]: BottombarButton,
-    [BottombarIcon.name]: BottombarIcon,
-    [BottombarInfo.name]: BottombarInfo,
     [List.name]: List,
     [ShareSheet.name]: ShareSheet,
     Banner,
@@ -173,20 +116,11 @@ export default {
     ContainProject,
     ContainService,
     ContainContent,
-    // Basic,
-    // Report,
-    // Commitment,
     TcPlanners,
-    // Dynamic,
-    // Question,
-    // Case,
-    // Recommend,
     ServiceDetail,
     RelatedRecommend,
-    tcCommodityConsultation,
+    bottomBar,
     MyIcon,
-    // BasicItem,
-    // QftDetails,
   },
   props: {
     imJumpQuery: {
@@ -199,15 +133,12 @@ export default {
   data() {
     return {
       opacity: 0,
-      text1: '在线咨询',
-      text2: '电话咨询',
       finished: false, // 停止加载更多
       loading: false,
       productPage: 1,
       productLimit: 10,
       productCount: 0,
       recommendProduct: [],
-      similarRecommend: [], // 同类推荐产品
       tcBasicData, // 基本信息的key
       showShare: false, // 是否弹起分享组件
       shareOptions: [{ name: '复制链接', icon: 'link' }],
@@ -240,8 +171,6 @@ export default {
     }
     // 获取推荐产品
     this.getrecommendProduct()
-    // 获取同类推荐
-    this.getSimilarRecommend()
     // 推荐规划师
     this.getRecommendPlanner()
     // 获取钻展
@@ -331,46 +260,6 @@ export default {
           console.log(err)
         })
     },
-    // 获取同类推荐
-    async getSimilarRecommend() {
-      this.loading = true
-      // 获取用户唯一标识
-      if (!this.deviceId) {
-        this.deviceId = await getUserSign()
-      }
-      const formatId1 = this.proDetail.classCodeLevel.split(',')[0] // 产品二级分类
-      const formatId2 = this.proDetail.classCodeLevel.split(',')[1] // 产品二级分类
-      const formatId3 = this.proDetail.classCodeLevel.split(',')[2] // 产品三级分类
-      const formatId = formatId3 || formatId2
-      this.$axios
-        .get(recommendApi.recommendProduct, {
-          params: {
-            userId: this.$cookies.get('userId'), // 用户id
-            deviceId: this.deviceId, // 设备ID
-            formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
-            areaCode: this.city.code, // 区域编码
-            classCode: formatId1,
-            sceneId: 'app-jycpxq-01', // 场景ID
-            productId: this.proDetail.id, // 产品ID（产品详情页必传）
-            productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
-            title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
-            platform: 'APP', // 平台（app,m,pc）
-            page: 1,
-            limit: 5,
-            searchType: 1, // 搜索推荐产品类型：1：交易，2服务
-          },
-        })
-        .then((res) => {
-          if (res.code === 200) {
-            this.$refs.recLoading.recLoading = false
-            this.similarRecommend = res.data.records
-          }
-        })
-        .catch((err) => {
-          this.loading = false
-          console.log(err)
-        })
-    },
     //  获取推荐规划师
     async getRecommendPlanner() {
       // 获取用户唯一标识
@@ -434,6 +323,7 @@ export default {
       this.proDetail.fieldList.forEach((list) => {
         fieldList[list.fieldCode] = list
       })
+      console.log(fieldList)
       const tcBasicDataArr = [...tcBasicData[this.proDetail.dictCode]]
       tcBasicDataArr.forEach((item, idx) => {
         // 有翻译的值,显示翻译的值
