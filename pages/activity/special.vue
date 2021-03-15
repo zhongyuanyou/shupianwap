@@ -32,20 +32,13 @@
           <div class="night"></div>
         </div>
         <div class="count-down">
-          <div class="end">距本场结束还剩</div>
-          <div class="down-time">
-            <sp-count-down :time="time">
-              <template #default="timeData">
-                <span class="block">{{ '0' + timeData.days }}</span>
-                <span class="colon">天</span>
-                <span class="block">{{ '0' + timeData.hours }}</span>
-                <span class="colon">:</span>
-                <span class="block">{{ '0' + timeData.minutes }}</span>
-                <span class="colon">:</span>
-                <span class="block">{{ '0' + timeData.seconds }}</span>
-              </template>
-            </sp-count-down>
-          </div>
+          <p class="down-time">
+            距本场结束还剩
+            <span>{{ time.day }}</span
+            >天 <span>{{ time.hour }}</span
+            >: <span>{{ time.min }}</span
+            >: <span>{{ time.sec }}</span>
+          </p>
         </div>
       </div>
       <!-- E countdown -->
@@ -104,13 +97,13 @@
                 <div class="left-countdown">距离结束21:18:02</div>
               </div>
               <div class="right-content">
-                <div class="rc-top">
+                <p class="rc-top">
                   <span class="rc-span">
                     <span>{{ item.span1 }}</span>
                     <span>{{ item.span2 }}</span>
                   </span>
-                  {{ item.content }}
-                </div>
+                  <span>{{ item.content }}</span>
+                </p>
                 <div class="rc-middle">
                   <div>{{ item.span3 }}</div>
                   <div>{{ item.span4 }}</div>
@@ -256,34 +249,26 @@
           font-family: PingFangSC-Medium, PingFang SC;
         }
         .down-time {
-          .sp-count-down {
-            color: #1a1a1a;
-            font-size: 14px;
-            line-height: 20px;
-            display: flex;
-            align-items: center;
-            .block {
-              width: 36px;
-              height: 36px;
-              font-size: 24px;
-              font-weight: 500;
-              color: #ec5330;
-              line-height: 24px;
-              background: #ffffff;
-              border-radius: 4px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              margin: 0 6px;
-            }
-            .colon {
-              height: 24px;
-              font-size: 24px;
-              font-family: PingFangSC-Medium, PingFang SC;
-              font-weight: 500;
-              color: #fefffe;
-              line-height: 24px;
-            }
+          font-size: 24px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #fefffe;
+          line-height: 24px;
+          display: flex;
+          align-items: center;
+          span {
+            width: 36px;
+            height: 36px;
+            padding: 6px 4px;
+            background: #ffffff;
+            border-radius: 4px;
+            font-size: 24px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #ec5330;
+            line-height: 24px;
+            margin: 0 6px;
+            text-align: center;
           }
         }
       }
@@ -421,8 +406,8 @@
           font-size: 22px;
           font-weight: 400;
           color: #ffffff;
-          line-height: 22px;
-          padding: 9px 23px 9px 12px;
+          line-height: 40px;
+          padding: 0 23px 0 12px;
           position: absolute;
           top: 0px;
           left: 0px;
@@ -438,18 +423,18 @@
         flex-direction: column;
         .rc-top {
           font-size: 32px;
-
           font-weight: 500;
           color: #222222;
-          // line-height: 42px;
+          line-height: 32px;
           text-overflow: ellipsis;
           word-break: break-all;
           overflow: hidden;
           white-space: normal;
+          height: 84px;
+          line-height: 42px;
           .rc-span {
             display: inline-flex;
             align-items: center;
-            padding-bottom: 8px;
             span:nth-child(1) {
               margin-right: 8px;
             }
@@ -564,6 +549,7 @@ import {
   WorkTabSortItem,
   PullRefresh,
 } from '@chipspc/vant-dgg'
+let timer
 
 export default {
   name: 'Special',
@@ -577,6 +563,7 @@ export default {
   },
   data() {
     return {
+      diff: 0,
       time: '',
       iconLeft: 0.35,
       list: [],
@@ -636,7 +623,37 @@ export default {
       ],
     }
   },
+  mounted() {
+    this.countDown(new Date().getTime() + 678900000)
+  },
+  beforeDestroy() {
+    clearInterval(timer)
+  },
   methods: {
+    countDown(endTimeStamp) {
+      const that = this
+      const nowTimeStamp = new Date().getTime()
+      // 计算时间差 秒
+      this.diff = (endTimeStamp - nowTimeStamp) / 1000
+      timer = setInterval(() => {
+        let day = Math.floor(this.diff / 86400)
+        let hour = Math.floor((this.diff - day * 86400) / 3600)
+        let min = Math.floor((this.diff - hour * 3600 - day * 86400) / 60)
+        let sec = Math.floor(this.diff % 60)
+        if (day < 10) day = '0' + day
+        if (hour < 10) hour = '0' + hour
+        if (min < 10) min = '0' + min
+        if (sec < 10) sec = '0' + sec
+        that.time = {
+          day,
+          hour,
+          min,
+          sec,
+        }
+        that.diff--
+      }, 1000)
+      // 每执行一次定时器就减少一秒
+    },
     onLoad() {
       setTimeout(() => {
         if (this.refreshing) {
