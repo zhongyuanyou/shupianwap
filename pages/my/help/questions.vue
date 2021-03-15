@@ -88,6 +88,9 @@ export default {
       color: #222222;
       line-height: 46px;
       margin-top: -4px;
+      overflow: hidden;
+      word-wrap: break-word;
+      word-break: normal;
     }
   }
   .title-box {
