@@ -146,6 +146,11 @@ export default {
       }
     },
   },
+  head() {
+    return {
+      title: '吐槽进度',
+    }
+  },
 }
 </script>
 

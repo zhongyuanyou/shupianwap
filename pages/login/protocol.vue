@@ -51,6 +51,7 @@ export default {
   },
   created() {
     if (process && process.client) {
+      console.log(this.$route.query.categoryCode)
       this.getProtocol(this.categoryCode)
     }
   },
@@ -93,7 +94,10 @@ export default {
   },
   head() {
     return {
-      title: this.article.title,
+      title:
+        this.$route.query.categoryCode === 'protocol100121'
+          ? '隐私政策'
+          : '服务协议',
     }
   },
 }

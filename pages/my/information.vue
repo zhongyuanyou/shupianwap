@@ -367,6 +367,11 @@ export default {
       this.info.url = fileList.oss_filePath
     },
   },
+  head() {
+    return {
+      title: '个人信息',
+    }
+  },
 }
 </script>
 

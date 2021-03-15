@@ -122,6 +122,11 @@ export default {
       this.nickname = ''
     },
   },
+  head() {
+    return {
+      title: '编辑昵称',
+    }
+  },
 }
 </script>
 

@@ -108,6 +108,11 @@ export default {
       this.emailRight = true
     },
   },
+  head() {
+    return {
+      title: '编辑邮箱',
+    }
+  },
 }
 </script>
 
