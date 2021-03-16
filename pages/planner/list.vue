@@ -310,8 +310,9 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.headHeight = this.$refs.head.clientHeight
-      console.log('this.headHeight:', this.headHeight)
+      if (!this.isApplets) {
+        this.headHeight = this.$refs.head.clientHeight
+      }
     })
   },
   methods: {
