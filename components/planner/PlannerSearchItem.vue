@@ -75,7 +75,7 @@
 
 <script>
 import { Button, Image, Tag } from '@chipspc/vant-dgg'
-
+import { mapState } from 'vuex'
 import { planner } from '@/api'
 
 export default {
