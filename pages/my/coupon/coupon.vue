@@ -47,6 +47,7 @@
 import { Button, RadioGroup, Radio, Cell, Tab, Tabs } from '@chipspc/vant-dgg'
 import Popover from '@/components/common/popover/popover.vue'
 import Header from '@/components/common/head/header'
+import { coupon } from '@/api/index'
 export default {
   components: {
     [Button.name]: Button,
@@ -60,6 +61,9 @@ export default {
   },
   data() {
     return {
+      formData: {
+        findType: 1,
+      },
       indexNum: 0,
       couponType: 0,
       buttonText: '你好',
@@ -134,8 +138,19 @@ export default {
   },
   mounted() {
     this.items = this.itemsData
+    this.getInitData()
   },
   methods: {
+    getInitData() {
+      coupon
+        .getCouponList({ axios: this.$axios }, this.formData)
+        .then((result) => result)
+        .catch((e) => {
+          if (e.code !== 200) {
+            console.log(e)
+          }
+        })
+    },
     changeTab(name, title) {
       // console.log(name, title)
       this.$refs['myPop' + this.indexNum][0].isShow = false
