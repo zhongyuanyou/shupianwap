@@ -130,10 +130,16 @@ export default {
       }
     },
     async getTel() {
-      const params = { id: this.itemData.mchUserId }
+      const params = {
+        areaCode: this.city.code,
+        areaName: this.city.name,
+        customerUserId: this.$store.state.user.userId,
+        plannerId: this.itemData.mchUserId,
+        requireCode: '',
+        requireName: '',
+      }
       try {
-        const data = await planner.tel(params)
-        console.log(data)
+        const data = await planner.newtel(params)
         return data
       } catch (error) {
         console.error('getTel:', error)
