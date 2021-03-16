@@ -106,6 +106,14 @@ export default {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
     }),
+      city() {
+      return this.$store.state.city.currentCity
+    },
+  },
+  async mounted() {
+    if (!this.city.code) {
+      await this.POSITION_CITY({ type: 'init' })
+    }
   },
   methods: {
     async handleClick(type) {
