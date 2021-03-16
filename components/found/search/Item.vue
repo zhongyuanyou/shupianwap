@@ -42,6 +42,7 @@
         </div>
       </div>
     </div>
+    <Loading-center v-show="loadingCenter" />
   </div>
 </template>
 
@@ -49,10 +50,11 @@
 import { Image } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { domainUrl } from '@/config'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import nameList from '@/config/nameList'
 export default {
   name: 'Item',
-  components: { [Image.name]: Image },
+  components: { [Image.name]: Image, LoadingCenter },
   props: {
     info: {
       type: Object,
@@ -60,6 +62,11 @@ export default {
         return {}
       },
     },
+  },
+  data() {
+    return {
+      loadingCenter: false,
+    }
   },
   computed: {
     ...mapState({
@@ -90,6 +97,7 @@ export default {
             '/pages/common_son/webview/index?id=' +
             this.info.id +
             '&dt=true&url=found/detail'
+          this.loadingCenter = true
         }
         this.$appFn.dggJumpRoute(
           { iOSRouter: iosRouter, androidRouter: adRouter, miniRouter },

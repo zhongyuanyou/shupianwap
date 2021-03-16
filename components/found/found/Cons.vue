@@ -73,6 +73,7 @@
       </div>
     </sp-pull-refresh>
     <!--E 列表-->
+    <Loading-center v-show="loadingCenter" />
   </div>
 </template>
 
@@ -88,6 +89,7 @@ import {
   Image,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import CardItem from '~/components/common/cardItem/CardItem'
 import { foundApi } from '@/api'
 import adJumpHandle from '~/mixins/adJumpHandle'
@@ -103,6 +105,7 @@ export default {
     [Cell.name]: Cell,
     [Image.name]: Image,
     CardItem,
+    LoadingCenter,
   },
   mixins: [adJumpHandle],
   props: {
@@ -146,6 +149,7 @@ export default {
       infoList: this.list, // 资讯列表
       bannerList: this.banner, // 广告集合
       code: this.categoryCode,
+      loadingCenter: false,
     }
   },
   computed: {
@@ -232,6 +236,7 @@ export default {
             '/pages/common_son/webview/index?id=' +
             item.id +
             '&dt=true&url=found/detail'
+          this.loadingCenter = true
           // miniRouter =
           //   '/pages/common_son/webview/index?type=23123&productId=4234234&url=detail/transactionDetails'
         }
