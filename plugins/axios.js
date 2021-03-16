@@ -47,7 +47,10 @@ export default function ({ $axios, redirect, app, store }) {
       }
       // config.headers['X-Auth-Token'] = '607991860798845556'
       // config.headers['X-Req-UserId'] = '607991757719633892'
-
+      config.headers['X-Auth-Token'] =
+        app.$cookies.get('token') || store.state.user.token
+      config.headers['X-Req-UserId'] =
+        app.$cookies.get('userId') || store.state.user.userId
       // 请求头设置站点code
       const cityCode = app.$cookies.get('currentCity', {
         path: '/',
