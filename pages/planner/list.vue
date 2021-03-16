@@ -9,7 +9,7 @@
 
 <template>
   <div class="list">
-    <div ref="head" class="head">
+    <div v-if="!isApplets" ref="head" class="head">
       <Header v-if="!isApplets" title="在线直选规划师">
         <template #left>
           <my-icon

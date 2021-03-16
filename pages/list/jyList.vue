@@ -124,6 +124,11 @@ export default {
       }
     },
   },
+  head() {
+    return {
+      title: '商品列表',
+    }
+  },
 }
 </script>
 

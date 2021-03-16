@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="complaint">
-    <Header title="我要吐槽">
+    <Header :title="!isApplets ? '我要吐槽' : ''">
       <template #left>
         <div @click="back">
           <my-icon

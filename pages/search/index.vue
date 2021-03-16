@@ -274,6 +274,11 @@ export default {
       this.jumpHandle(item)
     },
   },
+  head() {
+    return {
+      title: '搜索',
+    }
+  },
 }
 </script>
 
