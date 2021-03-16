@@ -299,7 +299,7 @@ export default {
       // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
       // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
       this.isInApp && this.clearUserInfo()
-
+      console.log(this.isInApp, 'app')
       this.uPGetCurrentRegion({ type: 'init' }).then((data) => {
         console.log('uPGetCurrentRegion data:', data)
         const { code } = data || {}
@@ -389,7 +389,24 @@ export default {
           this.uPIM(data)
           break
         case 'tel':
-          this.uPCall(data)
+          if (this.isInApp) {
+            this.$appFn.dggBindHiddenPhone(
+              { plannerId: data.mchUserId },
+              (res) => {
+                const { code } = res || {}
+                if (code !== 200) {
+                  this.$xToast.show({
+                    message: '拨号失败！',
+                    duration: 1000,
+                    forbidClick: true,
+                    icon: 'toast_ic_remind',
+                  })
+                }
+              }
+            )
+          } else {
+            this.uPCall(data)
+          }
           break
         case 'detail':
           // if (this.isApplets) {
@@ -458,27 +475,9 @@ export default {
 
     // 拨打电话号码
     uPCall(data) {
-      console.log(this.$appFn, 1111)
       const ciphertext = data || {}
       const telNumber = ciphertext.phone
       if (ciphertext.status === 1) {
-        if (this.isInApp) {
-          this.$appFn.dggBindHiddenPhone(
-            { plannerId: ciphertext.mchUserId },
-            (res) => {
-              const { code } = res || {}
-              if (code !== 200) {
-                this.$xToast.show({
-                  message: '拨号失败！',
-                  duration: 1000,
-                  forbidClick: true,
-                  icon: 'toast_ic_remind',
-                })
-              }
-            }
-          )
-          return
-        }
         callPhone(telNumber)
       } else if (ciphertext.status === 0) {
         Toast({
@@ -495,7 +494,6 @@ export default {
       }
       console.log('telNumber:', telNumber)
       // 如果当前页面在app中，则调用原生拨打电话的方法
-
       // 浏览器中调用的
     },
 

@@ -324,6 +324,17 @@ export default {
       this.uPShareOption()
     },
     handleCall() {
+      // 如果当前页面在app中，则调用原生拨打电话的方法
+      if (this.isInApp) {
+        this.$appFn.dggBindHiddenPhone(
+          { plannerId: this.detailData.id },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) this.$xToast.error('拨号失败！')
+          }
+        )
+        return
+      }
       this.bindhidden()
     },
     async bindhidden() {
@@ -440,17 +451,6 @@ export default {
     },
     // 拨打电话号码
     uPCall(telNumber) {
-      // 如果当前页面在app中，则调用原生拨打电话的方法
-      if (this.isInApp) {
-        this.$appFn.dggBindHiddenPhone(
-          { plannerId: telNumber.mchUserId },
-          (res) => {
-            const { code } = res || {}
-            if (code !== 200) this.$xToast.error('拨号失败！')
-          }
-        )
-        return
-      }
       // 浏览器中调用的
       callPhone(telNumber.phone)
     },

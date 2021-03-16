@@ -97,6 +97,7 @@ export default {
     },
     ...mapState({
       userInfo: (state) => state.user.userInfo,
+      isInApp: (state) => state.app.isInApp,
     }),
     city() {
       return this.$store.state.city.currentCity
@@ -130,20 +131,37 @@ export default {
       }
     },
     async getTel() {
-      const params = {
-        areaCode: this.city.code,
-        areaName: this.city.name,
-        customerUserId: this.$store.state.user.userId,
-        plannerId: this.itemData.mchUserId,
-        requireCode: '',
-        requireName: '',
-      }
-      try {
-        const data = await planner.newtel(params)
-        return data
-      } catch (error) {
-        console.error('getTel:', error)
-        return Promise.reject(error)
+      if (this.isInApp) {
+        this.$appFn.dggBindHiddenPhone(
+          { plannerId: this.itemData.mchUserId },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) {
+              this.$xToast.show({
+                message: '拨号失败！',
+                duration: 1000,
+                forbidClick: true,
+                icon: 'toast_ic_remind',
+              })
+            }
+          }
+        )
+      } else {
+        const params = {
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: this.itemData.mchUserId,
+          requireCode: '',
+          requireName: '',
+        }
+        try {
+          const data = await planner.newtel(params)
+          return data
+        } catch (error) {
+          console.error('getTel:', error)
+          return Promise.reject(error)
+        }
       }
     },
   },

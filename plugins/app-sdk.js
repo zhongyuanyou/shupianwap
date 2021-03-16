@@ -250,8 +250,8 @@ const appHandler = {
     })
   },
   // 隐号拨打
-  dggBindHiddenPhone: (fn = () => {}) => {
-    Bridge.callHandler('dgg_bindHiddenPhone', {}, (res) => {
+  dggBindHiddenPhone: (data = { plannerId: '' }, fn = () => {}) => {
+    Bridge.callHandler('dgg_bindHiddenPhone', data, (res) => {
       handleRequest(res, fn)
     })
   },
