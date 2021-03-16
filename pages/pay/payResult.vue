@@ -35,7 +35,7 @@
       <div class="btn-area">
         <sp-button class="btn1">查看订单</sp-button>
         <sp-button v-if="payStatus" class="btn2">返回首页</sp-button>
-        <sp-button v-else class="btn3">重新支付</sp-button>
+        <sp-button v-else class="btn3" @click="againPay">重新支付</sp-button>
       </div>
     </div>
     <div class="list"></div>
@@ -59,6 +59,9 @@ export default {
   methods: {
     onLeftClick() {
       this.$router.go(-1)
+    },
+    againPay() {
+      this.$router.replace('/pay/payType')
     },
   },
 }

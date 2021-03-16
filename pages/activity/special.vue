@@ -74,10 +74,18 @@
     <div class="container-body" :style="style.containerStyle">
       <div class="tabs-box">
         <ul class="tabs-box-items">
-          <li class="active">全部</li>
-          <li>99元封顶</li>
+          <li
+            v-for="(item, index) in tabs"
+            :key="index"
+            class="li-tab"
+            :class="{ active: index == nowIndex }"
+            @click="toggleTabs(index)"
+          >
+            {{ item }}
+          </li>
+          <!-- <li>99元封顶</li>
           <li>899元封顶</li>
-          <li>1999元封顶</li>
+          <li>1999元封顶</li> -->
         </ul>
       </div>
       <div class="body-content">
@@ -88,43 +96,45 @@
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <div
-              v-for="(item, index) in itemsData"
-              :key="index"
-              class="body-content-items"
-            >
-              <div class="left-content">
-                <div class="left-countdown">距离结束21:18:02</div>
-              </div>
-              <div class="right-content">
-                <p class="rc-top">
-                  <span class="rc-span">
-                    <span>{{ item.span1 }}</span>
-                    <span>{{ item.span2 }}</span>
-                  </span>
-                  <span>{{ item.content }}</span>
-                </p>
-                <div class="rc-middle">
-                  <div>{{ item.span3 }}</div>
-                  <div>{{ item.span4 }}</div>
-                  <div>{{ item.span5 }}</div>
+            <div v-for="(item, index) in itemsData" :key="index">
+              <div class="body-content-items">
+                <div class="left-content">
+                  <div class="left-countdown">
+                    距离结束{{ endTime.hour }}:{{ endTime.min }}:{{
+                      endTime.sec
+                    }}
+                  </div>
                 </div>
-                <div class="rc-bottom">
-                  <div class="rc-bottom-lf">
-                    <div class="rc-bottom-lf-my">
-                      <div>{{ item.beforeMoney }}</div>
-                      <div>元</div>
+                <div class="right-content">
+                  <p class="rc-top">
+                    <span class="rc-span">
+                      <span>{{ item.span1 }}</span>
+                      <span>{{ item.span2 }}</span>
+                    </span>
+                    <span>{{ item.content }}</span>
+                  </p>
+                  <div class="rc-middle">
+                    <div>{{ item.span3 }}</div>
+                    <div>{{ item.span4 }}</div>
+                    <div>{{ item.span5 }}</div>
+                  </div>
+                  <div class="rc-bottom">
+                    <div class="rc-bottom-lf">
+                      <div class="rc-bottom-lf-my">
+                        <div>{{ item.beforeMoney }}</div>
+                        <div>元</div>
+                      </div>
+                      <div class="bf-my">原价{{ item.money }}元</div>
                     </div>
-                    <div class="bf-my">原价{{ item.money }}元</div>
-                  </div>
-                  <div class="rc-bottom-rt">
-                    <div>去抢购</div>
-                    <div>已成交{{ item.dan }}单</div>
+                    <div class="rc-bottom-rt">
+                      <div>去抢购</div>
+                      <div>已成交{{ item.dan }}单</div>
+                    </div>
                   </div>
                 </div>
               </div>
+              <div class="line"></div>
             </div>
-            <div class="line"></div>
           </sp-list>
         </sp-pull-refresh>
       </div>
@@ -350,8 +360,8 @@
       padding-top: 32px;
       display: flex;
       justify-content: space-between;
-      li {
-        padding: 19px 24px;
+      .li-tab {
+        padding: 0 24px;
         background: #f5f5f5;
         border-radius: 32px;
         font-size: 26px;
@@ -362,22 +372,21 @@
         align-items: center;
         height: 64px;
       }
-      li.active {
-        padding: 17px 42px;
+      .active {
+        padding: 0 42px;
         font-size: 30px;
         font-weight: 500;
         color: #ffffff;
         line-height: 30px;
         background: #ec5330;
         font-family: PingFangSC-Medium, PingFang SC;
+        height: 64px;
       }
     }
     .body-content {
       .line {
-        width: 710px;
         height: 1px;
         background: #f4f4f4;
-        margin: 0 20px;
       }
       .body-content-items {
         display: flex;
@@ -563,8 +572,10 @@ export default {
   },
   data() {
     return {
+      nowIndex: 0,
       diff: 0,
       time: '',
+      endTime: '',
       iconLeft: 0.35,
       list: [],
       loading: false,
@@ -621,15 +632,21 @@ export default {
           dan: '335',
         },
       ],
+      tabs: ['全部', '99元封顶', '899元封顶', '1999元封顶'],
     }
   },
   mounted() {
     this.countDown(new Date().getTime() + 678900000)
+    this.endCountDown(new Date().getTime() + 60 * 60 * 24 * 1000)
   },
   beforeDestroy() {
     clearInterval(timer)
   },
   methods: {
+    toggleTabs(index) {
+      console.log('index', index)
+      this.nowIndex = index
+    },
     countDown(endTimeStamp) {
       const that = this
       const nowTimeStamp = new Date().getTime()
@@ -646,6 +663,27 @@ export default {
         if (sec < 10) sec = '0' + sec
         that.time = {
           day,
+          hour,
+          min,
+          sec,
+        }
+        that.diff--
+      }, 1000)
+      // 每执行一次定时器就减少一秒
+    },
+    endCountDown(timestamp) {
+      const that = this
+      const nowTimeStamp = new Date().getTime()
+      // 计算时间差 秒
+      this.diff = (timestamp - nowTimeStamp) / 1000
+      timer = setInterval(() => {
+        let hour = Math.floor(this.diff / 3600)
+        let min = Math.floor((this.diff - hour * 3600) / 60)
+        let sec = Math.floor(this.diff % 60)
+        if (hour < 10) hour = '0' + hour
+        if (min < 10) min = '0' + min
+        if (sec < 10) sec = '0' + sec
+        that.endTime = {
           hour,
           min,
           sec,
