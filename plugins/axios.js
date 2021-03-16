@@ -1,15 +1,11 @@
 import qs from 'qs'
 import { saveAxiosInstance } from '@/utils/request'
-
 import xToast from '@/components/common/spToast'
-
 const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
 const BASE = require('~/config/index.js')
-
 export default function ({ $axios, redirect, app, store }) {
   $axios.defaults.withCredentials = false
   $axios.defaults.timeout = 12000
-
   // 设置基本URL
   if (process.server) {
     $axios.defaults.baseURL = BASE.baseURL
@@ -26,27 +22,27 @@ export default function ({ $axios, redirect, app, store }) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
-      if (DGG_SERVER_ENV === 'development') {
-        // 本地根据自己的需求进行配置
-        // config.headers.sysCode = 'crisps-app-wap-bff-api'
-      } else {
-        // 在app正式上线未做负载前,此sysCode不修改
-        config.headers.sysCode = 'crisps-app-wap-bff-api'
-      }
-      if (
-        app.$cookies.get('token', {
-          path: '/',
-        })
-      ) {
-        config.headers['X-Auth-Token'] = app.$cookies.get('token', {
-          path: '/',
-        })
-        config.headers['X-Req-UserId'] = app.$cookies.get('userId', {
-          path: '/',
-        })
-      }
-      // config.headers['X-Auth-Token'] = '607991860798845556'
-      // config.headers['X-Req-UserId'] = '607991757719633892'
+      // if (DGG_SERVER_ENV === 'development') {
+      //   // 本地根据自己的需求进行配置
+      //   // config.headers.sysCode = 'crisps-app-wap-bff-api'
+      // } else {
+      //   // 在app正式上线未做负载前,此sysCode不修改
+      //   config.headers.sysCode = 'crisps-app-wap-bff-api'
+      // }
+      // if (
+      //   app.$cookies.get('token', {
+      //     path: '/',
+      //   })
+      // ) {
+      //   config.headers['X-Auth-Token'] = app.$cookies.get('token', {
+      //     path: '/',
+      //   })
+      //   config.headers['X-Req-UserId'] = app.$cookies.get('userId', {
+      //     path: '/',
+      //   })
+      // }
+      // config.headers['X-Auth-Token'] = '793798847155816293'
+      // config.headers['X-Req-UserId'] = '793798812796081931'
       config.headers['X-Auth-Token'] =
         app.$cookies.get('token') || store.state.user.token
       config.headers['X-Req-UserId'] =
