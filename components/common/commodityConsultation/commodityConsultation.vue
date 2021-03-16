@@ -149,6 +149,7 @@ export default {
       isApplets: (state) => state.app.isApplets,
     }),
   },
+  
   methods: {
     // 规划师详情跳转
     plannerInfoUrlJump(mchUserId) {

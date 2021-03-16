@@ -61,5 +61,12 @@ const planner = {
       url: CHIPS_WAP_BASE_URL + '/nk/planner/v1/tel.do',
     })
   },
+  newtel(params) {
+    return request({
+      params,
+      method: 'post',
+      url: CRM_MIDDLE_APP + '/yk/outbound/shupiancall/bind_hidden.do',
+    })
+  },
 }
 export default planner
