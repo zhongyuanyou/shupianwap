@@ -149,7 +149,7 @@ export default {
       isApplets: (state) => state.app.isApplets,
     }),
   },
-   async mounted() {
+  async mounted() {
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
     }
@@ -165,20 +165,33 @@ export default {
     // 拨打电话
     async handleTel(mchUserId) {
       try {
-        const telData = await planner.tel({
-          id: mchUserId,
-          sensitiveInfoType: 'MCH_USER',
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: mchUserId,
+          requireCode: '',
+          requireName: '',
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
         })
         // 解密电话
-        const tel = parseTel(telData.ciphertext)
-        if (this.isApplets) {
-          // 若是在小程序中
-          this.uni.makePhoneCall({
-            phoneNumber: tel, // 仅为示例
+        if (telData.status === 1) {
+          const tel = telData.phone
+          window.location.href = `tel://${tel}`
+        } else if (telData.status === 0) {
+          Toast({
+            message: '当前人员已禁用，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
           })
-          return
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
         }
-        window.location.href = `tel://${tel}`
       } catch (err) {
         Toast({
           message: '未获取到划师联系方式',
