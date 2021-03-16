@@ -165,6 +165,7 @@ import {
   Cell,
   Image,
   Tag,
+  Toast,
 } from '@chipspc/vant-dgg'
 
 import CoupleSelect from '@/components/common/coupleSelected/CoupleSelect'
@@ -457,26 +458,44 @@ export default {
 
     // 拨打电话号码
     uPCall(data) {
-      const { ciphertext } = data || {}
-      const telNumber = parseTel(ciphertext)
+      const ciphertext = data || {}
+      const telNumber = ciphertext.phone
+      if (ciphertext.status === 1) {
+        if (this.isInApp) {
+          this.$appFn.dgg_bindHiddenPhone(
+            { plannerId: ciphertext.mchUserId },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200) {
+                this.$xToast.show({
+                  message: '拨号失败！',
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+              }
+            }
+          )
+          return
+        }
+        callPhone(telNumber)
+      } else if (ciphertext.status === 0) {
+        Toast({
+          message: '当前人员已禁用，无法拨打电话',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+      } else if (ciphertext.status === 3) {
+        Toast({
+          message: '当前人员已离职，无法拨打电话',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+      }
       console.log('telNumber:', telNumber)
       // 如果当前页面在app中，则调用原生拨打电话的方法
-      if (this.isInApp) {
-        this.$appFn.dggCallPhone({ phone: telNumber }, (res) => {
-          const { code } = res || {}
-          if (code !== 200) {
-            this.$xToast.show({
-              message: '拨号失败！',
-              duration: 1000,
-              forbidClick: true,
-              icon: 'toast_ic_remind',
-            })
-          }
-        })
-        return
-      }
+
       // 浏览器中调用的
-      callPhone(telNumber)
     },
 
     // 发起聊天
