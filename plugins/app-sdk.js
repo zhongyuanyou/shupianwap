@@ -235,6 +235,12 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // 隐号拨打
+  dggBindHiddenPhone: (data = { plannerId: '' }, fn = () => {}) => {
+    Bridge.callHandler('dgg_bindHiddenPhone', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
 }
 
 // 注册APP调用的js方法
