@@ -115,7 +115,7 @@ export default {
     },
   },
   head: {
-    title: '商品详情',
+    title: '商品列表',
     meta: [{ name: 'spptmd-track_code', content: 'SPW000011' }],
   },
 }
