@@ -156,7 +156,7 @@ export default {
     // 拨打电话
     async handleTel(mchUserId) {
       try {
-        const telData = await planner.tel({
+        const telData = await planner.newtel({
           id: mchUserId,
           sensitiveInfoType: 'MCH_USER',
         })

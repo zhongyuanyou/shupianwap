@@ -8,7 +8,7 @@
  */
 'use strict'
 
-import { CHIPS_WAP_BASE_URL } from '../config/constant'
+import { CHIPS_WAP_BASE_URL, CRM_MIDDLE_APP } from '../config/constant'
 
 import { request } from '@/utils/request'
 
@@ -59,6 +59,13 @@ const planner = {
     return request({
       params,
       url: CHIPS_WAP_BASE_URL + '/nk/planner/v1/tel.do',
+    })
+  },
+  newtel(params) {
+    console.log(params, 111)
+    return request({
+      params,
+      url: CRM_MIDDLE_APP + '/yk/outbound/shupiancall/bind_hidden.do',
     })
   },
 }
