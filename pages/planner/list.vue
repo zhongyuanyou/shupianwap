@@ -388,7 +388,24 @@ export default {
           break
         case 'tel':
           console.log('想打电话：', data)
-          this.uPCall(data)
+          if (this.isInApp) {
+            this.$appFn.dggBindHiddenPhone(
+              { plannerId: data.mchUserId },
+              (res) => {
+                const { code } = res || {}
+                if (code !== 200) {
+                  this.$xToast.show({
+                    message: '拨号失败！',
+                    duration: 1000,
+                    forbidClick: true,
+                    icon: 'toast_ic_remind',
+                  })
+                }
+              }
+            )
+          } else {
+            this.uPCall(data)
+          }
           break
         case 'detail':
           console.log('看看详情：', data)
