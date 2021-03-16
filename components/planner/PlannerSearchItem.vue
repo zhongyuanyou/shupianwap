@@ -102,6 +102,14 @@ export default {
       const formatData = this.itemData.tagList.slice(0, 5)
       return formatData
     },
+    city() {
+      return this.$store.state.city.currentCity
+    },
+  },
+  async mounted() {
+    if (!this.city.code) {
+      await this.POSITION_CITY({ type: 'init' })
+    }
   },
   methods: {
     async handleClick(type) {
@@ -126,10 +134,16 @@ export default {
       }
     },
     async getTel() {
-      const params = { id: this.itemData.mchUserId }
+      const params = {
+        areaCode: this.city.code,
+        areaName: this.city.name,
+        customerUserId: this.$store.state.user.userId,
+        plannerId: this.itemData.mchUserId,
+        requireCode: '',
+        requireName: '',
+      }
       try {
-        const data = await planner.tel(params)
-        console.log(data)
+        const data = await planner.newtel(params)
         return data
       } catch (error) {
         console.error('getTel:', error)

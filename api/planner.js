@@ -62,9 +62,9 @@ const planner = {
     })
   },
   newtel(params) {
-    console.log(params, 111)
     return request({
       params,
+      method: 'post',
       url: CRM_MIDDLE_APP + '/yk/outbound/shupiancall/bind_hidden.do',
     })
   },

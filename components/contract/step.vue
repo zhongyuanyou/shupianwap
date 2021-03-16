@@ -57,7 +57,7 @@ export default {
       },
     },
     istitle: {
-      type: String,
+      type: Boolean,
       default() {
         return false
       },
