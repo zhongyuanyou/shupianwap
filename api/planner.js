@@ -8,7 +8,7 @@
  */
 'use strict'
 
-import { CHIPS_WAP_BASE_URL } from '../config/constant'
+import { CHIPS_WAP_BASE_URL, CRM_MIDDLE_APP } from '../config/constant'
 
 import { request } from '@/utils/request'
 
