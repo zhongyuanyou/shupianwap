@@ -458,11 +458,12 @@ export default {
 
     // 拨打电话号码
     uPCall(data) {
+      console.log(this.$appFn, 1111)
       const ciphertext = data || {}
       const telNumber = ciphertext.phone
       if (ciphertext.status === 1) {
         if (this.isInApp) {
-          this.$appFn.dgg_bindHiddenPhone(
+          this.$appFn.dggBindHiddenPhone(
             { plannerId: ciphertext.mchUserId },
             (res) => {
               const { code } = res || {}

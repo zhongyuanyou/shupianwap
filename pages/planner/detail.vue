@@ -204,6 +204,7 @@ import {
   Bottombar,
   BottombarButton,
   ShareSheet,
+  Toast,
 } from '@chipspc/vant-dgg'
 
 import Header from '@/components/common/head/header'
@@ -287,6 +288,9 @@ export default {
       }
       return true
     },
+    city() {
+      return this.$store.state.city.currentCity
+    },
   },
   created() {
     if (process && process.client) {
@@ -299,6 +303,11 @@ export default {
       this.getDetail().finally(() => {
         this.loading = false
       })
+    }
+  },
+  async mounted() {
+    if (!this.city.code) {
+      await this.POSITION_CITY({ type: 'init' })
     }
   },
   methods: {
@@ -315,8 +324,45 @@ export default {
       this.uPShareOption()
     },
     handleCall() {
-      console.log('call ')
-      this.uPCall(this.detailData.phone)
+      this.bindhidden()
+    },
+    async bindhidden() {
+      try {
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: this.detailData.id,
+          requireCode: '',
+          requireName: '',
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+        })
+        // 解密电话
+        if (telData.status === 1) {
+          this.uPCall(telData)
+        } else if (telData.status === 0) {
+          Toast({
+            message: '当前人员已禁用，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+          return ''
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+          return ''
+        }
+      } catch (err) {
+        Toast({
+          message: '未获取到划师联系方式',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+      }
     },
     handleIM() {
       console.log('IM ')
@@ -396,14 +442,17 @@ export default {
     uPCall(telNumber) {
       // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
-        this.$appFn.dggCallPhone({ phone: telNumber }, (res) => {
-          const { code } = res || {}
-          if (code !== 200) this.$xToast.error('拨号失败！')
-        })
+        this.$appFn.dggBindHiddenPhone(
+          { plannerId: telNumber.mchUserId },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) this.$xToast.error('拨号失败！')
+          }
+        )
         return
       }
       // 浏览器中调用的
-      callPhone(telNumber)
+      callPhone(telNumber.phone)
     },
 
     // 发起聊天
