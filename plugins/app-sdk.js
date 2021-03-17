@@ -121,12 +121,12 @@ const appHandler = {
     data = { iOSRouter: '', androidRouter: '', miniRouter: '' },
     fn = () => {}
   ) => {
-    if (miniProgram) {
-      uni.navigateTo({
-        url: data.miniRouter,
-      })
-      return
-    }
+    // if (miniProgram) {
+    //   uni.navigateTo({
+    //     url: data.miniRouter,
+    //   })
+    //   return
+    // }
     Bridge.callHandler('dgg_jumpRoute', data, (res) => {
       handleRequest(res, fn)
     })
