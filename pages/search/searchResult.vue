@@ -237,6 +237,7 @@ export default {
     },
   },
   head: {
+    title: '搜索',
     meta: [{ name: 'spptmd-track_code', content: 'SPW000006' }],
   },
 }
