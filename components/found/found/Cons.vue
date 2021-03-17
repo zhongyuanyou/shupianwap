@@ -188,29 +188,60 @@ export default {
       if (this.isInApp || this.isApplets) {
         let url = ''
         let hide = 0
+        if (this.isApplets) {
+          this.loadingCenter = true
+        }
         switch (item.linkType) {
           // 跳转文章详情
           case 1:
             url = `${domainUrl}found/detail/${item.id}`
             hide = 1
+            if (this.isApplets) {
+              this.uni.navigateTo({
+                url:
+                  '/pages/common_son/webview/index?id=' +
+                  item.id +
+                  '&dt=true&url=found/detail',
+              })
+            }
             break
           // 跳转内链
           case 2:
             url = `${item.wapRoute}`
             hide = 0
             this.$appFn.dggSetTitle({ title: '' }, () => {})
+            if (this.isApplets) {
+              this.uni.navigateTo({
+                url:
+                  '/pages/common_son/webview/index?id=' +
+                  item.id +
+                  '&dt=true&url=found/detail',
+              })
+            }
             break
           // 跳转外链
           case 3:
             url = item.link
             hide = 0
             this.$appFn.dggSetTitle({ title: '' }, () => {})
+            if (this.isApplets) {
+              this.uni.navigateTo({
+                url: '/pages/common_son/link/outLink?url=' + item.link,
+              })
+            }
             break
           // 跳转图片链接
           case 4:
             url = item.jumpImageUrl
             hide = 0
             this.$appFn.dggSetTitle({ title: '' }, () => {})
+            alert(123)
+            if (this.isApplets) {
+              this.uni.navigateTo({
+                url:
+                  '/pages/common_son/link/imgLink?imgUrl=' + item.jumpImageUrl,
+              })
+            }
             break
           default:
             url = `${domainUrl}found/detail/${item.id}`
@@ -229,25 +260,23 @@ export default {
           '","isHideNav":' +
           hide +
           ',"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
-        let miniRouter = ''
         if (this.isApplets) {
-          // 若在小程序中
-          miniRouter =
-            '/pages/common_son/webview/index?id=' +
-            item.id +
-            '&dt=true&url=found/detail'
-          this.loadingCenter = true
-          // miniRouter =
-          //   '/pages/common_son/webview/index?type=23123&productId=4234234&url=detail/transactionDetails'
+          this.uni.navigateTo({
+            url:
+              '/pages/common_son/webview/index?id=' +
+              item.id +
+              '&dt=true&url=found/detail',
+          })
         }
-        this.$appFn.dggJumpRoute(
-          {
-            iOSRouter: iosRouter,
-            androidRouter: adRouter,
-            miniRouter,
-          },
-          (res) => {}
-        )
+        if (this.isInApp) {
+          this.$appFn.dggJumpRoute(
+            {
+              iOSRouter: iosRouter,
+              androidRouter: adRouter,
+            },
+            (res) => {}
+          )
+        }
         return
       }
       // linkType跳转链接类型 1、跳转文章详情,2、跳转内链,3、跳转外链,4、跳转图片链接
