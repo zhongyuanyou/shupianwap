@@ -9,7 +9,7 @@
 
 <template>
   <div class="list">
-    <div v-if="!isApplets" ref="head" class="head">
+    <div ref="head" class="head">
       <Header v-if="!isApplets" title="在线直选规划师">
         <template #left>
           <my-icon
@@ -310,9 +310,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      if (!this.isApplets) {
-        this.headHeight = this.$refs.head.clientHeight
-      }
+      this.headHeight = this.$refs.head.clientHeight
     })
   },
   methods: {
