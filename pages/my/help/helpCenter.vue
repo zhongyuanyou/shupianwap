@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <Header title="帮助中心">
+    <Header v-if="isAppLets" title="帮助中心">
       <template #left>
         <div @click="back">
           <my-icon
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import { Search, Cell, CellGroup, TopNavBar, Sticky } from '@chipspc/vant-dgg'
 import {
   PLATFORM_CODE,
@@ -98,6 +98,11 @@ export default {
       searchResult: [],
       noData: false,
     }
+  },
+  computed: {
+    ...mapState({
+      isAppLets: (state) => state.app.isAppLets,
+    }),
   },
   watch: {
     $route(to, from) {
@@ -180,6 +185,11 @@ export default {
       }
       this.$router.back()
     },
+  },
+  head() {
+    return {
+      title: '帮助中心',
+    }
   },
 }
 </script>
