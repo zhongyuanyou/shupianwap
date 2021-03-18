@@ -260,14 +260,14 @@ export default {
           '","isHideNav":' +
           hide +
           ',"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
-        if (this.isApplets) {
-          this.uni.navigateTo({
-            url:
-              '/pages/common_son/webview/index?id=' +
-              item.id +
-              '&dt=true&url=found/detail',
-          })
-        }
+        // if (this.isApplets) {
+        //   this.uni.navigateTo({
+        //     url:
+        //       '/pages/common_son/webview/index?id=' +
+        //       item.id +
+        //       '&dt=true&url=found/detail',
+        //   })
+        // }
         if (this.isInApp) {
           this.$appFn.dggJumpRoute(
             {
