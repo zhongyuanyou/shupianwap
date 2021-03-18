@@ -283,7 +283,12 @@ export default {
         sortType: matched.type,
         value: matched.sortValue,
       }
-      const code = region.name === '区域' ? this.currentCity.code : region.code
+      const code =
+        region.name === '区域'
+          ? this.isApplets
+            ? this.code
+            : this.currentCity.code
+          : region.code
       const regionDto = {
         codeState: region.name === '区域' ? 2 : 3,
         regions: [code],
