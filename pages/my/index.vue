@@ -14,8 +14,8 @@
         />
         <p class="txt" @click="handleClickLogin">
           {{
-            userId && info.nickName
-              ? '欢迎你，' + info.nickName || ''
+            (userId && info.nickName) || userName
+              ? '欢迎你，' + info.nickName || userName || ''
               : '登录/注册'
           }}
         </p>
@@ -217,16 +217,21 @@ export default {
     ...mapState({
       userId: (state) => state.user.userInfo.userId,
       token: (state) => state.user.userInfo.token,
+      userPhone: (state) => state.user.userInfo.userPhone,
     }),
+    userName() {
+      return this.$store.state.user.userInfo.userName
+    },
     avatar() {
       return GOODSLIST
     },
   },
   mounted() {
-    if (this.userId) {
+    if (this.userId || this.$cookies.get('token')) {
       this.getUserInfo()
     }
   },
+
   methods: {
     coupon() {
       this.$router.push('/my/coupon/coupon')
@@ -255,7 +260,7 @@ export default {
       try {
         const params = {
           // id: this.userId,
-          id: this.userId,
+          id: this.userId || this.$cookies.get('userId'),
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false
