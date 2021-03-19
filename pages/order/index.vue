@@ -464,6 +464,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.btn-car {
+  margin-right: 20px;
+}
 .order-page {
   min-height: 100%;
   background: #f5f5f5;
