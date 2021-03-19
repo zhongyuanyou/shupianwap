@@ -39,6 +39,36 @@
       </div>
     </div>
     <div class="list"></div>
+    <div class="body_container">
+      <div class="recommend">为你推荐</div>
+      <div class="recommend_list">
+        <div
+          v-for="(item, index) in itemsData"
+          :key="index"
+          class="recommend_item"
+        >
+          <div class="item_lf">
+            <div class="hot">{{ item.span1 }}</div>
+          </div>
+          <div class="item_rt">
+            <div class="item_title">{{ item.title }}</div>
+            <div class="item_span">
+              <span>{{ item.span2 }}</span>
+              <span>{{ item.span3 }}</span>
+              <span>{{ item.span4 }}</span>
+            </div>
+            <div class="item_content">
+              顶呱呱集团专业会计师团队代账，服务快...
+            </div>
+            <div class="item_money">
+              <div class="money_num">{{ item.money }}</div>
+              <div class="money_icon">元</div>
+              <div class="sale_num">半年销量 {{ item.sold_num }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -51,6 +81,35 @@ export default {
   data() {
     return {
       payStatus: false,
+      itemsData: [
+        {
+          span1: '热卖',
+          title: '0元购小规模代理记账',
+          span2: '极速办理',
+          span3: '官方保障',
+          span4: '专业高效',
+          money: '1500',
+          sold_num: '123541',
+        },
+        {
+          span1: '热卖',
+          title: '四川省成都市*****科技有限公司',
+          span2: '极速办理',
+          span3: '官方保障',
+          span4: '专业高效',
+          money: '1500',
+          sold_num: '123541',
+        },
+        {
+          span1: '热卖',
+          title: '0元购小规模代理记账',
+          span2: '极速办理',
+          span3: '官方保障',
+          span4: '专业高效',
+          money: '1500',
+          sold_num: '123541',
+        },
+      ],
     }
   },
   mounted() {
@@ -98,7 +157,7 @@ export default {
   .btn-area {
     display: flex;
     justify-content: space-between;
-    margin: 40px auto 80px auto;
+    margin: 40px auto 0 auto;
     width: 60%;
     height: 120px;
     .sp-button {
@@ -124,6 +183,126 @@ export default {
       border-radius: 4px;
       color: #ffffff;
       border: none;
+    }
+  }
+}
+.body_container {
+  padding: 48px 40px 0 40px;
+  .recommend {
+    font-size: 40px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #222222;
+    margin-bottom: 7px;
+  }
+  .recommend_item {
+    display: flex;
+    justify-content: flex-start;
+    padding: 32px 0;
+    .item_lf {
+      width: 160px;
+      height: 160px;
+      background: red;
+      border-radius: 8px;
+      position: relative;
+      margin-right: 32px;
+      .hot {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 44px;
+        background: #fa5741;
+        border-radius: 8px 0px 8px 0px;
+        font-size: 22px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #ffffff;
+        line-height: 44px;
+        padding: 0 13px;
+      }
+    }
+    .item_rt {
+      flex: 1;
+      .item_title {
+        width: 401px;
+        font-size: 32px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #222222;
+        margin-bottom: 15px;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        overflow: hidden;
+        white-space: nowrap;
+        height: 32px;
+        line-height: 32px;
+      }
+      .item_span {
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 15px;
+        line-height: 28px;
+        height: 28px;
+        span {
+          background: #f0f2f5;
+          border-radius: 4px;
+          padding: 0 5px;
+          margin-right: 14px;
+          font-size: 20px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          color: #5c7499;
+          // line-height: 28px;
+        }
+      }
+      .item_content {
+        width: 411px;
+        font-size: 22px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #222222;
+        margin-bottom: 18px;
+        height: 23px;
+        line-height: 23px;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .item_money {
+        display: flex;
+        // justify-content: center;
+        align-items: center;
+        .money_num {
+          height: 24px;
+          font-size: 30px;
+          font-family: PingFang SC;
+          font-weight: bold;
+          color: #ec5330;
+          line-height: 24px;
+        }
+        .money_icon {
+          // width: 21px;
+          // height: 19px;
+          height: 22px;
+          font-size: 22px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          color: #ec5330;
+          line-height: 22px;
+          margin: 4px 0 0 4px;
+        }
+        .sale_num {
+          height: 22px;
+          font-size: 22px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          color: #999999;
+          line-height: 22px;
+          margin-left: 18px;
+          margin-top: 2px;
+        }
+      }
     }
   }
 }

@@ -402,7 +402,7 @@ export default {
       console.log(name, title)
     },
     toCar() {
-      this.$router.push('../shoppingCar/')
+      this.$router.push('../shopCart/')
     },
     handleClickItem(type, order) {
       this.selectedOrder = order
