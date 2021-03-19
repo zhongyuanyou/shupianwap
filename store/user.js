@@ -53,27 +53,28 @@ export const mutations = {
     this.$cookies.set('userNo', data.no, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('userName', data.nickName, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('userPhone', data.fullName, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('userPhoneFull', data.mainAccountFull, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     state.userNo = data.no
     state.userName = data.nickName
     state.userPhone = data.fullName
-    state.userPhoneFull = data.mainAccountFull
+    state.userPhoneFull =
+      data.mainAccountFull || this.$cookies.get('userPhoneFull')
   },
 }
 
