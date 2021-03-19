@@ -15,7 +15,7 @@
         <p class="txt" @click="handleClickLogin">
           {{
             (userId && info.nickName) || userName
-              ? '欢迎你，' + info.nickName || userName || ''
+              ? '欢迎你，' + userName || info.nickName || ''
               : '登录/注册'
           }}
         </p>
@@ -211,6 +211,7 @@ export default {
         title: '确定退出吗？',
       },
       loading: false,
+      userName: '',
     }
   },
   computed: {
@@ -219,15 +220,13 @@ export default {
       token: (state) => state.user.userInfo.token,
       userPhone: (state) => state.user.userInfo.userPhone,
     }),
-    userName() {
-      return this.$store.state.user.userInfo.userName
-    },
     avatar() {
       return GOODSLIST
     },
   },
   mounted() {
     if (this.userId || this.$cookies.get('token')) {
+      this.userName = this.$cookies.get('userName')
       this.getUserInfo()
     }
   },
