@@ -121,7 +121,7 @@ const appHandler = {
     data = { iOSRouter: '', androidRouter: '', miniRouter: '' },
     fn = () => {}
   ) => {
-    if (miniProgram) {
+    if (miniProgram && data.miniRouter) {
       uni.navigateTo({
         url: data.miniRouter,
       })

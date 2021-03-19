@@ -144,7 +144,13 @@ export default {
   methods: {
     // 取消
     clooseHandle() {
-      this.$router.back()
+      if (this.isApplets) {
+        this.uni.navigateBack({
+          delta: 1,
+        })
+      } else {
+        this.$router.back()
+      }
     },
     keyClickHandle() {
       const data = {

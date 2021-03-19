@@ -216,6 +216,7 @@ export default {
 .detail {
   /deep/ img {
     max-width: 100%;
+    height: auto;
   }
   /deep/ p {
     word-wrap: break-word;
