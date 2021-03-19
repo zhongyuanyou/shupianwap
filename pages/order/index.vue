@@ -1,6 +1,10 @@
 <template>
   <div class="order-page">
-    <Header v-if="!isInApp && !isApplets" title="我的订单" :hide-back="true" />
+    <Header v-if="!isInApp && !isApplets" title="我的订单" :hide-back="true">
+      <template #right>
+        <div class="btn-car" @click="toCar">购物车</div>
+      </template>
+    </Header>
     <div
       class="top-nav"
       :style="{ top: !isInApp && !isApplets ? '44px' : '0' }"
@@ -396,6 +400,9 @@ export default {
   methods: {
     changeTab(name, title) {
       console.log(name, title)
+    },
+    toCar() {
+      this.$router.push('../shoppingCar/')
     },
     handleClickItem(type, order) {
       this.selectedOrder = order

@@ -71,6 +71,7 @@
 // 有关联订单时的取消订单和支付提示弹窗
 // 关联订单提示弹窗
 import { Popup, Button, RadioGroup, Radio, Cell } from '@chipspc/vant-dgg'
+import { dict } from '@/api/index'
 let timer
 export default {
   components: {
@@ -196,24 +197,20 @@ export default {
       modalType: 1,
       reasonList: [
         {
-          code: '031131',
-          name: '价格有点贵',
+          code: 'DONT_NEED',
+          name: '用户不需要了',
         },
         {
-          code: '031132',
-          name: '款式/规格/数量拍错',
+          code: 'WRONG_PRO_CHOOSE',
+          name: '产品选择错误',
         },
         {
-          code: '031133',
-          name: '价格有点贵',
+          code: 'ORDER_REPEAT',
+          name: '重复下单',
         },
         {
-          code: '031134',
-          name: '价格有点贵',
-        },
-        {
-          code: '031135',
-          name: '价格有点贵5',
+          code: 'ORTHER_REASON',
+          name: '其他原因',
         },
       ],
       form: {
@@ -237,10 +234,27 @@ export default {
       return this.modalType === 1 ? ' 确定取消' : '立即支付'
     },
   },
+  mounted() {
+    this.getData()
+  },
   beforeDestroy() {
     if (timer) clearTimeout(timer)
   },
   methods: {
+    // 获取取消原因
+    async getData() {
+      try {
+        const data = await dict.findCmsCode(
+          { axios: this.$axios },
+          {
+            code: 'CUS_ORDER_CANCEL_REASON',
+          }
+        )
+        this.reasonList = data
+      } catch (error) {
+        this.reasonList = []
+      }
+    },
     submit() {
       if (this.modalType === 1) {
         // 取消订单
