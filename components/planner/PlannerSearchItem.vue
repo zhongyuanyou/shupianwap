@@ -156,7 +156,9 @@ export default {
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
           plannerId: this.itemData.mchUserId,
-          customerPhone: this.$store.state.user.userPhoneFull,
+          customerPhone:
+            this.$store.state.user.userPhoneFull ||
+            this.$cookies.get('userPhoneFull'),
           requireCode: '',
           requireName: '',
         }
