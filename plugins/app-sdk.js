@@ -250,7 +250,10 @@ const appHandler = {
     })
   },
   // 隐号拨打
-  dggBindHiddenPhone: (data = { plannerId: '' }, fn = () => {}) => {
+  dggBindHiddenPhone: (
+    data = { plannerId: '', requireCode: '', requireName: '' },
+    fn = () => {}
+  ) => {
     Bridge.callHandler('dgg_bindHiddenPhone', data, (res) => {
       handleRequest(res, fn)
     })

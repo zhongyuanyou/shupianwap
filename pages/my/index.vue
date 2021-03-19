@@ -22,6 +22,63 @@
       </div>
     </div>
     <!--E 顶部-->
+    <!--S 我的订单-->
+    <div class="my_order">
+      <div class="my_order_title">我的订单</div>
+      <div class="my_order_type">
+        <div class="my_order_type_list">
+          <div class="icon">
+            <my-icon
+              name="per_ic_payment"
+              color="#4E78F5"
+              size="0.44rem"
+            ></my-icon>
+          </div>
+          <div class="order_text">待付款</div>
+        </div>
+        <div class="my_order_type_list">
+          <div class="icon">
+            <my-icon
+              name="per_ic_handle"
+              color="#4E78F5"
+              size="0.44rem"
+            ></my-icon>
+          </div>
+          <div class="order_text">办理中</div>
+        </div>
+        <div class="my_order_type_list">
+          <div class="icon">
+            <my-icon
+              name="per_ic_complete"
+              color="#4E78F5"
+              size="0.44rem"
+            ></my-icon>
+          </div>
+          <div class="order_text">已完成</div>
+        </div>
+        <div class="my_order_type_list">
+          <div class="icon">
+            <my-icon
+              name="per_ic_cancel"
+              color="#4E78F5"
+              size="0.44rem"
+            ></my-icon>
+          </div>
+          <div class="order_text">已取消</div>
+        </div>
+        <div class="my_order_type_list">
+          <div class="icon">
+            <my-icon
+              name="per_ic_whole"
+              color="#4E78F5"
+              size="0.44rem"
+            ></my-icon>
+          </div>
+          <div class="order_text">全部订单</div>
+        </div>
+      </div>
+    </div>
+    <!--E 我的订单-->
     <!--S 按钮区-->
     <div class="my_btns">
       <!--      <div class="my_btns_item" @click="handleClick(0)">-->
@@ -36,23 +93,75 @@
       <!--        </div>-->
       <!--        <div class="my_btns_item_con">我要合作</div>-->
       <!--      </div>-->
+      <div class="my_btns_item" @click="handleClick(1)">
+        <div class="my_btns_item_icon">
+          <my-icon
+            name="personal_ic_authenticate"
+            size="0.36rem"
+            color="#00B365"
+          />
+        </div>
+        <div class="my_btns_item_con">
+          实名认证
+
+          <div class="item_lf">
+            <span>已认证</span>
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
       <div class="my_btns_item" @click="handleClick(2)">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_help" size="0.36rem" color="#00B365" />
         </div>
-        <div class="my_btns_item_con">帮助中心</div>
+        <div class="my_btns_item_con">
+          帮助中心
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
       </div>
       <div class="my_btns_item" @click="handleClick(3)">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_debunk" size="0.36rem" color="#10BBB8" />
         </div>
-        <div class="my_btns_item_con">我要吐槽</div>
+        <div class="my_btns_item_con">
+          我要吐槽
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
       </div>
       <div class="my_btns_item" @click="handleClick(4)">
         <div class="my_btns_item_icon">
           <my-icon name="per_ic_about" size="0.36rem" color="#4974F5" />
         </div>
-        <div class="my_btns_item_con no_line">关于我们</div>
+        <div class="my_btns_item_con no_line">
+          关于我们
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <!--S 按钮区-->
@@ -149,6 +258,7 @@ export default {
         this.loading = false
         if (res.code === 200 && res.data && typeof res.data === 'object') {
           this.info = res.data
+          this.$store.dispatch('user/setInfo', res.data)
         } else {
           // 清除用户缓存信息
           this.$store.dispatch('user/clearUser')
@@ -220,6 +330,41 @@ export default {
       }
     }
   }
+  &_order {
+    height: 240px;
+    padding: 0 40px;
+    margin-top: 25px;
+    background: #ffffff;
+    &_title {
+      font-size: 40px;
+      font-family: PingFang-SC-Bold, PingFang-SC;
+      font-weight: bold;
+      color: #1a1a1a;
+      padding: 32px 0;
+    }
+    &_type {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &_list {
+        text-align: center;
+        .icon {
+          height: 44px;
+          line-height: 44px;
+          display: flex;
+          justify-content: center;
+        }
+        .order_text {
+          font-size: 24px;
+          font-family: PingFang-SC-Bold, PingFang-SC;
+          font-weight: bold;
+          color: #222222;
+          line-height: 24px;
+          padding-top: 20px;
+        }
+      }
+    }
+  }
   &_btns {
     width: 100%;
     border-bottom: 1px solid rgba(205, 205, 205, 0.5);
@@ -254,6 +399,22 @@ export default {
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
         color: #1a1a1a;
+        display: flex;
+        justify-content: space-between;
+        .item_lf {
+          display: flex;
+          padding-right: 40px;
+          span {
+            padding-right: 8px;
+            font-size: 28px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #999999;
+          }
+          .myIcon {
+            color: #cccccc;
+          }
+        }
       }
     }
   }
@@ -263,6 +424,9 @@ export default {
     /deep/ .sp-button {
       width: 100%;
     }
+  }
+  .spiconfont {
+    display: block;
   }
 }
 </style>

@@ -164,6 +164,11 @@ export default {
       return this.$store.state.city.currentCity
     },
   },
+  async mounted() {
+    if (!this.city.code) {
+      await this.POSITION_CITY({ type: 'init' })
+    }
+  },
   methods: {
     // 规划师详情跳转
     plannerInfoUrlJump(mchUserId) {
@@ -174,13 +179,32 @@ export default {
     },
     async handleTel(mchUserId) {
       try {
-        const telData = await planner.tel({
-          id: mchUserId,
-          sensitiveInfoType: 'MCH_USER',
+        const telData = await planner.newtel({
+          areaCode: this.city.code,
+          areaName: this.city.name,
+          customerUserId: this.$store.state.user.userId,
+          plannerId: mchUserId,
+          customerPhone: this.$store.state.user.userPhoneFull,
+          requireCode: '',
+          requireName: '',
         })
         // 解密电话
-        const tel = parseTel(telData.ciphertext)
-        window.location.href = `tel://${tel}`
+        if (telData.status === 1) {
+          const tel = telData.phone
+          window.location.href = `tel://${tel}`
+        } else if (telData.status === 0) {
+          Toast({
+            message: '当前人员已禁用，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+        } else if (telData.status === 3) {
+          Toast({
+            message: '当前人员已离职，无法拨打电话',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
+        }
       } catch (err) {
         Toast({
           message: '未获取到划师联系方式',

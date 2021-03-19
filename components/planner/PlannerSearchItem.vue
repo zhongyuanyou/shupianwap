@@ -70,7 +70,7 @@ import { Button, Image, Tag } from '@chipspc/vant-dgg'
 
 import { mapState } from 'vuex'
 import { planner } from '@/api'
-
+import { parseTel } from '~/utils/common'
 export default {
   name: 'PlannerSearchItem',
   components: {
@@ -133,7 +133,11 @@ export default {
     async getTel() {
       if (this.isInApp) {
         this.$appFn.dggBindHiddenPhone(
-          { plannerId: this.itemData.mchUserId },
+          {
+            plannerId: this.itemData.mchUserId,
+            requireCode: '',
+            requireName: '',
+          },
           (res) => {
             const { code } = res || {}
             if (code !== 200) {
@@ -152,6 +156,7 @@ export default {
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
           plannerId: this.itemData.mchUserId,
+          customerPhone: this.$store.state.user.userPhoneFull,
           requireCode: '',
           requireName: '',
         }

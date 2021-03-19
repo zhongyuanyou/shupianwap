@@ -1,16 +1,11 @@
 import qs from 'qs'
-import Vue from 'vue'
 import { saveAxiosInstance } from '@/utils/request'
 import xToast from '@/components/common/spToast'
-// import uni from '@/plugins/uni'
-
 const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
 const BASE = require('~/config/index.js')
-
 export default function ({ $axios, redirect, app, store }) {
   $axios.defaults.withCredentials = false
   $axios.defaults.timeout = 12000
-
   // 设置基本URL
   if (process.server) {
     $axios.defaults.baseURL = BASE.baseURL
@@ -29,7 +24,7 @@ export default function ({ $axios, redirect, app, store }) {
       config.params = config.params || {}
       if (DGG_SERVER_ENV === 'development') {
         // 本地根据自己的需求进行配置
-        config.headers.sysCode = 'zky-api'
+        config.headers.sysCode = 'crisps-app-wap-bff-api'
       } else {
         // 在app正式上线未做负载前,此sysCode不修改
         config.headers.sysCode = 'crisps-app-wap-bff-api'
@@ -48,7 +43,16 @@ export default function ({ $axios, redirect, app, store }) {
       }
       // config.headers['X-Auth-Token'] = '607991860798845556'
       // config.headers['X-Req-UserId'] = '607991757719633892'
-
+      config.headers['X-Auth-Token'] =
+        app.$cookies.get('token') || store.state.user.token
+      config.headers['X-Req-UserId'] =
+        app.$cookies.get('userId') || store.state.user.userId
+      config.headers['X-Req-UserNo'] =
+        app.$cookies.get('userNo') || store.state.user.userNo
+      config.headers['X-Req-UserName'] =
+        app.$cookies.get('userName') || store.state.user.userName
+      config.headers['X-Req-UserPhone'] =
+        app.$cookies.get('userPhone') || store.state.user.userPhone
       // 请求头设置站点code
       const cityCode = app.$cookies.get('currentCity', {
         path: '/',
@@ -74,12 +78,7 @@ export default function ({ $axios, redirect, app, store }) {
         // 清空登录信息
         store.commit('user/CLEAR_USER')
         if (!store.state.app.isInApp) {
-          if (store.state.app.isApplets) {
-            // const uni = Vue.prototype.uni
-            // uni.navigateTo({
-            //   url: '/pages/my_son/login/wxLogin',
-            // })
-          } else if (process && process.client) {
+          if (process && process.client) {
             xToast.error('登录失效，请重新登录')
             setTimeout(() => {
               redirect('/my')
