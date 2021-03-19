@@ -26,6 +26,7 @@
         <sp-button v-if="type === 1" class="add_cart" @click="addCart">
           加入购物车
         </sp-button>
+
         <sp-button
           v-if="[2, 3].includes(type)"
           class="consulting"

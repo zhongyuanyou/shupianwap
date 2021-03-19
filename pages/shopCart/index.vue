@@ -114,14 +114,14 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import { TopNavBar, Button, PullRefresh, List } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 
-import GoodsItem from '@/components/shoppingCar/GoodsItem'
+import GoodsItem from '@/components/shopCart/GoodsItem'
 import Bottombar from '@/components/shoppingCar/Bottombar'
 import GoodsPopup from '@/components/shoppingCar/GoodsPopup'
 import ShoppingCarNull from '@/components/shoppingCar/ShoppingCarNull'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 
-import { shoppingCar } from '@/api'
+import { shopCart } from '@/api'
 
 const shoppingCarStatusList = {
   completed: '完成',
@@ -129,7 +129,7 @@ const shoppingCarStatusList = {
 }
 
 export default {
-  name: 'ShoppingCar',
+  name: 'ShopCart',
   layout: 'keepAlive',
   components: {
     [TopNavBar.name]: TopNavBar,
@@ -554,7 +554,7 @@ export default {
     async getList() {
       try {
         const userId = this.userInfo.userId
-        let data = await shoppingCar.list({ userId })
+        let data = await shopCart.list({ userId })
         console.log(data)
         if (!Array.isArray(data)) data = []
         return data
@@ -601,7 +601,7 @@ export default {
           createrId: userId,
           type,
         }
-        let data = await shoppingCar.update({ ...defalutParams, ...params })
+        let data = await shopCart.update({ ...defalutParams, ...params })
         console.log(data)
         data = data || {}
         const { total, totalCount } = data

@@ -1,5 +1,6 @@
 import auth from './auth'
 import shoppingCar from './shoppingCar'
+import shopCart from './shopCart'
 import consult from './consult'
 import planner from './planner'
 import category from './category'
@@ -38,3 +39,4 @@ export { recommendApi }
 export { commonApi }
 export { ossApi }
 export { coupon }
+export { shopCart }
