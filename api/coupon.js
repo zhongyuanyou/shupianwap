@@ -1,6 +1,7 @@
 'use strict'
 import { request } from '@/utils/request'
 import { CHIPS_WAP_BASE_URL } from '@/config/constant'
+
 const coupon = {
   getCouponList({ axios }, params) {
     // 获取优惠券列表
@@ -8,7 +9,7 @@ const coupon = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/v2/coupon/list.do',
+      url: 'http://127.0.0.1:7001/service/yk/v2/coupon/list.do',
     })
   },
   receiveCoupon({ axios }, params) {

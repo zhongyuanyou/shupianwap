@@ -11,14 +11,14 @@
     </sp-tabs>
     <div class="coupon_list">
       <div
-        v-for="(item, index) in items"
+        v-for="(item, index) in responseData"
         :key="index"
         :style="style"
         class="coupon_item"
       >
         <div class="item-lf">
-          <div class="coupon_price">450</div>
-          <div class="can_use">满3800元可用</div>
+          <div class="coupon_price">{{ item.reducePrice }}</div>
+          <div class="can_use">满{{ item.fullPrice }}元可用</div>
         </div>
         <div class="item-rt">
           <Popover
@@ -27,12 +27,14 @@
             @closepop="closeBox"
           />
           <div :style="signStyle" class="sign"></div>
-          <div class="title">{{ item.title }}</div>
+          <div class="title">{{ item.couponName }}</div>
           <div ref="textpro" class="content" @click="popOver(index)">
-            {{ item.content }}
+            {{ item.remark }}
           </div>
-          <div v-if="couponType == 0" class="expiredate">{{ item.date }}</div>
-          <div v-else class="date">{{ item.date }}</div>
+          <div v-if="couponType == 0" class="expiredate">
+            {{ item.receiveEndDate }}
+          </div>
+          <div v-else class="date">{{ item.receiveStartDate }}</div>
         </div>
       </div>
     </div>
@@ -61,9 +63,10 @@ export default {
   },
   data() {
     return {
+      responseData: [],
       formData: {
         findType: 1,
-      },
+      }, // 请求数据
       indexNum: 0,
       couponType: 0,
       buttonText: '你好',
@@ -144,7 +147,11 @@ export default {
     getInitData() {
       coupon
         .getCouponList({ axios: this.$axios }, this.formData)
-        .then((result) => result)
+        .then((result) => {
+          console.log('result', result)
+          this.responseData = result.rows
+          console.log('responseData', this.responseData)
+        })
         .catch((e) => {
           if (e.code !== 200) {
             console.log(e)
@@ -162,7 +169,33 @@ export default {
           "background-image: url('https://cdn.shupian.cn/sp-pt/wap/8j18z03j8c00000.png');"
         this.signStyle =
           "background-image: url('https://cdn.shupian.cn/sp-pt/wap/29a165hg8w4k000.png');"
+        this.formData.findType = 2
+        coupon
+          .getCouponList({ axios: this.$axios }, this.formData)
+          .then((result) => {
+            console.log('result', result)
+            this.responseData = result.rows
+            console.log('responseData', this.responseData)
+          })
+          .catch((e) => {
+            if (e.code !== 200) {
+              console.log(e)
+            }
+          })
       } else if (type === 2) {
+        this.formData.findType = 3
+        coupon
+          .getCouponList({ axios: this.$axios }, this.formData)
+          .then((result) => {
+            console.log('result', result)
+            this.responseData = result.rows
+            console.log('responseData', this.responseData)
+          })
+          .catch((e) => {
+            if (e.code !== 200) {
+              console.log(e)
+            }
+          })
         this.items = this.failData
         this.style =
           "background-image: url('https://cdn.shupian.cn/sp-pt/wap/8j18z03j8c00000.png');"

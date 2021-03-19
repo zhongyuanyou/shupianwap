@@ -14,6 +14,8 @@ const homeApi = {
   asyncRequest: `${CHIPS_WAP_BASE_URL}/nk/home/v1/get_home_asyn_data.do`, // 首页异步加载数据 （广告+资讯）
   findInfo: `${CHIPS_WAP_BASE_URL}/nk/home/v1/find_info_list.do`, // 资讯
   findSiteList: `${CHIPS_WAP_BASE_URL}/nk/home/v1/find_city_list.do`, // 查询站点列表
-  findRecomList: `${CHIPS_WAP_BASE_URL}/nk/home/v1/find_recom_list.do`, // 查询推荐商品
+  findRecomList: `https://spmicrouag.shupian.cn/crisps-app-wap-bff-api/service/nk/home/v1/find_recom_list.do`,
 }
+// findRecomList: `${CHIPS_WAP_BASE_URL}/nk/home/v1/find_recom_list.do`, // 查询推荐商品
+
 export { homeApi }

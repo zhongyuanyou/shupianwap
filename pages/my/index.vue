@@ -34,7 +34,7 @@
               size="0.44rem"
             ></my-icon>
           </div>
-          <div class="order_text">待付款</div>
+          <div class="order_text" @click="coupon">待付款</div>
         </div>
         <div class="my_order_type_list">
           <div class="icon">
@@ -228,6 +228,9 @@ export default {
     }
   },
   methods: {
+    coupon() {
+      this.$router.push('/my/coupon/coupon')
+    },
     handleAvatar() {
       // 点击头像
       if (!this.userId) {
