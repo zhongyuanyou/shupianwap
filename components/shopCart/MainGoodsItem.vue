@@ -115,10 +115,10 @@
               <span class="goods-service__content"></span>
               <span class="goods-service__count">{{
                 `${
-                  saleGoodsSubItem.settlementPrice
+                  serviceItem.settlementPrice
                     ? saleGoodsSubItem.settlementPrice
                     : '--'
-                }元  x${saleGoodsSubItem.salesPrice}`
+                }元  x${serviceItem.salesPrice}`
               }}</span>
             </div>
           </div>

@@ -3,7 +3,7 @@
     <!-- <sp-sticky></sp-sticky> -->
     <div class="container-advice">
       <!-- S search -->
-      <sp-sticky>
+      <sp-sticky @scroll="scrollHandle">
         <div class="search">
           <div class="left-back">
             <my-icon
@@ -28,35 +28,15 @@
       <!-- E search -->
       <!-- S countdown -->
       <div class="countdown">
-        <div class="special-price">
-          <div class="night">
-            <!-- <img
-              src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20171210%2Ff010a6e7f6864fccad3c9ba2b4d0a467.jpeg&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1617336043&t=8c59d6d00865e6bff20ca88933fde51c"
-              alt=""
-            /> -->
-          </div>
-          <div class="special">
-            <!-- <img
-              src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg36.ddimg.cn%2F59%2F24%2F1307438906-1_u_2.jpg&refer=http%3A%2F%2Fimg36.ddimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1617336043&t=13c39fc99b458705d1d01d77b58ac353"
-              alt=""
-            /> -->
-          </div>
-        </div>
+        <div class="special-price"></div>
         <div class="count-down">
-          <div>距本场结束还剩</div>
-          <div class="down-time">
-            <sp-count-down :time="time">
-              <template #default="timeData">
-                <span class="block">{{ '0' + timeData.days }}</span>
-                <span class="colon">天</span>
-                <span class="block">{{ '0' + timeData.hours }}</span>
-                <span class="colon">:</span>
-                <span class="block">{{ '0' + timeData.minutes }}</span>
-                <span class="colon">:</span>
-                <span class="block">{{ '0' + timeData.seconds }}</span>
-              </template>
-            </sp-count-down>
-          </div>
+          <p class="down-time">
+            距本场结束还剩
+            <span>{{ time.day }}</span
+            >天 <span>{{ time.hour }}</span
+            >: <span>{{ time.min }}</span
+            >: <span>{{ time.sec }}</span>
+          </p>
         </div>
       </div>
       <!-- E countdown -->
@@ -88,14 +68,21 @@
         </div>
       </div>
       <!-- E avtar -->
-      <div class="container-body">
+      <div class="container-body" :style="style.containerStyle">
         <div class="tabs-box">
           <ul class="tabs-box-items">
-            <li class="active">全部</li>
-            <li>99元封顶</li>
-            <li>899元封顶</li>
-            <li>1999元封顶</li>
-            <li>1999元封顶</li>
+            <li
+              v-for="(item, index) in tabs"
+              :key="index"
+              class="li-tab"
+              :class="{ active: index == nowIndex }"
+              @click="toggleTabs(index)"
+            >
+              {{ item }}
+            </li>
+            <!-- <li>99元封顶</li>
+          <li>899元封顶</li>
+          <li>1999元封顶</li> -->
           </ul>
         </div>
         <div class="body-content">
@@ -142,6 +129,14 @@
 </template>
 
 <style lang="less" scoped>
+/deep/.sp-sticky--fixed {
+  max-width: 10rem;
+  width: 100%;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background: linear-gradient(125deg, #daa240 0%, #c98714 100%);
+}
 .container {
   width: 100%;
   height: 746px;
@@ -154,8 +149,7 @@
       display: flex;
       // justify-content: space-between;
       align-items: center;
-      padding-top: 56px;
-      margin-bottom: 16px;
+      padding: 16px 0;
       .left-back {
         display: flex;
         justify-content: center;
@@ -201,32 +195,15 @@
       justify-content: space-between;
       // justify-content: center;
       .special-price {
+        width: 150px;
+        height: 30px;
         margin: 36px 0 35px 20px;
         display: flex;
         font-size: 30px;
         justify-content: center;
         align-items: center;
-        .night {
-          width: 72px;
-          height: 29px;
-          // img {
-          //   width: 100%;
-          // }
-          background-repeat: no-repeat;
-          background-size: 100% 100%;
-          -moz-background-size: 100% 100%;
-          background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20171210%2Ff010a6e7f6864fccad3c9ba2b4d0a467.jpeg&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1617336043&t=8c59d6d00865e6bff20ca88933fde51c');
-        }
-        .special {
-          width: 72px;
-          height: 29px;
-          background: #fff37f;
-          margin: 0 0 0 2px;
-          background-repeat: no-repeat;
-          background-size: 100% 100%;
-          -moz-background-size: 100% 100%;
-          background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20171210%2Ff010a6e7f6864fccad3c9ba2b4d0a467.jpeg&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1617336043&t=8c59d6d00865e6bff20ca88933fde51c');
-        }
+        background-size: 100% 100%;
+        background-image: url('https://cdn.shupian.cn/sp-pt/wap/dai4vjldrjs0000.png');
       }
       .count-down {
         margin: 32px 20px 32px 0;
@@ -244,28 +221,26 @@
           margin-right: 15px;
         }
         .down-time {
-          .sp-count-down {
-            .block {
-              margin: 0;
-              padding: 6px;
-              width: 36px;
-              height: 36px;
-              font-size: 24px;
-              font-weight: 500;
-              color: #ec5330;
-              background: #ffffff;
-              border-radius: 4px;
-              width: 29px;
-              height: 24px;
-              font-size: 24px;
-              font-weight: 500;
-              color: #835436;
-              line-height: 24px;
-              background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
-              border-radius: 4px;
-            }
-            .colon {
-            }
+          font-size: 24px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #fefffe;
+          line-height: 24px;
+          display: flex;
+          align-items: center;
+          span {
+            width: 36px;
+            height: 36px;
+            padding: 6px 4px;
+            background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
+            border-radius: 4px;
+            font-size: 24px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #835436;
+            line-height: 24px;
+            margin: 0 6px;
+            text-align: center;
           }
         }
       }
@@ -316,9 +291,9 @@
         .background {
           width: 210px;
           height: 44px;
-          background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
           border-radius: 8px;
-
+          background: url('https://cdn.shupian.cn/sp-pt/wap/2qtj44rmu8m0000.png');
+          background-size: 100% 100%;
           width: 210px;
           height: 44px;
           margin: 0 8px 8px 8px;
@@ -344,7 +319,6 @@
             height: 44px;
             margin: 0;
             border-radius: 8px 0px 0px 8px;
-            background: red;
           }
         }
       }
@@ -356,40 +330,42 @@
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
     z-index: 1;
-    .tabs-box-items {
-      display: flex;
-      overflow: auto;
-      padding: 22px 10px 0 10px;
-      li {
-        background-color: #f00;
-        margin: 10px;
-        flex-shrink: 0;
+    .tabs-box {
+      padding: 32px 20px 0 20px;
+      .tabs-box-items {
+        display: flex;
+        overflow: auto;
+        .li-tab {
+          background-color: #f00;
+          flex-shrink: 0;
+          padding: 19px 24px;
+          background: #f5f5f5;
+          border-radius: 32px;
+          font-size: 26px;
+          font-weight: 500;
+          color: #222222;
+          line-height: 26px;
+          margin-right: 16px;
+        }
+        .active {
+          padding: 17px 42px;
+          font-size: 30px;
+          font-weight: 500;
+          color: #ffffff;
+          background: #ec5330;
+          background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
+          border-radius: 32px;
+        }
 
-        padding: 19px 24px;
-        background: #f5f5f5;
-        border-radius: 32px;
-        font-size: 26px;
-        font-weight: 500;
-        color: #222222;
-        line-height: 26px;
-        margin-right: 16px;
-      }
-      li.active {
-        padding: 17px 42px;
-        font-size: 30px;
-        font-weight: 500;
-        color: #ffffff;
-        background: #ec5330;
-        background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
-        border-radius: 32px;
-      }
-      li:nth-child(1) {
-        // margin-left: 20px;
-      }
-      li:nth-last-child(1) {
-        margin-right: 16px;
+        li:nth-child(1) {
+          // margin-left: 20px;
+        }
+        li:nth-last-child(1) {
+          margin-right: 16px;
+        }
       }
     }
+
     .body-content {
       .line {
         width: 710px;
@@ -421,25 +397,14 @@
         background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
         .left-span {
           position: absolute;
-          border-radius: 12px 0 0 0;
-          background: linear-gradient(90deg, #ffb132 0%, #ff8208 100%);
+          background: url('https://cdn.shupian.cn/sp-pt/wap/7nccpoc61co0000.png');
+          background-size: 100% 100%;
           font-size: 20px;
           font-weight: 500;
           color: #ffffff;
           top: -6px;
           left: 0;
-          padding: 12px 6px 16px 6px;
-          // font-size: 22px;
-          // font-weight: 400;
-          // color: #ffffff;
-          // line-height: 22px;
-          // padding: 9px 0px 9px 12px;
-          // position: absolute;
-          // top: 0px;
-          // left: 0px;
-          // word-break: break-all;
-          // background: #ec5330;
-          // border-radius: 24px 0px 98px 0px;
+          padding: 12px 12px 16px 6px;
         }
       }
       .right-content {
@@ -465,7 +430,6 @@
           }
         }
         .rc-middle {
-          // margin-top: 16px;
           margin: 16px 0 58px 0;
           width: 409px;
           height: 22px;
@@ -521,7 +485,6 @@
             height: 80px;
             background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
             border-radius: 8px;
-            // margin-top: 58px;
             border-radius: 8px;
             font-size: 30px;
             font-weight: 500;
@@ -529,14 +492,6 @@
             line-height: 30px;
             padding: 25px 28px;
             text-align: center;
-
-            // width: 120px;
-            // height: 30px;
-            // font-size: 30px;
-            // font-family: PingFangSC-Medium, PingFang SC;
-            // font-weight: 500;
-            // color: #835436;
-            // line-height: 30px;
           }
         }
       }
@@ -546,17 +501,34 @@
 </style>
 
 <script>
-import { CountDown, Sticky, List } from '@chipspc/vant-dgg'
-
+import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
+let timer
 export default {
   name: 'Exclusive',
+
   components: {
     [CountDown.name]: CountDown,
     [Sticky.name]: Sticky,
     [List.name]: List,
+    [PullRefresh.name]: PullRefresh,
   },
+
   data() {
     return {
+      style: {
+        containerStyle: '',
+        iconStyle: '',
+        searchStyle: '',
+      },
+      nowIndex: 0,
+      tabs: [
+        '全部',
+        '99元封顶',
+        '899元封顶',
+        '1999元封顶',
+        '1999元封顶',
+        '1999元封顶',
+      ],
       iconLeft: 0.35,
       time: '',
       list: [],
@@ -615,7 +587,47 @@ export default {
       ],
     }
   },
+  mounted() {
+    this.countDown(new Date().getTime() + 60 * 60 * 24 * 1000)
+  },
   methods: {
+    scrollHandle({ scrollTop }) {
+      // console.log(scrollTop)
+      // 滚动事件
+      if (scrollTop > 255) {
+        this.style.containerStyle = 'border-radius: 0px;'
+      } else {
+        this.style.containerStyle = 'border-radius: 12px;'
+      }
+    },
+    countDown(endTimeStamp) {
+      const that = this
+      const nowTimeStamp = new Date().getTime()
+      // 计算时间差 秒
+      this.diff = (endTimeStamp - nowTimeStamp) / 1000
+      timer = setInterval(() => {
+        let day = Math.floor(this.diff / 86400)
+        let hour = Math.floor((this.diff - day * 86400) / 3600)
+        let min = Math.floor((this.diff - hour * 3600 - day * 86400) / 60)
+        let sec = Math.floor(this.diff % 60)
+        if (day < 10) day = '0' + day
+        if (hour < 10) hour = '0' + hour
+        if (min < 10) min = '0' + min
+        if (sec < 10) sec = '0' + sec
+        that.time = {
+          day,
+          hour,
+          min,
+          sec,
+        }
+        that.diff--
+      }, 1000)
+      // 每执行一次定时器就减少一秒
+    },
+    toggleTabs(index) {
+      console.log('index', index)
+      this.nowIndex = index
+    },
     onLoad() {
       setTimeout(() => {
         if (this.refreshing) {
