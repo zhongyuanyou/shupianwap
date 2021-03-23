@@ -112,7 +112,7 @@ export default {
           customerPhone:
             this.$store.state.user.userPhoneFull ||
             this.$cookies.get('userPhoneFull'),
-          requireCode: '',
+          requireCode: this.proDetail.classCodeLevelList[0],
           requireName: '',
           // id: mchUserId,
           // sensitiveInfoType: 'MCH_USER',

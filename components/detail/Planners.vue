@@ -174,7 +174,11 @@ export default {
     plannerInfoUrlJump(mchUserId) {
       this.$router.push({
         path: '/planner/detail',
-        query: { mchUserId },
+        query: {
+          mchUserId,
+          requireCode: this.baseData.requireCode,
+          requireName: this.baseData.requireName,
+        },
       })
     },
     async handleTel(mchUserId) {
@@ -187,8 +191,8 @@ export default {
           customerPhone:
             this.$store.state.user.userPhoneFull ||
             this.$cookies.get('userPhoneFull'),
-          requireCode: '',
-          requireName: '',
+          requireCode: this.baseData.requireCode,
+          requireName: this.baseData.requireName,
         })
         // 解密电话
         if (telData.status === 1) {
