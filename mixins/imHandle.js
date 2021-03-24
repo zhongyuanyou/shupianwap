@@ -111,7 +111,7 @@ export default {
           params = Object.assign(params, data)
           this.imExample.createSession(params, (res) => {
             if (res.code === 200) {
-              window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
+              window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}&requireCode=${data.requireCode}&requireName=${data.requireName}`
             } else if (res.code === 5223) {
               this.clearUserInfoAndJumpLoging()
             } else {
@@ -198,15 +198,16 @@ export default {
               // 发送模板消息
               this.imExample.sendTemplateMsg(tepMsgParams, (resData) => {
                 if (resData.code === 200) {
+                  console.log(sessionParams, 111)
                   // 延时1s进入IM,避免模板消息未发生完成就已进入IM
                   this.$xToast.showLoading({ message: '正在联系规划师...' })
                   const timer = setTimeout(() => {
                     clearTimeout(timer)
                     this.$xToast.hideLoading()
                     if (this.isApplets) {
-                      window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}&isApplets=true`
+                      window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}&isApplets=true`
                     } else {
-                      window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
+                      window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}`
                     }
                   }, 2000)
                   // window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`

@@ -223,6 +223,8 @@ export default {
       const sessionParams = {
         imUserId: mchUserId, // 商户用户ID
         imUserType: type, // 用户类型
+        requireCode: this.baseData.requireCode,
+        requireName: this.baseData.requireName,
         ext: {
           intentionType, // 意向业务 非必传
           intentionCity, // 意向城市 非必传

@@ -191,8 +191,6 @@ export default {
           customerPhone:
             this.$store.state.user.userPhoneFull ||
             this.$cookies.get('userPhoneFull'),
-          requireCode: this.baseData.requireCode,
-          requireName: this.baseData.requireName,
         })
         // 解密电话
         if (telData.status === 1) {
@@ -236,6 +234,8 @@ export default {
       const sessionParams = {
         imUserId: mchUserId, // 商户用户ID
         imUserType: type, // 用户类型
+        requireCode: this.baseData.requireCode || '',
+        requireName: this.baseData.requireName || '',
         ext: {
           intentionType, // 意向业务 非必传
           intentionCity, // 意向城市 非必传

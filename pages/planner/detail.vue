@@ -498,7 +498,12 @@ export default {
         return
       }
       const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
-      this.creatImSessionMixin({ imUserId: mchUserId, imUserType })
+      this.creatImSessionMixin({
+        imUserId: mchUserId,
+        imUserType,
+        requireCode: this.requireCode || '',
+        requireName: this.requireName || '',
+      })
     },
 
     // 平台不同，跳转方式不同
