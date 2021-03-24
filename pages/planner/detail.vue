@@ -478,8 +478,8 @@ export default {
               name: userName,
               userId: mchUserId,
               userType: type || 'MERCHANT_B',
-              requireCode: this.baseData.requireCode,
-              requireName: this.baseData.requireName,
+              requireCode: this.requireCode || '',
+              requireName: this.requireName || '',
             },
             (res) => {
               const { code } = res || {}
