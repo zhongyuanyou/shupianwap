@@ -197,8 +197,8 @@ const appHandler = {
       name: '', // 商户用户名称
       userId: '', // 商户用户ID
       userType: '', // 用户类型
-      requireCode:'',
-      requireName:'',
+      requireCode: '',
+      requireName: '',
     },
     fn = () => {}
   ) => {
