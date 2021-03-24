@@ -159,7 +159,11 @@ export default {
     plannerInfoUrlJump(mchUserId) {
       this.$router.push({
         path: '/planner/detail',
-        query: { mchUserId },
+        query: {
+          mchUserId,
+          requireCode: this.baseData.requireCode,
+          requireName: this.baseData.requireName,
+        },
       })
     },
     // 拨打电话

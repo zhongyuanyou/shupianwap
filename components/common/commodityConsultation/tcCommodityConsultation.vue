@@ -98,7 +98,11 @@ export default {
     plannerInfoUrlJump(mchUserId) {
       this.$router.push({
         path: '/planner/detail',
-        query: { mchUserId },
+        query: {
+          mchUserId,
+          requireCode: this.proDetail.classCodeLevelList[0],
+          requireName: '',
+        },
       })
     },
     // 拨打电话
