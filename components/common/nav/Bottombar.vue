@@ -56,7 +56,7 @@ export default {
         {
           name: '必懂',
           iconName: 'tabbar_ic_news',
-          path: '/found',
+          path: '/known',
         },
         {
           name: '消息',
