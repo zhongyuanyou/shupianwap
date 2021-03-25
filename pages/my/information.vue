@@ -67,6 +67,20 @@
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
         </div>
+        <div class="cell" @click="handleClick(7)">
+          <p class="title">个人简介</p>
+          <div class="right_icon">
+            <p class="txt hide">不悲伤，不仰望。不悲伤，不仰望。</p>
+            <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
+          </div>
+        </div>
+        <div class="cell">
+          <p class="title">实名认证</p>
+          <div class="right_icon">
+            <p class="txt hide">未实名认证</p>
+            <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
+          </div>
+        </div>
       </div>
       <div class="information_con_tp">
         <div class="cell" @click="handleClick(5)">
@@ -248,6 +262,10 @@ export default {
             forbidClick: true,
           })
         }
+      } else if (val === 7) {
+        this.$router.push({
+          path: '/my/info/personalProfile',
+        })
       }
     },
     async select(data) {
@@ -411,6 +429,12 @@ export default {
             font-weight: 400;
             color: #999999;
             line-height: 44px;
+          }
+          .hide {
+            max-width: 420px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
         }
       }
