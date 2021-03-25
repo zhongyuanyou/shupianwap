@@ -12357,11 +12357,6 @@ sshpk@^1.7.0:
     safer-buffer "^2.0.2"
     tweetnacl "~0.14.0"
 
-ssr-window@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npm.taobao.org/ssr-window/download/ssr-window-1.0.1.tgz#30752a6a4666e7767f0b7e6aa6fc2fdbd0d9b369"
-  integrity sha1-MHUqakZm53Z/C35qpvwv29DZs2k=
-
 ssr-window@^3.0.0, ssr-window@^3.0.0-alpha.1:
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/ssr-window/download/ssr-window-3.0.0.tgz#fd5b82801638943e0cc704c4691801435af7ac37"
@@ -14034,10 +14029,3 @@ yargs@^15.3.1:
     which-module "^2.0.0"
     y18n "^4.0.0"
     yargs-parser "^18.1.2"
-
-zx-editor@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.npm.taobao.org/zx-editor/download/zx-editor-3.0.2.tgz#7fea854772fc694b22728f67291931f7fbd7b3b6"
-  integrity sha1-f+qFR3L8aUsico9nKRkx9/vXs7Y=
-  dependencies:
-    ssr-window "^1.0.1"

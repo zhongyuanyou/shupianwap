@@ -56,7 +56,7 @@ export default {
       this.showPop = false
     },
     tonav(url) {
-      this.$router.push(url)
+      this.$router.push({ path: url })
     },
   },
 }

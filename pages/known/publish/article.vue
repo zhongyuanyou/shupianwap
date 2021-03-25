@@ -1,6 +1,9 @@
 <template>
   <div>
-    <PageHead title="攥写文章" :has-val="hasVal" />
+    <PageHead
+      :title="editType == 1 ? '编辑文章' : '攥写文章'"
+      :has-val="hasVal"
+    />
     <div class="main">
       <div class="input">
         <div v-show="hideInput" class="title-area">
@@ -71,6 +74,8 @@ export default {
       maxLength: 20,
       topics: [], // 话题
       topicStr: '',
+      editType: '', // editType=1为编写文章 editType=2 为新发文章
+      articleId: '',
     }
   },
   computed: {
@@ -83,6 +88,11 @@ export default {
     hasVal() {
       return this.formData.title.length > 0
     },
+  },
+  mounted() {
+    // 获取参数
+    this.editType = this.$route.query.editType
+    this.articleId = this.$route.query.articleId
   },
   methods: {
     inputTitle(a) {
