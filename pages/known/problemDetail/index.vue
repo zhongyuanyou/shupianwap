@@ -46,13 +46,16 @@
         </div>
       </div>
       <div class="content">
-        <p class="tit">
+        <p
+          class="tit"
+          :style="{ display: contentshow ? 'block' : '-webkit-box' }"
+        >
           {{ detail.content }}
         </p>
-        <div class="btn">
-          <span class="tit">展开</span>
+        <div class="btn" @click="contentshow = !contentshow">
+          <span class="tit">{{ contentshow ? '收起' : '展开' }}</span>
           <sp-icon
-            name="arrow-down"
+            :name="contentshow ? 'arrow-up' : 'arrow-down'"
             size="0.4rem"
             color="#999999"
             class="ellipsis"
@@ -75,7 +78,7 @@
           <p>邀请回答</p>
         </div>
         <div class="box">
-          <sp-icon name="spiconfont-yaoqing" size="0.4rem" />
+          <sp-icon name="edit" size="0.4rem" />
           <p>写回答</p>
         </div>
         <div class="box">
@@ -84,7 +87,30 @@
         </div>
       </div>
     </div>
-    <div class="success"></div>
+    <div class="success">
+      <div>
+        <sp-icon name="certificate" size="0.45rem" color="#00B365" /><span
+          >成功提问</span
+        >
+      </div>
+      <p>你可以邀请下面用户来更快获得回答</p>
+    </div>
+    <div v-if="detail.answer.length < 1" class="user">
+      <div class="head">
+        <div class="left">
+          <h1>邀请知友为你解答</h1>
+          <p>为你精选 34 位优质回答者</p>
+        </div>
+        <div class="right">一键邀请</div>
+      </div>
+      <div class="listbox">
+        <div v-for="(item, index) in userlist" :key="index" class="list">
+          <img :src="item.img" alt="" />
+          <p>{{ item.userName }}</p>
+          <div>邀请</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -100,6 +126,7 @@ export default {
   data() {
     return {
       taglist: ['公司注册', '公司注册', '公司注册'],
+      contentshow: false,
       detail: {
         title:
           '最近发现很多流量明星一不小心就火了，我想问问为什么粉丝可以突然就爱上一个明星？',
@@ -113,7 +140,11 @@ export default {
         follow: '5',
         comment: '10',
         visit: '200',
+        answer: [],
       },
+      userlist: [
+        { userName: '用户', img: 'https://cn.vuejs.org/images/logo.png' },
+      ],
     }
   },
 }
@@ -122,12 +153,14 @@ export default {
 <style lang="less" scoped>
 .detail {
   min-height: 100vh;
+  background: #f5f5f5;
   /deep/.my-head {
     padding: 0 32px;
     box-sizing: border-box;
   }
   > .problem {
     margin-top: 20px;
+    background: #fff;
     > .tag {
       width: 100%;
       overflow: auto;
@@ -201,9 +234,6 @@ export default {
         -webkit-line-clamp: 2;
         overflow: hidden;
       }
-      > p:first-line {
-        text-indent: 20px;
-      }
       > .btn {
         margin-top: 20px;
         font-size: 28px;
@@ -269,6 +299,67 @@ export default {
       > .box:first-child {
         border-left: none;
       }
+    }
+  }
+  > .success {
+    margin-top: 21px;
+    background: #fff;
+    padding: 32px 0 40px 0;
+    border: 1px solid #dddddd;
+    > div {
+      text-align: center;
+      font-size: 40px;
+      font-weight: 600;
+      color: #222222;
+      /deep/ i {
+        vertical-align: -11px;
+        margin-right: 5px;
+      }
+    }
+    > p {
+      margin-top: 24px;
+      font-size: 28px;
+      font-weight: 400;
+      color: #999999;
+      text-align: center;
+    }
+  }
+  > .user {
+    background: #fff;
+    > .head {
+      display: flex;
+      align-items: center;
+      height: 162px;
+      padding: 0 32px;
+      > .left {
+        > h1 {
+          font-size: 32px;
+          font-weight: 600;
+          color: #222222;
+        }
+        > p {
+          margin-top: 16px;
+          font-size: 26px;
+          font-weight: 400;
+          color: #999999;
+        }
+      }
+      > .right {
+        margin-left: auto;
+        width: 144px;
+        height: 72px;
+        background: #f2f5ff;
+        border-radius: 8px;
+        font-size: 26px;
+        font-weight: 500;
+        color: #4974f5;
+        text-align: center;
+        line-height: 72px;
+      }
+    }
+    > .listbox {
+      margin: 0 32px;
+      border-top: 1px solid #dddddd;
     }
   }
 }
