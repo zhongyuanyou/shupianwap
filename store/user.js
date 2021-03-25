@@ -73,8 +73,7 @@ export const mutations = {
     state.userNo = data.no
     state.userName = data.nickName
     state.userPhone = data.fullName
-    state.userPhoneFull =
-      data.mainAccountFull || this.$cookies.get('userPhoneFull')
+    state.userPhoneFull = this.$cookies.get('userPhoneFull')
   },
 }
 
