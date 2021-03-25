@@ -82,6 +82,12 @@ module.exports = {
         charset: 'utf-8',
       },
       {
+        src: '/js/zx-editor.js',
+        ssr: false,
+        type: 'text/javascript',
+        charset: 'utf-8',
+      },
+      {
         src: 'https://res.wx.qq.com/open/js/jweixin-1.4.0.js',
         ssr: false,
         type: 'text/javascript',
@@ -146,7 +152,6 @@ module.exports = {
       pathRewrite: {
         '^/api': '/', // 把 /api 替换成 /
       },
-
     },
     '/gdmap': {
       target: 'https://restapi.amap.com', // 高德地图代理
