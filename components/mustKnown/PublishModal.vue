@@ -27,7 +27,7 @@
           </div>
           回答问题
         </div>
-        <div class="item" @click="tonav(3)">
+        <div class="item" @click="tonav('/known/publish/article')">
           <div class="img">
             <img src="" alt="" srcset="" />
           </div>
@@ -56,7 +56,7 @@ export default {
       this.showPop = false
     },
     tonav(url) {
-      this.$router.push(url)
+      this.$router.push({ path: url })
     },
   },
 }

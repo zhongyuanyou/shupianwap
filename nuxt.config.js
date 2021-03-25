@@ -146,7 +146,6 @@ module.exports = {
       pathRewrite: {
         '^/api': '/', // 把 /api 替换成 /
       },
-
     },
     '/gdmap': {
       target: 'https://restapi.amap.com', // 高德地图代理
