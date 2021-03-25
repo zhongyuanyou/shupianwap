@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       result: [],
-      showPop: true,
+      showPop: false,
       list1: [
         {
           code: 'DONT_NEED',
