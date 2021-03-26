@@ -22,8 +22,12 @@
 </template>
 
 <script>
+import { Image } from '@chipspc/vant-dgg'
 // 文章详情的推荐列表
 export default {
+  components: {
+    [Image.name]: Image,
+  },
   data() {
     return {
       list: [

@@ -21,7 +21,13 @@
 </template>
 
 <script>
-export default {}
+import { Image, Button } from '@chipspc/vant-dgg'
+export default {
+  components: {
+    [Image.name]: Image,
+    [Button.name]: Button,
+  },
+}
 </script>
 
 <style lang="less" scoped>

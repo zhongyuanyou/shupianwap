@@ -4,8 +4,13 @@
     <div class="list">
       <div class="comment-item">
         <sp-image class="img" src="" />
-        <div class="right">
-          <sp-field aria-placeholder="写下你的评论"></sp-field>
+        <div class="right input-area">
+          <sp-field
+            v-model="value"
+            placeholder="写下你的评论..."
+            max-length="50"
+          ></sp-field>
+          <sp-button @click="submit">发布</sp-button>
         </div>
       </div>
       <div
@@ -33,11 +38,12 @@
 
 <script>
 // 详情页非弹窗的评论列表
-import { Image, Field } from '@chipspc/vant-dgg'
+import { Image, Field, Button } from '@chipspc/vant-dgg'
 export default {
   components: {
     [Image.name]: Image,
     [Field.name]: Field,
+    [Button.name]: Button,
   },
   props: {
     commentList: {
@@ -47,9 +53,21 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      value: '',
+    }
+  },
   methods: {
     openModal() {
       this.$emit('changeModal', true)
+    },
+    submit() {
+      console.log('val', this.value)
+      this.$xToast.show({
+        message: '评论成功',
+      })
+      this.value = ''
     },
   },
 }
@@ -58,6 +76,34 @@ export default {
 <style lang="less" scoped>
 .comment-area {
   padding: 20px 40px 120px 40px;
+  .input-area {
+    display: flex;
+    justify-content: space-between;
+    height: 72px;
+    .sp-cell {
+      flex: 1;
+      padding: 0;
+      height: 72px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #dddddd;
+      line-height: 72px;
+      padding-left: 20px;
+    }
+    .sp-button {
+      width: 90px;
+      height: 74px;
+      padding: 0;
+      border: none;
+      font-size: 30px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #4974f5;
+      line-height: 30px;
+      font-weight: 600;
+      text-align: right;
+    }
+  }
   .title {
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
