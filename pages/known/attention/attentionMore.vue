@@ -2,7 +2,7 @@
   <div class="container">
     <div class="container_header">
       <my-icon
-        name="nav_ic_back"
+        name="tabbar_ic_order"
         size="0.32rem"
         color="#1A1A1A"
         class="my_icon"
@@ -16,12 +16,7 @@ import { WorkTab } from '@chipspc/vant-dgg'
 // import ItemCard from '@/components/mustKnown/recommend/ItemCard'
 export default {
   name: 'Attention',
-  components: {
-    Search,
-    Tabs,
-    VisitUser,
-    AttentionItem,
-  },
+  components: {},
   data() {
     return {}
   },
