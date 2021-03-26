@@ -15,13 +15,13 @@
         </div>
       </div>
       <div class="main">
-        <div class="item" @click="tonav(1)">
+        <div class="item" @click="tonav('/known/publish/question')">
           <div class="img">
             <img src="" alt="" srcset="" />
           </div>
           提个问题
         </div>
-        <div class="item" @click="tonav(2)">
+        <div class="item" @click="tonav('/known/publish/answer')">
           <div class="img">
             <img src="" alt="" srcset="" />
           </div>

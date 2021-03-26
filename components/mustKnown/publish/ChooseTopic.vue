@@ -1,47 +1,70 @@
 <template>
-  <sp-popup v-model="showPop" position="bottom">
-    <div class="page-inner">
-      <div class="title">
-        <sp-button type="default" class="btn1" @click="cancel">取消</sp-button>
-        选择话题
-        <sp-button class="btn2" @click="submit">确定</sp-button>
-      </div>
-      <div class="main">
-        <div class="left">
-          <div
-            v-for="(item, index) in list1"
-            :key="index"
-            class="item"
-            :class="selectIndex === index ? 'activeItem' : ''"
-            @click="chooseList1(index)"
-          >
-            {{ item.name }}
-          </div>
-        </div>
-        <div class="right">
-          <sp-checkbox-group v-model="result">
-            <sp-cell-group>
-              <sp-cell
-                v-for="(item, index) in list2"
-                :key="index"
-                clickable
-                :title="item.name"
-                @click="toggle(index)"
-              >
-                <template #right-icon>
-                  <sp-checkbox ref="checkboxes" :name="item" />
-                </template>
-              </sp-cell>
-            </sp-cell-group>
-          </sp-checkbox-group>
-        </div>
+  <section>
+    <div class="choose-topic" @click="openModal">
+      <p v-if="!topics.length">
+        <my-icon
+          name="spiconfont-nav_ic_abb"
+          size="0.28rem"
+          color="rgba(73, 116, 245, 1)"
+        ></my-icon>
+        + 话题 (至少添加一个)
+      </p>
+      <div v-else class="select-topics-area">
+        <span> + 话题({{ topics.length }}/5)</span>
+        <span
+          v-for="(item, index) in topics"
+          :key="index"
+          class="topic1-item"
+          >{{ item.name }}</span
+        >
       </div>
     </div>
-  </sp-popup>
+    <sp-popup v-model="showPop" position="bottom">
+      <div class="page-inner">
+        <div class="title">
+          <sp-button type="default" class="btn1" @click="cancel"
+            >取消</sp-button
+          >
+          选择话题
+          <sp-button class="btn2" @click="submit">确定</sp-button>
+        </div>
+        <div class="main">
+          <div class="left">
+            <div
+              v-for="(item, index) in list1"
+              :key="index"
+              class="item"
+              :class="selectIndex === index ? 'activeItem' : ''"
+              @click="chooseList1(index)"
+            >
+              {{ item.name }}
+            </div>
+          </div>
+          <div class="right">
+            <sp-checkbox-group v-model="result">
+              <sp-cell-group>
+                <sp-cell
+                  v-for="(item, index) in list2"
+                  :key="index"
+                  clickable
+                  :title="item.name"
+                  @click="toggle(index)"
+                >
+                  <template #right-icon>
+                    <sp-checkbox ref="checkboxes" :name="item" />
+                  </template>
+                </sp-cell>
+              </sp-cell-group>
+            </sp-checkbox-group>
+          </div>
+        </div>
+      </div>
+    </sp-popup>
+  </section>
 </template>
 
 <script>
-// 选择话题弹窗
+// 选择按钮和话题弹窗
 import {
   Popup,
   Button,
@@ -61,10 +84,24 @@ export default {
     [CheckboxGroup.name]: CheckboxGroup,
     [Checkbox.name]: Checkbox,
   },
+  props: {
+    // 内容类型 文章 问题
+    contentType: {
+      type: Number,
+      default: 1,
+    },
+    // 话题数组
+    topicsArr: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+  },
   data() {
     return {
       result: [],
-      showPop: true,
+      showPop: false,
       list1: [
         {
           code: 'DONT_NEED',
@@ -272,6 +309,16 @@ export default {
       selectIndex: 0,
     }
   },
+  computed: {
+    topics: {
+      set(val) {
+        return val
+      },
+      get() {
+        return this.topicsArr || []
+      },
+    },
+  },
   mounted() {
     this.list2 = this.list1[0].children
   },
@@ -284,9 +331,16 @@ export default {
       this.selectIndex = index
       this.result = []
     },
+    openModal() {
+      this.showPop = true
+    },
     submit() {
       console.log('this.result', this.result)
       this.showPop = false
+      this.topics = this.result
+      const arr = this.result.map((item) => {
+        return item.name
+      })
       this.$emit('setTopic', this.result)
     },
     cancel() {
@@ -314,6 +368,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.choose-topic {
+  height: 28px;
+  font-size: 28px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #4974f5;
+  line-height: 88px;
+  padding-left: 40px;
+  .item {
+    margin-right: 10px;
+  }
+}
 .sp-popup--bottom {
   border-radius: 24px 24px 0px 0px;
 }
@@ -410,5 +476,21 @@ export default {
 }
 .sp-cell {
   padding: 16px 32px;
+}
+.select-topics-area {
+  font-size: 28px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #4974f5;
+  line-height: 28px;
+  span {
+    display: inline-block;
+  }
+  .topic1-item {
+    margin-left: 10px;
+    background: #f2f5ff;
+    border-radius: 24px;
+    padding: 12px;
+  }
 }
 </style>

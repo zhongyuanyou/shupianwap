@@ -1,10 +1,10 @@
 <template>
   <div class="page-head">
-    <div class="btn-cancel" @click="cancle">取消</div>
+    <div class="btn-cancel" @click="handleCancel">取消</div>
     {{ title }}
-    <div v-if="hasVal" class="btn-save blue" @click="submit">草稿</div>
+    <!-- <div v-if="hasVal" class="btn-save blue" @click="submit">草稿</div> -->
     <div class="btn-submit" :class="hasVal ? 'blue' : 'dark'" @click="submit">
-      发布
+      {{ confirmText }}
     </div>
   </div>
 </template>
@@ -14,16 +14,22 @@ export default {
   props: {
     title: {
       type: String,
-      default: '攥写文章',
+      default: '',
     },
     hasVal: {
       type: Boolean,
       default: false,
     },
+    confirmText: {
+      type: String,
+      default: '发布',
+    },
   },
   methods: {
-    cancle() {
+    handleCancel() {
       console.log('取消')
+      // this.$router.back(-1)
+      this.$emit('handleCancel')
     },
     submit() {
       console.log('发布')
@@ -49,40 +55,33 @@ export default {
   font-size: 36px;
   font-weight: bold;
   color: #1a1a1a;
+  display: flex;
+  justify-content: space-between;
   .btn-cancel {
-    position: absolute;
-    left: 20px;
-    top: 0px;
-    font-size: 32px;
     color: #999;
-    width: 100px;
     font-weight: 400;
   }
   .blue {
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: 600;
     color: #4974f5;
   }
   .dark {
     color: #a7baf2;
   }
   .btn-submit {
-    position: absolute;
-    right: 20px;
-    top: 0px;
     font-weight: 500;
-    width: 100px;
-    font-size: 32px;
-    right: 20px;
-  }
-  .btn-save {
-    position: absolute;
-    right: 120px;
-    top: 0px;
-    font-weight: 500;
-    width: 100px;
+    width: auto;
     font-size: 32px;
   }
+  // .btn-save {
+  //   position: absolute;
+  //   right: 120px;
+  //   top: 0px;
+  //   font-weight: 500;
+  //   width: 100px;
+  //   font-size: 32px;
+  // }
 }
 </style>
