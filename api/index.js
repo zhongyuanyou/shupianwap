@@ -20,6 +20,8 @@ import { recommendApi } from './recommend' // 推荐相关接口
 import { commonApi } from './common' // 帮助中心相关接口
 import { ossApi } from './oss'
 import coupon from './coupon' // 优惠券接口
+import pay from './pay' // 优惠券接口
+
 export { auth, shoppingCar, planner }
 export { category }
 export { userinfoApi }
@@ -40,3 +42,4 @@ export { commonApi }
 export { ossApi }
 export { coupon }
 export { shopCart }
+export { pay }
