@@ -9,67 +9,36 @@
         class="my_icon"
       ></my-icon>
     </div>
-    <div class="container_news_see">
-      <div class="news">
-        <div class="news_num">25</div>
-        <div class="news_span">日报精选</div>
-      </div>
-      <div class="see">
-        <div class="see_like"></div>
-        <div class="see_span">进站必看</div>
-      </div>
-    </div>
-    <div class="container_middle">
+    <div class="attention">
       <Tabs />
     </div>
-    <div class="container_body">
-      <ItemCard />
+    <div class="visit_user">
+      <VisitUser />
+    </div>
+    <div class="attention_user_list">
+      <AttentionItem />
     </div>
   </div>
 </template>
 <script>
-import {
-  WorkTab,
-  WorkTabs,
-  Icon,
-  TopNavBar,
-  Toast,
-  Swipe,
-  SwipeItem,
-  Lazyload,
-  PullRefresh,
-  List,
-  Cell,
-  Image,
-} from '@chipspc/vant-dgg'
-import ItemCard from '@/components/mustKnown/recommend/ItemCard'
-import Search from '@/components/mustKnown/recommend/search/Search'
+import { WorkTab } from '@chipspc/vant-dgg'
+// import ItemCard from '@/components/mustKnown/recommend/ItemCard'
 import Tabs from '@/components/mustKnown/recommend/tabs'
-// import { domainUrl } from '~/config/index'
-// import { foundApi } from '@/api'
-
+import Search from '@/components/mustKnown/recommend/search/Search'
+import VisitUser from '@/components/mustKnown/recommend/VisitUser'
+import AttentionItem from '@/components/mustKnown/recommend/AttentionItem'
 export default {
-  name: 'Recommend',
+  name: 'Attention',
   components: {
-    [WorkTab.name]: WorkTab,
-    [WorkTabs.name]: WorkTabs,
-    [Icon.name]: Icon,
-    [TopNavBar.name]: TopNavBar,
-    [Toast.name]: Toast,
-    [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
-    [PullRefresh.name]: PullRefresh,
-    [List.name]: List,
-    [Cell.name]: Cell,
-    [Image.name]: Image,
-    ItemCard,
     Search,
     Tabs,
+    VisitUser,
+    AttentionItem,
   },
   data() {
     return {
       title: '考研复试体检包含什么项目',
-      tabs: ['关注', '推荐', '热榜', '法律', '交易', '知产', '知识'],
+
       nowIndex: 2,
       infoList: [
         {
@@ -81,38 +50,14 @@ export default {
       ],
     }
   },
-  methods: {
-    toggleTabs(index) {
-      console.log('index', index)
-      this.nowIndex = index
-    },
-  },
+  methods: {},
 }
 </script>
 <style lang="less" scoped>
-//
-::v-deep .sp-work-tab--active {
-  font-size: 32px;
-  font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
-  color: #222222;
-}
-/deep/ .sp-work-tab__text {
-  flex-shrink: 0;
-  font-size: 32px;
-  font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
-  color: #999999;
-}
-/deep/ .sp-work-tabs__line {
-  width: 24px;
-  height: 6px;
-  background: #4974f5;
-  border-radius: 3px;
-}
 .container {
-  padding: 0 32px;
+  background: #f5f5f5;
   .container_head {
+    padding: 0 32px;
     display: flex;
     justify-content: space-between;
     height: 88px;
@@ -122,6 +67,10 @@ export default {
       height: 52px;
       margin-left: 32px;
     }
+  }
+  .attention {
+  }
+  .attention_user_list {
   }
   .container_news_see {
     height: 136px;
