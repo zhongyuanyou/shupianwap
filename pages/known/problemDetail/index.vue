@@ -144,7 +144,7 @@
           <span></span>
           <p>{{ item.like }} 喜欢</p>
           <span></span>
-          <p>{{ item.agree }} 评论</p>
+          <p @click="commetnShow = true">{{ item.agree }} 评论</p>
           <span></span>
           <p>{{ item.time }}</p>
         </div>
@@ -257,7 +257,7 @@ export default {
       answersort: 0,
       fixedshow: false,
       scrollTop: 0,
-      commetnShow: true,
+      commetnShow: false,
       commetnList: [
         {
           username: '用户1',
