@@ -107,6 +107,7 @@ module.exports = {
   css: [
     'assets/css/reset.css',
     'assets/icons/iconfont.css',
+    'assets/iconsNew/iconfont.css',
     'assets/styles/reset-vant.less',
   ],
   styleResources: {

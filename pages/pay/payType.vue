@@ -2,7 +2,7 @@
   <div class="pay-page">
     <Header title="选择支付方式" />
     <div class="banner">
-      <p class="total-money">{{ orderData.totalMoney || '23000.00' }}元</p>
+      <p class="total-money">{{ responseData.enableTotalMoney }}元</p>
       <p v-if="time && time.hour" class="time">
         剩余支付时间 ：<span>{{ time.hour }}</span> ：<span>{{
           time.min
@@ -42,7 +42,7 @@
       <sp-button size="large" @click="startPay">
         <span class="btn-item"> {{ payName || '支付宝支付' }}：</span>
         <span class="btn-item money">
-          {{ orderData.totalMoney || '23000' }}
+          {{ responseData.enableTotalMoney }}
         </span>
         <span class="btn-item"> 元</span>
       </sp-button>
@@ -53,6 +53,7 @@
 <script>
 import { Button, RadioGroup, Radio, Cell } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
+import { pay } from '@/api'
 // 支付倒计时定时器
 let timer
 export default {
@@ -65,6 +66,10 @@ export default {
   },
   data() {
     return {
+      responseData: {},
+      formData: {
+        payCusId: 10000000,
+      }, // 请求数据
       orderData: {},
       time: {}, // 倒计时
       diff: 0, // 时间差 s
@@ -96,6 +101,18 @@ export default {
     if (timer) clearInterval(timer)
   },
   mounted() {
+    pay
+      .enablePayMoney({ axios: this.$axios }, this.formData)
+      .then((result) => {
+        // console.log('result的值', result)
+        this.responseData = result.data.data
+        console.log('this.responseData的值', this.responseData)
+      })
+      .catch((e) => {
+        if (e.code !== 200) {
+          console.log(e)
+        }
+      })
     this.countDown(new Date().getTime() + 60 * 60 * 24 * 1000)
   },
   methods: {

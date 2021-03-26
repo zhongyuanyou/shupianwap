@@ -74,12 +74,17 @@
 
 <script>
 import { Button } from '@chipspc/vant-dgg'
+import { pay } from '@/api'
 export default {
   components: {
     [Button.name]: Button,
   },
   data() {
     return {
+      responseData: [],
+      formData: {
+        payCusId: 10000000,
+      }, // 请求数据
       payStatus: false,
       itemsData: [
         {
@@ -114,6 +119,17 @@ export default {
   },
   mounted() {
     this.payStatus = Math.floor(Math.random() * 2)
+    pay
+      .enablePayMoney({ axios: this.$axios }, this.formData)
+      .then((result) => {
+        console.log('result的值', result)
+        this.responseData = result.data
+      })
+      .catch((e) => {
+        if (e.code !== 200) {
+          console.log(e)
+        }
+      })
   },
   methods: {
     onLeftClick() {
