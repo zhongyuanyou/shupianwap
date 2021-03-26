@@ -1,9 +1,9 @@
 <template>
-  <section>
-    <div class="head head1">
+  <div ref="myPage">
+    <div v-show="!showHead2" class="head head1">
       <my-icon
-        class="back-icon"
         name="nav_ic_back"
+        class="btn-icon"
         size="0.4rem"
         color="#1A1A1A"
         @click.native="onLeftClick"
@@ -11,7 +11,6 @@
       <div class="btn-area">
         <span>
           <my-icon
-            class="back-icon"
             name="nav_ic_back"
             size="0.4rem"
             color="#1A1A1A"
@@ -31,13 +30,32 @@
         >
       </div>
     </div>
+    <div v-show="showHead2" class="head head2">
+      <my-icon
+        class="btn-icon"
+        name="nav_ic_back"
+        size="0.4rem"
+        color="#1A1A1A"
+        @click.native="onLeftClick"
+      ></my-icon>
+      <div class="user-info">
+        <sp-image class="img" src="" />
+        <div class="infos">
+          <p>周转</p>
+          我是一个牛人
+        </div>
+        <div class="btn">
+          <sp-button>关注</sp-button>
+        </div>
+      </div>
+    </div>
     <div class="title-area">
       <div class="title">哪部电影让你最有所触动？</div>
       <div class="nums-area">300个回答 · 200个关注</div>
     </div>
     <div class="main">
       <div class="user-info">
-        <div class="img"></div>
+        <sp-image class="img" src="" />
         <div class="infos">
           <p>周转</p>
           我是一个牛人
@@ -55,44 +73,34 @@
         近日，据外媒报道，谷歌翻译新增了5种语音的翻译，它们分别是基尼亚卢旺达语（卢旺达）、奥里亚语（印度）、
         鞑靼语、土库曼语（土库曼斯坦），还有维吾尔语。这些语言目前的使用者大约为7500万人。这是谷歌自2016年以来首次新增翻译语言
       </div>
+      <p class="pub-time">编辑于2021-05-10 16:40</p>
     </div>
+    <Comment :comment-list="commentList2" @changeModal="changeModal" />
     <div class="page-bottom">
       <div class="left-area">
-        <span class="icon">
-          <my-icon
-            class="msg_ic_emoji"
-            name="msg_ic_emoji"
-            size="0.3rem"
-            color="#000000"
-          ></my-icon
+        <span class="icon" @click="handleClickBottom(1)">
+          <my-icon name="msg_ic_emoji" size="0.3rem" color="#000000"></my-icon
         ></span>
         <span class="text">赞同9999</span>
-        <span class="icon">
-          <my-icon
-            class="msg_ic_emoji"
-            name="msg_ic_emoji"
-            size="0.3rem"
-            color="#000000"
-          ></my-icon
+        <span class="icon" @click="handleClickBottom(2)">
+          <my-icon name="msg_ic_emoji" size="0.3rem" color="#000000"></my-icon
         ></span>
       </div>
       <div class="right-area">
-        <div class="item">
+        <div class="item" @click="handleClickBottom(3)">
           <div class="icon">
             <my-icon
-              class="msg_ic_emoji"
-              name="spiconfont-shoucang"
+              name="spiconfont-shoucang_mian"
               size="0.3rem"
               color="#000000"
             ></my-icon>
           </div>
           收藏
         </div>
-        <div class="item">
+        <div class="item" @click="handleClickBottom(4)">
           <div class="icon">
             <my-icon
-              class="msg_ic_emoji"
-              name="spiconfont-pinglun"
+              name="spiconfont-guankan"
               size="0.3rem"
               color="#000000"
             ></my-icon>
@@ -101,20 +109,157 @@
         </div>
       </div>
     </div>
-  </section>
+    <comment-modal
+      :show="commentShow"
+      :list="commentList"
+      @sort="sort"
+      @release="sum"
+      @close="changeModal(false)"
+    >
+    </comment-modal>
+  </div>
 </template>
 
 <script>
-import { Field, Tab, Tabs, Button } from '@chipspc/vant-dgg'
+import { Field, Tab, Tabs, Button, Image } from '@chipspc/vant-dgg'
+import CommentModal from '~/components/mustKnown/commentList.vue'
+import Comment from '~/components/mustKnown/DetailComment.vue'
 export default {
   components: {
     [Button.name]: Button,
+    [Image.name]: Image,
+    [Field.name]: Field,
+    CommentModal,
+    Comment,
+  },
+  data() {
+    return {
+      showHead2: true,
+      commentShow: false,
+      commentList: [
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+      ],
+      commentList2: [],
+    }
+  },
+  mounted() {
+    this.commentList2 = JSON.parse(JSON.stringify(this.commentList)).splice(
+      0,
+      2
+    )
+    // this.$refs.myPage.addEventListener('scroll', this.handleScoll)
+    const element = this.$refs.myPage
+    // 监听这个dom的scroll事件
+    element.addEventListener(
+      'scroll',
+      () => {
+        this.handleScroll()
+      },
+      false
+    )
+  },
+  methods: {
+    handleScoll() {
+      // 获取推荐板块到顶部的距离 减 搜索栏高度
+      const scrollTop = this.$refs.myPage.scrollTop // 滚动条距离顶部的位置
+      console.log('scrollTop', scrollTop)
+      if (scrollTop > 100) {
+        this.showHead2 = true
+      } else {
+        this.showHead2 = true
+      }
+    },
+    onLeftClick() {
+      this.$router.back(-1)
+    },
+    sum(val) {
+      console.log(val)
+    },
+    sort(value) {
+      console.log(value)
+    },
+    answersortfn(index) {
+      console.log(index)
+    },
+    changeModal(val) {
+      this.commentShow = val
+      console.log('111', val)
+    },
+    handleClickBottom(type) {
+      console.log('type', type)
+      switch (type) {
+        case 1:
+          this.$xToast.show({
+            message: '点赞成功',
+          })
+          break
+
+        default:
+          this.$xToast.show({
+            message: '操作成功',
+          })
+          break
+      }
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
-.head1 {
+.head {
   position: fixed;
   left: 0;
   top: 0;
@@ -127,6 +272,14 @@ export default {
   font-weight: 500;
   color: #4974f5;
   padding: 0 40px;
+  .btn-icon {
+    float: left;
+  }
+}
+.head1 {
+  height: 88px;
+  background: #ffffff;
+  line-height: 88px;
   .btn-area {
     float: right;
     width: auto;
@@ -134,6 +287,64 @@ export default {
     span {
       padding: 0 20px;
     }
+  }
+}
+.head2 {
+  height: 104px;
+  background: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  .user-info {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 0;
+    padding-left: 20px;
+    .img {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #d8d8d8;
+      overflow: hidden;
+    }
+    .infos {
+      flex: 1;
+      height: 26px;
+      font-size: 26px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #999999;
+      line-height: 26px;
+      padding-left: 20px;
+      p {
+        font-size: 30px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #222222;
+        margin-bottom: 20px;
+      }
+    }
+    .btn {
+      background: none;
+      border-radius: 12px;
+      .sp-button {
+        width: 100%;
+        height: 100%;
+        background: none;
+        color: rgba(73, 116, 245, 1);
+        display: block;
+        float: left;
+        font-size: 30px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #4974f5;
+        border: none;
+      }
+    }
+  }
+  .btn-icon {
+    line-height: 104px;
+    float: left;
   }
 }
 .title-area {
@@ -167,6 +378,7 @@ export default {
       height: 72px;
       border-radius: 50%;
       background: #d8d8d8;
+      overflow: hidden;
     }
     .infos {
       flex: 1;
@@ -207,6 +419,14 @@ export default {
     font-weight: 400;
     color: #555555;
     line-height: 52px;
+  }
+  .pub-time {
+    font-size: 26px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #999999;
+    line-height: 26px;
+    margin-top: 40px;
   }
 }
 .page-bottom {
