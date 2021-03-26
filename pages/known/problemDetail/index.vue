@@ -1,6 +1,6 @@
 <template>
-  <div class="detail">
-    <Header title="">
+  <div class="detail" :style="{ paddingBottom: fixedshow ? '1.3rem' : '' }">
+    <Header v-show="!commetnShow" title="">
       <template #left>
         <div>
           <sp-icon name="arrow-left" size="0.4rem" />
@@ -26,7 +26,11 @@
       </div>
       <h1 class="tit">{{ detail.title }}</h1>
       <div
-        v-if="detail.imglist.length <= 2 && detail.imglist.length > 0"
+        v-if="
+          detail.imglist.length <= 2 &&
+          detail.imglist.length > 0 &&
+          !contentshow
+        "
         class="imglist"
       >
         <div
@@ -37,7 +41,7 @@
           <img :src="item" alt="" />
         </div>
       </div>
-      <div v-if="detail.imglist.length > 2" class="imglist">
+      <div v-if="detail.imglist.length > 2 && !contentshow" class="imglist">
         <div class="imgbox">
           <img :src="detail.imglist[0]" alt="" />
         </div>
@@ -46,12 +50,10 @@
         </div>
       </div>
       <div class="content">
-        <p
-          class="tit"
-          :style="{ display: contentshow ? 'block' : '-webkit-box' }"
-        >
+        <p v-if="!contentshow" class="tit">
           {{ detail.content }}
         </p>
+        <div v-else class="tit" v-html="detail.content"></div>
         <div class="btn" @click="contentshow = !contentshow">
           <span class="tit">{{ contentshow ? '收起' : '展开' }}</span>
           <sp-icon
@@ -70,9 +72,9 @@
           <p></p>
           <div>{{ detail.visit }} <span>游览</span></div>
         </div>
-        <div class="right">好问题</div>
+        <div class="right" :class="detail.isLike ? 'act' : ''">好问题</div>
       </div>
-      <div class="btns">
+      <div ref="btns" class="btns">
         <div class="box">
           <sp-icon name="friends-o" size="0.4rem" />
           <p>邀请回答</p>
@@ -82,8 +84,12 @@
           <p>写回答</p>
         </div>
         <div class="box">
-          <sp-icon name="like" size="0.4rem" />
-          <p>已收藏</p>
+          <sp-icon
+            name="like-o"
+            size="0.4rem"
+            :color="detail.isagree ? '#4974F5' : ''"
+          />
+          <p :style="{ color: detail.isagree ? '#4974F5' : '' }">已收藏</p>
         </div>
       </div>
     </div>
@@ -110,18 +116,78 @@
           <div>邀请</div>
         </div>
       </div>
+      <div class="none">没有更多了</div>
     </div>
+    <div v-else class="answer">
+      <div class="head">
+        <p>回答 {{ detail.answer.length }}</p>
+        <div>
+          <i class="bg" :class="answersort == 1 ? 'right' : ''"></i>
+          <span :class="answersort == 0 ? 'act' : ''" @click="answersortfn(0)"
+            >默认</span
+          >
+          <span :class="answersort == 1 ? 'act' : ''" @click="answersortfn(1)"
+            >最新</span
+          >
+        </div>
+      </div>
+      <div v-for="(item, index) in detail.answer" :key="index" class="list">
+        <div class="head">
+          <img :src="item.img" alt="" />
+          <p>{{ item.username }}</p>
+        </div>
+        <p class="content">
+          {{ item.content }}
+        </p>
+        <div class="foot">
+          <p>{{ item.agree }} 赞同</p>
+          <span></span>
+          <p>{{ item.like }} 喜欢</p>
+          <span></span>
+          <p>{{ item.agree }} 评论</p>
+          <span></span>
+          <p>{{ item.time }}</p>
+        </div>
+      </div>
+    </div>
+    <div v-show="fixedshow" class="fiexdbtn">
+      <div class="btn">
+        <sp-icon name="friends-o" size="0.4rem" />
+        <span>邀请回答</span>
+      </div>
+      <div class="btn">
+        <sp-icon name="edit" size="0.4rem" />
+        <span>写回答</span>
+      </div>
+      <div class="btn">
+        <sp-icon
+          name="like-o"
+          size="0.4rem"
+          :color="detail.isagree ? '#4974F5' : ''"
+        />
+        <span :style="{ color: detail.isagree ? '#4974F5' : '' }">收藏</span>
+      </div>
+    </div>
+    <comment-list
+      :show="commetnShow"
+      :list="commetnList"
+      @sort="sort"
+      @release="sum"
+      @close="commetnShow = false"
+    ></comment-list>
   </div>
 </template>
 
 <script>
 import { Icon } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
+import CommentList from '~/components/mustKnown/commentList.vue'
 export default {
   name: 'Detail',
   components: {
     Header,
     [Icon.name]: Icon,
+    CommentList,
   },
   data() {
     return {
@@ -140,12 +206,139 @@ export default {
         follow: '5',
         comment: '10',
         visit: '200',
-        answer: [],
+        answer: [
+          {
+            username: '用户',
+            img: 'https://cn.vuejs.org/images/logo.png',
+            content:
+              '心理学的研究发现，人们很容易相信一个笼统的人格描述，即使这种描述十分空洞，但仍然会认为反映了自己的人格面貌。心理学的研究发现，人们…',
+            agree: '10',
+            like: '20',
+            comment: '20',
+            time: '22小时前',
+          },
+          {
+            username: '用户',
+            img: 'https://cn.vuejs.org/images/logo.png',
+            content:
+              '心理学的研究发现，人们很容易相信一个笼统的人格描述，即使这种描述十分空洞，但仍然会认为反映了自己的人格面貌。心理学的研究发现，人们…',
+            agree: '10',
+            like: '20',
+            comment: '20',
+            time: '22小时前',
+          },
+          {
+            username: '用户',
+            img: 'https://cn.vuejs.org/images/logo.png',
+            content:
+              '心理学的研究发现，人们很容易相信一个笼统的人格描述，即使这种描述十分空洞，但仍然会认为反映了自己的人格面貌。心理学的研究发现，人们…',
+            agree: '10',
+            like: '20',
+            comment: '20',
+            time: '22小时前',
+          },
+          {
+            username: '用户',
+            img: 'https://cn.vuejs.org/images/logo.png',
+            content:
+              '心理学的研究发现，人们很容易相信一个笼统的人格描述，即使这种描述十分空洞，但仍然会认为反映了自己的人格面貌。心理学的研究发现，人们…',
+            agree: '10',
+            like: '20',
+            comment: '20',
+            time: '22小时前',
+          },
+        ],
+        isLike: true,
+        isagree: true,
       },
       userlist: [
         { userName: '用户', img: 'https://cn.vuejs.org/images/logo.png' },
       ],
+      answersort: 0,
+      fixedshow: false,
+      scrollTop: 0,
+      commetnShow: true,
+      commetnList: [
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+      ],
     }
+  },
+  mounted() {
+    window.addEventListener('scroll', this.watchScroll)
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.watchScroll)
+  },
+  methods: {
+    sum(val) {
+      console.log(val)
+    },
+    sort(value) {
+      console.log(value)
+    },
+    answersortfn(index) {
+      console.log(index)
+    },
+    watchScroll() {
+      if (this.$refs.btns.getBoundingClientRect().top < 0) {
+        this.fixedshow = true
+      } else {
+        this.fixedshow = false
+      }
+    },
   },
 }
 </script>
@@ -234,6 +427,9 @@ export default {
         -webkit-line-clamp: 2;
         overflow: hidden;
       }
+      > div.tit {
+        display: block;
+      }
       > .btn {
         margin-top: 20px;
         font-size: 28px;
@@ -279,6 +475,10 @@ export default {
         margin-left: auto;
         text-align: center;
         line-height: 56px;
+      }
+      > .act {
+        background: #f2f5ff;
+        color: #4974f5;
       }
     }
     > .btns {
@@ -360,6 +560,184 @@ export default {
     > .listbox {
       margin: 0 32px;
       border-top: 1px solid #dddddd;
+      padding-bottom: 58px;
+      > .list {
+        display: flex;
+        margin: 20px 0;
+        align-items: center;
+        > img {
+          width: 72px;
+          height: 72px;
+          background: #d8d8d8;
+          border-radius: 50%;
+          margin-right: 24px;
+        }
+        > p {
+          font-size: 30px;
+          font-weight: 500;
+          color: #222222;
+        }
+        > div {
+          width: 144px;
+          height: 72px;
+          background: #4974f5;
+          border-radius: 8px;
+          font-size: 26px;
+          font-weight: 500;
+          color: #ffffff;
+          margin-left: auto;
+          text-align: center;
+          line-height: 72px;
+          box-sizing: border-box;
+        }
+      }
+    }
+    > .none {
+      background: #f5f5f5;
+      height: 96px;
+      font-size: 24px;
+      font-weight: 400;
+      color: #999999;
+      line-height: 96px;
+      text-align: center;
+    }
+  }
+  > .answer {
+    margin-top: 21px;
+    > .head {
+      padding: 0 32px;
+      height: 96px;
+      border-bottom: 1px solid #dddddd;
+      display: flex;
+      align-items: center;
+      background: #fff;
+      > p {
+        font-size: 30px;
+        font-weight: 500;
+        color: #222222;
+      }
+      > div {
+        width: 216px;
+        height: 60px;
+        background: #f5f5f5;
+        border-radius: 31px;
+        position: relative;
+        display: flex;
+        margin-left: auto;
+        align-items: center;
+        > span {
+          width: 104px;
+          height: 52px;
+          display: block;
+          font-size: 26px;
+          font-weight: 500;
+          color: #999999;
+          text-align: center;
+          line-height: 52px;
+          position: relative;
+          z-index: 1;
+        }
+        > .act {
+          color: #222222;
+        }
+        > .bg {
+          width: 104px;
+          height: 52px;
+          background: #ffffff;
+          border-radius: 27px;
+          display: block;
+          position: absolute;
+          z-index: 0;
+          top: 4px;
+          left: 4px;
+          transition: all 0.3s;
+        }
+        > .right {
+          left: 108px;
+          transition: all 0.3s;
+        }
+      }
+    }
+    > .list {
+      margin-bottom: 10px;
+      background: #fff;
+      padding: 32px 32px 40px 32px;
+      > .head {
+        display: flex;
+        align-items: center;
+        > img {
+          width: 72px;
+          height: 72px;
+          background: #d8d8d8;
+          object-fit: cover;
+          border-radius: 50%;
+        }
+        > p {
+          font-size: 30px;
+          font-weight: 600;
+          color: #222222;
+          margin-left: 16px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+      > .content {
+        margin-top: 22px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        font-size: 30px;
+        font-weight: 400;
+        color: #555555;
+      }
+      > .foot {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        > p {
+          font-size: 26px;
+          font-weight: 400;
+          color: #999999;
+        }
+        > span {
+          width: 4px;
+          height: 4px;
+          background: #999999;
+          display: block;
+          margin: 0 16px;
+        }
+      }
+    }
+  }
+  > .fiexdbtn {
+    position: fixed;
+    height: 104px;
+    background: #ffffff;
+    width: 100vw;
+    bottom: -1px;
+    left: 0;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    justify-content: space-between;
+    padding: 0 32px;
+    box-sizing: border-box;
+    > .btn {
+      width: 216px;
+      height: 72px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #dddddd;
+      font-size: 28px;
+      font-weight: 500;
+      color: #222222;
+      text-align: center;
+      line-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 }
