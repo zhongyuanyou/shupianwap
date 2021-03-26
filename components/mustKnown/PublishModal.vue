@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="main">
-        <div class="item" @click="tonav(1)">
+        <div class="item" @click="tonav('/known/publish/question')">
           <div class="img">
             <img src="" alt="" srcset="" />
           </div>
