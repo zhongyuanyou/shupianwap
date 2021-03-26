@@ -88,7 +88,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-//
+::v-deep .sp-cell {
+  overflow: visible;
+}
+::v-deep .sp-cell__value {
+  overflow: visible;
+}
 ::v-deep .sp-work-tab--active {
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
