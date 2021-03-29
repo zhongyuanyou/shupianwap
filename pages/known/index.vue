@@ -9,9 +9,11 @@
         class="my_icon"
       ></my-icon>
     </div>
-    <div class="container_middle">
-      <Tabs @openPop="OpenPop($event)" />
-    </div>
+    <sp-sticky>
+      <div class="container_middle">
+        <Tabs @openPop="OpenPop($event)" />
+      </div>
+    </sp-sticky>
     <div class="container_body">
       <AttentionItem />
     </div>
@@ -73,7 +75,7 @@
   </div>
 </template>
 <script>
-import { WorkTab, WorkTabs, Popup } from '@chipspc/vant-dgg'
+import { WorkTab, WorkTabs, Popup, Sticky } from '@chipspc/vant-dgg'
 import AttentionItem from '@/components/mustKnown/recommend/AttentionItem'
 import Search from '@/components/mustKnown/recommend/search/Search'
 import Tabs from '@/components/mustKnown/recommend/tabs'
@@ -81,11 +83,12 @@ import Tabs from '@/components/mustKnown/recommend/tabs'
 // import { foundApi } from '@/api'
 
 export default {
-  name: 'Recommend',
+  name: 'Index',
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
     [Popup.name]: Popup,
+    [Sticky.name]: Sticky,
     Search,
     Tabs,
     AttentionItem,

@@ -14,13 +14,16 @@
   </div>
 </template>
 <script>
-import { WorkTab, WorkTabs } from '@chipspc/vant-dgg'
+import { WorkTab, WorkTabs, List, Cell, Sticky } from '@chipspc/vant-dgg'
 
 export default {
   name: 'Tabs',
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
+    [List.name]: List,
+    [Cell.name]: Cell,
+    [Sticky.name]: Sticky,
   },
 
   props: {
