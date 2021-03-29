@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div class="container_head">
-      <Search :value="title" :icon-left="0.32"> </Search>
+      <Search :value="title" :icon-left="0.2"> </Search>
       <my-icon
-        name="sear_ic_open"
+        name="fabu_mian"
         size="0.52rem"
         color="#4974F5"
         class="my_icon"
@@ -26,10 +26,11 @@
       <div class="popTop">
         <div class="popTop_title">全部板块</div>
         <my-icon
-          name="notify_ic_close"
+          name="guanbi_mian"
           size="0.48rem"
-          color="#999999"
+          color="#F5F5F5"
           class="my_icon"
+          @click.native="showPop = false"
         ></my-icon>
       </div>
       <div class="popMiddle">
@@ -196,7 +197,6 @@ export default {
       .my_icon {
         width: 48px;
         height: 48px;
-        background: #f5f5f5;
       }
     }
     .popMiddle {
