@@ -15,7 +15,7 @@
       </div>
     </sp-sticky>
     <div class="container_body">
-      <AttentionItem />
+      <ListItem />
     </div>
     <sp-popup
       v-model="showPop"
@@ -76,7 +76,7 @@
 </template>
 <script>
 import { WorkTab, WorkTabs, Popup, Sticky } from '@chipspc/vant-dgg'
-import AttentionItem from '@/components/mustKnown/recommend/AttentionItem'
+import ListItem from '@/components/mustKnown/recommend/ListItem'
 import Search from '@/components/mustKnown/recommend/search/Search'
 import Tabs from '@/components/mustKnown/recommend/tabs'
 // import { domainUrl } from '~/config/index'
@@ -91,7 +91,7 @@ export default {
     [Sticky.name]: Sticky,
     Search,
     Tabs,
-    AttentionItem,
+    ListItem,
   },
   data() {
     return {
@@ -146,6 +146,7 @@ export default {
   border-radius: 3px;
 }
 .container {
+  background: #f5f5f5;
   .container_head {
     display: flex;
     justify-content: space-between;
@@ -163,7 +164,7 @@ export default {
     background: #ffffff;
     display: flex;
     align-items: center;
-    margin-bottom: 24px;
+    // margin-bottom: 24px;
 
     .tabs-box {
       .tabs-box-items {
