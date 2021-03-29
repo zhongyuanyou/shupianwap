@@ -9,6 +9,9 @@
         class="my_icon"
       ></my-icon>
     </div>
+    <div class="container_middle">
+      <Tabs />
+    </div>
     <div class="container_news_see">
       <div class="news" @click="$router.push('/known/newspaper')">
         <div class="news_num">25</div>
@@ -19,49 +22,23 @@
         <div class="see_span">进站必看</div>
       </div>
     </div>
-    <div class="container_middle">
-      <Tabs />
-    </div>
     <div class="container_body">
       <ItemCard />
     </div>
   </div>
 </template>
 <script>
-import {
-  WorkTab,
-  WorkTabs,
-  Icon,
-  TopNavBar,
-  Toast,
-  Swipe,
-  SwipeItem,
-  Lazyload,
-  PullRefresh,
-  List,
-  Cell,
-  Image,
-} from '@chipspc/vant-dgg'
+import {} from '@chipspc/vant-dgg'
 import ItemCard from '@/components/mustKnown/recommend/ItemCard'
 import Search from '@/components/mustKnown/recommend/search/Search'
 import Tabs from '@/components/mustKnown/recommend/tabs'
+
 // import { domainUrl } from '~/config/index'
 // import { foundApi } from '@/api'
 
 export default {
   name: 'Hot',
   components: {
-    [WorkTab.name]: WorkTab,
-    [WorkTabs.name]: WorkTabs,
-    [Icon.name]: Icon,
-    [TopNavBar.name]: TopNavBar,
-    [Toast.name]: Toast,
-    [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
-    [PullRefresh.name]: PullRefresh,
-    [List.name]: List,
-    [Cell.name]: Cell,
-    [Image.name]: Image,
     ItemCard,
     Search,
     Tabs,
