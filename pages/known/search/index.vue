@@ -84,7 +84,7 @@ export default {
       console.log(111)
     },
     clooseHandle() {
-      console.log(222)
+      this.$router.back()
     },
   },
 }

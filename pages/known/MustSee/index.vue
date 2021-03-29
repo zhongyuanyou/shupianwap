@@ -1,7 +1,13 @@
 <template>
   <div class="MustSee">
     <div class="head">
-      <sp-icon name="arrow-left" class="left" color="#fff" size="0.4rem" />
+      <sp-icon
+        name="arrow-left"
+        class="left"
+        color="#fff"
+        size="0.4rem"
+        @click.native="$router.back()"
+      />
       <sp-icon name="search" class="right" color="#fff" size="0.4rem" />
     </div>
     <div class="top">

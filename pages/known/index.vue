@@ -1,7 +1,12 @@
 <template>
   <div class="container">
     <div class="container_head">
-      <Search :value="title" :icon-left="0.2"> </Search>
+      <Search
+        :value="title"
+        :icon-left="0.2"
+        @click.native="$router.push('/known/search')"
+      >
+      </Search>
       <my-icon
         name="fabu_mian"
         size="0.52rem"

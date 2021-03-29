@@ -10,11 +10,11 @@
       ></my-icon>
     </div>
     <div class="container_news_see">
-      <div class="news">
+      <div class="news" @click="$router.push('/known/newspaper')">
         <div class="news_num">25</div>
         <div class="news_span">日报精选</div>
       </div>
-      <div class="see">
+      <div class="see" @click="$router.push('/known/mustSee')">
         <div class="see_like"></div>
         <div class="see_span">进站必看</div>
       </div>

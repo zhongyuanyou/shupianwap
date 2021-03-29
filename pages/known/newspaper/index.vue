@@ -7,6 +7,7 @@
           size="0.40rem"
           color="#FFFFFF"
           class="my_icon"
+          @click.native="$router.back()"
         ></my-icon>
         <my-icon
           name="sear_ic_sear"
