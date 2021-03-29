@@ -54,11 +54,14 @@
   </sp-list>
 </template>
 <script>
-import {} from '@chipspc/vant-dgg'
+import { Cell, List } from '@chipspc/vant-dgg'
 
 export default {
   name: 'AttentionItem',
-  components: {},
+  components: {
+    [Cell.name]: Cell,
+    [List.name]: List,
+  },
 
   props: {
     // banner: {

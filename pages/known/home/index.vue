@@ -20,11 +20,14 @@
         <div class="user_name">罗振宇</div>
         <div class="user_desc clamp3">这个人很懒，什么也没留下</div>
         <div class="user_data">
-          <div class="user_data_item">
+          <div class="user_data_item" @click="$router.push('/known/home/fans')">
             <div class="user_data_item_num">9999万</div>
             <div class="user_data_item_name">粉丝</div>
           </div>
-          <div class="user_data_item">
+          <div
+            class="user_data_item"
+            @click="$router.push('/known/home/attention')"
+          >
             <div class="user_data_item_num">9999万</div>
             <div class="user_data_item_name">关注</div>
           </div>

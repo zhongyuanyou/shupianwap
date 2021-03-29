@@ -12,7 +12,7 @@
       <my-icon
         class="search-icon"
         name="sear_ic_sear"
-        size="0.3rem"
+        size="0.32rem"
         color="#999999"
         :style="{ marginLeft: iconLeft + 'rem' }"
       ></my-icon>
