@@ -16,7 +16,7 @@
         color="#999999"
         :style="{ marginLeft: iconLeft + 'rem' }"
       ></my-icon>
-      <form v-if="!disabled" action="javascript:return true">
+      <!-- <form v-if="!disabled" action="javascript:return true">
         <input
           ref="inputRef"
           v-model="visible"
@@ -28,11 +28,13 @@
           @focus="searchFocusHandle"
           @keydown="searchKeydownHandle"
         />
-      </form>
+      </form> -->
+      <div class="search_box"></div>
+
       <!-- s 禁用输入框时，隐藏真实输入款，模拟一个输入框 -->
-      <span v-else class="imitate-input" @click="clickInputHandle">{{
+      <!-- <span v-else class="imitate-input" @click="clickInputHandle">{{
         visible || placeholder
-      }}</span>
+      }}</span> -->
     </div>
     <slot name="right"></slot>
   </div>

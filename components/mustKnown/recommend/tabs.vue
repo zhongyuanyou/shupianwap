@@ -85,6 +85,7 @@ export default {
   background: #ffffff;
   display: flex;
   align-items: center;
+  padding: 0 32px;
   .tabs-box {
     .tabs-box-items {
       display: flex;

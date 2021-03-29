@@ -140,7 +140,6 @@ export default {
   }
   .container_middle {
     height: 88px;
-    background: #ffffff;
     display: flex;
     align-items: center;
     margin-bottom: 24px;
