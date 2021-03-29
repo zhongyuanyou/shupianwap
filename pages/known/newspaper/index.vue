@@ -1,20 +1,23 @@
 <template>
   <div class="container">
     <div class="container_head">
-      <div class="header_search">
-        <my-icon
-          name="nav_ic_back"
-          size="0.40rem"
-          color="#FFFFFF"
-          class="my_icon"
-        ></my-icon>
-        <my-icon
-          name="sear_ic_sear"
-          size="0.40rem"
-          color="#FFFFFF"
-          class="my_icon"
-        ></my-icon>
-      </div>
+      <sp-sticky @scroll="scrollHandle">
+        <div class="header_search">
+          <my-icon
+            name="nav_ic_back"
+            size="0.40rem"
+            color="#FFFFFF"
+            class="my_icon"
+          ></my-icon>
+          <div v-show="showPaper" class="newspaperTitle">日报精选</div>
+          <my-icon
+            name="sear_ic_sear"
+            size="0.40rem"
+            color="#FFFFFF"
+            class="my_icon"
+          ></my-icon>
+        </div>
+      </sp-sticky>
       <div class="newspaper">日报精选</div>
       <div class="day_num">08</div>
       <div class="weekday">周一</div>
@@ -25,22 +28,7 @@
   </div>
 </template>
 <script>
-import {
-  WorkTab,
-  WorkTabs,
-  Tab,
-  Tabs,
-  Icon,
-  TopNavBar,
-  Toast,
-  Swipe,
-  SwipeItem,
-  Lazyload,
-  PullRefresh,
-  List,
-  Cell,
-  Image,
-} from '@chipspc/vant-dgg'
+import { Sticky } from '@chipspc/vant-dgg'
 import ProblemItem from '@/components/mustKnown/recommend/ProblemItem'
 
 // import Search from '@/components/mustKnown/recommend/search/Search'
@@ -49,23 +37,12 @@ import ProblemItem from '@/components/mustKnown/recommend/ProblemItem'
 export default {
   name: 'Recommend',
   components: {
-    [WorkTab.name]: WorkTab,
-    [WorkTabs.name]: WorkTabs,
-    [Tab.name]: Tab,
-    [Tabs.name]: Tabs,
-    [Icon.name]: Icon,
-    [TopNavBar.name]: TopNavBar,
-    [Toast.name]: Toast,
-    [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
-    [PullRefresh.name]: PullRefresh,
-    [List.name]: List,
-    [Cell.name]: Cell,
-    [Image.name]: Image,
+    [Sticky.name]: Sticky,
     ProblemItem,
   },
   data() {
     return {
+      showPaper: false,
       title: '考研复试体检包含什么项目',
       tabs: ['关注', '推荐', '热榜', '法律', '交易', '知产', '知识'],
       nowIndex: 2,
@@ -83,6 +60,14 @@ export default {
     toggleTabs(index) {
       console.log('index', index)
       this.nowIndex = index
+    },
+    scrollHandle({ scrollTop }) {
+      // 滚动事件
+      if (scrollTop > 88) {
+        this.showPaper = true
+      } else {
+        this.showPaper = false
+      }
     },
   },
 }
@@ -126,7 +111,16 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: #4974f5;
       .my_icon {
+      }
+      .newspaperTitle {
+        height: 50px;
+        font-size: 36px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 50px;
       }
     }
     .newspaper {
