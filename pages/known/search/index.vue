@@ -23,8 +23,15 @@
           :key="index"
           @click="historyfn(item)"
         >
-          <span :style="{ color: colorfn(index + 1) }">{{ index + 1 }}</span>
+          <sp-icon name="clock-o" class="clock" size="0.4rem" color="#555555" />
           <b> {{ item }}</b>
+          <sp-icon
+            name="cross"
+            class="close"
+            size="0.34rem"
+            color="#555555"
+            @click="del(index)"
+          />
         </li>
       </ul>
     </div>
@@ -32,13 +39,14 @@
 </template>
 
 <script>
-import { Sticky } from '@chipspc/vant-dgg'
+import { Sticky, Icon } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 
 export default {
   name: 'SearchPage',
   components: {
     [Sticky.name]: Sticky,
+    [Icon.name]: Icon,
     Search,
   },
   data() {
@@ -57,32 +65,14 @@ export default {
     }
   },
   methods: {
-    colorfn(index) {
-      if (index === 2) {
-        return '#FC6A48'
-      } else if (index === 3) {
-        return '#FF866A'
-      } else if (index === 4) {
-        return '#FF8266'
-      } else if (index === 5) {
-        return '#FF9780'
-      } else if (index === 6) {
-        return '#FFB5A4'
-      } else if (index === 7) {
-        return '#FFC4C4'
-      } else if (index === 8) {
-        return '#FFD4D4'
-      } else if (index === 9) {
-        return '#E0D3D3'
-      } else if (index === 10) {
-        return '#CCCCCC'
-      }
+    del(index) {
+      console.log(index)
+      this.historyData.splice(index, 1)
     },
     historyfn(text) {
       this.value = text
       let b
       for (let i = 0; i < this.historyData.length; i++) {
-        console.log(text, this.historyData[i])
         if (text === this.historyData[i]) {
           b = i
         }
@@ -137,19 +127,28 @@ export default {
       flex-wrap: wrap;
       justify-content: space-between;
       > li {
-        width: 46%;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        margin: 0 32px;
+        display: flex;
         font-size: 30px;
         color: #222222;
-        margin-bottom: 48px;
+        align-items: center;
+        height: 88px;
+        border-bottom: 1px solid #ddd;
+        > .clock {
+          display: block;
+          margin-right: 24px;
+        }
         > b {
           font-weight: normal;
+          width: 550px;
+          color: #555;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
-        > span {
-          margin-right: 25px;
-          color: rgba(236, 83, 48, 1);
+        > .close {
+          display: block;
+          margin-left: auto;
         }
       }
     }
