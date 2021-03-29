@@ -8,6 +8,7 @@
             size="0.40rem"
             color="#FFFFFF"
             class="my_icon"
+            @click.native="$router.back()"
           ></my-icon>
           <div v-show="showPaper" class="newspaperTitle">日报精选</div>
           <my-icon
