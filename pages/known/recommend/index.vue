@@ -9,40 +9,72 @@
         class="my_icon"
       ></my-icon>
     </div>
-    <div class="container_news_see">
-      <div class="news">
-        <div class="news_num">25</div>
-        <div class="news_span">日报精选</div>
-      </div>
-      <div class="see">
-        <div class="see_like"></div>
-        <div class="see_span">进站必看</div>
-      </div>
-    </div>
     <div class="container_middle">
-      <Tabs />
+      <Tabs @openPop="OpenPop($event)" />
     </div>
     <div class="container_body">
-      <ItemCard />
+      <AttentionItem />
     </div>
+    <sp-popup
+      v-model="showPop"
+      position="bottom"
+      class="popup"
+      :overlay-style="{ background: 'rgba(0, 0, 0, 0.4)' }"
+    >
+      <div class="popTop">
+        <div class="popTop_title">全部板块</div>
+        <my-icon
+          name="notify_ic_close"
+          size="0.48rem"
+          color="#999999"
+          class="my_icon"
+        ></my-icon>
+      </div>
+      <div class="popMiddle">
+        <div class="spans">
+          <div class="popMiddle_span1">我的板块</div>
+          <div class="popMiddle_span2">长按拖拽排序</div>
+        </div>
+        <div class="popMiddle_span3">编辑</div>
+      </div>
+      <div class="list">
+        <div class="list_items">
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+        </div>
+      </div>
+
+      <div class="popBottom">
+        <div class="spans">
+          <div class="popBottom_span1">我的板块</div>
+          <div class="popBottom_span2">长按拖拽排序</div>
+        </div>
+        <div class="popBottom_span3">编辑</div>
+      </div>
+      <div class="list">
+        <div class="list_items">
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+        </div>
+      </div>
+    </sp-popup>
   </div>
 </template>
 <script>
-import {
-  WorkTab,
-  WorkTabs,
-  Icon,
-  TopNavBar,
-  Toast,
-  Swipe,
-  SwipeItem,
-  Lazyload,
-  PullRefresh,
-  List,
-  Cell,
-  Image,
-} from '@chipspc/vant-dgg'
-import ItemCard from '@/components/mustKnown/recommend/ItemCard'
+import { WorkTab, WorkTabs, Popup } from '@chipspc/vant-dgg'
+import AttentionItem from '@/components/mustKnown/recommend/AttentionItem'
 import Search from '@/components/mustKnown/recommend/search/Search'
 import Tabs from '@/components/mustKnown/recommend/tabs'
 // import { domainUrl } from '~/config/index'
@@ -53,24 +85,18 @@ export default {
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
-    [Icon.name]: Icon,
-    [TopNavBar.name]: TopNavBar,
-    [Toast.name]: Toast,
-    [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
-    [PullRefresh.name]: PullRefresh,
-    [List.name]: List,
-    [Cell.name]: Cell,
-    [Image.name]: Image,
-    ItemCard,
+    [Popup.name]: Popup,
     Search,
     Tabs,
+    AttentionItem,
   },
   data() {
     return {
       title: '考研复试体检包含什么项目',
       tabs: ['关注', '推荐', '热榜', '法律', '交易', '知产', '知识'],
       nowIndex: 2,
+      showPop: false,
+
       infoList: [
         {
           item: 1,
@@ -85,6 +111,12 @@ export default {
     toggleTabs(index) {
       console.log('index', index)
       this.nowIndex = index
+    },
+    OpenPop(event) {
+      console.log('evnet', event)
+      if (event) {
+        this.showPop = event
+      }
     },
   },
 }
@@ -111,82 +143,16 @@ export default {
   border-radius: 3px;
 }
 .container {
-  padding: 0 32px;
   .container_head {
     display: flex;
     justify-content: space-between;
     height: 88px;
     align-items: center;
+    padding: 0 32px;
     .my_icon {
       width: 52px;
       height: 52px;
       margin-left: 32px;
-    }
-  }
-  .container_news_see {
-    height: 136px;
-    background: #ffffff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .news {
-      width: 329px;
-      height: 88px;
-      background: #dbe4fd;
-      border-radius: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      .news_num {
-        width: 48px;
-        height: 48px;
-        background: #ffffff;
-        border-radius: 50%;
-        font-size: 22px;
-        font-family: SourceHanSansCN-Medium, SourceHanSansCN;
-        font-weight: 500;
-        color: #133aa3;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .news_span {
-        height: 28px;
-        font-size: 28px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #133aa3;
-        line-height: 28px;
-        margin-left: 12px;
-      }
-    }
-    .see {
-      width: 329px;
-      height: 88px;
-      background: #d8cffa;
-      border-radius: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .see_like {
-        width: 48px;
-        height: 48px;
-        background: #ffffff;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .see_span {
-        height: 28px;
-        font-size: 28px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #564499;
-        line-height: 28px;
-        margin-left: 12px;
-      }
     }
   }
   .container_middle {
@@ -195,6 +161,7 @@ export default {
     display: flex;
     align-items: center;
     margin-bottom: 24px;
+
     .tabs-box {
       .tabs-box-items {
         display: flex;
@@ -203,6 +170,150 @@ export default {
     }
   }
   .container_body {
+  }
+  .popup {
+    height: 1012px;
+    background: #ffffff;
+    border-radius: 24px 24px 0px 0px;
+    padding: 0 40px;
+    .popTop {
+      display: flex;
+      height: 120px;
+      align-items: center;
+      justify-content: space-between;
+      .popTop_title {
+        height: 40px;
+        font-size: 40px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #222222;
+        line-height: 40px;
+      }
+      .my_icon {
+        width: 48px;
+        height: 48px;
+        background: #f5f5f5;
+      }
+    }
+    .popMiddle {
+      // height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .spans {
+        height: 50px;
+        display: flex;
+        align-items: center;
+        .popMiddle_span1 {
+          height: 30px;
+          font-size: 30px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #222222;
+          line-height: 30px;
+        }
+        .popMiddle_span2 {
+          height: 24px;
+          font-size: 24px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #999999;
+          line-height: 24px;
+          margin-left: 15px;
+        }
+      }
+
+      .popMiddle_span3 {
+        height: 28px;
+        font-size: 28px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #4974f5;
+        line-height: 28px;
+      }
+    }
+    .list {
+      .list_items {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .item {
+          width: 154px;
+          height: 88px;
+          background: #f5f5f5;
+          border-radius: 44px;
+          font-size: 28px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #222222;
+          line-height: 28px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 16px 0 16px 0;
+        }
+      }
+    }
+
+    .popBottom {
+      // height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .spans {
+        height: 50px;
+        display: flex;
+        align-items: center;
+        .popBottom_span1 {
+          height: 30px;
+          font-size: 30px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #222222;
+          line-height: 30px;
+        }
+        .popBottom_span2 {
+          height: 24px;
+          font-size: 24px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #999999;
+          line-height: 24px;
+          margin-left: 15px;
+        }
+      }
+
+      .popBottom_span3 {
+        height: 28px;
+        font-size: 28px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #4974f5;
+        line-height: 28px;
+      }
+    }
+    .list {
+      .list_items {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .item {
+          width: 154px;
+          height: 88px;
+          background: #f5f5f5;
+          border-radius: 44px;
+          font-size: 28px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #222222;
+          line-height: 28px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 16px 0 16px 0;
+        }
+      }
+    }
   }
 }
 </style>

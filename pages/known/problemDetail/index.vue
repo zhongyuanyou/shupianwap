@@ -352,7 +352,7 @@ export default {
     box-sizing: border-box;
   }
   > .problem {
-    margin-top: 20px;
+    padding-top: 20px;
     background: #fff;
     > .tag {
       width: 100%;

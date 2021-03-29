@@ -10,12 +10,7 @@
         {{ 'content' }} {{ index }}
       </sp-work-tab>
     </sp-work-tabs>
-    <my-icon
-      name="tabbar_ic_order"
-      size="0.32rem"
-      color="#1A1A1A"
-      class="my_icon"
-    ></my-icon>
+    <div class="icon" @click="openPop"></div>
   </div>
 </template>
 <script>
@@ -46,6 +41,10 @@ export default {
     toggleTabs(index) {
       console.log('index', index)
       this.nowIndex = index
+    },
+    openPop() {
+      console.log('this.open')
+      this.$emit('openPop', true)
     },
   },
 }
@@ -87,6 +86,12 @@ export default {
       display: flex;
       overflow: auto;
     }
+  }
+  .icon {
+    width: 32px;
+    height: 32px;
+    background: black;
+    border-radius: 1px;
   }
 }
 </style>

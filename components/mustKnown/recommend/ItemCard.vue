@@ -31,7 +31,6 @@ import {
   Toast,
   Swipe,
   SwipeItem,
-  Lazyload,
   PullRefresh,
   List,
   Cell,

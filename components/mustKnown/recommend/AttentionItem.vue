@@ -104,6 +104,7 @@ export default {
   height: 453px;
   background: #ffffff;
   padding: 0 32px;
+  margin-bottom: 20px;
   .item_title {
     font-size: 36px;
     font-family: PingFangSC-Medium, PingFang SC;
@@ -113,7 +114,7 @@ export default {
   }
   .item_Info {
     display: flex;
-    margin: 28px 0 32px 0;
+    padding: 28px 0 32px 0;
     align-items: center;
 
     .userPhoto {
