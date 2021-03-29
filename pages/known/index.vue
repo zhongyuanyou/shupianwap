@@ -1,227 +1,319 @@
 <template>
-  <div class="found">
-    <sp-top-nav-bar special-layout :placeholder="true" fixed>
-      <template #title>
-        <sp-tabs
-          v-model="activeTab"
-          mask
-          title-active-color="#222"
-          @click="onClickTap"
-        >
-          <sp-tab
-            v-for="item in information_class"
-            :key="item.code"
-            :title="item.name"
-            :need-content="false"
-          >
-          </sp-tab>
-        </sp-tabs>
-      </template>
-      <template #right>
-        <sp-icon name="search" size="20" @click="onClickRight" />
-      </template>
-    </sp-top-nav-bar>
-    <Con
-      :banner="information_banner"
-      :list="information_list"
-      :category-code="categoryCode"
-      :refresh-status="refreshStatus"
-      :active-tab="activeTab"
-      @refresh="refresh"
-    />
-    <Bottombar v-if="!isInApp && !isApplets" ref="bottombar" />
-    <Loading-center v-show="loadingIndex" />
+  <div class="container">
+    <div class="container_head">
+      <Search :value="title" :icon-left="0.32"> </Search>
+      <my-icon
+        name="sear_ic_open"
+        size="0.52rem"
+        color="#4974F5"
+        class="my_icon"
+      ></my-icon>
+    </div>
+    <div class="container_middle">
+      <Tabs @openPop="OpenPop($event)" />
+    </div>
+    <div class="container_body">
+      <AttentionItem />
+    </div>
+    <sp-popup
+      v-model="showPop"
+      position="bottom"
+      class="popup"
+      :overlay-style="{ background: 'rgba(0, 0, 0, 0.4)' }"
+    >
+      <div class="popTop">
+        <div class="popTop_title">全部板块</div>
+        <my-icon
+          name="notify_ic_close"
+          size="0.48rem"
+          color="#999999"
+          class="my_icon"
+        ></my-icon>
+      </div>
+      <div class="popMiddle">
+        <div class="spans">
+          <div class="popMiddle_span1">我的板块</div>
+          <div class="popMiddle_span2">长按拖拽排序</div>
+        </div>
+        <div class="popMiddle_span3">编辑</div>
+      </div>
+      <div class="list">
+        <div class="list_items">
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+        </div>
+      </div>
+
+      <div class="popBottom">
+        <div class="spans">
+          <div class="popBottom_span1">我的板块</div>
+          <div class="popBottom_span2">长按拖拽排序</div>
+        </div>
+        <div class="popBottom_span3">编辑</div>
+      </div>
+      <div class="list">
+        <div class="list_items">
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+          <div class="item">关注</div>
+        </div>
+      </div>
+    </sp-popup>
   </div>
 </template>
-
 <script>
-import { Tab, Tabs, Icon, TopNavBar, Toast } from '@chipspc/vant-dgg'
-import { mapMutations, mapState } from 'vuex'
-import Con from '~/components/found/found/Cons'
-import { foundApi } from '@/api'
-import Bottombar from '@/components/common/nav/Bottombar'
-import LoadingCenter from '@/components/common/loading/LoadingCenter'
-import { domainUrl } from '@/config'
+import { WorkTab, WorkTabs, Popup } from '@chipspc/vant-dgg'
+import AttentionItem from '@/components/mustKnown/recommend/AttentionItem'
+import Search from '@/components/mustKnown/recommend/search/Search'
+import Tabs from '@/components/mustKnown/recommend/tabs'
+// import { domainUrl } from '~/config/index'
+// import { foundApi } from '@/api'
+
 export default {
-  layout: 'keepAlive',
-  name: 'Found',
+  name: 'Recommend',
   components: {
-    [Tab.name]: Tab,
-    [Tabs.name]: Tabs,
-    [Icon.name]: Icon,
-    [TopNavBar.name]: TopNavBar,
-    [Toast.name]: Toast,
-    Con,
-    Bottombar,
-    LoadingCenter,
-  },
-  async asyncData({ store, $axios }) {
-    try {
-      let homeData = {}
-      const params = {
-        platformCode: store.state.app.isInApp
-          ? store.state.app.appInfo.platformCode
-          : 'COMDIC_PLATFORM_CRISPS',
-        terminalCode: store.state.app.isInApp
-          ? 'COMDIC_TERMINAL_APP'
-          : 'COMDIC_TERMINAL_WAP',
-      }
-      const res = await $axios.get(foundApi.initRequest, { params })
-      if (res.code === 200) {
-        homeData = res.data || {}
-      }
-      return {
-        homeData,
-      }
-    } catch (err) {}
+    [WorkTab.name]: WorkTab,
+    [WorkTabs.name]: WorkTabs,
+    [Popup.name]: Popup,
+    Search,
+    Tabs,
+    AttentionItem,
   },
   data() {
     return {
-      activeTab: 0,
-      information_class: [
-        { code: 'con100032', name: '行业资讯' },
-        { code: 'con100034', name: '政策分析' },
-        { code: 'con100033', name: '商业头条' },
-      ], // 产品分类
-      information_banner: [], // 广告数据
-      information_list: [], // 资讯列表
-      categoryCode: '', // code码
-      refreshStatus: false,
-      loadingIndex: false,
-    }
-  },
-  computed: {
-    ...mapState({
-      isInApp: (state) => state.app.isInApp,
-      appInfo: (state) => state.app.appInfo,
-      isApplets: (state) => state.app.isApplets,
-    }),
-  },
-  mounted() {
-    // this.information_class =
-    //   this.homeData && this.homeData.information_class
-    //     ? this.homeData.information_class
-    //     : []
-    this.categoryCode =
-      this.information_class && this.information_class.length
-        ? this.information_class[0].code
-        : ''
-    this.information_banner =
-      this.homeData && this.homeData.information_banner
-        ? this.homeData.information_banner
-        : []
-    this.information_list =
-      this.homeData && this.homeData.information_list
-        ? this.homeData.information_list
-        : []
-  },
-  // 离开时 路由拦截
-  beforeRouteLeave(to, from, next) {
-    if (['found-detail-id', 'found-foundSearch'].includes(to.name)) {
-      this.SET_KEEP_ALIVE({ type: 'add', name: 'Found' })
-    } else {
-      this.SET_KEEP_ALIVE({ type: 'remove', name: 'Found' })
-    }
-    next()
-  },
-  methods: {
-    ...mapMutations({
-      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
-    }),
-    async onClickTap(index, isRefresh) {
-      // 切换按钮回滚到顶部
-      window.scrollTo(0, 0)
-      if (!isRefresh) {
-        this.information_banner = []
-        this.information_list = []
-      }
-      this.loadingIndex = true
-      // 点击tab标签
-      try {
-        this.categoryCode = this.information_class[index].code
-        const params = {
-          categoryCode: this.categoryCode,
-          platformCode: this.isInApp
-            ? this.appInfo.platformCode
-            : 'COMDIC_PLATFORM_CRISPS',
-          terminalCode: this.isInApp
-            ? 'COMDIC_TERMINAL_APP'
-            : 'COMDIC_TERMINAL_WAP',
-        }
-        const res = await this.$axios.get(foundApi.screenRequest, { params })
-        this.refreshStatus = false
-        this.loadingIndex = false
-        if (res.code === 200) {
-          this.information_banner = res.data.information_banner
-          this.information_list = res.data.information_list
-        }
-      } catch (err) {
-        this.refreshStatus = false
-        this.loadingIndex = false
-      }
-    },
-    onClickRight() {
-      if (this.isInApp) {
-        const ios =
-          '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
-          `${domainUrl}found/foundSearch` +
-          '","isHideNav":1,"isHideBack":1},"isLogin":"0","version":"1.0.0"}'
-        const android =
-          '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
-          `${domainUrl}found/foundSearch` +
-          '","isHideNav":1,"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
-        this.$appFn.dggJumpRoute({ iOSRouter: ios, androidRouter: android })
-        return
-      }
-      this.$router.push('/found/foundSearch')
-    },
-    refresh() {
-      this.refreshStatus = true
-      this.onClickTap(this.activeTab, true)
-    },
-  },
-  head() {
-    return {
-      meta: [
+      title: '考研复试体检包含什么项目',
+      tabs: ['关注', '推荐', '热榜', '法律', '交易', '知产', '知识'],
+      nowIndex: 2,
+      showPop: false,
+
+      infoList: [
         {
-          name: 'spptmd-track_code',
-          content: this.isInApp ? 'SPP000007' : 'SPW000007',
+          item: 1,
+        },
+        {
+          item: 1,
         },
       ],
     }
   },
+  methods: {
+    toggleTabs(index) {
+      console.log('index', index)
+      this.nowIndex = index
+    },
+    OpenPop(event) {
+      console.log('evnet', event)
+      if (event) {
+        this.showPop = event
+      }
+    },
+  },
 }
 </script>
-
 <style lang="less" scoped>
-.found {
-  width: 100%;
-  padding-bottom: 98px;
-  /deep/ .sp-top-nav-bar {
-    padding-top: constant(safe-area-inset-top);
-    padding-top: env(safe-area-inset-top);
-    z-index: 5;
-  }
-  /deep/ .sp-tab {
-    font-size: 32px;
-    color: #222222;
-    font-weight: bold;
-    &:first-child {
-      padding-left: 0;
+//
+::v-deep .sp-work-tab--active {
+  font-size: 32px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #222222;
+}
+/deep/ .sp-work-tab__text {
+  flex-shrink: 0;
+  font-size: 32px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #999999;
+}
+/deep/ .sp-work-tabs__line {
+  width: 24px;
+  height: 6px;
+  background: #4974f5;
+  border-radius: 3px;
+}
+.container {
+  .container_head {
+    display: flex;
+    justify-content: space-between;
+    height: 88px;
+    align-items: center;
+    padding: 0 32px;
+    .my_icon {
+      width: 52px;
+      height: 52px;
+      margin-left: 32px;
     }
   }
-  /deep/ .sp-tabs__nav--complete {
-    padding-left: 0;
+  .container_middle {
+    height: 88px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .tabs-box {
+      .tabs-box-items {
+        display: flex;
+        overflow: auto;
+      }
+    }
   }
-  /deep/ .sp-tab--active {
-    font-size: 40px;
+  .container_body {
   }
-  /deep/ .sp-tabs__line {
-    width: 32px;
-    height: 6px;
-  }
-  /deep/ .sp-hairline--bottom::after {
-    border-bottom: none;
+  .popup {
+    height: 1012px;
+    background: #ffffff;
+    border-radius: 24px 24px 0px 0px;
+    padding: 0 40px;
+    .popTop {
+      display: flex;
+      height: 120px;
+      align-items: center;
+      justify-content: space-between;
+      .popTop_title {
+        height: 40px;
+        font-size: 40px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #222222;
+        line-height: 40px;
+      }
+      .my_icon {
+        width: 48px;
+        height: 48px;
+        background: #f5f5f5;
+      }
+    }
+    .popMiddle {
+      // height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .spans {
+        height: 50px;
+        display: flex;
+        align-items: center;
+        .popMiddle_span1 {
+          height: 30px;
+          font-size: 30px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #222222;
+          line-height: 30px;
+        }
+        .popMiddle_span2 {
+          height: 24px;
+          font-size: 24px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #999999;
+          line-height: 24px;
+          margin-left: 15px;
+        }
+      }
+
+      .popMiddle_span3 {
+        height: 28px;
+        font-size: 28px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #4974f5;
+        line-height: 28px;
+      }
+    }
+    .list {
+      .list_items {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .item {
+          width: 154px;
+          height: 88px;
+          background: #f5f5f5;
+          border-radius: 44px;
+          font-size: 28px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #222222;
+          line-height: 28px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 16px 0 16px 0;
+        }
+      }
+    }
+
+    .popBottom {
+      // height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .spans {
+        height: 50px;
+        display: flex;
+        align-items: center;
+        .popBottom_span1 {
+          height: 30px;
+          font-size: 30px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #222222;
+          line-height: 30px;
+        }
+        .popBottom_span2 {
+          height: 24px;
+          font-size: 24px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #999999;
+          line-height: 24px;
+          margin-left: 15px;
+        }
+      }
+
+      .popBottom_span3 {
+        height: 28px;
+        font-size: 28px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #4974f5;
+        line-height: 28px;
+      }
+    }
+    .list {
+      .list_items {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .item {
+          width: 154px;
+          height: 88px;
+          background: #f5f5f5;
+          border-radius: 44px;
+          font-size: 28px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #222222;
+          line-height: 28px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 16px 0 16px 0;
+        }
+      }
+    }
   }
 }
 </style>
