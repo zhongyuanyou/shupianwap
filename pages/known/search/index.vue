@@ -81,7 +81,7 @@ export default {
       this.historyData.unshift(text)
     },
     keyClickHandle() {
-      console.log(111)
+      this.$router.push('/known/search/result')
     },
     clooseHandle() {
       this.$router.back()

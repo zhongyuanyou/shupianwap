@@ -9,7 +9,7 @@
         @searchKeydownHandle="keyClickHandle"
       >
         <template v-slot:left>
-          <sp-icon name="arrow-left" size="0.4rem" />
+          <sp-icon name="arrow-left" size="0.4rem" @click="$router.back()" />
         </template>
       </Search>
     </sp-sticky>
@@ -25,7 +25,12 @@
       </p>
     </div>
     <div v-show="tabIndex === 0 || tabIndex === 1" class="listbox">
-      <div v-for="(item, index) in searchList" :key="index" class="list">
+      <div
+        v-for="(item, index) in searchList"
+        :key="index"
+        class="list"
+        @click="toDetail"
+      >
         <h1>{{ item.title }}</h1>
         <div class="box">
           <div :style="{ width: item.img ? '464px' : '100%' }">
@@ -125,6 +130,23 @@ export default {
     },
     clooseHandle() {
       console.log(222)
+    },
+    toDetail() {
+      if (this.tabIndex) {
+        this.$router.push({
+          path: '/known/detail/article',
+          query: {
+            // 传文章id
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/known/detail/question',
+          query: {
+            // 传问题id
+          },
+        })
+      }
     },
   },
 }

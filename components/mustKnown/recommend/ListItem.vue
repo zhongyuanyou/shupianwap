@@ -7,7 +7,7 @@
     finished-text="没有更多了"
   >
     <sp-cell v-for="(item, index) in infoList" :key="index">
-      <div class="item">
+      <div class="item" @click="$router.push('/known/detail/article')">
         <div class="item_title">什么情况下你会毫不犹豫地辞职呢？</div>
 
         <div class="item_content">

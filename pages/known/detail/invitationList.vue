@@ -1,7 +1,7 @@
 <template>
   <div class="invitationList">
     <div class="head">
-      <sp-icon name="arrow-left" size="0.4rem" />
+      <sp-icon name="arrow-left" size="0.4rem" @click.native="$router.back()" />
       <sp-field
         v-model="keywords"
         clearable

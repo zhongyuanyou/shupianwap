@@ -6,11 +6,13 @@
         <div class="bt_box">
           <div v-if="!userId" class="bt_edit">编辑资料</div>
           <template v-else>
-            <div v-if="!isAttention" class="bt_attention">+ 关注</div>
+            <div v-if="!isAttention" class="bt_attention" @click="attention">
+              + 关注
+            </div>
             <div v-else class="bt_has_attention">已关注</div>
             <div v-if="source" class="bt_contact">
               <my-icon
-                name="fabiaoqing"
+                name="pinglun_mian"
                 size="0.36rem"
                 color="#ffffff"
               ></my-icon>
@@ -154,6 +156,9 @@ export default {
     },
     comments() {
       console.log('评论')
+    },
+    attention() {
+      console.log('关注')
     },
   },
 }

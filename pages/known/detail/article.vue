@@ -33,31 +33,23 @@
     <div class="page-bottom">
       <div class="left-area">
         <span class="icon" @click="handleClickBottom(1)">
-          <my-icon name="msg_ic_emoji" size="0.3rem" color="#000000"></my-icon
+          <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
         ></span>
         <span class="text">赞同9999</span>
         <span class="icon" @click="handleClickBottom(2)">
-          <my-icon name="msg_ic_emoji" size="0.3rem" color="#000000"></my-icon
+          <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
         ></span>
       </div>
       <div class="right-area">
         <div class="item" @click="handleClickBottom(3)">
           <div class="icon">
-            <my-icon
-              name="spiconfont-shoucang_mian"
-              size="0.3rem"
-              color="#000000"
-            ></my-icon>
+            <my-icon name="shoucang" size="0.4rem" color="#999999"></my-icon>
           </div>
           收藏
         </div>
         <div class="item" @click="handleClickBottom(4)">
           <div class="icon">
-            <my-icon
-              name="spiconfont-guankan"
-              size="0.3rem"
-              color="#000000"
-            ></my-icon>
+            <my-icon name="pinglun" size="0.4rem" color="#999999"></my-icon>
           </div>
           评论
         </div>

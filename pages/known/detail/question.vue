@@ -3,12 +3,18 @@
     <Header v-show="!commetnShow" title="">
       <template #left>
         <div>
-          <sp-icon name="arrow-left" size="0.4rem" />
+          <sp-icon name="arrow-left" size="0.4rem" @click="$router.back()" />
         </div>
       </template>
       <template #right>
         <div class="btn">
-          <sp-icon name="search" size="0.4rem" color="#1A1A1A" class="ss" />
+          <sp-icon
+            name="search"
+            size="0.4rem"
+            color="#1A1A1A"
+            class="ss"
+            @click="$router.push('/known/search')"
+          />
           <sp-icon
             name="ellipsis"
             size="0.4rem"
@@ -75,11 +81,11 @@
         <div class="right" :class="detail.isLike ? 'act' : ''">好问题</div>
       </div>
       <div ref="btns" class="btns">
-        <div class="box">
+        <div class="box" @click="$router.push('/known/detail/invitationList')">
           <sp-icon name="friends-o" size="0.4rem" />
           <p>邀请回答</p>
         </div>
-        <div class="box">
+        <div class="box" @click="$router.push('/known/publish/answer')">
           <sp-icon name="edit" size="0.4rem" />
           <p>写回答</p>
         </div>
@@ -151,11 +157,11 @@
       </div>
     </div>
     <div v-show="fixedshow" class="fiexdbtn">
-      <div class="btn">
+      <div class="btn" @click="$router.push('/known/detail/invitationList')">
         <sp-icon name="friends-o" size="0.4rem" />
         <span>邀请回答</span>
       </div>
-      <div class="btn">
+      <div class="btn" @click="$router.push('/known/publish/answer')">
         <sp-icon name="edit" size="0.4rem" />
         <span>写回答</span>
       </div>
