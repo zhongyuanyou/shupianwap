@@ -54,6 +54,11 @@ export default {
           path: '/',
         },
         {
+          name: '发现',
+          iconName: 'tabbar_ic_news',
+          path: '/found',
+        },
+        {
           name: '必懂',
           iconName: 'tabbar_ic_news',
           path: '/known',

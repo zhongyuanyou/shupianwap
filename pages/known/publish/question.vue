@@ -30,14 +30,7 @@
           <p>· 添加合适的话题，让问题更好地流通</p>
           <p>· 确保问题没有被提问过</p>
         </div>
-        <sp-field
-          v-model="formData.content"
-          placeholder="请输入内容"
-          type="textarea"
-          maxlength="3000"
-          rows="4"
-          autosize
-        />
+        <Editor :init-content="formData.content" @editorChange="editorChange" />
       </div>
       <ChooseTopic
         ref="chooseTopic"
@@ -53,11 +46,13 @@ import { Field } from '@chipspc/vant-dgg'
 import PageHead from '@/components/mustKnown/publish/PageHead'
 import TitleArea from '@/components/mustKnown/publish/TitleArea'
 import ChooseTopic from '@/components/mustKnown/publish/ChooseTopic'
+import Editor from '@/components/mustKnown/publish/Editor'
 export default {
   components: {
     PageHead,
     TitleArea,
     ChooseTopic,
+    Editor,
     [Field.name]: Field,
   },
   data() {
@@ -100,6 +95,9 @@ export default {
     },
     handleClickCloseToast() {
       this.showToast = false
+    },
+    editorChange(val) {
+      this.formData.content = val
     },
   },
 }

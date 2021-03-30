@@ -62,13 +62,9 @@
       <div class="main">
         <TitleArea ref="myTitle" :title="question.title" :can-edit="false" />
         <div class="content">
-          <sp-field
-            v-model="formData.content"
-            placeholder="请输入内容"
-            type="textarea"
-            maxlength="3000"
-            rows="4"
-            autosize
+          <Editor
+            :init-content="formData.content"
+            @editorChange="editorChange"
           />
         </div>
       </div>
@@ -81,11 +77,13 @@ import { Field, Tab, Tabs, Button } from '@chipspc/vant-dgg'
 import CommonHead from '@/components/common/head/header'
 import PageHead from '@/components/mustKnown/publish/PageHead'
 import TitleArea from '@/components/mustKnown/publish/TitleArea'
+import Editor from '@/components/mustKnown/publish/Editor'
 export default {
   components: {
     PageHead,
     CommonHead,
     TitleArea,
+    Editor,
     [Field.name]: Field,
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
@@ -201,6 +199,9 @@ export default {
     },
     chooseQue(id) {
       this.id = id
+    },
+    editorChange(val) {
+      this.formData.content = val
     },
   },
 }

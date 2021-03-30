@@ -13,14 +13,7 @@
         @setTitle="setTitle"
       />
       <div class="content">
-        <sp-field
-          v-model="formData.content"
-          placeholder="请输入内容"
-          type="textarea"
-          maxlength="3000"
-          rows="4"
-          autosize
-        />
+        <Editor :init-content="formData.content" @editorChange="editorChange" />
       </div>
       <ChooseTopic
         ref="chooseTopic"
@@ -36,11 +29,13 @@ import { Field } from '@chipspc/vant-dgg'
 import PageHead from '@/components/mustKnown/publish/PageHead'
 import TitleArea from '@/components/mustKnown/publish/TitleArea'
 import ChooseTopic from '@/components/mustKnown/publish/ChooseTopic'
+import Editor from '@/components/mustKnown/publish/Editor'
 export default {
   components: {
     PageHead,
     TitleArea,
     ChooseTopic,
+    Editor,
     [Field.name]: Field,
   },
   data() {
@@ -49,6 +44,7 @@ export default {
       formData: {
         title: '',
         content: '',
+        text: '',
         topics: [], // 话题
       },
       editType: '', // editType=1为编写文章 editType=2 为新发文章
@@ -64,7 +60,7 @@ export default {
     },
     hasVal() {
       // 文章发布按钮显示必须有标题和内容
-      return this.formData.title.length > 0 && this.formData.content.length > 0
+      return this.formData.title.length > 0 && this.formData.text.length > 0
     },
   },
   mounted() {
@@ -86,6 +82,12 @@ export default {
     setTitle(val) {
       this.formData.title = val
       console.log('this.formData', this.formData)
+    },
+    editorChange(data) {
+      console.log('data', data)
+      this.formData.content = data.html
+      this.formData.text = data.text
+      console.log('this.formData.content', this.formData)
     },
   },
 }

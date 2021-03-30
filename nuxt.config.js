@@ -87,20 +87,20 @@ module.exports = {
         type: 'text/javascript',
         charset: 'utf-8',
       },
-      {
-        src:
-          'https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-2.0.18.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
-      {
-        src:
-          'https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js',
-        ssr: false,
-        type: 'text/javascript',
-        charset: 'utf-8',
-      },
+      // {
+      //   src:
+      //     'https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-2.0.18.js',
+      //   ssr: false,
+      //   type: 'text/javascript',
+      //   charset: 'utf-8',
+      // },
+      // {
+      //   src:
+      //     'https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js',
+      //   ssr: false,
+      //   type: 'text/javascript',
+      //   charset: 'utf-8',
+      // },
     ],
   },
   loading: { color: '#4974F5' },
@@ -109,6 +109,9 @@ module.exports = {
     'assets/icons/iconfont.css',
     'assets/iconsNew/iconfont.css',
     'assets/styles/reset-vant.less',
+    'quill/dist/quill.snow.css',
+    'quill/dist/quill.bubble.css',
+    'quill/dist/quill.core.css',
   ],
   styleResources: {
     less: 'assets/styles/variables.less',
@@ -123,6 +126,7 @@ module.exports = {
     { src: '@/plugins/oss', ssr: true },
     { src: '@/plugins/install-components', ssr: false },
     { src: '@/plugins/directive.js', ssr: false },
+    { src: '@/plugins/vue-quill-editor', ssr: false },
   ],
   router: {
     middleware: 'appDock',

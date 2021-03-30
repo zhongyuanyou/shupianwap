@@ -106,26 +106,26 @@
         <span>提个问题</span>
       </div>
       <div class="answer_article">
-        <div class="item">
+        <div class="item" @click="tonav('/known/publish/question')">
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
             alt=""
           />
           <span>提个问题</span>
         </div>
-        <div class="item">
+        <div class="item" @click="tonav('/known/publish/answer')">
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
             alt=""
           />
-          <span>提个问题</span>
+          <span>回答问题</span>
         </div>
-        <div class="item">
+        <div class="item" @click="tonav('/known/publish/article')">
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
             alt=""
           />
-          <span>提个问题</span>
+          <span>写文章</span>
         </div>
       </div>
       <div class="line"></div>
@@ -180,6 +180,9 @@ export default {
     }),
   },
   methods: {
+    tonav(url) {
+      this.$router.push({ path: url })
+    },
     toggleTabs(index) {
       // console.log('index', index)
       this.nowIndex = index
