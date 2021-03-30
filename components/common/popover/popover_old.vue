@@ -1,6 +1,7 @@
 <template>
   <div v-show="isShow" class="pop-over">
     <p>{{ text }}</p>
+    <!-- <span>文本文本文本文本</span> -->
     <div @click="close()">
       <my-icon
         name="login_ic_clear"

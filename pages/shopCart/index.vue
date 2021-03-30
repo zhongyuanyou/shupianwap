@@ -1,10 +1,5 @@
 <!--
- * @Author: xiao pu
- * @Date: 2020-11-26 11:50:25
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-02-02 16:29:08
- * @Description: 购物车页面
- * @FilePath: /chips-wap/pages/shoppingCar/index.vue
+ * @Author: lijialun
 -->
 
 <template>

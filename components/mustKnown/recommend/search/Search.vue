@@ -29,7 +29,7 @@
           @keydown="searchKeydownHandle"
         />
       </form> -->
-      <div class="search_box"></div>
+      <div class="search_box">考研复试体检包含什么项目</div>
 
       <!-- s 禁用输入框时，隐藏真实输入款，模拟一个输入框 -->
       <!-- <span v-else class="imitate-input" @click="clickInputHandle">{{
@@ -176,6 +176,14 @@ export default {
     }
     .search-icon {
       margin-right: 12px;
+    }
+    .search_box {
+      height: 30px;
+      font-size: 30px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #999999;
+      line-height: 30px;
     }
   }
 }

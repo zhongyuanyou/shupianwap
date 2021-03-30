@@ -6,8 +6,8 @@
         :key="index"
         :need-content="false"
         :title="index"
+        @click="getBackIndex"
       >
-        <ListItem />
       </sp-work-tab>
     </sp-work-tabs>
     <div class="icon" @click="openPop"></div>
@@ -15,7 +15,6 @@
 </template>
 <script>
 import { WorkTab, WorkTabs, List, Cell, Sticky } from '@chipspc/vant-dgg'
-import ListItem from '@/components/mustKnown/recommend/ListItem'
 
 export default {
   name: 'Tabs',
@@ -25,7 +24,6 @@ export default {
     [List.name]: List,
     [Cell.name]: Cell,
     [Sticky.name]: Sticky,
-    ListItem,
   },
 
   props: {
@@ -45,7 +43,6 @@ export default {
   methods: {
     toggleTabs(index) {
       console.log('index', index)
-      this.nowIndex = index
     },
     openPop() {
       console.log('this.open')

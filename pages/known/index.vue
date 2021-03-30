@@ -15,14 +15,43 @@
         @click.native="openArticle"
       ></my-icon>
     </div>
+    <!-- 吸顶 start -->
     <sp-sticky>
       <div class="container_middle">
-        <Tabs @openPop="OpenPop($event)" />
+        <div class="tabs-box-items">
+          <div
+            v-for="(item, index) in tabs"
+            :key="index"
+            class="li-tab"
+            @click="toggleTabs(index)"
+          >
+            <p>{{ item }}</p>
+            <div class="line" :class="tabIndex ? 'line' : ''"></div>
+          </div>
+        </div>
+        <my-icon
+          name="guanbi_mian"
+          size="0.32rem"
+          color="#F5F5F5"
+          class="my_icon"
+          @click.native="showPop = false"
+        ></my-icon>
+        <!-- <Tabs @openPop="OpenPop($event)" @getBackIndex="getBackIndex($event)" /> -->
       </div>
     </sp-sticky>
+    <!-- 吸顶 end -->
+    <!-- 列表 start -->
     <div class="container_body">
-      <ListItem />
+      <section v-if="tabIndex === 0">
+        <VisitUser v-if="attentionStatus" />
+        <NotAttention v-if="showNotAttention" />
+        <AttentionItem v-if="attentionStatus" />
+      </section>
+      <section v-else-if="tabIndex === 1"><ListItem /></section>
+      <section v-else-if="tabIndex === 2"><ItemCard /></section>
     </div>
+    <!-- 列表 end -->
+    <!-- 弹出框tab修改列表 start -->
     <sp-popup
       v-model="showPop"
       position="bottom"
@@ -45,18 +74,29 @@
             <div class="popMiddle_span1">我的板块</div>
             <div class="popMiddle_span2">长按拖拽排序</div>
           </div>
-          <div class="popMiddle_span3">编辑</div>
+          <div class="popMiddle_span3" @click="editIcon(status)">
+            {{ editFinish }}
+          </div>
         </div>
         <div class="list">
           <div class="list_items">
-            <div class="item">关注</div>
-            <div class="item">关注</div>
-            <div class="item">关注</div>
-            <div class="item">关注</div>
-            <div class="item">关注</div>
-            <div class="item">关注</div>
-            <div class="item">关注</div>
-            <div class="item">关注</div>
+            <div
+              v-for="(item, index) in myPlate"
+              :key="index"
+              :class="status ? '' : index < 3 ? 'active' : ''"
+              class="item"
+            >
+              {{ item }}
+              <my-icon
+                v-show="showIcon"
+                name="guanbi_mian"
+                size="0.28rem"
+                color="#dddddd"
+                class="my_icon"
+                :class="index < 3 ? 'iconactive' : ''"
+                @click.native="deleteToMyPlate(index)"
+              ></my-icon>
+            </div>
           </div>
         </div>
       </div>
@@ -69,27 +109,23 @@
         </div>
         <div class="list">
           <div class="list_items">
-            <div class="item">
-              关注
+            <div v-for="(item, index) in morePlate" :key="index" class="item">
+              {{ item }}
               <my-icon
+                v-show="showIcon"
                 name="fabu_mian"
                 size="0.28rem"
                 color="#dddddd"
                 class="my_icon"
-                @click.native="openArticle"
+                @click.native="addToMyPlate(index)"
               ></my-icon>
             </div>
-            <div class="item">关注</div>
-            <div class="item">关注</div>
-            <div class="item">关注</div>
-            <div class="item">关注</div>
-            <div class="item">关注</div>
-            <div class="item">关注</div>
-            <div class="item">关注</div>
           </div>
         </div>
       </div>
     </sp-popup>
+    <!-- 弹出框tab修改列表 end -->
+    <!-- 弹出框文章 start -->
     <sp-popup
       v-model="showArticlePop"
       position="bottom"
@@ -131,19 +167,25 @@
       <div class="line"></div>
       <div class="button" @click="closePop">取消</div>
     </sp-popup>
-    <Bottombar v-if="!isInApp && !isApplets" ref="bottombar" />
+    <!-- 弹出框文章 end -->
+    <!-- 底部tab start -->
+    <Bottombar v-if="!isInApp" ref="bottombar" />
+    <!-- 底部tab end -->
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import { WorkTab, WorkTabs, Popup, Sticky } from '@chipspc/vant-dgg'
+import { WorkTab, WorkTabs, Popup, Sticky, Tab, Tabs } from '@chipspc/vant-dgg'
+import AttentionItem from '@/components/mustKnown/recommend/AttentionItem'
+import NotAttention from '@/pages/known/attention/NotAttention'
+import VisitUser from '@/components/mustKnown/recommend/VisitUser'
 import ListItem from '@/components/mustKnown/recommend/ListItem'
+import ItemCard from '@/components/mustKnown/recommend/ItemCard'
 import Search from '@/components/mustKnown/recommend/search/Search'
-import Tabs from '@/components/mustKnown/recommend/tabs'
+// import Tabs from '@/components/mustKnown/recommend/tabs'
 import Bottombar from '@/components/common/nav/Bottombar'
 // import { domainUrl } from '~/config/index'
 // import { foundApi } from '@/api'
-
 export default {
   name: 'Index',
   components: {
@@ -151,17 +193,28 @@ export default {
     [WorkTabs.name]: WorkTabs,
     [Popup.name]: Popup,
     [Sticky.name]: Sticky,
+    [Tab.name]: Tab,
+    [Tabs.name]: Tabs,
     Search,
-    Tabs,
+    // Tabs,
     ListItem,
+    ItemCard,
+    VisitUser,
+    AttentionItem,
     Bottombar,
+    NotAttention,
   },
   data() {
     return {
+      attentionStatus: true, // 已关注
+      showNotAttention: false, // 未关注
       title: '考研复试体检包含什么项目',
-      tabs: ['关注', '推荐', '热榜', '法律', '交易', '知产', '知识'],
+      tabs: ['关注', '推荐', '热榜', '法律', '交易', '知产', '知识', '数据'],
+      editFinish: '编辑',
       nowIndex: 2,
       showPop: false,
+      showIcon: false,
+      status: true,
       showArticlePop: false,
       infoList: [
         {
@@ -171,6 +224,33 @@ export default {
           item: 1,
         },
       ],
+      myPlate: [
+        '关注',
+        '推荐',
+        '热榜',
+        '法律',
+        '交易',
+        '知产',
+        '知识',
+        '互联网',
+        '工商注册',
+        '办证',
+        '刻章',
+      ],
+      morePlate: [
+        '关注',
+        '推荐',
+        '热榜',
+        '法律',
+        '交易',
+        '知产',
+        '知识',
+        '互联网',
+        '工商注册',
+        '办证',
+        '刻章',
+      ],
+      tabIndex: 1,
     }
   },
   computed: {
@@ -179,15 +259,21 @@ export default {
       isShowOpenApp: (state) => state.app.isShowOpenApp,
     }),
   },
+  mounted() {},
   methods: {
     toggleTabs(index) {
-      // console.log('index', index)
-      this.nowIndex = index
+      console.log('index', index)
+      this.tabIndex = index
     },
     OpenPop(event) {
       // console.log('evnet', event)
       if (event) {
         this.showPop = event
+      }
+    },
+    getBackIndex(event) {
+      if (event) {
+        console.log(event)
       }
     },
     openArticle() {
@@ -197,10 +283,38 @@ export default {
     closePop() {
       this.showArticlePop = false
     },
+    editIcon(status) {
+      if (status) {
+        this.showIcon = true
+        this.editFinish = '完成'
+        this.status = false
+      } else {
+        this.showIcon = false
+        this.editFinish = '编辑'
+        this.status = true
+      }
+    },
+    addToMyPlate(index) {
+      console.log('index', index)
+      const arrayValue = this.morePlate[index]
+      if (arrayValue) {
+        this.myPlate.push(arrayValue)
+        this.morePlate.pop(index)
+      }
+    },
+    // changeTab(name, title) {
+    //   console.log(name)
+    // },
   },
 }
 </script>
 <style lang="less" scoped>
+.active {
+  color: #cccccc !important;
+}
+.iconactive {
+  display: none;
+}
 //
 ::v-deep .sp-work-tab--active {
   font-size: 32px;
@@ -241,12 +355,48 @@ export default {
     display: flex;
     align-items: center;
     // margin-bottom: 24px;
+    padding: 0 32px;
 
-    .tabs-box {
-      .tabs-box-items {
-        display: flex;
-        overflow: auto;
+    .tabs-box-items {
+      display: flex;
+      overflow: auto;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+      .li-tab {
+        flex-shrink: 0;
+        height: 32px;
+        font-size: 32px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #999999;
+        line-height: 32px;
+        margin-right: 48px;
+        .line {
+          width: 24px;
+          height: 6px;
+          background: #4974f5;
+          border-radius: 3px;
+          margin-top: 12px;
+          margin: 0 auto;
+          margin-top: 12px;
+        }
       }
+      .active {
+        height: 32px;
+        font-size: 32px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #222222;
+        line-height: 32px;
+      }
+
+      // li:nth-child(1) {
+      //   // margin-left: 20px;
+      // }
+      // li:nth-last-child(1) {
+      //   margin-right: 16px;
+      // }
     }
   }
   .container_body {
@@ -314,8 +464,7 @@ export default {
       .list {
         .list_items {
           display: flex;
-          justify-content: space-between;
-          flex-wrap: wrap;
+          flex-flow: row wrap;
           .item {
             width: 154px;
             height: 88px;
@@ -329,18 +478,23 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 16px 0 16px 0;
+            margin: 8px 0;
             position: relative;
+            margin-right: 18px;
             > .my_icon {
               position: absolute;
               top: 0;
               right: 0;
             }
           }
+          div:nth-child(4n + 4) {
+            margin-right: 0;
+          }
         }
       }
     }
     .popContentTwo {
+      margin-top: 72px;
       .popBottom {
         // height: 50px;
         display: flex;
@@ -381,11 +535,11 @@ export default {
       .list {
         .list_items {
           display: flex;
-          justify-content: space-between;
-          flex-wrap: wrap;
+          flex-flow: row wrap;
           .item {
             width: 154px;
             height: 88px;
+            background: #f5f5f5;
             border-radius: 44px;
             font-size: 28px;
             font-family: PingFangSC-Regular, PingFang SC;
@@ -395,14 +549,17 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 16px 0 16px 0;
+            margin: 8px 0;
             position: relative;
-            border: 2px dashed #dddddd;
+            margin-right: 18px;
             > .my_icon {
               position: absolute;
               top: 0;
               right: 0;
             }
+          }
+          div:nth-child(4n + 4) {
+            margin-right: 0;
           }
         }
       }

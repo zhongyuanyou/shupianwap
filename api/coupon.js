@@ -9,7 +9,7 @@ const coupon = {
       axios,
       params,
       method: 'post',
-      url: 'http://127.0.0.1:7001/service/yk/v2/coupon/list.do',
+      url: CHIPS_WAP_BASE_URL + '/nk/marketingCoupon/v2/find_my_coupon_page',
     })
   },
   receiveCoupon({ axios }, params) {
