@@ -10,7 +10,7 @@
         + 话题 (至少添加一个)
       </p>
       <div v-else class="select-topics-area">
-        <span> + 话题({{ topics.length }}/5)</span>
+        <span class="topic-item"> + 话题({{ topics.length }}/5)</span>
         <span
           v-for="(item, index) in topics"
           :key="index"
@@ -369,13 +369,21 @@ export default {
 
 <style lang="less" scoped>
 .choose-topic {
-  height: 28px;
+  position: fixed;
+  left: 0;
+  bottom: 120px;
+  height: 80px;
+  padding: 20px 0 0 40px;
+  width: 100%;
+  overflow-x: scroll;
   font-size: 28px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
   color: #4974f5;
   line-height: 88px;
-  padding-left: 40px;
+  background: white;
+  border-top: 1px solid #ddd;
+  z-index: 2;
   .item {
     margin-right: 10px;
   }
@@ -478,13 +486,20 @@ export default {
   padding: 16px 32px;
 }
 .select-topics-area {
+  position: absolute;
+  width: auto;
+  overflow-x: scroll;
   font-size: 28px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
   color: #4974f5;
   line-height: 28px;
+  white-space: nowrap;
   span {
     display: inline-block;
+  }
+  .topic-item {
+    padding: 12px;
   }
   .topic1-item {
     margin-left: 10px;

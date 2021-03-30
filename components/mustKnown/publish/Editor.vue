@@ -4,13 +4,12 @@
       v-quill:myQuillEditor="editorOption"
       class="quill-editor"
       :content="content"
+      placeholder="请在此处输入内容"
       @change="onEditorChange($event)"
       @blur="onEditorBlur($event)"
       @focus="onEditorFocus($event)"
       @ready="onEditorReady($event)"
-    >
-      <p>请在此处输入内容</p>
-    </div>
+    ></div>
   </div>
 </template>
 <script>
@@ -27,9 +26,9 @@ export default {
         // some quill options
         modules: {
           toolbar: [
-            // ['bold', 'italic', 'underline', 'strike'], // 加粗 斜体 下划线 删除线
+            ['bold', 'italic', 'underline'], // 加粗 斜体 下划线 删除线 ['bold', 'italic', 'underline', 'strike']
             // ["blockquote", "code-block"], // 引用代码块
-            [{ header: 1 }, { header: 2 }], // 1、2 级标题
+            [{ header: 1 }, { header: 2 }], // 1、2 级标题  [{ header: 1 }, { header: 2 }]
 
             // [{ list: "ordered" }, { list: "bullet" }], // 有序、无序列表
 
@@ -39,9 +38,9 @@ export default {
 
             // [{'direction': 'rtl'}], // 文本方向
 
-            [{ size: ['small', false, 'large', 'huge'] }], // 字体大小
+            [{ size: ['small', false, 'large'] }], // 字体大小 [{ size: ['small', false, 'large', 'huge'] }]
 
-            // [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题
+            // [{ header: [1, 2] }], // 标题   [{ header: [1, 2, 3, 4, 5, 6, false] }]
 
             // [{ color: [] }, { background: [] }], // 字体颜色、字体背景颜色
 
@@ -83,36 +82,193 @@ export default {
   },
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
 .edit-container {
-  margin: 40px 0;
-  .ql-editor {
-    min-height: 100px;
-  }
-  .ql-toolbar {
-    position: fixed;
-  }
-  .ql-toolbar.ql-snow {
-    position: fixed !important;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 88px;
-  }
+  min-height: 400px;
+  border-top: 1px solid #ddd;
 }
 </style>
-<style lang="css" scoped>
-.ql-editor {
+<style lang="css">
+/* .ql-editor {
   min-height: 100px !important;
-}
-.ql-toolbar {
+} */
+/* .ql-toolbar {
   position: fixed;
-}
-.edit-container .ql-toolbar {
+} */
+/* .edit-container .ql-toolbar {
   position: fixed !important;
+  left: 0;
+  bottom: 40px;
+  width: 100%;
+  height: auto;
+} */
+</style>
+<style lang="css">
+.editor {
+  line-height: normal !important;
+  height: 500px;
+}
+/* .ql-snow .ql-tooltip[data-mode='link']::before {
+  content: '请输入链接地址:';
+}
+.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+  border-right: 0px;
+  content: '保存';
+  padding-right: 0px;
+}
+
+.ql-snow .ql-tooltip[data-mode='video']::before {
+  content: '请输入视频地址:';
+} */
+
+.ql-snow .ql-picker.ql-size .ql-picker-label::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item::before {
+  content: '中';
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='small']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='small']::before {
+  content: '小';
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value='large']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='large']::before {
+  content: '大';
+}
+/* .ql-snow .ql-picker.ql-size .ql-picker-label[data-value='huge']::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value='huge']::before {
+  content: '32px';
+} */
+
+.ql-snow .ql-picker.ql-header .ql-picker-label::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item::before {
+  content: '文本';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='1']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='1']::before {
+  content: '标题1';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='2']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='2']::before {
+  content: '标题2';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='3']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='3']::before {
+  content: '标题3';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='4']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='4']::before {
+  content: '标题4';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='5']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='5']::before {
+  content: '标题5';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='6']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='6']::before {
+  content: '标题6';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item::before {
+  content: '标准字体';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='serif']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='serif']::before {
+  content: '衬线字体';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='monospace']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='monospace']::before {
+  content: '等宽字体';
+}
+
+.ql-editor.ql-blank::before {
+  color: rgba(0, 0, 0, 0.6);
+  content: '请在此处输入内容';
+  font-style: italic;
+  left: 15px;
+  pointer-events: none;
+  position: absolute;
+  right: 15px;
+}
+/* .ql-toolbar.ql-snow {
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  padding: 0 8px;
+  text-align: right;
+}
+.ql-formats {
+  margin-right: 10px;
+} */
+/* .ql-snow .ql-picker.ql-size {
+  width: 120px;
+} */
+.ql-snow .ql-picker.ql-size {
+  width: 120px;
+}
+.ql-snow .ql-picker.ql-header {
+  width: 150px;
+}
+.ql-toolbar.ql-snow .ql-formats {
+  margin-right: 0;
+}
+/* 字体选择样式处理汉化 */
+.ql-toolbar.ql-snow .ql-formats button {
+  position: relative;
+  width: 100px;
+}
+.ql-toolbar.ql-snow .ql-formats .ql-header {
+  width: 60px !important;
+  margin-left: 4px;
+}
+.ql-toolbar.ql-snow .ql-formats:nth-child(1) button svg {
+  display: none;
+}
+.ql-toolbar.ql-snow .ql-formats button::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 12px;
+  width: 100%;
+  height: 100%;
+  padding: 12px 0;
+  color: #222;
+}
+
+.ql-toolbar.ql-snow .ql-formats .ql-bold::before {
+  content: '加粗';
+  font-weight: bold;
+}
+
+.ql-toolbar.ql-snow .ql-formats .ql-italic::before {
+  content: '斜体';
+  font-style: italic;
+}
+.ql-toolbar.ql-snow .ql-formats .ql-underline::before {
+  content: '下划线';
+  text-decoration: underline;
+}
+.ql-toolbar.ql-snow .ql-formats .ql-strike::before {
+  content: '中横线';
+  text-decoration: line-through;
+}
+/* 选择图片样式修改 */
+.ql-toolbar.ql-snow .ql-formats:nth-child(4) {
+  width: 70px;
+}
+
+.ql-toolbar.ql-snow {
+  border: none;
+  background: white;
+}
+.ql-container.ql-snow {
+  border: none;
+}
+.ql-toolbar.ql-snow {
+  border: none;
+  position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 88px;
+  z-index: 2;
 }
 </style>
