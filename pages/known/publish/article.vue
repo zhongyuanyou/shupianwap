@@ -123,6 +123,6 @@ export default {
   }
 }
 .content-area {
-  margin-bottom: 100px;
+  margin-bottom: 260px;
 }
 </style>

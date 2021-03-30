@@ -380,12 +380,14 @@ export default {
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
   color: #4974f5;
-  line-height: 88px;
   background: white;
   border-top: 1px solid #ddd;
   z-index: 2;
   .item {
     margin-right: 10px;
+  }
+  p {
+    line-height: 44px;
   }
 }
 .sp-popup--bottom {

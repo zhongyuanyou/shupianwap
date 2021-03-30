@@ -3,9 +3,9 @@
     <div class="content">
       <h2>文本区域111</h2>
     </div>
-    <div class="page-btn">
+    <!-- <div class="page-btn">
       <sp-field type="text" placeholder="请输入1" />
-    </div>
+    </div> -->
     <div>下单协议</div>
   </div>
 </template>
@@ -18,7 +18,10 @@ export default {
     [Field.name]: Field,
   },
   mounted() {
+    // 获取协议
     this.getProtocol('protocol100008')
+    // 数据加密
+    this.jiami()
   },
   methods: {
     async getProtocol(categoryCode) {
@@ -42,6 +45,20 @@ export default {
         this.$xToast.error(error.message || '请求失败')
         return Promise.reject(error)
       }
+    },
+    jiami() {
+      this.$axios
+        .get(
+          'http://dspmicrouag.shupian.cn/crisps-c-middle-service-api/nk/encryptAndDecrypt/encryption_data.do',
+          {
+            params: {
+              stayEncryptData: 134567890112,
+            },
+          }
+        )
+        .then((res) => {
+          console.log('res', res)
+        })
     },
   },
 }

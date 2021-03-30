@@ -203,10 +203,10 @@ export default {
   width: 120px;
 } */
 .ql-snow .ql-picker.ql-size {
-  width: 120px;
+  width: 1.2rem;
 }
 .ql-snow .ql-picker.ql-header {
-  width: 150px;
+  width: 1.5rem;
 }
 .ql-toolbar.ql-snow .ql-formats {
   margin-right: 0;
@@ -214,7 +214,7 @@ export default {
 /* 字体选择样式处理汉化 */
 .ql-toolbar.ql-snow .ql-formats button {
   position: relative;
-  width: 100px;
+  width: 1rem;
 }
 .ql-toolbar.ql-snow .ql-formats .ql-header {
   width: 60px !important;
@@ -227,10 +227,10 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
-  font-size: 12px;
+  font-size: 0.24rem;
+  line-height: 0.52rem;
   width: 100%;
   height: 100%;
-  padding: 12px 0;
   color: #222;
 }
 
@@ -253,7 +253,7 @@ export default {
 }
 /* 选择图片样式修改 */
 .ql-toolbar.ql-snow .ql-formats:nth-child(4) {
-  width: 70px;
+  width: 0.7rem;
 }
 
 .ql-toolbar.ql-snow {
