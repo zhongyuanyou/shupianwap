@@ -6,31 +6,20 @@
         <span class="order-status">{{ data.orderStatusName }}</span>
       </p>
       <div
-        v-for="(item, index) in data.productVo"
+        v-for="(item, index) in data.orderSkuEsList"
         :key="index"
         class="order-infos"
         :class="index !== 0 ? 'border-top' : ''"
       >
-        <div class="img">
-          <img
-            src="https://static.leetcode-cn.com/cn-assets/webpack_bundles/images/lcci_bg.7bfafcf36.png"
-            alt=""
-            srcset=""
-          />
-        </div>
+        <sp-image :src="item.skuImages" alt="" class="img" srcset="" />
         <div class="right">
           <p class="goods-name">
-            <span class="name"> {{ item.name }}</span>
-            <span class="money1"> {{ item.price }}元 </span>
+            <span class="name"> {{ item.spuName }}</span>
+            <span class="money1"> {{ item.skuPrice }}元 </span>
           </p>
           <p class="sku-info">
-            <span
-              v-for="(item2, index2) in item.fieldList"
-              :key="index2"
-              class="sku-item"
-              >{{ item2.fieldValue }};</span
-            >
-            <span class="goods-num">×{{ item.goodsNumber }}</span>
+            <span class="sku-item">{{ item.skuExtInfo }}</span>
+            <span class="goods-num">×{{ item.skuCount }}</span>
           </p>
           <!-- 增值服务产品中心2期已去掉 2021.03.10 -->
           <!-- <div class="sku-sercice">
@@ -65,31 +54,36 @@
     </div>
     <div class="btn-area">
       <div class="inner">
+        <!-- 未支付订单可取消订单 根据订单状态判断-->
         <sp-button
-          v-if="orderType == 1"
+          v-if="data.cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID'"
           type="primary"
-          @click="handleClickItem(1)"
+          @click="handleClickItem(1, '取消订单')"
           >取消订单</sp-button
         >
+        <!-- 客户订单状态 -->
         <sp-button
-          v-if="orderType !== 4 && !data.contracUrl"
+          v-if="checkContractStatus() === 2"
           type="info"
-          @click="handleClickItem(2)"
+          @click="handleClickItem(3, '查看合同')"
+          >查看合同</sp-button
+        >
+        <sp-button
+          v-if="checkContractStatus() === 1"
+          type="info"
+          @click="handleClickItem(2, '签署合同')"
           >签署合同</sp-button
         >
         <sp-button
-          v-if="orderType !== 4 && data.contracUrl"
-          type="info"
-          @click="handleClickItem(2)"
-          >查看合同</sp-button
-        >
-        <sp-button type="default" @click="handleClickItem(3)"
+          v-if="data.isNeedPay"
+          type="default"
+          @click="handleClickItem(4, '立即付款')"
           >立即付款</sp-button
         >
         <sp-button
-          v-if="orderType === 2"
+          v-if="data.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'"
           type="default"
-          @click="handleClickItem(4)"
+          @click="handleClickItem(5, '确认完成')"
           >确认完成</sp-button
         >
       </div>
@@ -98,10 +92,11 @@
 </template>
 
 <script>
-import { Button } from '@chipspc/vant-dgg'
+import { Button, Image } from '@chipspc/vant-dgg'
 export default {
   components: {
     [Button.name]: Button,
+    [Image.name]: Image,
   },
   props: {
     data: {
@@ -114,21 +109,50 @@ export default {
       type: String,
       default: '',
     },
-    orderType: {
-      type: Number,
-      default: 0,
+    selectedOrderStatus: {
+      type: String,
+      default: '',
     },
   },
   methods: {
-    handleClickItem(type) {
-      this.$emit('handleClickItem', type, this.data)
+    handleClickItem(type, text) {
+      this.$emit('handleClickItem', type, text, this.data)
     },
     toDetail() {
       this.$router.push({
         path: '/order/detail',
-        query: { id: this.data.orderId || this.data.id || '13131' },
+        query: { id: this.data.id },
       })
       this.$store.dispatch('order/setOrderData', this.data)
+    },
+    // 判断订单状态
+    checkOrderStatus(code) {
+      const ALLSTATUS = {
+        1: 'ORDER_ORDER_SALE_STATUS_UN_PAID,ORDER_ORDER_TRADE_STATUS_UN_PAID,ORDER_ORDER_RESOURCE_STATUS_UN_PAID,ORDER_ORDER_SERVER_STATUS_UN_PAID', // 可取消订单的状态 未付款时
+        2: 'ORDER_ORDER_SALE_STATUS_HANDLING,ORDER_ORDER_SALE_STATUS_HANDLED,ORDER_ORDER_TRADE_STATUS_HANDLING,ORDER_ORDER_RESOURCE_STATUS_HANDLING,ORDER_ORDER_SERVER_STATUS_UN_ASSIGN,ORDER_ORDER_SERVER_STATUS_UN_RECEICE_ORDER,ORDER_ORDER_SERVER_STATUS_HANDLING', // 进行中
+        3: 'ORDER_ORDER_SALE_STATUS_COMPLETED,ORDER_ORDER_TRADE_STATUS_COMPLETED,ORDER_ORDER_RESOURCE_STATUS_COMPLETED,ORDER_ORDER_SERVER_STATUS_HANDLED,ORDER_ORDER_SERVER_STATUS_COMPLETED', // 已完成
+        4: 'ORDER_ORDER_SALE_STATUS_CANCELLED,ORDER_ORDER_TRADE_STATUS_CANCELLED,ORDER_ORDER_RESOURCE_STATUS_CANCELLED,ORDER_ORDER_SERVER_STATUS_CANCELLED', // 已取消
+      }
+      for (const key of ALLSTATUS) {
+        if (ALLSTATUS[key].match(code)) {
+          return key
+        }
+      }
+    },
+    // 展示合同操作按钮判断
+    checkContractStatus() {
+      const data = this.data
+      // 当客户订单状态为已取消时不展示按钮
+      if (data.cusOrderStatusNo === 'ORDER_CUS_STATUS_CANCELLED') return false
+      // 当合同状态为草稿或签署中时显示签署合同按钮
+      if (
+        data.contractStatus &&
+        (data.contractStatus === 'STRUTS_QSZ' ||
+          data.contractStatus === 'STRUTS_CG')
+      )
+        return 1
+      // 当合同状态为已完成时显示查看合同按钮
+      if (data.contractStatus && data.contractStatus === 'STRUTS_YWC') return 2
     },
   },
 }

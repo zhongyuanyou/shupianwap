@@ -33,6 +33,7 @@ export default {
     },
     submit() {
       console.log('发布')
+      this.$emit('submit')
     },
   },
 }

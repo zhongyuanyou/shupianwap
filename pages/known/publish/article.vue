@@ -3,6 +3,7 @@
     <PageHead
       :title="editType == 1 ? '编辑文章' : '攥写文章'"
       :has-val="hasVal"
+      @submit="submit"
     />
     <div class="main">
       <TitleArea
@@ -12,15 +13,8 @@
         :title="formData.title"
         @setTitle="setTitle"
       />
-      <div class="content">
-        <sp-field
-          v-model="formData.content"
-          placeholder="请输入内容"
-          type="textarea"
-          maxlength="3000"
-          rows="4"
-          autosize
-        />
+      <div class="content-area">
+        <Editor :init-content="formData.content" @editorChange="editorChange" />
       </div>
       <ChooseTopic
         ref="chooseTopic"
@@ -36,23 +30,33 @@ import { Field } from '@chipspc/vant-dgg'
 import PageHead from '@/components/mustKnown/publish/PageHead'
 import TitleArea from '@/components/mustKnown/publish/TitleArea'
 import ChooseTopic from '@/components/mustKnown/publish/ChooseTopic'
+import Editor from '@/components/mustKnown/publish/Editor'
 export default {
   components: {
     PageHead,
     TitleArea,
     ChooseTopic,
+    Editor,
     [Field.name]: Field,
   },
   data() {
     return {
       hideInput: false, // 是否隐藏标题输入框
-      formData: {
-        title: '',
-        content: '',
-        topics: [], // 话题
-      },
+      detailData: {},
       editType: '', // editType=1为编写文章 editType=2 为新发文章
       articleId: '',
+      formData: {
+        // 编辑之前的信息
+        title: '',
+        content: '',
+        text: '',
+        topics: [], // 话题
+      },
+      editData: {
+        // 编辑之后的富文本数据
+        text: '',
+        content: '',
+      },
     }
   },
   computed: {
@@ -64,7 +68,10 @@ export default {
     },
     hasVal() {
       // 文章发布按钮显示必须有标题和内容
-      return this.formData.title.length > 0 && this.formData.content.length > 0
+      return (
+        this.formData.title.length > 0 &&
+        (this.formData.text.length > 0 || this.editData.text.length > 0)
+      )
     },
   },
   mounted() {
@@ -87,6 +94,14 @@ export default {
       this.formData.title = val
       console.log('this.formData', this.formData)
     },
+    editorChange(data) {
+      this.editData.text = data.text
+      this.editData.content = data.html
+    },
+    submit() {
+      const data = Object.assign(this.formData, this.editData)
+      console.log('data', data)
+    },
   },
 }
 </script>
@@ -106,5 +121,8 @@ export default {
       margin-right: 10px;
     }
   }
+}
+.content-area {
+  margin-bottom: 260px;
 }
 </style>

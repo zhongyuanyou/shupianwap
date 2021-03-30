@@ -3,9 +3,9 @@
     <Banner :order-type="orderType" :order-status="orderStatus" />
     <div class="order-area">
       <!-- 服务商品、 -->
-      <ServeList v-if="orderType === 1" :order-data="orderData" />
+      <!-- <ServeList v-if="orderType === 1" :order-data="orderData" /> -->
       <!-- 交易商品 -->
-      <TradeList v-else class="goods-info" :order-data="orderData" />
+      <TradeList class="goods-info" :order-data="orderData" />
       <div class="price-area">
         <p>
           <span> 商品总额 </span>
@@ -15,23 +15,30 @@
           </span>
         </p>
         <p>
+          <span> 优惠金额 </span>
+          <span class="money">
+            {{ orderData.orderDiscountMoney || 0 }}
+            元
+          </span>
+        </p>
+        <p>
           <span> 活动优惠 </span>
           <span class="money">
-            {{ orderData.orderTotalMoney || 0 }}
+            {{ orderData.discount2 || 0 }}
             元
           </span>
         </p>
         <p>
           <span> 优惠券 </span>
           <span class="money">
-            {{ orderData.orderDiscountMoney || 0 }}
+            {{ orderData.discount3 || 0 }}
             元
           </span>
         </p>
         <p>
           <span> 其他优惠 </span>
           <span class="money">
-            {{ orderData.orderDiscountMoney || 0 }}
+            {{ orderData.orther || 0 }}
             元
           </span>
         </p>
@@ -43,17 +50,24 @@
           元
         </span>
       </p>
+      <p class="last-money">
+        已付金额:
+        <span class="pay-money">
+          {{ orderData.orderPaidMoney || 0 }}
+          元
+        </span>
+      </p>
     </div>
 
     <div class="order-info">
       <p class="order-item">
         <span class="label">订单编号</span>
-        <span class="text">{{ orderData.orderNo || '21321313' }}</span>
+        <span class="text">{{ orderData.orderNo }}</span>
         <span class="btn" @click="copy">复制</span>
       </p>
       <p class="order-item">
         <span class="label">下单时间</span>
-        <span class="text">{{ orderData.createTime || '2021-02-02' }}</span>
+        <span class="text">{{ orderData.createTime }}</span>
       </p>
       <p class="order-item">
         <span class="label">支付状态</span>
@@ -141,11 +155,12 @@ import ServeList from '@/components/order/detail/ServeList'
 import TradeList from '@/components/order/detail/TradeList'
 import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
 import PayModal from '@/components/order/PayModal' // 支付弹窗
+import orderApi from '@/api/order'
 export default {
   components: {
     [Button.name]: Button,
     Banner,
-    ServeList,
+    // ServeList,
     TradeList,
     CancelOrder,
     PayModal,
@@ -156,7 +171,7 @@ export default {
       orderType: 1,
       orderStatus: 1,
       orderData: {
-        productVo: [],
+        orderSkuList: [],
       },
       // 交易资源
       jyList: [
@@ -248,18 +263,29 @@ export default {
     }
   },
   created() {
-    this.orderType = Math.ceil(Math.random(0, 1) * 3)
+    // this.orderType = Math.ceil(Math.random(0, 1) * 3)
     this.orderStatus = Math.ceil(Math.random(0, 1) * 4)
   },
   mounted() {
-    this.orderData = this.$store.state.order.orderData
+    // this.orderData = this.$store.state.order.orderData
     this.orderId = this.$route.query.id
-    this.orderType = parseInt(this.orderId.charAt(this.orderId.length - 1))
+    // this.orderId = '8064689631648653312'
+    // this.orderType = parseInt(this.orderId.charAt(this.orderId.length - 1))
     console.log('this.$orderData', this.orderData)
+    this.getDetail()
   },
   methods: {
     onLeftClick() {
       this.$router.back(-1)
+    },
+    async getDetail() {
+      console.log('this.orderId', this.orderId)
+      const res = await orderApi.detail(
+        { axios: this.axios },
+        { orderId: this.orderId }
+      )
+      this.orderData = res.data
+      console.log('this.orderData', this.orderData)
     },
     handleClickItem(type, order) {
       this.selectedOrder = order

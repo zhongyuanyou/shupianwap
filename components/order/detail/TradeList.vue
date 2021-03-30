@@ -5,7 +5,7 @@
         <TradeItem :item="item" />
       </div>
     </div>
-    <div v-if="orderData.productVo.length > 3" class="btn-p">
+    <div v-if="orderData.orderSkuList.length > 3" class="btn-p">
       <sp-button
         v-if="hideMore"
         icon="arrow-down"
@@ -50,7 +50,7 @@ export default {
       return this.goodsList.length > 3 && this.hideMore ? '8.2rem' : 'auto'
     },
     goodsList() {
-      return this.orderData.productVo
+      return this.orderData.orderSkuList
     },
   },
   methods: {
