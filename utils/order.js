@@ -21,13 +21,18 @@ const PAYSTATUSCODE = {
 const checkContractStatus = function (data) {
   // 当客户订单状态为已取消时不展示按钮
   if (data.cusOrderStatusNo === 'ORDER_CUS_STATUS_CANCELLED') return false
-  // 当订单状态合同状态为草稿或签署中时显示签署合同按钮
-  if (
-    data.contractStatus &&
-    (data.contractStatus === 'STRUTS_QSZ' ||
-      data.contractStatus === 'STRUTS_CG')
-  )
-    return 1
+  if (data.cusOrderStatusNo !== 'ORDER_CUS_STATUS_CANCELLED') {
+    // 当订单状态不为已取消时
+    // 当合同状态为草稿或签署中或无合同信息时显示签署合同按钮
+    if (
+      (data.contractStatus &&
+        (data.contractStatus === 'STRUTS_QSZ' ||
+          data.contractStatus === 'STRUTS_CG')) ||
+      !data.contractStatus
+    ) {
+      return 1
+    }
+  }
   // 当合同状态为已完成时显示查看合同按钮
   if (data.contractStatus && data.contractStatus === 'STRUTS_YWC') return 2
 }
