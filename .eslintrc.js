@@ -6,6 +6,7 @@ module.exports = {
   },
   globals: {
     dggSensors: true,
+    ZxEditor: true,
   },
   parserOptions: {
     parser: 'babel-eslint',

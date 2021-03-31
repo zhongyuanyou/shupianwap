@@ -241,6 +241,12 @@ const appHandler = {
       handleRequest(res, fn)
     })
   },
+  // 开启在线聊天
+  dggOpenOnlineServiceIM: (data = { entranceId: '' }, fn = () => {}) => {
+    Bridge.callHandler('dgg_openOnlineServiceIM', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
 }
 
 // 注册APP调用的js方法

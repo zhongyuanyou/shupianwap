@@ -9,14 +9,15 @@
     </div>
     <div class="right">
       <p class="goods-name">
-        <span class="name"> {{ item.name }}</span>
-        <span class="money1"> {{ item.price }}元 </span>
+        <span class="name"> {{ item.spuName }}</span>
+        <span class="money1"> {{ item.skuPrice }}元 </span>
       </p>
       <div class="sku-info">
-        <div class="goods-num">×{{ item.num || 1 }}</div>
-        <p v-for="(item2, index2) in item.fieldList" :key="index2">
+        <div class="goods-num">×{{ item.skuCount || 1 }}</div>
+        <p>{{ item.skuExtInfo }}</p>
+        <!-- <p v-for="(item2, index2) in item.fieldList" :key="index2">
           {{ item2.fieldValue }}
-        </p>
+        </p> -->
       </div>
     </div>
   </div>

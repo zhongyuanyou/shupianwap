@@ -250,14 +250,6 @@
         font-size: 30px;
         justify-content: center;
         align-items: center;
-        .end {
-          font-size: 24px;
-          font-weight: 500;
-          color: #fefffe;
-          line-height: 24px;
-          margin-right: 6px;
-          font-family: PingFangSC-Medium, PingFang SC;
-        }
         .down-time {
           font-size: 24px;
           font-family: PingFangSC-Medium, PingFang SC;

@@ -1,7 +1,6 @@
 <template>
   <div v-show="isShow" class="pop-over">
     <p>{{ text }}</p>
-    <!-- <span>文本文本文本文本</span> -->
     <div @click="close()">
       <my-icon
         name="login_ic_clear"
@@ -20,10 +19,6 @@ export default {
       type: String,
       default: '',
     },
-    // indexData: {
-    //   type: Number,
-    //   default: 0,
-    // },
   },
   data() {
     return {

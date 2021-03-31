@@ -96,6 +96,14 @@
 </template>
 
 <style lang="less" scoped>
+/deep/.sp-sticky--fixed {
+  max-width: 10rem;
+  width: 100%;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #d20001 0%, #f80302 100%);
+}
 .container {
   position: relative;
   .container-advice {
@@ -131,10 +139,8 @@
     }
     .search {
       display: flex;
-      // justify-content: space-between;
       align-items: center;
-      padding-top: 56px;
-      margin-bottom: 16px;
+      padding: 16px 0;
       .left-back {
         display: flex;
         justify-content: center;

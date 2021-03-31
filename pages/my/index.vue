@@ -14,8 +14,8 @@
         />
         <p class="txt" @click="handleClickLogin">
           {{
-            userId && info.nickName
-              ? '欢迎你，' + info.nickName || ''
+            (userId && info.nickName) || userName
+              ? '欢迎你，' + userName || info.nickName || ''
               : '登录/注册'
           }}
         </p>
@@ -211,22 +211,26 @@ export default {
         title: '确定退出吗？',
       },
       loading: false,
+      userName: '',
     }
   },
   computed: {
     ...mapState({
       userId: (state) => state.user.userInfo.userId,
       token: (state) => state.user.userInfo.token,
+      userPhone: (state) => state.user.userInfo.userPhone,
     }),
     avatar() {
       return GOODSLIST
     },
   },
   mounted() {
-    if (this.userId) {
+    if (this.userId || this.$cookies.get('token')) {
+      this.userName = this.$cookies.get('userName')
       this.getUserInfo()
     }
   },
+
   methods: {
     coupon() {
       this.$router.push('/my/coupon/coupon')
@@ -255,12 +259,13 @@ export default {
       try {
         const params = {
           // id: this.userId,
-          id: this.userId,
+          id: this.userId || this.$cookies.get('userId'),
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false
         if (res.code === 200 && res.data && typeof res.data === 'object') {
           this.info = res.data
+          this.$store.dispatch('user/setInfo', res.data)
         } else {
           // 清除用户缓存信息
           this.$store.dispatch('user/clearUser')
@@ -422,7 +427,7 @@ export default {
   }
   .exit_btn {
     margin: 65px 24px 0 24px;
-    height: 80px;
+    height: 280px;
     /deep/ .sp-button {
       width: 100%;
     }
