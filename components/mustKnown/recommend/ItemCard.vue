@@ -9,7 +9,20 @@
     <sp-cell v-for="(item, index) in infoList" :key="index">
       <div class="item">
         <div class="item_top">
-          <div class="item_span"></div>
+          <div
+            class="item_span"
+            :class="
+              index === 0
+                ? 'first'
+                : index == 1
+                ? 'second'
+                : index == 2
+                ? 'third'
+                : ''
+            "
+          >
+            {{ index + 1 }}
+          </div>
           <div class="item_content">
             <p>
               如何看待全国政协委员俞敏洪：建议修改义务教育法，让流动儿童在居住地就近入学？你支持吗？
@@ -89,22 +102,45 @@ export default {
 </script>
 <style lang="less" scoped>
 /deep/ .sp-cell {
-  padding: 0;
+  padding: 0 32px;
 }
 .item {
   padding: 18px 0 28px 0;
   border-top: 1px solid #dddddd;
   .item_top {
     display: flex;
-    // position: relative;
+
     justify-content: space-between;
     .item_span {
+      text-align: center;
+      font-size: 28px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #999999;
+    }
+    .first {
       width: 30px;
       height: 44px;
       background: linear-gradient(315deg, #fa2925 0%, #ff8e8e 100%);
-      // position: absolute;
       margin-top: 10px;
       margin-right: 20px;
+      color: #fff;
+    }
+    .second {
+      width: 30px;
+      height: 44px;
+      background: linear-gradient(315deg, #ff8208 0%, #ffb132 100%);
+      margin-top: 10px;
+      margin-right: 20px;
+      color: #fff;
+    }
+    .third {
+      width: 30px;
+      height: 44px;
+      background: linear-gradient(135deg, #e4c57c 0%, #e2a972 100%);
+      margin-top: 10px;
+      margin-right: 20px;
+      color: #fff;
     }
     .item_content {
       width: 398px;

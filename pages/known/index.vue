@@ -23,10 +23,11 @@
             v-for="(item, index) in tabs"
             :key="index"
             class="li-tab"
+            :class="{ tab_active: index == tabIndex }"
             @click="toggleTabs(index)"
           >
             <p>{{ item }}</p>
-            <div class="line" :class="tabIndex ? 'line' : ''"></div>
+            <div :class="{ line_active: index == tabIndex }"></div>
           </div>
         </div>
         <my-icon
@@ -34,9 +35,8 @@
           size="0.32rem"
           color="#F5F5F5"
           class="my_icon"
-          @click.native="showPop = false"
+          @click.native="openPop"
         ></my-icon>
-        <!-- <Tabs @openPop="OpenPop($event)" @getBackIndex="getBackIndex($event)" /> -->
       </div>
     </sp-sticky>
     <!-- 吸顶 end -->
@@ -44,8 +44,8 @@
     <div class="container_body">
       <section v-if="tabIndex === 0">
         <VisitUser v-if="attentionStatus" />
-        <NotAttention v-if="showNotAttention" />
         <AttentionItem v-if="attentionStatus" />
+        <NotAttention v-if="showNotAttention" />
       </section>
       <section v-else-if="tabIndex === 1"><ListItem /></section>
       <section v-else-if="tabIndex === 2"><ItemCard /></section>
@@ -64,7 +64,7 @@
           <my-icon
             name="guanbi_mian"
             size="0.48rem"
-            color="#F5F5F5"
+            color="black"
             class="my_icon"
             @click.native="showPop = false"
           ></my-icon>
@@ -208,10 +208,10 @@ export default {
     return {
       attentionStatus: true, // 已关注
       showNotAttention: false, // 未关注
-      title: '考研复试体检包含什么项目',
+      title: '考研复试体检包含什么项目', // 标题
       tabs: ['关注', '推荐', '热榜', '法律', '交易', '知产', '知识', '数据'],
       editFinish: '编辑',
-      nowIndex: 2,
+      tabIndex: 1,
       showPop: false,
       showIcon: false,
       status: true,
@@ -250,7 +250,6 @@ export default {
         '办证',
         '刻章',
       ],
-      tabIndex: 1,
     }
   },
   computed: {
@@ -266,6 +265,7 @@ export default {
     },
     toggleTabs(index) {
       console.log('index', index)
+      // this.tabIndex = index
       this.tabIndex = index
     },
     OpenPop(event) {
@@ -305,9 +305,10 @@ export default {
         this.morePlate.pop(index)
       }
     },
-    // changeTab(name, title) {
-    //   console.log(name)
-    // },
+    openPop() {
+      console.log('this.open')
+      this.showPop = true
+    },
   },
 }
 </script>
@@ -317,6 +318,23 @@ export default {
 }
 .iconactive {
   display: none;
+}
+.tab_active {
+  height: 32px;
+  font-size: 32px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #222222;
+  line-height: 32px;
+}
+.line_active {
+  width: 24px;
+  height: 6px;
+  background: #4974f5;
+  border-radius: 3px;
+  margin-top: 12px;
+  margin: 0 auto;
+  margin-top: 12px;
 }
 //
 ::v-deep .sp-work-tab--active {
@@ -375,15 +393,6 @@ export default {
         color: #999999;
         line-height: 32px;
         margin-right: 48px;
-        .line {
-          width: 24px;
-          height: 6px;
-          background: #4974f5;
-          border-radius: 3px;
-          margin-top: 12px;
-          margin: 0 auto;
-          margin-top: 12px;
-        }
       }
       .active {
         height: 32px;
@@ -393,13 +402,6 @@ export default {
         color: #222222;
         line-height: 32px;
       }
-
-      // li:nth-child(1) {
-      //   // margin-left: 20px;
-      // }
-      // li:nth-last-child(1) {
-      //   margin-right: 16px;
-      // }
     }
   }
   .container_body {
