@@ -3,7 +3,9 @@
     <div @click="toDetail">
       <p class="order-no-area">
         <span class="orderNo"> 订单编号: {{ data.orderNo }} </span>
-        <span class="order-status">{{ data.orderStatusName }}</span>
+        <span class="order-status">{{
+          CUSORDERSTATUSCODE[data.cusOrderStatusNo]
+        }}</span>
       </p>
       <div
         v-for="(item, index) in data.orderSkuEsList"
@@ -56,7 +58,7 @@
       <div class="inner">
         <!-- 未支付订单可取消订单 根据订单状态判断-->
         <sp-button
-          v-if="data.cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID'"
+          v-if="checkOrdertStatus() === 1"
           type="primary"
           @click="handleClickItem(1, '取消订单')"
           >取消订单</sp-button
@@ -75,13 +77,13 @@
           >签署合同</sp-button
         >
         <sp-button
-          v-if="data.isNeedPay"
+          v-if="checkOrdertStatus() === 3"
           type="default"
           @click="handleClickItem(4, '立即付款')"
           >立即付款</sp-button
         >
         <sp-button
-          v-if="data.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'"
+          v-if="checkOrdertStatus() === 2"
           type="default"
           @click="handleClickItem(5, '确认完成')"
           >确认完成</sp-button
@@ -93,6 +95,7 @@
 
 <script>
 import { Button, Image } from '@chipspc/vant-dgg'
+import orderUtils from '@/utils/order'
 export default {
   components: {
     [Button.name]: Button,
@@ -114,6 +117,16 @@ export default {
       default: '',
     },
   },
+  data() {
+    return {
+      CUSORDERSTATUSCODE: {
+        ORDER_CUS_STATUS_UNPAID: '待付款', // 未付款
+        ORDER_CUS_STATUS_PROGRESSING: '办理中', // 进行中
+        ORDER_CUS_STATUS_COMPLETED: '已完成', // 已完成
+        ORDER_CUS_STATUS_CANCELLED: '已取消', // 已取消
+      },
+    }
+  },
   methods: {
     handleClickItem(type, text) {
       this.$emit('handleClickItem', type, text, this.data)
@@ -121,7 +134,7 @@ export default {
     toDetail() {
       this.$router.push({
         path: '/order/detail',
-        query: { id: this.data.id },
+        query: { id: this.data.id, cusOrderId: this.data.cusOrderId },
       })
       this.$store.dispatch('order/setOrderData', this.data)
     },
@@ -141,18 +154,11 @@ export default {
     },
     // 展示合同操作按钮判断
     checkContractStatus() {
-      const data = this.data
-      // 当客户订单状态为已取消时不展示按钮
-      if (data.cusOrderStatusNo === 'ORDER_CUS_STATUS_CANCELLED') return false
-      // 当合同状态为草稿或签署中时显示签署合同按钮
-      if (
-        data.contractStatus &&
-        (data.contractStatus === 'STRUTS_QSZ' ||
-          data.contractStatus === 'STRUTS_CG')
-      )
-        return 1
-      // 当合同状态为已完成时显示查看合同按钮
-      if (data.contractStatus && data.contractStatus === 'STRUTS_YWC') return 2
+      return orderUtils.checkContractStatus(this.data)
+    },
+    // 判断订单状态支付状态等展示不同的订单操作按钮
+    checkOrdertStatus() {
+      return orderUtils.checkOrdertStatus(this.data)
     },
   },
 }

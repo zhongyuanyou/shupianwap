@@ -6,6 +6,12 @@ export const state = () => ({
     3: '定金尾款',
     4: '服务完结收费',
   },
+  orderStatusCode: {
+    1: 'ORDER_CUS_STATUS_UNPAID', // 未付款
+    2: 'ORDER_CUS_STATUS_PROGRESSING', // 进行中
+    3: 'ORDER_CUS_STATUS_COMPLETED', // 已完成
+    4: 'ORDER_CUS_STATUS_CANCELLED', // 已取消
+  },
 })
 
 export const mutations = {

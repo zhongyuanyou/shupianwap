@@ -1,6 +1,6 @@
 <template>
-  <div class="pay-page">
-    <Banner :order-type="orderType" :order-status="orderStatus" />
+  <div v-if="hasData" class="pay-page">
+    <Banner :order-status-code="orderData.cusOrderDetail.cusOrderStatusNo" />
     <div class="order-area">
       <!-- 服务商品、 -->
       <!-- <ServeList v-if="orderType === 1" :order-data="orderData" /> -->
@@ -72,10 +72,10 @@
       <p class="order-item">
         <span class="label">支付状态</span>
         <span class="text">{{
-          orderStatus === 1 ? '待支付' : '部分付款'
+          orderData.orderStatus === '1' ? '待支付' : '部分付款'
         }}</span>
       </p>
-      <div v-if="orderStatus !== 1" class="pay-detail-area">
+      <div class="pay-detail-area">
         <p class="has-pay">
           <span class="span1">首款：</span>
           <span class="span2">3000</span>
@@ -119,18 +119,20 @@
     </div>
     <div class="btn-area">
       <div class="inner">
-        <sp-button v-if="orderStatus === 1" @click="handleClickItem(1)"
-          >取消订单</sp-button
-        >
+        <!--   v-if="
+            orderData.orderSplitAndCusVo[0].cusOrderPayStatusNo ===
+            orderStatusCode[1]
+          " -->
+        <sp-button @click="handleClickItem(1)">取消订单</sp-button>
         <sp-button @click="handleClickItem(2)">签署合同</sp-button>
         <sp-button
-          v-if="orderStatus === 1"
+          v-if="orderData.orderStatus === 1"
           class="btn-pay"
           @click="handleClickItem(3)"
           >立即支付</sp-button
         >
         <sp-button
-          v-if="orderStatus === 2"
+          v-if="orderData.orderStatus === 2"
           class="btn-pay"
           @click="handleClickItem(4)"
           >支付余款</sp-button
@@ -167,11 +169,14 @@ export default {
   },
   data() {
     return {
+      hasData: false,
       orderId: '',
+      cusOrderId: '',
       orderType: 1,
-      orderStatus: 1,
       orderData: {
+        orderStatus: '',
         orderSkuList: [],
+        orderSplitAndCusVo: [],
       },
       // 交易资源
       jyList: [
@@ -262,13 +267,19 @@ export default {
       ],
     }
   },
+  computed: {
+    orderStatusCode() {
+      return this.$store.state.order.orderStatusCode
+    },
+  },
   created() {
     // this.orderType = Math.ceil(Math.random(0, 1) * 3)
-    this.orderStatus = Math.ceil(Math.random(0, 1) * 4)
+    // this.orderStatus = Math.ceil(Math.random(0, 1) * 4)
   },
   mounted() {
     // this.orderData = this.$store.state.order.orderData
     this.orderId = this.$route.query.id
+    this.cusOrderId = this.$route.query.cusOrderId
     // this.orderId = '8064689631648653312'
     // this.orderType = parseInt(this.orderId.charAt(this.orderId.length - 1))
     console.log('this.$orderData', this.orderData)
@@ -278,14 +289,23 @@ export default {
     onLeftClick() {
       this.$router.back(-1)
     },
-    async getDetail() {
+    getDetail() {
       console.log('this.orderId', this.orderId)
-      const res = await orderApi.detail(
-        { axios: this.axios },
-        { orderId: this.orderId }
-      )
-      this.orderData = res.data
-      console.log('this.orderData', this.orderData)
+      orderApi
+        .getDetailByOrderId(
+          { axios: this.axios },
+          { id: this.orderId, cusOrderId: this.cusOrderId }
+        )
+        .then((res) => {
+          console.log('res')
+          this.orderData = res.data
+          this.hasData = true
+        })
+        .catch((err) => {
+          console.log('错误信息err', err)
+          this.$xToast.showPop(err.message)
+          this.$router.back(-1)
+        })
     },
     handleClickItem(type, order) {
       this.selectedOrder = order
@@ -302,6 +322,15 @@ export default {
           break
         case 2:
           console.log('2')
+          // 签署合同
+          this.$router.push({
+            path: 'contract/edit',
+            query: {
+              orderId: this.orderId,
+              cusOrderId: this.cusOrderId,
+              fromPage: 'orderDetail',
+            },
+          })
           //
           break
         case 3:

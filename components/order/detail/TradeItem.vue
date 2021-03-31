@@ -9,7 +9,7 @@
     </div>
     <div class="right">
       <p class="goods-name">
-        <span class="name"> {{ item.orderSaleName }}</span>
+        <span class="name"> {{ item.spuName }}</span>
         <span class="money1"> {{ item.skuPrice }}元 </span>
       </p>
       <div class="sku-info">

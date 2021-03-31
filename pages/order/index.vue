@@ -422,7 +422,15 @@ export default {
           break
         case 2:
           console.log('2')
-          //
+          // 签署合同
+          this.$router.push({
+            path: 'contract/edit',
+            query: {
+              orderId: order.id,
+              cusOrderId: order.cusOrderId,
+              fromPage: 'orderList',
+            },
+          })
           break
         case 4:
           // if (order.payType) {
