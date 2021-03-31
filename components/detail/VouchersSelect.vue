@@ -13,22 +13,26 @@
       </div>
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
-    <div class="cell" @click="openSku">
-      <div class="cell_left">
-        <div class="label">选择</div>
-        <div class="content">锦江区，其它，有注册经营地址</div>
-      </div>
-      <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
-    </div>
-    <div class="cell" @click="safeguardShow = true">
+    <!--    <div class="cell" @click="openSku">-->
+    <!--      <div class="cell_left">-->
+    <!--        <div class="label">选择</div>-->
+    <!--        <div class="content">锦江区，其它，有注册经营地址</div>-->
+    <!--      </div>-->
+    <!--      <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />-->
+    <!--    </div>-->
+    <div
+      v-if="serviceTag.length > 0"
+      class="cell"
+      @click="safeguardShow = true"
+    >
       <div class="cell_left">
         <div class="label">保障</div>
         <div class="content">
           <span
-            v-for="item in ['官方服务', '售后保障', '极速退款']"
-            :key="item"
+            v-for="item in serviceTag.slice(0, 3)"
+            :key="item.tagId"
             class="item"
-            >{{ item }}</span
+            >{{ item.tagName }}</span
           >
         </div>
       </div>
@@ -44,26 +48,39 @@
       <p class="popup_title">优惠</p>
       <div class="popup_box">
         <p class="p1">优惠预估</p>
-        <p class="p2">使用以下优惠券后预估价<span>720.00元</span></p>
+        <p class="p2">
+          使用以下优惠券后预估价<span>{{ couponPreferentialLine }}元</span>
+        </p>
         <div class="vouchers_box">
           <p class="vouchers_box_title">可领取优惠券</p>
           <div class="vouchers_list">
             <div
-              v-for="item in 5"
-              :key="item"
-              class="vouchers_item"
-              :class="{ over: item == 1, receive: item == 2 }"
+              v-for="item in coupon"
+              :key="item.id"
+              :class="{
+                vouchers_item: true,
+                over: item.couponStatus == 1,
+                receive: item.couponStatus == 2,
+              }"
             >
               <div class="vouchers_item_left">
-                <div class="amount">99</div>
-                <div class="conditions">无门槛</div>
+                <div class="amount">{{ item.discount }}</div>
+                <div class="conditions">{{ item.fullPrice }}</div>
               </div>
               <div class="vouchers_item_right">
-                <div class="vouchers_title">新用户通用券</div>
-                <div class="vouchers_desc">全品类通用</div>
-                <div class="vouchers_date">2020.09.01-2020.09.31</div>
+                <div class="vouchers_title">{{ item.couponName }}</div>
+                <div class="vouchers_desc">{{ item.useType }}</div>
+                <div class="vouchers_date">
+                  {{ item.serviceLife }}
+                </div>
                 <div class="vouchers_bt">
-                  {{ item == 1 ? '已领完' : item == 2 ? '已领取' : '立即领取' }}
+                  {{
+                    item.couponStatus == 1
+                      ? '已领完'
+                      : item.couponStatus == 2
+                      ? '已领取'
+                      : '立即领取'
+                  }}
                 </div>
               </div>
             </div>
@@ -72,66 +89,6 @@
             上述优惠预估仅为系统初步预估，不代表最终价格，请以订单实际价格为准。若有疑惑，请<span
               >联系客服</span
             >
-          </div>
-        </div>
-      </div>
-    </sp-popup>
-    <sp-popup
-      v-model="skuShow"
-      round
-      closeable
-      padding
-      position="bottom"
-      :style="{ padding: '0.4rem 0.4rem' }"
-    >
-      <div class="sku_box">
-        <div class="goods_info">
-          <sp-image
-            width="1.8rem"
-            height="1.8rem"
-            fit="cover"
-            lazy-load
-            src=""
-          />
-          <div class="goods_info_right">
-            <div class="price">895 <span>元</span></div>
-            <div class="code">编号 191015773</div>
-          </div>
-        </div>
-        <div class="attrs_box">
-          <div class="attrs_item">
-            <div class="attrs_item_title">区域</div>
-            <div class="attrs_item_value">锦江区</div>
-          </div>
-          <div class="attrs_item">
-            <div class="attrs_item_title">地址情况</div>
-            <div class="attrs_item_value">有注册地址</div>
-          </div>
-        </div>
-        <div class="buy_num_box">
-          <div class="buy_num_title">购买数量</div>
-          <div class="count_box">
-            <div class="count_reduce" @click="countReduce"></div>
-            <div class="count">{{ num }}</div>
-            <div class="count_add" @click="countAdd"></div>
-          </div>
-        </div>
-        <div class="cart_buy_box">
-          <div
-            v-if="type !== 3"
-            class="bt"
-            :class="{ width100: type === 2 }"
-            @click="addCart"
-          >
-            加入购物车
-          </div>
-          <div
-            v-if="type !== 2"
-            class="bt buy"
-            :class="{ width100: type === 3 }"
-            @click="nowBuy"
-          >
-            立即购买
           </div>
         </div>
       </div>
@@ -147,6 +104,66 @@
     >
       <sp-safeguard :options="options" success ellipsis></sp-safeguard>
     </sp-popup>
+    <!--    <sp-popup-->
+    <!--      v-model="skuShow"-->
+    <!--      round-->
+    <!--      closeable-->
+    <!--      padding-->
+    <!--      position="bottom"-->
+    <!--      :style="{ padding: '0.4rem 0.4rem' }"-->
+    <!--    >-->
+    <!--      <div class="sku_box">-->
+    <!--        <div class="goods_info">-->
+    <!--          <sp-image-->
+    <!--            width="1.8rem"-->
+    <!--            height="1.8rem"-->
+    <!--            fit="cover"-->
+    <!--            lazy-load-->
+    <!--            src=""-->
+    <!--          />-->
+    <!--          <div class="goods_info_right">-->
+    <!--            <div class="price">895 <span>元</span></div>-->
+    <!--            <div class="code">编号 191015773</div>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--        <div class="attrs_box">-->
+    <!--          <div class="attrs_item">-->
+    <!--            <div class="attrs_item_title">区域</div>-->
+    <!--            <div class="attrs_item_value">锦江区</div>-->
+    <!--          </div>-->
+    <!--          <div class="attrs_item">-->
+    <!--            <div class="attrs_item_title">地址情况</div>-->
+    <!--            <div class="attrs_item_value">有注册地址</div>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--        <div class="buy_num_box">-->
+    <!--          <div class="buy_num_title">购买数量</div>-->
+    <!--          <div class="count_box">-->
+    <!--            <div class="count_reduce" @click="countReduce"></div>-->
+    <!--            <div class="count">{{ num }}</div>-->
+    <!--            <div class="count_add" @click="countAdd"></div>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--        <div class="cart_buy_box">-->
+    <!--          <div-->
+    <!--            v-if="type !== 3"-->
+    <!--            class="bt"-->
+    <!--            :class="{ width100: type === 2 }"-->
+    <!--            @click="addCart"-->
+    <!--          >-->
+    <!--            加入购物车-->
+    <!--          </div>-->
+    <!--          <div-->
+    <!--            v-if="type !== 2"-->
+    <!--            class="bt buy"-->
+    <!--            :class="{ width100: type === 3 }"-->
+    <!--            @click="nowBuy"-->
+    <!--          >-->
+    <!--            立即购买-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </sp-popup>-->
   </div>
 </template>
 
@@ -188,6 +205,34 @@ export default {
       num: 1,
     }
   },
+  computed: {
+    serviceTag() {
+      const salesGoodsTags = this.$store.state.sellingGoodsDetail
+        .sellingGoodsData.salesGoodsTags
+      let serviceTag = []
+      serviceTag = salesGoodsTags.filter(
+        (item) => item.tagType === 'PRO_SERVICE_TAG'
+      )
+      return serviceTag
+    },
+    coupon() {
+      return this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList
+    },
+    couponPreferentialLine() {
+      const sellingGoodsData = this.$store.state.sellingGoodsDetail
+        .sellingGoodsData
+      const couponList = sellingGoodsData.couponList
+      // 有效优惠券金额
+      const effective = couponList.map((item) => {
+        return item.reducePrice
+      })
+      console.log(effective)
+      //  取最大优惠金额
+      const salesPrice = sellingGoodsData.salesPrice - Math.max(...effective)
+      const salesPriceRes = salesPrice >= 0 ? salesPrice : 0
+      return salesPriceRes.toFixed(2)
+    },
+  },
   methods: {
     // 减少数量
     countReduce() {
@@ -196,9 +241,9 @@ export default {
       }
     },
     // 增加数量
-    countAdd() {
-      this.num++
-    },
+    // countAdd() {
+    //   this.num++
+    // },
     openSku(type = 1) {
       this.type = type
       this.skuShow = true

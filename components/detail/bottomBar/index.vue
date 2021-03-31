@@ -95,8 +95,8 @@ export default {
     addCart() {
       this.$parent.$refs.sku.openSku(2)
     },
-    nowBuy() {
-      this.$parent.$refs.sku.openSku(3)
+    // nowBuy() {
+    //   this.$axios.post('', {})
     },
     // 规划师详情跳转
     plannerInfoUrlJump(mchUserId) {

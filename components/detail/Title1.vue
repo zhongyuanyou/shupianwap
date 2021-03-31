@@ -1,27 +1,31 @@
 <template>
   <div class="title">
-    <p class="title_btitle">{{ proDetail.name }}</p>
-    <div class="title_tags">
-      <span
-        v-for="(item, index) in [
-          '千万补贴',
-          '1对1服务',
-          '视频看房',
-          '视频看房1',
-        ]"
-        :key="index"
-        class="title_tags_item"
-        :class="{ title_tags_main: index == 0 }"
-        >{{ item }}</span
-      >
-    </div>
-    <div class="title_desc">
-      公司注册是开始创业的第一步，
-      根据《中华人民共和国公司法》规定，注册公司时需要依法向注册公司时需要...
-    </div>
+    <p class="title_btitle">{{ sellingGoodsData.name }}</p>
+    <!--    <div class="title_tags">-->
+    <!--      <span-->
+    <!--        v-for="(item, index) in [-->
+    <!--          '千万补贴',-->
+    <!--          '1对1服务',-->
+    <!--          '视频看房',-->
+    <!--          '视频看房1',-->
+    <!--        ]"-->
+    <!--        :key="index"-->
+    <!--        class="title_tags_item"-->
+    <!--        :class="{ title_tags_main: index == 0 }"-->
+    <!--        >{{ item }}</span-->
+    <!--      >-->
+    <!--    </div>-->
+    <!--    <div class="title_desc">-->
+    <!--      公司注册是开始创业的第一步，-->
+    <!--      根据《中华人民共和国公司法》规定，注册公司时需要依法向注册公司时需要...-->
+    <!--    </div>-->
     <div class="title_bottom">
-      <span class="title_bottom_money">{{ proDetail.platformPrice }}元</span>
-      <span class="title_bottom_num">销量 5678</span>
+      <span class="title_bottom_money"
+        >{{ sellingGoodsData.salesPrice }}元</span
+      >
+      <span class="title_bottom_num"
+        >销量 {{ sellingGoodsData.salesVolume }}</span
+      >
     </div>
     <PriceReduction ref="priceR"></PriceReduction>
   </div>
@@ -40,8 +44,8 @@ export default {
     return {}
   },
   computed: {
-    proDetail() {
-      return this.$store.state.tcProductDetail.detailData
+    sellingGoodsData() {
+      return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
   },
   methods: {
