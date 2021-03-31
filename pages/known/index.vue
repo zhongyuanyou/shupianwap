@@ -48,7 +48,9 @@
         <NotAttention v-if="showNotAttention" />
       </section>
       <section v-else-if="tabIndex === 1"><ListItem /></section>
-      <section v-else-if="tabIndex === 2"><ItemCard /></section>
+      <section v-else-if="tabIndex === 2">
+        <ItemCard />
+      </section>
     </div>
     <!-- 列表 end -->
     <!-- 弹出框tab修改列表 start -->
@@ -177,7 +179,7 @@
 import { mapState } from 'vuex'
 import { WorkTab, WorkTabs, Popup, Sticky, Tab, Tabs } from '@chipspc/vant-dgg'
 import AttentionItem from '@/components/mustKnown/recommend/AttentionItem'
-import NotAttention from '@/pages/known/attention/NotAttention'
+import NotAttention from '@/pages/known/attention/notAttention'
 import VisitUser from '@/components/mustKnown/recommend/VisitUser'
 import ListItem from '@/components/mustKnown/recommend/ListItem'
 import ItemCard from '@/components/mustKnown/recommend/ItemCard'
