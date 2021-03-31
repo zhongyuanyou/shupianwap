@@ -129,7 +129,7 @@ export default {
           console.log('2')
           // 签署合同
           this.$router.push({
-            path: 'contract/edit',
+            path: '/contract/edit',
             query: {
               orderId: order.id,
               cusOrderId: order.cusOrderId,
