@@ -60,7 +60,7 @@
       </div>
     </div>
     <div class="btn">
-      <div class="box">立即签署</div>
+      <div class="box" @click="sumfn()">立即申请</div>
     </div>
   </div>
 </template>
@@ -72,6 +72,8 @@ import {
   // CheckboxGroup,
 } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
+import orderApi from '@/api/order'
+import contractApi from '@/api/contract'
 export default {
   name: 'Edit',
   components: {
@@ -90,7 +92,12 @@ export default {
       email: '',
       address: '',
       formshow: false,
+      orderItem: this.$route.query,
+      orderData: '',
     }
+  },
+  mounted() {
+    this.getorder()
   },
   methods: {
     validator(val) {
@@ -102,8 +109,60 @@ export default {
         return true
       }
     },
-    onSubmit(values) {
-      console.log(values)
+    getorder() {
+      orderApi
+        .getDetailByOrderId(
+          { axios: this.axios },
+          { id: this.orderItem.orderId, cusOrderId: this.orderItem.cusOrderId }
+        )
+        .then((res) => {
+          this.orderData = res.data
+          if (this.orderData.contractVo2s.length > 0) {
+            this.partyName = this.orderData.contractVo2s[0].contractFirstName
+            this.userName = this.orderData.contractVo2s[0].contractFirstContacts
+            this.phone = this.orderData.contractVo2s[0].contractFirstPhone
+          }
+        })
+        .catch((err) => {
+          console.log('错误信息err', err)
+        })
+    },
+    applycontart() {
+      contractApi
+        .applycontart(
+          { axios: this.axios },
+          {
+            orderId: this.orderItem.orderId,
+            contractFirstName: this.partyName,
+            contractFirstContacts: this.userName,
+            contractFirstPhone: this.phone,
+            contractFirstEmail: this.email,
+            contractFirstAddr: this.address,
+          }
+        )
+        .then((res) => {
+          if (res) {
+            this.$cookies.set('contractUrl', res.contractUrl)
+            this.$router.push({
+              path: '/contract/preview',
+              query: {
+                contractId: res.contractId,
+                contractNo: res.contractNo,
+                signerName: this.userName,
+                contactWay: this.phone,
+              },
+            })
+          }
+        })
+        .catch((err) => {
+          console.log('错误信息err', err)
+        })
+    },
+    sumfn() {
+      const _this = this
+      if (this.partyName && this.userName && this.phone) {
+        _this.applycontart()
+      }
     },
   },
 }

@@ -30,15 +30,7 @@
       @activeItem="getFilterHandle"
     /> -->
     <!-- Etab -->
-    <goods
-      v-if="jyTypesData.length"
-      :is-show-tabs="false"
-      :tab-items="jyTypesData"
-      :type-code-index="typeCodeIndex"
-      :req-type="reqType"
-      :search-text="searchText"
-      :is-list="false"
-    />
+    <goods ref="goods" :searchkey="currentInputText" />
   </div>
 </template>
 
@@ -47,9 +39,7 @@ import { mapMutations } from 'vuex'
 // import JyFilters from '@/components/list/JyFilters'
 import Search from '@/components/common/search/Search'
 import Goods from '@/components/list/goods'
-import { dict } from '@/api/index'
 import listJumpIm from '@/mixins/listJumpIm'
-
 export default {
   name: 'TransactionList',
   components: {
@@ -150,15 +140,9 @@ export default {
       currentInputText: '',
       reqType: 'jy',
       jyTypesData: [], // 交易业态数据
-      formData: {
-        page: 1,
-        limit: 10,
-      },
     }
   },
   mounted() {
-    this.SET_KEEP_ALIVE({ type: 'add', name: 'JyList' })
-    this.getJyType()
     document.body.addEventListener('focusout', () => {
       // 监听软键盘关闭事件
       // 解決ios端用微信打开页面，收起软键盘后，底部出现空白问题
@@ -177,33 +161,10 @@ export default {
       console.log(data, filrerName)
     },
     searchKeydownHandle() {
+      this.$refs.goods.$refs.list.formData.start = 1
+      this.$refs.goods.$refs.list.datalist = []
+      this.$refs.goods.$refs.list.getlist()
       // 点击搜索按钮
-      this.searchText = this.currentInputText
-    },
-    async getJyType() {
-      // 交易的业态数据
-      const jyTypeData = await dict
-        .findCmsCode({ axios: this.$axios }, { code: 'CONDITION-JY' })
-        .then((result) => result)
-        .catch((e) => {
-          if (e.code !== 200) {
-            console.log(e)
-          }
-        })
-      if (jyTypeData) {
-        this.jyTypesData = jyTypeData
-        // 查找query的typeCode是第几个下标
-        const index = this.jyTypesData.findIndex((item) => {
-          const typeCode = this.$route.query.typeCode
-            ? this.$route.query.typeCode
-            : item.ext4
-          return item.ext4 === typeCode
-        })
-        if (index === -1) {
-          this.$router.replace('/500')
-        }
-        this.typeCodeIndex = index
-      }
     },
   },
 }

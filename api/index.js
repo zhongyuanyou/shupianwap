@@ -22,6 +22,7 @@ import { ossApi } from './oss'
 import coupon from './coupon' // 优惠券接口
 import pay from './pay' // 优惠券接口
 import order from './order'
+import contract from './contract'
 export { auth, shoppingCar, planner }
 export { category }
 export { userinfoApi }
@@ -44,3 +45,4 @@ export { coupon }
 export { shopCart }
 export { order }
 export { pay }
+export { contract }

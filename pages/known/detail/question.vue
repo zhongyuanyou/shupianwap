@@ -1,6 +1,6 @@
 <template>
   <div class="detail" :style="{ paddingBottom: fixedshow ? '1.3rem' : '' }">
-    <Header v-show="!commetnShow" title="">
+    <Header v-show="!commetnShow" :title="title">
       <template #left>
         <div>
           <sp-icon name="arrow-left" size="0.4rem" @click="$router.back()" />
@@ -30,7 +30,7 @@
           <li v-for="(item, index) in taglist" :key="index">{{ item }}</li>
         </ul>
       </div>
-      <h1 class="tit">{{ detail.title }}</h1>
+      <h1 ref="title" class="tit">{{ detail.title }}</h1>
       <div
         v-if="
           detail.imglist.length <= 2 &&
@@ -197,6 +197,7 @@ export default {
   },
   data() {
     return {
+      title: '',
       taglist: ['公司注册', '公司注册', '公司注册'],
       contentshow: false,
       detail: {
@@ -344,6 +345,11 @@ export default {
       } else {
         this.fixedshow = false
       }
+      if (this.$refs.title.getBoundingClientRect().top < 0) {
+        this.title = this.detail.title
+      } else {
+        this.title = ''
+      }
     },
   },
 }
@@ -356,6 +362,16 @@ export default {
   /deep/.my-head {
     padding: 0 32px;
     box-sizing: border-box;
+    .title {
+      > span {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        display: block;
+        width: 500px;
+        margin: 0 auto;
+      }
+    }
   }
   > .problem {
     padding-top: 20px;

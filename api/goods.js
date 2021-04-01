@@ -20,5 +20,14 @@ const goods = {
       url: CHIPS_WAP_BASE_URL + '/nk/goodslist/v1/get_jy_list.do',
     })
   },
+  transactionList({ axios }, params) {
+    // 新搜索交易商品列表
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/nk/commodity/v2/get_serve_list.do',
+    })
+  },
 }
 export default goods

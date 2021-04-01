@@ -42,6 +42,7 @@
     <div
       class="btn"
       :class="userName && idCrad && isCardNo(idCrad) && checked ? 'check' : ''"
+      @click="sumfn()"
     >
       验证信息
     </div>
@@ -51,6 +52,7 @@
 <script>
 import { Icon, Form, Field, Checkbox } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
+import { contract } from '@/api/index'
 export default {
   name: 'Authentication',
   components: {
@@ -77,6 +79,32 @@ export default {
         return false
       } else {
         return true
+      }
+    },
+    sumfn() {
+      if (
+        this.userName &&
+        this.idCrad &&
+        this.isCardNo(this.idCrad) &&
+        this.checked
+      ) {
+        contract
+          .authentication(
+            { axios: this.axios },
+            {
+              name: this.userName,
+              cardNo: this.idCrad,
+              userid: this.$cookies.get('userId'),
+            }
+          )
+          .then((res) => {
+            if (res) {
+              window.location.href = res
+            }
+          })
+          .catch((err) => {
+            console.log('错误信息err', err)
+          })
       }
     },
   },
