@@ -1,5 +1,5 @@
 <template>
-  <div class="banner" :class="'banner' + orderStatusType">
+  <div class="banner" :class="'banner' + cusOrderStatusType">
     <my-icon
       class="back-icon"
       name="nav_ic_back"
@@ -13,12 +13,12 @@
         size="0.40rem"
         color="rgba(255, 255, 255, 1)"
       ></my-icon>
-      <span v-if="orderStatusType == 1" class="text"> 等待付款 </span>
-      <span v-else-if="orderStatusType == 2" class="text"> 办理中 </span>
-      <span v-else-if="orderStatusType == 3" class="text"> 已完成 </span>
-      <span v-else-if="orderStatusType == 4" class="text"> 已取消 </span>
+      <span v-if="cusOrderStatusType == 1" class="text"> 等待付款 </span>
+      <span v-else-if="cusOrderStatusType == 2" class="text"> 办理中 </span>
+      <span v-else-if="cusOrderStatusType == 3" class="text"> 已完成 </span>
+      <span v-else-if="cusOrderStatusType == 4" class="text"> 已取消 </span>
     </p>
-    <div v-if="orderStatusType == 1" class="msg">
+    <div v-if="cusOrderStatusType == 1" class="msg">
       请在24小时内支付，超时订单将自动关闭<br />
       <p class="time">
         <span>{{ time.hour }}</span>
@@ -27,17 +27,17 @@
         >秒后自动关闭
       </p>
     </div>
-    <p v-else-if="orderStatusType == 2" class="msg">
+    <p v-else-if="cusOrderStatusType == 2" class="msg">
       您的订单正在办理中<br />
       <span> 请耐心等待</span>
     </p>
-    <p v-else-if="orderStatusType == 3" class="msg">
+    <p v-else-if="cusOrderStatusType == 3" class="msg">
       您的订单已完成<br />
       <span> 请对本次服务进行评价，谢谢您的支持 </span>
     </p>
-    <p v-else-if="orderStatusType == 4" class="msg">
+    <p v-else-if="cusOrderStatusType == 4" class="msg">
       您的订单已取消<br />
-      <span> 取消原因:我睡着了 </span>
+      <span> 取消原因:{{ cusOrderCancelReason }} </span>
     </p>
   </div>
 </template>
@@ -52,26 +52,27 @@ export default {
       type: String,
       default: '',
     },
+    cusOrderStatusType: {
+      type: [String, Number],
+      default: '1',
+    },
+    // 订单取消原因
+    cusOrderCancelReason: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
       time: {}, // 倒计时数据
       diff: 0, // 时间差 s
-      orderStatusType: 1,
     }
   },
-  // computed: {
-  //   orderStatusType: {
-  //     get() {
-  //       return this.checkCusOrderStatus()
-  //     },
-  //   },
-  // },
   mounted() {
-    const that = this
-    this.countDown(new Date().getTime() + 67890000)
-    this.orderStatusType = this.checkCusOrderStatus()
-    console.log('orderStatusType', this.orderStatusType)
+    if (this.cusOrderStatusType === 1) {
+      const that = this
+      this.countDown(new Date().getTime() + 67890000)
+    }
   },
   beforeDestroy() {
     clearInterval(timer)

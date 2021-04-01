@@ -1,5 +1,5 @@
 <template>
-  <sp-popup v-model="showPayModal" position="bottom">
+  <sp-popup v-model="showPop" position="bottom">
     <div class="pay-modal">
       <div class="btn-close" @click="cancelModal">
         <my-icon name="nav_ic_close" size="0.28rem" color="#222222"> </my-icon>
@@ -13,7 +13,7 @@
           <div class="money-area">
             <span class="span1">金额:</span>
             <span class="span2">
-              <span class="money1">2800</span>
+              <span class="money1">{{ orderData.orderPayableMoney }}</span>
               元</span
             >
             <span class="span3" @click="toDetail"
@@ -46,6 +46,10 @@
             </span>
           </div>
         </sp-radio-group>
+        <div v-for="(item, index) in payList" :key="index" class="item">
+          {{ item.alreadyPayment }}
+          {{ item.batchType }}
+        </div>
       </div>
       <div class="btn-area">
         <sp-button @click="toPay">去支付</sp-button>
@@ -71,16 +75,23 @@ export default {
         return {}
       },
     },
+    // 分批支付数据列表
+    payList: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
   },
   data() {
     return {
       choosePayStep: '1',
-      showPayModal: false,
+      showPop: false,
     }
   },
   methods: {
     cancelModal() {
-      this.showPayModal = false
+      this.showPop = false
     },
     toDetail() {
       this.$router.push('/order/billDetail')

@@ -72,6 +72,7 @@
 // 关联订单提示弹窗
 import { Popup, Button, RadioGroup, Radio, Cell } from '@chipspc/vant-dgg'
 import { dict } from '@/api/index'
+import orderApi from '@/api/order'
 let timer
 export default {
   components: {
@@ -87,105 +88,13 @@ export default {
       type: String,
       default: '',
     },
+    // 客户单id
+    csuOrderId: { type: String, default: '' },
     // 关联订单列表
     orderSkuList: {
       type: Array,
       default() {
-        return [
-          {
-            orderNo: 'eewqewqeq1',
-            price: '3000',
-            productVo: [
-              {
-                name:
-                  '公司注册1公司注册1公司注册1公司注册1公司注册1公司注册1公司注册1公司注册1',
-                goodsNumber: 1,
-                price: 500,
-              },
-              {
-                name: '公司注册2',
-                goodsNumber: 1,
-                price: 500,
-              },
-            ],
-          },
-          {
-            orderNo: 'eewqewqeq2',
-            price: '4000',
-            productVo: [
-              {
-                name: '公司注册3',
-                goodsNumber: 1,
-                price: 500,
-              },
-            ],
-          },
-          {
-            orderNo: 'eewqewqeq3',
-            price: '5000',
-            productVo: [
-              {
-                name: '公司注册3',
-                goodsNumber: 1,
-                price: 500,
-              },
-            ],
-          },
-          {
-            orderNo: 'eewqewqeq4',
-            price: '3000',
-            productVo: [
-              {
-                name: '公司注册3',
-                goodsNumber: 1,
-                price: 500,
-              },
-              {
-                name: '公司注册3',
-                goodsNumber: 1,
-                price: 500,
-              },
-              {
-                name: '公司注册3',
-                goodsNumber: 1,
-                price: 500,
-              },
-            ],
-          },
-          {
-            orderNo: 'eewqewqeq4',
-            price: '3000',
-            productVo: [
-              {
-                name: '公司注册3',
-                goodsNumber: 1,
-                price: 500,
-              },
-            ],
-          },
-          {
-            orderNo: 'eewqewqeq4',
-            price: '3000',
-            productVo: [
-              {
-                name: '公司注册3',
-                goodsNumber: 1,
-                price: 500,
-              },
-            ],
-          },
-          {
-            orderNo: 'eewqewqeq4',
-            price: '3000',
-            productVo: [
-              {
-                name: '公司注册3',
-                goodsNumber: 1,
-                price: 500,
-              },
-            ],
-          },
-        ]
+        return []
       },
     },
   },
@@ -193,7 +102,7 @@ export default {
     return {
       showPop: false,
       step: 1,
-      // 弹窗业务类型 1为取消订单 2为立即
+      // 弹窗业务类型 1为取消订单 2为立即付款
       modalType: 1,
       reasonList: [
         {
@@ -267,6 +176,16 @@ export default {
         // 立即支付
         this.$router.push('/order/pay')
       }
+    },
+    cancleOrder() {
+      orderApi.cancelOrder(
+        { axios: this.axios },
+        {
+          orderId: this.orderId,
+          cancelReasonCode: this.cancelReasonCode,
+          cancelReasonName: this.cancelReasonName,
+        }
+      )
     },
     cancel() {
       this.showPop = false

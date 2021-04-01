@@ -1,6 +1,9 @@
 <template>
   <div v-if="hasData" class="pay-page">
-    <Banner :order-status-code="orderData.cusOrderDetail.cusOrderStatusNo" />
+    <Banner
+      :order-status-code="orderData.cusOrderDetail.cusOrderStatusNo"
+      :cus-order-status-type="cusOrderStatusType"
+    />
     <div class="order-area">
       <!-- 服务商品、 -->
       <!-- <ServeList v-if="orderType === 1" :order-data="orderData" /> -->
@@ -72,10 +75,17 @@
       <p class="order-item">
         <span class="label">支付状态</span>
         <span class="text">{{
-          orderData.orderStatus === '1' ? '待支付' : '部分付款'
+          PAYSTATUSCODENAME[orderData.cusOrderDetail.cusOrderPayStatusNo]
         }}</span>
       </p>
-      <div class="pay-detail-area">
+      <!-- 支付状态为部分付款时才显示这部分 -->
+      <div
+        v-if="
+          orderData.cusOrderDetail.cusOrderPayStatusNo ===
+          'ORDER_CUS_PAY_STATUS_PART_PAID'
+        "
+        class="pay-detail-area"
+      >
         <p class="has-pay">
           <span class="span1">首款：</span>
           <span class="span2">3000</span>
@@ -99,9 +109,9 @@
       </p>
       <p class="order-item last-p">
         <span class="label">备注</span>
-        <span class="text"
-          >搞快点啊，等不及了搞快点啊，等不及了搞快点啊，等不及了搞快点啊，等不及了搞快点啊，等不及了搞快点啊，等不及了搞快点啊，等不及了</span
-        >
+        <span class="text">{{
+          orderData.mark || orderData.cusOrderDetail.mark
+        }}</span>
       </p>
     </div>
     <div class="serve-time">
@@ -117,34 +127,62 @@
         </a>
       </p>
     </div>
-    <div class="btn-area">
+    <!-- 当订单状态为已取消时隐藏顶部按钮区域 -->
+    <div v-if="cusOrderStatusType != 4" class="btn-area">
       <div class="inner">
         <!--   v-if="
             orderData.orderSplitAndCusVo[0].cusOrderPayStatusNo ===
             orderStatusCode[1]
           " -->
-        <sp-button @click="handleClickItem(1)">取消订单</sp-button>
-        <sp-button @click="handleClickItem(2)">签署合同</sp-button>
+        <sp-button v-if="isShowCanCelBtn()" @click="handleClickItem(1)"
+          >取消订单</sp-button
+        >
+        <sp-button v-if="checkContractStatus() == 1" @click="handleClickItem(2)"
+          >签署合同</sp-button
+        >
+        <sp-button v-if="checkContractStatus() == 2" @click="handleClickItem(3)"
+          >查看合同</sp-button
+        >
         <sp-button
-          v-if="orderData.orderStatus === 1"
+          v-if="
+            showPayBtn &&
+            orderData.cusOrderDetail.cusOrderPayStatusNo ===
+              'ORDER_CUS_PAY_STATUS_UN_PAID'
+          "
           class="btn-pay"
-          @click="handleClickItem(3)"
+          @click="handleClickItem(4)"
           >立即支付</sp-button
         >
         <sp-button
-          v-if="orderData.orderStatus === 2"
+          v-if="
+            showPayBtn &&
+            orderData.cusOrderDetail.cusOrderPayStatusNo ===
+              'ORDER_CUS_PAY_STATUS_PART_PAID'
+          "
           class="btn-pay"
-          @click="handleClickItem(4)"
+          @click="handleClickItem(5)"
           >支付余款</sp-button
         >
       </div>
     </div>
     <CancelOrder
+      v-if="
+        orderData.cusOrderDetail.cusOrderStatusNo ===
+          'ORDER_CUS_STATUS_UNPAID' &&
+        orderData.cusOrderDetail.cusOrderStatusNo !==
+          'ORDER_CUS_STATUS_CANCELLED'
+      "
       ref="cancleOrderModel"
-      :order-id="orderData.cusOrderId"
-      :order-sku-list="orderData.selectedOrderSkuList"
+      :order-id="orderData.orderId"
+      :cus-order-id="orderData.cusOrderId"
+      :order-sku-list="orderData.orderSkuList"
     />
-    <PayModal ref="payModal" :order-data="orderData" />
+    <PayModal
+      v-if="showPayBtn"
+      ref="payModal"
+      :order-data="orderData"
+      :pay-list="payList"
+    />
   </div>
 </template>
 
@@ -157,7 +195,9 @@ import ServeList from '@/components/order/detail/ServeList'
 import TradeList from '@/components/order/detail/TradeList'
 import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
 import PayModal from '@/components/order/PayModal' // 支付弹窗
+import orderUtils from '@/utils/order'
 import orderApi from '@/api/order'
+import OrderMixins from '@/mixins/order'
 export default {
   components: {
     [Button.name]: Button,
@@ -167,104 +207,21 @@ export default {
     CancelOrder,
     PayModal,
   },
+  mixins: [OrderMixins],
   data() {
     return {
       hasData: false,
       orderId: '',
       cusOrderId: '',
-      orderType: 1,
+      cusOrderStatusType: 1, // 1为未付款 2进行中3已完成4已取消
       orderData: {
         orderStatus: '',
         orderSkuList: [],
         orderSplitAndCusVo: [],
       },
-      // 交易资源
-      jyList: [
-        {
-          id: '3113241',
-          name: '四川成都******科技有限公司',
-          price: 2345,
-          goodsNum: 1,
-          goodsInfos: [
-            {
-              key: '所属行业',
-              val: '科技信息',
-            },
-            {
-              key: '纳税类型',
-              val: '小规模纳税',
-            },
-            {
-              key: '注册资本',
-              val: '100W-500W',
-            },
-            {
-              key: '附带资产',
-              val: '网站',
-            },
-          ],
-        },
-        {
-          id: '31132413',
-          name: '顶呱呱商标',
-          price: 6345,
-          goodsNum: 1,
-          goodsInfos: [
-            {
-              key: '商标分类',
-              val: '42类-化妆品类',
-            },
-            {
-              key: '商标组合',
-              val: '中英文商标',
-            },
-            {
-              key: '使用项目',
-              val: '鞋袜衣裤',
-            },
-          ],
-        },
-        {
-          id: '31132414',
-          name: '高级发明专利',
-          price: 6345,
-          goodsNum: 1,
-          goodsInfos: [
-            {
-              key: '商标分类',
-              val: '42类-化妆品类',
-            },
-            {
-              key: '商标组合',
-              val: '中英文商标',
-            },
-            {
-              key: '使用项目',
-              val: '鞋袜衣裤',
-            },
-          ],
-        },
-        {
-          id: '31132414',
-          name: '顶呱呱family',
-          price: 6345,
-          goodsNum: 1,
-          goodsInfos: [
-            {
-              key: '公众号分类',
-              val: '帅哥美女',
-            },
-            {
-              key: '粉丝数',
-              val: '250W',
-            },
-            {
-              key: '使用项目',
-              val: '鞋袜衣裤',
-            },
-          ],
-        },
-      ],
+      showPayBtn: false,
+      payList: [], // 支付列表
+      fromPage: 'orderDetail',
     }
   },
   computed: {
@@ -272,16 +229,9 @@ export default {
       return this.$store.state.order.orderStatusCode
     },
   },
-  created() {
-    // this.orderType = Math.ceil(Math.random(0, 1) * 3)
-    // this.orderStatus = Math.ceil(Math.random(0, 1) * 4)
-  },
   mounted() {
-    // this.orderData = this.$store.state.order.orderData
     this.orderId = this.$route.query.id
     this.cusOrderId = this.$route.query.cusOrderId
-    // this.orderId = '8064689631648653312'
-    // this.orderType = parseInt(this.orderId.charAt(this.orderId.length - 1))
     console.log('this.$orderData', this.orderData)
     this.getDetail()
   },
@@ -290,7 +240,6 @@ export default {
       this.$router.back(-1)
     },
     getDetail() {
-      console.log('this.orderId', this.orderId)
       orderApi
         .getDetailByOrderId(
           { axios: this.axios },
@@ -298,8 +247,29 @@ export default {
         )
         .then((res) => {
           console.log('res')
-          this.orderData = res.data
+          const cusDetail = res.data.cusOrderDetail
+          this.orderData = Object.assign(cusDetail, res.data)
+          console.log('this.orderData', this.orderData)
           this.hasData = true
+          this.cusOrderStatusType = orderUtils.checkCusOrderStatus(
+            this.orderData.cusOrderStatusNo
+          )
+          if (
+            this.orderData.cusOrderDetail.cusOrderStatusNo !==
+              'ORDER_CUS_STATUS_CANCELLED' &&
+            this.orderData.cusOrderDetail.cusOrderPayStatusNo !==
+              'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
+          ) {
+            // 当订单状态不为已取消且支付状态不为已完成时展示付款入口
+            this.showPayBtn = true
+          }
+          if (
+            this.orderData.cusOrderPayStatusNo !==
+            'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
+          ) {
+            // 当客户单支付状态不等于已完成时调用分批支付列表
+            this.getBatchList()
+          }
         })
         .catch((err) => {
           console.log('错误信息err', err)
@@ -307,8 +277,9 @@ export default {
           this.$router.back(-1)
         })
     },
-    handleClickItem(type, order) {
-      this.selectedOrder = order
+    // 按钮操作
+    handleClickItem(type) {
+      console.log('type', type)
       switch (type) {
         case 1:
           // 取消订单 无关联订单直接取消
@@ -331,29 +302,154 @@ export default {
               fromPage: 'orderDetail',
             },
           })
-          //
           break
         case 3:
-          // 立即支付 无关联订单直接支付
-          if (!this.checkHasOtherOrder()) this.$router.push('/order/pay')
-          else {
-            // 有关联订单则弹起弹窗
-            this.$refs.cancleOrderModel.showPop = true
-            this.$refs.cancleOrderModel.modalType = 2
-          }
+          console.log('3')
+          // 查看合同
+          this.$router.push({
+            path: '/contract/edit',
+            query: {
+              orderId: this.orderId,
+              cusOrderId: this.cusOrderId,
+              fromPage: 'orderDetail',
+            },
+          })
           break
         case 4:
-          // 支付余款 尾款 服务商品定金尾款适用
-          // 有关联订单则弹起弹窗
-          // 弹起定金尾款付费提示弹窗
-          this.$refs.payModal.showPayModal = true
+          this.checkHasOtherOrder()
+          // 立即付款
+          // this.getBatchList()
+          // if (order.payType) {
+          //   // 服务商品
+          //   if (order.payType === 1) {
+          //     // 全款时直接跳转支付页面
+          //     this.$router.push('/order/pay')
+          //   } else if (order.payType === 2) {
+          //     // 节点付费
+          //     // 弹起节点付款提示弹窗
+          //     this.$refs.payModal.showPop = true
+          //   } else if (order.payType === 3) {
+          //     // 定金尾款
+          //     // 弹起定金尾款付费提示弹窗
+          //     this.$refs.payModal.showPop = true
+          //   } else {
+          //     // 服务完结
+          //     // 全款时直接跳转支付页面
+          //     this.$router.push('/order/pay')
+          //   }
+          //   return
+          // }
+          // // 非服务商品
+          // if (!this.checkHasOtherOrder()) {
+          //   // 立即支付 无关联订单直接支付
+          //   this.$router.push('/order/pay')
+          // } else {
+          //   // 有关联订单则弹起弹窗
+          //   this.$refs.cancleOrderModel.showPop = true
+          //   this.$refs.cancleOrderModel.modalType = 2
+          // }
+          break
+        case 5:
+          this.checkHasOtherOrder()
+          console.log('支付余款')
+          break
+        case 6:
+          console.log('确认完成')
           break
       }
     },
-    // 查询是否有关联订单  0 无 1有
-    checkHasOtherOrder() {
-      return Math.floor(Math.random(0, 1) * 2)
-    },
+    // // 判断是否有关联订单  0 无 1有
+    // checkHasOtherOrder() {
+    //   // 订单列表大于1则有关联订单
+    //   return this.orderData.orderList.length.length > 1
+    // },
+    // // 开始支付时判断
+    // startPay() {
+    //   // 先判断是否有关联订单
+    //   if (this.checkHasOtherOrder) {
+    //     // 有关联订单时打开提示弹窗
+    //     this.$refs.CancelOrder.showPop = true
+    //   } else if (this.payList.length === 1) {
+    //     // 无关联订单时判断是否是分批支付
+    //     // 支付列表为1则为全款支付直接跳转支付页面
+    //     this.$router.push({
+    //       path: '/pay/payType',
+    //       query: {
+    //         orderId: this.orderId,
+    //         cusOrderId: this.cusOrderId,
+    //       },
+    //     })
+    //   } else {
+    //     // 分批支付则打开分批支付提示弹窗
+    //     this.$refs.payModal.showPop = true
+    //   }
+    // },
+    // // 获取分批支付信息
+    // getBatchList() {
+    //   orderApi
+    //     .batchPayList(
+    //       { axios: this.$axios },
+    //       {
+    //         page: this.page,
+    //         limit: this.limit,
+    //         cusOrderId: this.cusOrderId,
+    //       }
+    //     )
+    //     .then((res) => {
+    //       console.log('分批支付信息', res)
+    //       this.payList = res
+    //       // if (res && res.length > 1) {
+    //       //   // 有分批支付信息则弹起分批支付弹窗
+    //       //   this.payList = res
+    //       //   this.$refs.payModal.showPop = true
+    //       // } else {
+    //       // 否则直接跳转支付页面
+    //       // this.$router.push({
+    //       //   path: '/pay/payType',
+    //       //   query: {
+    //       //     orderId: this.selectedOrder.id,
+    //       //     cusOrderId: this.selectedOrder.cusOrderId,
+    //       //     batchIds: res[0].id,
+    //       //   },
+    //       // })
+    //       // }
+    //     })
+    //     .catch((err) => {
+    //       console.log('分批支付信息err', err)
+    //     })
+    // },
+    // // 取消订单
+    // cancleOrder() {
+    //   orderApi.cancelOrder(
+    //     { axios: this.axios },
+    //     {
+    //       orderId: this.orderId,
+    //       cancelReasonCode: this.cancelReasonCode,
+    //       cancelReasonName: this.cancelReasonName,
+    //     }
+    //   )
+    // },
+    // // 判断展示合同按钮 false不展示  1签署合同 2查看合同
+    // checkContractStatus() {
+    //   return orderUtils.checkContractStatus(this.orderData)
+    // },
+    // // 判断客户单状态类型 1待付款 2进行中 3已完成 4已取消
+    // checkCusOrderStatus() {
+    //   return orderUtils.checkCusOrderStatus(this.orderData.cusOrderStatusNo)
+    // },
+    // // 判断是否显示取消订单按钮
+    // isShowCanCelBtn() {
+    //   return orderUtils.isShowCanCelBtn(this.orderData)
+    // },
+    // // 判断是否显示确认订单按钮
+    // isShowConfirmBtn() {
+    //   return orderUtils.isShowConfirmBtn(this.orderData)
+    // },
+    // // 判断是否显示付款按钮
+    // isShowPayBtn() {
+    //   return orderUtils.isShowPayBtn(this.orderData)
+    // },
+    // 复制功能
     copy() {
       const oInput = document.createElement('input')
       oInput.value = this.orderData.orderNo
