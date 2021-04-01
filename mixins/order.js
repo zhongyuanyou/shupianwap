@@ -20,26 +20,51 @@ export default {
         ORDER_CUS_PAY_STATUS_PART_PAID: '部分支付',
         ORDER_CUS_PAY_STATUS_COMPLETED_PAID: '已完成',
       },
+      // 分批支付状态 alreadyPayment
+      batchPayStatus: {
+        1: 'ORDER_BATCH_PAYMENT_PAY_0', // 未支付
+        2: 'ORDER_BATCH_PAYMENT_PAY_1', // 应支付
+        3: 'ORDER_BATCH_PAYMENT_PAY_2', // 已支付
+      },
+      // 分批支付类型 batchType
+      batchType: {
+        0: '全款',
+        1: '首款',
+        2: '中期款',
+        3: '尾款',
+      },
+      // 付款类型
+      batchNumber: {
+        0: '全款',
+      },
     }
   },
   methods: {
     // 判断是否有关联订单  0 无 1有
     checkHasOtherOrder() {
-      return this.orderData.orderList.length.length > 1
+      return this.orderData.orderList.length > 1
     },
     // 开始支付时判断
     startPay() {
-      // 先判断是否有关联订单
-      if (this.checkHasOtherOrder) {
+      if (this.fromPage === 'orderList') {
+        // 同时判断有无关联订单
+        if (this.checkHasOtherOrder()) {
+          // 有关联订单时则打开提示弹窗
+          this.loading = false
+          this.$refs.cancleOrderModel.showPop = true
+          this.$refs.cancleOrderModel.modalType = 2
+          // 后续操作为关联弹窗点击立即付款后继续查询分批支付列表 走分批支付逻辑判断
+        } else {
+          // 无关联订单则直接走分批支付逻辑判断
+          this.getBatchList()
+        }
+      } else if (this.checkHasOtherOrder()) {
         // 有关联订单时打开提示弹窗
+        this.loading = false
         this.$refs.cancleOrderModel.showPop = true
-        this.$refs.cancleOrderModel.modalType = 1
-      } else if (this.fromPage === 'orderList') {
-        // 从订单列表页发起操作需先更新当前订单的分批支付列表
-        this.getBatchList(this.fromPage)
-      } else if (this.fromPage === 'orderDetail' && this.payList.length === 1) {
-        // 无关联订单时判断是否是分批支付
-        // 支付列表长度为1则为全款支付直接跳转支付页面
+        this.$refs.cancleOrderModel.modalType = 2
+      } else if (this.payList.length === 1) {
+        this.loading = false
         this.$router.push({
           path: '/pay/payType',
           query: {
@@ -49,10 +74,11 @@ export default {
         })
       } else {
         // 分批支付则打开分批支付弹窗
+        this.loading = false
         this.$refs.payModal.showPop = true
       }
     },
-    // 获取分批支付信息
+    // 获取分批支付信息 订单列表页为点击付款之后进行的查询 详情页为页面加载时查询
     getBatchList() {
       this.loading = true
       orderApi
@@ -69,18 +95,36 @@ export default {
           this.payList = res
           this.loading = false
           if (this.fromPage === 'orderList') {
-            // 从订单列表页调用该方法则直接走流程
-            if (res && res.length > 1) {
-              // 有分批支付信息则弹起分批支付弹窗
-              this.payList = res
-              this.$refs.payModal.showPop = true
+            // 从订单列表页调用该方法则直接走分批支付流程
+            if (this.payList && this.payList.length > 1) {
+              if (this.payList.length === this.orderData.orderList.length) {
+                // 子订单数量和分批支付数量一样的话实际上不是分批支付订单
+                if (this.payList[0].batchType === 0) {
+                  // 全款支付
+                  this.$router.push({
+                    path: '/pay/payType',
+                    query: {
+                      fromPage: this.fromPage,
+                      cusOrderId: this.orderData.cusOrderId,
+                    },
+                  })
+                } else if (this.payList[0].batchType === 1) {
+                }
+              } else {
+                // 否则直接跳转支付页面
+                // 有分批支付信息则弹起分批支付弹窗 关闭关联订单弹窗
+                this.payList = res
+                this.$refs.payModal.showPop = true
+                this.$refs.cancleOrderModel.showPop = false
+              }
             } else {
               // 否则直接跳转支付页面
               this.$router.push({
                 path: '/pay/payType',
                 query: {
-                  orderId: this.selectedOrder.id,
-                  cusOrderId: this.selectedOrder.cusOrderId,
+                  cusOrderId: this.orderData.cusOrderId,
+                  fromPage: this.fromPage,
+                  batchPayIds: '',
                 },
               })
             }
@@ -157,8 +201,9 @@ export default {
           )
           .then((res) => {
             console.log('子订单返回', res)
-            this.orderData.orderList = res
-            this.checkHasOtherOrder()
+            this.orderData.orderList = res.list
+            console.log('组装关联订单后的this.orderData', this.orderData)
+            this.startPay()
           })
           .catch((err) => {
             this.loading = false

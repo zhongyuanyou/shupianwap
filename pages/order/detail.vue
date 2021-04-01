@@ -175,13 +175,15 @@
       ref="cancleOrderModel"
       :order-id="orderData.orderId"
       :cus-order-id="orderData.cusOrderId"
-      :order-sku-list="orderData.orderSkuList"
+      :order-sku-list="orderData.orderList"
     />
     <PayModal
       v-if="showPayBtn"
       ref="payModal"
       :order-data="orderData"
       :pay-list="payList"
+      :batch-pay-status="batchPayStatus"
+      :batch-type="batchType"
     />
   </div>
 </template>
@@ -216,7 +218,7 @@ export default {
       cusOrderStatusType: 1, // 1为未付款 2进行中3已完成4已取消
       orderData: {
         orderStatus: '',
-        orderSkuList: [],
+        orderList: [],
         orderSplitAndCusVo: [],
       },
       showPayBtn: false,

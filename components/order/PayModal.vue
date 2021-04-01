@@ -59,6 +59,7 @@
 </template>
 
 <script>
+// 分批支付弹窗
 // 按节点服务和定金尾款付费的支付提示弹窗
 import { Popup, RadioGroup, Radio, Button } from '@chipspc/vant-dgg'
 export default {
@@ -82,6 +83,18 @@ export default {
         return []
       },
     },
+    batchPayStatus: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
+    batchType: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
   },
   data() {
     return {
@@ -97,7 +110,14 @@ export default {
       this.$router.push('/order/billDetail')
     },
     toPay() {
-      this.$router.push('/order/pay')
+      this.$router.push({
+        path: '/pay/payType',
+        query: {
+          orderId: this.orderData.id,
+          cusOrderId: this.orderData.cusOrderId,
+          fromPage: this.fromPage,
+        },
+      })
     },
   },
 }

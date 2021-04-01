@@ -12,6 +12,12 @@ export const state = () => ({
     3: 'ORDER_CUS_STATUS_COMPLETED', // 已完成
     4: 'ORDER_CUS_STATUS_CANCELLED', // 已取消
   },
+  // 分批支付状态
+  batchPayStatus: {
+    1: 'ORDER_BATCH_PAYMENT_PAY_0', // 未支付
+    2: 'ORDER_BATCH_PAYMENT_PAY_1', // 应支付
+    3: 'ORDER_BATCH_PAYMENT_PAY_2', // 已支付
+  },
 })
 
 export const mutations = {

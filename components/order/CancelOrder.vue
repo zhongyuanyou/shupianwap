@@ -7,24 +7,24 @@
         <div class="order-list">
           <div class="inner">
             <div
-              v-for="(item, index) in orderSkuList"
+              v-for="(item, index) in orderList"
               :key="index"
               class="item"
-              :class="index === orderSkuList.length - 1 ? 'last-item' : ''"
+              :class="index === orderList.length - 1 ? 'last-item' : ''"
             >
               <p class="p1">
                 订单编号：
                 <span class="no">{{ item.orderNo }}</span>
-                <span class="price">{{ item.price }}元</span>
+                <span class="price">{{ item.orderPayableMoney }}元</span>
               </p>
               <div class="serve-area">
                 <p
-                  v-for="(item2, index2) in item.productVo"
+                  v-for="(item2, index2) in item.orderSkuList"
                   :key="index2"
                   class="p2"
                 >
-                  <span class="name">{{ item2.name }}</span>
-                  <span class="num">×{{ item2.goodsNumber }}</span>
+                  <span class="name">{{ item2.spuName }}</span>
+                  <span class="num">×{{ item2.skuCount }}</span>
                 </p>
               </div>
             </div>
@@ -68,6 +68,7 @@
 </template>
 
 <script>
+// 关联订单弹窗
 // 有关联订单时的取消订单和支付提示弹窗
 // 关联订单提示弹窗
 import { Popup, Button, RadioGroup, Radio, Cell } from '@chipspc/vant-dgg'
@@ -91,7 +92,7 @@ export default {
     // 客户单id
     csuOrderId: { type: String, default: '' },
     // 关联订单列表
-    orderSkuList: {
+    orderList: {
       type: Array,
       default() {
         return []
@@ -174,7 +175,8 @@ export default {
         }
       } else if (this.modalType === 2) {
         // 立即支付
-        this.$router.push('/order/pay')
+        // 查询分批支付信息
+        this.$emit('getBatchList')
       }
     },
     cancleOrder() {
