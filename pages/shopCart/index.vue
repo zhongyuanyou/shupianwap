@@ -1,7 +1,6 @@
 <!--
  * @Author: lijialun
 -->
-
 <template>
   <div class="shopping-car">
     <GoodsPopup ref="goodsPopup" />
@@ -108,14 +107,12 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 import { TopNavBar, Button, PullRefresh, List } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
-
 import GoodsItem from '@/components/shopCart/GoodsItem'
 import Bottombar from '@/components/shoppingCar/Bottombar'
 import GoodsPopup from '@/components/shoppingCar/GoodsPopup'
 import ShoppingCarNull from '@/components/shoppingCar/ShoppingCarNull'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import LoadingDown from '@/components/common/loading/LoadingDown'
-
 import { shopCart } from '@/api'
 
 const shoppingCarStatusList = {
@@ -157,6 +154,7 @@ export default {
       },
       skuOpenIndex: -1, // 记录当前打开的sku的序列号
       skuStatus: '',
+      selectFlag: 0,
     }
   },
   computed: {
@@ -184,6 +182,7 @@ export default {
   created() {
     if (process && process.client) {
       this.postUpdate({ type: 'init' })
+      this.getList()
       this.onLoad()
     }
   },
@@ -259,6 +258,7 @@ export default {
     },
 
     onLoad() {
+      // 获取这个列表数据 初始化
       this.getList()
         .then((data) => {
           if (this.refreshing) {
@@ -268,13 +268,30 @@ export default {
           // 只请求一次
           this.loading = false
           this.finished = true
-
           this.list = data
-          // 接收选中的放入 currentSelectedCartIds 中
+          console.log('列表数据', data)
+          // 进行判断,主要判断是否有商品加入购物车 如果没有则是空，如果有判断是否上架，如果没有上架，对这个下架的进行未选中操作
+          if (data.length >= 0) {
+            for (let index = 0; index < data.length; index++) {
+              if (data[index].status === 'PRO_STATUS_SOLD_OUT') {
+                console.log('+++++++++data[index].status', data[index].status)
+                console.log('+++++++++data[index].cartId', data[index].cartId)
+                console.log('+++++++++this.selectFlag', this.selectFlag)
+                this.postUpdate({
+                  createrId: this.userInfo.userId,
+                  cartId: data[index].cartId,
+                  type: 'select',
+                  selectFlag: this.selectFlag,
+                })
+              }
+            }
+          }
+          // 接收选中的放入 currentSelectedCartIds 中,放入被选中的购物车中
           this.currentSelectedCartIds = data.reduce((accumulator, item) => {
             if (item.shopIsSelected === 1) {
               accumulator.push(item.cartId)
             }
+            console.log('accumulator,accumulator', accumulator)
             return accumulator
           }, [])
         })
@@ -292,6 +309,7 @@ export default {
       }
       this.onLoad()
     },
+
     handleItemOperation(value = {}) {
       const { type, data, cartId, index } = value
       console.log('type:', type)
@@ -397,13 +415,16 @@ export default {
     // 统一的结算
     uPBill() {
       const billCarIds = this.list.reduce((accumulator, item) => {
+        console.log('item.value', item) // 商品列表
+        console.log(' this.currentSelectedCartIds', this.currentSelectedCartIds) // 当前选中的购物车ID
         // 结算时候需要过滤掉非上架产品
         if (
           this.currentSelectedCartIds.includes(item.cartId) &&
-          item.status === 'GOODS_STATUS_ON_SHELF'
+          item.status === 'PRO_STATUS_PUT_AWAY'
         ) {
           accumulator.push(item.cartId)
         }
+        console.log('accumulator', accumulator) // 总金额
         return accumulator
       }, [])
 
@@ -455,6 +476,8 @@ export default {
             }
           }
         )
+      } else {
+        this.$router.push({ path: '', query: {} })
       }
     },
 
@@ -485,6 +508,7 @@ export default {
       try {
         const data = await this.postUpdate({ cartId, type: 'select', value })
         const cartArray = cartId.split(',')
+        console.log(' this.currentSelectedCartIds', this.currentSelectedCartIds) // 当前选中的购物车ID
         if (value) {
           // 选中
           cartArray.forEach((item) => {
@@ -561,6 +585,7 @@ export default {
 
     // 更新购物车数据
     async postUpdate(data = {}) {
+      console.log('++++++++++++++++++++nihao', data)
       const { type, cartId, value, serviceList, skuAttr, skuId } = data
       this.updateLoading = true
       let params = {}
@@ -597,10 +622,15 @@ export default {
           type,
         }
         let data = await shopCart.update({ ...defalutParams, ...params })
-        console.log(data)
+        console.log('++++++++++++++++++++nihao2', {
+          ...defalutParams,
+          ...params,
+        })
         data = data || {}
         const { total, totalCount } = data
+        console.log('++++++++++++++++++++nihao3', data)
         this.bottomData = { ...this.bottomData, totalAmount: total, totalCount }
+        console.log('++++++++++++++++++++nihao3', this.bottomData)
         this.updateLoading = false
         return data
       } catch (error) {

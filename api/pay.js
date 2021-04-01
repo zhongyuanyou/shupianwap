@@ -9,26 +9,26 @@ const pay = {
       axios,
       params,
       method: 'post',
-      url: 'http://yapi.dgg.cn/mock/111/service/yk/pay/v2/enable_pay_money.do',
+      url: CHIPS_WAP_BASE_URL + 'yk/pay/v2/enable_pay_money.do',
     })
   },
-  // receiveCoupon({ axios }, params) {
-  //   // 客服单付款
-  //   return request({
-  //     axios,
-  //     params,
-  //     method: 'post',
-  //     url: CHIPS_WAP_BASE_URL + '/yk/v2/coupon/receive.do',
-  //   })
-  // },
-  // useWithdrawal({ axios }, params) {
-  //   // 使用撤销优惠券
-  //   return request({
-  //     axios,
-  //     params,
-  //     method: 'post',
-  //     url: CHIPS_WAP_BASE_URL + '/yk/v2/coupon/use_withdrawal.do',
-  //   })
-  // },
+  getPayParams({ axios }, params) {
+    // 客服单付款 获取二维码
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + 'yk/pay/v2/get_pay_params.do',
+    })
+  },
+  getPayResult({ axios }, params) {
+    // 支付成功回调查询
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + 'yk/pay/v2/get_pay_result.do',
+    })
+  },
 }
 export default pay

@@ -42,13 +42,14 @@
     <!-- 吸顶 end -->
     <!-- 列表 start -->
     <div class="container_body">
-      <section v-if="tabIndex === 0">
+      <section v-if="tabIndex === 0"></section>
+      <section v-if="tabIndex === 1">
         <VisitUser v-if="attentionStatus" />
         <AttentionItem v-if="attentionStatus" />
         <NotAttention v-if="showNotAttention" />
       </section>
-      <section v-else-if="tabIndex === 1"><ListItem /></section>
-      <section v-else-if="tabIndex === 2">
+      <section v-else-if="tabIndex === 2"><ListItem /></section>
+      <section v-else-if="tabIndex === 3">
         <ItemCard />
       </section>
     </div>
@@ -211,7 +212,17 @@ export default {
       attentionStatus: true, // 已关注
       showNotAttention: false, // 未关注
       title: '考研复试体检包含什么项目', // 标题
-      tabs: ['关注', '推荐', '热榜', '法律', '交易', '知产', '知识', '数据'],
+      tabs: [
+        '回答',
+        '关注',
+        '推荐',
+        '热榜',
+        '法律',
+        '交易',
+        '知产',
+        '知识',
+        '数据',
+      ],
       editFinish: '编辑',
       tabIndex: 1,
       showPop: false,
