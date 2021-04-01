@@ -3,14 +3,12 @@
     <Head title="合同预览"></Head>
     <div class="data">
       <div class="box">
-        <iframe v-if="pdf" src="" width="100%" height="100%"></iframe>
+        <iframe v-if="pdf" :src="pdf" width="100%" height="100%"></iframe>
         <p v-else>合同预览失败</p>
       </div>
       <div class="btn">
         <Button plain type="primary" size="large">我再想想</Button>
-        <Button type="primary" size="large" @click="dialogShow"
-          >确认签署</Button
-        >
+        <Button type="primary" size="large" @click="sign()">确认签署</Button>
         <sp-dialog v-model="timeshow" :show-confirm-button="false">
           <div class="dialog">
             <div class="head">温馨提示</div>
@@ -34,6 +32,7 @@
 <script>
 import { Button, Dialog } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
+import contractApi from '@/api/contract'
 export default {
   name: 'Preview',
   components: {
@@ -43,16 +42,39 @@ export default {
   },
   data() {
     return {
+      contract: this.$route.query,
       pdf: '',
-      timeshow: true,
+      timeshow: false,
       time: 5,
       btnshow: false,
     }
   },
   mounted() {
-    this.btntime()
+    this.pdf = decodeURI(this.$cookies.get('contractUrl'))
+    console.log(this.pdf)
   },
   methods: {
+    sign() {
+      contractApi
+        .signcontart(
+          { axios: this.axios },
+          {
+            contractId: this.contract.contractId,
+            phone: this.contract.contactWay,
+            signerName: this.contract.signerName,
+            contactWay: this.contract.contactWay,
+            businessId: this.$cookies.get('userId'),
+          }
+        )
+        .then((res) => {
+          if (res) {
+            console.log(res)
+          }
+        })
+        .catch((err) => {
+          console.log('错误信息err', err)
+        })
+    },
     timeshowFn() {
       if (this.btnshow) {
         this.timeshow = false

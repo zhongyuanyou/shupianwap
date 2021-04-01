@@ -29,7 +29,9 @@
             ></my-icon>
           </slot>
         </div>
-        <strong class="title">{{ title }}</strong>
+        <strong class="title">
+          <span>{{ title }}</span>
+        </strong>
         <div class="slot-right">
           <slot name="right"></slot>
         </div>

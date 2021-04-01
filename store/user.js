@@ -59,9 +59,19 @@ export const mutations = {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
+    this.$cookies.set('realStatus', data.realStatus, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 过期时间
+    })
+    this.$cookies.set('mainAccountFull', data.mainAccountFull, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 过期时间
+    })
     state.userNo = data.no
     state.userName = data.nickName
     state.userPhone = data.fullName
+    state.realStatus = data.realStatus
+    state.mainAccountFull = data.mainAccountFull
   },
 }
 
