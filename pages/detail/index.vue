@@ -1,6 +1,6 @@
 <template>
   <div class="company">
-    <DetailTemplate :im-jump-query="imJumpQuery" />
+    <DetailTemplate />
   </div>
 </template>
 
@@ -10,67 +10,45 @@ import { productDetailsApi } from '~/api'
 import getUserSign from '~/utils/fingerprint'
 import { GOODSLIST } from '~/config/constant'
 export default {
-  name: 'Id',
+  name: 'SellingGoodsDetail',
   components: {
     DetailTemplate,
   },
-  async asyncData({ $axios, query, app, store }) {
+  async asyncData({ $axios, query, store }) {
     try {
-      let tcProductDetailData = {}
-      const { code, message, data } = await $axios.get(
-        productDetailsApi.tcProductDetail,
+      let sellingGoodsDetailData = {}
+      const { code, message, data } = await $axios.post(
+        productDetailsApi.sellingGoodsDetail,
         {
-          params: {
-            productId: query.productId,
-          },
+          id: query.productId,
+          configFlg: 1,
+          floatingFlg: 1,
+          withSalesSubsFlg: 1,
+          withTagsFlg: 1,
+          withGoodsSubFlg: 1,
+          withOperatingsFlg: 1,
+          clientType: 'COMDIC_TERMINAL_WAP',
         }
       )
       if (code === 200) {
-        tcProductDetailData = data
-        store.commit('tcProductDetail/SET_TCPRODUCT_DETAIL', data)
-        return { tcProductDetailData }
+        sellingGoodsDetailData = data
+        console.log(data)
+        store.commit('sellingGoodsDetail/SET_SELLING_GOODS_DETAIL', data)
+        return { sellingGoodsDetailData }
       } else {
-        console.log(code, message)
+        throw message
       }
     } catch (err) {
       console.log(err)
     }
   },
   data() {
-    return {
-      tcProductDetailData: {
-        classCodeLevelList: [],
-        platformPrice: '0',
-        classCodeLevel: '',
-        qftDetails: {
-          fieldValueCn: '',
-          fieldValue: '',
-          fieldValueList: [],
-        },
-      },
-    }
+    return {}
   },
   computed: {
     city() {
       return this.$store.state.city.currentCity
     },
-    imJumpQuery() {
-      const imdata = {
-        productName: this.tcProductDetailData.name, // 产品名称
-        productContent: this.tcProductDetailData.name, // 产品信息
-        price: `${this.tcProductDetailData.platformPrice}元`, // 价格
-        forwardAbstract: this.tcProductDetailData.name, // 摘要信息，可与显示内容保持一致
-        routerId: 'IMRouter_APP_ProductDetail_Trade', // 路由ID
-        imageUrl: this.tcProductDetailData.productImgArr
-          ? this.tcProductDetailData.productImgArr
-          : [GOODSLIST], // 产品图片
-        unit: `${this.tcProductDetailData.platformPrice.split('.')[1]}元`, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
-      }
-      return imdata
-    },
-  },
-  head: {
-    meta: [{ name: 'spptmd-track_code', content: 'SPW000014' }],
   },
   layout: 'keepAlive',
   watchQuery: ['productId'],

@@ -21,7 +21,7 @@
       <orderItem
         v-for="(item, index) in list"
         :key="index"
-        :data="item"
+        :order-data="item"
         :order-id="item.cusOrderId"
         :order-type="selectedOrderStatus"
         @handleClickItem="handleClickItem"
@@ -30,11 +30,21 @@
     </div>
     <CancelOrder
       ref="cancleOrderModel"
-      :order-id="selectedOrder.cusOrderId"
-      :order-sku-list="selectedOrder.selectedOrderSkuList"
+      :order-id="orderData.orderId"
+      :cus-order-id="orderData.cusOrderId"
+      :order-sku-list="orderData.orderSkuList"
     />
-    <PayModal ref="payModal" :order-data="selectedOrder" />
+    <div v-if="!list.length" class="no-data-area">
+      <img
+        src="https://cdn.shupian.cn/sp-pt/wap/az6c2sr0jcs0000.png"
+        alt=""
+        srcset=""
+      />
+      <p class="text">暂无订单</p>
+    </div>
+    <PayModal ref="payModal" :order-data="orderData" :pay-list="payList" />
     <Bottombar v-if="!isInApp && !isApplets" ref="bottombar" />
+    <LoadingCenter v-show="loading" />
   </div>
 </template>
 
@@ -47,6 +57,8 @@ import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
 import PayModal from '@/components/order/PayModal' // 支付弹窗
 import Bottombar from '@/components/common/nav/Bottombar'
 import orderApi from '@/api/order'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import OrderMixins from '@/mixins/order'
 export default {
   components: {
     [Tab.name]: Tab,
@@ -56,11 +68,14 @@ export default {
     CancelOrder,
     Bottombar,
     PayModal,
+    LoadingCenter,
   },
+  mixins: [OrderMixins],
   data() {
     return {
       page: 1,
       limit: 20,
+      loading: true,
       tabs: [
         {
           name: 0,
@@ -83,9 +98,11 @@ export default {
           title: '已取消',
         },
       ],
-      selectedOrderStatus: '',
-      selectedOrder: {}, // 选中的订单
+      selectedOrderStatus: 'ORDER_CUS_STATUS_UNPAID',
+      orderData: {}, // 选中的订单
       list: [],
+      payList: [], // 分批支付信息
+      fromPage: 'orderList',
     }
   },
   computed: {
@@ -104,16 +121,36 @@ export default {
   methods: {
     changeTab(name, title) {
       this.selectedOrderStatus = name
-      this.getList(name)
+      this.getList()
     },
     toCar() {
       this.$router.push('../shopCart/')
     },
+    getList() {
+      this.loading = true
+      orderApi
+        .list(
+          { axios: this.$axios },
+          {
+            page: this.page,
+            limit: this.limit,
+            cusOrderStatusNo: this.selectedOrderStatus,
+          }
+        )
+        .then((res) => {
+          this.loading = false
+          this.list = res.records
+        })
+        .catch(() => {
+          this.loading = false
+          this.$xToast.fail('获取数据失败')
+        })
+    },
     handleClickItem(type, text, order) {
       console.log('type', type)
       console.log('text', text)
-      this.selectedOrder = order
-      console.log('this.selectedOrder', this.selectedOrder)
+      this.orderData = order
+      console.log('this.orderData', this.orderData)
       switch (type) {
         case 1:
           // 取消订单 无关联订单直接取消
@@ -137,7 +174,21 @@ export default {
             },
           })
           break
+        case 3:
+          console.log('3')
+          // 查看合同
+          this.$router.push({
+            path: '/contract/edit',
+            query: {
+              orderId: order.id,
+              cusOrderId: order.cusOrderId,
+              fromPage: 'orderList',
+            },
+          })
+          break
         case 4:
+          // 立即付款
+          this.getChildOrders()
           // if (order.payType) {
           //   // 服务商品
           //   if (order.payType === 1) {
@@ -146,11 +197,11 @@ export default {
           //   } else if (order.payType === 2) {
           //     // 节点付费
           //     // 弹起节点付款提示弹窗
-          //     this.$refs.payModal.showPayModal = true
+          //     this.$refs.payModal.showPop = true
           //   } else if (order.payType === 3) {
           //     // 定金尾款
           //     // 弹起定金尾款付费提示弹窗
-          //     this.$refs.payModal.showPayModal = true
+          //     this.$refs.payModal.showPop = true
           //   } else {
           //     // 服务完结
           //     // 全款时直接跳转支付页面
@@ -168,19 +219,14 @@ export default {
           //   this.$refs.cancleOrderModel.modalType = 2
           // }
           break
+        case 5:
+          this.startPay('orderList')
+          console.log('支付余款')
+          break
+        case 6:
+          console.log('确认完成')
+          break
       }
-    },
-    // 查询是否有关联订单  0 无 1有
-    checkHasOtherOrder() {
-      return Math.floor(Math.random(0, 1) * 2)
-    },
-    async getList(cusOrderStatusNo = '') {
-      const res = await orderApi.list(
-        { axios: this.$axios },
-        { page: this.page, limit: this.limit, cusOrderStatusNo }
-      )
-      console.log('orderList', res)
-      this.list = res.records
     },
   },
 }
@@ -216,6 +262,28 @@ export default {
   .list {
     padding-bottom: 180px;
     margin-top: 108px;
+  }
+}
+.no-data-area {
+  width: 100%;
+  height: 100vh;
+  background: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  img {
+    width: 340px;
+    height: 340px;
+    margin: 20vh auto 40px auto;
+    display: block;
+  }
+  .text {
+    height: 29px;
+    font-size: 30px;
+    font-family: PingFang SC;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-align: center;
   }
 }
 </style>

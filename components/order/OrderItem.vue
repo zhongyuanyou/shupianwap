@@ -2,13 +2,13 @@
   <div class="item">
     <div @click="toDetail">
       <p class="order-no-area">
-        <span class="orderNo"> 订单编号: {{ data.orderNo }} </span>
+        <span class="orderNo"> 订单编号: {{ orderData.orderNo }} </span>
         <span class="order-status">{{
-          CUSORDERSTATUSCODE[data.cusOrderStatusNo]
+          CUSORDERSTATUSCODE[orderData.cusOrderStatusNo]
         }}</span>
       </p>
       <div
-        v-for="(item, index) in data.orderSkuEsList"
+        v-for="(item, index) in orderData.orderSkuEsList"
         :key="index"
         class="order-infos"
         :class="index !== 0 ? 'border-top' : ''"
@@ -48,17 +48,36 @@
       </div>
     </div>
     <div class="total-price-area">
-      <p class="inner">
-        <span class="price1"> 总价 {{ data.orderTotalMoney }}元，</span>
-        <span class="price2"> 优惠 {{ data.orderDiscountMoney }}元，</span>
-        <span class="price3"> 合计 {{ data.orderPayableMoney }}元</span>
+      <!-- 定金尾款付费 -->
+      <p v-if="checkPayType() === 2" class="inner">
+        <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元，</span>
+        <span class="price2">
+          尾款
+          {{ orderData.orderTotalMoney - orderData.depositAmount }}元，</span
+        >
+        <span class="price3"> 定金 {{ orderData.depositAmount }}元</span>
+      </p>
+      <!-- 服务完结收费的意向单 -->
+      <p v-else-if="orderData.orderType === 0" class="inner">
+        <span class="price1"> 总价面议</span>
+      </p>
+      <!-- 其他付费方式展示效果一样 -->
+      <p v-else class="inner">
+        <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元，</span>
+        <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span>
+        <span v-if="isShowPayBtn() == 1" class="price3">
+          应付款 {{ orderData.orderPayableMoney }}元</span
+        >
+        <span v-else class="price3"
+          >合计 {{ orderData.orderPayableMoney }}元</span
+        >
       </p>
     </div>
     <div class="btn-area">
       <div class="inner">
         <!-- 未支付订单可取消订单 根据订单状态判断-->
         <sp-button
-          v-if="checkOrdertStatus() === 1"
+          v-if="isShowCanCelBtn()"
           type="primary"
           @click="handleClickItem(1, '取消订单')"
           >取消订单</sp-button
@@ -71,21 +90,27 @@
           >查看合同</sp-button
         >
         <sp-button
-          v-if="checkContractStatus() === 1"
+          v-if="checkContractStatus() == 1"
           type="info"
           @click="handleClickItem(2, '签署合同')"
           >签署合同</sp-button
         >
         <sp-button
-          v-if="checkOrdertStatus() === 3"
+          v-if="isShowPayBtn() == 1"
           type="default"
           @click="handleClickItem(4, '立即付款')"
           >立即付款</sp-button
         >
         <sp-button
-          v-if="checkOrdertStatus() === 2"
+          v-if="isShowPayBtn() == 2"
           type="default"
-          @click="handleClickItem(5, '确认完成')"
+          @click="handleClickItem(5, '支付余款')"
+          >支付余款</sp-button
+        >
+        <sp-button
+          v-if="isShowConfirmBtn()"
+          type="default"
+          @click="handleClickItem(6, '确认完成')"
           >确认完成</sp-button
         >
       </div>
@@ -96,13 +121,15 @@
 <script>
 import { Button, Image } from '@chipspc/vant-dgg'
 import orderUtils from '@/utils/order'
+import OrderMixins from '@/mixins/order'
 export default {
   components: {
     [Button.name]: Button,
     [Image.name]: Image,
   },
+  mixins: [OrderMixins],
   props: {
-    data: {
+    orderData: {
       type: Object,
       default() {
         return {}
@@ -117,48 +144,16 @@ export default {
       default: '',
     },
   },
-  data() {
-    return {
-      CUSORDERSTATUSCODE: {
-        ORDER_CUS_STATUS_UNPAID: '待付款', // 未付款
-        ORDER_CUS_STATUS_PROGRESSING: '办理中', // 进行中
-        ORDER_CUS_STATUS_COMPLETED: '已完成', // 已完成
-        ORDER_CUS_STATUS_CANCELLED: '已取消', // 已取消
-      },
-    }
-  },
   methods: {
     handleClickItem(type, text) {
-      this.$emit('handleClickItem', type, text, this.data)
+      this.$emit('handleClickItem', type, text, this.orderData)
     },
     toDetail() {
       this.$router.push({
         path: '/order/detail',
-        query: { id: this.data.id, cusOrderId: this.data.cusOrderId },
+        query: { id: this.orderData.id, cusOrderId: this.orderData.cusOrderId },
       })
-      this.$store.dispatch('order/setOrderData', this.data)
-    },
-    // 判断订单状态
-    checkOrderStatus(code) {
-      const ALLSTATUS = {
-        1: 'ORDER_ORDER_SALE_STATUS_UN_PAID,ORDER_ORDER_TRADE_STATUS_UN_PAID,ORDER_ORDER_RESOURCE_STATUS_UN_PAID,ORDER_ORDER_SERVER_STATUS_UN_PAID', // 可取消订单的状态 未付款时
-        2: 'ORDER_ORDER_SALE_STATUS_HANDLING,ORDER_ORDER_SALE_STATUS_HANDLED,ORDER_ORDER_TRADE_STATUS_HANDLING,ORDER_ORDER_RESOURCE_STATUS_HANDLING,ORDER_ORDER_SERVER_STATUS_UN_ASSIGN,ORDER_ORDER_SERVER_STATUS_UN_RECEICE_ORDER,ORDER_ORDER_SERVER_STATUS_HANDLING', // 进行中
-        3: 'ORDER_ORDER_SALE_STATUS_COMPLETED,ORDER_ORDER_TRADE_STATUS_COMPLETED,ORDER_ORDER_RESOURCE_STATUS_COMPLETED,ORDER_ORDER_SERVER_STATUS_HANDLED,ORDER_ORDER_SERVER_STATUS_COMPLETED', // 已完成
-        4: 'ORDER_ORDER_SALE_STATUS_CANCELLED,ORDER_ORDER_TRADE_STATUS_CANCELLED,ORDER_ORDER_RESOURCE_STATUS_CANCELLED,ORDER_ORDER_SERVER_STATUS_CANCELLED', // 已取消
-      }
-      for (const key of ALLSTATUS) {
-        if (ALLSTATUS[key].match(code)) {
-          return key
-        }
-      }
-    },
-    // 展示合同操作按钮判断
-    checkContractStatus() {
-      return orderUtils.checkContractStatus(this.data)
-    },
-    // 判断订单状态支付状态等展示不同的订单操作按钮
-    checkOrdertStatus() {
-      return orderUtils.checkOrdertStatus(this.data)
+      this.$store.dispatch('order/setdata', this.orderData)
     },
   },
 }
@@ -193,7 +188,7 @@ export default {
   .order-infos {
     height: auto;
     display: flex;
-    padding: 40px 0;
+    padding: 40px 0 20px 0;
     .img {
       width: 130px;
       height: 130px;
