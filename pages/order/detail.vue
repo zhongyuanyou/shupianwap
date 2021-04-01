@@ -99,14 +99,14 @@
           <span class="span3">请于2021-05-23前支付</span>
         </p>
       </div>
-      <p class="order-item">
+      <!-- <p class="order-item">
         <span class="label">合同</span>
-        <span class="text">暂无</span>
-      </p>
-      <p class="order-item">
+        <span class="text">{{ orderData.contractName || '暂无' }}</span>
+      </p> -->
+      <!-- <p class="order-item">
         <span class="label">发票</span>
         <span class="text">暂无</span>
-      </p>
+      </p> -->
       <p class="order-item last-p">
         <span class="label">备注</span>
         <span class="text">{{
@@ -183,7 +183,7 @@
       :order-data="orderData"
       :pay-list="payList"
       :batch-pay-status="batchPayStatus"
-      :batch-type="batchType"
+      :this-time-pay-total="thisTimePayTotal"
     />
   </div>
 </template>

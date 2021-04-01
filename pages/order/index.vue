@@ -48,7 +48,7 @@
       :order-data="orderData"
       :pay-list="payList"
       :batch-pay-status="batchPayStatus"
-      :batch-type="batchType"
+      :this-time-pay-total="thisTimePayTotal"
     />
     <Bottombar v-if="!isInApp && !isApplets" ref="bottombar" />
     <LoadingCenter v-show="loading" />
@@ -156,6 +156,7 @@ export default {
     handleClickItem(type, text, order) {
       console.log('type', type)
       console.log('text', text)
+      this.initItem()
       this.orderData = order
       console.log('初始化时this.orderData', this.orderData)
       switch (type) {

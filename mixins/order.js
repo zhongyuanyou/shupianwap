@@ -7,6 +7,9 @@ import orderApi from '@/api/order'
 export default {
   data() {
     return {
+      thisTimePayTotal: 0, // 本期应付批次总额
+      allTimePayTotal: 0, // 未支付批次总额
+      batchIds: '', // 分批支付id集合
       // 客户单状态CODE对应文字
       CUSORDERSTATUSCODE: {
         ORDER_CUS_STATUS_UNPAID: '待付款', // 未付款
@@ -26,20 +29,40 @@ export default {
         2: 'ORDER_BATCH_PAYMENT_PAY_1', // 应支付
         3: 'ORDER_BATCH_PAYMENT_PAY_2', // 已支付
       },
-      // 分批支付类型 batchType
-      batchType: {
+      // 付款节点
+      batchNumber: {
         0: '全款',
         1: '首款',
         2: '中期款',
         3: '尾款',
       },
-      // 付款类型
-      batchNumber: {
-        0: '全款',
+      // 支付类型
+      orderPayType: {
+        PRO_PRE_PAY_POST_SERVICE: {
+          name: '先付款后服务',
+          number: 1,
+        },
+        PRO_PRE_DEPOSIT_POST_OTHERS: {
+          name: '先定金后尾款',
+          number: 2,
+        },
+        PRO_PRE_SERVICE_POST_PAY_BY_NODE: {
+          name: '先服务按节点付费',
+          number: 3,
+        },
+        PRO_PRE_SERVICE_FINISHED_PAY: {
+          name: '服务完结收费',
+          number: 4,
+        },
       },
     }
   },
   methods: {
+    initItem() {
+      this.batchIds = ''
+      this.thisTimePayTotal = 0 // 本期应付批次总额
+      this.allTimePayTotal = 0 // 未支付批次总额
+    },
     // 判断是否有关联订单  0 无 1有
     checkHasOtherOrder() {
       return this.orderData.orderList.length > 1
@@ -95,51 +118,81 @@ export default {
           this.payList = res
           this.loading = false
           if (this.fromPage === 'orderList') {
-            // 从订单列表页调用该方法则直接走分批支付流程
-            if (this.payList && this.payList.length > 1) {
-              if (this.payList.length === this.orderData.orderList.length) {
-                // 子订单数量和分批支付数量一样的话实际上不是分批支付订单
-                if (this.payList[0].batchType === 0) {
-                  // 全款支付
-                  this.$router.push({
-                    path: '/pay/payType',
-                    query: {
-                      fromPage: this.fromPage,
-                      cusOrderId: this.orderData.cusOrderId,
-                    },
-                  })
-                } else if (this.payList[0].batchType === 1) {
-                }
-              } else {
-                // 否则直接跳转支付页面
-                // 有分批支付信息则弹起分批支付弹窗 关闭关联订单弹窗
-                this.payList = res
-                this.$refs.payModal.showPop = true
-                this.$refs.cancleOrderModel.showPop = false
-              }
-            } else {
-              // 否则直接跳转支付页面
-              this.$router.push({
-                path: '/pay/payType',
-                query: {
-                  cusOrderId: this.orderData.cusOrderId,
-                  fromPage: this.fromPage,
-                  batchPayIds: '',
-                },
-              })
-            }
+            this.checkCusBatchPayType()
           }
         })
         .catch((err) => {
           this.loading = false
           console.log('分批支付信息err', err)
           this.$xToast.show({
-            message: '获取分批支付信息失败',
+            message: '获取分批支付信息失败' + err.data.error,
             duration: 1000,
             icon: 'toast_ic_remind',
             forbidClick: true,
           })
         })
+    },
+    // 判断是分批支付还是全款支付等
+    checkCusBatchPayType() {
+      if (
+        this.payList.length === this.orderData.orderList.length ||
+        this.payList.length === 1
+      ) {
+        // 此时一个订单只有一个支付信息则为全款支付
+        console.log('分批支付数量和订单数量一致')
+        console.log('this.payList', this.payList)
+        this.$router.push({
+          path: '/pay/payType',
+          query: {
+            fromPage: this.fromPage,
+            cusOrderId: this.orderData.cusOrderId,
+            batchIds: '',
+          },
+        })
+        // // 子订单数量和分批支付数量一样的话实际上不是分批支付订单
+        // if (
+        //   this.payList[0].orderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
+        //   this.payList[0].orderPayType ===
+        //     'PRO_PRE_SERVICE_FINISHED_PAY'
+        // ) {
+        //   // 当支付类型为先付款后服务和服务完结收费且付费节点为全款时（batchNumber=0）进行全款支付
+        //   this.$router.push({
+        //     path: '/pay/payType',
+        //     query: {
+        //       fromPage: this.fromPage,
+        //       cusOrderId: this.orderData.cusOrderId,
+        //     },
+        //   })
+        // } else {
+        //   this.payList = res
+        //   this.$refs.payModal.showPop = true
+        //   this.$refs.cancleOrderModel.showPop = false
+        // }
+      } else {
+        // 是分批支付则弹起分批支付弹窗 关闭关联订单弹窗
+        this.$refs.payModal.showPop = true
+        this.$refs.cancleOrderModel.showPop = false
+        let thisTimePayTotal = 0 // 本期应付总额
+        let allTimePayTotal = 0 // 剩余未支付所有批次总额
+        const idsArr = [] // 应分批支付id
+        this.payList.forEach((element) => {
+          if (element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
+            thisTimePayTotal += element.money
+            idsArr.push(element.id)
+          }
+          if (
+            element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_0' ||
+            element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1'
+          ) {
+            allTimePayTotal += element.money
+          }
+        })
+        this.thisTimePayTotal = thisTimePayTotal
+        this.allTimePayTotal = allTimePayTotal
+        this.batchIds = idsArr.join(',')
+        console.log('本期应付总额:thisTimePayTotal:', thisTimePayTotal)
+        console.log('全款支付剩余应付总额thisTimePayTotal:', thisTimePayTotal)
+      }
     },
     // 取消订单
     cancleOrder() {

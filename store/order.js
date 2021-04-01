@@ -16,7 +16,7 @@ export const state = () => ({
   batchPayStatus: {
     1: 'ORDER_BATCH_PAYMENT_PAY_0', // 未支付
     2: 'ORDER_BATCH_PAYMENT_PAY_1', // 应支付
-    3: 'ORDER_BATCH_PAYMENT_PAY_2', // 已支付
+    3: 'ORDER_BATCH_PAYMENT_PAY_2', // 已
   },
 })
 
