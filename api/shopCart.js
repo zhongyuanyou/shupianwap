@@ -17,6 +17,7 @@ const shopCart = {
   list(params) {
     return request({
       params,
+      method: 'get',
       url: CHIPS_APP_BASE_URL + '/yk/cart/v2/find_list.do',
     })
   },

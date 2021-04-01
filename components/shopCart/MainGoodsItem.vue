@@ -4,7 +4,7 @@
  * @LastEditors: Please set LastEditors
  * @LastEditTime: 2021-01-22 16:15:13
  * @Description: file content
- * @FilePath: /chips-wap/components/shoppingCar/MainGoodsItem.vue
+ * @FilePath: /chips-wap/components/import { shoppingCar } from '@/api'Car/MainGoodsItem.vue
 -->
 <template>
   <div class="main-goods-item">
@@ -26,17 +26,10 @@
           color="#F8F8F8"
           text-color="#999999"
           size="large"
-          @click="handleSkuOpen"
+          @click="handleSkuToDetail"
         >
           <span class="goods-sku__text"> {{ mainData.skuAttrName }}</span>
-
-          <my-icon
-            name="shop_ic_open"
-            size="0.14rem"
-            color="#999999"
-            class="ic__sku-open"
-          ></my-icon
-        ></sp-tag>
+        </sp-tag>
       </div>
       <div class="goods-price">
         <span class="sales-price">
@@ -56,8 +49,8 @@
           :async-change="true"
           :disabled="
             mainData &&
-            mainData.serviceResourceList &&
-            mainData.serviceResourceList.length >= 1
+            mainData.saleGoodsSubs &&
+            mainData.saleGoodsSubs.length >= 1
           "
           @change="handleCountChange"
           @focus="handleCountFoucs"
@@ -81,48 +74,6 @@
             />
           </template>
         </sp-stepper>
-      </div>
-      <div v-if="mainData.saleGoodsSubs.length" class="goods-service">
-        <div class="goods-service__row-left">基础商品</div>
-        <div class="goods-service__row-right">
-          <div
-            v-for="(saleGoodsSubItem, index) in mainData.saleGoodsSubs"
-            :key="index"
-            class="goods-service__item"
-          >
-            <span class="goods-service__title">{{
-              saleGoodsSubItem.goodsSubName
-            }}</span>
-            <span class="goods-service__content"></span>
-            <span class="goods-service__count">{{
-              `${
-                saleGoodsSubItem.settlementFloating
-                  ? saleGoodsSubItem.settlementFloating
-                  : '--'
-              }元  x${saleGoodsSubItem.salesFloating}`
-            }}</span>
-          </div>
-          <div class="goods-service__row-left">服务项目</div>
-          <div class="goods-service__row-right">
-            <div
-              v-for="(serviceItem, index) in saleGoodsSubItem.serviceItems"
-              :key="index"
-              class="goods-service__item"
-            >
-              <span class="goods-service__title">{{
-                serviceItem.serviceItemValName
-              }}</span>
-              <span class="goods-service__content"></span>
-              <span class="goods-service__count">{{
-                `${
-                  serviceItem.settlementPrice
-                    ? saleGoodsSubItem.settlementPrice
-                    : '--'
-                }元  x${serviceItem.salesPrice}`
-              }}</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -171,6 +122,7 @@ export default {
       checked: false,
       goodsCount: 1,
       countStatus: 'blur', // foucs
+      saleGoodsSubs: [],
     }
   },
   computed: {
@@ -203,6 +155,8 @@ export default {
         if (goodsNumber !== this.goodsCount) {
           this.goodsCount = goodsNumber || 0
         }
+        this.saleGoodsSubs = this.mainData.saleGoodsSubs
+        console.log('this.saleGoodsSubs', this.saleGoodsSubs)
       },
       immediate: true,
     },
@@ -214,6 +168,12 @@ export default {
     handleSkuOpen() {
       console.log('handleSkuOpen')
       this.$emit('operation', { type: 'openSku' })
+    },
+    handleSkuToDetail() {
+      this.$router.push({
+        path: '/DetailManagement',
+        query: {},
+      })
     },
     handleCountChange(value) {
       console.log('handleCountChange value:', value)

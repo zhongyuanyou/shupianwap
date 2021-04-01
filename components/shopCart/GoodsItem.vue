@@ -6,7 +6,7 @@
     class="goods-item"
     :class="{
       'goods-item--disable':
-        formatGoodsStatusData.status !== 'GOODS_STATUS_ON_SHELF',
+        formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY',
     }"
   >
     <SkuService
@@ -26,7 +26,7 @@
             icon-size="0.32rem"
             class="goods-item__check"
             :disabled="
-              formatGoodsStatusData.status !== 'GOODS_STATUS_ON_SHELF' &&
+              formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY' &&
               shoppingCarStatus === 'completed'
             "
             @change="handleAsyncCheckboxChange"
@@ -40,7 +40,7 @@
         </div>
         <!-- S 状态提示 -->
         <div
-          v-if="formatGoodsStatusData.status !== 'GOODS_STATUS_ON_SHELF'"
+          v-if="formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY'"
           class="goods-item--disable-tip flex-c-c flex-c-a-c"
         >
           <span class="goods-item--disable-tip__zh">{{
@@ -188,7 +188,7 @@ export default {
       // 所以 在前端只是通过ui控制在购物车完成状态的 商品选中效果被禁用
       if (this.shoppingCarStatus === 'completed') {
         return (
-          this.formatGoodsStatusData.status === 'GOODS_STATUS_ON_SHELF' &&
+          this.formatGoodsStatusData.status === 'PRO_STATUS_PUT_AWAY' &&
           !!this.commodityData.shopIsSelected
         )
       }
@@ -290,25 +290,25 @@ export default {
         statusTextEn: '--',
       }
       switch (status) {
-        case 'GOODS_STATUS_ON_SHELF':
+        case 'PRO_STATUS_PUT_AWAY':
           stautsData = {
             status,
             statusTextZh: '上架',
             statusTextEn: 'on shelf',
           }
           break
-        case 'GOODS_STATUS_OFF_SHELF':
+        case 'PRO_STATUS_SOLD_OUT':
           stautsData = {
             status,
             statusTextZh: '已下架',
             statusTextEn: 'off shelf',
           }
           break
-        case 'GOODS_STATUS_DEL':
+        case 'PRO_STATUS_INVALID':
           stautsData = {
             status,
-            statusTextZh: '已删除',
-            statusTextEn: 'deleted',
+            statusTextZh: '作废',
+            statusTextEn: 'invalid',
           }
           break
       }
