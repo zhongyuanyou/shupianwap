@@ -32,7 +32,8 @@
       ref="cancleOrderModel"
       :order-id="orderData.orderId"
       :cus-order-id="orderData.cusOrderId"
-      :order-sku-list="orderData.orderSkuList"
+      :order-list="orderData.orderList"
+      @getBatchList="getBatchList"
     />
     <div v-if="!list.length" class="no-data-area">
       <img
@@ -42,7 +43,13 @@
       />
       <p class="text">暂无订单</p>
     </div>
-    <PayModal ref="payModal" :order-data="orderData" :pay-list="payList" />
+    <PayModal
+      ref="payModal"
+      :order-data="orderData"
+      :pay-list="payList"
+      :batch-pay-status="batchPayStatus"
+      :batch-type="batchType"
+    />
     <Bottombar v-if="!isInApp && !isApplets" ref="bottombar" />
     <LoadingCenter v-show="loading" />
   </div>
@@ -150,7 +157,7 @@ export default {
       console.log('type', type)
       console.log('text', text)
       this.orderData = order
-      console.log('this.orderData', this.orderData)
+      console.log('初始化时this.orderData', this.orderData)
       switch (type) {
         case 1:
           // 取消订单 无关联订单直接取消

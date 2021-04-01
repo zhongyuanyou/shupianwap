@@ -29,6 +29,7 @@ export default function ({ $axios, redirect, app, store }) {
         // 在app正式上线未做负载前,此sysCode不修改
         config.headers.sysCode = 'crisps-app-wap-bff-api'
       }
+      config.headers.sourcePlatform = 'COMDIC_PLATFORM_CRISPS' // 操作系统来源 薯片
       if (
         app.$cookies.get('token', {
           path: '/',
