@@ -1,6 +1,10 @@
 <template>
   <div>
-    <PageHead :has-val="hasVal" confirm-text="发布问题" />
+    <PageHead
+      :has-val="hasVal"
+      confirm-text="发布问题"
+      @handleCancel="$router.back()"
+    />
     <div class="main">
       <TitleArea
         ref="myTitle"
