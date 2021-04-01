@@ -4,7 +4,11 @@
       <p class="container_tp_title">包含内容</p>
     </div>
     <div class="container_list">
-      <div v-for="(item, index) in 3" :key="index" class="container_list_item">
+      <div
+        v-for="item in salesGoodsSubVos"
+        :key="item.goodsId"
+        class="container_list_item"
+      >
         <div class="item_box">
           <sp-image
             width="1.2rem"
@@ -14,31 +18,33 @@
             src=""
           />
           <div class="content">
-            <div class="content_title hide">有限公司注册(工商）</div>
+            <div class="content_title hide">{{ item.goodsSubName }}</div>
             <div class="content_desc hide">
-              新手创业，找专业平台，省心更省钱新手创业，找专页平台
+              {{ item.goodsSubDetailsName }}
             </div>
-            <div class="content_price">3000 <span>元</span></div>
-            <div class="content_detail" @click="expand = !expand">
-              {{ expand ? '收起详情' : '查看详情'
-              }}<sp-icon
-                name="arrow-down"
-                color="#4974f5"
-                :class="{ arrow_up: expand }"
-              />
+            <div class="content_price">
+              {{ item.salesPriceEdit }} <span>元</span>
             </div>
+            <!--            <div class="content_detail" @click="expand = !expand">-->
+            <!--              {{ expand ? '收起详情' : '查看详情'-->
+            <!--              }}<sp-icon-->
+            <!--                name="arrow-down"-->
+            <!--                color="#4974f5"-->
+            <!--                :class="{ arrow_up: expand }"-->
+            <!--              />-->
+            <!--            </div>-->
           </div>
         </div>
-        <div v-if="expand" class="detail">
-          <div
-            v-for="(attrItem, attrIndex) in list"
-            :key="attrIndex"
-            class="detail_attr"
-          >
-            <span class="detail_attr_label"> {{ attrItem.label }}：</span>
-            <span class="detail_attr_content">{{ attrItem.content }}</span>
-          </div>
-        </div>
+        <!--        <div v-if="expand" class="detail">-->
+        <!--          <div-->
+        <!--            v-for="(attrItem, attrIndex) in list"-->
+        <!--            :key="attrIndex"-->
+        <!--            class="detail_attr"-->
+        <!--          >-->
+        <!--            <span class="detail_attr_label"> {{ attrItem.label }}：</span>-->
+        <!--            <span class="detail_attr_content">{{ attrItem.content }}</span>-->
+        <!--          </div>-->
+        <!--        </div>-->
       </div>
     </div>
   </div>
@@ -83,6 +89,12 @@ export default {
         },
       ],
     }
+  },
+  computed: {
+    salesGoodsSubVos() {
+      return this.$store.state.sellingGoodsDetail.sellingGoodsData
+        .salesGoodsSubVos
+    },
   },
   mounted() {},
   methods: {},
@@ -195,6 +207,7 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
     margin-top: 6px;
+    overflow: hidden;
   }
 }
 </style>

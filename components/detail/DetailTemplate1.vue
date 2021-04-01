@@ -41,7 +41,7 @@
     </sp-sticky>
     <!--E 导航栏-->
     <!--S banner-->
-    <Banner :images="proDetail.productImgArr" />
+    <Banner :images="[]" />
     <!--S banner-->
     <!--S 第一板块-->
     <Title />
@@ -49,12 +49,6 @@
     <!--S 第二板块 领券 SKU-->
     <VouchersSelect ref="sku" />
     <!--E 第二板块 领券 SKU-->
-    <!--S 第三板块 包含项目-->
-    <ContainProject />
-    <!--E 第三板块 包含项目-->
-    <!--S 第三板块 包含服务-->
-    <ContainService />
-    <!--E 第三板块 包含服务-->
     <!--S 第三板块 包含内容-->
     <ContainContent />
     <!--E 第三板块 包含内容-->
@@ -113,8 +107,8 @@ export default {
     Banner,
     Title,
     VouchersSelect,
-    ContainProject,
-    ContainService,
+    // ContainProject,
+    // ContainService,
     ContainContent,
     TcPlanners,
     ServiceDetail,
@@ -130,6 +124,7 @@ export default {
       },
     },
   },
+
   data() {
     return {
       opacity: 0,
@@ -154,16 +149,23 @@ export default {
     }
   },
   computed: {
-    // 产品详情
-    proDetail() {
-      return this.$store.state.tcProductDetail.detailData
-    },
+    // imgFileIdPaths() {
+    //   // 获取客户端展示信息
+    //   const clientDetails = this.$store.state.sellingGoodsDetail
+    //     .sellingGoodsData.salesGoodsOperatings.clientDetails
+    //   // 获取商品图片集合
+    //   const imgFileIdPaths = clientDetails.length
+    //     ? clientDetails[0].imgFileIdPaths
+    //     : []
+    //   // 返回图片地址集合
+    //   return imgFileIdPaths
+    // },
     city() {
       return this.$store.state.city.currentCity
     },
   },
   async mounted() {
-    this.fieldListFun() // 加载基本信息
+    // this.fieldListFun() // 加载基本信息
     this.getUserIndo()
     // 假如未获取到站点信息,再获取地理位置
     if (!this.city.code) {
