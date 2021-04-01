@@ -194,17 +194,6 @@ export default {
         console.log('全款支付剩余应付总额thisTimePayTotal:', thisTimePayTotal)
       }
     },
-    // 取消订单
-    cancleOrder() {
-      orderApi.cancelOrder(
-        { axios: this.axios },
-        {
-          orderId: this.orderId,
-          cancelReasonCode: this.cancelReasonCode,
-          cancelReasonName: this.cancelReasonName,
-        }
-      )
-    },
     // 判断展示合同按钮 false不展示  1签署合同 2查看合同
     checkContractStatus() {
       return orderUtils.checkContractStatus(this.orderData)
@@ -260,16 +249,44 @@ export default {
           })
           .catch((err) => {
             this.loading = false
-            this.$xToast.show({
-              message: '查询关联订单失败,' + err.data.error,
-              duration: 1000,
-              icon: 'toast_ic_remind',
-              forbidClick: true,
-            })
+            this.$xToast.error(err.data.err || '操作失败')
           })
       } else {
         this.startPay()
       }
+    },
+    // 确认订单
+    confirmOrder() {
+      orderApi
+        .confirmOrder({ axios: this.$axios }, { orderId: this.orderData.id })
+        .then((res) => {
+          this.$xToast.success('操作成功')
+          if (this.fromPage === 'orderList') this.getOrderList()
+          else this.getDetail()
+        })
+        .catch((err) => {
+          this.$xToast.error(err.data.err || '操作失败')
+        })
+    },
+    // 取消订单
+    cancleOrder() {
+      orderApi
+        .cancelOrder(
+          { axios: this.axios },
+          {
+            orderId: this.orderId,
+            cancelReasonCode: this.cancelReasonCode,
+            cancelReasonName: this.cancelReasonName,
+          }
+        )
+        .then((res) => {
+          this.$xToast.success('操作成功')
+          if (this.fromPage === 'orderList') this.getOrderList()
+          else this.getDetail()
+        })
+        .catch((err) => {
+          this.$xToast.error(err.data.err || '操作失败')
+        })
     },
   },
 }

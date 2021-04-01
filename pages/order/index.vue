@@ -123,17 +123,17 @@ export default {
     },
   },
   mounted() {
-    this.getList()
+    this.getOrderList()
   },
   methods: {
     changeTab(name, title) {
       this.selectedOrderStatus = name
-      this.getList()
+      this.getOrderList()
     },
     toCar() {
       this.$router.push('../shopCart/')
     },
-    getList() {
+    getOrderList() {
       this.loading = true
       orderApi
         .list(
@@ -150,7 +150,7 @@ export default {
         })
         .catch(() => {
           this.loading = false
-          this.$xToast.fail('获取数据失败')
+          this.$xToast.error('获取数据失败')
         })
     },
     handleClickItem(type, text, order) {
@@ -233,6 +233,7 @@ export default {
           break
         case 6:
           console.log('确认完成')
+          this.confirmOrder()
           break
       }
     },

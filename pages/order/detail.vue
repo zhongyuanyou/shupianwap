@@ -275,7 +275,7 @@ export default {
         })
         .catch((err) => {
           console.log('错误信息err', err)
-          this.$xToast.showPop(err.message)
+          this.$xToast.show(err.message)
           this.$router.back(-1)
         })
     },
@@ -357,6 +357,7 @@ export default {
           break
         case 6:
           console.log('确认完成')
+          this.confirmOrder()
           break
       }
     },
