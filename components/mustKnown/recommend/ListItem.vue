@@ -36,16 +36,11 @@
 import {
   Tab,
   Tabs,
-  Icon,
   TopNavBar,
   Toast,
-  Swipe,
-  SwipeItem,
-  Lazyload,
   PullRefresh,
   List,
   Cell,
-  Image,
 } from '@chipspc/vant-dgg'
 
 export default {
@@ -53,15 +48,11 @@ export default {
   components: {
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
-    [Icon.name]: Icon,
     [TopNavBar.name]: TopNavBar,
     [Toast.name]: Toast,
-    [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
     [Cell.name]: Cell,
-    [Image.name]: Image,
   },
 
   props: {
