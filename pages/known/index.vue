@@ -42,7 +42,7 @@
     <!-- 吸顶 end -->
     <!-- 列表 start -->
     <div class="container_body">
-      <section v-if="tabIndex === 0"></section>
+      <section v-if="tabIndex === 0"><Answer /></section>
       <section v-if="tabIndex === 1">
         <VisitUser v-if="attentionStatus" />
         <AttentionItem v-if="attentionStatus" />
@@ -180,6 +180,7 @@
 import { mapState } from 'vuex'
 import { WorkTab, WorkTabs, Popup, Sticky, Tab, Tabs } from '@chipspc/vant-dgg'
 import AttentionItem from '@/components/mustKnown/recommend/AttentionItem'
+import Answer from '@/components/mustKnown/answer/Answer'
 import NotAttention from '@/pages/known/attention/notAttention'
 import VisitUser from '@/components/mustKnown/recommend/VisitUser'
 import ListItem from '@/components/mustKnown/recommend/ListItem'
@@ -199,7 +200,7 @@ export default {
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
     Search,
-    // Tabs,
+    Answer,
     ListItem,
     ItemCard,
     VisitUser,
@@ -370,7 +371,7 @@ export default {
   border-radius: 3px;
 }
 .container {
-  background: #f5f5f5;
+  background: #fff;
   .container_head {
     display: flex;
     justify-content: space-between;
