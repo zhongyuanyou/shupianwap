@@ -65,11 +65,16 @@ export default function (ctx, inject) {
         config.headers['X-Req-UserId'] = app.$cookies.get('userId', {
           path: '/',
         })
+        config.headers['X-Req-UserNo'] = app.$cookies.get('userNo', {
+          path: '/',
+        })
+        config.headers['X-Req-UserName'] = app.$cookies.get('userName', {
+          path: '/',
+        })
+        config.headers['X-Req-UserPhone'] = app.$cookies.get('userPhone', {
+          path: '/',
+        })
       }
-      config.headers['X-Auth-Token'] =
-        app.$cookies.get('token') || store.state.user.token
-      config.headers['X-Req-UserId'] =
-        app.$cookies.get('userId') || store.state.user.userId
       // 请求头设置站点code
       const cityCode = app.$cookies.get('currentCity', {
         path: '/',

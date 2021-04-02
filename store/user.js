@@ -19,23 +19,23 @@ export const state = () => ({
 })
 export const mutations = {
   SET_USER(state, data = {}) {
-    this.$cookies.set('token', data.token, {
+    this.$cookies.set('token', String(data.token), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
-    this.$cookies.set('userId', data.userId, {
+    this.$cookies.set('userId', String(data.userId), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
-    this.$cookies.set('userType', data.userType, {
+    this.$cookies.set('userType', String(data.userType), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     state.userInfo = data
-    state.token = data.token
-    state.userId = data.userId
-    state.userType = data.userType
+    state.token = String(data.token)
+    state.userId = String(data.userId)
+    state.userType = String(data.userType)
   },
   CLEAR_USER(state) {
     this.$cookies.remove('token')
@@ -47,7 +47,7 @@ export const mutations = {
     state.userInfo = {}
   },
   SET_INFO(state, data = {}) {
-    this.$cookies.set('userNo', data.no, {
+    this.$cookies.set('userNo', String(data.no), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
