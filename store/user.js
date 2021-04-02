@@ -41,9 +41,16 @@ export const mutations = {
     this.$cookies.remove('token')
     this.$cookies.remove('userId')
     this.$cookies.remove('userType')
+    this.$cookies.remove('userName')
+    this.$cookies.remove('userPhone')
     state.token = ''
     state.userId = ''
     state.userType = ''
+    state.userNo = ''
+    state.userName = ''
+    state.userPhone = ''
+    state.realStatus = ''
+    state.mainAccountFull = ''
     state.userInfo = {}
   },
   SET_INFO(state, data = {}) {

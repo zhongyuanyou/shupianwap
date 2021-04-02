@@ -14,7 +14,7 @@
         />
         <p class="txt" @click="handleClickLogin">
           {{
-            (userId && info.nickName) || userName
+            (token && info.nickName) || userName
               ? '欢迎你，' + userName || info.nickName || ''
               : '登录/注册'
           }}
@@ -265,6 +265,7 @@ export default {
         this.loading = false
         if (res.code === 200 && res.data && typeof res.data === 'object') {
           this.info = res.data
+          this.userName = res.data.nickName
           this.$store.dispatch('user/setInfo', res.data)
         } else {
           // 清除用户缓存信息
@@ -296,6 +297,7 @@ export default {
       if (res.code === 200) {
         // 清除cookie中的数据
         this.info.url = ''
+        this.userName = ''
         this.$store.dispatch('user/clearUser')
       }
     },

@@ -74,11 +74,18 @@ export default function (ctx, inject) {
         config.headers['X-Req-UserPhone'] = app.$cookies.get('userPhone', {
           path: '/',
         })
+        config.headers['X-Req-mainAccountFull'] = app.$cookies.get(
+          'mainAccountFull',
+          {
+            path: '/',
+          }
+        )
       }
       // 请求头设置站点code
       const cityCode = app.$cookies.get('currentCity', {
         path: '/',
       })
+      config.headers.sourcePlatform = 'COMDIC_PLATFORM_CRISPS' // 操作系统来源 薯片
       if (cityCode && cityCode !== '{}') {
         config.headers.areaCode = JSON.parse(cityCode).code
       } else {
