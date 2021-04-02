@@ -1,7 +1,7 @@
 'use strict'
 import { request } from '@/utils/request'
-import { CHIPS_WAP_BASE_URL } from '@/config/constant'
-
+// import { CHIPS_WAP_BASE_URL } from '@/config/constant'
+const CHIPS_WAP_BASE_URL = 'http://127.0.0.1:7001/service'
 const pay = {
   enablePayMoney({ axios }, params) {
     // 查询当前订单的金额
