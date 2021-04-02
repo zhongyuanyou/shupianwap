@@ -1,7 +1,7 @@
 <template>
   <div class="comment">
     <sp-popup
-      v-model="show"
+      v-model="popupShow"
       position="bottom"
       :style="{ height: '95%' }"
       round
@@ -9,17 +9,16 @@
       :close-on-click-overlay="false"
     >
       <div class="head">
-        {{ title }}
-        <my-icon
-          name="guanbihuise_mian"
-          size="0.48rem"
-          color="#F5F5F5"
+        全部评论
+        <img
           class="icon"
-          @click.native="close"
+          src="~/assets/knownImg/close_icon.png"
+          alt=""
+          @click="popupShow = false"
         />
       </div>
       <div class="btns">
-        <span>评论 {{ list.length }}</span>
+        <span>评论 {{ total }}</span>
         <p>
           <i :class="{ right: sort }"></i>
           <span
@@ -31,31 +30,38 @@
           >
         </p>
       </div>
-      <div class="listbox">
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        class="listbox"
+        @load="getCommentsList"
+      >
         <div v-for="(item, index) in list" :key="index" class="list">
-          <img :src="item.img" alt="" />
+          <img :src="item.avatar" alt="" />
           <div class="user">
-            <h1>{{ item.username }}</h1>
+            <h1>{{ item.userName }}</h1>
             <p>{{ item.content }}</p>
             <div>
-              <span>{{ item.time }}</span>
+              <span>{{ item.createTime }}</span>
               <div>
                 <my-icon
                   name="dianzan"
                   size="0.32rem"
-                  color="#999999"
+                  :color="item.isApplaud ? '#4974f5' : '#999999'"
+                  @click.native="Applaud(item)"
                 ></my-icon>
-                {{ item.Likes }}
+                {{ item.applaudCount }}
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </sp-list>
       <div class="foot">
-        <sp-field v-model="text" placeholder="请输入您的评论内容" />
+        <sp-field v-model.trim="content" placeholder="请输入您的评论内容" />
         <p
-          :style="{ color: text ? 'rgba(73, 116, 245, 1)' : '' }"
-          @click="sum()"
+          :style="{ color: content ? 'rgba(73, 116, 245, 1)' : '' }"
+          @click="publish"
         >
           发布
         </p>
@@ -65,47 +71,138 @@
 </template>
 
 <script>
-import { Popup, Field } from '@chipspc/vant-dgg'
+import { Popup, Field, List, Toast } from '@chipspc/vant-dgg'
+import { knownApi } from '~/api'
 export default {
-  name: 'Comment',
+  name: 'CommentList',
   components: {
     [Popup.name]: Popup,
     [Field.name]: Field,
+    [List.name]: List,
   },
   props: {
-    title: {
-      type: String,
-      default: '全部评论',
-    },
-    show: {
+    value: {
       type: Boolean,
       default: false,
     },
-    list: {
-      type: Array,
-      default: () => {
-        return []
-      },
+    articleId: {
+      type: Number,
+      default: 0,
     },
   },
   data() {
     return {
-      sort: 0,
-      text: '',
+      loading: false,
+      finished: false,
+      sort: 0, // 0 默认 2 时间
+      content: '',
+      list: [],
+      page: 1,
+      total: 0, // 总数
     }
+  },
+  computed: {
+    popupShow: {
+      get() {
+        return this.value
+      },
+      set(value) {
+        this.$emit('input', value)
+      },
+    },
+  },
+  watch: {
+    popupShow(val) {
+      if (val) {
+        this.sort = 0
+        this.init()
+      }
+    },
   },
   methods: {
     sortfn(index) {
       if (this.sort !== index) {
         this.sort = index
-        this.$emit('sort', index)
+        this.init()
       }
     },
-    sum() {
-      this.$emit('release', this.text)
+    init() {
+      this.page = 1
+      this.list = []
+      this.finished = false
+      this.loading = true
+      this.getCommentsList()
     },
-    close() {
-      this.$emit('close')
+    async getCommentsList() {
+      const { code, message, data } = await this.$axios.get(
+        knownApi.comments.list,
+        {
+          params: {
+            currentUserId: 100,
+            sourceIds: this.articleId,
+            orderBy: this.sort,
+            page: this.page,
+          },
+        }
+      )
+      if (code === 200) {
+        this.list = this.list.concat(data.rows)
+        this.total = data.total
+        this.loading = false
+        this.page++
+        if (this.page > data.totalPage) {
+          this.finished = true
+        }
+      } else {
+        console.log(message)
+        this.loading = false
+        this.finished = true
+      }
+    },
+    Applaud(item) {
+      if (item.isApplaud) {
+        item.isApplaud = false
+        console.log('取消点赞')
+      } else {
+        item.isApplaud = true
+        console.log('点赞')
+      }
+    },
+    async publish() {
+      if (!this.content) {
+        return
+      }
+      const { code, message, data } = await this.$axios.post(
+        knownApi.comments.publish,
+        {
+          content: this.content,
+          sourceId: this.articleId,
+          sourceType: 2, // 2 文章 3 回答
+          userId: 100,
+          userName: '测试用户',
+          userType: 1, // 1 普通用户 2 规划师
+        }
+      )
+      if (code === 200) {
+        Toast({
+          message: '发布成功',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_success',
+        })
+        this.list.unshift({
+          userId: '',
+          avatar: '',
+          userName: '测试用户',
+          userType: 1,
+          content: this.content,
+          createTime: '',
+          applaudCount: 0,
+          isApplaud: false,
+        })
+        this.content = ''
+      } else {
+        console.log(message)
+      }
     },
   },
 }
@@ -125,6 +222,8 @@ export default {
       position: absolute;
       right: 32px;
       top: 38px;
+      width: 48px;
+      height: 48px;
     }
   }
   .btns {
@@ -193,6 +292,7 @@ export default {
       }
       .user {
         margin-left: 20px;
+        flex: 1;
         > h1 {
           font-size: 30px;
           color: #555555;

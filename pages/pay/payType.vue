@@ -103,7 +103,6 @@ export default {
   },
   mounted() {
     // 如果没有cusOrderId，batchIds 回退
-
     if (this.$route.query.cusOrderId) {
       this.formData.cusOrderId = this.$route.query.cusOrderId
       this.formData.batchIds = this.$route.query.batchIds

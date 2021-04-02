@@ -4,6 +4,7 @@
       <Search
         :value="title"
         :icon-left="0.2"
+        @submit="submit"
         @click.native="$router.push('/known/search')"
       >
       </Search>
@@ -322,6 +323,9 @@ export default {
     openPop() {
       console.log('this.open')
       this.showPop = true
+    },
+    submit() {
+      console.log('this.submit')
     },
   },
 }

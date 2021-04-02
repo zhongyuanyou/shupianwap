@@ -6,8 +6,11 @@
     />
     <div class="order-area">
       <!-- 服务商品、 -->
-      <!-- <ServeList v-if="orderType === 1" :order-data="orderData" /> -->
-      <!-- 交易商品 -->
+      <!-- <ServeList
+        v-if="orderData.orderProTypeNo.match('PRO_CLASS_TYPE_SERVICE')"
+        :order-data="orderData"
+      /> -->
+      <!-- 交易销售资源商品 -->
       <TradeList class="goods-info" :order-data="orderData" />
       <div class="price-area">
         <p>
@@ -110,7 +113,7 @@
       <p class="order-item last-p">
         <span class="label">备注</span>
         <span class="text">{{
-          orderData.mark || orderData.cusOrderDetail.mark
+          orderData.mark || orderData.cusOrderDetail.mark || '暂无'
         }}</span>
       </p>
     </div>
@@ -185,6 +188,7 @@
       :batch-pay-status="batchPayStatus"
       :this-time-pay-total="thisTimePayTotal"
     />
+    <LoadingCenter v-show="loading" />
   </div>
 </template>
 
@@ -192,7 +196,7 @@
 import { Button } from '@chipspc/vant-dgg'
 import Banner from '@/components/order/detail/Banner'
 // 服务订单
-import ServeList from '@/components/order/detail/ServeList'
+// import ServeList from '@/components/order/detail/ServeList'
 // 交易订单
 import TradeList from '@/components/order/detail/TradeList'
 import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
@@ -200,6 +204,7 @@ import PayModal from '@/components/order/PayModal' // 支付弹窗
 import orderUtils from '@/utils/order'
 import orderApi from '@/api/order'
 import OrderMixins from '@/mixins/order'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     [Button.name]: Button,
@@ -208,10 +213,12 @@ export default {
     TradeList,
     CancelOrder,
     PayModal,
+    LoadingCenter,
   },
   mixins: [OrderMixins],
   data() {
     return {
+      loading: true,
       hasData: false,
       orderId: '',
       cusOrderId: '',
@@ -232,10 +239,15 @@ export default {
     },
   },
   mounted() {
-    this.orderId = this.$route.query.id
-    this.cusOrderId = this.$route.query.cusOrderId
-    console.log('this.$orderData', this.orderData)
-    this.getDetail()
+    if (this.$route.query.id) {
+      this.orderId = this.$route.query.id
+      this.cusOrderId = this.$route.query.cusOrderId
+      console.log('this.$orderData', this.orderData)
+      this.getDetail()
+    } else {
+      this.$xToast.error('缺少参数')
+      this.$router.back(-1)
+    }
   },
   methods: {
     onLeftClick() {
@@ -248,10 +260,15 @@ export default {
           { id: this.orderId, cusOrderId: this.cusOrderId }
         )
         .then((res) => {
+          this.loading = false
           console.log('res')
           const cusDetail = res.data.cusOrderDetail
           this.orderData = Object.assign(cusDetail, res.data)
           console.log('this.orderData', this.orderData)
+          console.log(
+            '订单类型this.orderData.orderProTypeNo',
+            this.orderData.orderProTypeNo
+          )
           this.hasData = true
           this.cusOrderStatusType = orderUtils.checkCusOrderStatus(
             this.orderData.cusOrderStatusNo
@@ -274,6 +291,7 @@ export default {
           }
         })
         .catch((err) => {
+          this.loading = false
           console.log('错误信息err', err)
           this.$xToast.show(err.message)
           this.$router.back(-1)

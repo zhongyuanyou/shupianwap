@@ -24,6 +24,7 @@ export default {
     this.jiami()
   },
   methods: {
+    // 下单协议
     async getProtocol(categoryCode) {
       if (!categoryCode) {
         this.$xToast.warn('请传入需要获取的协议!')

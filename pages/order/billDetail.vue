@@ -3,21 +3,21 @@
     <Header title="账单明细" @leftClickFuc="onClickLeft" />
     <div class="list">
       <div
-        v-for="(item, index) in goodsList"
+        v-for="(item, index) in allOrderSkuList"
         :key="index"
         class="item"
-        @click="toDetail"
+        @click="toDetail(item.orderId, item.id)"
       >
         <div class="left">
           <p class="goods-name">
-            {{ item.name }}
+            {{ item.spuName }}
           </p>
           <p class="goods-skus">
-            {{ item.skus }}
+            {{ item.skuExtInfo }}
           </p>
         </div>
         <div class="right">
-          {{ item.price }}元
+          {{ item.skuPayableTotalMoney }}元
           <my-icon
             name="list_ic_next"
             size="0.24rem"
@@ -27,44 +27,89 @@
         </div>
       </div>
     </div>
+    <LoadingCenter v-show="loading" />
   </div>
 </template>
 
 <script>
 // 服务商品账单明细
 import Header from '@/components/common/head/header'
+import OrderMixins from '@/mixins/order'
+import orderApi from '@/api/order'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     Header,
+    LoadingCenter,
   },
+  mixins: [OrderMixins],
   data() {
     return {
-      goodsList: [
-        {
-          name: '商标注册',
-          skus: '武侯区；无注册地址；认缴申请武侯区；武侯区开花13131414',
-          price: 300,
-        },
-        {
-          name: '商标注册2',
-          skus: '武侯区；无注册地址；认缴申请武侯区；武侯区开花13131414',
-          price: 300,
-        },
-        {
-          name: '商标注册3',
-          skus: '武侯区；无注册地址；认缴申请武侯区；武侯区开花13131414',
-          price: 300,
-        },
-      ],
+      loading: true,
+      isPayAll: 0, // 0 未本期 1为全部付款
+      cusOrderId: '',
+      allOrderSkuList: [],
+    }
+  },
+  // computed: {
+  //   shoulPayDetail: {
+  //     set(val) {
+  //       return val
+  //     },
+  //     get() {
+  //       return this.payList.filter((item) => {
+  //         return this.isPayAll === 0
+  //           ? item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1'
+  //           : item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1' ||
+  //               item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_0'
+  //       })
+  //     },
+  //   },
+  // },
+  mounted() {
+    if (this.$route.query.cusOrderId) {
+      this.cusOrderId = this.$route.query.cusOrderId
+      this.isPayAll = this.$route.query.isPayAll
+      this.getChildOrders()
+    } else {
+      this.$xToast.error('缺少参数')
+      this.$router.back(-1)
     }
   },
   methods: {
+    // 查询客户单下的关联订单
+    getChildOrders() {
+      orderApi
+        .getChildOrder({ axios: this.$axios }, { cusOrderId: this.cusOrderId })
+        .then((res) => {
+          this.loading = false
+          console.log('子订单返回', res)
+          // 筛选应支付订单
+          const shoudPayOrderList = res.list.filter((item) => {
+            return item.isNeedPay === 1 || item.isNeedPay === '1'
+          })
+          // 组装所有应支付订单下的商品
+          const allOrderSkuList = []
+          for (let i = 0; i < shoudPayOrderList.length; i++) {
+            if (shoudPayOrderList[i].orderSkuList.length) {
+              allOrderSkuList.concat(shoudPayOrderList[i].orderSkuList)
+            }
+          }
+          this.allOrderSkuList = allOrderSkuList
+        })
+        .catch((err) => {
+          this.loading = false
+          this.$xToast.error(err.data.err || '操作失败')
+        })
+    },
     onClickLeft() {
       this.$router.back(-1)
     },
-    toDetail() {
-      console.log(':111')
-      this.$router.push('/order/nodeDetail')
+    toDetail(orderId, skuId) {
+      this.$router.push({
+        path: '/order/nodeDetail',
+        query: { cusOrderId: this.cusOrderId, orderId, skuId },
+      })
     },
   },
 }
