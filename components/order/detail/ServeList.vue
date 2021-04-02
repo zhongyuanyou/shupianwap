@@ -3,17 +3,17 @@
     <div
       ref="content"
       class="serve-list"
-      :class="orderData.productVo.length > 3 ? 'serve-list1' : ''"
+      :class="orderData.orderSkuList.length > 3 ? 'serve-list1' : ''"
     >
       <div
-        v-for="(item, index) in orderData.productVo"
+        v-for="(item, index) in orderData.orderSkuList"
         :key="index"
         class="item"
       >
         <ServeItem :item="item" @showSkuModal="showSkuModal" />
       </div>
     </div>
-    <div v-if="orderData.productVo.length > 3" class="btn-p">
+    <div v-if="orderData.orderSkuList.length > 3" class="btn-p">
       <sp-button
         v-if="hideMore"
         icon="arrow-down"
@@ -61,7 +61,7 @@ export default {
   },
   computed: {
     maxHeight() {
-      return this.orderData.productVo.length * 275
+      return this.orderData.orderSkuList.length * 275
     },
   },
   methods: {

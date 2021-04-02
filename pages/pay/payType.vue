@@ -103,10 +103,9 @@ export default {
   },
   mounted() {
     // 如果没有cusOrderId，batchIds 回退
-
-    if (this.$router.query.cusOrderId) {
-      this.formData.cusOrderId = this.$router.query.cusOrderId
-      this.formData.batchIds = this.$router.query.batchIds
+    if (this.$route.query.cusOrderId) {
+      this.formData.cusOrderId = this.$route.query.cusOrderId
+      this.formData.batchIds = this.$route.query.batchIds
       this.enablePayMoney()
     } else {
       this.goBack()

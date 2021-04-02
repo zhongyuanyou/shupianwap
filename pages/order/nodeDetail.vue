@@ -41,18 +41,25 @@
         </p>
       </div>
     </div>
+    <LoadingCenter v-show="loading" />
   </div>
 </template>
 
 <script>
 // 服务商品节点明细
 import Header from '@/components/common/head/header'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     Header,
+    LoadingCenter,
   },
   data() {
     return {
+      orderId: '',
+      cusOrderId: '',
+      skuId: '',
+      loading: true,
       nodeList: [
         {
           money: 200,
@@ -73,6 +80,17 @@ export default {
       ],
     }
   },
+  mounted() {
+    if (this.$route.query.orderId) {
+      this.cusOrderId = this.$route.query.cusOrderId
+      this.orderId = this.$route.query.orderId
+      this.skuId = this.$route.query.skuId
+      this.getNodeDetail()
+    } else {
+      this.$xToast.error('缺少参数')
+      this.$router.back(-1)
+    }
+  },
   methods: {
     onClickLeft() {
       this.$router.back(-1)
@@ -80,6 +98,8 @@ export default {
     toDetail() {
       this.$router.go('/order/nodeDetail')
     },
+    // 获取节点明细
+    getNodeDetail() {},
   },
 }
 </script>

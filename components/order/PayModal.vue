@@ -20,7 +20,7 @@
                 <span class="money1">{{ thisTimePayTotal }}</span>
                 元</span
               >
-              <span class="span3" @click="toDetail"
+              <span class="span3" @click="toDetail(0)"
                 >查看明细
                 <my-icon
                   name="list_ic_next"
@@ -39,7 +39,7 @@
                 <span class="money1">{{ allTimePayTotal }}</span>
                 元</span
               >
-              <span class="span3" @click="toDetail"
+              <span class="span3" @click="toDetail(1)"
                 >查看明细
                 <my-icon
                   name="list_ic_next"
@@ -147,8 +147,11 @@ export default {
     cancelModal() {
       this.showPop = false
     },
-    toDetail() {
-      this.$router.push('/order/billDetail')
+    toDetail(type) {
+      this.$router.push({
+        path: '/order/billDetail',
+        query: { cusOrderId: this.orderData.cusOrderId, isPayAll: type },
+      })
     },
     toPay() {
       this.$router.push({
@@ -170,7 +173,7 @@ export default {
 }
 .pay-modal {
   max-height: 800px;
-  min-height: 500px;
+  min-height: 300px;
   height: auto;
   font-size: 28px;
   padding: 40px 40px 0 40px;

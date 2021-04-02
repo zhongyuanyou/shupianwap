@@ -8,7 +8,8 @@
         }}</span>
       </p>
       <div
-        v-for="(item, index) in orderData.orderSkuEsList"
+        v-for="(item, index) in orderData.orderSkuEsList ||
+        orderData.orderSkuList"
         :key="index"
         class="order-infos"
         :class="index !== 0 ? 'border-top' : ''"
@@ -16,7 +17,7 @@
         <sp-image :src="item.skuImages" alt="" class="img" srcset="" />
         <div class="right">
           <p class="goods-name">
-            <span class="name"> {{ item.spuName }}</span>
+            <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
             <span class="money1"> {{ item.skuPrice }}元 </span>
           </p>
           <p class="sku-info">
@@ -120,7 +121,6 @@
 
 <script>
 import { Button, Image } from '@chipspc/vant-dgg'
-import orderUtils from '@/utils/order'
 import OrderMixins from '@/mixins/order'
 export default {
   components: {
@@ -153,7 +153,6 @@ export default {
         path: '/order/detail',
         query: { id: this.orderData.id, cusOrderId: this.orderData.cusOrderId },
       })
-      this.$store.dispatch('order/setdata', this.orderData)
     },
   },
 }
