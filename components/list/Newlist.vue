@@ -91,7 +91,6 @@ export default {
       if (this.isLoading) {
         this.datalist = []
       }
-      let pa
       goods
         .transactionList({ axios: this.$axios }, this.formData)
         .then((data) => {

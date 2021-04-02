@@ -124,6 +124,7 @@ export default {
           }
         })
         .catch((err) => {
+          this.$xToast.show(err.message)
           console.log('错误信息err', err)
         })
     },
@@ -141,20 +142,19 @@ export default {
           }
         )
         .then((res) => {
-          if (res) {
-            this.$cookies.set('contractUrl', res.contractUrl)
-            this.$router.push({
-              path: '/contract/preview',
-              query: {
-                contractId: res.contractId,
-                contractNo: res.contractNo,
-                signerName: this.userName,
-                contactWay: this.phone,
-              },
-            })
-          }
+          this.$router.push({
+            path: '/contract/preview',
+            query: {
+              contractUrl: res.contractUrl,
+              contractId: res.contractId,
+              contractNo: res.contractNo,
+              signerName: this.userName,
+              contactWay: this.phone,
+            },
+          })
         })
         .catch((err) => {
+          this.$xToast.show(err.message)
           console.log('错误信息err', err)
         })
     },

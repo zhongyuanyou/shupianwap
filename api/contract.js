@@ -7,7 +7,8 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/contract/v2/authentication.do',
+      url: 'http://172.16.133.40:7001/service/yk/contract/v2/authentication.do',
+      // CHIPS_WAP_BASE_URL + '/yk/contract/v2/authentication.do',
     })
   },
   applycontart({ axios }, params) {
@@ -15,7 +16,8 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/contract/v2/applycontract.do',
+      url: 'http://172.16.133.40:7001/service/yk/contract/v2/applycontract.do',
+      // CHIPS_WAP_BASE_URL + '/yk/contract/v2/applycontract.do',
     })
   },
   signcontart({ axios }, params) {
@@ -23,7 +25,15 @@ const contract = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/contract/v2/sign.do',
+      url: 'http://172.16.133.40:7001/service/yk/contract/v2/sign.do', // CHIPS_WAP_BASE_URL + '/yk/contract/v2/sign.do',
+    })
+  },
+  contartlist({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: 'http://172.16.133.40:7001/service/yk/contract/v2/list.do', // CHIPS_WAP_BASE_URL + '/yk/contract/v2/list.do',
     })
   },
 }
