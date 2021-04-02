@@ -4,20 +4,17 @@
       <div class="card">
         <sp-image round class="user_avatar" fit="cover" src="" />
         <div class="bt_box">
-          <div v-if="!userId" class="bt_edit">编辑资料</div>
-          <template v-else>
-            <div v-if="!isAttention" class="bt_attention" @click="attention">
-              + 关注
-            </div>
-            <div v-else class="bt_has_attention">已关注</div>
-            <div v-if="source" class="bt_contact">
-              <my-icon
-                name="pinglun_mian"
-                size="0.36rem"
-                color="#ffffff"
-              ></my-icon>
-            </div>
-          </template>
+          <div v-if="!isAttention" class="bt_attention" @click="attention">
+            + 关注
+          </div>
+          <div v-else class="bt_has_attention">已关注</div>
+          <div v-if="source" class="bt_contact">
+            <my-icon
+              name="pinglun_mian"
+              size="0.36rem"
+              color="#ffffff"
+            ></my-icon>
+          </div>
         </div>
         <div class="user_name">罗振宇</div>
         <div class="user_desc clamp3">这个人很懒，什么也没留下</div>
@@ -83,11 +80,7 @@
           </div>
           <div class="bottom">
             <div class="bottom_item" @click="agree">
-              <my-icon
-                name="fabiaoqing"
-                size="0.36rem"
-                color="#999999"
-              ></my-icon>
+              <my-icon name="zantong" size="0.36rem" color="#999999"></my-icon>
               {{ 0 || '赞同' }}
             </div>
             <div class="bottom_item" @click="comments">
@@ -95,15 +88,31 @@
               {{ 3 || '评论' }}
             </div>
           </div>
+          <div class="bottom">
+            <div class="bottom_item" @click="invitation">
+              <my-icon name="yaoqing" size="0.36rem" color="#999999"></my-icon>
+              邀请
+            </div>
+            <div class="bottom_item" @click="answer">
+              <my-icon name="xiehuida" size="0.36rem" color="#999999"></my-icon>
+              写回答
+            </div>
+          </div>
         </div>
       </sp-list>
     </div>
+    <comment-list
+      v-model="commetnShow"
+      :article-id="12"
+      @release="release"
+    ></comment-list>
   </div>
 </template>
 
 <script>
 import { Tabs, Tab, Image, List } from '@chipspc/vant-dgg'
 import { userinfoApi } from '~/api'
+import CommentList from '@/components/mustKnown/commentList1'
 export default {
   name: 'Collection',
   components: {
@@ -111,15 +120,17 @@ export default {
     [Tab.name]: Tab,
     [Image.name]: Image,
     [List.name]: List,
+    CommentList,
   },
   data() {
     return {
       active: 0,
-      menuList: ['全部', '问题', '回答', '文章', '评论', '点赞'],
+      menuList: ['全部', '问题', '回答', '文章'],
       list: [],
       loading: false,
       finished: false,
       isAttention: false,
+      commetnShow: false,
     }
   },
   computed: {
@@ -151,14 +162,24 @@ export default {
         }
       }, 1000)
     },
+    attention() {
+      console.log('关注')
+    },
     agree() {
       console.log('赞同')
     },
     comments() {
       console.log('评论')
+      this.commetnShow = true
     },
-    attention() {
-      console.log('关注')
+    invitation() {
+      console.log('邀请')
+    },
+    answer() {
+      console.log('回答')
+    },
+    release() {
+      console.log('点击了发布')
     },
   },
 }
@@ -170,6 +191,7 @@ export default {
 
   .top_box {
     padding-top: 320px;
+    background: #026ac3;
     .card {
       position: relative;
       background-color: #ffffff;
@@ -191,14 +213,6 @@ export default {
         text-align: center;
         font-size: 26px;
         font-weight: 500;
-        .bt_edit {
-          width: 180px;
-          height: 64px;
-          background: #4974f5;
-          border-radius: 8px;
-          line-height: 64px;
-          color: #ffffff;
-        }
         .bt_attention {
           width: 144px;
           height: 64px;

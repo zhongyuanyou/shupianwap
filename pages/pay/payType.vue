@@ -68,7 +68,8 @@ export default {
     return {
       responseData: {},
       formData: {
-        payCusId: 10000000,
+        payCusId: '',
+        batchIds: [],
       }, // 请求数据
       orderData: {},
       time: {}, // 倒计时
@@ -101,21 +102,23 @@ export default {
     if (timer) clearInterval(timer)
   },
   mounted() {
-    pay
-      .enablePayMoney({ axios: this.$axios }, this.formData)
-      .then((result) => {
-        // console.log('result的值', result)
-        this.responseData = result.data.data
-        console.log('this.responseData的值', this.responseData)
-      })
-      .catch((e) => {
-        if (e.code !== 200) {
-          console.log(e)
-        }
-      })
+    // 如果没有cusOrderId，batchIds 回退
+
+    if (this.$router.query.cusOrderId) {
+      this.formData.cusOrderId = this.$router.query.cusOrderId
+      this.formData.batchIds = this.$router.query.batchIds
+      this.enablePayMoney()
+    } else {
+      this.goBack()
+    }
+
     this.countDown(new Date().getTime() + 60 * 60 * 24 * 1000)
   },
   methods: {
+    // 回退
+    goBack() {
+      this.$router.go(-1)
+    },
     // 支付倒计时
     countDown(endTimeStamp) {
       const that = this
@@ -144,6 +147,21 @@ export default {
     },
     startPay() {
       this.$router.replace('/pay/payResult')
+    },
+    // 查询订单应付金额
+    enablePayMoney() {
+      pay
+        .enablePayMoney({ axios: this.$axios }, this.formData)
+        .then((result) => {
+          // console.log('result的值', result)
+          this.responseData = result.data.data
+          console.log('this.responseData的值', this.responseData)
+        })
+        .catch((e) => {
+          if (e.code !== 200) {
+            console.log(e)
+          }
+        })
     },
   },
 }

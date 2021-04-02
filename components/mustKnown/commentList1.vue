@@ -1,7 +1,7 @@
 <template>
   <div class="comment">
     <sp-popup
-      v-model="show"
+      v-model="popupShow"
       position="bottom"
       :style="{ height: '95%' }"
       round
@@ -9,13 +9,13 @@
       :close-on-click-overlay="false"
     >
       <div class="head">
-        {{ title }}
+        全部评论
         <my-icon
           name="guanbihuise_mian"
           size="0.48rem"
           color="#F5F5F5"
           class="icon"
-          @click.native="close"
+          @click.native="popupShow = false"
         />
       </div>
       <div class="btns">
@@ -73,39 +73,95 @@ export default {
     [Field.name]: Field,
   },
   props: {
-    title: {
-      type: String,
-      default: '全部评论',
-    },
-    show: {
+    value: {
       type: Boolean,
       default: false,
     },
-    list: {
-      type: Array,
-      default: () => {
-        return []
-      },
+    articleId: {
+      type: Number,
+      default: 0,
     },
   },
   data() {
     return {
       sort: 0,
       text: '',
+      list: [
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+        {
+          username: '用户1',
+          img: 'https://cn.vuejs.org/images/logo.png',
+          time: '2010-01-11',
+          content:
+            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
+          isLike: true,
+          Likes: '1111',
+        },
+      ],
     }
+  },
+  computed: {
+    popupShow: {
+      get() {
+        return this.value
+      },
+      set(value) {
+        this.$emit('input', value)
+      },
+    },
   },
   methods: {
     sortfn(index) {
       if (this.sort !== index) {
         this.sort = index
-        this.$emit('sort', index)
       }
     },
     sum() {
       this.$emit('release', this.text)
-    },
-    close() {
-      this.$emit('close')
     },
   },
 }
