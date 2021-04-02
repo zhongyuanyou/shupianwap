@@ -1,12 +1,11 @@
 <template>
   <div class="tabs">
-    <sp-work-tabs v-model="active" is-nav-tab>
+    <sp-work-tabs v-model="active" is-nav-tab @click="getBackIndex">
       <sp-work-tab
         v-for="index in tabs"
         :key="index"
         :need-content="false"
         :title="index"
-        @click="getBackIndex"
       >
       </sp-work-tab>
     </sp-work-tabs>

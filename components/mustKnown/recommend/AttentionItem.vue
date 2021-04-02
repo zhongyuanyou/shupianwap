@@ -30,7 +30,7 @@
         <div class="item_bottom">
           <span class="like">
             <my-icon
-              name="msg_ic_emoji"
+              name="zantong"
               size="0.36rem"
               color="#999999"
               class="my_icon"
@@ -40,7 +40,7 @@
           >
           <span class="comment">
             <my-icon
-              name="tabbar_ic_msg"
+              name="pinglun"
               size="0.36rem"
               color="#999999"
               class="my_icon"
