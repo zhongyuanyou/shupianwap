@@ -50,32 +50,32 @@ export default {
       tabBarData: [
         {
           name: '首页',
-          iconName: 'tabbar_ic_home',
+          iconName: 'shouye1',
           path: '/',
         },
         {
           name: '发现',
-          iconName: 'tabbar_ic_news',
+          iconName: 'dongtai',
           path: '/found',
         },
         {
           name: '必懂',
-          iconName: 'tabbar_ic_news',
+          iconName: 'bidong',
           path: '/known',
         },
         {
           name: '消息',
-          iconName: 'tabbar_ic_msg',
+          iconName: 'xiaoxi1',
           path: '/msg',
         },
         {
           name: '订单',
-          iconName: 'tabbar_ic_order',
+          iconName: 'faxian',
           path: '/order/',
         },
         {
           name: '我的',
-          iconName: 'tabbar_ic_personal',
+          iconName: 'wode',
           path: '/my',
         },
       ],
