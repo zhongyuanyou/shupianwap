@@ -29,7 +29,7 @@
       <p class="pub-time">编辑于2021-05-10 16:40</p>
       <DetailArticleList />
     </div>
-    <Comment :comment-list="commentList2" @changeModal="changeModal" />
+    <Comment :article-id="1" />
     <div class="page-bottom">
       <div class="left-area">
         <span class="icon" @click="handleClickBottom(1)">
@@ -55,14 +55,6 @@
         </div>
       </div>
     </div>
-    <comment-modal
-      :show="commentShow"
-      :list="commentList"
-      @sort="sort"
-      @release="sum"
-      @close="changeModal(false)"
-    >
-    </comment-modal>
   </div>
 </template>
 
@@ -72,16 +64,13 @@ import PageHead from '@/components/common/head/header'
 import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
 // 推荐文章列表
 import DetailArticleList from '@/components/mustKnown/DetailArticleList'
-// 评论列表弹窗
-import CommentModal from '~/components/mustKnown/commentList.vue'
 // 默认评论列表
-import Comment from '~/components/mustKnown/DetailComment.vue'
+import Comment from '~/components/mustKnown/DetailComment'
 export default {
   components: {
     [Button.name]: Button,
     [Image.name]: Image,
     [Field.name]: Field,
-    CommentModal,
     Comment,
     PageHead,
     PageHead2,
@@ -90,7 +79,6 @@ export default {
   data() {
     return {
       showHead2: false,
-      commentShow: false,
       commentList: [
         {
           username: '用户1',
@@ -179,19 +167,6 @@ export default {
     },
     onLeftClick() {
       this.$router.back(-1)
-    },
-    sum(val) {
-      console.log(val)
-    },
-    sort(value) {
-      console.log(value)
-    },
-    answersortfn(index) {
-      console.log(index)
-    },
-    changeModal(val) {
-      this.commentShow = val
-      console.log('111', val)
     },
     handleClickBottom(type) {
       console.log('type', type)

@@ -1,6 +1,6 @@
 <template>
   <div class="detail" :style="{ paddingBottom: fixedshow ? '1.3rem' : '' }">
-    <Header v-show="!commetnShow" :title="title">
+    <Header :title="title">
       <template #left>
         <div>
           <sp-icon name="arrow-left" size="0.4rem" @click="$router.back()" />
@@ -150,7 +150,7 @@
           <span></span>
           <p>{{ item.like }} 喜欢</p>
           <span></span>
-          <p @click="commetnShow = true">{{ item.agree }} 评论</p>
+          <p>{{ item.agree }} 评论</p>
           <span></span>
           <p>{{ item.time }}</p>
         </div>
@@ -174,26 +174,17 @@
         <span :style="{ color: detail.isagree ? '#4974F5' : '' }">收藏</span>
       </div>
     </div>
-    <comment-list
-      :show="commetnShow"
-      :list="commetnList"
-      @sort="sort"
-      @release="sum"
-      @close="commetnShow = false"
-    ></comment-list>
   </div>
 </template>
 
 <script>
 import { Icon } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
-import CommentList from '~/components/mustKnown/commentList.vue'
 export default {
   name: 'Detail',
   components: {
     Header,
     [Icon.name]: Icon,
-    CommentList,
   },
   data() {
     return {
@@ -264,63 +255,6 @@ export default {
       answersort: 0,
       fixedshow: false,
       scrollTop: 0,
-      commetnShow: false,
-      commetnList: [
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-      ],
     }
   },
   mounted() {

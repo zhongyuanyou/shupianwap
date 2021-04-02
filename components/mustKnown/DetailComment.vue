@@ -1,6 +1,6 @@
 <template>
   <div class="comment-area">
-    <div class="title">评论888</div>
+    <div class="title">评论{{ total }}</div>
     <div class="list">
       <div class="comment-item">
         <sp-image class="img" src="" />
@@ -13,61 +13,80 @@
           <sp-button @click="submit">发布</sp-button>
         </div>
       </div>
-      <div
-        v-for="(item, index) in commentList"
-        :key="index"
-        class="comment-item"
-      >
+      <div v-for="(item, index) in list" :key="index" class="comment-item">
         <sp-image class="img" src="" />
         <div class="right">
-          <p class="user-name">{{ item.username }}</p>
+          <p class="user-name">{{ item.userName }}</p>
           <p class="item-content">{{ item.content }}</p>
           <p class="time-area">
-            <span class="time">{{ item.time }}</span>
-            <span class="num">{{ item.Likes }}</span>
+            <span class="time">{{ item.createTime }}</span>
+            <span class="num">{{ item.applaudCount }}</span>
           </p>
         </div>
       </div>
     </div>
-    <div class="toast" @click="openModal">
+    <div class="toast" @click="commentShow = true">
       查看全部评论
-      <my-icon name="order_ic_listnext" size="0.28rem"></my-icon>
+      <my-icon name="you" size="0.2rem"></my-icon>
     </div>
+
+    <comment-list v-model="commentShow" :article-id="articleId"></comment-list>
   </div>
 </template>
 
 <script>
 // 详情页非弹窗的评论列表
 import { Image, Field, Button } from '@chipspc/vant-dgg'
+import CommentList from './CommentList'
+import { knownApi } from '~/api'
 export default {
   components: {
     [Image.name]: Image,
     [Field.name]: Field,
     [Button.name]: Button,
+    CommentList,
   },
   props: {
-    commentList: {
-      type: Array,
-      default() {
-        return []
-      },
+    articleId: {
+      type: Number,
+      default: 0,
     },
   },
   data() {
     return {
+      commentShow: false,
       value: '',
+      total: 0,
+      list: [],
     }
   },
+  created() {
+    this.getCommentsList()
+  },
   methods: {
-    openModal() {
-      this.$emit('changeModal', true)
-    },
     submit() {
       console.log('val', this.value)
       this.$xToast.show({
         message: '评论成功',
       })
       this.value = ''
+    },
+    async getCommentsList() {
+      const { code, message, data } = await this.$axios.get(
+        knownApi.comments.list,
+        {
+          params: {
+            currentUserId: 100,
+            sourceIds: this.articleId,
+          },
+        }
+      )
+      if (code === 200) {
+        this.list = data.rows.slice(0, 2)
+        this.total = data.total
+      } else {
+        console.log(message)
+      }
     },
   },
 }

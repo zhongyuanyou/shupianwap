@@ -102,8 +102,8 @@
       </sp-list>
     </div>
     <comment-list
-      v-model="commetnShow"
-      :article-id="12"
+      v-model="commentShow"
+      :article-id="1"
       @release="release"
     ></comment-list>
   </div>
@@ -112,7 +112,7 @@
 <script>
 import { Tabs, Tab, Image, List } from '@chipspc/vant-dgg'
 import { userinfoApi } from '~/api'
-import CommentList from '@/components/mustKnown/commentList1'
+import CommentList from '@/components/mustKnown/CommentList'
 export default {
   name: 'Collection',
   components: {
@@ -130,7 +130,7 @@ export default {
       loading: false,
       finished: false,
       isAttention: false,
-      commetnShow: false,
+      commentShow: false,
     }
   },
   computed: {
@@ -170,7 +170,7 @@ export default {
     },
     comments() {
       console.log('评论')
-      this.commetnShow = true
+      this.commentShow = true
     },
     invitation() {
       console.log('邀请')
