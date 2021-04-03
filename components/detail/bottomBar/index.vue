@@ -53,7 +53,7 @@
 
 <script>
 import { Image, Button, Toast } from '@chipspc/vant-dgg'
-import { planner } from '~/api'
+import { auth, planner, order } from '~/api'
 import { parseTel } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
 import { codeTranslate } from '~/utils/codeTranslate'
@@ -81,6 +81,7 @@ export default {
   data() {
     return {
       type: 1,
+      article: {}, // 下单协议信息
     }
   },
   computed: {
@@ -88,16 +89,71 @@ export default {
     proDetail() {
       return this.$store.state.tcProductDetail.detailData
     },
+    sellingGoodsData() {
+      return this.$store.state.sellingGoodsDetail.sellingGoodsData
+    },
     city() {
       return this.$store.state.city.currentCity
     },
   },
+  mounted() {
+    // 获取协议
+    this.getProtocol('protocol100008')
+  },
   methods: {
+    // 获取协议id
+    async getProtocol(categoryCode) {
+      if (!categoryCode) {
+        this.$xToast.warn('请传入需要获取的协议!')
+        return
+      }
+      const params = {
+        categoryCode,
+        includeField: 'content,title',
+      }
+      try {
+        this.loading = true
+        const data = await auth.protocol(params)
+        const { rows = [] } = data || {}
+        this.article = rows[0] || {}
+        this.loading = false
+      } catch (error) {
+        this.$xToast.error(error.message || '请求失败')
+        return Promise.reject(error)
+      }
+    },
     addCart() {
       this.$parent.$refs.sku.openSku(2)
     },
-    nowBuy() {
-      //   this.$axios.post('', {})
+    async nowBuy() {
+      // 点击立即购买
+      const isLogin = await this.judgeLoginMixin()
+      if (isLogin) {
+        this.$router.push({
+          path: '/order/confirmorder',
+          query: {
+            productId: this.sellingGoodsData.id,
+          },
+        })
+      }
+      // try {
+      //   const addOrderResult = await order.placeOrder({
+      //     needSplitProPackageDataParam: {
+      //       saleSkuId: this.sellingGoodsData.id, // 商品id
+      //       saleSkuName: this.sellingGoodsData.name, // 销售商品名称
+      //       saleSkuVersionNo: this.sellingGoodsData.version, // 销售商品版本号
+      //       saleSkuPrice: this.sellingGoodsData.salesPrice, // 销售商品单价,单位（元）
+      //       saleSkuCount: this.sellingGoodsData.salesVolume, // 销售商品数量
+      //     }, // 商品信息列表
+      //     orderProvinceNo: this.city.pid, // 订单站点省份编码
+      //     orderCityNo: this.city.code, // 订单站点城市编码
+      //     orderLocationProvinceName: '', // 下单定位省份名称
+      //     orderLocationCityName: '', // 下单定位城市名称
+      //     orderAgreementIds: this.article.id, // 下单协议id，多个id用逗号隔开
+      //   })
+      // } catch (err) {
+      //   console.log(err)
+      // }
     },
     // 规划师详情跳转
     plannerInfoUrlJump(mchUserId) {
