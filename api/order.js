@@ -96,7 +96,7 @@ const category = {
     return request({
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/add_order.do',
     })
   },
 }
