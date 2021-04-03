@@ -31,7 +31,7 @@ import PageHead from '@/components/mustKnown/publish/PageHead'
 import TitleArea from '@/components/mustKnown/publish/TitleArea'
 import ChooseTopic from '@/components/mustKnown/publish/ChooseTopic'
 import Editor from '@/components/mustKnown/publish/Editor'
-import { known } from '@/api'
+// import { knownApi } from '@/api'
 
 export default {
   components: {
@@ -102,17 +102,17 @@ export default {
     },
     submit() {
       const data = Object.assign(this.formData, this.editData)
-      known
-        .add({ axios: this.axios, params: data })
-        .then((result) => {
-          console.log('result', result)
-        })
-        .catch((e) => {
-          if (e.code !== 200) {
-            console.log(e)
-          }
-        })
-      console.log('data', data)
+      // known
+      //   .add({ axios: this.axios, params: data })
+      //   .then((result) => {
+      //     console.log('result', result)
+      //   })
+      //   .catch((e) => {
+      //     if (e.code !== 200) {
+      //       console.log(e)
+      //     }
+      //   })
+      // console.log('data', data)
     },
   },
 }

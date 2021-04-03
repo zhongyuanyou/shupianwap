@@ -18,7 +18,7 @@ const coupon = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/v2/coupon/receive.do',
+      url: CHIPS_WAP_BASE_URL + 'yk/marketingCoupon/v2/receive_coupon',
     })
   },
   useWithdrawal({ axios }, params) {
@@ -27,7 +27,7 @@ const coupon = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/v2/coupon/use_withdrawal.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/marketingCoupon/v2/use_withdrawal',
     })
   },
 }

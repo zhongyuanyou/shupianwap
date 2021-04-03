@@ -103,9 +103,10 @@
         </div>
         <div class="my_btns_item_con">
           实名认证
-
           <div class="item_lf">
-            <span>已认证</span>
+            <span>{{
+              realStatus === 'NO_AUTHENTICATION' ? '未认证' : '已认证'
+            }}</span>
             <my-icon
               name="order_ic_listnext"
               size="0.24rem"
@@ -212,6 +213,7 @@ export default {
       },
       loading: false,
       userName: '',
+      realStatus: 'NO_AUTHENTICATION',
     }
   },
   computed: {
@@ -266,6 +268,8 @@ export default {
         if (res.code === 200 && res.data && typeof res.data === 'object') {
           this.info = res.data
           this.userName = res.data.nickName
+          this.realStatus = res.data.realStatus
+          // console.log(res.data.realStatus)
           this.$store.dispatch('user/setInfo', res.data)
         } else {
           // 清除用户缓存信息
@@ -276,7 +280,11 @@ export default {
       }
     },
     handleClick(val) {
-      if (val === 2) {
+      if (val === 1) {
+        this.realStatus === 'NO_AUTHENTICATION'
+          ? this.$router.push('/contract/authentication')
+          : this.$router.go(0)
+      } else if (val === 2) {
         this.$router.push('/my/help')
       } else if (val === 3) {
         this.$router.push('/my/complain')
