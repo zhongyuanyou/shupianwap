@@ -1,7 +1,15 @@
 /**
  * @author tangdaibing
  * @since 2021/04/01
- */
+ * @lastEditDate 2021/04/03
+ * @param operateSourcePlat 操作系统来源  薯片：ORDER_PLAT_C,企大顺：ORDER_PLAT_B,企大宝：ORDER_PLAT_S,运营后台：ORDER_PLAT_A 系统 SYSTEM
+ * @param operateTerminal 操作终端 pc端：ORDER_TERMINAL_PC,wap端：ORDER_TERMINAL_WAP,小程序：ORDER_TERMINAL_WECHAT_APPLETS,app端：ORDER_TERMINAL_APP
+ * @param cusOrderId 客户单id
+ * @param orderId 订单id
+ * @param orderSkuList 订单产品集合
+ * @param orderSkuEsList 订单产品集合
+ * @param orderList 订单列表
+ * */
 import orderUtils from '@/utils/order'
 import orderApi from '@/api/order'
 export default {
@@ -55,13 +63,24 @@ export default {
           number: 4,
         },
       },
+      cusOrderCancelReasonName: '', // 订单取消原因
+      opType: '', // 操作类型： cancelOrder 取消订单 payMoney 发起支付 confirmComplete 确认完成
     }
   },
   methods: {
-    initItem() {
+    // 初始化选中的订单数据
+    initItem(order) {
       this.batchIds = ''
       this.thisTimePayTotal = 0 // 本期应付批次总额
       this.allTimePayTotal = 0 // 未支付批次总额
+      this.orderData = order
+      // if (this.orderData.id !== order.id || !this.orderData.orderList) {
+      //   // 当前选中订单与上次选中订单相同则不初始化数据
+      //   this.batchIds = ''
+      //   this.thisTimePayTotal = 0 // 本期应付批次总额
+      //   this.allTimePayTotal = 0 // 未支付批次总额
+      //   this.orderData = order
+      // }
     },
     // 判断是否有关联订单  0 无 1有
     checkHasOtherOrder() {
@@ -109,31 +128,57 @@ export default {
           { axios: this.$axios },
           {
             page: 1,
-            limit: 50,
+            limit: 100,
             cusOrderId: this.cusOrderId || this.orderData.cusOrderId,
           }
         )
         .then((res) => {
           console.log('分批支付信息', res)
+          console.log('this.fromPage', this.fromPage)
+          // 客户单的分批支付信息
           this.payList = res
           this.loading = false
           if (this.fromPage === 'orderList') {
             this.checkCusBatchPayType()
+          } else if (this.fromPage === 'nodeDetail') {
+            // 节点明细页面则筛选该订单下的选中商品的支付列表信息
+            const nodeList = res.filter((item) => {
+              return item.orderSkuId === this.orderSkuId
+            })
+            this.nodeNumber = this.nodeList.length
+            const sortArr = []
+            // 将本期应付的批次排在前面
+            for (let i = 0, l = nodeList.length; i < l; i++) {
+              if (nodeList[i].alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
+                sortArr.splice(0, 0, nodeList[i])
+              } else {
+                sortArr.push(nodeList[i])
+              }
+            }
+            console.log('sortArr', sortArr)
+            this.nodeList = sortArr
+            // 计算合计金额
+            this.nodeTotalMoney = this.nodeList.reduce((total, item) => {
+              return total + Number(item.money)
+            }, 0)
+          } else {
+            // 当前订单的分批支付信息
+            // 筛选对应订单的支付列表
+            this.orderPayList = res.filter((item) => {
+              return item.orderId === this.orderData.id
+            })
+            console.log('orderPayList', this.orderPayList)
+            this.paylistLength = this.orderPayList.length
           }
         })
         .catch((err) => {
           this.loading = false
-          console.log('分批支付信息err', err)
-          this.$xToast.show({
-            message: '获取分批支付信息失败' + err.data.error,
-            duration: 1000,
-            icon: 'toast_ic_remind',
-            forbidClick: true,
-          })
+          this.$xToast.error(err.message || '获取支付信息失败')
         })
     },
     // // 判断是分批支付还是全款支付等
-    checkCusBatchPayType1() {
+    checkCusBatchPay1() {
+      this.$refs.payModal.showPop = true
       if (
         this.payList.length === this.orderData.orderList.length ||
         this.payList.length === 1
@@ -146,7 +191,7 @@ export default {
           query: {
             fromPage: this.fromPage,
             cusOrderId: this.orderData.cusOrderId,
-            batchIds: '',
+            batchIds: this.batchIds,
           },
         })
       } else {
@@ -177,6 +222,7 @@ export default {
     },
     // 判断是分批支付还是全款支付等
     checkCusBatchPayType() {
+      this.getBillDetail()
       if (
         this.payList[0].orderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
         this.payList[0].orderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY'
@@ -228,8 +274,9 @@ export default {
       return orderUtils.isShowCanCelBtn(this.orderData)
     },
     // 判断是否显示确认订单按钮
-    isShowConfirmBtn() {
-      return orderUtils.isShowConfirmBtn(this.orderData)
+    isShowConfirmBtn(data) {
+      console.log('data', data)
+      return orderUtils.isShowConfirmBtn(this.orderData || data)
     },
     // 判断是否显示付款按钮
     isShowPayBtn() {
@@ -263,50 +310,94 @@ export default {
             { cusOrderId: this.orderData.cusOrderId }
           )
           .then((res) => {
-            console.log('子订单返回', res)
+            this.loading = false
             this.orderData.orderList = res.list
             console.log('组装关联订单后的this.orderData', this.orderData)
-            this.startPay()
+            this.switchOptionType()
           })
           .catch((err) => {
             this.loading = false
-            this.$xToast.error(err.data.err || '操作失败')
+            this.$xToast.error(err.message || '操作失败')
           })
       } else {
+        this.switchOptionType()
+      }
+    },
+    // 根据操作类型进行不同的任务
+    switchOptionType() {
+      if (this.opType === 'cancelOrder') {
+        // 弹出取消订单弹窗
+        this.$refs.cancleOrderModel.showPop = true
+        if (this.orderData.orderList.length > 1) {
+          this.$refs.cancleOrderModel.step = 1
+        } else {
+          this.$refs.cancleOrderModel.step = 2
+        }
+      } else if (this.opType === 'payMoney') {
         this.startPay()
       }
     },
-    // 确认订单
+    // 确认完成
     confirmOrder() {
+      const arr1 = this.orderData.orderSkuEsList || this.orderData.orderSkuList
+      const orderSkuIds = arr1.map((item) => {
+        return item.id
+      })
+      const params = {
+        orderId: this.orderData.orderId,
+        cusOrderId: this.orderData.cusOrderId,
+        orderSkuIds,
+        operateSourcePlat: 'COMDIC_PLATFORM_CRISPS',
+        operateTerminal: 'ORDER_TERMINAL_WAP',
+      }
       orderApi
-        .confirmOrder({ axios: this.$axios }, { orderId: this.orderData.id })
+        .confirmOrder({ axios: this.$axios }, params)
         .then((res) => {
           this.$xToast.success('操作成功')
           if (this.fromPage === 'orderList') this.getOrderList()
           else this.getDetail()
         })
         .catch((err) => {
-          this.$xToast.error(err.data.err || '操作失败')
+          this.$xToast.error(err.message || '操作失败')
         })
     },
     // 取消订单
-    cancleOrder() {
+    cancleOrder(orderCancelCode, orderCancelName) {
+      this.loading = true
       orderApi
         .cancelOrder(
           { axios: this.axios },
           {
-            orderId: this.orderId,
-            cancelReasonCode: this.cancelReasonCode,
-            cancelReasonName: this.cancelReasonName,
+            orderId: this.orderData.orderId,
+            cusOrderIds: new Array(1).fill(this.orderData.cusOrderId),
+            orderCancelCode,
+            orderCancelName,
+            orderCancelReason: orderCancelName,
+            operateSourcePlat: 'COMDIC_PLATFORM_CRISPS',
+            operateTerminal: 'COMDIC_TERMINAL_WAP',
           }
         )
         .then((res) => {
+          this.$refs.cancleOrderModel.showPop = false
+          this.loading = false
           this.$xToast.success('操作成功')
           if (this.fromPage === 'orderList') this.getOrderList()
-          else this.getDetail()
+          else if (this.fromPage === 'orderDetail') this.getDetail()
         })
         .catch((err) => {
-          this.$xToast.error(err.data.err || '操作失败')
+          this.loading = false
+          this.$xToast.error(err.message || '操作失败')
+        })
+    },
+    // 账单明细
+    getBillDetail() {
+      orderApi
+        .getBillDetail(
+          { axios: this.$axios },
+          { cusOrderId: this.orderData.cusOrderId }
+        )
+        .then((res) => {
+          console.log('账单明细', res)
         })
     },
   },

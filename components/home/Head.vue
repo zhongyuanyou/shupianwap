@@ -3,7 +3,8 @@
     <div class="bg-area" :class="fiexdBannerData.length ? '' : 'bg-activity'">
       <span class="logo"></span>
       <span class="span-2">薯片</span>
-      <span class="span-3">·企业服务大平台</span>
+      <span class="span-3">·</span>
+      <span class="span-4">企业服务大平台</span>
       <div class="btn-city" @click="swichCityHandle">
         <span class="current-city">{{ cityName ? cityName : '定位中' }}</span>
         <span class="local-icon">
@@ -60,7 +61,7 @@
 <script>
 import { Sticky, Swipe, swipeItem } from '@chipspc/vant-dgg'
 import { mapState, mapActions } from 'vuex'
-import Search from '@/components/common/search/Search'
+import Search from '@/components/Home/Search'
 export default {
   components: {
     [Sticky.name]: Sticky,
@@ -142,7 +143,7 @@ export default {
     height: 84px;
     font-size: 36px;
     position: relative;
-    padding: 20px 20px 0 20px;
+    padding: 51px 20px 0 20px;
     z-index: 2;
     span {
       display: inline-block;
@@ -153,18 +154,38 @@ export default {
       background: url(https://cdn.shupian.cn/sp-pt/wap/exhzqp9t6jk0000.png)
         no-repeat center center;
       background-size: 100% 100%;
-      border-radius: 50%;
       position: absolute;
       left: 20px;
-      top: 24px;
+      top: 49px;
       font-size: 36px;
     }
     .span-2 {
       margin-left: 60px;
       color: #fff;
+      height: 36px;
+      font-size: 36px;
+      font-family: PingFangSC-Semibold, PingFang SC;
+      font-weight: 600;
+      color: #ffffff;
+      line-height: 36px;
     }
     .span-3 {
       color: #dfdfdf;
+      height: 36px;
+      font-size: 36px;
+      font-family: PingFangSC-Semibold, PingFang SC;
+      font-weight: 600;
+
+      line-height: 36px;
+    }
+    .span-4 {
+      color: #dfdfdf;
+      height: 36px;
+      font-size: 36px;
+      font-family: PingFangSC-Semibold, PingFang SC;
+      font-weight: 600;
+
+      line-height: 36px;
     }
     .btn-city {
       position: absolute;
@@ -172,7 +193,7 @@ export default {
       color: white;
       font-size: 28px;
       padding-left: 30px;
-      top: 24px;
+      top: 54px;
       font-size: 28px;
       .local-icon {
         transform: scale(0.6);
@@ -194,7 +215,8 @@ export default {
     }
   }
   .bg-activity {
-    height: 94px;
+    height: 152px;
+
     &::after {
       position: absolute;
       background: #f5f5f5;

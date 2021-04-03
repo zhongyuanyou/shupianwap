@@ -1,11 +1,12 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="productDescribe">
     <p class="container_title">服务详情</p>
-    <div class="container_html"></div>
+    <div class="container_html" v-html="productDescribe"></div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'ServiceDetail',
   components: {},
@@ -14,7 +15,13 @@ export default {
       containerLoading: true,
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      productDescribe: (state) =>
+        state.sellingGoodsDetail.sellingGoodsData.salesGoodsOperatings
+          .productDescribe,
+    }),
+  },
   methods: {},
 }
 </script>

@@ -40,7 +40,11 @@
           </p>
         </div>
         <p class="title2">请选择取消订单的原因：</p>
-        <sp-radio-group v-model="form.reason" class="reason-list">
+        <sp-radio-group
+          v-if="reasonList.length"
+          v-model="form.reason"
+          class="reason-list"
+        >
           <sp-cell
             v-for="(item, index) in reasonList"
             :key="index"
@@ -98,6 +102,11 @@ export default {
         return []
       },
     },
+    // 取消订单原因
+    cusOrderCancelReason: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -152,42 +161,47 @@ export default {
   },
   methods: {
     // 获取取消原因
-    async getData() {
+    getData() {
       try {
-        const data = await dict.findCmsCode(
-          { axios: this.$axios },
-          {
-            code: 'CUS_ORDER_CANCEL_REASON',
-          }
-        )
-        this.reasonList = data
+        dict
+          .findCmsCode(
+            { axios: this.$axios },
+            {
+              code: 'CUS_ORDER_CANCEL_REASON',
+            }
+          )
+          .then((res) => {
+            this.reasonList = res
+            const data = JSON.parse(JSON.stringify(res))
+            if (this.cusOrderCancelReason) {
+              const canCelResonName = data.filter((item) => {
+                return item.code === this.cusOrderCancelReason
+              })[0].name
+              this.$emit('setCancelOrderName', canCelResonName)
+            }
+          })
       } catch (error) {
-        this.reasonList = []
+        this.$xToast.error('获取订单取消原因失败')
       }
     },
     submit() {
       if (this.modalType === 1) {
         // 取消订单
         if (this.step === 1) this.step = 2
-        else {
-          this.$xToast.success('取消订单成功')
-          this.cancel()
+        else if (!this.form.reason) {
+          this.$xToast.error('请选中取消原因')
+        } else {
+          const cancelReasonCode = this.form.reason
+          const cancelReasonName = this.reasonList.filter((item) => {
+            return item.code === cancelReasonCode
+          })[0].name
+          this.$emit('cancleOrder', cancelReasonCode, cancelReasonName)
         }
       } else if (this.modalType === 2) {
         // 立即支付
         // 查询分批支付信息
         this.$emit('getBatchList')
       }
-    },
-    cancleOrder() {
-      orderApi.cancelOrder(
-        { axios: this.axios },
-        {
-          orderId: this.orderId,
-          cancelReasonCode: this.cancelReasonCode,
-          cancelReasonName: this.cancelReasonName,
-        }
-      )
     },
     cancel() {
       this.showPop = false
@@ -231,7 +245,7 @@ export default {
     }
     .order-list {
       max-height: 766px;
-      min-height: 400px;
+      min-height: 300px;
       overflow-x: scroll;
       margin-bottom: 140px;
       .inner {

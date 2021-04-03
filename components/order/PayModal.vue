@@ -6,10 +6,10 @@
       </div>
       <p class="title">支付款项</p>
       <div v-if="payList.length" class="money-list">
+        <!-- 服务节点付费 -->
         <section
           v-if="payList[0].orderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE'"
         >
-          <!-- 服务节点付费 -->
           <sp-radio-group>
             <sp-radio name="1" icon-size="16px" class="radio radio1"
               >本期应付</sp-radio
@@ -51,10 +51,10 @@
             </div>
           </sp-radio-group>
         </section>
+        <!-- 定金尾款付费 -->
         <section
-          v-if="payList[0].orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'"
+          v-else-if="payList[0].orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'"
         >
-          <!-- 定金尾款付费 -->
           <sp-radio-group>
             <sp-radio
               v-if="payList[0].batchNumber === 0"
@@ -76,7 +76,30 @@
                 <span class="money1">{{ thisTimePayTotal }}</span>
                 元</span
               >
-              <span class="span3" @click="toDetail"
+              <span class="span3" @click="toDetail(0)"
+                >查看明细
+                <my-icon
+                  name="list_ic_next"
+                  size="0.26rem"
+                  color="rgba(204, 204, 204, 1)"
+                >
+                </my-icon>
+              </span>
+            </div>
+          </sp-radio-group>
+        </section>
+        <section v-else>
+          <sp-radio-group>
+            <sp-radio name="1" icon-size="16px" class="radio radio1"
+              >全款</sp-radio
+            >
+            <div class="money-area">
+              <span class="span1">金额:</span>
+              <span class="span2">
+                <span class="money1">{{ thisTimePayTotal }}</span>
+                元</span
+              >
+              <span class="span3" @click="toDetail(1)"
                 >查看明细
                 <my-icon
                   name="list_ic_next"
@@ -148,6 +171,7 @@ export default {
       this.showPop = false
     },
     toDetail(type) {
+      console.log('isPayAll', type)
       this.$router.push({
         path: '/order/billDetail',
         query: { cusOrderId: this.orderData.cusOrderId, isPayAll: type },

@@ -18,6 +18,7 @@ export const state = () => ({
     salesGoodsSubVos: [], // 销售商品包含基础商品列表集合
     salesGoodsOperatings: {
       clientDetails: [],
+      productDescribe: null,
     }, // 运营信息
     couponList: [], // 优惠券集合
     planner: null, // 钻展位规划师

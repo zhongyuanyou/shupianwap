@@ -7,8 +7,6 @@
 <script>
 import DetailTemplate from '~/components/detail/DetailTemplate1'
 import { productDetailsApi } from '~/api'
-import getUserSign from '~/utils/fingerprint'
-import { GOODSLIST } from '~/config/constant'
 export default {
   name: 'SellingGoodsDetail',
   components: {
@@ -27,7 +25,6 @@ export default {
           withTagsFlg: 1,
           withGoodsSubFlg: 1,
           withOperatingsFlg: 1,
-          clientType: 'COMDIC_TERMINAL_WAP',
         }
       )
       if (code === 200) {
