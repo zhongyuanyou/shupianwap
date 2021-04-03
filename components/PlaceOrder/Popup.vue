@@ -23,13 +23,13 @@
             @click="tabactivefn(item, index)"
           >
             <span>{{ item.name }}</span
-            ><b v-if="item.num">{{ `(${item.num})` }}</b>
+            ><b v-if="item.num">{{ `(${datalist.length})` }}</b>
             <i class="icon"></i>
           </p>
         </div>
         <div v-if="tablist[tabAct].is" class="calculation">
           {{ calculation }}
-          <span class="red">{{ num }}</span>
+          <span class="red">{{ num }}元</span>
         </div>
         <div v-if="tablist[tabAct].is">
           <div class="databox">
@@ -61,14 +61,14 @@
             <div v-for="(item, index) in datalist" :key="index" class="nolist">
               <div class="top">
                 <div class="left">
-                  <h1>{{ item.money }}</h1>
-                  <p>{{ item.data }}</p>
+                  <h1>{{ item.discount || item.reducePrice }}</h1>
+                  <p>{{ item.useType == 1 ? '全场通用' : '当前暂不可用' }}</p>
                 </div>
                 <div class="right">
                   <div class="data">
-                    <h1>{{ item.name }}</h1>
-                    <p>{{ item.ms }}</p>
-                    <p class="date">{{ item.date }}</p>
+                    <h1>{{ item.couponName }}</h1>
+                    <p>{{ item.serviceLife }}</p>
+                    <p class="date">{{ item.serviceLife }}</p>
                   </div>
                 </div>
               </div>
@@ -134,7 +134,7 @@ export default {
       },
     },
     num: {
-      type: String,
+      type: Number,
       default() {
         return ''
       },

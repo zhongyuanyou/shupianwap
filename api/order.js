@@ -78,11 +78,21 @@ const category = {
     })
   },
   // 提交订单
-  placeOrder(params) {
+  placeOrder({ axios }, params) {
     return request({
+      axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
+      url: 'http://172.16.133.40:7001/service/yk/order/v2/add_order.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
+    })
+  },
+  // 查询订单详情
+  detailOrder({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: 'http://172.16.133.40:7001/service/nk/sc_product/v1/detail.do', // CHIPS_WAP_BASE_URL2 + '/nk/sc_product/v1/detail.do',
     })
   },
 }

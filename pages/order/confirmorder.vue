@@ -3,26 +3,29 @@
     <Head ref="head" title="确认订单"></Head>
     <div class="allbox">
       <div class="data-content">
-        <div v-for="(item, index) in order" :key="index" class="list">
+        <div v-for="(item, index) in order.list" :key="index" class="list">
           <div class="left">
             <img :src="item.img" alt="" />
           </div>
           <div class="right">
             <h1 class="tit">{{ item.name }}</h1>
-            <p class="tag">{{ item.tag }}</p>
+            <p class="tag">{{ item.classCodeName }}</p>
             <p class="price">
               <span
-                ><b>{{ item.price }}</b
+                ><b>{{ item.salesPrice }}</b
                 >元</span
               >
-              <i>{{ `x${item.num}` }}</i>
+              <i>{{ `x1` }}</i>
             </p>
             <div class="list">
-              <div v-for="(listitem, listindex) in item.list" :key="listindex">
-                <p class="name">{{ listitem.name }}</p>
-                <p class="data">{{ listitem.data }}</p>
+              <div
+                v-for="(listitem, listindex) in item.salesGoodsSubVos"
+                :key="listindex"
+              >
+                <p class="name">{{ listitem.goodsSubName }}</p>
+                <p class="data">{{ listitem.goodsSubDetailsName }}</p>
                 <p class="price">
-                  {{ listitem.price }} {{ `x${listitem.num}` }}
+                  {{ listitem.settlementPriceEdit }} {{ `x1` }}
                 </p>
               </div>
             </div>
@@ -43,12 +46,12 @@
         <CellGroup>
           <Cell
             title="商品及服务总数"
-            :value="news.num + '件'"
+            :value="order.num + '件'"
             value-class="black"
           />
           <Cell
             title="商品金额"
-            :value="news.price + '元'"
+            :value="order.salesPrice + '元'"
             value-class="black"
           />
           <Cell
@@ -96,10 +99,10 @@
     <div ref="foot" class="foot">
       <p class="left">
         应付:<span>
-          <b>{{ money }}</b> 元</span
+          <b>{{ order.salesPrice }}</b> 元</span
         >
       </p>
-      <div class="right">提交订单</div>
+      <div class="right" @click="placeOrder">提交订单</div>
     </div>
     <Popup
       :show="popupshow"
@@ -108,7 +111,7 @@
       help="使用说明"
       :tablist="tablist"
       calculation="已选中推荐优惠券，可抵扣"
-      num="450元"
+      :num="num"
       :datalist="datalist"
       @tabactive="tabfn"
       @close="close"
@@ -126,6 +129,9 @@ import {
 } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
 import Popup from '@/components/PlaceOrder/Popup'
+import { productDetailsApi, auth } from '@/api'
+import { coupon, order } from '@/api/index'
+
 export default {
   name: 'PlaceOrder',
   components: {
@@ -147,25 +153,8 @@ export default {
       couponlist: [1],
       message: '',
       news: { num: '123', price: '1392.00', money: '4600.00' },
-      order: [
-        {
-          img:
-            'https://anjia2.oss-cn-beijing.aliyuncs.com/test/1291267227269508147.png',
-          name:
-            '四川省成都市*****科技有限公司四川省成都市*****科技有限公司四川省成都市*****科技有限公司四川省成都市*****科技有限公司',
-          tag: '科技类 | 一般纳税人 | 50万 | 3年以上',
-          price: '123232',
-          num: '1',
-          list: [
-            {
-              name: '平台使用费',
-              data: '公司核名等6个服务公司核名等6个服务',
-              price: '123',
-              num: '3',
-            },
-          ],
-        },
-      ],
+      order: '',
+      num: 0,
       tablist: [
         { name: '可用优惠券', num: '12', is: true },
         { name: '过期优惠券' },
@@ -209,16 +198,136 @@ export default {
         },
       ],
       contaract: '',
+      productId: this.$route.query.productId,
+      formData: {
+        orderByWhere: 'createTime=desc',
+        findType: 5,
+        userId: '767579686475123456',
+        actionId: this.productId,
+      },
+      Orderform: {
+        needSplitProPackageDataParam: [],
+        cusOrderPayType: '',
+        isFromCart: '',
+        cartIds: '',
+        orderProvinceNo: '',
+        orderCityNo: '',
+        orderLocationProvinceName: '',
+        orderLocationCityName: '',
+        orderAgreementIds: '',
+        customerOrderMark: '',
+        discount: [],
+        payType: 'ORDER_PAY_MODE_ONLINE ',
+      },
     }
   },
   mounted() {
     if (this.$cookies.get('contaract')) {
       this.contaract = this.$cookies.get('contaract')
       this.$cookies.remove('contaract')
-      console.log(this.contaract)
     }
+    this.asyncData()
+    this.getInitData()
+    this.getProtocol('protocol100008')
+    console.log(this.$store.state.city, '城市')
   },
   methods: {
+    async asyncData() {
+      try {
+        const { code, message, data } = await this.$axios.post(
+          productDetailsApi.sellingGoodsDetail,
+          {
+            id: this.$route.query.productId,
+            configFlg: 1,
+            floatingFlg: 1,
+            withSalesSubsFlg: 1,
+            withTagsFlg: 1,
+            withGoodsSubFlg: 1,
+            withOperatingsFlg: 1,
+            clientType: 'COMDIC_TERMINAL_WAP',
+          }
+        )
+        if (code === 200) {
+          const obj = {
+            name: data.name,
+            classCodeName: data.classCodeName,
+            salesPrice: data.salesPrice,
+            salesGoodsSubVos: data.salesGoodsSubVos,
+          }
+          this.order = data
+          this.order.list = []
+          this.order.list.push(obj)
+          this.order.num = this.order.list.length
+        } else {
+          throw message
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async getProtocol(categoryCode) {
+      if (!categoryCode) {
+        this.$xToast.warning('请传入需要获取的协议!')
+        return
+      }
+      const params = {
+        categoryCode,
+        includeField: 'content,title',
+      }
+      try {
+        this.loading = true
+        const data = await auth.protocol(params)
+        const { rows = [] } = data || {}
+        this.Orderform.orderAgreementIds = rows[0].id || {}
+        this.loading = false
+      } catch (error) {
+        this.$xToast.error(error.message || '请求失败')
+        return Promise.reject(error)
+      }
+    },
+    placeOrder() {
+      const sku = {
+        saleSkuId: this.order.id,
+        saleSkuName: this.order.name,
+        saleSkuVersionNo: this.order.goodsNo,
+        saleSkuPrice: this.order.salesPrice,
+        saleSkuCount: 1,
+      }
+      this.Orderform.needSplitProPackageDataParam.push(sku)
+      this.Orderform.cusOrderPayType = this.order.refConfig.payType
+      this.Orderform.isFromCart = false
+      this.Orderform.orderProvinceNo = this.$store.state.city.defaultCity.pid
+      this.Orderform.orderCityNo = this.$store.state.city.defaultCity.code
+      this.Orderform.orderLocationProvinceName = this.$store.state.city.defaultCity.pname
+      this.Orderform.orderLocationCityName = this.$store.state.city.defaultCity.name
+      this.Orderform.customerOrderMark = this.message
+      if (this.contaract) {
+        this.Orderform.contractFormParam = this.contaract
+      }
+      order
+        .placeOrder({ axios: this.$axios }, this.Orderform)
+        .then((result) => {
+          console.log(result)
+        })
+        .catch((e) => {
+          if (e.code !== 200) {
+            this.$xToast.show(e.message)
+            console.log(e)
+          }
+        })
+    },
+    getInitData() {
+      coupon
+        .getCouponList({ axios: this.$axios }, this.formData)
+        .then((result) => {
+          console.log(result)
+        })
+        .catch((e) => {
+          if (e.code !== 200) {
+            this.$xToast.show(e.message)
+          }
+        })
+    },
     gocontractedit() {
       this.$router.push({
         path: '/contract/edit',
@@ -227,7 +336,7 @@ export default {
         },
       })
     },
-    getpopupfn() {
+    popupfn() {
       this.popupshow = true
     },
     close(data) {

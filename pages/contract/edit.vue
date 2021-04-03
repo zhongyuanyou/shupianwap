@@ -126,7 +126,7 @@ export default {
           }
         })
         .catch((err) => {
-          this.$xToast.show(err.message)
+          this.$xToast.show(err)
           console.log('错误信息err', err)
         })
     },
@@ -156,8 +156,7 @@ export default {
           })
         })
         .catch((err) => {
-          this.$xToast.show(err.message)
-          console.log('错误信息err', err)
+          this.$xToast.show(err)
         })
     },
     sumfn() {
