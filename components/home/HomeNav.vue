@@ -47,18 +47,18 @@
               </nuxt-link>
             </li>
           </ul>
+          <!-- S 自定义滚动条 -->
+          <div v-if="rollNavHandle.length > 10" class="scroll-box">
+            <span><i :style="{ left: scroLeft + '%' }"></i></span>
+          </div>
+          <div
+            v-else-if="rollNavHandle.length && rollNavHandle.length <= 10"
+            class="scroll-box"
+          ></div>
+          <!-- E 自定义滚动条 -->
         </div>
         <!-- E 可滚动导航 -->
-        <!-- S 自定义滚动条 -->
-        <div v-if="rollNavHandle.length > 10" class="scroll-box">
-          <span><i :style="{ left: scroLeft + '%' }"></i></span>
-        </div>
-        <div
-          v-else-if="rollNavHandle.length && rollNavHandle.length <= 10"
-          class="scroll-box"
-        ></div>
       </div>
-      <!-- E 自定义滚动条 -->
     </nav>
   </div>
 </template>
@@ -153,11 +153,12 @@ export default {
 .nav-content {
   font-size: 24px;
   box-sizing: border-box;
+  margin-bottom: 20px;
   .fixed-nav {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 28px 16px 0 16px;
+    padding: 24px 40px 0 40px;
     li {
       width: 20%;
       a {
@@ -230,7 +231,7 @@ export default {
   }
   .scroll-container {
     padding: 20px 20px 0 20px;
-    margin: 20px auto 0 auto;
+    margin: 12px auto 0 auto;
     .inner {
       background: white;
       border-radius: 16px;
