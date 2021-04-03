@@ -77,5 +77,13 @@ const category = {
       url: CHIPS_WAP_BASE_URL2 + '/yk/order/v2/child_order.do',
     })
   },
+  // 提交订单
+  placeOrder(params) {
+    return request({
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
+    })
+  },
 }
 export default category

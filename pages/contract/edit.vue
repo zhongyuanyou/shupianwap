@@ -97,7 +97,9 @@ export default {
     }
   },
   mounted() {
-    this.getorder()
+    if (this.orderItem.type !== 'ws') {
+      this.getorder()
+    }
   },
   methods: {
     validator(val) {
@@ -124,6 +126,7 @@ export default {
           }
         })
         .catch((err) => {
+          this.$xToast.show(err.message)
           console.log('错误信息err', err)
         })
     },
@@ -141,27 +144,38 @@ export default {
           }
         )
         .then((res) => {
-          if (res) {
-            this.$cookies.set('contractUrl', res.contractUrl)
-            this.$router.push({
-              path: '/contract/preview',
-              query: {
-                contractId: res.contractId,
-                contractNo: res.contractNo,
-                signerName: this.userName,
-                contactWay: this.phone,
-              },
-            })
-          }
+          this.$router.push({
+            path: '/contract/preview',
+            query: {
+              contractUrl: res.contractUrl,
+              contractId: res.contractId,
+              contractNo: res.contractNo,
+              signerName: this.userName,
+              contactWay: this.phone,
+            },
+          })
         })
         .catch((err) => {
+          this.$xToast.show(err.message)
           console.log('错误信息err', err)
         })
     },
     sumfn() {
       const _this = this
       if (this.partyName && this.userName && this.phone) {
-        _this.applycontart()
+        if (this.orderItem.type === 'ws') {
+          const contaract = {
+            contractFirstName: this.partyName,
+            contractFirstContacts: this.userName,
+            contractFirstPhone: this.phone,
+            contractFirstEmail: this.email,
+            contractFirstAddr: this.address,
+          }
+          this.$cookies.set('contaract', contaract)
+          this.$router.back(-1)
+        } else {
+          _this.applycontart()
+        }
       }
     },
   },

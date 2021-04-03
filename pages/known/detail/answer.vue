@@ -75,7 +75,7 @@
       </div>
       <p class="pub-time">编辑于2021-05-10 16:40</p>
     </div>
-    <Comment :comment-list="commentList2" @changeModal="changeModal" />
+    <Comment :article-id="1" />
     <div class="page-bottom">
       <div class="left-area">
         <span class="icon" @click="handleClickBottom(1)">
@@ -89,53 +89,34 @@
       <div class="right-area">
         <div class="item" @click="handleClickBottom(3)">
           <div class="icon">
-            <my-icon
-              name="spiconfont-shoucang_mian"
-              size="0.3rem"
-              color="#000000"
-            ></my-icon>
+            <my-icon name="shoucang" size="0.4rem" color="#999999"></my-icon>
           </div>
           收藏
         </div>
         <div class="item" @click="handleClickBottom(4)">
           <div class="icon">
-            <my-icon
-              name="spiconfont-guankan"
-              size="0.3rem"
-              color="#000000"
-            ></my-icon>
+            <my-icon name="pinglun" size="0.4rem" color="#999999"></my-icon>
           </div>
           评论
         </div>
       </div>
     </div>
-    <comment-modal
-      :show="commentShow"
-      :list="commentList"
-      @sort="sort"
-      @release="sum"
-      @close="changeModal(false)"
-    >
-    </comment-modal>
   </div>
 </template>
 
 <script>
 import { Field, Tab, Tabs, Button, Image } from '@chipspc/vant-dgg'
-import CommentModal from '~/components/mustKnown/commentList.vue'
-import Comment from '~/components/mustKnown/DetailComment.vue'
+import Comment from '~/components/mustKnown/DetailComment'
 export default {
   components: {
     [Button.name]: Button,
     [Image.name]: Image,
     [Field.name]: Field,
-    CommentModal,
     Comment,
   },
   data() {
     return {
       showHead2: true,
-      commentShow: false,
       commentList: [
         {
           username: '用户1',
@@ -225,18 +206,8 @@ export default {
     onLeftClick() {
       this.$router.back(-1)
     },
-    sum(val) {
-      console.log(val)
-    },
-    sort(value) {
-      console.log(value)
-    },
     answersortfn(index) {
       console.log(index)
-    },
-    changeModal(val) {
-      this.commentShow = val
-      console.log('111', val)
     },
     handleClickBottom(type) {
       console.log('type', type)

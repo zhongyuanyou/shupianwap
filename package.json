@@ -62,7 +62,8 @@
     "nodemon": "^2.0.3",
     "postcss-pxtorem": "^5.1.1",
     "prettier": "^2.0.4",
-    "vue-jest": "^3.0.5"
+    "vue-jest": "^3.0.5",
+    "vue-pdf": "^4.2.0"
   },
   "engines": {
     "node": ">=10.0.0"

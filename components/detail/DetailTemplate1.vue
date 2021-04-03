@@ -320,30 +320,6 @@ export default {
         this.tcPlannerBooth = plannerRes.data.records[0]
       }
     },
-    fieldListFun() {
-      const fieldList = {}
-      this.proDetail.fieldList.forEach((list) => {
-        fieldList[list.fieldCode] = list
-      })
-      console.log(fieldList)
-      const tcBasicDataArr = [...tcBasicData[this.proDetail.dictCode]]
-      tcBasicDataArr.forEach((item, idx) => {
-        // 有翻译的值,显示翻译的值
-        if (fieldList[item.listKey] && fieldList[item.listKey].fieldValueCn) {
-          tcBasicDataArr[idx].listVal = fieldList[item.listKey].fieldValueCn
-        } else if (
-          fieldList[item.listKey] &&
-          fieldList[item.listKey].fieldValue
-        ) {
-          // 没有翻译的值,使用原始值
-          tcBasicDataArr[idx].listVal = fieldList[item.listKey].fieldValue
-        } else {
-          // 数据不存在,使用'/'代替
-          tcBasicDataArr[idx].listVal = '/'
-        }
-      })
-      return tcBasicDataArr
-    },
     // 加入购物车
     addCart() {
       console.log('加入购物车')

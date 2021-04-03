@@ -74,7 +74,13 @@
       </div>
       <div class="contract">
         <CellGroup>
-          <Cell title="合同信息" value="申请合同" value-class="black" is-link />
+          <Cell
+            title="合同信息"
+            value="完善合同信息"
+            value-class="black"
+            is-link
+            @click="gocontractedit()"
+          />
         </CellGroup>
       </div>
       <div class="agreement">
@@ -202,10 +208,26 @@ export default {
           nodata: '订单金额不符合使用条件',
         },
       ],
+      contaract: '',
+    }
+  },
+  mounted() {
+    if (this.$cookies.get('contaract')) {
+      this.contaract = this.$cookies.get('contaract')
+      this.$cookies.remove('contaract')
+      console.log(this.contaract)
     }
   },
   methods: {
-    popupfn() {
+    gocontractedit() {
+      this.$router.push({
+        path: '/contract/edit',
+        query: {
+          type: 'ws',
+        },
+      })
+    },
+    getpopupfn() {
       this.popupshow = true
     },
     close(data) {

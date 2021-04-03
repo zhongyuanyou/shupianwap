@@ -132,8 +132,8 @@ export default {
           })
         })
     },
-    // 判断是分批支付还是全款支付等
-    checkCusBatchPayType() {
+    // // 判断是分批支付还是全款支付等
+    checkCusBatchPayType1() {
       if (
         this.payList.length === this.orderData.orderList.length ||
         this.payList.length === 1
@@ -149,25 +149,46 @@ export default {
             batchIds: '',
           },
         })
-        // // 子订单数量和分批支付数量一样的话实际上不是分批支付订单
-        // if (
-        //   this.payList[0].orderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
-        //   this.payList[0].orderPayType ===
-        //     'PRO_PRE_SERVICE_FINISHED_PAY'
-        // ) {
-        //   // 当支付类型为先付款后服务和服务完结收费且付费节点为全款时（batchNumber=0）进行全款支付
-        //   this.$router.push({
-        //     path: '/pay/payType',
-        //     query: {
-        //       fromPage: this.fromPage,
-        //       cusOrderId: this.orderData.cusOrderId,
-        //     },
-        //   })
-        // } else {
-        //   this.payList = res
-        //   this.$refs.payModal.showPop = true
-        //   this.$refs.cancleOrderModel.showPop = false
-        // }
+      } else {
+        // 是分批支付则弹起分批支付弹窗 关闭关联订单弹窗
+        this.$refs.payModal.showPop = true
+        this.$refs.cancleOrderModel.showPop = false
+        let thisTimePayTotal = 0 // 本期应付总额
+        let allTimePayTotal = 0 // 剩余未支付所有批次总额
+        const idsArr = [] // 应分批支付id
+        this.payList.forEach((element) => {
+          if (element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
+            thisTimePayTotal += element.money
+            idsArr.push(element.id)
+          }
+          if (
+            element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_0' ||
+            element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1'
+          ) {
+            allTimePayTotal += element.money
+          }
+        })
+        this.thisTimePayTotal = thisTimePayTotal
+        this.allTimePayTotal = allTimePayTotal
+        this.batchIds = idsArr.join(',')
+        console.log('本期应付总额:thisTimePayTotal:', thisTimePayTotal)
+        console.log('全款支付剩余应付总额thisTimePayTotal:', thisTimePayTotal)
+      }
+    },
+    // 判断是分批支付还是全款支付等
+    checkCusBatchPayType() {
+      if (
+        this.payList[0].orderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
+        this.payList[0].orderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY'
+      ) {
+        // 当支付类型为先付款后服务和服务完结收费且付费节点为全款时（batchNumber=0）进行全款支付
+        this.$router.push({
+          path: '/pay/payType',
+          query: {
+            fromPage: this.fromPage,
+            cusOrderId: this.orderData.cusOrderId,
+          },
+        })
       } else {
         // 是分批支付则弹起分批支付弹窗 关闭关联订单弹窗
         this.$refs.payModal.showPop = true

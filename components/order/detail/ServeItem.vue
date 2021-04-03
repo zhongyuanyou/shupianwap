@@ -9,12 +9,12 @@
     </div>
     <div class="right">
       <p class="goods-name">
-        <span class="name"> {{ item.name }}</span>
-        <span class="money1"> {{ item.price }}元 </span>
+        <span class="name"> {{ item.orderSaleName }}</span>
+        <span class="money1"> {{ item.skuTotalPrice }}元 </span>
       </p>
       <div class="sku-info">
-        <p class="sku-l">
-          {{ getValue(item.fieldList) }}
+        <p class="sku-l">{{ item.skuExtInfo }}</p>
+        <!-- <p class="sku-l">
           <span class="btn-more" @click="showMoSku">
             <my-icon
               v-if="getValue(item.fieldList).length > 40"
@@ -23,20 +23,20 @@
               color="rgba(0,0,0,0.6)"
             ></my-icon>
           </span>
-          <!-- <span
+          <span
             v-for="(item2, index2) in item.fieldList"
             :key="index2"
             class="sku-item"
             >{{ item2.fieldValue }};</span
-          > -->
-        </p>
-        <span class="goods-num">×{{ item.goodsNumber }}</span>
+          >
+        </p> -->
+        <span class="goods-num">×{{ item.skuCount }}</span>
       </div>
       <div class="item-btn-area">
         <div class="inner">
-          <sp-button @click="handleClickBtn(1)">查看底单</sp-button>
+          <!-- <sp-button @click="handleClickBtn(1)">查看底单</sp-button> -->
           <sp-button @click="handleClickBtn(2)">办理进度</sp-button>
-          <sp-button @click="handleClickBtn">确认完成</sp-button>
+          <sp-button @click="handleClickBtn(3)">确认完成</sp-button>
         </div>
       </div>
       <!-- <div
@@ -103,6 +103,10 @@ export default {
         // 办理进度
         case 2:
           this.$router.push('/order/process')
+          break
+        case 3:
+          // 确认完成
+          this.$emit('confirmSku')
           break
         default:
           console.log('type', type)
