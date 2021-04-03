@@ -2,18 +2,17 @@
   <div class="page">
     <Header title="节点明细" @leftClickFuc="onClickLeft" />
     <div class="banner">
-      <p class="goods-name">商标注册</p>
+      <p class="goods-name">{{ skuInfo.orderSaleName }}</p>
       <p class="goods-skus">
-        武侯区；无注册地址；认缴申请武侯区；武侯区；无注册地址；
-        认缴申请武侯区；武
+        {{ skuInfo.skuExtInfo }}
       </p>
       <div class="banner-node">
         <div class="left">
-          <p class="p1">2</p>
+          <p class="p1">{{ nodeList.length }}</p>
           <p>支付节点</p>
         </div>
         <div class="right">
-          <p class="p1">388</p>
+          <p class="p1">{{ nodeTotalMoney }}</p>
           <p>合计金额</p>
         </div>
       </div>
@@ -22,22 +21,37 @@
       <div v-for="(item, index) in nodeList" :key="index" class="item">
         <span class="node-icon">节点{{ ++index }}</span>
         <p class="money-area">
-          <span class="span1"> 金额：</span>
-          <span class="span2">
-            {{ item.money }}
-          </span>
-          元
-          <span v-if="item.payTime" class="span3">
-            已于 {{ item.payTime }} 支付
-          </span>
-          <span v-else class="span3">待支付</span>
-        </p>
-        <p
-          v-for="(item2, index2) in item.serveList"
-          :key="index2"
-          class="serve-list"
-        >
-          {{ item2 }}
+          <span
+            v-if="
+              nodeNumber === 2 &&
+              item.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+              index === 0
+            "
+            class="span1"
+            >定金:</span
+          >
+          <span
+            v-else-if="
+              nodeNumber === 2 &&
+              item.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+              index === 1
+            "
+            class="span1"
+            >尾款:</span
+          >
+          <span class="span2">{{ item.money }}</span>
+          <span class="span4">元</span>
+          <span
+            v-if="item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_0'"
+            class="span3"
+            >待支付</span
+          >
+          <span
+            v-else-if="item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1'"
+            class="span3"
+            >本期应付</span
+          >
+          <span v-else class="span3">已支付</span>
         </p>
       </div>
     </div>
@@ -49,43 +63,39 @@
 // 服务商品节点明细
 import Header from '@/components/common/head/header'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
+import OrderMixins from '@/mixins/order'
+import orderApi from '@/api/order'
 export default {
   components: {
     Header,
     LoadingCenter,
   },
+  mixins: [OrderMixins],
   data() {
     return {
+      loading: true,
       orderId: '',
       cusOrderId: '',
-      skuId: '',
-      loading: true,
-      nodeList: [
-        {
-          money: 200,
-          payTime: '2021.03.10',
-          serveList: ['加急处理1', '加急处理2'],
-        },
-        {
-          money: 300,
-          payTime: null,
-        },
-        {
-          money: 400,
-          payTime: null,
-          serveList: [
-            'vip贵宾服务vip贵宾服务vip贵宾服务vip贵宾服务vip贵宾服务vip贵宾服务vip贵宾服务vip贵宾服务vip贵宾服务',
-          ],
-        },
-      ],
+      orderData: {},
+      orderSkuId: '',
+      skuInfo: {},
+      fromPage: 'nodeDetail',
+      nodeList: [],
+      nodeTotalMoney: '', // 该产品所有节点金额总额
+      nodeNumber: 0,
     }
   },
   mounted() {
-    if (this.$route.query.orderId) {
+    if (
+      this.$route.query.orderId &&
+      this.$route.query.cusOrderId &&
+      this.$route.query.skuId
+    ) {
       this.cusOrderId = this.$route.query.cusOrderId
       this.orderId = this.$route.query.orderId
-      this.skuId = this.$route.query.skuId
-      this.getNodeDetail()
+      this.orderSkuId = this.$route.query.skuId
+      this.getBatchList()
+      this.getDetail()
     } else {
       this.$xToast.error('缺少参数')
       this.$router.back(-1)
@@ -95,11 +105,22 @@ export default {
     onClickLeft() {
       this.$router.back(-1)
     },
-    toDetail() {
-      this.$router.go('/order/nodeDetail')
+    getDetail() {
+      orderApi
+        .getDetailByOrderId(
+          { axios: this.axios },
+          { id: this.orderId, cusOrderId: this.cusOrderId }
+        )
+        .then((res) => {
+          console.log('res', res)
+          this.skuInfo = res.data.orderSkuList.filter((item) => {
+            return item.id === this.orderSkuId
+          })[0]
+        })
+        .catch((err) => {
+          this.$xToast.error(err.message)
+        })
     },
-    // 获取节点明细
-    getNodeDetail() {},
   },
 }
 </script>

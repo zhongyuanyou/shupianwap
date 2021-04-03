@@ -1,7 +1,10 @@
 'use strict'
 import { request } from '@/utils/request'
-import { CHIPS_WAP_BASE_URL } from '@/config/constant'
-const CHIPS_WAP_BASE_URL2 = 'http://127.0.0.1:7001/service'
+// import { CHIPS_WAP_BASE_URL } from '@/config/constant'
+import { CHIPS_APP_BASE_URL } from '@/config/constant'
+const CHIPS_WAP_BASE_URL = 'http://127.0.0.1:7001/service'
+// const CHIPS_APP_BASE_URL =
+//   'https://dspmicrouag.shupian.cn/crisps-c-middle-service-api'
 const category = {
   // 订单列表
   list({ axios }, params) {
@@ -10,7 +13,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL2 + '/yk/order/v2/order_list.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/order_list.do',
     })
   },
   // 客户单列表
@@ -20,7 +23,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL2 + '/yk/order/v2/order_list.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/order_list.do',
     })
   },
   // 根据客户单id查询客户单详情
@@ -29,7 +32,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL2 + '/yk/order/v2/cus_order_detail.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/cus_order_detail.do',
     })
   },
   // 客户单详情
@@ -38,7 +41,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL2 + '/yk/order/v2/order_detail.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/order_detail.do',
     })
   },
   // 分批支付列表
@@ -47,7 +50,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL2 + '/yk/order/v2/batch_pay_list.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/batch_pay_list.do',
     })
   },
   // 取消订单
@@ -56,16 +59,16 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL2 + '/service/yk/order/v2/cancle_order.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/cancle_order.do',
     })
   },
-  // 确认订单
+  // 确认订单 确认完成
   confirmOrder({ axios }, params) {
     return request({
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL2 + '/service/yk/order/v2/confirm_order.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/confirm_order.do',
     })
   },
   // 根据客户单id查询关联订单
@@ -74,7 +77,18 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL2 + '/yk/order/v2/child_order.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/child_order.do',
+    })
+  },
+  // 获取账单明细 yk/order/find_pay_bill_details.do
+  getBillDetail({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'get',
+      url:
+        CHIPS_APP_BASE_URL +
+        '/crisps-c-middle-service-api/yk/order/find_pay_bill_details.do',
     })
   },
   // 提交订单
@@ -82,7 +96,7 @@ const category = {
     return request({
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/add_order.do',
     })
   },
 }

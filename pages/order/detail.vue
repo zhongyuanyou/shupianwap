@@ -3,15 +3,17 @@
     <Banner
       :order-status-code="orderData.cusOrderDetail.cusOrderStatusNo"
       :cus-order-status-type="cusOrderStatusType"
+      :cus-order-id="cusOrderId"
+      :cus-order-cancel-reason="canCelReasonName"
     />
     <div class="order-area">
-      <!-- 服务商品、 -->
-      <!-- <ServeList
+      <!-- 服务 -->
+      <ServeList
         v-if="orderData.orderProTypeNo.match('PRO_CLASS_TYPE_SERVICE')"
         :order-data="orderData"
-      /> -->
-      <!-- 交易销售资源商品 -->
-      <TradeList class="goods-info" :order-data="orderData" />
+      />
+      <!-- 交易/销售/资源 -->
+      <TradeList v-else class="goods-info" :order-data="orderData" />
       <div class="price-area">
         <p>
           <span> 商品总额 </span>
@@ -81,25 +83,67 @@
           PAYSTATUSCODENAME[orderData.cusOrderDetail.cusOrderPayStatusNo]
         }}</span>
       </p>
-      <!-- 支付状态为部分付款时才显示这部分 -->
-      <div
-        v-if="
+      <!-- 支付状态为部分付款时才显示这部分         v-if="
           orderData.cusOrderDetail.cusOrderPayStatusNo ===
           'ORDER_CUS_PAY_STATUS_PART_PAID'
-        "
-        class="pay-detail-area"
-      >
-        <p class="has-pay">
-          <span class="span1">首款：</span>
-          <span class="span2">3000</span>
+        " -->
+      <div v-if="cusOrderStatusType !== 4" class="pay-detail-area">
+        <p
+          v-for="(item, index) in orderPayList"
+          :key="index"
+          :class="
+            item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_2'
+              ? 'has-pay'
+              : 'no-pay'
+          "
+        >
+          <span v-if="paylistLength === 1" class="span1">全款:</span>
+          <span
+            v-else-if="
+              paylistLength === 2 &&
+              item.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+              index === 0
+            "
+            class="span1"
+            >定金:</span
+          >
+          <span
+            v-else-if="
+              paylistLength === 2 &&
+              item.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+              index === 1
+            "
+            class="span1"
+            >尾款:</span
+          >
+          <span
+            v-else-if="
+              item.orderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE' &&
+              index === 0
+            "
+            class="span1"
+            >首款:</span
+          >
+          <span
+            v-else-if="
+              item.orderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE' &&
+              index === paylistLength
+            "
+            class="span1"
+            >尾款:</span
+          >
+          <span v-else class="span1">第{{ item.batchNumber }}批:</span>
+          <span class="span2">{{ item.money }}</span>
           <span class="span4">元</span>
-          <span class="span3">已于2021-04-23支付</span>
-        </p>
-        <p class="no-pay">
-          <span class="span1">尾款：</span>
-          <span class="span2">5000</span>
-          <span class="span4">元</span>
-          <span class="span3">请于2021-05-23前支付</span>
+          <span
+            v-if="item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_2'"
+            class="span3"
+            >已于{{ item.realPaymentDate }}支付</span
+          >
+          <span v-else-if="item.expireDate" class="span3"
+            >请于{{ item.expireDate }}前支付</span
+          >
+          <span v-else class="span3">待支付</span>
         </p>
       </div>
       <!-- <p class="order-item">
@@ -131,7 +175,7 @@
       </p>
     </div>
     <!-- 当订单状态为已取消时隐藏顶部按钮区域 -->
-    <div v-if="cusOrderStatusType != 4" class="btn-area">
+    <div v-if="cusOrderStatusType !== 4" class="btn-area">
       <div class="inner">
         <!--   v-if="
             orderData.orderSplitAndCusVo[0].cusOrderPayStatusNo ===
@@ -169,16 +213,13 @@
       </div>
     </div>
     <CancelOrder
-      v-if="
-        orderData.cusOrderDetail.cusOrderStatusNo ===
-          'ORDER_CUS_STATUS_UNPAID' &&
-        orderData.cusOrderDetail.cusOrderStatusNo !==
-          'ORDER_CUS_STATUS_CANCELLED'
-      "
       ref="cancleOrderModel"
       :order-id="orderData.orderId"
       :cus-order-id="orderData.cusOrderId"
       :order-sku-list="orderData.orderList"
+      :cus-order-cancel-reason="orderData.cusOrderCancelReason"
+      @setCancelOrderName="setCancelOrderName"
+      @cancleOrder="cancleOrder"
     />
     <PayModal
       v-if="showPayBtn"
@@ -196,7 +237,7 @@
 import { Button } from '@chipspc/vant-dgg'
 import Banner from '@/components/order/detail/Banner'
 // 服务订单
-// import ServeList from '@/components/order/detail/ServeList'
+import ServeList from '@/components/order/detail/ServeList'
 // 交易订单
 import TradeList from '@/components/order/detail/TradeList'
 import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
@@ -209,7 +250,7 @@ export default {
   components: {
     [Button.name]: Button,
     Banner,
-    // ServeList,
+    ServeList,
     TradeList,
     CancelOrder,
     PayModal,
@@ -218,6 +259,7 @@ export default {
   mixins: [OrderMixins],
   data() {
     return {
+      canCelReasonName: '',
       loading: true,
       hasData: false,
       orderId: '',
@@ -231,6 +273,9 @@ export default {
       showPayBtn: false,
       payList: [], // 支付列表
       fromPage: 'orderDetail',
+      orderPayList: [],
+      paylistLength: 0,
+      opType: '',
     }
   },
   computed: {
@@ -260,7 +305,6 @@ export default {
           { id: this.orderId, cusOrderId: this.cusOrderId }
         )
         .then((res) => {
-          this.loading = false
           console.log('res')
           const cusDetail = res.data.cusOrderDetail
           this.orderData = Object.assign(cusDetail, res.data)
@@ -282,13 +326,14 @@ export default {
             // 当订单状态不为已取消且支付状态不为已完成时展示付款入口
             this.showPayBtn = true
           }
-          if (
-            this.orderData.cusOrderPayStatusNo !==
-            'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
-          ) {
-            // 当客户单支付状态不等于已完成时调用分批支付列表
-            this.getBatchList()
-          }
+          this.getBatchList()
+          // if (
+          //   this.orderData.cusOrderPayStatusNo !==
+          //   'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
+          // ) {
+          //   // 当客户单支付状态不等于已完成时调用分批支付列表
+          //   this.getBatchList()
+          // }
         })
         .catch((err) => {
           this.loading = false
@@ -299,177 +344,55 @@ export default {
     },
     // 按钮操作
     handleClickItem(type) {
-      console.log('type', type)
       switch (type) {
         case 1:
-          // 取消订单 无关联订单直接取消
-          if (!this.checkHasOtherOrder()) {
-            this.$xToast.success('订单取消成功')
-          } else {
-            // 有关联订单则弹起弹窗
-            this.$refs.cancleOrderModel.showPop = true
-            this.$refs.cancleOrderModel.modalType = 1
-          }
+          // 取消订单 首先判断是否有关联订单
+          this.opType = 'cancelOrder'
+          this.getChildOrders()
           break
         case 2:
-          console.log('2')
           // 签署合同
           this.$router.push({
             path: '/contract/edit',
             query: {
-              orderId: this.orderId,
-              cusOrderId: this.cusOrderId,
-              fromPage: 'orderDetail',
+              orderId: this.orderData.id,
+              cusOrderId: this.orderData.cusOrderId,
+              fromPage: this.fromPage,
             },
           })
           break
         case 3:
-          console.log('3')
           // 查看合同
           this.$router.push({
             path: '/contract/edit',
             query: {
-              orderId: this.orderId,
-              cusOrderId: this.cusOrderId,
-              fromPage: 'orderDetail',
+              orderId: this.orderData.id,
+              cusOrderId: this.orderData.cusOrderId,
+              fromPage: this.fromPage,
             },
           })
           break
         case 4:
-          this.checkHasOtherOrder()
-          // 立即付款
-          // this.getBatchList()
-          // if (order.payType) {
-          //   // 服务商品
-          //   if (order.payType === 1) {
-          //     // 全款时直接跳转支付页面
-          //     this.$router.push('/order/pay')
-          //   } else if (order.payType === 2) {
-          //     // 节点付费
-          //     // 弹起节点付款提示弹窗
-          //     this.$refs.payModal.showPop = true
-          //   } else if (order.payType === 3) {
-          //     // 定金尾款
-          //     // 弹起定金尾款付费提示弹窗
-          //     this.$refs.payModal.showPop = true
-          //   } else {
-          //     // 服务完结
-          //     // 全款时直接跳转支付页面
-          //     this.$router.push('/order/pay')
-          //   }
-          //   return
-          // }
-          // // 非服务商品
-          // if (!this.checkHasOtherOrder()) {
-          //   // 立即支付 无关联订单直接支付
-          //   this.$router.push('/order/pay')
-          // } else {
-          //   // 有关联订单则弹起弹窗
-          //   this.$refs.cancleOrderModel.showPop = true
-          //   this.$refs.cancleOrderModel.modalType = 2
-          // }
+          // 立即付款 首先判断是否有关联订单
+          this.opType = 'payMoney'
+          this.getChildOrders()
           break
         case 5:
-          this.checkHasOtherOrder()
-          console.log('支付余款')
+          // 支付余款 首先判断是否有关联订单
+          this.opType = 'payMoney'
+          this.getChildOrders()
           break
         case 6:
-          console.log('确认完成')
+          // 确认完成
+          this.opType = 'confirmComplete'
           this.confirmOrder()
           break
       }
     },
-    // // 判断是否有关联订单  0 无 1有
-    // checkHasOtherOrder() {
-    //   // 订单列表大于1则有关联订单
-    //   return this.orderData.orderList.length.length > 1
-    // },
-    // // 开始支付时判断
-    // startPay() {
-    //   // 先判断是否有关联订单
-    //   if (this.checkHasOtherOrder) {
-    //     // 有关联订单时打开提示弹窗
-    //     this.$refs.CancelOrder.showPop = true
-    //   } else if (this.payList.length === 1) {
-    //     // 无关联订单时判断是否是分批支付
-    //     // 支付列表为1则为全款支付直接跳转支付页面
-    //     this.$router.push({
-    //       path: '/pay/payType',
-    //       query: {
-    //         orderId: this.orderId,
-    //         cusOrderId: this.cusOrderId,
-    //       },
-    //     })
-    //   } else {
-    //     // 分批支付则打开分批支付提示弹窗
-    //     this.$refs.payModal.showPop = true
-    //   }
-    // },
-    // // 获取分批支付信息
-    // getBatchList() {
-    //   orderApi
-    //     .batchPayList(
-    //       { axios: this.$axios },
-    //       {
-    //         page: this.page,
-    //         limit: this.limit,
-    //         cusOrderId: this.cusOrderId,
-    //       }
-    //     )
-    //     .then((res) => {
-    //       console.log('分批支付信息', res)
-    //       this.payList = res
-    //       // if (res && res.length > 1) {
-    //       //   // 有分批支付信息则弹起分批支付弹窗
-    //       //   this.payList = res
-    //       //   this.$refs.payModal.showPop = true
-    //       // } else {
-    //       // 否则直接跳转支付页面
-    //       // this.$router.push({
-    //       //   path: '/pay/payType',
-    //       //   query: {
-    //       //     orderId: this.selectedOrder.id,
-    //       //     cusOrderId: this.selectedOrder.cusOrderId,
-    //       //     batchIds: res[0].id,
-    //       //   },
-    //       // })
-    //       // }
-    //     })
-    //     .catch((err) => {
-    //       console.log('分批支付信息err', err)
-    //     })
-    // },
-    // // 取消订单
-    // cancleOrder() {
-    //   orderApi.cancelOrder(
-    //     { axios: this.axios },
-    //     {
-    //       orderId: this.orderId,
-    //       cancelReasonCode: this.cancelReasonCode,
-    //       cancelReasonName: this.cancelReasonName,
-    //     }
-    //   )
-    // },
-    // // 判断展示合同按钮 false不展示  1签署合同 2查看合同
-    // checkContractStatus() {
-    //   return orderUtils.checkContractStatus(this.orderData)
-    // },
-    // // 判断客户单状态类型 1待付款 2进行中 3已完成 4已取消
-    // checkCusOrderStatus() {
-    //   return orderUtils.checkCusOrderStatus(this.orderData.cusOrderStatusNo)
-    // },
-    // // 判断是否显示取消订单按钮
-    // isShowCanCelBtn() {
-    //   return orderUtils.isShowCanCelBtn(this.orderData)
-    // },
-    // // 判断是否显示确认订单按钮
-    // isShowConfirmBtn() {
-    //   return orderUtils.isShowConfirmBtn(this.orderData)
-    // },
-    // // 判断是否显示付款按钮
-    // isShowPayBtn() {
-    //   return orderUtils.isShowPayBtn(this.orderData)
-    // },
+    // 设置取消订单原因name 中文
+    setCancelOrderName(val) {
+      this.canCelReasonName = val
+    },
     // 复制功能
     copy() {
       const oInput = document.createElement('input')
@@ -568,10 +491,11 @@ export default {
     height: auto;
     background: #f8f8f8;
     border-radius: 8px;
-    padding: 20px;
+    padding: 10px 20px;
     margin-bottom: 20px;
     p {
       font-size: 24px;
+      margin: 10px 0;
       span {
         display: block;
         float: left;
@@ -607,7 +531,6 @@ export default {
       font-size: 24px;
       font-family: PingFang SC;
       color: #ec5330;
-      margin-top: 20px;
       .span1 {
         color: rgba(34, 34, 34, 1);
         width: 140px;

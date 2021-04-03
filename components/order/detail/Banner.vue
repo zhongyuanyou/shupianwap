@@ -44,9 +44,15 @@
 
 <script>
 import orderUtils from '@/utils/order'
+import payApi from '@/api/pay'
 let timer
 export default {
   props: {
+    // 客户单id 查支付信息用
+    cusOrderId: {
+      type: String,
+      default: '',
+    },
     // 订单状态
     orderStatusCode: {
       type: String,
@@ -71,7 +77,7 @@ export default {
   mounted() {
     if (this.cusOrderStatusType === 1) {
       const that = this
-      this.countDown(new Date().getTime() + 67890000)
+      this.getEnablePayMoney()
     }
   },
   beforeDestroy() {
@@ -83,6 +89,7 @@ export default {
     },
     // 支付倒计时
     countDown(endTimeStamp) {
+      endTimeStamp = Number(endTimeStamp)
       const that = this
       const nowTimeStamp = new Date().getTime()
       // 计算时间差 秒
@@ -106,6 +113,30 @@ export default {
     // 判断客户单状态
     checkCusOrderStatus() {
       return orderUtils.checkCusOrderStatus(this.orderStatusCode)
+    },
+    // 查询订单应付金额
+    getEnablePayMoney() {
+      const postData = {
+        cusOrderId: this.cusOrderId,
+        // batchPayIds: this.batchIds, // 分批支付id集合
+        payPlatform: 'COMDIC_PLATFORM_CRISPS', // 支付平台 c端默认值薯片
+        // 薯片：COMDIC_PLATFORM_CRISPS
+        // 企大顺：COMDIC_PLATFORM_QIDASHUN
+        // 企大宝：COMDIC_PLATFORM_QIDABAO
+        // 运营后台：COMDIC_PLATFORM_MANAGMENT
+        payTerminal: 'COMDIC_TERMINAL_WAP',
+      }
+      payApi
+        .enablePayMoney({ axios: this.$axios }, postData)
+        .then((res) => {
+          this.countDown(res.countDownTimeLong || res.data.countDownTimeLong)
+          console.log('支付信息', res)
+        })
+        .catch((e) => {
+          if (e.code !== 200) {
+            console.log(e)
+          }
+        })
     },
   },
 }
