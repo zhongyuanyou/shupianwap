@@ -13,6 +13,8 @@ export const state = () => ({
   defaultCity: {
     code: '510100',
     name: '成都市',
+    pid: '510000',
+    pname: '四川省',
   },
   currentCity: {}, // 当前选择的城市
   positionCityName: '', // 当前定位城市的名称
@@ -76,6 +78,8 @@ export const actions = {
       commit('SET_CITY', {
         name: data.name,
         code: data.code,
+        pid: data.pid,
+        pname: data.pname,
       })
       return
     }

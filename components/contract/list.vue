@@ -13,32 +13,43 @@
       >
         <div v-for="(item, index) in list" :key="index" class="list">
           <div class="head">
-            <h1>{{ item.name }}</h1>
-            <p :style="{ color: item.state == 1 ? '#FE8C29' : '#999999' }">
-              {{ item.state == 1 ? '已完成' : '待签署' }}
+            <h1>{{ item.contractName }}</h1>
+            <p
+              :style="{
+                color:
+                  item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
+              }"
+            >
+              {{ item.contractStatus == 'STRUTS_YWC' ? '已完成' : '待签署' }}
             </p>
           </div>
           <div class="data">
             <div class="tit">
               <p>合同编号：</p>
-              <p>{{ item.contract || '暂无' }}</p>
+              <p>{{ item.contractNo || '暂无' }}</p>
             </div>
             <div class="tit">
               <p>合同金额：</p>
-              <p>{{ item.price ? item.price + '元' : '暂无' }}</p>
+              <p>
+                {{ item.contractMoney ? item.contractMoney + '元' : '暂无' }}
+              </p>
             </div>
             <div class="tit">
               <p>签署时间：</p>
-              <p>{{ item.date || '暂无' }}</p>
+              <p>{{ item.createTime || '暂无' }}</p>
             </div>
             <div class="tit">
               <p>订单编号：</p>
-              <p>{{ item.ordersn || '暂无' }}</p>
+              <p>{{ item.orderNo || '暂无' }}</p>
             </div>
           </div>
           <div class="btn">
             <p>订单详情</p>
-            <p>{{ item.state == 1 ? '查看合同' : '签署合同' }}</p>
+            <p @click.stop="btn(item)">
+              {{
+                item.contractStatus == 'STRUTS_YWC' ? '查看合同' : '签署合同'
+              }}
+            </p>
           </div>
         </div>
       </List>
@@ -68,29 +79,22 @@ export default {
       loading: false,
       finished: false,
       isLoading: false,
+      page: 1,
     }
   },
   methods: {
+    btn(item) {
+      this.$emit('Jump', item)
+    },
     onRefresh() {
-      setTimeout(() => {
-        this.isLoading = false
-      }, 1000)
+      // 重新加载数据
+      // 将 loading 设置为 true，表示处于加载状态
+      this.loading = true
+      this.$emit('Refresh')
     },
     onLoad() {
-      // setTimeout(() => {
-      //   if (this.refreshing) {
-      //     this.list = []
-      //     this.refreshing = false
-      //   }
-      //   for (let i = 0; i < 10; i++) {
-      //     this.list.push(this.list.length + 1)
-      //   }
-      //   this.loading = false
-      //   if (this.list.length >= 40) {
-      //     this.finished = true
-      //   }
-      // }, 1000)
-      this.loading = false
+      this.$emit('load', this.page)
+      this.page++
     },
   },
 }
@@ -134,10 +138,10 @@ export default {
         color: #999999;
         margin-bottom: 14px;
         > :nth-child(1) {
-          width: 120px;
+          width: 130px;
         }
         > :nth-child(2) {
-          width: calc(100% - 120px);
+          width: calc(100% - 130px);
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;

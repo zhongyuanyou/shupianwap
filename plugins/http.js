@@ -71,9 +71,9 @@ export default function (ctx, inject) {
         config.headers['X-Req-UserName'] = app.$cookies.get('userName', {
           path: '/',
         })
-        config.headers['X-Req-UserPhone'] = app.$cookies.get('userPhone', {
-          path: '/',
-        })
+        // config.headers['X-Req-UserPhone'] = app.$cookies.get('userPhone', {
+        //   path: '/',
+        // })
         config.headers['X-Req-mainAccountFull'] = app.$cookies.get(
           'mainAccountFull',
           {
@@ -85,7 +85,6 @@ export default function (ctx, inject) {
       const cityCode = app.$cookies.get('currentCity', {
         path: '/',
       })
-      config.headers.sourcePlatform = 'COMDIC_PLATFORM_CRISPS' // 操作系统来源 薯片
       if (cityCode && cityCode !== '{}') {
         config.headers.areaCode = JSON.parse(cityCode).code
       } else {

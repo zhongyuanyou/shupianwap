@@ -1,12 +1,12 @@
 <template>
   <div class="preview">
-    <Head title="合同预览"></Head>
+    <Head :title="contract.type == 'qs' ? '合同预览' : '预览合同'"></Head>
     <div class="data">
       <div class="box">
-        <iframe v-if="pdf" :src="pdf" width="100%" height="100%"></iframe>
+        <Pdf v-if="pdf" :src="pdf" />
         <p v-else>合同预览失败</p>
       </div>
-      <div class="btn">
+      <div v-if="contract.type == 'qs'" class="btn">
         <Button plain type="primary" size="large">我再想想</Button>
         <Button type="primary" size="large" @click="sign()">确认签署</Button>
         <sp-dialog v-model="timeshow" :show-confirm-button="false">
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import Pdf from 'vue-pdf'
 import { Button, Dialog } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
 import contractApi from '@/api/contract'
@@ -39,6 +40,7 @@ export default {
     Head,
     Button,
     [Dialog.Component.name]: Dialog.Component,
+    Pdf,
   },
   data() {
     return {
@@ -50,30 +52,42 @@ export default {
     }
   },
   mounted() {
-    this.pdf = decodeURI(this.$cookies.get('contractUrl'))
-    console.log(this.pdf)
+    this.pdf = this.contract.contractUrl
   },
   methods: {
     sign() {
-      contractApi
-        .signcontart(
-          { axios: this.axios },
-          {
+      if (this.$cookies.get('realStatus') === 'AUTHENTICATION_SUCCESS') {
+        contractApi
+          .signcontart(
+            { axios: this.axios },
+            {
+              contractId: this.contract.contractId,
+              phone: this.contract.contactWay,
+              signerName: this.contract.signerName,
+              contactWay: this.contract.contactWay,
+              businessId: this.$cookies.get('userId'),
+            }
+          )
+          .then((res) => {
+            if (res) {
+              console.log(res)
+            }
+          })
+          .catch((err) => {
+            this.$xToast.show(err.message)
+            console.log('错误信息err', err)
+          })
+      } else {
+        this.$router.push({
+          path: '/contract/authentication',
+          query: {
             contractId: this.contract.contractId,
-            phone: this.contract.contactWay,
-            signerName: this.contract.signerName,
-            contactWay: this.contract.contactWay,
-            businessId: this.$cookies.get('userId'),
-          }
-        )
-        .then((res) => {
-          if (res) {
-            console.log(res)
-          }
+            contractNo: this.contract.contractNo,
+            signerName: this.contract.userName,
+            contactWay: this.contract.phone,
+          },
         })
-        .catch((err) => {
-          console.log('错误信息err', err)
-        })
+      }
     },
     timeshowFn() {
       if (this.btnshow) {

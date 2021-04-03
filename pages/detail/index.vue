@@ -32,9 +32,7 @@ export default {
       )
       if (code === 200) {
         sellingGoodsDetailData = data
-        console.log(data)
         store.commit('sellingGoodsDetail/SET_SELLING_GOODS_DETAIL', data)
-        return { sellingGoodsDetailData }
       } else {
         throw message
       }
