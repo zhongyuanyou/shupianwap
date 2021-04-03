@@ -16,7 +16,7 @@ const coupon = {
     return request({
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + 'yk/coupon/v2/receive_coupon.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/coupon/v2/receive_coupon.do',
     })
   },
   useWithdrawal(params) {
@@ -32,7 +32,7 @@ const coupon = {
     return request({
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/coupon/v2/find_order_coupon_page.do',
+      url: CHIPS_WAP_BASE_URL + '/nk/coupon/v2/find_order_coupon_page.do',
     })
   },
   findPage(params) {
@@ -40,7 +40,7 @@ const coupon = {
     return request({
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/coupon/v2/find_page.do',
+      url: CHIPS_WAP_BASE_URL + '/nk/coupon/v2/find_page.do',
     })
   },
 }
