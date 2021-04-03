@@ -1,12 +1,6 @@
 <template>
   <div class="item-inner">
-    <div class="img">
-      <img
-        src="https://static.leetcode-cn.com/cn-assets/webpack_bundles/images/lcci_bg.7bfafcf36.png"
-        alt=""
-        srcset=""
-      />
-    </div>
+    <sp-image class="img" :src="item.skuImages"></sp-image>
     <div class="right">
       <p class="goods-name">
         <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
@@ -26,10 +20,11 @@
 <script>
 // 服务商品支付方式分为全款，定金尾款，按节点付费，完结付费
 // 定金胃口，按节点付费，完结付费有办理进度
-import { Button } from '@chipspc/vant-dgg'
+import { Button, Image } from '@chipspc/vant-dgg'
 export default {
   components: {
     [Button.name]: Button,
+    [Image.name]: Image,
   },
   props: {
     item: {
@@ -57,10 +52,6 @@ export default {
     background: rgba(0, 0, 0, 0.16);
     border-radius: 8px;
     overflow: hidden;
-    img {
-      width: 100%;
-      height: 100%;
-    }
   }
   .right {
     flex: 1;

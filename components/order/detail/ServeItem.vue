@@ -1,16 +1,10 @@
 <template>
   <div class="item-inner">
-    <div class="img">
-      <img
-        src="https://static.leetcode-cn.com/cn-assets/webpack_bundles/images/lcci_bg.7bfafcf36.png"
-        alt=""
-        srcset=""
-      />
-    </div>
+    <sp-image class="img" :src="item.skuImages"></sp-image>
     <div class="right">
       <p class="goods-name">
-        <span class="name"> {{ item.orderSaleName }}</span>
-        <span class="money1"> {{ item.skuTotalPrice }}元 </span>
+        <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
+        <span class="money1"> {{ item.skuPrice }}元 </span>
       </p>
       <div class="sku-info">
         <p class="sku-l">{{ item.skuExtInfo }}</p>
@@ -30,13 +24,18 @@
             >{{ item2.fieldValue }};</span
           >
         </p> -->
-        <span class="goods-num">×{{ item.skuCount }}</span>
+        <span class="goods-num">×{{ item.skuCount || 1 }}</span>
       </div>
       <div class="item-btn-area">
         <div class="inner">
           <!-- <sp-button @click="handleClickBtn(1)">查看底单</sp-button> -->
-          <sp-button @click="handleClickBtn(2)">办理进度</sp-button>
-          <sp-button @click="handleClickBtn(3)">确认完成</sp-button>
+          <sp-button @click="handleClickBtn(2, item)">办理进度</sp-button>
+          <sp-button
+            v-if="isShowConfirmBtn(item)"
+            type="default"
+            @click="handleClickBtn(3, '确认完成')"
+            >确认完成</sp-button
+          >
         </div>
       </div>
       <!-- <div
@@ -83,11 +82,14 @@
 <script>
 // 服务商品支付方式分为全款，定金尾款，按节点付费，完结付费
 // 定金胃口，按节点付费，完结付费有办理进度
-import { Popup, Button } from '@chipspc/vant-dgg'
+import { Popup, Button, Image } from '@chipspc/vant-dgg'
+import OrderMixins from '@/mixins/order'
 export default {
   components: {
     [Button.name]: Button,
+    [Image.name]: Image,
   },
+  mixins: [OrderMixins],
   props: {
     // 当前商品产品
     item: {
@@ -98,15 +100,24 @@ export default {
     },
   },
   methods: {
-    handleClickBtn(type) {
+    handleClickBtn(type, item) {
+      console.log('item', item)
       switch (type) {
         // 办理进度
         case 2:
-          this.$router.push('/order/process')
+          this.$router.push({
+            path: '/order/process',
+            query: {
+              orderId: item.orderId,
+              cusOrderId: item.cusOrderId,
+              skuId: item.skuId,
+            },
+          })
+          this.$emit('confirmOrder')
           break
         case 3:
           // 确认完成
-          this.$emit('confirmSku')
+          this.$emit('confirmOrder')
           break
         default:
           console.log('type', type)
@@ -138,10 +149,6 @@ export default {
     background: rgba(0, 0, 0, 0.16);
     border-radius: 8px;
     overflow: hidden;
-    img {
-      width: 100%;
-      height: 100%;
-    }
   }
   .right {
     flex: 1;

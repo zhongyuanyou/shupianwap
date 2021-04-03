@@ -80,38 +80,38 @@
         <sp-button
           v-if="isShowCanCelBtn()"
           type="primary"
-          @click="handleClickItem(1, '取消订单')"
+          @click="handleClickItem(1)"
           >取消订单</sp-button
         >
         <!-- 客户订单状态 -->
         <sp-button
           v-if="checkContractStatus() === 2"
           type="info"
-          @click="handleClickItem(3, '查看合同')"
+          @click="handleClickItem(3)"
           >查看合同</sp-button
         >
         <sp-button
           v-if="checkContractStatus() == 1"
           type="info"
-          @click="handleClickItem(2, '签署合同')"
+          @click="handleClickItem(2)"
           >签署合同</sp-button
         >
         <sp-button
           v-if="isShowPayBtn() == 1"
           type="default"
-          @click="handleClickItem(4, '立即付款')"
+          @click="handleClickItem(4)"
           >立即付款</sp-button
         >
         <sp-button
           v-if="isShowPayBtn() == 2"
           type="default"
-          @click="handleClickItem(5, '支付余款')"
+          @click="handleClickItem(5)"
           >支付余款</sp-button
         >
         <sp-button
           v-if="isShowConfirmBtn()"
           type="default"
-          @click="handleClickItem(6, '确认完成')"
+          @click="handleClickItem(6)"
           >确认完成</sp-button
         >
       </div>
@@ -145,8 +145,8 @@ export default {
     },
   },
   methods: {
-    handleClickItem(type, text) {
-      this.$emit('handleClickItem', type, text, this.orderData)
+    handleClickItem(type) {
+      this.$emit('handleClickItem', type, this.orderData)
     },
     toDetail() {
       this.$router.push({

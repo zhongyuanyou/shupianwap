@@ -33,6 +33,7 @@
       :order-id="orderData.orderId"
       :cus-order-id="orderData.cusOrderId"
       :order-list="orderData.orderList"
+      @cancleOrder="cancleOrder"
       @getBatchList="getBatchList"
     />
     <div v-if="!list.length" class="no-data-area">
@@ -153,86 +154,49 @@ export default {
           this.$xToast.error('获取数据失败')
         })
     },
-    handleClickItem(type, text, order) {
-      console.log('type', type)
-      console.log('text', text)
-      this.initItem()
-      this.orderData = order
-      console.log('初始化时this.orderData', this.orderData)
+    handleClickItem(type, order) {
+      this.initItem(order)
       switch (type) {
         case 1:
-          // 取消订单 无关联订单直接取消
-          if (!this.checkHasOtherOrder()) {
-            this.$xToast.success('订单取消成功')
-          } else {
-            // 有关联订单则弹起弹窗
-            this.$refs.cancleOrderModel.showPop = true
-            this.$refs.cancleOrderModel.modalType = 1
-          }
+          // 取消订单 首先判断是否有关联订单
+          this.opType = 'cancelOrder'
+          this.getChildOrders()
           break
         case 2:
-          console.log('2')
           // 签署合同
           this.$router.push({
             path: '/contract/edit',
             query: {
-              orderId: order.id,
-              cusOrderId: order.cusOrderId,
-              fromPage: 'orderList',
+              orderId: this.orderData.id,
+              cusOrderId: this.orderData.cusOrderId,
+              fromPage: this.fromPage,
             },
           })
           break
         case 3:
-          console.log('3')
           // 查看合同
           this.$router.push({
             path: '/contract/edit',
             query: {
-              orderId: order.id,
-              cusOrderId: order.cusOrderId,
-              fromPage: 'orderList',
+              orderId: this.orderData.id,
+              cusOrderId: this.orderData.cusOrderId,
+              fromPage: this.fromPage,
             },
           })
           break
         case 4:
-          // 立即付款
+          // 立即付款 首先判断是否有关联订单
+          this.opType = 'payMoney'
           this.getChildOrders()
-          // if (order.payType) {
-          //   // 服务商品
-          //   if (order.payType === 1) {
-          //     // 全款时直接跳转支付页面
-          //     this.$router.push('/order/pay')
-          //   } else if (order.payType === 2) {
-          //     // 节点付费
-          //     // 弹起节点付款提示弹窗
-          //     this.$refs.payModal.showPop = true
-          //   } else if (order.payType === 3) {
-          //     // 定金尾款
-          //     // 弹起定金尾款付费提示弹窗
-          //     this.$refs.payModal.showPop = true
-          //   } else {
-          //     // 服务完结
-          //     // 全款时直接跳转支付页面
-          //     this.$router.push('/order/pay')
-          //   }
-          //   return
-          // }
-          // // 非服务商品
-          // if (!this.checkHasOtherOrder()) {
-          //   // 立即支付 无关联订单直接支付
-          //   this.$router.push('/order/pay')
-          // } else {
-          //   // 有关联订单则弹起弹窗
-          //   this.$refs.cancleOrderModel.showPop = true
-          //   this.$refs.cancleOrderModel.modalType = 2
-          // }
           break
         case 5:
-          this.startPay('orderList')
-          console.log('支付余款')
+          // 支付余款 首先判断是否有关联订单
+          this.opType = 'payMoney'
+          this.getChildOrders()
           break
         case 6:
-          console.log('确认完成')
+          // 确认完成
+          this.opType = 'confirmComplete'
           this.confirmOrder()
           break
       }

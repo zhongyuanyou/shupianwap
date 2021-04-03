@@ -59,13 +59,9 @@ const checkContractStatus = function (data) {
  * @Description:根据不同的订单状态和支付状态判断显示不同的订单操作按钮和支付按钮
  */
 const isShowCanCelBtn = function (orderData) {
-  if (
-    orderData.cusOrderStatusNo !== ORDERSTATUSCODE[4] &&
-    orderData.orderPayStatusNo === PAYSTATUSCODE[1]
-  ) {
-    // 当且仅当客户订单状态为非已取消并且未支付时展示取消订单按钮
-    return true
-  }
+  // 当且仅当客户订单状态为待付款并且支付状态为未支付时展示取消订单按钮
+  return orderData.cusOrderStatusNo === ORDERSTATUSCODE[1]
+  // && orderData.orderPayStatusNo === PAYSTATUSCODE[1]  暂时修改逻辑放出取消订单按钮
 }
 /*
  * @LastEditors: tang dai bing

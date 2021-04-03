@@ -10,7 +10,7 @@
       >
         <div class="left">
           <p class="goods-name">
-            {{ item.spuName }}
+            {{ item.orderSaleName }}
           </p>
           <p class="goods-skus">
             {{ item.skuExtInfo }}
@@ -88,13 +88,18 @@ export default {
           const shoudPayOrderList = res.list.filter((item) => {
             return item.isNeedPay === 1 || item.isNeedPay === '1'
           })
+          console.log('shoudPayOrderList', shoudPayOrderList)
           // 组装所有应支付订单下的商品
           const allOrderSkuList = []
           for (let i = 0; i < shoudPayOrderList.length; i++) {
-            if (shoudPayOrderList[i].orderSkuList.length) {
-              allOrderSkuList.concat(shoudPayOrderList[i].orderSkuList)
+            const everyOrderSku =
+              shoudPayOrderList[i].orderSkuList ||
+              shoudPayOrderList[i].orderSkueList
+            for (let j = 0; j < everyOrderSku.length; j++) {
+              allOrderSkuList.push(everyOrderSku[j])
             }
           }
+          console.log('allOrderSkuList', allOrderSkuList)
           this.allOrderSkuList = allOrderSkuList
         })
         .catch((err) => {

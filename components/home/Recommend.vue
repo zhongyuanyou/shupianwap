@@ -253,7 +253,7 @@ export default {
 
       // 广告位code
       if (this.params.findType === 1) {
-        params.locationCode = this.tabBtn[index].ext4
+        params.locationCode = this.tabBtn[index].ext1
       }
 
       this.$axios.post(homeApi.findRecomList, params).then((res) => {
