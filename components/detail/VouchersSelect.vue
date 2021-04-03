@@ -13,19 +13,15 @@
       </div>
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
-    <div
-      v-if="serviceTag.length > 0"
-      class="cell"
-      @click="safeguardShow = true"
-    >
+    <div v-if="serviceTag.length > 0" class="cell" @click="safeguardIsShow">
       <div class="cell_left">
         <div class="label">保障</div>
         <div class="content">
           <span
-            v-for="item in serviceTag.slice(0, 3)"
-            :key="item.tagId"
+            v-for="(item, index) in serviceTag.slice(0, 3)"
+            :key="index"
             class="item"
-            >{{ item.tagName }}</span
+            >{{ item.title }}</span
           >
         </div>
       </div>
@@ -44,8 +40,8 @@
         <p class="p2">
           使用以下优惠券后预估价<span>{{ couponPreferentialLine }}元</span>
         </p>
+        <p class="vouchers_box_title">可领取优惠券</p>
         <div class="vouchers_box">
-          <p class="vouchers_box_title">可领取优惠券</p>
           <div class="vouchers_list">
             <div
               v-for="item in coupon"
@@ -96,7 +92,7 @@
       position="bottom"
       :style="{ padding: '25px 20px' }"
     >
-      <sp-safeguard :options="options" success ellipsis></sp-safeguard>
+      <sp-safeguard :options="serviceTag" success ellipsis></sp-safeguard>
     </sp-popup>
   </div>
 </template>
@@ -139,24 +135,6 @@ export default {
       show: false,
       skuShow: false,
       safeguardShow: false,
-      options: [
-        {
-          text: '由顶呱呱作为居间担保，12年专业企服领域，大品牌，值 得信赖',
-          title: '担保交易',
-          icon: 'sign',
-        },
-        {
-          text: '为保障交易双方权益和交易产物安全，交易时需签署买卖交易合同',
-          title: '签署合同',
-          icon: 'sign',
-        },
-        {
-          text:
-            '交易时资金需暂时托管到薯片，待买方确认交易信息完全无误或买方签署合同并确认之后，打款到卖方，全程公平公正',
-          title: '资金保障',
-          icon: 'sign',
-        },
-      ],
       num: 1,
       couponPreferentialLine: 0.0, // 优惠后的金额
     }
@@ -165,10 +143,16 @@ export default {
     serviceTag() {
       const salesGoodsTags = this.$store.state.sellingGoodsDetail
         .sellingGoodsData.salesGoodsTags
-      let serviceTag = []
-      serviceTag = salesGoodsTags.filter(
-        (item) => item.tagType === 'PRO_SERVICE_TAG'
-      )
+      const serviceTag = salesGoodsTags.map((item) => {
+        if (item.tagType === 'PRO_SERVICE_TAG') {
+          return {
+            text: item.description,
+            title: item.tagName,
+            icon: 'sign',
+          }
+        }
+      })
+      console.log(serviceTag)
       return serviceTag
     },
     // 优惠券列表
@@ -180,10 +164,7 @@ export default {
     this.couponPreferential()
   },
   methods: {
-    openSku(type = 1) {
-      this.type = type
-      this.skuShow = true
-    },
+    // 打开优惠券领取弹窗
     couponShow() {
       if (this.vouchers) {
         this.show = true
@@ -221,10 +202,6 @@ export default {
           vouchers1 + `, 满${info2.fullPrice}减${info2.reducePrice}`
       }
     },
-    // 加入购物车
-    addCart() {},
-    // 立即购买
-    nowBuy() {},
     // 领取优惠券
     getCoupons(id, status) {
       if (status === 0) {
@@ -243,12 +220,23 @@ export default {
           })
       }
     },
+    // 打开服务表情
+    safeguardIsShow() {
+      if (this.serviceTag.length > 0) {
+        this.safeguardShow = true
+      } else {
+        this.$xToast.warning('没有更多内容')
+      }
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
 .container {
+  /deep/.sp-popup--round {
+    border-radius: 24px 24px 0px 0px;
+  }
   font-family: PingFang SC;
   font-weight: 400;
   background-color: #ffffff;
@@ -467,6 +455,7 @@ export default {
   }
   .popup_box {
     padding: 0 40px;
+    overflow-y: auto;
     .p1 {
       color: #222222;
       font-size: 28px;
@@ -484,7 +473,6 @@ export default {
     }
     .vouchers_box {
       max-height: 820px;
-      overflow-y: auto;
       padding-bottom: 54px;
       &_title {
         padding-top: 30px;
@@ -501,6 +489,7 @@ export default {
           height: 212px;
           background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
           background-size: 100% 100%;
+          box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
           &_left {
             width: 200px;
             padding-top: 30px;

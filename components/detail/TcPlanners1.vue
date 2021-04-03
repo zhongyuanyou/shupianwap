@@ -69,15 +69,15 @@
         </div>
       </sp-skeleton>
     </div>
-    <p class="planners_sub_title">您的疑问，第一时间为您解答</p>
-    <div class="planners_question">
-      <input
-        type="text"
-        class="planners_question_input"
-        placeholder="请输入您想咨询的问题"
-      />
-      <div class="planners_question_bt">提问</div>
-    </div>
+    <!--    <p class="planners_sub_title">您的疑问，第一时间为您解答</p>-->
+    <!--    <div class="planners_question">-->
+    <!--      <input-->
+    <!--        type="text"-->
+    <!--        class="planners_question_input"-->
+    <!--        placeholder="请输入您想咨询的问题"-->
+    <!--      />-->
+    <!--      <div class="planners_question_bt">提问</div>-->
+    <!--    </div>-->
   </div>
 </template>
 
@@ -194,11 +194,11 @@ export default {
 .container {
   background-color: #fff;
   border-bottom: 24px solid #f8f8f8;
-  padding: 44px 0 40px;
+  padding: 44px 0 0px;
 }
 .planners {
   padding: 0 40px 64px 40px;
-  border-bottom: 1px solid #f4f4f4;
+  /*border-bottom: 1px solid #f4f4f4;*/
   /deep/.sp-skeleton {
     margin-top: 48px;
   }
