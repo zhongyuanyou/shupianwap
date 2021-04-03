@@ -45,7 +45,7 @@
           </div>
           <div class="btn">
             <p>订单详情</p>
-            <p @click="btn(item)">
+            <p @click.stop="btn(item)">
               {{
                 item.contractStatus == 'STRUTS_YWC' ? '查看合同' : '签署合同'
               }}

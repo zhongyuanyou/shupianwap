@@ -97,7 +97,9 @@ export default {
     }
   },
   mounted() {
-    this.getorder()
+    if (this.orderItem.type !== 'ws') {
+      this.getorder()
+    }
   },
   methods: {
     validator(val) {
@@ -161,7 +163,19 @@ export default {
     sumfn() {
       const _this = this
       if (this.partyName && this.userName && this.phone) {
-        _this.applycontart()
+        if (this.orderItem.type === 'ws') {
+          const contaract = {
+            contractFirstName: this.partyName,
+            contractFirstContacts: this.userName,
+            contractFirstPhone: this.phone,
+            contractFirstEmail: this.email,
+            contractFirstAddr: this.address,
+          }
+          this.$cookies.set('contaract', contaract)
+          this.$router.back(-1)
+        } else {
+          _this.applycontart()
+        }
       }
     },
   },

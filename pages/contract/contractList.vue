@@ -19,6 +19,7 @@
         @Refresh="Refresh"
         @load="pagefn"
         @Jump="jump"
+        @godetail="godetail"
       ></List>
     </div>
   </div>
@@ -44,6 +45,14 @@ export default {
   },
   mounted() {},
   methods: {
+    // godetail(item) {
+    //   this.$router.push({
+    //     path: '/detail',
+    //     query: {
+    //       productId: item.id,
+    //     },
+    //   })
+    // },
     jump(val) {
       console.log(val)
       if (val.contractStatus === 'STRUTS_YWC') {

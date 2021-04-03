@@ -11,7 +11,12 @@
         finished-text="没有更多了"
         @load="onLoad"
       >
-        <div v-for="(item, index) in datalist" :key="index" class="list">
+        <div
+          v-for="(item, index) in datalist"
+          :key="index"
+          class="list"
+          @click="godeatil(item)"
+        >
           <div class="left">
             <img :src="item.img" alt="" />
           </div>
@@ -64,6 +69,14 @@ export default {
     // this.getlist()
   },
   methods: {
+    godeatil(item) {
+      this.$router.push({
+        path: '/detail',
+        query: {
+          productId: item.id,
+        },
+      })
+    },
     getlist() {
       console.log(this.searchtext)
       this.formData.searchKey = this.searchtext
