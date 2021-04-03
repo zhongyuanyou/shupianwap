@@ -12,13 +12,12 @@ const coupon = {
       url: CHIPS_WAP_BASE_URL + '/nk/marketingCoupon/v2/find_my_coupon_page',
     })
   },
-  receiveCoupon({ axios }, params) {
+  receiveCoupon(params) {
     // 领取优惠券
     return request({
-      axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/v2/coupon/receive.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/marketingCoupon/v2/receive_coupon',
     })
   },
   useWithdrawal({ axios }, params) {

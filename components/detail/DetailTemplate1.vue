@@ -41,7 +41,7 @@
     </sp-sticky>
     <!--E 导航栏-->
     <!--S banner-->
-    <Banner :images="[]" />
+    <Banner :images="imgFileIdPaths" />
     <!--S banner-->
     <!--S 第一板块-->
     <Title />
@@ -85,8 +85,6 @@ import { mapActions } from 'vuex'
 import Banner from '~/components/detail/Banner'
 import Title from '~/components/detail/Title1'
 import VouchersSelect from '~/components/detail/VouchersSelect'
-import ContainProject from '~/components/detail/ContainProject'
-import ContainService from '~/components/detail/ContainService'
 import ContainContent from '~/components/detail/ContainContent'
 import TcPlanners from '~/components/detail/TcPlanners1'
 import ServiceDetail from '~/components/detail/ServiceDetail'
@@ -97,6 +95,7 @@ import tcBasicData from '~/mock/tcBasicData'
 import { productDetailsApi, recommendApi, userinfoApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import { copyToClipboard } from '~/utils/common'
+import imHandle from '~/mixins/imHandle'
 export default {
   name: 'DetailTemplate',
   components: {
@@ -116,6 +115,7 @@ export default {
     bottomBar,
     MyIcon,
   },
+  mixins: [imHandle],
   props: {
     imJumpQuery: {
       type: Object,
@@ -149,24 +149,22 @@ export default {
     }
   },
   computed: {
-    // imgFileIdPaths() {
-    //   // 获取客户端展示信息
-    //   const clientDetails = this.$store.state.sellingGoodsDetail
-    //     .sellingGoodsData.salesGoodsOperatings.clientDetails
-    //   // 获取商品图片集合
-    //   const imgFileIdPaths = clientDetails.length
-    //     ? clientDetails[0].imgFileIdPaths
-    //     : []
-    //   // 返回图片地址集合
-    //   return imgFileIdPaths
-    // },
+    imgFileIdPaths() {
+      // 获取客户端展示信息
+      const clientDetails = this.$store.state.sellingGoodsDetail
+        .sellingGoodsData.salesGoodsOperatings.clientDetails
+      // 获取商品图片集合
+      const imgFileIdPaths = clientDetails.length
+        ? clientDetails[0].imgFileIdPaths
+        : []
+      // 返回图片地址集合
+      return imgFileIdPaths
+    },
     city() {
       return this.$store.state.city.currentCity
     },
   },
   async mounted() {
-    // this.fieldListFun() // 加载基本信息
-    this.getUserIndo()
     // 假如未获取到站点信息,再获取地理位置
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
@@ -320,9 +318,15 @@ export default {
         this.tcPlannerBooth = plannerRes.data.records[0]
       }
     },
-    // 加入购物车
-    addCart() {
-      console.log('加入购物车')
+    // 购物车
+    async addCart() {
+      // 点击立即购买
+      const isLogin = await this.judgeLoginMixin()
+      if (isLogin) {
+        this.$router.push({
+          path: '/shopCart',
+        })
+      }
     },
     //  分享
     onClickRight() {
@@ -339,28 +343,28 @@ export default {
       // this.showShare = false
     },
     // 获取手机号
-    getUserIndo() {
-      if (this.token) {
-        this.$axios
-          .get(userinfoApi.info, {
-            params: {
-              id: this.userInfo.userId,
-            },
-          })
-          .then((res) => {
-            if (res.code === 200) {
-              this.userInfoData = res.data
-            } else {
-              this.$xToast.show({
-                message: '网络错误,请刷稍后再试',
-                duration: 1000,
-                icon: 'toast_ic_error',
-                forbidClick: true,
-              })
-            }
-          })
-      }
-    },
+    // getUserIndo() {
+    //   if (this.token) {
+    //     this.$axios
+    //       .get(userinfoApi.info, {
+    //         params: {
+    //           id: this.userInfo.userId,
+    //         },
+    //       })
+    //       .then((res) => {
+    //         if (res.code === 200) {
+    //           this.userInfoData = res.data
+    //         } else {
+    //           this.$xToast.show({
+    //             message: '网络错误,请刷稍后再试',
+    //             duration: 1000,
+    //             icon: 'toast_ic_error',
+    //             forbidClick: true,
+    //           })
+    //         }
+    //       })
+    //   }
+    // },
   },
 }
 </script>

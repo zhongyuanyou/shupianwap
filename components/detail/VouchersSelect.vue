@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="cell" @click="show = true">
+    <div class="cell" @click="couponShow">
       <div class="cell_left">
         <div class="label">优惠</div>
         <div class="content">
@@ -13,13 +13,6 @@
       </div>
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
-    <!--    <div class="cell" @click="openSku">-->
-    <!--      <div class="cell_left">-->
-    <!--        <div class="label">选择</div>-->
-    <!--        <div class="content">锦江区，其它，有注册经营地址</div>-->
-    <!--      </div>-->
-    <!--      <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />-->
-    <!--    </div>-->
     <div
       v-if="serviceTag.length > 0"
       class="cell"
@@ -73,7 +66,10 @@
                 <div class="vouchers_date">
                   {{ item.serviceLife }}
                 </div>
-                <div class="vouchers_bt">
+                <div
+                  class="vouchers_bt"
+                  @click="getCoupons(item.id, item.couponStatus)"
+                >
                   {{
                     item.couponStatus == 1
                       ? '已领完'
@@ -86,9 +82,7 @@
             </div>
           </div>
           <div class="vouchers_tips">
-            上述优惠预估仅为系统初步预估，不代表最终价格，请以订单实际价格为准。若有疑惑，请<span
-              >联系客服</span
-            >
+            上述优惠预估仅为系统初步预估，不代表最终价格，请以订单实际价格为准。
           </div>
         </div>
       </div>
@@ -104,71 +98,32 @@
     >
       <sp-safeguard :options="options" success ellipsis></sp-safeguard>
     </sp-popup>
-    <!--    <sp-popup-->
-    <!--      v-model="skuShow"-->
-    <!--      round-->
-    <!--      closeable-->
-    <!--      padding-->
-    <!--      position="bottom"-->
-    <!--      :style="{ padding: '0.4rem 0.4rem' }"-->
-    <!--    >-->
-    <!--      <div class="sku_box">-->
-    <!--        <div class="goods_info">-->
-    <!--          <sp-image-->
-    <!--            width="1.8rem"-->
-    <!--            height="1.8rem"-->
-    <!--            fit="cover"-->
-    <!--            lazy-load-->
-    <!--            src=""-->
-    <!--          />-->
-    <!--          <div class="goods_info_right">-->
-    <!--            <div class="price">895 <span>元</span></div>-->
-    <!--            <div class="code">编号 191015773</div>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--        <div class="attrs_box">-->
-    <!--          <div class="attrs_item">-->
-    <!--            <div class="attrs_item_title">区域</div>-->
-    <!--            <div class="attrs_item_value">锦江区</div>-->
-    <!--          </div>-->
-    <!--          <div class="attrs_item">-->
-    <!--            <div class="attrs_item_title">地址情况</div>-->
-    <!--            <div class="attrs_item_value">有注册地址</div>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--        <div class="buy_num_box">-->
-    <!--          <div class="buy_num_title">购买数量</div>-->
-    <!--          <div class="count_box">-->
-    <!--            <div class="count_reduce" @click="countReduce"></div>-->
-    <!--            <div class="count">{{ num }}</div>-->
-    <!--            <div class="count_add" @click="countAdd"></div>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--        <div class="cart_buy_box">-->
-    <!--          <div-->
-    <!--            v-if="type !== 3"-->
-    <!--            class="bt"-->
-    <!--            :class="{ width100: type === 2 }"-->
-    <!--            @click="addCart"-->
-    <!--          >-->
-    <!--            加入购物车-->
-    <!--          </div>-->
-    <!--          <div-->
-    <!--            v-if="type !== 2"-->
-    <!--            class="bt buy"-->
-    <!--            :class="{ width100: type === 3 }"-->
-    <!--            @click="nowBuy"-->
-    <!--          >-->
-    <!--            立即购买-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </sp-popup>-->
   </div>
 </template>
 
 <script>
 import { Cell, Popup, Safeguard, Image } from '@chipspc/vant-dgg'
+import { coupon } from '@/api'
+function xier(arr) {
+  let interval = parseInt(arr.length / 2) // 分组间隔设置
+  while (interval > 0) {
+    for (let i = 0; i < arr.length; i++) {
+      let n = i
+      while (
+        arr[n].reducePrice <
+          (arr[n - interval] ? arr[n - interval].reducePrice : -1) &&
+        n > 0
+      ) {
+        const temp = arr[n]
+        arr[n] = arr[n - interval]
+        arr[n - interval] = temp
+        n = n - interval
+      }
+    }
+    interval = parseInt(interval / 2)
+  }
+  return arr
+}
 export default {
   name: 'VouchersSelect',
   components: {
@@ -203,6 +158,7 @@ export default {
         },
       ],
       num: 1,
+      couponPreferentialLine: 0.0, // 优惠后的金额
     }
   },
   computed: {
@@ -215,43 +171,78 @@ export default {
       )
       return serviceTag
     },
+    // 优惠券列表
     coupon() {
       return this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList
     },
-    couponPreferentialLine() {
-      const sellingGoodsData = this.$store.state.sellingGoodsDetail
-        .sellingGoodsData
-      const couponList = sellingGoodsData.couponList
-      // 有效优惠券金额
-      const effective = couponList.map((item) => {
-        return item.reducePrice
-      })
-      console.log(effective)
-      //  取最大优惠金额
-      const salesPrice = sellingGoodsData.salesPrice - Math.max(...effective)
-      const salesPriceRes = salesPrice >= 0 ? salesPrice : 0
-      return salesPriceRes.toFixed(2)
-    },
+  },
+  mounted() {
+    this.couponPreferential()
   },
   methods: {
-    // 减少数量
-    countReduce() {
-      if (this.num > 1) {
-        this.num--
-      }
-    },
-    // 增加数量
-    // countAdd() {
-    //   this.num++
-    // },
     openSku(type = 1) {
       this.type = type
       this.skuShow = true
+    },
+    couponShow() {
+      if (this.vouchers) {
+        this.show = true
+      }
+    },
+    // 计算优惠后的价格
+    couponPreferential() {
+      const sellingGoodsData = this.$store.state.sellingGoodsDetail
+        .sellingGoodsData
+      // 找出有效优惠券
+      const couponList = sellingGoodsData.couponList.filter(
+        (item) => item.couponStatus === 0
+      )
+      if (couponList.length < 1) {
+        this.vouchers = null
+      } else {
+        // 根据优惠金额对优惠券排序
+        const sortcouponList = xier(couponList)
+        //  取最大优惠金额
+        const salesPrice =
+          sellingGoodsData.salesPrice -
+          sortcouponList[sortcouponList.length - 1]
+        const salesPriceRes = salesPrice >= 0 ? salesPrice : 0
+        console.log('最多可以优惠：', sortcouponList[sortcouponList.length - 1])
+        this.couponPreferentialLine = salesPriceRes.toFixed(2)
+        //  组装优惠券提示信息
+        const info1 = sortcouponList[sortcouponList.length - 1]
+        const info2 = sortcouponList[sortcouponList.length - 2]
+        const vouchers1 = `满${info1.fullPrice}减${info1.reducePrice}`
+        if (!info2) {
+          this.vouchers = vouchers1
+          return
+        }
+        this.vouchers =
+          vouchers1 + `, 满${info2.fullPrice}减${info2.reducePrice}`
+      }
     },
     // 加入购物车
     addCart() {},
     // 立即购买
     nowBuy() {},
+    // 领取优惠券
+    getCoupons(id, status) {
+      if (status === 0) {
+        const params = {
+          couponId: id,
+        }
+        coupon
+          .receiveCoupon(params)
+          .then((res) => {
+            this.$xToast.success('优惠券领取成功')
+          })
+          .catch((err) => {
+            this.$xToast.warning(
+              err.message ? err.message : '优惠券领取失败,请稍后再试！'
+            )
+          })
+      }
+    },
   },
 }
 </script>

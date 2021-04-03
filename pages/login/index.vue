@@ -207,7 +207,7 @@ export default {
   computed: {},
   methods: {
     ...mapMutations({
-      setUserInfo: 'user/SET_USER',
+      setUser: 'user/SET_USER',
       setImSdk: 'im/SET_IM_SDK',
     }),
     onSubmit() {
@@ -344,7 +344,8 @@ export default {
         this.loading = false
         // 缓存用户信息
         if (data != null) {
-          this.setUserInfo(data)
+          // 存储token
+          this.setUser(data)
         }
         return data
       } catch (error) {
