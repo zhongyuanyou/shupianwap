@@ -358,6 +358,7 @@ export default {
               orderId: this.orderData.id,
               cusOrderId: this.orderData.cusOrderId,
               fromPage: this.fromPage,
+              contractStatus: this.orderData.contractStatus,
             },
           })
           break
@@ -369,6 +370,7 @@ export default {
               orderId: this.orderData.id,
               cusOrderId: this.orderData.cusOrderId,
               fromPage: this.fromPage,
+              contractStatus: this.orderData.contractStatus,
             },
           })
           break

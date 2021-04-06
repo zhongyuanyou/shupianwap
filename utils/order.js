@@ -37,17 +37,15 @@ const PAYTYPECODE = {
 const checkContractStatus = function (data) {
   // 当客户订单状态为已取消时不展示按钮
   if (data.cusOrderStatusNo === ORDERSTATUSCODE[4]) return false
-  if (data.cusOrderStatusNo !== ORDERSTATUSCODE[4]) {
-    // 当订单状态不为已取消时
-    if (
-      (data.contractStatus &&
-        (data.contractStatus === 'STRUTS_QSZ' ||
-          data.contractStatus === 'STRUTS_CG')) ||
-      !data.contractStatus
-    ) {
-      // 当合同状态为草稿或签署中或无合同信息时显示签署合同按钮
-      return 1
-    }
+
+  if (
+    (data.contractStatus &&
+      (data.contractStatus === 'STRUTS_QSZ' ||
+        data.contractStatus === 'STRUTS_CG')) ||
+    !data.contractStatus
+  ) {
+    // 当合同状态为草稿或签署中或无合同信息时显示签署合同按钮
+    return 1
   }
   // 当合同状态为已完成时显示查看合同按钮
   if (data.contractStatus && data.contractStatus === 'STRUTS_YWC') return 2
@@ -70,10 +68,8 @@ const isShowCanCelBtn = function (orderData) {
  * @Description:判断是否显示确认订单按钮 true为显示
  */
 const isShowConfirmBtn = function (orderData) {
-  if (orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED') {
-    // 当订单状态为 资源商品 待确认时显示确认订单按钮
-    return true
-  }
+  return orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'
+  // 当订单状态为 资源商品 待确认时显示确认订单按钮
 }
 /*
  * @LastEditors: tang dai bing
