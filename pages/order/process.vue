@@ -1,26 +1,29 @@
 <template>
   <div class="page">
     <Header title="进行进度" @leftClickFuc="onClickLeft" />
-    <div class="banner">
-      <div class="left-img">
-        <img
-          src="https://sp-img-wlh.oss-cn-beijing.aliyuncs.com/crisps-product-center%3APRO_CLASS_TYPE_TRANSACTION%3A607997667594632518%3Aicon_1611797943000_%E5%85%AC%E5%8F%B8%E4%BA%A4%E6%98%93%E5%A4%B4%E5%9B%BE%E7%89%A9%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%B1%BB.png?x-oss-process=image/resize,m_fill,w_750,h_520,limit_0"
-        />
-      </div>
+    <div v-if="!loading" class="banner">
+      <sp-image class="left-img" :src="skuInfo.skuImages"> </sp-image>
       <div class="right">
         <p class="goods-name">
-          成都市有限公司注册注册服务成都市有限公司注册注册服务
+          {{ skuInfo.orderSaleName }}
         </p>
         <p class="price-area">
-          <span class="goods-price">2020</span>
-          <span class="text">元</span>
-          <span class="goods-num">×1</span>
+          <span class="goods-price">{{ skuInfo.skuExtInfo }}</span>
+          <!-- <span class="text">元</span>
+          <span class="goods-num">×1</span> -->
         </p>
       </div>
     </div>
-    <ProcessList v-if="type === 1" />
-    <div v-else class="batch-list" @click="toNav">
+    <div v-else class="batch-list">
       <div class="title">办理进度</div>
+      <div
+        v-for="(item, index) in batchList"
+        :key="index"
+        class="item"
+        @click="toNav(item)"
+      >
+        <span>第{{ index }}批次</span>
+      </div>
       <div class="item no-border">
         <span>第一批次</span>
         <span>
@@ -59,47 +62,25 @@
 </template>
 
 <script>
-// 办理进度
+// 周期产品办理进度
 import { mapMutations, mapState } from 'vuex'
-import { Button, RadioGroup, Radio, Cell } from '@chipspc/vant-dgg'
+import { Button, RadioGroup, Radio, Cell, Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
-import ProcessList from '@/components/order/process/ProcessList'
+import orderApi from '@/api/order'
 export default {
   components: {
     [Button.name]: Button,
     [RadioGroup.name]: RadioGroup,
     [Radio.name]: Radio,
     [Cell.name]: Cell,
+    [Image.name]: Image,
     Header,
-    ProcessList,
   },
   data() {
     return {
+      loading: false,
+      skuInfo: {},
       orderData: {},
-      time: {}, // 倒计时
-      diff: 0, // 时间差 s
-      typeList: [
-        {
-          code: 'CRISPS_C_ZFFS_ALI',
-          name: '支付宝支付',
-          icon: 'pay_ic_alipay',
-          color: 'rgba(23, 151, 236, 1)',
-        },
-        {
-          code: 'CRISPS_C_ZFFS_WECHAT',
-          name: '微信支付',
-          icon: 'pay_ic_wechat',
-          color: 'rgba(41, 175, 18, 1)',
-        },
-        {
-          code: 'CRISPS_C_ZFFS_CARD',
-          name: '银行卡支付',
-          icon: 'pay_ic_bank',
-          color: 'rgba(255, 133, 60, 1)',
-        },
-      ],
-      payPlatform: 'CRISPS_C_ZFFS_ALI',
-      payName: '支付宝支付',
     }
   },
   computed: {
@@ -112,15 +93,57 @@ export default {
       return 44
     },
   },
-  created() {
-    this.type = Math.ceil(Math.random() * 2)
+  mounted() {
+    console.log('this.$route', this.$route)
+    this.orderData.orderId = this.$route.query.orderId
+    this.orderData.cusOrderId = this.$route.query.cusOrderId
+    this.orderData.skuId = this.$route.query.skuId
+    this.getBatchList()
+    // this.getDetail()
   },
   methods: {
     onClickLeft() {
       this.$router.back(-1)
     },
-    toNav() {
-      this.$router.push('/order/processBatch')
+    toNav(item) {
+      this.$router.push({
+        path: '/order/processBatch',
+        query: {
+          orderId: this.orderData.orderId,
+          serverId: item.id,
+          step: item.index++,
+        },
+      })
+    },
+    getBatchList() {
+      orderApi
+        .getProcessList(
+          { axios: this.$axios },
+          { orderDetailsId: this.orderData.orderId }
+        )
+        .then((res) => {
+          console.log('周期信息', res)
+          this.batchList = res.data.records || res.data
+        })
+    },
+    getDetail() {
+      orderApi
+        .getDetailByOrderId(
+          { axios: this.axios },
+          { id: this.orderData.orderId, cusOrderId: this.orderData.cusOrderId }
+        )
+        .then((res) => {
+          // const orderData = res
+          console.log('res', res)
+          this.skuInfo = res.data.orderSkuList.filter((item) => {
+            return item.skuId === this.orderData.skuId
+          })[0]
+          console.log('this.skuInfo', this.skuInfo)
+        })
+        .catch((err) => {
+          this.$xToast.show(err.message)
+          this.$router.back(-1)
+        })
     },
   },
 }

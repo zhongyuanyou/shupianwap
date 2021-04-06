@@ -1,11 +1,16 @@
 <template>
   <div class="pro-list">
-    <div class="item no-border">
+    <div
+      v-for="(item, index) in batchData"
+      :key="index"
+      class="item"
+      :class="index === 0 ? 'no-border' : ''"
+    >
       <div class="node-name">
-        <span>资料录入</span>
-        <span class="status">已完成</span>
+        <span>{{ item.serviceName }}</span>
+        <span class="status">{{ item.taskStatus }}</span>
       </div>
-      <p>办理人员：赵四</p>
+      <p>办理人员：{{ item.handlerName }}</p>
     </div>
     <div class="item">
       <div class="node-name">
@@ -25,7 +30,16 @@
 </template>
 
 <script>
-export default {}
+export default {
+  props: {
+    batchData: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
+  },
+}
 </script>
 
 <style lang="less" scoped>

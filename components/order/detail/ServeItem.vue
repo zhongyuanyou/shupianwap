@@ -138,12 +138,6 @@ export default {
     },
     // 判断是否是周期产品
     checkProductType(item) {
-      console.log('item.skuDetails', item.skuDetails)
-      console.log('item.skuDetailInfo', item.skuDetailInfo)
-      console.log(
-        'item.skuDetails.skuDetailInfo',
-        item.skuDetails.skuDetailInfo
-      )
       const skuDetailInfo = JSON.parse(item.skuDetailInfo)
       const productStyle = skuDetailInfo.sku.refConfig.productStyle
       if (productStyle === 'PRO_CYCLE_PRODUCT') {
@@ -159,7 +153,7 @@ export default {
       } else {
         // 普通产品
         this.$router.push({
-          path: '/order/processBatch',
+          path: '/order/nomalProces',
           query: {
             orderId: item.orderId,
             cusOrderId: item.cusOrderId,

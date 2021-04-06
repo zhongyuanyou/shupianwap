@@ -314,7 +314,6 @@ export default {
           { id: this.orderId, cusOrderId: this.cusOrderId }
         )
         .then((res) => {
-          console.log('res')
           const cusDetail = res.data.orderSplitAndCusVo
           this.orderData = Object.assign(cusDetail, res.data)
           this.hasData = true
