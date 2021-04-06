@@ -64,15 +64,11 @@
 <script>
 // 周期产品办理进度
 import { mapMutations, mapState } from 'vuex'
-import { Button, RadioGroup, Radio, Cell, Image } from '@chipspc/vant-dgg'
+import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import orderApi from '@/api/order'
 export default {
   components: {
-    [Button.name]: Button,
-    [RadioGroup.name]: RadioGroup,
-    [Radio.name]: Radio,
-    [Cell.name]: Cell,
     [Image.name]: Image,
     Header,
   },
@@ -94,12 +90,11 @@ export default {
     },
   },
   mounted() {
-    console.log('this.$route', this.$route)
     this.orderData.orderId = this.$route.query.orderId
     this.orderData.cusOrderId = this.$route.query.cusOrderId
     this.orderData.skuId = this.$route.query.skuId
     this.getBatchList()
-    // this.getDetail()
+    this.getDetail()
   },
   methods: {
     onClickLeft() {
@@ -122,7 +117,7 @@ export default {
           { orderDetailsId: this.orderData.orderId }
         )
         .then((res) => {
-          console.log('周期信息', res)
+          console.log('周期批次列表', res)
           this.batchList = res.data.records || res.data
         })
     },

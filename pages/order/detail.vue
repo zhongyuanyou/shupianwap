@@ -5,6 +5,7 @@
       :cus-order-status-type="cusOrderStatusType"
       :cus-order-id="cusOrderId"
       :cus-order-cancel-reason="canCelReasonName"
+      @getDetail="getDetail"
     />
     <div class="order-area">
       <!-- 服务 -->

@@ -21,16 +21,12 @@
 <script>
 // 非周期产品办理进度
 import { mapMutations, mapState } from 'vuex'
-import { Button, RadioGroup, Radio, Cell, Image } from '@chipspc/vant-dgg'
+import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import ProcessList from '@/components/order/process/ProcessList'
 import orderApi from '@/api/order'
 export default {
   components: {
-    [Button.name]: Button,
-    [RadioGroup.name]: RadioGroup,
-    [Radio.name]: Radio,
-    [Cell.name]: Cell,
     [Image.name]: Image,
     Header,
     ProcessList,
@@ -40,7 +36,7 @@ export default {
       loading: false,
       skuInfo: {},
       orderData: {},
-      batchData: {},
+      batchData: [],
     }
   },
   computed: {
@@ -77,8 +73,10 @@ export default {
           }
         )
         .then((res) => {
-          console.log('非周期产品进度', res)
-          this.batchData = res.data
+          console.log('非周期产品办理进度', res)
+          if (res.data && res.data.records)
+            this.batchData = res.data || res.data.records
+          else this.batchData = []
         })
     },
     getDetail() {

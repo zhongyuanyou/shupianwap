@@ -8,16 +8,11 @@
 <script>
 // 办理进度批次信息
 import { mapMutations, mapState } from 'vuex'
-import { Button, RadioGroup, Radio, Cell } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import ProcessList from '@/components/order/process/ProcessList'
 import orderApi from '@/api/order'
 export default {
   components: {
-    [Button.name]: Button,
-    [RadioGroup.name]: RadioGroup,
-    [Radio.name]: Radio,
-    [Cell.name]: Cell,
     Header,
     ProcessList,
   },
@@ -53,8 +48,10 @@ export default {
           }
         )
         .then((res) => {
-          console.log('非周期产品进度', res)
-          this.batchData = res.data
+          console.log('周期产品办理进度', res)
+          if (res.data && res.data.records)
+            this.batchData = res.data || res.data.records
+          else this.batchData = []
         })
     },
   },

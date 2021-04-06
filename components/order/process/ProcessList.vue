@@ -33,7 +33,7 @@
 export default {
   props: {
     batchData: {
-      type: Object,
+      type: Array,
       default() {
         return {}
       },
