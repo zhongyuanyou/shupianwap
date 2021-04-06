@@ -338,11 +338,17 @@ export default {
       }
     },
     // 确认完成
-    confirmOrder() {
-      const arr1 = this.orderData.orderSkuEsList || this.orderData.orderSkuList
-      const orderSkuIds = arr1.map((item) => {
-        return item.id
-      })
+    confirmOrder(orderSkuIds) {
+      if (this.fromPage === 'orderList') {
+        const arr1 =
+          this.orderData.orderSkuEsList || this.orderData.orderSkuList
+        orderSkuIds = arr1.map((item) => {
+          return item.id
+        })
+      } else {
+        // 订单详情页里的确认完成为单个服务商品的商品id
+        orderSkuIds = new Array(1).fill(orderSkuIds)
+      }
       const params = {
         orderId: this.orderData.orderId,
         cusOrderId: this.orderData.cusOrderId,

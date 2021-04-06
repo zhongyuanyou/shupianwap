@@ -10,7 +10,13 @@
         :key="index"
         class="item"
       >
-        <ServeItem :item="item" @showSkuModal="showSkuModal" />
+        <ServeItem
+          :item="item"
+          :cus-order-status-type="cusOrderStatusType"
+          :cus-order-pay-status-no="cusOrderPayStatusNo"
+          @showSkuModal="showSkuModal"
+          @confirmOrder="confirmOrder"
+        />
       </div>
     </div>
     <div v-if="orderData.orderSkuList.length > 3" class="btn-p">
@@ -52,6 +58,16 @@ export default {
         return {}
       },
     },
+    // 订单状态
+    cusOrderStatusType: {
+      type: Number,
+      default: 2,
+    },
+    // 订单支付状态
+    cusOrderPayStatusNo: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -77,6 +93,9 @@ export default {
     showSkuModal(obj) {
       this.$refs.skuModal.showModal = true
       this.selectProduct = obj
+    },
+    confirmOrder(id) {
+      this.$emit('confirmOrder', id)
     },
   },
 }

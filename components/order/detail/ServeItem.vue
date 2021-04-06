@@ -29,11 +29,24 @@
       <div class="item-btn-area">
         <div class="inner">
           <!-- <sp-button @click="handleClickBtn(1)">查看底单</sp-button> -->
-          <sp-button @click="handleClickBtn(2, item)">办理进度</sp-button>
           <sp-button
-            v-if="isShowConfirmBtn(item)"
+            v-if="
+              item.skuDetails.skuStatusNo !==
+              'ORDER_ORDER_SERVER_STATUS_UN_PAID'
+            "
+            @click="handleClickBtn(2, item)"
+            >办理进度</sp-button
+          >
+          <!-- 服务产品确认完成显示条件 1产品状态为已处理 2支付状态为完成支付  3用户未点确认-->
+          <sp-button
+            v-if="
+              item.skuDetails.skuStatusNo ===
+                'ORDER_ORDER_SERVER_STATUS_HANDLED' &&
+              cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID' &&
+              item.userConfirm == 0
+            "
             type="default"
-            @click="handleClickBtn(3, '确认完成')"
+            @click="handleClickBtn(3, item)"
             >确认完成</sp-button
           >
         </div>
@@ -98,6 +111,16 @@ export default {
         return {}
       },
     },
+    // 订单状态
+    cusOrderStatusType: {
+      type: Number,
+      default: 2,
+    },
+    // 订单支付状态
+    cusOrderPayStatusNo: {
+      type: String,
+      default: '',
+    },
   },
   methods: {
     handleClickBtn(type, item) {
@@ -105,22 +128,44 @@ export default {
       switch (type) {
         // 办理进度
         case 2:
-          this.$router.push({
-            path: '/order/process',
-            query: {
-              orderId: item.orderId,
-              cusOrderId: item.cusOrderId,
-              skuId: item.skuId,
-            },
-          })
-          this.$emit('confirmOrder')
+          this.checkProductType(item)
           break
         case 3:
           // 确认完成
-          this.$emit('confirmOrder')
+          this.$emit('confirmOrder', item.skuId)
           break
-        default:
-          console.log('type', type)
+      }
+    },
+    // 判断是否是周期产品
+    checkProductType(item) {
+      console.log('item.skuDetails', item.skuDetails)
+      console.log('item.skuDetailInfo', item.skuDetailInfo)
+      console.log(
+        'item.skuDetails.skuDetailInfo',
+        item.skuDetails.skuDetailInfo
+      )
+      const skuDetailInfo = JSON.parse(item.skuDetailInfo)
+      const productStyle = skuDetailInfo.sku.refConfig.productStyle
+      if (productStyle === 'PRO_CYCLE_PRODUCT') {
+        // 周期产品
+        this.$router.push({
+          path: '/order/process',
+          query: {
+            orderId: item.orderId,
+            cusOrderId: item.cusOrderId,
+            skuId: item.skuId,
+          },
+        })
+      } else {
+        // 普通产品
+        this.$router.push({
+          path: '/order/processBatch',
+          query: {
+            orderId: item.orderId,
+            cusOrderId: item.cusOrderId,
+            skuId: item.skuId,
+          },
+        })
       }
     },
     // 解析属性信息
@@ -176,7 +221,7 @@ export default {
     font-weight: 400;
     color: #999999;
     margin: 10px 0 10px 0;
-    height: 100px;
+    height: auto;
     display: flex !important;
     .sku-l {
       flex: 1;

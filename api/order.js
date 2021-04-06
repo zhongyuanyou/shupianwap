@@ -109,5 +109,23 @@ const category = {
       url: CHIPS_WAP_BASE_URL + '/yk/order/v2/add_order.do',
     })
   },
+  // 查询周期产品进度批次列表
+  getProcessList({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/batch_info.do',
+    })
+  },
+  // 查询进度信息
+  getProcessInfo({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/batch_process.do',
+    })
+  },
 }
 export default category
