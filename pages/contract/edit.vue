@@ -60,7 +60,7 @@
       </div>
     </div>
     <div class="btn">
-      <div class="box" @click="sumfn()">立即申请</div>
+      <div class="box" @click="sumfn()">立即签署</div>
     </div>
   </div>
 </template>
@@ -120,9 +120,24 @@ export default {
         .then((res) => {
           this.orderData = res.data
           if (this.orderData.contractVo2s.length > 0) {
-            this.partyName = this.orderData.contractVo2s[0].contractFirstName
-            this.userName = this.orderData.contractVo2s[0].contractFirstContacts
-            this.phone = this.orderData.contractVo2s[0].contractFirstPhone
+            if (this.orderItem.contractStatus === 'STRUTS_CG') {
+              this.$router.push({
+                path: '/contract/preview',
+                query: {
+                  contractUrl: this.orderData.contractVo2s[0].contractUrl,
+                  contractId: this.orderData.contractVo2s[0].contractId,
+                  contractNo: this.orderData.contractVo2s[0].contractNo,
+                  signerName: this.orderData.contractVo2s[0].contractFirstName,
+                  contactWay: this.orderData.contractVo2s[0].contractFirstPhone,
+                  orderItem: this.orderItem.orderItem.orderItem,
+                  type: 'qs',
+                },
+              })
+            } else {
+              this.partyName = this.orderData.contractVo2s[0].contractFirstName
+              this.userName = this.orderData.contractVo2s[0].contractFirstContacts
+              this.phone = this.orderData.contractVo2s[0].contractFirstPhone
+            }
           }
         })
         .catch((err) => {
@@ -152,6 +167,7 @@ export default {
               contractNo: res.contractNo,
               signerName: this.userName,
               contactWay: this.phone,
+              type: 'qs',
             },
           })
         })
