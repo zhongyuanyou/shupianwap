@@ -97,7 +97,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: 'http://172.16.133.40:7001/service/yk/order/v2/add_order.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
+      url: 'http://127.0.0.1:7001/service/yk/order/v2/add_order.do', // CHIPS_WAP_BASE_URL2 + '/yk/order/v2/add_order.do',
     })
   },
   // 查询订单详情
