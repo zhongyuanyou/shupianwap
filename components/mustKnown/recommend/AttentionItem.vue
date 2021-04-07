@@ -38,7 +38,7 @@
             ></my-icon
             >赞同</span
           >
-          <span class="comment">
+          <span class="comment" @click="showComment">
             <my-icon
               name="pinglun"
               size="0.36rem"
@@ -50,17 +50,24 @@
           </span>
         </div>
       </div>
+      <comment-list
+        v-model="commentShow"
+        :article-id="1"
+        @release="release"
+      ></comment-list>
     </sp-cell>
   </sp-list>
 </template>
 <script>
 import { Cell, List } from '@chipspc/vant-dgg'
+import CommentList from '@/components/mustKnown/CommentList'
 
 export default {
   name: 'AttentionItem',
   components: {
     [Cell.name]: Cell,
     [List.name]: List,
+    CommentList,
   },
 
   props: {
@@ -73,6 +80,7 @@ export default {
   },
   data() {
     return {
+      commentShow: false,
       loading: true,
       finished: false,
       infoList: [
@@ -94,7 +102,15 @@ export default {
       ],
     }
   },
-  methods: {},
+  methods: {
+    release() {
+      console.log('点击了发布')
+    },
+    showComment() {
+      console.log('点击了评论')
+      this.commentShow = true
+    },
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -149,27 +165,12 @@ export default {
         line-height: 24px;
       }
     }
-    // .userName {
-    //   height: 26px;
-    //   font-size: 26px;
-    //   font-family: PingFangSC-Regular, PingFang SC;
-    //   font-weight: 400;
-    //   color: #222222;
-    //   line-height: 26px;
-    // }
   }
   .item_content {
     display: flex;
     justify-content: space-between;
     align-items: center;
     .content {
-      // font-size: 30px;
-      // font-family: PingFangSC-Regular, PingFang SC;
-      // font-weight: 400;
-      // color: #555555;
-      // line-height: 54px;
-      // padding: 20px 0;
-      // margin-right: 0.32rem;
       height: 126px;
       font-size: 30px;
       font-family: PingFangSC-Regular, PingFang SC;

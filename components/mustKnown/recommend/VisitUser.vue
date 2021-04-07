@@ -1,6 +1,5 @@
 <template>
   <div class="UserList">
-    <div class="type">最常访问</div>
     <div class="items">
       <ul class="tabs-box-items">
         <li class="user">
@@ -27,18 +26,18 @@
           <div class="Image"><img src="" alt="" /></div>
           <div class="name">郑远</div>
         </li>
-        <li class="attentionMore">
-          <div class="more_icon">
-            <my-icon
-              name="shop_ic_add"
-              size="0.32rem"
-              color="#1A1A1A"
-              class="my_icon"
-            ></my-icon>
-          </div>
-          <div class="more">查看更多</div>
-        </li>
       </ul>
+      <div class="attentionMore" @click="attentionMore">
+        <div class="more_icon">
+          <my-icon
+            name="tianjia"
+            size="0.32rem"
+            color="#555555"
+            class="my_icon"
+          ></my-icon>
+        </div>
+        <div class="more">查看更多</div>
+      </div>
     </div>
   </div>
 </template>
@@ -69,12 +68,14 @@ export default {
       console.log('index', index)
       this.nowIndex = index
     },
+    attentionMore() {
+      this.$router.push({ path: 'known/attention/attentionMore' })
+    },
   },
 }
 </script>
 <style lang="less" scoped>
 .UserList {
-  height: 248px;
   background: #f5f5f5;
   padding: 0 32px;
   .type {
@@ -88,7 +89,12 @@ export default {
     align-items: center;
   }
   .items {
+    display: flex;
+    align-items: center;
     ul {
+      height: 216px;
+      width: 540px;
+      align-items: center;
       display: flex;
       justify-content: space-between;
       overflow: auto;
@@ -121,27 +127,28 @@ export default {
           margin-top: 14px;
         }
       }
-      .attentionMore {
-        text-align: center;
-        .more_icon {
-          display: block;
-          width: 100px;
-          height: 100px;
-          border: 2px solid #dddddd;
-          border-radius: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .more {
-          height: 22px;
-          font-size: 22px;
-          font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
-          color: #555555;
-          line-height: 22px;
-          margin-top: 14px;
-        }
+    }
+    .attentionMore {
+      text-align: center;
+      margin-left: 46px;
+      .more_icon {
+        display: block;
+        width: 100px;
+        height: 100px;
+        border: 2px solid #dddddd;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .more {
+        height: 22px;
+        font-size: 22px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #555555;
+        line-height: 22px;
+        margin-top: 14px;
       }
     }
   }

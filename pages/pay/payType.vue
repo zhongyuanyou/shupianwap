@@ -2,7 +2,9 @@
   <div class="pay-page">
     <Header title="选择支付方式" />
     <div class="banner">
-      <p class="total-money">{{ responseData.enableTotalMoney }}元</p>
+      <p class="total-money">
+        {{ responseData.enableTotalMoney / 100 || 0 }}元
+      </p>
       <p v-if="time && time.hour" class="time">
         剩余支付时间 ：<span>{{ time.hour }}</span> ：<span>{{
           time.min
@@ -38,11 +40,20 @@
         </sp-cell>
       </div>
     </sp-radio-group>
+    <Checkbox v-model="radio">
+      <template>
+        <p class="tit">
+          我已阅读过并知晓<span @click="enterAgreement"
+            >《薯片平台订单协议》</span
+          >
+        </p>
+      </template>
+    </Checkbox>
     <div class="page-bottom">
       <sp-button size="large" @click="startPay">
         <span class="btn-item"> {{ payName || '支付宝支付' }}：</span>
         <span class="btn-item money">
-          {{ responseData.enableTotalMoney }}
+          {{ responseData.enableTotalMoney / 100 }}
         </span>
         <span class="btn-item"> 元</span>
       </sp-button>
@@ -51,9 +62,9 @@
 </template>
 
 <script>
-import { Button, RadioGroup, Radio, Cell } from '@chipspc/vant-dgg'
+import { Button, RadioGroup, Radio, Cell, Checkbox } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
-import { pay } from '@/api'
+import { pay, auth } from '@/api'
 // 支付倒计时定时器
 let timer
 export default {
@@ -63,14 +74,26 @@ export default {
     [Radio.name]: Radio,
     [Cell.name]: Cell,
     Header,
+    Checkbox,
   },
   data() {
     return {
+      agreementData: {}, // 协议数据
       responseData: {},
+      radio: '',
       formData: {
         payCusId: '',
         batchIds: [],
       }, // 请求数据
+      getPayParamsFormData: {
+        cusOrderId: '',
+        payPlatform: 'CRISPS_C_ZFFS_ALI',
+        payTerminal: 'COMDIC_TERMINAL_WAP', // 支付终端 当前为wap
+        sourcePlatform: 'COMDIC_PLATFORM_CRISPS', // 操作系统来源
+        // userId: this.$cookies.get('userId'), // 用户ID
+        // userName: this.$cookies.get('userName'), // 用户姓名
+        orderAgreementIds: '',
+      },
       orderData: {},
       time: {}, // 倒计时
       diff: 0, // 时间差 s
@@ -102,18 +125,56 @@ export default {
     if (timer) clearInterval(timer)
   },
   mounted() {
+    // 获取协议
+    this.getProtocol('protocol100008')
+
     // 如果没有cusOrderId，batchIds 回退
     if (this.$route.query.cusOrderId) {
       this.formData.cusOrderId = this.$route.query.cusOrderId
       this.formData.batchIds = this.$route.query.batchIds
+      this.getPayParamsFormData.cusOrderId = this.$route.query.cusOrderId
       this.enablePayMoney()
     } else {
       this.goBack()
     }
-
-    this.countDown(new Date().getTime() + 60 * 60 * 24 * 1000)
   },
   methods: {
+    // 进入协议页面
+    enterAgreement() {
+      console.log('this.agreementData', this.agreementData)
+      this.$router.push({
+        name: 'login-protocol',
+        query: {
+          categoryCode: 'protocol100008',
+          hideHeader: false,
+        },
+      })
+    },
+    // 获取支付协议
+    async getProtocol(categoryCode) {
+      if (!categoryCode) {
+        this.$xToast.warn('请传入需要获取的协议!')
+        return
+      }
+      const params = {
+        categoryCode,
+        includeField: 'content,title',
+      }
+      try {
+        this.loading = true
+        const data = await auth.protocol(params)
+        console.log('data:', data)
+        // this.agreementData = data.rows || {}
+        const { rows = [] } = data || {}
+        this.agreementData = rows[0] || {}
+
+        this.loading = false
+        return rows[0] || {}
+      } catch (error) {
+        this.$xToast.error(error.message || '请求失败')
+        return Promise.reject(error)
+      }
+    },
     // 回退
     goBack() {
       this.$router.go(-1)
@@ -124,43 +185,84 @@ export default {
       const nowTimeStamp = new Date().getTime()
       // 计算时间差 秒
       this.diff = (endTimeStamp - nowTimeStamp) / 1000
-      timer = setInterval(() => {
-        let hour = Math.floor(this.diff / 3600)
-        let min = Math.floor((this.diff - hour * 3600) / 60)
-        let sec = Math.floor(this.diff % 60)
-        if (hour < 10) hour = '0' + hour
-        if (min < 10) min = '0' + min
-        if (sec < 10) sec = '0' + sec
+      let hour = 0
+      let min = 0
+      let sec = 0
+      if (this.diff < 0) {
         that.time = {
-          hour,
-          min,
-          sec,
+          hour: '0' + hour,
+          min: '0' + min,
+          sec: '0' + sec,
         }
-        that.diff--
-      }, 1000)
+      } else {
+        timer = setInterval(() => {
+          hour = Math.floor(this.diff / 3600)
+          min = Math.floor((this.diff - hour * 3600) / 60)
+          sec = Math.floor(this.diff % 60)
+          if (hour < 10) hour = '0' + hour
+          if (min < 10) min = '0' + min
+          if (sec < 10) sec = '0' + sec
+          that.time = {
+            hour,
+            min,
+            sec,
+          }
+          that.diff--
+        }, 1000)
+      }
+
       // 每执行一次定时器就减少一秒
     },
     switchPayType(item) {
       this.payName = item.name
-      this.payPlatform = item.code
+      this.getPayParamsFormData.payPlatform = item.code
     },
     startPay() {
-      this.$router.replace('/pay/payResult')
+      // this.$router.replace('/pay/payResult')
+      this.getPayParams()
     },
     // 查询订单应付金额
     enablePayMoney() {
       pay
-        .enablePayMoney({ axios: this.$axios }, this.formData)
+        .enablePayMoney(this.formData)
         .then((result) => {
-          // console.log('result的值', result)
-          this.responseData = result.data.data
-          console.log('this.responseData的值', this.responseData)
+          console.log('result的值', result)
+          this.responseData = result
+          this.countDown(this.responseData.countDownTimeLong) // 倒计时
         })
         .catch((e) => {
           if (e.code !== 200) {
             console.log(e)
           }
         })
+    },
+    // 客户单付款
+    getPayParams() {
+      if (!this.radio) {
+        this.$xToast.show({
+          message: '请先阅读薯片平台订单协议',
+          duration: 1000,
+          forbidClick: true,
+        })
+      } else {
+        this.getPayParamsFormData.orderAgreementIds = this.agreementData.id
+        pay
+          .getPayParams(this.getPayParamsFormData)
+          .then((result) => {
+            this.responseData = result
+            console.log(this.responseData.payParam)
+            if (this.responseData.code === '0') {
+              const payUrl = this.responseData.payParam
+              window.location.href = payUrl
+            } else {
+            }
+          })
+          .catch((e) => {
+            if (e.code !== 200) {
+              console.log(e)
+            }
+          })
+      }
     },
   },
 }
@@ -170,6 +272,20 @@ export default {
 .pay-page {
   background: #f4f4f4;
   min-height: 100vh;
+  .sp-checkbox {
+    padding: 0 20px;
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .tit {
+    font-size: 28px;
+    font-weight: 400;
+    color: #222222;
+    > span {
+      color: #4974f5;
+    }
+  }
   .banner {
     height: 300px;
     font-size: 24px;

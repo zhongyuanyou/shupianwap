@@ -19,13 +19,18 @@
       <span v-else-if="cusOrderStatusType == 4" class="text"> 已取消 </span>
     </p>
     <div v-if="cusOrderStatusType == 1" class="msg">
-      请在24小时内支付，超时订单将自动关闭<br />
-      <p class="time">
-        <span>{{ time.hour }}</span>
-        时<span>{{ time.min }}</span
-        >分<span>{{ time.sec }}</span
-        >秒后自动关闭
-      </p>
+      <section v-if="time.hour > 0">
+        请在24小时内支付，超时订单将自动关闭<br />
+        <p class="time">
+          <span>{{ time.hour }}</span>
+          时<span>{{ time.min }}</span
+          >分<span>{{ time.sec }}</span
+          >秒后自动关闭
+        </p>
+      </section>
+      <section v-else>
+        <p>订单支付已超时,请重新下单</p>
+      </section>
     </div>
     <p v-else-if="cusOrderStatusType == 2" class="msg">
       您的订单正在办理中<br />
@@ -81,7 +86,7 @@ export default {
     }
   },
   beforeDestroy() {
-    clearInterval(timer)
+    if (timer) clearInterval(timer)
   },
   methods: {
     onLeftClick() {
@@ -98,6 +103,10 @@ export default {
         let hour = Math.floor(this.diff / 3600)
         let min = Math.floor((this.diff - hour * 3600) / 60)
         let sec = Math.floor(this.diff % 60)
+        if (hour === 0 && min === 0 && sec === 0) {
+          this.$emit('getDetail')
+          clearInterval(timer)
+        }
         if (hour < 10) hour = '0' + hour
         if (min < 10) min = '0' + min
         if (sec < 10) sec = '0' + sec

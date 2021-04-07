@@ -32,9 +32,9 @@
           </div>
         </div>
         <my-icon
-          name="guanbi_mian"
+          name="fenlei"
           size="0.32rem"
-          color="#F5F5F5"
+          color="#1A1A1A"
           class="my_icon"
           @click.native="openPop"
         ></my-icon>
@@ -49,8 +49,20 @@
         <AttentionItem v-if="attentionStatus" />
         <NotAttention v-if="showNotAttention" />
       </section>
-      <section v-else-if="tabIndex === 2"><ListItem /></section>
+      <section v-else-if="tabIndex === 2">
+        <ListItem />
+      </section>
       <section v-else-if="tabIndex === 3">
+        <div class="container_news_see">
+          <div class="news" @click="$router.push('/known/newspaper')">
+            <div class="news_num">25</div>
+            <div class="news_span">日报精选</div>
+          </div>
+          <div class="see" @click="$router.push('/known/mustSee')">
+            <div class="see_like"></div>
+            <div class="see_span">进站必看</div>
+          </div>
+        </div>
         <ItemCard />
       </section>
     </div>
@@ -187,10 +199,8 @@ import VisitUser from '@/components/mustKnown/recommend/VisitUser'
 import ListItem from '@/components/mustKnown/recommend/ListItem'
 import ItemCard from '@/components/mustKnown/recommend/ItemCard'
 import Search from '@/components/mustKnown/recommend/search/Search'
-// import Tabs from '@/components/mustKnown/recommend/tabs'
 import Bottombar from '@/components/common/nav/Bottombar'
-// import { domainUrl } from '~/config/index'
-// import { foundApi } from '@/api'
+
 export default {
   name: 'Index',
   components: {
@@ -280,7 +290,6 @@ export default {
     },
     toggleTabs(index) {
       console.log('index', index)
-      // this.tabIndex = index
       this.tabIndex = index
     },
     OpenPop(event) {
@@ -423,6 +432,74 @@ export default {
     }
   }
   .container_body {
+  }
+  .container_news_see {
+    height: 136px;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    margin-bottom: 24px;
+    .news {
+      width: 329px;
+      height: 88px;
+      background: #dbe4fd;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .news_num {
+        width: 48px;
+        height: 48px;
+        background: #ffffff;
+        border-radius: 50%;
+        font-size: 22px;
+        font-family: SourceHanSansCN-Medium, SourceHanSansCN;
+        font-weight: 500;
+        color: #133aa3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .news_span {
+        height: 28px;
+        font-size: 28px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #133aa3;
+        line-height: 28px;
+        margin-left: 12px;
+      }
+    }
+    .see {
+      width: 329px;
+      height: 88px;
+      background: #d8cffa;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .see_like {
+        width: 48px;
+        height: 48px;
+        background: #ffffff;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .see_span {
+        height: 28px;
+        font-size: 28px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #564499;
+        line-height: 28px;
+        margin-left: 12px;
+      }
+    }
   }
   .popup {
     height: 1012px;

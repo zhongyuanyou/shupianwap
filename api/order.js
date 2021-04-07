@@ -1,8 +1,8 @@
 'use strict'
 import { request } from '@/utils/request'
 // import { CHIPS_WAP_BASE_URL } from '@/config/constant'
-import { CHIPS_APP_BASE_URL } from '@/config/constant'
-const CHIPS_WAP_BASE_URL = 'http://127.0.0.1:7001/service'
+import { CHIPS_APP_BASE_URL, CHIPS_WAP_BASE_URL } from '@/config/constant'
+// const CHIPS_WAP_BASE_URL = 'http://127.0.0.1:7001/service'
 // const CHIPS_APP_BASE_URL =
 //   'https://dspmicrouag.shupian.cn/crisps-c-middle-service-api'
 const category = {
@@ -109,22 +109,31 @@ const category = {
       url: CHIPS_WAP_BASE_URL + '/yk/order/v2/add_order.do',
     })
   },
-  // 查询周期产品进度批次列表
+  // 查询周期产品批次进度列表(周期产品)
   getProcessList({ axios }, params) {
     return request({
       axios,
       params,
-      method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/batch_info.do',
+      method: 'get',
+      url: CHIPS_APP_BASE_URL + 'yk/order/v2/find_service_by_details_id.do',
     })
   },
-  // 查询进度信息
+  // 查询进度信息(周期产品)
+  getProcessInfoBatch({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'get',
+      url: CHIPS_APP_BASE_URL + '/yk/order/v2/find_task_by_server.do',
+    })
+  },
+  // 查询进度信息(非周期产品)
   getProcessInfo({ axios }, params) {
     return request({
       axios,
       params,
-      method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/batch_process.do',
+      method: 'get',
+      url: CHIPS_APP_BASE_URL + '/yk/order/v2/get_order_track_list.do',
     })
   },
   getCouponList({ axios }, params) {

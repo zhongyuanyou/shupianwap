@@ -5,6 +5,7 @@
       :cus-order-status-type="cusOrderStatusType"
       :cus-order-id="cusOrderId"
       :cus-order-cancel-reason="canCelReasonName"
+      @getDetail="getDetail"
     />
     <div class="order-area">
       <!-- 服务 -->
@@ -314,7 +315,6 @@ export default {
           { id: this.orderId, cusOrderId: this.cusOrderId }
         )
         .then((res) => {
-          console.log('res')
           const cusDetail = res.data.orderSplitAndCusVo
           this.orderData = Object.assign(cusDetail, res.data)
           this.hasData = true

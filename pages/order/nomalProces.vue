@@ -14,69 +14,29 @@
         </p>
       </div>
     </div>
-    <div v-else class="batch-list">
-      <div class="title">办理进度</div>
-      <div
-        v-for="(item, index) in batchList"
-        :key="index"
-        class="item"
-        @click="toNav(item)"
-      >
-        <span>第{{ index }}批次</span>
-      </div>
-      <div class="item no-border">
-        <span>第一批次</span>
-        <span>
-          <my-icon
-            class="back-icon"
-            name="list_ic_next"
-            size="0.24rem"
-            color="rgba(204, 204, 204, 1)"
-          ></my-icon>
-        </span>
-      </div>
-      <div class="item">
-        <span>第二批次</span>
-        <span>
-          <my-icon
-            class="back-icon"
-            name="list_ic_next"
-            size="0.24rem"
-            color="rgba(204, 204, 204, 1)"
-          ></my-icon>
-        </span>
-      </div>
-      <div class="item">
-        <span>第三批次</span>
-        <span>
-          <my-icon
-            class="back-icon"
-            name="list_ic_next"
-            size="0.24rem"
-            color="rgba(204, 204, 204, 1)"
-          ></my-icon>
-        </span>
-      </div>
-    </div>
+    <ProcessList :batch-data="batchData" />
   </div>
 </template>
 
 <script>
-// 周期产品办理进度
+// 非周期产品办理进度
 import { mapMutations, mapState } from 'vuex'
 import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
+import ProcessList from '@/components/order/process/ProcessList'
 import orderApi from '@/api/order'
 export default {
   components: {
     [Image.name]: Image,
     Header,
+    ProcessList,
   },
   data() {
     return {
       loading: false,
       skuInfo: {},
       orderData: {},
+      batchData: [],
     }
   },
   computed: {
@@ -89,36 +49,34 @@ export default {
       return 44
     },
   },
+  created() {
+    this.type = Math.ceil(Math.random() * 2)
+  },
   mounted() {
     this.orderData.orderId = this.$route.query.orderId
     this.orderData.cusOrderId = this.$route.query.cusOrderId
     this.orderData.skuId = this.$route.query.skuId
-    this.getBatchList()
     this.getDetail()
+    this.getProcessInfo()
   },
   methods: {
     onClickLeft() {
       this.$router.back(-1)
     },
-    toNav(item) {
-      this.$router.push({
-        path: '/order/processBatch',
-        query: {
-          orderId: this.orderData.orderId,
-          serverId: item.id,
-          step: item.index++,
-        },
-      })
-    },
-    getBatchList() {
+    getProcessInfo() {
       orderApi
-        .getProcessList(
+        .getProcessInfo(
           { axios: this.$axios },
-          { orderDetailsId: this.orderData.orderId }
+          {
+            orderDetailsId: this.orderData.orderId,
+            orderProductId: this.orderData.orderId,
+          }
         )
         .then((res) => {
-          console.log('周期批次列表', res)
-          this.batchList = res.data.records || res.data
+          console.log('非周期产品办理进度', res)
+          if (res.data && res.data.records)
+            this.batchData = res.data || res.data.records
+          else this.batchData = []
         })
     },
     getDetail() {
