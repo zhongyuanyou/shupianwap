@@ -128,6 +128,7 @@ export default {
           'x-cache-control': 'cache',
         },
       })
+      console.log('res', res)
       if (res.code === 200) {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
         initData.rollBannerData = res.data.advertising[rollAdCode] || []
@@ -164,32 +165,26 @@ export default {
     }
   },
   created() {
-    if (process.client) {
-      this.asyncReqParams.locationCodeList = this.adModuleOne.concat(
-        this.adModuleTwo
-      )
-      // 获取非首屏数据（广告 + 资讯）
-      this.$axios
-        .post(homeApi.asyncRequest, this.asyncReqParams, {
-          headers: {
-            'x-cache-control': 'cache',
-          },
-        })
-        .then((res) => {
-          //   console.log('客户端：', res.data)
-          this.adModuleOne.forEach((item) => {
-            if (res.data.advertising[item]) {
-              this.asyncData.preferential.push(res.data.advertising[item])
-            }
-          })
-          this.asyncData.information = res.data.information
-          this.adModuleTwo.forEach((item) => {
-            if (res.data.advertising[item]) {
-              this.asyncData.rotationAd.push(res.data.advertising[item])
-            }
-          })
-        })
-    }
+    this.asyncReqParams.locationCodeList = this.adModuleOne.concat(
+      this.adModuleTwo
+    )
+    console.log('homeApi.asyncRequest', homeApi.asyncRequest)
+    // 获取非首屏数据（广告 + 资讯）
+    this.$axios.post(homeApi.asyncRequest, this.asyncReqParams).then((res) => {
+      console.log('非首屏渲染', res)
+      //   console.log('客户端：', res.data)
+      this.adModuleOne.forEach((item) => {
+        if (res.data.advertising[item]) {
+          this.asyncData.preferential.push(res.data.advertising[item])
+        }
+      })
+      this.asyncData.information = res.data.information
+      this.adModuleTwo.forEach((item) => {
+        if (res.data.advertising[item]) {
+          this.asyncData.rotationAd.push(res.data.advertising[item])
+        }
+      })
+    })
   },
   methods: {
     // 用户手动关闭下载app提示弹框后，记录状态到cookie，刷新页面不再弹出，使用默认过期时间（关闭浏览器过期，下次再访问，再次弹出）

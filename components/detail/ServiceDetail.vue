@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="productDescribe">
+  <div v-if="productDescribe" class="container">
     <p class="container_title">服务详情</p>
     <div class="container_html" v-html="productDescribe"></div>
   </div>

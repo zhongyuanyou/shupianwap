@@ -19,7 +19,7 @@
       <span v-else-if="cusOrderStatusType == 4" class="text"> 已取消 </span>
     </p>
     <div v-if="cusOrderStatusType == 1" class="msg">
-      <section v-if="time.hour > 0">
+      <section v-if="diff > 0">
         请在24小时内支付，超时订单将自动关闭<br />
         <p class="time">
           <span>{{ time.hour }}</span>
@@ -42,7 +42,7 @@
     </p>
     <p v-else-if="cusOrderStatusType == 4" class="msg">
       您的订单已取消<br />
-      <span> 取消原因:{{ cusOrderCancelReason }} </span>
+      <span> 取消原因:{{ cusOrderCancelReason || '-' }} </span>
     </p>
   </div>
 </template>
@@ -99,14 +99,14 @@ export default {
       const nowTimeStamp = new Date().getTime()
       // 计算时间差 秒
       this.diff = (endTimeStamp - nowTimeStamp) / 1000
+      if (this.diff < 0) {
+        this.$emit('getDetail')
+        clearInterval(timer)
+      }
       timer = setInterval(() => {
         let hour = Math.floor(this.diff / 3600)
         let min = Math.floor((this.diff - hour * 3600) / 60)
         let sec = Math.floor(this.diff % 60)
-        if (hour === 0 && min === 0 && sec === 0) {
-          this.$emit('getDetail')
-          clearInterval(timer)
-        }
         if (hour < 10) hour = '0' + hour
         if (min < 10) min = '0' + min
         if (sec < 10) sec = '0' + sec
@@ -136,7 +136,7 @@ export default {
         payTerminal: 'COMDIC_TERMINAL_WAP',
       }
       payApi
-        .enablePayMoney({ axios: this.$axios }, postData)
+        .enablePayMoney(postData)
         .then((res) => {
           this.countDown(res.countDownTimeLong || res.data.countDownTimeLong)
           console.log('支付信息', res)
