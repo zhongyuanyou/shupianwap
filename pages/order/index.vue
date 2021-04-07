@@ -146,10 +146,17 @@ export default {
           }
         )
         .then((res) => {
+          console.log('订单列表', res)
           this.loading = false
-          this.list = res.records
+          const arr = res.records
+          for (let i = 0, l = arr.length; i < l; i++) {
+            this.changeMoney(arr[i])
+          }
+          console.log('arr', arr)
+          this.list = arr
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log('error', error)
           this.loading = false
           this.$xToast.error('获取数据失败')
         })

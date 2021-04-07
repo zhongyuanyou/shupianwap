@@ -94,7 +94,7 @@ export default {
             {
               name: this.userName,
               cardNo: this.idCrad,
-              userid: this.$cookies.get('userId'),
+              phone: this.$cookies.get('mainAccountFull'),
             }
           )
           .then((res) => {

@@ -1,52 +1,25 @@
 <template>
   <div class="page">
-    <Header title="第一批次" @leftClickFuc="onClickLeft" />
-    <ProcessList />
+    <Header :title="pageTitle" @leftClickFuc="onClickLeft" />
+    <ProcessList :batch-data="batchData" />
   </div>
 </template>
 
 <script>
 // 办理进度批次信息
 import { mapMutations, mapState } from 'vuex'
-import { Button, RadioGroup, Radio, Cell } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import ProcessList from '@/components/order/process/ProcessList'
+import orderApi from '@/api/order'
 export default {
   components: {
-    [Button.name]: Button,
-    [RadioGroup.name]: RadioGroup,
-    [Radio.name]: Radio,
-    [Cell.name]: Cell,
     Header,
     ProcessList,
   },
   data() {
     return {
       orderData: {},
-      time: {}, // 倒计时
-      diff: 0, // 时间差 s
-      typeList: [
-        {
-          code: 'CRISPS_C_ZFFS_ALI',
-          name: '支付宝支付',
-          icon: 'pay_ic_alipay',
-          color: 'rgba(23, 151, 236, 1)',
-        },
-        {
-          code: 'CRISPS_C_ZFFS_WECHAT',
-          name: '微信支付',
-          icon: 'pay_ic_wechat',
-          color: 'rgba(41, 175, 18, 1)',
-        },
-        {
-          code: 'CRISPS_C_ZFFS_CARD',
-          name: '银行卡支付',
-          icon: 'pay_ic_bank',
-          color: 'rgba(255, 133, 60, 1)',
-        },
-      ],
-      payPlatform: 'CRISPS_C_ZFFS_ALI',
-      payName: '支付宝支付',
+      batchData: [],
     }
   },
   computed: {
@@ -59,9 +32,27 @@ export default {
       return 44
     },
   },
+  mounted() {
+    this.pageTitle = '第' + this.$route.query.step + '批次'
+  },
   methods: {
     onClickLeft() {
       this.$router.back(-1)
+    },
+    getProcessInfo() {
+      orderApi
+        .getProcessInfoBatch(
+          { axios: this.$axios },
+          {
+            orderDetailsId: this.orderData.orderId,
+          }
+        )
+        .then((res) => {
+          console.log('周期产品办理进度', res)
+          if (res.data && res.data.records)
+            this.batchData = res.data || res.data.records
+          else this.batchData = []
+        })
     },
   },
 }

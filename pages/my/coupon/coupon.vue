@@ -87,11 +87,11 @@ export default {
       responseData: [], // 请求成功返回数据
       // 请求数据格式
       formData: {
-        orderByWhere: 'createTime=desc',
+        orderByWhere: '',
         findType: 2,
-        userId: '767579686475123456',
-        limit: 10,
-        page: 1,
+        userId: this.$cookies.get('userId'),
+        limit: '',
+        page: '',
       }, // 请求数据
       indexNum: 0,
       couponType: 0, // 优惠券类型 未使用 已使用 已失效
@@ -137,7 +137,7 @@ export default {
           this.usedCount = result.usedCount
           this.notUsedCount = result.notUsedCount
           this.invalidCount = result.invalidCount
-          console.log('this.responseData', this.responseData)
+          // console.log('this.responseData', this.responseData)
         })
         .catch((e) => {
           if (e.code !== 200) {

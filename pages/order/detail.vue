@@ -1,16 +1,20 @@
 <template>
   <div v-if="hasData" class="pay-page">
     <Banner
-      :order-status-code="orderData.cusOrderDetail.cusOrderStatusNo"
+      :order-status-code="orderData.orderSplitAndCusVo.cusOrderStatusNo"
       :cus-order-status-type="cusOrderStatusType"
-      :cus-order-id="cusOrderId"
+      :cus-order-id="orderData.cusOrderId"
       :cus-order-cancel-reason="canCelReasonName"
+      @getDetail="getDetail"
     />
     <div class="order-area">
       <!-- 服务 -->
       <ServeList
         v-if="orderData.orderProTypeNo.match('PRO_CLASS_TYPE_SERVICE')"
         :order-data="orderData"
+        :cus-order-status-type="cusOrderStatusType"
+        :cus-order-pay-status-no="orderData.cusOrderPayStatusNo"
+        @confirmOrder="confirmOrder"
       />
       <!-- 交易/销售/资源 -->
       <TradeList v-else class="goods-info" :order-data="orderData" />
@@ -80,11 +84,11 @@
       <p class="order-item">
         <span class="label">支付状态</span>
         <span class="text">{{
-          PAYSTATUSCODENAME[orderData.cusOrderDetail.cusOrderPayStatusNo]
+          PAYSTATUSCODENAME[orderData.orderSplitAndCusVo.cusOrderPayStatusNo]
         }}</span>
       </p>
       <!-- 支付状态为部分付款时才显示这部分         v-if="
-          orderData.cusOrderDetail.cusOrderPayStatusNo ===
+          orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
           'ORDER_CUS_PAY_STATUS_PART_PAID'
         " -->
       <div v-if="cusOrderStatusType !== 4" class="pay-detail-area">
@@ -157,7 +161,7 @@
       <p class="order-item last-p">
         <span class="label">备注</span>
         <span class="text">{{
-          orderData.mark || orderData.cusOrderDetail.mark || '暂无'
+          orderData.mark || orderData.orderSplitAndCusVo.mark || '-'
         }}</span>
       </p>
     </div>
@@ -193,7 +197,8 @@
         <sp-button
           v-if="
             showPayBtn &&
-            orderData.cusOrderDetail.cusOrderPayStatusNo ===
+            orderData.isNeedPay == 1 &&
+            orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
               'ORDER_CUS_PAY_STATUS_UN_PAID'
           "
           class="btn-pay"
@@ -203,12 +208,19 @@
         <sp-button
           v-if="
             showPayBtn &&
-            orderData.cusOrderDetail.cusOrderPayStatusNo ===
+            orderData.isNeedPay == 1 &&
+            orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
               'ORDER_CUS_PAY_STATUS_PART_PAID'
           "
           class="btn-pay"
           @click="handleClickItem(5)"
           >支付余款</sp-button
+        >
+        <sp-button
+          v-if="isShowConfirmBtn()"
+          type="default"
+          @click="handleClickItem(6)"
+          >确认完成</sp-button
         >
       </div>
     </div>
@@ -287,7 +299,6 @@ export default {
     if (this.$route.query.id) {
       this.orderId = this.$route.query.id
       this.cusOrderId = this.$route.query.cusOrderId
-      console.log('this.$orderData', this.orderData)
       this.getDetail()
     } else {
       this.$xToast.error('缺少参数')
@@ -305,27 +316,24 @@ export default {
           { id: this.orderId, cusOrderId: this.cusOrderId }
         )
         .then((res) => {
-          console.log('res')
-          const cusDetail = res.data.cusOrderDetail
+          // 订单价格处理 分转元
+          this.changeMoney(res.data)
+          const cusDetail = res.data.orderSplitAndCusVo
           this.orderData = Object.assign(cusDetail, res.data)
-          console.log('this.orderData', this.orderData)
-          console.log(
-            '订单类型this.orderData.orderProTypeNo',
-            this.orderData.orderProTypeNo
-          )
           this.hasData = true
           this.cusOrderStatusType = orderUtils.checkCusOrderStatus(
             this.orderData.cusOrderStatusNo
           )
           if (
-            this.orderData.cusOrderDetail.cusOrderStatusNo !==
+            this.orderData.orderSplitAndCusVo.cusOrderStatusNo !==
               'ORDER_CUS_STATUS_CANCELLED' &&
-            this.orderData.cusOrderDetail.cusOrderPayStatusNo !==
+            this.orderData.orderSplitAndCusVo.cusOrderPayStatusNo !==
               'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
           ) {
             // 当订单状态不为已取消且支付状态不为已完成时展示付款入口
             this.showPayBtn = true
           }
+          console.log('orderData', this.orderData)
           this.getBatchList()
           // if (
           //   this.orderData.cusOrderPayStatusNo !==
@@ -385,6 +393,7 @@ export default {
           this.getChildOrders()
           break
         case 6:
+          console.log('确认完成33')
           // 确认完成
           this.opType = 'confirmComplete'
           this.confirmOrder()
@@ -535,7 +544,7 @@ export default {
       color: #ec5330;
       .span1 {
         color: rgba(34, 34, 34, 1);
-        width: 140px;
+        padding-right: 40px;
       }
       .span2 {
         font-size: 28px;
