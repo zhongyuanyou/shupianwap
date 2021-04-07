@@ -125,7 +125,6 @@ const checkCusOrderStatus = function (cusOrderStatusNo) {
  * @Description:支付类型判断 返参：1先付款后服务 2先定金后尾款 3按服务节点付费 4PRO_PRE_SERVICE_FINISHED_PAY
  */
 const checkPayType = function (cusOrderPayType) {
-  console.log('cusOrderPayType', cusOrderPayType)
   if (!cusOrderPayType) return 0
   for (const key in PAYTYPECODE) {
     if (PAYTYPECODE[key] === cusOrderPayType) return Number(key)

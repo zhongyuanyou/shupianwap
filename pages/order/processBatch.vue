@@ -2,6 +2,7 @@
   <div class="page">
     <Header :title="pageTitle" @leftClickFuc="onClickLeft" />
     <ProcessList :batch-data="batchData" />
+    <LoadingCenter v-show="loading" />
   </div>
 </template>
 
@@ -11,13 +12,16 @@ import { mapMutations, mapState } from 'vuex'
 import Header from '@/components/common/head/header'
 import ProcessList from '@/components/order/process/ProcessList'
 import orderApi from '@/api/order'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     Header,
     ProcessList,
+    LoadingCenter,
   },
   data() {
     return {
+      loading: true,
       orderData: {},
       batchData: [],
     }
@@ -48,10 +52,14 @@ export default {
           }
         )
         .then((res) => {
-          console.log('周期产品办理进度', res)
+          this.loading = false
           if (res.data && res.data.records)
             this.batchData = res.data || res.data.records
           else this.batchData = []
+        })
+        .catch((error) => {
+          this.loading = false
+          console.log(error)
         })
     },
   },

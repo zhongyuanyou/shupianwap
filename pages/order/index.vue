@@ -84,29 +84,7 @@ export default {
       page: 1,
       limit: 20,
       loading: true,
-      tabs: [
-        {
-          name: 0,
-          title: '全部',
-        },
-        {
-          name: 1,
-          title: '待付款',
-        },
-        {
-          name: 2,
-          title: '办理中',
-        },
-        {
-          name: 3,
-          title: '已完成',
-        },
-        {
-          name: 4,
-          title: '已取消',
-        },
-      ],
-      selectedOrderStatus: 'ORDER_CUS_STATUS_UNPAID',
+      selectedOrderStatus: '',
       orderData: {}, // 选中的订单
       list: [],
       payList: [], // 分批支付信息
@@ -125,6 +103,20 @@ export default {
   },
   mounted() {
     this.getOrderList()
+    if (this.$route.query.type) {
+      const pageType = this.$route.query.type
+      if (pageType === 0) {
+        this.selectedOrderStatus = ''
+      } else if (pageType === 1) {
+        this.selectedOrderStatus = 'ORDER_CUS_STATUS_UNPAID'
+      } else if (pageType === 2) {
+        this.selectedOrderStatus = 'ORDER_CUS_STATUS_PROGRESSING'
+      } else if (pageType === 3) {
+        this.selectedOrderStatus = 'ORDER_CUS_STATUS_COMPLETED'
+      } else if (pageType === 4) {
+        this.selectedOrderStatus = 'ORDER_CUS_STATUS_CANCELLED'
+      }
+    }
   },
   methods: {
     changeTab(name, title) {
@@ -216,7 +208,7 @@ export default {
 
 <style lang="less" scoped>
 .btn-car {
-  margin-right: 20px;
+  margin-right: 40px;
 }
 .order-page {
   min-height: 100%;

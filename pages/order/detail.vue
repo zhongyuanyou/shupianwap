@@ -185,15 +185,21 @@
             orderData.orderSplitAndCusVo[0].cusOrderPayStatusNo ===
             orderStatusCode[1]
           " -->
-        <sp-button v-if="isShowCanCelBtn()" @click="handleClickItem(1)"
-          >取消订单</sp-button
+        <sp-button v-if="isShowCanCelBtn()" @click="handleClickItem(1)">
+          取消订单
+        </sp-button>
+        <sp-button
+          v-if="checkContractStatus() == 1"
+          @click="handleClickItem(2)"
         >
-        <sp-button v-if="checkContractStatus() == 1" @click="handleClickItem(2)"
-          >签署合同</sp-button
+          签署合同
+        </sp-button>
+        <sp-button
+          v-if="checkContractStatus() == 2"
+          @click="handleClickItem(3)"
         >
-        <sp-button v-if="checkContractStatus() == 2" @click="handleClickItem(3)"
-          >查看合同</sp-button
-        >
+          查看合同
+        </sp-button>
         <sp-button
           v-if="
             showPayBtn &&
@@ -203,8 +209,9 @@
           "
           class="btn-pay"
           @click="handleClickItem(4)"
-          >立即支付</sp-button
         >
+          立即支付
+        </sp-button>
         <sp-button
           v-if="
             showPayBtn &&
@@ -214,14 +221,16 @@
           "
           class="btn-pay"
           @click="handleClickItem(5)"
-          >支付余款</sp-button
         >
+          支付余款
+        </sp-button>
         <sp-button
           v-if="isShowConfirmBtn()"
           type="default"
           @click="handleClickItem(6)"
-          >确认完成</sp-button
         >
+          确认完成
+        </sp-button>
       </div>
     </div>
     <CancelOrder
@@ -524,7 +533,7 @@ export default {
       color: rgba(153, 153, 153, 1);
       font-size: 24px;
       .span1 {
-        width: 140px;
+        width: 120px;
       }
       .span2 {
         font-size: 28px;
@@ -544,7 +553,7 @@ export default {
       color: #ec5330;
       .span1 {
         color: rgba(34, 34, 34, 1);
-        padding-right: 40px;
+        width: 120px;
       }
       .span2 {
         font-size: 28px;

@@ -87,11 +87,11 @@ export default {
       responseData: [], // 请求成功返回数据
       // 请求数据格式
       formData: {
-        orderByWhere: '',
+        orderByWhere: 'createTime=desc;',
         findType: 2,
         userId: this.$cookies.get('userId'),
-        limit: '',
-        page: '',
+        limit: '10',
+        page: '1',
       }, // 请求数据
       indexNum: 0,
       couponType: 0, // 优惠券类型 未使用 已使用 已失效
