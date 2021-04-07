@@ -251,7 +251,7 @@ export default {
           .then((result) => {
             this.responseData = result
             console.log(this.responseData.payParam)
-            if (this.responseData.code === 0) {
+            if (this.responseData.code === '0') {
               const payUrl = this.responseData.payParam
               window.location.href = payUrl
             } else {
