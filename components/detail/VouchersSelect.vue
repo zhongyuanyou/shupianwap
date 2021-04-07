@@ -152,7 +152,6 @@ export default {
           }
         }
       })
-      console.log(serviceTag)
       return serviceTag
     },
     // 优惠券列表
@@ -188,7 +187,6 @@ export default {
           sellingGoodsData.salesPrice -
           sortcouponList[sortcouponList.length - 1]
         const salesPriceRes = salesPrice >= 0 ? salesPrice : 0
-        console.log('最多可以优惠：', sortcouponList[sortcouponList.length - 1])
         this.couponPreferentialLine = salesPriceRes.toFixed(2)
         //  组装优惠券提示信息
         const info1 = sortcouponList[sortcouponList.length - 1]
@@ -212,6 +210,7 @@ export default {
           .receiveCoupon(params)
           .then((res) => {
             this.$xToast.success('优惠券领取成功')
+            this.store.commit('sellingGoodsDetail/SET_SELLING_COUPONLIST', id)
           })
           .catch((err) => {
             this.$xToast.warning(
