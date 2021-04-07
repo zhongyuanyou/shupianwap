@@ -14,7 +14,7 @@
         </p>
       </div>
     </div>
-    <div v-else class="batch-list">
+    <div v-if="batchList.length" class="batch-list">
       <div class="title">办理进度</div>
       <div
         v-for="(item, index) in batchList"
@@ -24,40 +24,16 @@
       >
         <span>第{{ index }}批次</span>
       </div>
-      <div class="item no-border">
-        <span>第一批次</span>
-        <span>
-          <my-icon
-            class="back-icon"
-            name="list_ic_next"
-            size="0.24rem"
-            color="rgba(204, 204, 204, 1)"
-          ></my-icon>
-        </span>
-      </div>
-      <div class="item">
-        <span>第二批次</span>
-        <span>
-          <my-icon
-            class="back-icon"
-            name="list_ic_next"
-            size="0.24rem"
-            color="rgba(204, 204, 204, 1)"
-          ></my-icon>
-        </span>
-      </div>
-      <div class="item">
-        <span>第三批次</span>
-        <span>
-          <my-icon
-            class="back-icon"
-            name="list_ic_next"
-            size="0.24rem"
-            color="rgba(204, 204, 204, 1)"
-          ></my-icon>
-        </span>
-      </div>
     </div>
+    <div v-if="!batchList.length" class="no-data">
+      <img
+        src="https://cdn.shupian.cn/sp-pt/wap/78km3o58dnw0000.png"
+        alt=""
+        srcset=""
+      />
+      <p>暂无办理进度信息</p>
+    </div>
+    <LoadingCenter v-show="loading" />
   </div>
 </template>
 
@@ -65,16 +41,18 @@
 // 周期产品办理进度
 import { mapMutations, mapState } from 'vuex'
 import { Image } from '@chipspc/vant-dgg'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import Header from '@/components/common/head/header'
 import orderApi from '@/api/order'
 export default {
   components: {
     [Image.name]: Image,
     Header,
+    LoadingCenter,
   },
   data() {
     return {
-      loading: false,
+      loading: true,
       skuInfo: {},
       orderData: {},
     }
@@ -119,6 +97,7 @@ export default {
         .then((res) => {
           console.log('周期批次列表', res)
           this.batchList = res.data.records || res.data
+          this.loading = false
         })
     },
     getDetail() {
@@ -221,6 +200,17 @@ export default {
     }
     .no-border {
       border-top: none;
+    }
+  }
+  .no-data {
+    text-align: center;
+    width: 100%;
+    padding: 100px 0;
+    font-size: 24px;
+    color: #999;
+    img {
+      width: 330px;
+      height: 330px;
     }
   }
 }

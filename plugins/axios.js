@@ -44,6 +44,12 @@ export default function ({ $axios, redirect, app, store }) {
         config.headers['X-Req-UserId'] = app.$cookies.get('userId', {
           path: '/',
         })
+      }
+      if (
+        app.$cookies.get('X-Req-UserNo', {
+          path: '/',
+        })
+      ) {
         config.headers['X-Req-UserNo'] = app.$cookies.get('userNo', {
           path: '/',
         })
