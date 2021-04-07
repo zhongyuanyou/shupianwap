@@ -78,19 +78,19 @@ export default {
       })
     },
     getlist() {
-      console.log(this.searchtext)
       this.formData.searchKey = this.searchtext
       goods
         .transactionList({ axios: this.$axios }, this.formData)
         .then((data) => {
-          console.log(data)
           if (this.datalist.length > 0) {
             this.datalist = this.datalist.concat(data.goods.records)
           } else {
             this.datalist = data.goods.records
           }
         })
-        .catch()
+        .catch((err) => {
+          console.log(err)
+        })
     },
     onRefresh() {
       this.finished = false
@@ -125,7 +125,11 @@ export default {
             this.isLoading = false
           }
         })
-        .catch()
+        .catch((err) => {
+          this.loading = false
+          this.isLoading = false
+          this.$xToast.show(err)
+        })
     },
   },
 }

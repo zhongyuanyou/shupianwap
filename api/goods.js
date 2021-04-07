@@ -21,6 +21,7 @@ const goods = {
     })
   },
   transactionList({ axios }, params) {
+    console.log(CHIPS_WAP_BASE_URL, 'url')
     // 新搜索交易商品列表
     return request({
       axios,

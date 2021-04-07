@@ -257,10 +257,12 @@ export default {
         box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
         box-sizing: border-box;
         display: flex;
+        background: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png')
+          no-repeat;
+        background-size: 100%;
         > .left {
           width: 201px;
           height: 100%;
-          background: red;
           color: #fff;
           padding-top: 20px;
           box-sizing: border-box;

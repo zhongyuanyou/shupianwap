@@ -259,7 +259,7 @@ export default {
           this.order.list = []
           this.order.list.push(obj)
           this.order.num = this.order.list.length
-          this.getInitData()
+          this.getInitData(2)
         } else {
           throw message
         }
@@ -318,7 +318,8 @@ export default {
           }
         })
     },
-    getInitData() {
+    getInitData(index) {
+      console.log()
       const arr = this.order.list.map((x) => {
         return x.id
       })
@@ -326,15 +327,17 @@ export default {
         .getCouponList(
           { axios: this.$axios },
           {
-            findType: 2,
-            userId: this.$cookies.get('userId'),
+            findType: index,
+            userId: this.$store.state.user.userId,
             actionId: arr,
+            orderByWhere: 'createTime=desc',
+            limit: 10,
+            page: 1,
           }
         )
         .then((result) => {
           console.log(result)
-          this.datalist = result.data.responseData
-          console.log(this.datalist, 11111111111111111)
+          this.datalist = result.responseData
         })
         .catch((e) => {
           if (e.code !== 200) {
@@ -357,7 +360,11 @@ export default {
       this.popupshow = data
     },
     tabfn(item, index) {
-      console.log(item, index)
+      if (index === 1) {
+        this.getInitData(4)
+      } else {
+        this.getInitData(2)
+      }
     },
   },
 }

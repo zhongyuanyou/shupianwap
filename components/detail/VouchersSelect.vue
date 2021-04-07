@@ -209,7 +209,7 @@ export default {
           couponId: id,
         }
         coupon
-          .receiveCoupon(params)
+          .receiveCoupon({ axios: this.$axios }, params)
           .then((res) => {
             this.$xToast.success('优惠券领取成功')
           })
