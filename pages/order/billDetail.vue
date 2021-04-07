@@ -36,6 +36,7 @@
 import Header from '@/components/common/head/header'
 import OrderMixins from '@/mixins/order'
 import orderApi from '@/api/order'
+import changeMoney from '@/utils/changeMoney'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
@@ -99,8 +100,17 @@ export default {
               allOrderSkuList.push(everyOrderSku[j])
             }
           }
-          console.log('allOrderSkuList', allOrderSkuList)
+          // 处理价格
+          for (let i = 0, l = allOrderSkuList.length; i < l; i++) {
+            if (allOrderSkuList[i].skuPayableTotalMoney)
+              allOrderSkuList[
+                i
+              ].skuPayableTotalMoney = changeMoney.regFenToYuan(
+                allOrderSkuList[i].skuPayableTotalMoney
+              )
+          }
           this.allOrderSkuList = allOrderSkuList
+          console.log('allOrderSkuList', allOrderSkuList)
         })
         .catch((err) => {
           this.loading = false

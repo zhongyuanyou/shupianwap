@@ -54,7 +54,7 @@
         <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元，</span>
         <span class="price2">
           尾款
-          {{ orderData.orderTotalMoney - orderData.depositAmount }}元，</span
+          {{ orderData.lastAount }}元，</span
         >
         <span class="price3"> 定金 {{ orderData.depositAmount }}元</span>
       </p>

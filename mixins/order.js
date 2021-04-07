@@ -133,41 +133,47 @@ export default {
           }
         )
         .then((res) => {
-          console.log('分批支付信息', res)
-          console.log('this.fromPage', this.fromPage)
           // 客户单的分批支付信息
           this.payList = res
           this.loading = false
           if (this.fromPage === 'orderList') {
+            // 从订单列表页发起的操作
             this.checkCusBatchPayType()
           } else if (this.fromPage === 'nodeDetail') {
-            // 节点明细页面则筛选该订单下的选中商品的支付列表信息
+            // 账单明细页面则筛选该订单下的选中商品的支付列表信息
             const nodeList = res.filter((item) => {
               return item.orderSkuId === this.orderSkuId
             })
+            // 计算合计金额
+            this.nodeTotalMoney = nodeList.reduce((total, item) => {
+              return total + Number(item.money)
+            }, 0)
+            // 处理合计金额单位
+            this.nodeTotalMoney = this.changePayMoney(this.nodeTotalMoney)
             this.nodeNumber = this.nodeList.length
+            // 对支付列表进行排序
             const sortArr = []
-            // 将本期应付的批次排在前面
             for (let i = 0, l = nodeList.length; i < l; i++) {
+              // 处理金额
+              nodeList[i].money = this.changePayMoney(nodeList[i].money)
+              // 将本期应付的批次排在前面
               if (nodeList[i].alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
                 sortArr.splice(0, 0, nodeList[i])
               } else {
                 sortArr.push(nodeList[i])
               }
             }
-            console.log('sortArr', sortArr)
             this.nodeList = sortArr
-            // 计算合计金额
-            this.nodeTotalMoney = this.nodeList.reduce((total, item) => {
-              return total + Number(item.money)
-            }, 0)
           } else {
-            // 当前订单的分批支付信息
+            // 当前订单的分批支付信息 订单详情页
             // 筛选对应订单的支付列表
-            this.orderPayList = res.filter((item) => {
+            const orderPayList = res.filter((item) => {
               return item.orderId === this.orderData.id
             })
-            console.log('orderPayList', this.orderPayList)
+            for (let i = 0, l = orderPayList.length; i < l; i++) {
+              this.changePayMoney(orderPayList[i])
+            }
+            this.orderPayList = orderPayList
             this.paylistLength = this.orderPayList.length
           }
         })
@@ -184,8 +190,6 @@ export default {
         this.payList.length === 1
       ) {
         // 此时一个订单只有一个支付信息则为全款支付
-        console.log('分批支付数量和订单数量一致')
-        console.log('this.payList', this.payList)
         this.$router.push({
           path: '/pay/payType',
           query: {
@@ -213,8 +217,8 @@ export default {
             allTimePayTotal += element.money
           }
         })
-        this.thisTimePayTotal = thisTimePayTotal
-        this.allTimePayTotal = allTimePayTotal
+        this.thisTimePayTotal = this.regFenToYuan(thisTimePayTotal)
+        this.allTimePayTotal = this.regFenToYuan(allTimePayTotal)
         this.batchIds = idsArr.join(',')
         console.log('本期应付总额:thisTimePayTotal:', thisTimePayTotal)
         console.log('全款支付剩余应付总额thisTimePayTotal:', thisTimePayTotal)
@@ -222,7 +226,6 @@ export default {
     },
     // 判断是分批支付还是全款支付等
     checkCusBatchPayType() {
-      this.getBillDetail()
       if (
         this.payList[0].orderPayType === 'PRO_PRE_PAY_POST_SERVICE' ||
         this.payList[0].orderPayType === 'PRO_PRE_SERVICE_FINISHED_PAY'
@@ -395,16 +398,88 @@ export default {
           this.$xToast.error(err.message || '操作失败')
         })
     },
-    // 账单明细
-    getBillDetail() {
-      orderApi
-        .getBillDetail(
-          { axios: this.$axios },
-          { cusOrderId: this.orderData.cusOrderId }
+    // 价格处理分转元
+    regFenToYuan(fen) {
+      let num = Number(fen)
+      num = fen * 0.01
+      num += ''
+      const reg =
+        num.indexOf('.') > -1
+          ? /(\d{1,3})(?=(?:\d{3})+\.)/g
+          : /(\d{1,3})(?=(?:\d{3})+$)/g
+      num = num.replace(reg, '$1')
+      num = this.toDecimal2(num)
+      return num
+    },
+    toDecimal2(x) {
+      let f = parseFloat(x)
+      if (isNaN(f)) {
+        return false
+      }
+      f = Math.round(x * 100) / 100
+      let s = f.toString()
+      let rs = s.indexOf('.')
+      if (rs < 0) {
+        rs = s.length
+        s += '.'
+      }
+      while (s.length <= rs + 2) {
+        s += '0'
+      }
+      return s
+    },
+    // 订单价格分转元
+    changeMoney(orderItem) {
+      if (orderItem.orderTotalMoney && orderItem.depositAmount)
+        // 尾款
+        orderItem.lastAount = this.regFenToYuan(
+          orderItem.orderTotalMoney - orderItem.depositAmount
         )
-        .then((res) => {
-          console.log('账单明细', res)
-        })
+      else orderItem.lastAount = '0.00'
+      if (orderItem.depositAmount)
+        // 定金
+        orderItem.depositAmount = this.regFenToYuan(orderItem.depositAmount)
+
+      if (orderItem.orderPaidMoney)
+        // 已支付金额
+        orderItem.orderPaidMoney = this.regFenToYuan(orderItem.orderPaidMoney)
+
+      if (orderItem.orderPayableMoney)
+        // 应付金额
+        orderItem.orderPayableMoney = this.regFenToYuan(
+          orderItem.orderPayableMoney
+        )
+      if (orderItem.orderDiscountMoney)
+        // 优惠金额
+        orderItem.orderDiscountMoney = this.regFenToYuan(
+          orderItem.orderDiscountMoney
+        )
+      if (orderItem.discountTotal)
+        // 优惠总额
+        orderItem.discountTotal = this.regFenToYuan(orderItem.discountTotal)
+      if (orderItem.orderTotalMoney)
+        // 总金额
+        orderItem.orderTotalMoney = this.regFenToYuan(orderItem.orderTotalMoney)
+      if (orderItem.orderSurplusMoney)
+        // 剩余应付金额
+        orderItem.orderSurplusMoney = this.regFenToYuan(
+          orderItem.orderSurplusMoney
+        )
+      const arr2 = orderItem.orderSkuEsList || orderItem.orderSkuList
+      if (arr2.length) {
+        for (let j = 0, len = arr2.length; j < len; j++) {
+          // 商品售价
+          if (arr2[j].skuPrice) {
+            arr2[j].skuPrice = this.regFenToYuan(arr2[j].skuPrice)
+          }
+        }
+      }
+    },
+    // 支付列表价格转换
+    changePayMoney(payItem) {
+      if (payItem.money) {
+        payItem.money = this.regFenToYuan(payItem.money)
+      }
     },
   },
 }
