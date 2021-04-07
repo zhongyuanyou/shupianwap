@@ -22,6 +22,7 @@ export default {
   },
   methods: {
     handleGO() {
+      // console.log('点击随便看看')
       this.uPGoScan()
     },
     // 统一平台的跳转
@@ -59,8 +60,9 @@ export default {
             }
           }
         )
+      } else {
+        this.$router.push({ path: '/category' })
       }
-      this.$router.push({ path: '/detail/index' })
     },
   },
 }

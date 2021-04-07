@@ -108,9 +108,9 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import { TopNavBar, Button, PullRefresh, List } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import GoodsItem from '@/components/shopCart/GoodsItem'
-import Bottombar from '@/components/shoppingCar/Bottombar'
-import GoodsPopup from '@/components/shoppingCar/GoodsPopup'
-import ShoppingCarNull from '@/components/shoppingCar/ShoppingCarNull'
+import Bottombar from '@/components/shopCart/Bottombar'
+import GoodsPopup from '@/components/shopCart/GoodsPopup'
+import ShoppingCarNull from '@/components/shopCart/ShoppingCarNull'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import { shopCart } from '@/api'
@@ -477,7 +477,10 @@ export default {
           }
         )
       } else {
-        this.$router.push({ path: '', query: {} })
+        this.$router.push({
+          path: '/order/confirmorder',
+          query: { type: 'shopcar' },
+        })
       }
     },
 
@@ -622,15 +625,13 @@ export default {
           type,
         }
         let data = await shopCart.update({ ...defalutParams, ...params })
-        console.log('++++++++++++++++++++nihao2', {
-          ...defalutParams,
-          ...params,
-        })
+        // console.log('++++++++++++++++++++nihao2', {
+        //   ...defalutParams,
+        //   ...params,
+        // })
         data = data || {}
         const { total, totalCount } = data
-        console.log('++++++++++++++++++++nihao3', data)
         this.bottomData = { ...this.bottomData, totalAmount: total, totalCount }
-        console.log('++++++++++++++++++++nihao3', this.bottomData)
         this.updateLoading = false
         return data
       } catch (error) {
