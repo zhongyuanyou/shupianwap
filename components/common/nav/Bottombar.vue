@@ -53,11 +53,11 @@ export default {
           iconName: 'shouye1',
           path: '/',
         },
-        {
-          name: '发现',
-          iconName: 'dongtai',
-          path: '/found',
-        },
+        // {
+        //   name: '发现',
+        //   iconName: 'dongtai',
+        //   path: '/found',
+        // },
         {
           name: '必懂',
           iconName: 'bidong',

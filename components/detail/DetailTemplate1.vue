@@ -130,35 +130,29 @@ export default {
       opacity: 0,
       finished: false, // 停止加载更多
       loading: false,
-      productPage: 1,
-      productLimit: 10,
-      productCount: 0,
-      recommendProduct: [],
+      productPage: 1, // 推荐产品当前页
+      productLimit: 10, // 推荐产品没有条数
+      productCount: 0, // 推荐产品总数
+      recommendProduct: [], // 推荐产品
       tcBasicData, // 基本信息的key
       showShare: false, // 是否弹起分享组件
       shareOptions: [{ name: '复制链接', icon: 'link' }],
       userInfoData: {
         decodePhone: null,
         fullName: null,
-      },
+      }, // 个人用户数据
       planners: [], // 规划师列表
-      plannerLimit: 3,
-      plannerPage: 1,
+      plannerLimit: 3, // 推荐规划师每页条数
+      plannerPage: 1, // 推荐规划师当前页
       tcPlannerBooth: {},
       deviceId: null, // 设备唯一码
+      imgFileIdPaths: [], // 产品图片
     }
   },
   computed: {
-    imgFileIdPaths() {
+    sellingDetail() {
       // 获取客户端展示信息
-      const clientDetails = this.$store.state.sellingGoodsDetail
-        .sellingGoodsData.salesGoodsOperatings.clientDetails
-      // 获取商品图片集合
-      const imgFileIdPaths = clientDetails.length
-        ? clientDetails[0].imgFileIdPaths
-        : []
-      // 返回图片地址集合
-      return imgFileIdPaths
+      return this.$store.state.sellingGoodsDetail.sellingGoodsData
     },
     city() {
       return this.$store.state.city.currentCity
@@ -169,6 +163,8 @@ export default {
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
     }
+    // 获取商品图片
+    this.getSellingImg()
     // 获取推荐产品
     this.getrecommendProduct()
     // 推荐规划师
@@ -214,9 +210,9 @@ export default {
       if (!this.deviceId) {
         this.deviceId = await getUserSign()
       }
-      const formatId1 = this.proDetail.classCodeLevel.split(',')[0] // 产品二级分类
-      const formatId2 = this.proDetail.classCodeLevel.split(',')[1] // 产品二级分类
-      const formatId3 = this.proDetail.classCodeLevel.split(',')[2] // 产品三级分类
+      const formatId1 = this.sellingDetail.classCodeLevel.split(',')[0] // 产品二级分类
+      const formatId2 = this.sellingDetail.classCodeLevel.split(',')[1] // 产品二级分类
+      const formatId3 = this.sellingDetail.classCodeLevel.split(',')[2] // 产品三级分类
       const formatId = formatId3 || formatId2
       this.$axios
         .get(recommendApi.recommendProduct, {
@@ -227,9 +223,9 @@ export default {
             classCode: formatId1,
             areaCode: this.city.code, // 区域编码
             sceneId: 'app-jycpxq-02', // 场景ID
-            productId: this.proDetail.id, // 产品ID（产品详情页必传）
+            productId: this.sellingDetail.id, // 产品ID（产品详情页必传）
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
-            title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
+            title: this.sellingDetail.name, // 产品名称（产品详情页传、咨询页等）
             platform: 'APP', // 平台（app,m,pc）
             page: this.productPage,
             limit: this.productLimit,
@@ -273,19 +269,20 @@ export default {
             page: this.plannerPage,
             area: this.city.code, // 区域编码
             deviceId: this.deviceId, // 设备ID
-            level_2_ID: this.proDetail.classCodeLevel
-              ? this.proDetail.classCodeLevel.split(',')[1]
+            level_2_ID: this.sellingDetail.classCodeLevel
+              ? this.sellingDetail.classCodeLevel.split(',')[1]
               : null, // 二级产品分类
             login_name: null, // 规划师ID(选填)
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
             user_id: this.$cookies.get('userId'), // 用户ID(选填)
             platform: 'app', // 平台（app,m,pc）
-            productId: this.proDetail.id, // 产品id
+            productId: this.sellingDetail.id, // 产品id
           },
         })
         .then((res) => {
           if (res.code === 200) {
+            console.log('推荐规划师', this.planners)
             this.planners = res.data.records
           }
         })
@@ -303,15 +300,15 @@ export default {
           page: 1,
           area: this.city.code, // 区域编码
           deviceId, // 设备ID
-          level_2_ID: this.proDetail.classCodeLevel
-            ? this.proDetail.classCodeLevel.split(',')[1]
+          level_2_ID: this.sellingDetail.classCodeLevel
+            ? this.sellingDetail.classCodeLevel.split(',')[1]
             : null, // 二级产品分类
           login_name: null, // 规划师ID(选填)
           productType: 'FL20201116000003', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
           user_id: this.$cookies.get('userId'), // 用户ID(选填)
           platform: 'app', // 平台（app,m,pc）
-          productId: this.proDetail.id, // 产品id
+          productId: this.sellingDetail.id, // 产品id
         },
       })
       if (plannerRes.code === 200) {
@@ -341,6 +338,17 @@ export default {
       }
       this.$xToast.error('链接复制失败,请重试')
       // this.showShare = false
+    },
+    // 获取商品图片
+    getSellingImg() {
+      // 获取客户端展示信息
+      const clientDetails = this.sellingDetail.salesGoodsOperatings
+        .clientDetails
+      // 获取商品图片集合
+      this.imgFileIdPaths = clientDetails.length
+        ? clientDetails[0].imgFileIdPaths
+        : []
+      // 返回图片地址集合
     },
     // 获取手机号
     // getUserIndo() {
