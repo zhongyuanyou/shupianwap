@@ -136,5 +136,15 @@ const category = {
       url: CHIPS_WAP_BASE_URL + '/nk/coupon/v2/find_my_coupon_page.do',
     })
   },
+  getcalculation({ axios }, params) {
+    // 获取优惠券列表
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url:
+        'http://172.16.133.40:7001/service/yk/order/v2/coupon_calculation.do', // CHIPS_WAP_BASE_URL + 'v2/coupon_calculation.do',
+    })
+  },
 }
 export default category

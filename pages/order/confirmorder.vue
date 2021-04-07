@@ -59,12 +59,12 @@
             :value="
               coupon
                 ? coupon
-                : couponlist.length > 0
-                ? couponlist.length + '个优惠券'
+                : datalist.length > 0
+                ? datalist.length + '个优惠券'
                 : '无可用'
             "
             is-link
-            :value-class="coupon ? 'red' : couponlist.length > 0 ? 'black' : ''"
+            :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
             @click="popupfn()"
           />
         </CellGroup>
@@ -111,9 +111,8 @@
       help="使用说明"
       :tablist="tablist"
       calculation="已选中推荐优惠券，可抵扣"
-      :num="num"
       :datalist="datalist"
-      @tabactive="tabfn"
+      :nolist="nolist"
       @close="close"
     ></Popup>
   </div>
@@ -129,9 +128,8 @@ import {
 } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
 import Popup from '@/components/PlaceOrder/Popup'
-import { productDetailsApi, auth } from '@/api'
+import { productDetailsApi, auth, shopCart } from '@/api'
 import { coupon, order } from '@/api/index'
-
 export default {
   name: 'PlaceOrder',
   components: {
@@ -149,8 +147,7 @@ export default {
       allboxHeight: '100vh',
       money: '1232',
       radio: '',
-      coupon: '2312',
-      couponlist: [1],
+      coupon: '',
       message: '',
       news: { num: '123', price: '1392.00', money: '4600.00' },
       order: '',
@@ -159,44 +156,8 @@ export default {
         { name: '可用优惠券', num: '12', is: true },
         { name: '过期优惠券' },
       ],
-      datalist: [
-        // {
-        //   money: '3200',
-        //   data: '满3800元可用',
-        //   name: '财税助力特惠券',
-        //   ms: '限“小规模纳税人代理记账”服务 使用',
-        //   date: '2020.09.01-2020.09.31',
-        //   check: false,
-        //   nodata: '订单金额不符合使用条件',
-        // },
-        // {
-        //   money: '3200',
-        //   data: '满3800元可用',
-        //   name: '财税助力特惠券',
-        //   ms: '限“小规模纳税人代理记账”服务 使用',
-        //   date: '2020.09.01-2020.09.31',
-        //   check: false,
-        //   nodata: '订单金额不符合使用条件',
-        // },
-        // {
-        //   money: '3200',
-        //   data: '满3800元可用',
-        //   name: '财税助力特惠券',
-        //   ms: '限“小规模纳税人代理记账”服务 使用',
-        //   date: '2020.09.01-2020.09.31',
-        //   check: false,
-        //   nodata: '订单金额不符合使用条件',
-        // },
-        // {
-        //   money: '3200',
-        //   data: '满3800元可用',
-        //   name: '财税助力特惠券',
-        //   ms: '限“小规模纳税人代理记账”服务 使用',
-        //   date: '2020.09.01-2020.09.31',
-        //   check: false,
-        //   nodata: '订单金额不符合使用条件',
-        // },
-      ],
+      datalist: [],
+      nolist: [],
       contaract: '',
       productId: this.$route.query.productId,
       formData: {
@@ -226,12 +187,35 @@ export default {
       this.contaract = this.$cookies.get('contaract')
       this.$cookies.remove('contaract')
     }
-    this.asyncData()
+    if (this.$route.query.type === 'shopcar') {
+      this.getcart()
+    } else {
+      this.asyncData()
+    }
+
     // this.getInitData()
     this.getProtocol('protocol100008')
     console.log(this.$store.state.city, '城市')
   },
   methods: {
+    getcart() {
+      shopCart
+        .bill({
+          userId: this.$store.state.user.userId,
+          type:1,
+        })
+        .then((result) => {
+          console.log(result, 1241241)
+          this.order.list = result
+          console.log(this.order.list)
+        })
+        .catch((e) => {
+          if (e.code !== 200) {
+            this.$xToast.show(e.message)
+            console.log(e)
+          }
+        })
+    },
     async asyncData() {
       try {
         const { code, message, data } = await this.$axios.post(
@@ -260,6 +244,7 @@ export default {
           this.order.list.push(obj)
           this.order.num = this.order.list.length
           this.getInitData(2)
+          this.getInitData(4)
         } else {
           throw message
         }
@@ -319,7 +304,6 @@ export default {
         })
     },
     getInitData(index) {
-      console.log()
       const arr = this.order.list.map((x) => {
         return x.id
       })
@@ -336,8 +320,11 @@ export default {
           }
         )
         .then((result) => {
-          console.log(result)
-          this.datalist = result.responseData
+          if (index === 2) {
+            this.datalist = result.responseData
+          } else {
+            this.nolist = result.responseData
+          }
         })
         .catch((e) => {
           if (e.code !== 200) {
@@ -359,13 +346,13 @@ export default {
     close(data) {
       this.popupshow = data
     },
-    tabfn(item, index) {
-      if (index === 1) {
-        this.getInitData(4)
-      } else {
-        this.getInitData(2)
-      }
-    },
+    // tabfn(item, index) {
+    //   if (index === 1) {
+    //     this.getInitData(4)
+    //   } else {
+    //     this.getInitData(2)
+    //   }
+    // },
   },
 }
 </script>
