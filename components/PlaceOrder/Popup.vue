@@ -33,7 +33,7 @@
         </div>
         <div v-if="tablist[tabAct].is">
           <div class="databox">
-            <div class="listbox">
+            <div class="listbox" v-if="datalist.length > 0">
               <div v-for="(item, index) in datalist" :key="index" class="list">
                 <div class="left">
                   <h1>{{ item.money }}</h1>
@@ -51,13 +51,20 @@
                 </div>
               </div>
             </div>
-            <div class="btn">
+            <div class="none" v-else>
+              <img
+                src="https://img10.dgg.cn/pt03/wap/e5g6ntopcpc0000.png"
+                alt=""
+              />
+              <p>暂无优惠券</p>
+            </div>
+            <div class="btn" v-if="datalist.length > 0">
               <p>确定</p>
             </div>
           </div>
         </div>
         <div v-else class="databox nodatabox">
-          <div class="listbox">
+          <div class="listbox" v-if="datalist.length > 0">
             <div v-for="(item, index) in datalist" :key="index" class="nolist">
               <div class="top">
                 <div class="left">
@@ -74,6 +81,13 @@
               </div>
               <p>{{ item.nodata }}</p>
             </div>
+          </div>
+          <div class="none" v-else>
+            <img
+              src="https://img10.dgg.cn/pt03/wap/e5g6ntopcpc0000.png"
+              alt=""
+            />
+            <p>暂无优惠券</p>
           </div>
         </div>
       </div>
@@ -293,6 +307,24 @@ export default {
             margin-right: 40px;
           }
         }
+      }
+    }
+    .none {
+      overflow-y: auto;
+      padding-top: 40px;
+      > img {
+        width: 340px;
+        height: 340px;
+        display: block;
+        margin: 0 auto;
+      }
+      > p {
+        font-size: 30px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #1a1a1a;
+        margin-top: 24px;
+        text-align: center;
       }
     }
     .btn {

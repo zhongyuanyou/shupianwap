@@ -160,42 +160,42 @@ export default {
         { name: '过期优惠券' },
       ],
       datalist: [
-        {
-          money: '3200',
-          data: '满3800元可用',
-          name: '财税助力特惠券',
-          ms: '限“小规模纳税人代理记账”服务 使用',
-          date: '2020.09.01-2020.09.31',
-          check: false,
-          nodata: '订单金额不符合使用条件',
-        },
-        {
-          money: '3200',
-          data: '满3800元可用',
-          name: '财税助力特惠券',
-          ms: '限“小规模纳税人代理记账”服务 使用',
-          date: '2020.09.01-2020.09.31',
-          check: false,
-          nodata: '订单金额不符合使用条件',
-        },
-        {
-          money: '3200',
-          data: '满3800元可用',
-          name: '财税助力特惠券',
-          ms: '限“小规模纳税人代理记账”服务 使用',
-          date: '2020.09.01-2020.09.31',
-          check: false,
-          nodata: '订单金额不符合使用条件',
-        },
-        {
-          money: '3200',
-          data: '满3800元可用',
-          name: '财税助力特惠券',
-          ms: '限“小规模纳税人代理记账”服务 使用',
-          date: '2020.09.01-2020.09.31',
-          check: false,
-          nodata: '订单金额不符合使用条件',
-        },
+        // {
+        //   money: '3200',
+        //   data: '满3800元可用',
+        //   name: '财税助力特惠券',
+        //   ms: '限“小规模纳税人代理记账”服务 使用',
+        //   date: '2020.09.01-2020.09.31',
+        //   check: false,
+        //   nodata: '订单金额不符合使用条件',
+        // },
+        // {
+        //   money: '3200',
+        //   data: '满3800元可用',
+        //   name: '财税助力特惠券',
+        //   ms: '限“小规模纳税人代理记账”服务 使用',
+        //   date: '2020.09.01-2020.09.31',
+        //   check: false,
+        //   nodata: '订单金额不符合使用条件',
+        // },
+        // {
+        //   money: '3200',
+        //   data: '满3800元可用',
+        //   name: '财税助力特惠券',
+        //   ms: '限“小规模纳税人代理记账”服务 使用',
+        //   date: '2020.09.01-2020.09.31',
+        //   check: false,
+        //   nodata: '订单金额不符合使用条件',
+        // },
+        // {
+        //   money: '3200',
+        //   data: '满3800元可用',
+        //   name: '财税助力特惠券',
+        //   ms: '限“小规模纳税人代理记账”服务 使用',
+        //   date: '2020.09.01-2020.09.31',
+        //   check: false,
+        //   nodata: '订单金额不符合使用条件',
+        // },
       ],
       contaract: '',
       productId: this.$route.query.productId,
@@ -227,7 +227,7 @@ export default {
       this.$cookies.remove('contaract')
     }
     this.asyncData()
-    this.getInitData()
+    // this.getInitData()
     this.getProtocol('protocol100008')
     console.log(this.$store.state.city, '城市')
   },
@@ -251,6 +251,7 @@ export default {
           const obj = {
             name: data.name,
             classCodeName: data.classCodeName,
+            id: data.id,
             salesPrice: data.salesPrice,
             salesGoodsSubVos: data.salesGoodsSubVos,
           }
@@ -258,6 +259,7 @@ export default {
           this.order.list = []
           this.order.list.push(obj)
           this.order.num = this.order.list.length
+          this.getInitData()
         } else {
           throw message
         }
@@ -317,14 +319,26 @@ export default {
         })
     },
     getInitData() {
-      coupon
-        .getCouponList({ axios: this.$axios }, this.formData)
+      const arr = this.order.list.map((x) => {
+        return x.id
+      })
+      order
+        .getCouponList(
+          { axios: this.$axios },
+          {
+            findType: 2,
+            userId: this.$cookies.get('userId'),
+            actionId: arr,
+          }
+        )
         .then((result) => {
           console.log(result)
+          this.datalist = result.data.responseData
+          console.log(this.datalist, 11111111111111111)
         })
         .catch((e) => {
           if (e.code !== 200) {
-            this.$xToast.show(e.message)
+            this.$xToast.show(e)
           }
         })
     },
