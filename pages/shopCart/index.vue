@@ -479,7 +479,7 @@ export default {
       } else {
         this.$router.push({
           path: '/order/confirmorder',
-          query: { cartIdsStr },
+          query: { type: 'shopcar' },
         })
       }
     },
