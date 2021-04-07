@@ -188,12 +188,14 @@ export default {
         .getcalculation(
           { axios: this.$axios },
           {
-            price: this.$parent.order.salesPrice,
+            price:
+              this.$parent.order.salesPrice ||
+              this.$parent.order.needPayTotalMoney,
             culation: this.checkarr.reducePrice,
           }
         )
         .then((result) => {
-          this.$parent.order.salesPrice = result
+          this.$parent.price = result
           this.$parent.popupshow = false
           this.$parent.coupon = `-${this.checkarr.reducePrice}`
         })

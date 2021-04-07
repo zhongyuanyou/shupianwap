@@ -2,7 +2,7 @@
 import { request } from '@/utils/request'
 // import { CHIPS_WAP_BASE_URL } from '@/config/constant'
 import { CHIPS_APP_BASE_URL } from '@/config/constant'
-const CHIPS_WAP_BASE_URL = 'http://172.16.133.7:7001/service'
+const CHIPS_WAP_BASE_URL = 'http://127.0.0.1:7001/service'
 // const CHIPS_APP_BASE_URL =
 //   'https://dspmicrouag.shupian.cn/crisps-c-middle-service-api'
 const category = {

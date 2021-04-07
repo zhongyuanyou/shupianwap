@@ -77,7 +77,7 @@ const shopCart = {
     return request({
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/yk/cart/v2/bill.do',
+      url: CHIPS_APP_BASE_URL + '/yk/cart/v2/bill.do',
     })
   },
 }
