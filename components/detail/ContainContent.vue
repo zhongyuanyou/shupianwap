@@ -6,7 +6,7 @@
     <div class="container_list">
       <div
         v-for="item in salesGoodsSubVos"
-        :key="item.goodsId"
+        :key="item.productId"
         class="container_list_item"
       >
         <div class="item_box">

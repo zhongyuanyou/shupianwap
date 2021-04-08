@@ -1,5 +1,10 @@
 <template>
-  <div v-if="serviceGoods.length === 1" class="container">
+  <div
+    v-if="
+      serviceGoods.length === 1 && serviceGoods[0]['serviceItems'].length > 0
+    "
+    class="container"
+  >
     <!--    服务商品的服务项-->
     <div class="container_tp">
       <p class="container_tp_title">包含项目</p>
