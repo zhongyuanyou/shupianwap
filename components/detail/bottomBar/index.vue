@@ -100,7 +100,7 @@ export default {
     addCart() {
       // 加入购物车
       const params = {
-        goodsNumber: this.sellingGoodsData.stock,
+        goodsNumber: 1, // 默认加购一个
         salePackageId: this.sellingGoodsData.id,
         shopMerId: this.sellingGoodsData.publisherMerchantsId,
         userId: this.userId,

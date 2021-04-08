@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div v-if="salesGoodsSubVos.length > 1" class="container">
     <div class="container_tp">
-      <p class="container_tp_title">包含内容</p>
+      <p class="container_tp_title">包含服务</p>
     </div>
     <div class="container_list">
       <div
@@ -10,13 +10,13 @@
         class="container_list_item"
       >
         <div class="item_box">
-          <sp-image
-            width="1.2rem"
-            height="1.2rem"
-            fit="cover"
-            lazy-load
-            src=""
-          />
+          <!--          <sp-image-->
+          <!--            width="1.2rem"-->
+          <!--            height="1.2rem"-->
+          <!--            fit="cover"-->
+          <!--            lazy-load-->
+          <!--            src=""-->
+          <!--          />-->
           <div class="content">
             <div class="content_title hide">{{ item.goodsSubName }}</div>
             <div class="content_desc hide">
@@ -25,26 +25,8 @@
             <div class="content_price">
               {{ item.salesPriceEdit }} <span>元</span>
             </div>
-            <!--            <div class="content_detail" @click="expand = !expand">-->
-            <!--              {{ expand ? '收起详情' : '查看详情'-->
-            <!--              }}<sp-icon-->
-            <!--                name="arrow-down"-->
-            <!--                color="#4974f5"-->
-            <!--                :class="{ arrow_up: expand }"-->
-            <!--              />-->
-            <!--            </div>-->
           </div>
         </div>
-        <!--        <div v-if="expand" class="detail">-->
-        <!--          <div-->
-        <!--            v-for="(attrItem, attrIndex) in list"-->
-        <!--            :key="attrIndex"-->
-        <!--            class="detail_attr"-->
-        <!--          >-->
-        <!--            <span class="detail_attr_label"> {{ attrItem.label }}：</span>-->
-        <!--            <span class="detail_attr_content">{{ attrItem.content }}</span>-->
-        <!--          </div>-->
-        <!--        </div>-->
       </div>
     </div>
   </div>
@@ -61,33 +43,6 @@ export default {
   data() {
     return {
       expand: false,
-      list: [
-        {
-          label: '经营年限',
-          content: '3年以上',
-        },
-        {
-          label: '到期时间',
-          content: '2023年',
-        },
-        {
-          label: '整转方式',
-          content: '整转',
-        },
-        {
-          label: '安许证',
-          content: '有',
-        },
-        {
-          label: '注册资本',
-          content: '50~100万元',
-        },
-        {
-          label: '经营地区',
-          content:
-            '四川省成都市四川省成都市四川省成都市四川省成都市四川省成都市四川省成都市',
-        },
-      ],
     }
   },
   computed: {
@@ -134,7 +89,7 @@ export default {
         border-bottom: 1px solid #f4f4f4;
         .content {
           position: relative;
-          margin-left: 28px;
+          /*margin-left: 28px;*/
           flex: 1;
           min-width: 0;
           &_title {
