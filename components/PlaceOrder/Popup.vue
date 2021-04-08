@@ -23,7 +23,8 @@
             @click="tabactivefn(item, index)"
           >
             <span>{{ item.name }}</span
-            ><b v-if="item.num">{{ `(${datalist.length})` }}</b>
+            ><b v-if="index == 0">{{ `(${datalist.length})` }}</b>
+            <b v-else>{{ `(${nolist.length})` }}</b>
             <i class="icon"></i>
           </p>
         </div>
@@ -33,47 +34,72 @@
         </div>
         <div v-if="tablist[tabAct].is">
           <div class="databox">
-            <div class="listbox">
+            <div v-if="datalist.length > 0" class="listbox">
               <div v-for="(item, index) in datalist" :key="index" class="list">
                 <div class="left">
-                  <h1>{{ item.money }}</h1>
-                  <p>{{ item.data }}</p>
-                </div>
-                <div class="right">
-                  <div class="data">
-                    <h1>{{ item.name }}</h1>
-                    <p>{{ item.ms }}</p>
-                    <p class="date">{{ item.date }}</p>
-                  </div>
-                  <div class="right">
-                    <Checkbox v-model="item.check"></Checkbox>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="btn">
-              <p>确定</p>
-            </div>
-          </div>
-        </div>
-        <div v-else class="databox nodatabox">
-          <div class="listbox">
-            <div v-for="(item, index) in datalist" :key="index" class="nolist">
-              <div class="top">
-                <div class="left">
-                  <h1>{{ item.discount || item.reducePrice }}</h1>
-                  <p>{{ item.useType == 1 ? '全场通用' : '当前暂不可用' }}</p>
+                  <h1>{{ item.reducePrice }}</h1>
+                  <p>满{{ item.fullPrice }}元可用</p>
                 </div>
                 <div class="right">
                   <div class="data">
                     <h1>{{ item.couponName }}</h1>
-                    <p>{{ item.serviceLife }}</p>
+                    <p v-if="item.useType === 1">全品类通用</p>
+                    <p v-else-if="item.useType === 2">
+                      限“小规模纳税人代理记账”服务 使用
+                    </p>
+                    <p v-else>限“小规模纳税人代理记账”服务 使用</p>
+                    <p class="date">{{ item.serviceLife }}</p>
+                  </div>
+                  <div class="right">
+                    <sp-radio-group v-model="radio">
+                      <sp-radio
+                        :name="index"
+                        @click="checkitem(item)"
+                      ></sp-radio>
+                    </sp-radio-group>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else class="none">
+              <img
+                src="https://img10.dgg.cn/pt03/wap/e5g6ntopcpc0000.png"
+                alt=""
+              />
+              <p>暂无优惠券</p>
+            </div>
+            <div v-if="datalist.length > 0" class="btn">
+              <p @click="sum">确定</p>
+            </div>
+          </div>
+        </div>
+        <div v-else class="databox nodatabox">
+          <div v-if="datalist.length > 0" class="listbox">
+            <div v-for="(item, index) in datalist" :key="index" class="nolist">
+              <div class="top">
+                <div class="left">
+                  <h1>{{ item.reducePrice }}</h1>
+                  <p>满{{ item.fullPrice }}元可用</p>
+                </div>
+                <div class="right">
+                  <div class="data">
+                    <h1>{{ item.couponName }}</h1>
+                    <p v-if="item.useType === 1">全品类通用</p>
+                    <p v-else-if="item.useType === 2">限定“部分类别产品”使用</p>
+                    <p v-else>限定“指定产品”使用</p>
                     <p class="date">{{ item.serviceLife }}</p>
                   </div>
                 </div>
               </div>
-              <p>{{ item.nodata }}</p>
+              <p>订单金额不符合使用条件</p>
             </div>
+          </div>
+          <div v-else class="none">
+            <img
+              src="https://img10.dgg.cn/pt03/wap/e5g6ntopcpc0000.png"
+              alt=""
+            />
+            <p>暂无优惠券</p>
           </div>
         </div>
       </div>
@@ -82,13 +108,15 @@
 </template>
 
 <script>
-import { Popup, Icon, Checkbox } from '@chipspc/vant-dgg'
+import { Popup, Icon, RadioGroup, Radio } from '@chipspc/vant-dgg'
+import { order } from '@/api/index'
 export default {
   name: 'PlaceOrderPopup',
   components: {
     Popup,
     Icon,
-    Checkbox,
+    [RadioGroup.name]: RadioGroup,
+    [Radio.name]: Radio,
   },
   props: {
     show: {
@@ -133,13 +161,13 @@ export default {
         return '请选择优惠券'
       },
     },
-    num: {
-      type: Number,
+    datalist: {
+      type: Array,
       default() {
-        return ''
+        return []
       },
     },
-    datalist: {
+    nolist: {
       type: Array,
       default() {
         return []
@@ -149,9 +177,39 @@ export default {
   data() {
     return {
       tabAct: 0,
+      checkarr: '',
+      radio: null,
+      num: 0,
     }
   },
   methods: {
+    sum() {
+      order
+        .getcalculation(
+          { axios: this.$axios },
+          {
+            price:
+              this.$parent.order.salesPrice ||
+              this.$parent.order.needPayTotalMoney,
+            culation: this.checkarr.reducePrice,
+          }
+        )
+        .then((result) => {
+          this.$parent.price = result
+          this.$parent.popupshow = false
+          this.$parent.coupon = `-${this.checkarr.reducePrice}`
+        })
+        .catch((e) => {
+          if (e.code !== 200) {
+            this.$xToast.show(e.message)
+            console.log(e)
+          }
+        })
+    },
+    checkitem(item) {
+      this.checkarr = item
+      this.num = this.checkarr.reducePrice
+    },
     close(data) {
       this.$emit('close', data)
     },
@@ -243,10 +301,12 @@ export default {
         box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
         box-sizing: border-box;
         display: flex;
+        background: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png')
+          no-repeat;
+        background-size: 100%;
         > .left {
           width: 201px;
           height: 100%;
-          background: red;
           color: #fff;
           padding-top: 20px;
           box-sizing: border-box;
@@ -295,6 +355,24 @@ export default {
         }
       }
     }
+    .none {
+      overflow-y: auto;
+      padding-top: 40px;
+      > img {
+        width: 340px;
+        height: 340px;
+        display: block;
+        margin: 0 auto;
+      }
+      > p {
+        font-size: 30px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: #1a1a1a;
+        margin-top: 24px;
+        text-align: center;
+      }
+    }
     .btn {
       height: 180px;
       box-sizing: border-box;
@@ -320,7 +398,9 @@ export default {
       > .nolist {
         height: 271px;
         margin-top: 24px;
-        background: #ffffff;
+        background: url(https://img10.dgg.cn/pt03/wap/83kzvunu5vw0000.png)
+          no-repeat;
+        background-size: 100%;
         box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
         box-sizing: border-box;
         > .top {
@@ -328,7 +408,6 @@ export default {
           > .left {
             width: 201px;
             height: 212px;
-            background: red;
             color: #fff;
             padding-top: 20px;
             box-sizing: border-box;

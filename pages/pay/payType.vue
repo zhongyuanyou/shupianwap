@@ -2,9 +2,7 @@
   <div class="pay-page">
     <Header title="选择支付方式" />
     <div class="banner">
-      <p class="total-money">
-        {{ responseData.enableTotalMoney / 100 || 0 }}元
-      </p>
+      <p class="total-money">{{ ChangeMoney }}元</p>
       <p v-if="time && time.hour" class="time">
         剩余支付时间 ：<span>{{ time.hour }}</span> ：<span>{{
           time.min
@@ -53,18 +51,21 @@
       <sp-button size="large" @click="startPay">
         <span class="btn-item"> {{ payName || '支付宝支付' }}：</span>
         <span class="btn-item money">
-          {{ responseData.enableTotalMoney / 100 }}
+          {{ ChangeMoney }}
         </span>
         <span class="btn-item"> 元</span>
       </sp-button>
     </div>
+    <LoadingCenter v-show="loading" />
   </div>
 </template>
 
 <script>
 import { Button, RadioGroup, Radio, Cell, Checkbox } from '@chipspc/vant-dgg'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import Header from '@/components/common/head/header'
 import { pay, auth } from '@/api'
+import changeMoney from '@/utils/changeMoney'
 // 支付倒计时定时器
 let timer
 export default {
@@ -75,9 +76,11 @@ export default {
     [Cell.name]: Cell,
     Header,
     Checkbox,
+    LoadingCenter,
   },
   data() {
     return {
+      loading: false, // 加载状态
       agreementData: {}, // 协议数据
       responseData: {},
       radio: '',
@@ -121,6 +124,11 @@ export default {
       payName: '支付宝支付',
     }
   },
+  computed: {
+    ChangeMoney() {
+      return changeMoney.regFenToYuan(this.responseData.enableTotalMoney)
+    },
+  },
   beforeDestroy() {
     if (timer) clearInterval(timer)
   },
@@ -138,10 +146,12 @@ export default {
       this.goBack()
     }
   },
+
   methods: {
     // 进入协议页面
     enterAgreement() {
-      console.log('this.agreementData', this.agreementData)
+      // console.log('this.agreementData', this.agreementData)
+
       this.$router.push({
         name: 'login-protocol',
         query: {
@@ -223,15 +233,18 @@ export default {
     },
     // 查询订单应付金额
     enablePayMoney() {
+      this.loading = true
       pay
         .enablePayMoney(this.formData)
         .then((result) => {
-          console.log('result的值', result)
+          // console.log('result的值', result)
+          this.loading = false
           this.responseData = result
           this.countDown(this.responseData.countDownTimeLong) // 倒计时
         })
         .catch((e) => {
           if (e.code !== 200) {
+            this.loading = false
             console.log(e)
           }
         })
