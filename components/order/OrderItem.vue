@@ -14,7 +14,8 @@
         class="order-infos"
         :class="index !== 0 ? 'border-top' : ''"
       >
-        <sp-image :src="item.skuImages" alt="" class="img" srcset="" />
+        <div class="img"></div>
+        <!-- <sp-image v-else :src="item.skuImages" alt="" class="img" srcset="" /> -->
         <div class="right">
           <p class="goods-name">
             <span class="name"> {{ item.orderSaleName || item.spuName }}</span>

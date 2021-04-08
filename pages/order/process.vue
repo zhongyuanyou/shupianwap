@@ -24,14 +24,14 @@
       >
         <span>第{{ index }}批次</span>
       </div>
-    </div>
-    <div v-if="!batchList.length" class="no-data">
-      <img
-        src="https://cdn.shupian.cn/sp-pt/wap/78km3o58dnw0000.png"
-        alt=""
-        srcset=""
-      />
-      <p>暂无办理进度信息</p>
+      <div v-if="!batchList.length" class="no-data">
+        <img
+          src="https://cdn.shupian.cn/sp-pt/wap/78km3o58dnw0000.png"
+          alt=""
+          srcset=""
+        />
+        <p>暂无办理进度信息</p>
+      </div>
     </div>
     <LoadingCenter v-show="loading" />
   </div>
@@ -55,6 +55,7 @@ export default {
       loading: true,
       skuInfo: {},
       orderData: {},
+      batchList: [],
     }
   },
   computed: {
@@ -107,6 +108,7 @@ export default {
           { id: this.orderData.orderId, cusOrderId: this.orderData.cusOrderId }
         )
         .then((res) => {
+          this.loading = false
           // const orderData = res
           console.log('res', res)
           this.skuInfo = res.data.orderSkuList.filter((item) => {

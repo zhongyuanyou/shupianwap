@@ -17,16 +17,24 @@
         <sp-tab name="ORDER_CUS_STATUS_CANCELLED" title="已取消"></sp-tab>
       </sp-tabs>
     </div>
-    <div class="list">
-      <orderItem
-        v-for="(item, index) in list"
-        :key="index"
-        :order-data="item"
-        :order-id="item.cusOrderId"
-        :order-type="selectedOrderStatus"
-        @handleClickItem="handleClickItem"
-      >
-      </orderItem>
+    <div ref="scrollView" class="page-list" @scroll="handleScollList">
+      <div class="scroll-inner">
+        <orderItem
+          v-for="(item, index) in list"
+          :key="index"
+          :order-data="item"
+          :order-id="item.cusOrderId"
+          :order-type="selectedOrderStatus"
+          @handleClickItem="handleClickItem"
+        >
+        </orderItem>
+      </div>
+      <sp-loading
+        v-if="loadingMore && !noMore"
+        type="spinner"
+        color="#1989fa"
+        class="loading-area"
+      />
       <p v-if="noMore" class="no-more">没有更多了</p>
     </div>
     <CancelOrder
@@ -59,7 +67,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex'
-import { Tab, Tabs } from '@chipspc/vant-dgg'
+import { Tab, Tabs, Loading } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import OrderItem from '@/components/order/OrderItem'
 import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
@@ -72,6 +80,7 @@ export default {
   components: {
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
+    [Loading.name]: Loading,
     Header,
     OrderItem,
     CancelOrder,
@@ -120,31 +129,32 @@ export default {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_CANCELLED'
       }
     }
-    window.addEventListener(
-      'scroll',
-      this.throttle(this.scollChange, 500, 1000)
-    )
-    this.$on('hook:beforeDestroy', () => {
-      window.removeEventListener('scroll', this.chartResize)
-    })
+    // window.addEventListener(
+    //   'scroll',
+    //   this.throttle(this.scollChange, 500, 1000)
+    // )
+    // this.$on('hook:beforeDestroy', () => {
+    //   window.removeEventListener('scroll', this.chartResize)
+    // })
   },
   beforeDestroy() {
     window.removeEventListener('scroll', this.throttle())
   },
   methods: {
+    handleScollList(e) {
+      console.log('列表滚动', e)
+      this.throttle(this.scollChange(), 500, 1000)
+    },
     scollChange() {
-      console.log('this.$route.path', this.$route.path)
-      if (this.$route.path !== '/order/') {
-        window.removeEventListener('scroll', this.throttle())
-        return
-      }
-      const scrollTop =
-        window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop
-      const scrollHeight = document.body.scrollHeight
+      const scrollTop = this.$refs.scrollView.scrollTop
+      const scrollHeight = this.$refs.scrollView.scrollHeight
       const windowHeight = window.innerHeight
-      if (scrollTop + windowHeight > scrollHeight - 100) {
+      console.log('scrollTop', scrollTop)
+      console.log('scrollHeight', scrollHeight)
+      console.log('windowHeight', windowHeight)
+      // 提前200px拉取下页数据
+      if (scrollTop + windowHeight > scrollHeight - 10) {
+        console.log('触发请求')
         this.getOrderList()
       }
     },
@@ -166,13 +176,14 @@ export default {
         }
       }
     },
-    changeTab(name, title) {
+    changeTab(name) {
+      console.log('name', name)
       // 初始化数据列表
       this.page = 1
       this.selectedOrderStatus = name
       this.loadingMore = false
       this.loading = false
-      this.list = []
+      this.noMore = false
       this.getOrderList()
     },
     toCar() {
@@ -180,12 +191,13 @@ export default {
     },
     getOrderList() {
       // 正在下拉加载则不加载更多
-      if (this.loadingMore) return
+      if (this.loadingMore || this.noMore) return
       if (this.page === 1) {
         this.loading = true
       } else {
         this.loadingMore = true
       }
+      this.noMore = false
       orderApi
         .list(
           { axios: this.$axios },
@@ -200,8 +212,11 @@ export default {
           this.loadingMore = false
           const arr = res.records
           if (arr.length) {
+            if (this.page === 1) {
+              this.list = []
+            }
+            if (arr.length < this.limit) this.noMore = true
             this.page++
-            this.noMore = false
             for (let i = 0, l = arr.length; i < l; i++) {
               this.changeMoney(arr[i])
             }
@@ -213,6 +228,9 @@ export default {
           }
         })
         .catch((error) => {
+          if (this.page === 1) {
+            this.list = []
+          }
           console.log('error', error)
           this.loading = false
           this.loadingMore = false
@@ -299,9 +317,11 @@ export default {
       width: 32px;
     }
   }
-  .list {
+  .page-list {
     padding-bottom: 140px;
     margin-top: 108px;
+    height: calc(100vh - 200px);
+    overflow-y: scroll;
   }
 }
 .no-data-area {
@@ -327,6 +347,12 @@ export default {
   }
 }
 .no-more {
+  color: #999;
+  font-size: 24px;
+  text-align: center;
+  margin-top: 40px;
+}
+.sp-loading {
   color: #999;
   font-size: 24px;
   text-align: center;

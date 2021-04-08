@@ -140,8 +140,9 @@ export default {
     // 判断是否是周期产品
     checkProductType(item) {
       const skuDetailInfo = JSON.parse(item.skuDetailInfo)
-      const productStyle = skuDetailInfo.sku.refConfig.productStyle
-      if (productStyle === 'PRO_CYCLE_PRODUCT') {
+      const productStyle =
+        skuDetailInfo.sku.refConfig && skuDetailInfo.sku.refConfig.productStyle
+      if (productStyle && productStyle === 'PRO_CYCLE_PRODUCT') {
         // 周期产品
         this.$router.push({
           path: '/order/process',
