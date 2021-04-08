@@ -224,7 +224,7 @@ export default {
     return {
       orderTabs: [
         {
-          iconName: 'per_ic_handle',
+          iconName: 'per_ic_payment',
           name: '待付款',
         },
         {
