@@ -14,7 +14,11 @@
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
     <!--    多个服务商品时不显示SKU-->
-    <div v-if="goodsSubDetailsName.length === 1" class="cell" @click="openSku">
+    <div
+      v-if="goodsSubDetailsName.length === 1 && skuResult.length > 0"
+      class="cell"
+      @click="openSku"
+    >
       <div class="cell_left">
         <div class="label">选择</div>
         <div class="content">
@@ -321,6 +325,10 @@ export default {
     },
     //  获取SKU属性
     async getServiceAttr(goodsSubDetailsName) {
+      if (goodsSubDetailsName.goodsSubDetailsName.length < 1) {
+        this.skuResult = []
+        return
+      }
       try {
         const skuResult = await this.$axios.post(
           productDetailsApi.findServiceAttr,

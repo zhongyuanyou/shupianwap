@@ -49,9 +49,12 @@
     <!--S 第二板块 领券 SKU-->
     <VouchersSelect ref="sku" />
     <!--E 第二板块 领券 SKU-->
-    <!--S 第三板块 包含内容-->
+    <!--S 第三板块 包含项目-->
+    <ContainProject />
+    <!--E 第三板块 包含项目-->
+    <!--S 第三板块 包含服务-->
     <ContainContent />
-    <!--E 第三板块 包含内容-->
+    <!--E 第三板块 包含服务-->
     <!--S 第五板块 推荐规划师-->
     <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
     <!--E 第五板块 推荐规划师-->
@@ -85,6 +88,7 @@ import { mapActions } from 'vuex'
 import Banner from '~/components/detail/Banner'
 import Title from '~/components/detail/Title1'
 import VouchersSelect from '~/components/detail/VouchersSelect'
+import ContainProject from '~/components/detail/ContainProject'
 import ContainContent from '~/components/detail/ContainContent'
 import TcPlanners from '~/components/detail/TcPlanners1'
 import ServiceDetail from '~/components/detail/ServiceDetail'
@@ -106,8 +110,7 @@ export default {
     Banner,
     Title,
     VouchersSelect,
-    // ContainProject,
-    // ContainService,
+    ContainProject,
     ContainContent,
     TcPlanners,
     ServiceDetail,

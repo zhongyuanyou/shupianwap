@@ -1,5 +1,11 @@
 <template>
-  <div class="container">
+  <div
+    v-if="
+      serviceGoods.length === 1 && serviceGoods[0]['serviceItems'].length > 0
+    "
+    class="container"
+  >
+    <!--    服务商品的服务项-->
     <div class="container_tp">
       <p class="container_tp_title">包含项目</p>
       <div class="container_tp_more" @click="showRoundCorner = true">
@@ -10,7 +16,7 @@
     </div>
     <div class="container_list">
       <div
-        v-for="(item, index) in projectList"
+        v-for="(item, index) in serviceGoods[0]['serviceItems']"
         :key="index"
         class="container_list_item"
       >
@@ -27,7 +33,11 @@
       position="bottom"
       :style="{ padding: '25px 20px' }"
     >
-      <sp-safeguard :options="projectList" success ellipsis></sp-safeguard>
+      <sp-safeguard
+        :options="serviceGoods[0]['serviceItems']"
+        success
+        ellipsis
+      ></sp-safeguard>
     </sp-popup>
   </div>
 </template>
@@ -42,21 +52,31 @@ export default {
   },
   data() {
     return {
-      projectList: [
-        {
-          title: '公司核名服务核名服务',
-          text: '这是一条描述文字这是一条描述文字',
-        },
-        {
-          title: '工商系统提报',
-          text: '这是一条描述文字',
-        },
-      ],
+      projectList: [],
       showRoundCorner: false,
     }
   },
-  mounted() {},
-  methods: {},
+  computed: {
+    //  服务商品的SKU集合
+    serviceGoods() {
+      //  基础商品
+      const salesGoodsSubVos = JSON.stringify(
+        this.$store.state.sellingGoodsDetail.sellingGoodsData.salesGoodsSubVos
+      )
+      // 找出服务商品
+      const serviceGoods = JSON.parse(salesGoodsSubVos).map((item) => {
+        item.serviceItems = item.serviceItems.map((serviceList) => {
+          return {
+            title: serviceList.serviceItemName,
+            text: serviceList.description,
+          }
+        })
+        return item
+      })
+      console.log(serviceGoods)
+      return serviceGoods
+    },
+  },
 }
 </script>
 

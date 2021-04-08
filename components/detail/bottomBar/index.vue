@@ -23,12 +23,16 @@
         </div>
       </div>
       <div class="commodityConsult-containner-handle">
-        <sp-button v-if="type === 1" class="add_cart" @click="addCart">
+        <sp-button
+          v-if="salesGoodsSubVos === 1"
+          class="add_cart"
+          @click="addCart"
+        >
           加入购物车
         </sp-button>
 
         <sp-button
-          v-if="[2, 3].includes(type)"
+          v-if="[2, 3].includes(salesGoodsSubVos)"
           class="consulting"
           @click="
             sendTemplateMsgWithImg(plannerInfo.mchUserId, plannerInfo.type)
@@ -36,11 +40,15 @@
         >
           在线咨询
         </sp-button>
-        <sp-button v-if="[1, 2].includes(type)" class="now_buy" @click="nowBuy">
+        <sp-button
+          v-if="[1, 2].includes(salesGoodsSubVos)"
+          class="now_buy"
+          @click="nowBuy"
+        >
           立即购买
         </sp-button>
         <sp-button
-          v-if="type === 3"
+          v-if="salesGoodsSubVos === 3"
           type="primary"
           @click="handleTel(plannerInfo.mchUserId)"
         >
@@ -94,13 +102,23 @@ export default {
       sellingGoodsData: (state) => state.sellingGoodsDetail.sellingGoodsData,
       city: (state) => state.city.currentCity,
       userId: (state) => state.user.userInfo.userId,
+      //  获取服务基础商品的个数
+      salesGoodsSubVos: (state) => {
+        const baseGoods =
+          state.sellingGoodsDetail.sellingGoodsData.salesGoodsSubVos
+        if (baseGoods.length < 2) {
+          return 1
+        } else {
+          return 2
+        }
+      },
     }),
   },
   methods: {
     addCart() {
       // 加入购物车
       const params = {
-        goodsNumber: this.sellingGoodsData.stock,
+        goodsNumber: 1, // 默认加购一个
         salePackageId: this.sellingGoodsData.id,
         shopMerId: this.sellingGoodsData.publisherMerchantsId,
         userId: this.userId,
