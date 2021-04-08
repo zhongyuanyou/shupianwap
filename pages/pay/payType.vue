@@ -68,6 +68,7 @@ import { pay, auth } from '@/api'
 import changeMoney from '@/utils/changeMoney'
 // 支付倒计时定时器
 let timer
+let time
 export default {
   components: {
     [Button.name]: Button,
@@ -80,6 +81,10 @@ export default {
   },
   data() {
     return {
+      payCallBackData: {
+        cusOrderId: 0,
+        serialNumber: 0,
+      }, // 回调请求数据
       loading: false, // 加载状态
       agreementData: {}, // 协议数据
       responseData: {},
@@ -131,6 +136,7 @@ export default {
   },
   beforeDestroy() {
     if (timer) clearInterval(timer)
+    if (time) clearInterval(time)
   },
   mounted() {
     // 获取协议
@@ -141,13 +147,36 @@ export default {
       this.formData.cusOrderId = this.$route.query.cusOrderId
       this.formData.batchIds = this.$route.query.batchIds
       this.getPayParamsFormData.cusOrderId = this.$route.query.cusOrderId
+      this.payCallBackData.cusOrderId = this.$route.query.cusOrderId
       this.enablePayMoney()
     } else {
       this.goBack()
     }
+
+    const startTime = localStorage.getItem('startTime')
+    if (startTime) {
+      const nowTime = this.getNowTime()
+      console.log('nowTime - startTime', nowTime - startTime)
+      if (nowTime - startTime > 120000) {
+        time = setInterval(() => {
+          this.getPayResult()
+        }, 2000)
+      } else {
+        this.$router.push({
+          path: '/pay/payResult',
+          query: {
+            payStatus: false,
+          },
+        })
+      }
+    }
   },
 
   methods: {
+    // 获取当前时间戳
+    getNowTime() {
+      return new Date().getTime()
+    },
     // 进入协议页面
     enterAgreement() {
       // console.log('this.agreementData', this.agreementData)
@@ -240,11 +269,36 @@ export default {
           // console.log('result的值', result)
           this.loading = false
           this.responseData = result
-          this.countDown(this.responseData.countDownTimeLong) // 倒计时
+          const countDownTimeLong = this.responseData.countDownTimeLong
+          this.countDown(countDownTimeLong) // 倒计时
         })
         .catch((e) => {
           if (e.code !== 200) {
             this.loading = false
+            this.$xToast.error(e.message || '请求失败')
+            console.log(e)
+          }
+        })
+    },
+    // 获取回调信息
+    getPayResult() {
+      this.payCallBackData.cusOrderId = localStorage.getItem('cusOrderId')
+      this.payCallBackData.serialNumber = localStorage.getItem('serialNumber')
+      pay
+        .getPayResult(this.payCallBackData)
+        .then((result) => {
+          console.log('result', result.data)
+          if (result.data === 1) {
+            this.$router.push({
+              path: '/pay/payResult',
+              query: {
+                payStatus: true,
+              },
+            })
+          }
+        })
+        .catch((e) => {
+          if (e.code !== 200) {
             console.log(e)
           }
         })
@@ -266,6 +320,14 @@ export default {
             console.log(this.responseData.payParam)
             if (this.responseData.code === '0') {
               const payUrl = this.responseData.payParam
+              // window.location.href = payUrl
+              this.payCallBackData.serialNumber = this.responseData.guaguaPayPartyNo
+              localStorage.setItem('cusOrderId', this.$route.query.cusOrderId)
+              localStorage.setItem(
+                'serialNumber',
+                this.payCallBackData.serialNumber
+              )
+              localStorage.setItem('startTime', new Date().getTime())
               window.location.href = payUrl
             } else {
             }
@@ -273,6 +335,7 @@ export default {
           .catch((e) => {
             if (e.code !== 200) {
               console.log(e)
+              this.$xToast.error(e.data.error || '请求失败')
             }
           })
       }

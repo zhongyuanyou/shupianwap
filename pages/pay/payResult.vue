@@ -10,32 +10,35 @@
       ></my-icon>
       <p v-if="payStatus" class="title title1">
         <my-icon
-          name="pay_ic_success"
-          size="0.4rem"
-          color="rgba(73, 116, 245, 1)"
-        ></my-icon>
-        支付成功
-      </p>
-      <p v-else class="title title1">
-        <my-icon
           name="pay_ic_fail"
           size="0.4rem"
           color="rgba(241, 82, 78, 1)"
         ></my-icon>
         支付失败
       </p>
-      <p v-if="payStatus" class="toast">
-        本次支付已完成，付款5000元，<br />
-        详细信息请点击查看订单
+      <p v-else class="title title1">
+        <my-icon
+          name="pay_ic_success"
+          size="0.4rem"
+          color="rgba(73, 116, 245, 1)"
+        ></my-icon>
+        支付成功
       </p>
-      <p v-else class="toast">
+
+      <p v-if="payStatus" class="toast">
         请尽快完成付款，超过订单付款期限，<br />
         系统将自动取消订单
       </p>
+      <p v-else class="toast">
+        本次支付已完成，付款5000元，<br />
+        详细信息请点击查看订单
+      </p>
       <div class="btn-area">
         <sp-button class="btn1">查看订单</sp-button>
-        <sp-button v-if="payStatus" class="btn2">返回首页</sp-button>
-        <sp-button v-else class="btn3" @click="againPay">重新支付</sp-button>
+        <sp-button v-if="payStatus" class="btn3" @click="againPay"
+          >重新支付</sp-button
+        >
+        <sp-button v-else class="btn2">返回首页</sp-button>
       </div>
     </div>
     <div class="list"></div>
@@ -118,7 +121,9 @@ export default {
     }
   },
   mounted() {
-    this.payStatus = Math.floor(Math.random() * 2)
+    // this.payStatus = Math.floor(Math.random() * 2)
+    this.payStatus = this.$route.query.payStatus
+    console.log('this.payStatus', this.payStatus)
     pay
       .enablePayMoney({ axios: this.$axios }, this.formData)
       .then((result) => {
