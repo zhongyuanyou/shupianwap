@@ -137,6 +137,7 @@ import {
   Cell,
   CellGroup,
   Checkbox,
+  Toast,
   // CheckboxGroup,
 } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
@@ -294,21 +295,38 @@ export default {
       if (this.$route.query.type === 'shopcar') {
         const arr = []
         for (let i = 0; i < this.order.list.length; i++) {
-          const sku = {
-            saleSkuId: this.order.list[i].id,
-            saleSkuName: this.order.list[i].name,
-            saleSkuVersionNo: this.order.list[i].goodsNo,
-            saleSkuPrice: this.order.list[i].salesPrice,
-            saleSkuCount: this.order.list[i].salesVolume,
+          if (arr.length === 0) {
+            const sku = {
+              saleSkuId: this.order.list[i].id,
+              saleSkuName: this.order.list[i].name,
+              saleSkuVersionNo: 0,
+              saleSkuPrice: this.order.list[i].salesPrice,
+              saleSkuCount: this.order.list[i].salesVolume,
+            }
+            arr.push(sku)
+          } else {
+            for (let b = 0; b < arr.length; b++) {
+              if (this.order.list[i].id === arr[b].saleSkuId) {
+                arr[b].saleSkuCount++
+              } else {
+                const sku = {
+                  saleSkuId: this.order.list[i].id,
+                  saleSkuName: this.order.list[i].name,
+                  saleSkuVersionNo: 0,
+                  saleSkuPrice: this.order.list[i].salesPrice,
+                  saleSkuCount: this.order.list[i].salesVolume,
+                }
+                arr.push(sku)
+              }
+            }
           }
-          arr.push(sku)
         }
         this.Orderform.needSplitProPackageDataParam = arr
       } else {
         const sku = {
           saleSkuId: this.order.id,
           saleSkuName: this.order.name,
-          saleSkuVersionNo: this.order.goodsNo,
+          saleSkuVersionNo: 0,
           saleSkuPrice: this.order.salesPrice,
           saleSkuCount: 1,
         }
@@ -320,10 +338,8 @@ export default {
       if (this.$route.query.type === 'shopcar') {
         isFromCart = true
         this.Orderform.cartIds = this.$route.query.cartIdsStr
-        cusOrderPayType = this.order.list.map((x) => {
-          return x.refConfig.payType
-        })
-        cusOrderPayType = cusOrderPayType.toString()
+        cusOrderPayType = this.order.list[0].refConfig.payType
+        // cusOrderPayType = cusOrderPayType.toString()
       } else {
         cusOrderPayType = this.order.refConfig.payType
         isFromCart = false
@@ -345,16 +361,28 @@ export default {
       this.Orderform.customerOrderMark = this.message
       if (this.contaract) {
         this.Orderform.contractFormParam = this.contaract
+        this.Orderform.contractFormParam.contractApplyWay = 'CUSTOMER'
       }
-      console.log(this.Orderform, 12412423423)
       order
         .placeOrder({ axios: this.$axios }, this.Orderform)
         .then((result) => {
-          console.log(result)
+          Toast({
+            message: '下单成功',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_success',
+          })
+          setTimeout(() => {
+            this.$router.push({
+              path: '/pay/payType',
+              query: {
+                cusOrderId: result.cusOrderId,
+              },
+            })
+          }, 1000)
         })
         .catch((e) => {
           if (e.code !== 200) {
-            this.$xToast.show(e.message)
+            this.$xToast.show(e)
             console.log(e)
           }
         })
