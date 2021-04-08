@@ -80,6 +80,7 @@
         <sp-button
           v-if="isShowCanCelBtn()"
           type="primary"
+          class="btn-cancel"
           @click="handleClickItem(1)"
           >取消订单</sp-button
         >
@@ -87,30 +88,35 @@
         <sp-button
           v-if="checkContractStatus() === 2"
           type="info"
+          class="btn-look"
           @click="handleClickItem(3)"
           >查看合同</sp-button
         >
         <sp-button
           v-if="checkContractStatus() == 1"
           type="info"
+          class="btn-look"
           @click="handleClickItem(2)"
           >签署合同</sp-button
         >
         <sp-button
           v-if="isShowPayBtn() == 1"
           type="default"
+          class="btn-confirm"
           @click="handleClickItem(4)"
           >立即付款</sp-button
         >
         <sp-button
           v-if="isShowPayBtn() == 2"
           type="default"
+          class="btn-confirm"
           @click="handleClickItem(5)"
           >支付余款</sp-button
         >
         <sp-button
           v-if="isShowConfirmBtn()"
           type="default"
+          class="btn-confirm"
           @click="handleClickItem(6)"
           >确认完成</sp-button
         >
@@ -187,7 +193,7 @@ export default {
   .order-infos {
     height: auto;
     display: flex;
-    padding: 40px 0 20px 0;
+    padding: 30px 0 24px 0;
     .img {
       width: 130px;
       height: 130px;
@@ -277,7 +283,6 @@ export default {
       font-family: PingFang SC;
       font-weight: 400;
       color: #999999;
-      margin-top: 10px;
       float: right;
       span {
         display: block;
@@ -294,14 +299,28 @@ export default {
       height: 110px;
       margin-top: -20px;
       .sp-button {
+        font-size: 26px;
         height: 64px;
-        background: #ffffff;
-        border: 1px solid #cdcdcd;
         border-radius: 32px;
         padding: 0 25px;
         color: #999999;
         line-height: 1;
         margin: 0;
+      }
+      .btn-cancel {
+        color: #999999;
+        background: #ffffff;
+        border: 1px solid #cdcdcd;
+      }
+      .btn-look {
+        border: 1px solid #cdcdcd;
+        background: #ffffff;
+        color: #222222;
+      }
+      .btn-confirm {
+        background: #ffffff;
+        border: 1px solid #e5654c;
+        color: #e5654c;
       }
     }
   }
