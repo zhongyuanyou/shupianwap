@@ -26,17 +26,21 @@
     <div class="my_order">
       <div class="my_order_title">我的订单</div>
       <div class="my_order_type">
-        <div class="my_order_type_list">
+        <div
+          v-for="(item, index) in orderTabs"
+          :key="index"
+          class="my_order_type_list"
+        >
           <div class="icon">
             <my-icon
-              name="per_ic_payment"
+              :name="item.iconName"
               color="#4E78F5"
               size="0.44rem"
             ></my-icon>
           </div>
-          <div class="order_text" @click="coupon">待付款</div>
+          <div class="order_text" @click="clickTab(index)">{{ item.name }}</div>
         </div>
-        <div class="my_order_type_list">
+        <!-- <div class="my_order_type_list">
           <div class="icon">
             <my-icon
               name="per_ic_handle"
@@ -75,7 +79,7 @@
             ></my-icon>
           </div>
           <div class="order_text">全部订单</div>
-        </div>
+        </div> -->
       </div>
     </div>
     <!--E 我的订单-->
@@ -202,6 +206,28 @@ export default {
   },
   data() {
     return {
+      orderTabs: [
+        {
+          iconName: 'per_ic_handle',
+          name: '待付款',
+        },
+        {
+          iconName: 'per_ic_handle',
+          name: '办理中',
+        },
+        {
+          iconName: 'per_ic_complete',
+          name: '已完成',
+        },
+        {
+          iconName: 'per_ic_cancel',
+          name: '已取消',
+        },
+        {
+          iconName: 'per_ic_whole',
+          name: '全部订单',
+        },
+      ],
       info: {
         fullName: '', // 用户昵称
         url: '', // 头像
@@ -234,8 +260,14 @@ export default {
   },
 
   methods: {
-    coupon() {
-      this.$router.push('/my/coupon/coupon')
+    clickTab(index) {
+      // console.log('index', index)
+      this.$router.push({
+        path: '/order',
+        query: {
+          type: index,
+        },
+      })
     },
     handleAvatar() {
       // 点击头像
