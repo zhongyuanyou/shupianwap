@@ -13,6 +13,18 @@
       </div>
       <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
     </div>
+    <!--    多个服务商品时不显示SKU-->
+    <div v-if="goodsSubDetailsName.length === 1" class="cell" @click="openSku">
+      <div class="cell_left">
+        <div class="label">选择</div>
+        <div class="content">
+          <span class="hide">{{
+            goodsSubDetailsName[0]['goodsSubDetailsName']
+          }}</span>
+        </div>
+      </div>
+      <my-icon name="order_ic_listnext" size="0.21rem" color="#ccc" />
+    </div>
     <div v-if="serviceTag.length > 0" class="cell" @click="safeguardIsShow">
       <div class="cell_left">
         <div class="label">保障</div>
@@ -84,6 +96,46 @@
       </div>
     </sp-popup>
     <sp-popup
+      v-model="skuShow"
+      round
+      closeable
+      padding
+      position="bottom"
+      :style="{ padding: '0.4rem 0.4rem' }"
+    >
+      <div class="sku_box">
+        <div class="goods_info">
+          <sp-image
+            width="1.8rem"
+            height="1.8rem"
+            fit="cover"
+            lazy-load
+            :src="imgFileIdPaths[0]"
+          />
+          <div class="goods_info_right">
+            <div class="price">
+              {{ sellingGoodsData.salesPrice }} <span>元</span>
+            </div>
+            <div class="code">编号 {{ sellingGoodsData.goodsNo }}</div>
+          </div>
+        </div>
+        <div class="attrs_box">
+          <div v-for="item in skuResult" :key="item.id" class="attrs_item">
+            <!--            属性名称-->
+            <div class="attrs_item_title">{{ item.name }}</div>
+            <!--            属性值-->
+            <div
+              v-for="child in item.attrValList"
+              :key="child.id"
+              class="attrs_item_value"
+            >
+              {{ child.name }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </sp-popup>
+    <sp-popup
       v-model="safeguardShow"
       title="平台保障"
       round
@@ -99,7 +151,8 @@
 
 <script>
 import { Cell, Popup, Safeguard, Image } from '@chipspc/vant-dgg'
-import { coupon } from '@/api'
+import { coupon, productDetailsApi } from '@/api'
+// 数组排序
 function xier(arr) {
   let interval = parseInt(arr.length / 2) // 分组间隔设置
   while (interval > 0) {
@@ -131,15 +184,23 @@ export default {
   data() {
     return {
       type: 1, // 1 加入购物车、立即购买  2 加入购物车  3 立即购买
-      vouchers: '满400元减10元， 满1000元减30元',
+      vouchers: '',
       show: false,
       skuShow: false,
       safeguardShow: false,
       num: 1,
       couponPreferentialLine: 0.0, // 优惠后的金额
+      imgFileIdPaths: [
+        'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg',
+      ], // 商品图片
+      skuResult: [], // sku
     }
   },
   computed: {
+    sellingGoodsData() {
+      // 获取客户端展示信息
+      return this.$store.state.sellingGoodsDetail.sellingGoodsData
+    },
     serviceTag() {
       const salesGoodsTags = this.$store.state.sellingGoodsDetail
         .sellingGoodsData.salesGoodsTags
@@ -158,11 +219,39 @@ export default {
     coupon() {
       return this.$store.state.sellingGoodsDetail.sellingGoodsData.couponList
     },
+    //  服务商品的SKU集合
+    goodsSubDetailsName() {
+      //  基础商品
+      const salesGoodsSubVos = this.$store.state.sellingGoodsDetail
+        .sellingGoodsData.salesGoodsSubVos
+      // 找出服务商品
+      const serviceGoods = salesGoodsSubVos.map((item) => {
+        if (item.goodsType === 'PRO_CLASS_TYPE_SERVICE') {
+          return item
+        }
+      })
+      return serviceGoods
+    },
   },
   mounted() {
     this.couponPreferential()
+    this.getSellingImg() // 获取商品图片
+    //  当只有一个服务产品时获取SKU
+    if (this.goodsSubDetailsName.length === 1) {
+      this.getServiceAttr(this.goodsSubDetailsName[0])
+    }
   },
   methods: {
+    // 获取商品图片
+    getSellingImg() {
+      // 获取商品图片集合
+      this.imgFileIdPaths = this.sellingGoodsData.salesGoodsOperatings
+        .clientDetails.length
+        ? this.sellingGoodsData.salesGoodsOperatings.clientDetails[0]
+            .imgFileIdPaths
+        : []
+      // 返回图片地址集合
+    },
     // 打开优惠券领取弹窗
     couponShow() {
       if (this.vouchers) {
@@ -219,12 +308,34 @@ export default {
           })
       }
     },
-    // 打开服务表情
+    // 打开服务标签
     safeguardIsShow() {
       if (this.serviceTag.length > 0) {
         this.safeguardShow = true
       } else {
         this.$xToast.warning('没有更多内容')
+      }
+    },
+    openSku() {
+      this.skuShow = true
+    },
+    //  获取SKU属性
+    async getServiceAttr(goodsSubDetailsName) {
+      try {
+        const skuResult = await this.$axios.post(
+          productDetailsApi.findServiceAttr,
+          {
+            productId: goodsSubDetailsName.productId,
+            attrName: goodsSubDetailsName.goodsSubDetailsName,
+          }
+        )
+        if (skuResult.code === 200) {
+          this.skuResult = skuResult.data
+        } else {
+          throw skuResult.message
+        }
+      } catch (err) {
+        this.$xToast.error(err)
       }
     },
   },
