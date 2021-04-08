@@ -15,7 +15,9 @@
                 ><b>{{ item.salesPrice }}</b
                 >元</span
               >
-              <i>{{ `x1` }}</i>
+              <i>{{
+                $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
+              }}</i>
             </p>
             <div v-if="$route.query.type === 'shopcar'" class="list">
               <div
@@ -91,8 +93,10 @@
         <CellGroup>
           <Cell
             title="合同信息"
-            value="完善合同信息"
-            value-class="black"
+            :value="
+              contaract.contractFirstPhone ? '已完善合同信息' : '完善合同信息'
+            "
+            :value-class="contaract.contractFirstPhone ? 'ys' : 'black'"
             is-link
             @click="gocontractedit()"
           />
@@ -207,7 +211,6 @@ export default {
     } else {
       this.asyncData()
     }
-
     // this.getInitData()
     this.getProtocol('protocol100008')
     console.log(this.$store.state.city, '城市')
@@ -299,7 +302,7 @@ export default {
             const sku = {
               saleSkuId: this.order.list[i].id,
               saleSkuName: this.order.list[i].name,
-              saleSkuVersionNo: 0,
+              saleSkuVersionNo: this.order.list[i].version + '',
               saleSkuPrice: this.order.list[i].salesPrice,
               saleSkuCount: this.order.list[i].salesVolume,
             }
@@ -312,7 +315,7 @@ export default {
                 const sku = {
                   saleSkuId: this.order.list[i].id,
                   saleSkuName: this.order.list[i].name,
-                  saleSkuVersionNo: 0,
+                  saleSkuVersionNo: this.order.list.version + '',
                   saleSkuPrice: this.order.list[i].salesPrice,
                   saleSkuCount: this.order.list[i].salesVolume,
                 }
@@ -326,13 +329,12 @@ export default {
         const sku = {
           saleSkuId: this.order.id,
           saleSkuName: this.order.name,
-          saleSkuVersionNo: 0,
+          saleSkuVersionNo: this.order.version + '',
           saleSkuPrice: this.order.salesPrice,
           saleSkuCount: 1,
         }
         this.Orderform.needSplitProPackageDataParam.push(sku)
       }
-
       let isFromCart = false
       let cusOrderPayType
       if (this.$route.query.type === 'shopcar') {
@@ -417,6 +419,7 @@ export default {
         })
     },
     gocontractedit() {
+      this.$cookies.set('contaract', this.contaract)
       this.$router.push({
         path: '/contract/edit',
         query: {
@@ -576,6 +579,9 @@ export default {
     > .contract {
       margin-top: 24px;
       background: #fff;
+      .ys {
+        color: #1a1a1a;
+      }
     }
     > .agreement {
       margin-top: 24px;

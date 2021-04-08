@@ -8,7 +8,7 @@
       <List
         v-model="loading"
         :finished="finished"
-        finished-text="没有更多了"
+        :finished-text="list.length == 0 ? '' : '没有更多了'"
         @load="onLoad"
       >
         <div v-for="(item, index) in list" :key="index" class="list">
@@ -44,16 +44,23 @@
             </div>
           </div>
           <div class="btn">
-            <p>订单详情</p>
+            <p @click="jump(item.orderId)">订单详情</p>
             <p @click.stop="btn(item)">
               {{
-                item.contractStatus == 'STRUTS_YWC' ? '查看合同' : '签署合同'
+                item.contractStatus == 'STRUTS_YWC' ||
+                item.contractStatus == 'STRUTS_QSZ '
+                  ? '查看合同'
+                  : '签署合同'
               }}
             </p>
           </div>
         </div>
       </List>
     </PullRefresh>
+    <div v-show="list.length < 1" class="none">
+      <img src="https://img10.dgg.cn/pt03/wap/cmxakdtkqxs0000.png" alt="" />
+      <p>暂无合同</p>
+    </div>
   </div>
 </template>
 
@@ -83,6 +90,14 @@ export default {
     }
   },
   methods: {
+    jump(orderid) {
+      this.$router.push({
+        path: '/order/detail',
+        query: {
+          id: orderid,
+        },
+      })
+    },
     btn(item) {
       this.$emit('Jump', item)
     },
@@ -165,6 +180,21 @@ export default {
         text-align: center;
         margin-left: 20px;
       }
+    }
+  }
+  .none {
+    padding-top: 100px;
+    margin: 0 auto;
+    text-align: center;
+    img {
+      width: 340px;
+      height: 340px;
+    }
+    p {
+      font-size: 30px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #1a1a1a;
     }
   }
 }
