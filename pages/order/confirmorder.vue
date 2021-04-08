@@ -17,7 +17,19 @@
               >
               <i>{{ `x1` }}</i>
             </p>
-            <div class="list">
+            <div v-if="$route.query.type === 'shopcar'" class="list">
+              <div
+                v-for="(listitem, listindex) in item.saleGoodsSubs"
+                :key="listindex"
+              >
+                <p class="name">{{ listitem.goodsSubName }}</p>
+                <p class="data">{{ listitem.goodsSubDetailsName }}</p>
+                <p class="price">
+                  {{ listitem.settlementPriceEdit }} {{ `x1` }}
+                </p>
+              </div>
+            </div>
+            <div v-else class="list">
               <div
                 v-for="(listitem, listindex) in item.salesGoodsSubVos"
                 :key="listindex"
@@ -46,12 +58,12 @@
         <CellGroup>
           <Cell
             title="商品及服务总数"
-            :value="order.num + '件'"
+            :value="order.num || order.goodsTotal + '件'"
             value-class="black"
           />
           <Cell
             title="商品金额"
-            :value="order.salesPrice + '元'"
+            :value="order.salesPrice || order.needPayTotalMoney + '元'"
             value-class="black"
           />
           <Cell
@@ -59,19 +71,19 @@
             :value="
               coupon
                 ? coupon
-                : couponlist.length > 0
-                ? couponlist.length + '个优惠券'
+                : datalist.length > 0
+                ? datalist.length + '个优惠券'
                 : '无可用'
             "
             is-link
-            :value-class="coupon ? 'red' : couponlist.length > 0 ? 'black' : ''"
+            :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
             @click="popupfn()"
           />
         </CellGroup>
         <p class="money">
           合计：
           <span>
-            <b>{{ news.money }}</b> 元
+            <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元
           </span>
         </p>
       </div>
@@ -99,21 +111,21 @@
     <div ref="foot" class="foot">
       <p class="left">
         应付:<span>
-          <b>{{ order.salesPrice }}</b> 元</span
+          <b>{{ price }}</b> 元</span
         >
       </p>
       <div class="right" @click="placeOrder">提交订单</div>
     </div>
     <Popup
+      ref="conpon"
       :show="popupshow"
       :height="75"
       title="优惠"
       help="使用说明"
       :tablist="tablist"
       calculation="已选中推荐优惠券，可抵扣"
-      :num="num"
       :datalist="datalist"
-      @tabactive="tabfn"
+      :nolist="nolist"
       @close="close"
     ></Popup>
   </div>
@@ -129,9 +141,8 @@ import {
 } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
 import Popup from '@/components/PlaceOrder/Popup'
-import { productDetailsApi, auth } from '@/api'
+import { productDetailsApi, auth, shopCart } from '@/api'
 import { coupon, order } from '@/api/index'
-
 export default {
   name: 'PlaceOrder',
   components: {
@@ -149,8 +160,7 @@ export default {
       allboxHeight: '100vh',
       money: '1232',
       radio: '',
-      coupon: '2312',
-      couponlist: [1],
+      coupon: '',
       message: '',
       news: { num: '123', price: '1392.00', money: '4600.00' },
       order: '',
@@ -159,44 +169,8 @@ export default {
         { name: '可用优惠券', num: '12', is: true },
         { name: '过期优惠券' },
       ],
-      datalist: [
-        {
-          money: '3200',
-          data: '满3800元可用',
-          name: '财税助力特惠券',
-          ms: '限“小规模纳税人代理记账”服务 使用',
-          date: '2020.09.01-2020.09.31',
-          check: false,
-          nodata: '订单金额不符合使用条件',
-        },
-        {
-          money: '3200',
-          data: '满3800元可用',
-          name: '财税助力特惠券',
-          ms: '限“小规模纳税人代理记账”服务 使用',
-          date: '2020.09.01-2020.09.31',
-          check: false,
-          nodata: '订单金额不符合使用条件',
-        },
-        {
-          money: '3200',
-          data: '满3800元可用',
-          name: '财税助力特惠券',
-          ms: '限“小规模纳税人代理记账”服务 使用',
-          date: '2020.09.01-2020.09.31',
-          check: false,
-          nodata: '订单金额不符合使用条件',
-        },
-        {
-          money: '3200',
-          data: '满3800元可用',
-          name: '财税助力特惠券',
-          ms: '限“小规模纳税人代理记账”服务 使用',
-          date: '2020.09.01-2020.09.31',
-          check: false,
-          nodata: '订单金额不符合使用条件',
-        },
-      ],
+      datalist: [],
+      nolist: [],
       contaract: '',
       productId: this.$route.query.productId,
       formData: {
@@ -205,6 +179,7 @@ export default {
         userId: '767579686475123456',
         actionId: this.productId,
       },
+      price: '',
       Orderform: {
         needSplitProPackageDataParam: [],
         cusOrderPayType: '',
@@ -226,12 +201,38 @@ export default {
       this.contaract = this.$cookies.get('contaract')
       this.$cookies.remove('contaract')
     }
-    this.asyncData()
-    this.getInitData()
+    if (this.$route.query.type === 'shopcar') {
+      this.getcart()
+    } else {
+      this.asyncData()
+    }
+
+    // this.getInitData()
     this.getProtocol('protocol100008')
     console.log(this.$store.state.city, '城市')
   },
   methods: {
+    getcart() {
+      shopCart
+        .bill({
+          cartId: this.$route.query.cartIdsStr,
+          type: '1',
+        })
+        .then((result) => {
+          // result = JSON.parse(result.productVo)
+          this.order = result
+          this.order.list = this.order.productVo
+          this.price = this.order.needPayTotalMoney
+          this.getInitData(2)
+          this.getInitData(4)
+        })
+        .catch((e) => {
+          if (e.code !== 200) {
+            this.$xToast.show(e.message)
+            console.log(e)
+          }
+        })
+    },
     async asyncData() {
       try {
         const { code, message, data } = await this.$axios.post(
@@ -251,6 +252,7 @@ export default {
           const obj = {
             name: data.name,
             classCodeName: data.classCodeName,
+            id: data.id,
             salesPrice: data.salesPrice,
             salesGoodsSubVos: data.salesGoodsSubVos,
           }
@@ -258,6 +260,9 @@ export default {
           this.order.list = []
           this.order.list.push(obj)
           this.order.num = this.order.list.length
+          this.price = this.order.salesPrice
+          this.getInitData(2)
+          this.getInitData(4)
         } else {
           throw message
         }
@@ -286,16 +291,53 @@ export default {
       }
     },
     placeOrder() {
-      const sku = {
-        saleSkuId: this.order.id,
-        saleSkuName: this.order.name,
-        saleSkuVersionNo: this.order.goodsNo,
-        saleSkuPrice: this.order.salesPrice,
-        saleSkuCount: 1,
+      if (this.$route.query.type === 'shopcar') {
+        const arr = []
+        for (let i = 0; i < this.order.list.length; i++) {
+          const sku = {
+            saleSkuId: this.order.list[i].id,
+            saleSkuName: this.order.list[i].name,
+            saleSkuVersionNo: this.order.list[i].goodsNo,
+            saleSkuPrice: this.order.list[i].salesPrice,
+            saleSkuCount: this.order.list[i].salesVolume,
+          }
+          arr.push(sku)
+        }
+        this.Orderform.needSplitProPackageDataParam = arr
+      } else {
+        const sku = {
+          saleSkuId: this.order.id,
+          saleSkuName: this.order.name,
+          saleSkuVersionNo: this.order.goodsNo,
+          saleSkuPrice: this.order.salesPrice,
+          saleSkuCount: 1,
+        }
+        this.Orderform.needSplitProPackageDataParam.push(sku)
       }
-      this.Orderform.needSplitProPackageDataParam.push(sku)
-      this.Orderform.cusOrderPayType = this.order.refConfig.payType
-      this.Orderform.isFromCart = false
+
+      let isFromCart = false
+      let cusOrderPayType
+      if (this.$route.query.type === 'shopcar') {
+        isFromCart = true
+        this.Orderform.cartIds = this.$route.query.cartIdsStr
+        cusOrderPayType = this.order.list.map((x) => {
+          return x.refConfig.payType
+        })
+        cusOrderPayType = cusOrderPayType.toString()
+      } else {
+        cusOrderPayType = this.order.refConfig.payType
+        isFromCart = false
+      }
+      if (this.$refs.conpon.checkarr.id) {
+        const arr = {
+          code: 'ORDER_DISCOUNT_DISCOUNT',
+          value: this.$refs.conpon.checkarr.id,
+        }
+        this.Orderform.discount.push(arr)
+      }
+
+      this.Orderform.cusOrderPayType = cusOrderPayType
+      this.Orderform.isFromCart = isFromCart
       this.Orderform.orderProvinceNo = this.$store.state.city.defaultCity.pid
       this.Orderform.orderCityNo = this.$store.state.city.defaultCity.code
       this.Orderform.orderLocationProvinceName = this.$store.state.city.defaultCity.pname
@@ -304,6 +346,7 @@ export default {
       if (this.contaract) {
         this.Orderform.contractFormParam = this.contaract
       }
+      console.log(this.Orderform, 12412423423)
       order
         .placeOrder({ axios: this.$axios }, this.Orderform)
         .then((result) => {
@@ -316,15 +359,32 @@ export default {
           }
         })
     },
-    getInitData() {
+    getInitData(index) {
+      const arr = this.order.list.map((x) => {
+        return x.id
+      })
       coupon
-        .getCouponList({ axios: this.$axios }, this.formData)
+        .getCouponList(
+          { axios: this.$axios },
+          {
+            findType: index,
+            userId: this.$store.state.user.userId,
+            actionId: arr,
+            orderByWhere: 'createTime=desc',
+            limit: 10,
+            page: 1,
+          }
+        )
         .then((result) => {
-          console.log(result)
+          if (index === 2) {
+            this.datalist = result.responseData
+          } else {
+            this.nolist = result.responseData
+          }
         })
         .catch((e) => {
           if (e.code !== 200) {
-            this.$xToast.show(e.message)
+            this.$xToast.show(e)
           }
         })
     },
@@ -341,10 +401,16 @@ export default {
     },
     close(data) {
       this.popupshow = data
+      this.$refs.conpon.checkarr = ''
+      this.$refs.conpon.radio = null
     },
-    tabfn(item, index) {
-      console.log(item, index)
-    },
+    // tabfn(item, index) {
+    //   if (index === 1) {
+    //     this.getInitData(4)
+    //   } else {
+    //     this.getInitData(2)
+    //   }
+    // },
   },
 }
 </script>

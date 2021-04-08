@@ -102,7 +102,7 @@ export default {
         .contartlist(
           { axios: this.axios },
           {
-            id: '607997736314103127', // this.$cookies.get('userId'),
+            id: this.$store.state.user.userId,
             status: this.status,
             page: this.page,
             limit: 10,

@@ -109,31 +109,41 @@ const category = {
       url: CHIPS_WAP_BASE_URL + '/yk/order/v2/add_order.do',
     })
   },
-  // 查询周期产品批次进度列表(周期产品)
+  // 查询周期产品进度批次列表
   getProcessList({ axios }, params) {
     return request({
       axios,
       params,
-      method: 'get',
-      url: CHIPS_APP_BASE_URL + 'yk/order/v2/find_service_by_details_id.do',
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/batch_info.do',
     })
   },
-  // 查询进度信息(周期产品)
-  getProcessInfoBatch({ axios }, params) {
-    return request({
-      axios,
-      params,
-      method: 'get',
-      url: CHIPS_APP_BASE_URL + '/yk/order/v2/find_task_by_server.do',
-    })
-  },
-  // 查询进度信息(非周期产品)
+  // 查询进度信息
   getProcessInfo({ axios }, params) {
     return request({
       axios,
       params,
-      method: 'get',
-      url: CHIPS_APP_BASE_URL + '/yk/order/v2/get_order_track_list.do',
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/batch_process.do',
+    })
+  },
+  getCouponList({ axios }, params) {
+    // 获取优惠券列表
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/nk/coupon/v2/find_my_coupon_page.do',
+    })
+  },
+  getcalculation({ axios }, params) {
+    // 获取优惠券列表
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url:
+        'http://172.16.133.40:7001/service/yk/order/v2/coupon_calculation.do', // CHIPS_WAP_BASE_URL + 'v2/coupon_calculation.do',
     })
   },
 }

@@ -12,7 +12,7 @@ export const state = () => ({
     classCodeName: null,
     classCodeLevel: null,
     classCodeLevelName: null,
-    salesPrice: null,
+    salesPrice: '0.00',
     salesVolume: null,
     status: null,
     salesGoodsSubVos: [], // 销售商品包含基础商品列表集合

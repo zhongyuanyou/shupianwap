@@ -72,5 +72,13 @@ const shopCart = {
       url: CHIPS_WAP_BASE_URL + '/nk/sc_product/v1/service_resource.do',
     })
   },
+  // 购物车结算
+  bill(params) {
+    return request({
+      params,
+      method: 'post',
+      url: CHIPS_APP_BASE_URL + '/yk/cart/v2/bill.do',
+    })
+  },
 }
 export default shopCart
