@@ -46,6 +46,7 @@
               item.userConfirm == 0
             "
             type="default"
+            class="btn-confirm"
             @click="handleClickBtn(3, item)"
             >确认完成</sp-button
           >
@@ -290,6 +291,11 @@ export default {
       font-size: 24px;
       color: #222;
       margin-left: 20px;
+    }
+    .btn-confirm {
+      background: #ffffff;
+      border: 1px solid #e5654c;
+      color: #e5654c;
     }
   }
 }

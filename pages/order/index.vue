@@ -1,5 +1,5 @@
 <template>
-  <div class="order-page">
+  <div ref="orderPage" class="order-page">
     <Header v-if="!isInApp && !isApplets" title="我的订单" :hide-back="true">
       <template #right>
         <div class="btn-car" @click="toCar">购物车</div>
@@ -27,6 +27,7 @@
         @handleClickItem="handleClickItem"
       >
       </orderItem>
+      <p v-if="noMore" class="no-more">没有更多了</p>
     </div>
     <CancelOrder
       ref="cancleOrderModel"
@@ -82,13 +83,15 @@ export default {
   data() {
     return {
       page: 1,
-      limit: 20,
+      limit: 10,
       loading: true,
       selectedOrderStatus: '',
       orderData: {}, // 选中的订单
       list: [],
       payList: [], // 分批支付信息
       fromPage: 'orderList',
+      noMore: false,
+      loadingMore: false,
     }
   },
   computed: {
@@ -117,17 +120,72 @@ export default {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_CANCELLED'
       }
     }
+    window.addEventListener(
+      'scroll',
+      this.throttle(this.scollChange, 500, 1000)
+    )
+    this.$on('hook:beforeDestroy', () => {
+      window.removeEventListener('scroll', this.chartResize)
+    })
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.throttle())
   },
   methods: {
+    scollChange() {
+      console.log('this.$route.path', this.$route.path)
+      if (this.$route.path !== '/order/') {
+        window.removeEventListener('scroll', this.throttle())
+        return
+      }
+      const scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop
+      const scrollHeight = document.body.scrollHeight
+      const windowHeight = window.innerHeight
+      if (scrollTop + windowHeight > scrollHeight - 100) {
+        this.getOrderList()
+      }
+    },
+    throttle(func, wait, mustRun) {
+      let timeout
+      let startTime = new Date()
+      return function () {
+        const context = this
+        const args = arguments
+        const curTime = new Date()
+        clearTimeout(timeout)
+        // 如果达到了规定的触发时间间隔，触发 handler
+        if (curTime - startTime >= mustRun) {
+          func.apply(context, args)
+          startTime = curTime
+          // 没达到触发间隔，重新设定定时器
+        } else {
+          timeout = setTimeout(func, wait)
+        }
+      }
+    },
     changeTab(name, title) {
+      // 初始化数据列表
+      this.page = 1
       this.selectedOrderStatus = name
+      this.loadingMore = false
+      this.loading = false
+      this.list = []
       this.getOrderList()
     },
     toCar() {
       this.$router.push('../shopCart/')
     },
     getOrderList() {
-      this.loading = true
+      // 正在下拉加载则不加载更多
+      if (this.loadingMore) return
+      if (this.page === 1) {
+        this.loading = true
+      } else {
+        this.loadingMore = true
+      }
       orderApi
         .list(
           { axios: this.$axios },
@@ -138,18 +196,26 @@ export default {
           }
         )
         .then((res) => {
-          console.log('订单列表', res)
           this.loading = false
+          this.loadingMore = false
           const arr = res.records
-          for (let i = 0, l = arr.length; i < l; i++) {
-            this.changeMoney(arr[i])
+          if (arr.length) {
+            this.page++
+            this.noMore = false
+            for (let i = 0, l = arr.length; i < l; i++) {
+              this.changeMoney(arr[i])
+            }
+            const nowData = JSON.parse(JSON.stringify(this.list))
+            const allData = nowData.concat(arr)
+            this.list = allData
+          } else {
+            this.noMore = true
           }
-          console.log('arr', arr)
-          this.list = arr
         })
         .catch((error) => {
           console.log('error', error)
           this.loading = false
+          this.loadingMore = false
           this.$xToast.error('获取数据失败')
         })
     },
@@ -234,7 +300,7 @@ export default {
     }
   }
   .list {
-    padding-bottom: 180px;
+    padding-bottom: 140px;
     margin-top: 108px;
   }
 }
@@ -259,5 +325,11 @@ export default {
     color: #1a1a1a;
     text-align: center;
   }
+}
+.no-more {
+  color: #999;
+  font-size: 24px;
+  text-align: center;
+  margin-top: 40px;
 }
 </style>
