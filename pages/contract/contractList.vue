@@ -19,7 +19,6 @@
         @Refresh="Refresh"
         @load="pagefn"
         @Jump="jump"
-        @godetail="godetail"
       ></List>
     </div>
   </div>
@@ -136,7 +135,7 @@ export default {
         this.page = 1
         this.$refs.list.page = 1
         this.$refs.list.finished = false
-        this.getlist()
+        // this.getlist()
       }
     },
   },
