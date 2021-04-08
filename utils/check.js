@@ -80,6 +80,6 @@ export function checkPassword(password) {
  */
 export function checkAuthCode(authCode) {
   // 6个数字
-  const regex = /\d{6}/
+  const regex = /\d{4}/
   return regex.test(authCode)
 }
