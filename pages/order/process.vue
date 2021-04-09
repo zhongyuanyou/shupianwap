@@ -72,7 +72,7 @@ export default {
     this.orderData.orderId = this.$route.query.orderId
     this.orderData.cusOrderId = this.$route.query.cusOrderId
     this.orderData.skuId = this.$route.query.skuId
-    this.getBatchList()
+    this.getProcessList()
     this.getDetail()
   },
   methods: {
@@ -89,7 +89,7 @@ export default {
         },
       })
     },
-    getBatchList() {
+    getProcessList() {
       orderApi
         .getProcessList(
           { axios: this.$axios },
@@ -108,17 +108,17 @@ export default {
           { id: this.orderData.orderId, cusOrderId: this.orderData.cusOrderId }
         )
         .then((res) => {
+          console.log('orderDetail3', res)
           this.loading = false
-          // const orderData = res
-          console.log('res', res)
-          this.skuInfo = res.data.orderSkuList.filter((item) => {
+          const data = res.data ? res.data : res
+          this.skuInfo = data.orderSkuList.filter((item) => {
             return item.skuId === this.orderData.skuId
           })[0]
-          console.log('this.skuInfo', this.skuInfo)
         })
         .catch((err) => {
+          console.log('err', err)
           this.$xToast.show(err.message)
-          this.$router.back(-1)
+          // this.$router.back(-1)
         })
     },
   },
