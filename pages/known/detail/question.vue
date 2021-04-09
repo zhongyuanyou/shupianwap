@@ -77,15 +77,16 @@
       </div>
       <div class="num">
         <div class="left">
-          <!-- <div>{{ questionDetials.follow }} <span>关注</span></div> -->
-          <!-- <p></p> -->
+          <!-- <div>{{ questionDetials.follow 
+          <p></p> -->
           <div>{{ questionDetials.collectCount }} <span>收藏</span></div>
           <p></p>
-          <div>{{ questionDetials.browseCount }} <span>游览</span></div>
+          <div>{{ questionDetials.browseCount }} <span>浏览</span></div>
         </div>
         <div
           class="right"
-          :class="questionDetials.isApplaudFlag == 1 ? 'act' : ''"
+          :class="questionDetials.applaudCount > 0 ? 'act' : ''"
+          @click="like('LIKE')"
         >
           好问题 {{ questionDetials.applaudCount }}
         </div>
@@ -111,19 +112,20 @@
           <sp-icon
             name="like-o"
             size="0.4rem"
-            :color="questionDetials.isCollectFlag === 1 ? '#4974F5' : ''"
+            :color="questionDetials.collectCount > 0 ? '#4974F5' : ''"
           />
           <p
             :style="{
-              color: questionDetials.isCollectFlag === 1 ? '#4974F5' : '',
+              color: questionDetials.collectCount > 0 ? '#4974F5' : '',
             }"
+            @click="like('COLLECT')"
           >
             收藏
           </p>
         </div>
       </div>
     </div>
-    <div class="success" v-if="releaseStatusId == 1">
+    <div v-if="releaseStatusId === 1" class="success">
       <div>
         <sp-icon name="certificate" size="0.45rem" color="#00B365" /><span
           >成功提问</span
@@ -131,26 +133,9 @@
       </div>
       <p>你可以邀请下面用户来更快获得回答</p>
     </div>
-    <div v-if="detail.answer.length < 1" class="user">
+    <div v-if="releaseStatusId === 1" class="answer">
       <div class="head">
-        <div class="left">
-          <h1>邀请知友为你解答</h1>
-          <p>为你精选 34 位优质回答者</p>
-        </div>
-        <div class="right">一键邀请</div>
-      </div>
-      <div class="listbox">
-        <div v-for="(item, index) in userlist" :key="index" class="list">
-          <img :src="item.img" alt="" />
-          <p>{{ item.userName }}</p>
-          <div>邀请</div>
-        </div>
-      </div>
-      <div class="none">没有更多了</div>
-    </div>
-    <div v-else class="answer">
-      <div class="head">
-        <p>回答 {{ questionDetials.answerCount }}</p>
+        <p>回答 {{ questionList.total }}</p>
         <div>
           <i class="bg" :class="answersort == 1 ? 'right' : ''"></i>
           <span :class="answersort == 0 ? 'act' : ''" @click="answersortfn(0)"
@@ -161,24 +146,31 @@
           >
         </div>
       </div>
-      <div v-for="(item, index) in questionList" :key="index" class="list">
-        <div class="head">
-          <img :src="item.img" alt="" />
-          <p>{{ item.username }}</p>
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="getQuesData"
+      >
+        <div v-for="(item, index) in questionList" :key="index" class="list">
+          <div class="head">
+            <img :src="item.avatar" alt="" />
+            <p>{{ item.userName }}</p>
+          </div>
+          <p class="content">
+            {{ item.content }}
+          </p>
+          <div class="foot">
+            <p>{{ item.applaudCount }} 赞同</p>
+            <span></span>
+            <p>{{ item.collectCount }} 喜欢</p>
+            <span></span>
+            <p>{{ item.remarkCount }} 评论</p>
+            <span></span>
+            <p>{{ item.createTime }}</p>
+          </div>
         </div>
-        <p class="content">
-          {{ item.content }}
-        </p>
-        <div class="foot">
-          <p>{{ item.applaudCount }} 赞同</p>
-          <span></span>
-          <p>{{ item.collectCount }} 喜欢</p>
-          <span></span>
-          <p>{{ item.agree }} 评论</p>
-          <span></span>
-          <p>{{ item.time }}</p>
-        </div>
-      </div>
+      </sp-list>
     </div>
     <div v-show="fixedshow" class="fiexdbtn">
       <div
@@ -215,7 +207,7 @@
 </template>
 
 <script>
-import { Icon, Toast } from '@chipspc/vant-dgg'
+import { Icon, Toast, List } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import { knownApi } from '@/api'
 export default {
@@ -223,6 +215,7 @@ export default {
   components: {
     Header,
     [Icon.name]: Icon,
+    [List.name]: List,
   },
   data() {
     return {
@@ -297,12 +290,18 @@ export default {
       userId: '120',
       questionDetials: '',
       questionList: '',
-      releaseStatusId: 0,
+      releaseStatusId: 1,
+      orderBy: 'totalBrowseCount=desc',
+      handleLikeType: null,
+      finished: false,
+      page: 1,
+      loading: false,
+      total: '',
     }
   },
   created() {
     this.getDetailData()
-    this.getQuesData()
+    // this.getQuesData()
   },
   mounted() {
     window.addEventListener('scroll', this.watchScroll)
@@ -325,6 +324,7 @@ export default {
           // this.loading = false
           if (res.code === 200) {
             this.questionDetials = res.data
+            this.handleLikeType = this.questionDetials.isApplaudFlag
             if (this.questionDetials.categoryName) {
               this.questionDetials.categoryName = this.questionDetials.categoryName.split(
                 ','
@@ -345,11 +345,77 @@ export default {
       const baseUrl =
         'http://172.16.132.255:7001/service/nk/question_article/v2/find_page.do'
       this.$axios
-        .post(baseUrl, { sourceIds: ['8064032317821808640'] })
+        .post(baseUrl, {
+          sourceIds: ['8064032317821808640'],
+          orderBy: this.orderBy,
+          page: this.page,
+          userId: this.userId,
+        })
         .then((res) => {
           // this.loading = false
           if (res.code === 200) {
-            this.questionList = res.data
+            this.questionList = res.data.rows
+            this.total = res.data.total
+            this.loading = false
+            this.page++
+            if (this.page > res.data.totalPage) {
+              this.finished = true
+            }
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+    },
+    like(type) {
+      this.handleLikeType = ''
+      if (type === 'LIKE') {
+        this.questionDetials.applaudCount = Number(
+          this.questionDetials.applaudCount
+        )
+        if (this.questionDetials.applaudCount > 0) {
+          this.handleLikeType = 7
+          this.questionDetials.applaudCount =
+            this.questionDetials.applaudCount - 1
+        } else {
+          this.handleLikeType = 1
+          this.questionDetials.applaudCount =
+            this.questionDetials.applaudCount + 1
+        }
+      } else {
+        this.questionDetials.collectCount = Number(
+          this.questionDetials.collectCount
+        )
+        if (this.questionDetials.collectCount > 0) {
+          this.handleLikeType = 9
+          this.questionDetials.collectCount =
+            this.questionDetials.collectCount - 1
+        } else {
+          this.handleLikeType = 4
+          this.questionDetials.collectCount =
+            this.questionDetials.collectCount + 1
+        }
+      }
+
+      const baseUrl =
+        'http://172.16.132.255:7001/service/nk/known_home/v1/operation.do'
+      this.$axios
+        .post(baseUrl, {
+          handleUserId: this.userId,
+          handleUserName: '张三疯',
+          businessId: this.id,
+          handleType: this.handleLikeType,
+          handleUserType: 1,
+          // handleUserType: this.$store.state.userType=== 'ORDINARY_USER' ? 1 : 2,
+          dateType: 1,
+        })
+        .then((res) => {
+          // this.loading = false
+          if (res.code === 200) {
           } else {
             Toast.fail({
               duration: 2000,
@@ -367,9 +433,23 @@ export default {
       console.log(value)
     },
     answersortfn(index) {
-      console.log(index)
       this.answersort = index
+      if (this.answersort === 0) {
+        this.orderBy = 'totalBrowseCount=desc'
+      } else {
+        this.orderBy = 'updateTime=desc'
+      }
+      this.init()
     },
+
+    init() {
+      this.page = 1
+      this.questionList = []
+      this.finished = false
+      this.loading = true
+      this.getQuesData()
+    },
+
     watchScroll() {
       if (this.$refs.btns.getBoundingClientRect().top < 0) {
         this.fixedshow = true
@@ -715,7 +795,7 @@ export default {
         }
       }
     }
-    > .list {
+    .list {
       margin-bottom: 10px;
       background: #fff;
       padding: 32px 32px 40px 32px;
