@@ -124,14 +124,14 @@ export default {
     CommentList,
   },
   async asyncData({ $axios, query, store }) {
-    const { code, message, data } = await $axios.post(knownApi.home.userInfo, {
-      userId: query.userId,
-      currentUserId: store.state.user.userId,
-    })
-    if (code === 200) {
-    } else {
-      throw message
-    }
+    // const { code, message, data } = await $axios.post(knownApi.home.userInfo, {
+    //   userId: query.userId,
+    //   currentUserId: store.state.user.userId,
+    // })
+    // if (code === 200) {
+    // } else {
+    //   throw message
+    // }
   },
   data() {
     return {
