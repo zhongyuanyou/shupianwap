@@ -6,6 +6,7 @@ const knownApi = {
   comments: {
     list: `${CHIPS_WAP_BASE_URL}/nk/known_comments/v1/list.do`, // 评论列表
     publish: `${CHIPS_WAP_BASE_URL}/nk/known_comments/v1/publish.do`, // 发布评论
+    like: `${CHIPS_WAP_BASE_URL}/nk/known_comments/v1/like.do`, // 发布评论
   },
   home: {
     list: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/index.do`, // 文章、问题、回答列表

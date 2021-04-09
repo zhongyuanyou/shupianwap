@@ -84,7 +84,7 @@
               <my-icon name="zantong" size="0.36rem" color="#999999"></my-icon>
               {{ item.applaudCount || '赞同' }}
             </div>
-            <div class="bottom_item" @click="comments">
+            <div class="bottom_item" @click="comments(item.id)">
               <my-icon name="pinglun" size="0.36rem" color="#999999"></my-icon>
               {{ item.remarkCount || '评论' }}
             </div>
@@ -104,7 +104,7 @@
     </div>
     <comment-list
       v-model="commentShow"
-      :article-id="1"
+      :article-id="articleId"
       @release="release"
     ></comment-list>
   </div>
@@ -124,17 +124,18 @@ export default {
     CommentList,
   },
   async asyncData({ $axios, query, store }) {
-    const { code, message, data } = await $axios.post(knownApi.home.userInfo, {
-      userId: query.userId,
-      currentUserId: store.state.user.userId,
-    })
-    if (code === 200) {
-    } else {
-      throw message
-    }
+    // const { code, message, data } = await $axios.post(knownApi.home.userInfo, {
+    //   userId: query.userId,
+    //   currentUserId: store.state.user.userId,
+    // })
+    // if (code === 200) {
+    // } else {
+    //   throw message
+    // }
   },
   data() {
     return {
+      articleId: '', // 打开评论列表需要传的id
       active: 0,
       menuList: [
         {
@@ -206,7 +207,8 @@ export default {
     agree() {
       console.log('赞同')
     },
-    comments() {
+    comments(id) {
+      this.articleId = id
       this.commentShow = true
     },
     invitation(id) {
