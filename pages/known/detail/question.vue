@@ -27,10 +27,15 @@
     <div class="problem">
       <div class="tag">
         <ul class="box">
-          <li v-for="(item, index) in taglist" :key="index">{{ item }}</li>
+          <li
+            v-for="(item, index) in questionDetials.categoryName"
+            :key="index"
+          >
+            {{ item }}
+          </li>
         </ul>
       </div>
-      <h1 ref="title" class="tit">{{ detail.title }}</h1>
+      <h1 ref="title" class="tit">{{ questionDetials.title }}</h1>
       <div
         v-if="
           detail.imglist.length <= 2 &&
@@ -57,9 +62,9 @@
       </div>
       <div class="content">
         <p v-if="!contentshow" class="tit">
-          {{ detail.content }}
+          {{ questionDetials.contentText }}
         </p>
-        <div v-else class="tit" v-html="detail.content"></div>
+        <div v-else class="tit" v-html="questionDetials.content"></div>
         <div class="btn" @click="contentshow = !contentshow">
           <span class="tit">{{ contentshow ? '收起' : '展开' }}</span>
           <sp-icon
@@ -72,20 +77,33 @@
       </div>
       <div class="num">
         <div class="left">
-          <div>{{ detail.follow }} <span>关注</span></div>
+          <!-- <div>{{ questionDetials.follow }} <span>关注</span></div> -->
+          <!-- <p></p> -->
+          <div>{{ questionDetials.collectCount }} <span>收藏</span></div>
           <p></p>
-          <div>{{ detail.comment }} <span>收藏</span></div>
-          <p></p>
-          <div>{{ detail.visit }} <span>游览</span></div>
+          <div>{{ questionDetials.browseCount }} <span>游览</span></div>
         </div>
-        <div class="right" :class="detail.isLike ? 'act' : ''">好问题</div>
+        <div
+          class="right"
+          :class="questionDetials.isApplaudFlag == 1 ? 'act' : ''"
+        >
+          好问题 {{ questionDetials.applaudCount }}
+        </div>
       </div>
       <div ref="btns" class="btns">
-        <div class="box" @click="$router.push('/known/detail/invitationList')">
+        <div
+          class="box"
+          :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
+          @click="$router.push('/known/detail/invitationList')"
+        >
           <sp-icon name="friends-o" size="0.4rem" />
           <p>邀请回答</p>
         </div>
-        <div class="box" @click="$router.push('/known/publish/answer')">
+        <div
+          class="box"
+          :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
+          @click="$router.push('/known/publish/answer')"
+        >
           <sp-icon name="edit" size="0.4rem" />
           <p>写回答</p>
         </div>
@@ -93,13 +111,19 @@
           <sp-icon
             name="like-o"
             size="0.4rem"
-            :color="detail.isagree ? '#4974F5' : ''"
+            :color="questionDetials.isCollectFlag === 1 ? '#4974F5' : ''"
           />
-          <p :style="{ color: detail.isagree ? '#4974F5' : '' }">已收藏</p>
+          <p
+            :style="{
+              color: questionDetials.isCollectFlag === 1 ? '#4974F5' : '',
+            }"
+          >
+            收藏
+          </p>
         </div>
       </div>
     </div>
-    <div class="success">
+    <div class="success" v-if="releaseStatusId == 1">
       <div>
         <sp-icon name="certificate" size="0.45rem" color="#00B365" /><span
           >成功提问</span
@@ -126,7 +150,7 @@
     </div>
     <div v-else class="answer">
       <div class="head">
-        <p>回答 {{ detail.answer.length }}</p>
+        <p>回答 {{ questionDetials.answerCount }}</p>
         <div>
           <i class="bg" :class="answersort == 1 ? 'right' : ''"></i>
           <span :class="answersort == 0 ? 'act' : ''" @click="answersortfn(0)"
@@ -137,7 +161,7 @@
           >
         </div>
       </div>
-      <div v-for="(item, index) in detail.answer" :key="index" class="list">
+      <div v-for="(item, index) in questionList" :key="index" class="list">
         <div class="head">
           <img :src="item.img" alt="" />
           <p>{{ item.username }}</p>
@@ -146,9 +170,9 @@
           {{ item.content }}
         </p>
         <div class="foot">
-          <p>{{ item.agree }} 赞同</p>
+          <p>{{ item.applaudCount }} 赞同</p>
           <span></span>
-          <p>{{ item.like }} 喜欢</p>
+          <p>{{ item.collectCount }} 喜欢</p>
           <span></span>
           <p>{{ item.agree }} 评论</p>
           <span></span>
@@ -157,11 +181,19 @@
       </div>
     </div>
     <div v-show="fixedshow" class="fiexdbtn">
-      <div class="btn" @click="$router.push('/known/detail/invitationList')">
+      <div
+        class="btn"
+        :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
+        @click="$router.push('/known/detail/invitationList')"
+      >
         <sp-icon name="friends-o" size="0.4rem" />
         <span>邀请回答</span>
       </div>
-      <div class="btn" @click="$router.push('/known/publish/answer')">
+      <div
+        class="btn"
+        :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
+        @click="$router.push('/known/publish/answer')"
+      >
         <sp-icon name="edit" size="0.4rem" />
         <span>写回答</span>
       </div>
@@ -169,17 +201,23 @@
         <sp-icon
           name="like-o"
           size="0.4rem"
-          :color="detail.isagree ? '#4974F5' : ''"
+          :color="questionDetials.isCollectFlag === 1 ? '#4974F5' : ''"
         />
-        <span :style="{ color: detail.isagree ? '#4974F5' : '' }">收藏</span>
+        <span
+          :style="{
+            color: questionDetials.isCollectFlag === 1 ? '#4974F5' : '',
+          }"
+          >收藏</span
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Icon } from '@chipspc/vant-dgg'
+import { Icon, Toast } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
+import { knownApi } from '@/api'
 export default {
   name: 'Detail',
   components: {
@@ -255,7 +293,16 @@ export default {
       answersort: 0,
       fixedshow: false,
       scrollTop: 0,
+      id: '8065065421625749504',
+      userId: '120',
+      questionDetials: '',
+      questionList: '',
+      releaseStatusId: 0,
     }
+  },
+  created() {
+    this.getDetailData()
+    this.getQuesData()
   },
   mounted() {
     window.addEventListener('scroll', this.watchScroll)
@@ -264,6 +311,55 @@ export default {
     window.removeEventListener('scroll', this.watchScroll)
   },
   methods: {
+    getDetailData() {
+      const baseUrl =
+        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do'
+      this.$axios
+        .get(baseUrl, {
+          params: {
+            id: this.id,
+            userId: this.userId,
+          },
+        })
+        .then((res) => {
+          // this.loading = false
+          if (res.code === 200) {
+            this.questionDetials = res.data
+            if (this.questionDetials.categoryName) {
+              this.questionDetials.categoryName = this.questionDetials.categoryName.split(
+                ','
+              )
+            }
+            console.log(this.questionDetials.categoryName)
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+    },
+    getQuesData() {
+      const baseUrl =
+        'http://172.16.132.255:7001/service/nk/question_article/v2/find_page.do'
+      this.$axios
+        .post(baseUrl, { sourceIds: ['8064032317821808640'] })
+        .then((res) => {
+          // this.loading = false
+          if (res.code === 200) {
+            this.questionList = res.data
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+    },
     sum(val) {
       console.log(val)
     },
@@ -272,6 +368,7 @@ export default {
     },
     answersortfn(index) {
       console.log(index)
+      this.answersort = index
     },
     watchScroll() {
       if (this.$refs.btns.getBoundingClientRect().top < 0) {
@@ -290,6 +387,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.form-onlyRead {
+  pointer-events: none;
+  color: #ccc !important;
+}
 .detail {
   min-height: 100vh;
   background: #f5f5f5;

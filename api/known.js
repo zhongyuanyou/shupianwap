@@ -11,5 +11,9 @@ const knownApi = {
     list: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/index.do`, // 文章、问题、回答列表
     userInfo: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/userInfo.do`, // 用户信息
   },
+  question: {
+    list: `${CHIPS_WAP_BASE_URL}/service/nk/question_article/v2/find_page.do`,
+    detail: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_detail.do`,
+  },
 }
 export default knownApi
