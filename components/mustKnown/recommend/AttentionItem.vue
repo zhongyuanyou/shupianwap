@@ -6,7 +6,7 @@
     offset="0"
     finished-text="没有更多了"
   >
-    <sp-cell v-for="(item, index) in infoList" :key="index">
+    <sp-cell v-for="(item, index) in listData" :key="index">
       <div class="item">
         <div class="item_Info">
           <div class="userPhoto">
@@ -18,12 +18,11 @@
           </div>
         </div>
         <div class="item_title">
-          如何看待韩国人在巴基斯坦冒充中国人骗吃骗喝骗感情？
+          {{ item.title }}
         </div>
         <div class="item_content">
           <p class="content">
-            笑死，韩国人干这种事真不稀奇 了，简单给大家梳理一下事情的经
-            过。绝了，韩国人跑到巴基斯坦…
+            {{ item.content }}
           </p>
           <img src="" alt="" />
         </div>
@@ -36,7 +35,7 @@
               class="my_icon"
               style="margin-right: 0.16rem"
             ></my-icon
-            >赞同</span
+            >赞同{{ item.applaudCount }}</span
           >
           <span class="comment" @click="showComment">
             <my-icon
@@ -46,16 +45,16 @@
               class="my_icon"
               style="margin-right: 0.16rem; margin-left: 0.26rem"
             ></my-icon
-            >评论
+            >评论{{ item.remarkCount }}
           </span>
         </div>
       </div>
-      <comment-list
-        v-model="commentShow"
-        :article-id="1"
-        @release="release"
-      ></comment-list>
     </sp-cell>
+    <comment-list
+      v-model="commentShow"
+      :article-id="1"
+      @release="release"
+    ></comment-list>
   </sp-list>
 </template>
 <script>
@@ -71,13 +70,14 @@ export default {
   },
 
   props: {
-    // banner: {
-    //   type: Array,
-    //   default: () => {
-    //     return []
-    //   },
-    // },
+    listData: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
+
   data() {
     return {
       commentShow: false,
@@ -101,6 +101,12 @@ export default {
         },
       ],
     }
+  },
+  watch: {
+    listData(newName, oldName) {
+      console.log('newName', newName)
+      console.log('oldName', oldName)
+    },
   },
   methods: {
     release() {
@@ -178,6 +184,11 @@ export default {
       color: #555555;
       line-height: 42px;
       margin: 17px 0 24px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
     }
     img {
       display: block;

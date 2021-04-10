@@ -24,6 +24,7 @@ import pay from './pay' // 支付接口
 import order from './order'
 import contract from './contract'
 import knownApi from './known'
+import knownQuestionArticleApi from './knownQuestionArticle' // 必懂文章集合api
 export { auth, shoppingCar, planner }
 export { category }
 export { userinfoApi }
@@ -48,3 +49,4 @@ export { order }
 export { pay }
 export { contract }
 export { knownApi }
+export { knownQuestionArticleApi }

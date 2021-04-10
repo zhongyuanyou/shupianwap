@@ -25,9 +25,9 @@
             :key="index"
             class="li-tab"
             :class="{ tab_active: index == tabIndex }"
-            @click="toggleTabs(index)"
+            @click="toggleTabs(index, item)"
           >
-            <p>{{ item }}</p>
+            <p>{{ item.name }}</p>
             <div :class="{ line_active: index == tabIndex }"></div>
           </div>
         </div>
@@ -43,16 +43,16 @@
     <!-- 吸顶 end -->
     <!-- 列表 start -->
     <div class="container_body">
-      <section v-if="tabIndex === 0"><Answer /></section>
-      <section v-if="tabIndex === 1">
+      <section v-if="showRecommend"><Answer /></section>
+      <section>
         <VisitUser v-if="attentionStatus" />
-        <AttentionItem v-if="attentionStatus" />
+        <AttentionItem v-if="attentionStatus" :list-data="listData" />
         <NotAttention v-if="showNotAttention" />
       </section>
-      <section v-else-if="tabIndex === 2">
+      <section>
         <ListItem />
       </section>
-      <section v-else-if="tabIndex === 3">
+      <section v-if="showHot">
         <div class="container_news_see">
           <div class="news" @click="$router.push('/known/newspaper')">
             <div class="news_num">25</div>
@@ -194,12 +194,13 @@ import { mapState } from 'vuex'
 import { WorkTab, WorkTabs, Popup, Sticky, Tab, Tabs } from '@chipspc/vant-dgg'
 import AttentionItem from '@/components/mustKnown/recommend/AttentionItem'
 import Answer from '@/components/mustKnown/answer/Answer'
-import NotAttention from '@/pages/known/attention/notAttention'
+import NotAttention from '@/components/mustKnown/recommend/NotAttention'
 import VisitUser from '@/components/mustKnown/recommend/VisitUser'
 import ListItem from '@/components/mustKnown/recommend/ListItem'
 import ItemCard from '@/components/mustKnown/recommend/ItemCard'
 import Search from '@/components/mustKnown/recommend/search/Search'
 import Bottombar from '@/components/common/nav/Bottombar'
+import { knownApi } from '@/api'
 
 export default {
   name: 'Index',
@@ -221,19 +222,19 @@ export default {
   },
   data() {
     return {
+      // type: 0, // 	不传 代表wap或薯片app 1代表企大顺
+      listData: [],
       attentionStatus: true, // 已关注
       showNotAttention: false, // 未关注
+      showHot: false, // 热榜
+      showRecommend: false, // 推荐
       title: '考研复试体检包含什么项目', // 标题
       tabs: [
-        '回答',
-        '关注',
-        '推荐',
-        '热榜',
-        '法律',
-        '交易',
-        '知产',
-        '知识',
-        '数据',
+        {
+          name: '',
+          categoryId: '',
+          executionParameters: '',
+        },
       ],
       editFinish: '编辑',
       tabIndex: 1,
@@ -283,14 +284,73 @@ export default {
       isShowOpenApp: (state) => state.app.isShowOpenApp,
     }),
   },
-  mounted() {},
+  mounted() {
+    this.categoryList()
+    // this.type = this.$router.query.type
+  },
   methods: {
+    async categoryList() {
+      const { code, message, data } = await this.$axios.get(
+        knownApi.questionArticle.categoryList,
+        { params: {} }
+      )
+      if (code === 200) {
+        this.tabs = data.reduce((arr, item) => {
+          return [
+            ...arr,
+            {
+              name: item.name,
+              categoryId: item.categoryId,
+              executionParameters: item.executionParameters,
+            },
+          ]
+        }, [])
+      } else {
+        console.log(message)
+        this.loading = false
+        this.finished = true
+      }
+    },
     tonav(url) {
       this.$router.push({ path: url })
     },
-    toggleTabs(index) {
-      console.log('index', index)
+    async toggleTabs(index, item) {
       this.tabIndex = index
+      const items = item
+      console.log('items', items)
+      console.log('executionParameters', items.executionParameters)
+      if (item.exexecutionParameters === 'tuijian') {
+        this.showRecommend = true
+      } else if (item.exexecutionParameters === 'guanzhu') {
+        this.attentionStatus = true
+      } else if (item.exexecutionParameters === 'rebang') {
+        this.showHot = true
+        this.attentionStatus = false
+        this.showRecommend = false
+      } else {
+      }
+      // 请求列表数据
+      const categorIds = []
+      categorIds.push(item.categoryId)
+      const params = {
+        categorIds,
+        limit: 10,
+        page: 1,
+      }
+      const { code, message, data } = await this.$axios.post(
+        knownApi.questionArticle.list,
+        params
+      )
+      if (code === 200) {
+        if (data.rows.length > 0) {
+          this.listData = data.rows
+        } else {
+          this.attentionStatus = false
+          this.showNotAttention = true
+        }
+      } else {
+        console.log(message)
+      }
     },
     OpenPop(event) {
       // console.log('evnet', event)

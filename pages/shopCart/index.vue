@@ -194,6 +194,11 @@ export default {
         console.log('refresh:', data)
         this.onRefresh()
       })
+      this.$appFn.dggGetUserInfo((res) => {
+        if (res.code === 200 && res.data.userId && res.data.token) {
+          console.log('res.data', res.data)
+        }
+      })
     }
   },
 
