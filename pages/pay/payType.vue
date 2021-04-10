@@ -153,25 +153,25 @@ export default {
     } else {
       this.goBack()
     }
-
     const startTime = localStorage.getItem('startTime')
     if (startTime) {
       const nowTime = this.getNowTime()
       console.log('nowTime - startTime', nowTime - startTime)
-      if (nowTime - startTime > 30000) {
+      if (nowTime - startTime > 3000) {
         time = setInterval(() => {
           this.number++
           this.getPayResult()
         }, 2000)
-      } else {
-        this.$router.push({
-          path: '/pay/payResult',
-          query: {
-            payStatus: false,
-          },
-        })
-        this.clearLocalStorage()
       }
+      // else {
+      //   this.$router.push({
+      //     path: '/pay/payResult',
+      //     query: {
+      //       payStatus: false,
+      //     },
+      //   })
+      //   this.clearLocalStorage()
+      // }
     }
   },
 
@@ -299,7 +299,7 @@ export default {
               },
             })
             clearInterval(time)
-          } else if (this.number > 10) {
+          } else if (this.number > 5) {
             clearInterval(time)
             this.$xToast.show({
               message: '支付失败',
