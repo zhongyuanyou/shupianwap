@@ -1,10 +1,10 @@
 <template>
   <div class="authentication">
     <Head title="实名认证"></Head>
-    <div class="head">
+    <!-- <div class="head">
       <span>输入麻烦？试试拍摄图片吧</span>
       <Icon name="arrow" />
-    </div>
+    </div> -->
     <div class="box">
       <Form>
         <Field
@@ -57,7 +57,7 @@ export default {
   name: 'Authentication',
   components: {
     Head,
-    Icon,
+    // Icon,
     Form,
     Field,
     Checkbox,

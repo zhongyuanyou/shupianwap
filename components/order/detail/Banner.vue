@@ -29,7 +29,7 @@
         </p>
       </section>
       <section v-else>
-        <p>订单支付已超时,请重新下单</p>
+        <p>暂无支付信息</p>
       </section>
     </div>
     <p v-else-if="cusOrderStatusType == 2" class="msg">

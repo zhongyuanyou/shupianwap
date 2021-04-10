@@ -87,8 +87,8 @@ export default {
         )
         .then((res) => {
           // const orderData = res
-          console.log('res', res)
-          this.skuInfo = res.data.orderSkuList.filter((item) => {
+          const data = res.data ? res.data : res
+          this.skuInfo = data.orderSkuList.filter((item) => {
             return item.skuId === this.orderData.skuId
           })[0]
           console.log('this.skuInfo', this.skuInfo)

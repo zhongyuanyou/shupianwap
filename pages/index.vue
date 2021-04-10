@@ -20,7 +20,7 @@
     <!-- S 轮播banner -->
     <!-- <SwiperBanner :swiper-data="initData.rollBannerData" /> -->
     <!-- S 限时秒杀广告位置 -->
-    <SkillGroup />
+    <SkillGroup :skill-data="initData.skillData" />
     <!-- E 限时秒杀-->
     <!-- E 轮播banner -->
     <!-- S 帮我找服务 -->
@@ -103,9 +103,10 @@ export default {
     const fiexdAdCode = 'ad100234' // 顶部固定banner的code
     const rollAdCode = 'ad100237' // 导航下方轮播banner code
     const helpAdCode = 'ad113183' // 帮我找下方banner code(服务榜单)
+    const skillCode = 'ad113282'
     // 首屏请求导航和广告的参数
     const initReqParams = {
-      locationCodeList: [fiexdAdCode, rollAdCode, helpAdCode], // 广告位code列表
+      locationCodeList: [fiexdAdCode, rollAdCode, helpAdCode, skillCode], // 广告位code列表
       rollPage: 1, // 滚动导航当前页
       rollLimit: 1000, // 滚动导航每页条数
       fixedPage: 1, // 固定导航当前页
@@ -122,17 +123,15 @@ export default {
       fiexdNavData: [], // 固定导航
       rollNavData: [], // 滚动导航
     }
+    // const skillData = []
     try {
-      const res = await $axios.post(homeApi.initRequest, initReqParams, {
-        headers: {
-          'x-cache-control': 'cache',
-        },
-      })
-      console.log('res', res)
+      const res = await $axios.post(homeApi.initRequest, initReqParams)
+      console.log('res.data.advertising', res.data.advertising)
       if (res.code === 200) {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
         initData.rollBannerData = res.data.advertising[rollAdCode] || []
         initData.helpBannerData = res.data.advertising[helpAdCode] || []
+        initData.skillData = res.data.advertising[skillCode] || []
         initData.fiexdNavData = res.data.fixedNavList || []
         initData.rollNavData = res.data.rollNavList || []
       }
@@ -142,6 +141,7 @@ export default {
     }
     return {
       initData,
+      // skillData,
       closeAppOpen: true,
     }
   },

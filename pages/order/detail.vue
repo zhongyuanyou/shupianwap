@@ -22,7 +22,7 @@
         <p>
           <span> 商品总额 </span>
           <span class="money">
-            {{ orderData.orderTotalMoney || 0 }}
+            {{ orderData.orderTotalMoney || '面议' }}
             元
           </span>
         </p>
@@ -33,7 +33,7 @@
             元
           </span>
         </p>
-        <p>
+        <!-- <p>
           <span> 活动优惠 </span>
           <span class="money">
             {{ orderData.discount2 || 0 }}
@@ -53,7 +53,7 @@
             {{ orderData.orther || 0 }}
             元
           </span>
-        </p>
+        </p> -->
       </div>
       <p class="last-money">
         应付金额:
@@ -326,9 +326,11 @@ export default {
         )
         .then((res) => {
           // 订单价格处理 分转元
-          this.changeMoney(res.data)
-          const cusDetail = res.data.orderSplitAndCusVo
-          this.orderData = Object.assign(cusDetail, res.data)
+          this.changeMoney(res.data || res)
+          const cusDetail = res.data
+            ? res.data.orderSplitAndCusVo
+            : res.orderSplitAndCusVo
+          this.orderData = Object.assign(cusDetail, res.data || res)
           this.hasData = true
           this.cusOrderStatusType = orderUtils.checkCusOrderStatus(
             this.orderData.cusOrderStatusNo
@@ -342,7 +344,6 @@ export default {
             // 当订单状态不为已取消且支付状态不为已完成时展示付款入口
             this.showPayBtn = true
           }
-          console.log('orderData', this.orderData)
           this.getBatchList()
           // if (
           //   this.orderData.cusOrderPayStatusNo !==
@@ -355,8 +356,8 @@ export default {
         .catch((err) => {
           this.loading = false
           console.log('错误信息err', err)
-          this.$xToast.show(err.message)
-          this.$router.back(-1)
+          // this.$xToast.show(err.message)
+          // this.$router.back(-1)
         })
     },
     // 按钮操作

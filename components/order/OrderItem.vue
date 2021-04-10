@@ -14,7 +14,8 @@
         class="order-infos"
         :class="index !== 0 ? 'border-top' : ''"
       >
-        <sp-image :src="item.skuImages" alt="" class="img" srcset="" />
+        <div class="img"></div>
+        <!-- <sp-image v-else :src="item.skuImages" alt="" class="img" srcset="" /> -->
         <div class="right">
           <p class="goods-name">
             <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
@@ -51,12 +52,16 @@
     <div class="total-price-area">
       <!-- 定金尾款付费 -->
       <p v-if="checkPayType() === 2" class="inner">
-        <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元，</span>
+        <span class="price1">
+          总价 {{ orderData.orderTotalMoney || '面议' }}元，</span
+        >
         <span class="price2">
           尾款
-          {{ orderData.lastAount }}元，</span
+          {{ orderData.lastAount || '面议' }}元，</span
         >
-        <span class="price3"> 定金 {{ orderData.depositAmount }}元</span>
+        <span class="price3">
+          定金 {{ orderData.depositAmount || '面议' }}元</span
+        >
       </p>
       <!-- 服务完结收费的意向单 -->
       <p v-else-if="orderData.orderType === 0" class="inner">

@@ -1,6 +1,6 @@
 <template>
   <div class="edit">
-    <Head ref="head" :title="title"></Head>
+    <Head ref="head" :title="title"> </Head>
     <div class="tips">
       同一订单中合同的甲方名称必须与发票抬头保持一致，以下信息将作为合同甲方信息填充到正式合同中
     </div>
@@ -100,6 +100,14 @@ export default {
     if (this.orderItem.type !== 'ws') {
       this.getorder()
     }
+    if (this.$cookies.get('contaract')) {
+      this.partyName = this.$cookies.get('contaract').contractFirstName
+      this.userName = this.$cookies.get('contaract').contractFirstContacts
+      this.phone = this.$cookies.get('contaract').contractFirstPhone
+      this.email = this.$cookies.get('contaract').contractFirstEmail
+      this.address = this.$cookies.get('contaract').contractFirstAddr
+      this.$cookies.remove('contaract')
+    }
   },
   methods: {
     validator(val) {
@@ -131,6 +139,7 @@ export default {
                   contactWay: this.orderData.contractVo2s[0].contractFirstPhone,
                   orderItem: this.orderItem.orderItem.orderItem,
                   type: 'qs',
+                  go: '-2',
                 },
               })
             } else {
@@ -168,6 +177,7 @@ export default {
               signerName: this.userName,
               contactWay: this.phone,
               type: 'qs',
+              go: '-1',
             },
           })
         })

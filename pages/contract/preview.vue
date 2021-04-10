@@ -1,13 +1,25 @@
 <template>
   <div class="preview">
-    <Head :title="contract.type == 'qs' ? '合同预览' : '预览合同'"></Head>
+    <Head :title="contract.type == 'qs' ? '合同预览' : '预览合同'">
+      <template #left>
+        <my-icon
+          class="back-icon"
+          name="nav_ic_back"
+          size="0.4rem"
+          color="#1A1A1A"
+          @click.native="goback"
+        ></my-icon>
+      </template>
+    </Head>
     <div class="data">
       <div class="box">
         <Pdf v-if="pdf" :src="pdf" />
         <p v-else>合同预览失败</p>
       </div>
       <div v-if="contract.type == 'qs'" class="btn">
-        <Button plain type="primary" size="large">我再想想</Button>
+        <Button plain type="primary" size="large" @click="$router.back(-1)"
+          >我再想想</Button
+        >
         <Button type="primary" size="large" @click="sign()">确认签署</Button>
         <sp-dialog v-model="timeshow" :show-confirm-button="false">
           <div class="dialog">
@@ -55,6 +67,13 @@ export default {
     this.pdf = this.contract.contractUrl
   },
   methods: {
+    goback() {
+      if (this.contract.go === '-2') {
+        this.$router.back(-2)
+      } else {
+        this.$router.back(-2)
+      }
+    },
     sign() {
       if (this.$cookies.get('realStatus') === 'AUTHENTICATION_SUCCESS') {
         contractApi
