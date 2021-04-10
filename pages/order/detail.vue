@@ -383,8 +383,10 @@ export default {
         case 3:
           // 查看合同
           this.$router.push({
-            path: '/contract/edit',
+            path: '/contract/preview',
             query: {
+              type: 'yl',
+              contractUrl: this.orderData.contractUrl,
               orderId: this.orderData.id,
               cusOrderId: this.orderData.cusOrderId,
               fromPage: this.fromPage,
