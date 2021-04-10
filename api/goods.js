@@ -1,6 +1,7 @@
 'use strict'
 import { request } from '@/utils/request'
 import { CHIPS_WAP_BASE_URL } from '@/config/constant'
+// const CHIPS_WAP_BASE_URL = 'http://172.16.133.40:7001/service'
 const goods = {
   searchServeGoodsList({ axios }, params) {
     // 搜索服务商品列表接口
@@ -21,7 +22,6 @@ const goods = {
     })
   },
   transactionList({ axios }, params) {
-    console.log(CHIPS_WAP_BASE_URL, 'url')
     // 新搜索交易商品列表
     return request({
       axios,

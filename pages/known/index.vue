@@ -165,7 +165,7 @@
           />
           <span>提个问题</span>
         </div>
-        <div class="item" @click="tonav('/known/publish/answer')">
+        <div class="item" @click="tonav('/known/publish/chooseque')">
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
             alt=""

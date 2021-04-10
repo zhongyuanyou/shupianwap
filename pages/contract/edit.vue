@@ -97,6 +97,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$router.history, '路由')
     if (this.orderItem.type !== 'ws') {
       this.getorder()
     }
@@ -126,9 +127,12 @@ export default {
           { id: this.orderItem.orderId, cusOrderId: this.orderItem.cusOrderId }
         )
         .then((res) => {
-          this.orderData = res.data
+          this.orderData = res
           if (this.orderData.contractVo2s.length > 0) {
-            if (this.orderItem.contractStatus === 'STRUTS_CG') {
+            if (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG') {
+              this.partyName = this.orderData.contractVo2s[0].contractFirstName
+              this.userName = this.orderData.contractVo2s[0].contractFirstContacts
+              this.phone = this.orderData.contractVo2s[0].contractFirstPhone
               this.$router.push({
                 path: '/contract/preview',
                 query: {
@@ -137,15 +141,25 @@ export default {
                   contractNo: this.orderData.contractVo2s[0].contractNo,
                   signerName: this.orderData.contractVo2s[0].contractFirstName,
                   contactWay: this.orderData.contractVo2s[0].contractFirstPhone,
-                  orderItem: this.orderItem.orderItem.orderItem,
                   type: 'qs',
                   go: '-2',
+                  fromPage: this.orderItem.fromPage,
                 },
               })
             } else {
-              this.partyName = this.orderData.contractVo2s[0].contractFirstName
-              this.userName = this.orderData.contractVo2s[0].contractFirstContacts
-              this.phone = this.orderData.contractVo2s[0].contractFirstPhone
+              this.$router.push({
+                path: '/contract/preview',
+                query: {
+                  contractUrl: this.orderData.contractVo2s[0].contractUrl,
+                  contractId: this.orderData.contractVo2s[0].contractId,
+                  contractNo: this.orderData.contractVo2s[0].contractNo,
+                  signerName: this.orderData.contractVo2s[0].contractFirstName,
+                  contactWay: this.orderData.contractVo2s[0].contractFirstPhone,
+                  type: 'yl',
+                  go: '-2',
+                  fromPage: this.orderItem.fromPage,
+                },
+              })
             }
           }
         })
@@ -177,7 +191,8 @@ export default {
               signerName: this.userName,
               contactWay: this.phone,
               type: 'qs',
-              go: '-1',
+              go: '-2',
+              fromPage: this.orderItem.fromPage,
             },
           })
         })

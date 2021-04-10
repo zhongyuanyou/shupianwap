@@ -13,6 +13,92 @@
   </div>
 </template>
 <script>
+const uploadConfig = {
+  action: 'https://dspapi.shupian.cn/api/oss/v1/upload', // 必填参数 图片上传地址
+  methods: 'POST', // 必填参数 图片上传方式
+  token: '', // 可选参数 如果需要token验证，假设你的token有存放在sessionStorage
+  name: 'img', // 必填参数 文件的参数名
+  size: 500, // 可选参数   图片大小，单位为Kb, 1M = 1024Kb
+  accept: 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon', // 可选 可上传的图片格式
+}
+const dataURLtoBlob = function (dataurl) {
+  const arr = dataurl.split(',')
+  // 注意base64的最后面中括号和引号是不转译的
+  const _arr = arr[1].substring(0, arr[1].length - 2)
+  const mime = arr[0].match(/:(.*?);/)[1]
+  const bstr = atob(_arr)
+  let n = bstr.length
+  const u8arr = new Uint8Array(n)
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n)
+  }
+  return new Blob([u8arr], {
+    type: mime,
+  })
+}
+let itemId
+const sendThis = (_this) => {
+  itemId = _this
+}
+const handlers = {
+  image: function image() {
+    const self = this
+    let fileInput = this.container.querySelector('input.ql-image[type=file]')
+    if (fileInput === null) {
+      fileInput = document.createElement('input')
+      fileInput.setAttribute('type', 'file')
+      // 设置图片参数名
+      if (uploadConfig.name) {
+        fileInput.setAttribute('name', uploadConfig.name)
+      }
+      // 可设置上传图片的格式
+      fileInput.setAttribute('accept', uploadConfig.accept)
+      fileInput.classList.add('ql-image')
+      // 监听选择文件
+      fileInput.addEventListener('change', function () {
+        console.log('change', 111)
+        // 创建formData
+        const formData = new FormData()
+        formData.append(uploadConfig.name, fileInput.files[0])
+        formData.append('fileId', itemId)
+        formData.append('isDeleteOriginalFile', false)
+        formData.append('type', `FLSC_HELP_${itemId}`)
+        // 如果需要token且存在token
+        if (uploadConfig.token) {
+          formData.append('token', uploadConfig.token)
+        }
+        // 图片上传
+        const xhr = new XMLHttpRequest()
+        xhr.open(uploadConfig.methods, uploadConfig.action, true)
+        // 上传数据成功，会触发
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            const res = JSON.parse(xhr.responseText)
+            console.log('res', res)
+            const length = self.quill.getSelection(true).index
+            // 这里很重要，你图片上传成功后，img的src需要在这里添加，res.path就是你服务器返回的图片链接。
+            self.quill.insertEmbed(length, 'image', res.data.url)
+            self.quill.setSelection(length + 1)
+          }
+          fileInput.value = ''
+        }
+        // 开始上传数据
+        xhr.upload.onloadstart = function () {
+          fileInput.value = ''
+        }
+        // 当发生网络异常的时候会触发，如果上传数据的过程还未结束
+        xhr.upload.onerror = function () {}
+        // 上传数据完成（成功或者失败）时会触发
+        xhr.upload.onloadend = function () {
+          // console.log('上传结束')
+        }
+        xhr.send(formData)
+      })
+      this.container.appendChild(fileInput)
+    }
+    fileInput.click()
+  },
+}
 export default {
   props: {
     initContent: {
@@ -25,33 +111,42 @@ export default {
       editorOption: {
         // some quill options
         modules: {
-          toolbar: [
-            ['bold', 'italic', 'underline'], // 加粗 斜体 下划线 删除线 ['bold', 'italic', 'underline', 'strike']
-            // ["blockquote", "code-block"], // 引用代码块
-            [{ header: 1 }, { header: 2 }], // 1、2 级标题  [{ header: 1 }, { header: 2 }]
+          toolbar: {
+            container: [
+              ['bold', 'italic', 'underline'], // 加粗 斜体 下划线 删除线 ['bold', 'italic', 'underline', 'strike']
+              // ["blockquote", "code-block"], // 引用代码块
+              [{ header: 1 }, { header: 2 }], // 1、2 级标题  [{ header: 1 }, { header: 2 }]
 
-            // [{ list: "ordered" }, { list: "bullet" }], // 有序、无序列表
+              // [{ list: "ordered" }, { list: "bullet" }], // 有序、无序列表
 
-            // [{ script: "sub" }, { script: "super" }], // 上标/下标
+              // [{ script: "sub" }, { script: "super" }], // 上标/下标
 
-            // [{ indent: "-1" }, { indent: "+1" }], // 缩进
+              // [{ indent: "-1" }, { indent: "+1" }], // 缩进
 
-            // [{'direction': 'rtl'}], // 文本方向
+              // [{'direction': 'rtl'}], // 文本方向
 
-            [{ size: ['small', false, 'large'] }], // 字体大小 [{ size: ['small', false, 'large', 'huge'] }]
+              // [{ size: ['small', false, 'large'] }], // 字体大小 [{ size: ['small', false, 'large', 'huge'] }]
 
-            // [{ header: [1, 2] }], // 标题   [{ header: [1, 2, 3, 4, 5, 6, false] }]
+              // [{ header: [1, 2] }], // 标题   [{ header: [1, 2, 3, 4, 5, 6, false] }]
 
-            // [{ color: [] }, { background: [] }], // 字体颜色、字体背景颜色
+              // [{ color: [] }, { background: [] }], // 字体颜色、字体背景颜色
 
-            // [{ font: [] }], // 字体种类
+              // [{ font: [] }], // 字体种类
 
-            // [{ align: [] }], // 对齐方式
+              // [{ align: [] }], // 对齐方式
 
-            // ["clean"], // 清除文本格式
-            ['image'], // 链接、图片、视频
-          ],
+              // ["clean"], // 清除文本格式
+              ['image'], // 链接、图片、视频
+            ],
+            handlers,
+          },
         },
+      },
+      setHeaders: {},
+      imgUploadUrl: 'https://dspapi.shupian.cn/api/oss/v1/upload',
+      token: '',
+      formData: {
+        file: '',
       },
     }
   },
