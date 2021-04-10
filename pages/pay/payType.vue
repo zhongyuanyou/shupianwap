@@ -81,6 +81,7 @@ export default {
   },
   data() {
     return {
+      number: 0,
       payCallBackData: {
         cusOrderId: 0,
         serialNumber: 0,
@@ -157,8 +158,9 @@ export default {
     if (startTime) {
       const nowTime = this.getNowTime()
       console.log('nowTime - startTime', nowTime - startTime)
-      if (nowTime - startTime > 120000) {
+      if (nowTime - startTime > 30000) {
         time = setInterval(() => {
+          this.number++
           this.getPayResult()
         }, 2000)
       } else {
@@ -168,6 +170,7 @@ export default {
             payStatus: false,
           },
         })
+        this.clearLocalStorage()
       }
     }
   },
@@ -295,6 +298,15 @@ export default {
                 payStatus: true,
               },
             })
+            clearInterval(time)
+          } else if (this.number > 10) {
+            clearInterval(time)
+            this.$xToast.show({
+              message: '支付失败',
+              duration: 1000,
+              forbidClick: true,
+            })
+            this.clearLocalStorage()
           }
         })
         .catch((e) => {
@@ -339,6 +351,12 @@ export default {
             }
           })
       }
+    },
+
+    // 清空localStorage
+    clearLocalStorage() {
+      localStorage.removeItem('cusOrderId')
+      localStorage.removeItem('serialNumber')
     },
   },
 }
