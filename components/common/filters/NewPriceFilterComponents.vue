@@ -67,6 +67,7 @@ export default {
       minPrice: '', // 最小价格
       maxPrice: '', // 最大价格
       activeItems: [],
+      asdada: 3,
     }
   },
   watch: {

@@ -238,6 +238,7 @@ export default {
       ],
       editFinish: '编辑',
       tabIndex: 1,
+      ada: 2,
       showPop: false,
       showIcon: false,
       status: true,

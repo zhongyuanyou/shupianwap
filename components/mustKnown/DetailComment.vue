@@ -37,7 +37,7 @@
 <script>
 // 详情页非弹窗的评论列表
 import { Image, Field, Button } from '@chipspc/vant-dgg'
-import CommentList from './CommentList'
+import CommentList from '@/components/mustKnown/CommentList'
 import { knownApi } from '~/api'
 export default {
   components: {

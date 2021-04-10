@@ -99,6 +99,7 @@ export default {
       list: [],
       page: 1,
       total: 0, // 总数
+      lll: 33333,
     }
   },
   computed: {
