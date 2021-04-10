@@ -1,20 +1,25 @@
 <template>
   <div class="title">
     <p class="title_btitle">{{ sellingGoodsData.name }}</p>
-    <!--    <div class="title_tags">-->
-    <!--      <span-->
-    <!--        v-for="(item, index) in [-->
-    <!--          '千万补贴',-->
-    <!--          '1对1服务',-->
-    <!--          '视频看房',-->
-    <!--          '视频看房1',-->
-    <!--        ]"-->
-    <!--        :key="index"-->
-    <!--        class="title_tags_item"-->
-    <!--        :class="{ title_tags_main: index == 0 }"-->
-    <!--        >{{ item }}</span-->
-    <!--      >-->
-    <!--    </div>-->
+    <div class="title_tags">
+      <span
+        v-if="sellingGoodsData.salesGoodsSubVos.length > 1"
+        class="title_tags_item title_tags_main"
+        >套餐</span
+      >
+      <!--      <span-->
+      <!--        v-for="(item, index) in [-->
+      <!--          '千万补贴',-->
+      <!--          '1对1服务',-->
+      <!--          '视频看房',-->
+      <!--          '视频看房1',-->
+      <!--        ]"-->
+      <!--        :key="index"-->
+      <!--        class="title_tags_item"-->
+      <!--        :class="{ title_tags_main: index == 0 }"-->
+      <!--        >{{ item }}-->
+      <!--      </span>-->
+    </div>
     <!--    <div class="title_desc">-->
     <!--      公司注册是开始创业的第一步，-->
     <!--      根据《中华人民共和国公司法》规定，注册公司时需要依法向注册公司时需要...-->
