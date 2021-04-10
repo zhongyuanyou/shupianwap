@@ -3,8 +3,8 @@
     <sp-sticky>
       <Search
         ref="searchRef"
-        :disabled="true"
         v-model="value"
+        :disabled="true"
         :icon-left="0.24"
         placeholder="请输入搜索内容"
         @clickInputHandle="keyClickHandle"
