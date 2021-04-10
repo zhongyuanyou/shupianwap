@@ -14,7 +14,13 @@
         @setTitle="setTitle"
       />
       <div class="content-area">
-        <Editor :init-content="formData.content" @editorChange="editorChange" />
+        <div class="content">
+          <Editor
+            ref="myEditor"
+            :init-content="formData.content"
+            @editorChange="editorChange"
+          />
+        </div>
       </div>
       <ChooseTopic
         ref="chooseTopic"
@@ -31,7 +37,7 @@ import PageHead from '@/components/mustKnown/publish/PageHead'
 import TitleArea from '@/components/mustKnown/publish/TitleArea'
 import ChooseTopic from '@/components/mustKnown/publish/ChooseTopic'
 import Editor from '@/components/mustKnown/publish/Editor'
-// import { knownApi } from '@/api'
+import EditorMinxin from '@/mixins/edit'
 
 export default {
   components: {
@@ -41,24 +47,13 @@ export default {
     Editor,
     [Field.name]: Field,
   },
+  mixins: [EditorMinxin],
   data() {
     return {
-      hideInput: false, // 是否隐藏标题输入框
+      fromPage: 'article',
       detailData: {},
       editType: '', // editType=1为编写文章 editType=2 为新发文章
       articleId: '',
-      formData: {
-        // 编辑之前的信息
-        title: '',
-        content: '',
-        text: '',
-        topics: [], // 话题
-      },
-      editData: {
-        // 编辑之后的富文本数据
-        text: '',
-        content: '',
-      },
     }
   },
   computed: {
@@ -70,10 +65,7 @@ export default {
     },
     hasVal() {
       // 文章发布按钮显示必须有标题和内容
-      return (
-        this.formData.title.length > 0 &&
-        (this.formData.text.length > 0 || this.editData.text.length > 0)
-      )
+      return this.formData.title.length > 0 && this.formData.content.length > 0
     },
   },
   mounted() {
@@ -84,35 +76,6 @@ export default {
   methods: {
     openModal() {
       this.$refs.chooseTopic.showPop = true
-    },
-    setTopic(val) {
-      this.formData.topics = val
-      const arr = val.map((item) => {
-        return item.name
-      })
-      console.log('formData', this.formData)
-    },
-    setTitle(val) {
-      this.formData.title = val
-      console.log('this.formData', this.formData)
-    },
-    editorChange(data) {
-      this.editData.text = data.text
-      this.editData.content = data.html
-    },
-    submit() {
-      const data = Object.assign(this.formData, this.editData)
-      // known
-      //   .add({ axios: this.axios, params: data })
-      //   .then((result) => {
-      //     console.log('result', result)
-      //   })
-      //   .catch((e) => {
-      //     if (e.code !== 200) {
-      //       console.log(e)
-      //     }
-      //   })
-      // console.log('data', data)
     },
   },
 }
