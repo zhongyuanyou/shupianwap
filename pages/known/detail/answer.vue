@@ -75,7 +75,7 @@
       </div>
       <p class="pub-time">编辑于2021-05-10 16:40</p>
     </div>
-    <Comment :article-id="1" />
+    <Comment :article-id="'1'" />
     <div class="page-bottom">
       <div class="left-area">
         <span class="icon" @click="handleClickBottom(1)">

@@ -10,12 +10,12 @@
       >
         <template v-slot:center>
           <sp-icon
-            @click="clearInput"
+            v-show="value != ''"
             name="clear"
             class="clear"
             color="#CCCCCC"
             size="0.35rem"
-            v-show="value != ''"
+            @click="clearInput"
           />
         </template>
         <template v-slot:right>
@@ -62,6 +62,13 @@ export default {
     [Icon.name]: Icon,
     Search,
   },
+  data() {
+    return {
+      value: '',
+      knownHistory: [], // 搜索历史记录
+      tabIndex: '1', // 搜索结果页面tab,默认为问题:1
+    }
+  },
   mounted() {
     // 历史记录从localStorage中取
     const localHistory = localStorage.getItem('knownHistory') || '[]'
@@ -78,13 +85,6 @@ export default {
     }
     this.tabIndex = this.$route.query.type || '1'
     this.value = this.$route.query.keyword || ''
-  },
-  data() {
-    return {
-      value: '',
-      knownHistory: [], // 搜索历史记录
-      tabIndex: '1', // 搜索结果页面tab,默认为问题:1
-    }
   },
   methods: {
     del(index) {

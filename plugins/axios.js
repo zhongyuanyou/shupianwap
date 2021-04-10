@@ -10,8 +10,8 @@ const BASE = require('~/config/index.js')
 const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
 const ctxImpl = new ExplicitContext() // 进程内的上下文
 // const recorder = new ConsoleRecorder();
-const localServiceName = 'service-a' // 此应用程序的名称
-const remoteServiceName = 'egg-ts' // 您所在应用程序的名称
+const localServiceName = BASE.terminalCode // 此应用程序的名称
+const remoteServiceName = BASE.terminalCode // 您所在应用程序的名称
 
 const tracer = new Tracer({
   ctxImpl,
@@ -45,8 +45,8 @@ export default function (ctx, inject) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
-      config.headers.platformCode = 'COMDIC_PLATFORM_CRISPS' // 平台code
-      config.headers.terminalCode = 'COMDIC_TERMINAL_WAP' // 终端code
+      config.headers.platformCode = BASE.platformCode // 平台code
+      config.headers.terminalCode = BASE.terminalCode // 终端code
       if (DGG_SERVER_ENV === 'development') {
         // 本地根据自己的需求进行配置
         config.headers.sysCode = 'crisps-app-wap-bff-api'
