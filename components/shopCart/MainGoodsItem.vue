@@ -26,7 +26,7 @@
           color="#F8F8F8"
           text-color="#999999"
           size="large"
-          @click="handleSkuToDetail"
+          @click="handleSkuToDetail(mainData.id)"
         >
           <span class="goods-sku__text"> {{ mainData.skuAttrName }}</span>
         </sp-tag>
@@ -169,10 +169,12 @@ export default {
       console.log('handleSkuOpen')
       this.$emit('operation', { type: 'openSku' })
     },
-    handleSkuToDetail() {
+    handleSkuToDetail(id) {
       this.$router.push({
-        path: '/DetailManagement',
-        query: {},
+        path: '/detail',
+        query: {
+          productId: id,
+        },
       })
     },
     handleCountChange(value) {
