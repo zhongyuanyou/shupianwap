@@ -356,8 +356,11 @@ export default {
         .catch((err) => {
           this.loading = false
           console.log('错误信息err', err)
-          // this.$xToast.show(err.message)
-          // this.$router.back(-1)
+          this.$xToast.error(err.message || '查询失败，请稍后重试')
+          const that = this
+          setTimeout(function () {
+            that.$router.back(-1)
+          }, 2000)
         })
     },
     // 按钮操作

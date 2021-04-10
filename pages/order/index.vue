@@ -231,10 +231,9 @@ export default {
           if (this.page === 1) {
             this.list = []
           }
-          console.log('error', error)
           this.loading = false
           this.loadingMore = false
-          this.$xToast.error('获取数据失败')
+          this.$xToast.error(error.message || '请求失败，请重试')
         })
     },
     handleClickItem(type, order) {

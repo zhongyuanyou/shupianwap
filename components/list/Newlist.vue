@@ -64,7 +64,7 @@ export default {
       formData: {
         start: 1,
         limit: 10,
-        needTypes: 0,
+        needTypes: 1,
         needGoodsList: 1,
         searchKey: '',
       },
@@ -88,9 +88,9 @@ export default {
         .transactionList({ axios: this.$axios }, this.formData)
         .then((data) => {
           if (this.datalist.length > 0) {
-            this.datalist = this.datalist.concat(data.goods.records)
+            this.datalist = this.datalist.concat(data.goodsList.records)
           } else {
-            this.datalist = data.goods.records
+            this.datalist = data.goodsList.records
           }
         })
         .catch((err) => {
@@ -105,37 +105,7 @@ export default {
       this.loading = true
       this.onLoad()
     },
-    onLoad() {
-      // if (this.isLoading) {
-      //   this.datalist = []
-      // }
-      // goods
-      //   .transactionList({ axios: this.$axios }, this.formData)
-      //   .then((data) => {
-      //     if (this.datalist.length > 0) {
-      //       this.datalist = this.datalist.concat(data.goods.records)
-      //       this.formData.start = this.formData.start + 1
-      //       if (data.goods.records.length < 10) {
-      //         this.finished = true
-      //       }
-      //       this.loading = false
-      //       this.isLoading = false
-      //     } else {
-      //       this.datalist = data.goods.records
-      //       this.formData.start = this.formData.start + 1
-      //       if (data.goods.records.length < 10) {
-      //         this.finished = true
-      //       }
-      //       this.loading = false
-      //       this.isLoading = false
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     this.loading = false
-      //     this.isLoading = false
-      //     this.$xToast.show(err)
-      //   })
-    },
+    onLoad() {},
   },
 }
 </script>
