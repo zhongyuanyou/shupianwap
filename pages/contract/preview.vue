@@ -100,7 +100,7 @@ export default {
           .then((res) => {
             if (res) {
               this.$router.push({
-                path: '/conrract',
+                path: '/conrract/iframe',
                 query: {
                   src: res,
                 },
