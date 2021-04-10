@@ -7,4 +7,6 @@ module.exports = {
   imBaseUrl: 'https://dim.shupian.cn', // IM 地址
   domainUrl: 'https://dm.shupian.cn/', // 域名
   ossUrl: 'https://dspapi.shupian.cn', // oss域名
+  platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
+  terminalCode: 'COMDIC_TERMINAL_WAP', // 终端code
 }
