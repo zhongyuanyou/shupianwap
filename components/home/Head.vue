@@ -61,7 +61,7 @@
 <script>
 import { Sticky, Swipe, swipeItem } from '@chipspc/vant-dgg'
 import { mapState, mapActions } from 'vuex'
-import Search from '@/components/Home/Search'
+import Search from '@/components/home/Search'
 export default {
   components: {
     [Sticky.name]: Sticky,

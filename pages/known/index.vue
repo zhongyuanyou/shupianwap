@@ -43,7 +43,7 @@
     <!-- 吸顶 end -->
     <!-- 列表 start -->
     <div class="container_body">
-      <section v-if="showRecommend"><Answer /></section>
+      <section><Answer v-if="showRecommend" /></section>
       <section>
         <VisitUser v-if="attentionStatus" />
         <AttentionItem v-if="attentionStatus" :list-data="listData" />

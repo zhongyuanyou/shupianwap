@@ -97,7 +97,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$router.history, '路由')
     if (this.orderItem.type !== 'ws') {
       this.getorder()
     }
