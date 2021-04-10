@@ -145,6 +145,7 @@ export default {
           .then((res) => {
             if (res.code === 200) {
               this.userInfoData = res.data
+              this.$store.dispatch('user/setInfo', res.data)
             } else {
               this.$xToast.show({
                 message: '网络错误,请刷稍后再试',
