@@ -61,7 +61,12 @@
       >
         <div v-for="(item, index) in list" :key="index" class="item">
           <div class="user">
-            <sp-image round class="user_avatar" fit="cover" src="" />
+            <sp-image
+              round
+              class="user_avatar"
+              fit="cover"
+              :src="item.avatar"
+            />
             <div class="user_info">
               <div class="user_info_name">{{ item.userName }}</div>
               <div class="user_info_time">27分钟前·回答了问题</div>
@@ -80,8 +85,16 @@
             <sp-image class="right_img" fit="cover" src="" />
           </div>
           <div v-if="item.type !== 1" class="bottom">
-            <div class="bottom_item" @click="agree">
-              <my-icon name="zantong" size="0.36rem" color="#999999"></my-icon>
+            <div
+              class="bottom_item"
+              :style="{ color: item.isApplaudFlag ? '#4974f5' : '#999999' }"
+              @click="like(item)"
+            >
+              <my-icon
+                name="zantong"
+                size="0.36rem"
+                :color="item.isApplaudFlag ? '#4974f5' : '#999999'"
+              ></my-icon>
               {{ item.applaudCount || '赞同' }}
             </div>
             <div class="bottom_item" @click="comments(item.id)">
@@ -168,17 +181,13 @@ export default {
     source() {
       return this.$route.query.source
     },
-    // 其他人用户id
-    userId() {
-      return this.$route.query.userId
+    // 主页用户id
+    homeUserId() {
+      return this.$route.query.homeUserId
     },
-    // 当前登录用户id
-    currentUserId() {
-      return this.$store.state.user.userId
+    userInfo() {
+      return this.$store.state.user
     },
-  },
-  mounted() {
-    console.log(this.$store)
   },
   methods: {
     tabChange() {
@@ -188,24 +197,8 @@ export default {
       this.loading = true
       this.getList()
     },
-    onLoad() {
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        // 加载状态结束
-        this.loading = false
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
-    },
     attention() {
       console.log('关注')
-    },
-    agree() {
-      console.log('赞同')
     },
     comments(id) {
       this.articleId = id
@@ -235,8 +228,8 @@ export default {
         knownApi.home.list,
         {
           type: this.active,
-          userIds: this.userId || this.currentUserId,
-          currentUserId: this.currentUserId,
+          userIds: this.homeUserId || this.userInfo.userId,
+          currentUserId: this.userInfo.userId,
           page: this.page,
           limit: this.limit,
         }
@@ -252,6 +245,30 @@ export default {
         console.log(message)
         this.loading = false
         this.finished = true
+      }
+    },
+    async like(item) {
+      const { code, message, data } = await this.$axios.post(
+        knownApi.home.operation,
+        {
+          handleUserId: this.userInfo.userId,
+          handleUserName: this.userInfo.userName || '测试用户名',
+          businessId: item.id,
+          handleType: item.isApplaudFlag ? 7 : 1, // 1是点赞 7是取消点赞
+          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+          dateType: item.type,
+        }
+      )
+      if (code === 200) {
+        if (item.isApplaudFlag) {
+          item.isApplaudFlag = 0
+          item.applaudCount--
+        } else {
+          item.isApplaudFlag = 1
+          item.applaudCount++
+        }
+      } else {
+        console.log(message)
       }
     },
   },
