@@ -83,6 +83,7 @@ export default {
       commentShow: false,
       loading: true,
       finished: false,
+      totalPage: 100,
       infoList: [
         {
           item: 1,
