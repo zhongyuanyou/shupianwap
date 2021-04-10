@@ -295,99 +295,107 @@ export default {
       }
     },
     placeOrder() {
-      if (this.$route.query.type === 'shopcar') {
-        const arr = []
-        for (let i = 0; i < this.order.list.length; i++) {
-          if (arr.length === 0) {
-            const sku = {
-              saleSkuId: this.order.list[i].id,
-              saleSkuName: this.order.list[i].name,
-              saleSkuVersionNo: this.order.list[i].version + '',
-              saleSkuPrice: this.order.list[i].salesPrice,
-              saleSkuCount: this.order.list[i].salesVolume,
-            }
-            arr.push(sku)
-          } else {
-            for (let b = 0; b < arr.length; b++) {
-              if (this.order.list[i].id === arr[b].saleSkuId) {
-                arr[b].saleSkuCount++
-              } else {
-                const sku = {
-                  saleSkuId: this.order.list[i].id,
-                  saleSkuName: this.order.list[i].name,
-                  saleSkuVersionNo: this.order.list.version + '',
-                  saleSkuPrice: this.order.list[i].salesPrice,
-                  saleSkuCount: this.order.list[i].salesVolume,
+      if (!this.radio) {
+        Toast({
+          message: '下单前，请先同意《薯片平台用户交易下单协议》',
+          overlay: true,
+        })
+      } else {
+        if (this.$route.query.type === 'shopcar') {
+          const arr = []
+          for (let i = 0; i < this.order.list.length; i++) {
+            if (arr.length === 0) {
+              const sku = {
+                saleSkuId: this.order.list[i].id,
+                saleSkuName: this.order.list[i].name,
+                saleSkuVersionNo: this.order.list[i].version + '',
+                saleSkuPrice: this.order.list[i].salesPrice,
+                saleSkuCount: this.order.list[i].salesVolume,
+              }
+              arr.push(sku)
+            } else {
+              for (let b = 0; b < arr.length; b++) {
+                if (this.order.list[i].id === arr[b].saleSkuId) {
+                  arr[b].saleSkuCount++
+                } else {
+                  const sku = {
+                    saleSkuId: this.order.list[i].id,
+                    saleSkuName: this.order.list[i].name,
+                    saleSkuVersionNo: this.order.list.version + '',
+                    saleSkuPrice: this.order.list[i].salesPrice,
+                    saleSkuCount: this.order.list[i].salesVolume,
+                  }
+                  arr.push(sku)
                 }
-                arr.push(sku)
               }
             }
           }
-        }
-        this.Orderform.needSplitProPackageDataParam = arr
-      } else {
-        const sku = {
-          saleSkuId: this.order.id,
-          saleSkuName: this.order.name,
-          saleSkuVersionNo: this.order.version + '',
-          saleSkuPrice: this.order.salesPrice,
-          saleSkuCount: 1,
-        }
-        this.Orderform.needSplitProPackageDataParam.push(sku)
-      }
-      let isFromCart = false
-      let cusOrderPayType
-      if (this.$route.query.type === 'shopcar') {
-        isFromCart = true
-        this.Orderform.cartIds = this.$route.query.cartIdsStr
-        cusOrderPayType = this.order.list[0].refConfig.payType
-        // cusOrderPayType = cusOrderPayType.toString()
-      } else {
-        cusOrderPayType = this.order.refConfig.payType
-        isFromCart = false
-      }
-      if (this.$refs.conpon.checkarr.id) {
-        const arr = {
-          code: 'ORDER_DISCOUNT_DISCOUNT',
-          value: this.$refs.conpon.checkarr.id,
-        }
-        this.Orderform.discount.push(arr)
-      }
-
-      this.Orderform.cusOrderPayType = cusOrderPayType
-      this.Orderform.isFromCart = isFromCart
-      this.Orderform.orderProvinceNo = this.$store.state.city.defaultCity.pid
-      this.Orderform.orderCityNo = this.$store.state.city.defaultCity.code
-      this.Orderform.orderLocationProvinceName = this.$store.state.city.defaultCity.pname
-      this.Orderform.orderLocationCityName = this.$store.state.city.defaultCity.name
-      this.Orderform.customerOrderMark = this.message
-      if (this.contaract) {
-        this.Orderform.contractFormParam = this.contaract
-        this.Orderform.contractFormParam.contractApplyWay = 'CUSTOMER'
-      }
-      order
-        .placeOrder({ axios: this.$axios }, this.Orderform)
-        .then((result) => {
-          Toast({
-            message: '下单成功',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_success',
-          })
-          setTimeout(() => {
-            this.$router.push({
-              path: '/pay/payType',
-              query: {
-                cusOrderId: result.cusOrderId,
-              },
-            })
-          }, 1000)
-        })
-        .catch((e) => {
-          if (e.code !== 200) {
-            this.$xToast.show(e)
-            console.log(e)
+          this.Orderform.needSplitProPackageDataParam = arr
+        } else {
+          const sku = {
+            saleSkuId: this.order.id,
+            saleSkuName: this.order.name,
+            saleSkuVersionNo: this.order.version + '',
+            saleSkuPrice: this.order.salesPrice,
+            saleSkuCount: 1,
           }
-        })
+          this.Orderform.needSplitProPackageDataParam.push(sku)
+        }
+        let isFromCart = false
+        let cusOrderPayType
+        if (this.$route.query.type === 'shopcar') {
+          isFromCart = true
+          this.Orderform.cartIds = this.$route.query.cartIdsStr
+          cusOrderPayType = this.order.list[0].refConfig.payType
+          // cusOrderPayType = cusOrderPayType.toString()
+        } else {
+          cusOrderPayType = this.order.refConfig.payType
+          isFromCart = false
+        }
+        if (this.$refs.conpon.checkarr.id) {
+          const arr = {
+            code: 'ORDER_DISCOUNT_DISCOUNT',
+            value: this.$refs.conpon.checkarr.id,
+          }
+          this.Orderform.discount.push(arr)
+        }
+
+        this.Orderform.cusOrderPayType = cusOrderPayType
+        this.Orderform.isFromCart = isFromCart
+        this.Orderform.orderProvinceNo = this.$store.state.city.defaultCity.pid
+        this.Orderform.orderCityNo = this.$store.state.city.defaultCity.code
+        this.Orderform.orderLocationProvinceName = this.$store.state.city.defaultCity.pname
+        this.Orderform.orderLocationCityName = this.$store.state.city.defaultCity.name
+        this.Orderform.customerOrderMark = this.message
+        if (this.contaract) {
+          this.Orderform.contractFormParam = this.contaract
+          this.Orderform.contractFormParam.contractApplyWay = 'CUSTOMER'
+        }
+        order
+          .placeOrder({ axios: this.$axios }, this.Orderform)
+          .then((result) => {
+            Toast({
+              message: '下单成功',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_success',
+              overlay: true,
+            })
+            setTimeout(() => {
+              this.$router.push({
+                path: '/pay/payType',
+                query: {
+                  cusOrderId: result.cusOrderId,
+                },
+              })
+            }, 1000)
+          })
+          .catch((e) => {
+            if (e.code !== 200) {
+              this.$xToast.show(e)
+              console.log(e)
+            }
+          })
+      }
     },
     getInitData(index) {
       const arr = this.order.list.map((x) => {

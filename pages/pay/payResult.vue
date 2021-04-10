@@ -77,7 +77,7 @@
 
 <script>
 import { Button } from '@chipspc/vant-dgg'
-import { pay } from '@/api'
+import { pay, homeApi } from '@/api'
 export default {
   components: {
     [Button.name]: Button,
@@ -118,6 +118,20 @@ export default {
           sold_num: '123541',
         },
       ],
+      params: {
+        dictionaryCode: 'C-SY-RMJY-GG', // 查询数据字典的code
+        findType: 0, // 查询类型：0：初始查询广告+数据字典+推荐商品  1：查询广告+推荐商品 2：只查推荐商品
+        userId: '', // 用户id
+        deviceId: '', // 设备ID（用户唯一标识） 0022ef1a-f685-469a-93a8-5409892207a2
+        areaCode: '', // 区域编码
+        sceneId: 'app-mainye-01', // 场景ID
+        maxsize: 100, // 要求推荐产品的数量
+        platform: 'APP', // 平台（app,m,pc）
+        formatId: '', // 产品类别
+        limit: 10, // 分页条数
+        page: 1, // 当前页
+        locationCode: '', // 查询广告的位置code
+      },
     }
   },
   mounted() {
@@ -127,7 +141,7 @@ export default {
     pay
       .enablePayMoney({ axios: this.$axios }, this.formData)
       .then((result) => {
-        console.log('result的值', result)
+        // console.log('result的值', result)
         this.responseData = result.data
       })
       .catch((e) => {
@@ -135,6 +149,8 @@ export default {
           console.log(e)
         }
       })
+
+    this.findRecomList()
   },
   methods: {
     onLeftClick() {
@@ -142,6 +158,91 @@ export default {
     },
     againPay() {
       this.$router.replace('/pay/payType')
+    },
+    // 查询推荐商品
+    findRecomList(index) {
+      const params = {}
+      // 初始化查询字典+广告需要的参数
+      // if (this.params.findType === 0) {
+      // params.findType = this.params.findType
+      // params.dictionaryCode = this.params.dictionaryCode
+      // params.limit = this.params.limit
+      // params.page = this.params.page
+      params.areaCode = '510100'
+      params.deviceId = '461454fcf47be7b04dedf5c57380d33d'
+      params.findType = 2
+      params.formatId = 'FL20201224136341'
+      params.limit = 10
+      params.maxsize = 100
+      params.page = 2
+      params.platform = 'APP'
+      params.sceneId = 'app-mainye-01'
+      params.userId = '767584840682202065'
+      // }
+      // areaCode: '510100'
+      // deviceId: '461454fcf47be7b04dedf5c57380d33d'
+      // findType: 2
+      // formatId: 'FL20201224136341'
+      // limit: 10
+      // maxsize: 100
+      // page: 2
+      // platform: 'APP'
+      // sceneId: 'app-mainye-01'
+      // userId: '767584840682202065'
+      // 查询推荐产品需要的参数
+      // if (this.params.findType !== 0) {
+      //   params.findType = this.params.findType
+      //   params.formatId = this.tabBtn[index].ext3
+      //   params.limit = this.tabBtn[index].limit
+      //   params.page = this.tabBtn[index].page
+      //   params.areaCode = this.cityCode
+      //   params.deviceId = this.params.deviceId
+      //   params.sceneId = this.params.sceneId
+      //   params.maxsize = this.params.maxsize
+      //   params.platform = this.params.platform
+      //   params.userId = this.userId || null
+      // }
+
+      // 广告位code
+      if (this.params.findType === 1) {
+        params.locationCode = this.tabBtn[index].ext1
+      }
+
+      this.$axios.post(homeApi.findRecomList, params).then((res) => {
+        this.loading = false
+        if (res.code === 200) {
+          if (params.findType === 0) {
+            res.data.dictData[0].adData = res.data.adData
+            this.tabBtn = res.data.dictData
+            return
+          }
+          if (params.findType === 1) {
+            this.tabBtn[index].adData = res.data.adData
+            this.tabBtn[index].goodsList = res.data.goodsList
+            this.tabBtn[index].noData = res.data.goodsList.length === 0
+            return
+          }
+          // 初始查询第一个分类产品无任何数据
+          if (
+            index === 0 &&
+            params.page === 1 &&
+            res.data.goodsList.length === 0
+          ) {
+            this.$set(this.tabBtn[index], 'noData', true)
+            return
+          }
+          // 加载更多时无更多数据
+          if (!res.data.goodsList.length) {
+            this.tabBtn[index].noMore = true
+            return
+          }
+          this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
+            res.data.goodsList
+          )
+        } else {
+          this.$xToast.error(res.message)
+        }
+      })
     },
   },
 }
@@ -223,7 +324,7 @@ export default {
     .item_lf {
       width: 160px;
       height: 160px;
-      background: red;
+      background: #ddd;
       border-radius: 8px;
       position: relative;
       margin-right: 32px;

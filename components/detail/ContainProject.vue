@@ -36,7 +36,6 @@
       <sp-safeguard
         :options="serviceGoods[0]['serviceItems']"
         success
-        ellipsis
       ></sp-safeguard>
     </sp-popup>
   </div>
@@ -81,6 +80,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.sp-safeguard__title {
+  max-width: none;
+}
 .container {
   background-color: #fff;
   padding-top: 44px;

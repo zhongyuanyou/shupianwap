@@ -46,7 +46,7 @@ export default function (ctx, inject) {
       }
       config.params = config.params || {}
       config.headers.platformCode = 'COMDIC_PLATFORM_CRISPS' // 平台code
-      config.headers.terminalCode = 'COMDIC_TERMINAL_APP' // 终端code
+      config.headers.terminalCode = 'COMDIC_TERMINAL_WAP' // 终端code
       if (DGG_SERVER_ENV === 'development') {
         // 本地根据自己的需求进行配置
         config.headers.sysCode = 'crisps-app-wap-bff-api'
@@ -65,21 +65,21 @@ export default function (ctx, inject) {
         config.headers['X-Req-UserId'] = app.$cookies.get('userId', {
           path: '/',
         })
+      }
+      if (
+        app.$cookies.get('X-Req-UserNo', {
+          path: '/',
+        })
+      ) {
         config.headers['X-Req-UserNo'] = app.$cookies.get('userNo', {
           path: '/',
         })
         config.headers['X-Req-UserName'] = app.$cookies.get('userName', {
           path: '/',
         })
-        // config.headers['X-Req-UserPhone'] = app.$cookies.get('userPhone', {
-        //   path: '/',
-        // })
-        config.headers['X-Req-mainAccountFull'] = app.$cookies.get(
-          'mainAccountFull',
-          {
-            path: '/',
-          }
-        )
+        config.headers['X-Req-UserPhone'] = app.$cookies.get('userPhone', {
+          path: '/',
+        })
       }
       // 请求头设置站点code
       const cityCode = app.$cookies.get('currentCity', {

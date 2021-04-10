@@ -53,6 +53,7 @@ export default {
               })
               .then((res) => {
                 if (res.code === 200 && res.data.id) {
+                  this.$store.dispatch('user/setInfo', res.data)
                   resolve(res.data)
                 } else {
                   this.loginToast('获取用户信息失败')

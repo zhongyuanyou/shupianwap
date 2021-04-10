@@ -22,10 +22,15 @@
           </div>
           <div class="right">
             <h1>{{ item.name }}</h1>
+            <div v-if="item.tag.length > 0" class="tag">
+              <p v-for="(tagitem, tagindex) in item.tag" :key="tagindex">
+                {{ tagitem.tagName }}
+              </p>
+            </div>
             <p class="describe">
               {{ item.classCodeLevelName }}
             </p>
-            <p class="price">{{ item.salesPrice }}元</p>
+            <p class="price">{{ item.price }}元</p>
           </div>
         </div>
       </sp-list>
@@ -66,7 +71,7 @@ export default {
     }
   },
   mounted() {
-    // this.getlist()
+    this.getlist()
   },
   methods: {
     godeatil(item) {
@@ -101,35 +106,35 @@ export default {
       this.onLoad()
     },
     onLoad() {
-      if (this.isLoading) {
-        this.datalist = []
-      }
-      goods
-        .transactionList({ axios: this.$axios }, this.formData)
-        .then((data) => {
-          if (this.datalist.length > 0) {
-            this.datalist = this.datalist.concat(data.goods.records)
-            this.formData.start = this.formData.start + 1
-            if (data.goods.records.length < 10) {
-              this.finished = true
-            }
-            this.loading = false
-            this.isLoading = false
-          } else {
-            this.datalist = data.goods.records
-            this.formData.start = this.formData.start + 1
-            if (data.goods.records.length < 10) {
-              this.finished = true
-            }
-            this.loading = false
-            this.isLoading = false
-          }
-        })
-        .catch((err) => {
-          this.loading = false
-          this.isLoading = false
-          this.$xToast.show(err)
-        })
+      // if (this.isLoading) {
+      //   this.datalist = []
+      // }
+      // goods
+      //   .transactionList({ axios: this.$axios }, this.formData)
+      //   .then((data) => {
+      //     if (this.datalist.length > 0) {
+      //       this.datalist = this.datalist.concat(data.goods.records)
+      //       this.formData.start = this.formData.start + 1
+      //       if (data.goods.records.length < 10) {
+      //         this.finished = true
+      //       }
+      //       this.loading = false
+      //       this.isLoading = false
+      //     } else {
+      //       this.datalist = data.goods.records
+      //       this.formData.start = this.formData.start + 1
+      //       if (data.goods.records.length < 10) {
+      //         this.finished = true
+      //       }
+      //       this.loading = false
+      //       this.isLoading = false
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     this.loading = false
+      //     this.isLoading = false
+      //     this.$xToast.show(err)
+      //   })
     },
   },
 }

@@ -1,6 +1,7 @@
 'use strict'
 
 import { CHIPS_WAP_BASE_URL } from '../config/constant'
+// const CHIPS_WAP_BASE_URL = 'http://172.16.133.40:7001/service'
 
 const userinfoApi = {
   info: `${CHIPS_WAP_BASE_URL}/yk/user/v1/info.do`, // 获取用户信息

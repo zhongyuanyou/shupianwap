@@ -50,9 +50,9 @@
 </template>
 
 <script>
-import { Icon, Form, Field, Checkbox } from '@chipspc/vant-dgg'
+import { Toast, Form, Field, Checkbox } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
-import { contract } from '@/api/index'
+import { contract, userinfoApi } from '@/api/index'
 export default {
   name: 'Authentication',
   components: {
@@ -69,7 +69,13 @@ export default {
       idCrad: '',
       pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
       checked: false,
+      timeer: '',
     }
+  },
+  mounted() {
+    this.timeer = setInterval(() => {
+      this.getUserInfo()
+    }, 2000)
   },
   methods: {
     isCardNo(card) {
@@ -79,6 +85,38 @@ export default {
         return false
       } else {
         return true
+      }
+    },
+    async getUserInfo() {
+      this.loading = true
+      // 获取用户信息
+      try {
+        const params = {
+          // id: this.userId,
+          id: this.$store.state.user.userId || this.$cookies.get('userId'),
+        }
+        const res = await this.$axios.get(userinfoApi.info, { params })
+        this.loading = false
+        if (res.code === 200 && res.data && typeof res.data === 'object') {
+          // this.info = res.data
+          // this.userName = res.data.nickName
+          // this.realStatus = res.data.realStatus
+          // console.log(res.data.realStatus)
+          if (
+            res.data.realStatus === 'AUTHENTICATION_SUCCESS' ||
+            res.data.realStatus === 'AUTHENTICATION_FAIL'
+          ) {
+            this.$cookies.set('realStatus', res.data.realStatus)
+            Toast({
+              message: '认证成功',
+              overlay: true,
+            })
+            clearInterval(this.timeer)
+            this.$router.back(-1)
+          }
+        }
+      } catch (err) {
+        this.loading = false
       }
     },
     sumfn() {
@@ -99,7 +137,12 @@ export default {
           )
           .then((res) => {
             if (res) {
-              window.location.href = res
+              this.$router.push({
+                path: '/conrract/iframe',
+                query: {
+                  src: res,
+                },
+              })
             }
           })
           .catch((err) => {

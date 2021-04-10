@@ -69,12 +69,20 @@
               }"
             >
               <div class="vouchers_item_left">
-                <div class="amount">{{ item.discount }}</div>
-                <div class="conditions">{{ item.fullPrice }}</div>
+                <div class="amount">{{ item.reducePrice }}</div>
+                <div class="conditions">满{{ item.fullPrice }}元可用</div>
               </div>
               <div class="vouchers_item_right">
                 <div class="vouchers_title">{{ item.couponName }}</div>
-                <div class="vouchers_desc">{{ item.useType }}</div>
+                <div class="vouchers_desc">
+                  {{
+                    item.useType == 1
+                      ? '全场通用'
+                      : item.useType == 2
+                      ? '限制分类'
+                      : '限制商品'
+                  }}
+                </div>
                 <div class="vouchers_date">
                   {{ item.serviceLife }}
                 </div>
@@ -148,7 +156,7 @@
       position="bottom"
       :style="{ padding: '25px 20px' }"
     >
-      <sp-safeguard :options="serviceTag" success ellipsis></sp-safeguard>
+      <sp-safeguard :options="serviceTag" success></sp-safeguard>
     </sp-popup>
   </div>
 </template>
@@ -156,6 +164,7 @@
 <script>
 import { Cell, Popup, Safeguard, Image } from '@chipspc/vant-dgg'
 import { coupon, productDetailsApi } from '@/api'
+import imHandle from '~/mixins/imHandle'
 // 数组排序
 function xier(arr) {
   let interval = parseInt(arr.length / 2) // 分组间隔设置
@@ -185,6 +194,7 @@ export default {
     [Safeguard.name]: Safeguard,
     [Image.name]: Image,
   },
+  mixins: [imHandle],
   data() {
     return {
       type: 1, // 1 加入购物车、立即购买  2 加入购物车  3 立即购买
@@ -268,7 +278,7 @@ export default {
         .sellingGoodsData
       // 找出有效优惠券
       const couponList = sellingGoodsData.couponList.filter(
-        (item) => item.couponStatus === 0
+        (item) => item.couponStatus === 0 || item.couponStatus === 2
       )
       if (couponList.length < 1) {
         this.vouchers = null
@@ -289,27 +299,30 @@ export default {
           this.vouchers = vouchers1
           return
         }
-        this.vouchers =
-          vouchers1 + `, 满${info2.fullPrice}减${info2.reducePrice}`
+        this.vouchers = `${vouchers1}, 满${info2.fullPrice}减${info2.reducePrice}`
       }
     },
     // 领取优惠券
-    getCoupons(id, status) {
-      if (status === 0) {
-        const params = {
-          couponId: id,
+    async getCoupons(id, status) {
+      // 点击立即购买
+      const isLogin = await this.judgeLoginMixin()
+      if (isLogin) {
+        if (status === 0) {
+          const params = {
+            couponId: id,
+          }
+          coupon
+            .receiveCoupon({ axios: this.$axios }, params)
+            .then((res) => {
+              this.$xToast.success('优惠券领取成功')
+              this.store.commit('sellingGoodsDetail/SET_SELLING_COUPONLIST', id)
+            })
+            .catch((err) => {
+              this.$xToast.warning(
+                err.message ? err.message : '优惠券领取失败,请稍后再试！'
+              )
+            })
         }
-        coupon
-          .receiveCoupon({ axios: this.$axios }, params)
-          .then((res) => {
-            this.$xToast.success('优惠券领取成功')
-            this.store.commit('sellingGoodsDetail/SET_SELLING_COUPONLIST', id)
-          })
-          .catch((err) => {
-            this.$xToast.warning(
-              err.message ? err.message : '优惠券领取失败,请稍后再试！'
-            )
-          })
       }
     },
     // 打开服务标签
@@ -355,6 +368,9 @@ export default {
   /deep/.sp-popup--round {
     border-radius: 24px 24px 0px 0px;
   }
+  /deep/.sp-safeguard__title {
+    max-width: none;
+  }
   font-family: PingFang SC;
   font-weight: 400;
   background-color: #ffffff;
@@ -382,7 +398,7 @@ export default {
         display: flex;
         align-items: center;
         flex: 1;
-        min-width: 0;
+        max-width: 550px;
         color: #222222;
         font-size: 26px;
         .tag {
@@ -407,6 +423,9 @@ export default {
         }
         .item {
           margin-right: 40px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
           &::before {
             content: '1';
             display: inline-block;
@@ -602,12 +621,13 @@ export default {
       .vouchers_list {
         .vouchers_item {
           display: flex;
-          margin-bottom: 24px;
+          margin-bottom: 20px;
           width: 670px;
-          height: 212px;
-          background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
+          height: 216px;
+          padding-bottom: 4px;
+          background-image: url('https://cdn.shupian.cn/sp-pt/wap/f5p8bx9q4oo0000.png?x-oss-process=image/resize,m_fill,w_670,h_212,limit_0');
+          background-repeat: no-repeat;
           background-size: 100% 100%;
-          box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
           &_left {
             width: 200px;
             padding-top: 30px;
@@ -621,18 +641,29 @@ export default {
             .conditions {
               color: #ffffff;
               font-size: 24px;
+              padding-left: 10px;
+              padding-right: 10px;
             }
           }
           &_right {
-            flex: 1;
+            /*flex: 1;*/
             position: relative;
             padding-left: 24px;
             padding-top: 30px;
+            width: 462px;
+            padding-right: 32px;
+            background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/fbal9hq2pkg0000.png?x-oss-process=image/resize,m_fill,w_100,h_100,limit_0');
+            background-repeat: no-repeat;
+            background-size: 100px 100px;
+            background-position: 360px 0px;
             .vouchers_title {
               color: #222222;
               font-size: 32px;
               font-weight: bold;
               margin-bottom: 18px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
             }
             .vouchers_desc {
               color: #555555;
@@ -663,10 +694,15 @@ export default {
           }
         }
         .over {
-          background-image: url('https://cdn.shupian.cn/sp-pt/wap/8j18z03j8c00000.png');
+          background-image: url('https://cdn.shupian.cn/sp-pt/wap/bhmf7qjf36w0000.png?x-oss-process=image/resize,m_fill,w_670,h_212,limit_0');
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
           .vouchers_bt {
             background-color: #cccccc;
             color: #ffffff;
+          }
+          .vouchers_item_right {
+            background: none;
           }
         }
         .receive {
@@ -681,6 +717,7 @@ export default {
         margin-top: 46px;
         color: #999999;
         font-size: 22px;
+        margin-bottom: 40px;
         span {
           color: #4974f5;
         }
