@@ -1,6 +1,7 @@
 <template>
   <div class="edit">
     <Head ref="head" :title="title"> </Head>
+    <LoadingCenter v-show="loading" />
     <div class="tips">
       同一订单中合同的甲方名称必须与发票抬头保持一致，以下信息将作为合同甲方信息填充到正式合同中
     </div>
@@ -74,6 +75,7 @@ import {
 import Head from '@/components/common/head/header'
 import orderApi from '@/api/order'
 import contractApi from '@/api/contract'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'Edit',
   components: {
@@ -81,6 +83,7 @@ export default {
     Form,
     Field,
     Icon,
+    LoadingCenter,
   },
   data() {
     return {
@@ -97,9 +100,9 @@ export default {
     }
   },
   mounted() {
-    if (this.orderItem.type !== 'ws') {
-      this.getorder()
-    }
+    // if (this.orderItem.type !== 'ws') {
+    //   this.getorder()
+    // }
     if (this.$cookies.get('contaract')) {
       this.partyName = this.$cookies.get('contaract').contractFirstName
       this.userName = this.$cookies.get('contaract').contractFirstContacts
@@ -119,55 +122,56 @@ export default {
         return true
       }
     },
-    getorder() {
-      orderApi
-        .getDetailByOrderId(
-          { axios: this.axios },
-          { id: this.orderItem.orderId, cusOrderId: this.orderItem.cusOrderId }
-        )
-        .then((res) => {
-          this.orderData = res
-          if (this.orderData.contractVo2s.length > 0) {
-            if (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG') {
-              this.partyName = this.orderData.contractVo2s[0].contractFirstName
-              this.userName = this.orderData.contractVo2s[0].contractFirstContacts
-              this.phone = this.orderData.contractVo2s[0].contractFirstPhone
-              this.$router.push({
-                path: '/contract/preview',
-                query: {
-                  contractUrl: this.orderData.contractVo2s[0].contractUrl,
-                  contractId: this.orderData.contractVo2s[0].contractId,
-                  contractNo: this.orderData.contractVo2s[0].contractNo,
-                  signerName: this.orderData.contractVo2s[0].contractFirstName,
-                  contactWay: this.orderData.contractVo2s[0].contractFirstPhone,
-                  type: 'qs',
-                  go: '-2',
-                  fromPage: this.orderItem.fromPage,
-                },
-              })
-            } else {
-              this.$router.push({
-                path: '/contract/preview',
-                query: {
-                  contractUrl: this.orderData.contractVo2s[0].contractUrl,
-                  contractId: this.orderData.contractVo2s[0].contractId,
-                  contractNo: this.orderData.contractVo2s[0].contractNo,
-                  signerName: this.orderData.contractVo2s[0].contractFirstName,
-                  contactWay: this.orderData.contractVo2s[0].contractFirstPhone,
-                  type: 'yl',
-                  go: '-2',
-                  fromPage: this.orderItem.fromPage,
-                },
-              })
-            }
-          }
-        })
-        .catch((err) => {
-          this.$xToast.show(err)
-          console.log('错误信息err', err)
-        })
-    },
+    // getorder() {
+    //   orderApi
+    //     .getDetailByOrderId(
+    //       { axios: this.axios },
+    //       { id: this.orderItem.orderId, cusOrderId: this.orderItem.cusOrderId }
+    //     )
+    //     .then((res) => {
+    //       this.orderData = res
+    //       if (this.orderData.contractVo2s.length > 0) {
+    //         if (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG') {
+    //           this.partyName = this.orderData.contractVo2s[0].contractFirstName
+    //           this.userName = this.orderData.contractVo2s[0].contractFirstContacts
+    //           this.phone = this.orderData.contractVo2s[0].contractFirstPhone
+    //           this.$router.push({
+    //             path: '/contract/preview',
+    //             query: {
+    //               contractUrl: this.orderData.contractVo2s[0].contractUrl,
+    //               contractId: this.orderData.contractVo2s[0].contractId,
+    //               contractNo: this.orderData.contractVo2s[0].contractNo,
+    //               signerName: this.orderData.contractVo2s[0].contractFirstName,
+    //               contactWay: this.orderData.contractVo2s[0].contractFirstPhone,
+    //               type: 'qs',
+    //               go: '-2',
+    //               fromPage: this.orderItem.fromPage,
+    //             },
+    //           })
+    //         } else {
+    //           this.$router.push({
+    //             path: '/contract/preview',
+    //             query: {
+    //               contractUrl: this.orderData.contractVo2s[0].contractUrl,
+    //               contractId: this.orderData.contractVo2s[0].contractId,
+    //               contractNo: this.orderData.contractVo2s[0].contractNo,
+    //               signerName: this.orderData.contractVo2s[0].contractFirstName,
+    //               contactWay: this.orderData.contractVo2s[0].contractFirstPhone,
+    //               type: 'yl',
+    //               go: '-2',
+    //               fromPage: this.orderItem.fromPage,
+    //             },
+    //           })
+    //         }
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       this.$xToast.show(err)
+    //       console.log('错误信息err', err)
+    //     })
+    // },
     applycontart() {
+      this.Loading = true
       contractApi
         .applycontart(
           { axios: this.axios },
@@ -194,9 +198,11 @@ export default {
               fromPage: this.orderItem.fromPage,
             },
           })
+          this.Loading = false
         })
         .catch((err) => {
           this.$xToast.show(err)
+          this.Loading = false
         })
     },
     sumfn() {
