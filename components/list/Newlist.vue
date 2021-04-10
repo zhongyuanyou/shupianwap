@@ -22,17 +22,15 @@
           </div>
           <div class="right">
             <h1>{{ item.name }}</h1>
-            <div class="tag">
-              <span
-                v-for="(tagitem, tagindex) in item.salesGoodsTags"
-                :key="tagindex"
-                >{{ tagitem.tagName }}</span
-              >
+            <div v-if="item.tag.length > 0" class="tag">
+              <p v-for="(tagitem, tagindex) in item.tag" :key="tagindex">
+                {{ tagitem.tagName }}
+              </p>
             </div>
             <p class="describe">
               {{ item.classCodeLevelName }}
             </p>
-            <p class="price">{{ item.salesPrice }}元</p>
+            <p class="price">{{ item.price }}元</p>
           </div>
         </div>
       </sp-list>
