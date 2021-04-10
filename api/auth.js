@@ -10,9 +10,7 @@
 'use strict'
 
 import { CHIPS_WAP_BASE_URL } from '../config/constant'
-
 import { request } from '@/utils/request'
-
 const auth = {
   login({ axios }, params) {
     return request({

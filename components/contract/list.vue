@@ -15,12 +15,58 @@
           <div class="head">
             <h1>{{ item.contractName }}</h1>
             <p
+              v-if="item.contractStatus == 'STRUTS_YWC'"
               :style="{
                 color:
                   item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
               }"
             >
-              {{ item.contractStatus == 'STRUTS_YWC' ? '已完成' : '待签署' }}
+              已完成
+            </p>
+            <p
+              v-if="item.contractStatus == 'STRUTS_CG'"
+              :style="{
+                color:
+                  item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
+              }"
+            >
+              待签署
+            </p>
+            <p
+              v-if="item.contractStatus == 'STRUTS_STRUTS_QSZ'"
+              :style="{
+                color:
+                  item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
+              }"
+            >
+              签署中
+            </p>
+            <p
+              v-if="item.contractStatus == 'STRUTS_YJQ'"
+              :style="{
+                color:
+                  item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
+              }"
+            >
+              已拒签
+            </p>
+            <p
+              v-if="item.contractStatus == 'STRUTS_YYQ'"
+              :style="{
+                color:
+                  item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
+              }"
+            >
+              已逾期
+            </p>
+            <p
+              v-if="item.contractStatus == 'STRUTS_YZF'"
+              :style="{
+                color:
+                  item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
+              }"
+            >
+              已作废
             </p>
           </div>
           <div class="data">
@@ -47,8 +93,8 @@
             <p @click="jump(item.orderId)">订单详情</p>
             <p @click.stop="btn(item)">
               {{
-                item.contractStatus == 'STRUTS_YWC' ||
-                item.contractStatus == 'STRUTS_QSZ '
+                item.contractStatus === 'STRUTS_YWC' ||
+                item.contractStatus === 'STRUTS_QSZ'
                   ? '查看合同'
                   : '签署合同'
               }}

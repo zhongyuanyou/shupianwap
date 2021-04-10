@@ -1,7 +1,7 @@
 'use strict'
 import { request } from '@/utils/request'
 import { CHIPS_WAP_BASE_URL } from '@/config/constant'
-
+// const CHIPS_WAP_BASE_URL = 'http://172.16.133.40:7001/service'
 const coupon = {
   getCouponList({ axios }, params) {
     // 获取优惠券列表
@@ -18,7 +18,7 @@ const coupon = {
       axios,
       params,
       method: 'post',
-      url: `http://172.16.133.40:7001/service/yk/coupon/v2/receive_coupon.do`, // CHIPS_WAP_BASE_URL + '/yk/coupon/v2/receive_coupon.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/coupon/v2/receive_coupon.do',
     })
   },
   useWithdrawal({ axios }, params) {

@@ -1,6 +1,6 @@
 <template>
   <div class="preview">
-    <Head :title="contract.type == 'qs' ? '合同预览' : '预览合同'">
+    <Head :title="contract.type == 'qs' ? '签署合同' : '预览合同'">
       <template #left>
         <my-icon
           class="back-icon"
@@ -43,7 +43,7 @@
 
 <script>
 import Pdf from 'vue-pdf'
-import { Button, Dialog } from '@chipspc/vant-dgg'
+import { Button, Dialog, Toast } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
 import contractApi from '@/api/contract'
 export default {
@@ -61,6 +61,7 @@ export default {
       timeshow: false,
       time: 5,
       btnshow: false,
+      timeer: '',
     }
   },
   mounted() {
@@ -69,13 +70,22 @@ export default {
   methods: {
     goback() {
       if (this.contract.go === '-2') {
-        this.$router.back(-2)
+        if (this.contract.fromPage === 'orderList') {
+          this.$router.push({
+            path: '/order',
+          })
+        } else {
+          this.$router.back(-2)
+        }
       } else {
-        this.$router.back(-2)
+        this.$router.back(-1)
       }
     },
     sign() {
-      if (this.$cookies.get('realStatus') === 'AUTHENTICATION_SUCCESS') {
+      if (
+        this.$cookies.get('realStatus') === 'AUTHENTICATION_SUCCESS' ||
+        this.$cookies.get('realStatus') === 'AUTHENTICATION_FAIL'
+      ) {
         contractApi
           .signcontart(
             { axios: this.axios },
@@ -84,28 +94,45 @@ export default {
               phone: this.contract.contactWay,
               signerName: this.contract.signerName,
               contactWay: this.contract.contactWay,
-              businessId: this.$cookies.get('userId'),
+              businessId: this.$store.state.user.userId,
             }
           )
           .then((res) => {
             if (res) {
-              console.log(res)
+              this.$router.push({
+                path: '/conrract',
+                query: {
+                  src: res,
+                },
+              })
             }
           })
           .catch((err) => {
-            this.$xToast.show(err.message)
+            Toast({
+              message: err.data.error,
+              overlay: true,
+            })
             console.log('错误信息err', err)
           })
       } else {
-        this.$router.push({
-          path: '/contract/authentication',
-          query: {
-            contractId: this.contract.contractId,
-            contractNo: this.contract.contractNo,
-            signerName: this.contract.userName,
-            contactWay: this.contract.phone,
-          },
+        Dialog.confirm({
+          title: '温馨提示',
+          message: '检测到您未实名认证，请在签合同前 先进行实名认证',
+          confirmButtonText: '现在就认证',
+          cancelButtonText: '我再想想',
         })
+          .then(() => {
+            this.$router.push({
+              path: '/contract/authentication',
+              query: {
+                contractId: this.contract.contractId,
+                contractNo: this.contract.contractNo,
+                signerName: this.contract.userName,
+                contactWay: this.contract.phone,
+              },
+            })
+          })
+          .catch(() => {})
       }
     },
     timeshowFn() {
@@ -124,20 +151,7 @@ export default {
         }
       }, 1000)
     },
-    dialogShow() {
-      Dialog.confirm({
-        title: '温馨提示',
-        message: '检测到您未实名认证，请在签合同前 先进行实名认证',
-        confirmButtonText: '现在就认证',
-        cancelButtonText: '我再想想',
-      })
-        .then(() => {
-          // on confirm
-        })
-        .catch(() => {
-          // on cancel
-        })
-    },
+    dialogShow() {},
   },
 }
 </script>

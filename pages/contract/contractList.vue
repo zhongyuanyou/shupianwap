@@ -54,7 +54,10 @@ export default {
     // },
     jump(val) {
       console.log(val)
-      if (val.contractStatus === 'STRUTS_YWC') {
+      if (
+        val.contractStatus === 'STRUTS_YWC' ||
+        val.contractStatus === 'STRUTS_QSZ'
+      ) {
         this.$router.push({
           path: '/contract/preview',
           query: {
@@ -70,8 +73,8 @@ export default {
             contractUrl: val.contractUrl,
             contractId: val.contractId,
             contractNo: val.contractNo,
-            signerName: val.contractSignerName,
-            contactWay: val.contractSignerPhone,
+            signerName: val.contractFirstContacts,
+            contactWay: val.contractFirstPhone,
             type: 'qs',
             fromPage: 'contractList',
           },
