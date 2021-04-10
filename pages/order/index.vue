@@ -231,10 +231,9 @@ export default {
           if (this.page === 1) {
             this.list = []
           }
-          console.log('error', error)
           this.loading = false
           this.loadingMore = false
-          this.$xToast.error('获取数据失败')
+          this.$xToast.error(error.message || '请求失败，请重试')
         })
     },
     handleClickItem(type, order) {
@@ -260,8 +259,10 @@ export default {
         case 3:
           // 查看合同
           this.$router.push({
-            path: '/contract/edit',
+            path: '/contract/preview',
             query: {
+              type: 'yl',
+              contractUrl: this.orderData.contractUrl,
               orderId: this.orderData.id,
               cusOrderId: this.orderData.cusOrderId,
               fromPage: this.fromPage,

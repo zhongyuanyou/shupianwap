@@ -329,9 +329,9 @@ export default {
     },
     handleClick(val) {
       if (val === 1) {
-        this.realStatus === 'NO_AUTHENTICATION'
-          ? this.$router.push('/contract/authentication')
-          : this.$router.go(0)
+        if (this.realStatus === 'NO_AUTHENTICATION') {
+          this.$router.push('/contract/authentication')
+        }
       } else if (val === 2) {
         this.$router.push('/my/help')
       } else if (val === 3) {
@@ -366,7 +366,6 @@ export default {
 <style lang="less" scoped>
 .my {
   width: 100%;
-  height: 100%;
   background-color: #f8f8f8;
   &_tp {
     width: 100%;
@@ -402,6 +401,8 @@ export default {
     padding: 0 40px;
     margin-top: 25px;
     background: #ffffff;
+    border-top: 1px solid rgba(205, 205, 205, 0.5);
+    border-bottom: 1px solid rgba(205, 205, 205, 0.5);
     &_title {
       font-size: 40px;
       font-family: PingFang-SC-Bold, PingFang-SC;
@@ -490,6 +491,7 @@ export default {
     height: 280px;
     /deep/ .sp-button {
       width: 100%;
+      border: 1px solid #cdcdcd;
     }
   }
   .spiconfont {
