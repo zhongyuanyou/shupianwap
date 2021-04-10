@@ -26,5 +26,8 @@ const knownApi = {
     list: `${CHIPS_WAP_BASE_URL}/service/nk/question_article/v2/find_page.do`,
     detail: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_detail.do`,
   },
+  search: {
+    list: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/search.do`, // 搜索历史记录 搜索类型 1: 问题  2: 文章  3: 用户
+  },
 }
 export default knownApi
