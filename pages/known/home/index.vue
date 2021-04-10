@@ -104,7 +104,7 @@
     </div>
     <comment-list
       v-model="commentShow"
-      :article-id="articleId"
+      :article-id="1"
       @release="release"
     ></comment-list>
   </div>
@@ -135,7 +135,7 @@ export default {
   },
   data() {
     return {
-      articleId: '', // 打开评论列表需要传的id
+      articleId: '1', // 打开评论列表需要传的id
       active: 0,
       menuList: [
         {
