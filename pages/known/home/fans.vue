@@ -12,13 +12,13 @@
       :finished="finished"
       finished-text="没有更多了"
       class="list_container"
-      @load="onLoad"
+      @load="getList"
     >
       <div v-for="(item, index) in list" :key="index" class="item">
-        <sp-image round class="user_avatar" fit="cover" src="" />
+        <sp-image round class="user_avatar" fit="cover" :src="item.avatar" />
         <div class="user_info">
-          <div class="title">用户名</div>
-          <div class="introduce">简介或签名文字简介或签名文字…</div>
+          <div class="title">{{ item.inviteeName }}</div>
+          <div class="introduce">{{ item.desc }}</div>
         </div>
       </div>
     </sp-list>
@@ -27,9 +27,9 @@
 
 <script>
 import { TopNavBar, Image, List } from '@chipspc/vant-dgg'
-import { userinfoApi } from '~/api'
+import { knownApi } from '~/api'
 export default {
-  name: 'Collection',
+  name: 'Fans',
   components: {
     [TopNavBar.name]: TopNavBar,
     [Image.name]: Image,
@@ -42,29 +42,48 @@ export default {
       list: [],
       loading: false,
       finished: false,
+      page: 1,
+      limit: 10,
     }
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.user
+    },
   },
   mounted() {},
   methods: {
-    tabChange(val) {
-      console.log(val)
+    tabChange() {
+      this.page = 1
       this.list = []
       this.finished = false
       this.loading = true
-      this.onLoad()
+      this.getList()
     },
-    onLoad() {
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
+    async getList() {
+      const { code, message, data } = await this.$axios.get(
+        knownApi.home.focusFansList,
+        {
+          params: {
+            handleUserId: this.userInfo.userId,
+            handleType: 2,
+            page: this.page,
+            limit: this.limit,
+          },
         }
-        // 加载状态结束
+      )
+      if (code === 200) {
+        this.list = this.list.concat(data.rows)
         this.loading = false
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
+        this.page++
+        if (this.page > data.totalPage) {
           this.finished = true
         }
-      }, 1000)
+      } else {
+        console.log(message)
+        this.loading = false
+        this.finished = true
+      }
     },
   },
 }
