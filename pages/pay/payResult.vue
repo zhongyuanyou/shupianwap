@@ -137,7 +137,6 @@ export default {
   mounted() {
     // this.payStatus = Math.floor(Math.random() * 2)
     this.payStatus = this.$route.query.payStatus
-    console.log('this.payStatus', this.payStatus)
     pay
       .enablePayMoney({ axios: this.$axios }, this.formData)
       .then((result) => {

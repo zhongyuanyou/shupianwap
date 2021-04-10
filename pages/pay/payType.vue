@@ -170,6 +170,7 @@ export default {
             payStatus: false,
           },
         })
+        this.clearLocalStorage()
       }
     }
   },
