@@ -247,8 +247,8 @@ export default {
 
     // 统一跳转详情app详情路由
     uPGoDetail() {
-      const { productId } = this.mainData || {}
-      if (!productId) {
+      const { id } = this.mainData || {}
+      if (!id) {
         this.$xToast({
           message: '缺少productId',
           duration: 1000,
@@ -264,14 +264,14 @@ export default {
             'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
           parameter: {
             routerPath: 'cpsc/goods/details/service',
-            parameter: { productId },
+            parameter: { productId: id },
           },
         }
         const androidRouter = {
           path: '/flutter/main',
           parameter: {
             routerPath: 'cpsc/goods/details/service',
-            parameter: { productId },
+            parameter: { productId: id },
           },
         }
         const iOSRouterStr = JSON.stringify(iOSRouter)
@@ -294,7 +294,15 @@ export default {
           }
         )
       }
-      // 暂不需要在浏览器中
+      // 浏览器跳转
+      if (!this.isInApp) {
+        this.$router.push({
+          path: '/detail',
+          query: {
+            productId: id,
+          },
+        })
+      }
     },
   },
 }
