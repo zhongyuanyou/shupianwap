@@ -46,9 +46,10 @@
         @change="tabChange"
       >
         <sp-tab
-          v-for="(item, index) in menuList"
-          :key="index"
-          :title="item"
+          v-for="item in menuList"
+          :key="item.index"
+          :title="item.name"
+          :name="item.index"
         ></sp-tab>
       </sp-tabs>
       <sp-list
@@ -56,44 +57,44 @@
         :finished="finished"
         finished-text="没有更多了"
         class="list_container"
-        @load="onLoad"
+        @load="getList"
       >
         <div v-for="(item, index) in list" :key="index" class="item">
           <div class="user">
             <sp-image round class="user_avatar" fit="cover" src="" />
             <div class="user_info">
-              <div class="user_info_name">罗振宇</div>
+              <div class="user_info_name">{{ item.userName }}</div>
               <div class="user_info_time">27分钟前·回答了问题</div>
             </div>
           </div>
           <div class="title clamp2">
-            如何看待韩国人在巴基斯坦冒充中国人骗吃骗喝骗感情？
+            {{ item.title }}
           </div>
-          <div v-if="index % 2" class="content clamp3">
-            笑死，韩国人干这种事真不稀奇了，简单给大家梳理一下事情的经过。绝了，韩国人跑到巴基斯坦绝了，韩国人跑到巴基斯坦绝了，韩国人跑到巴基…
+          <div v-if="!item.contentImageUrl" class="content clamp3">
+            {{ item.contentText }}
           </div>
           <div v-else class="content_img">
             <div class="left_content clamp3">
-              笑死，韩国人干这种事真不稀奇了，简单给大家梳理一下事情的经过。绝了，韩国人跑到巴基斯坦…
+              {{ item.contentText }}
             </div>
             <sp-image class="right_img" fit="cover" src="" />
           </div>
-          <div class="bottom">
+          <div v-if="item.type !== 1" class="bottom">
             <div class="bottom_item" @click="agree">
               <my-icon name="zantong" size="0.36rem" color="#999999"></my-icon>
-              {{ 0 || '赞同' }}
+              {{ item.applaudCount || '赞同' }}
             </div>
-            <div class="bottom_item" @click="comments">
+            <div class="bottom_item" @click="comments(item.id)">
               <my-icon name="pinglun" size="0.36rem" color="#999999"></my-icon>
-              {{ 3 || '评论' }}
+              {{ item.remarkCount || '评论' }}
             </div>
           </div>
-          <div class="bottom">
-            <div class="bottom_item" @click="invitation">
+          <div v-else class="bottom">
+            <div class="bottom_item" @click="invitation(item.id)">
               <my-icon name="yaoqing" size="0.36rem" color="#999999"></my-icon>
               邀请
             </div>
-            <div class="bottom_item" @click="answer">
+            <div class="bottom_item" @click="answer(item.id)">
               <my-icon name="xiehuida" size="0.36rem" color="#999999"></my-icon>
               写回答
             </div>
@@ -103,7 +104,7 @@
     </div>
     <comment-list
       v-model="commentShow"
-      :article-id="1"
+      :article-id="articleId"
       @release="release"
     ></comment-list>
   </div>
@@ -111,8 +112,8 @@
 
 <script>
 import { Tabs, Tab, Image, List } from '@chipspc/vant-dgg'
-import { userinfoApi } from '~/api'
 import CommentList from '@/components/mustKnown/CommentList'
+import { knownApi } from '~/api'
 export default {
   name: 'Collection',
   components: {
@@ -122,32 +123,70 @@ export default {
     [List.name]: List,
     CommentList,
   },
+  async asyncData({ $axios, query, store }) {
+    // const { code, message, data } = await $axios.post(knownApi.home.userInfo, {
+    //   userId: query.userId,
+    //   currentUserId: store.state.user.userId,
+    // })
+    // if (code === 200) {
+    // } else {
+    //   throw message
+    // }
+  },
   data() {
     return {
+      articleId: '', // 打开评论列表需要传的id
       active: 0,
-      menuList: ['全部', '问题', '回答', '文章'],
+      menuList: [
+        {
+          name: '全部',
+          index: 0,
+        },
+        {
+          name: '问题',
+          index: 1,
+        },
+        {
+          name: '回答',
+          index: 3,
+        },
+        {
+          name: '文章',
+          index: 2,
+        },
+      ],
       list: [],
       loading: false,
       finished: false,
       isAttention: false,
       commentShow: false,
+      page: 1,
+      limit: 10,
     }
   },
   computed: {
     source() {
       return this.$route.query.source
     },
+    // 其他人用户id
     userId() {
       return this.$route.query.userId
     },
+    // 当前登录用户id
+    currentUserId() {
+      return this.$store.state.user.userId
+    },
   },
-  mounted() {},
+  mounted() {
+    console.log(this.$store)
+  },
   methods: {
     tabChange() {
+      this.page = 1
       this.list = []
       this.finished = false
       this.loading = true
-      this.onLoad()
+      this.getList()
     },
     onLoad() {
       setTimeout(() => {
@@ -168,18 +207,52 @@ export default {
     agree() {
       console.log('赞同')
     },
-    comments() {
-      console.log('评论')
+    comments(id) {
+      this.articleId = id
       this.commentShow = true
     },
-    invitation() {
-      console.log('邀请')
+    invitation(id) {
+      this.$router.push({
+        path: '/known/detail/invitationList',
+        query: {
+          questionId: id,
+        },
+      })
     },
-    answer() {
-      console.log('回答')
+    answer(id) {
+      this.$router.push({
+        path: '/known/publish/answer',
+        query: {
+          questionId: id,
+        },
+      })
     },
     release() {
       console.log('点击了发布')
+    },
+    async getList() {
+      const { code, message, data } = await this.$axios.post(
+        knownApi.home.list,
+        {
+          type: this.active,
+          userIds: this.userId || this.currentUserId,
+          currentUserId: this.currentUserId,
+          page: this.page,
+          limit: this.limit,
+        }
+      )
+      if (code === 200) {
+        this.list = this.list.concat(data.rows)
+        this.loading = false
+        this.page++
+        if (this.page > data.totalPage) {
+          this.finished = true
+        }
+      } else {
+        console.log(message)
+        this.loading = false
+        this.finished = true
+      }
     },
   },
 }

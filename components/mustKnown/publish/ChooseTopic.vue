@@ -41,14 +41,13 @@
             </div>
           </div>
           <div class="right">
-            <sp-checkbox-group v-model="result">
+            <sp-checkbox-group v-model="result" @change="changeTopic">
               <sp-cell-group>
                 <sp-cell
                   v-for="(item, index) in list2"
                   :key="index"
                   clickable
                   :title="item.name"
-                  @click="toggle(index)"
                 >
                   <template #right-icon>
                     <sp-checkbox ref="checkboxes" :name="item" />
@@ -109,37 +108,46 @@ export default {
           children: [
             {
               code: '1313',
+              id: '3214141',
               name: '分类11',
             },
             {
               code: '111',
+              id: '32141411231',
               name: '分类12',
             },
             {
               code: '112',
+              id: '32141411',
               name: '分类13',
             },
             {
+              id: '32141411',
               code: '113',
               name: '分类11',
             },
             {
+              id: '31214141',
               code: '114',
               name: '分类12',
             },
             {
+              id: 'd3214141',
               code: '115',
               name: '分类13',
             },
             {
+              id: '32141a41',
               code: '116',
               name: '分类11',
             },
             {
+              id: '3214141d',
               code: '117',
               name: '分类12',
             },
             {
+              id: 'd3d214141',
               code: '118',
               name: '分类13',
             },
@@ -150,80 +158,47 @@ export default {
           name: '精选',
           children: [
             {
+              id: 'd3d2141411',
               code: '119',
               name: '分类16',
             },
             {
+              id: 'd3d21a4141',
               code: '120',
               name: '分类27',
             },
             {
+              id: 'd3d21a4142',
               code: '13113',
               name: '分类33',
             },
             {
+              id: 'd3d21a4143',
               code: 'WRONG_PRO_CHOOSE',
               name: '分类11',
             },
             {
+              id: 'd3d21a414113',
               code: 'ORDER_REPEAT',
               name: '分类12',
             },
             {
+              id: 'd3d21a41413',
               code: 'ORTHER_REASON',
               name: '分类13',
             },
             {
+              id: 'd3d211a41413',
               code: 'WRONG_PRO_CHOOSE',
               name: '分类11',
             },
             {
+              id: 'd3d21a414d1',
               code: 'ORDER_REPEAT',
               name: '分类12',
             },
             {
-              code: 'ORTHER_REASON',
-              name: '分类13',
-            },
-          ],
-        },
-        {
-          code: 'DONT_NEED',
-          name: '精选',
-          children: [
-            {
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-            {
-              code: 'ORDER_REPEAT',
-              name: '分类12',
-            },
-            {
-              code: 'ORTHER_REASON',
-              name: '分类13',
-            },
-            {
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-            {
-              code: 'ORDER_REPEAT',
-              name: '分类12',
-            },
-            {
-              code: 'ORTHER_REASON',
-              name: '分类13',
-            },
-            {
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-            {
-              code: 'ORDER_REPEAT',
-              name: '分类12',
-            },
-            {
+              id: 'd3d23131a4141',
               code: 'ORTHER_REASON',
               name: '分类13',
             },
@@ -234,10 +209,63 @@ export default {
           name: '精选',
           children: [
             {
+              id: 'd13d23131a4141',
               code: 'WRONG_PRO_CHOOSE',
               name: '分类11',
             },
             {
+              id: 'd133d23131a4141',
+              code: 'ORDER_REPEAT',
+              name: '分类12',
+            },
+            {
+              id: 'd13d123131a4141',
+              code: 'ORTHER_REASON',
+              name: '分类13',
+            },
+            {
+              id: 'd13d23131a4141d',
+              code: 'WRONG_PRO_CHOOSE',
+              name: '分类11',
+            },
+            {
+              id: 'd13d23131aa4141',
+              code: 'ORDER_REPEAT',
+              name: '分类12',
+            },
+            {
+              id: 'd13d23131a41431',
+              code: 'ORTHER_REASON',
+              name: '分类13',
+            },
+            {
+              id: 'd13d23133a4141',
+              code: 'WRONG_PRO_CHOOSE',
+              name: '分类11',
+            },
+            {
+              id: 'd13d23133a4141',
+              code: 'ORDER_REPEAT',
+              name: '分类12',
+            },
+            {
+              id: 'd13d23133a4141',
+              code: 'ORTHER_REASON',
+              name: '分类13',
+            },
+          ],
+        },
+        {
+          code: 'DONT_NEED',
+          name: '精选',
+          children: [
+            {
+              id: 'd13d23133a4141',
+              code: 'WRONG_PRO_CHOOSE',
+              name: '分类11',
+            },
+            {
+              id: 'd13d23133a4141',
               code: 'ORDER_REPEAT',
               name: '分类12',
             },
@@ -246,10 +274,12 @@ export default {
               name: '分类13',
             },
             {
+              id: 'd13d23133a4141',
               code: 'WRONG_PRO_CHOOSE',
               name: '分类11',
             },
             {
+              id: 'd13d23133a4141',
               code: 'ORDER_REPEAT',
               name: '分类12',
             },
@@ -258,14 +288,17 @@ export default {
               name: '分类13',
             },
             {
+              id: 'd13d23133a4141',
               code: 'WRONG_PRO_CHOOSE',
               name: '分类11',
             },
             {
+              id: 'd13d23133a4141',
               code: 'ORDER_REPEAT',
               name: '分类12',
             },
             {
+              id: 'd13d23133a4141',
               code: 'ORTHER_REASON',
               name: '分类13',
             },
@@ -307,6 +340,7 @@ export default {
         reason: '',
       },
       selectIndex: 0,
+      maxArr: [],
     }
   },
   computed: {
@@ -349,19 +383,29 @@ export default {
         this.step = 1
       }, 300)
     },
-    toggle(index) {
-      // if (this.result.length > 4) {
-      //   this.$xToast.show({
-      //     message: '最多可选择五个话题哦',
-      //     duration: 1000,
-      //     icon: 'toast_ic_remind',
-      //     forbidClick: true,
-      //   })
-      //   return
-      // }
-      this.$refs.checkboxes[index].toggle()
-      console.log('result', this.result)
-      console.log('index', index)
+    toggle(e, index) {
+      console.log('toggle', index)
+      if (this.result.length > 4) {
+        this.$refs.checkboxes[index].toggle()
+        console.log('result', this.result)
+        console.log('index', index)
+      }
+    },
+    changeTopic(val) {
+      if (val.length === 5) {
+        this.maxArr = val
+      } else if (this.result.length > 5) {
+        this.$xToast.show({
+          message: '最多可选择五个话题哦',
+          duration: 1000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        this.result = this.maxArr
+        this.$forceUpdate()
+      } else {
+        this.result = val
+      }
     },
   },
 }

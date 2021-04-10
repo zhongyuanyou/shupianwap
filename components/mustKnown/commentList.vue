@@ -86,15 +86,15 @@ export default {
       default: false,
     },
     articleId: {
-      type: Number,
-      default: 0,
+      type: String,
+      default: '',
     },
   },
   data() {
     return {
       loading: false,
       finished: false,
-      sort: 0, // 0 默认 2 时间
+      sort: 0, // 0 默认 1 时间
       content: '',
       list: [],
       page: 1,
@@ -109,6 +109,9 @@ export default {
       set(value) {
         this.$emit('input', value)
       },
+    },
+    userInfo() {
+      return this.$store.state.user
     },
   },
   watch: {
@@ -134,15 +137,13 @@ export default {
       this.getCommentsList()
     },
     async getCommentsList() {
-      const { code, message, data } = await this.$axios.get(
+      const { code, message, data } = await this.$axios.post(
         knownApi.comments.list,
         {
-          params: {
-            currentUserId: 100,
-            sourceIds: this.articleId,
-            orderBy: this.sort,
-            page: this.page,
-          },
+          currentUserId: this.userInfo.userId,
+          sourceIds: this.articleId,
+          orderBy: this.sort,
+          page: this.page,
         }
       )
       if (code === 200) {
@@ -159,13 +160,27 @@ export default {
         this.finished = true
       }
     },
-    Applaud(item) {
-      if (item.isApplaud) {
-        item.isApplaud = false
-        console.log('取消点赞')
+    async Applaud(item) {
+      const { code, message, data } = await this.$axios.post(
+        knownApi.comments.like,
+        {
+          handleUserId: this.userInfo.userId,
+          handleUserName: this.userInfo.userName || '测试用户名',
+          businessId: item.id,
+          handleType: item.isApplaud ? 2 : 1,
+          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+        }
+      )
+      if (code === 200) {
+        if (item.isApplaud) {
+          item.applaudCount--
+          item.isApplaud = 0
+        } else {
+          item.applaudCount++
+          item.isApplaud = 1
+        }
       } else {
-        item.isApplaud = true
-        console.log('点赞')
+        console.log(message)
       }
     },
     async publish() {
@@ -178,8 +193,8 @@ export default {
           content: this.content,
           sourceId: this.articleId,
           sourceType: 2, // 2 文章 3 回答
-          userId: 100,
-          userName: '测试用户',
+          userId: this.userInfo.userId,
+          userName: this.userInfo.userName || '测试用户名',
           userType: 1, // 1 普通用户 2 规划师
         }
       )
@@ -189,17 +204,9 @@ export default {
           iconPrefix: 'sp-iconfont',
           icon: 'popup_ic_success',
         })
-        this.list.unshift({
-          userId: '',
-          avatar: '',
-          userName: '测试用户',
-          userType: 1,
-          content: this.content,
-          createTime: '',
-          applaudCount: 0,
-          isApplaud: false,
-        })
+        this.list.unshift(data)
         this.content = ''
+        this.total++
       } else {
         console.log(message)
       }

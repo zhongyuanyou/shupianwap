@@ -278,7 +278,6 @@ export default {
     },
     // 判断是否显示确认订单按钮
     isShowConfirmBtn(data) {
-      console.log('data', data)
       return orderUtils.isShowConfirmBtn(this.orderData || data)
     },
     // 判断是否显示付款按钮

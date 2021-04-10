@@ -1,10 +1,6 @@
 <template>
   <div>
-    <PageHead
-      :has-val="hasVal"
-      confirm-text="发布问题"
-      @handleCancel="$router.back()"
-    />
+    <PageHead :has-val="hasVal" confirm-text="发布问题" @submit="submit" />
     <div class="main">
       <TitleArea
         ref="myTitle"
@@ -51,6 +47,7 @@ import PageHead from '@/components/mustKnown/publish/PageHead'
 import TitleArea from '@/components/mustKnown/publish/TitleArea'
 import ChooseTopic from '@/components/mustKnown/publish/ChooseTopic'
 import Editor from '@/components/mustKnown/publish/Editor'
+import EditorMinxin from '@/mixins/edit'
 export default {
   components: {
     PageHead,
@@ -59,49 +56,26 @@ export default {
     Editor,
     [Field.name]: Field,
   },
+  mixins: [EditorMinxin],
   data() {
     return {
-      hideInput: false, // 是否隐藏标题输入框
-      formData: {
-        title: '',
-        content: '',
-        topics: [], // 话题
-      },
+      fromPage: 'question',
       editType: '', // editType=1为编写文章 editType=2 为新发文章
-      id: '',
       showToast: true,
     }
   },
   computed: {
+    // 问题发布按钮显示条件必须有问题标题
     hasVal() {
-      return this.formData.title.length > 0
+      return this.formData.content.length > 0
     },
-  },
-  mounted() {
-    // 获取参数
-    this.editType = this.$route.query.editType
-    this.articleId = this.$route.query.articleId
   },
   methods: {
     openModal() {
       this.$refs.chooseTopic.showPop = true
     },
-    setTopic(val) {
-      this.formData.topics = val
-      const arr = val.map((item) => {
-        return item.name
-      })
-      console.log('formData', this.formData)
-    },
-    setTitle(val) {
-      this.formData.title = val
-      console.log('this.formData', this.formData)
-    },
     handleClickCloseToast() {
       this.showToast = false
-    },
-    editorChange(val) {
-      this.formData.content = val
     },
   },
 }
