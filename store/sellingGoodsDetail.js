@@ -31,15 +31,14 @@ export const mutations = {
   SET_SELLING_GOODS_DETAIL(state, object) {
     state.sellingGoodsData = object
   },
-  // 修改优惠券状态
+  // 更新优惠券状态
   SET_SELLING_COUPONLIST(state, cid) {
-    debugger
-    const newCouponList = state.sellingGoodsData.salesGoodsTags.map((item) => {
+    const newCouponList = state.sellingGoodsData.couponList.map((item) => {
       if (item.id === cid) {
         item.couponStatus = 2
       }
       return item
     })
-    state.sellingGoodsData.salesGoodsTags = newCouponList
+    state.sellingGoodsData.couponList = newCouponList
   },
 }

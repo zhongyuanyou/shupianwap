@@ -315,12 +315,14 @@ export default {
             .receiveCoupon({ axios: this.$axios }, params)
             .then((res) => {
               this.$xToast.success('优惠券领取成功')
-              this.store.commit('sellingGoodsDetail/SET_SELLING_COUPONLIST', id)
+              this.$store.commit(
+                'sellingGoodsDetail/SET_SELLING_COUPONLIST',
+                id
+              )
             })
             .catch((err) => {
-              this.$xToast.warning(
-                err.message ? err.message : '优惠券领取失败,请稍后再试！'
-              )
+              console.log(err)
+              this.$xToast.warning('优惠券领取失败,请稍后再试！')
             })
         }
       }
@@ -652,10 +654,6 @@ export default {
             padding-top: 30px;
             width: 462px;
             padding-right: 32px;
-            background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/fbal9hq2pkg0000.png?x-oss-process=image/resize,m_fill,w_100,h_100,limit_0');
-            background-repeat: no-repeat;
-            background-size: 100px 100px;
-            background-position: 360px 0px;
             .vouchers_title {
               color: #222222;
               font-size: 32px;
@@ -701,15 +699,18 @@ export default {
             background-color: #cccccc;
             color: #ffffff;
           }
-          .vouchers_item_right {
-            background: none;
-          }
         }
         .receive {
           .vouchers_bt {
             background-color: #fdedea;
             border: 1px solid #ec5330;
             color: #ec5330;
+          }
+          .vouchers_item_right {
+            background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/fbal9hq2pkg0000.png?x-oss-process=image/resize,m_fill,w_100,h_100,limit_0');
+            background-repeat: no-repeat;
+            background-size: 100px 100px;
+            background-position: 360px 0px;
           }
         }
       }
