@@ -106,7 +106,7 @@ export default {
   },
   data() {
     return {
-      haisdaas: false,
+      haisdaas: true,
       showItem: true,
       showInvite: false,
       answerTabs: ['推荐', '邀请'],
