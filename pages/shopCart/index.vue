@@ -195,8 +195,8 @@ export default {
         this.onRefresh()
       })
       this.$appFn.dggGetUserInfo((res) => {
+        console.log('res.data', res.data)
         if (res.code === 200 && res.data.userId && res.data.token) {
-          console.log('res.data', res.data)
         }
       })
     }
@@ -279,9 +279,6 @@ export default {
           if (data.length >= 0) {
             for (let index = 0; index < data.length; index++) {
               if (data[index].status === 'PRO_STATUS_SOLD_OUT') {
-                console.log('+++++++++data[index].status', data[index].status)
-                console.log('+++++++++data[index].cartId', data[index].cartId)
-                console.log('+++++++++this.selectFlag', this.selectFlag)
                 this.postUpdate({
                   createrId: this.userInfo.userId,
                   cartId: data[index].cartId,

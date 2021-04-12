@@ -13,10 +13,13 @@ const knownApi = {
     userInfo: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/homeUserInfo.do`, // 用户信息
     operation: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/operation.do`, // 点赞、点踩、收藏操作(包含取消)
     focusFansList: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/focusFansList.do`, // 粉丝/关注 列表
+    attention: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_user_relations.do`, // 用户关注/取消关注其他用户
   },
   questionArticle: {
     categoryList: `${CHIPS_WAP_BASE_URL}/nk/known_category/v1/list.do`, // 获取分类列表
     list: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_page.do`, // 获取列表数据
+    recommendList: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/recommend_page.do`, // 获取推荐列表数据
+    attentionUserList: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_my_attention_user_page.do`, // 获取关注用户列表
   },
   content: {
     add: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/add.do`, // 文章、问题、回答新增 新增内容

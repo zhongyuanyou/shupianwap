@@ -4,7 +4,7 @@
       <div class="card">
         <sp-image round class="user_avatar" fit="cover" :src="avatar" />
         <div class="bt_box">
-          <template v-if="homeUserId">
+          <template v-if="homeUserId && homeUserId !== userInfo.userId">
             <div v-if="!isAttention" class="bt_attention" @click="attention">
               + 关注
             </div>
@@ -71,7 +71,13 @@
             />
             <div class="user_info">
               <div class="user_info_name">{{ item.userName }}</div>
-              <div class="user_info_time">27分钟前·回答了问题</div>
+              <div v-if="item.type === 1" class="user_info_time">
+                27分钟前·发起了问题
+              </div>
+              <div v-else-if="item.type === 2" class="user_info_time">
+                27分钟前·回答了问题
+              </div>
+              <div v-else class="user_info_time">27分钟前·发表了文章</div>
             </div>
           </div>
           <div class="title clamp2">
@@ -119,7 +125,7 @@
     </div>
     <comment-list
       v-model="commentShow"
-      :article-id="'1'"
+      :article-id="articleId"
       @release="release"
     ></comment-list>
   </div>
@@ -165,7 +171,7 @@ export default {
   },
   data() {
     return {
-      articleId: '1', // 打开评论列表需要传的id
+      articleId: '', // 打开评论列表需要传的id
       active: 0,
       menuList: [
         {
@@ -319,6 +325,7 @@ export default {
         text-align: center;
         font-size: 26px;
         font-weight: 500;
+        height: 64px;
         .bt_attention {
           width: 144px;
           height: 64px;
