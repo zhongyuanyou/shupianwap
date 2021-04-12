@@ -83,7 +83,7 @@ export default {
             if (res) {
               this.Loading = false
               this.$router.push({
-                path: '/conrract/iframe',
+                path: '/contract/iframe',
                 query: {
                   src: res,
                   type: 'qs',

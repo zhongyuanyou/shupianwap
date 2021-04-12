@@ -298,10 +298,14 @@ export default {
     }
   }
   .jygood {
+    /deep/.sp-dropdown-menu {
+      background: #fff;
+    }
     /deep/.goods-item {
       margin: 0.2rem auto 0 auto;
       background: #fff;
       border-radius: 0.24rem;
+      width: 90%;
     }
   }
   .nav-back {
