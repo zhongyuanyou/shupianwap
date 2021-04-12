@@ -43,14 +43,19 @@
     <!-- 吸顶 end -->
     <!-- 列表 start -->
     <div class="container_body">
-      <section><Answer v-if="showRecommend" /></section>
+      <!-- 回答start -->
+      <section><Answer v-if="shwoAnswer" /></section>
+      <!-- 回答end -->
+      <!-- 关注start -->
       <section>
         <VisitUser v-if="attentionStatus" />
         <AttentionItem v-if="attentionStatus" :list-data="listData" />
         <NotAttention v-if="showNotAttention" />
       </section>
+      <!-- 关注end -->
+      <!--  -->
       <section>
-        <ListItem />
+        <ListItem v-if="showRecommend" />
       </section>
       <section v-if="showHot">
         <div class="container_news_see">
@@ -63,7 +68,7 @@
             <div class="see_span">进站必看</div>
           </div>
         </div>
-        <ItemCard />
+        <ItemCard v-if="showHot" />
       </section>
     </div>
     <!-- 列表 end -->
@@ -88,7 +93,6 @@
         <div class="popMiddle">
           <div class="spans">
             <div class="popMiddle_span1">我的板块</div>
-            <div class="popMiddle_span2">长按拖拽排序</div>
           </div>
           <div class="popMiddle_span3" @click="editIcon(status)">
             {{ editFinish }}
@@ -120,7 +124,6 @@
         <div class="popBottom">
           <div class="spans">
             <div class="popBottom_span1">更多板块</div>
-            <div class="popBottom_span2">长按拖拽排序</div>
           </div>
         </div>
         <div class="list">
@@ -228,6 +231,7 @@ export default {
       showNotAttention: false, // 未关注
       showHot: false, // 热榜
       showRecommend: false, // 推荐
+      shwoAnswer: false, // 回答
       title: '考研复试体检包含什么项目', // 标题
       tabs: [
         {
@@ -317,42 +321,104 @@ export default {
     },
     async toggleTabs(index, item) {
       this.tabIndex = index
-      const items = item
-      console.log('items', items)
-      console.log('executionParameters', items.executionParameters)
-      if (item.exexecutionParameters === 'tuijian') {
+      console.log('executionParameters', item.executionParameters)
+      const params = {}
+      // 去请求推荐列表数据
+      if (item.executionParameters === 'tuijian') {
         this.showRecommend = true
-      } else if (item.exexecutionParameters === 'guanzhu') {
+        this.attentionStatus = false
+        this.showHot = false
+        const { code, message, data } = await this.$axios.post(
+          knownApi.questionArticle.recommendList,
+          params
+        )
+        if (code === 200) {
+          if (data.rows.length > 0) {
+            console.log('this.rows', data.rows)
+            this.listData = data.rows
+          } else {
+            this.attentionStatus = false
+            this.showNotAttention = true
+          }
+        } else {
+          console.log(message)
+        }
+        // 去请求关注列表数据
+      } else if (item.executionParameters === 'guanzhu') {
         this.attentionStatus = true
-      } else if (item.exexecutionParameters === 'rebang') {
-        this.showHot = true
+        this.showRecommend = false
+        // 组装参数
+        // params.handleUserId = this.$cookies.get('userId')
+        // params.dateType = 0
+        // params.userHandleFlag = 0
+        params.handleUserId = 118
+        params.dateType = 0
+        params.userHandleFlag = 1
+        const { code, message, data } = await this.$axios.post(
+          knownApi.questionArticle.attentionUserList,
+          params
+        )
+        if (code === 200) {
+          if (data.rows.length > 0) {
+            console.log('this.rows', data.rows)
+            this.listData = data.rows
+          } else {
+            this.attentionStatus = false
+            this.showNotAttention = true
+          }
+        } else {
+          console.log(message)
+        }
+        // 请求热榜数据
+      } else if (item.executionParameters === 'rebang') {
         this.attentionStatus = false
         this.showRecommend = false
-      } else {
-      }
-      // 请求列表数据
-      const categorIds = []
-      categorIds.push(item.categoryId)
-      const params = {
-        categorIds,
-        limit: 10,
-        page: 1,
-      }
-      const { code, message, data } = await this.$axios.post(
-        knownApi.questionArticle.list,
-        params
-      )
-      if (code === 200) {
-        if (data.rows.length > 0) {
-          this.listData = data.rows
+        this.showHot = true
+        const { code, message, data } = await this.$axios.post(
+          knownApi.questionArticle.list,
+          params
+        )
+        if (code === 200) {
+          if (data.rows.length > 0) {
+            console.log('this.rows', data.rows)
+            this.listData = data.rows
+          } else {
+            this.attentionStatus = false
+            this.showNotAttention = true
+          }
         } else {
-          this.attentionStatus = false
-          this.showNotAttention = true
+          console.log(message)
         }
       } else {
-        console.log(message)
+        // 请求列表数据
+        const categorIds = []
+        categorIds.push(item.categoryId)
+        const params = {
+          categorIds,
+          limit: 10,
+          page: 1,
+        }
+        const { code, message, data } = await this.$axios.post(
+          knownApi.questionArticle.list,
+          params
+        )
+        if (code === 200) {
+          if (data.rows.length > 0) {
+            this.listData = data.rows
+          } else {
+            this.attentionStatus = false
+            this.showNotAttention = true
+          }
+        } else {
+          console.log(message)
+        }
       }
     },
+
+    // // 请求各个列表
+    // requestList(
+
+    // ) {},
     OpenPop(event) {
       // console.log('evnet', event)
       if (event) {

@@ -105,8 +105,8 @@ export default {
   },
   watch: {
     listData(newName, oldName) {
-      console.log('newName', newName)
-      console.log('oldName', oldName)
+      // console.log('newName', newName)
+      // console.log('oldName', oldName)
     },
   },
   methods: {

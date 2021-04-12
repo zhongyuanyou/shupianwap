@@ -182,8 +182,6 @@ export default {
     },
     // 进入协议页面
     enterAgreement() {
-      // console.log('this.agreementData', this.agreementData)
-
       this.$router.push({
         name: 'login-protocol',
         query: {
@@ -307,6 +305,7 @@ export default {
               forbidClick: true,
             })
             this.clearLocalStorage()
+            this.$router.go({ path: '/order' })
           }
         })
         .catch((e) => {
