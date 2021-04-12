@@ -73,7 +73,7 @@ import SkillGroup from '@/components/home/SkillGroup'
 // import Preferential from '@/components/home/Preferential'
 // import Information from '@/components/home/Information'
 // import HotServe from '@/components/home/HotServe'
-import Recommend from '@/components/home/Recommend'
+import Recommend from '@/components/home/RecommendSale'
 import FiexdBtn from '@/components/home/FiexdBtn'
 import DownloadApp from '@/components/common/app/DownloadApp'
 import Marketing from '@/components/home/Marketing'
@@ -169,7 +169,6 @@ export default {
     this.asyncReqParams.locationCodeList = this.adModuleOne.concat(
       this.adModuleTwo
     )
-    console.log('homeApi.asyncRequest', homeApi.asyncRequest)
     // 获取非首屏数据（广告 + 资讯）
     this.$axios.post(homeApi.asyncRequest, this.asyncReqParams).then((res) => {
       console.log('非首屏渲染', res)
