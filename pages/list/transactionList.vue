@@ -30,7 +30,7 @@
       @activeItem="getFilterHandle"
     /> -->
     <!-- Etab -->
-    <goods ref="goods" :searchkey="currentInputText" />
+    <goods ref="goods" :searchkey="currentInputText" :height="height" />
   </div>
 </template>
 
@@ -51,88 +51,7 @@ export default {
   mixins: [listJumpIm],
   data() {
     return {
-      tabItems: [
-        {
-          code: 'CONDITION-JY-ZZ-LB',
-          componentName: 'SelectFilter',
-          ext1: 'qualification_type',
-          ext2: '',
-          ext3: '1',
-          ext4: 'FL20201224136348',
-          id: '607967087427479044',
-          isSelects: false,
-          levels:
-            '-1_607966778189835763_607966846909310222_607967018708008664_607967018708008721',
-          name: '类别',
-          pcode: 'CONDITION-JY-ZZ',
-        },
-        {
-          children: [
-            {
-              code: 'CONDITION-JY-ZZ-JG-A',
-              ext1: 'platform_price',
-              ext2: '',
-              ext3: '',
-              ext4: '',
-              id: '607967121787221663',
-              levels:
-                '-1_607966778189835763_607966846909310222_607967018708008664_607967018708008721_607967087427479046',
-              name: '不限',
-              pcode: 'CONDITION-JY-ZZ-JG',
-            },
-            {
-              code: 'CONDITION-JY-ZZ-JG-B',
-              ext1: 'platform_price',
-              ext2: '0-5000000',
-              ext3: '',
-              ext4: '',
-              id: '607967121787221662',
-              levels:
-                '-1_607966778189835763_607966846909310222_607967018708008664_607967018708008721_607967087427479046',
-              name: '5万以下',
-              pcode: 'CONDITION-JY-ZZ-JG',
-            },
-          ],
-          code: 'CONDITION-JY-ZZ-JG',
-          componentName: 'PriceFilter',
-          ext1: 'platform_price',
-          ext2: '',
-          ext3: '',
-          ext4: '',
-          id: '607967087427479046',
-          isSelects: false,
-          levels:
-            '-1_607966778189835763_607966846909310222_607967018708008664_607967018708008721',
-          name: '价格',
-          pcode: 'CONDITION-JY-ZZ',
-        },
-        {
-          code: 'CONDITION-JY-ZZ-PX',
-          componentName: 'SortFilter',
-          ext1: '',
-          ext2: '',
-          ext3: '',
-          ext4: '',
-          id: '607967087427479064',
-          isSelects: false,
-          levels:
-            '-1_607966778189835763_607966846909310222_607967018708008664_607967018708008721',
-          name: '排序',
-          pcode: 'CONDITION-JY-ZZ',
-          children: {
-            code: 'CONDITION-JY-ZZ-PX-A',
-            ext1: 'CONDITION-JY-ZZ-PX-A',
-            ext2: '',
-            ext3: '',
-            ext4: '',
-            id: '607967121787221733',
-            levels:
-              '-1_607966778189835763_607966846909310222_607967018708008664_607967018708008721_607967087427479064',
-            name: '综合排序',
-            pcode: 'CONDITION-JY-ZZ-PX',
-          },
-        },
-      ],
+      tabItems: [],
       ctiveTabIndex: '',
       jyGoodsListData: {}, // 服务商品列表数据
       typeCodeIndex: 0,
@@ -140,9 +59,12 @@ export default {
       currentInputText: '',
       reqType: 'jy',
       jyTypesData: [], // 交易业态数据
+      height: '',
     }
   },
   mounted() {
+    this.height = this.$refs.search.$el.offsetHeight
+    console.log(this.height, 124213)
     document.body.addEventListener('focusout', () => {
       // 监听软键盘关闭事件
       // 解決ios端用微信打开页面，收起软键盘后，底部出现空白问题
@@ -160,10 +82,13 @@ export default {
     getFilterHandle(data, filrerName) {
       console.log(data, filrerName)
     },
+    rest() {},
     searchKeydownHandle() {
-      this.$refs.goods.$refs.list.formData.start = 1
-      this.$refs.goods.$refs.list.datalist = []
-      this.$refs.goods.$refs.list.getlist()
+      this.$refs.goods.formData.start = 1
+      this.$refs.goods.datalist = []
+      this.$refs.goods.formData.searchKey = this.currentInputText
+      this.$refs.goods.formData.needTypes = 0
+      this.$refs.goods.getlist()
       // 点击搜索按钮
     },
   },
