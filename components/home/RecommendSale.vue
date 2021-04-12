@@ -72,7 +72,7 @@
     <Loading-down
       v-if="goodsList.length"
       :bg-color="noData ? '#ffffff' : '#f4f4f4'"
-      :loading="loading && noMore"
+      :loading="loading"
       :no-data="noMore"
     />
   </div>
