@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="container_header">
-      <span class="my_icon" @click="java">
+      <span class="my_icon" @click="$router.back()">
         <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
       </span>
       <span>关注更多</span>

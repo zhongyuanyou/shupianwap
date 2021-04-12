@@ -126,11 +126,35 @@ export default {
     // const skillData = []
     try {
       const res = await $axios.post(homeApi.initRequest, initReqParams)
-      if (res.code === 200) {
+      if (res.code && res.data && res.data.advertising === 200) {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
         initData.rollBannerData = res.data.advertising[rollAdCode] || []
         initData.helpBannerData = res.data.advertising[helpAdCode] || []
-        initData.skillData = res.data.advertising[skillCode] || []
+        initData.skillData = res.data.advertising[skillCode] || [
+          {
+            locationSort: 1,
+            materialList: [
+              {
+                materialTypeCode: 'GGLX_TP',
+                materialUrl:
+                  'https://cdn.shupian.cn/sp/cms/cfg4m044ea80000.png',
+                imgLink: '',
+                materialLink: 'https://shupian.dgg.cn/spread/companyRegister',
+                materialCode: 'src113387',
+                materialHeight: 109,
+                materialId: '8054898714890534912',
+                materialDescription: '',
+                materialName: 'wap首页秒杀广告',
+                androidLink: '',
+                materialWidth: 416,
+                iosLink: '',
+                linkType: 2,
+                wapLink: '',
+                executeParam: '',
+              },
+            ],
+          },
+        ]
         initData.fiexdNavData = res.data.fixedNavList || []
         initData.rollNavData = res.data.rollNavList || []
       }

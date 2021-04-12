@@ -38,31 +38,7 @@ export default {
     skillData: {
       type: Array,
       default: () => {
-        return [
-          {
-            locationSort: 1,
-            materialList: [
-              {
-                materialTypeCode: 'GGLX_TP',
-                materialUrl:
-                  'https://cdn.shupian.cn/sp/cms/cfg4m044ea80000.png',
-                imgLink: '',
-                materialLink: 'https://shupian.dgg.cn/spread/companyRegister',
-                materialCode: 'src113387',
-                materialHeight: 109,
-                materialId: '8054898714890534912',
-                materialDescription: '',
-                materialName: 'wap首页秒杀广告',
-                androidLink: '',
-                materialWidth: 416,
-                iosLink: '',
-                linkType: 2,
-                wapLink: '',
-                executeParam: '',
-              },
-            ],
-          },
-        ]
+        return []
       },
     },
   },

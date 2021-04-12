@@ -1,4 +1,5 @@
 import knownApi from '@/api/known'
+let timeoute
 export default {
   data() {
     return {
@@ -24,6 +25,9 @@ export default {
       id: '', // 内容id
       isFromApp: '', // 是否从APP跳转
     }
+  },
+  beforeDestroy() {
+    if (timeoute) clearTimeout(timeoute)
   },
   mounted() {
     // 获取参数
@@ -72,7 +76,7 @@ export default {
     },
     submit() {
       if (!this.editType || this.editType === 1) {
-        if (this.fromPage === 'article') {
+        if (this.fromPage === 'article' || this.fromPage === 'question') {
           if (!this.formData.categoryCode) {
             this.$xToast.error('请选择话题')
           } else this.addContent()
@@ -89,20 +93,52 @@ export default {
       this.$axios
         .post(knownApi.content.add, this.formData)
         .then((res) => {
-          console.log('res', res)
-          this.$xToast.show('发表成功')
-          if (this.fromPage === 'article') {
-            this.$router.replace({
-              path: '/known/detail/article',
-              query: {
-                id: res.id,
-              },
-            })
+          const that = this
+          if (res.code && res.code === 200) {
+            this.$xToast.success('发布成功')
+            this.switchUrl()
+          } else {
+            this.$xToast.error('发布失败')
           }
         })
         .catch((err) => {
-          console.log('add', err)
+          console.log('发布内容失败', err)
         })
+    },
+    // 页面跳转
+    switchUrl(id) {
+      // 新增内容时
+      if (this.fromPage === 'article') {
+        timeoute = setTimeout(function () {
+          this.$router.replace({
+            path: '/known/detail/article',
+            query: {
+              id,
+              type: 'add',
+            },
+          })
+        }, 2000)
+      } else if (this.fromPage === 'question') {
+        timeoute = setTimeout(function () {
+          this.$router.replace({
+            path: '/known/detail/question',
+            query: {
+              id,
+              type: 'add',
+            },
+          })
+        }, 2000)
+      } else {
+        timeoute = setTimeout(function () {
+          this.$router.replace({
+            path: '/known/detail/answer',
+            query: {
+              id,
+              type: 'add',
+            },
+          })
+        }, 2000)
+      }
     },
   },
 }

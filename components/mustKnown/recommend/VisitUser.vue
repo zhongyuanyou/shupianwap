@@ -69,7 +69,7 @@ export default {
       this.nowIndex = index
     },
     attentionMore() {
-      this.$router.push({ path: 'known/attention/attentionMore' })
+      this.$router.push({ path: 'known/more' })
     },
   },
 }
