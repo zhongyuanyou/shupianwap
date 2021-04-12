@@ -71,13 +71,9 @@
             />
             <div class="user_info">
               <div class="user_info_name">{{ item.userName }}</div>
-              <div v-if="item.type === 1" class="user_info_time">
-                27分钟前·发起了问题
+              <div class="user_info_time">
+                {{ item.createTime }}·{{ item.type | filterType }}
               </div>
-              <div v-else-if="item.type === 2" class="user_info_time">
-                27分钟前·回答了问题
-              </div>
-              <div v-else class="user_info_time">27分钟前·发表了文章</div>
             </div>
           </div>
           <div class="title clamp2">
@@ -143,6 +139,17 @@ export default {
     [Image.name]: Image,
     [List.name]: List,
     CommentList,
+  },
+  filters: {
+    filterType(type) {
+      if (type === 1) {
+        return '发布了问题'
+      } else if (type === 2) {
+        return '发表了文章'
+      } else {
+        return '回答了问题'
+      }
+    },
   },
   async asyncData({ $axios, query, store, redirect }) {
     if (!query.homeUserId && !store.state.user.userId) {
