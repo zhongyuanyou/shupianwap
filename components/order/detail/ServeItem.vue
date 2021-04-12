@@ -1,10 +1,21 @@
 <template>
   <div class="item-inner">
-    <sp-image class="img" :src="item.skuImages"></sp-image>
+    <sp-image
+      class="img"
+      :src="item.skuDetails[0].skuImages || item.skuImages"
+    ></sp-image>
     <div class="right">
       <p class="goods-name">
-        <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
-        <span class="money1"> {{ item.skuPrice }}元 </span>
+        <span class="name">
+          {{
+            item.skuDetails[0].orderSaleName ||
+            item.skuDetails[0].spuName ||
+            item.spuName
+          }}</span
+        >
+        <span class="money1">
+          {{ changeMoney(item.skuDetails[0].skuPrice || item.skuPrice) }}元
+        </span>
       </p>
       <div class="sku-info">
         <p class="sku-l">{{ item.skuExtInfo }}</p>
@@ -31,7 +42,7 @@
           <!-- <sp-button @click="handleClickBtn(1)">查看底单</sp-button> -->
           <sp-button
             v-if="
-              item.skuDetails.skuStatusNo !==
+              item.skuDetails[0].skuStatusNo !==
               'ORDER_ORDER_SERVER_STATUS_UN_PAID'
             "
             @click="handleClickBtn(2, item)"
@@ -40,7 +51,7 @@
           <!-- 服务产品确认完成显示条件 1产品状态为已处理 2支付状态为完成支付  3用户未点确认-->
           <sp-button
             v-if="
-              item.skuDetails.skuStatusNo ===
+              item.skuDetails[0].skuStatusNo ===
                 'ORDER_ORDER_SERVER_STATUS_HANDLED' &&
               cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID' &&
               item.userConfirm == 0
@@ -96,8 +107,9 @@
 <script>
 // 服务商品支付方式分为全款，定金尾款，按节点付费，完结付费
 // 定金胃口，按节点付费，完结付费有办理进度
-import { Popup, Button, Image } from '@chipspc/vant-dgg'
+import { Button, Image } from '@chipspc/vant-dgg'
 import OrderMixins from '@/mixins/order'
+import changeMoney from '@/utils/changeMoney'
 export default {
   components: {
     [Button.name]: Button,
@@ -124,6 +136,9 @@ export default {
     },
   },
   methods: {
+    changeMoney(num) {
+      return changeMoney.regFenToYuan(num)
+    },
     handleClickBtn(type, item) {
       console.log('item', item)
       switch (type) {
@@ -150,6 +165,7 @@ export default {
             orderId: item.orderId,
             cusOrderId: item.cusOrderId,
             skuId: item.skuId,
+            detailId: item.skuDetails[0].id,
           },
         })
       } else {
@@ -160,6 +176,7 @@ export default {
             orderId: item.orderId,
             cusOrderId: item.cusOrderId,
             skuId: item.skuId,
+            detailId: item.skuDetails[0].id,
           },
         })
       }

@@ -429,6 +429,7 @@ export default {
     },
     // 订单价格分转元
     changeMoney(orderItem) {
+      console.log('计算价格', orderItem)
       if (orderItem.orderTotalMoney && orderItem.depositAmount)
         // 尾款
         orderItem.lastAount = this.regFenToYuan(
@@ -478,6 +479,30 @@ export default {
     changePayMoney(payItem) {
       if (payItem.money) {
         payItem.money = this.regFenToYuan(payItem.money)
+      }
+    },
+    // jump
+    toContract() {
+      if (this.orderData.contractStatus === 'STRUTS_QSZ') {
+        this.$router.push({
+          path: '/contract/preview',
+          query: {
+            orderId: this.orderData.id,
+            cusOrderId: this.orderData.cusOrderId,
+            fromPage: this.fromPage,
+            contractStatus: this.orderData.contractStatus,
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/contract/edit',
+          query: {
+            orderId: this.orderData.id,
+            cusOrderId: this.orderData.cusOrderId,
+            fromPage: this.fromPage,
+            contractStatus: this.orderData.contractStatus,
+          },
+        })
       }
     },
   },

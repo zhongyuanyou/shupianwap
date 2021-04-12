@@ -18,7 +18,7 @@
         <!-- <sp-image v-else :src="item.skuImages" alt="" class="img" srcset="" /> -->
         <div class="right">
           <p class="goods-name">
-            <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
+            <span class="name"> {{ item.spuName || item.orderSaleName }}</span>
             <span class="money1"> {{ item.skuPrice }}元 </span>
           </p>
           <p class="sku-info">

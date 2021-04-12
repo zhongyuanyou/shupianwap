@@ -27,19 +27,25 @@
       @load="getList"
     >
       <div v-for="(item, index) in list" :key="index" class="item">
-        <sp-image round class="user_avatar" fit="cover" :src="item.avatar" />
+        <sp-image
+          round
+          class="user_avatar"
+          fit="cover"
+          :src="item.avatar"
+          @click="toHome(item.inviteeId)"
+        />
         <div class="user_info">
           <div class="title">{{ item.inviteeName }}</div>
           <div class="introduce">{{ item.desc }}</div>
         </div>
-        <div class="bt">已关注</div>
+        <div class="bt" @click="cancelAttention(item)">已关注</div>
       </div>
     </sp-list>
   </div>
 </template>
 
 <script>
-import { TopNavBar, Tabs, Tab, Image, List } from '@chipspc/vant-dgg'
+import { TopNavBar, Tabs, Tab, Image, List, Dialog } from '@chipspc/vant-dgg'
 import { knownApi } from '~/api'
 export default {
   name: 'Attention',
@@ -49,6 +55,7 @@ export default {
     [Tab.name]: Tab,
     [Image.name]: Image,
     [List.name]: List,
+    [Dialog.name]: Dialog,
   },
   data() {
     return {
@@ -99,6 +106,47 @@ export default {
         this.loading = false
         this.finished = true
       }
+    },
+    cancelAttention(item) {
+      Dialog.confirm({
+        title: '温馨提示',
+        message: '确定不再关注当前用户吗？',
+      }).then(() => {
+        this.attention(item)
+      })
+    },
+    async attention(item) {
+      const { code, message } = await this.$axios.post(
+        knownApi.home.attention,
+        {
+          handleUserId: this.userInfo.userId,
+          handleUserName: this.userInfo.userName || '测试用户',
+          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+          handleType: 2,
+          attentionUserId: item.inviteeId,
+          attentionUserName: item.inviteeName,
+          attentionUserType: item.inviteeType,
+        }
+      )
+      if (code === 200) {
+        this.$xToast.show({
+          message: '取关成功',
+          duration: 1000,
+          icon: 'toast_ic_comp',
+          forbidClick: true,
+        })
+        this.tabChange()
+      } else {
+        console.log(message)
+      }
+    },
+    toHome(id) {
+      this.$router.push({
+        path: '/known/home',
+        query: {
+          homeUserId: id,
+        },
+      })
     },
   },
 }

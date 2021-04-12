@@ -137,24 +137,16 @@ export default {
     //   window.removeEventListener('scroll', this.chartResize)
     // })
   },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.throttle())
-  },
   methods: {
     handleScollList(e) {
-      console.log('列表滚动', e)
-      this.throttle(this.scollChange(), 500, 1000)
+      this.throttle(this.scollChange(), 1000, 1000)
     },
     scollChange() {
       const scrollTop = this.$refs.scrollView.scrollTop
       const scrollHeight = this.$refs.scrollView.scrollHeight
       const windowHeight = window.innerHeight
-      console.log('scrollTop', scrollTop)
-      console.log('scrollHeight', scrollHeight)
-      console.log('windowHeight', windowHeight)
-      // 提前200px拉取下页数据
-      if (scrollTop + windowHeight > scrollHeight - 10) {
-        console.log('触发请求')
+      // 提前100px拉取下页数据
+      if (scrollTop + windowHeight > scrollHeight - 100) {
         this.getOrderList()
       }
     },
@@ -212,10 +204,8 @@ export default {
           this.loadingMore = false
           const arr = res.records
           if (arr.length) {
-            if (this.page === 1) {
-              this.list = []
-            }
-            if (arr.length < this.limit) this.noMore = true
+            if (this.page === 1) this.list = arr
+            if (arr.length <= this.limit) this.noMore = true
             this.page++
             for (let i = 0, l = arr.length; i < l; i++) {
               this.changeMoney(arr[i])
@@ -225,6 +215,7 @@ export default {
             this.list = allData
           } else {
             this.noMore = true
+            this.list = []
           }
         })
         .catch((error) => {
@@ -245,30 +236,12 @@ export default {
           this.getChildOrders()
           break
         case 2:
-          // 签署合同
-          this.$router.push({
-            path: '/contract/edit',
-            query: {
-              orderId: this.orderData.id,
-              cusOrderId: this.orderData.cusOrderId,
-              fromPage: this.fromPage,
-              contractStatus: this.orderData.contractStatus,
-            },
-          })
+          // 申请合同
+          this.toContract()
           break
         case 3:
-          // 查看合同
-          this.$router.push({
-            path: '/contract/preview',
-            query: {
-              type: 'yl',
-              contractUrl: this.orderData.contractUrl,
-              orderId: this.orderData.id,
-              cusOrderId: this.orderData.cusOrderId,
-              fromPage: this.fromPage,
-              contractStatus: this.orderData.contractStatus,
-            },
-          })
+          // 签署合同 查看合同
+          this.toContract()
           break
         case 4:
           // 立即付款 首先判断是否有关联订单
