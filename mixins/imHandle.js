@@ -18,20 +18,6 @@ export default {
     }),
   },
   methods: {
-    loginToast(
-      message = '',
-      className = 'toast',
-      icon = 'toast_ic_remind',
-      duration = 1000
-    ) {
-      Toast({
-        duration,
-        className,
-        message,
-        icon,
-        iconPrefix: 'spiconfont',
-      })
-    },
     clearUserInfoAndJumpLoging() {
       this.$store.commit('user/CLEAR_USER')
       this.$router.push({
@@ -56,7 +42,7 @@ export default {
                   this.$store.dispatch('user/setInfo', res.data)
                   resolve(res.data)
                 } else {
-                  this.loginToast('获取用户信息失败')
+                  this.$xToast.warning('获取用户信息失败')
                 }
               })
           } else {
@@ -100,7 +86,7 @@ export default {
             } else if (res.code === 5223) {
               this.clearUserInfoAndJumpLoging()
             } else {
-              this.loginToast(res.msg)
+              this.$xToast.warning(res.msg)
             }
           })
         }
@@ -173,7 +159,6 @@ export default {
                 case 1:
                   tepMsgParams.templateId = '5fcef0aec24ddd00065a8c83' // 模板id
                   break
-
                 default:
                   break
               }
@@ -194,13 +179,13 @@ export default {
                 } else if (res.code === 5223) {
                   this.clearUserInfoAndJumpLoging()
                 } else {
-                  this.loginToast(resData.msg)
+                  this.$xToast.warning(resData.msg)
                 }
               })
             } else if (res.code === 5223) {
               this.clearUserInfoAndJumpLoging()
             } else {
-              this.loginToast(res.msg)
+              this.$xToast.warning(res.msg)
             }
           })
         }

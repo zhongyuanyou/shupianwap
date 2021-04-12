@@ -10,8 +10,9 @@ const knownApi = {
   },
   home: {
     list: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/index.do`, // 文章、问题、回答列表
-    userInfo: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/userInfo.do`, // 用户信息
+    userInfo: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/homeUserInfo.do`, // 用户信息
     operation: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/operation.do`, // 点赞、点踩、收藏操作(包含取消)
+    focusFansList: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/focusFansList.do`, // 粉丝/关注 列表
   },
   questionArticle: {
     categoryList: `${CHIPS_WAP_BASE_URL}/nk/known_category/v1/list.do`, // 获取分类列表
