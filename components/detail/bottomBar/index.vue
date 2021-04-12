@@ -104,11 +104,21 @@ export default {
       userId: (state) => state.user.userInfo.userId,
       //  获取服务基础商品的个数
       salesGoodsSubVos: (state) => {
-        const baseGoods =
-          state.sellingGoodsDetail.sellingGoodsData.salesGoodsSubVos
-        if (baseGoods.length < 2) {
+        const sellingGoodsData = state.sellingGoodsDetail.sellingGoodsData
+        const baseGoods = sellingGoodsData.salesGoodsSubVos
+        if (
+          sellingGoodsData.refConfig.tradeType === 'PRO_BY_SELF' &&
+          baseGoods.length < 2
+        ) {
+          // 先付款后服务的商品才能下单
           return 1
-        } else {
+        } else if (sellingGoodsData.refConfig.tradeType === 'PRO_PRE_ASK') {
+          // 先服务后收费的智能咨询
+          return 3
+        } else if (
+          sellingGoodsData.refConfig.tradeType === 'PRO_BY_SELF' &&
+          baseGoods.length > 1
+        ) {
           return 2
         }
       },
