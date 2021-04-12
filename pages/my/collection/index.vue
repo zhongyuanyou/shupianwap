@@ -1,41 +1,52 @@
 <template>
   <div class="collection_container">
     <sp-tabs
-      v-model="active"
       title-active-color="#4974F5"
       title-inactive-color="#222222"
-      @change="tabChange"
+      @click="changeTab"
     >
       <sp-tab
-        v-for="(item, index) in ['问题', '回答', '文章']"
-        :key="index"
-        :title="item"
+        v-for="item in tabs"
+        :key="item.id"
+        :title="item.tile"
+        :name="item.id"
       ></sp-tab>
     </sp-tabs>
-
     <sp-list
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
       class="list_container"
+      :error.sync="error"
+      error-text="请求失败，点击重新加载"
       @load="onLoad"
     >
       <div v-for="(item, index) in list" :key="index" class="item">
-        <div class="title clamp2">中小企业如何快速报税？</div>
-        <div v-if="active" class="user">
-          <sp-image round class="user_avatar" fit="cover" src="" /> 紫风
+        <div class="title clamp2">{{ item.title }}</div>
+        <!-- 除了回答,都有人物头像和图片 -->
+        <div v-if="tabIndex !== 1" class="user">
+          <sp-image
+            round
+            class="user_avatar"
+            fit="cover"
+            :src="item.avatar"
+          />{{ item.userName }}
         </div>
-        <div v-if="index % 2" class="content clamp2">
-          2017年孙正义问WeWork创始人诺伊曼，“你觉得在一场战斗中，聪明人和疯子，究竟谁会赢？”诺伊…
+        <div v-if="item.contentImageUrl === ''" class="content clamp2">
+          {{ item.contentText }}
         </div>
         <div v-else class="content_img">
           <div class="left_content clamp3">
-            2017年孙正义问WeWork创始人诺伊曼，“你觉得在一场战斗中，聪明人和疯子，究竟谁会赢？”诺伊…
+            {{ item.contentText }}
           </div>
-          <sp-image class="right_img" fit="cover" src="" />
+          <sp-image class="right_img" fit="cover" :src="item.contentImageUrl" />
         </div>
         <div class="bottom">
-          {{ active ? '4639 赞 · 1304 评论' : ' 3 回答 · 4 收藏' }}
+          {{
+            tabIndex !== 1
+              ? `${item.applaudCount} 赞 ${item.remarkCount} 评论`
+              : `${item.answerCount} 回答 · ${item.collectCount} 收藏`
+          }}
         </div>
       </div>
     </sp-list>
@@ -43,8 +54,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Tabs, Tab, Image, List } from '@chipspc/vant-dgg'
-import { userinfoApi } from '~/api'
+import knownApi from '@/api/known'
+
 export default {
   name: 'Collection',
   components: {
@@ -55,34 +68,81 @@ export default {
   },
   data() {
     return {
-      active: 0,
       content: '',
+      tabs: [
+        {
+          tile: '问题',
+          id: 1,
+        },
+        {
+          tile: '回答',
+          id: 3,
+        },
+        {
+          tile: '文章',
+          id: 2,
+        },
+      ],
       list: [],
       loading: false,
       finished: false,
+      page: 1,
+      tabIndex: 1,
+      total: 0,
+      limit: 10,
+      error: false,
     }
   },
-  mounted() {},
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+    }),
+  },
   methods: {
-    tabChange(val) {
-      console.log(val)
-      this.list = []
+    changeTab(name) {
+      if (this.tabIndex === name) {
+        return
+      }
+      this.page = 1
+      this.tabIndex = name
       this.finished = false
       this.loading = true
+      this.list = []
       this.onLoad()
     },
     onLoad() {
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
+      const timer = setTimeout(() => {
+        this.getList()
+        this.page++
+        this.finished && clearTimeout(timer)
+      }, 100)
+    },
+    async getList() {
+      try {
+        const params = {
+          handleUserId: this.userId,
+          dateType: this.tabIndex, //  1问题 2文章 3回答.默认问题
+          limit: 10,
+          page: this.page,
         }
-        // 加载状态结束
-        this.loading = false
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
+        const res = await this.$axios.get(knownApi.home.collection, { params })
+        if (res.code === 200) {
+          if (!res.data.rows || res.data.rows.length === 0) {
+            this.list = []
+            this.finished = true
+          }
+          this.list.push(...res.data.rows)
+          if (this.page > res.data.totalPage) {
+            this.finished = true
+          }
+          this.loading = false
+        } else {
+          this.error = true
+          this.loading = false
         }
-      }, 1000)
+      } catch (e) {
+        this.error = true
+      }
     },
   },
 }

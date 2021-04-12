@@ -10,7 +10,11 @@
         @clickInputHandle="keyClickHandle"
       >
         <template v-slot:left>
-          <sp-icon name="arrow-left" size="0.4rem" @click="$router.back()" />
+          <sp-icon
+            name="arrow-left"
+            size="0.4rem"
+            @click="$router.push('/known/search')"
+          />
         </template>
       </Search>
     </sp-sticky>
@@ -32,12 +36,10 @@
         class="list"
         @click="toDetail"
       >
-        <h1>{{ item.title }}</h1>
+        <h1 v-html="item.titleHtml"></h1>
         <div class="box">
           <div :style="{ width: item.contentImageUrl ? '464px' : '100%' }">
-            <p>
-              {{ item.contentText }}
-            </p>
+            <p v-html="item.contentTextHtml"></p>
             <div v-if="item.contentImageUrl" class="num">
               <span>{{ item.applaudCount }} 赞同</span>
               <i></i>
@@ -58,24 +60,23 @@
       </div>
     </div>
     <div v-show="tabIndex === '3'" class="userlist">
-      <div v-for="(item, index) in userList" :key="index" class="list">
+      <div v-for="item in userList" :key="item.id" class="list">
         <img :src="item.avatar" alt="" class="" />
         <div class="user-desc">
-          <span class="name">{{ item.userName }}</span>
-          <span class="desc"
-            >324532432425325253wkl;jrewklrjkweljrklewjrlk25324</span
-          >
+          <span class="name" v-html="item.userNameHtml"></span>
+          <span class="desc" v-html="item.descHtml"></span>
         </div>
         <div class="applaudFlag">
           <sp-icon
-            v-if="!item.isApplaudFlag"
+            v-if="!item.custAttentionFlag"
             name="plus"
             color="#4974F5"
             size="0.3rem"
           />
           <span
-            :style="{ color: item.isApplaudFlag ? '#999999' : '#4974F5' }"
-            >{{ item.isApplaudFlag ? '已关注' : '关注' }}</span
+            :style="{ color: item.custAttentionFlag ? '#999999' : '#4974F5' }"
+            @click="attentionHandler(item)"
+            >{{ item.custAttentionFlag ? '已关注' : '关注' }}</span
           >
         </div>
       </div>
@@ -83,10 +84,40 @@
   </div>
 </template>
 <script>
-import { Sticky, Icon } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import { Sticky, Icon, Dialog } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import knownApi from '@/api/known'
 import utils from '@/utils/spread/util'
+
+// 构建uselist数据
+const buildUserList = (data, item) => {
+  const len = data.length
+  if (len === 0) {
+    return []
+  }
+  if (item) {
+    // 处理对某个用户关注|取消关注处理
+    for (let i = 0; i < len; i++) {
+      if (item.id === data[i].id) {
+        data[i].custAttentionFlag = !data[i].custAttentionFlag
+        break
+      }
+    }
+  } else {
+    for (let i = 0; i < len; i++) {
+      // 查询用户结果都为未关注,所以这里对关注字段进行数据构建
+      data[i].custAttentionFlag = false
+      // 重新构建type类型,操作人类型: 1 普通用户 2 规划师
+      if (data[i].type === 'ORDINARY_USER') {
+        data[i].custType = 1
+      } else {
+        data[i].custType = 2
+      }
+    }
+  }
+  return data
+}
 
 export default {
   name: 'Searchresult',
@@ -94,6 +125,7 @@ export default {
     [Sticky.name]: Sticky,
     [Icon.name]: Icon,
     Search,
+    [Dialog.name]: Dialog,
   },
   filters: {
     fromatDate(value) {
@@ -104,18 +136,18 @@ export default {
     },
   },
   async asyncData({ $axios, query }) {
-    const params = {
-      keyword: query.keyword,
-      type: query.type,
-    }
     let userList = []
     let searchList = []
     try {
-      const res = await $axios.get(knownApi.search.list, params)
+      const params1 = {
+        keyword: query.keyword,
+        type: parseInt(query.type),
+      }
+      const res = await $axios.post(knownApi.search.list, params1)
       if (res.code === 200 && res.data.records.length) {
         // 用户数据
         if (query.type === '3') {
-          userList = res.data.records
+          userList = buildUserList(res.data.records)
         } else {
           searchList = res.data.records
         }
@@ -129,7 +161,13 @@ export default {
     }
   },
   data() {
-    return {}
+    return { redirect: this.$route.query.redirect || '/' }
+  },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user.userInfo, // 登录的用户信息
+      userId: (state) => state.user.userId, // userId 用于判断登录
+    }),
   },
   methods: {
     keyClickHandle() {
@@ -142,7 +180,7 @@ export default {
       console.log(222)
     },
     toDetail() {
-      if (this.tabIndex) {
+      if (this.tabIndex === 2) {
         this.$router.push({
           path: '/known/detail/article',
           query: {
@@ -165,17 +203,69 @@ export default {
       this.tabIndex = type
       // 请求后台接口
       try {
-        const res = await this.$axios.get(knownApi.search.list, {
+        const res = await this.$axios.post(knownApi.search.list, {
           keyword: this.value,
-          type: this.tabIndex,
+          type: parseInt(this.tabIndex),
         })
-        // 用户数据
-        if (this.tabIndex === '3') {
-          this.userList = res.data.records
-        } else {
-          this.searchList = res.data.records
+        if (res.code === 200 && res.data.records.length) {
+          // 用户数据
+          if (this.tabIndex === '3') {
+            this.userList = buildUserList(res.data.records)
+          } else {
+            this.searchList = res.data.records
+          }
         }
       } catch (e) {}
+    },
+    async attentionHandler(item) {
+      // 先判断是否登录
+      if (this.userId) {
+        try {
+          const res = await this.$axios.post(knownApi.home.attention, {
+            handleUserId: this.userInfo.userId,
+            handleUserName: this.userInfo.userName || '测试用户',
+            handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+            handleType: item.custAttentionFlag ? 2 : 1,
+            attentionUserId: item.id,
+            attentionUserName: item.userName,
+            attentionUserType: item.custType,
+          })
+          if (res.code === 200) {
+            // 重新构建页面数据,处理关注状态
+            item.custAttentionFlag = !item.custAttentionFlag
+            let message
+            if (item.custAttentionFlag) {
+              message = '关注成功'
+            } else {
+              message = '取关成功'
+            }
+            this.userList = buildUserList(this.userList, item)
+            this.$xToast.show({
+              message,
+              duration: 1000,
+              icon: 'toast_ic_comp',
+              forbidClick: true,
+            })
+          }
+        } catch (e) {
+          this.$xToast.show({
+            message: '请求失败,请联系客服',
+            duration: 1000,
+            icon: 'toast_ic_comp',
+            forbidClick: true,
+          })
+        }
+      } else {
+        Dialog.confirm({
+          title: '温馨提示',
+          message: '关注用户需先登录',
+        }).then(() => {
+          this.$router.replace({
+            name: 'login',
+            query: { redirect: this.redirect },
+          })
+        })
+      }
     },
   },
 }
