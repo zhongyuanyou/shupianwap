@@ -1,16 +1,7 @@
 <template>
   <div class="preview">
-    <Head :title="contract.type == 'qs' ? '签署合同' : '预览合同'">
-      <template #left>
-        <my-icon
-          class="back-icon"
-          name="nav_ic_back"
-          size="0.4rem"
-          color="#1A1A1A"
-          @click.native="goback"
-        ></my-icon>
-      </template>
-    </Head>
+    <Head :title="contract.type == 'qs' ? '签署合同' : '预览合同'"> </Head>
+    <LoadingCenter v-show="loading" />
     <div class="data">
       <div class="box">
         <Pdf v-if="pdf" :src="pdf" />
@@ -46,6 +37,7 @@ import Pdf from 'vue-pdf'
 import { Button, Dialog, Toast } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
 import contractApi from '@/api/contract'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'Preview',
   components: {
@@ -53,6 +45,7 @@ export default {
     Button,
     [Dialog.Component.name]: Dialog.Component,
     Pdf,
+    LoadingCenter,
   },
   data() {
     return {
@@ -62,26 +55,15 @@ export default {
       time: 5,
       btnshow: false,
       timeer: '',
+      Loading: false,
     }
   },
   mounted() {
     this.pdf = this.contract.contractUrl
   },
   methods: {
-    goback() {
-      if (this.contract.go === '-2') {
-        if (this.contract.fromPage === 'orderList') {
-          this.$router.push({
-            path: '/order',
-          })
-        } else {
-          this.$router.back(-2)
-        }
-      } else {
-        this.$router.back(-1)
-      }
-    },
     sign() {
+      this.Loading = true
       if (
         this.$cookies.get('realStatus') === 'AUTHENTICATION_SUCCESS' ||
         this.$cookies.get('realStatus') === 'AUTHENTICATION_FAIL'
@@ -99,15 +81,18 @@ export default {
           )
           .then((res) => {
             if (res) {
+              this.Loading = false
               this.$router.push({
                 path: '/conrract/iframe',
                 query: {
                   src: res,
+                  type: 'qs',
                 },
               })
             }
           })
           .catch((err) => {
+            this.Loading = false
             Toast({
               message: err.data.error,
               overlay: true,
@@ -115,6 +100,7 @@ export default {
             console.log('错误信息err', err)
           })
       } else {
+        this.Loading = false
         Dialog.confirm({
           title: '温馨提示',
           message: '检测到您未实名认证，请在签合同前 先进行实名认证',

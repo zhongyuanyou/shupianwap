@@ -50,7 +50,11 @@
         </div>
       </div>
     </sp-cell>
-    <CommentList v-model="commentShow" :article-id="'1'" @release="release" />
+    <comment-list
+      v-model="commentShow"
+      :article-id="'1'"
+      @release="release"
+    ></comment-list>
   </sp-list>
 </template>
 <script>
