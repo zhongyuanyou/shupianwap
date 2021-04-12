@@ -60,7 +60,6 @@ export default {
   data() {
     return {
       fromPage: 'question',
-      editType: '', // editType=1为编写文章 editType=2 为新发文章
       showToast: true,
     }
   },
