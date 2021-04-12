@@ -126,7 +126,6 @@ export default {
     // const skillData = []
     try {
       const res = await $axios.post(homeApi.initRequest, initReqParams)
-      console.log('res.data.advertising', res.data.advertising)
       if (res.code === 200) {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
         initData.rollBannerData = res.data.advertising[rollAdCode] || []
