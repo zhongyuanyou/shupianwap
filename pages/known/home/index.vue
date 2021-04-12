@@ -4,7 +4,7 @@
       <div class="card">
         <sp-image round class="user_avatar" fit="cover" :src="avatar" />
         <div class="bt_box">
-          <template v-if="homeUserId">
+          <template v-if="homeUserId && homeUserId !== userInfo.userId">
             <div v-if="!isAttention" class="bt_attention" @click="attention">
               + 关注
             </div>
@@ -71,7 +71,9 @@
             />
             <div class="user_info">
               <div class="user_info_name">{{ item.userName }}</div>
-              <div class="user_info_time">27分钟前·回答了问题</div>
+              <div class="user_info_time">
+                {{ item.createTime }}·{{ item.type | filterType }}
+              </div>
             </div>
           </div>
           <div class="title clamp2">
@@ -119,7 +121,7 @@
     </div>
     <comment-list
       v-model="commentShow"
-      :article-id="'1'"
+      :article-id="articleId"
       @release="release"
     ></comment-list>
   </div>
@@ -137,6 +139,17 @@ export default {
     [Image.name]: Image,
     [List.name]: List,
     CommentList,
+  },
+  filters: {
+    filterType(type) {
+      if (type === 1) {
+        return '发布了问题'
+      } else if (type === 2) {
+        return '发表了文章'
+      } else {
+        return '回答了问题'
+      }
+    },
   },
   async asyncData({ $axios, query, store, redirect }) {
     if (!query.homeUserId && !store.state.user.userId) {
@@ -165,7 +178,7 @@ export default {
   },
   data() {
     return {
-      articleId: '1', // 打开评论列表需要传的id
+      articleId: '', // 打开评论列表需要传的id
       active: 0,
       menuList: [
         {
@@ -319,6 +332,7 @@ export default {
         text-align: center;
         font-size: 26px;
         font-weight: 500;
+        height: 64px;
         .bt_attention {
           width: 144px;
           height: 64px;
