@@ -29,13 +29,22 @@
           <p class="goods-name">
             {{ item.name }}
           </p>
-          <p class="sku-extinfo">
+          <p class="goods-tag">
             <span
               v-for="(tagItem, index2) in item.tag"
+              v-show="index2 < 3"
               :key="index2"
               class="tag-item"
-              >{{ item.tagName }}</span
+              >{{ tagItem.tagName }}</span
             >
+          </p>
+          <p
+            class="goods-sloga"
+            :class="
+              !item.tag || !item.tag.length ? 'goods-slogan2' : 'goods-slogan1'
+            "
+          >
+            {{ item.salesGoodsOperatings && item.salesGoodsOperatings.slogan }}
           </p>
           <div class="goods-price">
             <span class="sales-proce">
@@ -61,10 +70,10 @@
       </div>
     </div>
     <Loading-down
-      v-if="tabBtn.length"
-      :bg-color="tabBtn[curentItem].noData ? '#ffffff' : '#f4f4f4'"
-      :loading="loading && !tabBtn[curentItem].noMore"
-      :no-data="tabBtn[curentItem].noMore"
+      v-if="goodsList.length"
+      :bg-color="noData ? '#ffffff' : '#f4f4f4'"
+      :loading="loading && noMore"
+      :no-data="noMore"
     />
   </div>
 </template>
@@ -74,8 +83,6 @@ import { mapState } from 'vuex'
 import { Swipe, swipeItem, Skeleton, Image } from '@chipspc/vant-dgg'
 import getUserSign from '@/utils/fingerprint'
 import { recommendApi } from '@/api'
-import TabCurve from '@/components/home/TabCurve'
-import GoodsPro from '@/components/common/goodsItem/GoodsPro'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import adJumpHandle from '~/mixins/adJumpHandle'
 export default {
@@ -94,6 +101,7 @@ export default {
       curentItem: 0,
       searchDomHeight: 0,
       noData: true,
+      noMore: false,
       params: {
         userId: '', // 用户id
         deviceId: '', // 设备ID（用户唯一标识） 0022ef1a-f685-469a-93a8-5409892207a2
@@ -102,8 +110,10 @@ export default {
         maxsize: 100, // 要求推荐产品的数量
         platform: 'APP', // 平台（app,m,pc）
         formatId: '', // 产品类别
-        limit: 10, // 分页条数
-        page: 1, // 当前页
+        page: {
+          pageNo: 1,
+          pageSize: 10,
+        },
         storeId: '', // 商户id
         productType: 'PRO_CLASS_TYPE_SALES',
       },
@@ -138,20 +148,14 @@ export default {
     handleScroll() {
       const pageScrollTop = this.$parent.$refs.homeRef.scrollTop // 滚动条距离顶部的位置
       this.$parent.pageScrollTop = pageScrollTop
-      if (
-        this.tabBtn.length &&
-        this.tabBtn[this.curentItem].goodsList.length &&
-        !this.loading &&
-        !this.tabBtn[this.curentItem].noMore
-      ) {
+      if (this.goodsList.length && !this.loading && !this.noMore) {
         const pageScrollHeight = this.$parent.$refs.homeRef.scrollHeight // 页面文档的总高度
         const pageClientHeight = this.$parent.$refs.homeRef.clientHeight // 文档显示区域的高度
         // 监听页面是否滚动到底部加载更多数据
         if (Math.ceil(pageScrollTop + pageClientHeight) >= pageScrollHeight) {
           this.loading = true
-          this.tabBtn[this.curentItem].page += 1
-          this.params.findType = 2
-          this.findRecomList(this.curentItem)
+          this.params.page.pageNo++
+          this.findRecomList()
         }
       }
     },
@@ -161,11 +165,6 @@ export default {
     // 查询推荐商品
     findRecomList() {
       const params = this.params
-      const page = {
-        pageNo: this.params.page,
-        pageSize: this.params.limit,
-      }
-      params.page = page
       params.areaCode = this.cityCode || '510100'
       this.$axios.post(recommendApi.saleList, params).then((res) => {
         this.loading = false
@@ -178,6 +177,7 @@ export default {
           this.goodsList = this.goodsList.concat(res.data.records)
           this.noData = false
         } else {
+          this.params.page.pageNo--
           this.$xToast.error(res.message)
         }
       })
@@ -288,6 +288,7 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 100%;
+    margin-bottom: 20px;
     img {
       width: 340px;
       height: 340px;
@@ -316,11 +317,11 @@ export default {
   overflow: hidden;
   .goods-lable-img {
     position: relative;
-    width: 240px;
-    height: 240px;
+    width: 180px;
+    height: 180px;
     border-radius: 8px;
     overflow: hidden;
-    margin-right: 32px;
+    margin-right: 22px;
     .sp-image {
       width: 100%;
       height: 100%;
@@ -360,11 +361,11 @@ export default {
     display: flex;
     flex-direction: column;
     .goods-name {
-      font-size: 32px;
+      font-size: 28px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #222222;
-      line-height: 42px;
+      line-height: 36px;
       margin-top: -3px;
       .textOverflow(2);
       .pro-lable {
@@ -390,6 +391,32 @@ export default {
           color: #ffffff;
         }
       }
+    }
+    .goods-tag {
+      margin: 4px 0 4px 0;
+      .textOverflow(1);
+      .tag-item {
+        display: inline-block;
+        height: 0.32rem;
+        background: #f0f2f5;
+        border-radius: 0.04rem;
+        padding: 0 0.09rem;
+        line-height: 0.32rem;
+        font-size: 0.22rem;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #5c7499;
+        margin-right: 10px;
+      }
+    }
+    .goods-slogan {
+      color: #999;
+    }
+    .goods-slogan1 {
+      .textOverflow(1);
+    }
+    .goods-slogan2 {
+      .textOverflow(2);
     }
     .goods-lable {
       display: flex;
@@ -441,7 +468,6 @@ export default {
     .goods-price {
       flex: 1;
       display: flex;
-      margin-top: 16px;
       line-height: 18px;
       align-items: flex-end;
       vertical-align: middle;
