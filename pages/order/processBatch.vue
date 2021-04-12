@@ -24,6 +24,7 @@ export default {
       loading: true,
       orderData: {},
       batchData: [],
+      pageTitle: '',
     }
   },
   computed: {
@@ -37,7 +38,8 @@ export default {
     },
   },
   mounted() {
-    this.pageTitle = '第' + this.$route.query.step + '批次'
+    this.pageTitle = '第' + this.$route.query.num + '批次'
+    this.getProcessInfo()
   },
   methods: {
     onClickLeft() {
@@ -48,13 +50,13 @@ export default {
         .getProcessInfoBatch(
           { axios: this.$axios },
           {
-            orderDetailsId: this.orderData.orderId,
+            productionOrderId: this.$route.query.productionOrderId,
+            serverId: this.$route.query.serverId,
           }
         )
         .then((res) => {
           this.loading = false
-          if (res.data && res.data.records)
-            this.batchData = res.data || res.data.records
+          if (res && res.length) this.batchData = res || res.data
           else this.batchData = []
         })
         .catch((error) => {

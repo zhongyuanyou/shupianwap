@@ -97,6 +97,7 @@ export default {
       formshow: false,
       orderItem: this.$route.query,
       orderData: '',
+      loading: false,
     }
   },
   mounted() {

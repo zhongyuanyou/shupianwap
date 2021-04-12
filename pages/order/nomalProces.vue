@@ -68,14 +68,12 @@ export default {
         .getProcessInfo(
           { axios: this.$axios },
           {
-            orderDetailsId: this.orderData.orderId,
-            orderProductId: this.orderData.orderId,
+            orderDetailsId: this.$route.query.detailId,
           }
         )
         .then((res) => {
           console.log('非周期产品办理进度', res)
-          if (res.data && res.data.records)
-            this.batchData = res.data || res.data.records
+          if (res && res.length) this.batchData = res || res
           else this.batchData = []
         })
     },

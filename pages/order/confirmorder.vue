@@ -200,7 +200,7 @@ export default {
         orderAgreementIds: '',
         customerOrderMark: '',
         discount: [],
-        payType: 'ORDER_PAY_MODE_ONLINE ',
+        payType: 'ORDER_PAY_MODE_ONLINE',
       },
       loading: true,
     }

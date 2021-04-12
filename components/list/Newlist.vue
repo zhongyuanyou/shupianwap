@@ -8,7 +8,7 @@
       <sp-list
         v-model="loading"
         :finished="finished"
-        finished-text="没有更多了"
+        :finished-text="datalist.length == 0 ? '' : '没有更多了'"
         @load="onLoad"
       >
         <div
@@ -35,6 +35,10 @@
         </div>
       </sp-list>
     </sp-pull-refresh>
+    <div v-show="datalist.length < 1" class="none">
+      <img src="https://img10.dgg.cn/pt03/wap/cmxakdtkqxs0000.png" alt="" />
+      <p>暂无商品</p>
+    </div>
   </div>
 </template>
 
@@ -53,6 +57,12 @@ export default {
       type: String,
       default: '',
     },
+    datalist: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
   data() {
     return {
@@ -60,19 +70,11 @@ export default {
       finished: false,
       isLoading: false,
       pages: 1,
-      datalist: [],
-      formData: {
-        start: 1,
-        limit: 10,
-        needTypes: 1,
-        needGoodsList: 1,
-        searchKey: '',
-      },
     }
   },
-  mounted() {
-    this.getlist()
-  },
+  // mounted() {
+  //   this.getlist()
+  // },
   methods: {
     godeatil(item) {
       this.$router.push({
@@ -82,30 +84,15 @@ export default {
         },
       })
     },
-    getlist() {
-      this.formData.searchKey = this.searchtext
-      goods
-        .transactionList({ axios: this.$axios }, this.formData)
-        .then((data) => {
-          if (this.datalist.length > 0) {
-            this.datalist = this.datalist.concat(data.goodsList.records)
-          } else {
-            this.datalist = data.goodsList.records
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
+    getlist() {},
     onRefresh() {
-      this.finished = false
-      this.formData.start = 1
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
-      this.onLoad()
+      this.$emit('Refresh')
     },
-    onLoad() {},
+    onLoad() {
+      this.$emit('load', this.pages)
+      this.pages++
+    },
   },
 }
 </script>
@@ -121,6 +108,11 @@ export default {
     box-sizing: border-box;
     display: flex;
     align-items: center;
+
+    // /deep/.list__finished-text {
+    //   background: #e4e4e4;
+    //   color: #fff;
+    // }
     > .left {
       width: 160px;
       height: 160px;
@@ -187,6 +179,21 @@ export default {
         font-weight: bold;
         color: #ec5330;
       }
+    }
+  }
+  .none {
+    padding-top: 100px;
+    margin: 0 auto;
+    text-align: center;
+    img {
+      width: 340px;
+      height: 340px;
+    }
+    p {
+      font-size: 30px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      color: #1a1a1a;
     }
   }
 }
