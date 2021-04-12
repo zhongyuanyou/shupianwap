@@ -2,29 +2,11 @@
   <div class="UserList">
     <div class="items">
       <ul class="tabs-box-items">
-        <li class="user">
-          <div class="Image"><img src="" alt="" /></div>
-          <div class="name">郑远</div>
-        </li>
-        <li class="user">
-          <div class="Image"><img src="" alt="" /></div>
-          <div class="name">郑远</div>
-        </li>
-        <li class="user">
-          <div class="Image"><img src="" alt="" /></div>
-          <div class="name">郑远</div>
-        </li>
-        <li class="user">
-          <div class="Image"><img src="" alt="" /></div>
-          <div class="name">郑远</div>
-        </li>
-        <li class="user">
-          <div class="Image"><img src="" alt="" /></div>
-          <div class="name">郑远</div>
-        </li>
-        <li class="user">
-          <div class="Image"><img src="" alt="" /></div>
-          <div class="name">郑远</div>
+        <li v-for="(item, index) in userData" :key="index" class="user">
+          <div class="Image" @click="clickImg(item.inviteeId)">
+            <img :src="item.avatar" alt="" />
+          </div>
+          <div class="name">{{ item.inviteeName }}</div>
         </li>
       </ul>
       <div class="attentionMore" @click="attentionMore">
@@ -51,12 +33,12 @@ export default {
     [WorkTabs.name]: WorkTabs,
   },
   props: {
-    // banner: {
-    //   type: Array,
-    //   default: () => {
-    //     return []
-    //   },
-    // },
+    userData: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
   data() {
     return {
@@ -69,6 +51,9 @@ export default {
       this.nowIndex = index
     },
     attentionMore() {
+      this.$router.push({ path: 'known/attention/attentionMore' })
+    },
+    clickImg() {
       this.$router.push({ path: 'known/attention/attentionMore' })
     },
   },
@@ -96,7 +81,6 @@ export default {
       width: 540px;
       align-items: center;
       display: flex;
-      justify-content: space-between;
       overflow: auto;
       .type {
         font-size: 22px;
