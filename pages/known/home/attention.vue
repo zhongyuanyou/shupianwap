@@ -27,7 +27,13 @@
       @load="getList"
     >
       <div v-for="(item, index) in list" :key="index" class="item">
-        <sp-image round class="user_avatar" fit="cover" :src="item.avatar" />
+        <sp-image
+          round
+          class="user_avatar"
+          fit="cover"
+          :src="item.avatar"
+          @click="toHome(item.inviteeId)"
+        />
         <div class="user_info">
           <div class="title">{{ item.inviteeName }}</div>
           <div class="introduce">{{ item.desc }}</div>
@@ -133,6 +139,14 @@ export default {
       } else {
         console.log(message)
       }
+    },
+    toHome(id) {
+      this.$router.push({
+        path: '/known/home',
+        query: {
+          homeUserId: id,
+        },
+      })
     },
   },
 }
