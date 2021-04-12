@@ -73,7 +73,7 @@ import SkillGroup from '@/components/home/SkillGroup'
 // import Preferential from '@/components/home/Preferential'
 // import Information from '@/components/home/Information'
 // import HotServe from '@/components/home/HotServe'
-import Recommend from '@/components/home/Recommend'
+import Recommend from '@/components/home/RecommendSale'
 import FiexdBtn from '@/components/home/FiexdBtn'
 import DownloadApp from '@/components/common/app/DownloadApp'
 import Marketing from '@/components/home/Marketing'
@@ -126,12 +126,35 @@ export default {
     // const skillData = []
     try {
       const res = await $axios.post(homeApi.initRequest, initReqParams)
-      console.log('res.data.advertising', res.data.advertising)
-      if (res.code === 200) {
+      if (res.code && res.data && res.data.advertising === 200) {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
         initData.rollBannerData = res.data.advertising[rollAdCode] || []
         initData.helpBannerData = res.data.advertising[helpAdCode] || []
-        initData.skillData = res.data.advertising[skillCode] || []
+        initData.skillData = res.data.advertising[skillCode] || [
+          {
+            locationSort: 1,
+            materialList: [
+              {
+                materialTypeCode: 'GGLX_TP',
+                materialUrl:
+                  'https://cdn.shupian.cn/sp/cms/cfg4m044ea80000.png',
+                imgLink: '',
+                materialLink: 'https://shupian.dgg.cn/spread/companyRegister',
+                materialCode: 'src113387',
+                materialHeight: 109,
+                materialId: '8054898714890534912',
+                materialDescription: '',
+                materialName: 'wap首页秒杀广告',
+                androidLink: '',
+                materialWidth: 416,
+                iosLink: '',
+                linkType: 2,
+                wapLink: '',
+                executeParam: '',
+              },
+            ],
+          },
+        ]
         initData.fiexdNavData = res.data.fixedNavList || []
         initData.rollNavData = res.data.rollNavList || []
       }
@@ -169,7 +192,6 @@ export default {
     this.asyncReqParams.locationCodeList = this.adModuleOne.concat(
       this.adModuleTwo
     )
-    console.log('homeApi.asyncRequest', homeApi.asyncRequest)
     // 获取非首屏数据（广告 + 资讯）
     this.$axios.post(homeApi.asyncRequest, this.asyncReqParams).then((res) => {
       console.log('非首屏渲染', res)

@@ -1,6 +1,6 @@
 <template>
   <div class="detail" :style="{ paddingBottom: fixedshow ? '1.3rem' : '' }">
-    <Header :title="title">
+    <Header :title="questionDetials.title">
       <template #left>
         <div>
           <sp-icon name="arrow-left" size="0.4rem" @click="$router.back()" />
@@ -16,10 +16,12 @@
             @click="$router.push('/known/search')"
           />
           <sp-icon
+            v-if="questionDetials.createrId === userInfo.userId"
             name="ellipsis"
             size="0.4rem"
             color="#1A1A1A"
             class="ellipsis"
+            @click="moreOperate"
           />
         </div>
       </template>
@@ -38,26 +40,38 @@
       <h1 ref="title" class="tit">{{ questionDetials.title }}</h1>
       <div
         v-if="
-          detail.imglist.length <= 2 &&
-          detail.imglist.length > 0 &&
+          questionDetials.contentImageUrl &&
+          questionDetials.contentImageUrl.length <= 2 &&
+          questionDetials.contentImageUrl &&
+          questionDetials.contentImageUrl.length > 0 &&
           !contentshow
         "
         class="imglist"
       >
         <div
-          v-for="(item, index) in detail.imglist"
+          v-for="(item, index) in questionDetials.contentImageUrl"
           :key="index"
           class="imgbox"
         >
           <img :src="item" alt="" />
         </div>
       </div>
-      <div v-if="detail.imglist.length > 2 && !contentshow" class="imglist">
+      <div
+        v-if="
+          questionDetials.contentImageUrl &&
+          questionDetials.contentImageUrl.length > 2 &&
+          !contentshow
+        "
+        class="imglist"
+      >
         <div class="imgbox">
-          <img :src="detail.imglist[0]" alt="" />
+          <img :src="questionDetials.contentImageUrl[0]" alt="" />
         </div>
-        <div class="imgbox1">
-          {{ `+${detail.imglist.length}` }}
+        <div class="imgbox">
+          <img :src="questionDetials.contentImageUrl[1]" alt="" />
+          <div class="imgbox1">
+            {{ `+${questionDetials.contentImageUrl.length}` }}
+          </div>
         </div>
       </div>
       <div class="content">
@@ -77,17 +91,21 @@
       </div>
       <div class="num">
         <div class="left">
-          <!-- <div>{{ questionDetials.follow 
-          <p></p> -->
-          <div>{{ questionDetials.collectCount }} <span>收藏</span></div>
+          <div>{{ questionDetials.remarkCount }} <span>评论</span></div>
           <p></p>
-          <div>{{ questionDetials.browseCount }} <span>浏览</span></div>
+          <div>{{ questionDetials.totalBrowseCount }} <span>浏览</span></div>
         </div>
         <div
           class="right"
-          :class="questionDetials.applaudCount > 0 ? 'act' : ''"
+          :class="questionDetials.isApplaudFlag === 1 ? 'act' : ''"
           @click="like('LIKE')"
         >
+          <my-icon
+            name="dianzan"
+            size="0.24rem"
+            :color="questionDetials.isApplaudFlag === 1 ? '1A1A1A' : ''"
+            class="myIcon"
+          />
           好问题 {{ questionDetials.applaudCount }}
         </div>
       </div>
@@ -112,11 +130,11 @@
           <sp-icon
             name="like-o"
             size="0.4rem"
-            :color="questionDetials.collectCount > 0 ? '#4974F5' : ''"
+            :color="questionDetials.isCollectFlag === 1 ? '#4974F5' : ''"
           />
           <p
             :style="{
-              color: questionDetials.collectCount > 0 ? '#4974F5' : '',
+              color: questionDetials.isCollectFlag === 1 ? '#4974F5' : '',
             }"
             @click="like('COLLECT')"
           >
@@ -135,13 +153,13 @@
     </div>
     <div v-if="releaseStatusId === 1" class="answer">
       <div class="head">
-        <p>回答 {{ questionList.total }}</p>
+        <p>回答 {{ total }}</p>
         <div>
-          <i class="bg" :class="answersort == 1 ? 'right' : ''"></i>
-          <span :class="answersort == 0 ? 'act' : ''" @click="answersortfn(0)"
+          <i class="bg" :class="answersort === 1 ? 'right' : ''"></i>
+          <span :class="answersort === 0 ? 'act' : ''" @click="answersortfn(0)"
             >默认</span
           >
-          <span :class="answersort == 1 ? 'act' : ''" @click="answersortfn(1)"
+          <span :class="answersort === 1 ? 'act' : ''" @click="answersortfn(1)"
             >最新</span
           >
         </div>
@@ -167,7 +185,7 @@
             <span></span>
             <p>{{ item.remarkCount }} 评论</p>
             <span></span>
-            <p>{{ item.createTime }}</p>
+            <p>{{ item.publishTime }}</p>
           </div>
         </div>
       </sp-list>
@@ -189,7 +207,7 @@
         <sp-icon name="edit" size="0.4rem" />
         <span>写回答</span>
       </div>
-      <div class="btn">
+      <div class="btn" @click="like('COLLECT')">
         <sp-icon
           name="like-o"
           size="0.4rem"
@@ -203,11 +221,44 @@
         >
       </div>
     </div>
+    <!--    分享组件-->
+    <sp-popup
+      v-model="popupShow"
+      position="bottom"
+      :style="{ height: '30%' }"
+      round
+      close-icon="close"
+      :close-on-click-overlay="false"
+    >
+      <div class="down_slide_list">
+        <ul>
+          <li @click="editQues(questionDetials.id)">
+            <my-icon
+              name="bianji1"
+              size="1rem"
+              color="#1A1A1A"
+              class="myIcon"
+            />
+            <p>编辑</p>
+          </li>
+          <li @click="deleteQues(questionDetials.id)">
+            <my-icon
+              name="shanchu1"
+              size="1rem"
+              color="#1A1A1A"
+              class="myIcon"
+            />
+            <p>删除</p>
+          </li>
+        </ul>
+        <div class="cancel" @click="cancel">取消</div>
+      </div>
+    </sp-popup>
   </div>
 </template>
 
 <script>
-import { Icon, Toast, List } from '@chipspc/vant-dgg'
+import { Icon, Toast, List, Popup } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import { knownApi } from '@/api'
 export default {
@@ -216,78 +267,15 @@ export default {
     Header,
     [Icon.name]: Icon,
     [List.name]: List,
+    [Popup.name]: Popup,
   },
   data() {
     return {
       title: '',
-      taglist: ['公司注册', '公司注册', '公司注册'],
       contentshow: false,
-      detail: {
-        title:
-          '最近发现很多流量明星一不小心就火了，我想问问为什么粉丝可以突然就爱上一个明星？',
-        imglist: [
-          'https://cn.vuejs.org/images/logo.png',
-          'https://cn.vuejs.org/images/logo.png',
-          'https://cn.vuejs.org/images/logo.png',
-        ],
-        content:
-          '尤其是有很多流浪都是有铁粉的，我理解铁粉不是应该一开始关注随着时间推长，他是你的尤其是有很多流浪都是有铁粉的，我理解铁粉不是应该一开始关注随着时间推长，他是你的',
-        follow: '5',
-        comment: '10',
-        visit: '200',
-        answer: [
-          {
-            username: '用户',
-            img: 'https://cn.vuejs.org/images/logo.png',
-            content:
-              '心理学的研究发现，人们很容易相信一个笼统的人格描述，即使这种描述十分空洞，但仍然会认为反映了自己的人格面貌。心理学的研究发现，人们…',
-            agree: '10',
-            like: '20',
-            comment: '20',
-            time: '22小时前',
-          },
-          {
-            username: '用户',
-            img: 'https://cn.vuejs.org/images/logo.png',
-            content:
-              '心理学的研究发现，人们很容易相信一个笼统的人格描述，即使这种描述十分空洞，但仍然会认为反映了自己的人格面貌。心理学的研究发现，人们…',
-            agree: '10',
-            like: '20',
-            comment: '20',
-            time: '22小时前',
-          },
-          {
-            username: '用户',
-            img: 'https://cn.vuejs.org/images/logo.png',
-            content:
-              '心理学的研究发现，人们很容易相信一个笼统的人格描述，即使这种描述十分空洞，但仍然会认为反映了自己的人格面貌。心理学的研究发现，人们…',
-            agree: '10',
-            like: '20',
-            comment: '20',
-            time: '22小时前',
-          },
-          {
-            username: '用户',
-            img: 'https://cn.vuejs.org/images/logo.png',
-            content:
-              '心理学的研究发现，人们很容易相信一个笼统的人格描述，即使这种描述十分空洞，但仍然会认为反映了自己的人格面貌。心理学的研究发现，人们…',
-            agree: '10',
-            like: '20',
-            comment: '20',
-            time: '22小时前',
-          },
-        ],
-        isLike: true,
-        isagree: true,
-      },
-      userlist: [
-        { userName: '用户', img: 'https://cn.vuejs.org/images/logo.png' },
-      ],
       answersort: 0,
       fixedshow: false,
       scrollTop: 0,
-      id: '8065065421625749504',
-      userId: '120',
       questionDetials: '',
       questionList: '',
       releaseStatusId: 1,
@@ -297,11 +285,23 @@ export default {
       page: 1,
       loading: false,
       total: '',
+      popupShow: false,
+      currentDetailsId: '',
     }
   },
+  computed: {
+    userInfo() {
+      console.log(this.$store.state.user)
+      return this.$store.state.user
+    },
+  },
   created() {
+    if (this.$route.params.id) {
+      this.currentDetailsId = this.$route.params.id
+    } else {
+      this.currentDetailsId = '8065065421625749504'
+    }
     this.getDetailData()
-    // this.getQuesData()
   },
   mounted() {
     window.addEventListener('scroll', this.watchScroll)
@@ -313,18 +313,28 @@ export default {
     getDetailData() {
       const baseUrl =
         'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do'
+      this.loading = true
       this.$axios
         .get(baseUrl, {
           params: {
-            id: this.id,
-            userId: this.userId,
+            id: this.currentDetailsId,
+            userId: this.userInfo.userId || '120',
+            userHandleFlag: 1,
+            userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+            userName: this.userInfo.userName || '测试用户',
           },
         })
         .then((res) => {
-          // this.loading = false
+          this.loading = false
           if (res.code === 200) {
             this.questionDetials = res.data
-            this.handleLikeType = this.questionDetials.isApplaudFlag
+            this.questionDetials.contentImageUrl =
+              'https://cn.vuejs.org/images/logo.png,https://cn.vuejs.org/images/logo.png,https://cn.vuejs.org/images/logo.png'
+            if (this.questionDetials.contentImageUrl) {
+              this.questionDetials.contentImageUrl = this.questionDetials.contentImageUrl.split(
+                ','
+              )
+            }
             if (this.questionDetials.categoryName) {
               this.questionDetials.categoryName = this.questionDetials.categoryName.split(
                 ','
@@ -346,10 +356,10 @@ export default {
         'http://172.16.132.255:7001/service/nk/question_article/v2/find_page.do'
       this.$axios
         .post(baseUrl, {
-          sourceIds: ['8064032317821808640'],
+          sourceIds: [`${this.currentDetailsId}`],
           orderBy: this.orderBy,
           page: this.page,
-          userId: this.userId,
+          userId: this.userInfo.userId || '120',
         })
         .then((res) => {
           // this.loading = false
@@ -377,25 +387,30 @@ export default {
         this.questionDetials.applaudCount = Number(
           this.questionDetials.applaudCount
         )
-        if (this.questionDetials.applaudCount > 0) {
+        if (this.questionDetials.isApplaudFlag === 1) {
           this.handleLikeType = 7
+          this.questionDetials.isApplaudFlag = 0
           this.questionDetials.applaudCount =
             this.questionDetials.applaudCount - 1
         } else {
           this.handleLikeType = 1
+          this.questionDetials.isApplaudFlag = 1
           this.questionDetials.applaudCount =
             this.questionDetials.applaudCount + 1
         }
-      } else {
+      }
+      if (type === 'COLLECT') {
         this.questionDetials.collectCount = Number(
           this.questionDetials.collectCount
         )
-        if (this.questionDetials.collectCount > 0) {
+        if (this.questionDetials.isCollectFlag === 1) {
           this.handleLikeType = 9
+          this.questionDetials.isCollectFlag = 0
           this.questionDetials.collectCount =
             this.questionDetials.collectCount - 1
         } else {
           this.handleLikeType = 4
+          this.questionDetials.isCollectFlag = 1
           this.questionDetials.collectCount =
             this.questionDetials.collectCount + 1
         }
@@ -405,17 +420,71 @@ export default {
         'http://172.16.132.255:7001/service/nk/known_home/v1/operation.do'
       this.$axios
         .post(baseUrl, {
-          handleUserId: this.userId,
-          handleUserName: '张三疯',
-          businessId: this.id,
+          handleUserId: this.userInfo.userId || '120',
+          handleUserName: this.userInfo.userName || '测试用户',
+          businessId: this.currentDetailsId,
           handleType: this.handleLikeType,
-          handleUserType: 1,
-          // handleUserType: this.$store.state.userType=== 'ORDINARY_USER' ? 1 : 2,
+          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
           dateType: 1,
         })
         .then((res) => {
-          // this.loading = false
           if (res.code === 200) {
+            if (type === 'LIKE') {
+              if (this.questionDetials.isApplaudFlag === 1) {
+                Toast('点赞成功')
+              } else {
+                Toast('取消点赞')
+              }
+            }
+            if (type === 'COLLECT') {
+              if (this.questionDetials.isCollectFlag === 1) {
+                Toast('收藏成功')
+              } else {
+                Toast('取消收藏')
+              }
+            }
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+    },
+    moreOperate() {
+      this.popupShow = true
+    },
+    cancel() {
+      this.popupShow = false
+    },
+    editQues(id) {
+      const curId = id
+      this.$router.push({
+        path: '/known/publish/question',
+        params: {
+          id: curId,
+        },
+      })
+    },
+    deleteQues(id) {
+      const curId = id
+      const baseUrl =
+        'http://172.16.132.255:7001/service/nk/question_article/v2/delete.do'
+      this.loading = true
+      this.$axios
+        .post(baseUrl, {
+          id: curId,
+          userId: this.userInfo.userId,
+        })
+        .then((res) => {
+          this.loading = false
+          if (res.code === 200) {
+            Toast('删除成功')
+            this.$router.push({
+              path: '/known',
+            })
           } else {
             Toast.fail({
               duration: 2000,
@@ -457,7 +526,7 @@ export default {
         this.fixedshow = false
       }
       if (this.$refs.title.getBoundingClientRect().top < 0) {
-        this.title = this.detail.title
+        this.title = this.questionDetials.title
       } else {
         this.title = ''
       }
@@ -471,6 +540,36 @@ export default {
   pointer-events: none;
   color: #ccc !important;
 }
+.down_slide_list {
+  ul {
+    display: flex;
+    padding: 70px;
+    box-sizing: border-box;
+    li {
+      width: 100px;
+      text-align: center;
+      margin-right: 76px;
+      p {
+        font-size: 24px;
+        color: #999999;
+      }
+    }
+  }
+  .cancel {
+    width: 100%;
+    height: 98px;
+    line-height: 98px;
+    text-align: center;
+    position: absolute;
+    font-size: 32px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #222222;
+    bottom: 0;
+    border-top: 1px solid #f0f0f0;
+  }
+}
+
 .detail {
   min-height: 100vh;
   background: #f5f5f5;
@@ -532,22 +631,26 @@ export default {
         background: #f5f5f5;
         border-radius: 12px;
         overflow: hidden;
+        position: relative;
         > img {
           object-fit: cover;
           width: 100%;
           height: 100%;
         }
-      }
-      > .imgbox1 {
-        width: 339px;
-        height: 226px;
-        background: rgba(0, 0, 0, 0.4);
-        font-size: 52px;
-        font-weight: 500;
-        color: #ffffff;
-        text-align: center;
-        line-height: 226px;
-        border-radius: 12px;
+        > .imgbox1 {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 339px;
+          height: 226px;
+          background: rgba(0, 0, 0, 0.4);
+          font-size: 52px;
+          font-weight: 500;
+          color: #ffffff;
+          text-align: center;
+          line-height: 226px;
+          border-radius: 12px;
+        }
       }
     }
     > .content {

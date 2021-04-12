@@ -2,12 +2,14 @@
   <div class="home_container">
     <div class="top_box">
       <div class="card">
-        <sp-image round class="user_avatar" fit="cover" src="" />
+        <sp-image round class="user_avatar" fit="cover" :src="avatar" />
         <div class="bt_box">
-          <div v-if="!isAttention" class="bt_attention" @click="attention">
-            + 关注
-          </div>
-          <div v-else class="bt_has_attention">已关注</div>
+          <template v-if="homeUserId && homeUserId !== userInfo.userId">
+            <div v-if="!isAttention" class="bt_attention" @click="attention">
+              + 关注
+            </div>
+            <div v-else class="bt_has_attention">已关注</div>
+          </template>
           <div v-if="source" class="bt_contact">
             <my-icon
               name="pinglun_mian"
@@ -16,22 +18,22 @@
             ></my-icon>
           </div>
         </div>
-        <div class="user_name">罗振宇</div>
-        <div class="user_desc clamp3">这个人很懒，什么也没留下</div>
+        <div class="user_name">{{ userName }}</div>
+        <div class="user_desc clamp3">{{ desc }}</div>
         <div class="user_data">
           <div class="user_data_item" @click="$router.push('/known/home/fans')">
-            <div class="user_data_item_num">9999万</div>
+            <div class="user_data_item_num">{{ fansNum }}</div>
             <div class="user_data_item_name">粉丝</div>
           </div>
           <div
             class="user_data_item"
             @click="$router.push('/known/home/attention')"
           >
-            <div class="user_data_item_num">9999万</div>
+            <div class="user_data_item_num">{{ attentionNum }}</div>
             <div class="user_data_item_name">关注</div>
           </div>
           <div class="user_data_item">
-            <div class="user_data_item_num">9999万</div>
+            <div class="user_data_item_num">{{ applaudNum }}</div>
             <div class="user_data_item_name">获赞</div>
           </div>
         </div>
@@ -69,7 +71,9 @@
             />
             <div class="user_info">
               <div class="user_info_name">{{ item.userName }}</div>
-              <div class="user_info_time">27分钟前·回答了问题</div>
+              <div class="user_info_time">
+                {{ item.createTime }}·{{ item.type | filterType }}
+              </div>
             </div>
           </div>
           <div class="title clamp2">
@@ -117,7 +121,7 @@
     </div>
     <comment-list
       v-model="commentShow"
-      :article-id="1"
+      :article-id="articleId"
       @release="release"
     ></comment-list>
   </div>
@@ -136,19 +140,45 @@ export default {
     [List.name]: List,
     CommentList,
   },
-  async asyncData({ $axios, query, store }) {
-    // const { code, message, data } = await $axios.post(knownApi.home.userInfo, {
-    //   userId: query.userId,
-    //   currentUserId: store.state.user.userId,
-    // })
-    // if (code === 200) {
-    // } else {
-    //   throw message
-    // }
+  filters: {
+    filterType(type) {
+      if (type === 1) {
+        return '发布了问题'
+      } else if (type === 2) {
+        return '发表了文章'
+      } else {
+        return '回答了问题'
+      }
+    },
+  },
+  async asyncData({ $axios, query, store, redirect }) {
+    if (!query.homeUserId && !store.state.user.userId) {
+      return redirect('/known')
+    }
+    let userInfo = {
+      avatar: '',
+      userName: '',
+      desc: '',
+      isAttention: false,
+      attentionNum: 0,
+      fansNum: 0,
+      applaudNum: 0,
+    }
+    const { code, data } = await $axios.get(knownApi.home.userInfo, {
+      params: {
+        homeUserId: query.homeUserId || store.state.user.userId,
+        currentUserId: store.state.user.userId,
+      },
+    })
+    if (code === 200) {
+      userInfo = data
+    }
+
+    return userInfo
   },
   data() {
     return {
-      articleId: '1', // 打开评论列表需要传的id
+      articleId: '', // 打开评论列表需要传的id
       active: 0,
       menuList: [
         {
@@ -171,7 +201,6 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      isAttention: false,
       commentShow: false,
       page: 1,
       limit: 10,
@@ -303,6 +332,7 @@ export default {
         text-align: center;
         font-size: 26px;
         font-weight: 500;
+        height: 64px;
         .bt_attention {
           width: 144px;
           height: 64px;

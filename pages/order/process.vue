@@ -22,7 +22,7 @@
         class="item"
         @click="toNav(item)"
       >
-        <span>第{{ index }}批次</span>
+        <span>{{ item.serverName }}</span>
       </div>
       <div v-if="!batchList.length" class="no-data">
         <img
@@ -85,7 +85,8 @@ export default {
         query: {
           orderId: this.orderData.orderId,
           serverId: item.id,
-          step: item.index++,
+          productionOrderId: item.productionOrderId,
+          num: item.serverNum,
         },
       })
     },
@@ -93,11 +94,11 @@ export default {
       orderApi
         .getProcessList(
           { axios: this.$axios },
-          { orderDetailsId: this.orderData.orderId }
+          { orderDetailsId: this.$route.query.detailId }
         )
         .then((res) => {
           console.log('周期批次列表', res)
-          this.batchList = res.data.records || res.data
+          this.batchList = res
           this.loading = false
         })
     },
@@ -188,6 +189,7 @@ export default {
       font-size: 32px;
       color: #222;
       font-weight: bold;
+      margin-bottom: 20px;
     }
     .item {
       padding: 40px 0;

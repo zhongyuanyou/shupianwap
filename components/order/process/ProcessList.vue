@@ -5,9 +5,9 @@
         <span>{{ item.serviceName }}</span>
       </div>
       <div class="infos">
-        <sp-iamge class="img" :src="item.handlerName"></sp-iamge>
+        <sp-image class="img" :src="item.handlerName"></sp-image>
         <span> {{ item.handlerName }}</span>
-        <span v-if="index === 0" class="status status1">{{
+        <span v-if="item.taskStatus === '已完成'" class="status status1">{{
           item.taskStatus
         }}</span>
         <span v-else class="status status2">{{ item.taskStatus }}</span>
@@ -78,6 +78,8 @@ export default {
     }
   }
   .infos {
+    font-size: 24px;
+    overflow: hidden;
     span {
       float: left;
       display: block;
@@ -88,15 +90,17 @@ export default {
       width: 30px;
       height: 30px;
       border-radius: 50%;
+      float: left;
+      display: block;
+      font-size: 12px;
+      margin-right: 20px;
     }
     .status {
       display: block;
       float: right;
       padding: 4px 8px;
-      background: #f8f8f8;
       border-radius: 4px;
       font-size: 24px;
-      color: #999999;
       font-weight: 400;
       border-radius: 4px;
     }

@@ -52,7 +52,7 @@
     </sp-cell>
     <comment-list
       v-model="commentShow"
-      :article-id="1"
+      :article-id="'1'"
       @release="release"
     ></comment-list>
   </sp-list>
@@ -105,8 +105,8 @@ export default {
   },
   watch: {
     listData(newName, oldName) {
-      console.log('newName', newName)
-      console.log('oldName', oldName)
+      // console.log('newName', newName)
+      // console.log('oldName', oldName)
     },
   },
   methods: {

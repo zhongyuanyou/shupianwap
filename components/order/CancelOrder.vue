@@ -174,9 +174,14 @@ export default {
             this.reasonList = res
             const data = JSON.parse(JSON.stringify(res))
             if (this.cusOrderCancelReason) {
-              const canCelResonName = data.filter((item) => {
+              const canCelReson = data.filter((item) => {
                 return item.code === this.cusOrderCancelReason
-              })[0].name
+              })[0]
+              let canCelResonName
+              if (canCelReson) canCelResonName = canCelReson.name
+              else if (this.cusOrderCancelReason === 'EXPIRE_AUTO_CANCEL') {
+                canCelResonName = '超时自动取消'
+              }
               this.$emit('setCancelOrderName', canCelResonName)
             }
           })

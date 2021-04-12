@@ -95,8 +95,7 @@ import ServiceDetail from '~/components/detail/ServiceDetail'
 import RelatedRecommend from '~/components/detail/RelatedRecommend'
 import bottomBar from '@/components/detail/bottomBar/index'
 import getUserSign from '~/utils/fingerprint'
-import tcBasicData from '~/mock/tcBasicData'
-import { productDetailsApi, recommendApi, userinfoApi } from '~/api'
+import { productDetailsApi, recommendApi } from '~/api'
 import MyIcon from '~/components/common/myIcon/MyIcon'
 import { copyToClipboard } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
@@ -137,7 +136,6 @@ export default {
       productLimit: 10, // 推荐产品没有条数
       productCount: 0, // 推荐产品总数
       recommendProduct: [], // 推荐产品
-      tcBasicData, // 基本信息的key
       showShare: false, // 是否弹起分享组件
       shareOptions: [{ name: '复制链接', icon: 'link' }],
       userInfoData: {
