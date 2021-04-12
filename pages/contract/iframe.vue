@@ -1,6 +1,16 @@
 <template>
   <div class="box">
-    <Head> </Head>
+    <Head>
+      <template #left>
+        <my-icon
+          class="back-icon"
+          name="nav_ic_back"
+          size="0.4rem"
+          color="#1A1A1A"
+          @click.native="onLeftClick"
+        ></my-icon>
+      </template>
+    </Head>
     <iframe :src="src" frameborder="0" class="ifr"></iframe>
   </div>
 </template>
@@ -14,8 +24,19 @@ export default {
   },
   data() {
     return {
-      src: this.$route.query,
+      src: this.$route.query.src,
     }
+  },
+  methods: {
+    onLeftClick() {
+      if (this.$route.query.type === 'qs') {
+        this.$router.push({
+          path: '/contract/contractList',
+        })
+      } else {
+        this.$router.back()
+      }
+    },
   },
 }
 </script>

@@ -1,6 +1,7 @@
 <template>
   <div class="PlaceOrder">
     <Head ref="head" title="确认订单"></Head>
+    <LoadingCenter v-show="loading" />
     <div class="allbox">
       <div class="data-content">
         <div v-for="(item, index) in order.list" :key="index" class="list">
@@ -146,6 +147,7 @@ import {
 } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
 import Popup from '@/components/PlaceOrder/Popup'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { productDetailsApi, auth, shopCart } from '@/api'
 import { coupon, order } from '@/api/index'
 export default {
@@ -157,6 +159,7 @@ export default {
     CellGroup,
     Checkbox,
     Popup,
+    LoadingCenter,
     // CheckboxGroup,
   },
   data() {
@@ -199,6 +202,7 @@ export default {
         discount: [],
         payType: 'ORDER_PAY_MODE_ONLINE ',
       },
+      loading: true,
     }
   },
   mounted() {
@@ -238,6 +242,7 @@ export default {
         })
     },
     async asyncData() {
+      this.loading = true
       try {
         const { code, message, data } = await this.$axios.post(
           productDetailsApi.sellingGoodsDetail,
@@ -267,11 +272,14 @@ export default {
           this.price = this.order.salesPrice
           this.getInitData(2)
           this.getInitData(4)
+          this.loading = false
         } else {
+          this.loading = false
           throw message
         }
       } catch (err) {
         console.log(err)
+        this.loading = false
       }
     },
     async getProtocol(categoryCode) {
@@ -295,6 +303,7 @@ export default {
       }
     },
     placeOrder() {
+      this.loading = true
       if (!this.radio) {
         Toast({
           message: '下单前，请先同意《薯片平台用户交易下单协议》',
@@ -313,6 +322,7 @@ export default {
                 saleSkuCount: this.order.list[i].salesVolume,
               }
               arr.push(sku)
+              this.loading = false
             } else {
               for (let b = 0; b < arr.length; b++) {
                 if (this.order.list[i].id === arr[b].saleSkuId) {
@@ -359,7 +369,6 @@ export default {
           }
           this.Orderform.discount.push(arr)
         }
-
         this.Orderform.cusOrderPayType = cusOrderPayType
         this.Orderform.isFromCart = isFromCart
         this.Orderform.orderProvinceNo = this.$store.state.city.defaultCity.pid
@@ -374,6 +383,7 @@ export default {
         order
           .placeOrder({ axios: this.$axios }, this.Orderform)
           .then((result) => {
+            this.loading = false
             Toast({
               message: '下单成功',
               iconPrefix: 'sp-iconfont',
@@ -390,6 +400,7 @@ export default {
             }, 1000)
           })
           .catch((e) => {
+            this.loading = false
             if (e.code !== 200) {
               this.$xToast.show(e)
               console.log(e)

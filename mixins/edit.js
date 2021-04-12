@@ -37,6 +37,16 @@ export default {
       : (this.formData.type = 3)
   },
   methods: {
+    getImgSrc(richtext) {
+      const imgList = []
+      richtext.replace(
+        /<img [^>]*src=['"]([^'"]+)[^>]*>/g,
+        (match, capture) => {
+          imgList.push(capture)
+        }
+      )
+      return imgList
+    },
     setTitle(val) {
       this.formData.title = val
       console.log('this.formData', this.formData)
@@ -61,14 +71,18 @@ export default {
       console.log('topicStr', this.topicStr)
     },
     submit() {
-      console.log('this.formData.content', this.formData)
       if (!this.editType || this.editType === 1) {
-        this.addContent()
+        if (this.fromPage === 'article') {
+          if (!this.formData.categoryCode) {
+            this.$xToast.error('请选择话题')
+          } else this.addContent()
+        }
       }
     },
     editorChange(val) {
       this.formData.content = val.html
       this.formData.contentText = val.text
+      this.formData.imgList = this.getImgSrc(val.html)
     },
     // 新增内容
     addContent() {

@@ -47,6 +47,9 @@ export default {
       console.log('this.open')
       this.$emit('openPop', true)
     },
+    getBackIndex() {
+      console.log('getBackIndex')
+    },
   },
 }
 </script>

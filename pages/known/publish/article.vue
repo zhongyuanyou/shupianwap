@@ -24,7 +24,7 @@
       </div>
       <ChooseTopic
         ref="chooseTopic"
-        :topics-arr="formData.topics"
+        :topics-arr="topics"
         @setTopic="setTopic"
       />
     </div>

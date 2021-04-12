@@ -53,6 +53,24 @@ export default {
         return []
       },
     },
+    class: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+    price: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+    sort: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
   },
   data() {
     return {
