@@ -5,6 +5,7 @@
     :finished="finished"
     offset="0"
     finished-text="没有更多了"
+    @scroll="handleScollList"
   >
     <sp-cell v-for="(item, index) in infoList" :key="index">
       <div class="item" @click="$router.push('/known/detail/article')">
@@ -86,7 +87,12 @@ export default {
       ],
     }
   },
-  methods: {},
+  methods: {
+    handleScollList(e) {
+      console.log('列表滚动', e)
+      // this.throttle(this.scollChange(), 500, 1000)
+    },
+  },
 }
 </script>
 <style lang="less" scoped>
