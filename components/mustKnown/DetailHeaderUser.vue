@@ -2,19 +2,19 @@
   <div class="head head2">
     <my-icon
       class="btn-icon"
-      name="nav_ic_back"
+      name="zuo"
       size="0.4rem"
       color="#1A1A1A"
       @click.native="onLeftClick"
     ></my-icon>
     <div class="user-info">
-      <sp-image class="img" src="" />
+      <sp-image class="img" :src="headerData.avatar" />
       <div class="infos">
-        <p>周转</p>
-        我是一个牛人
+        <p>{{ headerData.createrName }}</p>
+        {{ headerData.contentText }}
       </div>
-      <div class="btn">
-        <sp-button>关注</sp-button>
+      <div class="btn" @click="follow">
+        <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
       </div>
     </div>
   </div>
@@ -26,6 +26,19 @@ export default {
   components: {
     [Image.name]: Image,
     [Button.name]: Button,
+  },
+  props: {
+    headerData: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
+  },
+  methods: {
+    follow() {
+      this.$emit('follow')
+    },
   },
 }
 </script>

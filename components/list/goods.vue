@@ -23,10 +23,10 @@
       style="margin-top: 10px"
       :loading="skeletonLoading"
     >
-      <div class="goodsbox">
-        <Newlist ref="list" :datalist="datalist" @load="pagefn"></Newlist>
-      </div>
     </sp-skeleton>
+    <div v-show="!skeletonLoading" class="goodsbox">
+      <Newlist ref="list" :datalist="datalist" @load="pagefn"></Newlist>
+    </div>
   </div>
 </template>
 
@@ -222,11 +222,14 @@ export default {
               }
             }
           }
+          if (data.goodsList.records.length === 0) {
+            this.$refs.list.finished = true
+          }
           if (this.datalist.length > 0) {
             this.datalist = this.datalist.concat(data.goodsList.records)
             if (
               data.goodsList.totalCount === this.datalist.length ||
-              data.goodsList.totalCount > this.datalist.length
+              data.goodsList.totalCount < this.datalist.length
             ) {
               this.$refs.list.finished = true
             }
@@ -235,10 +238,14 @@ export default {
           } else {
             this.datalist = data.goodsList.records
             this.skeletonLoading = false
-            if (data.goodsList.records.length < 10) {
+            if (
+              data.goodsList.totalCount === this.datalist.length ||
+              data.goodsList.totalCount < this.datalist.length
+            ) {
               this.$refs.list.finished = true
             }
           }
+          this.$refs.list.loading = false
           this.skeletonLoading = false
         })
         .catch((err) => {
@@ -251,6 +258,7 @@ export default {
       console.log(data, filrerName)
     },
     pagefn(val) {
+      console.log(val)
       this.formData.start = val
       this.getlist()
     },

@@ -11,7 +11,7 @@
           <sp-icon
             name="search"
             size="0.4rem"
-            color="#1A1A1A"
+            color="#1a1a1a"
             class="ss"
             @click="$router.push('/known/search')"
           />
@@ -19,7 +19,7 @@
             v-if="questionDetials.createrId === userInfo.userId"
             name="ellipsis"
             size="0.4rem"
-            color="#1A1A1A"
+            color="#1a1a1a"
             class="ellipsis"
             @click="moreOperate"
           />
@@ -100,12 +100,7 @@
           :class="questionDetials.isApplaudFlag === 1 ? 'act' : ''"
           @click="like('LIKE')"
         >
-          <my-icon
-            name="dianzan"
-            size="0.24rem"
-            :color="questionDetials.isApplaudFlag === 1 ? '1A1A1A' : ''"
-            class="myIcon"
-          />
+          <my-icon name="dianzan" size="0.24rem"></my-icon>
           好问题 {{ questionDetials.applaudCount }}
         </div>
       </div>
@@ -233,21 +228,11 @@
       <div class="down_slide_list">
         <ul>
           <li @click="editQues(questionDetials.id)">
-            <my-icon
-              name="bianji1"
-              size="1rem"
-              color="#1A1A1A"
-              class="myIcon"
-            />
+            <my-icon name="bianji1" size="1rem" color="#1a1a1a"></my-icon>
             <p>编辑</p>
           </li>
           <li @click="deleteQues(questionDetials.id)">
-            <my-icon
-              name="shanchu1"
-              size="1rem"
-              color="#1A1A1A"
-              class="myIcon"
-            />
+            <my-icon name="shanchu1" size="1rem" color="#1a1a1a"></my-icon>
             <p>删除</p>
           </li>
         </ul>
@@ -258,7 +243,7 @@
 </template>
 
 <script>
-import { Icon, Toast, List, Popup } from '@chipspc/vant-dgg'
+import { Icon, Toast, List, Popup, Dialog } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import { knownApi } from '@/api'
 export default {
@@ -268,6 +253,7 @@ export default {
     [Icon.name]: Icon,
     [List.name]: List,
     [Popup.name]: Popup,
+    [Dialog.name]: Dialog,
   },
   data() {
     return {
@@ -291,7 +277,6 @@ export default {
   },
   computed: {
     userInfo() {
-      console.log(this.$store.state.user)
       return this.$store.state.user
     },
   },
@@ -431,16 +416,16 @@ export default {
           if (res.code === 200) {
             if (type === 'LIKE') {
               if (this.questionDetials.isApplaudFlag === 1) {
-                Toast('点赞成功')
+                this.$xToast.show({ message: '点赞成功' })
               } else {
-                Toast('取消点赞')
+                this.$xToast.show({ message: '取消点赞' })
               }
             }
             if (type === 'COLLECT') {
               if (this.questionDetials.isCollectFlag === 1) {
-                Toast('收藏成功')
+                this.$xToast.show({ message: '收藏成功' })
               } else {
-                Toast('取消收藏')
+                this.$xToast.show({ message: '取消收藏' })
               }
             }
           } else {
@@ -473,26 +458,34 @@ export default {
       const baseUrl =
         'http://172.16.132.255:7001/service/nk/question_article/v2/delete.do'
       this.loading = true
-      this.$axios
-        .post(baseUrl, {
-          id: curId,
-          userId: this.userInfo.userId,
+      Dialog.confirm({
+        title: '提示',
+        message: '确定要删除吗？',
+      })
+        .then(() => {
+          this.$axios
+            .post(baseUrl, {
+              id: curId,
+              userId: this.userInfo.userId,
+            })
+            .then((res) => {
+              this.loading = false
+              if (res.code === 200) {
+                this.$xToast.show({ message: '删除成功' })
+                this.$router.replace({ path: '/known' })
+              } else {
+                Toast.fail({
+                  duration: 2000,
+                  message: '服务异常，请刷新重试！',
+                  forbidClick: true,
+                  className: 'my-toast-style',
+                })
+              }
+            })
         })
-        .then((res) => {
-          this.loading = false
-          if (res.code === 200) {
-            Toast('删除成功')
-            this.$router.push({
-              path: '/known',
-            })
-          } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
-          }
+        .catch((err) => {
+          console.log(err)
+          // on cancel
         })
     },
     sum(val) {

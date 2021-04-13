@@ -83,7 +83,6 @@
 
 <script>
 import { Image, Button, Toast, Skeleton } from '@chipspc/vant-dgg'
-import { parseTel } from '~/utils/common'
 import { planner } from '~/api'
 import imHandle from '~/mixins/imHandle'
 
@@ -127,34 +126,38 @@ export default {
     },
     // 规划师拨号
     async handleTel(mchUserId) {
+      // 规划师拨号需要先登录
       try {
-        const telData = await planner.newtel({
-          areaCode: this.city.code,
-          areaName: this.city.name,
-          customerUserId: this.$store.state.user.userId,
-          plannerId: mchUserId,
-          customerPhone: this.$cookies.get('mainAccountFull'),
-          requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
-          requireName: '',
-          // id: mchUserId,
-          // sensitiveInfoType: 'MCH_USER',
-        })
-        // 解密电话
-        if (telData.status === 1) {
-          const tel = telData.phone
-          window.location.href = `tel://${tel}`
-        } else if (telData.status === 0) {
-          Toast({
-            message: '当前人员已禁用，无法拨打电话',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
+        const isLogin = await this.judgeLoginMixin()
+        if (!isLogin) {
+          const telData = await planner.newtel({
+            areaCode: this.city.code,
+            areaName: this.city.name,
+            customerUserId: this.$store.state.user.userId,
+            plannerId: mchUserId,
+            customerPhone: this.$cookies.get('mainAccountFull'),
+            requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
+            requireName: '',
+            // id: mchUserId,
+            // sensitiveInfoType: 'MCH_USER',
           })
-        } else if (telData.status === 3) {
-          Toast({
-            message: '当前人员已离职，无法拨打电话',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
-          })
+          // 解密电话
+          if (telData.status === 1) {
+            const tel = telData.phone
+            window.location.href = `tel://${tel}`
+          } else if (telData.status === 0) {
+            Toast({
+              message: '当前人员已禁用，无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
+          } else if (telData.status === 3) {
+            Toast({
+              message: '当前人员已离职，无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
+          }
         }
       } catch (err) {
         console.log(err)
