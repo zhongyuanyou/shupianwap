@@ -29,7 +29,7 @@
           <p class="goods-name">
             {{ item.name }}
           </p>
-          <p v-if="item.tag && item.tag.length" class="goods-tag">
+          <p v-if="item.tag" class="goods-tag">
             <span
               v-for="(tagItem, index2) in item.tag"
               v-show="index2 < 3"
@@ -39,42 +39,40 @@
             >
           </p>
           <p
-            v-else-if="
-              item.salesGoodsSubVos &&
-              item.salesGoodsSubVos[0] &&
-              item.salesGoodsSubVos[0].serviceItems &&
-              item.salesGoodsSubVos[0].serviceItems.length
-            "
-            class="goods-tag goods-tag2"
+            v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length === 1"
+            class="goods-slogan goods-slogan1"
           >
-            <span
-              v-for="(serviceItem, index2) in item.salesGoodsSubVos[0]
-                .serviceItems"
-              v-show="index2 < 3"
-              :key="index2"
-              class="tag-item"
-              >{{ serviceItem.serviceItemName }}</span
-            >
+            {{
+              item.salesGoodsSubVos[0] &&
+              item.salesGoodsSubVos[0].goodsSubDetailsName
+            }}
           </p>
-          <p v-else class="goods-tag goods-tag3">套装</p>
-          <p class="goods-slogan goods-slogan1">
+          <p v-else class="goods-slogan goods-slogan1">
             {{ item.salesGoodsOperatings && item.salesGoodsOperatings.slogan }}
           </p>
           <div class="goods-price">
-            <span class="sales-proce">
-              <span class="big-value">{{
-                priceRest(0, item.price || item.salesPrice)
-              }}</span>
-              <span
+            <span
+              v-if="
+                item.price == 0 ||
+                item.price === '0.00' ||
+                item.price === '0.0' ||
+                item.price === '0'
+              "
+              class="sales-proce"
+              ><span class="big-value">面议</span></span
+            >
+            <span v-else class="sales-proce">
+              <span class="big-value">{{ item.price || item.salesPrice }}</span>
+              <!-- <span
                 v-if="priceRest(1, item.price || item.salesPrice)"
                 class="small-value"
                 >.{{ priceRest(1, item.price || item.salesPrice) }}</span
               >
-              <span class="unit">元</span>
+              <span class="unit">元</span> -->
             </span>
-            <span class="original-price"
+            <!-- <span class="original-price"
               >{{ item.goodsPrice || item.price || item.salesPrice }}元</span
-            >
+            > -->
           </div>
         </div>
       </div>
