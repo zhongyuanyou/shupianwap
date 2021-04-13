@@ -151,7 +151,6 @@ export default {
         initData.rollNavData = res.data.rollNavList ? res.data.rollNavList : []
       }
     } catch (error) {
-      redirect('/500')
       console.log(error)
     }
     return {
