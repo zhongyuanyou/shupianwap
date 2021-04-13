@@ -183,7 +183,6 @@ export default {
       })
     },
     priceRest(index = 0, price) {
-      console.log('price', price)
       const isFlot = price.indexOf('.')
       if (isFlot !== -1) {
         return price.split('.')[index]

@@ -103,7 +103,7 @@ export default {
     const fiexdAdCode = 'ad100234' // 顶部固定banner的code
     const rollAdCode = 'ad100237' // 导航下方轮播banner code
     const helpAdCode = 'ad113183' // 帮我找下方banner code(服务榜单)
-    const skillCode = 'ad113282'
+    const skillCode = 'ad113282' // 秒杀
     // 首屏请求导航和广告的参数
     const initReqParams = {
       locationCodeList: [fiexdAdCode, rollAdCode, helpAdCode, skillCode], // 广告位code列表
@@ -126,35 +126,12 @@ export default {
     // const skillData = []
     try {
       const res = await $axios.post(homeApi.initRequest, initReqParams)
-      if (res.code && res.data && res.data.advertising === 200) {
+      console.log('首屏渲染数据', res.data.advertising)
+      if (res.code && res.data && res.data.advertising) {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
         initData.rollBannerData = res.data.advertising[rollAdCode] || []
         initData.helpBannerData = res.data.advertising[helpAdCode] || []
-        initData.skillData = res.data.advertising[skillCode] || [
-          {
-            locationSort: 1,
-            materialList: [
-              {
-                materialTypeCode: 'GGLX_TP',
-                materialUrl:
-                  'https://cdn.shupian.cn/sp/cms/cfg4m044ea80000.png',
-                imgLink: '',
-                materialLink: 'https://shupian.dgg.cn/spread/companyRegister',
-                materialCode: 'src113387',
-                materialHeight: 109,
-                materialId: '8054898714890534912',
-                materialDescription: '',
-                materialName: 'wap首页秒杀广告',
-                androidLink: '',
-                materialWidth: 416,
-                iosLink: '',
-                linkType: 2,
-                wapLink: '',
-                executeParam: '',
-              },
-            ],
-          },
-        ]
+        initData.skillData = res.data.advertising[skillCode] || []
         initData.fiexdNavData = res.data.fixedNavList || []
         initData.rollNavData = res.data.rollNavList || []
       }
@@ -194,8 +171,6 @@ export default {
     )
     // 获取非首屏数据（广告 + 资讯）
     this.$axios.post(homeApi.asyncRequest, this.asyncReqParams).then((res) => {
-      console.log('非首屏渲染', res)
-      //   console.log('客户端：', res.data)
       this.adModuleOne.forEach((item) => {
         if (res.data.advertising[item]) {
           this.asyncData.preferential.push(res.data.advertising[item])
