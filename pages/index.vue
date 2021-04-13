@@ -3,7 +3,7 @@
     <Head
       ref="searchBannerRef"
       :page-scroll-top="pageScrollTop"
-      :fiexd-banner-data="[]"
+      :fiexd-banner-data="initData.fiexdBannerData"
     />
     <!-- S 搜索 + 大banner -->
     <!-- <SearchBanner
