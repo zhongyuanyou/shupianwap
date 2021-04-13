@@ -3,7 +3,7 @@
     <Head
       ref="searchBannerRef"
       :page-scroll-top="pageScrollTop"
-      :fiexd-banner-data="[]"
+      :fiexd-banner-data="initData.fiexdBannerData"
     />
     <!-- S 搜索 + 大banner -->
     <!-- <SearchBanner
@@ -97,13 +97,13 @@ export default {
   },
   async asyncData({ $axios, redirect, app }) {
     // 获取用户是否手动关闭过下载app的弹框，手动关闭过不再弹出
-    const closeAppOpen = app.$cookies.get('closeAppOpen', {
-      path: '/',
-    })
+    // const closeAppOpen = app.$cookies.get('closeAppOpen', {
+    //   path: '/',
+    // })
     const fiexdAdCode = 'ad100234' // 顶部固定banner的code
     const rollAdCode = 'ad100237' // 导航下方轮播banner code
     const helpAdCode = 'ad113183' // 帮我找下方banner code(服务榜单)
-    const skillCode = 'ad113282'
+    const skillCode = 'ad113282' // 秒杀
     // 首屏请求导航和广告的参数
     const initReqParams = {
       locationCodeList: [fiexdAdCode, rollAdCode, helpAdCode, skillCode], // 广告位code列表
@@ -122,50 +122,43 @@ export default {
       helpBannerData: [], // 帮我找广告
       fiexdNavData: [], // 固定导航
       rollNavData: [], // 滚动导航
+      skillData: [],
     }
-    // const skillData = []
     try {
       const res = await $axios.post(homeApi.initRequest, initReqParams)
-      if (res.code && res.data && res.data.advertising === 200) {
-        initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
-        initData.rollBannerData = res.data.advertising[rollAdCode] || []
-        initData.helpBannerData = res.data.advertising[helpAdCode] || []
-        initData.skillData = res.data.advertising[skillCode] || [
-          {
-            locationSort: 1,
-            materialList: [
-              {
-                materialTypeCode: 'GGLX_TP',
-                materialUrl:
-                  'https://cdn.shupian.cn/sp/cms/cfg4m044ea80000.png',
-                imgLink: '',
-                materialLink: 'https://shupian.dgg.cn/spread/companyRegister',
-                materialCode: 'src113387',
-                materialHeight: 109,
-                materialId: '8054898714890534912',
-                materialDescription: '',
-                materialName: 'wap首页秒杀广告',
-                androidLink: '',
-                materialWidth: 416,
-                iosLink: '',
-                linkType: 2,
-                wapLink: '',
-                executeParam: '',
-              },
-            ],
-          },
-        ]
-        initData.fiexdNavData = res.data.fixedNavList || []
-        initData.rollNavData = res.data.rollNavList || []
+      if (res.code && res.data) {
+        if (res.data.advertising) {
+          initData.fiexdBannerData =
+            res.data.advertising && res.data.advertising[fiexdAdCode]
+              ? res.data.advertising[fiexdAdCode]
+              : []
+          initData.rollBannerData =
+            res.data.advertising && res.data.advertising[rollAdCode]
+              ? res.data.advertising[rollAdCode]
+              : []
+          initData.helpBannerData =
+            res.data.advertising && res.data.advertising[helpAdCode]
+              ? res.data.advertising[helpAdCode]
+              : []
+          initData.skillData =
+            res.data.advertising && res.data.advertising[skillCode]
+              ? res.data.advertising[skillCode]
+              : []
+        }
+        initData.fiexdNavData = res.data.fixedNavList
+          ? res.data.fixedNavList
+          : []
+        initData.rollNavData = res.data.rollNavList ? res.data.rollNavList : []
+        initData.ddd = res.ddddd
+      }
+      return {
+        initData,
       }
     } catch (error) {
       console.log(error)
-      redirect('/500')
-    }
-    return {
-      initData,
-      // skillData,
-      closeAppOpen: true,
+      return {
+        initData,
+      }
     }
   },
   data() {
@@ -181,10 +174,19 @@ export default {
         terminalCode: TERMINAL_CODE.wap, // 查询资讯的终端code
         locationCodeList: [], // 广告编码
       },
+      closeAppOpen: true,
       asyncData: {
         preferential: [], // 限时特惠
         information: [], // 资讯精选
         rotationAd: [], // 热门服务
+      },
+      initData: {
+        fiexdBannerData: [], // 固定广告
+        rollBannerData: [], // 轮播广告
+        helpBannerData: [], // 帮我找广告
+        fiexdNavData: [], // 固定导航
+        rollNavData: [], // 滚动导航
+        skillData: [],
       },
     }
   },
@@ -192,22 +194,14 @@ export default {
     this.asyncReqParams.locationCodeList = this.adModuleOne.concat(
       this.adModuleTwo
     )
-    // 获取非首屏数据（广告 + 资讯）
-    this.$axios.post(homeApi.asyncRequest, this.asyncReqParams).then((res) => {
-      console.log('非首屏渲染', res)
-      //   console.log('客户端：', res.data)
-      this.adModuleOne.forEach((item) => {
-        if (res.data.advertising[item]) {
-          this.asyncData.preferential.push(res.data.advertising[item])
-        }
-      })
-      this.asyncData.information = res.data.information
-      this.adModuleTwo.forEach((item) => {
-        if (res.data.advertising[item]) {
-          this.asyncData.rotationAd.push(res.data.advertising[item])
-        }
-      })
+    this.closeAppOpen = this.$cookies.get('closeAppOpen', {
+      path: '/',
     })
+  },
+  mounted() {
+    if (!this.initData.fiexdNavData.length) {
+      this.getHomeData()
+    }
   },
   methods: {
     // 用户手动关闭下载app提示弹框后，记录状态到cookie，刷新页面不再弹出，使用默认过期时间（关闭浏览器过期，下次再访问，再次弹出）
@@ -216,6 +210,82 @@ export default {
       this.$cookies.set('closeAppOpen', true, {
         path: '/',
       })
+    },
+    async getHomeData() {
+      const fiexdAdCode = 'ad100234' // 顶部固定banner的code
+      const rollAdCode = 'ad100237' // 导航下方轮播banner code
+      const helpAdCode = 'ad113183' // 帮我找下方banner code(服务榜单)
+      const skillCode = 'ad113282' // 秒杀
+      // 首屏请求导航和广告的参数
+      const initReqParams = {
+        locationCodeList: [fiexdAdCode, rollAdCode, helpAdCode, skillCode], // 广告位code列表
+        rollPage: 1, // 滚动导航当前页
+        rollLimit: 1000, // 滚动导航每页条数
+        fixedPage: 1, // 固定导航当前页
+        fixedLimit: 5, // 固定导航每页条数
+        fixedNavCategoryCode: 'nav100007', // 固定导航分类code
+        rollNavCategoryCode: 'nav100012', // 滚动导航分类code
+        platformCode: PLATFORM_CODE.wap, // 平台code
+        terminalCode: TERMINAL_CODE.wap, // 终端code
+      }
+      const initData = {
+        fiexdBannerData: [], // 固定广告
+        rollBannerData: [], // 轮播广告
+        helpBannerData: [], // 帮我找广告
+        fiexdNavData: [], // 固定导航
+        rollNavData: [], // 滚动导航
+        skillData: [],
+      }
+      try {
+        const res = await this.$axios.post(homeApi.initRequest, initReqParams)
+        if (res.code && res.data) {
+          if (res.data.advertising) {
+            initData.fiexdBannerData =
+              res.data.advertising && res.data.advertising[fiexdAdCode]
+                ? res.data.advertising[fiexdAdCode]
+                : []
+            initData.rollBannerData =
+              res.data.advertising && res.data.advertising[rollAdCode]
+                ? res.data.advertising[rollAdCode]
+                : []
+            initData.helpBannerData =
+              res.data.advertising && res.data.advertising[helpAdCode]
+                ? res.data.advertising[helpAdCode]
+                : []
+            initData.skillData =
+              res.data.advertising && res.data.advertising[skillCode]
+                ? res.data.advertising[skillCode]
+                : []
+          }
+          initData.fiexdNavData = res.data.fixedNavList
+            ? res.data.fixedNavList
+            : []
+          initData.rollNavData = res.data.rollNavList
+            ? res.data.rollNavList
+            : []
+          this.initData = initData
+        }
+      } catch (error) {
+        console.log('error', error)
+      }
+    },
+    getMoreData() {
+      // 获取非首屏数据（广告 + 资讯）
+      this.$axios
+        .post(homeApi.asyncRequest, this.asyncReqParams)
+        .then((res) => {
+          this.adModuleOne.forEach((item) => {
+            if (res.data.advertising[item]) {
+              this.asyncData.preferential.push(res.data.advertising[item])
+            }
+          })
+          this.asyncData.information = res.data.information
+          this.adModuleTwo.forEach((item) => {
+            if (res.data.advertising[item]) {
+              this.asyncData.rotationAd.push(res.data.advertising[item])
+            }
+          })
+        })
     },
   },
   head: {

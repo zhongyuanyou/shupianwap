@@ -202,7 +202,6 @@ export default {
       },
       immediate: true,
     },
-
     formatItems: {
       handler(newVal) {
         if (newVal) {
@@ -219,7 +218,6 @@ export default {
   mounted() {},
   methods: {
     handleClickNav(navIndex) {
-      console.log('navIndex:', navIndex)
       const navItem = (this.formatItems && this.formatItems[navIndex]) || {}
       this.$set(this.selectData, 0, {
         id: navItem.id,
@@ -228,8 +226,7 @@ export default {
         [this.label]: navItem.text,
       })
       this.$set(this.selectData, 1, { services: [this.childrenList[0]] })
-
-      this.$emit('select', clone(this.selectData, true))
+      this.$emit('navselect', clone(this.selectData, true))
     },
     handleClickItem(item = {}) {
       console.log('item:', item)

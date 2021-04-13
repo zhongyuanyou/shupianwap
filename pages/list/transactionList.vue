@@ -11,16 +11,6 @@
       <div slot="left" class="nav-back" @click="$router.go(-1)">
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
-      <div
-        slot="right"
-        v-md:p_IMClick
-        data-im_type="售前"
-        data-commodity_type="交易商品"
-        class="info"
-        @click="jumpImMixin"
-      >
-        <my-icon name="nav_ic_msg" size="0.40rem" color="#1a1a1a"></my-icon>
-      </div>
     </Search>
     <!--E搜索框-->
     <!-- Stab -->
@@ -30,7 +20,7 @@
       @activeItem="getFilterHandle"
     /> -->
     <!-- Etab -->
-    <goods ref="goods" :searchkey="currentInputText" :height="height" />
+    <goods ref="goods" :searchkey="currentInputText" />
   </div>
 </template>
 
@@ -63,8 +53,6 @@ export default {
     }
   },
   mounted() {
-    this.height = this.$refs.search.$el.offsetHeight
-    console.log(this.height, 124213)
     document.body.addEventListener('focusout', () => {
       // 监听软键盘关闭事件
       // 解決ios端用微信打开页面，收起软键盘后，底部出现空白问题
@@ -79,10 +67,6 @@ export default {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
-    getFilterHandle(data, filrerName) {
-      console.log(data, filrerName)
-    },
-    rest() {},
     searchKeydownHandle() {
       this.$refs.goods.formData.start = 1
       this.$refs.goods.datalist = []
@@ -143,6 +127,9 @@ export default {
         color: #222222;
       }
     }
+  }
+  /deep/.goodsbox {
+    height: calc(100vh - 210px);
   }
 }
 </style>

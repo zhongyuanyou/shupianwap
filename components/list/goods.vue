@@ -5,7 +5,7 @@
       :filter-data="jyFilterData"
       :classification="items.typeData"
       :active_data="itemsclass"
-      :price_list="items.price"
+      :pricelist="items.price"
       :sort="items.sortFilter"
       :sortactive="sortactive"
       @classfn="classfn"
@@ -13,19 +13,25 @@
       @sortfn="sortfn"
       @reset="reset"
       @confirm="confirm"
+      @navselect="navselect"
     />
-    <div class="listbox" :style="{ height: listboxheight + 'px' }">
-      <Newlist
-        ref="list"
-        :datalist="datalist"
-        @load="pagefn"
-        @Refresh="Refresh"
-      ></Newlist>
-    </div>
+    <sp-skeleton
+      v-for="_index in 10"
+      :key="_index"
+      title
+      :row="3"
+      style="margin-top: 10px"
+      :loading="skeletonLoading"
+    >
+      <div class="goodsbox">
+        <Newlist ref="list" :datalist="datalist" @load="pagefn"></Newlist>
+      </div>
+    </sp-skeleton>
   </div>
 </template>
 
 <script>
+import { Skeleton } from '@chipspc/vant-dgg'
 import Newlist from '@/components/list/Newlist'
 import Filters from '@/components/list/filters'
 import searchList from '@/mixins/searchList'
@@ -35,6 +41,7 @@ export default {
   components: {
     Filters,
     Newlist,
+    [Skeleton.name]: Skeleton,
   },
   mixins: [searchList],
   props: {
@@ -49,7 +56,6 @@ export default {
   },
   data() {
     return {
-      listboxheight: 700,
       listShow: true,
       loading: false,
       finished: false,
@@ -99,16 +105,13 @@ export default {
         maxPrice: '',
         activeItems: {},
       },
+      classcode: this.$route.query,
     }
   },
   computed: {},
   watch: {},
   mounted() {
-    this.$nextTick(() => {
-      this.listboxheight =
-        document.documentElement.clientHeight -
-        (this.heigth + this.$refs.dropDownMenu.$el.offsetHeight)
-    })
+    this.getlist()
   },
   methods: {
     confirm() {
@@ -117,10 +120,17 @@ export default {
       this.formData.needTypes = 0
       this.formData.price = this.priceactive
       this.formData.sort = this.sortactive
-      this.formData.class = this.itemsclass[1].services
+      this.formData.class = this.itemsclass
       this.getlist()
     },
-
+    navselect(item) {
+      if (item[0].id === -1 && item[0].name === '不限') {
+        this.jyFilterData[0].name = '全部分类'
+      } else {
+        this.jyFilterData[0].name = item[0].name
+        this.itemsclass = item
+      }
+    },
     reset() {
       this.priceactive = {
         minPrice: '',
@@ -141,26 +151,26 @@ export default {
       if (this.priceactive.activeItems) {
         this.jyFilterData[1].name = this.priceactive.activeItems.name
       }
-      console.log(item, 123)
-      console.log(items, 321)
     },
     classfn(item) {
       if (item[1].services.length && item[1].services.length > 0) {
         if (
-          item[1].services[0].id === -1 &&
-          item[1].services[0].name === '不限'
+          item[1].services[0].id !== -1 &&
+          item[1].services[0].name !== '不限'
         ) {
-          this.jyFilterData[0].name = '全部分类'
-        } else {
           let arr = item[1].services.map((x) => {
             return x.name
           })
           arr = arr.toString()
           this.jyFilterData[0].name = arr
+        } else if (item[0].id !== -1 && item[0].name !== '不限') {
+          this.jyFilterData[0].name = item[0].name
+        } else {
+          this.jyFilterData[0].name = '全部分类'
         }
       }
       this.itemsclass = item
-      // console.log(this.itemsclass, 123)
+      console.log(this.itemsclass, 123)
     },
     sortfn(item) {
       this.sortactive = item
@@ -176,6 +186,41 @@ export default {
         .then((data) => {
           if (this.formData.needTypes === 1) {
             this.items = data
+            if (this.classcode) {
+              for (let i = 0; i < this.items.typeData.length; i++) {
+                if (this.classcode.navcode === this.items.typeData[i].id) {
+                  this.itemsclass[0].id = this.items.typeData[i].id
+                  this.itemsclass[0].name = this.items.typeData[i].name
+                  this.itemsclass[0].text = this.items.typeData[i].text
+                  if (this.classcode.classcode) {
+                    this.classcode.classcode = this.classcode.classcode.split(
+                      ','
+                    )
+                    this.itemsclass[1].services = []
+                    for (
+                      let b = 0;
+                      b < this.items.typeData[i].children.length;
+                      b++
+                    ) {
+                      for (
+                        let a = 0;
+                        a < this.classcode.classcode.length;
+                        a++
+                      ) {
+                        if (
+                          this.items.typeData[i].children[b].id ===
+                          this.classcode.classcode[a]
+                        ) {
+                          this.itemsclass[1].services.push(
+                            this.items.typeData[i].children[b]
+                          )
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
           if (this.datalist.length > 0) {
             this.datalist = this.datalist.concat(data.goodsList.records)
@@ -185,36 +230,27 @@ export default {
             ) {
               this.$refs.list.finished = true
             }
-            this.$refs.list.isLoading = false
+            this.skeletonLoading = false
             this.$refs.list.loading = false
           } else {
             this.datalist = data.goodsList.records
-            this.$refs.list.loading = false
-            this.$refs.list.isLoading = false
+            this.skeletonLoading = false
             if (data.goodsList.records.length < 10) {
               this.$refs.list.finished = true
             }
           }
+          this.skeletonLoading = false
         })
         .catch((err) => {
-          this.$refs.list.isLoading = false
-          // this.$refs.list.loading = false
-          console.log(err)
+          console.log(err, 123)
+          this.skeletonLoading = false
+          this.$refs.list.loading = false
         })
     },
     getFilterHandle(data, filrerName) {
       console.log(data, filrerName)
     },
-    Refresh() {
-      this.datalist = []
-      this.page = 1
-      this.$refs.list.page = 1
-      this.$refs.list.finished = false
-      this.getlist()
-      this.formData.needTypes = 0
-    },
     pagefn(val) {
-      console.log(val)
       this.formData.start = val
       this.getlist()
     },
@@ -264,7 +300,10 @@ export default {
     font-size: 30px;
     padding: 0 40px;
   }
-  .listbox {
+  // /deep/.sp-ellipsis {
+  //   width: 87%;
+  // }
+  .goodsbox {
     overflow-y: auto;
     padding-bottom: 20px;
     background: #e4e4e4;
@@ -312,9 +351,9 @@ export default {
       display: inline-block;
       width: 100%;
       height: 100%;
-      line-height: 80px;
-      padding: 0 28px;
-      font-size: 28px;
+      line-height: 0.8rem;
+      padding: 0 0.28rem;
+      font-size: 0.28rem;
       font-family: PingFang SC;
       font-weight: 400;
       color: #222222;

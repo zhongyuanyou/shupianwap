@@ -13,13 +13,7 @@
       </p>
     </div>
     <div class="list">
-      <List
-        ref="list"
-        :list="list"
-        @Refresh="Refresh"
-        @load="pagefn"
-        @Jump="jump"
-      ></List>
+      <List ref="list" :list="list" @load="pagefn" @Jump="jump"></List>
     </div>
   </div>
 </template>
@@ -175,7 +169,7 @@ export default {
     }
   }
   > .list {
-    height: calc(100vh - 88px - 80px);
+    height: calc(100vh - 88px - 88px);
     overflow: auto;
   }
 }

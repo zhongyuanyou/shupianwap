@@ -1,108 +1,102 @@
 <template>
   <div class="listbox">
-    <PullRefresh
-      v-model="isLoading"
-      :success-text="`刷新成功`"
-      @refresh="onRefresh"
+    <List
+      v-model="loading"
+      :finished="finished"
+      :finished-text="list.length == 0 ? '' : '没有更多了'"
+      @load="onLoad"
     >
-      <List
-        v-model="loading"
-        :finished="finished"
-        :finished-text="list.length == 0 ? '' : '没有更多了'"
-        @load="onLoad"
-      >
-        <div v-for="(item, index) in list" :key="index" class="list">
-          <div class="head">
-            <h1>{{ item.contractName }}</h1>
-            <p
-              v-if="item.contractStatus == 'STRUTS_YWC'"
-              :style="{
-                color:
-                  item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
-              }"
-            >
-              已完成
-            </p>
-            <p
-              v-if="item.contractStatus == 'STRUTS_CG'"
-              :style="{
-                color:
-                  item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
-              }"
-            >
-              待签署
-            </p>
-            <p
-              v-if="item.contractStatus == 'STRUTS_STRUTS_QSZ'"
-              :style="{
-                color:
-                  item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
-              }"
-            >
-              签署中
-            </p>
-            <p
-              v-if="item.contractStatus == 'STRUTS_YJQ'"
-              :style="{
-                color:
-                  item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
-              }"
-            >
-              已拒签
-            </p>
-            <p
-              v-if="item.contractStatus == 'STRUTS_YYQ'"
-              :style="{
-                color:
-                  item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
-              }"
-            >
-              已逾期
-            </p>
-            <p
-              v-if="item.contractStatus == 'STRUTS_YZF'"
-              :style="{
-                color:
-                  item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
-              }"
-            >
-              已作废
+      <div v-for="(item, index) in list" :key="index" class="list">
+        <div class="head">
+          <h1>{{ item.contractName }}</h1>
+          <p
+            v-if="item.contractStatus == 'STRUTS_YWC'"
+            :style="{
+              color:
+                item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
+            }"
+          >
+            已完成
+          </p>
+          <p
+            v-if="item.contractStatus == 'STRUTS_CG'"
+            :style="{
+              color:
+                item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
+            }"
+          >
+            待签署
+          </p>
+          <p
+            v-if="item.contractStatus == 'STRUTS_STRUTS_QSZ'"
+            :style="{
+              color:
+                item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
+            }"
+          >
+            签署中
+          </p>
+          <p
+            v-if="item.contractStatus == 'STRUTS_YJQ'"
+            :style="{
+              color:
+                item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
+            }"
+          >
+            已拒签
+          </p>
+          <p
+            v-if="item.contractStatus == 'STRUTS_YYQ'"
+            :style="{
+              color:
+                item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
+            }"
+          >
+            已逾期
+          </p>
+          <p
+            v-if="item.contractStatus == 'STRUTS_YZF'"
+            :style="{
+              color:
+                item.contractStatus == 'STRUTS_YWC' ? '#FE8C29' : '#999999',
+            }"
+          >
+            已作废
+          </p>
+        </div>
+        <div class="data">
+          <div class="tit">
+            <p>合同编号：</p>
+            <p>{{ item.contractNo || '暂无' }}</p>
+          </div>
+          <div class="tit">
+            <p>合同金额：</p>
+            <p>
+              {{ item.contractMoney ? item.contractMoney + '元' : '暂无' }}
             </p>
           </div>
-          <div class="data">
-            <div class="tit">
-              <p>合同编号：</p>
-              <p>{{ item.contractNo || '暂无' }}</p>
-            </div>
-            <div class="tit">
-              <p>合同金额：</p>
-              <p>
-                {{ item.contractMoney ? item.contractMoney + '元' : '暂无' }}
-              </p>
-            </div>
-            <div class="tit">
-              <p>签署时间：</p>
-              <p>{{ item.createTime || '暂无' }}</p>
-            </div>
-            <div class="tit">
-              <p>订单编号：</p>
-              <p>{{ item.orderNo || '暂无' }}</p>
-            </div>
+          <div class="tit">
+            <p>签署时间：</p>
+            <p>{{ item.createTime || '暂无' }}</p>
           </div>
-          <div class="btn">
-            <p @click="jump(item.orderId)">订单详情</p>
-            <p @click.stop="btn(item)">
-              {{
-                item.contractStatus === 'STRUTS_YWC' ||
-                item.contractStatus === 'STRUTS_QSZ'
-                  ? '查看合同'
-                  : '签署合同'
-              }}
-            </p>
+          <div class="tit">
+            <p>订单编号：</p>
+            <p>{{ item.orderNo || '暂无' }}</p>
           </div>
         </div>
-      </List>
-    </PullRefresh>
+        <div class="btn">
+          <p @click="jump(item.orderId)">订单详情</p>
+          <p @click.stop="btn(item)">
+            {{
+              item.contractStatus === 'STRUTS_YWC' ||
+              item.contractStatus === 'STRUTS_QSZ'
+                ? '查看合同'
+                : '签署合同'
+            }}
+          </p>
+        </div>
+      </div>
+    </List>
     <div v-show="list.length < 1" class="none">
       <img src="https://img10.dgg.cn/pt03/wap/cmxakdtkqxs0000.png" alt="" />
       <p>暂无合同</p>
@@ -111,11 +105,10 @@
 </template>
 
 <script>
-import { PullRefresh, List } from '@chipspc/vant-dgg'
+import { List } from '@chipspc/vant-dgg'
 export default {
   name: 'ContractListcomponents',
   components: {
-    PullRefresh,
     List,
   },
   props: {
@@ -146,12 +139,6 @@ export default {
     },
     btn(item) {
       this.$emit('Jump', item)
-    },
-    onRefresh() {
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.$emit('Refresh')
     },
     onLoad() {
       this.$emit('load', this.page)

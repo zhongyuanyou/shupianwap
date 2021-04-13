@@ -23,13 +23,18 @@
       >
         <div class="goods-lable-img">
           <span v-if="false" class="lable">2千元成交礼</span>
-          <sp-image v-lazy="item.img"></sp-image>
+          <sp-image :src="item.img"></sp-image>
         </div>
         <div class="goods-info">
           <p class="goods-name">
             {{ item.name }}
           </p>
-          <p class="goods-tag">
+          <p v-if="item.tag" class="goods-tag">
+            <span
+              v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1"
+              class="tag-item tag-tc"
+              >套餐</span
+            >
             <span
               v-for="(tagItem, index2) in item.tag"
               v-show="index2 < 3"
@@ -39,28 +44,40 @@
             >
           </p>
           <p
-            class="goods-sloga"
-            :class="
-              !item.tag || !item.tag.length ? 'goods-slogan2' : 'goods-slogan1'
-            "
+            v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length === 1"
+            class="goods-slogan goods-slogan1"
           >
+            {{
+              item.salesGoodsSubVos[0] &&
+              item.salesGoodsSubVos[0].goodsSubDetailsName
+            }}
+          </p>
+          <p v-else class="goods-slogan goods-slogan1">
             {{ item.salesGoodsOperatings && item.salesGoodsOperatings.slogan }}
           </p>
           <div class="goods-price">
-            <span class="sales-proce">
-              <span class="big-value">{{
-                priceRest(0, item.price || item.salesPrice)
-              }}</span>
-              <span
+            <span
+              v-if="
+                item.price == 0 ||
+                item.price === '0.00' ||
+                item.price === '0.0' ||
+                item.price === '0'
+              "
+              class="sales-proce"
+              ><span class="big-value">面议</span></span
+            >
+            <span v-else class="sales-proce">
+              <span class="big-value">{{ item.price || item.salesPrice }}</span>
+              <!-- <span
                 v-if="priceRest(1, item.price || item.salesPrice)"
                 class="small-value"
                 >.{{ priceRest(1, item.price || item.salesPrice) }}</span
               >
-              <span class="unit">元</span>
+              <span class="unit">元</span> -->
             </span>
-            <span class="original-price"
+            <!-- <span class="original-price"
               >{{ item.goodsPrice || item.price || item.salesPrice }}元</span
-            >
+            > -->
           </div>
         </div>
       </div>
@@ -183,7 +200,6 @@ export default {
       })
     },
     priceRest(index = 0, price) {
-      console.log('price', price)
       const isFlot = price.indexOf('.')
       if (isFlot !== -1) {
         return price.split('.')[index]
@@ -408,6 +424,11 @@ export default {
         color: #5c7499;
         margin-right: 10px;
       }
+      .tag-tc {
+        background: #fc4e41;
+        border-radius: 4px;
+        color: white;
+      }
     }
     .goods-slogan {
       color: #999;
@@ -475,7 +496,7 @@ export default {
         display: flex;
         align-items: baseline;
         .big-value {
-          font-size: 36px;
+          font-size: 32px;
           font-family: PingFang SC;
           font-weight: bold;
           color: #ec5330;

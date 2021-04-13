@@ -230,10 +230,15 @@ export default {
     }
   }
   .scroll-container {
+    position: relative;
     padding: 20px 20px 0 20px;
     margin: 12px auto 0 auto;
+    position: relative;
     .inner {
       background: white;
+      border-radius: 16px;
+      background: white;
+      padding-bottom: 40px;
       border-radius: 16px;
     }
   }
@@ -296,6 +301,9 @@ export default {
     }
   }
   .scroll-box {
+    position: absolute;
+    left: 0;
+    bottom: 0;
     display: flex;
     justify-content: center;
     width: 100%;

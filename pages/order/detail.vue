@@ -62,13 +62,13 @@
           元
         </span>
       </p>
-      <p class="last-money">
+      <!-- <p class="last-money">
         已付金额:
         <span class="pay-money">
           {{ orderData.orderPaidMoney || 0 }}
           元
         </span>
-      </p>
+      </p> -->
     </div>
 
     <div class="order-info">
@@ -91,7 +91,7 @@
           orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
           'ORDER_CUS_PAY_STATUS_PART_PAID'
         " -->
-      <div v-if="cusOrderStatusType !== 4" class="pay-detail-area">
+      <!-- <div v-if="cusOrderStatusType !== 4" class="pay-detail-area">
         <p
           v-for="(item, index) in orderPayList"
           :key="index"
@@ -149,7 +149,7 @@
           >
           <span v-else class="span3">待支付</span>
         </p>
-      </div>
+      </div> -->
       <!-- <p class="order-item">
         <span class="label">合同</span>
         <span class="text">{{ orderData.contractName || '暂无' }}</span>

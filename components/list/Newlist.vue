@@ -1,40 +1,36 @@
 <template>
   <div class="Newlist">
-    <sp-pull-refresh
-      v-model="isLoading"
-      :success-text="`刷新成功`"
-      @refresh="onRefresh"
+    <sp-list
+      v-model="loading"
+      :finished="finished"
+      :finished-text="datalist.length == 0 ? '' : '没有更多了'"
+      @load="onLoad"
     >
-      <sp-list
-        v-model="loading"
-        :finished="finished"
-        :finished-text="datalist.length == 0 ? '' : '没有更多了'"
-        @load="onLoad"
+      <div
+        v-for="(item, index) in datalist"
+        :key="index"
+        class="list"
+        @click="godeatil(item)"
       >
-        <div
-          v-for="(item, index) in datalist"
-          :key="index"
-          class="list"
-          @click="godeatil(item)"
-        >
-          <div class="left">
-            <img :src="item.img" alt="" />
-          </div>
-          <div class="right">
-            <h1>{{ item.name }}</h1>
-            <div v-if="item.tag.length > 0" class="tag">
-              <p v-for="(tagitem, tagindex) in item.tag" :key="tagindex">
-                {{ tagitem.tagName }}
-              </p>
-            </div>
-            <p class="describe">
-              {{ item.classCodeLevelName }}
-            </p>
-            <p class="price">{{ item.price }}元</p>
-          </div>
+        <div class="left">
+          <img :src="item.img" alt="" />
         </div>
-      </sp-list>
-    </sp-pull-refresh>
+        <div class="right">
+          <h1>{{ item.name }}</h1>
+          <div v-if="item.tag.length > 0" class="tag">
+            <p v-for="(tagitem, tagindex) in item.tag" :key="tagindex">
+              {{ tagitem.tagName }}
+            </p>
+          </div>
+          <p class="describe">
+            {{ item.attr }}
+          </p>
+          <p class="price">
+            {{ item.price === '0.00' ? '面议' : `${item.price}元` }}
+          </p>
+        </div>
+      </div>
+    </sp-list>
     <div v-show="datalist.length < 1" class="none">
       <img src="https://img10.dgg.cn/pt03/wap/cmxakdtkqxs0000.png" alt="" />
       <p>暂无商品</p>
@@ -85,10 +81,6 @@ export default {
       })
     },
     getlist() {},
-    onRefresh() {
-      this.loading = true
-      this.$emit('Refresh')
-    },
     onLoad() {
       this.$emit('load', this.pages)
       this.pages++
@@ -142,6 +134,11 @@ export default {
         display: flex;
         align-items: center;
         > p {
+          max-width: 30%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          box-sizing: border-box;
           height: 32px;
           background: #f0f2f5;
           border-radius: 4px;
