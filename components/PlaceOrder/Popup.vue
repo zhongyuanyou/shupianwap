@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import { Popup, Icon, RadioGroup, Radio } from '@chipspc/vant-dgg'
+import { Popup, Icon, RadioGroup, Radio, Toast } from '@chipspc/vant-dgg'
 import { order } from '@/api/index'
 export default {
   name: 'PlaceOrderPopup',
@@ -200,10 +200,12 @@ export default {
           this.$parent.coupon = `-${this.checkarr.reducePrice}`
         })
         .catch((e) => {
-          if (e.code !== 200) {
-            this.$xToast.show(e.message)
-            console.log(e)
-          }
+          Toast({
+            message: e.data.error,
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+            overlay: true,
+          })
         })
     },
     checkitem(item) {
