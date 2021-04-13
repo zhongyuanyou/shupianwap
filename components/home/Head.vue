@@ -1,6 +1,9 @@
 <template>
   <div class="page-head">
-    <div class="bg-area" :class="fiexdBannerData.length ? '' : 'bg-activity'">
+    <div
+      class="bg-area"
+      :class="fiexdBannerData.length ? 'bg-area2' : 'bg-activity'"
+    >
       <span class="logo"></span>
       <span class="span-2">薯片</span>
       <span class="span-3">·</span>
@@ -214,6 +217,14 @@ export default {
       }
     }
   }
+  .bg-area2 {
+    height: 1.52rem;
+    border-radius: 0;
+    background: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
   .bg-activity {
     height: 152px;
 
@@ -264,6 +275,12 @@ export default {
         width: 100%;
         height: 100%;
       }
+    }
+  }
+  .sp-swipe-item {
+    img {
+      width: 100%;
+      height: 100%;
     }
   }
 }
