@@ -129,7 +129,7 @@ export default {
       // 规划师拨号需要先登录
       try {
         const isLogin = await this.judgeLoginMixin()
-        if (!isLogin) {
+        if (isLogin) {
           const telData = await planner.newtel({
             areaCode: this.city.code,
             areaName: this.city.name,
@@ -158,6 +158,12 @@ export default {
               icon: 'popup_ic_fail',
             })
           }
+        } else {
+          Toast({
+            message: '请先登录账号',
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+          })
         }
       } catch (err) {
         console.log(err)
