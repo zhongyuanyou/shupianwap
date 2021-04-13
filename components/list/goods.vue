@@ -16,12 +16,7 @@
       @navselect="navselect"
     />
     <div class="listbox" :style="{ height: listboxheight + 'px' }">
-      <Newlist
-        ref="list"
-        :datalist="datalist"
-        @load="pagefn"
-        @Refresh="Refresh"
-      ></Newlist>
+      <Newlist ref="list" :datalist="datalist" @load="pagefn"></Newlist>
     </div>
   </div>
 </template>
@@ -270,6 +265,9 @@ export default {
     font-weight: bold;
     font-size: 30px;
     padding: 0 40px;
+  }
+  /deep/.sp-ellipsis {
+    width: 87%;
   }
   .listbox {
     overflow-y: auto;

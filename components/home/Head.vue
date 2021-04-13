@@ -161,6 +161,8 @@ export default {
       left: 20px;
       top: 49px;
       font-size: 36px;
+      border-radius: 50%;
+      overflow: hidden;
     }
     .span-2 {
       margin-left: 60px;
@@ -196,7 +198,7 @@ export default {
       color: white;
       font-size: 28px;
       padding-left: 30px;
-      top: 54px;
+      top: 52px;
       font-size: 28px;
       .local-icon {
         transform: scale(0.6);
@@ -211,7 +213,7 @@ export default {
         background-size: 100% 100%;
         content: '';
         left: 0;
-        top: 6px;
+        top: 8px;
         width: 18px;
         height: 24px;
       }
