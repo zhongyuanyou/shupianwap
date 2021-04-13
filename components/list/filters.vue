@@ -32,7 +32,6 @@
         </div>
 
         <BottomConfirm
-          v-if="item.name != '排序'"
           @resetFilters="reset"
           @confirmFilters="confirm"
         ></BottomConfirm>
