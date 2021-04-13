@@ -20,7 +20,7 @@
       @activeItem="getFilterHandle"
     /> -->
     <!-- Etab -->
-    <goods ref="goods" :searchkey="currentInputText" :height="height" />
+    <goods ref="goods" :searchkey="currentInputText" />
   </div>
 </template>
 
@@ -53,7 +53,6 @@ export default {
     }
   },
   mounted() {
-    this.height = this.$refs.search.$el.offsetHeight
     document.body.addEventListener('focusout', () => {
       // 监听软键盘关闭事件
       // 解決ios端用微信打开页面，收起软键盘后，底部出现空白问题
@@ -68,10 +67,6 @@ export default {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
-    getFilterHandle(data, filrerName) {
-      console.log(data, filrerName)
-    },
-    rest() {},
     searchKeydownHandle() {
       this.$refs.goods.formData.start = 1
       this.$refs.goods.datalist = []
@@ -132,6 +127,9 @@ export default {
         color: #222222;
       }
     }
+  }
+  /deep/.goodsbox {
+    height: calc(100vh - 210px);
   }
 }
 </style>

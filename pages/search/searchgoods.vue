@@ -165,7 +165,9 @@ export default {
   },
   mounted() {
     this.height =
-      this.$refs.search.$el.offsetHeight + this.$refs.tabs.$el.offsetHeight
+      this.$refs.search.$el.offsetHeight +
+      this.$refs.tabs.$el.offsetHeight +
+      115
     // 当前页面公共属性注册
     // const param = {
     //   platform_type: 'wap端', // 平台类型：App，H5，Web
@@ -289,6 +291,9 @@ export default {
   width: 100%;
   height: 100%;
   background: #e4e4e4;
+  /deep/.goodsbox {
+    height: calc(100vh - 290px);
+  }
   .search-content {
     padding: 16px 32px;
     &.has-input {

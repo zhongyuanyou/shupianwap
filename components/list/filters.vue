@@ -6,11 +6,12 @@
         :key="index"
         :title="item.name"
       >
-        <div v-if="item.code == 'class'" class="class">
+        <div v-if="item.code == 'class'" class="classification">
           <ServiceSelect
+            ref="service"
             :items="classification"
-            :is_select_more="true"
-            :active_data="activeData"
+            :is-select_more="true"
+            :active-data="activeData"
             @select="classfn"
             @navselect="navselect"
           ></ServiceSelect>
@@ -18,8 +19,8 @@
 
         <div v-if="item.code == 'price'" class="price">
           <PriceFilter
-            :priceList="pricelist"
-            :echo_data="price"
+            :price-list="pricelist"
+            :echo-data="price"
             @selectItems="pricefn"
           ></PriceFilter>
         </div>

@@ -23,7 +23,7 @@
             </p>
           </div>
           <p class="describe">
-            {{ item.classCodeLevelName }}
+            {{ item.attr }}
           </p>
           <p class="price">{{ item.price }}元</p>
         </div>
@@ -132,7 +132,7 @@ export default {
         display: flex;
         align-items: center;
         > p {
-          max-width: 150px;
+          max-width: 30%;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
