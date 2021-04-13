@@ -25,7 +25,9 @@
           <p class="describe">
             {{ item.attr }}
           </p>
-          <p class="price">{{ item.price }}元</p>
+          <p class="price">
+            {{ item.price === '0.00' ? '面议' : `${item.price}元` }}
+          </p>
         </div>
       </div>
     </sp-list>

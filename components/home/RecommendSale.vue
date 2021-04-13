@@ -72,9 +72,9 @@
               >
               <span class="unit">元</span>
             </span>
-            <span class="original-price"
+            <!-- <span class="original-price"
               >{{ item.goodsPrice || item.price || item.salesPrice }}元</span
-            >
+            > -->
           </div>
         </div>
       </div>
