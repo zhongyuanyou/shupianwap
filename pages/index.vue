@@ -97,9 +97,9 @@ export default {
   },
   async asyncData({ $axios, redirect, app }) {
     // 获取用户是否手动关闭过下载app的弹框，手动关闭过不再弹出
-    const closeAppOpen = app.$cookies.get('closeAppOpen', {
-      path: '/',
-    })
+    // const closeAppOpen = app.$cookies.get('closeAppOpen', {
+    //   path: '/',
+    // })
     const fiexdAdCode = 'ad100234' // 顶部固定banner的code
     const rollAdCode = 'ad100237' // 导航下方轮播banner code
     const helpAdCode = 'ad113183' // 帮我找下方banner code(服务榜单)
@@ -126,20 +126,35 @@ export default {
     }
     try {
       const res = await $axios.post(homeApi.initRequest, initReqParams)
-      if (res.code && res.data && res.data.advertising) {
-        initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
-        initData.rollBannerData = res.data.advertising[rollAdCode] || []
-        initData.helpBannerData = res.data.advertising[helpAdCode] || []
-        initData.skillData = res.data.advertising[skillCode] || []
-        initData.fiexdNavData = res.data.fixedNavList || []
-        initData.rollNavData = res.data.rollNavList || []
+      if (res.code && res.data) {
+        if (res.data.advertising) {
+          initData.fiexdBannerData =
+            res.data.advertising && res.data.advertising[fiexdAdCode]
+              ? res.data.advertising[fiexdAdCode]
+              : []
+          initData.rollBannerData =
+            res.data.advertising && res.data.advertising[rollAdCode]
+              ? res.data.advertising[rollAdCode]
+              : []
+          initData.helpBannerData =
+            res.data.advertising && res.data.advertising[helpAdCode]
+              ? res.data.advertising[helpAdCode]
+              : []
+          initData.skillData =
+            res.data.advertising && res.data.advertising[skillCode]
+              ? res.data.advertising[skillCode]
+              : []
+        }
+        initData.fiexdNavData = res.data.fixedNavList
+          ? res.data.fixedNavList
+          : []
+        initData.rollNavData = res.data.rollNavList ? res.data.rollNavList : []
       }
     } catch (error) {
       console.log(error)
     }
     return {
       initData,
-      closeAppOpen: true,
     }
   },
   data() {
@@ -155,6 +170,7 @@ export default {
         terminalCode: TERMINAL_CODE.wap, // 查询资讯的终端code
         locationCodeList: [], // 广告编码
       },
+      closeAppOpen: true,
       asyncData: {
         preferential: [], // 限时特惠
         information: [], // 资讯精选
@@ -167,18 +183,21 @@ export default {
       this.adModuleTwo
     )
     // 获取非首屏数据（广告 + 资讯）
-    this.$axios.post(homeApi.asyncRequest, this.asyncReqParams).then((res) => {
-      this.adModuleOne.forEach((item) => {
-        if (res.data.advertising[item]) {
-          this.asyncData.preferential.push(res.data.advertising[item])
-        }
-      })
-      this.asyncData.information = res.data.information
-      this.adModuleTwo.forEach((item) => {
-        if (res.data.advertising[item]) {
-          this.asyncData.rotationAd.push(res.data.advertising[item])
-        }
-      })
+    // this.$axios.post(homeApi.asyncRequest, this.asyncReqParams).then((res) => {
+    //   this.adModuleOne.forEach((item) => {
+    //     if (res.data.advertising[item]) {
+    //       this.asyncData.preferential.push(res.data.advertising[item])
+    //     }
+    //   })
+    //   this.asyncData.information = res.data.information
+    //   this.adModuleTwo.forEach((item) => {
+    //     if (res.data.advertising[item]) {
+    //       this.asyncData.rotationAd.push(res.data.advertising[item])
+    //     }
+    //   })
+    // })
+    this.closeAppOpen = this.$cookies.get('closeAppOpen', {
+      path: '/',
     })
   },
   methods: {
