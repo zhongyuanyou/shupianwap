@@ -3,7 +3,7 @@
     <Head
       ref="searchBannerRef"
       :page-scroll-top="pageScrollTop"
-      :fiexd-banner-data="[]"
+      :fiexd-banner-data="initData.fiexdBannerData"
     />
     <!-- S 搜索 + 大banner -->
     <!-- <SearchBanner
@@ -122,11 +122,10 @@ export default {
       helpBannerData: [], // 帮我找广告
       fiexdNavData: [], // 固定导航
       rollNavData: [], // 滚动导航
+      skillData: [],
     }
-    // const skillData = []
     try {
       const res = await $axios.post(homeApi.initRequest, initReqParams)
-      console.log('首屏渲染数据', res.data.advertising)
       if (res.code && res.data && res.data.advertising) {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
         initData.rollBannerData = res.data.advertising[rollAdCode] || []
@@ -137,11 +136,9 @@ export default {
       }
     } catch (error) {
       console.log(error)
-      redirect('/500')
     }
     return {
       initData,
-      // skillData,
       closeAppOpen: true,
     }
   },
