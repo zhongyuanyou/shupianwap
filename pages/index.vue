@@ -131,31 +131,7 @@ export default {
         initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
         initData.rollBannerData = res.data.advertising[rollAdCode] || []
         initData.helpBannerData = res.data.advertising[helpAdCode] || []
-        initData.skillData = res.data.advertising[skillCode] || [
-          {
-            locationSort: 1,
-            materialList: [
-              {
-                materialTypeCode: 'GGLX_TP',
-                materialUrl:
-                  'https://cdn.shupian.cn/sp-pt/wap/emkuijw6j4o0000.png',
-                imgLink: '',
-                materialLink: 'https://shupian.dgg.cn/spread/companyRegister',
-                materialCode: 'src113387',
-                materialHeight: 109,
-                materialId: '8054898714890534912',
-                materialDescription: '',
-                materialName: 'wap首页秒杀广告',
-                androidLink: '',
-                materialWidth: 416,
-                iosLink: '',
-                linkType: 2,
-                wapLink: '',
-                executeParam: '',
-              },
-            ],
-          },
-        ]
+        initData.skillData = res.data.advertising[skillCode] || []
         initData.fiexdNavData = res.data.fixedNavList || []
         initData.rollNavData = res.data.rollNavList || []
       }
