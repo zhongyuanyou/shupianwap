@@ -303,13 +303,13 @@ export default {
       }
     },
     placeOrder() {
-      this.loading = true
       if (!this.radio) {
         Toast({
           message: '下单前，请先同意《薯片平台用户交易下单协议》',
           overlay: true,
         })
       } else {
+        this.loading = true
         if (this.$route.query.type === 'shopcar') {
           const arr = []
           for (let i = 0; i < this.order.list.length; i++) {

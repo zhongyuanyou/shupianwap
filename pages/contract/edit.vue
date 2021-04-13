@@ -123,54 +123,6 @@ export default {
         return true
       }
     },
-    // getorder() {
-    //   orderApi
-    //     .getDetailByOrderId(
-    //       { axios: this.axios },
-    //       { id: this.orderItem.orderId, cusOrderId: this.orderItem.cusOrderId }
-    //     )
-    //     .then((res) => {
-    //       this.orderData = res
-    //       if (this.orderData.contractVo2s.length > 0) {
-    //         if (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG') {
-    //           this.partyName = this.orderData.contractVo2s[0].contractFirstName
-    //           this.userName = this.orderData.contractVo2s[0].contractFirstContacts
-    //           this.phone = this.orderData.contractVo2s[0].contractFirstPhone
-    //           this.$router.push({
-    //             path: '/contract/preview',
-    //             query: {
-    //               contractUrl: this.orderData.contractVo2s[0].contractUrl,
-    //               contractId: this.orderData.contractVo2s[0].contractId,
-    //               contractNo: this.orderData.contractVo2s[0].contractNo,
-    //               signerName: this.orderData.contractVo2s[0].contractFirstName,
-    //               contactWay: this.orderData.contractVo2s[0].contractFirstPhone,
-    //               type: 'qs',
-    //               go: '-2',
-    //               fromPage: this.orderItem.fromPage,
-    //             },
-    //           })
-    //         } else {
-    //           this.$router.push({
-    //             path: '/contract/preview',
-    //             query: {
-    //               contractUrl: this.orderData.contractVo2s[0].contractUrl,
-    //               contractId: this.orderData.contractVo2s[0].contractId,
-    //               contractNo: this.orderData.contractVo2s[0].contractNo,
-    //               signerName: this.orderData.contractVo2s[0].contractFirstName,
-    //               contactWay: this.orderData.contractVo2s[0].contractFirstPhone,
-    //               type: 'yl',
-    //               go: '-2',
-    //               fromPage: this.orderItem.fromPage,
-    //             },
-    //           })
-    //         }
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       this.$xToast.show(err)
-    //       console.log('错误信息err', err)
-    //     })
-    // },
     applycontart() {
       this.Loading = true
       contractApi

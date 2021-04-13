@@ -4,8 +4,8 @@
       ref="dropDownMenu"
       :filter-data="jyFilterData"
       :classification="items.typeData"
-      :activeData="itemsclass"
-      :priceList="items.price"
+      :active_data="itemsclass"
+      :price_list="items.price"
       :sort="items.sortFilter"
       :sortactive="sortactive"
       @classfn="classfn"
@@ -197,6 +197,8 @@ export default {
           }
         })
         .catch((err) => {
+          this.$refs.list.isLoading = false
+          // this.$refs.list.loading = false
           console.log(err)
         })
     },

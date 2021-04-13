@@ -236,30 +236,12 @@ export default {
           this.getChildOrders()
           break
         case 2:
-          // 签署合同
-          this.$router.push({
-            path: '/contract/edit',
-            query: {
-              orderId: this.orderData.id,
-              cusOrderId: this.orderData.cusOrderId,
-              fromPage: this.fromPage,
-              contractStatus: this.orderData.contractStatus,
-            },
-          })
+          // 申请合同
+          this.toContract()
           break
         case 3:
-          // 查看合同
-          this.$router.push({
-            path: '/contract/preview',
-            query: {
-              type: 'yl',
-              contractUrl: this.orderData.contractUrl,
-              orderId: this.orderData.id,
-              cusOrderId: this.orderData.cusOrderId,
-              fromPage: this.fromPage,
-              contractStatus: this.orderData.contractStatus,
-            },
-          })
+          // 签署合同 查看合同
+          this.toContract()
           break
         case 4:
           // 立即付款 首先判断是否有关联订单

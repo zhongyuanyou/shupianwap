@@ -48,7 +48,7 @@
       <!-- 回答end -->
       <!-- 关注start -->
       <section>
-        <VisitUser v-if="attentionStatus" />
+        <VisitUser v-if="attentionStatus" :user-data="userData" />
         <AttentionItem v-if="attentionStatus" :list-data="listData" />
         <NotAttention v-if="showNotAttention" />
       </section>
@@ -82,13 +82,7 @@
       <div class="popContentOne">
         <div class="popTop">
           <span class="popTop_title">全部板块</span>
-          <my-icon
-            name="guanbi_mian"
-            size="0.48rem"
-            color="black"
-            class="my_icon"
-            @click.native="showPop = false"
-          ></my-icon>
+          <div class="my_icon close_btn" @click="showPop = false">×</div>
         </div>
         <div class="popMiddle">
           <div class="spans">
@@ -163,7 +157,7 @@
       <div class="answer_article">
         <div class="item" @click="tonav('/known/publish/question')">
           <img
-            src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
+            src="https://cdn.shupian.cn/sp-pt/wap/8sixz8dnnt40000.png"
             alt=""
           />
           <span>提个问题</span>
@@ -177,7 +171,7 @@
         </div>
         <div class="item" @click="tonav('/known/publish/article')">
           <img
-            src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
+            src="https://cdn.shupian.cn/sp-pt/wap/eoeulbunbpk0000.png"
             alt=""
           />
           <span>写文章</span>
@@ -225,6 +219,7 @@ export default {
   },
   data() {
     return {
+      userData: [], // 用户数据
       // type: 0, // 	不传 代表wap或薯片app 1代表企大顺
       listData: [],
       attentionStatus: true, // 已关注
@@ -369,6 +364,24 @@ export default {
         } else {
           console.log(message)
         }
+        // 关注用户列表
+        params.handleType = 1
+        const result = await this.$axios.get(
+          knownApi.questionArticle.focusFansList,
+          { params }
+        )
+        if (result.code === 200) {
+          if (result.data.rows.length > 0) {
+            console.log('this.rows', data.rows)
+            this.userData = data.rows
+          } else {
+            this.attentionStatus = false
+            this.showNotAttention = true
+          }
+        } else {
+          console.log(message)
+        }
+
         // 请求热榜数据
       } else if (item.executionParameters === 'rebang') {
         this.attentionStatus = false
@@ -490,7 +503,16 @@ export default {
   margin: 0 auto;
   margin-top: 12px;
 }
-//
+.close_btn {
+  background: #f5f5f5;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 40px;
+  color: #999999;
+  line-height: 48px;
+  text-align: center;
+}
 ::v-deep .sp-work-tab--active {
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;

@@ -6,7 +6,7 @@
         :key="index"
         :title="item.name"
       >
-        <div v-if="item.code == 'class'" class="classification">
+        <div v-if="item.code == 'class'" class="class">
           <ServiceSelect
             :items="classification"
             :isSelectMore="true"

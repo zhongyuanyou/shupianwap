@@ -1,6 +1,6 @@
 <template>
   <sp-list
-    v-if="infoList.length"
+    v-if="listData.length"
     v-model="loading"
     :finished="finished"
     offset="0"
@@ -10,11 +10,20 @@
       <div class="item">
         <div class="item_Info">
           <div class="userPhoto">
-            <img src="" alt="" />
+            <img :src="item.avatar" alt="" />
           </div>
           <div class="item_status">
-            <div class="userName">摇铃铛</div>
-            <div class="item_time">27分钟前·回答了问题</div>
+            <div class="userName">{{ item.userName }}</div>
+            <div class="item_time">
+              {{ toTimeStamp(item.createTime) }}·
+              <span>{{
+                item.type == 1
+                  ? '发起了问题'
+                  : item.type == 2
+                  ? '发表了文章'
+                  : '回答了问题'
+              }}</span>
+            </div>
           </div>
         </div>
         <div class="item_title">
@@ -22,12 +31,37 @@
         </div>
         <div class="item_content">
           <p class="content">
-            {{ item.content }}
+            {{ item.contentText }}
           </p>
-          <img src="" alt="" />
+          <img
+            v-if="item.contentImageUrl"
+            :src="item.contentImageUrl.split(',')[0]"
+            alt=""
+          />
         </div>
         <div class="item_bottom">
-          <span class="like">
+          <span v-if="item.isAnswerFlag === 0" @click="invite()">
+            <my-icon
+              name="yaoqing"
+              size="0.36rem"
+              color="#999999"
+              class="my_icon"
+              style="margin-right: 0.16rem"
+            ></my-icon>
+            邀请
+          </span>
+          <span v-if="item.isAnswerFlag === 0" @click="openAnswer(item.id)">
+            <my-icon
+              name="xiehuida"
+              size="0.36rem"
+              color="#999999"
+              class="my_icon"
+              style="margin-right: 0.16rem"
+            ></my-icon>
+            写回答
+          </span>
+
+          <span v-if="item.isAnswerFlag !== 0">
             <my-icon
               name="zantong"
               size="0.36rem"
@@ -37,7 +71,7 @@
             ></my-icon
             >赞同{{ item.applaudCount }}</span
           >
-          <span class="comment" @click="showComment">
+          <span v-if="item.isAnswerFlag !== 0" @click="showComment">
             <my-icon
               name="pinglun"
               size="0.36rem"
@@ -60,6 +94,7 @@
 <script>
 import { Cell, List } from '@chipspc/vant-dgg'
 import CommentList from '@/components/mustKnown/CommentList'
+// import time from '@/utils/time'
 
 export default {
   name: 'AttentionItem',
@@ -83,32 +118,14 @@ export default {
       commentShow: false,
       loading: true,
       finished: false,
-      totalPage: 100,
-      infoList: [
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-      ],
+      timeStamp: 0,
     }
   },
   watch: {
-    listData(newName, oldName) {
-      // console.log('newName', newName)
-      // console.log('oldName', oldName)
-    },
+    listData(newName, oldName) {},
   },
+  mounted() {},
+
   methods: {
     release() {
       console.log('点击了发布')
@@ -116,6 +133,44 @@ export default {
     showComment() {
       console.log('点击了评论')
       this.commentShow = true
+    },
+    openAnswer(id) {
+      this.$router.push({
+        path: '/known/publish/answer',
+        query: {
+          id,
+          type: 2,
+        },
+      })
+    },
+    invite() {
+      this.$router.push({
+        path: '/known/detail/invitationList',
+      })
+    },
+    toTimeStamp(time) {
+      let times = time.replace(/-/g, '/')
+      times = Date.parse(times)
+      const nowTime = new Date().getTime()
+      let result = ''
+      // 的倒时差
+      const diff = nowTime - times
+      if (diff < 3600000) {
+        result = diff / 60000 + '分钟前'
+      } else if (diff > 3600000 && diff < 86400000) {
+        result = diff / 3600000 + '小时前'
+      } else {
+        const m =
+          new Date(times).getMonth() + 1 < 10
+            ? '0' + new Date(times).getMonth()
+            : new Date(times).getMonth()
+        const d =
+          new Date(times).getDate() < 10
+            ? '0' + new Date(times).getDate()
+            : new Date(times).getDate()
+        result = m + '-' + d
+      }
+      return result
     },
   },
 }
@@ -125,7 +180,6 @@ export default {
   padding: 0 0 20px 0;
   position: relative;
 }
-
 .item {
   height: 453px;
   background: #ffffff;
@@ -150,6 +204,9 @@ export default {
       margin-right: 16px;
       border-radius: 50%;
       img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
       }
     }
     .item_status {
@@ -208,10 +265,6 @@ export default {
     font-weight: 400;
     color: #999999;
     line-height: 28px;
-    .like {
-    }
-    .comment {
-    }
   }
 }
 </style>

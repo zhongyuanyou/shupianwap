@@ -19,7 +19,7 @@ export default {
     ...mapState({
       productDescribe: (state) =>
         state.sellingGoodsDetail.sellingGoodsData.salesGoodsOperatings
-          .productDescribe,
+          .clientDetails[0].clientDetail,
     }),
   },
   methods: {},

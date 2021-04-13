@@ -55,6 +55,7 @@
           :search-text="formData.searchText"
           :tab-items="jyTypesData"
           :req-type="reqType"
+          class="jygood"
           @goodsList="getTabVue"
         />
       </sp-work-tab>
@@ -294,6 +295,17 @@ export default {
       /deep/.input-box .imitate-input {
         color: #1a1a1a;
       }
+    }
+  }
+  .jygood {
+    /deep/.sp-dropdown-menu {
+      background: #fff;
+    }
+    /deep/.goods-item {
+      margin: 0.2rem auto 0 auto;
+      background: #fff;
+      border-radius: 0.24rem;
+      width: 90%;
     }
   }
   .nav-back {

@@ -92,14 +92,7 @@ export default {
       localStorage.setItem('knownHistory', JSON.stringify(tempHistory))
     },
     historyfn(keyword) {
-      // 拿到key位置
-      let b
-      for (let i = 0, l = this.knownHistory.length; i < l; i++) {
-        if (keyword === this.knownHistory[i]) {
-          b = i
-        }
-      }
-      this.addHistoryItem(keyword, b)
+      this.addHistoryItem(keyword)
       this.$router.push({
         path: '/known/search/result',
         query: { keyword, type: this.tabIndex },
@@ -110,7 +103,7 @@ export default {
       if (keyword) {
         this.addHistoryItem(keyword)
         this.$router.push({
-          path: '/known/search/result',
+          name: '/known/search/result',
           query: { keyword, type: this.tabIndex },
         })
       }
@@ -122,12 +115,18 @@ export default {
       this.knownHistory = []
       localStorage.removeItem('knownHistory')
     },
-    addHistoryItem(key, i) {
+    addHistoryItem(key) {
       const tempKnownHistory = this.knownHistory
       const len = tempKnownHistory.length
-      if (typeof i === 'number') {
+      let b
+      for (let i = 0; i < len; i++) {
+        if (key === this.knownHistory[i]) {
+          b = i
+        }
+      }
+      if (typeof b === 'number') {
         // 存在i证明存在key, 则需将选择值前移至首位
-        tempKnownHistory.splice(i, 1)
+        tempKnownHistory.splice(b, 1)
       } else if (len > 8) {
         // 列表数量最大为10
         tempKnownHistory.splice(9, 1)
