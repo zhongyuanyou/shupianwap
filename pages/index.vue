@@ -149,12 +149,16 @@ export default {
           ? res.data.fixedNavList
           : []
         initData.rollNavData = res.data.rollNavList ? res.data.rollNavList : []
+        initData.ddd = res.ddddd
+      }
+      return {
+        initData,
       }
     } catch (error) {
       console.log(error)
-    }
-    return {
-      initData,
+      return {
+        initData,
+      }
     }
   },
   data() {
