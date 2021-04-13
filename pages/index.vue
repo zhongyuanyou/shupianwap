@@ -126,15 +126,30 @@ export default {
     }
     try {
       const res = await $axios.post(homeApi.initRequest, initReqParams)
-      if (res.code && res.data && res.data.advertising) {
-        initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
-        initData.rollBannerData = res.data.advertising[rollAdCode] || []
-        initData.helpBannerData = res.data.advertising[helpAdCode] || []
-        initData.skillData = res.data.advertising[skillCode] || []
-        initData.fiexdNavData = res.data.fixedNavList || []
-        initData.rollNavData = res.data.rollNavList || []
+      if (res.code && res.data) {
+        initData.fiexdBannerData =
+          res.data.advertising && res.data.advertising[fiexdAdCode]
+            ? res.data.advertising[fiexdAdCode]
+            : []
+        initData.rollBannerData =
+          res.data.advertising && res.data.advertising[rollAdCode]
+            ? res.data.advertising[rollAdCode]
+            : []
+        initData.helpBannerData =
+          res.data.advertising && res.data.advertising[helpAdCode]
+            ? res.data.advertising[helpAdCode]
+            : []
+        initData.skillData =
+          res.data.advertising && res.data.advertising[skillCode]
+            ? res.data.advertising[skillCode]
+            : []
+        initData.fiexdNavData = res.data.fixedNavList
+          ? res.data.fixedNavList
+          : []
+        initData.rollNavData = res.data.rollNavList ? res.data.rollNavList : []
       }
     } catch (error) {
+      redirect('/500')
       console.log(error)
     }
     return {
