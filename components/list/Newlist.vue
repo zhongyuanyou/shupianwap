@@ -142,6 +142,11 @@ export default {
         display: flex;
         align-items: center;
         > p {
+          max-width: 150px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          box-sizing: border-box;
           height: 32px;
           background: #f0f2f5;
           border-radius: 4px;

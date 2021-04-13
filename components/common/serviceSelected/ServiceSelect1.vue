@@ -229,7 +229,7 @@ export default {
       })
       this.$set(this.selectData, 1, { services: [this.childrenList[0]] })
 
-      this.$emit('select', clone(this.selectData, true))
+      this.$emit('navselect', clone(this.selectData, true))
     },
     handleClickItem(item = {}) {
       console.log('item:', item)
