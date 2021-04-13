@@ -5,7 +5,7 @@
       :filter-data="jyFilterData"
       :classification="items.typeData"
       :active_data="itemsclass"
-      :price_list="items.price"
+      :pricelist="items.price"
       :sort="items.sortFilter"
       :sortactive="sortactive"
       @classfn="classfn"
@@ -13,6 +13,7 @@
       @sortfn="sortfn"
       @reset="reset"
       @confirm="confirm"
+      @navselect="navselect"
     />
     <div class="listbox" :style="{ height: listboxheight + 'px' }">
       <Newlist
@@ -107,7 +108,7 @@ export default {
     this.$nextTick(() => {
       this.listboxheight =
         document.documentElement.clientHeight -
-        (this.heigth + this.$refs.dropDownMenu.$el.offsetHeight)
+        (this.heigth + this.$refs.dropDownMenu.$el.offsetHeight + 65)
     })
   },
   methods: {
@@ -117,10 +118,16 @@ export default {
       this.formData.needTypes = 0
       this.formData.price = this.priceactive
       this.formData.sort = this.sortactive
-      this.formData.class = this.itemsclass[1].services
+      this.formData.class = this.itemsclass
       this.getlist()
     },
-
+    navselect(item) {
+      if (item[0].id === -1 && item[0].name === '不限') {
+        this.jyFilterData[0].name = '全部分类'
+      } else {
+        this.jyFilterData[0].name = item[0].name
+      }
+    },
     reset() {
       this.priceactive = {
         minPrice: '',
@@ -141,22 +148,22 @@ export default {
       if (this.priceactive.activeItems) {
         this.jyFilterData[1].name = this.priceactive.activeItems.name
       }
-      console.log(item, 123)
-      console.log(items, 321)
     },
     classfn(item) {
       if (item[1].services.length && item[1].services.length > 0) {
         if (
-          item[1].services[0].id === -1 &&
-          item[1].services[0].name === '不限'
+          item[1].services[0].id !== -1 &&
+          item[1].services[0].name !== '不限'
         ) {
-          this.jyFilterData[0].name = '全部分类'
-        } else {
           let arr = item[1].services.map((x) => {
             return x.name
           })
           arr = arr.toString()
           this.jyFilterData[0].name = arr
+        } else if (item[0].id !== -1 && item[0].name !== '不限') {
+          this.jyFilterData[0].name = item[0].name
+        } else {
+          this.jyFilterData[0].name = '全部分类'
         }
       }
       this.itemsclass = item
