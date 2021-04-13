@@ -31,6 +31,11 @@
           </p>
           <p v-if="item.tag" class="goods-tag">
             <span
+              v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1"
+              class="tag-item tag-tc"
+              >套餐</span
+            >
+            <span
               v-for="(tagItem, index2) in item.tag"
               v-show="index2 < 3"
               :key="index2"
@@ -418,6 +423,11 @@ export default {
         font-weight: 400;
         color: #5c7499;
         margin-right: 10px;
+      }
+      .tag-tc {
+        background: #fc4e41;
+        border-radius: 4px;
+        color: white;
       }
     }
     .goods-slogan {
