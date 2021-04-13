@@ -180,6 +180,14 @@ export default {
         information: [], // 资讯精选
         rotationAd: [], // 热门服务
       },
+      initData: {
+        fiexdBannerData: [], // 固定广告
+        rollBannerData: [], // 轮播广告
+        helpBannerData: [], // 帮我找广告
+        fiexdNavData: [], // 固定导航
+        rollNavData: [], // 滚动导航
+        skillData: [],
+      },
     }
   },
   created() {
@@ -191,7 +199,7 @@ export default {
     })
   },
   mounted() {
-    if (!this.initData.fixedNavList) {
+    if (!this.initData.fiexdNavData.length) {
       this.getHomeData()
     }
   },
@@ -255,10 +263,7 @@ export default {
           initData.rollNavData = res.data.rollNavList
             ? res.data.rollNavList
             : []
-          initData.ddd = res.ddddd
-        }
-        return {
-          initData,
+          this.initData = initData
         }
       } catch (error) {
         console.log('error', error)

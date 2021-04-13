@@ -3,9 +3,17 @@
     <div @click="toDetail">
       <p class="order-no-area">
         <span class="orderNo"> 订单编号: {{ orderData.orderNo }} </span>
-        <span class="order-status">{{
-          CUSORDERSTATUSCODE[orderData.cusOrderStatusNo]
-        }}</span>
+        <span
+          class="order-status"
+          :class="
+            orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_CANCELLED'
+              ? 'status1'
+              : orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_UNPAID'
+              ? 'status2'
+              : 'status3'
+          "
+          >{{ CUSORDERSTATUSCODE[orderData.cusOrderStatusNo] }}</span
+        >
       </p>
       <div
         v-for="(item, index) in orderData.orderSkuEsList ||
@@ -14,8 +22,7 @@
         class="order-infos"
         :class="index !== 0 ? 'border-top' : ''"
       >
-        <div class="img"></div>
-        <!-- <sp-image v-else :src="item.skuImages" alt="" class="img" srcset="" /> -->
+        <sp-image :src="item.skuImages" alt="" class="img" srcset="" />
         <div class="right">
           <p class="goods-name">
             <span class="name"> {{ item.spuName || item.orderSaleName }}</span>
@@ -91,7 +98,7 @@
         >
         <!-- 客户订单状态 -->
         <sp-button
-          v-if="checkContractStatus() === 2"
+          v-if="checkContractStatus() == 2"
           type="info"
           class="btn-look"
           @click="handleClickItem(3)"
@@ -191,8 +198,14 @@ export default {
     .orderNo {
       color: #999999;
     }
-    .order-status {
+    .status1 {
+      color: #999999;
+    }
+    .status2 {
       color: #fe8c29;
+    }
+    .status3 {
+      color: #3b69f5;
     }
   }
   .order-infos {
@@ -223,7 +236,7 @@ export default {
       .name {
         font-weight: bold;
         flex: 1;
-        .textOverflow(1);
+        .textOverflow(2);
         padding-right: 20px;
       }
       .money1 {
@@ -235,7 +248,9 @@ export default {
       font-family: PingFang SC;
       font-weight: 400;
       color: #999999;
-      margin: 10px 0 20px 0;
+      margin: 10px 0 10px 0;
+      min-height: 64px;
+      .textOverflow(2);
       .sku-item {
         margin-right: 10px;
       }

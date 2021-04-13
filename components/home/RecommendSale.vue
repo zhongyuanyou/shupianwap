@@ -23,13 +23,13 @@
       >
         <div class="goods-lable-img">
           <span v-if="false" class="lable">2千元成交礼</span>
-          <sp-image v-lazy="item.img"></sp-image>
+          <sp-image :src="item.img"></sp-image>
         </div>
         <div class="goods-info">
           <p class="goods-name">
             {{ item.name }}
           </p>
-          <p class="goods-tag">
+          <p v-if="item.tag && item.tag.length" class="goods-tag">
             <span
               v-for="(tagItem, index2) in item.tag"
               v-show="index2 < 3"
@@ -39,11 +39,25 @@
             >
           </p>
           <p
-            class="goods-sloga"
-            :class="
-              !item.tag || !item.tag.length ? 'goods-slogan2' : 'goods-slogan1'
+            v-else-if="
+              item.salesGoodsSubVos &&
+              item.salesGoodsSubVos[0] &&
+              item.salesGoodsSubVos[0].serviceItems &&
+              item.salesGoodsSubVos[0].serviceItems.length
             "
+            class="goods-tag goods-tag2"
           >
+            <span
+              v-for="(serviceItem, index2) in item.salesGoodsSubVos[0]
+                .serviceItems"
+              v-show="index2 < 3"
+              :key="index2"
+              class="tag-item"
+              >{{ serviceItem.serviceItemName }}</span
+            >
+          </p>
+          <p v-else class="goods-tag goods-tag3">套装</p>
+          <p class="goods-slogan goods-slogan1">
             {{ item.salesGoodsOperatings && item.salesGoodsOperatings.slogan }}
           </p>
           <div class="goods-price">
@@ -474,7 +488,7 @@ export default {
         display: flex;
         align-items: baseline;
         .big-value {
-          font-size: 36px;
+          font-size: 32px;
           font-family: PingFang SC;
           font-weight: bold;
           color: #ec5330;
