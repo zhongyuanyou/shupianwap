@@ -177,6 +177,7 @@ export default {
       }
     },
   },
+  layout: 'keepAlive',
 }
 </script>
 

@@ -2,6 +2,7 @@
   <div class="Newlist">
     <sp-list
       v-model="loading"
+      :immediate-check="false"
       :finished="finished"
       :finished-text="datalist.length == 0 ? '' : '没有更多了'"
       @load="onLoad"
@@ -16,7 +17,10 @@
           <img :src="item.img" alt="" />
         </div>
         <div class="right">
-          <h1>{{ item.name }}</h1>
+          <h1>
+            <span v-if="item.salesGoodsSubVos.length > 1">套餐</span>
+            {{ item.name }}
+          </h1>
           <div v-if="item.tag.length > 0" class="tag">
             <p v-for="(tagitem, tagindex) in item.tag" :key="tagindex">
               {{ tagitem.tagName }}
@@ -30,6 +34,7 @@
           </p>
         </div>
       </div>
+      <div class="claassicon"></div>
     </sp-list>
     <div v-show="datalist.length < 1" class="none">
       <img src="https://img10.dgg.cn/pt03/wap/cmxakdtkqxs0000.png" alt="" />
@@ -82,8 +87,8 @@ export default {
     },
     getlist() {},
     onLoad() {
-      this.$emit('load', this.pages)
       this.pages++
+      this.$emit('load', this.pages)
     },
   },
 }
@@ -127,6 +132,18 @@ export default {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+        > span {
+          display: inline-block;
+          padding: 2px;
+          background: #ec5330;
+          border-radius: 4px;
+          margin-left: 10px;
+          font-size: 20px;
+          text-align: center;
+          font-weight: bold;
+          color: #ffffff;
+          text-align: 28px;
+        }
       }
       > .tag {
         margin-top: 10px;
@@ -177,6 +194,9 @@ export default {
         color: #ec5330;
       }
     }
+  }
+  .claassicon {
+    min-height: 1px;
   }
   .none {
     padding-top: 100px;

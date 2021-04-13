@@ -1,6 +1,8 @@
 'use strict'
 import { request } from '@/utils/request'
-import { CHIPS_APP_BASE_URL, CHIPS_WAP_BASE_URL } from '@/config/constant'
+// import { CHIPS_APP_BASE_URL, CHIPS_WAP_BASE_URL } from '@/config/constant'
+import { CHIPS_APP_BASE_URL } from '@/config/constant'
+const CHIPS_WAP_BASE_URL = 'http://172.16.133.40:7001/service'
 const category = {
   // 订单列表
   list({ axios }, params) {
@@ -130,6 +132,14 @@ const category = {
       params,
       method: 'get',
       url: CHIPS_APP_BASE_URL + '/yk/order/v2/get_order_track_list.do',
+    })
+  },
+  getcalculation({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_APP_BASE_URL + '/yk/order/v2/coupon_calculation.do',
     })
   },
 }
