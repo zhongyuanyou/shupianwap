@@ -47,13 +47,13 @@ export default {
   },
   methods: {
     toggleTabs(index) {
-      console.log('index', index)
       this.nowIndex = index
     },
     attentionMore() {
       this.$router.push({ path: 'known/more' })
     },
     clickImg() {
+      // 跳转到个人主页 目前不知道个人主页在哪里
       this.$router.push({ path: 'known/attention/attentionMore' })
     },
   },

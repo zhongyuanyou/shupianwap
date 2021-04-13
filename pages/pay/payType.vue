@@ -2,7 +2,7 @@
   <div class="pay-page">
     <Header title="选择支付方式" />
     <div class="banner">
-      <p class="total-money">{{ ChangeMoney }}元</p>
+      <p class="total-money">{{ responseData.enableTotalMoney || 0 }}元</p>
       <p v-if="time && time.hour" class="time">
         剩余支付时间 ：<span>{{ time.hour }}</span> ：<span>{{
           time.min
@@ -53,7 +53,9 @@
         <span class="btn-item money">
           {{ ChangeMoney }}
         </span>
-        <span class="btn-item"> 元</span>
+        <span class="btn-item">
+          {{ responseData.enableTotalMoney || 0 }}元</span
+        >
       </sp-button>
     </div>
     <LoadingCenter v-show="loading" />
@@ -130,11 +132,7 @@ export default {
       payName: '支付宝支付',
     }
   },
-  computed: {
-    ChangeMoney() {
-      return changeMoney.regFenToYuan(this.responseData.enableTotalMoney)
-    },
-  },
+  computed: {},
   beforeDestroy() {
     if (timer) clearInterval(timer)
     if (time) clearInterval(time)

@@ -1,30 +1,35 @@
 <template>
   <sp-list
-    v-if="infoList.length"
+    v-if="newspaperData.length"
     v-model="loading"
     :finished="finished"
     offset="0"
     finished-text="没有更多了"
   >
-    <sp-cell v-for="(item, index) in infoList" :key="index">
+    <sp-cell v-for="(item, index) in newspaperData" :key="index">
       <div class="item_span">1/精选</div>
       <div class="item">
-        <div class="item_title">什么情况下你会毫不犹豫地辞职呢？</div>
+        <div class="item_title">{{ item.title }}</div>
         <div class="item_Info">
           <div class="userPhoto">
-            <img src="" alt="" />
+            <img :src="item.avatar" alt="" />
           </div>
-          <div class="userName">摇铃铛</div>
+          <div class="userName">{{ item.userName }}</div>
         </div>
         <div class="item_content">
           <p class="content">
-            今年两会，全国人大将审查国民经济和社会发展第十四个五年规划和2035年远景目标纲要草案，为未来五年与更长远的…
+            {{ item.content }}
+            {{ item.contentText }}
           </p>
-          <img src="" alt="" />
+          <img
+            v-if="item.contentImageUrl"
+            :src="item.contentImageUrl.split(',')[0]"
+            alt=""
+          />
         </div>
         <div class="item_bottom">
-          <span class="like">2.1 万赞同</span>
-          <span class="comment"> · 4424 评论</span>
+          <span class="like">{{ item.applaudCount / 10000 }}万赞同</span>
+          <span class="comment"> · {{ item.remarkCount }}评论</span>
         </div>
       </div>
     </sp-cell>
@@ -63,34 +68,17 @@ export default {
   },
 
   props: {
-    // banner: {
-    //   type: Array,
-    //   default: () => {
-    //     return []
-    //   },
-    // },
+    newspaperData: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
   data() {
     return {
       loading: true,
       finished: false,
-      infoList: [
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-      ],
     }
   },
   methods: {},
@@ -144,6 +132,9 @@ export default {
       margin-right: 20px;
       border-radius: 50%;
       img {
+        height: 100%;
+        width: 100%;
+        vertical-align: unset;
       }
     }
     .userName {

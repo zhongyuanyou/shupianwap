@@ -1,12 +1,12 @@
 <template>
   <sp-list
-    v-if="infoList.length"
+    v-if="listData.length"
     v-model="loading"
     :finished="finished"
     offset="0"
     finished-text="没有更多了"
   >
-    <sp-cell v-for="(item, index) in infoList" :key="index">
+    <sp-cell v-for="(item, index) in listData" :key="index">
       <div class="item">
         <div class="item_top">
           <div
@@ -25,14 +25,31 @@
           </div>
           <div class="item_content">
             <p>
-              如何看待全国政协委员俞敏洪：建议修改义务教育法，让流动儿童在居住地就近入学？你支持吗？
+              {{ item.title }}
             </p>
-            <span class="item_bottom">2340 万热度</span>
+            <span class="item_bottom"
+              >{{ computeHotNumber(item.browseCount) }} 万热度</span
+            >
           </div>
-          <div class="item_img"></div>
+          <div class="item_img">
+            <img
+              v-if="item.contentImageUrl"
+              :src="item.contentImageUrl.split(',')[0]"
+              alt=""
+            />
+          </div>
         </div>
       </div>
     </sp-cell>
+    <div class="bottom" @click="goRecommend">
+      到底啦，去推荐看看吧
+      <my-icon
+        name="you"
+        size="0.22rem"
+        color="#999999"
+        class="my_icon"
+      ></my-icon>
+    </div>
   </sp-list>
 </template>
 <script>
@@ -67,49 +84,61 @@ export default {
   },
 
   props: {
-    // banner: {
-    //   type: Array,
-    //   default: () => {
-    //     return []
-    //   },
-    // },
+    listData: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
+
   data() {
     return {
       loading: true,
       finished: false,
-      infoList: [
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-      ],
     }
   },
-  methods: {},
+  computed: {},
+  methods: {
+    // 调到推荐页面
+    goRecommend() {
+      this.$router.push({
+        path: '/',
+      })
+    },
+    computeHotNumber(browseCount) {
+      return browseCount / 10000
+    },
+  },
 }
 </script>
 <style lang="less" scoped>
 /deep/ .sp-cell {
   padding: 0 32px;
 }
+.bottom {
+  width: 336px;
+  height: 60px;
+  background: #f5f5f5;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #999999;
+  line-height: 24px;
+  justify-content: center;
+  margin: 60px auto;
+  .my_icon {
+    margin-left: 8px;
+  }
+}
 .item {
   padding: 18px 0 28px 0;
   border-top: 1px solid #dddddd;
   .item_top {
     display: flex;
-
     justify-content: space-between;
     .item_span {
       text-align: center;
@@ -156,12 +185,15 @@ export default {
       }
     }
     .item_img {
-      width: 190px;
-      height: 127px;
-      background: #cccccc;
-      border-radius: 12px;
-      margin-top: 10px;
-      margin-left: 40px;
+      img {
+        display: block;
+        width: 190px;
+        height: 127px;
+        background: #cccccc;
+        border-radius: 12px;
+        margin-top: 10px;
+        margin-left: 40px;
+      }
     }
   }
   .item_bottom {

@@ -1,36 +1,49 @@
 <template>
   <sp-list
-    v-if="infoList.length"
+    v-if="normalListData.length"
     v-model="loading"
     :finished="finished"
     offset="0"
     finished-text="没有更多了"
     @scroll="handleScollList"
   >
-    <sp-cell v-for="(item, index) in infoList" :key="index">
-      <div class="item" @click="$router.push('/known/detail/article')">
-        <div class="item_title">什么情况下你会毫不犹豫地辞职呢？</div>
+    <sp-cell v-for="(item, index) in normalListData" :key="index">
+      <div class="item">
+        <div class="item_title" @click="$router.push('/known/detail/article')">
+          {{ item.title }}
+        </div>
 
         <div class="item_content">
           <div class="item_content_lf">
             <div class="item_Info">
               <div class="userPhoto">
-                <img src="" alt="" />
+                <img :src="item.avatar" alt="" />
               </div>
-              <div class="userName">摇铃铛</div>
+              <div class="userName">{{ item.userName }}</div>
             </div>
-            <p class="content">
-              今年两会，全国人大将审查国民经济和社会发展第十四个五年规划和2035年远景目标纲要草案，为未来五年与更长远的…
+            <p class="content" @click="$router.push('/known/detail/article')">
+              {{ item.content }}
             </p>
           </div>
-          <img class="content_img" src="" alt="" />
+
+          <img
+            v-if="item.contentImageUrl"
+            :src="item.contentImageUrl.split(',')[0]"
+            class="content_img"
+            alt=""
+          />
         </div>
         <div class="item_bottom">
-          <span class="like">2.1 万赞同</span>
-          <span class="comment"> · 4424 评论</span>
+          <span class="like">
+            {{ applaudNumber(item.applaudCount) }}万赞同</span
+          >
+          <span class="comment" @click="showComment(item.id)">
+            · {{ item.answerCount }} 评论</span
+          >
         </div>
       </div>
     </sp-cell>
+    <comment-list v-model="commentShow" :article-id="articleId"></comment-list>
   </sp-list>
 </template>
 <script>
@@ -43,7 +56,7 @@ import {
   List,
   Cell,
 } from '@chipspc/vant-dgg'
-
+import CommentList from '@/components/mustKnown/CommentList'
 export default {
   name: 'ListItem',
   components: {
@@ -54,43 +67,42 @@ export default {
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
     [Cell.name]: Cell,
+    CommentList,
   },
 
   props: {
-    // banner: {
-    //   type: Array,
-    //   default: () => {
-    //     return []
-    //   },
-    // },
+    normalListData: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
   data() {
     return {
       loading: true,
       finished: false,
-      infoList: [
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-      ],
+      commentShow: false,
+      articleId: '1',
     }
+  },
+  watch: {
+    normalListData(newData, oldData) {
+      console.log('newData', newData)
+    },
   },
   methods: {
     handleScollList(e) {
       console.log('列表滚动', e)
       // this.throttle(this.scollChange(), 500, 1000)
+    },
+    applaudNumber(browseCount) {
+      return browseCount / 10000
+    },
+    showComment(id) {
+      console.log('id', id)
+      this.articleId = id
+      this.commentShow = true
     },
   },
 }
@@ -148,6 +160,10 @@ export default {
           margin-right: 20px;
           border-radius: 50%;
           img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            vertical-align: unset;
           }
         }
         .userName {
@@ -160,7 +176,6 @@ export default {
         }
       }
       .content {
-        width: 448px;
         min-height: 84px;
         font-size: 30px;
         font-family: PingFangSC-Regular, PingFang SC;

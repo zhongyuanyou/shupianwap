@@ -11,17 +11,17 @@
       <sp-icon name="search" class="right" color="#fff" size="0.4rem" />
     </div>
     <div class="top">
-      <h1>进站必看</h1>
-      <p>必懂上那些「压箱底」的宝藏内容</p>
+      <h1>{{ name }}</h1>
+      <p>{{ description }}</p>
     </div>
     <div class="listbox">
-      <div v-for="(item, index) in list" :key="index" class="list">
+      <div v-for="(item, index) in mustSeeData" :key="index" class="list">
         <h1>{{ item.title }}</h1>
         <div class="box">
           <div class="left" :style="{ width: item.img ? '300px' : '100%' }">
             <div class="top">
-              <img :src="item.userimg" alt="" />
-              <p>张译</p>
+              <img :src="item.avatar" alt="" />
+              <p>{{ item.userName }}</p>
             </div>
             <p class="tit">
               {{ item.content }}
@@ -30,9 +30,9 @@
           <img v-if="item.img" :src="item.img" alt="" class="right" />
         </div>
         <div class="num">
-          <p>{{ item.agree }} 赞同</p>
+          <p>{{ item.applaudCount }} 赞同</p>
           <i></i>
-          <p>{{ item.comment }} 评论</p>
+          <p>{{ item.remarkCount }} 评论</p>
         </div>
       </div>
     </div>
@@ -41,6 +41,7 @@
 
 <script>
 import { Icon } from '@chipspc/vant-dgg'
+import { knownApi } from '@/api'
 export default {
   name: 'MustSee',
   components: {
@@ -48,30 +49,43 @@ export default {
   },
   data() {
     return {
-      list: [
-        {
-          title:
-            '理性过剩、信息同质，创业者如何培养创造力？理性过剩、信息同质，创业者如何培养创造力？',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          userimg: 'https://cn.vuejs.org/images/logo.png',
-          username: '用户',
-          content:
-            '没人邀请回答本体，但是再不回答就老了。过去当兵十年，从集团军到文工团，没有过这个经没人邀请回答本体，但是再不回答就老了。过去当兵十年，从集团军到文工团，没有过这个经',
-          agree: '123',
-          comment: '321',
-        },
-        {
-          title: '理性过剩、信息同质，创业者如',
-          img: '',
-          userimg: 'https://cn.vuejs.org/images/logo.png',
-          username: '用户',
-          content:
-            '没人邀请回答本体，但是再不回答就老了。过去当兵十年，从集团军到文工团，没有过这个经没人邀请回答本体，但是再不回答就老了。过去当兵十年，从集团军到文工团，没有过这个经',
-          agree: '123',
-          comment: '321',
-        },
-      ],
+      categorIds: [],
+      mustSeeData: [],
+      name: '',
+      description: '',
     }
+  },
+  mounted() {
+    this.name = this.$route.query.name
+    this.description = this.$route.query.description
+    this.init()
+  },
+  methods: {
+    init() {
+      this.categorIds.push(this.$route.query.id)
+      this.getList()
+    },
+    async getList() {
+      // 组装参数
+      const params = {}
+      params.categorIds = this.categorIds
+      params.limit = 10
+      params.page = 1
+      const { code, message, data } = await this.$axios.post(
+        knownApi.questionArticle.list,
+        params
+      )
+      if (code === 200) {
+        if (data.rows.length > 0) {
+          this.mustSeeData = data.rows
+        } else {
+          this.attentionStatus = false
+          this.showNotAttention = true
+        }
+      } else {
+        console.log(message)
+      }
+    },
   },
 }
 </script>

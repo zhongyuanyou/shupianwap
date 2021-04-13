@@ -10,7 +10,7 @@
             class="my_icon"
             @click.native="$router.back()"
           ></my-icon>
-          <div v-show="showPaper" class="newspaperTitle">日报精选</div>
+          <div v-show="showPaper" class="newspaperTitle">{{ name }}</div>
           <my-icon
             name="sear_ic_sear"
             size="0.40rem"
@@ -19,21 +19,21 @@
           ></my-icon>
         </div>
       </sp-sticky>
-      <div class="newspaper">日报精选</div>
-      <div class="day_num">08</div>
-      <div class="weekday">周一</div>
-      <div class="title">专属必懂带逛小助手，带你发现并懂精品</div>
+      <div class="newspaper">{{ name }}</div>
+      <div class="day_num">{{ new Date().getDate() }}</div>
+      <div class="weekday">{{ getWekDay() }}</div>
+      <div class="title">{{ description }}</div>
     </div>
 
-    <div class="container_body"><ProblemItem /></div>
+    <div class="container_body">
+      <ProblemItem :newspaper-data="newspaperData" />
+    </div>
   </div>
 </template>
 <script>
 import { Sticky } from '@chipspc/vant-dgg'
 import ProblemItem from '@/components/mustKnown/recommend/ProblemItem'
-
-// import Search from '@/components/mustKnown/recommend/search/Search'
-// import { foundApi } from '@/api'
+import { knownApi } from '@/api'
 
 export default {
   name: 'Recommend',
@@ -43,6 +43,10 @@ export default {
   },
   data() {
     return {
+      name: '',
+      description: '',
+      categorIds: [],
+      newspaperData: [],
       showPaper: false,
       title: '考研复试体检包含什么项目',
       tabs: ['关注', '推荐', '热榜', '法律', '交易', '知产', '知识'],
@@ -57,7 +61,18 @@ export default {
       ],
     }
   },
+  mounted() {
+    this.init()
+  },
   methods: {
+    // 初始化
+    init() {
+      this.name = this.$route.query.name
+      this.description = this.$route.query.description
+      this.categorIds.push(this.$route.query.id)
+      this.getList()
+      this.getWekDay()
+    },
     toggleTabs(index) {
       console.log('index', index)
       this.nowIndex = index
@@ -69,6 +84,32 @@ export default {
       } else {
         this.showPaper = false
       }
+    },
+    async getList() {
+      // 组装参数
+      const params = {}
+      params.categorIds = this.categorIds
+      params.limit = 10
+      params.page = 1
+      const { code, message, data } = await this.$axios.post(
+        knownApi.questionArticle.list,
+        params
+      )
+      if (code === 200) {
+        if (data.rows.length > 0) {
+          this.newspaperData = data.rows
+          console.log('this.normalListData', this.newspaperData)
+        } else {
+          this.attentionStatus = false
+          this.showNotAttention = true
+        }
+      } else {
+        console.log(message)
+      }
+    },
+    getWekDay() {
+      const date = '周' + '天一二三四五六'.charAt(new Date().getDay())
+      return date
     },
   },
 }

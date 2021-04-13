@@ -149,6 +149,7 @@ export default {
       })
     },
     toTimeStamp(time) {
+      console.log('time', time)
       let times = time.replace(/-/g, '/')
       times = Date.parse(times)
       const nowTime = new Date().getTime()
