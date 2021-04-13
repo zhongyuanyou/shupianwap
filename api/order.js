@@ -1,8 +1,6 @@
 'use strict'
 import { request } from '@/utils/request'
-// import { CHIPS_APP_BASE_URL, CHIPS_WAP_BASE_URL } from '@/config/constant'
-import { CHIPS_APP_BASE_URL } from '@/config/constant'
-const CHIPS_WAP_BASE_URL = 'http://172.16.133.40:7001/service'
+import { CHIPS_APP_BASE_URL, CHIPS_WAP_BASE_URL } from '@/config/constant'
 const category = {
   // 订单列表
   list({ axios }, params) {

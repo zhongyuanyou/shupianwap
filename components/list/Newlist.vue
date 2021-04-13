@@ -133,16 +133,16 @@ export default {
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         > span {
+          height: 35px;
           display: inline-block;
-          padding: 2px;
+          padding: 0 6px;
           background: #ec5330;
           border-radius: 4px;
           margin-left: 10px;
           font-size: 20px;
           text-align: center;
-          font-weight: bold;
           color: #ffffff;
-          text-align: 28px;
+          line-height: 35px;
         }
       }
       > .tag {

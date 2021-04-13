@@ -35,7 +35,12 @@
         <div v-if="tablist[tabAct].is">
           <div class="databox">
             <div v-if="datalist.length > 0" class="listbox">
-              <div v-for="(item, index) in datalist" :key="index" class="list">
+              <div
+                v-for="(item, index) in datalist"
+                :key="index"
+                class="list"
+                @click="checkitem(item, index)"
+              >
                 <div class="left">
                   <h1>{{ item.reducePrice }}</h1>
                   <p>满{{ item.fullPrice }}元可用</p>
@@ -44,18 +49,13 @@
                   <div class="data">
                     <h1>{{ item.couponName }}</h1>
                     <p v-if="item.useType === 1">全品类通用</p>
-                    <p v-else-if="item.useType === 2">
-                      限“小规模纳税人代理记账”服务 使用
-                    </p>
-                    <p v-else>限“小规模纳税人代理记账”服务 使用</p>
+                    <p v-else-if="item.useType === 2">限定“部分类别产品”使用</p>
+                    <p v-else>限定“指定产品”使用</p>
                     <p class="date">{{ item.serviceLife }}</p>
                   </div>
                   <div class="right">
                     <sp-radio-group v-model="radio">
-                      <sp-radio
-                        :name="index"
-                        @click="checkitem(item)"
-                      ></sp-radio>
+                      <sp-radio :name="index"></sp-radio>
                     </sp-radio-group>
                   </div>
                 </div>
@@ -208,8 +208,9 @@ export default {
           })
         })
     },
-    checkitem(item) {
+    checkitem(item, index) {
       this.checkarr = item
+      this.radio = index
       this.num = this.checkarr.reducePrice
     },
     close(data) {

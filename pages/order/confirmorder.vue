@@ -208,10 +208,12 @@ import {
   Skeleton,
   // CheckboxGroup,
 } from '@chipspc/vant-dgg'
+import { mapMutations } from 'vuex'
 import Head from '@/components/common/head/header'
 import Popup from '@/components/PlaceOrder/Popup'
 import { productDetailsApi, auth, shopCart } from '@/api'
 import { coupon, order } from '@/api/index'
+import listJumpIm from '@/mixins/listJumpIm'
 export default {
   name: 'PlaceOrder',
   components: {
@@ -223,6 +225,8 @@ export default {
     Popup,
     [Skeleton.name]: Skeleton,
   },
+  layout: 'keepAlive',
+  mixins: [listJumpIm],
   data() {
     return {
       popupshow: false,
@@ -231,7 +235,6 @@ export default {
       radio: '',
       coupon: '',
       message: '',
-      news: { num: '123', price: '1392.00', money: '4600.00' },
       order: '',
       num: 0,
       tablist: [
@@ -267,6 +270,7 @@ export default {
     }
   },
   mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'PlaceOrder' })
     if (this.$cookies.get('contaract')) {
       this.contaract = this.$cookies.get('contaract')
       this.$cookies.remove('contaract')
@@ -281,6 +285,9 @@ export default {
     console.log(this.$store.state.city, '城市')
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     goagr() {
       this.$router.push({
         name: 'login-protocol',
@@ -339,7 +346,7 @@ export default {
           this.order.num = this.order.list.length
           this.price = this.order.salesPrice
           this.getInitData(2)
-          this.getInitData(4)
+          this.getInitData(6)
           this.loading = false
         } else {
           this.loading = false
