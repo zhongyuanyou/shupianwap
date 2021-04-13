@@ -169,7 +169,6 @@ export default {
       }
     },
     changeTab(name) {
-      console.log('name', name)
       // 初始化数据列表
       this.page = 1
       this.selectedOrderStatus = name
@@ -204,15 +203,17 @@ export default {
           this.loadingMore = false
           const arr = res.records
           if (arr.length) {
-            if (this.page === 1) this.list = arr
             if (arr.length <= this.limit) this.noMore = true
-            this.page++
             for (let i = 0, l = arr.length; i < l; i++) {
               this.changeMoney(arr[i])
             }
-            const nowData = JSON.parse(JSON.stringify(this.list))
-            const allData = nowData.concat(arr)
-            this.list = allData
+            if (this.page === 1) this.list = arr
+            else {
+              const nowData = JSON.parse(JSON.stringify(this.list))
+              const allData = nowData.concat(arr)
+              this.list = allData
+            }
+            this.page++
           } else {
             this.noMore = true
             this.list = []
