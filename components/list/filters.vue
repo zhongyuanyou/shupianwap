@@ -9,16 +9,17 @@
         <div v-if="item.code == 'class'" class="class">
           <ServiceSelect
             :items="classification"
-            :isSelectMore="true"
-            :activeData="activeData"
+            :is_select_more="true"
+            :active_data="activeData"
             @select="classfn"
+            @navselect="navselect"
           ></ServiceSelect>
         </div>
 
         <div v-if="item.code == 'price'" class="price">
           <PriceFilter
-            :priceList="priceList"
-            :echoData="price"
+            :priceList="pricelist"
+            :echo_data="price"
             @selectItems="pricefn"
           ></PriceFilter>
         </div>
@@ -86,7 +87,7 @@ export default {
         }
       },
     },
-    priceList: {
+    pricelist: {
       type: Array,
       default() {
         return []
@@ -145,6 +146,10 @@ export default {
     },
     pricefn(item, items) {
       this.$emit('pricefn', item, items)
+    },
+    navselect(item) {
+      console.log(item)
+      this.$emit('navselect', item)
     },
   },
 }
