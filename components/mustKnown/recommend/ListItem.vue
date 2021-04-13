@@ -9,19 +9,19 @@
   >
     <sp-cell v-for="(item, index) in normalListData" :key="index">
       <div class="item">
-        <div class="item_title" @click="$router.push('/known/detail/article')">
+        <div class="item_title" @click="goDetailPage(item.type, item.id)">
           {{ item.title }}
         </div>
 
         <div class="item_content">
           <div class="item_content_lf">
             <div class="item_Info">
-              <div class="userPhoto">
+              <div class="userPhoto" @click="goUserDetail(item.userId)">
                 <img :src="item.avatar" alt="" />
               </div>
               <div class="userName">{{ item.userName }}</div>
             </div>
-            <p class="content" @click="$router.push('/known/detail/article')">
+            <p class="content" @click="goDetailPage(item.type, item.id)">
               {{ item.content }}
             </p>
           </div>
@@ -104,6 +104,40 @@ export default {
       this.articleId = id
       this.commentShow = true
     },
+    // 进入文章/问题/回答详情页面
+    goDetailPage(type, id) {
+      if (type === 1) {
+        this.$router.push({
+          path: '/known/detail/question',
+          query: {
+            id,
+          },
+        })
+      } else if (type === 2) {
+        this.$router.push({
+          path: '/known/detail/article',
+          query: {
+            id,
+          },
+        })
+      } else if (type === 3) {
+        this.$router.push({
+          path: '/known/detail/answer',
+          query: {
+            id,
+          },
+        })
+      }
+    },
+    // 进入用户详情
+    goUserDetail(userId) {
+      this.$router.push({
+        path: '/known/home',
+        query: {
+          userId,
+        },
+      })
+    },
   },
 }
 </script>
@@ -176,7 +210,6 @@ export default {
         }
       }
       .content {
-        min-height: 84px;
         font-size: 30px;
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;

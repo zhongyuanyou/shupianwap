@@ -52,9 +52,14 @@ export default {
     attentionMore() {
       this.$router.push({ path: 'known/more' })
     },
-    clickImg() {
+    clickImg(inviteeId) {
       // 跳转到个人主页 目前不知道个人主页在哪里
-      this.$router.push({ path: 'known/attention/attentionMore' })
+      this.$router.push({
+        path: '/known/home',
+        query: {
+          id: inviteeId,
+        },
+      })
     },
   },
 }

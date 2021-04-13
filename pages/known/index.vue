@@ -68,6 +68,7 @@
                 query: {
                   id: subjectList[0].id,
                   name: subjectList[0].name,
+                  description: subjectList[0].description,
                 },
               })
             "
@@ -83,6 +84,7 @@
                 query: {
                   id: subjectList[1].id,
                   name: subjectList[1].name,
+                  description: subjectList[1].description,
                 },
               })
             "
@@ -185,14 +187,14 @@
       <div class="answer_article">
         <div class="item" @click="tonav('/known/publish/question')">
           <img
-            src="https://cdn.shupian.cn/sp-pt/wap/8sixz8dnnt40000.png"
+            src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
             alt=""
           />
           <span>提个问题</span>
         </div>
         <div class="item" @click="tonav('/known/publish/chooseque')">
           <img
-            src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
+            src="https://cdn.shupian.cn/sp-pt/wap/8sixz8dnnt40000.png"
             alt=""
           />
           <span>回答问题</span>
@@ -353,6 +355,7 @@ export default {
     async toggleTabs(index, item) {
       this.tabIndex = index
       const params = {}
+      this.listData = []
       // 去请求推荐列表数据
       if (item.executionParameters === 'tuijian') {
         this.showRecommend = true
@@ -366,6 +369,7 @@ export default {
         this.showRecommend = false
         this.normalList = false
         this.showHot = false
+        console.log('guanzhu')
         await this.attentionList()
         // 请求热榜数据
       } else if (item.executionParameters === 'rebang') {

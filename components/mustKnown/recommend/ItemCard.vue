@@ -23,7 +23,7 @@
           >
             {{ index + 1 }}
           </div>
-          <div class="item_content">
+          <div class="item_content" @click="goDetailPage(item.type, item.id)">
             <p>
               {{ item.title }}
             </p>
@@ -31,7 +31,7 @@
               >{{ computeHotNumber(item.browseCount) }} 万热度</span
             >
           </div>
-          <div class="item_img">
+          <div class="item_img" @click="goDetailPage(item.type, item.id)">
             <img
               v-if="item.contentImageUrl"
               :src="item.contentImageUrl.split(',')[0]"
@@ -109,6 +109,31 @@ export default {
     computeHotNumber(browseCount) {
       return browseCount / 10000
     },
+    // 进入文章/问题/回答详情页面
+    goDetailPage(type, id) {
+      if (type === 1) {
+        this.$router.push({
+          path: '/known/detail/question',
+          query: {
+            id,
+          },
+        })
+      } else if (type === 2) {
+        this.$router.push({
+          path: '/known/detail/article',
+          query: {
+            id,
+          },
+        })
+      } else if (type === 3) {
+        this.$router.push({
+          path: '/known/detail/answer',
+          query: {
+            id,
+          },
+        })
+      }
+    },
   },
 }
 </script>
@@ -139,7 +164,7 @@ export default {
   border-top: 1px solid #dddddd;
   .item_top {
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     .item_span {
       text-align: center;
       font-size: 28px;
@@ -150,26 +175,29 @@ export default {
     .first {
       width: 30px;
       height: 44px;
-      background: linear-gradient(315deg, #fa2925 0%, #ff8e8e 100%);
+      background: url('https://cdn.shupian.cn/sp-pt/wap/fszz6gnty1s0000.png');
       margin-top: 10px;
       margin-right: 20px;
       color: #fff;
+      background-size: 100%;
     }
     .second {
       width: 30px;
       height: 44px;
-      background: linear-gradient(315deg, #ff8208 0%, #ffb132 100%);
+      background: url('https://cdn.shupian.cn/sp-pt/wap/5rd435gzz4s0000.png');
       margin-top: 10px;
       margin-right: 20px;
       color: #fff;
+      background-size: 100%;
     }
     .third {
       width: 30px;
       height: 44px;
-      background: linear-gradient(135deg, #e4c57c 0%, #e2a972 100%);
+      background: url('https://cdn.shupian.cn/sp-pt/wap/blyffrn3qg80000.png');
       margin-top: 10px;
       margin-right: 20px;
       color: #fff;
+      background-size: 100%;
     }
     .item_content {
       width: 398px;

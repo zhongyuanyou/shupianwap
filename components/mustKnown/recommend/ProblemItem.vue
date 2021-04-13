@@ -9,14 +9,18 @@
     <sp-cell v-for="(item, index) in newspaperData" :key="index">
       <div class="item_span">1/精选</div>
       <div class="item">
-        <div class="item_title">{{ item.title }}</div>
+        <div class="item_title" @click="goDetailPage(item.type, item.id)">
+          {{ item.title }}
+        </div>
         <div class="item_Info">
-          <div class="userPhoto">
+          <div class="userPhoto" @click="goUserDetail(item.userId)">
             <img :src="item.avatar" alt="" />
           </div>
-          <div class="userName">{{ item.userName }}</div>
+          <div class="userName" @click="goUserDetail(item.userId)">
+            {{ item.userName }}
+          </div>
         </div>
-        <div class="item_content">
+        <div class="item_content" @click="goDetailPage(item.type, item.id)">
           <p class="content">
             {{ item.content }}
             {{ item.contentText }}
@@ -81,7 +85,42 @@ export default {
       finished: false,
     }
   },
-  methods: {},
+  methods: {
+    // 进入文章/问题/回答详情页面
+    goDetailPage(type, id) {
+      if (type === 1) {
+        this.$router.push({
+          path: '/known/detail/question',
+          query: {
+            id,
+          },
+        })
+      } else if (type === 2) {
+        this.$router.push({
+          path: '/known/detail/article',
+          query: {
+            id,
+          },
+        })
+      } else if (type === 3) {
+        this.$router.push({
+          path: '/known/detail/answer',
+          query: {
+            id,
+          },
+        })
+      }
+    },
+    // 进入用户详情
+    goUserDetail(userId) {
+      this.$router.push({
+        path: '/known/home',
+        query: {
+          userId,
+        },
+      })
+    },
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -108,7 +147,6 @@ export default {
   text-align: center;
 }
 .item {
-  height: 476px;
   background: linear-gradient(180deg, #f1f3fa 0%, #fafafa 100%);
   border-radius: 12px;
   padding: 44px 32px;
