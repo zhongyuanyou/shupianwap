@@ -25,9 +25,11 @@
     <!--      根据《中华人民共和国公司法》规定，注册公司时需要依法向注册公司时需要...-->
     <!--    </div>-->
     <div class="title_bottom">
-      <span class="title_bottom_money"
-        >{{ sellingGoodsData.salesPrice }}元</span
-      >
+      <span class="title_bottom_money">{{
+        sellingGoodsData.salesPrice !== '0.00'
+          ? sellingGoodsData.salesPrice + '元'
+          : '面议'
+      }}</span>
       <span class="title_bottom_num"
         >销量 {{ sellingGoodsData.salesVolume }}</span
       >
