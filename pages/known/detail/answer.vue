@@ -1,8 +1,8 @@
 <template>
   <div ref="myPage">
-    <div v-show="!showHead2" class="head head1">
+    <div v-if="!showHead2" class="head head1">
       <my-icon
-        name="nav_ic_back"
+        name="zuo"
         class="btn-icon"
         size="0.4rem"
         color="#1A1A1A"
@@ -11,26 +11,25 @@
       <div class="btn-area">
         <span>
           <my-icon
-            name="nav_ic_back"
+            name="yaoqing"
             size="0.4rem"
-            color="#1A1A1A"
             @click.native="onLeftClick"
           ></my-icon>
           邀请</span
         >
         <span>
           <my-icon
+            v-if="answerDetails && answerDetails.createrId === userInfo.userId"
             class="back-icon"
-            name="nav_ic_back"
+            name="xiehuida"
             size="0.4rem"
-            color="#1A1A1A"
             @click.native="onLeftClick"
           ></my-icon>
           写回答</span
         >
       </div>
     </div>
-    <div v-show="showHead2" class="head head2">
+    <div v-if="showHead2" class="head head2">
       <my-icon
         class="btn-icon"
         name="nav_ic_back"
@@ -105,7 +104,7 @@
 </template>
 
 <script>
-import { Field, Tab, Tabs, Button, Image } from '@chipspc/vant-dgg'
+import { Field, Tab, Tabs, Button, Image, Toast } from '@chipspc/vant-dgg'
 import Comment from '~/components/mustKnown/DetailComment'
 export default {
   components: {
@@ -116,7 +115,7 @@ export default {
   },
   data() {
     return {
-      showHead2: true,
+      showHead2: false,
       commentList: [
         {
           username: '用户1',
@@ -174,7 +173,22 @@ export default {
         },
       ],
       commentList2: [],
+      answerDetails: '',
+      headerData: {},
     }
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.user
+    },
+  },
+  created() {
+    if (this.$route.params.id) {
+      this.currentDetailsId = this.$route.params.id
+    } else {
+      this.currentDetailsId = '8065065421625749504'
+    }
+    this.getDetailData()
   },
   mounted() {
     this.commentList2 = JSON.parse(JSON.stringify(this.commentList)).splice(
@@ -182,25 +196,53 @@ export default {
       2
     )
     // this.$refs.myPage.addEventListener('scroll', this.handleScoll)
-    const element = this.$refs.myPage
-    // 监听这个dom的scroll事件
-    element.addEventListener(
-      'scroll',
-      () => {
-        this.handleScroll()
-      },
-      false
-    )
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    getDetailData() {
+      const baseUrl =
+        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do'
+      this.loading = true
+      this.$axios
+        .get(baseUrl, {
+          params: {
+            id: this.currentDetailsId,
+            userId: this.userInfo.userId || '120',
+            userHandleFlag: 1,
+            userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+            userName: this.userInfo.userName || '测试用户',
+          },
+        })
+        .then((res) => {
+          this.loading = false
+          if (res.code === 200) {
+            this.answerDetails = res.data
+            this.headerData.createrName = this.answerDetails.createrName
+            this.headerData.contentText = this.answerDetails.contentText
+            this.headerData.avatar = this.answerDetails.avatar
+            this.answerDetails.content =
+              '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+    },
     handleScoll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
-      const scrollTop = this.$refs.myPage.scrollTop // 滚动条距离顶部的位置
+      const scrollTop = this.$refs.myPage.getBoundingClientRect().top // 滚动条距离顶部的位置
       console.log('scrollTop', scrollTop)
-      if (scrollTop > 100) {
+      if (scrollTop < 0) {
         this.showHead2 = true
       } else {
-        this.showHead2 = true
+        this.showHead2 = false
       }
     },
     onLeftClick() {
@@ -243,6 +285,7 @@ export default {
   font-weight: 500;
   color: #4974f5;
   padding: 0 40px;
+  z-index: 99;
   .btn-icon {
     float: left;
   }
