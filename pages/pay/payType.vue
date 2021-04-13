@@ -42,7 +42,7 @@
       <template>
         <p class="tit">
           我已阅读过并知晓<span @click="enterAgreement"
-            >《薯片平台订单协议》</span
+            >《{{ protocoTitle }}》</span
           >
         </p>
       </template>
@@ -81,6 +81,7 @@ export default {
   },
   data() {
     return {
+      protocoTitle: '', // 协议标题
       number: 0,
       payCallBackData: {
         cusOrderId: 0,
@@ -114,18 +115,18 @@ export default {
           icon: 'pay_ic_alipay',
           color: 'rgba(23, 151, 236, 1)',
         },
-        {
-          code: 'CRISPS_C_ZFFS_WECHAT',
-          name: '微信支付',
-          icon: 'pay_ic_wechat',
-          color: 'rgba(41, 175, 18, 1)',
-        },
-        {
-          code: 'CRISPS_C_ZFFS_CARD',
-          name: '银行卡支付',
-          icon: 'pay_ic_bank',
-          color: 'rgba(255, 133, 60, 1)',
-        },
+        // {
+        //   code: 'CRISPS_C_ZFFS_WECHAT',
+        //   name: '微信支付',
+        //   icon: 'pay_ic_wechat',
+        //   color: 'rgba(41, 175, 18, 1)',
+        // },
+        // {
+        //   code: 'CRISPS_C_ZFFS_CARD',
+        //   name: '银行卡支付',
+        //   icon: 'pay_ic_bank',
+        //   color: 'rgba(255, 133, 60, 1)',
+        // },
       ],
       payPlatform: 'CRISPS_C_ZFFS_ALI',
       payName: '支付宝支付',
@@ -145,38 +146,37 @@ export default {
       this.formData.cusOrderId = this.$route.query.cusOrderId
       this.formData.batchIds = this.$route.query.batchIds
       this.getPayParamsFormData.cusOrderId = this.$route.query.cusOrderId
-      this.payCallBackData.cusOrderId = this.$route.query.cusOrderId
-      // 将获取过来的
+      this.payCallBackData.cusOrderId = this.$route.query.cusOrderId // cusOrderId获取
 
       this.enablePayMoney()
     } else {
       this.goBack()
     }
     const startTime = localStorage.getItem('startTime')
-    if (
-      localStorage.getItem('cusOrderId') &&
-      localStorage.getItem('serialNumber')
-    ) {
-      if (startTime) {
-        const nowTime = this.getNowTime()
-        console.log('nowTime - startTime', nowTime - startTime)
-        if (nowTime - startTime > 3000) {
-          time = setInterval(() => {
-            this.number++
-            this.getPayResult()
-          }, 2000)
-        }
-        // else {
-        //   this.$router.push({
-        //     path: '/pay/payResult',
-        //     query: {
-        //       payStatus: false,
-        //     },
-        //   })
-        this.clearLocalStorage()
-        // }
+    // if (
+    //   localStorage.getItem('cusOrderId') &&
+    //   localStorage.getItem('serialNumber')
+    // ) {
+    if (startTime) {
+      const nowTime = this.getNowTime()
+      console.log('nowTime - startTime', nowTime - startTime)
+      if (nowTime - startTime > 3000) {
+        time = setInterval(() => {
+          this.number++
+          this.getPayResult()
+        }, 2000)
       }
+      // else {
+      //   this.$router.push({
+      //     path: '/pay/payResult',
+      //     query: {
+      //       payStatus: false,
+      //     },
+      //   })
+      // this.clearLocalStorage()
+      // }
     }
+    // }
   },
 
   methods: {
@@ -207,7 +207,11 @@ export default {
       try {
         this.loading = true
         const data = await auth.protocol(params)
-        console.log('data:', data)
+        console.log('data++++', data)
+
+        if (data.rows.length > 0) {
+          this.protocoTitle = data.rows[0].title
+        }
         // this.agreementData = data.rows || {}
         const { rows = [] } = data || {}
         this.agreementData = rows[0] || {}
@@ -254,7 +258,6 @@ export default {
           that.diff--
         }, 1000)
       }
-
       // 每执行一次定时器就减少一秒
     },
     switchPayType(item) {
@@ -276,6 +279,7 @@ export default {
           this.responseData = result
           const countDownTimeLong = this.responseData.countDownTimeLong
           this.countDown(countDownTimeLong) // 倒计时
+          localStorage.setItem('cusOrderId', this.$route.query.cusOrderId)
         })
         .catch((e) => {
           if (e.code !== 200) {
@@ -309,7 +313,7 @@ export default {
               forbidClick: true,
             })
             this.clearLocalStorage()
-            this.$router.go({ path: '/order' })
+            this.$router.push({ path: '/order' })
           }
         })
         .catch((e) => {
@@ -320,6 +324,7 @@ export default {
     },
     // 客户单付款
     getPayParams() {
+      console.log('this.raido', this.radio)
       if (!this.radio) {
         this.$xToast.show({
           message: '请先阅读薯片平台订单协议',
@@ -337,7 +342,6 @@ export default {
               const payUrl = this.responseData.payParam
               // window.location.href = payUrl
               this.payCallBackData.serialNumber = this.responseData.guaguaPayPartyNo
-              localStorage.setItem('cusOrderId', this.$route.query.cusOrderId)
               localStorage.setItem(
                 'serialNumber',
                 this.payCallBackData.serialNumber
@@ -410,7 +414,6 @@ export default {
     }
   }
   .type-list {
-    height: 332px;
     background: white;
     font-weight: bold;
     color: #1a1a1a;
