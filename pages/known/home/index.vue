@@ -5,10 +5,13 @@
         <sp-image round class="user_avatar" fit="cover" :src="avatar" />
         <div class="bt_box">
           <template v-if="homeUserId && homeUserId !== userInfo.userId">
-            <div v-if="!isAttention" class="bt_attention" @click="attention">
-              + 关注
+            <div
+              class="bt_attention"
+              :class="{ bt_has_attention: isAttention }"
+              @click="attention"
+            >
+              {{ isAttention ? '已关注' : '+ 关注' }}
             </div>
-            <div v-else class="bt_has_attention">已关注</div>
           </template>
           <div v-if="source" class="bt_contact">
             <my-icon
@@ -226,8 +229,30 @@ export default {
       this.loading = true
       this.getList()
     },
-    attention() {
-      console.log('关注')
+    async attention() {
+      const { code, message } = await this.$axios.post(
+        knownApi.home.attention,
+        {
+          handleUserId: this.userInfo.userId,
+          handleUserName: this.userInfo.userName || '测试用户',
+          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+          handleType: this.isAttention ? 1 : 2,
+          attentionUserId: this.$route.query.homeUserId,
+          attentionUserName: this.userName,
+          attentionUserType: 1,
+        }
+      )
+      if (code === 200) {
+        this.$xToast.show({
+          message: this.isAttention ? '取关成功' : '关注成功',
+          duration: 1000,
+          icon: 'toast_ic_comp',
+          forbidClick: true,
+        })
+        this.isAttention = !this.isAttention
+      } else {
+        console.log(message)
+      }
     },
     comments(id) {
       this.articleId = id
@@ -342,11 +367,7 @@ export default {
           color: #ffffff;
         }
         .bt_has_attention {
-          width: 144px;
-          height: 64px;
-          line-height: 64px;
           background: #f5f5f5;
-          border-radius: 8px;
           color: #999999;
         }
         .bt_contact {
