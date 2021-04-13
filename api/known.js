@@ -21,7 +21,8 @@ const knownApi = {
     categoryList: `${CHIPS_WAP_BASE_URL}/nk/known_category/v1/list.do`, // 获取分类列表
     list: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_page.do`, // 获取列表数据
     recommendList: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/recommend_page.do`, // 获取推荐列表数据
-    attentionUserList: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_my_attention_user_page.do`, // 获取关注用户动态列表
+    attentionMore: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/attention_more.do`, // 关注更多列表
+    attentionUserList: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_my_attention_user_page.do`, // 获取关注用户列表
     focusFansList: `${CHIPS_WAP_BASE_URL}/service/nk/known_home/v1/focusFansList.do`, // 获取关注用户列表
   },
   content: {
