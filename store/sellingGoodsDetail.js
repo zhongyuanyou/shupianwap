@@ -23,7 +23,9 @@ export const state = () => ({
     couponList: [], // 优惠券集合
     planner: null, // 钻展位规划师
     goodsImgs: null, // 销售商品图片
-    refConfig: null, // 销售商品配置信息
+    refConfig: {
+      tradeType: 'PRO_PRE_ASK',
+    }, // 销售商品配置信息
     salesGoodsTags: [], // 销售商品标签集合
   },
 })

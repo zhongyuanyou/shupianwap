@@ -4,8 +4,8 @@
       v-for="(item, index) in list"
       :key="index"
       class="list"
-      :class="active == index ? 'act' : ''"
-      @click="activefn(index)"
+      :class="sortactive.code == item.code ? 'act' : ''"
+      @click="activefn(item)"
     >
       {{ item.name }}
     </div>
@@ -13,15 +13,26 @@
 </template>
 <script>
 export default {
+  props: {
+    list: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+    sortactive: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
+  },
   data() {
-    return {
-      list: [{ name: '从低到高' }, { name: '从高到低' }],
-      active: -1,
-    }
+    return {}
   },
   methods: {
-    activefn(index) {
-      this.active = index
+    activefn(item) {
+      this.$emit('sortfn', item)
     },
   },
 }

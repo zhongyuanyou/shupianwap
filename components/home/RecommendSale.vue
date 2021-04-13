@@ -107,7 +107,7 @@ export default {
         deviceId: '', // 设备ID（用户唯一标识） 0022ef1a-f685-469a-93a8-5409892207a2
         areaCode: '', // 区域编码
         sceneId: 'app-mainye-01', // 场景ID
-        maxsize: 100, // 要求推荐产品的数量
+        maxsize: 120, // 要求推荐产品的数量
         platform: 'APP', // 平台（app,m,pc）
         formatId: '', // 产品类别
         page: {
@@ -183,7 +183,6 @@ export default {
       })
     },
     priceRest(index = 0, price) {
-      console.log('price', price)
       const isFlot = price.indexOf('.')
       if (isFlot !== -1) {
         return price.split('.')[index]

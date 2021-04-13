@@ -1,8 +1,27 @@
 <template>
   <div class="jyGoods">
-    <Filters ref="dropDownMenu" :filter-data="jyFilterData" />
+    <Filters
+      ref="dropDownMenu"
+      :filter-data="jyFilterData"
+      :classification="items.typeData"
+      :active_data="itemsclass"
+      :pricelist="items.price"
+      :sort="items.sortFilter"
+      :sortactive="sortactive"
+      @classfn="classfn"
+      @pricefn="pricefn"
+      @sortfn="sortfn"
+      @reset="reset"
+      @confirm="confirm"
+      @navselect="navselect"
+    />
     <div class="listbox" :style="{ height: listboxheight + 'px' }">
-      <Newlist ref="list" :searchtext="searchkey"></Newlist>
+      <Newlist
+        ref="list"
+        :datalist="datalist"
+        @load="pagefn"
+        @Refresh="Refresh"
+      ></Newlist>
     </div>
   </div>
 </template>
@@ -11,7 +30,7 @@
 import Newlist from '@/components/list/Newlist'
 import Filters from '@/components/list/filters'
 import searchList from '@/mixins/searchList'
-
+import { goods } from '@/api/index'
 export default {
   name: 'JyGoods',
   components: {
@@ -24,6 +43,10 @@ export default {
       type: String,
       default: '',
     },
+    heigth: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
@@ -33,114 +56,174 @@ export default {
       finished: false,
       maxHeight: 0,
       activeTabIndex: 0,
-      formData: {},
       typeText: '',
+      itemsclass: [
+        { id: -1, name: '不限', text: '不限' },
+        { services: [{ id: -1, name: '不限', text: '不限' }] },
+      ],
       skeletonLoading: true,
       // jyFilterData: {}, // 保存所有交易业态的筛选项数据
       jyFilterData: [
         {
-          children: [],
-          code: 'CONDITION-JY-ZZ-LB',
-          componentName: 'SelectFilter',
-          ext1: 'qualification_type',
-          ext2: '',
-          ext3: '1',
-          ext4: 'FL20201224136348',
-          id: '607967087427479044',
-          isSelects: false,
-          levels:
-            '-1_607966778189835763_607966846909310222_607967018708008664_607967018708008721',
           name: '全部分类',
-          pcode: 'CONDITION-JY-ZZ',
+          code: 'class',
         },
         {
-          children: [
-            {
-              code: 'CONDITION-JY-ZZ-JG-A',
-              ext1: 'platform_price',
-              ext2: '',
-              ext3: '',
-              ext4: '',
-              id: '607967121787221663',
-              levels:
-                '-1_607966778189835763_607966846909310222_607967018708008664_607967018708008721_607967087427479046',
-              name: '不限',
-              pcode: 'CONDITION-JY-ZZ-JG',
-            },
-            {
-              code: 'CONDITION-JY-ZZ-JG-B',
-              ext1: 'platform_price',
-              ext2: '0-5000000',
-              ext3: '',
-              ext4: '',
-              id: '607967121787221662',
-              levels:
-                '-1_607966778189835763_607966846909310222_607967018708008664_607967018708008721_607967087427479046',
-              name: '5万以下',
-              pcode: 'CONDITION-JY-ZZ-JG',
-            },
-          ],
-          code: 'CONDITION-JY-ZZ-JG',
-          componentName: 'PriceFilter',
-          ext1: 'platform_price',
-          ext2: '',
-          ext3: '',
-          ext4: '',
-          id: '607967087427479046',
-          isSelects: false,
-          levels:
-            '-1_607966778189835763_607966846909310222_607967018708008664_607967018708008721',
           name: '价格',
-          pcode: 'CONDITION-JY-ZZ',
+          code: 'price',
         },
         {
-          code: 'CONDITION-JY-ZZ-PX',
-          componentName: 'SortFilter',
-          ext1: '',
-          ext2: '',
-          ext3: '',
-          ext4: '',
-          id: '607967087427479064',
-          isSelects: false,
-          levels:
-            '-1_607966778189835763_607966846909310222_607967018708008664_607967018708008721',
           name: '排序',
-          pcode: 'CONDITION-JY-ZZ',
-          children: {
-            code: 'CONDITION-JY-ZZ-PX-A',
-            ext1: 'CONDITION-JY-ZZ-PX-A',
-            ext2: '',
-            ext3: '',
-            ext4: '',
-            id: '607967121787221733',
-            levels:
-              '-1_607966778189835763_607966846909310222_607967018708008664_607967018708008721_607967087427479064',
-            name: '综合排序',
-            pcode: 'CONDITION-JY-ZZ-PX',
-          },
+          code: 'sort',
         },
       ],
       jyGoodsListData: {}, // 保存所有交易业态的列表数据
       currentTabJyCode: '', // 当前tab选中的jy code
       filterItem: {}, // 保存所有交易业态的已筛选数据
       isReq: {}, // 存储当前业态是否已经进行过搜索
+      formData: {
+        start: 1,
+        limit: 10,
+        needTypes: 1,
+        needGoodsList: 1,
+        searchKey: this.searchkey,
+        price: this.priceactive,
+        sort: this.sortactive,
+        class: this.itemsclass,
+        clientType: 'COMDIC_TERMINAL_APP',
+      },
+      datalist: [],
+      items: '',
+      sortactive: {},
+      priceactive: {
+        minPrice: '',
+        maxPrice: '',
+        activeItems: {},
+      },
     }
   },
   computed: {},
   watch: {},
   mounted() {
-    console.log(this.list, 'list')
-    this.listboxheight =
-      document.documentElement.clientHeight -
-      (this.$parent.$refs.search.$el.offsetHeight +
-        this.$refs.dropDownMenu.$el.offsetHeight)
+    this.$nextTick(() => {
+      this.listboxheight =
+        document.documentElement.clientHeight -
+        (this.heigth + this.$refs.dropDownMenu.$el.offsetHeight + 65)
+    })
   },
   methods: {
+    confirm() {
+      this.datalist = []
+      this.formData.start = 1
+      this.formData.needTypes = 0
+      this.formData.price = this.priceactive
+      this.formData.sort = this.sortactive
+      this.formData.class = this.itemsclass
+      this.getlist()
+    },
+    navselect(item) {
+      if (item[0].id === -1 && item[0].name === '不限') {
+        this.jyFilterData[0].name = '全部分类'
+      } else {
+        this.jyFilterData[0].name = item[0].name
+      }
+    },
+    reset() {
+      this.priceactive = {
+        minPrice: '',
+        maxPrice: '',
+        activeItems: [],
+      }
+      this.itemsclass = [
+        { id: -1, name: '不限', text: '不限' },
+        { services: [{ id: -1, name: '不限', text: '不限' }] },
+      ]
+      this.sortactive = {}
+      this.jyFilterData[0].name = '全部分类'
+      this.jyFilterData[1].name = '价格'
+      this.jyFilterData[2].name = '排序'
+    },
+    pricefn(item, items) {
+      this.priceactive.activeItems = item
+      if (this.priceactive.activeItems) {
+        this.jyFilterData[1].name = this.priceactive.activeItems.name
+      }
+    },
+    classfn(item) {
+      if (item[1].services.length && item[1].services.length > 0) {
+        if (
+          item[1].services[0].id !== -1 &&
+          item[1].services[0].name !== '不限'
+        ) {
+          let arr = item[1].services.map((x) => {
+            return x.name
+          })
+          arr = arr.toString()
+          this.jyFilterData[0].name = arr
+        } else if (item[0].id !== -1 && item[0].name !== '不限') {
+          this.jyFilterData[0].name = item[0].name
+        } else {
+          this.jyFilterData[0].name = '全部分类'
+        }
+      }
+      this.itemsclass = item
+      // console.log(this.itemsclass, 123)
+    },
+    sortfn(item) {
+      this.sortactive = item
+      if (this.sortactive.name) {
+        this.jyFilterData[2].name = this.sortactive.name
+      } else {
+        this.jyFilterData[2].name = '排序'
+      }
+    },
+    getlist() {
+      goods
+        .transactionList({ axios: this.$axios }, this.formData)
+        .then((data) => {
+          if (this.formData.needTypes === 1) {
+            this.items = data
+          }
+          if (this.datalist.length > 0) {
+            this.datalist = this.datalist.concat(data.goodsList.records)
+            if (
+              data.goodsList.totalCount === this.datalist.length ||
+              data.goodsList.totalCount > this.datalist.length
+            ) {
+              this.$refs.list.finished = true
+            }
+            this.$refs.list.isLoading = false
+            this.$refs.list.loading = false
+          } else {
+            this.datalist = data.goodsList.records
+            this.$refs.list.loading = false
+            this.$refs.list.isLoading = false
+            if (data.goodsList.records.length < 10) {
+              this.$refs.list.finished = true
+            }
+          }
+        })
+        .catch((err) => {
+          this.$refs.list.isLoading = false
+          // this.$refs.list.loading = false
+          console.log(err)
+        })
+    },
     getFilterHandle(data, filrerName) {
       console.log(data, filrerName)
     },
-    onLoad() {
-      this.searchKeydownHandle()
+    Refresh() {
+      this.datalist = []
+      this.page = 1
+      this.$refs.list.page = 1
+      this.$refs.list.finished = false
+      this.getlist()
+      this.formData.needTypes = 0
+    },
+    pagefn(val) {
+      console.log(val)
+      this.formData.start = val
+      this.getlist()
     },
     changeTabs(name, title) {
       // 切换业态tab
@@ -191,6 +274,7 @@ export default {
   .listbox {
     overflow-y: auto;
     padding-bottom: 20px;
+    background: #e4e4e4;
   }
   /deep/.sp-tabs {
     .sp-tabs__line {

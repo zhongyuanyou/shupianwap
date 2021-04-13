@@ -77,6 +77,9 @@ export default {
       this.getUserInfo()
     }, 2000)
   },
+  beforeDestroy() {
+    clearInterval(this.timeer)
+  },
   methods: {
     isCardNo(card) {
       // 身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X
@@ -138,7 +141,7 @@ export default {
           .then((res) => {
             if (res) {
               this.$router.push({
-                path: '/conrract/iframe',
+                path: '/contract/iframe',
                 query: {
                   src: res,
                 },

@@ -6,18 +6,36 @@
         :key="index"
         :title="item.name"
       >
-        <div v-if="item.name == '全部分类'" class="class">
-          <ServiceSelect></ServiceSelect>
+        <div v-if="item.code == 'class'" class="class">
+          <ServiceSelect
+            :items="classification"
+            :is_select_more="true"
+            :active_data="activeData"
+            @select="classfn"
+            @navselect="navselect"
+          ></ServiceSelect>
         </div>
 
-        <div v-if="item.name == '价格'" class="price">
-          <PriceFilter></PriceFilter>
+        <div v-if="item.code == 'price'" class="price">
+          <PriceFilter
+            :priceList="pricelist"
+            :echo_data="price"
+            @selectItems="pricefn"
+          ></PriceFilter>
         </div>
-        <div v-if="item.name == '排序'" class="sort">
-          <SortFilter></SortFilter>
+        <div v-if="item.code == 'sort'" class="sort">
+          <SortFilter
+            :list="sort"
+            :sortactive="sortactive"
+            @sortfn="sortfn"
+          ></SortFilter>
         </div>
 
-        <BottomConfirm v-if="item.name != '排序'"></BottomConfirm>
+        <BottomConfirm
+          v-if="item.name != '排序'"
+          @resetFilters="reset"
+          @confirmFilters="confirm"
+        ></BottomConfirm>
       </sp-dropdown-item>
     </sp-dropdown-menu>
   </div>
@@ -25,12 +43,12 @@
 
 <script>
 import { DropdownMenu, DropdownItem, List } from '@chipspc/vant-dgg'
-import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect'
+import ServiceSelect from '@/components/common/serviceSelected/ServiceSelect1'
 import PriceFilter from '@/components/common/filters/NewPriceFilterComponents'
 import SortFilter from '@/components/common/filters/SortFilter'
 import BottomConfirm from '@/components/common/filters/BottomConfirm'
 import clone from '~/utils/clone'
-
+const initSelectData = [{}, { services: [] }]
 export default {
   name: 'Filters',
   components: {
@@ -53,13 +71,23 @@ export default {
         return []
       },
     },
-    class: {
+    classification: {
       type: Array,
       default() {
         return []
       },
     },
     price: {
+      type: Object,
+      default() {
+        return {
+          minPrice: '',
+          maxPrice: '',
+          activeItems: [],
+        }
+      },
+    },
+    pricelist: {
       type: Array,
       default() {
         return []
@@ -69,6 +97,18 @@ export default {
       type: Array,
       default() {
         return []
+      },
+    },
+    sortactive: {
+      type: Object,
+      default() {
+        return {}
+      },
+    },
+    activeData: {
+      type: Array,
+      default() {
+        return initSelectData
       },
     },
   },
@@ -91,7 +131,27 @@ export default {
     // },
   },
   mounted() {},
-  methods: {},
+  methods: {
+    reset() {
+      this.$emit('reset')
+    },
+    confirm() {
+      this.$emit('confirm')
+    },
+    sortfn(item) {
+      this.$emit('sortfn', item)
+    },
+    classfn(item) {
+      this.$emit('classfn', item)
+    },
+    pricefn(item, items) {
+      this.$emit('pricefn', item, items)
+    },
+    navselect(item) {
+      console.log(item)
+      this.$emit('navselect', item)
+    },
+  },
 }
 </script>
 

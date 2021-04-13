@@ -84,7 +84,7 @@ export default {
       number: 0,
       payCallBackData: {
         cusOrderId: 0,
-        serialNumber: 0,
+        serialNumber: 0, // dgg流水号
       }, // 回调请求数据
       loading: false, // 加载状态
       agreementData: {}, // 协议数据
@@ -149,29 +149,36 @@ export default {
       this.formData.batchIds = this.$route.query.batchIds
       this.getPayParamsFormData.cusOrderId = this.$route.query.cusOrderId
       this.payCallBackData.cusOrderId = this.$route.query.cusOrderId
+      // 将获取过来的
+
       this.enablePayMoney()
     } else {
       this.goBack()
     }
     const startTime = localStorage.getItem('startTime')
-    if (startTime) {
-      const nowTime = this.getNowTime()
-      console.log('nowTime - startTime', nowTime - startTime)
-      if (nowTime - startTime > 3000) {
-        time = setInterval(() => {
-          this.number++
-          this.getPayResult()
-        }, 2000)
+    if (
+      localStorage.getItem('cusOrderId') &&
+      localStorage.getItem('serialNumber')
+    ) {
+      if (startTime) {
+        const nowTime = this.getNowTime()
+        console.log('nowTime - startTime', nowTime - startTime)
+        if (nowTime - startTime > 3000) {
+          time = setInterval(() => {
+            this.number++
+            this.getPayResult()
+          }, 2000)
+        }
+        // else {
+        //   this.$router.push({
+        //     path: '/pay/payResult',
+        //     query: {
+        //       payStatus: false,
+        //     },
+        //   })
+        this.clearLocalStorage()
+        // }
       }
-      // else {
-      //   this.$router.push({
-      //     path: '/pay/payResult',
-      //     query: {
-      //       payStatus: false,
-      //     },
-      //   })
-      //   this.clearLocalStorage()
-      // }
     }
   },
 
@@ -351,7 +358,6 @@ export default {
           })
       }
     },
-
     // 清空localStorage
     clearLocalStorage() {
       localStorage.removeItem('cusOrderId')
