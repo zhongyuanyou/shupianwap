@@ -1,6 +1,16 @@
 <template>
   <div class="contractList">
-    <Head ref="head" title="合同列表"></Head>
+    <Head ref="head" title="合同列表">
+      <template #left>
+        <my-icon
+          class="back-icon"
+          name="nav_ic_back"
+          size="0.4rem"
+          color="#1A1A1A"
+          @click.native="onLeftClick"
+        ></my-icon>
+      </template>
+    </Head>
     <div class="tab">
       <p :class="tabAct == 0 ? 'act' : ''" @click="tabFn(0)">
         全部<i class="icon"></i>
@@ -126,6 +136,11 @@ export default {
         this.$refs.list.finished = false
         // this.getlist()
       }
+    },
+    onLeftClick() {
+      this.$router.push({
+        path: '/my',
+      })
     },
   },
 }
