@@ -235,7 +235,7 @@ export default {
               }
             }
           }
-          if (data.goodsList.records.length === 0) {
+          if (data.goodsList.records.length < 0) {
             this.$refs.list.finished = true
           }
           if (this.datalist.length > 0) {
@@ -266,6 +266,7 @@ export default {
           this.skeletonLoading = false
           this.$refs.list.loading = false
         })
+      this.$refs.list.loading = false
     },
     getFilterHandle(data, filrerName) {
       console.log(data, filrerName)
