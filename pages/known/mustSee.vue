@@ -8,11 +8,17 @@
         size="0.4rem"
         @click.native="$router.back()"
       />
-      <sp-icon name="search" class="right" color="#fff" size="0.4rem" />
+      <sp-icon
+        name="search"
+        class="right"
+        color="#fff"
+        size="0.4rem"
+        @click.native="$router.push({ path: '/known/search' })"
+      />
     </div>
     <div class="top">
-      <h1>{{ name }}</h1>
-      <p>{{ description }}</p>
+      <h1>进站必看</h1>
+      <p>必懂上那些「压箱底」的宝藏内容</p>
     </div>
     <div class="listbox">
       <div v-for="(item, index) in mustSeeData" :key="index" class="list">

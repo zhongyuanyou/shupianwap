@@ -9,6 +9,7 @@
       >
         <div v-if="item.code == 'class'" class="classification">
           <ServiceSelect
+            ref="classification"
             :items="classification"
             :is-select_more="true"
             :active-data="activeData"
@@ -19,6 +20,7 @@
 
         <div v-if="item.code == 'price'" class="price">
           <PriceFilter
+            ref="price"
             :price-list="pricelist"
             :echo-data="price"
             @selectItems="pricefn"
@@ -119,6 +121,8 @@ export default {
       value: 0,
       switch1: false,
       switch2: false,
+      navIndex: 0,
+      classarr: [],
       option: [
         { text: '全部商品', value: 0 },
         { text: '新款商品', value: 1 },
@@ -136,14 +140,18 @@ export default {
   methods: {
     minInput(val) {
       this.$emit('minInput', val)
-      console.log(val)
     },
     maxInput(val) {
       this.$emit('maxInput', val)
-      console.log(val)
     },
     reset() {
       this.$emit('reset')
+      if (this.$refs.service[0].showPopup === true) {
+        this.$refs.classification[0].handleClickNav(0)
+        this.$refs.classification[0].active = 0
+      } else if (this.$refs.service[1].showPopup === true) {
+        this.$refs.price[0].minInput('')
+      }
     },
     confirm() {
       if (this.$refs.service[0].showPopup === true) {

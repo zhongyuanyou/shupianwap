@@ -17,11 +17,9 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
 // import JyFilters from '@/components/list/JyFilters'
 import Search from '@/components/common/search/Search'
 import Goods from '@/components/list/goods'
-import listJumpIm from '@/mixins/listJumpIm'
 export default {
   name: 'TransactionList',
   components: {
@@ -29,8 +27,6 @@ export default {
     Search,
     Goods,
   },
-  layout: 'keepAlive',
-  mixins: [listJumpIm],
   data() {
     return {
       tabItems: [],
@@ -56,9 +52,6 @@ export default {
     })
   },
   methods: {
-    ...mapMutations({
-      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
-    }),
     searchKeydownHandle() {
       this.$refs.goods.formData.start = 1
       this.$refs.goods.datalist = []
