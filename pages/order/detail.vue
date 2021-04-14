@@ -1,39 +1,40 @@
 <template>
-  <div v-if="hasData" class="pay-page">
-    <Banner
-      :order-status-code="orderData.orderSplitAndCusVo.cusOrderStatusNo"
-      :cus-order-status-type="cusOrderStatusType"
-      :cus-order-id="orderData.cusOrderId"
-      :cus-order-cancel-reason="canCelReasonName"
-      @getDetail="getDetail"
-    />
-    <div class="order-area">
-      <!-- 服务 -->
-      <ServeList
-        v-if="orderData.orderProTypeNo.match('PRO_CLASS_TYPE_SERVICE')"
-        :order-data="orderData"
+  <div class="pay-page">
+    <section v-if="hasData">
+      <Banner
+        :order-status-code="orderData.orderSplitAndCusVo.cusOrderStatusNo"
         :cus-order-status-type="cusOrderStatusType"
-        :cus-order-pay-status-no="orderData.cusOrderPayStatusNo"
-        @confirmOrder="confirmOrder"
+        :cus-order-id="orderData.cusOrderId"
+        :cus-order-cancel-reason="canCelReasonName"
+        @getDetail="getDetail"
       />
-      <!-- 交易/销售/资源 -->
-      <TradeList v-else class="goods-info" :order-data="orderData" />
-      <div class="price-area">
-        <p>
-          <span> 商品总额 </span>
-          <span class="money">
-            {{ orderData.orderTotalMoney || '面议' }}
-            元
-          </span>
-        </p>
-        <p>
-          <span> 优惠金额 </span>
-          <span class="money">
-            {{ orderData.orderDiscountMoney || 0 }}
-            元
-          </span>
-        </p>
-        <!-- <p>
+      <div class="order-area">
+        <!-- 服务 -->
+        <ServeList
+          v-if="orderData.orderProTypeNo.match('PRO_CLASS_TYPE_SERVICE')"
+          :order-data="orderData"
+          :cus-order-status-type="cusOrderStatusType"
+          :cus-order-pay-status-no="orderData.cusOrderPayStatusNo"
+          @confirmOrder="confirmOrder"
+        />
+        <!-- 交易/销售/资源 -->
+        <TradeList v-else class="goods-info" :order-data="orderData" />
+        <div class="price-area">
+          <p>
+            <span> 商品总额 </span>
+            <span class="money">
+              {{ orderData.orderTotalMoney || '面议' }}
+              元
+            </span>
+          </p>
+          <p>
+            <span> 优惠金额 </span>
+            <span class="money">
+              {{ orderData.orderDiscountMoney || 0 }}
+              元
+            </span>
+          </p>
+          <!-- <p>
           <span> 活动优惠 </span>
           <span class="money">
             {{ orderData.discount2 || 0 }}
@@ -54,44 +55,44 @@
             元
           </span>
         </p> -->
-      </div>
-      <p class="last-money">
-        应付金额:
-        <span class="pay-money">
-          {{ orderData.orderPayableMoney || 0 }}
-          元
-        </span>
-      </p>
-      <!-- <p class="last-money">
+        </div>
+        <p class="last-money">
+          应付金额:
+          <span class="pay-money">
+            {{ orderData.orderPayableMoney || 0 }}
+            元
+          </span>
+        </p>
+        <!-- <p class="last-money">
         已付金额:
         <span class="pay-money">
           {{ orderData.orderPaidMoney || 0 }}
           元
         </span>
       </p> -->
-    </div>
+      </div>
 
-    <div class="order-info">
-      <p class="order-item">
-        <span class="label">订单编号</span>
-        <span class="text">{{ orderData.orderNo }}</span>
-        <span class="btn" @click="copy">复制</span>
-      </p>
-      <p class="order-item">
-        <span class="label">下单时间</span>
-        <span class="text">{{ orderData.createTime }}</span>
-      </p>
-      <p class="order-item">
-        <span class="label">支付状态</span>
-        <span class="text">{{
-          PAYSTATUSCODENAME[orderData.orderSplitAndCusVo.cusOrderPayStatusNo]
-        }}</span>
-      </p>
-      <!-- 支付状态为部分付款时才显示这部分         v-if="
+      <div class="order-info">
+        <p class="order-item">
+          <span class="label">订单编号</span>
+          <span class="text">{{ orderData.orderNo }}</span>
+          <span class="btn" @click="copy">复制</span>
+        </p>
+        <p class="order-item">
+          <span class="label">下单时间</span>
+          <span class="text">{{ orderData.createTime }}</span>
+        </p>
+        <p class="order-item">
+          <span class="label">支付状态</span>
+          <span class="text">{{
+            PAYSTATUSCODENAME[orderData.orderSplitAndCusVo.cusOrderPayStatusNo]
+          }}</span>
+        </p>
+        <!-- 支付状态为部分付款时才显示这部分         v-if="
           orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
           'ORDER_CUS_PAY_STATUS_PART_PAID'
         " -->
-      <!-- <div v-if="cusOrderStatusType !== 4" class="pay-detail-area">
+        <!-- <div v-if="cusOrderStatusType !== 4" class="pay-detail-area">
         <p
           v-for="(item, index) in orderPayList"
           :key="index"
@@ -150,107 +151,108 @@
           <span v-else class="span3">待支付</span>
         </p>
       </div> -->
-      <!-- <p class="order-item">
+        <!-- <p class="order-item">
         <span class="label">合同</span>
         <span class="text">{{ orderData.contractName || '暂无' }}</span>
       </p> -->
-      <!-- <p class="order-item">
+        <!-- <p class="order-item">
         <span class="label">发票</span>
         <span class="text">暂无</span>
       </p> -->
-      <p class="order-item last-p">
-        <span class="label">备注</span>
-        <span class="text">{{
-          orderData.mark || orderData.orderSplitAndCusVo.mark || '-'
-        }}</span>
-      </p>
-    </div>
-    <div class="serve-time">
-      <p>服务时间：9:00-24:00 周一至周日</p>
-      <p class="btn">
-        <a href="tel://962540">
-          <my-icon
-            name="per_ic_customer"
-            size="0.28rem"
-            color="#222222"
-          ></my-icon>
-          在线客服
-        </a>
-      </p>
-    </div>
-    <!-- 当订单状态为已取消时隐藏顶部按钮区域 -->
-    <div v-if="cusOrderStatusType !== 4" class="btn-area">
-      <div class="inner">
-        <!--   v-if="
+        <p class="order-item last-p">
+          <span class="label">备注</span>
+          <span class="text">{{
+            orderData.mark || orderData.orderSplitAndCusVo.mark || '-'
+          }}</span>
+        </p>
+      </div>
+      <div class="serve-time">
+        <p>服务时间：9:00-24:00 周一至周日</p>
+        <p class="btn">
+          <a href="tel://962540">
+            <my-icon
+              name="per_ic_customer"
+              size="0.28rem"
+              color="#222222"
+            ></my-icon>
+            在线客服
+          </a>
+        </p>
+      </div>
+      <!-- 当订单状态为已取消时隐藏顶部按钮区域 -->
+      <div v-if="cusOrderStatusType !== 4" class="btn-area">
+        <div class="inner">
+          <!--   v-if="
             orderData.orderSplitAndCusVo[0].cusOrderPayStatusNo ===
             orderStatusCode[1]
           " -->
-        <sp-button v-if="isShowCanCelBtn()" @click="handleClickItem(1)">
-          取消订单
-        </sp-button>
-        <sp-button
-          v-if="checkContractStatus() == 1"
-          @click="handleClickItem(2)"
-        >
-          签署合同
-        </sp-button>
-        <sp-button
-          v-if="checkContractStatus() == 2"
-          @click="handleClickItem(3)"
-        >
-          查看合同
-        </sp-button>
-        <sp-button
-          v-if="
-            showPayBtn &&
-            orderData.isNeedPay == 1 &&
-            orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
-              'ORDER_CUS_PAY_STATUS_UN_PAID'
-          "
-          class="btn-pay"
-          @click="handleClickItem(4)"
-        >
-          立即支付
-        </sp-button>
-        <sp-button
-          v-if="
-            showPayBtn &&
-            orderData.isNeedPay == 1 &&
-            orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
-              'ORDER_CUS_PAY_STATUS_PART_PAID'
-          "
-          class="btn-pay"
-          @click="handleClickItem(5)"
-        >
-          支付余款
-        </sp-button>
-        <sp-button
-          v-if="isShowConfirmBtn()"
-          type="default"
-          @click="handleClickItem(6)"
-        >
-          确认完成
-        </sp-button>
+          <sp-button v-if="isShowCanCelBtn()" @click="handleClickItem(1)">
+            取消订单
+          </sp-button>
+          <sp-button
+            v-if="checkContractStatus() == 1"
+            @click="handleClickItem(2)"
+          >
+            签署合同
+          </sp-button>
+          <sp-button
+            v-if="checkContractStatus() == 2"
+            @click="handleClickItem(3)"
+          >
+            查看合同
+          </sp-button>
+          <sp-button
+            v-if="
+              showPayBtn &&
+              orderData.isNeedPay == 1 &&
+              orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
+                'ORDER_CUS_PAY_STATUS_UN_PAID'
+            "
+            class="btn-pay"
+            @click="handleClickItem(4)"
+          >
+            立即支付
+          </sp-button>
+          <sp-button
+            v-if="
+              showPayBtn &&
+              orderData.isNeedPay == 1 &&
+              orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
+                'ORDER_CUS_PAY_STATUS_PART_PAID'
+            "
+            class="btn-pay"
+            @click="handleClickItem(5)"
+          >
+            支付余款
+          </sp-button>
+          <sp-button
+            v-if="isShowConfirmBtn()"
+            type="default"
+            @click="handleClickItem(6)"
+          >
+            确认完成
+          </sp-button>
+        </div>
       </div>
-    </div>
-    <CancelOrder
-      ref="cancleOrderModel"
-      :order-id="orderData.orderId"
-      :cus-order-id="orderData.cusOrderId"
-      :order-sku-list="orderData.orderList"
-      :cus-order-cancel-reason="orderData.cusOrderCancelReason"
-      @setCancelOrderName="setCancelOrderName"
-      @cancleOrder="cancleOrder"
-    />
-    <PayModal
-      v-if="showPayBtn"
-      ref="payModal"
-      :order-data="orderData"
-      :pay-list="payList"
-      :batch-pay-status="batchPayStatus"
-      :this-time-pay-total="thisTimePayTotal"
-    />
-    <LoadingCenter v-show="loading" />
+      <CancelOrder
+        ref="cancleOrderModel"
+        :order-id="orderData.orderId"
+        :cus-order-id="orderData.cusOrderId"
+        :order-sku-list="orderData.orderList"
+        :cus-order-cancel-reason="orderData.cusOrderCancelReason"
+        @setCancelOrderName="setCancelOrderName"
+        @cancleOrder="cancleOrder"
+      />
+      <PayModal
+        v-if="showPayBtn"
+        ref="payModal"
+        :order-data="orderData"
+        :pay-list="payList"
+        :batch-pay-status="batchPayStatus"
+        :this-time-pay-total="thisTimePayTotal"
+      />
+    </section>
+    <LoadingCenter v-if="!hasData" v-show="loading" />
   </div>
 </template>
 
@@ -304,7 +306,7 @@ export default {
       return this.$store.state.order.orderStatusCode
     },
   },
-  mounted() {
+  created() {
     if (this.$route.query.id) {
       this.orderId = this.$route.query.id
       this.cusOrderId = this.$route.query.cusOrderId
@@ -314,6 +316,16 @@ export default {
       this.$router.back(-1)
     }
   },
+  // mounted() {
+  //   if (this.$route.query.id) {
+  //     this.orderId = this.$route.query.id
+  //     this.cusOrderId = this.$route.query.cusOrderId
+  //     this.getDetail()
+  //   } else {
+  //     this.$xToast.error('缺少参数')
+  //     this.$router.back(-1)
+  //   }
+  // },
   methods: {
     onLeftClick() {
       this.$router.back(-1)
@@ -331,7 +343,6 @@ export default {
             ? res.data.orderSplitAndCusVo
             : res.orderSplitAndCusVo
           this.orderData = Object.assign(cusDetail, res.data || res)
-          this.hasData = true
           this.cusOrderStatusType = orderUtils.checkCusOrderStatus(
             this.orderData.cusOrderStatusNo
           )
@@ -345,6 +356,7 @@ export default {
             this.showPayBtn = true
           }
           this.getBatchList()
+          this.hasData = true
           // if (
           //   this.orderData.cusOrderPayStatusNo !==
           //   'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
@@ -355,7 +367,6 @@ export default {
         })
         .catch((err) => {
           this.loading = false
-          console.log('错误信息err', err)
           this.$xToast.error(err.message || '查询失败，请稍后重试')
           const that = this
           setTimeout(function () {

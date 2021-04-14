@@ -429,7 +429,6 @@ export default {
     },
     // 订单价格分转元
     changeMoney(orderItem) {
-      console.log('计算价格', orderItem)
       if (orderItem.orderTotalMoney && orderItem.depositAmount)
         // 尾款
         orderItem.lastAount = this.regFenToYuan(

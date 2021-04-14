@@ -1,5 +1,21 @@
 <template>
   <div class="recommend-moudle">
+    <sp-sticky :offset-top="searchDomHeight" @scroll="scrollHandle">
+      <div class="tab-curve" :class="[isFixed ? 'fixed-tab' : '']">
+        <ul class="tab-curve-list">
+          <li
+            v-for="(item, index) in tabList"
+            :key="index"
+            style="margin-right: 0.56rem"
+            @click="selectItem(item, index)"
+          >
+            <span :class="[index === activeIndex ? 'tab-curve-active' : '']">{{
+              item.name
+            }}</span>
+          </li>
+        </ul>
+      </div>
+    </sp-sticky>
     <!-- S 推荐商品列表 -->
     <div class="goods-list">
       <sp-skeleton
@@ -67,7 +83,9 @@
               ><span class="big-value">面议</span></span
             >
             <span v-else class="sales-proce">
-              <span class="big-value">{{ item.price || item.salesPrice }}</span>
+              <span class="big-value"
+                >{{ item.price || item.salesPrice }}元</span
+              >
               <!-- <span
                 v-if="priceRest(1, item.price || item.salesPrice)"
                 class="small-value"
@@ -97,9 +115,9 @@
 
 <script>
 import { mapState } from 'vuex'
-import { Swipe, swipeItem, Skeleton, Image } from '@chipspc/vant-dgg'
+import { Swipe, swipeItem, Skeleton, Image, Sticky } from '@chipspc/vant-dgg'
 import getUserSign from '@/utils/fingerprint'
-import { recommendApi } from '@/api'
+import { recommendApi, dict } from '@/api'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import adJumpHandle from '~/mixins/adJumpHandle'
 export default {
@@ -108,17 +126,21 @@ export default {
     [swipeItem.name]: swipeItem,
     [Skeleton.name]: Skeleton,
     [Image.name]: Image,
+    [Sticky.name]: Sticky,
     LoadingDown,
   },
   mixins: [adJumpHandle],
   data() {
     return {
+      isFixed: false,
       tabBtn: [],
       loading: false,
       curentItem: 0,
+      activeIndex: '',
       searchDomHeight: 0,
       noData: true,
       noMore: false,
+      tabList: [],
       params: {
         userId: '', // 用户id
         deviceId: '', // 设备ID（用户唯一标识） 0022ef1a-f685-469a-93a8-5409892207a2
@@ -148,10 +170,10 @@ export default {
   async created() {
     if (process.client) {
       this.params.deviceId = await getUserSign() // 获取用户唯一标识
-      this.findRecomList()
     }
   },
   mounted() {
+    this.getTabData()
     try {
       this.searchDomHeight =
         this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
@@ -161,6 +183,19 @@ export default {
     }
   },
   methods: {
+    getTabData() {
+      dict
+        .findCmsCode(
+          { axios: this.$axios },
+          {
+            code: 'C-SY-RMSP-GG',
+          }
+        )
+        .then((res) => {
+          this.tabList = res
+          if (res.length) this.selectItem(res[0], 0)
+        })
+    },
     // 滚动加载更多
     handleScroll() {
       const pageScrollTop = this.$parent.$refs.homeRef.scrollTop // 滚动条距离顶部的位置
@@ -176,11 +211,24 @@ export default {
         }
       }
     },
+    // 滚动事件
+    scrollHandle(data) {
+      this.isFixed = data.isFixed
+    },
+    selectItem(item, index) {
+      this.params.formatId = item.ext3
+      this.activeIndex = index
+      this.goodsList = []
+      this.noData = false
+      this.loading = true
+      this.params.page.pageNo = 1
+      this.findRecomList(index)
+    },
     preventTouch(e) {
       e.stopImmediatePropagation() // 阻止冒泡
     },
     // 查询推荐商品
-    findRecomList() {
+    findRecomList(index) {
       const params = this.params
       params.areaCode = this.cityCode || '510100'
       this.$axios.post(recommendApi.saleList, params).then((res) => {
@@ -188,14 +236,16 @@ export default {
         if (res.code === 200) {
           // 加载更多时无更多数据
           if (!res.data.records.length) {
-            this.noMore = true
+            this.noData = true
             return
           }
           this.goodsList = this.goodsList.concat(res.data.records)
           this.noData = false
         } else {
+          if (!this.goodsList.length) {
+            this.noData = true
+          }
           this.params.page.pageNo--
-          this.$xToast.error(res.message)
         }
       })
     },
@@ -220,6 +270,12 @@ export default {
 
 <style scoped lang="less">
 @skeleton-row-margin-top: 0;
+.recommend-moudle {
+  margin-top: -20px;
+}
+.tab-curve-list {
+  height: 88px;
+}
 .scroll-recom {
   padding: 22px 0 32px 40px;
   display: flex;
@@ -286,6 +342,7 @@ export default {
   position: relative;
   width: 100%;
   padding: 0 20px;
+  min-height: 400px;
   .goods-item {
     padding: 20px;
     background: white;
@@ -558,5 +615,53 @@ export default {
       }
     }
   }
+}
+.tab-curve {
+  width: 100%;
+  font-size: 24px;
+  &-list {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 84px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-top: 30px;
+    padding-left: 40px;
+    -webkit-overflow-scrolling: touch;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    li {
+      position: relative;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+      &:last-child {
+        padding-right: 40px;
+      }
+      span {
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: rgba(153, 153, 153, 1);
+        font-size: 32px;
+        line-height: 32px;
+        position: relative;
+        z-index: 4;
+      }
+      .tab-curve-active {
+        font-size: 34px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        color: rgba(34, 34, 34, 1);
+        // & + .svg-content {
+        //   display: block !important;
+        // }
+      }
+    }
+  }
+}
+.fixed-tab {
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.04);
+  background: white;
 }
 </style>
