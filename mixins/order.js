@@ -482,25 +482,39 @@ export default {
     },
     // jump
     toContract() {
-      if (this.orderData.contractStatus === 'STRUTS_QSZ') {
+      if (
+        this.orderData.contractStatus === 'STRUTS_QSZ' ||
+        (this.orderData.contractVo2s &&
+          this.orderData.contractVo2s.length &&
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ')
+      ) {
         this.$router.push({
           path: '/contract/preview',
           query: {
             orderId: this.orderData.id,
             cusOrderId: this.orderData.cusOrderId,
             fromPage: this.fromPage,
-            contractStatus: this.orderData.contractStatus,
+            contractUrl:
+              this.orderData.contractVo2s &&
+              this.orderData.contractVo2s[0].contractUrl,
             type: 'qs',
           },
         })
-      } else if (this.orderData.contractStatus === 'STRUTS_YWC') {
+      } else if (
+        this.orderData.contractStatus === 'STRUTS_YWC' ||
+        (this.orderData.contractVo2s &&
+          this.orderData.contractVo2s.length &&
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_YWC')
+      ) {
         this.$router.push({
           path: '/contract/preview',
           query: {
             orderId: this.orderData.id,
             cusOrderId: this.orderData.cusOrderId,
             fromPage: this.fromPage,
-            contractStatus: this.orderData.contractStatus,
+            contractUrl:
+              this.orderData.contractVo2s &&
+              this.orderData.contractVo2s[0].contractUrl,
             type: 'yl',
           },
         })

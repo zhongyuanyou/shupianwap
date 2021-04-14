@@ -25,7 +25,7 @@
         <sp-image :src="item.skuImages" alt="" class="img" srcset="" />
         <div class="right">
           <p class="goods-name">
-            <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
+            <span class="name"> {{ item.spuName || item.orderSaleName }}</span>
             <span
               v-if="
                 checkPayType() !== 2 && checkPayType() !== 4 && !item.orderType
