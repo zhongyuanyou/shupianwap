@@ -80,7 +80,6 @@
           >
         </div>
       </div>
-      <div @click="test">aaa</div>
     </div>
   </div>
 </template>
@@ -171,9 +170,6 @@ export default {
     }),
   },
   methods: {
-    test() {
-      console.log(`first render data:\n ${JSON.stringify(this.userList)}`)
-    },
     keyClickHandle() {
       this.$router.push({
         path: '/known/search',
@@ -243,11 +239,7 @@ export default {
             } else {
               message = '取关成功'
             }
-            console.log(
-              `before render data:\n ${JSON.stringify(this.userList)}`
-            )
             this.userList = buildUserList(this.userList, item)
-            console.log(`after render data:\n ${JSON.stringify(this.userList)}`)
             this.$xToast.show({
               message,
               duration: 1000,
