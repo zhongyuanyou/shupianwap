@@ -9,90 +9,134 @@
         @click.native="onLeftClick"
       ></my-icon>
       <div class="btn-area">
-        <span>
-          <my-icon
-            name="yaoqing"
-            size="0.4rem"
-            @click.native="onLeftClick"
-          ></my-icon>
+        <span @click="onInvite">
+          <my-icon name="yaoqing" size="0.4rem"></my-icon>
           邀请</span
         >
-        <span>
+        <span
+          v-if="answerDetails && answerDetails.createrId === userInfo.userId"
+        >
           <my-icon
-            v-if="answerDetails && answerDetails.createrId === userInfo.userId"
-            class="back-icon"
             name="xiehuida"
             size="0.4rem"
-            @click.native="onLeftClick"
+            @click.native="writeAnswer"
           ></my-icon>
           写回答</span
         >
+        <span v-else>
+          <my-icon
+            name="gengduo"
+            size="0.4rem"
+            color="#000000"
+            @click.native="more"
+          ></my-icon>
+        </span>
       </div>
     </div>
     <div v-if="showHead2" class="head head2">
       <my-icon
         class="btn-icon"
-        name="nav_ic_back"
+        name="zuo"
         size="0.4rem"
         color="#1A1A1A"
         @click.native="onLeftClick"
       ></my-icon>
       <div class="user-info">
-        <sp-image class="img" src="" />
+        <sp-image class="img" :src="answerDetails.avatar" />
         <div class="infos">
-          <p>周转</p>
-          我是一个牛人
+          <p>{{ answerDetails.createrName }}</p>
+          {{ answerDetails.contentText }}
         </div>
-        <div class="btn">
-          <sp-button>关注</sp-button>
-        </div>
+        <template v-if="answerDetails.createrId !== userInfo.userId">
+          <div v-if="!isFollow" class="btn" @click="follow">
+            <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
+          </div>
+          <div v-else class="btn2" @click="follow">
+            <span class="follow">已关注</span>
+          </div>
+        </template>
       </div>
     </div>
     <div class="title-area">
-      <div class="title">哪部电影让你最有所触动？</div>
-      <div class="nums-area">300个回答 · 200个关注</div>
+      <div class="title">{{ answerDetails.title }}</div>
+      <div class="nums-area">
+        {{ answerDetails.answerCount }}个回答 ·
+        {{ answerDetails.collectCount }} 收藏
+      </div>
     </div>
     <div class="main">
       <div class="user-info">
-        <sp-image class="img" src="" />
+        <sp-image class="img" :src="answerDetails.avatar" />
         <div class="infos">
-          <p>周转</p>
-          我是一个牛人
+          <p>{{ answerDetails.createrName }}</p>
+          {{ answerDetails.contentText }}
         </div>
-        <div class="btn">
-          <sp-button>关注</sp-button>
-        </div>
+        <template v-if="answerDetails.createrId !== userInfo.userId">
+          <div v-if="!isFollow" class="btn" @click="follow">
+            <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
+          </div>
+          <div v-else class="btn2" @click="follow">
+            <span class="follow">已关注</span>
+          </div>
+        </template>
       </div>
-      <div class="content">
-        近日，据外媒报道，谷歌翻译新增了5种语音的翻译，它们分别是基尼亚卢旺达语（卢旺达）、奥里亚语（印度）、
-        鞑靼语、土库曼语（土库曼斯坦），还有维吾尔语。这些语言目前的使用者大约为7500万人。这是谷歌自2016年以来首次新增翻译语言。翻译还支持基尼亚卢旺达语、鞑靼语和维吾尔语的虚拟键盘输入。<br />
-        近日，据外媒报道，谷歌翻译新增了5种语音的翻译，它们分别是基尼亚卢旺达语（卢旺达）、奥里亚语（印度）<br />
-        近日，据外媒报道，谷歌翻译新增了5种语音的翻译，它们分别是基尼亚卢旺达语（卢旺达）、奥里亚语（印度）、
-        鞑靼语、土库曼语（土库曼斯坦），还有维吾尔语。这些语言目前的使用者大约为7500万人。这是谷歌自2016年以来首次新增翻译语言
-        近日，据外媒报道，谷歌翻译新增了5种语音的翻译，它们分别是基尼亚卢旺达语（卢旺达）、奥里亚语（印度）、
-        鞑靼语、土库曼语（土库曼斯坦），还有维吾尔语。这些语言目前的使用者大约为7500万人。这是谷歌自2016年以来首次新增翻译语言
-      </div>
-      <p class="pub-time">编辑于2021-05-10 16:40</p>
+      <div class="content" v-html="answerDetails.content"></div>
+      <p class="pub-time">编辑于{{ answerDetails.createTime }}</p>
     </div>
-    <Comment :article-id="'1'" />
+    <Comment ref="openComment" :article-id="answerDetails.id" />
     <div class="page-bottom">
-      <div class="left-area">
+      <div
+        v-if="
+          answerDetails &&
+          answerDetails.isApplaudFlag === 0 &&
+          answerDetails.isDisapplaudFlag === 0
+        "
+        class="left-area"
+      >
         <span class="icon" @click="handleClickBottom(1)">
-          <my-icon name="msg_ic_emoji" size="0.3rem" color="#000000"></my-icon
+          <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
         ></span>
-        <span class="text">赞同9999</span>
+        <span class="text" @click="handleClickBottom(1)"
+          >赞同{{ answerDetails.applaudCount }}</span
+        >
         <span class="icon" @click="handleClickBottom(2)">
-          <my-icon name="msg_ic_emoji" size="0.3rem" color="#000000"></my-icon
+          <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
         ></span>
+      </div>
+      <div
+        v-if="answerDetails && answerDetails.isApplaudFlag === 1"
+        class="applaud"
+        @click="handleClickBottom(1)"
+      >
+        <span class="icon">
+          <my-icon name="zantong" size="0.28rem" color="#fff"></my-icon
+        ></span>
+        <span class="text">已赞同</span>
+      </div>
+      <div
+        v-if="answerDetails.isDisapplaudFlag === 1"
+        class="applaud dis-applaud"
+        @click="handleClickBottom(2)"
+      >
+        <span class="icon">
+          <my-icon name="fandui" size="0.28rem" color="#fff"></my-icon
+        ></span>
+        <span class="text">已反对</span>
       </div>
       <div class="right-area">
-        <div class="item" @click="handleClickBottom(3)">
+        <div
+          class="item"
+          :style="{
+            color: answerDetails.isCollectFlag === 1 ? '#4974F5' : '#999999',
+          }"
+          @click="handleClickBottom(3)"
+        >
           <div class="icon">
-            <my-icon name="shoucang" size="0.4rem" color="#999999"></my-icon>
+            <my-icon name="shoucang" size="0.4rem"></my-icon>
           </div>
           收藏
         </div>
-        <div class="item" @click="handleClickBottom(4)">
+        <div class="item" @click="comment()">
           <div class="icon">
             <my-icon name="pinglun" size="0.4rem" color="#999999"></my-icon>
           </div>
@@ -100,17 +144,42 @@
         </div>
       </div>
     </div>
+    <!-- 上拉组件 -->
+    <sp-popup
+      v-model="popupShow"
+      position="bottom"
+      :style="{ height: '30%' }"
+      round
+      close-icon="close"
+      :close-on-click-overlay="false"
+    >
+      <div class="down_slide_list">
+        <ul>
+          <li @click="editAnswer(answerDetails.id)">
+            <my-icon name="bianji1" size="1rem" color="#1a1a1a"></my-icon>
+            <p>编辑</p>
+          </li>
+          <li @click="deleteAnswer(answerDetails.id)">
+            <my-icon name="shanchu1" size="1rem" color="#1a1a1a"></my-icon>
+            <p>删除</p>
+          </li>
+        </ul>
+        <div class="cancel" @click="cancel">取消</div>
+      </div>
+    </sp-popup>
   </div>
 </template>
 
 <script>
-import { Field, Tab, Tabs, Button, Image, Toast } from '@chipspc/vant-dgg'
+import { Field, Button, Image, Toast, Popup, Dialog } from '@chipspc/vant-dgg'
 import Comment from '~/components/mustKnown/DetailComment'
 export default {
   components: {
     [Button.name]: Button,
     [Image.name]: Image,
     [Field.name]: Field,
+    [Popup.name]: Popup,
+    [Dialog.name]: Dialog,
     Comment,
   },
   data() {
@@ -175,6 +244,11 @@ export default {
       commentList2: [],
       answerDetails: '',
       headerData: {},
+      popupShow: false,
+      sourceId: '',
+      answerCollectCount: '',
+      homeUserId: '',
+      isFollow: false,
     }
   },
   computed: {
@@ -189,19 +263,89 @@ export default {
       this.currentDetailsId = '8065065421625749504'
     }
     this.getDetailData()
+    this.initFollow()
   },
   mounted() {
     this.commentList2 = JSON.parse(JSON.stringify(this.commentList)).splice(
       0,
       2
     )
-    // this.$refs.myPage.addEventListener('scroll', this.handleScoll)
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    follow() {
+      let followStatus = ''
+      if (this.isFollow) {
+        followStatus = 2
+        this.isFollow = false
+      } else {
+        followStatus = 1
+        this.isFollow = true
+      }
+      const baseUrl =
+        'http://172.16.132.255:7001/service/nk/question_article/v2/find_user_relations.do'
+      this.loading = true
+      this.$axios
+        .post(baseUrl, {
+          handleUserName: this.userInfo.userName || '测试用户',
+          handleUserId: this.userInfo.userId || '120',
+          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+          handleType: followStatus,
+          attentionUserId: this.answerDetails.userId,
+          attentionUserName: this.answerDetails.userName,
+          attentionUserType: this.answerDetails.userType,
+        })
+        .then((res) => {
+          this.loading = false
+          if (res.code === 200) {
+            if (this.isFollow) {
+              this.$xToast.show({ message: '关注成功' })
+            } else {
+              this.$xToast.show({ message: '取消关注' })
+            }
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+    },
+    initFollow() {
+      const baseUrl =
+        'http://172.16.132.255:7001/service/nk/known_home/v1/findAttention.do'
+      this.$axios
+        .get(baseUrl, {
+          params: {
+            currentUserId: this.userInfo.userId,
+            homeUserId: this.homeUserId || '120',
+          },
+        })
+        .then((res) => {
+          if (res.data) {
+            this.isFollow = true
+          } else {
+            this.isFollow = false
+          }
+        })
+    },
+    onInvite() {
+      this.$router.push('/known/detail/invitationList')
+    },
+    writeAnswer() {
+      this.$router.push('/known/publish/answer')
+    },
+    more() {
+      this.popupShow = true
+    },
+    cancel() {
+      this.popupShow = false
+    },
     getDetailData() {
       const baseUrl =
         'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do'
@@ -220,11 +364,15 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.answerDetails = res.data
+            console.log(this.answerDetails)
             this.headerData.createrName = this.answerDetails.createrName
             this.headerData.contentText = this.answerDetails.contentText
             this.headerData.avatar = this.answerDetails.avatar
+            this.sourceId = this.answerDetails.sourceId
+            this.homeUserId = this.answerDetails.userId
             this.answerDetails.content =
               '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'
+            // this.getAnswerCollectCount()
           } else {
             Toast.fail({
               duration: 2000,
@@ -235,10 +383,40 @@ export default {
           }
         })
     },
-    handleScoll() {
+
+    // 获取回答数与关注数
+
+    getAnswerCollectCount() {
+      const baseUrl =
+        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do'
+      this.$axios
+        .get(baseUrl, {
+          params: {
+            id: this.sourceId,
+            userId: this.userInfo.userId || '120',
+            userHandleFlag: 1,
+            userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+            userName: this.userInfo.userName || '测试用户',
+          },
+        })
+        .then((res) => {
+          this.loading = false
+          if (res.code === 200) {
+            this.answerCollectCount = res.data
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+    },
+
+    handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
       const scrollTop = this.$refs.myPage.getBoundingClientRect().top // 滚动条距离顶部的位置
-      console.log('scrollTop', scrollTop)
       if (scrollTop < 0) {
         this.showHead2 = true
       } else {
@@ -251,27 +429,166 @@ export default {
     answersortfn(index) {
       console.log(index)
     },
-    handleClickBottom(type) {
-      console.log('type', type)
-      switch (type) {
-        case 1:
-          this.$xToast.show({
-            message: '点赞成功',
-          })
-          break
 
-        default:
-          this.$xToast.show({
-            message: '操作成功',
-          })
-          break
+    handleClickBottom(type) {
+      this.handleType = ''
+      if (type === 1) {
+        this.answerDetails.applaudCount = Number(
+          this.answerDetails.applaudCount
+        )
+        if (this.answerDetails.isApplaudFlag === 1) {
+          this.handleType = 7
+          this.answerDetails.isApplaudFlag = 0
+          this.answerDetails.applaudCount = this.answerDetails.applaudCount - 1
+        } else {
+          this.handleType = 1
+          this.answerDetails.isApplaudFlag = 1
+          this.answerDetails.applaudCount = this.answerDetails.applaudCount + 1
+        }
       }
+      if (type === 2) {
+        if (this.answerDetails.isDisapplaudFlag === 1) {
+          this.handleType = 8
+          this.answerDetails.isDisapplaudFlag = 0
+        } else {
+          this.handleType = 2
+          this.answerDetails.isDisapplaudFlag = 1
+        }
+      }
+      if (type === 3) {
+        if (this.answerDetails.isCollectFlag === 1) {
+          this.handleType = 9
+          this.answerDetails.isCollectFlag = 0
+        } else {
+          this.handleType = 4
+          this.answerDetails.isCollectFlag = 1
+        }
+      }
+      const baseUrl =
+        'http://172.16.132.255:7001/service/nk/known_home/v1/operation.do'
+      this.$axios
+        .post(baseUrl, {
+          handleUserId: this.userInfo.userId || '120',
+          handleUserName: this.userInfo.userName || '测试用户',
+          businessId: this.currentDetailsId,
+          handleType: this.handleType,
+          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+          dateType: 1,
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            if (type === 1) {
+              if (this.answerDetails.isApplaudFlag === 1) {
+                this.$xToast.show({ message: '点赞成功' })
+              } else {
+                this.$xToast.show({ message: '取消点赞' })
+              }
+            }
+            if (type === 2) {
+              if (this.answerDetails.isDisapplaudFlag === 1) {
+                this.$xToast.show({ message: '反对成功' })
+              } else {
+                this.$xToast.show({ message: '取消反对' })
+              }
+            }
+            if (type === 3) {
+              if (this.answerDetails.isCollectFlag === 1) {
+                this.$xToast.show({ message: '收藏成功' })
+              } else {
+                this.$xToast.show({ message: '取消收藏' })
+              }
+            }
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+    },
+    editAnswer(id) {
+      const curId = id
+      this.$router.push({
+        path: '/known/publish/answer',
+        params: {
+          id: curId,
+        },
+      })
+    },
+    comment() {
+      this.$refs.openComment.commentShow = true
+    },
+    deleteAnswer(id) {
+      const curId = id
+      const baseUrl =
+        'http://172.16.132.255:7001/service/nk/question_article/v2/delete.do'
+      this.loading = true
+      Dialog.confirm({
+        title: '提示',
+        message: '确定要删除吗？',
+      })
+        .then(() => {
+          this.$axios
+            .post(baseUrl, {
+              id: curId,
+              userId: this.userInfo.userId || '120',
+            })
+            .then((res) => {
+              this.loading = false
+              if (res.code === 200) {
+                this.$xToast.show({ message: '删除成功' })
+                this.$router.replace({ path: '/known' })
+              } else {
+                Toast.fail({
+                  duration: 2000,
+                  message: '服务异常，请刷新重试！',
+                  forbidClick: true,
+                  className: 'my-toast-style',
+                })
+              }
+            })
+        })
+        .catch((err) => {
+          console.log(err)
+          // on cancel
+        })
     },
   },
 }
 </script>
 
 <style lang="less" scoped>
+.down_slide_list {
+  ul {
+    display: flex;
+    padding: 70px 60px;
+    box-sizing: border-box;
+    li {
+      width: 100px;
+      text-align: center;
+      margin-right: 76px;
+      p {
+        font-size: 24px;
+        color: #999999;
+      }
+    }
+  }
+  .cancel {
+    width: 100%;
+    height: 98px;
+    line-height: 98px;
+    text-align: center;
+    position: absolute;
+    font-size: 32px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #222222;
+    bottom: 0;
+    border-top: 1px solid #f0f0f0;
+  }
+}
 .head {
   position: fixed;
   left: 0;
@@ -338,6 +655,11 @@ export default {
         margin-bottom: 20px;
       }
     }
+    .btn2 {
+      background: none;
+      font-size: 30px;
+      color: #999999;
+    }
     .btn {
       background: none;
       border-radius: 12px;
@@ -353,6 +675,10 @@ export default {
         font-weight: 500;
         color: #4974f5;
         border: none;
+      }
+      .follow {
+        color: #999999;
+        font-size: 30px;
       }
     }
   }
@@ -411,8 +737,12 @@ export default {
         margin-bottom: 20px;
       }
     }
+    .btn2 {
+      background: none;
+      font-size: 30px;
+      color: #999999;
+    }
     .btn {
-      width: 144px;
       height: 72px;
       background: #f5f5f5;
       border-radius: 12px;
@@ -423,6 +753,10 @@ export default {
         color: rgba(73, 116, 245, 1);
         display: block;
         float: left;
+      }
+      .follow {
+        color: #999999;
+        font-size: 30px;
       }
     }
   }
@@ -452,6 +786,40 @@ export default {
   background: #ffffff;
   padding: 10px 40px;
   border-top: 1px solid #ddd;
+  .applaud {
+    display: flex;
+    align-items: center;
+    float: left;
+    height: 72px;
+    background: #f2f5ff;
+    border-radius: 8px;
+    padding: 20px 15px;
+    box-sizing: border-box;
+    background: #4974f5;
+    span {
+      display: block;
+      float: left;
+      margin-right: 4px;
+      font-size: 24px;
+      color: #ffffff;
+      text-align: center;
+    }
+    .icon {
+      padding: 0;
+      width: 40px;
+      height: 100%;
+      line-height: 0;
+      position: relative;
+      .spiconfont {
+        position: absolute;
+        left: 0px;
+        top: 20px;
+        padding: 0;
+        margin: 0;
+        line-height: 0;
+      }
+    }
+  }
   .left-area {
     float: left;
     width: auto;

@@ -22,7 +22,7 @@
           <slot name="left">
             <my-icon
               class="back-icon"
-              name="nav_ic_back"
+              name="zuo"
               size="0.4rem"
               color="#1A1A1A"
               @click.native="onLeftClick"

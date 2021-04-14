@@ -2,7 +2,13 @@
   <div>
     <div ref="myPage">
       <PageHead v-if="!showHead2" :title="articleDetails.title"></PageHead>
-      <PageHead2 v-if="showHead2" :headerData="headerData" @follow="follow" />
+      <PageHead2
+        v-if="showHead2"
+        :header-data="headerData"
+        @follow="follow"
+        :isFollow="isFollow"
+        :isShowFollow="articleDetails.createrId !== userInfo.userId"
+      />
     </div>
     <div class="title-area">
       <div class="title">{{ articleDetails.title }}</div>
@@ -14,15 +20,20 @@
           <p>{{ articleDetails.createrName }}</p>
           {{ articleDetails.contentText }}
         </div>
-        <div class="btn" @click="follow">
-          <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
-        </div>
+        <template v-if="articleDetails.createrId !== userInfo.userId">
+          <div v-if="!isFollow" class="btn" @click="follow">
+            <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
+          </div>
+          <div v-else class="btn2" @click="follow">
+            <span class="follow">已关注</span>
+          </div>
+        </template>
       </div>
       <div class="content" v-html="articleDetails.content"></div>
       <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
       <DetailArticleList :article-list="articleList" />
     </div>
-    <Comment :article-id="articleDetails.id" ref="openComment" />
+    <Comment ref="openComment" :article-id="articleDetails.id" />
     <div class="page-bottom">
       <div
         v-if="
@@ -168,6 +179,7 @@ export default {
       articleDetails: '',
       currentDetailsId: '',
       handleType: '',
+      isFollow: false,
     }
   },
   computed: {
@@ -183,6 +195,7 @@ export default {
     }
     this.getDetailData()
     this.getRecommendData()
+    this.initFollow()
   },
 
   mounted() {
@@ -196,26 +209,55 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    initFollow() {
+      const baseUrl =
+        'http://172.16.132.255:7001/service/nk/known_home/v1/findAttention.do'
+      this.$axios
+        .get(baseUrl, {
+          params: {
+            currentUserId: this.userInfo.userId,
+            homeUserId: this.homeUserId || '120',
+          },
+        })
+        .then((res) => {
+          if (res.data) {
+            this.isFollow = true
+          } else {
+            this.isFollow = false
+          }
+        })
+    },
     follow() {
+      debugger
+      let followStatus = ''
+      if (this.isFollow) {
+        followStatus = 2
+        this.isFollow = false
+      } else {
+        followStatus = 1
+        this.isFollow = true
+      }
       const baseUrl =
         'http://172.16.132.255:7001/service/nk/question_article/v2/find_user_relations.do'
       this.loading = true
       this.$axios
-        .get(baseUrl, {
-          params: {
-            id: this.currentDetailsId,
-            userId: this.userInfo.userId || '120',
-            userHandleFlag: 1,
-            userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-            userName: this.userInfo.userName || '测试用户',
-            attentionUserId: '',
-            attentionUserName: '',
-            attentionUserType: '',
-          },
+        .post(baseUrl, {
+          handleUserName: this.userInfo.userName || '测试用户',
+          handleUserId: this.userInfo.userId || '120',
+          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+          handleType: followStatus,
+          attentionUserId: this.articleDetails.userId,
+          attentionUserName: this.articleDetails.userName,
+          attentionUserType: this.articleDetails.userType,
         })
         .then((res) => {
           this.loading = false
           if (res.code === 200) {
+            if (this.isFollow) {
+              this.$xToast.show({ message: '关注成功' })
+            } else {
+              this.$xToast.show({ message: '取消关注' })
+            }
           } else {
             Toast.fail({
               duration: 2000,
@@ -373,28 +415,6 @@ export default {
             })
           }
         })
-      // switch (type) {
-      //   case 1:
-      //     this.$xToast.show({
-      //       message: '点赞成功',
-      //     })
-      //     break
-      //   case 2:
-      //     this.$xToast.show({
-      //       message: '点赞成功',
-      //     })
-      //     break
-      //   case 3:
-      //     this.$xToast.show({
-      //       message: '点赞成功',
-      //     })
-      //     break
-      //   default:
-      //     this.$xToast.show({
-      //       message: '操作成功',
-      //     })
-      //     break
-      // }
     },
   },
 }
@@ -488,6 +508,11 @@ export default {
         color: #222222;
         margin-bottom: 20px;
       }
+    }
+    .btn2 {
+      background: none;
+      font-size: 30px;
+      color: #999999;
     }
     .btn {
       height: 72px;

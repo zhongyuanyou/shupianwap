@@ -171,7 +171,7 @@
             <p>{{ item.userName }}</p>
           </div>
           <p class="content">
-            {{ item.content }}
+            {{ item.contentText }}
           </p>
           <div class="foot">
             <p>{{ item.applaudCount }} 赞同</p>
@@ -216,7 +216,7 @@
         >
       </div>
     </div>
-    <!--    分享组件-->
+    <!--    上拉组件-->
     <sp-popup
       v-model="popupShow"
       position="bottom"

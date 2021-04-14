@@ -13,9 +13,14 @@
         <p>{{ headerData.createrName }}</p>
         {{ headerData.contentText }}
       </div>
-      <div class="btn" @click="follow">
-        <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
-      </div>
+      <template v-if="isShowFollow">
+        <div v-if="!isFollow" class="btn" @click="follow">
+          <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
+        </div>
+        <div v-else class="btn2" @click="follow">
+          <span class="follow">已关注</span>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -33,6 +38,14 @@ export default {
       default() {
         return {}
       },
+    },
+    isFollow: {
+      type: Boolean,
+      default: false,
+    },
+    isShowFollow: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {
@@ -95,6 +108,11 @@ export default {
         color: #222222;
         margin-bottom: 20px;
       }
+    }
+    .btn2 {
+      background: none;
+      font-size: 30px;
+      color: #999999;
     }
     .btn {
       background: none;
