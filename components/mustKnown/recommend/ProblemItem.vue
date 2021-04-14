@@ -116,7 +116,7 @@ export default {
       this.$router.push({
         path: '/known/home',
         query: {
-          userId,
+          homeUserId: userId,
         },
       })
     },

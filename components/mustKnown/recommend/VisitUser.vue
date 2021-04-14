@@ -57,7 +57,7 @@ export default {
       this.$router.push({
         path: '/known/home',
         query: {
-          id: inviteeId,
+          homeUserId: inviteeId,
         },
       })
     },

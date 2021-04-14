@@ -31,11 +31,11 @@
         <div class="main">
           <div class="left">
             <div
-              v-for="(item, index) in list1"
-              :key="index"
+              v-for="item in list1"
+              :key="item.id"
               class="item"
-              :class="selectIndex === index ? 'activeItem' : ''"
-              @click="chooseList1(index)"
+              :class="selectIndex === item.id ? 'activeItem' : ''"
+              @click="chooseList1(item)"
             >
               {{ item.name }}
             </div>
@@ -44,8 +44,8 @@
             <sp-checkbox-group v-model="result" @change="changeTopic">
               <sp-cell-group>
                 <sp-cell
-                  v-for="(item, index) in list2"
-                  :key="index"
+                  v-for="item in list2"
+                  :key="item.id"
                   clickable
                   :title="item.name"
                 >
@@ -72,8 +72,9 @@ import {
   CheckboxGroup,
   Checkbox,
 } from '@chipspc/vant-dgg'
-import { dict } from '@/api/index'
-let timer
+import knownApi from '@/api/known'
+
+// let timer
 export default {
   components: {
     [Popup.name]: Popup,
@@ -100,249 +101,18 @@ export default {
   data() {
     return {
       result: [],
-      showPop: false,
-      list1: [
-        {
-          code: 'DONT_NEED',
-          name: '热门',
-          children: [
-            {
-              code: '1313',
-              id: '3214141',
-              name: '分类11',
-            },
-            {
-              code: '111',
-              id: '32141411231',
-              name: '分类12',
-            },
-            {
-              code: '112',
-              id: '32141411',
-              name: '分类13',
-            },
-            {
-              id: '32141411',
-              code: '113',
-              name: '分类11',
-            },
-            {
-              id: '31214141',
-              code: '114',
-              name: '分类12',
-            },
-            {
-              id: 'd3214141',
-              code: '115',
-              name: '分类13',
-            },
-            {
-              id: '32141a41',
-              code: '116',
-              name: '分类11',
-            },
-            {
-              id: '3214141d',
-              code: '117',
-              name: '分类12',
-            },
-            {
-              id: 'd3d214141',
-              code: '118',
-              name: '分类13',
-            },
-          ],
-        },
-        {
-          code: 'DONT_NEED',
-          name: '精选',
-          children: [
-            {
-              id: 'd3d2141411',
-              code: '119',
-              name: '分类16',
-            },
-            {
-              id: 'd3d21a4141',
-              code: '120',
-              name: '分类27',
-            },
-            {
-              id: 'd3d21a4142',
-              code: '13113',
-              name: '分类33',
-            },
-            {
-              id: 'd3d21a4143',
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-            {
-              id: 'd3d21a414113',
-              code: 'ORDER_REPEAT',
-              name: '分类12',
-            },
-            {
-              id: 'd3d21a41413',
-              code: 'ORTHER_REASON',
-              name: '分类13',
-            },
-            {
-              id: 'd3d211a41413',
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-            {
-              id: 'd3d21a414d1',
-              code: 'ORDER_REPEAT',
-              name: '分类12',
-            },
-            {
-              id: 'd3d23131a4141',
-              code: 'ORTHER_REASON',
-              name: '分类13',
-            },
-          ],
-        },
-        {
-          code: 'DONT_NEED',
-          name: '精选',
-          children: [
-            {
-              id: 'd13d23131a4141',
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-            {
-              id: 'd133d23131a4141',
-              code: 'ORDER_REPEAT',
-              name: '分类12',
-            },
-            {
-              id: 'd13d123131a4141',
-              code: 'ORTHER_REASON',
-              name: '分类13',
-            },
-            {
-              id: 'd13d23131a4141d',
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-            {
-              id: 'd13d23131aa4141',
-              code: 'ORDER_REPEAT',
-              name: '分类12',
-            },
-            {
-              id: 'd13d23131a41431',
-              code: 'ORTHER_REASON',
-              name: '分类13',
-            },
-            {
-              id: 'd13d23133a4141',
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-            {
-              id: 'd13d23133a4141',
-              code: 'ORDER_REPEAT',
-              name: '分类12',
-            },
-            {
-              id: 'd13d23133a4141',
-              code: 'ORTHER_REASON',
-              name: '分类13',
-            },
-          ],
-        },
-        {
-          code: 'DONT_NEED',
-          name: '精选',
-          children: [
-            {
-              id: 'd13d23133a4141',
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-            {
-              id: 'd13d23133a4141',
-              code: 'ORDER_REPEAT',
-              name: '分类12',
-            },
-            {
-              code: 'ORTHER_REASON',
-              name: '分类13',
-            },
-            {
-              id: 'd13d23133a4141',
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-            {
-              id: 'd13d23133a4141',
-              code: 'ORDER_REPEAT',
-              name: '分类12',
-            },
-            {
-              code: 'ORTHER_REASON',
-              name: '分类13',
-            },
-            {
-              id: 'd13d23133a4141',
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-            {
-              id: 'd13d23133a4141',
-              code: 'ORDER_REPEAT',
-              name: '分类12',
-            },
-            {
-              id: 'd13d23133a4141',
-              code: 'ORTHER_REASON',
-              name: '分类13',
-            },
-          ],
-        },
-        {
-          code: 'DONT_NEED',
-          name: '精选',
-          children: [
-            {
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-          ],
-        },
-        {
-          code: 'DONT_NEED',
-          name: '精选',
-          children: [
-            {
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-          ],
-        },
-        {
-          code: 'DONT_NEED',
-          name: '精选',
-          children: [
-            {
-              code: 'WRONG_PRO_CHOOSE',
-              name: '分类11',
-            },
-          ],
-        },
-      ],
-      list2: [],
+      showPop: false, // 控制图层关闭展开
+      list1: [], // 一级列表
+      list2: [], // 二级列表
       form: {
         reason: '',
       },
       selectIndex: 0,
       maxArr: [],
+      topics: [],
     }
   },
+  /*
   computed: {
     topics: {
       set(val) {
@@ -353,23 +123,26 @@ export default {
       },
     },
   },
+  */
   mounted() {
-    this.list2 = this.list1[0].children
+    this.topicApi()
   },
+  /*
   beforeDestroy() {
     if (timer) clearTimeout(timer)
   },
+  */
   methods: {
-    chooseList1(index) {
-      this.list2 = this.list1[index].children
-      this.selectIndex = index
+    chooseList1(item) {
+      this.list2 = item.childrenList || []
+      this.selectIndex = item.id
+      // 切换一级页面, 则临时结果置空
       this.result = []
     },
     openModal() {
       this.showPop = true
     },
     submit() {
-      console.log('this.result', this.result)
       this.showPop = false
       this.topics = this.result
       const arr = this.result.map((item) => {
@@ -379,10 +152,13 @@ export default {
     },
     cancel() {
       this.showPop = false
+      /*
       timer = setTimeout(() => {
         this.step = 1
       }, 300)
+      */
     },
+    /*
     toggle(e, index) {
       console.log('toggle', index)
       if (this.result.length > 4) {
@@ -391,6 +167,7 @@ export default {
         console.log('index', index)
       }
     },
+    */
     changeTopic(val) {
       if (val.length === 5) {
         this.maxArr = val
@@ -406,6 +183,25 @@ export default {
       } else {
         this.result = val
       }
+    },
+    async topicApi() {
+      try {
+        const params = {
+          level: 2,
+        }
+        const { code, data } = await this.$axios.get(knownApi.content.topic, {
+          params,
+        })
+        if (code === 200) {
+          if (data.length > 0) {
+            this.list1 = data
+            if (this.list1[0].childrenList.length > 0) {
+              this.list2 = this.list1[0].childrenList
+            }
+            this.selectIndex = data[0].id
+          }
+        }
+      } catch (e) {}
     },
   },
 }
