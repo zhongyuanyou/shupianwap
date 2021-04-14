@@ -32,6 +32,7 @@ const knownApi = {
     add: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/add.do`, // 文章、问题、回答新增 新增内容
     dlt: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/delete.do`, // 文章、问题、回答新增 删除
     edit: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/update.do`, // 文章、问题、回答新增 删除
+    topic: `${CHIPS_WAP_BASE_URL}/nk/known_category/v1/topic.do`, // 话题列表 1代表返回的数据中只有一级分类 2代表返回的数据中包含一级分类和二级分类
   },
   question: {
     list: `${CHIPS_WAP_BASE_URL}/service/nk/question_article/v2/find_page.do`,
