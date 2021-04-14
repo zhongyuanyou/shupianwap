@@ -10,19 +10,20 @@
             class="my_icon"
             @click.native="$router.back()"
           ></my-icon>
-          <div v-show="showPaper" class="newspaperTitle">{{ name }}</div>
+          <div v-show="showPaper" class="newspaperTitle">日报精选</div>
           <my-icon
             name="sear_ic_sear"
             size="0.40rem"
             color="#FFFFFF"
             class="my_icon"
+            @click.native="$router.push({ path: '/known/search' })"
           ></my-icon>
         </div>
       </sp-sticky>
-      <div class="newspaper">{{ name }}</div>
+      <div class="newspaper">日报精选</div>
       <div class="day_num">{{ new Date().getDate() }}</div>
       <div class="weekday">{{ getWekDay() }}</div>
-      <div class="title">{{ description }}</div>
+      <div class="title">专属必懂带逛小助手，带你发现并懂精品</div>
     </div>
 
     <div class="container_body">
