@@ -66,13 +66,15 @@
               $router.push({
                 path: '/known/newspaper',
                 query: {
-                  id: subjectList[0].id,
+                  id: subjectList ? subjectList[0].id : '',
                 },
               })
             "
           >
             <div class="news_num">{{ new Date().getDate() }}</div>
-            <div class="news_span">{{ subjectList[0].name }}</div>
+            <div class="news_span">
+              {{ subjectList ? subjectList[0].name : '' }}
+            </div>
           </div>
           <div
             class="see"
@@ -80,7 +82,7 @@
               $router.push({
                 path: '/known/mustSee',
                 query: {
-                  id: subjectList[1].id,
+                  id: subjectList ? subjectList[0].id : '',
                 },
               })
             "
@@ -88,7 +90,9 @@
             <div class="see_like">
               <my-icon name="dianzan" size="0.24rem" color="#4974F5"></my-icon>
             </div>
-            <div class="see_span">{{ subjectList[1].name }}</div>
+            <div class="see_span">
+              {{ subjectList ? subjectList[1].name : '' }}
+            </div>
           </div>
         </div>
         <ItemCard v-if="showHot" :list-data="listData" />
@@ -428,7 +432,10 @@ export default {
       )
       if (code === 200) {
         if (data.length > 0) {
-          this.subjectList = data.shift()
+          console.log('++++++++', data.length)
+          this.subjectList.push(data[1])
+          this.subjectList.push(data[2])
+          console.log(' this.subjectList', this.subjectList)
         } else {
           this.attentionStatus = false
           this.showNotAttention = true
