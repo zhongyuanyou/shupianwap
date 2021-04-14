@@ -5,6 +5,7 @@
       :immediate-check="false"
       :finished="finished"
       :finished-text="datalist.length == 0 ? '' : '没有更多了'"
+      offset="0"
       @load="onLoad"
     >
       <div
