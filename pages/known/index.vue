@@ -67,8 +67,6 @@
                 path: '/known/newspaper',
                 query: {
                   id: subjectList[0].id,
-                  name: subjectList[0].name,
-                  description: subjectList[0].description,
                 },
               })
             "
@@ -83,8 +81,6 @@
                 path: '/known/mustSee',
                 query: {
                   id: subjectList[1].id,
-                  name: subjectList[1].name,
-                  description: subjectList[1].description,
                 },
               })
             "
@@ -325,7 +321,7 @@ export default {
     // 请求分类列表
     async categoryList() {
       const params = {}
-      params.type = 1
+      params.type = this.type
       const { code, message, data } = await this.$axios.get(
         knownApi.questionArticle.categoryList,
         { params }
