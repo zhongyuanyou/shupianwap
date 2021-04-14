@@ -328,7 +328,7 @@ export default {
             withTagsFlg: 1,
             withGoodsSubFlg: 1,
             withOperatingsFlg: 1,
-            clientType: 'COMDIC_TERMINAL_WAP',
+            clientType: 'COMDIC_TERMINAL_APP',
           }
         )
         if (code === 200) {

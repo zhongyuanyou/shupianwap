@@ -233,6 +233,9 @@ export default {
     isInApp() {
       return this.$store.state.app.isInApp
     },
+    appInfo() {
+      return this.$store.state.app.appInfo
+    },
   },
   mounted() {
     window.addEventListener('scroll', this.getScroll)

@@ -1,31 +1,40 @@
 <template>
-  <div class="head head2">
-    <my-icon
-      class="btn-icon"
-      name="zuo"
-      size="0.4rem"
-      color="#1A1A1A"
-      @click.native="onLeftClick"
-    ></my-icon>
-    <div class="user-info">
-      <sp-image class="img" :src="headerData.avatar" />
-      <div class="infos">
-        <p>{{ headerData.createrName }}</p>
-        {{ headerData.contentText }}
-      </div>
-      <div class="btn" @click="follow">
-        <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
+  <HeadSlot>
+    <div class="head head2">
+      <my-icon
+        class="btn-icon"
+        name="zuo"
+        size="0.4rem"
+        color="#1A1A1A"
+        @click.native="onLeftClick"
+      ></my-icon>
+      <div class="user-info">
+        <sp-image class="img" :src="headerData.avatar" />
+        <div class="infos">
+          <p>{{ headerData.createrName }}</p>
+          {{ headerData.contentText }}
+        </div>
+        <template v-if="isShowFollow">
+          <div v-if="!isFollow" class="btn" @click="follow">
+            <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
+          </div>
+          <div v-else class="btn2" @click="follow">
+            <span class="follow">已关注</span>
+          </div>
+        </template>
       </div>
     </div>
-  </div>
+  </HeadSlot>
 </template>
 
 <script>
 import { Image, Button } from '@chipspc/vant-dgg'
+import HeadSlot from '@/components/common/head/header-slot'
 export default {
   components: {
     [Image.name]: Image,
     [Button.name]: Button,
+    HeadSlot,
   },
   props: {
     headerData: {
@@ -33,6 +42,14 @@ export default {
       default() {
         return {}
       },
+    },
+    isFollow: {
+      type: Boolean,
+      default: false,
+    },
+    isShowFollow: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {
@@ -95,6 +112,11 @@ export default {
         color: #222222;
         margin-bottom: 20px;
       }
+    }
+    .btn2 {
+      background: none;
+      font-size: 30px;
+      color: #999999;
     }
     .btn {
       background: none;

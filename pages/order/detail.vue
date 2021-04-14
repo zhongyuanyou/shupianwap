@@ -193,7 +193,7 @@
           }}</span>
         </p>
       </div>
-      <div class="serve-time">
+      <!-- <div class="serve-time">
         <p>服务时间：9:00-24:00 周一至周日</p>
         <p class="btn">
           <a href="tel://962540">
@@ -205,7 +205,7 @@
             在线客服
           </a>
         </p>
-      </div>
+      </div> -->
       <!-- 当订单状态为已取消时隐藏顶部按钮区域 -->
       <div v-if="cusOrderStatusType !== 4" class="btn-area">
         <div class="inner">
@@ -505,6 +505,7 @@ export default {
   background: white;
   padding: 40px;
   font-size: 26px;
+  margin-bottom: 100px;
   .order-item {
     font-size: 26px;
     font-family: PingFang SC;
@@ -622,12 +623,15 @@ export default {
   }
 }
 .btn-area {
+  position: fixed;
+  left: 0;
+  bottom: 0;
   margin-top: 20px;
   width: 100%;
   height: 128px;
   background: #ffffff;
   line-height: 0;
-  padding: 24px 0;
+  padding-top: 24px;
   .inner {
     float: right;
     width: auto;

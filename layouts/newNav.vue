@@ -57,5 +57,6 @@ export default {
 }
 .show-open-app {
   height: calc(100% - 98px);
+  z-index: 1000;
 }
 </style>

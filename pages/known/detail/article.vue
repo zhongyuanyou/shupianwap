@@ -2,7 +2,13 @@
   <div>
     <div ref="myPage">
       <PageHead v-if="!showHead2" :title="articleDetails.title"></PageHead>
-      <PageHead2 v-if="showHead2" :header-data="headerData" @follow="follow" />
+      <PageHead2
+        v-if="showHead2"
+        :header-data="headerData"
+        :is-follow="isFollow"
+        :is-show-follow="articleDetails.createrId !== userInfo.userId"
+        @follow="follow"
+      />
     </div>
     <div class="title-area">
       <div class="title">{{ articleDetails.title }}</div>
@@ -14,9 +20,14 @@
           <p>{{ articleDetails.createrName }}</p>
           {{ articleDetails.contentText }}
         </div>
-        <div class="btn" @click="follow">
-          <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
-        </div>
+        <template v-if="articleDetails.createrId !== userInfo.userId">
+          <div v-if="!isFollow" class="btn" @click="follow">
+            <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
+          </div>
+          <div v-else class="btn2" @click="follow">
+            <span class="follow">已关注</span>
+          </div>
+        </template>
       </div>
       <div class="content" v-html="articleDetails.content"></div>
       <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
@@ -87,6 +98,7 @@
 
 <script>
 import { Field, Tab, Tabs, Button, Image, Toast } from '@chipspc/vant-dgg'
+import { knownApi } from '@/api'
 import PageHead from '@/components/common/head/header'
 import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
 // 推荐文章列表
@@ -108,66 +120,10 @@ export default {
       articleList: '',
       headerData: {},
       showHead2: false,
-      commentList: [
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-      ],
-      commentList2: [],
       articleDetails: '',
       currentDetailsId: '',
       handleType: '',
+      isFollow: false,
     }
   },
   computed: {
@@ -176,46 +132,65 @@ export default {
     },
   },
   created() {
-    if (this.$route.params.id) {
-      this.currentDetailsId = this.$route.params.id
-    } else {
-      this.currentDetailsId = '8065065421625749504'
+    if (this.$route.query.id) {
+      this.currentDetailsId = this.$route.query.id
     }
     this.getDetailData()
     this.getRecommendData()
+    this.initFollow()
   },
 
   mounted() {
-    this.commentList2 = JSON.parse(JSON.stringify(this.commentList)).splice(
-      0,
-      2
-    )
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    initFollow() {
+      this.$axios
+        .get(knownApi.questionArticle.findAttention, {
+          params: {
+            currentUserId: this.userInfo.userId,
+            homeUserId: this.homeUserId || '120',
+          },
+        })
+        .then((res) => {
+          if (res.data) {
+            this.isFollow = true
+          } else {
+            this.isFollow = false
+          }
+        })
+    },
     follow() {
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/question_article/v2/find_user_relations.do'
+      let followStatus = ''
+      if (this.isFollow) {
+        followStatus = 2
+        this.isFollow = false
+      } else {
+        followStatus = 1
+        this.isFollow = true
+      }
       this.loading = true
       this.$axios
-        .get(baseUrl, {
-          params: {
-            id: this.currentDetailsId,
-            userId: this.userInfo.userId || '120',
-            userHandleFlag: 1,
-            userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-            userName: this.userInfo.userName || '测试用户',
-            attentionUserId: '',
-            attentionUserName: '',
-            attentionUserType: '',
-          },
+        .post(knownApi.home.attention, {
+          handleUserName: this.userInfo.userName || '测试用户',
+          handleUserId: this.userInfo.userId || '120',
+          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+          handleType: followStatus,
+          attentionUserId: this.articleDetails.userId,
+          attentionUserName: this.articleDetails.userName,
+          attentionUserType: this.articleDetails.userType,
         })
         .then((res) => {
           this.loading = false
           if (res.code === 200) {
+            if (this.isFollow) {
+              this.$xToast.show({ message: '关注成功' })
+            } else {
+              this.$xToast.show({ message: '取消关注' })
+            }
           } else {
             Toast.fail({
               duration: 2000,
@@ -230,29 +205,27 @@ export default {
       this.$refs.openComment.commentShow = true
     },
     getRecommendData() {
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/known_home/v1/recommendArticle.do'
-      this.loading = true
-      this.$axios.get(baseUrl, { params: {} }).then((res) => {
-        this.loading = false
-        if (res.code === 200) {
-          this.articleList = res.data
-        } else {
-          Toast.fail({
-            duration: 2000,
-            message: '服务异常，请刷新重试！',
-            forbidClick: true,
-            className: 'my-toast-style',
-          })
-        }
-      })
-    },
-    getDetailData() {
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do'
       this.loading = true
       this.$axios
-        .get(baseUrl, {
+        .get(knownApi.questionArticle.recommendArticle, { params: {} })
+        .then((res) => {
+          this.loading = false
+          if (res.code === 200) {
+            this.articleList = res.data
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+    },
+    getDetailData() {
+      this.loading = true
+      this.$axios
+        .get(knownApi.questionArticle.detail, {
           params: {
             id: this.currentDetailsId,
             userId: this.userInfo.userId || '120',
@@ -268,8 +241,6 @@ export default {
             this.headerData.createrName = this.articleDetails.createrName
             this.headerData.contentText = this.articleDetails.contentText
             this.headerData.avatar = this.articleDetails.avatar
-            this.articleDetails.content =
-              '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'
           } else {
             Toast.fail({
               duration: 2000,
@@ -283,7 +254,6 @@ export default {
     handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
       const scrollTop = this.$refs.myPage.getBoundingClientRect().top // 滚动条距离顶部的位置
-      console.log(scrollTop, 11111111111111)
       console.log('scrollTop', scrollTop)
       if (scrollTop < 0) {
         this.showHead2 = true
@@ -330,10 +300,8 @@ export default {
           this.articleDetails.isCollectFlag = 1
         }
       }
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/known_home/v1/operation.do'
       this.$axios
-        .post(baseUrl, {
+        .post(knownApi.home.operation, {
           handleUserId: this.userInfo.userId || '120',
           handleUserName: this.userInfo.userName || '测试用户',
           businessId: this.currentDetailsId,
@@ -350,13 +318,13 @@ export default {
                 this.$xToast.show({ message: '取消点赞' })
               }
             }
-            // if (type === 2) {
-            //   if (this.articleDetails.isDisapplaudFlag === 1) {
-            //     this.$xToast.show({ message: '反对成功' })
-            //   } else {
-            //     this.$xToast.show({ message: '取消反对' })
-            //   }
-            // }
+            if (type === 2) {
+              if (this.articleDetails.isDisapplaudFlag === 1) {
+                this.$xToast.show({ message: '已反对' })
+              } else {
+                this.$xToast.show({ message: '取消反对' })
+              }
+            }
             if (type === 3) {
               if (this.articleDetails.isCollectFlag === 1) {
                 this.$xToast.show({ message: '收藏成功' })
@@ -373,28 +341,6 @@ export default {
             })
           }
         })
-      // switch (type) {
-      //   case 1:
-      //     this.$xToast.show({
-      //       message: '点赞成功',
-      //     })
-      //     break
-      //   case 2:
-      //     this.$xToast.show({
-      //       message: '点赞成功',
-      //     })
-      //     break
-      //   case 3:
-      //     this.$xToast.show({
-      //       message: '点赞成功',
-      //     })
-      //     break
-      //   default:
-      //     this.$xToast.show({
-      //       message: '操作成功',
-      //     })
-      //     break
-      // }
     },
   },
 }
@@ -488,6 +434,11 @@ export default {
         color: #222222;
         margin-bottom: 20px;
       }
+    }
+    .btn2 {
+      background: none;
+      font-size: 30px;
+      color: #999999;
     }
     .btn {
       height: 72px;

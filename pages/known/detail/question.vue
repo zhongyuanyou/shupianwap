@@ -138,7 +138,7 @@
         </div>
       </div>
     </div>
-    <div v-if="releaseStatusId === 1" class="success">
+    <div v-if="releaseStatus === 1" class="success">
       <div>
         <sp-icon name="certificate" size="0.45rem" color="#00B365" /><span
           >成功提问</span
@@ -146,7 +146,7 @@
       </div>
       <p>你可以邀请下面用户来更快获得回答</p>
     </div>
-    <div v-if="releaseStatusId === 1" class="answer">
+    <div v-if="releaseStatus === 1" class="answer">
       <div class="head">
         <p>回答 {{ total }}</p>
         <div>
@@ -165,13 +165,18 @@
         finished-text="没有更多了"
         @load="getQuesData"
       >
-        <div v-for="(item, index) in questionList" :key="index" class="list">
+        <div
+          v-for="(item, index) in questionList"
+          :key="index"
+          class="list"
+          @click="goAnsDetail(item.id)"
+        >
           <div class="head">
             <img :src="item.avatar" alt="" />
             <p>{{ item.userName }}</p>
           </div>
           <p class="content">
-            {{ item.content }}
+            {{ item.contentText }}
           </p>
           <div class="foot">
             <p>{{ item.applaudCount }} 赞同</p>
@@ -216,7 +221,7 @@
         >
       </div>
     </div>
-    <!--    分享组件-->
+    <!--    上拉组件-->
     <sp-popup
       v-model="popupShow"
       position="bottom"
@@ -264,7 +269,7 @@ export default {
       scrollTop: 0,
       questionDetials: '',
       questionList: '',
-      releaseStatusId: 1,
+      releaseStatus: 0,
       orderBy: 'totalBrowseCount=desc',
       handleLikeType: null,
       finished: false,
@@ -281,10 +286,11 @@ export default {
     },
   },
   created() {
-    if (this.$route.params.id) {
-      this.currentDetailsId = this.$route.params.id
-    } else {
-      this.currentDetailsId = '8065065421625749504'
+    if (this.$route.query.id) {
+      this.currentDetailsId = this.$route.query.id
+    }
+    if (this.$route.query.status) {
+      this.releaseStatus = this.$route.query.status
     }
     this.getDetailData()
   },
@@ -295,12 +301,16 @@ export default {
     window.removeEventListener('scroll', this.watchScroll)
   },
   methods: {
+    goAnsDetail(id) {
+      this.$route.push({
+        path: '/known/detail/answer',
+        query: id,
+      })
+    },
     getDetailData() {
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do'
       this.loading = true
       this.$axios
-        .get(baseUrl, {
+        .get(knownApi.questionArticle.detail, {
           params: {
             id: this.currentDetailsId,
             userId: this.userInfo.userId || '120',
@@ -337,11 +347,9 @@ export default {
         })
     },
     getQuesData() {
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/question_article/v2/find_page.do'
       this.$axios
-        .post(baseUrl, {
-          sourceIds: [`${this.currentDetailsId}`],
+        .post(knownApi.questionArticle.list, {
+          sourceIds: [this.currentDetailsId],
           orderBy: this.orderBy,
           page: this.page,
           userId: this.userInfo.userId || '120',
@@ -400,11 +408,8 @@ export default {
             this.questionDetials.collectCount + 1
         }
       }
-
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/known_home/v1/operation.do'
       this.$axios
-        .post(baseUrl, {
+        .post(knownApi.home.operation, {
           handleUserId: this.userInfo.userId || '120',
           handleUserName: this.userInfo.userName || '测试用户',
           businessId: this.currentDetailsId,
@@ -455,8 +460,6 @@ export default {
     },
     deleteQues(id) {
       const curId = id
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/question_article/v2/delete.do'
       this.loading = true
       Dialog.confirm({
         title: '提示',
@@ -464,7 +467,7 @@ export default {
       })
         .then(() => {
           this.$axios
-            .post(baseUrl, {
+            .post(knownApi.content.dlt, {
               id: curId,
               userId: this.userInfo.userId,
             })
@@ -485,7 +488,6 @@ export default {
         })
         .catch((err) => {
           console.log(err)
-          // on cancel
         })
     },
     sum(val) {
