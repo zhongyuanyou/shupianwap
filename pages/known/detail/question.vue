@@ -280,6 +280,31 @@ export default {
       currentDetailsId: '',
     }
   },
+  asyncData(context) {
+    return Promise.all([
+      context.$axios.get(
+        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do',
+        {
+          params: { id: '8065065421625749504', userHandleFlag: 1 },
+        }
+      ),
+    ])
+      .then((res) => {
+        if (res[0].data.categoryName) {
+          res[0].data.categoryName = res[0].data.categoryName.split(',')
+        }
+        console.log(res)
+        if (res[0] && res[0].code === 200) {
+          return {
+            questionDetials: res[0].data,
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        Promise.reject(error)
+      })
+  },
   computed: {
     userInfo() {
       return this.$store.state.user
@@ -292,7 +317,6 @@ export default {
     if (this.$route.query.status) {
       this.releaseStatus = this.$route.query.status
     }
-    this.getDetailData()
   },
   mounted() {
     window.addEventListener('scroll', this.watchScroll)
@@ -313,10 +337,7 @@ export default {
         .get(knownApi.questionArticle.detail, {
           params: {
             id: this.currentDetailsId,
-            userId: this.userInfo.userId || '120',
             userHandleFlag: 1,
-            userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-            userName: this.userInfo.userName || '测试用户',
           },
         })
         .then((res) => {
