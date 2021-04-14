@@ -22,7 +22,7 @@
               <div class="userName">{{ item.userName }}</div>
             </div>
             <p class="content" @click="goDetailPage(item.type, item.id)">
-              {{ item.content }}
+              {{ item.contentText }}
             </p>
           </div>
 

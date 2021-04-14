@@ -321,6 +321,7 @@ export default {
       this.getDate()
       this.getSubjectList() // 获取专题列表
       this.categoryList() // 获取分类列表
+      this.recommendList()
     },
     // 请求分类列表
     async categoryList() {
@@ -427,7 +428,7 @@ export default {
       )
       if (code === 200) {
         if (data.length > 0) {
-          this.subjectList = data
+          this.subjectList = data.shift()
         } else {
           this.attentionStatus = false
           this.showNotAttention = true
@@ -498,9 +499,9 @@ export default {
     // 请求推荐列表数据
     async recommendList() {
       const params = {}
-      const { code, message, data } = await this.$axios.post(
+      const { code, message, data } = await this.$axios.get(
         knownApi.questionArticle.recommendList,
-        params
+        { params }
       )
       if (code === 200) {
         if (data.rows.length > 0) {
