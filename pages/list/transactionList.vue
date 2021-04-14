@@ -12,14 +12,6 @@
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
     </Search>
-    <!--E搜索框-->
-    <!-- Stab -->
-    <!-- <jy-filters
-      ref="dropDownMenu"
-      :filter-data="tabItems"
-      @activeItem="getFilterHandle"
-    /> -->
-    <!-- Etab -->
     <goods ref="goods" :searchkey="currentInputText" />
   </div>
 </template>

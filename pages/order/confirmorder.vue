@@ -1,97 +1,101 @@
 <template>
   <div class="PlaceOrder">
-    <Head ref="head" title="确认订单"></Head>
-    <sp-skeleton title avatar :row="3" :loading="loading">
-      <div class="allbox">
-        <div class="data-content">
-          <div v-for="(item, index) in order.list" :key="index" class="list">
-            <div class="left">
-              <img
-                :src="
-                  item.salesGoodsOperatings.clientDetails[0].imgFileIdPaths[0]
-                "
-                alt=""
-              />
-            </div>
-            <div class="right">
-              <h1 class="tit">{{ item.name }}</h1>
-              <!-- <p class="tag">{{ item.classCodeName }}</p> -->
-              <p class="price">
-                <span
-                  ><b>{{ item.salesPrice }}</b
-                  >元</span
-                >
-                <i>{{
-                  $route.query.type === 'shopcar'
-                    ? `x${item.salesVolume}`
-                    : 'x1'
-                }}</i>
-              </p>
-              <div v-if="$route.query.type === 'shopcar'" class="list">
-                <div
-                  v-for="(listitem, listindex) in item.saleGoodsSubs"
-                  :key="listindex"
-                >
-                  <p class="name">{{ listitem.goodsSubName }}</p>
-                  <p class="data">{{ listitem.goodsSubDetailsName }}</p>
-                  <p class="price">
-                    {{ listitem.settlementPriceEdit }} {{ `x1` }}
-                  </p>
-                </div>
-              </div>
-              <div v-else class="list">
-                <div
-                  v-for="(listitem, listindex) in item.salesGoodsSubVos"
-                  :key="listindex"
-                >
-                  <p class="name">
-                    <span v-if="listitem.goodsType === 'PRO_CLASS_TYPE_SALES'">
-                      销售产品
-                    </span>
-                    <span
-                      v-else-if="
-                        listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE'
-                      "
-                    >
-                      服务产品
-                    </span>
-                    <span
-                      v-else-if="
-                        listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE_RESOURCE'
-                      "
-                    >
-                      服务资源
-                    </span>
-                    <span
-                      v-else-if="
-                        listitem.goodsType === 'PRO_CLASS_TYPE_TRANSACTION'
-                      "
-                    >
-                      交易资源
-                    </span>
-                  </p>
-                  <p class="data">{{ listitem.goodsSubName }}</p>
-                  <p class="price">
-                    <!-- {{ listitem.settlementPriceEdit }}  -->
-                    {{ `x1` }}
-                  </p>
-                </div>
-              </div>
-            </div>
+    <Head v-show="!editShow" ref="head" title="确认订单"></Head>
+    <sp-skeleton
+      v-for="_index in 10"
+      :key="_index"
+      title
+      :row="3"
+      style="margin-top: 10px"
+      :loading="skeletonloading"
+    >
+    </sp-skeleton>
+    <div v-if="!skeletonloading" class="allbox">
+      <div class="data-content">
+        <div v-for="(item, index) in order.list" :key="index" class="list">
+          <div class="left">
+            <img
+              :src="
+                item.salesGoodsOperatings.clientDetails[0].imgFileIdPaths[0]
+              "
+              alt=""
+            />
           </div>
-          <div class="inpbox">
-            <Field
-              v-model="message"
-              rows="1"
-              autosize
-              label="备注留言"
-              type="textarea"
-              placeholder="建议提前先与规划师联系"
-              maxlength="50"
-            ></Field>
+          <div class="right">
+            <h1 class="tit">{{ item.name }}</h1>
+            <!-- <p class="tag">{{ item.classCodeName }}</p> -->
+            <p class="price">
+              <span
+                ><b>{{ item.salesPrice }}</b
+                >元</span
+              >
+              <i>{{
+                $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
+              }}</i>
+            </p>
+            <div v-if="$route.query.type === 'shopcar'" class="list">
+              <div
+                v-for="(listitem, listindex) in item.saleGoodsSubs"
+                :key="listindex"
+              >
+                <p class="name">{{ listitem.goodsSubName }}</p>
+                <p class="data">{{ listitem.goodsSubDetailsName }}</p>
+                <p class="price">
+                  {{ listitem.settlementPriceEdit }} {{ `x1` }}
+                </p>
+              </div>
+            </div>
+            <div v-else class="list">
+              <div
+                v-for="(listitem, listindex) in item.salesGoodsSubVos"
+                :key="listindex"
+              >
+                <p class="name">
+                  <span v-if="listitem.goodsType === 'PRO_CLASS_TYPE_SALES'">
+                    销售产品
+                  </span>
+                  <span
+                    v-else-if="listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE'"
+                  >
+                    服务产品
+                  </span>
+                  <span
+                    v-else-if="
+                      listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE_RESOURCE'
+                    "
+                  >
+                    服务资源
+                  </span>
+                  <span
+                    v-else-if="
+                      listitem.goodsType === 'PRO_CLASS_TYPE_TRANSACTION'
+                    "
+                  >
+                    交易资源
+                  </span>
+                </p>
+                <p class="data">{{ listitem.goodsSubName }}</p>
+                <p class="price">
+                  <!-- {{ listitem.settlementPriceEdit }}  -->
+                  {{ `x1` }}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-        <!-- <div v-else class="data-content data-content1">
+        <div class="inpbox">
+          <Field
+            v-model="message"
+            rows="1"
+            autosize
+            label="备注留言"
+            type="textarea"
+            placeholder="建议提前先与规划师联系"
+            maxlength="50"
+          ></Field>
+        </div>
+      </div>
+      <!-- <div v-else class="data-content data-content1">
           <div v-for="(item, index) in order.list" :key="index" class="list">
             <h1><span>套餐</span>{{ item.name }}</h1>
             <div
@@ -116,73 +120,76 @@
             ></Field>
           </div>
         </div> -->
-        <div class="news-content">
-          <CellGroup>
-            <Cell
-              title="商品及服务总数"
-              :value="order.num || order.goodsTotal + '件'"
-              value-class="black"
-            />
-            <Cell
-              title="商品金额"
-              :value="order.salesPrice || order.needPayTotalMoney + '元'"
-              value-class="black"
-            />
-            <Cell
-              title="优惠券"
-              :value="
-                coupon
-                  ? coupon
-                  : datalist.length > 0
-                  ? datalist.length + '个优惠券'
-                  : '无可用'
-              "
-              is-link
-              :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
-              @click="popupfn()"
-            />
-          </CellGroup>
-          <p class="money">
-            合计：
-            <span>
-              <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元
-            </span>
-          </p>
-        </div>
-        <div class="contract">
-          <CellGroup>
-            <Cell
-              title="合同信息"
-              :value="
-                contaract.contractFirstPhone ? '已完善合同信息' : '完善合同信息'
-              "
-              :value-class="contaract.contractFirstPhone ? 'ys' : 'black'"
-              is-link
-              @click="gocontractedit()"
-            />
-          </CellGroup>
-        </div>
-        <div class="agreement">
-          <Checkbox v-model="radio">
-            <template>
-              <p class="tit">
-                我已阅读过并知晓<span @click="goagr"
-                  >《薯片平台用户交易下单协议》</span
-                >
-              </p>
-            </template>
-          </Checkbox>
-        </div>
-      </div>
-      <div ref="foot" class="foot">
-        <p class="left">
-          应付:<span>
-            <b>{{ price }}</b> 元</span
-          >
+      <div class="news-content">
+        <CellGroup>
+          <Cell
+            title="商品及服务总数"
+            :value="order.num || order.goodsTotal + '件'"
+            value-class="black"
+          />
+          <Cell
+            title="商品金额"
+            :value="order.salesPrice || order.needPayTotalMoney + '元'"
+            value-class="black"
+          />
+          <Cell
+            title="优惠券"
+            :value="
+              coupon
+                ? coupon
+                : datalist.length > 0
+                ? datalist.length + '个优惠券'
+                : '无可用'
+            "
+            is-link
+            :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
+            @click="popupfn()"
+          />
+        </CellGroup>
+        <p class="money">
+          合计：
+          <span>
+            <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元
+          </span>
         </p>
-        <div class="right" @click="placeOrder">提交订单</div>
       </div>
-    </sp-skeleton>
+      <div class="contract">
+        <CellGroup>
+          <Cell
+            title="合同信息"
+            :value="
+              contaract.contractFirstPhone ? '已完善合同信息' : '完善合同信息'
+            "
+            :value-class="contaract.contractFirstPhone ? 'ys' : 'black'"
+            is-link
+            @click="gocontractedit()"
+          />
+        </CellGroup>
+      </div>
+      <div class="agreement">
+        <Checkbox v-model="radio">
+          <template>
+            <p class="tit">
+              我已阅读过并知晓<span @click="goagr"
+                >《薯片平台用户交易下单协议》</span
+              >
+            </p>
+          </template>
+        </Checkbox>
+      </div>
+    </div>
+    <div ref="foot" class="foot">
+      <p class="left">
+        应付:<span>
+          <b>{{ price }}</b> 元</span
+        >
+      </p>
+      <div class="right" @click="placeOrder">提交订单</div>
+    </div>
+    <div v-show="editShow" class="contractbox">
+      <Contract @goback="contractback" @sum="contractsum"></Contract>
+    </div>
+    <LoadingCenter v-show="loading" />
     <Popup
       ref="conpon"
       :show="popupshow"
@@ -208,12 +215,12 @@ import {
   Skeleton,
   // CheckboxGroup,
 } from '@chipspc/vant-dgg'
-import { mapMutations } from 'vuex'
 import Head from '@/components/common/head/header'
 import Popup from '@/components/PlaceOrder/Popup'
+import Contract from '@/components/PlaceOrder/contract'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { productDetailsApi, auth, shopCart } from '@/api'
 import { coupon, order } from '@/api/index'
-import listJumpIm from '@/mixins/listJumpIm'
 export default {
   name: 'PlaceOrder',
   components: {
@@ -224,9 +231,9 @@ export default {
     Checkbox,
     Popup,
     [Skeleton.name]: Skeleton,
+    LoadingCenter,
+    Contract,
   },
-  layout: 'keepAlive',
-  mixins: [listJumpIm],
   data() {
     return {
       popupshow: false,
@@ -266,15 +273,12 @@ export default {
         discount: [],
         payType: 'ORDER_PAY_MODE_ONLINE',
       },
-      loading: true,
+      loading: false,
+      skeletonloading: true,
+      editShow: false,
     }
   },
   mounted() {
-    this.SET_KEEP_ALIVE({ type: 'add', name: 'PlaceOrder' })
-    if (this.$cookies.get('contaract')) {
-      this.contaract = this.$cookies.get('contaract')
-      this.$cookies.remove('contaract')
-    }
     if (this.$route.query.type === 'shopcar') {
       this.getcart()
     } else {
@@ -282,12 +286,8 @@ export default {
     }
     // this.getInitData()
     this.getProtocol('protocol100008')
-    console.log(this.$store.state.city, '城市')
   },
   methods: {
-    ...mapMutations({
-      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
-    }),
     goagr() {
       this.$router.push({
         name: 'login-protocol',
@@ -307,6 +307,7 @@ export default {
           this.price = this.order.needPayTotalMoney
           this.getInitData(2)
           this.getInitData(4)
+          this.loading = false
         })
         .catch((e) => {
           if (e.code !== 200) {
@@ -316,7 +317,6 @@ export default {
         })
     },
     async asyncData() {
-      this.loading = true
       try {
         const { code, message, data } = await this.$axios.post(
           productDetailsApi.sellingGoodsDetail,
@@ -347,14 +347,14 @@ export default {
           this.price = this.order.salesPrice
           this.getInitData(2)
           this.getInitData(6)
-          this.loading = false
+          this.skeletonloading = false
         } else {
-          this.loading = false
+          this.skeletonloading = false
           throw message
         }
       } catch (err) {
         console.log(err)
-        this.loading = false
+        this.skeletonloading = false
       }
     },
     async getProtocol(categoryCode) {
@@ -367,11 +367,9 @@ export default {
         includeField: 'content,title',
       }
       try {
-        this.loading = true
         const data = await auth.protocol(params)
         const { rows = [] } = data || {}
         this.Orderform.orderAgreementIds = rows[0].id || {}
-        this.loading = false
       } catch (error) {
         this.$xToast.error(error.message || '请求失败')
         return Promise.reject(error)
@@ -472,7 +470,7 @@ export default {
                   cusOrderId: result.cusOrderId,
                 },
               })
-            }, 1000)
+            }, 2000)
           })
           .catch((e) => {
             this.loading = false
@@ -515,14 +513,15 @@ export default {
           }
         })
     },
+    contractback() {
+      this.editShow = false
+    },
+    contractsum(val) {
+      this.contaract = val
+      this.editShow = false
+    },
     gocontractedit() {
-      this.$cookies.set('contaract', this.contaract)
-      this.$router.push({
-        path: '/contract/edit',
-        query: {
-          type: 'ws',
-        },
-      })
+      this.editShow = true
     },
     popupfn() {
       this.popupshow = true
@@ -532,7 +531,6 @@ export default {
       this.$refs.conpon.checkarr = ''
       this.$refs.conpon.radio = null
     },
-    // layout: 'keepAlive',
   },
 }
 </script>
@@ -541,6 +539,10 @@ export default {
 .PlaceOrder {
   background: #f8f8f8;
   height: 100vh;
+  /deep/.sp-skeleton__row,
+  .sp-skeleton__title {
+    background: #fff;
+  }
   > .allbox {
     padding-bottom: 24px;
     overflow-y: auto;
@@ -718,6 +720,13 @@ export default {
       color: #fff;
       margin-left: auto;
     }
+  }
+  > .contractbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
   }
 }
 </style>

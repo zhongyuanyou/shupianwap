@@ -72,7 +72,6 @@ export default {
   },
   watch: {
     echoData(val) {
-      console.log('echoData', val)
       this.minPrice = val.minValue
       this.maxPrice = val.maxValue
       this.activeItems = val.activeItems

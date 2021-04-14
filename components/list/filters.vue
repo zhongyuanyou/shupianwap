@@ -4,11 +4,11 @@
       <sp-dropdown-item
         v-for="(item, index) in filterData"
         :key="index"
+        ref="service"
         :title="item.name"
       >
         <div v-if="item.code == 'class'" class="classification">
           <ServiceSelect
-            ref="service"
             :items="classification"
             :is-select_more="true"
             :active-data="activeData"
@@ -22,6 +22,8 @@
             :price-list="pricelist"
             :echo-data="price"
             @selectItems="pricefn"
+            @minInput="minInput"
+            @maxInput="maxInput"
           ></PriceFilter>
         </div>
         <div v-if="item.code == 'sort'" class="sort">
@@ -132,10 +134,25 @@ export default {
   },
   mounted() {},
   methods: {
+    minInput(val) {
+      this.$emit('minInput', val)
+      console.log(val)
+    },
+    maxInput(val) {
+      this.$emit('maxInput', val)
+      console.log(val)
+    },
     reset() {
       this.$emit('reset')
     },
     confirm() {
+      if (this.$refs.service[0].showPopup === true) {
+        this.$refs.service[0].toggle()
+      } else if (this.$refs.service[1].showPopup === true) {
+        this.$refs.service[1].toggle()
+      } else if (this.$refs.service[2].showPopup === true) {
+        this.$refs.service[2].toggle()
+      }
       this.$emit('confirm')
     },
     sortfn(item) {
@@ -148,7 +165,6 @@ export default {
       this.$emit('pricefn', item, items)
     },
     navselect(item) {
-      console.log(item)
       this.$emit('navselect', item)
     },
   },
