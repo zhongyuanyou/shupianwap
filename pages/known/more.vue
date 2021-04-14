@@ -1,11 +1,6 @@
 <template>
   <div class="container">
-    <sp-top-nav-bar
-      title="关注更多"
-      :fixed="true"
-      left-arrow
-      @on-click-left="$router.back()"
-    />
+    <Header title="关注更多" />
 
     <sp-list
       v-model="loading"
@@ -40,6 +35,7 @@
 <script>
 import { TopNavBar, Image, List, Dialog } from '@chipspc/vant-dgg'
 import { knownApi } from '~/api'
+import Header from '@/components/common/head/header'
 export default {
   name: 'AttentionMore',
   components: {
@@ -47,6 +43,7 @@ export default {
     [Image.name]: Image,
     [List.name]: List,
     [Dialog.name]: Dialog,
+    Header,
   },
   data() {
     return {
@@ -137,7 +134,6 @@ export default {
 <style lang="less" scoped>
 .container {
   .list_container {
-    padding-top: 80px;
     .item {
       background: #ffffff;
       padding: 28px 32px 28px;

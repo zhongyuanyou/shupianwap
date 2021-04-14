@@ -1,6 +1,10 @@
 <template>
   <div class="home_container">
-    <div class="header" :class="{ header_fixed: fixed }">
+    <div
+      class="header"
+      :class="{ header_fixed: fixed }"
+      :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
+    >
       <my-icon
         name="zuo"
         size="0.4rem"
@@ -33,14 +37,11 @@
         <div class="user_name">{{ userName }}</div>
         <div class="user_desc clamp3">{{ desc }}</div>
         <div class="user_data">
-          <div class="user_data_item" @click="$router.push('/known/home/fans')">
+          <div class="user_data_item" @click="toFans">
             <div class="user_data_item_num">{{ fansNum }}</div>
             <div class="user_data_item_name">粉丝</div>
           </div>
-          <div
-            class="user_data_item"
-            @click="$router.push('/known/home/attention')"
-          >
+          <div class="user_data_item" @click="toAttention">
             <div class="user_data_item_num">{{ attentionNum }}</div>
             <div class="user_data_item_name">关注</div>
           </div>
@@ -241,6 +242,18 @@ export default {
     window.addEventListener('scroll', this.getScroll)
   },
   methods: {
+    toFans() {
+      this.$router.push({
+        path: '/known/home/fans',
+        query: { homeUserId: this.homeUserId },
+      })
+    },
+    toAttention() {
+      this.$router.push({
+        path: '/known/home/attention',
+        query: { homeUserId: this.homeUserId },
+      })
+    },
     getScroll() {
       const scrollTop =
         window.pageYOffset ||
@@ -387,18 +400,19 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
-    height: 128px;
-    padding: 40px 0 0 86px;
+    height: 88px;
+    padding-left: 86px;
     color: #1a1a1a;
     font-size: 36px;
     font-weight: 500px;
     display: flex;
     align-items: center;
     transition: 0.3s all;
+    box-sizing: content-box;
     .spiconfont-zuo {
       position: absolute;
       left: 24px;
-      top: 64px;
+      bottom: 20px;
     }
   }
   .header_fixed {
