@@ -175,6 +175,7 @@ export default {
       this.loadingMore = false
       this.loading = false
       this.noMore = false
+      this.list = []
       this.getOrderList()
     },
     toCar() {
@@ -202,13 +203,17 @@ export default {
           this.loading = false
           this.loadingMore = false
           const arr = res.records
+          if (this.page === 1) {
+            this.list = []
+          }
           if (arr.length) {
             if (arr.length <= this.limit) this.noMore = true
             for (let i = 0, l = arr.length; i < l; i++) {
               this.changeMoney(arr[i])
             }
-            if (this.page === 1) this.list = arr
-            else {
+            if (res.currentPage === this.page) {
+              this.list = arr
+            } else {
               const nowData = JSON.parse(JSON.stringify(this.list))
               const allData = nowData.concat(arr)
               this.list = allData
