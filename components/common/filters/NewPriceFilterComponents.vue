@@ -126,11 +126,9 @@ export default {
       this.$emit('selectItems', item, items)
     },
     selectAllItems(item) {
-      console.log(item)
       this.$emit('selectAllItems', item)
     },
     setPrice(minPrice, maxPrice) {
-      console.log('123', minPrice, maxPrice)
       this.minPrice = minPrice
       this.maxPrice = maxPrice
     },
