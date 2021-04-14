@@ -8,7 +8,7 @@
       <p class="goods-name">
         <span class="name">
           {{
-            item.orderSaleName || item.skuDetails[0].spuName || item.spuName
+            item.skuDetails[0].spuName || item.spuName || item.orderSaleName
           }}</span
         >
         <span v-if="cusOrderPayType !== 2 && orderType" class="money1">

@@ -3,11 +3,13 @@
     <div class="container_body">
       <div class="default">
         <img
-          src="https://cdn.shupian.cn/sp-pt/wap/akj5xaee4oo0000.png"
+          src="https://cdn.shupian.cn/sp-pt/wap/5ntfyph5qvc0000.png"
           alt=""
         />
         <div class="default_title">关注列表空空如也～</div>
-        <div class="attBtn">前往关注</div>
+        <div class="attBtn" @click="$router.push({ path: '/known/' })">
+          前往关注
+        </div>
       </div>
     </div>
   </div>
@@ -43,8 +45,6 @@ export default {
       > img {
         width: 340px;
         height: 340px;
-        background: #4974f5;
-        opacity: 0.4;
       }
       .default_title {
         height: 30px;
