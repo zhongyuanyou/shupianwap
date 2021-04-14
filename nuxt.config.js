@@ -127,6 +127,7 @@ module.exports = {
     { src: '@/plugins/install-components', ssr: false },
     { src: '@/plugins/directive.js', ssr: false },
     { src: '@/plugins/vue-quill-editor', ssr: false },
+    { src: '@/plugins/back', ssr: false },
   ],
   router: {
     middleware: 'appDock',

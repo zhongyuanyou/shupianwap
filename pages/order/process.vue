@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <Header title="进行进度" @leftClickFuc="onClickLeft" />
-    <div v-if="!loading" class="banner">
+    <div v-if="hasDetail" class="banner">
       <sp-image class="left-img" :src="skuInfo.skuImages"> </sp-image>
       <div class="right">
         <p class="goods-name">
@@ -33,7 +33,7 @@
         <p>暂无办理进度信息</p>
       </div>
     </div>
-    <LoadingCenter v-show="loading" />
+    <LoadingCenter v-show="!hasList || !hasDetail" />
   </div>
 </template>
 
@@ -52,10 +52,11 @@ export default {
   },
   data() {
     return {
-      loading: true,
       skuInfo: {},
       orderData: {},
       batchList: [],
+      hasList: false,
+      hasDetail: false,
     }
   },
   computed: {
@@ -97,9 +98,8 @@ export default {
           { orderDetailsId: this.$route.query.detailId }
         )
         .then((res) => {
-          console.log('周期批次列表', res)
+          this.hasList = true
           this.batchList = res
-          this.loading = false
         })
     },
     getDetail() {
@@ -109,8 +109,7 @@ export default {
           { id: this.orderData.orderId, cusOrderId: this.orderData.cusOrderId }
         )
         .then((res) => {
-          console.log('orderDetail3', res)
-          this.loading = false
+          this.hasDetail = true
           const data = res.data ? res.data : res
           this.skuInfo = data.orderSkuList.filter((item) => {
             return item.skuId === this.orderData.skuId

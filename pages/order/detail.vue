@@ -15,25 +15,39 @@
           :order-data="orderData"
           :cus-order-status-type="cusOrderStatusType"
           :cus-order-pay-status-no="orderData.cusOrderPayStatusNo"
+          :cus-order-pay-type="cusOrderPayType"
           @confirmOrder="confirmOrder"
         />
         <!-- 交易/销售/资源 -->
         <TradeList v-else class="goods-info" :order-data="orderData" />
         <div class="price-area">
-          <p>
-            <span> 商品总额 </span>
-            <span class="money">
-              {{ orderData.orderTotalMoney || '面议' }}
-              元
-            </span>
-          </p>
-          <p>
-            <span> 优惠金额 </span>
-            <span class="money">
-              {{ orderData.orderDiscountMoney || 0 }}
-              元
-            </span>
-          </p>
+          <!-- 定金尾款付费 -->
+          <!-- 服务完结收费 -->
+          <div v-if="checkPayType() === 2 || checkPayType() === 4">
+            <p>
+              <span> 商品总额 </span>
+              <span v-if="orderData.orderType === 0" class="money"> 面议</span>
+              <span v-else class="price1"
+                >{{ orderData.orderTotalMoney }}元</span
+              >
+            </p>
+          </div>
+          <div v-else>
+            <p>
+              <span> 商品总额 </span>
+              <span class="money">
+                {{ orderData.orderTotalMoney }}
+                元
+              </span>
+            </p>
+            <p>
+              <span> 优惠金额 </span>
+              <span class="money">
+                {{ orderData.orderDiscountMoney }}
+                元
+              </span>
+            </p>
+          </div>
           <!-- <p>
           <span> 活动优惠 </span>
           <span class="money">
@@ -56,20 +70,33 @@
           </span>
         </p> -->
         </div>
-        <p class="last-money">
+        <p
+          v-if="orderData.isNeedPay && cusOrderStatusType === 1"
+          class="last-money"
+        >
           应付金额:
-          <span class="pay-money">
-            {{ orderData.orderPayableMoney || 0 }}
-            元
-          </span>
+          <span v-if="orderData.orderType === 0" class="pay-money"> 面议</span>
+          <span v-else class="pay-money"
+            >{{ orderData.orderPayableMoney }}元</span
+          >
+        </p>
+        <p
+          v-if="cusOrderStatusType !== 4 && cusOrderStatusType !== 1"
+          class="last-money"
+        >
+          实付金额:
+          <span v-if="orderData.orderType === 0" class="pay-money"> 面议</span>
+          <span v-else class="pay-money"
+            >{{ orderData.orderTotalMoney }}元</span
+          >
         </p>
         <!-- <p class="last-money">
-        已付金额:
-        <span class="pay-money">
-          {{ orderData.orderPaidMoney || 0 }}
-          元
-        </span>
-      </p> -->
+          已付金额:
+          <span class="pay-money">
+            {{ orderData.orderPaidMoney || 0 }}
+            元
+          </span>
+        </p> -->
       </div>
 
       <div class="order-info">
@@ -252,7 +279,9 @@
         :this-time-pay-total="thisTimePayTotal"
       />
     </section>
-    <LoadingCenter v-if="!hasData" v-show="loading" />
+    <div v-if="!hasData" class="loading-area">
+      <LoadingCenter v-show="loading" />
+    </div>
   </div>
 </template>
 
@@ -299,6 +328,7 @@ export default {
       orderPayList: [],
       paylistLength: 0,
       opType: '',
+      cusOrderPayType: '', // 付费类型 1先付款后服务 2先定金后尾款 3服务节点收费 4服务完成收费
     }
   },
   computed: {
@@ -357,6 +387,7 @@ export default {
           }
           this.getBatchList()
           this.hasData = true
+          this.cusOrderPayType = this.checkPayType()
           // if (
           //   this.orderData.cusOrderPayStatusNo !==
           //   'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
@@ -431,6 +462,11 @@ export default {
   background: #f5f5f5;
   min-height: 100vh;
 }
+.loading-area {
+  background: white;
+  min-height: 100vh;
+  background: white;
+}
 .order-area {
   background: white;
   margin-bottom: 20px;
@@ -438,6 +474,7 @@ export default {
 }
 .price-area {
   margin-top: 40px;
+  padding-bottom: 20px;
   p {
     margin-bottom: 20px;
     font-size: 26px;

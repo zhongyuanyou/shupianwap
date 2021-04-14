@@ -5,7 +5,7 @@
         name="zuo"
         size="0.4rem"
         :color="fixed ? '#1A1A1A' : '#D8D8D8'"
-        @click.native="$router.back()"
+        @click.native="$back"
       ></my-icon>
       {{ fixed ? userName : '' }}
     </div>
@@ -230,6 +230,9 @@ export default {
     userInfo() {
       return this.$store.state.user
     },
+    isInApp() {
+      return this.$store.state.app.isInApp
+    },
   },
   mounted() {
     window.addEventListener('scroll', this.getScroll)
@@ -254,7 +257,25 @@ export default {
       this.loading = true
       this.getList()
     },
+    async isLogin() {
+      if (this.userInfo.userId && this.userInfo.token) {
+        return true
+      } else if (this.isInApp) {
+        alert()
+        await this.$appFn.dggLogin()
+      } else {
+        this.$router.push({
+          path: '/login',
+          query: {
+            redirect: this.$route.fullPath,
+          },
+        })
+      }
+    },
     async attention() {
+      if (!this.isLogin()) {
+        return
+      }
       const { code, message } = await this.$axios.post(
         knownApi.home.attention,
         {

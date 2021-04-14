@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <Header title="进行进度" @leftClickFuc="onClickLeft" />
-    <div v-if="!loading" class="banner">
+    <div v-if="hasDetail" class="banner">
       <sp-image class="left-img" :src="skuInfo.skuImages"> </sp-image>
       <div class="right">
         <p class="goods-name">
@@ -14,7 +14,8 @@
         </p>
       </div>
     </div>
-    <ProcessList :batch-data="batchData" />
+    <ProcessList v-if="hasList" :batch-data="batchData" />
+    <LoadingCenter v-show="!hasList || !hasDetail" />
   </div>
 </template>
 
@@ -25,15 +26,19 @@ import { Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import ProcessList from '@/components/order/process/ProcessList'
 import orderApi from '@/api/order'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     [Image.name]: Image,
     Header,
+    LoadingCenter,
     ProcessList,
   },
   data() {
     return {
-      loading: false,
+      loading: true,
+      hasDetail: false,
+      hasList: false,
       skuInfo: {},
       orderData: {},
       batchData: [],
@@ -72,9 +77,12 @@ export default {
           }
         )
         .then((res) => {
-          console.log('非周期产品办理进度', res)
+          this.hasList = true
           if (res && res.length) this.batchData = res || res
           else this.batchData = []
+        })
+        .catch(() => {
+          this.hasList = true
         })
     },
     getDetail() {
@@ -89,9 +97,10 @@ export default {
           this.skuInfo = data.orderSkuList.filter((item) => {
             return item.skuId === this.orderData.skuId
           })[0]
-          console.log('this.skuInfo', this.skuInfo)
+          this.hasDetail = true
         })
         .catch((err) => {
+          this.hasDetail = true
           this.$xToast.show(err.message)
           this.$router.back(-1)
         })

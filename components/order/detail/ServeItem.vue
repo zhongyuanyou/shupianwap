@@ -11,7 +11,7 @@
             item.orderSaleName || item.skuDetails[0].spuName || item.spuName
           }}</span
         >
-        <span class="money1">
+        <span v-if="cusOrderPayType !== 2 && orderType" class="money1">
           {{ changeMoney(item.skuDetails[0].skuPrice || item.skuPrice) }}元
         </span>
       </p>
@@ -131,6 +131,15 @@ export default {
     cusOrderPayStatusNo: {
       type: String,
       default: '',
+    },
+    cusOrderPayType: {
+      type: Number,
+      default: 1,
+    },
+    // 意向单类型 0 为意向单
+    orderType: {
+      type: Number,
+      default: 1,
     },
   },
   methods: {
