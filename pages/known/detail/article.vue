@@ -120,63 +120,6 @@ export default {
       articleList: '',
       headerData: {},
       showHead2: false,
-      commentList: [
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-      ],
-      commentList2: [],
       articleDetails: '',
       currentDetailsId: '',
       handleType: '',
@@ -189,10 +132,8 @@ export default {
     },
   },
   created() {
-    if (this.$route.params.id) {
-      this.currentDetailsId = this.$route.params.id
-    } else {
-      this.currentDetailsId = '8065065421625749504'
+    if (this.$route.query.id) {
+      this.currentDetailsId = this.$route.query.id
     }
     this.getDetailData()
     this.getRecommendData()
@@ -200,10 +141,6 @@ export default {
   },
 
   mounted() {
-    this.commentList2 = JSON.parse(JSON.stringify(this.commentList)).splice(
-      0,
-      2
-    )
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
@@ -304,8 +241,6 @@ export default {
             this.headerData.createrName = this.articleDetails.createrName
             this.headerData.contentText = this.articleDetails.contentText
             this.headerData.avatar = this.articleDetails.avatar
-            this.articleDetails.content =
-              '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'
           } else {
             Toast.fail({
               duration: 2000,
