@@ -4,7 +4,7 @@
       <sp-tabs
         v-model="active"
         class="answer_container_tabs"
-        @change="tabChange"
+        @click="tabChange"
       >
         <sp-tab
           v-for="(item, index) in answerTabs"
@@ -18,13 +18,13 @@
     <!-- 回答推荐 start -->
     <div v-if="showItem" class="answer_item">
       <sp-list
-        v-if="infoList.length"
+        v-if="answerList.length"
         v-model="loading"
         :finished="finished"
         offset="0"
         finished-text="没有更多了"
       >
-        <sp-cell v-for="(item, index) in infoList" :key="index">
+        <sp-cell v-for="(item, index) in answerList" :key="index">
           <div class="item" @click="$router.push('/known/detail/article')">
             <div class="item_content">
               <div class="item_content_lf">
@@ -33,18 +33,18 @@
                     <img src="" alt="" />
                   </div>
                   <div class="user_name">
-                    <p>摇铃铛</p>
+                    <p>{{ item.userName }}</p>
                     <div class="user_answer">的提问期待你的解答30分钟前</div>
                   </div>
                 </div>
                 <p class="content">
-                  今年两会，全国人大将审查国民经济和社会发展第十四个五年规划和2035年远景目标纲要草案，为未来五年与更长远的…
+                  {{ item.content }}
                 </p>
               </div>
             </div>
             <div class="item_bottom">
-              <p>5 回答 · 5关注</p>
-              <div class="btn" @click="goAnswer">写回答</div>
+              <p>{{ item.answerCount }} 回答 · {{ item.collectCount }}收藏</p>
+              <div class="btn" @click="goAnswer(item.id)">写回答</div>
             </div>
           </div>
         </sp-cell>
@@ -54,25 +54,43 @@
     <!-- 回答邀请 start -->
     <div v-if="showInvite" class="answer_invite">
       <sp-list
-        v-if="infoList.length"
+        v-if="inviteList.length"
         v-model="loading"
         :finished="finished"
         offset="0"
         finished-text="没有更多了"
       >
-        <sp-cell v-for="(item, index) in infoList" :key="index">
-          <div class="item" @click="$router.push('/known/detail/article')">
+        <sp-cell v-for="(item, index) in inviteList" :key="index">
+          <div class="item">
             <div class="item_content">
               <div class="item_content_lf">
-                <div class="item_Info">最近 2.3 万人浏览</div>
-                <p class="content">
-                  今年两会，全国人大将审查国民经济和社会发展第十四个五年规划和2035年远景目标纲要草案，为未来五年与更长远的…
+                <div
+                  class="item_Info"
+                  @click="
+                    $router.push({
+                      path: '/known/detail/article',
+                      query: { id: item.id },
+                    })
+                  "
+                >
+                  最近{{ item.browseCount / 10000 }}万人浏览
+                </div>
+                <p
+                  class="content"
+                  @click="
+                    $router.push({
+                      path: '/known/detail/article',
+                      query: { id: item.id },
+                    })
+                  "
+                >
+                  {{ item.content }}
                 </p>
               </div>
             </div>
             <div class="item_bottom">
-              <p>5 回答 · 5关注</p>
-              <div class="btn" @click="goAnswer">写回答</div>
+              <p>{{ item.answerCount }}回答 · {{ item.collectCount }}收藏</p>
+              <div class="btn" @click="goAnswer(item.id)">写回答</div>
             </div>
           </div>
         </sp-cell>
@@ -82,7 +100,6 @@
   </div>
 </template>
 <script>
-// import ItemCard from '@/components/mustKnown/recommend/ItemCard'
 import {
   Tabs,
   Tab,
@@ -92,6 +109,7 @@ import {
   List,
   Cell,
 } from '@chipspc/vant-dgg'
+import { knownApi } from '@/api'
 
 export default {
   name: 'Answer',
@@ -104,8 +122,17 @@ export default {
     [List.name]: List,
     [Cell.name]: Cell,
   },
+  props: {
+    answerList: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+  },
   data() {
     return {
+      inviteList: [],
       haisdaas: true,
       showItem: true,
       showInvite: false,
@@ -114,38 +141,73 @@ export default {
       loading: true,
       finished: false,
       tabIndex: 0,
-      infoList: [
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-      ],
     }
   },
   methods: {
     tabChange(name, title) {
-      this.tabIndex = name
       console.log('name', name)
+      this.tabIndex = name
       if (this.tabIndex === 0) {
         this.showItem = true
         this.showInvite = false
-      } else {
+        this.getAnswerList()
+      } else if (this.tabIndex === 1) {
+        console.log('this.tabIndex', this.tabIndex)
         this.showInvite = true
         this.showItem = false
+        this.getList()
       }
     },
-    goAnswer() {},
+    // 请求回答列表
+    async getAnswerList() {
+      const params = {}
+      const { code, message, data } = await this.$axios.post(
+        knownApi.questionArticle.recommendList,
+        params
+      )
+      if (code === 200) {
+        if (data.rows.length > 0) {
+          console.log('this.rows', data.rows)
+          this.answerList = data.rows
+        } else {
+          // this.attentionStatus = false
+          // this.showNotAttention = true
+        }
+      } else {
+        console.log(message)
+      }
+    },
+    // 请求邀请
+    async getList() {
+      const params = {
+        limit: 10,
+        page: 1,
+      }
+      const { code, message, data } = await this.$axios.post(
+        knownApi.questionArticle.findMyInvitedPage,
+        params
+      )
+      if (code === 200) {
+        if (data.rows.length > 0) {
+          this.inviteList = data.rows
+          console.log('this.inviteList', this.inviteList)
+        } else {
+          // this.attentionStatus = false
+          // this.showNotAttention = true
+        }
+      } else {
+        console.log(message)
+      }
+    },
+    // 去回答页面
+    goAnswer(id) {
+      this.$router.push({
+        path: '/known/publish/answer',
+        query: {
+          id,
+        },
+      })
+    },
   },
 }
 </script>

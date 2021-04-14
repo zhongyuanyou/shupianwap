@@ -44,7 +44,7 @@
     <!-- 列表 start -->
     <div class="container_body">
       <!-- 回答start -->
-      <section><Answer v-if="shwoAnswer" /></section>
+      <section><Answer v-if="shwoAnswer" :answer-list="answerList" /></section>
       <!-- 回答end -->
       <!-- 关注start -->
       <section>
@@ -249,19 +249,20 @@ export default {
   },
   data() {
     return {
+      answerList: [],
       subjectList: [],
+      listData: [],
+      normalListData: [],
       type: 0, // 类型
       nowDate: 0, // 日期
-      normalListData: [],
       userData: [], // 用户数据
       // type: 0, // 	不传 代表wap或薯片app 1代表企大顺
-      listData: [],
-      attentionStatus: true, // 已关注
+      attentionStatus: false, // 已关注
       showNotAttention: false, // 未关注
       showHot: false, // 热榜
       showRecommend: false, // 推荐
       shwoAnswer: false, // 回答
-      normalList: false, // 推荐列表和一般列表
+      normalList: true, // 推荐列表和一般列表
       title: '考研复试体检包含什么项目', // 标题
       tabs: [
         {
@@ -314,23 +315,20 @@ export default {
   mounted() {
     this.type = this.$route.query.type
     this.init()
-
-    // this.type = this.$router.query.type
-    // 获取日期
   },
   methods: {
     init() {
       this.getDate()
-      this.getSubjectList()
-      this.focusFansList()
-      this.categoryList()
-      this.attentionList()
+      this.getSubjectList() // 获取专题列表
+      this.categoryList() // 获取分类列表
     },
     // 请求分类列表
     async categoryList() {
+      const params = {}
+      params.type = 1
       const { code, message, data } = await this.$axios.get(
         knownApi.questionArticle.categoryList,
-        { params: {} }
+        { params }
       )
       if (code === 200) {
         this.tabs = data.reduce((arr, item) => {
@@ -343,6 +341,12 @@ export default {
             },
           ]
         }, [])
+        // 将起始位置放到推荐下
+        for (let i = 0; i < this.tabs.length; i++) {
+          if (this.tabs[i].executionParameters === 'tuijian') {
+            this.tabIndex = i
+          }
+        }
       } else {
         console.log(message)
         this.loading = false
@@ -362,6 +366,8 @@ export default {
         this.attentionStatus = false
         this.showHot = false
         this.normalList = false
+        this.shwoAnswer = false
+        this.normalListData = []
         await this.recommendList()
         // 去请求关注列表数据
       } else if (item.executionParameters === 'guanzhu') {
@@ -369,16 +375,27 @@ export default {
         this.showRecommend = false
         this.normalList = false
         this.showHot = false
-        console.log('guanzhu')
-        await this.attentionList()
+        this.shwoAnswer = false
+        await this.attentionList() // 获取关注用户动态列表
+        await this.focusFansList() // 获取关注列表
         // 请求热榜数据
       } else if (item.executionParameters === 'rebang') {
         this.attentionStatus = false
         this.showRecommend = false
         this.normalList = false
+        this.shwoAnswer = false
         this.showHot = true
+
         // 请求热榜列表
         await this.hotList()
+      } else if (item.executionParameters === 'huida') {
+        this.shwoAnswer = true
+        this.attentionStatus = false
+        this.showRecommend = false
+        this.normalList = false
+        this.showHot = false
+        // 请求热榜列表
+        await this.getAnswerList()
       } else {
         this.normalList = true
         this.attentionStatus = false
@@ -397,10 +414,7 @@ export default {
       )
       if (code === 200) {
         if (data.length > 0) {
-          // this.listData = data.rows
-          console.log('this.subjectList', data)
           this.subjectList = data
-          console.log('this.subjectList', this.subjectList)
         } else {
           this.attentionStatus = false
           this.showNotAttention = true
@@ -516,9 +530,27 @@ export default {
         console.log(message)
       }
     },
+    // 请求回答列表
+    async getAnswerList() {
+      const params = {}
+      const { code, message, data } = await this.$axios.post(
+        knownApi.questionArticle.recommendList,
+        params
+      )
+      if (code === 200) {
+        if (data.rows.length > 0) {
+          console.log('this.rows', data.rows)
+          this.answerList = data.rows
+        } else {
+          // this.attentionStatus = false
+          // this.showNotAttention = true
+        }
+      } else {
+        console.log(message)
+      }
+    },
     // 打开弹出框
     OpenPop(event) {
-      // console.log('evnet', event)
       if (event) {
         this.showPop = event
       }

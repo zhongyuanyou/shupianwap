@@ -42,7 +42,7 @@
           />
         </div>
         <div class="item_bottom">
-          <span v-if="item.isAnswerFlag === 0" @click="invite()">
+          <span v-if="item.type === 2" @click="invite()">
             <my-icon
               name="yaoqing"
               size="0.36rem"
@@ -52,7 +52,7 @@
             ></my-icon>
             邀请
           </span>
-          <span v-if="item.isAnswerFlag === 0" @click="openAnswer(item.id)">
+          <span v-if="item.type === 2" @click="openAnswer(item.id)">
             <my-icon
               name="xiehuida"
               size="0.36rem"
@@ -63,7 +63,7 @@
             写回答
           </span>
 
-          <span v-if="item.isAnswerFlag !== 0">
+          <span v-if="item.type === 1">
             <my-icon
               name="zantong"
               size="0.36rem"
@@ -73,7 +73,7 @@
             ></my-icon
             >赞同{{ item.applaudCount }}</span
           >
-          <span v-if="item.isAnswerFlag !== 0" @click="showComment">
+          <span v-if="item.type === 1" @click="showComment">
             <my-icon
               name="pinglun"
               size="0.36rem"
