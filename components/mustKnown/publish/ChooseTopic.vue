@@ -25,7 +25,7 @@
           <sp-button type="default" class="btn1" @click="cancel"
             >取消</sp-button
           >
-          选择话题
+          <span class="title-t">选择话题</span>
           <sp-button class="btn2" @click="submit">确定</sp-button>
         </div>
         <div class="main">
@@ -473,6 +473,10 @@ export default {
       top: 20px;
       border: none;
     }
+    .title-t {
+      font-size: 40px;
+      font-weight: bold;
+    }
   }
   .main {
     display: flex;
@@ -528,8 +532,13 @@ export default {
 .activeItem2 {
   color: rgba(73, 116, 245, 1);
 }
-.sp-cell {
+/deep/.sp-cell {
   padding: 16px 32px;
+  .sp-checkbox__icon {
+    .sp-icon {
+      border-radius: 1px;
+    }
+  }
 }
 .select-topics-area {
   position: absolute;

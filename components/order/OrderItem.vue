@@ -25,8 +25,15 @@
         <sp-image :src="item.skuImages" alt="" class="img" srcset="" />
         <div class="right">
           <p class="goods-name">
-            <span class="name"> {{ item.spuName || item.orderSaleName }}</span>
-            <span class="money1"> {{ item.skuPrice }}元 </span>
+            <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
+            <span
+              v-if="
+                checkPayType() !== 2 && checkPayType() !== 4 && !item.orderType
+              "
+              class="money1"
+            >
+              {{ item.skuPrice }}元
+            </span>
           </p>
           <p class="sku-info">
             <span class="sku-item">{{ item.skuExtInfo }}</span>
@@ -59,20 +66,27 @@
     <div class="total-price-area">
       <!-- 定金尾款付费 -->
       <p v-if="checkPayType() === 2" class="inner">
-        <span class="price1">
-          总价 {{ orderData.orderTotalMoney || '面议' }}元，</span
+        总价
+        <span v-if="orderData.orderType === 0" class="price1 price">
+          面议，</span
         >
-        <span class="price2">
-          尾款
-          {{ orderData.lastAount || '面议' }}元，</span
+        <span v-else class="price1">{{ orderData.orderTotalMoney }}元，</span>
+        尾款
+        <span v-if="orderData.orderType === 0" class="price2 price">
+          面议，</span
         >
-        <span class="price3">
-          定金 {{ orderData.depositAmount || '面议' }}元</span
-        >
+        <span v-else class="price2 price"> {{ orderData.lastAount }}元，</span>
+        定金
+        <span class="price3 price">
+          {{ orderData.depositAmount || '面议' }}
+        </span>
       </p>
       <!-- 服务完结收费的意向单 -->
-      <p v-else-if="orderData.orderType === 0" class="inner">
-        <span class="price1"> 总价面议</span>
+      <p
+        v-else-if="checkPayType() === 4 && orderData.orderType === 0"
+        class="inner"
+      >
+        <span class="price1"> 总价：面议</span>
       </p>
       <!-- 其他付费方式展示效果一样 -->
       <p v-else class="inner">
@@ -167,6 +181,11 @@ export default {
       this.$emit('handleClickItem', type, this.orderData)
     },
     toDetail() {
+      // const { href } = this.$router.resolve({
+      //   path: '/order/detail',
+      //   query: { id: this.orderData.id, cusOrderId: this.orderData.cusOrderId },
+      // })
+      // window.open(href, '_blank')
       this.$router.push({
         path: '/order/detail',
         query: { id: this.orderData.id, cusOrderId: this.orderData.cusOrderId },
@@ -304,10 +323,6 @@ export default {
       font-weight: 400;
       color: #999999;
       float: right;
-      span {
-        display: block;
-        float: left;
-      }
     }
   }
   .btn-area {

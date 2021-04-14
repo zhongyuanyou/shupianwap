@@ -251,7 +251,7 @@ export default {
           this.$xToast.show({
             message: '请求失败,请联系客服',
             duration: 1000,
-            icon: 'toast_ic_comp',
+            icon: 'toast_ic_error',
             forbidClick: true,
           })
         }

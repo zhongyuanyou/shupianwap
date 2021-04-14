@@ -14,6 +14,8 @@
       @reset="reset"
       @confirm="confirm"
       @navselect="navselect"
+      @minInput="minInput"
+      @maxInput="maxInput"
     />
     <sp-skeleton
       v-for="_index in 10"
@@ -67,7 +69,6 @@ export default {
         { services: [{ id: -1, name: '不限', text: '不限' }] },
       ],
       skeletonLoading: true,
-      // jyFilterData: {}, // 保存所有交易业态的筛选项数据
       jyFilterData: [
         {
           name: '全部分类',
@@ -146,6 +147,16 @@ export default {
       this.jyFilterData[1].name = '价格'
       this.jyFilterData[2].name = '排序'
     },
+    minInput(val) {
+      this.priceactive.minPrice = val
+      this.priceactive.activeItems = {}
+      this.jyFilterData[1].name = '价格'
+    },
+    maxInput(val) {
+      this.priceactive.maxPrice = val
+      this.priceactive.activeItems = {}
+      this.jyFilterData[1].name = '价格'
+    },
     pricefn(item, items) {
       this.priceactive.activeItems = item
       if (this.priceactive.activeItems) {
@@ -170,7 +181,6 @@ export default {
         }
       }
       this.itemsclass = item
-      console.log(this.itemsclass, 123)
     },
     sortfn(item) {
       this.sortactive = item
@@ -189,9 +199,11 @@ export default {
             if (this.classcode) {
               for (let i = 0; i < this.items.typeData.length; i++) {
                 if (this.classcode.navcode === this.items.typeData[i].id) {
+                  this.$refs.dropDownMenu.navIndex = i + 1
                   this.itemsclass[0].id = this.items.typeData[i].id
                   this.itemsclass[0].name = this.items.typeData[i].name
                   this.itemsclass[0].text = this.items.typeData[i].text
+                  this.jyFilterData[0].name = this.itemsclass[0].name
                   if (this.classcode.classcode) {
                     this.classcode.classcode = this.classcode.classcode.split(
                       ','
@@ -217,6 +229,7 @@ export default {
                         }
                       }
                     }
+                    this.$refs.dropDownMenu.classarr = this.itemsclass[1].services
                   }
                 }
               }
@@ -249,7 +262,7 @@ export default {
           this.skeletonLoading = false
         })
         .catch((err) => {
-          console.log(err, 123)
+          console.log(err)
           this.skeletonLoading = false
           this.$refs.list.loading = false
         })

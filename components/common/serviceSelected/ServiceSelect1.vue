@@ -136,6 +136,7 @@ export default {
       active: 0,
       activeIds: [],
       selectData: initSelectData,
+      classarr: [],
     }
   },
   computed: {
@@ -215,7 +216,9 @@ export default {
     },
   },
 
-  mounted() {},
+  mounted() {
+    console.log(this.selectData, 'item')
+  },
   methods: {
     handleClickNav(navIndex) {
       const navItem = (this.formatItems && this.formatItems[navIndex]) || {}
@@ -249,7 +252,6 @@ export default {
       if (services && !services.length) {
         services = [firstItem]
       }
-
       this.$set(this.selectData, 1, { services })
       this.$emit('select', clone(this.selectData, true))
     },

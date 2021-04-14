@@ -84,12 +84,10 @@ export default {
         .getChildOrder({ axios: this.$axios }, { cusOrderId: this.cusOrderId })
         .then((res) => {
           this.loading = false
-          console.log('子订单返回', res)
           // 筛选应支付订单
           const shoudPayOrderList = res.list.filter((item) => {
             return item.isNeedPay === 1 || item.isNeedPay === '1'
           })
-          console.log('shoudPayOrderList', shoudPayOrderList)
           // 组装所有应支付订单下的商品
           const allOrderSkuList = []
           for (let i = 0; i < shoudPayOrderList.length; i++) {
@@ -110,7 +108,6 @@ export default {
               )
           }
           this.allOrderSkuList = allOrderSkuList
-          console.log('allOrderSkuList', allOrderSkuList)
         })
         .catch((err) => {
           this.loading = false

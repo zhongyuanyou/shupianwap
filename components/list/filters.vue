@@ -4,11 +4,12 @@
       <sp-dropdown-item
         v-for="(item, index) in filterData"
         :key="index"
+        ref="service"
         :title="item.name"
       >
         <div v-if="item.code == 'class'" class="classification">
           <ServiceSelect
-            ref="service"
+            ref="classification"
             :items="classification"
             :is-select_more="true"
             :active-data="activeData"
@@ -19,9 +20,12 @@
 
         <div v-if="item.code == 'price'" class="price">
           <PriceFilter
+            ref="price"
             :price-list="pricelist"
             :echo-data="price"
             @selectItems="pricefn"
+            @minInput="minInput"
+            @maxInput="maxInput"
           ></PriceFilter>
         </div>
         <div v-if="item.code == 'sort'" class="sort">
@@ -117,6 +121,8 @@ export default {
       value: 0,
       switch1: false,
       switch2: false,
+      navIndex: 0,
+      classarr: [],
       option: [
         { text: '全部商品', value: 0 },
         { text: '新款商品', value: 1 },
@@ -132,10 +138,29 @@ export default {
   },
   mounted() {},
   methods: {
+    minInput(val) {
+      this.$emit('minInput', val)
+    },
+    maxInput(val) {
+      this.$emit('maxInput', val)
+    },
     reset() {
       this.$emit('reset')
+      if (this.$refs.service[0].showPopup === true) {
+        this.$refs.classification[0].handleClickNav(0)
+        this.$refs.classification[0].active = 0
+      } else if (this.$refs.service[1].showPopup === true) {
+        this.$refs.price[0].minInput('')
+      }
     },
     confirm() {
+      if (this.$refs.service[0].showPopup === true) {
+        this.$refs.service[0].toggle()
+      } else if (this.$refs.service[1].showPopup === true) {
+        this.$refs.service[1].toggle()
+      } else if (this.$refs.service[2].showPopup === true) {
+        this.$refs.service[2].toggle()
+      }
       this.$emit('confirm')
     },
     sortfn(item) {
@@ -148,7 +173,6 @@ export default {
       this.$emit('pricefn', item, items)
     },
     navselect(item) {
-      console.log(item)
       this.$emit('navselect', item)
     },
   },

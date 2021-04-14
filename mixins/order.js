@@ -27,7 +27,7 @@ export default {
       },
       // 客户单付款状态CODE对应文字
       PAYSTATUSCODENAME: {
-        ORDER_CUS_PAY_STATUS_UN_PAID: '待付款',
+        ORDER_CUS_PAY_STATUS_UN_PAID: '未支付',
         ORDER_CUS_PAY_STATUS_PART_PAID: '部分支付',
         ORDER_CUS_PAY_STATUS_COMPLETED_PAID: '已完成',
       },
@@ -429,7 +429,6 @@ export default {
     },
     // 订单价格分转元
     changeMoney(orderItem) {
-      console.log('计算价格', orderItem)
       if (orderItem.orderTotalMoney && orderItem.depositAmount)
         // 尾款
         orderItem.lastAount = this.regFenToYuan(

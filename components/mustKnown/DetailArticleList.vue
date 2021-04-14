@@ -17,7 +17,7 @@
           <span>{{ item.categoryName }}</span>
         </p>
       </div>
-      <div class="right" v-if="item.contentImageUrl">
+      <div v-if="item.contentImageUrl" class="right">
         <sp-image :src="item.contentImageUrl" />
       </div>
     </div>

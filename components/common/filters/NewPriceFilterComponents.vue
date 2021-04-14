@@ -72,7 +72,6 @@ export default {
   },
   watch: {
     echoData(val) {
-      console.log('echoData', val)
       this.minPrice = val.minValue
       this.maxPrice = val.maxValue
       this.activeItems = val.activeItems
@@ -127,11 +126,9 @@ export default {
       this.$emit('selectItems', item, items)
     },
     selectAllItems(item) {
-      console.log(item)
       this.$emit('selectAllItems', item)
     },
     setPrice(minPrice, maxPrice) {
-      console.log('123', minPrice, maxPrice)
       this.minPrice = minPrice
       this.maxPrice = maxPrice
     },

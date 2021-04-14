@@ -12,24 +12,14 @@
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
     </Search>
-    <!--E搜索框-->
-    <!-- Stab -->
-    <!-- <jy-filters
-      ref="dropDownMenu"
-      :filter-data="tabItems"
-      @activeItem="getFilterHandle"
-    /> -->
-    <!-- Etab -->
     <goods ref="goods" :searchkey="currentInputText" />
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
 // import JyFilters from '@/components/list/JyFilters'
 import Search from '@/components/common/search/Search'
 import Goods from '@/components/list/goods'
-import listJumpIm from '@/mixins/listJumpIm'
 export default {
   name: 'TransactionList',
   components: {
@@ -37,8 +27,6 @@ export default {
     Search,
     Goods,
   },
-  layout: 'keepAlive',
-  mixins: [listJumpIm],
   data() {
     return {
       tabItems: [],
@@ -64,9 +52,6 @@ export default {
     })
   },
   methods: {
-    ...mapMutations({
-      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
-    }),
     searchKeydownHandle() {
       this.$refs.goods.formData.start = 1
       this.$refs.goods.datalist = []

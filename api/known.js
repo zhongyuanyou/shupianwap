@@ -26,11 +26,20 @@ const knownApi = {
     detail: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_detail.do`,
     recommendArticle: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/recommendArticle.do`,
     findAttention: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/findAttention.do`,
+    findMyInvitedPage: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_my_invited_page.do`, // 我被邀请回答的问题分页查询
   },
   content: {
     add: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/add.do`, // 文章、问题、回答新增 新增内容
     dlt: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/delete.do`, // 文章、问题、回答新增 删除
     edit: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/update.do`, // 文章、问题、回答新增 删除
+  },
+  question: {
+    list: `${CHIPS_WAP_BASE_URL}/service/nk/question_article/v2/find_page.do`,
+    detail: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_detail.do`,
+    searchAnswerUser: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/searchAnswerUser.do`, // 搜索回答用户|GET
+    recommendAnswerUser: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/recommendAnswerUser.do`, // 推荐回答用户|GET
+    invite: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/invite.do`, // 邀请用户回答|POST
+    writeAnswer: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/writeAnswer.do`, // 写回答列表（推荐、邀请）| GET
   },
   search: {
     list: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/search.do`, // 搜索历史记录 搜索类型 1: 问题  2: 文章  3: 用户
