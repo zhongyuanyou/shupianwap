@@ -44,8 +44,10 @@ export default {
 <style lang="less" scoped>
 .box {
   width: 100%;
+  height: 100vh;
   > .ifr {
     width: 100%;
+    height: calc(100vh - 88px);
   }
 }
 </style>

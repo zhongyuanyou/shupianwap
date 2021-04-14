@@ -169,7 +169,6 @@ export default {
       }
     },
     changeTab(name) {
-      console.log('name', name)
       // 初始化数据列表
       this.page = 1
       this.selectedOrderStatus = name
@@ -204,15 +203,17 @@ export default {
           this.loadingMore = false
           const arr = res.records
           if (arr.length) {
-            if (this.page === 1) this.list = arr
             if (arr.length <= this.limit) this.noMore = true
-            this.page++
             for (let i = 0, l = arr.length; i < l; i++) {
               this.changeMoney(arr[i])
             }
-            const nowData = JSON.parse(JSON.stringify(this.list))
-            const allData = nowData.concat(arr)
-            this.list = allData
+            if (this.page === 1) this.list = arr
+            else {
+              const nowData = JSON.parse(JSON.stringify(this.list))
+              const allData = nowData.concat(arr)
+              this.list = allData
+            }
+            this.page++
           } else {
             this.noMore = true
             this.list = []
@@ -236,30 +237,12 @@ export default {
           this.getChildOrders()
           break
         case 2:
-          // 签署合同
-          this.$router.push({
-            path: '/contract/edit',
-            query: {
-              orderId: this.orderData.id,
-              cusOrderId: this.orderData.cusOrderId,
-              fromPage: this.fromPage,
-              contractStatus: this.orderData.contractStatus,
-            },
-          })
+          // 申请合同
+          this.toContract()
           break
         case 3:
-          // 查看合同
-          this.$router.push({
-            path: '/contract/preview',
-            query: {
-              type: 'yl',
-              contractUrl: this.orderData.contractUrl,
-              orderId: this.orderData.id,
-              cusOrderId: this.orderData.cusOrderId,
-              fromPage: this.fromPage,
-              contractStatus: this.orderData.contractStatus,
-            },
-          })
+          // 签署合同 查看合同
+          this.toContract()
           break
         case 4:
           // 立即付款 首先判断是否有关联订单

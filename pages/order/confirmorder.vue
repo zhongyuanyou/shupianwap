@@ -1,126 +1,188 @@
 <template>
   <div class="PlaceOrder">
     <Head ref="head" title="确认订单"></Head>
-    <LoadingCenter v-show="loading" />
-    <div class="allbox">
-      <div class="data-content">
-        <div v-for="(item, index) in order.list" :key="index" class="list">
-          <div class="left">
-            <img :src="item.img" alt="" />
+    <sp-skeleton title avatar :row="3" :loading="loading">
+      <div class="allbox">
+        <div class="data-content">
+          <div v-for="(item, index) in order.list" :key="index" class="list">
+            <div class="left">
+              <img
+                :src="
+                  item.salesGoodsOperatings.clientDetails[0].imgFileIdPaths[0]
+                "
+                alt=""
+              />
+            </div>
+            <div class="right">
+              <h1 class="tit">{{ item.name }}</h1>
+              <!-- <p class="tag">{{ item.classCodeName }}</p> -->
+              <p class="price">
+                <span
+                  ><b>{{ item.salesPrice }}</b
+                  >元</span
+                >
+                <i>{{
+                  $route.query.type === 'shopcar'
+                    ? `x${item.salesVolume}`
+                    : 'x1'
+                }}</i>
+              </p>
+              <div v-if="$route.query.type === 'shopcar'" class="list">
+                <div
+                  v-for="(listitem, listindex) in item.saleGoodsSubs"
+                  :key="listindex"
+                >
+                  <p class="name">{{ listitem.goodsSubName }}</p>
+                  <p class="data">{{ listitem.goodsSubDetailsName }}</p>
+                  <p class="price">
+                    {{ listitem.settlementPriceEdit }} {{ `x1` }}
+                  </p>
+                </div>
+              </div>
+              <div v-else class="list">
+                <div
+                  v-for="(listitem, listindex) in item.salesGoodsSubVos"
+                  :key="listindex"
+                >
+                  <p class="name">
+                    <span v-if="listitem.goodsType === 'PRO_CLASS_TYPE_SALES'">
+                      销售产品
+                    </span>
+                    <span
+                      v-else-if="
+                        listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE'
+                      "
+                    >
+                      服务产品
+                    </span>
+                    <span
+                      v-else-if="
+                        listitem.goodsType === 'PRO_CLASS_TYPE_SERVICE_RESOURCE'
+                      "
+                    >
+                      服务资源
+                    </span>
+                    <span
+                      v-else-if="
+                        listitem.goodsType === 'PRO_CLASS_TYPE_TRANSACTION'
+                      "
+                    >
+                      交易资源
+                    </span>
+                  </p>
+                  <p class="data">{{ listitem.goodsSubName }}</p>
+                  <p class="price">
+                    <!-- {{ listitem.settlementPriceEdit }}  -->
+                    {{ `x1` }}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="right">
-            <h1 class="tit">{{ item.name }}</h1>
-            <p class="tag">{{ item.classCodeName }}</p>
-            <p class="price">
-              <span
-                ><b>{{ item.salesPrice }}</b
-                >元</span
-              >
-              <i>{{
-                $route.query.type === 'shopcar' ? `x${item.salesVolume}` : 'x1'
-              }}</i>
-            </p>
-            <div v-if="$route.query.type === 'shopcar'" class="list">
-              <div
-                v-for="(listitem, listindex) in item.saleGoodsSubs"
-                :key="listindex"
-              >
-                <p class="name">{{ listitem.goodsSubName }}</p>
-                <p class="data">{{ listitem.goodsSubDetailsName }}</p>
-                <p class="price">
-                  {{ listitem.settlementPriceEdit }} {{ `x1` }}
-                </p>
-              </div>
-            </div>
-            <div v-else class="list">
-              <div
-                v-for="(listitem, listindex) in item.salesGoodsSubVos"
-                :key="listindex"
-              >
-                <p class="name">{{ listitem.goodsSubName }}</p>
-                <p class="data">{{ listitem.goodsSubDetailsName }}</p>
-                <p class="price">
-                  {{ listitem.settlementPriceEdit }} {{ `x1` }}
-                </p>
-              </div>
-            </div>
+          <div class="inpbox">
+            <Field
+              v-model="message"
+              rows="1"
+              autosize
+              label="备注留言"
+              type="textarea"
+              placeholder="建议提前先与规划师联系"
+              maxlength="50"
+            ></Field>
           </div>
         </div>
-        <div class="inpbox">
-          <Field
-            v-model="message"
-            rows="1"
-            autosize
-            label="备注留言"
-            type="textarea"
-            placeholder="建议提前先与规划师联系"
-          ></Field>
+        <!-- <div v-else class="data-content data-content1">
+          <div v-for="(item, index) in order.list" :key="index" class="list">
+            <h1><span>套餐</span>{{ item.name }}</h1>
+            <div
+              class="goods"
+              v-for="(goodsitem, goodsindex) in item.salesGoodsSubVos"
+              :key="goodsindex"
+            >
+              <img src="item.img" alt="" class="left" />
+              <div class="right">
+                <h1></h1>
+              </div>
+            </div>
+          </div>
+          <div class="inpbox">
+            <Field
+              v-model="message"
+              rows="1"
+              autosize
+              label="备注留言"
+              type="textarea"
+              placeholder="建议提前先与规划师联系"
+            ></Field>
+          </div>
+        </div> -->
+        <div class="news-content">
+          <CellGroup>
+            <Cell
+              title="商品及服务总数"
+              :value="order.num || order.goodsTotal + '件'"
+              value-class="black"
+            />
+            <Cell
+              title="商品金额"
+              :value="order.salesPrice || order.needPayTotalMoney + '元'"
+              value-class="black"
+            />
+            <Cell
+              title="优惠券"
+              :value="
+                coupon
+                  ? coupon
+                  : datalist.length > 0
+                  ? datalist.length + '个优惠券'
+                  : '无可用'
+              "
+              is-link
+              :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
+              @click="popupfn()"
+            />
+          </CellGroup>
+          <p class="money">
+            合计：
+            <span>
+              <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元
+            </span>
+          </p>
+        </div>
+        <div class="contract">
+          <CellGroup>
+            <Cell
+              title="合同信息"
+              :value="
+                contaract.contractFirstPhone ? '已完善合同信息' : '完善合同信息'
+              "
+              :value-class="contaract.contractFirstPhone ? 'ys' : 'black'"
+              is-link
+              @click="gocontractedit()"
+            />
+          </CellGroup>
+        </div>
+        <div class="agreement">
+          <Checkbox v-model="radio">
+            <template>
+              <p class="tit">
+                我已阅读过并知晓<span @click="goagr"
+                  >《薯片平台用户交易下单协议》</span
+                >
+              </p>
+            </template>
+          </Checkbox>
         </div>
       </div>
-      <div class="news-content">
-        <CellGroup>
-          <Cell
-            title="商品及服务总数"
-            :value="order.num || order.goodsTotal + '件'"
-            value-class="black"
-          />
-          <Cell
-            title="商品金额"
-            :value="order.salesPrice || order.needPayTotalMoney + '元'"
-            value-class="black"
-          />
-          <Cell
-            title="优惠券"
-            :value="
-              coupon
-                ? coupon
-                : datalist.length > 0
-                ? datalist.length + '个优惠券'
-                : '无可用'
-            "
-            is-link
-            :value-class="coupon ? 'red' : datalist.length > 0 ? 'black' : ''"
-            @click="popupfn()"
-          />
-        </CellGroup>
-        <p class="money">
-          合计：
-          <span>
-            <b>{{ order.salesPrice || order.skuTotalPrice }}</b> 元
-          </span>
+      <div ref="foot" class="foot">
+        <p class="left">
+          应付:<span>
+            <b>{{ price }}</b> 元</span
+          >
         </p>
+        <div class="right" @click="placeOrder">提交订单</div>
       </div>
-      <div class="contract">
-        <CellGroup>
-          <Cell
-            title="合同信息"
-            :value="
-              contaract.contractFirstPhone ? '已完善合同信息' : '完善合同信息'
-            "
-            :value-class="contaract.contractFirstPhone ? 'ys' : 'black'"
-            is-link
-            @click="gocontractedit()"
-          />
-        </CellGroup>
-      </div>
-      <div class="agreement">
-        <Checkbox v-model="radio">
-          <template>
-            <p class="tit">
-              我已阅读过并知晓<span>《薯片平台用户交易下单协议》</span>
-            </p>
-          </template>
-        </Checkbox>
-      </div>
-    </div>
-    <div ref="foot" class="foot">
-      <p class="left">
-        应付:<span>
-          <b>{{ price }}</b> 元</span
-        >
-      </p>
-      <div class="right" @click="placeOrder">提交订单</div>
-    </div>
+    </sp-skeleton>
     <Popup
       ref="conpon"
       :show="popupshow"
@@ -143,13 +205,15 @@ import {
   CellGroup,
   Checkbox,
   Toast,
+  Skeleton,
   // CheckboxGroup,
 } from '@chipspc/vant-dgg'
+import { mapMutations } from 'vuex'
 import Head from '@/components/common/head/header'
 import Popup from '@/components/PlaceOrder/Popup'
-import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { productDetailsApi, auth, shopCart } from '@/api'
 import { coupon, order } from '@/api/index'
+import listJumpIm from '@/mixins/listJumpIm'
 export default {
   name: 'PlaceOrder',
   components: {
@@ -159,9 +223,10 @@ export default {
     CellGroup,
     Checkbox,
     Popup,
-    LoadingCenter,
-    // CheckboxGroup,
+    [Skeleton.name]: Skeleton,
   },
+  layout: 'keepAlive',
+  mixins: [listJumpIm],
   data() {
     return {
       popupshow: false,
@@ -170,7 +235,6 @@ export default {
       radio: '',
       coupon: '',
       message: '',
-      news: { num: '123', price: '1392.00', money: '4600.00' },
       order: '',
       num: 0,
       tablist: [
@@ -206,6 +270,7 @@ export default {
     }
   },
   mounted() {
+    this.SET_KEEP_ALIVE({ type: 'add', name: 'PlaceOrder' })
     if (this.$cookies.get('contaract')) {
       this.contaract = this.$cookies.get('contaract')
       this.$cookies.remove('contaract')
@@ -220,6 +285,15 @@ export default {
     console.log(this.$store.state.city, '城市')
   },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
+    goagr() {
+      this.$router.push({
+        name: 'login-protocol',
+        query: { categoryCode: 'protocol100008' },
+      })
+    },
     getcart() {
       shopCart
         .bill({
@@ -264,6 +338,7 @@ export default {
             id: data.id,
             salesPrice: data.salesPrice,
             salesGoodsSubVos: data.salesGoodsSubVos,
+            salesGoodsOperatings: data.salesGoodsOperatings,
           }
           this.order = data
           this.order.list = []
@@ -271,7 +346,7 @@ export default {
           this.order.num = this.order.list.length
           this.price = this.order.salesPrice
           this.getInitData(2)
-          this.getInitData(4)
+          this.getInitData(6)
           this.loading = false
         } else {
           this.loading = false
@@ -303,13 +378,13 @@ export default {
       }
     },
     placeOrder() {
-      this.loading = true
       if (!this.radio) {
         Toast({
           message: '下单前，请先同意《薯片平台用户交易下单协议》',
           overlay: true,
         })
       } else {
+        this.loading = true
         if (this.$route.query.type === 'shopcar') {
           const arr = []
           for (let i = 0; i < this.order.list.length; i++) {
@@ -401,10 +476,13 @@ export default {
           })
           .catch((e) => {
             this.loading = false
-            if (e.code !== 200) {
-              this.$xToast.show(e)
-              console.log(e)
-            }
+            Toast({
+              message: e.data.error,
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+              overlay: true,
+            })
+            console.log(e)
           })
       }
     },
@@ -454,13 +532,7 @@ export default {
       this.$refs.conpon.checkarr = ''
       this.$refs.conpon.radio = null
     },
-    // tabfn(item, index) {
-    //   if (index === 1) {
-    //     this.getInitData(4)
-    //   } else {
-    //     this.getInitData(2)
-    //   }
-    // },
+    // layout: 'keepAlive',
   },
 }
 </script>
@@ -536,7 +608,7 @@ export default {
               margin-top: 14px;
               display: flex;
               > .name {
-                width: 25%;
+                width: 29%;
                 font-size: 22px;
                 font-weight: bold;
                 color: #222222;
@@ -546,7 +618,7 @@ export default {
                 text-overflow: ellipsis;
               }
               > .data {
-                width: 40%;
+                width: 45%;
                 font-size: 22px;
                 font-weight: 400;
                 color: #222222;

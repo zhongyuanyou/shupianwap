@@ -481,5 +481,41 @@ export default {
         payItem.money = this.regFenToYuan(payItem.money)
       }
     },
+    // jump
+    toContract() {
+      if (this.orderData.contractStatus === 'STRUTS_QSZ') {
+        this.$router.push({
+          path: '/contract/preview',
+          query: {
+            orderId: this.orderData.id,
+            cusOrderId: this.orderData.cusOrderId,
+            fromPage: this.fromPage,
+            contractStatus: this.orderData.contractStatus,
+            type: 'qs',
+          },
+        })
+      } else if (this.orderData.contractStatus === 'STRUTS_YWC') {
+        this.$router.push({
+          path: '/contract/preview',
+          query: {
+            orderId: this.orderData.id,
+            cusOrderId: this.orderData.cusOrderId,
+            fromPage: this.fromPage,
+            contractStatus: this.orderData.contractStatus,
+            type: 'yl',
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/contract/edit',
+          query: {
+            orderId: this.orderData.id,
+            cusOrderId: this.orderData.cusOrderId,
+            fromPage: this.fromPage,
+            contractStatus: this.orderData.contractStatus,
+          },
+        })
+      }
+    },
   },
 }

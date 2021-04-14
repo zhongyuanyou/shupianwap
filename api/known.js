@@ -1,7 +1,7 @@
 'use strict'
 
 import { CHIPS_WAP_BASE_URL } from '../config/constant'
-
+// const CHIPS_WAP_BASE_URL = 'http://172.16.133.40:7001/service'
 const knownApi = {
   comments: {
     list: `${CHIPS_WAP_BASE_URL}/nk/known_comments/v1/list.do`, // 评论列表
@@ -20,7 +20,9 @@ const knownApi = {
     categoryList: `${CHIPS_WAP_BASE_URL}/nk/known_category/v1/list.do`, // 获取分类列表
     list: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_page.do`, // 获取列表数据
     recommendList: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/recommend_page.do`, // 获取推荐列表数据
-    attentionUserList: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_my_attention_user_page.do`, // 获取关注用户列表
+    attentionUserList: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_my_attention_user_page.do`, // 获取关注用户动态列表
+    subjectList: `${CHIPS_WAP_BASE_URL}/nk/known_category/v1/subject.do`, // 获取分类列表
+    attentionMore: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/attention_more.do`, // 关注更多列表
   },
   content: {
     add: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/add.do`, // 文章、问题、回答新增 新增内容

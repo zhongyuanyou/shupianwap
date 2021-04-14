@@ -2,29 +2,11 @@
   <div class="UserList">
     <div class="items">
       <ul class="tabs-box-items">
-        <li class="user">
-          <div class="Image"><img src="" alt="" /></div>
-          <div class="name">郑远</div>
-        </li>
-        <li class="user">
-          <div class="Image"><img src="" alt="" /></div>
-          <div class="name">郑远</div>
-        </li>
-        <li class="user">
-          <div class="Image"><img src="" alt="" /></div>
-          <div class="name">郑远</div>
-        </li>
-        <li class="user">
-          <div class="Image"><img src="" alt="" /></div>
-          <div class="name">郑远</div>
-        </li>
-        <li class="user">
-          <div class="Image"><img src="" alt="" /></div>
-          <div class="name">郑远</div>
-        </li>
-        <li class="user">
-          <div class="Image"><img src="" alt="" /></div>
-          <div class="name">郑远</div>
+        <li v-for="(item, index) in userData" :key="index" class="user">
+          <div class="Image" @click="clickImg(item.inviteeId)">
+            <img :src="item.avatar" alt="" />
+          </div>
+          <div class="name">{{ item.inviteeName }}</div>
         </li>
       </ul>
       <div class="attentionMore" @click="attentionMore">
@@ -51,12 +33,12 @@ export default {
     [WorkTabs.name]: WorkTabs,
   },
   props: {
-    // banner: {
-    //   type: Array,
-    //   default: () => {
-    //     return []
-    //   },
-    // },
+    userData: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
   data() {
     return {
@@ -65,11 +47,19 @@ export default {
   },
   methods: {
     toggleTabs(index) {
-      console.log('index', index)
       this.nowIndex = index
     },
     attentionMore() {
       this.$router.push({ path: 'known/more' })
+    },
+    clickImg(inviteeId) {
+      // 跳转到个人主页 目前不知道个人主页在哪里
+      this.$router.push({
+        path: '/known/home',
+        query: {
+          id: inviteeId,
+        },
+      })
     },
   },
 }
@@ -96,7 +86,6 @@ export default {
       width: 540px;
       align-items: center;
       display: flex;
-      justify-content: space-between;
       overflow: auto;
       .type {
         font-size: 22px;

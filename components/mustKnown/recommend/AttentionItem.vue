@@ -1,6 +1,6 @@
 <template>
   <sp-list
-    v-if="infoList.length"
+    v-if="listData.length"
     v-model="loading"
     :finished="finished"
     offset="0"
@@ -9,25 +9,61 @@
     <sp-cell v-for="(item, index) in listData" :key="index">
       <div class="item">
         <div class="item_Info">
-          <div class="userPhoto">
-            <img src="" alt="" />
+          <div class="userPhoto" @click="goUserDetail(item.userId)">
+            <img :src="item.avatar" alt="" />
           </div>
           <div class="item_status">
-            <div class="userName">摇铃铛</div>
-            <div class="item_time">27分钟前·回答了问题</div>
+            <div class="userName" @click="goUserDetail(item.userId)">
+              {{ item.userName }}
+            </div>
+            <div class="item_time">
+              {{ toTimeStamp(item.createTime) }}·
+              <span>{{
+                item.type == 1
+                  ? '发起了问题'
+                  : item.type == 2
+                  ? '发表了文章'
+                  : '回答了问题'
+              }}</span>
+            </div>
           </div>
         </div>
-        <div class="item_title">
+        <div class="item_title" @click="goDetailPage(item.type, item.id)">
           {{ item.title }}
         </div>
-        <div class="item_content">
+        <div class="item_content" @click="goDetailPage(item.type, item.id)">
           <p class="content">
-            {{ item.content }}
+            {{ item.contentText }}
           </p>
-          <img src="" alt="" />
+          <img
+            v-if="item.contentImageUrl"
+            :src="item.contentImageUrl.split(',')[0]"
+            alt=""
+          />
         </div>
         <div class="item_bottom">
-          <span class="like">
+          <span v-if="item.isAnswerFlag === 0" @click="invite()">
+            <my-icon
+              name="yaoqing"
+              size="0.36rem"
+              color="#999999"
+              class="my_icon"
+              style="margin-right: 0.16rem"
+            ></my-icon>
+            邀请
+          </span>
+          <span v-if="item.isAnswerFlag === 0" @click="openAnswer(item.id)">
+            <my-icon
+              name="xiehuida"
+              size="0.36rem"
+              color="#999999"
+              class="my_icon"
+              style="margin-right: 0.16rem"
+            ></my-icon>
+            写回答
+          </span>
+
+          <span v-if="item.isAnswerFlag !== 0">
             <my-icon
               name="zantong"
               size="0.36rem"
@@ -37,7 +73,7 @@
             ></my-icon
             >赞同{{ item.applaudCount }}</span
           >
-          <span class="comment" @click="showComment">
+          <span v-if="item.isAnswerFlag !== 0" @click="showComment">
             <my-icon
               name="pinglun"
               size="0.36rem"
@@ -60,6 +96,7 @@
 <script>
 import { Cell, List } from '@chipspc/vant-dgg'
 import CommentList from '@/components/mustKnown/CommentList'
+// import time from '@/utils/time'
 
 export default {
   name: 'AttentionItem',
@@ -83,32 +120,14 @@ export default {
       commentShow: false,
       loading: true,
       finished: false,
-      totalPage: 100,
-      infoList: [
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-        {
-          item: 1,
-        },
-      ],
+      timeStamp: 0,
     }
   },
   watch: {
-    listData(newName, oldName) {
-      // console.log('newName', newName)
-      // console.log('oldName', oldName)
-    },
+    listData(newName, oldName) {},
   },
+  mounted() {},
+
   methods: {
     release() {
       console.log('点击了发布')
@@ -116,6 +135,79 @@ export default {
     showComment() {
       console.log('点击了评论')
       this.commentShow = true
+    },
+    openAnswer(id) {
+      this.$router.push({
+        path: '/known/publish/answer',
+        query: {
+          id,
+          type: 2,
+        },
+      })
+    },
+    invite() {
+      this.$router.push({
+        path: '/known/detail/invitationList',
+      })
+    },
+    toTimeStamp(time) {
+      console.log('time', time)
+      let times = time.replace(/-/g, '/')
+      times = Date.parse(times)
+      const nowTime = new Date().getTime()
+      let result = ''
+      // 的倒时差
+      const diff = nowTime - times
+      if (diff < 3600000) {
+        result = diff / 60000 + '分钟前'
+      } else if (diff > 3600000 && diff < 86400000) {
+        result = diff / 3600000 + '小时前'
+      } else {
+        const m =
+          new Date(times).getMonth() + 1 < 10
+            ? '0' + new Date(times).getMonth()
+            : new Date(times).getMonth()
+        const d =
+          new Date(times).getDate() < 10
+            ? '0' + new Date(times).getDate()
+            : new Date(times).getDate()
+        result = m + '-' + d
+      }
+      return result
+    },
+    // 进入文章/问题/回答详情页面
+    goDetailPage(type, id) {
+      if (type === 1) {
+        this.$router.push({
+          path: '/known/detail/question',
+          query: {
+            id,
+          },
+        })
+      } else if (type === 2) {
+        this.$router.push({
+          path: '/known/detail/article',
+          query: {
+            id,
+          },
+        })
+      } else if (type === 3) {
+        this.$router.push({
+          path: '/known/detail/answer',
+          query: {
+            id,
+          },
+        })
+      }
+    },
+    // 进入用户详情
+    goUserDetail(userId) {
+      this.$router.push({
+        path: '/known/home',
+        query: {
+          userId,
+        },
+      })
     },
   },
 }
@@ -125,9 +217,7 @@ export default {
   padding: 0 0 20px 0;
   position: relative;
 }
-
 .item {
-  height: 453px;
   background: #ffffff;
   padding: 0 32px;
   margin-bottom: 20px;
@@ -150,6 +240,9 @@ export default {
       margin-right: 16px;
       border-radius: 50%;
       img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
       }
     }
     .item_status {
@@ -178,7 +271,6 @@ export default {
     justify-content: space-between;
     align-items: center;
     .content {
-      height: 126px;
       font-size: 30px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
@@ -208,10 +300,6 @@ export default {
     font-weight: 400;
     color: #999999;
     line-height: 28px;
-    .like {
-    }
-    .comment {
-    }
   }
 }
 </style>

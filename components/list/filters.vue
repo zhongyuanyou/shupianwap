@@ -8,17 +8,19 @@
       >
         <div v-if="item.code == 'class'" class="classification">
           <ServiceSelect
+            ref="service"
             :items="classification"
-            :isSelectMore="true"
-            :activeData="activeData"
+            :is-select_more="true"
+            :active-data="activeData"
             @select="classfn"
+            @navselect="navselect"
           ></ServiceSelect>
         </div>
 
         <div v-if="item.code == 'price'" class="price">
           <PriceFilter
-            :priceList="priceList"
-            :echoData="price"
+            :price-list="pricelist"
+            :echo-data="price"
             @selectItems="pricefn"
           ></PriceFilter>
         </div>
@@ -31,7 +33,6 @@
         </div>
 
         <BottomConfirm
-          v-if="item.name != '排序'"
           @resetFilters="reset"
           @confirmFilters="confirm"
         ></BottomConfirm>
@@ -86,7 +87,7 @@ export default {
         }
       },
     },
-    priceList: {
+    pricelist: {
       type: Array,
       default() {
         return []
@@ -145,6 +146,10 @@ export default {
     },
     pricefn(item, items) {
       this.$emit('pricefn', item, items)
+    },
+    navselect(item) {
+      console.log(item)
+      this.$emit('navselect', item)
     },
   },
 }

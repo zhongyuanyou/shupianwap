@@ -2,7 +2,7 @@
   <div class="list">
     <p class="title1">推荐阅读</p>
     <div
-      v-for="(item, index) in list"
+      v-for="(item, index) in articleList"
       :key="index"
       class="item"
       :class="index === 0 ? 'no-border' : ''"
@@ -10,12 +10,15 @@
       <div class="left">
         <div class="title">{{ item.title }}</div>
         <p>
-          <span>3000</span>
-          <span>科技</span>
+          <span
+            ><my-icon name="xianshi" size="0.24rem" color="#999999" />
+            {{ item.totalBrowseCount }}</span
+          >
+          <span>{{ item.categoryName }}</span>
         </p>
       </div>
-      <div class="right">
-        <sp-image src="" />
+      <div v-if="item.contentImageUrl" class="right">
+        <sp-image :src="item.contentImageUrl" />
       </div>
     </div>
   </div>
@@ -27,6 +30,12 @@ import { Image } from '@chipspc/vant-dgg'
 export default {
   components: {
     [Image.name]: Image,
+  },
+  props: {
+    articleList: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {

@@ -224,7 +224,7 @@ export default {
           })
           break
         default:
-          url = `/search/searchResult`
+          url = `/search/searchgoods`
           this.$router.push({
             path: url,
             query: {

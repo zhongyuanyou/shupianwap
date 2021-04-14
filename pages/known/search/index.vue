@@ -103,7 +103,7 @@ export default {
       if (keyword) {
         this.addHistoryItem(keyword)
         this.$router.push({
-          name: '/known/search/result',
+          path: '/known/search/result',
           query: { keyword, type: this.tabIndex },
         })
       }

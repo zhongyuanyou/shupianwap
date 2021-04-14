@@ -1,6 +1,16 @@
 <template>
   <div class="contractList">
-    <Head ref="head" title="合同列表"></Head>
+    <Head ref="head" title="合同列表">
+      <template #left>
+        <my-icon
+          class="back-icon"
+          name="nav_ic_back"
+          size="0.4rem"
+          color="#1A1A1A"
+          @click.native="onLeftClick"
+        ></my-icon>
+      </template>
+    </Head>
     <div class="tab">
       <p :class="tabAct == 0 ? 'act' : ''" @click="tabFn(0)">
         全部<i class="icon"></i>
@@ -13,13 +23,7 @@
       </p>
     </div>
     <div class="list">
-      <List
-        ref="list"
-        :list="list"
-        @Refresh="Refresh"
-        @load="pagefn"
-        @Jump="jump"
-      ></List>
+      <List ref="list" :list="list" @load="pagefn" @Jump="jump"></List>
     </div>
   </div>
 </template>
@@ -133,6 +137,11 @@ export default {
         // this.getlist()
       }
     },
+    onLeftClick() {
+      this.$router.push({
+        path: '/my',
+      })
+    },
   },
 }
 </script>
@@ -175,7 +184,7 @@ export default {
     }
   }
   > .list {
-    height: calc(100vh - 88px - 80px);
+    height: calc(100vh - 88px - 88px);
     overflow: auto;
   }
 }

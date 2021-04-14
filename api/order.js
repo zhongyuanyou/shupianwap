@@ -132,5 +132,13 @@ const category = {
       url: CHIPS_APP_BASE_URL + '/yk/order/v2/get_order_track_list.do',
     })
   },
+  getcalculation({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/coupon_calculation.do',
+    })
+  },
 }
 export default category

@@ -1,139 +1,192 @@
 <template>
   <div class="container">
-    <div class="container_header">
-      <span class="my_icon" @click="$router.back()">
-        <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A"></my-icon>
-      </span>
-      <span>关注更多</span>
-    </div>
-    <div class="items">
-      <ul>
-        <li>
-          <img src="" alt="" />
-          <div class="userInfo">
-            <div class="user_name">用户名</div>
-            <div class="user_sign">简介或签名文字简介或签名文字…</div>
-          </div>
-          <div class="attention_btn">+关注</div>
-        </li>
-        <li>
-          <img src="" alt="" />
-          <div class="userInfo">
-            <div class="user_name">用户名</div>
-            <div class="user_sign">简介或签名文字简介或签名文字…</div>
-          </div>
-          <div class="attention_btn">+关注</div>
-        </li>
-        <li>
-          <img src="" alt="" />
-          <div class="userInfo">
-            <div class="user_name">用户名</div>
-            <div class="user_sign">简介或签名文字简介或签名文字…</div>
-          </div>
-          <div
-            :style="attention_btn"
-            class="attention_btn"
-            @click="attention()"
-          >
-            {{ btnValue }}
-          </div>
-        </li>
-      </ul>
-    </div>
+    <sp-top-nav-bar
+      title="关注更多"
+      :fixed="true"
+      left-arrow
+      @on-click-left="$router.back()"
+    />
+
+    <sp-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      class="list_container"
+      @load="getList"
+    >
+      <div v-for="(item, index) in list" :key="index" class="item">
+        <sp-image
+          round
+          class="user_avatar"
+          fit="cover"
+          :src="item.avatar"
+          @click="toHome(item.id)"
+        />
+        <div class="user_info">
+          <div class="title">{{ item.userName }}</div>
+          <div class="introduce">{{ item.desc }}</div>
+        </div>
+        <div
+          class="bt"
+          :class="{ bt_have: item.isAttention }"
+          @click="handle(item)"
+        >
+          {{ item.isAttention ? '已关注' : '+ 关注' }}
+        </div>
+      </div>
+    </sp-list>
   </div>
 </template>
 <script>
-import { WorkTab } from '@chipspc/vant-dgg'
-// import ItemCard from '@/components/mustKnown/recommend/ItemCard'
+import { TopNavBar, Image, List, Dialog } from '@chipspc/vant-dgg'
+import { knownApi } from '~/api'
 export default {
-  name: 'Attention',
-  components: {},
+  name: 'AttentionMore',
+  components: {
+    [TopNavBar.name]: TopNavBar,
+    [Image.name]: Image,
+    [List.name]: List,
+    [Dialog.name]: Dialog,
+  },
   data() {
     return {
-      btnValue: '+关注',
+      loading: false,
+      finished: false,
       attention_btn: {},
+      list: [],
+      page: 1,
     }
   },
+  computed: {
+    userInfo() {
+      return this.$store.state.user
+    },
+  },
   methods: {
-    attention() {
-      this.btnValue = '已关注'
-      this.attention_btn = { background: ' #F5F5F5', color: '#999999' }
+    toHome(id) {
+      this.$router.push({
+        path: '/known/home',
+        query: {
+          homeUserId: id,
+        },
+      })
+    },
+    handle(item) {
+      item.isAttention ? this.cancelAttention(item) : this.attention(item)
+    },
+    cancelAttention(item) {
+      Dialog.confirm({
+        title: '温馨提示',
+        message: '确定不再关注当前用户吗？',
+      }).then(() => {
+        this.attention(item)
+      })
+    },
+    async attention(item) {
+      const { code, message } = await this.$axios.post(
+        knownApi.home.attention,
+        {
+          handleUserId: this.userInfo.userId,
+          handleUserName: this.userInfo.userName || '测试用户',
+          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+          handleType: item.isAttention ? 2 : 1,
+          attentionUserId: item.id,
+          attentionUserName: item.userName,
+          attentionUserType: 2, // 推荐的用户都是规划师
+        }
+      )
+      if (code === 200) {
+        this.$xToast.show({
+          message: item.isAttention ? '取关成功' : '关注成功',
+          duration: 1000,
+          icon: 'toast_ic_comp',
+          forbidClick: true,
+        })
+        item.isAttention = !item.isAttention
+      } else {
+        console.log(message)
+      }
+    },
+    async getList() {
+      const { code, message, data } = await this.$axios.post(
+        knownApi.questionArticle.attentionMore,
+        {
+          page: this.page,
+        }
+      )
+      if (code === 200) {
+        data.rows.forEach((item) => {
+          item.isAttention = false
+        })
+        this.list = this.list.concat(data.rows)
+        this.total = data.total
+        this.loading = false
+        this.page++
+        if (this.page > data.totalPage) {
+          this.finished = true
+        }
+      } else {
+        console.log(message)
+        this.loading = false
+        this.finished = true
+      }
     },
   },
 }
 </script>
 <style lang="less" scoped>
 .container {
-  .container_header {
-    height: 88px;
-    background: #ffffff;
-    line-height: 50px;
-    font-size: 36px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
-    color: #1a1a1a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    border-bottom: 1px solid #dddddd;
-    margin-bottom: 40px;
-    .my_icon {
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-      position: absolute;
-      top: 24px;
-      left: 24px;
-    }
-  }
-  .items {
-    padding: 0 32px;
-    > ul {
-      > li {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 56px;
-        > img {
-          width: 72px;
-          height: 72px;
-          background: #d8d8d8;
-          border-radius: 50%;
-        }
-        .userInfo {
-          .user_name {
-            height: 30px;
-            font-size: 30px;
-            font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
-            color: #222222;
-            line-height: 30px;
-            margin-bottom: 0.12rem;
-          }
-          .user_sign {
-            height: 26px;
-            font-size: 26px;
-            font-family: PingFangSC-Regular, PingFang SC;
-            font-weight: 400;
-            color: #999999;
-            line-height: 26px;
-          }
-        }
-        .attention_btn {
-          width: 144px;
-          height: 64px;
-          background: #4974f5;
-          border-radius: 8px;
-          font-size: 26px;
+  .list_container {
+    padding-top: 80px;
+    .item {
+      background: #ffffff;
+      padding: 28px 32px 28px;
+      display: flex;
+      align-items: center;
+
+      .user_avatar {
+        width: 72px;
+        height: 72px;
+        margin-right: 24px;
+      }
+      .user_info {
+        flex: 1;
+        .title {
+          font-size: 30px;
           font-family: PingFangSC-Medium, PingFang SC;
           font-weight: 500;
-          color: #ffffff;
-          line-height: 26px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+          color: #222222;
+          line-height: 30px;
+          margin-right: 30px;
         }
+        .introduce {
+          margin-top: 12px;
+          font-size: 26px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #999999;
+          line-height: 26px;
+          width: 414px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+      .bt {
+        width: 144px;
+        height: 64px;
+        background: #4974f5;
+        color: #ffffff;
+        border-radius: 8px;
+        text-align: center;
+        line-height: 64px;
+        font-size: 26px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+      }
+      .bt_have {
+        background: #f5f5f5;
+        color: #999999;
       }
     }
   }

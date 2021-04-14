@@ -18,6 +18,7 @@ const infoList = [
   'shoppingCar', // 购物车页面
   'my-help', // 帮助中心
   'spread-myDemandCard', // 免费找
+  'known-home', // 必懂个人主页
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {

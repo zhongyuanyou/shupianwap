@@ -1,40 +1,41 @@
 <template>
   <div class="Newlist">
-    <sp-pull-refresh
-      v-model="isLoading"
-      :success-text="`刷新成功`"
-      @refresh="onRefresh"
+    <sp-list
+      v-model="loading"
+      :immediate-check="false"
+      :finished="finished"
+      :finished-text="datalist.length == 0 ? '' : '没有更多了'"
+      @load="onLoad"
     >
-      <sp-list
-        v-model="loading"
-        :finished="finished"
-        :finished-text="datalist.length == 0 ? '' : '没有更多了'"
-        @load="onLoad"
+      <div
+        v-for="(item, index) in datalist"
+        :key="index"
+        class="list"
+        @click="godeatil(item)"
       >
-        <div
-          v-for="(item, index) in datalist"
-          :key="index"
-          class="list"
-          @click="godeatil(item)"
-        >
-          <div class="left">
-            <img :src="item.img" alt="" />
-          </div>
-          <div class="right">
-            <h1>{{ item.name }}</h1>
-            <div v-if="item.tag.length > 0" class="tag">
-              <p v-for="(tagitem, tagindex) in item.tag" :key="tagindex">
-                {{ tagitem.tagName }}
-              </p>
-            </div>
-            <p class="describe">
-              {{ item.classCodeLevelName }}
-            </p>
-            <p class="price">{{ item.price }}元</p>
-          </div>
+        <div class="left">
+          <img :src="item.img" alt="" />
         </div>
-      </sp-list>
-    </sp-pull-refresh>
+        <div class="right">
+          <h1>
+            <span v-if="item.salesGoodsSubVos.length > 1">套餐</span>
+            {{ item.name }}
+          </h1>
+          <div v-if="item.tag.length > 0" class="tag">
+            <p v-for="(tagitem, tagindex) in item.tag" :key="tagindex">
+              {{ tagitem.tagName }}
+            </p>
+          </div>
+          <p class="describe">
+            {{ item.attr }}
+          </p>
+          <p class="price">
+            {{ item.price === '0.00' ? '面议' : `${item.price}元` }}
+          </p>
+        </div>
+      </div>
+      <div class="claassicon"></div>
+    </sp-list>
     <div v-show="datalist.length < 1" class="none">
       <img src="https://img10.dgg.cn/pt03/wap/cmxakdtkqxs0000.png" alt="" />
       <p>暂无商品</p>
@@ -85,13 +86,9 @@ export default {
       })
     },
     getlist() {},
-    onRefresh() {
-      this.loading = true
-      this.$emit('Refresh')
-    },
     onLoad() {
-      this.$emit('load', this.pages)
       this.pages++
+      this.$emit('load', this.pages)
     },
   },
 }
@@ -135,6 +132,18 @@ export default {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+        > span {
+          height: 35px;
+          display: inline-block;
+          padding: 0 6px;
+          background: #ec5330;
+          border-radius: 4px;
+          margin-left: 10px;
+          font-size: 20px;
+          text-align: center;
+          color: #ffffff;
+          line-height: 35px;
+        }
       }
       > .tag {
         margin-top: 10px;
@@ -142,6 +151,11 @@ export default {
         display: flex;
         align-items: center;
         > p {
+          max-width: 30%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          box-sizing: border-box;
           height: 32px;
           background: #f0f2f5;
           border-radius: 4px;
@@ -180,6 +194,9 @@ export default {
         color: #ec5330;
       }
     }
+  }
+  .claassicon {
+    min-height: 1px;
   }
   .none {
     padding-top: 100px;
