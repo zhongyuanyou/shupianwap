@@ -3,7 +3,7 @@
     <div class="btn-cancel" @click="handleCancel">取消</div>
     {{ title }}
     <div class="btn-submit" :class="hasVal ? 'blue' : ''" @click="submit">
-      发布
+      {{ confirmText }}
     </div>
   </div>
 </template>

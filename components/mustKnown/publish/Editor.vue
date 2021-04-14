@@ -4,7 +4,7 @@
       v-quill:myQuillEditor="editorOption"
       class="quill-editor"
       :content="content"
-      placeholder="请在此处输入内容"
+      :placeholder="custPlaceholder"
       @change="onEditorChange($event)"
       @blur="onEditorBlur($event)"
       @focus="onEditorFocus($event)"
@@ -104,6 +104,10 @@ export default {
     initContent: {
       type: String,
       default: '',
+    },
+    custPlaceholder: {
+      type: String,
+      default: '请在此处输入内容',
     },
   },
   data() {
@@ -357,6 +361,20 @@ export default {
 }
 .ql-container.ql-snow {
   border: none;
+}
+.ql-container {
+  font-size: 34px;
+  font-family: PingFangSC-Regular, PingFang SC;
+}
+.ql-container .ql-editor {
+  padding: 0 32px;
+  padding-top: 40px;
+}
+.ql-container .ql-editor.ql-blank::before {
+  font-style: unset;
+  font-weight: 400;
+  color: #9e9e9e;
+  left: 32px;
 }
 .ql-toolbar.ql-snow {
   border: none;
