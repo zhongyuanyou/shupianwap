@@ -2,8 +2,7 @@
   <div class="page-head">
     <div class="btn-cancel" @click="handleCancel">取消</div>
     {{ title }}
-    <!-- <div v-if="hasVal" class="btn-save blue" @click="submit">草稿</div> -->
-    <div class="btn-submit" :class="hasVal ? 'blue' : 'dark'" @click="submit">
+    <div class="btn-submit" :class="hasVal ? 'blue' : ''" @click="submit">
       {{ confirmText }}
     </div>
   </div>
@@ -44,7 +43,7 @@ export default {
   width: 100%;
   height: 88px;
   line-height: 88px;
-  padding: 0 20px;
+  padding: 0 32px;
   position: fixed;
   left: 0;
   top: 0;
@@ -52,7 +51,6 @@ export default {
   background: white;
   z-index: 2;
   text-align: center;
-  border-bottom: 1px solid #dddddd;
   font-size: 36px;
   font-weight: bold;
   color: #1a1a1a;
@@ -61,20 +59,16 @@ export default {
   .btn-cancel {
     color: #999;
     font-weight: 400;
-  }
-  .blue {
     font-size: 32px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
-    color: #4974f5;
-  }
-  .dark {
-    color: #a7baf2;
   }
   .btn-submit {
     font-weight: 500;
     width: auto;
     font-size: 32px;
+    color: #b6c7fb;
+  }
+  .blue {
+    color: #4974f5;
   }
   // .btn-save {
   //   position: absolute;

@@ -14,6 +14,8 @@
       @reset="reset"
       @confirm="confirm"
       @navselect="navselect"
+      @minInput="minInput"
+      @maxInput="maxInput"
     />
     <sp-skeleton
       v-for="_index in 10"
@@ -67,7 +69,6 @@ export default {
         { services: [{ id: -1, name: '不限', text: '不限' }] },
       ],
       skeletonLoading: true,
-      // jyFilterData: {}, // 保存所有交易业态的筛选项数据
       jyFilterData: [
         {
           name: '全部分类',
@@ -145,6 +146,16 @@ export default {
       this.jyFilterData[0].name = '全部分类'
       this.jyFilterData[1].name = '价格'
       this.jyFilterData[2].name = '排序'
+    },
+    minInput(val) {
+      this.priceactive.minPrice = val
+      this.priceactive.activeItems = {}
+      this.jyFilterData[1].name = '价格'
+    },
+    maxInput(val) {
+      this.priceactive.maxPrice = val
+      this.priceactive.activeItems = {}
+      this.jyFilterData[1].name = '价格'
     },
     pricefn(item, items) {
       this.priceactive.activeItems = item

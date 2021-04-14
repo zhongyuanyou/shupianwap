@@ -8,9 +8,7 @@
       <p class="goods-name">
         <span class="name">
           {{
-            item.skuDetails[0].orderSaleName ||
-            item.skuDetails[0].spuName ||
-            item.spuName
+            item.orderSaleName || item.skuDetails[0].spuName || item.spuName
           }}</span
         >
         <span class="money1">

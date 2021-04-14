@@ -5,8 +5,8 @@
         <span>{{ item.serviceName }}</span>
       </div>
       <div class="infos">
-        <sp-image class="img" :src="item.handlerName"></sp-image>
-        <span> {{ item.handlerName }}</span>
+        办理人员:
+        <span> {{ item.handlerName || '-' }}</span>
         <span v-if="item.taskStatus === '已完成'" class="status status1">{{
           item.taskStatus
         }}</span>
@@ -81,8 +81,6 @@ export default {
     font-size: 24px;
     overflow: hidden;
     span {
-      float: left;
-      display: block;
       line-height: 30px;
       margin-right: 10px;
     }

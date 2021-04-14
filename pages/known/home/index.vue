@@ -1,5 +1,14 @@
 <template>
   <div class="home_container">
+    <div class="header" :class="{ header_fixed: fixed }">
+      <my-icon
+        name="zuo"
+        size="0.4rem"
+        :color="fixed ? '#1A1A1A' : '#D8D8D8'"
+        @click.native="$router.back()"
+      ></my-icon>
+      {{ fixed ? userName : '' }}
+    </div>
     <div class="top_box">
       <div class="card">
         <sp-image round class="user_avatar" fit="cover" :src="avatar" />
@@ -207,6 +216,7 @@ export default {
       commentShow: false,
       page: 1,
       limit: 10,
+      fixed: false,
     }
   },
   computed: {
@@ -221,7 +231,22 @@ export default {
       return this.$store.state.user
     },
   },
+  mounted() {
+    window.addEventListener('scroll', this.getScroll)
+  },
   methods: {
+    getScroll() {
+      const scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop
+
+      if (scrollTop > 180) {
+        this.fixed = true
+      } else {
+        this.fixed = false
+      }
+    },
     tabChange() {
       this.page = 1
       this.list = []
@@ -332,6 +357,30 @@ export default {
 <style lang="less" scoped>
 .home_container {
   height: 100%;
+  .header {
+    z-index: 10;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 128px;
+    padding: 40px 0 0 86px;
+    color: #1a1a1a;
+    font-size: 36px;
+    font-weight: 500px;
+    display: flex;
+    align-items: center;
+    transition: 0.3s all;
+    .spiconfont-zuo {
+      position: absolute;
+      left: 24px;
+      top: 64px;
+    }
+  }
+  .header_fixed {
+    border-bottom: 1px solid #dddddd;
+    background: #ffffff;
+  }
 
   .top_box {
     padding-top: 320px;

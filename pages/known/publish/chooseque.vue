@@ -2,12 +2,24 @@
   <div>
     <Header title="写回答" :fixed="true" @leftClickFuc="onClickLeft" />
     <div class="main">
-      <sp-tabs v-model="active">
+      <sp-tabs v-model="active" @change="init">
         <sp-tab title="推荐">
-          <div class="list list1">
-            <div v-for="(item, index) in list1" :key="index" class="item">
+          <sp-list
+            v-model="loading"
+            :finished="finished"
+            finished-text="没有更多了"
+            class="list"
+            :error.sync="error"
+            error-text="请求失败，点击重新加载"
+            @load="onLoadRecommend"
+          >
+            <div
+              v-for="(item, index) in recommendList"
+              :key="index"
+              class="item"
+            >
               <div class="user-info">
-                <div class="img"></div>
+                <div class="img" :src="item.avatar"></div>
                 <div class="infos">
                   <p class="user-name">{{ item.userName || '' }}</p>
                   <p class="pub-time">
@@ -15,7 +27,7 @@
                   </p>
                 </div>
               </div>
-              <div class="item-content">{{ item.content }}</div>
+              <div class="item-content">{{ item.contentText }}</div>
               <div class="item-bottom">
                 <div class="left">
                   {{ item.num1 }}回答 · {{ item.num2 }}关注
@@ -27,11 +39,20 @@
                 </div>
               </div>
             </div>
-          </div>
+          </sp-list>
         </sp-tab>
         <sp-tab title="邀请">
-          <div class="list list2">
-            <div v-for="(item, index) in list2" :key="index" class="item">
+          <sp-list
+            v-model="loading1"
+            :finished="finished1"
+            finished-text="没有更多了"
+            class="list"
+            :error.sync="error1"
+            error-text="请求失败，点击重新加载"
+            :immediate-check="immediateCheck"
+            @load="onLoadAnswer"
+          >
+            <div v-for="(item, index) in answerList" :key="index" class="item">
               <p class="view-num">最近 2.3 万人浏览</p>
               <div class="item-content">{{ item.content }}</div>
               <div class="item-bottom">
@@ -45,134 +66,60 @@
                 </div>
               </div>
             </div>
-          </div></sp-tab
-        >
+          </sp-list>
+        </sp-tab>
       </sp-tabs>
     </div>
   </div>
 </template>
 
 <script>
-import { Field, Tab, Tabs, Button } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
+import { Tab, Tabs, Button, List } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
+import knownApi from '@/api/known'
+
 export default {
   components: {
     Header,
-    [Field.name]: Field,
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
     [Button.name]: Button,
+    [List.name]: List,
   },
   data() {
     return {
+      error: false,
+      loading: false,
+      finished: false,
+      recommendPage: 1,
+      error1: false,
+      loading1: false,
+      finished1: false,
+      answerPage: 1,
+      recommendList: [],
+      answerList: [],
       active: 0,
       isFromApp: '', // 是否从APP跳转
-      list1: [
-        {
-          userName: '赵四',
-          time: '40分钟',
-          content:
-            '如何才能在一个月内赚到1个亿？如何才能在一个月内赚到1个亿？如何才能在一个月内赚到1个亿？如何才能在一个月内赚到1个亿？如何才能在一个月内赚到1个亿？如何才能在一个月内赚到1个亿？',
-          num1: '33',
-          num2: '44',
-          id: '3242525252535',
-        },
-        {
-          userName: '张三',
-          time: '90分钟',
-          content: '如何用100元生存1个月？',
-          num1: '11',
-          num2: '22',
-          id: '324252525253315',
-        },
-        {
-          userName: '刘五',
-          time: '1900分钟',
-          content: '彩票开奖是不是被人为控制的，怎么才能中奖？',
-          num1: '110',
-          num2: '2',
-          id: '324252525253315',
-        },
-      ],
-      list2: [
-        {
-          userName: '赵四',
-          time: '40分钟',
-          content: '如何才能在一个月内赚到1个亿？',
-          num1: '33',
-          num2: '44',
-          id: '3242525252535',
-        },
-        {
-          userName: '赵东明',
-          time: '60分钟',
-          content:
-            '如何才能在一个月内赚到1个亿2？如何才能在一个月内赚到1个亿2如何才能在一个月内赚到1个亿2如何才能在一个月内赚到1个亿2如何才能在一个月内赚到1个亿2如何才能在一个月内赚到1个亿2',
-          num1: '33',
-          num2: '44',
-          id: '3242525252535',
-        },
-        {
-          userName: '张三',
-          time: '90分钟',
-          content: '如何用100元生存1个月？',
-          num1: '11',
-          num2: '22',
-          id: '324252525253315',
-        },
-        {
-          userName: '赵东明',
-          time: '60分钟',
-          content:
-            '如何才能在一个月内赚到1个亿2？如何才能在一个月内赚到1个亿2如何才能在一个月内赚到1个亿2如何才能在一个月内赚到1个亿2如何才能在一个月内赚到1个亿2如何才能在一个月内赚到1个亿2',
-          num1: '33',
-          num2: '44',
-          id: '3242525252535',
-        },
-        {
-          userName: '刘五',
-          time: '1900分钟',
-          content: '彩票开奖是不是被人为控制的，怎么才能中奖？',
-          num1: '110',
-          num2: '2',
-          id: '324252525253315',
-        },
-        {
-          userName: '刘五',
-          time: '1900分钟',
-          content: '彩票开奖是不是被人为控制的，怎么才能中奖？',
-          num1: '110',
-          num2: '2',
-          id: '324252525253315',
-        },
-        {
-          userName: '刘五',
-          time: '1900分钟',
-          content: '彩票开奖是不是被人为控制的，怎么才能中奖？',
-          num1: '110',
-          num2: '2',
-          id: '324252525253315',
-        },
-        {
-          userName: '刘五',
-          time: '1900分钟',
-          content: '彩票开奖是不是被人为控制的，怎么才能中奖？',
-          num1: '110',
-          num2: '2',
-          id: '324252525253315',
-        },
-        {
-          userName: '刘五',
-          time: '1900分钟',
-          content: '彩票开奖是不是被人为控制的，怎么才能中奖？',
-          num1: '110',
-          num2: '2',
-          id: '324252525253315',
-        },
-      ],
+      immediateCheck: false,
     }
   },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userId, // userId 用于判断登录
+    }),
+  },
   methods: {
+    init() {
+      // 初始化数据
+      this.recommendList = []
+      this.answerList = []
+      this.recommendPage = 1
+      this.answerPage = 1
+      this.error = false
+      this.error1 = false
+      this.writeAnswerApi()
+    },
     onClickLeft() {
       this.$router.back(-1)
     },
@@ -204,34 +151,112 @@ export default {
     editorChange(val) {
       this.formData.content = val
     },
+    onLoadRecommend() {
+      this.writeAnswerApi()
+    },
+    onLoadAnswer() {
+      this.writeAnswerApi()
+    },
+    async writeAnswerApi() {
+      try {
+        const params = {
+          type: this.active === 0 ? 1 : 2, // 1 推荐回答 2 邀请回答
+          handleUserId: this.userId,
+          page: this.active === 0 ? this.recommendPage : this.answerPage,
+          limit: 10,
+        }
+        const { code, data } = await this.$axios.get(
+          knownApi.question.writeAnswer,
+          { params }
+        )
+        if (this.active === 0) {
+          this.buildRecommendData(code, data)
+        } else {
+          this.buildAnswerData(code, data)
+        }
+      } catch (e) {
+        if (this.active === 0) {
+          this.error = true
+          this.loading = false
+        } else {
+          this.error1 = true
+          this.loading1 = false
+        }
+      }
+    },
+    buildRecommendData(code, data) {
+      if (code === 200) {
+        if (data.rows || data.rows.length === 0) {
+          this.recommendList = []
+          this.finished = true
+        }
+        this.recommendList.push(...data.rows)
+        this.recommendPage++
+        if (this.recommendPage > data.totalPage) {
+          this.finished = true
+        }
+      } else {
+        this.error = true
+      }
+      this.loading = false
+    },
+    buildAnswerData(code, data) {
+      if (code === 200) {
+        if (data.rows || data.rows.length === 0) {
+          this.answerList = []
+          this.finished1 = true
+        }
+        this.answerList.push(...data.rows)
+        this.answerPage++
+        if (this.answerPage > data.totalPage) {
+          this.finished1 = true
+        }
+      } else {
+        this.error1 = true
+      }
+      this.loading1 = false
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
+/deep/.my-head {
+  box-shadow: unset;
+}
 .main {
-  .title {
-    font-size: 40px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
-    color: #222222;
-    line-height: 52px;
+  /deep/.sp-tabs {
+    .sp-tabs__wrap {
+      height: 72px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #ddd;
+      .sp-tab {
+        font-size: 30px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #999999;
+        line-height: 30px;
+      }
+      .sp-tab--active {
+        color: #222222;
+        font-weight: bold;
+      }
+      .sp-tab__text--ellipsis {
+        overflow: unset;
+      }
+      .sp-tabs__line {
+        width: 28px;
+        height: 6px;
+        background: #4974f5;
+        border-radius: 3px;
+      }
+    }
   }
-}
-.sp-tabs {
-  border-bottom: 1px solid #ddd;
-  .sp-tabs__nav--line {
-    border-bottom: 1px solid #ddd;
-  }
-}
-/deep/.sp-tabs__wrap {
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
 }
 .list {
   padding: 0 32px;
   .item {
-    padding: 32px 0;
+    padding: 40px 0;
     font-size: 28px;
     color: #222;
     border-bottom: 1px solid #ddd;
@@ -259,6 +284,7 @@ export default {
         min-width: 500px;
         .user-name {
           font-size: 30px;
+          color: #222222;
         }
         .pub-time {
           font-size: 24px;
@@ -283,7 +309,7 @@ export default {
       justify-content: space-between;
       .left {
         font-size: 26px;
-        color: #666;
+        color: #999;
       }
       .btn {
         width: 180px;
@@ -295,8 +321,10 @@ export default {
         font-weight: 500;
         color: #ffffff;
         .sp-button {
-          width: 100%;
-          height: 100%;
+          width: 160px;
+          height: 64px;
+          background: #4974f5;
+          border-radius: 8px;
         }
       }
     }

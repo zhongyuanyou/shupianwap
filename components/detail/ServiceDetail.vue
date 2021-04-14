@@ -1,7 +1,7 @@
 <template>
   <div v-if="productDescribe" class="container">
     <p class="container_title">服务详情</p>
-    <div class="container_html" v-html="productDescribe"></div>
+    <div class="container_html" v-html="productDescribe.clientDetail"></div>
   </div>
 </template>
 
@@ -19,7 +19,7 @@ export default {
     ...mapState({
       productDescribe: (state) =>
         state.sellingGoodsDetail.sellingGoodsData.salesGoodsOperatings
-          .clientDetails[0].clientDetail,
+          .clientDetails[0],
     }),
   },
   methods: {},

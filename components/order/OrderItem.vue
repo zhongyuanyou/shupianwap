@@ -25,7 +25,7 @@
         <sp-image :src="item.skuImages" alt="" class="img" srcset="" />
         <div class="right">
           <p class="goods-name">
-            <span class="name"> {{ item.spuName || item.orderSaleName }}</span>
+            <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
             <span class="money1"> {{ item.skuPrice }}元 </span>
           </p>
           <p class="sku-info">
@@ -72,7 +72,7 @@
       </p>
       <!-- 服务完结收费的意向单 -->
       <p v-else-if="orderData.orderType === 0" class="inner">
-        <span class="price1"> 总价面议</span>
+        <span class="price1"> 总价：面议</span>
       </p>
       <!-- 其他付费方式展示效果一样 -->
       <p v-else class="inner">

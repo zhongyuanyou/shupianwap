@@ -19,6 +19,7 @@
       class="list_container"
       :error.sync="error"
       error-text="请求失败，点击重新加载"
+      offset="30"
       @load="onLoad"
     >
       <div v-for="(item, index) in list" :key="index" class="item">
@@ -88,9 +89,10 @@ export default {
       finished: false,
       page: 1,
       tabIndex: 1,
-      total: 0,
       limit: 10,
       error: false,
+      totalPage: 1,
+      apiLock: false, // tab 切换会有重复发送请求问题,这里设置lock锁,防止重复请求
     }
   },
   computed: {
@@ -103,21 +105,26 @@ export default {
       if (this.tabIndex === name) {
         return
       }
+      // 重置 list 列表页面渲染参数
       this.page = 1
       this.tabIndex = name
       this.finished = false
-      this.loading = true
+      this.error = false
+      this.apiLock = false
       this.list = []
       this.onLoad()
     },
     onLoad() {
-      const timer = setTimeout(() => {
+      if (this.page > this.totalPage) {
+        this.finished = true
+        return
+      }
+      if (!this.apiLock) {
         this.getList()
-        this.page++
-        this.finished && clearTimeout(timer)
-      }, 100)
+      }
     },
     async getList() {
+      this.apiLock = true
       try {
         const params = {
           handleUserId: this.userId,
@@ -128,20 +135,22 @@ export default {
         const res = await this.$axios.get(knownApi.home.collection, { params })
         if (res.code === 200) {
           if (!res.data.rows || res.data.rows.length === 0) {
-            this.list = []
             this.finished = true
+          } else {
+            this.list.push(...res.data.rows)
+            this.totalPage = res.data.totalPage
+            // 当成功时,则处理 page ++
+            this.page++
           }
-          this.list.push(...res.data.rows)
-          if (this.page > res.data.totalPage) {
-            this.finished = true
-          }
-          this.loading = false
         } else {
           this.error = true
-          this.loading = false
         }
+        this.loading = false
+        this.apiLock = false
       } catch (e) {
         this.error = true
+        this.loading = false
+        this.apiLock = false
       }
     },
   },

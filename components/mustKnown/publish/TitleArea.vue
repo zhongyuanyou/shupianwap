@@ -1,22 +1,17 @@
 <template>
-  <div class="input">
-    <div v-if="!canEdit" class="title-area">
-      <p class="content-title">{{ title }}</p>
+  <div class="title-wapper">
+    <div v-show="showInput" class="title-area" @click="edit">
+      <p class="content-title">{{ inputVal }}</p>
     </div>
-    <section v-else>
-      <div v-show="hideInput" class="title-area">
-        <p class="content-title" @click="handleClickTitle">{{ title }}</p>
-        <p v-if="overNum > 0" class="more-text">超出{{ overNum }}个字符</p>
-      </div>
+    <section v-show="!showInput">
       <sp-field
-        v-show="!hideInput"
-        v-model="inputVal"
-        placeholder="请输入标题"
+        ref="tileArea"
+        v-model.trim="inputVal"
+        :placeholder="custPlaceholder"
         type="textarea"
-        rows="1"
-        maxlength="80"
+        maxlength="50"
         autosize
-        @input="inputTitle"
+        show-word-limit
         @blur="blur"
       />
     </section>
@@ -31,16 +26,6 @@ export default {
     [Field.name]: Field,
   },
   props: {
-    // 标题最大长度
-    maxLength: {
-      type: Number,
-      default: 60,
-    },
-    // 输入框最大长度
-    inputLength: {
-      type: Number,
-      default: 80,
-    },
     // 标题
     title: {
       type: String,
@@ -51,58 +36,65 @@ export default {
       type: Boolean,
       default: true,
     },
+    // 设置placeholder
+    custPlaceholder: {
+      type: String,
+      default: '请输入标题',
+    },
   },
   data() {
     return {
-      hideInput: false,
+      showInput: false,
       inputVal: '',
     }
   },
-  computed: {
-    overNum() {
-      return this.inputVal.length - this.maxLength
-    },
-  },
+  mounted() {},
   methods: {
-    handleClickTitle() {
-      this.hideInput = false
-    },
-    blur(a) {
+    blur() {
+      if (this.inputVal === '') {
+        /*
+        this.$xToast.show({
+          message: '标题不能为空',
+          duration: 1000,
+          icon: 'toast_ic_error',
+          forbidClick: true,
+        })
+        */
+        this.$refs.tileArea.$refs.input.focus()
+        return
+      }
+      // 给父组件传标题
       this.$emit('setTitle', this.inputVal)
-      if (this.inputVal) this.hideInput = true
+      // 改变样式 标题设置显示
+      this.showInput = true
     },
-    inputTitle(a) {
-      console.log('a', a)
+    edit() {
+      this.showInput = false
     },
   },
 }
 </script>
 
 <style lang="less" scoped>
+/deep/.sp-cell {
+  padding: 18px 40px 36px 32px;
+  font-size: 40px;
+  .sp-field__word-limit {
+    font-size: 24px;
+    color: #ff3b30;
+  }
+}
 .title-area {
   width: 100%;
   font-size: 40px;
   position: relative;
-  padding: 20px 32px;
+  padding: 18px 40px 32px;
   border-bottom: 1px solid #ddd;
   .content-title {
     color: #222222;
     line-height: 52px;
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: 600;
-    font-size: 40px;
-  }
-  .more-text {
-    width: auto;
-    height: 24px;
-    font-size: 24px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #ff3b30;
-    line-height: 24px;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    text-align: right;
   }
 }
 </style>

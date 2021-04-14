@@ -2,7 +2,7 @@
   <div>
     <div ref="myPage">
       <PageHead v-if="!showHead2" :title="articleDetails.title"></PageHead>
-      <PageHead2 v-if="showHead2" :headerData="headerData" @follow="follow" />
+      <PageHead2 v-if="showHead2" :header-data="headerData" @follow="follow" />
     </div>
     <div class="title-area">
       <div class="title">{{ articleDetails.title }}</div>
@@ -22,7 +22,7 @@
       <p class="pub-time">编辑于 {{ articleDetails.createTime }}</p>
       <DetailArticleList :article-list="articleList" />
     </div>
-    <Comment :article-id="articleDetails.id" ref="openComment" />
+    <Comment ref="openComment" :article-id="articleDetails.id" />
     <div class="page-bottom">
       <div
         v-if="
