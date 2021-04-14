@@ -296,11 +296,9 @@ export default {
   },
   methods: {
     getDetailData() {
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do'
       this.loading = true
       this.$axios
-        .get(baseUrl, {
+        .get(knownApi.questionArticle.detail, {
           params: {
             id: this.currentDetailsId,
             userId: this.userInfo.userId || '120',
@@ -337,10 +335,8 @@ export default {
         })
     },
     getQuesData() {
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/question_article/v2/find_page.do'
       this.$axios
-        .post(baseUrl, {
+        .post(knownApi.questionArticle.list, {
           sourceIds: [`${this.currentDetailsId}`],
           orderBy: this.orderBy,
           page: this.page,
@@ -400,11 +396,8 @@ export default {
             this.questionDetials.collectCount + 1
         }
       }
-
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/known_home/v1/operation.do'
       this.$axios
-        .post(baseUrl, {
+        .post(knownApi.home.operation, {
           handleUserId: this.userInfo.userId || '120',
           handleUserName: this.userInfo.userName || '测试用户',
           businessId: this.currentDetailsId,
@@ -455,8 +448,6 @@ export default {
     },
     deleteQues(id) {
       const curId = id
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/question_article/v2/delete.do'
       this.loading = true
       Dialog.confirm({
         title: '提示',
@@ -464,7 +455,7 @@ export default {
       })
         .then(() => {
           this.$axios
-            .post(baseUrl, {
+            .post(knownApi.content.dlt, {
               id: curId,
               userId: this.userInfo.userId,
             })
@@ -485,7 +476,6 @@ export default {
         })
         .catch((err) => {
           console.log(err)
-          // on cancel
         })
     },
     sum(val) {

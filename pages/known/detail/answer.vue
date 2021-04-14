@@ -173,6 +173,7 @@
 <script>
 import { Field, Button, Image, Toast, Popup, Dialog } from '@chipspc/vant-dgg'
 import Comment from '~/components/mustKnown/DetailComment'
+import { knownApi } from '~/api'
 export default {
   components: {
     [Button.name]: Button,
@@ -185,63 +186,6 @@ export default {
   data() {
     return {
       showHead2: false,
-      commentList: [
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-      ],
-      commentList2: [],
       answerDetails: '',
       headerData: {},
       popupShow: false,
@@ -266,10 +210,6 @@ export default {
     this.initFollow()
   },
   mounted() {
-    this.commentList2 = JSON.parse(JSON.stringify(this.commentList)).splice(
-      0,
-      2
-    )
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
@@ -285,11 +225,9 @@ export default {
         followStatus = 1
         this.isFollow = true
       }
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/question_article/v2/find_user_relations.do'
       this.loading = true
       this.$axios
-        .post(baseUrl, {
+        .post(knownApi.home.attention, {
           handleUserName: this.userInfo.userName || '测试用户',
           handleUserId: this.userInfo.userId || '120',
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
@@ -317,10 +255,8 @@ export default {
         })
     },
     initFollow() {
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/known_home/v1/findAttention.do'
       this.$axios
-        .get(baseUrl, {
+        .get(knownApi.questionArticle.findAttention, {
           params: {
             currentUserId: this.userInfo.userId,
             homeUserId: this.homeUserId || '120',
@@ -347,11 +283,9 @@ export default {
       this.popupShow = false
     },
     getDetailData() {
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do'
       this.loading = true
       this.$axios
-        .get(baseUrl, {
+        .get(knownApi.questionArticle.detail, {
           params: {
             id: this.currentDetailsId,
             userId: this.userInfo.userId || '120',
@@ -383,14 +317,10 @@ export default {
           }
         })
     },
-
     // 获取回答数与关注数
-
     getAnswerCollectCount() {
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do'
       this.$axios
-        .get(baseUrl, {
+        .get(knownApi.questionArticle.detail, {
           params: {
             id: this.sourceId,
             userId: this.userInfo.userId || '120',
@@ -413,7 +343,6 @@ export default {
           }
         })
     },
-
     handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
       const scrollTop = this.$refs.myPage.getBoundingClientRect().top // 滚动条距离顶部的位置
@@ -464,10 +393,8 @@ export default {
           this.answerDetails.isCollectFlag = 1
         }
       }
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/known_home/v1/operation.do'
       this.$axios
-        .post(baseUrl, {
+        .post(knownApi.home.operation, {
           handleUserId: this.userInfo.userId || '120',
           handleUserName: this.userInfo.userName || '测试用户',
           businessId: this.currentDetailsId,
@@ -522,8 +449,6 @@ export default {
     },
     deleteAnswer(id) {
       const curId = id
-      const baseUrl =
-        'http://172.16.132.255:7001/service/nk/question_article/v2/delete.do'
       this.loading = true
       Dialog.confirm({
         title: '提示',
@@ -531,7 +456,7 @@ export default {
       })
         .then(() => {
           this.$axios
-            .post(baseUrl, {
+            .post(knownApi.content.dlt, {
               id: curId,
               userId: this.userInfo.userId || '120',
             })
