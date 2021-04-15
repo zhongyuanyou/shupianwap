@@ -19,10 +19,10 @@
         </div>
         <div class="right">
           <h1>
-            <span v-if="item.salesGoodsSubVos.length > 1">套餐</span>
             {{ item.name }}
           </h1>
           <div v-if="item.tag.length > 0" class="tag">
+            <div v-if="item.salesGoodsSubVos.length > 1">套餐</div>
             <p v-for="(tagitem, tagindex) in item.tag" :key="tagindex">
               {{ tagitem.tagName }}
             </p>
@@ -133,24 +133,25 @@ export default {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
-        > span {
-          height: 35px;
-          display: inline-block;
-          padding: 0 6px;
-          background: #ec5330;
-          border-radius: 4px;
-          margin-left: 10px;
-          font-size: 20px;
-          text-align: center;
-          color: #ffffff;
-          line-height: 35px;
-        }
       }
       > .tag {
         margin-top: 10px;
         height: 35px;
         display: flex;
         align-items: center;
+        > div {
+          background: #ec5330;
+          box-sizing: border-box;
+          height: 32px;
+          border-radius: 4px;
+          padding: 0 9px;
+          line-height: 37px;
+          font-size: 22px;
+          font-weight: 400;
+          color: #fff;
+          margin-left: 12px;
+          color: #ffffff;
+        }
         > p {
           max-width: 30%;
           overflow: hidden;

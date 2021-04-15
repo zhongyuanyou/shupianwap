@@ -116,15 +116,17 @@ export default {
       const arr = this.classcode.classcode.split(',')
       for (let i = 0; i < arr.length; i++) {
         const item = {
-          id: arr[i],
+          code: arr[i],
+          id: 1,
         }
-        this.itemsclass[1].services = []
         this.itemsclass[1].services.push(item)
       }
-      this.itemsclass[0].id = this.classcode.navcode
+      this.itemsclass[0].id = 1
+      this.itemsclass[0].code = this.classcode.navcode
       this.formData.class = this.itemsclass
     } else if (this.classcode.navcode) {
-      this.itemsclass[0].id = this.classcode.navcode
+      this.itemsclass[0].id = 1
+      this.itemsclass[0].code = this.classcode.navcode
       this.formData.class = this.itemsclass
     }
     this.getlist()
@@ -136,8 +138,8 @@ export default {
       this.formData.needTypes = 0
       this.formData.price = this.priceactive
       this.formData.sort = this.sortactive
-      console.log(this.itemsclass)
       this.formData.class = this.itemsclass
+      this.$refs.list.finished = false
       this.getlist()
     },
     navselect(item) {
@@ -215,8 +217,9 @@ export default {
             this.items = data
             if (this.classcode) {
               for (let i = 0; i < this.items.typeData.length; i++) {
-                if (this.classcode.navcode === this.items.typeData[i].id) {
+                if (this.classcode.navcode === this.items.typeData[i].code) {
                   this.$refs.dropDownMenu.navIndex = i + 1
+                  this.itemsclass[0].code = this.items.typeData[i].code
                   this.itemsclass[0].id = this.items.typeData[i].id
                   this.itemsclass[0].name = this.items.typeData[i].name
                   this.itemsclass[0].text = this.items.typeData[i].text
@@ -237,7 +240,7 @@ export default {
                         a++
                       ) {
                         if (
-                          this.items.typeData[i].children[b].id ===
+                          this.items.typeData[i].children[b].code ===
                           this.classcode.classcode[a]
                         ) {
                           this.itemsclass[1].services.push(
@@ -252,7 +255,7 @@ export default {
               }
             }
           }
-          if (data.goodsList.records.length < 0) {
+          if (data.goodsList.records.length < 1) {
             this.$refs.list.finished = true
           }
           if (this.datalist.length > 0) {

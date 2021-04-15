@@ -145,6 +145,7 @@ export default {
         if (this.classarr.length > 0) {
           for (let i = 0; i < this.classarr.length; i++) {
             const item = {
+              code: this.classarr[i].code,
               id: this.classarr[i].id,
               name: this.classarr[i].name,
               text: this.classarr[i].name,
