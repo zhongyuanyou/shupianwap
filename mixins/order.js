@@ -88,6 +88,13 @@ export default {
     },
     // 开始支付时判断
     startPay() {
+      if (
+        !this.orderData.payType ||
+        this.orderData.payType !== 'ORDER_PAY_MODE_ONLINE'
+      ) {
+        this.$xToast.error('该订单为线下支付，请联系规划师付款')
+        return
+      }
       if (this.fromPage === 'orderList') {
         // 同时判断有无关联订单
         if (this.checkHasOtherOrder()) {
@@ -314,7 +321,6 @@ export default {
           .then((res) => {
             this.loading = false
             this.orderData.orderList = res.list
-            console.log('组装关联订单后的this.orderData', this.orderData)
             this.switchOptionType()
           })
           .catch((err) => {
@@ -482,6 +488,11 @@ export default {
     },
     // jump
     toContract() {
+      const contractUrl =
+        (this.orderData.contractVo2s &&
+          this.orderData.contractVo2s.length &&
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ') ||
+        this.orderData.contractUrl
       if (
         this.orderData.contractStatus === 'STRUTS_QSZ' ||
         (this.orderData.contractVo2s &&
@@ -494,9 +505,7 @@ export default {
             orderId: this.orderData.id,
             cusOrderId: this.orderData.cusOrderId,
             fromPage: this.fromPage,
-            contractUrl:
-              this.orderData.contractVo2s &&
-              this.orderData.contractVo2s[0].contractUrl,
+            contractUrl,
             type: 'qs',
           },
         })
@@ -512,9 +521,7 @@ export default {
             orderId: this.orderData.id,
             cusOrderId: this.orderData.cusOrderId,
             fromPage: this.fromPage,
-            contractUrl:
-              this.orderData.contractVo2s &&
-              this.orderData.contractVo2s[0].contractUrl,
+            contractUrl,
             type: 'yl',
           },
         })
