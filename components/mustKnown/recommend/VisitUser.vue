@@ -3,7 +3,7 @@
     <div class="items">
       <ul class="tabs-box-items">
         <li v-for="(item, index) in userData" :key="index" class="user">
-          <div class="Image" @click="clickImg(item.inviteeId)">
+          <div class="Image" @click="clickImg(item)">
             <img :src="item.avatar" alt="" />
           </div>
           <div class="name">{{ item.inviteeName }}</div>
@@ -50,12 +50,13 @@ export default {
     attentionMore() {
       this.$router.push({ path: 'known/more' })
     },
-    clickImg(inviteeId) {
+    clickImg(item) {
       // 跳转到个人主页 目前不知道个人主页在哪里
       this.$router.push({
         path: '/known/home',
         query: {
-          homeUserId: inviteeId,
+          homeUserId: item.inviteeId,
+          type: item.inviteeType,
         },
       })
     },

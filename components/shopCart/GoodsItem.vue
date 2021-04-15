@@ -6,7 +6,8 @@
     class="goods-item"
     :class="{
       'goods-item--disable':
-        formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY',
+        formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY' ||
+        formatGoodsStatusData.stock < 0,
     }"
   >
     <SkuService
@@ -26,8 +27,9 @@
             icon-size="0.32rem"
             class="goods-item__check"
             :disabled="
-              formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY' &&
-              shoppingCarStatus === 'completed'
+              (formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY' &&
+                shoppingCarStatus === 'completed') ||
+              formatGoodsStatusData.stock < 0
             "
             @change="handleAsyncCheckboxChange"
           >

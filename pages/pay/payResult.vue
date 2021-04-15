@@ -44,43 +44,54 @@
     <div class="list"></div>
     <div class="body_container">
       <div class="recommend">为你推荐</div>
-      <div class="recommend_list">
-        <div
-          v-for="(item, index) in itemsData"
-          :key="index"
-          class="recommend_item"
-        >
-          <div class="item_lf">
-            <div class="hot">{{ item.span1 }}</div>
-          </div>
-          <div class="item_rt">
-            <div class="item_title">{{ item.title }}</div>
-            <div class="item_span">
-              <span>{{ item.span2 }}</span>
-              <span>{{ item.span3 }}</span>
-              <span>{{ item.span4 }}</span>
+      <!-- <Recommend ref="recommendRef" /> -->
+      <sp-skeleton
+        avatar
+        avatar-shape="square"
+        :row="3"
+        :loading="loading"
+        avatar-size="80px"
+      >
+        <div class="recommend_list">
+          <div
+            v-for="(item, index) in itemsData"
+            :key="index"
+            class="recommend_item"
+          >
+            <div class="item_lf">
+              <div class="hot">{{ item.span1 }}</div>
             </div>
-            <div class="item_content">
-              顶呱呱集团专业会计师团队代账，服务快...
-            </div>
-            <div class="item_money">
-              <div class="money_num">{{ item.money }}</div>
-              <div class="money_icon">元</div>
-              <div class="sale_num">半年销量 {{ item.sold_num }}</div>
+            <div class="item_rt">
+              <div class="item_title">{{ item.title }}</div>
+              <div class="item_span">
+                <span>{{ item.span2 }}</span>
+                <span>{{ item.span3 }}</span>
+                <span>{{ item.span4 }}</span>
+              </div>
+              <div class="item_content">
+                顶呱呱集团专业会计师团队代账，服务快...
+              </div>
+              <div class="item_money">
+                <div class="money_num">{{ item.money }}</div>
+                <div class="money_icon">元</div>
+                <div class="sale_num">半年销量 {{ item.sold_num }}</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </sp-skeleton>
     </div>
   </section>
 </template>
 
 <script>
-import { Button } from '@chipspc/vant-dgg'
-import { pay, homeApi } from '@/api'
+import { Button, Skeleton } from '@chipspc/vant-dgg'
+import { pay, recommendApi } from '@/api'
+
 export default {
   components: {
     [Button.name]: Button,
+    [Skeleton.name]: Skeleton,
   },
   data() {
     return {
@@ -118,40 +129,44 @@ export default {
           sold_num: '123541',
         },
       ],
+      loading: true,
       params: {
-        dictionaryCode: 'C-SY-RMJY-GG', // 查询数据字典的code
-        findType: 0, // 查询类型：0：初始查询广告+数据字典+推荐商品  1：查询广告+推荐商品 2：只查推荐商品
         userId: '', // 用户id
         deviceId: '', // 设备ID（用户唯一标识） 0022ef1a-f685-469a-93a8-5409892207a2
         areaCode: '', // 区域编码
         sceneId: 'app-mainye-01', // 场景ID
-        maxsize: 100, // 要求推荐产品的数量
+        maxsize: 120, // 要求推荐产品的数量
         platform: 'APP', // 平台（app,m,pc）
         formatId: '', // 产品类别
-        limit: 10, // 分页条数
-        page: 1, // 当前页
-        locationCode: '', // 查询广告的位置code
+        page: {
+          pageNo: 1,
+          pageSize: 10,
+        },
+        storeId: '', // 商户id
+        productType: 'PRO_CLASS_TYPE_SALES',
       },
     }
   },
-  mounted() {
-    // this.payStatus = Math.floor(Math.random() * 2)
-    this.payStatus = this.$route.query.payStatus
-    pay
-      .enablePayMoney({ axios: this.$axios }, this.formData)
-      .then((result) => {
-        // console.log('result的值', result)
-        this.responseData = result.data
-      })
-      .catch((e) => {
-        if (e.code !== 200) {
-          console.log(e)
-        }
-      })
 
-    this.findRecomList()
+  mounted() {
+    this.init()
   },
   methods: {
+    init() {
+      this.payStatus = this.$route.query.payStatus
+      pay
+        .enablePayMoney({ axios: this.$axios }, this.formData)
+        .then((result) => {
+          // console.log('result的值', result)
+          this.responseData = result.data
+        })
+        .catch((e) => {
+          if (e.code !== 200) {
+            console.log(e)
+          }
+        })
+      this.findRecomList()
+    },
     onLeftClick() {
       this.$router.go(-1)
     },
@@ -160,86 +175,31 @@ export default {
     },
     // 查询推荐商品
     findRecomList(index) {
-      const params = {}
-      // 初始化查询字典+广告需要的参数
-      // if (this.params.findType === 0) {
-      // params.findType = this.params.findType
-      // params.dictionaryCode = this.params.dictionaryCode
-      // params.limit = this.params.limit
-      // params.page = this.params.page
-      params.areaCode = '510100'
-      params.deviceId = '461454fcf47be7b04dedf5c57380d33d'
-      params.findType = 2
-      params.formatId = 'FL20201224136341'
-      params.limit = 10
-      params.maxsize = 100
-      params.page = 2
-      params.platform = 'APP'
-      params.sceneId = 'app-mainye-01'
-      params.userId = '767584840682202065'
-      // }
-      // areaCode: '510100'
-      // deviceId: '461454fcf47be7b04dedf5c57380d33d'
-      // findType: 2
-      // formatId: 'FL20201224136341'
-      // limit: 10
-      // maxsize: 100
-      // page: 2
-      // platform: 'APP'
-      // sceneId: 'app-mainye-01'
-      // userId: '767584840682202065'
-      // 查询推荐产品需要的参数
-      // if (this.params.findType !== 0) {
-      //   params.findType = this.params.findType
-      //   params.formatId = this.tabBtn[index].ext3
-      //   params.limit = this.tabBtn[index].limit
-      //   params.page = this.tabBtn[index].page
-      //   params.areaCode = this.cityCode
-      //   params.deviceId = this.params.deviceId
-      //   params.sceneId = this.params.sceneId
-      //   params.maxsize = this.params.maxsize
-      //   params.platform = this.params.platform
-      //   params.userId = this.userId || null
-      // }
-
-      // 广告位code
-      if (this.params.findType === 1) {
-        params.locationCode = this.tabBtn[index].ext1
+      const params = this.params
+      params.areaCode = this.cityCode || '510100'
+      params.page = {
+        pageNo: 1,
+        limit: 10,
       }
-
-      this.$axios.post(homeApi.findRecomList, params).then((res) => {
+      this.$axios.post(recommendApi.saleList, params).then((res) => {
+        this.loadingList = false
         this.loading = false
         if (res.code === 200) {
-          if (params.findType === 0) {
-            res.data.dictData[0].adData = res.data.adData
-            this.tabBtn = res.data.dictData
-            return
-          }
-          if (params.findType === 1) {
-            this.tabBtn[index].adData = res.data.adData
-            this.tabBtn[index].goodsList = res.data.goodsList
-            this.tabBtn[index].noData = res.data.goodsList.length === 0
-            return
-          }
-          // 初始查询第一个分类产品无任何数据
-          if (
-            index === 0 &&
-            params.page === 1 &&
-            res.data.goodsList.length === 0
-          ) {
-            this.$set(this.tabBtn[index], 'noData', true)
-            return
-          }
-          // 加载更多时无更多数据
-          if (!res.data.goodsList.length) {
-            this.tabBtn[index].noMore = true
-            return
-          }
-          this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
-            res.data.goodsList
-          )
+          console.log('res++++++++++', res)
+          // this.tabBtn[index].noData = res.data.records.length === 0
+          // if (this.tabBtn[index].page === 1) {
+          //   this.tabBtn[index].goodsList = res.data.records
+          // } else {
+          //   this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
+          //     res.data.records
+          //   )
+          // }
+          // // 加载更多时无更多数据
+          // if (!res.data.records.length && this.tabBtn[index].goodsList.length) {
+          //   this.tabBtn[index].noMore = true
+          // }
         } else {
-          this.$xToast.error(res.message)
+          this.tabBtn[index].page--
         }
       })
     },

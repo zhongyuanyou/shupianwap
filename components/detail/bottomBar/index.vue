@@ -235,6 +235,7 @@ export default {
       const sessionParams = {
         imUserId: mchUserId, // 商户用户ID
         imUserType: type, // 用户类型
+        requireCode: this.sellingGoodsData.classCodeLevel.split(',')[0],
         ext: {
           intentionType, // 意向业务 非必传
           intentionCity, // 意向城市 非必传
