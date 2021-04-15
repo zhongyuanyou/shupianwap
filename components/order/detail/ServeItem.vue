@@ -155,7 +155,7 @@ export default {
           break
         case 3:
           // 确认完成
-          this.$emit('confirmOrder', item.skuId)
+          this.$emit('confirmOrder', item.skuDetails[0].id)
           break
       }
     },

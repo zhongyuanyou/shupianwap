@@ -1,28 +1,33 @@
 <template>
-  <div v-if="productDescribe" class="container">
-    <p class="container_title">服务详情</p>
-    <div class="container_html" v-html="productDescribe.clientDetail"></div>
+  <div v-if="detailData && detailData.clientDetail" class="container">
+    <p class="container_title">
+      {{ compType == 'tc' ? '产品详情' : '服务详情' }}
+    </p>
+    <div class="container_html" v-html="detailData.clientDetail"></div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   name: 'ServiceDetail',
   components: {},
+  props: {
+    detailData: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+    compType: {
+      type: String,
+      default: 'tc',
+    },
+  },
   data() {
     return {
       containerLoading: true,
     }
   },
-  computed: {
-    ...mapState({
-      productDescribe: (state) =>
-        state.sellingGoodsDetail.sellingGoodsData.salesGoodsOperatings
-          .clientDetails[0],
-    }),
-  },
-  methods: {},
 }
 </script>
 

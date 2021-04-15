@@ -473,7 +473,7 @@ export default {
     // 请求关注用户的数据
     async focusFansList() {
       const params = {
-        handleUserId: this.$store.state.userInfo.userId,
+        handleUserId: this.$store.state.user.userId,
         handleType: 1,
         limit: 10,
         page: 1,
@@ -486,6 +486,8 @@ export default {
         if (data.rows.length > 0) {
           this.userData = data.rows
         } else {
+          this.NotAttention = true
+          this.attentionStatus = false
         }
       } else {
       }
@@ -493,7 +495,7 @@ export default {
     // 请求关注用户的列表数据
     async attentionList() {
       const params = {}
-      params.handleUserId = this.$store.state.userInfo.userId
+      params.handleUserId = this.$store.state.user.userId
       params.dateType = 0
       params.userHandleFlag = 1
       params.limit = 10
@@ -506,6 +508,7 @@ export default {
         if (data.rows.length > 0) {
           this.listData = data.rows
         } else {
+          this.showNotAttention = true
         }
       } else {
       }

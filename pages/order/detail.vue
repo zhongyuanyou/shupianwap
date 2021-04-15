@@ -442,7 +442,6 @@ export default {
           this.getChildOrders()
           break
         case 6:
-          console.log('确认完成33')
           // 确认完成
           this.opType = 'confirmComplete'
           this.confirmOrder()
