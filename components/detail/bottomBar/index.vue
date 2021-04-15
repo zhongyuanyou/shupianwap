@@ -257,6 +257,8 @@ export default {
         imageUrl: this.sellingGoodsData.salesGoodsOperatings.clientDetails[0]
           .imgFileIdPaths[0], // 产品图片
         unit: this.sellingGoodsData.salesPrice.split('.')[1], // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+        requireCode: this.proDetail.classCodeLevel.split(',')[0],
+        requireName: '',
       }
       this.sendTemplateMsgMixin({ sessionParams, msgParams })
     },
