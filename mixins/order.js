@@ -484,20 +484,38 @@ export default {
     },
     // jump
     toContract() {
+      // 合同链接
       const contractUrl =
-        (this.orderData.contractVo2s &&
-          this.orderData.contractVo2s.length &&
-          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ') ||
-        this.orderData.contractUrl
+        this.orderData.contractVo2s &&
+        this.orderData.contractVo2s.length &&
+        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+          ? this.orderData.contractVo2s[0].contractUrl
+          : this.orderData.contractUrl
+      // 合同ID
+      const contractId =
+        this.orderData.contractVo2s &&
+        this.orderData.contractVo2s.length &&
+        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+          ? this.orderData.contractVo2s[0].contractId
+          : this.orderData.contractId
+      // 合同编号
+      const contractNo =
+        this.orderData.contractVo2s &&
+        this.orderData.contractVo2s.length &&
+        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+          ? this.orderData.contractVo2s[0].contractNo
+          : this.orderData.contractNo
       if (
         (this.orderData.contractStatus &&
           (this.orderData.contractStatus === 'STRUTS_QSZ' ||
             this.orderData.contractStatus === 'STRUTS_CG')) ||
         (this.orderData.contractVo2s &&
-          this.orderData.contractVo2s.length > 0) ||
-        (this.orderData.contractVo2s &&
           this.orderData.contractVo2s.length &&
-          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ')
+          (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+            this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG'))
       ) {
         this.$router.push({
           path: '/contract/preview',
@@ -507,6 +525,8 @@ export default {
             fromPage: this.fromPage,
             contractUrl,
             type: 'qs',
+            contractId,
+            contractNo,
           },
         })
       } else if (
@@ -523,6 +543,8 @@ export default {
             cusOrderId: this.orderData.cusOrderId,
             fromPage: this.fromPage,
             contractUrl,
+            contractId,
+            contractNo,
             type: 'yl',
           },
         })
