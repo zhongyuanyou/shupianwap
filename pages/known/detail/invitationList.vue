@@ -67,6 +67,7 @@ export default {
       finished: false,
       page: 1,
       questionId: '',
+      totalPage: 1,
     }
   },
   computed: {
@@ -104,19 +105,17 @@ export default {
           { params }
         )
         if (code === 200) {
-          if (!data.records || data.records.length === 0) {
+          if (!data.rows || data.rows.length === 0) {
             this.recommendList = []
             this.finished = true
           }
-          this.recommendList.push(...data.records)
-          if (this.page > data.totalPage) {
-            this.finished = true
-          }
-          this.loading = false
+          this.recommendList.push(...data.rows)
+          this.totalPage = data.totalPage
+          this.page++
         } else {
           this.error = true
-          this.loading = false
         }
+        this.loading = false
       } catch (e) {
         this.error = true
         this.loading = false
@@ -176,8 +175,11 @@ export default {
       }
     },
     onLoad() {
+      if (this.page > this.totalPage) {
+        this.finished = true
+        return
+      }
       this.recommendAnswerUserApi()
-      this.page++
     },
     buildAllInvited() {
       const res = []

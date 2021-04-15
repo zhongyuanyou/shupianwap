@@ -79,6 +79,7 @@ export default {
       loading: false,
       finished: false,
       page: 1,
+      totalPage: 1,
       immediateCheck: false,
       questionId: '',
     }
@@ -99,9 +100,11 @@ export default {
     // this.questionId = this.$route.query.questionId
   },
   methods: {
+    /*
     activefn() {
       console.log(this.actList)
     },
+    */
     clearInput() {
       this.keywords = ''
       this.$refs.fieldInput.$refs.inputRef.focus()
@@ -130,10 +133,8 @@ export default {
             this.finished = true
           }
           this.searchList.push(...data.records)
+          this.totalPage = data.totalPage
           this.page++
-          if (this.page > data.totalPage) {
-            this.finished = true
-          }
         } else {
           this.error = true
         }
@@ -190,6 +191,10 @@ export default {
       this.inviteApi(item)
     },
     onLoad() {
+      if (this.page > this.totalPage) {
+        this.finished = true
+        return
+      }
       this.searchAnswerUserApi()
     },
   },
