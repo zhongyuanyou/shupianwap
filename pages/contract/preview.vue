@@ -144,7 +144,7 @@ export default {
           .then((res) => {
             if (res) {
               this.loading = false
-              this.$router.push({
+              this.$router.replace({
                 path: '/contract/iframe',
                 query: {
                   src: res,

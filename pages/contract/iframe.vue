@@ -29,13 +29,7 @@ export default {
   },
   methods: {
     onLeftClick() {
-      if (this.$route.query.type === 'qs') {
-        this.$router.push({
-          path: '/contract/contractList',
-        })
-      } else {
-        this.$router.back()
-      }
+      this.$router.back()
     },
   },
 }
