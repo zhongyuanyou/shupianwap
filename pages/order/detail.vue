@@ -214,12 +214,14 @@
           </sp-button>
           <sp-button
             v-if="checkContractStatus() == 1"
+            class="btn-look"
             @click="handleClickItem(2)"
           >
             签署合同
           </sp-button>
           <sp-button
             v-if="checkContractStatus() == 2"
+            class="btn-look"
             @click="handleClickItem(3)"
           >
             查看合同
@@ -655,6 +657,9 @@ export default {
       font-family: PingFang SC;
       font-weight: 400;
       color: #999999;
+    }
+    .btn-look {
+      color: #222222;
     }
     .btn-pay {
       background: rgba(236, 83, 48, 1);

@@ -189,46 +189,6 @@ export default {
           this.$xToast.error(err.message || '获取支付信息失败')
         })
     },
-    // // 判断是分批支付还是全款支付等
-    checkCusBatchPay1() {
-      this.$refs.payModal.showPop = true
-      if (
-        this.payList.length === this.orderData.orderList.length ||
-        this.payList.length === 1
-      ) {
-        // 此时一个订单只有一个支付信息则为全款支付
-        this.$router.push({
-          path: '/pay/payType',
-          query: {
-            fromPage: this.fromPage,
-            cusOrderId: this.orderData.cusOrderId,
-            batchIds: this.batchIds,
-          },
-        })
-      } else {
-        // 是分批支付则弹起分批支付弹窗 关闭关联订单弹窗
-        this.$refs.payModal.showPop = true
-        this.$refs.cancleOrderModel.showPop = false
-        let thisTimePayTotal = 0 // 本期应付总额
-        let allTimePayTotal = 0 // 剩余未支付所有批次总额
-        const idsArr = [] // 应分批支付id
-        this.payList.forEach((element) => {
-          if (element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
-            thisTimePayTotal += Number(element.money)
-            idsArr.push(element.id)
-          }
-          if (
-            element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_0' ||
-            element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1'
-          ) {
-            allTimePayTotal += Number(element.money)
-          }
-        })
-        this.thisTimePayTotal = this.regFenToYuan(thisTimePayTotal)
-        this.allTimePayTotal = this.regFenToYuan(allTimePayTotal)
-        this.batchIds = idsArr.join(',')
-      }
-    },
     // 判断是分批支付还是全款支付等
     checkCusBatchPayType() {
       if (

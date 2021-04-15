@@ -291,7 +291,6 @@ export default {
       if (this.userInfo.userId && this.userInfo.token) {
         return true
       } else if (this.isInApp) {
-        alert()
         await this.$appFn.dggLogin()
       } else {
         this.$router.push({

@@ -38,7 +38,9 @@
               size="0.44rem"
             ></my-icon>
           </div>
-          <div class="order_text" @click="clickTab(index)">{{ item.name }}</div>
+          <div class="order_text" @click="clickTab(++index)">
+            {{ item.name }}
+          </div>
         </div>
       </div>
     </div>
