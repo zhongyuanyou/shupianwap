@@ -138,15 +138,15 @@
         </div>
       </div>
     </div>
-    <div v-if="releaseStatus === 1" class="success">
+    <div v-if="releaseStatus === 'release'" class="success">
       <div>
         <sp-icon name="certificate" size="0.45rem" color="#00B365" /><span
           >成功提问</span
         >
       </div>
-      <p>你可以邀请下面用户来更快获得回答</p>
+      <p>你可以邀请用户来更快获得回答</p>
     </div>
-    <div v-if="releaseStatus === 1" class="answer">
+    <div class="answer">
       <div class="head">
         <p>回答 {{ total }}</p>
         <div>
@@ -260,30 +260,44 @@ export default {
     [Popup.name]: Popup,
     [Dialog.name]: Dialog,
   },
-  asyncData(context) {
-    return Promise.all([
-      context.$axios.get(knownApi.questionArticle.detail, {
-        params: {
-          id: context.query.id,
-          userHandleFlag: context.store.state.user.userId ? 1 : 0,
-        },
-      }),
-    ])
-      .then((res) => {
-        if (res[0].data.categoryName) {
-          res[0].data.categoryName = res[0].data.categoryName.split(',')
-        }
-        console.log(res)
-        if (res[0] && res[0].code === 200) {
-          return {
-            questionDetials: res[0].data,
-          }
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-        Promise.reject(error)
-      })
+  async asyncData({ $axios, store, query }) {
+    // return Promise.all([
+    //   $axios.get(knownApi.questionArticle.detail, {
+    //     params: {
+    //       id: query.id,
+    //       userId: store.state.user.userId,
+    //       userHandleFlag: store.state.user.userId ? 1 : 0,
+    //     },
+    //   }),
+    // ])
+    //   .then((res) => {
+    //     if (res[0].data.categoryName) {
+    //       res[0].data.categoryName = res[0].data.categoryName.split(',')
+    //     }
+    //     console.log(res)
+    //     if (res[0] && res[0].code === 200) {
+    //       return {
+    //         questionDetials: res[0].data,
+    //       }
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error)
+    //     Promise.reject(error)
+    //   })
+    const res = await $axios.get(knownApi.questionArticle.detail, {
+      params: {
+        id: query.id,
+        userId: store.state.user.userId,
+        userHandleFlag: store.state.user.userId ? 1 : 0,
+      },
+    })
+    if (res.data.categoryName) {
+      res.data.categoryName = res.data.categoryName.split(',')
+    }
+    return {
+      questionDetials: res.data,
+    }
   },
   data() {
     return {
@@ -294,7 +308,7 @@ export default {
       scrollTop: 0,
       questionDetials: '',
       questionList: '',
-      releaseStatus: 0,
+      releaseStatus: '',
       orderBy: 'totalBrowseCount=desc',
       handleLikeType: null,
       finished: false,
@@ -635,6 +649,10 @@ export default {
       color: #222222;
       padding: 0 32px;
       line-height: 56px;
+      /deep/ img {
+        width: 100px;
+        height: auto;
+      }
     }
     > .imglist {
       display: flex;
