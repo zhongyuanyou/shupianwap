@@ -199,8 +199,6 @@ export default {
         forwardAbstract: this.imJumpQuery.forwardAbstract, // 摘要信息，可与显示内容保持一致
         routerId: this.imJumpQuery.routerId, // 路由ID
         imageUrl: this.imJumpQuery.imageUrl[0], // 产品图片
-        requireCode: this.proDetail.classCodeLevel.split(',')[0],
-        requireName: '',
         unit: this.imJumpQuery.unit, // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
       }
       this.sendTemplateMsgMixin({ sessionParams, msgParams })
