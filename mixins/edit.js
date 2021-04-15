@@ -22,6 +22,7 @@ export default {
         userId: '',
         userName: 'dsdadsada', //
         userType: '1', // 作者类型 1 普通用户 2 规划师
+        contentImageUrl: '', // 内容图片地址（多张 “,”号拼接）
       },
       topics: [], // 话题
       topicStr: '',
@@ -60,7 +61,7 @@ export default {
           imgList.push(capture)
         }
       )
-      return imgList
+      return imgList.join(',')
     },
     setTitle(val) {
       if (!val) {
@@ -109,7 +110,7 @@ export default {
     editorChange(val) {
       this.formData.content = val.html
       this.formData.contentText = val.text
-      this.formData.imgList = this.getImgSrc(val.html)
+      this.formData.contentImageUrl = this.getImgSrc(val.html)
     },
     // 新增内容
     addContent() {
