@@ -129,17 +129,17 @@
               <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
               <p>暂无数据</p>
             </div>
+            <Loading-down
+              v-if="tabBtn.length"
+              v-show="loading || tabBtn[curentItem].noMore"
+              :bg-color="tabBtn[curentItem].noData ? '#ffffff' : '#f4f4f4'"
+              :loading="loading && !tabBtn[curentItem].noMore"
+              :no-data="tabBtn[curentItem].noMore"
+            />
           </div>
         </div>
       </sp-swipe-item>
     </sp-swipe>
-    <Loading-down
-      v-if="tabBtn.length"
-      v-show="loading"
-      :bg-color="tabBtn[curentItem].noData ? '#ffffff' : '#f4f4f4'"
-      :loading="loading && !tabBtn[curentItem].noMore"
-      :no-data="tabBtn[curentItem].noMore"
-    />
   </div>
 </template>
 
@@ -221,9 +221,8 @@ export default {
         .then((res) => {
           this.tabList = res
           this.tabBtn = res.map((item) => {
-            return { ...item, goodsList: [], noData: false, limit: 10, page: 1 }
+            return { ...item, goodsList: [], noData: false, limit: 20, page: 1 }
           })
-          console.log('tabBtn', this.tabBtn)
           this.selectItem(res[0], 0)
         })
     },
@@ -241,15 +240,10 @@ export default {
         const pageClientHeight = this.$parent.$refs.homeRef.clientHeight // 文档显示区域的高度
         // 监听页面是否滚动到底部加载更多数据
         if (Math.ceil(pageScrollTop + pageClientHeight) >= pageScrollHeight) {
-          if (this.tabBtn[this.curentItem].page === 3) {
-            this.tabBtn[this.curentItem].noMore = true
-            this.loading = true
-          } else {
-            this.loading = true
-            this.tabBtn[this.curentItem].page += 1
-            this.params.findType = 2
-            this.findRecomList(this.curentItem)
-          }
+          this.loading = true
+          this.tabBtn[this.curentItem].page += 1
+          this.params.findType = 2
+          this.findRecomList(this.curentItem)
         }
       }
     },
