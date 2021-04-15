@@ -164,6 +164,8 @@ export default {
       const intentionCity = {}
       intentionCity[this.city.code] = this.city.name
       const sessionParams = {
+        requireCode: this.proDetail.classCodeLevel.split(',')[0],
+        requireName: '',
         imUserId: mchUserId, // 商户用户ID
         imUserType: type, // 用户类型
         ext: {
