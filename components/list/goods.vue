@@ -112,6 +112,21 @@ export default {
   computed: {},
   watch: {},
   mounted() {
+    if (this.classcode.classcode && this.classcode.navcode) {
+      const arr = this.classcode.classcode.split(',')
+      for (let i = 0; i < arr.length; i++) {
+        const item = {
+          id: arr[i],
+        }
+        this.itemsclass[1].services = []
+        this.itemsclass[1].services.push(item)
+      }
+      this.itemsclass[0].id = this.classcode.navcode
+      this.formData.class = this.itemsclass
+    } else if (this.classcode.navcode) {
+      this.itemsclass[0].id = this.classcode.navcode
+      this.formData.class = this.itemsclass
+    }
     this.getlist()
   },
   methods: {
@@ -121,6 +136,7 @@ export default {
       this.formData.needTypes = 0
       this.formData.price = this.priceactive
       this.formData.sort = this.sortactive
+      console.log(this.itemsclass)
       this.formData.class = this.itemsclass
       this.getlist()
     },
@@ -131,6 +147,7 @@ export default {
         this.jyFilterData[0].name = item[0].name
         this.itemsclass = item
       }
+      this.itemsclass = item
     },
     reset() {
       this.priceactive = {

@@ -191,18 +191,6 @@ export default {
     Comment,
     HeadSlot,
   },
-  data() {
-    return {
-      showHead2: false,
-      answerDetails: '',
-      headerData: {},
-      popupShow: false,
-      sourceId: '',
-      answerCollectCount: '',
-      homeUserId: '',
-      isFollow: false,
-    }
-  },
   asyncData(context) {
     return Promise.all([
       context.$axios.get(
@@ -230,6 +218,18 @@ export default {
         console.log(error)
         Promise.reject(error)
       })
+  },
+  data() {
+    return {
+      showHead2: false,
+      answerDetails: '',
+      headerData: {},
+      popupShow: false,
+      sourceId: '',
+      answerCollectCount: '',
+      homeUserId: '',
+      isFollow: false,
+    }
   },
   computed: {
     userInfo() {

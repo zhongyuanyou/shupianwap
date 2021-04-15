@@ -6,6 +6,7 @@
         :key="index"
         ref="service"
         :title="item.name"
+        @open="open"
       >
         <div v-if="item.code == 'class'" class="classification">
           <ServiceSelect
@@ -123,6 +124,7 @@ export default {
       switch2: false,
       navIndex: 0,
       classarr: [],
+      isOne: true,
       option: [
         { text: '全部商品', value: 0 },
         { text: '新款商品', value: 1 },
@@ -138,6 +140,36 @@ export default {
   },
   mounted() {},
   methods: {
+    open() {
+      if (this.isOne) {
+        if (this.classarr.length > 0) {
+          for (let i = 0; i < this.classarr.length; i++) {
+            const item = {
+              id: this.classarr[i].id,
+              name: this.classarr[i].name,
+              text: this.classarr[i].name,
+            }
+            this.$nextTick(() => {
+              this.$refs.classification[0].classarr.push(item)
+            })
+          }
+          this.$nextTick(() => {
+            // this.$refs.classification[0].handleClickNav(this.navIndex)
+            this.$refs.classification[0].active = this.navIndex
+          })
+        } else if (this.$route.query.navcode) {
+          this.$nextTick(() => {
+            if (this.$refs.service[0].showPopup) {
+              // this.$refs.classification[0]
+              // this.$refs.classification[0].handleClickNav(this.navIndex)
+              this.$refs.classification[0].active = this.navIndex
+            }
+          })
+        }
+
+        this.isOne = false
+      }
+    },
     minInput(val) {
       this.$emit('minInput', val)
     },

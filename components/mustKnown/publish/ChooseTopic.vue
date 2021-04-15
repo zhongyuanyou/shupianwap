@@ -19,7 +19,7 @@
         >
       </div>
     </div>
-    <sp-popup v-model="showPop" position="bottom">
+    <sp-popup v-model="showPop" position="bottom" @close="closePop">
       <div class="page-inner">
         <div class="title">
           <sp-button type="default" class="btn1" @click="cancel"
@@ -110,6 +110,9 @@ export default {
       selectIndex: 0,
       maxArr: [],
       topics: [],
+      submitFlag: false, // 设置是否更新result数据
+      backupResult: [],
+      backupId: '',
     }
   },
   /*
@@ -136,8 +139,12 @@ export default {
     chooseList1(item) {
       this.list2 = item.childrenList || []
       this.selectIndex = item.id
-      // 切换一级页面, 则临时结果置空
       this.result = []
+      if (this.backupId === item.id) {
+        this.renderResultView()
+      } else {
+        this.result = []
+      }
     },
     openModal() {
       this.showPop = true
@@ -145,6 +152,11 @@ export default {
     submit() {
       this.showPop = false
       this.topics = this.result
+      // start: 备份result 数据,并且设置提交标识
+      this.backupResult = this.result
+      this.submitFlag = true
+      this.backupId = this.result[0].pid
+      // end: 备份result 数据,并且设置提交标识
       const arr = this.result.map((item) => {
         return item.name
       })
@@ -198,10 +210,24 @@ export default {
             if (this.list1[0].childrenList.length > 0) {
               this.list2 = this.list1[0].childrenList
             }
-            this.selectIndex = data[0].id
+            this.selectIndex = data[0].pid
           }
         }
       } catch (e) {}
+    },
+    closePop() {
+      if (this.submitFlag) {
+        this.submitFlag = false
+      } else {
+        this.renderResultView()
+      }
+    },
+    renderResultView() {
+      this.result = this.backupResult
+      for (let i = 0, l = this.backupResult.length; i < l; i++) {
+        this.$set(this.result, i, this.backupResult[i])
+      }
+      console.log(`closepop: ${JSON.stringify(this.result)}`)
     },
   },
 }

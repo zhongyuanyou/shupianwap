@@ -115,17 +115,6 @@ export default {
     PageHead2,
     DetailArticleList,
   },
-  data() {
-    return {
-      articleList: '',
-      headerData: {},
-      showHead2: false,
-      articleDetails: '',
-      currentDetailsId: '',
-      handleType: '',
-      isFollow: false,
-    }
-  },
   asyncData(context) {
     return Promise.all([
       context.$axios.get(
@@ -151,6 +140,17 @@ export default {
         console.log(error)
         Promise.reject(error)
       })
+  },
+  data() {
+    return {
+      articleList: '',
+      headerData: {},
+      showHead2: false,
+      articleDetails: '',
+      currentDetailsId: '',
+      handleType: '',
+      isFollow: false,
+    }
   },
   computed: {
     userInfo() {

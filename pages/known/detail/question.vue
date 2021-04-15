@@ -260,26 +260,6 @@ export default {
     [Popup.name]: Popup,
     [Dialog.name]: Dialog,
   },
-  data() {
-    return {
-      title: '',
-      contentshow: false,
-      answersort: 0,
-      fixedshow: false,
-      scrollTop: 0,
-      questionDetials: '',
-      questionList: '',
-      releaseStatus: 0,
-      orderBy: 'totalBrowseCount=desc',
-      handleLikeType: null,
-      finished: false,
-      page: 1,
-      loading: false,
-      total: '',
-      popupShow: false,
-      currentDetailsId: '',
-    }
-  },
   asyncData(context) {
     return Promise.all([
       context.$axios.get(
@@ -304,6 +284,26 @@ export default {
         console.log(error)
         Promise.reject(error)
       })
+  },
+  data() {
+    return {
+      title: '',
+      contentshow: false,
+      answersort: 0,
+      fixedshow: false,
+      scrollTop: 0,
+      questionDetials: '',
+      questionList: '',
+      releaseStatus: 0,
+      orderBy: 'totalBrowseCount=desc',
+      handleLikeType: null,
+      finished: false,
+      page: 1,
+      loading: false,
+      total: '',
+      popupShow: false,
+      currentDetailsId: '',
+    }
   },
   computed: {
     userInfo() {

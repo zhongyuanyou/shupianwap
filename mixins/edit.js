@@ -96,7 +96,7 @@ export default {
           const that = this
           if (res.code && res.code === 200) {
             this.$xToast.success('发布成功')
-            this.switchUrl()
+            this.switchUrl(res.data.id)
           } else {
             this.$xToast.error('发布失败')
           }
@@ -107,34 +107,32 @@ export default {
     },
     // 页面跳转
     switchUrl(id) {
+      const _this = this
       // 新增内容时
       if (this.fromPage === 'article') {
         timeoute = setTimeout(function () {
-          this.$router.replace({
+          _this.$router.replace({
             path: '/known/detail/article',
             query: {
               id,
-              type: 'add',
             },
           })
         }, 2000)
       } else if (this.fromPage === 'question') {
         timeoute = setTimeout(function () {
-          this.$router.replace({
+          _this.$router.replace({
             path: '/known/detail/question',
             query: {
               id,
-              type: 'add',
             },
           })
         }, 2000)
       } else {
         timeoute = setTimeout(function () {
-          this.$router.replace({
+          _this.$router.replace({
             path: '/known/detail/answer',
             query: {
               id,
-              type: 'add',
             },
           })
         }, 2000)

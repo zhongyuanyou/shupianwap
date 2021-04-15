@@ -66,13 +66,15 @@
               $router.push({
                 path: '/known/newspaper',
                 query: {
-                  id: subjectList[0].id,
+                  id: subjectList ? subjectList[0].id : '',
                 },
               })
             "
           >
             <div class="news_num">{{ new Date().getDate() }}</div>
-            <div class="news_span">{{ subjectList[0].name }}</div>
+            <div class="news_span">
+              {{ subjectList ? subjectList[0].name : '' }}
+            </div>
           </div>
           <div
             class="see"
@@ -80,7 +82,7 @@
               $router.push({
                 path: '/known/mustSee',
                 query: {
-                  id: subjectList[1].id,
+                  id: subjectList ? subjectList[0].id : '',
                 },
               })
             "
@@ -88,7 +90,9 @@
             <div class="see_like">
               <my-icon name="dianzan" size="0.24rem" color="#4974F5"></my-icon>
             </div>
-            <div class="see_span">{{ subjectList[1].name }}</div>
+            <div class="see_span">
+              {{ subjectList ? subjectList[1].name : '' }}
+            </div>
           </div>
         </div>
         <ItemCard v-if="showHot" :list-data="listData" />
@@ -321,6 +325,7 @@ export default {
       this.getDate()
       this.getSubjectList() // 获取专题列表
       this.categoryList() // 获取分类列表
+      this.recommendList()
     },
     // 请求分类列表
     async categoryList() {
@@ -338,6 +343,7 @@ export default {
               name: item.name,
               categoryId: item.categoryId,
               executionParameters: item.executionParameters,
+              id: item.id,
             },
           ]
         }, [])
@@ -427,7 +433,10 @@ export default {
       )
       if (code === 200) {
         if (data.length > 0) {
-          this.subjectList = data
+          console.log('++++++++', data.length)
+          this.subjectList.push(data[1])
+          this.subjectList.push(data[2])
+          console.log(' this.subjectList', this.subjectList)
         } else {
           this.attentionStatus = false
           this.showNotAttention = true
@@ -498,9 +507,9 @@ export default {
     // 请求推荐列表数据
     async recommendList() {
       const params = {}
-      const { code, message, data } = await this.$axios.post(
+      const { code, message, data } = await this.$axios.get(
         knownApi.questionArticle.recommendList,
-        params
+        { params }
       )
       if (code === 200) {
         if (data.rows.length > 0) {
@@ -514,8 +523,9 @@ export default {
     },
     // 请求普通列表数据
     async getList(item) {
+      console.log('item', item)
       const categorIds = []
-      categorIds.push(item.categoryId)
+      categorIds.push(item.id)
       const params = {
         categorIds,
         limit: 10,

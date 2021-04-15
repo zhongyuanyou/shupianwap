@@ -194,9 +194,10 @@ export default {
         console.log('refresh:', data)
         this.onRefresh()
       })
+      // 传送到构购物车页面
       this.$appFn.dggGetUserInfo((res) => {
-        console.log('res.data', res.data)
         if (res.code === 200 && res.data.userId && res.data.token) {
+          this.$store.dispatch('user/setUser', res.data)
         }
       })
     }

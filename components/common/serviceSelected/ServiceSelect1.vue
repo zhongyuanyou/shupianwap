@@ -137,6 +137,7 @@ export default {
       activeIds: [],
       selectData: initSelectData,
       classarr: [],
+      isOne: true,
     }
   },
   computed: {
@@ -216,9 +217,7 @@ export default {
     },
   },
 
-  mounted() {
-    console.log(this.selectData, 'item')
-  },
+  mounted() {},
   methods: {
     handleClickNav(navIndex) {
       const navItem = (this.formatItems && this.formatItems[navIndex]) || {}
@@ -228,7 +227,15 @@ export default {
         [this.value]: navItem.id,
         [this.label]: navItem.text,
       })
-      this.$set(this.selectData, 1, { services: [this.childrenList[0]] })
+      if (this.isOne) {
+        this.isOne = false
+        for (let i = 0; i < this.classarr.length; i++) {
+          this.handleClickItem(this.classarr[i])
+        }
+      } else {
+        this.$set(this.selectData, 1, { services: [this.childrenList[0]] })
+      }
+
       this.$emit('navselect', clone(this.selectData, true))
     },
     handleClickItem(item = {}) {
@@ -247,7 +254,6 @@ export default {
           .concat({ ...item })
           .filter((service) => service.id !== firstItem.id) // 只要点击其他项 选中的里面有不限，则删除不限
       }
-
       // 当一个都不选择时候，默认选择第一个
       if (services && !services.length) {
         services = [firstItem]
