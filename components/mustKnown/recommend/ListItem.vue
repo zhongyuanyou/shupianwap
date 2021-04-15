@@ -16,7 +16,7 @@
         <div class="item_content">
           <div class="item_content_lf">
             <div class="item_Info">
-              <div class="userPhoto" @click="goUserDetail(item.userId)">
+              <div class="userPhoto" @click="goUserDetail(item)">
                 <img :src="item.avatar" alt="" />
               </div>
               <div class="userName">{{ item.userName }}</div>
@@ -103,7 +103,6 @@ export default {
       return browseCount * 10 + '万'
     },
     showComment(id) {
-      console.log('id', id)
       this.articleId = id
       this.commentShow = true
     },
@@ -133,11 +132,12 @@ export default {
       }
     },
     // 进入用户详情
-    goUserDetail(userId) {
+    goUserDetail(item) {
       this.$router.push({
         path: '/known/home',
         query: {
-          homeUserId: userId,
+          homeUserId: item.userId,
+          type: item.userType,
         },
       })
     },

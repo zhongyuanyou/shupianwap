@@ -7,7 +7,7 @@
           alt=""
         />
         <div class="default_title">关注列表空空如也～</div>
-        <div class="attBtn" @click="$router.push({ path: '/known/' })">
+        <div class="attBtn" @click="$router.push({ path: '/known/more' })">
           前往关注
         </div>
       </div>

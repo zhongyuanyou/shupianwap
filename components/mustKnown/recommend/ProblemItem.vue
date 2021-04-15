@@ -13,10 +13,10 @@
           {{ item.title }}
         </div>
         <div class="item_Info">
-          <div class="userPhoto" @click="goUserDetail(item.userId)">
+          <div class="userPhoto" @click="goUserDetail(item)">
             <img :src="item.avatar" alt="" />
           </div>
-          <div class="userName" @click="goUserDetail(item.userId)">
+          <div class="userName" @click="goUserDetail(item)">
             {{ item.userName }}
           </div>
         </div>
@@ -31,8 +31,12 @@
           />
         </div>
         <div class="item_bottom">
-          <span class="like">赞同</span>
-          <span class="comment"> · {{ item.remarkCount }}评论</span>
+          <span class="like" @click="goDetailPage(item.type, item.id)"
+            >赞同</span
+          >
+          <span class="comment" @click="goDetailPage(item.type, item.id)">
+            · {{ item.remarkCount }}评论</span
+          >
         </div>
       </div>
     </sp-cell>
@@ -112,11 +116,12 @@ export default {
       }
     },
     // 进入用户详情
-    goUserDetail(userId) {
+    goUserDetail(item) {
       this.$router.push({
         path: '/known/home',
         query: {
-          homeUserId: userId,
+          homeUserId: item.userId,
+          type: item.userType,
         },
       })
     },
