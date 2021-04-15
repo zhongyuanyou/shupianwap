@@ -1,6 +1,10 @@
 <template>
   <div class="recommend-moudle">
-    <sp-sticky :offset-top="searchDomHeight" @scroll="scrollHandle">
+    <sp-sticky
+      ref="tabCurveRef"
+      :offset-top="searchDomHeight"
+      @scroll="scrollHandle"
+    >
       <div class="tab-curve" :class="[isFixed ? 'fixed-tab' : '']">
         <ul class="tab-curve-list">
           <li
@@ -9,107 +13,133 @@
             style="margin-right: 0.56rem"
             @click="selectItem(item, index)"
           >
-            <span :class="[index === activeIndex ? 'tab-curve-active' : '']">{{
+            <span :class="[index === curentItem ? 'tab-curve-active' : '']">{{
               item.name
             }}</span>
           </li>
         </ul>
       </div>
     </sp-sticky>
-    <!-- S 推荐商品列表 -->
-    <div class="goods-list">
-      <sp-skeleton
-        v-for="val in goodsList"
-        :key="val + 'a'"
-        avatar-shape="square"
-        avatar-size="2.4rem"
-        title
-        title-width="100%"
-        avatar
-        :row="3"
-        :row-width="['80%', '70%', '50%']"
-        :loading="goodsList.length > 0 ? false : true && !noData"
-      >
-      </sp-skeleton>
-      <div
-        v-for="(item, index) in goodsList"
-        :key="index"
-        class="goods-item"
-        @click="jumpPage(item)"
-      >
-        <div class="goods-lable-img">
-          <span v-if="false" class="lable">2千元成交礼</span>
-          <sp-image :src="item.img"></sp-image>
-        </div>
-        <div class="goods-info">
-          <p class="goods-name">
-            {{ item.name }}
-          </p>
-          <p v-if="item.tag" class="goods-tag">
-            <span
-              v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1"
-              class="tag-item tag-tc"
-              >套餐</span
-            >
-            <span
-              v-for="(tagItem, index2) in item.tag"
-              v-show="index2 < 3"
-              :key="index2"
-              class="tag-item"
-              >{{ tagItem.tagName }}</span
-            >
-          </p>
-          <p
-            v-if="item.salesGoodsSubVos && item.salesGoodsSubVos.length === 1"
-            class="goods-slogan goods-slogan1"
-          >
-            {{
-              item.salesGoodsSubVos[0] &&
-              item.salesGoodsSubVos[0].goodsSubDetailsName
-            }}
-          </p>
-          <p v-else class="goods-slogan goods-slogan1">
-            {{ item.salesGoodsOperatings && item.salesGoodsOperatings.slogan }}
-          </p>
-          <div class="goods-price">
-            <span
-              v-if="
-                item.price == 0 ||
-                item.price === '0.00' ||
-                item.price === '0.0' ||
-                item.price === '0'
+    <sp-skeleton
+      v-for="val in 10"
+      v-show="loadingList"
+      :key="val + 'a'"
+      avatar-shape="square"
+      avatar-size="2.4rem"
+      title
+      title-width="100%"
+      avatar
+      :row="3"
+      :row-width="['80%', '70%', '50%']"
+      :loading="loadingList"
+    >
+    </sp-skeleton>
+    <!-- E 推荐模块tab -->
+    <sp-swipe
+      ref="recomRef"
+      class="my-swipe"
+      :show-indicators="false"
+      @change="onChange"
+    >
+      <sp-swipe-item v-for="(swipItem, index) in tabBtn" :key="index">
+        <div v-show="index === curentItem">
+          <div class="goods-list">
+            <sp-skeleton
+              v-for="val in 20"
+              :key="val + 'a'"
+              avatar-shape="square"
+              avatar-size="2.4rem"
+              title
+              title-width="100%"
+              avatar
+              :row="3"
+              :row-width="['80%', '70%', '50%']"
+              :loading="
+                swipItem.goodsList.length > 0 ? false : true && !swipItem.noData
               "
-              class="sales-proce"
-              ><span class="big-value">面议</span></span
             >
-            <span v-else class="sales-proce">
-              <span class="big-value"
-                >{{ item.price || item.salesPrice }}元</span
-              >
-              <!-- <span
-                v-if="priceRest(1, item.price || item.salesPrice)"
-                class="small-value"
-                >.{{ priceRest(1, item.price || item.salesPrice) }}</span
-              >
-              <span class="unit">元</span> -->
-            </span>
-            <!-- <span class="original-price"
-              >{{ item.goodsPrice || item.price || item.salesPrice }}元</span
-            > -->
+            </sp-skeleton>
+            <div
+              v-for="(item, goodsIndex) in swipItem.goodsList"
+              :key="goodsIndex"
+              class="goods-item"
+              @click="jumpPage(item)"
+            >
+              <div class="goods-lable-img">
+                <span v-if="false" class="lable">2千元成交礼</span>
+                <sp-image :src="item.img"></sp-image>
+              </div>
+              <div class="goods-info">
+                <p class="goods-name">
+                  {{ item.name }}
+                </p>
+                <p v-if="item.tag" class="goods-tag">
+                  <span
+                    v-if="
+                      item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
+                    "
+                    class="tag-item tag-tc"
+                    >套餐</span
+                  >
+                  <span
+                    v-for="(tagItem, index2) in item.tag"
+                    v-show="index2 < 3"
+                    :key="index2"
+                    class="tag-item"
+                    >{{ tagItem.tagName }}</span
+                  >
+                </p>
+                <p
+                  v-if="
+                    item.salesGoodsSubVos && item.salesGoodsSubVos.length === 1
+                  "
+                  class="goods-slogan goods-slogan1"
+                >
+                  {{
+                    item.salesGoodsSubVos[0] &&
+                    item.salesGoodsSubVos[0].goodsSubDetailsName
+                  }}
+                </p>
+                <p v-else class="goods-slogan goods-slogan1">
+                  {{
+                    item.salesGoodsOperatings &&
+                    item.salesGoodsOperatings.slogan
+                  }}
+                </p>
+                <div class="goods-price">
+                  <span
+                    v-if="
+                      item.price == 0 ||
+                      item.price === '0.00' ||
+                      item.price === '0.0' ||
+                      item.price === '0'
+                    "
+                    class="sales-proce"
+                    ><span class="big-value">面议</span></span
+                  >
+                  <span v-else class="sales-proce">
+                    <span class="big-value"
+                      >{{ item.price || item.salesPrice }}元</span
+                    >
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div v-if="swipItem.noData" class="no-data">
+              <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
+              <p>暂无数据</p>
+            </div>
+            <Loading-down
+              v-if="tabBtn.length"
+              v-show="loading || tabBtn[curentItem].noMore"
+              :bg-color="tabBtn[curentItem].noData ? '#ffffff' : '#f4f4f4'"
+              :loading="loading && !tabBtn[curentItem].noMore"
+              :no-data="tabBtn[curentItem].noMore"
+            />
           </div>
         </div>
-      </div>
-      <div v-if="noData" class="no-data">
-        <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
-        <p>暂无数据</p>
-      </div>
-    </div>
-    <Loading-down
-      v-if="goodsList.length"
-      :bg-color="noData ? '#ffffff' : '#f4f4f4'"
-      :loading="loading"
-      :no-data="noMore"
-    />
+      </sp-swipe-item>
+    </sp-swipe>
   </div>
 </template>
 
@@ -133,13 +163,9 @@ export default {
   data() {
     return {
       isFixed: false,
-      tabBtn: [],
       loading: false,
       curentItem: 0,
-      activeIndex: '',
       searchDomHeight: 0,
-      noData: true,
-      noMore: false,
       tabList: [],
       params: {
         userId: '', // 用户id
@@ -156,7 +182,8 @@ export default {
         storeId: '', // 商户id
         productType: 'PRO_CLASS_TYPE_SALES',
       },
-      goodsList: [],
+      tabBtn: [],
+      loadingList: true,
     }
   },
   computed: {
@@ -193,21 +220,30 @@ export default {
         )
         .then((res) => {
           this.tabList = res
-          if (res.length) this.selectItem(res[0], 0)
+          this.tabBtn = res.map((item) => {
+            return { ...item, goodsList: [], noData: false, limit: 20, page: 1 }
+          })
+          this.selectItem(res[0], 0)
         })
     },
     // 滚动加载更多
     handleScroll() {
       const pageScrollTop = this.$parent.$refs.homeRef.scrollTop // 滚动条距离顶部的位置
       this.$parent.pageScrollTop = pageScrollTop
-      if (this.goodsList.length && !this.loading && !this.noMore) {
+      if (
+        this.tabBtn.length &&
+        this.tabBtn[this.curentItem].goodsList.length &&
+        !this.loading &&
+        !this.tabBtn[this.curentItem].noMore
+      ) {
         const pageScrollHeight = this.$parent.$refs.homeRef.scrollHeight // 页面文档的总高度
         const pageClientHeight = this.$parent.$refs.homeRef.clientHeight // 文档显示区域的高度
         // 监听页面是否滚动到底部加载更多数据
         if (Math.ceil(pageScrollTop + pageClientHeight) >= pageScrollHeight) {
           this.loading = true
-          this.params.page.pageNo++
-          this.findRecomList()
+          this.tabBtn[this.curentItem].page += 1
+          this.params.findType = 2
+          this.findRecomList(this.curentItem)
         }
       }
     },
@@ -217,11 +253,7 @@ export default {
     },
     selectItem(item, index) {
       this.params.formatId = item.ext3
-      this.activeIndex = index
-      this.goodsList = []
-      this.noData = false
-      this.loading = true
-      this.params.page.pageNo = 1
+      this.$refs.recomRef.swipeTo(index)
       this.findRecomList(index)
     },
     preventTouch(e) {
@@ -231,21 +263,28 @@ export default {
     findRecomList(index) {
       const params = this.params
       params.areaCode = this.cityCode || '510100'
+      params.page = {
+        pageNo: this.tabBtn[index].page,
+        limit: this.tabBtn[index].limit,
+      }
       this.$axios.post(recommendApi.saleList, params).then((res) => {
+        this.loadingList = false
         this.loading = false
         if (res.code === 200) {
+          this.tabBtn[index].noData = res.data.records.length === 0
+          if (this.tabBtn[index].page === 1) {
+            this.tabBtn[index].goodsList = res.data.records
+          } else {
+            this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
+              res.data.records
+            )
+          }
           // 加载更多时无更多数据
-          if (!res.data.records.length) {
-            this.noData = true
-            return
+          if (!res.data.records.length && this.tabBtn[index].goodsList.length) {
+            this.tabBtn[index].noMore = true
           }
-          this.goodsList = this.goodsList.concat(res.data.records)
-          this.noData = false
         } else {
-          if (!this.goodsList.length) {
-            this.noData = true
-          }
-          this.params.page.pageNo--
+          this.tabBtn[index].page--
         }
       })
     },
@@ -263,6 +302,27 @@ export default {
           productId: item.id,
         },
       })
+    },
+    // 切换轮播
+    onChange(index) {
+      this.switchHandle(index)
+      if (this.isFixed) {
+        this.$nextTick(() => {
+          const tabCurveDomHeight = this.$refs.tabCurveRef.clientHeight // 获取吸顶头部tab栏高度
+          this.listOffsetTop =
+            this.$refs.recomRef.$el.offsetTop -
+            this.searchDomHeight -
+            tabCurveDomHeight // 推荐列表距离顶部的距离 - 搜索栏高度 - tab栏高度 （用于切换tab重置列表滚动位置）
+          this.$parent.$refs.homeRef.scrollTop = 5300
+        })
+      }
+      this.curentItem = index
+    },
+    switchHandle(index) {
+      // 切换没有数据时加载数据
+      if (!this.tabBtn[index].goodsList.length) {
+        this.findRecomList(index)
+      }
     },
   },
 }
@@ -374,13 +434,11 @@ export default {
     }
   }
 }
-.my-swipe {
-  /deep/ .sp-skeleton {
-    padding: 32px 0;
-  }
-  /deep/ .sp-skeleton__content {
-    padding-top: 0;
-  }
+/deep/ .sp-skeleton {
+  padding: 32px 0;
+}
+/deep/ .sp-skeleton__content {
+  padding-top: 0;
 }
 .goods-item {
   font-size: 24px;

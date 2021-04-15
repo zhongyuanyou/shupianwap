@@ -17,8 +17,21 @@
         <sp-tab name="ORDER_CUS_STATUS_CANCELLED" title="已取消"></sp-tab>
       </sp-tabs>
     </div>
-    <div ref="scrollView" class="page-list" @scroll="handleScollList">
+    <div ref="scrollView" class="page-list" @scroll="scollChange">
       <div class="scroll-inner">
+        <sp-skeleton
+          v-for="val in 10"
+          v-show="loadingList"
+          :key="val + 'a'"
+          avatar-shape="square"
+          avatar-size="2.4rem"
+          title
+          title-width="100%"
+          avatar
+          :row="3"
+          :row-width="['80%', '70%', '50%']"
+        >
+        </sp-skeleton>
         <orderItem
           v-for="(item, index) in list"
           :key="index"
@@ -67,7 +80,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex'
-import { Tab, Tabs, Loading } from '@chipspc/vant-dgg'
+import { Tab, Tabs, Loading, Skeleton } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import OrderItem from '@/components/order/OrderItem'
 import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
@@ -81,6 +94,7 @@ export default {
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
     [Loading.name]: Loading,
+    [Skeleton.name]: Skeleton,
     Header,
     OrderItem,
     CancelOrder,
@@ -91,6 +105,7 @@ export default {
   mixins: [OrderMixins],
   data() {
     return {
+      loadingList: true,
       page: 1,
       limit: 10,
       loading: true,
@@ -146,8 +161,12 @@ export default {
       const scrollHeight = this.$refs.scrollView.scrollHeight
       const windowHeight = window.innerHeight
       // 提前100px拉取下页数据
-      if (scrollTop + windowHeight > scrollHeight - 100) {
-        this.getOrderList()
+      if (scrollTop + windowHeight > scrollHeight) {
+        if (!this.loading && !this.loadingMore && !this.noMore) {
+          this.loadingMore = true
+          this.page++
+          this.getOrderList()
+        }
       }
     },
     throttle(func, wait, mustRun) {
@@ -173,8 +192,8 @@ export default {
       this.page = 1
       this.selectedOrderStatus = name
       this.loadingMore = false
-      this.loading = false
       this.noMore = false
+      this.loading = true
       this.list = []
       this.getOrderList()
     },
@@ -182,13 +201,6 @@ export default {
       this.$router.push('../shopCart/')
     },
     getOrderList() {
-      // 正在下拉加载则不加载更多
-      if (this.loadingMore || this.noMore) return
-      if (this.page === 1) {
-        this.loading = true
-      } else {
-        this.loadingMore = true
-      }
       this.noMore = false
       orderApi
         .list(
@@ -200,29 +212,23 @@ export default {
           }
         )
         .then((res) => {
+          if (res.totalCount <= this.page * this.limit) {
+            this.noMore = true
+          }
           this.loading = false
           this.loadingMore = false
           const arr = res.records
+          for (let i = 0, l = arr.length; i < l; i++) {
+            this.changeMoney(arr[i])
+          }
           if (this.page === 1) {
-            this.list = []
-          }
-          if (arr.length) {
-            if (arr.length <= this.limit) this.noMore = true
-            for (let i = 0, l = arr.length; i < l; i++) {
-              this.changeMoney(arr[i])
-            }
-            if (res.currentPage === this.page) {
-              this.list = arr
-            } else {
-              const nowData = JSON.parse(JSON.stringify(this.list))
-              const allData = nowData.concat(arr)
-              this.list = allData
-            }
-            this.page++
+            this.list = arr
           } else {
-            this.noMore = true
-            this.list = []
+            const nowData = JSON.parse(JSON.stringify(this.list))
+            const allData = nowData.concat(arr)
+            this.list = allData
           }
+          this.loadingList = false
         })
         .catch((error) => {
           if (this.page === 1) {
@@ -231,6 +237,7 @@ export default {
           this.loading = false
           this.loadingMore = false
           this.$xToast.error(error.message || '请求失败，请重试')
+          this.loadingList = false
         })
     },
     handleClickItem(type, order) {

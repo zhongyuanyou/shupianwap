@@ -4,7 +4,8 @@
     v-model="loading"
     :finished="finished"
     offset="0"
-    finished-text="没有更多了"
+    :finished-text="listData.length == 0 ? '' : '没有更多了'"
+    @load="onLoad"
   >
     <sp-cell v-for="(item, index) in listData" :key="index">
       <div class="item">
@@ -28,7 +29,7 @@
               {{ item.title }}
             </p>
             <span class="item_bottom"
-              >{{ computeHotNumber(item.browseCount) }} 万热度</span
+              >{{ computeHotNumber(item.browseCount) || 0 }} 热度</span
             >
           </div>
           <div class="item_img" @click="goDetailPage(item.type, item.id)">
@@ -91,15 +92,17 @@ export default {
       },
     },
   },
-
   data() {
     return {
-      loading: true,
-      finished: false,
+      loading: false,
+      finished: true,
+      isLoading: false,
+      pages: 0,
     }
   },
   computed: {},
   methods: {
+    init() {},
     // 调到推荐页面
     goRecommend() {
       this.$router.push({
@@ -107,7 +110,11 @@ export default {
       })
     },
     computeHotNumber(browseCount) {
-      return browseCount / 10000
+      if (browseCount > 10000) {
+        return browseCount / 10000 + '万'
+      } else {
+        return browseCount
+      }
     },
     // 进入文章/问题/回答详情页面
     goDetailPage(type, id) {
@@ -133,6 +140,10 @@ export default {
           },
         })
       }
+    },
+    onLoad() {
+      this.pages++
+      this.$emit('load', this.pages)
     },
   },
 }
@@ -171,6 +182,10 @@ export default {
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
       color: #999999;
+      width: 0.33rem;
+      height: 0.44rem;
+      margin-top: 0.1rem;
+      margin-right: 0.2rem;
     }
     .first {
       width: 30px;
@@ -180,6 +195,7 @@ export default {
       margin-right: 20px;
       color: #fff;
       background-size: 100%;
+      line-height: 40px;
     }
     .second {
       width: 30px;
@@ -189,6 +205,7 @@ export default {
       margin-right: 20px;
       color: #fff;
       background-size: 100%;
+      line-height: 40px;
     }
     .third {
       width: 30px;
@@ -198,6 +215,7 @@ export default {
       margin-right: 20px;
       color: #fff;
       background-size: 100%;
+      line-height: 40px;
     }
     .item_content {
       width: 398px;

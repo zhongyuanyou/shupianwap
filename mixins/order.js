@@ -214,21 +214,19 @@ export default {
         const idsArr = [] // 应分批支付id
         this.payList.forEach((element) => {
           if (element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
-            thisTimePayTotal += element.money
+            thisTimePayTotal += Number(element.money)
             idsArr.push(element.id)
           }
           if (
             element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_0' ||
             element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1'
           ) {
-            allTimePayTotal += element.money
+            allTimePayTotal += Number(element.money)
           }
         })
         this.thisTimePayTotal = this.regFenToYuan(thisTimePayTotal)
         this.allTimePayTotal = this.regFenToYuan(allTimePayTotal)
         this.batchIds = idsArr.join(',')
-        console.log('本期应付总额:thisTimePayTotal:', thisTimePayTotal)
-        console.log('全款支付剩余应付总额thisTimePayTotal:', thisTimePayTotal)
       }
     },
     // 判断是分批支付还是全款支付等
@@ -254,21 +252,19 @@ export default {
         const idsArr = [] // 应分批支付id
         this.payList.forEach((element) => {
           if (element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
-            thisTimePayTotal += element.money
+            thisTimePayTotal += Number(element.money)
             idsArr.push(element.id)
           }
           if (
             element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_0' ||
             element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1'
           ) {
-            allTimePayTotal += element.money
+            allTimePayTotal += Number(element.money)
           }
         })
-        this.thisTimePayTotal = thisTimePayTotal
-        this.allTimePayTotal = allTimePayTotal
+        this.thisTimePayTotal = this.regFenToYuan(thisTimePayTotal)
+        this.allTimePayTotal = this.regFenToYuan(allTimePayTotal)
         this.batchIds = idsArr.join(',')
-        console.log('本期应付总额:thisTimePayTotal:', thisTimePayTotal)
-        console.log('全款支付剩余应付总额thisTimePayTotal:', thisTimePayTotal)
       }
     },
     // 判断展示合同按钮 false不展示  1签署合同 2查看合同
@@ -438,7 +434,7 @@ export default {
       if (orderItem.orderTotalMoney && orderItem.depositAmount)
         // 尾款
         orderItem.lastAount = this.regFenToYuan(
-          orderItem.orderTotalMoney - orderItem.depositAmount
+          Number(orderItem.orderTotalMoney) - Number(orderItem.depositAmount)
         )
       else orderItem.lastAount = '0.00'
       if (orderItem.depositAmount)
@@ -495,6 +491,8 @@ export default {
         this.orderData.contractUrl
       if (
         this.orderData.contractStatus === 'STRUTS_QSZ' ||
+        this.orderData.contractStatus === 'STRUTS_CG' ||
+        this.orderData.contractVo2s.length > 0 ||
         (this.orderData.contractVo2s &&
           this.orderData.contractVo2s.length &&
           this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ')

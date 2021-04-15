@@ -55,48 +55,70 @@
       <!-- 关注end -->
       <!-- 推荐列表 start-->
       <section>
-        <ListItem v-if="showRecommend" :normal-list-data="normalListData" />
+        <sp-pull-refresh
+          v-model="isLoading"
+          success-text="刷新成功"
+          @refresh="onRefresh"
+        >
+          <ListItem v-if="showRecommend" :normal-list-data="normalListData" />
+        </sp-pull-refresh>
       </section>
       <!-- 推荐列表 end-->
-      <section v-if="showHot">
-        <div class="container_news_see">
-          <div
-            class="news"
-            @click="
-              $router.push({
-                path: '/known/newspaper',
-                query: {
-                  id: subjectList ? subjectList[0].id : '',
-                },
-              })
-            "
-          >
-            <div class="news_num">{{ new Date().getDate() }}</div>
-            <div class="news_span">
-              {{ subjectList ? subjectList[0].name : '' }}
+      <!-- 热榜 start -->
+      <sp-pull-refresh
+        v-model="isLoading"
+        success-text="刷新成功"
+        @refresh="onRefresh"
+      >
+        <section v-if="showHot">
+          <div class="container_news_see">
+            <div
+              class="news"
+              @click="
+                $router.push({
+                  path: '/known/newspaper',
+                  query: {
+                    id: subjectList ? subjectList[0].id : '',
+                  },
+                })
+              "
+            >
+              <div class="news_num">{{ new Date().getDate() }}</div>
+              <div class="news_span">
+                {{ subjectList ? subjectList[0].name : '' }}
+              </div>
+            </div>
+            <div
+              class="see"
+              @click="
+                $router.push({
+                  path: '/known/mustSee',
+                  query: {
+                    id: subjectList ? subjectList[1].id : '',
+                  },
+                })
+              "
+            >
+              <div class="see_like">
+                <my-icon
+                  name="dianzan"
+                  size="0.24rem"
+                  color="#4974F5"
+                ></my-icon>
+              </div>
+              <div class="see_span">
+                {{ subjectList ? subjectList[1].name : '' }}
+              </div>
             </div>
           </div>
-          <div
-            class="see"
-            @click="
-              $router.push({
-                path: '/known/mustSee',
-                query: {
-                  id: subjectList ? subjectList[0].id : '',
-                },
-              })
-            "
-          >
-            <div class="see_like">
-              <my-icon name="dianzan" size="0.24rem" color="#4974F5"></my-icon>
-            </div>
-            <div class="see_span">
-              {{ subjectList ? subjectList[1].name : '' }}
-            </div>
-          </div>
-        </div>
-        <ItemCard v-if="showHot" :list-data="listData" />
-      </section>
+          <ItemCard
+            v-if="showHot"
+            :list-data="listData"
+            @load="requestHotList"
+          />
+        </section>
+      </sp-pull-refresh>
+      <!-- 热榜 end -->
       <section>
         <ListItem v-if="normalList" :normal-list-data="normalListData" />
       </section>
@@ -218,7 +240,15 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { WorkTab, WorkTabs, Popup, Sticky, Tab, Tabs } from '@chipspc/vant-dgg'
+import {
+  WorkTab,
+  WorkTabs,
+  Popup,
+  Sticky,
+  Tab,
+  Tabs,
+  PullRefresh,
+} from '@chipspc/vant-dgg'
 import AttentionItem from '@/components/mustKnown/recommend/AttentionItem'
 import Answer from '@/components/mustKnown/answer/Answer'
 import NotAttention from '@/components/mustKnown/recommend/NotAttention'
@@ -238,6 +268,7 @@ export default {
     [Sticky.name]: Sticky,
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
+    [PullRefresh.name]: PullRefresh,
     Search,
     Answer,
     ListItem,
@@ -249,6 +280,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       answerList: [],
       subjectList: [],
       listData: [],
@@ -354,7 +386,6 @@ export default {
           }
         }
       } else {
-        console.log(message)
         this.loading = false
         this.finished = true
       }
@@ -404,7 +435,7 @@ export default {
         this.shwoAnswer = false
         this.showHot = true
         // 请求热榜列表
-        await this.hotList()
+        await this.hotList(item)
       } else if (item.executionParameters === 'huida') {
         this.showNotAttention = false
         this.shwoAnswer = true
@@ -433,22 +464,19 @@ export default {
       )
       if (code === 200) {
         if (data.length > 0) {
-          console.log('++++++++', data.length)
           this.subjectList.push(data[1])
           this.subjectList.push(data[2])
-          console.log(' this.subjectList', this.subjectList)
         } else {
           this.attentionStatus = false
           this.showNotAttention = true
         }
       } else {
-        console.log(message)
       }
     },
     // 请求关注用户的数据
     async focusFansList() {
       const params = {
-        handleUserId: 118,
+        handleUserId: this.$cookies.get('userId'),
         handleType: 1,
         limit: 10,
         page: 1,
@@ -461,19 +489,18 @@ export default {
         if (data.rows.length > 0) {
           this.userData = data.rows
         } else {
-          // this.attentionStatus = false
-          // this.showNotAttention = true
         }
       } else {
-        console.log(message)
       }
     },
     // 请求关注用户的列表数据
     async attentionList() {
       const params = {}
-      params.handleUserId = 118
+      params.handleUserId = this.$cookies.get('userId')
       params.dateType = 0
       params.userHandleFlag = 1
+      params.limit = 10
+      params.page = 1
       const { code, message, data } = await this.$axios.post(
         knownApi.questionArticle.attentionUserList,
         params
@@ -484,46 +511,48 @@ export default {
         } else {
         }
       } else {
-        console.log(message)
       }
     },
     // 请求热榜列表数据
-    async hotList() {
-      const params = {}
+    async hotList(item) {
+      const categorIds = []
+      categorIds.push(item.id)
+      const params = {
+        categorIds,
+      }
       const { code, message, data } = await this.$axios.post(
         knownApi.questionArticle.list,
         params
       )
       if (code === 200) {
         if (data.rows.length > 0) {
-          console.log('this.rows', data.rows)
           this.listData = data.rows
         } else {
         }
       } else {
-        console.log(message)
       }
     },
     // 请求推荐列表数据
     async recommendList() {
-      const params = {}
+      const params = {
+        limit: 10,
+        page: 1,
+      }
       const { code, message, data } = await this.$axios.get(
         knownApi.questionArticle.recommendList,
         { params }
       )
       if (code === 200) {
         if (data.rows.length > 0) {
-          console.log('this.rows', data.rows)
           this.normalListData = data.rows
         } else {
         }
       } else {
-        console.log(message)
       }
     },
     // 请求普通列表数据
     async getList(item) {
-      console.log('item', item)
+      this.normalListData = []
       const categorIds = []
       categorIds.push(item.id)
       const params = {
@@ -538,11 +567,9 @@ export default {
       if (code === 200) {
         if (data.rows.length > 0) {
           this.normalListData = data.rows
-          console.log('this.normalListData', this.normalListData)
         } else {
         }
       } else {
-        console.log(message)
       }
     },
     // 请求回答列表
@@ -560,12 +587,10 @@ export default {
       )
       if (code === 200) {
         if (data.rows.length > 0) {
-          console.log('this.rows', data.rows)
           this.answerList = data.rows
         } else {
         }
       } else {
-        console.log(message)
       }
     },
     // 打开弹出框
@@ -577,7 +602,6 @@ export default {
     // 回到上一页
     getBackIndex(event) {
       if (event) {
-        console.log(event)
       }
     },
     // 打开文章编辑框
@@ -602,7 +626,6 @@ export default {
     },
     // 添加到我的列表中
     addToMyPlate(index) {
-      console.log('index', index)
       const arrayValue = this.morePlate[index]
       if (arrayValue) {
         this.myPlate.push(arrayValue)
@@ -611,15 +634,18 @@ export default {
     },
     // 打开弹出框
     openPop() {
-      console.log('this.open')
       this.showPop = true
     },
-    submit() {
-      console.log('this.submit')
-    },
+    submit() {},
     // 获取日期
     getDate() {
       this.nowDate = new Date().getDate()
+    },
+    onRefresh() {
+      this.hotList()
+    },
+    requestHotList(page) {
+      console.log('+++++++++page', page)
     },
   },
 }
