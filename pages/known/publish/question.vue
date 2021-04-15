@@ -11,7 +11,7 @@
         ref="myTitle"
         :max-length="50"
         :title="formData.title"
-        :custPlaceholder="myPlaceholder"
+        :cust-placeholder="myPlaceholder"
         @setTitle="setTitle"
       />
       <div class="content">
