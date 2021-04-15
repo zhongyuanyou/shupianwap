@@ -93,8 +93,12 @@ export default {
       const arr3 = val.map((item) => {
         return item.id
       })
+      // 接口新返回字段,进行处理
+      const arrLevelIds = val.map((item) => {
+        return item.levelIds
+      })
       this.formData.categoryId = arr3.join(',')
-      this.formData.categoryLevelIds = arr3.join(',')
+      this.formData.categoryLevelIds = arrLevelIds.join(',')
       console.log('话题', this.topics)
       console.log('topicStr', this.topicStr)
     },
