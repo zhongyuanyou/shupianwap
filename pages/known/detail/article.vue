@@ -115,68 +115,37 @@ export default {
     PageHead2,
     DetailArticleList,
   },
+  asyncData(context) {
+    return Promise.all([
+      context.$axios.get(
+        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do',
+        {
+          params: { id: '8065065421625749504', userHandleFlag: 1 },
+        }
+      ),
+    ])
+      .then((res) => {
+        if (res[0] && res[0].code === 200) {
+          return {
+            articleDetails: res[0].data,
+            headerData: {
+              createrName: res[0].createrName,
+              contentText: res[0].contentText,
+              avatar: res[0].avatar,
+            },
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        Promise.reject(error)
+      })
+  },
   data() {
     return {
       articleList: '',
       headerData: {},
       showHead2: false,
-      commentList: [
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-        {
-          username: '用户1',
-          img: 'https://cn.vuejs.org/images/logo.png',
-          time: '2010-01-11',
-          content:
-            '看串行，看成“祝每一个有梦想的人，都死得其所看串行，看成“祝每一个有梦想的人。',
-          isLike: true,
-          Likes: '1111',
-        },
-      ],
-      commentList2: [],
       articleDetails: '',
       currentDetailsId: '',
       handleType: '',
@@ -189,21 +158,14 @@ export default {
     },
   },
   created() {
-    if (this.$route.params.id) {
-      this.currentDetailsId = this.$route.params.id
-    } else {
-      this.currentDetailsId = '8065065421625749504'
+    if (this.$route.query.id) {
+      this.currentDetailsId = this.$route.query.id
     }
-    this.getDetailData()
     this.getRecommendData()
     this.initFollow()
   },
 
   mounted() {
-    this.commentList2 = JSON.parse(JSON.stringify(this.commentList)).splice(
-      0,
-      2
-    )
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
@@ -291,10 +253,7 @@ export default {
         .get(knownApi.questionArticle.detail, {
           params: {
             id: this.currentDetailsId,
-            userId: this.userInfo.userId || '120',
             userHandleFlag: 1,
-            userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-            userName: this.userInfo.userName || '测试用户',
           },
         })
         .then((res) => {
@@ -304,8 +263,6 @@ export default {
             this.headerData.createrName = this.articleDetails.createrName
             this.headerData.contentText = this.articleDetails.contentText
             this.headerData.avatar = this.articleDetails.avatar
-            this.articleDetails.content =
-              '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'
           } else {
             Toast.fail({
               duration: 2000,

@@ -66,13 +66,15 @@
               $router.push({
                 path: '/known/newspaper',
                 query: {
-                  id: subjectList[0].id,
+                  id: subjectList ? subjectList[0].id : '',
                 },
               })
             "
           >
             <div class="news_num">{{ new Date().getDate() }}</div>
-            <div class="news_span">{{ subjectList[0].name }}</div>
+            <div class="news_span">
+              {{ subjectList ? subjectList[0].name : '' }}
+            </div>
           </div>
           <div
             class="see"
@@ -80,7 +82,7 @@
               $router.push({
                 path: '/known/mustSee',
                 query: {
-                  id: subjectList[1].id,
+                  id: subjectList ? subjectList[0].id : '',
                 },
               })
             "
@@ -88,7 +90,9 @@
             <div class="see_like">
               <my-icon name="dianzan" size="0.24rem" color="#4974F5"></my-icon>
             </div>
-            <div class="see_span">{{ subjectList[1].name }}</div>
+            <div class="see_span">
+              {{ subjectList ? subjectList[1].name : '' }}
+            </div>
           </div>
         </div>
         <ItemCard v-if="showHot" :list-data="listData" />
@@ -306,7 +310,11 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       isShowOpenApp: (state) => state.app.isShowOpenApp,
+      token: (state) => state.user.userInfo.token,
     }),
+    userInfo() {
+      return this.$store.state.user
+    },
   },
   mounted() {
     this.type = this.$route.query.type
@@ -317,6 +325,7 @@ export default {
       this.getDate()
       this.getSubjectList() // 获取专题列表
       this.categoryList() // 获取分类列表
+      this.recommendList()
     },
     // 请求分类列表
     async categoryList() {
@@ -334,6 +343,7 @@ export default {
               name: item.name,
               categoryId: item.categoryId,
               executionParameters: item.executionParameters,
+              id: item.id,
             },
           ]
         }, [])
@@ -359,6 +369,7 @@ export default {
       // 去请求推荐列表数据
       if (item.executionParameters === 'tuijian') {
         this.showRecommend = true
+        this.showNotAttention = false
         this.attentionStatus = false
         this.showHot = false
         this.normalList = false
@@ -367,33 +378,45 @@ export default {
         await this.recommendList()
         // 去请求关注列表数据
       } else if (item.executionParameters === 'guanzhu') {
-        this.attentionStatus = true
-        this.showRecommend = false
-        this.normalList = false
-        this.showHot = false
-        this.shwoAnswer = false
-        await this.attentionList() // 获取关注用户动态列表
-        await this.focusFansList() // 获取关注列表
+        if (!this.token) {
+          this.showNotAttention = true
+          this.attentionStatus = false
+          this.showRecommend = false
+          this.normalList = false
+          this.showHot = false
+          this.shwoAnswer = false
+        } else {
+          this.attentionStatus = true
+          this.showNotAttention = false
+          this.showRecommend = false
+          this.normalList = false
+          this.showHot = false
+          this.shwoAnswer = false
+          await this.attentionList() // 获取关注用户动态列表
+          await this.focusFansList() // 获取关注列表
+        }
         // 请求热榜数据
       } else if (item.executionParameters === 'rebang') {
+        this.showNotAttention = false
         this.attentionStatus = false
         this.showRecommend = false
         this.normalList = false
         this.shwoAnswer = false
         this.showHot = true
-
         // 请求热榜列表
         await this.hotList()
       } else if (item.executionParameters === 'huida') {
+        this.showNotAttention = false
         this.shwoAnswer = true
         this.attentionStatus = false
         this.showRecommend = false
         this.normalList = false
         this.showHot = false
-        // 请求热榜列表
         await this.getAnswerList()
       } else {
         this.normalList = true
+        this.showNotAttention = false
+        this.showNotAttention = false
         this.attentionStatus = false
         this.showRecommend = false
         this.showHot = false
@@ -410,7 +433,10 @@ export default {
       )
       if (code === 200) {
         if (data.length > 0) {
-          this.subjectList = data
+          console.log('++++++++', data.length)
+          this.subjectList.push(data[1])
+          this.subjectList.push(data[2])
+          console.log(' this.subjectList', this.subjectList)
         } else {
           this.attentionStatus = false
           this.showNotAttention = true
@@ -435,8 +461,8 @@ export default {
         if (data.rows.length > 0) {
           this.userData = data.rows
         } else {
-          this.attentionStatus = false
-          this.showNotAttention = true
+          // this.attentionStatus = false
+          // this.showNotAttention = true
         }
       } else {
         console.log(message)
@@ -456,8 +482,6 @@ export default {
         if (data.rows.length > 0) {
           this.listData = data.rows
         } else {
-          this.attentionStatus = false
-          this.showNotAttention = true
         }
       } else {
         console.log(message)
@@ -475,8 +499,6 @@ export default {
           console.log('this.rows', data.rows)
           this.listData = data.rows
         } else {
-          this.attentionStatus = false
-          this.showNotAttention = true
         }
       } else {
         console.log(message)
@@ -485,17 +507,15 @@ export default {
     // 请求推荐列表数据
     async recommendList() {
       const params = {}
-      const { code, message, data } = await this.$axios.post(
+      const { code, message, data } = await this.$axios.get(
         knownApi.questionArticle.recommendList,
-        params
+        { params }
       )
       if (code === 200) {
         if (data.rows.length > 0) {
           console.log('this.rows', data.rows)
           this.normalListData = data.rows
         } else {
-          this.attentionStatus = false
-          this.showNotAttention = true
         }
       } else {
         console.log(message)
@@ -503,8 +523,9 @@ export default {
     },
     // 请求普通列表数据
     async getList(item) {
+      console.log('item', item)
       const categorIds = []
-      categorIds.push(item.categoryId)
+      categorIds.push(item.id)
       const params = {
         categorIds,
         limit: 10,
@@ -519,27 +540,29 @@ export default {
           this.normalListData = data.rows
           console.log('this.normalListData', this.normalListData)
         } else {
-          this.attentionStatus = false
-          this.showNotAttention = true
         }
       } else {
         console.log(message)
       }
     },
     // 请求回答列表
-    async getAnswerList() {
-      const params = {}
-      const { code, message, data } = await this.$axios.post(
-        knownApi.questionArticle.recommendList,
-        params
+    async getAnswerList(limit, page) {
+      const params = {
+        handleUserId: this.userInfo.userId || this.$cookies.get('userId'),
+        type: 1,
+        limit,
+        page,
+      }
+
+      const { code, message, data } = await this.$axios.get(
+        knownApi.question.writeAnswer,
+        { params }
       )
       if (code === 200) {
         if (data.rows.length > 0) {
           console.log('this.rows', data.rows)
           this.answerList = data.rows
         } else {
-          // this.attentionStatus = false
-          // this.showNotAttention = true
         }
       } else {
         console.log(message)

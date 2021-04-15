@@ -33,29 +33,35 @@
         </span>
       </div>
     </div>
-    <div v-if="showHead2" class="head head2">
-      <my-icon
-        class="btn-icon"
-        name="zuo"
-        size="0.4rem"
-        color="#1A1A1A"
-        @click.native="onLeftClick"
-      ></my-icon>
-      <div class="user-info">
-        <sp-image class="img" :src="answerDetails.avatar" />
-        <div class="infos">
-          <p>{{ answerDetails.createrName }}</p>
-          {{ answerDetails.contentText }}
+    <div v-if="showHead2">
+      <HeadSlot>
+        <div class="head head2">
+          <my-icon
+            class="btn-icon"
+            name="zuo"
+            size="0.4rem"
+            color="#1A1A1A"
+            @click.native="onLeftClick"
+          ></my-icon>
+          <div class="user-info">
+            <sp-image class="img" :src="answerDetails.avatar" />
+            <div class="infos">
+              <p>{{ answerDetails.createrName }}</p>
+              {{ answerDetails.contentText }}
+            </div>
+            <template v-if="answerDetails.createrId !== userInfo.userId">
+              <div v-if="!isFollow" class="btn" @click="follow">
+                <sp-button
+                  ><my-icon name="jia" size="0.28rem" /> 关注</sp-button
+                >
+              </div>
+              <div v-else class="btn2" @click="follow">
+                <span class="follow">已关注</span>
+              </div>
+            </template>
+          </div>
         </div>
-        <template v-if="answerDetails.createrId !== userInfo.userId">
-          <div v-if="!isFollow" class="btn" @click="follow">
-            <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
-          </div>
-          <div v-else class="btn2" @click="follow">
-            <span class="follow">已关注</span>
-          </div>
-        </template>
-      </div>
+      </HeadSlot>
     </div>
     <div class="title-area">
       <div class="title">{{ answerDetails.title }}</div>
@@ -173,6 +179,7 @@
 <script>
 import { Field, Button, Image, Toast, Popup, Dialog } from '@chipspc/vant-dgg'
 import Comment from '~/components/mustKnown/DetailComment'
+import HeadSlot from '@/components/common/head/header-slot'
 import { knownApi } from '~/api'
 export default {
   components: {
@@ -182,6 +189,35 @@ export default {
     [Popup.name]: Popup,
     [Dialog.name]: Dialog,
     Comment,
+    HeadSlot,
+  },
+  asyncData(context) {
+    return Promise.all([
+      context.$axios.get(
+        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do',
+        {
+          params: { id: '8065065421625749504', userHandleFlag: 1 },
+        }
+      ),
+    ])
+      .then((res) => {
+        if (res[0] && res[0].code === 200) {
+          return {
+            answerDetails: res[0].data,
+            headerData: {
+              createrName: res[0].createrName,
+              contentText: res[0].contentText,
+              avatar: res[0].avatar,
+            },
+            sourceId: res[0].sourceId,
+            homeUserId: res[0].userId,
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        Promise.reject(error)
+      })
   },
   data() {
     return {
@@ -201,12 +237,9 @@ export default {
     },
   },
   created() {
-    if (this.$route.params.id) {
-      this.currentDetailsId = this.$route.params.id
-    } else {
-      this.currentDetailsId = '8065065421625749504'
+    if (this.$route.query.id) {
+      this.currentDetailsId = this.$route.query.id
     }
-    this.getDetailData()
     this.initFollow()
   },
   mounted() {
@@ -288,10 +321,7 @@ export default {
         .get(knownApi.questionArticle.detail, {
           params: {
             id: this.currentDetailsId,
-            userId: this.userInfo.userId || '120',
             userHandleFlag: 1,
-            userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-            userName: this.userInfo.userName || '测试用户',
           },
         })
         .then((res) => {
@@ -304,9 +334,6 @@ export default {
             this.headerData.avatar = this.answerDetails.avatar
             this.sourceId = this.answerDetails.sourceId
             this.homeUserId = this.answerDetails.userId
-            this.answerDetails.content =
-              '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'
-            // this.getAnswerCollectCount()
           } else {
             Toast.fail({
               duration: 2000,

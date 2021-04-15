@@ -1,15 +1,22 @@
 <template>
-  <div class="page-head">
-    <div class="btn-cancel" @click="handleCancel">取消</div>
-    {{ title }}
-    <div class="btn-submit" :class="hasVal ? 'blue' : ''" @click="submit">
-      {{ confirmText }}
+  <header-slot>
+    <div class="page-head">
+      <div class="btn-cancel" @click="handleCancel">取消</div>
+      {{ title }}
+      <div class="btn-submit" :class="hasVal ? 'blue' : ''" @click="submit">
+        {{ confirmText }}
+      </div>
     </div>
-  </div>
+  </header-slot>
 </template>
 
 <script>
+import HeaderSlot from '@/components/common/head/header-slot'
+
 export default {
+  components: {
+    HeaderSlot,
+  },
   props: {
     title: {
       type: String,
@@ -26,12 +33,9 @@ export default {
   },
   methods: {
     handleCancel() {
-      console.log('取消')
-      // this.$router.back(-1)
-      this.$emit('handleCancel')
+      this.$back()
     },
     submit() {
-      console.log('发布')
       this.$emit('submit')
     },
   },
@@ -40,13 +44,9 @@ export default {
 
 <style lang="less" scoped>
 .page-head {
-  width: 100%;
   height: 88px;
   line-height: 88px;
   padding: 0 32px;
-  position: fixed;
-  left: 0;
-  top: 0;
   font-size: 40px;
   background: white;
   z-index: 2;

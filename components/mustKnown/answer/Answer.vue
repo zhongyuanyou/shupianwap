@@ -25,28 +25,30 @@
         finished-text="没有更多了"
       >
         <sp-cell v-for="(item, index) in answerList" :key="index">
-          <div class="item" @click="$router.push('/known/detail/article')">
-            <div class="item_content">
-              <div class="item_content_lf">
-                <div class="item_Info">
-                  <div class="user_photo">
-                    <img src="" alt="" />
+          <sp-skeleton :row="6" :loading="recommendPlanner.length == 0">
+            <div class="item" @click="$router.push('/known/detail/article')">
+              <div class="item_content">
+                <div class="item_content_lf">
+                  <div class="item_Info">
+                    <div class="user_photo">
+                      <img :src="item.avatar" alt="" />
+                    </div>
+                    <div class="user_name">
+                      <p>{{ item.userName }}</p>
+                      <div class="user_answer">的提问期待你的解答30分钟前</div>
+                    </div>
                   </div>
-                  <div class="user_name">
-                    <p>{{ item.userName }}</p>
-                    <div class="user_answer">的提问期待你的解答30分钟前</div>
-                  </div>
+                  <p class="content">
+                    {{ item.contentText }}
+                  </p>
                 </div>
-                <p class="content">
-                  {{ item.content }}
-                </p>
+              </div>
+              <div class="item_bottom">
+                <p>{{ item.answerCount }} 回答 · {{ item.collectCount }}收藏</p>
+                <div class="btn" @click="goAnswer(item.id)">写回答</div>
               </div>
             </div>
-            <div class="item_bottom">
-              <p>{{ item.answerCount }} 回答 · {{ item.collectCount }}收藏</p>
-              <div class="btn" @click="goAnswer(item.id)">写回答</div>
-            </div>
-          </div>
+          </sp-skeleton>
         </sp-cell>
       </sp-list>
     </div>
@@ -84,7 +86,7 @@
                     })
                   "
                 >
-                  {{ item.content }}
+                  {{ item.contentText }}
                 </p>
               </div>
             </div>
@@ -108,6 +110,7 @@ import {
   PullRefresh,
   List,
   Cell,
+  Skeleton,
 } from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 
@@ -121,6 +124,7 @@ export default {
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
     [Cell.name]: Cell,
+    [Skeleton.name]: Skeleton,
   },
   props: {
     answerList: {
@@ -143,6 +147,11 @@ export default {
       tabIndex: 0,
     }
   },
+  computed: {
+    userInfo() {
+      return this.$store.state.user
+    },
+  },
   methods: {
     tabChange(name, title) {
       console.log('name', name)
@@ -160,18 +169,20 @@ export default {
     },
     // 请求回答列表
     async getAnswerList() {
-      const params = {}
-      const { code, message, data } = await this.$axios.post(
-        knownApi.questionArticle.recommendList,
-        params
+      const params = {
+        handleUserId: this.userInfo.userId || this.$cookies.get('userId'),
+        type: 1,
+      }
+
+      const { code, message, data } = await this.$axios.get(
+        knownApi.question.writeAnswer,
+        { params }
       )
       if (code === 200) {
         if (data.rows.length > 0) {
           console.log('this.rows', data.rows)
           this.answerList = data.rows
         } else {
-          // this.attentionStatus = false
-          // this.showNotAttention = true
         }
       } else {
         console.log(message)
@@ -180,20 +191,18 @@ export default {
     // 请求邀请
     async getList() {
       const params = {
-        limit: 10,
-        page: 1,
+        handleUserId: this.userInfo.userId || this.$cookies.get('userId'),
+        type: 2,
       }
-      const { code, message, data } = await this.$axios.post(
-        knownApi.questionArticle.findMyInvitedPage,
-        params
+      const { code, message, data } = await this.$axios.get(
+        knownApi.question.writeAnswer,
+        { params }
       )
       if (code === 200) {
         if (data.rows.length > 0) {
           this.inviteList = data.rows
           console.log('this.inviteList', this.inviteList)
         } else {
-          // this.attentionStatus = false
-          // this.showNotAttention = true
         }
       } else {
         console.log(message)
@@ -299,11 +308,13 @@ export default {
           .user_photo {
             width: 72px;
             height: 72px;
-
             background: #6d7177;
             margin-right: 16px;
             border-radius: 50%;
             img {
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
             }
           }
           .user_name {

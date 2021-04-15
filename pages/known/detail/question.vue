@@ -138,7 +138,7 @@
         </div>
       </div>
     </div>
-    <div v-if="releaseStatusId === 1" class="success">
+    <div v-if="releaseStatus === 1" class="success">
       <div>
         <sp-icon name="certificate" size="0.45rem" color="#00B365" /><span
           >成功提问</span
@@ -146,7 +146,7 @@
       </div>
       <p>你可以邀请下面用户来更快获得回答</p>
     </div>
-    <div v-if="releaseStatusId === 1" class="answer">
+    <div v-if="releaseStatus === 1" class="answer">
       <div class="head">
         <p>回答 {{ total }}</p>
         <div>
@@ -165,7 +165,12 @@
         finished-text="没有更多了"
         @load="getQuesData"
       >
-        <div v-for="(item, index) in questionList" :key="index" class="list">
+        <div
+          v-for="(item, index) in questionList"
+          :key="index"
+          class="list"
+          @click="goAnsDetail(item.id)"
+        >
           <div class="head">
             <img :src="item.avatar" alt="" />
             <p>{{ item.userName }}</p>
@@ -255,6 +260,31 @@ export default {
     [Popup.name]: Popup,
     [Dialog.name]: Dialog,
   },
+  asyncData(context) {
+    return Promise.all([
+      context.$axios.get(
+        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do',
+        {
+          params: { id: '8065065421625749504', userHandleFlag: 1 },
+        }
+      ),
+    ])
+      .then((res) => {
+        if (res[0].data.categoryName) {
+          res[0].data.categoryName = res[0].data.categoryName.split(',')
+        }
+        console.log(res)
+        if (res[0] && res[0].code === 200) {
+          return {
+            questionDetials: res[0].data,
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        Promise.reject(error)
+      })
+  },
   data() {
     return {
       title: '',
@@ -264,7 +294,7 @@ export default {
       scrollTop: 0,
       questionDetials: '',
       questionList: '',
-      releaseStatusId: 1,
+      releaseStatus: 0,
       orderBy: 'totalBrowseCount=desc',
       handleLikeType: null,
       finished: false,
@@ -281,12 +311,12 @@ export default {
     },
   },
   created() {
-    if (this.$route.params.id) {
-      this.currentDetailsId = this.$route.params.id
-    } else {
-      this.currentDetailsId = '8065065421625749504'
+    if (this.$route.query.id) {
+      this.currentDetailsId = this.$route.query.id
     }
-    this.getDetailData()
+    if (this.$route.query.status) {
+      this.releaseStatus = this.$route.query.status
+    }
   },
   mounted() {
     window.addEventListener('scroll', this.watchScroll)
@@ -295,16 +325,19 @@ export default {
     window.removeEventListener('scroll', this.watchScroll)
   },
   methods: {
+    goAnsDetail(id) {
+      this.$route.push({
+        path: '/known/detail/answer',
+        query: id,
+      })
+    },
     getDetailData() {
       this.loading = true
       this.$axios
         .get(knownApi.questionArticle.detail, {
           params: {
             id: this.currentDetailsId,
-            userId: this.userInfo.userId || '120',
             userHandleFlag: 1,
-            userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-            userName: this.userInfo.userName || '测试用户',
           },
         })
         .then((res) => {
@@ -337,7 +370,7 @@ export default {
     getQuesData() {
       this.$axios
         .post(knownApi.questionArticle.list, {
-          sourceIds: [`${this.currentDetailsId}`],
+          sourceIds: [this.currentDetailsId],
           orderBy: this.orderBy,
           page: this.page,
           userId: this.userInfo.userId || '120',
