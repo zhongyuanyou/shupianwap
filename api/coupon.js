@@ -9,7 +9,7 @@ const coupon = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_WAP_BASE_URL + '/nk/coupon/v2/find_my_coupon_page.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/coupon/v2/find_my_coupon_page.do',
     })
   },
   receiveCoupon({ axios }, params) {
