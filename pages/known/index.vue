@@ -343,6 +343,7 @@ export default {
               name: item.name,
               categoryId: item.categoryId,
               executionParameters: item.executionParameters,
+              id: item.id,
             },
           ]
         }, [])
@@ -522,8 +523,9 @@ export default {
     },
     // 请求普通列表数据
     async getList(item) {
+      console.log('item', item)
       const categorIds = []
-      categorIds.push(item.categoryId)
+      categorIds.push(item.id)
       const params = {
         categorIds,
         limit: 10,
