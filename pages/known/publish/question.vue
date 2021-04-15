@@ -93,7 +93,7 @@ export default {
 <style lang="less" scoped>
 .main {
   .content {
-    padding: 20px 32px 40px 32px;
+    padding: 20px 32px 300px 32px;
     .toast-area {
       width: 100%;
       height: 236px;
