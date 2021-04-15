@@ -311,7 +311,6 @@ export default {
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
     }
-    console.log(this.$route.query.requireCode, 111)
   },
   methods: {
     ...mapMutations({
