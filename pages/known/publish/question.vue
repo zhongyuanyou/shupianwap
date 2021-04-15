@@ -3,15 +3,15 @@
     <PageHead
       :has-val="hasVal"
       confirm-text="发布问题"
-      @submit="submit"
       :title="title"
+      @submit="submit"
     />
     <div class="main">
       <TitleArea
         ref="myTitle"
         :max-length="50"
-        :input-length="60"
         :title="formData.title"
+        :custPlaceholder="myPlaceholder"
         @setTitle="setTitle"
       />
       <div class="content">
@@ -67,12 +67,16 @@ export default {
       fromPage: 'question',
       showToast: true,
       title: '回答问题',
+      myPlaceholder: '输入问题并以问号结尾',
     }
   },
   computed: {
-    // 问题发布按钮显示条件必须有问题标题
-    hasVal() {
-      return this.formData.content.length > 0
+    hasVal: {
+      get() {
+        return (
+          this.formData.content.length > 0 && this.formData.title.length > 0
+        )
+      },
     },
   },
   methods: {

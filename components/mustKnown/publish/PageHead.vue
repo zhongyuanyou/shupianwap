@@ -43,6 +43,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.my-head {
+  box-shadow: unset !important;
+}
+
 .page-head {
   height: 88px;
   line-height: 88px;

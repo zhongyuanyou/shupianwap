@@ -1,7 +1,7 @@
 <template>
   <div class="title-wapper">
     <div v-show="showInput" class="title-area" @click="edit">
-      <p class="content-title">{{ inputVal }}</p>
+      <div class="content-title" v-html="inputVal"></div>
     </div>
     <section v-show="!showInput">
       <sp-field
@@ -52,15 +52,6 @@ export default {
   methods: {
     blur() {
       if (this.inputVal === '') {
-        /*
-        this.$xToast.show({
-          message: '标题不能为空',
-          duration: 1000,
-          icon: 'toast_ic_error',
-          forbidClick: true,
-        })
-        */
-        this.$refs.tileArea.$refs.input.focus()
         return
       }
       // 给父组件传标题
@@ -81,20 +72,23 @@ export default {
   font-size: 40px;
   .sp-field__word-limit {
     font-size: 24px;
-    color: #ff3b30;
   }
 }
-.title-area {
+.title-wapper {
   width: 100%;
-  font-size: 40px;
-  position: relative;
-  padding: 18px 40px 32px;
   border-bottom: 1px solid #ddd;
-  .content-title {
-    color: #222222;
-    line-height: 52px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+  .title-area {
+    font-size: 40px;
+    position: relative;
+    padding: 18px 40px 32px;
+    .content-title {
+      color: #222222;
+      line-height: 52px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 600;
+      word-wrap: break-word;
+      word-break: normal;
+    }
   }
 }
 </style>
