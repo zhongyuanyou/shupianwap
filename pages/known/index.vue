@@ -111,7 +111,11 @@
               </div>
             </div>
           </div>
-          <ItemCard v-if="showHot" :list-data="listData" />
+          <ItemCard
+            v-if="showHot"
+            :list-data="listData"
+            @load="requestHotList"
+          />
         </section>
       </sp-pull-refresh>
       <!-- 热榜 end -->
@@ -472,7 +476,7 @@ export default {
     // 请求关注用户的数据
     async focusFansList() {
       const params = {
-        handleUserId: 118,
+        handleUserId: this.$cookies.get('userId'),
         handleType: 1,
         limit: 10,
         page: 1,
@@ -492,9 +496,11 @@ export default {
     // 请求关注用户的列表数据
     async attentionList() {
       const params = {}
-      params.handleUserId = 118
+      params.handleUserId = this.$cookies.get('userId')
       params.dateType = 0
       params.userHandleFlag = 1
+      params.limit = 10
+      params.page = 1
       const { code, message, data } = await this.$axios.post(
         knownApi.questionArticle.attentionUserList,
         params
@@ -637,6 +643,9 @@ export default {
     },
     onRefresh() {
       this.hotList()
+    },
+    requestHotList(page) {
+      console.log('+++++++++page', page)
     },
   },
 }
