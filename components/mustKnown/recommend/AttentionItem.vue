@@ -9,11 +9,11 @@
     <sp-cell v-for="(item, index) in listData" :key="index">
       <div class="item">
         <div class="item_Info">
-          <div class="userPhoto" @click="goUserDetail(item.userId)">
+          <div class="userPhoto" @click="goUserDetail(item)">
             <img :src="item.avatar" alt="" />
           </div>
           <div class="item_status">
-            <div class="userName" @click="goUserDetail(item.userId)">
+            <div class="userName" @click="goUserDetail(item)">
               {{ item.userName }}
             </div>
             <div class="item_time">
@@ -48,7 +48,6 @@
               size="0.36rem"
               color="#999999"
               class="my_icon"
-              style="margin-right: 0.16rem"
             ></my-icon>
             邀请
           </span>
@@ -58,37 +57,54 @@
               size="0.36rem"
               color="#999999"
               class="my_icon"
-              style="margin-right: 0.16rem"
             ></my-icon>
             写回答
           </span>
 
-          <span v-if="item.type === 1">
+          <span
+            v-if="item.type === 1"
+            class="bottom_icon"
+            :class="item.isApplaudFlag === 1 ? 'like_active' : ''"
+            @click="like(item)"
+          >
             <my-icon
+              v-if="item.isApplaudFlag === 1"
+              name="zantong_mian"
+              size="0.36rem"
+              color="#4974F5"
+              class="my_icon"
+            ></my-icon>
+            <my-icon
+              v-else
               name="zantong"
               size="0.36rem"
               color="#999999"
               class="my_icon"
-              style="margin-right: 0.16rem"
-            ></my-icon
-            >赞同{{ item.applaudCount }}</span
+            ></my-icon>
+            <span>
+              {{ item.applaudCount > 0 ? item.applaudCount : '赞同' }}
+            </span>
+          </span>
+          <span
+            v-if="item.type === 1"
+            class="bottom_icon"
+            @click="showComment(item.id)"
           >
-          <span v-if="item.type === 1" @click="showComment">
             <my-icon
               name="pinglun"
               size="0.36rem"
               color="#999999"
               class="my_icon"
-              style="margin-right: 0.16rem; margin-left: 0.26rem"
-            ></my-icon
-            >评论{{ item.remarkCount }}
+              style="margin-left: 0.26rem"
+            ></my-icon>
+            <span> 评论{{ item.remarkCount }}</span>
           </span>
         </div>
       </div>
     </sp-cell>
     <comment-list
       v-model="commentShow"
-      :article-id="'1'"
+      :article-id="articleId"
       @release="release"
     ></comment-list>
   </sp-list>
@@ -97,7 +113,7 @@
 import { mapState } from 'vuex'
 import { Cell, List } from '@chipspc/vant-dgg'
 import CommentList from '@/components/mustKnown/CommentList'
-// import time from '@/utils/time'
+import { knownApi } from '@/api'
 export default {
   name: 'AttentionItem',
   components: {
@@ -121,6 +137,9 @@ export default {
       loading: true,
       finished: false,
       timeStamp: 0,
+      articleId: 0,
+      applaudLine: false,
+      applaudMian: true,
     }
   },
   computed: {
@@ -142,8 +161,9 @@ export default {
     release() {
       console.log('点击了发布')
     },
-    showComment() {
+    showComment(id) {
       console.log('点击了评论')
+      this.articleId = id
       this.commentShow = true
     },
     openAnswer(id) {
@@ -211,19 +231,66 @@ export default {
       }
     },
     // 进入用户详情
-    goUserDetail(userId) {
-      console.log('userId', userId)
+    goUserDetail(item) {
       this.$router.push({
         path: '/known/home',
         query: {
-          homeUserId: userId,
+          homeUserId: item.userId,
+          type: item.userType,
         },
       })
+    },
+    // 点赞（取消）
+    async like(item) {
+      const params = {
+        handleUserId: this.$store.state.user.userId,
+        handleUserName:
+          this.$store.state.user.userName || this.$cookies.get('userId'),
+        businessId: item.id,
+        handleUserType: item.userType,
+        dateType: item.type,
+      }
+      if (item.isApplaudFlag === 0) {
+        params.handleType = 1
+        const { code, message, data } = await this.$axios.post(
+          knownApi.home.operation,
+          params
+        )
+        this.flag = true
+        if (code === 200) {
+          this.$xToast.show({
+            message: '点赞成功',
+            duration: 1000,
+            icon: 'toast_ic_remind',
+            forbidClick: true,
+          })
+        } else {
+          this.$xToast.show({
+            message,
+            duration: 1000,
+            icon: 'toast_ic_remind',
+            forbidClick: true,
+          })
+        }
+      }
+      // else {
+      //   params.handleType = 2
+      //   const { code, message, data } = await this.$axios.post(
+      //     knownApi.home.operation,
+      //     params
+      //   )
+      //   if (code === 200) {
+      //   } else {
+      //   }
+      // }
     },
   },
 }
 </script>
 <style lang="less" scoped>
+.like_active {
+  color: #4974f5 !important;
+}
 /deep/ .sp-cell {
   padding: 0 0 20px 0;
   position: relative;
@@ -311,6 +378,12 @@ export default {
     font-weight: 400;
     color: #999999;
     line-height: 28px;
+    > .bottom_icon {
+      display: inline-flex;
+      > span {
+        margin-left: 16px;
+      }
+    }
   }
 }
 </style>

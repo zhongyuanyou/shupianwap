@@ -216,7 +216,9 @@ export default {
 
     // 超过购买限制后的触发
     handleOverlimit(action) {
+      console.log('action+++++', action)
       const { serviceResourceList = [] } = this.mainData || {}
+      console.log('this.mainData+++++', this.mainData)
       let message = ''
       switch (action) {
         case 'minus':
