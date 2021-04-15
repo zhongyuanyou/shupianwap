@@ -207,6 +207,8 @@ export default {
         price: this.sellingDetail.salesPrice, // 价格
         forwardAbstract: this.sellingDetail.salesGoodsOperatings
           .productDescribe, // 摘要信息，可与显示内容保持一致
+        requireCode: this.proDetail.classCodeLevel.split(',')[0],
+        requireName: '',
         routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID
         imageUrl: this.sellingDetail.salesGoodsOperatings.clientDetails[0]
           .imgFileIdPaths[0], // 产品图片
