@@ -19,6 +19,7 @@ export const actions = {
     const token = app.$cookies.get('token', { path: '/' })
     const userId = app.$cookies.get('userId', { path: '/' })
     const userType = app.$cookies.get('userType', { path: '/' })
+    const userName = app.$cookies.get('userName', { path: '/' })
 
     commit('city/SET_CITY', currentCity || {})
     commit('city/SET_POSITION_CITY', positionCityName || '')
