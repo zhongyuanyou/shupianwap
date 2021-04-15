@@ -17,7 +17,7 @@
         <sp-tab name="ORDER_CUS_STATUS_CANCELLED" title="已取消"></sp-tab>
       </sp-tabs>
     </div>
-    <div ref="scrollView" class="page-list" @scroll="handleScollList">
+    <div ref="scrollView" class="page-list" @scroll="scollChange">
       <div class="scroll-inner">
         <sp-skeleton
           v-for="val in 10"
@@ -161,8 +161,12 @@ export default {
       const scrollHeight = this.$refs.scrollView.scrollHeight
       const windowHeight = window.innerHeight
       // 提前100px拉取下页数据
-      if (scrollTop + windowHeight > scrollHeight - 100) {
-        this.getOrderList()
+      if (scrollTop + windowHeight > scrollHeight) {
+        if (!this.loading && !this.loadingMore && !this.noMore) {
+          this.loadingMore = true
+          this.page++
+          this.getOrderList()
+        }
       }
     },
     throttle(func, wait, mustRun) {
@@ -188,8 +192,8 @@ export default {
       this.page = 1
       this.selectedOrderStatus = name
       this.loadingMore = false
-      this.loading = false
       this.noMore = false
+      this.loading = true
       this.list = []
       this.getOrderList()
     },
@@ -197,13 +201,6 @@ export default {
       this.$router.push('../shopCart/')
     },
     getOrderList() {
-      // 正在下拉加载则不加载更多
-      if (this.loadingMore || this.noMore) return
-      if (this.page === 1) {
-        this.loading = true
-      } else {
-        this.loadingMore = true
-      }
       this.noMore = false
       orderApi
         .list(
@@ -215,28 +212,21 @@ export default {
           }
         )
         .then((res) => {
+          if (res.totalCount <= this.page * this.limit) {
+            this.noMore = true
+          }
           this.loading = false
           this.loadingMore = false
           const arr = res.records
-          if (this.page === 1) {
-            this.list = []
+          for (let i = 0, l = arr.length; i < l; i++) {
+            this.changeMoney(arr[i])
           }
-          if (arr.length) {
-            if (arr.length <= this.limit) this.noMore = true
-            for (let i = 0, l = arr.length; i < l; i++) {
-              this.changeMoney(arr[i])
-            }
-            if (res.currentPage === this.page) {
-              this.list = arr
-            } else {
-              const nowData = JSON.parse(JSON.stringify(this.list))
-              const allData = nowData.concat(arr)
-              this.list = allData
-            }
-            this.page++
+          if (this.page === 1) {
+            this.list = arr
           } else {
-            this.noMore = true
-            this.list = []
+            const nowData = JSON.parse(JSON.stringify(this.list))
+            const allData = nowData.concat(arr)
+            this.list = allData
           }
           this.loadingList = false
         })

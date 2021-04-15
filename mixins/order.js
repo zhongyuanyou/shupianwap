@@ -491,6 +491,8 @@ export default {
         this.orderData.contractUrl
       if (
         this.orderData.contractStatus === 'STRUTS_QSZ' ||
+        this.orderData.contractStatus === 'STRUTS_CG' ||
+        this.orderData.contractVo2s.length > 0 ||
         (this.orderData.contractVo2s &&
           this.orderData.contractVo2s.length &&
           this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ')
