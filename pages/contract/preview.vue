@@ -176,7 +176,7 @@ export default {
       p {
         height: 100%;
         background: #e5e5e5;
-        padding-top: 60%;
+        line-height: 300px;
         text-align: center;
         font-size: 36px;
         font-family: PingFang SC;
