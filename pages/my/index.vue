@@ -14,8 +14,8 @@
         />
         <p class="txt" @click="handleClickLogin">
           {{
-            (token && info.nickName) || userName
-              ? '欢迎你，' + userName || info.nickName || ''
+            token && info.nickName
+              ? '欢迎你，' + info.nickName || ''
               : '登录/注册'
           }}
         </p>
