@@ -65,7 +65,7 @@ export default {
       time: 5,
       btnshow: false,
       timeer: '',
-      Loading: false,
+      loading: false,
     }
   },
   mounted() {
@@ -73,12 +73,12 @@ export default {
   },
   methods: {
     onLeftClick() {
-      if (this.$router.query.go === '-2') {
+      if (this.contract.go && this.contract.go === '-2') {
         this.$router.push({
           path: '/contract/contractList',
         })
       } else {
-        this.goBack()
+        this.$router.back(-1)
       }
     },
     sign() {
@@ -119,7 +119,7 @@ export default {
             console.log('错误信息err', err)
           })
       } else {
-        this.Loading = false
+        this.loading = false
         Dialog.confirm({
           title: '温馨提示',
           message: '检测到您未实名认证，请在签合同前 先进行实名认证',
