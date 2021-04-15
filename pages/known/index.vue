@@ -476,7 +476,7 @@ export default {
     // 请求关注用户的数据
     async focusFansList() {
       const params = {
-        handleUserId: this.$cookies.get('userId'),
+        handleUserId: this.$store.state.userInfo.userId,
         handleType: 1,
         limit: 10,
         page: 1,
@@ -496,7 +496,7 @@ export default {
     // 请求关注用户的列表数据
     async attentionList() {
       const params = {}
-      params.handleUserId = this.$cookies.get('userId')
+      params.handleUserId = this.$store.state.userInfo.userId
       params.dateType = 0
       params.userHandleFlag = 1
       params.limit = 10

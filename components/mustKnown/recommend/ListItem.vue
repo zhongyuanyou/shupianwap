@@ -34,9 +34,7 @@
           />
         </div>
         <div class="item_bottom">
-          <span class="like">
-            {{ applaudNumber(item.applaudCount) }}万赞同</span
-          >
+          <span class="like"> {{ applaudNumber(item.applaudCount) }}赞同</span>
           <span class="comment" @click="showComment(item.id)">
             · {{ item.answerCount }} 评论</span
           >
@@ -99,7 +97,10 @@ export default {
       // this.throttle(this.scollChange(), 500, 1000)
     },
     applaudNumber(browseCount) {
-      return browseCount / 10000
+      if (browseCount < 10000) {
+        return browseCount
+      }
+      return browseCount * 10 + '万'
     },
     showComment(id) {
       console.log('id', id)
