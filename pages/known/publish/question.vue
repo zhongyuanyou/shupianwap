@@ -29,7 +29,7 @@
               size="0.32rem"
               color="#999999"
             ></my-icon>
-            让你的第一个提问获得更多解答
+            让你的提问获得更多解答
           </p>
           <p>· 保持文字简练，表述清晰问题的关键点</p>
           <p>· 添加合适的话题，让问题更好地流通</p>
@@ -93,7 +93,7 @@ export default {
 <style lang="less" scoped>
 .main {
   .content {
-    padding: 20px 32px 40px 32px;
+    padding: 20px 32px 300px 32px;
     .toast-area {
       width: 100%;
       height: 236px;

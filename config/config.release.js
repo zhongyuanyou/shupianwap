@@ -6,7 +6,7 @@ module.exports = {
   mchCoding: '20190620000111',
   imBaseUrl: 'https://tim.shupian.cn', // IM 地址
   domainUrl: 'https://tm.shupian.cn/', // 域名
-  ossUrl: 'https://tspapi.shupian.cn', // oss域名
+  ossUrl: 'https://spapi.shupian.cn', // oss域名
   platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
   terminalCode: 'COMDIC_TERMINAL_WAP', // 终端code
 }

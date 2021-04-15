@@ -14,7 +14,7 @@
 </template>
 <script>
 const uploadConfig = {
-  action: 'https://dspapi.shupian.cn/api/oss/v1/upload', // 必填参数 图片上传地址
+  action: 'https://spapi.shupian.cn/api/oss/v1/upload', // 必填参数 图片上传地址
   methods: 'POST', // 必填参数 图片上传方式
   token: '', // 可选参数 如果需要token验证，假设你的token有存放在sessionStorage
   name: 'img', // 必填参数 文件的参数名

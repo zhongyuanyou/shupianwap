@@ -55,7 +55,6 @@
           name="email"
           label="电子邮箱"
           placeholder="请输入合同联系人邮箱"
-          :rules="[{ validator, message: '请输入合同联系人正确的邮箱' }]"
         />
         <Field
           v-if="formshow"
@@ -75,7 +74,9 @@
       </div>
     </div>
     <div class="btn">
-      <div class="box" @click="sumfn()">立即签署</div>
+      <div class="box" :class="verification ? 'act' : ''" @click="sumfn()">
+        立即签署
+      </div>
     </div>
   </div>
 </template>
@@ -105,10 +106,46 @@ export default {
       email: '',
       address: '',
       formshow: false,
-      orderItem: this.$route.query,
-      orderData: '',
-      loading: false,
+      verification: false,
     }
+  },
+  watch: {
+    userName() {
+      if (
+        this.partyName &&
+        this.userName &&
+        this.phone &&
+        !/^1[3456789]\d{9}$/.test(this.phone)
+      ) {
+        this.verification = true
+      } else {
+        this.verification = false
+      }
+    },
+    partyName() {
+      if (
+        this.partyName &&
+        this.userName &&
+        this.phone &&
+        !/^1[3456789]\d{9}$/.test(this.phone)
+      ) {
+        this.verification = true
+      } else {
+        this.verification = false
+      }
+    },
+    phone() {
+      if (
+        this.partyName &&
+        this.userName &&
+        this.phone &&
+        /^1[3456789]\d{9}$/.test(this.phone)
+      ) {
+        this.verification = true
+      } else {
+        this.verification = false
+      }
+    },
   },
   mounted() {},
   methods: {
@@ -123,14 +160,16 @@ export default {
     },
     sumfn() {
       if (this.partyName && this.userName && this.phone) {
-        const contaract = {
-          contractFirstName: this.partyName,
-          contractFirstContacts: this.userName,
-          contractFirstPhone: this.phone,
-          contractFirstEmail: this.email,
-          contractFirstAddr: this.address,
+        if (/^1[3456789]\d{9}$/.test(this.phone)) {
+          const contaract = {
+            contractFirstName: this.partyName,
+            contractFirstContacts: this.userName,
+            contractFirstPhone: this.phone,
+            contractFirstEmail: this.email,
+            contractFirstAddr: this.address,
+          }
+          this.$emit('sum', contaract)
         }
-        this.$emit('sum', contaract)
       }
     },
     onLeftClick() {
@@ -208,11 +247,15 @@ export default {
       background: #4974f5;
       border-radius: 8px;
       margin: 0 auto;
+      opacity: 0.4;
       line-height: 96px;
       text-align: center;
       font-size: 32px;
       font-weight: bold;
       color: #ffffff;
+    }
+    > .act {
+      opacity: 1;
     }
   }
 }

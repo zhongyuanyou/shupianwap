@@ -109,7 +109,7 @@ export default {
       }
     },
     clooseHandle() {
-      this.$router.push('/known')
+      this.$back()
     },
     clearHistory() {
       this.knownHistory = []
