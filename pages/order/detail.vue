@@ -70,24 +70,20 @@
           </span>
         </p> -->
         </div>
-        <p
-          v-if="orderData.isNeedPay && cusOrderStatusType === 1"
-          class="last-money"
-        >
-          应付金额:
-          <span v-if="orderData.orderType === 0" class="pay-money"> 面议</span>
+        <!-- 当订单已取消时不显示总金额 -->
+        <p v-if="cusOrderStatusType !== 4" class="last-money">
+          {{ shouldPayText }}
+          <span
+            v-if="
+              (checkPayType() === 2 || checkPayType() === 4) &&
+              orderData.orderType === 0
+            "
+            class="pay-money"
+          >
+            面议</span
+          >
           <span v-else class="pay-money"
             >{{ orderData.orderPayableMoney }}元</span
-          >
-        </p>
-        <p
-          v-if="cusOrderStatusType !== 4 && cusOrderStatusType !== 1"
-          class="last-money"
-        >
-          实付金额:
-          <span v-if="orderData.orderType === 0" class="pay-money"> 面议</span>
-          <span v-else class="pay-money"
-            >{{ orderData.orderTotalMoney }}元</span
           >
         </p>
         <!-- <p class="last-money">
@@ -330,6 +326,7 @@ export default {
       orderPayList: [],
       paylistLength: 0,
       opType: '',
+      shouldPayText: '',
       cusOrderPayType: '', // 付费类型 1先付款后服务 2先定金后尾款 3服务节点收费 4服务完成收费
     }
   },
@@ -391,6 +388,14 @@ export default {
           this.hasData = true
           this.loading = false
           this.cusOrderPayType = this.checkPayType()
+          if (
+            this.orderData.orderSplitAndCusVo ===
+            'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
+          )
+            this.shouldPayText = '实付金额'
+          else {
+            this.shouldPayText = '应付金额'
+          }
           // if (
           //   this.orderData.cusOrderPayStatusNo !==
           //   'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'

@@ -26,7 +26,11 @@
               {{ isAttention ? '已关注' : '+ 关注' }}
             </div>
           </template>
-          <div v-if="source" class="bt_contact">
+          <div
+            v-if="appInfo.appCode === 'CPSAPP' && type === 2"
+            class="bt_contact"
+            @click="contact"
+          >
             <my-icon
               name="pinglun_mian"
               size="0.36rem"
@@ -144,6 +148,7 @@
 import { Tabs, Tab, Image, List } from '@chipspc/vant-dgg'
 import CommentList from '@/components/mustKnown/CommentList'
 import { knownApi } from '~/api'
+import utils from '@/utils/changeBusinessData'
 export default {
   name: 'Collection',
   components: {
@@ -172,6 +177,7 @@ export default {
       avatar: '',
       userName: '',
       desc: '',
+      type: '',
       isAttention: false,
       attentionNum: 0,
       fansNum: 0,
@@ -180,7 +186,8 @@ export default {
     const { code, data } = await $axios.get(knownApi.home.userInfo, {
       params: {
         homeUserId: query.homeUserId || store.state.user.userId,
-        currentUserId: store.state.user.userId,
+        homeUserType:
+          query.type || utils.getUserType(store.state.user.userType),
       },
     })
     if (code === 200) {
@@ -221,9 +228,6 @@ export default {
     }
   },
   computed: {
-    source() {
-      return this.$route.query.source
-    },
     // 主页用户id
     homeUserId() {
       return this.$route.query.homeUserId
@@ -253,6 +257,16 @@ export default {
         path: '/known/home/attention',
         query: { homeUserId: this.homeUserId },
       })
+    },
+    contact() {
+      this.$appFn.dggOpenIM(
+        {
+          name: this.userName, // 商户用户名称
+          userId: this.homeUserId, // 商户用户ID
+          userType: 'MERCHANT_USER', // 用户类型
+        },
+        (res) => {}
+      )
     },
     getScroll() {
       const scrollTop =

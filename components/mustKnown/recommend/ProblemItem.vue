@@ -31,7 +31,7 @@
           />
         </div>
         <div class="item_bottom">
-          <span class="like">{{ item.applaudCount / 10000 }}万赞同</span>
+          <span class="like">赞同</span>
           <span class="comment"> · {{ item.remarkCount }}评论</span>
         </div>
       </div>
