@@ -154,6 +154,7 @@ export default {
           [this.label]: '不限',
         })
         return {
+          code: item.code,
           id: item[this.value],
           text: item[this.label],
           [this.value]: item[this.value],
@@ -170,8 +171,8 @@ export default {
       ) {
         return []
       }
-
       return this.formatItems[this.active].children.map((item) => ({
+        code: item.code,
         id: item[this.value],
         text: item[this.label],
         [this.value]: item[this.value],
@@ -222,6 +223,7 @@ export default {
     handleClickNav(navIndex) {
       const navItem = (this.formatItems && this.formatItems[navIndex]) || {}
       this.$set(this.selectData, 0, {
+        code: navItem.code,
         id: navItem.id,
         text: navItem.text,
         [this.value]: navItem.id,
