@@ -1,4 +1,7 @@
+import { mapState } from 'vuex'
 import knownApi from '@/api/known'
+import util from '@/utils/changeBusinessData'
+
 let timeoute
 export default {
   data() {
@@ -16,7 +19,7 @@ export default {
         title: '', // 标题
         type: '', // 类型：1问题  2文章 3回答
         userCode: 'U2100607057',
-        userId: '767579755195165966',
+        userId: '',
         userName: 'dsdadsada', //
         userType: '1', // 作者类型 1 普通用户 2 规划师
       },
@@ -29,6 +32,12 @@ export default {
   beforeDestroy() {
     if (timeoute) clearTimeout(timeoute)
   },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userId,
+      userType: (state) => state.user.userType,
+    }),
+  },
   mounted() {
     // 获取参数
     this.editType = this.$route.query.editType
@@ -39,6 +48,8 @@ export default {
       : this.fromPage === 'article'
       ? (this.formData.type = 2)
       : (this.formData.type = 3)
+    this.formData.userId = this.userId
+    this.formData.userType = util.getUserType(this.userType)
   },
   methods: {
     getImgSrc(richtext) {
@@ -52,8 +63,20 @@ export default {
       return imgList
     },
     setTitle(val) {
+      if (!val) {
+        return
+      }
+      if (this.fromPage === 'question') {
+        const tempVal = val
+        const lastLetter = tempVal.slice(tempVal.length - 1, tempVal.length)
+        const reg = /\?|？/
+        if (!reg.test(lastLetter)) {
+          this.$xToast.error('输入问题并以问号结尾')
+          return
+        }
+      }
       this.formData.title = val
-      console.log('this.formData', this.formData)
+      console.log('set formData title:', this.formData)
     },
     setTopic(val) {
       this.topics = val
@@ -96,7 +119,7 @@ export default {
           const that = this
           if (res.code && res.code === 200) {
             this.$xToast.success('发布成功')
-            this.switchUrl()
+            this.switchUrl(res.data.id)
           } else {
             this.$xToast.error('发布失败')
           }
@@ -107,34 +130,32 @@ export default {
     },
     // 页面跳转
     switchUrl(id) {
+      const _this = this
       // 新增内容时
       if (this.fromPage === 'article') {
         timeoute = setTimeout(function () {
-          this.$router.replace({
+          _this.$router.replace({
             path: '/known/detail/article',
             query: {
               id,
-              type: 'add',
             },
           })
         }, 2000)
       } else if (this.fromPage === 'question') {
         timeoute = setTimeout(function () {
-          this.$router.replace({
+          _this.$router.replace({
             path: '/known/detail/question',
             query: {
               id,
-              type: 'add',
             },
           })
         }, 2000)
       } else {
         timeoute = setTimeout(function () {
-          this.$router.replace({
+          _this.$router.replace({
             path: '/known/detail/answer',
             query: {
               id,
-              type: 'add',
             },
           })
         }, 2000)

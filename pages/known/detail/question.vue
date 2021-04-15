@@ -260,6 +260,31 @@ export default {
     [Popup.name]: Popup,
     [Dialog.name]: Dialog,
   },
+  asyncData(context) {
+    return Promise.all([
+      context.$axios.get(knownApi.questionArticle.detail, {
+        params: {
+          id: context.query.id,
+          userHandleFlag: context.store.state.user.userId ? 1 : 0,
+        },
+      }),
+    ])
+      .then((res) => {
+        if (res[0].data.categoryName) {
+          res[0].data.categoryName = res[0].data.categoryName.split(',')
+        }
+        console.log(res)
+        if (res[0] && res[0].code === 200) {
+          return {
+            questionDetials: res[0].data,
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        Promise.reject(error)
+      })
+  },
   data() {
     return {
       title: '',
@@ -279,31 +304,6 @@ export default {
       popupShow: false,
       currentDetailsId: '',
     }
-  },
-  asyncData(context) {
-    return Promise.all([
-      context.$axios.get(
-        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do',
-        {
-          params: { id: '8065065421625749504', userHandleFlag: 1 },
-        }
-      ),
-    ])
-      .then((res) => {
-        if (res[0].data.categoryName) {
-          res[0].data.categoryName = res[0].data.categoryName.split(',')
-        }
-        console.log(res)
-        if (res[0] && res[0].code === 200) {
-          return {
-            questionDetials: res[0].data,
-          }
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-        Promise.reject(error)
-      })
   },
   computed: {
     userInfo() {

@@ -191,26 +191,14 @@ export default {
     Comment,
     HeadSlot,
   },
-  data() {
-    return {
-      showHead2: false,
-      answerDetails: '',
-      headerData: {},
-      popupShow: false,
-      sourceId: '',
-      answerCollectCount: '',
-      homeUserId: '',
-      isFollow: false,
-    }
-  },
   asyncData(context) {
     return Promise.all([
-      context.$axios.get(
-        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do',
-        {
-          params: { id: '8065065421625749504', userHandleFlag: 1 },
-        }
-      ),
+      context.$axios.get(knownApi.questionArticle.detail, {
+        params: {
+          id: context.query.id,
+          userHandleFlag: context.store.state.user.userId ? 1 : 0,
+        },
+      }),
     ])
       .then((res) => {
         if (res[0] && res[0].code === 200) {
@@ -231,6 +219,18 @@ export default {
         Promise.reject(error)
       })
   },
+  data() {
+    return {
+      showHead2: false,
+      answerDetails: '',
+      headerData: {},
+      popupShow: false,
+      sourceId: '',
+      answerCollectCount: '',
+      homeUserId: '',
+      isFollow: false,
+    }
+  },
   computed: {
     userInfo() {
       return this.$store.state.user
@@ -243,6 +243,7 @@ export default {
     this.initFollow()
   },
   mounted() {
+    debugger
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {

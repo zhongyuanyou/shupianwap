@@ -110,15 +110,17 @@ export default function (ctx, inject) {
         if (!store.state.app.isInApp) {
           if (process && process.client) {
             xToast.error('登录失效，请重新登录')
-            setTimeout(() => {
+            const timer = setTimeout(() => {
               redirect('/my')
+              clearTimeout(timer)
             }, 1500)
           } else {
             redirect('/my')
           }
         }
+      } else {
+        return result
       }
-      return result
     },
     (error) => {
       return Promise.reject(error)

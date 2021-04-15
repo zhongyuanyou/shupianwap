@@ -1,6 +1,11 @@
 <template>
   <div>
-    <PageHead :has-val="hasVal" confirm-text="发布问题" @submit="submit" />
+    <PageHead
+      :has-val="hasVal"
+      confirm-text="发布问题"
+      @submit="submit"
+      :title="title"
+    />
     <div class="main">
       <TitleArea
         ref="myTitle"
@@ -61,6 +66,7 @@ export default {
     return {
       fromPage: 'question',
       showToast: true,
+      title: '回答问题',
     }
   },
   computed: {
@@ -82,7 +88,6 @@ export default {
 
 <style lang="less" scoped>
 .main {
-  margin-top: 88px;
   .content {
     padding: 20px 32px 40px 32px;
     .toast-area {

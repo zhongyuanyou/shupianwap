@@ -25,28 +25,30 @@
         finished-text="没有更多了"
       >
         <sp-cell v-for="(item, index) in answerList" :key="index">
-          <div class="item" @click="$router.push('/known/detail/article')">
-            <div class="item_content">
-              <div class="item_content_lf">
-                <div class="item_Info">
-                  <div class="user_photo">
-                    <img :src="item.avatar" alt="" />
+          <sp-skeleton :row="6" :loading="recommendPlanner.length == 0">
+            <div class="item" @click="$router.push('/known/detail/article')">
+              <div class="item_content">
+                <div class="item_content_lf">
+                  <div class="item_Info">
+                    <div class="user_photo">
+                      <img :src="item.avatar" alt="" />
+                    </div>
+                    <div class="user_name">
+                      <p>{{ item.userName }}</p>
+                      <div class="user_answer">的提问期待你的解答30分钟前</div>
+                    </div>
                   </div>
-                  <div class="user_name">
-                    <p>{{ item.userName }}</p>
-                    <div class="user_answer">的提问期待你的解答30分钟前</div>
-                  </div>
+                  <p class="content">
+                    {{ item.contentText }}
+                  </p>
                 </div>
-                <p class="content">
-                  {{ item.contentText }}
-                </p>
+              </div>
+              <div class="item_bottom">
+                <p>{{ item.answerCount }} 回答 · {{ item.collectCount }}收藏</p>
+                <div class="btn" @click="goAnswer(item.id)">写回答</div>
               </div>
             </div>
-            <div class="item_bottom">
-              <p>{{ item.answerCount }} 回答 · {{ item.collectCount }}收藏</p>
-              <div class="btn" @click="goAnswer(item.id)">写回答</div>
-            </div>
-          </div>
+          </sp-skeleton>
         </sp-cell>
       </sp-list>
     </div>
@@ -108,6 +110,7 @@ import {
   PullRefresh,
   List,
   Cell,
+  Skeleton,
 } from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 
@@ -121,6 +124,7 @@ export default {
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
     [Cell.name]: Cell,
+    [Skeleton.name]: Skeleton,
   },
   props: {
     answerList: {

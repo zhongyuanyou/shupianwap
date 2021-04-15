@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     cancel() {
-      this.$router.back(-1)
+      this.$back()
     },
     openModal() {
       this.$refs.chooseTopic.showPop = true
@@ -66,7 +66,6 @@ export default {
 
 <style lang="less" scoped>
 .main {
-  margin-top: 88px;
   .title {
     font-size: 40px;
     font-family: PingFangSC-Medium, PingFang SC;
