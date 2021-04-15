@@ -30,7 +30,14 @@ export default {
   },
   methods: {
     onLeftClick() {
-      this.$router.back()
+      console.log(this.$route.query.type)
+      if (this.$route.query.type === 'qs') {
+        this.$router.replace({
+          path: '/contract/contractList',
+        })
+      } else {
+        this.$router.back()
+      }
     },
   },
 }
