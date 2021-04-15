@@ -22,7 +22,6 @@
         </div>
         <div class="item_content" @click="goDetailPage(item.type, item.id)">
           <p class="content">
-            {{ item.content }}
             {{ item.contentText }}
           </p>
           <img
@@ -69,6 +68,7 @@ export default {
     [List.name]: List,
     [Cell.name]: Cell,
     [Image.name]: Image,
+    [PullRefresh.name]: PullRefresh,
   },
 
   props: {
