@@ -489,7 +489,7 @@ export default {
         return x.id
       })
       coupon
-        .getCouponList(
+        .couponPage(
           { axios: this.$axios },
           {
             findType: index,
@@ -502,9 +502,9 @@ export default {
         )
         .then((result) => {
           if (index === 2) {
-            this.datalist = result.responseData
+            this.datalist = result
           } else {
-            this.nolist = result.responseData
+            this.nolist = result
           }
         })
         .catch((e) => {

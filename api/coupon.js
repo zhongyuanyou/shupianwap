@@ -48,5 +48,14 @@ const coupon = {
       url: CHIPS_WAP_BASE_URL + '/nk/coupon/v2/find_page.do',
     })
   },
+  couponPage({ axios }, params) {
+    // 查询我的可用不可用优惠券
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_WAP_BASE_URL + '/nk/coupon/v2/find_page.do',
+    })
+  },
 }
 export default coupon
