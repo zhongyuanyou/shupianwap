@@ -59,7 +59,10 @@
     <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
     <!--E 第五板块 推荐规划师-->
     <!--S 第十板块 服务详情-->
-    <ServiceDetail />
+    <ServiceDetail
+      comp-type="sc"
+      :detail-data="sellingDetail.salesGoodsOperatings.clientDetails[0]"
+    />
     <!--S 第十板块 服务详情-->
     <!--S 第十板块 猜你需要-->
     <sp-list
@@ -216,28 +219,25 @@ export default {
       const formatId3 = this.sellingDetail.classCodeLevel.split(',')[2] // 产品三级分类
       const formatId = formatId3 || formatId2
       this.$axios
-        .get(recommendApi.recommendProduct, {
-          params: {
-            userId: this.$cookies.get('userId'), // 用户id
-            deviceId: this.deviceId, // 设备ID
-            formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
-            classCode: formatId1,
-            areaCode: this.city.code, // 区域编码
-            sceneId: 'app-jycpxq-02', // 场景ID
-            productId: this.sellingDetail.id, // 产品ID（产品详情页必传）
-            productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
-            title: this.sellingDetail.name, // 产品名称（产品详情页传、咨询页等）
-            platform: 'APP', // 平台（app,m,pc）
-            page: this.productPage,
-            limit: this.productLimit,
-            searchType: 1, // 搜索推荐产品类型：1：交易，2服务
-          },
+        .post(recommendApi.saleList, {
+          userId: this.$cookies.get('userId'), // 用户id
+          deviceId: this.deviceId, // 设备ID
+          formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
+          classCode: formatId1,
+          areaCode: this.city.code, // 区域编码
+          sceneId: 'app-fwcpxq-01', // 场景ID
+          productId: this.sellingDetail.id, // 产品ID（产品详情页必传）
+          productType: 'PRO_CLASS_TYPE_SALES', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
+          title: this.sellingDetail.name, // 产品名称（产品详情页传、咨询页等）
+          platform: 'm', // 平台（app,m,pc）
+          page: { pageNo: this.productPage, pageSize: this.productLimit },
         })
         .then((res) => {
           if (res.code === 200) {
             // 关闭骨架屏
             this.$refs.remNeed.needLoading = false
             this.productPage += 1
+            debugger
             if (res.data.records.length === 0) {
               this.finished = true
             }
@@ -249,6 +249,7 @@ export default {
             if (this.recommendProduct.length >= 30) {
               this.finished = true
             }
+            return
           }
           this.finished = true
         })
