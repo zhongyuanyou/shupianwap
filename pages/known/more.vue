@@ -65,6 +65,7 @@ export default {
         path: '/known/home',
         query: {
           homeUserId: id,
+          type: 2,
         },
       })
     },
