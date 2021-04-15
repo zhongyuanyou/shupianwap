@@ -153,7 +153,7 @@ export default {
           color: #ffffff;
         }
         > p {
-          max-width: 30%;
+          max-width: 25%;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;

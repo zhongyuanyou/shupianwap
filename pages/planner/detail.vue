@@ -341,6 +341,7 @@ export default {
           areaCode: this.city.code,
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
+          customerPhone: this.detailData.phone,
           plannerId: this.detailData.id,
           requireCode: '',
           requireName: '',

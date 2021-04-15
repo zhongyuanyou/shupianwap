@@ -488,7 +488,7 @@ export default {
       const curId = id
       this.$router.push({
         path: '/known/publish/question',
-        params: {
+        query: {
           id: curId,
         },
       })
@@ -504,7 +504,7 @@ export default {
           this.$axios
             .post(knownApi.content.dlt, {
               id: curId,
-              userId: this.userInfo.userId,
+              currentUserId: this.userInfo.userId,
             })
             .then((res) => {
               this.loading = false
@@ -649,10 +649,6 @@ export default {
       color: #222222;
       padding: 0 32px;
       line-height: 56px;
-      /deep/ img {
-        width: 100px;
-        height: auto;
-      }
     }
     > .imglist {
       display: flex;
@@ -700,6 +696,11 @@ export default {
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
         overflow: hidden;
+
+        /deep/ img {
+          width: 100%;
+          height: auto;
+        }
       }
       > div.tit {
         display: block;
