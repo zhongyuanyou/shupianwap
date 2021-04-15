@@ -262,12 +262,12 @@ export default {
   },
   asyncData(context) {
     return Promise.all([
-      context.$axios.get(
-        'http://172.16.132.255:7001/service/nk/question_article/v2/find_detail.do',
-        {
-          params: { id: '8065065421625749504', userHandleFlag: 1 },
-        }
-      ),
+      context.$axios.get(knownApi.questionArticle.detail, {
+        params: {
+          id: context.query.id,
+          userHandleFlag: context.store.state.user.userId ? 1 : 0,
+        },
+      }),
     ])
       .then((res) => {
         if (res[0].data.categoryName) {

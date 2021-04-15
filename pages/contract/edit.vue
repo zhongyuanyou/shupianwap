@@ -101,19 +101,27 @@ export default {
     }
   },
   mounted() {
-    // if (this.orderItem.type !== 'ws') {
-    //   this.getorder()
-    // }
-    if (this.$cookies.get('contaract')) {
-      this.partyName = this.$cookies.get('contaract').contractFirstName
-      this.userName = this.$cookies.get('contaract').contractFirstContacts
-      this.phone = this.$cookies.get('contaract').contractFirstPhone
-      this.email = this.$cookies.get('contaract').contractFirstEmail
-      this.address = this.$cookies.get('contaract').contractFirstAddr
-      this.$cookies.remove('contaract')
-    }
+    this.getorder()
   },
   methods: {
+    getorder() {
+      orderApi
+        .getDetailByOrderId(
+          { axios: this.axios },
+          { id: this.orderItem.orderId, cusOrderId: this.orderItem.cusOrderId }
+        )
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          this.loading = false
+          this.$xToast.error(err.message || '查询失败，请稍后重试')
+          const that = this
+          setTimeout(function () {
+            that.$router.back(-1)
+          }, 2000)
+        })
+    },
     validator(val) {
       if (val) {
         return /^([a-zA-Z]|[0-9])(\w|-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(
@@ -161,19 +169,7 @@ export default {
     sumfn() {
       const _this = this
       if (this.partyName && this.userName && this.phone) {
-        if (this.orderItem.type === 'ws') {
-          const contaract = {
-            contractFirstName: this.partyName,
-            contractFirstContacts: this.userName,
-            contractFirstPhone: this.phone,
-            contractFirstEmail: this.email,
-            contractFirstAddr: this.address,
-          }
-          this.$cookies.set('contaract', contaract)
-          this.$router.back(-1)
-        } else {
-          _this.applycontart()
-        }
+        _this.applycontart()
       }
     },
   },

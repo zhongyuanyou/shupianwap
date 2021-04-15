@@ -1,18 +1,8 @@
 <template>
   <div>
-    <PageHead
-      :title="editType == 1 ? '编辑文章' : '攥写文章'"
-      :has-val="hasVal"
-      @submit="submit"
-    />
+    <PageHead title="撰写文章" :has-val="hasVal" @submit="submit" />
     <div class="main">
-      <TitleArea
-        ref="myTitle"
-        :max-length="50"
-        :input-length="60"
-        :title="formData.title"
-        @setTitle="setTitle"
-      />
+      <TitleArea ref="myTitle" :title="title" @setTitle="setTitle" />
       <div class="content-area">
         <div class="content">
           <Editor
@@ -52,30 +42,36 @@ export default {
     return {
       fromPage: 'article',
       detailData: {},
-      editType: '', // editType=1为编写文章 editType=2 为新发文章
+      // editType: '', // editType=1为编写文章 editType=2 为新发文章
       articleId: '',
+      title: '',
+      topicArgs: {}, // 话题参数
     }
   },
   computed: {
-    overNum() {
-      return this.formData.title.length - this.maxLength
-    },
-    textareaRow() {
-      return Math.ceil(this.formData.title.length / 30)
-    },
     hasVal() {
       // 文章发布按钮显示必须有标题和内容
-      return this.formData.title.length > 0 && this.formData.content.length > 0
+      return this.title.length > 0 && this.formData.content.length > 0
     },
   },
   mounted() {
     // 获取参数
     this.editType = this.$route.query.editType
     this.articleId = this.$route.query.articleId
+    this.$refs.myTitle.$refs.tileArea.$refs.input.focus()
   },
   methods: {
     openModal() {
       this.$refs.chooseTopic.showPop = true
+    },
+    setTitle(myTitle) {
+      this.title = myTitle
+    },
+    setTopic(res) {
+      this.topicArgs = res
+    },
+    submit() {
+      // 发布文章
     },
   },
 }
@@ -83,7 +79,6 @@ export default {
 
 <style lang="less" scoped>
 .main {
-  margin-top: 88px;
   .choose-topic {
     height: 28px;
     font-size: 28px;
@@ -96,8 +91,5 @@ export default {
       margin-right: 10px;
     }
   }
-}
-.content-area {
-  margin-bottom: 260px;
 }
 </style>
