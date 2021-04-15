@@ -23,12 +23,16 @@ const knownApi = {
     attentionUserList: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_my_attention_user_page.do`, // 获取关注用户动态列表
     subjectList: `${CHIPS_WAP_BASE_URL}/nk/known_category/v1/subject.do`, // 获取分类列表
     attentionMore: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/attention_more.do`, // 关注更多列表
+    detail: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_detail.do`,
+    recommendArticle: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/recommendArticle.do`,
+    findAttention: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/findAttention.do`,
     findMyInvitedPage: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_my_invited_page.do`, // 我被邀请回答的问题分页查询
   },
   content: {
     add: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/add.do`, // 文章、问题、回答新增 新增内容
     dlt: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/delete.do`, // 文章、问题、回答新增 删除
     edit: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/update.do`, // 文章、问题、回答新增 删除
+    topic: `${CHIPS_WAP_BASE_URL}/nk/known_category/v1/topic.do`, // 话题列表 1代表返回的数据中只有一级分类 2代表返回的数据中包含一级分类和二级分类
   },
   question: {
     list: `${CHIPS_WAP_BASE_URL}/service/nk/question_article/v2/find_page.do`,

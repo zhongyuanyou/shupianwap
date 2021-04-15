@@ -124,7 +124,7 @@ export default {
       }
     },
     applycontart() {
-      this.Loading = true
+      this.loading = true
       contractApi
         .applycontart(
           { axios: this.axios },
@@ -151,11 +151,11 @@ export default {
               fromPage: this.orderItem.fromPage,
             },
           })
-          this.Loading = false
+          this.loading = false
         })
         .catch((err) => {
           this.$xToast.show(err)
-          this.Loading = false
+          this.loading = false
         })
     },
     sumfn() {

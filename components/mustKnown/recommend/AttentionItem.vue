@@ -94,10 +94,10 @@
   </sp-list>
 </template>
 <script>
+import { mapState } from 'vuex'
 import { Cell, List } from '@chipspc/vant-dgg'
 import CommentList from '@/components/mustKnown/CommentList'
 // import time from '@/utils/time'
-
 export default {
   name: 'AttentionItem',
   components: {
@@ -123,11 +123,21 @@ export default {
       timeStamp: 0,
     }
   },
+  computed: {
+    ...mapState({
+      userId: (state) => state.user.userInfo.userId,
+      token: (state) => state.user.userInfo.token,
+      userPhone: (state) => state.user.userInfo.userPhone,
+    }),
+  },
   watch: {
     listData(newName, oldName) {},
   },
-  mounted() {},
-
+  mounted() {
+    if (this.Token) {
+      console.log('+++++++++++++', this.token)
+    }
+  },
   methods: {
     release() {
       console.log('点击了发布')
@@ -202,10 +212,11 @@ export default {
     },
     // 进入用户详情
     goUserDetail(userId) {
+      console.log('userId', userId)
       this.$router.push({
         path: '/known/home',
         query: {
-          userId,
+          homeUserId: userId,
         },
       })
     },

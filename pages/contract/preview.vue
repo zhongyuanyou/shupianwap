@@ -1,6 +1,16 @@
 <template>
   <div class="preview">
-    <Head :title="contract.type == 'qs' ? '签署合同' : '预览合同'"> </Head>
+    <Head :title="contract.type == 'qs' ? '签署合同' : '预览合同'">
+      <template #left>
+        <my-icon
+          class="back-icon"
+          name="nav_ic_back"
+          size="0.4rem"
+          color="#1A1A1A"
+          @click.native="onLeftClick"
+        ></my-icon>
+      </template>
+    </Head>
     <LoadingCenter v-show="loading" />
     <div class="data">
       <div class="box">
@@ -62,8 +72,17 @@ export default {
     this.pdf = this.contract.contractUrl
   },
   methods: {
+    onLeftClick() {
+      if (this.$router.query.go === '-2') {
+        this.$router.push({
+          path: '/contract/contractList',
+        })
+      } else {
+        this.goBack()
+      }
+    },
     sign() {
-      this.Loading = true
+      this.loading = true
       if (
         this.$cookies.get('realStatus') === 'AUTHENTICATION_SUCCESS' ||
         this.$cookies.get('realStatus') === 'AUTHENTICATION_FAIL'
@@ -81,7 +100,7 @@ export default {
           )
           .then((res) => {
             if (res) {
-              this.Loading = false
+              this.loading = false
               this.$router.push({
                 path: '/contract/iframe',
                 query: {
@@ -92,7 +111,7 @@ export default {
             }
           })
           .catch((err) => {
-            this.Loading = false
+            this.loading = false
             Toast({
               message: err.data.error,
               overlay: true,

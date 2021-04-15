@@ -30,7 +30,7 @@
               <div class="item_content_lf">
                 <div class="item_Info">
                   <div class="user_photo">
-                    <img src="" alt="" />
+                    <img :src="item.avatar" alt="" />
                   </div>
                   <div class="user_name">
                     <p>{{ item.userName }}</p>
@@ -38,7 +38,7 @@
                   </div>
                 </div>
                 <p class="content">
-                  {{ item.content }}
+                  {{ item.contentText }}
                 </p>
               </div>
             </div>
@@ -84,7 +84,7 @@
                     })
                   "
                 >
-                  {{ item.content }}
+                  {{ item.contentText }}
                 </p>
               </div>
             </div>
@@ -143,6 +143,11 @@ export default {
       tabIndex: 0,
     }
   },
+  computed: {
+    userInfo() {
+      return this.$store.state.user
+    },
+  },
   methods: {
     tabChange(name, title) {
       console.log('name', name)
@@ -160,18 +165,20 @@ export default {
     },
     // 请求回答列表
     async getAnswerList() {
-      const params = {}
-      const { code, message, data } = await this.$axios.post(
-        knownApi.questionArticle.recommendList,
-        params
+      const params = {
+        handleUserId: this.userInfo.userId || this.$cookies.get('userId'),
+        type: 1,
+      }
+
+      const { code, message, data } = await this.$axios.get(
+        knownApi.question.writeAnswer,
+        { params }
       )
       if (code === 200) {
         if (data.rows.length > 0) {
           console.log('this.rows', data.rows)
           this.answerList = data.rows
         } else {
-          // this.attentionStatus = false
-          // this.showNotAttention = true
         }
       } else {
         console.log(message)
@@ -180,20 +187,18 @@ export default {
     // 请求邀请
     async getList() {
       const params = {
-        limit: 10,
-        page: 1,
+        handleUserId: this.userInfo.userId || this.$cookies.get('userId'),
+        type: 2,
       }
-      const { code, message, data } = await this.$axios.post(
-        knownApi.questionArticle.findMyInvitedPage,
-        params
+      const { code, message, data } = await this.$axios.get(
+        knownApi.question.writeAnswer,
+        { params }
       )
       if (code === 200) {
         if (data.rows.length > 0) {
           this.inviteList = data.rows
           console.log('this.inviteList', this.inviteList)
         } else {
-          // this.attentionStatus = false
-          // this.showNotAttention = true
         }
       } else {
         console.log(message)
@@ -299,11 +304,13 @@ export default {
           .user_photo {
             width: 72px;
             height: 72px;
-
             background: #6d7177;
             margin-right: 16px;
             border-radius: 50%;
             img {
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
             }
           }
           .user_name {

@@ -1,11 +1,12 @@
 <template>
   <div class="attention_container">
-    <sp-top-nav-bar
-      title="我的粉丝"
+    <!-- <sp-top-nav-bar
+      title="粉丝"
       :fixed="true"
       left-arrow
       @on-click-left="$router.back()"
-    />
+    /> -->
+    <Header title="粉丝" />
 
     <sp-list
       v-model="loading"
@@ -33,6 +34,7 @@
 
 <script>
 import { TopNavBar, Image, List } from '@chipspc/vant-dgg'
+import Header from '@/components/common/head/header'
 import { knownApi } from '~/api'
 export default {
   name: 'Fans',
@@ -40,6 +42,7 @@ export default {
     [TopNavBar.name]: TopNavBar,
     [Image.name]: Image,
     [List.name]: List,
+    Header,
   },
   data() {
     return {
@@ -71,7 +74,7 @@ export default {
         knownApi.home.focusFansList,
         {
           params: {
-            handleUserId: this.userInfo.userId,
+            handleUserId: this.$route.query.homeUserId || this.userInfo.userId,
             handleType: 2,
             page: this.page,
             limit: this.limit,
@@ -107,7 +110,6 @@ export default {
 .attention_container {
   height: 100%;
   background-color: #f8f8f8;
-  padding-top: 88px;
 
   /deep/ .sp-top-nav-bar {
     height: 88px;
