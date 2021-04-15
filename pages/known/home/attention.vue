@@ -1,11 +1,14 @@
 <template>
   <div class="attention_container">
-    <sp-top-nav-bar
-      title="我的关注"
+    <!-- <sp-top-nav-bar
+      title="关注"
       :fixed="true"
       left-arrow
       @on-click-left="$router.back()"
-    />
+    /> -->
+
+    <Header title="关注" />
+
     <sp-tabs
       v-model="active"
       title-active-color="#4974F5"
@@ -46,6 +49,7 @@
 
 <script>
 import { TopNavBar, Tabs, Tab, Image, List, Dialog } from '@chipspc/vant-dgg'
+import Header from '@/components/common/head/header'
 import { knownApi } from '~/api'
 export default {
   name: 'Attention',
@@ -56,6 +60,7 @@ export default {
     [Image.name]: Image,
     [List.name]: List,
     [Dialog.name]: Dialog,
+    Header,
   },
   data() {
     return {
@@ -86,7 +91,7 @@ export default {
         knownApi.home.focusFansList,
         {
           params: {
-            handleUserId: this.userInfo.userId,
+            handleUserId: this.$route.query.homeUserId || this.userInfo.userId,
             handleType: 1,
             userType: this.active ? 2 : 1, // 1普通用户 2规划师
             page: this.page,
@@ -156,7 +161,6 @@ export default {
 .attention_container {
   height: 100%;
   background-color: #f8f8f8;
-  padding-top: 88px;
 
   /deep/ .sp-top-nav-bar {
     height: 88px;
