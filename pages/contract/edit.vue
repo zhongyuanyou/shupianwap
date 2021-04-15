@@ -42,7 +42,6 @@
           name="email"
           label="电子邮箱"
           placeholder="请输入合同联系人邮箱"
-          :rules="[{ validator, message: '请输入合同联系人正确的邮箱' }]"
         />
         <Field
           v-if="formshow"
@@ -61,7 +60,9 @@
       </div>
     </div>
     <div class="btn">
-      <div class="box" @click="sumfn()">立即签署</div>
+      <div class="box" :class="verification ? 'act' : ''" @click="sumfn()">
+        立即签署
+      </div>
     </div>
   </div>
 </template>
@@ -98,7 +99,46 @@ export default {
       orderItem: this.$route.query,
       orderData: '',
       loading: false,
+      verification: false,
     }
+  },
+  watch: {
+    userName() {
+      if (
+        this.partyName &&
+        this.userName &&
+        this.phone &&
+        !/^1[3456789]\d{9}$/.test(this.phone)
+      ) {
+        this.verification = true
+      } else {
+        this.verification = false
+      }
+    },
+    partyName() {
+      if (
+        this.partyName &&
+        this.userName &&
+        this.phone &&
+        !/^1[3456789]\d{9}$/.test(this.phone)
+      ) {
+        this.verification = true
+      } else {
+        this.verification = false
+      }
+    },
+    phone() {
+      if (
+        this.partyName &&
+        this.userName &&
+        this.phone &&
+        /^1[3456789]\d{9}$/.test(this.phone)
+      ) {
+        this.verification = true
+      } else {
+        this.verification = false
+      }
+    },
   },
   mounted() {
     this.getorder()
@@ -112,6 +152,7 @@ export default {
         )
         .then((res) => {
           this.orderItem = res
+          console.log(this.orderItem)
         })
         .catch((err) => {
           this.loading = false
@@ -137,7 +178,7 @@ export default {
         .applycontart(
           { axios: this.axios },
           {
-            orderId: this.orderItem.orderId,
+            orderId: this.orderItem.id,
             contractFirstName: this.partyName,
             contractFirstContacts: this.userName,
             contractFirstPhone: this.phone,
@@ -169,7 +210,9 @@ export default {
     sumfn() {
       const _this = this
       if (this.partyName && this.userName && this.phone) {
-        _this.applycontart()
+        if (/^1[3456789]\d{9}$/.test(this.phone)) {
+          _this.applycontart()
+        }
       }
     },
   },
@@ -242,6 +285,7 @@ export default {
       width: 670px;
       height: 96px;
       background: #4974f5;
+      opacity: 0.4;
       border-radius: 8px;
       margin: 0 auto;
       line-height: 96px;
@@ -249,6 +293,9 @@ export default {
       font-size: 32px;
       font-weight: bold;
       color: #ffffff;
+    }
+    > .act {
+      opacity: 1;
     }
   }
 }
