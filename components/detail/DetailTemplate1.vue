@@ -237,7 +237,6 @@ export default {
             // 关闭骨架屏
             this.$refs.remNeed.needLoading = false
             this.productPage += 1
-            debugger
             if (res.data.records.length === 0) {
               this.finished = true
             }
@@ -249,7 +248,6 @@ export default {
             if (this.recommendProduct.length >= 30) {
               this.finished = true
             }
-            return
           }
           this.finished = true
         })
