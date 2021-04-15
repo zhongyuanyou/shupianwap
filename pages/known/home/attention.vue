@@ -1,18 +1,12 @@
 <template>
   <div class="attention_container">
-    <!-- <sp-top-nav-bar
-      title="关注"
-      :fixed="true"
-      left-arrow
-      @on-click-left="$router.back()"
-    /> -->
-
     <Header title="关注" />
 
     <sp-tabs
       v-model="active"
       title-active-color="#4974F5"
       title-inactive-color="#222222"
+      :style="{ marginTop: (appInfo.statusBarHeight || 0) + 'px' }"
       @change="tabChange"
     >
       <sp-tab
@@ -41,7 +35,9 @@
           <div class="title">{{ item.inviteeName }}</div>
           <div class="introduce">{{ item.desc }}</div>
         </div>
-        <div class="bt" @click="cancelAttention(item)">已关注</div>
+        <div v-if="!homeUserId" class="bt" @click="cancelAttention(item)">
+          已关注
+        </div>
       </div>
     </sp-list>
   </div>
@@ -77,6 +73,12 @@ export default {
     userInfo() {
       return this.$store.state.user
     },
+    homeUserId() {
+      return this.$route.query.homeUserId
+    },
+    appInfo() {
+      return this.$store.state.app.appInfo
+    },
   },
   methods: {
     tabChange() {
@@ -91,7 +93,7 @@ export default {
         knownApi.home.focusFansList,
         {
           params: {
-            handleUserId: this.$route.query.homeUserId || this.userInfo.userId,
+            handleUserId: this.homeUserId || this.userInfo.userId,
             handleType: 1,
             userType: this.active ? 2 : 1, // 1普通用户 2规划师
             page: this.page,
@@ -173,7 +175,7 @@ export default {
     z-index: 2;
     width: 100%;
     height: 80px;
-    border-bottom: 1px solid #dddddd;
+    box-shadow: 0px 1px 0px 0px #f4f4f4;
   }
 
   /deep/ .sp-tabs__line {
