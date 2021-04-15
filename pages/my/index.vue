@@ -297,7 +297,7 @@ export default {
       }
     },
     handleClickLogin() {
-      if (this.userId) return
+      if (this.token) return
       this.$router.push({
         name: 'login',
         query: { redirect: this.$route.fullPath },

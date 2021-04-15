@@ -19,6 +19,19 @@
     </div>
     <div ref="scrollView" class="page-list" @scroll="handleScollList">
       <div class="scroll-inner">
+        <sp-skeleton
+          v-for="val in 10"
+          v-show="loadingList"
+          :key="val + 'a'"
+          avatar-shape="square"
+          avatar-size="2.4rem"
+          title
+          title-width="100%"
+          avatar
+          :row="3"
+          :row-width="['80%', '70%', '50%']"
+        >
+        </sp-skeleton>
         <orderItem
           v-for="(item, index) in list"
           :key="index"
@@ -67,7 +80,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex'
-import { Tab, Tabs, Loading } from '@chipspc/vant-dgg'
+import { Tab, Tabs, Loading, Skeleton } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import OrderItem from '@/components/order/OrderItem'
 import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
@@ -81,6 +94,7 @@ export default {
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
     [Loading.name]: Loading,
+    [Skeleton.name]: Skeleton,
     Header,
     OrderItem,
     CancelOrder,
@@ -91,6 +105,7 @@ export default {
   mixins: [OrderMixins],
   data() {
     return {
+      loadingList: true,
       page: 1,
       limit: 10,
       loading: true,
@@ -223,6 +238,7 @@ export default {
             this.noMore = true
             this.list = []
           }
+          this.loadingList = false
         })
         .catch((error) => {
           if (this.page === 1) {
@@ -231,6 +247,7 @@ export default {
           this.loading = false
           this.loadingMore = false
           this.$xToast.error(error.message || '请求失败，请重试')
+          this.loadingList = false
         })
     },
     handleClickItem(type, order) {
