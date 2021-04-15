@@ -5,9 +5,8 @@
       <div v-for="item in productData" :key="item.id" class="need_item">
         <nuxt-link
           :to="{
-            path: '/detail/transactionDetails',
+            path: '/detail',
             query: {
-              type: detailType,
               productId: item.id,
             },
           }"
@@ -19,7 +18,7 @@
               fit="cover"
               radius="0.04rem"
               lazy-load
-              :src="`${item.productImgArr[0]}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
+              :src="`${item.img}?x-oss-process=image/resize,m_fill,w_160,h_160,limit_0`"
             />
           </div>
           <div class="need_item_rt">
@@ -28,14 +27,16 @@
             </p>
             <div class="label">
               <span
-                v-for="labelItem in getItemList(item.fieldList)"
-                :key="labelItem"
+                v-for="(labelItem, index) in item.tag"
+                :key="index"
                 class="label_item"
-                >{{ labelItem }}</span
+                >{{ labelItem.tagName }}</span
               >
             </div>
-            <div class="desc">降低企业办事成本，提高办事效率</div>
-            <p class="money">{{ item.platformPrice }}元</p>
+            <div class="desc">
+              <p>{{ item.salesGoodsOperatings.slogan }}</p>
+            </div>
+            <p class="money">{{ item.price }}元</p>
           </div>
         </nuxt-link>
       </div>
@@ -138,6 +139,8 @@ export default {
         align-items: center;
         margin-top: 10px;
         overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         &_item {
           padding: 0 10px;
           height: 32px;
@@ -159,6 +162,11 @@ export default {
         font-size: 22px;
         font-family: PingFang SC;
         font-weight: 400;
+        p {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
       }
       .money {
         font-size: 30px;
