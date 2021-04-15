@@ -33,9 +33,7 @@ export default {
   },
   methods: {
     handleCancel() {
-      console.log('取消')
-      // this.$router.back(-1)
-      this.$emit('handleCancel')
+      this.$back()
     },
     submit() {
       this.$emit('submit')
