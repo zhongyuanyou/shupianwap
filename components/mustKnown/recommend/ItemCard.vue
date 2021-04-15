@@ -4,7 +4,8 @@
     v-model="loading"
     :finished="finished"
     offset="0"
-    finished-text="没有更多了"
+    :finished-text="listData.length == 0 ? '' : '没有更多了'"
+    @load="onLoad"
   >
     <sp-cell v-for="(item, index) in listData" :key="index">
       <div class="item">
@@ -91,15 +92,17 @@ export default {
       },
     },
   },
-
   data() {
     return {
-      loading: true,
-      finished: false,
+      loading: false,
+      finished: true,
+      isLoading: false,
+      pages: 0,
     }
   },
   computed: {},
   methods: {
+    init() {},
     // 调到推荐页面
     goRecommend() {
       this.$router.push({
@@ -137,6 +140,10 @@ export default {
           },
         })
       }
+    },
+    onLoad() {
+      this.pages++
+      this.$emit('load', this.pages)
     },
   },
 }

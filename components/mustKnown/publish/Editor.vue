@@ -184,7 +184,6 @@ export default {
 <style lang="less">
 .edit-container {
   min-height: 400px;
-  border-top: 1px solid #ddd;
 }
 </style>
 <style lang="css">

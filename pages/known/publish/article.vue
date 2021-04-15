@@ -2,7 +2,7 @@
   <div>
     <PageHead title="撰写文章" :has-val="hasVal" @submit="submit" />
     <div class="main">
-      <TitleArea ref="myTitle" :title="title" @setTitle="setTitle" />
+      <TitleArea ref="myTitle" :title="formData.title" @setTitle="setTitle" />
       <div class="content-area">
         <div class="content">
           <Editor
@@ -14,7 +14,7 @@
       </div>
       <ChooseTopic
         ref="chooseTopic"
-        :topics-arr="topics"
+        :topics-arr="formData.topics"
         @setTopic="setTopic"
       />
     </div>
@@ -42,16 +42,18 @@ export default {
     return {
       fromPage: 'article',
       detailData: {},
-      // editType: '', // editType=1为编写文章 editType=2 为新发文章
+      editType: '', // editType=1为编写文章 editType=2 为新发文章
       articleId: '',
-      title: '',
-      topicArgs: {}, // 话题参数
     }
   },
   computed: {
-    hasVal() {
-      // 文章发布按钮显示必须有标题和内容
-      return this.title.length > 0 && this.formData.content.length > 0
+    hasVal: {
+      get() {
+        // 文章发布按钮显示必须有标题和内容
+        return (
+          this.formData.content.length > 0 && this.formData.title.length > 0
+        )
+      },
     },
   },
   mounted() {
@@ -63,15 +65,6 @@ export default {
   methods: {
     openModal() {
       this.$refs.chooseTopic.showPop = true
-    },
-    setTitle(myTitle) {
-      this.title = myTitle
-    },
-    setTopic(res) {
-      this.topicArgs = res
-    },
-    submit() {
-      // 发布文章
     },
   },
 }
