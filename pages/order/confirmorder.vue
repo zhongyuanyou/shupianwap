@@ -464,7 +464,7 @@ export default {
               overlay: true,
             })
             setTimeout(() => {
-              this.$router.push({
+              this.$router.replace({
                 path: '/pay/payType',
                 query: {
                   cusOrderId: result.cusOrderId,

@@ -94,7 +94,6 @@
     </div>
   </div>
 </template>
-
 <style lang="less" scoped>
 /deep/.sp-sticky--fixed {
   max-width: 10rem;
@@ -105,7 +104,8 @@
   background: linear-gradient(90deg, #d20001 0%, #f80302 100%);
 }
 .container {
-  position: relative;
+  width: 100%;
+  overflow-x: hidden;
   .container-advice {
     padding: 0 20px;
     margin-bottom: 32px;

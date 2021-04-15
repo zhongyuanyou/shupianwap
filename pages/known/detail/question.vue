@@ -210,18 +210,16 @@
         <sp-icon name="edit" size="0.4rem" />
         <span>写回答</span>
       </div>
-      <div class="btn" @click="like('COLLECT')">
-        <sp-icon
-          name="like-o"
-          size="0.4rem"
-          :color="questionDetials.isCollectFlag === 1 ? '#4974F5' : ''"
-        />
-        <span
-          :style="{
-            color: questionDetials.isCollectFlag === 1 ? '#4974F5' : '',
-          }"
-          >收藏</span
-        >
+      <div
+        class="btn"
+        @click="like('COLLECT')"
+        :style="{
+          background: questionDetials.isCollectFlag === 1 ? '#4974F5' : '',
+          color: questionDetials.isCollectFlag === 1 ? '#fff' : '',
+        }"
+      >
+        <sp-icon name="like-o" size="0.4rem" />
+        <span>收藏</span>
       </div>
     </div>
     <!--    上拉组件-->

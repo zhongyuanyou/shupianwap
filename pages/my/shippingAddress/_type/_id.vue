@@ -81,7 +81,12 @@
     <!--E 内容-->
     <!--S 底部-->
     <sp-bottombar safe-area-inset-bottom>
-      <sp-bottombar-button type="primary" :text="'保存'" @click="handleSave" />
+      <sp-bottombar-button
+        :loading="btnLoading"
+        type="primary"
+        :text="'保存'"
+        @click="handleSave"
+      />
     </sp-bottombar>
     <!--E 底部-->
     <!--S 地址选择-->
@@ -142,6 +147,7 @@ export default {
   },
   data() {
     return {
+      btnLoading: false,
       fixHeadStyle: null,
       ruleForm: {
         contactName: '',
@@ -329,7 +335,8 @@ export default {
     },
     async saveEdit() {
       // 保存编辑内容
-      this.loading = true
+      // this.loading = true
+      this.btnLoading = true
       this.ruleForm.defaultAddress = this.ruleForm.defaultAddress ? 1 : 0
       const params = {
         ...this.ruleForm,
@@ -340,6 +347,7 @@ export default {
       try {
         const res = await this.$axios.post(userinfoApi.updateAddress, params)
         this.loading = false
+        this.btnLoading = false
         if (res.code === 200) {
           this.$router.back()
         } else {
@@ -355,7 +363,8 @@ export default {
     },
     async saveNew() {
       // 保存新增内容
-      this.loading = true
+      // this.loading = true
+      this.btnLoading = true
       this.ruleForm.defaultAddress = this.ruleForm.defaultAddress ? 1 : 0
       const params = {
         ...this.ruleForm,
@@ -367,6 +376,7 @@ export default {
       try {
         const res = await this.$axios.post(userinfoApi.updateAddress, params)
         this.loading = false
+        this.btnLoading = true
         if (res.code === 200) {
           this.$router.back()
         } else {
