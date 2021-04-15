@@ -490,9 +490,11 @@ export default {
           this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ') ||
         this.orderData.contractUrl
       if (
-        this.orderData.contractStatus === 'STRUTS_QSZ' ||
-        this.orderData.contractStatus === 'STRUTS_CG' ||
-        this.orderData.contractVo2s.length > 0 ||
+        (this.orderData.contractStatus &&
+          (this.orderData.contractStatus === 'STRUTS_QSZ' ||
+            this.orderData.contractStatus === 'STRUTS_CG')) ||
+        (this.orderData.contractVo2s &&
+          this.orderData.contractVo2s.length > 0) ||
         (this.orderData.contractVo2s &&
           this.orderData.contractVo2s.length &&
           this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ')
@@ -508,7 +510,8 @@ export default {
           },
         })
       } else if (
-        this.orderData.contractStatus === 'STRUTS_YWC' ||
+        (this.orderData.contractStatus &&
+          this.orderData.contractStatus === 'STRUTS_YWC') ||
         (this.orderData.contractVo2s &&
           this.orderData.contractVo2s.length &&
           this.orderData.contractVo2s[0].contractStatus === 'STRUTS_YWC')
