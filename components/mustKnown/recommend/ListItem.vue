@@ -80,8 +80,10 @@ export default {
   },
   data() {
     return {
-      loading: true,
-      finished: false,
+      loading: false,
+      finished: true,
+      isLoading: false,
+      pages: 0,
       commentShow: false,
       articleId: '1',
     }

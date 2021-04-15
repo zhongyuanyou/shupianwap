@@ -41,9 +41,7 @@ export default {
     },
   },
   data() {
-    return {
-      tabs: ['关注', '推荐', '热榜', '法律', '交易', '知产', '知识'],
-    }
+    return {}
   },
   methods: {
     toggleTabs(index) {
