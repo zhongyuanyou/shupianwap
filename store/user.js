@@ -8,6 +8,7 @@
  */
 
 import { auth } from '@/api'
+import { GOODSLIST } from '~/config/constant'
 export const state = () => ({
   userInfo: {},
   token: '',
@@ -16,6 +17,7 @@ export const state = () => ({
   userNo: '', // 用户编码
   userName: '', // 用户名称=nickName
   userPhone: '', // 用户电话=fullName 加密
+  avatar: '', // 用户头像
 })
 export const mutations = {
   SET_USER(state, data = {}) {
@@ -34,10 +36,22 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
+    this.$cookies.set('userName', String(data.userName), {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 过期时间
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+    })
+    this.$cookies.set('avatar', String(data.avatar), {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 过期时间
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+    })
     state.userInfo = data
     state.token = String(data.token)
     state.userId = String(data.userId)
     state.userType = String(data.userType)
+    state.userName = String(data.userName)
+    state.avatar = String(data.avatar)
   },
   CLEAR_USER(state) {
     this.$cookies.remove('token')
@@ -81,11 +95,17 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
+    this.$cookies.set('avatar', data.url, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 过期时间
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+    })
     state.userNo = data.no
     state.userName = data.nickName
     state.userPhone = data.fullName
     state.realStatus = data.realStatus
     state.mainAccountFull = data.mainAccountFull
+    state.avatar = data.url || GOODSLIST
   },
 }
 
