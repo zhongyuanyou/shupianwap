@@ -391,7 +391,7 @@ export default {
           this.loading = false
           this.cusOrderPayType = this.checkPayType()
           if (
-            this.orderData.orderSplitAndCusVo ===
+            this.orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
             'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
           )
             this.shouldPayText = '实付金额'
