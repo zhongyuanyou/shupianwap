@@ -111,7 +111,7 @@ export default {
           { id: this.orderItem.orderId, cusOrderId: this.orderItem.cusOrderId }
         )
         .then((res) => {
-          console.log(res)
+          this.orderItem = res
         })
         .catch((err) => {
           this.loading = false
