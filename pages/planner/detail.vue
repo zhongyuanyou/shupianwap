@@ -162,6 +162,7 @@
     <div class="footer">
       <sp-bottombar safe-area-inset-bottom>
         <sp-bottombar-button
+          v-if="!hideIM"
           type="primary"
           text="电话联系"
           :disabled="!detailData.phone"
