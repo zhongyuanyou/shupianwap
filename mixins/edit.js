@@ -148,6 +148,7 @@ export default {
             path: '/known/detail/question',
             query: {
               id,
+              status: 'release',
             },
           })
         }, 2000)
