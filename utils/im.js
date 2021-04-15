@@ -15,9 +15,9 @@ export function imInit(data = {}) {
   const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
   const BASE = {
     // 开发、测试环境
-    development: 'T',
+    development: 'D',
     // 预发布环境
-    release: 'D',
+    release: 'T',
     // 生产环境
     production: 'P',
   }

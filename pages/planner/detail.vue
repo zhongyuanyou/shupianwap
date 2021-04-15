@@ -9,7 +9,7 @@
 
 <template>
   <div class="detail">
-    <div v-if="!hideHeader" class="head">
+    <div v-if="!hideHeader && !isApplets" class="head">
       <Header title="规划师">
         <template #left>
           <sp-icon
@@ -241,12 +241,15 @@ export default {
       hideIM: this.$route.query.imUserId === this.$route.query.mchUserId, // 目前是 获取到imUserId与mchUserId相等，说明是自己与自己聊天，不显示IM
       hideHeader: !!this.$route.query.hideHeader || false,
       redirectType: this.$route.query.redirectType || 'wap', // 跳转的到 wap里面还是app里面去
+      requireCode: this.$route.query.requireCode || '', // 隐号拨打需要
+      requireName: this.$route.query.requireName || '', // 隐号拨打需要
     }
   },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       userInfo: (state) => state.user.userInfo,
+      isApplets: (state) => state.app.isApplets,
     }),
     formatTagList() {
       const tagList = this.detailData.tagList
@@ -323,9 +326,14 @@ export default {
       this.uPShareOption()
     },
     handleCall() {
+      // 如果当前页面在app中，则调用原生拨打电话的方法
       if (this.isInApp) {
         this.$appFn.dggBindHiddenPhone(
-          { plannerId: this.detailData.id },
+          {
+            plannerId: this.detailData.id,
+            requireCode: this.requireCode,
+            requireName: this.requireName,
+          },
           (res) => {
             const { code } = res || {}
             if (code !== 200) this.$xToast.error('拨号失败！')
@@ -342,8 +350,11 @@ export default {
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
           plannerId: this.detailData.id,
-          requireCode: '',
-          requireName: '',
+          customerPhone:
+            this.$store.state.user.userPhoneFull ||
+            this.$cookies.get('userPhoneFull'),
+          requireCode: this.requireCode,
+          requireName: this.requireName,
           // id: mchUserId,
           // sensitiveInfoType: 'MCH_USER',
         })
@@ -366,11 +377,11 @@ export default {
           return ''
         }
       } catch (err) {
-        Toast({
-          message: '未获取到划师联系方式',
-          iconPrefix: 'sp-iconfont',
-          icon: 'popup_ic_fail',
-        })
+        // Toast({
+        //   message: '未获取到划师联系方式',
+        //   iconPrefix: 'sp-iconfont',
+        //   icon: 'popup_ic_fail',
+        // })
       }
     },
     handleIM() {
@@ -449,7 +460,7 @@ export default {
     },
     // 拨打电话号码
     uPCall(telNumber) {
-      // 如果当前页面在app中，则调用原生拨打电话的方法
+      // 浏览器中调用的
       callPhone(telNumber.phone)
     },
 
@@ -466,6 +477,8 @@ export default {
               name: userName,
               userId: mchUserId,
               userType: type || 'MERCHANT_B',
+              requireCode: this.requireCode || '',
+              requireName: this.requireName || '',
             },
             (res) => {
               const { code } = res || {}
@@ -484,7 +497,12 @@ export default {
         return
       }
       const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
-      this.creatImSessionMixin({ imUserId: mchUserId, imUserType })
+      this.creatImSessionMixin({
+        imUserId: mchUserId,
+        imUserType,
+        requireCode: this.requireCode || '',
+        requireName: this.requireName || '',
+      })
     },
 
     // 平台不同，跳转方式不同

@@ -121,7 +121,9 @@ export default {
     plannerInfoUrlJump(mchUserId) {
       this.$router.push({
         path: '/planner/detail',
-        query: { mchUserId },
+        query: {
+          mchUserId,
+        },
       })
     },
     // 规划师拨号
@@ -188,6 +190,8 @@ export default {
       const intentionCity = {}
       intentionCity[this.city.code] = this.city.name
       const sessionParams = {
+        requireCode: this.sellingDetail.classCodeLevel.split(',')[0],
+        requireName: '',
         imUserId: mchUserId, // 商户用户ID
         imUserType: type, // 用户类型
         ext: {

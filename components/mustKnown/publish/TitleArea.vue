@@ -61,6 +61,9 @@ export default {
     },
     edit() {
       this.showInput = false
+      setTimeout(() => {
+        this.$refs.tileArea.$refs.input.focus()
+      })
     },
   },
 }

@@ -129,28 +129,21 @@ export default {
     },
   },
   mounted() {
-    this.getOrderList()
     if (this.$route.query.type) {
       const pageType = this.$route.query.type
       if (pageType === 0) {
         this.selectedOrderStatus = ''
-      } else if (pageType === 1) {
+      } else if (pageType === '1') {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_UNPAID'
-      } else if (pageType === 2) {
+      } else if (pageType === '2') {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_PROGRESSING'
-      } else if (pageType === 3) {
+      } else if (pageType === '3') {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_COMPLETED'
-      } else if (pageType === 4) {
+      } else if (pageType === '4') {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_CANCELLED'
       }
     }
-    // window.addEventListener(
-    //   'scroll',
-    //   this.throttle(this.scollChange, 500, 1000)
-    // )
-    // this.$on('hook:beforeDestroy', () => {
-    //   window.removeEventListener('scroll', this.chartResize)
-    // })
+    this.getOrderList()
   },
   methods: {
     handleScollList(e) {

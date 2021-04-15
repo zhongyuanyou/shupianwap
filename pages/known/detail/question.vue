@@ -42,7 +42,6 @@
         v-if="
           questionDetials.contentImageUrl &&
           questionDetials.contentImageUrl.length <= 2 &&
-          questionDetials.contentImageUrl &&
           questionDetials.contentImageUrl.length > 0 &&
           !contentshow
         "
@@ -110,7 +109,7 @@
           :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
           @click="$router.push('/known/detail/invitationList')"
         >
-          <sp-icon name="friends-o" size="0.4rem" />
+          <my-icon name="yaoqinghuida_mian" size="0.32rem"></my-icon>
           <p>邀请回答</p>
         </div>
         <div
@@ -118,35 +117,38 @@
           :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
           @click="$router.push('/known/publish/answer')"
         >
-          <sp-icon name="edit" size="0.4rem" />
+          <my-icon name="xiehuida" size="0.32rem"></my-icon>
           <p>写回答</p>
         </div>
         <div class="box">
-          <sp-icon
-            name="like-o"
-            size="0.4rem"
-            :color="questionDetials.isCollectFlag === 1 ? '#4974F5' : ''"
-          />
+          <my-icon
+            :name="
+              questionDetials.isCollectFlag === 1 ? 'shoucang_mian' : 'shoucang'
+            "
+            :color="questionDetials.isCollectFlag === 1 ? '#555555' : '#4974F5'"
+            size="0.32rem"
+          ></my-icon>
           <p
             :style="{
-              color: questionDetials.isCollectFlag === 1 ? '#4974F5' : '',
+              color:
+                questionDetials.isCollectFlag === 1 ? '#555555' : '#4974F5',
             }"
             @click="like('COLLECT')"
           >
-            收藏
+            {{ questionDetials.isCollectFlag === 1 ? '已收藏' : '收藏' }}
           </p>
         </div>
       </div>
     </div>
-    <div v-if="releaseStatus === 1" class="success">
+    <div v-if="releaseStatus === 'release'" class="success">
       <div>
         <sp-icon name="certificate" size="0.45rem" color="#00B365" /><span
           >成功提问</span
         >
       </div>
-      <p>你可以邀请下面用户来更快获得回答</p>
+      <p>你可以邀请用户来更快获得回答</p>
     </div>
-    <div v-if="releaseStatus === 1" class="answer">
+    <div class="answer">
       <div class="head">
         <p>回答 {{ total }}</p>
         <div>
@@ -190,7 +192,8 @@
         </div>
       </sp-list>
     </div>
-    <div v-show="fixedshow" class="fiexdbtn">
+    <!-- <div v-show="fixedshow" class="fiexdbtn"> -->
+    <div class="fiexdbtn">
       <div
         class="btn"
         :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
@@ -207,18 +210,16 @@
         <sp-icon name="edit" size="0.4rem" />
         <span>写回答</span>
       </div>
-      <div class="btn" @click="like('COLLECT')">
-        <sp-icon
-          name="like-o"
-          size="0.4rem"
-          :color="questionDetials.isCollectFlag === 1 ? '#4974F5' : ''"
-        />
-        <span
-          :style="{
-            color: questionDetials.isCollectFlag === 1 ? '#4974F5' : '',
-          }"
-          >收藏</span
-        >
+      <div
+        class="btn"
+        @click="like('COLLECT')"
+        :style="{
+          background: questionDetials.isCollectFlag === 1 ? '#4974F5' : '',
+          color: questionDetials.isCollectFlag === 1 ? '#fff' : '',
+        }"
+      >
+        <sp-icon name="like-o" size="0.4rem" />
+        <span>收藏</span>
       </div>
     </div>
     <!--    上拉组件-->
@@ -260,30 +261,23 @@ export default {
     [Popup.name]: Popup,
     [Dialog.name]: Dialog,
   },
-  asyncData(context) {
-    return Promise.all([
-      context.$axios.get(knownApi.questionArticle.detail, {
-        params: {
-          id: context.query.id,
-          userHandleFlag: context.store.state.user.userId ? 1 : 0,
-        },
-      }),
-    ])
-      .then((res) => {
-        if (res[0].data.categoryName) {
-          res[0].data.categoryName = res[0].data.categoryName.split(',')
-        }
-        console.log(res)
-        if (res[0] && res[0].code === 200) {
-          return {
-            questionDetials: res[0].data,
-          }
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-        Promise.reject(error)
-      })
+  async asyncData({ $axios, store, query }) {
+    const res = await $axios.get(knownApi.questionArticle.detail, {
+      params: {
+        id: query.id,
+        userId: store.state.user.userId,
+        userHandleFlag: store.state.user.userId ? 1 : 0,
+      },
+    })
+    if (res.data.categoryName) {
+      res.data.categoryName = res.data.categoryName.split(',')
+    }
+    if (res.data.contentImageUrl) {
+      res.data.contentImageUrl = res.data.contentImageUrl.split(',')
+    }
+    return {
+      questionDetials: res.data,
+    }
   },
   data() {
     return {
@@ -294,7 +288,7 @@ export default {
       scrollTop: 0,
       questionDetials: '',
       questionList: '',
-      releaseStatus: 0,
+      releaseStatus: '',
       orderBy: 'totalBrowseCount=desc',
       handleLikeType: null,
       finished: false,
@@ -319,6 +313,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.questionDetials)
     window.addEventListener('scroll', this.watchScroll)
   },
   destroyed() {
@@ -344,8 +339,6 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.questionDetials = res.data
-            this.questionDetials.contentImageUrl =
-              'https://cn.vuejs.org/images/logo.png,https://cn.vuejs.org/images/logo.png,https://cn.vuejs.org/images/logo.png'
             if (this.questionDetials.contentImageUrl) {
               this.questionDetials.contentImageUrl = this.questionDetials.contentImageUrl.split(
                 ','
@@ -474,7 +467,7 @@ export default {
       const curId = id
       this.$router.push({
         path: '/known/publish/question',
-        params: {
+        query: {
           id: curId,
         },
       })
@@ -490,7 +483,7 @@ export default {
           this.$axios
             .post(knownApi.content.dlt, {
               id: curId,
-              userId: this.userInfo.userId,
+              currentUserId: this.userInfo.userId,
             })
             .then((res) => {
               this.loading = false
@@ -682,6 +675,11 @@ export default {
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
         overflow: hidden;
+
+        /deep/ img {
+          width: 100%;
+          height: auto;
+        }
       }
       > div.tit {
         display: block;
@@ -744,13 +742,16 @@ export default {
       > .box {
         padding-top: 23px;
         box-sizing: border-box;
-        width: 33%;
+        width: 250px;
         height: 118px;
         font-size: 26px;
         font-weight: 500;
         color: #555555;
         text-align: center;
         border-left: 1px solid #ddd;
+        p {
+          margin-top: 10px;
+        }
       }
       > .box:first-child {
         border-left: none;

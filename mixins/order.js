@@ -189,46 +189,6 @@ export default {
           this.$xToast.error(err.message || '获取支付信息失败')
         })
     },
-    // // 判断是分批支付还是全款支付等
-    checkCusBatchPay1() {
-      this.$refs.payModal.showPop = true
-      if (
-        this.payList.length === this.orderData.orderList.length ||
-        this.payList.length === 1
-      ) {
-        // 此时一个订单只有一个支付信息则为全款支付
-        this.$router.push({
-          path: '/pay/payType',
-          query: {
-            fromPage: this.fromPage,
-            cusOrderId: this.orderData.cusOrderId,
-            batchIds: this.batchIds,
-          },
-        })
-      } else {
-        // 是分批支付则弹起分批支付弹窗 关闭关联订单弹窗
-        this.$refs.payModal.showPop = true
-        this.$refs.cancleOrderModel.showPop = false
-        let thisTimePayTotal = 0 // 本期应付总额
-        let allTimePayTotal = 0 // 剩余未支付所有批次总额
-        const idsArr = [] // 应分批支付id
-        this.payList.forEach((element) => {
-          if (element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
-            thisTimePayTotal += Number(element.money)
-            idsArr.push(element.id)
-          }
-          if (
-            element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_0' ||
-            element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1'
-          ) {
-            allTimePayTotal += Number(element.money)
-          }
-        })
-        this.thisTimePayTotal = this.regFenToYuan(thisTimePayTotal)
-        this.allTimePayTotal = this.regFenToYuan(allTimePayTotal)
-        this.batchIds = idsArr.join(',')
-      }
-    },
     // 判断是分批支付还是全款支付等
     checkCusBatchPayType() {
       if (
@@ -484,20 +444,38 @@ export default {
     },
     // jump
     toContract() {
+      // 合同链接
       const contractUrl =
-        (this.orderData.contractVo2s &&
-          this.orderData.contractVo2s.length &&
-          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ') ||
-        this.orderData.contractUrl
+        this.orderData.contractVo2s &&
+        this.orderData.contractVo2s.length &&
+        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+          ? this.orderData.contractVo2s[0].contractUrl
+          : this.orderData.contractUrl
+      // 合同ID
+      const contractId =
+        this.orderData.contractVo2s &&
+        this.orderData.contractVo2s.length &&
+        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+          ? this.orderData.contractVo2s[0].contractId
+          : this.orderData.contractId
+      // 合同编号
+      const contractNo =
+        this.orderData.contractVo2s &&
+        this.orderData.contractVo2s.length &&
+        (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG')
+          ? this.orderData.contractVo2s[0].contractNo
+          : this.orderData.contractNo
       if (
         (this.orderData.contractStatus &&
           (this.orderData.contractStatus === 'STRUTS_QSZ' ||
             this.orderData.contractStatus === 'STRUTS_CG')) ||
         (this.orderData.contractVo2s &&
-          this.orderData.contractVo2s.length > 0) ||
-        (this.orderData.contractVo2s &&
           this.orderData.contractVo2s.length &&
-          this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ')
+          (this.orderData.contractVo2s[0].contractStatus === 'STRUTS_QSZ' ||
+            this.orderData.contractVo2s[0].contractStatus === 'STRUTS_CG'))
       ) {
         this.$router.push({
           path: '/contract/preview',
@@ -507,6 +485,8 @@ export default {
             fromPage: this.fromPage,
             contractUrl,
             type: 'qs',
+            contractId,
+            contractNo,
           },
         })
       } else if (
@@ -523,6 +503,8 @@ export default {
             cusOrderId: this.orderData.cusOrderId,
             fromPage: this.fromPage,
             contractUrl,
+            contractId,
+            contractNo,
             type: 'yl',
           },
         })

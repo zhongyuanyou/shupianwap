@@ -199,12 +199,9 @@
     >
       <div class="popUserInfo">
         <div class="popUserPhoto">
-          <img
-            src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
-            alt=""
-          />
+          <img :src="userInfo.avatar" alt="" />
         </div>
-        <span>提个问题</span>
+        <span>{{ userInfo.userName }}</span>
       </div>
       <div class="answer_article">
         <div class="item" @click="tonav('/known/publish/question')">
@@ -607,8 +604,25 @@ export default {
       if (event) {
       }
     },
+    async isLogin() {
+      if (this.userInfo.userId && this.userInfo.token) {
+        return true
+      } else if (this.isInApp) {
+        await this.$appFn.dggLogin()
+      } else {
+        this.$router.push({
+          path: '/login',
+          query: {
+            redirect: this.$route.fullPath,
+          },
+        })
+      }
+    },
     // 打开文章编辑框
     openArticle() {
+      if (!this.isLogin) {
+        return
+      }
       this.showArticlePop = true
     },
     // 关闭弹出框

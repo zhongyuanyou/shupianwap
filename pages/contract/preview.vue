@@ -11,8 +11,17 @@
         ></my-icon>
       </template>
     </Head>
+    <sp-skeleton
+      v-for="_index in 10"
+      :key="_index"
+      title
+      :row="3"
+      style="margin-top: 10px"
+      :loading="skeletonLoading"
+    >
+    </sp-skeleton>
     <LoadingCenter v-show="loading" />
-    <div class="data">
+    <div v-show="!skeletonLoading" class="data">
       <div class="box">
         <Pdf v-if="pdf" :src="pdf" />
         <p v-else>合同预览失败</p>
@@ -44,9 +53,10 @@
 
 <script>
 import Pdf from 'vue-pdf'
-import { Button, Dialog, Toast } from '@chipspc/vant-dgg'
+import { Button, Dialog, Toast, Skeleton } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
 import contractApi from '@/api/contract'
+import orderApi from '@/api/order'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'Preview',
@@ -56,6 +66,7 @@ export default {
     [Dialog.Component.name]: Dialog.Component,
     Pdf,
     LoadingCenter,
+    [Skeleton.name]: Skeleton,
   },
   data() {
     return {
@@ -66,12 +77,44 @@ export default {
       btnshow: false,
       timeer: '',
       loading: false,
+      skeletonLoading: false,
     }
   },
-  mounted() {
-    this.pdf = this.contract.contractUrl
+  created() {
+    if (
+      this.contract.fromPage === 'orderList' ||
+      this.contract.fromPage === 'orderDetail'
+    ) {
+      this.skeletonLoading = true
+      this.getorder()
+    } else {
+      this.pdf = this.contract.contractUrl
+    }
   },
+  mounted() {},
   methods: {
+    getorder() {
+      orderApi
+        .getDetailByOrderId(
+          { axios: this.axios },
+          { id: this.contract.orderId, cusOrderId: this.contract.cusOrderId }
+        )
+        .then((res) => {
+          this.contract.contractId = res.contractVo2s[0].contractId
+          this.contract.contactWay = res.contractVo2s[0].contractFirstPhone
+          this.contract.signerName = res.contractVo2s[0].contractFirstContacts
+          this.pdf = res.contractVo2s[0].contractUrl
+          this.skeletonLoading = false
+        })
+        .catch((err) => {
+          this.skeletonLoading = false
+          this.$xToast.error(err.message || '查询失败，请稍后重试')
+          const that = this
+          setTimeout(function () {
+            that.$router.back(-1)
+          }, 2000)
+        })
+    },
     onLeftClick() {
       if (this.contract.go && this.contract.go === '-2') {
         this.$router.push({
@@ -101,7 +144,7 @@ export default {
           .then((res) => {
             if (res) {
               this.loading = false
-              this.$router.push({
+              this.$router.replace({
                 path: '/contract/iframe',
                 query: {
                   src: res,

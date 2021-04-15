@@ -15,7 +15,9 @@
               <p class="p1">
                 订单编号：
                 <span class="no">{{ item.orderNo }}</span>
-                <span class="price">{{ item.orderPayableMoney }}元</span>
+                <span class="price"
+                  >{{ changeMoney(item.orderPayableMoney) }}元</span
+                >
               </p>
               <div class="serve-area">
                 <p
@@ -77,7 +79,7 @@
 // 关联订单提示弹窗
 import { Popup, Button, RadioGroup, Radio, Cell } from '@chipspc/vant-dgg'
 import { dict } from '@/api/index'
-import orderApi from '@/api/order'
+import changeMoney from '@/utils/changeMoney'
 let timer
 export default {
   components: {
@@ -188,6 +190,9 @@ export default {
       } catch (error) {
         this.$xToast.error('获取订单取消原因失败')
       }
+    },
+    changeMoney(num) {
+      return changeMoney.regFenToYuan(num)
     },
     submit() {
       if (this.modalType === 1) {
