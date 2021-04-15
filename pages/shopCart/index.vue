@@ -179,13 +179,6 @@ export default {
     },
   },
 
-  created() {
-    if (process && process.client) {
-      this.postUpdate({ type: 'init' })
-      this.getList()
-      this.onLoad()
-    }
-  },
   mounted() {
     // 注册一个方法，app里面使用
     if (this.isInApp) {
@@ -198,8 +191,15 @@ export default {
       this.$appFn.dggGetUserInfo((res) => {
         if (res.code === 200 && res.data.userId && res.data.token) {
           this.$store.dispatch('user/setUser', res.data)
+          this.postUpdate({ type: 'init' })
+          this.onLoad()
+        } else {
+          this.$xToast.error('未获取到用户信息')
         }
       })
+    } else {
+      this.postUpdate({ type: 'init' })
+      this.onLoad()
     }
   },
 

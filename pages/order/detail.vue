@@ -280,13 +280,14 @@
       />
     </section>
     <div v-if="!hasData" class="loading-area">
+      <sp-skeleton title avatar :row="10" :loading="loading"> </sp-skeleton>
       <LoadingCenter v-show="loading" />
     </div>
   </div>
 </template>
 
 <script>
-import { Button } from '@chipspc/vant-dgg'
+import { Button, Skeleton } from '@chipspc/vant-dgg'
 import Banner from '@/components/order/detail/Banner'
 // 服务订单
 import ServeList from '@/components/order/detail/ServeList'
@@ -301,6 +302,7 @@ import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   components: {
     [Button.name]: Button,
+    [Skeleton.name]: Skeleton,
     Banner,
     ServeList,
     TradeList,
@@ -387,6 +389,7 @@ export default {
           }
           this.getBatchList()
           this.hasData = true
+          this.loading = false
           this.cusOrderPayType = this.checkPayType()
           // if (
           //   this.orderData.cusOrderPayStatusNo !==

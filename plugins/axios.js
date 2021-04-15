@@ -107,19 +107,20 @@ export default function (ctx, inject) {
       if (code === 5223) {
         // 清空登录信息
         store.commit('user/CLEAR_USER')
-        store.commit('user/CLEAR_USER')
         if (!store.state.app.isInApp) {
           if (process && process.client) {
             xToast.error('登录失效，请重新登录')
-            setTimeout(() => {
+            const timer = setTimeout(() => {
               redirect('/my')
+              clearTimeout(timer)
             }, 1500)
           } else {
             redirect('/my')
           }
         }
+      } else {
+        return result
       }
-      return result
     },
     (error) => {
       return Promise.reject(error)
