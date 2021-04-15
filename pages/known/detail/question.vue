@@ -42,7 +42,6 @@
         v-if="
           questionDetials.contentImageUrl &&
           questionDetials.contentImageUrl.length <= 2 &&
-          questionDetials.contentImageUrl &&
           questionDetials.contentImageUrl.length > 0 &&
           !contentshow
         "
@@ -110,7 +109,7 @@
           :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
           @click="$router.push('/known/detail/invitationList')"
         >
-          <sp-icon name="friends-o" size="0.4rem" />
+          <my-icon name="yaoqinghuida_mian" size="0.32rem"></my-icon>
           <p>邀请回答</p>
         </div>
         <div
@@ -118,22 +117,25 @@
           :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
           @click="$router.push('/known/publish/answer')"
         >
-          <sp-icon name="edit" size="0.4rem" />
+          <my-icon name="xiehuida" size="0.32rem"></my-icon>
           <p>写回答</p>
         </div>
         <div class="box">
-          <sp-icon
-            name="like-o"
-            size="0.4rem"
-            :color="questionDetials.isCollectFlag === 1 ? '#4974F5' : ''"
-          />
+          <my-icon
+            :name="
+              questionDetials.isCollectFlag === 1 ? 'shoucang_mian' : 'shoucang'
+            "
+            :color="questionDetials.isCollectFlag === 1 ? '#555555' : '#4974F5'"
+            size="0.32rem"
+          ></my-icon>
           <p
             :style="{
-              color: questionDetials.isCollectFlag === 1 ? '#4974F5' : '',
+              color:
+                questionDetials.isCollectFlag === 1 ? '#555555' : '#4974F5',
             }"
             @click="like('COLLECT')"
           >
-            收藏
+            {{ questionDetials.isCollectFlag === 1 ? '已收藏' : '收藏' }}
           </p>
         </div>
       </div>
@@ -190,7 +192,8 @@
         </div>
       </sp-list>
     </div>
-    <div v-show="fixedshow" class="fiexdbtn">
+    <!-- <div v-show="fixedshow" class="fiexdbtn"> -->
+    <div class="fiexdbtn">
       <div
         class="btn"
         :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
@@ -261,30 +264,6 @@ export default {
     [Dialog.name]: Dialog,
   },
   async asyncData({ $axios, store, query }) {
-    // return Promise.all([
-    //   $axios.get(knownApi.questionArticle.detail, {
-    //     params: {
-    //       id: query.id,
-    //       userId: store.state.user.userId,
-    //       userHandleFlag: store.state.user.userId ? 1 : 0,
-    //     },
-    //   }),
-    // ])
-    //   .then((res) => {
-    //     if (res[0].data.categoryName) {
-    //       res[0].data.categoryName = res[0].data.categoryName.split(',')
-    //     }
-    //     console.log(res)
-    //     if (res[0] && res[0].code === 200) {
-    //       return {
-    //         questionDetials: res[0].data,
-    //       }
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //     Promise.reject(error)
-    //   })
     const res = await $axios.get(knownApi.questionArticle.detail, {
       params: {
         id: query.id,
@@ -294,6 +273,9 @@ export default {
     })
     if (res.data.categoryName) {
       res.data.categoryName = res.data.categoryName.split(',')
+    }
+    if (res.data.contentImageUrl) {
+      res.data.contentImageUrl = res.data.contentImageUrl.split(',')
     }
     return {
       questionDetials: res.data,
@@ -333,6 +315,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.questionDetials)
     window.addEventListener('scroll', this.watchScroll)
   },
   destroyed() {
@@ -358,8 +341,6 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.questionDetials = res.data
-            this.questionDetials.contentImageUrl =
-              'https://cn.vuejs.org/images/logo.png,https://cn.vuejs.org/images/logo.png,https://cn.vuejs.org/images/logo.png'
             if (this.questionDetials.contentImageUrl) {
               this.questionDetials.contentImageUrl = this.questionDetials.contentImageUrl.split(
                 ','
@@ -488,7 +469,7 @@ export default {
       const curId = id
       this.$router.push({
         path: '/known/publish/question',
-        params: {
+        query: {
           id: curId,
         },
       })
@@ -504,7 +485,7 @@ export default {
           this.$axios
             .post(knownApi.content.dlt, {
               id: curId,
-              userId: this.userInfo.userId,
+              currentUserId: this.userInfo.userId,
             })
             .then((res) => {
               this.loading = false
@@ -649,10 +630,6 @@ export default {
       color: #222222;
       padding: 0 32px;
       line-height: 56px;
-      /deep/ img {
-        width: 100px;
-        height: auto;
-      }
     }
     > .imglist {
       display: flex;
@@ -700,6 +677,11 @@ export default {
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
         overflow: hidden;
+
+        /deep/ img {
+          width: 100%;
+          height: auto;
+        }
       }
       > div.tit {
         display: block;
@@ -762,13 +744,16 @@ export default {
       > .box {
         padding-top: 23px;
         box-sizing: border-box;
-        width: 33%;
+        width: 250px;
         height: 118px;
         font-size: 26px;
         font-weight: 500;
         color: #555555;
         text-align: center;
         border-left: 1px solid #ddd;
+        p {
+          margin-top: 10px;
+        }
       }
       > .box:first-child {
         border-left: none;
