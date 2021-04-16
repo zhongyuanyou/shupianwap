@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <Head>
+    <Head :title="title">
       <template #left>
         <my-icon
           class="back-icon"
@@ -25,11 +25,19 @@ export default {
   data() {
     return {
       src: this.$route.query.src,
+      title: this.$route.query.type === 'qs' ? '签署合同' : '个人认证',
     }
   },
   methods: {
     onLeftClick() {
-      this.$router.back()
+      console.log(this.$route.query.type)
+      if (this.$route.query.type === 'qs') {
+        this.$router.replace({
+          path: '/contract/contractList',
+        })
+      } else {
+        this.$router.back()
+      }
     },
   },
 }

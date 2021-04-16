@@ -305,8 +305,8 @@ export default {
           this.order = result
           this.order.list = this.order.productVo
           this.price = this.order.needPayTotalMoney
-          this.getInitData(2)
-          this.getInitData(4)
+          this.getInitData(5)
+          this.getInitData(6)
           this.loading = false
         })
         .catch((e) => {
@@ -334,6 +334,7 @@ export default {
         if (code === 200) {
           const obj = {
             name: data.name,
+            classCode: data.classCode,
             classCodeName: data.classCodeName,
             id: data.id,
             salesPrice: data.salesPrice,
@@ -345,7 +346,7 @@ export default {
           this.order.list.push(obj)
           this.order.num = this.order.list.length
           this.price = this.order.salesPrice
-          this.getInitData(2)
+          this.getInitData(5)
           this.getInitData(6)
           this.skeletonloading = false
         } else {
@@ -474,8 +475,9 @@ export default {
           })
           .catch((e) => {
             this.loading = false
+            const msg = e.data.error
             Toast({
-              message: e.data.error,
+              message: msg,
               iconPrefix: 'sp-iconfont',
               icon: 'popup_ic_fail',
               overlay: true,
@@ -488,6 +490,22 @@ export default {
       const arr = this.order.list.map((x) => {
         return x.id
       })
+      const list = []
+      for (let i = 0; i < this.order.list.length; i++) {
+        const item = {
+          goodsId: this.order.list[i].id,
+          price: this.order.list[i].salesPrice,
+          goodsNum: this.order.list[i].salesVolume || 1,
+          goodsClassCode: this.order.list[i].classCode,
+        }
+        list.push(item)
+      }
+      let price = 0
+      if (this.order.salesPrice) {
+        price = this.order.salesPrice
+      } else if (this.order.skuTotalPrice) {
+        price = this.order.skuTotalPrice
+      }
       coupon
         .couponPage(
           { axios: this.$axios },
@@ -495,9 +513,11 @@ export default {
             findType: index,
             userId: this.$store.state.user.userId,
             actionId: arr,
+            orderPrice: price,
             orderByWhere: 'createTime=desc',
             limit: 10,
             page: 1,
+            commodityList: list,
           }
         )
         .then((result) => {

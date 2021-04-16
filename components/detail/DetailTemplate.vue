@@ -63,6 +63,10 @@
     <!--S 第五板块 推荐规划师-->
     <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
     <!--E 第五板块 推荐规划师-->
+    <ServiceDetail
+      comp-type="tc"
+      :detail-data="proDetail.goodsOperating.clientDetails[0]"
+    />
     <!--S 第六板块 商品动态-->
     <Dynamic />
     <!--E 第六板块 商品动态-->
@@ -117,6 +121,7 @@ import Basic from '~/components/detail/Basic'
 import Report from '~/components/detail/Report'
 import Commitment from '~/components/detail/Commitment'
 import TcPlanners from '~/components/detail/TcPlanners'
+import ServiceDetail from '~/components/detail/ServiceDetail'
 import Dynamic from '~/components/detail/Dynamic'
 import Question from '~/components/detail/Question'
 import Case from '~/components/detail/Case'
@@ -147,6 +152,7 @@ export default {
     Report,
     Commitment,
     TcPlanners,
+    ServiceDetail,
     Dynamic,
     Question,
     Case,
@@ -195,7 +201,7 @@ export default {
     // 产品详情
     proDetail() {
       return this.$store.state.tcProductDetail.detailData
-    },
+    }, // 产品banner
     city() {
       return this.$store.state.city.currentCity
     },

@@ -391,7 +391,7 @@ export default {
           this.loading = false
           this.cusOrderPayType = this.checkPayType()
           if (
-            this.orderData.orderSplitAndCusVo ===
+            this.orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
             'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
           )
             this.shouldPayText = '实付金额'
@@ -442,7 +442,6 @@ export default {
           this.getChildOrders()
           break
         case 6:
-          console.log('确认完成33')
           // 确认完成
           this.opType = 'confirmComplete'
           this.confirmOrder()

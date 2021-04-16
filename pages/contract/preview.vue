@@ -155,9 +155,12 @@ export default {
           })
           .catch((err) => {
             this.loading = false
+            const msg = err.data.error
             Toast({
-              message: err.data.error,
+              message: msg,
               overlay: true,
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
             })
             console.log('错误信息err', err)
           })

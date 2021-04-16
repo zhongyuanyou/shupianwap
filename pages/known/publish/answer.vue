@@ -10,7 +10,7 @@
       @handleCancel="cancel"
     />
     <div class="main">
-      <TitleArea ref="myTitle" :title="question.title" :can-edit="false" />
+      <TitleArea ref="myTitle" :title="questionInfo.title" :can-edit="false" />
       <div class="content">
         <Editor
           ref="myEditor"
@@ -29,6 +29,8 @@ import PageHead from '@/components/mustKnown/publish/PageHead'
 import TitleArea from '@/components/mustKnown/publish/TitleArea'
 import Editor from '@/components/mustKnown/publish/Editor'
 import EditorMinxin from '@/mixins/edit'
+import knownApi from '@/api/known'
+
 export default {
   components: {
     PageHead,
@@ -41,17 +43,39 @@ export default {
     [Button.name]: Button,
   },
   mixins: [EditorMinxin],
+  // 防止服务器拿不到数据,获取问题信息用服务器渲染
+  async asyncData({ $axios, query }) {
+    let questionInfo = {}
+    try {
+      const params = {
+        id: query.id,
+        userHandleFlag: 0,
+      }
+      const { code, data } = await $axios.get(knownApi.question.detail, {
+        params,
+      })
+      if (code === 200) {
+        questionInfo = data
+      }
+    } catch (e) {}
+    return {
+      questionInfo,
+      questionId: query.id,
+    }
+  },
   data() {
     return {
-      question: {
-        title:
-          '问题标题再次，问题标题再次，问题标题再次，问题标题再次，问题标题再次，问题标题再次，问题标题？',
-        id: '',
-      },
       active: 0,
       maxLength: 20,
-      fromPage: 'anwser',
+      fromPage: 'answer',
     }
+  },
+  computed: {
+    hasVal: {
+      get() {
+        return this.formData.content.length > 0
+      },
+    },
   },
   methods: {
     cancel() {
