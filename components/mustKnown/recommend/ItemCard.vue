@@ -24,20 +24,23 @@
           >
             {{ index + 1 }}
           </div>
-          <div class="item_content" @click="goDetailPage(item.type, item.id)">
-            <p>
-              {{ item.title }}
-            </p>
-            <span class="item_bottom"
-              >{{ computeHotNumber(item.browseCount) || 0 }} 热度</span
-            >
-          </div>
-          <div class="item_img" @click="goDetailPage(item.type, item.id)">
-            <img
-              v-if="item.contentImageUrl"
-              :src="item.contentImageUrl.split(',')[0]"
-              alt=""
-            />
+
+          <div class="item_middle">
+            <div class="item_content" @click="goDetailPage(item.type, item.id)">
+              <p>
+                {{ item.title }}
+              </p>
+              <span class="item_bottom"
+                >{{ computeHotNumber(item.browseCount) || 0 }} 热度</span
+              >
+            </div>
+            <div class="item_img" @click="goDetailPage(item.type, item.id)">
+              <img
+                v-if="item.contentImageUrl"
+                :src="item.contentImageUrl.split(',')[0]"
+                alt=""
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -194,7 +197,7 @@ export default {
       margin-top: 10px;
       margin-right: 20px;
       color: #fff;
-      background-size: 100%;
+      background-size: 100% 100%;
       line-height: 40px;
     }
     .second {
@@ -204,7 +207,7 @@ export default {
       margin-top: 10px;
       margin-right: 20px;
       color: #fff;
-      background-size: 100%;
+      background-size: 100% 100%;
       line-height: 40px;
     }
     .third {
@@ -214,31 +217,35 @@ export default {
       margin-top: 10px;
       margin-right: 20px;
       color: #fff;
-      background-size: 100%;
+      background-size: 100% 100%;
       line-height: 40px;
     }
-    .item_content {
-      width: 398px;
-      height: auto;
-      p {
-        font-size: 32px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #222222;
-        line-height: 45px;
+    .item_middle {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      .item_content {
+        height: auto;
+        p {
+          font-size: 32px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #222222;
+          line-height: 45px;
+        }
+        span {
+        }
       }
-      span {
-      }
-    }
-    .item_img {
-      img {
-        display: block;
-        width: 190px;
-        height: 127px;
-        background: #cccccc;
-        border-radius: 12px;
-        margin-top: 10px;
-        margin-left: 40px;
+      .item_img {
+        img {
+          display: block;
+          width: 190px;
+          height: 127px;
+          background: #cccccc;
+          border-radius: 12px;
+          margin-top: 10px;
+          margin-left: 40px;
+        }
       }
     }
   }
