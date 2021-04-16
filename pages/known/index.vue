@@ -620,7 +620,7 @@ export default {
     },
     // 打开文章编辑框
     openArticle() {
-      if (!this.isLogin) {
+      if (!this.isLogin()) {
         return
       }
       this.showArticlePop = true

@@ -35,7 +35,7 @@
         <span v-for="(item, index) in tags" :key="index">{{ item.name }}</span>
       </div>
       <div class="price-sales">
-        <span>{{ itemData.referencePrice }}元</span
+        <span>{{ itemData.referencePrice }}<b>元</b></span
         ><span v-if="goodstype.type === 'serve'"
           >销量 {{ itemData.salesSum }}</span
         >

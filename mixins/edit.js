@@ -138,7 +138,16 @@ export default {
         })
     },
     // 修改内容
-    modifyContent() {},
+    modifyContent() {
+      this.$axios.post(knownApi.content.edit, this.formData).then((res) => {
+        const that = this
+        if (res.code && res.code === 200) {
+          this.$xToast.success('修改成功')
+        } else {
+          this.$xToast.error('发布失败')
+        }
+      })
+    },
     // 页面跳转
     switchUrl(id) {
       const _this = this
@@ -210,6 +219,21 @@ export default {
       this.formData.categoryId = this.questionInfo.categoryId
       this.formData.categoryLevelIds = this.questionInfo.categoryLevelIds
       this.formData.categoryName = this.questionInfo.categoryName
+    },
+    async getDetailByIdApi() {
+      try {
+        const params = {
+          id: this.questionId,
+          userHandleFlag: 0,
+          userId: this.userId,
+        }
+        const { code, data } = await this.$axios.get(knownApi.question.detail, {
+          params,
+        })
+        return { code, data }
+      } catch (e) {
+        return e
+      }
     },
   },
 }

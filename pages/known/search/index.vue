@@ -25,7 +25,7 @@
         </template>
       </Search>
     </sp-sticky>
-    <div class="history">
+    <div v-if="knownHistory.length" class="history">
       <div class="tile">
         <h1>历史记录</h1>
         <span @click="clearHistory">清空</span>
@@ -36,7 +36,13 @@
           :key="index"
           @click="historyfn(item)"
         >
-          <sp-icon name="clock-o" class="clock" size="0.4rem" color="#555555" />
+          <!-- <sp-icon name="clock-o" class="clock" size="0.4rem" color="#555555" /> -->
+          <my-icon
+            class="clock"
+            name="details_ic_time"
+            size="0.32rem"
+            color="#999999"
+          ></my-icon>
           <b> {{ item }}</b>
           <sp-icon
             name="cross"

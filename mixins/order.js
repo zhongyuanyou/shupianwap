@@ -1,4 +1,5 @@
 /**
+ * ORDER_ORDER_RESOURCE_STATUS_HANDLED
  * @author tangdaibing
  * @since 2021/04/01
  * @lastEditDate 2021/04/03
@@ -12,6 +13,13 @@
  * */
 import orderUtils from '@/utils/order'
 import orderApi from '@/api/order'
+// 客户单状态code
+const ORDERSTATUSCODE = {
+  1: 'ORDER_CUS_STATUS_UNPAID', // 未付款
+  2: 'ORDER_CUS_STATUS_PROGRESSING', // 进行中
+  3: 'ORDER_CUS_STATUS_COMPLETED', // 已完成
+  4: 'ORDER_CUS_STATUS_CANCELLED', // 已取消
+}
 export default {
   data() {
     return {
@@ -229,7 +237,34 @@ export default {
     },
     // 判断展示合同按钮 false不展示  1签署合同 2查看合同
     checkContractStatus() {
-      return orderUtils.checkContractStatus(this.orderData)
+      const data = this.orderData
+      // 当客户订单状态为已取消时不展示按钮
+      if (data.cusOrderStatusNo === ORDERSTATUSCODE[4]) return false
+      if (this.fromPage === 'orderList') {
+        if (
+          (data.contractStatus &&
+            (data.contractStatus === 'STRUTS_QSZ' ||
+              data.contractStatus === 'STRUTS_CG')) ||
+          !data.contractStatus
+        ) {
+          // 当合同状态为草稿或签署中或无合同信息时显示签署合同按钮
+          return 1
+        }
+        // 当合同状态为已完成时显示查看合同按钮
+        if (data.contractStatus && data.contractStatus === 'STRUTS_YWC')
+          return 2
+        return orderUtils.checkContractStatus(this.orderData)
+      } else {
+        // 订单详情页面根据合同列表判断
+        // 当合同状态为已完成时显示查看合同按钮
+        if (
+          data.contractVo2s &&
+          data.contractVo2s.length &&
+          data.contractVo2s[0].contractStatus === 'STRUTS_YWC'
+        )
+          return 2
+        return 1
+      }
     },
     // 判断客户单状态类型 1待付款 2进行中 3已完成 4已取消
     checkCusOrderStatus() {
@@ -240,8 +275,10 @@ export default {
       return orderUtils.isShowCanCelBtn(this.orderData)
     },
     // 判断是否显示确认订单按钮
-    isShowConfirmBtn(data) {
-      return orderUtils.isShowConfirmBtn(this.orderData || data)
+    isShowConfirmBtn() {
+      return (
+        this.orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'
+      )
     },
     // 判断是否显示付款按钮
     isShowPayBtn() {

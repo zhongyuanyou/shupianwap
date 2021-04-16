@@ -30,7 +30,7 @@
         v-for="(item, index) in searchList"
         :key="index"
         class="list"
-        @click="toDetail"
+        @click="toDetail(item.id)"
       >
         <h1 v-html="item.titleHtml"></h1>
         <div class="box">
@@ -57,7 +57,7 @@
     </div>
     <div v-show="tabIndex === '3'" class="userlist">
       <div v-for="item in userList" :key="item.id" class="list">
-        <img :src="item.avatar" alt="" class="" />
+        <img :src="item.avatar" alt="" @click="toHome(item)" />
         <div class="name" v-html="item.userNameHtml"></div>
         <div class="applaudFlag">
           <sp-icon
@@ -81,36 +81,7 @@ import { mapState } from 'vuex'
 import { Sticky, Icon, Dialog } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import knownApi from '@/api/known'
-import utils from '@/utils/spread/util'
-
-// 构建uselist数据
-const buildUserList = (data, item) => {
-  const len = data.length
-  if (len === 0) {
-    return []
-  }
-  if (item) {
-    // 处理对某个用户关注|取消关注处理
-    for (let i = 0; i < len; i++) {
-      if (item.id === data[i].id) {
-        data[i].custAttentionFlag = !data[i].custAttentionFlag
-        break
-      }
-    }
-  } else {
-    for (let i = 0; i < len; i++) {
-      // 查询用户结果都为未关注,所以这里对关注字段进行数据构建
-      data[i].custAttentionFlag = false
-      // 重新构建type类型,操作人类型: 1 普通用户 2 规划师
-      if (data[i].type === 'ORDINARY_USER') {
-        data[i].custType = 1
-      } else {
-        data[i].custType = 2
-      }
-    }
-  }
-  return data
-}
+import utils from '@/utils/changeBusinessData'
 
 export default {
   name: 'Searchresult',
@@ -125,7 +96,7 @@ export default {
       if (!value) {
         return
       }
-      return utils.formatDate(value)
+      return value.split(' ')[0]
     },
   },
   async asyncData({ $axios, query }) {
@@ -140,7 +111,11 @@ export default {
       if (res.code === 200 && res.data.records.length) {
         // 用户数据
         if (query.type === '3') {
-          userList = buildUserList(res.data.records)
+          // userList = buildUserList(res.data.records)
+          res.data.records.forEach((item) => {
+            item.custAttentionFlag = false
+          })
+          userList = res.data.records
         } else {
           searchList = res.data.records
         }
@@ -169,22 +144,28 @@ export default {
         query: { type: this.tabIndex, keyword: this.value },
       })
     },
-    clooseHandle() {
-      console.log(222)
+    toHome(item) {
+      this.$router.push({
+        path: '/known/home',
+        query: {
+          homeUserId: item.id,
+          type: utils.getUserType(item.type),
+        },
+      })
     },
-    toDetail() {
+    toDetail(id) {
       if (this.tabIndex === 2) {
         this.$router.push({
           path: '/known/detail/article',
           query: {
-            // 传文章id
+            id,
           },
         })
       } else {
         this.$router.push({
           path: '/known/detail/question',
           query: {
-            // 传问题id
+            id,
           },
         })
       }
@@ -203,7 +184,10 @@ export default {
         if (res.code === 200 && res.data.records.length) {
           // 用户数据
           if (this.tabIndex === '3') {
-            this.userList = buildUserList(res.data.records)
+            res.data.records.forEach((item) => {
+              item.custAttentionFlag = false
+            })
+            this.userList = res.data.records
           } else {
             this.searchList = res.data.records
           }
@@ -221,7 +205,7 @@ export default {
             handleType: item.custAttentionFlag ? 2 : 1,
             attentionUserId: item.id,
             attentionUserName: item.userName,
-            attentionUserType: item.custType,
+            attentionUserType: item.type === 'ORDINARY_USER' ? 1 : 2,
           })
           if (res.code === 200) {
             // 重新构建页面数据,处理关注状态
@@ -232,7 +216,6 @@ export default {
             } else {
               message = '取关成功'
             }
-            this.userList = buildUserList(this.userList, item)
             this.$xToast.show({
               message,
               duration: 1000,
@@ -249,14 +232,11 @@ export default {
           })
         }
       } else {
-        Dialog.confirm({
-          title: '温馨提示',
-          message: '关注用户需先登录',
-        }).then(() => {
-          this.$router.replace({
-            name: 'login',
-            query: { redirect: this.redirect },
-          })
+        this.$router.push({
+          path: '/login',
+          query: {
+            redirect: this.$route.fullPath,
+          },
         })
       }
     },
