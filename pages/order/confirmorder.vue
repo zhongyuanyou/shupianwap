@@ -475,8 +475,9 @@ export default {
           })
           .catch((e) => {
             this.loading = false
+            const msg = e.data.error
             Toast({
-              message: e.data.error,
+              message: msg,
               iconPrefix: 'sp-iconfont',
               icon: 'popup_ic_fail',
               overlay: true,
