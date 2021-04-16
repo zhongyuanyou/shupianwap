@@ -131,12 +131,12 @@ export default {
     }),
 
     maxNum() {
-      const { stock } = this.mainData || {}
+      const { maxNum } = this.mainData || {}
       let max = 999
-      if (stock && stock < 999) {
-        max = stock
+      if (maxNum && maxNum < 99) {
+        max = maxNum
       } else {
-        max = 999
+        max = 99
       }
       max = Number(max)
       if (isNaN(max)) max = 1
