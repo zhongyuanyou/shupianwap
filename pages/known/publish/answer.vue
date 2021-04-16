@@ -60,9 +60,10 @@ export default {
   },
   mounted() {
     this.questionId = this.$route.query.id
-    const _this = this
-    this.$nextTick(() => {
-      _this.getDetailByIdApi()
+    this.getDetailByIdApi().then(({ code, data }) => {
+      if (code === 200) {
+        this.questionInfo = data
+      }
     })
   },
   methods: {
