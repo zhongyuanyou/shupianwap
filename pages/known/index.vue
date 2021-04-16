@@ -1021,19 +1021,10 @@ export default {
         > img {
           width: 48px;
           height: 48px;
-          background: #6d7177;
           border-radius: 50%;
           margin-right: 16px;
         }
       }
-      // > .popUserNick {
-      //   height: 28px;
-      //   font-size: 28px;
-      //   font-family: PingFangSC-Medium, PingFang SC;
-      //   font-weight: 500;
-      //   color: #555555;
-      //   line-height: 28px;
-      // }
     }
     > .answer_article {
       height: 285px;

@@ -10,11 +10,7 @@
         @clickInputHandle="keyClickHandle"
       >
         <template v-slot:left>
-          <sp-icon
-            name="arrow-left"
-            size="0.4rem"
-            @click="$router.push('/known/search')"
-          />
+          <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
         </template>
       </Search>
     </sp-sticky>
@@ -62,10 +58,7 @@
     <div v-show="tabIndex === '3'" class="userlist">
       <div v-for="item in userList" :key="item.id" class="list">
         <img :src="item.avatar" alt="" class="" />
-        <div class="user-desc">
-          <span class="name" v-html="item.userNameHtml"></span>
-          <span class="desc" v-html="item.descHtml"></span>
-        </div>
+        <div class="name" v-html="item.userNameHtml"></div>
         <div class="applaudFlag">
           <sp-icon
             v-if="!item.custAttentionFlag"
@@ -171,7 +164,7 @@ export default {
   },
   methods: {
     keyClickHandle() {
-      this.$router.push({
+      this.$router.replace({
         path: '/known/search',
         query: { type: this.tabIndex, keyword: this.value },
       })
@@ -430,24 +423,10 @@ export default {
         background: #d8d8d8;
         border-radius: 50%;
       }
-      .user-desc {
+      .name {
+        flex: 1;
         margin-left: 24px;
-        > span {
-          display: block;
-        }
-        .name {
-          font-size: 36px;
-          margin-bottom: 12px;
-        }
-        .desc {
-          font-size: 26px;
-          line-height: 26px;
-          color: #999999;
-          width: 412px;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-        }
+        font-size: 36px;
       }
       .applaudFlag {
         width: 144px;

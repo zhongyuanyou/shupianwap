@@ -102,7 +102,7 @@ export default {
       const keyword = this.value
       if (keyword) {
         this.addHistoryItem(keyword)
-        this.$router.push({
+        this.$router.replace({
           path: '/known/search/result',
           query: { keyword, type: this.tabIndex },
         })
