@@ -4,6 +4,14 @@
       <p class="order-no-area">
         <span class="orderNo"> 订单编号: {{ orderData.orderNo }} </span>
         <span
+          v-if="
+            orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'
+          "
+          class="order-status status3"
+          >{{ CUSORDERSTATUSCODE[orderData.cusOrderStatusNo] }}</span
+        >
+        <span
+          v-else
           class="order-status"
           :class="
             orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_CANCELLED'
@@ -137,7 +145,7 @@
           type="default"
           class="btn-confirm"
           @click="handleClickItem(5)"
-          >支付余款</sp-button
+          >立即付款</sp-button
         >
         <sp-button
           v-if="isShowConfirmBtn()"
