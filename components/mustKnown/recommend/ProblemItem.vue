@@ -31,8 +31,8 @@
           />
         </div>
         <div class="item_bottom">
-          <span class="like" @click="goDetailPage(item.type, item.id)"
-            >赞同</span
+          <span class="like" @click="goDetailPage(item.type, item.id)">
+            {{ item.isApplaudFlag }}赞同</span
           >
           <span class="comment" @click="goDetailPage(item.type, item.id)">
             · {{ item.remarkCount }}评论</span
@@ -155,7 +155,7 @@ export default {
   background: linear-gradient(180deg, #f1f3fa 0%, #fafafa 100%);
   border-radius: 12px;
   padding: 44px 32px;
-
+  width: 710px;
   .item_title {
     height: 36px;
     font-size: 36px;
@@ -200,7 +200,10 @@ export default {
       color: #555555;
       line-height: 54px;
       padding: 20px 0;
-      margin-right: 0.32rem;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 4;
+      overflow: hidden;
+      word-break: break-all;
     }
     img {
       display: block;
@@ -208,6 +211,7 @@ export default {
       height: 127px;
       background: #cccccc;
       border-radius: 12px;
+      margin-left: 0.32rem;
     }
   }
   .item_bottom {
