@@ -92,6 +92,12 @@ export default {
           _this.questionInfo = data
           _this.formData.title = data.title
           _this.formData.content = data.content
+          // start: init 话题部分参数,当用户没有点击更改话题时,则使用查询问题中的值
+          _this.formData.categoryId = data.categoryId
+          _this.formData.categoryCode = data.categoryCode
+          _this.formData.categoryLevelIds = data.categoryLevelIds
+          _this.formData.categoryName = data.categoryName
+          // end: init 话题部分参数,当用户没有点击更改话题时,则使用查询问题中的值
           _this.buildTopicArr(data)
         } else {
           _this.$xToast.error(data.error || '异常错误')
