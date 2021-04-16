@@ -305,7 +305,7 @@ export default {
           this.order = result
           this.order.list = this.order.productVo
           this.price = this.order.needPayTotalMoney
-          this.getInitData(2)
+          this.getInitData(5)
           this.getInitData(6)
           this.loading = false
         })
@@ -346,7 +346,7 @@ export default {
           this.order.list.push(obj)
           this.order.num = this.order.list.length
           this.price = this.order.salesPrice
-          this.getInitData(2)
+          this.getInitData(5)
           this.getInitData(6)
           this.skeletonloading = false
         } else {
@@ -493,11 +493,17 @@ export default {
       for (let i = 0; i < this.order.list.length; i++) {
         const item = {
           goodsId: this.order.list[i].id,
-          price: parseInt(this.order.list[i].salesPrice),
+          price: this.order.list[i].salesPrice,
           goodsNum: this.order.list[i].salesVolume || 1,
           goodsClassCode: this.order.list[i].classCode,
         }
         list.push(item)
+      }
+      let price = 0
+      if (this.order.salesPrice) {
+        price = this.order.salesPrice
+      } else if (this.order.skuTotalPrice) {
+        price = this.order.skuTotalPrice
       }
       coupon
         .couponPage(
@@ -506,6 +512,7 @@ export default {
             findType: index,
             userId: this.$store.state.user.userId,
             actionId: arr,
+            orderPrice: price,
             orderByWhere: 'createTime=desc',
             limit: 10,
             page: 1,
