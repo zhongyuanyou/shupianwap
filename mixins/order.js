@@ -473,6 +473,10 @@ export default {
         }
       }
     },
+    // 设置sku信息
+    getSkus(skuStr) {
+      return skuStr.replace(/\|/g, ';')
+    },
     // 支付列表价格转换
     changePayMoney(payItem) {
       if (payItem.money) {
