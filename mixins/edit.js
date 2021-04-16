@@ -23,6 +23,7 @@ export default {
         userName: 'dsdadsada', //
         userType: '1', // 作者类型 1 普通用户 2 规划师
         contentImageUrl: '', // 内容图片地址（多张 “,”号拼接）
+        id: '',
       },
       topics: [], // 话题
       topicStr: '',
