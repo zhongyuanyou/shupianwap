@@ -72,7 +72,7 @@ export default {
         const lastLetter = tempVal.slice(tempVal.length - 1, tempVal.length)
         const reg = /\?|？/
         if (!reg.test(lastLetter)) {
-          this.$xToast.error('输入问题并以问号结尾')
+          this.$xToast.error('标题需以问号结尾')
           return
         }
       }
@@ -103,12 +103,15 @@ export default {
       console.log('topicStr', this.topicStr)
     },
     submit() {
+      const checkFlag = this.checkParams()
+      if (!checkFlag) return
       if (!this.editType || this.editType === 1) {
-        if (this.fromPage === 'article' || this.fromPage === 'question') {
-          if (!this.formData.categoryCode) {
-            this.$xToast.error('请选择话题')
-          } else this.addContent()
+        if (this.fromPage === 'answer') {
+          this.buildAnswerParams()
         }
+        this.addContent()
+      } else {
+        this.modifyContent()
       }
     },
     editorChange(val) {
@@ -130,9 +133,12 @@ export default {
           }
         })
         .catch((err) => {
+          this.$xToast.error('发布失败')
           console.log('发布内容失败', err)
         })
     },
+    // 修改内容
+    modifyContent() {},
     // 页面跳转
     switchUrl(id) {
       const _this = this
@@ -166,6 +172,44 @@ export default {
           })
         }, 2000)
       }
+    },
+    checkParams() {
+      // check title
+      if (this.fromPage !== 'answer') {
+        const tempTitle = this.formData.title
+        if (tempTitle.length < 4) {
+          this.$xToast.error('标题不能少于4个字哦')
+          return false
+        }
+        const lastLetter = tempTitle.slice(
+          tempTitle.length - 1,
+          tempTitle.length
+        )
+        const reg = /\?|？/
+        if (this.fromPage === 'question' && !reg.test(lastLetter)) {
+          this.$xToast.error('标题需以问号结尾')
+          return false
+        }
+        // check categorycode
+        if (!this.formData.categoryCode) {
+          this.$xToast.error('请选择话题')
+          return false
+        }
+      }
+      // check content
+      if (this.formData.content.length === 0) {
+        this.$xToast.error('内容区域不能为空哦')
+        return false
+      }
+      return true
+    },
+    buildAnswerParams() {
+      this.formData.sourceId = this.questionId
+      this.formData.title = this.questionInfo.title
+      this.formData.categoryCode = this.questionInfo.categoryCode
+      this.formData.categoryId = this.questionInfo.categoryId
+      this.formData.categoryLevelIds = this.questionInfo.categoryLevelIds
+      this.formData.categoryName = this.questionInfo.categoryName
     },
   },
 }
