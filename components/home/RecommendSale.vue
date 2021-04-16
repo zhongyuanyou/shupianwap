@@ -45,7 +45,7 @@
         <div v-show="index === curentItem">
           <div class="goods-list">
             <sp-skeleton
-              v-for="val in 20"
+              v-for="val in 4"
               :key="val + 'a'"
               avatar-shape="square"
               avatar-size="2.4rem"
@@ -125,7 +125,7 @@
                 </div>
               </div>
             </div>
-            <div v-if="swipItem.noData" class="no-data">
+            <div v-if="!swipItem.goodsList.length" class="no-data">
               <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
               <p>暂无数据</p>
             </div>
@@ -267,26 +267,35 @@ export default {
         pageNo: this.tabBtn[index].page,
         limit: this.tabBtn[index].limit,
       }
-      this.$axios.post(recommendApi.saleList, params).then((res) => {
-        this.loadingList = false
-        this.loading = false
-        if (res.code === 200) {
-          this.tabBtn[index].noData = res.data.records.length === 0
-          if (this.tabBtn[index].page === 1) {
-            this.tabBtn[index].goodsList = res.data.records
+      this.$axios
+        .post(recommendApi.saleList, params, {
+          headers: {
+            'x-cache-control': 'cache',
+          },
+        })
+        .then((res) => {
+          this.loadingList = false
+          this.loading = false
+          if (res.code === 200) {
+            this.tabBtn[index].noData = res.data.records.length === 0
+            if (this.tabBtn[index].page === 1) {
+              this.tabBtn[index].goodsList = res.data.records
+            } else {
+              this.tabBtn[index].goodsList = this.tabBtn[
+                index
+              ].goodsList.concat(res.data.records)
+            }
+            // 加载更多时无更多数据
+            if (
+              !res.data.records.length &&
+              this.tabBtn[index].goodsList.length
+            ) {
+              this.tabBtn[index].noMore = true
+            }
           } else {
-            this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
-              res.data.records
-            )
+            this.tabBtn[index].page--
           }
-          // 加载更多时无更多数据
-          if (!res.data.records.length && this.tabBtn[index].goodsList.length) {
-            this.tabBtn[index].noMore = true
-          }
-        } else {
-          this.tabBtn[index].page--
-        }
-      })
+        })
     },
     priceRest(index = 0, price) {
       const isFlot = price.indexOf('.')

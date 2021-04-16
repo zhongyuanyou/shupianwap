@@ -153,12 +153,16 @@ export default {
       // 点击立即购买
       const isLogin = await this.judgeLoginMixin()
       if (isLogin) {
-        this.$router.push({
-          path: '/order/confirmorder',
-          query: {
-            productId: this.sellingGoodsData.id,
-          },
-        })
+        if (this.sellingGoodsData.stock > 0) {
+          this.$router.push({
+            path: '/order/confirmorder',
+            query: {
+              productId: this.sellingGoodsData.id,
+            },
+          })
+        } else {
+          this.$xToast.warning('当前商品没有更多库存')
+        }
       }
     },
     // 规划师详情跳转
