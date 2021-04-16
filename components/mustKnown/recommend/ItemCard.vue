@@ -232,6 +232,7 @@ export default {
           font-weight: 500;
           color: #222222;
           line-height: 45px;
+          word-break: break-all;
         }
         span {
         }
