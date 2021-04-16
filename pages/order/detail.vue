@@ -236,7 +236,7 @@
             class="btn-pay"
             @click="handleClickItem(4)"
           >
-            立即支付
+            立即付款
           </sp-button>
           <sp-button
             v-if="
@@ -248,7 +248,7 @@
             class="btn-pay"
             @click="handleClickItem(5)"
           >
-            支付余款
+            立即付款
           </sp-button>
           <sp-button
             v-if="isShowConfirmBtn()"
