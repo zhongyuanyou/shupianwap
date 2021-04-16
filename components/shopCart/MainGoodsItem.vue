@@ -45,12 +45,12 @@
           min="1"
           class="goods-count-stepper"
           :value="goodsCount"
-          :max="maxNum"
+          :max="mainData.stock ? mainData.stock : 999"
           :async-change="true"
           :disabled="
             mainData &&
             mainData.saleGoodsSubs &&
-            mainData.saleGoodsSubs.length >= 1
+            mainData.saleGoodsSubs.length < 0
           "
           @change="handleCountChange"
           @focus="handleCountFoucs"
@@ -130,14 +130,16 @@ export default {
       isInApp: (state) => state.app.isInApp,
     }),
 
-    maxNum() {
-      const { numFlag, maxNum } = this.mainData || {}
-      let max =
-        numFlag === SHOP_RESTRICTION.restrictedNumber && maxNum ? maxNum : 99
-      max = Number(max)
-      if (isNaN(max)) max = 1
-      return max
-    },
+    // maxNum() {
+    //   const { maxNum } = this.mainData || {}
+    //   let max =
+    //     maxNum === SHOP_RESTRICTION.restrictedNumber && maxNum !== 0
+    //       ? maxNum
+    //       : 999
+    //   max = Number(max)
+    //   if (isNaN(max)) max = 1
+    //   return max
+    // },
   },
   watch: {
     // 'mainData.goodsNumber': {
@@ -216,9 +218,7 @@ export default {
 
     // 超过购买限制后的触发
     handleOverlimit(action) {
-      console.log('action+++++', action)
       const { serviceResourceList = [] } = this.mainData || {}
-      console.log('this.mainData+++++', this.mainData)
       let message = ''
       switch (action) {
         case 'minus':
