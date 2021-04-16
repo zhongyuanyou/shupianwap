@@ -42,7 +42,9 @@
                 : 'lose'
             "
           ></div>
-          <div class="title">{{ item.couponName }}</div>
+          <div class="title" @click="goDetailPage(item)">
+            {{ item.couponName }}
+          </div>
           <div ref="textpro" class="content" @click="popOver(index)">
             {{ item.remark }}
           </div>
@@ -58,6 +60,7 @@
       当优惠券超出使用时间范围时，该优惠券即会失效。失效超过180天
       的优惠券会被系统自动清除，若有疑惑，请<span>联系客服</span>
     </p>
+    <LoadingCenter v-show="loading" />
   </div>
 </template>
 
@@ -65,6 +68,7 @@
 import { Button, RadioGroup, Radio, Cell, Tab, Tabs } from '@chipspc/vant-dgg'
 import Popover from '~/components/common/popover/popover_old.vue'
 import Header from '@/components/common/head/header'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { coupon } from '@/api/index'
 export default {
   components: {
@@ -76,9 +80,11 @@ export default {
     [Tabs.name]: Tabs,
     Header,
     Popover,
+    LoadingCenter,
   },
   data() {
     return {
+      loading: false,
       usedCount: 0, // 已使用
       notUsedCount: 0, // 未使用
       invalidCount: 0, // 已过期
@@ -138,6 +144,7 @@ export default {
           this.notUsedCount = result.notUsedCount
           this.invalidCount = result.invalidCount
           // console.log('this.responseData', this.responseData)
+          this.loading = false
         })
         .catch((e) => {
           if (e.code !== 200) {
@@ -149,6 +156,7 @@ export default {
     changeTab(name, title) {
       // this.$refs['myPop' + this.indexNum][0].isShow = false
       const type = this.couponType
+      this.loading = true
       console.log('type', type)
       if (type === 0) {
         this.formData.findType = 2
@@ -158,9 +166,8 @@ export default {
         coupon
           .getCouponList({ axios: this.$axios }, this.formData)
           .then((result) => {
-            console.log('result', result)
             this.responseData = result.responseData
-            console.log('responseData', this.responseData)
+            this.loading = false
           })
           .catch((e) => {
             if (e.code !== 200) {
@@ -173,9 +180,8 @@ export default {
         coupon
           .getCouponList({ axios: this.$axios }, this.formData)
           .then((result) => {
-            console.log('result', result)
             this.responseData = result.responseData
-            console.log('responseData', this.responseData)
+            this.loading = false
           })
           .catch((e) => {
             if (e.code !== 200) {
@@ -197,6 +203,19 @@ export default {
     closeBox(data) {
       this.indexNum = data
       this.$refs['myPop' + this.indexNum][0].isShow = false
+    },
+    // 进入详情
+    goDetailPage(item) {
+      if (item.useType === 1) {
+        // 全服务品类列表
+        // this.$router.push({ path: '/' })
+      } else if (item.useType === 2) {
+        // 分类列表
+        // this.$router.push({ path: '/' })
+      } else {
+        // 商品列表
+        // this.$router.push({ path: '/' })
+      }
     },
   },
 }

@@ -54,27 +54,25 @@
       >
         <div class="recommend_list">
           <div
-            v-for="(item, index) in itemsData"
+            v-for="(item, index) in productList"
             :key="index"
             class="recommend_item"
+            @click="goProductDetail(item)"
           >
             <div class="item_lf">
-              <div class="hot">{{ item.span1 }}</div>
+              <div class="hot">热卖</div>
+              <img :src="item.img" alt="" />
             </div>
             <div class="item_rt">
-              <div class="item_title">{{ item.title }}</div>
+              <div class="item_title">{{ item.name }}</div>
               <div class="item_span">
-                <span>{{ item.span2 }}</span>
-                <span>{{ item.span3 }}</span>
-                <span>{{ item.span4 }}</span>
+                <span>{{ item.classCodeLevelName }}</span>
               </div>
-              <div class="item_content">
-                顶呱呱集团专业会计师团队代账，服务快...
-              </div>
+              <div class="item_content">{{ item.classCodeName }}</div>
               <div class="item_money">
-                <div class="money_num">{{ item.money }}</div>
+                <div class="money_num">{{ item.price }}</div>
                 <div class="money_icon">元</div>
-                <div class="sale_num">半年销量 {{ item.sold_num }}</div>
+                <div class="sale_num">半年销量 {{ item.salesVolume }}</div>
               </div>
             </div>
           </div>
@@ -87,7 +85,7 @@
 <script>
 import { Button, Skeleton } from '@chipspc/vant-dgg'
 import { pay, recommendApi } from '@/api'
-
+import getUserSign from '~/utils/fingerprint'
 export default {
   components: {
     [Button.name]: Button,
@@ -96,58 +94,24 @@ export default {
   data() {
     return {
       responseData: [],
+      productList: [],
       formData: {
         payCusId: 10000000,
       }, // 请求数据
       payStatus: false,
-      itemsData: [
-        {
-          span1: '热卖',
-          title: '0元购小规模代理记账',
-          span2: '极速办理',
-          span3: '官方保障',
-          span4: '专业高效',
-          money: '1500',
-          sold_num: '123541',
-        },
-        {
-          span1: '热卖',
-          title: '四川省成都市*****科技有限公司',
-          span2: '极速办理',
-          span3: '官方保障',
-          span4: '专业高效',
-          money: '1500',
-          sold_num: '123541',
-        },
-        {
-          span1: '热卖',
-          title: '0元购小规模代理记账',
-          span2: '极速办理',
-          span3: '官方保障',
-          span4: '专业高效',
-          money: '1500',
-          sold_num: '123541',
-        },
-      ],
+      deviceId: null, // 设备唯一码
       loading: true,
-      params: {
-        userId: '', // 用户id
-        deviceId: '', // 设备ID（用户唯一标识） 0022ef1a-f685-469a-93a8-5409892207a2
-        areaCode: '', // 区域编码
-        sceneId: 'app-mainye-01', // 场景ID
-        maxsize: 120, // 要求推荐产品的数量
-        platform: 'APP', // 平台（app,m,pc）
-        formatId: '', // 产品类别
-        page: {
-          pageNo: 1,
-          pageSize: 10,
-        },
-        storeId: '', // 商户id
-        productType: 'PRO_CLASS_TYPE_SALES',
-      },
     }
   },
-
+  computed: {
+    // 产品详情
+    proDetail() {
+      return this.$store.state.tcProductDetail.detailData
+    },
+    city() {
+      return this.$store.state.city.currentCity
+    },
+  },
   mounted() {
     this.init()
   },
@@ -174,33 +138,57 @@ export default {
       this.$router.replace('/pay/payType')
     },
     // 查询推荐商品
-    findRecomList(index) {
-      const params = this.params
-      params.areaCode = this.cityCode || '510100'
-      params.page = {
-        pageNo: 1,
-        limit: 10,
+    async findRecomList() {
+      if (!this.deviceId) {
+        this.deviceId = await getUserSign()
       }
-      this.$axios.post(recommendApi.saleList, params).then((res) => {
-        this.loadingList = false
-        this.loading = false
-        if (res.code === 200) {
-          console.log('res++++++++++', res)
-          // this.tabBtn[index].noData = res.data.records.length === 0
-          // if (this.tabBtn[index].page === 1) {
-          //   this.tabBtn[index].goodsList = res.data.records
-          // } else {
-          //   this.tabBtn[index].goodsList = this.tabBtn[index].goodsList.concat(
-          //     res.data.records
-          //   )
-          // }
-          // // 加载更多时无更多数据
-          // if (!res.data.records.length && this.tabBtn[index].goodsList.length) {
-          //   this.tabBtn[index].noMore = true
-          // }
-        } else {
-          this.tabBtn[index].page--
-        }
+      console.log(
+        "this.proDetail.classCodeLevel.split(',')[0] ",
+        this.proDetail.classCodeLevel.split(',')[0]
+      )
+      const formatId1 = this.proDetail.classCodeLevel.split(',')[0] // 产品二级分类
+      const formatId2 = this.proDetail.classCodeLevel.split(',')[1] // 产品二级分类
+      const formatId3 = this.proDetail.classCodeLevel.split(',')[2] // 产品三级分类
+      const formatId = formatId3 || formatId2
+      this.$axios
+        .post(recommendApi.saleList, {
+          userId: this.$cookies.get('userId'), // 用户id
+          deviceId: this.deviceId, // 设备ID
+          formatId: '', // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
+          classCode: formatId1,
+          areaCode: this.cityCode || '510100', // 区域编码
+          sceneId: 'app-jycpxq-02', // 场景ID
+          productId: this.proDetail.id, // 产品ID（产品详情页必传）
+          productType: 'PRO_CLASS_TYPE_SALES', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
+          title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
+          platform: 'APP', // 平台（app,m,pc）
+          page: {
+            pageNo: 1,
+            limit: 10,
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.loading = false
+            this.productList = res.data.records
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+          this.$xToast.show({
+            message: '网络错误,请刷稍后再试',
+            duration: 1000,
+            icon: 'toast_ic_error',
+            forbidClick: true,
+          })
+        })
+    },
+    goProductDetail(item) {
+      this.$router.push({
+        path: '/detail',
+        query: {
+          productId: item.id,
+        },
       })
     },
   },
@@ -301,6 +289,10 @@ export default {
         line-height: 44px;
         padding: 0 13px;
       }
+      img {
+        width: 160px;
+        height: 160px;
+      }
     }
     .item_rt {
       flex: 1;
@@ -324,6 +316,7 @@ export default {
         margin-bottom: 15px;
         line-height: 28px;
         height: 28px;
+        width: 420px;
         span {
           background: #f0f2f5;
           border-radius: 4px;
@@ -334,6 +327,9 @@ export default {
           font-weight: 400;
           color: #5c7499;
           // line-height: 28px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
       .item_content {
