@@ -14,7 +14,8 @@
           v-else
           class="order-status"
           :class="
-            orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_CANCELLED'
+            orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_CANCELLED' ||
+            orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_COMPLETED'
               ? 'status1'
               : orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_UNPAID'
               ? 'status2'
@@ -44,7 +45,7 @@
             </span>
           </p>
           <p class="sku-info">
-            <span class="sku-item">{{ item.skuExtInfo }}</span>
+            <span class="sku-item">{{ getSkus(item.skuExtInfo) }}</span>
             <span class="goods-num">×{{ item.skuCount }}</span>
           </p>
           <!-- 增值服务产品中心2期已去掉 2021.03.10 -->
