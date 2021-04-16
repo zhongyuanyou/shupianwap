@@ -166,7 +166,7 @@ export default {
         knownApi.comments.like,
         {
           handleUserId: this.userInfo.userId,
-          handleUserName: this.userInfo.userName || '测试用户名',
+          handleUserName: this.userInfo.userName,
           businessId: item.id,
           handleType: item.isApplaud ? 2 : 1,
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
@@ -195,8 +195,8 @@ export default {
           sourceId: this.articleId,
           sourceType: 2, // 2 文章 3 回答
           userId: this.userInfo.userId,
-          userName: this.userInfo.userName || '测试用户名',
-          userType: 1, // 1 普通用户 2 规划师
+          userName: this.userInfo.userName,
+          userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2, // 1 普通用户 2 规划师
         }
       )
       if (code === 200) {

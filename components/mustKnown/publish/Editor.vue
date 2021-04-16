@@ -366,8 +366,7 @@ export default {
   font-family: PingFangSC-Regular, PingFang SC;
 }
 .ql-container .ql-editor {
-  padding: 0 32px;
-  padding-top: 40px;
+  padding: 40px 32px 210px;
 }
 .ql-container .ql-editor.ql-blank::before {
   font-style: unset;

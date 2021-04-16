@@ -20,11 +20,12 @@ export const actions = {
     const userId = app.$cookies.get('userId', { path: '/' })
     const userType = app.$cookies.get('userType', { path: '/' })
     const userName = app.$cookies.get('userName', { path: '/' })
+    const avatar = app.$cookies.get('avatar', { path: '/' })
 
     commit('city/SET_CITY', currentCity || {})
     commit('city/SET_POSITION_CITY', positionCityName || '')
     commit('city/SET_POSITION_STATUS', positionStatus || null)
     if (token && userId && userType)
-      commit('user/SET_USER', { token, userId, userType })
+      commit('user/SET_USER', { token, userId, userType, userName, avatar })
   },
 }
