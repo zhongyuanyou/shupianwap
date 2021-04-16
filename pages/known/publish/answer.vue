@@ -29,7 +29,6 @@ import PageHead from '@/components/mustKnown/publish/PageHead'
 import TitleArea from '@/components/mustKnown/publish/TitleArea'
 import Editor from '@/components/mustKnown/publish/Editor'
 import EditorMinxin from '@/mixins/edit'
-import knownApi from '@/api/known'
 
 export default {
   components: {
@@ -43,31 +42,13 @@ export default {
     [Button.name]: Button,
   },
   mixins: [EditorMinxin],
-  // 防止服务器拿不到数据,获取问题信息用服务器渲染
-  async asyncData({ $axios, query }) {
-    let questionInfo = {}
-    try {
-      const params = {
-        id: query.id,
-        userHandleFlag: 0,
-      }
-      const { code, data } = await $axios.get(knownApi.question.detail, {
-        params,
-      })
-      if (code === 200) {
-        questionInfo = data
-      }
-    } catch (e) {}
-    return {
-      questionInfo,
-      questionId: query.id,
-    }
-  },
   data() {
     return {
       active: 0,
       maxLength: 20,
       fromPage: 'answer',
+      questionId: '', // 问题id
+      questionInfo: {}, // 问题详情
     }
   },
   computed: {
@@ -76,6 +57,13 @@ export default {
         return this.formData.content.length > 0
       },
     },
+  },
+  mounted() {
+    this.questionId = this.$route.query.id
+    const _this = this
+    this.$nextTick(() => {
+      _this.getDetailByIdApi()
+    })
   },
   methods: {
     cancel() {

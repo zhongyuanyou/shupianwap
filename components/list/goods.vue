@@ -348,7 +348,7 @@ export default {
   .goodsbox {
     overflow-y: auto;
     padding-bottom: 20px;
-    background: #e4e4e4;
+    background: #fff;
   }
   /deep/.sp-tabs {
     .sp-tabs__line {

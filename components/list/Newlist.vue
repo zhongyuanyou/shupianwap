@@ -4,7 +4,7 @@
       v-model="loading"
       :immediate-check="false"
       :finished="finished"
-      :finished-text="datalist.length == 0 ? '' : '没有更多了'"
+      :finished-text="datalist.length == 0 ? '' : '我是有底线的...'"
       offset="0"
       @load="onLoad"
     >
@@ -21,7 +21,7 @@
           <h1>
             {{ item.name }}
           </h1>
-          <div v-if="item.tag.length > 0" class="tag">
+          <div class="tag">
             <div v-if="item.salesGoodsSubVos.length > 1">套餐</div>
             <p v-for="(tagitem, tagindex) in item.tag" :key="tagindex">
               {{ tagitem.tagName }}
@@ -31,7 +31,8 @@
             {{ item.attr }}
           </p>
           <p class="price">
-            {{ item.price === '0.00' ? '面议' : `${item.price}元` }}
+            {{ item.price === '0.00' ? '面议' : item.price
+            }}<span v-if="item.price !== '0.00'">元</span>
           </p>
         </div>
       </div>
@@ -98,36 +99,31 @@ export default {
 <style lang="less" scoped>
 .Newlist {
   .list {
-    margin: 20px 20px 0 20px;
-    padding: 20px;
-    height: 253px;
+    margin: 0 40px 0 40px;
+    padding: 32px 0;
     background: #fff;
-    border-radius: 24px;
     box-sizing: border-box;
     display: flex;
-    align-items: center;
-
-    // /deep/.list__finished-text {
-    //   background: #e4e4e4;
-    //   color: #fff;
-    // }
+    border-bottom: 1px solid #f4f4f4;
     > .left {
-      width: 160px;
-      height: 160px;
+      width: 220px;
+      height: 220px;
       > img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        border-radius: 12px;
       }
     }
     > .right {
-      margin-left: 20px;
-      width: calc(100% - 180px);
+      margin-left: 32px;
+      width: calc(100% - 240px);
       > h1 {
-        font-size: 30px;
-        font-family: PingFang SC;
-        font-weight: bold;
+        font-size: 32px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 600;
         color: #222222;
+        line-height: 42px;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
@@ -135,10 +131,16 @@ export default {
         -webkit-box-orient: vertical;
       }
       > .tag {
-        margin-top: 10px;
-        height: 35px;
+        margin-top: 16px;
+        height: 33px;
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
         > div {
           background: #ec5330;
           box-sizing: border-box;
@@ -153,21 +155,18 @@ export default {
           color: #ffffff;
         }
         > p {
-          max-width: 25%;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          box-sizing: border-box;
+          display: inline-block;
           height: 32px;
-          background: #f0f2f5;
           border-radius: 4px;
           padding: 0 9px;
           line-height: 32px;
           font-size: 22px;
           font-family: PingFang SC;
           font-weight: 400;
+          background: #f0f2f5;
+          border-radius: 4px;
+          margin-left: 20px;
           color: #5c7499;
-          margin-left: 12px;
         }
         > p:nth-child(1) {
           margin-left: 0px;
@@ -178,22 +177,29 @@ export default {
         }
       }
       > .describe {
-        margin-top: 8px;
+        min-height: 20px;
+        margin-top: 16px;
         width: 100%;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         font-size: 22px;
-        font-family: PingFang SC;
+        font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
         color: #222222;
+        line-height: 22px;
       }
       > .price {
-        margin-top: 8px;
-        font-size: 30px;
-        font-family: PingFang SC;
-        font-weight: bold;
+        margin-top: 19px;
+        font-size: 36px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 600;
         color: #ec5330;
+        line-height: 36px;
+        > span {
+          font-size: 22px;
+          line-height: 22px;
+        }
       }
     }
   }

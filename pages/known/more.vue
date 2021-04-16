@@ -19,7 +19,7 @@
         />
         <div class="user_info">
           <div class="title">{{ item.userName }}</div>
-          <div class="introduce">{{ item.desc }}</div>
+          <!-- <div class="introduce">{{ item.desc }}</div> -->
         </div>
         <div
           class="bt"
