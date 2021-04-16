@@ -102,7 +102,7 @@ export default {
         .then((res) => {
           this.contract.contractId = res.contractVo2s[0].contractId
           this.contract.contactWay = res.contractVo2s[0].contractFirstPhone
-          this.contract.signerName = res.contractVo2s[0].contractFirstContacts
+          this.contract.signerName = res.contractVo2s[0].contractFirstName
           this.pdf = res.contractVo2s[0].contractUrl
           this.skeletonLoading = false
         })
