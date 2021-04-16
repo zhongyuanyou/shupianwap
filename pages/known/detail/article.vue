@@ -115,31 +115,22 @@ export default {
     PageHead2,
     DetailArticleList,
   },
-  asyncData(context) {
-    return Promise.all([
-      context.$axios.get(knownApi.questionArticle.detail, {
-        params: {
-          id: context.query.id,
-          userHandleFlag: context.store.state.user.userId ? 1 : 0,
-        },
-      }),
-    ])
-      .then((res) => {
-        if (res[0] && res[0].code === 200) {
-          return {
-            articleDetails: res[0].data,
-            headerData: {
-              createrName: res[0].createrName,
-              contentText: res[0].contentText,
-              avatar: res[0].avatar,
-            },
-          }
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-        Promise.reject(error)
-      })
+  async asyncData({ $axios, query, store }) {
+    const res = await $axios.get(knownApi.questionArticle.detail, {
+      params: {
+        id: query.id,
+        userId: store.state.user.userId,
+        userHandleFlag: store.state.user.userId ? 1 : 0,
+      },
+    })
+    return {
+      articleDetails: res.data,
+      headerData: {
+        createrName: res.createrName,
+        contentText: res.contentText,
+        avatar: res.avatar,
+      },
+    }
   },
   data() {
     return {

@@ -67,12 +67,7 @@
   </div>
 </template>
 <script>
-import {
-  Form,
-  Field,
-  Icon,
-  // CheckboxGroup,
-} from '@chipspc/vant-dgg'
+import { Form, Field, Icon, Toast } from '@chipspc/vant-dgg'
 import Head from '@/components/common/head/header'
 import orderApi from '@/api/order'
 import contractApi from '@/api/contract'
@@ -193,7 +188,7 @@ export default {
               contractUrl: res.contractUrl,
               contractId: res.contractId,
               contractNo: res.contractNo,
-              signerName: this.userName,
+              signerName: this.partyName,
               contactWay: this.phone,
               type: 'qs',
               go: '-2',
@@ -203,8 +198,14 @@ export default {
           this.loading = false
         })
         .catch((err) => {
-          this.$xToast.show(err)
           this.loading = false
+          const msg = err.data.error
+          Toast({
+            message: msg,
+            iconPrefix: 'sp-iconfont',
+            icon: 'popup_ic_fail',
+            overlay: true,
+          })
         })
     },
     sumfn() {

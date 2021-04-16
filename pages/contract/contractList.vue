@@ -69,7 +69,7 @@ export default {
             contractUrl: val.contractUrl,
             contractId: val.contractId,
             contractNo: val.contractNo,
-            signerName: val.contractFirstContacts,
+            signerName: val.contractFirstName,
             contactWay: val.contractFirstPhone,
             type: 'qs',
             fromPage: 'contractList',

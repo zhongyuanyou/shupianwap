@@ -95,7 +95,7 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
-    this.$cookies.set('avatar', data.url, {
+    this.$cookies.set('avatar', data.url || GOODSLIST, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
@@ -105,7 +105,7 @@ export const mutations = {
     state.userPhone = data.fullName
     state.realStatus = data.realStatus
     state.mainAccountFull = data.mainAccountFull
-    state.avatar = data.url || GOODSLIST
+    state.avatar = data.url
   },
 }
 
