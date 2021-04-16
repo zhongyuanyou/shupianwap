@@ -55,6 +55,12 @@ export default {
       inputVal: '',
     }
   },
+  watch: {
+    title() {
+      this.inputVal = this.title
+      this.showInput = true
+    },
+  },
   methods: {
     blur() {
       if (this.inputVal === '') {

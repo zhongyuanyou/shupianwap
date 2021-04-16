@@ -48,8 +48,8 @@ export default {
   },
   props: {
     articleId: {
-      type: Number,
-      default: 0,
+      type: String,
+      default: '',
     },
   },
   data() {
@@ -59,6 +59,11 @@ export default {
       total: 0,
       list: [],
     }
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.user
+    },
   },
   created() {
     this.getCommentsList()
@@ -72,13 +77,11 @@ export default {
       this.value = ''
     },
     async getCommentsList() {
-      const { code, message, data } = await this.$axios.get(
+      const { code, message, data } = await this.$axios.post(
         knownApi.comments.list,
         {
-          params: {
-            currentUserId: 100,
-            sourceIds: this.articleId,
-          },
+          currentUserId: this.userInfo.userId,
+          sourceIds: this.articleId,
         }
       )
       if (code === 200) {

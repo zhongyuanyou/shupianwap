@@ -212,11 +212,11 @@
       </div>
       <div
         class="btn"
-        @click="like('COLLECT')"
         :style="{
           background: questionDetials.isCollectFlag === 1 ? '#4974F5' : '',
           color: questionDetials.isCollectFlag === 1 ? '#fff' : '',
         }"
+        @click="like('COLLECT')"
       >
         <sp-icon name="like-o" size="0.4rem" />
         <span>收藏</span>
@@ -469,6 +469,7 @@ export default {
         path: '/known/publish/question',
         query: {
           id: curId,
+          editType: 2,
         },
       })
     },

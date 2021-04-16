@@ -16,10 +16,7 @@
     <div class="main">
       <div class="user-info">
         <sp-image class="img" :src="articleDetails.avatar" />
-        <div class="infos">
-          <p>{{ articleDetails.createrName }}</p>
-          {{ articleDetails.contentText }}
-        </div>
+        <div class="infos">{{ articleDetails.createrName }}</div>
         <template v-if="articleDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
             <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
@@ -115,35 +112,26 @@ export default {
     PageHead2,
     DetailArticleList,
   },
-  asyncData(context) {
-    return Promise.all([
-      context.$axios.get(knownApi.questionArticle.detail, {
-        params: {
-          id: context.query.id,
-          userHandleFlag: context.store.state.user.userId ? 1 : 0,
-        },
-      }),
-    ])
-      .then((res) => {
-        if (res[0] && res[0].code === 200) {
-          return {
-            articleDetails: res[0].data,
-            headerData: {
-              createrName: res[0].createrName,
-              contentText: res[0].contentText,
-              avatar: res[0].avatar,
-            },
-          }
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-        Promise.reject(error)
-      })
+  async asyncData({ $axios, query, store }) {
+    const res = await $axios.get(knownApi.questionArticle.detail, {
+      params: {
+        id: query.id,
+        userId: store.state.user.userId,
+        userHandleFlag: store.state.user.userId ? 1 : 0,
+      },
+    })
+    return {
+      articleDetails: res.data,
+      headerData: {
+        createrName: res.createrName,
+        contentText: res.contentText,
+        avatar: res.avatar,
+      },
+    }
   },
   data() {
     return {
-      articleList: '',
+      articleList: [],
       headerData: {},
       showHead2: false,
       articleDetails: '',
@@ -156,11 +144,11 @@ export default {
     userInfo() {
       return this.$store.state.user
     },
+    id() {
+      return this.$route.query.id
+    },
   },
   created() {
-    if (this.$route.query.id) {
-      this.currentDetailsId = this.$route.query.id
-    }
     this.getRecommendData()
     this.initFollow()
   },
@@ -189,21 +177,13 @@ export default {
         })
     },
     follow() {
-      let followStatus = ''
-      if (this.isFollow) {
-        followStatus = 2
-        this.isFollow = false
-      } else {
-        followStatus = 1
-        this.isFollow = true
-      }
       this.loading = true
       this.$axios
         .post(knownApi.home.attention, {
           handleUserName: this.userInfo.userName || '测试用户',
           handleUserId: this.userInfo.userId || '120',
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-          handleType: followStatus,
+          handleType: this.isFollow ? 2 : 1,
           attentionUserId: this.articleDetails.userId,
           attentionUserName: this.articleDetails.userName,
           attentionUserType: this.articleDetails.userType,
@@ -211,11 +191,10 @@ export default {
         .then((res) => {
           this.loading = false
           if (res.code === 200) {
-            if (this.isFollow) {
-              this.$xToast.show({ message: '关注成功' })
-            } else {
-              this.$xToast.show({ message: '取消关注' })
-            }
+            this.$xToast.show({
+              message: this.isFollow ? '关注成功' : '取消关注',
+            })
+            this.isFollow = !this.isFollow
           } else {
             Toast.fail({
               duration: 2000,
@@ -252,7 +231,7 @@ export default {
       this.$axios
         .get(knownApi.questionArticle.detail, {
           params: {
-            id: this.currentDetailsId,
+            id: this.id,
             userHandleFlag: 1,
           },
         })
@@ -326,7 +305,7 @@ export default {
         .post(knownApi.home.operation, {
           handleUserId: this.userInfo.userId || '120',
           handleUserName: this.userInfo.userName || '测试用户',
-          businessId: this.currentDetailsId,
+          businessId: this.id,
           handleType: this.handleType,
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
           dateType: 1,
@@ -432,7 +411,7 @@ export default {
   padding: 40px;
   .user-info {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     .img {
       width: 72px;
       height: 72px;
@@ -442,20 +421,12 @@ export default {
     }
     .infos {
       flex: 1;
-      height: 26px;
-      font-size: 26px;
+      font-size: 30px;
       font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
-      color: #999999;
-      line-height: 26px;
-      padding-left: 20px;
-      p {
-        font-size: 30px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #222222;
-        margin-bottom: 20px;
-      }
+      font-weight: 500;
+      color: #222222;
+      line-height: 30px;
+      padding-left: 16px;
     }
     .btn2 {
       background: none;
