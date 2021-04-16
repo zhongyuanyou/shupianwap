@@ -43,13 +43,12 @@
         </sp-tab>
         <sp-tab title="邀请">
           <sp-list
-            v-model="loading1"
-            :finished="finished1"
+            v-model="loading"
+            :finished="finished"
             finished-text="没有更多了"
             class="list"
-            :error.sync="error1"
+            :error.sync="error"
             error-text="请求失败，点击重新加载"
-            :immediate-check="immediateCheck"
             @load="onLoadAnswer"
           >
             <div v-for="(item, index) in answerList" :key="index" class="item">
@@ -92,16 +91,13 @@ export default {
       error: false,
       loading: false,
       finished: false,
-      recommendPage: 1,
-      error1: false,
-      loading1: false,
-      finished1: false,
-      answerPage: 1,
+      page: 1,
+      totalPage: 1,
       recommendList: [],
       answerList: [],
       active: 0,
       isFromApp: '', // 是否从APP跳转
-      immediateCheck: false,
+      // immediateCheck: false,
     }
   },
   computed: {
@@ -114,11 +110,12 @@ export default {
       // 初始化数据
       this.recommendList = []
       this.answerList = []
-      this.recommendPage = 1
-      this.answerPage = 1
+      this.page = 1
+      this.totalPage = 1
       this.error = false
-      this.error1 = false
-      this.writeAnswerApi()
+      this.finished = false
+      this.loading = false
+      // this.writeAnswerApi()
     },
     chooseQue(item) {
       this.$router.push({
@@ -132,9 +129,17 @@ export default {
       this.formData.content = val
     },
     onLoadRecommend() {
+      if (this.page > this.totalPage) {
+        this.finished = true
+        return
+      }
       this.writeAnswerApi()
     },
     onLoadAnswer() {
+      if (this.page > this.totalPage) {
+        this.finished = true
+        return
+      }
       this.writeAnswerApi()
     },
     async writeAnswerApi() {
@@ -142,7 +147,7 @@ export default {
         const params = {
           type: this.active === 0 ? 1 : 2, // 1 推荐回答 2 邀请回答
           handleUserId: this.userId,
-          page: this.active === 0 ? this.recommendPage : this.answerPage,
+          page: this.page,
           limit: 10,
         }
         const { code, data } = await this.$axios.get(
@@ -155,26 +160,19 @@ export default {
           this.buildAnswerData(code, data)
         }
       } catch (e) {
-        if (this.active === 0) {
-          this.error = true
-          this.loading = false
-        } else {
-          this.error1 = true
-          this.loading1 = false
-        }
+        this.error = true
+        this.loading = false
       }
     },
     buildRecommendData(code, data) {
       if (code === 200) {
-        if (data.rows || data.rows.length === 0) {
+        if (!data.rows || data.rows.length === 0) {
           this.recommendList = []
           this.finished = true
         }
         this.recommendList.push(...data.rows)
-        this.recommendPage++
-        if (this.recommendPage > data.totalPage) {
-          this.finished = true
-        }
+        this.totalPage = data.totalPage
+        this.page++
       } else {
         this.error = true
       }
@@ -187,14 +185,12 @@ export default {
           this.finished1 = true
         }
         this.answerList.push(...data.rows)
-        this.answerPage++
-        if (this.answerPage > data.totalPage) {
-          this.finished1 = true
-        }
+        this.totalPage = data.totalPage
+        this.page++
       } else {
-        this.error1 = true
+        this.error = true
       }
-      this.loading1 = false
+      this.loading = false
     },
   },
 }
