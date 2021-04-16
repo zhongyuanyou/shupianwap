@@ -9,7 +9,26 @@
     ></my-icon>
     <p class="title">
       <my-icon
+        v-if="cusOrderStatusType == 1"
         name="details_ic_Unpaid"
+        size="0.40rem"
+        color="rgba(255, 255, 255, 1)"
+      ></my-icon>
+      <my-icon
+        v-if="cusOrderStatusType == 2"
+        name="shijian"
+        size="0.40rem"
+        color="rgba(255, 255, 255, 1)"
+      ></my-icon>
+      <my-icon
+        v-if="cusOrderStatusType == 3"
+        name="wancheng"
+        size="0.40rem"
+        color="rgba(255, 255, 255, 1)"
+      ></my-icon>
+      <my-icon
+        v-if="cusOrderStatusType == 4"
+        name="tixing"
         size="0.40rem"
         color="rgba(255, 255, 255, 1)"
       ></my-icon>
