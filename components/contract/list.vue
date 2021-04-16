@@ -3,7 +3,7 @@
     <List
       v-model="loading"
       :finished="finished"
-      :finished-text="list.length == 0 ? '' : '没有更多了'"
+      :finished-text="list.length == 0 ? '' : '我是有底线的...'"
       @load="onLoad"
     >
       <div v-for="(item, index) in list" :key="index" class="list">
