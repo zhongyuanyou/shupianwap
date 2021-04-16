@@ -93,17 +93,19 @@
               </div>
             </div>
           </div>
-          <div class="title clamp2">
-            {{ item.title }}
-          </div>
-          <div v-if="!item.contentImageUrl" class="content clamp3">
-            {{ item.contentText }}
-          </div>
-          <div v-else class="content_img">
-            <div class="left_content clamp3">
+          <div @click="toDetail(item)">
+            <div class="title clamp2">
+              {{ item.title }}
+            </div>
+            <div v-if="!item.contentImageUrl" class="content clamp3">
               {{ item.contentText }}
             </div>
-            <sp-image class="right_img" fit="cover" src="" />
+            <div v-else class="content_img">
+              <div class="left_content clamp3">
+                {{ item.contentText }}
+              </div>
+              <sp-image class="right_img" fit="cover" src="" />
+            </div>
           </div>
           <div v-if="item.type !== 1" class="bottom">
             <div
@@ -399,6 +401,19 @@ export default {
       } else {
         console.log(message)
       }
+    },
+    toDetail(item) {
+      this.$router.push({
+        path:
+          item.type === 1
+            ? '/known/detail/question'
+            : item.type === 2
+            ? '/known/detail/article'
+            : '/known/detail/answer',
+        query: {
+          id: item.id,
+        },
+      })
     },
   },
 }

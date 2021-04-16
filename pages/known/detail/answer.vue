@@ -191,33 +191,50 @@ export default {
     Comment,
     HeadSlot,
   },
-  asyncData(context) {
-    return Promise.all([
-      context.$axios.get(knownApi.questionArticle.detail, {
-        params: {
-          id: context.query.id,
-          userHandleFlag: context.store.state.user.userId ? 1 : 0,
-        },
-      }),
-    ])
-      .then((res) => {
-        if (res[0] && res[0].code === 200) {
-          return {
-            answerDetails: res[0].data,
-            headerData: {
-              createrName: res[0].createrName,
-              contentText: res[0].contentText,
-              avatar: res[0].avatar,
-            },
-            sourceId: res[0].sourceId,
-            homeUserId: res[0].userId,
-          }
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-        Promise.reject(error)
-      })
+  async asyncData({ $axios, query, store }) {
+    const res = await $axios.get(knownApi.questionArticle.detail, {
+      params: {
+        id: query.id,
+        userId: store.state.user.userId,
+        userHandleFlag: store.state.user.userId ? 1 : 0,
+      },
+    })
+    return {
+      answerDetails: res.data,
+      headerData: {
+        createrName: res.createrName,
+        contentText: res.contentText,
+        avatar: res.avatar,
+      },
+      sourceId: res.sourceId,
+      homeUserId: res.userId,
+    }
+    // return Promise.all([
+    //   context.$axios.get(knownApi.questionArticle.detail, {
+    //     params: {
+    //       id: context.query.id,
+    //       userHandleFlag: context.store.state.user.userId ? 1 : 0,
+    //     },
+    //   }),
+    // ])
+    //   .then((res) => {
+    //     if (res[0] && res[0].code === 200) {
+    //       return {
+    //         answerDetails: res[0].data,
+    //         headerData: {
+    //           createrName: res[0].createrName,
+    //           contentText: res[0].contentText,
+    //           avatar: res[0].avatar,
+    //         },
+    //         sourceId: res[0].sourceId,
+    //         homeUserId: res[0].userId,
+    //       }
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error)
+    //     Promise.reject(error)
+    //   })
   },
   data() {
     return {
@@ -243,7 +260,6 @@ export default {
     this.initFollow()
   },
   mounted() {
-    debugger
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
