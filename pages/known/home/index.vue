@@ -313,10 +313,10 @@ export default {
           handleUserId: this.userInfo.userId,
           handleUserName: this.userInfo.userName || '测试用户',
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-          handleType: this.isAttention ? 1 : 2,
+          handleType: this.isAttention ? 2 : 1,
           attentionUserId: this.$route.query.homeUserId,
           attentionUserName: this.userName,
-          attentionUserType: 1,
+          attentionUserType: this.type,
         }
       )
       if (code === 200) {
