@@ -188,7 +188,7 @@ export default {
               contractUrl: res.contractUrl,
               contractId: res.contractId,
               contractNo: res.contractNo,
-              signerName: this.userName,
+              signerName: this.partyName,
               contactWay: this.phone,
               type: 'qs',
               go: '-2',
