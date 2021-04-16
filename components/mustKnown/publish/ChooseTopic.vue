@@ -50,7 +50,7 @@
                   :title="item.name"
                 >
                   <template #right-icon>
-                    <sp-checkbox ref="checkboxes" :name="item" />
+                    <sp-checkbox ref="checkboxes" :name="item.id" />
                   </template>
                 </sp-cell>
               </sp-cell-group>
@@ -100,7 +100,8 @@ export default {
   },
   data() {
     return {
-      result: [],
+      result: [], // result id 集合
+      warpResult: [], // result 包装类集合
       showPop: false, // 控制图层关闭展开
       list1: [], // 一级列表
       list2: [], // 二级列表
@@ -114,6 +115,16 @@ export default {
       backupResult: [],
       backupId: '',
     }
+  },
+  watch: {
+    topicsArr(val) {
+      console.log(val)
+      this.result = val[0]
+      this.selectIndex = val[1]
+      this.topics = val[2]
+      this.backupId = val[1]
+      this.backupResult = val[0]
+    },
   },
   /*
   computed: {
@@ -151,16 +162,14 @@ export default {
     },
     submit() {
       this.showPop = false
-      this.topics = this.result
+      const warpResult = this.buildWarpResult()
+      this.topics = warpResult
       // start: 备份result 数据,并且设置提交标识
       this.backupResult = this.result
       this.submitFlag = true
-      this.backupId = this.result[0].pid
+      this.backupId = warpResult[0].pid
       // end: 备份result 数据,并且设置提交标识
-      const arr = this.result.map((item) => {
-        return item.name
-      })
-      this.$emit('setTopic', this.result)
+      this.$emit('setTopic', warpResult)
     },
     cancel() {
       this.showPop = false
@@ -170,16 +179,6 @@ export default {
       }, 300)
       */
     },
-    /*
-    toggle(e, index) {
-      console.log('toggle', index)
-      if (this.result.length > 4) {
-        this.$refs.checkboxes[index].toggle()
-        console.log('result', this.result)
-        console.log('index', index)
-      }
-    },
-    */
     changeTopic(val) {
       if (val.length === 5) {
         this.maxArr = val
@@ -210,7 +209,9 @@ export default {
             if (this.list1[0].childrenList.length > 0) {
               this.list2 = this.list1[0].childrenList
             }
-            this.selectIndex = data[0].pid
+            if (this.selectIndex === 0) {
+              this.selectIndex = data[0].id
+            }
           }
         }
       } catch (e) {}
@@ -228,6 +229,24 @@ export default {
         this.$set(this.result, i, this.backupResult[i])
       }
       console.log(`closepop: ${JSON.stringify(this.result)}`)
+    },
+    buildWarpResult() {
+      // 拿到level1的值
+      const _this = this
+      const level1Res = this.list1.find((item) => {
+        return item.id === _this.selectIndex
+      })
+      // find
+      const level1Child = level1Res.childrenList
+      const res = []
+      this.result.forEach((item) => {
+        res.push(
+          level1Child.find((i) => {
+            return i.id === item
+          })
+        )
+      })
+      return res
     },
   },
 }

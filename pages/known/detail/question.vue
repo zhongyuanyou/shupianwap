@@ -469,6 +469,7 @@ export default {
         path: '/known/publish/question',
         query: {
           id: curId,
+          editType: 2,
         },
       })
     },
