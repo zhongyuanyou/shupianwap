@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header title="写回答" :fixed="true" @leftClickFuc="onClickLeft" />
+    <Header title="写回答" :fixed="true" />
     <div class="main">
       <sp-tabs v-model="active" @change="init">
         <sp-tab title="推荐">
@@ -23,17 +23,17 @@
                 <div class="infos">
                   <p class="user-name">{{ item.userName || '' }}</p>
                   <p class="pub-time">
-                    的提问期待你的回答 · {{ item.time || '' }}前
+                    的提问期待你的回答 · {{ item.createTime || '' }}
                   </p>
                 </div>
               </div>
               <div class="item-content">{{ item.contentText }}</div>
               <div class="item-bottom">
                 <div class="left">
-                  {{ item.num1 }}回答 · {{ item.num2 }}关注
+                  {{ item.answerCount }} 回答 · {{ item.collectCount }} 关注
                 </div>
                 <div class="btn">
-                  <sp-button type="primary" @click="chooseQue(item.id)"
+                  <sp-button type="primary" @click="chooseQue(item)"
                     >写回答</sp-button
                   >
                 </div>
@@ -53,14 +53,14 @@
             @load="onLoadAnswer"
           >
             <div v-for="(item, index) in answerList" :key="index" class="item">
-              <p class="view-num">最近 2.3 万人浏览</p>
+              <p class="view-num">最近{{ item.totalBrowseCount }}人浏览</p>
               <div class="item-content">{{ item.content }}</div>
               <div class="item-bottom">
                 <div class="left">
-                  {{ item.num1 }}回答 · {{ item.num2 }}关注
+                  {{ item.answerCount }} 回答 · {{ item.collectCount }} 关注
                 </div>
                 <div class="btn">
-                  <sp-button type="primary" @click="chooseQue(item.id)"
+                  <sp-button type="primary" @click="chooseQue(item)"
                     >写回答</sp-button
                   >
                 </div>
@@ -120,31 +120,11 @@ export default {
       this.error1 = false
       this.writeAnswerApi()
     },
-    onClickLeft() {
-      this.$router.back(-1)
-    },
-    cancel() {
-      this.id = ''
-    },
-    openModal() {
-      this.$refs.chooseTopic.showPop = true
-    },
-    setTopic(val) {
-      this.topics = val
-      const arr = val.map((item) => {
-        return item.name
-      })
-      this.topicStr = arr.join(',')
-      console.log('话题', this.topics)
-      console.log('topicStr', this.topicStr)
-    },
-    chooseQue(id) {
-      this.id = id
+    chooseQue(item) {
       this.$router.push({
         path: '/known/publish/answer',
         query: {
-          id,
-          type: 2,
+          id: item.id,
         },
       })
     },
