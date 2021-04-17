@@ -26,13 +26,11 @@
         }"
         v-html="heightLightHtml(description)"
       ></p>
-      <div
-        class="tags"
-        :style="{
-          visibility: goodstype.type === 'serve' ? 'visible' : 'hidden',
-        }"
-      >
+      <div v-if="goodstype.type === 'serve'" class="tags">
         <span v-for="(item, index) in tags" :key="index">{{ item.name }}</span>
+      </div>
+      <div v-if="itemData.slogan" class="slogan">
+        {{ itemData.slogan }}
       </div>
       <div class="price-sales">
         <span>{{ itemData.referencePrice }}元</span
@@ -308,6 +306,19 @@ export default {
           margin-right: 0;
         }
       }
+    }
+    .slogan {
+      font-size: 22px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #222222;
+      -webkit-line-clamp: 1;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+      word-break: break-all;
+      overflow: hidden;
+      white-space: normal;
     }
     .price-sales {
       display: flex;

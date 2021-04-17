@@ -125,8 +125,14 @@
             :src="imgFileIdPaths[0]"
           />
           <div class="goods_info_right">
+            <!--            0.00元的商品显示面议-->
             <div class="price">
-              {{ sellingGoodsData.salesPrice }} <span>元</span>
+              {{
+                sellingGoodsData.salesPrice !== '0.00'
+                  ? sellingGoodsData.salesPrice
+                  : '面议'
+              }}
+              <span v-if="sellingGoodsData.salesPrice !== '0.00'">元</span>
             </div>
             <div class="code">编号 {{ sellingGoodsData.goodsNo }}</div>
           </div>
