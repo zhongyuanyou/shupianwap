@@ -23,8 +23,10 @@ export function imInit(data = {}) {
   }
   const env = BASE[DGG_SERVER_ENV]
   imSdk.sdkInstance = null // 初始化前先重置
+  // 获取用户唯一标识
   const initSdk = imSdk.instance({
     env, // 'D|T|Y|P'
+    deviceId: data.deviceId,
     token: data.token,
     userId: data.userId,
     userTypeFlag: data.userType,
@@ -32,10 +34,18 @@ export function imInit(data = {}) {
     secret: 'b06ca305974e8b6b590b8315f72a7438',
     appKey: '4R29RHK10AQILT8ONUAOC5DDST',
     isConnectSocket: false,
+    myInfo: (res) => {
+      if (data.userType === 'VISITOR') {
+        localStorage.setItem('myInfo', JSON.stringify(res.data))
+      } else {
+        localStorage.removeItem('myInfo')
+      }
+    },
     onError: (res) => {
       console.log(res)
     },
   })
+  console.log(initSdk)
   return initSdk
 }
 

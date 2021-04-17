@@ -144,6 +144,7 @@ export default {
         const that = this
         if (res.code && res.code === 200) {
           this.$xToast.success('修改成功')
+          this.switchUrl(res.data.id)
         } else {
           this.$xToast.error('发布失败')
         }
@@ -161,7 +162,7 @@ export default {
               id,
             },
           })
-        }, 2000)
+        }, 1000)
       } else if (this.fromPage === 'question') {
         timeoute = setTimeout(function () {
           _this.$router.replace({
@@ -171,7 +172,7 @@ export default {
               status: 'release',
             },
           })
-        }, 2000)
+        }, 1000)
       } else {
         timeoute = setTimeout(function () {
           _this.$router.replace({
@@ -180,7 +181,7 @@ export default {
               id,
             },
           })
-        }, 2000)
+        }, 1000)
       }
     },
     checkParams() {

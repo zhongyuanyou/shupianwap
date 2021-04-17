@@ -14,3 +14,20 @@ export const mutations = {
     state.imExample = data
   },
 }
+export const actions = {
+  CLEAR_IM(state, data) {
+    const imId = localStorage.getItem('myInfo')
+      ? JSON.parse(localStorage.getItem('myInfo')).imUserId
+      : {}
+    console.log(state.imExample.regularVisitor, 123)
+    // state.imExample.regularVisitor(
+    //   {
+    //     visitorId: imId,
+    //     userId: data,
+    //   },
+    //   (res) => {
+    //     console.log(res)
+    //   }
+    // )
+  },
+}

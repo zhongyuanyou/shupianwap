@@ -2,7 +2,7 @@
   <div>
     <PageHead
       :has-val="hasVal"
-      confirm-text="发布问题"
+      :confirm-text="editType === '2' ? '修改问题' : '发布问题'"
       :title="title"
       @submit="submit"
     />
@@ -66,7 +66,7 @@ export default {
     return {
       fromPage: 'question',
       showToast: true,
-      title: '回答问题',
+      title: '',
       myPlaceholder: '输入问题并以问号结尾',
       questionId: '', // 问题id
       questionInfo: {}, // 问题详情

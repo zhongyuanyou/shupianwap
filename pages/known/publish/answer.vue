@@ -3,7 +3,7 @@
     <CommonHead v-if="!id" title="写回答" />
     <PageHead
       v-else
-      :title="editType == 1 ? '写回答' : '回答问题'"
+      :title="editType == 2 ? '回答问题' : '写回答'"
       :has-val="hasVal"
       :fixed="true"
       @submit="submit"

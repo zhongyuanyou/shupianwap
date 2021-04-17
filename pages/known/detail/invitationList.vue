@@ -28,12 +28,7 @@
       >
         <div v-for="(item, index) in recommendList" :key="index" class="list">
           <img :src="item.avatar" alt="" />
-          <div class="content">
-            <div class="name">{{ item.userName }}</div>
-            <div class="desc">
-              {{ item.desc }}
-            </div>
-          </div>
+          <div class="name">{{ item.userName }}</div>
           <div class="invitation" @click="invitItem(item)">邀请</div>
         </div>
       </sp-list>
@@ -66,24 +61,26 @@ export default {
       loading: false,
       finished: false,
       page: 1,
+      limit: 15,
       questionId: '',
-      totalPage: 1,
     }
   },
   computed: {
     ...mapState({
-      userInfo: (state) => state.user.userInfo, // 登录的用户信息
-      userId: (state) => state.user.userId, // userId 用于判断登录
-      userType: (state) => state.user.userType,
+      userInfo: (state) => state.user, // 登录的用户信息
     }),
   },
   mounted() {
-    // 这里拿到 questionId,用于邀请接口
-    // this.questionId = this.$route.query.questionId
+    this.questionId = this.$route.query.questionId
   },
   methods: {
     keyClickHandle() {
-      this.$router.push('/known/detail/invitationSearch')
+      this.$router.push({
+        path: '/known/detail/invitationSearch',
+        query: {
+          questionId: this.questionId,
+        },
+      })
     },
     invitAll() {
       // 一键邀请
@@ -98,20 +95,18 @@ export default {
       try {
         const params = {
           page: this.page,
-          limit: 10,
+          limit: this.limit,
         }
         const { code, data } = await this.$axios.get(
           knownApi.question.recommendAnswerUser,
           { params }
         )
         if (code === 200) {
-          if (!data.rows || data.rows.length === 0) {
-            this.recommendList = []
+          this.recommendList.push(...data.rows)
+          this.page++
+          if (this.page > data.totalPage) {
             this.finished = true
           }
-          this.recommendList.push(...data.rows)
-          this.totalPage = data.totalPage
-          this.page++
         } else {
           this.error = true
         }
@@ -125,10 +120,10 @@ export default {
       // 邀请用户回答
       try {
         const params = {
-          handleUserId: this.userId,
-          handleUserName: this.userInfo.userName || '测试用户',
-          handleUserType: util.getUserType(this.userType),
-          questionId: this.questionId || '123456', // 暂无,需要页面传
+          handleUserId: this.userInfo.userId,
+          handleUserName: this.userInfo.userName,
+          handleUserType: util.getUserType(this.userInfo.userType),
+          questionId: this.questionId,
         }
         if (datas === 'all') {
           params.invitedUsers = this.buildAllInvited()
@@ -175,10 +170,6 @@ export default {
       }
     },
     onLoad() {
-      if (this.page > this.totalPage) {
-        this.finished = true
-        return
-      }
       this.recommendAnswerUserApi()
     },
     buildAllInvited() {
@@ -260,33 +251,20 @@ export default {
         padding: 0 32px;
         align-items: center;
         > img {
-          width: 72px;
           height: 72px;
+          width: 72px;
           background: #d8d8d8;
           object-fit: cover;
           border-radius: 50%;
         }
-        .content {
+        .name {
           margin-left: 24px;
-          .name {
-            font-size: 30px;
-            line-height: 26px;
-            font-weight: 600;
-            color: #222222;
-            margin-bottom: 12px;
-            margin-top: 3px;
-          }
-          .desc {
-            font-size: 26px;
-            line-height: 26px;
-            color: #999999;
-            width: 414px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-          }
+          font-size: 30px;
+          line-height: 72px;
+          font-weight: 600;
+          color: #222222;
+          text-align: center;
         }
-
         .invitation {
           width: 144px;
           height: 72px;
