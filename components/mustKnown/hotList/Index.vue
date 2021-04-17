@@ -1,0 +1,224 @@
+<template>
+  <div>
+    <div class="container_news_see">
+      <div
+        class="news"
+        @click="
+          $router.push({
+            path: '/known/newspaper',
+            query: {
+              id: subjectList ? subjectList[0].id : '',
+            },
+          })
+        "
+      >
+        <div class="news_num">{{ new Date().getDate() }}</div>
+        <div class="news_span">
+          {{ subjectList[0] ? subjectList[0].name : '' }}
+        </div>
+      </div>
+      <div
+        class="see"
+        @click="
+          $router.push({
+            path: '/known/mustSee',
+            query: {
+              id: subjectList ? subjectList[1].id : '',
+            },
+          })
+        "
+      >
+        <div class="see_like">
+          <my-icon name="dianzan" size="0.24rem" color="#4974F5"></my-icon>
+        </div>
+        <div class="see_span">
+          {{ subjectList[1] ? subjectList[1].name : '' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import { Image } from '@chipspc/vant-dgg'
+import { knownApi } from '~/api'
+export default {
+  name: 'Item',
+  components: {
+    [Image.name]: Image,
+  },
+  props: {
+    categoryId: {
+      type: String,
+      default: '',
+    },
+  },
+  data() {
+    return {
+      subjectList: [],
+    }
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.user
+    },
+  },
+  created() {
+    this.getSubjectList()
+    this.hotList()
+  },
+  methods: {
+    // 请求专题列表数据
+    async getSubjectList() {
+      const { code, message, data } = await this.$axios.get(
+        knownApi.questionArticle.subjectList
+      )
+      if (code === 200) {
+        if (data.length > 0) {
+          this.subjectList.push(data[1])
+          this.subjectList.push(data[2])
+        }
+      }
+    },
+    // 请求热榜列表数据
+    async hotList() {
+      const { code, message, data } = await this.$axios.post(
+        knownApi.questionArticle.list,
+        {
+          categorIds: [this.categoryId],
+        }
+      )
+      if (code === 200) {
+        if (data.rows.length > 0) {
+          this.listData = data.rows
+        } else {
+        }
+      } else {
+      }
+    },
+    toHome(item) {
+      this.$router.push({
+        path: '/known/home',
+        query: {
+          homeUserId: item.userId,
+          type: item.userType,
+        },
+      })
+    },
+    toDetail(item) {
+      this.$router.push({
+        path:
+          item.type === 1
+            ? '/known/detail/question'
+            : item.type === 2
+            ? '/known/detail/article'
+            : '/known/detail/answer',
+        query: {
+          id: item.id,
+        },
+      })
+    },
+    comments(id) {
+      this.$emit('comments', id)
+    },
+    invitation(id) {
+      this.$router.push({
+        path: '/known/detail/invitationList',
+        query: {
+          questionId: id,
+        },
+      })
+    },
+    answer(id) {
+      this.$router.push({
+        path: '/known/publish/answer',
+        query: {
+          id,
+        },
+      })
+    },
+  },
+}
+</script>
+<style lang="less" scoped>
+.container_news_see {
+  height: 136px;
+  background: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+  margin-bottom: 24px;
+  .news {
+    width: 329px;
+    height: 88px;
+    background: #dbe4fd;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .news_num {
+      width: 48px;
+      height: 48px;
+      background: #ffffff;
+      border-radius: 50%;
+      font-size: 22px;
+      font-family: SourceHanSansCN-Medium, SourceHanSansCN;
+      font-weight: 500;
+      color: #133aa3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .news_span {
+      height: 28px;
+      font-size: 28px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #133aa3;
+      line-height: 28px;
+      margin-left: 12px;
+    }
+  }
+  .see {
+    width: 329px;
+    height: 88px;
+    background: #d8cffa;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .see_like {
+      width: 48px;
+      height: 48px;
+      background: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .see_span {
+      height: 28px;
+      font-size: 28px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #564499;
+      line-height: 28px;
+      margin-left: 12px;
+    }
+  }
+}
+
+.clamp2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.clamp3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+</style>
