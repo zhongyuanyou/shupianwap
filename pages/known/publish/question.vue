@@ -2,7 +2,7 @@
   <div>
     <PageHead
       :has-val="hasVal"
-      :confirm-text="this.editType === '2' ? '修改问题' : '发布问题'"
+      :confirm-text="editType === '2' ? '修改问题' : '发布问题'"
       :title="title"
       @submit="submit"
     />

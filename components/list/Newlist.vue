@@ -71,7 +71,6 @@ export default {
     return {
       loading: false,
       finished: false,
-      isLoading: false,
       pages: 1,
     }
   },
@@ -89,6 +88,7 @@ export default {
     },
     getlist() {},
     onLoad() {
+      this.loading = true
       this.pages++
       this.$emit('load', this.pages)
     },

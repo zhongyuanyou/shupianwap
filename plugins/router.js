@@ -10,6 +10,8 @@ import Vue from 'vue'
 import { appHandler } from './app-sdk'
 import { imInit } from '@/utils/im'
 import routerBlackList from '@/config/routerBlackList'
+import getUserSign from '~/utils/fingerprint'
+
 const infoList = [
   'my-shippingAddress', // 收货地址列表页面
   'my-interviewRecord', // 面谈记录列表页面
@@ -92,24 +94,34 @@ export default ({ app, store }) => {
           next()
         }
       }
-      Vue.nextTick(() => {
+      Vue.nextTick(async () => {
         // 已登录用户，若未初始化IM，进行IM初始化
-        const token = app.$cookies.get('token', { path: '/' })
-        const userId = app.$cookies.get('userId', { path: '/' })
-        const userType = app.$cookies.get('userType', { path: '/' })
-        if (!store.state.im.imExample && token) {
-          // 初始化IM
+        let token = app.$cookies.get('token', { path: '/' })
+        let userId = app.$cookies.get('userId', { path: '/' })
+        let userType = app.$cookies.get('userType', { path: '/' })
+        const deviceId = await getUserSign()
+
+        if (!token) {
+          const info = localStorage.getItem('myInfo')
+            ? JSON.parse(localStorage.getItem('myInfo'))
+            : {}
+          userType = 'VISITOR'
+          token = info.token
+          userId = info.userId
+        }
+
+        // if (!store.state.im.imExample && token) {
+        // 初始化IM
+        if (!store.state.im.imExample) {
           const initImSdk = imInit({
             token,
             userId,
             userType,
+            deviceId,
           })
           store.commit('im/SET_IM_SDK', initImSdk)
         }
       })
     }
-    // if (!store.state.app.isInApp) {
-    //   next()
-    // }
   })
 }

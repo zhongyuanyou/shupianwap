@@ -150,7 +150,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 
 import {
   TopNavBar,
@@ -163,12 +163,13 @@ import {
 import ProtocolField from '@/components/login/ProtocolField'
 import PhoneField from '@/components/login/PhoneField'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
-
 import formHandle from '@/mixins/formHandle'
 import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
 import { openLink } from '@/utils/common.js'
 import ImgAuthDialog from '@/components/common/imgAuth'
+import { CRISPS_C_MIDDLE_SERVICE_API } from '~/config/constant'
+import imHandle from '~/mixins/imHandle'
 
 // 第三方登录需要回传的参数
 const SOURCE_PLATFROM_PARAMS = { IM: ['token', 'userId'] }
@@ -186,7 +187,7 @@ export default {
     ProtocolField,
     LoadingCenter,
   },
-  mixins: [formHandle],
+  mixins: [formHandle, imHandle],
   data() {
     return {
       loginForm: {
@@ -204,7 +205,12 @@ export default {
       redirect: this.$route.query.redirect || '/', // 登录后需要跳转的地址
     }
   },
-  computed: {},
+
+  computed: {
+    ...mapState({
+      imExample: (state) => state.im.imExample, // IM 实例
+    }),
+  },
   methods: {
     ...mapMutations({
       setUser: 'user/SET_USER',
@@ -219,7 +225,7 @@ export default {
       }
       this.login().then((data) => {
         this.$xToast.success('登录成功！')
-        this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
+        // this.setImSdk(null) // 每次登陆清除IM-SDK初始信息
         // 使用定时器，等待提示信息展示1.5s 再跳转
         setTimeout(() => {
           // 跳转外连接
@@ -237,7 +243,6 @@ export default {
             openLink(this.redirect, query)
             return
           }
-
           this.$router.replace(this.redirect)
         }, 1500)
       })
@@ -346,6 +351,14 @@ export default {
         if (data != null) {
           // 存储token
           this.setUser(data)
+          const imId = localStorage.getItem('myInfo')
+            ? JSON.parse(localStorage.getItem('myInfo')).imUserId
+            : {}
+          this.regularVisitor({
+            visitorId: imId,
+            userId: data.userId,
+          })
+          this.$store.commit('im/SET_IM_SDK', null)
         }
         return data
       } catch (error) {
