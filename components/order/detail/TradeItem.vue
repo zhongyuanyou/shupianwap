@@ -22,32 +22,6 @@
           {{ item2.fieldValue }}
         </p> -->
       </div>
-      <div class="item-btn-area">
-        <div class="inner">
-          <!-- <sp-button @click="handleClickBtn(1)">查看底单</sp-button> -->
-          <sp-button
-            v-if="
-              item.skuDetails[0].skuStatusNo !==
-              'ORDER_ORDER_SERVER_STATUS_UN_PAID'
-            "
-            @click="handleClickBtn(2, item)"
-            >办理进度</sp-button
-          >
-          <!-- 服务产品确认完成显示条件 1产品状态为已处理 2支付状态为完成支付  3用户未点确认-->
-          <sp-button
-            v-if="
-              item.skuDetails[0].skuStatusNo ===
-                'ORDER_ORDER_SERVER_STATUS_HANDLED' &&
-              cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID' &&
-              item.userConfirm == 0
-            "
-            type="default"
-            class="btn-confirm"
-            @click="handleClickBtn(3, item)"
-            >确认完成</sp-button
-          >
-        </div>
-      </div>
     </div>
   </div>
 </template>
