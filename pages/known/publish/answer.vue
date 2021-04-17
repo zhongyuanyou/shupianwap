@@ -3,14 +3,14 @@
     <CommonHead v-if="!id" title="写回答" />
     <PageHead
       v-else
-      :title="editType == 1 ? '写回答' : '回答问题'"
+      :title="editType === '2' ? '回答问题' : '写回答'"
       :has-val="hasVal"
       :fixed="true"
       @submit="submit"
       @handleCancel="cancel"
     />
     <div class="main">
-      <TitleArea ref="myTitle" :title="question.title" :can-edit="false" />
+      <TitleArea ref="myTitle" :title="questionInfo.title" :can-edit="false" />
       <div class="content">
         <Editor
           ref="myEditor"
@@ -29,6 +29,7 @@ import PageHead from '@/components/mustKnown/publish/PageHead'
 import TitleArea from '@/components/mustKnown/publish/TitleArea'
 import Editor from '@/components/mustKnown/publish/Editor'
 import EditorMinxin from '@/mixins/edit'
+
 export default {
   components: {
     PageHead,
@@ -43,15 +44,32 @@ export default {
   mixins: [EditorMinxin],
   data() {
     return {
-      question: {
-        title:
-          '问题标题再次，问题标题再次，问题标题再次，问题标题再次，问题标题再次，问题标题再次，问题标题？',
-        id: '',
-      },
       active: 0,
       maxLength: 20,
-      fromPage: 'anwser',
+      fromPage: 'answer',
+      questionId: '', // 问题id
+      questionInfo: {}, // 问题详情
     }
+  },
+  computed: {
+    hasVal: {
+      get() {
+        return this.formData.content.length > 0
+      },
+    },
+  },
+  mounted() {
+    this.questionId = this.$route.query.id
+    // this.formData.id = this.questionId
+    if (this.$route.query.editType) {
+      this.editType = this.$route.query.editType
+    }
+    const _this = this
+    this.getDetailByIdApi().then(({ code, data }) => {
+      if (code === 200) {
+        _this.questionInfo = data
+      }
+    })
   },
   methods: {
     cancel() {

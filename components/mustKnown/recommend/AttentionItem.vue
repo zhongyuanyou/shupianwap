@@ -360,6 +360,7 @@ export default {
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
+      word-break: break-all;
     }
     img {
       display: block;

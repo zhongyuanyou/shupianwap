@@ -591,7 +591,6 @@ export default {
 
     // 更新购物车数据
     async postUpdate(data = {}) {
-      console.log('++++++++++++++++++++nihao', data)
       const { type, cartId, value, serviceList, skuAttr, skuId } = data
       this.updateLoading = true
       let params = {}
@@ -628,10 +627,6 @@ export default {
           type,
         }
         let data = await shopCart.update({ ...defalutParams, ...params })
-        // console.log('++++++++++++++++++++nihao2', {
-        //   ...defalutParams,
-        //   ...params,
-        // })
         data = data || {}
         const { total, totalCount } = data
         this.bottomData = { ...this.bottomData, totalAmount: total, totalCount }
@@ -639,6 +634,12 @@ export default {
         return data
       } catch (error) {
         console.error('postUpdate:', error)
+        this.$xToast.show({
+          message: error.message,
+          duration: 1000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
         this.updateLoading = false
         return Promise.reject(error)
       }

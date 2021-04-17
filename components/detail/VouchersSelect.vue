@@ -1,6 +1,10 @@
 <template>
   <div class="container">
-    <div class="cell" @click="couponShow">
+    <div
+      v-if="sellingGoodsData.salesPrice !== '0.00'"
+      class="cell"
+      @click="couponShow"
+    >
       <div class="cell_left">
         <div class="label">优惠</div>
         <div class="content">

@@ -16,7 +16,13 @@
           <div class="left">
             <img
               :src="
-                item.salesGoodsOperatings.clientDetails[0].imgFileIdPaths[0]
+                item.salesGoodsOperatings
+                  ? item.salesGoodsOperatings.clientDetails[0]
+                    ? item.salesGoodsOperatings.clientDetails[0]
+                        .imgFileIdPaths[0] ||
+                      'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
+                    : 'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
+                  : 'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
               "
               alt=""
             />
@@ -295,6 +301,7 @@ export default {
       })
     },
     getcart() {
+      const that = this
       shopCart
         .bill({
           cartId: this.$route.query.cartIdsStr,
@@ -305,14 +312,17 @@ export default {
           this.order = result
           this.order.list = this.order.productVo
           this.price = this.order.needPayTotalMoney
-          this.getInitData(2)
+          this.getInitData(5)
           this.getInitData(6)
-          this.loading = false
+          this.skeletonloading = false
         })
         .catch((e) => {
           if (e.code !== 200) {
             this.$xToast.show(e.message)
             console.log(e)
+            setTimeout(function () {
+              that.$router.back(-1)
+            }, 2000)
           }
         })
     },
@@ -346,7 +356,7 @@ export default {
           this.order.list.push(obj)
           this.order.num = this.order.list.length
           this.price = this.order.salesPrice
-          this.getInitData(2)
+          this.getInitData(5)
           this.getInitData(6)
           this.skeletonloading = false
         } else {
@@ -387,32 +397,15 @@ export default {
         if (this.$route.query.type === 'shopcar') {
           const arr = []
           for (let i = 0; i < this.order.list.length; i++) {
-            if (arr.length === 0) {
-              const sku = {
-                saleSkuId: this.order.list[i].id,
-                saleSkuName: this.order.list[i].name,
-                saleSkuVersionNo: this.order.list[i].version + '',
-                saleSkuPrice: this.order.list[i].salesPrice,
-                saleSkuCount: this.order.list[i].salesVolume,
-              }
-              arr.push(sku)
-              this.loading = false
-            } else {
-              for (let b = 0; b < arr.length; b++) {
-                if (this.order.list[i].id === arr[b].saleSkuId) {
-                  arr[b].saleSkuCount++
-                } else {
-                  const sku = {
-                    saleSkuId: this.order.list[i].id,
-                    saleSkuName: this.order.list[i].name,
-                    saleSkuVersionNo: this.order.list.version + '',
-                    saleSkuPrice: this.order.list[i].salesPrice,
-                    saleSkuCount: this.order.list[i].salesVolume,
-                  }
-                  arr.push(sku)
-                }
-              }
+            const sku = {
+              saleSkuId: this.order.list[i].id,
+              saleSkuName: this.order.list[i].name,
+              saleSkuVersionNo: this.order.list[i].version + '',
+              saleSkuPrice: this.order.list[i].salesPrice,
+              saleSkuCount: this.order.list[i].salesVolume,
             }
+            arr.push(sku)
+            this.loading = false
           }
           this.Orderform.needSplitProPackageDataParam = arr
         } else {
@@ -475,8 +468,9 @@ export default {
           })
           .catch((e) => {
             this.loading = false
+            const msg = e.data.error
             Toast({
-              message: e.data.error,
+              message: msg,
               iconPrefix: 'sp-iconfont',
               icon: 'popup_ic_fail',
               overlay: true,
@@ -493,11 +487,17 @@ export default {
       for (let i = 0; i < this.order.list.length; i++) {
         const item = {
           goodsId: this.order.list[i].id,
-          price: parseInt(this.order.list[i].salesPrice),
+          price: this.order.list[i].salesPrice,
           goodsNum: this.order.list[i].salesVolume || 1,
           goodsClassCode: this.order.list[i].classCode,
         }
         list.push(item)
+      }
+      let price = 0
+      if (this.order.salesPrice) {
+        price = this.order.salesPrice
+      } else if (this.order.skuTotalPrice) {
+        price = this.order.skuTotalPrice
       }
       coupon
         .couponPage(
@@ -506,6 +506,7 @@ export default {
             findType: index,
             userId: this.$store.state.user.userId,
             actionId: arr,
+            orderPrice: price,
             orderByWhere: 'createTime=desc',
             limit: 10,
             page: 1,
@@ -632,7 +633,7 @@ export default {
                 text-overflow: ellipsis;
               }
               > .data {
-                width: 45%;
+                width: 40%;
                 font-size: 22px;
                 font-weight: 400;
                 color: #222222;

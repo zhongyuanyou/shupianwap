@@ -1,20 +1,27 @@
 <template>
   <div class="title-wapper">
-    <div v-show="showInput" class="title-area" @click="edit">
-      <div class="content-title" v-html="inputVal"></div>
-    </div>
-    <section v-show="!showInput">
-      <sp-field
-        ref="tileArea"
-        v-model.trim="inputVal"
-        :placeholder="custPlaceholder"
-        type="textarea"
-        maxlength="50"
-        autosize
-        show-word-limit
-        @blur="blur"
-      />
-    </section>
+    <template v-if="canEdit">
+      <div v-show="showInput" class="title-area" @click="edit">
+        <div class="content-title" v-html="inputVal"></div>
+      </div>
+      <section v-show="!showInput">
+        <sp-field
+          ref="tileArea"
+          v-model.trim="inputVal"
+          :placeholder="custPlaceholder"
+          type="textarea"
+          maxlength="50"
+          autosize
+          show-word-limit
+          @blur="blur"
+        />
+      </section>
+    </template>
+    <template v-else>
+      <div class="title-area">
+        <div class="content-title" v-html="title"></div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -48,7 +55,12 @@ export default {
       inputVal: '',
     }
   },
-  mounted() {},
+  watch: {
+    title() {
+      this.inputVal = this.title
+      this.showInput = true
+    },
+  },
   methods: {
     blur() {
       if (this.inputVal === '') {

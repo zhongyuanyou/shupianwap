@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Header title="写回答" :fixed="true" @leftClickFuc="onClickLeft" />
+    <Header title="写回答" :fixed="true" />
     <div class="main">
-      <sp-tabs v-model="active" @change="init">
+      <sp-tabs v-model="active" @change="changeTab">
         <sp-tab title="推荐">
           <sp-list
             v-model="loading"
@@ -11,29 +11,25 @@
             class="list"
             :error.sync="error"
             error-text="请求失败，点击重新加载"
-            @load="onLoadRecommend"
+            @load="onLoad"
           >
-            <div
-              v-for="(item, index) in recommendList"
-              :key="index"
-              class="item"
-            >
+            <div v-for="(item, index) in list" :key="index" class="item">
               <div class="user-info">
                 <div class="img" :src="item.avatar"></div>
                 <div class="infos">
                   <p class="user-name">{{ item.userName || '' }}</p>
                   <p class="pub-time">
-                    的提问期待你的回答 · {{ item.time || '' }}前
+                    的提问期待你的回答 · {{ item.createTime || '' }}
                   </p>
                 </div>
               </div>
               <div class="item-content">{{ item.contentText }}</div>
               <div class="item-bottom">
                 <div class="left">
-                  {{ item.num1 }}回答 · {{ item.num2 }}关注
+                  {{ item.answerCount }} 回答 · {{ item.collectCount }} 关注
                 </div>
                 <div class="btn">
-                  <sp-button type="primary" @click="chooseQue(item.id)"
+                  <sp-button type="primary" @click="chooseQue(item)"
                     >写回答</sp-button
                   >
                 </div>
@@ -43,24 +39,23 @@
         </sp-tab>
         <sp-tab title="邀请">
           <sp-list
-            v-model="loading1"
-            :finished="finished1"
+            v-model="loading"
+            :finished="finished"
             finished-text="没有更多了"
             class="list"
-            :error.sync="error1"
+            :error.sync="error"
             error-text="请求失败，点击重新加载"
-            :immediate-check="immediateCheck"
-            @load="onLoadAnswer"
+            @load="onLoad"
           >
-            <div v-for="(item, index) in answerList" :key="index" class="item">
-              <p class="view-num">最近 2.3 万人浏览</p>
+            <div v-for="(item, index) in list" :key="index" class="item">
+              <p class="view-num">最近{{ item.totalBrowseCount }}人浏览</p>
               <div class="item-content">{{ item.content }}</div>
               <div class="item-bottom">
                 <div class="left">
-                  {{ item.num1 }}回答 · {{ item.num2 }}关注
+                  {{ item.answerCount }} 回答 · {{ item.collectCount }} 关注
                 </div>
                 <div class="btn">
-                  <sp-button type="primary" @click="chooseQue(item.id)"
+                  <sp-button type="primary" @click="chooseQue(item)"
                     >写回答</sp-button
                   >
                 </div>
@@ -92,16 +87,11 @@ export default {
       error: false,
       loading: false,
       finished: false,
-      recommendPage: 1,
-      error1: false,
-      loading1: false,
-      finished1: false,
-      answerPage: 1,
-      recommendList: [],
-      answerList: [],
+      page: 1,
+      limit: 15,
+      list: [],
       active: 0,
       isFromApp: '', // 是否从APP跳转
-      immediateCheck: false,
     }
   },
   computed: {
@@ -110,51 +100,29 @@ export default {
     }),
   },
   methods: {
+    changeTab() {
+      this.init()
+      this.onLoad()
+    },
     init() {
-      // 初始化数据
-      this.recommendList = []
-      this.answerList = []
-      this.recommendPage = 1
-      this.answerPage = 1
+      this.list = []
+      this.page = 1
       this.error = false
-      this.error1 = false
-      this.writeAnswerApi()
+      this.finished = false
+      this.loading = true
     },
-    onClickLeft() {
-      this.$router.back(-1)
-    },
-    cancel() {
-      this.id = ''
-    },
-    openModal() {
-      this.$refs.chooseTopic.showPop = true
-    },
-    setTopic(val) {
-      this.topics = val
-      const arr = val.map((item) => {
-        return item.name
-      })
-      this.topicStr = arr.join(',')
-      console.log('话题', this.topics)
-      console.log('topicStr', this.topicStr)
-    },
-    chooseQue(id) {
-      this.id = id
+    chooseQue(item) {
       this.$router.push({
         path: '/known/publish/answer',
         query: {
-          id,
-          type: 2,
+          id: item.id,
         },
       })
     },
     editorChange(val) {
       this.formData.content = val
     },
-    onLoadRecommend() {
-      this.writeAnswerApi()
-    },
-    onLoadAnswer() {
+    onLoad() {
       this.writeAnswerApi()
     },
     async writeAnswerApi() {
@@ -162,59 +130,27 @@ export default {
         const params = {
           type: this.active === 0 ? 1 : 2, // 1 推荐回答 2 邀请回答
           handleUserId: this.userId,
-          page: this.active === 0 ? this.recommendPage : this.answerPage,
-          limit: 10,
+          page: this.page,
+          limit: this.limit,
         }
         const { code, data } = await this.$axios.get(
           knownApi.question.writeAnswer,
           { params }
         )
-        if (this.active === 0) {
-          this.buildRecommendData(code, data)
+        if (code === 200) {
+          this.list.push(...data.rows)
+          this.page++
+          if (this.page > data.totalPage) {
+            this.finished = true
+          }
         } else {
-          this.buildAnswerData(code, data)
-        }
-      } catch (e) {
-        if (this.active === 0) {
           this.error = true
-          this.loading = false
-        } else {
-          this.error1 = true
-          this.loading1 = false
         }
-      }
-    },
-    buildRecommendData(code, data) {
-      if (code === 200) {
-        if (data.rows || data.rows.length === 0) {
-          this.recommendList = []
-          this.finished = true
-        }
-        this.recommendList.push(...data.rows)
-        this.recommendPage++
-        if (this.recommendPage > data.totalPage) {
-          this.finished = true
-        }
-      } else {
+        this.loading = false
+      } catch (e) {
         this.error = true
+        this.loading = false
       }
-      this.loading = false
-    },
-    buildAnswerData(code, data) {
-      if (code === 200) {
-        if (data.rows || data.rows.length === 0) {
-          this.answerList = []
-          this.finished1 = true
-        }
-        this.answerList.push(...data.rows)
-        this.answerPage++
-        if (this.answerPage > data.totalPage) {
-          this.finished1 = true
-        }
-      } else {
-        this.error1 = true
-      }
-      this.loading1 = false
     },
   },
 }

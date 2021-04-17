@@ -2,7 +2,7 @@
   <div>
     <PageHead
       :has-val="hasVal"
-      confirm-text="发布问题"
+      :confirm-text="editType === '2' ? '修改问题' : '发布问题'"
       :title="title"
       @submit="submit"
     />
@@ -39,7 +39,7 @@
       </div>
       <ChooseTopic
         ref="chooseTopic"
-        :topics-arr="formData.topics"
+        :topics-arr="mytopics"
         @setTopic="setTopic"
       />
     </div>
@@ -66,8 +66,11 @@ export default {
     return {
       fromPage: 'question',
       showToast: true,
-      title: '回答问题',
+      title: '',
       myPlaceholder: '输入问题并以问号结尾',
+      questionId: '', // 问题id
+      questionInfo: {}, // 问题详情
+      mytopics: [],
     }
   },
   computed: {
@@ -79,12 +82,54 @@ export default {
       },
     },
   },
+  mounted() {
+    if (this.$route.query.editType === '2') {
+      this.editType = this.$route.query.editType
+      this.questionId = this.$route.query.id
+      this.formData.id = this.questionId
+      const _this = this
+      _this.getDetailByIdApi().then(({ code, data }) => {
+        if (code === 200) {
+          _this.questionInfo = data
+          _this.formData.title = data.title
+          _this.formData.content = data.content
+          // start: init 话题部分参数,当用户没有点击更改话题时,则使用查询问题中的值
+          _this.formData.categoryId = data.categoryId
+          _this.formData.categoryCode = data.categoryCode
+          _this.formData.categoryLevelIds = data.categoryLevelIds
+          _this.formData.categoryName = data.categoryName
+          // end: init 话题部分参数,当用户没有点击更改话题时,则使用查询问题中的值
+          _this.buildTopicArr(data)
+        } else {
+          _this.$xToast.error(data.error || '异常错误')
+          setTimeout(() => {
+            _this.$back()
+          }, 2000)
+        }
+      })
+    }
+  },
   methods: {
     openModal() {
       this.$refs.chooseTopic.showPop = true
     },
     handleClickCloseToast() {
       this.showToast = false
+    },
+    buildTopicArr(data) {
+      // get level 1 id
+      const tempIds = data.categoryLevelIds.split('_')
+      const levelOneId = tempIds[tempIds.length - 2]
+      // get topic name
+      const topicNameList = []
+      const topicNames = data.categoryName.split(',')
+      for (let i = 0, l = topicNames.length; i < l; i++) {
+        const item = { name: '' }
+        item.name = topicNames[i]
+        topicNameList.push(item)
+      }
+      console.log(`first ids: ${tempIds}, secound level1: ${levelOneId}`)
+      this.mytopics = [data.categoryId.split(','), levelOneId, topicNameList]
     },
   },
 }

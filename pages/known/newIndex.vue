@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <!-- 头部 start -->
     <div class="container_head">
       <Search
         :value="title"
@@ -16,10 +17,21 @@
         @click.native="openArticle"
       ></my-icon>
     </div>
+    <!-- 头部 end -->
     <!-- 吸顶 start -->
     <sp-sticky>
       <div class="container_middle">
-        <div class="tabs-box-items">
+        <sp-tabs v-model="active" is-nav-tab @click="toggleTabs">
+          <sp-tab
+            v-for="(item, index) in tabs"
+            :key="index"
+            :need-content="false"
+            :title="item.name"
+            :name="item"
+          >
+          </sp-tab>
+        </sp-tabs>
+        <!-- <div class="tabs-box-items">
           <div
             v-for="(item, index) in tabs"
             :key="index"
@@ -30,7 +42,7 @@
             <p>{{ item.name }}</p>
             <div :class="{ line_active: index == tabIndex }"></div>
           </div>
-        </div>
+        </div> -->
         <my-icon
           name="fenlei"
           size="0.32rem"
@@ -56,11 +68,15 @@
       <!-- 推荐列表 start-->
       <section>
         <sp-pull-refresh
-          v-model="isLoading"
+          v-model="isRecLoading"
           success-text="刷新成功"
           @refresh="onRefresh"
         >
-          <ListItem v-if="showRecommend" :normal-list-data="normalListData" />
+          <ListItem
+            v-if="showRecommend"
+            :normal-list-data="normalListData"
+            :list-loading="listLoading"
+          />
         </sp-pull-refresh>
       </section>
       <!-- 推荐列表 end-->
@@ -257,7 +273,7 @@ import Bottombar from '@/components/common/nav/Bottombar'
 import { knownApi } from '@/api'
 
 export default {
-  name: 'Index',
+  name: 'NewIndex',
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
@@ -265,6 +281,8 @@ export default {
     [Sticky.name]: Sticky,
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
+    [WorkTab.name]: WorkTab,
+    [WorkTabs.name]: WorkTabs,
     [PullRefresh.name]: PullRefresh,
     Search,
     Answer,
@@ -277,6 +295,8 @@ export default {
   },
   data() {
     return {
+      listLoading: false,
+      isRecLoading: false,
       isLoading: false,
       answerList: [],
       subjectList: [],
@@ -390,8 +410,10 @@ export default {
     tonav(url) {
       this.$router.push({ path: url })
     },
-    async toggleTabs(index, item) {
-      this.tabIndex = index
+    async toggleTabs(name, title) {
+      console.log('name', name)
+      const item = name
+      // this.tabIndex = name
       const params = {}
       this.listData = []
       // 去请求推荐列表数据
@@ -545,6 +567,7 @@ export default {
       if (code === 200) {
         if (data.rows.length > 0) {
           this.normalListData = data.rows
+          this.listLoading = false
         } else {
         }
       } else {
@@ -588,6 +611,7 @@ export default {
       if (code === 200) {
         if (data.rows.length > 0) {
           this.answerList = data.rows
+          this.listLoading = false
         } else {
         }
       } else {
@@ -620,7 +644,7 @@ export default {
     },
     // 打开文章编辑框
     openArticle() {
-      if (!this.isLogin()) {
+      if (!this.isLogin) {
         return
       }
       this.showArticlePop = true
@@ -701,20 +725,25 @@ export default {
   line-height: 48px;
   text-align: center;
 }
-::v-deep .sp-work-tab--active {
-  font-size: 32px;
-  font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
-  color: #222222;
+::v-deep .sp-tab--active {
+  span {
+    color: #222222;
+    font-size: 32px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+  }
 }
-/deep/ .sp-work-tab__text {
+/deep/ .sp-tabs {
+  width: 686px;
+}
+/deep/ .sp-tab__text {
   flex-shrink: 0;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
   color: #999999;
 }
-/deep/ .sp-work-tabs__line {
+/deep/ .sp-tabs__line {
   width: 24px;
   height: 6px;
   background: #4974f5;
@@ -739,8 +768,7 @@ export default {
     background: #ffffff;
     display: flex;
     align-items: center;
-    // margin-bottom: 24px;
-    padding: 0 32px;
+    overflow: hidden;
 
     .tabs-box-items {
       display: flex;

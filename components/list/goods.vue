@@ -140,6 +140,7 @@ export default {
       this.formData.sort = this.sortactive
       this.formData.class = this.itemsclass
       this.$refs.list.finished = false
+      this.$refs.list.pages = 1
       this.getlist()
     },
     navselect(item) {
@@ -267,10 +268,8 @@ export default {
               this.$refs.list.finished = true
             }
             this.skeletonLoading = false
-            this.$refs.list.loading = false
           } else {
             this.datalist = data.goodsList.records
-            this.skeletonLoading = false
             if (
               data.goodsList.totalCount === this.datalist.length ||
               data.goodsList.totalCount < this.datalist.length
@@ -286,7 +285,6 @@ export default {
           this.skeletonLoading = false
           this.$refs.list.loading = false
         })
-      this.$refs.list.loading = false
     },
     getFilterHandle(data, filrerName) {
       console.log(data, filrerName)
@@ -348,7 +346,7 @@ export default {
   .goodsbox {
     overflow-y: auto;
     padding-bottom: 20px;
-    background: #e4e4e4;
+    background: #fff;
   }
   /deep/.sp-tabs {
     .sp-tabs__line {

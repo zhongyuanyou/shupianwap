@@ -23,6 +23,7 @@ export default {
         userName: 'dsdadsada', //
         userType: '1', // 作者类型 1 普通用户 2 规划师
         contentImageUrl: '', // 内容图片地址（多张 “,”号拼接）
+        id: '',
       },
       topics: [], // 话题
       topicStr: '',
@@ -72,7 +73,7 @@ export default {
         const lastLetter = tempVal.slice(tempVal.length - 1, tempVal.length)
         const reg = /\?|？/
         if (!reg.test(lastLetter)) {
-          this.$xToast.error('输入问题并以问号结尾')
+          this.$xToast.error('标题需以问号结尾')
           return
         }
       }
@@ -103,12 +104,15 @@ export default {
       console.log('topicStr', this.topicStr)
     },
     submit() {
+      const checkFlag = this.checkParams()
+      if (!checkFlag) return
       if (!this.editType || this.editType === 1) {
-        if (this.fromPage === 'article' || this.fromPage === 'question') {
-          if (!this.formData.categoryCode) {
-            this.$xToast.error('请选择话题')
-          } else this.addContent()
+        if (this.fromPage === 'answer') {
+          this.buildAnswerParams()
         }
+        this.addContent()
+      } else {
+        this.modifyContent()
       }
     },
     editorChange(val) {
@@ -130,8 +134,21 @@ export default {
           }
         })
         .catch((err) => {
+          this.$xToast.error('发布失败')
           console.log('发布内容失败', err)
         })
+    },
+    // 修改内容
+    modifyContent() {
+      this.$axios.post(knownApi.content.edit, this.formData).then((res) => {
+        const that = this
+        if (res.code && res.code === 200) {
+          this.$xToast.success('修改成功')
+          this.switchUrl(res.data.id)
+        } else {
+          this.$xToast.error('发布失败')
+        }
+      })
     },
     // 页面跳转
     switchUrl(id) {
@@ -145,7 +162,7 @@ export default {
               id,
             },
           })
-        }, 2000)
+        }, 1000)
       } else if (this.fromPage === 'question') {
         timeoute = setTimeout(function () {
           _this.$router.replace({
@@ -155,7 +172,7 @@ export default {
               status: 'release',
             },
           })
-        }, 2000)
+        }, 1000)
       } else {
         timeoute = setTimeout(function () {
           _this.$router.replace({
@@ -164,7 +181,60 @@ export default {
               id,
             },
           })
-        }, 2000)
+        }, 1000)
+      }
+    },
+    checkParams() {
+      // check title
+      if (this.fromPage !== 'answer') {
+        const tempTitle = this.formData.title
+        if (tempTitle.length < 4) {
+          this.$xToast.error('标题不能少于4个字哦')
+          return false
+        }
+        const lastLetter = tempTitle.slice(
+          tempTitle.length - 1,
+          tempTitle.length
+        )
+        const reg = /\?|？/
+        if (this.fromPage === 'question' && !reg.test(lastLetter)) {
+          this.$xToast.error('标题需以问号结尾')
+          return false
+        }
+        // check categorycode
+        if (!this.formData.categoryCode) {
+          this.$xToast.error('请选择话题')
+          return false
+        }
+      }
+      // check content
+      if (this.formData.content.length === 0) {
+        this.$xToast.error('内容区域不能为空哦')
+        return false
+      }
+      return true
+    },
+    buildAnswerParams() {
+      this.formData.sourceId = this.questionId
+      this.formData.title = this.questionInfo.title
+      this.formData.categoryCode = this.questionInfo.categoryCode
+      this.formData.categoryId = this.questionInfo.categoryId
+      this.formData.categoryLevelIds = this.questionInfo.categoryLevelIds
+      this.formData.categoryName = this.questionInfo.categoryName
+    },
+    async getDetailByIdApi() {
+      try {
+        const params = {
+          id: this.questionId,
+          userHandleFlag: 0,
+          userId: this.userId,
+        }
+        const { code, data } = await this.$axios.get(knownApi.question.detail, {
+          params,
+        })
+        return { code, data }
+      } catch (e) {
+        return e
       }
     },
   },

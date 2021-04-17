@@ -55,6 +55,7 @@ export default {
     searchKeydownHandle() {
       this.$refs.goods.formData.start = 1
       this.$refs.goods.datalist = []
+      this.$refs.goods.$refs.list.finished = false
       this.$refs.goods.formData.searchKey = this.currentInputText
       this.$refs.goods.formData.needTypes = 0
       this.$refs.goods.getlist()

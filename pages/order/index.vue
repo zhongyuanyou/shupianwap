@@ -38,6 +38,7 @@
           :order-data="item"
           :order-id="item.cusOrderId"
           :order-type="selectedOrderStatus"
+          :order-pro-type-no="item.orderProTypeNo"
           @handleClickItem="handleClickItem"
         >
         </orderItem>
@@ -213,6 +214,7 @@ export default {
           const arr = res.records
           for (let i = 0, l = arr.length; i < l; i++) {
             this.changeMoney(arr[i])
+            arr[i].statusName = this.getStatusName(arr[i].orderStatusNo)
           }
           if (this.page === 1) {
             this.list = arr
@@ -224,6 +226,7 @@ export default {
           this.loadingList = false
         })
         .catch((error) => {
+          console.log('error', error)
           if (this.page === 1) {
             this.list = []
           }

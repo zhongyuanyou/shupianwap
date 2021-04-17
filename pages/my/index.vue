@@ -186,6 +186,8 @@ import { mapState } from 'vuex'
 import { userinfoApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { GOODSLIST } from '~/config/constant'
+import { imInit } from '@/utils/im'
+import getUserSign from '~/utils/fingerprint'
 export default {
   layout: 'nav',
   name: 'Index',
@@ -319,8 +321,16 @@ export default {
         this.$router.push('/my/about')
       }
     },
-    showExit() {
+    async showExit() {
       this.loginStatus = true
+      const deviceId = await getUserSign()
+      const initImSdk = imInit({
+        token: '',
+        userId: '',
+        userType: 'VISITOR',
+        deviceId,
+      })
+      this.$store.commit('im/SET_IM_SDK', initImSdk)
     },
     async exitConfirm() {
       // 退出

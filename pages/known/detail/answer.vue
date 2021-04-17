@@ -15,12 +15,9 @@
         >
         <span
           v-if="answerDetails && answerDetails.createrId === userInfo.userId"
+          @click.stop="writeAnswer"
         >
-          <my-icon
-            name="xiehuida"
-            size="0.4rem"
-            @click.native="writeAnswer"
-          ></my-icon>
+          <my-icon name="xiehuida" size="0.4rem"></my-icon>
           写回答</span
         >
         <span v-else>
@@ -45,10 +42,7 @@
           ></my-icon>
           <div class="user-info">
             <sp-image class="img" :src="answerDetails.avatar" />
-            <div class="infos">
-              <p>{{ answerDetails.createrName }}</p>
-              {{ answerDetails.contentText }}
-            </div>
+            <div class="infos">{{ answerDetails.createrName }}</div>
             <template v-if="answerDetails.createrId !== userInfo.userId">
               <div v-if="!isFollow" class="btn" @click="follow">
                 <sp-button
@@ -66,17 +60,14 @@
     <div class="title-area">
       <div class="title">{{ answerDetails.title }}</div>
       <div class="nums-area">
-        {{ answerDetails.answerCount }}个回答 ·
+        {{ answerDetails.answerCount }} 个回答 ·
         {{ answerDetails.collectCount }} 收藏
       </div>
     </div>
     <div class="main">
       <div class="user-info">
         <sp-image class="img" :src="answerDetails.avatar" />
-        <div class="infos">
-          <p>{{ answerDetails.createrName }}</p>
-          {{ answerDetails.contentText }}
-        </div>
+        <div class="infos">{{ answerDetails.createrName }}</div>
         <template v-if="answerDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
             <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
@@ -191,33 +182,50 @@ export default {
     Comment,
     HeadSlot,
   },
-  asyncData(context) {
-    return Promise.all([
-      context.$axios.get(knownApi.questionArticle.detail, {
-        params: {
-          id: context.query.id,
-          userHandleFlag: context.store.state.user.userId ? 1 : 0,
-        },
-      }),
-    ])
-      .then((res) => {
-        if (res[0] && res[0].code === 200) {
-          return {
-            answerDetails: res[0].data,
-            headerData: {
-              createrName: res[0].createrName,
-              contentText: res[0].contentText,
-              avatar: res[0].avatar,
-            },
-            sourceId: res[0].sourceId,
-            homeUserId: res[0].userId,
-          }
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-        Promise.reject(error)
-      })
+  async asyncData({ $axios, query, store }) {
+    const res = await $axios.get(knownApi.questionArticle.detail, {
+      params: {
+        id: query.id,
+        userId: store.state.user.userId,
+        userHandleFlag: store.state.user.userId ? 1 : 0,
+      },
+    })
+    return {
+      answerDetails: res.data,
+      headerData: {
+        createrName: res.createrName,
+        contentText: res.contentText,
+        avatar: res.avatar,
+      },
+      sourceId: res.sourceId,
+      homeUserId: res.userId,
+    }
+    // return Promise.all([
+    //   context.$axios.get(knownApi.questionArticle.detail, {
+    //     params: {
+    //       id: context.query.id,
+    //       userHandleFlag: context.store.state.user.userId ? 1 : 0,
+    //     },
+    //   }),
+    // ])
+    //   .then((res) => {
+    //     if (res[0] && res[0].code === 200) {
+    //       return {
+    //         answerDetails: res[0].data,
+    //         headerData: {
+    //           createrName: res[0].createrName,
+    //           contentText: res[0].contentText,
+    //           avatar: res[0].avatar,
+    //         },
+    //         sourceId: res[0].sourceId,
+    //         homeUserId: res[0].userId,
+    //       }
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error)
+    //     Promise.reject(error)
+    //   })
   },
   data() {
     return {
@@ -243,7 +251,6 @@ export default {
     this.initFollow()
   },
   mounted() {
-    debugger
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
@@ -251,33 +258,24 @@ export default {
   },
   methods: {
     follow() {
-      let followStatus = ''
-      if (this.isFollow) {
-        followStatus = 2
-        this.isFollow = false
-      } else {
-        followStatus = 1
-        this.isFollow = true
-      }
       this.loading = true
       this.$axios
         .post(knownApi.home.attention, {
           handleUserName: this.userInfo.userName || '测试用户',
           handleUserId: this.userInfo.userId || '120',
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-          handleType: followStatus,
-          attentionUserId: this.answerDetails.userId,
-          attentionUserName: this.answerDetails.userName,
-          attentionUserType: this.answerDetails.userType,
+          handleType: this.isFollow ? 2 : 1,
+          attentionUserId: this.articleDetails.userId,
+          attentionUserName: this.articleDetails.userName,
+          attentionUserType: this.articleDetails.userType,
         })
         .then((res) => {
           this.loading = false
           if (res.code === 200) {
-            if (this.isFollow) {
-              this.$xToast.show({ message: '关注成功' })
-            } else {
-              this.$xToast.show({ message: '取消关注' })
-            }
+            this.$xToast.show({
+              message: this.isFollow ? '关注成功' : '取消关注',
+            })
+            this.isFollow = !this.isFollow
           } else {
             Toast.fail({
               duration: 2000,
@@ -308,7 +306,12 @@ export default {
       this.$router.push('/known/detail/invitationList')
     },
     writeAnswer() {
-      this.$router.push('/known/publish/answer')
+      this.$router.push({
+        path: '/known/publish/answer',
+        query: {
+          id: this.answerDetails.sourceId,
+        },
+      })
     },
     more() {
       this.popupShow = true
@@ -381,10 +384,7 @@ export default {
       }
     },
     onLeftClick() {
-      this.$router.back(-1)
-    },
-    answersortfn(index) {
-      console.log(index)
+      this.$back()
     },
 
     handleClickBottom(type) {
@@ -665,7 +665,7 @@ export default {
   padding: 40px;
   .user-info {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     .img {
       width: 72px;
       height: 72px;
@@ -675,20 +675,12 @@ export default {
     }
     .infos {
       flex: 1;
-      height: 26px;
-      font-size: 26px;
+      font-size: 30px;
       font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
-      color: #999999;
-      line-height: 26px;
-      padding-left: 20px;
-      p {
-        font-size: 30px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #222222;
-        margin-bottom: 20px;
-      }
+      font-weight: 500;
+      color: #222222;
+      line-height: 30px;
+      padding-left: 16px;
     }
     .btn2 {
       background: none;

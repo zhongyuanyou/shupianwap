@@ -193,6 +193,7 @@ export default {
       this.isShowInput = true
     },
     servergoodsfn() {
+      this.$refs.goods.$refs.list.finished = false
       this.$refs.goods.formData.start = 1
       this.$refs.goods.datalist = []
       this.$refs.goods.formData.searchKey = this.currentInputText
@@ -290,7 +291,7 @@ export default {
 .search-result {
   width: 100%;
   height: 100%;
-  background: #e4e4e4;
+  background: #fff;
   /deep/.goodsbox {
     height: calc(100vh - 290px);
   }
@@ -302,16 +303,53 @@ export default {
       }
     }
   }
+  /deep/.goods-item {
+    padding: 32px 0;
+    width: 96%;
+    margin: 0 40px;
+    .goods-item-left {
+      width: 220px;
+      height: 220px;
+      margin: 0;
+      .goods-img {
+        width: 220px;
+        height: 220px;
+        min-width: 220px;
+        min-height: 220px;
+        border-radius: 12px;
+      }
+    }
+    .goods-right {
+      width: calc(100% - 252px);
+      margin-left: 32px;
+      h3 {
+        margin-top: 0;
+        margin-bottom: 16px;
+      }
+      .price-sales {
+        span {
+          font-size: 36px;
+          font-weight: 600;
+          color: #ec5330;
+          b {
+            font-size: 22px;
+            line-height: 22px;
+          }
+        }
+      }
+    }
+  }
   .jygood {
     /deep/.sp-dropdown-menu {
       background: #fff;
+      border: none;
     }
-    /deep/.goods-item {
-      margin: 0.2rem auto 0 auto;
-      background: #fff;
-      border-radius: 0.24rem;
-      width: 90%;
-    }
+    // /deep/.goods-item {
+    //   margin: 0.2rem auto 0 auto;
+    //   background: #fff;
+    //   border-radius: 0.24rem;
+    //   width: 90%;
+    // }
   }
   .nav-back {
     margin-right: 32px;

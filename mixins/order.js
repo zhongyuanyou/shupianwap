@@ -1,4 +1,5 @@
 /**
+ * ORDER_ORDER_RESOURCE_STATUS_HANDLED
  * @author tangdaibing
  * @since 2021/04/01
  * @lastEditDate 2021/04/03
@@ -12,6 +13,172 @@
  * */
 import orderUtils from '@/utils/order'
 import orderApi from '@/api/order'
+// 客户单状态code
+const ORDERSTATUSCODE = {
+  1: 'ORDER_CUS_STATUS_UNPAID', // 未付款
+  2: 'ORDER_CUS_STATUS_PROGRESSING', // 进行中
+  3: 'ORDER_CUS_STATUS_COMPLETED', // 已完成
+  4: 'ORDER_CUS_STATUS_CANCELLED', // 已取消
+}
+// 根据订单状态判断订单状态名称
+const orderStatusObj = {
+  TRADE_STATUS_UN_PAID: {
+    type: 'PRO_CLASS_TYPE_TRANSACTION',
+    code: 'ORDER_ORDER_TRADE_STATUS_UN_PAID',
+    name: '未付款',
+    cripsName: '未付款',
+    status: 'ORDER_CUS_STATUS_UNPAID',
+  },
+  TRADE_STATUS_HANDLING: {
+    type: 'PRO_CLASS_TYPE_TRANSACTION',
+    code: 'ORDER_ORDER_TRADE_STATUS_HANDLING',
+    name: '处理中',
+    cripsName: '交易中',
+    status: 'ORDER_CUS_STATUS_PROGRESSING',
+  },
+  TRADE_STATUS_HANDLED: {
+    type: 'PRO_CLASS_TYPE_TRANSACTION',
+    code: 'ORDER_ORDER_TRADE_STATUS_HANDLED',
+    name: '已处理',
+    cripsName: '待确认',
+    status: 'ORDER_CUS_STATUS_PROGRESSING',
+  },
+  TRADE_STATUS_COMPLETED: {
+    type: 'PRO_CLASS_TYPE_TRANSACTION',
+    code: 'ORDER_ORDER_TRADE_STATUS_COMPLETED',
+    name: '已完成',
+    cripsName: '已完成',
+    status: 'ORDER_CUS_STATUS_COMPLETED',
+  },
+  TRADE_STATUS_CANCELLED: {
+    type: 'PRO_CLASS_TYPE_TRANSACTION',
+    code: 'ORDER_ORDER_TRADE_STATUS_CANCELLED',
+    name: '已取消',
+    cripsName: '已取消',
+    status: 'ORDER_CUS_STATUS_CANCELLED',
+  },
+  SALES_STATUS_UN_PAID: {
+    type: 'PRO_CLASS_TYPE_SALES',
+    code: 'ORDER_ORDER_SALE_STATUS_UN_PAID',
+    name: '未付款',
+    cripsName: '未付款',
+    status: 'ORDER_CUS_STATUS_UNPAID',
+  },
+  SALES_STATUS_HANDLING: {
+    type: 'PRO_CLASS_TYPE_SALES',
+    code: 'ORDER_ORDER_SALE_STATUS_HANDLING',
+    name: '待发货',
+    cripsName: '进行中',
+    status: 'ORDER_CUS_STATUS_PROGRESSING',
+  },
+  SALES_STATUS_HANDLED: {
+    type: 'PRO_CLASS_TYPE_SALES',
+    code: 'ORDER_ORDER_SALE_STATUS_HANDLED',
+    name: '待收货',
+    cripsName: '待确认',
+    status: 'ORDER_CUS_STATUS_PROGRESSING',
+  },
+  SALES_STATUS_COMPLETED: {
+    type: 'PRO_CLASS_TYPE_SALES',
+    code: 'ORDER_ORDER_SALE_STATUS_COMPLETED',
+    name: '已完成',
+    cripsName: '已完成',
+    status: 'ORDER_CUS_STATUS_COMPLETED',
+  },
+  SALES_STATUS_CANCELLED: {
+    type: 'PRO_CLASS_TYPE_SALES',
+    code: 'ORDER_ORDER_SALE_STATUS_CANCELLED',
+    name: '已取消',
+    cripsName: '已取消',
+    status: 'ORDER_CUS_STATUS_CANCELLED',
+  },
+
+  RESOURCE_STATUS_UN_PAID: {
+    type: 'PRO_CLASS_TYPE_SERVICE_RESOURCE',
+    code: 'ORDER_ORDER_RESOURCE_STATUS_UN_PAID',
+    name: '未付款',
+    cripsName: '未付款',
+    status: 'ORDER_CUS_STATUS_UNPAID',
+  },
+  RESOURCE_STATUS_HANDLING: {
+    type: 'PRO_CLASS_TYPE_SERVICE_RESOURCE',
+    code: 'ORDER_ORDER_RESOURCE_STATUS_HANDLING',
+    name: '处理中',
+    cripsName: '进行中',
+    status: 'ORDER_CUS_STATUS_PROGRESSING',
+  },
+  RESOURCE_STATUS_HANDLED: {
+    type: 'PRO_CLASS_TYPE_SERVICE_RESOURCE',
+    code: 'ORDER_ORDER_RESOURCE_STATUS_HANDLED',
+    name: '待确认',
+    cripsName: '待确认',
+    status: 'ORDER_CUS_STATUS_PROGRESSING',
+  },
+  RESOURCE_STATUS_COMPLETED: {
+    type: 'PRO_CLASS_TYPE_SERVICE_RESOURCE',
+    code: 'ORDER_ORDER_RESOURCE_STATUS_COMPLETED',
+    name: '已完成',
+    cripsName: '已完成',
+    status: 'ORDER_CUS_STATUS_COMPLETED',
+  },
+  RESOURCE_STATUS_CANCELLED: {
+    type: 'PRO_CLASS_TYPE_SERVICE_RESOURCE',
+    code: 'ORDER_ORDER_RESOURCE_STATUS_CANCELLED',
+    name: '已取消',
+    cripsName: '已取消',
+    status: 'ORDER_CUS_STATUS_CANCELLED',
+  },
+
+  SERVER_STATUS_UN_PAID: {
+    type: 'PRO_CLASS_TYPE_SERVICE',
+    code: 'ORDER_ORDER_SERVER_STATUS_UN_PAID',
+    name: '未付款',
+    cripsName: '未付款',
+    status: 'ORDER_CUS_STATUS_UNPAID',
+  },
+  SERVER_STATUS_UN_ASSIGN: {
+    type: 'PRO_CLASS_TYPE_SERVICE',
+    code: 'ORDER_ORDER_SERVER_STATUS_UN_ASSIGN',
+    name: '待分配',
+    cripsName: '办理中',
+    status: 'ORDER_CUS_STATUS_PROGRESSING',
+  },
+  SERVER_STATUS_UN_RECEICE_ORDER: {
+    type: 'PRO_CLASS_TYPE_SERVICE',
+    code: 'ORDER_ORDER_SERVER_STATUS_UN_RECEICE_ORDER',
+    name: '待接单',
+    cripsName: '办理中',
+    status: 'ORDER_CUS_STATUS_PROGRESSING',
+  },
+  SERVER_STATUS_HANDLING: {
+    type: 'PRO_CLASS_TYPE_SERVICE',
+    code: 'ORDER_ORDER_SERVER_STATUS_HANDLING',
+    name: '处理中',
+    cripsName: '办理中',
+    status: 'ORDER_CUS_STATUS_PROGRESSING',
+  },
+  SERVER_STATUS_HANDLED: {
+    type: 'PRO_CLASS_TYPE_SERVICE',
+    code: 'ORDER_ORDER_SERVER_STATUS_HANDLED',
+    name: '已处理',
+    cripsName: '待确认',
+    status: 'ORDER_CUS_STATUS_PROGRESSING',
+  },
+  SERVER_STATUS_COMPLETED: {
+    type: 'PRO_CLASS_TYPE_SERVICE',
+    code: 'ORDER_ORDER_SERVER_STATUS_COMPLETED',
+    name: '已完成',
+    cripsName: '已完成',
+    status: 'ORDER_CUS_STATUS_COMPLETED',
+  },
+  SERVER_STATUS_CANCELLED: {
+    type: 'PRO_CLASS_TYPE_SERVICE',
+    code: 'ORDER_ORDER_SERVER_STATUS_CANCELLED',
+    name: '已取消',
+    cripsName: '已取消',
+    status: 'ORDER_CUS_STATUS_CANCELLED',
+  },
+}
 export default {
   data() {
     return {
@@ -229,7 +396,34 @@ export default {
     },
     // 判断展示合同按钮 false不展示  1签署合同 2查看合同
     checkContractStatus() {
-      return orderUtils.checkContractStatus(this.orderData)
+      const data = this.orderData
+      // 当客户订单状态为已取消时不展示按钮
+      if (data.cusOrderStatusNo === ORDERSTATUSCODE[4]) return false
+      if (this.fromPage === 'orderList') {
+        if (
+          (data.contractStatus &&
+            (data.contractStatus === 'STRUTS_QSZ' ||
+              data.contractStatus === 'STRUTS_CG')) ||
+          !data.contractStatus
+        ) {
+          // 当合同状态为草稿或签署中或无合同信息时显示签署合同按钮
+          return 1
+        }
+        // 当合同状态为已完成时显示查看合同按钮
+        if (data.contractStatus && data.contractStatus === 'STRUTS_YWC')
+          return 2
+        return orderUtils.checkContractStatus(this.orderData)
+      } else {
+        // 订单详情页面根据合同列表判断
+        // 当合同状态为已完成时显示查看合同按钮
+        if (
+          data.contractVo2s &&
+          data.contractVo2s.length &&
+          data.contractVo2s[0].contractStatus === 'STRUTS_YWC'
+        )
+          return 2
+        return 1
+      }
     },
     // 判断客户单状态类型 1待付款 2进行中 3已完成 4已取消
     checkCusOrderStatus() {
@@ -241,7 +435,28 @@ export default {
     },
     // 判断是否显示确认订单按钮
     isShowConfirmBtn(data) {
-      return orderUtils.isShowConfirmBtn(this.orderData || data)
+      data = data || this.orderData
+      let isShowConfirm
+      const orderProTypeNo = data.orderProTypeNo
+      if (
+        data.orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION' ||
+        data.orderProTypeNo === 'PRO_CLASS_TYPE_SALES '
+      ) {
+        const orderArr = data.orderSkuEsList || data.orderSkuList
+        for (let i = 0, l = orderArr.length; i < l; i++) {
+          if (
+            orderArr[i].skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
+            orderArr[i].skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED' ||
+            orderArr[i].skuStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED' ||
+            orderArr[i].skuStatusNo === 'ORDER_ORDER_SERVER_STATUS_HANDLED'
+          ) {
+            if (orderArr[i].userConfirm === 0) {
+              isShowConfirm = 1
+            }
+          }
+        }
+      }
+      return isShowConfirm
     },
     // 判断是否显示付款按钮
     isShowPayBtn() {
@@ -436,11 +651,39 @@ export default {
         }
       }
     },
+    // 设置sku信息
+    getSkus(skuStr) {
+      return skuStr.replace(/\|/g, ';')
+    },
     // 支付列表价格转换
     changePayMoney(payItem) {
       if (payItem.money) {
         payItem.money = this.regFenToYuan(payItem.money)
       }
+    },
+    // 将订单状态解析成对应分类订单对应状态的name
+    getStatusName(code) {
+      let statusName
+      for (const key in orderStatusObj) {
+        if (orderStatusObj[key].code === code) {
+          statusName = orderStatusObj[key].cripsName
+        }
+      }
+      return statusName
+    },
+    changeOrderList(order) {
+      const arr = order.orderSkuEsList
+      const result = []
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < result.length; j++) {
+          if (j === 0) {
+            result.push(arr[i])
+          } else if (result[j].skuId === arr[i].skuId) {
+            result[j].skuCount++
+          }
+        }
+      }
+      return result
     },
     // jump
     toContract() {
