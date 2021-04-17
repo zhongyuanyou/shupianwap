@@ -3,7 +3,7 @@
     <CommonHead v-if="!id" title="写回答" />
     <PageHead
       v-else
-      :title="editType == 2 ? '回答问题' : '写回答'"
+      :title="editType === '2' ? '回答问题' : '写回答'"
       :has-val="hasVal"
       :fixed="true"
       @submit="submit"
@@ -60,9 +60,14 @@ export default {
   },
   mounted() {
     this.questionId = this.$route.query.id
+    // this.formData.id = this.questionId
+    if (this.$route.query.editType) {
+      this.editType = this.$route.query.editType
+    }
+    const _this = this
     this.getDetailByIdApi().then(({ code, data }) => {
       if (code === 200) {
-        this.questionInfo = data
+        _this.questionInfo = data
       }
     })
   },
