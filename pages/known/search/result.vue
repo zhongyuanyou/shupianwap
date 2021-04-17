@@ -126,17 +126,16 @@ export default {
   },
   data() {
     return {
-      redirect: this.$route.query.redirect || '/',
       searchList: [],
       userList: [],
       tabIndex: '1',
       value: '',
-      loading: false,
-      finished: false,
       page: 1,
       limit: 10,
       error: false,
-      totalPage: 1,
+      loading: false,
+      finished: false,
+      apiLock: false,
     }
   },
   computed: {
@@ -146,8 +145,9 @@ export default {
     }),
   },
   mounted() {
-    this.tabIndex = this.$route.query.type || '1'
-    this.value = this.$route.query.keyword
+    const query = this.$route.query
+    this.tabIndex = query.type || '1'
+    this.value = query.keyword
   },
   methods: {
     keyClickHandle() {
@@ -182,19 +182,22 @@ export default {
         })
       }
     },
-    t(type) {
+    changeTab(type) {
       if (this.tabIndex === type) {
         return
       }
+      this.tabIndex = type
+      this.initTab()
+      this.onLoad()
+    },
+    initTab() {
       this.loading = false
       this.finished = false
       this.error = false
       this.page = 1
-      this.totalPage = 1
-      this.tabIndex = type
-      // 请求后台接口
-      // this.getSearchListApi()
-      this.onLoad()
+      this.searchList = []
+      this.userList = []
+      this.apiLock = false
     },
     async attentionHandler(item) {
       // 先判断是否登录
@@ -243,43 +246,44 @@ export default {
       }
     },
     async getSearchListApi() {
+      this.apiLock = true
       // 请求后台接口
       try {
         const res = await this.$axios.post(knownApi.search.list, {
           keyword: this.value,
           type: parseInt(this.tabIndex),
-          limit: 10,
+          limit: this.limit,
           page: this.page,
         })
-        if (res.code === 200 && res.data.records.length) {
+        if (res.code === 200) {
           // 用户数据
           if (this.tabIndex === '3') {
             res.data.records.forEach((item) => {
               item.custAttentionFlag = false
             })
             this.userList.push(...res.data.records)
-            this.totalPage = res.data.totalPage
-            this.page++
           } else {
             this.searchList.push(...res.data.records)
-            this.totalPage = res.data.totalPage
-            this.page++
+          }
+          this.page++
+          if (this.page > res.data.totalPage) {
+            this.finished = true
           }
         } else {
           this.error = true
         }
         this.loading = false
+        this.apiLock = false
       } catch (e) {
         this.error = true
         this.loading = false
+        this.apiLock = false
       }
     },
     onLoad() {
-      if (this.page > this.totalPage) {
-        this.finished = true
-        return
+      if (!this.apiLock) {
+        this.getSearchListApi()
       }
-      this.getSearchListApi()
     },
   },
 }
