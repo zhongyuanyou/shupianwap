@@ -8,7 +8,7 @@
         @clickInputHandle="keyClickHandle"
       >
         <template v-slot:left>
-          <sp-icon name="arrow-left" size="0.4rem" @click="$router.back()" />
+          <sp-icon name="arrow-left" size="0.4rem" @click="backPage" />
         </template>
       </Search>
     </div>
@@ -182,6 +182,13 @@ export default {
         res.push(item)
       }
       return res
+    },
+    backPage() {
+      if (this.$route.query.fromPage === 'invitationSearch') {
+        this.$router.push('/known/home')
+      } else {
+        this.$back()
+      }
     },
   },
 }
