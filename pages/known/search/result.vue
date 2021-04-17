@@ -26,59 +26,83 @@
       </p>
     </div>
     <div v-show="tabIndex === '1' || tabIndex === '2'" class="listbox">
-      <div
-        v-for="(item, index) in searchList"
-        :key="index"
-        class="list"
-        @click="toDetail(item.id)"
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        :error.sync="error"
+        error-text="请求失败，点击重新加载"
+        offset="30"
+        @load="onLoad"
       >
-        <h1 v-html="item.titleHtml"></h1>
-        <div class="box">
-          <div :style="{ width: item.contentImageUrl ? '464px' : '100%' }">
-            <p v-html="item.contentTextHtml"></p>
-            <div v-if="item.contentImageUrl" class="num">
-              <span>{{ item.applaudCount }} 赞同</span>
-              <i></i>
-              <span>{{ item.remarkCount }} 评论</span>
-              <i></i>
-              <span>{{ item.createTime | fromatDate }} </span>
+        <div
+          v-for="(item, index) in searchList"
+          :key="index"
+          class="list"
+          @click="toDetail(item.id)"
+        >
+          <h1 v-html="item.titleHtml"></h1>
+          <div class="box">
+            <div :style="{ width: item.contentImageUrl ? '464px' : '100%' }">
+              <p v-html="item.contentTextHtml"></p>
+              <div v-if="item.contentImageUrl" class="num">
+                <span>{{ item.applaudCount }} 赞同</span>
+                <i></i>
+                <span>{{ item.remarkCount }} 评论</span>
+                <i></i>
+                <span>{{ item.createTime | fromatDate }} </span>
+              </div>
             </div>
+            <img
+              v-if="item.contentImageUrl"
+              :src="item.contentImageUrl"
+              alt=""
+            />
           </div>
-          <img v-if="item.contentImageUrl" :src="item.contentImageUrl" alt="" />
+          <div v-if="!item.contentImageUrl" class="num">
+            <span>{{ item.applaudCount }} 赞同</span>
+            <i></i>
+            <span>{{ item.remarkCount }} 评论</span>
+            <i></i>
+            <span>{{ item.createTime | fromatDate }} </span>
+          </div>
         </div>
-        <div v-if="!item.contentImageUrl" class="num">
-          <span>{{ item.applaudCount }} 赞同</span>
-          <i></i>
-          <span>{{ item.remarkCount }} 评论</span>
-          <i></i>
-          <span>{{ item.createTime | fromatDate }} </span>
-        </div>
-      </div>
+      </sp-list>
     </div>
     <div v-show="tabIndex === '3'" class="userlist">
-      <div v-for="item in userList" :key="item.id" class="list">
-        <img :src="item.avatar" alt="" @click="toHome(item)" />
-        <div class="name" v-html="item.userNameHtml"></div>
-        <div class="applaudFlag">
-          <sp-icon
-            v-if="!item.custAttentionFlag"
-            name="plus"
-            color="#4974F5"
-            size="0.3rem"
-          />
-          <span
-            :style="{ color: item.custAttentionFlag ? '#999999' : '#4974F5' }"
-            @click="attentionHandler(item)"
-            >{{ item.custAttentionFlag ? '已关注' : '关注' }}</span
-          >
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        :error.sync="error"
+        error-text="请求失败，点击重新加载"
+        offset="30"
+        @load="onLoad"
+      >
+        <div v-for="item in userList" :key="item.id" class="list">
+          <img :src="item.avatar" alt="" @click="toHome(item)" />
+          <div class="name" v-html="item.userNameHtml"></div>
+          <div class="applaudFlag">
+            <sp-icon
+              v-if="!item.custAttentionFlag"
+              name="plus"
+              color="#4974F5"
+              size="0.3rem"
+            />
+            <span
+              :style="{ color: item.custAttentionFlag ? '#999999' : '#4974F5' }"
+              @click="attentionHandler(item)"
+              >{{ item.custAttentionFlag ? '已关注' : '关注' }}</span
+            >
+          </div>
         </div>
-      </div>
+      </sp-list>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import { Sticky, Icon, Dialog } from '@chipspc/vant-dgg'
+import { Sticky, Icon, Dialog, List } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import knownApi from '@/api/known'
 import utils from '@/utils/changeBusinessData'
@@ -90,6 +114,7 @@ export default {
     [Icon.name]: Icon,
     Search,
     [Dialog.name]: Dialog,
+    [List.name]: List,
   },
   filters: {
     fromatDate(value) {
@@ -99,43 +124,30 @@ export default {
       return value.split(' ')[0]
     },
   },
-  async asyncData({ $axios, query }) {
-    let userList = []
-    let searchList = []
-    try {
-      const params1 = {
-        keyword: query.keyword,
-        type: parseInt(query.type),
-      }
-      const res = await $axios.post(knownApi.search.list, params1)
-      if (res.code === 200 && res.data.records.length) {
-        // 用户数据
-        if (query.type === '3') {
-          // userList = buildUserList(res.data.records)
-          res.data.records.forEach((item) => {
-            item.custAttentionFlag = false
-          })
-          userList = res.data.records
-        } else {
-          searchList = res.data.records
-        }
-      }
-    } catch (e) {}
-    return {
-      searchList,
-      userList,
-      tabIndex: query.type || '1',
-      value: query.keyword,
-    }
-  },
   data() {
-    return { redirect: this.$route.query.redirect || '/' }
+    return {
+      redirect: this.$route.query.redirect || '/',
+      searchList: [],
+      userList: [],
+      tabIndex: '1',
+      value: '',
+      loading: false,
+      finished: false,
+      page: 1,
+      limit: 10,
+      error: false,
+      totalPage: 1,
+    }
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo, // 登录的用户信息
       userId: (state) => state.user.userId, // userId 用于判断登录
     }),
+  },
+  mounted() {
+    this.tabIndex = this.$route.query.type || '1'
+    this.value = this.$route.query.keyword
   },
   methods: {
     keyClickHandle() {
@@ -170,29 +182,19 @@ export default {
         })
       }
     },
-    async changeTab(type) {
+    t(type) {
       if (this.tabIndex === type) {
         return
       }
+      this.loading = false
+      this.finished = false
+      this.error = false
+      this.page = 1
+      this.totalPage = 1
       this.tabIndex = type
       // 请求后台接口
-      try {
-        const res = await this.$axios.post(knownApi.search.list, {
-          keyword: this.value,
-          type: parseInt(this.tabIndex),
-        })
-        if (res.code === 200 && res.data.records.length) {
-          // 用户数据
-          if (this.tabIndex === '3') {
-            res.data.records.forEach((item) => {
-              item.custAttentionFlag = false
-            })
-            this.userList = res.data.records
-          } else {
-            this.searchList = res.data.records
-          }
-        }
-      } catch (e) {}
+      // this.getSearchListApi()
+      this.onLoad()
     },
     async attentionHandler(item) {
       // 先判断是否登录
@@ -239,6 +241,45 @@ export default {
           },
         })
       }
+    },
+    async getSearchListApi() {
+      // 请求后台接口
+      try {
+        const res = await this.$axios.post(knownApi.search.list, {
+          keyword: this.value,
+          type: parseInt(this.tabIndex),
+          limit: 10,
+          page: this.page,
+        })
+        if (res.code === 200 && res.data.records.length) {
+          // 用户数据
+          if (this.tabIndex === '3') {
+            res.data.records.forEach((item) => {
+              item.custAttentionFlag = false
+            })
+            this.userList.push(...res.data.records)
+            this.totalPage = res.data.totalPage
+            this.page++
+          } else {
+            this.searchList.push(...res.data.records)
+            this.totalPage = res.data.totalPage
+            this.page++
+          }
+        } else {
+          this.error = true
+        }
+        this.loading = false
+      } catch (e) {
+        this.error = true
+        this.loading = false
+      }
+    },
+    onLoad() {
+      if (this.page > this.totalPage) {
+        this.finished = true
+        return
+      }
+      this.getSearchListApi()
     },
   },
 }
@@ -307,7 +348,7 @@ export default {
     }
   }
   > .listbox {
-    > .list {
+    .list {
       padding: 40px 32px;
       background: #fff;
       margin-top: 20px;
@@ -390,7 +431,7 @@ export default {
     background: #fff;
     margin-top: 20px;
     padding-top: 40px;
-    > .list {
+    .list {
       display: flex;
       padding-top: 20px;
       align-items: center;
