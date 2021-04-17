@@ -19,7 +19,6 @@
       class="list_container"
       :error.sync="error"
       error-text="请求失败，点击重新加载"
-      offset="30"
       @load="onLoad"
     >
       <div v-for="(item, index) in list" :key="index" class="item">
