@@ -1,23 +1,16 @@
 <template>
   <div class="item-inner">
-    <sp-image
-      class="img"
-      :src="item.skuDetails[0].skuImages || item.skuImages"
-    ></sp-image>
+    <sp-image class="img" :src="item.skuImages"></sp-image>
     <div class="right">
       <p class="goods-name">
-        <span class="name">
-          {{
-            item.orderSaleName || item.skuDetails[0].spuName || item.spuName
-          }}</span
-        >
+        <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
         <span class="money1">
-          {{ changeMoney(item.skuDetails[0].skuPrice || item.skuPrice) }}元
+          {{ changeMoney(item.skuPrice || item.skuPrice) }}元
         </span>
       </p>
       <div class="sku-info">
         <div class="goods-num">×{{ item.skuCount || 1 }}</div>
-        <p>{{ item.skuDetailInfo }}</p>
+        <p>{{ item.skuExtInfo }}</p>
         <!-- <p v-for="(item2, index2) in item.fieldList" :key="index2">
           {{ item2.fieldValue }}
         </p> -->
