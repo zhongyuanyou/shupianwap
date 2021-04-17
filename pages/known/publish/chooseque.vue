@@ -2,7 +2,7 @@
   <div>
     <Header title="写回答" :fixed="true" />
     <div class="main">
-      <sp-tabs v-model="active" @change="init">
+      <sp-tabs v-model="active" @change="changeTab">
         <sp-tab title="推荐">
           <sp-list
             v-model="loading"
@@ -11,13 +11,9 @@
             class="list"
             :error.sync="error"
             error-text="请求失败，点击重新加载"
-            @load="onLoadRecommend"
+            @load="onLoad"
           >
-            <div
-              v-for="(item, index) in recommendList"
-              :key="index"
-              class="item"
-            >
+            <div v-for="(item, index) in list" :key="index" class="item">
               <div class="user-info">
                 <div class="img" :src="item.avatar"></div>
                 <div class="infos">
@@ -49,9 +45,9 @@
             class="list"
             :error.sync="error"
             error-text="请求失败，点击重新加载"
-            @load="onLoadAnswer"
+            @load="onLoad"
           >
-            <div v-for="(item, index) in answerList" :key="index" class="item">
+            <div v-for="(item, index) in list" :key="index" class="item">
               <p class="view-num">最近{{ item.totalBrowseCount }}人浏览</p>
               <div class="item-content">{{ item.content }}</div>
               <div class="item-bottom">
@@ -92,12 +88,10 @@ export default {
       loading: false,
       finished: false,
       page: 1,
-      totalPage: 1,
-      recommendList: [],
-      answerList: [],
+      limit: 15,
+      list: [],
       active: 0,
       isFromApp: '', // 是否从APP跳转
-      // immediateCheck: false,
     }
   },
   computed: {
@@ -106,16 +100,16 @@ export default {
     }),
   },
   methods: {
+    changeTab() {
+      this.init()
+      this.onLoad()
+    },
     init() {
-      // 初始化数据
-      this.recommendList = []
-      this.answerList = []
+      this.list = []
       this.page = 1
-      this.totalPage = 1
       this.error = false
       this.finished = false
-      this.loading = false
-      // this.writeAnswerApi()
+      this.loading = true
     },
     chooseQue(item) {
       this.$router.push({
@@ -128,18 +122,7 @@ export default {
     editorChange(val) {
       this.formData.content = val
     },
-    onLoadRecommend() {
-      if (this.page > this.totalPage) {
-        this.finished = true
-        return
-      }
-      this.writeAnswerApi()
-    },
-    onLoadAnswer() {
-      if (this.page > this.totalPage) {
-        this.finished = true
-        return
-      }
+    onLoad() {
       this.writeAnswerApi()
     },
     async writeAnswerApi() {
@@ -148,49 +131,26 @@ export default {
           type: this.active === 0 ? 1 : 2, // 1 推荐回答 2 邀请回答
           handleUserId: this.userId,
           page: this.page,
-          limit: 10,
+          limit: this.limit,
         }
         const { code, data } = await this.$axios.get(
           knownApi.question.writeAnswer,
           { params }
         )
-        if (this.active === 0) {
-          this.buildRecommendData(code, data)
+        if (code === 200) {
+          this.list.push(...data.rows)
+          this.page++
+          if (this.page > data.totalPage) {
+            this.finished = true
+          }
         } else {
-          this.buildAnswerData(code, data)
+          this.error = true
         }
+        this.loading = false
       } catch (e) {
         this.error = true
         this.loading = false
       }
-    },
-    buildRecommendData(code, data) {
-      if (code === 200) {
-        if (!data.rows || data.rows.length === 0) {
-          this.recommendList = []
-          this.finished = true
-        }
-        this.recommendList.push(...data.rows)
-        this.totalPage = data.totalPage
-        this.page++
-      } else {
-        this.error = true
-      }
-      this.loading = false
-    },
-    buildAnswerData(code, data) {
-      if (code === 200) {
-        if (data.rows || data.rows.length === 0) {
-          this.answerList = []
-          this.finished1 = true
-        }
-        this.answerList.push(...data.rows)
-        this.totalPage = data.totalPage
-        this.page++
-      } else {
-        this.error = true
-      }
-      this.loading = false
     },
   },
 }
