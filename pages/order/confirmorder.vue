@@ -16,7 +16,13 @@
           <div class="left">
             <img
               :src="
-                item.salesGoodsOperatings.clientDetails[0].imgFileIdPaths[0]
+                item.salesGoodsOperatings
+                  ? item.salesGoodsOperatings.clientDetails[0]
+                    ? item.salesGoodsOperatings.clientDetails[0]
+                        .imgFileIdPaths[0] ||
+                      'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
+                    : 'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
+                  : 'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
               "
               alt=""
             />
@@ -391,32 +397,15 @@ export default {
         if (this.$route.query.type === 'shopcar') {
           const arr = []
           for (let i = 0; i < this.order.list.length; i++) {
-            if (arr.length === 0) {
-              const sku = {
-                saleSkuId: this.order.list[i].id,
-                saleSkuName: this.order.list[i].name,
-                saleSkuVersionNo: this.order.list[i].version + '',
-                saleSkuPrice: this.order.list[i].salesPrice,
-                saleSkuCount: this.order.list[i].salesVolume,
-              }
-              arr.push(sku)
-              this.loading = false
-            } else {
-              for (let b = 0; b < arr.length; b++) {
-                if (this.order.list[i].id === arr[b].saleSkuId) {
-                  arr[b].saleSkuCount++
-                } else {
-                  const sku = {
-                    saleSkuId: this.order.list[i].id,
-                    saleSkuName: this.order.list[i].name,
-                    saleSkuVersionNo: this.order.list.version + '',
-                    saleSkuPrice: this.order.list[i].salesPrice,
-                    saleSkuCount: this.order.list[i].salesVolume,
-                  }
-                  arr.push(sku)
-                }
-              }
+            const sku = {
+              saleSkuId: this.order.list[i].id,
+              saleSkuName: this.order.list[i].name,
+              saleSkuVersionNo: this.order.list[i].version + '',
+              saleSkuPrice: this.order.list[i].salesPrice,
+              saleSkuCount: this.order.list[i].salesVolume,
             }
+            arr.push(sku)
+            this.loading = false
           }
           this.Orderform.needSplitProPackageDataParam = arr
         } else {
@@ -644,7 +633,7 @@ export default {
                 text-overflow: ellipsis;
               }
               > .data {
-                width: 45%;
+                width: 40%;
                 font-size: 22px;
                 font-weight: 400;
                 color: #222222;

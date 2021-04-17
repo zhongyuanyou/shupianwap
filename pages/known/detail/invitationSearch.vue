@@ -102,7 +102,7 @@ export default {
     clooseHandle() {
       this.$router.push({
         path: '/known/detail/invitationList',
-        query: { questionId: this.questionId },
+        query: { questionId: this.questionId, fromPage: 'invitationSearch' },
       })
     },
     keyClickHandle() {

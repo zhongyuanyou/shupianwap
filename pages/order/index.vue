@@ -214,10 +214,6 @@ export default {
           const arr = res.records
           for (let i = 0, l = arr.length; i < l; i++) {
             this.changeMoney(arr[i])
-            console.log(
-              ' this.getStatusName(arr[i].orderStatusNo)',
-              this.getStatusName(arr[i].orderStatusNo)
-            )
             arr[i].statusName = this.getStatusName(arr[i].orderStatusNo)
           }
           if (this.page === 1) {
