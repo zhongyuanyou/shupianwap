@@ -295,6 +295,7 @@ export default {
       })
     },
     getcart() {
+      const that = this
       shopCart
         .bill({
           cartId: this.$route.query.cartIdsStr,
@@ -307,12 +308,15 @@ export default {
           this.price = this.order.needPayTotalMoney
           this.getInitData(5)
           this.getInitData(6)
-          this.loading = false
+          this.skeletonloading = false
         })
         .catch((e) => {
           if (e.code !== 200) {
             this.$xToast.show(e.message)
             console.log(e)
+            setTimeout(function () {
+              that.$router.back(-1)
+            }, 2000)
           }
         })
     },
