@@ -8,7 +8,7 @@
             orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'
           "
           class="order-status status3"
-          >{{ CUSORDERSTATUSCODE[orderData.cusOrderStatusNo] }}</span
+          >{{ orderData.statusName }}</span
         >
         <span
           v-else
@@ -21,7 +21,7 @@
               ? 'status2'
               : 'status3'
           "
-          >{{ CUSORDERSTATUSCODE[orderData.cusOrderStatusNo] }}</span
+          >{{ orderData.statusName }}</span
         >
       </p>
       <div
@@ -44,8 +44,18 @@
               {{ item.skuPrice }}元
             </span>
           </p>
+          <!-- 交易商品和销售产品取skuDetailInfo -->
+          <!-- 资源和服务取skuExtInfo -->
           <p class="sku-info">
-            <span class="sku-item">{{ getSkus(item.skuExtInfo) }}</span>
+            <span
+              v-if="
+                orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION ' ||
+                orderProTypeNo === 'PRO_CLASS_TYPE_SALES '
+              "
+              class="sku-item"
+              >{{ item.skuDetailInfo }}</span
+            >
+            <span v-else class="sku-item">{{ getSkus(item.skuExtInfo) }}</span>
             <span class="goods-num">×{{ item.skuCount }}</span>
           </p>
           <!-- 增值服务产品中心2期已去掉 2021.03.10 -->
@@ -151,7 +161,7 @@
           >立即付款</sp-button
         >
         <sp-button
-          v-if="isShowConfirmBtn()"
+          v-if="isShowConfirmBtn(orderData)"
           type="default"
           class="btn-confirm"
           @click="handleClickItem(6)"
@@ -177,6 +187,10 @@ export default {
       default() {
         return {}
       },
+    },
+    orderProTypeNo: {
+      type: String,
+      default: '',
     },
     orderId: {
       type: String,
