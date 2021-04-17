@@ -66,20 +66,16 @@ export default {
       loading: false,
       finished: false,
       page: 1,
-      questionId: '',
       totalPage: 1,
     }
   },
   computed: {
     ...mapState({
-      userInfo: (state) => state.user.userInfo, // 登录的用户信息
-      userId: (state) => state.user.userId, // userId 用于判断登录
-      userType: (state) => state.user.userType,
+      userInfo: (state) => state.user, // 登录的用户信息
     }),
-  },
-  mounted() {
-    // 这里拿到 questionId,用于邀请接口
-    // this.questionId = this.$route.query.questionId
+    questionId() {
+      return this.$route.query.questionId
+    },
   },
   methods: {
     keyClickHandle() {
@@ -125,10 +121,10 @@ export default {
       // 邀请用户回答
       try {
         const params = {
-          handleUserId: this.userId,
-          handleUserName: this.userInfo.userName || '测试用户',
-          handleUserType: util.getUserType(this.userType),
-          questionId: this.questionId || '123456', // 暂无,需要页面传
+          handleUserId: this.userInfo.userId,
+          handleUserName: this.userInfo.userName,
+          handleUserType: util.getUserType(this.userInfo.userType),
+          questionId: this.questionId,
         }
         if (datas === 'all') {
           params.invitedUsers = this.buildAllInvited()
