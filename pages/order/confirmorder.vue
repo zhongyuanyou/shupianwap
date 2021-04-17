@@ -16,7 +16,13 @@
           <div class="left">
             <img
               :src="
-                item.salesGoodsOperatings.clientDetails[0].imgFileIdPaths[0]
+                item.salesGoodsOperatings
+                  ? item.salesGoodsOperatings.clientDetails[0]
+                    ? item.salesGoodsOperatings.clientDetails[0]
+                        .imgFileIdPaths[0] ||
+                      'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
+                    : 'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
+                  : 'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg'
               "
               alt=""
             />
@@ -644,7 +650,7 @@ export default {
                 text-overflow: ellipsis;
               }
               > .data {
-                width: 45%;
+                width: 40%;
                 font-size: 22px;
                 font-weight: 400;
                 color: #222222;
