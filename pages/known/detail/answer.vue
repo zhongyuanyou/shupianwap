@@ -15,12 +15,9 @@
         >
         <span
           v-if="answerDetails && answerDetails.createrId === userInfo.userId"
+          @click.stop="writeAnswer"
         >
-          <my-icon
-            name="xiehuida"
-            size="0.4rem"
-            @click.native="writeAnswer"
-          ></my-icon>
+          <my-icon name="xiehuida" size="0.4rem"></my-icon>
           写回答</span
         >
         <span v-else>
@@ -309,7 +306,12 @@ export default {
       this.$router.push('/known/detail/invitationList')
     },
     writeAnswer() {
-      this.$router.push('/known/publish/answer')
+      this.$router.push({
+        path: '/known/publish/answer',
+        query: {
+          id: this.answerDetails.sourceId,
+        },
+      })
     },
     more() {
       this.popupShow = true

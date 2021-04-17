@@ -140,7 +140,6 @@ export default {
       }
       max = Number(max)
       if (isNaN(max)) max = 1
-      console.log('+++++++++', max)
       return max
     },
   },
