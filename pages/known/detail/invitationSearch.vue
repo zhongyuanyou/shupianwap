@@ -114,6 +114,7 @@ export default {
       this.finished = false
       this.loading = true
       this.error = false
+      this.page = 1
     },
     async searchAnswerUserApi() {
       // 搜索回答用户
