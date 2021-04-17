@@ -4,14 +4,14 @@
       <sp-sticky>
         <Search
           ref="fieldInput"
-          v-model="keywords"
+          v-model="keyword"
           :icon-left="0.12"
           placeholder="搜索你想邀请的人"
           @searchKeydownHandle="keyClickHandle"
         >
           <template v-slot:center>
             <sp-icon
-              v-show="keywords != ''"
+              v-show="keyword != ''"
               name="clear"
               class="clear"
               color="#CCCCCC"
@@ -73,7 +73,7 @@ export default {
   },
   data() {
     return {
-      keywords: '',
+      keyword: '',
       searchList: [],
       error: false,
       loading: false,
@@ -106,7 +106,7 @@ export default {
     },
     */
     clearInput() {
-      this.keywords = ''
+      this.keyword = ''
       this.$refs.fieldInput.$refs.inputRef.focus()
     },
     clooseHandle() {
@@ -121,7 +121,7 @@ export default {
         const params = {
           page: this.page,
           limit: 10,
-          kewords: this.keywords,
+          keyword: this.keyword,
         }
         const { code, data } = await this.$axios.get(
           knownApi.question.searchAnswerUser,

@@ -50,7 +50,7 @@
           :disabled="
             mainData &&
             mainData.saleGoodsSubs &&
-            mainData.saleGoodsSubs.length >= 1
+            mainData.saleGoodsSubs.length < 0
           "
           @change="handleCountChange"
           @focus="handleCountFoucs"
@@ -131,11 +131,16 @@ export default {
     }),
 
     maxNum() {
-      const { numFlag, maxNum } = this.mainData || {}
-      let max =
-        numFlag === SHOP_RESTRICTION.restrictedNumber && maxNum ? maxNum : 99
+      const { maxNum } = this.mainData || {}
+      let max = 999
+      if (maxNum && maxNum < 99) {
+        max = maxNum
+      } else {
+        max = 99
+      }
       max = Number(max)
       if (isNaN(max)) max = 1
+      console.log('+++++++++', max)
       return max
     },
   },
@@ -216,9 +221,7 @@ export default {
 
     // 超过购买限制后的触发
     handleOverlimit(action) {
-      console.log('action+++++', action)
       const { serviceResourceList = [] } = this.mainData || {}
-      console.log('this.mainData+++++', this.mainData)
       let message = ''
       switch (action) {
         case 'minus':

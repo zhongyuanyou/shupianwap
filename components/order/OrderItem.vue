@@ -4,9 +4,18 @@
       <p class="order-no-area">
         <span class="orderNo"> 订单编号: {{ orderData.orderNo }} </span>
         <span
+          v-if="
+            orderData.orderStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED'
+          "
+          class="order-status status3"
+          >{{ CUSORDERSTATUSCODE[orderData.cusOrderStatusNo] }}</span
+        >
+        <span
+          v-else
           class="order-status"
           :class="
-            orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_CANCELLED'
+            orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_CANCELLED' ||
+            orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_COMPLETED'
               ? 'status1'
               : orderData.cusOrderStatusNo === 'ORDER_CUS_STATUS_UNPAID'
               ? 'status2'
@@ -36,7 +45,7 @@
             </span>
           </p>
           <p class="sku-info">
-            <span class="sku-item">{{ item.skuExtInfo }}</span>
+            <span class="sku-item">{{ getSkus(item.skuExtInfo) }}</span>
             <span class="goods-num">×{{ item.skuCount }}</span>
           </p>
           <!-- 增值服务产品中心2期已去掉 2021.03.10 -->
@@ -77,9 +86,7 @@
         >
         <span v-else class="price2 price"> {{ orderData.lastAount }}元，</span>
         定金
-        <span class="price3 price">
-          {{ orderData.depositAmount || '面议' }}
-        </span>
+        <span class="price3 price"> {{ orderData.depositAmount }} </span>元
       </p>
       <!-- 服务完结收费的意向单 -->
       <p
@@ -92,12 +99,16 @@
       <p v-else class="inner">
         <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元，</span>
         <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span>
-        <span v-if="isShowPayBtn() == 1" class="price3">
-          应付款 {{ orderData.orderPayableMoney }}元</span
-        >
-        <span v-else class="price3"
-          >合计 {{ orderData.orderPayableMoney }}元</span
-        >
+        应付款
+        <span v-if="isShowPayBtn() == 1">
+          <span class="price3"> {{ orderData.orderPayableMoney }}</span
+          >元
+        </span>
+        <span v-else>
+          合计
+          <span class="price3">{{ orderData.orderPayableMoney }}</span
+          >元
+        </span>
       </p>
     </div>
     <div class="btn-area">
@@ -137,7 +148,7 @@
           type="default"
           class="btn-confirm"
           @click="handleClickItem(5)"
-          >支付余款</sp-button
+          >立即付款</sp-button
         >
         <sp-button
           v-if="isShowConfirmBtn()"
@@ -196,6 +207,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.price3 {
+  color: #666;
+  font-size: 28px;
+  font-weight: 600;
+}
 .item {
   width: auto;
   padding: 20px 40px;

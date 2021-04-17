@@ -85,14 +85,12 @@ export default {
         },
       ],
       list: [],
-      loading: false,
-      finished: false,
       page: 1,
       tabIndex: 1,
-      limit: 10,
+      limit: 15,
       error: false,
-      totalPage: 1,
-      apiLock: false, // tab 切换会有重复发送请求问题,这里设置lock锁,防止重复请求
+      loading: false,
+      finished: false,
     }
   },
   computed: {
@@ -105,52 +103,42 @@ export default {
       if (this.tabIndex === name) {
         return
       }
-      // 重置 list 列表页面渲染参数
-      this.page = 1
       this.tabIndex = name
-      this.finished = false
-      this.error = false
-      this.apiLock = false
-      this.list = []
+      this.init()
       this.onLoad()
     },
+    init() {
+      this.page = 1
+      this.finished = false
+      this.error = false
+      this.loading = true
+      this.list = []
+    },
     onLoad() {
-      if (this.page > this.totalPage) {
-        this.finished = true
-        return
-      }
-      if (!this.apiLock) {
-        this.getList()
-      }
+      this.getList()
     },
     async getList() {
-      this.apiLock = true
       try {
         const params = {
           handleUserId: this.userId,
           dateType: this.tabIndex, //  1问题 2文章 3回答.默认问题
-          limit: 10,
+          limit: this.limit,
           page: this.page,
         }
         const res = await this.$axios.get(knownApi.home.collection, { params })
         if (res.code === 200) {
-          if (!res.data.rows || res.data.rows.length === 0) {
+          this.list.push(...res.data.rows)
+          this.page++
+          if (this.page > res.data.totalPage) {
             this.finished = true
-          } else {
-            this.list.push(...res.data.rows)
-            this.totalPage = res.data.totalPage
-            // 当成功时,则处理 page ++
-            this.page++
           }
         } else {
           this.error = true
         }
         this.loading = false
-        this.apiLock = false
       } catch (e) {
         this.error = true
         this.loading = false
-        this.apiLock = false
       }
     },
   },

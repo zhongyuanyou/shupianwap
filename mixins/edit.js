@@ -23,6 +23,7 @@ export default {
         userName: 'dsdadsada', //
         userType: '1', // 作者类型 1 普通用户 2 规划师
         contentImageUrl: '', // 内容图片地址（多张 “,”号拼接）
+        id: '',
       },
       topics: [], // 话题
       topicStr: '',
@@ -138,7 +139,17 @@ export default {
         })
     },
     // 修改内容
-    modifyContent() {},
+    modifyContent() {
+      this.$axios.post(knownApi.content.edit, this.formData).then((res) => {
+        const that = this
+        if (res.code && res.code === 200) {
+          this.$xToast.success('修改成功')
+          this.switchUrl(res.data.id)
+        } else {
+          this.$xToast.error('发布失败')
+        }
+      })
+    },
     // 页面跳转
     switchUrl(id) {
       const _this = this
@@ -151,7 +162,7 @@ export default {
               id,
             },
           })
-        }, 2000)
+        }, 1000)
       } else if (this.fromPage === 'question') {
         timeoute = setTimeout(function () {
           _this.$router.replace({
@@ -161,7 +172,7 @@ export default {
               status: 'release',
             },
           })
-        }, 2000)
+        }, 1000)
       } else {
         timeoute = setTimeout(function () {
           _this.$router.replace({
@@ -170,7 +181,7 @@ export default {
               id,
             },
           })
-        }, 2000)
+        }, 1000)
       }
     },
     checkParams() {
@@ -210,6 +221,21 @@ export default {
       this.formData.categoryId = this.questionInfo.categoryId
       this.formData.categoryLevelIds = this.questionInfo.categoryLevelIds
       this.formData.categoryName = this.questionInfo.categoryName
+    },
+    async getDetailByIdApi() {
+      try {
+        const params = {
+          id: this.questionId,
+          userHandleFlag: 0,
+          userId: this.userId,
+        }
+        const { code, data } = await this.$axios.get(knownApi.question.detail, {
+          params,
+        })
+        return { code, data }
+      } catch (e) {
+        return e
+      }
     },
   },
 }
