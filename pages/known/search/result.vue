@@ -32,7 +32,6 @@
         finished-text="没有更多了"
         :error.sync="error"
         error-text="请求失败，点击重新加载"
-        offset="30"
         @load="onLoad"
       >
         <div
@@ -76,7 +75,6 @@
         finished-text="没有更多了"
         :error.sync="error"
         error-text="请求失败，点击重新加载"
-        offset="30"
         @load="onLoad"
       >
         <div v-for="item in userList" :key="item.id" class="list">
@@ -131,11 +129,10 @@ export default {
       tabIndex: '1',
       value: '',
       page: 1,
-      limit: 10,
+      limit: 15,
       error: false,
       loading: false,
       finished: false,
-      apiLock: false,
     }
   },
   computed: {
@@ -191,13 +188,12 @@ export default {
       this.onLoad()
     },
     initTab() {
-      this.loading = false
+      this.loading = true
       this.finished = false
       this.error = false
       this.page = 1
       this.searchList = []
       this.userList = []
-      this.apiLock = false
     },
     async attentionHandler(item) {
       // 先判断是否登录
@@ -246,7 +242,6 @@ export default {
       }
     },
     async getSearchListApi() {
-      this.apiLock = true
       // 请求后台接口
       try {
         const res = await this.$axios.post(knownApi.search.list, {
@@ -273,17 +268,13 @@ export default {
           this.error = true
         }
         this.loading = false
-        this.apiLock = false
       } catch (e) {
         this.error = true
         this.loading = false
-        this.apiLock = false
       }
     },
     onLoad() {
-      if (!this.apiLock) {
-        this.getSearchListApi()
-      }
+      this.getSearchListApi()
     },
   },
 }
