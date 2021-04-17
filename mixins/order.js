@@ -671,6 +671,20 @@ export default {
       }
       return statusName
     },
+    changeOrderList(order) {
+      const arr = order.orderSkuEsList
+      const result = []
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < result.length; j++) {
+          if (j === 0) {
+            result.push(arr[i])
+          } else if (result[j].skuId === arr[i].skuId) {
+            result[j].skuCount++
+          }
+        }
+      }
+      return result
+    },
     // jump
     toContract() {
       // 合同链接
