@@ -347,7 +347,7 @@ export default {
       this.$router.push({
         path: '/known/publish/answer',
         query: {
-          questionId: id,
+          id,
         },
       })
     },
