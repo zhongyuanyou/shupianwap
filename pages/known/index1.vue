@@ -1,11 +1,9 @@
 <template>
   <div class="container">
-    <!-- 头部 start -->
     <div class="container_head">
       <Search
         :value="title"
         :icon-left="0.2"
-        @submit="submit"
         @click.native="$router.push('/known/search')"
       >
       </Search>
@@ -17,42 +15,46 @@
         @click.native="openArticle"
       ></my-icon>
     </div>
-    <!-- 头部 end -->
-    <!-- 吸顶 start -->
+
     <sp-sticky>
-      <div class="container_middle">
-        <sp-tabs v-model="active" is-nav-tab @click="toggleTabs">
+      <div class="category_box">
+        <sp-tabs
+          v-model="active"
+          title-active-color="#222222"
+          title-inactive-color="#999999"
+          @change="toggleTabs1"
+        >
           <sp-tab
             v-for="(item, index) in tabs"
             :key="index"
-            :need-content="false"
             :title="item.name"
-            :name="item"
-          >
-          </sp-tab>
+            :name="index"
+          ></sp-tab>
         </sp-tabs>
-        <!-- <div class="tabs-box-items">
-          <div
-            v-for="(item, index) in tabs"
-            :key="index"
-            class="li-tab"
-            :class="{ tab_active: index == tabIndex }"
-            @click="toggleTabs(index, item)"
-          >
-            <p>{{ item.name }}</p>
-            <div :class="{ line_active: index == tabIndex }"></div>
-          </div>
-        </div> -->
         <my-icon
           name="fenlei"
           size="0.32rem"
           color="#1A1A1A"
           class="my_icon"
-          @click.native="openPop"
+          @click.native="showPop = true"
         ></my-icon>
       </div>
     </sp-sticky>
-    <!-- 吸顶 end -->
+
+    <Answer
+      v-if="tabs[active].executionParameters === 'huida'"
+      :answer-list="answerList"
+    />
+
+    <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
+      >关注</Attention
+    >
+    <hot-list
+      v-else-if="tabs[active].executionParameters === 'rebang'"
+      :category-id="tabs[active].id"
+    />
+    <Recommend v-else-if="tabs[active].executionParameters === 'tuijian'" />
+
     <!-- 列表 start -->
     <div class="container_body">
       <!-- 回答start -->
@@ -65,21 +67,6 @@
         <NotAttention v-if="showNotAttention" />
       </section>
       <!-- 关注end -->
-      <!-- 推荐列表 start-->
-      <section>
-        <sp-pull-refresh
-          v-model="isRecLoading"
-          success-text="刷新成功"
-          @refresh="onRefresh"
-        >
-          <ListItem
-            v-if="showRecommend"
-            :normal-list-data="normalListData"
-            :list-loading="listLoading"
-          />
-        </sp-pull-refresh>
-      </section>
-      <!-- 推荐列表 end-->
       <!-- 热榜 start -->
       <sp-pull-refresh
         v-model="isLoading"
@@ -220,21 +207,21 @@
         <span>{{ userInfo.userName }}</span>
       </div>
       <div class="answer_article">
-        <div class="item" @click="tonav('/known/publish/question')">
+        <div class="item" @click="$router.push('/known/publish/question')">
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
             alt=""
           />
           <span>提个问题</span>
         </div>
-        <div class="item" @click="tonav('/known/publish/chooseque')">
+        <div class="item" @click="$router.push('/known/publish/chooseque')">
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/8sixz8dnnt40000.png"
             alt=""
           />
           <span>回答问题</span>
         </div>
-        <div class="item" @click="tonav('/known/publish/article')">
+        <div class="item" @click="$router.push('/known/publish/article')">
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/eoeulbunbpk0000.png"
             alt=""
@@ -243,7 +230,7 @@
         </div>
       </div>
       <div class="line"></div>
-      <div class="button" @click="closePop">取消</div>
+      <div class="button" @click="showArticlePop = false">取消</div>
     </sp-popup>
     <!-- 弹出框文章 end -->
     <!-- 底部tab start -->
@@ -262,6 +249,9 @@ import {
   Tabs,
   PullRefresh,
 } from '@chipspc/vant-dgg'
+import Recommend from '@/components/mustKnown/Recommend'
+import Attention from '@/components/mustKnown/attention/Index'
+import HotList from '@/components/mustKnown/hotList/Index'
 import AttentionItem from '@/components/mustKnown/recommend/AttentionItem'
 import Answer from '@/components/mustKnown/answer/Answer'
 import NotAttention from '@/components/mustKnown/recommend/NotAttention'
@@ -273,7 +263,7 @@ import Bottombar from '@/components/common/nav/Bottombar'
 import { knownApi } from '@/api'
 
 export default {
-  name: 'NewIndex',
+  name: 'Index',
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
@@ -281,8 +271,6 @@ export default {
     [Sticky.name]: Sticky,
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
-    [WorkTab.name]: WorkTab,
-    [WorkTabs.name]: WorkTabs,
     [PullRefresh.name]: PullRefresh,
     Search,
     Answer,
@@ -292,20 +280,33 @@ export default {
     AttentionItem,
     Bottombar,
     NotAttention,
+    Recommend,
+    Attention,
+    HotList,
+  },
+  async asyncData({ $axios, store }) {
+    const { code, message, data } = await $axios.get(
+      knownApi.questionArticle.categoryList,
+      {
+        params: {
+          // type 1 获取企大顺导航 2 获取薯片wap和app导航
+          type: store.state.app.appInfo.appCode === 'crisps-qds-app' ? 1 : '',
+        },
+      }
+    )
+    return {
+      tabs: data,
+    }
   },
   data() {
     return {
-      listLoading: false,
-      isRecLoading: false,
       isLoading: false,
       answerList: [],
       subjectList: [],
       listData: [],
       normalListData: [],
-      type: 0, // 类型
       nowDate: 0, // 日期
       userData: [], // 用户数据
-      // type: 0, // 	不传 代表wap或薯片app 1代表企大顺
       attentionStatus: false, // 已关注
       showNotAttention: false, // 未关注
       showHot: false, // 热榜
@@ -313,13 +314,6 @@ export default {
       shwoAnswer: false, // 回答
       normalList: true, // 推荐列表和一般列表
       title: '考研复试体检包含什么项目', // 标题
-      tabs: [
-        {
-          name: '',
-          categoryId: '',
-          executionParameters: '',
-        },
-      ],
       editFinish: '编辑',
       tabIndex: 1,
       ada: 2,
@@ -353,6 +347,7 @@ export default {
         '办证',
         '刻章',
       ],
+      active: 0,
     }
   },
   computed: {
@@ -366,54 +361,19 @@ export default {
     },
   },
   mounted() {
-    this.type = this.$route.query.type
+    console.log(this.tabs)
     this.init()
   },
   methods: {
     init() {
       this.getDate()
       this.getSubjectList() // 获取专题列表
-      this.categoryList() // 获取分类列表
-      this.recommendList()
     },
-    // 请求分类列表
-    async categoryList() {
-      const params = {}
-      params.type = this.type
-      const { code, message, data } = await this.$axios.get(
-        knownApi.questionArticle.categoryList,
-        { params }
-      )
-      if (code === 200) {
-        this.tabs = data.reduce((arr, item) => {
-          return [
-            ...arr,
-            {
-              name: item.name,
-              categoryId: item.categoryId,
-              executionParameters: item.executionParameters,
-              id: item.id,
-            },
-          ]
-        }, [])
-        // 将起始位置放到推荐下
-        for (let i = 0; i < this.tabs.length; i++) {
-          if (this.tabs[i].executionParameters === 'tuijian') {
-            this.tabIndex = i
-          }
-        }
-      } else {
-        this.loading = false
-        this.finished = true
-      }
+    toggleTabs1() {
+      console.log(this.active)
     },
-    tonav(url) {
-      this.$router.push({ path: url })
-    },
-    async toggleTabs(name, title) {
-      console.log('name', name)
-      const item = name
-      // this.tabIndex = name
+    async toggleTabs(index, item) {
+      this.tabIndex = index
       const params = {}
       this.listData = []
       // 去请求推荐列表数据
@@ -554,25 +514,6 @@ export default {
       } else {
       }
     },
-    // 请求推荐列表数据
-    async recommendList() {
-      const params = {
-        limit: 10,
-        page: 1,
-      }
-      const { code, message, data } = await this.$axios.get(
-        knownApi.questionArticle.recommendList,
-        { params }
-      )
-      if (code === 200) {
-        if (data.rows.length > 0) {
-          this.normalListData = data.rows
-          this.listLoading = false
-        } else {
-        }
-      } else {
-      }
-    },
     // 请求普通列表数据
     async getList(item) {
       this.normalListData = []
@@ -611,21 +552,9 @@ export default {
       if (code === 200) {
         if (data.rows.length > 0) {
           this.answerList = data.rows
-          this.listLoading = false
         } else {
         }
       } else {
-      }
-    },
-    // 打开弹出框
-    OpenPop(event) {
-      if (event) {
-        this.showPop = event
-      }
-    },
-    // 回到上一页
-    getBackIndex(event) {
-      if (event) {
       }
     },
     async isLogin() {
@@ -644,14 +573,10 @@ export default {
     },
     // 打开文章编辑框
     openArticle() {
-      if (!this.isLogin) {
+      if (!this.isLogin()) {
         return
       }
       this.showArticlePop = true
-    },
-    // 关闭弹出框
-    closePop() {
-      this.showArticlePop = false
     },
     // 编辑
     editIcon(status) {
@@ -673,11 +598,6 @@ export default {
         this.morePlate.pop(index)
       }
     },
-    // 打开弹出框
-    openPop() {
-      this.showPop = true
-    },
-    submit() {},
     // 获取日期
     getDate() {
       this.nowDate = new Date().getDate()
@@ -725,25 +645,20 @@ export default {
   line-height: 48px;
   text-align: center;
 }
-::v-deep .sp-tab--active {
-  span {
-    color: #222222;
-    font-size: 32px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
-  }
+::v-deep .sp-work-tab--active {
+  font-size: 32px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #222222;
 }
-/deep/ .sp-tabs {
-  width: 686px;
-}
-/deep/ .sp-tab__text {
+/deep/ .sp-work-tab__text {
   flex-shrink: 0;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
   color: #999999;
 }
-/deep/ .sp-tabs__line {
+/deep/ .sp-work-tabs__line {
   width: 24px;
   height: 6px;
   background: #4974f5;
@@ -763,40 +678,25 @@ export default {
       margin-left: 32px;
     }
   }
-  .container_middle {
-    height: 88px;
-    background: #ffffff;
+  .category_box {
     display: flex;
     align-items: center;
-    overflow: hidden;
-
-    .tabs-box-items {
-      display: flex;
-      overflow: auto;
-      justify-content: space-between;
-      align-items: center;
-      height: 100%;
-      .li-tab {
-        flex-shrink: 0;
-        height: 32px;
+    .sp-tabs {
+      width: 670px;
+      /deep/.sp-tab {
         font-size: 32px;
-        font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
-        color: #999999;
-        line-height: 32px;
-        margin-right: 48px;
-      }
-      .active {
-        height: 32px;
-        font-size: 32px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #222222;
-        line-height: 32px;
       }
     }
-  }
-  .container_body {
+    /deep/.sp-tabs__line {
+      width: 24px;
+      height: 6px;
+      border-radius: 3px;
+      bottom: 32px;
+    }
+    .my_icon {
+      margin-left: 10px;
+    }
   }
   .container_news_see {
     height: 136px;
