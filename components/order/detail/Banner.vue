@@ -32,10 +32,11 @@
         size="0.40rem"
         color="rgba(255, 255, 255, 1)"
       ></my-icon>
-      <span v-if="cusOrderStatusType == 1" class="text"> 等待付款 </span>
+      <span class="text">{{ statusName }}</span>
+      <!-- <span v-if="cusOrderStatusType == 1" class="text"> 等待付款 </span>
       <span v-else-if="cusOrderStatusType == 2" class="text"> 办理中 </span>
       <span v-else-if="cusOrderStatusType == 3" class="text"> 已完成 </span>
-      <span v-else-if="cusOrderStatusType == 4" class="text"> 已取消 </span>
+      <span v-else-if="cusOrderStatusType == 4" class="text"> 已取消 </span> -->
     </p>
     <div v-if="cusOrderStatusType == 1" class="msg">
       <section v-if="diff > 0">
@@ -88,6 +89,11 @@ export default {
     },
     // 订单取消原因
     cusOrderCancelReason: {
+      type: String,
+      default: '',
+    },
+    // 订单状态
+    statusName: {
       type: String,
       default: '',
     },
