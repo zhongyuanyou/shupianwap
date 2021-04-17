@@ -38,16 +38,13 @@
         class="listbox"
         :error.sync="error"
         error-text="请求失败，点击重新加载"
-        :immediate-check="immediateCheck"
+        :immediate-check="false"
         @load="onLoad"
       >
         <div v-for="(item, index) in searchList" :key="index" class="list">
           <img :src="item.avatar" alt="" />
-          <div class="content">
-            <div class="name">
-              {{ item.userName }}
-            </div>
-            <div class="desc">{{ item.desc }}</div>
+          <div class="name">
+            {{ item.userName }}
           </div>
           <div class="invitation" @click="invitItem(item)">邀请</div>
         </div>
@@ -75,13 +72,12 @@ export default {
     return {
       keyword: '',
       searchList: [],
+      questionId: '',
       error: false,
       loading: false,
       finished: false,
       page: 1,
-      totalPage: 1,
-      immediateCheck: false,
-      questionId: '',
+      limit: 15,
     }
   },
   computed: {
@@ -96,31 +92,35 @@ export default {
     this.$nextTick(() => {
       _this.$refs.fieldInput.$refs.inputRef.focus()
     })
-    // 这里拿到 questionId,用于邀请接口
-    // this.questionId = this.$route.query.questionId
+    this.questionId = this.$route.query.questionId
   },
   methods: {
-    /*
-    activefn() {
-      console.log(this.actList)
-    },
-    */
     clearInput() {
       this.keyword = ''
       this.$refs.fieldInput.$refs.inputRef.focus()
     },
     clooseHandle() {
-      this.$router.push('/known/detail/invitationList')
+      this.$router.push({
+        path: '/known/detail/invitationList',
+        query: { questionId: this.questionId },
+      })
     },
     keyClickHandle() {
+      this.init()
       this.onLoad()
+    },
+    init() {
+      this.searchList = []
+      this.finished = false
+      this.loading = true
+      this.error = false
     },
     async searchAnswerUserApi() {
       // 搜索回答用户
       try {
         const params = {
           page: this.page,
-          limit: 10,
+          limit: this.limit,
           keyword: this.keyword,
         }
         const { code, data } = await this.$axios.get(
@@ -128,13 +128,11 @@ export default {
           { params }
         )
         if (code === 200) {
-          if (!data.records || data.records.length === 0) {
-            this.searchList = []
+          this.searchList.push(...data.records)
+          this.page++
+          if (this.page > data.totalPage) {
             this.finished = true
           }
-          this.searchList.push(...data.records)
-          this.totalPage = data.totalPage
-          this.page++
         } else {
           this.error = true
         }
@@ -151,7 +149,7 @@ export default {
           handleUserId: this.userId,
           handleUserName: this.userInfo.userName || '测试用户',
           handleUserType: util.getUserType(this.userType),
-          questionId: this.questionId || '123456', // 暂无,需要页面传
+          questionId: this.questionId,
         }
         params.invitedUsers = []
         params.invitedUsers.push({
@@ -191,10 +189,6 @@ export default {
       this.inviteApi(item)
     },
     onLoad() {
-      if (this.page > this.totalPage) {
-        this.finished = true
-        return
-      }
       this.searchAnswerUserApi()
     },
   },
@@ -223,6 +217,7 @@ export default {
           border-radius: 12px;
           height: 68px;
           width: 606px;
+          border: none;
           input {
             background: #f5f5f5;
             width: 406px;
@@ -282,25 +277,13 @@ export default {
           object-fit: cover;
           border-radius: 50%;
         }
-        .content {
+        .name {
           margin-left: 24px;
-          .name {
-            font-size: 30px;
-            line-height: 26px;
-            font-weight: 600;
-            color: #222222;
-            margin-bottom: 12px;
-            margin-top: 3px;
-          }
-          .desc {
-            font-size: 26px;
-            line-height: 26px;
-            color: #999999;
-            width: 414px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-          }
+          font-size: 30px;
+          line-height: 72px;
+          font-weight: 600;
+          color: #222222;
+          text-align: center;
         }
 
         .invitation {
