@@ -45,7 +45,7 @@
           min="1"
           class="goods-count-stepper"
           :value="goodsCount"
-          :max="mainData.stock ? mainData.stock : 999"
+          :max="maxNum"
           :async-change="true"
           :disabled="
             mainData &&
@@ -130,16 +130,19 @@ export default {
       isInApp: (state) => state.app.isInApp,
     }),
 
-    // maxNum() {
-    //   const { maxNum } = this.mainData || {}
-    //   let max =
-    //     maxNum === SHOP_RESTRICTION.restrictedNumber && maxNum !== 0
-    //       ? maxNum
-    //       : 999
-    //   max = Number(max)
-    //   if (isNaN(max)) max = 1
-    //   return max
-    // },
+    maxNum() {
+      const { maxNum } = this.mainData || {}
+      let max = 999
+      if (maxNum && maxNum < 99) {
+        max = maxNum
+      } else {
+        max = 99
+      }
+      max = Number(max)
+      if (isNaN(max)) max = 1
+      console.log('+++++++++', max)
+      return max
+    },
   },
   watch: {
     // 'mainData.goodsNumber': {

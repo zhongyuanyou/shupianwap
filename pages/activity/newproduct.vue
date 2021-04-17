@@ -5,7 +5,7 @@
       <!-- S search -->
       <sp-sticky>
         <div class="search">
-          <div class="left-back">
+          <div class="left-back" @click="$router.back(-1)">
             <my-icon
               name="nav_ic_back"
               class="back_icon"
@@ -21,32 +21,45 @@
               color="#FFFFFF"
               :style="{ marginLeft: iconLeft + 'rem' }"
             ></my-icon>
-            <input placeholder="搜索首发商品" />
+            <input
+              placeholder="搜索首发商品"
+              readonly
+              @click="clickInputHandle"
+            />
           </div>
         </div>
       </sp-sticky>
       <!-- E search -->
-      <div class="rules">
+      <div class="rules" @click="$router.push('/')">
         <p>规则</p>
       </div>
       <div class="advice-box">
-        <div></div>
-        <div></div>
-        <div></div>
+        <div
+          v-for="(item, index) in productAdvertData"
+          :key="index"
+          @click="advertjump(item)"
+        >
+          <img :src="item.materialUrl" alt="" srcset="" />
+        </div>
       </div>
     </div>
     <div class="container-body">
       <div class="tabs-box">
         <div class="tabs-box-left">
-          <div>成都</div>
+          <div @click="swichCityHandle">
+            {{ cityName ? cityName : '定位中' }}
+          </div>
           <div></div>
         </div>
         <ul class="tabs-box-items">
-          <li class="active">精选</li>
-          <li>工商</li>
-          <li>财税</li>
-          <li>知产</li>
-          <li>法律</li>
+          <li
+            v-for="(item, index) in activityTypeOptions"
+            :key="index"
+            :class="{ active: index === currentIndex }"
+            @click="menuTab(item, index)"
+          >
+            {{ item.labelName }}
+          </li>
         </ul>
       </div>
       <div class="body-content">
@@ -55,16 +68,18 @@
             v-model="loading"
             :finished="finished"
             finished-text="没有更多了"
-            @load="onLoad"
           >
-            <div v-for="(item, index) in items" :key="index">
+            <div
+              v-for="(item, index) in productList.rows"
+              :key="index"
+              @click="jumpProductdetail(item)"
+            >
               <div class="body-content-items">
                 <div class="left-content"></div>
                 <div class="right-content">
                   <div class="rc-top">
-                    <span>{{ item.span1 }}</span>
-                    <span>{{ item.span2 }}</span>
-                    {{ item.content }}
+                    <span v-if="specTypeCode === 'HDZT_ZTTYPE_XTSF'">新品</span>
+                    {{ item.skuName }}
                   </div>
                   <div class="rc-middle">
                     <div>免手续</div>
@@ -74,12 +89,12 @@
                   <div class="rc-bottom">
                     <div class="rc-bottom-lf">
                       <div class="rc-bottom-lf-my">
-                        <div>{{ item.money }}</div>
+                        <div>{{ item.specialPrice }}</div>
                         <div>元</div>
                       </div>
-                      <div class="bf-my">原价{{ item.price }}元</div>
+                      <div class="bf-my">原价{{ item.skuPrice }}元</div>
                     </div>
-                    <div class="rc-bottom-rt">
+                    <div class="rc-bottom-rt" @click.stop="jumpIM()">
                       <div class="imm_consult">立即咨询</div>
                       <div class="imm_img"></div>
                     </div>
@@ -94,6 +109,207 @@
     </div>
   </div>
 </template>
+
+<script>
+import { mapState, mapActions } from 'vuex'
+import {
+  CountDown,
+  Sticky,
+  List,
+  WorkTabSort,
+  WorkTabSortItem,
+  PullRefresh,
+  Toast,
+} from '@chipspc/vant-dgg'
+import { activityApi } from '~/api'
+export default {
+  components: {
+    [CountDown.name]: CountDown,
+    [Sticky.name]: Sticky,
+    [List.name]: List,
+    [WorkTabSort.name]: WorkTabSort,
+    [WorkTabSortItem.name]: WorkTabSortItem,
+    [PullRefresh.name]: PullRefresh,
+  },
+  data() {
+    return {
+      defaultData: {
+        index: 0,
+        sort: -1, // 倒序
+      },
+
+      iconLeft: 0.35,
+      loading: false,
+      finished: false,
+      refreshing: false,
+      activityTypeOptions: '',
+      activityProductList: '',
+      currentIndex: 0,
+      itemTypeOptions: '',
+      productList: '',
+      productRecoData: '',
+      productAdvertData: '',
+      page: 1,
+      specTypeCode: 'HDZT_ZTTYPE_XTSF',
+      specCode: '',
+    }
+  },
+  computed: {
+    ...mapState({
+      cityName: (state) => state.city.currentCity.name,
+      code: (state) => state.city.currentCity.code,
+    }),
+  },
+  created() {
+    // 初始化定位
+    if (process.client && !this.cityName) {
+      this.POSITION_CITY({
+        type: 'init',
+      })
+    }
+    this.getAdvertisingData()
+    this.getMenuTabs()
+  },
+  methods: {
+    ...mapActions({
+      POSITION_CITY: 'city/POSITION_CITY',
+    }),
+    advertjump(item) {
+      this.$router.push('/')
+    },
+    jumpProductdetail() {
+      this.$router.push('/')
+    },
+    jumpIM() {
+      console.log('咨询')
+    },
+    init() {
+      this.page = 1
+      this.productList = []
+      this.finished = false
+      this.loading = true
+    },
+
+    menuTab(item, index) {
+      this.init()
+      this.currentIndex = index
+      this.getProductList(item, this.specCode)
+    },
+    getMenuTabs() {
+      this.$axios
+        .get(activityApi.activityTypeOptions, {
+          params: {
+            cityCodes: '510100',
+            platformCode: 'COMDIC_PLATFORM_CRISPS',
+            specType: this.specTypeCode,
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.activityTypeOptions = res.data.settingVOList
+            if (res.data.settingVOList && res.data.settingVOList.length > 0) {
+              this.itemTypeOptions = res.data.settingVOList[0]
+              this.specCode = res.data.specCode
+              // this.getRecProduct(this.itemTypeOptions, specCode, 1)
+              this.getProductList(this.itemTypeOptions, this.specCode)
+            }
+          }
+        })
+    },
+    // 初始化获取推介商品
+    // getRecProduct(item, itemSpecCode, itemReco) {
+    //   const params = {
+    //     specCode: itemSpecCode,
+    //     cityCode: item.cityCode,
+    //     isReco: itemReco,
+    //   }
+    //   this.productMethod(params, itemReco)
+    // },
+    // 获取产品
+    getProductList(item, itemSpecCode) {
+      const params = {
+        specCode: itemSpecCode,
+        cityCode: item.cityCode,
+        labelId: item.id,
+      }
+      this.productMethod(params)
+    },
+    productMethod(param) {
+      this.$axios
+        .get(activityApi.activityProductList, {
+          params: param,
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.productList = res.data
+            this.total = res.data.total
+            this.loading = false
+            this.page++
+            if (this.page > res.data.totalPage) {
+              this.finished = true
+            }
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+    },
+
+    getAdvertisingData() {
+      this.$axios
+        .get(activityApi.activityAdvertising, {
+          params: {
+            code: 'ad113184',
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.productAdvertData = res.data.sortMaterialList[0].materialList.slice(
+              0,
+              3
+            )
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+    },
+    onRefresh() {
+      // 清空列表数据
+      this.finished = false
+
+      // 重新加载数据
+      // 将 loading 设置为 true，表示处于加载状态
+      this.loading = true
+      this.onLoad()
+    },
+    handlerItemChange(action, index) {
+      console.log(action, index)
+    },
+    swichCityHandle() {
+      if (!this.cityName) {
+        return
+      }
+      this.$router.push({
+        path: '/city/choiceCity',
+      })
+    },
+    // 搜索框点击
+    clickInputHandle() {
+      this.$router.push('/search')
+    },
+  },
+}
+</script>
+
 <style lang="less" scoped>
 /deep/.sp-sticky--fixed {
   max-width: 10rem;
@@ -104,8 +320,9 @@
   background: linear-gradient(90deg, #d20001 0%, #f80302 100%);
 }
 .container {
-  width: 100%;
+  width: 7.5rem;
   overflow-x: hidden;
+  margin: 0 auto;
   .container-advice {
     padding: 0 20px;
     margin-bottom: 32px;
@@ -193,18 +410,18 @@
         //background: linear-gradient(137deg, #ffffff 0%, #fff3eb 100%);
         border-radius: 12px;
         border: 5px solid #ffab6f;
+        img {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
   }
   .container-body {
     padding: 0 20px;
-    position: absolute;
     width: 100%;
-    height: 1720px;
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
-    top: 658px;
-    z-index: 1;
     .tabs-box {
       display: flex;
       justify-content: space-between;
@@ -212,11 +429,12 @@
       height: 88px;
       align-items: center;
       .tabs-box-left {
-        width: 131px;
+        padding: 0 10px;
+        width: 160px;
+        overflow: hidden;
         height: 56px;
         background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
         border-radius: 32px;
-
         display: flex;
         justify-content: center;
         align-items: center;
@@ -226,6 +444,9 @@
           font-weight: 500;
           color: #ffffff;
           line-height: 30px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         div:nth-last-child(1) {
           // width: 15px;
@@ -246,6 +467,9 @@
       justify-content: space-between;
       align-items: center;
       margin-right: 15px;
+      max-width: 500px;
+      overflow-x: auto;
+      height: 40px;
       // padding: 22px 10px 0 10px;
       li {
         height: 32px;
@@ -263,11 +487,6 @@
         font-weight: 600;
         color: #ec5330;
         line-height: 32px;
-      }
-      li:nth-child(1) {
-        // margin-left: 20px;
-      }
-      li:nth-last-child(1) {
       }
     }
     .body-content {
@@ -424,120 +643,3 @@
   }
 }
 </style>
-
-<script>
-import {
-  CountDown,
-  Sticky,
-  List,
-  WorkTabSort,
-  WorkTabSortItem,
-} from '@chipspc/vant-dgg'
-export default {
-  name: 'Newproduct',
-  components: {
-    [CountDown.name]: CountDown,
-    [Sticky.name]: Sticky,
-    [List.name]: List,
-    [WorkTabSort.name]: WorkTabSort,
-    [WorkTabSortItem.name]: WorkTabSortItem,
-  },
-  data() {
-    return {
-      defaultData: {
-        index: 0,
-        sort: -1, // 倒序
-      },
-
-      iconLeft: 0.35,
-      time: '',
-      list: [],
-      loading: false,
-      finished: false,
-      refreshing: false,
-      items: [
-        {
-          span1: '好品',
-          span2: '独家转售',
-          content: '公司干净 成都 **国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '独家转售',
-          content: '公司干净 成都 **国际融资租赁有限公司',
-
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '独家转售',
-          content: '公司干净 成都 **国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '独家转售',
-          content: '公司干净 成都 **国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '独家转售',
-          content: '公司干净 成都 **国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '独家转售',
-          content: '公司干净 成都 **国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-      ],
-    }
-  },
-  methods: {
-    onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        this.loading = false
-
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
-    },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
-
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
-    handlerItemChange(action, index) {
-      console.log(action, index)
-    },
-  },
-}
-</script>
