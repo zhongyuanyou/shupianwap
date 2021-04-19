@@ -263,6 +263,8 @@ export default {
     width: calc(100% - 52px);
     padding-right: 52px;
     overflow: hidden;
+    position: relative;
+    min-height: 220px;
     h3 {
       font-size: 32px;
       font-family: PingFang SC;
@@ -322,10 +324,12 @@ export default {
     }
     .price-sales {
       display: flex;
+      position: absolute;
+      bottom: 0;
       align-items: flex-end;
       display: inherit;
-      margin-top: 12px;
-      margin-bottom: 34px;
+      // margin-top: 12px;
+      // margin-bottom: 34px;
       span {
         &:nth-child(1) {
           font-size: 26px;

@@ -21,13 +21,13 @@
           <h1>
             {{ item.name }}
           </h1>
-          <div class="tag">
+          <div v-if="item.tag.length > 0" class="tag">
             <div v-if="item.salesGoodsSubVos.length > 1">套餐</div>
             <p v-for="(tagitem, tagindex) in item.tag" :key="tagindex">
               {{ tagitem.tagName }}
             </p>
           </div>
-          <p class="describe">
+          <p v-if="item.attr" class="describe">
             {{ item.attr }}
           </p>
           <p class="price">
@@ -118,6 +118,8 @@ export default {
     > .right {
       margin-left: 32px;
       width: calc(100% - 240px);
+      min-height: 220px;
+      position: relative;
       > h1 {
         font-size: 32px;
         font-family: PingFangSC-Medium, PingFang SC;
@@ -190,12 +192,15 @@ export default {
         line-height: 22px;
       }
       > .price {
+        position: absolute;
+        bottom: 0;
         margin-top: 19px;
         font-size: 36px;
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 600;
         color: #ec5330;
         line-height: 36px;
+        align-self: flex-end;
         > span {
           font-size: 22px;
           line-height: 22px;

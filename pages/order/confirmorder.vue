@@ -135,7 +135,7 @@
           />
           <Cell
             title="商品金额"
-            :value="order.salesPrice || order.needPayTotalMoney + '元'"
+            :value="order.salesPrice || order.skuTotalPrice + '元'"
             value-class="black"
           />
           <Cell
@@ -311,7 +311,7 @@ export default {
           // result = JSON.parse(result.productVo)
           this.order = result
           this.order.list = this.order.productVo
-          this.price = this.order.needPayTotalMoney
+          this.price = this.order.skuTotalPrice
           this.getInitData(5)
           this.getInitData(6)
           this.skeletonloading = false

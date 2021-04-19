@@ -189,9 +189,7 @@ export default {
         .getcalculation(
           { axios: this.$axios },
           {
-            price:
-              this.$parent.order.salesPrice ||
-              this.$parent.order.needPayTotalMoney,
+            price: this.$parent.price,
             culation: this.checkarr.reducePrice,
           }
         )
