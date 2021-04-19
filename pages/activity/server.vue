@@ -2,7 +2,7 @@
   <div class="container">
     <div class="container-advice">
       <!-- S search -->
-      <sp-sticky>
+      <sp-sticky @scroll="scrollHandle">
         <div class="search">
           <div class="left-back">
             <my-icon
@@ -20,7 +20,7 @@
               color="#FFFFFF"
               :style="{ marginLeft: iconLeft + 'rem' }"
             ></my-icon>
-            <input placeholder="搜索特卖商品" />
+            <input placeholder="请输入感兴趣的内容" />
           </div>
         </div>
       </sp-sticky>
@@ -47,7 +47,7 @@
         </div>
       </div>
       <!-- E title -->
-      <div class="container-body" :style="containerStyle">
+      <div class="container-body" :style="style.containerStyle">
         <div class="tabs-box">
           <div class="drop_down">
             <div class="drop_down_title">成都</div>
@@ -107,6 +107,147 @@
     </div>
   </div>
 </template>
+
+<script>
+import {
+  CountDown,
+  Sticky,
+  List,
+  WorkTabSort,
+  WorkTabSortItem,
+  PullRefresh,
+} from '@chipspc/vant-dgg'
+import activityMixin from '@/mixins/activityMixin'
+
+export default {
+  name: 'Server',
+  components: {
+    [CountDown.name]: CountDown,
+    [Sticky.name]: Sticky,
+    [List.name]: List,
+    [WorkTabSort.name]: WorkTabSort,
+    [WorkTabSortItem.name]: WorkTabSortItem,
+    [PullRefresh.name]: PullRefresh,
+  },
+  mixins: [activityMixin],
+  data() {
+    return {
+      iconLeft: 0.35,
+      time: '',
+      list: [],
+      loading: false,
+      finished: false,
+      refreshing: false,
+      items: [
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+      ],
+      defaultData: {
+        index: 0,
+        sort: -1, // 倒序
+      },
+      style: {
+        containerStyle: '',
+        iconStyle: '',
+        searchStyle: '',
+      },
+    }
+  },
+  methods: {
+    onLoad() {
+      setTimeout(() => {
+        if (this.refreshing) {
+          this.list = []
+          this.refreshing = false
+        }
+
+        for (let i = 0; i < 10; i++) {
+          this.list.push(this.list.length + 1)
+        }
+        this.loading = false
+
+        if (this.list.length >= 40) {
+          this.finished = true
+        }
+      }, 1000)
+    },
+    onRefresh() {
+      // 清空列表数据
+      this.finished = false
+
+      // 重新加载数据
+      // 将 loading 设置为 true，表示处于加载状态
+      this.loading = true
+      this.onLoad()
+    },
+    handlerItemChange(action, index) {
+      console.log(action, index)
+      this.$toast(`选择结果：${JSON.stringify({ type: action, index })}`)
+    },
+    scrollHandle({ scrollTop }) {
+      console.log(scrollTop)
+      // 滚动事件
+      if (scrollTop > 325) {
+        this.style.containerStyle = 'border-radius: 0px;'
+      } else {
+        this.style.containerStyle = 'border-radius: 12px;'
+      }
+    },
+  },
+}
+</script>
 
 <style lang="less" scoped>
 .container {
@@ -497,128 +638,3 @@
   }
 }
 </style>
-
-<script>
-import {
-  CountDown,
-  Sticky,
-  List,
-  WorkTabSort,
-  WorkTabSortItem,
-  PullRefresh,
-} from '@chipspc/vant-dgg'
-
-export default {
-  name: 'Server',
-  components: {
-    [CountDown.name]: CountDown,
-    [Sticky.name]: Sticky,
-    [List.name]: List,
-    [WorkTabSort.name]: WorkTabSort,
-    [WorkTabSortItem.name]: WorkTabSortItem,
-    [PullRefresh.name]: PullRefresh,
-  },
-  data() {
-    return {
-      iconLeft: 0.35,
-      time: '',
-      list: [],
-      loading: false,
-      finished: false,
-      refreshing: false,
-      items: [
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-      ],
-      defaultData: {
-        index: 0,
-        sort: -1, // 倒序
-      },
-    }
-  },
-  methods: {
-    onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        this.loading = false
-
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
-    },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
-
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
-    handlerItemChange(action, index) {
-      console.log(action, index)
-      this.$toast(`选择结果：${JSON.stringify({ type: action, index })}`)
-    },
-  },
-}
-</script>
