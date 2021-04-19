@@ -71,7 +71,7 @@ export default {
       this.$refs.priceR.show = true
     },
     commentfn() {
-      this.$emit('comment')
+      this.$emit('onComment')
     },
   },
 }

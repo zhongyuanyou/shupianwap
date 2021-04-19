@@ -32,7 +32,9 @@
         size="0.40rem"
         color="rgba(255, 255, 255, 1)"
       ></my-icon>
-      <span class="text">{{ statusName }}</span>
+      <span class="text">{{
+        cusOrderStatusType === 1 ? '等待付款' : statusName
+      }}</span>
       <!-- <span v-if="cusOrderStatusType == 1" class="text"> 等待付款 </span>
       <span v-else-if="cusOrderStatusType == 2" class="text"> 办理中 </span>
       <span v-else-if="cusOrderStatusType == 3" class="text"> 已完成 </span>
@@ -53,8 +55,10 @@
       </section>
     </div>
     <p v-else-if="cusOrderStatusType == 2" class="msg">
-      您的订单正在办理中<br />
-      <span> 请耐心等待</span>
+      <span v-if="statusName === '待确认'"
+        >您的订单已办理完成，请您确认<br />超时未确认将会自动确认完成</span
+      >
+      <span v-else> 您的订单正在办理中<br />请耐心等待</span>
     </p>
     <p v-else-if="cusOrderStatusType == 3" class="msg">
       您的订单已完成<br />

@@ -11,6 +11,11 @@
           >{{ orderData.statusName }}</span
         >
         <span
+          v-else-if="orderData.orderStatusNo === 'ORDER_CUS_STATUS_UNPAID'"
+          class="order-status status2"
+          >待支付</span
+        >
+        <span
           v-else
           class="order-status"
           :class="
@@ -134,14 +139,14 @@
         >
         <!-- 客户订单状态 -->
         <sp-button
-          v-if="checkContractStatus() == 2"
+          v-if="checkContractStatus(orderData) == 2"
           type="info"
           class="btn-look"
           @click="handleClickItem(3)"
           >查看合同</sp-button
         >
         <sp-button
-          v-if="checkContractStatus() == 1"
+          v-if="checkContractStatus(orderData) == 1"
           type="info"
           class="btn-look"
           @click="handleClickItem(2)"
@@ -201,6 +206,11 @@ export default {
       type: String,
       default: '',
     },
+  },
+  data() {
+    return {
+      fromPage: 'orderList',
+    }
   },
   methods: {
     handleClickItem(type) {
