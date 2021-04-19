@@ -20,7 +20,23 @@ const infoList = [
   'shoppingCar', // 购物车页面
   'my-help', // 帮助中心
   'spread-myDemandCard', // 免费找
+  'known',
   'known-home', // 必懂个人主页
+  'known-home-attention', // 必懂个人主页
+  'known-home-fans', // 必懂个人主页
+  'known-home-list', // 必懂个人主页
+  'known-more',
+  'known-search',
+  'known-search-result',
+  'known-publish-answer',
+  'known-publish-article',
+  'known-publish-chooseque',
+  'known-publish-question',
+  'known-detail-answer',
+  'known-detail-article',
+  'known-detail-question',
+  'known-detail-invitationList',
+  'known-detail-invitationSearch',
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {
@@ -75,6 +91,8 @@ export default ({ app, store }) => {
             if (res.code === 200) {
               try {
                 // const userInfo = res.data || {}
+                console.log(11111111111111111)
+                console.log(res.data)
                 let userInfo = {}
                 if (typeof res.data === 'string') {
                   userInfo = JSON.parse(res.data)
