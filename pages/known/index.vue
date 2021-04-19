@@ -379,6 +379,7 @@ export default {
   .category_box {
     display: flex;
     align-items: center;
+    background-color: #fff;
     .sp-tabs {
       width: 670px;
       /deep/.sp-tab {
