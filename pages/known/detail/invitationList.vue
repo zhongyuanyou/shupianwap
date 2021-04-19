@@ -68,7 +68,7 @@ export default {
       loading: false,
       finished: false,
       page: 1,
-      limit: 9999, // 这里一次请求所有数据 经过和付蔚杰沟通 2021/4/19
+      limit: 50, // 这里一次请求所有数据 经过和付蔚杰沟通 2021/4/19
       questionId: '',
       invitedAllFlag: false,
     }
