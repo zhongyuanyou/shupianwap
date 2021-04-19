@@ -115,7 +115,7 @@
         <div
           class="box"
           :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
-          @click="$router.push('/known/publish/answer')"
+          @click="goPublishAnswer"
         >
           <my-icon name="xiehuida" size="0.32rem"></my-icon>
           <p>写回答</p>
@@ -541,7 +541,15 @@ export default {
     },
     goInvitionPage() {
       this.$router.push({
-        path: '/known/publish/question',
+        path: '/known/detail/invitationList',
+        query: {
+          questionId: this.currentDetailsId,
+        },
+      })
+    },
+    goPublishAnswer() {
+      this.$router.push({
+        path: '/known/publish/answer',
         query: {
           id: this.currentDetailsId,
         },
