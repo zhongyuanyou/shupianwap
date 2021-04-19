@@ -46,7 +46,13 @@
           <div class="name">
             {{ item.userName }}
           </div>
-          <div class="invitation" @click="invitItem(item)">邀请</div>
+          <div
+            class="invitation"
+            :class="item.custInvited ? 'active' : ''"
+            @click="invitItem(item)"
+          >
+            {{ item.custInvited ? '已邀请' : '邀请' }}
+          </div>
         </div>
       </sp-list>
     </div>
@@ -126,6 +132,9 @@ export default {
           { params }
         )
         if (code === 200) {
+          data.records.forEach((item) => {
+            item.custInvited = false
+          })
           this.searchList.push(...data.records)
           this.page++
           if (this.page > data.totalPage) {
@@ -166,6 +175,7 @@ export default {
             icon: 'toast_ic_comp',
             forbidClick: true,
           })
+          datas.custInvited = true
         } else {
           this.$xToast.show({
             message: '邀请失败,请联系客服',
@@ -184,6 +194,9 @@ export default {
       }
     },
     invitItem(item) {
+      if (item.custInvited) {
+        return
+      }
       this.inviteApi(item)
     },
     onLoad() {
@@ -298,6 +311,10 @@ export default {
           font-weight: 500;
           color: #ffffff;
           margin-left: auto;
+        }
+        .invitation.active {
+          background: #f5f5f5;
+          color: #999999;
         }
       }
     }
