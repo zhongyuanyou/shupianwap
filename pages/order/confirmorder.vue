@@ -327,6 +327,7 @@ export default {
         })
     },
     async asyncData() {
+      const that = this
       try {
         const { code, message, data } = await this.$axios.post(
           productDetailsApi.sellingGoodsDetail,
@@ -361,10 +362,18 @@ export default {
           this.skeletonloading = false
         } else {
           this.skeletonloading = false
+          this.$xToast.show('服务器异常,请然后再试')
+          setTimeout(function () {
+            that.$router.back(-1)
+          }, 2000)
           throw message
         }
       } catch (err) {
+        this.$xToast.show(err.message)
         console.log(err)
+        setTimeout(function () {
+          that.$router.back(-1)
+        }, 2000)
         this.skeletonloading = false
       }
     },
@@ -500,7 +509,7 @@ export default {
         price = this.order.skuTotalPrice
       }
       coupon
-        .couponPage(
+        .findOrderCouponPage(
           { axios: this.$axios },
           {
             findType: index,
@@ -514,9 +523,10 @@ export default {
           }
         )
         .then((result) => {
-          if (index === 2) {
+          if (index === 5) {
             this.datalist = result
           } else {
+            console.log(result, 123)
             this.nolist = result
           }
         })

@@ -12,7 +12,7 @@
       :finished="finished"
       offset="0"
       finished-text="没有更多了"
-      @load="recommendList"
+      @load="getList"
     >
       <Item v-for="(item, index) in list" :key="index" :item="item" />
     </sp-list>
@@ -30,7 +30,12 @@ export default {
     [Cell.name]: Cell,
     Item,
   },
-
+  props: {
+    categorIds: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       refreshing: false,
@@ -41,6 +46,15 @@ export default {
       list: [],
     }
   },
+  watch: {
+    categorIds() {
+      this.finished = false
+      this.list = []
+      this.page = 1
+      this.loading = true
+      this.getList()
+    },
+  },
   methods: {
     onRefresh() {
       this.finished = false
@@ -48,24 +62,23 @@ export default {
       this.page = 1
       this.loading = true
       this.refreshing = false
-      this.recommendList()
+      this.getList()
     },
     // 请求推荐列表数据
-    async recommendList() {
-      const { code, message, data } = await this.$axios.get(
-        knownApi.questionArticle.recommendList,
+    async getList() {
+      const { code, message, data } = await this.$axios.post(
+        knownApi.questionArticle.list,
         {
-          params: {
-            limit: this.limit,
-            page: this.page,
-          },
+          categorIds: [this.categorIds],
+          limit: this.limit,
+          page: this.page,
         }
       )
       if (code === 200) {
         this.list = this.list.concat(data.rows)
         this.loading = false
         this.page++
-        if (this.page > data.totalPage) {
+        if (this.page > Math.ceil(data.total / this.limit)) {
           this.finished = true
         }
       } else {
@@ -80,20 +93,5 @@ export default {
 <style lang="less" scoped>
 /deep/ .sp-list {
   padding-bottom: 110px;
-}
-.item_span {
-  width: 94px;
-  height: 40px;
-  background: #4974f5;
-  border-radius: 4px;
-  position: absolute;
-  top: -20px;
-  right: 32px;
-  font-size: 20px;
-  font-family: PingFangSC-Regular, PingFang SC;
-  font-weight: 400;
-  color: #ffffff;
-  line-height: 0.4rem;
-  text-align: center;
 }
 </style>
