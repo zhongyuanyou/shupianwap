@@ -61,6 +61,12 @@ export default {
     /deep/ .sp-image {
       height: 520px;
       width: 100%;
+      > img {
+        width: 750px;
+        height: 520px;
+        display: block;
+        object-fit: fill !important;
+      }
     }
     .custom-indicator {
       position: absolute;

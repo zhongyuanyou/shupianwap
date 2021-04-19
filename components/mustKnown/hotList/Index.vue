@@ -36,15 +36,28 @@
         </div>
       </div>
     </div>
+    <sp-pull-refresh
+      v-model="refreshing"
+      success-text="刷新成功"
+      pulling-text="下拉即可刷新..."
+      loosing-text="释放即可刷新..."
+      loading-text="加载中..."
+      @refresh="onRefresh"
+    >
+      <ItemCard :list-data="list" />
+    </sp-pull-refresh>
   </div>
 </template>
 <script>
-import { Image } from '@chipspc/vant-dgg'
+import { Image, PullRefresh } from '@chipspc/vant-dgg'
+import ItemCard from './ItemCard'
 import { knownApi } from '~/api'
 export default {
-  name: 'Item',
+  name: 'Index',
   components: {
+    [PullRefresh.name]: PullRefresh,
     [Image.name]: Image,
+    ItemCard,
   },
   props: {
     categoryId: {
@@ -55,6 +68,8 @@ export default {
   data() {
     return {
       subjectList: [],
+      list: [],
+      refreshing: false,
     }
   },
   computed: {
@@ -79,20 +94,24 @@ export default {
         }
       }
     },
+    onRefresh() {
+      this.refreshing = false
+      this.hotList()
+    },
     // 请求热榜列表数据
     async hotList() {
       const { code, message, data } = await this.$axios.post(
         knownApi.questionArticle.list,
         {
           categorIds: [this.categoryId],
+          page: 1,
+          limit: 50,
         }
       )
       if (code === 200) {
         if (data.rows.length > 0) {
-          this.listData = data.rows
-        } else {
+          this.list = data.rows
         }
-      } else {
       }
     },
     toHome(item) {

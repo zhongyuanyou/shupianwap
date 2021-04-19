@@ -42,7 +42,7 @@
         @load="onLoad"
       >
         <div v-for="(item, index) in searchList" :key="index" class="list">
-          <img :src="item.avatar" alt="" />
+          <img :src="item.avatar" alt="" @click="goUserInfo(item)" />
           <div class="name">
             {{ item.userName }}
           </div>
@@ -100,10 +100,7 @@ export default {
       this.$refs.fieldInput.$refs.inputRef.focus()
     },
     clooseHandle() {
-      this.$router.push({
-        path: '/known/detail/invitationList',
-        query: { questionId: this.questionId, fromPage: 'invitationSearch' },
-      })
+      this.$back()
     },
     keyClickHandle() {
       this.init()
@@ -191,6 +188,9 @@ export default {
     },
     onLoad() {
       this.searchAnswerUserApi()
+    },
+    goUserInfo(item) {
+      this.$router.push({ path: '/known/home', query: { homeUserId: item.id } })
     },
   },
 }
