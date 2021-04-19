@@ -57,7 +57,7 @@
         </div>
       </HeadSlot>
     </div>
-    <div class="title-area">
+    <div class="title-area" @click="toQueDetail">
       <div class="title">{{ answerDetails.title }}</div>
       <div class="nums-area">
         {{ answerDetails.answerCount }} 个回答 ·
@@ -257,6 +257,11 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    toQueDetail() {
+      this.$router.replace(
+        '/known/detail/question?id=' + this.answerDetails.sourceId
+      )
+    },
     follow() {
       this.loading = true
       this.$axios
