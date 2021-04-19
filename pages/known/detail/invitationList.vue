@@ -1,6 +1,9 @@
 <template>
   <div class="invitationList">
-    <div class="head">
+    <div
+      class="head"
+      :style="{ paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px' }"
+    >
       <Search
         :disabled="true"
         :icon-left="0.24"
@@ -76,6 +79,8 @@ export default {
   computed: {
     ...mapState({
       userInfo: (state) => state.user, // 登录的用户信息
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
   mounted() {
