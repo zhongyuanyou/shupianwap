@@ -30,16 +30,18 @@
         </div>
       </sp-sticky>
       <!-- E search -->
-      <div class="rules" @click="$router.push('/')">
+      <!-- <div class="rules" @click="$router.push('/')">
         <p>规则</p>
-      </div>
+      </div> -->
       <div class="advice-box">
         <div
           v-for="(item, index) in productAdvertData"
           :key="index"
           @click="advertjump(item)"
         >
-          <img :src="item.materialUrl" alt="" srcset="" />
+          <a :href="item.materialLink"
+            ><img :src="item.materialUrl" alt="" srcset=""
+          /></a>
         </div>
       </div>
     </div>
@@ -75,16 +77,18 @@
               @click="jumpProductdetail(item)"
             >
               <div class="body-content-items">
-                <div class="left-content"></div>
+                <div class="left-content">
+                  <img :src="item.imageUrl" alt="" srcset="" />
+                </div>
                 <div class="right-content">
                   <div class="rc-top">
                     <span v-if="specTypeCode === 'HDZT_ZTTYPE_XTSF'">新品</span>
                     {{ item.skuName }}
                   </div>
-                  <div class="rc-middle">
-                    <div>免手续</div>
-                    <div>1对1</div>
-                    <div>店铺干净</div>
+                  <div v-if="item.tags.length > 0" class="rc-middle">
+                    <div v-for="(item2, index2) in item.tags" :key="index2">
+                      {{ item2 }}
+                    </div>
                   </div>
                   <div class="rc-bottom">
                     <div class="rc-bottom-lf">
@@ -155,7 +159,8 @@ export default {
       platformCode: 'COMDIC_PLATFORM_CRISPS', // 终端code
       specCode: '',
       defaultCityCode: '510100',
-      advertCode: 'ad1314', // 广告code
+      advertCode: 'ad100043', // 广告code
+      productType: '',
     }
   },
   computed: {
@@ -186,11 +191,18 @@ export default {
       POSITION_CITY: 'city/POSITION_CITY',
       GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
     }),
-    advertjump(item) {
-      this.$router.push('/')
-    },
-    jumpProductdetail() {
-      this.$router.push('/')
+    jumpProductdetail(item) {
+      if (this.type === 'PRO_CLASS_TYPE_TRANSACTION') {
+        this.$router.push({
+          path: `/detail/transactionDetails`,
+          query: { productId: item.id },
+        })
+      } else {
+        this.$router.push({
+          path: `/detail/serviceDetails`,
+          query: { productId: item.id },
+        })
+      }
     },
     jumpIM(item) {
       console.log(item)
@@ -266,6 +278,7 @@ export default {
             if (res.data.settingVOList && res.data.settingVOList.length > 0) {
               this.itemTypeOptions = res.data.settingVOList[0]
               this.specCode = res.data.specCode
+              this.productType = res.data.productType
               this.getProductList(this.itemTypeOptions, this.specCode)
             } else {
               this.loading = false
@@ -307,6 +320,12 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             this.productList = res.data
+            this.productList.rows.forEach((item) => {
+              if (item.tags) {
+                item.tags = item.tags.split(',')
+              }
+            })
+
             this.total = res.data.total
             this.loading = false
             this.page++
@@ -329,7 +348,7 @@ export default {
       this.$axios
         .get(activityApi.activityAdvertising, {
           params: {
-            code: this.advertCode,
+            locationCode: this.advertCode,
           },
         })
         .then((res) => {
@@ -582,7 +601,10 @@ export default {
         border-radius: 12px;
         background-size: 100% 100%;
         -moz-background-size: 100% 100%;
-        background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
+        img {
+          width: 100%;
+          height: 100%;
+        }
         .left-span {
           position: absolute;
           border-radius: 12px 0 0 0;
@@ -608,10 +630,9 @@ export default {
           font-weight: 500;
           color: #222222;
           line-height: 42px;
-          // white-space: nowrap;
-          overflow: hidden;
+          white-space: nowrap;
+          // overflow: hidden;
           text-overflow: ellipsis;
-          word-break: break-all;
           span {
             background: #ec5330;
             border-radius: 4px;
@@ -627,9 +648,10 @@ export default {
           // justify-content: space-between;
           align-content: flex-start;
           margin-top: 12px;
+          flex-wrap: wrap;
           div {
-            height: 20px;
             font-size: 20px;
+            margin-bottom: 12px;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: #5c7499;

@@ -12,7 +12,7 @@
         <sp-image class="img" :src="headerData.avatar" />
         <div class="infos">
           <p>{{ headerData.createrName }}</p>
-          {{ headerData.contentText }}
+          <!-- {{ headerData.contentText }} -->
         </div>
         <template v-if="isShowFollow">
           <div v-if="!isFollow" class="btn" @click="follow">
@@ -103,7 +103,7 @@ export default {
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #999999;
-      line-height: 26px;
+      line-height: 66px;
       padding-left: 20px;
       p {
         font-size: 30px;

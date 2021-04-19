@@ -1,11 +1,14 @@
 <template>
   <div class="container">
-    <div class="container_head">
+    <div class="container_head" :style="[isInApp ? appStyle : '']">
       <Search
         value="请输入关键词搜索"
         :icon-left="0.2"
         @click.native="$router.push('/known/search')"
       >
+        <template v-if="isInApp" v-slot:left>
+          <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
+        </template>
       </Search>
       <my-icon
         name="fabu_mian"
@@ -15,8 +18,11 @@
         @click.native="openArticle"
       ></my-icon>
     </div>
-
-    <sp-sticky>
+    <div
+      :class="[isInApp ? 'top-safe-app' : '']"
+      :style="[isInApp ? tapSafeApp : '']"
+    ></div>
+    <sp-sticky :offset-top="isInApp ? statusBarHeight : '0'">
       <div class="category_box">
         <sp-tabs
           v-model="active"
@@ -175,6 +181,7 @@ import {
   Tab,
   Tabs,
   PullRefresh,
+  Icon,
 } from '@chipspc/vant-dgg'
 import Recommend from '@/components/mustKnown/Recommend'
 import Attention from '@/components/mustKnown/attention/Index'
@@ -195,6 +202,7 @@ export default {
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
     [PullRefresh.name]: PullRefresh,
+    [Icon.name]: Icon,
     Search,
     Answer,
     Bottombar,
@@ -210,12 +218,14 @@ export default {
         params: {
           // type 1 获取企大顺导航
           type: store.state.app.isInApp ? 1 : '',
+          // type: 1,
         },
       }
     )
     return {
       tabs: data,
-      myPlate: data,
+      morePlate: data.slice(4, data.length),
+      myPlate: data.slice(0, 3),
     }
   },
   data() {
@@ -228,18 +238,34 @@ export default {
       myPlate: [],
       morePlate: [],
       active: 0,
+      statusBarHeight: '',
+      appStyle: {
+        'padding-left': '12px',
+        'padding-right': '16px',
+        'padding-top': '',
+      },
+      tapSafeApp: {
+        height: '',
+      },
     }
   },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo,
     }),
     userInfo() {
       return this.$store.state.user
     },
   },
   mounted() {
-    this.init()
+    console.log(this.tabs)
+    if (this.appInfo) {
+      this.statusBarHeight = this.appInfo.statusBarHeight
+    }
+    // this.containerStyle['padding-top'] = this.appInfo.statusBarHeight + 'px'
+    this.appStyle['padding-top'] = this.statusBarHeight + 'px'
+    this.tapSafeApp.height = this.statusBarHeight + 'px'
   },
   methods: {
     init() {
@@ -248,6 +274,7 @@ export default {
         this.myPlate = this.tabs.filter(
           (item) => !this.morePlate.some((ele) => ele.id === item.id)
         )
+        this.tabs = JSON.parse(JSON.stringify(this.myPlate))
       }
     },
     toggleTabs() {
@@ -280,12 +307,11 @@ export default {
         this.showIcon = true
         this.editFinish = '完成'
         this.status = false
+        localStorage.setItem('tabsList', JSON.stringify(this.myPlate))
       } else {
         this.showIcon = false
         this.editFinish = '编辑'
         this.status = true
-        console.log('this.morePlate', this.morePlate)
-        localStorage.setItem('morePlate', JSON.stringify(this.morePlate))
       }
     },
     // 添加到我的列表中
@@ -296,18 +322,18 @@ export default {
         this.morePlate.pop(index)
       }
     },
-    deleteToMyPlate(index) {
-      const arrayValue = this.myPlate[index]
-      if (arrayValue) {
-        this.morePlate.push(arrayValue)
-        this.myPlate.pop(index)
-      }
-    },
   },
 }
 </script>
 <style lang="less" scoped>
-.sp-sticky {
+.top-safe-app {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 99;
+}
+/deep/ .sp-sticky {
   background: #fff;
 }
 .active {
@@ -376,10 +402,22 @@ export default {
       margin-left: 32px;
     }
   }
+  .container_head_app {
+    display: flex;
+    justify-content: space-between;
+    height: 88px;
+    align-items: center;
+    padding-left: 12px;
+    padding-right: 16px;
+    .my_icon {
+      width: 52px;
+      height: 52px;
+      margin-left: 32px;
+    }
+  }
   .category_box {
     display: flex;
     align-items: center;
-    background-color: #fff;
     .sp-tabs {
       width: 670px;
       /deep/.sp-tab {
