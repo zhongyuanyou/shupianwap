@@ -21,7 +21,7 @@
           class="user_avatar"
           fit="cover"
           :src="item.avatar"
-          @click="toHome(item.inviteeId)"
+          @click="toHome(item)"
         />
         <div class="user_info">
           <div class="title">{{ item.inviteeName }}</div>
@@ -94,11 +94,12 @@ export default {
         this.finished = true
       }
     },
-    toHome(id) {
+    toHome(item) {
       this.$router.push({
         path: '/known/home',
         query: {
-          homeUserId: id,
+          homeUserId: item.inviteeId,
+          type: item.inviteeType,
         },
       })
     },
