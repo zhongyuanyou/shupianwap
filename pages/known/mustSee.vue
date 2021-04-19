@@ -1,12 +1,15 @@
 <template>
   <div class="MustSee">
-    <div class="head">
+    <div
+      class="head"
+      :style="{ paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px' }"
+    >
       <sp-icon
         name="arrow-left"
         class="left"
         color="#fff"
         size="0.4rem"
-        @click.native="$router.back()"
+        @click.native="back()"
       />
       <sp-icon
         name="search"
@@ -51,6 +54,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Icon } from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 export default {
@@ -66,12 +70,25 @@ export default {
       description: '',
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
+    }),
+  },
   mounted() {
     this.name = this.$route.query.name
     this.description = this.$route.query.description
     this.init()
   },
   methods: {
+    back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack()
+      } else {
+        this.$router.go(-1)
+      }
+    },
     init() {
       this.categorIds.push(this.$route.query.id)
       this.getList()

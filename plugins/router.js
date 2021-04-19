@@ -91,7 +91,6 @@ export default ({ app, store }) => {
             if (res.code === 200) {
               try {
                 // const userInfo = res.data || {}
-                console.log(11111111111111111)
                 console.log(res.data)
                 let userInfo = {}
                 if (typeof res.data === 'string') {
