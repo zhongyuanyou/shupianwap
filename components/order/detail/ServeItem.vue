@@ -44,6 +44,7 @@
             v-if="
               (item.skuStatusNo === 'ORDER_ORDER_SERVER_STATUS_HANDLED' ||
                 item.skuStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED') &&
+              item.payStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID' &&
               item.userConfirm == 0
             "
             type="default"
@@ -133,6 +134,11 @@ export default {
       type: Number,
       default: 1,
     },
+  },
+  data() {
+    return {
+      fromPage: 'orderDetail',
+    }
   },
   methods: {
     changeMoney(num) {

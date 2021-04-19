@@ -395,8 +395,8 @@ export default {
       }
     },
     // 判断展示合同按钮 false不展示  1签署合同 2查看合同
-    checkContractStatus() {
-      const data = this.orderData
+    checkContractStatus(orderData) {
+      const data = orderData || this.orderData
       // 当客户订单状态为已取消时不展示按钮
       if (data.cusOrderStatusNo === ORDERSTATUSCODE[4]) return false
       if (this.fromPage === 'orderList') {
@@ -410,9 +410,10 @@ export default {
           return 1
         }
         // 当合同状态为已完成时显示查看合同按钮
-        if (data.contractStatus && data.contractStatus === 'STRUTS_YWC')
+        if (data.contractStatus && data.contractStatus === 'STRUTS_YWC') {
+          console.log('已完成')
           return 2
-        return orderUtils.checkContractStatus(this.orderData)
+        }
       } else {
         // 订单详情页面根据合同列表判断
         // 当合同状态为已完成时显示查看合同按钮
@@ -437,7 +438,6 @@ export default {
     isShowConfirmBtn(data) {
       data = data || this.orderData
       let isShowConfirm
-      const orderProTypeNo = data.orderProTypeNo
       if (
         data.orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION' ||
         data.orderProTypeNo === 'PRO_CLASS_TYPE_SALES '
@@ -445,10 +445,13 @@ export default {
         const orderArr = data.orderSkuEsList || data.orderSkuList
         for (let i = 0, l = orderArr.length; i < l; i++) {
           if (
-            orderArr[i].skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
-            orderArr[i].skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED' ||
-            orderArr[i].skuStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED' ||
-            orderArr[i].skuStatusNo === 'ORDER_ORDER_SERVER_STATUS_HANDLED'
+            (orderArr[i].skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
+              orderArr[i].skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED' ||
+              orderArr[i].skuStatusNo ===
+                'ORDER_ORDER_RESOURCE_STATUS_HANDLED' ||
+              orderArr[i].skuStatusNo ===
+                'ORDER_ORDER_SERVER_STATUS_HANDLED') &&
+            orderArr[i].payStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
           ) {
             if (orderArr[i].userConfirm === 0) {
               isShowConfirm = 1

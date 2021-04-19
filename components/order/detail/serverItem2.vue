@@ -142,6 +142,11 @@ export default {
       default: 1,
     },
   },
+  data() {
+    return {
+      fromPage: 'orderDetail',
+    }
+  },
   methods: {
     changeMoney(num) {
       return changeMoney.regFenToYuan(num)

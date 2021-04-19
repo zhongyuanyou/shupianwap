@@ -39,6 +39,11 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      fromPage: 'orderDetail',
+    }
+  },
   methods: {
     toNav() {},
     changeMoney(num) {
