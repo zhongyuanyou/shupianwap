@@ -107,7 +107,7 @@
         <div
           class="box"
           :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
-          @click="$router.push('/known/detail/invitationList')"
+          @click="goInvitionPage"
         >
           <my-icon name="yaoqinghuida_mian" size="0.32rem"></my-icon>
           <p>邀请回答</p>
@@ -538,6 +538,14 @@ export default {
     },
     goBack() {
       this.$back()
+    },
+    goInvitionPage() {
+      this.$router.push({
+        path: '/known/publish/question',
+        query: {
+          id: this.currentDetailsId,
+        },
+      })
     },
   },
 }
