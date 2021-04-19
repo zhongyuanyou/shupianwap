@@ -58,6 +58,9 @@ export default {
     userInfo() {
       return this.$store.state.user
     },
+    isInApp() {
+      return this.$store.state.app.isInApp
+    },
   },
   methods: {
     toHome(id) {
@@ -70,6 +73,9 @@ export default {
       })
     },
     handle(item) {
+      if (!this.isLogin()) {
+        return
+      }
       item.isAttention ? this.cancelAttention(item) : this.attention(item)
     },
     cancelAttention(item) {
@@ -103,6 +109,20 @@ export default {
         item.isAttention = !item.isAttention
       } else {
         console.log(message)
+      }
+    },
+    async isLogin() {
+      if (this.userInfo.userId && this.userInfo.token) {
+        return true
+      } else if (this.isInApp) {
+        await this.$appFn.dggLogin()
+      } else {
+        this.$router.push({
+          path: '/login',
+          query: {
+            redirect: this.$route.fullPath,
+          },
+        })
       }
     },
     async getList() {
