@@ -21,7 +21,12 @@
       <p>必懂上那些「压箱底」的宝藏内容</p>
     </div>
     <div class="listbox">
-      <div v-for="(item, index) in mustSeeData" :key="index" class="list">
+      <div
+        v-for="(item, index) in mustSeeData"
+        :key="index"
+        class="list"
+        @click="goDetail(item)"
+      >
         <h1>{{ item.title }}</h1>
         <div class="box">
           <div class="left" :style="{ width: item.img ? '300px' : '100%' }">
@@ -91,6 +96,14 @@ export default {
       } else {
         console.log(message)
       }
+    },
+    goDetail(item) {
+      this.$router.push({
+        path: '/known/detail/answer',
+        query: {
+          id: item.id,
+        },
+      })
     },
   },
 }

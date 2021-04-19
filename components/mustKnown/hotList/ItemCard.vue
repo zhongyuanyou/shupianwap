@@ -31,7 +31,12 @@
                 {{ item.title }}
               </p>
               <span class="item_bottom"
-                >{{ computeHotNumber(item.browseCount) || 0 }} 热度</span
+                >{{
+                  item.hotNumber > 10000
+                    ? item.hotNumber / 10000 + '万'
+                    : item.hotNumber || 0
+                }}
+                热度</span
               >
             </div>
             <div class="item_img" @click="goDetailPage(item.type, item.id)">
@@ -109,7 +114,7 @@ export default {
     // 调到推荐页面
     goRecommend() {
       this.$router.push({
-        path: '/',
+        path: '/known/',
       })
     },
     computeHotNumber(browseCount) {
