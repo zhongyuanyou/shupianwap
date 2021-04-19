@@ -523,9 +523,10 @@ export default {
           }
         )
         .then((result) => {
-          if (index === 2) {
+          if (index === 5) {
             this.datalist = result
           } else {
+            console.log(result, 123)
             this.nolist = result
           }
         })
