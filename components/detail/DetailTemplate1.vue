@@ -55,6 +55,9 @@
     <!--S 第三板块 包含服务-->
     <ContainContent />
     <!--E 第三板块 包含服务-->
+    <!--S 评论-->
+    <!-- <CommentBox /> -->
+    <!--E 评论-->
     <!--S 第五板块 推荐规划师-->
     <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
     <!--E 第五板块 推荐规划师-->
@@ -90,6 +93,7 @@ import { TopNavBar, Sticky, List, ShareSheet } from '@chipspc/vant-dgg'
 import { mapActions } from 'vuex'
 import Banner from '~/components/detail/Banner'
 import Title from '~/components/detail/Title1'
+// import CommentBox from '~/components/detail/CommentBox'
 import VouchersSelect from '~/components/detail/VouchersSelect'
 import ContainProject from '~/components/detail/ContainProject'
 import ContainContent from '~/components/detail/ContainContent'
@@ -119,6 +123,7 @@ export default {
     RelatedRecommend,
     bottomBar,
     MyIcon,
+    // CommentBox,
   },
   mixins: [imHandle],
   props: {
