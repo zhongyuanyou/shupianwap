@@ -1,28 +1,29 @@
 <template>
   <div class="container">
-    <div class="container_head" :style="[isInApp ? appStyle : '']">
-      <Search
-        value="请输入关键词搜索"
-        :icon-left="0.2"
-        @click.native="$router.push('/known/search')"
-      >
-        <template v-if="isInApp" v-slot:left>
-          <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
-        </template>
-      </Search>
-      <my-icon
-        name="fabu_mian"
-        size="0.52rem"
-        color="#4974F5"
-        class="my_icon"
-        @click.native="openArticle"
-      ></my-icon>
-    </div>
     <div
-      :class="[isInApp ? 'top-safe-app' : '']"
-      :style="[isInApp ? tapSafeApp : '']"
+      v-if="isInApp"
+      class="modal"
+      :style="{ height: statusBarHeight + 'px' }"
     ></div>
     <sp-sticky :offset-top="isInApp ? statusBarHeight : '0'">
+      <div class="container_head">
+        <Search
+          value="请输入关键词搜索"
+          :icon-left="0.2"
+          @click.native="$router.push('/known/search')"
+        >
+          <template v-if="isInApp" v-slot:left>
+            <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
+          </template>
+        </Search>
+        <my-icon
+          name="fabu_mian"
+          size="0.52rem"
+          color="#4974F5"
+          class="my_icon"
+          @click.native="openArticle"
+        ></my-icon>
+      </div>
       <div class="category_box">
         <sp-tabs
           v-model="active"
@@ -47,18 +48,19 @@
       </div>
     </sp-sticky>
 
-    <Answer v-if="tabs[active].executionParameters === 'huida'" />
+    <div :style="{ marginTop: isInApp ? '50px' : 0 }">
+      <Answer v-if="tabs[active].executionParameters === 'huida'" />
 
-    <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
-      >关注</Attention
-    >
-    <hot-list
-      v-else-if="tabs[active].executionParameters === 'rebang'"
-      :category-id="tabs[active].id"
-    />
-    <Recommend v-else-if="tabs[active].executionParameters === 'tuijian'" />
-
-    <ordinary-list v-else :categor-ids="tabs[active].id" />
+      <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
+        >关注</Attention
+      >
+      <hot-list
+        v-else-if="tabs[active].executionParameters === 'rebang'"
+        :category-id="tabs[active].id"
+      />
+      <Recommend v-else-if="tabs[active].executionParameters === 'tuijian'" />
+      <ordinary-list v-else :categor-ids="tabs[active].id" />
+    </div>
 
     <!-- 弹出框tab修改列表 start -->
     <sp-popup
@@ -259,12 +261,12 @@ export default {
     },
   },
   mounted() {
-    console.log(this.tabs)
+    console.log(this.appInfo)
     if (this.appInfo) {
       this.statusBarHeight = this.appInfo.statusBarHeight
     }
     // this.containerStyle['padding-top'] = this.appInfo.statusBarHeight + 'px'
-    this.appStyle['padding-top'] = this.statusBarHeight + 'px'
+    this.appStyle['padding-top'] = this.statusBarHeight * 2 + 'px'
     this.tapSafeApp.height = this.statusBarHeight + 'px'
     this.init()
   },
@@ -391,6 +393,14 @@ export default {
 }
 .container {
   background: #fff;
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+    background: #fff;
+  }
   .container_head {
     display: flex;
     justify-content: space-between;

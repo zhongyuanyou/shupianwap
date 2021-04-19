@@ -163,6 +163,9 @@ export default {
     z-index: 2;
     width: 100%;
     height: 88px;
+    padding-top: 40px;
+    box-sizing: content-box;
+    background-color: #ffffff;
   }
 
   /deep/ .sp-tabs__line {
@@ -173,7 +176,7 @@ export default {
   }
 
   .list_container {
-    padding-top: 88px;
+    padding-top: 128px;
     .item {
       background: #ffffff;
       padding: 24px 32px 28px;
