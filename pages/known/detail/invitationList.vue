@@ -15,7 +15,7 @@
     <div class="recommend">
       <div class="titbox">
         <span>为你精选 {{ recommendList.length }} 位优质回答者</span>
-        <p @click="invitAll()" :class="[invitedAllFlag ? 'active' : '']">
+        <p :class="[invitedAllFlag ? 'active' : '']" @click="invitAll()">
           {{ invitedAllFlag ? '已邀请' : '一键邀请' }}
         </p>
       </div>
@@ -29,7 +29,7 @@
         @load="onLoad"
       >
         <div v-for="(item, index) in recommendList" :key="index" class="list">
-          <img :src="item.avatar" alt="" @click="goUserInfo(item)" />
+          <img alt="" :src="item.avatar" @click="goUserInfo(item)" />
           <div class="name">{{ item.userName }}</div>
           <div
             class="invitation"
