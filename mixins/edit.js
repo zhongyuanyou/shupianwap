@@ -51,7 +51,8 @@ export default {
       ? (this.formData.type = 2)
       : (this.formData.type = 3)
     this.formData.userId = this.userId
-    this.formData.userType = util.getUserType(this.userType)
+    this.formData.userType = this.$store.state.user.userInfo.userType
+    console.log(this.$store.state.user, 123)
   },
   methods: {
     getImgSrc(richtext) {
