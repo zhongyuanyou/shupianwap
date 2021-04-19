@@ -44,7 +44,7 @@
     <Banner :images="imgFileIdPaths" />
     <!--S banner-->
     <!--S 第一板块-->
-    <Title />
+    <Title @onComment="comment" />
     <!--E 第一板块-->
     <!--S 第二板块 领券 SKU-->
     <VouchersSelect ref="sku" />
@@ -56,7 +56,7 @@
     <ContainContent />
     <!--E 第三板块 包含服务-->
     <!--S 评论-->
-    <!-- <CommentBox /> -->
+    <CommentBox id="comment" />
     <!--E 评论-->
     <!--S 第五板块 推荐规划师-->
     <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
@@ -93,7 +93,7 @@ import { TopNavBar, Sticky, List, ShareSheet } from '@chipspc/vant-dgg'
 import { mapActions } from 'vuex'
 import Banner from '~/components/detail/Banner'
 import Title from '~/components/detail/Title1'
-// import CommentBox from '~/components/detail/CommentBox'
+import CommentBox from '~/components/detail/CommentBox'
 import VouchersSelect from '~/components/detail/VouchersSelect'
 import ContainProject from '~/components/detail/ContainProject'
 import ContainContent from '~/components/detail/ContainContent'
@@ -123,7 +123,7 @@ export default {
     RelatedRecommend,
     bottomBar,
     MyIcon,
-    // CommentBox,
+    CommentBox,
   },
   mixins: [imHandle],
   props: {
@@ -185,6 +185,9 @@ export default {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
     }),
+    comment() {
+      document.querySelector('#comment').scrollIntoView(true)
+    },
     scrollHandle({ scrollTop }) {
       // 滚动事件
       if (scrollTop > 216) {
