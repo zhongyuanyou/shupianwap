@@ -194,7 +194,7 @@ export default {
       },
       // 客户单付款状态CODE对应文字
       PAYSTATUSCODENAME: {
-        ORDER_CUS_PAY_STATUS_UN_PAID: '未支付',
+        ORDER_CUS_PAY_STATUS_UN_PAID: '待付款',
         ORDER_CUS_PAY_STATUS_PART_PAID: '部分支付',
         ORDER_CUS_PAY_STATUS_COMPLETED_PAID: '已完成',
       },
@@ -310,8 +310,11 @@ export default {
           // 客户单的分批支付信息
           this.payList = res
           this.loading = false
-          if (this.fromPage === 'orderList') {
-            // 从订单列表页发起的操作
+          if (
+            this.fromPage === 'orderList' ||
+            this.fromPage === 'orderDetail'
+          ) {
+            // 从订单列表页和详情页发起的操作
             this.checkCusBatchPayType()
           } else if (this.fromPage === 'nodeDetail') {
             // 账单明细页面则筛选该订单下的选中商品的支付列表信息
@@ -527,8 +530,18 @@ export default {
         orderSkuIds = arr1.map((item) => {
           return item.id
         })
-      } else {
+      } else if (this.fromPage === 'orderDetail' && !orderSkuIds) {
+        const ids = []
+        this.orderData.orderSkuList.forEach((item) => {
+          if (
+            item.skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
+            item.skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED'
+          )
+            ids.push(item.id)
+        })
         // 订单详情页里的确认完成为单个服务商品的商品id
+        orderSkuIds = ids
+      } else {
         orderSkuIds = new Array(1).fill(orderSkuIds)
       }
       const params = {

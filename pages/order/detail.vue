@@ -391,7 +391,6 @@ export default {
             // 当订单状态不为已取消且支付状态不为已完成时展示付款入口
             this.showPayBtn = true
           }
-          this.getBatchList()
           this.hasData = true
           this.loading = false
           this.cusOrderPayType = this.checkPayType()
@@ -412,14 +411,6 @@ export default {
             arr1 = arr1.concat(orders[i].skuDetails)
           }
           this.orderData.orderSkuList = arr1
-
-          // if (
-          //   this.orderData.cusOrderPayStatusNo !==
-          //   'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
-          // ) {
-          //   // 当客户单支付状态不等于已完成时调用分批支付列表
-          //   this.getBatchList()
-          // }
         })
         .catch((err) => {
           this.loading = false
