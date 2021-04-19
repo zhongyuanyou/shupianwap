@@ -27,7 +27,7 @@
         @load="onLoad"
       >
         <div v-for="(item, index) in recommendList" :key="index" class="list">
-          <img :src="item.avatar" alt="" />
+          <img :src="item.avatar" alt="" @click="goUserInfo(item)" />
           <div class="name">{{ item.userName }}</div>
           <div class="invitation" @click="invitItem(item)">邀请</div>
         </div>
@@ -184,11 +184,10 @@ export default {
       return res
     },
     backPage() {
-      if (this.$route.query.fromPage === 'invitationSearch') {
-        this.$router.push('/known/home')
-      } else {
-        this.$back()
-      }
+      this.$back()
+    },
+    goUserInfo(item) {
+      this.$router.push({ path: '/known/home', query: { homeUserId: item.id } })
     },
   },
 }
