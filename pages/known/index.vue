@@ -219,15 +219,14 @@ export default {
       {
         params: {
           // type 1 获取企大顺导航
-          type: store.state.app.isInApp ? 1 : '',
-          // type: 1,
+          // type: store.state.app.isInApp ? 1 : '',
+          type: 1,
         },
       }
     )
+    console.log(data)
     return {
       tabs: data,
-      morePlate: data.slice(4, data.length),
-      myPlate: data.slice(0, 3),
     }
   },
   data() {
