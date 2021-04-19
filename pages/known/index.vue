@@ -260,6 +260,7 @@ export default {
     }
     // this.containerStyle['padding-top'] = this.appInfo.statusBarHeight + 'px'
     this.appStyle['padding-top'] = this.statusBarHeight + 'px'
+    this.init()
   },
   methods: {
     init() {
