@@ -19,7 +19,7 @@
       ></my-icon>
     </div>
 
-    <sp-sticky :offset-top="isInApp ? statusBarHeight : 0">
+    <sp-sticky :offset-top="isInApp ? statusBarHeight : '0'">
       <div class="category_box">
         <sp-tabs
           v-model="active"
@@ -245,12 +245,10 @@ export default {
     }
   },
   computed: {
-    /*
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo,
     }),
-    */
     userInfo() {
       return this.$store.state.user
     },
