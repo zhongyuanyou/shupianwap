@@ -248,6 +248,7 @@ export default {
         this.myPlate = this.tabs.filter(
           (item) => !this.morePlate.some((ele) => ele.id === item.id)
         )
+        this.tabs = JSON.parse(JSON.stringify(this.myPlate))
       }
     },
     toggleTabs() {
