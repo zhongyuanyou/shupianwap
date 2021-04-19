@@ -26,7 +26,7 @@
         }"
         v-html="heightLightHtml(description)"
       ></p>
-      <div v-if="goodstype.type === 'serve'" class="tags">
+      <div v-if="goodstype.type === 'serve' && tags.length > 0" class="tags">
         <span v-for="(item, index) in tags" :key="index">{{ item.name }}</span>
       </div>
       <div v-if="itemData.slogan" class="slogan">

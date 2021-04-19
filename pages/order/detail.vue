@@ -406,6 +406,9 @@ export default {
           const orders = this.orderData.orderSkuList
           let arr1 = []
           for (let i = 0; i < orders.length; i++) {
+            orders[i].skuDetails.forEach((item) => {
+              item.skuDetailInfo = orders[i].skuDetailInfo
+            })
             arr1 = arr1.concat(orders[i].skuDetails)
           }
           this.orderData.orderSkuList = arr1
