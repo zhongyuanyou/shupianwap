@@ -1,6 +1,6 @@
 <template>
-  <div class="item">
-    <div class="item_title" @click="toDetail(item)">
+  <div class="item" @click="toDetail(item)">
+    <div class="item_title">
       {{ item.title }}
     </div>
 
@@ -11,11 +11,11 @@
             :src="item.avatar"
             alt=""
             class="userPhoto"
-            @click="goUserDetail(item)"
+            @click.stop="goUserDetail(item)"
           />
           <div class="userName">{{ item.userName }}</div>
         </div>
-        <p class="content" @click="toDetail(item)">
+        <p class="content">
           {{ item.contentText }}
         </p>
       </div>
