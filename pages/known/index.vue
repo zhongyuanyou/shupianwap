@@ -18,7 +18,10 @@
         @click.native="openArticle"
       ></my-icon>
     </div>
-
+    <div
+      :class="[isInApp ? 'top-safe-app' : '']"
+      :style="[isInApp ? tapSafeApp : '']"
+    ></div>
     <sp-sticky :offset-top="isInApp ? statusBarHeight : '0'">
       <div class="category_box">
         <sp-tabs
@@ -214,8 +217,8 @@ export default {
       {
         params: {
           // type 1 获取企大顺导航
-          // type: store.state.app.isInApp ? 1 : '',
-          type: 1,
+          type: store.state.app.isInApp ? 1 : '',
+          // type: 1,
         },
       }
     )
@@ -235,12 +238,14 @@ export default {
       myPlate: [],
       morePlate: [],
       active: 0,
-      isInApp: 1,
       statusBarHeight: '',
       appStyle: {
         'padding-left': '12px',
         'padding-right': '16px',
         'padding-top': '',
+      },
+      tapSafeApp: {
+        height: '',
       },
     }
   },
@@ -260,6 +265,8 @@ export default {
     }
     // this.containerStyle['padding-top'] = this.appInfo.statusBarHeight + 'px'
     this.appStyle['padding-top'] = this.statusBarHeight + 'px'
+    this.tapSafeApp.height = this.statusBarHeight + 'px'
+    this.init()
   },
   methods: {
     init() {
@@ -320,11 +327,14 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.app-safe-top {
-  height: 20px;
+.top-safe-app {
+  position: fixed;
+  top: 0;
   width: 100%;
+  background: #fff;
+  z-index: 99;
 }
-.sp-sticky {
+/deep/ .sp-sticky {
   background: #fff;
 }
 .active {
