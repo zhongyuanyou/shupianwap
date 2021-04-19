@@ -32,7 +32,8 @@ export default {
   .container_body {
     .default {
       text-align: center;
-      margin-top: 132px;
+      padding-top: 132px;
+      height: 1120px;
       > img {
         width: 340px;
         height: 340px;
