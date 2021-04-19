@@ -41,10 +41,7 @@
       </div>
     </sp-sticky>
 
-    <Answer
-      v-if="tabs[active].executionParameters === 'huida'"
-      :answer-list="answerList"
-    />
+    <Answer v-if="tabs[active].executionParameters === 'huida'" />
 
     <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
       >关注</Attention
@@ -211,7 +208,7 @@ export default {
       knownApi.questionArticle.categoryList,
       {
         params: {
-          // type 1 获取企大顺导航 2 获取薯片wap和app导航
+          // type 1 获取企大顺导航
           type: store.state.app.isInApp ? 1 : '',
         },
       }
@@ -222,7 +219,6 @@ export default {
   },
   data() {
     return {
-      answerList: [],
       editFinish: '编辑',
       showPop: false,
       showIcon: false,
@@ -271,27 +267,6 @@ export default {
   methods: {
     toggleTabs() {
       console.log(this.active)
-    },
-    // 请求回答列表
-    async getAnswerList(limit, page) {
-      const params = {
-        handleUserId: this.userInfo.userId || this.$cookies.get('userId'),
-        type: 1,
-        limit,
-        page,
-      }
-
-      const { code, message, data } = await this.$axios.get(
-        knownApi.question.writeAnswer,
-        { params }
-      )
-      if (code === 200) {
-        if (data.rows.length > 0) {
-          this.answerList = data.rows
-        } else {
-        }
-      } else {
-      }
     },
     async isLogin() {
       if (this.userInfo.userId && this.userInfo.token) {
