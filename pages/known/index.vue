@@ -85,7 +85,7 @@
               :class="status ? '' : index < 3 ? 'active' : ''"
               class="item"
             >
-              {{ item }}
+              <div class="item_name">{{ item.name }}</div>
               <my-icon
                 v-show="showIcon"
                 name="guanbi_mian"
@@ -108,7 +108,7 @@
         <div class="list">
           <div class="list_items">
             <div v-for="(item, index) in morePlate" :key="index" class="item">
-              {{ item }}
+              <div class="item_name">{{ item.name }}</div>
               <my-icon
                 v-show="showIcon"
                 name="fabu_mian"
@@ -218,6 +218,8 @@ export default {
     )
     return {
       tabs: data,
+      morePlate: data.slice(4, data.length),
+      myPlate: data.slice(0, 3),
     }
   },
   data() {
@@ -228,32 +230,8 @@ export default {
       showIcon: false,
       status: true,
       showArticlePop: false,
-      myPlate: [
-        '关注',
-        '推荐',
-        '热榜',
-        '法律',
-        '交易',
-        '知产',
-        '知识',
-        '互联网',
-        '工商注册',
-        '办证',
-        '刻章',
-      ],
-      morePlate: [
-        '关注',
-        '推荐',
-        '热榜',
-        '法律',
-        '交易',
-        '知产',
-        '知识',
-        '互联网',
-        '工商注册',
-        '办证',
-        '刻章',
-      ],
+      myPlate: [],
+      morePlate: [],
       active: 0,
     }
   },
@@ -320,6 +298,7 @@ export default {
         this.showIcon = true
         this.editFinish = '完成'
         this.status = false
+        localStorage.setItem('tabsList', JSON.stringify(this.myPlate))
       } else {
         this.showIcon = false
         this.editFinish = '编辑'
@@ -580,6 +559,15 @@ export default {
               top: 0;
               right: 0;
             }
+            > .item_name {
+              width: 84px;
+              height: 28px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
+              text-align: center;
+            }
           }
           div:nth-child(4n + 4) {
             margin-right: 0;
@@ -650,6 +638,15 @@ export default {
               position: absolute;
               top: 0;
               right: 0;
+            }
+            > .item_name {
+              width: 84px;
+              height: 28px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
+              text-align: center;
             }
           }
           div:nth-child(4n + 4) {
