@@ -30,28 +30,27 @@ export default {
     // 判断是否登录
     judgeLoginMixin(needUserInfo = false) {
       return new Promise((resolve) => {
-        resolve(true)
-        // if (this.userId && this.token && this.userType) {
-        //   if (needUserInfo) {
-        //     // 获取用户信息
-        //     this.$axios
-        //       .get(userinfoApi.info, {
-        //         params: { id: this.userId },
-        //       })
-        //       .then((res) => {
-        //         if (res.code === 200 && res.data.id) {
-        //           this.$store.dispatch('user/setInfo', res.data)
-        //           resolve(res.data)
-        //         } else {
-        //           this.$xToast.warning('获取用户信息失败')
-        //         }
-        //       })
-        //   } else {
-        //     resolve(true)
-        //   }
-        // } else {
-        //   this.clearUserInfoAndJumpLoging()
-        // }
+        if (this.userId && this.token && this.userType) {
+          if (needUserInfo) {
+            // 获取用户信息
+            this.$axios
+              .get(userinfoApi.info, {
+                params: { id: this.userId },
+              })
+              .then((res) => {
+                if (res.code === 200 && res.data.id) {
+                  this.$store.dispatch('user/setInfo', res.data)
+                  resolve(res.data)
+                } else {
+                  this.$xToast.warning('获取用户信息失败')
+                }
+              })
+          } else {
+            resolve(true)
+          }
+        } else {
+          this.clearUserInfoAndJumpLoging()
+        }
       })
     },
     /**
