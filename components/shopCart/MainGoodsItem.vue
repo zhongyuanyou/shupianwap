@@ -26,7 +26,7 @@
           color="#F8F8F8"
           text-color="#999999"
           size="large"
-          @click="handleSkuToDetail(mainData.id)"
+          @click="handleGoDetail"
         >
           <span class="goods-sku__text"> {{ mainData.skuAttrName }}</span>
         </sp-tag>
@@ -297,9 +297,7 @@ export default {
             }
           }
         )
-      }
-      // 浏览器跳转
-      if (!this.isInApp) {
+      } else {
         this.$router.push({
           path: '/detail',
           query: {
