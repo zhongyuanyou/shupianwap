@@ -74,8 +74,8 @@
           </div>
         </div>
         <div v-else class="databox nodatabox">
-          <div v-if="datalist.length > 0" class="listbox">
-            <div v-for="(item, index) in datalist" :key="index" class="nolist">
+          <div v-if="nolist.length > 0" class="listbox">
+            <div v-for="(item, index) in nolist" :key="index" class="nolist">
               <div class="top">
                 <div class="left">
                   <h1>{{ item.reducePrice }}</h1>
@@ -182,15 +182,14 @@ export default {
       num: 0,
     }
   },
+  mounted() {},
   methods: {
     sum() {
       order
         .getcalculation(
           { axios: this.$axios },
           {
-            price:
-              this.$parent.order.salesPrice ||
-              this.$parent.order.needPayTotalMoney,
+            price: this.$parent.price,
             culation: this.checkarr.reducePrice,
           }
         )

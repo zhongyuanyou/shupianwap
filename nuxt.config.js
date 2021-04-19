@@ -134,6 +134,7 @@ module.exports = {
   },
   buildModules: ['@nuxtjs/eslint-module'],
   modules: [
+    '@nuxtjs/axios',
     '@nuxtjs/proxy',
     '@nuxtjs/style-resources',
     ['cookie-universal-nuxt', { parseJSON: true }],

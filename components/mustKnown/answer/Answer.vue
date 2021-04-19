@@ -14,91 +14,38 @@
         ></sp-tab>
       </sp-tabs>
     </div>
-    <!-- <div class="answer_container--line"></div> -->
-    <!-- 回答推荐 start -->
-    <div v-if="showItem" class="answer_item">
-      <sp-list
-        v-if="answerList.length"
-        v-model="loading"
-        :finished="finished"
-        offset="0"
-        finished-text="没有更多了"
-      >
-        <sp-cell v-for="(item, index) in answerList" :key="index">
-          <sp-skeleton :row="6" :loading="recommendPlanner.length == 0">
-            <div class="item" @click="$router.push('/known/detail/article')">
-              <div class="item_content">
-                <div class="item_content_lf">
-                  <div class="item_Info">
-                    <div class="user_photo">
-                      <img :src="item.avatar" alt="" />
-                    </div>
-                    <div class="user_name">
-                      <p>{{ item.userName }}</p>
-                      <div class="user_answer">的提问期待你的解答30分钟前</div>
-                    </div>
-                  </div>
-                  <p class="content">
-                    {{ item.contentText }}
-                  </p>
+    <sp-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      class="list"
+      @load="onLoad"
+    >
+      <sp-cell v-for="(item, index) in list" :key="index">
+        <div class="item" @click="$router.push('/known/detail/article')">
+          <div class="item_content">
+            <div class="item_content_lf">
+              <div class="item_Info">
+                <div class="user_photo">
+                  <img :src="item.avatar" alt="" />
+                </div>
+                <div class="user_name">
+                  <p>{{ item.userName }}</p>
+                  <div class="user_answer">的提问期待你的解答30分钟前</div>
                 </div>
               </div>
-              <div class="item_bottom">
-                <p>{{ item.answerCount }} 回答 · {{ item.collectCount }}收藏</p>
-                <div class="btn" @click="goAnswer(item.id)">写回答</div>
-              </div>
-            </div>
-          </sp-skeleton>
-        </sp-cell>
-      </sp-list>
-    </div>
-    <!-- 回答推荐 end -->
-    <!-- 回答邀请 start -->
-    <div v-if="showInvite" class="answer_invite">
-      <sp-list
-        v-if="inviteList.length"
-        v-model="loading"
-        :finished="finished"
-        offset="0"
-        finished-text="没有更多了"
-      >
-        <sp-cell v-for="(item, index) in inviteList" :key="index">
-          <div class="item">
-            <div class="item_content">
-              <div class="item_content_lf">
-                <div
-                  class="item_Info"
-                  @click="
-                    $router.push({
-                      path: '/known/detail/article',
-                      query: { id: item.id },
-                    })
-                  "
-                >
-                  最近{{ item.browseCount / 10000 }}万人浏览
-                </div>
-                <p
-                  class="content"
-                  @click="
-                    $router.push({
-                      path: '/known/detail/article',
-                      query: { id: item.id },
-                    })
-                  "
-                >
-                  {{ item.contentText }}
-                </p>
-              </div>
-            </div>
-            <div class="item_bottom">
-              <p>{{ item.answerCount }}回答 · {{ item.collectCount }}收藏</p>
-              <div class="btn" @click="goAnswer(item.id)">写回答</div>
+              <p class="content">
+                {{ item.contentText }}
+              </p>
             </div>
           </div>
-        </sp-cell>
-      </sp-list>
-    </div>
-    <!-- 回答问题 end -->
+          <div class="item_bottom">
+            <p>{{ item.answerCount }} 回答 · {{ item.collectCount }}收藏</p>
+            <div class="btn" @click="goAnswer(item.id)">写回答</div>
+          </div>
+        </div>
+      </sp-cell>
+    </sp-list>
   </div>
 </template>
 <script>
@@ -126,25 +73,15 @@ export default {
     [Cell.name]: Cell,
     [Skeleton.name]: Skeleton,
   },
-  props: {
-    answerList: {
-      type: Array,
-      default: () => {
-        return []
-      },
-    },
-  },
   data() {
     return {
-      inviteList: [],
-      haisdaas: true,
-      showItem: true,
-      showInvite: false,
       answerTabs: ['推荐', '邀请'],
       active: 2,
       loading: true,
       finished: false,
-      tabIndex: 0,
+      list: [],
+      page: 1,
+      limit: 10,
     }
   },
   computed: {
@@ -153,59 +90,43 @@ export default {
     },
   },
   methods: {
-    tabChange(name, title) {
-      console.log('name', name)
-      this.tabIndex = name
-      if (this.tabIndex === 0) {
-        this.showItem = true
-        this.showInvite = false
-        this.getAnswerList()
-      } else if (this.tabIndex === 1) {
-        console.log('this.tabIndex', this.tabIndex)
-        this.showInvite = true
-        this.showItem = false
-        this.getList()
-      }
+    tabChange() {
+      console.log(this.active)
+      this.page = 1
+      this.limit = 10
+      this.list = []
+      this.finished = false
+      this.loading = true
+      this.writeAnswerApi()
     },
-    // 请求回答列表
-    async getAnswerList() {
-      const params = {
-        handleUserId: this.userInfo.userId || this.$cookies.get('userId'),
-        type: 1,
-      }
-
-      const { code, message, data } = await this.$axios.get(
-        knownApi.question.writeAnswer,
-        { params }
-      )
-      if (code === 200) {
-        if (data.rows.length > 0) {
-          console.log('this.rows', data.rows)
-          this.answerList = data.rows
-        } else {
-        }
-      } else {
-        console.log(message)
-      }
+    onLoad() {
+      this.writeAnswerApi()
     },
-    // 请求邀请
-    async getList() {
-      const params = {
-        handleUserId: this.userInfo.userId || this.$cookies.get('userId'),
-        type: 2,
-      }
-      const { code, message, data } = await this.$axios.get(
-        knownApi.question.writeAnswer,
-        { params }
-      )
-      if (code === 200) {
-        if (data.rows.length > 0) {
-          this.inviteList = data.rows
-          console.log('this.inviteList', this.inviteList)
-        } else {
+    async writeAnswerApi() {
+      try {
+        const params = {
+          type: this.active ? 2 : 1, // 1 推荐回答 2 邀请回答
+          handleUserId: this.userInfo.userId,
+          page: this.page,
+          limit: this.limit,
         }
-      } else {
-        console.log(message)
+        const { code, data } = await this.$axios.get(
+          knownApi.question.writeAnswer,
+          { params }
+        )
+        if (code === 200) {
+          this.list.push(...data.rows)
+          this.page++
+          if (this.page > data.totalPage) {
+            this.finished = true
+          }
+        } else {
+          this.error = true
+        }
+        this.loading = false
+      } catch (e) {
+        this.error = true
+        this.loading = false
       }
     },
     // 去回答页面
@@ -281,180 +202,104 @@ export default {
     background: #dddddd;
   }
 }
-.answer_item {
-  .item {
-    background: #fff;
-    border-radius: 12px;
-    // position: relative;
-    .item_title {
-      height: 36px;
-      font-size: 36px;
-      font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
-      color: #1a1a1a;
-      line-height: 36px;
-    }
+.item {
+  background: #fff;
+  border-radius: 12px;
+  // position: relative;
+  .item_title {
+    height: 36px;
+    font-size: 36px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #1a1a1a;
+    line-height: 36px;
+  }
 
-    .item_content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      .item_content_lf {
-        .item_Info {
-          display: flex;
-          margin-bottom: 20px;
-          align-items: center;
-          .user_photo {
-            width: 72px;
-            height: 72px;
-            background: #6d7177;
-            margin-right: 16px;
+  .item_content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    .item_content_lf {
+      .item_Info {
+        display: flex;
+        margin-bottom: 20px;
+        align-items: center;
+        .user_photo {
+          width: 72px;
+          height: 72px;
+          background: #6d7177;
+          margin-right: 16px;
+          border-radius: 50%;
+          img {
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            img {
-              width: 100%;
-              height: 100%;
-              border-radius: 50%;
-            }
-          }
-          .user_name {
-            height: 0.72rem;
-            padding: 3px 0;
-            p {
-              height: 30px;
-              font-size: 30px;
-              font-family: PingFangSC-Medium, PingFang SC;
-              font-weight: 500;
-              color: #222222;
-              line-height: 30px;
-            }
-            .user_answer {
-              height: 24px;
-              font-size: 24px;
-              font-family: PingFangSC-Regular, PingFang SC;
-              font-weight: 400;
-              color: #999999;
-              line-height: 24px;
-              margin-top: 12px;
-            }
           }
         }
-        .content {
-          min-height: 80px;
-          font-size: 30px;
-          font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
-          color: #222222;
-          line-height: 40px;
-          // margin-right: 0.32rem;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-          overflow: hidden;
+        .user_name {
+          height: 0.72rem;
+          padding: 3px 0;
+          p {
+            height: 30px;
+            font-size: 30px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #222222;
+            line-height: 30px;
+          }
+          .user_answer {
+            height: 24px;
+            font-size: 24px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #999999;
+            line-height: 24px;
+            margin-top: 12px;
+          }
         }
       }
-    }
-    .item_bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      p {
-        font-size: 28px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #999999;
-        line-height: 28px;
-      }
-      .btn {
-        // position: absolute;
-        // top: 232px;
-        // right: 0;
-        width: 160px;
-        height: 64px;
-        background: #4974f5;
-        border-radius: 8px;
-        font-size: 26px;
+      .content {
+        min-height: 80px;
+        font-size: 30px;
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
-        color: #ffffff;
-        line-height: 64px;
-        text-align: center;
-        vertical-align: middle;
+        color: #222222;
+        line-height: 40px;
+        // margin-right: 0.32rem;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
       }
     }
   }
-}
-.answer_invite {
-  .item {
-    background: #fff;
-    border-radius: 12px;
-    // position: relative;
-    .item_title {
-      height: 36px;
-      font-size: 36px;
+  .item_bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    p {
+      font-size: 28px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #999999;
+      line-height: 28px;
+    }
+    .btn {
+      // position: absolute;
+      // top: 232px;
+      // right: 0;
+      width: 160px;
+      height: 64px;
+      background: #4974f5;
+      border-radius: 8px;
+      font-size: 26px;
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
-      color: #1a1a1a;
-      line-height: 36px;
-    }
-
-    .item_content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      .item_content_lf {
-        .item_Info {
-          height: 28px;
-          font-size: 28px;
-          font-family: PingFangSC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #999999;
-          line-height: 28px;
-          margin-bottom: 32px;
-        }
-        .content {
-          min-height: 80px;
-          font-size: 30px;
-          font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
-          color: #222222;
-          line-height: 40px;
-          // margin-right: 0.32rem;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-          overflow: hidden;
-        }
-      }
-    }
-    .item_bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      p {
-        font-size: 28px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #999999;
-        line-height: 28px;
-      }
-      .btn {
-        // position: absolute;
-        // top: 232px;
-        // right: 0;
-        width: 160px;
-        height: 64px;
-        background: #4974f5;
-        border-radius: 8px;
-        font-size: 26px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #ffffff;
-        line-height: 64px;
-        text-align: center;
-        vertical-align: middle;
-      }
+      color: #ffffff;
+      line-height: 64px;
+      text-align: center;
+      vertical-align: middle;
     }
   }
 }

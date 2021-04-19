@@ -47,7 +47,7 @@
         {{ item.remarkCount || '评论' }}
       </div>
     </div>
-    <div v-else class="bottom">
+    <div v-if="item.type === 1 && item.status === 1" class="bottom">
       <div class="bottom_item" @click="invitation(item.id)">
         <my-icon name="yaoqing" size="0.36rem" color="#999999"></my-icon>
         邀请
