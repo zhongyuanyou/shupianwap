@@ -7,6 +7,7 @@
         :disabled="true"
         :icon-left="0.24"
         placeholder="请输入搜索内容"
+        :style="{ paddingTop: (appInfo.statusBarHeight || 10) + 'px' }"
         @clickInputHandle="keyClickHandle"
       >
         <template v-slot:left>
@@ -140,6 +141,9 @@ export default {
       userInfo: (state) => state.user.userInfo, // 登录的用户信息
       userId: (state) => state.user.userId, // userId 用于判断登录
     }),
+    appInfo() {
+      return this.$store.state.app.appInfo
+    },
   },
   mounted() {
     const query = this.$route.query
