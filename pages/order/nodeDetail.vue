@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <Header title="节点明细" @leftClickFuc="onClickLeft" />
-    <div class="banner">
+    <div v-if="skuInfo.orderSaleName" class="banner">
       <p class="goods-name">{{ skuInfo.orderSaleName }}</p>
       <p class="goods-skus">
         {{ skuInfo.skuExtInfo }}
@@ -23,18 +23,14 @@
         <p class="money-area">
           <span
             v-if="
-              nodeNumber === 2 &&
-              item.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
-              index === 0
+              item.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' && index === 0
             "
             class="span1"
             >定金:</span
           >
           <span
             v-else-if="
-              nodeNumber === 2 &&
-              item.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
-              index === 1
+              item.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' && index === 1
             "
             class="span1"
             >尾款:</span
@@ -55,7 +51,7 @@
         </p>
       </div>
     </div>
-    <LoadingCenter v-show="loading" />
+    <LoadingCenter v-show="loading || !skuInfo.orderSaleName" />
   </div>
 </template>
 
@@ -82,7 +78,6 @@ export default {
       fromPage: 'nodeDetail',
       nodeList: [],
       nodeTotalMoney: '', // 该产品所有节点金额总额
-      nodeNumber: 0,
     }
   },
   mounted() {
@@ -112,8 +107,7 @@ export default {
           { id: this.orderId, cusOrderId: this.cusOrderId }
         )
         .then((res) => {
-          console.log('res', res)
-          this.skuInfo = res.data.orderSkuList.filter((item) => {
+          this.skuInfo = res.orderSkuList.filter((item) => {
             return item.id === this.orderSkuId
           })[0]
         })
