@@ -69,19 +69,19 @@ export default function (ctx, inject) {
       }
       // 获取用户信息
       if (
-        app.$cookies.get('X-Req-UserNo', {
+        app.$cookies.get('userNo', {
           path: '/',
         })
       ) {
         config.headers['X-Req-UserNo'] = app.$cookies.get('userNo', {
           path: '/',
         })
-        config.headers['X-Req-UserName'] = app.$cookies.get('userName', {
-          path: '/',
-        })
-        config.headers['X-Req-UserPhone'] = app.$cookies.get('userPhone', {
-          path: '/',
-        })
+        // config.headers['X-Req-UserName'] = app.$cookies.get('userName', {
+        //   path: '/',
+        // })
+        // config.headers['X-Req-UserPhone'] = app.$cookies.get('userPhone', {
+        //   path: '/',
+        // })
       }
       // 请求头设置站点code
       const cityCode = app.$cookies.get('currentCity', {
