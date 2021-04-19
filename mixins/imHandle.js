@@ -84,8 +84,15 @@ export default {
         }
         params = Object.assign(params, data)
         this.imExample.createSession(params, (res) => {
+          console.log(res)
           if (res.code === 200) {
-            window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
+            const myInfo = localStorage.getItem('myInfo')
+              ? JSON.parse(localStorage.getItem('myInfo'))
+              : {}
+            const token = this.userType ? this.token : myInfo.token
+            const userId = this.userType ? this.userId : myInfo.token
+            const userType = this.userType || 'VISITOR'
+            window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}`
           } else if (res.code === 5223) {
             this.clearUserInfoAndJumpLoging()
           } else {
