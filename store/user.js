@@ -54,11 +54,21 @@ export const mutations = {
     state.avatar = String(data.avatar)
   },
   CLEAR_USER(state) {
-    this.$cookies.remove('token')
-    this.$cookies.remove('userId')
-    this.$cookies.remove('userType')
-    this.$cookies.remove('userName')
-    this.$cookies.remove('userPhone')
+    this.$cookies.remove('token', {
+      path: '/',
+    })
+    this.$cookies.remove('userId', {
+      path: '/',
+    })
+    this.$cookies.remove('userType', {
+      path: '/',
+    })
+    this.$cookies.remove('userName', {
+      path: '/',
+    })
+    this.$cookies.remove('userPhone', {
+      path: '/',
+    })
     state.token = ''
     state.userId = ''
     state.userType = ''
@@ -68,7 +78,6 @@ export const mutations = {
     state.realStatus = ''
     state.mainAccountFull = ''
     state.userInfo = {}
-    console.log(this.$cookies.remove(), state.token, 123)
   },
   SET_INFO(state, data = {}) {
     this.$cookies.set('userNo', String(data.no), {
