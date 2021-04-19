@@ -6,6 +6,7 @@
         v-model.trim="value"
         :icon-left="0.24"
         placeholder="请输入搜索关键词"
+        :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
         @searchKeydownHandle="keyClickHandle"
       >
         <template v-slot:center>
@@ -74,6 +75,11 @@ export default {
       knownHistory: [], // 搜索历史记录
       tabIndex: '1', // 搜索结果页面tab,默认为问题:1
     }
+  },
+  computed: {
+    appInfo() {
+      return this.$store.state.app.appInfo
+    },
   },
   mounted() {
     // 历史记录从localStorage中取

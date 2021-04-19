@@ -183,7 +183,9 @@ export default {
         this.$refs.classification[0].handleClickNav(0)
         this.$refs.classification[0].active = 0
       } else if (this.$refs.service[1].showPopup === true) {
-        this.$refs.price[0].minInput('')
+        this.$refs.price[0].minPrice = ''
+        this.$refs.price[0].maxPrice = ''
+        this.$refs.price[0].$refs.selectCheckBox.clearSelect()
       }
     },
     confirm() {

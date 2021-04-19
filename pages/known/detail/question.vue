@@ -3,7 +3,7 @@
     <Header :title="questionDetials.title">
       <template #left>
         <div>
-          <sp-icon name="arrow-left" size="0.4rem" @click="$router.back()" />
+          <sp-icon name="arrow-left" size="0.4rem" @click="goBack" />
         </div>
       </template>
       <template #right>
@@ -107,7 +107,7 @@
         <div
           class="box"
           :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
-          @click="$router.push('/known/detail/invitationList')"
+          @click="goInvitionPage"
         >
           <my-icon name="yaoqinghuida_mian" size="0.32rem"></my-icon>
           <p>邀请回答</p>
@@ -165,7 +165,9 @@
         v-model="loading"
         :finished="finished"
         finished-text="没有更多了"
-        @load="getQuesData"
+        :error.sync="error"
+        error-text="请求失败，点击重新加载"
+        @load="onLoad"
       >
         <div
           v-for="(item, index) in questionList"
@@ -250,6 +252,7 @@
 
 <script>
 import { Icon, Toast, List, Popup, Dialog } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import Header from '@/components/common/head/header'
 import { knownApi } from '@/api'
 export default {
@@ -261,24 +264,6 @@ export default {
     [Popup.name]: Popup,
     [Dialog.name]: Dialog,
   },
-  async asyncData({ $axios, store, query }) {
-    const res = await $axios.get(knownApi.questionArticle.detail, {
-      params: {
-        id: query.id,
-        userId: store.state.user.userId,
-        userHandleFlag: store.state.user.userId ? 1 : 0,
-      },
-    })
-    if (res.data.categoryName) {
-      res.data.categoryName = res.data.categoryName.split(',')
-    }
-    if (res.data.contentImageUrl) {
-      res.data.contentImageUrl = res.data.contentImageUrl.split(',')
-    }
-    return {
-      questionDetials: res.data,
-    }
-  },
   data() {
     return {
       title: '',
@@ -287,22 +272,25 @@ export default {
       fixedshow: false,
       scrollTop: 0,
       questionDetials: '',
-      questionList: '',
+      questionList: [],
       releaseStatus: '',
       orderBy: 'totalBrowseCount=desc',
       handleLikeType: null,
       finished: false,
       page: 1,
       loading: false,
+      limit: 15,
+      error: false,
       total: '',
       popupShow: false,
       currentDetailsId: '',
     }
   },
   computed: {
-    userInfo() {
-      return this.$store.state.user
-    },
+    ...mapState({
+      userId: (state) => state.user.userId,
+      userInfo: (state) => state.user, // 登录的用户信息
+    }),
   },
   created() {
     if (this.$route.query.id) {
@@ -313,72 +301,72 @@ export default {
     }
   },
   mounted() {
-    console.log(this.questionDetials)
     window.addEventListener('scroll', this.watchScroll)
+    this.getDetailApi()
   },
   destroyed() {
     window.removeEventListener('scroll', this.watchScroll)
   },
   methods: {
+    onLoad() {
+      this.getQuesDataApi()
+    },
     goAnsDetail(id) {
       this.$route.push({
         path: '/known/detail/answer',
         query: id,
       })
     },
-    getDetailData() {
-      this.loading = true
-      this.$axios
-        .get(knownApi.questionArticle.detail, {
+    async getDetailApi() {
+      try {
+        const res = await this.$axios.get(knownApi.questionArticle.detail, {
           params: {
             id: this.currentDetailsId,
-            userHandleFlag: 1,
+            userId: this.userId,
+            userHandleFlag: this.userId ? 1 : 0,
           },
         })
-        .then((res) => {
-          this.loading = false
-          if (res.code === 200) {
-            this.questionDetials = res.data
-            if (this.questionDetials.contentImageUrl) {
-              this.questionDetials.contentImageUrl = this.questionDetials.contentImageUrl.split(
-                ','
-              )
-            }
-            if (this.questionDetials.categoryName) {
-              this.questionDetials.categoryName = this.questionDetials.categoryName.split(
-                ','
-              )
-            }
-            console.log(this.questionDetials.categoryName)
-          } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
+        if (res.code === 200) {
+          if (res.data.categoryName) {
+            res.data.categoryName = res.data.categoryName.split(',')
           }
-        })
+          if (res.data.contentImageUrl) {
+            res.data.contentImageUrl = res.data.contentImageUrl.split(',')
+          }
+          this.questionDetials = res.data
+        } else {
+          this.pageError()
+        }
+      } catch (e) {
+        this.pageError()
+      }
     },
-    getQuesData() {
+    pageError() {
+      this.$xToast.error('服务器加载异常,请稍后重试.')
+      const _this = this
+      setTimeout(() => {
+        _this.$back()
+      }, 1000)
+    },
+    getQuesDataApi() {
       this.$axios
         .post(knownApi.questionArticle.list, {
           sourceIds: [this.currentDetailsId],
           orderBy: this.orderBy,
           page: this.page,
           userId: this.userInfo.userId || '120',
+          limit: this.limit,
         })
         .then((res) => {
-          // this.loading = false
           if (res.code === 200) {
-            this.questionList = res.data.rows
+            this.questionList.push(...res.data.rows)
             this.total = res.data.total
-            this.loading = false
             this.page++
-            if (this.page > res.data.totalPage) {
+            if (!res.data.totalPage || this.page > res.data.totalPage) {
               this.finished = true
             }
           } else {
+            this.error = true
             Toast.fail({
               duration: 2000,
               message: '服务异常，请刷新重试！',
@@ -386,6 +374,11 @@ export default {
               className: 'my-toast-style',
             })
           }
+          this.loading = false
+        })
+        .catch((e) => {
+          this.error = true
+          this.loading = false
         })
     },
     like(type) {
@@ -475,7 +468,6 @@ export default {
     },
     deleteQues(id) {
       const curId = id
-      this.loading = true
       Dialog.confirm({
         title: '提示',
         message: '确定要删除吗？',
@@ -487,7 +479,6 @@ export default {
               currentUserId: this.userInfo.userId,
             })
             .then((res) => {
-              this.loading = false
               if (res.code === 200) {
                 this.$xToast.show({ message: '删除成功' })
                 this.$router.replace({ path: '/known' })
@@ -512,6 +503,9 @@ export default {
       console.log(value)
     },
     answersortfn(index) {
+      if (this.answersort === index) {
+        return
+      }
       this.answersort = index
       if (this.answersort === 0) {
         this.orderBy = 'totalBrowseCount=desc'
@@ -519,6 +513,7 @@ export default {
         this.orderBy = 'updateTime=desc'
       }
       this.init()
+      this.onLoad()
     },
 
     init() {
@@ -526,7 +521,7 @@ export default {
       this.questionList = []
       this.finished = false
       this.loading = true
-      this.getQuesData()
+      this.error = false
     },
 
     watchScroll() {
@@ -540,6 +535,17 @@ export default {
       } else {
         this.title = ''
       }
+    },
+    goBack() {
+      this.$back()
+    },
+    goInvitionPage() {
+      this.$router.push({
+        path: '/known/publish/question',
+        query: {
+          id: this.currentDetailsId,
+        },
+      })
     },
   },
 }
