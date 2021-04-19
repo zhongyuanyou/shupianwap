@@ -15,7 +15,9 @@
     <div class="recommend">
       <div class="titbox">
         <span>为你精选 {{ recommendList.length }} 位优质回答者</span>
-        <p @click="invitAll()">一键邀请</p>
+        <p @click="invitAll()" :class="[invitedAllFlag ? 'active' : '']">
+          {{ invitedAllFlag ? '已邀请' : '一键邀请' }}
+        </p>
       </div>
       <sp-list
         v-model="loading"
@@ -29,7 +31,13 @@
         <div v-for="(item, index) in recommendList" :key="index" class="list">
           <img :src="item.avatar" alt="" @click="goUserInfo(item)" />
           <div class="name">{{ item.userName }}</div>
-          <div class="invitation" @click="invitItem(item)">邀请</div>
+          <div
+            class="invitation"
+            :class="item.custInvited ? 'active' : ''"
+            @click="invitItem(item)"
+          >
+            {{ item.custInvited ? '已邀请' : '邀请' }}
+          </div>
         </div>
       </sp-list>
     </div>
@@ -56,13 +64,13 @@ export default {
     return {
       keywords: '',
       recommendList: [],
-      actList: [],
       error: false,
       loading: false,
       finished: false,
       page: 1,
-      limit: 15,
+      limit: 9999, // 这里一次请求所有数据 经过和付蔚杰沟通 2021/4/19
       questionId: '',
+      invitedAllFlag: false,
     }
   },
   computed: {
@@ -83,10 +91,16 @@ export default {
       })
     },
     invitAll() {
+      if (this.invitedAllFlag) {
+        return
+      }
       // 一键邀请
       this.inviteApi('all')
     },
     invitItem(item) {
+      if (item.custInvited) {
+        return
+      }
       // 邀请单个
       this.inviteApi(item)
     },
@@ -102,6 +116,9 @@ export default {
           { params }
         )
         if (code === 200) {
+          data.rows.forEach((item) => {
+            item.custInvited = false
+          })
           this.recommendList.push(...data.rows)
           this.page++
           if (this.page > data.totalPage) {
@@ -141,9 +158,14 @@ export default {
         )
         if (code === 200) {
           let message
-          if (data === 'all') {
-            message = '一键邀请成功'
+          if (datas === 'all') {
+            this.recommendList.forEach((item) => {
+              item.custInvited = true
+            })
+            this.message = '一键邀请成功'
+            this.invitedAllFlag = true
           } else {
+            datas.custInvited = true
             message = '邀请成功'
           }
           this.$xToast.show({
@@ -245,6 +267,9 @@ export default {
         font-weight: 500;
         color: #4974f5;
       }
+      > p.active {
+        color: #999;
+      }
     }
     > .listbox {
       height: calc(100% - 102px);
@@ -282,6 +307,10 @@ export default {
           font-weight: 500;
           color: #ffffff;
           margin-left: auto;
+        }
+        .invitation.active {
+          background: #f5f5f5;
+          color: #999999;
         }
       }
     }
