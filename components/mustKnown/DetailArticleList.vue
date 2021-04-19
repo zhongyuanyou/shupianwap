@@ -58,7 +58,13 @@ export default {
   },
   methods: {
     toDetail(item) {
-      this.$router.query.id = item.id
+      this.$router.replace({
+        path: '/known/detail/tran',
+        query: {
+          id: item.id,
+          page: '/known/detail/article',
+        },
+      })
     },
   },
 }
