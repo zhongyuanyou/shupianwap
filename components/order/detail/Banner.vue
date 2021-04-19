@@ -42,13 +42,14 @@
     </p>
     <div v-if="cusOrderStatusType == 1" class="msg">
       <section v-if="diff > 0">
-        请及时支付，超时订单将自动关闭<br />
         <p class="time">
+          请在
           <span>{{ time.hour }}</span>
           时<span>{{ time.min }}</span
           >分<span>{{ time.sec }}</span
-          >秒后自动关闭
+          >秒内支付
         </p>
+        超时订单将自动关闭<br />
       </section>
       <section v-else>
         <p>暂无支付信息</p>

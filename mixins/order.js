@@ -321,18 +321,18 @@ export default {
             const nodeList = res.filter((item) => {
               return item.orderSkuId === this.orderSkuId
             })
-            // 计算合计金额
+            // // 计算合计金额
             this.nodeTotalMoney = nodeList.reduce((total, item) => {
               return total + Number(item.money)
             }, 0)
             // 处理合计金额单位
-            this.nodeTotalMoney = this.changePayMoney(this.nodeTotalMoney)
+            this.nodeTotalMoney = this.regFenToYuan(this.nodeTotalMoney)
             this.nodeNumber = this.nodeList.length
             // 对支付列表进行排序
             const sortArr = []
             for (let i = 0, l = nodeList.length; i < l; i++) {
               // 处理金额
-              nodeList[i].money = this.changePayMoney(nodeList[i].money)
+              nodeList[i].money = this.regFenToYuan(nodeList[i].money)
               // 将本期应付的批次排在前面
               if (nodeList[i].alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
                 sortArr.splice(0, 0, nodeList[i])
@@ -414,7 +414,6 @@ export default {
         }
         // 当合同状态为已完成时显示查看合同按钮
         if (data.contractStatus && data.contractStatus === 'STRUTS_YWC') {
-          console.log('已完成')
           return 2
         }
       } else {
