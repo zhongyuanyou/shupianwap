@@ -68,6 +68,7 @@ export const mutations = {
     state.realStatus = ''
     state.mainAccountFull = ''
     state.userInfo = {}
+    console.log(this.$cookies.remove(), state.token, 123)
   },
   SET_INFO(state, data = {}) {
     this.$cookies.set('userNo', String(data.no), {
