@@ -153,7 +153,7 @@ export default {
             const tepMsgParams = {
               templateId: '', // 模板 id
               receiver: res.data.groupId, // 会话 id
-              senderName: userInfo.nickName || '匿名', // 发送者昵称
+              senderName: userInfo.nickName || '访客', // 发送者昵称
               msgType: msgParams.msgType, // 消息类型
               extContent: JSON.stringify(msgParams.extContent), // 路由参数
               paramJsonStr: {
