@@ -1,16 +1,23 @@
 <template>
-  <div class="item-inner">
-    <sp-image class="img" :src="item.skuImages"></sp-image>
-    <div class="right">
-      <p class="goods-name">
-        <span class="name"> {{ item.spuName || item.orderSaleName }}</span>
-        <span v-if="cusOrderPayType !== 2 && orderType" class="money1">
-          {{ changeMoney(item.skuPrice || item.skuPrice) }}元
-        </span>
-      </p>
-      <div class="sku-info">
-        <p class="sku-l">{{ item.skuExtInfo }}</p>
-        <!-- <p class="sku-l">
+  <section>
+    <div
+      v-for="(detailItem, index) in item.skuDetails"
+      :key="index"
+      class="item-inner"
+    >
+      <sp-image class="img" :src="detailItem.skuImages"></sp-image>
+      <div class="right">
+        <p class="goods-name">
+          <span class="name">
+            {{ detailItem.spuName || item.spuName || item.orderSaleName }}</span
+          >
+          <span v-if="cusOrderPayType !== 2 && orderType" class="money1">
+            {{ changeMoney(detailItem.skuPrice || detailItem.skuPrice) }}元
+          </span>
+        </p>
+        <div class="sku-info">
+          <p class="sku-l">{{ detailItem.skuExtInfo }}</p>
+          <!-- <p class="sku-l">
           <span class="btn-more" @click="showMoSku">
             <my-icon
               v-if="getValue(item.fieldList).length > 40"
@@ -26,34 +33,34 @@
             >{{ item2.fieldValue }};</span
           >
         </p> -->
-        <span class="goods-num">×{{ item.skuCount || 1 }}</span>
-      </div>
-      <div class="item-btn-area">
-        <div class="inner">
-          <!-- <sp-button @click="handleClickBtn(1)">查看底单</sp-button> -->
-          <sp-button
-            v-if="
-              item.skuStatusNo !== 'ORDER_ORDER_SERVER_STATUS_UN_PAID' &&
-              item.skuStatusNo !== 'ORDER_ORDER_TRADE_STATUS_CANCELLED'
-            "
-            @click="handleClickBtn(2, item)"
-            >办理进度</sp-button
-          >
-          <!-- 服务产品确认完成显示条件 1产品状态为已处理 2支付状态为完成支付  3用户未点确认-->
-          <sp-button
-            v-if="
-              (item.skuStatusNo === 'ORDER_ORDER_SERVER_STATUS_HANDLED' ||
-                item.skuStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED') &&
-              item.userConfirm == 0
-            "
-            type="default"
-            class="btn-confirm"
-            @click="handleClickBtn(3, item)"
-            >确认完成</sp-button
-          >
+          <span class="goods-num">×{{ item.skuCount || 1 }}</span>
         </div>
-      </div>
-      <!-- <div
+        <div class="item-btn-area">
+          <div class="inner">
+            <!-- <sp-button @click="handleClickBtn(1)">查看底单</sp-button> -->
+            <sp-button
+              v-if="
+                detailItem.skuStatusNo !== 'ORDER_ORDER_SERVER_STATUS_UN_PAID'
+              "
+              @click="handleClickBtn(2, item)"
+              >办理进度</sp-button
+            >
+            <!-- 服务产品确认完成显示条件 1产品状态为已处理 2支付状态为完成支付  3用户未点确认-->
+            <sp-button
+              v-if="
+                detailItem.skuStatusNo ===
+                  'ORDER_ORDER_SERVER_STATUS_HANDLED' &&
+                cusOrderPayStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID' &&
+                detailItem.userConfirm == 0
+              "
+              type="default"
+              class="btn-confirm"
+              @click="handleClickBtn(3, item)"
+              >确认完成</sp-button
+            >
+          </div>
+        </div>
+        <!-- <div
           v-if="item.serviceResourceList && item.serviceResourceList.length"
           class="sku-sercice"
         >
@@ -71,8 +78,8 @@
             </p>
           </div>
         </div> -->
-      <!-- 增值服务-产品中心已删除 -->
-      <!-- <div
+        <!-- 增值服务-产品中心已删除 -->
+        <!-- <div
           v-if="item.serviceResourceList && item.serviceResourceList.length"
           class="sku-sercice"
         >
@@ -90,8 +97,9 @@
             </p>
           </div>
         </div> -->
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -147,7 +155,7 @@ export default {
           break
         case 3:
           // 确认完成
-          this.$emit('confirmOrder', item.id)
+          this.$emit('confirmOrder', item.skuDetails[0].id)
           break
       }
     },
@@ -164,7 +172,7 @@ export default {
             orderId: item.orderId,
             cusOrderId: item.cusOrderId,
             skuId: item.skuId,
-            detailId: item.id,
+            detailId: item.skuDetails[0].id,
           },
         })
       } else {
@@ -175,7 +183,7 @@ export default {
             orderId: item.orderId,
             cusOrderId: item.cusOrderId,
             skuId: item.skuId,
-            detailId: item.id,
+            detailId: item.skuDetails[0].id,
           },
         })
       }

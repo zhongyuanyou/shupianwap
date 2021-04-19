@@ -6,6 +6,7 @@
         :cus-order-status-type="cusOrderStatusType"
         :cus-order-id="orderData.cusOrderId"
         :cus-order-cancel-reason="canCelReasonName"
+        :status-name="orderData.statusName"
         @getDetail="getDetail"
       />
       <div class="order-area">
@@ -375,6 +376,9 @@ export default {
             ? res.data.orderSplitAndCusVo
             : res.orderSplitAndCusVo
           this.orderData = Object.assign(cusDetail, res.data || res)
+          this.orderData.statusName = this.getStatusName(
+            this.orderData.orderStatusNo
+          )
           this.cusOrderStatusType = orderUtils.checkCusOrderStatus(
             this.orderData.cusOrderStatusNo
           )
@@ -399,6 +403,16 @@ export default {
           else {
             this.shouldPayText = '应付金额'
           }
+          const orders = this.orderData.orderSkuList
+          let arr1 = []
+          for (let i = 0; i < orders.length; i++) {
+            orders[i].skuDetails.forEach((item) => {
+              item.skuDetailInfo = orders[i].skuDetailInfo
+            })
+            arr1 = arr1.concat(orders[i].skuDetails)
+          }
+          this.orderData.orderSkuList = arr1
+
           // if (
           //   this.orderData.cusOrderPayStatusNo !==
           //   'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'

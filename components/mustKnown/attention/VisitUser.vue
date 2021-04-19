@@ -44,9 +44,6 @@ export default {
     return {}
   },
   methods: {
-    toggleTabs(index) {
-      this.nowIndex = index
-    },
     attentionMore() {
       this.$router.push({ path: '/known/more' })
     },
@@ -98,6 +95,9 @@ export default {
         flex-shrink: 0;
         margin-right: 46px;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         img {
           display: block;
           width: 100px;

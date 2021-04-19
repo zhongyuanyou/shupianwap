@@ -1,168 +1,78 @@
 <template>
-  <sp-list
-    v-if="listData.length"
-    v-model="loading"
-    :finished="finished"
-    offset="0"
-    finished-text="没有更多了"
-  >
-    <sp-cell v-for="(item, index) in listData" :key="index">
-      <div class="item">
-        <div class="item_Info">
-          <div class="userPhoto" @click="goUserDetail(item)">
-            <img :src="item.avatar" alt="" />
-          </div>
-          <div class="item_status">
-            <div class="userName" @click="goUserDetail(item)">
-              {{ item.userName }}
-            </div>
-            <div class="item_time">
-              {{ toTimeStamp(item.createTime) }}·
-              <span>{{
-                item.type == 1
-                  ? '发起了问题'
-                  : item.type == 2
-                  ? '发表了文章'
-                  : '回答了问题'
-              }}</span>
-            </div>
-          </div>
+  <div>
+    <sp-pull-refresh
+      v-model="refreshing"
+      success-text="刷新成功"
+      pulling-text="下拉即可刷新..."
+      loosing-text="释放即可刷新..."
+      loading-text="加载中..."
+      @refresh="onRefresh"
+    >
+      <sp-list
+        v-model="loading"
+        :finished="finished"
+        offset="0"
+        finished-text="没有更多了"
+        @load="attentionList"
+      >
+        <div v-for="(item, index) in list" :key="index">
+          <Item :item="item" @comments="comments" />
         </div>
-        <div class="item_title" @click="goDetailPage(item.type, item.id)">
-          {{ item.title }}
-        </div>
-        <div class="item_content" @click="goDetailPage(item.type, item.id)">
-          <p class="content">
-            {{ item.contentText }}
-          </p>
-          <img
-            v-if="item.contentImageUrl"
-            :src="item.contentImageUrl.split(',')[0]"
-            alt=""
-          />
-        </div>
-        <div class="item_bottom">
-          <span v-if="item.type === 2" @click="invite()">
-            <my-icon
-              name="yaoqing"
-              size="0.36rem"
-              color="#999999"
-              class="my_icon"
-            ></my-icon>
-            邀请
-          </span>
-          <span v-if="item.type === 2" @click="openAnswer(item.id)">
-            <my-icon
-              name="xiehuida"
-              size="0.36rem"
-              color="#999999"
-              class="my_icon"
-            ></my-icon>
-            写回答
-          </span>
-
-          <span
-            v-if="item.type === 1"
-            class="bottom_icon"
-            :class="item.isApplaudFlag === 1 ? 'like_active' : ''"
-            @click="like(item)"
-          >
-            <my-icon
-              v-if="item.isApplaudFlag === 1"
-              name="zantong_mian"
-              size="0.36rem"
-              color="#4974F5"
-              class="my_icon"
-            ></my-icon>
-            <my-icon
-              v-else
-              name="zantong"
-              size="0.36rem"
-              color="#999999"
-              class="my_icon"
-            ></my-icon>
-            <span>
-              {{ item.applaudCount > 0 ? item.applaudCount : '赞同' }}
-            </span>
-          </span>
-          <span
-            v-if="item.type === 1"
-            class="bottom_icon"
-            @click="showComment(item.id)"
-          >
-            <my-icon
-              name="pinglun"
-              size="0.36rem"
-              color="#999999"
-              class="my_icon"
-              style="margin-left: 0.26rem"
-            ></my-icon>
-            <span> 评论{{ item.remarkCount }}</span>
-          </span>
-        </div>
-      </div>
-    </sp-cell>
+      </sp-list>
+    </sp-pull-refresh>
     <comment-list
       v-model="commentShow"
       :article-id="articleId"
       @release="release"
     ></comment-list>
-  </sp-list>
+  </div>
 </template>
 <script>
-import { mapState } from 'vuex'
-import { Cell, List } from '@chipspc/vant-dgg'
+import { PullRefresh, Cell, List } from '@chipspc/vant-dgg'
 import CommentList from '@/components/mustKnown/CommentList'
+import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '@/api'
 export default {
   name: 'AttentionItem',
   components: {
+    [PullRefresh.name]: PullRefresh,
     [Cell.name]: Cell,
     [List.name]: List,
     CommentList,
-  },
-
-  props: {
-    listData: {
-      type: Array,
-      default: () => {
-        return []
-      },
-    },
+    Item,
   },
 
   data() {
     return {
       commentShow: false,
-      loading: true,
+      articleId: '',
+      refreshing: false,
+      loading: false,
       finished: false,
-      timeStamp: 0,
-      articleId: 0,
-      applaudLine: false,
-      applaudMian: true,
+      page: 1,
+      limit: 10,
+      list: [],
     }
   },
   computed: {
-    ...mapState({
-      userId: (state) => state.user.userInfo.userId,
-      token: (state) => state.user.userInfo.token,
-      userPhone: (state) => state.user.userInfo.userPhone,
-    }),
+    userInfo() {
+      return this.$store.state.user
+    },
   },
-  watch: {
-    listData(newName, oldName) {},
-  },
-  mounted() {
-    if (this.Token) {
-      console.log('+++++++++++++', this.token)
-    }
-  },
+  mounted() {},
   methods: {
+    onRefresh() {
+      this.finished = false
+      this.list = []
+      this.page = 1
+      this.loading = true
+      this.refreshing = false
+      this.attentionList()
+    },
     release() {
       console.log('点击了发布')
     },
-    showComment(id) {
-      console.log('点击了评论')
+    comments(id) {
       this.articleId = id
       this.commentShow = true
     },
@@ -243,46 +153,58 @@ export default {
     // 点赞（取消）
     async like(item) {
       const params = {
-        handleUserId: this.$store.state.user.userId,
-        handleUserName:
-          this.$store.state.user.userName || this.$cookies.get('userId'),
+        handleUserId: this.userInfo.userId,
+        handleUserName: this.userInfo.userName,
         businessId: item.id,
         handleUserType: item.userType,
         dateType: item.type,
+        handleType: item.isApplaudFlag ? 0 : 1,
       }
-      if (item.isApplaudFlag === 0) {
-        params.handleType = 1
-        const { code, message, data } = await this.$axios.post(
-          knownApi.home.operation,
-          params
-        )
-        this.flag = true
-        if (code === 200) {
-          this.$xToast.show({
-            message: '点赞成功',
-            duration: 1000,
-            icon: 'toast_ic_remind',
-            forbidClick: true,
-          })
-        } else {
-          this.$xToast.show({
-            message,
-            duration: 1000,
-            icon: 'toast_ic_remind',
-            forbidClick: true,
-          })
+      const { code, message, data } = await this.$axios.post(
+        knownApi.home.operation,
+        params
+      )
+      if (code === 200) {
+        item.isApplaudFlag = item.isApplaudFlag ? 0 : 1
+        this.$xToast.show({
+          message: item.isApplaudFlag ? '点赞成功' : '取消成功',
+          duration: 1000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+      } else {
+        this.$xToast.show({
+          message,
+          duration: 1000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+      }
+    },
+    // 请求关注用户的列表数据
+    async attentionList() {
+      const { code, message, data } = await this.$axios.post(
+        knownApi.questionArticle.attentionUserList,
+        {
+          handleUserId: this.userInfo.userId,
+          dateType: 0,
+          userHandleFlag: 1,
+          limit: this.limit,
+          page: this.page,
         }
+      )
+      if (code === 200) {
+        this.list = this.list.concat(data.rows)
+        this.loading = false
+        this.page++
+        if (this.page > data.totalPage) {
+          this.finished = true
+        }
+      } else {
+        console.log(message)
+        this.loading = false
+        this.finished = true
       }
-      // else {
-      //   params.handleType = 2
-      //   const { code, message, data } = await this.$axios.post(
-      //     knownApi.home.operation,
-      //     params
-      //   )
-      //   if (code === 200) {
-      //   } else {
-      //   }
-      // }
     },
   },
 }

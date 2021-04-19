@@ -34,6 +34,9 @@
                 {{ tItem }}
               </div>
             </div>
+            <div v-if="item.slogan" class="slogan">
+              {{ item.slogan }}
+            </div>
             <p class="money">{{ item.platformPrice }}元</p>
           </div>
         </nuxt-link>
@@ -163,6 +166,19 @@ export default {
           font-weight: 400;
           color: #5c7499;
         }
+      }
+      .slogan {
+        font-size: 0.22rem;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #222222;
+        -webkit-line-clamp: 1;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        overflow: hidden;
+        white-space: normal;
       }
       .money {
         font-size: 30px;

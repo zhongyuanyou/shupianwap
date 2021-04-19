@@ -19,18 +19,9 @@ export default {
   name: 'NotAttention',
   components: {},
   data() {
-    return {
-      title: '搜索数据',
-      btnValue: '+关注',
-      attention_btn: {},
-    }
+    return {}
   },
-  methods: {
-    attention() {
-      this.btnValue = '已关注'
-      this.attention_btn = { background: ' #F5F5F5', color: '#999999' }
-    },
-  },
+  methods: {},
 }
 </script>
 <style lang="less" scoped>

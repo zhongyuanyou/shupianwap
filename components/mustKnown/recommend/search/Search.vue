@@ -29,7 +29,7 @@
           @keydown="searchKeydownHandle"
         />
       </form> -->
-      <div class="search_box">考研复试体检包含什么项目</div>
+      <div class="search_box">请输入关键词搜索</div>
 
       <!-- s 禁用输入框时，隐藏真实输入款，模拟一个输入框 -->
       <!-- <span v-else class="imitate-input" @click="clickInputHandle">{{
