@@ -384,7 +384,7 @@ export default {
       }
     },
     onLeftClick() {
-      this.$back()
+      this.$router.back(-1)
     },
 
     handleClickBottom(type) {

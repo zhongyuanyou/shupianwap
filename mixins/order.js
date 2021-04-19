@@ -26,7 +26,7 @@ const orderStatusObj = {
     type: 'PRO_CLASS_TYPE_TRANSACTION',
     code: 'ORDER_ORDER_TRADE_STATUS_UN_PAID',
     name: '未付款',
-    cripsName: '未付款',
+    cripsName: '待付款',
     status: 'ORDER_CUS_STATUS_UNPAID',
   },
   TRADE_STATUS_HANDLING: {
@@ -61,7 +61,7 @@ const orderStatusObj = {
     type: 'PRO_CLASS_TYPE_SALES',
     code: 'ORDER_ORDER_SALE_STATUS_UN_PAID',
     name: '未付款',
-    cripsName: '未付款',
+    cripsName: '待付款',
     status: 'ORDER_CUS_STATUS_UNPAID',
   },
   SALES_STATUS_HANDLING: {
@@ -97,7 +97,7 @@ const orderStatusObj = {
     type: 'PRO_CLASS_TYPE_SERVICE_RESOURCE',
     code: 'ORDER_ORDER_RESOURCE_STATUS_UN_PAID',
     name: '未付款',
-    cripsName: '未付款',
+    cripsName: '待付款',
     status: 'ORDER_CUS_STATUS_UNPAID',
   },
   RESOURCE_STATUS_HANDLING: {
@@ -133,7 +133,7 @@ const orderStatusObj = {
     type: 'PRO_CLASS_TYPE_SERVICE',
     code: 'ORDER_ORDER_SERVER_STATUS_UN_PAID',
     name: '未付款',
-    cripsName: '未付款',
+    cripsName: '待付款',
     status: 'ORDER_CUS_STATUS_UNPAID',
   },
   SERVER_STATUS_UN_ASSIGN: {

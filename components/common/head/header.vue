@@ -51,7 +51,7 @@ export default {
     // 头部标题
     title: {
       type: String,
-      default: () => '帮助中心',
+      default: () => '',
     },
     // 是否隐藏回退按钮
     hideBack: {
