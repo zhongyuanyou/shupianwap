@@ -66,6 +66,7 @@ import { auth, planner, shopCart } from '~/api'
 import { parseTel } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
 import { codeTranslate } from '~/utils/codeTranslate'
+import { debounce } from '~/utils/debounceThrottling'
 export default {
   name: 'BottomBar',
   components: {
@@ -91,6 +92,7 @@ export default {
     return {
       type: 1,
       article: {}, // 下单协议信息
+      carSub: null,
     }
   },
   computed: {
@@ -132,22 +134,26 @@ export default {
   methods: {
     addCart() {
       // 加入购物车
-      const params = {
-        goodsNumber: 1, // 默认加购一个
-        salePackageId: this.sellingGoodsData.id,
-        shopMerId: this.sellingGoodsData.publisherMerchantsId,
-        userId: this.userId,
-      }
-      shopCart
-        .add(params)
-        .then((res) => {
-          this.$xToast.success('加入购物车成功')
-        })
-        .catch((err) => {
-          this.$xToast.warning(
-            err.message ? err.message : '加入购物车失败，请稍后重试'
-          )
-        })
+      const that = this
+      clearTimeout(this.carSub)
+      this.carSub = setTimeout(function () {
+        const params = {
+          goodsNumber: 1, // 默认加购一个
+          salePackageId: that.sellingGoodsData.id,
+          shopMerId: that.sellingGoodsData.publisherMerchantsId,
+          userId: that.userId,
+        }
+        shopCart
+          .add(params)
+          .then((res) => {
+            that.$xToast.success('加入购物车成功')
+          })
+          .catch((err) => {
+            that.$xToast.warning(
+              err.message ? err.message : '加入购物车失败，请稍后重试'
+            )
+          })
+      }, 500)
     },
     async nowBuy() {
       // 点击立即购买
