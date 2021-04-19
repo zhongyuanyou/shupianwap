@@ -51,6 +51,10 @@ export default {
       type: String,
       default: '',
     },
+    sourceType: {
+      type: Number,
+      default: 2, // 类型：2 文章 3 回答
+    },
   },
   data() {
     return {
@@ -70,11 +74,33 @@ export default {
   },
   methods: {
     submit() {
-      console.log('val', this.value)
-      this.$xToast.show({
-        message: '评论成功',
-      })
-      this.value = ''
+      console.log('userInfo', this.userInfo)
+      if (!this.userInfo.userId) {
+        return this.$xToast.error('请先登录')
+      }
+      this.$axios
+        .post(knownApi.comments.publish, {
+          content: this.value,
+          sourceId: this.articleId,
+          sourceType: this.sourceType,
+          userId: this.userInfo.userId,
+          userName: this.userInfo.userName || this.userInfo.nickName,
+          userType: this.userInfo.type === 'ORDINARY_USER' ? 2 : 3,
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.$xToast.show({
+              message: '评论成功',
+            })
+            this.getCommentsList()
+            this.value = ''
+          } else {
+            this.$xToast.error(res.message)
+          }
+        })
+        .catch((err) => {
+          this.$xToast.error(err.message)
+        })
     },
     async getCommentsList() {
       const { code, message, data } = await this.$axios.post(
