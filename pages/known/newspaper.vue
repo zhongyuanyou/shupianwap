@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <div class="container_head">
+    <div
+      class="container_head"
+      :style="{ paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px' }"
+    >
       <sp-sticky @scroll="scrollHandle">
         <div class="header_search">
           <my-icon
@@ -8,7 +11,7 @@
             size="0.40rem"
             color="#FFFFFF"
             class="my_icon"
-            @click.native="$router.back()"
+            @click.native="back()"
           ></my-icon>
           <div v-show="showPaper" class="newspaperTitle">日报精选</div>
           <my-icon
@@ -32,10 +35,10 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import { Sticky } from '@chipspc/vant-dgg'
 import ProblemItem from '@/components/mustKnown/recommend/ProblemItem'
 import { knownApi } from '@/api'
-
 export default {
   name: 'Recommend',
   components: {
@@ -62,10 +65,25 @@ export default {
       ],
     }
   },
+
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
+    }),
+  },
   mounted() {
     this.init()
+    console.log(this.appInfo, 123)
   },
   methods: {
+    back() {
+      if (this.isInApp) {
+        this.$appFn.dggWebGoBack()
+      } else {
+        this.$router.go(-1)
+      }
+    },
     // 初始化
     init() {
       this.name = this.$route.query.name

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="container-advice">
       <!-- S search -->
-      <sp-sticky>
+      <sp-sticky @scroll="scrollHandle">
         <div class="search">
           <div class="left-back">
             <my-icon
@@ -47,7 +47,7 @@
         </div>
       </div>
       <!-- E title -->
-      <div class="container-body" :style="containerStyle">
+      <div class="container-body" :style="style.containerStyle">
         <div class="tabs-box">
           <div class="drop_down">
             <div class="drop_down_title">成都</div>
@@ -520,6 +520,11 @@ export default {
   },
   data() {
     return {
+      style: {
+        containerStyle: '',
+        iconStyle: '',
+        searchStyle: '',
+      },
       iconLeft: 0.35,
       time: '',
       list: [],
@@ -589,6 +594,15 @@ export default {
     }
   },
   methods: {
+    scrollHandle({ scrollTop }) {
+      // console.log(scrollTop)
+      // 滚动事件
+      if (scrollTop > 325) {
+        this.style.containerStyle = 'border-radius: 0px;'
+      } else {
+        this.style.containerStyle = 'border-radius: 12px;'
+      }
+    },
     onLoad() {
       setTimeout(() => {
         if (this.refreshing) {

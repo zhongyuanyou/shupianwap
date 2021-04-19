@@ -4,7 +4,7 @@
       <PageHead v-if="!showHead2" :title="articleDetails.title"></PageHead>
       <PageHead2
         v-if="showHead2"
-        :header-data="headerData"
+        :header-data="articleDetails"
         :is-follow="isFollow"
         :is-show-follow="articleDetails.createrId !== userInfo.userId"
         @follow="follow"
@@ -123,9 +123,9 @@ export default {
     return {
       articleDetails: res.data,
       headerData: {
-        createrName: res.createrName,
-        contentText: res.contentText,
-        avatar: res.avatar,
+        createrName: res.data.createrName,
+        contentText: res.data.contentText,
+        avatar: res.data.avatar,
       },
     }
   },
