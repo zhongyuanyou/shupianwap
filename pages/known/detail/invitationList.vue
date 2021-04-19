@@ -29,7 +29,7 @@
         @load="onLoad"
       >
         <div v-for="(item, index) in recommendList" :key="index" class="list">
-          <img :src="item.avatar" alt="" @click="goUserInfo(item)" />
+          <img alt="" :src="item.avatar" @click="goUserInfo(item)" />
           <div class="name">{{ item.userName }}</div>
           <div
             class="invitation"
