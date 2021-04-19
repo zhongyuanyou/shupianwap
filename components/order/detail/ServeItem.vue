@@ -49,7 +49,7 @@
             "
             type="default"
             class="btn-confirm"
-            @click="handleClickBtn(3, item)"
+            @click="confirmOrder(item.id)"
             >确认完成</sp-button
           >
         </div>
@@ -145,7 +145,6 @@ export default {
       return changeMoney.regFenToYuan(num)
     },
     handleClickBtn(type, item) {
-      console.log('item', item)
       switch (type) {
         // 办理进度
         case 2:
@@ -153,7 +152,7 @@ export default {
           break
         case 3:
           // 确认完成
-          this.$emit('confirmOrder', item.id)
+          this.confirmOrder(item.id)
           break
       }
     },
