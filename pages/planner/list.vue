@@ -506,13 +506,14 @@ export default {
     },
 
     // 发起聊天
-    async uPIM(data = {}) {
+    uPIM(data = {}) {
+      console.log(123)
       const { mchUserId, userName, type } = data
       // 如果当前页面在app中，则调用原生IM的方法
       if (this.isInApp) {
         try {
           // 需要判断登陆没有，没有登录就是调用登录
-          await this.getUserInfo()
+          // await this.getUserInfo()
           this.$appFn.dggOpenIM(
             {
               name: userName,

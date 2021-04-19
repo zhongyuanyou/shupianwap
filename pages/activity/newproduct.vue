@@ -63,7 +63,7 @@
         </ul>
       </div>
       <div class="body-content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <sp-pull-refresh v-model="refreshing">
           <sp-list
             v-model="loading"
             :finished="finished"
@@ -94,7 +94,7 @@
                       </div>
                       <div class="bf-my">原价{{ item.skuPrice }}元</div>
                     </div>
-                    <div class="rc-bottom-rt" @click.stop="jumpIM()">
+                    <div class="rc-bottom-rt" @click.stop="jumpIM(item)">
                       <div class="imm_consult">立即咨询</div>
                       <div class="imm_img"></div>
                     </div>
@@ -122,6 +122,7 @@ import {
   Toast,
 } from '@chipspc/vant-dgg'
 import { activityApi } from '~/api'
+import imHandle from '@/mixins/imHandle'
 export default {
   components: {
     [CountDown.name]: CountDown,
@@ -131,13 +132,13 @@ export default {
     [WorkTabSortItem.name]: WorkTabSortItem,
     [PullRefresh.name]: PullRefresh,
   },
+  mixins: [imHandle],
   data() {
     return {
       defaultData: {
         index: 0,
         sort: -1, // 倒序
       },
-
       iconLeft: 0.35,
       loading: false,
       finished: false,
@@ -150,8 +151,11 @@ export default {
       productRecoData: '',
       productAdvertData: '',
       page: 1,
-      specTypeCode: 'HDZT_ZTTYPE_XTSF',
+      specTypeCode: 'HDZT_ZTTYPE_XTSF', // 活动类型code
+      platformCode: 'COMDIC_PLATFORM_CRISPS', // 终端code
       specCode: '',
+      defaultCityCode: '510100',
+      advertCode: 'ad1314', // 广告code
     }
   },
   computed: {
@@ -159,6 +163,9 @@ export default {
       cityName: (state) => state.city.currentCity.name,
       code: (state) => state.city.currentCity.code,
     }),
+    userInfo() {
+      return JSON.parse(localStorage.getItem('myInfo'))
+    },
   },
   created() {
     // 初始化定位
@@ -167,12 +174,17 @@ export default {
         type: 'init',
       })
     }
+
     this.getAdvertisingData()
     this.getMenuTabs()
+  },
+  mounted() {
+    console.log(this.$store.state.user, 1111111111111)
   },
   methods: {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
+      GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
     }),
     advertjump(item) {
       this.$router.push('/')
@@ -180,8 +192,52 @@ export default {
     jumpProductdetail() {
       this.$router.push('/')
     },
-    jumpIM() {
-      console.log('咨询')
+    jumpIM(item) {
+      console.log(item)
+      this.uPIM({
+        mchUserId: this.userInfo.imUserId,
+        userName: this.userInfo.userName,
+        type: this.userInfo.imUserType,
+      })
+    },
+    async uPIM(data = {}) {
+      const { mchUserId, userName, type } = data
+      // 如果当前页面在app中，则调用原生IM的方法
+      if (this.isInApp) {
+        try {
+          // 需要判断登陆没有，没有登录就是调用登录
+          await this.getUserInfo()
+          this.$appFn.dggOpenIM(
+            {
+              name: userName,
+              userId: mchUserId,
+              userType: type || 'MERCHANT_B',
+              requireCode: this.requireCode || '',
+              requireName: this.requireName || '',
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `联系失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            }
+          )
+        } catch (error) {
+          console.error('uPIM error:', error)
+        }
+        return
+      }
+      const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+      this.creatImSessionMixin({
+        imUserId: mchUserId,
+        imUserType,
+        requireCode: this.requireCode || '',
+        requireName: this.requireName || '',
+      })
     },
     init() {
       this.page = 1
@@ -199,8 +255,8 @@ export default {
       this.$axios
         .get(activityApi.activityTypeOptions, {
           params: {
-            cityCodes: '510100',
-            platformCode: 'COMDIC_PLATFORM_CRISPS',
+            cityCodes: this.code || this.defaultCityCode,
+            platformCode: this.platformCode,
             specType: this.specTypeCode,
           },
         })
@@ -210,9 +266,18 @@ export default {
             if (res.data.settingVOList && res.data.settingVOList.length > 0) {
               this.itemTypeOptions = res.data.settingVOList[0]
               this.specCode = res.data.specCode
-              // this.getRecProduct(this.itemTypeOptions, specCode, 1)
               this.getProductList(this.itemTypeOptions, this.specCode)
+            } else {
+              this.loading = false
+              this.finished = true
             }
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
           }
         })
     },
@@ -249,6 +314,7 @@ export default {
               this.finished = true
             }
           } else {
+            this.loading = false
             Toast.fail({
               duration: 2000,
               message: '服务异常，请刷新重试！',
@@ -263,7 +329,7 @@ export default {
       this.$axios
         .get(activityApi.activityAdvertising, {
           params: {
-            code: 'ad113184',
+            code: this.advertCode,
           },
         })
         .then((res) => {
@@ -282,15 +348,15 @@ export default {
           }
         })
     },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
+    // onRefresh() {
+    //   // 清空列表数据
+    //   this.finished = false
 
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
+    //   // 重新加载数据
+    //   // 将 loading 设置为 true，表示处于加载状态
+    //   this.loading = true
+    //   this.onLoad()
+    // },
     handlerItemChange(action, index) {
       console.log(action, index)
     },
