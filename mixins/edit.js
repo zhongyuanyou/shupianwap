@@ -20,7 +20,7 @@ export default {
         type: '', // 类型：1问题  2文章 3回答
         userCode: 'U2100607057',
         userId: '',
-        userName: 'dsdadsada', //
+        userName: '', //
         userType: '1', // 作者类型 1 普通用户 2 规划师
         contentImageUrl: '', // 内容图片地址（多张 “,”号拼接）
         id: '',
@@ -38,6 +38,7 @@ export default {
     ...mapState({
       userId: (state) => state.user.userId,
       userType: (state) => state.user.userType,
+      userName: (state) => state.user.userName,
     }),
   },
   mounted() {
@@ -51,8 +52,8 @@ export default {
       ? (this.formData.type = 2)
       : (this.formData.type = 3)
     this.formData.userId = this.userId
-    this.formData.userType = this.$store.state.user.userInfo.userType
-    console.log(this.$store.state.user, 123)
+    this.formData.userType = util.getUserType(this.userType)
+    this.formData.userName = this.userName
   },
   methods: {
     getImgSrc(richtext) {
