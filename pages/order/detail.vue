@@ -277,6 +277,7 @@
         :pay-list="payList"
         :batch-pay-status="batchPayStatus"
         :this-time-pay-total="thisTimePayTotal"
+        :batch-ids="batchIds"
       />
     </section>
     <div v-if="!hasData" class="loading-area">

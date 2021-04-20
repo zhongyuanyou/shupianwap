@@ -392,7 +392,6 @@ export default {
         this.thisTimePayTotal = this.regFenToYuan(thisTimePayTotal)
         this.allTimePayTotal = this.regFenToYuan(allTimePayTotal)
         this.batchIds = idsArr.join(',')
-        console.log('batchIds', this.batchIds)
         // 是分批支付则弹起分批支付弹窗 关闭关联订单弹窗
         this.$refs.payModal.showPop = true
         this.$refs.cancleOrderModel.showPop = false
@@ -700,6 +699,10 @@ export default {
         }
       }
       return result
+    },
+    // 产品名称脱敏
+    setName(str) {
+      return '**' + str.substring(2, str.length)
     },
     // jump
     toContract() {

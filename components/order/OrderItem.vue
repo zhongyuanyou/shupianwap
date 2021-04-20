@@ -39,7 +39,15 @@
         <sp-image :src="item.skuImages" alt="" class="img" srcset="" />
         <div class="right">
           <p class="goods-name">
-            <span class="name"> {{ item.spuName || item.orderSaleName }}</span>
+            <span
+              v-if="orderData.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID'"
+              class="name"
+            >
+              {{ setName(item.spuName || item.orderSaleName) }}</span
+            >
+            <span v-else class="name">
+              {{ item.spuName || item.orderSaleName }}</span
+            >
             <span
               v-if="
                 checkPayType() !== 2 && checkPayType() !== 4 && !item.orderType
@@ -227,6 +235,9 @@ export default {
         path: '/order/detail',
         query: { id: this.orderData.id, cusOrderId: this.orderData.cusOrderId },
       })
+    },
+    setName(str) {
+      return '**' + str.substring(2, str.length)
     },
   },
 }

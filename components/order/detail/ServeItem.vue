@@ -3,7 +3,15 @@
     <sp-image class="img" :src="item.skuImages"></sp-image>
     <div class="right">
       <p class="goods-name">
-        <span class="name"> {{ item.spuName || item.orderSaleName }}</span>
+        <span
+          v-if="item.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID'"
+          class="name"
+        >
+          {{ setName(item.spuName || item.orderSaleName) }}</span
+        >
+        <span v-else class="name">
+          {{ item.spuName || item.orderSaleName }}</span
+        >
         <span v-if="cusOrderPayType !== 2 && orderType" class="money1">
           {{ changeMoney(item.skuPrice || item.skuPrice) }}元
         </span>
