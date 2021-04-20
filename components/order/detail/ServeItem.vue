@@ -44,11 +44,12 @@
             v-if="
               (item.skuStatusNo === 'ORDER_ORDER_SERVER_STATUS_HANDLED' ||
                 item.skuStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED') &&
+              item.payStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID' &&
               item.userConfirm == 0
             "
             type="default"
             class="btn-confirm"
-            @click="handleClickBtn(3, item)"
+            @click="confirmOrder(item.id)"
             >确认完成</sp-button
           >
         </div>
@@ -134,12 +135,16 @@ export default {
       default: 1,
     },
   },
+  data() {
+    return {
+      fromPage: 'orderDetail',
+    }
+  },
   methods: {
     changeMoney(num) {
       return changeMoney.regFenToYuan(num)
     },
     handleClickBtn(type, item) {
-      console.log('item', item)
       switch (type) {
         // 办理进度
         case 2:
@@ -147,7 +152,7 @@ export default {
           break
         case 3:
           // 确认完成
-          this.$emit('confirmOrder', item.id)
+          this.confirmOrder(item.id)
           break
       }
     },

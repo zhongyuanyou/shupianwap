@@ -26,7 +26,7 @@ const orderStatusObj = {
     type: 'PRO_CLASS_TYPE_TRANSACTION',
     code: 'ORDER_ORDER_TRADE_STATUS_UN_PAID',
     name: '未付款',
-    cripsName: '未付款',
+    cripsName: '待付款',
     status: 'ORDER_CUS_STATUS_UNPAID',
   },
   TRADE_STATUS_HANDLING: {
@@ -61,7 +61,7 @@ const orderStatusObj = {
     type: 'PRO_CLASS_TYPE_SALES',
     code: 'ORDER_ORDER_SALE_STATUS_UN_PAID',
     name: '未付款',
-    cripsName: '未付款',
+    cripsName: '待付款',
     status: 'ORDER_CUS_STATUS_UNPAID',
   },
   SALES_STATUS_HANDLING: {
@@ -97,7 +97,7 @@ const orderStatusObj = {
     type: 'PRO_CLASS_TYPE_SERVICE_RESOURCE',
     code: 'ORDER_ORDER_RESOURCE_STATUS_UN_PAID',
     name: '未付款',
-    cripsName: '未付款',
+    cripsName: '待付款',
     status: 'ORDER_CUS_STATUS_UNPAID',
   },
   RESOURCE_STATUS_HANDLING: {
@@ -133,7 +133,7 @@ const orderStatusObj = {
     type: 'PRO_CLASS_TYPE_SERVICE',
     code: 'ORDER_ORDER_SERVER_STATUS_UN_PAID',
     name: '未付款',
-    cripsName: '未付款',
+    cripsName: '待付款',
     status: 'ORDER_CUS_STATUS_UNPAID',
   },
   SERVER_STATUS_UN_ASSIGN: {
@@ -194,7 +194,7 @@ export default {
       },
       // 客户单付款状态CODE对应文字
       PAYSTATUSCODENAME: {
-        ORDER_CUS_PAY_STATUS_UN_PAID: '未支付',
+        ORDER_CUS_PAY_STATUS_UN_PAID: '待付款',
         ORDER_CUS_PAY_STATUS_PART_PAID: '部分支付',
         ORDER_CUS_PAY_STATUS_COMPLETED_PAID: '已完成',
       },
@@ -310,26 +310,29 @@ export default {
           // 客户单的分批支付信息
           this.payList = res
           this.loading = false
-          if (this.fromPage === 'orderList') {
-            // 从订单列表页发起的操作
+          if (
+            this.fromPage === 'orderList' ||
+            this.fromPage === 'orderDetail'
+          ) {
+            // 从订单列表页和详情页发起的操作
             this.checkCusBatchPayType()
           } else if (this.fromPage === 'nodeDetail') {
             // 账单明细页面则筛选该订单下的选中商品的支付列表信息
             const nodeList = res.filter((item) => {
               return item.orderSkuId === this.orderSkuId
             })
-            // 计算合计金额
+            // // 计算合计金额
             this.nodeTotalMoney = nodeList.reduce((total, item) => {
               return total + Number(item.money)
             }, 0)
             // 处理合计金额单位
-            this.nodeTotalMoney = this.changePayMoney(this.nodeTotalMoney)
+            this.nodeTotalMoney = this.regFenToYuan(this.nodeTotalMoney)
             this.nodeNumber = this.nodeList.length
             // 对支付列表进行排序
             const sortArr = []
             for (let i = 0, l = nodeList.length; i < l; i++) {
               // 处理金额
-              nodeList[i].money = this.changePayMoney(nodeList[i].money)
+              nodeList[i].money = this.regFenToYuan(nodeList[i].money)
               // 将本期应付的批次排在前面
               if (nodeList[i].alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
                 sortArr.splice(0, 0, nodeList[i])
@@ -395,8 +398,8 @@ export default {
       }
     },
     // 判断展示合同按钮 false不展示  1签署合同 2查看合同
-    checkContractStatus() {
-      const data = this.orderData
+    checkContractStatus(orderData) {
+      const data = orderData || this.orderData
       // 当客户订单状态为已取消时不展示按钮
       if (data.cusOrderStatusNo === ORDERSTATUSCODE[4]) return false
       if (this.fromPage === 'orderList') {
@@ -410,9 +413,9 @@ export default {
           return 1
         }
         // 当合同状态为已完成时显示查看合同按钮
-        if (data.contractStatus && data.contractStatus === 'STRUTS_YWC')
+        if (data.contractStatus && data.contractStatus === 'STRUTS_YWC') {
           return 2
-        return orderUtils.checkContractStatus(this.orderData)
+        }
       } else {
         // 订单详情页面根据合同列表判断
         // 当合同状态为已完成时显示查看合同按钮
@@ -437,7 +440,6 @@ export default {
     isShowConfirmBtn(data) {
       data = data || this.orderData
       let isShowConfirm
-      const orderProTypeNo = data.orderProTypeNo
       if (
         data.orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION' ||
         data.orderProTypeNo === 'PRO_CLASS_TYPE_SALES '
@@ -445,10 +447,13 @@ export default {
         const orderArr = data.orderSkuEsList || data.orderSkuList
         for (let i = 0, l = orderArr.length; i < l; i++) {
           if (
-            orderArr[i].skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
-            orderArr[i].skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED' ||
-            orderArr[i].skuStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED' ||
-            orderArr[i].skuStatusNo === 'ORDER_ORDER_SERVER_STATUS_HANDLED'
+            (orderArr[i].skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
+              orderArr[i].skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED' ||
+              orderArr[i].skuStatusNo ===
+                'ORDER_ORDER_RESOURCE_STATUS_HANDLED' ||
+              orderArr[i].skuStatusNo ===
+                'ORDER_ORDER_SERVER_STATUS_HANDLED') &&
+            orderArr[i].payStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
           ) {
             if (orderArr[i].userConfirm === 0) {
               isShowConfirm = 1
@@ -524,8 +529,18 @@ export default {
         orderSkuIds = arr1.map((item) => {
           return item.id
         })
-      } else {
+      } else if (this.fromPage === 'orderDetail' && !orderSkuIds) {
+        const ids = []
+        this.orderData.orderSkuList.forEach((item) => {
+          if (
+            item.skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
+            item.skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED'
+          )
+            ids.push(item.id)
+        })
         // 订单详情页里的确认完成为单个服务商品的商品id
+        orderSkuIds = ids
+      } else {
         orderSkuIds = new Array(1).fill(orderSkuIds)
       }
       const params = {

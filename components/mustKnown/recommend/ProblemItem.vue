@@ -13,10 +13,10 @@
           {{ item.title }}
         </div>
         <div class="item_Info">
-          <div class="userPhoto" @click="goUserDetail(item)">
+          <div class="userPhoto" @click="goDetailPage(item.type, item.id)">
             <img :src="item.avatar" alt="" />
           </div>
-          <div class="userName" @click="goUserDetail(item)">
+          <div class="userName" @click="goDetailPage(item.type, item.id)">
             {{ item.userName }}
           </div>
         </div>
@@ -32,7 +32,7 @@
         </div>
         <div class="item_bottom">
           <span class="like" @click="goDetailPage(item.type, item.id)">
-            {{ item.isApplaudFlag }}赞同</span
+            {{ item.applaudCount }}赞同</span
           >
           <span class="comment" @click="goDetailPage(item.type, item.id)">
             · {{ item.remarkCount }}评论</span

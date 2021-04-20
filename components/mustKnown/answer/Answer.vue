@@ -120,6 +120,7 @@ export default {
           if (this.page > data.totalPage) {
             this.finished = true
           }
+          this.loading = false
         } else {
           this.error = true
         }

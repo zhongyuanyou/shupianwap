@@ -6,6 +6,7 @@
       :key="index"
       class="item"
       :class="index === 0 ? 'no-border' : ''"
+      @click="toDetail(item)"
     >
       <div class="left">
         <div class="title">{{ item.title }}</div>
@@ -54,6 +55,17 @@ export default {
         },
       ],
     }
+  },
+  methods: {
+    toDetail(item) {
+      this.$router.replace({
+        path: '/known/detail/tran',
+        query: {
+          id: item.id,
+          page: '/known/detail/article',
+        },
+      })
+    },
   },
 }
 </script>

@@ -1,11 +1,34 @@
 import qs from 'qs'
+import axios from 'axios'
+import { HttpLogger } from 'zipkin-transport-http'
+import { Tracer, BatchRecorder, ExplicitContext, jsonEncoder } from 'zipkin'
+import wrapAxios from './zipkin-axios'
 import { saveAxiosInstance } from '@/utils/request'
 import xToast from '@/components/common/spToast'
-const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
+
 const BASE = require('~/config/index.js')
-export default function ({ $axios, redirect, app, store }) {
-  $axios.defaults.withCredentials = false
-  $axios.defaults.timeout = 12000
+const DGG_SERVER_ENV = process.env.DGG_SERVER_ENV
+const ctxImpl = new ExplicitContext() // 进程内的上下文
+// const recorder = new ConsoleRecorder();
+const localServiceName = BASE.terminalCode // 此应用程序的名称
+const remoteServiceName = BASE.terminalCode // 您所在应用程序的名称
+
+const tracer = new Tracer({
+  ctxImpl,
+  localServiceName,
+  recorder: new BatchRecorder({
+    logger: new HttpLogger({
+      // take a look
+      endpoint: 'https://dzipkin.shupian.cn/api/v2/spans',
+      jsonEncoder: jsonEncoder.JSON_V2,
+    }),
+  }),
+})
+
+const $axios = wrapAxios(axios.create(), { tracer, remoteServiceName })
+
+export default function (ctx, inject) {
+  const { redirect, app, store } = ctx
   // 设置基本URL
   if (process.server) {
     $axios.defaults.baseURL = BASE.baseURL
@@ -46,19 +69,19 @@ export default function ({ $axios, redirect, app, store }) {
       }
       // 获取用户信息
       if (
-        app.$cookies.get('userNo', {
+        app.$cookies.get('X-Req-UserNo', {
           path: '/',
         })
       ) {
         config.headers['X-Req-UserNo'] = app.$cookies.get('userNo', {
           path: '/',
         })
-        // config.headers['X-Req-UserName'] = app.$cookies.get('userName', {
-        //   path: '/',
-        // })
-        // config.headers['X-Req-UserPhone'] = app.$cookies.get('userPhone', {
-        //   path: '/',
-        // })
+        config.headers['X-Req-UserName'] = app.$cookies.get('userName', {
+          path: '/',
+        })
+        config.headers['X-Req-UserPhone'] = app.$cookies.get('userPhone', {
+          path: '/',
+        })
       }
       // 请求头设置站点code
       const cityCode = app.$cookies.get('currentCity', {
@@ -103,13 +126,7 @@ export default function ({ $axios, redirect, app, store }) {
       return Promise.reject(error)
     }
   )
-  $axios.onError((error) => {
-    const code = parseInt(error.response && error.response.status)
-    if (code === 400) {
-      redirect('/404')
-    } else if (code === 500) {
-      redirect('/500')
-    }
-  })
   saveAxiosInstance($axios)
+  ctx.$axios = $axios
+  inject('axios', $axios)
 }

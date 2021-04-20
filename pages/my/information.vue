@@ -28,8 +28,9 @@
                 height="0.88rem"
                 fit="cover"
                 class="avatar"
-                :src="info.url ? info.url : avatars"
+                :src="info.photo ? info.photo : avatars"
               />
+
               <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
             </div>
           </div>
@@ -37,6 +38,7 @@
         <div class="cell" @click="handleClick(2)">
           <p class="title">昵称</p>
           <div class="right_icon">
+            {{ info.photo }}
             <p class="txt">{{ info.nickName || '未设置' }}</p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
@@ -70,14 +72,21 @@
         <div class="cell" @click="handleClick(7)">
           <p class="title">个人简介</p>
           <div class="right_icon">
-            <p class="txt hide">不悲伤，不仰望。不悲伤，不仰望。</p>
+            <!-- <p class="txt hide">{{ info.status || '未设置' }}</p> -->
+            <p class="txt hide">未设置</p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
         </div>
         <div class="cell">
           <p class="title">实名认证</p>
           <div class="right_icon">
-            <p class="txt hide">未实名认证</p>
+            <p class="txt hide">
+              {{
+                info.realStatus === 'NO_AUTHENTICATION'
+                  ? '未实名认证'
+                  : '已实名认证'
+              }}
+            </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
         </div>

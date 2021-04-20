@@ -50,6 +50,7 @@ export default {
       isPayAll: 0, // 0 未本期 1为全部付款
       cusOrderId: '',
       allOrderSkuList: [],
+      fromPage: 'orderDetail',
     }
   },
   // computed: {

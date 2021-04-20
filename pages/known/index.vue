@@ -1,11 +1,14 @@
 <template>
   <div class="container">
-    <div class="container_head">
+    <div class="container_head" :style="[isInApp ? appStyle : '']">
       <Search
         value="请输入关键词搜索"
         :icon-left="0.2"
         @click.native="$router.push('/known/search')"
       >
+        <template v-if="isInApp" v-slot:left>
+          <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
+        </template>
       </Search>
       <my-icon
         name="fabu_mian"
@@ -15,8 +18,11 @@
         @click.native="openArticle"
       ></my-icon>
     </div>
-
-    <sp-sticky>
+    <div
+      :class="[isInApp ? 'top-safe-app' : '']"
+      :style="[isInApp ? tapSafeApp : '']"
+    ></div>
+    <sp-sticky :offset-top="isInApp ? statusBarHeight : '0'">
       <div class="category_box">
         <sp-tabs
           v-model="active"
@@ -82,7 +88,7 @@
               :class="status ? '' : index < 3 ? 'active' : ''"
               class="item"
             >
-              {{ item }}
+              <div class="item_name">{{ item.name }}</div>
               <my-icon
                 v-show="showIcon"
                 name="guanbi_mian"
@@ -105,7 +111,7 @@
         <div class="list">
           <div class="list_items">
             <div v-for="(item, index) in morePlate" :key="index" class="item">
-              {{ item }}
+              <div class="item_name">{{ item.name }}</div>
               <my-icon
                 v-show="showIcon"
                 name="fabu_mian"
@@ -175,6 +181,7 @@ import {
   Tab,
   Tabs,
   PullRefresh,
+  Icon,
 } from '@chipspc/vant-dgg'
 import Recommend from '@/components/mustKnown/Recommend'
 import Attention from '@/components/mustKnown/attention/Index'
@@ -195,6 +202,7 @@ export default {
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
     [PullRefresh.name]: PullRefresh,
+    [Icon.name]: Icon,
     Search,
     Answer,
     Bottombar,
@@ -210,11 +218,14 @@ export default {
         params: {
           // type 1 获取企大顺导航
           type: store.state.app.isInApp ? 1 : '',
+          // type: 1,
         },
       }
     )
     return {
       tabs: data,
+      morePlate: data.slice(4, data.length),
+      myPlate: data.slice(0, 3),
     }
   },
   data() {
@@ -224,38 +235,24 @@ export default {
       showIcon: false,
       status: true,
       showArticlePop: false,
-      myPlate: [
-        '关注',
-        '推荐',
-        '热榜',
-        '法律',
-        '交易',
-        '知产',
-        '知识',
-        '互联网',
-        '工商注册',
-        '办证',
-        '刻章',
-      ],
-      morePlate: [
-        '关注',
-        '推荐',
-        '热榜',
-        '法律',
-        '交易',
-        '知产',
-        '知识',
-        '互联网',
-        '工商注册',
-        '办证',
-        '刻章',
-      ],
+      myPlate: [],
+      morePlate: [],
       active: 0,
+      statusBarHeight: '',
+      appStyle: {
+        'padding-left': '12px',
+        'padding-right': '16px',
+        'padding-top': '',
+      },
+      tapSafeApp: {
+        height: '',
+      },
     }
   },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo,
     }),
     userInfo() {
       return this.$store.state.user
@@ -263,8 +260,24 @@ export default {
   },
   mounted() {
     console.log(this.tabs)
+    if (this.appInfo) {
+      this.statusBarHeight = this.appInfo.statusBarHeight
+    }
+    // this.containerStyle['padding-top'] = this.appInfo.statusBarHeight + 'px'
+    this.appStyle['padding-top'] = this.statusBarHeight + 'px'
+    this.tapSafeApp.height = this.statusBarHeight + 'px'
+    this.init()
   },
   methods: {
+    init() {
+      if (localStorage.getItem('morePlate')) {
+        this.morePlate = JSON.parse(localStorage.getItem('morePlate'))
+        this.myPlate = this.tabs.filter(
+          (item) => !this.morePlate.some((ele) => ele.id === item.id)
+        )
+        this.tabs = JSON.parse(JSON.stringify(this.myPlate))
+      }
+    },
     toggleTabs() {
       console.log(this.active)
     },
@@ -295,6 +308,7 @@ export default {
         this.showIcon = true
         this.editFinish = '完成'
         this.status = false
+        localStorage.setItem('tabsList', JSON.stringify(this.myPlate))
       } else {
         this.showIcon = false
         this.editFinish = '编辑'
@@ -313,7 +327,14 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.sp-sticky {
+.top-safe-app {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 99;
+}
+/deep/ .sp-sticky {
   background: #fff;
 }
 .active {
@@ -376,6 +397,19 @@ export default {
     height: 88px;
     align-items: center;
     padding: 0 32px;
+    .my_icon {
+      width: 52px;
+      height: 52px;
+      margin-left: 32px;
+    }
+  }
+  .container_head_app {
+    display: flex;
+    justify-content: space-between;
+    height: 88px;
+    align-items: center;
+    padding-left: 12px;
+    padding-right: 16px;
     .my_icon {
       width: 52px;
       height: 52px;
@@ -555,6 +589,15 @@ export default {
               top: 0;
               right: 0;
             }
+            > .item_name {
+              width: 84px;
+              height: 28px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
+              text-align: center;
+            }
           }
           div:nth-child(4n + 4) {
             margin-right: 0;
@@ -625,6 +668,15 @@ export default {
               position: absolute;
               top: 0;
               right: 0;
+            }
+            > .item_name {
+              width: 84px;
+              height: 28px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
+              text-align: center;
             }
           }
           div:nth-child(4n + 4) {
