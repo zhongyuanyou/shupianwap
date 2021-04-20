@@ -35,12 +35,13 @@
             class="span1"
             >尾款:</span
           >
+          <span v-else class="span1">全款:</span>
           <span class="span2">{{ item.money }}</span>
           <span class="span4">元</span>
           <span
             v-if="item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_0'"
             class="span3"
-            >待支付</span
+            >无需支付</span
           >
           <span
             v-else-if="item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1'"
@@ -51,7 +52,7 @@
         </p>
       </div>
     </div>
-    <LoadingCenter v-show="loading || !skuInfo.orderSaleName" />
+    <LoadingCenter v-show="loading" />
   </div>
 </template>
 
@@ -107,6 +108,7 @@ export default {
           { id: this.orderId, cusOrderId: this.cusOrderId }
         )
         .then((res) => {
+          this.loading = false
           this.skuInfo = res.orderSkuList.filter((item) => {
             return item.id === this.orderSkuId
           })[0]

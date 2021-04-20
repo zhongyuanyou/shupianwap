@@ -235,7 +235,7 @@
                 'ORDER_CUS_PAY_STATUS_UN_PAID'
             "
             class="btn-pay"
-            @click="handleClickItem(4)"
+            @click="handleClickPay()"
           >
             立即付款
           </sp-button>
@@ -247,7 +247,7 @@
                 'ORDER_CUS_PAY_STATUS_PART_PAID'
             "
             class="btn-pay"
-            @click="handleClickItem(5)"
+            @click="handleClickPay()"
           >
             立即付款
           </sp-button>
@@ -265,10 +265,10 @@
         ref="cancleOrderModel"
         :order-id="orderData.orderId"
         :cus-order-id="orderData.cusOrderId"
-        :order-sku-list="orderData.orderList"
-        :cus-order-cancel-reason="orderData.cusOrderCancelReason"
+        :order-list="orderData.orderList"
         @setCancelOrderName="setCancelOrderName"
         @cancleOrder="cancleOrder"
+        @getBatchList="getBatchList"
       />
       <PayModal
         v-if="showPayBtn"
@@ -468,6 +468,11 @@ export default {
       document.execCommand('Copy') // 执行浏览器复制命令
       oInput.remove()
       this.$xToast.success('复制成功')
+    },
+    handleClickPay() {
+      console.log('this.orderData', this.orderData.orderSkuList[0])
+      this.opType = 'payMoney'
+      this.getChildOrders(this.orderData.orderSkuList[0])
     },
   },
 }
