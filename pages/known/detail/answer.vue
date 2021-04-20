@@ -1,6 +1,10 @@
 <template>
   <div ref="myPage">
-    <div v-if="!showHead2" class="head head1">
+    <div
+      v-if="!showHead2"
+      class="head head1"
+      :style="{ paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px' }"
+    >
       <my-icon
         name="zuo"
         class="btn-icon"
@@ -57,7 +61,7 @@
         </div>
       </HeadSlot>
     </div>
-    <div class="title-area">
+    <div class="title-area" @click="toQueDetail">
       <div class="title">{{ answerDetails.title }}</div>
       <div class="nums-area">
         {{ answerDetails.answerCount }} 个回答 ·
@@ -168,6 +172,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Field, Button, Image, Toast, Popup, Dialog } from '@chipspc/vant-dgg'
 import Comment from '~/components/mustKnown/DetailComment'
 import HeadSlot from '@/components/common/head/header-slot'
@@ -240,9 +245,11 @@ export default {
     }
   },
   computed: {
-    userInfo() {
-      return this.$store.state.user
-    },
+    ...mapState({
+      userInfo: (state) => state.user, // 登录的用户信息
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
+    }),
   },
   created() {
     if (this.$route.query.id) {
@@ -257,6 +264,11 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    toQueDetail() {
+      this.$router.replace(
+        '/known/detail/question?id=' + this.answerDetails.sourceId
+      )
+    },
     follow() {
       this.loading = true
       this.$axios

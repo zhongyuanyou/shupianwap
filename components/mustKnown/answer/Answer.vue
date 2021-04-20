@@ -22,7 +22,7 @@
       @load="onLoad"
     >
       <sp-cell v-for="(item, index) in list" :key="index">
-        <div class="item" @click="$router.push('/known/detail/article')">
+        <div class="item" @click="toDetail(item)">
           <div class="item_content">
             <div class="item_content_lf">
               <div class="item_Info">
@@ -77,7 +77,7 @@ export default {
     return {
       answerTabs: ['推荐', '邀请'],
       active: 2,
-      loading: true,
+      loading: false,
       finished: false,
       list: [],
       page: 1,
@@ -136,6 +136,14 @@ export default {
         path: '/known/publish/answer',
         query: {
           id,
+        },
+      })
+    },
+    toDetail(item) {
+      this.$router.push({
+        path: '/known/detail/question',
+        query: {
+          id: item.id,
         },
       })
     },

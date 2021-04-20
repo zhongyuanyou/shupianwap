@@ -1,6 +1,7 @@
 import { mapState } from 'vuex'
 import knownApi from '@/api/known'
 import util from '@/utils/changeBusinessData'
+import { userinfoApi } from '@/api'
 
 let timeoute
 export default {
@@ -21,7 +22,7 @@ export default {
         userCode: 'U2100607057',
         userId: '',
         userName: '', //
-        userType: '1', // 作者类型 1 普通用户 2 规划师
+        userType: 2, // 作者类型 2 普通用户 3 规划师
         contentImageUrl: '', // 内容图片地址（多张 “,”号拼接）
         id: '',
       },
@@ -42,6 +43,7 @@ export default {
     }),
   },
   mounted() {
+    this.getUserInfo()
     // 获取参数
     this.editType = this.$route.query.editType
     this.id = this.$route.query.id
@@ -51,11 +53,32 @@ export default {
       : this.fromPage === 'article'
       ? (this.formData.type = 2)
       : (this.formData.type = 3)
-    this.formData.userId = this.userId
-    this.formData.userType = util.getUserType(this.userType)
-    this.formData.userName = this.userName
+    // this.formData.userId = this.userId
+    // this.formData.userType = util.getUserType(this.userType)
+    // this.formData.userName = this.userName
   },
   methods: {
+    async getUserInfo() {
+      // 获取用户信息
+      try {
+        const params = {
+          // id: this.userId,
+          id: this.userId || this.$cookies.get('userId'),
+        }
+        const res = await this.$axios.get(userinfoApi.info, { params })
+        this.loading = false
+        if (res.code === 200 && res.data && typeof res.data === 'object') {
+          console.log(res.data, 123)
+          this.formData.userId = res.data.id
+          this.formData.userType = util.getUserType(res.data.type)
+          this.formData.userName = res.data.nickName
+          console.log(res.data.userId, 123)
+          console.log(this.formData, 12312213)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
     getImgSrc(richtext) {
       const imgList = []
       richtext.replace(
@@ -80,7 +103,6 @@ export default {
         }
       }
       this.formData.title = val
-      console.log('set formData title:', this.formData)
     },
     setTopic(val) {
       this.topics = val
@@ -124,6 +146,10 @@ export default {
     },
     // 新增内容
     addContent() {
+      this.formData.userId = this.userId
+      this.formData.userType =
+        this.$store.state.user.userType === 'MERCHANT_USER' ? 3 : 2
+      this.formData.userName = this.userName
       this.$axios
         .post(knownApi.content.add, this.formData)
         .then((res) => {
