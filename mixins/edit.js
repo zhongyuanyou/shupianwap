@@ -22,7 +22,7 @@ export default {
         userCode: 'U2100607057',
         userId: '',
         userName: '', //
-        userType: '1', // 作者类型 1 普通用户 2 规划师
+        userType: 2, // 作者类型 2 普通用户 3 规划师
         contentImageUrl: '', // 内容图片地址（多张 “,”号拼接）
         id: '',
       },
@@ -103,7 +103,6 @@ export default {
         }
       }
       this.formData.title = val
-      console.log('set formData title:', this.formData)
     },
     setTopic(val) {
       this.topics = val
@@ -147,6 +146,10 @@ export default {
     },
     // 新增内容
     addContent() {
+      this.formData.userId = this.userId
+      this.formData.userType =
+        this.$store.state.user.userType === 'MERCHANT_USER' ? 3 : 2
+      this.formData.userName = this.userName
       this.$axios
         .post(knownApi.content.add, this.formData)
         .then((res) => {

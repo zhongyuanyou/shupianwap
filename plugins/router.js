@@ -37,6 +37,7 @@ const infoList = [
   'known-detail-question',
   'known-detail-invitationList',
   'known-detail-invitationSearch',
+  'my-collection',
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {
