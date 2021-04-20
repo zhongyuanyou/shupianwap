@@ -106,6 +106,9 @@ export default ({ app, store }) => {
               } catch (err) {
                 next()
               }
+            } else {
+              store.commit('user/CLEAR_USER')
+              next()
             }
           })
         } else {
