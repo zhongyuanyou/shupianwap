@@ -1,11 +1,6 @@
 <template>
   <div class="container">
-    <div
-      v-if="isInApp"
-      class="modal"
-      :style="{ height: statusBarHeight + 'px' }"
-    ></div>
-    <sp-sticky :offset-top="isInApp ? statusBarHeight : '0'">
+    <header-slot height="1.8rem">
       <div class="container_head">
         <Search
           value="请输入关键词搜索"
@@ -46,21 +41,19 @@
           @click.native="showPop = true"
         ></my-icon>
       </div>
-    </sp-sticky>
+    </header-slot>
 
-    <div :style="{ marginTop: isInApp ? '50px' : 0 }">
-      <Answer v-if="tabs[active].executionParameters === 'huida'" />
+    <Answer v-if="tabs[active].executionParameters === 'huida'" />
 
-      <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
-        >关注</Attention
-      >
-      <hot-list
-        v-else-if="tabs[active].executionParameters === 'rebang'"
-        :category-id="tabs[active].id"
-      />
-      <Recommend v-else-if="tabs[active].executionParameters === 'tuijian'" />
-      <ordinary-list v-else :categor-ids="tabs[active].id" />
-    </div>
+    <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
+      >关注</Attention
+    >
+    <hot-list
+      v-else-if="tabs[active].executionParameters === 'rebang'"
+      :category-id="tabs[active].id"
+    />
+    <Recommend v-else-if="tabs[active].executionParameters === 'tuijian'" />
+    <ordinary-list v-else :categor-ids="tabs[active].id" />
 
     <!-- 弹出框tab修改列表 start -->
     <sp-popup
@@ -193,6 +186,7 @@ import Answer from '@/components/mustKnown/answer/Answer'
 import Search from '@/components/mustKnown/recommend/search/Search'
 import Bottombar from '@/components/common/nav/Bottombar'
 import { knownApi } from '@/api'
+import HeaderSlot from '@/components/common/head/header-slot'
 
 export default {
   name: 'Index',
@@ -212,6 +206,7 @@ export default {
     Attention,
     HotList,
     OrdinaryList,
+    HeaderSlot,
   },
   async asyncData({ $axios, store }) {
     const { code, message, data } = await $axios.get(
@@ -219,8 +214,8 @@ export default {
       {
         params: {
           // type 1 获取企大顺导航
-          type: store.state.app.isInApp ? 1 : '',
-          // type: 1,
+          // type: store.state.app.isInApp ? 1 : '',
+          type: 1,
         },
       }
     )
