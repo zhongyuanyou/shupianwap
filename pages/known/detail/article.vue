@@ -192,7 +192,7 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.$xToast.show({
-              message: this.isFollow ? '关注成功' : '取消关注',
+              message: this.isFollow ? '取消关注' : '关注成功',
             })
             this.isFollow = !this.isFollow
           } else {
