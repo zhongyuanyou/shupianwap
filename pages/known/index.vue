@@ -224,7 +224,6 @@ export default {
         },
       }
     )
-    console.log(data)
     return {
       tabs: data,
     }
@@ -260,7 +259,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.appInfo)
     if (this.appInfo) {
       this.statusBarHeight = this.appInfo.statusBarHeight
     }
@@ -277,11 +275,11 @@ export default {
           (item) => !this.morePlate.some((ele) => ele.id === item.id)
         )
         this.tabs = this.myPlate
+      } else {
+        this.myPlate = this.tabs
       }
     },
-    toggleTabs() {
-      console.log(this.active)
-    },
+    toggleTabs() {},
     async isLogin() {
       if (this.userInfo.userId && this.userInfo.token) {
         return true
@@ -319,6 +317,7 @@ export default {
     // 添加到我的列表中
     addToMyPlate(index) {
       const arrayValue = this.morePlate[index]
+      console.log('arrayValue1', arrayValue)
       if (arrayValue) {
         this.myPlate.push(arrayValue)
         this.morePlate.pop(index)
@@ -326,6 +325,7 @@ export default {
     },
     deleteToMyPlate(index) {
       const arrayValue = this.myPlate[index]
+      console.log('arrayValu2', arrayValue)
       if (arrayValue) {
         this.morePlate.push(arrayValue)
         this.myPlate.pop(index)
