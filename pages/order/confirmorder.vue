@@ -47,7 +47,7 @@
                 <p class="name">{{ listitem.goodsSubName }}</p>
                 <p class="data">{{ listitem.goodsSubDetailsName }}</p>
                 <p class="price">
-                  {{ listitem.settlementPriceEdit }} {{ `x1` }}
+                  {{ `x1` }}
                 </p>
               </div>
             </div>
@@ -190,7 +190,9 @@
           <b>{{ price }}</b> 元</span
         >
       </p>
-      <div class="right" @click="placeOrder">提交订单</div>
+      <div class="right" :class="radio ? 'act' : ''" @click="placeOrder">
+        提交订单
+      </div>
     </div>
     <div v-show="editShow" class="contractbox">
       <Contract @goback="contractback" @sum="contractsum"></Contract>
@@ -252,7 +254,7 @@ export default {
       num: 0,
       tablist: [
         { name: '可用优惠券', num: '12', is: true },
-        { name: '过期优惠券' },
+        { name: '不可用优惠券' },
       ],
       datalist: [],
       nolist: [],
@@ -314,7 +316,6 @@ export default {
           this.price = this.order.skuTotalPrice
           this.getInitData(5)
           this.getInitData(6)
-          this.skeletonloading = false
         })
         .catch((e) => {
           if (e.code !== 200) {
@@ -359,9 +360,7 @@ export default {
           this.price = this.order.salesPrice
           this.getInitData(5)
           this.getInitData(6)
-          this.skeletonloading = false
         } else {
-          this.skeletonloading = false
           this.$xToast.show('服务器异常,请然后再试')
           setTimeout(function () {
             that.$router.back(-1)
@@ -488,6 +487,9 @@ export default {
           })
       }
     },
+    sortData(a, b) {
+      return b.reducePrice - a.reducePrice
+    },
     getInitData(index) {
       const arr = this.order.list.map((x) => {
         return x.id
@@ -525,8 +527,14 @@ export default {
         .then((result) => {
           if (index === 5) {
             this.datalist = result
+            this.datalist = this.datalist.sort(this.sortData)
+            this.conpon = this.datalist[0]
+            this.$refs.conpon.radio = 0
+            this.$refs.conpon.checkarr = this.datalist[0]
+            this.$refs.conpon.num = this.$refs.conpon.checkarr.reducePrice
+            this.$refs.conpon.sum()
+            this.skeletonloading = false
           } else {
-            console.log(result, 123)
             this.nolist = result
           }
         })
@@ -742,6 +750,10 @@ export default {
       text-align: center;
       color: #fff;
       margin-left: auto;
+      opacity: 0.4;
+    }
+    .act {
+      opacity: 1;
     }
   }
   > .contractbox {

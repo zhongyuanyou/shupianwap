@@ -49,7 +49,7 @@ export default {
   height: 100vh;
   > .ifr {
     width: 100%;
-    height: calc(100vh - 200px);
+    height: calc(100vh - 100px);
   }
 }
 </style>

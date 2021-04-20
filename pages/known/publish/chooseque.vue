@@ -13,9 +13,20 @@
             error-text="请求失败，点击重新加载"
             @load="onLoad"
           >
-            <div v-for="(item, index) in list" :key="index" class="item">
+            <div
+              v-for="(item, index) in list"
+              :key="index"
+              class="item"
+              @click="toDetail(item)"
+            >
               <div class="user-info">
-                <div class="img" :src="item.avatar"></div>
+                <sp-image
+                  round
+                  class="img"
+                  fit="cover"
+                  :src="item.avatar"
+                  @click="toHome(item)"
+                />
                 <div class="infos">
                   <p class="user-name">{{ item.userName || '' }}</p>
                   <p class="pub-time">
@@ -29,7 +40,7 @@
                   {{ item.answerCount }} 回答 · {{ item.collectCount }} 关注
                 </div>
                 <div class="btn">
-                  <sp-button type="primary" @click="chooseQue(item)"
+                  <sp-button type="primary" @click.stop="chooseQue(item)"
                     >写回答</sp-button
                   >
                 </div>
@@ -47,7 +58,12 @@
             error-text="请求失败，点击重新加载"
             @load="onLoad"
           >
-            <div v-for="(item, index) in list" :key="index" class="item">
+            <div
+              v-for="(item, index) in list"
+              :key="index"
+              class="item"
+              @click="toDetail(item)"
+            >
               <p class="view-num">最近{{ item.totalBrowseCount }}人浏览</p>
               <div class="item-content">{{ item.content }}</div>
               <div class="item-bottom">
@@ -55,7 +71,7 @@
                   {{ item.answerCount }} 回答 · {{ item.collectCount }} 关注
                 </div>
                 <div class="btn">
-                  <sp-button type="primary" @click="chooseQue(item)"
+                  <sp-button type="primary" @click.stop="chooseQue(item)"
                     >写回答</sp-button
                   >
                 </div>
@@ -70,7 +86,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { Tab, Tabs, Button, List } from '@chipspc/vant-dgg'
+import { Tab, Tabs, Button, List, Image } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import knownApi from '@/api/known'
 
@@ -81,6 +97,7 @@ export default {
     [Tabs.name]: Tabs,
     [Button.name]: Button,
     [List.name]: List,
+    [Image.name]: Image,
   },
   data() {
     return {
@@ -91,7 +108,6 @@ export default {
       limit: 15,
       list: [],
       active: 0,
-      isFromApp: '', // 是否从APP跳转
     }
   },
   computed: {
@@ -110,6 +126,23 @@ export default {
       this.error = false
       this.finished = false
       this.loading = true
+    },
+    toHome(item) {
+      this.$router.push({
+        path: '/known/home',
+        query: {
+          homeUserId: item.userId,
+          type: 2, // 推荐的用户都是规划师
+        },
+      })
+    },
+    toDetail(item) {
+      this.$router.push({
+        path: '/known/detail/question',
+        query: {
+          id: item.id,
+        },
+      })
     },
     chooseQue(item) {
       this.$router.push({

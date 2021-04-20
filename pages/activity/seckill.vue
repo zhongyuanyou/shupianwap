@@ -35,7 +35,12 @@
         <div class="count-down">
           <div class="end-time">距本场结束还剩</div>
           <div class="down-time">
-            <sp-count-down :time="time">
+            <span class="block">{{ endTime.hour }}</span>
+            <span class="colon">:</span>
+            <span class="block">{{ endTime.min }}</span>
+            <span class="colon">:</span>
+            <span class="block">{{ endTime.sec }}</span>
+            <!-- <sp-count-down :time="time">
               <template #default="timeData">
                 <span class="block">{{ '0' + timeData.hours }}</span>
                 <span class="colon">:</span>
@@ -43,34 +48,39 @@
                 <span class="colon">:</span>
                 <span class="block">{{ '0' + timeData.seconds }}</span>
               </template>
-            </sp-count-down>
+            </sp-count-down> -->
           </div>
         </div>
       </div>
       <!-- E countdown -->
       <!-- S wrapper -->
       <div class="wrapper">
-        <div v-for="(item, index) in advice" :key="index" class="item">
-          <div class="item-tp">
+        <div
+          v-for="item in recommendProductList.rows"
+          :key="item.id"
+          class="item"
+          @click="jumpProductDetail(item)"
+        >
+          <div class="item-tp" :style="{ 'background-image': item.imageUrl }">
             <div class="item_tp_title">
               <div class="item-icon"></div>
-              <div class="item-money">{{ item.lowmoney }}</div>
+              <div class="item-money">{{ item.specialPrice }}</div>
             </div>
           </div>
           <div class="item-bt">
-            <div class="item-bt-tp">{{ item.title }}</div>
+            <div class="item-bt-tp">{{ item.skuName }}</div>
             <div class="item-bt-md">
-              <span>{{ item.money }}</span>
+              <span>{{ item.specialPrice }}</span>
               <span>元</span>
             </div>
-            <div class="item-bt-bt">
+            <!-- <div class="item-bt-bt">
               <div class="avtars">
                 <div class="avtar1"></div>
                 <div class="avtar2"></div>
               </div>
 
               <span class="counsel">{{ item.time }}秒之前咨询</span>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -81,11 +91,22 @@
       <div class="body-tabs">
         <div class="care-select"></div>
         <ul class="tab-box">
-          <li class="tab-item active">精选</li>
+          <!-- <li class="tab-item active">精选</li>
           <li class="tab-item">工商</li>
           <li class="tab-item">财税</li>
-          <li class="tab-item">知识</li>
-          <li class="tab-item">法律</li>
+          <li class="tab-item">知识</li> -->
+          <li v-for="item in introWords" :key="item" class="tab-item">
+            {{ item }}
+          </li>
+          <!-- <li
+            v-for="(item, index) in activityTypeOptions"
+            :key="index"
+            class="tab-item"
+            :class="{ active: index == currentIndex }"
+            @click="menuTab(item, index)"
+          >
+            {{ item.labelName }}
+          </li> -->
         </ul>
       </div>
       <div class="body-content">
@@ -96,31 +117,48 @@
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <div v-for="(item, index) in items" :key="index">
+            <div
+              v-for="(item, index) in productList.rows"
+              :key="index"
+              @click="jumpProductDetail(item)"
+            >
               <div class="body-content-items">
-                <div class="left-content">
-                  <div class="left-countdown">距离结束21:18:02</div>
+                <div
+                  class="left-content"
+                  :style="{ 'background-image': item.imageUrl }"
+                >
+                  <div class="left-countdown">
+                    距离结束{{ endTime.hour }}:{{ endTime.min }}:{{
+                      endTime.sec
+                    }}
+                  </div>
                 </div>
                 <div class="right-content">
                   <div class="rc-top">
-                    <span>{{ item.span1 }}</span>
-                    <span>{{ item.span2 }}</span>
-                    {{ item.title }}
+                    <!-- <span>{{ item.span1 }}</span>
+                    <span>{{ item.span2 }}</span> -->
+                    <span>特卖</span>
+                    <span>千万补贴</span>
+                    {{ item.skuName }}
                   </div>
                   <div class="rc-middle">
                     <div class="reduce-price">
-                      限时直降{{ item.jiangjia }}元
+                      限时直降{{ item.skuPrice - item.specialPrice }}元
                     </div>
-                    <div class="deal-ok">已成交{{ item.ok }}单</div>
+                    <div class="deal-ok">
+                      已成交{{
+                        item.specialInventory - item.specialResidueInventory
+                      }}单
+                    </div>
                   </div>
                   <div class="rc-bottom">
                     <div class="rc-bottom-lf">
                       <div class="rc-bottom-lf-my">
                         <div>秒杀价</div>
-                        <div>{{ item.miaosha }}</div>
+                        <div>{{ item.specialPrice }}</div>
                         <div>元</div>
                       </div>
-                      <div class="bf-my">近{{ item.dijia }}天历史低价</div>
+                      <!-- <div class="bf-my">近{{ item.dijia }}天历史低价</div> -->
                     </div>
                     <div class="rc-bottom-rt">
                       <div>去抢购</div>
@@ -141,6 +179,157 @@
     <!-- E container-body -->
   </div>
 </template>
+
+<script>
+import {
+  CountDown,
+  Sticky,
+  Progress,
+  List,
+  PullRefresh,
+} from '@chipspc/vant-dgg'
+import activityMixin from '@/mixins/activityMixin'
+
+export default {
+  name: 'Seckill',
+  components: {
+    [CountDown.name]: CountDown,
+    [Sticky.name]: Sticky,
+    [Progress.name]: Progress,
+    [List.name]: List,
+    [PullRefresh.name]: PullRefresh,
+  },
+  mixins: [activityMixin],
+  data() {
+    return {
+      specType: 'HDZT_ZTTYPE_XSQG',
+      advice: [
+        {
+          lowmoney: '限时直降499元',
+          title: '小规模纳税人财税代理',
+          money: '488',
+          time: '38',
+        },
+        {
+          lowmoney: '限时直降498元',
+          title: '小规模纳税人财税代理',
+          money: '488',
+          time: '30',
+        },
+        {
+          lowmoney: '限时直降499元',
+          title: '小规模纳税人财税代理',
+          money: '488',
+          time: '22',
+        },
+        {
+          lowmoney: '限时直降499元',
+          title: '小规模纳税人财税代理',
+          money: '488',
+          time: '21',
+        },
+      ],
+      items: [
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+      ],
+      list: [],
+      loading: false,
+      finished: false,
+      refreshing: false,
+      allText: '精选',
+      introWords: ['人工选品', '限时限量', '低价高质'],
+    }
+  },
+  methods: {
+    onLoad() {
+      setTimeout(() => {
+        if (this.refreshing) {
+          this.list = []
+          this.refreshing = false
+        }
+
+        for (let i = 0; i < 10; i++) {
+          this.list.push(this.list.length + 1)
+        }
+        this.loading = false
+
+        if (this.list.length >= 40) {
+          this.finished = true
+        }
+      }, 1000)
+    },
+    onRefresh() {
+      // 清空列表数据
+      this.finished = false
+
+      // 重新加载数据
+      // 将 loading 设置为 true，表示处于加载状态
+      this.loading = true
+      this.onLoad()
+    },
+  },
+}
+</script>
+
 <style lang="less" scoped>
 .container {
   position: relative;
@@ -224,26 +413,44 @@
           margin-right: 12px;
         }
         .down-time {
-          .sp-count-down {
-            .block {
-              padding: 6px;
-              width: 36px;
-              height: 36px;
-              font-size: 24px;
-              font-weight: 500;
-              color: #ec5330;
-              line-height: 24px;
-              background: #ffffff;
-              border-radius: 4px;
-            }
-            .colon {
-              font-size: 24px;
-              font-weight: 500;
-              color: #fefffe;
-              // // line-height: 24px;
-              // margin-right: 12px;
-            }
+          .block {
+            padding: 6px;
+            width: 36px;
+            height: 36px;
+            font-size: 24px;
+            font-weight: 500;
+            color: #ec5330;
+            line-height: 24px;
+            background: #ffffff;
+            border-radius: 4px;
           }
+          .colon {
+            font-size: 24px;
+            font-weight: 500;
+            color: #fefffe;
+            // // line-height: 24px;
+            // margin-right: 12px;
+          }
+          // .sp-count-down {
+          //   .block {
+          //     padding: 6px;
+          //     width: 36px;
+          //     height: 36px;
+          //     font-size: 24px;
+          //     font-weight: 500;
+          //     color: #ec5330;
+          //     line-height: 24px;
+          //     background: #ffffff;
+          //     border-radius: 4px;
+          //   }
+          //   .colon {
+          //     font-size: 24px;
+          //     font-weight: 500;
+          //     color: #fefffe;
+          //     // // line-height: 24px;
+          //     // margin-right: 12px;
+          //   }
+          // }
         }
       }
     }
@@ -270,7 +477,7 @@
           );
           background-size: 100% 100%;
           -moz-background-size: 100% 100%;
-          background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
+          // background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
           border-radius: 16px 16px 0px 0px;
           position: relative;
           bottom: 0;
@@ -443,7 +650,7 @@
         border-radius: 12px;
         background-size: 100% 100%;
         -moz-background-size: 100% 100%;
-        background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
+        // background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
         .left-countdown {
           font-size: 22px;
           font-weight: 400;
@@ -598,142 +805,3 @@
   }
 }
 </style>
-
-<script>
-// import Search from '~/components/common/search/Search.vue'
-import { CountDown, Sticky, Progress, List } from '@chipspc/vant-dgg'
-
-export default {
-  name: 'Seckill',
-  components: {
-    [CountDown.name]: CountDown,
-    [Sticky.name]: Sticky,
-    [Progress.name]: Progress,
-    [List.name]: List,
-  },
-  data() {
-    return {
-      advice: [
-        {
-          lowmoney: '限时直降499元',
-          title: '小规模纳税人财税代理',
-          money: '488',
-          time: '38',
-        },
-        {
-          lowmoney: '限时直降498元',
-          title: '小规模纳税人财税代理',
-          money: '488',
-          time: '30',
-        },
-        {
-          lowmoney: '限时直降499元',
-          title: '小规模纳税人财税代理',
-          money: '488',
-          time: '22',
-        },
-        {
-          lowmoney: '限时直降499元',
-          title: '小规模纳税人财税代理',
-          money: '488',
-          time: '21',
-        },
-      ],
-      items: [
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-      ],
-      list: [],
-      loading: false,
-      finished: false,
-      refreshing: false,
-    }
-  },
-  methods: {
-    onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        this.loading = false
-
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
-    },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
-
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
-  },
-}
-</script>

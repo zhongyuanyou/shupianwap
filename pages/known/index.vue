@@ -1,11 +1,6 @@
 <template>
   <div class="container">
-    <div
-      v-if="isInApp"
-      class="modal"
-      :style="{ height: statusBarHeight + 'px' }"
-    ></div>
-    <sp-sticky :offset-top="isInApp ? statusBarHeight : '0'">
+    <header-slot height="1.8rem">
       <div class="container_head">
         <Search
           value="请输入关键词搜索"
@@ -46,21 +41,19 @@
           @click.native="showPop = true"
         ></my-icon>
       </div>
-    </sp-sticky>
+    </header-slot>
 
-    <div :style="{ marginTop: isInApp ? '50px' : 0 }">
-      <Answer v-if="tabs[active].executionParameters === 'huida'" />
+    <Answer v-if="tabs[active].executionParameters === 'huida'" />
 
-      <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
-        >关注</Attention
-      >
-      <hot-list
-        v-else-if="tabs[active].executionParameters === 'rebang'"
-        :category-id="tabs[active].id"
-      />
-      <Recommend v-else-if="tabs[active].executionParameters === 'tuijian'" />
-      <ordinary-list v-else :categor-ids="tabs[active].id" />
-    </div>
+    <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
+      >关注</Attention
+    >
+    <hot-list
+      v-else-if="tabs[active].executionParameters === 'rebang'"
+      :category-id="tabs[active].id"
+    />
+    <Recommend v-else-if="tabs[active].executionParameters === 'tuijian'" />
+    <ordinary-list v-else :categor-ids="tabs[active].id" />
 
     <!-- 弹出框tab修改列表 start -->
     <sp-popup
@@ -193,6 +186,7 @@ import Answer from '@/components/mustKnown/answer/Answer'
 import Search from '@/components/mustKnown/recommend/search/Search'
 import Bottombar from '@/components/common/nav/Bottombar'
 import { knownApi } from '@/api'
+import HeaderSlot from '@/components/common/head/header-slot'
 
 export default {
   name: 'Index',
@@ -212,6 +206,7 @@ export default {
     Attention,
     HotList,
     OrdinaryList,
+    HeaderSlot,
   },
   async asyncData({ $axios, store }) {
     const { code, message, data } = await $axios.get(
@@ -224,7 +219,6 @@ export default {
         },
       }
     )
-    console.log(data)
     return {
       tabs: data,
     }
@@ -260,7 +254,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.appInfo)
     if (this.appInfo) {
       this.statusBarHeight = this.appInfo.statusBarHeight
     }
@@ -277,11 +270,11 @@ export default {
           (item) => !this.morePlate.some((ele) => ele.id === item.id)
         )
         this.tabs = this.myPlate
+      } else {
+        this.myPlate = this.tabs
       }
     },
-    toggleTabs() {
-      console.log(this.active)
-    },
+    toggleTabs() {},
     async isLogin() {
       if (this.userInfo.userId && this.userInfo.token) {
         return true
@@ -319,13 +312,18 @@ export default {
     // 添加到我的列表中
     addToMyPlate(index) {
       const arrayValue = this.morePlate[index]
+      console.log('arrayValue1', arrayValue)
       if (arrayValue) {
         this.myPlate.push(arrayValue)
         this.morePlate.pop(index)
       }
     },
     deleteToMyPlate(index) {
+      if (index === this.active) {
+        this.active--
+      }
       const arrayValue = this.myPlate[index]
+      console.log('arrayValu2', arrayValue)
       if (arrayValue) {
         this.morePlate.push(arrayValue)
         this.myPlate.pop(index)
