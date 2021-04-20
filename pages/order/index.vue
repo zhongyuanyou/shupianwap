@@ -217,6 +217,7 @@ export default {
           for (let i = 0, l = arr.length; i < l; i++) {
             this.changeMoney(arr[i])
             arr[i].statusName = this.getStatusName(arr[i].orderStatusNo)
+            this.getSkuList(arr[i])
           }
           if (this.page === 1) {
             this.list = arr
@@ -225,6 +226,7 @@ export default {
             const allData = nowData.concat(arr)
             this.list = allData
           }
+          console.log('this.list', this.list)
           this.loadingList = false
         })
         .catch((error) => {
@@ -239,6 +241,7 @@ export default {
         })
     },
     handleClickItem(type, order) {
+      console.log('order1', order)
       this.initItem(order)
       switch (type) {
         case 1:
@@ -257,12 +260,12 @@ export default {
         case 4:
           // 立即付款 首先判断是否有关联订单
           this.opType = 'payMoney'
-          this.getChildOrders()
+          this.getChildOrders(order)
           break
         case 5:
           // 支付余款 首先判断是否有关联订单
           this.opType = 'payMoney'
-          this.getChildOrders()
+          this.getChildOrders(order)
           break
         case 6:
           // 确认完成

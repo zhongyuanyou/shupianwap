@@ -3,15 +3,13 @@
     <sp-image class="img" :src="item.skuImages"></sp-image>
     <div class="right">
       <p class="goods-name">
-        <span
+        <!-- <span
           v-if="item.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID'"
           class="name"
         >
           {{ setName(item.spuName || item.orderSaleName) }}</span
-        >
-        <span v-else class="name">
-          {{ item.spuName || item.orderSaleName }}</span
-        >
+        > -->
+        <span class="name"> {{ item.spuName || item.orderSaleName }}</span>
         <span v-if="cusOrderPayType !== 2 && orderType" class="money1">
           {{ changeMoney(item.skuPrice || item.skuPrice) }}元
         </span>
@@ -44,7 +42,7 @@
             @click="handleClickBtn(2, item)"
             >办理进度</sp-button
           >
-          <!-- 服务产品确认完成显示条件 1产品状态为已处理 2支付状态为完成支付  3用户未点确认-->
+          <!-- 服务产品确认完成显示条件 1产品状态为已处理 2支付状态未完成支付  3用户未点确认-->
           <sp-button
             v-if="
               (item.skuStatusNo === 'ORDER_ORDER_SERVER_STATUS_HANDLED' ||
