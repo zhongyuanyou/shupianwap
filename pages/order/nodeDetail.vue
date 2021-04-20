@@ -2,7 +2,7 @@
   <div class="page">
     <Header title="节点明细" @leftClickFuc="onClickLeft" />
     <div class="banner">
-      <p class="goods-name">{{ skuInfo.orderSaleName }}</p>
+      <p class="goods-name">{{ skuInfo.spuName }}</p>
       <p class="goods-skus">
         {{ skuInfo.skuExtInfo }}
       </p>
@@ -82,19 +82,12 @@ export default {
     }
   },
   mounted() {
-    if (
-      this.$route.query.orderId &&
-      this.$route.query.cusOrderId &&
-      this.$route.query.skuId
-    ) {
+    if (this.$route.query.cusOrderId && this.$route.query.skuId) {
       this.cusOrderId = this.$route.query.cusOrderId
-      this.orderId = this.$route.query.orderId
       this.orderSkuId = this.$route.query.skuId
+      this.orderId = this.$route.query.orderId
       this.getBatchList()
       this.getDetail()
-    } else {
-      this.$xToast.error('缺少参数')
-      this.$router.back(-1)
     }
   },
   methods: {
@@ -102,20 +95,10 @@ export default {
       this.$router.back(-1)
     },
     getDetail() {
-      orderApi
-        .getDetailByOrderId(
-          { axios: this.axios },
-          { id: this.orderId, cusOrderId: this.cusOrderId }
-        )
-        .then((res) => {
-          this.loading = false
-          this.skuInfo = res.orderSkuList.filter((item) => {
-            return item.id === this.orderSkuId
-          })[0]
-        })
-        .catch((err) => {
-          this.$xToast.error(err.message)
-        })
+      const list = JSON.parse(localStorage.getItem('nodeList'))
+      this.skuInfo = list.filter((item) => {
+        return item.id === this.orderSkuId
+      })[0]
     },
   },
 }
