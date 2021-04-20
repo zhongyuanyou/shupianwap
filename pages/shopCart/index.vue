@@ -403,7 +403,10 @@ export default {
     attentionItem(cartId, data) {},
     // 全选
     selectAll(data) {
-      const cartIdArray = this.list.map((item) => item.cartId)
+      const cartIdArray = this.list.map((item) => {
+        if (item.status === 'PRO_STATUS_PUT_AWAY') return item.cartId
+      })
+      console.log('item.cartIdArray', cartIdArray)
       const cartId = cartIdArray.join()
       this.selectItem(cartId, data).catch((error) => {
         this.$xToast.show({
