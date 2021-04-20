@@ -78,7 +78,7 @@ export default {
   },
   computed: {
     maxHeight() {
-      return this.orderData.orderSkuList.length * 230
+      return this.orderData.orderSkuList.length * 236
     },
   },
   methods: {
@@ -110,7 +110,7 @@ export default {
   transition: all 0.5s;
 }
 .serve-list1 {
-  height: 660px;
+  height: 680px;
 }
 .btn-p {
   text-align: center;

@@ -9,7 +9,11 @@
         @click.native="onLeftClick"
       ></my-icon>
       <div class="user-info">
-        <sp-image class="img" :src="headerData.avatar" />
+        <sp-image
+          class="img"
+          :src="headerData.avatar"
+          @click.stop="goUser(headerData.userId, headerData.userType)"
+        />
         <div class="infos">
           <p>{{ headerData.createrName }}</p>
           <!-- {{ headerData.contentText }} -->
@@ -53,6 +57,12 @@ export default {
     },
   },
   methods: {
+    goUser(id, usertype) {
+      this.$router.push({
+        path: '/known/home',
+        query: { homeUserId: id, type: usertype },
+      })
+    },
     follow() {
       this.$emit('follow')
     },

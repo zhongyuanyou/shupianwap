@@ -61,6 +61,7 @@
               >{{ item.skuDetailInfo }}</span
             >
             <span class="sku-item">{{ getSkus(item.skuExtInfo) }}</span>
+            <span class="goods-num">×{{ item.skuCount }}</span>
             <!-- <span v-else class="sku-item">{{ getSkus(item.skuExtInfo) }}</span>
             <span class="goods-num">×{{ item.skuCount }}</span> -->
           </p>
