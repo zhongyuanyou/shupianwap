@@ -459,30 +459,31 @@ export default {
     },
     // 判断是否显示确认订单按钮
     isShowConfirmBtn(data) {
-      data = data || this.orderData
-      let isShowConfirm
-      if (
-        data.orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION' ||
-        data.orderProTypeNo === 'PRO_CLASS_TYPE_SALES '
-      ) {
-        const orderArr = data.orderSkuEsList || data.orderSkuList
-        for (let i = 0, l = orderArr.length; i < l; i++) {
-          if (
-            (orderArr[i].skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
-              orderArr[i].skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED' ||
-              orderArr[i].skuStatusNo ===
-                'ORDER_ORDER_RESOURCE_STATUS_HANDLED' ||
-              orderArr[i].skuStatusNo ===
-                'ORDER_ORDER_SERVER_STATUS_HANDLED') &&
-            orderArr[i].payStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
-          ) {
-            if (orderArr[i].userConfirm === 0) {
-              isShowConfirm = 1
-            }
-          }
-        }
-      }
-      return isShowConfirm
+      return true
+      // data = data || this.orderData
+      // let isShowConfirm
+      // if (
+      //   data.orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION' ||
+      //   data.orderProTypeNo === 'PRO_CLASS_TYPE_SALES '
+      // ) {
+      //   const orderArr = data.orderSkuEsList || data.orderSkuList
+      //   for (let i = 0, l = orderArr.length; i < l; i++) {
+      //     if (
+      //       (orderArr[i].skuStatusNo === 'ORDER_ORDER_SALE_STATUS_HANDLED' ||
+      //         orderArr[i].skuStatusNo === 'ORDER_ORDER_TRADE_STATUS_HANDLED' ||
+      //         orderArr[i].skuStatusNo ===
+      //           'ORDER_ORDER_RESOURCE_STATUS_HANDLED' ||
+      //         orderArr[i].skuStatusNo ===
+      //           'ORDER_ORDER_SERVER_STATUS_HANDLED') &&
+      //       orderArr[i].payStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
+      //     ) {
+      //       if (orderArr[i].userConfirm === 0) {
+      //         isShowConfirm = 1
+      //       }
+      //     }
+      //   }
+      // }
+      // return isShowConfirm
     },
     // 判断是否显示付款按钮
     isShowPayBtn() {
@@ -580,12 +581,11 @@ export default {
         orderSkuIds = new Array(1).fill(orderSkuIds)
       }
       const params = {
-        orderId: this.orderData.orderId,
-        cusOrderId: this.orderData.cusOrderId,
         orderSkuIds,
         operateSourcePlat: 'COMDIC_PLATFORM_CRISPS',
         operateTerminal: 'ORDER_TERMINAL_WAP',
       }
+      console.log('params', params)
       orderApi
         .confirmOrder({ axios: this.$axios }, params)
         .then((res) => {

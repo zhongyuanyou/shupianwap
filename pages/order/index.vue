@@ -241,7 +241,6 @@ export default {
         })
     },
     handleClickItem(type, order) {
-      console.log('order1', order)
       this.initItem(order)
       switch (type) {
         case 1:
