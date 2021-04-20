@@ -137,6 +137,12 @@ export default {
         return {}
       },
     },
+    batchIds: {
+      type: String,
+      default() {
+        return ''
+      },
+    },
     // 分批支付数据列表
     payList: {
       type: Array,
@@ -184,6 +190,7 @@ export default {
           orderId: this.orderData.id,
           cusOrderId: this.orderData.cusOrderId,
           fromPage: this.fromPage,
+          batchIds: this.batchIds,
         },
       })
     },

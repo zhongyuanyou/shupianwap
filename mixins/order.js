@@ -262,7 +262,7 @@ export default {
         this.$xToast.error('该订单为线下支付，请联系规划师付款')
         return
       }
-      if (this.fromPage === 'orderList') {
+      if (this.fromPage === 'orderList' || this.fromPage === 'orderDetail') {
         // 同时判断有无关联订单
         if (this.checkHasOtherOrder()) {
           // 有关联订单时则打开提示弹窗
@@ -374,9 +374,6 @@ export default {
           },
         })
       } else {
-        // 是分批支付则弹起分批支付弹窗 关闭关联订单弹窗
-        this.$refs.payModal.showPop = true
-        this.$refs.cancleOrderModel.showPop = false
         let thisTimePayTotal = 0 // 本期应付总额
         let allTimePayTotal = 0 // 剩余未支付所有批次总额
         const idsArr = [] // 应分批支付id
@@ -395,6 +392,10 @@ export default {
         this.thisTimePayTotal = this.regFenToYuan(thisTimePayTotal)
         this.allTimePayTotal = this.regFenToYuan(allTimePayTotal)
         this.batchIds = idsArr.join(',')
+        console.log('batchIds', this.batchIds)
+        // 是分批支付则弹起分批支付弹窗 关闭关联订单弹窗
+        this.$refs.payModal.showPop = true
+        this.$refs.cancleOrderModel.showPop = false
       }
     },
     // 判断展示合同按钮 false不展示  1签署合同 2查看合同
