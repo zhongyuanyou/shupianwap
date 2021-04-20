@@ -45,7 +45,11 @@
             @click.native="onLeftClick"
           ></my-icon>
           <div class="user-info">
-            <sp-image class="img" :src="answerDetails.avatar" />
+            <sp-image
+              class="img"
+              :src="answerDetails.avatar"
+              @click="goUser(answerDetails.userId, answerDetails.userType)"
+            />
             <div class="infos">{{ answerDetails.createrName }}</div>
             <template v-if="answerDetails.createrId !== userInfo.userId">
               <div v-if="!isFollow" class="btn" @click="follow">
@@ -70,7 +74,11 @@
     </div>
     <div class="main">
       <div class="user-info">
-        <sp-image class="img" :src="answerDetails.avatar" />
+        <sp-image
+          class="img"
+          :src="answerDetails.avatar"
+          @click="goUser(answerDetails.userId, answerDetails.userType)"
+        />
         <div class="infos">{{ answerDetails.createrName }}</div>
         <template v-if="answerDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
@@ -176,7 +184,8 @@ import { mapState } from 'vuex'
 import { Field, Button, Image, Toast, Popup, Dialog } from '@chipspc/vant-dgg'
 import Comment from '~/components/mustKnown/DetailComment'
 import HeadSlot from '@/components/common/head/header-slot'
-import { knownApi } from '~/api'
+import { knownApi, userinfoApi } from '@/api'
+import util from '@/utils/changeBusinessData'
 export default {
   components: {
     [Button.name]: Button,
@@ -242,6 +251,7 @@ export default {
       answerCollectCount: '',
       homeUserId: '',
       isFollow: false,
+      userType: '',
     }
   },
   computed: {
@@ -259,11 +269,34 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
+    this.getUserInfo()
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    goUser(id, usertype) {
+      this.$router.push({
+        path: '/known/home',
+        query: { homeUserId: id, type: usertype },
+      })
+    },
+    async getUserInfo() {
+      // 获取用户信息
+      try {
+        const params = {
+          // id: this.userId,
+          id: this.userId || this.$cookies.get('userId'),
+        }
+        const res = await this.$axios.get(userinfoApi.info, { params })
+        this.loading = false
+        if (res.code === 200 && res.data && typeof res.data === 'object') {
+          this.userType = util.getUserType(res.data.type)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
     toQueDetail() {
       this.$router.replace(
         '/known/detail/question?id=' + this.answerDetails.sourceId

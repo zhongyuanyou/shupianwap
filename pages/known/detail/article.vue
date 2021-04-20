@@ -15,7 +15,11 @@
     </div>
     <div class="main">
       <div class="user-info">
-        <sp-image class="img" :src="articleDetails.avatar" />
+        <sp-image
+          class="img"
+          :src="articleDetails.avatar"
+          @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
+        />
         <div class="infos">{{ articleDetails.createrName }}</div>
         <template v-if="articleDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
@@ -160,6 +164,12 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    goUser(id, usertype) {
+      this.$router.push({
+        path: '/known/home',
+        query: { homeUserId: id, type: usertype },
+      })
+    },
     initFollow() {
       this.$axios
         .get(knownApi.questionArticle.findAttention, {
