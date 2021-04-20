@@ -2,7 +2,11 @@
   <div class="container">
     <div
       class="container_head"
-      :style="{ paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px' }"
+      :style="{
+        paddingTop: appInfo.statusBarHeight
+          ? appInfo.statusBarHeight + 'px'
+          : '0px',
+      }"
     >
       <sp-sticky @scroll="scrollHandle">
         <div class="header_search">

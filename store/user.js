@@ -36,7 +36,7 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
-    this.$cookies.set('userName', String(data.userName), {
+    this.$cookies.set('userName', String(data.nickName), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
@@ -50,7 +50,7 @@ export const mutations = {
     state.token = String(data.token)
     state.userId = String(data.userId)
     state.userType = String(data.userType)
-    state.userName = String(data.userName)
+    state.userName = String(data.nickName)
     state.avatar = String(data.avatar)
   },
   CLEAR_USER(state) {
