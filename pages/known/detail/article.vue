@@ -151,6 +151,9 @@ export default {
     id() {
       return this.$route.query.id
     },
+    isInApp() {
+      return this.$store.state.app.isInApp
+    },
   },
   created() {
     this.getRecommendData()
@@ -170,12 +173,26 @@ export default {
         query: { homeUserId: id, type: usertype },
       })
     },
+    async isLogin() {
+      if (this.userInfo.userId && this.userInfo.token) {
+        return true
+      } else if (this.isInApp) {
+        await this.$appFn.dggLogin()
+      } else {
+        this.$router.push({
+          path: '/login',
+          query: {
+            redirect: this.$route.fullPath,
+          },
+        })
+      }
+    },
     initFollow() {
       this.$axios
         .get(knownApi.questionArticle.findAttention, {
           params: {
             currentUserId: this.userInfo.userId,
-            homeUserId: this.homeUserId || '120',
+            homeUserId: this.homeUserId,
           },
         })
         .then((res) => {
@@ -187,11 +204,13 @@ export default {
         })
     },
     follow() {
-      this.loading = true
+      if (!this.isLogin()) {
+        return
+      }
       this.$axios
         .post(knownApi.home.attention, {
-          handleUserName: this.userInfo.userName || '测试用户',
-          handleUserId: this.userInfo.userId || '120',
+          handleUserName: this.userInfo.userName,
+          handleUserId: this.userInfo.userId,
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
           handleType: this.isFollow ? 2 : 1,
           attentionUserId: this.articleDetails.userId,
@@ -276,6 +295,9 @@ export default {
       this.$router.back(-1)
     },
     handleClickBottom(type) {
+      if (!this.isLogin()) {
+        return
+      }
       this.handleType = ''
       if (type === 1) {
         this.articleDetails.applaudCount = Number(
