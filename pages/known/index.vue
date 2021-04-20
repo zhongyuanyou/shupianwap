@@ -214,8 +214,8 @@ export default {
       {
         params: {
           // type 1 获取企大顺导航
-          // type: store.state.app.isInApp ? 1 : '',
-          type: 1,
+          type: store.state.app.isInApp ? 1 : '',
+          // type: 1,
         },
       }
     )
@@ -272,6 +272,8 @@ export default {
           (item) => !this.morePlate.some((ele) => ele.id === item.id)
         )
         this.tabs = this.myPlate
+      } else {
+        this.myPlate = this.tabs
       }
     },
     toggleTabs() {
@@ -320,6 +322,9 @@ export default {
       }
     },
     deleteToMyPlate(index) {
+      if (index === this.active) {
+        this.active--
+      }
       const arrayValue = this.myPlate[index]
       if (arrayValue) {
         this.morePlate.push(arrayValue)
