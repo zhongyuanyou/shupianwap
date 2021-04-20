@@ -6,5 +6,4 @@ const activityApi = {
   activityProductList: `${CHIPS_WAP_BASE_URL}/nk/activity/v1/activity_product_list.do`, // 活动产品列表
   activityAdvertising: `${CHIPS_WAP_BASE_URL}/nk/activity/v1/advertising.do`, // 广告位
 }
-
 export { activityApi }
