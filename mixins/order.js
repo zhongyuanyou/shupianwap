@@ -262,7 +262,7 @@ export default {
         this.$xToast.error('该订单为线下支付，请联系规划师付款')
         return
       }
-      if (this.fromPage === 'orderList') {
+      if (this.fromPage === 'orderList' || this.fromPage === 'orderDetail') {
         // 同时判断有无关联订单
         if (this.checkHasOtherOrder()) {
           // 有关联订单时则打开提示弹窗
