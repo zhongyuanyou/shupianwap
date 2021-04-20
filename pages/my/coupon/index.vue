@@ -46,7 +46,13 @@
             {{ item.couponName }}
           </div>
           <div ref="textpro" class="content" @click="popOver(index)">
-            {{ item.remark }}
+            {{
+              item.useType === 1
+                ? '全品类商品可用'
+                : item.useType === 2
+                ? '限分类商品可用'
+                : '限特定商品类可用'
+            }}
           </div>
           <div class="date" :class="item.showColorTime ? 'expiredate' : ''">
             {{ item.serviceLife }}
@@ -95,8 +101,8 @@ export default {
       formData: {
         orderByWhere: 'createTime=desc;',
         findType: 2,
-        userId: this.$cookies.get('userId'),
-        limit: '10',
+        userId: this.$store.state.user.userId,
+        limit: '100',
         page: '1',
       }, // 请求数据
       indexNum: 0,
