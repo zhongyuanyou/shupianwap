@@ -38,7 +38,10 @@
         <div class="inner">
           <!-- <sp-button @click="handleClickBtn(1)">查看底单</sp-button> -->
           <sp-button
-            v-if="cusOrderStatusType !== 4"
+            v-if="
+              cusOrderStatusType !== 4 &&
+              item.skuType === 'PRO_CLASS_TYPE_SERVICE'
+            "
             @click="handleClickBtn(2, item)"
             >办理进度</sp-button
           >
