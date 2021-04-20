@@ -580,12 +580,11 @@ export default {
         orderSkuIds = new Array(1).fill(orderSkuIds)
       }
       const params = {
-        orderId: this.orderData.orderId,
-        cusOrderId: this.orderData.cusOrderId,
         orderSkuIds,
         operateSourcePlat: 'COMDIC_PLATFORM_CRISPS',
         operateTerminal: 'ORDER_TERMINAL_WAP',
       }
+      console.log('params', params)
       orderApi
         .confirmOrder({ axios: this.$axios }, params)
         .then((res) => {

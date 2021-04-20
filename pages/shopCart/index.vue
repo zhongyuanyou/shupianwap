@@ -406,8 +406,7 @@ export default {
       const cartIdArray = this.list.map((item) => {
         if (item.status === 'PRO_STATUS_PUT_AWAY') return item.cartId
       })
-      console.log('item.cartIdArray', cartIdArray)
-      const cartId = cartIdArray.join()
+      const cartId = cartIdArray.filter((item) => item).join()
       this.selectItem(cartId, data).catch((error) => {
         this.$xToast.show({
           message: error.message || '选择失败',
@@ -583,8 +582,19 @@ export default {
       try {
         const userId = this.userInfo.userId
         let data = await shopCart.list({ userId })
-        console.log(data)
+        data = data.map((item) => {
+          if (
+            item.status === 'PRO_STATUS_SOLD_OUT' ||
+            item.status === 'PRO_STATUS_INVALID'
+          ) {
+            item.shopIsSelected = 0
+            return item
+          } else {
+            return item
+          }
+        })
         if (!Array.isArray(data)) data = []
+
         return data
       } catch (error) {
         console.error('getList:', error)
