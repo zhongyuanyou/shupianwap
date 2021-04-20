@@ -20,6 +20,12 @@ const ORDERSTATUSCODE = {
   3: 'ORDER_CUS_STATUS_COMPLETED', // 已完成
   4: 'ORDER_CUS_STATUS_CANCELLED', // 已取消
 }
+const orderProTypeNoS = {
+  1: 'PRO_CLASS_TYPE_TRANSACTION', // 交易
+  2: 'PRO_CLASS_TYPE_SALES', // 销售
+  3: 'PRO_CLASS_TYPE_SERVICE_RESOURCE', // 资源
+  4: 'PRO_CLASS_TYPE_SERVICE', // 服务
+}
 // 根据订单状态判断订单状态名称
 const orderStatusObj = {
   TRADE_STATUS_UN_PAID: {
@@ -198,6 +204,20 @@ export default {
         ORDER_CUS_PAY_STATUS_PART_PAID: '部分支付',
         ORDER_CUS_PAY_STATUS_COMPLETED_PAID: '已完成',
       },
+      // 客户单类型
+      orderProTypeNoS: {
+        1: 'PRO_CLASS_TYPE_TRANSACTION', // 交易
+        2: 'PRO_CLASS_TYPE_SALES', // 销售
+        3: 'PRO_CLASS_TYPE_SERVICE_RESOURCE', // 资源
+        4: 'PRO_CLASS_TYPE_SERVICE', // 服务
+      },
+      // 订单商品类型
+      skuTypes: {
+        1: 'ORDER_PRO_TYPE_TRADE', // 交易
+        2: 'ORDER_PRO_TYPE_SALE', // 销售
+        3: 'ORDER_PRO_TYPE_RESOURCE', // 资源
+        4: 'ORDER_PRO_TYPE_SERVICE', // 服务
+      },
       // 分批支付状态 alreadyPayment
       batchPayStatus: {
         1: 'ORDER_BATCH_PAYMENT_PAY_0', // 未支付
@@ -269,6 +289,7 @@ export default {
           this.loading = false
           this.$refs.cancleOrderModel.showPop = true
           this.$refs.cancleOrderModel.modalType = 2
+          this.childOrderList = this.orderData.orderList
           // 后续操作为关联弹窗点击立即付款后继续查询分批支付列表 走分批支付逻辑判断
         } else {
           // 无关联订单则直接走分批支付逻辑判断
@@ -392,7 +413,6 @@ export default {
         this.thisTimePayTotal = this.regFenToYuan(thisTimePayTotal)
         this.allTimePayTotal = this.regFenToYuan(allTimePayTotal)
         this.batchIds = idsArr.join(',')
-        console.log('batchIds', this.batchIds)
         // 是分批支付则弹起分批支付弹窗 关闭关联订单弹窗
         this.$refs.payModal.showPop = true
         this.$refs.cancleOrderModel.showPop = false
@@ -487,7 +507,22 @@ export default {
       return orderUtils.checkPayType(this.orderData.cusOrderPayType)
     },
     // 查询客户单下的关联订单
-    getChildOrders() {
+    getChildOrders(order) {
+      if (
+        order &&
+        this.opType === 'payMoney' &&
+        order.skuType === this.skuTypes[1] &&
+        this.checkContractStatus(order) === 1
+      ) {
+        // 交易商品付款之前检测有无签署合同
+        this.$xToast.show({
+          message: '为满足您的合法权益，请先和卖家签署合同后再付款',
+          duration: 3000,
+          icon: 'toast_ic_remind',
+          forbidClick: true,
+        })
+        return
+      }
       if (!this.orderData.orderList) {
         this.loading = true
         orderApi
@@ -667,10 +702,6 @@ export default {
         }
       }
     },
-    // 设置sku信息
-    getSkus(skuStr) {
-      return skuStr.replace(/\|/g, ';')
-    },
     // 支付列表价格转换
     changePayMoney(payItem) {
       if (payItem.money) {
@@ -700,6 +731,10 @@ export default {
         }
       }
       return result
+    },
+    // 产品名称脱敏
+    setName(str) {
+      return '**' + str.substring(2, str.length)
     },
     // jump
     toContract() {
@@ -778,6 +813,26 @@ export default {
           },
         })
       }
+    },
+    //
+    getSkuList(orderItem) {
+      const arr = orderItem.orderSkuEsList
+      for (let i = 0, l = arr.length; i < l; i++) {
+        const skuObj = JSON.parse(arr[i].skuDetailInfo)
+        if (skuObj && skuObj.sku) {
+          arr[i].skuList = skuObj.sku.fieldList
+          // const arr2 = skuObj.sku.fieldList
+          // const arr3 = []
+          // for (let i = 0, l2 = arr2.length; i < l2; i++) {
+          //   arr3.push(arr2[i].fieldName)
+          // }
+          // arr[i].detailName = arr3.join('|')
+        }
+      }
+    },
+    // 转换sku信息
+    getSkus(skuStr) {
+      return skuStr.replace(/\|/g, ';')
     },
   },
 }

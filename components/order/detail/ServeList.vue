@@ -86,7 +86,7 @@ export default {
     handleClickBtn() {
       this.hideMore = !this.hideMore
       if (this.hideMore) {
-        this.$refs.content.style.height = '6.6rem'
+        this.$refs.content.style.height = '6.8rem'
       } else {
         this.$refs.content.style.height = this.maxHeight / 100 + 'rem'
       }

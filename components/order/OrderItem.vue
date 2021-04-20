@@ -39,6 +39,15 @@
         <sp-image :src="item.skuImages" alt="" class="img" srcset="" />
         <div class="right">
           <p class="goods-name">
+            <!-- <span
+              v-if="
+                orderData.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID' &&
+                orderData.skuType !== skuTypes[1]
+              "
+              class="name"
+            >
+              {{ item.spuName || item.orderSaleName }}</span
+            > -->
             <span class="name"> {{ item.spuName || item.orderSaleName }}</span>
             <span
               v-if="
@@ -49,21 +58,18 @@
               {{ item.skuPrice }}元
             </span>
           </p>
-          <!-- 交易商品和销售产品取skuDetailInfo -->
-          <!-- 资源和服务取skuExtInfo -->
+          <!-- 交易和资源取skuDetailInfo -->
+          <!-- 销售和服务取skuExtInfo -->
           <p class="sku-info">
             <span
               v-if="
-                orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION ' ||
-                orderProTypeNo === 'PRO_CLASS_TYPE_SALES '
+                item.skuType === skuTypes[1] || item.skuType === skuTypes[3]
               "
               class="sku-item"
-              >{{ item.skuDetailInfo }}</span
+              >{{ getSkus(item.skuExtInfo) }}</span
             >
-            <span class="sku-item">{{ getSkus(item.skuExtInfo) }}</span>
+            <span v-else class="sku-item">{{ getSkus(item.skuExtInfo) }}</span>
             <span class="goods-num">×{{ item.skuCount }}</span>
-            <!-- <span v-else class="sku-item">{{ getSkus(item.skuExtInfo) }}</span>
-            <span class="goods-num">×{{ item.skuCount }}</span> -->
           </p>
           <!-- 增值服务产品中心2期已去掉 2021.03.10 -->
           <!-- <div class="sku-sercice">
@@ -227,6 +233,9 @@ export default {
         path: '/order/detail',
         query: { id: this.orderData.id, cusOrderId: this.orderData.cusOrderId },
       })
+    },
+    setName(str) {
+      return '**' + str.substring(2, str.length)
     },
   },
 }

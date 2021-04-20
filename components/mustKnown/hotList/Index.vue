@@ -14,7 +14,7 @@
       >
         <div class="news_num">{{ new Date().getDate() }}</div>
         <div class="news_span">
-          {{ subjectList[0] ? subjectList[0].name : '' }}
+          {{ subjectList[0] ? subjectList[0].name : '日报精选' }}
         </div>
       </div>
       <div
@@ -32,7 +32,7 @@
           <my-icon name="dianzan" size="0.24rem" color="#4974F5"></my-icon>
         </div>
         <div class="see_span">
-          {{ subjectList[1] ? subjectList[1].name : '' }}
+          {{ subjectList[1] ? subjectList[1].name : '进站必看' }}
         </div>
       </div>
     </div>
