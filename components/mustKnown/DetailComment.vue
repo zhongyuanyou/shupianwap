@@ -4,7 +4,14 @@
     <div class="list">
       <div class="comment-item">
         <sp-image class="img" src="" />
-        <div class="right input-area">写下你的评论...</div>
+        <div class="right input-area">
+          <sp-field
+            v-model="value"
+            placeholder="写下你的评论..."
+            max-length="50"
+          ></sp-field>
+          <sp-button @click="submit">发布</sp-button>
+        </div>
       </div>
       <div v-for="(item, index) in list" :key="index" class="comment-item">
         <sp-image class="img" src="" />
@@ -67,7 +74,6 @@ export default {
   },
   methods: {
     submit() {
-      console.log('userInfo', this.userInfo)
       if (!this.userInfo.userId) {
         return this.$xToast.error('请先登录')
       }
@@ -77,7 +83,7 @@ export default {
           sourceId: this.articleId,
           sourceType: this.sourceType,
           userId: this.userInfo.userId,
-          userName: this.userInfo.userName || this.userInfo.nickName,
+          userName: this.userInfo.userName,
           userType: this.userInfo.type === 'ORDINARY_USER' ? 2 : 3,
         })
         .then((res) => {

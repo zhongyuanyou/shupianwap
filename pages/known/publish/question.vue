@@ -52,6 +52,7 @@ import PageHead from '@/components/mustKnown/publish/PageHead'
 import TitleArea from '@/components/mustKnown/publish/TitleArea'
 import ChooseTopic from '@/components/mustKnown/publish/ChooseTopic'
 import Editor from '@/components/mustKnown/publish/Editor'
+
 import EditorMinxin from '@/mixins/edit'
 export default {
   components: {

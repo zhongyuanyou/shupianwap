@@ -37,6 +37,7 @@ const infoList = [
   'known-detail-question',
   'known-detail-invitationList',
   'known-detail-invitationSearch',
+  'my-collection',
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {
@@ -91,7 +92,6 @@ export default ({ app, store }) => {
             if (res.code === 200) {
               try {
                 // const userInfo = res.data || {}
-                console.log(11111111111111111)
                 console.log(res.data)
                 let userInfo = {}
                 if (typeof res.data === 'string') {
