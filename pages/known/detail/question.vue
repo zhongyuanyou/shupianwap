@@ -1,6 +1,18 @@
 <template>
-  <div class="detail" :style="{ paddingBottom: fixedshow ? '1.3rem' : '' }">
-    <Header :title="questionDetials.title">
+  <div
+    class="detail"
+    :style="{
+      paddingBottom: fixedshow ? '1.3rem' : '',
+    }"
+  >
+    <Header
+      :title="questionDetials.title"
+      :height="
+        appInfo.statusBarHeight
+          ? appInfo.statusBarHeight / 100 + 0.98 + 'rem'
+          : '0.88rem'
+      "
+    >
       <template #left>
         <div>
           <sp-icon name="arrow-left" size="0.4rem" @click="goBack" />
@@ -288,6 +300,8 @@ export default {
   },
   computed: {
     ...mapState({
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
       userId: (state) => state.user.userId,
       userInfo: (state) => state.user, // 登录的用户信息
     }),
@@ -564,6 +578,7 @@ export default {
   pointer-events: none;
   color: #ccc !important;
 }
+
 .down_slide_list {
   ul {
     display: flex;
@@ -597,6 +612,12 @@ export default {
 .detail {
   min-height: 100vh;
   background: #f5f5f5;
+  /deep/.fixed-head {
+    background: #fff;
+    .my-head {
+      background: #fff;
+    }
+  }
   /deep/.my-head {
     padding: 0 32px;
     box-sizing: border-box;

@@ -276,7 +276,7 @@ export default {
         this.myPlate = this.tabs.filter(
           (item) => !this.morePlate.some((ele) => ele.id === item.id)
         )
-        this.tabs = JSON.parse(JSON.stringify(this.myPlate))
+        this.tabs = this.myPlate
       }
     },
     toggleTabs() {
@@ -309,11 +309,11 @@ export default {
         this.showIcon = true
         this.editFinish = '完成'
         this.status = false
-        localStorage.setItem('tabsList', JSON.stringify(this.myPlate))
       } else {
         this.showIcon = false
         this.editFinish = '编辑'
         this.status = true
+        localStorage.setItem('morePlate', JSON.stringify(this.morePlate))
       }
     },
     // 添加到我的列表中
@@ -322,6 +322,13 @@ export default {
       if (arrayValue) {
         this.myPlate.push(arrayValue)
         this.morePlate.pop(index)
+      }
+    },
+    deleteToMyPlate(index) {
+      const arrayValue = this.myPlate[index]
+      if (arrayValue) {
+        this.morePlate.push(arrayValue)
+        this.myPlate.pop(index)
       }
     },
   },
