@@ -219,8 +219,8 @@ export default {
       {
         params: {
           // type 1 获取企大顺导航
-          // type: store.state.app.isInApp ? 1 : '',
-          type: 1,
+          type: store.state.app.isInApp ? 1 : '',
+          // type: 1,
         },
       }
     )

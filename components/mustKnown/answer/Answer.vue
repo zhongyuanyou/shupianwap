@@ -31,7 +31,9 @@
                 </div>
                 <div class="user_name">
                   <p>{{ item.userName }}</p>
-                  <div class="user_answer">的提问期待你的解答30分钟前</div>
+                  <div class="user_answer">
+                    的提问期待你的解答{{ item.createTime }}
+                  </div>
                 </div>
               </div>
               <p class="content">
