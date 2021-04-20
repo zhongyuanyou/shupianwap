@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <Header title="节点明细" @leftClickFuc="onClickLeft" />
-    <div v-if="skuInfo.orderSaleName" class="banner">
+    <div class="banner">
       <p class="goods-name">{{ skuInfo.orderSaleName }}</p>
       <p class="goods-skus">
         {{ skuInfo.skuExtInfo }}

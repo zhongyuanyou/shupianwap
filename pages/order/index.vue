@@ -39,6 +39,7 @@
           :order-id="item.cusOrderId"
           :order-type="selectedOrderStatus"
           :order-pro-type-no="item.orderProTypeNo"
+          :batch-ids="batchIds"
           @handleClickItem="handleClickItem"
         >
         </orderItem>
@@ -72,6 +73,7 @@
       :order-data="orderData"
       :pay-list="payList"
       :batch-pay-status="batchPayStatus"
+      :batch-ids="batchIds"
       :this-time-pay-total="thisTimePayTotal"
     />
     <Bottombar v-if="!isInApp && !isApplets" ref="bottombar" />

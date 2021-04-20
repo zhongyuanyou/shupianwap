@@ -188,7 +188,11 @@
           @click="goAnsDetail(item.id)"
         >
           <div class="head">
-            <img :src="item.avatar" alt="" />
+            <img
+              :src="item.avatar"
+              alt=""
+              @click.stop="goUser(item.userId, item.userType)"
+            />
             <p>{{ item.userName }}</p>
           </div>
           <p class="content">
@@ -219,7 +223,7 @@
       <div
         class="btn"
         :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
-        @click="$router.push('/known/publish/answer')"
+        @click="goPublishAnswer"
       >
         <sp-icon name="edit" size="0.4rem" />
         <span>写回答</span>
@@ -266,7 +270,8 @@
 import { Icon, Toast, List, Popup, Dialog } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import Header from '@/components/common/head/header'
-import { knownApi } from '@/api'
+import { knownApi, userinfoApi } from '@/api'
+import util from '@/utils/changeBusinessData'
 export default {
   name: 'Detail',
   components: {
@@ -296,6 +301,7 @@ export default {
       total: '',
       popupShow: false,
       currentDetailsId: '',
+      userType: '',
     }
   },
   computed: {
@@ -317,18 +323,41 @@ export default {
   mounted() {
     window.addEventListener('scroll', this.watchScroll)
     this.getDetailApi()
+    this.getUserInfo()
   },
   destroyed() {
     window.removeEventListener('scroll', this.watchScroll)
   },
   methods: {
+    async getUserInfo() {
+      // 获取用户信息
+      try {
+        const params = {
+          // id: this.userId,
+          id: this.userId || this.$cookies.get('userId'),
+        }
+        const res = await this.$axios.get(userinfoApi.info, { params })
+        this.loading = false
+        if (res.code === 200 && res.data && typeof res.data === 'object') {
+          this.userType = util.getUserType(res.data.type)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    goUser(id, usertype) {
+      this.$router.push({
+        path: '/known/home',
+        query: { homeUserId: id, type: usertype },
+      })
+    },
     onLoad() {
       this.getQuesDataApi()
     },
     goAnsDetail(id) {
-      this.$route.push({
+      this.$router.push({
         path: '/known/detail/answer',
-        query: id,
+        query: { id },
       })
     },
     async getDetailApi() {

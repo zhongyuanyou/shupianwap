@@ -14,7 +14,11 @@
         </div>
       </div>
       <div v-for="(item, index) in list" :key="index" class="comment-item">
-        <sp-image class="img" src="" />
+        <sp-image
+          class="img"
+          :src="item.avatar"
+          @click.stop="goUser(item.userId, item.userType)"
+        />
         <div class="right">
           <p class="user-name">{{ item.userName }}</p>
           <p class="item-content">{{ item.content }}</p>
@@ -73,6 +77,12 @@ export default {
     this.getCommentsList()
   },
   methods: {
+    goUser(id, usertype) {
+      this.$router.push({
+        path: '/known/home',
+        query: { homeUserId: id, type: usertype },
+      })
+    },
     submit() {
       if (!this.userInfo.userId) {
         return this.$xToast.error('请先登录')

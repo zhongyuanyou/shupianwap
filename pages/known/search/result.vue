@@ -167,7 +167,7 @@ export default {
       })
     },
     toDetail(id) {
-      if (this.tabIndex === 2) {
+      if (this.tabIndex === '2') {
         this.$router.push({
           path: '/known/detail/article',
           query: {

@@ -19,6 +19,8 @@
       :finished="finished"
       finished-text="没有更多了"
       class="list"
+      :error.sync="error"
+      error-text="请求失败，点击重新加载"
       @load="onLoad"
     >
       <sp-cell v-for="(item, index) in list" :key="index">
@@ -31,7 +33,9 @@
                 </div>
                 <div class="user_name">
                   <p>{{ item.userName }}</p>
-                  <div class="user_answer">的提问期待你的解答30分钟前</div>
+                  <div class="user_answer">
+                    的提问期待你的解答{{ item.createTime }}
+                  </div>
                 </div>
               </div>
               <p class="content">
@@ -82,6 +86,7 @@ export default {
       list: [],
       page: 1,
       limit: 10,
+      error: false,
     }
   },
   computed: {
@@ -97,6 +102,7 @@ export default {
       this.list = []
       this.finished = false
       this.loading = true
+      this.error = false
       this.writeAnswerApi()
     },
     onLoad() {

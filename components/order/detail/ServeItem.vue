@@ -32,10 +32,7 @@
         <div class="inner">
           <!-- <sp-button @click="handleClickBtn(1)">查看底单</sp-button> -->
           <sp-button
-            v-if="
-              item.skuStatusNo !== 'ORDER_ORDER_SERVER_STATUS_UN_PAID' &&
-              item.skuStatusNo !== 'ORDER_ORDER_TRADE_STATUS_CANCELLED'
-            "
+            v-if="cusOrderStatusType !== 4"
             @click="handleClickBtn(2, item)"
             >办理进度</sp-button
           >
