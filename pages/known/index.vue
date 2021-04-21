@@ -1,5 +1,11 @@
 <template>
-  <div class="container">
+  <div
+    :class="
+      tabs[active].executionParameters === 'guanzhu'
+        ? 'flex_column container'
+        : 'container'
+    "
+  >
     <header-slot height="1.8rem">
       <div class="container_head">
         <Search
@@ -42,7 +48,6 @@
         ></my-icon>
       </div>
     </header-slot>
-
     <Answer v-if="tabs[active].executionParameters === 'huida'" />
 
     <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
@@ -395,10 +400,13 @@ export default {
   background: #4974f5;
   border-radius: 3px;
 }
-.container {
-  height: 100%;
+.flex_column {
   display: flex;
   flex-direction: column;
+}
+
+.container {
+  height: 100%;
   background: #fff;
   .modal {
     position: fixed;
