@@ -48,7 +48,7 @@
             >
               {{ item.spuName || item.orderSaleName }}</span
             > -->
-            <span class="name"> {{ item.spuName || item.orderSaleName }}</span>
+            <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
             <span
               v-if="
                 checkPayType() !== 2 && checkPayType() !== 4 && !item.orderType
