@@ -361,10 +361,10 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      align-items: flex-end;
+      // align-items: flex-end;
       .left {
         display: flex;
-        width: 500px;
+        width: 450px;
       }
       &_detail {
         padding-left: 24px;
