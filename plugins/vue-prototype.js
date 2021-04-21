@@ -25,12 +25,15 @@ export default ({ app, store, route }) => {
           if (res.code === 200) {
             store.commit('user/SET_USER', res.data)
             resolve('app_login_success')
-          } else {
-            resolve('error')
           }
         })
       } else {
-        resolve('needlogin')
+        app.router.push({
+          path: '/login',
+          query: {
+            redirect: route.fullPath,
+          },
+        })
       }
     })
   }

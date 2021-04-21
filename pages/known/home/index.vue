@@ -225,10 +225,11 @@ export default {
       this.getList()
     },
     async attention() {
-      if (!(await this.$isLogin())) {
+      const result = await this.$isLogin()
+      if (result === 'app_login_success') {
+        console.log('初始化数据')
         return
       }
-      console.log(1111)
       const { code, message } = await this.$axios.post(
         knownApi.home.attention,
         {
