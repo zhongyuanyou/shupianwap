@@ -205,7 +205,7 @@
             <span></span>
             <p>{{ item.remarkCount }} 评论</p>
             <span></span>
-            <p>{{ item.publishTime }}</p>
+            <p>{{ item.createTime }}</p>
           </div>
         </div>
       </sp-list>
