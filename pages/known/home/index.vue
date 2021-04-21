@@ -224,10 +224,19 @@ export default {
       this.loading = true
       this.getList()
     },
+    async init() {
+      const { code, data } = await this.$axios.get(knownApi.home.userInfo, {
+        params: {
+          homeUserId: this.homeUserId || this.userInfo.userId,
+          homeUserType: this.type || utils.getUserType(this.userInfo.userType),
+        },
+      })
+      this.isAttention = data.isAttention
+    },
     async attention() {
       const result = await this.$isLogin()
       if (result === 'app_login_success') {
-        console.log('初始化数据')
+        this.init()
         return
       }
       const { code, message } = await this.$axios.post(
