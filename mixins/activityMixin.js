@@ -91,6 +91,13 @@ export default {
       activityTypeOptions: [],
       activityProductList: [],
       currentIndex: 0,
+      currentTab: {
+        cityCode: this.cityCode,
+        cityName: this.cityName,
+        id: '',
+        labelName: this.allText,
+        specialId: '',
+      },
       itemTypeOptions: '',
       productList: '',
       productRecoData: '',
@@ -109,7 +116,7 @@ export default {
       productType: '',
     }
   },
-  created() {
+  async created() {
     // 初始化定位
     if (process.client && !this.cityName) {
       this.POSITION_CITY({
@@ -118,7 +125,7 @@ export default {
     }
 
     this.getAdvertisingData()
-    this.getMenuTabs().then(this.getRecommendProductList)
+    await this.getMenuTabs().then(this.getRecommendProductList)
   },
   mounted() {
     console.log(this.$store.state.user, 1111111111111)
@@ -220,7 +227,7 @@ export default {
     },
     init() {
       this.page = 1
-      this.productList = []
+      this.activityProductList = []
       this.finished = false
       this.loading = true
     },
@@ -228,10 +235,23 @@ export default {
     menuTab(item, index) {
       this.init()
       this.currentIndex = index
-      this.getProductList(item, this.specCode)
+      this.currentTab = item
+      this.getProductList()
     },
-    getMenuTabs() {
-      return this.$axios
+    async onLoad() {
+      if (this.specCode) {
+        this.page++
+        await this.getProductList()
+      }
+    },
+    async onRefresh() {
+      this.init()
+      await this.getProductList().then(() => {
+        this.loading = false
+      })
+    },
+    async getMenuTabs() {
+      await this.$axios
         .get(activityApi.activityTypeOptions, {
           params: {
             cityCodes: this.cityCode || this.defaultCityCode,
@@ -269,32 +289,61 @@ export default {
           }
         })
     },
-    // 初始化获取推介商品
-    // getRecProduct(item, itemSpecCode, itemReco) {
-    //   const params = {
-    //     specCode: itemSpecCode,
-    //     cityCode: item.cityCode,
-    //     isReco: itemReco,
-    //   }
-    //   this.productMethod(params, itemReco)
-    // },
     // 获取产品
-    getProductList(item, itemSpecCode) {
+    getProductList() {
       const params = {
-        specCode: itemSpecCode,
-        // cityCode: item.cityCode,
+        specCode: this.specCode,
+        page: this.page,
+        limit: 10,
       }
-      if (item.id !== '') {
-        params.labelId = item.id
+      if (this.hasCity) {
+        params.cityCode = this.cityCode
       }
-      this.productMethod(params)
+      if (this.currentTab.id !== '') {
+        params.labelId = this.currentTab.id
+      }
+      return this.productMethod(params)
+    },
+    async productMethod(param) {
+      console.log('param', param)
+      await this.$axios
+        .get(activityApi.activityProductList, {
+          params: param,
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.activityProductList = this.activityProductList.concat(
+              res.data.rows
+            )
+            this.total = res.data.total
+            this.loading = false
+            // this.page++
+            // this.page = res.data.currentPage
+            if (this.page > res.data.totalPage) {
+              this.finished = true
+            }
+          } else {
+            this.loading = false
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+        .finally(() => {
+          this.refreshing = false
+        })
     },
     getRecommendProductList() {
       const params = {
         specCode: this.specCode,
         isReco: 1,
+        page: 1,
+        limit: 100000,
       }
-      //  asda
+
       this.$axios
         .get(activityApi.activityProductList, { params })
         .then((res) => {
@@ -311,32 +360,6 @@ export default {
             forbidClick: true,
             className: 'my-toast-style',
           })
-        })
-    },
-    productMethod(param) {
-      console.log('param', param)
-      this.$axios
-        .get(activityApi.activityProductList, {
-          params: param,
-        })
-        .then((res) => {
-          if (res.code === 200) {
-            this.activityProductList = res.data.rows
-            this.total = res.data.total
-            this.loading = false
-            this.page++
-            if (this.page > res.data.totalPage) {
-              this.finished = true
-            }
-          } else {
-            this.loading = false
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
-          }
         })
     },
 
@@ -390,7 +413,14 @@ export default {
     },
     // 搜索框点击
     clickInputHandle() {
-      this.$router.push('/search')
+      if (this.isInApp) {
+        this.$appFn.dggJumpRoute({
+          iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/search/page"}}`,
+          androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/search/page"}}`,
+        })
+      } else {
+        this.$router.push('/search')
+      }
     },
     activeTimer(endTime) {
       this.endCountDown(new Date(endTime).getTime())
