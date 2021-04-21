@@ -321,7 +321,7 @@ export default {
     }
   }
   .container-advice {
-    margin-bottom: 32px;
+    margin-bottom: 40px;
     width: 750px;
     // height: 750px;
     // background: linear-gradient(125deg, #e1b876 0%, #b7782c 100%);
