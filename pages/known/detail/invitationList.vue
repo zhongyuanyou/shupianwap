@@ -1,20 +1,19 @@
 <template>
   <div class="invitationList">
-    <div
-      class="head"
-      :style="{ paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px' }"
-    >
-      <Search
-        :disabled="true"
-        :icon-left="0.24"
-        placeholder="搜索你想邀请的人"
-        @clickInputHandle="keyClickHandle"
-      >
-        <template v-slot:left>
-          <sp-icon name="arrow-left" size="0.4rem" @click="backPage" />
-        </template>
-      </Search>
-    </div>
+    <header-slot>
+      <div class="head">
+        <Search
+          :disabled="true"
+          :icon-left="0.24"
+          placeholder="搜索你想邀请的人"
+          @clickInputHandle="keyClickHandle"
+        >
+          <template v-slot:left>
+            <sp-icon name="arrow-left" size="0.4rem" @click="backPage" />
+          </template>
+        </Search>
+      </div>
+    </header-slot>
     <div class="recommend">
       <div class="titbox">
         <span>为你精选 {{ recommendList.length }} 位优质回答者</span>
@@ -53,6 +52,7 @@ import { Icon, Field, List, Sticky } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
 import util from '@/utils/changeBusinessData'
 import Search from '@/components/common/search/Search'
+import HeaderSlot from '@/components/common/head/header-slot'
 
 export default {
   name: 'InvitationList',
@@ -62,6 +62,7 @@ export default {
     [List.name]: List,
     Search,
     [Sticky.name]: Sticky,
+    HeaderSlot,
   },
   data() {
     return {
@@ -84,6 +85,7 @@ export default {
     }),
   },
   mounted() {
+    console.log(this.userInfo)
     this.questionId = this.$route.query.questionId
   },
   methods: {
@@ -214,7 +216,10 @@ export default {
       this.$back()
     },
     goUserInfo(item) {
-      this.$router.push({ path: '/known/home', query: { homeUserId: item.id } })
+      this.$router.push({
+        path: '/known/home',
+        query: { homeUserId: item.id, type: 2 },
+      })
     },
   },
 }

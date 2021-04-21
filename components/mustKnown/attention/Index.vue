@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="flex: 1">
     <template v-if="userData.length">
       <VisitUser :user-data="userData" />
       <AttentionItem />

@@ -7,11 +7,11 @@
           name="nav_ic_back"
           size="0.4rem"
           color="#1A1A1A"
-          @click.native="onLeftClick"
+          @click.native="uPGoBack"
         ></my-icon>
       </template>
     </Head>
-    <div v-if="images.length > 0" class="banner">
+    <div v-if="productAdvertData.length > 0" class="banner">
       <sp-swipe :autoplay="3000" @change="onChange">
         <sp-swipe-item v-for="(item, index) in productAdvertData" :key="index">
           <a :href="item.materialLink" style="display: block; height: 100%">
@@ -23,26 +23,27 @@
         </sp-swipe-item>
       </sp-swipe>
     </div>
-    <div class="coupon_list">
-      <div
-        v-for="(item, index) in responseData"
-        :key="index"
-        class="coupon_item"
-      >
+    <div v-if="responseData.length > 0">
+      <div class="coupon_list">
         <div
-          :class="item.couponType === 1 ? 'notUse' : 'haveUse'"
-          class="item-lf"
+          v-for="(item, index) in responseData"
+          :key="index"
+          class="coupon_item"
         >
-          <div class="coupon_price">{{ item.reducePrice }}</div>
-          <div v-if="item.useType === 1" class="can_use">无门槛</div>
-          <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
-        </div>
-        <div class="item-rt">
-          <!-- 气泡组件 start -->
-          <Popover @closepop="closeBox" />
-          <!-- 气泡组件 end-->
-          <!-- 右侧显示 start-->
-          <!-- <div
+          <div
+            :class="item.couponType === 1 ? 'notUse' : 'haveUse'"
+            class="item-lf"
+          >
+            <div class="coupon_price">{{ item.reducePrice }}</div>
+            <div v-if="item.useType === 1" class="can_use">无门槛</div>
+            <div v-else class="can_use">满{{ item.fullPrice }}元可用</div>
+          </div>
+          <div class="item-rt">
+            <!-- 气泡组件 start -->
+            <Popover @closepop="closeBox" />
+            <!-- 气泡组件 end-->
+            <!-- 右侧显示 start-->
+            <!-- <div
             class="sign"
             :class="
               couponType === 1
@@ -52,31 +53,48 @@
                 : 'lose'
             "
           ></div> -->
-          <div class="title" @click="goDetailPage(item)">
-            {{ item.couponName }}
+            <div class="title" @click="goDetailPage(item)">
+              {{ item.couponName }}
+            </div>
+            <div ref="textpro" class="content" @click="popOver(index)">
+              <span v-if="item.useType === 1">全场通用</span>
+              <span v-if="item.useType === 2">限制分类</span>
+              <span v-if="item.useType === 3">限制商品</span>
+            </div>
+            <div class="date">{{ item.serviceLife }}</div>
+            <!-- 右侧显示 end-->
           </div>
-          <div ref="textpro" class="content" @click="popOver(index)">
-            <span v-if="item.useType === 1">全场通用</span>
-            <span v-if="item.useType === 2">限制分类</span>
-            <span v-if="item.useType === 3">限制商品</span>
+          <div class="item-btn">
+            <button
+              v-if="item.couponStatus === 0"
+              class="my-coupon"
+              @click="operation_coupon(item)"
+            >
+              立即领取
+            </button>
+            <button v-if="item.couponStatus === 1" class="no-coupon">
+              已领完
+            </button>
+            <button v-if="item.couponStatus === 2" class="no-use">
+              已领取
+            </button>
           </div>
-          <div class="date">{{ item.serviceLife }}</div>
-          <!-- 右侧显示 end-->
-        </div>
-        <div class="item-btn">
-          <button
-            v-if="item.couponStatus === 0"
-            class="my-coupon"
-            @click="operation_coupon(item)"
-          >
-            立即领取
-          </button>
-          <button v-if="item.couponStatus === 1" class="no-coupon">
-            已领完
-          </button>
-          <button v-if="item.couponStatus === 2" class="no-use">已领取</button>
+          <div v-if="item.couponStatus === 2" class="receive">
+            <img
+              src="https://cdn.shupian.cn/sp-pt/wap/images/1g2zj1jmy4o0000.png"
+              alt=""
+            />
+          </div>
         </div>
       </div>
+    </div>
+    <div v-else class="no-data">
+      <img
+        src="https://cdn.shupian.cn/sp-pt/wap/images/dypjq91xxps0000.png"
+        alt=""
+        srcset=""
+      />
+      <p>目前没有优惠券可领哦~</p>
     </div>
   </div>
 </template>
@@ -98,10 +116,6 @@ export default {
   },
   data() {
     return {
-      images: [
-        'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1867843355,3746771280&fm=26&gp=0.jpg',
-        'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1867843355,3746771280&fm=26&gp=0.jpg',
-      ],
       current: '',
       loading: false,
       usedCount: 0, // 已使用
@@ -123,6 +137,7 @@ export default {
     ...mapState({
       userId: (state) => state.user.userId,
       userInfo: (state) => state.user, // 登录的用户信息
+      isInApp: (state) => state.app.isInApp,
     }),
   },
   mounted() {
@@ -130,6 +145,28 @@ export default {
     this.getAdvertisingData()
   },
   methods: {
+    uPGoBack() {
+      if (this.isInApp) {
+        this.$appFn.dggCloseWebView((res) => {
+          if (!res || res.code !== 200) {
+            this.$xToast.show({
+              message: '返回失败',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
+        return
+      }
+
+      // 在浏览器里 返回, 若没返回记录了，就跳转到首页
+      if (window && window.history && window.history.length <= 1) {
+        this.$router.replace('/')
+        return
+      }
+      this.$router.back(-1)
+    },
     operation_coupon(item) {
       if (item.status === 1) {
         this.setCouponStatus(item)
@@ -138,15 +175,15 @@ export default {
       }
     },
     setCouponStatus(item) {
+      this.loading = true
       this.$axios
         .post(`${CHIPS_WAP_BASE_URL}/yk/coupon/v2/receive_coupon.do`, {
           couponId: item.id,
         })
         .then((res) => {
-          debugger
           if (res.code === 200) {
             this.responseData = []
-            Toast('已领取')
+            Toast('领取成功')
             this.getInitCouponData()
             this.loading = false
           } else {
@@ -232,9 +269,11 @@ export default {
         page: '1',
       }
       this.userId ? (params.userId = this.userId) : (params.userId = '')
+      this.loading = true
       coupon
         .findPage({ axios: this.$axios }, params)
         .then((result) => {
+          this.loading = false
           this.responseData = result
           for (let i = 0, length = this.responseData.length; i < length; i++) {
             let useTime = this.responseData[i].serviceLife
@@ -275,6 +314,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.no-data {
+  text-align: center;
+  padding-top: 150px;
+  img {
+    width: 340px;
+    height: 340px;
+  }
+  p {
+    width: 100%;
+    color: #222222;
+    font-size: 28px;
+  }
+}
 .lose {
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/8a099vjhmbc0000.png');
 }
@@ -348,6 +400,7 @@ export default {
     display: flex;
     position: relative;
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
     .item-lf {
       width: 201px;
       height: 212px;
@@ -423,6 +476,18 @@ export default {
         background-size: 100% 100%;
         right: 0px;
         top: 0px;
+      }
+    }
+    .receive {
+      position: absolute;
+      right: 0;
+      top: -30px;
+      z-index: 1;
+      width: 90px;
+      height: 90px;
+      img {
+        width: 90px;
+        height: 90px;
       }
     }
     .item-btn {

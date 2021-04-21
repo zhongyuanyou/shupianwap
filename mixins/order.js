@@ -340,8 +340,9 @@ export default {
           } else if (this.fromPage === 'nodeDetail') {
             // 账单明细页面则筛选该订单下的选中商品的支付列表信息
             const nodeList = res.filter((item) => {
-              return item.orderSkuId === this.orderSkuId
+              return item.orderSkuId === this.orderId
             })
+            console.log('nodeList1', nodeList)
             // // 计算合计金额
             this.nodeTotalMoney = nodeList.reduce((total, item) => {
               return total + Number(item.money)
@@ -362,6 +363,7 @@ export default {
               }
             }
             this.nodeList = sortArr
+            console.log('nodeList', sortArr)
           } else {
             // 当前订单的分批支付信息 订单详情页
             // 筛选对应订单的支付列表
@@ -580,12 +582,11 @@ export default {
         orderSkuIds = new Array(1).fill(orderSkuIds)
       }
       const params = {
-        orderId: this.orderData.orderId,
-        cusOrderId: this.orderData.cusOrderId,
         orderSkuIds,
         operateSourcePlat: 'COMDIC_PLATFORM_CRISPS',
         operateTerminal: 'ORDER_TERMINAL_WAP',
       }
+      console.log('params', params)
       orderApi
         .confirmOrder({ axios: this.$axios }, params)
         .then((res) => {
