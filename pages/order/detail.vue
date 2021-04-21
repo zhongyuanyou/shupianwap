@@ -253,7 +253,7 @@
           </sp-button>
           <!-- 销售商品交易商品的确认按钮是在下边 -->
           <sp-button
-            v-if="isShowConfirmBtn()"
+            v-if="cusOrderStatusType === 2 && isShowConfirmBtn()"
             class="btn-pay"
             @click="handleClickItem(6)"
           >
@@ -319,7 +319,7 @@ export default {
       hasData: false,
       orderId: '',
       cusOrderId: '',
-      cusOrderStatusType: 1, // 1为未付款 2进行中3已完成4已取消
+      cusOrderStatusType: null, // 1为未付款 2进行中3已完成4已取消
       orderData: {
         orderStatus: '',
         orderList: [],
@@ -392,8 +392,6 @@ export default {
             // 当订单状态不为已取消且支付状态不为已完成时展示付款入口
             this.showPayBtn = true
           }
-          this.hasData = true
-          this.loading = false
           this.cusOrderPayType = this.checkPayType()
           if (
             this.orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
@@ -412,6 +410,8 @@ export default {
             arr1 = arr1.concat(orders[i].skuDetails)
           }
           this.orderData.orderSkuList = arr1
+          this.hasData = true
+          this.loading = false
         })
         .catch((err) => {
           this.loading = false
