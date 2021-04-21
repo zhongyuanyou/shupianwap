@@ -364,6 +364,7 @@ export default {
       align-items: flex-end;
       .left {
         display: flex;
+        width: 500px;
       }
       &_detail {
         padding-left: 24px;

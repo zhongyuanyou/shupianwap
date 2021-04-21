@@ -1,31 +1,29 @@
 <template>
   <div class="search">
-    <sp-sticky>
-      <Search
-        ref="searchRef"
-        v-model.trim="value"
-        :icon-left="0.24"
-        placeholder="请输入搜索关键词"
-        :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
-        @searchKeydownHandle="keyClickHandle"
-      >
-        <template v-slot:center>
-          <sp-icon
-            v-show="value != ''"
-            name="clear"
-            class="clear"
-            color="#CCCCCC"
-            size="0.35rem"
-            @click="clearInput"
-          />
-        </template>
-        <template v-slot:right>
-          <a class="cloose-btn" href="javascript:void(0);" @click="clooseHandle"
-            >取消</a
-          >
-        </template>
-      </Search>
-    </sp-sticky>
+    <Search
+      ref="searchRef"
+      v-model.trim="value"
+      :icon-left="0.24"
+      placeholder="请输入搜索关键词"
+      :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
+      @searchKeydownHandle="keyClickHandle"
+    >
+      <template v-slot:center>
+        <sp-icon
+          v-show="value != ''"
+          name="clear"
+          class="clear"
+          color="#CCCCCC"
+          size="0.35rem"
+          @click="clearInput"
+        />
+      </template>
+      <template v-slot:right>
+        <a class="cloose-btn" href="javascript:void(0);" @click="clooseHandle"
+          >取消</a
+        >
+      </template>
+    </Search>
     <div v-if="knownHistory.length" class="history">
       <div class="tile">
         <h1>历史记录</h1>
@@ -157,16 +155,15 @@ export default {
 <style lang="less" scoped>
 .search {
   min-height: 100vh;
-  /deep/.sp-sticky {
-    .search-content {
-      padding: 10px 24px;
-    }
+  /deep/.search-content {
+    height: 88px;
+    padding: 0 24px;
     .input-box {
       position: relative;
       background: #f5f5f5;
       border: none;
       box-shadow: none;
-      height: 64px;
+      height: 60px;
       input {
         background: #f5f5f5;
       }

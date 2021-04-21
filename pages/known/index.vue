@@ -396,6 +396,9 @@ export default {
   border-radius: 3px;
 }
 .container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   background: #fff;
   .modal {
     position: fixed;
