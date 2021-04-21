@@ -228,6 +228,7 @@ export default {
       if (!(await this.$isLogin())) {
         return
       }
+      console.log(1111)
       const { code, message } = await this.$axios.post(
         knownApi.home.attention,
         {

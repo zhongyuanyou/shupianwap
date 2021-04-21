@@ -10,11 +10,16 @@ export default ({ app, store, route }) => {
     }
   }
 
-  Vue.prototype.$isLogin = async () => {
+  Vue.prototype.$isLogin = () => {
     if (store.state.user.userId && store.state.user.token) {
       return true
     } else if (store.state.app.isInApp) {
-      await this.$appFn.dggLogin()
+      appHandler.dggLogin((res) => {
+        if (res.code === 200) {
+          store.commit('user/SET_USER', res.data)
+          return 'app_login_success'
+        }
+      })
     } else {
       app.router.push({
         path: '/login',
