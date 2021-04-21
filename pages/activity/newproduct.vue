@@ -65,12 +65,12 @@
         </ul>
       </div>
       <div class="body-content">
-        <sp-pull-refresh v-model="refreshing">
-          <sp-list
-            v-model="loading"
-            :finished="finished"
-            finished-text="没有更多了"
-          >
+        <sp-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+        >
+          <div v-if="productList.rows && productList.rows.length > 0">
             <div
               v-for="(item, index) in productList.rows"
               :key="index"
@@ -98,8 +98,8 @@
                       </div>
                       <div class="bf-my">原价{{ item.skuPrice }}元</div>
                     </div>
-                    <div class="rc-bottom-rt" @click.stop="jumpIM(item)">
-                      <div class="imm_consult">立即咨询</div>
+                    <div class="rc-bottom-rt">
+                      <div class="imm_consult">详情</div>
                       <div class="imm_img"></div>
                     </div>
                   </div>
@@ -107,8 +107,15 @@
               </div>
               <div class="line"></div>
             </div>
-          </sp-list>
-        </sp-pull-refresh>
+          </div>
+          <div v-else class="no-data">
+            <img
+              src="https://cdn.shupian.cn/sp-pt/wap/images/bzre7lw14o00000.png"
+              alt=""
+              srcset=""
+            />
+          </div>
+        </sp-list>
       </div>
     </div>
   </div>
@@ -156,11 +163,12 @@ export default {
       productAdvertData: '',
       page: 1,
       specTypeCode: 'HDZT_ZTTYPE_XTSF', // 活动类型code
-      platformCode: 'COMDIC_PLATFORM_CRISPS', // 终端code
+      platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
       specCode: '',
       defaultCityCode: '510100',
       advertCode: 'ad100043', // 广告code
       productType: '',
+      classCode: '', // 交易类型code
     }
   },
   computed: {
@@ -183,19 +191,16 @@ export default {
     this.getAdvertisingData()
     this.getMenuTabs()
   },
-  mounted() {
-    console.log(this.$store.state.user, 1111111111111)
-  },
   methods: {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
       GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
     }),
     jumpProductdetail(item) {
-      if (this.type === 'PRO_CLASS_TYPE_TRANSACTION') {
+      if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
         this.$router.push({
           path: `/detail/transactionDetails`,
-          query: { productId: item.id },
+          query: { productId: item.id, type: this.classCode },
         })
       } else {
         this.$router.push({
@@ -203,53 +208,6 @@ export default {
           query: { productId: item.id },
         })
       }
-    },
-    jumpIM(item) {
-      console.log(item)
-      this.uPIM({
-        mchUserId: this.userInfo.imUserId,
-        userName: this.userInfo.userName,
-        type: this.userInfo.imUserType,
-      })
-    },
-    async uPIM(data = {}) {
-      const { mchUserId, userName, type } = data
-      // 如果当前页面在app中，则调用原生IM的方法
-      if (this.isInApp) {
-        try {
-          // 需要判断登陆没有，没有登录就是调用登录
-          await this.getUserInfo()
-          this.$appFn.dggOpenIM(
-            {
-              name: userName,
-              userId: mchUserId,
-              userType: type || 'MERCHANT_B',
-              requireCode: this.requireCode || '',
-              requireName: this.requireName || '',
-            },
-            (res) => {
-              const { code } = res || {}
-              if (code !== 200)
-                this.$xToast.show({
-                  message: `联系失败`,
-                  duration: 1000,
-                  forbidClick: true,
-                  icon: 'toast_ic_remind',
-                })
-            }
-          )
-        } catch (error) {
-          console.error('uPIM error:', error)
-        }
-        return
-      }
-      const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
-      this.creatImSessionMixin({
-        imUserId: mchUserId,
-        imUserType,
-        requireCode: this.requireCode || '',
-        requireName: this.requireName || '',
-      })
     },
     init() {
       this.page = 1
@@ -261,6 +219,7 @@ export default {
     menuTab(item, index) {
       this.init()
       this.currentIndex = index
+      this.classCode = item.classCode
       this.getProductList(item, this.specCode)
     },
     getMenuTabs() {
@@ -277,6 +236,7 @@ export default {
             this.activityTypeOptions = res.data.settingVOList
             if (res.data.settingVOList && res.data.settingVOList.length > 0) {
               this.itemTypeOptions = res.data.settingVOList[0]
+              this.classCode = res.data.settingVOList[0].classCode
               this.specCode = res.data.specCode
               this.productType = res.data.productType
               this.getProductList(this.itemTypeOptions, this.specCode)
@@ -343,7 +303,6 @@ export default {
           }
         })
     },
-
     getAdvertisingData() {
       this.$axios
         .get(activityApi.activityAdvertising, {
@@ -367,15 +326,6 @@ export default {
           }
         })
     },
-    // onRefresh() {
-    //   // 清空列表数据
-    //   this.finished = false
-
-    //   // 重新加载数据
-    //   // 将 loading 设置为 true，表示处于加载状态
-    //   this.loading = true
-    //   this.onLoad()
-    // },
     handlerItemChange(action, index) {
       console.log(action, index)
     },
@@ -396,6 +346,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.no-data {
+  text-align: center;
+  padding-top: 10px;
+  img {
+    width: 340px;
+    height: 340px;
+  }
+  p {
+    width: 100%;
+    color: #222222;
+    font-size: 28px;
+  }
+}
 /deep/.sp-sticky--fixed {
   max-width: 10rem;
   width: 100%;
@@ -409,7 +372,7 @@ export default {
   overflow-x: hidden;
   margin: 0 auto;
   .container-advice {
-    padding: 0 20px;
+    // padding: 0 20px;
     margin-bottom: 32px;
     width: 750px;
     height: 717px;
@@ -487,9 +450,11 @@ export default {
       position: absolute;
       display: flex;
       justify-content: space-between;
-      bottom: 92px;
+      bottom: 72px;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0 20px;
       div {
-        margin-right: 10px;
         width: 230px;
         height: 160px;
         //background: linear-gradient(137deg, #ffffff 0%, #fff3eb 100%);
