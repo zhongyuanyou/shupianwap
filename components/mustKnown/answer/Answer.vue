@@ -1,11 +1,7 @@
 <template>
   <div class="answer">
     <div class="answer_container">
-      <sp-tabs
-        v-model="active"
-        class="answer_container_tabs"
-        @click="tabChange"
-      >
+      <sp-tabs v-model="active" @click="tabChange">
         <sp-tab
           v-for="(item, index) in answerTabs"
           :key="index"
@@ -25,27 +21,13 @@
     >
       <sp-cell v-for="(item, index) in list" :key="index">
         <div class="item" @click="toDetail(item)">
+          <div class="item_browse">最近 {{ item.totalBrowseCount }}人浏览</div>
           <div class="item_content">
-            <div class="item_content_lf">
-              <div class="item_Info">
-                <div class="user_photo">
-                  <img :src="item.avatar" alt="" />
-                </div>
-                <div class="user_name">
-                  <p>{{ item.userName }}</p>
-                  <div class="user_answer">
-                    的提问期待你的解答{{ item.createTime }}
-                  </div>
-                </div>
-              </div>
-              <p class="content">
-                {{ item.contentText }}
-              </p>
-            </div>
+            {{ item.contentText }}
           </div>
           <div class="item_bottom">
-            <p>{{ item.answerCount }} 回答 · {{ item.collectCount }}收藏</p>
-            <div class="btn" @click="goAnswer(item.id)">写回答</div>
+            <p>{{ item.answerCount }} 回答 · {{ item.collectCount }} 收藏</p>
+            <div class="btn" @click.stop="goAnswer(item.id)">写回答</div>
           </div>
         </div>
       </sp-cell>
@@ -53,16 +35,7 @@
   </div>
 </template>
 <script>
-import {
-  Tabs,
-  Tab,
-  TopNavBar,
-  Toast,
-  PullRefresh,
-  List,
-  Cell,
-  Skeleton,
-} from '@chipspc/vant-dgg'
+import { Tabs, Tab, List, Cell } from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 
 export default {
@@ -70,17 +43,13 @@ export default {
   components: {
     [Tabs.name]: Tabs,
     [Tab.name]: Tab,
-    [TopNavBar.name]: TopNavBar,
-    [Toast.name]: Toast,
-    [PullRefresh.name]: PullRefresh,
     [List.name]: List,
     [Cell.name]: Cell,
-    [Skeleton.name]: Skeleton,
   },
   data() {
     return {
       answerTabs: ['推荐', '邀请'],
-      active: 2,
+      active: 0,
       loading: false,
       finished: false,
       list: [],
@@ -96,7 +65,6 @@ export default {
   },
   methods: {
     tabChange() {
-      console.log(this.active)
       this.page = 1
       this.limit = 10
       this.list = []
@@ -158,10 +126,14 @@ export default {
 </script>
 <style lang="less" scoped>
 /deep/ .sp-cell {
-  padding: 40px 32px;
-  border-top: 1px solid #ddd;
+  width: 686px;
+  margin: 0 auto;
+  padding: 40px 0;
+  border-bottom: 1px solid #ddd;
 }
-
+/deep/ .sp-tabs__wrap {
+  height: 80px;
+}
 /deep/ .sp-tab {
   font-size: 30px;
   font-family: PingFangSC-Medium, PingFang SC;
@@ -180,19 +152,15 @@ export default {
   background: #4974f5;
   border-radius: 3px;
 }
-.active {
-  font-size: 30px;
-  font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
-  color: #222222;
-}
 .answer_container {
-  margin-bottom: 2px;
+  border-bottom: 1px solid #ddd;
+
   &_tabs {
     height: 80px;
     padding: 0 32px;
     display: flex;
     align-items: center;
+    border-bottom: 1px solid #ddd;
     &_items {
       width: 60px;
       height: 30px;
@@ -219,75 +187,26 @@ export default {
 }
 .item {
   background: #fff;
-  border-radius: 12px;
-  // position: relative;
-  .item_title {
-    height: 36px;
-    font-size: 36px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
-    color: #1a1a1a;
-    line-height: 36px;
+  .item_browse {
+    font-size: 28px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #999999;
+    line-height: 28px;
+    margin-bottom: 32px;
   }
 
   .item_content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 20px;
-    .item_content_lf {
-      .item_Info {
-        display: flex;
-        margin-bottom: 20px;
-        align-items: center;
-        .user_photo {
-          width: 72px;
-          height: 72px;
-          background: #6d7177;
-          margin-right: 16px;
-          border-radius: 50%;
-          img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-          }
-        }
-        .user_name {
-          height: 0.72rem;
-          padding: 3px 0;
-          p {
-            height: 30px;
-            font-size: 30px;
-            font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
-            color: #222222;
-            line-height: 30px;
-          }
-          .user_answer {
-            height: 24px;
-            font-size: 24px;
-            font-family: PingFangSC-Regular, PingFang SC;
-            font-weight: 400;
-            color: #999999;
-            line-height: 24px;
-            margin-top: 12px;
-          }
-        }
-      }
-      .content {
-        min-height: 80px;
-        font-size: 30px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #222222;
-        line-height: 40px;
-        // margin-right: 0.32rem;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        overflow: hidden;
-      }
-    }
+    font-size: 30px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #222222;
+    line-height: 40px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
   .item_bottom {
     display: flex;
