@@ -224,11 +224,21 @@ export default {
       this.loading = true
       this.getList()
     },
+    async init() {
+      const { code, data } = await this.$axios.get(knownApi.home.userInfo, {
+        params: {
+          homeUserId: this.homeUserId || this.userInfo.userId,
+          homeUserType: this.type || utils.getUserType(this.userInfo.userType),
+        },
+      })
+      this.isAttention = data.isAttention
+    },
     async attention() {
-      if (!(await this.$isLogin())) {
+      const result = await this.$isLogin()
+      if (result === 'app_login_success') {
+        this.init()
         return
       }
-      console.log(1111)
       const { code, message } = await this.$axios.post(
         knownApi.home.attention,
         {
