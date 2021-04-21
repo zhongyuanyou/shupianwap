@@ -42,84 +42,27 @@
       <!-- E countdown -->
       <!-- S avtar -->
       <div class="avtars">
-        <div class="avtar">
+        <div
+          v-for="item in recommendProductList.slice(0, 3)"
+          :key="item.id"
+          class="avtar"
+        >
           <div class="touxiang"></div>
-          <div class="content">视频作品著作权申请</div>
+          <div class="content">{{ item.skuName }}</div>
           <div class="background">
             <div class="bg-img"></div>
-            <div class="money"><span>999</span><span>元</span></div>
+            <div class="money">
+              <span>{{ item.specialPrice }}</span
+              ><span>元</span>
+            </div>
           </div>
         </div>
-        <div class="avtar">
-          <div class="touxiang"></div>
-          <div class="content">视频作品著作权申请</div>
-          <div class="background">
-            <div class="bg-img"></div>
-            <div class="money"><span>999</span><span>元</span></div>
-          </div>
-        </div>
-        <div class="avtar">
-          <div class="touxiang"></div>
-          <div class="content">视频作品著作权申请</div>
-          <div class="background">
-            <div class="bg-img"></div>
-            <div class="money"><span>999</span><span>元</span></div>
-          </div>
-        </div>
-        <!-- <div class="avtar">
-          <div class="touxiang"></div>
-          <div class="content">视频作品著作权申请</div>
-          <div class="background">
-            <div class="bg-img"></div>
-            <div class="money"><span>999</span><span>元</span></div>
-          </div>
-        </div>
-        <div class="avtar">
-          <div class="touxiang"></div>
-          <div class="content">视频作品著作权申请</div>
-          <div class="background">
-            <div class="bg-img"></div>
-            <div class="money"><span>999</span><span>元</span></div>
-          </div>
-        </div>
-        <div class="avtar">
-          <div class="touxiang"></div>
-          <div class="content">视频作品著作权申请</div>
-          <div class="background">
-            <div class="bg-img"></div>
-            <div class="money"><span>999</span><span>元</span></div>
-          </div>
-        </div>
-        <div class="avtar">
-          <div class="touxiang"></div>
-          <div class="content">视频作品著作权申请</div>
-          <div class="background">
-            <div class="bg-img"></div>
-            <div class="money"><span>999</span><span>元</span></div>
-          </div>
-        </div>
-        <div class="avtar">
-          <div class="touxiang"></div>
-          <div class="content">视频作品著作权申请</div>
-          <div class="background">
-            <div class="bg-img"></div>
-            <div class="money"><span>999</span><span>元</span></div>
-          </div>
-        </div>
-        <div class="avtar">
-          <div class="touxiang"></div>
-          <div class="content">视频作品著作权申请</div>
-          <div class="background">
-            <div class="bg-img"></div>
-            <div class="money"><span>999</span><span>元</span></div>
-          </div>
-        </div> -->
       </div>
       <!-- E avtar -->
     </div>
 
     <div class="container-body" :style="style.containerStyle">
-      <sp-sticky offset-top="16vw">
+      <sp-sticky offset-top="15.7vw">
         <div class="tabs-box">
           <ul class="tabs-box-items">
             <li
@@ -152,7 +95,7 @@
               @click="jumpProductDetail(item)"
             > -->
             <div
-              v-for="(item, index) in items"
+              v-for="(item, index) in activityProductList"
               :key="index"
               @click="jumpProductDetail(item)"
             >
@@ -166,8 +109,7 @@
                     {{ item.skuName }}
                   </div>
                   <div class="rc-middle">
-                    <!-- TODO 换键 -->
-                    {{ item.mdTitle }}
+                    {{ item.remark }}
                   </div>
                   <div class="rc-bottom">
                     <div class="rc-bottom-lf">
@@ -325,14 +267,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/* /deep/.sp-sticky--fixed {
-  max-width: 10rem;
-  width: 100%;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
-  background: linear-gradient(125deg, #daa240 0%, #c98714 100%);
-} */
 .container {
   width: 100%;
   height: 746px;
@@ -491,14 +425,12 @@ export default {
           height: 68px;
         }
         .background {
-          width: 210px;
+          width: 215px;
           height: 44px;
           border-radius: 8px;
           background: url('https://cdn.shupian.cn/sp-pt/wap/2qtj44rmu8m0000.png');
           background-size: 100% 100%;
-          width: 210px;
-          height: 44px;
-          margin: 0 8px 8px 8px;
+          margin: 0 auto 8px auto;
           display: flex;
           justify-content: flex-start;
 
@@ -507,19 +439,22 @@ export default {
           color: #ffffff;
           line-height: 28px;
           .money {
-            padding: 8px;
+            font-size: 28px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #835436;
+            margin: 0;
+            position: relative;
+            line-height: 44px;
             span:nth-of-type(2) {
               font-size: 22px;
-              font-weight: 500;
-              color: #ffffff;
-              line-height: 22px;
             }
           }
 
           .bg-img {
             width: 104px;
             height: 44px;
-            margin: 0;
+            margin: 0 6px 0 0;
             border-radius: 8px 0px 0px 8px;
           }
         }
@@ -530,41 +465,49 @@ export default {
     width: 750px;
     height: 1720px;
     background: #ffffff;
-    border-radius: 24px 24px 0px 0px;
     z-index: 1;
-    .tabs-box {
-      background-color: #fff;
-      padding: 32px 20px;
-      .tabs-box-items {
-        display: flex;
-        overflow: auto;
-        .li-tab {
-          background-color: #f00;
-          flex-shrink: 0;
-          padding: 19px 24px;
-          background: #f5f5f5;
-          border-radius: 32px;
-          font-size: 26px;
-          font-weight: 500;
-          color: #222222;
-          line-height: 26px;
-          margin-right: 16px;
-        }
-        .active {
-          padding: 17px 42px;
-          font-size: 30px;
-          font-weight: 500;
-          color: #835436;
-          background: #ec5330;
-          background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
-          border-radius: 32px;
-        }
+    /deep/ .sp-sticky {
+      // outline: 1px solid red;
+      border-radius: 24px 24px 0px 0px;
+      overflow: hidden;
+      width: 100vw;
+      &.sp-sticky--fixed {
+        border-radius: 0;
+      }
+      .tabs-box {
+        background-color: #fff;
+        padding: 32px 20px;
+        .tabs-box-items {
+          display: flex;
+          overflow: auto;
+          .li-tab {
+            background-color: #f00;
+            flex-shrink: 0;
+            padding: 19px 24px;
+            background: #f5f5f5;
+            border-radius: 32px;
+            font-size: 26px;
+            font-weight: 500;
+            color: #222222;
+            line-height: 26px;
+            margin-right: 16px;
+          }
+          .active {
+            padding: 17px 42px;
+            font-size: 30px;
+            font-weight: 500;
+            color: #835436;
+            background: #ec5330;
+            background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
+            border-radius: 32px;
+          }
 
-        li:nth-child(1) {
-          // margin-left: 20px;
-        }
-        li:nth-last-child(1) {
-          margin-right: 16px;
+          li:nth-child(1) {
+            // margin-left: 20px;
+          }
+          li:nth-last-child(1) {
+            margin-right: 16px;
+          }
         }
       }
     }
@@ -576,12 +519,19 @@ export default {
         background: #f4f4f4;
         margin: 0 20px;
       }
+      /deep/ .sp-list {
+        > div:first-child .body-content-items {
+          margin-top: 0;
+        }
+      }
       .body-content-items {
         display: flex;
         justify-content: space-between;
-        height: 324px;
+        height: 260px;
         width: 100%;
-        padding: 32px 20px;
+        // padding: 32px 20px;
+        margin: 32px 0;
+        padding: 0 20px;
       }
       .left-content {
         position: relative;
@@ -615,9 +565,10 @@ export default {
         display: flex;
         align-content: flex-start;
         flex-direction: column;
+        position: relative;
         .rc-top {
           font-size: 32px;
-          height: 84px;
+          // height: 84px;
           font-weight: 500;
           color: #222222;
           line-height: 42px;
@@ -647,8 +598,12 @@ export default {
           padding: 1px 0;
         }
         .rc-bottom {
+          position: absolute;
           display: flex;
           justify-content: space-between;
+          bottom: 0;
+          right: 0;
+          width: 100%;
           .rc-bottom-lf {
             margin-top: 5px;
             .rc-bottom-lf-my {
