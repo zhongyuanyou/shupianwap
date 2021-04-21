@@ -19,10 +19,10 @@ export default {
         contentText: '', // 文章/问题/回答纯文本内容（type为问题时不必传）
         title: '', // 标题
         type: '', // 类型：1问题  2文章 3回答
-        userCode: 'U2100607057',
+        userCode: '',
         userId: '',
         userName: '', //
-        userType: 2, // 作者类型 2 普通用户 3 规划师
+        userType: 1, // // 作者类型 1 普通用户 2 规划师
         contentImageUrl: '', // 内容图片地址（多张 “,”号拼接）
         id: '',
       },
@@ -30,6 +30,7 @@ export default {
       topicStr: '',
       id: '', // 内容id
       isFromApp: '', // 是否从APP跳转
+      apiLock: false, // 防止接口重复调用
     }
   },
   beforeDestroy() {
@@ -38,8 +39,6 @@ export default {
   computed: {
     ...mapState({
       userId: (state) => state.user.userId,
-      userType: (state) => state.user.userType,
-      userName: (state) => state.user.userName,
     }),
   },
   mounted() {
@@ -53,9 +52,6 @@ export default {
       : this.fromPage === 'article'
       ? (this.formData.type = 2)
       : (this.formData.type = 3)
-    // this.formData.userId = this.userId
-    // this.formData.userType = util.getUserType(this.userType)
-    // this.formData.userName = this.userName
   },
   methods: {
     async getUserInfo() {
@@ -68,12 +64,12 @@ export default {
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false
         if (res.code === 200 && res.data && typeof res.data === 'object') {
-          console.log(res.data, 123)
+          // start: set userInfo
           this.formData.userId = res.data.id
           this.formData.userType = util.getUserType(res.data.type)
           this.formData.userName = res.data.nickName
-          console.log(res.data.userId, 123)
-          console.log(this.formData, 12312213)
+          this.formData.userCode = res.data.no
+          // end: set userInfo
         }
       } catch (err) {
         console.log(err)
@@ -130,6 +126,10 @@ export default {
     submit() {
       const checkFlag = this.checkParams()
       if (!checkFlag) return
+      if (this.apiLock) {
+        this.$xToast.error('正在处理中,请稍后')
+        return
+      }
       if (!this.editType || this.editType === 1) {
         if (this.fromPage === 'answer') {
           this.buildAnswerParams()
@@ -146,13 +146,11 @@ export default {
     },
     // 新增内容
     addContent() {
-      this.formData.userId = this.userId
-      this.formData.userType =
-        this.$store.state.user.userType === 'MERCHANT_USER' ? 3 : 2
-      this.formData.userName = this.userName
+      this.apiLock = true
       this.$axios
         .post(knownApi.content.add, this.formData)
         .then((res) => {
+          this.apiLock = false
           const that = this
           if (res.code && res.code === 200) {
             this.$xToast.success('发布成功')
@@ -162,21 +160,30 @@ export default {
           }
         })
         .catch((err) => {
+          this.apiLock = false
           this.$xToast.error('发布失败')
           console.log('发布内容失败', err)
         })
     },
     // 修改内容
     modifyContent() {
-      this.$axios.post(knownApi.content.edit, this.formData).then((res) => {
-        const that = this
-        if (res.code && res.code === 200) {
-          this.$xToast.success('修改成功')
-          this.switchUrl(res.data.id)
-        } else {
-          this.$xToast.error('发布失败')
-        }
-      })
+      this.apiLock = true
+      this.$axios
+        .post(knownApi.content.edit, this.formData)
+        .then((res) => {
+          this.apiLock = false
+          const that = this
+          if (res.code && res.code === 200) {
+            this.$xToast.success('修改成功')
+            this.switchUrl(res.data.id)
+          } else {
+            this.$xToast.error('发布失败')
+          }
+        })
+        .catch((e) => {
+          this.apiLock = false
+          this.$xToast.error('修改失败')
+        })
     },
     // 页面跳转
     switchUrl(id) {
