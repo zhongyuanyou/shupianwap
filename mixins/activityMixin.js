@@ -444,5 +444,12 @@ export default {
     getPercentage(res, total) {
       return (res / total) * 100
     },
+    overflowDot(str, num) {
+      if (str.length > 6) {
+        return str.slice(0, num) + '...'
+      } else {
+        return str
+      }
+    },
   },
 }

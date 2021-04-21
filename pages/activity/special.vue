@@ -163,7 +163,7 @@
                       v-for="tag in item.tags.split(',').slice(0, 2)"
                       :key="tag"
                     >
-                      {{ tag }}
+                      {{ overflowDot(tag, 6) }}
                     </div>
                   </div>
                   <div class="rc-bottom">
@@ -480,12 +480,21 @@ export default {
   }
 
   .tabs-box {
-    padding: 0 20px;
-    border-radius: 24px 24px 0px 0px;
-    background-color: #fff;
+    width: 100vw;
+    /deep/ .sp-sticky {
+      border-radius: 24px 24px 0px 0px;
+      background-color: #fff;
+      overflow: hidden;
+      &.sp-sticky--fixed {
+        border-radius: 0 0 0 0;
+        .tabs-box-items {
+          padding: 32px 20px;
+        }
+      }
+    }
+
     .tabs-box-items {
-      // padding-top: 32px;
-      padding: 32px 0;
+      padding: 32px 20px;
       display: flex;
       background-color: #ffffff;
       justify-content: flex-start;
@@ -516,10 +525,10 @@ export default {
   }
   .container-body {
     width: 100%;
-    height: auto;
+    // height: auto;
     background: #ffffff;
     z-index: 1;
-    top: 622px;
+    // top: 622px;
     padding: 0 20px;
     .body-content {
       position: absolute;
