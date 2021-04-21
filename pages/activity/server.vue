@@ -49,9 +49,16 @@
       <!-- E title -->
       <div class="container-body" :style="style.containerStyle">
         <div class="tabs-box">
-          <div class="drop_down">
+          <!-- <div class="drop_down">
             <div class="drop_down_title">成都</div>
             <div class="drop_down_icon"></div>
+          </div> -->
+
+          <div class="tabs-box-left">
+            <div @click="swichCityHandle">
+              {{ cityName ? cityName : '定位中' }}
+            </div>
+            <div></div>
           </div>
           <ul class="tabs-box-items">
             <li class="active">精选</li>
@@ -107,6 +114,143 @@
     </div>
   </div>
 </template>
+
+<script>
+import {
+  CountDown,
+  Sticky,
+  List,
+  WorkTabSort,
+  WorkTabSortItem,
+  PullRefresh,
+} from '@chipspc/vant-dgg'
+import activityMixin from '@/mixins/activityMixin'
+
+export default {
+  name: 'Server',
+  components: {
+    [CountDown.name]: CountDown,
+    [Sticky.name]: Sticky,
+    [List.name]: List,
+    [WorkTabSort.name]: WorkTabSort,
+    [WorkTabSortItem.name]: WorkTabSortItem,
+    [PullRefresh.name]: PullRefresh,
+  },
+  mixins: [activityMixin],
+  data() {
+    return {
+      specType: 'HDZT_ZTTYPE_XFWHSF',
+      style: {
+        containerStyle: '',
+        iconStyle: '',
+        searchStyle: '',
+      },
+      list: [],
+      items: [
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+      ],
+      defaultData: {
+        index: 0,
+        sort: -1, // 倒序
+      },
+    }
+  },
+  methods: {
+    scrollHandle({ scrollTop }) {
+      // console.log(scrollTop)
+      // 滚动事件
+      if (scrollTop > 325) {
+        this.style.containerStyle = 'border-radius: 0px;'
+      } else {
+        this.style.containerStyle = 'border-radius: 12px;'
+      }
+    },
+    onLoad() {
+      setTimeout(() => {
+        if (this.refreshing) {
+          this.list = []
+          this.refreshing = false
+        }
+
+        for (let i = 0; i < 10; i++) {
+          this.list.push(this.list.length + 1)
+        }
+        this.loading = false
+
+        if (this.list.length >= 40) {
+          this.finished = true
+        }
+      }, 1000)
+    },
+    onRefresh() {
+      // 清空列表数据
+      this.finished = false
+
+      // 重新加载数据
+      // 将 loading 设置为 true，表示处于加载状态
+      this.loading = true
+      this.onLoad()
+    },
+    handlerItemChange(action, index) {
+      console.log(action, index)
+      this.$toast(`选择结果：${JSON.stringify({ type: action, index })}`)
+    },
+  },
+}
+</script>
 
 <style lang="less" scoped>
 .container {
@@ -284,6 +428,38 @@
       align-items: center;
       height: 88px;
       padding: 12px 0 0 0;
+      .tabs-box-left {
+        padding: 0 10px;
+        width: 160px;
+        overflow: hidden;
+        height: 56px;
+        background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
+        border-radius: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        div:nth-child(1) {
+          font-size: 30px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #ffffff;
+          line-height: 30px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        div:nth-last-child(1) {
+          // width: 15px;
+          // height: 10px;
+          // background: #ffffff;
+          margin-left: 8px;
+          width: 0;
+          height: 0;
+          border-left: 10px solid transparent;
+          border-right: 10px solid transparent;
+          border-top: 12px solid #ffffff;
+        }
+      }
       .drop_down {
         width: 131px;
         height: 56px;
@@ -497,142 +673,3 @@
   }
 }
 </style>
-
-<script>
-import {
-  CountDown,
-  Sticky,
-  List,
-  WorkTabSort,
-  WorkTabSortItem,
-  PullRefresh,
-} from '@chipspc/vant-dgg'
-
-export default {
-  name: 'Server',
-  components: {
-    [CountDown.name]: CountDown,
-    [Sticky.name]: Sticky,
-    [List.name]: List,
-    [WorkTabSort.name]: WorkTabSort,
-    [WorkTabSortItem.name]: WorkTabSortItem,
-    [PullRefresh.name]: PullRefresh,
-  },
-  data() {
-    return {
-      style: {
-        containerStyle: '',
-        iconStyle: '',
-        searchStyle: '',
-      },
-      iconLeft: 0.35,
-      time: '',
-      list: [],
-      loading: false,
-      finished: false,
-      refreshing: false,
-      items: [
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-      ],
-      defaultData: {
-        index: 0,
-        sort: -1, // 倒序
-      },
-    }
-  },
-  methods: {
-    scrollHandle({ scrollTop }) {
-      // console.log(scrollTop)
-      // 滚动事件
-      if (scrollTop > 325) {
-        this.style.containerStyle = 'border-radius: 0px;'
-      } else {
-        this.style.containerStyle = 'border-radius: 12px;'
-      }
-    },
-    onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        this.loading = false
-
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
-    },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
-
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
-    handlerItemChange(action, index) {
-      console.log(action, index)
-      this.$toast(`选择结果：${JSON.stringify({ type: action, index })}`)
-    },
-  },
-}
-</script>
