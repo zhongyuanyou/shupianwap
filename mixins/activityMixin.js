@@ -317,8 +317,6 @@ export default {
             )
             this.total = res.data.total
             this.loading = false
-            // this.page++
-            // this.page = res.data.currentPage
             if (this.page > res.data.totalPage) {
               this.finished = true
             }
