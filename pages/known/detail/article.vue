@@ -157,7 +157,9 @@ export default {
   },
   created() {
     this.getRecommendData()
-    this.initFollow()
+    if (this.userInfo.token) {
+      this.initFollow()
+    }
   },
 
   mounted() {
@@ -178,7 +180,7 @@ export default {
         .get(knownApi.questionArticle.findAttention, {
           params: {
             currentUserId: this.userInfo.userId,
-            homeUserId: this.homeUserId,
+            homeUserId: this.articleDetails.createrId,
           },
         })
         .then((res) => {
@@ -190,8 +192,9 @@ export default {
         })
     },
     async follow() {
-      if (!(await this.$isLogin())) {
-        return
+      const res = await this.$isLogin()
+      if (res === 'app_login_success') {
+        this.initFollow()
       }
       this.$axios
         .post(knownApi.home.attention, {
