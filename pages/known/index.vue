@@ -191,9 +191,9 @@ import Answer from '@/components/mustKnown/answer/Answer'
 import Search from '@/components/mustKnown/recommend/search/Search'
 import Bottombar from '@/components/common/nav/Bottombar'
 import { knownApi } from '@/api'
-import HeaderSlot from '@/components/common/head/header-slot'
 
 export default {
+  layout: 'appSafeView',
   name: 'Index',
   components: {
     [WorkTab.name]: WorkTab,
@@ -211,7 +211,6 @@ export default {
     Attention,
     HotList,
     OrdinaryList,
-    HeaderSlot,
   },
   async asyncData({ $axios, store }) {
     const { code, message, data } = await $axios.get(
