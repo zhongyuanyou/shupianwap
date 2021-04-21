@@ -173,20 +173,6 @@ export default {
         query: { homeUserId: id, type: usertype },
       })
     },
-    async isLogin() {
-      if (this.userInfo.userId && this.userInfo.token) {
-        return true
-      } else if (this.isInApp) {
-        await this.$appFn.dggLogin()
-      } else {
-        this.$router.push({
-          path: '/login',
-          query: {
-            redirect: this.$route.fullPath,
-          },
-        })
-      }
-    },
     initFollow() {
       this.$axios
         .get(knownApi.questionArticle.findAttention, {
@@ -203,8 +189,8 @@ export default {
           }
         })
     },
-    follow() {
-      if (!this.isLogin()) {
+    async follow() {
+      if (!(await this.$isLogin())) {
         return
       }
       this.$axios
@@ -294,8 +280,8 @@ export default {
     onLeftClick() {
       this.$router.back(-1)
     },
-    handleClickBottom(type) {
-      if (!this.isLogin()) {
+    async handleClickBottom(type) {
+      if (!(await this.$isLogin())) {
         return
       }
       this.handleType = ''

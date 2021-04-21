@@ -72,8 +72,8 @@ export default {
         },
       })
     },
-    handle(item) {
-      if (!this.isLogin()) {
+    async handle(item) {
+      if (!(await this.$isLogin())) {
         return
       }
       item.isAttention ? this.cancelAttention(item) : this.attention(item)
@@ -109,20 +109,6 @@ export default {
         item.isAttention = !item.isAttention
       } else {
         console.log(message)
-      }
-    },
-    async isLogin() {
-      if (this.userInfo.userId && this.userInfo.token) {
-        return true
-      } else if (this.isInApp) {
-        await this.$appFn.dggLogin()
-      } else {
-        this.$router.push({
-          path: '/login',
-          query: {
-            redirect: this.$route.fullPath,
-          },
-        })
       }
     },
     async getList() {

@@ -224,22 +224,8 @@ export default {
       this.loading = true
       this.getList()
     },
-    async isLogin() {
-      if (this.userInfo.userId && this.userInfo.token) {
-        return true
-      } else if (this.isInApp) {
-        await this.$appFn.dggLogin()
-      } else {
-        this.$router.push({
-          path: '/login',
-          query: {
-            redirect: this.$route.fullPath,
-          },
-        })
-      }
-    },
     async attention() {
-      if (!this.isLogin()) {
+      if (!(await this.$isLogin())) {
         return
       }
       const { code, message } = await this.$axios.post(
