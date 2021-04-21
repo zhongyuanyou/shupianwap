@@ -68,12 +68,9 @@ export default {
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false
         if (res.code === 200 && res.data && typeof res.data === 'object') {
-          console.log(res.data, 123)
           this.formData.userId = res.data.id
           this.formData.userType = util.getUserType(res.data.type)
           this.formData.userName = res.data.nickName
-          console.log(res.data.userId, 123)
-          console.log(this.formData, 12312213)
         }
       } catch (err) {
         console.log(err)
