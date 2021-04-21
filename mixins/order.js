@@ -342,7 +342,6 @@ export default {
             const nodeList = res.filter((item) => {
               return item.orderSkuId === this.orderId
             })
-            console.log('nodeList1', nodeList)
             // // 计算合计金额
             this.nodeTotalMoney = nodeList.reduce((total, item) => {
               return total + Number(item.money)
@@ -363,7 +362,6 @@ export default {
               }
             }
             this.nodeList = sortArr
-            console.log('nodeList', sortArr)
           } else {
             // 当前订单的分批支付信息 订单详情页
             // 筛选对应订单的支付列表
@@ -511,20 +509,38 @@ export default {
     },
     // 查询客户单下的关联订单
     getChildOrders(order) {
-      if (
-        order &&
-        this.opType === 'payMoney' &&
-        order.skuType === this.skuTypes[1] &&
-        this.checkContractStatus(order) === 1
-      ) {
-        // 交易商品付款之前检测有无签署合同
-        this.$xToast.show({
-          message: '为满足您的合法权益，请先和卖家签署合同后再付款',
-          duration: 3000,
-          icon: 'toast_ic_remind',
-          forbidClick: true,
-        })
-        return
+      if (this.fromPage === 'orderList') {
+        if (
+          this.opType === 'payMoney' &&
+          order.orderSkuEsList[0].skuType === 'PRO_CLASS_TYPE_TRANSACTION' &&
+          this.checkContractStatus(order) === 1
+        ) {
+          // 交易商品付款之前检测有无签署合同
+          this.$xToast.show({
+            message: '为满足您的合法权益，请先和卖家签署合同后再付款',
+            duration: 3000,
+            icon: 'toast_ic_remind',
+            forbidClick: true,
+          })
+          return
+        }
+      }
+      if (this.fromPage === 'orderDetail') {
+        if (
+          this.opType === 'payMoney' &&
+          (order.skuType === 'PRO_CLASS_TYPE_TRANSACTION' ||
+            order.skuType === this.skuTypes[1]) &&
+          this.checkContractStatus(order) === 1
+        ) {
+          // 交易商品付款之前检测有无签署合同
+          this.$xToast.show({
+            message: '为满足您的合法权益，请先和卖家签署合同后再付款',
+            duration: 3000,
+            icon: 'toast_ic_remind',
+            forbidClick: true,
+          })
+          return
+        }
       }
       if (!this.orderData.orderList) {
         this.loading = true
