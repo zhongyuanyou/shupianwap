@@ -4,12 +4,13 @@
       v-model="loading"
       :finished="finished"
       :finished-text="list.length == 0 ? '' : '我是有底线的...'"
+      :offset="0"
       @load="onLoad"
     >
       <div v-for="(item, index) in list" :key="index" class="list">
         <div class="head">
           <h1>{{ item.contractName }}</h1>
-          <p
+          <!--  <p
             v-if="item.contractStatus == 'STRUTS_YWC'"
             :style="{
               color:
@@ -62,7 +63,7 @@
             }"
           >
             已作废
-          </p>
+          </p> -->
         </div>
         <div class="data">
           <div class="tit">
@@ -151,6 +152,7 @@ export default {
 <style lang="less" scoped>
 .listbox {
   background: #f8f8f8;
+  min-height: calc(100vh - 88px - 88px);
   .list {
     margin-top: 24px;
     height: 390px;

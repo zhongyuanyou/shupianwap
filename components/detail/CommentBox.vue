@@ -1,11 +1,7 @@
 <template>
   <div class="comment">
     <h1>用户评价</h1>
-    <sp-swipe
-      class="my-swipe"
-      :autoplay="1000000000"
-      indicator-color="#4974f5;"
-    >
+    <sp-swipe class="my-swipe" :autoplay="5000" indicator-color="#4974f5;">
       <sp-swipe-item v-for="(item, index) in list" :key="index">
         <div class="item">
           <div class="head">

@@ -342,7 +342,6 @@ export default {
             const nodeList = res.filter((item) => {
               return item.orderSkuId === this.orderId
             })
-            console.log('nodeList1', nodeList)
             // // 计算合计金额
             this.nodeTotalMoney = nodeList.reduce((total, item) => {
               return total + Number(item.money)
@@ -363,7 +362,6 @@ export default {
               }
             }
             this.nodeList = sortArr
-            console.log('nodeList', sortArr)
           } else {
             // 当前订单的分批支付信息 订单详情页
             // 筛选对应订单的支付列表
@@ -464,8 +462,9 @@ export default {
       data = data || this.orderData
       let isShowConfirm
       if (
-        data.orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION' ||
-        data.orderProTypeNo === 'PRO_CLASS_TYPE_SALES '
+        data.cusOrderStatusNo === 'ORDER_CUS_STATUS_PROGRESSING' &&
+        (data.orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION' ||
+          data.orderProTypeNo === 'PRO_CLASS_TYPE_SALES ')
       ) {
         const orderArr = data.orderSkuEsList || data.orderSkuList
         for (let i = 0, l = orderArr.length; i < l; i++) {
@@ -510,20 +509,38 @@ export default {
     },
     // 查询客户单下的关联订单
     getChildOrders(order) {
-      if (
-        order &&
-        this.opType === 'payMoney' &&
-        order.skuType === this.skuTypes[1] &&
-        this.checkContractStatus(order) === 1
-      ) {
-        // 交易商品付款之前检测有无签署合同
-        this.$xToast.show({
-          message: '为满足您的合法权益，请先和卖家签署合同后再付款',
-          duration: 3000,
-          icon: 'toast_ic_remind',
-          forbidClick: true,
-        })
-        return
+      if (this.fromPage === 'orderList') {
+        if (
+          this.opType === 'payMoney' &&
+          order.orderSkuEsList[0].skuType === 'PRO_CLASS_TYPE_TRANSACTION' &&
+          this.checkContractStatus(order) === 1
+        ) {
+          // 交易商品付款之前检测有无签署合同
+          this.$xToast.show({
+            message: '为满足您的合法权益，请先和卖家签署合同后再付款',
+            duration: 3000,
+            icon: 'toast_ic_remind',
+            forbidClick: true,
+          })
+          return
+        }
+      }
+      if (this.fromPage === 'orderDetail') {
+        if (
+          this.opType === 'payMoney' &&
+          (order.skuType === 'PRO_CLASS_TYPE_TRANSACTION' ||
+            order.skuType === this.skuTypes[1]) &&
+          this.checkContractStatus(order) === 1
+        ) {
+          // 交易商品付款之前检测有无签署合同
+          this.$xToast.show({
+            message: '为满足您的合法权益，请先和卖家签署合同后再付款',
+            duration: 3000,
+            icon: 'toast_ic_remind',
+            forbidClick: true,
+          })
+          return
+        }
       }
       if (!this.orderData.orderList) {
         this.loading = true
@@ -586,7 +603,6 @@ export default {
         operateSourcePlat: 'COMDIC_PLATFORM_CRISPS',
         operateTerminal: 'ORDER_TERMINAL_WAP',
       }
-      console.log('params', params)
       orderApi
         .confirmOrder({ axios: this.$axios }, params)
         .then((res) => {
@@ -821,13 +837,15 @@ export default {
       for (let i = 0, l = arr.length; i < l; i++) {
         const skuObj = JSON.parse(arr[i].skuDetailInfo)
         if (skuObj && skuObj.sku) {
-          arr[i].skuList = skuObj.sku.fieldList
-          // const arr2 = skuObj.sku.fieldList
-          // const arr3 = []
-          // for (let i = 0, l2 = arr2.length; i < l2; i++) {
-          //   arr3.push(arr2[i].fieldName)
-          // }
-          // arr[i].detailName = arr3.join('|')
+          const arr2 = skuObj.sku.fieldList
+          if (arr2) {
+            const arr3 = []
+            for (let j = 0, l2 = arr2.length; j < l2; j++) {
+              arr3.push(arr2[j].fieldName)
+            }
+            arr[i].detailName = arr3.join('|')
+            arr[i].skuList = arr2
+          }
         }
       }
     },

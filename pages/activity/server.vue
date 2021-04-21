@@ -58,7 +58,7 @@
       </div>
     </div>
     <div class="container-body">
-      <sp-sticky :offset-top="66">
+      <sp-sticky :offset-top="59">
         <div ref="menu" class="tabs-box">
           <div class="tabs-box-left">
             <div @click="swichCityHandle">
@@ -96,7 +96,9 @@
                 </div>
                 <div class="right-content">
                   <div class="rc-top">
-                    <span v-if="specTypeCode === 'HDZT_ZTTYPE_XTSF'">新品</span>
+                    <span v-if="specTypeCode === 'HDZT_ZTTYPE_XFWHSF'"
+                      >好品</span
+                    ><span>千万补贴</span>
                     {{ item.skuName }}
                   </div>
                   <div v-if="item.tags.length > 0" class="rc-middle">
@@ -267,6 +269,11 @@ export default {
             })
           }
         })
+        .catch((err) => {
+          this.loading = false
+          this.finished = true
+          console.log(err)
+        })
     },
     // 获取产品
     getProductList(item, itemSpecCode) {
@@ -307,6 +314,11 @@ export default {
             })
           }
         })
+        .catch((err) => {
+          this.loading = false
+          this.finished = true
+          console.log(err)
+        })
     },
     getAdvertisingData() {
       this.$axios
@@ -326,6 +338,10 @@ export default {
               className: 'my-toast-style',
             })
           }
+        })
+        .catch((err) => {
+          this.loading = false
+          console.log(err)
         })
     },
     handlerItemChange(action, index) {
@@ -509,10 +525,10 @@ export default {
     }
   }
   .container-body {
-    height: 88px;
     width: 100%;
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
+    overflow: hidden;
     .tabs-box {
       display: flex;
       justify-content: space-between;
@@ -648,6 +664,7 @@ export default {
             font-weight: 500;
             color: #ffffff;
             margin-top: 6px;
+            margin-right: 8px;
           }
         }
         .rc-middle {
