@@ -282,7 +282,7 @@ export default {
     getProductList(item, itemSpecCode) {
       const params = {
         specCode: itemSpecCode,
-        cityCode: item.cityCode,
+        // cityCode: item.cityCode,
       }
       if (item.id !== '') {
         params.labelId = item.id
@@ -294,6 +294,7 @@ export default {
         specCode: this.specCode,
         isReco: 1,
       }
+      //  asda
       this.$axios
         .get(activityApi.activityProductList, { params })
         .then((res) => {
@@ -320,7 +321,7 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.activityProductList = res.data.rows.concat(res.data.rows)
+            this.activityProductList = res.data.rows
             this.total = res.data.total
             this.loading = false
             this.page++
