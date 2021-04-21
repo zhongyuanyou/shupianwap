@@ -464,8 +464,9 @@ export default {
       data = data || this.orderData
       let isShowConfirm
       if (
-        data.orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION' ||
-        data.orderProTypeNo === 'PRO_CLASS_TYPE_SALES '
+        data.cusOrderStatusNo === 'ORDER_CUS_STATUS_PROGRESSING' &&
+        (data.orderProTypeNo === 'PRO_CLASS_TYPE_TRANSACTION' ||
+          data.orderProTypeNo === 'PRO_CLASS_TYPE_SALES ')
       ) {
         const orderArr = data.orderSkuEsList || data.orderSkuList
         for (let i = 0, l = orderArr.length; i < l; i++) {
@@ -586,7 +587,6 @@ export default {
         operateSourcePlat: 'COMDIC_PLATFORM_CRISPS',
         operateTerminal: 'ORDER_TERMINAL_WAP',
       }
-      console.log('params', params)
       orderApi
         .confirmOrder({ axios: this.$axios }, params)
         .then((res) => {
@@ -821,13 +821,15 @@ export default {
       for (let i = 0, l = arr.length; i < l; i++) {
         const skuObj = JSON.parse(arr[i].skuDetailInfo)
         if (skuObj && skuObj.sku) {
-          arr[i].skuList = skuObj.sku.fieldList
-          // const arr2 = skuObj.sku.fieldList
-          // const arr3 = []
-          // for (let i = 0, l2 = arr2.length; i < l2; i++) {
-          //   arr3.push(arr2[i].fieldName)
-          // }
-          // arr[i].detailName = arr3.join('|')
+          const arr2 = skuObj.sku.fieldList
+          if (arr2) {
+            const arr3 = []
+            for (let j = 0, l2 = arr2.length; j < l2; j++) {
+              arr3.push(arr2[j].fieldName)
+            }
+            arr[i].detailName = arr3.join('|')
+            arr[i].skuList = arr2
+          }
         }
       }
     },

@@ -13,7 +13,7 @@
             {{ item.spuName }}
           </p>
           <p class="goods-skus">
-            {{ item.skuExtInfo }}
+            {{ getSkus(item.skuExtInfo) }}
           </p>
         </div>
         <div class="right">
@@ -53,21 +53,6 @@ export default {
       fromPage: 'orderDetail',
     }
   },
-  // computed: {
-  //   shoulPayDetail: {
-  //     set(val) {
-  //       return val
-  //     },
-  //     get() {
-  //       return this.payList.filter((item) => {
-  //         return this.isPayAll === 0
-  //           ? item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1'
-  //           : item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1' ||
-  //               item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_0'
-  //       })
-  //     },
-  //   },
-  // },
   mounted() {
     if (this.$route.query.cusOrderId) {
       this.cusOrderId = this.$route.query.cusOrderId

@@ -9,6 +9,7 @@ export default {
     ...mapState({
       cityName: (state) => state.city.currentCity.name,
       cityCode: (state) => state.city.currentCity.code,
+      isInApp: (state) => state.app.isInApp,
     }),
     userInfo() {
       return JSON.parse(localStorage.getItem('myInfo'))
@@ -21,6 +22,68 @@ export default {
         index: 0,
         sort: -1, // 倒序
       },
+      testItems: [
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+      ],
       iconLeft: 0.35,
       loading: false,
       finished: false,
@@ -68,6 +131,29 @@ export default {
       POSITION_CITY: 'city/POSITION_CITY',
       GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
     }),
+    // 平台不同，跳转方式不同
+    uPGoBack() {
+      if (this.isInApp) {
+        this.$appFn.dggCloseWebView((res) => {
+          if (!res || res.code !== 200) {
+            this.$xToast.show({
+              message: '返回失败',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
+        return
+      }
+
+      // 在浏览器里 返回, 若没返回记录了，就跳转到首页
+      if (window && window.history && window.history.length <= 1) {
+        this.$router.replace('/')
+        return
+      }
+      this.$router.back(-1)
+    },
     advertjump(item) {
       this.$router.push('/')
     },
@@ -155,8 +241,8 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.activityTypeOptions = res.data.settingVOList
-            this.productType = res.data.productType
+            this.activityTypeOptions = res.data.settingVOList || []
+            this.productType = res.data.productType || ''
             this.activityTypeOptions.unshift({
               cityCode: this.cityCode,
               cityName: this.cityName,
@@ -196,8 +282,10 @@ export default {
     getProductList(item, itemSpecCode) {
       const params = {
         specCode: itemSpecCode,
-        cityCode: item.cityCode,
-        labelId: item.id,
+        // cityCode: item.cityCode,
+      }
+      if (item.id !== '') {
+        params.labelId = item.id
       }
       this.productMethod(params)
     },
@@ -206,11 +294,12 @@ export default {
         specCode: this.specCode,
         isReco: 1,
       }
+      //  asda
       this.$axios
         .get(activityApi.activityProductList, { params })
         .then((res) => {
           if (res.code === 200) {
-            this.recommendProductList = res.data
+            this.recommendProductList = res.data.rows
           } else {
             throw new Error('服务异常，请刷新重试！')
           }
@@ -225,13 +314,14 @@ export default {
         })
     },
     productMethod(param) {
+      console.log('param', param)
       this.$axios
         .get(activityApi.activityProductList, {
           params: param,
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productList = res.data
+            this.activityProductList = res.data.rows
             this.total = res.data.total
             this.loading = false
             this.page++
@@ -259,10 +349,12 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productAdvertData = res.data.sortMaterialList[0].materialList.slice(
-              0,
-              3
-            )
+            if (res.data.sortMaterialList.length) {
+              this.productAdvertData = res.data.sortMaterialList[0].materialList.slice(
+                0,
+                3
+              )
+            }
           } else {
             Toast.fail({
               duration: 2000,
@@ -271,6 +363,9 @@ export default {
               className: 'my-toast-style',
             })
           }
+        })
+        .catch((err) => {
+          console.log(err.message)
         })
     },
     // onRefresh() {
@@ -345,6 +440,9 @@ export default {
         that.diff--
       }, 1000)
       // 每执行一次定时器就减少一秒
+    },
+    getPercentage(res, total) {
+      return (res / total) * 100
     },
   },
 }

@@ -96,6 +96,7 @@ export default {
     },
     getDetail() {
       const list = JSON.parse(localStorage.getItem('nodeList'))
+
       this.skuInfo = list.filter((item) => {
         return item.id === this.orderSkuId
       })[0]

@@ -3,13 +3,7 @@
     <sp-image class="img" :src="item.skuImages"></sp-image>
     <div class="right">
       <p class="goods-name">
-        <!-- <span
-          v-if="item.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID'"
-          class="name"
-        >
-          {{ setName(item.spuName || item.orderSaleName) }}</span
-        > -->
-        <span class="name"> {{ item.spuName || item.orderSaleName }}</span>
+        <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
         <span v-if="cusOrderPayType !== 2 && orderType" class="money1">
           {{ changeMoney(item.skuPrice || item.skuPrice) }}元
         </span>
@@ -42,12 +36,13 @@
               cusOrderStatusType !== 4 &&
               item.skuType === 'PRO_CLASS_TYPE_SERVICE'
             "
-            @click="handleClickBtn(2, item)"
+            @click="checkProductType(item)"
             >办理进度</sp-button
           >
           <!-- 服务产品确认完成显示条件 1产品状态为已处理 2支付状态未完成支付  3用户未点确认-->
           <sp-button
             v-if="
+              cusOrderStatusType === 2 &&
               (item.skuStatusNo === 'ORDER_ORDER_SERVER_STATUS_HANDLED' ||
                 item.skuStatusNo === 'ORDER_ORDER_RESOURCE_STATUS_HANDLED') &&
               item.payStatusNo === 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID' &&
@@ -105,14 +100,12 @@
 // 服务商品支付方式分为全款，定金尾款，按节点付费，完结付费
 // 定金胃口，按节点付费，完结付费有办理进度
 import { Button, Image } from '@chipspc/vant-dgg'
-import OrderMixins from '@/mixins/order'
 import changeMoney from '@/utils/changeMoney'
 export default {
   components: {
     [Button.name]: Button,
     [Image.name]: Image,
   },
-  mixins: [OrderMixins],
   props: {
     // 当前商品产品
     item: {
@@ -141,26 +134,12 @@ export default {
       default: 1,
     },
   },
-  data() {
-    return {
-      fromPage: 'orderDetail',
-    }
-  },
   methods: {
     changeMoney(num) {
       return changeMoney.regFenToYuan(num)
     },
-    handleClickBtn(type, item) {
-      switch (type) {
-        // 办理进度
-        case 2:
-          this.checkProductType(item)
-          break
-        case 3:
-          // 确认完成
-          this.confirmOrder(item.id)
-          break
-      }
+    confirmOrder(id) {
+      this.$emit('confirmOrder', id)
     },
     // 判断是否是周期产品
     checkProductType(item) {

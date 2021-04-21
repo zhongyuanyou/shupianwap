@@ -7,7 +7,7 @@
           name="nav_ic_back"
           size="0.4rem"
           color="#1A1A1A"
-          @click.native="onLeftClick"
+          @click.native="uPGoBack"
         ></my-icon>
       </template>
     </Head>
@@ -116,10 +116,6 @@ export default {
   },
   data() {
     return {
-      images: [
-        'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1867843355,3746771280&fm=26&gp=0.jpg',
-        'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1867843355,3746771280&fm=26&gp=0.jpg',
-      ],
       current: '',
       loading: false,
       usedCount: 0, // 已使用
@@ -141,6 +137,7 @@ export default {
     ...mapState({
       userId: (state) => state.user.userId,
       userInfo: (state) => state.user, // 登录的用户信息
+      isInApp: (state) => state.app.isInApp,
     }),
   },
   mounted() {
@@ -148,6 +145,28 @@ export default {
     this.getAdvertisingData()
   },
   methods: {
+    uPGoBack() {
+      if (this.isInApp) {
+        this.$appFn.dggCloseWebView((res) => {
+          if (!res || res.code !== 200) {
+            this.$xToast.show({
+              message: '返回失败',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
+        return
+      }
+
+      // 在浏览器里 返回, 若没返回记录了，就跳转到首页
+      if (window && window.history && window.history.length <= 1) {
+        this.$router.replace('/')
+        return
+      }
+      this.$router.back(-1)
+    },
     operation_coupon(item) {
       if (item.status === 1) {
         this.setCouponStatus(item)
@@ -156,15 +175,15 @@ export default {
       }
     },
     setCouponStatus(item) {
+      this.loading = true
       this.$axios
         .post(`${CHIPS_WAP_BASE_URL}/yk/coupon/v2/receive_coupon.do`, {
           couponId: item.id,
         })
         .then((res) => {
-          debugger
           if (res.code === 200) {
             this.responseData = []
-            Toast('已领取')
+            Toast('领取成功')
             this.getInitCouponData()
             this.loading = false
           } else {
@@ -250,9 +269,11 @@ export default {
         page: '1',
       }
       this.userId ? (params.userId = this.userId) : (params.userId = '')
+      this.loading = true
       coupon
         .findPage({ axios: this.$axios }, params)
         .then((result) => {
+          this.loading = false
           this.responseData = result
           for (let i = 0, length = this.responseData.length; i < length; i++) {
             let useTime = this.responseData[i].serviceLife

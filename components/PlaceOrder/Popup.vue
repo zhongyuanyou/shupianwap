@@ -204,8 +204,10 @@ export default {
           this.$parent.price = result
           this.$parent.popupshow = false
           this.$parent.coupon = `-${this.checkarr.reducePrice}`
+          this.$parent.skeletonloading = false
         })
         .catch((e) => {
+          this.$parent.skeletonloading = false
           Toast({
             message: e.data.error,
             iconPrefix: 'sp-iconfont',

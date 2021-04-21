@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <div class="container-advice">
-      <!-- S search -->
-      <sp-sticky @scroll="scrollHandle">
+    <!-- S search -->
+    <div style="height: 66px">
+      <sp-sticky>
         <div class="search">
-          <div class="left-back">
+          <div class="left-back" @click="uPGoBack">
             <my-icon
               name="nav_ic_back"
               class="back_icon"
@@ -16,346 +16,607 @@
             <my-icon
               class="search-icon"
               name="sear_ic_sear"
-              size="0.3rem"
+              size="0.30rem"
               color="#FFFFFF"
               :style="{ marginLeft: iconLeft + 'rem' }"
             ></my-icon>
-            <input placeholder="搜索特卖商品" />
+            <input
+              placeholder="请输入感兴趣的内容"
+              readonly
+              @click="clickInputHandle"
+            />
           </div>
         </div>
       </sp-sticky>
-      <!-- E search -->
-      <!-- S server-pay -->
-      <div class="server-pay">
-        <div class="server"></div>
-        <div class="server-img"></div>
-        <div class="pay"></div>
-      </div>
-      <!-- E server-pay -->
-      <!-- S title -->
-      <div class="middle-title">
-        <div class="title">“先享后付”尽在薯片平台</div>
-      </div>
-
+    </div>
+    <!-- E search -->
+    <!-- <sp-sticky></sp-sticky> -->
+    <div class="container-advice">
       <div class="advice-box">
-        <div class="advice-content">
-          <div class="advice-lf"></div>
-          <div class="advice-rt">
-            <div class="rt-top"></div>
-            <div class="rt-bottom"></div>
+        <div
+          v-for="(item, index) in productAdvertData.slice(0, 1)"
+          :key="index"
+          class="default_s"
+          @click="advertjump(item)"
+        >
+          <a :href="item.materialLink"
+            ><img :src="item.materialUrl" alt="" srcset=""
+          /></a>
+        </div>
+        <div>
+          <div
+            v-for="(item, index) in productAdvertData.slice(1, 3)"
+            :key="index"
+            class="other_s"
+            @click="advertjump(item)"
+          >
+            <a :href="item.materialLink"
+              ><img :src="item.materialUrl" alt="" srcset=""
+            /></a>
           </div>
         </div>
       </div>
-      <!-- E title -->
-      <div class="container-body" :style="style.containerStyle">
-        <div class="tabs-box">
-          <div class="drop_down">
-            <div class="drop_down_title">成都</div>
-            <div class="drop_down_icon"></div>
+    </div>
+    <div class="container-body">
+      <sp-sticky :offset-top="59">
+        <div ref="menu" class="tabs-box">
+          <div class="tabs-box-left">
+            <div @click="swichCityHandle">
+              {{ cityName ? cityName : '定位中' }}
+            </div>
+            <div></div>
           </div>
           <ul class="tabs-box-items">
-            <li class="active">精选</li>
-            <li>工商</li>
-            <li>财税</li>
-            <li>知产</li>
-            <li>法律</li>
+            <li
+              v-for="(item, index) in activityTypeOptions"
+              :key="index"
+              :class="{ active: index === currentIndex }"
+              @click="menuTab(item, index)"
+            >
+              {{ item.labelName }}
+            </li>
           </ul>
         </div>
-        <div class="body-content">
-          <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
-            <sp-list
-              v-model="loading"
-              :finished="finished"
-              finished-text="没有更多了"
-              @load="onLoad"
+      </sp-sticky>
+      <div class="body-content">
+        <sp-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+        >
+          <div v-if="productList.rows && productList.rows.length > 0">
+            <div
+              v-for="(item, index) in productList.rows"
+              :key="index"
+              @click="jumpProductdetail(item)"
             >
-              <div v-for="(item, index) in items" :key="index">
-                <div class="body-content-items">
-                  <div class="left-content"></div>
-                  <div class="right-content">
-                    <div class="rc-top">
-                      <span class="span1">{{ item.span1 }}</span>
-                      <span class="span2">{{ item.span2 }}</span>
-                      <span class="span3"> {{ item.content }}</span>
+              <div class="body-content-items">
+                <div class="left-content">
+                  <img :src="item.imageUrl" alt="" srcset="" />
+                </div>
+                <div class="right-content">
+                  <div class="rc-top">
+                    <span v-if="specTypeCode === 'HDZT_ZTTYPE_XFWHSF'"
+                      >好品</span
+                    ><span>千万补贴</span>
+                    {{ item.skuName }}
+                  </div>
+                  <div v-if="item.tags.length > 0" class="rc-middle">
+                    <div v-for="(item2, index2) in item.tags" :key="index2">
+                      {{ item2 }}
                     </div>
-                    <div class="rc-middle">
-                      <div>免手续费</div>
-                      <div>1对1服务</div>
-                      <div>店铺干净</div>
+                  </div>
+                  <div class="rc-bottom">
+                    <div class="rc-bottom-lf">
+                      <div class="rc-bottom-lf-my">
+                        <div>{{ item.specialPrice }}</div>
+                        <div>元</div>
+                      </div>
+                      <div class="bf-my">原价{{ item.skuPrice }}元</div>
                     </div>
-                    <div class="rc-bottom">
-                      <div class="rc-bottom-lf">
-                        <div class="rc-bottom-lf-my">
-                          <div>{{ item.money }}</div>
-                          <div>元</div>
-                        </div>
-                        <div class="bf-my">{{ item.price }}元</div>
-                      </div>
-                      <div class="rc-bottom-rt">
-                        <div>立即购买</div>
-                        <div></div>
-                      </div>
+                    <div class="rc-bottom-rt">
+                      <div class="imm_consult">立即购买</div>
+                      <div class="imm_img"></div>
                     </div>
                   </div>
                 </div>
-                <div class="line"></div>
               </div>
-            </sp-list>
-          </sp-pull-refresh>
-        </div>
+              <div class="line"></div>
+            </div>
+          </div>
+          <div v-else class="no-data">
+            <img
+              src="https://cdn.shupian.cn/sp-pt/wap/images/bzre7lw14o00000.png"
+              alt=""
+              srcset=""
+            />
+          </div>
+        </sp-list>
       </div>
     </div>
   </div>
 </template>
 
-<style lang="less" scoped>
-.container {
-  .container-advice {
-    margin-bottom: 32px;
-    width: 750px;
-    height: 890px;
-    background: linear-gradient(125deg, #e1b876 0%, #b7782c 100%);
-    .search {
-      display: flex;
-      // justify-content: space-between;
-      align-items: center;
-      padding-top: 16px;
-      margin-bottom: 16px;
-      .left-back {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 32px;
-        .back_icon {
-          width: 40px;
-          height: 40px;
-        }
+<script>
+import { mapState, mapActions } from 'vuex'
+import {
+  CountDown,
+  Sticky,
+  List,
+  WorkTabSort,
+  WorkTabSortItem,
+  PullRefresh,
+  Toast,
+} from '@chipspc/vant-dgg'
+import { activityApi } from '~/api'
+import imHandle from '@/mixins/imHandle'
+export default {
+  components: {
+    [CountDown.name]: CountDown,
+    [Sticky.name]: Sticky,
+    [List.name]: List,
+    [WorkTabSort.name]: WorkTabSort,
+    [WorkTabSortItem.name]: WorkTabSortItem,
+    [PullRefresh.name]: PullRefresh,
+  },
+  mixins: [imHandle],
+  data() {
+    return {
+      defaultData: {
+        index: 0,
+        sort: -1, // 倒序
+      },
+      iconLeft: 0.35,
+      loading: false,
+      finished: false,
+      refreshing: false,
+      activityTypeOptions: [],
+      activityProductList: '',
+      currentIndex: 0,
+      itemTypeOptions: '',
+      productList: {},
+      productRecoData: '',
+      productAdvertData: '',
+      page: 1,
+      specTypeCode: 'HDZT_ZTTYPE_XFWHSF', // 活动类型code
+      platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
+      specCode: '',
+      defaultCityCode: '510100',
+      advertCode: 'ad100043', // 广告code
+      productType: '',
+      fixedShow: false,
+    }
+  },
+  computed: {
+    ...mapState({
+      cityName: (state) => state.city.currentCity.name,
+      code: (state) => state.city.currentCity.code,
+      isInApp: (state) => state.app.isInApp,
+    }),
+    userInfo() {
+      return JSON.parse(localStorage.getItem('myInfo'))
+    },
+  },
+  created() {
+    // 初始化定位
+    if (process.client && !this.cityName) {
+      this.POSITION_CITY({
+        type: 'init',
+      })
+    }
+
+    this.getAdvertisingData()
+    this.getMenuTabs()
+  },
+
+  methods: {
+    ...mapActions({
+      POSITION_CITY: 'city/POSITION_CITY',
+      GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
+    }),
+    jumpProductdetail(item) {
+      if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+        this.$router.push({
+          path: `/detail/transactionDetails`,
+          query: { productId: item.id, type: item.classCode },
+        })
+      } else {
+        this.$router.push({
+          path: `/detail/serviceDetails`,
+          query: { productId: item.id },
+        })
       }
-      .search-box {
-        margin-right: 40px;
-        height: 88px;
-        box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
-        border-radius: 8px;
-        background: #000000;
-        border-radius: 8px;
-        background-color: rgba(0, 0, 0, 0.1);
-        display: flex;
-        align-items: center;
-        flex: 1;
-        .search-icon {
-          margin: 29px 12px 28px 32px;
-        }
-        input {
-          border: none;
-          font-size: 32px;
-          font-weight: 500;
-          color: #ffffff;
-          line-height: 32px;
-          background: transparent;
-          display: flex;
-          align-items: center;
-          &::placeholder {
-            /* Internet Explorer 10+ */
-            color: #ffffff !important;
+    },
+    init() {
+      this.page = 1
+      this.productList = []
+      this.finished = false
+      this.loading = true
+    },
+
+    menuTab(item, index) {
+      this.init()
+      this.currentIndex = index
+      this.getProductList(item, this.specCode)
+    },
+    getMenuTabs() {
+      this.$axios
+        .get(activityApi.activityTypeOptions, {
+          params: {
+            cityCodes: this.code || this.defaultCityCode,
+            platformCode: this.platformCode,
+            specType: this.specTypeCode,
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.activityTypeOptions = res.data.settingVOList
+            if (res.data.settingVOList && res.data.settingVOList.length > 0) {
+              this.itemTypeOptions = res.data.settingVOList[0]
+              this.specCode = res.data.specCode
+              this.productType = res.data.productType
+              this.getProductList(this.itemTypeOptions, this.specCode)
+            } else {
+              this.loading = false
+              this.finished = true
+            }
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
           }
-        }
+        })
+        .catch((err) => {
+          this.loading = false
+          this.finished = true
+          console.log(err)
+        })
+    },
+    // 获取产品
+    getProductList(item, itemSpecCode) {
+      const params = {
+        specCode: itemSpecCode,
+        cityCode: item.cityCode,
+        labelId: item.id,
       }
-    }
-    .server-pay {
+      this.productMethod(params)
+    },
+    productMethod(param) {
+      this.$axios
+        .get(activityApi.activityProductList, {
+          params: param,
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.productList = res.data
+            this.productList.rows.forEach((item) => {
+              if (item.tags) {
+                item.tags = item.tags.split(',')
+              }
+            })
+
+            this.total = res.data.total
+            this.loading = false
+            this.page++
+            if (this.page > res.data.totalPage) {
+              this.finished = true
+            }
+          } else {
+            this.loading = false
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+        .catch((err) => {
+          this.loading = false
+          this.finished = true
+          console.log(err)
+        })
+    },
+    getAdvertisingData() {
+      this.$axios
+        .get(activityApi.activityAdvertising, {
+          params: {
+            locationCode: this.advertCode,
+          },
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.productAdvertData = res.data.sortMaterialList[0].materialList
+          } else {
+            Toast.fail({
+              duration: 2000,
+              message: '服务异常，请刷新重试！',
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          }
+        })
+        .catch((err) => {
+          this.loading = false
+          console.log(err)
+        })
+    },
+    handlerItemChange(action, index) {
+      console.log(action, index)
+    },
+    swichCityHandle() {
+      if (!this.cityName) {
+        return
+      }
+      this.$router.push({
+        path: '/city/choiceCity',
+      })
+    },
+    // 搜索框点击
+    clickInputHandle() {
+      this.$router.push('/search')
+    },
+    uPGoBack() {
+      if (this.isInApp) {
+        this.$appFn.dggCloseWebView((res) => {
+          if (!res || res.code !== 200) {
+            this.$xToast.show({
+              message: '返回失败',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
+        return
+      }
+
+      // 在浏览器里 返回, 若没返回记录了，就跳转到首页
+      if (window && window.history && window.history.length <= 1) {
+        this.$router.replace('/')
+        return
+      }
+      this.$router.back(-1)
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped>
+.no-data {
+  text-align: center;
+  padding-top: 10px;
+  img {
+    width: 340px;
+    height: 340px;
+  }
+  p {
+    width: 100%;
+    color: #222222;
+    font-size: 28px;
+  }
+}
+.container {
+  width: 7.5rem;
+  height: 100%;
+  overflow-x: hidden;
+  margin: 0 auto;
+  background: url('https://cdn.shupian.cn/sp-pt/wap/images/eomlorriyxc0000.png')
+    no-repeat;
+  background-size: 100% auto;
+  .search {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+    width: 750px;
+    margin: 0 auto;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/images/eomlorriyxc0000.png')
+      no-repeat;
+    background-size: 100% auto;
+    background-position: center 0;
+    .left-back {
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px 0;
-      .server {
-        width: 266px;
-        height: 72px;
-        font-size: 96px;
-        font-weight: 400;
-        color: #ffffff;
-        background: #ffffff;
-      }
-      .server-img {
-        width: 108px;
-        height: 125px;
-        box-shadow: 13px 22px 35px 0px rgba(145, 0, 46, 0.75);
-      }
-      .pay {
-        width: 260px;
-        height: 72px;
-        background: #ffffff;
+      margin: 0 32px;
+      .back_icon {
+        width: 40px;
+        height: 40px;
       }
     }
-    .middle-title {
+    .search-box {
+      margin-right: 40px;
+      height: 88px;
+      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
+      border-radius: 8px;
+      background: #000000;
+      border-radius: 8px;
+      background-color: rgba(0, 0, 0, 0.1);
       display: flex;
       align-items: center;
-      justify-content: center;
-      margin-bottom: 53px;
-      .title {
-        width: 680px;
-        height: 62px;
-        background: #ff8636;
-        opacity: 0.8;
-        font-size: 28px;
+      flex: 1;
+      .search-icon {
+        margin: 29px 12px 28px 32px;
+      }
+      input {
+        border: none;
+        font-size: 30px;
         font-weight: 500;
         color: #ffffff;
-        text-shadow: 0px 3px 3px rgba(227, 48, 0, 0.7);
-        padding: 18px 0;
-        text-align: center;
-        line-height: 28px;
+        line-height: 32px;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        &::placeholder {
+          /* Internet Explorer 10+ */
+          color: #ffffff !important;
+        }
       }
     }
-    .advice-box {
-      display: flex;
-      justify-content: center;
+  }
+  .container-advice {
+    // padding: 0 20px;
+    width: 750px;
+    height: 700px;
 
-      .advice-content {
-        width: 710px;
-        height: 346px;
-        padding: 24px 20px;
-        display: flex;
-        justify-content: space-between;
-        background: linear-gradient(0deg, #ffa04b, #ff8c46);
-        border-radius: 24px;
-        margin-bottom: 32px;
-        .advice-lf {
-          width: 327px;
-          height: 298px;
-          background: linear-gradient(0deg, #fee8e4, #ffffff);
-          border-radius: 12px;
-          position: relative;
-          .law-consult {
-            width: 136px;
-            font-size: 34px;
-            font-family: Source Han Sans CN;
-            font-weight: 500;
-            color: #3b1f1b;
-            line-height: 44px;
-            position: absolute;
-            top: 32px;
-            left: 32px;
-          }
-          .law-pay {
-            width: 228px;
-            height: 26px;
-            font-size: 26px;
-            font-family: AlibabaPuHuiTiR;
-            font-weight: 400;
-            color: #b60e0e;
-            position: absolute;
-            top: 122px;
-            left: 34px;
-          }
-          .law-hot {
-          }
+    position: relative;
+    .rules {
+      position: fixed;
+      width: 68px;
+      height: 36px;
+      background: linear-gradient(45deg, #ffd800 0%, #ff2828 100%);
+      box-shadow: 0px 0px 20px 0px #d70000;
+      border-radius: 32px 0px 0px 32px;
+      // opacity: 0.5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      right: -4px;
+      top: 164px;
+      p {
+        height: 20px;
+        font-size: 20px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 20px;
+      }
+    }
+
+    .advice-box {
+      position: absolute;
+      display: flex;
+      justify-content: space-between;
+      bottom: 32px;
+      box-sizing: border-box;
+      padding: 20px;
+      width: 710px;
+      height: 346px;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      background: linear-gradient(0deg, #ffa04b, #ff8c46);
+      border-radius: 24px;
+      .default_s {
+        width: 327px;
+        height: 298px;
+        overflow: hidden;
+        border-radius: 12px;
+        img {
+          width: 100%;
+          height: 100%;
         }
-        .advice-rt {
-          width: 327px;
-          height: 298px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          .rt-top {
-            width: 327px;
-            height: 140px;
-            background: linear-gradient(0deg, #fef6df, #ffffff);
-            border-radius: 12px;
-          }
-          .rt-bottom {
-            width: 327px;
-            height: 140px;
-            background: linear-gradient(0deg, #fef6df, #ffffff);
-            border-radius: 12px;
-          }
+      }
+      .other_s {
+        width: 327px;
+        height: 140px;
+        overflow: hidden;
+        //background: linear-gradient(137deg, #ffffff 0%, #fff3eb 100%);
+        border-radius: 12px;
+        margin-bottom: 18px;
+        img {
+          width: 100%;
+          height: 100%;
         }
       }
     }
   }
   .container-body {
-    position: absolute;
-    width: 750px;
-    height: 1667px;
+    width: 100%;
     background: #ffffff;
-    border-radius: 24px;
-    padding: 0 20px;
-    top: 758px;
+    border-radius: 24px 24px 0px 0px;
+    overflow: hidden;
     .tabs-box {
       display: flex;
       justify-content: space-between;
+      height: 124px;
       align-items: center;
-      height: 88px;
-      padding: 12px 0 0 0;
-      .drop_down {
-        width: 131px;
+      background: #ffffff;
+      padding: 0 20px;
+      .tabs-box-left {
+        padding: 0 20px;
+        width: 160px;
+        overflow: hidden;
         height: 56px;
         background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
         border-radius: 32px;
         display: flex;
+        justify-content: center;
         align-items: center;
-        .drop_down_title {
-          padding: 0 8px 0 24px;
-          height: 30px;
+        div:nth-child(1) {
           font-size: 30px;
           font-family: PingFangSC-Medium, PingFang SC;
           font-weight: 500;
           color: #ffffff;
           line-height: 30px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          padding: 8px 0;
         }
-        .drop_down_icon {
-          background: url('https://cdn.shupian.cn/sp-pt/wap/9ij1cu5sv4g0000.png');
-          width: 15px;
-          height: 10px;
-          background-size: 100% 100%;
-          -moz-background-size: 100% 100%;
-        }
-      }
-      .tabs-box-items {
-        display: flex;
-        justify-content: space-between;
-        li {
-          height: 32px;
-          font-size: 32px;
-          font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
-          color: #555555;
-          line-height: 32px;
-          margin-left: 48px;
-        }
-        li.active {
-          //   padding: 17px 42px;
-          width: 64px;
-          height: 32px;
-          font-size: 32px;
-          font-family: PingFangSC-Semibold, PingFang SC;
-          font-weight: 600;
-          color: #ec5330;
-          line-height: 32px;
-        }
-        li:nth-child(1) {
-          // margin-left: 20px;
-        }
-        li:nth-last-child(1) {
-          margin-right: 15px;
+        div:nth-last-child(1) {
+          // width: 15px;
+          // height: 10px;
+          // background: #ffffff;
+          margin-left: 8px;
+          width: 0;
+          height: 0;
+          border-left: 10px solid transparent;
+          border-right: 10px solid transparent;
+          border-top: 12px solid #ffffff;
         }
       }
     }
 
+    .tabs-box-items {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-right: 15px;
+      max-width: 500px;
+      overflow-x: auto;
+      height: 40px;
+      white-space: nowrap;
+      li {
+        height: 32px;
+        font-size: 32px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #555555;
+        line-height: 32px;
+        margin-left: 48px;
+      }
+      li.active {
+        height: 32px;
+        font-size: 32px;
+        font-family: PingFangSC-Semibold, PingFang SC;
+        font-weight: 600;
+        color: #ec5330;
+        line-height: 32px;
+      }
+    }
     .body-content {
+      background: #fff;
       .line {
         width: 710px;
         height: 1px;
         background: #dcdcdc;
+        margin: 0 20px;
       }
       .body-content-items {
         display: flex;
-        height: 284px;
+        justify-content: space-between;
         width: 100%;
-        padding: 32px 0;
+        padding: 32px 20px;
       }
       .left-content {
         position: relative;
         margin-right: 32px;
-        width: 220px;
-        height: 220px;
+        width: 260px;
+        height: 260px;
         background: linear-gradient(
           180deg,
           #46494d 0%,
@@ -365,7 +626,10 @@
         border-radius: 12px;
         background-size: 100% 100%;
         -moz-background-size: 100% 100%;
-        background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
+        img {
+          width: 100%;
+          height: 100%;
+        }
         .left-span {
           position: absolute;
           border-radius: 12px 0 0 0;
@@ -379,74 +643,65 @@
         }
       }
       .right-content {
+        width: 418px;
+        display: flex;
+        align-content: flex-start;
+        flex-direction: column;
         .rc-top {
+          width: 378px;
+          max-height: 90px;
           font-size: 32px;
-          height: 84px;
+          font-family: PingFangSC-Medium, PingFang SC;
           font-weight: 500;
           color: #222222;
-          width: 395px;
-          .span1 {
-            height: 32px;
+          line-height: 46px;
+          overflow: hidden;
+          span {
             background: #ec5330;
             border-radius: 4px;
-            padding: 6px 8px;
+            padding: 8px;
             font-size: 20px;
-            font-family: PingFangSC-Medium, PingFang SC;
-
             font-weight: 500;
             color: #ffffff;
-            line-height: 20px;
-          }
-          .span2 {
-            height: 32px;
-            background: #ec5330;
-            border-radius: 4px;
-            padding: 6px 8px;
-            font-size: 20px;
-            font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
-            color: #ffffff;
-            line-height: 20px;
+            margin-top: 6px;
+            margin-right: 8px;
           }
         }
         .rc-middle {
-          margin-top: 12px;
           display: flex;
-          justify-content: flex-start;
-          margin-right: 14px;
-          margin-bottom: 32px;
+          // justify-content: space-between;
+          align-content: flex-start;
+          margin-top: 12px;
+          flex-wrap: wrap;
           div {
-            // height: 20px;
             font-size: 20px;
+            margin-bottom: 12px;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: #5c7499;
             line-height: 20px;
-            padding: 4px 6px;
-
+            padding: 6px 6px;
             background: #f0f2f5;
             border-radius: 4px;
+            margin-right: 8px;
           }
         }
         .rc-bottom {
           display: flex;
           justify-content: space-between;
           .rc-bottom-lf {
-            margin-top: 2px;
             .rc-bottom-lf-my {
               display: flex;
               flex-direction: row;
               align-content: flex-start;
               align-items: center;
-              //   padding-top: 2px;
               div {
                 color: #ec5330;
               }
               div:nth-of-type(1) {
-                font-size: 32px;
+                font-size: 40px;
                 font-weight: 500;
-                line-height: 32px;
-                font-family: PingFangSC-Medium, PingFang SC;
+                line-height: 40px;
               }
               div:nth-of-type(2) {
                 font-size: 22px;
@@ -467,28 +722,28 @@
             }
           }
           .rc-bottom-rt {
-            width: 200px;
-            height: 64px;
-            background: linear-gradient(90deg, #ec5330 0%, #f3363f 100%);
+            width: 204px;
+            height: 65px;
+            background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
             border-radius: 8px;
             display: flex;
             align-items: center;
-            margin-left: 134px;
-            div:nth-child(1) {
-              height: 32px;
-              font-size: 32px;
+            justify-content: center;
+            .imm_consult {
+              height: 30px;
+              font-size: 30px;
               font-family: PingFangSC-Medium, PingFang SC;
               font-weight: 500;
               color: #ffffff;
-              line-height: 32px;
-              padding: 0 8px 0 16px;
+              line-height: 30px;
             }
-            :nth-last-child(1) {
-              height: 32px;
+            .imm_img {
               width: 32px;
-              background: url('https://cdn.shupian.cn/sp-pt/wap/g76q42107k00000.png');
+              height: 32px;
               background-size: 100% 100%;
               -moz-background-size: 100% 100%;
+              background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/625y4ztzqec0000.png');
+              margin-left: 8px;
             }
           }
         }
@@ -497,142 +752,3 @@
   }
 }
 </style>
-
-<script>
-import {
-  CountDown,
-  Sticky,
-  List,
-  WorkTabSort,
-  WorkTabSortItem,
-  PullRefresh,
-} from '@chipspc/vant-dgg'
-
-export default {
-  name: 'Server',
-  components: {
-    [CountDown.name]: CountDown,
-    [Sticky.name]: Sticky,
-    [List.name]: List,
-    [WorkTabSort.name]: WorkTabSort,
-    [WorkTabSortItem.name]: WorkTabSortItem,
-    [PullRefresh.name]: PullRefresh,
-  },
-  data() {
-    return {
-      style: {
-        containerStyle: '',
-        iconStyle: '',
-        searchStyle: '',
-      },
-      iconLeft: 0.35,
-      time: '',
-      list: [],
-      loading: false,
-      finished: false,
-      refreshing: false,
-      items: [
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-      ],
-      defaultData: {
-        index: 0,
-        sort: -1, // 倒序
-      },
-    }
-  },
-  methods: {
-    scrollHandle({ scrollTop }) {
-      // console.log(scrollTop)
-      // 滚动事件
-      if (scrollTop > 325) {
-        this.style.containerStyle = 'border-radius: 0px;'
-      } else {
-        this.style.containerStyle = 'border-radius: 12px;'
-      }
-    },
-    onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        this.loading = false
-
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
-    },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
-
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
-    handlerItemChange(action, index) {
-      console.log(action, index)
-      this.$toast(`选择结果：${JSON.stringify({ type: action, index })}`)
-    },
-  },
-}
-</script>
