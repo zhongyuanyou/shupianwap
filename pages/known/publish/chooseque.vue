@@ -25,7 +25,7 @@
                   class="img"
                   fit="cover"
                   :src="item.avatar"
-                  @click="toHome(item)"
+                  @click.stop="toHome(item)"
                 />
                 <div class="infos">
                   <p class="user-name">{{ item.userName || '' }}</p>

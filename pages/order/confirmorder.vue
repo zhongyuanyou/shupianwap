@@ -528,19 +528,24 @@ export default {
           if (index === 5) {
             this.datalist = result
             this.datalist = this.datalist.sort(this.sortData)
-            this.conpon = this.datalist[0]
-            this.$refs.conpon.radio = 0
-            this.$refs.conpon.checkarr = this.datalist[0]
-            this.$refs.conpon.num = this.$refs.conpon.checkarr.reducePrice
-            this.$refs.conpon.sum()
-            this.skeletonloading = false
+            if (this.datalist.length > 0) {
+              this.conpon = this.datalist[0]
+              this.$refs.conpon.radio = 0
+              this.$refs.conpon.checkarr = this.datalist[0]
+              this.$refs.conpon.num = this.$refs.conpon.checkarr.reducePrice
+              this.$refs.conpon.sum()
+            } else {
+              this.skeletonloading = false
+            }
           } else {
             this.nolist = result
+            this.skeletonloading = false
           }
         })
         .catch((e) => {
           if (e.code !== 200) {
             this.$xToast.show(e)
+            this.skeletonloading = false
           }
         })
     },

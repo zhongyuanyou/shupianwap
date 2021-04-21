@@ -1,31 +1,31 @@
 <template>
   <div class="container">
     <!-- <sp-sticky></sp-sticky> -->
-    <div class="container-advice">
-      <!-- S search -->
-      <sp-sticky @scroll="scrollHandle">
-        <div class="search">
-          <div class="left-back">
-            <my-icon
-              name="nav_ic_back"
-              class="back_icon"
-              size="0.4rem"
-              color="#FFFFFF"
-            ></my-icon>
-          </div>
-          <div class="search-box">
-            <my-icon
-              class="search-icon"
-              name="sear_ic_sear"
-              size="0.3rem"
-              color="#FFFFFF"
-              :style="{ marginLeft: iconLeft + 'rem' }"
-            ></my-icon>
-            <input placeholder="搜索特卖商品" />
-          </div>
+    <!-- S search -->
+    <sp-sticky @scroll="scrollHandle">
+      <div class="search">
+        <div class="left-back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#FFFFFF"
+          ></my-icon>
         </div>
-      </sp-sticky>
-      <!-- E search -->
+        <div class="search-box">
+          <my-icon
+            class="search-icon"
+            name="sear_ic_sear"
+            size="0.3rem"
+            color="#FFFFFF"
+            :style="{ marginLeft: iconLeft + 'rem' }"
+          ></my-icon>
+          <input placeholder="搜索特卖商品" />
+        </div>
+      </div>
+    </sp-sticky>
+    <!-- E search -->
+    <div class="container-advice">
       <!-- S countdown -->
       <div class="countdown">
         <div class="special-price"></div>
@@ -66,130 +66,331 @@
             <div class="money"><span>999</span><span>元</span></div>
           </div>
         </div>
+        <!-- <div class="avtar">
+          <div class="touxiang"></div>
+          <div class="content">视频作品著作权申请</div>
+          <div class="background">
+            <div class="bg-img"></div>
+            <div class="money"><span>999</span><span>元</span></div>
+          </div>
+        </div>
+        <div class="avtar">
+          <div class="touxiang"></div>
+          <div class="content">视频作品著作权申请</div>
+          <div class="background">
+            <div class="bg-img"></div>
+            <div class="money"><span>999</span><span>元</span></div>
+          </div>
+        </div>
+        <div class="avtar">
+          <div class="touxiang"></div>
+          <div class="content">视频作品著作权申请</div>
+          <div class="background">
+            <div class="bg-img"></div>
+            <div class="money"><span>999</span><span>元</span></div>
+          </div>
+        </div>
+        <div class="avtar">
+          <div class="touxiang"></div>
+          <div class="content">视频作品著作权申请</div>
+          <div class="background">
+            <div class="bg-img"></div>
+            <div class="money"><span>999</span><span>元</span></div>
+          </div>
+        </div>
+        <div class="avtar">
+          <div class="touxiang"></div>
+          <div class="content">视频作品著作权申请</div>
+          <div class="background">
+            <div class="bg-img"></div>
+            <div class="money"><span>999</span><span>元</span></div>
+          </div>
+        </div>
+        <div class="avtar">
+          <div class="touxiang"></div>
+          <div class="content">视频作品著作权申请</div>
+          <div class="background">
+            <div class="bg-img"></div>
+            <div class="money"><span>999</span><span>元</span></div>
+          </div>
+        </div> -->
       </div>
       <!-- E avtar -->
-      <div class="container-body" :style="style.containerStyle">
+    </div>
+
+    <div class="container-body" :style="style.containerStyle">
+      <sp-sticky offset-top="16vw">
         <div class="tabs-box">
           <ul class="tabs-box-items">
             <li
-              v-for="(item, index) in tabs"
+              v-for="(item, index) in activityTypeOptions"
               :key="index"
               class="li-tab"
-              :class="{ active: index == nowIndex }"
-              @click="toggleTabs(index)"
+              :class="{ active: index == currentIndex }"
+              @click="menuTab(item, index)"
             >
-              {{ item }}
+              {{ item.labelName }}
             </li>
             <!-- <li>99元封顶</li>
           <li>899元封顶</li>
           <li>1999元封顶</li> -->
           </ul>
         </div>
-        <div class="body-content">
-          <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
-            <sp-list
-              v-model="loading"
-              :finished="finished"
-              finished-text="没有更多了"
-              @load="onLoad"
+      </sp-sticky>
+
+      <div class="body-content">
+        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+          <sp-list
+            v-model="loading"
+            :finished="finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+          >
+            <!-- <div
+              v-for="(item, index) in productList"
+              :key="index"
+              @click="jumpProductDetail(item)"
+            > -->
+            <div
+              v-for="(item, index) in items"
+              :key="index"
+              @click="jumpProductDetail(item)"
             >
-              <div v-for="(item, index) in items" :key="index">
-                <div class="body-content-items">
-                  <div class="left-content">
-                    <div class="left-span">{{ item.title }}</div>
+              <div class="body-content-items">
+                <div class="left-content">
+                  <div class="left-span">独家专售</div>
+                </div>
+                <div class="right-content">
+                  <div class="rc-top">
+                    <span>好品</span>
+                    {{ item.skuName }}
                   </div>
-                  <div class="right-content">
-                    <div class="rc-top">
-                      <span>{{ item.span1 }}</span>
-                      {{ item.content }}
-                    </div>
-                    <div class="rc-middle">
-                      {{ item.mdTitle }}
-                    </div>
-                    <div class="rc-bottom">
-                      <div class="rc-bottom-lf">
-                        <div class="rc-bottom-lf-my">
-                          <div>{{ item.money }}</div>
-                          <div>元</div>
-                        </div>
-                        <div class="bf-my">原价{{ item.price }}元</div>
+                  <div class="rc-middle">
+                    <!-- TODO 换键 -->
+                    {{ item.mdTitle }}
+                  </div>
+                  <div class="rc-bottom">
+                    <div class="rc-bottom-lf">
+                      <div class="rc-bottom-lf-my">
+                        <div>{{ item.specialPrice }}</div>
+                        <div>元</div>
                       </div>
-                      <div class="rc-bottom-rt">去抢购</div>
+                      <div class="bf-my">原价{{ item.skuPrice }}元</div>
                     </div>
+                    <div class="rc-bottom-rt">去抢购</div>
                   </div>
                 </div>
-                <div class="line"></div>
               </div>
-            </sp-list>
-          </sp-pull-refresh>
-        </div>
+              <div class="line"></div>
+            </div>
+          </sp-list>
+        </sp-pull-refresh>
       </div>
     </div>
   </div>
 </template>
 
+<script>
+import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
+import activityMixin from '@/mixins/activityMixin'
+export default {
+  name: 'Exclusive',
+  components: {
+    [CountDown.name]: CountDown,
+    [Sticky.name]: Sticky,
+    [List.name]: List,
+    [PullRefresh.name]: PullRefresh,
+  },
+  mixins: [activityMixin],
+  data() {
+    return {
+      specType: 'HDZT_ZTTYPE_DJZS',
+      style: {
+        containerStyle: '',
+        iconStyle: '',
+        searchStyle: '',
+      },
+      nowIndex: 0,
+      tabs: [
+        '全部',
+        '99元封顶',
+        '899元封顶',
+        '1999元封顶',
+        '1999元封顶',
+        '1999元封顶',
+      ],
+      iconLeft: 0.35,
+      time: '',
+      list: [],
+      loading: false,
+      finished: false,
+      refreshing: false,
+      items: [
+        {
+          span1: '好品',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+        {
+          span1: '好品',
+          title: '独家转售',
+          content: '公司干净，成都某某国际融资租赁有限公司',
+          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
+          money: '98.95',
+          price: '998',
+        },
+      ],
+    }
+  },
+  mounted() {
+    this.countDown(new Date().getTime() + 60 * 60 * 24 * 1000)
+  },
+  methods: {
+    scrollHandle({ scrollTop }) {
+      // console.log(scrollTop)
+      // 滚动事件
+      if (scrollTop > 255) {
+        this.style.containerStyle = 'border-radius: 0px;'
+      } else {
+        this.style.containerStyle = 'border-radius: 12px;'
+      }
+    },
+    toggleTabs(index) {
+      console.log('index', index)
+      this.nowIndex = index
+    },
+    onLoad() {
+      setTimeout(() => {
+        if (this.refreshing) {
+          this.list = []
+          this.refreshing = false
+        }
+
+        for (let i = 0; i < 10; i++) {
+          this.list.push(this.list.length + 1)
+        }
+        this.loading = false
+
+        if (this.list.length >= 40) {
+          this.finished = true
+        }
+      }, 1000)
+    },
+    onRefresh() {
+      // 清空列表数据
+      this.finished = false
+
+      // 重新加载数据
+      // 将 loading 设置为 true，表示处于加载状态
+      this.loading = true
+      this.onLoad()
+    },
+  },
+}
+</script>
+
 <style lang="less" scoped>
-/deep/.sp-sticky--fixed {
+/* /deep/.sp-sticky--fixed {
   max-width: 10rem;
   width: 100%;
   left: 50%;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
   background: linear-gradient(125deg, #daa240 0%, #c98714 100%);
-}
+} */
 .container {
   width: 100%;
   height: 746px;
-  .container-advice {
-    margin-bottom: 32px;
-    width: 750px;
-    height: 750px;
-    background: linear-gradient(125deg, #e1b876 0%, #b7782c 100%);
-    .search {
+  background: url('https://cdn.shupian.cn/sp-pt/wap/e5ubrp1fm800000.png');
+  background-size: 100% auto;
+  background-attachment: fixed;
+  .search {
+    display: flex;
+    // justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/e5ubrp1fm800000.png');
+    background-size: 100% auto;
+    .left-back {
       display: flex;
-      // justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      padding: 16px 0;
-      .left-back {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 32px;
-        .back_icon {
-          width: 40px;
-          height: 40px;
-        }
+      margin: 0 32px;
+      .back_icon {
+        width: 40px;
+        height: 40px;
       }
-      .search-box {
-        margin-right: 40px;
-        height: 88px;
-        box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
-        border-radius: 8px;
-        background: #000000;
-        border-radius: 8px;
-        background-color: rgba(0, 0, 0, 0.1);
+    }
+    .search-box {
+      margin-right: 40px;
+      height: 88px;
+      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
+      border-radius: 8px;
+      background: #000000;
+      border-radius: 8px;
+      background-color: rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      flex: 1;
+      .search-icon {
+        margin: 29px 12px 28px 32px;
+      }
+      input {
+        border: none;
+        font-size: 32px;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 32px;
+        background: transparent;
         display: flex;
         align-items: center;
-        flex: 1;
-        .search-icon {
-          margin: 29px 12px 28px 32px;
-        }
-        input {
-          border: none;
-          font-size: 32px;
-          font-weight: 500;
-          color: #ffffff;
-          line-height: 32px;
-          background: transparent;
-          display: flex;
-          align-items: center;
-          &::placeholder {
-            /* Internet Explorer 10+ */
-            color: #ffffff !important;
-          }
+        &::placeholder {
+          /* Internet Explorer 10+ */
+          color: #ffffff !important;
         }
       }
     }
+  }
+  .container-advice {
+    margin-bottom: 32px;
+    width: 750px;
+    // height: 750px;
+    // background: linear-gradient(125deg, #e1b876 0%, #b7782c 100%);
     .countdown {
       display: flex;
       justify-content: space-between;
@@ -249,6 +450,7 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 40px;
+      overflow-x: scroll;
       div:nth-of-type(1) {
         margin-left: 20px;
       }
@@ -331,7 +533,8 @@
     border-radius: 24px 24px 0px 0px;
     z-index: 1;
     .tabs-box {
-      padding: 32px 20px 0 20px;
+      background-color: #fff;
+      padding: 32px 20px;
       .tabs-box-items {
         display: flex;
         overflow: auto;
@@ -351,7 +554,7 @@
           padding: 17px 42px;
           font-size: 30px;
           font-weight: 500;
-          color: #ffffff;
+          color: #835436;
           background: #ec5330;
           background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
           border-radius: 32px;
@@ -499,161 +702,3 @@
   }
 }
 </style>
-
-<script>
-import { CountDown, Sticky, List, PullRefresh } from '@chipspc/vant-dgg'
-let timer
-export default {
-  name: 'Exclusive',
-
-  components: {
-    [CountDown.name]: CountDown,
-    [Sticky.name]: Sticky,
-    [List.name]: List,
-    [PullRefresh.name]: PullRefresh,
-  },
-
-  data() {
-    return {
-      style: {
-        containerStyle: '',
-        iconStyle: '',
-        searchStyle: '',
-      },
-      nowIndex: 0,
-      tabs: [
-        '全部',
-        '99元封顶',
-        '899元封顶',
-        '1999元封顶',
-        '1999元封顶',
-        '1999元封顶',
-      ],
-      iconLeft: 0.35,
-      time: '',
-      list: [],
-      loading: false,
-      finished: false,
-      refreshing: false,
-      items: [
-        {
-          span1: '好品',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          title: '独家转售',
-          content: '公司干净，成都某某国际融资租赁有限公司',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '98.95',
-          price: '998',
-        },
-      ],
-    }
-  },
-  mounted() {
-    this.countDown(new Date().getTime() + 60 * 60 * 24 * 1000)
-  },
-  methods: {
-    scrollHandle({ scrollTop }) {
-      // console.log(scrollTop)
-      // 滚动事件
-      if (scrollTop > 255) {
-        this.style.containerStyle = 'border-radius: 0px;'
-      } else {
-        this.style.containerStyle = 'border-radius: 12px;'
-      }
-    },
-    countDown(endTimeStamp) {
-      const that = this
-      const nowTimeStamp = new Date().getTime()
-      // 计算时间差 秒
-      this.diff = (endTimeStamp - nowTimeStamp) / 1000
-      timer = setInterval(() => {
-        let day = Math.floor(this.diff / 86400)
-        let hour = Math.floor((this.diff - day * 86400) / 3600)
-        let min = Math.floor((this.diff - hour * 3600 - day * 86400) / 60)
-        let sec = Math.floor(this.diff % 60)
-        if (day < 10) day = '0' + day
-        if (hour < 10) hour = '0' + hour
-        if (min < 10) min = '0' + min
-        if (sec < 10) sec = '0' + sec
-        that.time = {
-          day,
-          hour,
-          min,
-          sec,
-        }
-        that.diff--
-      }, 1000)
-      // 每执行一次定时器就减少一秒
-    },
-    toggleTabs(index) {
-      console.log('index', index)
-      this.nowIndex = index
-    },
-    onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        this.loading = false
-
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
-    },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
-
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
-  },
-}
-</script>

@@ -151,10 +151,15 @@ export default {
     id() {
       return this.$route.query.id
     },
+    isInApp() {
+      return this.$store.state.app.isInApp
+    },
   },
   created() {
     this.getRecommendData()
-    this.initFollow()
+    if (this.userInfo.token) {
+      this.initFollow()
+    }
   },
 
   mounted() {
@@ -175,7 +180,7 @@ export default {
         .get(knownApi.questionArticle.findAttention, {
           params: {
             currentUserId: this.userInfo.userId,
-            homeUserId: this.homeUserId || '120',
+            homeUserId: this.articleDetails.createrId,
           },
         })
         .then((res) => {
@@ -186,12 +191,15 @@ export default {
           }
         })
     },
-    follow() {
-      this.loading = true
+    async follow() {
+      const res = await this.$isLogin()
+      if (res === 'app_login_success') {
+        this.initFollow()
+      }
       this.$axios
         .post(knownApi.home.attention, {
-          handleUserName: this.userInfo.userName || '测试用户',
-          handleUserId: this.userInfo.userId || '120',
+          handleUserName: this.userInfo.userName,
+          handleUserId: this.userInfo.userId,
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
           handleType: this.isFollow ? 2 : 1,
           attentionUserId: this.articleDetails.userId,
@@ -275,7 +283,10 @@ export default {
     onLeftClick() {
       this.$router.back(-1)
     },
-    handleClickBottom(type) {
+    async handleClickBottom(type) {
+      if (!(await this.$isLogin())) {
+        return
+      }
       this.handleType = ''
       if (type === 1) {
         this.articleDetails.applaudCount = Number(

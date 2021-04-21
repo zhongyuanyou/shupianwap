@@ -376,7 +376,7 @@ export default {
     handleKeywordsSearch(data = {}) {
       const { keywords } = data
       this.search.keywords = keywords
-      this.handleSearch()
+      // this.handleSearch()
     },
 
     handleOperation(value = {}) {

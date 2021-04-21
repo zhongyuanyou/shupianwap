@@ -72,11 +72,16 @@ export default {
         },
       })
     },
-    handle(item) {
-      if (!this.isLogin()) {
-        return
+    async handle(item) {
+      const res = await this.$isLogin()
+      if (res === 'app_login_success') {
+        this.page = 1
+        this.loading = true
+        this.finished = false
+        this.getList()
+      } else {
+        item.isAttention ? this.cancelAttention(item) : this.attention(item)
       }
-      item.isAttention ? this.cancelAttention(item) : this.attention(item)
     },
     cancelAttention(item) {
       Dialog.confirm({
@@ -109,20 +114,6 @@ export default {
         item.isAttention = !item.isAttention
       } else {
         console.log(message)
-      }
-    },
-    async isLogin() {
-      if (this.userInfo.userId && this.userInfo.token) {
-        return true
-      } else if (this.isInApp) {
-        await this.$appFn.dggLogin()
-      } else {
-        this.$router.push({
-          path: '/login',
-          query: {
-            redirect: this.$route.fullPath,
-          },
-        })
       }
     },
     async getList() {
