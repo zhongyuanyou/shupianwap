@@ -28,12 +28,11 @@ export default {
 .container {
   background: #f5f5f5;
   height: 100%;
-
   .container_body {
     .default {
       text-align: center;
       padding-top: 132px;
-      height: 1120px;
+      // height: 1120px;
       > img {
         width: 340px;
         height: 340px;
