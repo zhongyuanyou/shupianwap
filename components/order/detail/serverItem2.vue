@@ -5,7 +5,7 @@
       :key="index"
       class="item-inner"
     >
-      <sp-image class="img" :src="detailItem.skuImages"></sp-image>
+      <sp-image class="img" :src="detailItem.indexImg"></sp-image>
       <div class="right">
         <p class="goods-name">
           <span class="name">

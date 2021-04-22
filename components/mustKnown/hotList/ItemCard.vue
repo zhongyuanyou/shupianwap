@@ -61,6 +61,7 @@
         size="0.22rem"
         color="#999999"
         class="my_icon"
+        style="margin-top: 2px"
       ></my-icon>
     </div>
   </sp-list>
@@ -175,7 +176,7 @@ export default {
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #999999;
-  line-height: 24px;
+  // line-height: 24px;
   justify-content: center;
   margin: 60px auto;
   .my_icon {

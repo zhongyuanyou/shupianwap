@@ -2,7 +2,7 @@
   <div class="page">
     <Header title="进行进度" @leftClickFuc="onClickLeft" />
     <div v-if="hasDetail" class="banner">
-      <sp-image class="left-img" :src="skuInfo.skuImages"> </sp-image>
+      <sp-image class="left-img" :src="skuInfo.indexImg"> </sp-image>
       <div class="right">
         <p class="goods-name">
           {{ skuInfo.orderSaleName }}
