@@ -1,16 +1,18 @@
 <template>
   <div class="act-coupon">
-    <Head ref="head" title="领取中心">
-      <template #left>
-        <my-icon
-          class="back-icon"
-          name="nav_ic_back"
-          size="0.4rem"
-          color="#1A1A1A"
-          @click.native="uPGoBack"
-        ></my-icon>
-      </template>
-    </Head>
+    <header-slot>
+      <Head ref="head" title="领取中心">
+        <template #left>
+          <my-icon
+            class="back-icon"
+            name="nav_ic_back"
+            size="0.4rem"
+            color="#1A1A1A"
+            @click.native="uPGoBack"
+          ></my-icon>
+        </template>
+      </Head>
+    </header-slot>
     <div v-if="productAdvertData.length > 0" class="banner">
       <sp-swipe :autoplay="3000" @change="onChange">
         <sp-swipe-item v-for="(item, index) in productAdvertData" :key="index">
@@ -102,6 +104,7 @@
 <script>
 import { Swipe, SwipeItem, Image, Toast } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 import Head from '@/components/common/head/header'
 import Popover from '~/components/common/popover/popover_old.vue'
 import { coupon, activityApi } from '@/api/index'
@@ -111,6 +114,7 @@ export default {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
     [Image.name]: Image,
+    [HeaderSlot.name]: HeaderSlot,
     Popover,
     Head,
   },
@@ -138,6 +142,7 @@ export default {
       userId: (state) => state.user.userId,
       userInfo: (state) => state.user, // 登录的用户信息
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
   mounted() {

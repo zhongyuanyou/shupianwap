@@ -191,7 +191,7 @@ import OrdinaryList from '@/components/mustKnown/OrdinaryList'
 import Answer from '@/components/mustKnown/answer/Answer'
 import Search from '@/components/mustKnown/recommend/search/Search'
 import Bottombar from '@/components/common/nav/Bottombar'
-import HeaderSlot from '@/components/common/head/header-slot'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi } from '@/api'
 
 export default {

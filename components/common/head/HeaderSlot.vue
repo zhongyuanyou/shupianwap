@@ -25,7 +25,7 @@ import { mapState } from 'vuex'
 import safeAreaInsets from 'safe-area-insets'
 
 export default {
-  name: 'Header',
+  name: 'HeaderSlot',
   props: {
     // 头部高度
     height: {

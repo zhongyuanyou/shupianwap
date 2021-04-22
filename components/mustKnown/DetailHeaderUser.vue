@@ -33,12 +33,12 @@
 
 <script>
 import { Image, Button } from '@chipspc/vant-dgg'
-import headerSlot from '@/components/common/head/header-slot'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   components: {
     [Image.name]: Image,
     [Button.name]: Button,
-    headerSlot,
+    HeaderSlot,
   },
   props: {
     headerData: {
@@ -72,11 +72,6 @@ export default {
 
 <style lang="less" scoped>
 .head {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 88px;
   background: #ffffff;
   line-height: 88px;
   font-size: 30px;

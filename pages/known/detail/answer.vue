@@ -35,7 +35,7 @@
       </div>
     </div>
     <div v-if="showHead2">
-      <HeadSlot>
+      <header-slot>
         <div class="head head2">
           <my-icon
             class="btn-icon"
@@ -63,7 +63,7 @@
             </template>
           </div>
         </div>
-      </HeadSlot>
+      </header-slot>
     </div>
     <div class="title-area" @click="toQueDetail">
       <div class="title">{{ answerDetails.title }}</div>
@@ -183,7 +183,7 @@
 import { mapState } from 'vuex'
 import { Field, Button, Image, Toast, Popup, Dialog } from '@chipspc/vant-dgg'
 import Comment from '~/components/mustKnown/DetailComment'
-import HeadSlot from '@/components/common/head/header-slot'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi, userinfoApi } from '@/api'
 import util from '@/utils/changeBusinessData'
 export default {
@@ -194,7 +194,7 @@ export default {
     [Popup.name]: Popup,
     [Dialog.name]: Dialog,
     Comment,
-    HeadSlot,
+    HeaderSlot,
   },
   async asyncData({ $axios, query, store }) {
     const res = await $axios.get(knownApi.questionArticle.detail, {
