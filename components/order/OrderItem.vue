@@ -66,7 +66,7 @@
                 item.skuType === skuTypes[1] || item.skuType === skuTypes[3]
               "
               class="sku-item"
-              >{{ item.detailName || getSkus(item.skuExtInfo) }}</span
+              >{{ item.skuDetailValues || getSkus(item.skuExtInfo) }}</span
             >
             <span v-else class="sku-item">{{ getSkus(item.skuExtInfo) }}</span>
             <span class="goods-num">×{{ item.skuCount }}</span>

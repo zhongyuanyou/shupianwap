@@ -9,7 +9,7 @@
         </span>
       </p>
       <div class="sku-info">
-        <p class="sku-l">{{ item.detailName || getSkus(item.skuExtInfo) }}</p>
+        <p class="sku-l">{{ item.skuDetailValues || item.skuExtInfo }}</p>
         <!-- <p class="sku-l">
           <span class="btn-more" @click="showMoSku">
             <my-icon
@@ -210,10 +210,10 @@ export default {
     .name {
       font-weight: bold;
       flex: 1;
-      .textOverflow(1);
       padding-right: 20px;
     }
     .money1 {
+      width: auto;
       font-weight: normal;
     }
   }
