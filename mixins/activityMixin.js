@@ -10,6 +10,7 @@ export default {
       cityName: (state) => state.city.currentCity.name,
       cityCode: (state) => state.city.currentCity.code,
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
     userInfo() {
       return JSON.parse(localStorage.getItem('myInfo'))
@@ -17,7 +18,6 @@ export default {
     splittedRecommendProduct() {
       return this.recommendProductList.slice(0, 3)
     },
-    appInfo: (state) => state.app.appInfo, // app信息
     //  asdsa
   },
   mixins: [imHandle],
