@@ -1,5 +1,12 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
+    <div
+      class="rule-tag"
+      :style="{ top: safeTop + headerHeight + 10 + 'px' }"
+      @click="$router.push('/activity/rule')"
+    >
+      规则
+    </div>
     <!-- S search -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="search">
@@ -67,15 +74,20 @@
     </div>
     <sp-sticky class="tabs-box" :offset-top="headerHeight + safeTop">
       <div class="drop_down">
-        <div class="drop_down_title">成都</div>
+        <div class="drop_down_title" @click="swichCityHandle">
+          {{ cityName ? cityName : '定位中' }}
+        </div>
         <div class="drop_down_icon"></div>
       </div>
       <ul class="tabs-box-items">
-        <li class="active">精选</li>
-        <li>工商</li>
-        <li>财税</li>
-        <li>知产</li>
-        <li>法律</li>
+        <li
+          v-for="(item, index) in activityTypeOptions"
+          :key="item.labelName"
+          :class="{ active: index == currentIndex }"
+          @click="menuTab(item, index)"
+        >
+          {{ item.labelName }}
+        </li>
       </ul>
     </sp-sticky>
     <div class="container-body">
@@ -116,6 +128,7 @@
                       :key="tag"
                     >
                       {{ overflowDot(tag, 6) }}
+                      <!-- {{ tag }} -->
                     </div>
                   </div>
                   <div class="rc-bottom">
@@ -173,12 +186,35 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.overflowDot {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 .container {
   position: relative;
   background: url('https://cdn.shupian.cn/sp-pt/wap/33iptmq9cya0000.png');
   background-size: 100% auto;
   -moz-background-size: 100% auto;
   // background-attachment: fixed;
+  .rule-tag {
+    position: absolute;
+    right: 0;
+    width: 68px;
+    height: 36px;
+    line-height: 36px;
+    background: linear-gradient(42deg, #ffa291 0%, #ffdb12 100%);
+    box-shadow: 0px 0px 20px 0px rgba(192, 24, 33, 0.5);
+    border-radius: 32px 0px 0px 32px;
+    // opacity: 0.5;
+    z-index: 10;
+    font-size: 20px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #ffffff;
+    text-align: right;
+    padding-right: 12px;
+  }
   .search {
     display: flex;
     // justify-content: space-between;
@@ -312,90 +348,35 @@ export default {
 
   .tabs-box {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     height: 88px;
     padding: 12px 0 0 0;
     border-radius: 24px 24px 0 0;
     background-color: #fff;
     width: 100vw;
-    .drop_down {
-      width: 131px;
-      height: 56px;
-      background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
-      border-radius: 32px;
-      display: flex;
-      align-items: center;
-      .drop_down_title {
-        padding: 0 8px 0 24px;
-        height: 30px;
-        font-size: 30px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #ffffff;
-        line-height: 30px;
-      }
-      .drop_down_icon {
-        background: url('https://cdn.shupian.cn/sp-pt/wap/9ij1cu5sv4g0000.png');
-        width: 15px;
-        height: 10px;
-        background-size: 100% 100%;
-        -moz-background-size: 100% 100%;
-      }
-    }
-    .tabs-box-items {
-      display: flex;
-      justify-content: space-between;
-      li {
-        height: 32px;
-        font-size: 32px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #555555;
-        line-height: 32px;
-        margin-left: 48px;
-      }
-      li.active {
-        //   padding: 17px 42px;
-        width: 64px;
-        height: 32px;
-        font-size: 32px;
-        font-family: PingFangSC-Semibold, PingFang SC;
-        font-weight: 600;
-        color: #ec5330;
-        line-height: 32px;
-      }
-      li:nth-child(1) {
-        // margin-left: 20px;
-      }
-      li:nth-last-child(1) {
-        margin-right: 15px;
-      }
-    }
-  }
-  .tabs-box {
     width: 100vw;
     /deep/ .sp-sticky {
       border-radius: 24px 24px 0 0;
       background-color: #fff;
       width: 100%;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       height: 88px;
-      // padding: 12px 0 0 0;
       padding: 0 20px;
       &.sp-sticky--fixed {
         border-radius: 0;
       }
     }
     .drop_down {
-      width: 131px;
+      width: 150px;
       height: 56px;
       background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
       border-radius: 32px;
       display: flex;
       align-items: center;
+      margin-right: 48px;
       .drop_down_title {
         padding: 0 8px 0 24px;
         height: 30px;
@@ -415,31 +396,22 @@ export default {
     }
     .tabs-box-items {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
+      max-width: 550px;
+      overflow-x: scroll;
       li {
+        white-space: nowrap;
         height: 32px;
         font-size: 32px;
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
         color: #555555;
         line-height: 32px;
-        margin-left: 48px;
-      }
-      li.active {
-        //   padding: 17px 42px;
-        width: 64px;
-        height: 32px;
-        font-size: 32px;
-        font-family: PingFangSC-Semibold, PingFang SC;
-        font-weight: 600;
-        color: #ec5330;
-        line-height: 32px;
-      }
-      li:nth-child(1) {
-        // margin-left: 20px;
-      }
-      li:nth-last-child(1) {
-        margin-right: 15px;
+        margin-right: 48px;
+        &.active {
+          font-weight: 600;
+          color: #ec5330;
+        }
       }
     }
   }
@@ -522,6 +494,8 @@ export default {
             background: #f0f2f5;
             border-radius: 4px;
             margin-right: 8px;
+            // max-width: 30%;
+            // .overflowDot();
           }
         }
         .rc-bottom {

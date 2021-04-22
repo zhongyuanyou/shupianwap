@@ -280,6 +280,15 @@ export default {
               labelName: this.allText,
               specialId: '',
             })
+            // for (let i = 0; i < 10; i++) {
+            //   this.activityTypeOptions.push({
+            //     cityCode: this.cityCode,
+            //     cityName: this.cityName,
+            //     id: i * 10,
+            //     labelName: '展位' + i,
+            //     specialId: '',
+            //   })
+            // }
             if (res.data.endTime) this.activeTimer(res.data.endTime)
             if (res.data.settingVOList && res.data.settingVOList.length > 0) {
               this.itemTypeOptions = res.data.settingVOList[0]
@@ -412,9 +421,6 @@ export default {
       console.log(action, index)
     },
     swichCityHandle() {
-      if (!this.cityName) {
-        return
-      }
       this.$router.push({
         path: '/city/choiceCity',
       })
