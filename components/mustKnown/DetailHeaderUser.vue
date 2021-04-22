@@ -72,11 +72,6 @@ export default {
 
 <style lang="less" scoped>
 .head {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 88px;
   background: #ffffff;
   line-height: 88px;
   font-size: 30px;

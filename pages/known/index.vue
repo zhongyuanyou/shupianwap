@@ -554,6 +554,7 @@ export default {
         }
       }
       .popMiddle {
+        padding: 10px 0;
         // height: 50px;
         display: flex;
         align-items: center;

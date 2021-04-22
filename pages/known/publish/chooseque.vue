@@ -228,7 +228,20 @@ export default {
     padding: 40px 0;
     font-size: 28px;
     color: #222;
-    border-bottom: 1px solid #ddd;
+    // border-bottom: 1px solid #ddd;
+    position: relative;
+    &::after {
+      position: absolute;
+      box-sizing: border-box;
+      content: ' ';
+      pointer-events: none;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border-bottom: 1px solid #dddddd;
+      -webkit-transform: scaleY(0.6);
+      transform: scaleY(0.6);
+    }
     .view-num {
       font-size: 28px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -281,7 +294,7 @@ export default {
         color: #999;
       }
       .btn {
-        width: 180px;
+        // width: 180px;
         height: 64px;
         background: #4974f5;
         border-radius: 8px;
@@ -290,8 +303,8 @@ export default {
         font-weight: 500;
         color: #ffffff;
         .sp-button {
-          width: 160px;
-          height: 64px;
+          width: 100%;
+          height: 100%;
           background: #4974f5;
           border-radius: 8px;
         }

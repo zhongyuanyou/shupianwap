@@ -139,7 +139,7 @@ export default {
     height: 60px;
     background: #ffffff;
     // border: 1px solid rgba(205, 205, 205, 0.6);
-    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
+    // box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
     border-radius: 8px;
     background: #f5f5f5;
     input {
@@ -178,12 +178,12 @@ export default {
       margin-right: 12px;
     }
     .search_box {
-      height: 30px;
+      // height: 30px;
       font-size: 30px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #999999;
-      line-height: 30px;
+      // line-height: 30px;
     }
   }
 }
