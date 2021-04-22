@@ -849,9 +849,118 @@ export default {
         }
       }
     },
+    getDetailValues(item) {
+      if (!item.filterSkuList || !item.filterSkuList.length) {
+        return ''
+      }
+      item.filterSkuList = this.rangeSkus(item.filterSkuList)
+      const names = []
+      console.log('item.filterSkuList', item.filterSkuList)
+      item.filterSkuList.forEach((ele) => {
+        if (ele && (ele.fieldValueCn || ele.fieldValue))
+          names.push(ele.fieldValueCn || ele.fieldValue)
+      })
+      console.log('names', names)
+      return names.join('; ')
+    },
+    // 对sku信息进行排序
+    //   const dataInfo={
+    //     // 交易分类
+    //     TRADE_PRO_CATE_COM("CATE-JYZY-GS", "公司分类数据字典编码"),
+    //     TRADE_PRO_CATE_APTI("CATE-JYZY-ZZ", "资质分类数据字典编码"),
+    //     TRADE_PRO_CATE_MARK("CATE-JYZY-SB", "商标分类数据字典编码"),
+    //     TRADE_PRO_CATE_PATENT("CATE-JYZY-ZL", "专利分类数据字典编码"),
+
+    //     // 公司
+    //     COMPANY_CAPITAL("paid_in_capital", "实缴资本"),
+    //     COMPANY_INDUSTRY_CODE("company_industry", "公司行业"),
+    //     COMPANY_TAX_TYPE_CODE("taxpayer_type", "纳税类型"),
+    //     COMPANY_RE_CAP_CODE("registered_capital", "注册资本"),
+    //     COMPANY_RE_TIME_CODE("registration_time", "注册时间"),
+
+    //     // 资质
+    //     APTITUDE_RE_AREA_CODE("qualification_registration_area", "资质注册区域CODE"),
+    //     APTITUDE_EX_DATE_CODE("qualification_expire_date", "资质到期时间CODE"),
+    //     APTITUDE_TAX_TYPE_CODE("tax_type", "资质纳税类型CODE"),
+    //     APTITUDE_SA_PRO_LIC_CODE("safety_production_license", "资质安全生产许可证CODE"),
+    //     APTITUDE_RE_CAP_CODE("qualification_registered_capital", "资质注册资本CODE"),
+
+    //     // 商标
+    //     TRADE_MARK_CATE("trademark_category", "商标类别"),
+    //     TRADE_MARK_PORTFOLIO("trademark_portfolio", "商标组合"),
+    //     TRADE_MARK_STATUS("trademark_state", "商标状态"),
+
+    //     // 专利
+    //     PATENT_TYPE("patent_classification", "专利分类"),
+    //     PATENT_INDUSTRY("patent_industry", "专利行业"),
+    //     PATENT_STATUS("patent_status", "专利状态"),
+    // }
+    rangeSkus(skuArr) {
+      const newArr = new Array(skuArr.length).fill(null)
+      const FIRSTCODES = [
+        'paid_in_capital',
+        'qualification_registration_area',
+        'trademark_category',
+        'patent_classification',
+      ]
+      const SCENDCODES = [
+        'company_industry',
+        'qualification_expire_date',
+        'trademark_portfolio',
+        'patent_industry',
+      ]
+      const THRDCODES = [
+        // 'taxpayer_type',
+        'tax_type',
+        'trademark_state',
+        'patent_status',
+      ]
+      const FOUTCODES = ['registered_capital', 'safety_production_license']
+      const FIVECODES = [
+        'registration_time',
+        'qualification_registered_capital',
+      ]
+      const codsArr = [FIRSTCODES, SCENDCODES, THRDCODES, FOUTCODES, FIVECODES]
+      for (let i = 0, l = skuArr.length; i < l; i++) {
+        if (skuArr[i].fieldCode === 'qualification_expire_date') {
+          skuArr[i].fieldValueCn = this.getYearBuyTimeStamp(
+            skuArr[i].fieldValue
+          )
+        }
+        if (skuArr[i].fieldCode === 'qualification_registered_capital') {
+          skuArr[i].fieldValueCn = this.getCnName(skuArr[i].fieldValueCn)
+        }
+        if (skuArr[i].fieldCode === 'safety_production_license') {
+          skuArr[i].fieldValueCn =
+            skuArr[i].fieldValueCn === '是' ? '有安许证' : '无安许证'
+        }
+        for (let j = 0, l2 = codsArr.length; j < l2; j++) {
+          if (codsArr[j].indexOf(skuArr[i].fieldCode) > 0) {
+            newArr[j] = skuArr[i]
+          }
+        }
+      }
+      return newArr
+    },
     // 转换sku信息
     getSkus(skuStr) {
       return skuStr.replace(/\|/g, ';')
+    },
+    // 根据时间戳获取年份
+    getYearBuyTimeStamp(timeStamp) {
+      return new Date(parseInt(timeStamp) * 1000).getFullYear() + '年'
+    },
+    // 资本显示
+    getCnName(num) {
+      if (num < 10e6) {
+        return '100万以下'
+      } else if (num < 5 * 10e6) {
+        return '100-500万'
+      } else if (num < 10e7) {
+        return '500-1000万'
+      } else {
+        return '1000万以上'
+      }
     },
   },
 }

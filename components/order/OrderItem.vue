@@ -66,9 +66,11 @@
                 item.skuType === skuTypes[1] || item.skuType === skuTypes[3]
               "
               class="sku-item"
-              >{{ item.skuDetailValues || getSkus(item.skuExtInfo) }}</span
+              >{{ item.skuDetailValues }}</span
             >
-            <span v-else class="sku-item">{{ getSkus(item.skuExtInfo) }}</span>
+            <span v-else class="sku-item">{{
+              item.skuDetailValues || getSkus(item.skuExtInfo)
+            }}</span>
             <span class="goods-num">×{{ item.skuCount }}</span>
           </p>
           <!-- 增值服务产品中心2期已去掉 2021.03.10 -->

@@ -217,7 +217,9 @@ export default {
           for (let i = 0, l = arr.length; i < l; i++) {
             this.changeMoney(arr[i])
             arr[i].statusName = this.getStatusName(arr[i].orderStatusNo)
-            this.getSkuList(arr[i])
+            arr[i].orderSkuEsList.forEach((item) => {
+              item.skuDetailValues = this.getDetailValues(item)
+            })
           }
           if (this.page === 1) {
             this.list = arr
@@ -226,7 +228,7 @@ export default {
             const allData = nowData.concat(arr)
             this.list = allData
           }
-          console.log('this.list', this.list)
+          console.log('this.orderList', this.list)
           this.loadingList = false
         })
         .catch((error) => {
