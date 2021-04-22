@@ -27,7 +27,7 @@
         <p v-else>合同预览失败</p>
       </div>
       <div v-if="contract.type == 'qs'" class="btn">
-        <Button plain type="primary" size="large" @click="$router.back(-1)"
+        <Button plain type="primary" size="large" @click="onLeftClick"
           >我再想想</Button
         >
         <Button type="primary" size="large" @click="sign()">确认签署</Button>

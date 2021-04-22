@@ -382,7 +382,9 @@ export default {
         })
         if (res.code === 200) {
           if (res.data.categoryName) {
-            res.data.categoryName = res.data.categoryName.split(',')
+            res.data.categoryName = res.data.categoryName
+              .split(',')
+              .filter(Boolean)
           }
           if (res.data.contentImageUrl) {
             res.data.contentImageUrl = res.data.contentImageUrl.split(',')
