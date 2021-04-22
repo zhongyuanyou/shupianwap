@@ -36,7 +36,7 @@
         class="order-infos"
         :class="index !== 0 ? 'border-top' : ''"
       >
-        <sp-image :src="item.skuImages" alt="" class="img" srcset="" />
+        <sp-image :src="item.indexImg" alt="" class="img" srcset="" />
         <div class="right">
           <p class="goods-name">
             <!-- <span

@@ -1,6 +1,6 @@
 <template>
   <div class="item-inner">
-    <sp-image class="img" :src="item.skuImages"></sp-image>
+    <sp-image class="img" :src="item.indexImg"></sp-image>
     <div class="right">
       <p class="goods-name">
         <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
