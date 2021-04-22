@@ -131,7 +131,7 @@ export default {
       })
     }
 
-    this.getAdvertisingData()
+    // this.getAdvertisingData()
     await this.getMenuTabs().then(this.getRecommendProductList)
   },
   mounted() {
@@ -175,7 +175,6 @@ export default {
       this.$router.push('/')
     },
     jumpProductDetail(item) {
-      console.log('jumpProductDetail', item)
       if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
         this.$router.push({
           path: `/detail/transactionDetails`,
@@ -189,7 +188,6 @@ export default {
       }
     },
     jumpIM(item) {
-      console.log(item)
       this.uPIM({
         mchUserId: this.userInfo.imUserId,
         userName: this.userInfo.userName,
@@ -280,15 +278,6 @@ export default {
               labelName: this.allText,
               specialId: '',
             })
-            // for (let i = 0; i < 10; i++) {
-            //   this.activityTypeOptions.push({
-            //     cityCode: this.cityCode,
-            //     cityName: this.cityName,
-            //     id: i * 10,
-            //     labelName: '展位' + i,
-            //     specialId: '',
-            //   })
-            // }
             if (res.data.endTime) this.activeTimer(res.data.endTime)
             if (res.data.settingVOList && res.data.settingVOList.length > 0) {
               this.itemTypeOptions = res.data.settingVOList[0]
@@ -324,7 +313,6 @@ export default {
       return this.productMethod(params)
     },
     async productMethod(param) {
-      console.log('param', param)
       await this.$axios
         .get(activityApi.activityProductList, {
           params: param,
@@ -407,18 +395,6 @@ export default {
         .catch((err) => {
           console.log(err.message)
         })
-    },
-    // onRefresh() {
-    //   // 清空列表数据
-    //   this.finished = false
-
-    //   // 重新加载数据
-    //   // 将 loading 设置为 true，表示处于加载状态
-    //   this.loading = true
-    //   this.onLoad()
-    // },
-    handlerItemChange(action, index) {
-      console.log(action, index)
     },
     swichCityHandle() {
       this.$router.push({
