@@ -1,20 +1,18 @@
 <template>
   <div class="act-coupon">
-    <div
-      v-if="isInApp"
-      :style="{ height: appInfo.statusBarHeight + 'px' }"
-    ></div>
-    <Head ref="head" title="领取中心">
-      <template #left>
-        <my-icon
-          class="back-icon"
-          name="nav_ic_back"
-          size="0.4rem"
-          color="#1A1A1A"
-          @click.native="uPGoBack"
-        ></my-icon>
-      </template>
-    </Head>
+    <header-slot>
+      <Head ref="head" title="领取中心">
+        <template #left>
+          <my-icon
+            class="back-icon"
+            name="nav_ic_back"
+            size="0.4rem"
+            color="#1A1A1A"
+            @click.native="uPGoBack"
+          ></my-icon>
+        </template>
+      </Head>
+    </header-slot>
     <div v-if="productAdvertData.length > 0" class="banner">
       <sp-swipe :autoplay="3000" @change="onChange">
         <sp-swipe-item v-for="(item, index) in productAdvertData" :key="index">
@@ -92,7 +90,7 @@
         </div>
       </div>
     </div>
-    <div v-else class="no-data">
+    <div v-if="isNoData" class="no-data">
       <img
         src="https://cdn.shupian.cn/sp-pt/wap/images/dypjq91xxps0000.png"
         alt=""
@@ -106,6 +104,7 @@
 <script>
 import { Swipe, SwipeItem, Image, Toast } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 import Head from '@/components/common/head/header'
 import Popover from '~/components/common/popover/popover_old.vue'
 import { coupon, activityApi } from '@/api/index'
@@ -115,6 +114,7 @@ export default {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
     [Image.name]: Image,
+    [HeaderSlot.name]: HeaderSlot,
     Popover,
     Head,
   },
@@ -135,6 +135,7 @@ export default {
       isShow: false, // 控制显示气泡
       advertCode: 'ad100043',
       productAdvertData: [],
+      isNoData: false,
     }
   },
   computed: {
@@ -179,7 +180,11 @@ export default {
         this.$router.push('/')
       }
     },
-    setCouponStatus(item) {
+    async setCouponStatus(item) {
+      const result = await this.$isLogin()
+      if (result === 'app_login_success') {
+        return
+      }
       this.loading = true
       this.$axios
         .post(`${CHIPS_WAP_BASE_URL}/yk/coupon/v2/receive_coupon.do`, {
@@ -244,29 +249,6 @@ export default {
         })
     },
     getInitCouponData() {
-      // const { code, message } = await this.$axios.post(
-      //   coupon.,
-      //   {
-      //     handleUserId: this.userInfo.userId,
-      //     handleUserName: this.userInfo.userName || '测试用户',
-      //     handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-      //     handleType: this.isAttention ? 2 : 1,
-      //     attentionUserId: this.$route.query.homeUserId,
-      //     attentionUserName: this.userName,
-      //     attentionUserType: this.type,
-      //   }
-      // )
-      // if (code === 200) {
-      //   this.$xToast.show({
-      //     message: this.isAttention ? '取关成功' : '关注成功',
-      //     duration: 1000,
-      //     icon: 'toast_ic_comp',
-      //     forbidClick: true,
-      //   })
-      //   this.isAttention = !this.isAttention
-      // } else {
-      //   console.log(message)
-      // }
       const params = {
         orderByWhere: 'createTime=desc;',
         findType: 1,
@@ -280,6 +262,10 @@ export default {
         .then((result) => {
           this.loading = false
           this.responseData = result
+          this.isNoData = false
+          if (this.responseData.length === 0) {
+            this.isNoData = true
+          }
           for (let i = 0, length = this.responseData.length; i < length; i++) {
             let useTime = this.responseData[i].serviceLife
             useTime = useTime.slice(11)

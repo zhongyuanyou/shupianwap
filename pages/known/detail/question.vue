@@ -815,8 +815,8 @@ export default {
     }
     > .btns {
       display: flex;
-      border-top: 1px solid #dddddd;
       border-bottom: 1px solid #dddddd;
+      border-top: 1px solid #dddddd;
       > .box {
         padding-top: 23px;
         box-sizing: border-box;
@@ -942,10 +942,11 @@ export default {
     > .head {
       padding: 0 32px;
       height: 96px;
-      border-bottom: 1px solid #dddddd;
+      // border-bottom: 1px solid #dddddd;
       display: flex;
       align-items: center;
       background: #fff;
+      position: relative;
       > p {
         font-size: 30px;
         font-weight: 500;
@@ -992,6 +993,18 @@ export default {
           transition: all 0.3s;
         }
       }
+    }
+    > .head::after {
+      position: absolute;
+      box-sizing: border-box;
+      content: ' ';
+      pointer-events: none;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border-bottom: 1px solid #dddddd;
+      -webkit-transform: scaleY(0.6);
+      transform: scaleY(0.6);
     }
     .list {
       margin-bottom: 10px;

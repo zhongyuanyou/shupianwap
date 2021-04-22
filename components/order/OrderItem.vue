@@ -39,16 +39,16 @@
         <sp-image :src="item.indexImg" alt="" class="img" srcset="" />
         <div class="right">
           <p class="goods-name">
-            <!-- <span
+            <span
               v-if="
-                orderData.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID' &&
-                orderData.skuType !== skuTypes[1]
+                item.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID' &&
+                item.classifyOneName.match('公司')
               "
               class="name"
             >
-              {{ item.spuName || item.orderSaleName }}</span
-            > -->
-            <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
+              {{ item.spuHideName || item.spuName }}</span
+            >
+            <span v-else class="name"> {{ item.spuName }}</span>
             <span
               v-if="
                 checkPayType() !== 2 && checkPayType() !== 4 && !item.orderType
@@ -66,9 +66,11 @@
                 item.skuType === skuTypes[1] || item.skuType === skuTypes[3]
               "
               class="sku-item"
-              >{{ item.skuDetailValues || getSkus(item.skuExtInfo) }}</span
+              >{{ item.skuDetailValues }}</span
             >
-            <span v-else class="sku-item">{{ getSkus(item.skuExtInfo) }}</span>
+            <span v-else class="sku-item">{{
+              item.skuDetailValues || getSkus(item.skuExtInfo)
+            }}</span>
             <span class="goods-num">×{{ item.skuCount }}</span>
           </p>
           <!-- 增值服务产品中心2期已去掉 2021.03.10 -->
