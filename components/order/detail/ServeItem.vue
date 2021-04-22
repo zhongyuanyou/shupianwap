@@ -9,7 +9,7 @@
         </span>
       </p>
       <div class="sku-info">
-        <p class="sku-l">{{ item.skuExtInfo }}</p>
+        <p class="sku-l">{{ item.detailName || getSkus(item.skuExtInfo) }}</p>
         <!-- <p class="sku-l">
           <span class="btn-more" @click="showMoSku">
             <my-icon

@@ -99,7 +99,11 @@
           实名认证
           <div class="item_lf">
             <span>{{
-              realStatus === 'NO_AUTHENTICATION' ? '未认证' : '已认证'
+              realStatus === 'NO_AUTHENTICATION'
+                ? '未实名认证'
+                : info.realStatus === 'AUTHENTICATION'
+                ? '已实名认证'
+                : '未实名认证'
             }}</span>
             <my-icon
               name="order_ic_listnext"
@@ -324,7 +328,10 @@ export default {
           this.$router.push('/login')
         }
       } else if (val === 3) {
-        if (this.realStatus === 'NO_AUTHENTICATION') {
+        if (
+          this.realStatus === 'NO_AUTHENTICATION' ||
+          this.realStatus === 'AUTHENTICATION_FAIL'
+        ) {
           this.$router.push('/contract/authentication')
         }
       } else if (val === 4) {

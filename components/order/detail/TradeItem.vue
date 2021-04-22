@@ -10,7 +10,7 @@
       </p>
       <div class="sku-info">
         <div class="goods-num">×{{ item.skuCount || 1 }}</div>
-        <p>{{ getSkus(item.skuExtInfo) }}</p>
+        <p>{{ item.detailName || getSkus(item.skuExtInfo) }}</p>
         <!-- <p v-for="(item2, index2) in item.fieldList" :key="index2">
           {{ item2.fieldValue }}
         </p> -->
