@@ -54,7 +54,7 @@ import { Icon, Field, List, Sticky } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
 import util from '@/utils/changeBusinessData'
 import Search from '@/components/common/search/Search'
-import HeaderSlot from '@/components/common/head/header-slot'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'InvitationList',

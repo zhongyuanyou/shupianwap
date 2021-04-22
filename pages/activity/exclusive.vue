@@ -460,6 +460,7 @@ export default {
           display: flex;
           overflow: auto;
           .li-tab {
+            white-space: nowrap;
             background-color: #f00;
             flex-shrink: 0;
             padding: 19px 24px;

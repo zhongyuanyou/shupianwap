@@ -466,7 +466,9 @@ export default {
       display: flex;
       background-color: #ffffff;
       justify-content: flex-start;
+      overflow-x: scroll;
       .li-tab {
+        white-space: nowrap;
         padding: 0 24px;
         background: #f5f5f5;
         border-radius: 32px;
