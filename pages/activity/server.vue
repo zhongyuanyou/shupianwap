@@ -1,37 +1,39 @@
 <template>
   <div class="container">
     <!-- S search -->
-    <div style="height: 66px">
-      <sp-sticky>
-        <div
-          v-if="isInApp"
-          :style="{ height: appInfo.statusBarHeight + 'px' }"
-        ></div>
-        <div :class="{ positionY: positionY }" class="search">
-          <div class="left-back" @click="uPGoBack">
-            <my-icon
-              name="nav_ic_back"
-              class="back_icon"
-              size="0.4rem"
-              color="#FFFFFF"
-            ></my-icon>
+    <div>
+      <header-slot>
+        <sp-sticky>
+          <div
+            v-if="isInApp"
+            :style="{ height: appInfo.statusBarHeight + 'px' }"
+          ></div>
+          <div :class="{ positionY: positionY }" class="search">
+            <div class="left-back" @click="uPGoBack">
+              <my-icon
+                name="nav_ic_back"
+                class="back_icon"
+                size="0.4rem"
+                color="#FFFFFF"
+              ></my-icon>
+            </div>
+            <div class="search-box">
+              <my-icon
+                class="search-icon"
+                name="sear_ic_sear"
+                size="0.30rem"
+                color="#FFFFFF"
+                :style="{ marginLeft: iconLeft + 'rem' }"
+              ></my-icon>
+              <input
+                placeholder="请输入感兴趣的内容"
+                readonly
+                @click="clickInputHandle"
+              />
+            </div>
           </div>
-          <div class="search-box">
-            <my-icon
-              class="search-icon"
-              name="sear_ic_sear"
-              size="0.30rem"
-              color="#FFFFFF"
-              :style="{ marginLeft: iconLeft + 'rem' }"
-            ></my-icon>
-            <input
-              placeholder="请输入感兴趣的内容"
-              readonly
-              @click="clickInputHandle"
-            />
-          </div>
-        </div>
-      </sp-sticky>
+        </sp-sticky>
+      </header-slot>
     </div>
     <!-- E search -->
     <!-- <sp-sticky></sp-sticky> -->
@@ -155,6 +157,7 @@ import {
   PullRefresh,
   Toast,
 } from '@chipspc/vant-dgg'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { activityApi } from '~/api'
 import imHandle from '@/mixins/imHandle'
 export default {
@@ -165,6 +168,7 @@ export default {
     [WorkTabSort.name]: WorkTabSort,
     [WorkTabSortItem.name]: WorkTabSortItem,
     [PullRefresh.name]: PullRefresh,
+    [HeaderSlot.name]: HeaderSlot,
   },
   mixins: [imHandle],
   data() {
