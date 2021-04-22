@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import HeaderSlot from '@/components/common/head/header-slot'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 
 export default {
   components: {

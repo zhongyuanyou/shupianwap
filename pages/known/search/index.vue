@@ -60,7 +60,7 @@
 <script>
 import { Sticky, Icon } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
-import HeaderSlot from '@/components/common/head/header-slot'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 
 export default {
   name: 'SearchPage',
