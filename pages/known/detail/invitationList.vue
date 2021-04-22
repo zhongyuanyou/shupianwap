@@ -189,6 +189,7 @@ export default {
             forbidClick: true,
           })
         } else {
+          this.mackLoading = false
           this.$xToast.show({
             message: '邀请失败,请联系客服',
             duration: 1000,
@@ -197,6 +198,7 @@ export default {
           })
         }
       } catch (e) {
+        this.mackLoading = false
         this.$xToast.show({
           message: '邀请失败,请联系客服',
           duration: 1000,
