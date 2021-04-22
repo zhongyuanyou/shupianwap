@@ -952,7 +952,7 @@ export default {
         color: #222222;
       }
       > div {
-        width: 216px;
+        // width: 216px;
         height: 60px;
         background: #f5f5f5;
         border-radius: 31px;
@@ -968,7 +968,7 @@ export default {
           font-weight: 500;
           color: #999999;
           text-align: center;
-          line-height: 52px;
+          // line-height: 52px;
           position: relative;
           z-index: 1;
         }
@@ -976,7 +976,7 @@ export default {
           color: #222222;
         }
         > .bg {
-          width: 104px;
+          width: 97px;
           height: 52px;
           background: #ffffff;
           border-radius: 27px;
@@ -1069,10 +1069,12 @@ export default {
       font-weight: 500;
       color: #222222;
       text-align: center;
-      line-height: 72px;
       display: flex;
       align-items: center;
       justify-content: center;
+      > span {
+        margin-left: 0.1rem;
+      }
     }
   }
 }

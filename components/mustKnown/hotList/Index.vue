@@ -190,12 +190,10 @@ export default {
       align-items: center;
     }
     .news_span {
-      height: 28px;
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
       color: #133aa3;
-      line-height: 28px;
       margin-left: 12px;
     }
   }
@@ -217,12 +215,10 @@ export default {
       align-items: center;
     }
     .see_span {
-      height: 28px;
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
       color: #564499;
-      line-height: 28px;
       margin-left: 12px;
     }
   }
