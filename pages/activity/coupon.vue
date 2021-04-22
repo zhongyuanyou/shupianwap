@@ -1,5 +1,9 @@
 <template>
   <div class="act-coupon">
+    <div
+      v-if="isInApp"
+      :style="{ height: appInfo.statusBarHeight + 'px' }"
+    ></div>
     <Head ref="head" title="领取中心">
       <template #left>
         <my-icon
@@ -138,6 +142,7 @@ export default {
       userId: (state) => state.user.userId,
       userInfo: (state) => state.user, // 登录的用户信息
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
   },
   mounted() {
