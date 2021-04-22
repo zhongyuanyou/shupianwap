@@ -14,6 +14,9 @@ export default {
     userInfo() {
       return JSON.parse(localStorage.getItem('myInfo'))
     },
+    splittedRecommendProduct() {
+      return this.recommendProductList.slice(0, 3)
+    },
   },
   mixins: [imHandle],
   data() {

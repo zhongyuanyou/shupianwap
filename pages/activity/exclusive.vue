@@ -443,7 +443,7 @@ export default {
   .container-body {
     width: 750px;
     height: 1720px;
-    background: #ffffff;
+    // background: #ffffff;
     z-index: 1;
     /deep/ .sp-sticky {
       // outline: 1px solid red;
