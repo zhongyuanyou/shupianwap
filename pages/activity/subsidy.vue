@@ -3,7 +3,7 @@
     <div
       class="rule-tag"
       :style="{ top: safeTop + headerHeight + 10 + 'px' }"
-      @click="$router.push('/activity/rule')"
+      @click="$router.push('/login/protocol?categoryCode=protocol100034')"
     >
       规则
     </div>
@@ -180,6 +180,7 @@ export default {
   data() {
     return {
       specType: 'HDZT_ZTTYPE_QWBT',
+      hasCity: true,
     }
   },
 }
