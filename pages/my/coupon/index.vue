@@ -70,6 +70,7 @@
     </div>
 
     <!-- 优惠券列表 end -->
+    <!-- 515上线客服跳转客服 现在暂时留着-->
     <p v-if="couponType == 2" class="coupon_tip">
       当优惠券超出使用时间范围时，该优惠券即会失效。失效超过180天
       的优惠券会被系统自动清除，若有疑惑，请<span>联系客服</span>
@@ -158,7 +159,6 @@ export default {
           this.usedCount = result.usedCount
           this.notUsedCount = result.notUsedCount
           this.invalidCount = result.invalidCount
-          // console.log('this.responseData', this.responseData)
           this.loading = false
         })
         .catch((e) => {
@@ -181,6 +181,7 @@ export default {
           .getCouponList({ axios: this.$axios }, this.formData)
           .then((result) => {
             this.responseData = result.responseData
+            console.log('+++++++++++', this.responseData)
             this.loading = false
           })
           .catch((e) => {
@@ -205,19 +206,7 @@ export default {
           })
       }
     },
-    // 气泡组件方法
-    // popOver(index) {
-    //   console.log(index)
-    //   // if(index)
-    //   this.$refs['myPop' + index][0].isShow = true
-    //   console.log(" this.$refs['myPop' + index]", this.$refs['myPop' + index])
-    //   this.$refs['myPop' + index][0].indexData = index
-    // },
-    // 关闭气泡组件
-    // closeBox(data) {
-    //   this.indexNum = data
-    //   this.$refs['myPop' + this.indexNum][0].isShow = false
-    // },
+
     // 进入详情
     goDetailPage(item) {
       if (item.useType === 1) {
