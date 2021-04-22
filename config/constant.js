@@ -16,7 +16,6 @@ const CHIPS_APP_SERVICE_PREFIX = ''
 export const CRM_MIDDLE_APP = `/crm-middle-app/api/crisps-crm/${CHIPS_WAP_SERVICE_PREFIX}`
 export const CHIPS_WAP_BASE_URL = `/${CHIPS_WAP_INSTANCE_NAME}/${CHIPS_WAP_SERVICE_PREFIX}` // 使用网关调用路径的规则：项目实例名 / 自己服务路径前缀
 export const CHIPS_APP_BASE_URL = `/${CHIPS_APP_INSTANCE_NAME}/${CHIPS_APP_SERVICE_PREFIX}` // 使用网关调用路径的规则：项目实例名 / 自己服务路径前缀
-
 export const CRISPS_C_MIDDLE_SERVICE_API = 'crisps-c-middle-service-api'
 
 export const GOODSDETAIL =

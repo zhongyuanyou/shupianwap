@@ -14,9 +14,9 @@
             :file-id="info.fileId"
             is-add-watermark
             class="uploader"
-            list-url="https://spmicrouag.shupian.cn/tac-external-platform-server/oss/find"
-            delete-url="https://spmicrouag.shupian.cn/tac-external-platform-server/oss/deleteSingle"
-            call-back-url="https://spmicrouag.shupian.cn/tac-external-platform-server/oss/callback"
+            :list-url="`${baseURL}/tac-external-platform-server/oss/find`"
+            :delete-url="`${baseURL}/tac-external-platform-server/oss/deleteSingle`"
+            :call-back-url="`${baseURL}/tac-external-platform-server/oss/callback`"
             @onSuccess="success"
           />
           <div class="cell">
@@ -28,7 +28,7 @@
                 height="0.88rem"
                 fit="cover"
                 class="avatar"
-                :src="info.photo ? info.photo : avatars"
+                :src="info.url ? info.url : avatars"
               />
 
               <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
@@ -38,7 +38,6 @@
         <div class="cell" @click="handleClick(2)">
           <p class="title">昵称</p>
           <div class="right_icon">
-            {{ info.photo }}
             <p class="txt">{{ info.nickName || '未设置' }}</p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
@@ -382,7 +381,7 @@ export default {
       } catch (err) {}
     },
     success(fileList) {
-      this.info.url = fileList.oss_filePath
+      this.info.url = fileList[0].filepath
     },
   },
 }

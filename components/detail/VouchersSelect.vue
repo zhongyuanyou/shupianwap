@@ -233,7 +233,7 @@ export default {
           return {
             text: item.description,
             title: item.tagName,
-            icon: 'sign',
+            icon: 'sp-iconfont sp-iconfont-security2',
           }
         }
       })
@@ -408,14 +408,17 @@ export default {
       }
       .content {
         display: flex;
-        align-items: center;
-        flex: 1;
+        flex-wrap: wrap;
+        // align-items: center;
+        // flex: 1;
         max-width: 550px;
         color: #222222;
         font-size: 26px;
+        height: 35px;
+        overflow: hidden;
         .tag {
           display: inline-block;
-          width: 60px;
+          // width: 60px;
           height: 32px;
           line-height: 32px;
           background-color: #feefef;
@@ -424,20 +427,17 @@ export default {
           text-align: center;
           margin-right: 9px;
         }
-        .hide {
-          width: 432px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
+        // .hide {
+        //   width: 432px;
+        //   overflow: hidden;
+        //   text-overflow: ellipsis;
+        //   white-space: nowrap;
+        // }
         .not_vouchers {
           color: #cccccc;
         }
         .item {
           margin-right: 40px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
           &::before {
             content: '1';
             display: inline-block;
