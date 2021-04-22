@@ -2,36 +2,38 @@
   <div class="container">
     <!-- S search -->
     <div>
-      <sp-sticky>
-        <div
+      <header-slot>
+        <sp-sticky>
+          <!-- <div
           v-if="isInApp"
           :style="{ height: appInfo.statusBarHeight + 'px' }"
-        ></div>
-        <div :class="{ positionY: positionY }" class="search">
-          <div class="left-back" @click="uPGoBack">
-            <my-icon
-              name="nav_ic_back"
-              class="back_icon"
-              size="0.4rem"
-              color="#FFFFFF"
-            ></my-icon>
+        ></div> -->
+          <div :class="{ positionY: positionY }" class="search">
+            <div class="left-back" @click="uPGoBack">
+              <my-icon
+                name="nav_ic_back"
+                class="back_icon"
+                size="0.4rem"
+                color="#FFFFFF"
+              ></my-icon>
+            </div>
+            <div class="search-box">
+              <my-icon
+                class="search-icon"
+                name="sear_ic_sear"
+                size="0.31rem"
+                color="#FFFFFF"
+                :style="{ marginLeft: iconLeft + 'rem' }"
+              ></my-icon>
+              <input
+                placeholder="搜索首发商品"
+                readonly
+                @click="clickInputHandle"
+              />
+            </div>
           </div>
-          <div class="search-box">
-            <my-icon
-              class="search-icon"
-              name="sear_ic_sear"
-              size="0.31rem"
-              color="#FFFFFF"
-              :style="{ marginLeft: iconLeft + 'rem' }"
-            ></my-icon>
-            <input
-              placeholder="搜索首发商品"
-              readonly
-              @click="clickInputHandle"
-            />
-          </div>
-        </div>
-      </sp-sticky>
+        </sp-sticky>
+      </header-slot>
     </div>
     <!-- E search -->
     <!-- <sp-sticky></sp-sticky> -->
@@ -151,6 +153,7 @@ import {
 } from '@chipspc/vant-dgg'
 import { activityApi } from '~/api'
 import imHandle from '@/mixins/imHandle'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   components: {
     [CountDown.name]: CountDown,
@@ -159,6 +162,7 @@ export default {
     [WorkTabSort.name]: WorkTabSort,
     [WorkTabSortItem.name]: WorkTabSortItem,
     [PullRefresh.name]: PullRefresh,
+    [HeaderSlot.name]: HeaderSlot,
   },
   mixins: [imHandle],
   data() {
