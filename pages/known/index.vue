@@ -1,6 +1,13 @@
 <template>
+  <!--<div
+    :class="
+      tabs[active].executionParameters === 'guanzhu'
+        ? 'flex_column container'
+        : 'container'
+    "
+  >-->
   <div class="container">
-    <header-slot height="1.8rem">
+    <sp-sticky :offset-top="statusBarHeight">
       <div class="container_head">
         <Search
           value="请输入关键词搜索"
@@ -41,8 +48,7 @@
           @click.native="showPop = true"
         ></my-icon>
       </div>
-    </header-slot>
-
+    </sp-sticky>
     <Answer v-if="tabs[active].executionParameters === 'huida'" />
 
     <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
@@ -185,10 +191,11 @@ import OrdinaryList from '@/components/mustKnown/OrdinaryList'
 import Answer from '@/components/mustKnown/answer/Answer'
 import Search from '@/components/mustKnown/recommend/search/Search'
 import Bottombar from '@/components/common/nav/Bottombar'
+// import HeaderSlot from '@/components/common/head/header-slot'
 import { knownApi } from '@/api'
-import HeaderSlot from '@/components/common/head/header-slot'
 
 export default {
+  layout: 'appSafeView',
   name: 'Index',
   components: {
     [WorkTab.name]: WorkTab,
@@ -206,7 +213,7 @@ export default {
     Attention,
     HotList,
     OrdinaryList,
-    HeaderSlot,
+    // HeaderSlot,
   },
   async asyncData({ $axios, store }) {
     const { code, message, data } = await $axios.get(
@@ -395,10 +402,13 @@ export default {
   background: #4974f5;
   border-radius: 3px;
 }
-.container {
-  height: 100%;
+.flex_column {
   display: flex;
   flex-direction: column;
+}
+
+.container {
+  height: 100%;
   background: #fff;
   .modal {
     position: fixed;

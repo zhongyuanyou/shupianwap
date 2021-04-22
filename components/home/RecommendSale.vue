@@ -45,7 +45,7 @@
         <div v-show="index === curentItem">
           <div class="goods-list">
             <sp-skeleton
-              v-for="val in 4"
+              v-for="val in 3"
               :key="val + 'a'"
               avatar-shape="square"
               avatar-size="2.4rem"
@@ -125,7 +125,10 @@
                 </div>
               </div>
             </div>
-            <div v-if="!swipItem.goodsList.length" class="no-data">
+            <div
+              v-if="!swipItem.goodsList.length && tabBtn.length"
+              class="no-data"
+            >
               <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
               <p>暂无数据</p>
             </div>

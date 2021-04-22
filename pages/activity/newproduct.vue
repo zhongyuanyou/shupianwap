@@ -1,11 +1,10 @@
 <template>
   <div class="container">
-    <!-- <sp-sticky></sp-sticky> -->
-    <div class="container-advice">
-      <!-- S search -->
+    <!-- S search -->
+    <div style="height: 66px">
       <sp-sticky>
         <div class="search">
-          <div class="left-back" @click="$router.back(-1)">
+          <div class="left-back" @click="uPGoBack">
             <my-icon
               name="nav_ic_back"
               class="back_icon"
@@ -29,10 +28,13 @@
           </div>
         </div>
       </sp-sticky>
-      <!-- E search -->
-      <!-- <div class="rules" @click="$router.push('/')">
+    </div>
+    <!-- E search -->
+    <!-- <sp-sticky></sp-sticky> -->
+    <div class="container-advice">
+      <div class="rules" @click="$router.push('/activity/rule')">
         <p>规则</p>
-      </div> -->
+      </div>
       <div class="advice-box">
         <div
           v-for="(item, index) in productAdvertData"
@@ -46,33 +48,36 @@
       </div>
     </div>
     <div class="container-body">
-      <div class="tabs-box">
-        <div class="tabs-box-left">
-          <div @click="swichCityHandle">
-            {{ cityName ? cityName : '定位中' }}
+      <sp-sticky :offset-top="59">
+        <div ref="menu" class="tabs-box">
+          <div class="tabs-box-left">
+            <div @click="swichCityHandle">
+              {{ cityName ? cityName : '定位中' }}
+            </div>
+            <div></div>
           </div>
-          <div></div>
+          <ul class="tabs-box-items">
+            <li
+              v-for="(item, index) in activityTypeOptions"
+              :key="index"
+              :class="{ active: index === currentIndex }"
+              @click="menuTab(item, index)"
+            >
+              {{ item.labelName }}
+            </li>
+          </ul>
         </div>
-        <ul class="tabs-box-items">
-          <li
-            v-for="(item, index) in activityTypeOptions"
-            :key="index"
-            :class="{ active: index === currentIndex }"
-            @click="menuTab(item, index)"
-          >
-            {{ item.labelName }}
-          </li>
-        </ul>
-      </div>
+      </sp-sticky>
       <div class="body-content">
         <sp-list
           v-model="loading"
           :finished="finished"
           finished-text="没有更多了"
+          @load="onLoad"
         >
-          <div v-if="productList.rows && productList.rows.length > 0">
+          <div v-if="productList && productList.length > 0">
             <div
-              v-for="(item, index) in productList.rows"
+              v-for="(item, index) in productList"
               :key="index"
               @click="jumpProductdetail(item)"
             >
@@ -83,6 +88,7 @@
                 <div class="right-content">
                   <div class="rc-top">
                     <span v-if="specTypeCode === 'HDZT_ZTTYPE_XTSF'">新品</span>
+                    <span>千万补贴</span>
                     {{ item.skuName }}
                   </div>
                   <div v-if="item.tags.length > 0" class="rc-middle">
@@ -99,7 +105,7 @@
                       <div class="bf-my">原价{{ item.skuPrice }}元</div>
                     </div>
                     <div class="rc-bottom-rt">
-                      <div class="imm_consult">详情</div>
+                      <div class="imm_consult">查看详情</div>
                       <div class="imm_img"></div>
                     </div>
                   </div>
@@ -154,11 +160,11 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
-      activityTypeOptions: '',
+      activityTypeOptions: [],
       activityProductList: '',
       currentIndex: 0,
       itemTypeOptions: '',
-      productList: '',
+      productList: [],
       productRecoData: '',
       productAdvertData: '',
       page: 1,
@@ -168,19 +174,21 @@ export default {
       defaultCityCode: '510100',
       advertCode: 'ad100043', // 广告code
       productType: '',
-      classCode: '', // 交易类型code
+      fixedShow: false,
+      limit: 10,
     }
   },
   computed: {
     ...mapState({
       cityName: (state) => state.city.currentCity.name,
       code: (state) => state.city.currentCity.code,
+      isInApp: (state) => state.app.isInApp,
     }),
     userInfo() {
       return JSON.parse(localStorage.getItem('myInfo'))
     },
   },
-  created() {
+  async created() {
     // 初始化定位
     if (process.client && !this.cityName) {
       this.POSITION_CITY({
@@ -189,24 +197,41 @@ export default {
     }
 
     this.getAdvertisingData()
-    this.getMenuTabs()
+    await this.getMenuTabs().then(this.getProductList)
   },
+
   methods: {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
       GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
     }),
     jumpProductdetail(item) {
-      if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
-        this.$router.push({
-          path: `/detail/transactionDetails`,
-          query: { productId: item.id, type: this.classCode },
-        })
-      } else {
-        this.$router.push({
-          path: `/detail/serviceDetails`,
-          query: { productId: item.id },
-        })
+      if (this.isInApp) {
+        if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+          this.$appFn.dggJumpRoute({
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cps/place_order","parameter":{"productId":${item.id},"type":${item.classCode}}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cps/place_order","parameter":{"productId":${item.id},"type":${item.classCode}}}}`,
+          })
+        } else {
+          this.$appFn.dggJumpRoute({
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cps/place_order","parameter":{"productId":${item.id}}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cps/place_order","parameter":{"productId":${item.id}}}}`,
+          })
+        }
+      }
+
+      if (!this.isInApp) {
+        if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+          this.$router.push({
+            path: `/detail/transactionDetails`,
+            query: { productId: item.id, type: item.classCode },
+          })
+        } else {
+          this.$router.push({
+            path: `/detail/serviceDetails`,
+            query: { productId: item.id },
+          })
+        }
       }
     },
     init() {
@@ -215,15 +240,20 @@ export default {
       this.finished = false
       this.loading = true
     },
-
+    async onLoad() {
+      if (this.specCode) {
+        this.page++
+        await this.getProductList()
+      }
+    },
     menuTab(item, index) {
       this.init()
       this.currentIndex = index
-      this.classCode = item.classCode
-      this.getProductList(item, this.specCode)
+      this.itemTypeOptions = item
+      this.getProductList()
     },
-    getMenuTabs() {
-      this.$axios
+    async getMenuTabs() {
+      await this.$axios
         .get(activityApi.activityTypeOptions, {
           params: {
             cityCodes: this.code || this.defaultCityCode,
@@ -236,10 +266,8 @@ export default {
             this.activityTypeOptions = res.data.settingVOList
             if (res.data.settingVOList && res.data.settingVOList.length > 0) {
               this.itemTypeOptions = res.data.settingVOList[0]
-              this.classCode = res.data.settingVOList[0].classCode
               this.specCode = res.data.specCode
               this.productType = res.data.productType
-              this.getProductList(this.itemTypeOptions, this.specCode)
             } else {
               this.loading = false
               this.finished = true
@@ -253,22 +281,21 @@ export default {
             })
           }
         })
+        .catch((err) => {
+          this.loading = false
+          this.finished = true
+          console.log(err)
+        })
     },
-    // 初始化获取推介商品
-    // getRecProduct(item, itemSpecCode, itemReco) {
-    //   const params = {
-    //     specCode: itemSpecCode,
-    //     cityCode: item.cityCode,
-    //     isReco: itemReco,
-    //   }
-    //   this.productMethod(params, itemReco)
-    // },
     // 获取产品
-    getProductList(item, itemSpecCode) {
+    getProductList() {
+      console.log(1111111)
       const params = {
-        specCode: itemSpecCode,
-        cityCode: item.cityCode,
-        labelId: item.id,
+        specCode: this.specCode,
+        cityCode: this.itemTypeOptions.cityCode,
+        labelId: this.itemTypeOptions.id,
+        limit: this.limit,
+        page: this.page,
       }
       this.productMethod(params)
     },
@@ -279,21 +306,20 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productList = res.data
-            this.productList.rows.forEach((item) => {
+            res.data.rows.forEach((item) => {
               if (item.tags) {
                 item.tags = item.tags.split(',')
               }
             })
-
+            this.productList = this.productList.concat(res.data.rows)
             this.total = res.data.total
             this.loading = false
-            this.page++
             if (this.page > res.data.totalPage) {
               this.finished = true
             }
           } else {
             this.loading = false
+            this.finished = true
             Toast.fail({
               duration: 2000,
               message: '服务异常，请刷新重试！',
@@ -301,6 +327,11 @@ export default {
               className: 'my-toast-style',
             })
           }
+        })
+        .catch((err) => {
+          this.loading = false
+          this.finished = true
+          console.log(err)
         })
     },
     getAdvertisingData() {
@@ -339,7 +370,36 @@ export default {
     },
     // 搜索框点击
     clickInputHandle() {
-      this.$router.push('/search')
+      if (this.isInApp) {
+        this.$appFn.dggJumpRoute({
+          iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/search/page"}}`,
+          androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/search/page"}}`,
+        })
+      } else {
+        this.$router.push('/search')
+      }
+    },
+    uPGoBack() {
+      if (this.isInApp) {
+        this.$appFn.dggCloseWebView((res) => {
+          if (!res || res.code !== 200) {
+            this.$xToast.show({
+              message: '返回失败',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
+        return
+      }
+
+      // 在浏览器里 返回, 若没返回记录了，就跳转到首页
+      if (window && window.history && window.history.length <= 1) {
+        this.$router.replace('/')
+        return
+      }
+      this.$router.back(-1)
     },
   },
 }
@@ -359,28 +419,71 @@ export default {
     font-size: 28px;
   }
 }
-/deep/.sp-sticky--fixed {
-  max-width: 10rem;
-  width: 100%;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
-  background: linear-gradient(90deg, #d20001 0%, #f80302 100%);
-}
 .container {
   width: 7.5rem;
+  height: 100%;
   overflow-x: hidden;
   margin: 0 auto;
-  .container-advice {
-    // padding: 0 20px;
-    margin-bottom: 32px;
+  background: url('https://cdn.shupian.cn/sp-pt/wap/images/aey2uyjrfcg0000.png')
+    no-repeat;
+  background-size: 100% auto;
+  .search {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
     width: 750px;
-    height: 717px;
-    background-size: 100% 100%;
-    -moz-background-size: 100% 100%;
-    background-image: url('https://cdn.shupian.cn/sp-pt/wap/images/aey2uyjrfcg0000.png');
+    margin: 0 auto;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/images/aey2uyjrfcg0000.png')
+      no-repeat;
+    background-size: 100% auto;
+    background-position: center 0;
+    .left-back {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 32px;
+      .back_icon {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    .search-box {
+      margin-right: 40px;
+      height: 88px;
+      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
+      border-radius: 8px;
+      background: #000000;
+      border-radius: 8px;
+      background-color: rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      flex: 1;
+      .search-icon {
+        margin: 29px 12px 28px 32px;
+      }
+      input {
+        border: none;
+        font-size: 30px;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 32px;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        &::placeholder {
+          /* Internet Explorer 10+ */
+          color: #ffffff !important;
+        }
+      }
+    }
+  }
+  .container-advice {
+    width: 750px;
+    height: 560px;
+
     position: relative;
     .rules {
+      position: fixed;
       width: 68px;
       height: 36px;
       background: linear-gradient(45deg, #ffd800 0%, #ff2828 100%);
@@ -390,7 +493,6 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      position: absolute;
       right: -4px;
       top: 164px;
       p {
@@ -402,50 +504,7 @@ export default {
         line-height: 20px;
       }
     }
-    .search {
-      display: flex;
-      align-items: center;
-      padding: 16px 0;
-      .left-back {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 32px;
-        .back_icon {
-          width: 40px;
-          height: 40px;
-        }
-      }
-      .search-box {
-        margin-right: 40px;
-        height: 88px;
-        box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
-        border-radius: 8px;
-        background: #000000;
-        border-radius: 8px;
-        background-color: rgba(0, 0, 0, 0.1);
-        display: flex;
-        align-items: center;
-        flex: 1;
-        .search-icon {
-          margin: 29px 12px 28px 32px;
-        }
-        input {
-          border: none;
-          font-size: 32px;
-          font-weight: 500;
-          color: #ffffff;
-          line-height: 32px;
-          background: transparent;
-          display: flex;
-          align-items: center;
-          &::placeholder {
-            /* Internet Explorer 10+ */
-            color: #ffffff !important;
-          }
-        }
-      }
-    }
+
     .advice-box {
       position: absolute;
       display: flex;
@@ -468,18 +527,19 @@ export default {
     }
   }
   .container-body {
-    padding: 0 20px;
     width: 100%;
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
+    overflow: hidden;
     .tabs-box {
       display: flex;
       justify-content: space-between;
-      padding-top: 12px;
-      height: 88px;
+      height: 124px;
       align-items: center;
+      background: #ffffff;
+      padding: 0 20px;
       .tabs-box-left {
-        padding: 0 10px;
+        padding: 0 20px;
         width: 160px;
         overflow: hidden;
         height: 56px;
@@ -497,6 +557,7 @@ export default {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          padding: 8px 0;
         }
         div:nth-last-child(1) {
           // width: 15px;
@@ -520,6 +581,7 @@ export default {
       max-width: 500px;
       overflow-x: auto;
       height: 40px;
+      white-space: nowrap;
       // padding: 22px 10px 0 10px;
       li {
         height: 32px;
@@ -540,17 +602,18 @@ export default {
       }
     }
     .body-content {
+      background: #fff;
       .line {
         width: 710px;
         height: 1px;
         background: #dcdcdc;
+        margin: 0 20px;
       }
       .body-content-items {
         display: flex;
         justify-content: space-between;
-        height: 324px;
         width: 100%;
-        padding: 32px 0;
+        padding: 32px 20px;
       }
       .left-content {
         position: relative;
@@ -589,15 +652,13 @@ export default {
         flex-direction: column;
         .rc-top {
           width: 378px;
-          height: 84px;
+          max-height: 90px;
           font-size: 32px;
           font-family: PingFangSC-Medium, PingFang SC;
           font-weight: 500;
           color: #222222;
-          line-height: 42px;
-          white-space: nowrap;
-          // overflow: hidden;
-          text-overflow: ellipsis;
+          line-height: 46px;
+          overflow: hidden;
           span {
             background: #ec5330;
             border-radius: 4px;
@@ -621,7 +682,7 @@ export default {
             font-weight: 400;
             color: #5c7499;
             line-height: 20px;
-            padding: 4px 6px;
+            padding: 6px 6px;
             background: #f0f2f5;
             border-radius: 4px;
             margin-right: 8px;
@@ -631,13 +692,11 @@ export default {
           display: flex;
           justify-content: space-between;
           .rc-bottom-lf {
-            margin-top: 5px;
             .rc-bottom-lf-my {
               display: flex;
               flex-direction: row;
               align-content: flex-start;
               align-items: center;
-              margin-top: 52px;
               div {
                 color: #ec5330;
               }
@@ -672,7 +731,6 @@ export default {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 56px;
             .imm_consult {
               height: 30px;
               font-size: 30px;

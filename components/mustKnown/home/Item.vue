@@ -26,7 +26,12 @@
         <div class="left_content clamp3">
           {{ item.contentText }}
         </div>
-        <sp-image class="right_img" fit="cover" src="" />
+        <sp-image
+          class="right_img"
+          fit="cover"
+          radius="0.12rem"
+          :src="item.contentImageUrl.split(',')[0]"
+        />
       </div>
     </div>
     <div v-if="item.type !== 1" class="bottom">
@@ -224,7 +229,6 @@ export default {
       width: 190px;
       height: 127px;
       background: #cccccc;
-      border-radius: 12px;
     }
   }
   .bottom {

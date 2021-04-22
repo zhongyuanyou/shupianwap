@@ -9,6 +9,7 @@ export default {
     ...mapState({
       cityName: (state) => state.city.currentCity.name,
       cityCode: (state) => state.city.currentCity.code,
+      isInApp: (state) => state.app.isInApp,
     }),
     userInfo() {
       return JSON.parse(localStorage.getItem('myInfo'))
@@ -21,6 +22,68 @@ export default {
         index: 0,
         sort: -1, // 倒序
       },
+      testItems: [
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+        {
+          span1: '好品',
+          span2: '千万补贴',
+          title: '公司干净，成都某某国际融资租赁有限公司',
+          jiangjia: '200',
+          ok: '3325',
+          miaosha: '98.5',
+          dijia: '90',
+          baifen: '75',
+        },
+      ],
       iconLeft: 0.35,
       loading: false,
       finished: false,
@@ -28,6 +91,13 @@ export default {
       activityTypeOptions: [],
       activityProductList: [],
       currentIndex: 0,
+      currentTab: {
+        cityCode: this.cityCode,
+        cityName: this.cityName,
+        id: '',
+        labelName: this.allText,
+        specialId: '',
+      },
       itemTypeOptions: '',
       productList: '',
       productRecoData: '',
@@ -46,7 +116,7 @@ export default {
       productType: '',
     }
   },
-  created() {
+  async created() {
     // 初始化定位
     if (process.client && !this.cityName) {
       this.POSITION_CITY({
@@ -55,7 +125,7 @@ export default {
     }
 
     this.getAdvertisingData()
-    this.getMenuTabs().then(this.getRecommendProductList)
+    await this.getMenuTabs().then(this.getRecommendProductList)
   },
   mounted() {
     console.log(this.$store.state.user, 1111111111111)
@@ -68,6 +138,29 @@ export default {
       POSITION_CITY: 'city/POSITION_CITY',
       GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
     }),
+    // 平台不同，跳转方式不同
+    uPGoBack() {
+      if (this.isInApp) {
+        this.$appFn.dggCloseWebView((res) => {
+          if (!res || res.code !== 200) {
+            this.$xToast.show({
+              message: '返回失败',
+              duration: 1000,
+              icon: 'toast_ic_error',
+              forbidClick: true,
+            })
+          }
+        })
+        return
+      }
+
+      // 在浏览器里 返回, 若没返回记录了，就跳转到首页
+      if (window && window.history && window.history.length <= 1) {
+        this.$router.replace('/')
+        return
+      }
+      this.$router.back(-1)
+    },
     advertjump(item) {
       this.$router.push('/')
     },
@@ -134,7 +227,7 @@ export default {
     },
     init() {
       this.page = 1
-      this.productList = []
+      this.activityProductList = []
       this.finished = false
       this.loading = true
     },
@@ -142,10 +235,23 @@ export default {
     menuTab(item, index) {
       this.init()
       this.currentIndex = index
-      this.getProductList(item, this.specCode)
+      this.currentTab = item
+      this.getProductList()
     },
-    getMenuTabs() {
-      return this.$axios
+    async onLoad() {
+      if (this.specCode) {
+        this.page++
+        await this.getProductList()
+      }
+    },
+    async onRefresh() {
+      this.init()
+      await this.getProductList().then(() => {
+        this.loading = false
+      })
+    },
+    async getMenuTabs() {
+      await this.$axios
         .get(activityApi.activityTypeOptions, {
           params: {
             cityCodes: this.cityCode || this.defaultCityCode,
@@ -155,8 +261,8 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.activityTypeOptions = res.data.settingVOList
-            this.productType = res.data.productType
+            this.activityTypeOptions = res.data.settingVOList || []
+            this.productType = res.data.productType || ''
             this.activityTypeOptions.unshift({
               cityCode: this.cityCode,
               cityName: this.cityName,
@@ -183,58 +289,34 @@ export default {
           }
         })
     },
-    // 初始化获取推介商品
-    // getRecProduct(item, itemSpecCode, itemReco) {
-    //   const params = {
-    //     specCode: itemSpecCode,
-    //     cityCode: item.cityCode,
-    //     isReco: itemReco,
-    //   }
-    //   this.productMethod(params, itemReco)
-    // },
     // 获取产品
-    getProductList(item, itemSpecCode) {
-      const params = {
-        specCode: itemSpecCode,
-        cityCode: item.cityCode,
-        labelId: item.id,
-      }
-      this.productMethod(params)
-    },
-    getRecommendProductList() {
+    getProductList() {
       const params = {
         specCode: this.specCode,
-        isReco: 1,
+        page: this.page,
+        limit: 10,
       }
-      this.$axios
-        .get(activityApi.activityProductList, { params })
-        .then((res) => {
-          if (res.code === 200) {
-            this.recommendProductList = res.data
-          } else {
-            throw new Error('服务异常，请刷新重试！')
-          }
-        })
-        .catch((err) => {
-          Toast.fail({
-            duration: 2000,
-            message: err.message,
-            forbidClick: true,
-            className: 'my-toast-style',
-          })
-        })
+      if (this.hasCity) {
+        params.cityCode = this.cityCode
+      }
+      if (this.currentTab.id !== '') {
+        params.labelId = this.currentTab.id
+      }
+      return this.productMethod(params)
     },
-    productMethod(param) {
-      this.$axios
+    async productMethod(param) {
+      console.log('param', param)
+      await this.$axios
         .get(activityApi.activityProductList, {
           params: param,
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productList = res.data
+            this.activityProductList = this.activityProductList.concat(
+              res.data.rows
+            )
             this.total = res.data.total
             this.loading = false
-            this.page++
             if (this.page > res.data.totalPage) {
               this.finished = true
             }
@@ -248,6 +330,35 @@ export default {
             })
           }
         })
+        .finally(() => {
+          this.refreshing = false
+        })
+    },
+    getRecommendProductList() {
+      const params = {
+        specCode: this.specCode,
+        isReco: 1,
+        page: 1,
+        limit: 100000,
+      }
+
+      this.$axios
+        .get(activityApi.activityProductList, { params })
+        .then((res) => {
+          if (res.code === 200) {
+            this.recommendProductList = res.data.rows
+          } else {
+            throw new Error('服务异常，请刷新重试！')
+          }
+        })
+        .catch((err) => {
+          Toast.fail({
+            duration: 2000,
+            message: err.message,
+            forbidClick: true,
+            className: 'my-toast-style',
+          })
+        })
     },
 
     getAdvertisingData() {
@@ -259,10 +370,12 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productAdvertData = res.data.sortMaterialList[0].materialList.slice(
-              0,
-              3
-            )
+            if (res.data.sortMaterialList.length) {
+              this.productAdvertData = res.data.sortMaterialList[0].materialList.slice(
+                0,
+                3
+              )
+            }
           } else {
             Toast.fail({
               duration: 2000,
@@ -271,6 +384,9 @@ export default {
               className: 'my-toast-style',
             })
           }
+        })
+        .catch((err) => {
+          console.log(err.message)
         })
     },
     // onRefresh() {
@@ -295,7 +411,14 @@ export default {
     },
     // 搜索框点击
     clickInputHandle() {
-      this.$router.push('/search')
+      if (this.isInApp) {
+        this.$appFn.dggJumpRoute({
+          iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/search/page"}}`,
+          androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/search/page"}}`,
+        })
+      } else {
+        this.$router.push('/search')
+      }
     },
     activeTimer(endTime) {
       this.endCountDown(new Date(endTime).getTime())
@@ -345,6 +468,16 @@ export default {
         that.diff--
       }, 1000)
       // 每执行一次定时器就减少一秒
+    },
+    getPercentage(res, total) {
+      return (res / total) * 100
+    },
+    overflowDot(str, num) {
+      if (str.length > 6) {
+        return str.slice(0, num) + '...'
+      } else {
+        return str
+      }
     },
   },
 }

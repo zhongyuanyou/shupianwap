@@ -1,39 +1,35 @@
 <template>
   <div class="container">
+    <!-- S search -->
+    <sp-sticky>
+      <div class="search">
+        <div class="left-back" :style="style.iconStyle" @click="uPGoBack">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#FFFFFF"
+          ></my-icon>
+        </div>
+        <div class="search-box" :style="style.searchStyle">
+          <my-icon
+            class="search-icon"
+            name="sear_ic_sear"
+            size="0.3rem"
+            color="#FFFFFF"
+            :style="{ marginLeft: iconLeft + 'rem' }"
+          ></my-icon>
+          <input
+            placeholder="搜索特卖商品"
+            readonly
+            @click="clickInputHandle"
+          />
+        </div>
+      </div>
+    </sp-sticky>
+    <!-- E search -->
     <!-- <sp-sticky></sp-sticky> -->
     <div class="container-advice">
-      <!-- S search -->
-      <sp-sticky @scroll="scrollHandle">
-        <div class="search">
-          <div
-            class="left-back"
-            :style="style.iconStyle"
-            @click="$router.back(-1)"
-          >
-            <my-icon
-              name="nav_ic_back"
-              class="back_icon"
-              size="0.4rem"
-              color="#FFFFFF"
-            ></my-icon>
-          </div>
-          <div class="search-box" :style="style.searchStyle">
-            <my-icon
-              class="search-icon"
-              name="sear_ic_sear"
-              size="0.3rem"
-              color="#FFFFFF"
-              :style="{ marginLeft: iconLeft + 'rem' }"
-            ></my-icon>
-            <input
-              placeholder="搜索特卖商品"
-              readonly
-              @click="clickInputHandle"
-            />
-          </div>
-        </div>
-      </sp-sticky>
-      <!-- E search -->
       <!-- S countdown -->
       <div class="countdown">
         <div class="special-price">
@@ -53,8 +49,9 @@
       <!-- S avtar -->
       <!-- S avtar -->
       <div class="avtars">
+        <!-- TODO 换回来activityTypeOptions -->
         <div
-          v-for="item in recommendProductList.rows"
+          v-for="item in activityProductList"
           :key="item.id"
           class="avtar"
           @click="jumpProductDetail(item)"
@@ -98,20 +95,23 @@
       </div>
       <!-- E avtar -->
     </div>
-    <div class="container-body" :style="style.containerStyle">
-      <div class="tabs-box">
-        <ul class="tabs-box-items">
-          <li
-            v-for="(item, index) in activityTypeOptions"
-            :key="index"
-            class="li-tab"
-            :class="{ active: index == currentIndex }"
-            @click="menuTab(item, index)"
-          >
-            {{ item.labelName }}
-          </li>
-        </ul>
-      </div>
+
+    <sp-sticky class="tabs-box" offset-top="16vw">
+      <ul class="tabs-box-items">
+        <li
+          v-for="(item, index) in activityTypeOptions"
+          :key="index"
+          class="li-tab"
+          :class="{ active: index == currentIndex }"
+          @click="menuTab(item, index)"
+        >
+          {{ item.labelName }}
+        </li>
+      </ul>
+      <!-- <div>
+        </div> -->
+    </sp-sticky>
+    <div class="container-body">
       <div class="body-content">
         <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
           <sp-list
@@ -121,10 +121,15 @@
             @load="onLoad"
           >
             <div
-              v-for="(item, index) in productList.rows"
+              v-for="(item, index) in activityProductList"
               :key="index"
               @click="jumpProductDetail(item)"
             >
+              <!-- <div
+              v-for="(item, index) in productList"
+              :key="index"
+              @click="jumpProductDetail(item)"
+            > -->
               <div class="body-content-items">
                 <div
                   class="left-content"
@@ -158,7 +163,7 @@
                       v-for="tag in item.tags.split(',').slice(0, 2)"
                       :key="tag"
                     >
-                      {{ tag }}
+                      {{ overflowDot(tag, 6) }}
                     </div>
                   </div>
                   <div class="rc-bottom">
@@ -217,51 +222,11 @@ export default {
       nowIndex: 0,
       list: [],
       style: {
-        containerStyle: '',
         iconStyle: '',
         searchStyle: '',
       },
       tabs: ['全部', '99元封顶', '899元封顶', '1999元封顶'],
     }
-  },
-  methods: {
-    toggleTabs(index) {
-      this.nowIndex = index
-    },
-    onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        this.loading = false
-
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
-    },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
-
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
-    scrollHandle({ scrollTop }) {
-      // 滚动事件
-      if (scrollTop > 250) {
-        this.style.containerStyle = 'border-radius: 0px;'
-      } else {
-        this.style.containerStyle = 'border-radius: 12px;'
-      }
-    },
   },
 }
 </script>
@@ -269,74 +234,77 @@ export default {
 <style lang="less" scoped>
 .container {
   position: relative;
+  background: url('https://cdn.shupian.cn/sp-pt/wap/erdd6dsvru00000.png');
+  background-size: 100% auto;
+  background-attachment: fixed;
+  .search {
+    background: url('https://cdn.shupian.cn/sp-pt/wap/erdd6dsvru00000.png');
+    background-size: 100% auto;
+    display: flex;
+    // justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    .left-back {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 32px;
+      .back_icon {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    .search-box {
+      margin-right: 20px;
+      flex: 1;
+      height: 88px;
+      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
+      border-radius: 8px;
+      background: #000000;
+      border-radius: 8px;
+      background-color: rgba(0, 0, 0, 0.1);
+      display: flex;
+      // justify-content: space-between;
+      align-items: center;
+      .search-icon {
+        margin: 29px 12px 28px 32px;
+      }
+      input {
+        border: none;
+        font-size: 32px;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 32px;
+        background: transparent;
+        display: flex;
+        align-items: center;
+
+        font-family: PingFangSC-Medium, PingFang SC;
+
+        &::placeholder {
+          /* Internet Explorer 10+ */
+          color: #ffffff !important;
+        }
+      }
+    }
+  }
   .container-advice {
     width: 100%;
-    height: 746px;
+    // height: 746px;
     // background: linear-gradient(to right, #fe8000, #ff4c00);
-    background: url('https://cdn.shupian.cn/sp-pt/wap/erdd6dsvru00000.png');
-    background-size: 100% 100%;
     padding: 0 20px;
 
     margin-bottom: 32px;
 
-    /deep/.sp-sticky--fixed {
+    /* /deep/.sp-sticky--fixed {
       max-width: 10rem;
       width: 100%;
       left: 50%;
       -webkit-transform: translateX(-50%);
       transform: translateX(-50%);
       background: linear-gradient(to right, #fe8000, #ff4c00);
-    }
-    .search {
-      display: flex;
-      // justify-content: space-between;
-      align-items: center;
-      padding-top: 16px;
-      margin-bottom: 16px;
-      .left-back {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 32px;
-        .back_icon {
-          width: 40px;
-          height: 40px;
-        }
-      }
-      .search-box {
-        margin-right: 20px;
-        flex: 1;
-        height: 88px;
-        box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
-        border-radius: 8px;
-        background: #000000;
-        border-radius: 8px;
-        background-color: rgba(0, 0, 0, 0.1);
-        display: flex;
-        // justify-content: space-between;
-        align-items: center;
-        .search-icon {
-          margin: 29px 12px 28px 32px;
-        }
-        input {
-          border: none;
-          font-size: 32px;
-          font-weight: 500;
-          color: #ffffff;
-          line-height: 32px;
-          background: transparent;
-          display: flex;
-          align-items: center;
-
-          font-family: PingFangSC-Medium, PingFang SC;
-
-          &::placeholder {
-            /* Internet Explorer 10+ */
-            color: #ffffff !important;
-          }
-        }
-      }
-    }
+    } */
     .countdown {
       display: flex;
       justify-content: space-between;
@@ -401,7 +369,7 @@ export default {
     }
     .avtars {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       overflow-x: scroll;
 
       .avtar {
@@ -479,18 +447,25 @@ export default {
       }
     }
   }
-  .container-body {
-    width: 100%;
-    height: auto;
-    background: #ffffff;
-    border-radius: 24px 24px 0px 0px;
-    z-index: 1;
-    position: absolute;
-    top: 622px;
-    padding: 0 20px;
+
+  .tabs-box {
+    width: 100vw;
+    /deep/ .sp-sticky {
+      border-radius: 24px 24px 0px 0px;
+      background-color: #fff;
+      overflow: hidden;
+      &.sp-sticky--fixed {
+        border-radius: 0 0 0 0;
+        .tabs-box-items {
+          padding: 32px 20px;
+        }
+      }
+    }
+
     .tabs-box-items {
-      padding-top: 32px;
+      padding: 32px 20px;
       display: flex;
+      background-color: #ffffff;
       justify-content: flex-start;
       .li-tab {
         padding: 0 24px;
@@ -516,7 +491,16 @@ export default {
         height: 64px;
       }
     }
+  }
+  .container-body {
+    width: 100%;
+    // height: auto;
+    background: #ffffff;
+    z-index: 1;
+    // top: 622px;
+    padding: 0 20px;
     .body-content {
+      position: absolute;
       .line {
         height: 1px;
         background: #f4f4f4;
