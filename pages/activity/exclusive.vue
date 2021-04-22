@@ -2,9 +2,9 @@
   <div class="container">
     <!-- <sp-sticky></sp-sticky> -->
     <!-- S search -->
-    <sp-sticky @scroll="scrollHandle">
+    <sp-sticky>
       <div class="search">
-        <div class="left-back">
+        <div class="left-back" @click="uPGoBack">
           <my-icon
             name="nav_ic_back"
             class="back_icon"
@@ -20,7 +20,11 @@
             color="#FFFFFF"
             :style="{ marginLeft: iconLeft + 'rem' }"
           ></my-icon>
-          <input placeholder="搜索特卖商品" />
+          <input
+            placeholder="搜索独家商品"
+            readonly
+            @click="clickInputHandle"
+          />
         </div>
       </div>
     </sp-sticky>
@@ -46,8 +50,19 @@
           v-for="item in recommendProductList.slice(0, 3)"
           :key="item.id"
           class="avtar"
+          @click="jumpProductDetail(item)"
         >
-          <div class="touxiang"></div>
+          <div class="touxiang">
+            <img
+              height="100%"
+              width="100%"
+              :src="
+                item.imageUrl ||
+                'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+              "
+              alt="商品图片"
+            />
+          </div>
           <div class="content">{{ item.skuName }}</div>
           <div class="background">
             <div class="bg-img"></div>
@@ -101,6 +116,15 @@
             >
               <div class="body-content-items">
                 <div class="left-content">
+                  <img
+                    height="100%"
+                    width="100%"
+                    :src="
+                      item.imageUrl ||
+                      'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+                    "
+                    alt="商品图片"
+                  />
                   <div class="left-span">独家专售</div>
                 </div>
                 <div class="right-content">
@@ -152,7 +176,6 @@ export default {
         iconStyle: '',
         searchStyle: '',
       },
-      nowIndex: 0,
       tabs: [
         '全部',
         '99元封顶',
@@ -161,12 +184,8 @@ export default {
         '1999元封顶',
         '1999元封顶',
       ],
-      iconLeft: 0.35,
       time: '',
       list: [],
-      loading: false,
-      finished: false,
-      refreshing: false,
       items: [
         {
           span1: '好品',
@@ -221,47 +240,6 @@ export default {
   },
   mounted() {
     this.countDown(new Date().getTime() + 60 * 60 * 24 * 1000)
-  },
-  methods: {
-    scrollHandle({ scrollTop }) {
-      // console.log(scrollTop)
-      // 滚动事件
-      if (scrollTop > 255) {
-        this.style.containerStyle = 'border-radius: 0px;'
-      } else {
-        this.style.containerStyle = 'border-radius: 12px;'
-      }
-    },
-    toggleTabs(index) {
-      console.log('index', index)
-      this.nowIndex = index
-    },
-    onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        this.loading = false
-
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
-    },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
-
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
   },
 }
 </script>
@@ -406,10 +384,11 @@ export default {
           width: 226px;
           height: 226px;
           margin: 0;
-          background-size: 100% 100%;
-          -moz-background-size: 100% 100%;
+          // background-size: 100% 100%;
+          // -moz-background-size: 100% 100%;
           border-radius: 12px 12px 0px 0px;
-          background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
+          overflow: hidden;
+          // background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
         }
         .content {
           font-size: 26px;
@@ -493,13 +472,13 @@ export default {
             margin-right: 16px;
           }
           .active {
-            padding: 17px 42px;
-            font-size: 30px;
-            font-weight: 500;
+            // padding: 17px 42px;
+            // font-size: 30px;
+            // font-weight: 500;
             color: #835436;
             background: #ec5330;
             background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
-            border-radius: 32px;
+            // border-radius: 32px;
           }
 
           li:nth-child(1) {
@@ -538,16 +517,17 @@ export default {
         margin-right: 32px;
         width: 260px;
         height: 260px;
-        background: linear-gradient(
-          180deg,
-          #46494d 0%,
-          #797d83 0%,
-          #414347 100%
-        );
+        // background: linear-gradient(
+        //   180deg,
+        //   #46494d 0%,
+        //   #797d83 0%,
+        //   #414347 100%
+        // );
         border-radius: 12px;
-        background-size: 100% 100%;
-        -moz-background-size: 100% 100%;
-        background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
+        // background-size: 100% 100%;
+        // -moz-background-size: 100% 100%;
+        overflow: hidden;
+        // background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
         .left-span {
           position: absolute;
           background: url('https://cdn.shupian.cn/sp-pt/wap/7nccpoc61co0000.png');

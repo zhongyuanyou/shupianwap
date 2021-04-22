@@ -71,19 +71,20 @@
         <div class="cell" @click="handleClick(7)">
           <p class="title">个人简介</p>
           <div class="right_icon">
-            <!-- <p class="txt hide">{{ info.status || '未设置' }}</p> -->
-            <p class="txt hide">未设置</p>
+            <p class="txt hide">{{ info.briefIntroduction || '未设置' }}</p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
         </div>
-        <div class="cell">
+        <div class="cell" @click="handleClick(8)">
           <p class="title">实名认证</p>
           <div class="right_icon">
             <p class="txt hide">
               {{
                 info.realStatus === 'NO_AUTHENTICATION'
                   ? '未实名认证'
-                  : '已实名认证'
+                  : info.realStatus === 'AUTHENTICATION'
+                  ? '已实名认证'
+                  : '未实名认证'
               }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
@@ -274,6 +275,10 @@ export default {
         this.$router.push({
           path: '/my/info/personalProfile',
         })
+      } else if (val === 8) {
+        if (this.realStatus === 'NO_AUTHENTICATION') {
+          this.$router.push('/contract/authentication')
+        }
       }
     },
     async select(data) {

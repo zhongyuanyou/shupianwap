@@ -67,18 +67,22 @@
         </p>
       </div>
     </sp-popup>
+
+    <LoadingCenter v-show="mackLoading" />
   </div>
 </template>
 
 <script>
 import { Popup, Field, List, Toast } from '@chipspc/vant-dgg'
 import { knownApi } from '~/api'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'CommentList',
   components: {
     [Popup.name]: Popup,
     [Field.name]: Field,
     [List.name]: List,
+    LoadingCenter,
   },
   props: {
     value: {
@@ -92,6 +96,7 @@ export default {
   },
   data() {
     return {
+      mackLoading: false,
       loading: false,
       finished: false,
       sort: 0, // 0 默认 1 时间
@@ -162,6 +167,7 @@ export default {
       }
     },
     async Applaud(item) {
+      this.mackLoading = true
       const { code, message, data } = await this.$axios.post(
         knownApi.comments.like,
         {
@@ -172,6 +178,7 @@ export default {
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
         }
       )
+      this.mackLoading = false
       if (code === 200) {
         if (item.isApplaud) {
           item.applaudCount--
@@ -188,6 +195,7 @@ export default {
       if (!this.content) {
         return
       }
+      this.mackLoading = true
       const { code, message, data } = await this.$axios.post(
         knownApi.comments.publish,
         {
@@ -199,6 +207,7 @@ export default {
           userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2, // 1 普通用户 2 规划师
         }
       )
+      this.mackLoading = false
       if (code === 200) {
         Toast({
           message: '发布成功',

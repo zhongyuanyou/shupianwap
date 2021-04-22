@@ -1,29 +1,30 @@
 <template>
   <div class="search">
-    <Search
-      ref="searchRef"
-      v-model.trim="value"
-      :icon-left="0.24"
-      placeholder="请输入搜索关键词"
-      :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
-      @searchKeydownHandle="keyClickHandle"
-    >
-      <template v-slot:center>
-        <sp-icon
-          v-show="value != ''"
-          name="clear"
-          class="clear"
-          color="#CCCCCC"
-          size="0.35rem"
-          @click="clearInput"
-        />
-      </template>
-      <template v-slot:right>
-        <a class="cloose-btn" href="javascript:void(0);" @click="clooseHandle"
-          >取消</a
-        >
-      </template>
-    </Search>
+    <sp-sticky :offset-top="appInfo.statusBarHeight">
+      <Search
+        ref="searchRef"
+        v-model.trim="value"
+        :icon-left="0.24"
+        placeholder="请输入搜索关键词"
+        @searchKeydownHandle="keyClickHandle"
+      >
+        <template v-slot:center>
+          <sp-icon
+            v-show="value != ''"
+            name="clear"
+            class="clear"
+            color="#CCCCCC"
+            size="0.35rem"
+            @click="clearInput"
+          />
+        </template>
+        <template v-slot:right>
+          <a class="cloose-btn" href="javascript:void(0);" @click="clooseHandle"
+            >取消</a
+          >
+        </template>
+      </Search>
+    </sp-sticky>
     <div v-if="knownHistory.length" class="history">
       <div class="tile">
         <h1>历史记录</h1>
@@ -59,6 +60,7 @@
 <script>
 import { Sticky, Icon } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
+// import HeaderSlot from '@/components/common/head/header-slot'
 
 export default {
   name: 'SearchPage',
@@ -66,6 +68,7 @@ export default {
     [Sticky.name]: Sticky,
     [Icon.name]: Icon,
     Search,
+    // HeaderSlot,
   },
   data() {
     return {

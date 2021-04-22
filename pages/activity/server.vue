@@ -83,10 +83,11 @@
           v-model="loading"
           :finished="finished"
           finished-text="没有更多了"
+          @load="onLoad"
         >
-          <div v-if="productList.rows && productList.rows.length > 0">
+          <div v-if="productList && productList.length > 0">
             <div
-              v-for="(item, index) in productList.rows"
+              v-for="(item, index) in productList"
               :key="index"
               @click="jumpProductdetail(item)"
             >
@@ -174,17 +175,18 @@ export default {
       activityProductList: '',
       currentIndex: 0,
       itemTypeOptions: '',
-      productList: {},
+      productList: [],
       productRecoData: '',
       productAdvertData: '',
       page: 1,
-      specTypeCode: 'HDZT_ZTTYPE_XFWHSF', // 活动类型code
+      specTypeCode: 'HDZT_ZTTYPE_XTSF', // 活动类型code
       platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
       specCode: '',
       defaultCityCode: '510100',
       advertCode: 'ad100043', // 广告code
       productType: '',
       fixedShow: false,
+      limit: 10,
     }
   },
   computed: {
@@ -197,16 +199,16 @@ export default {
       return JSON.parse(localStorage.getItem('myInfo'))
     },
   },
-  created() {
+  async created() {
     // 初始化定位
     if (process.client && !this.cityName) {
       this.POSITION_CITY({
         type: 'init',
       })
     }
-
     this.getAdvertisingData()
-    this.getMenuTabs()
+    console.log(2222222222)
+    await this.getMenuTabs().then(this.getProductList)
   },
 
   methods: {
@@ -215,16 +217,32 @@ export default {
       GET_ACCOUNT_INFO: 'user/GET_ACCOUNT_INFO',
     }),
     jumpProductdetail(item) {
-      if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
-        this.$router.push({
-          path: `/detail/transactionDetails`,
-          query: { productId: item.id, type: item.classCode },
-        })
-      } else {
-        this.$router.push({
-          path: `/detail/serviceDetails`,
-          query: { productId: item.id },
-        })
+      if (this.isInApp) {
+        if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+          this.$appFn.dggJumpRoute({
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cps/place_order","parameter":{"productId":${item.id},"type":${item.classCode}}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cps/place_order","parameter":{"productId":${item.id},"type":${item.classCode}}}}`,
+          })
+        } else {
+          this.$appFn.dggJumpRoute({
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cps/place_order","parameter":{"productId":${item.id}}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cps/place_order","parameter":{"productId":${item.id}}}}`,
+          })
+        }
+      }
+
+      if (!this.isInApp) {
+        if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+          this.$router.push({
+            path: `/detail/transactionDetails`,
+            query: { productId: item.id, type: item.classCode },
+          })
+        } else {
+          this.$router.push({
+            path: `/detail/serviceDetails`,
+            query: { productId: item.id },
+          })
+        }
       }
     },
     init() {
@@ -233,14 +251,20 @@ export default {
       this.finished = false
       this.loading = true
     },
-
+    async onLoad() {
+      if (this.specCode) {
+        this.page++
+        await this.getProductList()
+      }
+    },
     menuTab(item, index) {
       this.init()
       this.currentIndex = index
-      this.getProductList(item, this.specCode)
+      this.itemTypeOptions = item
+      this.getProductList()
     },
-    getMenuTabs() {
-      this.$axios
+    async getMenuTabs() {
+      await this.$axios
         .get(activityApi.activityTypeOptions, {
           params: {
             cityCodes: this.code || this.defaultCityCode,
@@ -255,7 +279,6 @@ export default {
               this.itemTypeOptions = res.data.settingVOList[0]
               this.specCode = res.data.specCode
               this.productType = res.data.productType
-              this.getProductList(this.itemTypeOptions, this.specCode)
             } else {
               this.loading = false
               this.finished = true
@@ -276,11 +299,13 @@ export default {
         })
     },
     // 获取产品
-    getProductList(item, itemSpecCode) {
+    getProductList() {
       const params = {
-        specCode: itemSpecCode,
-        cityCode: item.cityCode,
-        labelId: item.id,
+        specCode: this.specCode,
+        cityCode: this.itemTypeOptions.cityCode,
+        labelId: this.itemTypeOptions.id,
+        limit: this.limit,
+        page: this.page,
       }
       this.productMethod(params)
     },
@@ -291,21 +316,20 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.productList = res.data
-            this.productList.rows.forEach((item) => {
+            res.data.rows.forEach((item) => {
               if (item.tags) {
                 item.tags = item.tags.split(',')
               }
             })
-
+            this.productList = this.productList.concat(res.data.rows)
             this.total = res.data.total
             this.loading = false
-            this.page++
             if (this.page > res.data.totalPage) {
               this.finished = true
             }
           } else {
             this.loading = false
+            this.finished = true
             Toast.fail({
               duration: 2000,
               message: '服务异常，请刷新重试！',
@@ -357,7 +381,14 @@ export default {
     },
     // 搜索框点击
     clickInputHandle() {
-      this.$router.push('/search')
+      if (this.isInApp) {
+        this.$appFn.dggJumpRoute({
+          iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/search/page"}}`,
+          androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/search/page"}}`,
+        })
+      } else {
+        this.$router.push('/search')
+      }
     },
     uPGoBack() {
       if (this.isInApp) {
