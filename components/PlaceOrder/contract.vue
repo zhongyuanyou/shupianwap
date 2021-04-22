@@ -44,7 +44,7 @@
           maxlength="11"
           name="phone"
           label="联系电话"
-          placeholder="请输入合同联系人姓名"
+          placeholder="请输入联系人电话"
           :rules="[{ pattern, message: '请输入正确的联系人电话' }]"
         />
         <Field

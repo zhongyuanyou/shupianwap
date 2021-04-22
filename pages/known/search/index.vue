@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <sp-sticky :offset-top="appInfo.statusBarHeight">
+    <header-slot>
       <Search
         ref="searchRef"
         v-model.trim="value"
@@ -24,7 +24,7 @@
           >
         </template>
       </Search>
-    </sp-sticky>
+    </header-slot>
     <div v-if="knownHistory.length" class="history">
       <div class="tile">
         <h1>历史记录</h1>
@@ -60,7 +60,7 @@
 <script>
 import { Sticky, Icon } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
-// import HeaderSlot from '@/components/common/head/header-slot'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 
 export default {
   name: 'SearchPage',
@@ -68,7 +68,7 @@ export default {
     [Sticky.name]: Sticky,
     [Icon.name]: Icon,
     Search,
-    // HeaderSlot,
+    HeaderSlot,
   },
   data() {
     return {
@@ -167,8 +167,12 @@ export default {
       border: none;
       box-shadow: none;
       height: 60px;
-      input {
-        background: #f5f5f5;
+      form {
+        width: 75%;
+        input {
+          background: #f5f5f5;
+          width: 100%;
+        }
       }
       .clear {
         position: absolute;

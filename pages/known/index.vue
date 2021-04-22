@@ -7,7 +7,7 @@
     "
   >-->
   <div class="container">
-    <sp-sticky :offset-top="statusBarHeight">
+    <header-slot height="1.8rem">
       <div class="container_head">
         <Search
           value="请输入关键词搜索"
@@ -48,7 +48,7 @@
           @click.native="showPop = true"
         ></my-icon>
       </div>
-    </sp-sticky>
+    </header-slot>
     <Answer v-if="tabs[active].executionParameters === 'huida'" />
 
     <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
@@ -191,11 +191,10 @@ import OrdinaryList from '@/components/mustKnown/OrdinaryList'
 import Answer from '@/components/mustKnown/answer/Answer'
 import Search from '@/components/mustKnown/recommend/search/Search'
 import Bottombar from '@/components/common/nav/Bottombar'
-// import HeaderSlot from '@/components/common/head/header-slot'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi } from '@/api'
 
 export default {
-  layout: 'appSafeView',
   name: 'Index',
   components: {
     [WorkTab.name]: WorkTab,
@@ -213,7 +212,7 @@ export default {
     Attention,
     HotList,
     OrdinaryList,
-    // HeaderSlot,
+    HeaderSlot,
   },
   async asyncData({ $axios, store }) {
     const { code, message, data } = await $axios.get(
