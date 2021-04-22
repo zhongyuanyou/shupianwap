@@ -49,9 +49,8 @@
       <!-- S avtar -->
       <!-- S avtar -->
       <div class="avtars">
-        <!-- TODO 换回来activityTypeOptions -->
         <div
-          v-for="item in activityProductList"
+          v-for="item in recommendProductList"
           :key="item.id"
           class="avtar"
           @click="jumpProductDetail(item)"
