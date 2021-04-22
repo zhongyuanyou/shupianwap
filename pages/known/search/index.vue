@@ -167,8 +167,12 @@ export default {
       border: none;
       box-shadow: none;
       height: 60px;
-      input {
-        background: #f5f5f5;
+      form {
+        width: 75%;
+        input {
+          background: #f5f5f5;
+          width: 100%;
+        }
       }
       .clear {
         position: absolute;
