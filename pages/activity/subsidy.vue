@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container" :style="{ marginTop: safeTop + 'px' }">
     <!-- S search -->
-    <sp-sticky>
+    <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="search">
         <div class="left-back" @click="uPGoBack">
           <my-icon
@@ -65,7 +65,7 @@
       </div>
       <!-- E advert -->
     </div>
-    <sp-sticky class="tabs-box" offset-top="15.8vw">
+    <sp-sticky class="tabs-box" :offset-top="headerHeight + safeTop">
       <div class="drop_down">
         <div class="drop_down_title">成都</div>
         <div class="drop_down_icon"></div>

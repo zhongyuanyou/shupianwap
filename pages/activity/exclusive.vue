@@ -1,8 +1,8 @@
 <template>
-  <div class="container">
+  <div class="container" :style="{ marginTop: safeTop + 'px' }">
     <!-- <sp-sticky></sp-sticky> -->
     <!-- S search -->
-    <sp-sticky>
+    <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="search">
         <div class="left-back" @click="uPGoBack">
           <my-icon
@@ -77,7 +77,7 @@
     </div>
 
     <div class="container-body" :style="style.containerStyle">
-      <sp-sticky offset-top="15.7vw">
+      <sp-sticky :offset-top="headerHeight + safeTop">
         <div class="tabs-box">
           <ul class="tabs-box-items">
             <li

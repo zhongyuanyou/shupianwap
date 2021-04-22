@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container" :style="{ marginTop: safeTop + 'px' }">
     <!-- S search -->
-    <sp-sticky>
+    <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="search">
         <div class="left-back" :style="style.iconStyle" @click="uPGoBack">
           <my-icon
@@ -96,7 +96,7 @@
       <!-- E avtar -->
     </div>
 
-    <sp-sticky class="tabs-box" offset-top="16vw">
+    <sp-sticky class="tabs-box" :offset-top="headerHeight + safeTop">
       <ul class="tabs-box-items">
         <li
           v-for="(item, index) in activityTypeOptions"

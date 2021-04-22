@@ -17,6 +17,8 @@ export default {
     splittedRecommendProduct() {
       return this.recommendProductList.slice(0, 3)
     },
+    appInfo: (state) => state.app.appInfo, // app信息
+    //  asdsa
   },
   mixins: [imHandle],
   data() {
@@ -117,6 +119,8 @@ export default {
       recommendProductList: [],
       allText: '全部',
       productType: '',
+      safeTop: 0,
+      headerHeight: 0,
     }
   },
   async created() {
@@ -131,7 +135,10 @@ export default {
     await this.getMenuTabs().then(this.getRecommendProductList)
   },
   mounted() {
-    console.log(this.$store.state.user, 1111111111111)
+    if (this.isInApp) {
+      this.safeTop = this.appInfo.statusBarHeight
+    }
+    this.headerHeight = this.$refs.header_sticky.height
   },
   beforeDestroy() {
     clearInterval(timer)
