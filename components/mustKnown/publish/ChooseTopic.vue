@@ -163,6 +163,7 @@ export default {
     submit() {
       this.showPop = false
       const warpResult = this.buildWarpResult()
+      if (warpResult.length === 0 || !warpResult) return
       this.topics = warpResult
       // start: 备份result 数据,并且设置提交标识
       this.backupResult = this.result

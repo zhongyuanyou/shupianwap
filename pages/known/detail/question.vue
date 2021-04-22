@@ -90,12 +90,23 @@
           {{ questionDetials.contentText }}
         </p>
         <div v-else class="tit" v-html="questionDetials.content"></div>
+
         <div class="btn" @click="contentshow = !contentshow">
           <span class="tit">{{ contentshow ? '收起' : '展开' }}</span>
           <sp-icon
-            :name="contentshow ? 'arrow-up' : 'arrow-down'"
-            size="0.4rem"
+            v-show="contentshow"
+            name="arrow-up"
+            size="0.3rem"
             color="#999999"
+            style="margin-top: -0.06rem; margin-left: 0.05rem"
+            class="ellipsis"
+          />
+          <sp-icon
+            v-show="!contentshow"
+            name="arrow-down"
+            size="0.3rem"
+            color="#999999"
+            style="margin-left: 0.05rem"
             class="ellipsis"
           />
         </div>
@@ -371,7 +382,9 @@ export default {
         })
         if (res.code === 200) {
           if (res.data.categoryName) {
-            res.data.categoryName = res.data.categoryName.split(',')
+            res.data.categoryName = res.data.categoryName
+              .split(',')
+              .filter(Boolean)
           }
           if (res.data.contentImageUrl) {
             res.data.contentImageUrl = res.data.contentImageUrl.split(',')
@@ -949,7 +962,7 @@ export default {
         align-items: center;
         > span {
           width: 104px;
-          height: 52px;
+          // height: 52px;
           display: block;
           font-size: 26px;
           font-weight: 500;

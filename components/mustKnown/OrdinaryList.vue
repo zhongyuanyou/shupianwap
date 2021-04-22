@@ -69,6 +69,7 @@ export default {
       const { code, message, data } = await this.$axios.post(
         knownApi.questionArticle.list,
         {
+          currentUserId: this.$store.state.user.userId,
           categorIds: [this.categorIds],
           limit: this.limit,
           page: this.page,
