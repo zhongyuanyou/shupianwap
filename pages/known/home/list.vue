@@ -1,8 +1,6 @@
 <template>
-  <div
-    class="home_container"
-    :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
-  >
+  <div class="home_container">
+    <Header title="列表" />
     <div class="bottom_box">
       <sp-tabs
         v-model="active"
@@ -15,6 +13,7 @@
           :key="item.index"
           :title="item.name"
           :name="item.index"
+          :style="{ top: (88 + (appInfo.statusBarHeight || 0)) / 100 + 'rem' }"
         ></sp-tab>
       </sp-tabs>
       <sp-list
@@ -41,6 +40,7 @@ import { Tabs, Tab, Image, List } from '@chipspc/vant-dgg'
 import CommentList from '@/components/mustKnown/CommentList'
 import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
+import Header from '@/components/common/head/header'
 export default {
   name: 'Collection',
   components: {
@@ -50,6 +50,7 @@ export default {
     [List.name]: List,
     CommentList,
     Item,
+    Header,
   },
   asyncData({ $axios, query, store, redirect }) {
     if (!query.homeUserId && !store.state.user.userId) {
@@ -205,6 +206,18 @@ export default {
 
   .bottom_box {
     background-color: #f8f8f8;
+
+    /deep/ .sp-tabs {
+      position: fixed;
+      left: 0;
+      top: 88px;
+      z-index: 2;
+      width: 100%;
+      height: 88px;
+      padding-top: 40px;
+      box-sizing: content-box;
+      background: #ffffff;
+    }
     /deep/ .sp-tabs {
       border-bottom: 1px solid #dddddd;
     }
@@ -217,6 +230,7 @@ export default {
     }
 
     .list_container {
+      padding-top: 128px;
       .item {
         background: #ffffff;
         padding: 28px 32px 28px;

@@ -1,12 +1,11 @@
 <template>
   <div class="search">
-    <sp-sticky>
+    <sp-sticky :offset-top="appInfo.statusBarHeight">
       <Search
         ref="searchRef"
         v-model.trim="value"
         :icon-left="0.24"
         placeholder="请输入搜索关键词"
-        :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
         @searchKeydownHandle="keyClickHandle"
       >
         <template v-slot:center>
@@ -61,6 +60,7 @@
 <script>
 import { Sticky, Icon } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
+// import HeaderSlot from '@/components/common/head/header-slot'
 
 export default {
   name: 'SearchPage',
@@ -68,6 +68,7 @@ export default {
     [Sticky.name]: Sticky,
     [Icon.name]: Icon,
     Search,
+    // HeaderSlot,
   },
   data() {
     return {
@@ -157,16 +158,15 @@ export default {
 <style lang="less" scoped>
 .search {
   min-height: 100vh;
-  /deep/.sp-sticky {
-    .search-content {
-      padding: 10px 24px;
-    }
+  /deep/.search-content {
+    height: 88px;
+    padding: 0 24px;
     .input-box {
       position: relative;
       background: #f5f5f5;
       border: none;
       box-shadow: none;
-      height: 64px;
+      height: 60px;
       input {
         background: #f5f5f5;
       }

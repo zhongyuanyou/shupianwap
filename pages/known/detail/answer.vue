@@ -1,6 +1,10 @@
 <template>
   <div ref="myPage">
-    <div v-if="!showHead2" class="head head1">
+    <div
+      v-if="!showHead2"
+      class="head head1"
+      :style="{ paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px' }"
+    >
       <my-icon
         name="zuo"
         class="btn-icon"
@@ -41,7 +45,11 @@
             @click.native="onLeftClick"
           ></my-icon>
           <div class="user-info">
-            <sp-image class="img" :src="answerDetails.avatar" />
+            <sp-image
+              class="img"
+              :src="answerDetails.avatar"
+              @click="goUser(answerDetails.userId, answerDetails.userType)"
+            />
             <div class="infos">{{ answerDetails.createrName }}</div>
             <template v-if="answerDetails.createrId !== userInfo.userId">
               <div v-if="!isFollow" class="btn" @click="follow">
@@ -57,7 +65,7 @@
         </div>
       </HeadSlot>
     </div>
-    <div class="title-area">
+    <div class="title-area" @click="toQueDetail">
       <div class="title">{{ answerDetails.title }}</div>
       <div class="nums-area">
         {{ answerDetails.answerCount }} 个回答 ·
@@ -66,7 +74,11 @@
     </div>
     <div class="main">
       <div class="user-info">
-        <sp-image class="img" :src="answerDetails.avatar" />
+        <sp-image
+          class="img"
+          :src="answerDetails.avatar"
+          @click="goUser(answerDetails.userId, answerDetails.userType)"
+        />
         <div class="infos">{{ answerDetails.createrName }}</div>
         <template v-if="answerDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
@@ -168,10 +180,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Field, Button, Image, Toast, Popup, Dialog } from '@chipspc/vant-dgg'
 import Comment from '~/components/mustKnown/DetailComment'
 import HeadSlot from '@/components/common/head/header-slot'
-import { knownApi } from '~/api'
+import { knownApi, userinfoApi } from '@/api'
+import util from '@/utils/changeBusinessData'
 export default {
   components: {
     [Button.name]: Button,
@@ -237,12 +251,15 @@ export default {
       answerCollectCount: '',
       homeUserId: '',
       isFollow: false,
+      userType: '',
     }
   },
   computed: {
-    userInfo() {
-      return this.$store.state.user
-    },
+    ...mapState({
+      userInfo: (state) => state.user, // 登录的用户信息
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
+    }),
   },
   created() {
     if (this.$route.query.id) {
@@ -252,11 +269,39 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
+    this.getUserInfo()
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    goUser(id, usertype) {
+      this.$router.push({
+        path: '/known/home',
+        query: { homeUserId: id, type: usertype },
+      })
+    },
+    async getUserInfo() {
+      // 获取用户信息
+      try {
+        const params = {
+          // id: this.userId,
+          id: this.userId || this.$cookies.get('userId'),
+        }
+        const res = await this.$axios.get(userinfoApi.info, { params })
+        this.loading = false
+        if (res.code === 200 && res.data && typeof res.data === 'object') {
+          this.userType = util.getUserType(res.data.type)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    toQueDetail() {
+      this.$router.replace(
+        '/known/detail/question?id=' + this.answerDetails.sourceId
+      )
+    },
     follow() {
       this.loading = true
       this.$axios
@@ -384,7 +429,7 @@ export default {
       }
     },
     onLeftClick() {
-      this.$back()
+      this.$router.back(-1)
     },
 
     handleClickBottom(type) {

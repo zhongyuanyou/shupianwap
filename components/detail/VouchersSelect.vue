@@ -81,10 +81,10 @@
                 <div class="vouchers_desc">
                   {{
                     item.useType == 1
-                      ? '全场通用'
+                      ? '全品类通用'
                       : item.useType == 2
-                      ? '限制分类'
-                      : '限制商品'
+                      ? '限定部分类别产品使用'
+                      : '置顶产品使用'
                   }}
                 </div>
                 <div class="vouchers_date">
@@ -332,7 +332,7 @@ export default {
             })
             .catch((err) => {
               console.log(err)
-              this.$xToast.warning('优惠券领取失败,请稍后再试！')
+              this.$xToast.warning(err)
             })
         }
       }

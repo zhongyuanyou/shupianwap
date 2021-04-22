@@ -1,35 +1,37 @@
 <template>
   <div class="invitationSearch">
-    <div class="head">
-      <sp-sticky>
-        <Search
-          ref="fieldInput"
-          v-model="keyword"
-          :icon-left="0.12"
-          placeholder="搜索你想邀请的人"
-          @searchKeydownHandle="keyClickHandle"
-        >
-          <template v-slot:center>
-            <sp-icon
-              v-show="keyword != ''"
-              name="clear"
-              class="clear"
-              color="#CCCCCC"
-              size="0.35rem"
-              @click="clearInput"
-            />
-          </template>
-          <template v-slot:right>
-            <a
-              class="cloose-btn"
-              href="javascript:void(0);"
-              @click="clooseHandle"
-              >取消</a
-            >
-          </template>
-        </Search>
-      </sp-sticky>
-    </div>
+    <header-slot>
+      <div class="head">
+        <sp-sticky>
+          <Search
+            ref="fieldInput"
+            v-model="keyword"
+            :icon-left="0.12"
+            placeholder="搜索你想邀请的人"
+            @searchKeydownHandle="keyClickHandle"
+          >
+            <template v-slot:center>
+              <sp-icon
+                v-show="keyword != ''"
+                name="clear"
+                class="clear"
+                color="#CCCCCC"
+                size="0.35rem"
+                @click="clearInput"
+              />
+            </template>
+            <template v-slot:right>
+              <a
+                class="cloose-btn"
+                href="javascript:void(0);"
+                @click="clooseHandle"
+                >取消</a
+              >
+            </template>
+          </Search>
+        </sp-sticky>
+      </div>
+    </header-slot>
     <div class="recommend search">
       <sp-list
         v-model="loading"
@@ -65,6 +67,7 @@ import { Icon, Sticky, List } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import knownApi from '@/api/known'
 import util from '@/utils/changeBusinessData'
+import HeaderSlot from '@/components/common/head/header-slot'
 
 export default {
   name: 'InvitationSearch',
@@ -73,6 +76,7 @@ export default {
     [Sticky.name]: Sticky,
     Search,
     [List.name]: List,
+    HeaderSlot,
   },
   data() {
     return {
@@ -203,7 +207,10 @@ export default {
       this.searchAnswerUserApi()
     },
     goUserInfo(item) {
-      this.$router.push({ path: '/known/home', query: { homeUserId: item.id } })
+      this.$router.push({
+        path: '/known/home',
+        query: { homeUserId: item.id, type: util.getUserType(item.type) },
+      })
     },
   },
 }
@@ -217,7 +224,6 @@ export default {
     width: 100%;
     display: flex;
     align-items: center;
-    padding-left: 24px;
     box-sizing: border-box;
     /deep/.sp-sticky {
       border-bottom: 1px solid #dddddd;

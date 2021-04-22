@@ -1,22 +1,31 @@
 <template>
+  <!--<div
+    :class="
+      tabs[active].executionParameters === 'guanzhu'
+        ? 'flex_column container'
+        : 'container'
+    "
+  >-->
   <div class="container">
-    <div class="container_head">
-      <Search
-        value="请输入关键词搜索"
-        :icon-left="0.2"
-        @click.native="$router.push('/known/search')"
-      >
-      </Search>
-      <my-icon
-        name="fabu_mian"
-        size="0.52rem"
-        color="#4974F5"
-        class="my_icon"
-        @click.native="openArticle"
-      ></my-icon>
-    </div>
-
-    <sp-sticky>
+    <sp-sticky :offset-top="statusBarHeight">
+      <div class="container_head">
+        <Search
+          value="请输入关键词搜索"
+          :icon-left="0.2"
+          @click.native="$router.push('/known/search')"
+        >
+          <template v-if="isInApp" v-slot:left>
+            <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
+          </template>
+        </Search>
+        <my-icon
+          name="fabu_mian"
+          size="0.52rem"
+          color="#4974F5"
+          class="my_icon"
+          @click.native="openArticle"
+        ></my-icon>
+      </div>
       <div class="category_box">
         <sp-tabs
           v-model="active"
@@ -40,7 +49,6 @@
         ></my-icon>
       </div>
     </sp-sticky>
-
     <Answer v-if="tabs[active].executionParameters === 'huida'" />
 
     <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
@@ -51,7 +59,6 @@
       :category-id="tabs[active].id"
     />
     <Recommend v-else-if="tabs[active].executionParameters === 'tuijian'" />
-
     <ordinary-list v-else :categor-ids="tabs[active].id" />
 
     <!-- 弹出框tab修改列表 start -->
@@ -82,7 +89,7 @@
               :class="status ? '' : index < 3 ? 'active' : ''"
               class="item"
             >
-              {{ item }}
+              <div class="item_name">{{ item.name }}</div>
               <my-icon
                 v-show="showIcon"
                 name="guanbi_mian"
@@ -105,7 +112,7 @@
         <div class="list">
           <div class="list_items">
             <div v-for="(item, index) in morePlate" :key="index" class="item">
-              {{ item }}
+              <div class="item_name">{{ item.name }}</div>
               <my-icon
                 v-show="showIcon"
                 name="fabu_mian"
@@ -175,6 +182,7 @@ import {
   Tab,
   Tabs,
   PullRefresh,
+  Icon,
 } from '@chipspc/vant-dgg'
 import Recommend from '@/components/mustKnown/Recommend'
 import Attention from '@/components/mustKnown/attention/Index'
@@ -183,9 +191,11 @@ import OrdinaryList from '@/components/mustKnown/OrdinaryList'
 import Answer from '@/components/mustKnown/answer/Answer'
 import Search from '@/components/mustKnown/recommend/search/Search'
 import Bottombar from '@/components/common/nav/Bottombar'
+// import HeaderSlot from '@/components/common/head/header-slot'
 import { knownApi } from '@/api'
 
 export default {
+  layout: 'appSafeView',
   name: 'Index',
   components: {
     [WorkTab.name]: WorkTab,
@@ -195,6 +205,7 @@ export default {
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
     [PullRefresh.name]: PullRefresh,
+    [Icon.name]: Icon,
     Search,
     Answer,
     Bottombar,
@@ -202,6 +213,7 @@ export default {
     Attention,
     HotList,
     OrdinaryList,
+    // HeaderSlot,
   },
   async asyncData({ $axios, store }) {
     const { code, message, data } = await $axios.get(
@@ -210,6 +222,7 @@ export default {
         params: {
           // type 1 获取企大顺导航
           type: store.state.app.isInApp ? 1 : '',
+          // type: 1,
         },
       }
     )
@@ -224,50 +237,51 @@ export default {
       showIcon: false,
       status: true,
       showArticlePop: false,
-      myPlate: [
-        '关注',
-        '推荐',
-        '热榜',
-        '法律',
-        '交易',
-        '知产',
-        '知识',
-        '互联网',
-        '工商注册',
-        '办证',
-        '刻章',
-      ],
-      morePlate: [
-        '关注',
-        '推荐',
-        '热榜',
-        '法律',
-        '交易',
-        '知产',
-        '知识',
-        '互联网',
-        '工商注册',
-        '办证',
-        '刻章',
-      ],
+      myPlate: [],
+      morePlate: [],
       active: 0,
+      statusBarHeight: '',
+      appStyle: {
+        'padding-left': '12px',
+        'padding-right': '16px',
+        'padding-top': '',
+      },
+      tapSafeApp: {
+        height: '',
+      },
     }
   },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo,
     }),
     userInfo() {
       return this.$store.state.user
     },
   },
   mounted() {
-    console.log(this.tabs)
+    if (this.appInfo) {
+      this.statusBarHeight = this.appInfo.statusBarHeight
+    }
+    // this.containerStyle['padding-top'] = this.appInfo.statusBarHeight + 'px'
+    this.appStyle['padding-top'] = this.statusBarHeight * 2 + 'px'
+    this.tapSafeApp.height = this.statusBarHeight + 'px'
+    this.init()
   },
   methods: {
-    toggleTabs() {
-      console.log(this.active)
+    init() {
+      if (localStorage.getItem('morePlate')) {
+        this.morePlate = JSON.parse(localStorage.getItem('morePlate'))
+        this.myPlate = this.tabs.filter(
+          (item) => !this.morePlate.some((ele) => ele.id === item.id)
+        )
+        this.tabs = this.myPlate
+      } else {
+        this.myPlate = this.tabs
+      }
     },
+    toggleTabs() {},
     async isLogin() {
       if (this.userInfo.userId && this.userInfo.token) {
         return true
@@ -299,21 +313,41 @@ export default {
         this.showIcon = false
         this.editFinish = '编辑'
         this.status = true
+        localStorage.setItem('morePlate', JSON.stringify(this.morePlate))
       }
     },
     // 添加到我的列表中
     addToMyPlate(index) {
       const arrayValue = this.morePlate[index]
+      console.log('arrayValue1', arrayValue)
       if (arrayValue) {
         this.myPlate.push(arrayValue)
         this.morePlate.pop(index)
+      }
+    },
+    deleteToMyPlate(index) {
+      if (index === this.active) {
+        this.active--
+      }
+      const arrayValue = this.myPlate[index]
+      console.log('arrayValu2', arrayValue)
+      if (arrayValue) {
+        this.morePlate.push(arrayValue)
+        this.myPlate.pop(index)
       }
     },
   },
 }
 </script>
 <style lang="less" scoped>
-.sp-sticky {
+.top-safe-app {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 99;
+}
+/deep/ .sp-sticky {
   background: #fff;
 }
 .active {
@@ -368,14 +402,41 @@ export default {
   background: #4974f5;
   border-radius: 3px;
 }
+.flex_column {
+  display: flex;
+  flex-direction: column;
+}
+
 .container {
+  height: 100%;
   background: #fff;
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+    background: #fff;
+  }
   .container_head {
     display: flex;
     justify-content: space-between;
     height: 88px;
     align-items: center;
     padding: 0 32px;
+    .my_icon {
+      width: 52px;
+      height: 52px;
+      margin-left: 32px;
+    }
+  }
+  .container_head_app {
+    display: flex;
+    justify-content: space-between;
+    height: 88px;
+    align-items: center;
+    padding-left: 12px;
+    padding-right: 16px;
     .my_icon {
       width: 52px;
       height: 52px;
@@ -555,6 +616,15 @@ export default {
               top: 0;
               right: 0;
             }
+            > .item_name {
+              width: 84px;
+              height: 28px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
+              text-align: center;
+            }
           }
           div:nth-child(4n + 4) {
             margin-right: 0;
@@ -625,6 +695,15 @@ export default {
               position: absolute;
               top: 0;
               right: 0;
+            }
+            > .item_name {
+              width: 84px;
+              height: 28px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
+              text-align: center;
             }
           }
           div:nth-child(4n + 4) {

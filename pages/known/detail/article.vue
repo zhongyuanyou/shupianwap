@@ -4,7 +4,7 @@
       <PageHead v-if="!showHead2" :title="articleDetails.title"></PageHead>
       <PageHead2
         v-if="showHead2"
-        :header-data="headerData"
+        :header-data="articleDetails"
         :is-follow="isFollow"
         :is-show-follow="articleDetails.createrId !== userInfo.userId"
         @follow="follow"
@@ -15,7 +15,11 @@
     </div>
     <div class="main">
       <div class="user-info">
-        <sp-image class="img" :src="articleDetails.avatar" />
+        <sp-image
+          class="img"
+          :src="articleDetails.avatar"
+          @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
+        />
         <div class="infos">{{ articleDetails.createrName }}</div>
         <template v-if="articleDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
@@ -123,9 +127,9 @@ export default {
     return {
       articleDetails: res.data,
       headerData: {
-        createrName: res.createrName,
-        contentText: res.contentText,
-        avatar: res.avatar,
+        createrName: res.data.createrName,
+        contentText: res.data.contentText,
+        avatar: res.data.avatar,
       },
     }
   },
@@ -147,10 +151,15 @@ export default {
     id() {
       return this.$route.query.id
     },
+    isInApp() {
+      return this.$store.state.app.isInApp
+    },
   },
   created() {
     this.getRecommendData()
-    this.initFollow()
+    if (this.userInfo.token) {
+      this.initFollow()
+    }
   },
 
   mounted() {
@@ -160,12 +169,18 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    goUser(id, usertype) {
+      this.$router.push({
+        path: '/known/home',
+        query: { homeUserId: id, type: usertype },
+      })
+    },
     initFollow() {
       this.$axios
         .get(knownApi.questionArticle.findAttention, {
           params: {
             currentUserId: this.userInfo.userId,
-            homeUserId: this.homeUserId || '120',
+            homeUserId: this.articleDetails.createrId,
           },
         })
         .then((res) => {
@@ -176,12 +191,15 @@ export default {
           }
         })
     },
-    follow() {
-      this.loading = true
+    async follow() {
+      const res = await this.$isLogin()
+      if (res === 'app_login_success') {
+        this.initFollow()
+      }
       this.$axios
         .post(knownApi.home.attention, {
-          handleUserName: this.userInfo.userName || '测试用户',
-          handleUserId: this.userInfo.userId || '120',
+          handleUserName: this.userInfo.userName,
+          handleUserId: this.userInfo.userId,
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
           handleType: this.isFollow ? 2 : 1,
           attentionUserId: this.articleDetails.userId,
@@ -192,7 +210,7 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.$xToast.show({
-              message: this.isFollow ? '关注成功' : '取消关注',
+              message: this.isFollow ? '取消关注' : '关注成功',
             })
             this.isFollow = !this.isFollow
           } else {
@@ -265,7 +283,10 @@ export default {
     onLeftClick() {
       this.$router.back(-1)
     },
-    handleClickBottom(type) {
+    async handleClickBottom(type) {
+      if (!(await this.$isLogin())) {
+        return
+      }
       this.handleType = ''
       if (type === 1) {
         this.articleDetails.applaudCount = Number(

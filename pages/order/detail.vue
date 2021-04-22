@@ -235,7 +235,7 @@
                 'ORDER_CUS_PAY_STATUS_UN_PAID'
             "
             class="btn-pay"
-            @click="handleClickItem(4)"
+            @click="handleClickPay()"
           >
             立即付款
           </sp-button>
@@ -247,13 +247,13 @@
                 'ORDER_CUS_PAY_STATUS_PART_PAID'
             "
             class="btn-pay"
-            @click="handleClickItem(5)"
+            @click="handleClickPay()"
           >
             立即付款
           </sp-button>
           <!-- 销售商品交易商品的确认按钮是在下边 -->
           <sp-button
-            v-if="isShowConfirmBtn()"
+            v-if="cusOrderStatusType === 2 && isShowConfirmBtn()"
             class="btn-pay"
             @click="handleClickItem(6)"
           >
@@ -265,10 +265,10 @@
         ref="cancleOrderModel"
         :order-id="orderData.orderId"
         :cus-order-id="orderData.cusOrderId"
-        :order-sku-list="orderData.orderList"
-        :cus-order-cancel-reason="orderData.cusOrderCancelReason"
+        :order-list="orderData.orderList"
         @setCancelOrderName="setCancelOrderName"
         @cancleOrder="cancleOrder"
+        @getBatchList="getBatchList"
       />
       <PayModal
         v-if="showPayBtn"
@@ -277,6 +277,7 @@
         :pay-list="payList"
         :batch-pay-status="batchPayStatus"
         :this-time-pay-total="thisTimePayTotal"
+        :batch-ids="batchIds"
       />
     </section>
     <div v-if="!hasData" class="loading-area">
@@ -318,7 +319,7 @@ export default {
       hasData: false,
       orderId: '',
       cusOrderId: '',
-      cusOrderStatusType: 1, // 1为未付款 2进行中3已完成4已取消
+      cusOrderStatusType: null, // 1为未付款 2进行中3已完成4已取消
       orderData: {
         orderStatus: '',
         orderList: [],
@@ -391,9 +392,6 @@ export default {
             // 当订单状态不为已取消且支付状态不为已完成时展示付款入口
             this.showPayBtn = true
           }
-          this.getBatchList()
-          this.hasData = true
-          this.loading = false
           this.cusOrderPayType = this.checkPayType()
           if (
             this.orderData.orderSplitAndCusVo.cusOrderPayStatusNo ===
@@ -412,14 +410,8 @@ export default {
             arr1 = arr1.concat(orders[i].skuDetails)
           }
           this.orderData.orderSkuList = arr1
-
-          // if (
-          //   this.orderData.cusOrderPayStatusNo !==
-          //   'ORDER_CUS_PAY_STATUS_COMPLETED_PAID'
-          // ) {
-          //   // 当客户单支付状态不等于已完成时调用分批支付列表
-          //   this.getBatchList()
-          // }
+          this.hasData = true
+          this.loading = false
         })
         .catch((err) => {
           this.loading = false
@@ -476,6 +468,11 @@ export default {
       document.execCommand('Copy') // 执行浏览器复制命令
       oInput.remove()
       this.$xToast.success('复制成功')
+    },
+    handleClickPay() {
+      console.log('this.orderData', this.orderData.orderSkuList[0])
+      this.opType = 'payMoney'
+      this.getChildOrders(this.orderData.orderSkuList[0])
     },
   },
 }

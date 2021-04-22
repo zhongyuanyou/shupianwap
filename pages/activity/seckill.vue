@@ -1,26 +1,25 @@
 <template>
   <div class="container">
-    <div class="container-advice">
-      <!-- Sheader -->
-      <sp-sticky>
-        <div class="header">
-          <div class="left-back">
-            <my-icon
-              name="nav_ic_back"
-              class="back_icon"
-              size="0.4rem"
-              color="#FFFFFF"
-            ></my-icon>
-          </div>
-          <div class="title">
-            <!-- <img src="" alt="" /> -->
-            <!-- 限时秒杀 -->
-          </div>
+    <!-- Sheader -->
+    <sp-sticky>
+      <div class="header">
+        <div class="left-back" @click="uPGoBack">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#FFFFFF"
+          ></my-icon>
         </div>
-      </sp-sticky>
+        <div class="title">
+          <!-- <img src="" alt="" /> -->
+          <!-- 限时秒杀 -->
+        </div>
+      </div>
+    </sp-sticky>
 
-      <!-- Eheader -->
-
+    <!-- Eheader -->
+    <div class="container-advice">
       <!-- S countdown -->
       <div class="countdown">
         <div class="special-price">
@@ -32,10 +31,15 @@
           </div>
           <div class="low-money">近15天全网底价</div>
         </div>
-        <div class="count-down">
+        <div v-show="endTime.sec" class="count-down">
           <div class="end-time">距本场结束还剩</div>
           <div class="down-time">
-            <sp-count-down :time="time">
+            <span class="block">{{ endTime.hour }}</span>
+            <span class="colon">:</span>
+            <span class="block">{{ endTime.min }}</span>
+            <span class="colon">:</span>
+            <span class="block">{{ endTime.sec }}</span>
+            <!-- <sp-count-down :time="time">
               <template #default="timeData">
                 <span class="block">{{ '0' + timeData.hours }}</span>
                 <span class="colon">:</span>
@@ -43,34 +47,48 @@
                 <span class="colon">:</span>
                 <span class="block">{{ '0' + timeData.seconds }}</span>
               </template>
-            </sp-count-down>
+            </sp-count-down> -->
           </div>
         </div>
       </div>
       <!-- E countdown -->
       <!-- S wrapper -->
       <div class="wrapper">
-        <div v-for="(item, index) in advice" :key="index" class="item">
-          <div class="item-tp">
+        <div
+          v-for="item in recommendProductList"
+          :key="item.id"
+          class="item"
+          @click="jumpProductDetail(item)"
+        >
+          <div class="item-tp" :style="{ 'background-image': item.imageUrl }">
+            <img
+              height="100%"
+              width="100%"
+              :src="
+                item.imageUrl ||
+                'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+              "
+              alt="商品图片"
+            />
             <div class="item_tp_title">
               <div class="item-icon"></div>
-              <div class="item-money">{{ item.lowmoney }}</div>
+              <div class="item-money">限时直降{{ item.minusPrice }}元</div>
             </div>
           </div>
           <div class="item-bt">
-            <div class="item-bt-tp">{{ item.title }}</div>
+            <div class="item-bt-tp">{{ item.skuName }}</div>
             <div class="item-bt-md">
-              <span>{{ item.money }}</span>
+              <span>{{ item.specialPrice }}</span>
               <span>元</span>
             </div>
-            <div class="item-bt-bt">
+            <!-- <div class="item-bt-bt">
               <div class="avtars">
                 <div class="avtar1"></div>
                 <div class="avtar2"></div>
               </div>
 
               <span class="counsel">{{ item.time }}秒之前咨询</span>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -78,16 +96,29 @@
     </div>
     <!-- S container-body -->
     <div class="container-body">
-      <div class="body-tabs">
-        <div class="care-select"></div>
-        <ul class="tab-box">
-          <li class="tab-item active">精选</li>
+      <sp-sticky offset-top="11.65vw">
+        <div class="body-tabs">
+          <div class="care-select"></div>
+          <ul class="tab-box">
+            <!-- <li class="tab-item active">精选</li>
           <li class="tab-item">工商</li>
           <li class="tab-item">财税</li>
-          <li class="tab-item">知识</li>
-          <li class="tab-item">法律</li>
-        </ul>
-      </div>
+          <li class="tab-item">知识</li> -->
+            <li v-for="item in introWords" :key="item" class="tab-item">
+              {{ item }}
+            </li>
+            <!-- <li
+            v-for="(item, index) in activityTypeOptions"
+            :key="index"
+            class="tab-item"
+            :class="{ active: index == currentIndex }"
+            @click="menuTab(item, index)"
+          >
+            {{ item.labelName }}
+          </li> -->
+          </ul>
+        </div>
+      </sp-sticky>
       <div class="body-content">
         <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
           <sp-list
@@ -96,37 +127,85 @@
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <div v-for="(item, index) in items" :key="index">
+            <div
+              v-for="(item, index) in activityProductList"
+              :key="index"
+              @click="jumpProductDetail(item)"
+            >
+              <!-- <div
+              v-for="(item, index) in items"
+              :key="index"
+              @click="jumpProductDetail(item)"
+            > -->
               <div class="body-content-items">
-                <div class="left-content">
-                  <div class="left-countdown">距离结束21:18:02</div>
+                <div
+                  class="left-content"
+                  :style="{ 'background-image': item.imageUrl }"
+                >
+                  <img
+                    height="100%"
+                    width="100%"
+                    :src="
+                      item.imageUrl ||
+                      'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+                    "
+                    alt="商品图片"
+                  />
+                  <div class="left-countdown">
+                    距离结束{{ endTime.hour }}:{{ endTime.min }}:{{
+                      endTime.sec
+                    }}
+                  </div>
                 </div>
                 <div class="right-content">
                   <div class="rc-top">
-                    <span>{{ item.span1 }}</span>
-                    <span>{{ item.span2 }}</span>
-                    {{ item.title }}
+                    <!-- <span>{{ item.span1 }}</span>
+                    <span>{{ item.span2 }}</span> -->
+                    <span>特卖</span>
+                    <span>千万补贴</span>
+                    {{ item.skuName }}
                   </div>
                   <div class="rc-middle">
                     <div class="reduce-price">
-                      限时直降{{ item.jiangjia }}元
+                      限时直降{{ item.minusPrice }}元
                     </div>
-                    <div class="deal-ok">已成交{{ item.ok }}单</div>
+                    <div class="deal-ok">
+                      已成交{{
+                        item.specialInventory - item.specialResidueInventory
+                      }}单
+                    </div>
                   </div>
                   <div class="rc-bottom">
                     <div class="rc-bottom-lf">
                       <div class="rc-bottom-lf-my">
-                        <div>秒杀价</div>
-                        <div>{{ item.miaosha }}</div>
-                        <div>元</div>
+                        秒杀价<span>{{ item.specialPrice }}</span
+                        >元
+                        <!-- <div>秒杀价</div>
+                        <div>{{ item.specialPrice }}</div>
+                        <div>元</div> -->
                       </div>
-                      <div class="bf-my">近{{ item.dijia }}天历史低价</div>
+                      <!-- <div class="bf-my">近{{ item.dijia }}天历史低价</div> -->
                     </div>
                     <div class="rc-bottom-rt">
                       <div>去抢购</div>
                       <div class="process-per">
-                        <sp-progress color="#FFF166" :percentage="75" />
-                        <div class="pro-per">{{ item.baifen }}</div>
+                        <sp-progress
+                          color="#FFF166"
+                          :percentage="
+                            getPercentage(
+                              item.specialResidueInventory,
+                              item.specialInventory
+                            )
+                          "
+                        />
+                        <div class="pro-per">
+                          {{
+                            getPercentage(
+                              item.specialResidueInventory,
+                              item.specialInventory
+                            )
+                          }}%
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -141,45 +220,107 @@
     <!-- E container-body -->
   </div>
 </template>
+
+<script>
+import {
+  CountDown,
+  Sticky,
+  Progress,
+  List,
+  PullRefresh,
+} from '@chipspc/vant-dgg'
+import activityMixin from '@/mixins/activityMixin'
+
+export default {
+  name: 'Seckill',
+  components: {
+    [CountDown.name]: CountDown,
+    [Sticky.name]: Sticky,
+    [Progress.name]: Progress,
+    [List.name]: List,
+    [PullRefresh.name]: PullRefresh,
+  },
+  mixins: [activityMixin],
+  data() {
+    return {
+      specType: 'HDZT_ZTTYPE_XSQG',
+      advice: [
+        {
+          lowmoney: '限时直降499元',
+          title: '小规模纳税人财税代理',
+          money: '488',
+          time: '38',
+        },
+        {
+          lowmoney: '限时直降498元',
+          title: '小规模纳税人财税代理',
+          money: '488',
+          time: '30',
+        },
+        {
+          lowmoney: '限时直降499元',
+          title: '小规模纳税人财税代理',
+          money: '488',
+          time: '22',
+        },
+        {
+          lowmoney: '限时直降499元',
+          title: '小规模纳税人财税代理',
+          money: '488',
+          time: '21',
+        },
+      ],
+      list: [],
+      loading: false,
+      finished: false,
+      refreshing: false,
+      allText: '精选',
+      introWords: ['人工选品', '限时限量', '低价高质'],
+    }
+  },
+}
+</script>
+
 <style lang="less" scoped>
 .container {
   position: relative;
-  .container-advice {
-    width: 750px;
-    height: 699px;
+  background: url('https://cdn.shupian.cn/sp-pt/wap/b5p8oqng6sg0000.png');
+  background-size: 100% auto;
+  background-attachment: fixed;
+  min-height: 80vh;
+  .header {
+    width: 100%;
+    height: 88px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: url('https://cdn.shupian.cn/sp-pt/wap/b5p8oqng6sg0000.png');
-    background-size: 100% 100%;
-    padding: 0 20px;
-    .header {
-      width: 100%;
-      height: 88px;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .back_icon {
-        width: 40px;
-        height: 34px;
-        // background: blue;
-        position: absolute;
-        top: 24px;
-        left: 32px;
-      }
-      .title {
-        width: 160px;
-        height: 32px;
-        background: url('https://cdn.shupian.cn/sp-pt/wap/dgfhzoli9mw0000.png');
-        background-size: 100% 100%;
-        img {
-          width: 100%;
-          height: 100%;
-        }
+    background-size: 100% auto;
+    .back_icon {
+      width: 40px;
+      height: 34px;
+      position: absolute;
+      top: 24px;
+      left: 32px;
+    }
+    .title {
+      width: 160px;
+      height: 32px;
+      background: url('https://cdn.shupian.cn/sp-pt/wap/dgfhzoli9mw0000.png');
+      background-size: 100% 100%;
+      img {
+        width: 100%;
+        height: 100%;
       }
     }
+  }
+  .container-advice {
+    width: 750px;
+    padding: 0 20px;
     .countdown {
       display: flex;
       justify-content: space-between;
-      // justify-content: center;
       .special-price {
         margin: 35px 0 34px 0;
         display: flex;
@@ -188,12 +329,13 @@
         align-items: center;
         .low-money {
           font-size: 24px;
-          font-weight: 400;
-          color: #ffffff;
+          font-weight: 500;
+          color: #fefffe;
           margin-left: 8px;
           justify-content: center;
           align-items: center;
           display: flex;
+          font-family: PingFangSC-Medium, PingFang SC;
         }
 
         .night {
@@ -209,7 +351,7 @@
         }
       }
       .count-down {
-        margin: 32px 0 34px 0;
+        margin: 35px 0 34px 0;
         display: flex;
         flex-direction: row;
         font-size: 30px;
@@ -220,57 +362,67 @@
           font-size: 24px;
           font-weight: 500;
           color: #fefffe;
-          // line-height: 24px;
           margin-right: 12px;
+          font-family: PingFangSC-Medium, PingFang SC;
         }
         .down-time {
-          .sp-count-down {
-            .block {
-              padding: 6px;
-              width: 36px;
-              height: 36px;
-              font-size: 24px;
-              font-weight: 500;
-              color: #ec5330;
-              line-height: 24px;
-              background: #ffffff;
-              border-radius: 4px;
-            }
-            .colon {
-              font-size: 24px;
-              font-weight: 500;
-              color: #fefffe;
-              // // line-height: 24px;
-              // margin-right: 12px;
-            }
+          .block {
+            padding: 6px;
+            width: 36px;
+            height: 36px;
+            font-size: 24px;
+            font-weight: 500;
+            color: #ec5330;
+            line-height: 24px;
+            background: #ffffff;
+            border-radius: 4px;
           }
+          .colon {
+            font-size: 24px;
+            font-weight: 500;
+            color: #fefffe;
+            // // line-height: 24px;
+            // margin-right: 12px;
+          }
+          // .sp-count-down {
+          //   .block {
+          //     padding: 6px;
+          //     width: 36px;
+          //     height: 36px;
+          //     font-size: 24px;
+          //     font-weight: 500;
+          //     color: #ec5330;
+          //     line-height: 24px;
+          //     background: #ffffff;
+          //     border-radius: 4px;
+          //   }
+          //   .colon {
+          //     font-size: 24px;
+          //     font-weight: 500;
+          //     color: #fefffe;
+          //     // // line-height: 24px;
+          //     // margin-right: 12px;
+          //   }
+          // }
         }
       }
     }
     .wrapper {
       display: flex;
       overflow: auto;
-      padding: 10px 0 32px 0;
+      padding-bottom: 32px;
       .item {
-        height: 400px;
-        width: 220px;
+        padding-bottom: 19px;
+        width: 225px;
         border-radius: 16px;
-        margin: 10px 16px 10px 0;
+        margin: 10px 16px 0 0;
         background: #ffffff;
         flex-shrink: 0;
         justify-content: space-between;
         .item-tp {
-          width: 220px;
+          width: 225px;
+          overflow: hidden;
           height: 220px;
-          background: linear-gradient(
-            180deg,
-            #46494d 0%,
-            #797d83 0%,
-            #414347 100%
-          );
-          background-size: 100% 100%;
-          -moz-background-size: 100% 100%;
-          background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
           border-radius: 16px 16px 0px 0px;
           position: relative;
           bottom: 0;
@@ -281,9 +433,6 @@
             width: 100%;
             height: 40px;
             background: linear-gradient(90deg, #ff8208 0%, #ffb132 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             .item-icon {
               width: 16px;
               height: 17px;
@@ -295,8 +444,10 @@
             }
             .item-money {
               font-size: 22px;
+              line-height: 40px;
               font-weight: 400;
               color: #ffffff;
+              margin-left: 34px;
             }
           }
         }
@@ -371,12 +522,11 @@
     }
   }
   .container-body {
-    width: 750px;
+    width: 100vw;
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
-    padding: 0 20px;
     position: absolute;
-    top: 660px;
+    min-height: 80vh;
     .body-tabs {
       width: 750px;
       height: 88px;
@@ -386,6 +536,8 @@
       align-items: center;
       justify-content: flex-start;
       padding: 10px 16px 0 0;
+      padding-left: 20px;
+      padding-right: 20px;
       .care-select {
         height: 30px;
         width: 150px;
@@ -400,7 +552,6 @@
           font-weight: 500;
           color: #555555;
           line-height: 32px;
-
           margin-left: 48px;
         }
         li.active {
@@ -415,7 +566,11 @@
         }
       }
     }
+    .sp-sticky--fixed .body-tabs {
+      border-radius: none;
+    }
     .body-content {
+      padding: 0 20px;
       .line {
         width: 710px;
         height: 1px;
@@ -434,16 +589,8 @@
         margin-right: 32px;
         width: 260px;
         height: 260px;
-        background: linear-gradient(
-          180deg,
-          #46494d 0%,
-          #797d83 0%,
-          #414347 100%
-        );
+        overflow: hidden;
         border-radius: 12px;
-        background-size: 100% 100%;
-        -moz-background-size: 100% 100%;
-        background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
         .left-countdown {
           font-size: 22px;
           font-weight: 400;
@@ -509,26 +656,17 @@
             .rc-bottom-lf-my {
               display: flex;
               flex-direction: row;
-              padding-top: 0.05rem;
+              height: 100%;
               align-items: center;
-              div {
-                color: #ec5330;
-              }
-              div:nth-of-type(1) {
-                font-size: 22px;
-                font-weight: 400;
-                color: #ec5330;
-              }
-              div:nth-of-type(2) {
+              color: #ec5330;
+              font-size: 22px;
+              font-weight: 400;
+              span {
                 font-size: 40px;
                 font-weight: 500;
-                line-height: 40px;
-              }
-              div:nth-of-type(3) {
-                font-size: 22px;
-                font-weight: 500;
-                margin: 13px 0 0 2px;
-                line-height: 22px;
+                display: inline-block;
+                transform: translateY(-3px);
+                margin: 0 4px;
               }
             }
             .bf-my {
@@ -575,6 +713,8 @@
                 font-size: 16px;
                 font-weight: 500;
                 color: #fffccd;
+                font-family: PingFangSC-Medium, PingFang SC;
+                line-height: 16px;
                 // right: 6px;
                 // bottom: 6px;
               }
@@ -598,142 +738,3 @@
   }
 }
 </style>
-
-<script>
-// import Search from '~/components/common/search/Search.vue'
-import { CountDown, Sticky, Progress, List } from '@chipspc/vant-dgg'
-
-export default {
-  name: 'Seckill',
-  components: {
-    [CountDown.name]: CountDown,
-    [Sticky.name]: Sticky,
-    [Progress.name]: Progress,
-    [List.name]: List,
-  },
-  data() {
-    return {
-      advice: [
-        {
-          lowmoney: '限时直降499元',
-          title: '小规模纳税人财税代理',
-          money: '488',
-          time: '38',
-        },
-        {
-          lowmoney: '限时直降498元',
-          title: '小规模纳税人财税代理',
-          money: '488',
-          time: '30',
-        },
-        {
-          lowmoney: '限时直降499元',
-          title: '小规模纳税人财税代理',
-          money: '488',
-          time: '22',
-        },
-        {
-          lowmoney: '限时直降499元',
-          title: '小规模纳税人财税代理',
-          money: '488',
-          time: '21',
-        },
-      ],
-      items: [
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-      ],
-      list: [],
-      loading: false,
-      finished: false,
-      refreshing: false,
-    }
-  },
-  methods: {
-    onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        this.loading = false
-
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
-    },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
-
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
-  },
-}
-</script>

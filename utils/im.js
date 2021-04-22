@@ -45,7 +45,6 @@ export function imInit(data = {}) {
       console.log(res)
     },
   })
-  console.log(initSdk)
   return initSdk
 }
 

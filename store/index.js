@@ -26,7 +26,13 @@ export const actions = {
     commit('city/SET_POSITION_CITY', positionCityName || '')
     commit('city/SET_POSITION_STATUS', positionStatus || null)
     if (token && userId && userType)
-      commit('user/SET_USER', { token, userId, userType, userName, avatar })
+      commit('user/SET_USER', {
+        token,
+        userId,
+        type: userType,
+        nickName: userName,
+        avatar,
+      })
   },
 }
 

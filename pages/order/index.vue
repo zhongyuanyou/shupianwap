@@ -39,6 +39,7 @@
           :order-id="item.cusOrderId"
           :order-type="selectedOrderStatus"
           :order-pro-type-no="item.orderProTypeNo"
+          :batch-ids="batchIds"
           @handleClickItem="handleClickItem"
         >
         </orderItem>
@@ -72,6 +73,7 @@
       :order-data="orderData"
       :pay-list="payList"
       :batch-pay-status="batchPayStatus"
+      :batch-ids="batchIds"
       :this-time-pay-total="thisTimePayTotal"
     />
     <Bottombar v-if="!isInApp && !isApplets" ref="bottombar" />
@@ -215,6 +217,7 @@ export default {
           for (let i = 0, l = arr.length; i < l; i++) {
             this.changeMoney(arr[i])
             arr[i].statusName = this.getStatusName(arr[i].orderStatusNo)
+            this.getSkuList(arr[i])
           }
           if (this.page === 1) {
             this.list = arr
@@ -223,6 +226,7 @@ export default {
             const allData = nowData.concat(arr)
             this.list = allData
           }
+          console.log('this.list', this.list)
           this.loadingList = false
         })
         .catch((error) => {
@@ -255,12 +259,12 @@ export default {
         case 4:
           // 立即付款 首先判断是否有关联订单
           this.opType = 'payMoney'
-          this.getChildOrders()
+          this.getChildOrders(order)
           break
         case 5:
           // 支付余款 首先判断是否有关联订单
           this.opType = 'payMoney'
-          this.getChildOrders()
+          this.getChildOrders(order)
           break
         case 6:
           // 确认完成

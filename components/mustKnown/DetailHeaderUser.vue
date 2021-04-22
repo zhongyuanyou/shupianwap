@@ -6,13 +6,17 @@
         name="zuo"
         size="0.4rem"
         color="#1A1A1A"
-        @click.native="onLeftClick"
+        @click.native="$back"
       ></my-icon>
       <div class="user-info">
-        <sp-image class="img" :src="headerData.avatar" />
+        <sp-image
+          class="img"
+          :src="headerData.avatar"
+          @click.stop="goUser(headerData.userId, headerData.userType)"
+        />
         <div class="infos">
           <p>{{ headerData.createrName }}</p>
-          {{ headerData.contentText }}
+          <!-- {{ headerData.contentText }} -->
         </div>
         <template v-if="isShowFollow">
           <div v-if="!isFollow" class="btn" @click="follow">
@@ -53,6 +57,12 @@ export default {
     },
   },
   methods: {
+    goUser(id, usertype) {
+      this.$router.push({
+        path: '/known/home',
+        query: { homeUserId: id, type: usertype },
+      })
+    },
     follow() {
       this.$emit('follow')
     },
@@ -103,7 +113,7 @@ export default {
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #999999;
-      line-height: 26px;
+      line-height: 66px;
       padding-left: 20px;
       p {
         font-size: 30px;

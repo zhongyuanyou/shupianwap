@@ -1,6 +1,18 @@
 <template>
-  <div class="detail" :style="{ paddingBottom: fixedshow ? '1.3rem' : '' }">
-    <Header :title="questionDetials.title">
+  <div
+    class="detail"
+    :style="{
+      paddingBottom: fixedshow ? '1.3rem' : '',
+    }"
+  >
+    <Header
+      :title="questionDetials.title"
+      :height="
+        appInfo.statusBarHeight
+          ? appInfo.statusBarHeight / 100 + 0.98 + 'rem'
+          : '0.88rem'
+      "
+    >
       <template #left>
         <div>
           <sp-icon name="arrow-left" size="0.4rem" @click="goBack" />
@@ -115,7 +127,7 @@
         <div
           class="box"
           :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
-          @click="$router.push('/known/publish/answer')"
+          @click="goPublishAnswer"
         >
           <my-icon name="xiehuida" size="0.32rem"></my-icon>
           <p>写回答</p>
@@ -176,7 +188,11 @@
           @click="goAnsDetail(item.id)"
         >
           <div class="head">
-            <img :src="item.avatar" alt="" />
+            <img
+              :src="item.avatar"
+              alt=""
+              @click.stop="goUser(item.userId, item.userType)"
+            />
             <p>{{ item.userName }}</p>
           </div>
           <p class="content">
@@ -189,7 +205,7 @@
             <span></span>
             <p>{{ item.remarkCount }} 评论</p>
             <span></span>
-            <p>{{ item.publishTime }}</p>
+            <p>{{ item.createTime }}</p>
           </div>
         </div>
       </sp-list>
@@ -207,7 +223,7 @@
       <div
         class="btn"
         :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
-        @click="$router.push('/known/publish/answer')"
+        @click="goPublishAnswer"
       >
         <sp-icon name="edit" size="0.4rem" />
         <span>写回答</span>
@@ -254,7 +270,8 @@
 import { Icon, Toast, List, Popup, Dialog } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import Header from '@/components/common/head/header'
-import { knownApi } from '@/api'
+import { knownApi, userinfoApi } from '@/api'
+import util from '@/utils/changeBusinessData'
 export default {
   name: 'Detail',
   components: {
@@ -284,10 +301,13 @@ export default {
       total: '',
       popupShow: false,
       currentDetailsId: '',
+      userType: '',
     }
   },
   computed: {
     ...mapState({
+      isInApp: (state) => state.app.isInApp, // 是否app中
+      appInfo: (state) => state.app.appInfo, // app信息
       userId: (state) => state.user.userId,
       userInfo: (state) => state.user, // 登录的用户信息
     }),
@@ -303,18 +323,41 @@ export default {
   mounted() {
     window.addEventListener('scroll', this.watchScroll)
     this.getDetailApi()
+    this.getUserInfo()
   },
   destroyed() {
     window.removeEventListener('scroll', this.watchScroll)
   },
   methods: {
+    async getUserInfo() {
+      // 获取用户信息
+      try {
+        const params = {
+          // id: this.userId,
+          id: this.userId || this.$cookies.get('userId'),
+        }
+        const res = await this.$axios.get(userinfoApi.info, { params })
+        this.loading = false
+        if (res.code === 200 && res.data && typeof res.data === 'object') {
+          this.userType = util.getUserType(res.data.type)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    goUser(id, usertype) {
+      this.$router.push({
+        path: '/known/home',
+        query: { homeUserId: id, type: usertype },
+      })
+    },
     onLoad() {
       this.getQuesDataApi()
     },
     goAnsDetail(id) {
-      this.$route.push({
+      this.$router.push({
         path: '/known/detail/answer',
-        query: id,
+        query: { id },
       })
     },
     async getDetailApi() {
@@ -541,7 +584,15 @@ export default {
     },
     goInvitionPage() {
       this.$router.push({
-        path: '/known/publish/question',
+        path: '/known/detail/invitationList',
+        query: {
+          questionId: this.currentDetailsId,
+        },
+      })
+    },
+    goPublishAnswer() {
+      this.$router.push({
+        path: '/known/publish/answer',
         query: {
           id: this.currentDetailsId,
         },
@@ -556,6 +607,7 @@ export default {
   pointer-events: none;
   color: #ccc !important;
 }
+
 .down_slide_list {
   ul {
     display: flex;
@@ -589,6 +641,12 @@ export default {
 .detail {
   min-height: 100vh;
   background: #f5f5f5;
+  /deep/.fixed-head {
+    background: #fff;
+    .my-head {
+      background: #fff;
+    }
+  }
   /deep/.my-head {
     padding: 0 32px;
     box-sizing: border-box;

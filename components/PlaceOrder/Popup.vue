@@ -55,7 +55,11 @@
                   </div>
                   <div class="right">
                     <sp-radio-group v-model="radio">
-                      <sp-radio :name="index"></sp-radio>
+                      <sp-radio
+                        :name="index"
+                        disabled
+                        :class="radio === index ? 'act' : ''"
+                      ></sp-radio>
                     </sp-radio-group>
                   </div>
                 </div>
@@ -189,16 +193,21 @@ export default {
         .getcalculation(
           { axios: this.$axios },
           {
-            price: this.$parent.price,
-            culation: this.checkarr.reducePrice,
+            price:
+              this.$route.query.type === 'shopcar'
+                ? this.$parent.order.skuTotalPrice
+                : this.$parent.order.salesPrice,
+            culation: this.checkarr.reducePrice || 0,
           }
         )
         .then((result) => {
           this.$parent.price = result
           this.$parent.popupshow = false
           this.$parent.coupon = `-${this.checkarr.reducePrice}`
+          this.$parent.skeletonloading = false
         })
         .catch((e) => {
+          this.$parent.skeletonloading = false
           Toast({
             message: e.data.error,
             iconPrefix: 'sp-iconfont',
@@ -208,9 +217,15 @@ export default {
         })
     },
     checkitem(item, index) {
-      this.checkarr = item
-      this.radio = index
-      this.num = this.checkarr.reducePrice
+      if (this.radio === index) {
+        this.checkarr = ''
+        this.radio = -1
+        this.num = 0
+      } else {
+        this.checkarr = item
+        this.radio = index
+        this.num = this.checkarr.reducePrice
+      }
     },
     close(data) {
       this.$emit('close', data)
@@ -306,6 +321,17 @@ export default {
         background: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png')
           no-repeat;
         background-size: 100%;
+        /deep/.sp-radio__icon--checked .sp-icon {
+          color: #fff;
+          background-color: #4974f5 !important;
+          border-color: #4974f5;
+        }
+        /deep/.sp-radio__icon--disabled {
+          background: #fff;
+          .sp-icon {
+            background: #fff;
+          }
+        }
         > .left {
           width: 201px;
           height: 100%;

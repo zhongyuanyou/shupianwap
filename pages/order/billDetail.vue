@@ -10,10 +10,10 @@
       >
         <div class="left">
           <p class="goods-name">
-            {{ item.orderSaleName }}
+            {{ item.spuName }}
           </p>
           <p class="goods-skus">
-            {{ item.skuExtInfo }}
+            {{ getSkus(item.skuExtInfo) }}
           </p>
         </div>
         <div class="right">
@@ -53,21 +53,6 @@ export default {
       fromPage: 'orderDetail',
     }
   },
-  // computed: {
-  //   shoulPayDetail: {
-  //     set(val) {
-  //       return val
-  //     },
-  //     get() {
-  //       return this.payList.filter((item) => {
-  //         return this.isPayAll === 0
-  //           ? item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1'
-  //           : item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1' ||
-  //               item.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_0'
-  //       })
-  //     },
-  //   },
-  // },
   mounted() {
     if (this.$route.query.cusOrderId) {
       this.cusOrderId = this.$route.query.cusOrderId
@@ -90,7 +75,7 @@ export default {
             return item.isNeedPay === 1 || item.isNeedPay === '1'
           })
           // 组装所有应支付订单下的商品
-          const allOrderSkuList = []
+          let allOrderSkuList = []
           for (let i = 0; i < shoudPayOrderList.length; i++) {
             const everyOrderSku =
               shoudPayOrderList[i].orderSkuList ||
@@ -99,6 +84,16 @@ export default {
               allOrderSkuList.push(everyOrderSku[j])
             }
           }
+          const orders = allOrderSkuList
+          let arr1 = []
+          for (let i = 0; i < orders.length; i++) {
+            orders[i].skuDetails.forEach((item) => {
+              item.skuDetailInfo = orders[i].skuDetailInfo
+              item.orderId = orders[i].id
+            })
+            arr1 = arr1.concat(orders[i].skuDetails)
+          }
+          allOrderSkuList = arr1
           // 处理价格
           for (let i = 0, l = allOrderSkuList.length; i < l; i++) {
             if (allOrderSkuList[i].skuPayableTotalMoney)
@@ -108,7 +103,9 @@ export default {
                 allOrderSkuList[i].skuPayableTotalMoney
               )
           }
+          console.log('allOrderSkuList', allOrderSkuList)
           this.allOrderSkuList = allOrderSkuList
+          localStorage.setItem('nodeList', JSON.stringify(allOrderSkuList))
         })
         .catch((err) => {
           this.loading = false

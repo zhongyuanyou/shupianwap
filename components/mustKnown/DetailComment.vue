@@ -2,26 +2,39 @@
   <div class="comment-area">
     <div class="title">评论{{ total }}</div>
     <div class="list">
-      <div class="comment-item">
-        <sp-image class="img" src="" />
-        <div class="right input-area">
-          <sp-field
-            v-model="value"
-            placeholder="写下你的评论..."
-            max-length="50"
-          ></sp-field>
-          <sp-button @click="submit">发布</sp-button>
+      <div class="comment-input">
+        <sp-image
+          width="0.6rem"
+          height="0.6rem"
+          round
+          fit="cover"
+          :src="avatar"
+        />
+        <div class="input-area" @click="commentShow = true">
+          写下你的评论...
         </div>
       </div>
       <div v-for="(item, index) in list" :key="index" class="comment-item">
-        <sp-image class="img" src="" />
+        <sp-image
+          class="img"
+          :src="item.avatar"
+          @click.stop="goUser(item.userId, item.userType)"
+        />
         <div class="right">
           <p class="user-name">{{ item.userName }}</p>
           <p class="item-content">{{ item.content }}</p>
-          <p class="time-area">
+          <div class="time-area">
             <span class="time">{{ item.createTime }}</span>
-            <span class="num">{{ item.applaudCount }}</span>
-          </p>
+            <div>
+              <my-icon
+                name="dianzan"
+                size="0.32rem"
+                :color="item.isApplaud ? '#4974f5' : '#999999'"
+                @click.native="Applaud(item)"
+              ></my-icon>
+              {{ item.applaudCount }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -39,6 +52,7 @@
 import { Image, Field, Button } from '@chipspc/vant-dgg'
 import CommentList from '@/components/mustKnown/CommentList'
 import { knownApi } from '~/api'
+import { GOODSLIST } from '@/config/constant'
 export default {
   components: {
     [Image.name]: Image,
@@ -50,6 +64,10 @@ export default {
     articleId: {
       type: String,
       default: '',
+    },
+    sourceType: {
+      type: Number,
+      default: 2, // 类型：2 文章 3 回答
     },
   },
   data() {
@@ -64,17 +82,91 @@ export default {
     userInfo() {
       return this.$store.state.user
     },
+    avatar() {
+      return this.$store.state.user.avatar || GOODSLIST
+    },
+    isInApp() {
+      return this.$store.state.app.isInApp
+    },
   },
   created() {
     this.getCommentsList()
   },
   methods: {
-    submit() {
-      console.log('val', this.value)
-      this.$xToast.show({
-        message: '评论成功',
+    async isLogin() {
+      if (this.userInfo.userId && this.userInfo.token) {
+        return true
+      } else if (this.isInApp) {
+        await this.$appFn.dggLogin()
+      } else {
+        this.$router.push({
+          path: '/login',
+          query: {
+            redirect: this.$route.fullPath,
+          },
+        })
+        return false
+      }
+    },
+    async Applaud(item) {
+      if (!this.isLogin()) {
+        return
+      }
+      const { code, message, data } = await this.$axios.post(
+        knownApi.comments.like,
+        {
+          handleUserId: this.userInfo.userId,
+          handleUserName: this.userInfo.userName,
+          businessId: item.id,
+          handleType: item.isApplaud ? 2 : 1,
+          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+        }
+      )
+      if (code === 200) {
+        if (item.isApplaud) {
+          item.applaudCount--
+          item.isApplaud = 0
+        } else {
+          item.applaudCount++
+          item.isApplaud = 1
+        }
+      } else {
+        console.log(message)
+      }
+    },
+    goUser(id, usertype) {
+      this.$router.push({
+        path: '/known/home',
+        query: { homeUserId: id, type: usertype },
       })
-      this.value = ''
+    },
+    submit() {
+      if (!this.userInfo.userId) {
+        return this.$xToast.error('请先登录')
+      }
+      this.$axios
+        .post(knownApi.comments.publish, {
+          content: this.value,
+          sourceId: this.articleId,
+          sourceType: this.sourceType,
+          userId: this.userInfo.userId,
+          userName: this.userInfo.userName,
+          userType: this.userInfo.type === 'ORDINARY_USER' ? 2 : 3,
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.$xToast.show({
+              message: '评论成功',
+            })
+            this.getCommentsList()
+            this.value = ''
+          } else {
+            this.$xToast.error(res.message)
+          }
+        })
+        .catch((err) => {
+          this.$xToast.error(err.message)
+        })
     },
     async getCommentsList() {
       const { code, message, data } = await this.$axios.post(
@@ -97,12 +189,13 @@ export default {
 
 <style lang="less" scoped>
 .comment-area {
-  padding: 20px 40px 120px 40px;
-  .input-area {
+  padding: 20px 32px 120px;
+  .comment-input {
     display: flex;
-    justify-content: space-between;
-    height: 72px;
-    .sp-cell {
+    align-items: center;
+    margin-bottom: 22px;
+
+    .input-area {
       flex: 1;
       padding: 0;
       height: 72px;
@@ -110,22 +203,13 @@ export default {
       border-radius: 12px;
       border: 1px solid #dddddd;
       line-height: 72px;
-      padding-left: 20px;
-    }
-    .sp-button {
-      width: 90px;
-      height: 74px;
-      padding: 0;
-      border: none;
-      font-size: 30px;
-      font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
-      color: #4974f5;
-      line-height: 30px;
-      font-weight: 600;
-      text-align: right;
+      padding-left: 24px;
+      margin-left: 20px;
+      color: #999999;
+      font-size: 26px;
     }
   }
+
   .title {
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;

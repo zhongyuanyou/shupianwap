@@ -134,7 +134,6 @@ export default {
         this.page = 1
         this.$refs.list.page = 1
         this.$refs.list.finished = false
-        // this.getlist()
       }
     },
     onLeftClick() {
@@ -151,6 +150,9 @@ export default {
   background: #f8f8f8;
   height: 100vh;
   > .tab {
+    width: 100%;
+    position: fixed;
+    top: 88px;
     height: 88px;
     display: flex;
     justify-content: space-between;
@@ -184,7 +186,7 @@ export default {
     }
   }
   > .list {
-    height: calc(100vh - 88px - 88px);
+    margin-top: 88px;
     overflow: auto;
   }
 }

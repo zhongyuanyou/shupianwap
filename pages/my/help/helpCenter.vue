@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <Header title="帮助中心">
+    <Header ref="headerRef" title="帮助中心">
       <template #left>
         <div @click="back">
           <my-icon
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { Search, Cell, CellGroup, TopNavBar, Sticky } from '@chipspc/vant-dgg'
 import {
   PLATFORM_CODE,
@@ -99,6 +99,12 @@ export default {
       noData: false,
     }
   },
+  computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+      isPassword: (state) => state.user.userInfo.isPassword || 0,
+    }),
+  },
   watch: {
     $route(to, from) {
       // 返回帮助首页清空数据
@@ -115,6 +121,17 @@ export default {
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'HelpCenter' })
     this.inputFocus() // 打开页面弹出软键盘
+    if (!this.isInApp) {
+      this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
+    } else {
+      // 设置app导航名称
+      this.$appFn.dggSetTitle(
+        {
+          title: '帮助中心',
+        },
+        (res) => {}
+      )
+    }
   },
   methods: {
     ...mapMutations({

@@ -1,8 +1,10 @@
 <template>
   <div class="collection_container">
+    <Header title="我的收藏" />
     <sp-tabs
       title-active-color="#4974F5"
       title-inactive-color="#222222"
+      :style="{ top: (88 + (appInfo.statusBarHeight || 0)) / 100 + 'rem' }"
       @click="changeTab"
     >
       <sp-tab
@@ -57,6 +59,7 @@
 import { mapState } from 'vuex'
 import { Tabs, Tab, Image, List } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
+import Header from '@/components/common/head/header'
 
 export default {
   name: 'Collection',
@@ -65,6 +68,7 @@ export default {
     [Tab.name]: Tab,
     [Image.name]: Image,
     [List.name]: List,
+    Header,
   },
   data() {
     return {
@@ -96,6 +100,9 @@ export default {
     ...mapState({
       userId: (state) => state.user.userId,
     }),
+    appInfo() {
+      return this.$store.state.app.appInfo
+    },
   },
   methods: {
     changeTab(name) {
@@ -152,10 +159,13 @@ export default {
   .sp-tabs {
     position: fixed;
     left: 0;
-    top: 0;
+    top: 88px;
     z-index: 2;
     width: 100%;
     height: 88px;
+    padding-top: 40px;
+    box-sizing: content-box;
+    background-color: #ffffff;
   }
 
   /deep/ .sp-tabs__line {
@@ -166,7 +176,7 @@ export default {
   }
 
   .list_container {
-    padding-top: 108px;
+    padding-top: 128px;
     .item {
       background: #ffffff;
       padding: 24px 32px 28px;

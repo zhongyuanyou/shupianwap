@@ -2,7 +2,7 @@
   <div class="pay-page">
     <Header title="选择支付方式" />
     <div class="banner">
-      <p class="total-money">{{ responseData.enableTotalMoney || '' }}元</p>
+      <p class="total-money">{{ responseData.currentPayMoney || '' }}元</p>
       <p v-if="time && time.hour" class="time">
         剩余支付时间 ：<span>{{ time.hour }}</span> ：<span>{{
           time.min
@@ -51,7 +51,7 @@
       <sp-button size="large" @click="startPay">
         <span class="btn-item"> {{ payName || '支付宝支付' }}：</span>
         <span class="btn-item money">
-          {{ responseData.enableTotalMoney || '' }}
+          {{ responseData.currentPayMoney || '' }}
         </span>
         <span class="btn-item"> 元</span>
       </sp-button>

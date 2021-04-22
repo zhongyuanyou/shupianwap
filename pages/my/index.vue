@@ -188,6 +188,8 @@ import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { GOODSLIST } from '~/config/constant'
 import { imInit } from '@/utils/im'
 import getUserSign from '~/utils/fingerprint'
+import imHandle from '~/mixins/imHandle'
+
 export default {
   layout: 'nav',
   name: 'Index',
@@ -197,6 +199,7 @@ export default {
     [CenterPopup.name]: CenterPopup,
     LoadingCenter,
   },
+  mixins: [imHandle],
   data() {
     return {
       orderTabs: [
@@ -304,11 +307,22 @@ export default {
         this.loading = false
       }
     },
-    handleClick(val) {
+    async handleClick(val) {
       if (val === 1) {
-        this.$router.push('/contract/contractList')
+        const isLogin = await this.judgeLoginMixin()
+
+        if (isLogin) {
+          this.$router.push('/contract/contractList')
+        } else {
+          this.$router.push('/login')
+        }
       } else if (val === 2) {
-        this.$router.push('/my/coupon')
+        const isLogin = await this.judgeLoginMixin()
+        if (isLogin) {
+          this.$router.push('/my/coupon')
+        } else {
+          this.$router.push('/login')
+        }
       } else if (val === 3) {
         if (this.realStatus === 'NO_AUTHENTICATION') {
           this.$router.push('/contract/authentication')

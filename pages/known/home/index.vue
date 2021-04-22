@@ -224,22 +224,19 @@ export default {
       this.loading = true
       this.getList()
     },
-    async isLogin() {
-      if (this.userInfo.userId && this.userInfo.token) {
-        return true
-      } else if (this.isInApp) {
-        await this.$appFn.dggLogin()
-      } else {
-        this.$router.push({
-          path: '/login',
-          query: {
-            redirect: this.$route.fullPath,
-          },
-        })
-      }
+    async init() {
+      const { code, data } = await this.$axios.get(knownApi.home.userInfo, {
+        params: {
+          homeUserId: this.homeUserId || this.userInfo.userId,
+          homeUserType: this.type || utils.getUserType(this.userInfo.userType),
+        },
+      })
+      this.isAttention = data.isAttention
     },
     async attention() {
-      if (!this.isLogin()) {
+      const result = await this.$isLogin()
+      if (result === 'app_login_success') {
+        this.init()
         return
       }
       const { code, message } = await this.$axios.post(

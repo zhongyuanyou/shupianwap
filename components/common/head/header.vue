@@ -51,7 +51,7 @@ export default {
     // 头部标题
     title: {
       type: String,
-      default: () => '帮助中心',
+      default: () => '',
     },
     // 是否隐藏回退按钮
     hideBack: {
@@ -154,6 +154,7 @@ export default {
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: center;
   }
   .slot-left {
     display: flex;
@@ -171,8 +172,12 @@ export default {
     font-family: PingFang SC;
     font-weight: bold;
     color: #1a1a1a;
-    flex: 1;
     text-align: center;
+    flex: 1;
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .slot-right {
     display: flex;

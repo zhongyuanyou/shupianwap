@@ -1,31 +1,35 @@
 <template>
   <div class="container">
+    <!-- S search -->
+    <sp-sticky>
+      <div class="search">
+        <div class="left-back" :style="style.iconStyle" @click="uPGoBack">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#FFFFFF"
+          ></my-icon>
+        </div>
+        <div class="search-box" :style="style.searchStyle">
+          <my-icon
+            class="search-icon"
+            name="sear_ic_sear"
+            size="0.3rem"
+            color="#FFFFFF"
+            :style="{ marginLeft: iconLeft + 'rem' }"
+          ></my-icon>
+          <input
+            placeholder="搜索特卖商品"
+            readonly
+            @click="clickInputHandle"
+          />
+        </div>
+      </div>
+    </sp-sticky>
+    <!-- E search -->
     <!-- <sp-sticky></sp-sticky> -->
     <div class="container-advice">
-      <!-- S search -->
-      <sp-sticky @scroll="scrollHandle">
-        <div class="search">
-          <div class="left-back" :style="style.iconStyle">
-            <my-icon
-              name="nav_ic_back"
-              class="back_icon"
-              size="0.4rem"
-              color="#FFFFFF"
-            ></my-icon>
-          </div>
-          <div class="search-box" :style="style.searchStyle">
-            <my-icon
-              class="search-icon"
-              name="sear_ic_sear"
-              size="0.3rem"
-              color="#FFFFFF"
-              :style="{ marginLeft: iconLeft + 'rem' }"
-            ></my-icon>
-            <input placeholder="搜索特卖商品" />
-          </div>
-        </div>
-      </sp-sticky>
-      <!-- E search -->
       <!-- S countdown -->
       <div class="countdown">
         <div class="special-price">
@@ -43,8 +47,36 @@
       </div>
       <!-- E countdown -->
       <!-- S avtar -->
+      <!-- S avtar -->
       <div class="avtars">
-        <div class="avtar">
+        <!-- TODO 换回来activityTypeOptions -->
+        <div
+          v-for="item in activityProductList"
+          :key="item.id"
+          class="avtar"
+          @click="jumpProductDetail(item)"
+        >
+          <div class="touxiang">
+            <img
+              height="100%"
+              width="100%"
+              :src="
+                item.imageUrl ||
+                'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+              "
+              alt="商品图片"
+            />
+          </div>
+          <div class="content">{{ item.skuName }}</div>
+          <div class="background">
+            <div class="bg-img"></div>
+            <div class="money">
+              <span>{{ item.specialPrice }}</span
+              ><span>元</span>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="avtar">
           <div class="touxiang"></div>
           <div class="content">视频作品著作权申请</div>
           <div class="background">
@@ -59,35 +91,27 @@
             <div class="bg-img"></div>
             <div class="money"><span>999</span><span>元</span></div>
           </div>
-        </div>
-        <div class="avtar">
-          <div class="touxiang"></div>
-          <div class="content">视频作品著作权申请</div>
-          <div class="background">
-            <div class="bg-img"></div>
-            <div class="money"><span>999</span><span>元</span></div>
-          </div>
-        </div>
+        </div> -->
       </div>
       <!-- E avtar -->
     </div>
-    <div class="container-body" :style="style.containerStyle">
-      <div class="tabs-box">
-        <ul class="tabs-box-items">
-          <li
-            v-for="(item, index) in tabs"
-            :key="index"
-            class="li-tab"
-            :class="{ active: index == nowIndex }"
-            @click="toggleTabs(index)"
-          >
-            {{ item }}
-          </li>
-          <!-- <li>99元封顶</li>
-          <li>899元封顶</li>
-          <li>1999元封顶</li> -->
-        </ul>
-      </div>
+
+    <sp-sticky class="tabs-box" offset-top="16vw">
+      <ul class="tabs-box-items">
+        <li
+          v-for="(item, index) in activityTypeOptions"
+          :key="index"
+          class="li-tab"
+          :class="{ active: index == currentIndex }"
+          @click="menuTab(item, index)"
+        >
+          {{ item.labelName }}
+        </li>
+      </ul>
+      <!-- <div>
+        </div> -->
+    </sp-sticky>
+    <div class="container-body">
       <div class="body-content">
         <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
           <sp-list
@@ -96,39 +120,67 @@
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <div v-for="(item, index) in itemsData" :key="index">
+            <div
+              v-for="(item, index) in activityProductList"
+              :key="index"
+              @click="jumpProductDetail(item)"
+            >
+              <!-- <div
+              v-for="(item, index) in productList"
+              :key="index"
+              @click="jumpProductDetail(item)"
+            > -->
               <div class="body-content-items">
-                <div class="left-content">
+                <div
+                  class="left-content"
+                  :style="{ 'background-image': item.imageUrl }"
+                >
                   <div class="left-countdown">
                     距离结束{{ endTime.hour }}:{{ endTime.min }}:{{
                       endTime.sec
                     }}
                   </div>
+                  <img
+                    height="100%"
+                    width="100%"
+                    :src="
+                      item.imageUrl ||
+                      'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+                    "
+                    alt="商品图片"
+                  />
                 </div>
                 <div class="right-content">
                   <p class="rc-top">
                     <span class="rc-span">
-                      <span>{{ item.span1 }}</span>
-                      <span>{{ item.span2 }}</span>
+                      <span>特卖</span>
+                      <span>千万补贴</span>
                     </span>
-                    <span>{{ item.content }}</span>
+                    <span class="rc-title">{{ item.skuName }}</span>
                   </p>
                   <div class="rc-middle">
-                    <div>{{ item.span3 }}</div>
-                    <div>{{ item.span4 }}</div>
-                    <div>{{ item.span5 }}</div>
+                    <div
+                      v-for="tag in item.tags.split(',').slice(0, 2)"
+                      :key="tag"
+                    >
+                      {{ overflowDot(tag, 6) }}
+                    </div>
                   </div>
                   <div class="rc-bottom">
                     <div class="rc-bottom-lf">
                       <div class="rc-bottom-lf-my">
-                        <div>{{ item.beforeMoney }}</div>
+                        <div>{{ item.specialPrice }}</div>
                         <div>元</div>
                       </div>
-                      <div class="bf-my">原价{{ item.money }}元</div>
+                      <div class="bf-my">原价{{ item.skuPrice }}元</div>
                     </div>
                     <div class="rc-bottom-rt">
                       <div>去抢购</div>
-                      <div>已成交{{ item.dan }}单</div>
+                      <div>
+                        已成交{{
+                          item.specialInventory - item.specialResidueInventory
+                        }}单
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -142,77 +194,117 @@
   </div>
 </template>
 
+<script>
+import {
+  CountDown,
+  Sticky,
+  List,
+  WorkTabSort,
+  WorkTabSortItem,
+  PullRefresh,
+} from '@chipspc/vant-dgg'
+import activityMixin from '@/mixins/activityMixin'
+
+export default {
+  name: 'Special',
+  components: {
+    [CountDown.name]: CountDown,
+    [Sticky.name]: Sticky,
+    [List.name]: List,
+    [PullRefresh.name]: PullRefresh,
+    [WorkTabSort.name]: WorkTabSort,
+    [WorkTabSortItem.name]: WorkTabSortItem,
+  },
+  mixins: [activityMixin],
+  data() {
+    return {
+      specType: 'HDZT_ZTTYPE_TM',
+      nowIndex: 0,
+      list: [],
+      style: {
+        iconStyle: '',
+        searchStyle: '',
+      },
+      tabs: ['全部', '99元封顶', '899元封顶', '1999元封顶'],
+    }
+  },
+}
+</script>
+
 <style lang="less" scoped>
 .container {
   position: relative;
+  background: url('https://cdn.shupian.cn/sp-pt/wap/erdd6dsvru00000.png');
+  background-size: 100% auto;
+  background-attachment: fixed;
+  .search {
+    background: url('https://cdn.shupian.cn/sp-pt/wap/erdd6dsvru00000.png');
+    background-size: 100% auto;
+    display: flex;
+    // justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    .left-back {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 32px;
+      .back_icon {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    .search-box {
+      margin-right: 20px;
+      flex: 1;
+      height: 88px;
+      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
+      border-radius: 8px;
+      background: #000000;
+      border-radius: 8px;
+      background-color: rgba(0, 0, 0, 0.1);
+      display: flex;
+      // justify-content: space-between;
+      align-items: center;
+      .search-icon {
+        margin: 29px 12px 28px 32px;
+      }
+      input {
+        border: none;
+        font-size: 32px;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 32px;
+        background: transparent;
+        display: flex;
+        align-items: center;
+
+        font-family: PingFangSC-Medium, PingFang SC;
+
+        &::placeholder {
+          /* Internet Explorer 10+ */
+          color: #ffffff !important;
+        }
+      }
+    }
+  }
   .container-advice {
     width: 100%;
-    height: 746px;
+    // height: 746px;
     // background: linear-gradient(to right, #fe8000, #ff4c00);
-    background: url('https://cdn.shupian.cn/sp-pt/wap/erdd6dsvru00000.png');
-    background-size: 100% 100%;
     padding: 0 20px;
 
     margin-bottom: 32px;
 
-    /deep/.sp-sticky--fixed {
+    /* /deep/.sp-sticky--fixed {
       max-width: 10rem;
       width: 100%;
       left: 50%;
       -webkit-transform: translateX(-50%);
       transform: translateX(-50%);
       background: linear-gradient(to right, #fe8000, #ff4c00);
-    }
-    .search {
-      display: flex;
-      // justify-content: space-between;
-      align-items: center;
-      padding-top: 16px;
-      margin-bottom: 16px;
-      .left-back {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 32px;
-        .back_icon {
-          width: 40px;
-          height: 40px;
-        }
-      }
-      .search-box {
-        margin-right: 20px;
-        flex: 1;
-        height: 88px;
-        box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
-        border-radius: 8px;
-        background: #000000;
-        border-radius: 8px;
-        background-color: rgba(0, 0, 0, 0.1);
-        display: flex;
-        // justify-content: space-between;
-        align-items: center;
-        .search-icon {
-          margin: 29px 12px 28px 32px;
-        }
-        input {
-          border: none;
-          font-size: 32px;
-          font-weight: 500;
-          color: #ffffff;
-          line-height: 32px;
-          background: transparent;
-          display: flex;
-          align-items: center;
-
-          font-family: PingFangSC-Medium, PingFang SC;
-
-          &::placeholder {
-            /* Internet Explorer 10+ */
-            color: #ffffff !important;
-          }
-        }
-      }
-    }
+    } */
     .countdown {
       display: flex;
       justify-content: space-between;
@@ -277,7 +369,9 @@
     }
     .avtars {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
+      overflow-x: scroll;
+
       .avtar {
         width: 226px;
         height: 366px;
@@ -288,10 +382,18 @@
           width: 210px;
           height: 210px;
           margin: 8px 8px 16px 8px;
-          background-size: 100% 100%;
-          -moz-background-size: 100% 100%;
+          background-size: cover;
+          background-repeat: no-repeat;
+          // -moz-background-size: 100% 100%;
           border-radius: 12px 12px 0px 0px;
-          background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
+          overflow: hidden;
+          background: linear-gradient(
+            180deg,
+            #46494d 0%,
+            #797d83 0%,
+            #414347 100%
+          );
+          // background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
         }
         .content {
           font-size: 26px;
@@ -305,6 +407,7 @@
           white-space: normal;
           width: 182px;
           height: 68px;
+          font-family: PingFangSC-Medium, PingFang SC;
         }
         .background {
           width: 210px;
@@ -322,10 +425,15 @@
           background-size: 100% 100%;
           .money {
             margin: 8px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            color: #ffffff;
+            font-weight: 500;
+            span:nth-of-type(1) {
+              line-height: 28px;
+              font-size: 28px;
+            }
             span:nth-of-type(2) {
               font-size: 22px;
-              font-weight: 500;
-              color: #ffffff;
               line-height: 22px;
             }
           }
@@ -339,19 +447,26 @@
       }
     }
   }
-  .container-body {
-    width: 100%;
-    height: auto;
-    background: #ffffff;
-    border-radius: 24px 24px 0px 0px;
-    z-index: 1;
-    position: absolute;
-    top: 622px;
-    padding: 0 20px;
+
+  .tabs-box {
+    width: 100vw;
+    /deep/ .sp-sticky {
+      border-radius: 24px 24px 0px 0px;
+      background-color: #fff;
+      overflow: hidden;
+      &.sp-sticky--fixed {
+        border-radius: 0 0 0 0;
+        .tabs-box-items {
+          padding: 32px 20px;
+        }
+      }
+    }
+
     .tabs-box-items {
-      padding-top: 32px;
+      padding: 32px 20px;
       display: flex;
-      justify-content: space-between;
+      background-color: #ffffff;
+      justify-content: flex-start;
       .li-tab {
         padding: 0 24px;
         background: #f5f5f5;
@@ -363,6 +478,7 @@
         display: flex;
         align-items: center;
         height: 64px;
+        margin-right: 16px;
       }
       .active {
         padding: 0 42px;
@@ -375,7 +491,16 @@
         height: 64px;
       }
     }
+  }
+  .container-body {
+    width: 100%;
+    // height: auto;
+    background: #ffffff;
+    z-index: 1;
+    // top: 622px;
+    padding: 0 20px;
     .body-content {
+      position: absolute;
       .line {
         height: 1px;
         background: #f4f4f4;
@@ -391,6 +516,7 @@
         position: relative;
         margin-right: 32px;
         width: 260px;
+        overflow: hidden;
         height: 260px;
         background: linear-gradient(
           180deg,
@@ -401,7 +527,7 @@
         border-radius: 12px;
         background-size: 100% 100%;
         -moz-background-size: 100% 100%;
-        background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
+        // background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
         .left-countdown {
           height: 40px;
           font-size: 22px;
@@ -415,12 +541,15 @@
           word-break: break-all;
           background: #ec5330;
           border-radius: 24px 0px 98px 0px;
+          font-family: PingFangSC-Regular, PingFang SC;
         }
       }
       .right-content {
         width: 418px;
         display: flex;
         align-content: flex-start;
+        position: relative;
+        height: 260px;
         flex-direction: column;
         .rc-top {
           font-size: 32px;
@@ -429,6 +558,7 @@
           line-height: 32px;
           text-overflow: ellipsis;
           word-break: break-all;
+          font-family: PingFangSC-Medium, PingFang SC;
           overflow: hidden;
           white-space: normal;
           height: 84px;
@@ -441,6 +571,7 @@
             }
             span {
               height: 32px;
+              line-height: 32px;
               background: #ec5330;
               border-radius: 4px;
               padding: 0px 8px;
@@ -453,6 +584,16 @@
               font-family: PingFangSC-Medium, PingFang SC;
             }
           }
+          .rc-title {
+            // line-height: 28px;
+            // background: #f0f2f5;
+            // border-radius: 4px;
+
+            font-size: 32px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            line-height: 42px;
+          }
         }
         .rc-middle {
           display: flex;
@@ -463,18 +604,22 @@
             font-size: 20px;
             font-weight: 400;
             color: #5c7499;
-            line-height: 20px;
-            padding: 4px 6px;
+            line-height: 28px;
+            padding: 0 6px;
             background: #f0f2f5;
             border-radius: 4px;
             margin-right: 8px;
+            font-family: PingFangSC-Regular, PingFang SC;
           }
         }
         .rc-bottom {
+          position: absolute;
+          bottom: 0;
           display: flex;
+          width: 100%;
           justify-content: space-between;
           .rc-bottom-lf {
-            margin-top: 60px;
+            // margin-top: 60px;
             .rc-bottom-lf-my {
               display: flex;
               flex-direction: row;
@@ -501,6 +646,7 @@
             .bf-my {
               display: flex;
               flex-direction: row;
+              justify-content: space-between;
               margin-top: 8px;
               font-size: 22px;
               font-weight: 400;
@@ -513,9 +659,10 @@
             width: 100px;
             height: 100px;
             background: yellow;
-            margin-top: 60px;
+            // margin-top: 60px;
             width: 176px;
             height: 80px;
+            font-family: PingFangSC-Medium, PingFang SC;
             background: linear-gradient(139deg, #fe525d 0%, #fd3543 100%);
             border-radius: 8px;
             div:nth-of-type(1) {
@@ -540,188 +687,3 @@
   }
 }
 </style>
-
-<script>
-import {
-  CountDown,
-  Sticky,
-  List,
-  WorkTabSort,
-  WorkTabSortItem,
-  PullRefresh,
-} from '@chipspc/vant-dgg'
-let timer
-
-export default {
-  name: 'Special',
-  components: {
-    [CountDown.name]: CountDown,
-    [Sticky.name]: Sticky,
-    [List.name]: List,
-    [PullRefresh.name]: PullRefresh,
-    [WorkTabSort.name]: WorkTabSort,
-    [WorkTabSortItem.name]: WorkTabSortItem,
-  },
-  data() {
-    return {
-      nowIndex: 0,
-      diff: 0,
-      time: '',
-      endTime: '',
-      iconLeft: 0.35,
-      list: [],
-      loading: false,
-      finished: false,
-      refreshing: false,
-      style: {
-        containerStyle: '',
-        iconStyle: '',
-        searchStyle: '',
-      },
-      itemsData: [
-        {
-          span1: '特卖',
-          span2: '千万补贴',
-          content: '公司干净 成都**国际融资租赁有限公司',
-          span3: '免手续',
-          span4: '1对1服务',
-          span5: '店铺干净',
-          beforeMoney: '98.95',
-          money: '998',
-          dan: '335',
-        },
-        {
-          span1: '特卖',
-          span2: '千万补贴',
-          content: '公司干净 成都**国际融资租赁有限公司',
-          span3: '免手续',
-          span4: '1对1服务',
-          span5: '店铺干净',
-          beforeMoney: '98.95',
-          money: '998',
-          dan: '335',
-        },
-        {
-          span1: '特卖',
-          span2: '千万补贴',
-          content: '公司干净 成都**国际融资租赁有限公司',
-          span3: '免手续',
-          span4: '1对1服务',
-          span5: '店铺干净',
-          beforeMoney: '98.95',
-          money: '998',
-          dan: '335',
-        },
-        {
-          span1: '特卖',
-          span2: '千万补贴',
-          content: '公司干净 成都**国际融资租赁有限公司',
-          span3: '免手续',
-          span4: '1对1服务',
-          span5: '店铺干净',
-          beforeMoney: '98.95',
-          money: '998',
-          dan: '335',
-        },
-      ],
-      tabs: ['全部', '99元封顶', '899元封顶', '1999元封顶'],
-    }
-  },
-  mounted() {
-    this.countDown(new Date().getTime() + 678900000)
-    this.endCountDown(new Date().getTime() + 60 * 60 * 24 * 1000)
-  },
-  beforeDestroy() {
-    clearInterval(timer)
-  },
-  methods: {
-    toggleTabs(index) {
-      console.log('index', index)
-      this.nowIndex = index
-    },
-    countDown(endTimeStamp) {
-      const that = this
-      const nowTimeStamp = new Date().getTime()
-      // 计算时间差 秒
-      this.diff = (endTimeStamp - nowTimeStamp) / 1000
-      timer = setInterval(() => {
-        let day = Math.floor(this.diff / 86400)
-        let hour = Math.floor((this.diff - day * 86400) / 3600)
-        let min = Math.floor((this.diff - hour * 3600 - day * 86400) / 60)
-        let sec = Math.floor(this.diff % 60)
-        if (day < 10) day = '0' + day
-        if (hour < 10) hour = '0' + hour
-        if (min < 10) min = '0' + min
-        if (sec < 10) sec = '0' + sec
-        that.time = {
-          day,
-          hour,
-          min,
-          sec,
-        }
-        that.diff--
-      }, 1000)
-      // 每执行一次定时器就减少一秒
-    },
-    endCountDown(timestamp) {
-      const that = this
-      const nowTimeStamp = new Date().getTime()
-      // 计算时间差 秒
-      this.diff = (timestamp - nowTimeStamp) / 1000
-      timer = setInterval(() => {
-        let hour = Math.floor(this.diff / 3600)
-        let min = Math.floor((this.diff - hour * 3600) / 60)
-        let sec = Math.floor(this.diff % 60)
-        if (hour < 10) hour = '0' + hour
-        if (min < 10) min = '0' + min
-        if (sec < 10) sec = '0' + sec
-        that.endTime = {
-          hour,
-          min,
-          sec,
-        }
-        that.diff--
-      }, 1000)
-      // 每执行一次定时器就减少一秒
-    },
-    onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        this.loading = false
-
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
-    },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
-
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
-    scrollHandle({ scrollTop }) {
-      // console.log(scrollTop)
-      // 滚动事件
-      if (scrollTop > 250) {
-        this.style.containerStyle = 'border-radius: 0px;'
-        // this.style.searchStyle = 'margin-right:20px;'
-      } else {
-        this.style.containerStyle = 'border-radius: 12px;'
-        // this.style.searchStyle = 'margin-right:0;'
-        // this.style.iconStyle = 'margin-left:12px;'
-      }
-    },
-  },
-}
-</script>
