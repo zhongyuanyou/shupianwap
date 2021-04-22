@@ -4,10 +4,6 @@
     <div>
       <header-slot>
         <sp-sticky>
-          <div
-            v-if="isInApp"
-            :style="{ height: appInfo.statusBarHeight + 'px' }"
-          ></div>
           <div :class="{ positionY: positionY }" class="search">
             <div class="left-back" @click="uPGoBack">
               <my-icon
@@ -451,6 +447,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.positionY {
+  background-position-y: -46px !important;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
