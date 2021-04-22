@@ -1,5 +1,5 @@
 <template>
-  <HeadSlot>
+  <header-slot>
     <div class="head head2">
       <my-icon
         class="btn-icon"
@@ -28,17 +28,17 @@
         </template>
       </div>
     </div>
-  </HeadSlot>
+  </header-slot>
 </template>
 
 <script>
 import { Image, Button } from '@chipspc/vant-dgg'
-import HeadSlot from '@/components/common/head/header-slot'
+import headerSlot from '@/components/common/head/header-slot'
 export default {
   components: {
     [Image.name]: Image,
     [Button.name]: Button,
-    HeadSlot,
+    headerSlot,
   },
   props: {
     headerData: {
