@@ -47,7 +47,7 @@
           <sp-icon
             name="cross"
             class="close"
-            size="0.34rem"
+            size="0.3rem"
             color="#555555"
             @click.stop="del(index)"
           />
@@ -216,8 +216,8 @@ export default {
         color: #222222;
         align-items: center;
         height: 88px;
-        border-bottom: 1px solid #ddd;
         width: 100%;
+        position: relative;
         > .clock {
           display: block;
           margin-right: 24px;
@@ -235,6 +235,18 @@ export default {
           margin-left: auto;
           margin-right: 32px;
         }
+      }
+      li::after {
+        position: absolute;
+        box-sizing: border-box;
+        content: ' ';
+        pointer-events: none;
+        right: 30px;
+        bottom: 0;
+        left: 8px;
+        border-bottom: 1px solid #dddddd;
+        -webkit-transform: scaleY(0.6);
+        transform: scaleY(0.6);
       }
     }
   }

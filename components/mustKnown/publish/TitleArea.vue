@@ -91,7 +91,20 @@ export default {
 }
 .title-wapper {
   width: 100%;
-  border-bottom: 1px solid #ddd;
+  // border-bottom: 1px solid #ddd;
+  position: relative;
+  &::after {
+    position: absolute;
+    box-sizing: border-box;
+    content: ' ';
+    pointer-events: none;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-bottom: 1px solid #dddddd;
+    -webkit-transform: scaleY(0.6);
+    transform: scaleY(0.6);
+  }
   .title-area {
     font-size: 40px;
     position: relative;
