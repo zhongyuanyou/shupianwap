@@ -600,11 +600,11 @@ export default {
             height: 88px;
             background: #f5f5f5;
             border-radius: 44px;
-            font-size: 28px;
+            // font-size: 28px;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: #222222;
-            line-height: 28px;
+            // line-height: 28px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -618,12 +618,12 @@ export default {
             }
             > .item_name {
               width: 84px;
-              height: 28px;
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 1;
-              overflow: hidden;
+              // height: 28px;
               text-align: center;
+              font-size: 26px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
           }
           div:nth-child(4n + 4) {

@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container" :style="{ marginTop: safeTop + 'px' }">
     <!-- Sheader -->
-    <sp-sticky>
+    <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="header">
         <div class="left-back" @click="uPGoBack">
           <my-icon
@@ -96,7 +96,7 @@
     </div>
     <!-- S container-body -->
     <div class="container-body">
-      <sp-sticky offset-top="11.65vw">
+      <sp-sticky :offset-top="headerHeight + safeTop">
         <div class="body-tabs">
           <div class="care-select"></div>
           <ul class="tab-box">
