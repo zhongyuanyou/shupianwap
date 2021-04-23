@@ -324,7 +324,7 @@ export default {
       console.log('arrayValue1', arrayValue)
       if (arrayValue) {
         this.myPlate.push(arrayValue)
-        this.morePlate.pop(index)
+        this.morePlate.splice(index, 1)
       }
     },
     deleteToMyPlate(index) {
@@ -332,10 +332,9 @@ export default {
         this.active--
       }
       const arrayValue = this.myPlate[index]
-      console.log('arrayValu2', arrayValue)
       if (arrayValue) {
         this.morePlate.push(arrayValue)
-        this.myPlate.pop(index)
+        this.myPlate.splice(index, 1)
       }
     },
   },
