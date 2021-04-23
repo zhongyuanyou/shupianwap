@@ -100,12 +100,17 @@ export default {
   border-bottom: 20px solid #f5f5f5;
 
   .item_title {
-    height: 36px;
     font-size: 36px;
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: 500;
     color: #1a1a1a;
     line-height: 36px;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 超出n行这里写n */
+    -webkit-box-orient: vertical;
   }
 
   .item_content {
