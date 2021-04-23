@@ -38,7 +38,7 @@
         @load="getCommentsList"
       >
         <div v-for="(item, index) in list" :key="index" class="list">
-          <img :src="item.avatar" alt="" />
+          <img :src="item.avatar" alt="" @click="toHome(item)" />
           <div class="user">
             <h1>{{ item.userName }}</h1>
             <p>{{ item.content }}</p>
@@ -220,6 +220,15 @@ export default {
       } else {
         console.log(message)
       }
+    },
+    toHome(item) {
+      this.$router.push({
+        path: '/known/home',
+        query: {
+          homeUserId: item.userId,
+          type: item.userType,
+        },
+      })
     },
   },
 }
