@@ -156,7 +156,7 @@ export default {
             this.$xToast.success('发布成功')
             this.switchUrl(res.data.id)
           } else {
-            this.$xToast.error('发布失败')
+            this.$xToast.error(res.data.error)
           }
         })
         .catch((err) => {
@@ -177,7 +177,7 @@ export default {
             this.$xToast.success('修改成功')
             this.switchUrl(res.data.id)
           } else {
-            this.$xToast.error('发布失败')
+            this.$xToast.error(res.data.error)
           }
         })
         .catch((e) => {
