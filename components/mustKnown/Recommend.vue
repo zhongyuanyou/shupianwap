@@ -19,7 +19,7 @@
   </sp-pull-refresh>
 </template>
 <script>
-import { PullRefresh, List, Cell } from '@chipspc/vant-dgg'
+import { PullRefresh, List, Cell, Skeleton } from '@chipspc/vant-dgg'
 import Item from './Item'
 import { knownApi } from '@/api'
 export default {
@@ -28,6 +28,7 @@ export default {
     [PullRefresh.name]: PullRefresh,
     [List.name]: List,
     [Cell.name]: Cell,
+    [Skeleton.name]: Skeleton,
     Item,
   },
 

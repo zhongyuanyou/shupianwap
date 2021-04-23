@@ -174,9 +174,11 @@ export default {
       this.loading = true
       if (type === 0) {
         this.formData.findType = 2
+        this.formData.orderByWhere = 'log_receive_time=desc;'
         this.getInitData()
       } else if (type === 1) {
         this.formData.findType = 3
+        this.formData.orderByWhere = 'log_use_time=desc;'
         coupon
           .getCouponList({ axios: this.$axios }, this.formData)
           .then((result) => {
@@ -190,6 +192,7 @@ export default {
             }
           })
       } else if (type === 2) {
+        this.formData.orderByWhere = 'effectEnd=desc;'
         this.formData.findType = 4
         coupon
           .getCouponList({ axios: this.$axios }, this.formData)
