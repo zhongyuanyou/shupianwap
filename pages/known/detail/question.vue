@@ -351,7 +351,7 @@ export default {
   mounted() {
     window.addEventListener('scroll', this.watchScroll)
     this.getDetailApi()
-    this.getUserInfo()
+    // this.getUserInfo()
   },
   destroyed() {
     window.removeEventListener('scroll', this.watchScroll)
