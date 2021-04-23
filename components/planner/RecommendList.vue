@@ -46,7 +46,7 @@
                 height="1.6rem"
                 fit="cover"
                 radius="0.04rem"
-                :src="item.productImgArr[0]"
+                :src="item.img || item.productImgArr[0]"
               />
             </div>
             <div class="recommend-list__item-rt">
@@ -54,9 +54,12 @@
                 {{ item.name }}
               </p>
               <div class="label">
-                <span>{{ item.operating ? item.operating.slogan : null }}</span>
+                <span v-if="item.operating">{{
+                  item.operating ? item.operating.slogan : null
+                }}</span>
+                <span v-else>{{ item.salesGoodsOperatings.slogan }}</span>
               </div>
-              <div class="tags">
+              <div v-if="item.tags" class="tags">
                 <div
                   v-for="tItem in tagsFilter(item.tags)"
                   :key="tItem.id"
@@ -65,7 +68,16 @@
                   {{ tItem.name }}
                 </div>
               </div>
-              <p class="money">{{ item.referencePrice }}元</p>
+              <div v-else class="tags">
+                <div
+                  v-for="tItem in item.tag"
+                  :key="tItem.id"
+                  class="tags__item"
+                >
+                  {{ tItem.tagName }}
+                </div>
+              </div>
+              <p class="money">{{ item.referencePrice || item.price }}元</p>
             </div>
           </div>
         </div>
@@ -339,41 +351,70 @@ export default {
     },
 
     async getList(current) {
-      try {
-        const config = await this.uPGetConfig()
-        const { deviceCode, reqArea } = config
-        const params = {
+      // try {
+      const config = await this.uPGetConfig()
+      const { deviceCode, reqArea } = config
+      //   const params = {
+      //     deviceId: deviceCode,
+      //     areaCode: reqArea,
+      //     sceneId: 'app-ghszy-01',
+      //     storeId: this.mchDetailId,
+      //     platform: 'APP',
+      //     searchType: 2,
+      //     page: current,
+      //     limit: this.pageOption.limit,
+      //   }
+      //   const data = await request({
+      //     params,
+      //     url: recommendApi.saleList,
+      //   })
+      //   if (data) {
+      //     const { currentPage, limit, records = [] } = data
+      //     this.pageOption = { ...this.pageOption, limit, page: currentPage }
+      //     if (Array.isArray(records)) {
+      //       this.list.push(...records)
+      //     }
+      //   }
+      //   return data
+      // } catch (error) {
+      //   console.error('getList:', error)
+      //   // this.$xToast.show({
+      //   //   message: '获取sku失败',
+      //   //   duration: 1000,
+      //   //   forbidClick: false,
+      //   //   icon: 'toast_ic_remind',
+      //   // })
+      //   return Promise.reject(error)
+      // }
+      const pageobj = {
+        pageNo: 1,
+        pageSize: 10,
+      }
+      this.$axios
+        .post(recommendApi.saleList, {
           deviceId: deviceCode,
           areaCode: reqArea,
-          sceneId: 'app-ghszy-01',
+          sceneId: 'app-fwcpxq-01',
           storeId: this.mchDetailId,
-          platform: 'APP',
-          searchType: 2,
-          page: current,
-          limit: this.pageOption.limit,
-        }
-        const data = await request({
-          params,
-          url: recommendApi.recommendProduct,
+          platform: 'm',
+          // searchType: 2,
+          page: pageobj,
+          planerid: this.$parent.detailData.id,
+          userId: this.$store.state.user.userId,
+          productType: 'PRO_CLASS_TYPE_SALES',
         })
-        if (data) {
-          const { currentPage, limit, records = [] } = data
-          this.pageOption = { ...this.pageOption, limit, page: currentPage }
-          if (Array.isArray(records)) {
-            this.list.push(...records)
+        .then((res) => {
+          if (res.code === 200) {
+            // 关闭骨架屏
+            // this.$refs.remNeed.needLoading = false
+            this.list = res.data.records
           }
-        }
-        return data
-      } catch (error) {
-        console.error('getList:', error)
-        // this.$xToast.show({
-        //   message: '获取sku失败',
-        //   duration: 1000,
-        //   forbidClick: false,
-        //   icon: 'toast_ic_remind',
-        // })
-        return Promise.reject(error)
-      }
+          this.finished = true
+        })
+        .catch((err) => {
+          this.finished = true
+          console.log(err)
+        })
     },
   },
 }

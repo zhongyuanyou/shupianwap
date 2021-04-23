@@ -97,6 +97,9 @@ export default {
     return {}
   },
   computed: {
+    ...mapState({
+      isInApp: (state) => state.app.isInApp,
+    }),
     formatTagList() {
       if (!Array.isArray(this.itemData.tagList)) return []
       const formatData = this.itemData.tagList.slice(0, 5)
