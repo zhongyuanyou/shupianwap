@@ -515,15 +515,16 @@ export default {
     // 查询客户单下的关联订单
     getChildOrders(order) {
       if (this.fromPage === 'orderList') {
+        const orderAgreementIds = order.orderAgreementIds
+        if (this.opType === 'payMoney' && !orderAgreementIds) {
+          // 无协议则需先同意协议
+          this.showMydialog = true
+          return
+        }
         if (
           this.opType === 'payMoney' &&
           order.orderSkuEsList[0].skuType === 'PRO_CLASS_TYPE_TRANSACTION'
         ) {
-          const orderAgreementIds = order.orderAgreementIds
-          if (!orderAgreementIds) {
-            this.showMydialog = true
-            return
-          }
           if (this.checkContractStatus(order) === 1) {
             // 交易商品付款之前检测有无签署合同
             this.$xToast.show({
@@ -537,12 +538,17 @@ export default {
         }
       }
       if (this.fromPage === 'orderDetail') {
+        const orderAgreementIds = this.orderData.orderAgreementIds
+        if (this.opType === 'payMoney' && !orderAgreementIds) {
+          // 无协议则需先同意协议
+          this.showMydialog = true
+          return
+        }
         if (
           this.opType === 'payMoney' &&
           (order.skuType === 'PRO_CLASS_TYPE_TRANSACTION' ||
             order.skuType === this.skuTypes[1])
         ) {
-          const orderAgreementIds = this.orderData.orderAgreementIds
           if (!orderAgreementIds) {
             this.showMydialog = true
             console.log('this.showMydialog', this.showMydialog)
@@ -582,8 +588,6 @@ export default {
     },
     // 同意协议
     confirmAggret(order) {
-      console.log('orderData', this.orderData)
-      console.log('order', order)
       if (!this.addOrderXy.id || !this.tranXy.id) {
         this.$xToast.error('获取协议失败，请刷新重试')
         return
@@ -598,7 +602,9 @@ export default {
           }
         )
         .then((res) => {
-          console.log('res', res)
+          this.$xToast.success('操作成功')
+          if (this.fromPage === 'orderList') this.getOrderList()
+          else this.getDetail()
         })
         .catch((err) => {
           console.log('err', err)
@@ -621,14 +627,6 @@ export default {
     // 根据操作类型进行不同的任务
     switchOptionType() {
       this.$refs.cancleOrderModel.orderList = this.orderData.orderList
-      console.log(
-        'this.$refs.cancleOrderModel.orderList',
-        this.$refs.cancleOrderModel.orderList
-      )
-      console.log(
-        'this.$refs.cancleOrderModel',
-        this.$refs.cancleOrderModel.orderList
-      )
       if (this.opType === 'cancelOrder') {
         // 弹出取消订单弹窗
         this.$refs.cancleOrderModel.showPop = true

@@ -44,16 +44,16 @@
       >
         <p>规则</p>
       </div>
-      <div class="advice-box">
-        <div
-          v-for="(item, index) in productAdvertData"
-          :key="index"
-          @click="advertjump(item)"
-        >
-          <a :href="item.materialLink"
-            ><img :src="item.materialUrl" alt="" srcset=""
-          /></a>
-        </div>
+    </div>
+    <div class="advice-box">
+      <div
+        v-for="(item, index) in productAdvertData"
+        :key="index"
+        @click="advertjump(item)"
+      >
+        <a :href="item.materialLink"
+          ><img :src="item.materialUrl" alt="" srcset=""
+        /></a>
       </div>
     </div>
     <div class="container-body">
@@ -220,7 +220,7 @@ export default {
   },
   mounted() {
     if (this.isInApp) {
-      this.offsetTop = this.appInfo.statusBarHeight + 66 + 'px'
+      this.offsetTop = this.appInfo.statusBarHeight + 64 + 'px'
       this.positionY = true
     } else {
       this.offsetTop = 59 + 'px'
@@ -498,21 +498,28 @@ export default {
   padding-top: 20px;
 }
 .container {
-  width: 7.5rem;
+  // width: 7.5rem;
   height: 100%;
   overflow-x: hidden;
   margin: 0 auto;
-  background: url('https://cdn.shupian.cn/sp-pt/wap/images/aey2uyjrfcg0000.png')
-    no-repeat;
-  background-size: 100% auto;
+  /deep/.fixed-head {
+    height: 0.88rem !important;
+    .my-head {
+      height: 1.2rem !important;
+      box-shadow: none !important;
+      background: url('https://cdn.shupian.cn/sp-pt/wap/8j0v9fa82uo0000.png')
+        no-repeat;
+      background-size: 100% auto;
+    }
+  }
   .search {
     display: flex;
     align-items: center;
     padding: 16px 0;
-    width: 750px;
+    // width: 750px;
+    width: 100%;
     margin: 0 auto;
-    background: url('https://cdn.shupian.cn/sp-pt/wap/images/aey2uyjrfcg0000.png')
-      no-repeat;
+
     background-size: 100% auto;
     .left-back {
       display: flex;
@@ -555,10 +562,12 @@ export default {
     }
   }
   .container-advice {
-    width: 750px;
-    height: 560px;
-
+    width: 100%;
+    height: 430px;
     position: relative;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/fe7bmr53zfs0000.png')
+      no-repeat;
+    background-size: 100% auto;
     .rules {
       position: fixed;
       width: 68px;
@@ -581,25 +590,25 @@ export default {
         line-height: 20px;
       }
     }
-
-    .advice-box {
-      position: absolute;
-      display: flex;
-      justify-content: space-between;
-      bottom: 72px;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 0 20px;
-      div {
-        width: 230px;
-        height: 160px;
-        //background: linear-gradient(137deg, #ffffff 0%, #fff3eb 100%);
-        border-radius: 12px;
-        border: 5px solid #ffab6f;
-        img {
-          width: 100%;
-          height: 100%;
-        }
+  }
+  .advice-box {
+    display: flex;
+    justify-content: space-between;
+    height: 280px;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: center;
+    padding: 0 20px;
+    background: #f60001;
+    div {
+      width: 230px;
+      height: 160px;
+      //background: linear-gradient(137deg, #ffffff 0%, #fff3eb 100%);
+      border-radius: 12px;
+      border: 5px solid #ffab6f;
+      img {
+        width: 100%;
+        height: 100%;
       }
     }
   }

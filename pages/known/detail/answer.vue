@@ -627,6 +627,7 @@ export default {
     flex: 1;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 16px 0;
     padding-left: 20px;
     .img {

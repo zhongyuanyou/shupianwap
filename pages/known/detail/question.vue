@@ -6,7 +6,7 @@
     }"
   >
     <Header
-      :title="questionDetials.title"
+      :title="title"
       :height="
         appInfo.statusBarHeight
           ? appInfo.statusBarHeight / 100 + 0.98 + 'rem'
@@ -113,7 +113,11 @@
       </div>
       <div class="num">
         <div class="left">
-          <div>{{ questionDetials.remarkCount }} <span>评论</span></div>
+          <div>{{ questionDetials.collectCount }} <span>收藏</span></div>
+          <p></p>
+          <div @click="commentShow = true">
+            {{ questionDetials.remarkCount }} <span>评论</span>
+          </div>
           <p></p>
           <div>{{ questionDetials.totalBrowseCount }} <span>浏览</span></div>
         </div>
@@ -123,7 +127,10 @@
           @click="like('LIKE')"
         >
           <my-icon name="dianzan" size="0.24rem"></my-icon>
-          好问题 {{ questionDetials.applaudCount }}
+          好问题
+          <span v-if="questionDetials.applaudCount > 0">{{
+            questionDetials.applaudCount
+          }}</span>
         </div>
       </div>
       <div ref="btns" class="btns">
@@ -221,8 +228,7 @@
         </div>
       </sp-list>
     </div>
-    <!-- <div v-show="fixedshow" class="fiexdbtn"> -->
-    <div class="fiexdbtn">
+    <div v-show="fixedshow" class="fiexdbtn">
       <div
         class="btn"
         :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
@@ -251,6 +257,12 @@
         <span>收藏</span>
       </div>
     </div>
+
+    <comment-list
+      v-model="commentShow"
+      :article-id="questionDetials.id"
+    ></comment-list>
+
     <!--    上拉组件-->
     <sp-popup
       v-model="popupShow"
@@ -280,6 +292,7 @@
 <script>
 import { Icon, Toast, List, Popup, Dialog } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
+import CommentList from '@/components/mustKnown/CommentList'
 import Header from '@/components/common/head/header'
 import { knownApi, userinfoApi } from '@/api'
 import util from '@/utils/changeBusinessData'
@@ -291,10 +304,12 @@ export default {
     [List.name]: List,
     [Popup.name]: Popup,
     [Dialog.name]: Dialog,
+    CommentList,
   },
   data() {
     return {
       title: '',
+      showHead2: false,
       contentshow: false,
       answersort: 0,
       fixedshow: false,
@@ -313,6 +328,8 @@ export default {
       popupShow: false,
       currentDetailsId: '',
       userType: '',
+      commentShow: false,
+      articleId: '',
     }
   },
   computed: {
@@ -616,6 +633,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.title {
+  text-align: left !important;
+}
 .form-onlyRead {
   pointer-events: none;
   color: #ccc !important;
