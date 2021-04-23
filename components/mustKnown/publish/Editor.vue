@@ -166,8 +166,11 @@ export default {
   },
   methods: {
     onEditorChange(a) {
-      // console.log('onEditorChange', a)
-      this.$emit('editorChange', a)
+      if (a.html.length > 5000) {
+        a.quill.deleteText(5000, 1)
+      } else {
+        this.$emit('editorChange', a)
+      }
     },
     onEditorFocus(a) {
       console.log('onEditorFocus', a)
