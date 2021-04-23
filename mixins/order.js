@@ -512,7 +512,6 @@ export default {
     },
     // 查询客户单下的关联订单
     getChildOrders(order) {
-      console.log('xyList', this.xyList)
       if (this.fromPage === 'orderList') {
         // if (
         //   this.opType === 'payMoney' &&
@@ -891,12 +890,10 @@ export default {
       }
       item.filterSkuList = this.rangeSkus(item.filterSkuList)
       const names = []
-      console.log('item.filterSkuList', item.filterSkuList)
       item.filterSkuList.forEach((ele) => {
         if (ele && (ele.fieldValueCn || ele.fieldValue))
           names.push(ele.fieldValueCn || ele.fieldValue)
       })
-      console.log('names', names)
       return names.join('; ')
     },
     // 对sku信息进行排序
