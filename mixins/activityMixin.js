@@ -10,6 +10,7 @@ export default {
       cityName: (state) => state.city.currentCity.name,
       cityCode: (state) => state.city.currentCity.code,
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
     userInfo() {
       return JSON.parse(localStorage.getItem('myInfo'))
@@ -17,7 +18,6 @@ export default {
     splittedRecommendProduct() {
       return this.recommendProductList.slice(0, 3)
     },
-    appInfo: (state) => state.app.appInfo, // app信息
     //  asdsa
   },
   mixins: [imHandle],
@@ -175,16 +175,31 @@ export default {
       this.$router.push('/')
     },
     jumpProductDetail(item) {
-      if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
-        this.$router.push({
-          path: `/detail/transactionDetails`,
-          query: { productId: item.id, type: item.type },
-        })
-      } else {
-        this.$router.push({
-          path: `/detail/serviceDetails`,
-          query: { productId: item.id },
-        })
+      if (this.isInApp) {
+        if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+          this.$appFn.dggJumpRoute({
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
+          })
+        } else {
+          this.$appFn.dggJumpRoute({
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
+          })
+        }
+      }
+      if (!this.isInApp) {
+        if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+          this.$router.push({
+            path: `/detail/transactionDetails`,
+            query: { productId: item.id, type: item.classCode },
+          })
+        } else {
+          this.$router.push({
+            path: `/detail/serviceDetails`,
+            query: { productId: item.id },
+          })
+        }
       }
     },
     jumpIM(item) {
@@ -349,6 +364,10 @@ export default {
         limit: 100000,
       }
 
+      if (this.hasCity) {
+        params.cityCode = this.cityCode
+      }
+
       this.$axios
         .get(activityApi.activityProductList, { params })
         .then((res) => {
@@ -404,10 +423,30 @@ export default {
     // 搜索框点击
     clickInputHandle() {
       if (this.isInApp) {
-        this.$appFn.dggJumpRoute({
-          iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/search/page"}}`,
-          androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/search/page"}}`,
-        })
+        const iOSRouter = {
+          path:
+            'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
+          parameter: {
+            routerPath: 'cpsc/search/page',
+          },
+        }
+        const androidRouter = {
+          path: '/flutter/main',
+          parameter: {
+            routerPath: 'cpsc/search/page',
+          },
+        }
+        const iOSRouterStr = JSON.stringify(iOSRouter)
+        const androidRouterStr = JSON.stringify(androidRouter)
+        this.$appFn.dggJumpRoute(
+          {
+            iOSRouter: iOSRouterStr,
+            androidRouter: androidRouterStr,
+          },
+          (res) => {
+            console.log(res)
+          }
+        )
       } else {
         this.$router.push('/search')
       }

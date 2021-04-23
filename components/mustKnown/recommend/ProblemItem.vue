@@ -1,11 +1,12 @@
 <template>
-  <sp-list
+  <!-- <sp-list
     v-if="newspaperData.length"
     v-model="loading"
     :finished="finished"
     offset="0"
     finished-text="没有更多了"
-  >
+  > -->
+  <div>
     <sp-cell v-for="(item, index) in newspaperData" :key="index">
       <div class="item_span">1/精选</div>
       <div class="item">
@@ -40,7 +41,19 @@
         </div>
       </div>
     </sp-cell>
-  </sp-list>
+    <div class="bottom" @click="goRecommend">
+      到底啦，去推荐看看吧
+      <my-icon
+        name="you"
+        size="0.22rem"
+        color="#999999"
+        class="my_icon"
+        style="margin-top: 2px"
+      ></my-icon>
+    </div>
+    <div style="height: 1px"></div>
+  </div>
+  <!-- </sp-list> -->
 </template>
 <script>
 import {
@@ -115,6 +128,12 @@ export default {
         })
       }
     },
+    // 调到推荐页面
+    goRecommend() {
+      this.$router.push({
+        path: '/known/',
+      })
+    },
     // 进入用户详情
     goUserDetail(item) {
       this.$router.push({
@@ -133,11 +152,11 @@ export default {
   padding-top: 59px;
 }
 /deep/ .sp-cell {
-  padding: 0 0 47px 0;
+  padding: 56px 0 0 0;
   position: relative;
 }
 .item_span {
-  width: 94px;
+  width: 100px;
   height: 40px;
   background: #4974f5;
   border-radius: 4px;
@@ -157,12 +176,18 @@ export default {
   padding: 44px 32px;
   width: 710px;
   .item_title {
-    height: 36px;
+    min-height: 36px;
     font-size: 36px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: 600;
     color: #1a1a1a;
-    line-height: 36px;
+    line-height: 40px;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 超出n行这里写n */
+    -webkit-box-orient: vertical;
   }
   .item_Info {
     display: flex;
@@ -222,6 +247,23 @@ export default {
     font-weight: 400;
     color: #999999;
     line-height: 28px;
+  }
+}
+.bottom {
+  width: 336px;
+  height: 60px;
+  background: #f5f5f5;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #999999;
+  justify-content: center;
+  margin: 60px auto;
+  .my_icon {
+    margin-left: 8px;
   }
 }
 </style>

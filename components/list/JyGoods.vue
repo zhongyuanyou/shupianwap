@@ -8,13 +8,13 @@
       line-width="0"
       :ellipsis="false"
       :class="{
-        lowFive: tabItems.length <= 5,
+        lowFive: tabs.length <= 5,
         'sp-tabs-self': true,
       }"
       @change="changeTabs"
     >
       <sp-tab
-        v-for="(item, index) in tabItems"
+        v-for="(item, index) in tabs"
         :key="index"
         :title="item.name + '交易'"
       >
@@ -79,6 +79,7 @@
 
 <script>
 import { List, Tabs, Tab, Skeleton } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import InstallApp from '@/components/common/app/InstallApp'
 import GoodsItem from '@/components/common/goodsItem/GoodsItem'
 import Subscribe from '@/components/list/Subscribe'
@@ -170,6 +171,22 @@ export default {
     isShowOpenApp() {
       return this.$store.state.app.isShowOpenApp
     },
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
+    tabs() {
+      let list = []
+      if (this.isApplets) {
+        this.tabItems.forEach((item) => {
+          if (item.code !== 'CONDITION-JY-ZZ') {
+            list.push(item)
+          }
+        })
+      } else {
+        list = this.tabItems
+      }
+      return list
+    },
   },
   watch: {
     searchText(val) {
@@ -194,23 +211,26 @@ export default {
     //   referrer: document.referrer,
     // }
     // window.sensors.registerPage(param) // 设置公共属性
+    if (this.isApplets) {
+      // this.formData.showClient = 'COMDIC_TERMINAL_APPLET'
+    }
     this.$emit('goodsList', 'jy', this)
     // 默认请求的数据
-    this.tabItems.forEach((item) => {
+    this.tabs.forEach((item) => {
       this.isReq[item.code] = false
     })
-    this.typeText = this.tabItems[0].name + '交易'
+    this.typeText = this.tabs[0].name + '交易'
     // console.log('jygood', this.typeCodeIndex)
     this.activeTabIndex = this.typeCodeIndex
-    this.currentTabJyCode = this.tabItems[this.typeCodeIndex].code
+    this.currentTabJyCode = this.tabs[this.typeCodeIndex].code
     // this.isReq[this.currentTabJyCode] = true
-    this.filterItem[this.tabItems[this.typeCodeIndex].code] = {}
-    this.formData[this.tabItems[this.typeCodeIndex].code] = {
+    this.filterItem[this.tabs[this.typeCodeIndex].code] = {}
+    this.formData[this.tabs[this.typeCodeIndex].code] = {
       start: 1,
       limit: 10,
       needTypes: 1,
-      classCode: this.tabItems[this.typeCodeIndex].ext4,
-      dictCode: this.tabItems[this.typeCodeIndex].code,
+      classCode: this.tabs[this.typeCodeIndex].ext4,
+      dictCode: this.tabs[this.typeCodeIndex].code,
       searchKey: this.searchText,
       statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
       fieldList: [],
@@ -241,7 +261,7 @@ export default {
       // console.log(this.tabItems[name])
       // console.log(title)
       this.typeText = title
-      this.currentTabJyCode = this.tabItems[name].code
+      this.currentTabJyCode = this.tabs[name].code
       // 如果已经存储的有筛选数据则不需要再去请求筛选数据
       if (this.jyFilterData[this.currentTabJyCode]) {
         this.formData[this.currentTabJyCode].needTypes = 0
@@ -258,8 +278,8 @@ export default {
           start: 1,
           limit: 10,
           needTypes: 1,
-          classCode: this.tabItems[name].ext4,
-          dictCode: this.tabItems[name].code,
+          classCode: this.tabs[name].ext4,
+          dictCode: this.tabs[name].code,
           searchKey: this.searchText,
           statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
           fieldList: [],
@@ -282,7 +302,7 @@ export default {
       }
       if (!currentCode) {
         this.activeTabIndex = 0
-        this.currentTabJyCode = this.tabItems[0].code
+        this.currentTabJyCode = this.tabs[0].code
       }
       Object.keys(this.formData).forEach((item) => {
         if (item !== currentCode) {

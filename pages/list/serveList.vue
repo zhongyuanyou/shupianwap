@@ -7,7 +7,12 @@
       placeholder="请输入搜索内容"
       @searchKeydownHandle="searchKeydownHandle"
     >
-      <div slot="left" class="nav-back" @click="$router.go(-1)">
+      <div
+        v-if="!isApplets"
+        slot="left"
+        class="nav-back"
+        @click="$router.go(-1)"
+      >
         <my-icon name="nav_ic_back" size="0.40rem" color="#1a1a1a"></my-icon>
       </div>
       <div
@@ -35,7 +40,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import { WorkTabs, WorkTab, Badge } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import serveGoods from '@/components/list/ServeGoods'
@@ -68,6 +73,11 @@ export default {
       sessionCategory: null,
     }
   },
+  computed: {
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
+  },
   beforeMount() {
     // 获取从分类页session中需要搜索服务的数据
     this.sessionCategory = JSON.parse(sessionStorage.getItem('categoryData'))
@@ -99,13 +109,13 @@ export default {
       goods
         .searchServeGoodsList({ axios: this.$axios }, this.formData)
         .then((data) => {
-          console.log(data)
           this.serveGoodsListData = data
         })
         .catch()
     },
   },
   head: {
+    title: '商品列表',
     meta: [{ name: 'spptmd-track_code', content: 'SPW000011' }],
   },
 }

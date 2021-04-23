@@ -180,7 +180,7 @@ export default {
           datas.custInvited = true
         } else {
           this.$xToast.show({
-            message: '邀请失败,请联系客服',
+            message: data.error,
             duration: 1000,
             icon: 'toast_ic_error',
             forbidClick: true,

@@ -1,11 +1,3 @@
-<!--
- * @Author: xiao pu
- * @Date: 2020-12-14 10:48:09
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-28 14:37:26
- * @Description: file content
- * @FilePath: /chips-wap/components/planner/PlannerSearchItem.vue
--->
 <template>
   <div class="planner-search-item" @click.stop="handleClick('detail')">
     <div class="left">
@@ -77,7 +69,7 @@
 import { Button, Image, Tag } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { planner } from '@/api'
-
+import { parseTel } from '~/utils/common'
 export default {
   name: 'PlannerSearchItem',
   components: {

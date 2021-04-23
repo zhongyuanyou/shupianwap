@@ -1,33 +1,35 @@
 <template>
   <div class="container">
     <!-- S search -->
-    <div style="height: 66px">
-      <sp-sticky>
-        <div class="search">
-          <div class="left-back" @click="uPGoBack">
-            <my-icon
-              name="nav_ic_back"
-              class="back_icon"
-              size="0.4rem"
-              color="#FFFFFF"
-            ></my-icon>
+    <div>
+      <header-slot>
+        <sp-sticky>
+          <div :class="{ positionY: positionY }" class="search">
+            <div class="left-back" @click="uPGoBack">
+              <my-icon
+                name="nav_ic_back"
+                class="back_icon"
+                size="0.4rem"
+                color="#FFFFFF"
+              ></my-icon>
+            </div>
+            <div class="search-box">
+              <my-icon
+                class="search-icon"
+                name="sear_ic_sear"
+                size="0.30rem"
+                color="#FFFFFF"
+                :style="{ marginLeft: iconLeft + 'rem' }"
+              ></my-icon>
+              <input
+                placeholder="请输入感兴趣的内容"
+                readonly
+                @click="clickInputHandle"
+              />
+            </div>
           </div>
-          <div class="search-box">
-            <my-icon
-              class="search-icon"
-              name="sear_ic_sear"
-              size="0.30rem"
-              color="#FFFFFF"
-              :style="{ marginLeft: iconLeft + 'rem' }"
-            ></my-icon>
-            <input
-              placeholder="请输入感兴趣的内容"
-              readonly
-              @click="clickInputHandle"
-            />
-          </div>
-        </div>
-      </sp-sticky>
+        </sp-sticky>
+      </header-slot>
     </div>
     <!-- E search -->
     <!-- <sp-sticky></sp-sticky> -->
@@ -79,60 +81,62 @@
         </div>
       </sp-sticky>
       <div class="body-content">
-        <sp-list
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          @load="onLoad"
-        >
-          <div v-if="productList && productList.length > 0">
-            <div
-              v-for="(item, index) in productList"
-              :key="index"
-              @click="jumpProductdetail(item)"
-            >
-              <div class="body-content-items">
-                <div class="left-content">
-                  <img :src="item.imageUrl" alt="" srcset="" />
-                </div>
-                <div class="right-content">
-                  <div class="rc-top">
-                    <span v-if="specTypeCode === 'HDZT_ZTTYPE_XFWHSF'"
-                      >好品</span
-                    ><span>千万补贴</span>
-                    {{ item.skuName }}
+        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+          <sp-list
+            v-model="loading"
+            :finished="finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+          >
+            <div v-if="productList && productList.length > 0">
+              <div
+                v-for="(item, index) in productList"
+                :key="index"
+                @click="jumpProductdetail(item)"
+              >
+                <div class="body-content-items">
+                  <div class="left-content">
+                    <img :src="item.imageUrl" alt="" srcset="" />
                   </div>
-                  <div v-if="item.tags.length > 0" class="rc-middle">
-                    <div v-for="(item2, index2) in item.tags" :key="index2">
-                      {{ item2 }}
+                  <div class="right-content">
+                    <div class="rc-top">
+                      <span v-if="specTypeCode === 'HDZT_ZTTYPE_XFWHSF'"
+                        >好品</span
+                      ><span>千万补贴</span>
+                      {{ item.skuName }}
                     </div>
-                  </div>
-                  <div class="rc-bottom">
-                    <div class="rc-bottom-lf">
-                      <div class="rc-bottom-lf-my">
-                        <div>{{ item.specialPrice }}</div>
-                        <div>元</div>
+                    <div v-if="item.tags.length > 0" class="rc-middle">
+                      <div v-for="(item2, index2) in item.tags" :key="index2">
+                        {{ item2 }}
                       </div>
-                      <div class="bf-my">原价{{ item.skuPrice }}元</div>
                     </div>
-                    <div class="rc-bottom-rt">
-                      <div class="imm_consult">立即购买</div>
-                      <div class="imm_img"></div>
+                    <div class="rc-bottom">
+                      <div class="rc-bottom-lf">
+                        <div class="rc-bottom-lf-my">
+                          <div>{{ item.specialPrice }}</div>
+                          <div>元</div>
+                        </div>
+                        <div class="bf-my">原价{{ item.skuPrice }}元</div>
+                      </div>
+                      <div class="rc-bottom-rt">
+                        <div class="imm_consult">立即购买</div>
+                        <div class="imm_img"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
+                <div class="line"></div>
               </div>
-              <div class="line"></div>
             </div>
-          </div>
-          <div v-else class="no-data">
-            <img
-              src="https://cdn.shupian.cn/sp-pt/wap/images/bzre7lw14o00000.png"
-              alt=""
-              srcset=""
-            />
-          </div>
-        </sp-list>
+            <div v-if="isNoData" class="no-data">
+              <img
+                src="https://cdn.shupian.cn/sp-pt/wap/images/bzre7lw14o00000.png"
+                alt=""
+                srcset=""
+              />
+            </div>
+          </sp-list>
+        </sp-pull-refresh>
       </div>
     </div>
   </div>
@@ -149,6 +153,7 @@ import {
   PullRefresh,
   Toast,
 } from '@chipspc/vant-dgg'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { activityApi } from '~/api'
 import imHandle from '@/mixins/imHandle'
 export default {
@@ -159,6 +164,7 @@ export default {
     [WorkTabSort.name]: WorkTabSort,
     [WorkTabSortItem.name]: WorkTabSortItem,
     [PullRefresh.name]: PullRefresh,
+    [HeaderSlot.name]: HeaderSlot,
   },
   mixins: [imHandle],
   data() {
@@ -179,7 +185,7 @@ export default {
       productRecoData: '',
       productAdvertData: '',
       page: 1,
-      specTypeCode: 'HDZT_ZTTYPE_XTSF', // 活动类型code
+      specTypeCode: 'HDZT_ZTTYPE_XFWHSF', // 活动类型code
       platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
       specCode: '',
       defaultCityCode: '510100',
@@ -187,6 +193,9 @@ export default {
       productType: '',
       fixedShow: false,
       limit: 10,
+      safeTop: 0,
+      isNoData: false,
+      positionY: false,
     }
   },
   computed: {
@@ -194,6 +203,7 @@ export default {
       cityName: (state) => state.city.currentCity.name,
       code: (state) => state.city.currentCity.code,
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
     userInfo() {
       return JSON.parse(localStorage.getItem('myInfo'))
@@ -207,10 +217,16 @@ export default {
       })
     }
     this.getAdvertisingData()
-    console.log(2222222222)
     await this.getMenuTabs().then(this.getProductList)
   },
-
+  mounted() {
+    if (this.isInApp) {
+      this.offsetTop = this.appInfo.statusBarHeight + 66 + 'px'
+      this.positionY = true
+    } else {
+      this.offsetTop = 59 + 'px'
+    }
+  },
   methods: {
     ...mapActions({
       POSITION_CITY: 'city/POSITION_CITY',
@@ -220,13 +236,13 @@ export default {
       if (this.isInApp) {
         if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
           this.$appFn.dggJumpRoute({
-            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cps/place_order","parameter":{"productId":${item.id},"type":${item.classCode}}}}`,
-            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cps/place_order","parameter":{"productId":${item.id},"type":${item.classCode}}}}`,
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
           })
         } else {
           this.$appFn.dggJumpRoute({
-            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cps/place_order","parameter":{"productId":${item.id}}}}`,
-            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cps/place_order","parameter":{"productId":${item.id}}}}`,
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
           })
         }
       }
@@ -243,6 +259,18 @@ export default {
             query: { productId: item.id },
           })
         }
+      }
+    },
+    onRefresh() {
+      if (this.itemTypeOptions) {
+        this.finished = false
+        this.loading = true
+        this.page = 1
+        this.onLoad()
+      } else {
+        this.loading = false
+        this.finished = true
+        this.refreshing = false
       }
     },
     init() {
@@ -307,7 +335,11 @@ export default {
         limit: this.limit,
         page: this.page,
       }
-      this.productMethod(params)
+      if (this.activityTypeOptions.length > 0) {
+        this.productMethod(params)
+      } else {
+        this.isNoData = true
+      }
     },
     productMethod(param) {
       this.$axios
@@ -324,6 +356,7 @@ export default {
             this.productList = this.productList.concat(res.data.rows)
             this.total = res.data.total
             this.loading = false
+            this.refreshing = false
             if (this.page > res.data.totalPage) {
               this.finished = true
             }
@@ -367,9 +400,6 @@ export default {
           this.loading = false
           console.log(err)
         })
-    },
-    handlerItemChange(action, index) {
-      console.log(action, index)
     },
     swichCityHandle() {
       if (!this.cityName) {
@@ -417,6 +447,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.positionY {
+  background-position-y: -46px !important;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
@@ -704,6 +737,7 @@ export default {
           align-content: flex-start;
           margin-top: 12px;
           flex-wrap: wrap;
+          min-height: 120px;
           div {
             font-size: 20px;
             margin-bottom: 12px;
@@ -720,6 +754,7 @@ export default {
         .rc-bottom {
           display: flex;
           justify-content: space-between;
+          align-items: center;
           .rc-bottom-lf {
             .rc-bottom-lf-my {
               display: flex;

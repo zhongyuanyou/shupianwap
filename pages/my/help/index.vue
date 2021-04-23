@@ -1,7 +1,7 @@
 <template>
   <div class="help-page">
     <!-- S 头部 -->
-    <Header ref="headerRef" title="帮助中心">
+    <Header v-if="!isApplets" ref="headerRef" title="帮助中心">
       <template #left>
         <div @click="back">
           <my-icon
@@ -232,13 +232,14 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       isPassword: (state) => state.user.userInfo.isPassword || 0,
+      isApplets: (state) => state.app.isApplets,
     }),
   },
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'Help' })
-    if (!this.isInApp) {
+    if (!this.isInApp && !this.isApplets) {
       this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
-    } else {
+    } else if (this.isInApp) {
       // 设置app导航名称
       this.$appFn.dggSetTitle(
         {
@@ -260,7 +261,9 @@ export default {
     },
     // 监听滚动吸顶与触底加载更多
     searchHandle({ scrollTop, isFixed }) {
-      this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
+      if (!this.isApplets) {
+        this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
+      }
       this.isFixed = isFixed
       if (
         this.tabData.length &&

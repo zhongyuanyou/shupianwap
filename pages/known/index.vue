@@ -140,7 +140,7 @@
         </div>
         <span>{{ userInfo.userName }}</span>
       </div>
-      <div class="answer_article">
+      <div v-if="!isInApp" class="answer_article">
         <div class="item" @click="$router.push('/known/publish/question')">
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
@@ -154,6 +154,22 @@
             alt=""
           />
           <span>回答问题</span>
+        </div>
+        <div class="item" @click="$router.push('/known/publish/article')">
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/eoeulbunbpk0000.png"
+            alt=""
+          />
+          <span>写文章</span>
+        </div>
+      </div>
+      <div v-else class="answer_article app">
+        <div class="item" @click="$router.push('/known/publish/question')">
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
+            alt=""
+          />
+          <span>提个问题</span>
         </div>
         <div class="item" @click="$router.push('/known/publish/article')">
           <img
@@ -281,26 +297,13 @@ export default {
       }
     },
     toggleTabs() {},
-    async isLogin() {
-      if (this.userInfo.userId && this.userInfo.token) {
-        return true
-      } else if (this.isInApp) {
-        await this.$appFn.dggLogin()
-      } else {
-        this.$router.push({
-          path: '/login',
-          query: {
-            redirect: this.$route.fullPath,
-          },
-        })
-      }
-    },
     // 打开文章编辑框
-    openArticle() {
-      if (!this.isLogin()) {
-        return
+    async openArticle() {
+      const result = await this.$isLogin()
+      // 必须判断是否全等true 因为result可能会返回字符串
+      if (result === true) {
+        this.showArticlePop = true
       }
-      this.showArticlePop = true
     },
     // 编辑
     editIcon(status) {
@@ -321,7 +324,7 @@ export default {
       console.log('arrayValue1', arrayValue)
       if (arrayValue) {
         this.myPlate.push(arrayValue)
-        this.morePlate.pop(index)
+        this.morePlate.splice(index, 1)
       }
     },
     deleteToMyPlate(index) {
@@ -329,10 +332,9 @@ export default {
         this.active--
       }
       const arrayValue = this.myPlate[index]
-      console.log('arrayValu2', arrayValue)
       if (arrayValue) {
         this.morePlate.push(arrayValue)
-        this.myPlate.pop(index)
+        this.myPlate.splice(index, 1)
       }
     },
   },
@@ -408,7 +410,7 @@ export default {
 
 .container {
   height: 100%;
-  background: #fff;
+  background: #f5f5f5;
   .modal {
     position: fixed;
     top: 0;
@@ -554,6 +556,7 @@ export default {
         }
       }
       .popMiddle {
+        padding: 10px 0;
         // height: 50px;
         display: flex;
         align-items: center;
@@ -760,6 +763,9 @@ export default {
           margin-top: 24px;
         }
       }
+    }
+    .answer_article.app {
+      justify-content: space-around;
     }
     > .line {
       height: 1px;

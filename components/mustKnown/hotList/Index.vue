@@ -29,7 +29,7 @@
         "
       >
         <div class="see_like">
-          <my-icon name="dianzan" size="0.24rem" color="#4974F5"></my-icon>
+          <my-icon name="dianzan" size="0.24rem" color="#564499"></my-icon>
         </div>
         <div class="see_span">
           {{ subjectList[1] ? subjectList[1].name : '进站必看' }}

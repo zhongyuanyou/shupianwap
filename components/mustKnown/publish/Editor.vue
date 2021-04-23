@@ -1,5 +1,5 @@
 <template xmlns:v-quill="富文本编辑器">
-  <div class="edit-container">
+  <div id="edit-container" class="edit-container">
     <div
       v-quill:myQuillEditor="editorOption"
       class="quill-editor"
@@ -121,13 +121,13 @@ export default {
               // ["blockquote", "code-block"], // 引用代码块
               [{ header: 1 }, { header: 2 }], // 1、2 级标题  [{ header: 1 }, { header: 2 }]
 
-              // [{ list: "ordered" }, { list: "bullet" }], // 有序、无序列表
+              // [{ list: 'ordered' }, { list: 'bullet' }], // 有序、无序列表
 
               // [{ script: "sub" }, { script: "super" }], // 上标/下标
 
               // [{ indent: "-1" }, { indent: "+1" }], // 缩进
 
-              // [{'direction': 'rtl'}], // 文本方向
+              // [{ direction: 'rtl' }], // 文本方向
 
               // [{ size: ['small', false, 'large'] }], // 字体大小 [{ size: ['small', false, 'large', 'huge'] }]
 
@@ -137,7 +137,7 @@ export default {
 
               // [{ font: [] }], // 字体种类
 
-              // [{ align: [] }], // 对齐方式
+              [{ align: [] }], // 对齐方式
 
               // ["clean"], // 清除文本格式
               ['image'], // 链接、图片、视频
@@ -167,16 +167,26 @@ export default {
   methods: {
     onEditorChange(a) {
       console.log('onEditorChange', a)
+      this.scrollToBottom()
       this.$emit('editorChange', a)
     },
     onEditorFocus(a) {
+      this.scrollToBottom()
       console.log('onEditorFocus', a)
     },
     onEditorBlur(a) {
+      this.scrollToBottom()
       console.log('onEditorBlur', a)
     },
     onEditorReady(a) {
+      this.scrollToBottom()
       console.log('onEditorReady', a)
+    },
+    scrollToBottom() {
+      this.$nextTick(() => {
+        const div = document.getElementById('edit-container')
+        window.scrollTo(0, div.scrollHeight)
+      })
     },
   },
 }

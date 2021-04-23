@@ -53,12 +53,12 @@ export default {
     },
     async onClickRight() {
       // 点击保存
-      // const params = {
-      //   type: 4,
-      //   value: this.email,
-      // }
-      // await this.$axios.post(userinfoApi.update, params)
-      // this.$router.back()
+      const params = {
+        type: 7,
+        value: this.content,
+      }
+      await this.$axios.post(userinfoApi.update, params)
+      this.$router.back()
     },
   },
 }

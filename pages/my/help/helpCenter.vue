@@ -198,6 +198,11 @@ export default {
       this.$router.back()
     },
   },
+  head() {
+    return {
+      title: '帮助中心',
+    }
+  },
 }
 </script>
 <style lang="less" scoped>

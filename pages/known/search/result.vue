@@ -81,7 +81,7 @@
         <div v-for="item in userList" :key="item.id" class="list">
           <img :src="item.avatar" alt="" @click="toHome(item)" />
           <div class="name" v-html="item.userNameHtml"></div>
-          <div class="applaudFlag">
+          <div class="applaudFlag" @click="attentionHandler(item)">
             <sp-icon
               v-if="!item.custAttentionFlag"
               name="plus"
@@ -90,7 +90,6 @@
             />
             <span
               :style="{ color: item.custAttentionFlag ? '#999999' : '#4974F5' }"
-              @click="attentionHandler(item)"
               >{{ item.custAttentionFlag ? '已关注' : '关注' }}</span
             >
           </div>
@@ -201,47 +200,42 @@ export default {
     },
     async attentionHandler(item) {
       // 先判断是否登录
-      if (this.userId) {
-        try {
-          const res = await this.$axios.post(knownApi.home.attention, {
-            handleUserId: this.userInfo.userId,
-            handleUserName: this.userInfo.userName || '测试用户',
-            handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-            handleType: item.custAttentionFlag ? 2 : 1,
-            attentionUserId: item.id,
-            attentionUserName: item.userName,
-            attentionUserType: item.type === 'ORDINARY_USER' ? 1 : 2,
-          })
-          if (res.code === 200) {
-            // 重新构建页面数据,处理关注状态
-            item.custAttentionFlag = !item.custAttentionFlag
-            let message
-            if (item.custAttentionFlag) {
-              message = '关注成功'
-            } else {
-              message = '取关成功'
-            }
-            this.$xToast.show({
-              message,
-              duration: 1000,
-              icon: 'toast_ic_comp',
-              forbidClick: true,
-            })
+      const result = await this.$isLogin()
+      if (result === 'app_login_success') {
+        return
+      }
+      try {
+        const res = await this.$axios.post(knownApi.home.attention, {
+          handleUserId: this.userInfo.userId,
+          handleUserName: this.userInfo.userName || '测试用户',
+          handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
+          handleType: item.custAttentionFlag ? 2 : 1,
+          attentionUserId: item.id,
+          attentionUserName: item.userName,
+          attentionUserType: item.type === 'ORDINARY_USER' ? 1 : 2,
+        })
+        if (res.code === 200) {
+          // 重新构建页面数据,处理关注状态
+          item.custAttentionFlag = !item.custAttentionFlag
+          let message
+          if (item.custAttentionFlag) {
+            message = '关注成功'
+          } else {
+            message = '取关成功'
           }
-        } catch (e) {
           this.$xToast.show({
-            message: '请求失败,请联系客服',
+            message,
             duration: 1000,
-            icon: 'toast_ic_error',
+            icon: 'toast_ic_comp',
             forbidClick: true,
           })
         }
-      } else {
-        this.$router.push({
-          path: '/login',
-          query: {
-            redirect: this.$route.fullPath,
-          },
+      } catch (e) {
+        this.$xToast.show({
+          message: '请求失败,请联系客服',
+          duration: 1000,
+          icon: 'toast_ic_error',
+          forbidClick: true,
         })
       }
     },
@@ -318,11 +312,11 @@ export default {
     width: 100%;
     height: 80px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     background: #fff;
     > p {
-      width: 170px;
+      width: 250px;
       height: 30px;
       font-size: 30px;
       font-weight: 400;

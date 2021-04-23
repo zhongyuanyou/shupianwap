@@ -104,6 +104,7 @@
 
 <script>
 import { Image, Button, Toast } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import { planner } from '~/api'
 import { parseTel } from '~/utils/common'
 import imHandle from '~/mixins/imHandle'
@@ -144,6 +145,9 @@ export default {
     city() {
       return this.$store.state.city.currentCity
     },
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
   },
   async mounted() {
     if (!this.city.code) {
@@ -155,7 +159,11 @@ export default {
     plannerInfoUrlJump(mchUserId) {
       this.$router.push({
         path: '/planner/detail',
-        query: { mchUserId },
+        query: {
+          mchUserId,
+          requireCode: this.baseData.requireCode,
+          requireName: this.baseData.requireName,
+        },
       })
     },
     // 拨打电话
@@ -189,11 +197,11 @@ export default {
           })
         }
       } catch (err) {
-        Toast({
-          message: '未获取到划师联系方式',
-          iconPrefix: 'sp-iconfont',
-          icon: 'popup_ic_fail',
-        })
+        // Toast({
+        //   message: '未获取到划师联系方式',
+        //   iconPrefix: 'sp-iconfont',
+        //   icon: 'popup_ic_fail',
+        // })
       }
     },
     // 调起IM
@@ -212,6 +220,8 @@ export default {
       const sessionParams = {
         imUserId: mchUserId, // 商户用户ID
         imUserType: type, // 用户类型
+        requireCode: this.baseData.requireCode,
+        requireName: this.baseData.requireName,
         ext: {
           intentionType, // 意向业务 非必传
           intentionCity, // 意向城市 非必传

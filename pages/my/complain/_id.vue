@@ -123,6 +123,9 @@ export default {
       this.revertImgs = data.revertImgs ? data.revertImgs.split(',') : []
     },
   },
+  head: {
+    title: '进度详情',
+  },
 }
 </script>
 

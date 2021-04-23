@@ -42,6 +42,7 @@
         </div>
       </div>
     </div>
+    <Loading-center v-show="loadingCenter" />
   </div>
 </template>
 
@@ -49,10 +50,11 @@
 import { Image } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { domainUrl } from '@/config'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import nameList from '@/config/nameList'
 export default {
   name: 'Item',
-  components: { [Image.name]: Image },
+  components: { [Image.name]: Image, LoadingCenter },
   props: {
     info: {
       type: Object,
@@ -61,10 +63,16 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      loadingCenter: false,
+    }
+  },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo,
+      isApplets: (state) => state.app.isApplets,
     }),
     nameList() {
       return nameList
@@ -73,19 +81,99 @@ export default {
   methods: {
     handleClick() {
       // 点击跳转详情
-      if (this.isInApp) {
+      if (this.isInApp || this.isApplets) {
+        let url = ''
+        let hide = 0
+        if (this.isApplets) {
+          this.loadingCenter = true
+        }
+        switch (this.info.linkType) {
+          // 跳转文章详情
+          case 1:
+            url = `${domainUrl}found/detail/${this.info.id}`
+            hide = 1
+            if (this.isApplets) {
+              this.uni.navigateTo({
+                url:
+                  '/pages/common_son/webview/index?id=' +
+                  this.info.id +
+                  '&dt=true&url=found/detail',
+              })
+            }
+            break
+          // 跳转内链
+          case 2:
+            url = `${this.info.wapRoute}`
+            hide = 0
+            this.$appFn.dggSetTitle({ title: '' }, () => {})
+            if (this.isApplets) {
+              this.uni.navigateTo({
+                url:
+                  '/pages/common_son/webview/index?id=' +
+                  this.info.id +
+                  '&dt=true&url=found/detail',
+              })
+            }
+            break
+          // 跳转外链
+          case 3:
+            url = this.info.link
+            hide = 0
+            this.$appFn.dggSetTitle({ title: '' }, () => {})
+            if (this.isApplets) {
+              this.uni.navigateTo({
+                url: '/pages/common_son/link/outLink?url=' + this.info.link,
+              })
+            }
+            break
+          // 跳转图片链接
+          case 4:
+            url = this.info.jumpImageUrl
+            hide = 0
+            this.$appFn.dggSetTitle({ title: '' }, () => {})
+            alert(123)
+            if (this.isApplets) {
+              this.uni.navigateTo({
+                url:
+                  '/pages/common_son/link/imgLink?imgUrl=' +
+                  this.info.jumpImageUrl,
+              })
+            }
+            break
+          default:
+            url = `${domainUrl}found/detail/${this.info.id}`
+            hide = 1
+            break
+        }
         const iosRouter =
           '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
-          `${domainUrl}found/detail/${this.info.id}` +
-          '","isHideNav":1},"isLogin":"0","version":"1.0.0"}'
+          `${url}` +
+          '","isHideNav":' +
+          hide +
+          ',"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
         const adRouter =
           '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
-          `${domainUrl}found/detail/${this.info.id}` +
-          '","isHideNav":1},"isLogin":"0","version":"1.0.0"}'
-        this.$appFn.dggJumpRoute(
-          { iOSRouter: iosRouter, androidRouter: adRouter },
-          (res) => {}
-        )
+          `${url}` +
+          '","isHideNav":' +
+          hide +
+          ',"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
+        // if (this.isApplets) {
+        //   this.uni.navigateTo({
+        //     url:
+        //       '/pages/common_son/webview/index?id=' +
+        //       item.id +
+        //       '&dt=true&url=found/detail',
+        //   })
+        // }
+        if (this.isInApp) {
+          this.$appFn.dggJumpRoute(
+            {
+              iOSRouter: iosRouter,
+              androidRouter: adRouter,
+            },
+            (res) => {}
+          )
+        }
         return
       }
       // linkType跳转链接类型 1、跳转文章详情,2、跳转内链,3、跳转外链,4、跳转图片链接
