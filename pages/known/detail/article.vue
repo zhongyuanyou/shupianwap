@@ -1,7 +1,33 @@
 <template>
   <div>
     <div ref="myPage">
-      <PageHead v-if="!showHead2" :title="articleDetails.title"></PageHead>
+      <!-- <PageHead v-if="!showHead2"></PageHead> -->
+      <Header height=" 0.88rem">
+        <template #left>
+          <div>
+            <sp-icon name="arrow-left" size="0.4rem" @click="goBack" />
+          </div>
+        </template>
+        <template #right>
+          <div class="btn">
+            <sp-icon
+              name="search"
+              size="0.4rem"
+              color="#1a1a1a"
+              class="ss"
+              @click="$router.push('/known/search')"
+            />
+            <sp-icon
+              v-if="articleDetails.createrId === userInfo.userId"
+              name="ellipsis"
+              size="0.4rem"
+              color="#1a1a1a"
+              class="ellipsis"
+              @click="popupShow = true"
+            />
+          </div>
+        </template>
+      </Header>
       <PageHead2
         v-if="showHead2"
         :header-data="articleDetails"
@@ -94,27 +120,65 @@
         </div>
       </div>
     </div>
+    <!--    上拉组件-->
+    <sp-popup
+      v-model="popupShow"
+      position="bottom"
+      :style="{ height: '30%' }"
+      round
+      close-icon="close"
+      :close-on-click-overlay="false"
+    >
+      <div class="down_slide_list">
+        <ul>
+          <li @click="editQues(articleDetails.id)">
+            <my-icon name="bianji1" size="1rem" color="#1a1a1a"></my-icon>
+            <p>编辑</p>
+          </li>
+          <li @click="deleteQues(articleDetails.id)">
+            <my-icon name="shanchu1" size="1rem" color="#1a1a1a"></my-icon>
+            <p>删除</p>
+          </li>
+        </ul>
+        <div class="cancel" @click="popupShow = false">取消</div>
+      </div>
+    </sp-popup>
   </div>
 </template>
 
 <script>
-import { Field, Tab, Tabs, Button, Image, Toast } from '@chipspc/vant-dgg'
+import {
+  Field,
+  Tab,
+  Tabs,
+  Button,
+  Image,
+  Toast,
+  Icon,
+  Dialog,
+  Popup,
+} from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
-import PageHead from '@/components/common/head/header'
+// import PageHead from '@/components/common/head/header'
 import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
 // 推荐文章列表
 import DetailArticleList from '@/components/mustKnown/DetailArticleList'
 // 默认评论列表
 import Comment from '~/components/mustKnown/DetailComment'
+import Header from '@/components/common/head/header'
 export default {
   components: {
+    [Icon.name]: Icon,
     [Button.name]: Button,
     [Image.name]: Image,
     [Field.name]: Field,
+    [Dialog.name]: Dialog,
+    [Popup.name]: Popup,
     Comment,
-    PageHead,
+    // PageHead,
     PageHead2,
     DetailArticleList,
+    Header,
   },
   async asyncData({ $axios, query, store }) {
     const res = await $axios.get(knownApi.questionArticle.detail, {
@@ -135,6 +199,7 @@ export default {
   },
   data() {
     return {
+      popupShow: false,
       articleList: [],
       headerData: {},
       showHead2: false,
@@ -174,6 +239,51 @@ export default {
         path: '/known/home',
         query: { homeUserId: id, type: usertype },
       })
+    },
+    goBack() {
+      this.$back()
+    },
+    // 编辑
+    editQues(id) {
+      const curId = id
+      this.$router.push({
+        path: '/known/publish/question',
+        query: {
+          id: curId,
+          editType: 2,
+        },
+      })
+    },
+    // 删除
+    deleteQues(id) {
+      const curId = id
+      Dialog.confirm({
+        title: '提示',
+        message: '确定要删除吗？',
+      })
+        .then(() => {
+          this.$axios
+            .post(knownApi.content.dlt, {
+              id: curId,
+              currentUserId: this.userInfo.userId,
+            })
+            .then((res) => {
+              if (res.code === 200) {
+                this.$xToast.show({ message: '删除成功' })
+                this.$router.replace({ path: '/known' })
+              } else {
+                Toast.fail({
+                  duration: 2000,
+                  message: '服务异常，请刷新重试！',
+                  forbidClick: true,
+                  className: 'my-toast-style',
+                })
+              }
+            })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     initFollow() {
       this.$axios
@@ -273,7 +383,6 @@ export default {
     handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
       const scrollTop = this.$refs.myPage.getBoundingClientRect().top // 滚动条距离顶部的位置
-      console.log('scrollTop', scrollTop)
       if (scrollTop < 0) {
         this.showHead2 = true
       } else {
@@ -586,6 +695,211 @@ export default {
         height: 40px;
       }
     }
+  }
+}
+/deep/.my-head {
+  padding: 0 32px;
+  box-sizing: border-box !important;
+  .title {
+    > span {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      display: block;
+      width: 500px;
+      margin: 0 auto;
+    }
+  }
+}
+.problem {
+  padding-top: 20px;
+  background: #fff;
+  > .tag {
+    width: 100%;
+    overflow: auto;
+    padding: 0 32px;
+    margin-bottom: 36px;
+    > .box {
+      display: flex;
+      width: auto;
+      > li {
+        background: #f5f5f5;
+        border-radius: 8px;
+        padding: 16px 24px;
+        font-size: 28px;
+        font-weight: 400;
+        color: #999999;
+        margin-left: 16px;
+      }
+      > li:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+  > .tit {
+    font-size: 40px;
+    margin-bottom: 28px;
+    font-weight: 600;
+    color: #222222;
+    padding: 0 32px;
+    line-height: 56px;
+  }
+  > .imglist {
+    display: flex;
+    padding: 0 32px;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    > .imgbox {
+      width: 339px;
+      height: 226px;
+      background: #f5f5f5;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      > img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+      }
+      > .imgbox1 {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 339px;
+        height: 226px;
+        background: rgba(0, 0, 0, 0.4);
+        font-size: 52px;
+        font-weight: 500;
+        color: #ffffff;
+        text-align: center;
+        line-height: 226px;
+        border-radius: 12px;
+      }
+    }
+  }
+  > .content {
+    font-size: 30px;
+    font-weight: 400;
+    color: #555555;
+    line-height: 42px;
+    padding: 0 32px;
+    position: relative;
+    margin-bottom: 48px;
+    > .tit {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+
+      /deep/ img {
+        width: 100%;
+        height: auto;
+      }
+    }
+    > div.tit {
+      display: block;
+    }
+    > .btn {
+      margin-top: 20px;
+      font-size: 28px;
+      font-weight: 400;
+      color: #999999;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+  > .num {
+    display: flex;
+    padding: 0 32px;
+    align-items: center;
+    margin-bottom: 40px;
+    > .left {
+      display: flex;
+      > div {
+        font-size: 24px;
+        font-weight: 500;
+        color: #222222;
+        > span {
+          color: #999999;
+        }
+      }
+      > p {
+        width: 4px;
+        height: 4px;
+        background: #999999;
+        border-radius: 50%;
+        margin: 0 16px;
+        align-self: center;
+      }
+    }
+    > .right {
+      padding: 0 20px;
+      height: 56px;
+      background: #f5f5f5;
+      border-radius: 28px;
+      font-size: 24px;
+      font-weight: 500;
+      color: #999999;
+      margin-left: auto;
+      text-align: center;
+      line-height: 56px;
+    }
+    > .act {
+      background: #f2f5ff;
+      color: #4974f5;
+    }
+  }
+  > .btns {
+    display: flex;
+    border-bottom: 1px solid #dddddd;
+    border-top: 1px solid #dddddd;
+    > .box {
+      padding-top: 23px;
+      box-sizing: border-box;
+      width: 250px;
+      height: 118px;
+      font-size: 26px;
+      font-weight: 500;
+      color: #555555;
+      text-align: center;
+      border-left: 1px solid #ddd;
+      p {
+        margin-top: 10px;
+      }
+    }
+    > .box:first-child {
+      border-left: none;
+    }
+  }
+}
+.down_slide_list {
+  ul {
+    display: flex;
+    padding: 70px;
+    box-sizing: border-box;
+    li {
+      width: 100px;
+      text-align: center;
+      margin-right: 76px;
+      p {
+        font-size: 24px;
+        color: #999999;
+      }
+    }
+  }
+  .cancel {
+    width: 100%;
+    height: 98px;
+    line-height: 98px;
+    text-align: center;
+    position: absolute;
+    font-size: 32px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #222222;
+    bottom: 0;
+    border-top: 1px solid #f0f0f0;
   }
 }
 </style>

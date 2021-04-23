@@ -6,7 +6,7 @@
     }"
   >
     <Header
-      :title="questionDetials.title"
+      :title="title"
       :height="
         appInfo.statusBarHeight
           ? appInfo.statusBarHeight / 100 + 0.98 + 'rem'
@@ -221,8 +221,7 @@
         </div>
       </sp-list>
     </div>
-    <!-- <div v-show="fixedshow" class="fiexdbtn"> -->
-    <div class="fiexdbtn">
+    <div v-show="fixedshow" class="fiexdbtn">
       <div
         class="btn"
         :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
@@ -295,6 +294,7 @@ export default {
   data() {
     return {
       title: '',
+      showHead2: false,
       contentshow: false,
       answersort: 0,
       fixedshow: false,
@@ -616,6 +616,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.title {
+  text-align: left !important;
+}
 .form-onlyRead {
   pointer-events: none;
   color: #ccc !important;

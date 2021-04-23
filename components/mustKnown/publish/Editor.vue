@@ -166,27 +166,17 @@ export default {
   },
   methods: {
     onEditorChange(a) {
-      console.log('onEditorChange', a)
-      this.scrollToBottom()
+      // console.log('onEditorChange', a)
       this.$emit('editorChange', a)
     },
     onEditorFocus(a) {
-      this.scrollToBottom()
       console.log('onEditorFocus', a)
     },
     onEditorBlur(a) {
-      this.scrollToBottom()
       console.log('onEditorBlur', a)
     },
     onEditorReady(a) {
-      this.scrollToBottom()
       console.log('onEditorReady', a)
-    },
-    scrollToBottom() {
-      this.$nextTick(() => {
-        const div = document.getElementById('edit-container')
-        window.scrollTo(0, div.scrollHeight)
-      })
     },
   },
 }
