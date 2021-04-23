@@ -171,8 +171,6 @@ export default {
         requireName: '',
         imUserId: mchUserId, // 商户用户ID
         imUserType: type, // 用户类型
-        requireCode: this.proDetail.classCodeLevelList[0],
-        requireName: '',
         ext: {
           intentionType, // 意向业务 非必传
           intentionCity, // 意向城市 非必传

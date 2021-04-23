@@ -18,11 +18,7 @@
       }"
     >
       <div class="my-head-row">
-<<<<<<< HEAD
-        <div v-if="!isApplets" class="slot-left">
-=======
         <div v-if="!hideBack" class="slot-left">
->>>>>>> feat_v2.0
           <slot name="left">
             <my-icon
               class="back-icon"

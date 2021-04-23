@@ -19,7 +19,7 @@ export default {
     }),
   },
   methods: {
-    clearUserInfoAndJumpLoging() {
+    clearUserInfoAndJumpLoging(url) {
       this.$store.commit('user/CLEAR_USER')
       if (this.isApplets) {
         // 若是在小程序中

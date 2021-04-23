@@ -154,11 +154,6 @@ export default {
       await this.POSITION_CITY({ type: 'init' })
     }
   },
-  async mounted() {
-    if (!this.city.code) {
-      await this.POSITION_CITY({ type: 'init' })
-    }
-  },
   methods: {
     // 规划师详情跳转
     plannerInfoUrlJump(mchUserId) {
