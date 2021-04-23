@@ -228,6 +228,7 @@ export default {
           name: '全部订单',
         },
       ],
+
       info: {
         fullName: '', // 用户昵称
         url: '', // 头像
@@ -255,7 +256,15 @@ export default {
   mounted() {
     if (this.userId || this.$cookies.get('token')) {
       this.userName = this.$cookies.get('userName')
+      // 1.先去本地里面找info信息，
+      if (localStorage.getItem('info')) {
+        this.info = JSON.parse(localStorage.getItem('info'))
+        console.log('myInfo', this.info)
+      }
       this.getUserInfo()
+      if (!this.token) {
+        localStorage.removeItem('info')
+      }
     }
   },
 
@@ -301,11 +310,15 @@ export default {
           this.info = res.data
           this.userName = res.data.nickName
           this.realStatus = res.data.realStatus
+          localStorage.setItem('info', JSON.stringify(this.info))
           // console.log(res.data.realStatus)
           this.$store.dispatch('user/setInfo', res.data)
         } else {
           // 清除用户缓存信息
+          this.info = {}
+          this.userName = ''
           this.$store.dispatch('user/clearUser')
+          localStorage.removeItem('info')
         }
       } catch (err) {
         this.loading = false
@@ -365,6 +378,7 @@ export default {
         this.info.url = ''
         this.userName = ''
         this.$store.dispatch('user/clearUser')
+        // localStorage.removeItem('info')
       }
     },
   },
