@@ -18,6 +18,7 @@
         <sp-image
           class="img"
           :src="item.avatar"
+          fit="cover"
           @click.stop="goUser(item.userId, item.userType)"
         />
         <div class="right">
