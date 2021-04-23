@@ -1,7 +1,7 @@
 <template>
   <header-slot>
     <div class="head head2">
-      <sp-icon name="arrow-left" size="0.4rem" @click="$back" />
+      <sp-icon name="arrow-left" color="#1a1a1a" size="0.4rem" @click="$back" />
       <div class="user-info">
         <sp-image
           class="img"
@@ -78,9 +78,6 @@ export default {
   box-sizing: border-box;
   .btn-icon {
     float: left;
-  }
-  /deep/ i {
-    color: #000;
   }
 }
 .head2 {

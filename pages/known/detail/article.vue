@@ -300,7 +300,6 @@ export default {
     handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
       const scrollTop = this.$refs.myPage.getBoundingClientRect().bottom // 滚动条距离顶部的位置
-      console.log(scrollTop)
       if (scrollTop < 0) {
         this.showHead2 = true
       } else {

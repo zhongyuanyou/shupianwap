@@ -1,50 +1,45 @@
 <template>
-  <div ref="myPage">
-    <div
-      v-if="!showHead2"
-      class="head head1"
-      :style="{ paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px' }"
-    >
-      <!-- <my-icon
-        name="zuo"
-        class="btn-icon"
-        size="0.4rem"
-        color="#1A1A1A"
-        @click.native="onLeftClick"
-      ></my-icon> -->
-      <sp-icon name="arrow-left" color="#1A1A1A" size="0.4rem" @click="$back" />
-      <div class="btn-area">
-        <span @click="onInvite">
-          <my-icon name="yaoqing" size="0.4rem"></my-icon>
-          邀请</span
-        >
-        <span
-          v-if="answerDetails && answerDetails.createrId === userInfo.userId"
-          @click.stop="writeAnswer"
-        >
-          <my-icon name="xiehuida" size="0.4rem"></my-icon>
-          写回答</span
-        >
-        <span v-else>
-          <my-icon
-            name="gengduo"
-            size="0.4rem"
-            color="#000000"
-            @click.native="more"
-          ></my-icon>
-        </span>
-      </div>
-    </div>
-    <div v-if="showHead2">
+  <div>
+    <div>
       <header-slot>
-        <div class="head head2">
-          <!-- <my-icon
-            class="btn-icon"
-            name="zuo"
-            size="0.4rem"
+        <div
+          v-if="!showHead2"
+          class="head head1"
+          :style="{
+            paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px',
+          }"
+        >
+          <sp-icon
+            name="arrow-left"
             color="#1A1A1A"
-            @click.native="onLeftClick"
-          ></my-icon> -->
+            size="0.4rem"
+            @click="$back"
+          />
+          <div class="btn-area">
+            <span @click="onInvite">
+              <my-icon name="yaoqing" size="0.4rem"></my-icon>
+              邀请</span
+            >
+            <span
+              v-if="
+                answerDetails && answerDetails.createrId === userInfo.userId
+              "
+              @click.stop="writeAnswer"
+            >
+              <my-icon name="xiehuida" size="0.4rem"></my-icon>
+              写回答</span
+            >
+            <span v-else>
+              <my-icon
+                name="gengduo"
+                size="0.4rem"
+                color="#000000"
+                @click.native="more"
+              ></my-icon>
+            </span>
+          </div>
+        </div>
+        <div v-if="showHead2" class="head head2">
           <sp-icon
             name="arrow-left"
             color="#1A1A1A"
@@ -80,7 +75,7 @@
       </div>
     </div>
     <div class="main">
-      <div class="user-info">
+      <div ref="myPage" class="user-info">
         <sp-image
           class="img"
           :src="answerDetails.avatar"
@@ -437,7 +432,7 @@ export default {
     },
     handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
-      const scrollTop = this.$refs.myPage.getBoundingClientRect().top // 滚动条距离顶部的位置
+      const scrollTop = this.$refs.myPage.getBoundingClientRect().bottom // 滚动条距离顶部的位置
       if (scrollTop < 0) {
         this.showHead2 = true
       } else {
