@@ -3,7 +3,7 @@
     <HeaderSlot>
       <div v-if="!showHead2" class="flex">
         <div>
-          <sp-icon name="arrow-left" size="0.4rem" @click="goBack" />
+          <sp-icon name="arrow-left" size="0.4rem" @click="$back" />
         </div>
         <div>
           <sp-icon
@@ -32,12 +32,11 @@
         />
       </div>
     </HeaderSlot>
-    <div ref="myPage"></div>
     <div class="title-area">
       <div class="title">{{ articleDetails.title }}</div>
     </div>
     <div class="main">
-      <div class="user-info">
+      <div ref="myPage" class="user-info">
         <sp-image
           class="img"
           :src="articleDetails.avatar"
@@ -121,7 +120,7 @@
 </template>
 
 <script>
-import { Field, Tab, Tabs, Button, Image, Toast } from '@chipspc/vant-dgg'
+import { Field, Tab, Tabs, Button, Image, Toast, Icon } from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 import PageHead from '@/components/common/head/header'
 import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
@@ -133,6 +132,7 @@ import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   components: {
+    [Icon.name]: Icon,
     [Button.name]: Button,
     [Image.name]: Image,
     [Field.name]: Field,
@@ -299,8 +299,8 @@ export default {
     },
     handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
-      const scrollTop = this.$refs.myPage.getBoundingClientRect().top // 滚动条距离顶部的位置
-      console.log('scrollTop', scrollTop)
+      const scrollTop = this.$refs.myPage.getBoundingClientRect().bottom // 滚动条距离顶部的位置
+      console.log(scrollTop)
       if (scrollTop < 0) {
         this.showHead2 = true
       } else {

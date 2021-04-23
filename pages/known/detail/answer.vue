@@ -5,13 +5,14 @@
       class="head head1"
       :style="{ paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px' }"
     >
-      <my-icon
+      <!-- <my-icon
         name="zuo"
         class="btn-icon"
         size="0.4rem"
         color="#1A1A1A"
         @click.native="onLeftClick"
-      ></my-icon>
+      ></my-icon> -->
+      <sp-icon name="arrow-left" color="#1A1A1A" size="0.4rem" @click="$back" />
       <div class="btn-area">
         <span @click="onInvite">
           <my-icon name="yaoqing" size="0.4rem"></my-icon>
@@ -37,13 +38,19 @@
     <div v-if="showHead2">
       <header-slot>
         <div class="head head2">
-          <my-icon
+          <!-- <my-icon
             class="btn-icon"
             name="zuo"
             size="0.4rem"
             color="#1A1A1A"
             @click.native="onLeftClick"
-          ></my-icon>
+          ></my-icon> -->
+          <sp-icon
+            name="arrow-left"
+            color="#1A1A1A"
+            size="0.4rem"
+            @click="$back"
+          />
           <div class="user-info">
             <sp-image
               class="img"
@@ -181,7 +188,15 @@
 
 <script>
 import { mapState } from 'vuex'
-import { Field, Button, Image, Toast, Popup, Dialog } from '@chipspc/vant-dgg'
+import {
+  Field,
+  Button,
+  Image,
+  Toast,
+  Popup,
+  Dialog,
+  Icon,
+} from '@chipspc/vant-dgg'
 import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi, userinfoApi } from '@/api'
@@ -189,6 +204,7 @@ import util from '@/utils/changeBusinessData'
 export default {
   components: {
     [Button.name]: Button,
+    [Icon.name]: Icon,
     [Image.name]: Image,
     [Field.name]: Field,
     [Popup.name]: Popup,
@@ -608,7 +624,9 @@ export default {
 .head1 {
   height: 88px;
   background: #ffffff;
-  line-height: 88px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   .btn-area {
     float: right;
     width: auto;
@@ -619,10 +637,11 @@ export default {
   }
 }
 .head2 {
-  height: 104px;
+  height: 88px;
   background: #ffffff;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   .user-info {
     flex: 1;
     display: flex;
