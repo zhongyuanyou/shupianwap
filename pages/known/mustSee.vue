@@ -110,14 +110,14 @@ export default {
         this.$router.go(-1)
       }
     },
-    // scrollHandle({ scrollTop }) {
-    //   // 滚动事件
-    //   if (scrollTop > 160) {
-    //     this.showPaper = true
-    //   } else {
-    //     this.showPaper = false
-    //   }
-    // },
+    scrollHandle({ scrollTop }) {
+      // 滚动事件
+      if (scrollTop > 160) {
+        this.showPaper = true
+      } else {
+        this.showPaper = false
+      }
+    },
     init() {
       this.categorIds.push(this.$route.query.id)
       this.getList()
