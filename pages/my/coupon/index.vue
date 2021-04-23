@@ -109,7 +109,7 @@ export default {
       responseData: [], // 请求成功返回数据
       // 请求数据格式
       formData: {
-        orderByWhere: 'createTime=desc;',
+        orderByWhere: 'log_receive_time=desc;',
         findType: 2,
         userId: this.$store.state.user.userId,
         limit: '100',
