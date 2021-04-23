@@ -22,7 +22,8 @@ export const GOODSDETAIL =
   'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg' // 产品详情默认图片
 export const GOODSLIST =
   'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg' // 产品列表默认图片
-
+export const AVATAR =
+  'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png' // 产品列表默认图片
 export const APPISPROD = false // APP是否上线
 export const HELP_CLASS_CODE = {
   // 帮助中心分类code
