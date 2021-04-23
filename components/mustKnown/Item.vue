@@ -1,44 +1,52 @@
 <template>
-  <div class="item" @click="toDetail(item)">
-    <div class="item_title">
-      {{ item.title }}
-    </div>
-
-    <div class="item_content">
-      <div class="item_content_lf">
-        <div class="item_Info">
-          <img
-            :src="item.avatar"
-            alt=""
-            class="userPhoto"
-            @click.stop="goUserDetail(item)"
-          />
-          <div class="userName">{{ item.userName }}</div>
-        </div>
-        <p class="content">
-          {{ item.contentText }}
-        </p>
+  <sp-skeleton
+    title
+    avatar
+    :row="3"
+    :loading="item && item !== {} ? false : true"
+  >
+    <div class="item" @click="toDetail(item)">
+      <div class="item_title">
+        {{ item.title }}
       </div>
 
-      <img
-        v-if="item.contentImageUrl"
-        :src="item.contentImageUrl.split(',')[0]"
-        class="content_img"
-        alt=""
-      />
+      <div class="item_content">
+        <div class="item_content_lf">
+          <div class="item_Info">
+            <img
+              :src="item.avatar"
+              alt=""
+              class="userPhoto"
+              @click.stop="goUserDetail(item)"
+            />
+            <div class="userName">{{ item.userName }}</div>
+          </div>
+          <p class="content">
+            {{ item.contentText }}
+          </p>
+        </div>
+
+        <img
+          v-if="item.contentImageUrl"
+          :src="item.contentImageUrl.split(',')[0]"
+          class="content_img"
+          alt=""
+        />
+      </div>
+      <div class="item_bottom">
+        <span class="like"> {{ item.applaudCount }}赞同</span>
+        <span class="comment"> · {{ item.answerCount }} 评论</span>
+      </div>
     </div>
-    <div class="item_bottom">
-      <span class="like"> {{ item.applaudCount }}赞同</span>
-      <span class="comment"> · {{ item.answerCount }} 评论</span>
-    </div>
-  </div>
+  </sp-skeleton>
 </template>
 <script>
-import { Image } from '@chipspc/vant-dgg'
+import { Image, skeleton } from '@chipspc/vant-dgg'
 export default {
   name: 'Item',
   components: {
     [Image.name]: Image,
+    [skeleton.name]: skeleton,
   },
   props: {
     item: {
@@ -49,7 +57,9 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      skeletonLoading: true,
+    }
   },
   computed: {
     userInfo() {

@@ -33,7 +33,7 @@
         />
         <div class="user_info">
           <div class="title">{{ item.inviteeName }}</div>
-          <div class="introduce">{{ item.desc }}</div>
+          <!-- <div class="introduce">{{ item.desc }}</div> -->
         </div>
         <div v-if="!homeUserId" class="bt" @click="cancelAttention(item)">
           已关注

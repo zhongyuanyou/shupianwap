@@ -4,13 +4,15 @@
  */
 
 import Vue from 'vue'
-
+const uni = require('~/static/js/uni.webview')
 // 验证是否为android
 const isAndroid =
   navigator.userAgent.indexOf('Android') > -1 ||
   navigator.userAgent.indexOf('Adr') > -1
 // 验证是否为ios
 const isiOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+// 验证是否为小程序
+const miniProgram = navigator.userAgent.indexOf('miniProgram') > -1
 
 function dggSetBridge(callback) {
   if (isAndroid) {
@@ -92,6 +94,12 @@ const appHandler = {
   },
   // 调用webView返回上一级网页
   dggWebGoBack: (fn = () => {}) => {
+    if (miniProgram) {
+      uni.navigateBack({
+        delta: 1,
+      })
+      return
+    }
     Bridge.callHandler('dgg_webGoBack', {}, (res) => {
       handleRequest(res, fn)
     })
@@ -110,9 +118,15 @@ const appHandler = {
   },
   // 跳转App页面
   dggJumpRoute: (
-    data = { iOSRouter: '', androidRouter: '' },
+    data = { iOSRouter: '', androidRouter: '', miniRouter: '' },
     fn = () => {}
   ) => {
+    if (miniProgram && data.miniRouter) {
+      uni.navigateTo({
+        url: data.miniRouter,
+      })
+      return
+    }
     Bridge.callHandler('dgg_jumpRoute', data, (res) => {
       handleRequest(res, fn)
     })
@@ -183,6 +197,8 @@ const appHandler = {
       name: '', // 商户用户名称
       userId: '', // 商户用户ID
       userType: '', // 用户类型
+      requireCode: '',
+      requireName: '',
     },
     fn = () => {}
   ) => {
@@ -236,6 +252,7 @@ const appHandler = {
     })
   },
   // 隐号拨打
+
   dggBindHiddenPhone: (data = { plannerId: '' }, fn = () => {}) => {
     Bridge.callHandler('dgg_bindHiddenPhone', data, (res) => {
       handleRequest(res, fn)

@@ -73,6 +73,7 @@
       </div>
     </sp-pull-refresh>
     <!--E 列表-->
+    <Loading-center v-show="loadingCenter" />
   </div>
 </template>
 
@@ -88,6 +89,7 @@ import {
   Image,
 } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import CardItem from '~/components/common/cardItem/CardItem'
 import { foundApi } from '@/api'
 import adJumpHandle from '~/mixins/adJumpHandle'
@@ -103,6 +105,7 @@ export default {
     [Cell.name]: Cell,
     [Image.name]: Image,
     CardItem,
+    LoadingCenter,
   },
   mixins: [adJumpHandle],
   props: {
@@ -146,12 +149,14 @@ export default {
       infoList: this.list, // 资讯列表
       bannerList: this.banner, // 广告集合
       code: this.categoryCode,
+      loadingCenter: false,
     }
   },
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
       appInfo: (state) => state.app.appInfo,
+      isApplets: (state) => state.app.isApplets,
     }),
   },
   watch: {
@@ -180,32 +185,63 @@ export default {
     },
     handleClick(item, index) {
       // 点击
-      if (this.isInApp) {
+      if (this.isInApp || this.isApplets) {
         let url = ''
         let hide = 0
+        if (this.isApplets) {
+          this.loadingCenter = true
+        }
         switch (item.linkType) {
           // 跳转文章详情
           case 1:
             url = `${domainUrl}found/detail/${item.id}`
             hide = 1
+            if (this.isApplets) {
+              this.uni.navigateTo({
+                url:
+                  '/pages/common_son/webview/index?id=' +
+                  item.id +
+                  '&dt=true&url=found/detail',
+              })
+            }
             break
           // 跳转内链
           case 2:
             url = `${item.wapRoute}`
             hide = 0
             this.$appFn.dggSetTitle({ title: '' }, () => {})
+            if (this.isApplets) {
+              this.uni.navigateTo({
+                url:
+                  '/pages/common_son/webview/index?id=' +
+                  item.id +
+                  '&dt=true&url=found/detail',
+              })
+            }
             break
           // 跳转外链
           case 3:
             url = item.link
             hide = 0
             this.$appFn.dggSetTitle({ title: '' }, () => {})
+            if (this.isApplets) {
+              this.uni.navigateTo({
+                url: '/pages/common_son/link/outLink?url=' + item.link,
+              })
+            }
             break
           // 跳转图片链接
           case 4:
             url = item.jumpImageUrl
             hide = 0
             this.$appFn.dggSetTitle({ title: '' }, () => {})
+            alert(123)
+            if (this.isApplets) {
+              this.uni.navigateTo({
+                url:
+                  '/pages/common_son/link/imgLink?imgUrl=' + item.jumpImageUrl,
+              })
+            }
             break
           default:
             url = `${domainUrl}found/detail/${item.id}`
@@ -224,10 +260,23 @@ export default {
           '","isHideNav":' +
           hide +
           ',"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
-        this.$appFn.dggJumpRoute(
-          { iOSRouter: iosRouter, androidRouter: adRouter },
-          (res) => {}
-        )
+        // if (this.isApplets) {
+        //   this.uni.navigateTo({
+        //     url:
+        //       '/pages/common_son/webview/index?id=' +
+        //       item.id +
+        //       '&dt=true&url=found/detail',
+        //   })
+        // }
+        if (this.isInApp) {
+          this.$appFn.dggJumpRoute(
+            {
+              iOSRouter: iosRouter,
+              androidRouter: adRouter,
+            },
+            (res) => {}
+          )
+        }
         return
       }
       // linkType跳转链接类型 1、跳转文章详情,2、跳转内链,3、跳转外链,4、跳转图片链接

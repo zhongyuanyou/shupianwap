@@ -16,7 +16,9 @@
         @load="attentionList"
       >
         <div v-for="(item, index) in list" :key="index">
-          <Item :item="item" @comments="comments" />
+          <sp-skeleton title avatar :row="3" :loading="skeletonLoading">
+            <Item :item="item" @comments="comments" />
+          </sp-skeleton>
         </div>
       </sp-list>
     </sp-pull-refresh>
@@ -28,7 +30,7 @@
   </div>
 </template>
 <script>
-import { PullRefresh, Cell, List } from '@chipspc/vant-dgg'
+import { PullRefresh, Cell, List, Skeleton } from '@chipspc/vant-dgg'
 import CommentList from '@/components/mustKnown/CommentList'
 import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '@/api'
@@ -38,12 +40,14 @@ export default {
     [PullRefresh.name]: PullRefresh,
     [Cell.name]: Cell,
     [List.name]: List,
+    [Skeleton.name]: Skeleton,
     CommentList,
     Item,
   },
 
   data() {
     return {
+      skeletonLoading: true,
       commentShow: false,
       articleId: '',
       refreshing: false,
@@ -166,6 +170,7 @@ export default {
       )
       if (code === 200) {
         item.isApplaudFlag = item.isApplaudFlag ? 0 : 1
+
         this.$xToast.show({
           message: item.isApplaudFlag ? '点赞成功' : '取消成功',
           duration: 1000,
@@ -196,6 +201,7 @@ export default {
       if (code === 200) {
         this.list = this.list.concat(data.rows)
         this.loading = false
+        this.skeletonLoading = false
         this.page++
         if (this.page > data.totalPage) {
           this.finished = true

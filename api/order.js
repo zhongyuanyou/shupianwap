@@ -132,6 +132,15 @@ const category = {
       url: CHIPS_APP_BASE_URL + '/yk/order/v2/get_order_track_list.do',
     })
   },
+  // 同意下单协议交易委托协议
+  aggrement({ axios }, params) {
+    return request({
+      axios,
+      params,
+      method: 'post',
+      url: CHIPS_APP_BASE_URL + 'yk/order/v2/aggrement.do',
+    })
+  },
   getcalculation({ axios }, params) {
     return request({
       axios,

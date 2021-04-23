@@ -98,7 +98,11 @@ export default {
     plannerInfoUrlJump(mchUserId) {
       this.$router.push({
         path: '/planner/detail',
-        query: { mchUserId },
+        query: {
+          mchUserId,
+          requireCode: this.proDetail.classCodeLevelList[0],
+          requireName: '',
+        },
       })
     },
     // 拨打电话
@@ -142,12 +146,11 @@ export default {
           })
         }
       } catch (err) {
-        console.log(err)
-        Toast({
-          message: '未获取到划师联系方式',
-          iconPrefix: 'sp-iconfont',
-          icon: 'popup_ic_fail',
-        })
+        // Toast({
+        //   message: '未获取到划师联系方式',
+        //   iconPrefix: 'sp-iconfont',
+        //   icon: 'popup_ic_fail',
+        // })
       }
     },
     // 调起IM
