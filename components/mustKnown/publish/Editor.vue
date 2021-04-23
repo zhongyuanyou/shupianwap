@@ -109,6 +109,10 @@ export default {
       type: String,
       default: '请在此处输入内容',
     },
+    textLength: {
+      type: Number,
+      default: 5000,
+    },
   },
   data() {
     return {
@@ -166,8 +170,9 @@ export default {
   },
   methods: {
     onEditorChange(a) {
-      if (a.html.length > 5000) {
-        a.quill.deleteText(5000, 1)
+      if (a.html.length > this.textLength) {
+        a.quill.deleteText(this.textLength, 1)
+        this.$xToast.success(`字符不能超过${this.textLength}字`)
       } else {
         this.$emit('editorChange', a)
       }
