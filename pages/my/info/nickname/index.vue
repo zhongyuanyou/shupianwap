@@ -2,6 +2,7 @@
   <div class="nickname">
     <!--S 头部-->
     <sp-top-nav-bar
+      v-if="!isApplets"
       :title="'昵称'"
       ellipsis
       :fixed="true"
@@ -17,7 +18,10 @@
     </sp-top-nav-bar>
     <!--E 头部-->
     <!--S 内容-->
-    <div class="nickname_con">
+    <div
+      class="nickname_con"
+      :style="{ paddingTop: isApplets ? '0' : '0.88rem' }"
+    >
       <div class="nickname_con_item">
         <input
           v-model="nickname"
@@ -31,6 +35,11 @@
       </div>
     </div>
     <!--E 内容-->
+    <!--小程序的时候显示-->
+    <button v-if="isApplets" class="nickname_btn" @click="onClickRight">
+      保存
+    </button>
+    <!--小程序的时候显示-->
     <sp-toast ref="spToast"></sp-toast>
   </div>
 </template>
@@ -54,6 +63,7 @@ export default {
   computed: {
     ...mapState({
       userId: (state) => state.user.userInfo.userId || null,
+      isApplets: (state) => state.app.isApplets,
     }),
   },
   mounted() {
@@ -93,14 +103,29 @@ export default {
           type: 1,
           value: this.nickname,
         }
-        await this.$axios.post(userinfoApi.update, params)
-        this.$router.back()
+        await this.$axios
+          .post(userinfoApi.update, params)
+          .then((res) => {
+            console.log('res', res)
+            if (res.code === 200) {
+              this.$xToast.success('修改成功')
+              this.$router.back()
+            }
+          })
+          .catch((err) => {
+            this.$xToast.error(err.message)
+          })
       }
     },
     clear() {
       // 清除昵称
       this.nickname = ''
     },
+  },
+  head() {
+    return {
+      title: '编辑昵称',
+    }
   },
 }
 </script>
@@ -114,7 +139,7 @@ export default {
     height: 88px;
   }
   &_con {
-    padding-top: 88px;
+    //padding-top: 88px;
     display: flex;
     flex-direction: column;
     &_item {
@@ -159,6 +184,16 @@ export default {
         line-height: 44px;
       }
     }
+  }
+  &_btn {
+    width: 670px;
+    height: 96px;
+    background: #4974f5;
+    border-radius: 8px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffffff;
+    margin: 72px 40px 0;
   }
 }
 </style>

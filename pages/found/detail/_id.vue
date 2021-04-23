@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <!--S 导航-->
-    <Header title="">
+    <Header v-if="!isApplets" title="">
       <template #left>
         <div @click="back">
           <my-icon
@@ -66,6 +66,8 @@
         :options="options"
         @select="handleSelect"
       />
+      <!--      <sp-bottom v-if="isApplets"></sp-bottom>-->
+      <!--      <sp-popup v-if="isApplets"></sp-popup>-->
     </div>
   </div>
 </template>
@@ -85,6 +87,8 @@ import Header from '@/components/common/head/header'
 import { copyToClipboard } from '@/utils/common'
 import { GOODSLIST } from '@/config/constant'
 import nameList from '@/config/nameList'
+// import SpPopup from '@/components/common/spPopup/SpPopup'
+// import SpBottom from '@/components/common/spBottom/SpBottom'
 export default {
   layout: 'keepAlive',
   name: 'Detail',
@@ -96,6 +100,8 @@ export default {
     [Skeleton.name]: Skeleton,
     [Sticky.name]: Sticky,
     Header,
+    // SpBottom,
+    // SpPopup,
   },
   filters: {
     dateTime(time) {
@@ -124,6 +130,7 @@ export default {
   computed: {
     ...mapState({
       isInApp: (state) => state.app.isInApp,
+      isApplets: (state) => state.app.isApplets,
     }),
     avatar() {
       return GOODSLIST
@@ -193,6 +200,7 @@ export default {
   },
   head() {
     return {
+      title: '发现',
       meta: [
         {
           name: 'spptmd-track_code',
@@ -208,6 +216,7 @@ export default {
 .detail {
   /deep/ img {
     max-width: 100%;
+    height: auto;
   }
   /deep/ p {
     word-wrap: break-word;

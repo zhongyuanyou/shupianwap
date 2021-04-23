@@ -182,6 +182,7 @@ export default {
   },
   head() {
     return {
+      title: '发现',
       meta: [
         {
           name: 'spptmd-track_code',

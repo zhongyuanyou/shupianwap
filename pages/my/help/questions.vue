@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <Header title="问题解答" />
+    <Header v-if="!isApplets" title="问题解答" />
     <div class="title-box moudle">
       <my-icon
         name="command_img_questions"
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { foundApi } from '~/api'
 import Header from '@/components/common/head/header'
 export default {
@@ -52,6 +53,11 @@ export default {
   data() {
     return {}
   },
+  computed: {
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -82,6 +88,9 @@ export default {
       color: #222222;
       line-height: 46px;
       margin-top: -4px;
+      overflow: hidden;
+      word-wrap: break-word;
+      word-break: normal;
     }
   }
   .title-box {

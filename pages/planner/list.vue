@@ -10,7 +10,7 @@
 <template>
   <div class="list">
     <div ref="head" class="head">
-      <Header title="在线直选规划师">
+      <Header v-if="!isApplets" title="在线直选规划师">
         <template #left>
           <my-icon
             name="nav_ic_back"
@@ -271,6 +271,8 @@ export default {
       currentCity: (state) => state.city.currentCity,
       isInApp: (state) => state.app.isInApp,
       userInfo: (state) => state.user.userInfo,
+      isApplets: (state) => state.app.isApplets,
+      code: (state) => state.city.code,
     }),
     formatSearch() {
       const { sortId, keywords, region } = this.search
@@ -280,7 +282,12 @@ export default {
         sortType: matched.type,
         value: matched.sortValue,
       }
-      const code = region.name === '区域' ? this.currentCity.code : region.code
+      const code =
+        region.name === '区域'
+          ? this.isApplets
+            ? this.code
+            : this.currentCity.code
+          : region.code
       const regionDto = {
         codeState: region.name === '区域' ? 2 : 3,
         regions: [code],
@@ -296,7 +303,7 @@ export default {
       // 但是在app中登录等，登录信息cookie中的没有更新，导致直接从store中获取到的信息无效
       // 所以在app中进入此页面，先清除userInfo,获取最新的userInfo
       this.isInApp && this.clearUserInfo()
-
+      console.log(this.isInApp, 'app')
       this.uPGetCurrentRegion({ type: 'init' }).then((data) => {
         console.log('uPGetCurrentRegion data:', data)
         const { code } = data || {}
@@ -308,7 +315,6 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.headHeight = this.$refs.head.clientHeight
-      console.log('this.headHeight:', this.headHeight)
     })
   },
   methods: {
@@ -383,7 +389,6 @@ export default {
       const { type, data } = value
       switch (type) {
         case 'IM':
-          console.log('发起IM', data)
           this.uPIM(data)
           break
         case 'tel':
@@ -408,7 +413,16 @@ export default {
           }
           break
         case 'detail':
-          console.log('看看详情：', data)
+          // if (this.isApplets) {
+          //   this.uni.navigateTo({
+          //     url:
+          //       '/pages/common_son/webview/index?mchUserId=' +
+          //       data.mchUserId +
+          //       '&url=planner/detail/&isShare=' +
+          //       data.isShare,
+          //   })
+          //   return
+          // }
           this.$router.push({
             name: 'planner-detail',
             query: data,
@@ -501,7 +515,6 @@ export default {
       }
       console.log('telNumber:', telNumber)
       // 如果当前页面在app中，则调用原生拨打电话的方法
-
       // 浏览器中调用的
     },
 
@@ -537,7 +550,11 @@ export default {
         return
       }
       const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_B 启大顺 ;MERCHANT_S 启大包
-      this.creatImSessionMixin({ imUserId: mchUserId, imUserType })
+      this.creatImSessionMixin({
+        imUserId: mchUserId,
+        imUserType,
+        url: 'planner/list',
+      })
     },
 
     // app获取用户信息
@@ -616,9 +633,13 @@ export default {
     },
 
     // 获取区域数据
-    async getRegionList(code) {
+    async getRegionList(codes) {
+      const cityCode = this.isApplets ? this.code : codes
       try {
-        const data = await dict.findCmsTier({ axios: this.$axios }, { code })
+        const data = await dict.findCmsTier(
+          { axios: this.$axios },
+          { code: cityCode }
+        )
         console.log(data)
         if (Array.isArray(data) && data.length) {
           const { code: currentCityCode } = this.currentCity || {}
@@ -640,6 +661,7 @@ export default {
   },
   head() {
     return {
+      title: '在线直选规划师',
       meta: [
         {
           name: 'spptmd-track_code',

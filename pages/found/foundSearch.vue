@@ -157,6 +157,9 @@ export default {
       // this.$router.back()
     },
   },
+  head: {
+    title: '搜索',
+  },
 }
 </script>
 

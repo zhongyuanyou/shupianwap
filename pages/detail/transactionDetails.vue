@@ -70,6 +70,7 @@ export default {
     },
   },
   head: {
+    title: '商品详情',
     meta: [{ name: 'spptmd-track_code', content: 'SPW000014' }],
   },
   layout: 'keepAlive',

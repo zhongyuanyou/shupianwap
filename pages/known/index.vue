@@ -247,6 +247,7 @@ export default {
   },
   data() {
     return {
+      loading: false, // 加载状态
       editFinish: '编辑',
       showPop: false,
       showIcon: false,

@@ -261,34 +261,52 @@
           </sp-button>
         </div>
       </div>
-      <CancelOrder
-        ref="cancleOrderModel"
-        :order-id="orderData.orderId"
-        :cus-order-id="orderData.cusOrderId"
-        :order-list="orderData.orderList"
-        @setCancelOrderName="setCancelOrderName"
-        @cancleOrder="cancleOrder"
-        @getBatchList="getBatchList"
-      />
-      <PayModal
-        v-if="showPayBtn"
-        ref="payModal"
-        :order-data="orderData"
-        :pay-list="payList"
-        :batch-pay-status="batchPayStatus"
-        :this-time-pay-total="thisTimePayTotal"
-        :batch-ids="batchIds"
-      />
     </section>
     <div v-if="!hasData" class="loading-area">
       <sp-skeleton title avatar :row="10" :loading="loading"> </sp-skeleton>
       <LoadingCenter v-show="loading" />
     </div>
+    <sp-dialog
+      v-model="showMydialog"
+      :show-cancel-button="true"
+      :show-confirm-button="true"
+      confirm-button-text="同意并继续"
+      concel-button-text="不同意"
+      title="温馨提示"
+      @confirm="confirmAggret"
+      @cancle="cancelAggret"
+    >
+      <p class="xy-p">
+        请仔细阅读并同意,
+        <span @click="enterAgreement('protocol100008')"
+          >《{{ addOrderXy.title }}》</span
+        >，<span @click="enterAgreement('protocol100033')"
+          >《{{ tranXy.title }}》</span
+        >
+      </p>
+    </sp-dialog>
+    <PayModal
+      v-if="showPayBtn"
+      ref="payModal"
+      :order-data="orderData"
+      :pay-list="payList"
+      :batch-pay-status="batchPayStatus"
+      :this-time-pay-total="thisTimePayTotal"
+      :batch-ids="batchIds"
+    />
+    <CancelOrder
+      ref="cancleOrderModel"
+      :order-id="orderData.orderId"
+      :cus-order-id="orderData.cusOrderId"
+      @setCancelOrderName="setCancelOrderName"
+      @cancleOrder="cancleOrder"
+      @getBatchList="getBatchList"
+    />
   </div>
 </template>
 
 <script>
-import { Button, Skeleton } from '@chipspc/vant-dgg'
+import { Button, Skeleton, Dialog } from '@chipspc/vant-dgg'
 import Banner from '@/components/order/detail/Banner'
 // 服务订单
 import ServeList from '@/components/order/detail/ServeList'
@@ -304,6 +322,7 @@ export default {
   components: {
     [Button.name]: Button,
     [Skeleton.name]: Skeleton,
+    [Dialog.Component.name]: Dialog.Component,
     Banner,
     ServeList,
     TradeList,
@@ -350,16 +369,12 @@ export default {
       this.$router.back(-1)
     }
   },
-  // mounted() {
-  //   if (this.$route.query.id) {
-  //     this.orderId = this.$route.query.id
-  //     this.cusOrderId = this.$route.query.cusOrderId
-  //     this.getDetail()
-  //   } else {
-  //     this.$xToast.error('缺少参数')
-  //     this.$router.back(-1)
-  //   }
-  // },
+  async mounted() {
+    // 获取下单协议
+    this.addOrderXy = await this.getProtocol('protocol100008')
+    // 获取交易委托协议
+    this.tranXy = await this.getProtocol('protocol100033')
+  },
   methods: {
     onLeftClick() {
       this.$router.back(-1)
@@ -410,6 +425,8 @@ export default {
             arr1 = arr1.concat(orders[i].skuDetails)
           }
           this.orderData.orderSkuList = arr1
+          this.getChildOrders(this.orderData)
+          console.log('orderData', this.orderData)
           this.hasData = true
           this.loading = false
         })
@@ -677,6 +694,16 @@ export default {
       color: white;
       border: none;
     }
+  }
+}
+.xy-p {
+  font-size: 28px;
+  font-weight: 400;
+  color: #222222;
+  line-height: 38px;
+  padding: 20px 40px;
+  span {
+    color: #4f90f6;
   }
 }
 </style>

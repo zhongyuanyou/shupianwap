@@ -93,6 +93,7 @@
 
 <script>
 import { Sticky } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import { PLATFORM_CODE, TERMINAL_CODE } from '@/config/constant'
 import { searchApi } from '@/api'
 import Search from '@/components/common/search/Search'
@@ -127,6 +128,11 @@ export default {
       },
     }
   },
+  computed: {
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
+  },
   created() {
     if (process.client) {
       this.getInitData()
@@ -138,7 +144,13 @@ export default {
   methods: {
     // 取消
     clooseHandle() {
-      this.$router.back()
+      if (this.isApplets) {
+        this.uni.navigateBack({
+          delta: 1,
+        })
+      } else {
+        this.$router.back()
+      }
     },
     keyClickHandle() {
       const data = {
@@ -211,11 +223,32 @@ export default {
         // 跳转外链
         case 2:
           url = item.url
+          if (this.isApplets) {
+            const miniRouter = '/pages/common_son/link/outLink?url=' + url
+            this.$appFn.dggJumpRoute(
+              {
+                miniRouter,
+              },
+              (res) => {}
+            )
+            return
+          }
           window.location.href = url
           break
         // 跳转图片链接
         case 3:
           url = `img`
+          if (this.isApplets) {
+            const miniRouter =
+              '/pages/common_son/link/imgLink?imgUrl=' + item.imageUrl
+            this.$appFn.dggJumpRoute(
+              {
+                miniRouter,
+              },
+              (res) => {}
+            )
+            return
+          }
           this.$router.push({
             name: url,
             params: {
@@ -246,6 +279,11 @@ export default {
       this.addSearchHistoryMixin(data)
       this.jumpHandle(item)
     },
+  },
+  head() {
+    return {
+      title: '搜索',
+    }
   },
 }
 </script>

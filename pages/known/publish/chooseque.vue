@@ -34,10 +34,10 @@
                   </p>
                 </div>
               </div>
-              <div class="item-content">{{ item.contentText }}</div>
+              <div class="item-content">{{ item.title }}</div>
               <div class="item-bottom">
                 <div class="left">
-                  {{ item.answerCount }} 回答 · {{ item.collectCount }} 关注
+                  {{ item.answerCount }} 回答 · {{ item.collectCount }} 收藏
                 </div>
                 <div class="btn">
                   <sp-button type="primary" @click.stop="chooseQue(item)"
@@ -64,11 +64,11 @@
               class="item"
               @click="toDetail(item)"
             >
-              <p class="view-num">最近{{ item.totalBrowseCount }}人浏览</p>
-              <div class="item-content">{{ item.content }}</div>
+              <p class="view-num">最近{{ item.browseCount }}人浏览</p>
+              <div class="item-content">{{ item.title }}</div>
               <div class="item-bottom">
                 <div class="left">
-                  {{ item.answerCount }} 回答 · {{ item.collectCount }} 关注
+                  {{ item.answerCount }} 回答 · {{ item.collectCount }} 收藏
                 </div>
                 <div class="btn">
                   <sp-button type="primary" @click.stop="chooseQue(item)"

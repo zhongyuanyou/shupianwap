@@ -93,6 +93,7 @@ export default {
     ...mapState({
       isInApp: (state) => state.app.isInApp, // 是否app中
       appInfo: (state) => state.app.appInfo, // app信息
+      isApplets: (state) => state.app.isApplets,
     }),
     headHeight() {
       if (typeof this.height === 'number') {

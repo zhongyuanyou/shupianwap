@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="complaint">
-    <Header title="我要吐槽">
+    <Header :title="!isApplets ? '我要吐槽' : ''">
       <template #left>
         <div @click="back">
           <my-icon
@@ -141,6 +141,7 @@ export default {
       appInfo: (state) => state.app.appInfo, // app信息
       appPlatform: (state) => state.app.appPlatform,
       userInfo: (state) => state.user.userInfo, // 用户信息
+      isApplets: (state) => state.app.isApplets,
     }),
   },
   created() {
@@ -250,6 +251,10 @@ export default {
           setTimeout(() => {
             if (this.isInApp) {
               this.$appFn.dggWebGoBack((res) => {})
+            } else if (this.isApplets) {
+              this.uni.switchTab({
+                url: '/pages/my/index',
+              })
             } else {
               this.$router.back()
             }
@@ -336,6 +341,11 @@ export default {
       this.images.splice(detail.index, 1)
       this.uploader.splice(detail.index, 1)
     },
+  },
+  head() {
+    return {
+      title: '我要吐槽',
+    }
   },
 }
 </script>
