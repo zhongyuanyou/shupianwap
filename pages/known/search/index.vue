@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <sp-sticky :offset-top="appInfo.statusBarHeight">
+    <header-slot>
       <Search
         ref="searchRef"
         v-model.trim="value"
@@ -24,7 +24,7 @@
           >
         </template>
       </Search>
-    </sp-sticky>
+    </header-slot>
     <div v-if="knownHistory.length" class="history">
       <div class="tile">
         <h1>历史记录</h1>
@@ -47,7 +47,7 @@
           <sp-icon
             name="cross"
             class="close"
-            size="0.34rem"
+            size="0.3rem"
             color="#555555"
             @click.stop="del(index)"
           />
@@ -60,7 +60,7 @@
 <script>
 import { Sticky, Icon } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
-// import HeaderSlot from '@/components/common/head/header-slot'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 
 export default {
   name: 'SearchPage',
@@ -68,7 +68,7 @@ export default {
     [Sticky.name]: Sticky,
     [Icon.name]: Icon,
     Search,
-    // HeaderSlot,
+    HeaderSlot,
   },
   data() {
     return {
@@ -167,8 +167,12 @@ export default {
       border: none;
       box-shadow: none;
       height: 60px;
-      input {
-        background: #f5f5f5;
+      form {
+        width: 75%;
+        input {
+          background: #f5f5f5;
+          width: 100%;
+        }
       }
       .clear {
         position: absolute;
@@ -212,8 +216,8 @@ export default {
         color: #222222;
         align-items: center;
         height: 88px;
-        border-bottom: 1px solid #ddd;
         width: 100%;
+        position: relative;
         > .clock {
           display: block;
           margin-right: 24px;
@@ -231,6 +235,18 @@ export default {
           margin-left: auto;
           margin-right: 32px;
         }
+      }
+      li::after {
+        position: absolute;
+        box-sizing: border-box;
+        content: ' ';
+        pointer-events: none;
+        right: 30px;
+        bottom: 0;
+        left: 8px;
+        border-bottom: 1px solid #dddddd;
+        -webkit-transform: scaleY(0.6);
+        transform: scaleY(0.6);
       }
     }
   }

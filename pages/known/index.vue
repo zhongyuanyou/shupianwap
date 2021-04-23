@@ -7,7 +7,7 @@
     "
   >-->
   <div class="container">
-    <sp-sticky :offset-top="statusBarHeight">
+    <header-slot height="1.8rem">
       <div class="container_head">
         <Search
           value="请输入关键词搜索"
@@ -48,7 +48,7 @@
           @click.native="showPop = true"
         ></my-icon>
       </div>
-    </sp-sticky>
+    </header-slot>
     <Answer v-if="tabs[active].executionParameters === 'huida'" />
 
     <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
@@ -140,7 +140,7 @@
         </div>
         <span>{{ userInfo.userName }}</span>
       </div>
-      <div class="answer_article">
+      <div v-if="!isInApp" class="answer_article">
         <div class="item" @click="$router.push('/known/publish/question')">
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
@@ -154,6 +154,22 @@
             alt=""
           />
           <span>回答问题</span>
+        </div>
+        <div class="item" @click="$router.push('/known/publish/article')">
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/eoeulbunbpk0000.png"
+            alt=""
+          />
+          <span>写文章</span>
+        </div>
+      </div>
+      <div v-else class="answer_article app">
+        <div class="item" @click="$router.push('/known/publish/question')">
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
+            alt=""
+          />
+          <span>提个问题</span>
         </div>
         <div class="item" @click="$router.push('/known/publish/article')">
           <img
@@ -191,11 +207,10 @@ import OrdinaryList from '@/components/mustKnown/OrdinaryList'
 import Answer from '@/components/mustKnown/answer/Answer'
 import Search from '@/components/mustKnown/recommend/search/Search'
 import Bottombar from '@/components/common/nav/Bottombar'
-// import HeaderSlot from '@/components/common/head/header-slot'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi } from '@/api'
 
 export default {
-  layout: 'appSafeView',
   name: 'Index',
   components: {
     [WorkTab.name]: WorkTab,
@@ -213,7 +228,7 @@ export default {
     Attention,
     HotList,
     OrdinaryList,
-    // HeaderSlot,
+    HeaderSlot,
   },
   async asyncData({ $axios, store }) {
     const { code, message, data } = await $axios.get(
@@ -282,26 +297,13 @@ export default {
       }
     },
     toggleTabs() {},
-    async isLogin() {
-      if (this.userInfo.userId && this.userInfo.token) {
-        return true
-      } else if (this.isInApp) {
-        await this.$appFn.dggLogin()
-      } else {
-        this.$router.push({
-          path: '/login',
-          query: {
-            redirect: this.$route.fullPath,
-          },
-        })
-      }
-    },
     // 打开文章编辑框
-    openArticle() {
-      if (!this.isLogin()) {
-        return
+    async openArticle() {
+      const result = await this.$isLogin()
+      // 必须判断是否全等true 因为result可能会返回字符串
+      if (result === true) {
+        this.showArticlePop = true
       }
-      this.showArticlePop = true
     },
     // 编辑
     editIcon(status) {
@@ -322,7 +324,7 @@ export default {
       console.log('arrayValue1', arrayValue)
       if (arrayValue) {
         this.myPlate.push(arrayValue)
-        this.morePlate.pop(index)
+        this.morePlate.splice(index, 1)
       }
     },
     deleteToMyPlate(index) {
@@ -330,10 +332,9 @@ export default {
         this.active--
       }
       const arrayValue = this.myPlate[index]
-      console.log('arrayValu2', arrayValue)
       if (arrayValue) {
         this.morePlate.push(arrayValue)
-        this.myPlate.pop(index)
+        this.myPlate.splice(index, 1)
       }
     },
   },
@@ -409,7 +410,7 @@ export default {
 
 .container {
   height: 100%;
-  background: #fff;
+  background: #f5f5f5;
   .modal {
     position: fixed;
     top: 0;
@@ -555,6 +556,7 @@ export default {
         }
       }
       .popMiddle {
+        padding: 10px 0;
         // height: 50px;
         display: flex;
         align-items: center;
@@ -600,11 +602,11 @@ export default {
             height: 88px;
             background: #f5f5f5;
             border-radius: 44px;
-            font-size: 28px;
+            // font-size: 28px;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: #222222;
-            line-height: 28px;
+            // line-height: 28px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -618,12 +620,12 @@ export default {
             }
             > .item_name {
               width: 84px;
-              height: 28px;
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 1;
-              overflow: hidden;
+              // height: 28px;
               text-align: center;
+              font-size: 26px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
           }
           div:nth-child(4n + 4) {
@@ -761,6 +763,9 @@ export default {
           margin-top: 24px;
         }
       }
+    }
+    .answer_article.app {
+      justify-content: space-around;
     }
     > .line {
       height: 1px;

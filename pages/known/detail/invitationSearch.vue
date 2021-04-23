@@ -2,34 +2,32 @@
   <div class="invitationSearch">
     <header-slot>
       <div class="head">
-        <sp-sticky>
-          <Search
-            ref="fieldInput"
-            v-model="keyword"
-            :icon-left="0.12"
-            placeholder="搜索你想邀请的人"
-            @searchKeydownHandle="keyClickHandle"
-          >
-            <template v-slot:center>
-              <sp-icon
-                v-show="keyword != ''"
-                name="clear"
-                class="clear"
-                color="#CCCCCC"
-                size="0.35rem"
-                @click="clearInput"
-              />
-            </template>
-            <template v-slot:right>
-              <a
-                class="cloose-btn"
-                href="javascript:void(0);"
-                @click="clooseHandle"
-                >取消</a
-              >
-            </template>
-          </Search>
-        </sp-sticky>
+        <Search
+          ref="fieldInput"
+          v-model="keyword"
+          :icon-left="0.12"
+          placeholder="搜索你想邀请的人"
+          @searchKeydownHandle="keyClickHandle"
+        >
+          <template v-slot:center>
+            <sp-icon
+              v-show="keyword != ''"
+              name="clear"
+              class="clear"
+              color="#CCCCCC"
+              size="0.35rem"
+              @click="clearInput"
+            />
+          </template>
+          <template v-slot:right>
+            <a
+              class="cloose-btn"
+              href="javascript:void(0);"
+              @click="clooseHandle"
+              >取消</a
+            >
+          </template>
+        </Search>
       </div>
     </header-slot>
     <div class="recommend search">
@@ -67,7 +65,7 @@ import { Icon, Sticky, List } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import knownApi from '@/api/known'
 import util from '@/utils/changeBusinessData'
-import HeaderSlot from '@/components/common/head/header-slot'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 
 export default {
   name: 'InvitationSearch',

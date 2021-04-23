@@ -1,16 +1,25 @@
 <template>
   <div class="item-inner">
-    <sp-image class="img" :src="item.skuImages"></sp-image>
+    <sp-image class="img" :src="item.indexImg"></sp-image>
     <div class="right">
       <p class="goods-name">
-        <span class="name"> {{ item.orderSaleName || item.spuName }}</span>
+        <span
+          v-if="
+            item.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID' &&
+            item.classifyOneName.match('公司')
+          "
+          class="name"
+        >
+          {{ item.spuHideName || item.spuName }}</span
+        >
+        <span v-else class="name"> {{ item.spuName }}</span>
         <span class="money1">
           {{ changeMoney(item.skuPrice || item.skuPrice) }}元
         </span>
       </p>
       <div class="sku-info">
         <div class="goods-num">×{{ item.skuCount || 1 }}</div>
-        <p>{{ item.detailName || getSkus(item.skuExtInfo) }}</p>
+        <p>{{ item.skuDetailValues || item.skuExtInfo.replace(/\|/g, ';') }}</p>
         <!-- <p v-for="(item2, index2) in item.fieldList" :key="index2">
           {{ item2.fieldValue }}
         </p> -->
@@ -80,7 +89,6 @@ export default {
     .name {
       font-weight: bold;
       flex: 1;
-      .textOverflow(1);
       padding-right: 20px;
     }
     .money1 {

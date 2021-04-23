@@ -10,10 +10,15 @@ export default {
       cityName: (state) => state.city.currentCity.name,
       cityCode: (state) => state.city.currentCity.code,
       isInApp: (state) => state.app.isInApp,
+      appInfo: (state) => state.app.appInfo, // app信息
     }),
     userInfo() {
       return JSON.parse(localStorage.getItem('myInfo'))
     },
+    splittedRecommendProduct() {
+      return this.recommendProductList.slice(0, 3)
+    },
+    //  asdsa
   },
   mixins: [imHandle],
   data() {
@@ -114,6 +119,8 @@ export default {
       recommendProductList: [],
       allText: '全部',
       productType: '',
+      safeTop: 0,
+      headerHeight: 0,
     }
   },
   async created() {
@@ -124,11 +131,14 @@ export default {
       })
     }
 
-    this.getAdvertisingData()
+    // this.getAdvertisingData()
     await this.getMenuTabs().then(this.getRecommendProductList)
   },
   mounted() {
-    console.log(this.$store.state.user, 1111111111111)
+    if (this.isInApp) {
+      this.safeTop = this.appInfo.statusBarHeight
+    }
+    this.headerHeight = this.$refs.header_sticky.height
   },
   beforeDestroy() {
     clearInterval(timer)
@@ -165,21 +175,34 @@ export default {
       this.$router.push('/')
     },
     jumpProductDetail(item) {
-      console.log('jumpProductDetail', item)
-      if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
-        this.$router.push({
-          path: `/detail/transactionDetails`,
-          query: { productId: item.id, type: item.type },
-        })
-      } else {
-        this.$router.push({
-          path: `/detail/serviceDetails`,
-          query: { productId: item.id },
-        })
+      if (this.isInApp) {
+        if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+          this.$appFn.dggJumpRoute({
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
+          })
+        } else {
+          this.$appFn.dggJumpRoute({
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
+          })
+        }
+      }
+      if (!this.isInApp) {
+        if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
+          this.$router.push({
+            path: `/detail/transactionDetails`,
+            query: { productId: item.id, type: item.classCode },
+          })
+        } else {
+          this.$router.push({
+            path: `/detail/serviceDetails`,
+            query: { productId: item.id },
+          })
+        }
       }
     },
     jumpIM(item) {
-      console.log(item)
       this.uPIM({
         mchUserId: this.userInfo.imUserId,
         userName: this.userInfo.userName,
@@ -305,7 +328,6 @@ export default {
       return this.productMethod(params)
     },
     async productMethod(param) {
-      console.log('param', param)
       await this.$axios
         .get(activityApi.activityProductList, {
           params: param,
@@ -340,6 +362,10 @@ export default {
         isReco: 1,
         page: 1,
         limit: 100000,
+      }
+
+      if (this.hasCity) {
+        params.cityCode = this.cityCode
       }
 
       this.$axios
@@ -389,22 +415,7 @@ export default {
           console.log(err.message)
         })
     },
-    // onRefresh() {
-    //   // 清空列表数据
-    //   this.finished = false
-
-    //   // 重新加载数据
-    //   // 将 loading 设置为 true，表示处于加载状态
-    //   this.loading = true
-    //   this.onLoad()
-    // },
-    handlerItemChange(action, index) {
-      console.log(action, index)
-    },
     swichCityHandle() {
-      if (!this.cityName) {
-        return
-      }
       this.$router.push({
         path: '/city/choiceCity',
       })
@@ -412,10 +423,30 @@ export default {
     // 搜索框点击
     clickInputHandle() {
       if (this.isInApp) {
-        this.$appFn.dggJumpRoute({
-          iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/search/page"}}`,
-          androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/search/page"}}`,
-        })
+        const iOSRouter = {
+          path:
+            'CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation',
+          parameter: {
+            routerPath: 'cpsc/search/page',
+          },
+        }
+        const androidRouter = {
+          path: '/flutter/main',
+          parameter: {
+            routerPath: 'cpsc/search/page',
+          },
+        }
+        const iOSRouterStr = JSON.stringify(iOSRouter)
+        const androidRouterStr = JSON.stringify(androidRouter)
+        this.$appFn.dggJumpRoute(
+          {
+            iOSRouter: iOSRouterStr,
+            androidRouter: androidRouterStr,
+          },
+          (res) => {
+            console.log(res)
+          }
+        )
       } else {
         this.$router.push('/search')
       }

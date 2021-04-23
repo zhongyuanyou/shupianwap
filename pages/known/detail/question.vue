@@ -90,12 +90,23 @@
           {{ questionDetials.contentText }}
         </p>
         <div v-else class="tit" v-html="questionDetials.content"></div>
+
         <div class="btn" @click="contentshow = !contentshow">
           <span class="tit">{{ contentshow ? '收起' : '展开' }}</span>
           <sp-icon
-            :name="contentshow ? 'arrow-up' : 'arrow-down'"
-            size="0.4rem"
+            v-show="contentshow"
+            name="arrow-up"
+            size="0.3rem"
             color="#999999"
+            style="margin-top: -0.06rem; margin-left: 0.05rem"
+            class="ellipsis"
+          />
+          <sp-icon
+            v-show="!contentshow"
+            name="arrow-down"
+            size="0.3rem"
+            color="#999999"
+            style="margin-left: 0.05rem"
             class="ellipsis"
           />
         </div>
@@ -371,7 +382,9 @@ export default {
         })
         if (res.code === 200) {
           if (res.data.categoryName) {
-            res.data.categoryName = res.data.categoryName.split(',')
+            res.data.categoryName = res.data.categoryName
+              .split(',')
+              .filter(Boolean)
           }
           if (res.data.contentImageUrl) {
             res.data.contentImageUrl = res.data.contentImageUrl.split(',')
@@ -784,7 +797,7 @@ export default {
         }
       }
       > .right {
-        width: 156px;
+        padding: 0 20px;
         height: 56px;
         background: #f5f5f5;
         border-radius: 28px;
@@ -802,8 +815,8 @@ export default {
     }
     > .btns {
       display: flex;
-      border-top: 1px solid #dddddd;
       border-bottom: 1px solid #dddddd;
+      border-top: 1px solid #dddddd;
       > .box {
         padding-top: 23px;
         box-sizing: border-box;
@@ -929,17 +942,18 @@ export default {
     > .head {
       padding: 0 32px;
       height: 96px;
-      border-bottom: 1px solid #dddddd;
+      // border-bottom: 1px solid #dddddd;
       display: flex;
       align-items: center;
       background: #fff;
+      position: relative;
       > p {
         font-size: 30px;
         font-weight: 500;
         color: #222222;
       }
       > div {
-        width: 216px;
+        // width: 216px;
         height: 60px;
         background: #f5f5f5;
         border-radius: 31px;
@@ -949,13 +963,13 @@ export default {
         align-items: center;
         > span {
           width: 104px;
-          height: 52px;
+          // height: 52px;
           display: block;
           font-size: 26px;
           font-weight: 500;
           color: #999999;
           text-align: center;
-          line-height: 52px;
+          // line-height: 52px;
           position: relative;
           z-index: 1;
         }
@@ -963,7 +977,7 @@ export default {
           color: #222222;
         }
         > .bg {
-          width: 104px;
+          width: 97px;
           height: 52px;
           background: #ffffff;
           border-radius: 27px;
@@ -979,6 +993,18 @@ export default {
           transition: all 0.3s;
         }
       }
+    }
+    > .head::after {
+      position: absolute;
+      box-sizing: border-box;
+      content: ' ';
+      pointer-events: none;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border-bottom: 1px solid #dddddd;
+      -webkit-transform: scaleY(0.6);
+      transform: scaleY(0.6);
     }
     .list {
       margin-bottom: 10px;
@@ -1056,10 +1082,12 @@ export default {
       font-weight: 500;
       color: #222222;
       text-align: center;
-      line-height: 72px;
       display: flex;
       align-items: center;
       justify-content: center;
+      > span {
+        margin-left: 0.1rem;
+      }
     }
   }
 }

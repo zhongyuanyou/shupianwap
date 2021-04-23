@@ -43,6 +43,8 @@
         </div>
       </sp-list>
     </div>
+    <!-- 加载组件 -->
+    <LoadingCenter v-show="mackLoading" />
   </div>
 </template>
 
@@ -52,8 +54,8 @@ import { Icon, Field, List, Sticky } from '@chipspc/vant-dgg'
 import knownApi from '@/api/known'
 import util from '@/utils/changeBusinessData'
 import Search from '@/components/common/search/Search'
-import HeaderSlot from '@/components/common/head/header-slot'
-
+import HeaderSlot from '@/components/common/head/HeaderSlot'
+import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
   name: 'InvitationList',
   components: {
@@ -63,6 +65,7 @@ export default {
     Search,
     [Sticky.name]: Sticky,
     HeaderSlot,
+    LoadingCenter,
   },
   data() {
     return {
@@ -75,6 +78,7 @@ export default {
       limit: 50, // 这里一次请求所有数据 经过和付蔚杰沟通 2021/4/19
       questionId: '',
       invitedAllFlag: false,
+      mackLoading: false,
     }
   },
   computed: {
@@ -124,6 +128,7 @@ export default {
         )
         if (code === 200) {
           data.rows.forEach((item) => {
+            this.invitedAllFlag = false
             item.custInvited = false
           })
           this.recommendList.push(...data.rows)
@@ -141,6 +146,7 @@ export default {
       }
     },
     async inviteApi(datas) {
+      this.mackLoading = true
       // 邀请用户回答
       try {
         const params = {
@@ -164,12 +170,13 @@ export default {
           params
         )
         if (code === 200) {
+          this.mackLoading = false
           let message
           if (datas === 'all') {
             this.recommendList.forEach((item) => {
               item.custInvited = true
             })
-            this.message = '一键邀请成功'
+            message = '一键邀请成功'
             this.invitedAllFlag = true
           } else {
             datas.custInvited = true
@@ -182,6 +189,7 @@ export default {
             forbidClick: true,
           })
         } else {
+          this.mackLoading = false
           this.$xToast.show({
             message: '邀请失败,请联系客服',
             duration: 1000,
@@ -190,6 +198,7 @@ export default {
           })
         }
       } catch (e) {
+        this.mackLoading = false
         this.$xToast.show({
           message: '邀请失败,请联系客服',
           duration: 1000,

@@ -38,6 +38,7 @@ const infoList = [
   'known-detail-invitationList',
   'known-detail-invitationSearch',
   'my-collection',
+  'activity-coupon',
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {

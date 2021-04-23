@@ -170,7 +170,10 @@ export default {
     currentSelectedCartIds: {
       handler(newVal, oldVal) {
         console.log('newVal:', newVal)
-        if (newVal.length && newVal.length === this.list.length) {
+        const list = this.list.filter(
+          (item) => item.status !== 'PRO_STATUS_SOLD_OUT'
+        )
+        if (newVal.length && newVal.length === list.length) {
           return (this.bottomData.selectAll = true)
         }
         return (this.bottomData.selectAll = false)
@@ -395,6 +398,7 @@ export default {
         })
         return
       }
+      console.log('this.currentSelectedCartIds')
       const cartId = this.currentSelectedCartIds.join(',')
       this.deteleItem(cartId)
     },
@@ -625,7 +629,7 @@ export default {
           }
           break
         case 'select':
-          params = { selectFlag: +value } // 将boolean转换为数字（1：选中 ,0：取消选中）
+          params = { selectFlag: value === true ? 1 : '0' } // 将boolean转换为数字（1：选中 ,0：取消选中）
           break
         case 'init':
           // 根据后台要求，id不能为空，虽然不用，所以随便传

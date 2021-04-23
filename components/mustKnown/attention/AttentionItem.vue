@@ -210,6 +210,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.sp-list {
+  background: #f5f5f5;
+}
+
 .like_active {
   color: #4974f5 !important;
 }

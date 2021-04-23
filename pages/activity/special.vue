@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container" :style="{ marginTop: safeTop + 'px' }">
     <!-- S search -->
-    <sp-sticky>
+    <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="search">
         <div class="left-back" :style="style.iconStyle" @click="uPGoBack">
           <my-icon
@@ -49,9 +49,8 @@
       <!-- S avtar -->
       <!-- S avtar -->
       <div class="avtars">
-        <!-- TODO 换回来activityTypeOptions -->
         <div
-          v-for="item in activityProductList"
+          v-for="item in recommendProductList"
           :key="item.id"
           class="avtar"
           @click="jumpProductDetail(item)"
@@ -96,7 +95,7 @@
       <!-- E avtar -->
     </div>
 
-    <sp-sticky class="tabs-box" offset-top="16vw">
+    <sp-sticky class="tabs-box" :offset-top="headerHeight + safeTop">
       <ul class="tabs-box-items">
         <li
           v-for="(item, index) in activityTypeOptions"
@@ -467,7 +466,9 @@ export default {
       display: flex;
       background-color: #ffffff;
       justify-content: flex-start;
+      overflow-x: scroll;
       .li-tab {
+        white-space: nowrap;
         padding: 0 24px;
         background: #f5f5f5;
         border-radius: 32px;

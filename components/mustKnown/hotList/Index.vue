@@ -29,7 +29,7 @@
         "
       >
         <div class="see_like">
-          <my-icon name="dianzan" size="0.24rem" color="#4974F5"></my-icon>
+          <my-icon name="dianzan" size="0.24rem" color="#564499"></my-icon>
         </div>
         <div class="see_span">
           {{ subjectList[1] ? subjectList[1].name : '进站必看' }}
@@ -190,12 +190,10 @@ export default {
       align-items: center;
     }
     .news_span {
-      height: 28px;
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
       color: #133aa3;
-      line-height: 28px;
       margin-left: 12px;
     }
   }
@@ -217,12 +215,10 @@ export default {
       align-items: center;
     }
     .see_span {
-      height: 28px;
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
       color: #564499;
-      line-height: 28px;
       margin-left: 12px;
     }
   }

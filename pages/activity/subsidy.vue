@@ -1,7 +1,14 @@
 <template>
-  <div class="container">
+  <div class="container" :style="{ marginTop: safeTop + 'px' }">
+    <div
+      class="rule-tag"
+      :style="{ top: safeTop + headerHeight + 10 + 'px' }"
+      @click="$router.push('/login/protocol?categoryCode=protocol100034')"
+    >
+      规则
+    </div>
     <!-- S search -->
-    <sp-sticky>
+    <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="search">
         <div class="left-back" @click="uPGoBack">
           <my-icon
@@ -19,7 +26,11 @@
             color="#FFFFFF"
             :style="{ marginLeft: iconLeft + 'rem' }"
           ></my-icon>
-          <input placeholder="搜索补贴商品" @click="clickInputHandle" />
+          <input
+            placeholder="搜索补贴商品"
+            readonly
+            @click="clickInputHandle"
+          />
         </div>
       </div>
     </sp-sticky>
@@ -27,26 +38,59 @@
     <div class="container-advice">
       <!-- S advert -->
       <div class="advert_box">
-        <div class="advert_item"></div>
-        <div class="advert_item"></div>
-        <div class="advert_item"></div>
+        <div
+          v-for="item in splittedRecommendProduct"
+          :key="item.id"
+          class="advert_item"
+          @click="jumpProductDetail(item)"
+        >
+          <div class="advert_item-img">
+            <div class="advert_item-angle"></div>
+            <div class="advert_item-tag">真便宜 不用算</div>
+            <img
+              height="100%"
+              width="100%"
+              :src="
+                item.imageUrl ||
+                'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+              "
+              alt="商品图片"
+            />
+          </div>
+          <div class="advert_item-title">
+            <div class="advert_item-title-name">{{ item.skuName }}</div>
+            <div class="advert_item-title-price">
+              低至
+              <span class="advert_item-title-num">{{ item.specialPrice }}</span>
+              元
+            </div>
+          </div>
+          {{ item.skuName }}
+        </div>
+        <!-- <div class="advert_item"></div>
+        <div class="advert_item"></div> -->
       </div>
       <!-- E advert -->
     </div>
-    <sp-sticky class="tabs-box" offset-top="15.8vw">
+    <sp-sticky class="tabs-box" :offset-top="headerHeight + safeTop">
       <div class="drop_down">
-        <div class="drop_down_title">成都</div>
+        <div class="drop_down_title" @click="swichCityHandle">
+          {{ cityName ? cityName : '定位中' }}
+        </div>
         <div class="drop_down_icon"></div>
       </div>
       <ul class="tabs-box-items">
-        <li class="active">精选</li>
-        <li>工商</li>
-        <li>财税</li>
-        <li>知产</li>
-        <li>法律</li>
+        <li
+          v-for="(item, index) in activityTypeOptions"
+          :key="item.labelName"
+          :class="{ active: index == currentIndex }"
+          @click="menuTab(item, index)"
+        >
+          {{ item.labelName }}
+        </li>
       </ul>
     </sp-sticky>
-    <div class="container-body" :style="containerStyle">
+    <div class="container-body">
       <div class="body-content">
         <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
           <sp-list
@@ -55,7 +99,11 @@
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <div v-for="(item, index) in activityProductList" :key="index">
+            <div
+              v-for="(item, index) in activityProductList"
+              :key="index"
+              @click="jumpProductDetail(item)"
+            >
               <div class="body-content-items">
                 <div class="left-content">
                   <img
@@ -80,6 +128,7 @@
                       :key="tag"
                     >
                       {{ overflowDot(tag, 6) }}
+                      <!-- {{ tag }} -->
                     </div>
                   </div>
                   <div class="rc-bottom">
@@ -131,113 +180,42 @@ export default {
   data() {
     return {
       specType: 'HDZT_ZTTYPE_QWBT',
-      time: '',
-      list: [],
-      containerStyle: '',
-      items: [
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '成都锦江区有限 公司免地址注册',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '698.99',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '成都锦江区有限 公司免地址注册',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '698.99',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '成都锦江区有限 公司免地址注册',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '698.99',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '成都锦江区有限 公司免地址注册',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '698.99',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '成都锦江区有限 公司免地址注册',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '698.99',
-          price: '998',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '独家转售',
-          content: '成都锦江区有限 公司免地址注册',
-          mdTitle: '适用项目：服装;成品衣;内衣;童装;鞋;帽;…',
-          money: '698.99',
-          price: '998',
-        },
-      ],
-      defaultData: {
-        index: 0,
-        sort: -1, // 倒序
-      },
+      hasCity: true,
     }
-  },
-  methods: {
-    onLoad() {
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        this.loading = false
-
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
-    },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
-
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
-    handlerItemChange(action, index) {
-      console.log(action, index)
-      this.$toast(`选择结果：${JSON.stringify({ type: action, index })}`)
-    },
   },
 }
 </script>
 
 <style lang="less" scoped>
+.overflowDot {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 .container {
   position: relative;
   background: url('https://cdn.shupian.cn/sp-pt/wap/33iptmq9cya0000.png');
   background-size: 100% auto;
   -moz-background-size: 100% auto;
-  background-attachment: fixed;
+  // background-attachment: fixed;
+  .rule-tag {
+    position: absolute;
+    right: 0;
+    width: 68px;
+    height: 36px;
+    line-height: 36px;
+    background: linear-gradient(42deg, #ffa291 0%, #ffdb12 100%);
+    box-shadow: 0px 0px 20px 0px rgba(192, 24, 33, 0.5);
+    border-radius: 32px 0px 0px 32px;
+    // opacity: 0.5;
+    z-index: 10;
+    font-size: 20px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #ffffff;
+    text-align: right;
+    padding-right: 12px;
+  }
   .search {
     display: flex;
     // justify-content: space-between;
@@ -290,9 +268,7 @@ export default {
   }
   .container-advice {
     width: 750px;
-    height: 821px;
-    padding: 0 20px;
-    position: relative;
+    padding: 290px 0 32px 0;
     /deep/.sp-sticky--fixed {
       max-width: 10rem;
       width: 100%;
@@ -304,105 +280,104 @@ export default {
     }
     .advert_box {
       display: flex;
-      justify-content: space-between;
-      position: absolute;
-      top: 438px;
+      justify-content: flex-start;
+      padding: 0 20px;
       .advert_item {
         width: 230px;
         height: 288px;
         background: #fff2e3;
         border-radius: 12px;
         margin-right: 10px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        overflow: hidden;
+        box-shadow: 0px 0px 5px 1px rgba(255, 255, 255, 0.6);
+        .advert_item-img {
+          border-radius: 12px;
+          overflow: hidden;
+          position: relative;
+          width: 100%;
+          height: 202px;
+          .advert_item-angle {
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 60px;
+            height: 60px;
+            background-size: 100% 100%;
+            background-image: url(https://cdn.shupian.cn/sp-pt/wap/images/ev3o08ysl400000.png);
+          }
+          .advert_item-tag {
+            bottom: 6px;
+            position: absolute;
+            background-repeat: no-repeat;
+            font-size: 20px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #ffffff;
+            background-size: 100% 100%;
+            width: 160px;
+            height: 38px;
+            line-height: 35px;
+            left: 50%;
+            text-align: center;
+            transform: translateX(-50%);
+            background-image: url(https://cdn.shupian.cn/sp-pt/wap/images/9joze15ug200000.png);
+          }
+        }
+        .advert_item-title {
+          text-align: center;
+          height: 86px;
+          .advert_item-title-name {
+            font-size: 22px;
+            font-weight: 600;
+            color: #222222;
+            line-height: 22px;
+            margin: 12px 0 5px 0;
+          }
+          .advert_item-title-price {
+            font-size: 20px;
+            font-weight: 500;
+            color: #ec5330;
+            .advert_item-title-num {
+              font-size: 35px;
+            }
+          }
+        }
       }
     }
   }
 
   .tabs-box {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     height: 88px;
     padding: 12px 0 0 0;
     border-radius: 24px 24px 0 0;
     background-color: #fff;
     width: 100vw;
-    .drop_down {
-      width: 131px;
-      height: 56px;
-      background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
-      border-radius: 32px;
-      display: flex;
-      align-items: center;
-      .drop_down_title {
-        padding: 0 8px 0 24px;
-        height: 30px;
-        font-size: 30px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #ffffff;
-        line-height: 30px;
-      }
-      .drop_down_icon {
-        background: url('https://cdn.shupian.cn/sp-pt/wap/9ij1cu5sv4g0000.png');
-        width: 15px;
-        height: 10px;
-        background-size: 100% 100%;
-        -moz-background-size: 100% 100%;
-      }
-    }
-    .tabs-box-items {
-      display: flex;
-      justify-content: space-between;
-      li {
-        height: 32px;
-        font-size: 32px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
-        color: #555555;
-        line-height: 32px;
-        margin-left: 48px;
-      }
-      li.active {
-        //   padding: 17px 42px;
-        width: 64px;
-        height: 32px;
-        font-size: 32px;
-        font-family: PingFangSC-Semibold, PingFang SC;
-        font-weight: 600;
-        color: #ec5330;
-        line-height: 32px;
-      }
-      li:nth-child(1) {
-        // margin-left: 20px;
-      }
-      li:nth-last-child(1) {
-        margin-right: 15px;
-      }
-    }
-  }
-  .tabs-box {
     width: 100vw;
     /deep/ .sp-sticky {
       border-radius: 24px 24px 0 0;
       background-color: #fff;
       width: 100%;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       height: 88px;
-      // padding: 12px 0 0 0;
       padding: 0 20px;
       &.sp-sticky--fixed {
         border-radius: 0;
       }
     }
     .drop_down {
-      width: 131px;
+      width: 150px;
       height: 56px;
       background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
       border-radius: 32px;
       display: flex;
       align-items: center;
+      margin-right: 48px;
       .drop_down_title {
         padding: 0 8px 0 24px;
         height: 30px;
@@ -422,31 +397,22 @@ export default {
     }
     .tabs-box-items {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
+      max-width: 550px;
+      overflow-x: scroll;
       li {
+        white-space: nowrap;
         height: 32px;
         font-size: 32px;
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
         color: #555555;
         line-height: 32px;
-        margin-left: 48px;
-      }
-      li.active {
-        //   padding: 17px 42px;
-        width: 64px;
-        height: 32px;
-        font-size: 32px;
-        font-family: PingFangSC-Semibold, PingFang SC;
-        font-weight: 600;
-        color: #ec5330;
-        line-height: 32px;
-      }
-      li:nth-child(1) {
-        // margin-left: 20px;
-      }
-      li:nth-last-child(1) {
-        margin-right: 15px;
+        margin-right: 48px;
+        &.active {
+          font-weight: 600;
+          color: #ec5330;
+        }
       }
     }
   }
@@ -469,36 +435,18 @@ export default {
         height: 284px;
         width: 100%;
         padding: 32px 0;
+        justify-content: space-between;
       }
       .left-content {
-        position: relative;
-        margin-right: 32px;
         width: 220px;
         height: 220px;
-        // background: linear-gradient(
-        //   180deg,
-        //   #46494d 0%,
-        //   #797d83 0%,
-        //   #414347 100%
-        // );
         border-radius: 12px;
         background-size: 100% 100%;
         -moz-background-size: 100% 100%;
         overflow: hidden;
-        // background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
-        .left-span {
-          position: absolute;
-          border-radius: 12px 0 0 0;
-          background: linear-gradient(90deg, #ffb132 0%, #ff8208 100%);
-          font-size: 20px;
-          font-weight: 500;
-          color: #ffffff;
-          top: -6px;
-          left: 0;
-          padding: 12px 6px 16px 6px;
-        }
       }
       .right-content {
+        width: 458px;
         .rc-top {
           font-size: 32px;
           height: 84px;
@@ -547,6 +495,8 @@ export default {
             background: #f0f2f5;
             border-radius: 4px;
             margin-right: 8px;
+            // max-width: 30%;
+            // .overflowDot();
           }
         }
         .rc-bottom {

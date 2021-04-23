@@ -38,7 +38,7 @@
               <p>{{ item.userName }}</p>
             </div>
             <p class="tit">
-              {{ item.content }}
+              {{ item.contentText }}
             </p>
           </div>
           <img v-if="item.img" :src="item.img" alt="" class="right" />

@@ -61,6 +61,7 @@
         size="0.22rem"
         color="#999999"
         class="my_icon"
+        style="margin-top: 2px"
       ></my-icon>
     </div>
   </sp-list>
@@ -175,7 +176,7 @@ export default {
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #999999;
-  line-height: 24px;
+  // line-height: 24px;
   justify-content: center;
   margin: 60px auto;
   .my_icon {
@@ -184,7 +185,7 @@ export default {
 }
 .item {
   padding: 18px 0 28px 0;
-  border-top: 1px solid #dddddd;
+  // border-top: 1px solid #dddddd;
   .item_top {
     display: flex;
     // justify-content: space-between;
@@ -196,14 +197,14 @@ export default {
       color: #999999;
       width: 0.33rem;
       height: 0.44rem;
-      margin-top: 0.1rem;
+      margin-top: 0.08rem;
       margin-right: 0.2rem;
     }
     .first {
       width: 30px;
       height: 44px;
       background: url('https://cdn.shupian.cn/sp-pt/wap/fszz6gnty1s0000.png');
-      margin-top: 10px;
+      margin-top: 8px;
       margin-right: 20px;
       color: #fff;
       background-size: 100% 100%;
@@ -213,7 +214,7 @@ export default {
       width: 30px;
       height: 44px;
       background: url('https://cdn.shupian.cn/sp-pt/wap/5rd435gzz4s0000.png');
-      margin-top: 10px;
+      margin-top: 8px;
       margin-right: 20px;
       color: #fff;
       background-size: 100% 100%;
@@ -223,7 +224,7 @@ export default {
       width: 30px;
       height: 44px;
       background: url('https://cdn.shupian.cn/sp-pt/wap/blyffrn3qg80000.png');
-      margin-top: 10px;
+      margin-top: 8px;
       margin-right: 20px;
       color: #fff;
       background-size: 100% 100%;
@@ -260,12 +261,25 @@ export default {
     }
   }
   .item_bottom {
-    padding-top: 16px;
+    display: inline-block;
+    margin-top: 26px;
     font-size: 24px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #999999;
     line-height: 24px;
   }
+}
+.item::after {
+  position: absolute;
+  box-sizing: border-box;
+  content: ' ';
+  pointer-events: none;
+  right: 16px;
+  bottom: 0;
+  left: 16px;
+  border-bottom: 1px solid #dddddd;
+  -webkit-transform: scaleY(0.6);
+  transform: scaleY(0.6);
 }
 </style>
