@@ -1,41 +1,38 @@
 <template>
   <div>
-    <div ref="myPage">
-      <!-- <PageHead v-if="!showHead2"></PageHead> -->
-      <Header height=" 0.88rem">
-        <template #left>
-          <div>
-            <sp-icon name="arrow-left" size="0.4rem" @click="goBack" />
-          </div>
-        </template>
-        <template #right>
-          <div class="btn">
-            <sp-icon
-              name="search"
-              size="0.4rem"
-              color="#1a1a1a"
-              class="ss"
-              @click="$router.push('/known/search')"
-            />
-            <sp-icon
-              v-if="articleDetails.createrId === userInfo.userId"
-              name="ellipsis"
-              size="0.4rem"
-              color="#1a1a1a"
-              class="ellipsis"
-              @click="popupShow = true"
-            />
-          </div>
-        </template>
-      </Header>
-      <PageHead2
-        v-if="showHead2"
-        :header-data="articleDetails"
-        :is-follow="isFollow"
-        :is-show-follow="articleDetails.createrId !== userInfo.userId"
-        @follow="follow"
-      />
-    </div>
+    <HeaderSlot>
+      <div v-if="!showHead2" class="flex">
+        <div>
+          <sp-icon name="arrow-left" size="0.4rem" @click="goBack" />
+        </div>
+        <div>
+          <sp-icon
+            style="margin-right: 0.15rem"
+            name="search"
+            size="0.4rem"
+            color="#1a1a1a"
+            @click="$router.push('/known/search')"
+          />
+          <sp-icon
+            v-if="articleDetails.createrId === userInfo.userId"
+            name="ellipsis"
+            size="0.4rem"
+            color="#1a1a1a"
+            class="ellipsis"
+            @click="popupShow = true"
+          />
+        </div>
+      </div>
+      <div v-if="showHead2" class="flex">
+        <PageHead2
+          :header-data="articleDetails"
+          :is-follow="isFollow"
+          :is-show-follow="articleDetails.createrId !== userInfo.userId"
+          @follow="follow"
+        />
+      </div>
+    </HeaderSlot>
+    <div ref="myPage"></div>
     <div class="title-area">
       <div class="title">{{ articleDetails.title }}</div>
     </div>
@@ -165,7 +162,8 @@ import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
 import DetailArticleList from '@/components/mustKnown/DetailArticleList'
 // 默认评论列表
 import Comment from '~/components/mustKnown/DetailComment'
-import Header from '@/components/common/head/header'
+// import Header from '@/components/common/head/header'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   components: {
     [Icon.name]: Icon,
@@ -175,10 +173,11 @@ export default {
     [Dialog.name]: Dialog,
     [Popup.name]: Popup,
     Comment,
+    HeaderSlot,
     // PageHead,
     PageHead2,
     DetailArticleList,
-    Header,
+    // Header,
   },
   async asyncData({ $axios, query, store }) {
     const res = await $axios.get(knownApi.questionArticle.detail, {
@@ -478,13 +477,25 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.fixed-head {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 104px;
-  z-index: 99;
+// .fixed-head {
+//   position: fixed;
+//   left: 0;
+//   top: 0;
+//   width: 100%;
+//   height: 104px;
+//   z-index: 99;
+// }
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 0.88rem;
+  padding: 0 0.32rem;
+  div {
+    display: flex;
+    height: 0.88rem;
+    align-items: center;
+  }
 }
 .head {
   position: fixed;
@@ -518,7 +529,7 @@ export default {
   }
 }
 .title-area {
-  margin-top: 120px;
+  // margin-top: 120px;
   padding: 20px 40px;
   .title {
     font-size: 40px;
@@ -697,20 +708,10 @@ export default {
     }
   }
 }
-/deep/.my-head {
-  padding: 0 32px;
-  box-sizing: border-box !important;
-  .title {
-    > span {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      display: block;
-      width: 500px;
-      margin: 0 auto;
-    }
-  }
-}
+// /deep/.my-head {
+//   padding: 0 32px;
+//   box-sizing: border-box !important;
+// }
 .problem {
   padding-top: 20px;
   background: #fff;

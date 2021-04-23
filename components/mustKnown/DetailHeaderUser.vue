@@ -1,13 +1,7 @@
 <template>
   <header-slot>
     <div class="head head2">
-      <my-icon
-        class="btn-icon"
-        name="zuo"
-        size="0.4rem"
-        color="#1A1A1A"
-        @click.native="$back"
-      ></my-icon>
+      <sp-icon name="arrow-left" size="0.4rem" @click="$back" />
       <div class="user-info">
         <sp-image
           class="img"
@@ -32,10 +26,11 @@
 </template>
 
 <script>
-import { Image, Button } from '@chipspc/vant-dgg'
+import { Image, Button, Icon } from '@chipspc/vant-dgg'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   components: {
+    [Icon.name]: Icon,
     [Image.name]: Image,
     [Button.name]: Button,
     HeaderSlot,
@@ -74,25 +69,31 @@ export default {
 .head {
   background: #ffffff;
   line-height: 88px;
+  height: 0.88rem;
   font-size: 30px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
   color: #4974f5;
-  padding: 0 40px;
+  padding: 0 32px;
+  box-sizing: border-box;
   .btn-icon {
     float: left;
   }
+  /deep/ i {
+    color: #000;
+  }
 }
 .head2 {
-  height: 104px;
+  // height: 104px;
   background: #ffffff;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   .user-info {
     flex: 1;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    padding: 16px 0;
     padding-left: 20px;
     .img {
       width: 72px;
@@ -103,7 +104,6 @@ export default {
     }
     .infos {
       flex: 1;
-      height: 26px;
       font-size: 26px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
@@ -115,7 +115,6 @@ export default {
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
         color: #222222;
-        margin-bottom: 20px;
       }
     }
     .btn2 {
@@ -142,7 +141,7 @@ export default {
     }
   }
   .btn-icon {
-    line-height: 104px;
+    // line-height: 104px;
     float: left;
   }
 }
