@@ -1,15 +1,38 @@
 <template>
   <div>
-    <div ref="myPage">
-      <PageHead v-if="!showHead2" :title="articleDetails.title"></PageHead>
-      <PageHead2
-        v-if="showHead2"
-        :header-data="articleDetails"
-        :is-follow="isFollow"
-        :is-show-follow="articleDetails.createrId !== userInfo.userId"
-        @follow="follow"
-      />
-    </div>
+    <HeaderSlot>
+      <div v-if="!showHead2" class="flex">
+        <div>
+          <sp-icon name="arrow-left" size="0.4rem" @click="goBack" />
+        </div>
+        <div>
+          <sp-icon
+            style="margin-right: 0.15rem"
+            name="search"
+            size="0.4rem"
+            color="#1a1a1a"
+            @click="$router.push('/known/search')"
+          />
+          <sp-icon
+            v-if="articleDetails.createrId === userInfo.userId"
+            name="ellipsis"
+            size="0.4rem"
+            color="#1a1a1a"
+            class="ellipsis"
+            @click="popupShow = true"
+          />
+        </div>
+      </div>
+      <div v-if="showHead2" class="flex">
+        <PageHead2
+          :header-data="articleDetails"
+          :is-follow="isFollow"
+          :is-show-follow="articleDetails.createrId !== userInfo.userId"
+          @follow="follow"
+        />
+      </div>
+    </HeaderSlot>
+    <div ref="myPage"></div>
     <div class="title-area">
       <div class="title">{{ articleDetails.title }}</div>
     </div>
@@ -106,15 +129,19 @@ import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
 import DetailArticleList from '@/components/mustKnown/DetailArticleList'
 // 默认评论列表
 import Comment from '~/components/mustKnown/DetailComment'
+// import Header from '@/components/common/head/header'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   components: {
     [Button.name]: Button,
     [Image.name]: Image,
     [Field.name]: Field,
     Comment,
-    PageHead,
+    HeaderSlot,
+    // PageHead,
     PageHead2,
     DetailArticleList,
+    // Header,
   },
   async asyncData({ $axios, query, store }) {
     const res = await $axios.get(knownApi.questionArticle.detail, {
@@ -369,13 +396,25 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.fixed-head {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 104px;
-  z-index: 99;
+// .fixed-head {
+//   position: fixed;
+//   left: 0;
+//   top: 0;
+//   width: 100%;
+//   height: 104px;
+//   z-index: 99;
+// }
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 0.88rem;
+  padding: 0 0.32rem;
+  div {
+    display: flex;
+    height: 0.88rem;
+    align-items: center;
+  }
 }
 .head {
   position: fixed;
@@ -409,7 +448,7 @@ export default {
   }
 }
 .title-area {
-  margin-top: 120px;
+  // margin-top: 120px;
   padding: 20px 40px;
   .title {
     font-size: 40px;
@@ -585,6 +624,201 @@ export default {
         height: 40px;
       }
     }
+  }
+}
+// /deep/.my-head {
+//   padding: 0 32px;
+//   box-sizing: border-box !important;
+// }
+.problem {
+  padding-top: 20px;
+  background: #fff;
+  > .tag {
+    width: 100%;
+    overflow: auto;
+    padding: 0 32px;
+    margin-bottom: 36px;
+    > .box {
+      display: flex;
+      width: auto;
+      > li {
+        background: #f5f5f5;
+        border-radius: 8px;
+        padding: 16px 24px;
+        font-size: 28px;
+        font-weight: 400;
+        color: #999999;
+        margin-left: 16px;
+      }
+      > li:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+  > .tit {
+    font-size: 40px;
+    margin-bottom: 28px;
+    font-weight: 600;
+    color: #222222;
+    padding: 0 32px;
+    line-height: 56px;
+  }
+  > .imglist {
+    display: flex;
+    padding: 0 32px;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    > .imgbox {
+      width: 339px;
+      height: 226px;
+      background: #f5f5f5;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      > img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+      }
+      > .imgbox1 {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 339px;
+        height: 226px;
+        background: rgba(0, 0, 0, 0.4);
+        font-size: 52px;
+        font-weight: 500;
+        color: #ffffff;
+        text-align: center;
+        line-height: 226px;
+        border-radius: 12px;
+      }
+    }
+  }
+  > .content {
+    font-size: 30px;
+    font-weight: 400;
+    color: #555555;
+    line-height: 42px;
+    padding: 0 32px;
+    position: relative;
+    margin-bottom: 48px;
+    > .tit {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+
+      /deep/ img {
+        width: 100%;
+        height: auto;
+      }
+    }
+    > div.tit {
+      display: block;
+    }
+    > .btn {
+      margin-top: 20px;
+      font-size: 28px;
+      font-weight: 400;
+      color: #999999;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+  > .num {
+    display: flex;
+    padding: 0 32px;
+    align-items: center;
+    margin-bottom: 40px;
+    > .left {
+      display: flex;
+      > div {
+        font-size: 24px;
+        font-weight: 500;
+        color: #222222;
+        > span {
+          color: #999999;
+        }
+      }
+      > p {
+        width: 4px;
+        height: 4px;
+        background: #999999;
+        border-radius: 50%;
+        margin: 0 16px;
+        align-self: center;
+      }
+    }
+    > .right {
+      padding: 0 20px;
+      height: 56px;
+      background: #f5f5f5;
+      border-radius: 28px;
+      font-size: 24px;
+      font-weight: 500;
+      color: #999999;
+      margin-left: auto;
+      text-align: center;
+      line-height: 56px;
+    }
+    > .act {
+      background: #f2f5ff;
+      color: #4974f5;
+    }
+  }
+  > .btns {
+    display: flex;
+    border-bottom: 1px solid #dddddd;
+    border-top: 1px solid #dddddd;
+    > .box {
+      padding-top: 23px;
+      box-sizing: border-box;
+      width: 250px;
+      height: 118px;
+      font-size: 26px;
+      font-weight: 500;
+      color: #555555;
+      text-align: center;
+      border-left: 1px solid #ddd;
+      p {
+        margin-top: 10px;
+      }
+    }
+    > .box:first-child {
+      border-left: none;
+    }
+  }
+}
+.down_slide_list {
+  ul {
+    display: flex;
+    padding: 70px;
+    box-sizing: border-box;
+    li {
+      width: 100px;
+      text-align: center;
+      margin-right: 76px;
+      p {
+        font-size: 24px;
+        color: #999999;
+      }
+    }
+  }
+  .cancel {
+    width: 100%;
+    height: 98px;
+    line-height: 98px;
+    text-align: center;
+    position: absolute;
+    font-size: 32px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #222222;
+    bottom: 0;
+    border-top: 1px solid #f0f0f0;
   }
 }
 </style>
