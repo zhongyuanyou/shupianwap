@@ -125,11 +125,26 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.list {
+  background: #fff;
+}
 /deep/ .sp-cell {
   width: 686px;
   margin: 0 auto;
   padding: 40px 0;
-  border-bottom: 1px solid #ddd;
+  position: relative;
+  &::after {
+    position: absolute;
+    box-sizing: border-box;
+    content: ' ';
+    pointer-events: none;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-bottom: 1px solid #dddddd;
+    -webkit-transform: scaleY(0.6);
+    transform: scaleY(0.6);
+  }
 }
 /deep/ .sp-tabs__wrap {
   height: 80px;

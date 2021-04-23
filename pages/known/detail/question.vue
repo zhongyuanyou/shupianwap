@@ -226,7 +226,7 @@
       <div
         class="btn"
         :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
-        @click="$router.push('/known/detail/invitationList')"
+        @click="goInvitionPage"
       >
         <sp-icon name="friends-o" size="0.4rem" />
         <span>邀请回答</span>

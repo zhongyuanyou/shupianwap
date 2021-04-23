@@ -68,6 +68,16 @@
           <p>{{ item.remarkCount }} 评论</p>
         </div>
       </div>
+      <div class="bottom" @click="goRecommend">
+        到底啦，去推荐看看吧
+        <my-icon
+          name="you"
+          size="0.22rem"
+          color="#999999"
+          class="my_icon"
+          style="margin-top: 2px"
+        ></my-icon>
+      </div>
     </div>
   </div>
 </template>
@@ -109,6 +119,12 @@ export default {
       } else {
         this.$router.go(-1)
       }
+    },
+    // 调到推荐页面
+    goRecommend() {
+      this.$router.push({
+        path: '/known/',
+      })
     },
     scrollHandle({ scrollTop }) {
       // 滚动事件
@@ -302,5 +318,23 @@ export default {
   font-weight: 500;
   color: #ffffff;
   line-height: 50px;
+}
+.bottom {
+  width: 336px;
+  height: 60px;
+  background: #f5f5f5;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #999999;
+  // line-height: 24px;
+  justify-content: center;
+  margin: 60px auto;
+  .my_icon {
+    margin-left: 8px;
+  }
 }
 </style>
