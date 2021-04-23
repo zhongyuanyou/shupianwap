@@ -117,46 +117,13 @@
         </div>
       </div>
     </div>
-    <!--    上拉组件-->
-    <sp-popup
-      v-model="popupShow"
-      position="bottom"
-      :style="{ height: '30%' }"
-      round
-      close-icon="close"
-      :close-on-click-overlay="false"
-    >
-      <div class="down_slide_list">
-        <ul>
-          <li @click="editQues(articleDetails.id)">
-            <my-icon name="bianji1" size="1rem" color="#1a1a1a"></my-icon>
-            <p>编辑</p>
-          </li>
-          <li @click="deleteQues(articleDetails.id)">
-            <my-icon name="shanchu1" size="1rem" color="#1a1a1a"></my-icon>
-            <p>删除</p>
-          </li>
-        </ul>
-        <div class="cancel" @click="popupShow = false">取消</div>
-      </div>
-    </sp-popup>
   </div>
 </template>
 
 <script>
-import {
-  Field,
-  Tab,
-  Tabs,
-  Button,
-  Image,
-  Toast,
-  Icon,
-  Dialog,
-  Popup,
-} from '@chipspc/vant-dgg'
+import { Field, Tab, Tabs, Button, Image, Toast } from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
-// import PageHead from '@/components/common/head/header'
+import PageHead from '@/components/common/head/header'
 import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
 // 推荐文章列表
 import DetailArticleList from '@/components/mustKnown/DetailArticleList'
@@ -166,12 +133,9 @@ import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   components: {
-    [Icon.name]: Icon,
     [Button.name]: Button,
     [Image.name]: Image,
     [Field.name]: Field,
-    [Dialog.name]: Dialog,
-    [Popup.name]: Popup,
     Comment,
     HeaderSlot,
     // PageHead,
@@ -198,7 +162,6 @@ export default {
   },
   data() {
     return {
-      popupShow: false,
       articleList: [],
       headerData: {},
       showHead2: false,
@@ -238,51 +201,6 @@ export default {
         path: '/known/home',
         query: { homeUserId: id, type: usertype },
       })
-    },
-    goBack() {
-      this.$back()
-    },
-    // 编辑
-    editQues(id) {
-      const curId = id
-      this.$router.push({
-        path: '/known/publish/question',
-        query: {
-          id: curId,
-          editType: 2,
-        },
-      })
-    },
-    // 删除
-    deleteQues(id) {
-      const curId = id
-      Dialog.confirm({
-        title: '提示',
-        message: '确定要删除吗？',
-      })
-        .then(() => {
-          this.$axios
-            .post(knownApi.content.dlt, {
-              id: curId,
-              currentUserId: this.userInfo.userId,
-            })
-            .then((res) => {
-              if (res.code === 200) {
-                this.$xToast.show({ message: '删除成功' })
-                this.$router.replace({ path: '/known' })
-              } else {
-                Toast.fail({
-                  duration: 2000,
-                  message: '服务异常，请刷新重试！',
-                  forbidClick: true,
-                  className: 'my-toast-style',
-                })
-              }
-            })
-        })
-        .catch((err) => {
-          console.log(err)
-        })
     },
     initFollow() {
       this.$axios
@@ -382,6 +300,7 @@ export default {
     handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
       const scrollTop = this.$refs.myPage.getBoundingClientRect().top // 滚动条距离顶部的位置
+      console.log('scrollTop', scrollTop)
       if (scrollTop < 0) {
         this.showHead2 = true
       } else {
@@ -594,7 +513,6 @@ export default {
     color: #666;
     font-weight: 400;
     color: #555555;
-    line-height: 52px;
     /deep/ img {
       width: 100%;
       height: auto;

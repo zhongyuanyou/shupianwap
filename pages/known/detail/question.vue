@@ -764,7 +764,6 @@ export default {
       font-size: 30px;
       font-weight: 400;
       color: #555555;
-      line-height: 42px;
       padding: 0 32px;
       position: relative;
       margin-bottom: 48px;
