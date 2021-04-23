@@ -78,6 +78,25 @@
     />
     <Bottombar v-if="!isInApp && !isApplets" ref="bottombar" />
     <LoadingCenter v-show="loading" />
+    <sp-dialog
+      v-model="showMydialog"
+      :show-cancel-button="true"
+      :show-confirm-button="true"
+      confirm-button-text="同意并继续"
+      concel-button-text="不同意"
+      title="温馨提示"
+      @confirm="confirmAggret"
+      @cancle="cancelAggret"
+    >
+      <p class="xy-p">
+        请仔细阅读并同意,
+        <span @click="enterAgreement(addOrderXy.code)"
+          >《{{ addOrderXy.title }}》</span
+        >，<span @click="enterAgreement(tranXy.code)"
+          >《{{ tranXy.title }}》</span
+        >
+      </p>
+    </sp-dialog>
   </div>
 </template>
 
@@ -98,7 +117,7 @@ export default {
     [Tabs.name]: Tabs,
     [Loading.name]: Loading,
     [Skeleton.name]: Skeleton,
-    [Dialog.name]: Dialog,
+    [Dialog.Component.name]: Dialog.Component,
     Header,
     OrderItem,
     CancelOrder,
@@ -148,9 +167,9 @@ export default {
       }
     }
     // 获取下单协议
-    this.xyList[0] = await this.getProtocol('protocol100008')
+    this.addOrderXy = await this.getProtocol('protocol100008')
     // 获取交易委托协议
-    this.xyList[1] = await this.getProtocol('protocol100033')
+    this.tranXy = await this.getProtocol('protocol100033')
     this.getOrderList()
   },
   methods: {
@@ -347,5 +366,15 @@ export default {
   font-size: 24px;
   text-align: center;
   margin-top: 40px;
+}
+.xy-p {
+  font-size: 28px;
+  font-weight: 400;
+  color: #222222;
+  line-height: 38px;
+  padding: 20px 40px;
+  span {
+    color: #10bbb8;
+  }
 }
 </style>
