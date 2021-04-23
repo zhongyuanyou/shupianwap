@@ -299,12 +299,9 @@ export default {
         this.loading = false
         if (res.code === 200 && res.data && typeof res.data === 'object') {
           this.info = res.data
-<<<<<<< HEAD
-=======
           this.userName = res.data.nickName
           this.realStatus = res.data.realStatus
           // console.log(res.data.realStatus)
->>>>>>> feat_v2.0
           this.$store.dispatch('user/setInfo', res.data)
         } else {
           // 清除用户缓存信息

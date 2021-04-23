@@ -67,10 +67,6 @@
 
 <script>
 import { Button, Image, Tag } from '@chipspc/vant-dgg'
-<<<<<<< HEAD
-
-=======
->>>>>>> feat_v2.0
 import { mapState } from 'vuex'
 import { planner } from '@/api'
 import { parseTel } from '~/utils/common'
@@ -98,13 +94,6 @@ export default {
       const formatData = this.itemData.tagList.slice(0, 5)
       return formatData
     },
-<<<<<<< HEAD
-    ...mapState({
-      userInfo: (state) => state.user.userInfo,
-      isInApp: (state) => state.app.isInApp,
-    }),
-=======
->>>>>>> feat_v2.0
     city() {
       return this.$store.state.city.currentCity
     },
@@ -139,15 +128,7 @@ export default {
     async getTel() {
       if (this.isInApp) {
         this.$appFn.dggBindHiddenPhone(
-<<<<<<< HEAD
-          {
-            plannerId: this.itemData.mchUserId,
-            requireCode: '',
-            requireName: '',
-          },
-=======
           { plannerId: this.itemData.mchUserId },
->>>>>>> feat_v2.0
           (res) => {
             const { code } = res || {}
             if (code !== 200) {
@@ -166,13 +147,7 @@ export default {
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
           plannerId: this.itemData.mchUserId,
-<<<<<<< HEAD
-          customerPhone:
-            this.$store.state.user.userPhoneFull ||
-            this.$cookies.get('userPhoneFull'),
-=======
           customerPhone: this.itemData.phone,
->>>>>>> feat_v2.0
           requireCode: '',
           requireName: '',
         }

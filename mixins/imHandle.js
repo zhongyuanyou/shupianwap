@@ -19,25 +19,7 @@ export default {
     }),
   },
   methods: {
-<<<<<<< HEAD
-    loginToast(
-      message = '',
-      className = 'toast',
-      icon = 'toast_ic_remind',
-      duration = 1000
-    ) {
-      Toast({
-        duration,
-        className,
-        message,
-        icon,
-        iconPrefix: 'spiconfont',
-      })
-    },
-    clearUserInfoAndJumpLoging(url) {
-=======
     clearUserInfoAndJumpLoging() {
->>>>>>> feat_v2.0
       this.$store.commit('user/CLEAR_USER')
       if (this.isApplets) {
         // 若是在小程序中
@@ -101,31 +83,6 @@ export default {
      */
 
     creatImSessionMixin(data) {
-<<<<<<< HEAD
-      this.judgeLoginMixin(true, data.url).then((userInfo) => {
-        if (userInfo) {
-          let params = {
-            imUserId: '',
-            imUserType: '',
-            ext: {
-              intentionType: '',
-              intentionCity: '',
-              recommendId: '',
-              recommendAttrJson: {},
-              startUserType: 'cps-app',
-            },
-          }
-          params = Object.assign(params, data)
-          this.imExample.createSession(params, (res) => {
-            if (res.code === 200) {
-              window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}&requireCode=${data.requireCode}&requireName=${data.requireName}`
-            } else if (res.code === 5223) {
-              this.clearUserInfoAndJumpLoging()
-            } else {
-              this.loginToast(res.msg)
-            }
-          })
-=======
       const userInfo = this.$store.state.user.userInfo
       // this.judgeLoginMixin().then((userInfo) => {
       if (userInfo) {
@@ -139,7 +96,6 @@ export default {
             recommendAttrJson: {},
             startUserType: 'cps-app',
           },
->>>>>>> feat_v2.0
         }
         params = Object.assign(params, data)
         this.imExample.createSession(params, (res) => {
@@ -198,85 +154,6 @@ export default {
       )
     },
     sendTemplateMsgMixin({ sessionParams, msgParams }) {
-<<<<<<< HEAD
-      this.judgeLoginMixin(true).then((userInfo) => {
-        if (userInfo) {
-          let params = {
-            imUserId: '',
-            imUserType: '',
-            ext: {
-              intentionType: '',
-              intentionCity: '',
-              recommendId: '',
-              recommendAttrJson: {},
-              startUserType: 'cps-app',
-            },
-          }
-          params = Object.assign(params, sessionParams)
-          // 发送模板消息前先创建会话
-          this.imExample.createSession(params, (res) => {
-            if (res.code === 200) {
-              const tepMsgParams = {
-                templateId: '', // 模板 id
-                receiver: res.data.groupId, // 会话 id
-                senderName: userInfo.nickName, // 发送者昵称
-                msgType: msgParams.msgType, // 消息类型
-                extContent: JSON.stringify(msgParams.extContent), // 路由参数
-                paramJsonStr: {
-                  productName: msgParams.productName, // 产品名称
-                  productContent: msgParams.productContent, // 产品信息
-                  price: msgParams.price, // 价格
-                  forwardAbstract: msgParams.forwardAbstract, // 摘要信息，可与显示内容保持一致
-                  routerId: msgParams.routerId, // 路由ID
-                },
-              }
-              switch (msgParams.sendType) {
-                // 带图片的模板消息
-                case 0:
-                  tepMsgParams.paramJsonStr.imageUrl = msgParams.imageUrl // 产品图片
-                  tepMsgParams.paramJsonStr.unit = msgParams.unit // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
-                  tepMsgParams.templateId = '5fcef0aec24ddd00065a8c93' // 模板id
-                  break
-                // 不带图片的模板消息
-                case 1:
-                  tepMsgParams.templateId = '5fcef0aec24ddd00065a8c83' // 模板id
-                  break
-
-                default:
-                  break
-              }
-              tepMsgParams.paramJsonStr = JSON.stringify(
-                tepMsgParams.paramJsonStr
-              )
-              // 发送模板消息
-              this.imExample.sendTemplateMsg(tepMsgParams, (resData) => {
-                if (resData.code === 200) {
-                  console.log(sessionParams, 111)
-                  // 延时1s进入IM,避免模板消息未发生完成就已进入IM
-                  this.$xToast.showLoading({ message: '正在联系规划师...' })
-                  const timer = setTimeout(() => {
-                    clearTimeout(timer)
-                    this.$xToast.hideLoading()
-                    if (this.isApplets) {
-                      window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}&isApplets=true`
-                    } else {
-                      window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}&requireCode=${sessionParams.requireCode}&requireName=${sessionParams.requireName}`
-                    }
-                  }, 2000)
-                  // window.location.href = `${config.imBaseUrl}/chat?token=${this.token}&userId=${this.userId}&userType=${this.userType}&id=${res.data.groupId}`
-                } else if (res.code === 5223) {
-                  this.clearUserInfoAndJumpLoging()
-                } else {
-                  this.loginToast(resData.msg)
-                }
-              })
-            } else if (res.code === 5223) {
-              this.clearUserInfoAndJumpLoging()
-            } else {
-              this.loginToast(res.msg)
-            }
-          })
-=======
       const userInfo = this.$store.state.user.userInfo
       // this.judgeLoginMixin(true).then((userInfo) => {
       if (userInfo) {
@@ -290,7 +167,6 @@ export default {
             recommendAttrJson: {},
             startUserType: 'cps-app',
           },
->>>>>>> feat_v2.0
         }
         params = Object.assign(params, sessionParams)
         // 发送模板消息前先创建会话

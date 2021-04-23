@@ -1,10 +1,6 @@
 <template>
   <div class="wrapper">
-<<<<<<< HEAD
-    <Header v-if="isAppLets" title="帮助中心">
-=======
     <Header ref="headerRef" title="帮助中心">
->>>>>>> feat_v2.0
       <template #left>
         <div @click="back">
           <my-icon
@@ -63,11 +59,7 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import { mapMutations, mapState } from 'vuex'
-=======
 import { mapState, mapMutations } from 'vuex'
->>>>>>> feat_v2.0
 import { Search, Cell, CellGroup, TopNavBar, Sticky } from '@chipspc/vant-dgg'
 import {
   PLATFORM_CODE,
@@ -109,12 +101,8 @@ export default {
   },
   computed: {
     ...mapState({
-<<<<<<< HEAD
-      isAppLets: (state) => state.app.isAppLets,
-=======
       isInApp: (state) => state.app.isInApp,
       isPassword: (state) => state.user.userInfo.isPassword || 0,
->>>>>>> feat_v2.0
     }),
   },
   watch: {

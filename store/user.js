@@ -17,11 +17,8 @@ export const state = () => ({
   userNo: '', // 用户编码
   userName: '', // 用户名称=nickName
   userPhone: '', // 用户电话=fullName 加密
-<<<<<<< HEAD
   userPhoneFull: '', // 用户电话加密
-=======
   avatar: '', // 用户头像
->>>>>>> feat_v2.0
 })
 export const mutations = {
   SET_USER(state, data = {}) {
@@ -39,8 +36,6 @@ export const mutations = {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
-<<<<<<< HEAD
-=======
     })
     this.$cookies.set('userName', String(data.nickName), {
       path: '/',
@@ -51,7 +46,6 @@ export const mutations = {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
->>>>>>> feat_v2.0
     })
     state.userInfo = data
     state.token = String(data.token)
@@ -87,11 +81,7 @@ export const mutations = {
     state.userInfo = {}
   },
   SET_INFO(state, data = {}) {
-<<<<<<< HEAD
-    this.$cookies.set('userNo', data.no, {
-=======
     this.$cookies.set('userNo', String(data.no), {
->>>>>>> feat_v2.0
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
@@ -106,9 +96,6 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
-<<<<<<< HEAD
-    this.$cookies.set('userPhoneFull', data.mainAccountFull, {
-=======
     this.$cookies.set('realStatus', data.realStatus, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
@@ -125,18 +112,12 @@ export const mutations = {
       // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('userType', data.type, {
->>>>>>> feat_v2.0
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     state.userNo = data.no
     state.userName = data.nickName
-<<<<<<< HEAD
-    state.userPhone = data.fullName
-    state.userPhoneFull =
-      data.mainAccountFull || this.$cookies.get('userPhoneFull')
-=======
     state.userType = data.type
     state.userPhone = data.fullName
     state.realStatus = data.realStatus
@@ -148,7 +129,6 @@ export const mutations = {
     state.userInfo.realStatus = data.realStatus
     state.userInfo.mainAccountFull = data.mainAccountFull
     state.userInfo.avatar = data.url
->>>>>>> feat_v2.0
   },
 }
 

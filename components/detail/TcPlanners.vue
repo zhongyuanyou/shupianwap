@@ -119,32 +119,6 @@ export default {
     },
     async handleTel(mchUserId) {
       try {
-<<<<<<< HEAD
-        const telData = await planner.newtel({
-          areaCode: this.city.code,
-          areaName: this.city.name,
-          customerUserId: this.$store.state.user.userId,
-          plannerId: mchUserId,
-          customerPhone:
-            this.$store.state.user.userPhoneFull ||
-            this.$cookies.get('userPhoneFull'),
-          requireCode: this.proDetail.classCodeLevelList[0],
-          requireName: '',
-        })
-        // 解密电话
-        if (telData.status === 1) {
-          const tel = telData.phone
-          window.location.href = `tel:${tel}`
-        } else if (telData.status === 0) {
-          Toast({
-            message: '当前人员已禁用，无法拨打电话',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
-          })
-        } else if (telData.status === 3) {
-          Toast({
-            message: '当前人员已离职，无法拨打电话',
-=======
         const isLogin = await this.judgeLoginMixin()
         if (isLogin) {
           const telData = await planner.newtel({
@@ -178,26 +152,17 @@ export default {
         } else {
           Toast({
             message: '请先登录账号',
->>>>>>> feat_v2.0
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
         }
       } catch (err) {
-<<<<<<< HEAD
-        // Toast({
-        //   message: '未获取到划师联系方式',
-        //   iconPrefix: 'sp-iconfont',
-        //   icon: 'popup_ic_fail',
-        // })
-=======
         console.log(err)
         Toast({
           message: '未获取到划师联系方式',
           iconPrefix: 'sp-iconfont',
           icon: 'popup_ic_fail',
         })
->>>>>>> feat_v2.0
       }
     },
     // 调起IM

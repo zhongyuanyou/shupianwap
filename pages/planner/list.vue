@@ -392,10 +392,7 @@ export default {
           this.uPIM(data)
           break
         case 'tel':
-<<<<<<< HEAD
-=======
           console.log('想打电话：', data)
->>>>>>> feat_v2.0
           if (this.isInApp) {
             this.$appFn.dggBindHiddenPhone(
               { plannerId: data.mchUserId },
@@ -485,8 +482,6 @@ export default {
       const ciphertext = data || {}
       const telNumber = ciphertext.phone
       if (ciphertext.status === 1) {
-<<<<<<< HEAD
-=======
         if (this.isInApp) {
           this.$appFn.dgg_bindHiddenPhone(
             { plannerId: ciphertext.mchUserId },
@@ -504,7 +499,6 @@ export default {
           )
           return
         }
->>>>>>> feat_v2.0
         callPhone(telNumber)
       } else if (ciphertext.status === 0) {
         Toast({
@@ -521,10 +515,6 @@ export default {
       }
       console.log('telNumber:', telNumber)
       // 如果当前页面在app中，则调用原生拨打电话的方法
-<<<<<<< HEAD
-=======
-
->>>>>>> feat_v2.0
       // 浏览器中调用的
     },
 

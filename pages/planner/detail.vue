@@ -311,10 +311,6 @@ export default {
     if (!this.city.code) {
       await this.POSITION_CITY({ type: 'init' })
     }
-<<<<<<< HEAD
-    console.log(this.$route.query.requireCode, 111)
-=======
->>>>>>> feat_v2.0
   },
   methods: {
     ...mapMutations({
