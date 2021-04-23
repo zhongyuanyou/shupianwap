@@ -408,7 +408,7 @@ export default {
 
 .container {
   height: 100%;
-  background: #fff;
+  background: #f5f5f5;
   .modal {
     position: fixed;
     top: 0;
