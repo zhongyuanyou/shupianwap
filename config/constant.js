@@ -24,7 +24,6 @@ export const GOODSLIST =
   'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg' // 产品列表默认图片
 
 export const APPISPROD = false // APP是否上线
-
 export const HELP_CLASS_CODE = {
   // 帮助中心分类code
   qdaCode: 'con100120', // 企大宝(案加)

@@ -176,12 +176,18 @@ export default {
   padding: 44px 32px;
   width: 710px;
   .item_title {
-    height: 36px;
+    min-height: 36px;
     font-size: 36px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: 600;
     color: #1a1a1a;
-    line-height: 36px;
+    line-height: 40px;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 超出n行这里写n */
+    -webkit-box-orient: vertical;
   }
   .item_Info {
     display: flex;

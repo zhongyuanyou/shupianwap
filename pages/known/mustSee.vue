@@ -19,6 +19,25 @@
         @click.native="$router.push({ path: '/known/search' })"
       />
     </div>
+    <sp-sticky @scroll="scrollHandle">
+      <div v-show="showPaper" class="header_search">
+        <my-icon
+          name="nav_ic_back"
+          size="0.40rem"
+          color="#FFFFFF"
+          class="my_icon"
+          @click.native="back()"
+        ></my-icon>
+        <div class="newspaperTitle">进站必看</div>
+        <my-icon
+          name="sear_ic_sear"
+          size="0.40rem"
+          color="#FFFFFF"
+          class="my_icon"
+          @click.native="$router.push({ path: '/known/search' })"
+        ></my-icon>
+      </div>
+    </sp-sticky>
     <div class="top">
       <h1>进站必看</h1>
       <p>必懂上那些「压箱底」的宝藏内容</p>
@@ -55,11 +74,12 @@
 
 <script>
 import { mapState } from 'vuex'
-import { Icon } from '@chipspc/vant-dgg'
+import { Icon, Sticky } from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 export default {
   name: 'MustSee',
   components: {
+    [Sticky.name]: Sticky,
     [Icon.name]: Icon,
   },
   data() {
@@ -68,6 +88,7 @@ export default {
       mustSeeData: [],
       name: '',
       description: '',
+      showPaper: false,
     }
   },
   computed: {
@@ -89,6 +110,14 @@ export default {
         this.$router.go(-1)
       }
     },
+    // scrollHandle({ scrollTop }) {
+    //   // 滚动事件
+    //   if (scrollTop > 160) {
+    //     this.showPaper = true
+    //   } else {
+    //     this.showPaper = false
+    //   }
+    // },
     init() {
       this.categorIds.push(this.$route.query.id)
       this.getList()
@@ -173,9 +202,13 @@ export default {
         font-weight: 600;
         color: #1a1a1a;
         display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
+        line-height: 40px;
+        word-break: break-all;
         overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* 超出n行这里写n */
+        -webkit-box-orient: vertical;
       }
       > .box {
         display: flex;
@@ -242,5 +275,32 @@ export default {
       margin-top: 0;
     }
   }
+}
+.header_search {
+  padding: 0 34px;
+  height: 88px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #4974f5;
+  .my_icon {
+  }
+  .newspaperTitle {
+    height: 50px;
+    font-size: 36px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #ffffff;
+    line-height: 50px;
+  }
+}
+.newspaperTitle {
+  height: 50px;
+  font-size: 36px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 50px;
 }
 </style>
