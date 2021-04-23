@@ -1,6 +1,10 @@
 <template>
   <div class="wrapper">
+<<<<<<< HEAD
     <Header v-if="isAppLets" title="帮助中心">
+=======
+    <Header ref="headerRef" title="帮助中心">
+>>>>>>> feat_v2.0
       <template #left>
         <div @click="back">
           <my-icon
@@ -59,7 +63,11 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import { mapMutations, mapState } from 'vuex'
+=======
+import { mapState, mapMutations } from 'vuex'
+>>>>>>> feat_v2.0
 import { Search, Cell, CellGroup, TopNavBar, Sticky } from '@chipspc/vant-dgg'
 import {
   PLATFORM_CODE,
@@ -101,7 +109,12 @@ export default {
   },
   computed: {
     ...mapState({
+<<<<<<< HEAD
       isAppLets: (state) => state.app.isAppLets,
+=======
+      isInApp: (state) => state.app.isInApp,
+      isPassword: (state) => state.user.userInfo.isPassword || 0,
+>>>>>>> feat_v2.0
     }),
   },
   watch: {
@@ -120,6 +133,17 @@ export default {
   mounted() {
     this.SET_KEEP_ALIVE({ type: 'add', name: 'HelpCenter' })
     this.inputFocus() // 打开页面弹出软键盘
+    if (!this.isInApp) {
+      this.headHeight = this.$refs.headerRef.$el.clientHeight // 获取头部高度
+    } else {
+      // 设置app导航名称
+      this.$appFn.dggSetTitle(
+        {
+          title: '帮助中心',
+        },
+        (res) => {}
+      )
+    }
   },
   methods: {
     ...mapMutations({

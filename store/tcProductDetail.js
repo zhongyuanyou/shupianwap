@@ -15,6 +15,14 @@ export const state = () => ({
     },
     productImgArr: [],
     dictCode: '',
+    goodsOperating: {
+      clientDetails: [
+        {
+          clientDetail: null,
+          imgFileIdPaths: [],
+        },
+      ],
+    },
   },
 })
 export const mutations = {

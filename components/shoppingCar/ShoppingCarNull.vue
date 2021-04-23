@@ -22,6 +22,7 @@ export default {
   },
   methods: {
     handleGO() {
+      console.log('点击随便看看')
       this.uPGoScan()
     },
     // 统一平台的跳转

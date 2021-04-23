@@ -188,14 +188,25 @@ export default {
           areaName: this.city.name,
           customerUserId: this.$store.state.user.userId,
           plannerId: mchUserId,
+<<<<<<< HEAD
           customerPhone:
             this.$store.state.user.userPhoneFull ||
             this.$cookies.get('userPhoneFull'),
+=======
+          requireCode: '',
+          requireName: '',
+          // id: mchUserId,
+          // sensitiveInfoType: 'MCH_USER',
+>>>>>>> feat_v2.0
         })
         // 解密电话
         if (telData.status === 1) {
           const tel = telData.phone
+<<<<<<< HEAD
           window.location.href = `tel:${tel}`
+=======
+          window.location.href = `tel://${tel}`
+>>>>>>> feat_v2.0
         } else if (telData.status === 0) {
           Toast({
             message: '当前人员已禁用，无法拨打电话',

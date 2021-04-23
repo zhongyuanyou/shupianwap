@@ -111,6 +111,7 @@ export default {
         .then((res) => {
           if (res.code === 200 && res.data.id) {
             this.userInfo = res.data
+            this.$store.dispatch('user/setInfo', res.data)
           } else {
             this.isLogin = false
           }

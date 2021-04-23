@@ -16,4 +16,5 @@ const homeApi = {
   findSiteList: `${CHIPS_WAP_BASE_URL}/nk/home/v1/find_city_list.do`, // 查询站点列表
   findRecomList: `${CHIPS_WAP_BASE_URL}/nk/home/v1/find_recom_list.do`, // 查询推荐商品
 }
+
 export { homeApi }

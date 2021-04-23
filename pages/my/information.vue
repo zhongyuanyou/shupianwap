@@ -14,9 +14,9 @@
             :file-id="info.fileId"
             is-add-watermark
             class="uploader"
-            list-url="https://spmicrouag.shupian.cn/tac-external-platform-server/oss/find"
-            delete-url="https://spmicrouag.shupian.cn/tac-external-platform-server/oss/deleteSingle"
-            call-back-url="https://spmicrouag.shupian.cn/tac-external-platform-server/oss/callback"
+            :list-url="`${baseURL}/tac-external-platform-server/oss/find`"
+            :delete-url="`${baseURL}/tac-external-platform-server/oss/deleteSingle`"
+            :call-back-url="`${baseURL}/tac-external-platform-server/oss/callback`"
             @onSuccess="success"
           />
           <div class="cell">
@@ -30,6 +30,7 @@
                 class="avatar"
                 :src="info.url ? info.url : avatars"
               />
+
               <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
             </div>
           </div>
@@ -62,6 +63,28 @@
                     ? '女'
                     : '未知' || '未知'
                   : '未知'
+              }}
+            </p>
+            <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
+          </div>
+        </div>
+        <div class="cell" @click="handleClick(7)">
+          <p class="title">个人简介</p>
+          <div class="right_icon">
+            <p class="txt hide">{{ info.briefIntroduction || '未设置' }}</p>
+            <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
+          </div>
+        </div>
+        <div class="cell" @click="handleClick(8)">
+          <p class="title">实名认证</p>
+          <div class="right_icon">
+            <p class="txt hide">
+              {{
+                info.realStatus === 'NO_AUTHENTICATION'
+                  ? '未实名认证'
+                  : info.realStatus === 'AUTHENTICATION'
+                  ? '已实名认证'
+                  : '未实名认证'
               }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
@@ -249,6 +272,14 @@ export default {
             forbidClick: true,
           })
         }
+      } else if (val === 7) {
+        this.$router.push({
+          path: '/my/info/personalProfile',
+        })
+      } else if (val === 8) {
+        if (this.realStatus === 'NO_AUTHENTICATION') {
+          this.$router.push('/contract/authentication')
+        }
       }
     },
     async select(data) {
@@ -364,7 +395,7 @@ export default {
       } catch (err) {}
     },
     success(fileList) {
-      this.info.url = fileList.oss_filePath
+      this.info.url = fileList[0].filepath
     },
   },
   head() {
@@ -425,6 +456,12 @@ export default {
             font-weight: 400;
             color: #999999;
             line-height: 44px;
+          }
+          .hide {
+            max-width: 420px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
         }
       }

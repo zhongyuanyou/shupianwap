@@ -16,16 +16,15 @@ const CHIPS_APP_SERVICE_PREFIX = ''
 export const CRM_MIDDLE_APP = `/crm-middle-app/api/crisps-crm/${CHIPS_WAP_SERVICE_PREFIX}`
 export const CHIPS_WAP_BASE_URL = `/${CHIPS_WAP_INSTANCE_NAME}/${CHIPS_WAP_SERVICE_PREFIX}` // 使用网关调用路径的规则：项目实例名 / 自己服务路径前缀
 export const CHIPS_APP_BASE_URL = `/${CHIPS_APP_INSTANCE_NAME}/${CHIPS_APP_SERVICE_PREFIX}` // 使用网关调用路径的规则：项目实例名 / 自己服务路径前缀
-
 export const CRISPS_C_MIDDLE_SERVICE_API = 'crisps-c-middle-service-api'
 
 export const GOODSDETAIL =
   'https://cdn.shupian.cn/sp-pt/wap/images/8n7yuuz26io0000.jpg' // 产品详情默认图片
 export const GOODSLIST =
   'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg' // 产品列表默认图片
-
+export const AVATAR =
+  'https://cdn.shupian.cn/sp-pt/wap/images/9zzzas17j8k0000.png' // 产品列表默认图片
 export const APPISPROD = false // APP是否上线
-
 export const HELP_CLASS_CODE = {
   // 帮助中心分类code
   qdaCode: 'con100120', // 企大宝(案加)

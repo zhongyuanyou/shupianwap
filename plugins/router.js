@@ -10,6 +10,8 @@ import Vue from 'vue'
 import { appHandler } from './app-sdk'
 import { imInit } from '@/utils/im'
 import routerBlackList from '@/config/routerBlackList'
+import getUserSign from '~/utils/fingerprint'
+
 const infoList = [
   'my-shippingAddress', // 收货地址列表页面
   'my-interviewRecord', // 面谈记录列表页面
@@ -18,6 +20,25 @@ const infoList = [
   'shoppingCar', // 购物车页面
   'my-help', // 帮助中心
   'spread-myDemandCard', // 免费找
+  'known',
+  'known-home', // 必懂个人主页
+  'known-home-attention', // 必懂个人主页
+  'known-home-fans', // 必懂个人主页
+  'known-home-list', // 必懂个人主页
+  'known-more',
+  'known-search',
+  'known-search-result',
+  'known-publish-answer',
+  'known-publish-article',
+  'known-publish-chooseque',
+  'known-publish-question',
+  'known-detail-answer',
+  'known-detail-article',
+  'known-detail-question',
+  'known-detail-invitationList',
+  'known-detail-invitationSearch',
+  'my-collection',
+  'activity-coupon',
 ]
 // const getInfo = function () {
 //   return new Promise(function (resolve, reject) {
@@ -88,6 +109,7 @@ export default ({ app, store }) => {
             if (res.code === 200) {
               try {
                 // const userInfo = res.data || {}
+                console.log(res.data)
                 let userInfo = {}
                 if (typeof res.data === 'string') {
                   userInfo = JSON.parse(res.data)
@@ -101,30 +123,43 @@ export default ({ app, store }) => {
               } catch (err) {
                 next()
               }
+            } else {
+              store.commit('user/CLEAR_USER')
+              next()
             }
           })
         } else {
           next()
         }
       }
-      Vue.nextTick(() => {
+      Vue.nextTick(async () => {
         // 已登录用户，若未初始化IM，进行IM初始化
-        const token = app.$cookies.get('token', { path: '/' })
-        const userId = app.$cookies.get('userId', { path: '/' })
-        const userType = app.$cookies.get('userType', { path: '/' })
-        if (!store.state.im.imExample && token) {
-          // 初始化IM
+        let token = app.$cookies.get('token', { path: '/' })
+        let userId = app.$cookies.get('userId', { path: '/' })
+        let userType = app.$cookies.get('userType', { path: '/' })
+        const deviceId = await getUserSign()
+
+        if (!token) {
+          const info = localStorage.getItem('myInfo')
+            ? JSON.parse(localStorage.getItem('myInfo'))
+            : {}
+          userType = 'VISITOR'
+          token = info.token
+          userId = info.userId
+        }
+
+        // if (!store.state.im.imExample && token) {
+        // 初始化IM
+        if (!store.state.im.imExample) {
           const initImSdk = imInit({
             token,
             userId,
             userType,
+            deviceId,
           })
           store.commit('im/SET_IM_SDK', initImSdk)
         }
       })
     }
-    // if (!store.state.app.isInApp) {
-    //   next()
-    // }
   })
 }

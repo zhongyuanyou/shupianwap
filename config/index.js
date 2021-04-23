@@ -11,5 +11,4 @@ const BASE = {
   // 生产环境
   production,
 }
-
 module.exports = Object.assign(defaults, BASE[DGG_SERVER_ENV])

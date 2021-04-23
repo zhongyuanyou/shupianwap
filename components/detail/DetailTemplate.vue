@@ -64,6 +64,10 @@
     <!--S 第五板块 推荐规划师-->
     <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
     <!--E 第五板块 推荐规划师-->
+    <ServiceDetail
+      comp-type="tc"
+      :detail-data="proDetail.goodsOperating.clientDetails[0]"
+    />
     <!--S 第六板块 商品动态-->
     <Dynamic />
     <!--E 第六板块 商品动态-->
@@ -118,6 +122,7 @@ import Basic from '~/components/detail/Basic'
 import Report from '~/components/detail/Report'
 import Commitment from '~/components/detail/Commitment'
 import TcPlanners from '~/components/detail/TcPlanners'
+import ServiceDetail from '~/components/detail/ServiceDetail'
 import Dynamic from '~/components/detail/Dynamic'
 import Question from '~/components/detail/Question'
 import Case from '~/components/detail/Case'
@@ -148,6 +153,7 @@ export default {
     Report,
     Commitment,
     TcPlanners,
+    ServiceDetail,
     Dynamic,
     Question,
     Case,
@@ -196,7 +202,7 @@ export default {
     // 产品详情
     proDetail() {
       return this.$store.state.tcProductDetail.detailData
-    },
+    }, // 产品banner
     city() {
       return this.$store.state.city.currentCity
     },
@@ -315,13 +321,18 @@ export default {
       const formatId2 = this.proDetail.classCodeLevel.split(',')[1] // 产品二级分类
       const formatId3 = this.proDetail.classCodeLevel.split(',')[2] // 产品三级分类
       const formatId = formatId3 || formatId2
+
+      console.log(
+        'this.$store.state.city.currentCity',
+        this.$store.state.city.currentCity
+      )
       this.$axios
         .get(recommendApi.recommendProduct, {
           params: {
             userId: this.$cookies.get('userId'), // 用户id
             deviceId: this.deviceId, // 设备ID
             formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
-            areaCode: this.city.code, // 区域编码
+            areaCode: this.$store.state.city.currentCity.code, // 区域编码
             classCode: formatId1,
             sceneId: 'app-jycpxq-01', // 场景ID
             productId: this.proDetail.id, // 产品ID（产品详情页必传）
@@ -451,6 +462,7 @@ export default {
           .then((res) => {
             if (res.code === 200) {
               this.userInfoData = res.data
+              this.$store.dispatch('user/setInfo', res.data)
             } else {
               this.$xToast.show({
                 message: '网络错误,请刷稍后再试',

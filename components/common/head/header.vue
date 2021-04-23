@@ -18,18 +18,24 @@
       }"
     >
       <div class="my-head-row">
+<<<<<<< HEAD
         <div v-if="!isApplets" class="slot-left">
+=======
+        <div v-if="!hideBack" class="slot-left">
+>>>>>>> feat_v2.0
           <slot name="left">
             <my-icon
               class="back-icon"
-              name="nav_ic_back"
+              name="zuo"
               size="0.4rem"
               color="#1A1A1A"
               @click.native="onLeftClick"
             ></my-icon>
           </slot>
         </div>
-        <strong class="title">{{ title }}</strong>
+        <strong class="title">
+          <span>{{ title }}</span>
+        </strong>
         <div class="slot-right">
           <slot name="right"></slot>
         </div>
@@ -49,7 +55,12 @@ export default {
     // 头部标题
     title: {
       type: String,
-      default: () => '帮助中心',
+      default: () => '',
+    },
+    // 是否隐藏回退按钮
+    hideBack: {
+      type: Boolean,
+      default: false,
     },
     // 头部高度
     height: {
@@ -148,6 +159,7 @@ export default {
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: center;
   }
   .slot-left {
     display: flex;
@@ -165,8 +177,12 @@ export default {
     font-family: PingFang SC;
     font-weight: bold;
     color: #1a1a1a;
-    flex: 1;
     text-align: center;
+    flex: 1;
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .slot-right {
     display: flex;

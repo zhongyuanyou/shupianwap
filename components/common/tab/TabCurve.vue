@@ -124,6 +124,9 @@ export default {
         this.$emit('update', val)
       },
     },
+    pageScrollTop() {
+      return this.$store.app.pageScrollTop
+    },
   },
   methods: {
     // 选择某项
@@ -190,6 +193,7 @@ export default {
 }
 .fixed-tab {
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.04);
+  background-color: white;
   .tab-curve-list {
     height: 112px;
     padding-top: 44px;
@@ -221,6 +225,12 @@ export default {
 
     to {
       transform: rotate(-180deg);
+    }
+  }
+  /deep/.sp-sticky {
+    background: none;
+    .tab-curve {
+      background-color: none;
     }
   }
 }

@@ -1,0 +1,570 @@
+<template>
+  <div class="container" :style="{ marginTop: safeTop + 'px' }">
+    <div
+      class="rule-tag"
+      :style="{ top: safeTop + headerHeight + 10 + 'px' }"
+      @click="$router.push('/login/protocol?categoryCode=protocol100034')"
+    >
+      规则
+    </div>
+    <!-- S search -->
+    <sp-sticky ref="header_sticky" :offset-top="safeTop">
+      <div class="search">
+        <div class="left-back" @click="uPGoBack">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.4rem"
+            color="#FFFFFF"
+          ></my-icon>
+        </div>
+        <div class="search-box">
+          <my-icon
+            class="search-icon"
+            name="sear_ic_sear"
+            size="0.3rem"
+            color="#FFFFFF"
+            :style="{ marginLeft: iconLeft + 'rem' }"
+          ></my-icon>
+          <input
+            placeholder="搜索补贴商品"
+            readonly
+            @click="clickInputHandle"
+          />
+        </div>
+      </div>
+    </sp-sticky>
+    <!-- E search -->
+    <div class="container-advice">
+      <!-- S advert -->
+      <div class="advert_box">
+        <div
+          v-for="item in splittedRecommendProduct"
+          :key="item.id"
+          class="advert_item"
+          @click="jumpProductDetail(item)"
+        >
+          <div class="advert_item-img">
+            <div class="advert_item-angle"></div>
+            <div class="advert_item-tag">真便宜 不用算</div>
+            <img
+              height="100%"
+              width="100%"
+              :src="
+                item.imageUrl ||
+                'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+              "
+              alt="商品图片"
+            />
+          </div>
+          <div class="advert_item-title">
+            <div class="advert_item-title-name">{{ item.skuName }}</div>
+            <div class="advert_item-title-price">
+              低至
+              <span class="advert_item-title-num">{{ item.specialPrice }}</span>
+              元
+            </div>
+          </div>
+          {{ item.skuName }}
+        </div>
+        <!-- <div class="advert_item"></div>
+        <div class="advert_item"></div> -->
+      </div>
+      <!-- E advert -->
+    </div>
+    <sp-sticky class="tabs-box" :offset-top="headerHeight + safeTop">
+      <div class="drop_down">
+        <div class="drop_down_title" @click="swichCityHandle">
+          {{ cityName ? cityName : '定位中' }}
+        </div>
+        <div class="drop_down_icon"></div>
+      </div>
+      <ul class="tabs-box-items">
+        <li
+          v-for="(item, index) in activityTypeOptions"
+          :key="item.labelName"
+          :class="{ active: index == currentIndex }"
+          @click="menuTab(item, index)"
+        >
+          {{ item.labelName }}
+        </li>
+      </ul>
+    </sp-sticky>
+    <div class="container-body">
+      <div class="body-content">
+        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+          <sp-list
+            v-model="loading"
+            :finished="finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+          >
+            <div
+              v-for="(item, index) in activityProductList"
+              :key="index"
+              @click="jumpProductDetail(item)"
+            >
+              <div class="body-content-items">
+                <div class="left-content">
+                  <img
+                    height="100%"
+                    width="100%"
+                    :src="
+                      item.imageUrl ||
+                      'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+                    "
+                    alt="商品图片"
+                  />
+                </div>
+                <div class="right-content">
+                  <div class="rc-top">
+                    <span class="span1">好品</span>
+                    <span class="span2">千万补贴</span>
+                    <span class="span3"> {{ item.skuName }}</span>
+                  </div>
+                  <div class="rc-middle">
+                    <div
+                      v-for="tag in item.tags.split(',').slice(0, 3)"
+                      :key="tag"
+                    >
+                      {{ overflowDot(tag, 6) }}
+                      <!-- {{ tag }} -->
+                    </div>
+                  </div>
+                  <div class="rc-bottom">
+                    <div class="rc-bottom-lf">
+                      <div class="rc-bottom-lf-my">
+                        <div>{{ item.specialPrice }}</div>
+                        <div>元</div>
+                      </div>
+                      <div class="bf-my">{{ item.skuPrice }}元</div>
+                    </div>
+                    <div class="rc-bottom-rt">
+                      <div>立即购买</div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="line"></div>
+            </div>
+          </sp-list>
+        </sp-pull-refresh>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import {
+  CountDown,
+  Sticky,
+  List,
+  WorkTabSort,
+  WorkTabSortItem,
+  PullRefresh,
+} from '@chipspc/vant-dgg'
+import activityMixin from '@/mixins/activityMixin'
+
+export default {
+  name: 'Subsidy',
+  components: {
+    [CountDown.name]: CountDown,
+    [Sticky.name]: Sticky,
+    [List.name]: List,
+    [PullRefresh.name]: PullRefresh,
+    [WorkTabSort.name]: WorkTabSort,
+    [WorkTabSortItem.name]: WorkTabSortItem,
+  },
+  mixins: [activityMixin],
+  data() {
+    return {
+      specType: 'HDZT_ZTTYPE_QWBT',
+      hasCity: true,
+    }
+  },
+}
+</script>
+
+<style lang="less" scoped>
+.overflowDot {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.container {
+  position: relative;
+  background: url('https://cdn.shupian.cn/sp-pt/wap/33iptmq9cya0000.png');
+  background-size: 100% auto;
+  -moz-background-size: 100% auto;
+  // background-attachment: fixed;
+  .rule-tag {
+    position: absolute;
+    right: 0;
+    width: 68px;
+    height: 36px;
+    line-height: 36px;
+    background: linear-gradient(42deg, #ffa291 0%, #ffdb12 100%);
+    box-shadow: 0px 0px 20px 0px rgba(192, 24, 33, 0.5);
+    border-radius: 32px 0px 0px 32px;
+    // opacity: 0.5;
+    z-index: 10;
+    font-size: 20px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #ffffff;
+    text-align: right;
+    padding-right: 12px;
+  }
+  .search {
+    display: flex;
+    // justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    margin-bottom: 16px;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/33iptmq9cya0000.png');
+    background-size: 100% auto;
+    -moz-background-size: 100% auto;
+    .left-back {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 32px;
+      .back_icon {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    .search-box {
+      margin-right: 40px;
+      height: 88px;
+      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
+      border-radius: 8px;
+      background: #000000;
+      border-radius: 8px;
+      background-color: rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      flex: 1;
+      .search-icon {
+        margin: 29px 12px 28px 32px;
+      }
+      input {
+        border: none;
+        font-size: 32px;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 32px;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        &::placeholder {
+          /* Internet Explorer 10+ */
+          color: #ffffff !important;
+        }
+      }
+    }
+  }
+  .container-advice {
+    width: 750px;
+    padding: 290px 0 32px 0;
+    /deep/.sp-sticky--fixed {
+      max-width: 10rem;
+      width: 100%;
+      left: 50%;
+      -webkit-transform: translateX(-50%);
+      transform: translateX(-50%);
+
+      background: linear-gradient(180deg, #ff582e 0%, #ef202c 100%);
+    }
+    .advert_box {
+      display: flex;
+      justify-content: flex-start;
+      padding: 0 20px;
+      .advert_item {
+        width: 230px;
+        height: 288px;
+        background: #fff2e3;
+        border-radius: 12px;
+        margin-right: 10px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        overflow: hidden;
+        box-shadow: 0px 0px 5px 1px rgba(255, 255, 255, 0.6);
+        .advert_item-img {
+          border-radius: 12px;
+          overflow: hidden;
+          position: relative;
+          width: 100%;
+          height: 202px;
+          .advert_item-angle {
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 60px;
+            height: 60px;
+            background-size: 100% 100%;
+            background-image: url(https://cdn.shupian.cn/sp-pt/wap/images/ev3o08ysl400000.png);
+          }
+          .advert_item-tag {
+            bottom: 6px;
+            position: absolute;
+            background-repeat: no-repeat;
+            font-size: 20px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #ffffff;
+            background-size: 100% 100%;
+            width: 160px;
+            height: 38px;
+            line-height: 35px;
+            left: 50%;
+            text-align: center;
+            transform: translateX(-50%);
+            background-image: url(https://cdn.shupian.cn/sp-pt/wap/images/9joze15ug200000.png);
+          }
+        }
+        .advert_item-title {
+          text-align: center;
+          height: 86px;
+          .advert_item-title-name {
+            font-size: 22px;
+            font-weight: 600;
+            color: #222222;
+            line-height: 22px;
+            margin: 12px 0 5px 0;
+          }
+          .advert_item-title-price {
+            font-size: 20px;
+            font-weight: 500;
+            color: #ec5330;
+            .advert_item-title-num {
+              font-size: 35px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .tabs-box {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 88px;
+    padding: 12px 0 0 0;
+    border-radius: 24px 24px 0 0;
+    background-color: #fff;
+    width: 100vw;
+    width: 100vw;
+    /deep/ .sp-sticky {
+      border-radius: 24px 24px 0 0;
+      background-color: #fff;
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      height: 88px;
+      padding: 0 20px;
+      &.sp-sticky--fixed {
+        border-radius: 0;
+      }
+    }
+    .drop_down {
+      width: 150px;
+      height: 56px;
+      background: linear-gradient(270deg, #f3363f 0%, #ec5330 100%);
+      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      margin-right: 48px;
+      .drop_down_title {
+        padding: 0 8px 0 24px;
+        height: 30px;
+        font-size: 30px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 30px;
+      }
+      .drop_down_icon {
+        background: url('https://cdn.shupian.cn/sp-pt/wap/9ij1cu5sv4g0000.png');
+        width: 15px;
+        height: 10px;
+        background-size: 100% 100%;
+        -moz-background-size: 100% 100%;
+      }
+    }
+    .tabs-box-items {
+      display: flex;
+      justify-content: flex-start;
+      max-width: 550px;
+      overflow-x: scroll;
+      li {
+        white-space: nowrap;
+        height: 32px;
+        font-size: 32px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #555555;
+        line-height: 32px;
+        margin-right: 48px;
+        &.active {
+          font-weight: 600;
+          color: #ec5330;
+        }
+      }
+    }
+  }
+  .container-body {
+    position: absolute;
+    width: 750px;
+    height: 1667px;
+    background: #ffffff;
+    padding: 0 20px;
+    // top: 758px;
+
+    .body-content {
+      .line {
+        width: 710px;
+        height: 1px;
+        background: #dcdcdc;
+      }
+      .body-content-items {
+        display: flex;
+        height: 284px;
+        width: 100%;
+        padding: 32px 0;
+        justify-content: space-between;
+      }
+      .left-content {
+        width: 220px;
+        height: 220px;
+        border-radius: 12px;
+        background-size: 100% 100%;
+        -moz-background-size: 100% 100%;
+        overflow: hidden;
+      }
+      .right-content {
+        width: 458px;
+        .rc-top {
+          font-size: 32px;
+          height: 84px;
+          font-weight: 500;
+          color: #222222;
+          width: 395px;
+          .span1 {
+            height: 32px;
+            background: #ec5330;
+            border-radius: 4px;
+            padding: 6px 8px;
+            font-size: 20px;
+            font-family: PingFangSC-Medium, PingFang SC;
+
+            font-weight: 500;
+            color: #ffffff;
+            line-height: 20px;
+          }
+          .span2 {
+            height: 32px;
+            background: #ec5330;
+            border-radius: 4px;
+            padding: 6px 8px;
+            font-size: 20px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #ffffff;
+            line-height: 20px;
+          }
+        }
+        .rc-middle {
+          margin-top: 12px;
+          display: flex;
+          justify-content: flex-start;
+          margin-right: 14px;
+          margin-bottom: 32px;
+          div {
+            // height: 20px;
+            font-size: 20px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #5c7499;
+            line-height: 20px;
+            padding: 4px 6px;
+
+            background: #f0f2f5;
+            border-radius: 4px;
+            margin-right: 8px;
+            // max-width: 30%;
+            // .overflowDot();
+          }
+        }
+        .rc-bottom {
+          display: flex;
+          justify-content: space-between;
+          .rc-bottom-lf {
+            margin-top: 2px;
+            .rc-bottom-lf-my {
+              display: flex;
+              flex-direction: row;
+              align-content: flex-start;
+              align-items: center;
+              //   padding-top: 2px;
+              div {
+                color: #ec5330;
+              }
+              div:nth-of-type(1) {
+                font-size: 32px;
+                font-weight: 500;
+                line-height: 32px;
+                font-family: PingFangSC-Medium, PingFang SC;
+              }
+              div:nth-of-type(2) {
+                font-size: 22px;
+                font-weight: 500;
+                margin: 13px 0 0 2px;
+                line-height: 22px;
+              }
+            }
+            .bf-my {
+              display: flex;
+              flex-direction: row;
+              margin-top: 4px;
+              font-size: 22px;
+              font-weight: 400;
+              color: #999999;
+              line-height: 22px;
+              margin-left: 2px;
+            }
+          }
+          .rc-bottom-rt {
+            width: 200px;
+            height: 64px;
+            background: linear-gradient(90deg, #ec5330 0%, #f3363f 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            margin-left: 134px;
+            div:nth-child(1) {
+              height: 32px;
+              font-size: 32px;
+              font-family: PingFangSC-Medium, PingFang SC;
+              font-weight: 500;
+              color: #ffffff;
+              line-height: 32px;
+              padding: 0 8px 0 16px;
+            }
+            :nth-last-child(1) {
+              height: 32px;
+              width: 32px;
+              background: url('https://cdn.shupian.cn/sp-pt/wap/g76q42107k00000.png');
+              background-size: 100% 100%;
+              -moz-background-size: 100% 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>

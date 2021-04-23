@@ -247,6 +247,7 @@ export default {
 .search-result {
   width: 100%;
   height: 100%;
+  background: #fff;
   .search-content {
     padding: 16px 32px;
     &.has-input {

@@ -91,7 +91,7 @@ import { mapState } from 'vuex'
 import { Swipe, swipeItem, Skeleton } from '@chipspc/vant-dgg'
 import getUserSign from '@/utils/fingerprint'
 import { homeApi } from '@/api'
-import TabCurve from '@/components/common/tab/TabCurve'
+import TabCurve from '@/components/home/TabCurve'
 import GoodsPro from '@/components/common/goodsItem/GoodsPro'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import adJumpHandle from '~/mixins/adJumpHandle'
@@ -170,13 +170,14 @@ export default {
   methods: {
     // 滚动加载更多
     handleScroll() {
+      const pageScrollTop = this.$parent.$refs.homeRef.scrollTop // 滚动条距离顶部的位置
+      this.$parent.pageScrollTop = pageScrollTop
       if (
         this.tabBtn.length &&
         this.tabBtn[this.curentItem].goodsList.length &&
         !this.loading &&
         !this.tabBtn[this.curentItem].noMore
       ) {
-        const pageScrollTop = this.$parent.$refs.homeRef.scrollTop // 滚动条距离顶部的位置
         const pageScrollHeight = this.$parent.$refs.homeRef.scrollHeight // 页面文档的总高度
         const pageClientHeight = this.$parent.$refs.homeRef.clientHeight // 文档显示区域的高度
         // 监听页面是否滚动到底部加载更多数据
@@ -252,7 +253,7 @@ export default {
 
       // 广告位code
       if (this.params.findType === 1) {
-        params.locationCode = this.tabBtn[index].ext4
+        params.locationCode = this.tabBtn[index].ext1
       }
 
       this.$axios.post(homeApi.findRecomList, params).then((res) => {
@@ -362,7 +363,13 @@ export default {
 .goods-list {
   position: relative;
   width: 100%;
-  padding: 0 40px 0 40px;
+  padding: 0 20px;
+  .goods-item {
+    padding: 20px;
+    background: white;
+    margin: 0 auto 20px auto;
+    border-radius: 24px;
+  }
   &::before {
     display: block;
     content: '';

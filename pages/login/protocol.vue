@@ -1,5 +1,6 @@
 <template>
   <div class="protocol">
+<<<<<<< HEAD
     <div v-if="!hideHeader && !isApplets" class="top">
       <sp-top-nav-bar
         ellipsis
@@ -11,6 +12,21 @@
         </template>
       </sp-top-nav-bar>
     </div>
+=======
+    <header-slot>
+      <div v-if="!hideHeader" class="top">
+        <sp-top-nav-bar
+          ellipsis
+          :title="article.title || '协议'"
+          @on-click-left="onClickLeft"
+        >
+          <template #left>
+            <my-icon name="nav_ic_back" size="0.4rem" color="#1A1A1A" />
+          </template>
+        </sp-top-nav-bar>
+      </div>
+    </header-slot>
+>>>>>>> feat_v2.0
     <div class="content">
       <sp-skeleton title :row="10" :loading="loading">
         <div class="content-text" v-html="article.content"></div>
@@ -23,7 +39,7 @@ import { TopNavBar, NavSearch, Icon, Skeleton } from '@chipspc/vant-dgg'
 
 import { mapState } from 'vuex'
 import { auth } from '@/api'
-
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   name: 'Protocol',
   components: {
@@ -31,6 +47,7 @@ export default {
     [NavSearch.name]: NavSearch,
     [Skeleton.name]: Skeleton,
     [Icon.name]: Icon,
+    [HeaderSlot.name]: HeaderSlot,
   },
   data() {
     return {

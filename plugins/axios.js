@@ -22,6 +22,8 @@ export default function ({ $axios, redirect, app, store }) {
         config.data = qs.stringify(config.data)
       }
       config.params = config.params || {}
+      config.headers.platformCode = BASE.platformCode // 平台code
+      config.headers.terminalCode = BASE.terminalCode // 终端code
       if (DGG_SERVER_ENV === 'development') {
         // 本地根据自己的需求进行配置
         config.headers.sysCode = 'crisps-app-wap-bff-api'
@@ -29,6 +31,7 @@ export default function ({ $axios, redirect, app, store }) {
         // 在app正式上线未做负载前,此sysCode不修改
         config.headers.sysCode = 'crisps-app-wap-bff-api'
       }
+      // 获取token
       if (
         app.$cookies.get('token', {
           path: '/',
@@ -41,18 +44,22 @@ export default function ({ $axios, redirect, app, store }) {
           path: '/',
         })
       }
-      // config.headers['X-Auth-Token'] = '607991860798845556'
-      // config.headers['X-Req-UserId'] = '607991757719633892'
-      // config.headers['X-Auth-Token'] =
-      //   app.$cookies.get('token') || store.state.user.token
-      // config.headers['X-Req-UserId'] =
-      //   app.$cookies.get('userId') || store.state.user.userId
-      // config.headers['X-Req-UserNo'] =
-      //   app.$cookies.get('userNo') || store.state.user.userNo
-      // config.headers['X-Req-UserName'] =
-      //   app.$cookies.get('userName') || store.state.user.userName
-      // config.headers['X-Req-UserPhone'] =
-      //   app.$cookies.get('userPhone') || store.state.user.userPhone
+      // 获取用户信息
+      if (
+        app.$cookies.get('userNo', {
+          path: '/',
+        })
+      ) {
+        config.headers['X-Req-UserNo'] = app.$cookies.get('userNo', {
+          path: '/',
+        })
+        // config.headers['X-Req-UserName'] = app.$cookies.get('userName', {
+        //   path: '/',
+        // })
+        // config.headers['X-Req-UserPhone'] = app.$cookies.get('userPhone', {
+        //   path: '/',
+        // })
+      }
       // 请求头设置站点code
       const cityCode = app.$cookies.get('currentCity', {
         path: '/',
@@ -80,16 +87,17 @@ export default function ({ $axios, redirect, app, store }) {
         if (!store.state.app.isInApp) {
           if (process && process.client) {
             xToast.error('登录失效，请重新登录')
-            setTimeout(() => {
+            const timer = setTimeout(() => {
               redirect('/my')
+              clearTimeout(timer)
             }, 1500)
           } else {
             redirect('/my')
           }
         }
+      } else {
+        return result
       }
-
-      return result
     },
     (error) => {
       return Promise.reject(error)

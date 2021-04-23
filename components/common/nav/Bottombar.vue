@@ -50,22 +50,32 @@ export default {
       tabBarData: [
         {
           name: '首页',
-          iconName: 'tabbar_ic_home',
+          iconName: 'shouye1',
           path: '/',
         },
+        // {
+        //   name: '发现',
+        //   iconName: 'dongtai',
+        //   path: '/found',
+        // },
         {
-          name: '发现',
-          iconName: 'tabbar_ic_news',
-          path: '/found',
+          name: '必懂',
+          iconName: 'bidong',
+          path: '/known',
         },
         {
           name: '消息',
-          iconName: 'tabbar_ic_msg',
+          iconName: 'xiaoxi1',
           path: '/msg',
         },
         {
+          name: '订单',
+          iconName: 'faxian',
+          path: '/order/',
+        },
+        {
           name: '我的',
-          iconName: 'tabbar_ic_personal',
+          iconName: 'wode',
           path: '/my',
         },
       ],
@@ -107,17 +117,25 @@ export default {
     pageJump(item) {
       // 消息页面跳转 IM
       if (item.path === '/msg') {
+        // if (this.userInfo.token) {
         if (this.userInfo.token) {
           window.location.href = `${config.imBaseUrl}/index?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
-          return
         } else {
-          this.$router.push({
-            path: '/login',
-            query: {
-              redirect: this.$route.fullPath,
-            },
-          })
+          const imId = localStorage.getItem('myInfo')
+            ? JSON.parse(localStorage.getItem('myInfo'))
+            : {}
+          window.location.href = `${config.imBaseUrl}/index?token=${imId.token}&userId=${imId.imUserId}&userType=VISITOR`
         }
+
+        //   return
+        // } else {
+        //   this.$router.push({
+        //     path: '/login',
+        //     query: {
+        //       redirect: this.$route.fullPath,
+        //     },
+        //   })
+        // }
         return
       }
       const path = this.$route.path

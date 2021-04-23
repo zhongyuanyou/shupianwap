@@ -252,11 +252,15 @@ const appHandler = {
     })
   },
   // 隐号拨打
-  dggBindHiddenPhone: (
-    data = { plannerId: '', requireCode: '', requireName: '' },
-    fn = () => {}
-  ) => {
+
+  dggBindHiddenPhone: (data = { plannerId: '' }, fn = () => {}) => {
     Bridge.callHandler('dgg_bindHiddenPhone', data, (res) => {
+      handleRequest(res, fn)
+    })
+  },
+  // 开启在线聊天
+  dggOpenOnlineServiceIM: (data = { entranceId: '' }, fn = () => {}) => {
+    Bridge.callHandler('dgg_openOnlineServiceIM', data, (res) => {
       handleRequest(res, fn)
     })
   },

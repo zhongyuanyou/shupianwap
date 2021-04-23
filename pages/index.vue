@@ -1,10 +1,15 @@
 <template>
   <div ref="homeRef" class="home-page-content">
-    <!-- S 搜索 + 大banner -->
-    <SearchBanner
+    <Head
       ref="searchBannerRef"
+      :page-scroll-top="pageScrollTop"
       :fiexd-banner-data="initData.fiexdBannerData"
     />
+    <!-- S 搜索 + 大banner -->
+    <!-- <SearchBanner
+      ref="searchBannerRef"
+      :fiexd-banner-data="initData.fiexdBannerData"
+    /> -->
     <!-- E 搜索 + 大banner -->
     <!-- S 金刚区nav -->
     <HomeNav
@@ -13,32 +18,38 @@
     />
     <!-- E 金刚区nav -->
     <!-- S 轮播banner -->
-    <SwiperBanner :swiper-data="initData.rollBannerData" />
+    <!-- <SwiperBanner :swiper-data="initData.rollBannerData" /> -->
+    <!-- S 限时秒杀广告位置 -->
+    <SkillGroup :skill-data="initData.skillData" />
+    <!-- E 限时秒杀-->
     <!-- E 轮播banner -->
     <!-- S 帮我找服务 -->
-    <Help ref="showScollHeight" :help-banner-data="initData.helpBannerData" />
+    <!-- <Help ref="showScollHeight" :help-banner-data="initData.helpBannerData" /> -->
     <!-- E 帮我找服务 -->
     <client-only>
       <!-- S 限时特惠 -->
-      <Preferential :init-data="asyncData.preferential" />
+      <!-- <Preferential :init-data="asyncData.preferential" /> -->
       <!-- E 限时特惠 -->
       <!-- S 资讯精选 -->
-      <Information
+      <!-- <Information
         v-if="asyncData.information.length"
         :info-data="asyncData.information"
-      />
+      /> -->
       <!-- E 资讯精选 -->
       <!-- S 热门服务 -->
-      <HotServe
+      <!-- <HotServe
         v-if="asyncData.rotationAd.length"
         :hot-data="asyncData.rotationAd"
-      />
+      /> -->
       <!-- E 热门服务 -->
+      <!-- S 营销入口区域 -->
+      <Marketing ref="showScollHeight" />
+      <!-- E 营销入口区域 -->
       <!-- S 推荐服务 -->
       <Recommend ref="recommendRef" />
       <!-- E 推荐服务 -->
       <!-- S 悬浮按钮 -->
-      <FiexdBtn />
+      <FiexdBtn :page-scroll-top="pageScrollTop" />
       <!-- E 悬浮按钮 -->
       <!-- S 下载app弹框 -->
       <DownloadApp
@@ -53,81 +64,106 @@
 <script>
 import { PLATFORM_CODE, TERMINAL_CODE } from '@/config/constant'
 import { homeApi } from '@/api'
-import SearchBanner from '@/components/home/SearchBanner'
+import Head from '@/components/home/Head'
+// import SearchBanner from '@/components/home/SearchBanner'
 import HomeNav from '@/components/home/HomeNav'
-import SwiperBanner from '@/components/home/SwiperAd'
-import Help from '@/components/home/HelpAd'
-import Preferential from '@/components/home/Preferential'
-import Information from '@/components/home/Information'
-import HotServe from '@/components/home/HotServe'
-import Recommend from '@/components/home/Recommend'
+import SkillGroup from '@/components/home/SkillGroup'
+// import SwiperBanner from '@/components/home/SwiperAd'
+// import Help from '@/components/home/HelpAd'
+// import Preferential from '@/components/home/Preferential'
+// import Information from '@/components/home/Information'
+// import HotServe from '@/components/home/HotServe'
+import Recommend from '@/components/home/RecommendSale'
 import FiexdBtn from '@/components/home/FiexdBtn'
 import DownloadApp from '@/components/common/app/DownloadApp'
+import Marketing from '@/components/home/Marketing'
 export default {
   layout: 'newNav',
   name: 'Home',
   components: {
-    SearchBanner,
+    Head,
+    // SearchBanner,
     HomeNav,
-    SwiperBanner,
-    Help,
-    Preferential,
-    Information,
-    HotServe,
+    // SwiperBanner,
+    // Help,
+    // Preferential,
+    // Information,
+    // HotServe,
     Recommend,
     FiexdBtn,
     DownloadApp,
+    SkillGroup,
+    Marketing,
   },
-  async asyncData({ $axios, redirect, app }) {
-    // 获取用户是否手动关闭过下载app的弹框，手动关闭过不再弹出
-    const closeAppOpen = app.$cookies.get('closeAppOpen', {
-      path: '/',
-    })
-    const fiexdAdCode = 'ad100234' // 顶部固定banner的code
-    const rollAdCode = 'ad100237' // 导航下方轮播banner code
-    const helpAdCode = 'ad113183' // 帮我找下方banner code(服务榜单)
-    // 首屏请求导航和广告的参数
-    const initReqParams = {
-      locationCodeList: [fiexdAdCode, rollAdCode, helpAdCode], // 广告位code列表
-      rollPage: 1, // 滚动导航当前页
-      rollLimit: 1000, // 滚动导航每页条数
-      fixedPage: 1, // 固定导航当前页
-      fixedLimit: 5, // 固定导航每页条数
-      fixedNavCategoryCode: 'nav100007', // 固定导航分类code
-      rollNavCategoryCode: 'nav100012', // 滚动导航分类code
-      platformCode: PLATFORM_CODE.wap, // 平台code
-      terminalCode: TERMINAL_CODE.wap, // 终端code
-    }
-    const initData = {
-      fiexdBannerData: [], // 固定广告
-      rollBannerData: [], // 轮播广告
-      helpBannerData: [], // 帮我找广告
-      fiexdNavData: [], // 固定导航
-      rollNavData: [], // 滚动导航
-    }
-    try {
-      const res = await $axios.post(homeApi.initRequest, initReqParams, {
-        headers: {
-          'x-cache-control': 'cache',
-        },
-      })
-      if (res.code === 200) {
-        initData.fiexdBannerData = res.data.advertising[fiexdAdCode] || []
-        initData.rollBannerData = res.data.advertising[rollAdCode] || []
-        initData.helpBannerData = res.data.advertising[helpAdCode] || []
-        initData.fiexdNavData = res.data.fixedNavList || []
-        initData.rollNavData = res.data.rollNavList || []
-      }
-    } catch (error) {
-      redirect('/500')
-    }
-    return {
-      initData,
-      closeAppOpen: true,
-    }
-  },
+  // async asyncData({ $axios, redirect, app }) {
+  //   // 获取用户是否手动关闭过下载app的弹框，手动关闭过不再弹出
+  //   // const closeAppOpen = app.$cookies.get('closeAppOpen', {
+  //   //   path: '/',
+  //   // })
+  //   const fiexdAdCode = 'ad100234' // 顶部固定banner的code
+  //   const rollAdCode = 'ad100237' // 导航下方轮播banner code
+  //   const helpAdCode = 'ad113183' // 帮我找下方banner code(服务榜单)
+  //   const skillCode = 'ad113282' // 秒杀
+  //   // 首屏请求导航和广告的参数
+  //   const initReqParams = {
+  //     locationCodeList: [fiexdAdCode, rollAdCode, helpAdCode, skillCode], // 广告位code列表
+  //     rollPage: 1, // 滚动导航当前页
+  //     rollLimit: 1000, // 滚动导航每页条数
+  //     fixedPage: 1, // 固定导航当前页
+  //     fixedLimit: 5, // 固定导航每页条数
+  //     fixedNavCategoryCode: 'nav100007', // 固定导航分类code
+  //     rollNavCategoryCode: 'nav100012', // 滚动导航分类code
+  //     platformCode: PLATFORM_CODE.wap, // 平台code
+  //     terminalCode: TERMINAL_CODE.wap, // 终端code
+  //   }
+  //   const initData = {
+  //     fiexdBannerData: [], // 固定广告
+  //     rollBannerData: [], // 轮播广告
+  //     helpBannerData: [], // 帮我找广告
+  //     fiexdNavData: [], // 固定导航
+  //     rollNavData: [], // 滚动导航
+  //     skillData: [],
+  //   }
+  //   try {
+  //     const res = await $axios.post(homeApi.initRequest, initReqParams)
+  //     if (res.code && res.data) {
+  //       if (res.data.advertising) {
+  //         initData.fiexdBannerData =
+  //           res.data.advertising && res.data.advertising[fiexdAdCode]
+  //             ? res.data.advertising[fiexdAdCode]
+  //             : []
+  //         initData.rollBannerData =
+  //           res.data.advertising && res.data.advertising[rollAdCode]
+  //             ? res.data.advertising[rollAdCode]
+  //             : []
+  //         initData.helpBannerData =
+  //           res.data.advertising && res.data.advertising[helpAdCode]
+  //             ? res.data.advertising[helpAdCode]
+  //             : []
+  //         initData.skillData =
+  //           res.data.advertising && res.data.advertising[skillCode]
+  //             ? res.data.advertising[skillCode]
+  //             : []
+  //       }
+  //       initData.fiexdNavData = res.data.fixedNavList
+  //         ? res.data.fixedNavList
+  //         : []
+  //       initData.rollNavData = res.data.rollNavList ? res.data.rollNavList : []
+  //       initData.ddd = res.ddddd
+  //     }
+  //     return {
+  //       initData,
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //     return {
+  //       initData,
+  //     }
+  //   }
+  // },
   data() {
     return {
+      pageScrollTop: 0,
       adModuleOne: ['ad100235', 'ad100236'], // 限时特惠板块
       adModuleTwo: ['ad100239', 'ad100240', 'ad100241', 'ad100242'], // 热门服务板块
       asyncReqParams: {
@@ -138,27 +174,106 @@ export default {
         terminalCode: TERMINAL_CODE.wap, // 查询资讯的终端code
         locationCodeList: [], // 广告编码
       },
+      closeAppOpen: true,
       asyncData: {
         preferential: [], // 限时特惠
         information: [], // 资讯精选
         rotationAd: [], // 热门服务
       },
+      initData: {
+        fiexdBannerData: [], // 固定广告
+        rollBannerData: [], // 轮播广告
+        helpBannerData: [], // 帮我找广告
+        fiexdNavData: [], // 固定导航
+        rollNavData: [], // 滚动导航
+        skillData: [],
+      },
     }
   },
   created() {
-    if (process.client) {
-      this.asyncReqParams.locationCodeList = this.adModuleOne.concat(
-        this.adModuleTwo
-      )
+    this.asyncReqParams.locationCodeList = this.adModuleOne.concat(
+      this.adModuleTwo
+    )
+    this.closeAppOpen = this.$cookies.get('closeAppOpen', {
+      path: '/',
+    })
+  },
+  mounted() {
+    if (!this.initData.fiexdNavData.length) {
+      this.getHomeData()
+    }
+  },
+  methods: {
+    // 用户手动关闭下载app提示弹框后，记录状态到cookie，刷新页面不再弹出，使用默认过期时间（关闭浏览器过期，下次再访问，再次弹出）
+    handleDialogClosed() {
+      this.closeAppOpen = true
+      this.$cookies.set('closeAppOpen', true, {
+        path: '/',
+      })
+    },
+    async getHomeData() {
+      const fiexdAdCode = 'ad100234' // 顶部固定banner的code
+      const rollAdCode = 'ad100237' // 导航下方轮播banner code
+      const helpAdCode = 'ad113183' // 帮我找下方banner code(服务榜单)
+      const skillCode = 'ad113282' // 秒杀
+      // 首屏请求导航和广告的参数
+      const initReqParams = {
+        locationCodeList: [fiexdAdCode, rollAdCode, helpAdCode, skillCode], // 广告位code列表
+        rollPage: 1, // 滚动导航当前页
+        rollLimit: 1000, // 滚动导航每页条数
+        fixedPage: 1, // 固定导航当前页
+        fixedLimit: 5, // 固定导航每页条数
+        fixedNavCategoryCode: 'nav100007', // 固定导航分类code
+        rollNavCategoryCode: 'nav100012', // 滚动导航分类code
+        platformCode: PLATFORM_CODE.wap, // 平台code
+        terminalCode: TERMINAL_CODE.wap, // 终端code
+      }
+      const initData = {
+        fiexdBannerData: [], // 固定广告
+        rollBannerData: [], // 轮播广告
+        helpBannerData: [], // 帮我找广告
+        fiexdNavData: [], // 固定导航
+        rollNavData: [], // 滚动导航
+        skillData: [],
+      }
+      try {
+        const res = await this.$axios.post(homeApi.initRequest, initReqParams)
+        if (res.code && res.data) {
+          if (res.data.advertising) {
+            initData.fiexdBannerData =
+              res.data.advertising && res.data.advertising[fiexdAdCode]
+                ? res.data.advertising[fiexdAdCode]
+                : []
+            initData.rollBannerData =
+              res.data.advertising && res.data.advertising[rollAdCode]
+                ? res.data.advertising[rollAdCode]
+                : []
+            initData.helpBannerData =
+              res.data.advertising && res.data.advertising[helpAdCode]
+                ? res.data.advertising[helpAdCode]
+                : []
+            initData.skillData =
+              res.data.advertising && res.data.advertising[skillCode]
+                ? res.data.advertising[skillCode]
+                : []
+          }
+          initData.fiexdNavData = res.data.fixedNavList
+            ? res.data.fixedNavList
+            : []
+          initData.rollNavData = res.data.rollNavList
+            ? res.data.rollNavList
+            : []
+          this.initData = initData
+        }
+      } catch (error) {
+        console.log('error', error)
+      }
+    },
+    getMoreData() {
       // 获取非首屏数据（广告 + 资讯）
       this.$axios
-        .post(homeApi.asyncRequest, this.asyncReqParams, {
-          headers: {
-            'x-cache-control': 'cache',
-          },
-        })
+        .post(homeApi.asyncRequest, this.asyncReqParams)
         .then((res) => {
-          //   console.log('客户端：', res.data)
           this.adModuleOne.forEach((item) => {
             if (res.data.advertising[item]) {
               this.asyncData.preferential.push(res.data.advertising[item])
@@ -171,15 +286,6 @@ export default {
             }
           })
         })
-    }
-  },
-  methods: {
-    // 用户手动关闭下载app提示弹框后，记录状态到cookie，刷新页面不再弹出，使用默认过期时间（关闭浏览器过期，下次再访问，再次弹出）
-    handleDialogClosed() {
-      this.closeAppOpen = true
-      this.$cookies.set('closeAppOpen', true, {
-        path: '/',
-      })
     },
   },
   head: {
@@ -193,6 +299,46 @@ export default {
   left: 50% !important;
   transform: translateX(-50%) !important;
 }
+.sp-main-box {
+  width: 100%;
+  margin: 0 auto 20px auto;
+  padding: 0 20px;
+  .inner {
+    background: white;
+    overflow: hidden;
+    border-radius: 16px;
+    width: 100%;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+.sp-home-title {
+  font-size: 32px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 600;
+  color: #222222;
+  line-height: 32px;
+  padding: 20px;
+  .to-more {
+    position: relative;
+    width: 70px;
+    height: 30px;
+    font-size: 22px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 600;
+    color: rgba(73, 116, 245, 1);
+    line-height: 34px;
+    display: block;
+    float: right;
+    .sp-icon {
+      position: absolute;
+      top: 4px;
+      right: 0;
+    }
+  }
+}
 </style>
 <style lang="less" scoped>
 .home-page-content {
@@ -201,6 +347,7 @@ export default {
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  background: #f5f5f5;
   /deep/ .sp-sticky--fixed {
     max-width: 1000px;
     width: 100%;

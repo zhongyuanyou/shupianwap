@@ -174,7 +174,6 @@ import Search from '@/components/common/search/Search'
 import SearchPopup from '@/components/planner/SearchPopup'
 import PlannerSearchItem from '@/components/planner/PlannerSearchItem'
 import LoadingDown from '@/components/common/loading/LoadingDown'
-
 import imHandle from '@/mixins/imHandle'
 
 import { planner, dict } from '@/api'
@@ -393,6 +392,10 @@ export default {
           this.uPIM(data)
           break
         case 'tel':
+<<<<<<< HEAD
+=======
+          console.log('想打电话：', data)
+>>>>>>> feat_v2.0
           if (this.isInApp) {
             this.$appFn.dggBindHiddenPhone(
               { plannerId: data.mchUserId },
@@ -482,6 +485,26 @@ export default {
       const ciphertext = data || {}
       const telNumber = ciphertext.phone
       if (ciphertext.status === 1) {
+<<<<<<< HEAD
+=======
+        if (this.isInApp) {
+          this.$appFn.dgg_bindHiddenPhone(
+            { plannerId: ciphertext.mchUserId },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200) {
+                this.$xToast.show({
+                  message: '拨号失败！',
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+              }
+            }
+          )
+          return
+        }
+>>>>>>> feat_v2.0
         callPhone(telNumber)
       } else if (ciphertext.status === 0) {
         Toast({
@@ -498,17 +521,22 @@ export default {
       }
       console.log('telNumber:', telNumber)
       // 如果当前页面在app中，则调用原生拨打电话的方法
+<<<<<<< HEAD
+=======
+
+>>>>>>> feat_v2.0
       // 浏览器中调用的
     },
 
     // 发起聊天
-    async uPIM(data = {}) {
+    uPIM(data = {}) {
+      console.log(123)
       const { mchUserId, userName, type } = data
       // 如果当前页面在app中，则调用原生IM的方法
       if (this.isInApp) {
         try {
           // 需要判断登陆没有，没有登录就是调用登录
-          await this.getUserInfo()
+          // await this.getUserInfo()
           this.$appFn.dggOpenIM(
             {
               name: userName,

@@ -26,16 +26,14 @@
         }"
         v-html="heightLightHtml(description)"
       ></p>
-      <div
-        class="tags"
-        :style="{
-          visibility: goodstype.type === 'serve' ? 'visible' : 'hidden',
-        }"
-      >
+      <div v-if="goodstype.type === 'serve' && tags.length > 0" class="tags">
         <span v-for="(item, index) in tags" :key="index">{{ item.name }}</span>
       </div>
+      <div v-if="itemData.slogan" class="slogan">
+        {{ itemData.slogan }}
+      </div>
       <div class="price-sales">
-        <span>{{ itemData.referencePrice }}元</span
+        <span>{{ itemData.referencePrice }}<b>元</b></span
         ><span v-if="goodstype.type === 'serve'"
           >销量 {{ itemData.salesSum }}</span
         >
@@ -265,6 +263,8 @@ export default {
     width: calc(100% - 52px);
     padding-right: 52px;
     overflow: hidden;
+    position: relative;
+    min-height: 220px;
     h3 {
       font-size: 32px;
       font-family: PingFang SC;
@@ -309,12 +309,27 @@ export default {
         }
       }
     }
+    .slogan {
+      font-size: 22px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #222222;
+      -webkit-line-clamp: 1;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+      word-break: break-all;
+      overflow: hidden;
+      white-space: normal;
+    }
     .price-sales {
       display: flex;
+      position: absolute;
+      bottom: 0;
       align-items: flex-end;
       display: inherit;
-      margin-top: 12px;
-      margin-bottom: 34px;
+      // margin-top: 12px;
+      // margin-bottom: 34px;
       span {
         &:nth-child(1) {
           font-size: 26px;

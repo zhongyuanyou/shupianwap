@@ -146,10 +146,9 @@ export default {
     border-radius: 8px;
     input {
       flex: 1;
-      font-size: 30px;
-      font-weight: bold;
       font-family: PingFang SC;
       border: none;
+      padding-top: 5px;
       font-size: 30px;
       color: #1a1a1a;
       &::-webkit-search-cancel-button {
@@ -165,7 +164,6 @@ export default {
     .imitate-input {
       flex: 1;
       font-size: 30px;
-      font-weight: bold;
       font-family: PingFang SC;
       border: none;
       font-size: 30px;

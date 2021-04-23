@@ -68,7 +68,6 @@ export default {
   watch: {
     isCheck: {
       handler(newVal, oldVal) {
-        console.log(newVal, oldVal)
         if (newVal === oldVal) return
         this.checkedVal = newVal
       },

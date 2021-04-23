@@ -14,7 +14,7 @@
         />
         <p class="txt" @click="handleClickLogin">
           {{
-            userId && info.nickName
+            token && info.nickName
               ? '欢迎你，' + info.nickName || ''
               : '登录/注册'
           }}
@@ -22,37 +22,146 @@
       </div>
     </div>
     <!--E 顶部-->
+    <!--S 我的订单-->
+    <div class="my_order">
+      <div class="my_order_title">我的订单</div>
+      <div class="my_order_type">
+        <div
+          v-for="(item, index) in orderTabs"
+          :key="index"
+          class="my_order_type_list"
+        >
+          <div class="icon">
+            <my-icon
+              :name="item.iconName"
+              color="#4E78F5"
+              size="0.44rem"
+            ></my-icon>
+          </div>
+          <div class="order_text" @click="clickTab(++index)">
+            {{ item.name }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--E 我的订单-->
     <!--S 按钮区-->
     <div class="my_btns">
-      <!--      <div class="my_btns_item" @click="handleClick(0)">-->
-      <!--        <div class="my_btns_item_icon">-->
-      <!--          <my-icon name="per_ic_entrust" size="0.36rem" color="#4974F5" />-->
-      <!--        </div>-->
-      <!--        <div class="my_btns_item_con">委托出售</div>-->
-      <!--      </div>-->
-      <!--      <div class="my_btns_item" @click="handleClick(1)">-->
-      <!--        <div class="my_btns_item_icon">-->
-      <!--          <my-icon name="per_ic_cooperation" size="0.36rem" color="#FE8C29" />-->
-      <!--        </div>-->
-      <!--        <div class="my_btns_item_con">我要合作</div>-->
-      <!--      </div>-->
+      <div class="my_btns_item" @click="handleClick(1)">
+        <div class="my_btns_item_icon">
+          <my-icon
+            name="gerenzhongxin_hetongicon"
+            size="0.36rem"
+            color="#4F9BFF"
+          />
+        </div>
+        <div class="my_btns_item_con">
+          我的合同
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
       <div class="my_btns_item" @click="handleClick(2)">
         <div class="my_btns_item_icon">
-          <my-icon name="per_ic_help" size="0.36rem" color="#00B365" />
+          <my-icon
+            name="gerenzhongxin_youhuiquanicon"
+            size="0.36rem"
+            color="#FFA416"
+          />
         </div>
-        <div class="my_btns_item_con">帮助中心</div>
+        <div class="my_btns_item_con">
+          我的优惠券
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
       </div>
       <div class="my_btns_item" @click="handleClick(3)">
         <div class="my_btns_item_icon">
-          <my-icon name="per_ic_debunk" size="0.36rem" color="#10BBB8" />
+          <my-icon
+            name="personal_ic_authenticate"
+            size="0.36rem"
+            color="#00B365"
+          />
         </div>
-        <div class="my_btns_item_con">我要吐槽</div>
+        <div class="my_btns_item_con">
+          实名认证
+          <div class="item_lf">
+            <span>{{
+              realStatus === 'NO_AUTHENTICATION'
+                ? '未实名认证'
+                : info.realStatus === 'AUTHENTICATION'
+                ? '已实名认证'
+                : '未实名认证'
+            }}</span>
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
       </div>
       <div class="my_btns_item" @click="handleClick(4)">
         <div class="my_btns_item_icon">
+          <my-icon name="per_ic_help" size="0.36rem" color="#00B365" />
+        </div>
+        <div class="my_btns_item_con">
+          帮助中心
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="my_btns_item" @click="handleClick(5)">
+        <div class="my_btns_item_icon">
+          <my-icon name="per_ic_debunk" size="0.36rem" color="#10BBB8" />
+        </div>
+        <div class="my_btns_item_con">
+          我要吐槽
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="my_btns_item" @click="handleClick(6)">
+        <div class="my_btns_item_icon">
           <my-icon name="per_ic_about" size="0.36rem" color="#4974F5" />
         </div>
-        <div class="my_btns_item_con no_line">关于我们</div>
+        <div class="my_btns_item_con no_line">
+          关于我们
+          <div class="item_lf">
+            <my-icon
+              name="order_ic_listnext"
+              size="0.24rem"
+              color="#CCCCCC"
+              class="myIcon"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <!--S 按钮区-->
@@ -81,6 +190,10 @@ import { mapState } from 'vuex'
 import { userinfoApi } from '@/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { GOODSLIST } from '~/config/constant'
+import { imInit } from '@/utils/im'
+import getUserSign from '~/utils/fingerprint'
+import imHandle from '~/mixins/imHandle'
+
 export default {
   layout: 'nav',
   name: 'Index',
@@ -90,8 +203,31 @@ export default {
     [CenterPopup.name]: CenterPopup,
     LoadingCenter,
   },
+  mixins: [imHandle],
   data() {
     return {
+      orderTabs: [
+        {
+          iconName: 'per_ic_payment',
+          name: '待付款',
+        },
+        {
+          iconName: 'per_ic_handle',
+          name: '办理中',
+        },
+        {
+          iconName: 'per_ic_complete',
+          name: '已完成',
+        },
+        {
+          iconName: 'per_ic_cancel',
+          name: '已取消',
+        },
+        {
+          iconName: 'per_ic_whole',
+          name: '全部订单',
+        },
+      ],
       info: {
         fullName: '', // 用户昵称
         url: '', // 头像
@@ -102,23 +238,37 @@ export default {
         title: '确定退出吗？',
       },
       loading: false,
+      userName: '',
+      realStatus: 'NO_AUTHENTICATION',
     }
   },
   computed: {
     ...mapState({
       userId: (state) => state.user.userInfo.userId,
       token: (state) => state.user.userInfo.token,
+      userPhone: (state) => state.user.userInfo.userPhone,
     }),
     avatar() {
       return GOODSLIST
     },
   },
   mounted() {
-    if (this.userId) {
+    if (this.userId || this.$cookies.get('token')) {
+      this.userName = this.$cookies.get('userName')
       this.getUserInfo()
     }
   },
+
   methods: {
+    clickTab(index) {
+      // console.log('index', index)
+      this.$router.push({
+        path: '/order',
+        query: {
+          type: index,
+        },
+      })
+    },
     handleAvatar() {
       // 点击头像
       if (!this.userId) {
@@ -131,7 +281,7 @@ export default {
       }
     },
     handleClickLogin() {
-      if (this.userId) return
+      if (this.token) return
       this.$router.push({
         name: 'login',
         query: { redirect: this.$route.fullPath },
@@ -143,12 +293,18 @@ export default {
       try {
         const params = {
           // id: this.userId,
-          id: this.userId,
+          id: this.userId || this.$cookies.get('userId'),
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false
         if (res.code === 200 && res.data && typeof res.data === 'object') {
           this.info = res.data
+<<<<<<< HEAD
+=======
+          this.userName = res.data.nickName
+          this.realStatus = res.data.realStatus
+          // console.log(res.data.realStatus)
+>>>>>>> feat_v2.0
           this.$store.dispatch('user/setInfo', res.data)
         } else {
           // 清除用户缓存信息
@@ -158,17 +314,47 @@ export default {
         this.loading = false
       }
     },
-    handleClick(val) {
-      if (val === 2) {
-        this.$router.push('/my/help')
+    async handleClick(val) {
+      if (val === 1) {
+        const isLogin = await this.judgeLoginMixin()
+
+        if (isLogin) {
+          this.$router.push('/contract/contractList')
+        } else {
+          this.$router.push('/login')
+        }
+      } else if (val === 2) {
+        const isLogin = await this.judgeLoginMixin()
+        if (isLogin) {
+          this.$router.push('/my/coupon')
+        } else {
+          this.$router.push('/login')
+        }
       } else if (val === 3) {
-        this.$router.push('/my/complain')
+        if (
+          this.realStatus === 'NO_AUTHENTICATION' ||
+          this.realStatus === 'AUTHENTICATION_FAIL'
+        ) {
+          this.$router.push('/contract/authentication')
+        }
       } else if (val === 4) {
+        this.$router.push('/my/help')
+      } else if (val === 5) {
+        this.$router.push('/my/complain')
+      } else if (val === 6) {
         this.$router.push('/my/about')
       }
     },
-    showExit() {
+    async showExit() {
       this.loginStatus = true
+      const deviceId = await getUserSign()
+      const initImSdk = imInit({
+        token: '',
+        userId: '',
+        userType: 'VISITOR',
+        deviceId,
+      })
+      this.$store.commit('im/SET_IM_SDK', initImSdk)
     },
     async exitConfirm() {
       // 退出
@@ -180,6 +366,7 @@ export default {
       if (res.code === 200) {
         // 清除cookie中的数据
         this.info.url = ''
+        this.userName = ''
         this.$store.dispatch('user/clearUser')
       }
     },
@@ -190,7 +377,6 @@ export default {
 <style lang="less" scoped>
 .my {
   width: 100%;
-  height: 100%;
   background-color: #f8f8f8;
   &_tp {
     width: 100%;
@@ -218,6 +404,43 @@ export default {
         color: #ffffff;
         line-height: 32px;
         margin-top: 48px;
+      }
+    }
+  }
+  &_order {
+    height: 240px;
+    padding: 0 40px;
+    margin-top: 25px;
+    background: #ffffff;
+    border-top: 1px solid rgba(205, 205, 205, 0.5);
+    border-bottom: 1px solid rgba(205, 205, 205, 0.5);
+    &_title {
+      font-size: 40px;
+      font-family: PingFang-SC-Bold, PingFang-SC;
+      font-weight: bold;
+      color: #1a1a1a;
+      padding: 32px 0;
+    }
+    &_type {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &_list {
+        text-align: center;
+        .icon {
+          height: 44px;
+          line-height: 44px;
+          display: flex;
+          justify-content: center;
+        }
+        .order_text {
+          font-size: 24px;
+          font-family: PingFang-SC-Bold, PingFang-SC;
+          font-weight: bold;
+          color: #222222;
+          line-height: 24px;
+          padding-top: 20px;
+        }
       }
     }
   }
@@ -255,15 +478,35 @@ export default {
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
         color: #1a1a1a;
+        display: flex;
+        justify-content: space-between;
+        .item_lf {
+          display: flex;
+          padding-right: 40px;
+          span {
+            padding-right: 8px;
+            font-size: 28px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #999999;
+          }
+          .myIcon {
+            color: #cccccc;
+          }
+        }
       }
     }
   }
   .exit_btn {
     margin: 65px 24px 0 24px;
-    height: 80px;
+    height: 280px;
     /deep/ .sp-button {
       width: 100%;
+      border: 1px solid #cdcdcd;
     }
+  }
+  .spiconfont {
+    display: block;
   }
 }
 </style>
