@@ -737,6 +737,7 @@ export default {
           align-content: flex-start;
           margin-top: 12px;
           flex-wrap: wrap;
+          min-height: 120px;
           div {
             font-size: 20px;
             margin-bottom: 12px;
@@ -753,6 +754,7 @@ export default {
         .rc-bottom {
           display: flex;
           justify-content: space-between;
+          align-items: center;
           .rc-bottom-lf {
             .rc-bottom-lf-my {
               display: flex;

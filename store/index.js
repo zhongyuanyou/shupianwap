@@ -31,7 +31,7 @@ export const actions = {
         userId,
         type: userType,
         nickName: userName,
-        avatar,
+        avatar: decodeURIComponent(avatar),
       })
   },
 }

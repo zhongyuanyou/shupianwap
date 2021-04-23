@@ -422,13 +422,13 @@ export default {
       width: 300px;
       box-sizing: border-box;
       .title {
-        height: 32px;
+        height: 42px;
         font-size: 32px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #222222;
-        line-height: 32px;
-        margin: 36px 0 23px 0;
+        line-height: 42px;
+        margin: 24px 0 23px 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -440,7 +440,7 @@ export default {
         font-weight: 400;
         color: #555555;
         line-height: 32px;
-        margin-bottom: 13px;
+        margin-bottom: 18px;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
