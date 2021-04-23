@@ -11,6 +11,8 @@
  * @param orderSkuEsList 订单产品集合
  * @param orderList 订单列表
  * */
+import { Dialog } from '@chipspc/vant-dgg'
+import { auth } from '@/api'
 import orderUtils from '@/utils/order'
 import orderApi from '@/api/order'
 // 客户单状态code
@@ -188,6 +190,7 @@ const orderStatusObj = {
 export default {
   data() {
     return {
+      xyList: [],
       thisTimePayTotal: 0, // 本期应付批次总额
       allTimePayTotal: 0, // 未支付批次总额
       batchIds: '', // 分批支付id集合
@@ -510,6 +513,15 @@ export default {
     // 查询客户单下的关联订单
     getChildOrders(order) {
       if (this.fromPage === 'orderList') {
+        // if (
+        //   this.opType === 'payMoney' &&
+        //   order.orderSkuEsList[0].skuType === 'PRO_CLASS_TYPE_TRANSACTION'
+        // ) {
+        //   Dialog.confirm({
+        //     title: '温馨提示',
+        //     message: '请仔细阅读并同意',
+        //   }).then(() => {})
+        // }
         if (
           this.opType === 'payMoney' &&
           order.orderSkuEsList[0].skuType === 'PRO_CLASS_TYPE_TRANSACTION' &&
@@ -831,6 +843,29 @@ export default {
         })
       }
     },
+    // 获取交易协议
+    async getProtocol(categoryCode) {
+      if (!categoryCode) {
+        this.$xToast.warn('请传入需要获取的协议!')
+        return
+      }
+      const params = {
+        categoryCode,
+        includeField: 'content,title',
+      }
+      try {
+        this.loading = true
+        const data = await auth.protocol(params)
+        console.log('data:', data)
+        const { rows = [] } = data || {}
+        this.article = rows[0] || {}
+        this.loading = false
+        return rows[0] || {}
+      } catch (error) {
+        this.$xToast.error(error.message || '请求失败')
+        return Promise.reject(error)
+      }
+    },
     //
     getSkuList(orderItem) {
       const arr = orderItem.orderSkuEsList
@@ -855,12 +890,10 @@ export default {
       }
       item.filterSkuList = this.rangeSkus(item.filterSkuList)
       const names = []
-      console.log('item.filterSkuList', item.filterSkuList)
       item.filterSkuList.forEach((ele) => {
         if (ele && (ele.fieldValueCn || ele.fieldValue))
           names.push(ele.fieldValueCn || ele.fieldValue)
       })
-      console.log('names', names)
       return names.join('; ')
     },
     // 对sku信息进行排序
@@ -895,6 +928,7 @@ export default {
     //     PATENT_INDUSTRY("patent_industry", "专利行业"),
     //     PATENT_STATUS("patent_status", "专利状态"),
     // }
+    // 对sku信息排序
     rangeSkus(skuArr) {
       const newArr = new Array(skuArr.length).fill(null)
       const FIRSTCODES = [

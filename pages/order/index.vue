@@ -83,7 +83,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex'
-import { Tab, Tabs, Loading, Skeleton } from '@chipspc/vant-dgg'
+import { Tab, Tabs, Loading, Skeleton, Dialog } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import OrderItem from '@/components/order/OrderItem'
 import CancelOrder from '@/components/order/CancelOrder' // 取消订单弹窗
@@ -98,6 +98,7 @@ export default {
     [Tabs.name]: Tabs,
     [Loading.name]: Loading,
     [Skeleton.name]: Skeleton,
+    [Dialog.name]: Dialog,
     Header,
     OrderItem,
     CancelOrder,
@@ -131,7 +132,7 @@ export default {
       return 44
     },
   },
-  mounted() {
+  async mounted() {
     if (this.$route.query.type) {
       const pageType = this.$route.query.type
       if (pageType === 0) {
@@ -146,6 +147,10 @@ export default {
         this.selectedOrderStatus = 'ORDER_CUS_STATUS_CANCELLED'
       }
     }
+    // 获取下单协议
+    this.xyList[0] = await this.getProtocol('protocol100008')
+    // 获取交易委托协议
+    this.xyList[1] = await this.getProtocol('protocol100033')
     this.getOrderList()
   },
   methods: {
@@ -217,9 +222,6 @@ export default {
           for (let i = 0, l = arr.length; i < l; i++) {
             this.changeMoney(arr[i])
             arr[i].statusName = this.getStatusName(arr[i].orderStatusNo)
-            arr[i].orderSkuEsList.forEach((item) => {
-              item.skuDetailValues = this.getDetailValues(item)
-            })
           }
           if (this.page === 1) {
             this.list = arr
@@ -228,7 +230,6 @@ export default {
             const allData = nowData.concat(arr)
             this.list = allData
           }
-          console.log('this.orderList', this.list)
           this.loadingList = false
         })
         .catch((error) => {

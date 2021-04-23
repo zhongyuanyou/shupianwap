@@ -177,6 +177,10 @@ export default {
     font-weight: 500;
     color: #1a1a1a;
     line-height: 36px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
   }
 
   .item_content {

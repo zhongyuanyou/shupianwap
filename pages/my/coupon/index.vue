@@ -181,7 +181,6 @@ export default {
           .getCouponList({ axios: this.$axios }, this.formData)
           .then((result) => {
             this.responseData = result.responseData
-            console.log('+++++++++++', this.responseData)
             this.loading = false
           })
           .catch((e) => {
