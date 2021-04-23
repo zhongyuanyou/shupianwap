@@ -797,7 +797,7 @@ export default {
         }
       }
       > .right {
-        width: 156px;
+        padding: 0 20px;
         height: 56px;
         background: #f5f5f5;
         border-radius: 28px;

@@ -112,7 +112,7 @@ export default {
       // 组装参数
       const params = {}
       params.categorIds = this.categorIds
-      params.limit = 10
+      params.limit = 50
       params.page = 1
       const { code, message, data } = await this.$axios.post(
         knownApi.questionArticle.list,
@@ -121,7 +121,6 @@ export default {
       if (code === 200) {
         if (data.rows.length > 0) {
           this.newspaperData = data.rows
-          console.log('this.normalListData', this.newspaperData)
         } else {
           this.attentionStatus = false
           this.showNotAttention = true
