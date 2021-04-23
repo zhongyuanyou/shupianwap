@@ -11,7 +11,7 @@
  * @param orderSkuEsList 订单产品集合
  * @param orderList 订单列表
  * */
-import { Dialog } from '@chipspc/vant-dgg'
+
 import { auth } from '@/api'
 import orderUtils from '@/utils/order'
 import orderApi from '@/api/order'
@@ -190,7 +190,9 @@ const orderStatusObj = {
 export default {
   data() {
     return {
-      xyList: [],
+      addOrderXy: {},
+      tranXy: {},
+      showMydialog: false,
       thisTimePayTotal: 0, // 本期应付批次总额
       allTimePayTotal: 0, // 未支付批次总额
       batchIds: '', // 分批支付id集合
@@ -513,45 +515,49 @@ export default {
     // 查询客户单下的关联订单
     getChildOrders(order) {
       if (this.fromPage === 'orderList') {
-        // if (
-        //   this.opType === 'payMoney' &&
-        //   order.orderSkuEsList[0].skuType === 'PRO_CLASS_TYPE_TRANSACTION'
-        // ) {
-        //   Dialog.confirm({
-        //     title: '温馨提示',
-        //     message: '请仔细阅读并同意',
-        //   }).then(() => {})
-        // }
         if (
           this.opType === 'payMoney' &&
-          order.orderSkuEsList[0].skuType === 'PRO_CLASS_TYPE_TRANSACTION' &&
-          this.checkContractStatus(order) === 1
+          order.orderSkuEsList[0].skuType === 'PRO_CLASS_TYPE_TRANSACTION'
         ) {
-          // 交易商品付款之前检测有无签署合同
-          this.$xToast.show({
-            message: '为满足您的合法权益，请先和卖家签署合同后再付款',
-            duration: 3000,
-            icon: 'toast_ic_remind',
-            forbidClick: true,
-          })
-          return
+          const orderAgreementIds = order.orderAgreementIds
+          if (!orderAgreementIds) {
+            this.showMydialog = true
+            return
+          }
+          if (this.checkContractStatus(order) === 1) {
+            // 交易商品付款之前检测有无签署合同
+            this.$xToast.show({
+              message: '为满足您的合法权益，请先和卖家签署合同后再付款',
+              duration: 3000,
+              icon: 'toast_ic_remind',
+              forbidClick: true,
+            })
+            return
+          }
         }
       }
       if (this.fromPage === 'orderDetail') {
         if (
           this.opType === 'payMoney' &&
           (order.skuType === 'PRO_CLASS_TYPE_TRANSACTION' ||
-            order.skuType === this.skuTypes[1]) &&
-          this.checkContractStatus(order) === 1
+            order.skuType === this.skuTypes[1])
         ) {
-          // 交易商品付款之前检测有无签署合同
-          this.$xToast.show({
-            message: '为满足您的合法权益，请先和卖家签署合同后再付款',
-            duration: 3000,
-            icon: 'toast_ic_remind',
-            forbidClick: true,
-          })
-          return
+          const orderAgreementIds = this.orderData.orderAgreementIds
+          if (!orderAgreementIds) {
+            this.showMydialog = true
+            console.log('this.showMydialog', this.showMydialog)
+            return
+          }
+          if (this.checkContractStatus(order) === 1) {
+            // 交易商品付款之前检测有无签署合同
+            this.$xToast.show({
+              message: '为满足您的合法权益，请先和卖家签署合同后再付款',
+              duration: 3000,
+              icon: 'toast_ic_remind',
+              forbidClick: true,
+            })
+            return
+          }
         }
       }
       if (!this.orderData.orderList) {
@@ -574,8 +580,55 @@ export default {
         this.switchOptionType()
       }
     },
+    // 同意协议
+    confirmAggret(order) {
+      console.log('orderData', this.orderData)
+      console.log('order', order)
+      if (!this.addOrderXy.id || !this.tranXy.id) {
+        this.$xToast.error('获取协议失败，请刷新重试')
+        return
+      }
+      orderApi
+        .aggrement(
+          { axios: this.$axios },
+          {
+            orderCusId: this.orderData.cusOrderId || order.orderCusId,
+            orderAgreementIds: this.addOrderXy.id + ',' + this.tranXy.id,
+            orderAgreementType: 'AGREEMENT_TYPE_PAY',
+          }
+        )
+        .then((res) => {
+          console.log('res', res)
+        })
+        .catch((err) => {
+          console.log('err', err)
+        })
+    },
+    // 不同意协议
+    cancelAggret() {
+      this.showMydialog = false
+    },
+    // 进入协议页面
+    enterAgreement(code) {
+      this.$router.push({
+        name: 'login-protocol',
+        query: {
+          categoryCode: code,
+          hideHeader: false,
+        },
+      })
+    },
     // 根据操作类型进行不同的任务
     switchOptionType() {
+      this.$refs.cancleOrderModel.orderList = this.orderData.orderList
+      console.log(
+        'this.$refs.cancleOrderModel.orderList',
+        this.$refs.cancleOrderModel.orderList
+      )
+      console.log(
+        'this.$refs.cancleOrderModel',
+        this.$refs.cancleOrderModel.orderList
+      )
       if (this.opType === 'cancelOrder') {
         // 弹出取消订单弹窗
         this.$refs.cancleOrderModel.showPop = true
