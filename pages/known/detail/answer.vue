@@ -310,15 +310,15 @@ export default {
           handleUserId: this.userInfo.userId || '120',
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
           handleType: this.isFollow ? 2 : 1,
-          attentionUserId: this.articleDetails.userId,
-          attentionUserName: this.articleDetails.userName,
-          attentionUserType: this.articleDetails.userType,
+          attentionUserId: this.answerDetails.userId,
+          attentionUserName: this.answerDetails.userName,
+          attentionUserType: this.answerDetails.userType,
         })
         .then((res) => {
           this.loading = false
           if (res.code === 200) {
             this.$xToast.show({
-              message: this.isFollow ? '关注成功' : '取消关注',
+              message: this.isFollow ? '取消关注' : '关注成功',
             })
             this.isFollow = !this.isFollow
           } else {
@@ -336,7 +336,7 @@ export default {
         .get(knownApi.questionArticle.findAttention, {
           params: {
             currentUserId: this.userInfo.userId,
-            homeUserId: this.homeUserId || '120',
+            homeUserId: this.answerDetails.createrId,
           },
         })
         .then((res) => {
