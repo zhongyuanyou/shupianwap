@@ -8,6 +8,7 @@
           <Editor
             ref="myEditor"
             :init-content="formData.content"
+            :text-length="30000"
             @editorChange="editorChange"
           />
         </div>

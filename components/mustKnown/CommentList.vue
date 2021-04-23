@@ -58,7 +58,11 @@
         </div>
       </sp-list>
       <div class="foot">
-        <sp-field v-model.trim="content" placeholder="请输入您的评论内容" />
+        <sp-field
+          v-model.trim="content"
+          maxlength="100"
+          placeholder="请输入您的评论内容"
+        />
         <p
           :style="{ color: content ? 'rgba(73, 116, 245, 1)' : '' }"
           @click="publish"

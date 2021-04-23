@@ -464,21 +464,32 @@ export default {
   }
 }
 .container {
-  width: 7.5rem;
+  width: 100%;
   height: 100%;
   overflow-x: hidden;
   margin: 0 auto;
   background: url('https://cdn.shupian.cn/sp-pt/wap/images/eomlorriyxc0000.png')
     no-repeat;
   background-size: 100% auto;
+  /deep/.fixed-head {
+    height: 1.1rem !important;
+    .my-head {
+      height: 1.2rem !important;
+      box-shadow: none !important;
+      background: url('https://cdn.shupian.cn/sp-pt/wap/d6bbb4d4tqo0000.png')
+        no-repeat;
+      background-size: 100% auto;
+    }
+  }
+
   .search {
     display: flex;
     align-items: center;
     padding: 16px 0;
-    width: 750px;
+    width: 100%;
     margin: 0 auto;
-    background: url('https://cdn.shupian.cn/sp-pt/wap/images/eomlorriyxc0000.png')
-      no-repeat;
+    // background: url('https://cdn.shupian.cn/sp-pt/wap/images/eomlorriyxc0000.png')
+    //   no-repeat;
     background-size: 100% auto;
     background-position: center 0;
     .left-back {
@@ -523,7 +534,7 @@ export default {
   }
   .container-advice {
     // padding: 0 20px;
-    width: 750px;
+    width: 100%;
     height: 700px;
 
     position: relative;

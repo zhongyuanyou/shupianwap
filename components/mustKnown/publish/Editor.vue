@@ -109,6 +109,10 @@ export default {
       type: String,
       default: '请在此处输入内容',
     },
+    textLength: {
+      type: Number,
+      default: 5000,
+    },
   },
   data() {
     return {
@@ -166,27 +170,21 @@ export default {
   },
   methods: {
     onEditorChange(a) {
-      console.log('onEditorChange', a)
-      this.scrollToBottom()
-      this.$emit('editorChange', a)
+      if (a.html.length > this.textLength) {
+        a.quill.deleteText(this.textLength, 1)
+        this.$xToast.success(`字符不能超过${this.textLength}字`)
+      } else {
+        this.$emit('editorChange', a)
+      }
     },
     onEditorFocus(a) {
-      this.scrollToBottom()
       console.log('onEditorFocus', a)
     },
     onEditorBlur(a) {
-      this.scrollToBottom()
       console.log('onEditorBlur', a)
     },
     onEditorReady(a) {
-      this.scrollToBottom()
       console.log('onEditorReady', a)
-    },
-    scrollToBottom() {
-      this.$nextTick(() => {
-        const div = document.getElementById('edit-container')
-        window.scrollTo(0, div.scrollHeight)
-      })
     },
   },
 }

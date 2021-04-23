@@ -2,7 +2,25 @@
   <div class="invitationSearch">
     <header-slot>
       <div class="head">
-        <Search
+        <div class="input_box">
+          <my-icon name="sousuo3" color="#D8D8D8" size="0.28rem"></my-icon>
+          <input
+            ref="inputRef"
+            v-model="keyword"
+            type="text"
+            placeholder="搜索你想邀请的人"
+            @keyup.enter="keyClickHandle"
+          />
+          <my-icon
+            v-show="keyword !== ''"
+            name="guanbi_mian"
+            color="#CCCCCC"
+            size="0.32rem"
+            @click.native="clearInput"
+          ></my-icon>
+        </div>
+        <span class="cancel" @click="clooseHandle">取消</span>
+        <!-- <Search
           ref="fieldInput"
           v-model="keyword"
           :icon-left="0.12"
@@ -27,7 +45,7 @@
               >取消</a
             >
           </template>
-        </Search>
+        </Search> -->
       </div>
     </header-slot>
     <div class="recommend search">
@@ -62,7 +80,7 @@
 <script>
 import { mapState } from 'vuex'
 import { Icon, Sticky, List } from '@chipspc/vant-dgg'
-import Search from '@/components/common/search/Search'
+// import Search from '@/components/common/search/Search'
 import knownApi from '@/api/known'
 import util from '@/utils/changeBusinessData'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
@@ -72,7 +90,7 @@ export default {
   components: {
     [Icon.name]: Icon,
     [Sticky.name]: Sticky,
-    Search,
+    // Search,
     [List.name]: List,
     HeaderSlot,
   },
@@ -96,16 +114,18 @@ export default {
     }),
   },
   mounted() {
+    this.$refs.inputRef.focus()
     const _this = this
     this.$nextTick(() => {
-      _this.$refs.fieldInput.$refs.inputRef.focus()
+      // _this.$refs.fieldInput.$refs.inputRef.focus()
     })
     this.questionId = this.$route.query.questionId
   },
   methods: {
     clearInput() {
       this.keyword = ''
-      this.$refs.fieldInput.$refs.inputRef.focus()
+      // this.$refs.fieldInput.$refs.inputRef.focus()
+      this.$refs.inputRef.focus()
     },
     clooseHandle() {
       this.$back()
@@ -218,45 +238,72 @@ export default {
 .invitationSearch {
   min-height: 100vh;
   .head {
-    height: 88px;
     width: 100%;
     display: flex;
     align-items: center;
-    box-sizing: border-box;
-    /deep/.sp-sticky {
-      border-bottom: 1px solid #dddddd;
-      .search-content {
-        padding: 0 24px;
-        height: 88px;
-        .input-box {
-          position: relative;
-          padding: 19px 12px;
-          background: #f5f5f5;
-          border-radius: 12px;
-          height: 68px;
-          width: 606px;
-          border: none;
-          input {
-            background: #f5f5f5;
-            width: 406px;
-          }
-          .search-icon {
-            color: #cccccc !important;
-          }
-          .clear {
-            position: absolute;
-            right: 24px;
-          }
-        }
-      }
-      .cloose-btn {
-        margin-left: 32px;
-        font-size: 32px;
-        font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
-        color: #222222;
+    justify-content: space-between;
+    padding: 10px 24px;
+    .input_box {
+      width: 606px;
+      height: 68px;
+      background: #f3f3f3;
+      display: flex;
+      align-items: center;
+      border-radius: 12px;
+      padding: 0 24px;
+
+      input {
+        width: 460px;
+        height: 68px;
+        border: none;
+        background: #f3f3f3;
+        font-size: 30px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #1a1a1a;
+        margin: 0 20px 0 16px;
       }
     }
+    .cancel {
+      font-size: 32px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+    // /deep/.sp-sticky {
+    //   border-bottom: 1px solid #dddddd;
+    //   .search-content {
+    //     padding: 0 24px;
+    //     height: 88px;
+    //     .input-box {
+    //       position: relative;
+    //       padding: 19px 12px;
+    //       background: #f5f5f5;
+    //       border-radius: 12px;
+    //       height: 68px;
+    //       width: 606px;
+    //       border: none;
+    //       input {
+    //         background: #f5f5f5;
+    //         width: 406px;
+    //       }
+    //       .search-icon {
+    //         color: #cccccc !important;
+    //       }
+    //       .clear {
+    //         position: absolute;
+    //         right: 24px;
+    //       }
+    //     }
+    //   }
+    //   .cloose-btn {
+    //     margin-left: 32px;
+    //     font-size: 32px;
+    //     font-family: PingFangSC-Medium, PingFang SC;
+    //     font-weight: 600;
+    //     color: #222222;
+    //   }
+    // }
   }
   .recommend {
     height: calc(100vh - 88px);
