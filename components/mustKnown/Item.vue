@@ -96,7 +96,7 @@ export default {
 .item {
   background: #fff;
   border-radius: 12px;
-  padding: 24px 32px 28px 28px;
+  padding: 26px 32px 28px 28px;
   border-bottom: 20px solid #f5f5f5;
 
   .item_title {
@@ -120,8 +120,8 @@ export default {
     .item_content_lf {
       .item_Info {
         display: flex;
-        margin-top: 16px;
-        margin-bottom: 12px;
+        margin-top: 20px;
+        margin-bottom: 16px;
         align-items: center;
         .userPhoto {
           width: 40px;

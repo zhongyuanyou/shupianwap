@@ -67,7 +67,7 @@
     </p>
     <p v-else-if="cusOrderStatusType == 4" class="msg">
       您的订单已取消<br />
-      <span> 取消原因:{{ cusOrderCancelReason || '-' }} </span>
+      <span> 取消原因:{{ cusOrderCancelReason || '订单超时未支付' }} </span>
     </p>
   </div>
 </template>

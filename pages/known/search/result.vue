@@ -318,11 +318,11 @@ export default {
     width: 100%;
     height: 80px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     background: #fff;
     > p {
-      width: 170px;
+      width: 250px;
       height: 30px;
       font-size: 30px;
       font-weight: 400;
