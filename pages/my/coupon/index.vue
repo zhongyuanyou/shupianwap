@@ -109,7 +109,7 @@ export default {
       responseData: [], // 请求成功返回数据
       // 请求数据格式
       formData: {
-        orderByWhere: 'createTime=desc;',
+        orderByWhere: 'log_receive_time=desc;',
         findType: 2,
         userId: this.$store.state.user.userId,
         limit: '100',
@@ -174,9 +174,11 @@ export default {
       this.loading = true
       if (type === 0) {
         this.formData.findType = 2
+        this.formData.orderByWhere = 'log_receive_time=desc;'
         this.getInitData()
       } else if (type === 1) {
         this.formData.findType = 3
+        this.formData.orderByWhere = 'log_use_time=desc;'
         coupon
           .getCouponList({ axios: this.$axios }, this.formData)
           .then((result) => {
@@ -190,6 +192,7 @@ export default {
             }
           })
       } else if (type === 2) {
+        this.formData.orderByWhere = 'effectEnd=desc;'
         this.formData.findType = 4
         coupon
           .getCouponList({ axios: this.$axios }, this.formData)

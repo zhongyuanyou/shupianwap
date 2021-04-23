@@ -193,7 +193,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 import {
   Icon,
@@ -313,6 +313,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      POSITION_CITY: 'city/POSITION_CITY',
+    }),
     ...mapMutations({
       setUserInfo: 'user/SET_USER',
       clearUserInfo: 'user/CLEAR_USER',
@@ -507,7 +510,7 @@ export default {
 
     // 平台不同，跳转方式不同
     uPGoBack() {
-      if (this.isInApp && this.redirectType === 'app') {
+      if (this.isInApp) {
         this.$appFn.dggCloseWebView((res) => {
           if (!res || res.code !== 200) {
             this.$xToast.show({

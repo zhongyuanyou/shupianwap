@@ -174,7 +174,11 @@ export default {
     plannerInfoUrlJump(mchUserId) {
       this.$router.push({
         path: '/planner/detail',
-        query: { mchUserId },
+        query: {
+          mchUserId,
+          requireCode: this.baseData.requireCode,
+          requireName: this.baseData.requireName,
+        },
       })
     },
     async handleTel(mchUserId) {
@@ -207,11 +211,11 @@ export default {
           })
         }
       } catch (err) {
-        Toast({
-          message: '未获取到划师联系方式',
-          iconPrefix: 'sp-iconfont',
-          icon: 'popup_ic_fail',
-        })
+        // Toast({
+        //   message: '未获取到划师联系方式',
+        //   iconPrefix: 'sp-iconfont',
+        //   icon: 'popup_ic_fail',
+        // })
       }
     },
     // 调起IM
@@ -231,6 +235,8 @@ export default {
       const sessionParams = {
         imUserId: mchUserId, // 商户用户ID
         imUserType: type, // 用户类型
+        requireCode: this.baseData.requireCode || '',
+        requireName: this.baseData.requireName || '',
         ext: {
           intentionType, // 意向业务 非必传
           intentionCity, // 意向城市 非必传

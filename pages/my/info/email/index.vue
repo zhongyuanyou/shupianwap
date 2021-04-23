@@ -2,6 +2,7 @@
   <div class="email">
     <!--S 头部-->
     <sp-top-nav-bar
+      v-if="!isApplets"
       :title="'电子邮箱'"
       ellipsis
       :fixed="true"
@@ -17,7 +18,7 @@
     </sp-top-nav-bar>
     <!--E 头部-->
     <!--S 内容-->
-    <div class="email_con">
+    <div class="email_con" :style="{ paddingTop: isApplets ? '0' : '0.88rem' }">
       <div class="email_con_item">
         <input
           v-model="email"
@@ -31,11 +32,17 @@
       </div>
     </div>
     <!--E 内容-->
+    <!--小程序的时候显示-->
+    <button v-if="isApplets" class="email_btn" @click="onClickRight">
+      保存
+    </button>
+    <!--小程序的时候显示-->
   </div>
 </template>
 
 <script>
 import { TopNavBar, Toast } from '@chipspc/vant-dgg'
+import { mapState } from 'vuex'
 import { checkEmail } from '~/utils/check'
 import { userinfoApi } from '~/api'
 export default {
@@ -49,6 +56,11 @@ export default {
       email: '',
       emailRight: false, // 邮箱格式是否正确
     }
+  },
+  computed: {
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
   },
   mounted() {
     this.email = this.$route.query.email
@@ -96,6 +108,11 @@ export default {
       this.emailRight = true
     },
   },
+  head() {
+    return {
+      title: '编辑邮箱',
+    }
+  },
 }
 </script>
 
@@ -108,7 +125,7 @@ export default {
     height: 88px;
   }
   &_con {
-    padding-top: 88px;
+    //padding-top: 88px;
     display: flex;
     flex-direction: column;
     &_item {
@@ -153,6 +170,16 @@ export default {
         line-height: 44px;
       }
     }
+  }
+  &_btn {
+    width: 670px;
+    height: 96px;
+    background: #4974f5;
+    border-radius: 8px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffffff;
+    margin: 72px 40px 0;
   }
 }
 </style>

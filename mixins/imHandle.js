@@ -15,11 +15,19 @@ export default {
       userId: (state) => state.user.userId,
       userType: (state) => state.user.userType,
       imExample: (state) => state.im.imExample, // IM 实例
+      isApplets: (state) => state.app.isApplets, // 是否在小程序中
     }),
   },
   methods: {
-    clearUserInfoAndJumpLoging() {
+    clearUserInfoAndJumpLoging(url) {
       this.$store.commit('user/CLEAR_USER')
+      if (this.isApplets) {
+        // 若是在小程序中
+        this.uni.redirectTo({
+          url: '/pages/my_son/login/wxLogin?url=' + url,
+        })
+        return
+      }
       this.$router.push({
         path: '/login',
         query: {
@@ -28,7 +36,7 @@ export default {
       })
     },
     // 判断是否登录
-    judgeLoginMixin(needUserInfo = false) {
+    judgeLoginMixin(needUserInfo = false, url) {
       return new Promise((resolve) => {
         if (this.userId && this.token && this.userType) {
           if (needUserInfo) {
@@ -49,7 +57,15 @@ export default {
             resolve(true)
           }
         } else {
-          this.clearUserInfoAndJumpLoging()
+          let url = this.$route.path.split('')
+          url.splice(0, 1)
+          url = url.join('')
+          if (this.$route.query) {
+            for (const key in this.$route.query) {
+              url += `&${key}=${this.$route.query[key]}`
+            }
+          }
+          this.clearUserInfoAndJumpLoging(url)
         }
       })
     },

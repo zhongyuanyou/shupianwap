@@ -97,13 +97,6 @@ export default {
     },
     // 客户单id
     csuOrderId: { type: String, default: '' },
-    // 关联订单列表
-    orderList: {
-      type: Array,
-      default() {
-        return []
-      },
-    },
     // 取消订单原因
     cusOrderCancelReason: {
       type: String,
@@ -112,6 +105,7 @@ export default {
   },
   data() {
     return {
+      orderList: [],
       showPop: false,
       step: 1,
       // 弹窗业务类型 1为取消订单 2为立即付款

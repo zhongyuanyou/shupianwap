@@ -19,6 +19,7 @@ export const state = () => ({
   currentCity: {}, // 当前选择的城市
   positionCityName: '', // 当前定位城市的名称
   positionStatus: null, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
+  code: '',
 })
 export const mutations = {
   // 设置当前选择城市
@@ -47,6 +48,10 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       domain: 'shupian.cn', // 城市选择加入根域名cookie供其他站点使用
     })
+  },
+  // 修改城市CODE
+  SET_CODE(state, code) {
+    state.code = code
   },
 }
 
@@ -108,5 +113,8 @@ export const actions = {
     commit('SET_POSITION_STATUS', 0)
     if (type === 'rest' && state.currentCity.name) return // 若是重新定位，定位失败并且当前有已选城市不重置当前城市
     commit('SET_CITY', state.defaultCity)
+  },
+  setCode({ commit }, code) {
+    commit('SET_CODE', code)
   },
 }

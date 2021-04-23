@@ -1,7 +1,7 @@
 <template>
   <div class="information">
     <!--S 头部-->
-    <Header title="个人信息" />
+    <Header v-if="!isApplets" title="个人信息" />
     <!--E 头部-->
     <!--S 内容-->
     <div class="information_con">
@@ -123,7 +123,7 @@
     <!--S 上传图片popup-->
     <SexSelected
       :show.sync="sexShow"
-      :sex="info ? info.sex : 1"
+      :sex="info && info.sex != 2 ? info.sex : 1"
       @changeSex="changeSex"
     />
     <!--E 上传图片popup-->
@@ -197,6 +197,7 @@ export default {
   computed: {
     ...mapState({
       userId: (state) => state.user.userInfo.userId,
+      isApplets: (state) => state.app.isApplets,
     }),
     baseURL() {
       return baseURL
@@ -342,7 +343,15 @@ export default {
           id: this.userId,
         }
         const data = await this.$axios.get(userinfoApi.info, { params })
-        this.info = data.data
+        this.info = data.data || {
+          nickName: '',
+          birthday: '',
+          sex: 0,
+          email: '',
+          province: '',
+          city: '',
+          url: '',
+        }
         this.loading = false
         this.$set(this.area, 0, {
           name: data.data.province ? data.data.province : '',
@@ -388,6 +397,11 @@ export default {
     success(fileList) {
       this.info.url = fileList[0].filepath
     },
+  },
+  head() {
+    return {
+      title: '个人信息',
+    }
   },
 }
 </script>

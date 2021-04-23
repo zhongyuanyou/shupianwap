@@ -17,6 +17,7 @@ export const state = () => ({
   userNo: '', // 用户编码
   userName: '', // 用户名称=nickName
   userPhone: '', // 用户电话=fullName 加密
+  userPhoneFull: '', // 用户电话加密
   avatar: '', // 用户头像
 })
 export const mutations = {

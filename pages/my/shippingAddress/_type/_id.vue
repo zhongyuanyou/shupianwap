@@ -188,7 +188,7 @@ export default {
         (res) => {}
       )
     }
-    this.keepHeadView()
+    // this.keepHeadView()
   },
 
   methods: {

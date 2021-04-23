@@ -23,6 +23,7 @@
 <script>
 import { TopNavBar, NavSearch, Icon, Skeleton } from '@chipspc/vant-dgg'
 
+import { mapState } from 'vuex'
 import { auth } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
@@ -46,8 +47,14 @@ export default {
       redirect: this.$route.query.redirect || '', // 登录后需要跳转的地址
     }
   },
+  computed: {
+    ...mapState({
+      isApplets: (state) => state.app.isApplets,
+    }),
+  },
   created() {
     if (process && process.client) {
+      console.log(this.$route.query.categoryCode)
       this.getProtocol(this.categoryCode)
     }
   },
@@ -87,6 +94,14 @@ export default {
         return Promise.reject(error)
       }
     },
+  },
+  head() {
+    return {
+      title:
+        this.$route.query.categoryCode === 'protocol100121'
+          ? '隐私政策'
+          : '服务协议',
+    }
   },
 }
 </script>

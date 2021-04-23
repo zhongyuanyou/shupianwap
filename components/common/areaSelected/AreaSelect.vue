@@ -41,6 +41,7 @@
         highlight-color="#4974F5"
         :sticky="false"
         class="popup_con_bar"
+        @touchmove="move"
       >
         <div v-for="item in city" :key="item.name">
           <!-- S 索引标题 -->
@@ -214,6 +215,9 @@ export default {
     }
   },
   watch: {
+    touchmove() {
+      console.log(1)
+    },
     show: {
       handler(newVal, oldVal) {
         if (newVal === oldVal) return
@@ -246,6 +250,9 @@ export default {
     this.getCityList()
   },
   methods: {
+    move(e) {
+      console.log(e)
+    },
     initCity(cityList) {
       const { cityArr, FristPin } = this
       const cityjson = {}
@@ -410,7 +417,7 @@ export default {
     padding: 0;
     /deep/ .popup_con_bar {
       height: 100%;
-      overflow-y: scroll;
+      overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
     }
