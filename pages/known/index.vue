@@ -140,7 +140,7 @@
         </div>
         <span>{{ userInfo.userName }}</span>
       </div>
-      <div class="answer_article">
+      <div v-if="!isInApp" class="answer_article">
         <div class="item" @click="$router.push('/known/publish/question')">
           <img
             src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
@@ -154,6 +154,22 @@
             alt=""
           />
           <span>回答问题</span>
+        </div>
+        <div class="item" @click="$router.push('/known/publish/article')">
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/eoeulbunbpk0000.png"
+            alt=""
+          />
+          <span>写文章</span>
+        </div>
+      </div>
+      <div v-else class="answer_article app">
+        <div class="item" @click="$router.push('/known/publish/question')">
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/9blv1fi2icc0000.png"
+            alt=""
+          />
+          <span>提个问题</span>
         </div>
         <div class="item" @click="$router.push('/known/publish/article')">
           <img
@@ -748,6 +764,9 @@ export default {
           margin-top: 24px;
         }
       }
+    }
+    .answer_article.app {
+      justify-content: space-around;
     }
     > .line {
       height: 1px;
