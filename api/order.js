@@ -138,7 +138,7 @@ const category = {
       axios,
       params,
       method: 'post',
-      url: CHIPS_APP_BASE_URL + 'yk/order/v2/aggrement.do',
+      url: CHIPS_WAP_BASE_URL + '/yk/order/v2/aggrement.do',
     })
   },
   getcalculation({ axios }, params) {

@@ -278,9 +278,9 @@
     >
       <p class="xy-p">
         请仔细阅读并同意,
-        <span @click="enterAgreement(addOrderXy.code)"
+        <span @click="enterAgreement('protocol100008')"
           >《{{ addOrderXy.title }}》</span
-        >，<span @click="enterAgreement(tranXy.code)"
+        >，<span @click="enterAgreement('protocol100033')"
           >《{{ tranXy.title }}》</span
         >
       </p>
@@ -703,7 +703,7 @@ export default {
   line-height: 38px;
   padding: 20px 40px;
   span {
-    color: #10bbb8;
+    color: #4f90f6;
   }
 }
 </style>
