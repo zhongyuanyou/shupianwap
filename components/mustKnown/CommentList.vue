@@ -171,6 +171,9 @@ export default {
       }
     },
     async Applaud(item) {
+      if (!(await this.isLogin())) {
+        return
+      }
       this.mackLoading = true
       const { code, message, data } = await this.$axios.post(
         knownApi.comments.like,
@@ -195,7 +198,18 @@ export default {
         console.log(message)
       }
     },
+    async isLogin() {
+      const res = await this.$isLogin()
+      if (res === 'app_login_success') {
+        this.init()
+        return false
+      }
+      return true
+    },
     async publish() {
+      if (!(await this.isLogin())) {
+        return
+      }
       if (!this.content) {
         return
       }
