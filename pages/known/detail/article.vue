@@ -3,7 +3,7 @@
     <HeaderSlot>
       <div v-if="!showHead2" class="flex">
         <div>
-          <sp-icon name="arrow-left" size="0.4rem" @click="$back" />
+          <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
         </div>
         <div>
           <sp-icon

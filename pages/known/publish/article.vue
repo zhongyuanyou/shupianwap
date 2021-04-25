@@ -1,6 +1,11 @@
 <template>
   <div class="article">
-    <PageHead title="撰写文章" :has-val="hasVal" @submit="submit" />
+    <PageHead
+      title="撰写文章"
+      :has-val="hasVal"
+      @submit="submit"
+      @handleCancel="handleCancel"
+    />
     <div class="main">
       <TitleArea ref="myTitle" :title="formData.title" @setTitle="setTitle" />
       <!-- <div class="content-area"> -->

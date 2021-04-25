@@ -2,18 +2,12 @@
   <div>
     <div>
       <header-slot>
-        <div
-          v-if="!showHead2"
-          class="head head1"
-          :style="{
-            paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px',
-          }"
-        >
+        <div v-if="!showHead2" class="head head1">
           <sp-icon
             name="arrow-left"
             color="#1A1A1A"
             size="0.4rem"
-            @click="$back"
+            @click="$back()"
           />
           <div class="btn-area">
             <span @click="onInvite">
@@ -22,7 +16,7 @@
             >
             <span
               v-if="
-                answerDetails && answerDetails.createrId === userInfo.userId
+                answerDetails && answerDetails.createrId !== userInfo.userId
               "
               @click.stop="writeAnswer"
             >
@@ -225,32 +219,6 @@ export default {
       sourceId: res.sourceId,
       homeUserId: res.userId,
     }
-    // return Promise.all([
-    //   context.$axios.get(knownApi.questionArticle.detail, {
-    //     params: {
-    //       id: context.query.id,
-    //       userHandleFlag: context.store.state.user.userId ? 1 : 0,
-    //     },
-    //   }),
-    // ])
-    //   .then((res) => {
-    //     if (res[0] && res[0].code === 200) {
-    //       return {
-    //         answerDetails: res[0].data,
-    //         headerData: {
-    //           createrName: res[0].createrName,
-    //           contentText: res[0].contentText,
-    //           avatar: res[0].avatar,
-    //         },
-    //         sourceId: res[0].sourceId,
-    //         homeUserId: res[0].userId,
-    //       }
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //     Promise.reject(error)
-    //   })
   },
   data() {
     return {
@@ -432,8 +400,9 @@ export default {
     },
     handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
-      const scrollTop = this.$refs.myPage.getBoundingClientRect().top // 滚动条距离顶部的位置
-      if (scrollTop < 88) {
+      const scrollTop = this.$refs.myPage.getBoundingClientRect().bottom // 滚动条距离顶部的位置
+      const than = document.body.clientWidth / 375
+      if (scrollTop / than <= ((this.appInfo.statusBarHeight || 0) + 88) / 2) {
         this.showHead2 = true
       } else {
         this.showHead2 = false
@@ -599,9 +568,6 @@ export default {
   }
 }
 .head {
-  position: fixed;
-  left: 0;
-  top: 0;
   width: 100%;
   height: 88px;
   background: #ffffff;
