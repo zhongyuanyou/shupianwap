@@ -1,5 +1,5 @@
 {
-  "name": "shupian",
+  "name": "sp-wap",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -11,6 +11,7 @@
     "@dgg/sp-im-sdk": "^1.0.0-beat29",
     "@fe/sp-ui-mobile": "^0.0.8",
     "@nuxtjs/axios": "^5.13.1",
+    "@nuxtjs/sentry": "^5.0.3",
     "@nuxtjs/style-resources": "^1.0.0",
     "autoprefixer": "^9.7.6",
     "axios": "^0.21.1",
