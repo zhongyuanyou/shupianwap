@@ -89,11 +89,6 @@ export default {
         },
       })
     },
-    invite() {
-      this.$router.push({
-        path: '/known/detail/invitationList',
-      })
-    },
     toTimeStamp(time) {
       console.log('time', time)
       let times = time.replace(/-/g, '/')
