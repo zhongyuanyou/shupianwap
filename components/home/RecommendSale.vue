@@ -224,7 +224,7 @@ export default {
         .then((res) => {
           this.tabList = res
           this.tabBtn = res.map((item) => {
-            return { ...item, goodsList: [], noData: false, limit: 20, page: 1 }
+            return { ...item, goodsList: [], noData: false, limit: 10, page: 1 }
           })
           this.selectItem(res[0], 0)
         })
@@ -268,7 +268,7 @@ export default {
       params.areaCode = this.cityCode || '510100'
       params.page = {
         pageNo: this.tabBtn[index].page,
-        limit: this.tabBtn[index].limit,
+        pageSize: this.tabBtn[index].limit,
       }
       this.$axios
         .post(recommendApi.saleList, params, {

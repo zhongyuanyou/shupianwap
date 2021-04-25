@@ -138,6 +138,9 @@ export default {
 
 <style lang="less" scoped>
 .main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   .content {
     padding: 20px 32px 300px 32px;
     .toast-area {

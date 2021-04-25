@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderSlot>
+    <HeaderSlot ref="HeaderSlot">
       <div v-if="!showHead2" class="flex">
         <div>
           <sp-icon name="arrow-left" size="0.4rem" @click="$back" />
@@ -181,6 +181,9 @@ export default {
     isInApp() {
       return this.$store.state.app.isInApp
     },
+    appInfo() {
+      return this.$store.state.app.appInfo
+    },
   },
   created() {
     this.getRecommendData()
@@ -300,7 +303,7 @@ export default {
     handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
       const scrollTop = this.$refs.myPage.getBoundingClientRect().bottom // 滚动条距离顶部的位置
-      if (scrollTop < 0) {
+      if (scrollTop < ((this.appInfo.statusBarHeight || 0) + 88) / 2) {
         this.showHead2 = true
       } else {
         this.showHead2 = false

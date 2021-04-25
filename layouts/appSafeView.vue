@@ -6,9 +6,8 @@
 <template>
   <div class="default-layout">
     <div v-if="isInApp" :style="appSafeView"></div>
-    <div :style="isInApp ? containerWarp : ''">
-      <nuxt />
-    </div>
+    <div :style="appSafePlaceholder"></div>
+    <nuxt />
   </div>
 </template>
 
@@ -25,11 +24,8 @@ export default {
         width: '100%',
         'z-index': 999,
       },
-      containerWarp: {
-        position: 'fixed',
-        top: '',
-        bottom: '0',
-        'overflow-y': 'scroll',
+      appSafePlaceholder: {
+        'margin-top': '',
         width: '100%',
       },
     }
@@ -44,7 +40,8 @@ export default {
     if (this.isInApp) {
       if (this.appInfo && this.appInfo.statusBarHeight) {
         this.appSafeView.height = this.appInfo.statusBarHeight + 'px'
-        this.containerWarp.top = this.appInfo.statusBarHeight + 'px'
+        this.appSafePlaceholder['margin-top'] =
+          this.appInfo.statusBarHeight + 'px'
       }
     }
   },

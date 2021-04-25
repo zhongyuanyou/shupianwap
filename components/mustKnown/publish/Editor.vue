@@ -1,15 +1,17 @@
 <template xmlns:v-quill="富文本编辑器">
-  <div id="edit-container" class="edit-container">
-    <div
-      v-quill:myQuillEditor="editorOption"
-      class="quill-editor"
-      :content="content"
-      :placeholder="custPlaceholder"
-      @change="onEditorChange($event)"
-      @blur="onEditorBlur($event)"
-      @focus="onEditorFocus($event)"
-      @ready="onEditorReady($event)"
-    ></div>
+  <div>
+    <div id="remarkEditor" class="edit-container">
+      <div
+        v-quill:myQuillEditor="editorOption"
+        class="quill-editor"
+        :content="content"
+        :placeholder="custPlaceholder"
+        @change="onEditorChange($event)"
+        @blur="onEditorBlur($event)"
+        @focus="onEditorFocus($event)"
+        @ready="onEditorReady($event)"
+      ></div>
+    </div>
   </div>
 </template>
 <script>
@@ -168,6 +170,7 @@ export default {
       },
     },
   },
+  mounted() {},
   methods: {
     onEditorChange(a) {
       if (a.html.length > this.textLength) {
@@ -191,7 +194,10 @@ export default {
 </script>
 <style lang="less">
 .edit-container {
+  flex: 1;
   min-height: 400px;
+  // max-height: 600px;
+  overflow-y: auto;
 }
 </style>
 <style lang="css">
