@@ -5,6 +5,7 @@
       :confirm-text="editType === '2' ? '修改问题' : '发布问题'"
       :title="title"
       @submit="submit"
+      @handleCancel="handleCancel"
     />
     <div class="main">
       <TitleArea

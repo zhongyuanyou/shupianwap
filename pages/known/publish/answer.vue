@@ -7,7 +7,7 @@
       :has-val="hasVal"
       :fixed="true"
       @submit="submit"
-      @handleCancel="cancel"
+      @handleCancel="handleCancel"
     />
     <div class="main">
       <TitleArea ref="myTitle" :title="questionInfo.title" :can-edit="false" />
@@ -73,9 +73,6 @@ export default {
     })
   },
   methods: {
-    cancel() {
-      this.$back()
-    },
     openModal() {
       this.$refs.chooseTopic.showPop = true
     },

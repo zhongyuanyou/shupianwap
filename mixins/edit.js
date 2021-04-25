@@ -1,3 +1,4 @@
+import { Dialog } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import knownApi from '@/api/known'
 import util from '@/utils/changeBusinessData'
@@ -5,6 +6,9 @@ import { userinfoApi } from '@/api'
 
 let timeoute
 export default {
+  components: {
+    [Dialog.name]: Dialog,
+  },
   data() {
     return {
       editType: '', // 内容类型 1 新增 2编辑
@@ -89,16 +93,15 @@ export default {
       if (!val) {
         return
       }
+      this.formData.title = val
       if (this.fromPage === 'question') {
         const tempVal = val
         const lastLetter = tempVal.slice(tempVal.length - 1, tempVal.length)
         const reg = /\?|？/
         if (!reg.test(lastLetter)) {
           this.$xToast.error('标题需以问号结尾')
-          return
         }
       }
-      this.formData.title = val
     },
     setTopic(val) {
       this.topics = val
@@ -137,6 +140,32 @@ export default {
         this.addContent()
       } else {
         this.modifyContent()
+      }
+    },
+    handleCancel() {
+      let cancelFlag = false
+      if (this.fromPage !== 'answer') {
+        if (
+          this.formData.title.length > 0 ||
+          this.formData.contentText.length > 0 ||
+          this.formData.categoryCode.length > 0
+        ) {
+          cancelFlag = true
+        }
+      } else if (this.formData.contentText.length > 0) {
+        cancelFlag = true
+      }
+      if (cancelFlag) {
+        const _this = this
+        Dialog.confirm({
+          title: '温馨提示',
+          message: '是否退出? 退出将清空已编辑内容',
+        }).then(() => {
+          // on confirm
+          _this.$back()
+        })
+      } else {
+        this.$back()
       }
     },
     editorChange(val) {
