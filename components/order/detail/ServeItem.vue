@@ -45,6 +45,7 @@
           <sp-button
             v-if="
               cusOrderStatusType !== 4 &&
+              cusOrderStatusType !== 1 &&
               item.skuType === 'PRO_CLASS_TYPE_SERVICE'
             "
             @click="checkProductType(item)"

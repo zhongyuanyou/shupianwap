@@ -21,14 +21,14 @@
             :src="imgItem"
             alt=""
             srcset=""
-            @click="linkUrl(item.url)"
+            @click="adJumpHandleMixin(item)"
           />
         </div>
         <sp-button
           v-if="item.buttonText"
           type="primary"
           class="sp-goods-btn"
-          @click="linkUrl(item.url)"
+          @click="adJumpHandleMixin(item)"
           >{{ item.buttonText }}</sp-button
         >
       </div>
@@ -38,11 +38,13 @@
 
 <script>
 import { Button } from '@chipspc/vant-dgg'
+import adJumpHandle from '~/mixins/adJumpHandle'
 // 营销商品活动入口
 export default {
   components: {
     [Button.name]: Button,
   },
+  mixins: [adJumpHandle],
   data() {
     return {
       list: [
@@ -51,13 +53,15 @@ export default {
           slogan: '快速转让',
           productDescript: '公司/商标/专利/网店/新媒',
           buttonText: '我要转让',
-          url:
-            'https://m.shupian.cn/search/searchResult?keywords=%E5%95%86%E6%A0%87%E4%BA%A4%E6%98%93',
+          linkType: 1,
+          wapLink: '/search/searchResult?keywords=商标',
         },
         {
           productName: '企服直播',
           slogan: '想你所想 新用户专享',
           imgs: ['https://cdn.shupian.cn/sp-pt/wap/images/8yl438481uk0000.png'],
+          linkType: 1,
+          wapLink: '/search/searchResult?keywords',
         },
         {
           productName: '帮找服务',
@@ -66,7 +70,8 @@ export default {
           buttonText: '立即咨询',
           type: 'planner',
           titleIcon: '精选规划师',
-          url: 'https://m.shupian.cn/spread/myDemandCard',
+          linkType: 2,
+          materialLink: 'https://m.shupian.cn/spread/myDemandCard',
         },
         {
           productName: '1000万补贴',
@@ -75,6 +80,8 @@ export default {
             'https://cdn.shupian.cn/sp-pt/wap/5o4toa1pfgk0000.png',
             'https://cdn.shupian.cn/sp-pt/wap/95f9n61gks00000.png',
           ],
+          linkType: 1,
+          wapLink: '/activity/exclusive',
         },
       ],
     }

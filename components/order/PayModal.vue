@@ -55,7 +55,7 @@
         <section
           v-else-if="payList[0].orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'"
         >
-          <sp-radio-group>
+          <sp-radio-group v-model="payMoneyType">
             <sp-radio
               v-if="payList[0].batchNumber === 0"
               name="1"
@@ -89,7 +89,7 @@
           </sp-radio-group>
         </section>
         <section v-else>
-          <sp-radio-group>
+          <sp-radio-group v-model="payMoneyType">
             <sp-radio name="1" icon-size="16px" class="radio radio1"
               >全款</sp-radio
             >
@@ -170,6 +170,7 @@ export default {
   data() {
     return {
       showPop: false,
+      payMoneyType: '1',
     }
   },
   methods: {
