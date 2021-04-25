@@ -23,7 +23,7 @@
         <div class="item" @click="toDetail(item)">
           <div class="item_browse">最近 {{ item.totalBrowseCount }}人浏览</div>
           <div class="item_content">
-            {{ item.contentText }}
+            {{ item.title }}
           </div>
           <div class="item_bottom">
             <p>{{ item.answerCount }} 回答 · {{ item.collectCount }} 收藏</p>
