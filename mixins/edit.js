@@ -244,7 +244,7 @@ export default {
         }
       }
       // check content
-      if (this.formData.content.length === 0) {
+      if (this.formData.content.length === 0 && this.fromPage !== 'question') {
         this.$xToast.error('内容区域不能为空哦')
         return false
       }
