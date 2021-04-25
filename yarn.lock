@@ -13815,6 +13815,11 @@ vue-hot-reload-api@^2.3.0:
   resolved "https://registry.npm.taobao.org/vue-hot-reload-api/download/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"
   integrity sha1-UylVzB6yCKPZkLOp+acFdGV+CPI=
 
+vue-html5-editor@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npm.taobao.org/vue-html5-editor/download/vue-html5-editor-1.1.1.tgz#5910210a830d8c8d3479a1f1fec8473192aa03b3"
+  integrity sha1-WRAhCoMNjI00eaHx/shHMZKqA7M=
+
 vue-jest@^3.0.5:
   version "3.0.7"
   resolved "https://registry.npm.taobao.org/vue-jest/download/vue-jest-3.0.7.tgz?cache=0&sync_timestamp=1615007403148&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-jest%2Fdownload%2Fvue-jest-3.0.7.tgz#a6d29758a5cb4d750f5d1242212be39be4296a33"

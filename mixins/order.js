@@ -366,6 +366,9 @@ export default {
                 sortArr.push(nodeList[i])
               }
             }
+            sortArr.forEach((item) => {
+              item.batchIndex = Number(item.batchNumber) + 1
+            })
             this.nodeList = sortArr
           } else {
             // 当前订单的分批支付信息 订单详情页
@@ -514,6 +517,7 @@ export default {
     },
     // 查询客户单下的关联订单
     getChildOrders(order) {
+      order = order || this.orderData
       if (this.fromPage === 'orderList') {
         const orderAgreementIds = order.orderAgreementIds
         if (this.opType === 'payMoney' && !orderAgreementIds) {
@@ -551,10 +555,9 @@ export default {
         ) {
           if (!orderAgreementIds) {
             this.showMydialog = true
-            console.log('this.showMydialog', this.showMydialog)
             return
           }
-          if (this.checkContractStatus(order) === 1) {
+          if (this.checkContractStatus() === 1) {
             // 交易商品付款之前检测有无签署合同
             this.$xToast.show({
               message: '为满足您的合法权益，请先和卖家签署合同后再付款',
@@ -907,7 +910,6 @@ export default {
       try {
         this.loading = true
         const data = await auth.protocol(params)
-        console.log('data:', data)
         const { rows = [] } = data || {}
         this.article = rows[0] || {}
         this.loading = false
