@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     handleCancel() {
-      this.$back()
+      this.$emit('handleCancel')
     },
     submit() {
       this.$emit('submit')

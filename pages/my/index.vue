@@ -101,8 +101,10 @@
             <span>{{
               realStatus === 'NO_AUTHENTICATION'
                 ? '未实名认证'
-                : info.realStatus === 'AUTHENTICATION'
+                : info.realStatus === 'AUTHENTICATION_SUCCESS'
                 ? '已实名认证'
+                : info.realStatus === 'AUTHENTICATION_ING'
+                ? '认证中'
                 : '未实名认证'
             }}</span>
             <my-icon
@@ -343,7 +345,8 @@ export default {
       } else if (val === 3) {
         if (
           this.realStatus === 'NO_AUTHENTICATION' ||
-          this.realStatus === 'AUTHENTICATION_FAIL'
+          this.realStatus === 'AUTHENTICATION_FAIL' ||
+          this.realStatus === 'AUTHENTICATION_INVALID'
         ) {
           this.$router.push('/contract/authentication')
         }
