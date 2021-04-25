@@ -492,7 +492,7 @@ export default {
       const curId = id
       this.$router.push({
         path: '/known/publish/answer',
-        params: {
+        query: {
           id: curId,
           editType: 2,
         },

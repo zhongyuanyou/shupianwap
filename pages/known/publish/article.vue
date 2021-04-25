@@ -74,6 +74,7 @@ export default {
       this.editType = this.$route.query.editType
       this.questionId = this.$route.query.id
       this.formData.id = this.questionId
+      this.formData.sourceId = this.questionId
       const _this = this
       _this.getDetailByIdApi().then(({ code, data }) => {
         if (code === 200) {
