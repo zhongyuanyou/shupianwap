@@ -260,6 +260,7 @@ export default {
       const res = await this.$isLogin()
       if (res === 'app_login_success') {
         this.initFollow()
+        return
       }
       this.$axios
         .post(knownApi.home.attention, {

@@ -211,24 +211,14 @@ export default {
     })
     return {
       answerDetails: res.data,
-      headerData: {
-        createrName: res.createrName,
-        contentText: res.contentText,
-        avatar: res.avatar,
-      },
-      sourceId: res.sourceId,
-      homeUserId: res.userId,
     }
   },
   data() {
     return {
       showHead2: false,
       answerDetails: '',
-      headerData: {},
       popupShow: false,
-      sourceId: '',
       answerCollectCount: '',
-      homeUserId: '',
       isFollow: false,
       userType: '',
     }
@@ -264,7 +254,22 @@ export default {
         '/known/detail/question?id=' + this.answerDetails.sourceId
       )
     },
-    follow() {
+    async initData() {
+      const res = await this.$axios.get(knownApi.questionArticle.detail, {
+        params: {
+          id: this.$route.query.id,
+          userId: this.userInfo.userId,
+          userHandleFlag: this.userInfo.userId ? 1 : 0,
+        },
+      })
+      if (res.code === 200) {
+        this.answerDetails = res.data
+      }
+    },
+    async follow() {
+      if (!(await this.isLogin())) {
+        return
+      }
       this.loading = true
       this.$axios
         .post(knownApi.home.attention, {
@@ -309,21 +314,34 @@ export default {
           }
         })
     },
-    onInvite() {
-      this.$router.push({
-        path: '/known/detail/invitationList',
-        query: {
-          questionId: this.answerDetails.sourceId,
-        },
-      })
+    async onInvite() {
+      if (await this.isLogin()) {
+        this.$router.push({
+          path: '/known/detail/invitationList',
+          query: {
+            questionId: this.answerDetails.sourceId,
+          },
+        })
+      }
     },
-    writeAnswer() {
-      this.$router.push({
-        path: '/known/publish/answer',
-        query: {
-          id: this.answerDetails.sourceId,
-        },
-      })
+    async writeAnswer() {
+      if (await this.isLogin()) {
+        this.$router.push({
+          path: '/known/publish/answer',
+          query: {
+            id: this.answerDetails.sourceId,
+          },
+        })
+      }
+    },
+    async isLogin() {
+      const res = await this.$isLogin()
+      if (res === 'app_login_success') {
+        this.initFollow()
+        this.initData()
+        return false
+      }
+      return true
     },
     more() {
       this.popupShow = true
@@ -336,11 +354,11 @@ export default {
       this.$axios
         .get(knownApi.questionArticle.detail, {
           params: {
-            id: this.sourceId,
-            userId: this.userInfo.userId || '120',
+            id: this.answerDetails.sourceId,
+            userId: this.userInfo.userId,
             userHandleFlag: 1,
             userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-            userName: this.userInfo.userName || '测试用户',
+            userName: this.userInfo.userName,
           },
         })
         .then((res) => {
@@ -371,7 +389,10 @@ export default {
       this.$router.back(-1)
     },
 
-    handleClickBottom(type) {
+    async handleClickBottom(type) {
+      if (!(await this.isLogin())) {
+        return
+      }
       this.handleType = ''
       if (type === 1) {
         this.answerDetails.applaudCount = Number(

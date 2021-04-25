@@ -20,7 +20,7 @@
             @click="$router.push('/known/search')"
           />
           <sp-icon
-            v-if="questionDetials.createrId === userInfo.userId"
+            v-if="questionDetails.createrId === userInfo.userId"
             name="ellipsis"
             size="0.4rem"
             color="#1a1a1a"
@@ -34,25 +34,25 @@
       <div class="tag">
         <ul class="box">
           <li
-            v-for="(item, index) in questionDetials.categoryName"
+            v-for="(item, index) in questionDetails.categoryName"
             :key="index"
           >
             {{ item }}
           </li>
         </ul>
       </div>
-      <h1 ref="title" class="tit">{{ questionDetials.title }}</h1>
+      <h1 ref="title" class="tit">{{ questionDetails.title }}</h1>
       <div
         v-if="
-          questionDetials.contentImageUrl &&
-          questionDetials.contentImageUrl.length <= 2 &&
-          questionDetials.contentImageUrl.length > 0 &&
+          questionDetails.contentImageUrl &&
+          questionDetails.contentImageUrl.length <= 2 &&
+          questionDetails.contentImageUrl.length > 0 &&
           !contentshow
         "
         class="imglist"
       >
         <div
-          v-for="(item, index) in questionDetials.contentImageUrl"
+          v-for="(item, index) in questionDetails.contentImageUrl"
           :key="index"
           class="imgbox"
         >
@@ -61,27 +61,27 @@
       </div>
       <div
         v-if="
-          questionDetials.contentImageUrl &&
-          questionDetials.contentImageUrl.length > 2 &&
+          questionDetails.contentImageUrl &&
+          questionDetails.contentImageUrl.length > 2 &&
           !contentshow
         "
         class="imglist"
       >
         <div class="imgbox">
-          <img :src="questionDetials.contentImageUrl[0]" alt="" />
+          <img :src="questionDetails.contentImageUrl[0]" alt="" />
         </div>
         <div class="imgbox">
-          <img :src="questionDetials.contentImageUrl[1]" alt="" />
+          <img :src="questionDetails.contentImageUrl[1]" alt="" />
           <div class="imgbox1">
-            {{ `+${questionDetials.contentImageUrl.length}` }}
+            {{ `+${questionDetails.contentImageUrl.length}` }}
           </div>
         </div>
       </div>
       <div class="content">
         <p v-if="!contentshow" class="tit">
-          {{ questionDetials.contentText }}
+          {{ questionDetails.contentText }}
         </p>
-        <div v-else class="tit" v-html="questionDetials.content"></div>
+        <div v-else class="tit" v-html="questionDetails.content"></div>
 
         <div class="btn" @click="contentshow = !contentshow">
           <span class="tit">{{ contentshow ? '收起' : '展开' }}</span>
@@ -105,30 +105,30 @@
       </div>
       <div class="num">
         <div class="left">
-          <div>{{ questionDetials.collectCount }} <span>收藏</span></div>
+          <div>{{ questionDetails.collectCount }} <span>收藏</span></div>
           <p></p>
           <div @click="commentShow = true">
-            {{ questionDetials.remarkCount }} <span>评论</span>
+            {{ questionDetails.remarkCount }} <span>评论</span>
           </div>
           <p></p>
-          <div>{{ questionDetials.totalBrowseCount }} <span>浏览</span></div>
+          <div>{{ questionDetails.totalBrowseCount }} <span>浏览</span></div>
         </div>
         <div
           class="right"
-          :class="questionDetials.isApplaudFlag === 1 ? 'act' : ''"
+          :class="questionDetails.isApplaudFlag === 1 ? 'act' : ''"
           @click="like('LIKE')"
         >
           <my-icon name="dianzan" size="0.24rem"></my-icon>
           好问题
-          <span v-if="questionDetials.applaudCount > 0">{{
-            questionDetials.applaudCount
+          <span v-if="questionDetails.applaudCount > 0">{{
+            questionDetails.applaudCount
           }}</span>
         </div>
       </div>
       <div ref="btns" class="btns">
         <div
           class="box"
-          :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
+          :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
           @click="goInvitionPage"
         >
           <my-icon name="yaoqinghuida_mian" size="0.32rem"></my-icon>
@@ -136,28 +136,27 @@
         </div>
         <div
           class="box"
-          :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
+          :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
           @click="goPublishAnswer"
         >
           <my-icon name="xiehuida" size="0.32rem"></my-icon>
           <p>写回答</p>
         </div>
-        <div class="box">
+        <div class="box" @click="like('COLLECT')">
           <my-icon
             :name="
-              questionDetials.isCollectFlag === 1 ? 'shoucang_mian' : 'shoucang'
+              questionDetails.isCollectFlag === 1 ? 'shoucang_mian' : 'shoucang'
             "
-            :color="questionDetials.isCollectFlag === 1 ? '#555555' : '#4974F5'"
+            :color="questionDetails.isCollectFlag === 1 ? '#555555' : '#4974F5'"
             size="0.32rem"
           ></my-icon>
           <p
             :style="{
               color:
-                questionDetials.isCollectFlag === 1 ? '#555555' : '#4974F5',
+                questionDetails.isCollectFlag === 1 ? '#555555' : '#4974F5',
             }"
-            @click="like('COLLECT')"
           >
-            {{ questionDetials.isCollectFlag === 1 ? '已收藏' : '收藏' }}
+            {{ questionDetails.isCollectFlag === 1 ? '已收藏' : '收藏' }}
           </p>
         </div>
       </div>
@@ -223,7 +222,7 @@
     <div v-show="fixedshow" class="fiexdbtn">
       <div
         class="btn"
-        :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
+        :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
         @click="goInvitionPage"
       >
         <sp-icon name="friends-o" size="0.4rem" />
@@ -231,7 +230,7 @@
       </div>
       <div
         class="btn"
-        :class="[questionDetials.status === 0 ? 'form-onlyRead' : '']"
+        :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
         @click="goPublishAnswer"
       >
         <sp-icon name="edit" size="0.4rem" />
@@ -240,8 +239,8 @@
       <div
         class="btn"
         :style="{
-          background: questionDetials.isCollectFlag === 1 ? '#4974F5' : '',
-          color: questionDetials.isCollectFlag === 1 ? '#fff' : '',
+          background: questionDetails.isCollectFlag === 1 ? '#4974F5' : '',
+          color: questionDetails.isCollectFlag === 1 ? '#fff' : '',
         }"
         @click="like('COLLECT')"
       >
@@ -252,7 +251,7 @@
 
     <comment-list
       v-model="commentShow"
-      :article-id="questionDetials.id"
+      :article-id="questionDetails.id"
     ></comment-list>
 
     <!--    上拉组件-->
@@ -266,11 +265,11 @@
     >
       <div class="down_slide_list">
         <ul>
-          <li @click="editQues(questionDetials.id)">
+          <li @click="editQues(questionDetails.id)">
             <my-icon name="bianji1" size="1rem" color="#1a1a1a"></my-icon>
             <p>编辑</p>
           </li>
-          <li @click="deleteQues(questionDetials.id)">
+          <li @click="deleteQues(questionDetails.id)">
             <my-icon name="shanchu1" size="1rem" color="#1a1a1a"></my-icon>
             <p>删除</p>
           </li>
@@ -298,15 +297,34 @@ export default {
     [Dialog.name]: Dialog,
     CommentList,
   },
+  async asyncData({ $axios, query, store }) {
+    const res = await $axios.get(knownApi.questionArticle.detail, {
+      params: {
+        id: query.id,
+        userId: store.state.user.userId,
+        userHandleFlag: store.state.user.userId ? 1 : 0,
+      },
+    })
+    if (res.code === 200) {
+      if (res.data.categoryName) {
+        res.data.categoryName = res.data.categoryName.split(',')
+      }
+      if (res.data.contentImageUrl) {
+        res.data.contentImageUrl = res.data.contentImageUrl.split(',')
+      }
+    } else {
+    }
+    return {
+      questionDetails: res.data,
+    }
+  },
   data() {
     return {
       title: '',
-      showHead2: false,
       contentshow: false,
       answersort: 0,
       fixedshow: false,
       scrollTop: 0,
-      questionDetials: '',
       questionList: [],
       releaseStatus: '',
       orderBy: 'totalBrowseCount=desc',
@@ -319,9 +337,7 @@ export default {
       total: '',
       popupShow: false,
       currentDetailsId: '',
-      userType: '',
       commentShow: false,
-      articleId: '',
     }
   },
   computed: {
@@ -342,7 +358,6 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.watchScroll)
-    this.getDetailApi()
   },
   destroyed() {
     window.removeEventListener('scroll', this.watchScroll)
@@ -374,14 +389,12 @@ export default {
         })
         if (res.code === 200) {
           if (res.data.categoryName) {
-            res.data.categoryName = res.data.categoryName
-              .split(',')
-              .filter(Boolean)
+            res.data.categoryName = res.data.categoryName.split(',')
           }
           if (res.data.contentImageUrl) {
             res.data.contentImageUrl = res.data.contentImageUrl.split(',')
           }
-          this.questionDetials = res.data
+          this.questionDetails = res.data
         } else {
           this.pageError()
         }
@@ -396,13 +409,21 @@ export default {
         _this.$back()
       }, 1000)
     },
+    async isLogin() {
+      const res = await this.$isLogin()
+      if (res === 'app_login_success') {
+        this.getDetailApi()
+        return false
+      }
+      return true
+    },
     getQuesDataApi() {
       this.$axios
         .post(knownApi.questionArticle.list, {
           sourceIds: [this.currentDetailsId],
           orderBy: this.orderBy,
           page: this.page,
-          userId: this.userInfo.userId || '120',
+          userId: this.userInfo.userId,
           limit: this.limit,
         })
         .then((res) => {
@@ -429,44 +450,48 @@ export default {
           this.loading = false
         })
     },
-    like(type) {
+    async like(type) {
+      if (!(await this.isLogin())) {
+        return
+      }
+
       this.handleLikeType = ''
       if (type === 'LIKE') {
-        this.questionDetials.applaudCount = Number(
-          this.questionDetials.applaudCount
+        this.questionDetails.applaudCount = Number(
+          this.questionDetails.applaudCount
         )
-        if (this.questionDetials.isApplaudFlag === 1) {
+        if (this.questionDetails.isApplaudFlag === 1) {
           this.handleLikeType = 7
-          this.questionDetials.isApplaudFlag = 0
-          this.questionDetials.applaudCount =
-            this.questionDetials.applaudCount - 1
+          this.questionDetails.isApplaudFlag = 0
+          this.questionDetails.applaudCount =
+            this.questionDetails.applaudCount - 1
         } else {
           this.handleLikeType = 1
-          this.questionDetials.isApplaudFlag = 1
-          this.questionDetials.applaudCount =
-            this.questionDetials.applaudCount + 1
+          this.questionDetails.isApplaudFlag = 1
+          this.questionDetails.applaudCount =
+            this.questionDetails.applaudCount + 1
         }
       }
       if (type === 'COLLECT') {
-        this.questionDetials.collectCount = Number(
-          this.questionDetials.collectCount
+        this.questionDetails.collectCount = Number(
+          this.questionDetails.collectCount
         )
-        if (this.questionDetials.isCollectFlag === 1) {
+        if (this.questionDetails.isCollectFlag === 1) {
           this.handleLikeType = 9
-          this.questionDetials.isCollectFlag = 0
-          this.questionDetials.collectCount =
-            this.questionDetials.collectCount - 1
+          this.questionDetails.isCollectFlag = 0
+          this.questionDetails.collectCount =
+            this.questionDetails.collectCount - 1
         } else {
           this.handleLikeType = 4
-          this.questionDetials.isCollectFlag = 1
-          this.questionDetials.collectCount =
-            this.questionDetials.collectCount + 1
+          this.questionDetails.isCollectFlag = 1
+          this.questionDetails.collectCount =
+            this.questionDetails.collectCount + 1
         }
       }
       this.$axios
         .post(knownApi.home.operation, {
-          handleUserId: this.userInfo.userId || '120',
-          handleUserName: this.userInfo.userName || '测试用户',
+          handleUserId: this.userInfo.userId,
+          handleUserName: this.userInfo.userName,
           businessId: this.currentDetailsId,
           handleType: this.handleLikeType,
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
@@ -475,14 +500,14 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             if (type === 'LIKE') {
-              if (this.questionDetials.isApplaudFlag === 1) {
+              if (this.questionDetails.isApplaudFlag === 1) {
                 this.$xToast.show({ message: '点赞成功' })
               } else {
                 this.$xToast.show({ message: '取消点赞' })
               }
             }
             if (type === 'COLLECT') {
-              if (this.questionDetials.isCollectFlag === 1) {
+              if (this.questionDetails.isCollectFlag === 1) {
                 this.$xToast.show({ message: '收藏成功' })
               } else {
                 this.$xToast.show({ message: '取消收藏' })
@@ -582,7 +607,7 @@ export default {
       const scrollTop = this.$refs.title.getBoundingClientRect().bottom // 滚动条距离顶部的位置
       const than = document.body.clientWidth / 375
       if (scrollTop / than <= ((this.appInfo.statusBarHeight || 0) + 88) / 2) {
-        this.title = this.questionDetials.title
+        this.title = this.questionDetails.title
       } else {
         this.title = ''
       }
@@ -590,21 +615,25 @@ export default {
     goBack() {
       this.$back()
     },
-    goInvitionPage() {
-      this.$router.push({
-        path: '/known/detail/invitationList',
-        query: {
-          questionId: this.currentDetailsId,
-        },
-      })
+    async goInvitionPage() {
+      if (await this.isLogin()) {
+        this.$router.push({
+          path: '/known/detail/invitationList',
+          query: {
+            questionId: this.currentDetailsId,
+          },
+        })
+      }
     },
-    goPublishAnswer() {
-      this.$router.push({
-        path: '/known/publish/answer',
-        query: {
-          id: this.currentDetailsId,
-        },
-      })
+    async goPublishAnswer() {
+      if (await this.isLogin()) {
+        this.$router.push({
+          path: '/known/publish/answer',
+          query: {
+            id: this.currentDetailsId,
+          },
+        })
+      }
     },
   },
 }
