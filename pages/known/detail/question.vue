@@ -768,6 +768,7 @@ export default {
       position: relative;
       margin-bottom: 48px;
       > .tit {
+        word-break: break-all;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;

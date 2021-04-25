@@ -255,7 +255,7 @@ export default {
           })
         } else {
           this.$router.push({
-            path: `/detail/serviceDetails`,
+            path: `/detail`,
             query: { productId: item.skuId },
           })
         }
