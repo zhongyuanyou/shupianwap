@@ -99,7 +99,7 @@
           实名认证
           <div class="item_lf">
             <span>{{
-              realStatus === 'NO_AUTHENTICATION'
+              info.realStatus === 'NO_AUTHENTICATION'
                 ? '未实名认证'
                 : info.realStatus === 'AUTHENTICATION_SUCCESS'
                 ? '已实名认证'

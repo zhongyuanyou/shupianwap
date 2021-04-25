@@ -2,18 +2,12 @@
   <div>
     <div>
       <header-slot>
-        <div
-          v-if="!showHead2"
-          class="head1"
-          :style="{
-            paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px',
-          }"
-        >
+        <div v-if="!showHead2" class="head1">
           <sp-icon
             name="arrow-left"
             color="#1A1A1A"
             size="0.4rem"
-            @click="$back"
+            @click="$back()"
           />
           <div class="btn-area">
             <span @click="onInvite">
@@ -225,32 +219,6 @@ export default {
       sourceId: res.sourceId,
       homeUserId: res.userId,
     }
-    // return Promise.all([
-    //   context.$axios.get(knownApi.questionArticle.detail, {
-    //     params: {
-    //       id: context.query.id,
-    //       userHandleFlag: context.store.state.user.userId ? 1 : 0,
-    //     },
-    //   }),
-    // ])
-    //   .then((res) => {
-    //     if (res[0] && res[0].code === 200) {
-    //       return {
-    //         answerDetails: res[0].data,
-    //         headerData: {
-    //           createrName: res[0].createrName,
-    //           contentText: res[0].contentText,
-    //           avatar: res[0].avatar,
-    //         },
-    //         sourceId: res[0].sourceId,
-    //         homeUserId: res[0].userId,
-    //       }
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //     Promise.reject(error)
-    //   })
   },
   data() {
     return {

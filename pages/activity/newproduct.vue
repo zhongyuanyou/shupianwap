@@ -46,11 +46,7 @@
       </div>
     </div>
     <div class="advice-box">
-      <div
-        v-for="(item, index) in productAdvertData"
-        :key="index"
-        @click="advertjump(item)"
-      >
+      <div v-for="(item, index) in productAdvertData" :key="index">
         <a :href="item.materialLink"
           ><img :src="item.materialUrl" alt="" srcset=""
         /></a>
