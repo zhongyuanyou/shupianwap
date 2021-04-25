@@ -116,11 +116,44 @@
         </div>
       </div>
     </div>
+    <!--    上拉组件-->
+    <sp-popup
+      v-model="popupShow"
+      position="bottom"
+      :style="{ height: '30%' }"
+      round
+      close-icon="close"
+      :close-on-click-overlay="false"
+    >
+      <div class="down_slide_list">
+        <ul>
+          <li @click="editQues(articleDetails.id)">
+            <my-icon name="bianji1" size="1rem" color="#1a1a1a"></my-icon>
+            <p>编辑</p>
+          </li>
+          <li @click="deleteQues(articleDetails.id)">
+            <my-icon name="shanchu1" size="1rem" color="#1a1a1a"></my-icon>
+            <p>删除</p>
+          </li>
+        </ul>
+        <div class="cancel" @click="popupShow = false">取消</div>
+      </div>
+    </sp-popup>
   </div>
 </template>
 
 <script>
-import { Field, Tab, Tabs, Button, Image, Toast, Icon } from '@chipspc/vant-dgg'
+import {
+  Field,
+  Tab,
+  Tabs,
+  Button,
+  Image,
+  Toast,
+  Icon,
+  Popup,
+  Dialog,
+} from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 import PageHead from '@/components/common/head/header'
 import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
@@ -132,9 +165,11 @@ import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   components: {
     [Icon.name]: Icon,
+    [Popup.name]: Popup,
     [Button.name]: Button,
     [Image.name]: Image,
     [Field.name]: Field,
+    [Dialog.name]: Dialog,
     Comment,
     HeaderSlot,
     // PageHead,
@@ -161,6 +196,7 @@ export default {
   },
   data() {
     return {
+      popupShow: false,
       articleList: [],
       headerData: {},
       showHead: false,
@@ -391,6 +427,46 @@ export default {
               className: 'my-toast-style',
             })
           }
+        })
+    },
+    editQues(id) {
+      const curId = id
+      this.$router.push({
+        path: '/known/publish/article',
+        query: {
+          id: curId,
+          editType: 2,
+        },
+      })
+    },
+    deleteQues(id) {
+      const curId = id
+      Dialog.confirm({
+        title: '提示',
+        message: '确定要删除吗？',
+      })
+        .then(() => {
+          this.$axios
+            .post(knownApi.content.dlt, {
+              id: curId,
+              currentUserId: this.userInfo.userId,
+            })
+            .then((res) => {
+              if (res.code === 200) {
+                this.$xToast.show({ message: '删除成功' })
+                this.$router.replace({ path: '/known' })
+              } else {
+                Toast.fail({
+                  duration: 2000,
+                  message: '服务异常，请刷新重试！',
+                  forbidClick: true,
+                  className: 'my-toast-style',
+                })
+              }
+            })
+        })
+        .catch((err) => {
+          console.log(err)
         })
     },
   },

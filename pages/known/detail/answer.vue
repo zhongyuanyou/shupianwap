@@ -494,6 +494,7 @@ export default {
         path: '/known/publish/answer',
         params: {
           id: curId,
+          editType: 2,
         },
       })
     },

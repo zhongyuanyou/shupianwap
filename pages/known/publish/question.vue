@@ -90,6 +90,7 @@ export default {
       const _this = this
       _this.getDetailByIdApi().then(({ code, data }) => {
         if (code === 200) {
+          console.error(data)
           _this.questionInfo = data
           _this.formData.title = data.title
           _this.formData.content = data.content
