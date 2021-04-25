@@ -303,7 +303,8 @@ export default {
     handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
       const scrollTop = this.$refs.myPage.getBoundingClientRect().bottom // 滚动条距离顶部的位置
-      if (scrollTop < ((this.appInfo.statusBarHeight || 0) + 88) / 2) {
+      const than = document.body.clientWidth / 375
+      if (scrollTop / than <= ((this.appInfo.statusBarHeight || 0) + 88) / 2) {
         this.showHead2 = true
       } else {
         this.showHead2 = false

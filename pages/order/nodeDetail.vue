@@ -19,7 +19,7 @@
     </div>
     <div class="list">
       <div v-for="(item, index) in nodeList" :key="index" class="item">
-        <span class="node-icon">节点{{ ++index }}</span>
+        <span class="node-icon">节点{{ item.batchIndex }}</span>
         <p class="money-area">
           <span
             v-if="
