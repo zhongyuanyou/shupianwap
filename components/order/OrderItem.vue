@@ -370,7 +370,7 @@ export default {
     width: 100%;
     .inner {
       width: auto;
-      height: 34px;
+      height: auto;
       font-size: 24px;
       font-family: PingFang SC;
       font-weight: 400;

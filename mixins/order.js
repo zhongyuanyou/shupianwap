@@ -426,6 +426,7 @@ export default {
     // 判断展示合同按钮 false不展示  1签署合同 2查看合同
     checkContractStatus(orderData) {
       const data = orderData || this.orderData
+      console.log('检测合同,', data)
       // 当客户订单状态为已取消时不展示按钮
       if (data.cusOrderStatusNo === ORDERSTATUSCODE[4]) return false
       if (this.fromPage === 'orderList') {
@@ -514,6 +515,7 @@ export default {
     },
     // 查询客户单下的关联订单
     getChildOrders(order) {
+      order = order || this.orderData
       if (this.fromPage === 'orderList') {
         const orderAgreementIds = order.orderAgreementIds
         if (this.opType === 'payMoney' && !orderAgreementIds) {
@@ -551,10 +553,9 @@ export default {
         ) {
           if (!orderAgreementIds) {
             this.showMydialog = true
-            console.log('this.showMydialog', this.showMydialog)
             return
           }
-          if (this.checkContractStatus(order) === 1) {
+          if (this.checkContractStatus() === 1) {
             // 交易商品付款之前检测有无签署合同
             this.$xToast.show({
               message: '为满足您的合法权益，请先和卖家签署合同后再付款',
