@@ -88,7 +88,6 @@
                   ? '认证中'
                   : '未实名认证'
               }}
-              }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
