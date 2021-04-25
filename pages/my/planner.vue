@@ -294,10 +294,12 @@ export default {
 
     async getList(currentPage) {
       const { limit } = this.pageOption
-      const { userId } =
-        this.userInfo || this.$route.query.userId
-          ? { userId: this.$route.query.userId }
-          : {} // { userId: '607997598875151734' }
+      console.log(this.userInfo, 123)
+      const { userId } = this.userInfo
+        ? this.userInfo
+        : this.$route.query.userId
+        ? { userId: this.$route.query.userId }
+        : {} // { userId: '607997598875151734' }
       if (!userId) {
         this.$xToast.warn('请先登录！')
         return
