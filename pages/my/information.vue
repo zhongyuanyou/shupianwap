@@ -14,9 +14,9 @@
             :file-id="info.fileId"
             is-add-watermark
             class="uploader"
-            :list-url="`${url}/tac-external-platform-server/oss/find`"
-            :delete-url="`${url}/tac-external-platform-server/oss/deleteSingle`"
-            :call-back-url="`${url}/tac-external-platform-server/oss/callback`"
+            :list-url="listUrl"
+            :delete-url="deleteUrl"
+            :call-back-url="callBackIUrl"
             @onSuccess="success"
           />
           <div class="cell">
@@ -194,6 +194,9 @@ export default {
       avatar: '', // 头像
       loading: true,
       url: config.baseURL,
+      listUrl: `${config.baseURL}/tac-external-platform-server/oss/find`,
+      deleteUrl: `${config.baseURL}/tac-external-platform-server/oss/deleteSingle`,
+      callBackIUrl: `${config.baseURL}/tac-external-platform-server/oss/callback`,
     }
   },
   computed: {
