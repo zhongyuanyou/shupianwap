@@ -724,6 +724,7 @@ export default {
       font-weight: 600;
       color: #222222;
       padding: 0 32px;
+      word-break: break-all;
       line-height: 56px;
     }
     > .imglist {
