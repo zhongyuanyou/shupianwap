@@ -4,7 +4,7 @@
     <div class="banner">
       <p class="goods-name">{{ skuInfo.spuName }}</p>
       <p class="goods-skus">
-        {{ skuInfo.skuExtInfo }}
+        {{ skuInfo.skuDetailValues || skuInfo.skuExtInfo }}
       </p>
       <div class="banner-node">
         <div class="left">
@@ -61,7 +61,6 @@
 import Header from '@/components/common/head/header'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import OrderMixins from '@/mixins/order'
-import orderApi from '@/api/order'
 export default {
   components: {
     Header,

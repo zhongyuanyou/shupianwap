@@ -13,7 +13,7 @@
             {{ item.spuName }}
           </p>
           <p class="goods-skus">
-            {{ getSkus(item.skuExtInfo) }}
+            {{ item.skuDetailValues || skuInfo.skuExtInfo }}
           </p>
         </div>
         <div class="right">

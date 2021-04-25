@@ -553,7 +553,6 @@ export default {
         ) {
           if (!orderAgreementIds) {
             this.showMydialog = true
-            console.log('this.showMydialog', this.showMydialog)
             return
           }
           if (this.checkContractStatus() === 1) {
