@@ -206,9 +206,13 @@ export default {
   methods: {
     adJump(item) {
       console.log(item)
-      // if (item.linkType === 1) {
-
-      // }
+      if (item.linkType === 1) {
+        this.$router.push(`/${item.wapLink}`)
+      } else if (item.linkType === 2) {
+        location.href = item.materialLink
+      } else {
+        location.href = item.imgLink
+      }
     },
     toFans() {
       this.$router.push({

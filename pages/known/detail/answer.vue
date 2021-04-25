@@ -511,7 +511,7 @@ export default {
           this.$axios
             .post(knownApi.content.dlt, {
               id: curId,
-              userId: this.userInfo.userId || '120',
+              currentUserId: this.userInfo.userId,
             })
             .then((res) => {
               this.loading = false
