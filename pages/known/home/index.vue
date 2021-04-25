@@ -54,7 +54,19 @@
             <div class="user_data_item_name">获赞</div>
           </div>
         </div>
-        <sp-image round class="user_banner" fit="cover" src="" />
+        <sp-swipe
+          v-if="adList.length"
+          class="user_banner"
+          :autoplay="3000"
+          indicator-color="white"
+        >
+          <sp-swipe-item v-for="(item, index) in adList" :key="index">
+            <sp-image
+              class="banner_img"
+              fit="cover"
+              :src="item.materialList[0].materialUrl"
+          /></sp-swipe-item>
+        </sp-swipe>
       </div>
     </div>
     <div class="bottom_box">
@@ -91,7 +103,7 @@
 </template>
 
 <script>
-import { Tabs, Tab, Image, List } from '@chipspc/vant-dgg'
+import { Tabs, Tab, Image, List, Swipe, SwipeItem } from '@chipspc/vant-dgg'
 import CommentList from '@/components/mustKnown/CommentList'
 import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
@@ -103,6 +115,8 @@ export default {
     [Tab.name]: Tab,
     [Image.name]: Image,
     [List.name]: List,
+    [Swipe.name]: Swipe,
+    [SwipeItem.name]: SwipeItem,
     CommentList,
     Item,
   },
@@ -162,6 +176,7 @@ export default {
       page: 1,
       limit: 10,
       fixed: false,
+      adList: [],
     }
   },
   computed: {
@@ -180,6 +195,7 @@ export default {
     },
   },
   mounted() {
+    this.getAdList()
     window.addEventListener('scroll', this.getScroll)
   },
   methods: {
@@ -292,6 +308,21 @@ export default {
         console.log(message)
         this.loading = false
         this.finished = true
+      }
+    },
+    async getAdList() {
+      const { code, message, data } = await this.$axios.get(
+        knownApi.home.adList,
+        {
+          params: {
+            locationCode: 'ad100028',
+          },
+        }
+      )
+      if (code === 200) {
+        this.adList = data.sortMaterialList
+      } else {
+        console.log(message)
       }
     },
   },
@@ -417,6 +448,11 @@ export default {
         width: 686px;
         height: 180px;
         border-radius: 12px;
+        .banner_img {
+          width: 686px;
+          height: 180px;
+          border-radius: 12px;
+        }
       }
     }
   }

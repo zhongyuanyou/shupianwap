@@ -11,7 +11,7 @@
           :text-length="30000"
           @editorChange="editorChange"
         />
-        <div style="height: 2.5rem"></div>
+        <div style="height: 3rem"></div>
       </div>
       <!-- </div> -->
       <ChooseTopic

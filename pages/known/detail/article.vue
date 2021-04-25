@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderSlot ref="HeaderSlot">
+    <HeaderSlot>
       <div v-if="!showHead2" class="flex">
         <div>
           <sp-icon name="arrow-left" size="0.4rem" @click="$back" />
@@ -511,6 +511,7 @@ export default {
     }
   }
   .content {
+    word-break: break-all;
     padding-top: 40px;
     font-size: 34px;
     color: #666;

@@ -77,9 +77,7 @@ export default {
   computed: {
     hasVal: {
       get() {
-        return (
-          this.formData.content.length > 0 && this.formData.title.length > 0
-        )
+        return this.formData.title.length > 0
       },
     },
   },

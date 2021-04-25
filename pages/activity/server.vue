@@ -255,7 +255,7 @@ export default {
           })
         } else {
           this.$router.push({
-            path: `/detail/serviceDetails`,
+            path: `/detail`,
             query: { productId: item.skuId },
           })
         }
@@ -645,7 +645,9 @@ export default {
         }
       }
     }
-
+    .tabs-box-items::-webkit-scrollbar {
+      display: none;
+    }
     .tabs-box-items {
       display: flex;
       justify-content: space-between;
@@ -653,7 +655,7 @@ export default {
       margin-right: 15px;
       max-width: 500px;
       overflow-x: auto;
-      height: 40px;
+      height: 80px;
       white-space: nowrap;
       li {
         height: 32px;
