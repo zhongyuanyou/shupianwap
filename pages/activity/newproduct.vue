@@ -235,13 +235,13 @@ export default {
       if (this.isInApp) {
         if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
           this.$appFn.dggJumpRoute({
-            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
-            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.skuId}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.skuId}"}}}`,
           })
         } else {
           this.$appFn.dggJumpRoute({
-            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
-            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.skuId}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.skuId}"}}}`,
           })
         }
       }
@@ -250,12 +250,12 @@ export default {
         if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
           this.$router.push({
             path: `/detail/transactionDetails`,
-            query: { productId: item.id, type: item.classCode },
+            query: { productId: item.skuId, type: item.classCode },
           })
         } else {
           this.$router.push({
             path: `/detail/serviceDetails`,
-            query: { productId: item.id },
+            query: { productId: item.skuId },
           })
         }
       }

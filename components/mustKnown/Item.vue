@@ -129,6 +129,8 @@ export default {
     align-items: center;
     margin-bottom: 30px;
     .item_content_lf {
+      flex: 1;
+      margin-right: 48px;
       .item_Info {
         display: flex;
         margin-top: 20px;
