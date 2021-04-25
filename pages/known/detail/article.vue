@@ -707,6 +707,7 @@ export default {
     padding: 0 32px;
     position: relative;
     margin-bottom: 48px;
+    word-break: break-all;
     > .tit {
       display: -webkit-box;
       -webkit-box-orient: vertical;
