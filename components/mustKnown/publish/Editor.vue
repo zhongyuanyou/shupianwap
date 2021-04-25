@@ -1,6 +1,6 @@
 <template xmlns:v-quill="富文本编辑器">
-  <div>
-    <div id="remarkEditor" class="edit-container">
+  <div style="overflow-y: auto; height: 100%">
+    <div class="edit-container">
       <div
         v-quill:myQuillEditor="editorOption"
         class="quill-editor"
@@ -194,10 +194,7 @@ export default {
 </script>
 <style lang="less">
 .edit-container {
-  flex: 1;
   min-height: 400px;
-  // max-height: 600px;
-  overflow-y: auto;
 }
 </style>
 <style lang="css">
