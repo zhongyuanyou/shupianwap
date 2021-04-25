@@ -5,26 +5,18 @@
       paddingBottom: fixedshow ? '1.3rem' : '',
     }"
   >
-    <Header
-      :title="title"
-      :height="
-        appInfo.statusBarHeight
-          ? appInfo.statusBarHeight / 100 + 0.98 + 'rem'
-          : '0.88rem'
-      "
-    >
-      <template #left>
+    <HeaderSlot>
+      <div class="flex">
         <div>
           <sp-icon name="arrow-left" size="0.4rem" @click="goBack" />
         </div>
-      </template>
-      <template #right>
-        <div class="btn">
+        <p class="title">{{ title }}</p>
+        <div>
           <sp-icon
+            style="margin-right: 0.15rem"
             name="search"
             size="0.4rem"
             color="#1a1a1a"
-            class="ss"
             @click="$router.push('/known/search')"
           />
           <sp-icon
@@ -36,8 +28,8 @@
             @click="moreOperate"
           />
         </div>
-      </template>
-    </Header>
+      </div>
+    </HeaderSlot>
     <div class="problem">
       <div class="tag">
         <ul class="box">
@@ -293,13 +285,13 @@
 import { Icon, Toast, List, Popup, Dialog } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import CommentList from '@/components/mustKnown/CommentList'
-import Header from '@/components/common/head/header'
 import { knownApi, userinfoApi } from '@/api'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 import util from '@/utils/changeBusinessData'
 export default {
   name: 'Detail',
   components: {
-    Header,
+    HeaderSlot,
     [Icon.name]: Icon,
     [List.name]: List,
     [Popup.name]: Popup,
@@ -603,7 +595,10 @@ export default {
       } else {
         this.fixedshow = false
       }
-      if (this.$refs.title.getBoundingClientRect().top < 0) {
+      // 获取推荐板块到顶部的距离 减 搜索栏高度
+      const scrollTop = this.$refs.title.getBoundingClientRect().bottom // 滚动条距离顶部的位置
+      const than = document.body.clientWidth / 375
+      if (scrollTop / than <= ((this.appInfo.statusBarHeight || 0) + 88) / 2) {
         this.title = this.questionDetials.title
       } else {
         this.title = ''
@@ -640,7 +635,28 @@ export default {
   pointer-events: none;
   color: #ccc !important;
 }
-
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 0.88rem;
+  padding: 0 0.32rem;
+  div {
+    display: flex;
+    height: 0.88rem;
+    align-items: center;
+  }
+  .title {
+    font-size: 0.36rem;
+    font-weight: bold;
+    color: #1a1a1a;
+    flex: 1;
+    max-width: 5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
 .down_slide_list {
   ul {
     display: flex;
@@ -681,7 +697,7 @@ export default {
     }
   }
   /deep/.my-head {
-    padding: 0 32px;
+    // padding: 0 32px;
     box-sizing: border-box;
     .title {
       > span {

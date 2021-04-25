@@ -4,7 +4,7 @@
       <header-slot>
         <div
           v-if="!showHead2"
-          class="head head1"
+          class="head1"
           :style="{
             paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px',
           }"
@@ -17,16 +17,16 @@
           />
           <div class="btn-area">
             <span @click="onInvite">
-              <my-icon name="yaoqing" size="0.4rem"></my-icon>
+              <my-icon name="yaoqing" size="0.36rem"></my-icon>
               邀请</span
             >
             <span
               v-if="
-                answerDetails && answerDetails.createrId === userInfo.userId
+                answerDetails && answerDetails.createrId !== userInfo.userId
               "
               @click.stop="writeAnswer"
             >
-              <my-icon name="xiehuida" size="0.4rem"></my-icon>
+              <my-icon name="xiehuida" size="0.36rem"></my-icon>
               写回答</span
             >
             <span v-else>
@@ -39,7 +39,7 @@
             </span>
           </div>
         </div>
-        <div v-if="showHead2" class="head head2">
+        <div v-if="showHead2" class="head2">
           <sp-icon
             name="arrow-left"
             color="#1A1A1A"
@@ -432,8 +432,9 @@ export default {
     },
     handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
-      const scrollTop = this.$refs.myPage.getBoundingClientRect().top // 滚动条距离顶部的位置
-      if (scrollTop < 88) {
+      const scrollTop = this.$refs.myPage.getBoundingClientRect().bottom // 滚动条距离顶部的位置
+      const than = document.body.clientWidth / 375
+      if (scrollTop / than <= ((this.appInfo.statusBarHeight || 0) + 88) / 2) {
         this.showHead2 = true
       } else {
         this.showHead2 = false
@@ -598,40 +599,26 @@ export default {
     border-top: 1px solid #f0f0f0;
   }
 }
-.head {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 88px;
-  background: #ffffff;
-  line-height: 88px;
-  font-size: 30px;
-  font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
-  color: #4974f5;
-  padding: 0 40px;
-  z-index: 99;
-  .btn-icon {
-    float: left;
-  }
-}
 .head1 {
+  padding: 0 40px;
   height: 88px;
+  font-size: 30px;
   background: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   .btn-area {
-    float: right;
-    width: auto;
+    display: flex;
+    align-items: center;
     height: 100%;
     span {
+      color: #4974f5;
       padding: 0 20px;
     }
   }
 }
 .head2 {
+  padding: 0 40px;
   height: 88px;
   background: #ffffff;
   display: flex;

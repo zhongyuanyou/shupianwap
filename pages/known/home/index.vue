@@ -150,6 +150,7 @@ export default {
   data() {
     return {
       articleId: '', // 打开评论列表需要传的id
+      userName: '',
       active: 0,
       menuList: [
         {

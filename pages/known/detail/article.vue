@@ -1,7 +1,7 @@
 <template>
   <div>
     <HeaderSlot>
-      <div v-if="!showHead2" class="flex">
+      <div v-if="!showHead" class="flex">
         <div>
           <sp-icon name="arrow-left" size="0.4rem" @click="$back" />
         </div>
@@ -23,7 +23,7 @@
           />
         </div>
       </div>
-      <div v-if="showHead2" class="flex">
+      <div v-if="showHead" class="flex">
         <PageHead2
           :header-data="articleDetails"
           :is-follow="isFollow"
@@ -128,7 +128,6 @@ import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
 import DetailArticleList from '@/components/mustKnown/DetailArticleList'
 // 默认评论列表
 import Comment from '~/components/mustKnown/DetailComment'
-// import Header from '@/components/common/head/header'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   components: {
@@ -164,7 +163,7 @@ export default {
     return {
       articleList: [],
       headerData: {},
-      showHead2: false,
+      showHead: false,
       articleDetails: '',
       currentDetailsId: '',
       handleType: '',
@@ -305,9 +304,9 @@ export default {
       const scrollTop = this.$refs.myPage.getBoundingClientRect().bottom // 滚动条距离顶部的位置
       const than = document.body.clientWidth / 375
       if (scrollTop / than <= ((this.appInfo.statusBarHeight || 0) + 88) / 2) {
-        this.showHead2 = true
+        this.showHead = true
       } else {
-        this.showHead2 = false
+        this.showHead = false
       }
     },
     onLeftClick() {
