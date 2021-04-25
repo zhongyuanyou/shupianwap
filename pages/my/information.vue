@@ -14,9 +14,9 @@
             :file-id="info.fileId"
             is-add-watermark
             class="uploader"
-            :list-url="`${baseURL}/tac-external-platform-server/oss/find`"
-            :delete-url="`${baseURL}/tac-external-platform-server/oss/deleteSingle`"
-            :call-back-url="`${baseURL}/tac-external-platform-server/oss/callback`"
+            :list-url="listUrl"
+            :delete-url="deleteUrl"
+            :call-back-url="callBackIUrl"
             @onSuccess="success"
           />
           <div class="cell">
@@ -154,6 +154,7 @@ import SpToast from '@/components/common/spToast/SpToast'
 import Header from '@/components/common/head/header'
 import '@fe/sp-ui-mobile/lib/index.css'
 import { baseURL } from '~/config/index'
+import config from '@/config'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import { GOODSLIST } from '~/config/constant'
 export default {
@@ -192,6 +193,10 @@ export default {
       isUpdateAvatar: false, // 能否修改头像
       avatar: '', // 头像
       loading: true,
+      url: config.baseURL,
+      listUrl: `${config.baseURL}/tac-external-platform-server/oss/find`,
+      deleteUrl: `${config.baseURL}/tac-external-platform-server/oss/deleteSingle`,
+      callBackIUrl: `${config.baseURL}/tac-external-platform-server/oss/callback`,
     }
   },
   computed: {
@@ -395,7 +400,7 @@ export default {
       } catch (err) {}
     },
     success(fileList) {
-      this.info.url = fileList[0].filepath
+      this.info.url = fileList.oss_filePath
     },
   },
   head() {

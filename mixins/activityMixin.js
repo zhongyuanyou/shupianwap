@@ -18,6 +18,9 @@ export default {
     splittedRecommendProduct() {
       return this.recommendProductList.slice(0, 3)
     },
+    isNoData() {
+      return !this.activityProductList.length
+    },
     //  asdsa
   },
   mixins: [imHandle],
@@ -121,7 +124,7 @@ export default {
       productType: '',
       safeTop: 0,
       headerHeight: 0,
-      isNoData: false,
+      // isNoData: false,
     }
   },
   async created() {
@@ -180,12 +183,12 @@ export default {
         if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
           this.$appFn.dggJumpRoute({
             iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
-            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.skuId}"}}}`,
           })
         } else {
           this.$appFn.dggJumpRoute({
             iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
-            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.skuId}"}}}`,
           })
         }
       }
@@ -194,12 +197,16 @@ export default {
         if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
           this.$router.push({
             path: `/detail/transactionDetails`,
-            query: { productId: item.id, type: item.classCode },
+            query: { productId: item.skuId, type: item.classCode },
           })
         } else {
+          // this.$router.push({
+          //   path: `/detail/serviceDetails`,
+          //   query: { productId: item.skuId },
+          // })
           this.$router.push({
-            path: `/detail/serviceDetails`,
-            query: { productId: item.id },
+            path: `/detail`,
+            query: { productId: item.skuId },
           })
         }
       }
@@ -255,7 +262,7 @@ export default {
       this.activityProductList = []
       this.finished = false
       this.loading = true
-      this.isNoData = false
+      // this.isNoData = false
     },
 
     menuTab(item, index) {
@@ -287,11 +294,20 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.activityTypeOptions = res.data.settingVOList || []
-            if (this.activityTypeOptions.length === 0) {
-              throw new Error('未获取到分类数据')
+            if (res.data.endTime) {
+              this.activeTimer(res.data.endTime)
+            }
+            if (res.data.specCode) {
+              this.specCode = res.data.specCode
             }
             this.productType = res.data.productType || ''
+            this.activityTypeOptions = res.data.settingVOList || []
+            if (
+              this.activityTypeOptions.length === 0 &&
+              this.specType !== 'HDZT_ZTTYPE_XSQG'
+            ) {
+              throw new Error('无分类数据')
+            }
             this.activityTypeOptions.unshift({
               cityCode: this.cityCode,
               cityName: this.cityName,
@@ -299,10 +315,9 @@ export default {
               labelName: this.allText,
               specialId: '',
             })
-            if (res.data.endTime) this.activeTimer(res.data.endTime)
+            console.log('this.specCode', this.specCode)
             if (res.data.settingVOList && res.data.settingVOList.length > 0) {
               this.itemTypeOptions = res.data.settingVOList[0]
-              this.specCode = res.data.specCode
               this.getProductList(this.itemTypeOptions, this.specCode)
             } else {
               this.loading = false
@@ -313,6 +328,8 @@ export default {
           }
         })
         .catch((error) => {
+          this.loading = false
+          this.finished = true
           Toast.fail({
             duration: 2000,
             message: error.message,
@@ -323,7 +340,10 @@ export default {
     },
     // 获取产品
     async getProductList() {
-      if (this.activityTypeOptions.length > 0) {
+      if (
+        this.activityTypeOptions.length > 0 &&
+        this.specType !== 'HDZT_ZTTYPE_XSQG'
+      ) {
         const params = {
           specCode: this.specCode,
           page: this.page,
@@ -337,7 +357,7 @@ export default {
         }
         await this.productMethod(params)
       } else {
-        this.isNoData = true
+        // this.isNoData = true
         this.finished = true
         this.loading = false
       }
@@ -352,8 +372,8 @@ export default {
             this.activityProductList = this.activityProductList.concat(
               res.data.rows
             )
-            if (this.page === 1 && this.activityProductList.length === 0) {
-              this.isNoData = true
+            if (this.activityProductList.length === 0) {
+              // this.isNoData = true
             }
             this.total = res.data.total
             this.loading = false
@@ -375,34 +395,36 @@ export default {
         })
     },
     getRecommendProductList() {
-      const params = {
-        specCode: this.specCode,
-        isReco: 1,
-        page: 1,
-        limit: 100000,
-      }
+      if (this.specCode) {
+        const params = {
+          specCode: this.specCode,
+          isReco: 1,
+          page: 1,
+          limit: 100000,
+        }
 
-      if (this.hasCity) {
-        params.cityCode = this.cityCode
-      }
+        if (this.hasCity) {
+          params.cityCode = this.cityCode
+        }
 
-      this.$axios
-        .get(activityApi.activityProductList, { params })
-        .then((res) => {
-          if (res.code === 200) {
-            this.recommendProductList = res.data.rows
-          } else {
-            throw new Error('服务异常，请刷新重试！')
-          }
-        })
-        .catch((err) => {
-          Toast.fail({
-            duration: 2000,
-            message: err.message,
-            forbidClick: true,
-            className: 'my-toast-style',
+        this.$axios
+          .get(activityApi.activityProductList, { params })
+          .then((res) => {
+            if (res.code === 200) {
+              this.recommendProductList = res.data.rows
+            } else {
+              throw new Error('服务异常，请刷新重试！')
+            }
           })
-        })
+          .catch((err) => {
+            Toast.fail({
+              duration: 2000,
+              message: err.message,
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          })
+      }
     },
 
     getAdvertisingData() {

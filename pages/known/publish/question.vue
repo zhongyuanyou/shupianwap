@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="question">
     <PageHead
       :has-val="hasVal"
       :confirm-text="editType === '2' ? '修改问题' : '发布问题'"
@@ -77,9 +77,7 @@ export default {
   computed: {
     hasVal: {
       get() {
-        return (
-          this.formData.content.length > 0 && this.formData.title.length > 0
-        )
+        return this.formData.title.length > 0
       },
     },
   },
@@ -137,9 +135,22 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.question {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 .main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   .content {
-    padding: 20px 32px 300px 32px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 20px 32px 250px 32px;
     .toast-area {
       width: 100%;
       height: 236px;

@@ -223,8 +223,9 @@ export default {
       // check title
       if (this.fromPage !== 'answer') {
         const tempTitle = this.formData.title
-        if (tempTitle.length < 4) {
-          this.$xToast.error('标题不能少于4个字哦')
+        const titleLength = this.fromPage === 'question' ? 4 : 2
+        if (tempTitle.length < titleLength) {
+          this.$xToast.error(`标题不能少于${titleLength}个字哦`)
           return false
         }
         const lastLetter = tempTitle.slice(
@@ -243,7 +244,7 @@ export default {
         }
       }
       // check content
-      if (this.formData.content.length === 0) {
+      if (this.formData.content.length === 0 && this.fromPage !== 'question') {
         this.$xToast.error('内容区域不能为空哦')
         return false
       }
