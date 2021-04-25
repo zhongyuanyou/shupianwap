@@ -49,17 +49,19 @@
         ></my-icon>
       </div>
     </header-slot>
-    <Answer v-if="tabs[active].executionParameters === 'huida'" />
+    <template v-if="tabs && tabs.length">
+      <Answer v-if="tabs[active].executionParameters === 'huida'" />
 
-    <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
-      >关注</Attention
-    >
-    <hot-list
-      v-else-if="tabs[active].executionParameters === 'rebang'"
-      :category-id="tabs[active].id"
-    />
-    <Recommend v-else-if="tabs[active].executionParameters === 'tuijian'" />
-    <ordinary-list v-else :categor-ids="tabs[active].id" />
+      <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
+        >关注</Attention
+      >
+      <hot-list
+        v-else-if="tabs[active].executionParameters === 'rebang'"
+        :category-id="tabs[active].id"
+      />
+      <Recommend v-else-if="tabs[active].executionParameters === 'tuijian'" />
+      <ordinary-list v-else :categor-ids="tabs[active].id" />
+    </template>
 
     <!-- 弹出框tab修改列表 start -->
     <sp-popup
