@@ -295,7 +295,7 @@ export default {
     async getList(currentPage) {
       const { limit } = this.pageOption
       const { userId } = this.userInfo
-        ? this.userInfo && Object.keys(this.userInfo).length === 0
+        ? this.userInfo
         : this.$route.query.userId
         ? { userId: this.$route.query.userId }
         : {} // { userId: '607997598875151734' }
