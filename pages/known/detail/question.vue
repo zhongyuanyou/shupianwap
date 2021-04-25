@@ -343,28 +343,11 @@ export default {
   mounted() {
     window.addEventListener('scroll', this.watchScroll)
     this.getDetailApi()
-    // this.getUserInfo()
   },
   destroyed() {
     window.removeEventListener('scroll', this.watchScroll)
   },
   methods: {
-    async getUserInfo() {
-      // 获取用户信息
-      try {
-        const params = {
-          // id: this.userId,
-          id: this.userId || this.$cookies.get('userId'),
-        }
-        const res = await this.$axios.get(userinfoApi.info, { params })
-        this.loading = false
-        if (res.code === 200 && res.data && typeof res.data === 'object') {
-          this.userType = util.getUserType(res.data.type)
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    },
     goUser(id, usertype) {
       this.$router.push({
         path: '/known/home',

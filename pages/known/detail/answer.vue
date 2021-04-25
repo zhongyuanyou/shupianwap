@@ -248,7 +248,6 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
-    this.getUserInfo()
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
@@ -259,22 +258,6 @@ export default {
         path: '/known/home',
         query: { homeUserId: id, type: usertype },
       })
-    },
-    async getUserInfo() {
-      // 获取用户信息
-      try {
-        const params = {
-          // id: this.userId,
-          id: this.userId || this.$cookies.get('userId'),
-        }
-        const res = await this.$axios.get(userinfoApi.info, { params })
-        this.loading = false
-        if (res.code === 200 && res.data && typeof res.data === 'object') {
-          this.userType = util.getUserType(res.data.type)
-        }
-      } catch (err) {
-        console.log(err)
-      }
     },
     toQueDetail() {
       this.$router.replace(
@@ -327,7 +310,12 @@ export default {
         })
     },
     onInvite() {
-      this.$router.push('/known/detail/invitationList')
+      this.$router.push({
+        path: '/known/detail/invitationList',
+        query: {
+          questionId: this.answerDetails.sourceId,
+        },
+      })
     },
     writeAnswer() {
       this.$router.push({
@@ -343,36 +331,7 @@ export default {
     cancel() {
       this.popupShow = false
     },
-    getDetailData() {
-      this.loading = true
-      this.$axios
-        .get(knownApi.questionArticle.detail, {
-          params: {
-            id: this.currentDetailsId,
-            userHandleFlag: 1,
-          },
-        })
-        .then((res) => {
-          this.loading = false
-          if (res.code === 200) {
-            this.answerDetails = res.data
-            console.log(this.answerDetails)
-            this.headerData.createrName = this.answerDetails.createrName
-            this.headerData.contentText = this.answerDetails.contentText
-            this.headerData.avatar = this.answerDetails.avatar
-            this.sourceId = this.answerDetails.sourceId
-            this.homeUserId = this.answerDetails.userId
-          } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
-          }
-        })
-    },
-    // 获取回答数与关注数
+    // 获取回答数和收藏数
     getAnswerCollectCount() {
       this.$axios
         .get(knownApi.questionArticle.detail, {
@@ -448,8 +407,8 @@ export default {
       }
       this.$axios
         .post(knownApi.home.operation, {
-          handleUserId: this.userInfo.userId || '120',
-          handleUserName: this.userInfo.userName || '测试用户',
+          handleUserId: this.userInfo.userId,
+          handleUserName: this.userInfo.userName,
           businessId: this.currentDetailsId,
           handleType: this.handleType,
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
