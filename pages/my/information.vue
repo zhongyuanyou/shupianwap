@@ -82,9 +82,12 @@
               {{
                 info.realStatus === 'NO_AUTHENTICATION'
                   ? '未实名认证'
-                  : info.realStatus === 'AUTHENTICATION'
+                  : info.realStatus === 'AUTHENTICATION_SUCCESS'
                   ? '已实名认证'
+                  : info.realStatus === 'AUTHENTICATION_ING'
+                  ? '认证中'
                   : '未实名认证'
+              }}
               }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
@@ -282,9 +285,9 @@ export default {
           path: '/my/info/personalProfile',
         })
       } else if (val === 8) {
-        if (this.realStatus === 'NO_AUTHENTICATION') {
-          this.$router.push('/contract/authentication')
-        }
+        // if (this.realStatus === 'NO_AUTHENTICATION') {
+        //   this.$router.push('/contract/authentication')
+        // }
       }
     },
     async select(data) {

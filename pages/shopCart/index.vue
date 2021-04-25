@@ -170,9 +170,11 @@ export default {
     currentSelectedCartIds: {
       handler(newVal, oldVal) {
         console.log('newVal:', newVal)
+
         const list = this.list.filter(
-          (item) => item.status !== 'PRO_STATUS_SOLD_OUT'
+          (item) => item.status !== 'PRO_STATUS_SOLD_OUT' && item.stock !== '0'
         )
+        console.log('list', list)
         if (newVal.length && newVal.length === list.length) {
           return (this.bottomData.selectAll = true)
         }
@@ -278,11 +280,13 @@ export default {
           this.loading = false
           this.finished = true
           this.list = data
-          console.log('列表数据', data)
           // 进行判断,主要判断是否有商品加入购物车 如果没有则是空，如果有判断是否上架，如果没有上架，对这个下架的进行未选中操作
           if (data.length >= 0) {
             for (let index = 0; index < data.length; index++) {
-              if (data[index].status === 'PRO_STATUS_SOLD_OUT') {
+              if (
+                data[index].status === 'PRO_STATUS_SOLD_OUT' ||
+                data[index].stock === '0'
+              ) {
                 this.postUpdate({
                   createrId: this.userInfo.userId,
                   cartId: data[index].cartId,
@@ -390,7 +394,7 @@ export default {
     // 全删除
     deteleAllItem() {
       if (this.currentSelectedCartIds.length === 0) {
-        this.$xToast({
+        this.$xToast.show({
           message: '请选择需要删除的商品',
           duration: 1000,
           icon: 'toast_ic_remind',
@@ -408,7 +412,8 @@ export default {
     // 全选
     selectAll(data) {
       const cartIdArray = this.list.map((item) => {
-        if (item.status === 'PRO_STATUS_PUT_AWAY') return item.cartId
+        if (item.status === 'PRO_STATUS_PUT_AWAY' && item.stock !== '0')
+          return item.cartId
       })
       const cartId = cartIdArray.filter((item) => item).join()
       this.selectItem(cartId, data).catch((error) => {
@@ -589,7 +594,8 @@ export default {
         data = data.map((item) => {
           if (
             item.status === 'PRO_STATUS_SOLD_OUT' ||
-            item.status === 'PRO_STATUS_INVALID'
+            item.status === 'PRO_STATUS_INVALID' ||
+            item.stock === '0'
           ) {
             item.shopIsSelected = 0
             return item

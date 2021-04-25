@@ -7,7 +7,7 @@
     :class="{
       'goods-item--disable':
         formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY' ||
-        formatGoodsStatusData.stock < 0,
+        formatGoodsStatusData.stock === '0',
     }"
   >
     <SkuService
@@ -29,7 +29,7 @@
             :disabled="
               (formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY' &&
                 shoppingCarStatus === 'completed') ||
-              formatGoodsStatusData.stock < 0
+              formatGoodsStatusData.stock === '0'
             "
             @change="handleAsyncCheckboxChange"
           >
@@ -42,12 +42,15 @@
         </div>
         <!-- S 状态提示 -->
         <div
-          v-if="formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY'"
+          v-if="
+            formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY' ||
+            formatGoodsStatusData.stock === '0'
+          "
           class="goods-item--disable-tip flex-c-c flex-c-a-c"
         >
-          <span class="goods-item--disable-tip__zh">{{
-            formatGoodsStatusData.statusTextZh
-          }}</span>
+          <span class="goods-item--disable-tip__zh">
+            {{ formatGoodsStatusData.statusTextZh }}</span
+          >
           <span class="division-line">·</span>
           <span class="goods-item--disable-tip__en">{{
             formatGoodsStatusData.statusTextEn
@@ -191,7 +194,8 @@ export default {
       if (this.shoppingCarStatus === 'completed') {
         return (
           this.formatGoodsStatusData.status === 'PRO_STATUS_PUT_AWAY' &&
-          !!this.commodityData.shopIsSelected
+          !!this.commodityData.shopIsSelected &&
+          this.formatGoodsStatusData
         )
       }
       return !!this.commodityData.shopIsSelected
@@ -285,35 +289,38 @@ export default {
       }
     },
     formatGoodsStatusData() {
-      const { status } = this.commodityData || {}
+      const { status, stock } = this.commodityData || {}
       let stautsData = {
         status,
+        stock,
         statusTextZh: '--',
         statusTextEn: '--',
       }
-      switch (status) {
-        case 'PRO_STATUS_PUT_AWAY':
+      if (status && stock) {
+        if (status && status === 'PRO_STATUS_SOLD_OUT') {
           stautsData = {
             status,
-            statusTextZh: '上架',
-            statusTextEn: 'on shelf',
-          }
-          break
-        case 'PRO_STATUS_SOLD_OUT':
-          stautsData = {
-            status,
+            stock,
             statusTextZh: '已下架',
             statusTextEn: 'off shelf',
           }
-          break
-        case 'PRO_STATUS_INVALID':
+        } else if (status && status === 'PRO_STATUS_INVALID') {
           stautsData = {
             status,
+            stock,
             statusTextZh: '作废',
             statusTextEn: 'invalid',
           }
-          break
+        } else if (stock && stock === '0') {
+          stautsData = {
+            status,
+            stock,
+            statusTextZh: '库存不足',
+            statusTextEn: 'unstock',
+          }
+        }
       }
+      console.log('stautsData', stautsData)
       return stautsData
     },
   },
