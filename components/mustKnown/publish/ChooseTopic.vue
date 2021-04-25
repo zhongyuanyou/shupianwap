@@ -163,12 +163,16 @@ export default {
     submit() {
       this.showPop = false
       const warpResult = this.buildWarpResult()
-      if (warpResult.length === 0 || !warpResult) return
       this.topics = warpResult
       // start: 备份result 数据,并且设置提交标识
       this.backupResult = this.result
       this.submitFlag = true
-      this.backupId = warpResult[0].pid
+      if (warpResult.length > 0) {
+        this.backupId = warpResult[0].pid
+      } else {
+        // 这里为用户主动行为,所以需要将备份id也置空
+        this.backupId = ''
+      }
       // end: 备份result 数据,并且设置提交标识
       this.$emit('setTopic', warpResult)
     },
@@ -229,24 +233,25 @@ export default {
       for (let i = 0, l = this.backupResult.length; i < l; i++) {
         this.$set(this.result, i, this.backupResult[i])
       }
-      console.log(`closepop: ${JSON.stringify(this.result)}`)
     },
     buildWarpResult() {
-      // 拿到level1的值
-      const _this = this
-      const level1Res = this.list1.find((item) => {
-        return item.id === _this.selectIndex
-      })
-      // find
-      const level1Child = level1Res.childrenList
       const res = []
-      this.result.forEach((item) => {
-        res.push(
-          level1Child.find((i) => {
-            return i.id === item
-          })
-        )
-      })
+      if (this.result.length > 0) {
+        // 拿到level1的值
+        const _this = this
+        const level1Res = this.list1.find((item) => {
+          return item.id === _this.selectIndex
+        })
+        // find
+        const level1Child = level1Res.childrenList
+        this.result.forEach((item) => {
+          res.push(
+            level1Child.find((i) => {
+              return i.id === item
+            })
+          )
+        })
+      }
       return res
     },
   },
