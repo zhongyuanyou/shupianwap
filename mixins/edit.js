@@ -104,27 +104,35 @@ export default {
       }
     },
     setTopic(val) {
-      this.topics = val
-      const arr = val.map((item) => {
-        return item.name
-      })
-      this.topicStr = arr.join(',')
-      this.formData.categoryName = this.topicStr
-      const arr2 = val.map((item) => {
-        return item.code
-      })
-      this.formData.categoryCode = arr2.join(',')
-      const arr3 = val.map((item) => {
-        return item.id
-      })
-      // 接口新返回字段,进行处理
-      const arrLevelIds = val.map((item) => {
-        return item.levelIds
-      })
-      this.formData.categoryId = arr3.join(',')
-      this.formData.categoryLevelIds = arrLevelIds.join(',')
-      console.log('话题', this.topics)
-      console.log('topicStr', this.topicStr)
+      if (val.length > 0) {
+        const arr = val.map((item) => {
+          return item.name
+        })
+        this.topicStr = arr.join(',')
+        this.formData.categoryName = this.topicStr
+        const arr2 = val.map((item) => {
+          return item.code
+        })
+        this.formData.categoryCode = arr2.join(',')
+        const arr3 = val.map((item) => {
+          return item.id
+        })
+        // 接口新返回字段,进行处理
+        const arrLevelIds = val.map((item) => {
+          return item.levelIds
+        })
+        this.formData.categoryId = arr3.join(',')
+        this.formData.categoryLevelIds = arrLevelIds.join(',')
+      } else {
+        // init 话题赋值
+        this.topicStr = ''
+        this.formData.categoryName = ''
+        this.formData.categoryCode = ''
+        this.formData.categoryId = ''
+        this.formData.categoryLevelIds = ''
+      }
+      console.log('话题: ', this.topics)
+      console.log('topicStr: ', this.topicStr)
     },
     submit() {
       const checkFlag = this.checkParams()
@@ -275,6 +283,11 @@ export default {
       // check content
       if (this.formData.content.length === 0 && this.fromPage !== 'question') {
         this.$xToast.error('内容区域不能为空哦')
+        return false
+      }
+      const maxLength = this.fromPage === 'article' ? 30000 : 5000
+      if (this.formData.content.length > maxLength) {
+        this.$xToast.error(`字符不能超过${maxLength}字`)
         return false
       }
       return true

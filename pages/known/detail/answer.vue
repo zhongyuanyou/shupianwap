@@ -2,7 +2,7 @@
   <div>
     <div>
       <header-slot>
-        <div v-if="!showHead2" class="head head1">
+        <div v-if="!showHead2" class="head1">
           <sp-icon
             name="arrow-left"
             color="#1A1A1A"
@@ -11,7 +11,7 @@
           />
           <div class="btn-area">
             <span @click="onInvite">
-              <my-icon name="yaoqing" size="0.4rem"></my-icon>
+              <my-icon name="yaoqing" size="0.36rem"></my-icon>
               邀请</span
             >
             <span
@@ -20,7 +20,7 @@
               "
               @click.stop="writeAnswer"
             >
-              <my-icon name="xiehuida" size="0.4rem"></my-icon>
+              <my-icon name="xiehuida" size="0.36rem"></my-icon>
               写回答</span
             >
             <span v-else>
@@ -33,7 +33,7 @@
             </span>
           </div>
         </div>
-        <div v-if="showHead2" class="head head2">
+        <div v-if="showHead2" class="head2">
           <sp-icon
             name="arrow-left"
             color="#1A1A1A"
@@ -511,7 +511,7 @@ export default {
           this.$axios
             .post(knownApi.content.dlt, {
               id: curId,
-              userId: this.userInfo.userId || '120',
+              currentUserId: this.userInfo.userId,
             })
             .then((res) => {
               this.loading = false
@@ -567,37 +567,26 @@ export default {
     border-top: 1px solid #f0f0f0;
   }
 }
-.head {
-  width: 100%;
-  height: 88px;
-  background: #ffffff;
-  line-height: 88px;
-  font-size: 30px;
-  font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
-  color: #4974f5;
-  padding: 0 40px;
-  z-index: 99;
-  .btn-icon {
-    float: left;
-  }
-}
 .head1 {
+  padding: 0 40px;
   height: 88px;
+  font-size: 30px;
   background: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   .btn-area {
-    float: right;
-    width: auto;
+    display: flex;
+    align-items: center;
     height: 100%;
     span {
+      color: #4974f5;
       padding: 0 20px;
     }
   }
 }
 .head2 {
+  padding: 0 40px;
   height: 88px;
   background: #ffffff;
   display: flex;
@@ -736,6 +725,7 @@ export default {
     color: #666;
     font-weight: 400;
     color: #555555;
+    word-break: break-all;
     /deep/ img {
       width: 100%;
       height: auto;

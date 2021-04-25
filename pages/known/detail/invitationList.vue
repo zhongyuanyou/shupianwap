@@ -14,7 +14,12 @@
         </Search>
       </div>
     </header-slot>
-    <div class="recommend">
+    <div
+      class="recommend"
+      :style="{
+        height: `calc(100vh - ${88 + (appInfo.statusBarHeight || 0)}px)`,
+      }"
+    >
       <div class="titbox">
         <span>为你精选 {{ recommendList.length }} 位优质回答者</span>
         <p :class="[invitedAllFlag ? 'active' : '']" @click="invitAll()">
@@ -236,7 +241,7 @@ export default {
 
 <style lang="less" scoped>
 .invitationList {
-  min-height: 100vh;
+  height: 100vh;
   .head {
     height: 88px;
     width: 100%;
@@ -268,7 +273,6 @@ export default {
     }
   }
   .recommend {
-    height: calc(100vh - 88px);
     > .titbox {
       height: 102px;
       background: #f5f5f5;

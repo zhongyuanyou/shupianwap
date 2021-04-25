@@ -39,7 +39,6 @@
           v-for="(item, index) in productAdvertData.slice(0, 1)"
           :key="index"
           class="default_s"
-          @click="advertjump(item)"
         >
           <a :href="item.materialLink"
             ><img :src="item.materialUrl" alt="" srcset=""
@@ -50,7 +49,6 @@
             v-for="(item, index) in productAdvertData.slice(1, 3)"
             :key="index"
             class="other_s"
-            @click="advertjump(item)"
           >
             <a :href="item.materialLink"
               ><img :src="item.materialUrl" alt="" srcset=""

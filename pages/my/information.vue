@@ -75,7 +75,7 @@
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
         </div>
-        <div class="cell" @click="handleClick(8)">
+        <!-- <div class="cell" @click="handleClick(8)">
           <p class="title">实名认证</p>
           <div class="right_icon">
             <p class="txt hide">
@@ -88,11 +88,10 @@
                   ? '认证中'
                   : '未实名认证'
               }}
-              }}
             </p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="information_con_tp">
         <div class="cell" @click="handleClick(5)">
@@ -284,11 +283,12 @@ export default {
         this.$router.push({
           path: '/my/info/personalProfile',
         })
-      } else if (val === 8) {
-        // if (this.realStatus === 'NO_AUTHENTICATION') {
-        //   this.$router.push('/contract/authentication')
-        // }
       }
+      //  else if (val === 8) {
+      //   // if (this.realStatus === 'NO_AUTHENTICATION') {
+      //   //   this.$router.push('/contract/authentication')
+      //   // }
+      // }
     },
     async select(data) {
       // 地区选择
