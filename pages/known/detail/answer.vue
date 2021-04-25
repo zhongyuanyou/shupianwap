@@ -1,49 +1,51 @@
 <template>
-  <div ref="myPage">
-    <div
-      v-if="!showHead2"
-      class="head head1"
-      :style="{ paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px' }"
-    >
-      <my-icon
-        name="zuo"
-        class="btn-icon"
-        size="0.4rem"
-        color="#1A1A1A"
-        @click.native="onLeftClick"
-      ></my-icon>
-      <div class="btn-area">
-        <span @click="onInvite">
-          <my-icon name="yaoqing" size="0.4rem"></my-icon>
-          邀请</span
-        >
-        <span
-          v-if="answerDetails && answerDetails.createrId === userInfo.userId"
-          @click.stop="writeAnswer"
-        >
-          <my-icon name="xiehuida" size="0.4rem"></my-icon>
-          写回答</span
-        >
-        <span v-else>
-          <my-icon
-            name="gengduo"
-            size="0.4rem"
-            color="#000000"
-            @click.native="more"
-          ></my-icon>
-        </span>
-      </div>
-    </div>
-    <div v-if="showHead2">
+  <div>
+    <div>
       <header-slot>
-        <div class="head head2">
-          <my-icon
-            class="btn-icon"
-            name="zuo"
-            size="0.4rem"
+        <div
+          v-if="!showHead2"
+          class="head head1"
+          :style="{
+            paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px',
+          }"
+        >
+          <sp-icon
+            name="arrow-left"
             color="#1A1A1A"
-            @click.native="onLeftClick"
-          ></my-icon>
+            size="0.4rem"
+            @click="$back"
+          />
+          <div class="btn-area">
+            <span @click="onInvite">
+              <my-icon name="yaoqing" size="0.4rem"></my-icon>
+              邀请</span
+            >
+            <span
+              v-if="
+                answerDetails && answerDetails.createrId === userInfo.userId
+              "
+              @click.stop="writeAnswer"
+            >
+              <my-icon name="xiehuida" size="0.4rem"></my-icon>
+              写回答</span
+            >
+            <span v-else>
+              <my-icon
+                name="gengduo"
+                size="0.4rem"
+                color="#000000"
+                @click.native="more"
+              ></my-icon>
+            </span>
+          </div>
+        </div>
+        <div v-if="showHead2" class="head head2">
+          <sp-icon
+            name="arrow-left"
+            color="#1A1A1A"
+            size="0.4rem"
+            @click="$back"
+          />
           <div class="user-info">
             <sp-image
               class="img"
@@ -73,7 +75,7 @@
       </div>
     </div>
     <div class="main">
-      <div class="user-info">
+      <div ref="myPage" class="user-info">
         <sp-image
           class="img"
           :src="answerDetails.avatar"
@@ -181,7 +183,15 @@
 
 <script>
 import { mapState } from 'vuex'
-import { Field, Button, Image, Toast, Popup, Dialog } from '@chipspc/vant-dgg'
+import {
+  Field,
+  Button,
+  Image,
+  Toast,
+  Popup,
+  Dialog,
+  Icon,
+} from '@chipspc/vant-dgg'
 import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi, userinfoApi } from '@/api'
@@ -189,6 +199,7 @@ import util from '@/utils/changeBusinessData'
 export default {
   components: {
     [Button.name]: Button,
+    [Icon.name]: Icon,
     [Image.name]: Image,
     [Field.name]: Field,
     [Popup.name]: Popup,
@@ -421,7 +432,7 @@ export default {
     },
     handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
-      const scrollTop = this.$refs.myPage.getBoundingClientRect().top // 滚动条距离顶部的位置
+      const scrollTop = this.$refs.myPage.getBoundingClientRect().bottom // 滚动条距离顶部的位置
       if (scrollTop < 0) {
         this.showHead2 = true
       } else {
@@ -608,7 +619,9 @@ export default {
 .head1 {
   height: 88px;
   background: #ffffff;
-  line-height: 88px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   .btn-area {
     float: right;
     width: auto;
@@ -619,14 +632,16 @@ export default {
   }
 }
 .head2 {
-  height: 104px;
+  height: 88px;
   background: #ffffff;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   .user-info {
     flex: 1;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 16px 0;
     padding-left: 20px;
     .img {
@@ -756,7 +771,6 @@ export default {
     color: #666;
     font-weight: 400;
     color: #555555;
-    line-height: 52px;
     /deep/ img {
       width: 100%;
       height: auto;

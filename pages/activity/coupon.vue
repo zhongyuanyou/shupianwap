@@ -1,7 +1,7 @@
 <template>
   <div class="act-coupon">
     <header-slot>
-      <Head ref="head" title="领取中心">
+      <Head ref="head" title="领券中心">
         <template #left>
           <my-icon
             class="back-icon"
@@ -488,9 +488,12 @@ export default {
       text-align: right;
       align-items: center;
       display: flex;
+      font-size: 0.24rem;
       button {
-        width: 132px;
+        display: block;
+        width: 150px;
         height: 54px;
+        font-size: 0.24rem;
         &.my-coupon {
           background: #ec5330;
           border-radius: 27px;

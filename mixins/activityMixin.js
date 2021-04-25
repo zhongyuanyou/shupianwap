@@ -121,6 +121,7 @@ export default {
       productType: '',
       safeTop: 0,
       headerHeight: 0,
+      isNoData: false,
     }
   },
   async created() {
@@ -188,6 +189,7 @@ export default {
           })
         }
       }
+      console.log(this.productType)
       if (!this.isInApp) {
         if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
           this.$router.push({
@@ -253,6 +255,7 @@ export default {
       this.activityProductList = []
       this.finished = false
       this.loading = true
+      this.isNoData = false
     },
 
     menuTab(item, index) {
@@ -285,6 +288,9 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             this.activityTypeOptions = res.data.settingVOList || []
+            if (this.activityTypeOptions.length === 0) {
+              throw new Error('未获取到分类数据')
+            }
             this.productType = res.data.productType || ''
             this.activityTypeOptions.unshift({
               cityCode: this.cityCode,
@@ -303,29 +309,38 @@ export default {
               this.finished = true
             }
           } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
+            throw new Error('服务异常，请刷新重试！')
           }
+        })
+        .catch((error) => {
+          Toast.fail({
+            duration: 2000,
+            message: error.message,
+            forbidClick: true,
+            className: 'my-toast-style',
+          })
         })
     },
     // 获取产品
-    getProductList() {
-      const params = {
-        specCode: this.specCode,
-        page: this.page,
-        limit: 10,
+    async getProductList() {
+      if (this.activityTypeOptions.length > 0) {
+        const params = {
+          specCode: this.specCode,
+          page: this.page,
+          limit: 10,
+        }
+        if (this.hasCity) {
+          params.cityCode = this.cityCode
+        }
+        if (this.currentTab.id !== '') {
+          params.labelId = this.currentTab.id
+        }
+        await this.productMethod(params)
+      } else {
+        this.isNoData = true
+        this.finished = true
+        this.loading = false
       }
-      if (this.hasCity) {
-        params.cityCode = this.cityCode
-      }
-      if (this.currentTab.id !== '') {
-        params.labelId = this.currentTab.id
-      }
-      return this.productMethod(params)
     },
     async productMethod(param) {
       await this.$axios
@@ -337,6 +352,9 @@ export default {
             this.activityProductList = this.activityProductList.concat(
               res.data.rows
             )
+            if (this.page === 1 && this.activityProductList.length === 0) {
+              this.isNoData = true
+            }
             this.total = res.data.total
             this.loading = false
             if (this.page > res.data.totalPage) {

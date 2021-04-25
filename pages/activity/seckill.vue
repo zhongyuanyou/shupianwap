@@ -127,91 +127,100 @@
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <div
-              v-for="(item, index) in activityProductList"
-              :key="index"
-              @click="jumpProductDetail(item)"
-            >
-              <!-- <div
+            <div v-if="activityProductList && activityProductList.length > 0">
+              <div
+                v-for="(item, index) in activityProductList"
+                :key="index"
+                @click="jumpProductDetail(item)"
+              >
+                <!-- <div
               v-for="(item, index) in items"
               :key="index"
               @click="jumpProductDetail(item)"
             > -->
-              <div class="body-content-items">
-                <div
-                  class="left-content"
-                  :style="{ 'background-image': item.imageUrl }"
-                >
-                  <img
-                    height="100%"
-                    width="100%"
-                    :src="
-                      item.imageUrl ||
-                      'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
-                    "
-                    alt="商品图片"
-                  />
-                  <div class="left-countdown">
-                    距离结束{{ endTime.hour }}:{{ endTime.min }}:{{
-                      endTime.sec
-                    }}
+                <div class="body-content-items">
+                  <div
+                    class="left-content"
+                    :style="{ 'background-image': item.imageUrl }"
+                  >
+                    <img
+                      height="100%"
+                      width="100%"
+                      :src="
+                        item.imageUrl ||
+                        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+                      "
+                      alt="商品图片"
+                    />
+                    <div class="left-countdown">
+                      距离结束{{ endTime.hour }}:{{ endTime.min }}:{{
+                        endTime.sec
+                      }}
+                    </div>
                   </div>
-                </div>
-                <div class="right-content">
-                  <div class="rc-top">
-                    <!-- <span>{{ item.span1 }}</span>
+                  <div class="right-content">
+                    <div class="rc-top">
+                      <!-- <span>{{ item.span1 }}</span>
                     <span>{{ item.span2 }}</span> -->
-                    <span>特卖</span>
-                    <span>千万补贴</span>
-                    {{ item.skuName }}
-                  </div>
-                  <div class="rc-middle">
-                    <div class="reduce-price">
-                      限时直降{{ item.minusPrice }}元
+                      <span>特卖</span>
+                      <span>千万补贴</span>
+                      {{ item.skuName }}
                     </div>
-                    <div class="deal-ok">
-                      已成交{{
-                        item.specialInventory - item.specialResidueInventory
-                      }}单
+                    <div class="rc-middle">
+                      <div class="reduce-price">
+                        限时直降{{ item.minusPrice }}元
+                      </div>
+                      <div class="deal-ok">
+                        已成交{{
+                          item.specialInventory - item.specialResidueInventory
+                        }}单
+                      </div>
                     </div>
-                  </div>
-                  <div class="rc-bottom">
-                    <div class="rc-bottom-lf">
-                      <div class="rc-bottom-lf-my">
-                        秒杀价<span>{{ item.specialPrice }}</span
-                        >元
-                        <!-- <div>秒杀价</div>
+                    <div class="rc-bottom">
+                      <div class="rc-bottom-lf">
+                        <div class="rc-bottom-lf-my">
+                          秒杀价<span>{{ item.specialPrice }}</span
+                          >元
+                          <!-- <div>秒杀价</div>
                         <div>{{ item.specialPrice }}</div>
                         <div>元</div> -->
+                        </div>
+                        <!-- <div class="bf-my">近{{ item.dijia }}天历史低价</div> -->
                       </div>
-                      <!-- <div class="bf-my">近{{ item.dijia }}天历史低价</div> -->
-                    </div>
-                    <div class="rc-bottom-rt">
-                      <div>去抢购</div>
-                      <div class="process-per">
-                        <sp-progress
-                          color="#FFF166"
-                          :percentage="
-                            getPercentage(
-                              item.specialResidueInventory,
-                              item.specialInventory
-                            )
-                          "
-                        />
-                        <div class="pro-per">
-                          {{
-                            getPercentage(
-                              item.specialResidueInventory,
-                              item.specialInventory
-                            )
-                          }}%
+                      <div class="rc-bottom-rt">
+                        <div>去抢购</div>
+                        <div class="process-per">
+                          <sp-progress
+                            color="#FFF166"
+                            :percentage="
+                              getPercentage(
+                                item.specialResidueInventory,
+                                item.specialInventory
+                              )
+                            "
+                          />
+                          <div class="pro-per">
+                            {{
+                              getPercentage(
+                                item.specialResidueInventory,
+                                item.specialInventory
+                              )
+                            }}%
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                <div class="line"></div>
               </div>
-              <div class="line"></div>
+            </div>
+            <div v-if="isNoData" class="no-data">
+              <img
+                src="https://cdn.shupian.cn/sp-pt/wap/images/bzre7lw14o00000.png"
+                alt=""
+                srcset=""
+              />
             </div>
           </sp-list>
         </sp-pull-refresh>
@@ -282,6 +291,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.no-data {
+  text-align: center;
+  padding-top: 10px;
+  img {
+    display: block;
+    width: 340px;
+    height: 340px;
+    margin: 0 auto;
+  }
+  p {
+    width: 100%;
+    color: #222222;
+    font-size: 28px;
+  }
+}
 .container {
   position: relative;
   background: url('https://cdn.shupian.cn/sp-pt/wap/b5p8oqng6sg0000.png');
@@ -410,6 +434,9 @@ export default {
     .wrapper {
       display: flex;
       overflow: auto;
+      &::-webkit-scrollbar {
+        width: 0 !important;
+      }
       padding-bottom: 32px;
       .item {
         padding-bottom: 19px;
@@ -571,6 +598,9 @@ export default {
     }
     .body-content {
       padding: 0 20px;
+      background-color: #fff;
+      min-height: 80vh;
+      width: 100vw;
       .line {
         width: 710px;
         height: 1px;

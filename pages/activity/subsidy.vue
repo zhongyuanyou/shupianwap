@@ -99,54 +99,63 @@
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <div
-              v-for="(item, index) in activityProductList"
-              :key="index"
-              @click="jumpProductDetail(item)"
-            >
-              <div class="body-content-items">
-                <div class="left-content">
-                  <img
-                    height="100%"
-                    width="100%"
-                    :src="
-                      item.imageUrl ||
-                      'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
-                    "
-                    alt="商品图片"
-                  />
-                </div>
-                <div class="right-content">
-                  <div class="rc-top">
-                    <span class="span1">好品</span>
-                    <span class="span2">千万补贴</span>
-                    <span class="span3"> {{ item.skuName }}</span>
+            <div v-if="activityProductList && activityProductList.length > 0">
+              <div
+                v-for="(item, index) in activityProductList"
+                :key="index"
+                @click="jumpProductDetail(item)"
+              >
+                <div class="body-content-items">
+                  <div class="left-content">
+                    <img
+                      height="100%"
+                      width="100%"
+                      :src="
+                        item.imageUrl ||
+                        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+                      "
+                      alt="商品图片"
+                    />
                   </div>
-                  <div class="rc-middle">
-                    <div
-                      v-for="tag in item.tags.split(',').slice(0, 3)"
-                      :key="tag"
-                    >
-                      {{ overflowDot(tag, 6) }}
-                      <!-- {{ tag }} -->
+                  <div class="right-content">
+                    <div class="rc-top">
+                      <span class="span1">好品</span>
+                      <span class="span2">千万补贴</span>
+                      <span class="span3"> {{ item.skuName }}</span>
                     </div>
-                  </div>
-                  <div class="rc-bottom">
-                    <div class="rc-bottom-lf">
-                      <div class="rc-bottom-lf-my">
-                        <div>{{ item.specialPrice }}</div>
-                        <div>元</div>
+                    <div class="rc-middle">
+                      <div
+                        v-for="tag in item.tags.split(',').slice(0, 3)"
+                        :key="tag"
+                      >
+                        {{ overflowDot(tag, 6) }}
+                        <!-- {{ tag }} -->
                       </div>
-                      <div class="bf-my">{{ item.skuPrice }}元</div>
                     </div>
-                    <div class="rc-bottom-rt">
-                      <div>立即购买</div>
-                      <div></div>
+                    <div class="rc-bottom">
+                      <div class="rc-bottom-lf">
+                        <div class="rc-bottom-lf-my">
+                          <div>{{ item.specialPrice }}</div>
+                          <div>元</div>
+                        </div>
+                        <div class="bf-my">{{ item.skuPrice }}元</div>
+                      </div>
+                      <div class="rc-bottom-rt">
+                        <div>立即购买</div>
+                        <div></div>
+                      </div>
                     </div>
                   </div>
                 </div>
+                <div class="line"></div>
               </div>
-              <div class="line"></div>
+            </div>
+            <div v-if="isNoData" class="no-data">
+              <img
+                src="https://cdn.shupian.cn/sp-pt/wap/images/bzre7lw14o00000.png"
+                alt=""
+                srcset=""
+              />
             </div>
           </sp-list>
         </sp-pull-refresh>
@@ -187,6 +196,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.no-data {
+  text-align: center;
+  padding-top: 10px;
+  img {
+    display: block;
+    width: 340px;
+    height: 340px;
+    margin: 0 auto;
+  }
+  p {
+    width: 100%;
+    color: #222222;
+    font-size: 28px;
+  }
+}
 .overflowDot {
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -198,6 +222,9 @@ export default {
   background-size: 100% auto;
   -moz-background-size: 100% auto;
   // background-attachment: fixed;
+  &::-webkit-scrollbar {
+    width: 0 !important;
+  }
   .rule-tag {
     position: absolute;
     right: 0;
@@ -400,6 +427,9 @@ export default {
       justify-content: flex-start;
       max-width: 550px;
       overflow-x: scroll;
+      &::-webkit-scrollbar {
+        width: 0 !important;
+      }
       li {
         white-space: nowrap;
         height: 32px;

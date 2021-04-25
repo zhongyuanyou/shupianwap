@@ -119,72 +119,82 @@
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <div
-              v-for="(item, index) in activityProductList"
-              :key="index"
-              @click="jumpProductDetail(item)"
-            >
-              <!-- <div
+            <div v-if="activityProductList && activityProductList.length > 0">
+              <div
+                v-for="(item, index) in activityProductList"
+                :key="index"
+                @click="jumpProductDetail(item)"
+              >
+                <!-- <div
               v-for="(item, index) in productList"
               :key="index"
               @click="jumpProductDetail(item)"
             > -->
-              <div class="body-content-items">
-                <div
-                  class="left-content"
-                  :style="{ 'background-image': item.imageUrl }"
-                >
-                  <div class="left-countdown">
-                    距离结束{{ endTime.hour }}:{{ endTime.min }}:{{
-                      endTime.sec
-                    }}
-                  </div>
-                  <img
-                    height="100%"
-                    width="100%"
-                    :src="
-                      item.imageUrl ||
-                      'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
-                    "
-                    alt="商品图片"
-                  />
-                </div>
-                <div class="right-content">
-                  <p class="rc-top">
-                    <span class="rc-span">
-                      <span>特卖</span>
-                      <span>千万补贴</span>
-                    </span>
-                    <span class="rc-title">{{ item.skuName }}</span>
-                  </p>
-                  <div class="rc-middle">
-                    <div
-                      v-for="tag in item.tags.split(',').slice(0, 2)"
-                      :key="tag"
-                    >
-                      {{ overflowDot(tag, 6) }}
+                <div class="body-content-items">
+                  <div
+                    class="left-content"
+                    :style="{ 'background-image': item.imageUrl }"
+                  >
+                    <div class="left-countdown">
+                      距离结束{{ endTime.hour }}:{{ endTime.min }}:{{
+                        endTime.sec
+                      }}
                     </div>
+                    <img
+                      height="100%"
+                      width="100%"
+                      :src="
+                        item.imageUrl ||
+                        'https://cdn.shupian.cn/sp-pt/wap/images/727ro8a1oa00000.jpg'
+                      "
+                      alt="商品图片"
+                    />
                   </div>
-                  <div class="rc-bottom">
-                    <div class="rc-bottom-lf">
-                      <div class="rc-bottom-lf-my">
-                        <div>{{ item.specialPrice }}</div>
-                        <div>元</div>
-                      </div>
-                      <div class="bf-my">原价{{ item.skuPrice }}元</div>
-                    </div>
-                    <div class="rc-bottom-rt">
-                      <div>去抢购</div>
-                      <div>
-                        已成交{{
-                          item.specialInventory - item.specialResidueInventory
-                        }}单
+                  <div class="right-content">
+                    <p class="rc-top">
+                      <span class="rc-span">
+                        <span>特卖</span>
+                        <span>千万补贴</span>
+                      </span>
+                      <span class="rc-title">{{ item.skuName }}</span>
+                    </p>
+                    <div class="rc-middle">
+                      <div
+                        v-for="tag in item.tags.split(',').slice(0, 2)"
+                        :key="tag"
+                      >
+                        {{ overflowDot(tag, 6) }}
                       </div>
                     </div>
+                    <div class="rc-bottom">
+                      <div class="rc-bottom-lf">
+                        <div class="rc-bottom-lf-my">
+                          <div>{{ item.specialPrice }}</div>
+                          <div>元</div>
+                        </div>
+                        <div class="bf-my">原价{{ item.skuPrice }}元</div>
+                      </div>
+                      <div class="rc-bottom-rt">
+                        <div>去抢购</div>
+                        <div>
+                          已成交{{
+                            item.specialInventory -
+                            item.specialResidueInventory
+                          }}单
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
+                <div class="line"></div>
               </div>
-              <div class="line"></div>
+            </div>
+            <div v-if="isNoData" class="no-data">
+              <img
+                src="https://cdn.shupian.cn/sp-pt/wap/images/bzre7lw14o00000.png"
+                alt=""
+                srcset=""
+              />
             </div>
           </sp-list>
         </sp-pull-refresh>
@@ -231,6 +241,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.no-data {
+  text-align: center;
+  padding-top: 10px;
+  img {
+    display: block;
+    width: 340px;
+    height: 340px;
+    margin: 0 auto;
+  }
+  p {
+    width: 100%;
+    color: #222222;
+    font-size: 28px;
+  }
+}
 .container {
   position: relative;
   background: url('https://cdn.shupian.cn/sp-pt/wap/erdd6dsvru00000.png');
@@ -370,6 +395,9 @@ export default {
       display: flex;
       justify-content: flex-start;
       overflow-x: scroll;
+      &::-webkit-scrollbar {
+        width: 0 !important;
+      }
 
       .avtar {
         width: 226px;
@@ -467,6 +495,9 @@ export default {
       background-color: #ffffff;
       justify-content: flex-start;
       overflow-x: scroll;
+      &::-webkit-scrollbar {
+        width: 0 !important;
+      }
       .li-tab {
         white-space: nowrap;
         padding: 0 24px;
@@ -502,6 +533,9 @@ export default {
     padding: 0 20px;
     .body-content {
       position: absolute;
+      background-color: #fff;
+      min-height: 80vh;
+      width: 100vw;
       .line {
         height: 1px;
         background: #f4f4f4;
