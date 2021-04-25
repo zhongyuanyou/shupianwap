@@ -223,8 +223,9 @@ export default {
       // check title
       if (this.fromPage !== 'answer') {
         const tempTitle = this.formData.title
-        if (tempTitle.length < 4) {
-          this.$xToast.error('标题不能少于4个字哦')
+        const titleLength = this.fromPage === 'question' ? 4 : 2
+        if (tempTitle.length < titleLength) {
+          this.$xToast.error(`标题不能少于${titleLength}个字哦`)
           return false
         }
         const lastLetter = tempTitle.slice(
