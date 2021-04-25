@@ -180,12 +180,12 @@ export default {
         if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
           this.$appFn.dggJumpRoute({
             iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
-            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.skuId}"}}}`,
           })
         } else {
           this.$appFn.dggJumpRoute({
             iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
-            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.skuId}"}}}`,
           })
         }
       }
@@ -194,12 +194,16 @@ export default {
         if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
           this.$router.push({
             path: `/detail/transactionDetails`,
-            query: { productId: item.id, type: item.classCode },
+            query: { productId: item.skuId, type: item.classCode },
           })
         } else {
+          // this.$router.push({
+          //   path: `/detail/serviceDetails`,
+          //   query: { productId: item.skuId },
+          // })
           this.$router.push({
-            path: `/detail/serviceDetails`,
-            query: { productId: item.id },
+            path: `/detail`,
+            query: { productId: item.skuId },
           })
         }
       }
@@ -287,11 +291,17 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
+            if (res.data.endTime) {
+              this.activeTimer(res.data.endTime)
+            }
+            if (res.data.specCode) {
+              this.specCode = res.data.specCode
+            }
+            this.productType = res.data.productType || ''
             this.activityTypeOptions = res.data.settingVOList || []
             if (this.activityTypeOptions.length === 0) {
               throw new Error('未获取到分类数据')
             }
-            this.productType = res.data.productType || ''
             this.activityTypeOptions.unshift({
               cityCode: this.cityCode,
               cityName: this.cityName,
@@ -299,10 +309,9 @@ export default {
               labelName: this.allText,
               specialId: '',
             })
-            if (res.data.endTime) this.activeTimer(res.data.endTime)
+            console.log('this.specCode', this.specCode)
             if (res.data.settingVOList && res.data.settingVOList.length > 0) {
               this.itemTypeOptions = res.data.settingVOList[0]
-              this.specCode = res.data.specCode
               this.getProductList(this.itemTypeOptions, this.specCode)
             } else {
               this.loading = false
@@ -313,6 +322,8 @@ export default {
           }
         })
         .catch((error) => {
+          this.loading = false
+          this.finished = true
           Toast.fail({
             duration: 2000,
             message: error.message,
@@ -375,34 +386,36 @@ export default {
         })
     },
     getRecommendProductList() {
-      const params = {
-        specCode: this.specCode,
-        isReco: 1,
-        page: 1,
-        limit: 100000,
-      }
+      if (this.specCode) {
+        const params = {
+          specCode: this.specCode,
+          isReco: 1,
+          page: 1,
+          limit: 100000,
+        }
 
-      if (this.hasCity) {
-        params.cityCode = this.cityCode
-      }
+        if (this.hasCity) {
+          params.cityCode = this.cityCode
+        }
 
-      this.$axios
-        .get(activityApi.activityProductList, { params })
-        .then((res) => {
-          if (res.code === 200) {
-            this.recommendProductList = res.data.rows
-          } else {
-            throw new Error('服务异常，请刷新重试！')
-          }
-        })
-        .catch((err) => {
-          Toast.fail({
-            duration: 2000,
-            message: err.message,
-            forbidClick: true,
-            className: 'my-toast-style',
+        this.$axios
+          .get(activityApi.activityProductList, { params })
+          .then((res) => {
+            if (res.code === 200) {
+              this.recommendProductList = res.data.rows
+            } else {
+              throw new Error('服务异常，请刷新重试！')
+            }
           })
-        })
+          .catch((err) => {
+            Toast.fail({
+              duration: 2000,
+              message: err.message,
+              forbidClick: true,
+              className: 'my-toast-style',
+            })
+          })
+      }
     },
 
     getAdvertisingData() {
