@@ -285,6 +285,11 @@ export default {
         this.$xToast.error('内容区域不能为空哦')
         return false
       }
+      const maxLength = this.fromPage === 'article' ? 30000 : 5000
+      if (this.formData.content.length > maxLength) {
+        this.$xToast.error(`字符不能超过${maxLength}字`)
+        return false
+      }
       return true
     },
     buildAnswerParams() {

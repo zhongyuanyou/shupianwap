@@ -60,7 +60,11 @@
           :autoplay="3000"
           indicator-color="white"
         >
-          <sp-swipe-item v-for="(item, index) in adList" :key="index">
+          <sp-swipe-item
+            v-for="(item, index) in adList"
+            :key="index"
+            @click="adJump(item.materialList[0])"
+          >
             <sp-image
               class="banner_img"
               fit="cover"
@@ -200,6 +204,16 @@ export default {
     window.addEventListener('scroll', this.getScroll)
   },
   methods: {
+    adJump(item) {
+      console.log(item)
+      if (item.linkType === 1) {
+        this.$router.push(`/${item.wapLink}`)
+      } else if (item.linkType === 2) {
+        location.href = item.materialLink
+      } else {
+        location.href = item.imgLink
+      }
+    },
     toFans() {
       this.$router.push({
         path: '/known/home/fans',

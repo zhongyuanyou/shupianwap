@@ -173,12 +173,13 @@ export default {
   mounted() {},
   methods: {
     onEditorChange(a) {
-      if (a.html.length > this.textLength) {
-        a.quill.deleteText(this.textLength, 1)
-        this.$xToast.success(`字符不能超过${this.textLength}字`)
-      } else {
-        this.$emit('editorChange', a)
-      }
+      // if (a.html.length > this.textLength) {
+      //   a.quill.deleteText(this.textLength, 1)
+      //   this.$xToast.error(`字符不能超过${this.textLength}字`)
+      // } else {
+      //   this.$emit('editorChange', a)
+      // }
+      this.$emit('editorChange', a)
     },
     onEditorFocus(a) {
       console.log('onEditorFocus', a)

@@ -512,7 +512,7 @@ export default {
           this.$axios
             .post(knownApi.content.dlt, {
               id: curId,
-              userId: this.userInfo.userId || '120',
+              currentUserId: this.userInfo.userId,
             })
             .then((res) => {
               this.loading = false
@@ -726,6 +726,7 @@ export default {
     color: #666;
     font-weight: 400;
     color: #555555;
+    word-break: break-all;
     /deep/ img {
       width: 100%;
       height: auto;

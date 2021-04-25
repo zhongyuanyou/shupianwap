@@ -783,6 +783,7 @@ export default {
       padding: 0 32px;
       position: relative;
       margin-bottom: 48px;
+      word-break: break-all;
       > .tit {
         word-break: break-all;
         display: -webkit-box;
