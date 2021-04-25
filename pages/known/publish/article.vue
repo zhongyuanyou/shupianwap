@@ -1,18 +1,19 @@
 <template>
-  <div>
+  <div class="article">
     <PageHead title="撰写文章" :has-val="hasVal" @submit="submit" />
     <div class="main">
       <TitleArea ref="myTitle" :title="formData.title" @setTitle="setTitle" />
-      <div class="content-area">
-        <div class="content">
-          <Editor
-            ref="myEditor"
-            :init-content="formData.content"
-            :text-length="30000"
-            @editorChange="editorChange"
-          />
-        </div>
+      <!-- <div class="content-area"> -->
+      <div class="content">
+        <Editor
+          ref="myEditor"
+          :init-content="formData.content"
+          :text-length="30000"
+          @editorChange="editorChange"
+        />
+        <div style="height: 3rem"></div>
       </div>
+      <!-- </div> -->
       <ChooseTopic
         ref="chooseTopic"
         :topics-arr="formData.topics"
@@ -72,7 +73,22 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.article {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 .main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
   .choose-topic {
     height: 28px;
     font-size: 28px;

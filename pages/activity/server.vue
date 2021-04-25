@@ -236,13 +236,13 @@ export default {
       if (this.isInApp) {
         if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
           this.$appFn.dggJumpRoute({
-            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
-            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.id}"}}}`,
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.skuId}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/trade","parameter":{"productId":"${item.skuId}"}}}`,
           })
         } else {
           this.$appFn.dggJumpRoute({
-            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
-            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.id}"}}}`,
+            iOSRouter: `{"path":"CPSCustomer:CPSCustomer/CPSFlutterRouterViewController///push/animation","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.skuId}"}}}`,
+            androidRouter: `{"path":"/flutter/main","parameter":{"routerPath":"cpsc/goods/details/service","parameter":{"productId":"${item.skuId}"}}}`,
           })
         }
       }
@@ -251,12 +251,12 @@ export default {
         if (this.productType === 'PRO_CLASS_TYPE_TRANSACTION') {
           this.$router.push({
             path: `/detail/transactionDetails`,
-            query: { productId: item.id, type: item.classCode },
+            query: { productId: item.skuId, type: item.classCode },
           })
         } else {
           this.$router.push({
-            path: `/detail/serviceDetails`,
-            query: { productId: item.id },
+            path: `/detail`,
+            query: { productId: item.skuId },
           })
         }
       }
@@ -645,7 +645,9 @@ export default {
         }
       }
     }
-
+    .tabs-box-items::-webkit-scrollbar {
+      display: none;
+    }
     .tabs-box-items {
       display: flex;
       justify-content: space-between;
@@ -653,7 +655,7 @@ export default {
       margin-right: 15px;
       max-width: 500px;
       overflow-x: auto;
-      height: 40px;
+      height: 80px;
       white-space: nowrap;
       li {
         height: 32px;

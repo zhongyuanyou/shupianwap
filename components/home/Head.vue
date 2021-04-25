@@ -64,6 +64,7 @@
 <script>
 import { Sticky, Swipe, swipeItem } from '@chipspc/vant-dgg'
 import { mapState, mapActions } from 'vuex'
+import adJumpHandle from '~/mixins/adJumpHandle'
 import Search from '@/components/home/Search'
 export default {
   components: {
@@ -72,6 +73,7 @@ export default {
     [swipeItem.name]: swipeItem,
     Search,
   },
+  mixins: [adJumpHandle],
   props: {
     pageScrollTop: {
       type: Number,

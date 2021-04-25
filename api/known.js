@@ -15,6 +15,7 @@ const knownApi = {
     focusFansList: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/focusFansList.do`, // 粉丝/关注 列表
     attention: `${CHIPS_WAP_BASE_URL}/nk/question_article/v2/find_user_relations.do`, // 用户关注/取消关注其他用户
     collection: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/collection.do`, // 我的收藏列表 1问题 2文章 3回答
+    adList: `${CHIPS_WAP_BASE_URL}/nk/known_home/v1/adList.do`, // 我的收藏列表 1问题 2文章 3回答
   },
   questionArticle: {
     categoryList: `${CHIPS_WAP_BASE_URL}/nk/known_category/v1/list.do`, // 获取分类列表

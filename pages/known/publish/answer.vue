@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="answer">
     <CommonHead v-if="!id" title="写回答" />
     <PageHead
       v-else
@@ -17,6 +17,7 @@
           :init-content="formData.content"
           @editorChange="editorChange"
         />
+        <div style="height: 2rem"></div>
       </div>
     </div>
   </div>
@@ -83,13 +84,28 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.answer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 .main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   .title {
     font-size: 40px;
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: 500;
     color: #222222;
     line-height: 52px;
+  }
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
   }
 }
 .sp-tabs {

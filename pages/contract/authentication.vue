@@ -107,7 +107,7 @@ export default {
           // console.log(res.data.realStatus)
           if (
             res.data.realStatus === 'AUTHENTICATION_SUCCESS' ||
-            res.data.realStatus === 'AUTHENTICATION_FAIL'
+            res.data.realStatus === 'AUTHENTICATION_ING'
           ) {
             this.$cookies.set('realStatus', res.data.realStatus)
             Toast({
