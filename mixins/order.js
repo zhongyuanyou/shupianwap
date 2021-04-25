@@ -366,6 +366,9 @@ export default {
                 sortArr.push(nodeList[i])
               }
             }
+            sortArr.forEach((item) => {
+              item.batchIndex = Number(item.batchNumber) + 1
+            })
             this.nodeList = sortArr
           } else {
             // 当前订单的分批支付信息 订单详情页
@@ -426,7 +429,6 @@ export default {
     // 判断展示合同按钮 false不展示  1签署合同 2查看合同
     checkContractStatus(orderData) {
       const data = orderData || this.orderData
-      console.log('检测合同,', data)
       // 当客户订单状态为已取消时不展示按钮
       if (data.cusOrderStatusNo === ORDERSTATUSCODE[4]) return false
       if (this.fromPage === 'orderList') {
@@ -908,7 +910,6 @@ export default {
       try {
         this.loading = true
         const data = await auth.protocol(params)
-        console.log('data:', data)
         const { rows = [] } = data || {}
         this.article = rows[0] || {}
         this.loading = false
