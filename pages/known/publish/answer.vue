@@ -48,8 +48,9 @@ export default {
       active: 0,
       maxLength: 20,
       fromPage: 'answer',
-      questionId: '', // 问题id
+      questionId: '', // editType = 1,问题id || editType = 2,回答id
       questionInfo: {}, // 问题详情
+      sourceId: '', // 问题id
     }
   },
   computed: {
@@ -61,32 +62,24 @@ export default {
   },
   mounted() {
     this.questionId = this.$route.query.id
-
-    if (this.$route.query.editType === '2') {
+    // this.formData.id = this.questionId
+    if (this.$route.query.editType) {
       this.editType = this.$route.query.editType
-      this.questionId = this.$route.query.id
-      this.formData.id = this.questionId
-      this.formData.sourceId = this.questionId
-      const _this = this
-      _this.getDetailByIdApi().then(({ code, data }) => {
-        if (code === 200) {
-          _this.questionInfo = data
-          _this.formData.title = data.title
-          _this.formData.content = data.content
-          // start: init 话题部分参数,当用户没有点击更改话题时,则使用查询问题中的值
-          _this.formData.categoryId = data.categoryId
-          _this.formData.categoryCode = data.categoryCode
-          _this.formData.categoryLevelIds = data.categoryLevelIds
-          _this.formData.categoryName = data.categoryName
-          // end: init 话题部分参数,当用户没有点击更改话题时,则使用查询问题中的值
-        } else {
-          _this.$xToast.error(data.error || '异常错误')
-          setTimeout(() => {
-            _this.$back()
-          }, 2000)
-        }
-      })
     }
+    const _this = this
+    this.getDetailByIdApi().then(({ code, data }) => {
+      if (code === 200) {
+        _this.questionInfo = data
+        // 当修改回答时,需要重显内容
+        if (_this.editType === '2') {
+          _this.formData.content = data.content
+          // 当修改回答时,sourceId为问题id.
+          _this.sourceId = data.sourceId
+          // data.id 为回答id
+          _this.formData.id = data.id
+        }
+      }
+    })
   },
   methods: {
     openModal() {
