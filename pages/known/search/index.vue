@@ -19,7 +19,10 @@
           />
         </template>
         <template v-slot:right>
-          <a class="cloose-btn" href="javascript:void(0);" @click="clooseHandle"
+          <a
+            class="cloose-btn"
+            href="javascript:void(0);"
+            @click.stop="clooseHandle"
             >取消</a
           >
         </template>

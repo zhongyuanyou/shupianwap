@@ -11,7 +11,7 @@
         @clickInputHandle="keyClickHandle"
       >
         <template v-slot:left>
-          <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
+          <sp-icon name="arrow-left" size="0.4rem" @click.stop="$back()" />
         </template>
       </Search>
     </sp-sticky>
@@ -43,7 +43,7 @@
         >
           <h1 v-html="item.titleHtml"></h1>
           <div class="box">
-            <div :style="{ width: item.contentImageUrl ? '464px' : '100%' }">
+            <div>
               <p v-html="item.contentTextHtml"></p>
               <div v-if="item.contentImageUrl" class="num">
                 <span>{{ item.applaudCount }} 赞同</span>
@@ -55,7 +55,7 @@
             </div>
             <img
               v-if="item.contentImageUrl"
-              :src="item.contentImageUrl"
+              :src="item.contentImageUrl.split(',')[0]"
               alt=""
             />
           </div>
@@ -359,6 +359,7 @@ export default {
         margin-top: 18px;
         align-items: center;
         > div {
+          flex: 1;
           > p {
             display: -webkit-box;
             -webkit-box-orient: vertical;
