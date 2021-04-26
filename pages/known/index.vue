@@ -211,6 +211,7 @@ import Search from '@/components/mustKnown/recommend/search/Search'
 import Bottombar from '@/components/common/nav/Bottombar'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi } from '@/api'
+import CoupleSelectVue from '~/components/common/coupleSelected/CoupleSelect.vue'
 
 export default {
   name: 'Index',
@@ -285,18 +286,39 @@ export default {
     // this.containerStyle['padding-top'] = this.appInfo.statusBarHeight + 'px'
     this.appStyle['padding-top'] = this.statusBarHeight * 2 + 'px'
     this.tapSafeApp.height = this.statusBarHeight + 'px'
+
     this.init()
   },
   methods: {
     init() {
+      // console.log('this.tabs++++++++++++++++++', this.tabs)
+      localStorage.setItem('allPlate', JSON.stringify(this.tabs))
+      // 获取所有列表数据
+      const allPlate = JSON.parse(localStorage.getItem('allPlate'))
+      // console.log('allPlate++++++++++++++++++', allPlate)
+      // 获取我的列表数据
+      this.myPlate = JSON.parse(localStorage.getItem('myPlate'))
+      // console.log('this.myPlate++++++++++++++++++', this.myPlate)
+      // if (!allPlate) {
+      //   localStorage.setItem('allPlate', JSON.stringify(this.tabs))
+      // }
+      if (this.myPlate) {
+        this.morePlate = allPlate.filter(
+          (item) => !this.myPlate.some((ele) => ele.id === item.id)
+        )
+        localStorage.setItem('morePlate', JSON.stringify(this.morePlate))
+      }
+
       if (localStorage.getItem('morePlate')) {
         this.morePlate = JSON.parse(localStorage.getItem('morePlate'))
-        this.myPlate = this.tabs.filter(
+        const allPlate = JSON.parse(localStorage.getItem('allPlate'))
+        this.myPlate = allPlate.filter(
           (item) => !this.morePlate.some((ele) => ele.id === item.id)
         )
+        localStorage.setItem('myPlate', JSON.stringify(this.myPlate))
         this.tabs = this.myPlate
       } else {
-        this.myPlate = this.tabs
+        this.myPlate = JSON.parse(localStorage.getItem('allPlate'))
       }
     },
     toggleTabs() {},
