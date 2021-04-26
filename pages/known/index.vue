@@ -294,6 +294,9 @@ export default {
         this.morePlate = this.tabs.filter(
           (item) => !this.myPlate.some((ele) => ele.id === item.id)
         )
+        this.myPlate = this.tabs.filter((item) =>
+          this.myPlate.some((ele) => ele.id === item.id)
+        )
         this.tabs = this.myPlate
       } else {
         this.myPlate = this.tabs
