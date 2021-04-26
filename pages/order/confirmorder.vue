@@ -492,7 +492,7 @@ export default {
       }
     },
     sortData(a, b) {
-      return b.reducePrice - a.reducePrice
+      return b.marketingCouponVO.reducePrice - a.marketingCouponVO.reducePrice
     },
     getInitData(index) {
       const arr = this.order.list.map((x) => {
@@ -592,7 +592,7 @@ export default {
       background: #fff;
       > .list {
         display: flex;
-        border-bottom: 1px solid #cdcdcd;
+        border-bottom: 1px solid #f4f4f4;
         padding: 32px 0;
         > .left {
           width: 160px;
@@ -689,6 +689,12 @@ export default {
     > .news-content {
       margin-top: 24px;
       background: #fff;
+      /deep/.sp-cell::after {
+        display: none;
+      }
+      /deep/.sp-hairline--top-bottom::after {
+        display: none;
+      }
       .black {
         color: #1a1a1a;
       }
@@ -696,7 +702,7 @@ export default {
         color: #ec5330;
       }
       > .money {
-        padding: 39px 30px;
+        padding: 15px 30px;
         text-align: right;
         font-size: 28px;
         font-weight: 400;
