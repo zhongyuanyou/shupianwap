@@ -11,7 +11,7 @@
             @click.native="back()"
           ></my-icon>
         </div>
-        <div class="newspaperTitle">日报精选</div>
+        <div v-show="showHead" class="newspaperTitle">日报精选</div>
         <div>
           <my-icon
             name="sear_ic_sear"
@@ -24,25 +24,6 @@
       </div>
     </HeaderSlot>
     <div class="container_head">
-      <sp-sticky @scroll="scrollHandle">
-        <!-- <div class="header_search"> -->
-        <!-- <my-icon
-            name="nav_ic_back"
-            size="0.40rem"
-            color="#FFFFFF"
-            class="my_icon"
-            @click.native="back()"
-          ></my-icon> -->
-        <!-- <div v-show="showPaper" class="newspaperTitle">日报精选</div> -->
-        <!-- <my-icon
-            name="sear_ic_sear"
-            size="0.40rem"
-            color="#FFFFFF"
-            class="my_icon"
-            @click.native="$router.push({ path: '/known/search' })"
-          ></my-icon> -->
-        <!-- </div> -->
-      </sp-sticky>
       <div>
         <!-- <div class="newspaper">日报精选</div> -->
         <div class="day_num">{{ new Date().getDate() }}</div>
@@ -51,7 +32,7 @@
       </div>
     </div>
 
-    <div class="container_body">
+    <div ref="body" class="container_body">
       <ProblemItem :newspaper-data="newspaperData" />
     </div>
   </div>
@@ -72,6 +53,7 @@ export default {
   data() {
     return {
       name: '',
+      showHead: false,
       [Icon.name]: Icon,
       description: '',
       categorIds: [],
@@ -99,7 +81,10 @@ export default {
   },
   mounted() {
     this.init()
-    console.log(this.appInfo, 123)
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     back() {
@@ -148,6 +133,16 @@ export default {
         }
       } else {
         console.log(message)
+      }
+    },
+    handleScroll() {
+      // 获取推荐板块到顶部的距离 减 搜索栏高度
+      const scrollTop = this.$refs.body.getBoundingClientRect().top // 滚动条距离顶部的位置
+      const than = document.body.clientWidth / 375
+      if (scrollTop / than <= ((this.appInfo.statusBarHeight || 0) + 88) / 2) {
+        this.showHead = true
+      } else {
+        this.showHead = false
       }
     },
     getWekDay() {
