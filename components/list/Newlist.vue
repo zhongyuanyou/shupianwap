@@ -12,6 +12,19 @@
         v-for="(item, index) in datalist"
         :key="index"
         class="list"
+        data-even_name="p_commodityClick"
+        :data-com_level_1_code="
+          item.classCodeLevel ? item.classCodeLevel.split(',')[0] : ''
+        "
+        :data-com_level_2_code="
+          item.classCodeLevel ? item.classCodeLevel.split(',')[1] : ''
+        "
+        data-commodity_level_1=""
+        data-commodity_level_2=""
+        :data-n_now_price="item.price || ''"
+        :data-commodity_number="item.goodsNo || ''"
+        :data-commodity_name="item.name || ''"
+        data-commodity_type="服务商品"
         @click="godeatil(item)"
       >
         <div class="left">

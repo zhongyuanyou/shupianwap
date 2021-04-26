@@ -291,6 +291,7 @@ export default {
     border-bottom: 1px solid #f4f4f4;
     > p {
       font-size: 28px;
+      height: 50px;
       font-family: PingFang SC;
       font-weight: 400;
       color: #222222;

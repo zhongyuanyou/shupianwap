@@ -20,6 +20,7 @@
         </div>
 
         <div v-if="item.code == 'price'" class="price">
+          <h1 class="pricetit">价格区间（元）</h1>
           <PriceFilter
             ref="price"
             :price-list="pricelist"
@@ -229,6 +230,11 @@ export default {
         }
       }
     }
+  }
+  .pricetit {
+    font-size: 30px;
+    padding-left: 20px;
+    margin: 20px 10px;
   }
 }
 </style>

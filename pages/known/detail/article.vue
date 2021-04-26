@@ -42,7 +42,7 @@
           :src="articleDetails.avatar"
           @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
         />
-        <div class="infos">{{ articleDetails.createrName }}</div>
+        <div class="infos">{{ articleDetails.userName }}</div>
         <template v-if="articleDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
             <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
@@ -187,20 +187,14 @@ export default {
     })
     return {
       articleDetails: res.data,
-      headerData: {
-        createrName: res.data.createrName,
-        contentText: res.data.contentText,
-        avatar: res.data.avatar,
-      },
     }
   },
   data() {
     return {
       popupShow: false,
       articleList: [],
-      headerData: {},
       showHead: false,
-      articleDetails: '',
+      // articleDetails: '',
       currentDetailsId: '',
       handleType: '',
       isFollow: false,
@@ -323,9 +317,6 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.articleDetails = res.data
-            this.headerData.createrName = this.articleDetails.createrName
-            this.headerData.contentText = this.articleDetails.contentText
-            this.headerData.avatar = this.articleDetails.avatar
           } else {
             Toast.fail({
               duration: 2000,
@@ -615,7 +606,7 @@ export default {
   height: 96px;
   background: #ffffff;
   padding: 10px 40px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #f4f4f4;
   .applaud {
     display: flex;
     align-items: center;
@@ -853,7 +844,7 @@ export default {
   > .btns {
     display: flex;
     border-bottom: 1px solid #f4f4f4;
-    border-top: 1px solid #dddddd;
+    border-top: 1px solid #f4f4f4;
     > .box {
       padding-top: 23px;
       box-sizing: border-box;
@@ -899,7 +890,7 @@ export default {
     font-weight: 500;
     color: #222222;
     bottom: 0;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid #f4f4f4;
   }
 }
 </style>

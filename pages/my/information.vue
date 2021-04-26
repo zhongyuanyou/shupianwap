@@ -190,6 +190,7 @@ export default {
         province: '',
         city: '',
         url: '',
+        briefIntroduction: '',
       }, // 用户信息
       isUpdateName: false, // 能否修改昵称
       isUpdateAvatar: false, // 能否修改头像
@@ -282,6 +283,9 @@ export default {
       } else if (val === 7) {
         this.$router.push({
           path: '/my/info/personalProfile',
+          query: {
+            content: this.info.briefIntroduction,
+          },
         })
       }
       //  else if (val === 8) {

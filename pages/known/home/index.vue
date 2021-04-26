@@ -375,7 +375,9 @@ export default {
 
   .top_box {
     padding-top: 320px;
-    background: #026ac3;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/images/dkl5m4sxqyo0000.png')
+      top right no-repeat;
+    background-size: contain;
     .card {
       position: relative;
       background-color: #ffffff;

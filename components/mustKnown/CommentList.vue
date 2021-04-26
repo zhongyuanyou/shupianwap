@@ -363,7 +363,7 @@ export default {
     }
   }
   .foot {
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #f4f4f4;
     height: 96px;
     display: flex;
     align-items: center;
