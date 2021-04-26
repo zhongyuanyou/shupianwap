@@ -708,20 +708,6 @@ export default {
       background: #fff;
     }
   }
-  /deep/.my-head {
-    // padding: 0 32px;
-    box-sizing: border-box;
-    .title {
-      > span {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        display: block;
-        width: 500px;
-        margin: 0 auto;
-      }
-    }
-  }
   > .problem {
     padding-top: 20px;
     background: #fff;
