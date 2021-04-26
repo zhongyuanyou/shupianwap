@@ -284,7 +284,7 @@ export default {
 .commodityConsult {
   width: 100vw;
   background-color: #fff;
-  padding-top: 144px;
+  padding-top: 148px;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
   &-containner {
@@ -292,7 +292,7 @@ export default {
     bottom: 0px;
     left: 0px;
     width: 100vw;
-    height: 144px;
+    // height: 144px;
     padding: 0 40px;
     background-color: #fff;
     display: flex;
@@ -368,5 +368,9 @@ export default {
       }
     }
   }
+}
+.commodityConsult-containner-handle {
+  padding-top: 0.24rem;
+  padding-bottom: 0.24rem;
 }
 </style>
