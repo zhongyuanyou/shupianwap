@@ -1,6 +1,11 @@
 <template>
   <div class="article">
-    <PageHead title="撰写文章" :has-val="hasVal" @submit="submit" />
+    <PageHead
+      title="撰写文章"
+      :has-val="hasVal"
+      @submit="submit"
+      @handleCancel="handleCancel"
+    />
     <div class="main">
       <TitleArea ref="myTitle" :title="formData.title" @setTitle="setTitle" />
       <!-- <div class="content-area"> -->
@@ -16,7 +21,7 @@
       <!-- </div> -->
       <ChooseTopic
         ref="chooseTopic"
-        :topics-arr="formData.topics"
+        :topics-arr="mytopics"
         @setTopic="setTopic"
       />
     </div>
@@ -43,9 +48,9 @@ export default {
   data() {
     return {
       fromPage: 'article',
-      detailData: {},
       editType: '', // editType=1为编写文章 editType=2 为新发文章
-      articleId: '',
+      questionId: '',
+      mytopics: [],
     }
   },
   computed: {
@@ -60,13 +65,55 @@ export default {
   },
   mounted() {
     // 获取参数
-    this.editType = this.$route.query.editType
-    this.articleId = this.$route.query.articleId
+    // this.editType = this.$route.query.editType。
+    // this.questionId = this.$route.query.id
     this.$refs.myTitle.$refs.tileArea.$refs.input.focus()
+
+    if (this.$route.query.editType === '2') {
+      this.editType = this.$route.query.editType
+      // 这里的 this.questionId 其实是赋值给 this.getDetailByIdApi 这个接口 这个 id 是文章id
+      this.questionId = this.$route.query.id
+      this.formData.id = this.questionId
+      // this.formData.sourceId = this.questionId
+      const _this = this
+      _this.getDetailByIdApi().then(({ code, data }) => {
+        if (code === 200) {
+          _this.formData.title = data.title
+          _this.formData.content = data.content
+          // start: init 话题部分参数,当用户没有点击更改话题时,则使用查询问题中的值
+          _this.formData.categoryId = data.categoryId
+          _this.formData.categoryCode = data.categoryCode
+          _this.formData.categoryLevelIds = data.categoryLevelIds
+          _this.formData.categoryName = data.categoryName
+          // end: init 话题部分参数,当用户没有点击更改话题时,则使用查询问题中的值
+          _this.buildTopicArr(data)
+        } else {
+          _this.$xToast.error(data.error || '异常错误')
+          setTimeout(() => {
+            _this.$back()
+          }, 2000)
+        }
+      })
+    }
   },
   methods: {
     openModal() {
       this.$refs.chooseTopic.showPop = true
+    },
+    buildTopicArr(data) {
+      // get level 1 id
+      const tempIds = data.categoryLevelIds.split('_')
+      const levelOneId = tempIds[tempIds.length - 2]
+      // get topic name
+      const topicNameList = []
+      const topicNames = data.categoryName.split(',')
+      for (let i = 0, l = topicNames.length; i < l; i++) {
+        const item = { name: '' }
+        item.name = topicNames[i]
+        topicNameList.push(item)
+      }
+      console.log(`first ids: ${tempIds}, secound level1: ${levelOneId}`)
+      this.mytopics = [data.categoryId.split(','), levelOneId, topicNameList]
     },
   },
 }

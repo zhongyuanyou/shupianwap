@@ -2,31 +2,25 @@
   <div>
     <div>
       <header-slot>
-        <div
-          v-if="!showHead2"
-          class="head head1"
-          :style="{
-            paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px',
-          }"
-        >
+        <div v-if="!showHead2" class="head1">
           <sp-icon
             name="arrow-left"
             color="#1A1A1A"
             size="0.4rem"
-            @click="$back"
+            @click="$back()"
           />
           <div class="btn-area">
             <span @click="onInvite">
-              <my-icon name="yaoqing" size="0.4rem"></my-icon>
+              <my-icon name="yaoqing" size="0.36rem"></my-icon>
               邀请</span
             >
             <span
               v-if="
-                answerDetails && answerDetails.createrId === userInfo.userId
+                answerDetails && answerDetails.createrId !== userInfo.userId
               "
               @click.stop="writeAnswer"
             >
-              <my-icon name="xiehuida" size="0.4rem"></my-icon>
+              <my-icon name="xiehuida" size="0.36rem"></my-icon>
               写回答</span
             >
             <span v-else>
@@ -39,7 +33,7 @@
             </span>
           </div>
         </div>
-        <div v-if="showHead2" class="head head2">
+        <div v-if="showHead2" class="head2">
           <sp-icon
             name="arrow-left"
             color="#1A1A1A"
@@ -52,7 +46,7 @@
               :src="answerDetails.avatar"
               @click="goUser(answerDetails.userId, answerDetails.userType)"
             />
-            <div class="infos">{{ answerDetails.createrName }}</div>
+            <div class="infos">{{ answerDetails.userName }}</div>
             <template v-if="answerDetails.createrId !== userInfo.userId">
               <div v-if="!isFollow" class="btn" @click="follow">
                 <sp-button
@@ -81,7 +75,7 @@
           :src="answerDetails.avatar"
           @click="goUser(answerDetails.userId, answerDetails.userType)"
         />
-        <div class="infos">{{ answerDetails.createrName }}</div>
+        <div class="infos">{{ answerDetails.userName }}</div>
         <template v-if="answerDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
             <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
@@ -217,50 +211,14 @@ export default {
     })
     return {
       answerDetails: res.data,
-      headerData: {
-        createrName: res.createrName,
-        contentText: res.contentText,
-        avatar: res.avatar,
-      },
-      sourceId: res.sourceId,
-      homeUserId: res.userId,
     }
-    // return Promise.all([
-    //   context.$axios.get(knownApi.questionArticle.detail, {
-    //     params: {
-    //       id: context.query.id,
-    //       userHandleFlag: context.store.state.user.userId ? 1 : 0,
-    //     },
-    //   }),
-    // ])
-    //   .then((res) => {
-    //     if (res[0] && res[0].code === 200) {
-    //       return {
-    //         answerDetails: res[0].data,
-    //         headerData: {
-    //           createrName: res[0].createrName,
-    //           contentText: res[0].contentText,
-    //           avatar: res[0].avatar,
-    //         },
-    //         sourceId: res[0].sourceId,
-    //         homeUserId: res[0].userId,
-    //       }
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //     Promise.reject(error)
-    //   })
   },
   data() {
     return {
       showHead2: false,
       answerDetails: '',
-      headerData: {},
       popupShow: false,
-      sourceId: '',
       answerCollectCount: '',
-      homeUserId: '',
       isFollow: false,
       userType: '',
     }
@@ -280,7 +238,6 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
-    this.getUserInfo()
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
@@ -292,28 +249,27 @@ export default {
         query: { homeUserId: id, type: usertype },
       })
     },
-    async getUserInfo() {
-      // 获取用户信息
-      try {
-        const params = {
-          // id: this.userId,
-          id: this.userId || this.$cookies.get('userId'),
-        }
-        const res = await this.$axios.get(userinfoApi.info, { params })
-        this.loading = false
-        if (res.code === 200 && res.data && typeof res.data === 'object') {
-          this.userType = util.getUserType(res.data.type)
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    },
     toQueDetail() {
       this.$router.replace(
         '/known/detail/question?id=' + this.answerDetails.sourceId
       )
     },
-    follow() {
+    async initData() {
+      const res = await this.$axios.get(knownApi.questionArticle.detail, {
+        params: {
+          id: this.$route.query.id,
+          userId: this.userInfo.userId,
+          userHandleFlag: this.userInfo.userId ? 1 : 0,
+        },
+      })
+      if (res.code === 200) {
+        this.answerDetails = res.data
+      }
+    },
+    async follow() {
+      if (!(await this.isLogin())) {
+        return
+      }
       this.loading = true
       this.$axios
         .post(knownApi.home.attention, {
@@ -358,16 +314,34 @@ export default {
           }
         })
     },
-    onInvite() {
-      this.$router.push('/known/detail/invitationList')
+    async onInvite() {
+      if (await this.isLogin()) {
+        this.$router.push({
+          path: '/known/detail/invitationList',
+          query: {
+            questionId: this.answerDetails.sourceId,
+          },
+        })
+      }
     },
-    writeAnswer() {
-      this.$router.push({
-        path: '/known/publish/answer',
-        query: {
-          id: this.answerDetails.sourceId,
-        },
-      })
+    async writeAnswer() {
+      if (await this.isLogin()) {
+        this.$router.push({
+          path: '/known/publish/answer',
+          query: {
+            id: this.answerDetails.sourceId,
+          },
+        })
+      }
+    },
+    async isLogin() {
+      const res = await this.$isLogin()
+      if (res === 'app_login_success') {
+        this.initFollow()
+        this.initData()
+        return false
+      }
+      return true
     },
     more() {
       this.popupShow = true
@@ -375,45 +349,16 @@ export default {
     cancel() {
       this.popupShow = false
     },
-    getDetailData() {
-      this.loading = true
-      this.$axios
-        .get(knownApi.questionArticle.detail, {
-          params: {
-            id: this.currentDetailsId,
-            userHandleFlag: 1,
-          },
-        })
-        .then((res) => {
-          this.loading = false
-          if (res.code === 200) {
-            this.answerDetails = res.data
-            console.log(this.answerDetails)
-            this.headerData.createrName = this.answerDetails.createrName
-            this.headerData.contentText = this.answerDetails.contentText
-            this.headerData.avatar = this.answerDetails.avatar
-            this.sourceId = this.answerDetails.sourceId
-            this.homeUserId = this.answerDetails.userId
-          } else {
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
-          }
-        })
-    },
-    // 获取回答数与关注数
+    // 获取回答数和收藏数
     getAnswerCollectCount() {
       this.$axios
         .get(knownApi.questionArticle.detail, {
           params: {
-            id: this.sourceId,
-            userId: this.userInfo.userId || '120',
+            id: this.answerDetails.sourceId,
+            userId: this.userInfo.userId,
             userHandleFlag: 1,
             userType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
-            userName: this.userInfo.userName || '测试用户',
+            userName: this.userInfo.userName,
           },
         })
         .then((res) => {
@@ -432,8 +377,9 @@ export default {
     },
     handleScroll() {
       // 获取推荐板块到顶部的距离 减 搜索栏高度
-      const scrollTop = this.$refs.myPage.getBoundingClientRect().top // 滚动条距离顶部的位置
-      if (scrollTop < 88) {
+      const scrollTop = this.$refs.myPage.getBoundingClientRect().bottom // 滚动条距离顶部的位置
+      const than = document.body.clientWidth / 375
+      if (scrollTop / than <= ((this.appInfo.statusBarHeight || 0) + 88) / 2) {
         this.showHead2 = true
       } else {
         this.showHead2 = false
@@ -443,7 +389,10 @@ export default {
       this.$router.back(-1)
     },
 
-    handleClickBottom(type) {
+    async handleClickBottom(type) {
+      if (!(await this.isLogin())) {
+        return
+      }
       this.handleType = ''
       if (type === 1) {
         this.answerDetails.applaudCount = Number(
@@ -479,8 +428,8 @@ export default {
       }
       this.$axios
         .post(knownApi.home.operation, {
-          handleUserId: this.userInfo.userId || '120',
-          handleUserName: this.userInfo.userName || '测试用户',
+          handleUserId: this.userInfo.userId,
+          handleUserName: this.userInfo.userName,
           businessId: this.currentDetailsId,
           handleType: this.handleType,
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,
@@ -523,8 +472,9 @@ export default {
       const curId = id
       this.$router.push({
         path: '/known/publish/answer',
-        params: {
+        query: {
           id: curId,
+          editType: 2,
         },
       })
     },
@@ -542,7 +492,7 @@ export default {
           this.$axios
             .post(knownApi.content.dlt, {
               id: curId,
-              userId: this.userInfo.userId || '120',
+              currentUserId: this.userInfo.userId,
             })
             .then((res) => {
               this.loading = false
@@ -595,43 +545,29 @@ export default {
     font-weight: 500;
     color: #222222;
     bottom: 0;
-    border-top: 1px solid #f0f0f0;
-  }
-}
-.head {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 88px;
-  background: #ffffff;
-  line-height: 88px;
-  font-size: 30px;
-  font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
-  color: #4974f5;
-  padding: 0 40px;
-  z-index: 99;
-  .btn-icon {
-    float: left;
+    border-top: 1px solid #f4f4f4;
   }
 }
 .head1 {
+  padding: 0 40px;
   height: 88px;
+  font-size: 30px;
   background: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   .btn-area {
-    float: right;
-    width: auto;
+    display: flex;
+    align-items: center;
     height: 100%;
     span {
+      color: #4974f5;
       padding: 0 20px;
     }
   }
 }
 .head2 {
+  padding: 0 40px;
   height: 88px;
   background: #ffffff;
   display: flex;
@@ -653,12 +589,10 @@ export default {
     }
     .infos {
       flex: 1;
-      height: 26px;
-      font-size: 26px;
+      font-size: 0.3rem;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
-      color: #999999;
-      line-height: 26px;
+      color: #222;
       padding-left: 20px;
       p {
         font-size: 30px;
@@ -770,6 +704,7 @@ export default {
     color: #666;
     font-weight: 400;
     color: #555555;
+    word-break: break-all;
     /deep/ img {
       width: 100%;
       height: auto;
@@ -792,7 +727,7 @@ export default {
   height: 96px;
   background: #ffffff;
   padding: 10px 40px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #4f4f4f;
   .applaud {
     display: flex;
     align-items: center;

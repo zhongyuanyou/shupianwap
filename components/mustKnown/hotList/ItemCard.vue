@@ -1,12 +1,5 @@
 <template>
-  <sp-list
-    v-if="listData.length"
-    v-model="loading"
-    :finished="finished"
-    offset="0"
-    :finished-text="listData.length == 0 ? '' : '没有更多了'"
-    @load="onLoad"
-  >
+  <div>
     <sp-cell
       v-for="(item, index) in listData"
       :key="index"
@@ -64,12 +57,10 @@
         style="margin-top: 2px"
       ></my-icon>
     </div>
-  </sp-list>
+  </div>
 </template>
 <script>
 import {
-  Tab,
-  Tabs,
   Icon,
   TopNavBar,
   Toast,
@@ -84,8 +75,6 @@ import {
 export default {
   name: 'ItemCard',
   components: {
-    [Tab.name]: Tab,
-    [Tabs.name]: Tabs,
     [Icon.name]: Icon,
     [TopNavBar.name]: TopNavBar,
     [Toast.name]: Toast,
@@ -119,15 +108,8 @@ export default {
     // 调到推荐页面
     goRecommend() {
       this.$router.push({
-        path: '/known/',
+        path: '/known',
       })
-    },
-    computeHotNumber(browseCount) {
-      if (browseCount > 10000) {
-        return browseCount / 10000 + '万'
-      } else {
-        return browseCount
-      }
     },
     // 进入文章/问题/回答详情页面
     goDetailPage(type, id) {
@@ -153,10 +135,6 @@ export default {
           },
         })
       }
-    },
-    onLoad() {
-      this.pages++
-      this.$emit('load', this.pages)
     },
   },
 }
@@ -278,7 +256,7 @@ export default {
   right: 16px;
   bottom: 0;
   left: 16px;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #f4f4f4;
   -webkit-transform: scaleY(0.6);
   transform: scaleY(0.6);
 }

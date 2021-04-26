@@ -394,7 +394,7 @@ export default {
         .post(recommendApi.saleList, {
           deviceId: deviceCode,
           areaCode: reqArea,
-          sceneId: 'app-fwcpxq-01',
+          sceneId: 'app-ghszy-01',
           storeId: this.mchDetailId,
           platform: 'm',
           // searchType: 2,

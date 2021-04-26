@@ -293,6 +293,8 @@
       :batch-pay-status="batchPayStatus"
       :this-time-pay-total="thisTimePayTotal"
       :batch-ids="batchIds"
+      :all-time-pay-total="allTimePayTotal"
+      :remain-total-pay-ids="remainTotalPayIds"
     />
     <CancelOrder
       ref="cancleOrderModel"
@@ -395,6 +397,17 @@ export default {
           this.orderData.statusName = this.getStatusName(
             this.orderData.orderStatusNo
           )
+          if (
+            this.orderData.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+            this.orderData.payStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
+          ) {
+            // 先定金后尾款部分支付的订单状态为办理中
+            this.orderData.statusName = '办理中'
+          } else {
+            this.orderData.statusName = this.getStatusName(
+              this.orderData.orderStatusNo
+            )
+          }
           this.cusOrderStatusType = orderUtils.checkCusOrderStatus(
             this.orderData.cusOrderStatusNo
           )
@@ -426,7 +439,6 @@ export default {
           }
           this.orderData.orderSkuList = arr1
           this.getChildOrders(this.orderData)
-          console.log('orderData', this.orderData)
           this.hasData = true
           this.loading = false
         })
@@ -487,7 +499,6 @@ export default {
       this.$xToast.success('复制成功')
     },
     handleClickPay() {
-      console.log('this.orderData', this.orderData.orderSkuList[0])
       this.opType = 'payMoney'
       this.getChildOrders(this.orderData.orderSkuList[0])
     },

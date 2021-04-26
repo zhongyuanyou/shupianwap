@@ -60,7 +60,11 @@
           :autoplay="3000"
           indicator-color="white"
         >
-          <sp-swipe-item v-for="(item, index) in adList" :key="index">
+          <sp-swipe-item
+            v-for="(item, index) in adList"
+            :key="index"
+            @click="adJump(item.materialList[0])"
+          >
             <sp-image
               class="banner_img"
               fit="cover"
@@ -150,6 +154,7 @@ export default {
   data() {
     return {
       articleId: '', // 打开评论列表需要传的id
+      userName: '',
       active: 0,
       menuList: [
         {
@@ -199,6 +204,16 @@ export default {
     window.addEventListener('scroll', this.getScroll)
   },
   methods: {
+    adJump(item) {
+      console.log(item)
+      if (item.linkType === 1) {
+        this.$router.push(`/${item.wapLink}`)
+      } else if (item.linkType === 2) {
+        location.href = item.materialLink
+      } else {
+        location.href = item.imgLink
+      }
+    },
     toFans() {
       this.$router.push({
         path: '/known/home/fans',
@@ -354,13 +369,15 @@ export default {
     }
   }
   .header_fixed {
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid #f4f4f4;
     background: #ffffff;
   }
 
   .top_box {
     padding-top: 320px;
-    background: #026ac3;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/images/dkl5m4sxqyo0000.png')
+      top right no-repeat;
+    background-size: contain;
     .card {
       position: relative;
       background-color: #ffffff;
@@ -460,7 +477,7 @@ export default {
   .bottom_box {
     background-color: #f8f8f8;
     /deep/ .sp-tabs {
-      border-bottom: 1px solid #dddddd;
+      border-bottom: 1px solid #f4f4f4;
     }
     /deep/ .sp-tab {
       font-size: 30px;

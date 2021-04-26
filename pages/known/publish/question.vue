@@ -5,6 +5,7 @@
       :confirm-text="editType === '2' ? '修改问题' : '发布问题'"
       :title="title"
       @submit="submit"
+      @handleCancel="handleCancel"
     />
     <div class="main">
       <TitleArea
@@ -89,6 +90,7 @@ export default {
       const _this = this
       _this.getDetailByIdApi().then(({ code, data }) => {
         if (code === 200) {
+          console.error(data)
           _this.questionInfo = data
           _this.formData.title = data.title
           _this.formData.content = data.content

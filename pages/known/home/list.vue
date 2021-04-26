@@ -206,7 +206,7 @@ export default {
   .bottom_box {
     background-color: #f8f8f8;
     /deep/ .sp-tabs {
-      border-bottom: 1px solid #dddddd;
+      border-bottom: 1px solid #f4f4f4;
     }
     /deep/ .sp-tab {
       font-size: 30px;

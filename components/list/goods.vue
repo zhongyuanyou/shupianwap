@@ -355,6 +355,9 @@ export default {
     /deep/.sp-dropdown-menu {
       border-bottom: 1px solid #f4f4f4;
     }
+    .sp-ellipsis {
+      padding-right: 12px;
+    }
   }
   /deep/.sp-tabs__wrap--scrollable .sp-tabs__nav--complete {
     padding-left: 0;

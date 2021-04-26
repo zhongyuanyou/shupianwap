@@ -41,7 +41,7 @@
         @click="like(item)"
       >
         <my-icon
-          name="zantong"
+          name="zantong_mian"
           size="0.36rem"
           :color="item.isApplaudFlag ? '#4974f5' : '#999999'"
         ></my-icon>
@@ -122,10 +122,21 @@ export default {
         },
       })
     },
+    async isLogin() {
+      const res = await this.$isLogin()
+      if (res === 'app_login_success') {
+        this.init()
+        return false
+      }
+      return true
+    },
     comments(id) {
       this.$emit('comments', id)
     },
-    invitation(id) {
+    async invitation(id) {
+      if (!(await this.isLogin())) {
+        return
+      }
       this.$router.push({
         path: '/known/detail/invitationList',
         query: {
@@ -133,7 +144,10 @@ export default {
         },
       })
     },
-    answer(id) {
+    async answer(id) {
+      if (!(await this.isLogin())) {
+        return
+      }
       this.$router.push({
         path: '/known/publish/answer',
         query: {
@@ -142,11 +156,14 @@ export default {
       })
     },
     async like(item) {
+      if (!(await this.isLogin())) {
+        return
+      }
       const { code, message, data } = await this.$axios.post(
         knownApi.home.operation,
         {
           handleUserId: this.userInfo.userId,
-          handleUserName: this.userInfo.userName || '测试用户名',
+          handleUserName: this.userInfo.userName,
           businessId: item.id,
           handleType: item.isApplaudFlag ? 7 : 1, // 1是点赞 7是取消点赞
           handleUserType: this.userInfo.userType === 'ORDINARY_USER' ? 1 : 2,

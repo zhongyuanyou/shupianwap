@@ -1,9 +1,9 @@
 <template>
   <div>
     <HeaderSlot>
-      <div v-if="!showHead2" class="flex">
+      <div v-if="!showHead" class="flex">
         <div>
-          <sp-icon name="arrow-left" size="0.4rem" @click="$back" />
+          <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
         </div>
         <div>
           <sp-icon
@@ -23,7 +23,7 @@
           />
         </div>
       </div>
-      <div v-if="showHead2" class="flex">
+      <div v-if="showHead" class="flex">
         <PageHead2
           :header-data="articleDetails"
           :is-follow="isFollow"
@@ -42,7 +42,7 @@
           :src="articleDetails.avatar"
           @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
         />
-        <div class="infos">{{ articleDetails.createrName }}</div>
+        <div class="infos">{{ articleDetails.userName }}</div>
         <template v-if="articleDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
             <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
@@ -116,11 +116,44 @@
         </div>
       </div>
     </div>
+    <!--    上拉组件-->
+    <sp-popup
+      v-model="popupShow"
+      position="bottom"
+      :style="{ height: '30%' }"
+      round
+      close-icon="close"
+      :close-on-click-overlay="false"
+    >
+      <div class="down_slide_list">
+        <ul>
+          <li @click="editQues(articleDetails.id)">
+            <my-icon name="bianji1" size="1rem" color="#1a1a1a"></my-icon>
+            <p>编辑</p>
+          </li>
+          <li @click="deleteQues(articleDetails.id)">
+            <my-icon name="shanchu1" size="1rem" color="#1a1a1a"></my-icon>
+            <p>删除</p>
+          </li>
+        </ul>
+        <div class="cancel" @click="popupShow = false">取消</div>
+      </div>
+    </sp-popup>
   </div>
 </template>
 
 <script>
-import { Field, Tab, Tabs, Button, Image, Toast, Icon } from '@chipspc/vant-dgg'
+import {
+  Field,
+  Tab,
+  Tabs,
+  Button,
+  Image,
+  Toast,
+  Icon,
+  Popup,
+  Dialog,
+} from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 import PageHead from '@/components/common/head/header'
 import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
@@ -128,14 +161,15 @@ import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
 import DetailArticleList from '@/components/mustKnown/DetailArticleList'
 // 默认评论列表
 import Comment from '~/components/mustKnown/DetailComment'
-// import Header from '@/components/common/head/header'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   components: {
     [Icon.name]: Icon,
+    [Popup.name]: Popup,
     [Button.name]: Button,
     [Image.name]: Image,
     [Field.name]: Field,
+    [Dialog.name]: Dialog,
     Comment,
     HeaderSlot,
     // PageHead,
@@ -153,19 +187,14 @@ export default {
     })
     return {
       articleDetails: res.data,
-      headerData: {
-        createrName: res.data.createrName,
-        contentText: res.data.contentText,
-        avatar: res.data.avatar,
-      },
     }
   },
   data() {
     return {
+      popupShow: false,
       articleList: [],
-      headerData: {},
-      showHead2: false,
-      articleDetails: '',
+      showHead: false,
+      // articleDetails: '',
       currentDetailsId: '',
       handleType: '',
       isFollow: false,
@@ -225,6 +254,7 @@ export default {
       const res = await this.$isLogin()
       if (res === 'app_login_success') {
         this.initFollow()
+        return
       }
       this.$axios
         .post(knownApi.home.attention, {
@@ -287,9 +317,6 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.articleDetails = res.data
-            this.headerData.createrName = this.articleDetails.createrName
-            this.headerData.contentText = this.articleDetails.contentText
-            this.headerData.avatar = this.articleDetails.avatar
           } else {
             Toast.fail({
               duration: 2000,
@@ -305,9 +332,9 @@ export default {
       const scrollTop = this.$refs.myPage.getBoundingClientRect().bottom // 滚动条距离顶部的位置
       const than = document.body.clientWidth / 375
       if (scrollTop / than <= ((this.appInfo.statusBarHeight || 0) + 88) / 2) {
-        this.showHead2 = true
+        this.showHead = true
       } else {
-        this.showHead2 = false
+        this.showHead = false
       }
     },
     onLeftClick() {
@@ -392,6 +419,46 @@ export default {
               className: 'my-toast-style',
             })
           }
+        })
+    },
+    editQues(id) {
+      const curId = id
+      this.$router.push({
+        path: '/known/publish/article',
+        query: {
+          id: curId,
+          editType: 2,
+        },
+      })
+    },
+    deleteQues(id) {
+      const curId = id
+      Dialog.confirm({
+        title: '提示',
+        message: '确定要删除吗？',
+      })
+        .then(() => {
+          this.$axios
+            .post(knownApi.content.dlt, {
+              id: curId,
+              currentUserId: this.userInfo.userId,
+            })
+            .then((res) => {
+              if (res.code === 200) {
+                this.$xToast.show({ message: '删除成功' })
+                this.$router.replace({ path: '/known' })
+              } else {
+                Toast.fail({
+                  duration: 2000,
+                  message: '服务异常，请刷新重试！',
+                  forbidClick: true,
+                  className: 'my-toast-style',
+                })
+              }
+            })
+        })
+        .catch((err) => {
+          console.log(err)
         })
     },
   },
@@ -539,7 +606,7 @@ export default {
   height: 96px;
   background: #ffffff;
   padding: 10px 40px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #f4f4f4;
   .applaud {
     display: flex;
     align-items: center;
@@ -708,6 +775,7 @@ export default {
     padding: 0 32px;
     position: relative;
     margin-bottom: 48px;
+    word-break: break-all;
     > .tit {
       display: -webkit-box;
       -webkit-box-orient: vertical;
@@ -775,8 +843,8 @@ export default {
   }
   > .btns {
     display: flex;
-    border-bottom: 1px solid #dddddd;
-    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #f4f4f4;
+    border-top: 1px solid #f4f4f4;
     > .box {
       padding-top: 23px;
       box-sizing: border-box;
@@ -822,7 +890,7 @@ export default {
     font-weight: 500;
     color: #222222;
     bottom: 0;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid #f4f4f4;
   }
 }
 </style>
