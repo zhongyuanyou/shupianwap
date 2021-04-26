@@ -237,6 +237,7 @@ export default {
 <style lang="less" scoped>
 .invitationSearch {
   min-height: 100vh;
+  background: #fff;
   .head {
     width: 100%;
     display: flex;

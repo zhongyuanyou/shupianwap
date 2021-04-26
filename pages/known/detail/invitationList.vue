@@ -241,6 +241,7 @@ export default {
 
 <style lang="less" scoped>
 .invitationList {
+  background: #fff;
   height: 100vh;
   .head {
     height: 88px;

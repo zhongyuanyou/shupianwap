@@ -183,7 +183,8 @@ export default {
   background: #4974f5 !important;
 }
 /deep/ .my-head {
-  background: url('~@/assets/knownImg/daily.png') no-repeat;
+  background: url('https://cdn.shupian.cn/sp-pt/wap/1ho0s5co5gow000.png')
+    no-repeat;
   background-size: 100%;
   box-shadow: none !important;
 }
@@ -209,8 +210,8 @@ export default {
   position: relative;
   .container_head {
     height: 420px;
-    // background: #4974f5;
-    background: url('~@/assets/knownImg/daily.png') no-repeat 100%;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/1ho0s5co5gow000.png')
+      no-repeat 100%;
     background-size: 100%;
     position: relative;
     .header_search {

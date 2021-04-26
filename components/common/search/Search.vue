@@ -18,7 +18,7 @@
         class="search-icon"
         name="sear_ic_sear"
         size="0.3rem"
-        color="#999999"
+        color="#cccccc"
         :style="{ marginLeft: iconLeft + 'rem' }"
       ></my-icon>
       <form v-if="!disabled" action="javascript:return true">
@@ -168,7 +168,7 @@ export default {
       border: none;
       font-size: 30px;
       color: #1a1a1a;
-      color: #999999;
+      color: #cccccc !important;
       white-space: nowrap;
       word-break: normal;
       .textOverflow(1);

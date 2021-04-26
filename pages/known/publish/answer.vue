@@ -91,6 +91,7 @@ export default {
 
 <style lang="less" scoped>
 .answer {
+  background: #fff;
   height: 100%;
   display: flex;
   flex-direction: column;

@@ -8,6 +8,7 @@
         <sp-field
           ref="tileArea"
           v-model.trim="inputVal"
+          style="font-weight: bold"
           :placeholder="custPlaceholder"
           type="textarea"
           maxlength="50"

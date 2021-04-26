@@ -1,5 +1,6 @@
 <template>
-  <div class="pay-page">
+  <div ref="scrollView" class="pay-page" @scroll="scollChange">
+    <Header v-show="showHead" title="订单详情"> </Header>
     <section v-if="hasData">
       <Banner
         :order-status-code="orderData.orderSplitAndCusVo.cusOrderStatusNo"
@@ -84,8 +85,9 @@
             面议</span
           >
           <span v-else class="pay-money"
-            >{{ orderData.orderPayableMoney }}元</span
-          >
+            >{{ orderData.orderPayableMoney }}
+            <span style="font-weight: 400; font-size: 12px">元</span>
+          </span>
         </p>
         <!-- <p class="last-money">
           已付金额:
@@ -309,6 +311,7 @@
 
 <script>
 import { Button, Skeleton, Dialog } from '@chipspc/vant-dgg'
+import Header from '@/components/common/head/header'
 import Banner from '@/components/order/detail/Banner'
 // 服务订单
 import ServeList from '@/components/order/detail/ServeList'
@@ -325,6 +328,7 @@ export default {
     [Button.name]: Button,
     [Skeleton.name]: Skeleton,
     [Dialog.Component.name]: Dialog.Component,
+    Header,
     Banner,
     ServeList,
     TradeList,
@@ -335,6 +339,7 @@ export default {
   mixins: [OrderMixins],
   data() {
     return {
+      showHead: false,
       canCelReasonName: '',
       loading: true,
       hasData: false,
@@ -378,6 +383,15 @@ export default {
     this.tranXy = await this.getProtocol('protocol100033')
   },
   methods: {
+    scollChange() {
+      const scrollTop = this.$refs.scrollView.scrollTop
+      if (scrollTop >= 80) {
+        this.showHead = true
+      } else {
+        this.showHead = false
+      }
+      console.log('scrollTop', scrollTop)
+    },
     onLeftClick() {
       this.$router.back(-1)
     },
@@ -510,6 +524,8 @@ export default {
 .pay-page {
   background: #f5f5f5;
   min-height: 100vh;
+  height: calc(100vh - 40px);
+  overflow-y: scroll;
 }
 .loading-area {
   background: white;
@@ -519,10 +535,10 @@ export default {
 .order-area {
   background: white;
   margin-bottom: 20px;
-  padding: 20px 40px 0 40px;
+  padding: 0 40px 0 40px;
 }
 .price-area {
-  margin-top: 40px;
+  margin-top: 60px;
   padding-bottom: 20px;
   p {
     margin-bottom: 20px;
@@ -554,7 +570,6 @@ export default {
   background: white;
   padding: 40px;
   font-size: 26px;
-  margin-bottom: 100px;
   .order-item {
     font-size: 26px;
     font-family: PingFang SC;
@@ -672,9 +687,6 @@ export default {
   }
 }
 .btn-area {
-  position: fixed;
-  left: 0;
-  bottom: 0;
   margin-top: 20px;
   width: 100%;
   height: 128px;
