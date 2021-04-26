@@ -15,7 +15,7 @@
           @click.native="$router.push('/known/search')"
         >
           <template v-if="isInApp" v-slot:left>
-            <sp-icon name="arrow-left" size="0.4rem" @click.stop="$back()" />
+            <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
           </template>
         </Search>
         <my-icon
@@ -211,7 +211,6 @@ import Search from '@/components/mustKnown/recommend/search/Search'
 import Bottombar from '@/components/common/nav/Bottombar'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi } from '@/api'
-import CoupleSelectVue from '~/components/common/coupleSelected/CoupleSelect.vue'
 
 export default {
   name: 'Index',
@@ -286,39 +285,18 @@ export default {
     // this.containerStyle['padding-top'] = this.appInfo.statusBarHeight + 'px'
     this.appStyle['padding-top'] = this.statusBarHeight * 2 + 'px'
     this.tapSafeApp.height = this.statusBarHeight + 'px'
-
     this.init()
   },
   methods: {
     init() {
-      // console.log('this.tabs++++++++++++++++++', this.tabs)
-      localStorage.setItem('allPlate', JSON.stringify(this.tabs))
-      // 获取所有列表数据
-      const allPlate = JSON.parse(localStorage.getItem('allPlate'))
-      // console.log('allPlate++++++++++++++++++', allPlate)
-      // 获取我的列表数据
-      this.myPlate = JSON.parse(localStorage.getItem('myPlate'))
-      // console.log('this.myPlate++++++++++++++++++', this.myPlate)
-      // if (!allPlate) {
-      //   localStorage.setItem('allPlate', JSON.stringify(this.tabs))
-      // }
-      if (this.myPlate) {
-        this.morePlate = allPlate.filter(
+      if (localStorage.getItem('myPlate')) {
+        this.myPlate = JSON.parse(localStorage.getItem('myPlate'))
+        this.morePlate = this.tabs.filter(
           (item) => !this.myPlate.some((ele) => ele.id === item.id)
         )
-        localStorage.setItem('morePlate', JSON.stringify(this.morePlate))
-      }
-
-      if (localStorage.getItem('morePlate')) {
-        this.morePlate = JSON.parse(localStorage.getItem('morePlate'))
-        const allPlate = JSON.parse(localStorage.getItem('allPlate'))
-        this.myPlate = allPlate.filter(
-          (item) => !this.morePlate.some((ele) => ele.id === item.id)
-        )
-        localStorage.setItem('myPlate', JSON.stringify(this.myPlate))
         this.tabs = this.myPlate
       } else {
-        this.myPlate = JSON.parse(localStorage.getItem('allPlate'))
+        this.myPlate = this.tabs
       }
     },
     toggleTabs() {},
@@ -340,7 +318,7 @@ export default {
         this.showIcon = false
         this.editFinish = '编辑'
         this.status = true
-        localStorage.setItem('morePlate', JSON.stringify(this.morePlate))
+        localStorage.setItem('myPlate', JSON.stringify(this.myPlate))
       }
     },
     // 添加到我的列表中
@@ -623,7 +601,7 @@ export default {
           display: flex;
           flex-flow: row wrap;
           .item {
-            width: 150px;
+            width: 154px;
             height: 88px;
             background: #f5f5f5;
             border-radius: 44px;
@@ -644,7 +622,7 @@ export default {
               right: 0;
             }
             > .item_name {
-              width: 130px;
+              width: 84px;
               // height: 28px;
               text-align: center;
               font-size: 26px;
