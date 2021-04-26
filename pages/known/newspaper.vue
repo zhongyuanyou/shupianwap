@@ -1,15 +1,8 @@
 <template>
   <div class="container">
-    <div
-      class="container_head"
-      :style="{
-        paddingTop: appInfo.statusBarHeight
-          ? appInfo.statusBarHeight + 'px'
-          : '0px',
-      }"
-    >
-      <sp-sticky @scroll="scrollHandle">
-        <div class="header_search">
+    <HeaderSlot>
+      <div class="flex">
+        <div>
           <my-icon
             name="nav_ic_back"
             size="0.40rem"
@@ -17,7 +10,9 @@
             class="my_icon"
             @click.native="back()"
           ></my-icon>
-          <div v-show="showPaper" class="newspaperTitle">日报精选</div>
+        </div>
+        <div class="newspaperTitle">日报精选</div>
+        <div>
           <my-icon
             name="sear_ic_sear"
             size="0.40rem"
@@ -26,11 +21,34 @@
             @click.native="$router.push({ path: '/known/search' })"
           ></my-icon>
         </div>
+      </div>
+    </HeaderSlot>
+    <div class="container_head">
+      <sp-sticky @scroll="scrollHandle">
+        <!-- <div class="header_search"> -->
+        <!-- <my-icon
+            name="nav_ic_back"
+            size="0.40rem"
+            color="#FFFFFF"
+            class="my_icon"
+            @click.native="back()"
+          ></my-icon> -->
+        <!-- <div v-show="showPaper" class="newspaperTitle">日报精选</div> -->
+        <!-- <my-icon
+            name="sear_ic_sear"
+            size="0.40rem"
+            color="#FFFFFF"
+            class="my_icon"
+            @click.native="$router.push({ path: '/known/search' })"
+          ></my-icon> -->
+        <!-- </div> -->
       </sp-sticky>
-      <div class="newspaper">日报精选</div>
-      <div class="day_num">{{ new Date().getDate() }}</div>
-      <div class="weekday">{{ getWekDay() }}</div>
-      <div class="title">专属必懂带逛小助手，带你发现并懂精品</div>
+      <div>
+        <!-- <div class="newspaper">日报精选</div> -->
+        <div class="day_num">{{ new Date().getDate() }}</div>
+        <div class="weekday">{{ getWekDay() }}</div>
+        <!-- <div class="title">专属必懂带逛小助手，带你发现并懂精品</div> -->
+      </div>
     </div>
 
     <div class="container_body">
@@ -40,18 +58,21 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { Sticky } from '@chipspc/vant-dgg'
+import { Sticky, Icon } from '@chipspc/vant-dgg'
 import ProblemItem from '@/components/mustKnown/recommend/ProblemItem'
 import { knownApi } from '@/api'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   name: 'Recommend',
   components: {
     [Sticky.name]: Sticky,
     ProblemItem,
+    HeaderSlot,
   },
   data() {
     return {
       name: '',
+      [Icon.name]: Icon,
       description: '',
       categorIds: [],
       newspaperData: [],
@@ -162,11 +183,40 @@ export default {
   background: #4974f5;
   border-radius: 3px;
 }
+/deep/ .fixed-head {
+  position: absolute !important;
+  background: #4974f5 !important;
+}
+/deep/ .my-head {
+  background: url('~@/assets/knownImg/daily.png') no-repeat;
+  background-size: 100%;
+  box-shadow: none !important;
+}
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 0.88rem;
+  padding: 0 0.32rem;
+  // background: #4974f5;
+  div {
+    display: flex;
+    height: 0.88rem;
+    align-items: center;
+  }
+  .newspaperTitle {
+    font-size: 36px;
+    font-weight: 500;
+    color: #ffffff;
+  }
+}
 .container {
   position: relative;
   .container_head {
-    height: 380px;
-    background: #4974f5;
+    height: 420px;
+    // background: #4974f5;
+    background: url('~@/assets/knownImg/daily.png') no-repeat 100%;
+    background-size: 100%;
     position: relative;
     .header_search {
       padding: 0 34px;
@@ -176,8 +226,6 @@ export default {
       justify-content: space-between;
       align-items: center;
       background: #4974f5;
-      .my_icon {
-      }
       .newspaperTitle {
         height: 50px;
         font-size: 36px;
@@ -189,7 +237,7 @@ export default {
     }
     .newspaper {
       position: absolute;
-      top: 186px;
+      top: 100px;
       left: 40px;
       font-size: 52px;
       font-family: AlibabaPuHuiTiH;
@@ -198,7 +246,7 @@ export default {
     }
     .day_num {
       position: absolute;
-      top: 186px;
+      top: 218px;
       right: 60px;
       height: 56px;
       font-size: 56px;
@@ -208,7 +256,7 @@ export default {
     }
     .weekday {
       position: absolute;
-      top: 264px;
+      top: 300px;
       right: 64px;
       height: 26px;
       font-size: 26px;
@@ -219,7 +267,7 @@ export default {
     }
     .title {
       position: absolute;
-      top: 264px;
+      top: 174px;
       left: 40px;
       font-size: 26px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -236,7 +284,7 @@ export default {
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
     position: absolute;
-    top: 350px;
+    top: 370px;
   }
 }
 </style>

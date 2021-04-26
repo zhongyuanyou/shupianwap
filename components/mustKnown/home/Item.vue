@@ -41,7 +41,7 @@
         @click="like(item)"
       >
         <my-icon
-          name="zantong"
+          name="zantong_mian"
           size="0.36rem"
           :color="item.isApplaudFlag ? '#4974f5' : '#999999'"
         ></my-icon>

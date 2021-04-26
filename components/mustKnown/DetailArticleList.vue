@@ -90,7 +90,7 @@ export default {
     font-weight: 500;
     color: #222222;
     line-height: 39px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #f4f4f4;
     padding: 40px 0;
     .left {
       flex: 1;
