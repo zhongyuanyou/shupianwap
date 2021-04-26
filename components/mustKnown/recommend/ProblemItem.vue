@@ -224,11 +224,12 @@ export default {
       font-weight: 400;
       color: #555555;
       line-height: 54px;
-      padding: 20px 0;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 4;
+      margin: 20px 0;
       overflow: hidden;
-      word-break: break-all;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 4; /* 超出n行这里写n */
+      -webkit-box-orient: vertical;
     }
     img {
       display: block;
