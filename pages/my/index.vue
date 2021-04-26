@@ -89,11 +89,7 @@
       </div>
       <div class="my_btns_item" @click="handleClick(3)">
         <div class="my_btns_item_icon">
-          <my-icon
-            name="personal_ic_authenticate"
-            size="0.36rem"
-            color="#00B365"
-          />
+          <my-icon name="shimingrenzheng" size="0.36rem" color="#00B365" />
         </div>
         <div class="my_btns_item_con">
           实名认证
