@@ -200,7 +200,7 @@ export default {
       articleList: [],
       headerData: {},
       showHead: false,
-      articleDetails: '',
+      // articleDetails: '',
       currentDetailsId: '',
       handleType: '',
       isFollow: false,
