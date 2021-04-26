@@ -255,12 +255,13 @@ export default {
       }
     }
     > .btn {
-      width: 310px;
+      width: 350px;
       font-size: 32px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #4974f5;
       margin: 0 auto 24px auto;
+      text-align: center;
       .icon {
         margin-left: 12px;
         vertical-align: -1px;
