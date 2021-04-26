@@ -205,17 +205,26 @@ export default {
               this.$route.query.type === 'shopcar'
                 ? this.$parent.order.skuTotalPrice
                 : this.$parent.order.salesPrice,
-            culation: this.checkarr.marketingCouponVO.reducePrice || 0,
+            culation: this.checkarr
+              ? this.checkarr.marketingCouponVO
+                ? this.checkarr.marketingCouponVO.reducePrice
+                : 0
+              : 0,
           }
         )
         .then((result) => {
           this.$parent.price = result
           this.$parent.popupshow = false
-          this.$parent.coupon = `-${this.checkarr.marketingCouponVO.reducePrice}`
+          this.$parent.coupon = this.checkarr
+            ? this.checkarr.marketingCouponVO
+              ? `-${this.checkarr.marketingCouponVO.reducePrice}`
+              : ''
+            : ''
           this.$parent.skeletonloading = false
         })
         .catch((e) => {
           this.$parent.skeletonloading = false
+          console.log(e)
           Toast({
             message: e.data.error,
             iconPrefix: 'sp-iconfont',

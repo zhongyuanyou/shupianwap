@@ -368,7 +368,7 @@ export default {
           throw message
         }
       } catch (err) {
-        this.$xToast.show(err.message)
+        this.$xToast.show('请求数据失败，请稍后再试')
         console.log(err)
         setTimeout(function () {
           that.$router.back(-1)
@@ -437,7 +437,10 @@ export default {
           cusOrderPayType = this.order.refConfig.payType
           isFromCart = false
         }
-        if (this.$refs.conpon.checkarr.marketingCouponVO.id) {
+        if (
+          this.$refs.conpon.checkarr &&
+          this.$refs.conpon.checkarr.marketingCouponVO.id
+        ) {
           const arr = {
             code: 'ORDER_DISCOUNT_DISCOUNT',
             value: this.$refs.conpon.checkarr.marketingCouponVO.id,
@@ -597,6 +600,7 @@ export default {
           > img {
             width: 100%;
             height: 100%;
+            border-radius: 8px;
             object-fit: cover;
           }
         }
