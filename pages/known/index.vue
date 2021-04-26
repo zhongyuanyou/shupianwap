@@ -15,7 +15,7 @@
           @click.native="$router.push('/known/search')"
         >
           <template v-if="isInApp" v-slot:left>
-            <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
+            <sp-icon name="arrow-left" size="0.4rem" @click.stop="$back()" />
           </template>
         </Search>
         <my-icon
@@ -623,7 +623,7 @@ export default {
           display: flex;
           flex-flow: row wrap;
           .item {
-            width: 154px;
+            width: 150px;
             height: 88px;
             background: #f5f5f5;
             border-radius: 44px;
@@ -644,7 +644,7 @@ export default {
               right: 0;
             }
             > .item_name {
-              width: 84px;
+              width: 130px;
               // height: 28px;
               text-align: center;
               font-size: 26px;

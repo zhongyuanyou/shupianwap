@@ -141,10 +141,10 @@ export default {
         this.$xToast.error('正在处理中,请稍后')
         return
       }
+      if (this.fromPage === 'answer') {
+        this.buildAnswerParams()
+      }
       if (!this.editType || this.editType === 1) {
-        if (this.fromPage === 'answer') {
-          this.buildAnswerParams()
-        }
         this.addContent()
       } else {
         this.modifyContent()
@@ -293,7 +293,11 @@ export default {
       return true
     },
     buildAnswerParams() {
-      this.formData.sourceId = this.questionId
+      if (this.editType === '2') {
+        this.formData.sourceId = this.sourceId
+      } else {
+        this.formData.sourceId = this.questionId
+      }
       this.formData.title = this.questionInfo.title
       this.formData.categoryCode = this.questionInfo.categoryCode
       this.formData.categoryId = this.questionInfo.categoryId

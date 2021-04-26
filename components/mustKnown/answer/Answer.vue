@@ -141,7 +141,7 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid #f4f4f4;
     -webkit-transform: scaleY(0.6);
     transform: scaleY(0.6);
   }

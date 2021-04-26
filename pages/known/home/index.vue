@@ -369,13 +369,15 @@ export default {
     }
   }
   .header_fixed {
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid #f4f4f4;
     background: #ffffff;
   }
 
   .top_box {
     padding-top: 320px;
-    background: #026ac3;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/images/dkl5m4sxqyo0000.png')
+      top right no-repeat;
+    background-size: contain;
     .card {
       position: relative;
       background-color: #ffffff;
@@ -475,7 +477,7 @@ export default {
   .bottom_box {
     background-color: #f8f8f8;
     /deep/ .sp-tabs {
-      border-bottom: 1px solid #dddddd;
+      border-bottom: 1px solid #f4f4f4;
     }
     /deep/ .sp-tab {
       font-size: 30px;

@@ -46,7 +46,7 @@
               :src="answerDetails.avatar"
               @click="goUser(answerDetails.userId, answerDetails.userType)"
             />
-            <div class="infos">{{ answerDetails.createrName }}</div>
+            <div class="infos">{{ answerDetails.userName }}</div>
             <template v-if="answerDetails.createrId !== userInfo.userId">
               <div v-if="!isFollow" class="btn" @click="follow">
                 <sp-button
@@ -75,7 +75,7 @@
           :src="answerDetails.avatar"
           @click="goUser(answerDetails.userId, answerDetails.userType)"
         />
-        <div class="infos">{{ answerDetails.createrName }}</div>
+        <div class="infos">{{ answerDetails.userName }}</div>
         <template v-if="answerDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
             <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
@@ -545,7 +545,7 @@ export default {
     font-weight: 500;
     color: #222222;
     bottom: 0;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid #f4f4f4;
   }
 }
 .head1 {
@@ -727,7 +727,7 @@ export default {
   height: 96px;
   background: #ffffff;
   padding: 10px 40px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #4f4f4f;
   .applaud {
     display: flex;
     align-items: center;

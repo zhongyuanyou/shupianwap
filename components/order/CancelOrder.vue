@@ -25,7 +25,17 @@
                   :key="index2"
                   class="p2"
                 >
-                  <span class="name">{{ item2.spuName }}</span>
+                  <!-- <span class="name">{{ item2.spuName }}</span> -->
+                  <span
+                    v-if="
+                      item2.payStatusNo === 'ORDER_CUS_PAY_STATUS_UN_PAID' &&
+                      item2.classifyOneName.match('公司')
+                    "
+                    class="name"
+                  >
+                    {{ item2.spuHideName || item2.spuName }}</span
+                  >
+                  <span v-else class="name"> {{ item2.spuName }}</span>
                   <span class="num">×{{ item2.skuCount }}</span>
                 </p>
               </div>

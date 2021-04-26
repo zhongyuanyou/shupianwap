@@ -695,7 +695,7 @@ export default {
     font-weight: 500;
     color: #222222;
     bottom: 0;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid #f4f4f4;
   }
 }
 
@@ -851,8 +851,8 @@ export default {
     }
     > .btns {
       display: flex;
-      border-bottom: 1px solid #dddddd;
-      border-top: 1px solid #dddddd;
+      border-bottom: 1px solid #f4f4f4;
+      border-top: 1px solid #f4f4f4;
       > .box {
         padding-top: 23px;
         box-sizing: border-box;
@@ -930,7 +930,7 @@ export default {
     }
     > .listbox {
       margin: 0 32px;
-      border-top: 1px solid #dddddd;
+      border-top: 1px solid #f4f4f4;
       padding-bottom: 58px;
       > .list {
         display: flex;
@@ -978,7 +978,7 @@ export default {
     > .head {
       padding: 0 32px;
       height: 96px;
-      // border-bottom: 1px solid #dddddd;
+      // border-bottom: 1px solid #f4f4f4;
       display: flex;
       align-items: center;
       background: #fff;
@@ -1038,7 +1038,7 @@ export default {
       right: 0;
       bottom: 0;
       left: 0;
-      border-bottom: 1px solid #dddddd;
+      border-bottom: 1px solid #f4f4f4;
       -webkit-transform: scaleY(0.6);
       transform: scaleY(0.6);
     }

@@ -48,9 +48,8 @@ export default {
   data() {
     return {
       fromPage: 'article',
-      questionInfo: {},
       editType: '', // editType=1为编写文章 editType=2 为新发文章
-      articleId: '',
+      questionId: '',
       mytopics: [],
     }
   },
@@ -72,13 +71,13 @@ export default {
 
     if (this.$route.query.editType === '2') {
       this.editType = this.$route.query.editType
+      // 这里的 this.questionId 其实是赋值给 this.getDetailByIdApi 这个接口 这个 id 是文章id
       this.questionId = this.$route.query.id
       this.formData.id = this.questionId
-      this.formData.sourceId = this.questionId
+      // this.formData.sourceId = this.questionId
       const _this = this
       _this.getDetailByIdApi().then(({ code, data }) => {
         if (code === 200) {
-          _this.questionInfo = data
           _this.formData.title = data.title
           _this.formData.content = data.content
           // start: init 话题部分参数,当用户没有点击更改话题时,则使用查询问题中的值
