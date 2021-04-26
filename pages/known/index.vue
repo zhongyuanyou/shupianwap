@@ -289,13 +289,13 @@ export default {
   },
   methods: {
     init() {
-      if (localStorage.getItem('myPlate')) {
-        this.myPlate = JSON.parse(localStorage.getItem('myPlate'))
-        this.morePlate = this.tabs.filter(
-          (item) => !this.myPlate.some((ele) => ele.id === item.id)
+      if (localStorage.getItem('morePlate')) {
+        this.morePlate = JSON.parse(localStorage.getItem('morePlate'))
+        this.myPlate = this.tabs.filter(
+          (item) => !this.morePlate.some((ele) => ele.id === item.id)
         )
-        this.myPlate = this.tabs.filter((item) =>
-          this.myPlate.some((ele) => ele.id === item.id)
+        this.morePlate = this.tabs.filter((item) =>
+          this.morePlate.some((ele) => ele.id === item.id)
         )
         this.tabs = this.myPlate
       } else {
@@ -321,7 +321,7 @@ export default {
         this.showIcon = false
         this.editFinish = '编辑'
         this.status = true
-        localStorage.setItem('myPlate', JSON.stringify(this.myPlate))
+        localStorage.setItem('morePlate', JSON.stringify(this.morePlate))
       }
     },
     // 添加到我的列表中

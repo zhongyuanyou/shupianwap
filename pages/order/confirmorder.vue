@@ -1,6 +1,16 @@
 <template>
   <div class="PlaceOrder">
-    <Head v-show="!editShow" ref="head" title="确认订单"></Head>
+    <Head v-show="!editShow" ref="head" title="确认订单">
+      <template #left>
+        <my-icon
+          class="back-icon"
+          name="nav_ic_back"
+          size="0.4rem"
+          color="#1A1A1A"
+          @click.native="onLeftClick"
+        ></my-icon>
+      </template>
+    </Head>
     <sp-skeleton
       v-for="_index in 10"
       :key="_index"
@@ -296,6 +306,9 @@ export default {
     this.getProtocol('protocol100008')
   },
   methods: {
+    onLeftClick() {
+      this.$router.back()
+    },
     goagr() {
       this.$router.push({
         name: 'login-protocol',
