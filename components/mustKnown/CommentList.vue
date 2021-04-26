@@ -61,6 +61,7 @@
         <sp-field
           v-model.trim="content"
           maxlength="100"
+          style="font-size: 16px"
           placeholder="请输入您的评论内容"
         />
         <p

@@ -272,7 +272,7 @@ export default {
   font-weight: 500;
   color: #4974f5;
   background: white;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #f4f4f4;
   z-index: 2;
   .item {
     margin-right: 10px;

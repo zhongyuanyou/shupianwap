@@ -11,7 +11,7 @@
           />
           <div class="btn-area">
             <span @click="onInvite">
-              <my-icon name="yaoqing" size="0.36rem"></my-icon>
+              <my-icon name="yaoqinghuida_mian" size="0.36rem"></my-icon>
               邀请</span
             >
             <span
@@ -618,6 +618,7 @@ export default {
         display: block;
         float: left;
         font-size: 30px;
+        border-radius: 12px;
         font-family: PingFangSC-Medium, PingFang SC;
         font-weight: 500;
         color: #4974f5;
@@ -636,7 +637,7 @@ export default {
 }
 .title-area {
   padding: 20px 40px;
-  border-bottom: 2px solid #ddd;
+  border-bottom: 2px solid #f4f4f4;
   .title {
     font-size: 40px;
     font-family: PingFangSC-Medium, PingFang SC;
@@ -688,6 +689,7 @@ export default {
         width: 100%;
         height: 100%;
         background: none;
+        border-radius: 12px;
         color: rgba(73, 116, 245, 1);
         display: block;
         float: left;
@@ -727,7 +729,7 @@ export default {
   height: 96px;
   background: #ffffff;
   padding: 10px 40px;
-  border-top: 1px solid #4f4f4f;
+  border-top: 1px solid #f4f4f4;
   .applaud {
     display: flex;
     align-items: center;
@@ -761,6 +763,9 @@ export default {
         line-height: 0;
       }
     }
+    .text {
+      margin-top: 1px;
+    }
   }
   .left-area {
     float: left;
@@ -790,12 +795,13 @@ export default {
       }
     }
     .text {
-      border-right: 1px solid #ddd;
+      border-right: 1px solid #f4f4f4;
       margin-right: 20px;
       font-size: 24px;
       color: #4974f5;
       font-weight: 500;
       padding-right: 20px;
+      margin-top: 1px;
     }
   }
   .right-area {
@@ -810,10 +816,11 @@ export default {
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
       color: #999999;
-      font-size: 28px;
+      font-size: 20px;
       .icon {
         width: 100%;
         height: 40px;
+        margin-bottom: 5px;
       }
     }
   }

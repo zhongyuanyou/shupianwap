@@ -28,7 +28,14 @@
     <div v-if="knownHistory.length" class="history">
       <div class="tile">
         <h1>历史记录</h1>
-        <span @click="clearHistory">清空</span>
+        <span @click="clearHistory">
+          <my-icon
+            class="clock"
+            name="shanchu"
+            size="0.32rem"
+            color="#999999"
+          ></my-icon>
+        </span>
       </div>
       <ul class="box">
         <li
@@ -48,7 +55,7 @@
             name="cross"
             class="close"
             size="0.3rem"
-            color="#555555"
+            color="#CCCCCC"
             @click.stop="del(index)"
           />
         </li>
@@ -235,18 +242,6 @@ export default {
           margin-left: auto;
           margin-right: 32px;
         }
-      }
-      li::after {
-        position: absolute;
-        box-sizing: border-box;
-        content: ' ';
-        pointer-events: none;
-        right: 30px;
-        bottom: 0;
-        left: 8px;
-        border-bottom: 1px solid #f4f4f4;
-        -webkit-transform: scaleY(0.6);
-        transform: scaleY(0.6);
       }
     }
   }

@@ -198,7 +198,7 @@ export default {
     .sp-tabs__wrap {
       height: 72px;
       padding-bottom: 8px;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #f4f4f4;
       .sp-tab {
         font-size: 30px;
         font-family: PingFangSC-Regular, PingFang SC;
@@ -228,20 +228,7 @@ export default {
     padding: 40px 0;
     font-size: 28px;
     color: #222;
-    // border-bottom: 1px solid #ddd;
-    position: relative;
-    &::after {
-      position: absolute;
-      box-sizing: border-box;
-      content: ' ';
-      pointer-events: none;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      border-bottom: 1px solid #f4f4f4;
-      -webkit-transform: scaleY(0.6);
-      transform: scaleY(0.6);
-    }
+    border-bottom: 1px solid #f4f4f4;
     .view-num {
       font-size: 28px;
       font-family: PingFangSC-Regular, PingFang SC;

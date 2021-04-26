@@ -421,9 +421,9 @@ export default {
     }
   }
   > .userlist {
-    background: #fff;
-    margin-top: 20px;
-    padding-top: 40px;
+    // background: #fff;
+    // margin-top: 20px;
+    // padding-top: 40px;
     .list {
       display: flex;
       padding-top: 20px;
