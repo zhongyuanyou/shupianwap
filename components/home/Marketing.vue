@@ -19,6 +19,7 @@
             v-for="(imgItem, imgIndex) in item.imgs"
             :key="imgIndex"
             :src="imgItem"
+            :style="imgWidth"
             alt=""
             srcset=""
             @click="adJumpHandleMixin(imgItem)"
@@ -26,17 +27,15 @@
         </div>
         <!-- 限时秒杀 -->
         <div v-if="index === 3" class="imgs">
-          <section
+          <img
             v-for="(subsidyItem, subIndex) in subsidyData"
             :key="subIndex"
-          >
-            <img
-              :src="subsidyItem.materialList[0].materialUrl"
-              alt=""
-              srcset=""
-              @click="adJumpHandleMixin(subsidyItem.materialList[0])"
-            />
-          </section>
+            :src="subsidyItem.materialList[0].materialUrl"
+            alt=""
+            srcset=""
+            :style="{ width: imgWidth }"
+            @click="adJumpHandleMixin(subsidyItem.materialList[0])"
+          />
           <!-- <img
             v-for="(subsidyItem, imgIndex) in subsidyData"
             :key="imgIndex"
@@ -68,6 +67,7 @@ export default {
   },
   mixins: [adJumpHandle],
   props: {
+    // 千万补贴广告
     subsidyData: {
       type: Array,
       default() {
@@ -115,6 +115,11 @@ export default {
         },
       ],
     }
+  },
+  computed: {
+    imgWidth() {
+      return this.subsidyData && this.subsidyData.length > 1 ? '48%' : '100%'
+    },
   },
   methods: {
     linkUrl(url) {
@@ -171,24 +176,23 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(153, 153, 153, 1);
-    line-height: 26px;
+    line-height: 32px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
   .sp-goods-des {
-    height: 26px;
     font-size: 26px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(153, 153, 153, 1);
-    line-height: 26px;
+    line-height: 32px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
   p {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
   }
   .imgs {
     width: 315px;

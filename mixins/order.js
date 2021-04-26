@@ -198,6 +198,7 @@ const orderStatusObj = {
 export default {
   data() {
     return {
+      remainTotalPayIds: '', // 分批支付剩余支付批次id
       addOrderXy: {},
       tranXy: {},
       showMydialog: false,
@@ -430,8 +431,6 @@ export default {
         })
         this.thisTimePayTotal = this.regFenToYuan(thisTimePayTotal)
         this.allTimePayTotal = this.regFenToYuan(allTimePayTotal)
-        console.log('this.thisTimePayTotal', this.thisTimePayTotal)
-        console.log('this.allTimePayTotal', this.allTimePayTotal)
         this.batchIds = idsArr.join(',')
         this.remainTotalPayIds = remainTotalPayIdsArr.join(',')
         // 是分批支付则弹起分批支付弹窗 关闭关联订单弹窗
@@ -642,7 +641,6 @@ export default {
     },
     // 根据操作类型进行不同的任务
     switchOptionType() {
-      console.log('this.orderData.orderList', this.orderData.orderList)
       this.$refs.cancleOrderModel.orderList = this.orderData.orderList
       if (this.opType === 'cancelOrder') {
         // 弹出取消订单弹窗
