@@ -395,6 +395,17 @@ export default {
           this.orderData.statusName = this.getStatusName(
             this.orderData.orderStatusNo
           )
+          if (
+            this.orderData.cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+            this.orderData.payStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
+          ) {
+            // 先定金后尾款部分支付的订单状态为办理中
+            this.orderData.statusName = '办理中'
+          } else {
+            this.orderData.statusName = this.getStatusName(
+              this.orderData.orderStatusNo
+            )
+          }
           this.cusOrderStatusType = orderUtils.checkCusOrderStatus(
             this.orderData.cusOrderStatusNo
           )

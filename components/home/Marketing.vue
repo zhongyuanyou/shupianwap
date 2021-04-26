@@ -14,15 +14,37 @@
         <p v-if="item.productDescript" class="sp-goods-des">
           {{ item.productDescript }}
         </p>
-        <div v-if="item.imgs && item.imgs.length" class="imgs">
+        <div v-if="index !== 3 && item.imgs && item.imgs.length" class="imgs">
           <img
             v-for="(imgItem, imgIndex) in item.imgs"
             :key="imgIndex"
             :src="imgItem"
             alt=""
             srcset=""
-            @click="adJumpHandleMixin(item)"
+            @click="adJumpHandleMixin(imgItem)"
           />
+        </div>
+        <!-- 限时秒杀 -->
+        <div v-if="index === 3" class="imgs">
+          <section
+            v-for="(subsidyItem, subIndex) in subsidyData"
+            :key="subIndex"
+          >
+            <img
+              :src="subsidyItem.materialList[0].materialUrl"
+              alt=""
+              srcset=""
+              @click="adJumpHandleMixin(subsidyItem.materialList[0])"
+            />
+          </section>
+          <!-- <img
+            v-for="(subsidyItem, imgIndex) in subsidyData"
+            :key="imgIndex"
+            :src="imgItem"
+            alt=""
+            srcset=""
+            @click="adJumpHandleMixin(imgItem)"
+          /> -->
         </div>
         <sp-button
           v-if="item.buttonText"
@@ -45,6 +67,14 @@ export default {
     [Button.name]: Button,
   },
   mixins: [adJumpHandle],
+  props: {
+    subsidyData: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+  },
   data() {
     return {
       list: [
