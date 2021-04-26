@@ -437,10 +437,11 @@ export default {
           cusOrderPayType = this.order.refConfig.payType
           isFromCart = false
         }
-        if (this.$refs.conpon.checkarr.id) {
+        if (this.$refs.conpon.checkarr.marketingCouponVO.id) {
           const arr = {
             code: 'ORDER_DISCOUNT_DISCOUNT',
-            value: this.$refs.conpon.checkarr.id,
+            value: this.$refs.conpon.checkarr.marketingCouponVO.id,
+            couponUseCode: this.$refs.conpon.checkarr.couponUseCode,
           }
           this.Orderform.discount.push(arr)
         }
@@ -526,19 +527,19 @@ export default {
         )
         .then((result) => {
           if (index === 5) {
-            this.datalist = result
+            this.datalist = result.marketingCouponLogList
             this.datalist = this.datalist.sort(this.sortData)
             if (this.datalist.length > 0) {
               this.conpon = this.datalist[0]
               this.$refs.conpon.radio = 0
               this.$refs.conpon.checkarr = this.datalist[0]
-              this.$refs.conpon.num = this.$refs.conpon.checkarr.reducePrice
+              this.$refs.conpon.num = this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
               this.$refs.conpon.sum()
             } else {
               this.skeletonloading = false
             }
           } else {
-            this.nolist = result
+            this.nolist = result.marketingCouponLogList
             this.skeletonloading = false
           }
         })
