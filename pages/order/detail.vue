@@ -293,6 +293,8 @@
       :batch-pay-status="batchPayStatus"
       :this-time-pay-total="thisTimePayTotal"
       :batch-ids="batchIds"
+      :all-time-pay-total="allTimePayTotal"
+      :remain-total-pay-ids="remainTotalPayIds"
     />
     <CancelOrder
       ref="cancleOrderModel"
