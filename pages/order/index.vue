@@ -240,7 +240,15 @@ export default {
           const arr = res.records
           for (let i = 0, l = arr.length; i < l; i++) {
             this.changeMoney(arr[i])
-            arr[i].statusName = this.getStatusName(arr[i].orderStatusNo)
+            if (
+              arr[i].cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+              arr[i].payStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
+            ) {
+              // 部分支付的订单状态为办理中
+              arr[i].statusName = '办理中'
+            } else {
+              arr[i].statusName = this.getStatusName(arr[i].orderStatusNo)
+            }
           }
           if (this.page === 1) {
             this.list = arr
