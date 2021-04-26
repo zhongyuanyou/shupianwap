@@ -9,6 +9,7 @@
         v-for="(item, index) in orderData.orderSkuList"
         :key="index"
         class="item"
+        :class="'item' + index"
       >
         <ServeItem
           :item="item"
@@ -139,10 +140,13 @@ export default {
   transition: height 0.5s;
 }
 .item {
-  padding: 20px 0;
+  padding: 40px 0 20px 0;
   height: auto;
-  margin-bottom: 20px;
   display: flex;
-  border-bottom: 1px solid #f4f4f4;
+  border-top: 1px solid #f4f4f4;
+}
+.item0 {
+  border: none;
+  border-top: none;
 }
 </style>

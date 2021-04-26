@@ -1,7 +1,10 @@
 <template>
   <div
     v-if="isShow"
-    :class="{ 'fixed-head': fixed, 'safe-area-top': useSafeAreaClass }"
+    :class="{
+      'fixed-head': fixed,
+      'safe-area-top': useSafeAreaClass,
+    }"
     :style="{
       height: headHeight,
       'padding-top': safeTop + 'px',
@@ -10,7 +13,7 @@
   >
     <div
       class="my-head"
-      :class="myHeadClass"
+      :class="{ myHeadClass, 'no-shadow': hideShadow }"
       :style="{
         height: headHeight,
         'padding-top': safeTop + 'px',
@@ -80,6 +83,11 @@ export default {
       default() {
         return {}
       },
+    },
+    // 隐藏shadow
+    hideShadow: {
+      type: Boolean,
+      default: () => false,
     },
   },
   data() {
@@ -203,5 +211,8 @@ export default {
     top: 0;
     z-index: 999;
   }
+}
+.no-shadow {
+  box-shadow: none;
 }
 </style>
