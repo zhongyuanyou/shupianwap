@@ -189,7 +189,8 @@ export default {
   }
   > .top {
     height: 420px;
-    background: url('~@/assets/knownImg/mustSee.png') no-repeat 100%;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
+      no-repeat 100%;
     background-size: 100%;
   }
   > .listbox {
@@ -314,7 +315,8 @@ export default {
   background: #4974f5 !important;
 }
 /deep/ .my-head {
-  background: url('~@/assets/knownImg/mustSee.png') no-repeat;
+  background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
+    no-repeat;
   background-size: 100%;
   box-shadow: none !important;
 }

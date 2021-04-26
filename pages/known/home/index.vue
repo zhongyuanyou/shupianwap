@@ -347,6 +347,7 @@ export default {
 <style lang="less" scoped>
 .home_container {
   height: 100%;
+  background: #fff;
   .header {
     z-index: 10;
     position: fixed;

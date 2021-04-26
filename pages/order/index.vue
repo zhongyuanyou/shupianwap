@@ -1,6 +1,11 @@
 <template>
   <div ref="orderPage" class="order-page">
-    <Header v-if="!isInApp && !isApplets" title="我的订单" :hide-back="true">
+    <Header
+      v-if="!isInApp && !isApplets"
+      title="我的订单"
+      :hide-back="true"
+      :hide-shadow="true"
+    >
       <template #right>
         <div class="btn-car" @click="toCar">购物车</div>
       </template>
@@ -338,7 +343,7 @@ export default {
   }
   .page-list {
     padding-bottom: 140px;
-    margin-top: 108px;
+    margin-top: 88px;
     height: calc(100vh - 200px);
     overflow-y: scroll;
   }

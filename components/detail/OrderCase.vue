@@ -53,7 +53,7 @@
         </div>
       </div>
       <div v-if="ordercase.list.length > 3" class="btn" @click="show = !show">
-        查看全部办理流程
+        {{ show ? '收起' : '查看' }}全部办理流程
         <sp-icon
           :name="show ? 'arrow-up' : 'arrow-down'"
           size="0.3rem"

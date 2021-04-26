@@ -245,13 +245,13 @@ export default {
 
 <style lang="less" scoped>
 .price3 {
-  color: #666;
+  color: #222;
   font-size: 28px;
   font-weight: 600;
 }
 .item {
   width: auto;
-  padding: 20px 40px;
+  padding: 32px 40px;
   height: auto;
   background: white;
   margin-top: 20px;
@@ -384,8 +384,9 @@ export default {
     .inner {
       float: right;
       margin-bottom: 10px;
-      height: 110px;
+      height: auto;
       margin-top: -20px;
+      padding: 0 24px;
       .sp-button {
         font-size: 26px;
         height: 64px;
