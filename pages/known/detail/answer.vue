@@ -589,12 +589,10 @@ export default {
     }
     .infos {
       flex: 1;
-      height: 26px;
-      font-size: 26px;
+      font-size: 0.3rem;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
-      color: #999999;
-      line-height: 26px;
+      color: #222;
       padding-left: 20px;
       p {
         font-size: 30px;
