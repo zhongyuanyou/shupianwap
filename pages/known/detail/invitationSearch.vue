@@ -271,7 +271,7 @@ export default {
       color: #1a1a1a;
     }
     // /deep/.sp-sticky {
-    //   border-bottom: 1px solid #dddddd;
+    //   border-bottom: 1px solid #f4f4f4;
     //   .search-content {
     //     padding: 0 24px;
     //     height: 88px;

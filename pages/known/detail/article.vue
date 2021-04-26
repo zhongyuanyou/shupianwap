@@ -852,7 +852,7 @@ export default {
   }
   > .btns {
     display: flex;
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid #f4f4f4;
     border-top: 1px solid #dddddd;
     > .box {
       padding-top: 23px;
