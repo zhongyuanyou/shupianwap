@@ -256,7 +256,7 @@ export default {
   right: 16px;
   bottom: 0;
   left: 16px;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #f4f4f4;
   -webkit-transform: scaleY(0.6);
   transform: scaleY(0.6);
 }

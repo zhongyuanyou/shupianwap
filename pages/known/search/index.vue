@@ -244,7 +244,7 @@ export default {
         right: 30px;
         bottom: 0;
         left: 8px;
-        border-bottom: 1px solid #dddddd;
+        border-bottom: 1px solid #f4f4f4;
         -webkit-transform: scaleY(0.6);
         transform: scaleY(0.6);
       }
