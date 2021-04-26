@@ -4,7 +4,6 @@ import { CHIPS_APP_BASE_URL, CHIPS_WAP_BASE_URL } from '@/config/constant'
 const category = {
   // 订单列表
   list({ axios }, params) {
-    console.log('paramsparams', params)
     return request({
       axios,
       params,
@@ -14,7 +13,6 @@ const category = {
   },
   // 客户单列表
   cusList({ axios }, params) {
-    console.log('paramsparams', params)
     return request({
       axios,
       params,
