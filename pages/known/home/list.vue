@@ -202,7 +202,7 @@ export default {
 <style lang="less" scoped>
 .home_container {
   height: 100%;
-
+  background: #fff;
   .bottom_box {
     background-color: #f8f8f8;
     /deep/ .sp-tabs {

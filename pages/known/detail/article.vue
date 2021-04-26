@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="article">
     <HeaderSlot>
       <div v-if="!showHead" class="flex">
         <div>
@@ -466,6 +466,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.article {
+  background: #fff;
+}
 // .fixed-head {
 //   position: fixed;
 //   left: 0;

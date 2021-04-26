@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="chooseque">
     <Header title="写回答" :fixed="true" />
     <div class="main">
       <sp-tabs v-model="active" @change="changeTab">
@@ -192,6 +192,9 @@ export default {
 <style lang="less" scoped>
 /deep/.my-head {
   box-shadow: unset;
+}
+.chooseque {
+  background: #fff;
 }
 .main {
   /deep/.sp-tabs {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="answer">
     <div>
       <header-slot>
         <div v-if="!showHead2" class="head1">
@@ -519,6 +519,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.answer {
+  background: #fff;
+}
 .down_slide_list {
   ul {
     display: flex;

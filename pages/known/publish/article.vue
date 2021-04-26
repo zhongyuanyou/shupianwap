@@ -121,6 +121,7 @@ export default {
 
 <style lang="less" scoped>
 .article {
+  background: #fff;
   height: 100%;
   display: flex;
   flex-direction: column;

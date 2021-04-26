@@ -141,6 +141,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  background: #fff;
 }
 .main {
   flex: 1;
