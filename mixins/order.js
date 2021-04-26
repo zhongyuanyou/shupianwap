@@ -30,12 +30,18 @@ const ORDERSTATUSCODE = {
 // }
 
 // // 支付类型CODE
-// const PAYTYPECODE = {
-//   1: 'PRO_PRE_PAY_POST_SERVICE', // 先付款后服务
-//   2: 'PRO_PRE_DEPOSIT_POST_OTHERS', // 先定金后尾款
-//   3: 'PRO_PRE_SERVICE_POST_PAY_BY_NODE', // 按服务节点付费
-//   4: 'PRO_PRE_SERVICE_FINISHED_PAY', // 服务完结收费
-// }
+const PAYTYPECODE = {
+  1: 'PRO_PRE_PAY_POST_SERVICE', // 先付款后服务
+  2: 'PRO_PRE_DEPOSIT_POST_OTHERS', // 先定金后尾款
+  3: 'PRO_PRE_SERVICE_POST_PAY_BY_NODE', // 按服务节点付费
+  4: 'PRO_PRE_SERVICE_FINISHED_PAY', // 服务完结收费
+}
+// 付款状态code
+const payStatusNo = {
+  1: 'ORDER_CUS_PAY_STATUS_UN_PAID', // 未支付
+  2: 'ORDER_CUS_PAY_STATUS_PART_PAID', // 部分支付
+  3: 'ORDER_CUS_PAY_STATUS_COMPLETED_PAID', // 已完成支付
+}
 // 根据订单状态判断订单状态名称
 const orderStatusObj = {
   TRADE_STATUS_UN_PAID: {
@@ -198,6 +204,7 @@ const orderStatusObj = {
 export default {
   data() {
     return {
+      remainTotalPayIds: '', // 分批支付所有未支付的id
       addOrderXy: {},
       tranXy: {},
       showMydialog: false,
