@@ -215,7 +215,7 @@ export default {
   );
 }
 .banner {
-  height: 250px;
+  height: 260px;
   color: white;
   text-align: center;
   position: relative;
@@ -230,7 +230,7 @@ export default {
     font-size: 40px;
     font-family: PingFang SC;
     color: #ffffff;
-    padding: 50px 0 40px 0;
+    padding: 50px 0 32px 0;
     .text {
       font-weight: bold;
     }

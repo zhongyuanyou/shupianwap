@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="article">
     <HeaderSlot>
       <div v-if="!showHead" class="flex">
         <div>
@@ -466,6 +466,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.article {
+  background: #fff;
+}
 // .fixed-head {
 //   position: fixed;
 //   left: 0;
@@ -571,6 +574,7 @@ export default {
         width: 100%;
         height: 100%;
         background: none;
+        border-radius: 12px;
         color: rgba(73, 116, 245, 1);
         display: block;
         float: left;
@@ -640,6 +644,9 @@ export default {
         line-height: 0;
       }
     }
+    .text {
+      margin-top: 8px;
+    }
   }
   .left-area {
     float: left;
@@ -671,6 +678,7 @@ export default {
     .text {
       border-right: 1px solid #ddd;
       margin-right: 20px;
+      margin-top: 2px;
       font-size: 24px;
       color: #4974f5;
       font-weight: 500;
@@ -689,10 +697,11 @@ export default {
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
       color: #999999;
-      font-size: 28px;
+      font-size: 20px;
       .icon {
         width: 100%;
         height: 40px;
+        margin-bottom: 5px;
       }
     }
   }

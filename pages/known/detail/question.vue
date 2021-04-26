@@ -237,15 +237,24 @@
         <span>写回答</span>
       </div>
       <div
-        class="btn"
+        class="collect"
         :style="{
-          background: questionDetails.isCollectFlag === 1 ? '#4974F5' : '',
-          color: questionDetails.isCollectFlag === 1 ? '#fff' : '',
+          background:
+            questionDetails.isCollectFlag === 1 ? '#F5F5F5' : '#4974F5',
+          color: questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF',
         }"
         @click="like('COLLECT')"
       >
-        <sp-icon name="like-o" size="0.4rem" />
-        <span>收藏</span>
+        <my-icon
+          :name="
+            questionDetails.isCollectFlag === 1 ? 'shoucang_mian' : 'shoucang'
+          "
+          :color="questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF'"
+          size="0.32rem"
+        ></my-icon>
+        <span>{{
+          questionDetails.isCollectFlag === 1 ? '已收藏' : '收藏'
+        }}</span>
       </div>
     </div>
 
@@ -862,7 +871,7 @@ export default {
         font-weight: 500;
         color: #555555;
         text-align: center;
-        border-left: 1px solid #ddd;
+        border-left: 1px solid #f4f4f4;
         p {
           margin-top: 10px;
         }
@@ -1114,6 +1123,22 @@ export default {
       background: #ffffff;
       border-radius: 8px;
       border: 1px solid #dddddd;
+      font-size: 28px;
+      font-weight: 500;
+      color: #222222;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      > span {
+        margin-left: 0.1rem;
+      }
+    }
+    .collect {
+      width: 216px;
+      height: 72px;
+      background: #ffffff;
+      border-radius: 8px;
       font-size: 28px;
       font-weight: 500;
       color: #222222;
