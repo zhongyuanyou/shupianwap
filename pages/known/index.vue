@@ -15,7 +15,7 @@
           @click.native="$router.push('/known/search')"
         >
           <template v-if="isInApp" v-slot:left>
-            <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
+            <sp-icon name="arrow-left" size="0.4rem" @click.stop="$back()" />
           </template>
         </Search>
         <my-icon

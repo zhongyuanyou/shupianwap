@@ -42,7 +42,7 @@
           :src="articleDetails.avatar"
           @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
         />
-        <div class="infos">{{ articleDetails.createrName }}</div>
+        <div class="infos">{{ articleDetails.userName }}</div>
         <template v-if="articleDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
             <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
@@ -187,18 +187,12 @@ export default {
     })
     return {
       articleDetails: res.data,
-      headerData: {
-        createrName: res.data.createrName,
-        contentText: res.data.contentText,
-        avatar: res.data.avatar,
-      },
     }
   },
   data() {
     return {
       popupShow: false,
       articleList: [],
-      headerData: {},
       showHead: false,
       // articleDetails: '',
       currentDetailsId: '',
@@ -323,9 +317,6 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.articleDetails = res.data
-            this.headerData.createrName = this.articleDetails.createrName
-            this.headerData.contentText = this.articleDetails.contentText
-            this.headerData.avatar = this.articleDetails.avatar
           } else {
             Toast.fail({
               duration: 2000,

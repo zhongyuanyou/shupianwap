@@ -46,7 +46,7 @@
               :src="answerDetails.avatar"
               @click="goUser(answerDetails.userId, answerDetails.userType)"
             />
-            <div class="infos">{{ answerDetails.createrName }}</div>
+            <div class="infos">{{ answerDetails.userName }}</div>
             <template v-if="answerDetails.createrId !== userInfo.userId">
               <div v-if="!isFollow" class="btn" @click="follow">
                 <sp-button
@@ -75,7 +75,7 @@
           :src="answerDetails.avatar"
           @click="goUser(answerDetails.userId, answerDetails.userType)"
         />
-        <div class="infos">{{ answerDetails.createrName }}</div>
+        <div class="infos">{{ answerDetails.userName }}</div>
         <template v-if="answerDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
             <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>

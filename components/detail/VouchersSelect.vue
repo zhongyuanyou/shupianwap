@@ -693,7 +693,7 @@ export default {
               position: absolute;
               top: 79px;
               right: 32px;
-              width: 132px;
+              width: 140px;
               height: 54px;
               text-align: center;
               line-height: 54px;
