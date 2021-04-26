@@ -485,7 +485,7 @@ export default {
         height: 107px;
         margin-left: 24px;
         width: 100%;
-        border-bottom: 1px solid rgba(205, 205, 205, 0.5);
+        border-bottom: 1px solid #f4f4f4;
         text-align: left;
         line-height: 107px;
         font-size: 28px;

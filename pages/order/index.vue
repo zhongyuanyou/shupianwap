@@ -75,6 +75,8 @@
       :batch-pay-status="batchPayStatus"
       :batch-ids="batchIds"
       :this-time-pay-total="thisTimePayTotal"
+      :all-time-pay-total="allTimePayTotal"
+      :remain-total-pay-ids="remainTotalPayIds"
     />
     <Bottombar v-if="!isInApp && !isApplets" ref="bottombar" />
     <LoadingCenter v-show="loading" />

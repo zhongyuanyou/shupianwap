@@ -15,7 +15,7 @@
           @click.native="$router.push('/known/search')"
         >
           <template v-if="isInApp" v-slot:left>
-            <sp-icon name="arrow-left" size="0.4rem" @click.stop="$back()" />
+            <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
           </template>
         </Search>
         <my-icon
@@ -289,10 +289,13 @@ export default {
   },
   methods: {
     init() {
-      if (localStorage.getItem('morePlate')) {
-        this.morePlate = JSON.parse(localStorage.getItem('morePlate'))
-        this.myPlate = this.tabs.filter(
-          (item) => !this.morePlate.some((ele) => ele.id === item.id)
+      if (localStorage.getItem('myPlate')) {
+        this.myPlate = JSON.parse(localStorage.getItem('myPlate'))
+        this.morePlate = this.tabs.filter(
+          (item) => !this.myPlate.some((ele) => ele.id === item.id)
+        )
+        this.myPlate = this.tabs.filter((item) =>
+          this.myPlate.some((ele) => ele.id === item.id)
         )
         this.tabs = this.myPlate
       } else {
@@ -318,7 +321,7 @@ export default {
         this.showIcon = false
         this.editFinish = '编辑'
         this.status = true
-        localStorage.setItem('morePlate', JSON.stringify(this.morePlate))
+        localStorage.setItem('myPlate', JSON.stringify(this.myPlate))
       }
     },
     // 添加到我的列表中
@@ -601,7 +604,7 @@ export default {
           display: flex;
           flex-flow: row wrap;
           .item {
-            width: 150px;
+            width: 154px;
             height: 88px;
             background: #f5f5f5;
             border-radius: 44px;
@@ -622,7 +625,7 @@ export default {
               right: 0;
             }
             > .item_name {
-              width: 130px;
+              width: 84px;
               // height: 28px;
               text-align: center;
               font-size: 26px;
