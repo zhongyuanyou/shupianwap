@@ -439,7 +439,6 @@ export default {
           }
           this.orderData.orderSkuList = arr1
           this.getChildOrders(this.orderData)
-          console.log('orderData', this.orderData)
           this.hasData = true
           this.loading = false
         })
@@ -500,7 +499,6 @@ export default {
       this.$xToast.success('复制成功')
     },
     handleClickPay() {
-      console.log('this.orderData', this.orderData.orderSkuList[0])
       this.opType = 'payMoney'
       this.getChildOrders(this.orderData.orderSkuList[0])
     },
