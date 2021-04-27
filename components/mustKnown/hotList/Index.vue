@@ -106,6 +106,7 @@ export default {
           categorIds: [this.categoryId],
           page: 1,
           limit: 50,
+          currentUserId: this.userInfo.userId,
         }
       )
       if (code === 200) {
