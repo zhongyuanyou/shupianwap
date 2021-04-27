@@ -12,13 +12,14 @@
           ></my-icon>
         </div>
         <div>
-          <sp-icon
+          <my-icon
             style="margin-right: 0.15rem"
-            name="search"
-            size="0.4rem"
+            name="nav_ic_searchbig"
+            size="0.40rem"
             color="#1a1a1a"
-            @click="$router.push('/known/search')"
-          />
+            class="my_icon"
+            @click.native="$router.push('/known/search')"
+          ></my-icon>
           <sp-icon
             v-if="articleDetails.createrId === userInfo.userId"
             name="ellipsis"
@@ -63,7 +64,7 @@
       <DetailArticleList :article-list="articleList" />
     </div>
     <Comment ref="openComment" :article-id="articleDetails.id" />
-    <div class="page-bottom">
+    <div class="page-bottom" :style="isInApp ? 'bottom: 0.3rem' : ''">
       <div
         v-if="
           articleDetails.isApplaudFlag === 0 &&
@@ -72,13 +73,13 @@
         class="left-area"
       >
         <span class="icon" @click="handleClickBottom(1)">
-          <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
+          <my-icon name="zantong_mian" size="0.28rem" color="#4974F5"></my-icon
         ></span>
         <span class="text" @click="handleClickBottom(1)"
           >赞同{{ articleDetails.applaudCount }}</span
         >
         <span class="icon" @click="handleClickBottom(2)">
-          <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
+          <my-icon name="fandui_mian" size="0.28rem" color="#4974F5"></my-icon
         ></span>
       </div>
       <div
@@ -87,7 +88,7 @@
         @click="handleClickBottom(1)"
       >
         <span class="icon">
-          <my-icon name="zantong" size="0.28rem" color="#fff"></my-icon
+          <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
         ></span>
         <span class="text">已赞同</span>
       </div>
@@ -97,7 +98,7 @@
         @click="handleClickBottom(2)"
       >
         <span class="icon">
-          <my-icon name="fandui" size="0.28rem" color="#fff"></my-icon
+          <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
         ></span>
         <span class="text">已反对</span>
       </div>
@@ -506,7 +507,7 @@ export default {
   line-height: 88px;
   font-size: 30px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #4974f5;
   padding: 0 40px;
   z-index: 99;
@@ -533,18 +534,18 @@ export default {
   .title {
     font-size: 40px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #222222;
     line-height: 68px;
-    font-weight: 600;
+    font-weight: bold;
   }
   .nums-area {
     font-size: 26px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #999999;
     margin: 20px 0;
-    font-weight: 600;
+    font-weight: bold;
   }
 }
 .main {
@@ -563,7 +564,7 @@ export default {
       flex: 1;
       font-size: 30px;
       font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
       line-height: 30px;
       padding-left: 16px;
@@ -571,6 +572,7 @@ export default {
     .btn2 {
       background: none;
       font-size: 30px;
+      font-weight: bold;
       color: #999999;
     }
     .btn {
@@ -585,6 +587,7 @@ export default {
         border-radius: 12px;
         color: rgba(73, 116, 245, 1);
         display: block;
+        font-weight: bold;
         float: left;
       }
     }
@@ -654,6 +657,7 @@ export default {
     }
     .text {
       margin-top: 8px;
+      font-weight: bold;
     }
   }
   .left-area {
@@ -689,7 +693,7 @@ export default {
       margin-top: 2px;
       font-size: 24px;
       color: #4974f5;
-      font-weight: 600;
+      font-weight: bold;
       padding-right: 20px;
     }
   }
@@ -703,7 +707,6 @@ export default {
       text-align: center;
       width: 80px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
       color: #999999;
       font-size: 20px;
       .icon {
@@ -746,7 +749,7 @@ export default {
   > .tit {
     font-size: 40px;
     margin-bottom: 28px;
-    font-weight: 600;
+    font-weight: bold;
     color: #222222;
     padding: 0 32px;
     line-height: 56px;
@@ -776,7 +779,7 @@ export default {
         height: 226px;
         background: rgba(0, 0, 0, 0.4);
         font-size: 52px;
-        font-weight: 600;
+        font-weight: bold;
         color: #ffffff;
         text-align: center;
         line-height: 226px;
@@ -826,7 +829,7 @@ export default {
       display: flex;
       > div {
         font-size: 24px;
-        font-weight: 600;
+        font-weight: bold;
         color: #222222;
         > span {
           color: #999999;
@@ -847,7 +850,7 @@ export default {
       background: #f5f5f5;
       border-radius: 28px;
       font-size: 24px;
-      font-weight: 600;
+      font-weight: bold;
       color: #999999;
       margin-left: auto;
       text-align: center;
@@ -868,7 +871,7 @@ export default {
       width: 250px;
       height: 118px;
       font-size: 26px;
-      font-weight: 600;
+      font-weight: bold;
       color: #555555;
       text-align: center;
       border-left: 1px solid #ddd;
@@ -904,7 +907,7 @@ export default {
     position: absolute;
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #222222;
     bottom: 0;
     border-top: 1px solid #f4f4f4;

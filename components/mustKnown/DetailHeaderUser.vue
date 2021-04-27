@@ -16,7 +16,7 @@
           @click.stop="goUser(headerData.userId, headerData.userType)"
         />
         <div class="infos">
-          <p>{{ headerData.createrName }}</p>
+          <p>{{ headerData.userName }}</p>
           <!-- {{ headerData.contentText }} -->
         </div>
         <template v-if="isShowFollow">
@@ -116,7 +116,7 @@ export default {
       p {
         font-size: 30px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #222222;
       }
     }
@@ -137,7 +137,7 @@ export default {
         float: left;
         font-size: 30px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #4974f5;
         border: none;
       }

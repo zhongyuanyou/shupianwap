@@ -214,7 +214,7 @@ export default {
   .title {
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #222222;
     line-height: 32px;
     margin-bottom: 40px;
@@ -241,7 +241,7 @@ export default {
         .user-name {
           font-size: 28px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
           margin-bottom: 16px;
         }

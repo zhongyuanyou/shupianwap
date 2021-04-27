@@ -204,7 +204,7 @@ export default {
         .title {
           font-size: 30px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
           line-height: 30px;
           margin-right: 30px;
@@ -231,7 +231,7 @@ export default {
         line-height: 64px;
         font-size: 26px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #999999;
       }
     }

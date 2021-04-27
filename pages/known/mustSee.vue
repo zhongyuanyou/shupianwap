@@ -207,7 +207,7 @@ export default {
       box-sizing: border-box;
       > h1 {
         font-size: 36px;
-        font-weight: 600;
+        font-weight: bold;
         color: #1a1a1a;
         display: -webkit-box;
         line-height: 40px;
@@ -288,7 +288,7 @@ export default {
   height: 50px;
   font-size: 36px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #ffffff;
   line-height: 50px;
 }
@@ -334,7 +334,7 @@ export default {
   }
   .newspaperTitle {
     font-size: 36px;
-    font-weight: 600;
+    font-weight: bold;
     color: #ffffff;
   }
 }
