@@ -28,7 +28,7 @@
           name="fabu_mian"
           size="0.52rem"
           color="#4974F5"
-          class="my_icon"
+          class="my_icon my_icon_fabu"
           @click.native="openArticle"
         ></my-icon>
       </div>
@@ -471,6 +471,9 @@ export default {
       width: 52px;
       height: 52px;
       // margin-left: 32px;
+    }
+    .my_icon_fabu {
+      margin-left: 32px;
     }
   }
   .container_head_app {
