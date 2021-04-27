@@ -403,8 +403,9 @@ export default {
         height: 64px;
         .bt_attention {
           width: 144px;
-          height: 64px;
-          line-height: 64px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           background: #4974f5;
           border-radius: 8px;
           color: #ffffff;
