@@ -1,11 +1,6 @@
-<!--
- * @Author: ma jinghe
- * @Date: 2021-4-21
- * @Description: appSafeView layout 主要处理app安全距离的问题
--->
 <template>
   <div class="default-layout">
-    <nuxt />
+    <nuxt keep-alive :keep-alive-props="keepAliveProps" />
     <!-- 底部占位符, 暂定固定30 -->
     <div v-if="isInApp" style="width: 100%; height: 30px"></div>
   </div>
@@ -15,44 +10,13 @@
 import { mapState } from 'vuex'
 
 export default {
-  name: 'AppSafeView',
+  name: 'AppSafeViewKpAlive',
   computed: {
     ...mapState({
+      keepAliveProps: (state) => state.keepAlive.keepAliveProps,
       isInApp: (state) => state.app.isInApp, // 是否app中
     }),
   },
-  /*
-  data() {
-    return {
-      appSafeView: {
-        position: 'fixed',
-        top: '0',
-        height: '',
-        width: '100%',
-        'z-index': 999,
-      },
-      appSafePlaceholder: {
-        'margin-top': '',
-        width: '100%',
-      },
-    }
-  },
-  computed: {
-    ...mapState({
-      isInApp: (state) => state.app.isInApp, // 是否app中
-      appInfo: (state) => state.app.appInfo, // app信息
-    }),
-  },
-  mounted() {
-    if (this.isInApp) {
-      if (this.appInfo && this.appInfo.statusBarHeight) {
-        this.appSafeView.height = this.appInfo.statusBarHeight + 'px'
-        this.appSafePlaceholder['margin-top'] =
-          this.appInfo.statusBarHeight + 'px'
-      }
-    }
-  },
-  */
 }
 </script>
 

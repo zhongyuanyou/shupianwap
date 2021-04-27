@@ -41,6 +41,7 @@ import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
 import Header from '@/components/common/head/header'
 export default {
+  layout: 'appSafeView',
   name: 'Collection',
   components: {
     [Tabs.name]: Tabs,
