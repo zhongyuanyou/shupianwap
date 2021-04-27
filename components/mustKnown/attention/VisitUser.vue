@@ -108,7 +108,7 @@ export default {
           height: 22px;
           font-size: 22px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 600;
+          font-weight: bold;
           color: #555555;
           line-height: 22px;
           margin-top: 14px;
@@ -132,7 +132,7 @@ export default {
         height: 22px;
         font-size: 22px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #555555;
         line-height: 22px;
         margin-top: 14px;

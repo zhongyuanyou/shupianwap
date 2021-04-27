@@ -162,14 +162,14 @@ export default {
 ::v-deep .sp-work-tab--active {
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #222222;
 }
 /deep/ .sp-work-tab__text {
   flex-shrink: 0;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #999999;
 }
 /deep/ .sp-work-tabs__line {
@@ -202,7 +202,7 @@ export default {
   }
   .newspaperTitle {
     font-size: 36px;
-    font-weight: 600;
+    font-weight: bold;
     color: #ffffff;
   }
 }
@@ -226,7 +226,7 @@ export default {
         height: 50px;
         font-size: 36px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #ffffff;
         line-height: 50px;
       }

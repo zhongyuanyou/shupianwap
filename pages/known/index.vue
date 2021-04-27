@@ -15,7 +15,13 @@
           @click.native="$router.push('/known/search')"
         >
           <template v-if="isInApp" v-slot:left>
-            <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
+            <my-icon
+              name="nav_ic_back"
+              size="0.40rem"
+              color="#1a1a1a"
+              class="my_icon"
+              @click.native="$back()"
+            ></my-icon>
           </template>
         </Search>
         <my-icon
@@ -73,7 +79,9 @@
       <div class="popContentOne">
         <div class="popTop">
           <span class="popTop_title">全部板块</span>
-          <div class="my_icon close_btn" @click="showPop = false">×</div>
+          <div class="my_icon close_btn" @click="showPop = false">
+            <my-icon name="cha" size="0.19rem" color="#999999"></my-icon>
+          </div>
         </div>
         <div class="popMiddle">
           <div class="spans">
@@ -309,8 +317,9 @@ export default {
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
     init() {
-      if (localStorage.getItem('morePlate')) {
-        this.morePlate = JSON.parse(localStorage.getItem('morePlate'))
+      const morePlate = JSON.parse(localStorage.getItem('morePlate'))
+      if (morePlate && morePlate.length !== 0) {
+        this.morePlate = morePlate
         this.myPlate = this.tabs.filter(
           (item) => !this.morePlate.some((ele) => ele.id === item.id)
         )
@@ -391,7 +400,7 @@ export default {
   height: 32px;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #222222;
   line-height: 32px;
 }
@@ -409,22 +418,25 @@ export default {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  font-size: 40px;
+  // font-size: 40px;
   color: #999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   line-height: 48px;
   text-align: center;
 }
 ::v-deep .sp-work-tab--active {
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #222222;
 }
 /deep/ .sp-work-tab__text {
   flex-shrink: 0;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #999999;
 }
 /deep/ .sp-work-tabs__line {
@@ -458,7 +470,7 @@ export default {
     .my_icon {
       width: 52px;
       height: 52px;
-      margin-left: 32px;
+      // margin-left: 32px;
     }
   }
   .container_head_app {
@@ -471,7 +483,7 @@ export default {
     .my_icon {
       width: 52px;
       height: 52px;
-      margin-left: 32px;
+      // margin-left: 32px;
     }
   }
   .category_box {
@@ -481,7 +493,7 @@ export default {
       width: 670px;
       /deep/.sp-tab {
         font-size: 32px;
-        font-weight: 600;
+        font-weight: bold;
       }
     }
     /deep/.sp-tabs__line {
@@ -518,7 +530,7 @@ export default {
         border-radius: 50%;
         font-size: 22px;
         font-family: SourceHanSansCN-Medium, SourceHanSansCN;
-        font-weight: 600;
+        font-weight: bold;
         color: #133aa3;
         display: flex;
         justify-content: center;
@@ -528,7 +540,7 @@ export default {
         height: 28px;
         font-size: 28px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #133aa3;
         line-height: 28px;
         margin-left: 12px;
@@ -555,7 +567,7 @@ export default {
         height: 28px;
         font-size: 28px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #564499;
         line-height: 28px;
         margin-left: 12px;
@@ -577,12 +589,8 @@ export default {
           height: 40px;
           font-size: 40px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
-        }
-        .my_icon {
-          width: 48px;
-          height: 48px;
         }
       }
       .popMiddle {
@@ -599,7 +607,7 @@ export default {
             height: 30px;
             font-size: 30px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 600;
+            font-weight: bold;
             color: #222222;
             line-height: 30px;
           }
@@ -680,7 +688,7 @@ export default {
             height: 30px;
             font-size: 30px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 600;
+            font-weight: bold;
             color: #222222;
             line-height: 30px;
           }
@@ -758,7 +766,7 @@ export default {
       padding: 0 40px;
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #555555;
       line-height: 28px;
       > .popUserPhoto {
@@ -787,7 +795,7 @@ export default {
           height: 24px;
           font-size: 24px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
           line-height: 24px;
           display: block;

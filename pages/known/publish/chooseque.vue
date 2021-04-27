@@ -270,7 +270,7 @@ export default {
       height: auto;
       font-size: 30px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
       line-height: 40px;
       margin-bottom: 20px;
@@ -290,7 +290,7 @@ export default {
         border-radius: 8px;
         text-align: center;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #ffffff;
         .sp-button {
           width: 100%;

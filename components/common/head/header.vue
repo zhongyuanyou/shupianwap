@@ -155,7 +155,7 @@ export default {
   // display: flex;
   // align-items: center;
   font-size: 24px;
-  box-shadow: 0px 1px 0px 0px #f4f4f4;
+  // box-shadow: 0px 1px 0px 0px #f4f4f4;
   background-color: #ffffff;
   &-row {
     position: relative;

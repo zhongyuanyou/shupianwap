@@ -290,7 +290,7 @@ export default {
       position: relative;
       > span {
         font-size: 24px;
-        font-weight: 600;
+        font-weight: bold;
         color: #999;
         display: block;
         height: 48px;
@@ -378,7 +378,7 @@ export default {
     > p {
       margin-left: auto;
       font-size: 30px;
-      font-weight: 600;
+      font-weight: bold;
       color: rgba(73, 116, 245, 0.4);
     }
   }
