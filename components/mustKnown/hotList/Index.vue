@@ -111,7 +111,9 @@ export default {
       )
       if (code === 200) {
         if (data.rows.length > 0) {
-          this.list = data.rows
+          this.list = data.rows.sort((a, b) => {
+            return b.hotNumber - a.hotNumber
+          })
         }
       }
     },
@@ -184,7 +186,7 @@ export default {
       border-radius: 50%;
       font-size: 22px;
       font-family: SourceHanSansCN-Medium, SourceHanSansCN;
-      font-weight: 600;
+      font-weight: bold;
       color: #133aa3;
       display: flex;
       justify-content: center;
@@ -193,7 +195,7 @@ export default {
     .news_span {
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #133aa3;
       margin-left: 12px;
     }
@@ -218,7 +220,7 @@ export default {
     .see_span {
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #564499;
       margin-left: 12px;
     }
