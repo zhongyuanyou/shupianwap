@@ -377,8 +377,7 @@ export default {
     }
     > p {
       margin-left: auto;
-      height: 28px;
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 600;
       color: rgba(73, 116, 245, 0.4);
     }

@@ -6,12 +6,12 @@
       :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
     >
       <my-icon
-        name="zuo"
+        name="nav_ic_back"
         size="0.4rem"
         :color="fixed ? '#1A1A1A' : '#D8D8D8'"
         @click.native="$back"
       ></my-icon>
-      {{ fixed ? userName : '' }}
+      <div style="margin-left: 0.2rem">{{ fixed ? userName : '' }}</div>
     </div>
     <div class="top_box">
       <div class="card">
@@ -355,7 +355,7 @@ export default {
     left: 0;
     width: 100%;
     height: 88px;
-    padding-left: 86px;
+    padding-left: 0.32rem;
     color: #1a1a1a;
     font-size: 36px;
     font-weight: 500px;
@@ -403,6 +403,7 @@ export default {
         height: 64px;
         .bt_attention {
           width: 144px;
+          // height: 64px;
           display: flex;
           align-items: center;
           justify-content: center;

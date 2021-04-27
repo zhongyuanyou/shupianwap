@@ -113,7 +113,11 @@
         </div>
         <div class="list">
           <div class="list_items">
-            <div v-for="(item, index) in morePlate" :key="index" class="item">
+            <div
+              v-for="(item, index) in morePlate"
+              :key="index"
+              class="item items"
+            >
               <div class="item_name">{{ item.name }}</div>
               <my-icon
                 v-show="showIcon"
@@ -356,6 +360,10 @@ export default {
 }
 /deep/ .sp-sticky {
   background: #fff;
+}
+.items {
+  background: none !important;
+  border: 1px dashed #dddddd;
 }
 .active {
   color: #cccccc !important;
@@ -603,6 +611,7 @@ export default {
         .list_items {
           display: flex;
           flex-flow: row wrap;
+
           .item {
             width: 154px;
             height: 88px;
@@ -625,7 +634,7 @@ export default {
               right: 0;
             }
             > .item_name {
-              width: 84px;
+              width: 130px;
               // height: 28px;
               text-align: center;
               font-size: 26px;

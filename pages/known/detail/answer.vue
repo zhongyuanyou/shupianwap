@@ -3,12 +3,13 @@
     <div>
       <header-slot>
         <div v-if="!showHead2" class="head1">
-          <sp-icon
-            name="arrow-left"
-            color="#1A1A1A"
-            size="0.4rem"
-            @click="$back()"
-          />
+          <my-icon
+            name="nav_ic_back"
+            size="0.40rem"
+            color="#1a1a1a"
+            class="my_icon"
+            @click.native="$back()"
+          ></my-icon>
           <div class="btn-area">
             <span @click="onInvite">
               <my-icon name="yaoqinghuida_mian" size="0.36rem"></my-icon>
@@ -34,12 +35,13 @@
           </div>
         </div>
         <div v-if="showHead2" class="head2">
-          <sp-icon
-            name="arrow-left"
-            color="#1A1A1A"
-            size="0.4rem"
-            @click="$back"
-          />
+          <my-icon
+            name="nav_ic_back"
+            size="0.40rem"
+            color="#1a1a1a"
+            class="my_icon"
+            @click.native="$back()"
+          ></my-icon>
           <div class="user-info">
             <sp-image
               class="img"
