@@ -346,7 +346,7 @@ export default {
       margin-top: 20px;
       > h1 {
         font-size: 36px;
-        font-weight: 500;
+        font-weight: 600;
         color: #222222;
         display: -webkit-box;
         -webkit-box-orient: vertical;
@@ -448,7 +448,7 @@ export default {
         background: #f5f5f5;
         border-radius: 8px;
         font-size: 26px;
-        font-weight: 500;
+        font-weight: 600;
         color: #4974f5;
         margin-left: auto;
         display: flex;

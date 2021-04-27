@@ -66,7 +66,7 @@ export default {
     font-size: 32px;
   }
   .btn-submit {
-    font-weight: 500;
+    font-weight: 600;
     width: auto;
     font-size: 32px;
     color: #b6c7fb;
@@ -78,7 +78,7 @@ export default {
   //   position: absolute;
   //   right: 120px;
   //   top: 0px;
-  //   font-weight: 500;
+  //   font-weight: 600;
   //   width: 100px;
   //   font-size: 32px;
   // }

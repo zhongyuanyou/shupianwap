@@ -288,7 +288,7 @@ export default {
       > p {
         margin-left: auto;
         font-size: 28px;
-        font-weight: 500;
+        font-weight: 600;
         color: #4974f5;
       }
       > p.active {
@@ -328,7 +328,7 @@ export default {
           text-align: center;
           line-height: 72px;
           font-size: 26px;
-          font-weight: 500;
+          font-weight: 600;
           color: #ffffff;
           margin-left: auto;
         }

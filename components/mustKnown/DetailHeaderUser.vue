@@ -72,7 +72,7 @@ export default {
   height: 0.88rem;
   font-size: 30px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: 600;
   color: #4974f5;
   padding: 0 32px;
   box-sizing: border-box;
@@ -110,7 +110,7 @@ export default {
       p {
         font-size: 30px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font-weight: 600;
         color: #222222;
       }
     }
@@ -131,7 +131,7 @@ export default {
         float: left;
         font-size: 30px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font-weight: 600;
         color: #4974f5;
         border: none;
       }

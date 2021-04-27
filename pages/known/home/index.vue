@@ -399,7 +399,7 @@ export default {
         justify-content: flex-end;
         text-align: center;
         font-size: 26px;
-        font-weight: 500;
+        font-weight: 600;
         height: 64px;
         .bt_attention {
           width: 144px;
@@ -427,7 +427,7 @@ export default {
       .user_name {
         margin-top: 48px;
         font-size: 44px;
-        font-weight: 500;
+        font-weight: 600;
         color: #1a1a1a;
         line-height: 44px;
       }
@@ -450,7 +450,7 @@ export default {
             color: #4974f5;
             font-size: 36px;
             line-height: 36px;
-            font-weight: 500;
+            font-weight: 600;
           }
           &_name {
             font-size: 26px;
@@ -485,7 +485,7 @@ export default {
     }
     .sp-tab--active {
       font-size: 32px;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .list_container {
@@ -521,7 +521,7 @@ export default {
         .title {
           font-family: PingFangSC-Medium, PingFang SC;
           font-size: 36px;
-          font-weight: 500;
+          font-weight: 600;
           color: #1a1a1a;
           line-height: 48px;
           margin-bottom: 17px;
