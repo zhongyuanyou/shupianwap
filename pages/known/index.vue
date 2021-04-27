@@ -113,7 +113,11 @@
         </div>
         <div class="list">
           <div class="list_items">
-            <div v-for="(item, index) in morePlate" :key="index" class="item">
+            <div
+              v-for="(item, index) in morePlate"
+              :key="index"
+              class="item items"
+            >
               <div class="item_name">{{ item.name }}</div>
               <my-icon
                 v-show="showIcon"
@@ -191,7 +195,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import {
   WorkTab,
   WorkTabs,
@@ -213,7 +217,8 @@ import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi } from '@/api'
 
 export default {
-  name: 'Index',
+  layout: 'appSafeViewKpAlive',
+  name: 'KnownIndex',
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
@@ -232,7 +237,7 @@ export default {
     OrdinaryList,
     HeaderSlot,
   },
-  async asyncData({ $axios, store }) {
+  async asyncData({ store, $axios }) {
     const { code, message, data } = await $axios.get(
       knownApi.questionArticle.categoryList,
       {
@@ -243,9 +248,7 @@ export default {
         },
       }
     )
-    return {
-      tabs: data,
-    }
+    return { tabs: data || [] }
   },
   data() {
     return {
@@ -287,7 +290,24 @@ export default {
     this.tapSafeApp.height = this.statusBarHeight + 'px'
     this.init()
   },
+  beforeRouteLeave(to, from, next) {
+    if (
+      [
+        'known-detail-answer',
+        'known-detail-article',
+        'known-detail-question',
+      ].includes(to.name)
+    ) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'KnownIndex' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'KnownIndex' })
+    }
+    next()
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     init() {
       if (localStorage.getItem('morePlate')) {
         this.morePlate = JSON.parse(localStorage.getItem('morePlate'))
@@ -356,6 +376,10 @@ export default {
 }
 /deep/ .sp-sticky {
   background: #fff;
+}
+.items {
+  background: none !important;
+  border: 1px dashed #dddddd;
 }
 .active {
   color: #cccccc !important;
@@ -603,6 +627,7 @@ export default {
         .list_items {
           display: flex;
           flex-flow: row wrap;
+
           .item {
             width: 154px;
             height: 88px;
@@ -625,7 +650,7 @@ export default {
               right: 0;
             }
             > .item_name {
-              width: 84px;
+              width: 130px;
               // height: 28px;
               text-align: center;
               font-size: 26px;

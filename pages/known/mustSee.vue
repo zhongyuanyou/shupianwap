@@ -73,6 +73,7 @@ import { Icon, Sticky } from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
+  layout: 'appSafeView',
   name: 'MustSee',
   components: {
     [Sticky.name]: Sticky,

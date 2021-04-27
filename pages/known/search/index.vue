@@ -73,6 +73,7 @@ import Search from '@/components/common/search/Search'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 
 export default {
+  layout: 'appSafeView',
   name: 'SearchPage',
   components: {
     [Sticky.name]: Sticky,

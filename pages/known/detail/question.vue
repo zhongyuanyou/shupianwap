@@ -8,7 +8,13 @@
     <HeaderSlot>
       <div class="flex">
         <div>
-          <sp-icon name="arrow-left" size="0.4rem" @click="goBack" />
+          <my-icon
+            name="nav_ic_back"
+            size="0.40rem"
+            color="#1a1a1a"
+            class="my_icon"
+            @click.native="goBack"
+          ></my-icon>
         </div>
         <p class="title">{{ title }}</p>
         <div>
@@ -297,6 +303,7 @@ import { knownApi, userinfoApi } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import util from '@/utils/changeBusinessData'
 export default {
+  layout: 'appSafeViewKpAlive',
   name: 'Detail',
   components: {
     HeaderSlot,

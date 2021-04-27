@@ -1,25 +1,20 @@
-<!--
- * @Author: xiao pu
- * @Date: 2020-12-20 20:20:22
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-12-21 09:01:00
- * @Description: file content
- * @FilePath: /chips-wap/client/layouts/keepAlive.vue
--->
 <template>
   <div class="default-layout">
     <nuxt keep-alive :keep-alive-props="keepAliveProps" />
+    <!-- 底部占位符, 暂定固定30 -->
+    <div v-if="isInApp" style="width: 100%; height: 30px"></div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
-  name: 'KeepAlive',
+  name: 'AppSafeViewKpAlive',
   computed: {
     ...mapState({
       keepAliveProps: (state) => state.keepAlive.keepAliveProps,
+      isInApp: (state) => state.app.isInApp, // 是否app中
     }),
   },
 }
