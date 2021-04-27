@@ -688,7 +688,7 @@ export default {
         height: 32px;
         font-size: 32px;
         font-family: PingFangSC-Semibold, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #ec5330;
         line-height: 32px;
       }

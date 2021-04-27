@@ -141,7 +141,7 @@ export default {
     height: 28px;
     font-size: 28px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #4974f5;
     line-height: 88px;
     padding-left: 40px;

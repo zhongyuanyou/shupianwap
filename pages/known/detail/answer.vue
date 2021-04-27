@@ -548,7 +548,7 @@ export default {
     position: absolute;
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #222222;
     bottom: 0;
     border-top: 1px solid #f4f4f4;
@@ -572,7 +572,7 @@ export default {
     }
     span {
       color: #4974f5;
-      font-weight: 600;
+      font-weight: bold;
       // padding: 0 20px;
     }
   }
@@ -608,7 +608,7 @@ export default {
       p {
         font-size: 30px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #222222;
         margin-bottom: 20px;
       }
@@ -631,7 +631,7 @@ export default {
         font-size: 30px;
         border-radius: 12px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #4974f5;
         border: none;
       }
@@ -652,18 +652,18 @@ export default {
   .title {
     font-size: 40px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #222222;
     line-height: 68px;
-    font-weight: 600;
+    font-weight: bold;
   }
   .nums-area {
     font-size: 26px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #999999;
     margin: 20px 0;
-    font-weight: 600;
+    font-weight: bold;
   }
 }
 .main {
@@ -682,7 +682,7 @@ export default {
       flex: 1;
       font-size: 30px;
       font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
       line-height: 30px;
       padding-left: 16px;
@@ -690,7 +690,7 @@ export default {
     .btn2 {
       background: none;
       font-size: 30px;
-      font-weight: 600;
+      font-weight: bold;
       color: #999999;
     }
     .btn {
@@ -704,7 +704,7 @@ export default {
         border-radius: 12px;
         color: rgba(73, 116, 245, 1);
         display: block;
-        font-weight: 600;
+        font-weight: bold;
         float: left;
       }
       .follow {
@@ -778,7 +778,7 @@ export default {
     }
     .text {
       margin-top: 1px;
-      font-weight: 600;
+      font-weight: bold;
     }
   }
   .left-area {
@@ -813,7 +813,7 @@ export default {
       margin-right: 20px;
       font-size: 24px;
       color: #4974f5;
-      font-weight: 600;
+      font-weight: bold;
       padding-right: 20px;
       margin-top: 1px;
     }

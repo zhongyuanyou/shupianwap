@@ -709,7 +709,7 @@ export default {
     position: absolute;
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #222222;
     bottom: 0;
     border-top: 1px solid #f4f4f4;
@@ -753,7 +753,7 @@ export default {
     > .tit {
       font-size: 40px;
       margin-bottom: 28px;
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
       padding: 0 32px;
       word-break: break-all;
@@ -784,7 +784,7 @@ export default {
           height: 226px;
           background: rgba(0, 0, 0, 0.4);
           font-size: 52px;
-          font-weight: 600;
+          font-weight: bold;
           color: #ffffff;
           text-align: center;
           line-height: 226px;
@@ -834,7 +834,7 @@ export default {
         display: flex;
         > div {
           font-size: 24px;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
           > span {
             color: #999999;
@@ -855,7 +855,7 @@ export default {
         background: #f5f5f5;
         border-radius: 28px;
         font-size: 24px;
-        font-weight: 600;
+        font-weight: bold;
         color: #999999;
         margin-left: auto;
         text-align: center;
@@ -876,7 +876,7 @@ export default {
         width: 250px;
         height: 118px;
         font-size: 26px;
-        font-weight: 600;
+        font-weight: bold;
         color: #555555;
         border-left: 1px solid #f4f4f4;
         display: flex;
@@ -900,7 +900,7 @@ export default {
     > div {
       text-align: center;
       font-size: 40px;
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
       /deep/ i {
         vertical-align: -11px;
@@ -925,7 +925,7 @@ export default {
       > .left {
         > h1 {
           font-size: 32px;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
         }
         > p {
@@ -942,7 +942,7 @@ export default {
         background: #f2f5ff;
         border-radius: 8px;
         font-size: 26px;
-        font-weight: 600;
+        font-weight: bold;
         color: #4974f5;
         text-align: center;
         line-height: 72px;
@@ -965,7 +965,7 @@ export default {
         }
         > p {
           font-size: 30px;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
         }
         > div {
@@ -974,7 +974,7 @@ export default {
           background: #4974f5;
           border-radius: 8px;
           font-size: 26px;
-          font-weight: 600;
+          font-weight: bold;
           color: #ffffff;
           margin-left: auto;
           text-align: center;
@@ -1005,7 +1005,7 @@ export default {
       position: relative;
       > p {
         font-size: 30px;
-        font-weight: 600;
+        font-weight: bold;
         color: #222222;
       }
       > div {
@@ -1022,7 +1022,7 @@ export default {
           // height: 52px;
           display: block;
           font-size: 26px;
-          font-weight: 600;
+          font-weight: bold;
           color: #999999;
           text-align: center;
           // line-height: 52px;
@@ -1078,7 +1078,7 @@ export default {
         }
         > p {
           font-size: 30px;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
           margin-left: 16px;
           white-space: nowrap;
@@ -1135,7 +1135,7 @@ export default {
       border-radius: 8px;
       border: 1px solid #dddddd;
       font-size: 28px;
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
       text-align: center;
       display: flex;
@@ -1151,7 +1151,7 @@ export default {
       background: #ffffff;
       border-radius: 8px;
       font-size: 28px;
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
       text-align: center;
       display: flex;
