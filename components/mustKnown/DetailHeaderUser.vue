@@ -16,7 +16,7 @@
           @click.stop="goUser(headerData.userId, headerData.userType)"
         />
         <div class="infos">
-          <p>{{ headerData.createrName }}</p>
+          <p>{{ headerData.userName }}</p>
           <!-- {{ headerData.contentText }} -->
         </div>
         <template v-if="isShowFollow">
