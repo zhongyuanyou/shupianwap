@@ -184,35 +184,19 @@ export default {
 <style lang="less" scoped>
 // 待支付背景
 .banner1 {
-  background: linear-gradient(
-    90deg,
-    rgba(254, 140, 41, 0.6),
-    rgba(254, 140, 41, 1)
-  );
+  background: linear-gradient(90deg, #fcaa2d, rgba(254, 140, 41, 1));
 }
 // 办理中背景
 .banner2 {
-  background: linear-gradient(
-    90deg,
-    rgba(59, 105, 245, 0.7),
-    rgba(59, 105, 245, 1)
-  );
+  background: linear-gradient(90deg, #3b92f5, rgba(59, 105, 245, 1));
 }
 // 已完成背景
 .banner3 {
-  background: linear-gradient(
-    90deg,
-    rgba(0, 179, 101, 0.6),
-    rgba(0, 179, 101, 1)
-  );
+  background: linear-gradient(90deg, #00cc74, rgba(0, 179, 101, 1));
 }
 // 已取消背景
 .banner4 {
-  background: linear-gradient(
-    90deg,
-    rgba(103, 107, 111, 0.7),
-    rgba(103, 107, 111, 1)
-  );
+  background: linear-gradient(90deg, #6f7377, rgba(103, 107, 111, 1));
 }
 .banner {
   height: 260px;
