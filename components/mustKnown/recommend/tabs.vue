@@ -62,7 +62,7 @@ export default {
   span {
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: 600;
     color: #222222;
   }
 }
@@ -70,7 +70,7 @@ export default {
   flex-shrink: 0;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: 600;
   color: #999999;
 }
 /deep/ .sp-work-tabs__line {

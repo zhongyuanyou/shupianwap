@@ -268,7 +268,7 @@ export default {
     .cancel {
       font-size: 32px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: 600;
       color: #1a1a1a;
     }
     // /deep/.sp-sticky {
@@ -322,7 +322,7 @@ export default {
       > p {
         margin-left: auto;
         font-size: 28px;
-        font-weight: 500;
+        font-weight: 600;
         color: #4974f5;
       }
     }
@@ -360,7 +360,7 @@ export default {
           text-align: center;
           line-height: 72px;
           font-size: 26px;
-          font-weight: 500;
+          font-weight: 600;
           color: #ffffff;
           margin-left: auto;
         }
