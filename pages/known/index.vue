@@ -234,24 +234,17 @@ export default {
     HeaderSlot,
   },
   async asyncData({ store, $axios }) {
-    // 这里使用keep-alive已经缓存,所以不需要在进行判断接口调用
-    if (!process.server) return
-    let tempArr = []
-    try {
-      const { code, message, data } = await $axios.get(
-        knownApi.questionArticle.categoryList,
-        {
-          params: {
-            // type 1 获取企大顺导航
-            type: store.state.app.isInApp ? 1 : '',
-            // type: 1,
-          },
-        }
-      )
-      tempArr = data
-    } catch (e) {}
-
-    return { tabs: tempArr }
+    const { code, message, data } = await $axios.get(
+      knownApi.questionArticle.categoryList,
+      {
+        params: {
+          // type 1 获取企大顺导航
+          type: store.state.app.isInApp ? 1 : '',
+          // type: 1,
+        },
+      }
+    )
+    return { tabs: data || [] }
   },
   data() {
     return {
