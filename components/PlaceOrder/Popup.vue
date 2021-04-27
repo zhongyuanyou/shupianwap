@@ -241,7 +241,7 @@ export default {
       } else {
         this.checkarr = item
         this.radio = index
-        this.num = this.checkarr.reducePrice
+        this.num = this.checkarr.marketingCouponVO.reducePrice
       }
     },
     close(data) {

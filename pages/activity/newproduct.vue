@@ -99,7 +99,7 @@
                       <span>千万补贴</span>
                       {{ item.skuName }}
                     </div>
-                    <div v-if="item.tags.length > 0" class="rc-middle">
+                    <div class="rc-middle">
                       <div v-for="(item2, index2) in item.tags" :key="index2">
                         {{ item2 }}
                       </div>
@@ -175,7 +175,6 @@ export default {
       activityProductList: '',
       currentIndex: 0,
       itemTypeOptions: '',
-      productList: [],
       productRecoData: '',
       productAdvertData: '',
       page: 1,
@@ -191,6 +190,7 @@ export default {
       isNoData: false,
       offsetTop: 0,
       positionY: false,
+      productList: [],
     }
   },
   computed: {
@@ -494,13 +494,17 @@ export default {
   padding-top: 20px;
 }
 .container {
-  // width: 7.5rem;
+  max-width: 8.12rem;
   height: 100%;
   overflow-x: hidden;
   margin: 0 auto;
   /deep/.fixed-head {
     height: 0.88rem !important;
     .my-head {
+      margin: 0 auto;
+      right: 0;
+      left: 0;
+      max-width: 812px;
       height: 1.2rem !important;
       box-shadow: none !important;
       background: url('https://cdn.shupian.cn/sp-pt/wap/8j0v9fa82uo0000.png')
@@ -530,7 +534,6 @@ export default {
     .search-box {
       margin-right: 40px;
       height: 88px;
-      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
       border-radius: 8px;
       background: #000000;
       border-radius: 8px;
@@ -546,7 +549,7 @@ export default {
         font-size: 30px;
         font-weight: 500;
         color: #ffffff;
-        line-height: 32px;
+        line-height: 30px;
         background: transparent;
         display: flex;
         align-items: center;
@@ -559,11 +562,12 @@ export default {
   }
   .container-advice {
     width: 100%;
-    height: 430px;
+    height: 340px;
     position: relative;
     background: url('https://cdn.shupian.cn/sp-pt/wap/fe7bmr53zfs0000.png')
       no-repeat;
     background-size: 100% auto;
+    background-position-y: -90px;
     .rules {
       position: fixed;
       width: 68px;
@@ -590,7 +594,7 @@ export default {
   .advice-box {
     display: flex;
     justify-content: space-between;
-    height: 280px;
+    height: 260px;
     width: 100%;
     box-sizing: border-box;
     align-items: center;
@@ -602,6 +606,7 @@ export default {
       //background: linear-gradient(137deg, #ffffff 0%, #fff3eb 100%);
       border-radius: 12px;
       border: 5px solid #ffab6f;
+      margin-top: -18px;
       img {
         width: 100%;
         height: 100%;
@@ -609,10 +614,13 @@ export default {
     }
   }
   .container-body {
+    position: relative;
     width: 100%;
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
     overflow: hidden;
+    margin-top: -20px;
+    z-index: 9;
     .tabs-box {
       display: flex;
       justify-content: space-between;
@@ -690,7 +698,7 @@ export default {
       .line {
         width: 710px;
         height: 1px;
-        background: #dcdcdc;
+        background: #f4f4f4;
         margin: 0 20px;
       }
       .body-content-items {
@@ -736,6 +744,7 @@ export default {
         flex-direction: column;
         .rc-top {
           width: 378px;
+          min-height: 90px;
           max-height: 90px;
           font-size: 32px;
           font-family: PingFangSC-Medium, PingFang SC;
@@ -759,7 +768,7 @@ export default {
           align-content: flex-start;
           margin-top: 12px;
           flex-wrap: wrap;
-          min-height: 120px;
+          min-height: 80px;
           div {
             font-size: 20px;
             margin-bottom: 12px;

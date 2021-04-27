@@ -193,7 +193,7 @@ import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi, userinfoApi } from '@/api'
 import util from '@/utils/changeBusinessData'
 export default {
-  layout: 'keepAlive',
+  layout: 'appSafeViewKpAlive',
   components: {
     [Button.name]: Button,
     [Icon.name]: Icon,

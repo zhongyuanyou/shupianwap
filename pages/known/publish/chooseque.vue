@@ -91,6 +91,7 @@ import Header from '@/components/common/head/header'
 import knownApi from '@/api/known'
 
 export default {
+  layout: 'appSafeView',
   components: {
     Header,
     [Tab.name]: Tab,
