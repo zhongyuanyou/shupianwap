@@ -109,7 +109,6 @@ import utils from '@/utils/changeBusinessData'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 
 export default {
-  layout: 'appSafeView',
   name: 'Searchresult',
   components: {
     [Sticky.name]: Sticky,
