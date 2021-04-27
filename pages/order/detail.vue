@@ -569,6 +569,7 @@ export default {
 .order-info {
   background: white;
   padding: 40px;
+  margin-bottom: 150px;
   font-size: 26px;
   .order-item {
     font-size: 26px;
@@ -591,7 +592,7 @@ export default {
       width: auto;
     }
     .btn {
-      margin-left: 40px;
+      margin-left: 12px;
       background: #f4f4f4;
       border-radius: 16px;
       padding: 2px 6px;
@@ -687,6 +688,9 @@ export default {
   }
 }
 .btn-area {
+  position: fixed;
+  left: 0;
+  bottom: 0;
   margin-top: 20px;
   width: 100%;
   height: 128px;
