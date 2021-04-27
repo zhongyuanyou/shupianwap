@@ -18,13 +18,14 @@
         </div>
         <p class="title">{{ title }}</p>
         <div>
-          <sp-icon
+          <my-icon
             style="margin-right: 0.15rem"
-            name="search"
-            size="0.4rem"
+            name="nav_ic_searchbig"
+            size="0.40rem"
             color="#1a1a1a"
-            @click="$router.push('/known/search')"
-          />
+            class="my_icon"
+            @click.native="$router.push('/known/search')"
+          ></my-icon>
           <sp-icon
             v-if="questionDetails.createrId === userInfo.userId"
             name="ellipsis"

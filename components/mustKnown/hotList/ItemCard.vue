@@ -221,8 +221,8 @@ export default {
         p {
           font-size: 32px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
-          color: #222222;
+          font-weight: 600;
+          color: #555555;
           line-height: 45px;
           word-break: break-all;
         }

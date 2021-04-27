@@ -41,9 +41,16 @@
         @click="like(item)"
       >
         <my-icon
+          v-show="item.isApplaudFlag"
           name="zantong_mian"
           size="0.34rem"
-          :color="item.isApplaudFlag ? '#4974f5' : '#999999'"
+          color="#4974f5"
+        ></my-icon>
+        <my-icon
+          v-show="!item.isApplaudFlag"
+          name="zantong"
+          size="0.34rem"
+          color="#999999"
         ></my-icon>
         {{ item.applaudCount || '赞同' }}
       </div>

@@ -88,7 +88,7 @@ export default {
     left: 0;
     top: 0;
     z-index: 999;
-    box-shadow: 0px 1px 0px 0px #f4f4f4;
+    // box-shadow: 0px 1px 0px 0px #f4f4f4;
     background-color: #ffffff;
   }
   .safe-area-top {
