@@ -68,7 +68,10 @@
         </div>
       </sp-list>
     </div>
-    <div v-show="tabIndex === '3'" class="userlist">
+    <div
+      v-show="tabIndex === '3'"
+      :class="userList.length !== 0 ? 'userlist' : ''"
+    >
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -421,9 +424,9 @@ export default {
     }
   }
   > .userlist {
-    // background: #fff;
-    // margin-top: 20px;
-    // padding-top: 40px;
+    background: #fff;
+    margin-top: 20px;
+    padding-top: 40px;
     .list {
       display: flex;
       padding-top: 20px;

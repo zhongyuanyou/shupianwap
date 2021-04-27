@@ -8,7 +8,7 @@
   > -->
   <div>
     <sp-cell v-for="(item, index) in newspaperData" :key="index">
-      <div class="item_span">1/精选</div>
+      <div class="item_span">{{ index + 1 }}/精选</div>
       <div class="item">
         <div class="item_title" @click="goDetailPage(item.type, item.id)">
           {{ item.title }}

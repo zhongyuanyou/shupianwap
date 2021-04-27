@@ -870,15 +870,18 @@ export default {
       border-bottom: 1px solid #f4f4f4;
       border-top: 1px solid #f4f4f4;
       > .box {
-        padding-top: 23px;
+        // padding-top: 23px;
         box-sizing: border-box;
         width: 250px;
         height: 118px;
         font-size: 26px;
         font-weight: 600;
         color: #555555;
-        text-align: center;
         border-left: 1px solid #f4f4f4;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
         p {
           margin-top: 10px;
         }

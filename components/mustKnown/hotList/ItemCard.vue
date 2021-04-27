@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="itemCard">
     <sp-cell
       v-for="(item, index) in listData"
       :key="index"
@@ -143,6 +143,9 @@ export default {
 /deep/ .sp-cell {
   padding: 0 32px;
 }
+.itemCard {
+  padding-bottom: 100px;
+}
 .bottom {
   width: 336px;
   height: 60px;
@@ -171,9 +174,10 @@ export default {
       text-align: center;
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: 500;
       color: #999999;
-      width: 0.33rem;
+      // width: 0.33rem;
+      word-break: normal;
       height: 0.44rem;
       margin-top: 0.08rem;
       margin-right: 0.2rem;
@@ -217,7 +221,7 @@ export default {
         p {
           font-size: 32px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 600;
+          font-weight: 500;
           color: #222222;
           line-height: 45px;
           word-break: break-all;

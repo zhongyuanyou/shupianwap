@@ -111,7 +111,9 @@ export default {
       )
       if (code === 200) {
         if (data.rows.length > 0) {
-          this.list = data.rows
+          this.list = data.rows.sort((a, b) => {
+            return b.hotNumber - a.hotNumber
+          })
         }
       }
     },

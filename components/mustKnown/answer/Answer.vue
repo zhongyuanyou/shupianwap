@@ -168,7 +168,7 @@ export default {
   border-radius: 3px;
 }
 .answer_container {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #f4f4f4;
 
   &_tabs {
     height: 80px;
