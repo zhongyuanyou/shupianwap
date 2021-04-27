@@ -288,7 +288,7 @@ export default {
   height: 50px;
   font-size: 36px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: 600;
   color: #ffffff;
   line-height: 50px;
 }
@@ -334,7 +334,7 @@ export default {
   }
   .newspaperTitle {
     font-size: 36px;
-    font-weight: 500;
+    font-weight: 600;
     color: #ffffff;
   }
 }

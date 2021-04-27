@@ -499,7 +499,7 @@ export default {
   line-height: 88px;
   font-size: 30px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: 600;
   color: #4974f5;
   padding: 0 40px;
   z-index: 99;
@@ -526,7 +526,7 @@ export default {
   .title {
     font-size: 40px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: 600;
     color: #222222;
     line-height: 68px;
     font-weight: 600;
@@ -534,10 +534,10 @@ export default {
   .nums-area {
     font-size: 26px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: 600;
     color: #999999;
     margin: 20px 0;
-    font-weight: 500;
+    font-weight: 600;
   }
 }
 .main {
@@ -556,7 +556,7 @@ export default {
       flex: 1;
       font-size: 30px;
       font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 500;
+      font-weight: 600;
       color: #222222;
       line-height: 30px;
       padding-left: 16px;
@@ -568,12 +568,13 @@ export default {
     }
     .btn {
       height: 72px;
-      background: #f5f5f5;
       border-radius: 12px;
+      display: flex;
+      align-content: center;
       .sp-button {
         width: 100%;
         height: 100%;
-        background: none;
+        background: #f5f5f5;
         border-radius: 12px;
         color: rgba(73, 116, 245, 1);
         display: block;
@@ -681,7 +682,7 @@ export default {
       margin-top: 2px;
       font-size: 24px;
       color: #4974f5;
-      font-weight: 500;
+      font-weight: 600;
       padding-right: 20px;
     }
   }
@@ -695,7 +696,7 @@ export default {
       text-align: center;
       width: 80px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: 600;
       color: #999999;
       font-size: 20px;
       .icon {
@@ -768,7 +769,7 @@ export default {
         height: 226px;
         background: rgba(0, 0, 0, 0.4);
         font-size: 52px;
-        font-weight: 500;
+        font-weight: 600;
         color: #ffffff;
         text-align: center;
         line-height: 226px;
@@ -818,7 +819,7 @@ export default {
       display: flex;
       > div {
         font-size: 24px;
-        font-weight: 500;
+        font-weight: 600;
         color: #222222;
         > span {
           color: #999999;
@@ -839,7 +840,7 @@ export default {
       background: #f5f5f5;
       border-radius: 28px;
       font-size: 24px;
-      font-weight: 500;
+      font-weight: 600;
       color: #999999;
       margin-left: auto;
       text-align: center;
@@ -860,7 +861,7 @@ export default {
       width: 250px;
       height: 118px;
       font-size: 26px;
-      font-weight: 500;
+      font-weight: 600;
       color: #555555;
       text-align: center;
       border-left: 1px solid #ddd;
@@ -896,7 +897,7 @@ export default {
     position: absolute;
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: 600;
     color: #222222;
     bottom: 0;
     border-top: 1px solid #f4f4f4;

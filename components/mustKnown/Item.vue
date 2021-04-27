@@ -112,7 +112,7 @@ export default {
   .item_title {
     font-size: 36px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: 600;
     color: #1a1a1a;
     word-break: break-all;
     overflow: hidden;
