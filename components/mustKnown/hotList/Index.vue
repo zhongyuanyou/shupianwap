@@ -44,7 +44,7 @@
       loading-text="加载中..."
       @refresh="onRefresh"
     >
-      <ItemCard :list-data="list" />
+      <ItemCard :list-data="list" :to-load="toLoad" />
     </sp-pull-refresh>
   </div>
 </template>
@@ -69,6 +69,7 @@ export default {
     return {
       subjectList: [],
       list: [],
+      toLoad: false,
       refreshing: false,
     }
   },
@@ -114,6 +115,7 @@ export default {
           this.list = data.rows.sort((a, b) => {
             return b.hotNumber - a.hotNumber
           })
+          this.toLoad = true // 页面加载完
         }
       }
     },

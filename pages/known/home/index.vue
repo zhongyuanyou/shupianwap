@@ -26,11 +26,7 @@
               {{ isAttention ? '已关注' : '+ 关注' }}
             </div>
           </template>
-          <div
-            v-if="appInfo.appCode === 'CPSAPP' && type === 2"
-            class="bt_contact"
-            @click="contact"
-          >
+          <div v-if="isInApp && type === 2" class="bt_contact" @click="contact">
             <my-icon
               name="pinglun_mian"
               size="0.36rem"
