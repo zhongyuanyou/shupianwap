@@ -78,7 +78,11 @@
         <span class="text" @click="handleClickBottom(1)"
           >赞同{{ articleDetails.applaudCount }}</span
         >
-        <span class="icon" @click="handleClickBottom(2)">
+        <span
+          v-if="!releaseFlag"
+          class="icon oppose"
+          @click="handleClickBottom(2)"
+        >
           <my-icon name="fandui_mian" size="0.28rem" color="#4974F5"></my-icon
         ></span>
       </div>
@@ -206,6 +210,7 @@ export default {
       currentDetailsId: '',
       handleType: '',
       isFollow: false,
+      releaseFlag: false, // 是否发布的新文章
     }
   },
   computed: {
@@ -230,6 +235,9 @@ export default {
   },
 
   mounted() {
+    if (this.$route.query.status === 'release') {
+      this.releaseFlag = true
+    }
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
@@ -667,9 +675,11 @@ export default {
     background: #f2f5ff;
     border-radius: 8px;
     padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     span {
       display: block;
-      float: left;
       margin-right: 4px;
     }
     .icon {
@@ -681,20 +691,24 @@ export default {
       .spiconfont {
         position: absolute;
         left: 0px;
-        top: 20px;
+        top: 18px;
         padding: 0;
         margin: 0;
         line-height: 0;
       }
     }
+    .icon.oppose {
+      padding-left: 20px;
+      margin-left: 20px;
+      border-left: 1px solid #ddd;
+      .spiconfont {
+        left: 10px;
+      }
+    }
     .text {
-      border-right: 1px solid #ddd;
-      margin-right: 20px;
-      margin-top: 2px;
       font-size: 24px;
       color: #4974f5;
       font-weight: bold;
-      padding-right: 20px;
     }
   }
   .right-area {
