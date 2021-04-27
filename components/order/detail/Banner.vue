@@ -186,7 +186,7 @@ export default {
 .banner1 {
   background: linear-gradient(
     90deg,
-    rgba(254, 140, 41, 0.7),
+    rgba(254, 140, 41, 0.6),
     rgba(254, 140, 41, 1)
   );
 }
@@ -202,7 +202,7 @@ export default {
 .banner3 {
   background: linear-gradient(
     90deg,
-    rgba(0, 179, 101, 0.7),
+    rgba(0, 179, 101, 0.6),
     rgba(0, 179, 101, 1)
   );
 }
