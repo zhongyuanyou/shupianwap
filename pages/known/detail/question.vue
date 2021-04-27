@@ -1119,7 +1119,7 @@ export default {
     height: 104px;
     background: #ffffff;
     width: 100vw;
-    bottom: -1px;
+    bottom: 10px;
     left: 0;
     display: flex;
     align-items: center;
