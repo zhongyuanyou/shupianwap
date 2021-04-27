@@ -103,7 +103,7 @@
                       ><span>千万补贴</span>
                       {{ item.skuName }}
                     </div>
-                    <div v-if="item.tags.length > 0" class="rc-middle">
+                    <div class="rc-middle">
                       <div v-for="(item2, index2) in item.tags" :key="index2">
                         {{ item2 }}
                       </div>
@@ -462,21 +462,27 @@ export default {
   }
 }
 .container {
-  width: 100%;
+  max-width: 8.12rem;
   height: 100%;
   overflow-x: hidden;
   margin: 0 auto;
-  background: url('https://cdn.shupian.cn/sp-pt/wap/images/eomlorriyxc0000.png')
+  background: url('https://cdn.shupian.cn/sp-pt/wap/images/1ra46owiem9s000.png')
     no-repeat;
   background-size: 100% auto;
+  background-position-y: 118px;
   /deep/.fixed-head {
     height: 1.1rem !important;
     .my-head {
+      max-width: 812px;
+      margin: 0 auto;
+      right: 0;
+      left: 0;
       height: 1.2rem !important;
       box-shadow: none !important;
-      background: url('https://cdn.shupian.cn/sp-pt/wap/d6bbb4d4tqo0000.png')
+      background: url('https://cdn.shupian.cn/sp-pt/wap/images/ezdtzc7pkwg0000.png')
         no-repeat;
       background-size: 100% auto;
+      background-position-y: -50px;
     }
   }
 
@@ -503,7 +509,6 @@ export default {
     .search-box {
       margin-right: 40px;
       height: 88px;
-      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
       border-radius: 8px;
       background: #000000;
       border-radius: 8px;
@@ -519,7 +524,7 @@ export default {
         font-size: 30px;
         font-weight: 500;
         color: #ffffff;
-        line-height: 32px;
+        line-height: 30px;
         background: transparent;
         display: flex;
         align-items: center;
@@ -563,7 +568,7 @@ export default {
       position: absolute;
       display: flex;
       justify-content: space-between;
-      bottom: 32px;
+      bottom: 50px;
       box-sizing: border-box;
       padding: 20px;
       width: 710px;
@@ -575,7 +580,7 @@ export default {
       border-radius: 24px;
       .default_s {
         width: 327px;
-        height: 298px;
+        // height: 298px;
         overflow: hidden;
         border-radius: 12px;
         img {
@@ -678,7 +683,7 @@ export default {
       .line {
         width: 710px;
         height: 1px;
-        background: #dcdcdc;
+        background: #f4f4f4;
         margin: 0 20px;
       }
       .body-content-items {
@@ -725,6 +730,7 @@ export default {
         .rc-top {
           width: 378px;
           max-height: 90px;
+          min-height: 90px;
           font-size: 32px;
           font-family: PingFangSC-Medium, PingFang SC;
           font-weight: 500;
@@ -748,7 +754,7 @@ export default {
           align-content: flex-start;
           margin-top: 12px;
           flex-wrap: wrap;
-          min-height: 120px;
+          min-height: 80px;
           div {
             font-size: 20px;
             margin-bottom: 12px;
