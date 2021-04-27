@@ -195,7 +195,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import {
   WorkTab,
   WorkTabs,
@@ -217,7 +217,8 @@ import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi } from '@/api'
 
 export default {
-  name: 'Index',
+  layout: 'keepAlive',
+  name: 'KnownIndex',
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
@@ -236,7 +237,7 @@ export default {
     OrdinaryList,
     HeaderSlot,
   },
-  async asyncData({ $axios, store }) {
+  async asyncData({ store, $axios }) {
     const { code, message, data } = await $axios.get(
       knownApi.questionArticle.categoryList,
       {
@@ -247,9 +248,7 @@ export default {
         },
       }
     )
-    return {
-      tabs: data,
-    }
+    return { tabs: data || [] }
   },
   data() {
     return {
@@ -291,7 +290,24 @@ export default {
     this.tapSafeApp.height = this.statusBarHeight + 'px'
     this.init()
   },
+  beforeRouteLeave(to, from, next) {
+    if (
+      [
+        'known-detail-answer',
+        'known-detail-article',
+        'known-detail-question',
+      ].includes(to.name)
+    ) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'KnownIndex' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'KnownIndex' })
+    }
+    next()
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     init() {
       if (localStorage.getItem('morePlate')) {
         this.morePlate = JSON.parse(localStorage.getItem('morePlate'))
