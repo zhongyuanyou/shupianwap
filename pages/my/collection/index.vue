@@ -46,7 +46,12 @@
           <div class="left_content clamp3">
             {{ item.contentText }}
           </div>
-          <sp-image class="right_img" fit="cover" :src="item.contentImageUrl" />
+          <sp-image
+            radius="0.12rem"
+            class="right_img"
+            fit="cover"
+            :src="item.contentImageUrl.split(',')[0]"
+          />
         </div>
         <div class="bottom">
           {{
