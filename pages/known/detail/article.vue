@@ -63,7 +63,7 @@
       <DetailArticleList :article-list="articleList" />
     </div>
     <Comment ref="openComment" :article-id="articleDetails.id" />
-    <div class="page-bottom">
+    <div class="page-bottom" :style="isInApp ? 'bottom: 0.3rem' : ''">
       <div
         v-if="
           articleDetails.isApplaudFlag === 0 &&

@@ -91,7 +91,7 @@
       <p class="pub-time">编辑于{{ answerDetails.createTime }}</p>
     </div>
     <Comment ref="openComment" :article-id="answerDetails.id" />
-    <div class="page-bottom">
+    <div class="page-bottom" :style="isInApp ? 'bottom: 0.3rem' : ''">
       <div
         v-if="
           answerDetails &&

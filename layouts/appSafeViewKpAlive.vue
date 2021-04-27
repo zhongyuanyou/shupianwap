@@ -1,8 +1,14 @@
 <template>
   <div class="default-layout">
     <nuxt keep-alive :keep-alive-props="keepAliveProps" />
-    <!-- 底部占位符, 暂定固定30 -->
-    <div v-if="isInApp" style="width: 100%; height: 30px"></div>
+    <!-- start: 创建遮挡层 -->
+    <div
+      class="ui-bottom-placeholder"
+      :style="isInApp ? 'padding-bottom: 0.3rem' : ''"
+    >
+      <div :style="isInApp ? 'padding-bottom: 0.3rem' : ''"></div>
+    </div>
+    <!-- end: 创建遮挡层 -->
   </div>
 </template>
 
@@ -71,5 +77,19 @@ html {
 }
 .default-layout {
   height: 100%;
+}
+
+.ui-bottom-placeholder {
+  width: 100%;
+  height: 1px;
+}
+.ui-bottom-placeholder > div {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  z-index: 999;
+  background: #fff;
 }
 </style>
