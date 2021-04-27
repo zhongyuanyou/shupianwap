@@ -432,7 +432,7 @@ export default {
           sourceIds: [this.currentDetailsId],
           orderBy: this.orderBy,
           page: this.page,
-          userId: this.userInfo.userId,
+          currentUserId: this.userInfo.userId,
           limit: this.limit,
         })
         .then((res) => {
