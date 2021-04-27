@@ -64,66 +64,72 @@
       <DetailArticleList :article-list="articleList" />
     </div>
     <Comment ref="openComment" :article-id="articleDetails.id" />
-    <div class="page-bottom" :style="isInApp ? 'bottom: 0.3rem' : ''">
-      <div
-        v-if="
-          articleDetails.isApplaudFlag === 0 &&
-          articleDetails.isDisapplaudFlag === 0
-        "
-        class="left-area"
-      >
-        <span class="icon" @click="handleClickBottom(1)">
-          <my-icon name="zantong_mian" size="0.28rem" color="#4974F5"></my-icon
-        ></span>
-        <span class="text" @click="handleClickBottom(1)"
-          >赞同{{ articleDetails.applaudCount }}</span
+    <div class="page-bottom">
+      <div>
+        <div
+          v-if="
+            articleDetails.isApplaudFlag === 0 &&
+            articleDetails.isDisapplaudFlag === 0
+          "
+          class="left-area"
         >
-        <span
-          v-if="!releaseFlag"
-          class="icon oppose"
+          <span class="icon" @click="handleClickBottom(1)">
+            <my-icon
+              name="zantong_mian"
+              size="0.28rem"
+              color="#4974F5"
+            ></my-icon
+          ></span>
+          <span class="text" @click="handleClickBottom(1)"
+            >赞同{{ articleDetails.applaudCount }}</span
+          >
+          <span
+            v-if="!releaseFlag"
+            class="icon oppose"
+            @click="handleClickBottom(2)"
+          >
+            <my-icon name="fandui_mian" size="0.28rem" color="#4974F5"></my-icon
+          ></span>
+        </div>
+        <div
+          v-if="articleDetails.isApplaudFlag === 1"
+          class="applaud"
+          @click="handleClickBottom(1)"
+        >
+          <span class="icon">
+            <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
+          ></span>
+          <span class="text">已赞同</span>
+        </div>
+        <div
+          v-if="articleDetails.isDisapplaudFlag === 1"
+          class="applaud dis-applaud"
           @click="handleClickBottom(2)"
         >
-          <my-icon name="fandui_mian" size="0.28rem" color="#4974F5"></my-icon
-        ></span>
-      </div>
-      <div
-        v-if="articleDetails.isApplaudFlag === 1"
-        class="applaud"
-        @click="handleClickBottom(1)"
-      >
-        <span class="icon">
-          <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
-        ></span>
-        <span class="text">已赞同</span>
-      </div>
-      <div
-        v-if="articleDetails.isDisapplaudFlag === 1"
-        class="applaud dis-applaud"
-        @click="handleClickBottom(2)"
-      >
-        <span class="icon">
-          <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
-        ></span>
-        <span class="text">已反对</span>
-      </div>
-      <div class="right-area">
-        <div
-          class="item"
-          :style="{
-            color: articleDetails.isCollectFlag === 1 ? '#4974F5' : '#999999',
-          }"
-          @click="handleClickBottom(3)"
-        >
-          <div class="icon">
-            <my-icon name="shoucang" size="0.4rem"></my-icon>
-          </div>
-          收藏
+          <span class="icon">
+            <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
+          ></span>
+          <span class="text">已反对</span>
         </div>
-        <div class="item" @click="comment()">
-          <div class="icon">
-            <my-icon name="pinglun" size="0.4rem" color="#999999"></my-icon>
+        <div class="right-area">
+          <div
+            class="item"
+            :style="{
+              color: articleDetails.isCollectFlag === 1 ? '#4974F5' : '#999999',
+            }"
+            @click="handleClickBottom(3)"
+          >
+            <div class="icon">
+              <my-icon name="shoucang" size="0.4rem"></my-icon>
+            </div>
+            收藏
           </div>
-          评论
+          <div class="item" @click="comment()">
+            <div class="icon">
+              <my-icon name="pinglun" size="0.4rem" color="#999999"></my-icon>
+            </div>
+            评论
+          </div>
         </div>
       </div>
     </div>
@@ -623,111 +629,121 @@ export default {
 }
 .page-bottom {
   position: fixed;
+  width: 100%;
   left: 0;
   bottom: 0;
-  width: 100%;
-  height: 96px;
-  background: #ffffff;
-  padding: 10px 40px;
-  border-top: 1px solid #f4f4f4;
-  .applaud {
-    display: flex;
-    align-items: center;
-    float: left;
-    height: 72px;
-    background: #f2f5ff;
-    border-radius: 8px;
-    padding: 20px 15px;
-    box-sizing: border-box;
-    background: #4974f5;
-    span {
-      display: block;
+  height: 116px;
+  background: #fff;
+  z-index: 1;
+  > div {
+    position: fixed;
+    left: 0;
+    bottom: 20px;
+    width: 100%;
+    height: 96px;
+    background: #ffffff;
+    padding: 10px 40px;
+    border-top: 1px solid #f4f4f4;
+    z-index: 2;
+    .applaud {
+      display: flex;
+      align-items: center;
       float: left;
-      margin-right: 4px;
-      font-size: 24px;
-      color: #ffffff;
-      text-align: center;
-    }
-    .icon {
-      padding: 0;
-      width: 40px;
-      height: 100%;
-      line-height: 0;
-      position: relative;
-      .spiconfont {
-        position: absolute;
-        left: 0px;
-        top: 20px;
-        padding: 0;
-        margin: 0;
-        line-height: 0;
+      height: 72px;
+      background: #f2f5ff;
+      border-radius: 8px;
+      padding: 20px 15px;
+      box-sizing: border-box;
+      background: #4974f5;
+      span {
+        display: block;
+        float: left;
+        margin-right: 4px;
+        font-size: 24px;
+        color: #ffffff;
+        text-align: center;
       }
-    }
-    .text {
-      margin-top: 8px;
-      font-weight: bold;
-    }
-  }
-  .left-area {
-    float: left;
-    width: auto;
-    height: 72px;
-    background: #f2f5ff;
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    span {
-      display: block;
-      margin-right: 4px;
-    }
-    .icon {
-      padding: 0;
-      width: 40px;
-      height: 100%;
-      line-height: 0;
-      position: relative;
-      .spiconfont {
-        position: absolute;
-        left: 0px;
-        top: 18px;
-        padding: 0;
-        margin: 0;
-        line-height: 0;
-      }
-    }
-    .icon.oppose {
-      padding-left: 20px;
-      margin-left: 20px;
-      border-left: 1px solid #ddd;
-      .spiconfont {
-        left: 20px;
-      }
-    }
-    .text {
-      margin-top: 6px;
-      font-size: 24px;
-      color: #4974f5;
-      font-weight: bold;
-    }
-  }
-  .right-area {
-    float: right;
-    width: auto;
-    .item {
-      height: 100%;
-      float: left;
-      margin-left: 10px;
-      text-align: center;
-      width: 80px;
-      font-family: PingFangSC-Medium, PingFang SC;
-      color: #999999;
-      font-size: 20px;
       .icon {
-        width: 100%;
-        height: 40px;
-        margin-bottom: 5px;
+        padding: 0;
+        width: 40px;
+        height: 100%;
+        line-height: 0;
+        position: relative;
+        .spiconfont {
+          position: absolute;
+          left: 0px;
+          top: 20px;
+          padding: 0;
+          margin: 0;
+          line-height: 0;
+        }
+      }
+      .text {
+        margin-top: 8px;
+        font-weight: bold;
+      }
+    }
+    .left-area {
+      float: left;
+      width: auto;
+      height: 72px;
+      background: #f2f5ff;
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        display: block;
+        margin-right: 4px;
+      }
+      .icon {
+        padding: 0;
+        width: 40px;
+        height: 100%;
+        line-height: 0;
+        position: relative;
+        .spiconfont {
+          position: absolute;
+          left: 0px;
+          top: 18px;
+          padding: 0;
+          margin: 0;
+          line-height: 0;
+        }
+      }
+      .icon.oppose {
+        padding-left: 20px;
+        margin-left: 20px;
+        border-left: 1px solid #ddd;
+        .spiconfont {
+          left: 20px;
+        }
+      }
+      .text {
+        margin-top: 6px;
+        font-size: 24px;
+        color: #4974f5;
+        font-weight: bold;
+      }
+    }
+    .right-area {
+      float: right;
+      width: auto;
+      .item {
+        height: 100%;
+        float: left;
+        margin-left: 10px;
+        text-align: center;
+        width: 80px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        color: #999999;
+        font-size: 20px;
+        .icon {
+          width: 100%;
+          height: 40px;
+          margin-bottom: 5px;
+        }
       }
     }
   }
