@@ -175,14 +175,11 @@ export default {
         deviceId: '', // 设备ID（用户唯一标识） 0022ef1a-f685-469a-93a8-5409892207a2
         areaCode: '', // 区域编码
         sceneId: 'app-mainye-01', // 场景ID
-        maxsize: 120, // 要求推荐产品的数量
         platform: 'APP', // 平台（app,m,pc）
-        formatId: '', // 产品类别
         page: {
           pageNo: 1,
           pageSize: 10,
         },
-        storeId: '', // 商户id
         productType: 'PRO_CLASS_TYPE_SALES',
       },
       tabBtn: [],
@@ -255,7 +252,8 @@ export default {
       this.isFixed = data.isFixed
     },
     selectItem(item, index) {
-      this.params.formatId = item.ext3
+      // this.params.formatId = item.ext3
+      this.params.formatIdOne = item.ext3
       this.$refs.recomRef.swipeTo(index)
       this.findRecomList(index)
     },
