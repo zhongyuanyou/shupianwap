@@ -140,7 +140,7 @@ export default {
         flex: 1;
         .goods-name {
           font-size: 32px;
-          font-weight: 600;
+          font-weight: bold;
           color: #222;
           margin-bottom: 10px;
           .textOverflow(1);
