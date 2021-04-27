@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="answer">
     <CommonHead v-if="!id" title="写回答" />
     <PageHead
       v-else
@@ -7,7 +7,7 @@
       :has-val="hasVal"
       :fixed="true"
       @submit="submit"
-      @handleCancel="cancel"
+      @handleCancel="handleCancel"
     />
     <div class="main">
       <TitleArea ref="myTitle" :title="questionInfo.title" :can-edit="false" />
@@ -17,6 +17,7 @@
           :init-content="formData.content"
           @editorChange="editorChange"
         />
+        <div style="height: 2rem"></div>
       </div>
     </div>
   </div>
@@ -47,8 +48,9 @@ export default {
       active: 0,
       maxLength: 20,
       fromPage: 'answer',
-      questionId: '', // 问题id
+      questionId: '', // editType = 1,问题id || editType = 2,回答id
       questionInfo: {}, // 问题详情
+      sourceId: '', // 问题id
     }
   },
   computed: {
@@ -68,13 +70,18 @@ export default {
     this.getDetailByIdApi().then(({ code, data }) => {
       if (code === 200) {
         _this.questionInfo = data
+        // 当修改回答时,需要重显内容
+        if (_this.editType === '2') {
+          _this.formData.content = data.content
+          // 当修改回答时,sourceId为问题id.
+          _this.sourceId = data.sourceId
+          // data.id 为回答id
+          _this.formData.id = data.id
+        }
       }
     })
   },
   methods: {
-    cancel() {
-      this.$back()
-    },
     openModal() {
       this.$refs.chooseTopic.showPop = true
     },
@@ -83,13 +90,29 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.answer {
+  background: #fff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 .main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   .title {
     font-size: 40px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: 600;
     color: #222222;
     line-height: 52px;
+  }
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
   }
 }
 .sp-tabs {

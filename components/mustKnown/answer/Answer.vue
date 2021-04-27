@@ -23,7 +23,7 @@
         <div class="item" @click="toDetail(item)">
           <div class="item_browse">最近 {{ item.totalBrowseCount }}人浏览</div>
           <div class="item_content">
-            {{ item.contentText }}
+            {{ item.title }}
           </div>
           <div class="item_bottom">
             <p>{{ item.answerCount }} 回答 · {{ item.collectCount }} 收藏</p>
@@ -141,7 +141,7 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid #f4f4f4;
     -webkit-transform: scaleY(0.6);
     transform: scaleY(0.6);
   }
@@ -158,7 +158,7 @@ export default {
 /deep/ .sp-tab--active {
   font-size: 30px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: 600;
   color: #222222;
 }
 /deep/ .sp-tabs__line {
@@ -190,7 +190,7 @@ export default {
       height: 30px;
       font-size: 30px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: 600;
       color: #222222;
       line-height: 30px;
     }
@@ -215,7 +215,7 @@ export default {
     margin-bottom: 20px;
     font-size: 30px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: 600;
     color: #222222;
     line-height: 40px;
     display: -webkit-box;
@@ -244,7 +244,7 @@ export default {
       border-radius: 8px;
       font-size: 26px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: 600;
       color: #ffffff;
       line-height: 64px;
       text-align: center;

@@ -22,12 +22,20 @@ const ORDERSTATUSCODE = {
   3: 'ORDER_CUS_STATUS_COMPLETED', // 已完成
   4: 'ORDER_CUS_STATUS_CANCELLED', // 已取消
 }
-const orderProTypeNoS = {
-  1: 'PRO_CLASS_TYPE_TRANSACTION', // 交易
-  2: 'PRO_CLASS_TYPE_SALES', // 销售
-  3: 'PRO_CLASS_TYPE_SERVICE_RESOURCE', // 资源
-  4: 'PRO_CLASS_TYPE_SERVICE', // 服务
-}
+// const orderProTypeNoS = {
+//   1: 'PRO_CLASS_TYPE_TRANSACTION', // 交易
+//   2: 'PRO_CLASS_TYPE_SALES', // 销售
+//   3: 'PRO_CLASS_TYPE_SERVICE_RESOURCE', // 资源
+//   4: 'PRO_CLASS_TYPE_SERVICE', // 服务
+// }
+
+// // 支付类型CODE
+// const PAYTYPECODE = {
+//   1: 'PRO_PRE_PAY_POST_SERVICE', // 先付款后服务
+//   2: 'PRO_PRE_DEPOSIT_POST_OTHERS', // 先定金后尾款
+//   3: 'PRO_PRE_SERVICE_POST_PAY_BY_NODE', // 按服务节点付费
+//   4: 'PRO_PRE_SERVICE_FINISHED_PAY', // 服务完结收费
+// }
 // 根据订单状态判断订单状态名称
 const orderStatusObj = {
   TRADE_STATUS_UN_PAID: {
@@ -190,6 +198,7 @@ const orderStatusObj = {
 export default {
   data() {
     return {
+      remainTotalPayIds: '', // 分批支付剩余支付批次id
       addOrderXy: {},
       tranXy: {},
       showMydialog: false,
@@ -366,6 +375,9 @@ export default {
                 sortArr.push(nodeList[i])
               }
             }
+            sortArr.forEach((item) => {
+              item.batchIndex = Number(item.batchNumber) + 1
+            })
             this.nodeList = sortArr
           } else {
             // 当前订单的分批支付信息 订单详情页
@@ -403,6 +415,7 @@ export default {
         let thisTimePayTotal = 0 // 本期应付总额
         let allTimePayTotal = 0 // 剩余未支付所有批次总额
         const idsArr = [] // 应分批支付id
+        const remainTotalPayIdsArr = [] // 剩余未支付所有批次总额id
         this.payList.forEach((element) => {
           if (element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
             thisTimePayTotal += Number(element.money)
@@ -413,11 +426,13 @@ export default {
             element.alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1'
           ) {
             allTimePayTotal += Number(element.money)
+            remainTotalPayIdsArr.push(element.id)
           }
         })
         this.thisTimePayTotal = this.regFenToYuan(thisTimePayTotal)
         this.allTimePayTotal = this.regFenToYuan(allTimePayTotal)
         this.batchIds = idsArr.join(',')
+        this.remainTotalPayIds = remainTotalPayIdsArr.join(',')
         // 是分批支付则弹起分批支付弹窗 关闭关联订单弹窗
         this.$refs.payModal.showPop = true
         this.$refs.cancleOrderModel.showPop = false
@@ -426,7 +441,6 @@ export default {
     // 判断展示合同按钮 false不展示  1签署合同 2查看合同
     checkContractStatus(orderData) {
       const data = orderData || this.orderData
-      console.log('检测合同,', data)
       // 当客户订单状态为已取消时不展示按钮
       if (data.cusOrderStatusNo === ORDERSTATUSCODE[4]) return false
       if (this.fromPage === 'orderList') {
@@ -553,7 +567,6 @@ export default {
         ) {
           if (!orderAgreementIds) {
             this.showMydialog = true
-            console.log('this.showMydialog', this.showMydialog)
             return
           }
           if (this.checkContractStatus() === 1) {
@@ -909,7 +922,6 @@ export default {
       try {
         this.loading = true
         const data = await auth.protocol(params)
-        console.log('data:', data)
         const { rows = [] } = data || {}
         this.article = rows[0] || {}
         this.loading = false

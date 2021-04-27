@@ -282,7 +282,10 @@ export default {
     },
   },
   head: {
-    meta: [{ name: 'spptmd-track_code', content: 'SPW000006' }],
+    meta: [
+      { name: 'spptmd-track_code', content: 'SPW000006' },
+      { name: 'conent_type', content: '1' },
+    ],
   },
 }
 </script>

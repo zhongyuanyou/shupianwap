@@ -44,7 +44,7 @@ export default {
     }
   },
   mounted() {
-    // this.email = this.$route.query.email
+    this.content = this.$route.query.content
   },
   methods: {
     onClickLeft() {

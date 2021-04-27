@@ -14,21 +14,42 @@
         <p v-if="item.productDescript" class="sp-goods-des">
           {{ item.productDescript }}
         </p>
-        <div v-if="item.imgs && item.imgs.length" class="imgs">
+        <div v-if="index !== 3 && item.imgs && item.imgs.length" class="imgs">
           <img
             v-for="(imgItem, imgIndex) in item.imgs"
             :key="imgIndex"
             :src="imgItem"
+            :style="imgWidth"
             alt=""
             srcset=""
-            @click="linkUrl(item.url)"
+            @click="adJumpHandleMixin(imgItem)"
           />
+        </div>
+        <!-- 限时秒杀 -->
+        <div v-if="index === 3" class="imgs">
+          <img
+            v-for="(subsidyItem, subIndex) in subsidyData"
+            :key="subIndex"
+            :src="subsidyItem.materialList[0].materialUrl"
+            alt=""
+            srcset=""
+            :style="{ width: imgWidth }"
+            @click="adJumpHandleMixin(subsidyItem.materialList[0])"
+          />
+          <!-- <img
+            v-for="(subsidyItem, imgIndex) in subsidyData"
+            :key="imgIndex"
+            :src="imgItem"
+            alt=""
+            srcset=""
+            @click="adJumpHandleMixin(imgItem)"
+          /> -->
         </div>
         <sp-button
           v-if="item.buttonText"
           type="primary"
           class="sp-goods-btn"
-          @click="linkUrl(item.url)"
+          @click="adJumpHandleMixin(item)"
           >{{ item.buttonText }}</sp-button
         >
       </div>
@@ -38,10 +59,21 @@
 
 <script>
 import { Button } from '@chipspc/vant-dgg'
+import adJumpHandle from '~/mixins/adJumpHandle'
 // 营销商品活动入口
 export default {
   components: {
     [Button.name]: Button,
+  },
+  mixins: [adJumpHandle],
+  props: {
+    // 千万补贴广告
+    subsidyData: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
   },
   data() {
     return {
@@ -51,13 +83,15 @@ export default {
           slogan: '快速转让',
           productDescript: '公司/商标/专利/网店/新媒',
           buttonText: '我要转让',
-          url:
-            'https://m.shupian.cn/search/searchResult?keywords=%E5%95%86%E6%A0%87%E4%BA%A4%E6%98%93',
+          linkType: 1,
+          wapLink: '/search/searchResult?keywords=商标',
         },
         {
           productName: '企服直播',
           slogan: '想你所想 新用户专享',
           imgs: ['https://cdn.shupian.cn/sp-pt/wap/images/8yl438481uk0000.png'],
+          linkType: 1,
+          wapLink: '/search/searchResult?keywords',
         },
         {
           productName: '帮找服务',
@@ -66,7 +100,8 @@ export default {
           buttonText: '立即咨询',
           type: 'planner',
           titleIcon: '精选规划师',
-          url: 'https://m.shupian.cn/spread/myDemandCard',
+          linkType: 2,
+          materialLink: 'https://m.shupian.cn/spread/myDemandCard',
         },
         {
           productName: '1000万补贴',
@@ -75,9 +110,16 @@ export default {
             'https://cdn.shupian.cn/sp-pt/wap/5o4toa1pfgk0000.png',
             'https://cdn.shupian.cn/sp-pt/wap/95f9n61gks00000.png',
           ],
+          linkType: 1,
+          wapLink: '/activity/exclusive',
         },
       ],
     }
+  },
+  computed: {
+    imgWidth() {
+      return this.subsidyData && this.subsidyData.length > 1 ? '48%' : '100%'
+    },
   },
   methods: {
     linkUrl(url) {
@@ -134,24 +176,23 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(153, 153, 153, 1);
-    line-height: 26px;
+    line-height: 32px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
   .sp-goods-des {
-    height: 26px;
     font-size: 26px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(153, 153, 153, 1);
-    line-height: 26px;
+    line-height: 32px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
   p {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
   }
   .imgs {
     width: 315px;

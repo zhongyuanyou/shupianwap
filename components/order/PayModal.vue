@@ -7,110 +7,119 @@
       <p class="title">支付款项</p>
       <div v-if="payList.length" class="money-list">
         <!-- 服务节点付费 -->
-        <section
+        <sp-radio-group
           v-if="payList[0].orderPayType === 'PRO_PRE_SERVICE_POST_PAY_BY_NODE'"
         >
-          <sp-radio-group>
-            <sp-radio name="1" icon-size="16px" class="radio radio1"
-              >本期应付</sp-radio
+          <sp-radio
+            name="1"
+            icon-size="16px"
+            class="radio radio1"
+            @click="switchPayType('1')"
+            >本期应付</sp-radio
+          >
+          <div class="money-area">
+            <span class="span1">金额:</span>
+            <span class="span2">
+              <span class="money1">{{ thisTimePayTotal }}</span>
+              元</span
             >
-            <div class="money-area">
-              <span class="span1">金额:</span>
-              <span class="span2">
-                <span class="money1">{{ thisTimePayTotal }}</span>
-                元</span
+            <span class="span3" @click="toDetail(0)"
+              >查看明细
+              <my-icon
+                name="list_ic_next"
+                size="0.26rem"
+                color="rgba(204, 204, 204, 1)"
               >
-              <span class="span3" @click="toDetail(0)"
-                >查看明细
-                <my-icon
-                  name="list_ic_next"
-                  size="0.26rem"
-                  color="rgba(204, 204, 204, 1)"
-                >
-                </my-icon>
-              </span>
-            </div>
-            <sp-radio name="2" icon-size="16px" class="radio radio2"
-              >全款支付</sp-radio
+              </my-icon>
+            </span>
+          </div>
+          <sp-radio
+            name="2"
+            icon-size="16px"
+            class="radio radio2"
+            @click="switchPayType('2')"
+            >全款支付</sp-radio
+          >
+          <div class="money-area">
+            <span class="span1">金额:</span>
+            <span class="span2">
+              <span class="money1">{{ allTimePayTotal }}</span>
+              元</span
             >
-            <div class="money-area">
-              <span class="span1">金额:</span>
-              <span class="span2">
-                <span class="money1">{{ allTimePayTotal }}</span>
-                元</span
+            <span class="span3" @click="toDetail(1)"
+              >查看明细
+              <my-icon
+                name="list_ic_next"
+                size="0.26rem"
+                color="rgba(204, 204, 204, 1)"
               >
-              <span class="span3" @click="toDetail(1)"
-                >查看明细
-                <my-icon
-                  name="list_ic_next"
-                  size="0.26rem"
-                  color="rgba(204, 204, 204, 1)"
-                >
-                </my-icon>
-              </span>
-            </div>
-          </sp-radio-group>
-        </section>
+              </my-icon>
+            </span>
+          </div>
+        </sp-radio-group>
         <!-- 定金尾款付费 -->
-        <section
+        <sp-radio-group
           v-else-if="payList[0].orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS'"
+          v-model="payMoneyType"
         >
-          <sp-radio-group>
-            <sp-radio
-              v-if="payList[0].batchNumber === 0"
-              name="1"
-              icon-size="16px"
-              class="radio radio1"
-              >定金</sp-radio
+          <sp-radio
+            v-if="payList[0].batchNumber === 0"
+            name="1"
+            icon-size="16px"
+            class="radio radio1"
+            @click="switchPayType('1')"
+            >定金</sp-radio
+          >
+          <sp-radio
+            v-if="payList[0].batchNumber === 1"
+            name="1"
+            icon-size="16px"
+            class="radio radio1"
+            @click="switchPayType('1')"
+            >尾款</sp-radio
+          >
+          <div class="money-area">
+            <span class="span1">金额:</span>
+            <span class="span2">
+              <span class="money1">{{ thisTimePayTotal }}</span>
+              元</span
             >
-            <sp-radio
-              v-if="payList[0].batchNumber === 1"
-              name="1"
-              icon-size="16px"
-              class="radio radio1"
-              >尾款</sp-radio
-            >
-            <div class="money-area">
-              <span class="span1">金额:</span>
-              <span class="span2">
-                <span class="money1">{{ thisTimePayTotal }}</span>
-                元</span
+            <span class="span3" @click="toDetail(0)"
+              >查看明细
+              <my-icon
+                name="list_ic_next"
+                size="0.26rem"
+                color="rgba(204, 204, 204, 1)"
               >
-              <span class="span3" @click="toDetail(0)"
-                >查看明细
-                <my-icon
-                  name="list_ic_next"
-                  size="0.26rem"
-                  color="rgba(204, 204, 204, 1)"
-                >
-                </my-icon>
-              </span>
-            </div>
-          </sp-radio-group>
-        </section>
-        <section v-else>
-          <sp-radio-group>
-            <sp-radio name="1" icon-size="16px" class="radio radio1"
-              >全款</sp-radio
+              </my-icon>
+            </span>
+          </div>
+        </sp-radio-group>
+        <sp-radio-group v-else v-model="payMoneyType">
+          <sp-radio
+            name="1"
+            icon-size="16px"
+            class="radio radio1"
+            @click="switchPayType('2')"
+            >全款支付</sp-radio
+          >
+          <div class="money-area">
+            <span class="span1">金额:</span>
+            <span class="span2">
+              <span class="money1">{{ allTimePayTotal }}</span>
+              元</span
             >
-            <div class="money-area">
-              <span class="span1">金额:</span>
-              <span class="span2">
-                <span class="money1">{{ thisTimePayTotal }}</span>
-                元</span
+            <span class="span3" @click="toDetail(1)"
+              >查看明细
+              <my-icon
+                name="list_ic_next"
+                size="0.26rem"
+                color="rgba(204, 204, 204, 1)"
               >
-              <span class="span3" @click="toDetail(1)"
-                >查看明细
-                <my-icon
-                  name="list_ic_next"
-                  size="0.26rem"
-                  color="rgba(204, 204, 204, 1)"
-                >
-                </my-icon>
-              </span>
-            </div>
-          </sp-radio-group>
-        </section>
+              </my-icon>
+            </span>
+          </div>
+        </sp-radio-group>
       </div>
       <div class="btn-area">
         <sp-button @click="toPay">去支付</sp-button>
@@ -137,7 +146,15 @@ export default {
         return {}
       },
     },
+    // 本期应付金额支付节点
     batchIds: {
+      type: String,
+      default() {
+        return ''
+      },
+    },
+    // 剩余所有未付金额
+    remainTotalPayIds: {
       type: String,
       default() {
         return ''
@@ -170,9 +187,19 @@ export default {
   data() {
     return {
       showPop: false,
+      payMoneyType: '1',
+      selectedPayIds: '',
     }
   },
   methods: {
+    switchPayType(type) {
+      this.payMoneyType = type
+      if (type === '2') {
+        this.selectedPayIds = this.remainTotalPayIds
+      } else {
+        this.selectedPayIds = this.batchIds
+      }
+    },
     cancelModal() {
       this.showPop = false
     },
@@ -190,7 +217,7 @@ export default {
           orderId: this.orderData.id,
           cusOrderId: this.orderData.cusOrderId,
           fromPage: this.fromPage,
-          batchIds: this.batchIds,
+          batchIds: this.selectedPayIds || this.batchIds,
         },
       })
     },

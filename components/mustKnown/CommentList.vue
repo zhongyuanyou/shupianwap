@@ -61,6 +61,7 @@
         <sp-field
           v-model.trim="content"
           maxlength="100"
+          style="font-size: 16px"
           placeholder="请输入您的评论内容"
         />
         <p
@@ -171,6 +172,9 @@ export default {
       }
     },
     async Applaud(item) {
+      if (!(await this.isLogin())) {
+        return
+      }
       this.mackLoading = true
       const { code, message, data } = await this.$axios.post(
         knownApi.comments.like,
@@ -195,7 +199,18 @@ export default {
         console.log(message)
       }
     },
+    async isLogin() {
+      const res = await this.$isLogin()
+      if (res === 'app_login_success') {
+        this.init()
+        return false
+      }
+      return true
+    },
     async publish() {
+      if (!(await this.isLogin())) {
+        return
+      }
       if (!this.content) {
         return
       }
@@ -275,7 +290,7 @@ export default {
       position: relative;
       > span {
         font-size: 24px;
-        font-weight: 500;
+        font-weight: 600;
         color: #999;
         display: block;
         height: 48px;
@@ -349,7 +364,7 @@ export default {
     }
   }
   .foot {
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #f4f4f4;
     height: 96px;
     display: flex;
     align-items: center;
@@ -362,9 +377,8 @@ export default {
     }
     > p {
       margin-left: auto;
-      height: 28px;
-      font-size: 28px;
-      font-weight: 500;
+      font-size: 30px;
+      font-weight: 600;
       color: rgba(73, 116, 245, 0.4);
     }
   }

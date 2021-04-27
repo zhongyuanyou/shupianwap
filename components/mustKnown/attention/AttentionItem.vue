@@ -89,11 +89,6 @@ export default {
         },
       })
     },
-    invite() {
-      this.$router.push({
-        path: '/known/detail/invitationList',
-      })
-    },
     toTimeStamp(time) {
       console.log('time', time)
       let times = time.replace(/-/g, '/')
@@ -234,7 +229,7 @@ export default {
   .item_title {
     font-size: 36px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: 600;
     color: #1a1a1a;
     line-height: 48px;
   }

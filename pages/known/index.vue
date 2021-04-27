@@ -49,17 +49,19 @@
         ></my-icon>
       </div>
     </header-slot>
-    <Answer v-if="tabs[active].executionParameters === 'huida'" />
+    <template v-if="tabs && tabs.length">
+      <Answer v-if="tabs[active].executionParameters === 'huida'" />
 
-    <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
-      >关注</Attention
-    >
-    <hot-list
-      v-else-if="tabs[active].executionParameters === 'rebang'"
-      :category-id="tabs[active].id"
-    />
-    <Recommend v-else-if="tabs[active].executionParameters === 'tuijian'" />
-    <ordinary-list v-else :categor-ids="tabs[active].id" />
+      <Attention v-else-if="tabs[active].executionParameters === 'guanzhu'"
+        >关注</Attention
+      >
+      <hot-list
+        v-else-if="tabs[active].executionParameters === 'rebang'"
+        :category-id="tabs[active].id"
+      />
+      <Recommend v-else-if="tabs[active].executionParameters === 'tuijian'" />
+      <ordinary-list v-else :categor-ids="tabs[active].id" />
+    </template>
 
     <!-- 弹出框tab修改列表 start -->
     <sp-popup
@@ -111,7 +113,11 @@
         </div>
         <div class="list">
           <div class="list_items">
-            <div v-for="(item, index) in morePlate" :key="index" class="item">
+            <div
+              v-for="(item, index) in morePlate"
+              :key="index"
+              class="item items"
+            >
               <div class="item_name">{{ item.name }}</div>
               <my-icon
                 v-show="showIcon"
@@ -189,7 +195,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import {
   WorkTab,
   WorkTabs,
@@ -211,7 +217,8 @@ import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi } from '@/api'
 
 export default {
-  name: 'Index',
+  layout: 'keepAlive',
+  name: 'KnownIndex',
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
@@ -230,7 +237,7 @@ export default {
     OrdinaryList,
     HeaderSlot,
   },
-  async asyncData({ $axios, store }) {
+  async asyncData({ store, $axios }) {
     const { code, message, data } = await $axios.get(
       knownApi.questionArticle.categoryList,
       {
@@ -241,9 +248,7 @@ export default {
         },
       }
     )
-    return {
-      tabs: data,
-    }
+    return { tabs: data || [] }
   },
   data() {
     return {
@@ -285,12 +290,32 @@ export default {
     this.tapSafeApp.height = this.statusBarHeight + 'px'
     this.init()
   },
+  beforeRouteLeave(to, from, next) {
+    if (
+      [
+        'known-detail-answer',
+        'known-detail-article',
+        'known-detail-question',
+      ].includes(to.name)
+    ) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'KnownIndex' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'KnownIndex' })
+    }
+    next()
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     init() {
       if (localStorage.getItem('morePlate')) {
         this.morePlate = JSON.parse(localStorage.getItem('morePlate'))
         this.myPlate = this.tabs.filter(
           (item) => !this.morePlate.some((ele) => ele.id === item.id)
+        )
+        this.morePlate = this.tabs.filter((item) =>
+          this.morePlate.some((ele) => ele.id === item.id)
         )
         this.tabs = this.myPlate
       } else {
@@ -352,6 +377,10 @@ export default {
 /deep/ .sp-sticky {
   background: #fff;
 }
+.items {
+  background: none !important;
+  border: 1px dashed #dddddd;
+}
 .active {
   color: #cccccc !important;
 }
@@ -362,7 +391,7 @@ export default {
   height: 32px;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: 600;
   color: #222222;
   line-height: 32px;
 }
@@ -388,14 +417,14 @@ export default {
 ::v-deep .sp-work-tab--active {
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: 600;
   color: #222222;
 }
 /deep/ .sp-work-tab__text {
   flex-shrink: 0;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: 600;
   color: #999999;
 }
 /deep/ .sp-work-tabs__line {
@@ -452,7 +481,7 @@ export default {
       width: 670px;
       /deep/.sp-tab {
         font-size: 32px;
-        font-weight: 500;
+        font-weight: 600;
       }
     }
     /deep/.sp-tabs__line {
@@ -489,7 +518,7 @@ export default {
         border-radius: 50%;
         font-size: 22px;
         font-family: SourceHanSansCN-Medium, SourceHanSansCN;
-        font-weight: 500;
+        font-weight: 600;
         color: #133aa3;
         display: flex;
         justify-content: center;
@@ -499,7 +528,7 @@ export default {
         height: 28px;
         font-size: 28px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font-weight: 600;
         color: #133aa3;
         line-height: 28px;
         margin-left: 12px;
@@ -526,7 +555,7 @@ export default {
         height: 28px;
         font-size: 28px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font-weight: 600;
         color: #564499;
         line-height: 28px;
         margin-left: 12px;
@@ -548,7 +577,7 @@ export default {
           height: 40px;
           font-size: 40px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
+          font-weight: 600;
           color: #222222;
         }
         .my_icon {
@@ -570,7 +599,7 @@ export default {
             height: 30px;
             font-size: 30px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
+            font-weight: 600;
             color: #222222;
             line-height: 30px;
           }
@@ -598,6 +627,7 @@ export default {
         .list_items {
           display: flex;
           flex-flow: row wrap;
+
           .item {
             width: 154px;
             height: 88px;
@@ -620,7 +650,7 @@ export default {
               right: 0;
             }
             > .item_name {
-              width: 84px;
+              width: 130px;
               // height: 28px;
               text-align: center;
               font-size: 26px;
@@ -650,7 +680,7 @@ export default {
             height: 30px;
             font-size: 30px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
+            font-weight: 600;
             color: #222222;
             line-height: 30px;
           }
@@ -728,7 +758,7 @@ export default {
       padding: 0 40px;
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: 600;
       color: #555555;
       line-height: 28px;
       > .popUserPhoto {
@@ -757,7 +787,7 @@ export default {
           height: 24px;
           font-size: 24px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
+          font-weight: 600;
           color: #222222;
           line-height: 24px;
           display: block;

@@ -55,11 +55,11 @@
       :style="{ maxHeight: '1067px' }"
     >
       <p class="popup_title">优惠</p>
+      <p class="p1">优惠预估</p>
+      <p class="p2">
+        使用以下优惠券后预估价<span>{{ couponPreferentialLine }}元</span>
+      </p>
       <div class="popup_box">
-        <p class="p1">优惠预估</p>
-        <p class="p2">
-          使用以下优惠券后预估价<span>{{ couponPreferentialLine }}元</span>
-        </p>
         <p class="vouchers_box_title">可领取优惠券</p>
         <div class="vouchers_box">
           <div class="vouchers_list">
@@ -418,7 +418,7 @@ export default {
         overflow: hidden;
         .tag {
           display: inline-block;
-          // width: 60px;
+          width: 60px;
           height: 32px;
           line-height: 32px;
           background-color: #feefef;
@@ -602,24 +602,28 @@ export default {
     top: 56px;
     right: 40px;
   }
+  .p1 {
+    color: #222222;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 24px;
+    padding: 0 40px;
+  }
+  .p2 {
+    color: #222222;
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 32px;
+    padding: 0 40px;
+    span {
+      color: #ec5330;
+    }
+  }
   .popup_box {
     padding: 0 40px;
     overflow-y: auto;
-    .p1 {
-      color: #222222;
-      font-size: 28px;
-      font-weight: bold;
-      margin-bottom: 24px;
-    }
-    .p2 {
-      color: #222222;
-      font-size: 26px;
-      font-weight: 400;
-      margin-bottom: 32px;
-      span {
-        color: #ec5330;
-      }
-    }
+    position: relative;
+
     .vouchers_box {
       max-height: 820px;
       padding-bottom: 54px;
@@ -689,7 +693,7 @@ export default {
               position: absolute;
               top: 79px;
               right: 32px;
-              width: 132px;
+              width: 140px;
               height: 54px;
               text-align: center;
               line-height: 54px;

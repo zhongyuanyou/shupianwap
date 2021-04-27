@@ -89,20 +89,18 @@
       </div>
       <div class="my_btns_item" @click="handleClick(3)">
         <div class="my_btns_item_icon">
-          <my-icon
-            name="personal_ic_authenticate"
-            size="0.36rem"
-            color="#00B365"
-          />
+          <my-icon name="shimingrenzheng" size="0.36rem" color="#00B365" />
         </div>
         <div class="my_btns_item_con">
           实名认证
           <div class="item_lf">
             <span>{{
-              realStatus === 'NO_AUTHENTICATION'
+              info.realStatus === 'NO_AUTHENTICATION'
                 ? '未实名认证'
-                : info.realStatus === 'AUTHENTICATION'
+                : info.realStatus === 'AUTHENTICATION_SUCCESS'
                 ? '已实名认证'
+                : info.realStatus === 'AUTHENTICATION_ING'
+                ? '认证中'
                 : '未实名认证'
             }}</span>
             <my-icon
@@ -343,7 +341,8 @@ export default {
       } else if (val === 3) {
         if (
           this.realStatus === 'NO_AUTHENTICATION' ||
-          this.realStatus === 'AUTHENTICATION_FAIL'
+          this.realStatus === 'AUTHENTICATION_FAIL' ||
+          this.realStatus === 'AUTHENTICATION_INVALID'
         ) {
           this.$router.push('/contract/authentication')
         }
@@ -482,7 +481,7 @@ export default {
         height: 107px;
         margin-left: 24px;
         width: 100%;
-        border-bottom: 1px solid rgba(205, 205, 205, 0.5);
+        border-bottom: 1px solid #f4f4f4;
         text-align: left;
         line-height: 107px;
         font-size: 28px;

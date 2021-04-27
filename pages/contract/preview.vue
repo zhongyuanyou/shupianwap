@@ -128,7 +128,7 @@ export default {
       this.loading = true
       if (
         this.$cookies.get('realStatus') === 'AUTHENTICATION_SUCCESS' ||
-        this.$cookies.get('realStatus') === 'AUTHENTICATION_FAIL'
+        this.$cookies.get('realStatus') === 'AUTHENTICATION_ING'
       ) {
         contractApi
           .signcontart(

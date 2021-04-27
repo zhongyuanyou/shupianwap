@@ -23,8 +23,8 @@
             @click="tabactivefn(item, index)"
           >
             <span>{{ item.name }}</span
-            ><b v-if="index == 0">{{ `(${datalist.length})` }}</b>
-            <b v-else>{{ `(${nolist.length})` }}</b>
+            ><b v-if="index == 0">{{ `(${datalist.length || 0})` }}</b>
+            <b v-else>{{ `(${nolist.length || 0})` }}</b>
             <i class="icon"></i>
           </p>
         </div>
@@ -42,16 +42,20 @@
                 @click="checkitem(item, index)"
               >
                 <div class="left">
-                  <h1>{{ item.reducePrice }}</h1>
-                  <p>满{{ item.fullPrice }}元可用</p>
+                  <h1>{{ item.marketingCouponVO.reducePrice }}</h1>
+                  <p>满{{ item.marketingCouponVO.fullPrice }}元可用</p>
                 </div>
                 <div class="right">
                   <div class="data">
-                    <h1>{{ item.couponName }}</h1>
-                    <p v-if="item.useType === 1">全品类通用</p>
-                    <p v-else-if="item.useType === 2">限定“部分类别产品”使用</p>
+                    <h1>{{ item.marketingCouponVO.couponName }}</h1>
+                    <p v-if="item.marketingCouponVO.useType === 1">
+                      全品类通用
+                    </p>
+                    <p v-else-if="item.marketingCouponVO.useType === 2">
+                      限定“部分类别产品”使用
+                    </p>
                     <p v-else>限定“指定产品”使用</p>
-                    <p class="date">{{ item.serviceLife }}</p>
+                    <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
                   <div class="right">
                     <sp-radio-group v-model="radio">
@@ -82,16 +86,20 @@
             <div v-for="(item, index) in nolist" :key="index" class="nolist">
               <div class="top">
                 <div class="left">
-                  <h1>{{ item.reducePrice }}</h1>
-                  <p>满{{ item.fullPrice }}元可用</p>
+                  <h1>{{ item.marketingCouponVO.reducePrice }}</h1>
+                  <p>满{{ item.marketingCouponVO.fullPrice }}元可用</p>
                 </div>
                 <div class="right">
                   <div class="data">
-                    <h1>{{ item.couponName }}</h1>
-                    <p v-if="item.useType === 1">全品类通用</p>
-                    <p v-else-if="item.useType === 2">限定“部分类别产品”使用</p>
+                    <h1>{{ item.marketingCouponVO.couponName }}</h1>
+                    <p v-if="item.marketingCouponVO.useType === 1">
+                      全品类通用
+                    </p>
+                    <p v-else-if="item.marketingCouponVO.useType === 2">
+                      限定“部分类别产品”使用
+                    </p>
                     <p v-else>限定“指定产品”使用</p>
-                    <p class="date">{{ item.serviceLife }}</p>
+                    <p class="date">{{ item.marketingCouponVO.serviceLife }}</p>
                   </div>
                 </div>
               </div>
@@ -197,17 +205,26 @@ export default {
               this.$route.query.type === 'shopcar'
                 ? this.$parent.order.skuTotalPrice
                 : this.$parent.order.salesPrice,
-            culation: this.checkarr.reducePrice || 0,
+            culation: this.checkarr
+              ? this.checkarr.marketingCouponVO
+                ? this.checkarr.marketingCouponVO.reducePrice
+                : 0
+              : 0,
           }
         )
         .then((result) => {
           this.$parent.price = result
           this.$parent.popupshow = false
-          this.$parent.coupon = `-${this.checkarr.reducePrice}`
+          this.$parent.coupon = this.checkarr
+            ? this.checkarr.marketingCouponVO
+              ? `-${this.checkarr.marketingCouponVO.reducePrice}`
+              : ''
+            : ''
           this.$parent.skeletonloading = false
         })
         .catch((e) => {
           this.$parent.skeletonloading = false
+          console.log(e)
           Toast({
             message: e.data.error,
             iconPrefix: 'sp-iconfont',
@@ -274,6 +291,7 @@ export default {
     border-bottom: 1px solid #f4f4f4;
     > p {
       font-size: 28px;
+      height: 50px;
       font-family: PingFang SC;
       font-weight: 400;
       color: #222222;
@@ -426,7 +444,7 @@ export default {
       > .nolist {
         height: 271px;
         margin-top: 24px;
-        background: url(https://img10.dgg.cn/pt03/wap/83kzvunu5vw0000.png)
+        background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png)
           no-repeat;
         background-size: 100%;
         box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);

@@ -87,10 +87,10 @@ export default {
     justify-content: space-between;
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: 600;
     color: #222222;
     line-height: 39px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #f4f4f4;
     padding: 40px 0;
     .left {
       flex: 1;

@@ -13,7 +13,6 @@
         </template>
       </Header>
     </div>
-
     <div class="body">
       <sp-pull-refresh
         v-model="refreshing"
@@ -294,10 +293,9 @@ export default {
 
     async getList(currentPage) {
       const { limit } = this.pageOption
-      const { userId } =
-        this.userInfo || this.$route.query.userId
-          ? { userId: this.$route.query.userId }
-          : {} // { userId: '607997598875151734' }
+      const { userId } = this.$route.query.userId
+        ? { userId: this.$route.query.userId }
+        : this.userInfo
       if (!userId) {
         this.$xToast.warn('请先登录！')
         return

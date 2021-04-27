@@ -6,12 +6,12 @@
       :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
     >
       <my-icon
-        name="zuo"
+        name="nav_ic_back"
         size="0.4rem"
         :color="fixed ? '#1A1A1A' : '#D8D8D8'"
         @click.native="$back"
       ></my-icon>
-      {{ fixed ? userName : '' }}
+      <div style="margin-left: 0.2rem">{{ fixed ? userName : '' }}</div>
     </div>
     <div class="top_box">
       <div class="card">
@@ -54,7 +54,23 @@
             <div class="user_data_item_name">获赞</div>
           </div>
         </div>
-        <sp-image round class="user_banner" fit="cover" src="" />
+        <sp-swipe
+          v-if="adList.length"
+          class="user_banner"
+          :autoplay="3000"
+          indicator-color="white"
+        >
+          <sp-swipe-item
+            v-for="(item, index) in adList"
+            :key="index"
+            @click="adJump(item.materialList[0])"
+          >
+            <sp-image
+              class="banner_img"
+              fit="cover"
+              :src="item.materialList[0].materialUrl"
+          /></sp-swipe-item>
+        </sp-swipe>
       </div>
     </div>
     <div class="bottom_box">
@@ -91,7 +107,7 @@
 </template>
 
 <script>
-import { Tabs, Tab, Image, List } from '@chipspc/vant-dgg'
+import { Tabs, Tab, Image, List, Swipe, SwipeItem } from '@chipspc/vant-dgg'
 import CommentList from '@/components/mustKnown/CommentList'
 import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
@@ -103,6 +119,8 @@ export default {
     [Tab.name]: Tab,
     [Image.name]: Image,
     [List.name]: List,
+    [Swipe.name]: Swipe,
+    [SwipeItem.name]: SwipeItem,
     CommentList,
     Item,
   },
@@ -136,6 +154,7 @@ export default {
   data() {
     return {
       articleId: '', // 打开评论列表需要传的id
+      userName: '',
       active: 0,
       menuList: [
         {
@@ -162,6 +181,7 @@ export default {
       page: 1,
       limit: 10,
       fixed: false,
+      adList: [],
     }
   },
   computed: {
@@ -180,9 +200,20 @@ export default {
     },
   },
   mounted() {
+    this.getAdList()
     window.addEventListener('scroll', this.getScroll)
   },
   methods: {
+    adJump(item) {
+      console.log(item)
+      if (item.linkType === 1) {
+        this.$router.push(`/${item.wapLink}`)
+      } else if (item.linkType === 2) {
+        location.href = item.materialLink
+      } else {
+        location.href = item.imgLink
+      }
+    },
     toFans() {
       this.$router.push({
         path: '/known/home/fans',
@@ -294,6 +325,21 @@ export default {
         this.finished = true
       }
     },
+    async getAdList() {
+      const { code, message, data } = await this.$axios.get(
+        knownApi.home.adList,
+        {
+          params: {
+            locationCode: 'ad100028',
+          },
+        }
+      )
+      if (code === 200) {
+        this.adList = data.sortMaterialList
+      } else {
+        console.log(message)
+      }
+    },
   },
 }
 </script>
@@ -301,6 +347,7 @@ export default {
 <style lang="less" scoped>
 .home_container {
   height: 100%;
+  background: #fff;
   .header {
     z-index: 10;
     position: fixed;
@@ -308,7 +355,7 @@ export default {
     left: 0;
     width: 100%;
     height: 88px;
-    padding-left: 86px;
+    padding-left: 0.32rem;
     color: #1a1a1a;
     font-size: 36px;
     font-weight: 500px;
@@ -323,13 +370,15 @@ export default {
     }
   }
   .header_fixed {
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid #f4f4f4;
     background: #ffffff;
   }
 
   .top_box {
     padding-top: 320px;
-    background: #026ac3;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/images/dkl5m4sxqyo0000.png')
+      top right no-repeat;
+    background-size: contain;
     .card {
       position: relative;
       background-color: #ffffff;
@@ -350,12 +399,14 @@ export default {
         justify-content: flex-end;
         text-align: center;
         font-size: 26px;
-        font-weight: 500;
+        font-weight: 600;
         height: 64px;
         .bt_attention {
           width: 144px;
-          height: 64px;
-          line-height: 64px;
+          // height: 64px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           background: #4974f5;
           border-radius: 8px;
           color: #ffffff;
@@ -378,7 +429,7 @@ export default {
       .user_name {
         margin-top: 48px;
         font-size: 44px;
-        font-weight: 500;
+        font-weight: 600;
         color: #1a1a1a;
         line-height: 44px;
       }
@@ -401,7 +452,7 @@ export default {
             color: #4974f5;
             font-size: 36px;
             line-height: 36px;
-            font-weight: 500;
+            font-weight: 600;
           }
           &_name {
             font-size: 26px;
@@ -417,6 +468,11 @@ export default {
         width: 686px;
         height: 180px;
         border-radius: 12px;
+        .banner_img {
+          width: 686px;
+          height: 180px;
+          border-radius: 12px;
+        }
       }
     }
   }
@@ -424,14 +480,14 @@ export default {
   .bottom_box {
     background-color: #f8f8f8;
     /deep/ .sp-tabs {
-      border-bottom: 1px solid #dddddd;
+      border-bottom: 1px solid #f4f4f4;
     }
     /deep/ .sp-tab {
       font-size: 30px;
     }
     .sp-tab--active {
       font-size: 32px;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .list_container {
@@ -467,7 +523,7 @@ export default {
         .title {
           font-family: PingFangSC-Medium, PingFang SC;
           font-size: 36px;
-          font-weight: 500;
+          font-weight: 600;
           color: #1a1a1a;
           line-height: 48px;
           margin-bottom: 17px;

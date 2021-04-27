@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="chooseque">
     <Header title="写回答" :fixed="true" />
     <div class="main">
       <sp-tabs v-model="active" @change="changeTab">
@@ -193,12 +193,15 @@ export default {
 /deep/.my-head {
   box-shadow: unset;
 }
+.chooseque {
+  background: #fff;
+}
 .main {
   /deep/.sp-tabs {
     .sp-tabs__wrap {
       height: 72px;
       padding-bottom: 8px;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #f4f4f4;
       .sp-tab {
         font-size: 30px;
         font-family: PingFangSC-Regular, PingFang SC;
@@ -228,20 +231,7 @@ export default {
     padding: 40px 0;
     font-size: 28px;
     color: #222;
-    // border-bottom: 1px solid #ddd;
-    position: relative;
-    &::after {
-      position: absolute;
-      box-sizing: border-box;
-      content: ' ';
-      pointer-events: none;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      border-bottom: 1px solid #dddddd;
-      -webkit-transform: scaleY(0.6);
-      transform: scaleY(0.6);
-    }
+    border-bottom: 1px solid #f4f4f4;
     .view-num {
       font-size: 28px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -280,7 +270,7 @@ export default {
       height: auto;
       font-size: 30px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: 600;
       color: #222222;
       line-height: 40px;
       margin-bottom: 20px;
@@ -300,7 +290,7 @@ export default {
         border-radius: 8px;
         text-align: center;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font-weight: 600;
         color: #ffffff;
         .sp-button {
           width: 100%;

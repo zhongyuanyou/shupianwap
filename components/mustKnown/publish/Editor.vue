@@ -1,15 +1,17 @@
 <template xmlns:v-quill="富文本编辑器">
-  <div id="edit-container" class="edit-container">
-    <div
-      v-quill:myQuillEditor="editorOption"
-      class="quill-editor"
-      :content="content"
-      :placeholder="custPlaceholder"
-      @change="onEditorChange($event)"
-      @blur="onEditorBlur($event)"
-      @focus="onEditorFocus($event)"
-      @ready="onEditorReady($event)"
-    ></div>
+  <div style="overflow-y: auto; height: 100%">
+    <div class="edit-container">
+      <div
+        v-quill:myQuillEditor="editorOption"
+        class="quill-editor"
+        :content="content"
+        :placeholder="custPlaceholder"
+        @change="onEditorChange($event)"
+        @blur="onEditorBlur($event)"
+        @focus="onEditorFocus($event)"
+        @ready="onEditorReady($event)"
+      ></div>
+    </div>
   </div>
 </template>
 <script>
@@ -168,14 +170,16 @@ export default {
       },
     },
   },
+  mounted() {},
   methods: {
     onEditorChange(a) {
-      if (a.html.length > this.textLength) {
-        a.quill.deleteText(this.textLength, 1)
-        this.$xToast.success(`字符不能超过${this.textLength}字`)
-      } else {
-        this.$emit('editorChange', a)
-      }
+      // if (a.html.length > this.textLength) {
+      //   a.quill.deleteText(this.textLength, 1)
+      //   this.$xToast.error(`字符不能超过${this.textLength}字`)
+      // } else {
+      //   this.$emit('editorChange', a)
+      // }
+      this.$emit('editorChange', a)
     },
     onEditorFocus(a) {
       console.log('onEditorFocus', a)

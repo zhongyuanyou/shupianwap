@@ -9,12 +9,23 @@
           @clickInputHandle="keyClickHandle"
         >
           <template v-slot:left>
-            <sp-icon name="arrow-left" size="0.4rem" @click="backPage" />
+            <my-icon
+              name="nav_ic_back"
+              size="0.40rem"
+              color="#1a1a1a"
+              class="my_icon"
+              @click.native="backPage"
+            ></my-icon>
           </template>
         </Search>
       </div>
     </header-slot>
-    <div class="recommend">
+    <div
+      class="recommend"
+      :style="{
+        height: `calc(100vh - ${88 + (appInfo.statusBarHeight || 0)}px)`,
+      }"
+    >
       <div class="titbox">
         <span>为你精选 {{ recommendList.length }} 位优质回答者</span>
         <p :class="[invitedAllFlag ? 'active' : '']" @click="invitAll()">
@@ -236,7 +247,8 @@ export default {
 
 <style lang="less" scoped>
 .invitationList {
-  min-height: 100vh;
+  background: #fff;
+  height: 100vh;
   .head {
     height: 88px;
     width: 100%;
@@ -268,7 +280,6 @@ export default {
     }
   }
   .recommend {
-    height: calc(100vh - 88px);
     > .titbox {
       height: 102px;
       background: #f5f5f5;
@@ -283,7 +294,7 @@ export default {
       > p {
         margin-left: auto;
         font-size: 28px;
-        font-weight: 500;
+        font-weight: 600;
         color: #4974f5;
       }
       > p.active {
@@ -323,7 +334,7 @@ export default {
           text-align: center;
           line-height: 72px;
           font-size: 26px;
-          font-weight: 500;
+          font-weight: 600;
           color: #ffffff;
           margin-left: auto;
         }

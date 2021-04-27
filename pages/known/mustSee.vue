@@ -1,48 +1,33 @@
 <template>
   <div class="MustSee">
-    <div
-      class="head"
-      :style="{ paddingTop: appInfo ? appInfo.statusBarHeight + 'px' : '0px' }"
-    >
-      <sp-icon
-        name="arrow-left"
-        class="left"
-        color="#fff"
-        size="0.4rem"
-        @click.native="back()"
-      />
-      <sp-icon
-        name="search"
-        class="right"
-        color="#fff"
-        size="0.4rem"
-        @click.native="$router.push({ path: '/known/search' })"
-      />
-    </div>
-    <sp-sticky @scroll="scrollHandle">
-      <div v-show="showPaper" class="header_search">
-        <my-icon
-          name="nav_ic_back"
-          size="0.40rem"
-          color="#FFFFFF"
-          class="my_icon"
-          @click.native="back()"
-        ></my-icon>
-        <div class="newspaperTitle">进站必看</div>
-        <my-icon
-          name="sear_ic_sear"
-          size="0.40rem"
-          color="#FFFFFF"
-          class="my_icon"
-          @click.native="$router.push({ path: '/known/search' })"
-        ></my-icon>
+    <HeaderSlot>
+      <div class="flex">
+        <div>
+          <my-icon
+            name="nav_ic_back"
+            size="0.40rem"
+            color="#FFFFFF"
+            class="my_icon"
+            @click.native="back()"
+          ></my-icon>
+        </div>
+        <div v-show="showHead" class="newspaperTitle">进站必看</div>
+        <div>
+          <my-icon
+            name="sear_ic_sear"
+            size="0.40rem"
+            color="#FFFFFF"
+            class="my_icon"
+            @click.native="$router.push({ path: '/known/search' })"
+          ></my-icon>
+        </div>
       </div>
-    </sp-sticky>
+    </HeaderSlot>
     <div class="top">
-      <h1>进站必看</h1>
-      <p>必懂上那些「压箱底」的宝藏内容</p>
+      <!-- <h1>进站必看</h1>
+      <p>必懂上那些「压箱底」的宝藏内容</p> -->
     </div>
-    <div class="listbox">
+    <div ref="body" class="listbox">
       <div
         v-for="(item, index) in mustSeeData"
         :key="index"
@@ -86,14 +71,17 @@
 import { mapState } from 'vuex'
 import { Icon, Sticky } from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
   name: 'MustSee',
   components: {
     [Sticky.name]: Sticky,
     [Icon.name]: Icon,
+    HeaderSlot,
   },
   data() {
     return {
+      showHead: false,
       categorIds: [],
       mustSeeData: [],
       name: '',
@@ -111,6 +99,10 @@ export default {
     this.name = this.$route.query.name
     this.description = this.$route.query.description
     this.init()
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     back() {
@@ -159,6 +151,16 @@ export default {
         console.log(message)
       }
     },
+    handleScroll() {
+      // 获取推荐板块到顶部的距离 减 搜索栏高度
+      const scrollTop = this.$refs.body.getBoundingClientRect().top // 滚动条距离顶部的位置
+      const than = document.body.clientWidth / 375
+      if (scrollTop / than <= ((this.appInfo.statusBarHeight || 0) + 88) / 2) {
+        this.showHead = true
+      } else {
+        this.showHead = false
+      }
+    },
     goDetail(item) {
       this.$router.push({
         path: '/known/detail/answer',
@@ -186,20 +188,10 @@ export default {
     }
   }
   > .top {
-    height: 292px;
-    padding: 98px 40px 0 40px;
-    box-sizing: border-box;
-    > h1 {
-      font-size: 52px;
-      color: #ffffff;
-      line-height: 52px;
-    }
-    > p {
-      font-size: 26px;
-      margin-top: 26px;
-      font-weight: 400;
-      color: #ffffff;
-    }
+    height: 420px;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
+      no-repeat 100%;
+    background-size: 100%;
   }
   > .listbox {
     border-radius: 24px 24px 0px 0px;
@@ -292,30 +284,11 @@ export default {
     }
   }
 }
-.header_search {
-  padding: 0 34px;
-  height: 88px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #4974f5;
-  .my_icon {
-  }
-  .newspaperTitle {
-    height: 50px;
-    font-size: 36px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
-    color: #ffffff;
-    line-height: 50px;
-  }
-}
 .newspaperTitle {
   height: 50px;
   font-size: 36px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: 600;
   color: #ffffff;
   line-height: 50px;
 }
@@ -335,6 +308,34 @@ export default {
   margin: 60px auto;
   .my_icon {
     margin-left: 8px;
+  }
+}
+/deep/ .fixed-head {
+  position: absolute !important;
+  background: #4974f5 !important;
+}
+/deep/ .my-head {
+  background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
+    no-repeat;
+  background-size: 100%;
+  box-shadow: none !important;
+}
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 0.88rem;
+  padding: 0 0.32rem;
+  // background: #4974f5;
+  div {
+    display: flex;
+    height: 0.88rem;
+    align-items: center;
+  }
+  .newspaperTitle {
+    font-size: 36px;
+    font-weight: 600;
+    color: #ffffff;
   }
 }
 </style>

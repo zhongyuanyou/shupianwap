@@ -202,18 +202,18 @@ export default {
 <style lang="less" scoped>
 .home_container {
   height: 100%;
-
+  background: #fff;
   .bottom_box {
     background-color: #f8f8f8;
     /deep/ .sp-tabs {
-      border-bottom: 1px solid #dddddd;
+      border-bottom: 1px solid #f4f4f4;
     }
     /deep/ .sp-tab {
       font-size: 30px;
     }
     .sp-tab--active {
       font-size: 32px;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .list_container {
@@ -249,7 +249,7 @@ export default {
         .title {
           font-family: PingFangSC-Medium, PingFang SC;
           font-size: 36px;
-          font-weight: 500;
+          font-weight: 600;
           color: #1a1a1a;
           line-height: 48px;
           margin-bottom: 17px;
