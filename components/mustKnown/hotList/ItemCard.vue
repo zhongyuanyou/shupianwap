@@ -47,7 +47,7 @@
         </div>
       </div>
     </sp-cell>
-    <div class="bottom" @click="goRecommend">
+    <div v-show="toLoad" class="bottom" @click="goRecommend">
       到底啦，去推荐看看吧
       <my-icon
         name="you"
@@ -93,6 +93,10 @@ export default {
         return []
       },
     },
+    toLoad: {
+      type: Boolean,
+      default: () => false,
+    },
   },
   data() {
     return {
@@ -103,6 +107,11 @@ export default {
     }
   },
   computed: {},
+  watch: {
+    listData() {
+      return true
+    },
+  },
   methods: {
     init() {},
     // 调到推荐页面
