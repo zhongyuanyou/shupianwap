@@ -113,7 +113,6 @@ import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
 import utils from '@/utils/changeBusinessData'
 export default {
-  layout: 'appSafeView',
   name: 'Collection',
   components: {
     [Tabs.name]: Tabs,

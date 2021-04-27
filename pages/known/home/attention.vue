@@ -48,7 +48,6 @@ import { TopNavBar, Tabs, Tab, Image, List, Dialog } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import { knownApi } from '~/api'
 export default {
-  layout: 'appSafeView',
   name: 'Attention',
   components: {
     [TopNavBar.name]: TopNavBar,

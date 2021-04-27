@@ -232,7 +232,7 @@
         :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
         @click="goInvitionPage"
       >
-        <sp-icon name="friends-o" size="0.4rem" />
+        <my-icon name="yaoqinghuida_mian" size="0.4rem"></my-icon>
         <span>邀请回答</span>
       </div>
       <div
@@ -240,7 +240,7 @@
         :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
         @click="goPublishAnswer"
       >
-        <sp-icon name="edit" size="0.4rem" />
+        <my-icon name="xiehuida" size="0.4rem"></my-icon>
         <span>写回答</span>
       </div>
       <div
@@ -304,7 +304,7 @@ import { knownApi, userinfoApi } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import util from '@/utils/changeBusinessData'
 export default {
-  layout: 'appSafeViewKpAlive',
+  layout: 'keepAlive',
   name: 'Detail',
   components: {
     HeaderSlot,
@@ -1120,7 +1120,7 @@ export default {
     height: 104px;
     background: #ffffff;
     width: 100vw;
-    bottom: -1px;
+    bottom: 10px;
     left: 0;
     display: flex;
     align-items: center;

@@ -86,7 +86,6 @@ import util from '@/utils/changeBusinessData'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 
 export default {
-  layout: 'appSafeView',
   name: 'InvitationSearch',
   components: {
     [Icon.name]: Icon,

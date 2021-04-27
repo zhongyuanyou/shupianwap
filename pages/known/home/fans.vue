@@ -37,7 +37,6 @@ import { TopNavBar, Image, List } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
 import { knownApi } from '~/api'
 export default {
-  layout: 'appSafeView',
   name: 'Fans',
   components: {
     [TopNavBar.name]: TopNavBar,

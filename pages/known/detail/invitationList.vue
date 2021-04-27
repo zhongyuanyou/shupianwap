@@ -68,7 +68,6 @@ import Search from '@/components/common/search/Search'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
-  layout: 'appSafeView',
   name: 'InvitationList',
   components: {
     [Icon.name]: Icon,

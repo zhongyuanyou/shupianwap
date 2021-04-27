@@ -64,7 +64,7 @@
       <DetailArticleList :article-list="articleList" />
     </div>
     <Comment ref="openComment" :article-id="articleDetails.id" />
-    <div class="page-bottom">
+    <div class="page-bottom" :style="isInApp ? 'bottom: 0.3rem' : ''">
       <div
         v-if="
           articleDetails.isApplaudFlag === 0 &&
@@ -170,7 +170,7 @@ import DetailArticleList from '@/components/mustKnown/DetailArticleList'
 import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
-  layout: 'appSafeViewKpAlive',
+  layout: 'keepAlive',
   components: {
     [Icon.name]: Icon,
     [Popup.name]: Popup,

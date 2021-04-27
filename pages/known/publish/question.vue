@@ -56,7 +56,6 @@ import Editor from '@/components/mustKnown/publish/Editor'
 
 import EditorMinxin from '@/mixins/edit'
 export default {
-  layout: 'appSafeView',
   components: {
     PageHead,
     TitleArea,
