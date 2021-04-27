@@ -226,41 +226,43 @@
       </sp-list>
     </div>
     <div v-show="fixedshow" class="fiexdbtn">
-      <div
-        class="btn"
-        :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
-        @click="goInvitionPage"
-      >
-        <my-icon name="yaoqinghuida_mian" size="0.4rem"></my-icon>
-        <span>邀请回答</span>
-      </div>
-      <div
-        class="btn"
-        :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
-        @click="goPublishAnswer"
-      >
-        <my-icon name="xiehuida" size="0.4rem"></my-icon>
-        <span>写回答</span>
-      </div>
-      <div
-        class="collect"
-        :style="{
-          background:
-            questionDetails.isCollectFlag === 1 ? '#F5F5F5' : '#4974F5',
-          color: questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF',
-        }"
-        @click="like('COLLECT')"
-      >
-        <my-icon
-          :name="
-            questionDetails.isCollectFlag === 1 ? 'shoucang_mian' : 'shoucang'
-          "
-          :color="questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF'"
-          size="0.32rem"
-        ></my-icon>
-        <span>{{
-          questionDetails.isCollectFlag === 1 ? '已收藏' : '收藏'
-        }}</span>
+      <div>
+        <div
+          class="btn"
+          :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
+          @click="goInvitionPage"
+        >
+          <my-icon name="yaoqinghuida_mian" size="0.4rem"></my-icon>
+          <span>邀请回答</span>
+        </div>
+        <div
+          class="btn"
+          :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
+          @click="goPublishAnswer"
+        >
+          <my-icon name="xiehuida" size="0.4rem"></my-icon>
+          <span>写回答</span>
+        </div>
+        <div
+          class="collect"
+          :style="{
+            background:
+              questionDetails.isCollectFlag === 1 ? '#F5F5F5' : '#4974F5',
+            color: questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF',
+          }"
+          @click="like('COLLECT')"
+        >
+          <my-icon
+            :name="
+              questionDetails.isCollectFlag === 1 ? 'shoucang_mian' : 'shoucang'
+            "
+            :color="questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF'"
+            size="0.32rem"
+          ></my-icon>
+          <span>{{
+            questionDetails.isCollectFlag === 1 ? '已收藏' : '收藏'
+          }}</span>
+        </div>
       </div>
     </div>
 
@@ -1116,48 +1118,57 @@ export default {
   }
   > .fiexdbtn {
     position: fixed;
-    height: 104px;
-    background: #ffffff;
+    z-index: 1;
+    background: #fff;
     width: 100vw;
-    bottom: 10px;
-    left: 0;
-    display: flex;
-    align-items: center;
-    z-index: 2;
-    justify-content: space-between;
-    padding: 0 32px;
-    box-sizing: border-box;
-    > .btn {
-      width: 216px;
-      height: 72px;
+    left: 20px;
+    bottom: 0;
+    height: 124px;
+    > div {
+      position: fixed;
+      height: 104px;
       background: #ffffff;
-      border-radius: 8px;
-      border: 1px solid #dddddd;
-      font-size: 28px;
-      font-weight: 600;
-      color: #222222;
-      text-align: center;
+      width: 100vw;
+      bottom: 20px;
+      left: 0;
       display: flex;
       align-items: center;
-      justify-content: center;
-      > span {
-        margin-left: 0.1rem;
+      z-index: 2;
+      justify-content: space-between;
+      padding: 0 32px;
+      box-sizing: border-box;
+      > .btn {
+        width: 216px;
+        height: 72px;
+        background: #ffffff;
+        border-radius: 8px;
+        border: 1px solid #dddddd;
+        font-size: 28px;
+        font-weight: 600;
+        color: #222222;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        > span {
+          margin-left: 0.1rem;
+        }
       }
-    }
-    .collect {
-      width: 216px;
-      height: 72px;
-      background: #ffffff;
-      border-radius: 8px;
-      font-size: 28px;
-      font-weight: 600;
-      color: #222222;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      > span {
-        margin-left: 0.1rem;
+      .collect {
+        width: 216px;
+        height: 72px;
+        background: #ffffff;
+        border-radius: 8px;
+        font-size: 28px;
+        font-weight: 600;
+        color: #222222;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        > span {
+          margin-left: 0.1rem;
+        }
       }
     }
   }
