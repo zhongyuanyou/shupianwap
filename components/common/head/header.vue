@@ -25,7 +25,7 @@
           <slot name="left">
             <my-icon
               class="back-icon"
-              name="zuo"
+              name="nav_ic_back"
               size="0.4rem"
               color="#1A1A1A"
               @click.native="onLeftClick"
@@ -87,7 +87,7 @@ export default {
     // 隐藏shadow
     hideShadow: {
       type: Boolean,
-      default: () => false,
+      default: false,
     },
   },
   data() {

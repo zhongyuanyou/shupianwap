@@ -1,7 +1,14 @@
 <template>
   <header-slot>
     <div class="head head2">
-      <sp-icon name="arrow-left" color="#1a1a1a" size="0.4rem" @click="$back" />
+      <!-- <sp-icon name="arrow-left" color="#1a1a1a" size="0.4rem" @click="$back" /> -->
+      <my-icon
+        name="nav_ic_back"
+        size="0.40rem"
+        color="#1a1a1a"
+        class="my_icon"
+        @click.native="$back()"
+      ></my-icon>
       <div class="user-info">
         <sp-image
           class="img"
@@ -72,7 +79,6 @@ export default {
   height: 0.88rem;
   font-size: 30px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
   color: #4974f5;
   padding: 0 32px;
   box-sizing: border-box;
