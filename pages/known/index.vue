@@ -28,7 +28,7 @@
           name="fabu_mian"
           size="0.52rem"
           color="#4974F5"
-          class="my_icon"
+          class="my_icon my_icon_fabu"
           @click.native="openArticle"
         ></my-icon>
       </div>
@@ -400,7 +400,7 @@ export default {
   height: 32px;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #222222;
   line-height: 32px;
 }
@@ -429,14 +429,14 @@ export default {
 ::v-deep .sp-work-tab--active {
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #222222;
 }
 /deep/ .sp-work-tab__text {
   flex-shrink: 0;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #999999;
 }
 /deep/ .sp-work-tabs__line {
@@ -472,6 +472,9 @@ export default {
       height: 52px;
       // margin-left: 32px;
     }
+    .my_icon_fabu {
+      margin-left: 32px;
+    }
   }
   .container_head_app {
     display: flex;
@@ -493,7 +496,7 @@ export default {
       width: 670px;
       /deep/.sp-tab {
         font-size: 32px;
-        font-weight: 600;
+        font-weight: bold;
       }
     }
     /deep/.sp-tabs__line {
@@ -530,7 +533,7 @@ export default {
         border-radius: 50%;
         font-size: 22px;
         font-family: SourceHanSansCN-Medium, SourceHanSansCN;
-        font-weight: 600;
+        font-weight: bold;
         color: #133aa3;
         display: flex;
         justify-content: center;
@@ -540,7 +543,7 @@ export default {
         height: 28px;
         font-size: 28px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #133aa3;
         line-height: 28px;
         margin-left: 12px;
@@ -567,7 +570,7 @@ export default {
         height: 28px;
         font-size: 28px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #564499;
         line-height: 28px;
         margin-left: 12px;
@@ -589,7 +592,7 @@ export default {
           height: 40px;
           font-size: 40px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
         }
       }
@@ -607,7 +610,7 @@ export default {
             height: 30px;
             font-size: 30px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 600;
+            font-weight: bold;
             color: #222222;
             line-height: 30px;
           }
@@ -688,7 +691,7 @@ export default {
             height: 30px;
             font-size: 30px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 600;
+            font-weight: bold;
             color: #222222;
             line-height: 30px;
           }
@@ -766,7 +769,7 @@ export default {
       padding: 0 40px;
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #555555;
       line-height: 28px;
       > .popUserPhoto {
@@ -795,7 +798,7 @@ export default {
           height: 24px;
           font-size: 24px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
           line-height: 24px;
           display: block;

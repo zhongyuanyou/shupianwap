@@ -179,7 +179,7 @@ export default {
     min-height: 36px;
     font-size: 36px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #1a1a1a;
     line-height: 40px;
     word-break: break-all;

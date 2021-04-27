@@ -225,7 +225,7 @@ export default {
   .title {
     font-family: PingFangSC-Medium, PingFang SC;
     font-size: 36px;
-    font-weight: 600;
+    font-weight: bold;
     color: #1a1a1a;
     line-height: 48px;
     margin-bottom: 17px;

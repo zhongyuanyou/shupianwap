@@ -335,7 +335,7 @@ export default {
       }
     }
     > .act {
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
       > i {
         display: block;
