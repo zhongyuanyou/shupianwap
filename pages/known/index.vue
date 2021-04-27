@@ -191,7 +191,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import {
   WorkTab,
   WorkTabs,
@@ -213,7 +213,8 @@ import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi } from '@/api'
 
 export default {
-  name: 'Index',
+  layout: 'keepAlive',
+  name: 'KnownIndex',
   components: {
     [WorkTab.name]: WorkTab,
     [WorkTabs.name]: WorkTabs,
@@ -232,20 +233,25 @@ export default {
     OrdinaryList,
     HeaderSlot,
   },
-  async asyncData({ $axios, store }) {
-    const { code, message, data } = await $axios.get(
-      knownApi.questionArticle.categoryList,
-      {
-        params: {
-          // type 1 获取企大顺导航
-          type: store.state.app.isInApp ? 1 : '',
-          // type: 1,
-        },
-      }
-    )
-    return {
-      tabs: data,
-    }
+  async asyncData({ store, $axios }) {
+    // 这里使用keep-alive已经缓存,所以不需要在进行判断接口调用
+    if (!process.server) return
+    let tempArr = []
+    try {
+      const { code, message, data } = await $axios.get(
+        knownApi.questionArticle.categoryList,
+        {
+          params: {
+            // type 1 获取企大顺导航
+            type: store.state.app.isInApp ? 1 : '',
+            // type: 1,
+          },
+        }
+      )
+      tempArr = data
+    } catch (e) {}
+
+    return { tabs: tempArr }
   },
   data() {
     return {
@@ -287,7 +293,24 @@ export default {
     this.tapSafeApp.height = this.statusBarHeight + 'px'
     this.init()
   },
+  beforeRouteLeave(to, from, next) {
+    if (
+      [
+        'known-detail-answer',
+        'known-detail-article',
+        'known-detail-question',
+      ].includes(to.name)
+    ) {
+      this.SET_KEEP_ALIVE({ type: 'add', name: 'KnownIndex' })
+    } else {
+      this.SET_KEEP_ALIVE({ type: 'remove', name: 'KnownIndex' })
+    }
+    next()
+  },
   methods: {
+    ...mapMutations({
+      SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
+    }),
     init() {
       if (localStorage.getItem('morePlate')) {
         this.morePlate = JSON.parse(localStorage.getItem('morePlate'))
