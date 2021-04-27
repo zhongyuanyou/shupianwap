@@ -231,7 +231,7 @@
         :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
         @click="goInvitionPage"
       >
-        <sp-icon name="friends-o" size="0.4rem" />
+        <my-icon name="yaoqinghuida_mian" size="0.4rem"></my-icon>
         <span>邀请回答</span>
       </div>
       <div
@@ -239,7 +239,7 @@
         :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
         @click="goPublishAnswer"
       >
-        <sp-icon name="edit" size="0.4rem" />
+        <my-icon name="xiehuida" size="0.4rem"></my-icon>
         <span>写回答</span>
       </div>
       <div
