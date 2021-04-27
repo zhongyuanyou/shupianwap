@@ -1,6 +1,6 @@
 <template>
   <div class="contractList">
-    <Head ref="head" title="合同列表">
+    <Head ref="head" title="合同列表" :hide-shadow="true">
       <template #left>
         <my-icon
           class="back-icon"

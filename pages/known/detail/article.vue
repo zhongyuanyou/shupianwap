@@ -3,7 +3,13 @@
     <HeaderSlot>
       <div v-if="!showHead" class="flex">
         <div>
-          <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
+          <my-icon
+            name="nav_ic_back"
+            size="0.40rem"
+            color="#1a1a1a"
+            class="my_icon"
+            @click.native="$back()"
+          ></my-icon>
         </div>
         <div>
           <sp-icon
@@ -163,6 +169,7 @@ import DetailArticleList from '@/components/mustKnown/DetailArticleList'
 import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
+  layout: 'keepAlive',
   components: {
     [Icon.name]: Icon,
     [Popup.name]: Popup,
