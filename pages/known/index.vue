@@ -225,7 +225,7 @@ import HeaderSlot from '@/components/common/head/HeaderSlot'
 import { knownApi } from '@/api'
 
 export default {
-  layout: 'appSafeViewKpAlive',
+  layout: 'keepAlive',
   name: 'KnownIndex',
   components: {
     [WorkTab.name]: WorkTab,

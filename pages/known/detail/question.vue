@@ -303,7 +303,7 @@ import { knownApi, userinfoApi } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import util from '@/utils/changeBusinessData'
 export default {
-  layout: 'appSafeViewKpAlive',
+  layout: 'keepAlive',
   name: 'Detail',
   components: {
     HeaderSlot,
