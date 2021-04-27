@@ -444,7 +444,7 @@ export default {
       > .nolist {
         height: 271px;
         margin-top: 24px;
-        background: url(https://img10.dgg.cn/pt03/wap/83kzvunu5vw0000.png)
+        background: url(https://cdn.shupian.cn/sp-pt/wap/2u00dwnv4aw0000.png)
           no-repeat;
         background-size: 100%;
         box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
