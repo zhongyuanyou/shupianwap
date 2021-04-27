@@ -702,10 +702,11 @@ export default {
       margin-left: 20px;
       border-left: 1px solid #ddd;
       .spiconfont {
-        left: 10px;
+        left: 20px;
       }
     }
     .text {
+      margin-top: 6px;
       font-size: 24px;
       color: #4974f5;
       font-weight: bold;
