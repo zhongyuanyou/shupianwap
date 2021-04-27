@@ -90,9 +90,6 @@ export default {
       return imgList.join(',')
     },
     setTitle(val) {
-      if (!val) {
-        return
-      }
       this.formData.title = val
       if (this.fromPage === 'question') {
         const tempVal = val
