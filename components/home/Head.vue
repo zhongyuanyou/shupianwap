@@ -39,30 +39,32 @@
         </sp-swipe-item>
       </sp-swipe>
     </div>
-    <sp-sticky>
-      <Search
-        ref="searchRef"
-        :icon-left="0.24"
-        :disabled="true"
-        :opacity="opacity"
-        :class="pageScrollTop > 240 ? 'serch-area' : ''"
-        placeholder="搜索您想找的服务"
-        @clickInputHandle="clickInputHandle"
-      >
-        <template v-if="showSearchCityBtn" v-slot:center>
-          <div class="city-box" @click="swichCityHandle">
-            <span class="current-city">{{
-              cityName ? cityName : '定位中'
-            }}</span>
-            <my-icon
-              name="sear_ic_open"
-              size="0.14rem"
-              color="#1A1A1A"
-            ></my-icon>
-          </div>
-        </template>
-      </Search>
-    </sp-sticky>
+    <div :class="pageScrollTop < 300 ? 'search-box' : ''">
+      <sp-sticky>
+        <Search
+          ref="searchRef"
+          :icon-left="0.24"
+          :disabled="true"
+          :opacity="opacity"
+          :class="pageScrollTop > 300 ? 'serch-area' : ''"
+          placeholder="搜索您想找的服务"
+          @clickInputHandle="clickInputHandle"
+        >
+          <template v-if="showSearchCityBtn" v-slot:center>
+            <div class="city-box" @click="swichCityHandle">
+              <span class="current-city">{{
+                cityName ? cityName : '定位中'
+              }}</span>
+              <my-icon
+                name="sear_ic_open"
+                size="0.14rem"
+                color="#1A1A1A"
+              ></my-icon>
+            </div>
+          </template>
+        </Search>
+      </sp-sticky>
+    </div>
   </div>
 </template>
 
@@ -108,13 +110,13 @@ export default {
         if (this.fiexdBannerData.length) {
           return this.pageScrollTop / 320
         } else {
-          return this.pageScrollTop / 80
+          return this.pageScrollTop / 120
         }
       },
     },
     showSearchCityBtn: {
       get() {
-        return this.pageScrollTop > 80
+        return this.pageScrollTop > 120
       },
     },
   },
@@ -152,6 +154,16 @@ export default {
 <style lang="less">
 .page-head {
   position: relative;
+  height: 660px;
+  .search-box {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 144px;
+    border-radius: 24px;
+    overflow: hidden;
+  }
   .bg-area {
     background: linear-gradient(rgba(86, 126, 246, 1), rgba(73, 116, 245, 1));
     width: 100%;
