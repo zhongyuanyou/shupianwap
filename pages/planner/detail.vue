@@ -679,8 +679,6 @@ export default {
 .detail {
   height: 100%;
   background-color: #ffffff;
-  .head {
-  }
   .body {
     padding: 0;
     .detail-content {
@@ -700,8 +698,6 @@ export default {
         border-radius: 8px;
         padding: 48px 40px;
         box-sizing: border-box;
-        &-head {
-        }
         &-body {
           padding-top: 42px;
         }
@@ -850,8 +846,6 @@ export default {
         border: 1px solid #24ae68;
       }
     }
-  }
-  .recommend {
   }
   .item-wrap {
     padding: 40px;
