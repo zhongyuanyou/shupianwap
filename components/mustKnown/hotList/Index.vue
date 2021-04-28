@@ -86,7 +86,12 @@ export default {
     // 请求专题列表数据
     async getSubjectList() {
       const { code, message, data } = await this.$axios.get(
-        knownApi.questionArticle.subjectList
+        knownApi.questionArticle.subjectList,
+        {
+          headers: {
+            'x-cache-control': 'cache',
+          },
+        }
       )
       if (code === 200) {
         if (data.length > 0) {
@@ -108,6 +113,11 @@ export default {
           page: 1,
           limit: 50,
           currentUserId: this.userInfo.userId,
+        },
+        {
+          headers: {
+            'x-cache-control': 'cache',
+          },
         }
       )
       if (code === 200) {
