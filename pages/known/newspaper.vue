@@ -44,6 +44,7 @@ import ProblemItem from '@/components/mustKnown/recommend/ProblemItem'
 import { knownApi } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
+  layout: 'keepAlive',
   name: 'Recommend',
   components: {
     [Sticky.name]: Sticky,

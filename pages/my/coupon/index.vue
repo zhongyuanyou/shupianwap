@@ -172,6 +172,7 @@ export default {
         })
         .catch((e) => {
           if (e.code !== 200) {
+            this.loading = false
             this.responseData = []
             console.log(e)
           }
@@ -196,6 +197,7 @@ export default {
           })
           .catch((e) => {
             if (e.code !== 200) {
+              this.loading = false
               this.responseData = []
               console.log(e)
             }
@@ -206,11 +208,13 @@ export default {
         coupon
           .getCouponList({ axios: this.$axios }, this.formData)
           .then((result) => {
+            this.loading = false
             this.responseData = result.marketingCouponLogList
             this.loading = false
           })
           .catch((e) => {
             if (e.code !== 200) {
+              this.loading = false
               this.responseData = []
               console.log(e)
             }
@@ -243,10 +247,10 @@ export default {
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/29a165hg8w4k000.png');
 }
 .haveUse {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/8j18z03j8c00000.png');
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/2ozhssqe5py0000.png');
 }
 .notUse {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png');
 }
 .not_coupon_data {
   background: #f5f5f5 !important;
@@ -266,7 +270,6 @@ export default {
       margin: 24px 0;
       display: flex;
       position: relative;
-      box-shadow: 0px 0.04rem 0.16rem 0px rgba(0, 0, 0, 0.05);
       .item-lf {
         width: 201px;
         height: 212px;

@@ -19,9 +19,9 @@
           <!--          />-->
           <div class="content">
             <div class="content_title hide">{{ item.goodsSubName }}</div>
-            <div class="content_desc hide">
+            <!-- <div class="content_desc hide">
               {{ item.goodsSubDetailsName }}
-            </div>
+            </div> -->
             <div class="content_price">
               {{ item.salesPriceEdit }} <span>元</span>
             </div>

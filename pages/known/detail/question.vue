@@ -226,8 +226,8 @@
         </div>
       </sp-list>
     </div>
-    <div v-show="fixedshow" class="fiexdbtn">
-      <div>
+    <template v-show="fixedshow">
+      <sp-bottombar safe-area-inset-bottom>
         <div
           class="btn"
           :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
@@ -264,8 +264,8 @@
             questionDetails.isCollectFlag === 1 ? '已收藏' : '收藏'
           }}</span>
         </div>
-      </div>
-    </div>
+      </sp-bottombar>
+    </template>
 
     <comment-list
       v-model="commentShow"
@@ -299,7 +299,7 @@
 </template>
 
 <script>
-import { Icon, Toast, List, Popup, Dialog } from '@chipspc/vant-dgg'
+import { Icon, Toast, List, Popup, Dialog, Bottombar } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import CommentList from '@/components/mustKnown/CommentList'
 import { knownApi, userinfoApi } from '@/api'
@@ -314,27 +314,32 @@ export default {
     [List.name]: List,
     [Popup.name]: Popup,
     [Dialog.name]: Dialog,
+    [Bottombar.name]: Bottombar,
     CommentList,
   },
   async asyncData({ $axios, query, store }) {
-    const res = await $axios.get(knownApi.questionArticle.detail, {
-      params: {
-        id: query.id,
-        userId: store.state.user.userId,
-        userHandleFlag: store.state.user.userId ? 1 : 0,
-      },
-    })
-    if (res.code === 200) {
-      if (res.data.categoryName) {
-        res.data.categoryName = res.data.categoryName.split(',')
+    let questionDetails = []
+    try {
+      const res = await $axios.get(knownApi.questionArticle.detail, {
+        params: {
+          id: query.id,
+          userId: store.state.user.userId,
+          userHandleFlag: store.state.user.userId ? 1 : 0,
+        },
+      })
+      if (res.code === 200) {
+        if (res.data.categoryName) {
+          res.data.categoryName = res.data.categoryName.split(',')
+        }
+        if (res.data.contentImageUrl) {
+          res.data.contentImageUrl = res.data.contentImageUrl.split(',')
+        }
+        questionDetails = res.data
       }
-      if (res.data.contentImageUrl) {
-        res.data.contentImageUrl = res.data.contentImageUrl.split(',')
-      }
-    } else {
-    }
+    } catch (error) {}
+
     return {
-      questionDetails: res.data,
+      questionDetails,
     }
   },
   data() {
@@ -1117,68 +1122,50 @@ export default {
       }
     }
   }
-  > .fiexdbtn {
-    position: fixed;
-    z-index: 1;
-    background: #fff;
-    width: 100vw;
-    left: 20px;
-    bottom: 0;
-    height: 124px;
-    > div {
-      position: fixed;
-      height: 104px;
+  /deep/.sp-bottombar {
+    display: flex;
+    background: #ffffff;
+    border-radius: 8px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #222222;
+    text-align: center;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    > .btn {
+      width: 216px;
+      height: 72px;
       background: #ffffff;
-      width: 100vw;
-      bottom: 20px;
-      left: 0;
       border-radius: 8px;
-      border-top: 1px solid #f4f4f4;
       font-size: 28px;
-      font-weight: bold;
+      font-weight: 600;
       color: #222222;
       text-align: center;
       display: flex;
       align-items: center;
-      z-index: 2;
-      justify-content: space-between;
-      padding: 0 32px;
-      box-sizing: border-box;
-      > .btn {
-        width: 216px;
-        height: 72px;
-        background: #ffffff;
-        border-radius: 8px;
-        border: 1px solid #dddddd;
-        font-size: 28px;
-        font-weight: 600;
-        color: #222222;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        > span {
-          margin-left: 0.1rem;
-        }
+      justify-content: center;
+      > span {
+        margin-left: 0.1rem;
       }
-      .collect {
-        width: 216px;
-        height: 72px;
-        background: #ffffff;
-        border-radius: 8px;
-        font-size: 28px;
-        font-weight: 600;
-        color: #222222;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        .spiconfont {
-          padding-top: 3px;
-        }
-        > span {
-          margin-left: 0.1rem;
-        }
+    }
+    .collect {
+      width: 216px;
+      height: 72px;
+      background: #ffffff;
+      border-radius: 8px;
+      font-size: 28px;
+      font-weight: 600;
+      color: #222222;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .spiconfont {
+        padding-top: 3px;
+      }
+      > span {
+        margin-left: 0.1rem;
       }
     }
   }
