@@ -52,8 +52,8 @@
             <template v-if="answerDetails.createrId !== userInfo.userId">
               <div v-if="!isFollow" class="btn" @click="follow">
                 <sp-button
-                  ><my-icon name="jia" size="0.28rem" /> 关注</sp-button
-                >
+                  ><my-icon name="tianjia" size="0.27rem" color="#4974F5" />
+                </sp-button>
               </div>
               <div v-else class="btn2" @click="follow">
                 <span class="follow">已关注</span>
@@ -80,7 +80,10 @@
         <div class="infos">{{ answerDetails.userName }}</div>
         <template v-if="answerDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
-            <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
+            <sp-button
+              ><my-icon name="tianjia" size="0.27rem" color="#4974F5" />
+              <p>关注</p></sp-button
+            >
           </div>
           <div v-else class="btn2" @click="follow">
             <span class="follow">已关注</span>
@@ -643,6 +646,9 @@ export default {
         font-weight: bold;
         color: #4974f5;
         border: none;
+        p {
+          margin-top: 10px;
+        }
       }
       .follow {
         color: #999999;
