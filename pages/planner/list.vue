@@ -519,7 +519,7 @@ export default {
     },
 
     // 发起聊天
-    uPIM(data = {}) {
+    async uPIM(data = {}) {
       // const isLogin = await this.judgeLoginMixin()
       // if (isLogin) {
       const { mchUserId, userName, type } = data
@@ -527,7 +527,7 @@ export default {
       if (this.isInApp) {
         try {
           // 需要判断登陆没有，没有登录就是调用登录
-          // await this.getUserInfo()
+          await this.getUserInfo()
           this.$appFn.dggOpenIM(
             {
               name: userName,
@@ -550,12 +550,15 @@ export default {
         }
         return
       }
-      const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_B 启大顺 ;MERCHANT_S 启大包
-      this.creatImSessionMixin({
-        imUserId: mchUserId,
-        imUserType,
-        url: 'planner/list',
-      })
+      const isLogin = await this.judgeLoginMixin()
+      if (isLogin) {
+        const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_B 启大顺 ;MERCHANT_S 启大包
+        this.creatImSessionMixin({
+          imUserId: mchUserId,
+          imUserType,
+          url: 'planner/list',
+        })
+      }
       // }
     },
 
