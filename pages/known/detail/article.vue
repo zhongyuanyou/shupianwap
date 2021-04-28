@@ -64,45 +64,25 @@
       <DetailArticleList :article-list="articleList" />
     </div>
     <Comment ref="openComment" :article-id="articleDetails.id" />
-    <div class="page-bottom" :style="isInApp ? 'bottom: 0.3rem' : ''">
-      <div
-        v-if="
-          articleDetails.isApplaudFlag === 0 &&
-          articleDetails.isDisapplaudFlag === 0
-        "
-        class="left-area"
-      >
-        <span class="icon" @click="handleClickBottom(1)">
-          <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
-        ></span>
-        <span class="text" @click="handleClickBottom(1)"
-          >赞同{{ articleDetails.applaudCount }}</span
+    <div class="page-bottom">
+      <div>
+        <div
+          v-if="
+            articleDetails.isApplaudFlag === 0 &&
+            articleDetails.isDisapplaudFlag === 0
+          "
+          class="left-area"
         >
-        <span class="icon" @click="handleClickBottom(2)">
-          <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
-        ></span>
-      </div>
-      <div
-        v-if="articleDetails.isApplaudFlag === 1"
-        class="applaud"
-        @click="handleClickBottom(1)"
-      >
-        <span class="icon">
-          <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
-        ></span>
-        <span class="text">已赞同</span>
-      </div>
-      <div
-        v-if="articleDetails.isDisapplaudFlag === 1"
-        class="applaud dis-applaud"
-        @click="handleClickBottom(2)"
-      >
-        <span class="icon">
-          <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
-        ></span>
-        <span class="text">已反对</span>
-      </div>
-      <div class="right-area">
+          <span class="icon" @click="handleClickBottom(1)">
+            <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
+          ></span>
+          <span class="text" @click="handleClickBottom(1)"
+            >赞同{{ articleDetails.applaudCount }}</span
+          >
+          <span class="icon" @click="handleClickBottom(2)">
+            <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
+          ></span>
+        </div>
         <div
           v-if="articleDetails.isApplaudFlag === 1"
           class="applaud"
@@ -678,20 +658,9 @@ export default {
       .icon {
         padding: 0;
         width: 40px;
-        height: 100%;
-        line-height: 0;
         position: relative;
-        .spiconfont {
-          position: absolute;
-          left: 0px;
-          top: 20px;
-          padding: 0;
-          margin: 0;
-          line-height: 0;
-        }
       }
       .text {
-        margin-top: 8px;
         font-weight: bold;
       }
     }
@@ -712,19 +681,10 @@ export default {
       .icon {
         padding: 0;
         width: 40px;
-        height: 40px;
         line-height: 0;
         position: relative;
-        .spiconfont {
-          position: absolute;
-          left: 0px;
-          top: 18px;
-          padding: 0;
-          margin: 0;
-          line-height: 0;
-        }
       }
-      .icon.oppose {
+      .icon .oppose {
         padding-left: 20px;
         margin-left: 20px;
         border-left: 1px solid #ddd;
@@ -733,7 +693,6 @@ export default {
         }
       }
       .text {
-        margin-top: 6px;
         font-size: 24px;
         color: #4974f5;
         font-weight: bold;

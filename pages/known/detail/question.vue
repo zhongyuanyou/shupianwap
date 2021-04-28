@@ -1173,6 +1173,9 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+        .spiconfont {
+          padding-top: 3px;
+        }
         > span {
           margin-left: 0.1rem;
         }
