@@ -346,7 +346,7 @@ export default {
       scrollTop: 0,
       questionList: [],
       releaseStatus: '',
-      orderBy: 'totalBrowseCount=desc',
+      orderBy: 'applaudCount=desc;',
       handleLikeType: null,
       finished: false,
       page: 1,
@@ -600,9 +600,9 @@ export default {
       }
       this.answersort = index
       if (this.answersort === 0) {
-        this.orderBy = 'totalBrowseCount=desc'
+        this.orderBy = 'applaudCount=desc;'
       } else {
-        this.orderBy = 'updateTime=desc'
+        this.orderBy = 'createTime=desc;'
       }
       this.init()
       this.onLoad()
