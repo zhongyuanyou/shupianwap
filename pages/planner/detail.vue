@@ -396,21 +396,21 @@ export default {
         })
       }
     },
-    async handleIM() {
-      const isLogin = await this.judgeLoginMixin()
-      if (isLogin) {
-        this.uPIM({
-          mchUserId: this.detailData.id,
-          userName: this.detailData.userName,
-          type: this.detailData.mchClass,
-        })
-      } else {
-        Toast({
-          message: '请先登录账号',
-          iconPrefix: 'sp-iconfont',
-          icon: 'popup_ic_fail',
-        })
-      }
+    handleIM() {
+      // const isLogin = await this.judgeLoginMixin()
+      // if (isLogin) {
+      this.uPIM({
+        mchUserId: this.detailData.id,
+        userName: this.detailData.userName,
+        type: this.detailData.mchClass,
+      })
+      // } else {
+      //   Toast({
+      //     message: '请先登录账号',
+      //     iconPrefix: 'sp-iconfont',
+      //     icon: 'popup_ic_fail',
+      //   })
+      // }
     },
 
     onSelect(option) {
@@ -485,13 +485,13 @@ export default {
     },
 
     // 发起聊天
-    uPIM(data = {}) {
+    async uPIM(data = {}) {
       const { mchUserId, userName, type } = data
       // 如果当前页面在app中，则调用原生IM的方法
       if (this.isInApp) {
         try {
           // 需要判断登陆没有，没有登录就是调用登录
-          // await this.getUserInfo()
+          await this.getUserInfo()
           this.$appFn.dggOpenIM(
             {
               name: userName,
@@ -514,15 +514,18 @@ export default {
         } catch (error) {
           console.error('uPIM error:', error)
         }
-        return
+      } else {
+        const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+        const isLogin = await this.judgeLoginMixin()
+        if (isLogin) {
+          this.creatImSessionMixin({
+            imUserId: mchUserId,
+            imUserType,
+            requireCode: this.requireCode || '',
+            requireName: this.requireName || '',
+          })
+        }
       }
-      const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
-      this.creatImSessionMixin({
-        imUserId: mchUserId,
-        imUserType,
-        requireCode: this.requireCode || '',
-        requireName: this.requireName || '',
-      })
     },
 
     // 平台不同，跳转方式不同
@@ -563,7 +566,6 @@ export default {
             this.$appFn.dggLogin((loginRes) => {
               if (loginRes && loginRes.code === 200) {
                 console.log('loginRes : ', loginRes)
-
                 let loginResData = {}
                 // 为了兼容 企大顺
                 if (typeof loginRes.data === 'string') {

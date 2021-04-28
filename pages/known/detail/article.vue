@@ -74,21 +74,13 @@
           class="left-area"
         >
           <span class="icon" @click="handleClickBottom(1)">
-            <my-icon
-              name="zantong_mian"
-              size="0.28rem"
-              color="#4974F5"
-            ></my-icon
+            <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
           ></span>
           <span class="text" @click="handleClickBottom(1)"
             >赞同{{ articleDetails.applaudCount }}</span
           >
-          <span
-            v-if="!releaseFlag"
-            class="icon oppose"
-            @click="handleClickBottom(2)"
-          >
-            <my-icon name="fandui_mian" size="0.28rem" color="#4974F5"></my-icon
+          <span class="icon" @click="handleClickBottom(2)">
+            <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
           ></span>
         </div>
         <div
@@ -145,11 +137,11 @@
       <div class="down_slide_list">
         <ul>
           <li @click="editQues(articleDetails.id)">
-            <my-icon name="bianji1" size="1rem" color="#1a1a1a"></my-icon>
+            <my-icon name="bianji1" size="1rem" color="#555"></my-icon>
             <p>编辑</p>
           </li>
           <li @click="deleteQues(articleDetails.id)">
-            <my-icon name="shanchu1" size="1rem" color="#1a1a1a"></my-icon>
+            <my-icon name="shanchu1" size="1rem" color="#555"></my-icon>
             <p>删除</p>
           </li>
         </ul>
@@ -550,7 +542,7 @@ export default {
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: bold;
     color: #222222;
-    line-height: 68px;
+    line-height: 56px;
     font-weight: bold;
   }
   .nums-area {
@@ -666,20 +658,9 @@ export default {
       .icon {
         padding: 0;
         width: 40px;
-        height: 100%;
-        line-height: 0;
         position: relative;
-        .spiconfont {
-          position: absolute;
-          left: 0px;
-          top: 20px;
-          padding: 0;
-          margin: 0;
-          line-height: 0;
-        }
       }
       .text {
-        margin-top: 8px;
         font-weight: bold;
       }
     }
@@ -700,19 +681,10 @@ export default {
       .icon {
         padding: 0;
         width: 40px;
-        height: 100%;
         line-height: 0;
         position: relative;
-        .spiconfont {
-          position: absolute;
-          left: 0px;
-          top: 18px;
-          padding: 0;
-          margin: 0;
-          line-height: 0;
-        }
       }
-      .icon.oppose {
+      .icon .oppose {
         padding-left: 20px;
         margin-left: 20px;
         border-left: 1px solid #ddd;
@@ -721,7 +693,6 @@ export default {
         }
       }
       .text {
-        margin-top: 6px;
         font-size: 24px;
         color: #4974f5;
         font-weight: bold;
