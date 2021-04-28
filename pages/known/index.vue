@@ -309,6 +309,8 @@ export default {
         'known-detail-answer',
         'known-detail-article',
         'known-detail-question',
+        'known-mustSee',
+        'known-newspaper',
       ].includes(to.name)
     ) {
       this.SET_KEEP_ALIVE({ type: 'add', name: 'KnownIndex' })
