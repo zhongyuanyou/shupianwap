@@ -134,16 +134,18 @@ export default {
       fansNum: 0,
       applaudNum: 0,
     }
-    const { code, data } = await $axios.get(knownApi.home.userInfo, {
-      params: {
-        homeUserId: query.homeUserId || store.state.user.userId,
-        homeUserType:
-          query.type || utils.getUserType(store.state.user.userType),
-      },
-    })
-    if (code === 200) {
-      userInfo = data
-    }
+    try {
+      const { code, data } = await $axios.get(knownApi.home.userInfo, {
+        params: {
+          homeUserId: query.homeUserId || store.state.user.userId,
+          homeUserType:
+            query.type || utils.getUserType(store.state.user.userType),
+        },
+      })
+      if (code === 200) {
+        userInfo = data
+      }
+    } catch (error) {}
 
     return userInfo
   },

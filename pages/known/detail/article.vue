@@ -192,15 +192,22 @@ export default {
     // Header,
   },
   async asyncData({ $axios, query, store }) {
-    const res = await $axios.get(knownApi.questionArticle.detail, {
-      params: {
-        id: query.id,
-        userId: store.state.user.userId,
-        userHandleFlag: store.state.user.userId ? 1 : 0,
-      },
-    })
+    let articleDetails = {}
+    try {
+      const res = await $axios.get(knownApi.questionArticle.detail, {
+        params: {
+          id: query.id,
+          userId: store.state.user.userId,
+          userHandleFlag: store.state.user.userId ? 1 : 0,
+        },
+      })
+      if (res.code === 200) {
+        articleDetails = res.data
+      }
+    } catch (error) {}
+
     return {
-      articleDetails: res.data,
+      articleDetails,
     }
   },
   data() {

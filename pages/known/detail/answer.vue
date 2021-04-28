@@ -207,15 +207,22 @@ export default {
     HeaderSlot,
   },
   async asyncData({ $axios, query, store }) {
-    const res = await $axios.get(knownApi.questionArticle.detail, {
-      params: {
-        id: query.id,
-        userId: store.state.user.userId,
-        userHandleFlag: store.state.user.userId ? 1 : 0,
-      },
-    })
+    let answerDetails = {}
+    try {
+      const res = await $axios.get(knownApi.questionArticle.detail, {
+        params: {
+          id: query.id,
+          userId: store.state.user.userId,
+          userHandleFlag: store.state.user.userId ? 1 : 0,
+        },
+      })
+      if (res.code === 200) {
+        answerDetails = res.data
+      }
+    } catch (error) {}
+
     return {
-      answerDetails: res.data,
+      answerDetails,
     }
   },
   data() {
