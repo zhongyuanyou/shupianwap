@@ -527,7 +527,7 @@ export default {
         if (this.isInApp) {
           try {
             // 需要判断登陆没有，没有登录就是调用登录
-            await this.getUserInfo()
+            // await this.getUserInfo()
             this.$appFn.dggOpenIM(
               {
                 name: userName,

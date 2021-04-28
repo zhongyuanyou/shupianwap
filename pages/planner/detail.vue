@@ -563,7 +563,6 @@ export default {
             this.$appFn.dggLogin((loginRes) => {
               if (loginRes && loginRes.code === 200) {
                 console.log('loginRes : ', loginRes)
-
                 let loginResData = {}
                 // 为了兼容 企大顺
                 if (typeof loginRes.data === 'string') {
