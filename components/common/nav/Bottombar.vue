@@ -71,7 +71,7 @@ export default {
         {
           name: '订单',
           iconName: 'faxian',
-          path: '/order/',
+          path: '/order',
         },
         {
           name: '我的',
