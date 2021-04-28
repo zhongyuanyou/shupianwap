@@ -1133,7 +1133,7 @@ export default {
       bottom: 20px;
       left: 0;
       border-radius: 8px;
-      border: 1px solid #dddddd;
+      border-top: 1px solid #f4f4f4;
       font-size: 28px;
       font-weight: bold;
       color: #222222;
