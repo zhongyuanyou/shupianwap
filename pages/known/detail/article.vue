@@ -79,13 +79,6 @@
           <span class="text" @click="handleClickBottom(1)"
             >赞同{{ articleDetails.applaudCount }}</span
           >
-          <span
-            v-if="!releaseFlag"
-            class="icon oppose"
-            @click="handleClickBottom(2)"
-          >
-            <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
-          ></span>
         </div>
         <div
           v-if="articleDetails.isApplaudFlag === 1"
