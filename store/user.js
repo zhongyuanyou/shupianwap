@@ -25,32 +25,19 @@ export const mutations = {
     this.$cookies.set('token', String(data.token), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('userId', String(data.userId), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
-    this.$cookies.set('userType', String(data.type), {
+    this.$cookies.set('userType', String(data.userType), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
-    })
-    this.$cookies.set('userName', String(data.nickName), {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
-    })
-    this.$cookies.set('avatar', String(data.avatar || AVATAR), {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     state.userInfo = data
     state.token = String(data.token)
     state.userId = String(data.userId)
-    state.userType = String(data.type)
+    state.userType = String(data.userType)
     state.userName = String(data.nickName)
     state.avatar = String(data.avatar || AVATAR)
   },
@@ -61,13 +48,28 @@ export const mutations = {
     this.$cookies.remove('userId', {
       path: '/',
     })
-    this.$cookies.remove('userType', {
+    this.$cookies.remove('avatar', {
+      path: '/',
+    })
+    this.$cookies.remove('userNo', {
       path: '/',
     })
     this.$cookies.remove('userName', {
       path: '/',
     })
     this.$cookies.remove('userPhone', {
+      path: '/',
+    })
+    this.$cookies.remove('realStatus', {
+      path: '/',
+    })
+    this.$cookies.remove('mainAccountFull', {
+      path: '/',
+    })
+    this.$cookies.remove('userNo', {
+      path: '/',
+    })
+    this.$cookies.remove('userType', {
       path: '/',
     })
     state.token = ''
@@ -84,37 +86,26 @@ export const mutations = {
     this.$cookies.set('userNo', String(data.no), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('userName', data.nickName, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('userPhone', data.fullName, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('realStatus', data.realStatus, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('mainAccountFull', data.mainAccountFull, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('avatar', data.url || AVATAR, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
-    })
-    this.$cookies.set('userType', data.type, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     state.userNo = data.no
     state.userName = data.nickName

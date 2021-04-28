@@ -702,7 +702,7 @@ export default {
       height: 12px;
       float: right;
       position: absolute;
-      bottom: 12px;
+      bottom: 16px;
       right: 0;
     }
   }
