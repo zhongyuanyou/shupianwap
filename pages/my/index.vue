@@ -252,7 +252,7 @@ export default {
     },
   },
   mounted() {
-    if (this.$cookies.get('token')) {
+    if (this.userId || this.$cookies.get('token')) {
       this.userName = this.$cookies.get('userName')
       // 1.先去本地里面找info信息，
       if (localStorage.getItem('info')) {
@@ -300,7 +300,7 @@ export default {
       try {
         const params = {
           // id: this.userId,
-          id: localStorage.getItem('userId'),
+          id: this.userId || this.$cookies.get('userId'),
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false
@@ -308,9 +308,9 @@ export default {
           this.info = res.data
           this.userName = res.data.nickName
           this.realStatus = res.data.realStatus
-          this.$store.dispatch('user/setInfo', res.data)
           localStorage.setItem('info', JSON.stringify(this.info))
           // console.log(res.data.realStatus)
+          this.$store.dispatch('user/setInfo', res.data)
         } else {
           // 清除用户缓存信息
           this.info = {}
