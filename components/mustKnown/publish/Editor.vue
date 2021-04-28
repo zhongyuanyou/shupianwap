@@ -312,6 +312,10 @@ export default {
 /* .ql-snow .ql-picker.ql-size {
   width: 120px;
 } */
+.ql-toolbar.ql-snow {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
 .ql-snow .ql-picker.ql-size {
   width: 1.2rem;
 }

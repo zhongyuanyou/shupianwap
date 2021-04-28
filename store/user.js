@@ -25,52 +25,60 @@ export const mutations = {
     this.$cookies.set('token', String(data.token), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
+      domain: 'shupian.cn',
     })
     this.$cookies.set('userId', String(data.userId), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-    })
-    this.$cookies.set('userType', String(data.type || data.userType), {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 过期时间
+      domain: 'shupian.cn',
     })
     state.userInfo = data
     state.token = String(data.token)
     state.userId = String(data.userId)
-    state.userType = String(data.type || data.userType)
+    state.userType = String(data.userType)
     state.userName = String(data.nickName)
     state.avatar = String(data.avatar || AVATAR)
   },
   CLEAR_USER(state) {
     this.$cookies.remove('token', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userId', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('avatar', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userNo', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userName', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userPhone', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('realStatus', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('mainAccountFull', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userNo', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userType', {
       path: '/',
+      domain: 'shupian.cn',
     })
     state.token = ''
     state.userId = ''

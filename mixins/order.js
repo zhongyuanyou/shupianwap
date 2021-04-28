@@ -22,20 +22,15 @@ const ORDERSTATUSCODE = {
   3: 'ORDER_CUS_STATUS_COMPLETED', // 已完成
   4: 'ORDER_CUS_STATUS_CANCELLED', // 已取消
 }
-// const orderProTypeNoS = {
-//   1: 'PRO_CLASS_TYPE_TRANSACTION', // 交易
-//   2: 'PRO_CLASS_TYPE_SALES', // 销售
-//   3: 'PRO_CLASS_TYPE_SERVICE_RESOURCE', // 资源
-//   4: 'PRO_CLASS_TYPE_SERVICE', // 服务
-// }
 
-// // 支付类型CODE
-// const PAYTYPECODE = {
-//   1: 'PRO_PRE_PAY_POST_SERVICE', // 先付款后服务
-//   2: 'PRO_PRE_DEPOSIT_POST_OTHERS', // 先定金后尾款
-//   3: 'PRO_PRE_SERVICE_POST_PAY_BY_NODE', // 按服务节点付费
-//   4: 'PRO_PRE_SERVICE_FINISHED_PAY', // 服务完结收费
-// }
+// 支付类型CODE
+const PAYTYPECODE = {
+  1: 'PRO_PRE_PAY_POST_SERVICE', // 先付款后服务
+  2: 'PRO_PRE_DEPOSIT_POST_OTHERS', // 先定金后尾款
+  3: 'PRO_PRE_SERVICE_POST_PAY_BY_NODE', // 按服务节点付费
+  4: 'PRO_PRE_SERVICE_FINISHED_PAY', // 服务完结收费
+}
+
 // 根据订单状态判断订单状态名称
 const orderStatusObj = {
   TRADE_STATUS_UN_PAID: {
@@ -525,7 +520,11 @@ export default {
     },
     // 判断客户单付费类型
     checkPayType() {
-      return orderUtils.checkPayType(this.orderData.cusOrderPayType)
+      if (!this.orderData.cusOrderPayType) return 0
+      for (const key in PAYTYPECODE) {
+        if (PAYTYPECODE[key] === this.orderData.cusOrderPayType)
+          return Number(key)
+      }
     },
     // 查询客户单下的关联订单
     getChildOrders(order) {

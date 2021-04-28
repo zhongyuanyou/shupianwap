@@ -148,6 +148,7 @@
       position="bottom"
       class="popupArticle"
       :overlay-style="{ background: 'rgba(0, 0, 0, 0.4)' }"
+      :safe-area-inset-bottom="true"
     >
       <div class="popUserInfo">
         <div class="popUserPhoto">
@@ -309,6 +310,8 @@ export default {
         'known-detail-answer',
         'known-detail-article',
         'known-detail-question',
+        'known-mustSee',
+        'known-newspaper',
       ].includes(to.name)
     ) {
       this.SET_KEEP_ALIVE({ type: 'add', name: 'KnownIndex' })
@@ -594,6 +597,8 @@ export default {
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
     padding: 0 40px;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
     .popContentOne {
       .popTop {
         display: flex;
@@ -770,7 +775,8 @@ export default {
     }
   }
   .popupArticle {
-    height: 519px;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
     > .popUserInfo {

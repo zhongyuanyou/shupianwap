@@ -58,10 +58,8 @@ export default {
   methods: {
     onRefresh() {
       this.finished = false
-      this.list = []
       this.page = 1
       this.loading = true
-      this.refreshing = false
       this.getList()
     },
     // 请求推荐列表数据
@@ -71,6 +69,7 @@ export default {
         {
           currentUserId: this.$store.state.user.userId,
           categorIds: [this.categorIds],
+          type: [2, 3],
           limit: this.limit,
           page: this.page,
         },
@@ -81,6 +80,10 @@ export default {
         }
       )
       if (code === 200) {
+        if (this.refreshing) {
+          this.list = []
+          this.refreshing = false
+        }
         this.list = this.list.concat(data.rows)
         this.loading = false
         this.page++
