@@ -45,10 +45,8 @@ export default {
   methods: {
     onRefresh() {
       this.finished = false
-      this.list = []
       this.page = 1
       this.loading = true
-      this.refreshing = false
       this.recommendList()
     },
     // 请求推荐列表数据
@@ -66,6 +64,10 @@ export default {
         }
       )
       if (code === 200) {
+        if (this.refreshing) {
+          this.list = []
+          this.refreshing = false
+        }
         this.list = this.list.concat(data.rows)
         this.loading = false
         this.page++
