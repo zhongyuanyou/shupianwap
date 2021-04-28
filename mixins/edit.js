@@ -91,14 +91,6 @@ export default {
     },
     setTitle(val) {
       this.formData.title = val
-      if (this.fromPage === 'question') {
-        const tempVal = val
-        const lastLetter = tempVal.slice(tempVal.length - 1, tempVal.length)
-        const reg = /\?|？/
-        if (!reg.test(lastLetter)) {
-          this.$xToast.error('标题需以问号结尾')
-        }
-      }
     },
     setTopic(val) {
       if (val.length > 0) {
@@ -152,14 +144,16 @@ export default {
       if (this.fromPage !== 'answer') {
         if (
           this.formData.title.length > 0 ||
-          this.formData.contentText.length > 0 ||
+          (this.formData.contentText !== '\n' &&
+            this.formData.contentText.length > 0) ||
           this.formData.categoryCode.length > 0
         ) {
           cancelFlag = true
         }
-      } else if (this.formData.contentText.length > 0) {
-        cancelFlag = true
       }
+      //  else if (this.formData.contentText.length > 0) {
+      //   cancelFlag = true
+      // }
       if (cancelFlag) {
         const _this = this
         Dialog.confirm({
