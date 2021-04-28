@@ -101,13 +101,13 @@
         class="left-area"
       >
         <span class="icon" @click="handleClickBottom(1)">
-          <my-icon name="zantong_mian" size="0.28rem" color="#4974F5"></my-icon
+          <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
         ></span>
         <span class="text" @click="handleClickBottom(1)"
           >赞同{{ answerDetails.applaudCount }}</span
         >
         <span class="icon" @click="handleClickBottom(2)">
-          <my-icon name="fandui_mian" size="0.28rem" color="#4974F5"></my-icon
+          <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
         ></span>
       </div>
       <div
@@ -654,7 +654,7 @@ export default {
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: bold;
     color: #222222;
-    line-height: 68px;
+    line-height: 56px;
     font-weight: bold;
   }
   .nums-area {
