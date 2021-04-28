@@ -79,7 +79,11 @@
           <span class="text" @click="handleClickBottom(1)"
             >赞同{{ articleDetails.applaudCount }}</span
           >
-          <span class="icon" @click="handleClickBottom(2)">
+          <span
+            v-if="!releaseFlag"
+            class="icon oppose"
+            @click="handleClickBottom(2)"
+          >
             <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
           ></span>
         </div>
@@ -681,10 +685,19 @@ export default {
       .icon {
         padding: 0;
         width: 40px;
+        height: 100%;
         line-height: 0;
         position: relative;
+        .spiconfont {
+          position: absolute;
+          left: 0px;
+          top: 18px;
+          padding: 0;
+          margin: 0;
+          line-height: 0;
+        }
       }
-      .icon .oppose {
+      .icon.oppose {
         padding-left: 20px;
         margin-left: 20px;
         border-left: 1px solid #ddd;
@@ -693,6 +706,7 @@ export default {
         }
       }
       .text {
+        margin-top: 6px;
         font-size: 24px;
         color: #4974f5;
         font-weight: bold;
