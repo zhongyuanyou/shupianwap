@@ -56,6 +56,9 @@ export default {
       const { code, message, data } = await this.$axios.get(
         knownApi.questionArticle.recommendList,
         {
+          headers: {
+            'x-cache-control': 'cache',
+          },
           params: {
             limit: this.limit,
             page: this.page,
