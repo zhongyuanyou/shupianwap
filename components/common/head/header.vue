@@ -87,7 +87,7 @@ export default {
     // 隐藏shadow
     hideShadow: {
       type: Boolean,
-      default: () => false,
+      default: false,
     },
   },
   data() {
