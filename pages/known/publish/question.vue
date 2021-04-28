@@ -156,7 +156,7 @@ export default {
     padding: 20px 32px 250px 32px;
     .toast-area {
       width: 100%;
-      height: 236px;
+      // height: 236px;
       background: #f2f5ff;
       border-radius: 24px;
       font-size: 28px;
