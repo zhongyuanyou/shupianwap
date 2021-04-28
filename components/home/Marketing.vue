@@ -136,7 +136,7 @@ export default {
   box-sizing: border-box;
   border-right: 1px solid rgba(244, 244, 244, 1);
   border-bottom: 1px solid rgba(244, 244, 244, 1);
-  padding: 20px;
+  padding: 24px 20px;
   position: relative;
   float: left;
   .sp-goods-title {
