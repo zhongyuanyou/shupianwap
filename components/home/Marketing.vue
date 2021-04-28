@@ -2,31 +2,52 @@
   <div class="sp-main-box">
     <div class="inner">
       <div v-for="(item, index) in list" :key="index" class="sp-item">
-        <p class="sp-goods-title">
+        <p v-if="index === 1" class="sp-goods-title">
+          {{
+            (bdData.length && bdData[0].materialList[0].materialName) ||
+            item.productName
+          }}
+          <span v-if="item.titleIcon" class="title-bar">
+            {{ item.titleIcon }}
+          </span>
+        </p>
+        <p v-else class="sp-goods-title">
           {{ item.productName }}
           <span v-if="item.titleIcon" class="title-bar">
             {{ item.titleIcon }}
           </span>
         </p>
-        <p class="sp-goods-slogan">
+        <p v-if="index === 1" class="sp-goods-slogan">
+          {{
+            (bdData.length && bdData[0].materialList[0].materialDescription) ||
+            item.slogan
+          }}
+        </p>
+        <p v-else class="sp-goods-slogan">
           {{ item.slogan }}
         </p>
         <p v-if="item.productDescript" class="sp-goods-des">
           {{ item.productDescript }}
         </p>
-        <div v-if="index !== 3 && item.imgs && item.imgs.length" class="imgs">
+        <!-- 必懂入口 直播入口 -->
+        <div v-if="index === 1" class="bd-imgs">
           <img
-            v-for="(imgItem, imgIndex) in item.imgs"
-            :key="imgIndex"
-            :src="imgItem"
-            :style="imgWidth"
+            :src="
+              (bdData.length && bdData[0].materialList[0].materialUrl) ||
+              item.imgs[0]
+            "
             alt=""
             srcset=""
-            @click="adJumpHandleMixin(imgItem)"
+            class="bd-img"
+            @click="
+              adJumpHandleMixin(
+                (bdData.length && bdData[0].materialList[0]) || item
+              )
+            "
           />
         </div>
-        <!-- 限时秒杀 -->
-        <div v-if="index === 3" class="imgs">
+        <!-- 千万补贴 -->
+        <div v-else-if="index === 3" class="imgs">
           <img
             v-for="(subsidyItem, subIndex) in subsidyData"
             :key="subIndex"
@@ -36,14 +57,20 @@
             :style="{ width: imgWidth }"
             @click="adJumpHandleMixin(subsidyItem.materialList[0])"
           />
-          <!-- <img
-            v-for="(subsidyItem, imgIndex) in subsidyData"
+        </div>
+        <div
+          v-else-if="index !== 3 && item.imgs && item.imgs.length"
+          class="imgs"
+        >
+          <img
+            v-for="(imgItem, imgIndex) in item.imgs"
             :key="imgIndex"
             :src="imgItem"
+            :style="imgWidth"
             alt=""
             srcset=""
             @click="adJumpHandleMixin(imgItem)"
-          /> -->
+          />
         </div>
         <sp-button
           v-if="item.buttonText"
@@ -74,6 +101,13 @@ export default {
         return []
       },
     },
+    // 直播入口 必懂入口
+    bdData: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
   },
   data() {
     return {
@@ -87,11 +121,11 @@ export default {
           wapLink: '/search/searchResult?keywords=商标',
         },
         {
-          productName: '企服直播',
-          slogan: '想你所想 新用户专享',
+          productName: '企服必懂',
+          slogan: '创业路上的知识加油站',
           imgs: ['https://cdn.shupian.cn/sp-pt/wap/images/8yl438481uk0000.png'],
           linkType: 1,
-          wapLink: '/search/searchResult?keywords',
+          wapLink: '/known',
         },
         {
           productName: '帮找服务',
@@ -104,8 +138,8 @@ export default {
           materialLink: 'https://m.shupian.cn/spread/myDemandCard',
         },
         {
-          productName: '1000万补贴',
-          slogan: '万款服务全补贴 先到先得',
+          productName: '政策补贴',
+          slogan: '企业补贴免费测算工具',
           imgs: [
             'https://cdn.shupian.cn/sp-pt/wap/5o4toa1pfgk0000.png',
             'https://cdn.shupian.cn/sp-pt/wap/95f9n61gks00000.png',
@@ -205,6 +239,13 @@ export default {
       border-radius: 12px;
     }
   }
+  .bd-imgs {
+    width: 100%;
+    height: 162px;
+    img {
+      width: 100%;
+    }
+  }
   .sp-goods-btn {
     position: absolute;
     left: 20px;
@@ -219,6 +260,9 @@ export default {
     border: none;
     color: #4974f5;
     padding: 0 12px;
+  }
+  .bd-img {
+    width: 100%;
   }
 }
 </style>
