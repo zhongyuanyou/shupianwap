@@ -369,6 +369,7 @@ export default {
     display: flex;
     align-items: center;
     padding-right: 32px;
+    padding-left: 16px;
     /deep/.sp-cell {
       width: 610px;
     }

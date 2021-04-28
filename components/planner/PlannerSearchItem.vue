@@ -69,6 +69,7 @@
 import { Button, Image, Tag } from '@chipspc/vant-dgg'
 import { mapState } from 'vuex'
 import { planner } from '@/api'
+import imHandle from '@/mixins/imHandle'
 import { parseTel } from '~/utils/common'
 export default {
   name: 'PlannerSearchItem',
@@ -77,6 +78,7 @@ export default {
     [Image.name]: Image,
     [Tag.name]: Tag,
   },
+  mixins: [imHandle],
   props: {
     itemData: {
       type: Object,
@@ -106,6 +108,7 @@ export default {
       await this.POSITION_CITY({ type: 'init' })
     }
   },
+
   methods: {
     async handleClick(type) {
       let data = {}
@@ -145,21 +148,24 @@ export default {
           }
         )
       } else {
-        const params = {
-          areaCode: this.city.code,
-          areaName: this.city.name,
-          customerUserId: this.$store.state.user.userId,
-          plannerId: this.itemData.mchUserId,
-          customerPhone: this.itemData.phone,
-          requireCode: '',
-          requireName: '',
-        }
-        try {
-          const data = await planner.newtel(params)
-          return data
-        } catch (error) {
-          console.error('getTel:', error)
-          return Promise.reject(error)
+        const isLogin = await this.judgeLoginMixin()
+        if (isLogin) {
+          const params = {
+            areaCode: this.city.code,
+            areaName: this.city.name,
+            customerUserId: this.$store.state.user.userId,
+            plannerId: this.itemData.mchUserId,
+            customerPhone: this.itemData.phone,
+            requireCode: '',
+            requireName: '',
+          }
+          try {
+            const data = await planner.newtel(params)
+            return data
+          } catch (error) {
+            console.error('getTel:', error)
+            return Promise.reject(error)
+          }
         }
       }
     },
