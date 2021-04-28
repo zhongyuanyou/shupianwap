@@ -41,7 +41,6 @@ import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
 import Header from '@/components/common/head/header'
 export default {
-  layout: 'appSafeView',
   name: 'Collection',
   components: {
     [Tabs.name]: Tabs,
@@ -214,7 +213,7 @@ export default {
     }
     .sp-tab--active {
       font-size: 32px;
-      font-weight: 600;
+      font-weight: bold;
     }
 
     .list_container {
@@ -250,7 +249,7 @@ export default {
         .title {
           font-family: PingFangSC-Medium, PingFang SC;
           font-size: 36px;
-          font-weight: 600;
+          font-weight: bold;
           color: #1a1a1a;
           line-height: 48px;
           margin-bottom: 17px;

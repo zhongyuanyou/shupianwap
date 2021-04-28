@@ -68,7 +68,6 @@ import Search from '@/components/common/search/Search'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
-  layout: 'appSafeView',
   name: 'InvitationList',
   components: {
     [Icon.name]: Icon,
@@ -295,7 +294,7 @@ export default {
       > p {
         margin-left: auto;
         font-size: 28px;
-        font-weight: 600;
+        font-weight: bold;
         color: #4974f5;
       }
       > p.active {
@@ -323,7 +322,7 @@ export default {
           margin-left: 24px;
           font-size: 30px;
           line-height: 72px;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
           text-align: center;
         }
@@ -335,7 +334,7 @@ export default {
           text-align: center;
           line-height: 72px;
           font-size: 26px;
-          font-weight: 600;
+          font-weight: bold;
           color: #ffffff;
           margin-left: auto;
         }

@@ -73,7 +73,6 @@ import Search from '@/components/common/search/Search'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 
 export default {
-  layout: 'appSafeView',
   name: 'SearchPage',
   components: {
     [Sticky.name]: Sticky,
@@ -194,7 +193,7 @@ export default {
       margin-left: 32px;
       font-size: 32px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
     }
   }
@@ -207,7 +206,7 @@ export default {
       margin-bottom: 40px;
       > h1 {
         font-size: 30px;
-        font-weight: 600;
+        font-weight: bold;
         color: #222222;
       }
       > span {

@@ -8,7 +8,6 @@
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 
 export default {
-  layout: 'appSafeView',
   components: {
     LoadingCenter,
   },

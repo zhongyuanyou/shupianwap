@@ -365,7 +365,7 @@ export default {
     height: 29px;
     font-size: 30px;
     font-family: PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #1a1a1a;
     text-align: center;
   }

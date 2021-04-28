@@ -210,7 +210,7 @@ export default {
         height: 40px;
         font-size: 40px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #222222;
       }
       .my_icon {
@@ -231,7 +231,7 @@ export default {
           height: 30px;
           font-size: 30px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
           line-height: 30px;
         }
@@ -302,7 +302,7 @@ export default {
           height: 30px;
           font-size: 30px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
           line-height: 30px;
         }

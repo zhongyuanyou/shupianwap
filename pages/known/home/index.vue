@@ -26,11 +26,7 @@
               {{ isAttention ? '已关注' : '+ 关注' }}
             </div>
           </template>
-          <div
-            v-if="appInfo.appCode === 'CPSAPP' && type === 2"
-            class="bt_contact"
-            @click="contact"
-          >
+          <div v-if="isInApp && type === 2" class="bt_contact" @click="contact">
             <my-icon
               name="pinglun_mian"
               size="0.36rem"
@@ -113,7 +109,6 @@ import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
 import utils from '@/utils/changeBusinessData'
 export default {
-  layout: 'appSafeView',
   name: 'Collection',
   components: {
     [Tabs.name]: Tabs,
@@ -400,7 +395,7 @@ export default {
         justify-content: flex-end;
         text-align: center;
         font-size: 26px;
-        font-weight: 600;
+        font-weight: bold;
         height: 64px;
         .bt_attention {
           width: 144px;
@@ -430,7 +425,7 @@ export default {
       .user_name {
         margin-top: 48px;
         font-size: 44px;
-        font-weight: 600;
+        font-weight: bold;
         color: #1a1a1a;
         line-height: 44px;
       }
@@ -453,7 +448,7 @@ export default {
             color: #4974f5;
             font-size: 36px;
             line-height: 36px;
-            font-weight: 600;
+            font-weight: bold;
           }
           &_name {
             font-size: 26px;
@@ -488,7 +483,7 @@ export default {
     }
     .sp-tab--active {
       font-size: 32px;
-      font-weight: 600;
+      font-weight: bold;
     }
 
     .list_container {
@@ -524,7 +519,7 @@ export default {
         .title {
           font-family: PingFangSC-Medium, PingFang SC;
           font-size: 36px;
-          font-weight: 600;
+          font-weight: bold;
           color: #1a1a1a;
           line-height: 48px;
           margin-bottom: 17px;

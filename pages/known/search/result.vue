@@ -68,7 +68,10 @@
         </div>
       </sp-list>
     </div>
-    <div v-show="tabIndex === '3'" class="userlist">
+    <div
+      v-show="tabIndex === '3'"
+      :class="userList.length !== 0 ? 'userlist' : ''"
+    >
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -106,7 +109,6 @@ import utils from '@/utils/changeBusinessData'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 
 export default {
-  layout: 'appSafeView',
   name: 'Searchresult',
   components: {
     [Sticky.name]: Sticky,
@@ -333,7 +335,7 @@ export default {
       }
     }
     > .act {
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
       > i {
         display: block;
@@ -422,9 +424,9 @@ export default {
     }
   }
   > .userlist {
-    // background: #fff;
-    // margin-top: 20px;
-    // padding-top: 40px;
+    background: #fff;
+    margin-top: 20px;
+    padding-top: 40px;
     .list {
       display: flex;
       padding-top: 20px;
