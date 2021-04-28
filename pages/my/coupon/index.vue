@@ -249,14 +249,15 @@ export default {
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
 }
 .not_coupon_data {
-  background: #ffffff !important;
+  background: #f5f5f5 !important;
 }
 .coupon-page {
+  height: 100%;
   .coupon_list {
     width: 100%;
     padding: 12px 40px 12px 40px;
-    height: auto;
-    background: #f8f8f8;
+    background: #f5f5f5;
+    height: 100%;
     .coupon_item {
       width: 670px;
       height: 212px;

@@ -482,7 +482,7 @@ export default {
       background: url('https://cdn.shupian.cn/sp-pt/wap/images/ezdtzc7pkwg0000.png')
         no-repeat;
       background-size: 100% auto;
-      background-position-y: -50px;
+      background-position-y: -40px;
     }
   }
 

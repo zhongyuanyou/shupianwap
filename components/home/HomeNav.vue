@@ -290,7 +290,6 @@ export default {
             font-size: 24px;
             line-height: 32px;
             font-family: PingFang SC;
-            font-weight: bold;
             color: #222222;
             margin-top: 16px;
             white-space: nowrap;
