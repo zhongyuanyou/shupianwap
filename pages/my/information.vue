@@ -68,13 +68,13 @@
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
         </div>
-        <!-- <div class="cell" @click="handleClick(7)">
+        <div class="cell" @click="handleClick(7)">
           <p class="title">个人简介</p>
           <div class="right_icon">
             <p class="txt hide">{{ info.briefIntroduction || '未设置' }}</p>
             <my-icon name="shop_ic_next" size="0.26rem" color="#ccc" />
           </div>
-        </div> -->
+        </div>
         <!-- <div class="cell" @click="handleClick(8)">
           <p class="title">实名认证</p>
           <div class="right_icon">
