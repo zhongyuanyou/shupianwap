@@ -172,6 +172,7 @@ export default {
         })
         .catch((e) => {
           if (e.code !== 200) {
+            this.loading = false
             this.responseData = []
             console.log(e)
           }
@@ -196,6 +197,7 @@ export default {
           })
           .catch((e) => {
             if (e.code !== 200) {
+              this.loading = false
               this.responseData = []
               console.log(e)
             }
@@ -206,11 +208,13 @@ export default {
         coupon
           .getCouponList({ axios: this.$axios }, this.formData)
           .then((result) => {
+            this.loading = false
             this.responseData = result.marketingCouponLogList
             this.loading = false
           })
           .catch((e) => {
             if (e.code !== 200) {
+              this.loading = false
               this.responseData = []
               console.log(e)
             }
