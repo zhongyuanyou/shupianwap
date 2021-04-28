@@ -109,7 +109,7 @@ export default {
       flex: 1;
       font-size: 26px;
       font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
+      font-weight: bold;
       color: #999999;
       line-height: 66px;
       padding-left: 20px;

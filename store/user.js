@@ -30,14 +30,14 @@ export const mutations = {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
-    this.$cookies.set('userType', String(data.userType), {
+    this.$cookies.set('userType', String(data.type || data.userType), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
     state.userInfo = data
     state.token = String(data.token)
     state.userId = String(data.userId)
-    state.userType = String(data.userType)
+    state.userType = String(data.type || data.userType)
     state.userName = String(data.nickName)
     state.avatar = String(data.avatar || AVATAR)
   },

@@ -639,7 +639,7 @@ export default {
     height: 96px;
     background: #ffffff;
     padding: 10px 40px;
-    border-top: 1px solid #f4f4f4;
+    // border-top: 1px solid #f4f4f4;
     z-index: 2;
     .applaud {
       display: flex;
