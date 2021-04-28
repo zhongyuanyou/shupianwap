@@ -71,10 +71,6 @@ export const mutations = {
       path: '/',
       domain: 'shupian.cn',
     })
-    this.$cookies.remove('userPhone', {
-      path: '/',
-      domain: 'shupian.cn',
-    })
     state.token = ''
     state.userId = ''
     state.userType = ''
