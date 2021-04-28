@@ -134,7 +134,7 @@ export default {
       // 组装参数
       const params = {}
       params.categorIds = this.categorIds
-      params.limit = 10
+      params.limit = 50
       params.page = 1
       const { code, message, data } = await this.$axios.post(
         knownApi.questionArticle.list,
@@ -189,7 +189,7 @@ export default {
   }
   > .top {
     height: 420px;
-    background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
+    background: url('https://cdn.shupian.cn/sp-pt/wap/1ho0s5co5gow000.png')
       no-repeat 100%;
     background-size: 100%;
   }
@@ -315,7 +315,7 @@ export default {
   background: #4974f5 !important;
 }
 /deep/ .my-head {
-  background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
+  background: url('https://cdn.shupian.cn/sp-pt/wap/1ho0s5co5gow000.png')
     no-repeat;
   background-size: 100%;
   box-shadow: none !important;

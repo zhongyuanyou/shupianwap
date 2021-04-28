@@ -90,9 +90,6 @@ export default {
       return imgList.join(',')
     },
     setTitle(val) {
-      if (!val) {
-        return
-      }
       this.formData.title = val
       if (this.fromPage === 'question') {
         const tempVal = val
@@ -232,6 +229,7 @@ export default {
             path: '/known/detail/article',
             query: {
               id,
+              status: 'release', // 表示刚发布的文章
             },
           })
         }, 1000)

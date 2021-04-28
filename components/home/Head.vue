@@ -11,7 +11,11 @@
       <div class="btn-city" @click="swichCityHandle">
         <span class="current-city">{{ cityName ? cityName : '定位中' }}</span>
         <span class="local-icon">
-          <my-icon name="sear_ic_open" size="0.04rem" color="#fff"></my-icon>
+          <!-- <my-icon
+            name="nav_ic_openpoint2x"
+            size="0.04rem"
+            color="#fff"
+          ></my-icon> -->
         </span>
       </div>
     </div>
@@ -41,6 +45,7 @@
         :icon-left="0.24"
         :disabled="true"
         :opacity="opacity"
+        :class="pageScrollTop > 240 ? 'serch-area' : ''"
         placeholder="搜索您想找的服务"
         @clickInputHandle="clickInputHandle"
       >
@@ -91,6 +96,7 @@ export default {
     return {
       indicators: true, // 是否需要指示器
       autoplay: 5000,
+      style: '',
     }
   },
   computed: {
@@ -135,6 +141,10 @@ export default {
     clickInputHandle() {
       this.$router.push('/search/')
     },
+    // scrollHandle({ scrollTop }) {
+    //   console.log(scrollTop)
+    //   // scrollTop > 300 ? (this.style = '') : ''
+    // },
   },
 }
 </script>
@@ -152,6 +162,8 @@ export default {
     z-index: 2;
     span {
       display: inline-block;
+      font-size: 30px;
+      font-weight: 600;
     }
     .logo {
       width: 40px;
@@ -163,12 +175,11 @@ export default {
       left: 20px;
       top: 49px;
       font-size: 36px;
-      border-radius: 50%;
       overflow: hidden;
     }
     .span-2 {
       margin-left: 60px;
-      color: #fff;
+      color: #ffffff;
       height: 36px;
       font-size: 36px;
       font-family: PingFangSC-Semibold, PingFang SC;
@@ -182,31 +193,32 @@ export default {
       font-size: 36px;
       font-family: PingFangSC-Semibold, PingFang SC;
       font-weight: 600;
-
       line-height: 36px;
     }
     .span-4 {
-      color: #dfdfdf;
       height: 36px;
       font-size: 36px;
       font-family: PingFangSC-Semibold, PingFang SC;
       font-weight: 600;
-
-      line-height: 36px;
+      color: #ffffff;
     }
     .btn-city {
       position: absolute;
       right: 10px;
       color: white;
-      font-size: 28px;
       padding-left: 30px;
-      top: 52px;
-      font-size: 28px;
+      top: 49px;
+      font-size: 30px;
+      display: flex;
+      align-items: center;
       .local-icon {
         transform: scale(0.6);
-        transform-origin: 0% 30%;
-        width: 40px;
-        height: 40px;
+        width: 0;
+        height: 0;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-top: 16px solid #fff;
+        margin-left: 8px;
       }
       &::before {
         position: absolute;
@@ -215,7 +227,7 @@ export default {
         background-size: 100% 100%;
         content: '';
         left: 0;
-        top: 8px;
+        top: 10px;
         width: 18px;
         height: 24px;
       }
@@ -285,6 +297,11 @@ export default {
     img {
       width: 100%;
       height: 100%;
+    }
+  }
+  .serch-area {
+    .input-box {
+      background: #f5f5f5;
     }
   }
 }
