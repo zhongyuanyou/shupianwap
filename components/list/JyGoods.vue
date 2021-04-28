@@ -165,6 +165,8 @@ export default {
       currentTabJyCode: '', // 当前tab选中的jy code
       filterItem: {}, // 保存所有交易业态的已筛选数据
       isReq: {}, // 存储当前业态是否已经进行过搜索
+      classCode: this.$route.query.classCode,
+      classCode1: this.$route.query.classCode,
     }
   },
   computed: {
@@ -225,6 +227,15 @@ export default {
     this.currentTabJyCode = this.tabs[this.typeCodeIndex].code
     // this.isReq[this.currentTabJyCode] = true
     this.filterItem[this.tabs[this.typeCodeIndex].code] = {}
+    const classList = []
+    if (this.classCode) {
+      const obj = {
+        fieldCode: this.$route.query.pcode.toLowerCase(),
+        fieldValue: [this.classCode],
+        matchType: 'MATCH_TYPE_MULTI',
+      }
+      classList.push(obj)
+    }
     this.formData[this.tabs[this.typeCodeIndex].code] = {
       start: 1,
       limit: 10,
@@ -233,7 +244,7 @@ export default {
       dictCode: this.tabs[this.typeCodeIndex].code,
       searchKey: this.searchText,
       statusList: ['PRO_STATUS_LOCKED', 'PRO_STATUS_PUT_AWAY'],
-      fieldList: [],
+      fieldList: classList,
     }
     this.initGoodsList()
     if (!this.isShowTabs) {
@@ -241,6 +252,9 @@ export default {
     }
   },
   methods: {
+    open() {
+      console.log(this.$refs.dropDownMenu)
+    },
     getFilterHandle(data, filrerName) {
       // 获取筛选项数据
       if (data) {

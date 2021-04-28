@@ -131,7 +131,23 @@ export default {
     }
   },
   methods: {
-    open() {},
+    open() {
+      if (this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1) {
+        for (let i = 0; i < this.selectList.length; i++) {
+          if (
+            this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 ===
+            this.selectList[i].code
+          ) {
+            this.activeItems.push(this.selectList[i])
+          } else if (
+            this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 ===
+            this.selectList[i].name
+          ) {
+            this.activeItems.push(this.selectList[i])
+          }
+        }
+      }
+    },
     close() {
       this.activeItems = clone(this.saveActiveItems, true)
     },
@@ -139,6 +155,7 @@ export default {
       this.selectCheckBoxVue = _this
     },
     selectItems(item, items) {
+      this.$parent.$parent.$parent.$parent.$parent.$parent.classCode1 = ''
       // console.log(item, items)
       this.activeItems = items
       if (!this.filterData.isSelects) {
