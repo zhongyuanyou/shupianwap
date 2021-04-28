@@ -201,6 +201,7 @@ export default {
       font-family: PingFangSC-Semibold, PingFang SC;
       font-weight: 600;
       color: #ffffff;
+      line-height: 36px;
     }
     .btn-city {
       position: absolute;

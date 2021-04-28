@@ -146,6 +146,10 @@ export default {
         "this.proDetail.classCodeLevel.split(',')[0] ",
         this.proDetail.classCodeLevel.split(',')[0]
       )
+      console.log(
+        'this.proDetail.classCodeLevel',
+        this.proDetail.classCodeLevel
+      )
       const formatId1 = this.proDetail.classCodeLevel.split(',')[0] // 产品二级分类
       const formatId2 = this.proDetail.classCodeLevel.split(',')[1] // 产品二级分类
       const formatId3 = this.proDetail.classCodeLevel.split(',')[2] // 产品三级分类
@@ -154,18 +158,14 @@ export default {
         .post(recommendApi.saleList, {
           userId: this.$cookies.get('userId'), // 用户id
           deviceId: this.deviceId, // 设备ID
-          formatId: '', // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
-          classCode: formatId1,
           areaCode: this.cityCode || '510100', // 区域编码
           sceneId: 'app-jycpxq-02', // 场景ID
-          productId: this.proDetail.id, // 产品ID（产品详情页必传）
-          productType: 'PRO_CLASS_TYPE_SALES', // 产品一级类别（交易、服务产品，首页等场景不需传，如其他场景能获取到必传）
-          title: this.proDetail.name, // 产品名称（产品详情页传、咨询页等）
           platform: 'APP', // 平台（app,m,pc）
           page: {
             pageNo: 1,
-            limit: 10,
+            pageSize: 10,
           },
+          formatIds: '',
         })
         .then((res) => {
           if (res.code === 200) {
