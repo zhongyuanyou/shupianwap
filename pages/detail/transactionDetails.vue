@@ -1,6 +1,10 @@
 <template>
   <div class="company">
-    <DetailTemplate :im-jump-query="imJumpQuery" />
+    <DetailTemplate
+      :im-jump-query="imJumpQuery"
+      scene-id1="app-jycpxq-01"
+      scene-id2="app-jycpxq-02"
+    />
   </div>
 </template>
 
