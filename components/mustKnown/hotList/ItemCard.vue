@@ -116,9 +116,7 @@ export default {
     init() {},
     // 调到推荐页面
     goRecommend() {
-      this.$router.push({
-        path: '/known',
-      })
+      this.$emit('goRecommend', 'tuijian')
     },
     // 进入文章/问题/回答详情页面
     goDetailPage(type, id) {

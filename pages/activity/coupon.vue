@@ -325,10 +325,10 @@ export default {
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/29a165hg8w4k000.png');
 }
 .haveUse {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/8j18z03j8c00000.png');
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/2ozhssqe5py0000.png');
 }
 .notUse {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png');
   background-size: cover;
 }
 .act-coupon {
@@ -390,7 +390,6 @@ export default {
     margin: 24px 0;
     display: flex;
     position: relative;
-    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
     overflow: hidden;
     .item-lf {
       width: 201px;
@@ -487,7 +486,8 @@ export default {
       text-align: right;
       align-items: center;
       display: flex;
-      font-size: 0.24rem;
+      font-size: 24px;
+      padding-right: 32px;
       button {
         display: block;
         min-width: 132px;
