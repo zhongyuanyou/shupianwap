@@ -64,9 +64,6 @@ export default {
   },
   methods: {
     blur() {
-      if (this.inputVal === '') {
-        return
-      }
       // 给父组件传标题
       this.$emit('setTitle', this.inputVal)
       // 改变样式 标题设置显示

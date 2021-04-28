@@ -73,6 +73,11 @@ export default {
           categorIds: [this.categorIds],
           limit: this.limit,
           page: this.page,
+        },
+        {
+          headers: {
+            'x-cache-control': 'cache',
+          },
         }
       )
       if (code === 200) {
