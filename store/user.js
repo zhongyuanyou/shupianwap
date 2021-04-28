@@ -57,18 +57,23 @@ export const mutations = {
   CLEAR_USER(state) {
     this.$cookies.remove('token', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userId', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userType', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userName', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userPhone', {
       path: '/',
+      domain: 'shupian.cn',
     })
     state.token = ''
     state.userId = ''
@@ -84,37 +89,37 @@ export const mutations = {
     this.$cookies.set('userNo', String(data.no), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('userName', data.nickName, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('userPhone', data.fullName, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('realStatus', data.realStatus, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('mainAccountFull', data.mainAccountFull, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('avatar', data.url || AVATAR, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     this.$cookies.set('userType', data.type, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
+      // domain: 'shupian.cn', // 加入根域名cookie供其他站点使用
     })
     state.userNo = data.no
     state.userName = data.nickName
