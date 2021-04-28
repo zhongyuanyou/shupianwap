@@ -348,52 +348,69 @@ export default {
     },
     async bindhidden() {
       try {
-        const telData = await planner.newtel({
-          areaCode: this.city.code,
-          areaName: this.city.name,
-          customerUserId: this.$store.state.user.userId,
-          plannerId: this.detailData.id,
-          customerPhone:
-            this.$store.state.user.userPhoneFull ||
-            this.$cookies.get('userPhoneFull'),
-          requireCode: this.requireCode,
-          requireName: this.requireName,
-          // id: mchUserId,
-          // sensitiveInfoType: 'MCH_USER',
-        })
-        // 解密电话
-        if (telData.status === 1) {
-          this.uPCall(telData)
-        } else if (telData.status === 0) {
+        const isLogin = await this.judgeLoginMixin()
+        if (isLogin) {
+          const telData = await planner.newtel({
+            areaCode: this.city.code,
+            areaName: this.city.name,
+            customerUserId: this.$store.state.user.userId,
+            plannerId: this.detailData.id,
+            customerPhone:
+              this.$store.state.user.mainAccountFull ||
+              this.$cookies.get('mainAccountFull'),
+            requireCode: this.requireCode,
+            requireName: this.requireName,
+            // id: mchUserId,
+            // sensitiveInfoType: 'MCH_USER',
+          })
+          // 解密电话
+          if (telData.status === 1) {
+            this.uPCall(telData)
+          } else if (telData.status === 0) {
+            Toast({
+              message: '当前人员已禁用，无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
+            return ''
+          } else if (telData.status === 3) {
+            Toast({
+              message: '当前人员已离职，无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
+            return ''
+          }
+        } else {
           Toast({
-            message: '当前人员已禁用，无法拨打电话',
+            message: '请先登录账号',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
-          return ''
-        } else if (telData.status === 3) {
-          Toast({
-            message: '当前人员已离职，无法拨打电话',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
-          })
-          return ''
         }
       } catch (err) {
-        // Toast({
-        //   message: '未获取到划师联系方式',
-        //   iconPrefix: 'sp-iconfont',
-        //   icon: 'popup_ic_fail',
-        // })
+        Toast({
+          message: '未获取到划师联系方式',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
       }
     },
-    handleIM() {
-      console.log('IM ')
-      this.uPIM({
-        mchUserId: this.detailData.id,
-        userName: this.detailData.userName,
-        type: this.detailData.mchClass,
-      })
+    async handleIM() {
+      const isLogin = await this.judgeLoginMixin()
+      if (isLogin) {
+        this.uPIM({
+          mchUserId: this.detailData.id,
+          userName: this.detailData.userName,
+          type: this.detailData.mchClass,
+        })
+      } else {
+        Toast({
+          message: '请先登录账号',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
+      }
     },
 
     onSelect(option) {
