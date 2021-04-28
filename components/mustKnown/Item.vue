@@ -35,7 +35,7 @@
       </div>
       <div class="item_bottom">
         <span class="like"> {{ item.applaudCount }}赞同</span>
-        <span class="comment"> · {{ item.answerCount }} 评论</span>
+        <span class="comment"> · {{ item.remarkCount }} 评论</span>
       </div>
     </div>
   </sp-skeleton>

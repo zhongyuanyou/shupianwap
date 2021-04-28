@@ -118,7 +118,6 @@ export default {
       return value ? parseInt(value) : ''
     },
     cancelItem(item, items) {
-      console.log(item, items)
       this.$emit('cancelItem', item, items)
     },
     selectItems(item, items) {
@@ -131,7 +130,6 @@ export default {
       this.$emit('selectAllItems', item)
     },
     setPrice(minPrice, maxPrice) {
-      console.log('123', minPrice, maxPrice)
       this.minPrice = minPrice
       this.maxPrice = maxPrice
     },

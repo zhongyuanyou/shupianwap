@@ -487,7 +487,8 @@ export default {
       text-align: right;
       align-items: center;
       display: flex;
-      font-size: 0.24rem;
+      font-size: 24px;
+      padding-right: 32px;
       button {
         display: block;
         min-width: 132px;

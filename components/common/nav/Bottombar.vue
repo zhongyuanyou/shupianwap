@@ -116,7 +116,7 @@ export default {
   methods: {
     pageJump(item) {
       // 消息页面跳转 IM
-      if (item.path === '/msg') {
+      if (item.path === '/msg' || item.path.match('order')) {
         if (this.userInfo.token) {
           if (this.userInfo.token) {
             window.location.href = `${config.imBaseUrl}/index?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
