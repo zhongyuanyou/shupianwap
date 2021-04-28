@@ -107,7 +107,7 @@
           <span class="text" @click="handleClickBottom(1)"
             >赞同{{ answerDetails.applaudCount }}</span
           >
-          <span class="icon" @click="handleClickBottom(2)">
+          <span class="icon oppose" @click="handleClickBottom(2)">
             <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
           ></span>
         </div>
@@ -775,66 +775,73 @@ export default {
       .icon {
         padding: 0;
         width: 40px;
-        height: 40px;
-        line-height: 0;
         position: relative;
       }
       .text {
-        margin-top: 1px;
         font-weight: bold;
       }
     }
-    .text {
-      margin-top: 1px;
-      font-weight: bold;
-    }
-  }
-  .left-area {
-    float: left;
-    width: auto;
-    height: 72px;
-    background: #f2f5ff;
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    span {
-      display: block;
-      margin-right: 4px;
-    }
-    .icon {
-      padding: 0;
-      width: 40px;
-      height: 40px;
-      position: relative;
+    .left-area {
+      float: left;
+      width: auto;
+      height: 72px;
+      background: #f2f5ff;
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        display: block;
+        margin-right: 4px;
+      }
+      .icon {
+        padding: 0;
+        width: 40px;
+        height: 100%;
+        line-height: 0;
+        position: relative;
+        .spiconfont {
+          position: absolute;
+          left: 0px;
+          top: 18px;
+          padding: 0;
+          margin: 0;
+          line-height: 0;
+        }
+      }
+      .icon.oppose {
+        padding-left: 20px;
+        margin-left: 20px;
+        border-left: 1px solid #ddd;
+        .spiconfont {
+          left: 20px;
+        }
+      }
       .text {
-        border-right: 1px solid #f4f4f4;
-        margin-right: 20px;
+        margin-top: 1px;
         font-size: 24px;
         color: #4974f5;
         font-weight: bold;
-        padding-right: 20px;
-        // margin-top: 1px;
       }
     }
-  }
-  .right-area {
-    float: right;
-    width: auto;
-    .item {
-      height: 100%;
-      float: left;
-      margin-left: 10px;
-      text-align: center;
-      width: 80px;
-      font-family: PingFangSC-Medium, PingFang SC;
-      color: #999999;
-      font-size: 20px;
-      .icon {
-        width: 100%;
-        height: 40px;
-        margin-bottom: 5px;
+    .right-area {
+      float: right;
+      width: auto;
+      .item {
+        height: 100%;
+        float: left;
+        margin-left: 10px;
+        text-align: center;
+        width: 80px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        color: #999999;
+        font-size: 20px;
+        .icon {
+          width: 100%;
+          height: 40px;
+          margin-bottom: 5px;
+        }
       }
     }
   }
