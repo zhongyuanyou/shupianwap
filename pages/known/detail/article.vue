@@ -52,7 +52,10 @@
         <div class="infos">{{ articleDetails.userName }}</div>
         <template v-if="articleDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
-            <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
+            <sp-button>
+              <my-icon name="tianjia" size="0.27rem" color="#4974F5" />
+              关注
+            </sp-button>
           </div>
           <div v-else class="btn2" @click="follow">
             <span class="follow">已关注</span>
@@ -589,7 +592,7 @@ export default {
       height: 72px;
       border-radius: 12px;
       display: flex;
-      align-content: center;
+      align-items: center;
       .sp-button {
         width: 100%;
         height: 100%;
@@ -599,6 +602,7 @@ export default {
         display: block;
         font-weight: bold;
         float: left;
+        display: flex;
       }
     }
   }

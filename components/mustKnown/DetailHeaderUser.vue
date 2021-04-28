@@ -21,7 +21,10 @@
         </div>
         <template v-if="isShowFollow">
           <div v-if="!isFollow" class="btn" @click="follow">
-            <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
+            <sp-button>
+              <my-icon name="tianjia" size="0.27rem" color="#4974F5" />
+              关注</sp-button
+            >
           </div>
           <div v-else class="btn2" @click="follow">
             <span class="follow">已关注</span>

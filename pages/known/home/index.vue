@@ -23,7 +23,13 @@
               :class="{ bt_has_attention: isAttention }"
               @click="attention"
             >
-              {{ isAttention ? '已关注' : '+ 关注' }}
+              <my-icon
+                v-show="!isAttention"
+                name="tianjia"
+                size="0.27rem"
+                color="#fff"
+              />
+              <p>{{ isAttention ? '已关注' : '关注' }}</p>
             </div>
           </template>
           <div v-if="isInApp && type === 2" class="bt_contact" @click="contact">
@@ -401,13 +407,16 @@ export default {
         height: 64px;
         .bt_attention {
           width: 144px;
-          // height: 64px;
+          height: 64px;
           display: flex;
           align-items: center;
           justify-content: center;
           background: #4974f5;
           border-radius: 8px;
           color: #ffffff;
+          /deep/ i {
+            margin-right: 6px;
+          }
         }
         .bt_has_attention {
           background: #f5f5f5;
