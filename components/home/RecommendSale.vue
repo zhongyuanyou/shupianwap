@@ -16,6 +16,12 @@
             <span :class="[index === curentItem ? 'tab-curve-active' : '']">{{
               item.name
             }}</span>
+            <div
+              v-if="index === curentItem ? true : false"
+              class="tab-curve-image"
+            >
+              <img :src="imgUrl" alt="" />
+            </div>
           </li>
         </ul>
       </div>
@@ -170,19 +176,17 @@ export default {
       curentItem: 0,
       searchDomHeight: 0,
       tabList: [],
+      imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/7jm4ttjg3780000.png',
       params: {
         userId: '', // 用户id
         deviceId: '', // 设备ID（用户唯一标识） 0022ef1a-f685-469a-93a8-5409892207a2
         areaCode: '', // 区域编码
         sceneId: 'app-mainye-01', // 场景ID
-        maxsize: 120, // 要求推荐产品的数量
         platform: 'APP', // 平台（app,m,pc）
-        formatId: '', // 产品类别
         page: {
           pageNo: 1,
           pageSize: 10,
         },
-        storeId: '', // 商户id
         productType: 'PRO_CLASS_TYPE_SALES',
       },
       tabBtn: [],
@@ -255,7 +259,8 @@ export default {
       this.isFixed = data.isFixed
     },
     selectItem(item, index) {
-      this.params.formatId = item.ext3
+      // this.params.formatId = item.ext3
+      this.params.formatIdOne = item.ext3
       this.$refs.recomRef.swipeTo(index)
       this.findRecomList(index)
     },
@@ -616,9 +621,10 @@ export default {
     .goods-price {
       flex: 1;
       display: flex;
-      line-height: 18px;
+      line-height: 36px;
       align-items: flex-end;
       vertical-align: middle;
+      margin-bottom: 5px;
       .sales-proce {
         display: flex;
         align-items: baseline;
@@ -689,6 +695,17 @@ export default {
 .tab-curve {
   width: 100%;
   font-size: 24px;
+  // position: relative;
+  &-image {
+    img {
+      width: 60px;
+      height: 12px;
+      float: right;
+      position: absolute;
+      bottom: 12px;
+      right: 0;
+    }
+  }
   &-list {
     display: flex;
     flex-wrap: nowrap;
@@ -707,7 +724,7 @@ export default {
       white-space: nowrap;
       -webkit-tap-highlight-color: transparent;
       &:last-child {
-        padding-right: 40px;
+        // padding-right: 40px;
       }
       span {
         font-family: PingFang SC;

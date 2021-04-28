@@ -76,7 +76,7 @@ export default {
   .title1 {
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #222222;
     line-height: 32px;
   }
@@ -87,7 +87,7 @@ export default {
     justify-content: space-between;
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     color: #222222;
     line-height: 39px;
     border-top: 1px solid #f4f4f4;

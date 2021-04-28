@@ -213,7 +213,7 @@ export default {
       .money {
         font-size: 32px;
         color: white;
-        font-weight: 600;
+        font-weight: bold;
       }
     }
   }

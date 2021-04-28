@@ -269,10 +269,10 @@ export default {
   overflow-x: scroll;
   font-size: 28px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: bold;
   color: #4974f5;
   background: white;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #f4f4f4;
   z-index: 2;
   .item {
     margin-right: 10px;
@@ -300,7 +300,7 @@ export default {
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
     font-size: 40px;
-    font-weight: 500;
+    font-weight: bold;
     color: #000000;
     line-height: 136px;
     position: relative;
@@ -397,7 +397,7 @@ export default {
   overflow-x: scroll;
   font-size: 28px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: bold;
   color: #4974f5;
   line-height: 28px;
   white-space: nowrap;

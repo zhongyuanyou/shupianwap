@@ -1,20 +1,19 @@
 <template>
   <div class="result">
-    <sp-sticky>
+    <header-slot>
       <Search
         ref="searchRef"
         v-model="value"
         :disabled="true"
         :icon-left="0.24"
         placeholder="请输入搜索内容"
-        :style="{ paddingTop: (appInfo.statusBarHeight || 10) + 'px' }"
         @clickInputHandle="keyClickHandle"
       >
         <template v-slot:left>
-          <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
+          <sp-icon name="arrow-left" size="0.4rem" @click.stop="$back()" />
         </template>
       </Search>
-    </sp-sticky>
+    </header-slot>
     <div class="tab">
       <p :class="tabIndex === '1' ? 'act' : ''" @click="changeTab('1')">
         <span>问题</span><i></i>
@@ -43,7 +42,7 @@
         >
           <h1 v-html="item.titleHtml"></h1>
           <div class="box">
-            <div :style="{ width: item.contentImageUrl ? '464px' : '100%' }">
+            <div>
               <p v-html="item.contentTextHtml"></p>
               <div v-if="item.contentImageUrl" class="num">
                 <span>{{ item.applaudCount }} 赞同</span>
@@ -55,7 +54,7 @@
             </div>
             <img
               v-if="item.contentImageUrl"
-              :src="item.contentImageUrl"
+              :src="item.contentImageUrl.split(',')[0]"
               alt=""
             />
           </div>
@@ -69,7 +68,10 @@
         </div>
       </sp-list>
     </div>
-    <div v-show="tabIndex === '3'" class="userlist">
+    <div
+      v-show="tabIndex === '3'"
+      :class="userList.length !== 0 ? 'userlist' : ''"
+    >
       <sp-list
         v-model="loading"
         :finished="finished"
@@ -104,6 +106,7 @@ import { Sticky, Icon, Dialog, List } from '@chipspc/vant-dgg'
 import Search from '@/components/common/search/Search'
 import knownApi from '@/api/known'
 import utils from '@/utils/changeBusinessData'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 
 export default {
   name: 'Searchresult',
@@ -113,6 +116,7 @@ export default {
     Search,
     [Dialog.name]: Dialog,
     [List.name]: List,
+    HeaderSlot,
   },
   filters: {
     fromatDate(value) {
@@ -282,31 +286,29 @@ export default {
 .result {
   background: #f5f5f5;
   min-height: 100vh;
-  /deep/.sp-sticky {
-    .search-content {
-      padding-left: 24px;
-      padding-right: 32px;
-    }
-    .input-box {
+  /deep/.search-content {
+    padding: 10px 32px 10px 24px;
+    height: 0.88rem;
+  }
+  /deep/.input-box {
+    background: #f5f5f5;
+    border: none;
+    box-shadow: none;
+    height: 64px;
+    margin-left: 16px;
+    input {
       background: #f5f5f5;
-      border: none;
-      box-shadow: none;
-      height: 64px;
-      margin-left: 16px;
-      input {
-        background: #f5f5f5;
-      }
-      .imitate-input {
-        color: #000;
-      }
     }
-    .cloose-btn {
-      margin-left: 32px;
-      font-size: 32px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
-      color: #222222;
+    .imitate-input {
+      color: #000;
     }
+  }
+  /deep/.cloose-btn {
+    margin-left: 32px;
+    font-size: 32px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #222222;
   }
   > .tab {
     width: 100%;
@@ -333,7 +335,7 @@ export default {
       }
     }
     > .act {
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
       > i {
         display: block;
@@ -359,6 +361,7 @@ export default {
         margin-top: 18px;
         align-items: center;
         > div {
+          flex: 1;
           > p {
             display: -webkit-box;
             -webkit-box-orient: vertical;

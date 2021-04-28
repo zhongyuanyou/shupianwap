@@ -162,14 +162,14 @@ export default {
 ::v-deep .sp-work-tab--active {
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: bold;
   color: #222222;
 }
 /deep/ .sp-work-tab__text {
   flex-shrink: 0;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: bold;
   color: #999999;
 }
 /deep/ .sp-work-tabs__line {
@@ -183,7 +183,8 @@ export default {
   background: #4974f5 !important;
 }
 /deep/ .my-head {
-  background: url('~@/assets/knownImg/daily.png') no-repeat;
+  background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
+    no-repeat;
   background-size: 100%;
   box-shadow: none !important;
 }
@@ -201,7 +202,7 @@ export default {
   }
   .newspaperTitle {
     font-size: 36px;
-    font-weight: 500;
+    font-weight: bold;
     color: #ffffff;
   }
 }
@@ -209,8 +210,8 @@ export default {
   position: relative;
   .container_head {
     height: 420px;
-    // background: #4974f5;
-    background: url('~@/assets/knownImg/daily.png') no-repeat 100%;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
+      no-repeat 100%;
     background-size: 100%;
     position: relative;
     .header_search {
@@ -225,7 +226,7 @@ export default {
         height: 50px;
         font-size: 36px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font-weight: bold;
         color: #ffffff;
         line-height: 50px;
       }

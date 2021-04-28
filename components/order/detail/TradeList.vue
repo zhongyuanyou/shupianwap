@@ -96,15 +96,19 @@ export default {
   height: auto;
   transition: height 0.5s;
 }
+
 .item {
-  padding: 20px 0;
+  padding: 40px 0 20px 0;
   height: auto;
-  margin-bottom: 20px;
   display: flex;
-  border-bottom: 1px solid #f4f4f4;
+  border-top: 1px solid #f4f4f4;
   .img {
     width: 130px;
     height: 130x;
   }
+}
+.item0 {
+  border: none;
+  border-top: none;
 }
 </style>

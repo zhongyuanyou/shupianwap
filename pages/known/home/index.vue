@@ -6,12 +6,12 @@
       :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
     >
       <my-icon
-        name="zuo"
+        name="nav_ic_back"
         size="0.4rem"
         :color="fixed ? '#1A1A1A' : '#D8D8D8'"
         @click.native="$back"
       ></my-icon>
-      {{ fixed ? userName : '' }}
+      <div style="margin-left: 0.2rem">{{ fixed ? userName : '' }}</div>
     </div>
     <div class="top_box">
       <div class="card">
@@ -26,11 +26,7 @@
               {{ isAttention ? '已关注' : '+ 关注' }}
             </div>
           </template>
-          <div
-            v-if="appInfo.appCode === 'CPSAPP' && type === 2"
-            class="bt_contact"
-            @click="contact"
-          >
+          <div v-if="isInApp && type === 2" class="bt_contact" @click="contact">
             <my-icon
               name="pinglun_mian"
               size="0.36rem"
@@ -347,6 +343,7 @@ export default {
 <style lang="less" scoped>
 .home_container {
   height: 100%;
+  background: #fff;
   .header {
     z-index: 10;
     position: fixed;
@@ -354,7 +351,7 @@ export default {
     left: 0;
     width: 100%;
     height: 88px;
-    padding-left: 86px;
+    padding-left: 0.32rem;
     color: #1a1a1a;
     font-size: 36px;
     font-weight: 500px;
@@ -398,12 +395,14 @@ export default {
         justify-content: flex-end;
         text-align: center;
         font-size: 26px;
-        font-weight: 500;
+        font-weight: bold;
         height: 64px;
         .bt_attention {
           width: 144px;
-          height: 64px;
-          line-height: 64px;
+          // height: 64px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           background: #4974f5;
           border-radius: 8px;
           color: #ffffff;
@@ -426,7 +425,7 @@ export default {
       .user_name {
         margin-top: 48px;
         font-size: 44px;
-        font-weight: 500;
+        font-weight: bold;
         color: #1a1a1a;
         line-height: 44px;
       }
@@ -449,7 +448,7 @@ export default {
             color: #4974f5;
             font-size: 36px;
             line-height: 36px;
-            font-weight: 500;
+            font-weight: bold;
           }
           &_name {
             font-size: 26px;
@@ -484,7 +483,7 @@ export default {
     }
     .sp-tab--active {
       font-size: 32px;
-      font-weight: 500;
+      font-weight: bold;
     }
 
     .list_container {
@@ -520,7 +519,7 @@ export default {
         .title {
           font-family: PingFangSC-Medium, PingFang SC;
           font-size: 36px;
-          font-weight: 500;
+          font-weight: bold;
           color: #1a1a1a;
           line-height: 48px;
           margin-bottom: 17px;

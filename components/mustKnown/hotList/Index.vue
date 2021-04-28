@@ -44,7 +44,7 @@
       loading-text="加载中..."
       @refresh="onRefresh"
     >
-      <ItemCard :list-data="list" />
+      <ItemCard :list-data="list" :to-load="toLoad" />
     </sp-pull-refresh>
   </div>
 </template>
@@ -69,6 +69,7 @@ export default {
     return {
       subjectList: [],
       list: [],
+      toLoad: false,
       refreshing: false,
     }
   },
@@ -85,7 +86,12 @@ export default {
     // 请求专题列表数据
     async getSubjectList() {
       const { code, message, data } = await this.$axios.get(
-        knownApi.questionArticle.subjectList
+        knownApi.questionArticle.subjectList,
+        {
+          headers: {
+            'x-cache-control': 'cache',
+          },
+        }
       )
       if (code === 200) {
         if (data.length > 0) {
@@ -106,11 +112,20 @@ export default {
           categorIds: [this.categoryId],
           page: 1,
           limit: 50,
+          currentUserId: this.userInfo.userId,
+        },
+        {
+          headers: {
+            'x-cache-control': 'cache',
+          },
         }
       )
       if (code === 200) {
         if (data.rows.length > 0) {
-          this.list = data.rows
+          this.list = data.rows.sort((a, b) => {
+            return b.hotNumber - a.hotNumber
+          })
+          this.toLoad = true // 页面加载完
         }
       }
     },
@@ -183,7 +198,7 @@ export default {
       border-radius: 50%;
       font-size: 22px;
       font-family: SourceHanSansCN-Medium, SourceHanSansCN;
-      font-weight: 500;
+      font-weight: bold;
       color: #133aa3;
       display: flex;
       justify-content: center;
@@ -192,7 +207,7 @@ export default {
     .news_span {
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: bold;
       color: #133aa3;
       margin-left: 12px;
     }
@@ -217,7 +232,7 @@ export default {
     .see_span {
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: bold;
       color: #564499;
       margin-left: 12px;
     }

@@ -1,7 +1,10 @@
 <template>
   <div
     v-if="isShow"
-    :class="{ 'fixed-head': fixed, 'safe-area-top': useSafeAreaClass }"
+    :class="{
+      'fixed-head': fixed,
+      'safe-area-top': useSafeAreaClass,
+    }"
     :style="{
       height: headHeight,
       'padding-top': safeTop + 'px',
@@ -10,7 +13,7 @@
   >
     <div
       class="my-head"
-      :class="myHeadClass"
+      :class="{ myHeadClass, 'no-shadow': hideShadow }"
       :style="{
         height: headHeight,
         'padding-top': safeTop + 'px',
@@ -22,7 +25,7 @@
           <slot name="left">
             <my-icon
               class="back-icon"
-              name="zuo"
+              name="nav_ic_back"
               size="0.4rem"
               color="#1A1A1A"
               @click.native="onLeftClick"
@@ -80,6 +83,11 @@ export default {
       default() {
         return {}
       },
+    },
+    // 隐藏shadow
+    hideShadow: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -147,7 +155,7 @@ export default {
   // display: flex;
   // align-items: center;
   font-size: 24px;
-  box-shadow: 0px 1px 0px 0px #f4f4f4;
+  // box-shadow: 0px 1px 0px 0px #f4f4f4;
   background-color: #ffffff;
   &-row {
     position: relative;
@@ -203,5 +211,8 @@ export default {
     top: 0;
     z-index: 999;
   }
+}
+.no-shadow {
+  box-shadow: none;
 }
 </style>

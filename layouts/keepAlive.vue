@@ -16,6 +16,7 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+  name: 'KeepAlive',
   computed: {
     ...mapState({
       keepAliveProps: (state) => state.keepAlive.keepAliveProps,

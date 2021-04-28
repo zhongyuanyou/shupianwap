@@ -8,17 +8,24 @@
     <HeaderSlot>
       <div class="flex">
         <div>
-          <sp-icon name="arrow-left" size="0.4rem" @click="goBack" />
+          <my-icon
+            name="nav_ic_back"
+            size="0.40rem"
+            color="#1a1a1a"
+            class="my_icon"
+            @click.native="goBack"
+          ></my-icon>
         </div>
         <p class="title">{{ title }}</p>
         <div>
-          <sp-icon
+          <my-icon
             style="margin-right: 0.15rem"
-            name="search"
-            size="0.4rem"
+            name="nav_ic_searchbig"
+            size="0.40rem"
             color="#1a1a1a"
-            @click="$router.push('/known/search')"
-          />
+            class="my_icon"
+            @click.native="$router.push('/known/search')"
+          ></my-icon>
           <sp-icon
             v-if="questionDetails.createrId === userInfo.userId"
             name="ellipsis"
@@ -220,32 +227,43 @@
       </sp-list>
     </div>
     <div v-show="fixedshow" class="fiexdbtn">
-      <div
-        class="btn"
-        :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
-        @click="goInvitionPage"
-      >
-        <sp-icon name="friends-o" size="0.4rem" />
-        <span>邀请回答</span>
-      </div>
-      <div
-        class="btn"
-        :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
-        @click="goPublishAnswer"
-      >
-        <sp-icon name="edit" size="0.4rem" />
-        <span>写回答</span>
-      </div>
-      <div
-        class="btn"
-        :style="{
-          background: questionDetails.isCollectFlag === 1 ? '#4974F5' : '',
-          color: questionDetails.isCollectFlag === 1 ? '#fff' : '',
-        }"
-        @click="like('COLLECT')"
-      >
-        <sp-icon name="like-o" size="0.4rem" />
-        <span>收藏</span>
+      <div>
+        <div
+          class="btn"
+          :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
+          @click="goInvitionPage"
+        >
+          <my-icon name="yaoqinghuida_mian" size="0.4rem"></my-icon>
+          <span>邀请回答</span>
+        </div>
+        <div
+          class="btn"
+          :class="[questionDetails.status === 0 ? 'form-onlyRead' : '']"
+          @click="goPublishAnswer"
+        >
+          <my-icon name="xiehuida" size="0.4rem"></my-icon>
+          <span>写回答</span>
+        </div>
+        <div
+          class="collect"
+          :style="{
+            background:
+              questionDetails.isCollectFlag === 1 ? '#F5F5F5' : '#4974F5',
+            color: questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF',
+          }"
+          @click="like('COLLECT')"
+        >
+          <my-icon
+            :name="
+              questionDetails.isCollectFlag === 1 ? 'shoucang_mian' : 'shoucang'
+            "
+            :color="questionDetails.isCollectFlag === 1 ? '#CCCCCC' : '#FFFFFF'"
+            size="0.32rem"
+          ></my-icon>
+          <span>{{
+            questionDetails.isCollectFlag === 1 ? '已收藏' : '收藏'
+          }}</span>
+        </div>
       </div>
     </div>
 
@@ -288,6 +306,7 @@ import { knownApi, userinfoApi } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 import util from '@/utils/changeBusinessData'
 export default {
+  layout: 'keepAlive',
   name: 'Detail',
   components: {
     HeaderSlot,
@@ -423,7 +442,7 @@ export default {
           sourceIds: [this.currentDetailsId],
           orderBy: this.orderBy,
           page: this.page,
-          userId: this.userInfo.userId,
+          currentUserId: this.userInfo.userId,
           limit: this.limit,
         })
         .then((res) => {
@@ -692,7 +711,7 @@ export default {
     position: absolute;
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     color: #222222;
     bottom: 0;
     border-top: 1px solid #f4f4f4;
@@ -736,7 +755,7 @@ export default {
     > .tit {
       font-size: 40px;
       margin-bottom: 28px;
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
       padding: 0 32px;
       word-break: break-all;
@@ -767,7 +786,7 @@ export default {
           height: 226px;
           background: rgba(0, 0, 0, 0.4);
           font-size: 52px;
-          font-weight: 500;
+          font-weight: bold;
           color: #ffffff;
           text-align: center;
           line-height: 226px;
@@ -817,7 +836,7 @@ export default {
         display: flex;
         > div {
           font-size: 24px;
-          font-weight: 500;
+          font-weight: bold;
           color: #222222;
           > span {
             color: #999999;
@@ -838,7 +857,7 @@ export default {
         background: #f5f5f5;
         border-radius: 28px;
         font-size: 24px;
-        font-weight: 500;
+        font-weight: bold;
         color: #999999;
         margin-left: auto;
         text-align: center;
@@ -854,15 +873,18 @@ export default {
       border-bottom: 1px solid #f4f4f4;
       border-top: 1px solid #f4f4f4;
       > .box {
-        padding-top: 23px;
+        // padding-top: 23px;
         box-sizing: border-box;
         width: 250px;
         height: 118px;
         font-size: 26px;
-        font-weight: 500;
+        font-weight: bold;
         color: #555555;
-        text-align: center;
-        border-left: 1px solid #ddd;
+        border-left: 1px solid #f4f4f4;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
         p {
           margin-top: 10px;
         }
@@ -880,7 +902,7 @@ export default {
     > div {
       text-align: center;
       font-size: 40px;
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
       /deep/ i {
         vertical-align: -11px;
@@ -905,7 +927,7 @@ export default {
       > .left {
         > h1 {
           font-size: 32px;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
         }
         > p {
@@ -922,7 +944,7 @@ export default {
         background: #f2f5ff;
         border-radius: 8px;
         font-size: 26px;
-        font-weight: 500;
+        font-weight: bold;
         color: #4974f5;
         text-align: center;
         line-height: 72px;
@@ -945,7 +967,7 @@ export default {
         }
         > p {
           font-size: 30px;
-          font-weight: 500;
+          font-weight: bold;
           color: #222222;
         }
         > div {
@@ -954,7 +976,7 @@ export default {
           background: #4974f5;
           border-radius: 8px;
           font-size: 26px;
-          font-weight: 500;
+          font-weight: bold;
           color: #ffffff;
           margin-left: auto;
           text-align: center;
@@ -985,7 +1007,7 @@ export default {
       position: relative;
       > p {
         font-size: 30px;
-        font-weight: 500;
+        font-weight: bold;
         color: #222222;
       }
       > div {
@@ -1002,7 +1024,7 @@ export default {
           // height: 52px;
           display: block;
           font-size: 26px;
-          font-weight: 500;
+          font-weight: bold;
           color: #999999;
           text-align: center;
           // line-height: 52px;
@@ -1058,7 +1080,7 @@ export default {
         }
         > p {
           font-size: 30px;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
           margin-left: 16px;
           white-space: nowrap;
@@ -1097,32 +1119,63 @@ export default {
   }
   > .fiexdbtn {
     position: fixed;
-    height: 104px;
-    background: #ffffff;
+    z-index: 1;
+    background: #fff;
     width: 100vw;
-    bottom: -1px;
-    left: 0;
-    display: flex;
-    align-items: center;
-    z-index: 2;
-    justify-content: space-between;
-    padding: 0 32px;
-    box-sizing: border-box;
-    > .btn {
-      width: 216px;
-      height: 72px;
+    left: 20px;
+    bottom: 0;
+    height: 124px;
+    > div {
+      position: fixed;
+      height: 104px;
       background: #ffffff;
+      width: 100vw;
+      bottom: 20px;
+      left: 0;
       border-radius: 8px;
       border: 1px solid #dddddd;
       font-size: 28px;
-      font-weight: 500;
+      font-weight: bold;
       color: #222222;
       text-align: center;
       display: flex;
       align-items: center;
-      justify-content: center;
-      > span {
-        margin-left: 0.1rem;
+      z-index: 2;
+      justify-content: space-between;
+      padding: 0 32px;
+      box-sizing: border-box;
+      > .btn {
+        width: 216px;
+        height: 72px;
+        background: #ffffff;
+        border-radius: 8px;
+        border: 1px solid #dddddd;
+        font-size: 28px;
+        font-weight: 600;
+        color: #222222;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        > span {
+          margin-left: 0.1rem;
+        }
+      }
+      .collect {
+        width: 216px;
+        height: 72px;
+        background: #ffffff;
+        border-radius: 8px;
+        font-size: 28px;
+        font-weight: 600;
+        color: #222222;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        > span {
+          margin-left: 0.1rem;
+        }
       }
     }
   }

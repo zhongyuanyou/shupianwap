@@ -332,7 +332,7 @@ export default {
       .price-sales {
         span {
           font-size: 36px;
-          font-weight: 600;
+          font-weight: bold;
           color: #ec5330;
           b {
             font-size: 22px;

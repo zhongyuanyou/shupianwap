@@ -121,6 +121,7 @@ export default {
 
 <style lang="less" scoped>
 .article {
+  background: #fff;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -140,7 +141,7 @@ export default {
     height: 28px;
     font-size: 28px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     color: #4974f5;
     line-height: 88px;
     padding-left: 40px;

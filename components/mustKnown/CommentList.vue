@@ -61,6 +61,7 @@
         <sp-field
           v-model.trim="content"
           maxlength="100"
+          style="font-size: 16px"
           placeholder="请输入您的评论内容"
         />
         <p
@@ -289,7 +290,7 @@ export default {
       position: relative;
       > span {
         font-size: 24px;
-        font-weight: 500;
+        font-weight: bold;
         color: #999;
         display: block;
         height: 48px;
@@ -376,9 +377,8 @@ export default {
     }
     > p {
       margin-left: auto;
-      height: 28px;
-      font-size: 28px;
-      font-weight: 500;
+      font-size: 30px;
+      font-weight: bold;
       color: rgba(73, 116, 245, 0.4);
     }
   }

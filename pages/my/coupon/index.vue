@@ -23,8 +23,12 @@
         class="coupon_item"
       >
         <div class="item-lf">
-          <div class="coupon_price">{{ item.reducePrice }}</div>
-          <div class="can_use">满{{ item.fullPrice }}元可用</div>
+          <div class="coupon_price">
+            {{ item.marketingCouponVO.reducePrice }}
+          </div>
+          <div class="can_use">
+            满{{ item.marketingCouponVO.fullPrice }}元可用
+          </div>
         </div>
         <div class="item-rt">
           <!-- 气泡组件 start -->
@@ -46,19 +50,22 @@
             "
           ></div>
           <div class="title" @click="goDetailPage(item)">
-            {{ item.couponName }}
+            {{ item.marketingCouponVO.couponName }}
           </div>
           <div ref="textpro" class="content">
             {{
-              item.useType === 1
+              item.marketingCouponVO.useType === 1
                 ? '全品类通用'
-                : item.useType === 2
+                : item.marketingCouponVO.useType === 2
                 ? '限定部分类别产品使用'
                 : '置顶产品使用'
             }}
           </div>
-          <div class="date" :class="item.showColorTime ? 'expiredate' : ''">
-            {{ item.serviceLife }}
+          <div
+            class="date"
+            :class="item.marketingCouponVO.showColorTime ? 'expiredate' : ''"
+          >
+            {{ item.marketingCouponVO.serviceLife }}
           </div>
           <!-- 右侧显示 end-->
         </div>
@@ -145,15 +152,17 @@ export default {
       coupon
         .getCouponList({ axios: this.$axios }, this.formData)
         .then((result) => {
-          this.responseData = result.responseData
+          this.responseData = result.marketingCouponLogList
           for (let i = 0, length = this.responseData.length; i < length; i++) {
-            let useTime = this.responseData[i].serviceLife
+            let useTime = this.responseData[i].marketingCouponVO.serviceLife
             useTime = useTime.slice(11)
             console.log('useTime', useTime)
             const thisTime = useTime.split('.').join('-')
             const time = new Date(thisTime).getTime()
             if (time - this.nowTimeStamp < 172800000) {
-              this.responseData[i].showColorTime = this.showColorTime
+              this.responseData[
+                i
+              ].marketingCouponVO.showColorTime = this.showColorTime
             }
           }
           this.usedCount = result.usedCount
@@ -182,7 +191,7 @@ export default {
         coupon
           .getCouponList({ axios: this.$axios }, this.formData)
           .then((result) => {
-            this.responseData = result.responseData
+            this.responseData = result.marketingCouponLogList
             this.loading = false
           })
           .catch((e) => {
@@ -197,7 +206,7 @@ export default {
         coupon
           .getCouponList({ axios: this.$axios }, this.formData)
           .then((result) => {
-            this.responseData = result.responseData
+            this.responseData = result.marketingCouponLogList
             this.loading = false
           })
           .catch((e) => {
@@ -240,14 +249,15 @@ export default {
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
 }
 .not_coupon_data {
-  background: #ffffff !important;
+  background: #f5f5f5 !important;
 }
 .coupon-page {
+  height: 100%;
   .coupon_list {
     width: 100%;
-    padding: 12px 40px 0 40px;
-    height: auto;
-    background: #f8f8f8;
+    padding: 12px 40px 12px 40px;
+    background: #f5f5f5;
+    height: 100%;
     .coupon_item {
       width: 670px;
       height: 212px;
@@ -256,6 +266,7 @@ export default {
       margin: 24px 0;
       display: flex;
       position: relative;
+      box-shadow: 0px 0.04rem 0.16rem 0px rgba(0, 0, 0, 0.05);
       .item-lf {
         width: 201px;
         height: 212px;

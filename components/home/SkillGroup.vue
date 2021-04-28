@@ -1,10 +1,10 @@
 <template>
   <div v-if="skillData.length" class="sp-main-box">
     <div class="inner">
-      <p class="sp-home-title">
+      <!-- <p class="sp-home-title">
         限时秒杀
         <a class="to-more" href="/category">更多 <sp-icon name="arrow" /></a>
-      </p>
+      </p> -->
       <sp-swipe
         class="my-swipe"
         :autoplay="autoplay"

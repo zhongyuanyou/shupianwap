@@ -41,24 +41,31 @@
         @click="like(item)"
       >
         <my-icon
+          v-show="item.isApplaudFlag"
           name="zantong_mian"
-          size="0.36rem"
-          :color="item.isApplaudFlag ? '#4974f5' : '#999999'"
+          size="0.34rem"
+          color="#4974f5"
+        ></my-icon>
+        <my-icon
+          v-show="!item.isApplaudFlag"
+          name="zantong"
+          size="0.34rem"
+          color="#999999"
         ></my-icon>
         {{ item.applaudCount || '赞同' }}
       </div>
       <div class="bottom_item" @click="comments(item.id)">
-        <my-icon name="pinglun" size="0.36rem" color="#999999"></my-icon>
+        <my-icon name="pinglun" size="0.34rem" color="#999999"></my-icon>
         {{ item.remarkCount || '评论' }}
       </div>
     </div>
     <div v-if="item.type === 1 && item.status === 1" class="bottom">
       <div class="bottom_item" @click="invitation(item.id)">
-        <my-icon name="yaoqing" size="0.36rem" color="#999999"></my-icon>
+        <my-icon name="yaoqing" size="0.34rem" color="#999999"></my-icon>
         邀请
       </div>
       <div class="bottom_item" @click="answer(item.id)">
-        <my-icon name="xiehuida" size="0.36rem" color="#999999"></my-icon>
+        <my-icon name="xiehuida" size="0.34rem" color="#999999"></my-icon>
         写回答
       </div>
     </div>
@@ -218,7 +225,7 @@ export default {
   .title {
     font-family: PingFangSC-Medium, PingFang SC;
     font-size: 36px;
-    font-weight: 500;
+    font-weight: bold;
     color: #1a1a1a;
     line-height: 48px;
     margin-bottom: 17px;
@@ -254,13 +261,11 @@ export default {
     font-size: 28px;
     font-weight: 400;
     color: #999999;
-    line-height: 28px;
     display: flex;
+    align-items: center;
     &_item {
-      display: flex;
-      align-items: center;
       margin-right: 24px;
-      min-width: 148px;
+      min-width: 100px;
       i {
         margin-right: 16px;
       }

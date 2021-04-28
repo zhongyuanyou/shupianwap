@@ -342,7 +342,7 @@ export default {
 .sp-home-title {
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #222222;
   line-height: 32px;
   padding: 20px;
@@ -352,7 +352,7 @@ export default {
     height: 30px;
     font-size: 22px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: rgba(73, 116, 245, 1);
     line-height: 34px;
     display: block;

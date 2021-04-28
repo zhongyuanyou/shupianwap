@@ -158,7 +158,7 @@ export default {
 /deep/ .sp-tab--active {
   font-size: 30px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: bold;
   color: #222222;
 }
 /deep/ .sp-tabs__line {
@@ -168,7 +168,7 @@ export default {
   border-radius: 3px;
 }
 .answer_container {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #f4f4f4;
 
   &_tabs {
     height: 80px;
@@ -190,7 +190,7 @@ export default {
       height: 30px;
       font-size: 30px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: bold;
       color: #222222;
       line-height: 30px;
     }
@@ -215,7 +215,7 @@ export default {
     margin-bottom: 20px;
     font-size: 30px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     color: #222222;
     line-height: 40px;
     display: -webkit-box;
@@ -244,7 +244,7 @@ export default {
       border-radius: 8px;
       font-size: 26px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: bold;
       color: #ffffff;
       line-height: 64px;
       text-align: center;

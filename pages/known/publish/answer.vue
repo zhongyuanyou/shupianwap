@@ -91,6 +91,7 @@ export default {
 
 <style lang="less" scoped>
 .answer {
+  background: #fff;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -103,7 +104,7 @@ export default {
   .title {
     font-size: 40px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     color: #222222;
     line-height: 52px;
   }

@@ -57,13 +57,39 @@
       </sp-button>
     </div>
     <LoadingCenter v-show="loading" />
+    <sp-dialog
+      v-model="showMydialog"
+      :show-cancel-button="true"
+      :show-confirm-button="true"
+      confirm-button-text="好的"
+      concel-button-text="取消"
+      title="温馨提示"
+      @confirm="confirmAggret"
+      @cancle="cancelAggret"
+    >
+      <p class="xy-p">本页面暂不支持在线支付，请下载薯片找人APP进行支付！</p>
+    </sp-dialog>
+    <!-- S 下载app弹框 -->
+    <DownloadApp
+      v-if="!closeAppOpen"
+      @handleDialogClosed="handleDialogClosed"
+    />
+    <!-- E 下载app弹框 -->
   </div>
 </template>
 
 <script>
-import { Button, RadioGroup, Radio, Cell, Checkbox } from '@chipspc/vant-dgg'
+import {
+  Button,
+  RadioGroup,
+  Radio,
+  Cell,
+  Checkbox,
+  Dialog,
+} from '@chipspc/vant-dgg'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import Header from '@/components/common/head/header'
+import DownloadApp from '@/components/common/app/DownloadApp'
 import { pay, auth } from '@/api'
 import changeMoney from '@/utils/changeMoney'
 // 支付倒计时定时器
@@ -75,12 +101,16 @@ export default {
     [RadioGroup.name]: RadioGroup,
     [Radio.name]: Radio,
     [Cell.name]: Cell,
+    [Dialog.Component.name]: Dialog.Component,
     Header,
     Checkbox,
     LoadingCenter,
+    DownloadApp,
   },
   data() {
     return {
+      closeAppOpen: true,
+      showMydialog: false,
       protocoTitle: '', // 协议标题
       number: 0,
       payCallBackData: {
@@ -152,34 +182,41 @@ export default {
     } else {
       this.goBack()
     }
-    const startTime = localStorage.getItem('startTime')
+    // const startTime = localStorage.getItem('startTime')
     // if (
     //   localStorage.getItem('cusOrderId') &&
     //   localStorage.getItem('serialNumber')
     // ) {
-    if (startTime) {
-      const nowTime = this.getNowTime()
-      console.log('nowTime - startTime', nowTime - startTime)
-      if (nowTime - startTime > 3000) {
-        time = setInterval(() => {
-          this.number++
-          this.getPayResult()
-        }, 2000)
-      }
-      // else {
-      //   this.$router.push({
-      //     path: '/pay/payResult',
-      //     query: {
-      //       payStatus: false,
-      //     },
-      //   })
-      // this.clearLocalStorage()
-      // }
-    }
+    // if (startTime) {
+    //   const nowTime = this.getNowTime()
+    //   console.log('nowTime - startTime', nowTime - startTime)
+    //   if (nowTime - startTime > 3000) {
+    //     time = setInterval(() => {
+    //       this.number++
+    //       this.getPayResult()
+    //     }, 2000)
+    //   }
+    // else {
+    //   this.$router.push({
+    //     path: '/pay/payResult',
+    //     query: {
+    //       payStatus: false,
+    //     },
+    //   })
+    // this.clearLocalStorage()
+    // }
+    // }
     // }
   },
 
   methods: {
+    confirmAggret() {
+      this.showMydialog = false
+      this.closeAppOpen = false
+    },
+    cancelAggret() {
+      this.showMydialog = false
+    },
     // 获取当前时间戳
     getNowTime() {
       return new Date().getTime()
@@ -193,6 +230,9 @@ export default {
           hideHeader: false,
         },
       })
+    },
+    handleDialogClosed() {
+      this.closeAppOpen = true
     },
     // 获取支付协议
     async getProtocol(categoryCode) {
@@ -265,8 +305,9 @@ export default {
       this.getPayParamsFormData.payPlatform = item.code
     },
     startPay() {
+      this.showMydialog = true
       // this.$router.replace('/pay/payResult')
-      this.getPayParams()
+      // this.getPayParams()
     },
     // 查询订单应付金额
     enablePayMoney() {
@@ -403,8 +444,9 @@ export default {
       margin-top: 20px;
       span {
         display: inline-block;
-        width: 40px;
+        width: auto;
         height: 40px;
+        padding: 0 4px;
         background: #f8f8f8;
         border: 1px solid #cccccc;
         border-radius: 4px;
@@ -462,9 +504,19 @@ export default {
       .money {
         font-size: 32px;
         color: white;
-        font-weight: 600;
+        font-weight: bold;
       }
     }
+  }
+}
+.xy-p {
+  font-size: 28px;
+  font-weight: 400;
+  color: #222222;
+  line-height: 38px;
+  padding: 20px 40px;
+  span {
+    color: #4f90f6;
   }
 }
 </style>
