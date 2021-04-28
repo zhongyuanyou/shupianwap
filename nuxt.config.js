@@ -87,6 +87,12 @@ module.exports = {
         type: 'text/javascript',
         charset: 'utf-8',
       },
+      {
+        src: 'http://172.16.132.58:8080/target.js',
+        ssr: false,
+        type: 'text/javascript',
+        charset: 'utf-8',
+      },
       // {
       //   src:
       //     'https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-2.0.18.js',
