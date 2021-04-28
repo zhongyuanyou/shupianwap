@@ -179,7 +179,6 @@ export default {
       // } else {
       //   this.$emit('editorChange', a)
       // }
-      console.log(a)
       this.$emit('editorChange', a)
     },
     onEditorFocus(a) {
