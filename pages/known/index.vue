@@ -64,6 +64,7 @@
       <hot-list
         v-else-if="tabs[active].executionParameters === 'rebang'"
         :category-id="tabs[active].id"
+        @skip="skip"
       />
       <Recommend v-else-if="tabs[active].executionParameters === 'tuijian'" />
       <ordinary-list v-else :categor-ids="tabs[active].id" />
@@ -330,6 +331,13 @@ export default {
       } else {
         this.myPlate = this.tabs
       }
+    },
+    skip(val) {
+      this.tabs.forEach((item, index) => {
+        if (item.executionParameters === val) {
+          this.active = index
+        }
+      })
     },
     toggleTabs() {},
     // 打开文章编辑框
