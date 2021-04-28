@@ -64,33 +64,45 @@
       <DetailArticleList :article-list="articleList" />
     </div>
     <Comment ref="openComment" :article-id="articleDetails.id" />
-    <div class="page-bottom">
-      <div>
-        <div
-          v-if="
-            articleDetails.isApplaudFlag === 0 &&
-            articleDetails.isDisapplaudFlag === 0
-          "
-          class="left-area"
+    <div class="page-bottom" :style="isInApp ? 'bottom: 0.3rem' : ''">
+      <div
+        v-if="
+          articleDetails.isApplaudFlag === 0 &&
+          articleDetails.isDisapplaudFlag === 0
+        "
+        class="left-area"
+      >
+        <span class="icon" @click="handleClickBottom(1)">
+          <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
+        ></span>
+        <span class="text" @click="handleClickBottom(1)"
+          >赞同{{ articleDetails.applaudCount }}</span
         >
-          <span class="icon" @click="handleClickBottom(1)">
-            <my-icon
-              name="zantong_mian"
-              size="0.28rem"
-              color="#4974F5"
-            ></my-icon
-          ></span>
-          <span class="text" @click="handleClickBottom(1)"
-            >赞同{{ articleDetails.applaudCount }}</span
-          >
-          <span
-            v-if="!releaseFlag"
-            class="icon oppose"
-            @click="handleClickBottom(2)"
-          >
-            <my-icon name="fandui_mian" size="0.28rem" color="#4974F5"></my-icon
-          ></span>
-        </div>
+        <span class="icon" @click="handleClickBottom(2)">
+          <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
+        ></span>
+      </div>
+      <div
+        v-if="articleDetails.isApplaudFlag === 1"
+        class="applaud"
+        @click="handleClickBottom(1)"
+      >
+        <span class="icon">
+          <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
+        ></span>
+        <span class="text">已赞同</span>
+      </div>
+      <div
+        v-if="articleDetails.isDisapplaudFlag === 1"
+        class="applaud dis-applaud"
+        @click="handleClickBottom(2)"
+      >
+        <span class="icon">
+          <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
+        ></span>
+        <span class="text">已反对</span>
+      </div>
+      <div class="right-area">
         <div
           v-if="articleDetails.isApplaudFlag === 1"
           class="applaud"
@@ -550,7 +562,7 @@ export default {
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: bold;
     color: #222222;
-    line-height: 68px;
+    line-height: 56px;
     font-weight: bold;
   }
   .nums-area {

@@ -207,6 +207,7 @@ export default {
   }
 }
 .container {
+  background: #4974f5;
   position: relative;
   .container_head {
     height: 420px;
@@ -279,8 +280,6 @@ export default {
     height: 1218px;
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
-    position: absolute;
-    top: 370px;
   }
 }
 </style>
