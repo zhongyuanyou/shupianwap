@@ -57,7 +57,7 @@
           </div>
         </div>
       </sp-list>
-      <div class="foot">
+      <sp-bottombar safe-area-inset-bottom>
         <sp-field
           v-model.trim="content"
           maxlength="100"
@@ -70,7 +70,7 @@
         >
           发布
         </p>
-      </div>
+      </sp-bottombar>
     </sp-popup>
 
     <LoadingCenter v-show="mackLoading" />
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { Popup, Field, List, Toast } from '@chipspc/vant-dgg'
+import { Popup, Field, List, Toast, Bottombar } from '@chipspc/vant-dgg'
 import { knownApi } from '~/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
@@ -87,6 +87,7 @@ export default {
     [Popup.name]: Popup,
     [Field.name]: Field,
     [List.name]: List,
+    [Bottombar.name]: Bottombar,
     LoadingCenter,
   },
   props: {
@@ -363,12 +364,13 @@ export default {
       }
     }
   }
-  .foot {
+  /deep/.sp-bottombar {
     border-top: 1px solid #f4f4f4;
-    height: 96px;
     display: flex;
     align-items: center;
     padding-right: 32px;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
     /deep/.sp-cell {
       width: 610px;
     }
@@ -379,6 +381,7 @@ export default {
       margin-left: auto;
       font-size: 30px;
       font-weight: bold;
+      width: 80px;
       color: rgba(73, 116, 245, 0.4);
     }
   }

@@ -1133,6 +1133,8 @@ export default {
     align-items: center;
     justify-content: space-between;
     padding: 0 32px;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
     > .btn {
       width: 216px;
       height: 72px;
@@ -1145,6 +1147,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
+      border: 1px solid #dddddd;
       > span {
         margin-left: 0.1rem;
       }

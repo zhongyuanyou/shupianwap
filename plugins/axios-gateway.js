@@ -22,19 +22,20 @@ export default function ({ $axios, redirect, app, store }) {
       ) {
         config.data = qs.stringify(config.data)
       }
+      config.params = config.params || {}
+      config.headers.platformCode = BASE.platformCode // 平台code
+      config.headers.terminalCode = BASE.terminalCode // 终端code
       // 签名
       const signData = gatewaySign.handleSign({
         method: config.method,
-        rawData: config.data,
+        rawData:
+          config.method === 'post' ? qs.stringify(config.data) : config.params,
         sysCode: BASE.SYS_CODE,
         secret: BASE.SECRET,
         token: app.$cookies.get('token', {
           path: '/',
         }),
       })
-      config.params = config.params || {}
-      config.headers.platformCode = BASE.platformCode // 平台code
-      config.headers.terminalCode = BASE.terminalCode // 终端code
       if (DGG_SERVER_ENV === 'development') {
         // 本地根据自己的需求进行配置
         config.headers.sysCode = 'crisps-app-wap-bff-api'

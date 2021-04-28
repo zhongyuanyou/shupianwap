@@ -302,8 +302,6 @@ export default {
       }
     }
     > .listbox {
-      height: calc(100% - 102px);
-      padding-bottom: 20px;
       box-sizing: border-box;
       overflow: auto;
       > .list {
