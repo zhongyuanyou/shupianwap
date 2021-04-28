@@ -29,19 +29,25 @@
         <p v-if="item.productDescript" class="sp-goods-des">
           {{ item.productDescript }}
         </p>
-        <div v-if="index !== 3 && item.imgs && item.imgs.length" class="imgs">
+        <!-- 必懂入口 直播入口 -->
+        <div v-if="index === 1" class="bd-imgs">
           <img
-            v-for="(imgItem, imgIndex) in item.imgs"
-            :key="imgIndex"
-            :src="imgItem"
-            :style="imgWidth"
+            :src="
+              (bdData.length && bdData[0].materialList[0].materialUrl) ||
+              item.imgs[0]
+            "
             alt=""
             srcset=""
-            @click="adJumpHandleMixin(imgItem)"
+            class="bd-img"
+            @click="
+              adJumpHandleMixin(
+                (bdData.length && bdData[0].materialList[0]) || item
+              )
+            "
           />
         </div>
         <!-- 千万补贴 -->
-        <div v-if="index === 3" class="imgs">
+        <div v-else-if="index === 3" class="imgs">
           <img
             v-for="(subsidyItem, subIndex) in subsidyData"
             :key="subIndex"
@@ -51,14 +57,20 @@
             :style="{ width: imgWidth }"
             @click="adJumpHandleMixin(subsidyItem.materialList[0])"
           />
-          <!-- <img
-            v-for="(subsidyItem, imgIndex) in subsidyData"
+        </div>
+        <div
+          v-else-if="index !== 3 && item.imgs && item.imgs.length"
+          class="imgs"
+        >
+          <img
+            v-for="(imgItem, imgIndex) in item.imgs"
             :key="imgIndex"
             :src="imgItem"
+            :style="imgWidth"
             alt=""
             srcset=""
             @click="adJumpHandleMixin(imgItem)"
-          /> -->
+          />
         </div>
         <sp-button
           v-if="item.buttonText"
@@ -227,6 +239,13 @@ export default {
       border-radius: 12px;
     }
   }
+  .bd-imgs {
+    width: 100%;
+    height: 162px;
+    img {
+      width: 100%;
+    }
+  }
   .sp-goods-btn {
     position: absolute;
     left: 20px;
@@ -241,6 +260,9 @@ export default {
     border: none;
     color: #4974f5;
     padding: 0 12px;
+  }
+  .bd-img {
+    width: 100%;
   }
 }
 </style>
