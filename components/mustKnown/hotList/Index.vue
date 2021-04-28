@@ -44,7 +44,11 @@
       loading-text="加载中..."
       @refresh="onRefresh"
     >
-      <ItemCard :list-data="list" :to-load="toLoad" />
+      <ItemCard
+        :list-data="list"
+        :to-load="toLoad"
+        @goRecommend="goRecommend"
+      />
     </sp-pull-refresh>
   </div>
 </template>
@@ -125,9 +129,9 @@ export default {
           this.list = data.rows.sort((a, b) => {
             return b.hotNumber - a.hotNumber
           })
-          this.toLoad = true // 页面加载完
         }
       }
+      this.toLoad = true // 页面加载完
     },
     toHome(item) {
       this.$router.push({
@@ -161,6 +165,9 @@ export default {
           questionId: id,
         },
       })
+    },
+    goRecommend(text) {
+      this.$emit('skip', text)
     },
     answer(id) {
       this.$router.push({

@@ -218,10 +218,6 @@ export default {
 .like_active {
   color: #4974f5 !important;
 }
-/deep/ .sp-cell {
-  padding: 0 0 20px 0;
-  position: relative;
-}
 .item {
   background: #ffffff;
   padding: 0 32px;

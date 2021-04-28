@@ -137,6 +137,15 @@ export default {
         }
         return
       }
+      if (item.path.match('order') && !this.userInfo.token) {
+        this.$router.push({
+          path: '/login',
+          query: {
+            redirect: this.$route.fullPath,
+          },
+        })
+        return
+      }
       const path = this.$route.path
       if (path === item.path) {
         return
