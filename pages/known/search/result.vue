@@ -10,7 +10,13 @@
         @clickInputHandle="keyClickHandle"
       >
         <template v-slot:left>
-          <sp-icon name="arrow-left" size="0.4rem" @click.stop="$back()" />
+          <my-icon
+            name="nav_ic_back"
+            size="0.40rem"
+            color="#1a1a1a"
+            class="my_icon"
+            @click.native="$back()"
+          ></my-icon>
         </template>
       </Search>
     </header-slot>
@@ -84,12 +90,12 @@
           <img :src="item.avatar" alt="" @click="toHome(item)" />
           <div class="name" v-html="item.userNameHtml"></div>
           <div class="applaudFlag" @click="attentionHandler(item)">
-            <sp-icon
+            <my-icon
               v-if="!item.custAttentionFlag"
-              name="plus"
+              name="tianjia"
+              size="0.27rem"
               color="#4974F5"
-              size="0.3rem"
-            />
+            ></my-icon>
             <span
               :style="{ color: item.custAttentionFlag ? '#999999' : '#4974F5' }"
               >{{ item.custAttentionFlag ? '已关注' : '关注' }}</span
@@ -444,6 +450,7 @@ export default {
         flex: 1;
         margin-left: 24px;
         font-size: 36px;
+        font-weight: bold;
       }
       .applaudFlag {
         width: 144px;
@@ -451,7 +458,7 @@ export default {
         background: #f5f5f5;
         border-radius: 8px;
         font-size: 26px;
-        font-weight: 500;
+        font-weight: bold;
         color: #4974f5;
         margin-left: auto;
         display: flex;

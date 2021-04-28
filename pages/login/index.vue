@@ -150,7 +150,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 import {
   TopNavBar,
@@ -168,7 +168,6 @@ import { auth } from '@/api'
 import { checkPhone, checkAuthCode, checkPassword } from '@/utils/check.js'
 import { openLink } from '@/utils/common.js'
 import ImgAuthDialog from '@/components/common/imgAuth'
-import { CRISPS_C_MIDDLE_SERVICE_API } from '~/config/constant'
 import imHandle from '~/mixins/imHandle'
 
 // 第三方登录需要回传的参数
@@ -215,10 +214,6 @@ export default {
     this.$store.dispatch('user/clearUser')
   },
   methods: {
-    ...mapMutations({
-      setUser: 'user/SET_USER',
-      setImSdk: 'im/SET_IM_SDK',
-    }),
     onSubmit() {
       const error = this.checkFormData()
       if (error) {
@@ -352,8 +347,8 @@ export default {
         this.loading = false
         // 缓存用户信息
         if (data != null) {
+          this.$store.dispatch('user/setUser', data)
           // 存储token
-          this.setUser(data)
           const imId = localStorage.getItem('myInfo')
             ? JSON.parse(localStorage.getItem('myInfo')).imUserId
             : {}

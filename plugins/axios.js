@@ -39,7 +39,7 @@ export default function ({ $axios, redirect, app, store }) {
         contentType: config.headers['Content-Type'],
       })
       config.headers = { ...signData }
-      // config.headers.sysCode = 'crisps-app-wap-bff-api'
+      config.headers.sysCode = 'crisps-app-wap-bff-api'
       // 获取token
       if (token) {
         config.headers['X-Auth-Token'] = token
