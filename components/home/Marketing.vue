@@ -2,13 +2,28 @@
   <div class="sp-main-box">
     <div class="inner">
       <div v-for="(item, index) in list" :key="index" class="sp-item">
-        <p class="sp-goods-title">
+        <p v-if="index === 1" class="sp-goods-title">
+          {{
+            (bdData.length && bdData[0].materialList[0].materialName) ||
+            item.productName
+          }}
+          <span v-if="item.titleIcon" class="title-bar">
+            {{ item.titleIcon }}
+          </span>
+        </p>
+        <p v-else class="sp-goods-title">
           {{ item.productName }}
           <span v-if="item.titleIcon" class="title-bar">
             {{ item.titleIcon }}
           </span>
         </p>
-        <p class="sp-goods-slogan">
+        <p v-if="index === 1" class="sp-goods-slogan">
+          {{
+            (bdData.length && bdData[0].materialList[0].materialDescription) ||
+            item.slogan
+          }}
+        </p>
+        <p v-else class="sp-goods-slogan">
           {{ item.slogan }}
         </p>
         <p v-if="item.productDescript" class="sp-goods-des">
@@ -25,7 +40,7 @@
             @click="adJumpHandleMixin(imgItem)"
           />
         </div>
-        <!-- 限时秒杀 -->
+        <!-- 千万补贴 -->
         <div v-if="index === 3" class="imgs">
           <img
             v-for="(subsidyItem, subIndex) in subsidyData"
@@ -74,6 +89,13 @@ export default {
         return []
       },
     },
+    // 直播入口 必懂入口
+    bdData: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
   },
   data() {
     return {
@@ -87,11 +109,11 @@ export default {
           wapLink: '/search/searchResult?keywords=商标',
         },
         {
-          productName: '企服直播',
-          slogan: '想你所想 新用户专享',
+          productName: '企服必懂',
+          slogan: '创业路上的知识加油站',
           imgs: ['https://cdn.shupian.cn/sp-pt/wap/images/8yl438481uk0000.png'],
           linkType: 1,
-          wapLink: '/search/searchResult?keywords',
+          wapLink: '/known',
         },
         {
           productName: '帮找服务',
@@ -104,8 +126,8 @@ export default {
           materialLink: 'https://m.shupian.cn/spread/myDemandCard',
         },
         {
-          productName: '1000万补贴',
-          slogan: '万款服务全补贴 先到先得',
+          productName: '政策补贴',
+          slogan: '企业补贴免费测算工具',
           imgs: [
             'https://cdn.shupian.cn/sp-pt/wap/5o4toa1pfgk0000.png',
             'https://cdn.shupian.cn/sp-pt/wap/95f9n61gks00000.png',

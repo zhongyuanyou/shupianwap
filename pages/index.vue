@@ -43,7 +43,11 @@
       /> -->
       <!-- E 热门服务 -->
       <!-- S 营销入口区域 -->
-      <Marketing ref="showScollHeight" :subsidy-data="initData.subsidyData" />
+      <Marketing
+        ref="showScollHeight"
+        :subsidy-data="initData.subsidyData"
+        :bd-data="initData.bdData"
+      />
       <!-- E 营销入口区域 -->
       <!-- S 推荐服务 -->
       <Recommend ref="recommendRef" />
@@ -105,6 +109,7 @@ export default {
     const helpAdCode = 'ad113183' // 帮我找下方banner code(服务榜单)
     const skillCode = 'ad113282' // 秒杀
     const subsidyCode = 'ad100018' // 千万补贴
+    const bkCode = 'ad100032' // 必懂 直播 code
     // 首屏请求导航和广告的参数
     const initReqParams = {
       locationCodeList: [
@@ -113,6 +118,7 @@ export default {
         helpAdCode,
         skillCode,
         subsidyCode,
+        bkCode,
       ], // 广告位code列表
       rollPage: 1, // 滚动导航当前页
       rollLimit: 1000, // 滚动导航每页条数
@@ -131,6 +137,7 @@ export default {
       rollNavData: [], // 滚动导航
       skillData: [], // 限时秒杀广告
       subsidyData: [], // 营销区域千万补贴
+      bdData: [], // 营销区域必懂入口，直播入口广告
     }
     try {
       const res = await $axios.post(homeApi.initRequest, initReqParams)
@@ -155,6 +162,10 @@ export default {
           initData.subsidyData =
             res.data.advertising && res.data.advertising[subsidyCode]
               ? res.data.advertising[subsidyCode]
+              : []
+          initData.bdData =
+            res.data.advertising && res.data.advertising[bkCode]
+              ? res.data.advertising[bkCode]
               : []
         }
         initData.fiexdNavData = res.data.fixedNavList
@@ -214,6 +225,7 @@ export default {
     if (!this.initData.fiexdNavData.length) {
       this.getHomeData()
     }
+    this.getHomeData()
   },
   methods: {
     // 用户手动关闭下载app提示弹框后，记录状态到cookie，刷新页面不再弹出，使用默认过期时间（关闭浏览器过期，下次再访问，再次弹出）
@@ -229,6 +241,7 @@ export default {
       const helpAdCode = 'ad113183' // 帮我找下方banner code(服务榜单)
       const skillCode = 'ad113282' // 秒杀
       const subsidyCode = 'ad100018' // 千万补贴
+      const bkCode = 'ad100032' // 必懂 直播 code
       // 首屏请求导航和广告的参数
       const initReqParams = {
         locationCodeList: [
@@ -237,6 +250,7 @@ export default {
           helpAdCode,
           skillCode,
           subsidyCode,
+          bkCode,
         ], // 广告位code列表
         rollPage: 1, // 滚动导航当前页
         rollLimit: 1000, // 滚动导航每页条数
@@ -255,6 +269,7 @@ export default {
         rollNavData: [], // 滚动导航
         skillData: [],
         subsidyData: [], // 营销区域千万补贴
+        bdData: [], // 营销区域必懂入口，直播入口广告
       }
       try {
         const res = await this.$axios.post(homeApi.initRequest, initReqParams)
@@ -280,6 +295,10 @@ export default {
               res.data.advertising && res.data.advertising[subsidyCode]
                 ? res.data.advertising[subsidyCode]
                 : []
+            initData.bdData =
+              res.data.advertising && res.data.advertising[bkCode]
+                ? res.data.advertising[bkCode]
+                : []
           }
           initData.fiexdNavData = res.data.fixedNavList
             ? res.data.fixedNavList
@@ -287,8 +306,8 @@ export default {
           initData.rollNavData = res.data.rollNavList
             ? res.data.rollNavList
             : []
+          console.log('initData.bdData', initData.bdData)
           this.initData = initData
-          console.log('this.initData', this.initData)
         }
       } catch (error) {
         console.log('error', error)
