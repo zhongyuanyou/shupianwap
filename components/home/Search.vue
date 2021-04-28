@@ -130,6 +130,7 @@ export default {
   font-size: 24px;
   position: relative;
   z-index: 1;
+  background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
   .input-box {
     display: flex;
     align-items: center;

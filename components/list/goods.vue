@@ -382,13 +382,15 @@ export default {
   /deep/.sp-dropdown-menu__bar {
     height: 80px;
     box-shadow: none;
-    margin: 0 30px;
-    margin-left: -8px;
+    padding: 0 10px;
+    // margin: 0 30px;
+    // margin-left: -8px;
     /*border-bottom: 1px solid #f4f4f4;*/
     /*border-top: 1px solid #f4f4f4;*/
     .sp-dropdown-menu__item {
-      text-align: right;
-      justify-content: flex-end;
+      // text-align: right;
+      width: 33%;
+      // justify-content: flex-end;
     }
     /deep/.sp-dropdown-menu__title {
       display: inline-block;

@@ -79,13 +79,6 @@
           <span class="text" @click="handleClickBottom(1)"
             >赞同{{ articleDetails.applaudCount }}</span
           >
-          <span
-            v-if="!releaseFlag"
-            class="icon oppose"
-            @click="handleClickBottom(2)"
-          >
-            <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
-          ></span>
         </div>
         <div
           v-if="articleDetails.isApplaudFlag === 1"
@@ -192,15 +185,22 @@ export default {
     // Header,
   },
   async asyncData({ $axios, query, store }) {
-    const res = await $axios.get(knownApi.questionArticle.detail, {
-      params: {
-        id: query.id,
-        userId: store.state.user.userId,
-        userHandleFlag: store.state.user.userId ? 1 : 0,
-      },
-    })
+    let articleDetails = {}
+    try {
+      const res = await $axios.get(knownApi.questionArticle.detail, {
+        params: {
+          id: query.id,
+          userId: store.state.user.userId,
+          userHandleFlag: store.state.user.userId ? 1 : 0,
+        },
+      })
+      if (res.code === 200) {
+        articleDetails = res.data
+      }
+    } catch (error) {}
+
     return {
-      articleDetails: res.data,
+      articleDetails,
     }
   },
   data() {
@@ -639,7 +639,7 @@ export default {
     height: 96px;
     background: #ffffff;
     padding: 10px 40px;
-    border-top: 1px solid #f4f4f4;
+    // border-top: 1px solid #f4f4f4;
     z-index: 2;
     .applaud {
       display: flex;

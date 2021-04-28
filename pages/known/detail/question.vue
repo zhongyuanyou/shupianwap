@@ -317,24 +317,28 @@ export default {
     CommentList,
   },
   async asyncData({ $axios, query, store }) {
-    const res = await $axios.get(knownApi.questionArticle.detail, {
-      params: {
-        id: query.id,
-        userId: store.state.user.userId,
-        userHandleFlag: store.state.user.userId ? 1 : 0,
-      },
-    })
-    if (res.code === 200) {
-      if (res.data.categoryName) {
-        res.data.categoryName = res.data.categoryName.split(',')
+    let questionDetails = []
+    try {
+      const res = await $axios.get(knownApi.questionArticle.detail, {
+        params: {
+          id: query.id,
+          userId: store.state.user.userId,
+          userHandleFlag: store.state.user.userId ? 1 : 0,
+        },
+      })
+      if (res.code === 200) {
+        if (res.data.categoryName) {
+          res.data.categoryName = res.data.categoryName.split(',')
+        }
+        if (res.data.contentImageUrl) {
+          res.data.contentImageUrl = res.data.contentImageUrl.split(',')
+        }
+        questionDetails = res.data
       }
-      if (res.data.contentImageUrl) {
-        res.data.contentImageUrl = res.data.contentImageUrl.split(',')
-      }
-    } else {
-    }
+    } catch (error) {}
+
     return {
-      questionDetails: res.data,
+      questionDetails,
     }
   },
   data() {
@@ -1133,7 +1137,7 @@ export default {
       bottom: 20px;
       left: 0;
       border-radius: 8px;
-      border-top: 1px solid #f4f4f4;
+      // border-top: 1px solid #f4f4f4;
       font-size: 28px;
       font-weight: bold;
       color: #222222;

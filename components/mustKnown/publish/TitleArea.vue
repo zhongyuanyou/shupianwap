@@ -59,7 +59,11 @@ export default {
   watch: {
     title() {
       this.inputVal = this.title
-      this.showInput = true
+      if (this.inputVal.length === 0 || this.inputVal === '') {
+        this.showInput = false
+      } else {
+        this.showInput = true
+      }
     },
   },
   methods: {
@@ -67,7 +71,11 @@ export default {
       // 给父组件传标题
       this.$emit('setTitle', this.inputVal)
       // 改变样式 标题设置显示
-      this.showInput = true
+      if (this.inputVal.length === 0 || this.inputVal === '') {
+        this.showInput = false
+      } else {
+        this.showInput = true
+      }
     },
     edit() {
       this.showInput = false

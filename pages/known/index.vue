@@ -247,17 +247,21 @@ export default {
     HeaderSlot,
   },
   async asyncData({ store, $axios }) {
-    const { code, message, data } = await $axios.get(
-      knownApi.questionArticle.categoryList,
-      {
-        params: {
-          // type 1 获取企大顺导航
-          type: store.state.app.isInApp ? 1 : '',
-          // type: 1,
-        },
-      }
-    )
-    return { tabs: data || [] }
+    let tabs = []
+    try {
+      const { code, message, data } = await $axios.get(
+        knownApi.questionArticle.categoryList,
+        {
+          params: {
+            // type 1 获取企大顺导航
+            type: store.state.app.isInApp ? 1 : '',
+            // type: 1,
+          },
+        }
+      )
+      tabs = data
+    } catch (error) {}
+    return { tabs }
   },
   data() {
     return {

@@ -21,7 +21,7 @@
         class="container_list_item"
       >
         <span class="label hide">{{ item.title }}</span>
-        <span class="desc hide">{{ item.text }}</span>
+        <!-- <span class="desc hide">{{ item.text }}</span> -->
       </div>
     </div>
     <sp-popup
@@ -67,7 +67,7 @@ export default {
         item.serviceItems = item.serviceItems.map((serviceList) => {
           return {
             title: serviceList.serviceItemName,
-            text: serviceList.description,
+            // text: serviceList.description,
           }
         })
         return item
