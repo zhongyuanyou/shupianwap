@@ -788,6 +788,8 @@ export default {
     background: #f2f5ff;
     border-radius: 8px;
     padding: 20px;
+    display: flex;
+    align-items: center;
     span {
       display: block;
       float: left;
@@ -796,8 +798,7 @@ export default {
     .icon {
       padding: 0;
       width: 40px;
-      height: 100%;
-      line-height: 0;
+      height: 40px;
       position: relative;
       .spiconfont {
         position: absolute;
@@ -815,7 +816,6 @@ export default {
       color: #4974f5;
       font-weight: bold;
       padding-right: 20px;
-      margin-top: 1px;
     }
   }
   .right-area {

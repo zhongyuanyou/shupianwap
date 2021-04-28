@@ -157,11 +157,11 @@
       <div class="down_slide_list">
         <ul>
           <li @click="editQues(articleDetails.id)">
-            <my-icon name="bianji1" size="1rem" color="#1a1a1a"></my-icon>
+            <my-icon name="bianji1" size="1rem" color="#555"></my-icon>
             <p>编辑</p>
           </li>
           <li @click="deleteQues(articleDetails.id)">
-            <my-icon name="shanchu1" size="1rem" color="#1a1a1a"></my-icon>
+            <my-icon name="shanchu1" size="1rem" color="#555"></my-icon>
             <p>删除</p>
           </li>
         </ul>
@@ -712,7 +712,7 @@ export default {
       .icon {
         padding: 0;
         width: 40px;
-        height: 100%;
+        height: 40px;
         line-height: 0;
         position: relative;
         .spiconfont {
