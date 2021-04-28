@@ -211,6 +211,9 @@ export default {
       imExample: (state) => state.im.imExample, // IM 实例
     }),
   },
+  mounted() {
+    this.$store.dispatch('user/clearUser')
+  },
   methods: {
     ...mapMutations({
       setUser: 'user/SET_USER',
