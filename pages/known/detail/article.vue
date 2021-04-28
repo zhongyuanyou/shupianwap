@@ -64,45 +64,25 @@
       <DetailArticleList :article-list="articleList" />
     </div>
     <Comment ref="openComment" :article-id="articleDetails.id" />
-    <div class="page-bottom" :style="isInApp ? 'bottom: 0.3rem' : ''">
-      <div
-        v-if="
-          articleDetails.isApplaudFlag === 0 &&
-          articleDetails.isDisapplaudFlag === 0
-        "
-        class="left-area"
-      >
-        <span class="icon" @click="handleClickBottom(1)">
-          <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
-        ></span>
-        <span class="text" @click="handleClickBottom(1)"
-          >赞同{{ articleDetails.applaudCount }}</span
+    <div class="page-bottom">
+      <div>
+        <div
+          v-if="
+            articleDetails.isApplaudFlag === 0 &&
+            articleDetails.isDisapplaudFlag === 0
+          "
+          class="left-area"
         >
-        <span class="icon" @click="handleClickBottom(2)">
-          <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
-        ></span>
-      </div>
-      <div
-        v-if="articleDetails.isApplaudFlag === 1"
-        class="applaud"
-        @click="handleClickBottom(1)"
-      >
-        <span class="icon">
-          <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
-        ></span>
-        <span class="text">已赞同</span>
-      </div>
-      <div
-        v-if="articleDetails.isDisapplaudFlag === 1"
-        class="applaud dis-applaud"
-        @click="handleClickBottom(2)"
-      >
-        <span class="icon">
-          <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
-        ></span>
-        <span class="text">已反对</span>
-      </div>
-      <div class="right-area">
+          <span class="icon" @click="handleClickBottom(1)">
+            <my-icon name="zantong" size="0.28rem" color="#4974F5"></my-icon
+          ></span>
+          <span class="text" @click="handleClickBottom(1)"
+            >赞同{{ articleDetails.applaudCount }}</span
+          >
+          <span class="icon" @click="handleClickBottom(2)">
+            <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
+          ></span>
+        </div>
         <div
           v-if="articleDetails.isApplaudFlag === 1"
           class="applaud"
@@ -125,22 +105,45 @@
         </div>
         <div class="right-area">
           <div
-            class="item"
-            :style="{
-              color: articleDetails.isCollectFlag === 1 ? '#4974F5' : '#999999',
-            }"
-            @click="handleClickBottom(3)"
+            v-if="articleDetails.isApplaudFlag === 1"
+            class="applaud"
+            @click="handleClickBottom(1)"
           >
-            <div class="icon">
-              <my-icon name="shoucang" size="0.4rem"></my-icon>
-            </div>
-            收藏
+            <span class="icon">
+              <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
+            ></span>
+            <span class="text">已赞同</span>
           </div>
-          <div class="item" @click="comment()">
-            <div class="icon">
-              <my-icon name="pinglun" size="0.4rem" color="#999999"></my-icon>
+          <div
+            v-if="articleDetails.isDisapplaudFlag === 1"
+            class="applaud dis-applaud"
+            @click="handleClickBottom(2)"
+          >
+            <span class="icon">
+              <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
+            ></span>
+            <span class="text">已反对</span>
+          </div>
+          <div class="right-area">
+            <div
+              class="item"
+              :style="{
+                color:
+                  articleDetails.isCollectFlag === 1 ? '#4974F5' : '#999999',
+              }"
+              @click="handleClickBottom(3)"
+            >
+              <div class="icon">
+                <my-icon name="shoucang" size="0.4rem"></my-icon>
+              </div>
+              收藏
             </div>
-            评论
+            <div class="item" @click="comment()">
+              <div class="icon">
+                <my-icon name="pinglun" size="0.4rem" color="#999999"></my-icon>
+              </div>
+              评论
+            </div>
           </div>
         </div>
       </div>
