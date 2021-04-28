@@ -116,7 +116,7 @@ export default {
   methods: {
     pageJump(item) {
       // 消息页面跳转 IM
-      if (item.path === '/msg' || item.path.match('order')) {
+      if (item.path === '/msg') {
         if (this.userInfo.token) {
           if (this.userInfo.token) {
             window.location.href = `${config.imBaseUrl}/index?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
@@ -135,6 +135,15 @@ export default {
             },
           })
         }
+        return
+      }
+      if (item.path.match('order') && !this.userInfo.token) {
+        this.$router.push({
+          path: '/login',
+          query: {
+            redirect: this.$route.fullPath,
+          },
+        })
         return
       }
       const path = this.$route.path
