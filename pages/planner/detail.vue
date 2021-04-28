@@ -396,21 +396,21 @@ export default {
         })
       }
     },
-    async handleIM() {
-      const isLogin = await this.judgeLoginMixin()
-      if (isLogin) {
-        this.uPIM({
-          mchUserId: this.detailData.id,
-          userName: this.detailData.userName,
-          type: this.detailData.mchClass,
-        })
-      } else {
-        Toast({
-          message: '请先登录账号',
-          iconPrefix: 'sp-iconfont',
-          icon: 'popup_ic_fail',
-        })
-      }
+    handleIM() {
+      // const isLogin = await this.judgeLoginMixin()
+      // if (isLogin) {
+      this.uPIM({
+        mchUserId: this.detailData.id,
+        userName: this.detailData.userName,
+        type: this.detailData.mchClass,
+      })
+      // } else {
+      //   Toast({
+      //     message: '请先登录账号',
+      //     iconPrefix: 'sp-iconfont',
+      //     icon: 'popup_ic_fail',
+      //   })
+      // }
     },
 
     onSelect(option) {
@@ -517,12 +517,15 @@ export default {
         return
       }
       const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
-      this.creatImSessionMixin({
-        imUserId: mchUserId,
-        imUserType,
-        requireCode: this.requireCode || '',
-        requireName: this.requireName || '',
-      })
+      const isLogin = await this.judgeLoginMixin()
+      if (isLogin) {
+        this.creatImSessionMixin({
+          imUserId: mchUserId,
+          imUserType,
+          requireCode: this.requireCode || '',
+          requireName: this.requireName || '',
+        })
+      }
     },
 
     // 平台不同，跳转方式不同
