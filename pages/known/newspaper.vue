@@ -44,7 +44,6 @@ import ProblemItem from '@/components/mustKnown/recommend/ProblemItem'
 import { knownApi } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
-  layout: 'appSafeView',
   name: 'Recommend',
   components: {
     [Sticky.name]: Sticky,
@@ -163,14 +162,14 @@ export default {
 ::v-deep .sp-work-tab--active {
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #222222;
 }
 /deep/ .sp-work-tab__text {
   flex-shrink: 0;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #999999;
 }
 /deep/ .sp-work-tabs__line {
@@ -184,7 +183,7 @@ export default {
   background: #4974f5 !important;
 }
 /deep/ .my-head {
-  background: url('https://cdn.shupian.cn/sp-pt/wap/1ho0s5co5gow000.png')
+  background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
     no-repeat;
   background-size: 100%;
   box-shadow: none !important;
@@ -203,7 +202,7 @@ export default {
   }
   .newspaperTitle {
     font-size: 36px;
-    font-weight: 600;
+    font-weight: bold;
     color: #ffffff;
   }
 }
@@ -211,7 +210,7 @@ export default {
   position: relative;
   .container_head {
     height: 420px;
-    background: url('https://cdn.shupian.cn/sp-pt/wap/1ho0s5co5gow000.png')
+    background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
       no-repeat 100%;
     background-size: 100%;
     position: relative;
@@ -227,7 +226,7 @@ export default {
         height: 50px;
         font-size: 36px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
         color: #ffffff;
         line-height: 50px;
       }

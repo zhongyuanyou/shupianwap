@@ -8,7 +8,7 @@
   > -->
   <div>
     <sp-cell v-for="(item, index) in newspaperData" :key="index">
-      <div class="item_span">1/精选</div>
+      <div class="item_span">{{ index + 1 }}/精选</div>
       <div class="item">
         <div class="item_title" @click="goDetailPage(item.type, item.id)">
           {{ item.title }}
@@ -179,7 +179,7 @@ export default {
     min-height: 36px;
     font-size: 36px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #1a1a1a;
     line-height: 40px;
     word-break: break-all;
@@ -203,6 +203,7 @@ export default {
         height: 100%;
         width: 100%;
         vertical-align: unset;
+        border-radius: 50%;
       }
     }
     .userName {

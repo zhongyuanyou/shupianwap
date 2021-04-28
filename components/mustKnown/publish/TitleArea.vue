@@ -64,9 +64,6 @@ export default {
   },
   methods: {
     blur() {
-      if (this.inputVal === '') {
-        return
-      }
       // 给父组件传标题
       this.$emit('setTitle', this.inputVal)
       // 改变样式 标题设置显示
@@ -114,7 +111,7 @@ export default {
       color: #222222;
       line-height: 52px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       word-wrap: break-word;
       word-break: normal;
     }

@@ -32,7 +32,6 @@ import Editor from '@/components/mustKnown/publish/Editor'
 import EditorMinxin from '@/mixins/edit'
 
 export default {
-  layout: 'appSafeView',
   components: {
     PageHead,
     CommonHead,
@@ -105,7 +104,7 @@ export default {
   .title {
     font-size: 40px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #222222;
     line-height: 52px;
   }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="itemCard">
     <sp-cell
       v-for="(item, index) in listData"
       :key="index"
@@ -47,7 +47,7 @@
         </div>
       </div>
     </sp-cell>
-    <div class="bottom" @click="goRecommend">
+    <div v-show="toLoad" class="bottom" @click="goRecommend">
       到底啦，去推荐看看吧
       <my-icon
         name="you"
@@ -93,6 +93,10 @@ export default {
         return []
       },
     },
+    toLoad: {
+      type: Boolean,
+      default: () => false,
+    },
   },
   data() {
     return {
@@ -103,6 +107,11 @@ export default {
     }
   },
   computed: {},
+  watch: {
+    listData() {
+      return true
+    },
+  },
   methods: {
     init() {},
     // 调到推荐页面
@@ -143,6 +152,9 @@ export default {
 /deep/ .sp-cell {
   padding: 0 32px;
 }
+.itemCard {
+  padding-bottom: 100px;
+}
 .bottom {
   width: 336px;
   height: 60px;
@@ -171,9 +183,10 @@ export default {
       text-align: center;
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: 500;
       color: #999999;
-      width: 0.33rem;
+      // width: 0.33rem;
+      word-break: normal;
       height: 0.44rem;
       margin-top: 0.08rem;
       margin-right: 0.2rem;
@@ -217,8 +230,8 @@ export default {
         p {
           font-size: 32px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 600;
-          color: #222222;
+          font-weight: bold;
+          color: #555555;
           line-height: 45px;
           word-break: break-all;
         }

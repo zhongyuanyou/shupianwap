@@ -73,7 +73,6 @@ import { Icon, Sticky } from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
-  layout: 'appSafeView',
   name: 'MustSee',
   components: {
     [Sticky.name]: Sticky,
@@ -135,7 +134,7 @@ export default {
       // 组装参数
       const params = {}
       params.categorIds = this.categorIds
-      params.limit = 10
+      params.limit = 50
       params.page = 1
       const { code, message, data } = await this.$axios.post(
         knownApi.questionArticle.list,
@@ -190,7 +189,7 @@ export default {
   }
   > .top {
     height: 420px;
-    background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
+    background: url('https://cdn.shupian.cn/sp-pt/wap/1ho0s5co5gow000.png')
       no-repeat 100%;
     background-size: 100%;
   }
@@ -208,7 +207,7 @@ export default {
       box-sizing: border-box;
       > h1 {
         font-size: 36px;
-        font-weight: 600;
+        font-weight: bold;
         color: #1a1a1a;
         display: -webkit-box;
         line-height: 40px;
@@ -289,7 +288,7 @@ export default {
   height: 50px;
   font-size: 36px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 600;
+  font-weight: bold;
   color: #ffffff;
   line-height: 50px;
 }
@@ -316,7 +315,7 @@ export default {
   background: #4974f5 !important;
 }
 /deep/ .my-head {
-  background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
+  background: url('https://cdn.shupian.cn/sp-pt/wap/1ho0s5co5gow000.png')
     no-repeat;
   background-size: 100%;
   box-shadow: none !important;
@@ -335,7 +334,7 @@ export default {
   }
   .newspaperTitle {
     font-size: 36px;
-    font-weight: 600;
+    font-weight: bold;
     color: #ffffff;
   }
 }

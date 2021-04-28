@@ -37,7 +37,6 @@ import { TopNavBar, Image, List, Dialog } from '@chipspc/vant-dgg'
 import { knownApi } from '~/api'
 import Header from '@/components/common/head/header'
 export default {
-  layout: 'appSafeView',
   name: 'AttentionMore',
   components: {
     [TopNavBar.name]: TopNavBar,
@@ -163,7 +162,7 @@ export default {
         .title {
           font-size: 30px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
           line-height: 30px;
           margin-right: 30px;
@@ -191,7 +190,7 @@ export default {
         line-height: 64px;
         font-size: 26px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 600;
+        font-weight: bold;
       }
       .bt_have {
         background: #f5f5f5;
