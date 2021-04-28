@@ -706,7 +706,7 @@ export default {
         }
       }
       .text {
-        margin-top: 6px;
+        margin-top: 1px;
         font-size: 24px;
         color: #4974f5;
         font-weight: bold;
