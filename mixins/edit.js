@@ -152,14 +152,16 @@ export default {
       if (this.fromPage !== 'answer') {
         if (
           this.formData.title.length > 0 ||
-          this.formData.contentText.length > 0 ||
+          (this.formData.contentText !== '\n' &&
+            this.formData.contentText.length > 0) ||
           this.formData.categoryCode.length > 0
         ) {
           cancelFlag = true
         }
-      } else if (this.formData.contentText.length > 0) {
-        cancelFlag = true
       }
+      //  else if (this.formData.contentText.length > 0) {
+      //   cancelFlag = true
+      // }
       if (cancelFlag) {
         const _this = this
         Dialog.confirm({
