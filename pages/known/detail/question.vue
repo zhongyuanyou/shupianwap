@@ -284,11 +284,11 @@
       <div class="down_slide_list">
         <ul>
           <li @click="editQues(questionDetails.id)">
-            <my-icon name="bianji1" size="1rem" color="#1a1a1a"></my-icon>
+            <my-icon name="bianji1" size="1rem" color="#555"></my-icon>
             <p>编辑</p>
           </li>
           <li @click="deleteQues(questionDetails.id)">
-            <my-icon name="shanchu1" size="1rem" color="#1a1a1a"></my-icon>
+            <my-icon name="shanchu1" size="1rem" color="#555"></my-icon>
             <p>删除</p>
           </li>
         </ul>
@@ -699,7 +699,7 @@ export default {
       margin-right: 76px;
       p {
         font-size: 24px;
-        color: #999999;
+        // color: #999999;
       }
     }
   }
@@ -1133,7 +1133,7 @@ export default {
       bottom: 20px;
       left: 0;
       border-radius: 8px;
-      border: 1px solid #dddddd;
+      border-top: 1px solid #f4f4f4;
       font-size: 28px;
       font-weight: bold;
       color: #222222;
@@ -1173,6 +1173,9 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+        .spiconfont {
+          padding-top: 3px;
+        }
         > span {
           margin-left: 0.1rem;
         }
