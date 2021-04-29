@@ -323,6 +323,7 @@ export default {
   }
   .serch-area {
     background: #fff !important;
+    padding: 12px 20px 12px 20px;
     /deep/.input-box {
       height: 100px;
       background: #f5f5f5;
