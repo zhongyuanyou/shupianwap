@@ -111,7 +111,9 @@ export default {
             res.data.realStatus === 'AUTHENTICATION_SUCCESS' ||
             res.data.realStatus === 'AUTHENTICATION_ING'
           ) {
-            this.$cookies.set('realStatus', res.data.realStatus)
+            this.$cookies.set('realStatus', res.data.realStatus, {
+              path: '/',
+            })
             Toast({
               message: '认证成功',
               overlay: true,
