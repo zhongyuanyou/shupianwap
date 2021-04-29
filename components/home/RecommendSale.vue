@@ -139,13 +139,13 @@
                 </div>
               </div>
             </div>
-            <!-- <div
+            <div
               v-if="!swipItem.goodsList.length && tabBtn.length"
               class="no-data"
             >
               <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
               <p>暂无数据</p>
-            </div> -->
+            </div>
             <Loading-down
               v-if="tabBtn.length"
               v-show="loading || tabBtn[curentItem].noMore"
@@ -238,7 +238,7 @@ export default {
           this.tabBtn = res.map((item) => {
             return { ...item, goodsList: [], noData: false, limit: 10, page: 1 }
           })
-          this.selectItem(res[0], 0)
+          if (res.length) this.selectItem(res[0], 0)
         })
     },
     // 滚动加载更多

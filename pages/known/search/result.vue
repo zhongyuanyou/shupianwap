@@ -355,7 +355,7 @@ export default {
       margin-top: 20px;
       > h1 {
         font-size: 36px;
-        font-weight: 500;
+        font-weight: bold;
         color: #222222;
         display: -webkit-box;
         -webkit-box-orient: vertical;

@@ -481,15 +481,14 @@ export default {
       }
     }
     .item-btn {
-      width: 150px;
       font-size: 24px;
-      min-width: 132px;
+      min-width: 150px;
       margin-left: auto;
       text-align: right;
       align-items: center;
       display: flex;
       font-size: 24px;
-      margin-right: 30px;
+      margin-right: 10px;
       button {
         display: block;
         width: 150px;
