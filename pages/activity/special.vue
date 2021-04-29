@@ -1,5 +1,6 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
+    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
     <!-- S search -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="search">
@@ -34,7 +35,7 @@
         <div class="special-price">
           <div class="night"></div>
         </div>
-        <div class="count-down">
+        <div v-if="isTimerShow" class="count-down">
           <p class="down-time">
             距本场结束还剩
             <span>{{ time.day }}</span
@@ -45,7 +46,6 @@
         </div>
       </div>
       <!-- E countdown -->
-      <!-- S avtar -->
       <!-- S avtar -->
       <div class="avtars">
         <div
@@ -74,22 +74,6 @@
             </div>
           </div>
         </div>
-        <!-- <div class="avtar">
-          <div class="touxiang"></div>
-          <div class="content">视频作品著作权申请</div>
-          <div class="background">
-            <div class="bg-img"></div>
-            <div class="money"><span>999</span><span>元</span></div>
-          </div>
-        </div>
-        <div class="avtar">
-          <div class="touxiang"></div>
-          <div class="content">视频作品著作权申请</div>
-          <div class="background">
-            <div class="bg-img"></div>
-            <div class="money"><span>999</span><span>元</span></div>
-          </div>
-        </div> -->
       </div>
       <!-- E avtar -->
     </div>
@@ -226,8 +210,8 @@ export default {
   mixins: [activityMixin],
   data() {
     return {
-      // specType: 'HDZT_ZTTYPE_TM',
-      specType: 'HDZT_ZTTYPE_QWBT',
+      specType: 'HDZT_ZTTYPE_TM',
+      // specType: 'HDZT_ZTTYPE_QWBT',
       nowIndex: 0,
       list: [],
       style: {
@@ -235,6 +219,7 @@ export default {
         searchStyle: '',
       },
       tabs: ['全部', '99元封顶', '899元封顶', '1999元封顶'],
+      hasCity: true,
     }
   },
 }
@@ -361,7 +346,7 @@ export default {
           display: flex;
           align-items: center;
           span {
-            width: 36px;
+            // width: 36px;
             height: 36px;
             padding: 6px 4px;
             background: #ffffff;
@@ -559,6 +544,7 @@ export default {
         }
       }
       .right-content {
+        flex: 1;
         width: 418px;
         display: flex;
         align-content: flex-start;

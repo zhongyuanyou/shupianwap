@@ -119,9 +119,9 @@
                   </div>
                   <div class="right-content">
                     <div class="rc-top">
-                      <span class="span1">好品</span>
-                      <span class="span2">千万补贴</span>
-                      <span class="span3"> {{ item.skuName }}</span>
+                      <span class="tag">好品</span>
+                      <span class="tag">千万补贴</span>
+                      <span class="title"> {{ item.skuName }}</span>
                     </div>
                     <div v-show="item.tags" class="rc-middle">
                       <div
@@ -420,20 +420,23 @@ export default {
       }
     }
     .tabs-box-items {
+      height: 56px;
       display: flex;
       justify-content: flex-start;
       overflow-x: scroll;
+      // margin: auto 0;
       &::-webkit-scrollbar {
         width: 0 !important;
+        height: 0 !important;
       }
       li {
         white-space: nowrap;
-        height: 32px;
         font-size: 32px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: bold;
+        font-weight: 500;
         color: #555555;
-        line-height: 32px;
+        line-height: 56px;
+        height: 56px;
         margin-right: 48px;
         &.active {
           font-weight: bold;
@@ -473,32 +476,24 @@ export default {
         position: relative;
         flex: 1;
         .rc-top {
-          font-size: 32px;
-          height: 84px;
-          font-weight: bold;
-          color: #222222;
-          .span1 {
+          // line-height: 32px;
+          .tag {
             height: 32px;
             background: #ec5330;
             border-radius: 4px;
-            padding: 6px 8px;
+            padding: 0 8px;
             font-size: 20px;
+            line-height: 28px;
             font-family: PingFangSC-Medium, PingFang SC;
-
             font-weight: bold;
             color: #ffffff;
-            line-height: 20px;
           }
-          .span2 {
-            height: 32px;
-            background: #ec5330;
-            border-radius: 4px;
-            padding: 6px 8px;
-            font-size: 20px;
-            font-family: PingFangSC-Medium, PingFang SC;
+          .title {
+            line-height: 32px;
+            font-size: 32px;
+            height: 84px;
             font-weight: bold;
-            color: #ffffff;
-            line-height: 20px;
+            color: #222222;
           }
         }
         .rc-middle {

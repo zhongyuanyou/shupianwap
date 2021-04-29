@@ -1,5 +1,6 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
+    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
     <!-- <sp-sticky></sp-sticky> -->
     <!-- S search -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
@@ -33,7 +34,7 @@
       <!-- S countdown -->
       <div class="countdown">
         <div class="special-price"></div>
-        <div class="count-down">
+        <div v-if="isTimerShow" class="count-down">
           <p class="down-time">
             距本场结束还剩
             <span>{{ time.day }}</span
@@ -240,6 +241,7 @@ export default {
           price: '998',
         },
       ],
+      hasCity: false,
     }
   },
   mounted() {
@@ -361,7 +363,7 @@ export default {
           display: flex;
           align-items: center;
           span {
-            width: 36px;
+            // width: 36px;
             height: 36px;
             padding: 6px 4px;
             background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);

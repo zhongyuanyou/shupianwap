@@ -1,5 +1,6 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
+    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
     <!-- Sheader -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="header">
@@ -31,7 +32,7 @@
           </div>
           <div class="low-money">近15天全网底价</div>
         </div>
-        <div v-show="endTime.sec" class="count-down">
+        <div v-if="isTimerShow" class="count-down">
           <div class="end-time">距本场结束还剩</div>
           <div class="down-time">
             <span class="block">{{ endTime.hour }}</span>
@@ -253,6 +254,7 @@ export default {
   data() {
     return {
       specType: 'HDZT_ZTTYPE_XSQG',
+      // specType: 'HDZT_ZTTYPE_QWBT',
       advice: [
         {
           lowmoney: '限时直降499元',
@@ -285,6 +287,7 @@ export default {
       refreshing: false,
       allText: '精选',
       introWords: ['人工选品', '限时限量', '低价高质'],
+      hasCity: false,
     }
   },
 }
@@ -405,29 +408,7 @@ export default {
             font-size: 24px;
             font-weight: bold;
             color: #fefffe;
-            // // line-height: 24px;
-            // margin-right: 12px;
           }
-          // .sp-count-down {
-          //   .block {
-          //     padding: 6px;
-          //     width: 36px;
-          //     height: 36px;
-          //     font-size: 24px;
-          //     font-weight: bold;
-          //     color: #ec5330;
-          //     line-height: 24px;
-          //     background: #ffffff;
-          //     border-radius: 4px;
-          //   }
-          //   .colon {
-          //     font-size: 24px;
-          //     font-weight: bold;
-          //     color: #fefffe;
-          //     // // line-height: 24px;
-          //     // margin-right: 12px;
-          //   }
-          // }
         }
       }
     }
