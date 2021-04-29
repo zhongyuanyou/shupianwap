@@ -25,24 +25,33 @@ export default function ({ $axios, redirect, app, store }) {
       config.params = config.params || {}
       config.headers.platformCode = BASE.platformCode // 平台code
       config.headers.terminalCode = BASE.terminalCode // 终端code
-      const data = config.method === 'post' ? config.data : config.params
-      const token = app.$cookies.get('token', {
-        path: '/',
-      })
-      // // 签名
+      // 签名
       const signData = gatewaySign.handleSign({
         method: config.method,
-        rawData: data,
+        rawData:
+          config.method === 'post' ? qs.stringify(config.data) : config.params,
         sysCode: BASE.SYS_CODE,
         secret: BASE.SECRET,
-        token,
-        contentType: config.headers['Content-Type'],
+        token: app.$cookies.get('token', {
+          path: '/',
+        }),
       })
-      config.headers = { ...signData }
-      // config.headers.sysCode = 'crisps-app-wap-bff-api'
+      if (DGG_SERVER_ENV === 'development') {
+        // 本地根据自己的需求进行配置
+        config.headers.sysCode = 'crisps-app-wap-bff-api'
+      } else {
+        // 在app正式上线未做负载前,此sysCode不修改
+        config.headers.sysCode = 'crisps-app-wap-bff-api'
+      }
       // 获取token
-      if (token) {
-        config.headers['X-Auth-Token'] = token
+      if (
+        app.$cookies.get('token', {
+          path: '/',
+        })
+      ) {
+        config.headers['X-Auth-Token'] = app.$cookies.get('token', {
+          path: '/',
+        })
         config.headers['X-Req-UserId'] = app.$cookies.get('userId', {
           path: '/',
         })
@@ -72,6 +81,7 @@ export default function ({ $axios, redirect, app, store }) {
       } else {
         config.headers.areaCode = store.state.city.defaultCity.code
       }
+      config.headers = Object.assign(config.headers, ...signData)
       return config
     },
     (error) => {

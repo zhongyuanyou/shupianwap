@@ -162,6 +162,7 @@
     <div class="footer">
       <sp-bottombar safe-area-inset-bottom>
         <sp-bottombar-button
+          v-if="!hideIM"
           type="primary"
           text="电话联系"
           :disabled="!detailData.phone"
@@ -348,52 +349,69 @@ export default {
     },
     async bindhidden() {
       try {
-        const telData = await planner.newtel({
-          areaCode: this.city.code,
-          areaName: this.city.name,
-          customerUserId: this.$store.state.user.userId,
-          plannerId: this.detailData.id,
-          customerPhone:
-            this.$store.state.user.userPhoneFull ||
-            this.$cookies.get('userPhoneFull'),
-          requireCode: this.requireCode,
-          requireName: this.requireName,
-          // id: mchUserId,
-          // sensitiveInfoType: 'MCH_USER',
-        })
-        // 解密电话
-        if (telData.status === 1) {
-          this.uPCall(telData)
-        } else if (telData.status === 0) {
+        const isLogin = await this.judgeLoginMixin()
+        if (isLogin) {
+          const telData = await planner.newtel({
+            areaCode: this.city.code,
+            areaName: this.city.name,
+            customerUserId: this.$store.state.user.userId,
+            plannerId: this.detailData.id,
+            customerPhone:
+              this.$store.state.user.mainAccountFull ||
+              this.$cookies.get('mainAccountFull', { path: '/' }),
+            requireCode: this.requireCode,
+            requireName: this.requireName,
+            // id: mchUserId,
+            // sensitiveInfoType: 'MCH_USER',
+          })
+          // 解密电话
+          if (telData.status === 1) {
+            this.uPCall(telData)
+          } else if (telData.status === 0) {
+            Toast({
+              message: '当前人员已禁用，无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
+            return ''
+          } else if (telData.status === 3) {
+            Toast({
+              message: '当前人员已离职，无法拨打电话',
+              iconPrefix: 'sp-iconfont',
+              icon: 'popup_ic_fail',
+            })
+            return ''
+          }
+        } else {
           Toast({
-            message: '当前人员已禁用，无法拨打电话',
+            message: '请先登录账号',
             iconPrefix: 'sp-iconfont',
             icon: 'popup_ic_fail',
           })
-          return ''
-        } else if (telData.status === 3) {
-          Toast({
-            message: '当前人员已离职，无法拨打电话',
-            iconPrefix: 'sp-iconfont',
-            icon: 'popup_ic_fail',
-          })
-          return ''
         }
       } catch (err) {
-        // Toast({
-        //   message: '未获取到划师联系方式',
-        //   iconPrefix: 'sp-iconfont',
-        //   icon: 'popup_ic_fail',
-        // })
+        Toast({
+          message: '未获取到划师联系方式',
+          iconPrefix: 'sp-iconfont',
+          icon: 'popup_ic_fail',
+        })
       }
     },
     handleIM() {
-      console.log('IM ')
+      // const isLogin = await this.judgeLoginMixin()
+      // if (isLogin) {
       this.uPIM({
         mchUserId: this.detailData.id,
         userName: this.detailData.userName,
         type: this.detailData.mchClass,
       })
+      // } else {
+      //   Toast({
+      //     message: '请先登录账号',
+      //     iconPrefix: 'sp-iconfont',
+      //     icon: 'popup_ic_fail',
+      //   })
+      // }
     },
 
     onSelect(option) {
@@ -468,13 +486,13 @@ export default {
     },
 
     // 发起聊天
-    uPIM(data = {}) {
+    async uPIM(data = {}) {
       const { mchUserId, userName, type } = data
       // 如果当前页面在app中，则调用原生IM的方法
       if (this.isInApp) {
         try {
           // 需要判断登陆没有，没有登录就是调用登录
-          // await this.getUserInfo()
+          await this.getUserInfo()
           this.$appFn.dggOpenIM(
             {
               name: userName,
@@ -497,15 +515,18 @@ export default {
         } catch (error) {
           console.error('uPIM error:', error)
         }
-        return
+      } else {
+        const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+        const isLogin = await this.judgeLoginMixin()
+        if (isLogin) {
+          this.creatImSessionMixin({
+            imUserId: mchUserId,
+            imUserType,
+            requireCode: this.requireCode || '',
+            requireName: this.requireName || '',
+          })
+        }
       }
-      const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
-      this.creatImSessionMixin({
-        imUserId: mchUserId,
-        imUserType,
-        requireCode: this.requireCode || '',
-        requireName: this.requireName || '',
-      })
     },
 
     // 平台不同，跳转方式不同
@@ -546,7 +567,6 @@ export default {
             this.$appFn.dggLogin((loginRes) => {
               if (loginRes && loginRes.code === 200) {
                 console.log('loginRes : ', loginRes)
-
                 let loginResData = {}
                 // 为了兼容 企大顺
                 if (typeof loginRes.data === 'string') {
@@ -660,8 +680,6 @@ export default {
 .detail {
   height: 100%;
   background-color: #ffffff;
-  .head {
-  }
   .body {
     padding: 0;
     .detail-content {
@@ -681,8 +699,6 @@ export default {
         border-radius: 8px;
         padding: 48px 40px;
         box-sizing: border-box;
-        &-head {
-        }
         &-body {
           padding-top: 42px;
         }
@@ -831,8 +847,6 @@ export default {
         border: 1px solid #24ae68;
       }
     }
-  }
-  .recommend {
   }
   .item-wrap {
     padding: 40px;

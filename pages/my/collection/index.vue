@@ -4,7 +4,6 @@
     <sp-tabs
       title-active-color="#4974F5"
       title-inactive-color="#222222"
-      :style="{ top: (88 + (appInfo.statusBarHeight || 0)) / 100 + 'rem' }"
       @click="changeTab"
     >
       <sp-tab
@@ -23,7 +22,12 @@
       error-text="请求失败，点击重新加载"
       @load="onLoad"
     >
-      <div v-for="(item, index) in list" :key="index" class="item">
+      <div
+        v-for="(item, index) in list"
+        :key="index"
+        class="item"
+        @click="toDetail(item)"
+      >
         <div class="title clamp2">{{ item.title }}</div>
         <!-- 除了回答,都有人物头像和图片 -->
         <div v-if="tabIndex !== 1" class="user">
@@ -32,6 +36,7 @@
             class="user_avatar"
             fit="cover"
             :src="item.avatar"
+            @click.stop="toHome(item)"
           />{{ item.userName }}
         </div>
         <div v-if="item.contentImageUrl === ''" class="content clamp2">
@@ -41,7 +46,12 @@
           <div class="left_content clamp3">
             {{ item.contentText }}
           </div>
-          <sp-image class="right_img" fit="cover" :src="item.contentImageUrl" />
+          <sp-image
+            radius="0.12rem"
+            class="right_img"
+            fit="cover"
+            :src="item.contentImageUrl.split(',')[0]"
+          />
         </div>
         <div class="bottom">
           {{
@@ -100,11 +110,30 @@ export default {
     ...mapState({
       userId: (state) => state.user.userId,
     }),
-    appInfo() {
-      return this.$store.state.app.appInfo
-    },
   },
   methods: {
+    toDetail(item) {
+      this.$router.push({
+        path:
+          item.type === 1
+            ? '/known/detail/question'
+            : item.type === 2
+            ? '/known/detail/article'
+            : '/known/detail/answer',
+        query: {
+          id: item.id,
+        },
+      })
+    },
+    toHome(item) {
+      this.$router.push({
+        path: '/known/home',
+        query: {
+          homeUserId: item.userId,
+          type: item.userType,
+        },
+      })
+    },
     changeTab(name) {
       if (this.tabIndex === name) {
         return
@@ -157,14 +186,8 @@ export default {
   background-color: #f8f8f8;
 
   .sp-tabs {
-    position: fixed;
-    left: 0;
-    top: 88px;
-    z-index: 2;
     width: 100%;
     height: 88px;
-    padding-top: 40px;
-    box-sizing: content-box;
     background-color: #ffffff;
   }
 
@@ -176,11 +199,11 @@ export default {
   }
 
   .list_container {
-    padding-top: 128px;
     .item {
       background: #ffffff;
       padding: 24px 32px 28px;
       margin-bottom: 20px;
+      word-break: break-all;
       .title {
         font-family: PingFangSC-Medium, PingFang SC;
         font-size: 36px;

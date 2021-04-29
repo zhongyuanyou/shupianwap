@@ -6,12 +6,12 @@
       :style="{ paddingTop: (appInfo.statusBarHeight || 0) + 'px' }"
     >
       <my-icon
-        name="zuo"
+        name="nav_ic_back"
         size="0.4rem"
         :color="fixed ? '#1A1A1A' : '#D8D8D8'"
         @click.native="$back"
       ></my-icon>
-      {{ fixed ? userName : '' }}
+      <div style="margin-left: 0.2rem">{{ fixed ? userName : '' }}</div>
     </div>
     <div class="top_box">
       <div class="card">
@@ -23,14 +23,16 @@
               :class="{ bt_has_attention: isAttention }"
               @click="attention"
             >
-              {{ isAttention ? '已关注' : '+ 关注' }}
+              <my-icon
+                v-show="!isAttention"
+                name="tianjia"
+                size="0.27rem"
+                color="#fff"
+              />
+              <p>{{ isAttention ? '已关注' : '关注' }}</p>
             </div>
           </template>
-          <div
-            v-if="appInfo.appCode === 'CPSAPP' && type === 2"
-            class="bt_contact"
-            @click="contact"
-          >
+          <div v-if="isInApp && type === 2" class="bt_contact" @click="contact">
             <my-icon
               name="pinglun_mian"
               size="0.36rem"
@@ -138,16 +140,18 @@ export default {
       fansNum: 0,
       applaudNum: 0,
     }
-    const { code, data } = await $axios.get(knownApi.home.userInfo, {
-      params: {
-        homeUserId: query.homeUserId || store.state.user.userId,
-        homeUserType:
-          query.type || utils.getUserType(store.state.user.userType),
-      },
-    })
-    if (code === 200) {
-      userInfo = data
-    }
+    try {
+      const { code, data } = await $axios.get(knownApi.home.userInfo, {
+        params: {
+          homeUserId: query.homeUserId || store.state.user.userId,
+          homeUserType:
+            query.type || utils.getUserType(store.state.user.userType),
+        },
+      })
+      if (code === 200) {
+        userInfo = data
+      }
+    } catch (error) {}
 
     return userInfo
   },
@@ -347,6 +351,7 @@ export default {
 <style lang="less" scoped>
 .home_container {
   height: 100%;
+  background: #fff;
   .header {
     z-index: 10;
     position: fixed;
@@ -354,7 +359,7 @@ export default {
     left: 0;
     width: 100%;
     height: 88px;
-    padding-left: 86px;
+    padding-left: 0.32rem;
     color: #1a1a1a;
     font-size: 36px;
     font-weight: 500px;
@@ -369,13 +374,15 @@ export default {
     }
   }
   .header_fixed {
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid #f4f4f4;
     background: #ffffff;
   }
 
   .top_box {
     padding-top: 320px;
-    background: #026ac3;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/images/dkl5m4sxqyo0000.png')
+      top right no-repeat;
+    background-size: contain;
     .card {
       position: relative;
       background-color: #ffffff;
@@ -396,15 +403,20 @@ export default {
         justify-content: flex-end;
         text-align: center;
         font-size: 26px;
-        font-weight: 500;
+        font-weight: bold;
         height: 64px;
         .bt_attention {
           width: 144px;
           height: 64px;
-          line-height: 64px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           background: #4974f5;
           border-radius: 8px;
           color: #ffffff;
+          /deep/ i {
+            margin-right: 6px;
+          }
         }
         .bt_has_attention {
           background: #f5f5f5;
@@ -424,7 +436,7 @@ export default {
       .user_name {
         margin-top: 48px;
         font-size: 44px;
-        font-weight: 500;
+        font-weight: bold;
         color: #1a1a1a;
         line-height: 44px;
       }
@@ -447,7 +459,7 @@ export default {
             color: #4974f5;
             font-size: 36px;
             line-height: 36px;
-            font-weight: 500;
+            font-weight: bold;
           }
           &_name {
             font-size: 26px;
@@ -475,14 +487,14 @@ export default {
   .bottom_box {
     background-color: #f8f8f8;
     /deep/ .sp-tabs {
-      border-bottom: 1px solid #dddddd;
+      border-bottom: 1px solid #f4f4f4;
     }
     /deep/ .sp-tab {
       font-size: 30px;
     }
     .sp-tab--active {
       font-size: 32px;
-      font-weight: 500;
+      font-weight: bold;
     }
 
     .list_container {
@@ -518,7 +530,7 @@ export default {
         .title {
           font-family: PingFangSC-Medium, PingFang SC;
           font-size: 36px;
-          font-weight: 500;
+          font-weight: bold;
           color: #1a1a1a;
           line-height: 48px;
           margin-bottom: 17px;

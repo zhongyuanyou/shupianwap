@@ -519,14 +519,15 @@ export default {
     },
 
     // 发起聊天
-    uPIM(data = {}) {
-      console.log(123)
+    async uPIM(data = {}) {
+      // const isLogin = await this.judgeLoginMixin()
+      // if (isLogin) {
       const { mchUserId, userName, type } = data
       // 如果当前页面在app中，则调用原生IM的方法
       if (this.isInApp) {
         try {
           // 需要判断登陆没有，没有登录就是调用登录
-          // await this.getUserInfo()
+          await this.getUserInfo()
           this.$appFn.dggOpenIM(
             {
               name: userName,
@@ -547,14 +548,14 @@ export default {
         } catch (error) {
           console.error('uPIM error:', error)
         }
-        return
+      } else {
+        const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_B 启大顺 ;MERCHANT_S 启大包
+        this.creatImSessionMixin({
+          imUserId: mchUserId,
+          imUserType,
+          url: 'planner/list',
+        })
       }
-      const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_B 启大顺 ;MERCHANT_S 启大包
-      this.creatImSessionMixin({
-        imUserId: mchUserId,
-        imUserType,
-        url: 'planner/list',
-      })
     },
 
     // app获取用户信息

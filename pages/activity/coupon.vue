@@ -33,7 +33,7 @@
           class="coupon_item"
         >
           <div
-            :class="item.couponType === 1 ? 'notUse' : 'haveUse'"
+            :class="item.couponStatus === 1 ? 'haveUse' : 'notUse'"
             class="item-lf"
           >
             <div class="coupon_price">{{ item.reducePrice }}</div>
@@ -325,10 +325,11 @@ export default {
   background-image: url('https://cdn.shupian.cn/sp-pt/wap/29a165hg8w4k000.png');
 }
 .haveUse {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/8j18z03j8c00000.png');
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/2ozhssqe5py0000.png');
+  background-size: cover;
 }
 .notUse {
-  background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
+  background-image: url('https://cdn.shupian.cn/sp-pt/wap/g4kbai7wgrk0000.png');
   background-size: cover;
 }
 .act-coupon {
@@ -383,14 +384,13 @@ export default {
   padding: 12px 40px 20px 40px;
   height: auto;
   .coupon_item {
-    width: 670px;
-    height: 212px;
+    min-height: 212px;
+    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
     // background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
     background-size: 100% 100%;
     margin: 24px 0;
     display: flex;
     position: relative;
-    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
     overflow: hidden;
     .item-lf {
       width: 201px;
@@ -422,13 +422,12 @@ export default {
       width: 300px;
       box-sizing: border-box;
       .title {
-        height: 42px;
         font-size: 32px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #222222;
-        line-height: 42px;
-        margin: 24px 0 23px 0;
+        line-height: 32px;
+        margin: 36px 0 24px 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -440,7 +439,7 @@ export default {
         font-weight: 400;
         color: #555555;
         line-height: 32px;
-        margin-bottom: 18px;
+        margin-bottom: 30px;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
@@ -483,12 +482,13 @@ export default {
     }
     .item-btn {
       font-size: 24px;
-      width: 150px;
+      min-width: 150px;
       margin-left: auto;
       text-align: right;
       align-items: center;
       display: flex;
-      font-size: 0.24rem;
+      font-size: 24px;
+      margin-right: 10px;
       button {
         display: block;
         width: 150px;

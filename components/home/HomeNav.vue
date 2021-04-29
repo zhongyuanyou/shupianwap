@@ -158,7 +158,7 @@ export default {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 24px 40px 0 40px;
+    padding: 24px 20px 0 20px;
     li {
       width: 20%;
       a {
@@ -246,7 +246,7 @@ export default {
     overflow-x: auto;
     overflow-y: hidden;
     padding-top: 20px;
-    padding-left: 16px;
+    // padding-left: 16px;
     -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
       /*滚动条整体样式*/
@@ -259,7 +259,7 @@ export default {
       flex-flow: column wrap;
       align-content: flex-start;
       height: 264px;
-      padding-right: 16px;
+      // padding-right: 16px;
       li {
         height: 92px;
         margin: 20px 0;
@@ -290,7 +290,6 @@ export default {
             font-size: 24px;
             line-height: 32px;
             font-family: PingFang SC;
-            font-weight: bold;
             color: #222222;
             margin-top: 16px;
             white-space: nowrap;

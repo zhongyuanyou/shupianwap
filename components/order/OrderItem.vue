@@ -110,8 +110,10 @@
           面议，</span
         >
         <span v-else class="price2 price"> {{ orderData.lastAount }}元，</span>
-        定金
-        <span class="price3 price"> {{ orderData.depositAmount }} </span>元
+        <span class="should-pay">
+          定金
+          <span class="price3 price"> {{ orderData.depositAmount }} </span>元
+        </span>
       </p>
       <!-- 服务完结收费的意向单 -->
       <p
@@ -124,12 +126,12 @@
       <p v-else class="inner">
         <span class="price1"> 总价 {{ orderData.orderTotalMoney }}元，</span>
         <span class="price2"> 优惠 {{ orderData.orderDiscountMoney }}元，</span>
-        应付款
-        <span v-if="isShowPayBtn() == 1">
+        <span v-if="isShowPayBtn() == 1" class="should-pay">
+          应付款
           <span class="price3"> {{ orderData.orderPayableMoney }}</span
           >元
         </span>
-        <span v-else>
+        <span v-else class="should-pay">
           合计
           <span class="price3">{{ orderData.orderPayableMoney }}</span
           >元
@@ -244,14 +246,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.price3 {
-  color: #666;
-  font-size: 28px;
-  font-weight: 600;
-}
 .item {
   width: auto;
-  padding: 20px 40px;
+  padding: 32px 40px;
   height: auto;
   background: white;
   margin-top: 20px;
@@ -376,6 +373,15 @@ export default {
       font-weight: 400;
       color: #999999;
       float: right;
+      .should-pay {
+        color: #222;
+        font-size: 28px;
+        .price3 {
+          color: #222;
+          font-size: 28px;
+          font-weight: 600;
+        }
+      }
     }
   }
   .btn-area {
@@ -384,7 +390,7 @@ export default {
     .inner {
       float: right;
       margin-bottom: 10px;
-      height: 110px;
+      height: auto;
       margin-top: -20px;
       .sp-button {
         font-size: 26px;

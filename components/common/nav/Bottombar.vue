@@ -53,16 +53,16 @@ export default {
           iconName: 'shouye1',
           path: '/',
         },
-        // {
-        //   name: '发现',
-        //   iconName: 'dongtai',
-        //   path: '/found',
-        // },
         {
-          name: '必懂',
-          iconName: 'bidong',
-          path: '/known',
+          name: '发现',
+          iconName: 'dongtai',
+          path: '/found',
         },
+        // {
+        //   name: '必懂',
+        //   iconName: 'bidong',
+        //   path: '/known',
+        // },
         {
           name: '消息',
           iconName: 'xiaoxi1',
@@ -71,7 +71,7 @@ export default {
         {
           name: '订单',
           iconName: 'faxian',
-          path: '/order/',
+          path: '/order',
         },
         {
           name: '我的',
@@ -117,25 +117,33 @@ export default {
     pageJump(item) {
       // 消息页面跳转 IM
       if (item.path === '/msg') {
-        // if (this.userInfo.token) {
         if (this.userInfo.token) {
-          window.location.href = `${config.imBaseUrl}/index?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
+          if (this.userInfo.token) {
+            window.location.href = `${config.imBaseUrl}/index?token=${this.userInfo.token}&userId=${this.userInfo.userId}&userType=${this.userInfo.userType}`
+          } else {
+            const imId = localStorage.getItem('myInfo')
+              ? JSON.parse(localStorage.getItem('myInfo'))
+              : {}
+            window.location.href = `${config.imBaseUrl}/index?token=${imId.token}&userId=${imId.imUserId}&userType=VISITOR`
+          }
+          return
         } else {
-          const imId = localStorage.getItem('myInfo')
-            ? JSON.parse(localStorage.getItem('myInfo'))
-            : {}
-          window.location.href = `${config.imBaseUrl}/index?token=${imId.token}&userId=${imId.imUserId}&userType=VISITOR`
+          this.$router.push({
+            path: '/login',
+            query: {
+              redirect: this.$route.fullPath,
+            },
+          })
         }
-
-        //   return
-        // } else {
-        //   this.$router.push({
-        //     path: '/login',
-        //     query: {
-        //       redirect: this.$route.fullPath,
-        //     },
-        //   })
-        // }
+        return
+      }
+      if (item.path.match('order') && !this.userInfo.token) {
+        this.$router.push({
+          path: '/login',
+          query: {
+            redirect: this.$route.fullPath,
+          },
+        })
         return
       }
       const path = this.$route.path

@@ -353,7 +353,7 @@ export default {
           height: 86px;
           .advert_item-title-name {
             font-size: 22px;
-            font-weight: 600;
+            font-weight: bold;
             color: #222222;
             line-height: 22px;
             margin: 12px 0 5px 0;
@@ -436,7 +436,7 @@ export default {
         line-height: 32px;
         margin-right: 48px;
         &.active {
-          font-weight: 600;
+          font-weight: bold;
           color: #ec5330;
         }
       }

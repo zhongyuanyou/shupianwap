@@ -282,7 +282,10 @@ export default {
     },
   },
   head: {
-    meta: [{ name: 'spptmd-track_code', content: 'SPW000006' }],
+    meta: [
+      { name: 'spptmd-track_code', content: 'SPW000006' },
+      { name: 'conent_type', content: '1' },
+    ],
   },
 }
 </script>
@@ -329,7 +332,7 @@ export default {
       .price-sales {
         span {
           font-size: 36px;
-          font-weight: 600;
+          font-weight: bold;
           color: #ec5330;
           b {
             font-size: 22px;

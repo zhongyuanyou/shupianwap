@@ -237,6 +237,7 @@ export default {
 <style lang="less" scoped>
 .invitationSearch {
   min-height: 100vh;
+  background: #fff;
   .head {
     width: 100%;
     display: flex;
@@ -267,11 +268,11 @@ export default {
     .cancel {
       font-size: 32px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: bold;
       color: #1a1a1a;
     }
     // /deep/.sp-sticky {
-    //   border-bottom: 1px solid #dddddd;
+    //   border-bottom: 1px solid #f4f4f4;
     //   .search-content {
     //     padding: 0 24px;
     //     height: 88px;
@@ -300,7 +301,7 @@ export default {
     //     margin-left: 32px;
     //     font-size: 32px;
     //     font-family: PingFangSC-Medium, PingFang SC;
-    //     font-weight: 600;
+    //     font-weight: bold;
     //     color: #222222;
     //   }
     // }
@@ -321,7 +322,7 @@ export default {
       > p {
         margin-left: auto;
         font-size: 28px;
-        font-weight: 500;
+        font-weight: bold;
         color: #4974f5;
       }
     }
@@ -346,7 +347,7 @@ export default {
           margin-left: 24px;
           font-size: 30px;
           line-height: 72px;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
           text-align: center;
         }
@@ -359,7 +360,7 @@ export default {
           text-align: center;
           line-height: 72px;
           font-size: 26px;
-          font-weight: 500;
+          font-weight: bold;
           color: #ffffff;
           margin-left: auto;
         }

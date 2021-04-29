@@ -19,7 +19,10 @@
           />
         </template>
         <template v-slot:right>
-          <a class="cloose-btn" href="javascript:void(0);" @click="clooseHandle"
+          <a
+            class="cloose-btn"
+            href="javascript:void(0);"
+            @click.stop="clooseHandle"
             >取消</a
           >
         </template>
@@ -28,7 +31,14 @@
     <div v-if="knownHistory.length" class="history">
       <div class="tile">
         <h1>历史记录</h1>
-        <span @click="clearHistory">清空</span>
+        <span @click="clearHistory">
+          <my-icon
+            class="clock"
+            name="shanchu"
+            size="0.32rem"
+            color="#999999"
+          ></my-icon>
+        </span>
       </div>
       <ul class="box">
         <li
@@ -48,7 +58,7 @@
             name="cross"
             class="close"
             size="0.3rem"
-            color="#555555"
+            color="#CCCCCC"
             @click.stop="del(index)"
           />
         </li>
@@ -183,7 +193,7 @@ export default {
       margin-left: 32px;
       font-size: 32px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #222222;
     }
   }
@@ -196,7 +206,7 @@ export default {
       margin-bottom: 40px;
       > h1 {
         font-size: 30px;
-        font-weight: 600;
+        font-weight: bold;
         color: #222222;
       }
       > span {
@@ -235,18 +245,6 @@ export default {
           margin-left: auto;
           margin-right: 32px;
         }
-      }
-      li::after {
-        position: absolute;
-        box-sizing: border-box;
-        content: ' ';
-        pointer-events: none;
-        right: 30px;
-        bottom: 0;
-        left: 8px;
-        border-bottom: 1px solid #dddddd;
-        -webkit-transform: scaleY(0.6);
-        transform: scaleY(0.6);
       }
     }
   }

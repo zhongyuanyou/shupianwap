@@ -53,7 +53,7 @@
         </div>
       </div>
       <div v-if="ordercase.list.length > 3" class="btn" @click="show = !show">
-        查看全部办理流程
+        {{ show ? '收起' : '查看' }}全部办理流程
         <sp-icon
           :name="show ? 'arrow-up' : 'arrow-down'"
           size="0.3rem"
@@ -255,12 +255,13 @@ export default {
       }
     }
     > .btn {
-      width: 310px;
+      width: 350px;
       font-size: 32px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #4974f5;
       margin: 0 auto 24px auto;
+      text-align: center;
       .icon {
         margin-left: 12px;
         vertical-align: -1px;

@@ -394,7 +394,7 @@ export default {
         .post(recommendApi.saleList, {
           deviceId: deviceCode,
           areaCode: reqArea,
-          sceneId: 'app-fwcpxq-01',
+          sceneId: 'app-ghszy-01',
           storeId: this.mchDetailId,
           platform: 'm',
           // searchType: 2,
@@ -487,6 +487,8 @@ export default {
         align-items: center;
         flex-direction: row;
         margin-top: 7px;
+        overflow: hidden;
+        height: 50px;
         flex-wrap: wrap;
         &__item {
           padding: 5px 10px;

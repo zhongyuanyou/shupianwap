@@ -9,7 +9,13 @@
           @clickInputHandle="keyClickHandle"
         >
           <template v-slot:left>
-            <sp-icon name="arrow-left" size="0.4rem" @click="backPage" />
+            <my-icon
+              name="nav_ic_back"
+              size="0.40rem"
+              color="#1a1a1a"
+              class="my_icon"
+              @click.native="backPage"
+            ></my-icon>
           </template>
         </Search>
       </div>
@@ -241,6 +247,7 @@ export default {
 
 <style lang="less" scoped>
 .invitationList {
+  background: #fff;
   height: 100vh;
   .head {
     height: 88px;
@@ -287,7 +294,7 @@ export default {
       > p {
         margin-left: auto;
         font-size: 28px;
-        font-weight: 500;
+        font-weight: bold;
         color: #4974f5;
       }
       > p.active {
@@ -295,8 +302,6 @@ export default {
       }
     }
     > .listbox {
-      height: calc(100% - 102px);
-      padding-bottom: 20px;
       box-sizing: border-box;
       overflow: auto;
       > .list {
@@ -315,7 +320,7 @@ export default {
           margin-left: 24px;
           font-size: 30px;
           line-height: 72px;
-          font-weight: 600;
+          font-weight: bold;
           color: #222222;
           text-align: center;
         }
@@ -327,7 +332,7 @@ export default {
           text-align: center;
           line-height: 72px;
           font-size: 26px;
-          font-weight: 500;
+          font-weight: bold;
           color: #ffffff;
           margin-left: auto;
         }

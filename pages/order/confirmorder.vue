@@ -1,6 +1,16 @@
 <template>
   <div class="PlaceOrder">
-    <Head v-show="!editShow" ref="head" title="确认订单"></Head>
+    <Head v-show="!editShow" ref="head" title="确认订单">
+      <template #left>
+        <my-icon
+          class="back-icon"
+          name="nav_ic_back"
+          size="0.4rem"
+          color="#1A1A1A"
+          @click.native="onLeftClick"
+        ></my-icon>
+      </template>
+    </Head>
     <sp-skeleton
       v-for="_index in 10"
       :key="_index"
@@ -296,6 +306,9 @@ export default {
     this.getProtocol('protocol100008')
   },
   methods: {
+    onLeftClick() {
+      this.$router.back()
+    },
     goagr() {
       this.$router.push({
         name: 'login-protocol',
@@ -368,7 +381,7 @@ export default {
           throw message
         }
       } catch (err) {
-        this.$xToast.show(err.message)
+        this.$xToast.show('请求数据失败，请稍后再试')
         console.log(err)
         setTimeout(function () {
           that.$router.back(-1)
@@ -437,10 +450,14 @@ export default {
           cusOrderPayType = this.order.refConfig.payType
           isFromCart = false
         }
-        if (this.$refs.conpon.checkarr.id) {
+        if (
+          this.$refs.conpon.checkarr &&
+          this.$refs.conpon.checkarr.marketingCouponVO.id
+        ) {
           const arr = {
             code: 'ORDER_DISCOUNT_DISCOUNT',
-            value: this.$refs.conpon.checkarr.id,
+            value: this.$refs.conpon.checkarr.marketingCouponVO.id,
+            couponUseCode: this.$refs.conpon.checkarr.couponUseCode,
           }
           this.Orderform.discount.push(arr)
         }
@@ -488,7 +505,7 @@ export default {
       }
     },
     sortData(a, b) {
-      return b.reducePrice - a.reducePrice
+      return b.marketingCouponVO.reducePrice - a.marketingCouponVO.reducePrice
     },
     getInitData(index) {
       const arr = this.order.list.map((x) => {
@@ -526,19 +543,19 @@ export default {
         )
         .then((result) => {
           if (index === 5) {
-            this.datalist = result
+            this.datalist = result.marketingCouponLogList
             this.datalist = this.datalist.sort(this.sortData)
             if (this.datalist.length > 0) {
               this.conpon = this.datalist[0]
               this.$refs.conpon.radio = 0
               this.$refs.conpon.checkarr = this.datalist[0]
-              this.$refs.conpon.num = this.$refs.conpon.checkarr.reducePrice
+              this.$refs.conpon.num = this.$refs.conpon.checkarr.marketingCouponVO.reducePrice
               this.$refs.conpon.sum()
             } else {
               this.skeletonloading = false
             }
           } else {
-            this.nolist = result
+            this.nolist = result.marketingCouponLogList
             this.skeletonloading = false
           }
         })
@@ -588,7 +605,7 @@ export default {
       background: #fff;
       > .list {
         display: flex;
-        border-bottom: 1px solid #cdcdcd;
+        border-bottom: 1px solid #f4f4f4;
         padding: 32px 0;
         > .left {
           width: 160px;
@@ -596,6 +613,7 @@ export default {
           > img {
             width: 100%;
             height: 100%;
+            border-radius: 8px;
             object-fit: cover;
           }
         }
@@ -684,6 +702,12 @@ export default {
     > .news-content {
       margin-top: 24px;
       background: #fff;
+      /deep/.sp-cell::after {
+        display: none;
+      }
+      /deep/.sp-hairline--top-bottom::after {
+        display: none;
+      }
       .black {
         color: #1a1a1a;
       }
@@ -691,7 +715,7 @@ export default {
         color: #ec5330;
       }
       > .money {
-        padding: 39px 30px;
+        padding: 15px 30px;
         text-align: right;
         font-size: 28px;
         font-weight: 400;

@@ -48,8 +48,9 @@ export default {
       active: 0,
       maxLength: 20,
       fromPage: 'answer',
-      questionId: '', // 问题id
+      questionId: '', // editType = 1,问题id || editType = 2,回答id
       questionInfo: {}, // 问题详情
+      sourceId: '', // 问题id
     }
   },
   computed: {
@@ -69,6 +70,14 @@ export default {
     this.getDetailByIdApi().then(({ code, data }) => {
       if (code === 200) {
         _this.questionInfo = data
+        // 当修改回答时,需要重显内容
+        if (_this.editType === '2') {
+          _this.formData.content = data.content
+          // 当修改回答时,sourceId为问题id.
+          _this.sourceId = data.sourceId
+          // data.id 为回答id
+          _this.formData.id = data.id
+        }
       }
     })
   },
@@ -82,6 +91,7 @@ export default {
 
 <style lang="less" scoped>
 .answer {
+  background: #fff;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -94,7 +104,7 @@ export default {
   .title {
     font-size: 40px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     color: #222222;
     line-height: 52px;
   }

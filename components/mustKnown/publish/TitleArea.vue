@@ -8,6 +8,7 @@
         <sp-field
           ref="tileArea"
           v-model.trim="inputVal"
+          style="font-weight: bold"
           :placeholder="custPlaceholder"
           type="textarea"
           maxlength="50"
@@ -58,18 +59,23 @@ export default {
   watch: {
     title() {
       this.inputVal = this.title
-      this.showInput = true
+      if (this.inputVal.length === 0 || this.inputVal === '') {
+        this.showInput = false
+      } else {
+        this.showInput = true
+      }
     },
   },
   methods: {
     blur() {
-      if (this.inputVal === '') {
-        return
-      }
       // 给父组件传标题
       this.$emit('setTitle', this.inputVal)
       // 改变样式 标题设置显示
-      this.showInput = true
+      if (this.inputVal.length === 0 || this.inputVal === '') {
+        this.showInput = false
+      } else {
+        this.showInput = true
+      }
     },
     edit() {
       this.showInput = false
@@ -101,7 +107,7 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid #f4f4f4;
     -webkit-transform: scaleY(0.6);
     transform: scaleY(0.6);
   }
@@ -113,7 +119,7 @@ export default {
       color: #222222;
       line-height: 52px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       word-wrap: break-word;
       word-break: normal;
     }

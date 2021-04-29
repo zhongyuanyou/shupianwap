@@ -90,6 +90,7 @@ export default {
       const _this = this
       _this.getDetailByIdApi().then(({ code, data }) => {
         if (code === 200) {
+          console.error(data)
           _this.questionInfo = data
           _this.formData.title = data.title
           _this.formData.content = data.content
@@ -140,6 +141,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  background: #fff;
 }
 .main {
   flex: 1;
@@ -154,7 +156,7 @@ export default {
     padding: 20px 32px 250px 32px;
     .toast-area {
       width: 100%;
-      height: 236px;
+      // height: 236px;
       background: #f2f5ff;
       border-radius: 24px;
       font-size: 28px;

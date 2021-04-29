@@ -1,6 +1,6 @@
 <template>
   <div class="company">
-    <DetailTemplate />
+    <DetailTemplate scene-id1="app-fwcpxq-01" scene-id2="app-jycpxq-02" />
   </div>
 </template>
 

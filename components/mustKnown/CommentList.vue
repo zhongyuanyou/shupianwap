@@ -57,10 +57,11 @@
           </div>
         </div>
       </sp-list>
-      <div class="foot">
+      <sp-bottombar safe-area-inset-bottom>
         <sp-field
           v-model.trim="content"
           maxlength="100"
+          style="font-size: 16px; padding-left: 0"
           placeholder="请输入您的评论内容"
         />
         <p
@@ -69,7 +70,7 @@
         >
           发布
         </p>
-      </div>
+      </sp-bottombar>
     </sp-popup>
 
     <LoadingCenter v-show="mackLoading" />
@@ -77,7 +78,7 @@
 </template>
 
 <script>
-import { Popup, Field, List, Toast } from '@chipspc/vant-dgg'
+import { Popup, Field, List, Toast, Bottombar } from '@chipspc/vant-dgg'
 import { knownApi } from '~/api'
 import LoadingCenter from '@/components/common/loading/LoadingCenter'
 export default {
@@ -86,6 +87,7 @@ export default {
     [Popup.name]: Popup,
     [Field.name]: Field,
     [List.name]: List,
+    [Bottombar.name]: Bottombar,
     LoadingCenter,
   },
   props: {
@@ -171,6 +173,9 @@ export default {
       }
     },
     async Applaud(item) {
+      if (!(await this.isLogin())) {
+        return
+      }
       this.mackLoading = true
       const { code, message, data } = await this.$axios.post(
         knownApi.comments.like,
@@ -195,7 +200,18 @@ export default {
         console.log(message)
       }
     },
+    async isLogin() {
+      const res = await this.$isLogin()
+      if (res === 'app_login_success') {
+        this.init()
+        return false
+      }
+      return true
+    },
     async publish() {
+      if (!(await this.isLogin())) {
+        return
+      }
       if (!this.content) {
         return
       }
@@ -248,6 +264,7 @@ export default {
     font-size: 34px;
     color: #1a1a1a;
     position: relative;
+    font-weight: bold;
     > .icon {
       position: absolute;
       right: 32px;
@@ -263,6 +280,9 @@ export default {
     display: flex;
     align-items: center;
     padding: 0 32px;
+    > span {
+      font-weight: bold;
+    }
     > p {
       margin-left: auto;
       width: 156px;
@@ -275,7 +295,7 @@ export default {
       position: relative;
       > span {
         font-size: 24px;
-        font-weight: 500;
+        font-weight: bold;
         color: #999;
         display: block;
         height: 48px;
@@ -348,23 +368,24 @@ export default {
       }
     }
   }
-  .foot {
-    border-top: 1px solid #ddd;
-    height: 96px;
+  /deep/.sp-bottombar {
+    border-top: 1px solid #f4f4f4;
     display: flex;
     align-items: center;
     padding-right: 32px;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
     /deep/.sp-cell {
       width: 610px;
     }
-    /deep/.sp-cell::after {
+    .sp-cell::after {
       display: none;
     }
     > p {
       margin-left: auto;
-      height: 28px;
-      font-size: 28px;
-      font-weight: 500;
+      font-size: 30px;
+      font-weight: bold;
+      width: 80px;
       color: rgba(73, 116, 245, 0.4);
     }
   }

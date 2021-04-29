@@ -1,6 +1,10 @@
 <template>
   <div class="company">
-    <DetailTemplate :im-jump-query="imJumpQuery" />
+    <DetailTemplate
+      :im-jump-query="imJumpQuery"
+      scene-id1="app-jycpxq-01"
+      scene-id2="app-jycpxq-02"
+    />
   </div>
 </template>
 
@@ -71,7 +75,10 @@ export default {
   },
   head: {
     title: '商品详情',
-    meta: [{ name: 'spptmd-track_code', content: 'SPW000014' }],
+    meta: [
+      { name: 'spptmd-track_code', content: 'SPW000014' },
+      { name: 'conent_type', content: '1' },
+    ],
   },
   layout: 'keepAlive',
   watchQuery: ['productId'],

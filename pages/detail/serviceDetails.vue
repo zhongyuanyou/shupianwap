@@ -282,7 +282,7 @@ export default {
             login_name: null, // 规划师ID(选填)
             productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
-            user_id: this.$cookies.get('userId'), // 用户ID(选填)
+            user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
             platform: 'app', // 平台（app,m,pc）
             productId: this.$route.query.productId, // 产品id
           },
@@ -313,7 +313,7 @@ export default {
       this.$axios
         .get(recommendApi.recommendProduct, {
           params: {
-            userId: this.$cookies.get('userId'), // 用户id
+            userId: this.$cookies.get('userId', { path: '/' }), // 用户id
             deviceId: this.deviceId, // 设备ID
             formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
             areaCode: this.city.code, // 区域编码
@@ -371,7 +371,7 @@ export default {
           login_name: null, // 规划师ID(选填)
           productType: 'PRO_CLASS_TYPE_SERVICE', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
-          user_id: this.$cookies.get('userId'), // 用户ID(选填)
+          user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
 
           platform: 'app', // 平台（app,m,pc）
           productId: this.scProductDetailData.baseData.id, // 产品id
@@ -398,7 +398,10 @@ export default {
   },
   head: {
     title: '商品详情',
-    meta: [{ name: 'spptmd-track_code', content: 'SPW000013' }],
+    meta: [
+      { name: 'spptmd-track_code', content: 'SPW000013' },
+      { name: 'conent_type', content: '1' },
+    ],
   },
 }
 </script>

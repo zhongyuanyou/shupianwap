@@ -67,10 +67,8 @@ export default {
   methods: {
     onRefresh() {
       this.finished = false
-      this.list = []
       this.page = 1
       this.loading = true
-      this.refreshing = false
       this.attentionList()
     },
     release() {
@@ -87,11 +85,6 @@ export default {
           id,
           type: 2,
         },
-      })
-    },
-    invite() {
-      this.$router.push({
-        path: '/known/detail/invitationList',
       })
     },
     toTimeStamp(time) {
@@ -199,6 +192,10 @@ export default {
         }
       )
       if (code === 200) {
+        if (this.refreshing) {
+          this.list = []
+          this.refreshing = false
+        }
         this.list = this.list.concat(data.rows)
         this.loading = false
         this.skeletonLoading = false
@@ -223,10 +220,6 @@ export default {
 .like_active {
   color: #4974f5 !important;
 }
-/deep/ .sp-cell {
-  padding: 0 0 20px 0;
-  position: relative;
-}
 .item {
   background: #ffffff;
   padding: 0 32px;
@@ -234,7 +227,7 @@ export default {
   .item_title {
     font-size: 36px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     color: #1a1a1a;
     line-height: 48px;
   }

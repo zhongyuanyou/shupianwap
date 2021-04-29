@@ -65,7 +65,25 @@ export default {
           this.formData[this.currentTabJyCode]
         )
         .then((data) => {
-          console.log(data)
+          if (this.classCode) {
+            for (let i = 0; i < data.filters.length; i++) {
+              if (this.$route.query.jylb === data.filters[i].code) {
+                for (let b = 0; b < data.filters[i].children.length; b++) {
+                  if (
+                    data.filters[i].children[b].code &&
+                    this.classCode === data.filters[i].children[b].code
+                  ) {
+                    data.filters[i].name = data.filters[i].children[b].name
+                  } else if (
+                    data.filters[i].children[b].name === this.classCode
+                  ) {
+                    data.filters[i].name = data.filters[i].children[b].name
+                  }
+                }
+              }
+            }
+            this.classCode = ''
+          }
           this.isReq[this.currentTabJyCode] = true
           if (
             this.formData[this.currentTabJyCode].needTypes === 1 &&

@@ -183,7 +183,7 @@ export default {
       text-align: center;
       font-size: 28px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-weight: bold;
       color: #999999;
       width: 0.33rem;
       height: 0.44rem;
@@ -229,7 +229,7 @@ export default {
         p {
           font-size: 32px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
+          font-weight: bold;
           color: #222222;
           line-height: 45px;
           word-break: break-all;

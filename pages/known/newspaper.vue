@@ -1,15 +1,8 @@
 <template>
   <div class="container">
-    <div
-      class="container_head"
-      :style="{
-        paddingTop: appInfo.statusBarHeight
-          ? appInfo.statusBarHeight + 'px'
-          : '0px',
-      }"
-    >
-      <sp-sticky @scroll="scrollHandle">
-        <div class="header_search">
+    <HeaderSlot>
+      <div class="flex">
+        <div>
           <my-icon
             name="nav_ic_back"
             size="0.40rem"
@@ -17,7 +10,9 @@
             class="my_icon"
             @click.native="back()"
           ></my-icon>
-          <div v-show="showPaper" class="newspaperTitle">日报精选</div>
+        </div>
+        <div v-show="showHead" class="newspaperTitle">日报精选</div>
+        <div>
           <my-icon
             name="sear_ic_sear"
             size="0.40rem"
@@ -26,32 +21,41 @@
             @click.native="$router.push({ path: '/known/search' })"
           ></my-icon>
         </div>
-      </sp-sticky>
-      <div class="newspaper">日报精选</div>
-      <div class="day_num">{{ new Date().getDate() }}</div>
-      <div class="weekday">{{ getWekDay() }}</div>
-      <div class="title">专属必懂带逛小助手，带你发现并懂精品</div>
+      </div>
+    </HeaderSlot>
+    <div class="container_head">
+      <div>
+        <!-- <div class="newspaper">日报精选</div> -->
+        <div class="day_num">{{ new Date().getDate() }}</div>
+        <div class="weekday">{{ getWekDay() }}</div>
+        <!-- <div class="title">专属必懂带逛小助手，带你发现并懂精品</div> -->
+      </div>
     </div>
 
-    <div class="container_body">
+    <div ref="body" class="container_body">
       <ProblemItem :newspaper-data="newspaperData" />
     </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
-import { Sticky } from '@chipspc/vant-dgg'
+import { Sticky, Icon } from '@chipspc/vant-dgg'
 import ProblemItem from '@/components/mustKnown/recommend/ProblemItem'
 import { knownApi } from '@/api'
+import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
+  layout: 'keepAlive',
   name: 'Recommend',
   components: {
     [Sticky.name]: Sticky,
     ProblemItem,
+    HeaderSlot,
   },
   data() {
     return {
       name: '',
+      showHead: false,
+      [Icon.name]: Icon,
       description: '',
       categorIds: [],
       newspaperData: [],
@@ -78,7 +82,10 @@ export default {
   },
   mounted() {
     this.init()
-    console.log(this.appInfo, 123)
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     back() {
@@ -129,6 +136,16 @@ export default {
         console.log(message)
       }
     },
+    handleScroll() {
+      // 获取推荐板块到顶部的距离 减 搜索栏高度
+      const scrollTop = this.$refs.body.getBoundingClientRect().top // 滚动条距离顶部的位置
+      const than = document.body.clientWidth / 375
+      if (scrollTop / than <= ((this.appInfo.statusBarHeight || 0) + 88) / 2) {
+        this.showHead = true
+      } else {
+        this.showHead = false
+      }
+    },
     getWekDay() {
       const date = '周' + '天一二三四五六'.charAt(new Date().getDay())
       return date
@@ -146,14 +163,14 @@ export default {
 ::v-deep .sp-work-tab--active {
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: bold;
   color: #222222;
 }
 /deep/ .sp-work-tab__text {
   flex-shrink: 0;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: bold;
   color: #999999;
 }
 /deep/ .sp-work-tabs__line {
@@ -162,11 +179,42 @@ export default {
   background: #4974f5;
   border-radius: 3px;
 }
+/deep/ .fixed-head {
+  position: absolute !important;
+  background: #4974f5 !important;
+}
+/deep/ .my-head {
+  background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
+    no-repeat;
+  background-size: 100%;
+  box-shadow: none !important;
+}
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 0.88rem;
+  padding: 0 0.32rem;
+  // background: #4974f5;
+  div {
+    display: flex;
+    height: 0.88rem;
+    align-items: center;
+  }
+  .newspaperTitle {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ffffff;
+  }
+}
 .container {
+  background: #4974f5;
   position: relative;
   .container_head {
-    height: 380px;
-    background: #4974f5;
+    height: 420px;
+    background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
+      no-repeat 100%;
+    background-size: 100%;
     position: relative;
     .header_search {
       padding: 0 34px;
@@ -176,20 +224,18 @@ export default {
       justify-content: space-between;
       align-items: center;
       background: #4974f5;
-      .my_icon {
-      }
       .newspaperTitle {
         height: 50px;
         font-size: 36px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font-weight: bold;
         color: #ffffff;
         line-height: 50px;
       }
     }
     .newspaper {
       position: absolute;
-      top: 186px;
+      top: 100px;
       left: 40px;
       font-size: 52px;
       font-family: AlibabaPuHuiTiH;
@@ -198,7 +244,7 @@ export default {
     }
     .day_num {
       position: absolute;
-      top: 186px;
+      top: 218px;
       right: 60px;
       height: 56px;
       font-size: 56px;
@@ -208,7 +254,7 @@ export default {
     }
     .weekday {
       position: absolute;
-      top: 264px;
+      top: 300px;
       right: 64px;
       height: 26px;
       font-size: 26px;
@@ -219,7 +265,7 @@ export default {
     }
     .title {
       position: absolute;
-      top: 264px;
+      top: 174px;
       left: 40px;
       font-size: 26px;
       font-family: PingFangSC-Regular, PingFang SC;
@@ -235,8 +281,6 @@ export default {
     height: 1218px;
     background: #ffffff;
     border-radius: 24px 24px 0px 0px;
-    position: absolute;
-    top: 350px;
   }
 }
 </style>

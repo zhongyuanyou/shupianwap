@@ -1,7 +1,14 @@
 <template>
   <header-slot>
     <div class="head head2">
-      <sp-icon name="arrow-left" color="#1a1a1a" size="0.4rem" @click="$back" />
+      <!-- <sp-icon name="arrow-left" color="#1a1a1a" size="0.4rem" @click="$back" /> -->
+      <my-icon
+        name="nav_ic_back"
+        size="0.40rem"
+        color="#1a1a1a"
+        class="my_icon"
+        @click.native="$back()"
+      ></my-icon>
       <div class="user-info">
         <sp-image
           class="img"
@@ -9,12 +16,15 @@
           @click.stop="goUser(headerData.userId, headerData.userType)"
         />
         <div class="infos">
-          <p>{{ headerData.createrName }}</p>
+          <p>{{ headerData.userName }}</p>
           <!-- {{ headerData.contentText }} -->
         </div>
         <template v-if="isShowFollow">
           <div v-if="!isFollow" class="btn" @click="follow">
-            <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
+            <sp-button>
+              <my-icon name="tianjia" size="0.27rem" color="#4974F5" />
+              关注</sp-button
+            >
           </div>
           <div v-else class="btn2" @click="follow">
             <span class="follow">已关注</span>
@@ -72,7 +82,6 @@ export default {
   height: 0.88rem;
   font-size: 30px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
   color: #4974f5;
   padding: 0 32px;
   box-sizing: border-box;
@@ -103,14 +112,14 @@ export default {
       flex: 1;
       font-size: 26px;
       font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
+      font-weight: bold;
       color: #999999;
       line-height: 66px;
       padding-left: 20px;
       p {
         font-size: 30px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font-weight: bold;
         color: #222222;
       }
     }
@@ -126,12 +135,11 @@ export default {
         width: 100%;
         height: 100%;
         background: none;
-        color: rgba(73, 116, 245, 1);
         display: block;
         float: left;
         font-size: 30px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font-weight: bold;
         color: #4974f5;
         border: none;
       }

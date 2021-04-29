@@ -4,7 +4,7 @@
 <template>
   <div
     class="search-content"
-    :style="{ backgroundColor: 'rgba(255,255,255,' + opacity + ')' }"
+    :style="{ backgroundColor: 'rgba(255,255,255,' + 1 + ')' }"
   >
     <slot name="left"></slot>
     <div class="input-box">
@@ -124,20 +124,21 @@ export default {
   display: flex;
   align-items: center;
   width: 100%;
-  height: 128px;
-  padding: 16px 40px;
-  box-sizing: border-box;
+  // height: 96px;
+  padding: 32px 20px 40px 20px;
+  // box-sizing: border-box;
   font-size: 24px;
   position: relative;
   z-index: 1;
+  background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
   .input-box {
     display: flex;
     align-items: center;
     flex: 1;
-    height: 100%;
+    height: 96px;
     background: #ffffff;
     border: 1px solid rgba(205, 205, 205, 0.6);
-    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
+    // box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
     border-radius: 24px;
     input {
       flex: 1;

@@ -1,18 +1,25 @@
 <template>
-  <div>
+  <div class="article">
     <HeaderSlot>
       <div v-if="!showHead" class="flex">
         <div>
-          <sp-icon name="arrow-left" size="0.4rem" @click="$back()" />
+          <my-icon
+            name="nav_ic_back"
+            size="0.40rem"
+            color="#1a1a1a"
+            class="my_icon"
+            @click.native="$back()"
+          ></my-icon>
         </div>
         <div>
-          <sp-icon
+          <my-icon
             style="margin-right: 0.15rem"
-            name="search"
-            size="0.4rem"
+            name="nav_ic_searchbig"
+            size="0.40rem"
             color="#1a1a1a"
-            @click="$router.push('/known/search')"
-          />
+            class="my_icon"
+            @click.native="$router.push('/known/search')"
+          ></my-icon>
           <sp-icon
             v-if="articleDetails.createrId === userInfo.userId"
             name="ellipsis"
@@ -42,10 +49,13 @@
           :src="articleDetails.avatar"
           @click.stop="goUser(articleDetails.userId, articleDetails.userType)"
         />
-        <div class="infos">{{ articleDetails.createrName }}</div>
+        <div class="infos">{{ articleDetails.userName }}</div>
         <template v-if="articleDetails.createrId !== userInfo.userId">
           <div v-if="!isFollow" class="btn" @click="follow">
-            <sp-button><my-icon name="jia" size="0.28rem" /> 关注</sp-button>
+            <sp-button>
+              <my-icon name="tianjia" size="0.27rem" color="#4974F5" />
+              关注
+            </sp-button>
           </div>
           <div v-else class="btn2" @click="follow">
             <span class="follow">已关注</span>
@@ -57,7 +67,7 @@
       <DetailArticleList :article-list="articleList" />
     </div>
     <Comment ref="openComment" :article-id="articleDetails.id" />
-    <div class="page-bottom">
+    <sp-bottombar safe-area-inset-bottom>
       <div
         v-if="
           articleDetails.isApplaudFlag === 0 &&
@@ -71,9 +81,6 @@
         <span class="text" @click="handleClickBottom(1)"
           >赞同{{ articleDetails.applaudCount }}</span
         >
-        <span class="icon" @click="handleClickBottom(2)">
-          <my-icon name="fandui" size="0.28rem" color="#4974F5"></my-icon
-        ></span>
       </div>
       <div
         v-if="articleDetails.isApplaudFlag === 1"
@@ -81,7 +88,7 @@
         @click="handleClickBottom(1)"
       >
         <span class="icon">
-          <my-icon name="zantong" size="0.28rem" color="#fff"></my-icon
+          <my-icon name="zantong_mian" size="0.28rem" color="#fff"></my-icon
         ></span>
         <span class="text">已赞同</span>
       </div>
@@ -91,7 +98,7 @@
         @click="handleClickBottom(2)"
       >
         <span class="icon">
-          <my-icon name="fandui" size="0.28rem" color="#fff"></my-icon
+          <my-icon name="fandui_mian" size="0.28rem" color="#fff"></my-icon
         ></span>
         <span class="text">已反对</span>
       </div>
@@ -115,12 +122,46 @@
           评论
         </div>
       </div>
-    </div>
+    </sp-bottombar>
+    <!--    上拉组件-->
+    <sp-popup
+      v-model="popupShow"
+      position="bottom"
+      :style="{ height: '30%' }"
+      round
+      close-icon="close"
+      :close-on-click-overlay="false"
+    >
+      <div class="down_slide_list">
+        <ul>
+          <li @click="editQues(articleDetails.id)">
+            <my-icon name="bianji1" size="1rem" color="#555"></my-icon>
+            <p>编辑</p>
+          </li>
+          <li @click="deleteQues(articleDetails.id)">
+            <my-icon name="shanchu1" size="1rem" color="#555"></my-icon>
+            <p>删除</p>
+          </li>
+        </ul>
+        <div class="cancel" @click="popupShow = false">取消</div>
+      </div>
+    </sp-popup>
   </div>
 </template>
 
 <script>
-import { Field, Tab, Tabs, Button, Image, Toast, Icon } from '@chipspc/vant-dgg'
+import {
+  Field,
+  Tab,
+  Tabs,
+  Button,
+  Image,
+  Toast,
+  Icon,
+  Popup,
+  Dialog,
+  Bottombar,
+} from '@chipspc/vant-dgg'
 import { knownApi } from '@/api'
 import PageHead from '@/components/common/head/header'
 import PageHead2 from '@/components/mustKnown/DetailHeaderUser'
@@ -130,11 +171,15 @@ import DetailArticleList from '@/components/mustKnown/DetailArticleList'
 import Comment from '~/components/mustKnown/DetailComment'
 import HeaderSlot from '@/components/common/head/HeaderSlot'
 export default {
+  layout: 'keepAlive',
   components: {
     [Icon.name]: Icon,
+    [Popup.name]: Popup,
     [Button.name]: Button,
     [Image.name]: Image,
     [Field.name]: Field,
+    [Dialog.name]: Dialog,
+    [Bottombar.name]: Bottombar,
     Comment,
     HeaderSlot,
     // PageHead,
@@ -143,31 +188,34 @@ export default {
     // Header,
   },
   async asyncData({ $axios, query, store }) {
-    const res = await $axios.get(knownApi.questionArticle.detail, {
-      params: {
-        id: query.id,
-        userId: store.state.user.userId,
-        userHandleFlag: store.state.user.userId ? 1 : 0,
-      },
-    })
+    let articleDetails = {}
+    try {
+      const res = await $axios.get(knownApi.questionArticle.detail, {
+        params: {
+          id: query.id,
+          userId: store.state.user.userId,
+          userHandleFlag: store.state.user.userId ? 1 : 0,
+        },
+      })
+      if (res.code === 200) {
+        articleDetails = res.data
+      }
+    } catch (error) {}
+
     return {
-      articleDetails: res.data,
-      headerData: {
-        createrName: res.data.createrName,
-        contentText: res.data.contentText,
-        avatar: res.data.avatar,
-      },
+      articleDetails,
     }
   },
   data() {
     return {
+      popupShow: false,
       articleList: [],
-      headerData: {},
       showHead: false,
-      articleDetails: '',
+      // articleDetails: '',
       currentDetailsId: '',
       handleType: '',
       isFollow: false,
+      releaseFlag: false, // 是否发布的新文章
     }
   },
   computed: {
@@ -192,6 +240,9 @@ export default {
   },
 
   mounted() {
+    if (this.$route.query.status === 'release') {
+      this.releaseFlag = true
+    }
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed() {
@@ -224,6 +275,7 @@ export default {
       const res = await this.$isLogin()
       if (res === 'app_login_success') {
         this.initFollow()
+        return
       }
       this.$axios
         .post(knownApi.home.attention, {
@@ -286,9 +338,6 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.articleDetails = res.data
-            this.headerData.createrName = this.articleDetails.createrName
-            this.headerData.contentText = this.articleDetails.contentText
-            this.headerData.avatar = this.articleDetails.avatar
           } else {
             Toast.fail({
               duration: 2000,
@@ -393,11 +442,54 @@ export default {
           }
         })
     },
+    editQues(id) {
+      const curId = id
+      this.$router.push({
+        path: '/known/publish/article',
+        query: {
+          id: curId,
+          editType: 2,
+        },
+      })
+    },
+    deleteQues(id) {
+      const curId = id
+      Dialog.confirm({
+        title: '提示',
+        message: '确定要删除吗？',
+      })
+        .then(() => {
+          this.$axios
+            .post(knownApi.content.dlt, {
+              id: curId,
+              currentUserId: this.userInfo.userId,
+            })
+            .then((res) => {
+              if (res.code === 200) {
+                this.$xToast.show({ message: '删除成功' })
+                this.$router.replace({ path: '/known' })
+              } else {
+                Toast.fail({
+                  duration: 2000,
+                  message: '服务异常，请刷新重试！',
+                  forbidClick: true,
+                  className: 'my-toast-style',
+                })
+              }
+            })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
+.article {
+  background: #fff;
+}
 // .fixed-head {
 //   position: fixed;
 //   left: 0;
@@ -428,7 +520,7 @@ export default {
   line-height: 88px;
   font-size: 30px;
   font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
+  font-weight: bold;
   color: #4974f5;
   padding: 0 40px;
   z-index: 99;
@@ -455,18 +547,18 @@ export default {
   .title {
     font-size: 40px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     color: #222222;
-    line-height: 68px;
-    font-weight: 600;
+    line-height: 56px;
+    font-weight: bold;
   }
   .nums-area {
     font-size: 26px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     color: #999999;
     margin: 20px 0;
-    font-weight: 500;
+    font-weight: bold;
   }
 }
 .main {
@@ -485,7 +577,7 @@ export default {
       flex: 1;
       font-size: 30px;
       font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 500;
+      font-weight: bold;
       color: #222222;
       line-height: 30px;
       padding-left: 16px;
@@ -493,19 +585,24 @@ export default {
     .btn2 {
       background: none;
       font-size: 30px;
+      font-weight: bold;
       color: #999999;
     }
     .btn {
       height: 72px;
-      background: #f5f5f5;
       border-radius: 12px;
+      display: flex;
+      align-items: center;
       .sp-button {
         width: 100%;
         height: 100%;
-        background: none;
+        background: #f5f5f5;
+        border-radius: 12px;
         color: rgba(73, 116, 245, 1);
         display: block;
+        font-weight: bold;
         float: left;
+        display: flex;
       }
     }
   }
@@ -530,15 +627,13 @@ export default {
     margin-top: 40px;
   }
 }
-.page-bottom {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 96px;
-  background: #ffffff;
-  padding: 10px 40px;
-  border-top: 1px solid #ddd;
+/deep/.sp-bottombar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
   .applaud {
     display: flex;
     align-items: center;
@@ -560,17 +655,10 @@ export default {
     .icon {
       padding: 0;
       width: 40px;
-      height: 100%;
-      line-height: 0;
       position: relative;
-      .spiconfont {
-        position: absolute;
-        left: 0px;
-        top: 20px;
-        padding: 0;
-        margin: 0;
-        line-height: 0;
-      }
+    }
+    .text {
+      font-weight: bold;
     }
   }
   .left-area {
@@ -580,9 +668,11 @@ export default {
     background: #f2f5ff;
     border-radius: 8px;
     padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     span {
       display: block;
-      float: left;
       margin-right: 4px;
     }
     .icon {
@@ -594,19 +684,25 @@ export default {
       .spiconfont {
         position: absolute;
         left: 0px;
-        top: 20px;
+        top: 18px;
         padding: 0;
         margin: 0;
         line-height: 0;
       }
     }
+    .icon.oppose {
+      padding-left: 20px;
+      margin-left: 20px;
+      border-left: 1px solid #ddd;
+      .spiconfont {
+        left: 20px;
+      }
+    }
     .text {
-      border-right: 1px solid #ddd;
-      margin-right: 20px;
+      margin-top: 1px;
       font-size: 24px;
       color: #4974f5;
-      font-weight: 500;
-      padding-right: 20px;
+      font-weight: bold;
     }
   }
   .right-area {
@@ -619,12 +715,12 @@ export default {
       text-align: center;
       width: 80px;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
       color: #999999;
-      font-size: 28px;
+      font-size: 20px;
       .icon {
         width: 100%;
         height: 40px;
+        margin-bottom: 5px;
       }
     }
   }
@@ -661,7 +757,7 @@ export default {
   > .tit {
     font-size: 40px;
     margin-bottom: 28px;
-    font-weight: 600;
+    font-weight: bold;
     color: #222222;
     padding: 0 32px;
     line-height: 56px;
@@ -691,7 +787,7 @@ export default {
         height: 226px;
         background: rgba(0, 0, 0, 0.4);
         font-size: 52px;
-        font-weight: 500;
+        font-weight: bold;
         color: #ffffff;
         text-align: center;
         line-height: 226px;
@@ -741,7 +837,7 @@ export default {
       display: flex;
       > div {
         font-size: 24px;
-        font-weight: 500;
+        font-weight: bold;
         color: #222222;
         > span {
           color: #999999;
@@ -762,7 +858,7 @@ export default {
       background: #f5f5f5;
       border-radius: 28px;
       font-size: 24px;
-      font-weight: 500;
+      font-weight: bold;
       color: #999999;
       margin-left: auto;
       text-align: center;
@@ -775,15 +871,15 @@ export default {
   }
   > .btns {
     display: flex;
-    border-bottom: 1px solid #dddddd;
-    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #f4f4f4;
+    border-top: 1px solid #f4f4f4;
     > .box {
       padding-top: 23px;
       box-sizing: border-box;
       width: 250px;
       height: 118px;
       font-size: 26px;
-      font-weight: 500;
+      font-weight: bold;
       color: #555555;
       text-align: center;
       border-left: 1px solid #ddd;
@@ -819,10 +915,10 @@ export default {
     position: absolute;
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     color: #222222;
     bottom: 0;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid #f4f4f4;
   }
 }
 </style>

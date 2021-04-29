@@ -63,7 +63,7 @@ export default {
       try {
         const params = {
           // id: this.userId,
-          id: this.userId || this.$cookies.get('userId'),
+          id: this.userId || this.$cookies.get('userId', { path: '/' }),
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false
@@ -90,18 +90,7 @@ export default {
       return imgList.join(',')
     },
     setTitle(val) {
-      if (!val) {
-        return
-      }
       this.formData.title = val
-      if (this.fromPage === 'question') {
-        const tempVal = val
-        const lastLetter = tempVal.slice(tempVal.length - 1, tempVal.length)
-        const reg = /\?|？/
-        if (!reg.test(lastLetter)) {
-          this.$xToast.error('标题需以问号结尾')
-        }
-      }
     },
     setTopic(val) {
       if (val.length > 0) {
@@ -141,10 +130,10 @@ export default {
         this.$xToast.error('正在处理中,请稍后')
         return
       }
+      if (this.fromPage === 'answer') {
+        this.buildAnswerParams()
+      }
       if (!this.editType || this.editType === 1) {
-        if (this.fromPage === 'answer') {
-          this.buildAnswerParams()
-        }
         this.addContent()
       } else {
         this.modifyContent()
@@ -155,14 +144,16 @@ export default {
       if (this.fromPage !== 'answer') {
         if (
           this.formData.title.length > 0 ||
-          this.formData.contentText.length > 0 ||
+          (this.formData.contentText !== '\n' &&
+            this.formData.contentText.length > 0) ||
           this.formData.categoryCode.length > 0
         ) {
           cancelFlag = true
         }
-      } else if (this.formData.contentText.length > 0) {
-        cancelFlag = true
       }
+      //  else if (this.formData.contentText.length > 0) {
+      //   cancelFlag = true
+      // }
       if (cancelFlag) {
         const _this = this
         Dialog.confirm({
@@ -232,6 +223,7 @@ export default {
             path: '/known/detail/article',
             query: {
               id,
+              status: 'release', // 表示刚发布的文章
             },
           })
         }, 1000)
@@ -293,7 +285,11 @@ export default {
       return true
     },
     buildAnswerParams() {
-      this.formData.sourceId = this.questionId
+      if (this.editType === '2') {
+        this.formData.sourceId = this.sourceId
+      } else {
+        this.formData.sourceId = this.questionId
+      }
       this.formData.title = this.questionInfo.title
       this.formData.categoryCode = this.questionInfo.categoryCode
       this.formData.categoryId = this.questionInfo.categoryId

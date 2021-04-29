@@ -276,8 +276,13 @@ export default {
         url: item.url,
         imageUrl: item.imageUrl,
       }
-      this.addSearchHistoryMixin(data)
-      this.jumpHandle(item)
+      // this.addSearchHistoryMixin(data)
+      this.$router.push({
+        path: '/search/searchgoods',
+        query: {
+          keywords: item.name,
+        },
+      })
     },
   },
   head() {

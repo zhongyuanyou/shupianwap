@@ -35,7 +35,7 @@
       </div>
       <div class="item_bottom">
         <span class="like"> {{ item.applaudCount }}赞同</span>
-        <span class="comment"> · {{ item.answerCount }} 评论</span>
+        <span class="comment"> · {{ item.remarkCount }} 评论</span>
       </div>
     </div>
   </sp-skeleton>
@@ -112,9 +112,8 @@ export default {
   .item_title {
     font-size: 36px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
+    font-weight: bold;
     color: #1a1a1a;
-    line-height: 36px;
     word-break: break-all;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -149,12 +148,10 @@ export default {
           }
         }
         .userName {
-          height: 26px;
           font-size: 26px;
           font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
           color: #222222;
-          line-height: 26px;
         }
       }
       .content {

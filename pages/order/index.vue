@@ -1,6 +1,11 @@
 <template>
   <div ref="orderPage" class="order-page">
-    <Header v-if="!isInApp && !isApplets" title="我的订单" :hide-back="true">
+    <Header
+      v-if="!isInApp && !isApplets"
+      title="我的订单"
+      :hide-back="true"
+      :hide-shadow="true"
+    >
       <template #right>
         <div class="btn-car" @click="toCar">购物车</div>
       </template>
@@ -75,6 +80,8 @@
       :batch-pay-status="batchPayStatus"
       :batch-ids="batchIds"
       :this-time-pay-total="thisTimePayTotal"
+      :all-time-pay-total="allTimePayTotal"
+      :remain-total-pay-ids="remainTotalPayIds"
     />
     <Bottombar v-if="!isInApp && !isApplets" ref="bottombar" />
     <LoadingCenter v-show="loading" />
@@ -240,7 +247,15 @@ export default {
           const arr = res.records
           for (let i = 0, l = arr.length; i < l; i++) {
             this.changeMoney(arr[i])
-            arr[i].statusName = this.getStatusName(arr[i].orderStatusNo)
+            if (
+              arr[i].cusOrderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' &&
+              arr[i].payStatusNo === 'ORDER_CUS_PAY_STATUS_PART_PAID'
+            ) {
+              // 部分支付的订单状态为办理中
+              arr[i].statusName = '办理中'
+            } else {
+              arr[i].statusName = this.getStatusName(arr[i].orderStatusNo)
+            }
           }
           if (this.page === 1) {
             this.list = arr
@@ -328,7 +343,7 @@ export default {
   }
   .page-list {
     padding-bottom: 140px;
-    margin-top: 108px;
+    margin-top: 88px;
     height: calc(100vh - 200px);
     overflow-y: scroll;
   }
@@ -350,7 +365,7 @@ export default {
     height: 29px;
     font-size: 30px;
     font-family: PingFang SC;
-    font-weight: 600;
+    font-weight: bold;
     color: #1a1a1a;
     text-align: center;
   }

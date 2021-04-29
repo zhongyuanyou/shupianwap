@@ -89,8 +89,8 @@ export default {
       const { itemData } = this
       const mdData = {}
       if (itemData) {
-        mdData.commodity_level_1 = itemData.parentClassCode.split(',')[0] // 1级分类
-        mdData.commodity_level_2 = itemData.parentClassCode.split(',')[1] // 2级分类
+        mdData.commodity_level_1 = itemData.parentClassCode.split(',')[0] || '' // 1级分类
+        mdData.commodity_level_2 = itemData.parentClassCode.split(',')[1] || '' // 2级分类
         mdData.n_now_price = itemData.referencePrice // 商品售价
         mdData.commodity_number = itemData.productNo // 商品编号
         mdData.commodity_name = this.getGoodsName() // 商品名

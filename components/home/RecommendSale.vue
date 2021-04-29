@@ -3,6 +3,7 @@
     <sp-sticky
       ref="tabCurveRef"
       :offset-top="searchDomHeight"
+      class="top"
       @scroll="scrollHandle"
     >
       <div class="tab-curve" :class="[isFixed ? 'fixed-tab' : '']">
@@ -16,6 +17,12 @@
             <span :class="[index === curentItem ? 'tab-curve-active' : '']">{{
               item.name
             }}</span>
+            <div
+              v-if="index === curentItem ? true : false"
+              class="tab-curve-image"
+            >
+              <img :src="imgUrl" alt="" />
+            </div>
           </li>
         </ul>
       </div>
@@ -73,7 +80,14 @@
                 <p class="goods-name">
                   {{ item.name }}
                 </p>
-                <p v-if="item.tag" class="goods-tag">
+                <p
+                  v-if="
+                    (item.tag && item.tag.length) ||
+                    (item.salesGoodsSubVos &&
+                      item.salesGoodsSubVos.length > 1) > 0
+                  "
+                  class="goods-tag"
+                >
                   <span
                     v-if="
                       item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
@@ -170,19 +184,17 @@ export default {
       curentItem: 0,
       searchDomHeight: 0,
       tabList: [],
+      imgUrl: 'https://cdn.shupian.cn/sp-pt/wap/7jm4ttjg3780000.png',
       params: {
         userId: '', // 用户id
         deviceId: '', // 设备ID（用户唯一标识） 0022ef1a-f685-469a-93a8-5409892207a2
         areaCode: '', // 区域编码
         sceneId: 'app-mainye-01', // 场景ID
-        maxsize: 120, // 要求推荐产品的数量
         platform: 'APP', // 平台（app,m,pc）
-        formatId: '', // 产品类别
         page: {
           pageNo: 1,
           pageSize: 10,
         },
-        storeId: '', // 商户id
         productType: 'PRO_CLASS_TYPE_SALES',
       },
       tabBtn: [],
@@ -206,7 +218,7 @@ export default {
     this.getTabData()
     try {
       this.searchDomHeight =
-        this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
+        this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 30 // 获取吸顶头部搜索栏的高度
       this.$parent.$refs.homeRef.addEventListener('scroll', this.handleScroll) // 监听滚动
     } catch (error) {
       console.log(error)
@@ -255,7 +267,8 @@ export default {
       this.isFixed = data.isFixed
     },
     selectItem(item, index) {
-      this.params.formatId = item.ext3
+      // this.params.formatId = item.ext3
+      this.params.formatIdOne = item.ext3
       this.$refs.recomRef.swipeTo(index)
       this.findRecomList(index)
     },
@@ -460,8 +473,8 @@ export default {
   overflow: hidden;
   .goods-lable-img {
     position: relative;
-    width: 180px;
-    height: 180px;
+    width: 220px;
+    height: 220px;
     border-radius: 8px;
     overflow: hidden;
     margin-right: 22px;
@@ -504,12 +517,11 @@ export default {
     display: flex;
     flex-direction: column;
     .goods-name {
-      font-size: 28px;
+      font-size: 32px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #222222;
-      line-height: 36px;
-      margin-top: -3px;
+      line-height: 42px;
       .textOverflow(2);
       .pro-lable {
         display: inline-block;
@@ -536,7 +548,7 @@ export default {
       }
     }
     .goods-tag {
-      margin: 4px 0 4px 0;
+      margin-top: 12px;
       .textOverflow(1);
       .tag-item {
         display: inline-block;
@@ -549,12 +561,13 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #5c7499;
-        margin-right: 10px;
+        // margin-right: 10px;
       }
       .tag-tc {
         background: #fc4e41;
         border-radius: 4px;
         color: white;
+        font-weight: 700;
       }
     }
     .goods-slogan {
@@ -562,6 +575,7 @@ export default {
     }
     .goods-slogan1 {
       .textOverflow(1);
+      margin-top: 16px;
     }
     .goods-slogan2 {
       .textOverflow(2);
@@ -616,9 +630,10 @@ export default {
     .goods-price {
       flex: 1;
       display: flex;
-      line-height: 18px;
+      line-height: 36px;
       align-items: flex-end;
       vertical-align: middle;
+      // margin-bottom: 5px;
       .sales-proce {
         display: flex;
         align-items: baseline;
@@ -689,6 +704,17 @@ export default {
 .tab-curve {
   width: 100%;
   font-size: 24px;
+  // position: relative;
+  &-image {
+    img {
+      width: 60px;
+      height: 12px;
+      float: right;
+      position: absolute;
+      bottom: 16px;
+      right: 0;
+    }
+  }
   &-list {
     display: flex;
     flex-wrap: nowrap;
@@ -707,11 +733,11 @@ export default {
       white-space: nowrap;
       -webkit-tap-highlight-color: transparent;
       &:last-child {
-        padding-right: 40px;
+        // padding-right: 40px;
       }
       span {
         font-family: PingFang SC;
-        font-weight: bold;
+        // font-weight: bold;
         color: rgba(153, 153, 153, 1);
         font-size: 32px;
         line-height: 32px;
@@ -733,5 +759,10 @@ export default {
 .fixed-tab {
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.04);
   background: white;
+}
+.top {
+  /deep/.sp-sticky {
+    z-index: 1;
+  }
 }
 </style>

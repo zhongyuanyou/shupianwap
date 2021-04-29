@@ -46,6 +46,7 @@ export default {
       filters: [],
       selectValue: 0,
       dropdownContentMaxHeight: 0,
+      classCode: this.$route.query.classCode,
     }
   },
   watch: {
@@ -70,7 +71,6 @@ export default {
   methods: {
     resetAllSelect() {
       // 重置所有筛选项
-      // console.log(this.$refs)
       // console.log(Object.keys(this.$refs))
       Object.keys(this.$refs).forEach((item) => {
         // console.log(this.$refs[item])
@@ -79,7 +79,6 @@ export default {
       this.$emit('emitVue', this, 'jyFilter')
     },
     getFilterHandle(data, filrerName) {
-      console.log(data, filrerName)
       this.$emit('activeItem', data, filrerName)
     },
     resetFilterData(filter) {
