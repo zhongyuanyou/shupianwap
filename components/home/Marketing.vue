@@ -3,10 +3,10 @@
     <div class="inner">
       <div v-for="(item, index) in list" :key="index" class="sp-item">
         <p v-if="index === 1" class="sp-goods-title">
-          {{
+          <span>{{
             (bdData.length && bdData[0].materialList[0].materialName) ||
             item.productName
-          }}
+          }}</span>
           <span v-if="item.titleIcon" class="title-bar">
             {{ item.titleIcon }}
           </span>
@@ -188,13 +188,16 @@ export default {
       background: #4974f5;
       color: white;
       font-size: 24px;
-      padding: 4px 8px 6px 8px;
+      padding: 6px;
       transform: scale(0.9);
       transform-origin: 0 50%;
       border-radius: 4px;
       line-height: 24px;
       position: relative;
       margin-left: 6px;
+      display: flex;
+      align-items: center;
+      bottom: 3px;
       &::before {
         position: absolute;
         content: '';
