@@ -19,7 +19,7 @@
         </p>
       </div>
       <div v-if="item.contentImageUrl" class="right">
-        <sp-image :src="item.contentImageUrl" />
+        <sp-image :src="item.contentImageUrl.split(',')[0]" />
       </div>
     </div>
   </div>

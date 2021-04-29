@@ -147,7 +147,18 @@ export default {
         )
         .then((res) => {
           this.orderItem = res
-          console.log(this.orderItem)
+          if (this.orderItem.conctractFirstInfo) {
+            this.partyName =
+              this.orderItem.conctractFirstInfo.contractFirstName || ''
+            this.userName =
+              this.orderItem.conctractFirstInfo.contractFirstContacts || ''
+            this.phone =
+              this.orderItem.conctractFirstInfo.contractFirstPhone || ''
+            this.email =
+              this.orderItem.conctractFirstInfo.contractFirstEmail || ''
+            this.address =
+              this.orderItem.conctractFirstInfo.contractFirstAddr || ''
+          }
         })
         .catch((err) => {
           this.loading = false
