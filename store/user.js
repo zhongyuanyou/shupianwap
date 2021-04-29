@@ -7,6 +7,7 @@
  * @FilePath: /chips-wap/client/store/user.js
  */
 
+import Vue from 'vue'
 import { auth } from '@/api'
 import { AVATAR } from '~/config/constant'
 export const state = () => ({
@@ -25,10 +26,12 @@ export const mutations = {
     this.$cookies.set('token', String(data.token), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
+      domain: Vue.$domain,
     })
     this.$cookies.set('userId', String(data.userId), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
+      domain: Vue.$domain,
     })
     state.userInfo = data
     state.token = String(data.token)
