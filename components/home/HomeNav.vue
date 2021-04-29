@@ -246,7 +246,7 @@ export default {
     overflow-x: auto;
     overflow-y: hidden;
     padding-top: 20px;
-    padding-left: 16px;
+    // padding-left: 16px;
     -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
       /*滚动条整体样式*/
@@ -259,7 +259,7 @@ export default {
       flex-flow: column wrap;
       align-content: flex-start;
       height: 264px;
-      padding-right: 16px;
+      // padding-right: 16px;
       li {
         height: 92px;
         margin: 20px 0;

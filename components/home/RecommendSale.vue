@@ -567,7 +567,7 @@ export default {
     }
     .goods-slogan1 {
       .textOverflow(1);
-      margin-top: 14px;
+      margin-top: 16px;
     }
     .goods-slogan2 {
       .textOverflow(2);
