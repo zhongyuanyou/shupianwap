@@ -190,6 +190,7 @@ export default {
       overflow: hidden;
     }
     .span-2 {
+      margin-left: 60px;
       color: #ffffff;
       height: 36px;
       font-size: 36px;
@@ -197,9 +198,6 @@ export default {
       font-weight: bold;
       color: #ffffff;
       line-height: 36px;
-      position: absolute;
-      top: 50px;
-      left: 68px;
     }
     .span-3 {
       color: #dfdfdf;
@@ -208,9 +206,6 @@ export default {
       font-family: PingFangSC-Semibold, PingFang SC;
       font-weight: bold;
       line-height: 36px;
-      position: absolute;
-      top: 50px;
-      left: 152px;
     }
     .span-4 {
       height: 36px;
@@ -220,16 +215,13 @@ export default {
       color: #ffffff;
       line-height: 36px;
       opacity: 0.6;
-      position: absolute;
-      top: 50px;
-      left: 175px;
     }
     .btn-city {
       position: absolute;
       right: 10px;
       color: white;
       padding-left: 30px;
-      top: 50px;
+      top: 49px;
       font-size: 30px;
       display: flex;
       align-items: center;
@@ -322,13 +314,8 @@ export default {
     }
   }
   .serch-area {
-    background: #fff !important;
-    padding: 12px 20px 12px 20px;
-    /deep/.input-box {
-      height: 100px;
+    .input-box {
       background: #f5f5f5;
-      border-radius: 24px;
-      border: none;
     }
   }
 }
