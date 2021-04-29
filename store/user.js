@@ -9,7 +9,8 @@
 
 import Vue from 'vue'
 import { auth } from '@/api'
-import { AVATAR } from '~/config/constant'
+import { AVATAR, DOMAIN } from '~/config/constant'
+
 export const state = () => ({
   userInfo: {},
   token: '',
@@ -26,12 +27,12 @@ export const mutations = {
     this.$cookies.set('token', String(data.token), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: Vue.$domain,
+      domain: DOMAIN,
     })
     this.$cookies.set('userId', String(data.userId), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: Vue.$domain,
+      domain: DOMAIN,
     })
     this.$cookies.set('userType', String(data.userType), {
       path: '/',
