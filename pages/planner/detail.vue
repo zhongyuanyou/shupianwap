@@ -840,7 +840,7 @@ export default {
     }
   }
   .footer {
-    /deep/.sp-bottombar {
+    ::v-deep.sp-bottombar {
       z-index: 100;
       .sp-button--info {
         background-color: #24ae68;
@@ -852,7 +852,7 @@ export default {
     padding: 40px;
   }
   &-toast {
-    /deep/.my-toast__content {
+    ::v-deep.my-toast__content {
       transform: translateY(-100%);
     }
   }

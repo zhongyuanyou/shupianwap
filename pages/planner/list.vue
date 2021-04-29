@@ -722,12 +722,12 @@ export default {
           }
         }
       }
-      /deep/.sticky-dropdown {
+      ::v-deep.sticky-dropdown {
         .sp-sticky {
           padding-top: 0;
         }
       }
-      /deep/.sp-dropdown-menu {
+      ::v-deep.sp-dropdown-menu {
         position: relative;
         &__bar {
           padding: 0 40px;

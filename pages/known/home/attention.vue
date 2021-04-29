@@ -165,7 +165,7 @@ export default {
   height: 100%;
   background-color: #f8f8f8;
 
-  /deep/ .sp-top-nav-bar {
+  ::v-deep .sp-top-nav-bar {
     height: 88px;
   }
 
@@ -179,7 +179,7 @@ export default {
     box-shadow: 0px 1px 0px 0px #f4f4f4;
   }
 
-  /deep/ .sp-tabs__line {
+  ::v-deep .sp-tabs__line {
     width: 28px;
     height: 6px;
     border-radius: 3px;

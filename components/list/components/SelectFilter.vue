@@ -220,7 +220,7 @@ export default {
   overflow-x: hidden;
   overflow-y: scroll;
 }
-/deep/.sp-dropdown-item__content {
+::v-deep.sp-dropdown-item__content {
   max-height: 100%;
 }
 </style>

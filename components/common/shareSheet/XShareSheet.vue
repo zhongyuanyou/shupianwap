@@ -81,7 +81,7 @@ export default {
 
 <style lang="less">
 .x-share {
-  /deep/.sp-share-sheet__options {
+  ::v-deep.sp-share-sheet__options {
     display: flex;
     padding: 61px 76px;
     &:nth-child(n + 2) {

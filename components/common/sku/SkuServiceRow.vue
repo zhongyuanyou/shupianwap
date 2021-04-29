@@ -185,7 +185,7 @@ export default {
     margin: 30px 0 0 0;
     font-size: 12px;
   }
-  /deep/.sku-service-row-item {
+  ::v-deep.sku-service-row-item {
     margin: 0 16px 16px 0;
   }
 

@@ -237,7 +237,7 @@ export default {
 .planners {
   padding: 0 40px 64px 40px;
   /*border-bottom: 1px solid #f4f4f4;*/
-  /deep/.sp-skeleton {
+  ::v-deep.sp-skeleton {
     margin-top: 48px;
   }
   .icon {
@@ -351,7 +351,7 @@ export default {
       justify-content: flex-end;
       align-items: center;
       flex-direction: row;
-      /deep/ .sp-button {
+      ::v-deep .sp-button {
         border: none;
       }
       .contact-btn {

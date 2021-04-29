@@ -461,10 +461,10 @@ export default {
     }
   }
 }
-/deep/ .sp-skeleton {
+::v-deep .sp-skeleton {
   padding: 32px 0;
 }
-/deep/ .sp-skeleton__content {
+::v-deep .sp-skeleton__content {
   padding-top: 0;
 }
 .goods-item {
@@ -763,7 +763,7 @@ export default {
   background: white;
 }
 .top {
-  /deep/.sp-sticky {
+  ::v-deep.sp-sticky {
     z-index: 1;
   }
 }

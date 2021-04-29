@@ -168,7 +168,7 @@ export default {
 <style lang="less" scoped>
 .search {
   min-height: 100vh;
-  /deep/.search-content {
+  ::v-deep.search-content {
     height: 88px;
     padding: 0 24px;
     .input-box {

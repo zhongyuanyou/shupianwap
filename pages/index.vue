@@ -392,7 +392,7 @@ export default {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   background: #f5f5f5;
-  /deep/ .sp-sticky--fixed {
+  ::v-deep .sp-sticky--fixed {
     max-width: 1000px;
     width: 100%;
     left: 50%;

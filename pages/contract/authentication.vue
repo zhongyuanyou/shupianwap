@@ -177,10 +177,10 @@ export default {
     align-self: center;
   }
   > .box {
-    /deep/.sp-cell--required::before {
+    ::v-deep.sp-cell--required::before {
       display: none;
     }
-    /deep/.sp-cell {
+    ::v-deep.sp-cell {
       span {
         font-weight: bold;
       }

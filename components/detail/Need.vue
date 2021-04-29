@@ -89,7 +89,7 @@ export default {
 .need {
   background-color: #fff;
   padding: 48px 40px 0 40px;
-  /deep/.sp-skeleton {
+  ::v-deep.sp-skeleton {
     margin-top: 64px;
   }
   &_title {

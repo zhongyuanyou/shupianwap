@@ -416,18 +416,18 @@ export default {
   background-color: #f8f8f8;
   -webkit-overflow-scrolling: auto;
   overscroll-behavior-y: none;
-  /deep/ .sp-field__label {
+  ::v-deep .sp-field__label {
     width: 150px;
   }
-  /deep/ .sp-field__body {
+  ::v-deep .sp-field__body {
     > input::-webkit-input-placeholder {
       color: #cccccc;
     }
   }
-  /deep/ .sp-bottombar {
+  ::v-deep .sp-bottombar {
     z-index: 999;
   }
-  /deep/ .sp-bottombar-button {
+  ::v-deep .sp-bottombar-button {
     font-size: 32px;
     font-weight: bold;
   }
@@ -441,7 +441,7 @@ export default {
     color: #1a1a1a;
     margin-right: 40px;
   }
-  /deep/ .sp-top-nav-bar {
+  ::v-deep .sp-top-nav-bar {
     height: 88px;
   }
   &_con {
@@ -456,20 +456,20 @@ export default {
       margin-top: 24px;
       background-color: #fff;
       width: 100%;
-      /deep/ .sp-cell {
+      ::v-deep .sp-cell {
         height: 120px;
       }
-      /deep/ .sp-cell__title {
+      ::v-deep .sp-cell__title {
         font-size: 32px;
         font-family: PingFang SC;
         font-weight: bold;
         color: #1a1a1a;
         line-height: 44px;
       }
-      /deep/.sp-field__body {
+      ::v-deep.sp-field__body {
         height: 119px;
       }
-      /deep/.sp-field__control {
+      ::v-deep.sp-field__control {
         font-size: 32px;
         font-family: PingFang SC;
         font-weight: 400;
@@ -534,7 +534,7 @@ export default {
     padding: 0 40px;
     justify-content: center;
     align-items: center;
-    /deep/ .sp-button {
+    ::v-deep .sp-button {
       width: 100%;
     }
   }

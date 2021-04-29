@@ -220,7 +220,7 @@ export default {
   padding: 41px 40px 56px 40px;
   background-color: #fff;
   border-bottom: 24px solid #f8f8f8;
-  /deep/.sp-skeleton {
+  ::v-deep.sp-skeleton {
     margin-top: 48px;
   }
   .icon {
@@ -332,7 +332,7 @@ export default {
       justify-content: flex-end;
       align-items: center;
       flex-direction: row;
-      /deep/ .sp-button {
+      ::v-deep .sp-button {
         border: none;
       }
       .contact-btn {

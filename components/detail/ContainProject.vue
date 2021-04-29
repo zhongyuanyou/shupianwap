@@ -80,7 +80,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/deep/.sp-safeguard__title {
+::v-deep.sp-safeguard__title {
   max-width: none;
 }
 .container {

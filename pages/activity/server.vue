@@ -470,7 +470,7 @@ export default {
     no-repeat;
   background-size: 100% auto;
   background-position-y: 118px;
-  /deep/.fixed-head {
+  ::v-deep.fixed-head {
     height: 1.1rem !important;
     .my-head {
       max-width: 812px;

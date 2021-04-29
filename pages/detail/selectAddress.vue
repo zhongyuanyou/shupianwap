@@ -454,12 +454,12 @@ export default {
   &__search {
     margin-top: 16px;
     &-input {
-      /deep/.sp-field__control {
+      ::v-deep.sp-field__control {
         font-size: 30px;
       }
     }
   }
-  /deep/.sp-top-nav-bar {
+  ::v-deep.sp-top-nav-bar {
     &__title {
       flex: 1;
       overflow: hidden;
@@ -484,7 +484,7 @@ export default {
       &::after {
         border-color: #f4f4f4;
       }
-      /deep/.dropdown__menu-bar--active {
+      ::v-deep.dropdown__menu-bar--active {
         font-size: 26px;
         font-family: PingFang SC;
         font-weight: bold;
@@ -493,7 +493,7 @@ export default {
           border-color: transparent transparent #4974f5 #4974f5;
         }
       }
-      /deep/.sp-dropdown-menu {
+      ::v-deep.sp-dropdown-menu {
         &__bar {
           box-shadow: none;
           position: relative;

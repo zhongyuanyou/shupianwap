@@ -198,12 +198,12 @@ export default {
 .found {
   width: 100%;
   padding-bottom: 98px;
-  /deep/ .sp-top-nav-bar {
+  ::v-deep .sp-top-nav-bar {
     padding-top: constant(safe-area-inset-top);
     padding-top: env(safe-area-inset-top);
     z-index: 5;
   }
-  /deep/ .sp-tab {
+  ::v-deep .sp-tab {
     font-size: 32px;
     color: #222222;
     font-weight: bold;
@@ -211,17 +211,17 @@ export default {
       padding-left: 0;
     }
   }
-  /deep/ .sp-tabs__nav--complete {
+  ::v-deep .sp-tabs__nav--complete {
     padding-left: 0;
   }
-  /deep/ .sp-tab--active {
+  ::v-deep .sp-tab--active {
     font-size: 40px;
   }
-  /deep/ .sp-tabs__line {
+  ::v-deep .sp-tabs__line {
     width: 32px;
     height: 6px;
   }
-  /deep/ .sp-hairline--bottom::after {
+  ::v-deep .sp-hairline--bottom::after {
     border-bottom: none;
   }
 }

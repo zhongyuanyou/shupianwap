@@ -311,11 +311,11 @@ export default {
     margin-left: 8px;
   }
 }
-/deep/ .fixed-head {
+::v-deep .fixed-head {
   position: absolute !important;
   background: #4974f5 !important;
 }
-/deep/ .my-head {
+::v-deep .my-head {
   background: url('https://cdn.shupian.cn/sp-pt/wap/1ho0s5co5gow000.png')
     no-repeat;
   background-size: 100%;

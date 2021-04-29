@@ -162,7 +162,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-/deep/.sp-popup--bottom.sp-popup--round {
+::v-deep.sp-popup--bottom.sp-popup--round {
   border-radius: 24px 24px 0px 0px;
 }
 .bargaining {
@@ -182,7 +182,7 @@ export default {
     line-height: 34px;
     margin-top: 12px;
   }
-  /deep/input {
+  ::v-deepinput {
     font-size: 28px;
     font-family: PingFang SC;
     font-weight: 400;

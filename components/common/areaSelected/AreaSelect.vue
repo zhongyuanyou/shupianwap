@@ -415,7 +415,7 @@ export default {
     //overflow-x: hidden;
     //-webkit-overflow-scrolling: touch;
     padding: 0;
-    /deep/ .popup_con_bar {
+    ::v-deep .popup_con_bar {
       height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
@@ -427,11 +427,11 @@ export default {
         height: 69px;
         line-height: 74px;
         padding: 0;
-        /deep/ .sp-index-anchor {
+        ::v-deep .sp-index-anchor {
           padding-left: 40px;
         }
       }
-      /deep/ .sp-index-bar__sidebar {
+      ::v-deep .sp-index-bar__sidebar {
         position: absolute;
         transform: translateY(-45%);
         z-index: 999;
