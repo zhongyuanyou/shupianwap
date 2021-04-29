@@ -3,10 +3,10 @@
     <div class="inner">
       <div v-for="(item, index) in list" :key="index" class="sp-item">
         <p v-if="index === 1" class="sp-goods-title">
-          {{
+          <span>{{
             (bdData.length && bdData[0].materialList[0].materialName) ||
             item.productName
-          }}
+          }}</span>
           <span v-if="item.titleIcon" class="title-bar">
             {{ item.titleIcon }}
           </span>
@@ -176,21 +176,28 @@ export default {
   .sp-goods-title {
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
     color: #222222;
     line-height: 32px;
+    margin-bottom: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
     .title-bar {
       display: inline-block;
       width: auto;
       background: #4974f5;
       color: white;
       font-size: 24px;
-      padding: 4px 8px 6px 8px;
+      padding: 6px;
       transform: scale(0.9);
       transform-origin: 0 50%;
       border-radius: 4px;
       line-height: 24px;
       position: relative;
+      margin-left: 6px;
+      display: flex;
+      align-items: center;
+      bottom: 2px;
       &::before {
         position: absolute;
         content: '';
@@ -210,40 +217,45 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(153, 153, 153, 1);
-    line-height: 32px;
+    line-height: 26px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    margin-bottom: 10px;
   }
   .sp-goods-des {
     font-size: 26px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(153, 153, 153, 1);
-    line-height: 32px;
+    line-height: 26px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-  p {
-    margin-bottom: 10px;
-  }
+  // p {
+  //   margin-bottom: 10px;
+  // }
   .imgs {
     width: 315px;
     height: 162px;
     overflow: hidden;
     display: flex;
     justify-content: space-between;
+    position: absolute;
+    bottom: 24px;
     img {
       width: auto;
       border-radius: 12px;
     }
   }
   .bd-imgs {
-    width: 100%;
+    position: absolute;
+    // width: 100%;
     height: 162px;
+    bottom: 28px;
     img {
-      width: 100%;
+      width: 315px;
     }
   }
   .sp-goods-btn {
@@ -256,10 +268,13 @@ export default {
     border-radius: 8px;
     font-size: 24px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: 700;
     border: none;
     color: #4974f5;
     padding: 0 12px;
+    /deep/ .sp-button__text {
+      font-weight: 700;
+    }
   }
   .bd-img {
     width: 100%;

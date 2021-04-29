@@ -79,7 +79,11 @@ export default {
   },
   computed: {
     maxHeight() {
-      return this.orderData.orderSkuList.length * 236
+      const itemHeight =
+        this.cusOrderStatusType === 1 || this.cusOrderStatusType === 4
+          ? '216'
+          : '296'
+      return this.orderData.orderSkuList.length * itemHeight
     },
   },
   methods: {

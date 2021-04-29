@@ -13,11 +13,7 @@
           @click="handleAvatar"
         />
         <p class="txt" @click="handleClickLogin">
-          {{
-            token && info.nickName
-              ? '欢迎你，' + info.nickName || ''
-              : '登录/注册'
-          }}
+          {{ info.nickName ? '欢迎你，' + info.nickName || '' : '登录/注册' }}
         </p>
       </div>
     </div>
@@ -243,9 +239,9 @@ export default {
   },
   computed: {
     ...mapState({
-      userId: (state) => state.user.userInfo.userId,
-      token: (state) => state.user.userInfo.token,
-      userPhone: (state) => state.user.userInfo.userPhone,
+      userId: (state) => state.user.userId,
+      token: (state) => state.user.token,
+      userPhone: (state) => state.user.userPhone,
     }),
     avatar() {
       return GOODSLIST
@@ -300,7 +296,7 @@ export default {
       try {
         const params = {
           // id: this.userId,
-          id: this.userId || this.$cookies.get('userId'),
+          id: this.userId || this.$cookies.get('userId', { path: '/' }),
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false
@@ -376,6 +372,7 @@ export default {
         // 清除cookie中的数据
         this.info.url = ''
         this.userName = ''
+        this.info = {}
         this.$store.dispatch('user/clearUser')
         // localStorage.removeItem('info')
       }

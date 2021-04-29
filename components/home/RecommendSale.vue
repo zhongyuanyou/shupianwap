@@ -3,6 +3,7 @@
     <sp-sticky
       ref="tabCurveRef"
       :offset-top="searchDomHeight"
+      class="top"
       @scroll="scrollHandle"
     >
       <div class="tab-curve" :class="[isFixed ? 'fixed-tab' : '']">
@@ -79,7 +80,14 @@
                 <p class="goods-name">
                   {{ item.name }}
                 </p>
-                <p v-if="item.tag" class="goods-tag">
+                <p
+                  v-if="
+                    (item.tag && item.tag.length) ||
+                    (item.salesGoodsSubVos &&
+                      item.salesGoodsSubVos.length > 1) > 0
+                  "
+                  class="goods-tag"
+                >
                   <span
                     v-if="
                       item.salesGoodsSubVos && item.salesGoodsSubVos.length > 1
@@ -131,13 +139,13 @@
                 </div>
               </div>
             </div>
-            <div
+            <!-- <div
               v-if="!swipItem.goodsList.length && tabBtn.length"
               class="no-data"
             >
               <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
               <p>暂无数据</p>
-            </div>
+            </div> -->
             <Loading-down
               v-if="tabBtn.length"
               v-show="loading || tabBtn[curentItem].noMore"
@@ -210,7 +218,7 @@ export default {
     this.getTabData()
     try {
       this.searchDomHeight =
-        this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
+        this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 30 // 获取吸顶头部搜索栏的高度
       this.$parent.$refs.homeRef.addEventListener('scroll', this.handleScroll) // 监听滚动
     } catch (error) {
       console.log(error)
@@ -465,8 +473,8 @@ export default {
   overflow: hidden;
   .goods-lable-img {
     position: relative;
-    width: 180px;
-    height: 180px;
+    width: 220px;
+    height: 220px;
     border-radius: 8px;
     overflow: hidden;
     margin-right: 22px;
@@ -509,12 +517,11 @@ export default {
     display: flex;
     flex-direction: column;
     .goods-name {
-      font-size: 28px;
+      font-size: 32px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #222222;
-      line-height: 36px;
-      margin-top: -3px;
+      line-height: 42px;
       .textOverflow(2);
       .pro-lable {
         display: inline-block;
@@ -541,7 +548,7 @@ export default {
       }
     }
     .goods-tag {
-      margin: 4px 0 4px 0;
+      margin-top: 12px;
       .textOverflow(1);
       .tag-item {
         display: inline-block;
@@ -554,12 +561,13 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #5c7499;
-        margin-right: 10px;
+        // margin-right: 10px;
       }
       .tag-tc {
         background: #fc4e41;
         border-radius: 4px;
         color: white;
+        font-weight: 700;
       }
     }
     .goods-slogan {
@@ -567,6 +575,7 @@ export default {
     }
     .goods-slogan1 {
       .textOverflow(1);
+      margin-top: 16px;
     }
     .goods-slogan2 {
       .textOverflow(2);
@@ -624,7 +633,7 @@ export default {
       line-height: 36px;
       align-items: flex-end;
       vertical-align: middle;
-      margin-bottom: 5px;
+      // margin-bottom: 5px;
       .sales-proce {
         display: flex;
         align-items: baseline;
@@ -728,7 +737,7 @@ export default {
       }
       span {
         font-family: PingFang SC;
-        font-weight: bold;
+        // font-weight: bold;
         color: rgba(153, 153, 153, 1);
         font-size: 32px;
         line-height: 32px;
@@ -750,5 +759,10 @@ export default {
 .fixed-tab {
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.04);
   background: white;
+}
+.top {
+  /deep/.sp-sticky {
+    z-index: 1;
+  }
 }
 </style>
