@@ -190,14 +190,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/deep/.my-head {
+::v-deep.my-head {
   box-shadow: unset;
 }
 .chooseque {
   background: #fff;
 }
 .main {
-  /deep/.sp-tabs {
+  ::v-deep.sp-tabs {
     .sp-tabs__wrap {
       height: 72px;
       padding-bottom: 8px;

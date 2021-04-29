@@ -735,7 +735,7 @@ export default {
     font-weight: 400;
     color: #555555;
     word-break: break-all;
-    /deep/ img {
+    ::v-deep img {
       width: 100%;
       height: auto;
     }
@@ -749,7 +749,7 @@ export default {
     margin-top: 40px;
   }
 }
-/deep/.sp-bottombar {
+::v-deep.sp-bottombar {
   display: flex;
   align-items: center;
   justify-content: space-between;

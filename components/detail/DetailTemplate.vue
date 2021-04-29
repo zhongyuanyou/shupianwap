@@ -490,7 +490,7 @@ export default {
 
 <style lang="less" scoped>
 .scroTopStyle {
-  /deep/.sp-sticky {
+  ::v-deep.sp-sticky {
     border: 1px solid #f4f4f4;
     .sp-top-nav-bar {
       background-color: #fff !important;
@@ -507,7 +507,7 @@ export default {
   overflow: hidden;
   background-color: #f8f8f8;
   /*padding-bottom: 144px;*/
-  /deep/ .sp-hairline--bottom::after {
+  ::v-deep .sp-hairline--bottom::after {
     border-bottom: none;
   }
 }
@@ -522,8 +522,8 @@ export default {
     margin-top: 15px;
   }
 }
-/deep/ .sp-top-nav-bar__left,
-/deep/ .sp-top-nav-bar__right {
+::v-deep .sp-top-nav-bar__left,
+::v-deep .sp-top-nav-bar__right {
   font-weight: initial;
 }
 </style>

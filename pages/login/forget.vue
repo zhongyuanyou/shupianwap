@@ -262,7 +262,7 @@ export default {
 .forget {
   height: 100%;
   .head {
-    /deep/.sp-top-nav-bar {
+    ::v-deep.sp-top-nav-bar {
       &__left,
       &__right {
         position: absolute;
@@ -287,7 +287,7 @@ export default {
         }
       }
 
-      /deep/.sp-cell {
+      ::v-deep.sp-cell {
         display: flex;
         align-items: center;
         height: 100px;
@@ -321,7 +321,7 @@ export default {
           border-radius: 12px;
           font-weight: bold;
           color: #ffffff;
-          /deep/.sp-button__text {
+          ::v-deep.sp-button__text {
             font-size: 32px;
           }
         }
@@ -344,7 +344,7 @@ export default {
       height: 25px;
       font-weight: 400;
       color: @subtitle-text-color;
-      /deep/.sp-button__text {
+      ::v-deep.sp-button__text {
         font-size: 26px;
         line-height: 1em;
       }

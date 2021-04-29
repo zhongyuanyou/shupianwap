@@ -409,11 +409,11 @@ export default {
 <style lang="less" scoped>
 .serviceDetails {
   background: #f8f8f8;
-  /deep/ .sp-hairline--bottom::after {
+  ::v-deep .sp-hairline--bottom::after {
     border-bottom: none;
   }
   .scroTopStyle {
-    /deep/.sp-sticky {
+    ::v-deep.sp-sticky {
       border: 1px solid #f4f4f4;
       .sp-top-nav-bar {
         background-color: #fff !important;
@@ -425,7 +425,7 @@ export default {
   }
   .planners-box {
     margin-bottom: 24px;
-    /deep/.planners {
+    ::v-deep.planners {
       border-bottom: none;
       padding-bottom: 64px;
     }
@@ -480,8 +480,8 @@ export default {
       }
     }
   }
-  /deep/ .sp-top-nav-bar__left,
-  /deep/ .sp-top-nav-bar__right {
+  ::v-deep .sp-top-nav-bar__left,
+  ::v-deep .sp-top-nav-bar__right {
     font-weight: initial;
   }
 }

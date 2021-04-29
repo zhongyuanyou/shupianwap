@@ -166,24 +166,24 @@ export default {
   font-weight: bold;
   color: #222222;
 }
-/deep/ .sp-work-tab__text {
+::v-deep .sp-work-tab__text {
   flex-shrink: 0;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: bold;
   color: #999999;
 }
-/deep/ .sp-work-tabs__line {
+::v-deep .sp-work-tabs__line {
   width: 24px;
   height: 6px;
   background: #4974f5;
   border-radius: 3px;
 }
-/deep/ .fixed-head {
+::v-deep .fixed-head {
   position: absolute !important;
   background: #4974f5 !important;
 }
-/deep/ .my-head {
+::v-deep .my-head {
   background: url('https://cdn.shupian.cn/sp-pt/wap/af5pg3et36g0000.png')
     no-repeat;
   background-size: 100%;

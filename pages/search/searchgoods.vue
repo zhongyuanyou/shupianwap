@@ -295,18 +295,18 @@ export default {
   width: 100%;
   height: 100%;
   background: #fff;
-  /deep/.goodsbox {
+  ::v-deep.goodsbox {
     height: calc(100vh - 290px);
   }
   .search-content {
     padding: 16px 32px;
     &.has-input {
-      /deep/.input-box .imitate-input {
+      ::v-deep.input-box .imitate-input {
         color: #1a1a1a;
       }
     }
   }
-  /deep/.goods-item {
+  ::v-deep.goods-item {
     padding: 32px 0;
     width: 96%;
     margin: 0 40px;
@@ -343,11 +343,11 @@ export default {
     }
   }
   .jygood {
-    /deep/.sp-dropdown-menu {
+    ::v-deep.sp-dropdown-menu {
       background: #fff;
       border: none;
     }
-    // /deep/.goods-item {
+    // ::v-deep.goods-item {
     //   margin: 0.2rem auto 0 auto;
     //   background: #fff;
     //   border-radius: 0.24rem;
@@ -360,7 +360,7 @@ export default {
   .info {
     margin-left: 41px;
   }
-  /deep/.sp-work-tabs__nav .sp-work-tab {
+  ::v-deep.sp-work-tabs__nav .sp-work-tab {
     font-size: 32px;
     font-family: PingFang SC;
     font-weight: 400;
@@ -372,7 +372,7 @@ export default {
       color: #4974f5;
     }
   }
-  /deep/.spiconfont-sear_ic_sear {
+  ::v-deep.spiconfont-sear_ic_sear {
     margin-left: 24px !important;
   }
   .search-page {

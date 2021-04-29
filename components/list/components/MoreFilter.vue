@@ -377,7 +377,7 @@ export default {
     }
   }
 }
-/deep/.sp-dropdown-item__content {
+::v-deep.sp-dropdown-item__content {
   max-height: 100%;
 }
 </style>

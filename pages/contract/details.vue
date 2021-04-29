@@ -137,18 +137,18 @@ export default {
       height: 400px;
       background: #ffffff;
       padding-top: 31px;
-      /deep/.sp-cell {
+      ::v-deep.sp-cell {
         padding-top: 0;
         padding-bottom: 31px;
       }
-      /deep/.title {
+      ::v-deep.title {
         width: 150px;
         flex: auto;
         font-size: 28px;
         font-weight: 400;
         color: #999999;
       }
-      /deep/.val {
+      ::v-deep.val {
         width: calc(100% - 150px);
         flex: auto;
         text-align: left;
@@ -156,7 +156,7 @@ export default {
         font-weight: 400;
         color: #222222;
       }
-      /deep/.sp-cell::after {
+      ::v-deep.sp-cell::after {
         display: none;
       }
     }
@@ -174,14 +174,14 @@ export default {
         margin-top: 24px;
         border-bottom: 1px solid #f4f4f4;
         position: relative;
-        /deep/.title {
+        ::v-deep.title {
           width: 150px;
           flex: auto;
           font-size: 28px;
           font-weight: 400;
           color: #999999;
         }
-        /deep/.val {
+        ::v-deep.val {
           width: calc(100% - 150px);
           flex: auto;
           text-align: left;
@@ -189,13 +189,13 @@ export default {
           font-weight: 400;
           color: #222222;
         }
-        /deep/.sp-cell::after {
+        ::v-deep.sp-cell::after {
           display: none;
         }
-        /deep/.sp-cell {
+        ::v-deep.sp-cell {
           padding: 0 0 31px 0;
         }
-        /deep/.sp-hairline--top-bottom::after,
+        ::v-deep.sp-hairline--top-bottom::after,
         .sp-hairline-unset--top-bottom::after {
           display: none;
         }

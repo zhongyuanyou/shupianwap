@@ -171,19 +171,19 @@ export default {
     color: #999999;
   }
 }
-/deep/.sp-cell {
+::v-deep.sp-cell {
   padding: 25px 0px;
   margin-top: 32px;
-  /deep/&::after {
+  ::v-deep&::after {
     left: 0px;
     width: 100%;
     border-bottom: 1px solid #eee;
   }
-  /deep/.sp-field__value {
+  ::v-deep.sp-field__value {
     height: 45px;
   }
-  /deep/&:last-child {
-    /deep/&::after {
+  ::v-deep&:last-child {
+    ::v-deep&::after {
       display: initial;
     }
   }

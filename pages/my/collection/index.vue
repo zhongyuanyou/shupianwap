@@ -191,7 +191,7 @@ export default {
     background-color: #ffffff;
   }
 
-  /deep/ .sp-tabs__line {
+  ::v-deep .sp-tabs__line {
     width: 32px;
     height: 4px;
     border-radius: 2px;

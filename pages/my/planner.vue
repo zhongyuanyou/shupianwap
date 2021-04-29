@@ -361,7 +361,7 @@ export default {
     -webkit-overflow-scrolling: touch;
 
     padding: 0;
-    /deep/.sp-cell {
+    ::v-deep.sp-cell {
       padding: 40px;
     }
     .item {

@@ -43,7 +43,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/deep/.my-head {
+::v-deep.my-head {
   box-shadow: unset !important;
 }
 

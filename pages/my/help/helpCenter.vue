@@ -207,15 +207,15 @@ export default {
 </script>
 <style lang="less" scoped>
 .wrapper {
-  /deep/ .sp-field__control {
+  ::v-deep .sp-field__control {
     transform: translateY(2px);
   }
-  /deep/ .sp-field__control {
+  ::v-deep .sp-field__control {
     &::placeholder {
       color: #cccccc !important;
     }
   }
-  /deep/ .sp-hairline--top-bottom {
+  ::v-deep .sp-hairline--top-bottom {
     &[class*='sp-hairline']::after {
       border: none;
     }

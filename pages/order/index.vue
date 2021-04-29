@@ -321,7 +321,7 @@ export default {
 .order-page {
   min-height: 100%;
   background: #f5f5f5;
-  /deep/ .top-nav {
+  ::v-deep .top-nav {
     position: fixed;
     width: 100%;
     left: 0;

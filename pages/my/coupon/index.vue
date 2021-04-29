@@ -377,10 +377,10 @@ export default {
     }
   }
 }
-/deep/ .sp-tabs__line {
+::v-deep .sp-tabs__line {
   width: 64px;
 }
-/deep/ .sp-tab--active {
+::v-deep .sp-tab--active {
   font-size: 28px;
   font-family: PingFang SC;
   font-weight: bold;

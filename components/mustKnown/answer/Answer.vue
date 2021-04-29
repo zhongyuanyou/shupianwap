@@ -128,7 +128,7 @@ export default {
 .list {
   background: #fff;
 }
-/deep/ .sp-cell {
+::v-deep .sp-cell {
   width: 686px;
   margin: 0 auto;
   padding: 40px 0;
@@ -146,22 +146,22 @@ export default {
     transform: scaleY(0.6);
   }
 }
-/deep/ .sp-tabs__wrap {
+::v-deep .sp-tabs__wrap {
   height: 80px;
 }
-/deep/ .sp-tab {
+::v-deep .sp-tab {
   font-size: 30px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 400;
   color: #999999;
 }
-/deep/ .sp-tab--active {
+::v-deep .sp-tab--active {
   font-size: 30px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: bold;
   color: #222222;
 }
-/deep/ .sp-tabs__line {
+::v-deep .sp-tabs__line {
   width: 28px;
   height: 3px;
   background: #4974f5;

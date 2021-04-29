@@ -115,7 +115,7 @@ export default {
   &::after {
     display: none;
   }
-  /deep/.sp-cell__value {
+  ::v-deep.sp-cell__value {
     flex: 30px 0 0;
     .sp-field__control--custom {
       min-height: auto;

@@ -205,10 +205,10 @@ export default {
   background: #fff;
   .bottom_box {
     background-color: #f8f8f8;
-    /deep/ .sp-tabs {
+    ::v-deep .sp-tabs {
       border-bottom: 1px solid #f4f4f4;
     }
-    /deep/ .sp-tab {
+    ::v-deep .sp-tab {
       font-size: 30px;
     }
     .sp-tab--active {

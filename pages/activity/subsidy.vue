@@ -296,7 +296,7 @@ export default {
   .container-advice {
     width: 750px;
     padding: 290px 0 32px 0;
-    /deep/.sp-sticky--fixed {
+    ::v-deep.sp-sticky--fixed {
       max-width: 10rem;
       width: 100%;
       left: 50%;
@@ -384,7 +384,7 @@ export default {
     background-color: #fff;
     width: 100vw;
     width: 100vw;
-    /deep/ .sp-sticky {
+    ::v-deep .sp-sticky {
       border-radius: 24px 24px 0 0;
       background-color: #fff;
       width: 100%;
