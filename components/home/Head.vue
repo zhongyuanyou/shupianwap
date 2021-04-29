@@ -1,5 +1,8 @@
 <template>
-  <div class="page-head">
+  <div
+    class="page-head"
+    :class="fiexdBannerData.length ? 'page-head2' : 'page-head1'"
+  >
     <div
       class="bg-area"
       :class="fiexdBannerData.length ? 'bg-area2' : 'bg-activity'"
@@ -153,8 +156,8 @@ export default {
 
 <style lang="less">
 .page-head {
+  height: 160px;
   position: relative;
-  height: 660px;
   .search-box {
     position: absolute;
     bottom: 0;
@@ -163,6 +166,9 @@ export default {
     height: 144px;
     border-radius: 24px;
     overflow: hidden;
+    .search-content {
+      background: #f5f5f5 !important;
+    }
   }
   .bg-area {
     background: linear-gradient(rgba(86, 126, 246, 1), rgba(73, 116, 245, 1));
@@ -322,5 +328,11 @@ export default {
       }
     }
   }
+}
+.page-head1 {
+  height: 270px;
+}
+.page-head2 {
+  height: 660px;
 }
 </style>
