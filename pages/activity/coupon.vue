@@ -480,6 +480,7 @@ export default {
       }
     }
     .item-btn {
+      width: 150px;
       font-size: 24px;
       min-width: 132px;
       margin-left: auto;
@@ -490,7 +491,7 @@ export default {
       padding-right: 12px;
       button {
         display: block;
-        min-width: 132px;
+        width: 150px;
         height: 54px;
         font-size: 0.24rem;
         &.my-coupon {
