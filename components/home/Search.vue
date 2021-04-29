@@ -4,7 +4,7 @@
 <template>
   <div
     class="search-content"
-    :style="{ backgroundColor: 'rgba(255,255,255,' + opacity + ')' }"
+    :style="{ backgroundColor: 'rgba(255,255,255,' + 1 + ')' }"
   >
     <slot name="left"></slot>
     <div class="input-box">
@@ -125,7 +125,7 @@ export default {
   align-items: center;
   width: 100%;
   // height: 96px;
-  padding: 32px 40px 40px 32px;
+  padding: 32px 20px 40px 20px;
   // box-sizing: border-box;
   font-size: 24px;
   position: relative;

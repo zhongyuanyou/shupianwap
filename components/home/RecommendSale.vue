@@ -3,6 +3,7 @@
     <sp-sticky
       ref="tabCurveRef"
       :offset-top="searchDomHeight"
+      class="top"
       @scroll="scrollHandle"
     >
       <div class="tab-curve" :class="[isFixed ? 'fixed-tab' : '']">
@@ -210,7 +211,7 @@ export default {
     this.getTabData()
     try {
       this.searchDomHeight =
-        this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 23 // 获取吸顶头部搜索栏的高度
+        this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 30 // 获取吸顶头部搜索栏的高度
       this.$parent.$refs.homeRef.addEventListener('scroll', this.handleScroll) // 监听滚动
     } catch (error) {
       console.log(error)
@@ -751,5 +752,10 @@ export default {
 .fixed-tab {
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.04);
   background: white;
+}
+.top {
+  /deep/.sp-sticky {
+    z-index: 1;
+  }
 }
 </style>
