@@ -40,7 +40,9 @@ export const mutations = {
     state.userInfo = data
     state.token = String(data.token)
     state.userId = String(data.userId)
+    state.userType = String(data.userType || data.type)
     state.userName = String(data.nickName)
+    state.userType = String(data.userType || data.type)
     state.avatar = String(data.avatar || AVATAR)
   },
   CLEAR_USER(state) {

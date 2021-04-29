@@ -40,12 +40,11 @@
     <div class="problem">
       <div class="tag">
         <ul class="box">
-          <li
-            v-for="(item, index) in questionDetails.categoryName"
-            :key="index"
-          >
-            {{ item }}
-          </li>
+          <template v-for="(item, index) in questionDetails.categoryName">
+            <li v-if="item" :key="index">
+              {{ item }}
+            </li>
+          </template>
         </ul>
       </div>
       <h1 ref="title" class="tit">{{ questionDetails.title }}</h1>
