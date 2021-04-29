@@ -43,3 +43,9 @@ export const TERMINAL_CODE = {
   app: 'COMDIC_TERMINAL_APP',
   wap: 'COMDIC_TERMINAL_WAP',
 }
+
+export const DOMAIN = (() => {
+  if (process.client) {
+    return location.href.indexOf('3001') !== -1 ? '/' : 'shupian.cn'
+  }
+})()
