@@ -56,13 +56,13 @@
     <ContainContent />
     <!--E 第三板块 包含服务-->
     <!--S 评论-->
-    <CommentBox id="comment" />
+    <!-- <CommentBox id="comment" /> -->
     <!--E 评论-->
     <!--S 第五板块 推荐规划师-->
     <TcPlanners :im-jump-query="imJumpQuery" :recommend-planner="planners" />
     <!--E 第五板块 推荐规划师-->
     <!--S  精选案例-->
-    <OrderCase></OrderCase>
+    <!-- <OrderCase></OrderCase> -->
     <!--E  精选案例-->
     <!--S 第十板块 服务详情-->
     <ServiceDetail
@@ -127,8 +127,8 @@ export default {
     RelatedRecommend,
     bottomBar,
     MyIcon,
-    CommentBox,
-    OrderCase,
+    // CommentBox,
+    // OrderCase,
   },
   mixins: [imHandle],
   props: {

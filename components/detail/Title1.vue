@@ -24,11 +24,11 @@
     <!--      公司注册是开始创业的第一步，-->
     <!--      根据《中华人民共和国公司法》规定，注册公司时需要依法向注册公司时需要...-->
     <!--    </div>-->
-    <div class="comment" @click="commentfn">
+    <!-- <div class="comment" @click="commentfn">
       <p class="tit">{{ comment.tit }}</p>
       <p class="num">共999+评价</p>
       <sp-icon name="arrow" class="icon" />
-    </div>
+    </div> -->
     <div class="title_bottom">
       <span class="title_bottom_money">{{
         sellingGoodsData.salesPrice !== '0.00'
@@ -51,7 +51,7 @@ export default {
   components: {
     [Image.name]: Image,
     PriceReduction,
-    SpIcon: Icon,
+    // SpIcon: Icon,
   },
   data() {
     return {
