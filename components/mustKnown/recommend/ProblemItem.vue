@@ -41,6 +41,7 @@
         </div>
       </div>
     </sp-cell>
+    <!--
     <div class="bottom" @click="goRecommend">
       到底啦，去推荐看看吧
       <my-icon
@@ -51,7 +52,8 @@
         style="margin-top: 2px"
       ></my-icon>
     </div>
-    <div style="height: 1px"></div>
+    -->
+    <div style="height: 1px; margin-top: 30px"></div>
   </div>
   <!-- </sp-list> -->
 </template>

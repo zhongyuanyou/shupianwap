@@ -21,21 +21,7 @@
       <div v-for="(item, index) in nodeList" :key="index" class="item">
         <span class="node-icon">节点{{ item.batchIndex }}</span>
         <p class="money-area">
-          <span
-            v-if="
-              item.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' && index === 0
-            "
-            class="span1"
-            >定金:</span
-          >
-          <span
-            v-else-if="
-              item.orderPayType === 'PRO_PRE_DEPOSIT_POST_OTHERS' && index === 1
-            "
-            class="span1"
-            >尾款:</span
-          >
-          <span v-else class="span1">全款:</span>
+          <span class="span1">金额:</span>
           <span class="span2">{{ item.money }}</span>
           <span class="span4">元</span>
           <span
