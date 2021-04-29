@@ -7,7 +7,6 @@
  * @FilePath: /chips-wap/client/store/user.js
  */
 
-import Vue from 'vue'
 import { auth } from '@/api'
 import { AVATAR } from '~/config/constant'
 export const state = () => ({
@@ -47,33 +46,43 @@ export const mutations = {
   CLEAR_USER(state) {
     this.$cookies.remove('token', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userId', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('avatar', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userNo', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userName', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userPhone', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('realStatus', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('mainAccountFull', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userNo', {
       path: '/',
+      domain: 'shupian.cn',
     })
     this.$cookies.remove('userType', {
       path: '/',
+      domain: 'shupian.cn',
     })
     state.token = ''
     state.userId = ''
