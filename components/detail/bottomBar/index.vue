@@ -263,7 +263,7 @@ export default {
           productName: this.sellingGoodsData.name, // 产品名称
           productContent: this.sellingGoodsData.salesGoodsOperatings
             .productDescribe, // 产品信息
-          price: this.sellingGoodsData.salesPrice, // 价格
+          price: `${this.sellingGoodsData.salesPrice}元`, // 价格
           forwardAbstract: this.sellingGoodsData.salesGoodsOperatings
             .productDescribe, // 摘要信息，可与显示内容保持一致
           routerId: 'IMRouter_APP_ProductDetail_Service', // 路由ID

@@ -248,8 +248,8 @@ export default {
     },
   },
   mounted() {
-    if (this.userId || this.$cookies.get('token')) {
-      this.userName = this.$cookies.get('userName')
+    if (this.userId || this.$cookies.get('token', { path: '/' })) {
+      this.userName = this.$cookies.get('userName', { path: '/' })
       // 1.先去本地里面找info信息，
       if (localStorage.getItem('info')) {
         this.info = JSON.parse(localStorage.getItem('info'))
@@ -321,7 +321,6 @@ export default {
     async handleClick(val) {
       if (val === 1) {
         const isLogin = await this.judgeLoginMixin()
-
         if (isLogin) {
           this.$router.push('/contract/contractList')
         } else {

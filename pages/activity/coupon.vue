@@ -174,10 +174,10 @@ export default {
       this.$router.back(-1)
     },
     operation_coupon(item) {
-      if (item.status === 1) {
+      if (item.couponStatus === 0) {
         this.setCouponStatus(item)
       } else {
-        this.$router.push('/')
+        Toast('无法领取')
       }
     },
     async setCouponStatus(item) {
@@ -426,8 +426,8 @@ export default {
         font-family: PingFang SC;
         font-weight: bold;
         color: #222222;
-        line-height: 32px;
-        margin: 36px 0 24px 0;
+        line-height: 40px;
+        margin: 30px 0 24px 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

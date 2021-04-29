@@ -117,6 +117,7 @@ export default {
           page: 1,
           limit: 50,
           currentUserId: this.userInfo.userId,
+          orderBy: 'totalBrowseCount=desc;',
         },
         {
           headers: {
