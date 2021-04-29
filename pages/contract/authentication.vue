@@ -137,7 +137,7 @@ export default {
             {
               name: this.userName,
               cardNo: this.idCrad,
-              phone: this.$cookies.get('mainAccountFull'),
+              phone: this.$cookies.get('mainAccountFull', { path: '/' }),
             }
           )
           .then((res) => {

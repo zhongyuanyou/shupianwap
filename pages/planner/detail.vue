@@ -358,7 +358,7 @@ export default {
             plannerId: this.detailData.id,
             customerPhone:
               this.$store.state.user.mainAccountFull ||
-              this.$cookies.get('mainAccountFull'),
+              this.$cookies.get('mainAccountFull', { path: '/' }),
             requireCode: this.requireCode,
             requireName: this.requireName,
             // id: mchUserId,
