@@ -487,6 +487,8 @@ export default {
         align-items: center;
         flex-direction: row;
         margin-top: 7px;
+        overflow: hidden;
+        height: 50px;
         flex-wrap: wrap;
         &__item {
           padding: 5px 10px;
