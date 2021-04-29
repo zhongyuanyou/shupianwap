@@ -197,7 +197,7 @@ export default {
       margin-left: 6px;
       display: flex;
       align-items: center;
-      bottom: 3px;
+      bottom: 2px;
       &::before {
         position: absolute;
         content: '';

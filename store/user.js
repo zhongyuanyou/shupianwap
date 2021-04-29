@@ -34,7 +34,7 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       domain: DOMAIN,
     })
-    this.$cookies.set('userType', String(data.userType), {
+    this.$cookies.set('userType', String(data.userType || data.type), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       domain: Vue.$domain,
