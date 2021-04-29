@@ -86,6 +86,9 @@ export default {
 </script>
 
 <style scoped lang="less">
+.sp-home-title {
+  font-weight: 700;
+}
 .swiper-bn {
   width: 100%;
   height: 231px;

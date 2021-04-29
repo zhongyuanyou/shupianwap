@@ -13,11 +13,7 @@
           @click="handleAvatar"
         />
         <p class="txt" @click="handleClickLogin">
-          {{
-            token && info.nickName
-              ? '欢迎你，' + info.nickName || ''
-              : '登录/注册'
-          }}
+          {{ info.nickName ? '欢迎你，' + info.nickName || '' : '登录/注册' }}
         </p>
       </div>
     </div>

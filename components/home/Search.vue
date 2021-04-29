@@ -124,9 +124,9 @@ export default {
   display: flex;
   align-items: center;
   width: 100%;
-  height: 128px;
-  padding: 16px 40px;
-  box-sizing: border-box;
+  // height: 96px;
+  padding: 32px 40px 40px 32px;
+  // box-sizing: border-box;
   font-size: 24px;
   position: relative;
   z-index: 1;
@@ -135,10 +135,10 @@ export default {
     display: flex;
     align-items: center;
     flex: 1;
-    height: 100%;
+    height: 96px;
     background: #ffffff;
     border: 1px solid rgba(205, 205, 205, 0.6);
-    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
+    // box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
     border-radius: 24px;
     input {
       flex: 1;

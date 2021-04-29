@@ -381,10 +381,11 @@ export default {
 }
 .coupon_list {
   width: 100%;
-  padding: 12px 20px 20px 20px;
+  padding: 12px 40px 20px 40px;
   height: auto;
   .coupon_item {
     min-height: 212px;
+    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.05);
     // background-image: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png');
     background-size: 100% 100%;
     margin: 24px 0;
@@ -480,6 +481,7 @@ export default {
       }
     }
     .item-btn {
+      width: 150px;
       font-size: 24px;
       min-width: 132px;
       margin-left: auto;
@@ -487,10 +489,10 @@ export default {
       align-items: center;
       display: flex;
       font-size: 24px;
-      padding-right: 12px;
+      margin-right: 30px;
       button {
         display: block;
-        min-width: 132px;
+        width: 150px;
         height: 54px;
         font-size: 0.24rem;
         &.my-coupon {

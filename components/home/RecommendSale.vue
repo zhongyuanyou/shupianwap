@@ -210,7 +210,7 @@ export default {
     this.getTabData()
     try {
       this.searchDomHeight =
-        this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
+        this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 23 // 获取吸顶头部搜索栏的高度
       this.$parent.$refs.homeRef.addEventListener('scroll', this.handleScroll) // 监听滚动
     } catch (error) {
       console.log(error)
@@ -465,8 +465,8 @@ export default {
   overflow: hidden;
   .goods-lable-img {
     position: relative;
-    width: 180px;
-    height: 180px;
+    width: 220px;
+    height: 220px;
     border-radius: 8px;
     overflow: hidden;
     margin-right: 22px;
@@ -509,12 +509,11 @@ export default {
     display: flex;
     flex-direction: column;
     .goods-name {
-      font-size: 28px;
+      font-size: 32px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #222222;
-      line-height: 36px;
-      margin-top: -3px;
+      line-height: 42px;
       .textOverflow(2);
       .pro-lable {
         display: inline-block;
@@ -541,7 +540,7 @@ export default {
       }
     }
     .goods-tag {
-      margin: 4px 0 4px 0;
+      margin-top: 12px;
       .textOverflow(1);
       .tag-item {
         display: inline-block;
@@ -554,12 +553,13 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #5c7499;
-        margin-right: 10px;
+        // margin-right: 10px;
       }
       .tag-tc {
         background: #fc4e41;
         border-radius: 4px;
         color: white;
+        font-weight: 700;
       }
     }
     .goods-slogan {
@@ -567,6 +567,7 @@ export default {
     }
     .goods-slogan1 {
       .textOverflow(1);
+      margin-top: 16px;
     }
     .goods-slogan2 {
       .textOverflow(2);
@@ -624,7 +625,7 @@ export default {
       line-height: 36px;
       align-items: flex-end;
       vertical-align: middle;
-      margin-bottom: 5px;
+      // margin-bottom: 5px;
       .sales-proce {
         display: flex;
         align-items: baseline;
@@ -728,7 +729,7 @@ export default {
       }
       span {
         font-family: PingFang SC;
-        font-weight: bold;
+        // font-weight: bold;
         color: rgba(153, 153, 153, 1);
         font-size: 32px;
         line-height: 32px;

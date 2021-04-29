@@ -175,7 +175,7 @@ export default {
     span {
       display: inline-block;
       font-size: 30px;
-      font-weight: 600;
+      font-weight: bold;
     }
     .logo {
       width: 40px;
@@ -190,37 +190,46 @@ export default {
       overflow: hidden;
     }
     .span-2 {
-      margin-left: 60px;
       color: #ffffff;
       height: 36px;
       font-size: 36px;
       font-family: PingFangSC-Semibold, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #ffffff;
       line-height: 36px;
+      position: absolute;
+      top: 50px;
+      left: 68px;
     }
     .span-3 {
       color: #dfdfdf;
       height: 36px;
       font-size: 36px;
       font-family: PingFangSC-Semibold, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       line-height: 36px;
+      position: absolute;
+      top: 50px;
+      left: 152px;
     }
     .span-4 {
       height: 36px;
       font-size: 36px;
       font-family: PingFangSC-Semibold, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #ffffff;
       line-height: 36px;
+      opacity: 0.6;
+      position: absolute;
+      top: 50px;
+      left: 175px;
     }
     .btn-city {
       position: absolute;
       right: 10px;
       color: white;
       padding-left: 30px;
-      top: 49px;
+      top: 50px;
       font-size: 30px;
       display: flex;
       align-items: center;
@@ -313,8 +322,13 @@ export default {
     }
   }
   .serch-area {
-    .input-box {
+    background: #fff !important;
+    padding: 12px 20px 12px 20px;
+    /deep/.input-box {
+      height: 100px;
       background: #f5f5f5;
+      border-radius: 24px;
+      border: none;
     }
   }
 }
