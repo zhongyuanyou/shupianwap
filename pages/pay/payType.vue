@@ -131,7 +131,7 @@ export default {
         payPlatform: 'CRISPS_C_ZFFS_ALI',
         payTerminal: 'COMDIC_TERMINAL_WAP', // 支付终端 当前为wap
         sourcePlatform: 'COMDIC_PLATFORM_CRISPS', // 操作系统来源
-        // userId: this.$cookies.get('userId'), // 用户ID
+        // userId: this.$cookies.get('userId', { path: '/' }), // 用户ID
         // userName: this.$cookies.get('userName'), // 用户姓名
         orderAgreementIds: '',
       },

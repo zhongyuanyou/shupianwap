@@ -233,7 +233,7 @@ export default {
       const formatId = formatId3 || formatId2
       this.$axios
         .post(recommendApi.saleList, {
-          userId: this.$cookies.get('userId'), // 用户id
+          userId: this.$cookies.get('userId', { path: '/' }), // 用户id
           deviceId: this.deviceId, // 设备ID
           formatId, // 产品三级类别,没有三级类别用二级类别（首页等场景不需传，如其他场景能获取到必传）
           classCode: formatId1,
@@ -288,7 +288,7 @@ export default {
             login_name: null, // 规划师ID(选填)
             productType: 'PRO_CLASS_TYPE_TRANSACTION', // 产品类型
             sceneId: 'app-cpxqye-01', // 场景ID
-            user_id: this.$cookies.get('userId'), // 用户ID(选填)
+            user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
             platform: 'app', // 平台（app,m,pc）
             productId: this.sellingDetail.id, // 产品id
           },
@@ -319,7 +319,7 @@ export default {
           login_name: null, // 规划师ID(选填)
           productType: 'FL20201116000003', // 产品类型
           sceneId: 'app-cpxqye-02', // 场景ID
-          user_id: this.$cookies.get('userId'), // 用户ID(选填)
+          user_id: this.$cookies.get('userId', { path: '/' }), // 用户ID(选填)
           platform: 'app', // 平台（app,m,pc）
           productId: this.sellingDetail.id, // 产品id
         },

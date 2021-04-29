@@ -156,7 +156,7 @@ export default {
       const formatId = formatId3 || formatId2
       this.$axios
         .post(recommendApi.saleList, {
-          userId: this.$cookies.get('userId'), // 用户id
+          userId: this.$cookies.get('userId', { path: '/' }), // 用户id
           deviceId: this.deviceId, // 设备ID
           areaCode: this.cityCode || '510100', // 区域编码
           sceneId: 'app-jycpxq-02', // 场景ID
