@@ -339,7 +339,7 @@ export default {
         }
       )
       if (code === 200) {
-        this.adList = data.sortMaterialList
+        this.adList = data.sortMaterialList || []
       } else {
         console.log(message)
       }
