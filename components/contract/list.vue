@@ -88,12 +88,7 @@
         <div class="btn">
           <p @click="jump(item.orderId)">订单详情</p>
           <p @click.stop="btn(item)">
-            {{
-              item.contractStatus === 'STRUTS_YWC' ||
-              item.contractStatus === 'STRUTS_QSZ'
-                ? '查看合同'
-                : '签署合同'
-            }}
+            {{ item.contractStatus === 'STRUTS_YWC' ? '查看合同' : '签署合同' }}
           </p>
         </div>
       </div>
