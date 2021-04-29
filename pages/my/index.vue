@@ -300,7 +300,7 @@ export default {
       try {
         const params = {
           // id: this.userId,
-          id: this.userId || this.$cookies.get('userId'),
+          id: localStorage.getItem('userId') || this.$cookies.get('userId'),
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false

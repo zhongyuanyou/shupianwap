@@ -30,6 +30,7 @@ export const mutations = {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
+    localStorage.setItem('userId', data.userId)
     state.userInfo = data
     state.token = String(data.token)
     state.userId = String(data.userId)
