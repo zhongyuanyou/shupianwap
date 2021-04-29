@@ -33,6 +33,11 @@ export const mutations = {
       maxAge: 60 * 60 * 24 * 7, // 过期时间
       domain: Vue.$domain,
     })
+    this.$cookies.set('userType', String(data.userType), {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 过期时间
+      domain: Vue.$domain,
+    })
     state.userInfo = data
     state.token = String(data.token)
     state.userId = String(data.userId)
@@ -105,13 +110,13 @@ export const mutations = {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
-    this.$cookies.set('userType', String(data.type), {
+    this.$cookies.set('userType', String(data.type || data.userType), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
     })
     state.userNo = data.no
     state.userName = data.nickName
-    state.userType = data.type
+    state.userType = data.type || data.userType
     state.userPhone = data.fullName
     state.realStatus = data.realStatus
     state.mainAccountFull = data.mainAccountFull

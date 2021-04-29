@@ -372,6 +372,7 @@ export default {
         // 清除cookie中的数据
         this.info.url = ''
         this.userName = ''
+        this.info = {}
         this.$store.dispatch('user/clearUser')
         // localStorage.removeItem('info')
       }
