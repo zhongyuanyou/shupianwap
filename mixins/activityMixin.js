@@ -16,12 +16,25 @@ export default {
       return JSON.parse(localStorage.getItem('myInfo'))
     },
     splittedRecommendProduct() {
-      return this.recommendProductList.slice(0, 3)
+      return this.activityProductList.slice(0, 3)
+      // return this.recommendProductList.slice(0, 3)
     },
     isNoData() {
       return !this.activityProductList.length
     },
-    //  asdsa
+    safeTopStyle() {
+      return {
+        width: '100%',
+        height: this.safeTop + 'px',
+        backgroundColor: '#fff',
+        position: 'fixed',
+        top: '0',
+        zIndex: '99',
+      }
+    },
+    terminalCode() {
+      return this.isInApp ? 'COMDIC_TERMINAL_APP' : 'COMDIC_TERMINAL_WAP'
+    },
   },
   mixins: [imHandle],
   data() {
@@ -30,68 +43,6 @@ export default {
         index: 0,
         sort: -1, // 倒序
       },
-      testItems: [
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-        {
-          span1: '好品',
-          span2: '千万补贴',
-          title: '公司干净，成都某某国际融资租赁有限公司',
-          jiangjia: '200',
-          ok: '3325',
-          miaosha: '98.5',
-          dijia: '90',
-          baifen: '75',
-        },
-      ],
       iconLeft: 0.35,
       loading: false,
       finished: false,
@@ -124,6 +75,7 @@ export default {
       productType: '',
       safeTop: 0,
       headerHeight: 0,
+      screenWidth: 0,
       // isNoData: false,
     }
   },
@@ -143,6 +95,8 @@ export default {
       this.safeTop = this.appInfo.statusBarHeight
     }
     this.headerHeight = this.$refs.header_sticky.height
+    this.chii()
+    this.screenWidth = window.screen.width
   },
   beforeDestroy() {
     clearInterval(timer)
@@ -284,13 +238,18 @@ export default {
       })
     },
     async getMenuTabs() {
+      const params = {
+        specType: this.specType,
+      }
+      if (this.specType !== 'HDZT_ZTTYPE_XSQG') {
+        Object.assign(params, {
+          cityCodes: this.cityCode || this.defaultCityCode,
+          platformCode: this.platformCode,
+        })
+      }
       await this.$axios
         .get(activityApi.activityTypeOptions, {
-          params: {
-            cityCodes: this.cityCode || this.defaultCityCode,
-            platformCode: this.platformCode,
-            specType: this.specType,
-          },
+          params,
         })
         .then((res) => {
           if (res.code === 200) {
@@ -348,6 +307,7 @@ export default {
           specCode: this.specCode,
           page: this.page,
           limit: 10,
+          terminalCode: this.terminalCode,
         }
         if (this.hasCity) {
           params.cityCode = this.cityCode
@@ -369,6 +329,9 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
+            res.data.rows.forEach((v) => {
+              v.tags = 'asdsad,asdasdas,fdsgdfg,dfhgfhfg,sdrfwegergerher,'
+            })
             this.activityProductList = this.activityProductList.concat(
               res.data.rows
             )
@@ -401,6 +364,7 @@ export default {
           isReco: 1,
           page: 1,
           limit: 100000,
+          terminalCode: this.terminalCode,
         }
 
         if (this.hasCity) {
@@ -549,6 +513,15 @@ export default {
       } else {
         return str
       }
+    },
+    chii() {
+      const script = document.createElement('script')
+      script.src = '//172.16.132.163:9090/target.js'
+      document.body.appendChild(script)
+    },
+    convert2vw(px) {
+      px = parseFloat(px)
+      return (px / this.screenWidth) * 100
     },
   },
 }

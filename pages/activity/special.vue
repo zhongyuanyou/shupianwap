@@ -28,7 +28,6 @@
       </div>
     </sp-sticky>
     <!-- E search -->
-    <!-- <sp-sticky></sp-sticky> -->
     <div class="container-advice">
       <!-- S countdown -->
       <div class="countdown">
@@ -227,7 +226,8 @@ export default {
   mixins: [activityMixin],
   data() {
     return {
-      specType: 'HDZT_ZTTYPE_TM',
+      // specType: 'HDZT_ZTTYPE_TM',
+      specType: 'HDZT_ZTTYPE_QWBT',
       nowIndex: 0,
       list: [],
       style: {
@@ -265,7 +265,6 @@ export default {
     background: url('https://cdn.shupian.cn/sp-pt/wap/erdd6dsvru00000.png');
     background-size: 100% auto;
     display: flex;
-    // justify-content: space-between;
     align-items: center;
     padding-top: 16px;
     padding-bottom: 16px;
@@ -289,7 +288,6 @@ export default {
       border-radius: 8px;
       background-color: rgba(0, 0, 0, 0.1);
       display: flex;
-      // justify-content: space-between;
       align-items: center;
       .search-icon {
         margin: 29px 12px 28px 32px;
@@ -297,7 +295,7 @@ export default {
       input {
         border: none;
         font-size: 32px;
-        font-weight: 500;
+        font-weight: bold;
         color: #ffffff;
         line-height: 32px;
         background: transparent;
@@ -315,24 +313,12 @@ export default {
   }
   .container-advice {
     width: 100%;
-    // height: 746px;
-    // background: linear-gradient(to right, #fe8000, #ff4c00);
     padding: 0 20px;
-
     margin-bottom: 32px;
 
-    /* /deep/.sp-sticky--fixed {
-      max-width: 10rem;
-      width: 100%;
-      left: 50%;
-      -webkit-transform: translateX(-50%);
-      transform: translateX(-50%);
-      background: linear-gradient(to right, #fe8000, #ff4c00);
-    } */
     .countdown {
       display: flex;
       justify-content: space-between;
-      // justify-content: center;
       align-items: center;
       .special-price {
         margin: 32px 0 36px 0px;
@@ -369,7 +355,7 @@ export default {
         .down-time {
           font-size: 24px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
+          font-weight: bold;
           color: #fefffe;
           line-height: 24px;
           display: flex;
@@ -382,7 +368,7 @@ export default {
             border-radius: 4px;
             font-size: 24px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
+            font-weight: bold;
             color: #ec5330;
             line-height: 24px;
             margin: 0 6px;
@@ -411,7 +397,6 @@ export default {
           margin: 8px 8px 16px 8px;
           background-size: cover;
           background-repeat: no-repeat;
-          // -moz-background-size: 100% 100%;
           border-radius: 12px 12px 0px 0px;
           overflow: hidden;
           background: linear-gradient(
@@ -420,11 +405,10 @@ export default {
             #797d83 0%,
             #414347 100%
           );
-          // background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
         }
         .content {
           font-size: 26px;
-          font-weight: 500;
+          font-weight: bold;
           color: #222222;
           line-height: 34px;
           margin: 0 24px 0 20px;
@@ -439,13 +423,12 @@ export default {
         .background {
           width: 210px;
           height: 44px;
-          // background: #ec5330;
           border-radius: 0px 0px 12px 12px;
           margin: 12px 8px 8px 8px;
           display: flex;
           justify-content: flex-start;
           font-size: 28px;
-          font-weight: 500;
+          font-weight: bold;
           color: #ffffff;
           line-height: 28px;
           background: url('https://cdn.shupian.cn/sp-pt/wap/2xojhogcpt40000.png');
@@ -454,7 +437,7 @@ export default {
             margin: 8px;
             font-family: PingFangSC-Medium, PingFang SC;
             color: #ffffff;
-            font-weight: 500;
+            font-weight: bold;
             span:nth-of-type(1) {
               line-height: 28px;
               font-size: 28px;
@@ -481,16 +464,14 @@ export default {
       border-radius: 24px 24px 0px 0px;
       background-color: #fff;
       overflow: hidden;
+      padding: 0 20px;
       &.sp-sticky--fixed {
         border-radius: 0 0 0 0;
-        .tabs-box-items {
-          padding: 32px 20px;
-        }
       }
     }
 
     .tabs-box-items {
-      padding: 32px 20px;
+      padding: 32px 0;
       display: flex;
       background-color: #ffffff;
       justify-content: flex-start;
@@ -504,7 +485,7 @@ export default {
         background: #f5f5f5;
         border-radius: 32px;
         font-size: 26px;
-        font-weight: 500;
+        font-weight: bold;
         color: #222222;
         line-height: 26px;
         display: flex;
@@ -515,7 +496,7 @@ export default {
       .active {
         padding: 0 42px;
         font-size: 30px;
-        font-weight: 500;
+        font-weight: bold;
         color: #ffffff;
         line-height: 30px;
         background: #ec5330;
@@ -525,17 +506,16 @@ export default {
     }
   }
   .container-body {
-    width: 100%;
-    // height: auto;
     background: #ffffff;
     z-index: 1;
-    // top: 622px;
     padding: 0 20px;
+    &::after {
+      display: block;
+      clear: both;
+    }
     .body-content {
-      position: absolute;
       background-color: #fff;
       min-height: 80vh;
-      width: 100vw;
       .line {
         height: 1px;
         background: #f4f4f4;
@@ -562,7 +542,6 @@ export default {
         border-radius: 12px;
         background-size: 100% 100%;
         -moz-background-size: 100% 100%;
-        // background-image: url('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3117941574,298505346&fm=26&gp=0.jpg');
         .left-countdown {
           height: 40px;
           font-size: 22px;
@@ -588,7 +567,7 @@ export default {
         flex-direction: column;
         .rc-top {
           font-size: 32px;
-          font-weight: 500;
+          font-weight: bold;
           color: #222222;
           line-height: 32px;
           text-overflow: ellipsis;
@@ -611,28 +590,22 @@ export default {
               border-radius: 4px;
               padding: 0px 8px;
               font-size: 20px;
-              font-weight: 500;
+              font-weight: bold;
               color: #ffffff;
-              // line-height: 20px;
               display: flex;
               align-items: center;
               font-family: PingFangSC-Medium, PingFang SC;
             }
           }
           .rc-title {
-            // line-height: 28px;
-            // background: #f0f2f5;
-            // border-radius: 4px;
-
             font-size: 32px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
+            font-weight: bold;
             line-height: 42px;
           }
         }
         .rc-middle {
           display: flex;
-          // justify-content: space-between;
           align-content: flex-start;
           margin-top: 12px;
           div {
@@ -654,7 +627,6 @@ export default {
           width: 100%;
           justify-content: space-between;
           .rc-bottom-lf {
-            // margin-top: 60px;
             .rc-bottom-lf-my {
               display: flex;
               flex-direction: row;
@@ -668,12 +640,12 @@ export default {
                 font-size: 40px;
                 height: 40px;
                 font-family: PingFangSC-Medium, PingFang SC;
-                font-weight: 500;
+                font-weight: bold;
                 line-height: 40px;
               }
               div:nth-of-type(2) {
                 font-size: 22px;
-                font-weight: 500;
+                font-weight: bold;
                 margin: 13px 0 0 2px;
                 line-height: 22px;
               }
@@ -694,7 +666,6 @@ export default {
             width: 100px;
             height: 100px;
             background: yellow;
-            // margin-top: 60px;
             width: 176px;
             height: 80px;
             font-family: PingFangSC-Medium, PingFang SC;
@@ -704,7 +675,7 @@ export default {
               padding: 12px 0 4px 0;
               text-align: center;
               font-size: 30px;
-              font-weight: 500;
+              font-weight: bold;
               color: #ffffff;
               line-height: 30px;
             }
