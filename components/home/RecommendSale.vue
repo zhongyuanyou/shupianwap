@@ -210,7 +210,7 @@ export default {
     this.getTabData()
     try {
       this.searchDomHeight =
-        this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 1 // 获取吸顶头部搜索栏的高度
+        this.$parent.$refs.searchBannerRef.$refs.searchRef.$el.clientHeight - 23 // 获取吸顶头部搜索栏的高度
       this.$parent.$refs.homeRef.addEventListener('scroll', this.handleScroll) // 监听滚动
     } catch (error) {
       console.log(error)
@@ -553,7 +553,7 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         color: #5c7499;
-        margin-right: 10px;
+        // margin-right: 10px;
       }
       .tag-tc {
         background: #fc4e41;
