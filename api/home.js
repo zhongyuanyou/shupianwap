@@ -7,8 +7,8 @@
  * @FilePath: /chips-wap/client/api/home.js
  */
 
-import { CHIPS_WAP_BASE_URL } from '../config/constant'
-// const CHIPS_WAP_BASE_URL = 'http://172.16.133.40:7001/service'
+// import { CHIPS_WAP_BASE_URL } from '../config/constant'
+const CHIPS_WAP_BASE_URL = 'http://172.16.133.197:7001/service'
 const homeApi = {
   initRequest: `${CHIPS_WAP_BASE_URL}/nk/home/v1/get_home_data.do`, // 首页首屏服务端初始化请求数据（导航 + 广告）
   asyncRequest: `${CHIPS_WAP_BASE_URL}/nk/home/v1/get_home_asyn_data.do`, // 首页异步加载数据 （广告+资讯）

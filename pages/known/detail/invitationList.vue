@@ -303,7 +303,6 @@ export default {
     }
     > .listbox {
       box-sizing: border-box;
-      overflow: auto;
       > .list {
         display: flex;
         margin-top: 58px;

@@ -321,7 +321,6 @@ export default {
     async handleClick(val) {
       if (val === 1) {
         const isLogin = await this.judgeLoginMixin()
-
         if (isLogin) {
           this.$router.push('/contract/contractList')
         } else {
