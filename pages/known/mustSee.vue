@@ -53,6 +53,8 @@
           <p>{{ item.remarkCount }} 评论</p>
         </div>
       </div>
+      <div style="height: 1px; margin-top: 20px"></div>
+      <!--
       <div class="bottom" @click="goRecommend">
         到底啦，去推荐看看吧
         <my-icon
@@ -63,6 +65,7 @@
           style="margin-top: 2px"
         ></my-icon>
       </div>
+      -->
     </div>
   </div>
 </template>
