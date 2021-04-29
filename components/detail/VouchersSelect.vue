@@ -332,7 +332,7 @@ export default {
             })
             .catch((err) => {
               console.log(err)
-              this.$xToast.warning(err)
+              this.$xToast.warning('优惠券领取失败，请稍后重试')
             })
         }
       }
