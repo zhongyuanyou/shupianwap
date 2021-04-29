@@ -140,7 +140,7 @@
               </div>
             </div>
             <div
-              v-if="!swipItem.goodsList.length && tabBtn.length"
+              v-if="!swipItem.goodsList.length && tabBtn.length && loaded"
               class="no-data"
             >
               <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
@@ -199,6 +199,7 @@ export default {
       },
       tabBtn: [],
       loadingList: true,
+      loaded: false,
     }
   },
   computed: {
@@ -290,6 +291,7 @@ export default {
           },
         })
         .then((res) => {
+          this.loaded = true
           this.loadingList = false
           this.loading = false
           if (res.code === 200) {
