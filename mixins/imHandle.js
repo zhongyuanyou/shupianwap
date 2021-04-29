@@ -37,8 +37,12 @@ export default {
     },
     // 判断是否登录
     judgeLoginMixin(needUserInfo = false, url) {
+      const token = this.token || this.$cookies.get('token', { path: '/' })
+      const userId = this.userId || this.$cookies.get('userId', { path: '/' })
+      const userType =
+        this.userType || this.$cookies.get('userType', { path: '/' })
       return new Promise((resolve) => {
-        if (this.userId && this.token && this.userType) {
+        if (userId && token && userType) {
           if (needUserInfo) {
             // 获取用户信息
             this.$axios
@@ -104,9 +108,20 @@ export default {
             const myInfo = localStorage.getItem('myInfo')
               ? JSON.parse(localStorage.getItem('myInfo'))
               : {}
-            const token = this.userType ? this.token : myInfo.token
-            const userId = this.userType ? this.userId : myInfo.token
-            const userType = this.userType || 'VISITOR'
+            const token = this.token
+              ? this.token
+              : this.$cookies.get('token', { path: '/' })
+              ? this.$cookies.get('token', { path: '/' })
+              : myInfo.token
+            const userId = this.userId
+              ? this.userId
+              : this.$cookies.get('userId', { path: '/' })
+              ? this.$cookies.get('userId', { path: '/' })
+              : myInfo.token
+            const userType =
+              this.userType ||
+              this.$cookies.get('userType', { path: '/' }) ||
+              'VISITOR'
             window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}`
           } else if (res.code === 5223) {
             this.clearUserInfoAndJumpLoging()
