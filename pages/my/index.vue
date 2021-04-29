@@ -243,9 +243,9 @@ export default {
   },
   computed: {
     ...mapState({
-      userId: (state) => state.user.userInfo.userId,
-      token: (state) => state.user.userInfo.token,
-      userPhone: (state) => state.user.userInfo.userPhone,
+      userId: (state) => state.user.userId,
+      token: (state) => state.user.token,
+      userPhone: (state) => state.user.userPhone,
     }),
     avatar() {
       return GOODSLIST
