@@ -140,7 +140,11 @@ export default {
       bdData: [], // 营销区域必懂入口，直播入口广告
     }
     try {
-      const res = await $axios.post(homeApi.initRequest, initReqParams)
+      const res = await $axios.post(homeApi.initRequest, initReqParams, {
+        headers: {
+          'x-cache-control': 'cache',
+        },
+      })
       if (res.code && res.data) {
         if (res.data.advertising) {
           initData.fiexdBannerData =
@@ -225,7 +229,6 @@ export default {
     if (!this.initData.fiexdNavData.length) {
       this.getHomeData()
     }
-    this.getHomeData()
   },
   methods: {
     // 用户手动关闭下载app提示弹框后，记录状态到cookie，刷新页面不再弹出，使用默认过期时间（关闭浏览器过期，下次再访问，再次弹出）
@@ -272,7 +275,11 @@ export default {
         bdData: [], // 营销区域必懂入口，直播入口广告
       }
       try {
-        const res = await this.$axios.post(homeApi.initRequest, initReqParams)
+        const res = await this.$axios.post(homeApi.initRequest, initReqParams, {
+          headers: {
+            'x-cache-control': 'cache',
+          },
+        })
         if (res.code && res.data) {
           if (res.data.advertising) {
             initData.fiexdBannerData =
@@ -306,7 +313,6 @@ export default {
           initData.rollNavData = res.data.rollNavList
             ? res.data.rollNavList
             : []
-          console.log('initData.bdData', initData.bdData)
           this.initData = initData
         }
       } catch (error) {

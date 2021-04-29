@@ -149,7 +149,7 @@
             <Loading-down
               v-if="tabBtn.length"
               v-show="loading || tabBtn[curentItem].noMore"
-              :bg-color="tabBtn[curentItem].noData ? '#ffffff' : '#f4f4f4'"
+              :bg-color="tabBtn[curentItem].noData ? '#f4f4f4' : '#f4f4f4'"
               :loading="loading && !tabBtn[curentItem].noMore"
               :no-data="tabBtn[curentItem].noMore"
             />

@@ -56,7 +56,6 @@ export function imInit(data = {}) {
  */
 export function pullUnreadMsgCount(imExample, data = {}) {
   return new Promise((resolve) => {
-    console.log(data.userId, 1111)
     imExample.pullUnreadMsgCount({ imUserId: data.userId }, (res) => {
       resolve(res)
     })
