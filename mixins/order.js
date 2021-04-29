@@ -296,8 +296,10 @@ export default {
         if (this.checkHasOtherOrder()) {
           // 有关联订单时则打开提示弹窗
           this.loading = false
-          this.$refs.cancleOrderModel.showPop = true
-          this.$refs.cancleOrderModel.modalType = 2
+          if (this.$refs.cancleOrderModel) {
+            this.$refs.cancleOrderModel.showPop = true
+            this.$refs.cancleOrderModel.modalType = 2
+          }
           this.childOrderList = this.orderData.orderList
           // 后续操作为关联弹窗点击立即付款后继续查询分批支付列表 走分批支付逻辑判断
         } else {
@@ -307,8 +309,10 @@ export default {
       } else if (this.checkHasOtherOrder()) {
         // 有关联订单时打开提示弹窗
         this.loading = false
-        this.$refs.cancleOrderModel.showPop = true
-        this.$refs.cancleOrderModel.modalType = 2
+        if (this.$refs.cancleOrderModel) {
+          this.$refs.cancleOrderModel.showPop = true
+          this.$refs.cancleOrderModel.modalType = 2
+        }
       } else if (this.payList.length === 1) {
         this.loading = false
         this.$router.push({
@@ -359,21 +363,10 @@ export default {
             this.nodeTotalMoney = this.regFenToYuan(this.nodeTotalMoney)
             this.nodeNumber = this.nodeList.length
             // 对支付列表进行排序
-            const sortArr = []
-            for (let i = 0, l = nodeList.length; i < l; i++) {
-              // 处理金额
-              nodeList[i].money = this.regFenToYuan(nodeList[i].money)
-              // 将本期应付的批次排在前面
-              if (nodeList[i].alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
-                sortArr.splice(0, 0, nodeList[i])
-              } else {
-                sortArr.push(nodeList[i])
-              }
-            }
-            sortArr.forEach((item) => {
+            nodeList.forEach((item) => {
               item.batchIndex = Number(item.batchNumber) + 1
             })
-            this.nodeList = sortArr
+            this.nodeList = nodeList
           } else {
             // 当前订单的分批支付信息 订单详情页
             // 筛选对应订单的支付列表
@@ -640,17 +633,19 @@ export default {
     },
     // 根据操作类型进行不同的任务
     switchOptionType() {
-      this.$refs.cancleOrderModel.orderList = this.orderData.orderList
-      if (this.opType === 'cancelOrder') {
-        // 弹出取消订单弹窗
-        this.$refs.cancleOrderModel.showPop = true
-        if (this.orderData.orderList.length > 1) {
-          this.$refs.cancleOrderModel.step = 1
-        } else {
-          this.$refs.cancleOrderModel.step = 2
+      if (this.$refs.cancleOrderModel) {
+        this.$refs.cancleOrderModel.orderList = this.orderData.orderList
+        if (this.opType === 'cancelOrder') {
+          // 弹出取消订单弹窗
+          this.$refs.cancleOrderModel.showPop = true
+          if (this.orderData.orderList.length > 1) {
+            this.$refs.cancleOrderModel.step = 1
+          } else {
+            this.$refs.cancleOrderModel.step = 2
+          }
+        } else if (this.opType === 'payMoney') {
+          this.startPay()
         }
-      } else if (this.opType === 'payMoney') {
-        this.startPay()
       }
     },
     // 确认完成

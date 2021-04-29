@@ -549,12 +549,15 @@ export default {
           console.error('uPIM error:', error)
         }
       } else {
-        const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_B 启大顺 ;MERCHANT_S 启大包
-        this.creatImSessionMixin({
-          imUserId: mchUserId,
-          imUserType,
-          url: 'planner/list',
-        })
+        const isLogin = await this.judgeLoginMixin()
+        if (isLogin) {
+          const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_B 启大顺 ;MERCHANT_S 启大包
+          this.creatImSessionMixin({
+            imUserId: mchUserId,
+            imUserType,
+            url: 'planner/list',
+          })
+        }
       }
     },
 
@@ -722,12 +725,12 @@ export default {
           }
         }
       }
-      /deep/.sticky-dropdown {
+      ::v-deep.sticky-dropdown {
         .sp-sticky {
           padding-top: 0;
         }
       }
-      /deep/.sp-dropdown-menu {
+      ::v-deep.sp-dropdown-menu {
         position: relative;
         &__bar {
           padding: 0 40px;

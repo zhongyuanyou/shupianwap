@@ -335,12 +335,12 @@ export default {
 
 <style lang="less" scoped>
 .jyGoods {
-  /deep/.sp-tab {
+  ::v-deep.sp-tab {
     font-weight: bold;
     font-size: 30px;
     padding: 0 40px;
   }
-  // /deep/.sp-ellipsis {
+  // ::v-deep.sp-ellipsis {
   //   width: 87%;
   // }
   .goodsbox {
@@ -348,22 +348,22 @@ export default {
     padding-bottom: 20px;
     background: #fff;
   }
-  /deep/.sp-tabs {
+  ::v-deep.sp-tabs {
     .sp-tabs__line {
       display: none;
     }
-    /deep/.sp-dropdown-menu {
+    ::v-deep.sp-dropdown-menu {
       border-bottom: 1px solid #f4f4f4;
     }
     .sp-ellipsis {
       padding-right: 12px;
     }
   }
-  /deep/.sp-tabs__wrap--scrollable .sp-tabs__nav--complete {
+  ::v-deep.sp-tabs__wrap--scrollable .sp-tabs__nav--complete {
     padding-left: 0;
     padding-right: 0;
   }
-  /deep/.jyDropdownFilter {
+  ::v-deep.jyDropdownFilter {
     &.active {
       font-weight: bold !important;
       color: #4974f5 !important;
@@ -372,14 +372,14 @@ export default {
       }
     }
   }
-  /deep/.sp-dropdown-item {
+  ::v-deep.sp-dropdown-item {
     z-index: 30 !important;
   }
   /*height: calc(100% - 200px);*/
-  /deep/.sp-dropdown-item__content {
+  ::v-deep.sp-dropdown-item__content {
     max-height: 100%;
   }
-  /deep/.sp-dropdown-menu__bar {
+  ::v-deep.sp-dropdown-menu__bar {
     height: 80px;
     box-shadow: none;
     padding: 0 10px;
@@ -392,7 +392,7 @@ export default {
       width: 33%;
       // justify-content: flex-end;
     }
-    /deep/.sp-dropdown-menu__title {
+    ::v-deep.sp-dropdown-menu__title {
       display: inline-block;
       width: 100%;
       height: 100%;
@@ -413,12 +413,12 @@ export default {
         }
       }
     }
-    /deep/.sp-dropdown-menu__title--active {
+    ::v-deep.sp-dropdown-menu__title--active {
       font-weight: bold;
       color: #4974f5;
     }
   }
-  .sort-filter /deep/.sp-cell {
+  .sort-filter ::v-deep.sp-cell {
     padding: 18px 40px;
     &:last-child {
       margin-bottom: 40px;
@@ -428,7 +428,7 @@ export default {
     overflow-x: hidden;
     overflow-y: scroll;
   }
-  /deep/.sp-tree-select {
+  ::v-deep.sp-tree-select {
     min-height: 600px;
     max-height: 600px;
     height: auto !important;
@@ -436,18 +436,18 @@ export default {
       padding: 30px 0 30px 40px;
     }
   }
-  /deep/.sp-dropdown-item__option--active {
+  ::v-deep.sp-dropdown-item__option--active {
     font-size: 28px;
     font-family: PingFang SC;
     font-weight: bold;
   }
-  /deep/.sp-tabs--line .sp-tabs__wrap {
+  ::v-deep.sp-tabs--line .sp-tabs__wrap {
     height: 94px;
   }
   .subscribe {
     padding: 0 40px;
   }
-  /deep/.lowFive /deep/.sp-tabs__nav /deep/.sp-tab {
+  ::v-deep.lowFive ::v-deep.sp-tabs__nav ::v-deep.sp-tab {
     &:first-child {
       justify-content: flex-start;
     }

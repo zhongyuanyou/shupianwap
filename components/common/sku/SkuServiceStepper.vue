@@ -140,7 +140,7 @@ export default {
     line-height: 46px;
   }
   &__main {
-    /deep/.sp-stepper__input {
+    ::v-deep.sp-stepper__input {
       font-size: 30px;
       font-weight: bold;
       color: #222222;

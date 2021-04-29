@@ -53,6 +53,8 @@
           <p>{{ item.remarkCount }} 评论</p>
         </div>
       </div>
+      <div style="height: 1px; margin-top: 20px"></div>
+      <!--
       <div class="bottom" @click="goRecommend">
         到底啦，去推荐看看吧
         <my-icon
@@ -63,6 +65,7 @@
           style="margin-top: 2px"
         ></my-icon>
       </div>
+      -->
     </div>
   </div>
 </template>
@@ -311,11 +314,11 @@ export default {
     margin-left: 8px;
   }
 }
-/deep/ .fixed-head {
+::v-deep .fixed-head {
   position: absolute !important;
   background: #4974f5 !important;
 }
-/deep/ .my-head {
+::v-deep .my-head {
   background: url('https://cdn.shupian.cn/sp-pt/wap/1ho0s5co5gow000.png')
     no-repeat;
   background-size: 100%;

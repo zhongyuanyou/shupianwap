@@ -332,7 +332,7 @@ export default {
             })
             .catch((err) => {
               console.log(err)
-              this.$xToast.warning(err)
+              this.$xToast.warning('优惠券领取失败，请稍后重试')
             })
         }
       }
@@ -377,10 +377,10 @@ export default {
 
 <style lang="less" scoped>
 .container {
-  /deep/.sp-popup--round {
+  ::v-deep.sp-popup--round {
     border-radius: 24px 24px 0px 0px;
   }
-  /deep/.sp-safeguard__title {
+  ::v-deep.sp-safeguard__title {
     max-width: none;
   }
   font-family: PingFang SC;
@@ -598,7 +598,7 @@ export default {
     text-align: center;
     padding: 48px 0;
   }
-  /deep/.sp-popup__close-icon--top-right {
+  ::v-deep.sp-popup__close-icon--top-right {
     top: 56px;
     right: 40px;
   }

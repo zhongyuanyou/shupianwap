@@ -359,7 +359,7 @@ export default {
   }
   .body {
     padding: 0;
-    /deep/.sp-cell {
+    ::v-deep.sp-cell {
       padding: 32px 40px 0px;
       border-bottom: 24px solid #f8f8f8;
     }
@@ -455,7 +455,7 @@ export default {
           width: 160px;
           height: 160px;
           position: relative;
-          /deep/.sp-tag--default {
+          ::v-deep.sp-tag--default {
             height: 48px;
             background: #f8f8f8;
             border-radius: 8px;
@@ -484,7 +484,7 @@ export default {
         margin-top: 14px;
         border-top: 1px solid #f4f4f4;
         text-align: center;
-        /deep/.sp-button--default {
+        ::v-deep.sp-button--default {
           border: 0;
           .sp-button__text {
             color: #555555;
@@ -493,7 +493,7 @@ export default {
             font-weight: 400;
           }
         }
-        /deep/ .sp-button {
+        ::v-deep .sp-button {
           width: 100%;
         }
         span {

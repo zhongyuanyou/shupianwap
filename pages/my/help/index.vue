@@ -480,10 +480,10 @@ export default {
       align-items: center;
       padding: 0 40px;
       margin-bottom: 20px;
-      /deep/ .sp-field__control {
+      ::v-deep .sp-field__control {
         transform: translateY(2px);
       }
-      /deep/ .sp-field__control:disabled {
+      ::v-deep .sp-field__control:disabled {
         color: #cccccc !important;
         -webkit-text-fill-color: #cccccc !important;
       }
@@ -495,17 +495,17 @@ export default {
         margin-right: 24px;
       }
     }
-    /deep/ .sp-search {
+    ::v-deep .sp-search {
       flex: 1;
       padding: 0;
     }
-    /deep/ .sp-icon {
+    ::v-deep .sp-icon {
       color: #999999;
     }
-    /deep/ .sp-search .sp-cell {
+    ::v-deep .sp-search .sp-cell {
       padding: 8px 16px 8px 0;
     }
-    /deep/ .sp-field__control {
+    ::v-deep .sp-field__control {
       &::placeholder {
         font-size: 28px;
         font-family: PingFang SC;
@@ -515,20 +515,20 @@ export default {
     }
   }
   .tab-content {
-    /deep/ .sp-tabs__nav {
+    ::v-deep .sp-tabs__nav {
       padding-left: 8px;
     }
     .isBorder {
-      /deep/ .sp-tabs__wrap {
+      ::v-deep .sp-tabs__wrap {
         border-bottom: none;
       }
     }
-    /deep/ .sp-tabs__wrap {
+    ::v-deep .sp-tabs__wrap {
       height: 100px;
       padding-right: 8px;
       border-bottom: 1px solid #f4f4f4;
     }
-    /deep/ .sp-tab {
+    ::v-deep .sp-tab {
       padding: 0 32px;
       padding-top: 29px;
       display: inline !important;
@@ -541,19 +541,19 @@ export default {
         color: #222222;
       }
     }
-    /deep/ .sp-tabs__nav .sp-tab {
+    ::v-deep .sp-tabs__nav .sp-tab {
       &:last-child {
         padding-right: 40px !important;
       }
     }
-    /deep/ .sp-tabs__line {
+    ::v-deep .sp-tabs__line {
       width: 32px;
       height: 6px;
       background: #4974f5;
       border-radius: 3px;
       bottom: 44px;
     }
-    /deep/ .sp-tab--active .sp-tab__text {
+    ::v-deep .sp-tab--active .sp-tab__text {
       color: #4974f5;
     }
   }
@@ -579,11 +579,11 @@ export default {
       }
     }
   }
-  /deep/ .sp-bottombar {
+  ::v-deep .sp-bottombar {
     z-index: 3;
     padding: 32px 40px;
   }
-  /deep/ .sp-icon-phone-o {
+  ::v-deep .sp-icon-phone-o {
     color: #1a1a1a;
     font-weight: bold;
   }
@@ -599,7 +599,7 @@ export default {
       height: 140px;
     }
   }
-  /deep/ .sp-button__text {
+  ::v-deep .sp-button__text {
     font-size: 32px;
     font-weight: bold;
   }

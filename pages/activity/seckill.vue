@@ -729,7 +729,7 @@ export default {
                 // right: 6px;
                 // bottom: 6px;
               }
-              /deep/ .sp-progress {
+              ::v-deep .sp-progress {
                 padding: 0;
                 width: 98px;
                 height: 6px;
@@ -738,7 +738,7 @@ export default {
                 // bottom: 17px;
                 margin: 0 5px 0 10px;
               }
-              /deep/ .sp-progress__pivot {
+              ::v-deep .sp-progress__pivot {
                 display: none;
               }
             }

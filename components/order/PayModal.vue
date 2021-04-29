@@ -260,7 +260,7 @@ export default {
     font-weight: 400;
     color: #222222;
     line-height: 56px;
-    /deep/.sp-radio {
+    ::v-deep.sp-radio {
       color: rgba(34, 34, 34, 34);
       font-size: 32px;
     }

@@ -161,7 +161,7 @@ export default {
   .back_icon {
     margin-left: 40px;
   }
-  /deep/.sp-cell {
+  ::v-deep.sp-cell {
     padding: 32px 40px;
     line-height: auto;
     &::after {
@@ -197,7 +197,7 @@ export default {
       margin-top: 1px;
     }
   }
-  /deep/.sp-cell__right-icon {
+  ::v-deep.sp-cell__right-icon {
     color: #cccccc;
     margin-left: 12px;
     // &::before {

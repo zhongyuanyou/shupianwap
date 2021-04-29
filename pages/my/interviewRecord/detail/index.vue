@@ -304,7 +304,7 @@ export default {
         }
       }
     }
-    /deep/ .sp-button--primary {
+    ::v-deep .sp-button--primary {
       width: 100%;
       margin-top: 84px;
       &:last-child {

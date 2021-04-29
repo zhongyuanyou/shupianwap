@@ -127,8 +127,9 @@ export default {
     sign() {
       this.loading = true
       if (
-        this.$cookies.get('realStatus') === 'AUTHENTICATION_SUCCESS' ||
-        this.$cookies.get('realStatus') === 'AUTHENTICATION_ING'
+        this.$cookies.get('realStatus', { path: '/' }) ===
+          'AUTHENTICATION_SUCCESS' ||
+        this.$cookies.get('realStatus', { path: '/' }) === 'AUTHENTICATION_ING'
       ) {
         contractApi
           .signcontart(
@@ -236,7 +237,7 @@ export default {
       justify-content: space-between;
       height: 160px;
       align-items: center;
-      /deep/.sp-button {
+      ::v-deep.sp-button {
         width: 48%;
         border-radius: 8px;
       }

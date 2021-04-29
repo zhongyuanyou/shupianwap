@@ -147,7 +147,18 @@ export default {
         )
         .then((res) => {
           this.orderItem = res
-          console.log(this.orderItem)
+          if (this.orderItem.conctractFirstInfo) {
+            this.partyName =
+              this.orderItem.conctractFirstInfo.contractFirstName || ''
+            this.userName =
+              this.orderItem.conctractFirstInfo.contractFirstContacts || ''
+            this.phone =
+              this.orderItem.conctractFirstInfo.contractFirstPhone || ''
+            this.email =
+              this.orderItem.conctractFirstInfo.contractFirstEmail || ''
+            this.address =
+              this.orderItem.conctractFirstInfo.contractFirstAddr || ''
+          }
         })
         .catch((err) => {
           this.loading = false
@@ -237,18 +248,18 @@ export default {
   > .form {
     background: #fff;
     padding: 0 40px;
-    /deep/.sp-cell--required::before {
+    ::v-deep.sp-cell--required::before {
       left: 145px;
     }
-    /deep/.wd70::before {
+    ::v-deep.wd70::before {
       left: 115px;
     }
-    /deep/.sp-cell__title {
+    ::v-deep.sp-cell__title {
       font-size: 28px;
       font-weight: 400;
       color: #1a1a1a;
     }
-    /deep/.sp-field__body {
+    ::v-deep.sp-field__body {
       input {
         font-size: 28px;
         font-weight: 400;

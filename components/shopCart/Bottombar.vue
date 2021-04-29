@@ -186,7 +186,7 @@ export default {
     }
   }
   &__check {
-    /deep/.sp-checkbox__label {
+    ::v-deep.sp-checkbox__label {
       font-size: 24px;
       font-weight: 400;
       color: #222222;

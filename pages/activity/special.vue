@@ -301,6 +301,14 @@ export default {
     padding: 0 20px;
     margin-bottom: 32px;
 
+    /* ::v-deep.sp-sticky--fixed {
+      max-width: 10rem;
+      width: 100%;
+      left: 50%;
+      -webkit-transform: translateX(-50%);
+      transform: translateX(-50%);
+      background: linear-gradient(to right, #fe8000, #ff4c00);
+    } */
     .countdown {
       display: flex;
       justify-content: space-between;
@@ -445,7 +453,7 @@ export default {
 
   .tabs-box {
     width: 100vw;
-    /deep/ .sp-sticky {
+    ::v-deep .sp-sticky {
       border-radius: 24px 24px 0px 0px;
       background-color: #fff;
       overflow: hidden;

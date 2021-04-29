@@ -288,7 +288,7 @@ export default {
       }
       // 在浏览器中
       this.$router.push({
-        path: '/detail/serviceDetails',
+        path: '/detail',
         query: { productId },
       })
     },

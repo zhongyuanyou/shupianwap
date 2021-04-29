@@ -68,17 +68,16 @@ export default ({ app, store }) => {
       const token = app.$cookies.get('token') // 获取缓存用户token
       if (!store.state.app.isInApp && !store.state.app.isApplets) {
         // wap页面中
-        // if (token) {
-        //   if (to.path === loginRoutePath) {
-        //     // 如果跳转登录页面，将被重定向到首页
-        //     next({
-        //       path: defaultRoutePath,
-        //     })
-        //   } else {
-        //     next()
-        //   }
-        // } else
-        if (routerBlackList.includes(to.path)) {
+        if (token) {
+          if (to.path === loginRoutePath) {
+            // 如果跳转登录页面，将被重定向到首页
+            next({
+              path: defaultRoutePath,
+            })
+          } else {
+            next()
+          }
+        } else if (routerBlackList.includes(to.path)) {
           next({
             path: loginRoutePath,
             query: { redirect: to.path },

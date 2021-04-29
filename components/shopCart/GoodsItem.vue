@@ -936,7 +936,7 @@ export default {
     &-line--top {
       padding: 32px 0;
     }
-    /deep/&-line--top.sp-hairline--top {
+    ::v-deep&-line--top.sp-hairline--top {
       &::after {
         border-top-style: dashed !important;
       }

@@ -18,6 +18,7 @@
           class="my-swiper-item"
         >
           <a
+            v-if="item[0] && item[0].materialList"
             href="javascript:void(0)"
             class="swiper-box"
             @click="adJumpHandleMixin(item[0].materialList[0])"
@@ -25,6 +26,7 @@
             <img :src="item[0].materialList[0].materialUrl" alt="" />
           </a>
           <a
+            v-if="item[1] && item[1].materialList"
             href="javascript:void(0)"
             class="swiper-box"
             @click="adJumpHandleMixin(item[1].materialList[0])"

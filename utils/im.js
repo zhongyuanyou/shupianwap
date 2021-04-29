@@ -1,5 +1,5 @@
 import imSdk from '@dgg/sp-im-sdk'
-
+import config from '@/config'
 /**
  * @description: 初始化im
  * @param {String} env: 环境 必传
@@ -30,9 +30,9 @@ export function imInit(data = {}) {
     token: data.token,
     userId: data.userId,
     userTypeFlag: data.userType,
-    sysCode: 'crisps-app',
-    secret: 'b06ca305974e8b6b590b8315f72a7438',
-    appKey: '4R29RHK10AQILT8ONUAOC5DDST',
+    sysCode: config.imsysCode,
+    secret: config.imsecret,
+    appKey: config.imappKey,
     isConnectSocket: false,
     myInfo: (res) => {
       if (data.userType === 'VISITOR') {
@@ -56,7 +56,7 @@ export function imInit(data = {}) {
  */
 export function pullUnreadMsgCount(imExample, data = {}) {
   return new Promise((resolve) => {
-    imExample.pullUnreadMsgCount({}, (res) => {
+    imExample.pullUnreadMsgCount({ imUserId: data.userId }, (res) => {
       resolve(res)
     })
   })

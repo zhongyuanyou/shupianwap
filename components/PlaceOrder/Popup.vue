@@ -339,12 +339,12 @@ export default {
         background: url('https://cdn.shupian.cn/sp-pt/wap/8ef4u05rpn8000.png')
           no-repeat;
         background-size: 100%;
-        /deep/.sp-radio__icon--checked .sp-icon {
+        ::v-deep.sp-radio__icon--checked .sp-icon {
           color: #fff;
           background-color: #4974f5 !important;
           border-color: #4974f5;
         }
-        /deep/.sp-radio__icon--disabled {
+        ::v-deep.sp-radio__icon--disabled {
           background: #fff;
           .sp-icon {
             background: #fff;

@@ -40,12 +40,11 @@
     <div class="problem">
       <div class="tag">
         <ul class="box">
-          <li
-            v-for="(item, index) in questionDetails.categoryName"
-            :key="index"
-          >
-            {{ item }}
-          </li>
+          <template v-for="(item, index) in questionDetails.categoryName">
+            <li v-if="item" :key="index">
+              {{ item }}
+            </li>
+          </template>
         </ul>
       </div>
       <h1 ref="title" class="tit">{{ questionDetails.title }}</h1>
@@ -664,7 +663,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/deep/.title {
+::v-deep.title {
   text-align: left !important;
 }
 .form-onlyRead {
@@ -726,7 +725,7 @@ export default {
 .detail {
   min-height: 100vh;
   background: #f5f5f5;
-  /deep/.fixed-head {
+  ::v-deep.fixed-head {
     background: #fff;
     .my-head {
       background: #fff;
@@ -814,7 +813,7 @@ export default {
         -webkit-line-clamp: 2;
         overflow: hidden;
 
-        /deep/ img {
+        ::v-deep img {
           width: 100%;
           height: auto;
         }
@@ -909,7 +908,7 @@ export default {
       font-size: 40px;
       font-weight: bold;
       color: #222222;
-      /deep/ i {
+      ::v-deep i {
         vertical-align: -11px;
         margin-right: 5px;
       }
@@ -1122,7 +1121,7 @@ export default {
       }
     }
   }
-  /deep/.sp-bottombar {
+  ::v-deep.sp-bottombar {
     display: flex;
     background: #ffffff;
     border-radius: 8px;

@@ -42,7 +42,7 @@
         </sp-swipe-item>
       </sp-swipe>
     </div>
-    <div :class="pageScrollTop < 300 ? 'search-box' : ''">
+    <div :class="pageScrollTop < 300 ? 'search-box' : 'search-box2'">
       <sp-sticky>
         <Search
           ref="searchRef"
@@ -319,16 +319,26 @@ export default {
       height: 100%;
     }
   }
-  .serch-area {
-    .input-box {
-      background: #f5f5f5;
-    }
-  }
 }
 .page-head1 {
   height: 270px;
 }
 .page-head2 {
   height: 660px;
+}
+</style>
+
+<style lang="less">
+.page-head {
+  .search-box2 {
+    .serch-area {
+      background: #fff;
+      padding: 12px 20px 12px 20px;
+      .input-box {
+        background: #f5f5f5;
+        border: none;
+      }
+    }
+  }
 }
 </style>

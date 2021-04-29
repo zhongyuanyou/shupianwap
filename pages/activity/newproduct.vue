@@ -498,7 +498,7 @@ export default {
   height: 100%;
   overflow-x: hidden;
   margin: 0 auto;
-  /deep/.fixed-head {
+  ::v-deep.fixed-head {
     height: 0.88rem !important;
     .my-head {
       margin: 0 auto;

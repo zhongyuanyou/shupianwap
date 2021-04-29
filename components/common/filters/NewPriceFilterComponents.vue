@@ -162,7 +162,7 @@ export default {
     .number-field {
       border-bottom: 3px solid rgba(240, 240, 240, 1);
       padding: 26px 0;
-      /deep/input {
+      ::v-deepinput {
         font-size: 38px;
         font-family: PingFang SC;
         font-weight: 400;

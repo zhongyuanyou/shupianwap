@@ -174,10 +174,10 @@ export default {
       this.$router.back(-1)
     },
     operation_coupon(item) {
-      if (item.status === 1) {
+      if (item.couponStatus === 0) {
         this.setCouponStatus(item)
       } else {
-        this.$router.push('/')
+        Toast('无法领取')
       }
     },
     async setCouponStatus(item) {
@@ -338,21 +338,21 @@ export default {
 }
 .banner {
   margin-top: 88px;
-  /deep/ .sp-swipe {
+  ::v-deep .sp-swipe {
     width: 100%;
     height: 300px;
     /*background-color: #999;*/
     overflow: hidden;
     position: relative;
     margin-top: -88px;
-    /deep/ .sp-swipe-item {
+    ::v-deep .sp-swipe-item {
       height: 300px;
       a {
         width: 100%;
         height: 100%;
       }
     }
-    /deep/ .sp-image {
+    ::v-deep .sp-image {
       height: 300px;
       width: 100%;
       > img {
@@ -426,8 +426,8 @@ export default {
         font-family: PingFang SC;
         font-weight: bold;
         color: #222222;
-        line-height: 32px;
-        margin: 36px 0 24px 0;
+        line-height: 40px;
+        margin: 30px 0 24px 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -526,10 +526,10 @@ export default {
     color: #4974f5;
   }
 }
-/deep/ .sp-tabs__line {
+::v-deep .sp-tabs__line {
   width: 64px;
 }
-/deep/ .sp-tab--active {
+::v-deep .sp-tab--active {
   font-size: 28px;
   font-family: PingFang SC;
   font-weight: bold;
