@@ -53,6 +53,7 @@
               <div v-if="!isFollow" class="btn" @click="follow">
                 <sp-button
                   ><my-icon name="tianjia" size="0.27rem" color="#4974F5" />
+                  关注
                 </sp-button>
               </div>
               <div v-else class="btn2" @click="follow">
@@ -82,7 +83,7 @@
           <div v-if="!isFollow" class="btn" @click="follow">
             <sp-button
               ><my-icon name="tianjia" size="0.27rem" color="#4974F5" />
-              <p>关注</p></sp-button
+              关注</sp-button
             >
           </div>
           <div v-else class="btn2" @click="follow">
@@ -637,7 +638,6 @@ export default {
         width: 100%;
         height: 100%;
         background: none;
-        color: rgba(73, 116, 245, 1);
         display: block;
         float: left;
         font-size: 30px;
