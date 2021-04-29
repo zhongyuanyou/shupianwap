@@ -211,6 +211,9 @@ export default {
       imExample: (state) => state.im.imExample, // IM 实例
     }),
   },
+  mounted() {
+    this.$store.dispatch('user/clearUser')
+  },
   methods: {
     ...mapMutations({
       setUser: 'user/SET_USER',
@@ -358,6 +361,7 @@ export default {
             visitorId: imId,
             userId: data.userId,
           })
+          localStorage.setItem('userId', data.userId)
           this.$store.commit('im/SET_IM_SDK', null)
         }
         return data
