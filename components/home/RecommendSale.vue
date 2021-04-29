@@ -238,7 +238,7 @@ export default {
           this.tabBtn = res.map((item) => {
             return { ...item, goodsList: [], noData: false, limit: 10, page: 1 }
           })
-          this.selectItem(res[0], 0)
+          if (res.length) this.selectItem(res[0], 0)
         })
     },
     // 滚动加载更多
