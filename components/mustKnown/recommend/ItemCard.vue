@@ -152,7 +152,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-/deep/ .sp-cell {
+::v-deep .sp-cell {
   padding: 0 32px;
 }
 .bottom {

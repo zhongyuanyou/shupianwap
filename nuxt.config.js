@@ -137,17 +137,17 @@ module.exports = {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
-    '@nuxtjs/sentry',
+    // '@nuxtjs/sentry',
     '@nuxtjs/style-resources',
     ['cookie-universal-nuxt', { parseJSON: true }],
   ],
-  sentry: {
-    dsn: 'https://7b965c0e5d6d40d3a9b97db6ff8e3f7f@dsentry.shupian.cn/8',
-    config: {
-      release: '1.0.0',
-    },
-    tracing: true,
-  },
+  // sentry: {
+  //   dsn: 'https://7b965c0e5d6d40d3a9b97db6ff8e3f7f@dsentry.shupian.cn/8',
+  //   config: {
+  //     release: '1.0.0',
+  //   },
+  //   tracing: true,
+  // },
   axios: {
     proxy: true,
   },

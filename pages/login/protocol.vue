@@ -115,7 +115,7 @@ export default {
   background-color: #ffffff;
   .top {
     flex: 88px 0 0;
-    /deep/.sp-top-nav-bar {
+    ::v-deep.sp-top-nav-bar {
       height: 88px;
       min-height: auto;
       &__left,
@@ -127,7 +127,7 @@ export default {
       }
     }
   }
-  /deep/.content {
+  ::v-deep.content {
     flex: 1;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;

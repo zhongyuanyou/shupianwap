@@ -363,7 +363,7 @@ export default {
         margin-left: 8px;
       }
 
-      /deep/.sp-tag--large {
+      ::v-deep.sp-tag--large {
         height: 40px;
         padding: 0 16px;
         display: flex;
@@ -400,7 +400,7 @@ export default {
           color: #ec5330;
         }
       }
-      /deep/.sp-stepper {
+      ::v-deep.sp-stepper {
         color: #1a1a1a;
         font-size: 24px;
         font-weight: bold;

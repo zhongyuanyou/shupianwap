@@ -61,7 +61,7 @@
         <sp-field
           v-model.trim="content"
           maxlength="100"
-          style="font-size: 16px"
+          style="font-size: 16px; padding-left: 0"
           placeholder="请输入您的评论内容"
         />
         <p
@@ -264,6 +264,7 @@ export default {
     font-size: 34px;
     color: #1a1a1a;
     position: relative;
+    font-weight: bold;
     > .icon {
       position: absolute;
       right: 32px;
@@ -279,6 +280,9 @@ export default {
     display: flex;
     align-items: center;
     padding: 0 32px;
+    > span {
+      font-weight: bold;
+    }
     > p {
       margin-left: auto;
       width: 156px;
@@ -364,17 +368,17 @@ export default {
       }
     }
   }
-  /deep/.sp-bottombar {
+  ::v-deep.sp-bottombar {
     border-top: 1px solid #f4f4f4;
     display: flex;
     align-items: center;
     padding-right: 32px;
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
-    /deep/.sp-cell {
+    ::v-deep.sp-cell {
       width: 610px;
     }
-    /deep/.sp-cell::after {
+    .sp-cell::after {
       display: none;
     }
     > p {

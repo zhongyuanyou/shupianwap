@@ -423,7 +423,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #f8f8f8;
-  /deep/ .sp-top-nav-bar {
+  ::v-deep .sp-top-nav-bar {
     height: 88px;
   }
   &_con {
@@ -480,7 +480,7 @@ export default {
       .avatar_con {
         width: 100%;
         position: relative;
-        /deep/ .sp-uploader__wrapper {
+        ::v-deep .sp-uploader__wrapper {
           position: absolute;
           left: 0;
           right: 0;
@@ -489,11 +489,11 @@ export default {
           opacity: 0;
           overflow: hidden;
         }
-        /deep/ .sp-uploader__upload {
+        ::v-deep .sp-uploader__upload {
           width: 100%;
           height: 120px;
         }
-        /deep/ .sp-uploader__input {
+        ::v-deep .sp-uploader__input {
           width: 100%;
           height: 120px;
         }

@@ -78,7 +78,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .popup {
-  /deep/.sp-top-nav-bar {
+  ::v-deep.sp-top-nav-bar {
     font-weight: 400;
     .sp-top-nav-bar__title {
       font-size: 36px;
@@ -90,7 +90,7 @@ export default {
       margin-left: 8px;
     }
   }
-  /deep/.sp-field__control {
+  ::v-deep.sp-field__control {
     font-size: 30px;
     font-weight: bold;
   }

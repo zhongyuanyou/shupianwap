@@ -9,6 +9,9 @@ module.exports = {
   ossUrl: 'https://spapi.shupian.cn', // oss域名
   platformCode: 'COMDIC_PLATFORM_CRISPS', // 平台code
   terminalCode: 'COMDIC_TERMINAL_WAP', // 终端code
+  imsysCode: 'crisps-app', // imsysCode
+  imsecret: 'b06ca305974e8b6b590b8315f72a7438', // imsecret
+  imappKey: '4R29RHK10AQILT8ONUAOC5DDST', // im
   // 网关签名code
   SYS_CODE: 'spc-wap',
   // 网关签名密钥

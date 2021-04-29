@@ -37,8 +37,12 @@ export default {
     },
     // 判断是否登录
     judgeLoginMixin(needUserInfo = false, url) {
+      const token = this.token || this.$cookies.get('token', { path: '/' })
+      const userId = this.userId || this.$cookies.get('userId', { path: '/' })
+      const userType =
+        this.userType || this.$cookies.get('userType', { path: '/' })
       return new Promise((resolve) => {
-        if (this.userId && this.token && this.userType) {
+        if (userId && token && userType) {
           if (needUserInfo) {
             // 获取用户信息
             this.$axios
@@ -104,9 +108,20 @@ export default {
             const myInfo = localStorage.getItem('myInfo')
               ? JSON.parse(localStorage.getItem('myInfo'))
               : {}
-            const token = this.userType ? this.token : myInfo.token
-            const userId = this.userType ? this.userId : myInfo.token
-            const userType = this.userType || 'VISITOR'
+            const token = this.token
+              ? this.token
+              : this.$cookies.get('token', { path: '/' })
+              ? this.$cookies.get('token', { path: '/' })
+              : myInfo.token
+            const userId = this.userId
+              ? this.userId
+              : this.$cookies.get('userId', { path: '/' })
+              ? this.$cookies.get('userId', { path: '/' })
+              : myInfo.token
+            const userType =
+              this.userType ||
+              this.$cookies.get('userType', { path: '/' }) ||
+              'VISITOR'
             window.location.href = `${config.imBaseUrl}/chat?token=${token}&userId=${userId}&userType=${userType}&id=${res.data.groupId}`
           } else if (res.code === 5223) {
             this.clearUserInfoAndJumpLoging()
@@ -181,7 +196,8 @@ export default {
               paramJsonStr: {
                 productName: msgParams.productName, // 产品名称
                 productContent: msgParams.productContent, // 产品信息
-                price: msgParams.price, // 价格
+                // eslint-disable-next-line eqeqeq
+                price: msgParams.price == '0.00元' ? '面议' : msgParams.price, // 价格
                 forwardAbstract: msgParams.forwardAbstract, // 摘要信息，可与显示内容保持一致
                 routerId: msgParams.routerId, // 路由ID
               },
@@ -190,7 +206,9 @@ export default {
               // 带图片的模板消息
               case 0:
                 tepMsgParams.paramJsonStr.imageUrl = msgParams.imageUrl // 产品图片
-                tepMsgParams.paramJsonStr.unit = msgParams.unit // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+                tepMsgParams.paramJsonStr.unit =
+                  // eslint-disable-next-line eqeqeq
+                  msgParams.price == '0.00元' ? '' : msgParams.unit // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
                 tepMsgParams.templateId = '5fcef0aec24ddd00065a8c93' // 模板id
                 break
               // 不带图片的模板消息

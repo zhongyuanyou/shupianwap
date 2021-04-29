@@ -74,7 +74,7 @@ export default {
 <style lang="less" scoped>
 .install-app-dialog {
   overflow: hidden;
-  /deep/.recommend-dialog-content_body {
+  ::v-deep.recommend-dialog-content_body {
     border-radius: 24px;
     width: 580px;
     height: 736px;
@@ -110,7 +110,7 @@ export default {
       height: 88px;
       border-radius: 8px;
       margin-top: 148px;
-      /deep/.sp-button__text {
+      ::v-deep.sp-button__text {
         font-size: 32px;
         font-weight: bold;
         color: #fff;

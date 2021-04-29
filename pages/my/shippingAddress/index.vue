@@ -281,7 +281,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
-  /deep/ .sp-bottombar-button {
+  ::v-deep .sp-bottombar-button {
     font-size: 32px;
     font-weight: bold;
   }
@@ -330,16 +330,16 @@ export default {
           color: #222222;
         }
       }
-      ///deep/ .sp-swipe-cell__wrapper {
+      //::v-deep .sp-swipe-cell__wrapper {
       //  transform: translate3d(116px, 0, 0);
       //}
-      /deep/ .sp-swipe-cell__right {
+      ::v-deep .sp-swipe-cell__right {
         display: flex;
       }
-      /deep/ .sp-button {
+      ::v-deep .sp-button {
         margin: 0;
       }
-      /deep/ .sp-button__text {
+      ::v-deep .sp-button__text {
         color: #fff;
       }
       &_item {
@@ -409,7 +409,7 @@ export default {
     align-items: center;
     background-color: #fff;
     padding: 0 40px;
-    /deep/ .sp-button {
+    ::v-deep .sp-button {
       width: 100%;
     }
   }

@@ -84,7 +84,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-/deep/ .sp-list {
+::v-deep .sp-list {
   padding-bottom: 110px;
 }
 .item_span {

@@ -115,7 +115,7 @@ export default {
             areaName: this.city.name,
             customerUserId: this.$store.state.user.userId,
             plannerId: mchUserId,
-            customerPhone: this.$cookies.get('mainAccountFull'),
+            customerPhone: this.$cookies.get('mainAccountFull', { path: '/' }),
             requireCode: this.proDetail.classCodeLevel.split(',')[0],
             requireName: '',
             // id: mchUserId,
@@ -268,7 +268,7 @@ export default {
       justify-content: flex-end;
       padding-top: 24px;
       padding-bottom: 24px;
-      /deep/ button {
+      ::v-deep button {
         height: 100px;
         line-height: 100px;
         border-radius: 8px;

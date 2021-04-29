@@ -32,8 +32,13 @@
         />
         <Field>
           <template #input>
-            <Checkbox v-model="checked" :required="true" class="check">
-              <span>已阅读并同意<b>《用户认证协议》</b></span>
+            <Checkbox
+              v-model="checked"
+              :required="true"
+              class="check"
+              label-disabled
+            >
+              <span @click="goagr">已阅读并同意<b>《用户认证协议》</b></span>
             </Checkbox>
           </template>
         </Field>
@@ -81,6 +86,12 @@ export default {
     clearInterval(this.timeer)
   },
   methods: {
+    goagr() {
+      this.$router.push({
+        name: 'login-protocol',
+        query: { categoryCode: 'protocol100121' },
+      })
+    },
     isCardNo(card) {
       // 身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X
       const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
@@ -103,15 +114,17 @@ export default {
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false
         if (res.code === 200 && res.data && typeof res.data === 'object') {
-          // this.info = res.data
-          // this.userName = res.data.nickName
-          // this.realStatus = res.data.realStatus
-          // console.log(res.data.realStatus)
+          this.info = res.data
+          this.userName = res.data.nickName
+          this.realStatus = res.data.realStatus
+          console.log(res.data.realStatus)
           if (
             res.data.realStatus === 'AUTHENTICATION_SUCCESS' ||
             res.data.realStatus === 'AUTHENTICATION_ING'
           ) {
-            this.$cookies.set('realStatus', res.data.realStatus)
+            this.$cookies.set('realStatus', res.data.realStatus, {
+              path: '/',
+            })
             Toast({
               message: '认证成功',
               overlay: true,
@@ -137,7 +150,7 @@ export default {
             {
               name: this.userName,
               cardNo: this.idCrad,
-              phone: this.$cookies.get('mainAccountFull'),
+              phone: this.$cookies.get('mainAccountFull', { path: '/' }),
             }
           )
           .then((res) => {
@@ -177,10 +190,10 @@ export default {
     align-self: center;
   }
   > .box {
-    /deep/.sp-cell--required::before {
+    ::v-deep.sp-cell--required::before {
       display: none;
     }
-    /deep/.sp-cell {
+    ::v-deep.sp-cell {
       span {
         font-weight: bold;
       }

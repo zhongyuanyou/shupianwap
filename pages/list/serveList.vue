@@ -131,7 +131,7 @@ export default {
   .search-content {
     padding: 16px 32px;
   }
-  /deep/.spiconfont-sear_ic_sear {
+  ::v-deep.spiconfont-sear_ic_sear {
     margin-left: 24px !important;
   }
   .nav-back {
@@ -140,7 +140,7 @@ export default {
   .info {
     margin-left: 41px;
   }
-  /deep/.sp-work-tabs__nav .sp-work-tab {
+  ::v-deep.sp-work-tabs__nav .sp-work-tab {
     font-size: 32px;
     font-family: PingFang SC;
     font-weight: 400;

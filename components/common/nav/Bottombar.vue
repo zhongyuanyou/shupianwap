@@ -104,13 +104,26 @@ export default {
   },
   mounted() {
     if (this.imExample && this.userInfo.token) {
-      //  获取IM未读消息总数
-      pullUnreadMsgCount(this.imExample).then((res) => {
-        console.log('IM消息未读数：', res)
-        if (res.code === 200) {
-          this.unreadNum = res.data.totleUnread
+      console.log(this.imExample)
+
+      this.imExample.pullUnreadMsgCount(
+        { imUserId: this.userInfo.userId },
+        (res) => {
+          console.log('IM消息未读数：', res)
+          if (res.code === 200) {
+            this.unreadNum = res.data.totleUnread
+          }
         }
-      })
+      )
+      // //  获取IM未读消息总数
+      // pullUnreadMsgCount(this.imExample, { userId: this.userInfo.userId }).then(
+      //   (res) => {
+      //     console.log('IM消息未读数：', res)
+      //     if (res.code === 200) {
+      //       this.unreadNum = res.data.totleUnread
+      //     }
+      //   }
+      // )
     }
   },
   methods: {

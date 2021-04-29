@@ -398,7 +398,7 @@ export default {
   background: #fff;
   z-index: 99;
 }
-/deep/ .sp-sticky {
+::v-deep .sp-sticky {
   background: #fff;
 }
 .items {
@@ -447,14 +447,14 @@ export default {
   font-weight: bold;
   color: #222222;
 }
-/deep/ .sp-work-tab__text {
+::v-deep .sp-work-tab__text {
   flex-shrink: 0;
   font-size: 32px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: bold;
   color: #999999;
 }
-/deep/ .sp-work-tabs__line {
+::v-deep .sp-work-tabs__line {
   width: 24px;
   height: 6px;
   background: #4974f5;
@@ -509,12 +509,12 @@ export default {
     align-items: center;
     .sp-tabs {
       width: 670px;
-      /deep/.sp-tab {
+      ::v-deep.sp-tab {
         font-size: 32px;
         font-weight: bold;
       }
     }
-    /deep/.sp-tabs__line {
+    ::v-deep.sp-tabs__line {
       width: 24px;
       height: 6px;
       border-radius: 3px;

@@ -1,5 +1,8 @@
 <template>
-  <div class="page-head">
+  <div
+    class="page-head"
+    :class="fiexdBannerData.length ? 'page-head2' : 'page-head1'"
+  >
     <div
       class="bg-area"
       :class="fiexdBannerData.length ? 'bg-area2' : 'bg-activity'"
@@ -39,7 +42,7 @@
         </sp-swipe-item>
       </sp-swipe>
     </div>
-    <div :class="pageScrollTop < 300 ? 'search-box' : ''">
+    <div :class="pageScrollTop < 300 ? 'search-box' : 'search-box2'">
       <sp-sticky>
         <Search
           ref="searchRef"
@@ -153,8 +156,8 @@ export default {
 
 <style lang="less">
 .page-head {
+  height: 160px;
   position: relative;
-  height: 660px;
   .search-box {
     position: absolute;
     bottom: 0;
@@ -163,6 +166,9 @@ export default {
     height: 144px;
     border-radius: 24px;
     overflow: hidden;
+    .search-content {
+      background: #f5f5f5 !important;
+    }
   }
   .bg-area {
     background: linear-gradient(rgba(86, 126, 246, 1), rgba(73, 116, 245, 1));
@@ -313,9 +319,25 @@ export default {
       height: 100%;
     }
   }
-  .serch-area {
-    .input-box {
-      background: #f5f5f5;
+}
+.page-head1 {
+  height: 270px;
+}
+.page-head2 {
+  height: 660px;
+}
+</style>
+
+<style lang="less">
+.page-head {
+  .search-box2 {
+    .serch-area {
+      background: #fff;
+      padding: 12px 20px 12px 20px;
+      .input-box {
+        background: #f5f5f5;
+        border: none;
+      }
     }
   }
 }

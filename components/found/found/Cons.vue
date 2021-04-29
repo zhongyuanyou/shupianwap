@@ -358,7 +358,7 @@ export default {
 
 <style lang="less" scoped>
 .con {
-  /deep/.sp-cell {
+  ::v-deep.sp-cell {
     padding: 40px 32px;
   }
   //padding-top: constant(safe-area-inset-top);
@@ -383,7 +383,7 @@ export default {
         height: 258px;
         background-color: #f8f8f8;
         overflow: hidden;
-        /deep/ .sp-image__img {
+        ::v-deep .sp-image__img {
           width: 100%;
           border-radius: 12px;
         }

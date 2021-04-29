@@ -139,17 +139,19 @@
                 </div>
               </div>
             </div>
-            <!-- <div
-              v-if="!swipItem.goodsList.length && tabBtn.length"
+            <div
+              v-if="
+                !swipItem.goodsList.length && tabBtn.length && swipItem.noData
+              "
               class="no-data"
             >
               <img :src="$ossImgSet(340, 340, '3py8wghbsaq000.png')" alt="" />
               <p>暂无数据</p>
-            </div> -->
+            </div>
             <Loading-down
               v-if="tabBtn.length"
               v-show="loading || tabBtn[curentItem].noMore"
-              :bg-color="tabBtn[curentItem].noData ? '#ffffff' : '#f4f4f4'"
+              :bg-color="tabBtn[curentItem].noData ? '#f4f4f4' : '#f4f4f4'"
               :loading="loading && !tabBtn[curentItem].noMore"
               :no-data="tabBtn[curentItem].noMore"
             />
@@ -238,7 +240,7 @@ export default {
           this.tabBtn = res.map((item) => {
             return { ...item, goodsList: [], noData: false, limit: 10, page: 1 }
           })
-          this.selectItem(res[0], 0)
+          if (res.length) this.selectItem(res[0], 0)
         })
     },
     // 滚动加载更多
@@ -459,10 +461,10 @@ export default {
     }
   }
 }
-/deep/ .sp-skeleton {
+::v-deep .sp-skeleton {
   padding: 32px 0;
 }
-/deep/ .sp-skeleton__content {
+::v-deep .sp-skeleton__content {
   padding-top: 0;
 }
 .goods-item {
@@ -761,7 +763,7 @@ export default {
   background: white;
 }
 .top {
-  /deep/.sp-sticky {
+  ::v-deep.sp-sticky {
     z-index: 1;
   }
 }

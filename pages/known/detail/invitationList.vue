@@ -256,7 +256,7 @@ export default {
     align-items: center;
     padding: 0 32px 0 24px;
     box-sizing: border-box;
-    /deep/.search-content {
+    ::v-deep.search-content {
       background: #f3f3f3;
       border-radius: 12px;
       height: 88px;
@@ -303,7 +303,6 @@ export default {
     }
     > .listbox {
       box-sizing: border-box;
-      overflow: auto;
       > .list {
         display: flex;
         margin-top: 58px;

@@ -112,7 +112,7 @@ export default {
   height: 100%;
   background-color: #f8f8f8;
 
-  /deep/ .sp-top-nav-bar {
+  ::v-deep .sp-top-nav-bar {
     height: 88px;
   }
 

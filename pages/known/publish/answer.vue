@@ -121,7 +121,7 @@ export default {
     border-bottom: 1px solid #ddd;
   }
 }
-/deep/.sp-tabs__wrap {
+::v-deep.sp-tabs__wrap {
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
 }

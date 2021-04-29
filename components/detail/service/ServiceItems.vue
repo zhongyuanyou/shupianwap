@@ -145,7 +145,7 @@ export default {
   .open_app {
     padding: 32px 47px 0px 48px;
   }
-  /deep/ .sp-popup {
+  ::v-deep .sp-popup {
     border-radius: 24px 24px 0px 0px;
     padding: 58px 40px 125px 40px !important;
     .sp-popup__close-icon {
@@ -154,22 +154,22 @@ export default {
     .sp-safeguard__icon {
       display: none;
     }
-    /deep/ .sp-popup__title {
+    ::v-deep .sp-popup__title {
       padding: 0px 0 6px 0;
       font-size: 40px;
       color: #1a1a1a;
     }
   }
-  /deep/ .sp-safeguard__list li {
+  ::v-deep .sp-safeguard__list li {
     display: block;
     padding-top: 47px;
     padding-bottom: 0px;
   }
-  /deep/ .sp-popup__close-icon--top-right {
+  ::v-deep .sp-popup__close-icon--top-right {
     top: 40px;
     right: 40px;
   }
-  /deep/ .sp-safeguard__title {
+  ::v-deep .sp-safeguard__title {
     font-size: 32px;
     color: #222222;
   }

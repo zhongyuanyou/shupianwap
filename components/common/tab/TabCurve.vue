@@ -227,7 +227,7 @@ export default {
       transform: rotate(-180deg);
     }
   }
-  /deep/.sp-sticky {
+  ::v-deep.sp-sticky {
     background: none;
     .tab-curve {
       background-color: none;

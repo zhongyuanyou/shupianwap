@@ -292,11 +292,11 @@ export default {
 .result {
   background: #f5f5f5;
   min-height: 100vh;
-  /deep/.search-content {
+  ::v-deep.search-content {
     padding: 10px 32px 10px 24px;
     height: 0.88rem;
   }
-  /deep/.input-box {
+  ::v-deep.input-box {
     background: #f5f5f5;
     border: none;
     box-shadow: none;
@@ -309,7 +309,7 @@ export default {
       color: #000;
     }
   }
-  /deep/.cloose-btn {
+  ::v-deep.cloose-btn {
     margin-left: 32px;
     font-size: 32px;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -355,7 +355,7 @@ export default {
       margin-top: 20px;
       > h1 {
         font-size: 36px;
-        font-weight: 500;
+        font-weight: bold;
         color: #222222;
         display: -webkit-box;
         -webkit-box-orient: vertical;

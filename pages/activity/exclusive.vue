@@ -467,7 +467,7 @@ export default {
     height: 1720px;
     // background: #ffffff;
     z-index: 1;
-    /deep/ .sp-sticky {
+    ::v-deep .sp-sticky {
       // outline: 1px solid red;
       border-radius: 24px 24px 0px 0px;
       overflow: hidden;
@@ -527,7 +527,7 @@ export default {
         background: #f4f4f4;
         margin: 0 20px;
       }
-      /deep/ .sp-list {
+      ::v-deep .sp-list {
         > div:first-child .body-content-items {
           margin-top: 0;
         }

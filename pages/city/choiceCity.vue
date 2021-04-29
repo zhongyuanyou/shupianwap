@@ -375,7 +375,7 @@ export default {
       color: #999999;
       line-height: 26px;
     }
-    /deep/ .sp-index-anchor {
+    ::v-deep .sp-index-anchor {
       font-size: 26px !important;
       font-weight: 400;
       color: #999999;
@@ -386,7 +386,7 @@ export default {
         display: none;
       }
     }
-    /deep/ .sp-index-anchor--sticky {
+    ::v-deep .sp-index-anchor--sticky {
       position: relative;
       transform: none !important;
       left: auto !important;
@@ -413,7 +413,7 @@ export default {
       }
     }
   }
-  /deep/ .sp-index-anchor {
+  ::v-deep .sp-index-anchor {
     line-height: 68px !important;
     padding: 0 40px;
     background-color: #f8f8f8;
@@ -422,7 +422,7 @@ export default {
     font-weight: 400;
     color: #999999 !important;
   }
-  /deep/ .sp-cell {
+  ::v-deep .sp-cell {
     padding: 0 40px;
     line-height: 120px;
     font-size: 32px;
@@ -430,7 +430,7 @@ export default {
     font-weight: 400;
     color: #222222;
   }
-  /deep/ .sp-index-bar__index {
+  ::v-deep .sp-index-bar__index {
     padding: 10px 16px 10px 5px;
     font-size: 20px;
     font-family: PingFang SC;

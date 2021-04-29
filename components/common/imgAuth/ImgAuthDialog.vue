@@ -121,7 +121,7 @@ export default {
 
 <style lang="less" scoped>
 .img-auth-dialog {
-  /deep/.sp-dialog {
+  ::v-deep.sp-dialog {
     width: 540px;
     height: 340px;
     .sp-dialog__header {

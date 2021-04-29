@@ -254,7 +254,7 @@ export default {
   .search-content {
     padding: 16px 32px;
     &.has-input {
-      /deep/.input-box .imitate-input {
+      ::v-deep.input-box .imitate-input {
         color: #1a1a1a;
       }
     }
@@ -265,7 +265,7 @@ export default {
   .info {
     margin-left: 41px;
   }
-  /deep/.sp-work-tabs__nav .sp-work-tab {
+  ::v-deep.sp-work-tabs__nav .sp-work-tab {
     font-size: 32px;
     font-family: PingFang SC;
     font-weight: 400;
@@ -277,7 +277,7 @@ export default {
       color: #4974f5;
     }
   }
-  /deep/.spiconfont-sear_ic_sear {
+  ::v-deep.spiconfont-sear_ic_sear {
     margin-left: 24px !important;
   }
   .search-page {

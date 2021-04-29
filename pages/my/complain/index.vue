@@ -274,19 +274,13 @@ export default {
       Toast('文件大小不能超过20M')
     },
     afterRead(file) {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
       const imgs = this.images
       const formData = new FormData()
       formData.append('uploadatalog', 'sp-pt/wap/images')
       formData.append('file', file.file)
-      console.log('file', file)
       this.loading = true
       try {
-        this.$axios.post(ossApi.add, formData, config).then((res) => {
+        this.$axios.post(ossApi.add, formData).then((res) => {
           this.loading = false
           if (res.code === 200) {
             imgs.push(res.data.url)
@@ -366,7 +360,7 @@ export default {
     color: #1a1a1a;
     margin-right: 40px;
   }
-  /deep/ .sp-bottombar-button {
+  ::v-deep .sp-bottombar-button {
     font-size: 32px;
     font-weight: bold;
   }
@@ -476,7 +470,7 @@ export default {
           top: -30px;
         }
       }
-      /deep/.sp-uploader__upload {
+      ::v-deep.sp-uploader__upload {
         width: 140px;
         height: 140px;
         background: #ffffff;
@@ -493,21 +487,21 @@ export default {
           color: #999999;
         }
       }
-      /deep/.sp-uploader__preview-image {
+      ::v-deep.sp-uploader__preview-image {
         width: 140px;
         height: 140px;
         border-radius: 8px;
       }
-      /deep/.sp-uploader__preview {
+      ::v-deep.sp-uploader__preview {
         margin: 0 32px 20px 0;
       }
-      /deep/.sp-uploader__preview-delete-icon {
+      ::v-deep.sp-uploader__preview-delete-icon {
         font-size: 40px;
         font-weight: 500;
         top: -4px;
         right: -4px;
       }
-      /deep/.sp-uploader__preview-delete {
+      ::v-deep.sp-uploader__preview-delete {
         width: 32px;
         height: 32px;
         top: -12px;
@@ -518,7 +512,7 @@ export default {
       }
     }
   }
-  /deep/.sp-bottombar {
+  ::v-deep.sp-bottombar {
     height: 96px;
     padding: 32px 40px;
     &-button {
