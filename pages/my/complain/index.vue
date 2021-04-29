@@ -274,19 +274,13 @@ export default {
       Toast('文件大小不能超过20M')
     },
     afterRead(file) {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
       const imgs = this.images
       const formData = new FormData()
       formData.append('uploadatalog', 'sp-pt/wap/images')
       formData.append('file', file.file)
-      console.log('file', file)
       this.loading = true
       try {
-        this.$axios.post(ossApi.add, formData, config).then((res) => {
+        this.$axios.post(ossApi.add, formData).then((res) => {
           this.loading = false
           if (res.code === 200) {
             imgs.push(res.data.url)
