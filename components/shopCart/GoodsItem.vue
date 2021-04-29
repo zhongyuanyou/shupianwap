@@ -27,9 +27,8 @@
             icon-size="0.32rem"
             class="goods-item__check"
             :disabled="
-              (formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY' &&
-                shoppingCarStatus === 'completed') ||
-              formatGoodsStatusData.stock === '0'
+              formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY' &&
+              shoppingCarStatus === 'completed'
             "
             @change="handleAsyncCheckboxChange"
           >
