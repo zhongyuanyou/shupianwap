@@ -85,8 +85,8 @@
             面议</span
           >
           <span v-else class="pay-money"
-            >{{ orderData.orderPayableMoney }}
-            <span style="font-weight: 400; font-size: 12px">元</span>
+            >{{ orderData.orderPayableMoney
+            }}<span style="font-weight: 400; font-size: 12px">元</span>
           </span>
         </p>
         <!-- <p class="last-money">

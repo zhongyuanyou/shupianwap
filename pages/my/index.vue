@@ -13,11 +13,7 @@
           @click="handleAvatar"
         />
         <p class="txt" @click="handleClickLogin">
-          {{
-            token && info.nickName
-              ? '欢迎你，' + info.nickName || ''
-              : '登录/注册'
-          }}
+          {{ info.nickName ? '欢迎你，' + info.nickName || '' : '登录/注册' }}
         </p>
       </div>
     </div>
@@ -243,9 +239,9 @@ export default {
   },
   computed: {
     ...mapState({
-      userId: (state) => state.user.userInfo.userId,
-      token: (state) => state.user.userInfo.token,
-      userPhone: (state) => state.user.userInfo.userPhone,
+      userId: (state) => state.user.userId,
+      token: (state) => state.user.token,
+      userPhone: (state) => state.user.userPhone,
     }),
     avatar() {
       return GOODSLIST

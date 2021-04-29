@@ -1,7 +1,14 @@
 <template>
   <div class="item-inner">
     <sp-image class="img" :src="item.indexImg"></sp-image>
-    <div class="right">
+    <div
+      class="right"
+      :class="
+        cusOrderStatusType === 1 || cusOrderStatusType === 4
+          ? 'item-height1'
+          : 'item-height2'
+      "
+    >
       <p class="goods-name">
         <span
           v-if="
@@ -213,6 +220,14 @@ export default {
     flex: 1;
     padding-left: 20px;
   }
+  .item-height1 {
+    height: 156px;
+    overflow: hidden;
+  }
+  .item-height2 {
+    min-height: 206px;
+    overflow: hidden;
+  }
   .goods-name {
     display: flex;
     font-size: 28px;
@@ -236,10 +251,11 @@ export default {
     color: #999999;
     margin: 10px 0 10px 0;
     height: auto;
+    min-height: 94px;
     display: flex !important;
     .sku-l {
       flex: 1;
-      height: 60px;
+      height: auto;
       .textOverflow(2);
       position: relative;
       .btn-more {
