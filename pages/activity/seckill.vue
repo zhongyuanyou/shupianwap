@@ -1,5 +1,6 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
+    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
     <!-- Sheader -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="header">
@@ -31,7 +32,7 @@
           </div>
           <div class="low-money">近15天全网底价</div>
         </div>
-        <div v-show="endTime.sec" class="count-down">
+        <div v-if="isTimerShow" class="count-down">
           <div class="end-time">距本场结束还剩</div>
           <div class="down-time">
             <span class="block">{{ endTime.hour }}</span>
@@ -253,6 +254,7 @@ export default {
   data() {
     return {
       specType: 'HDZT_ZTTYPE_XSQG',
+      // specType: 'HDZT_ZTTYPE_QWBT',
       advice: [
         {
           lowmoney: '限时直降499元',
@@ -285,6 +287,7 @@ export default {
       refreshing: false,
       allText: '精选',
       introWords: ['人工选品', '限时限量', '低价高质'],
+      hasCity: false,
     }
   },
 }
@@ -353,7 +356,7 @@ export default {
         align-items: center;
         .low-money {
           font-size: 24px;
-          font-weight: 500;
+          font-weight: bold;
           color: #fefffe;
           margin-left: 8px;
           justify-content: center;
@@ -384,7 +387,7 @@ export default {
         align-items: center;
         .end-time {
           font-size: 24px;
-          font-weight: 500;
+          font-weight: bold;
           color: #fefffe;
           margin-right: 12px;
           font-family: PingFangSC-Medium, PingFang SC;
@@ -395,7 +398,7 @@ export default {
             width: 36px;
             height: 36px;
             font-size: 24px;
-            font-weight: 500;
+            font-weight: bold;
             color: #ec5330;
             line-height: 24px;
             background: #ffffff;
@@ -403,31 +406,9 @@ export default {
           }
           .colon {
             font-size: 24px;
-            font-weight: 500;
+            font-weight: bold;
             color: #fefffe;
-            // // line-height: 24px;
-            // margin-right: 12px;
           }
-          // .sp-count-down {
-          //   .block {
-          //     padding: 6px;
-          //     width: 36px;
-          //     height: 36px;
-          //     font-size: 24px;
-          //     font-weight: 500;
-          //     color: #ec5330;
-          //     line-height: 24px;
-          //     background: #ffffff;
-          //     border-radius: 4px;
-          //   }
-          //   .colon {
-          //     font-size: 24px;
-          //     font-weight: 500;
-          //     color: #fefffe;
-          //     // // line-height: 24px;
-          //     // margin-right: 12px;
-          //   }
-          // }
         }
       }
     }
@@ -481,7 +462,7 @@ export default {
         .item-bt {
           .item-bt-tp {
             font-size: 26px;
-            font-weight: 500;
+            font-weight: bold;
             color: #222222;
             padding: 16px 22px 12px 16px;
           }
@@ -491,14 +472,14 @@ export default {
             align-items: center;
             span:nth-child(1) {
               font-size: 30px;
-              font-weight: 500;
+              font-weight: bold;
               color: #ec5330;
               line-height: 30px;
               padding: 0 0 0 16px;
             }
             span:nth-last-child(1) {
               font-size: 22px;
-              font-weight: 500;
+              font-weight: bold;
               color: #ec5330;
               line-height: 22px;
             }
@@ -576,14 +557,14 @@ export default {
         justify-content: flex-start;
         li {
           font-size: 32px;
-          font-weight: 500;
+          font-weight: bold;
           color: #555555;
           line-height: 32px;
           margin-left: 48px;
         }
         li.active {
           font-size: 32px;
-          font-weight: 500;
+          font-weight: bold;
           color: #ec5330;
           line-height: 32px;
         }
@@ -643,7 +624,7 @@ export default {
         .rc-top {
           font-size: 32px;
           height: 84px;
-          font-weight: 500;
+          font-weight: bold;
           color: #222222;
           line-height: 0.42rem;
           span {
@@ -652,7 +633,7 @@ export default {
             border-radius: 4px;
             padding: 6px 8px;
             font-size: 20px;
-            font-weight: 500;
+            font-weight: bold;
             color: #ffffff;
             line-height: 20px;
           }
@@ -693,7 +674,7 @@ export default {
               font-weight: 400;
               span {
                 font-size: 40px;
-                font-weight: 500;
+                font-weight: bold;
                 display: inline-block;
                 transform: translateY(-3px);
                 margin: 0 4px;
@@ -724,7 +705,7 @@ export default {
               padding: 12px 0 10px 0;
               text-align: center;
               font-size: 30px;
-              font-weight: 500;
+              font-weight: bold;
               color: #ffffff;
               line-height: 30px;
             }
@@ -741,7 +722,7 @@ export default {
               .pro-per {
                 // position: absolute;
                 font-size: 16px;
-                font-weight: 500;
+                font-weight: bold;
                 color: #fffccd;
                 font-family: PingFangSC-Medium, PingFang SC;
                 line-height: 16px;
