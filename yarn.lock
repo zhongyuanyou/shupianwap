@@ -1139,10 +1139,10 @@
   dependencies:
     babel-runtime "^6.23.0"
 
-"@fe/gateway-sign@^1.0.1":
-  version "1.0.1"
-  resolved "http://tmobile.dgg188.cn/@fe/gateway-sign/download/@fe/gateway-sign-1.0.1.tgz#8a424527cb0cd98131378e2f37b0dfe027f7a804"
-  integrity sha1-ikJFJ8sM2YExN44vN7Df4Cf3qAQ=
+"@fe/gateway-sign@^1.0.2":
+  version "1.0.2"
+  resolved "http://tmobile.dgg188.cn/@fe/gateway-sign/download/@fe/gateway-sign-1.0.2.tgz#b7817b40d94b8edabc5f16b60ea6fbf516851812"
+  integrity sha1-t4F7QNlLjtq8Xxa2Dqb79RaFGBI=
   dependencies:
     "@dgg/http-sign" "^1.0.4"
     qs "^6.9.4"
