@@ -90,7 +90,7 @@ export default {
     color: #222222;
     line-height: 44px;
     span {
-      margin: 30px 0 0 283px;
+      margin: 30px auto;
       display: block;
       padding-top: 10px;
       width: 184px;
