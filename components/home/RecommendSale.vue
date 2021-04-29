@@ -509,12 +509,11 @@ export default {
     display: flex;
     flex-direction: column;
     .goods-name {
-      font-size: 28px;
+      font-size: 32px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #222222;
-      line-height: 36px;
-      margin-top: -3px;
+      line-height: 42px;
       .textOverflow(2);
       .pro-lable {
         display: inline-block;
