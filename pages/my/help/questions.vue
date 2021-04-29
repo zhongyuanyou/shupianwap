@@ -64,10 +64,10 @@ export default {
 .page-content {
   font-size: 32px;
   padding-bottom: 40px;
-  /deep/ a {
+  ::v-deep a {
     color: #4974f5;
   }
-  /deep/ img {
+  ::v-deep img {
     max-width: 100% !important;
     height: auto;
   }

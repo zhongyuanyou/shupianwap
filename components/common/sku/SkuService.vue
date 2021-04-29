@@ -447,7 +447,7 @@ export default {
       &:last-child {
         margin-bottom: 0;
       }
-      /deep/.sp-cell__title {
+      ::v-deep.sp-cell__title {
         display: inline-flex;
         align-items: center;
         flex: 50% 1 0;

@@ -48,17 +48,17 @@ export default {
 
 <style lang="less" scoped>
 .banner {
-  /deep/ .sp-swipe {
+  ::v-deep .sp-swipe {
     width: 100%;
     height: 520px;
     /*background-color: #999;*/
     overflow: hidden;
     position: relative;
     margin-top: -88px;
-    /deep/ .sp-swipe-item {
+    ::v-deep .sp-swipe-item {
       height: 520px;
     }
-    /deep/ .sp-image {
+    ::v-deep .sp-image {
       height: 520px;
       width: 100%;
       > img {

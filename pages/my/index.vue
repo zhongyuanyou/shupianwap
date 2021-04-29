@@ -507,7 +507,7 @@ export default {
   .exit_btn {
     margin: 65px 24px 0 24px;
     height: 280px;
-    /deep/ .sp-button {
+    ::v-deep .sp-button {
       width: 100%;
       border: 1px solid #cdcdcd;
     }

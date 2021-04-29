@@ -38,7 +38,7 @@ export default {
   &-content {
     font-size: 26px;
     color: #595959;
-    /deep/ img {
+    ::v-deep img {
       max-width: 100%;
     }
   }

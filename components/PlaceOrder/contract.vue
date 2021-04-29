@@ -196,18 +196,18 @@ export default {
   > .form {
     background: #fff;
     padding: 0 40px;
-    /deep/.sp-cell--required::before {
+    ::v-deep.sp-cell--required::before {
       left: 145px;
     }
-    /deep/.wd70::before {
+    ::v-deep.wd70::before {
       left: 115px;
     }
-    /deep/.sp-cell__title {
+    ::v-deep.sp-cell__title {
       font-size: 28px;
       font-weight: 400;
       color: #1a1a1a;
     }
-    /deep/.sp-field__body {
+    ::v-deep.sp-field__body {
       input {
         font-size: 28px;
         font-weight: 400;

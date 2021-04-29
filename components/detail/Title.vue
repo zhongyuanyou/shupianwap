@@ -136,7 +136,7 @@ export default {
     a {
       display: flex;
       color: #222222;
-      /deep/img {
+      ::v-deepimg {
         width: 40px;
         height: 30px;
       }

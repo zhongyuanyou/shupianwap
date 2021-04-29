@@ -236,7 +236,7 @@ export default {
       justify-content: space-between;
       height: 160px;
       align-items: center;
-      /deep/.sp-button {
+      ::v-deep.sp-button {
         width: 48%;
         border-radius: 8px;
       }

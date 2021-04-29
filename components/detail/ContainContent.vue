@@ -120,7 +120,7 @@ export default {
             font-size: 22px;
             display: flex;
             align-items: center;
-            /deep/ .sp-icon-arrow-down {
+            ::v-deep .sp-icon-arrow-down {
               margin-left: 10px;
               transition: all 0.3s;
             }

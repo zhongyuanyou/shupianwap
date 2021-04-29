@@ -613,7 +613,7 @@ export default {
     color: #666;
     font-weight: 400;
     color: #555555;
-    /deep/ img {
+    ::v-deep img {
       width: 100%;
       height: auto;
     }
@@ -627,7 +627,7 @@ export default {
     margin-top: 40px;
   }
 }
-/deep/.sp-bottombar {
+::v-deep.sp-bottombar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -725,7 +725,7 @@ export default {
     }
   }
 }
-// /deep/.my-head {
+// ::v-deep.my-head {
 //   padding: 0 32px;
 //   box-sizing: border-box !important;
 // }
@@ -810,7 +810,7 @@ export default {
       -webkit-line-clamp: 2;
       overflow: hidden;
 
-      /deep/ img {
+      ::v-deep img {
         width: 100%;
         height: auto;
       }

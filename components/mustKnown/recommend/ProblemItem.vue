@@ -151,7 +151,7 @@ export default {
 .sp-list {
   padding-top: 59px;
 }
-/deep/ .sp-cell {
+::v-deep .sp-cell {
   padding: 56px 0 0 0;
   position: relative;
 }

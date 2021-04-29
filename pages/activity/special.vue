@@ -321,7 +321,7 @@ export default {
 
     margin-bottom: 32px;
 
-    /* /deep/.sp-sticky--fixed {
+    /* ::v-deep.sp-sticky--fixed {
       max-width: 10rem;
       width: 100%;
       left: 50%;
@@ -477,7 +477,7 @@ export default {
 
   .tabs-box {
     width: 100vw;
-    /deep/ .sp-sticky {
+    ::v-deep .sp-sticky {
       border-radius: 24px 24px 0px 0px;
       background-color: #fff;
       overflow: hidden;

@@ -192,7 +192,7 @@ export default {
     }
   }
 }
-/deep/ .title {
+::v-deep .title {
   height: 72px;
 }
 </style>

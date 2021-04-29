@@ -214,11 +214,11 @@ export default {
 
 <style lang="less" scoped>
 .detail {
-  /deep/ img {
+  ::v-deep img {
     max-width: 100%;
     height: auto;
   }
-  /deep/ p {
+  ::v-deep p {
     word-wrap: break-word;
     word-break: normal;
   }

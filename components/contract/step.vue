@@ -107,7 +107,7 @@ export default {
         display: flex;
         align-items: center;
         width: 100%;
-        /deep/.icon {
+        ::v-deep.icon {
           padding: 0 19px;
         }
         .hr {
@@ -126,7 +126,7 @@ export default {
     }
     > .list:first-child {
       > .iconbox {
-        /deep/.icon {
+        ::v-deep.icon {
           padding-left: 20px;
         }
       }

@@ -319,7 +319,7 @@ export default {
       justify-content: flex-end;
       padding-top: 24px;
       padding-bottom: 24px;
-      /deep/ button {
+      ::v-deep button {
         height: 100px;
         line-height: 100px;
         border-radius: 8px;

@@ -28,20 +28,20 @@ export default {
 
 <style lang="less" scoped>
 .commitment {
-  /deep/ .sp-cell {
+  ::v-deep .sp-cell {
     height: 110px;
     padding: 0 40px;
     font-weight: 500;
     color: #1a1a1a;
     font-size: 28px;
-    /deep/ .sp-cell__title {
+    ::v-deep .sp-cell__title {
       font-size: 28px;
       font-family: PingFang SC;
       font-weight: 500;
       color: #1a1a1a;
     }
   }
-  /deep/ .sp-icon {
+  ::v-deep .sp-icon {
     height: 110px;
     line-height: 110px;
   }

@@ -94,13 +94,13 @@ export default {
 
 <style lang="less" scoped>
 .async-checkbox {
-  /deep/.sp-checkbox__icon--disabled {
+  ::v-deep.sp-checkbox__icon--disabled {
     .async-checkbox__icon {
       background-color: rgba(204, 204, 204, 0.32);
       color: #c8c9cc !important;
     }
   }
-  /deep/.sp-checkbox__icon--checked {
+  ::v-deep.sp-checkbox__icon--checked {
     .async-checkbox__icon {
       color: #4974f5;
     }

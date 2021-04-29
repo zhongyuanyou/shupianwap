@@ -366,7 +366,7 @@ export default {
     color: #1a1a1a;
     margin-right: 40px;
   }
-  /deep/ .sp-bottombar-button {
+  ::v-deep .sp-bottombar-button {
     font-size: 32px;
     font-weight: bold;
   }
@@ -476,7 +476,7 @@ export default {
           top: -30px;
         }
       }
-      /deep/.sp-uploader__upload {
+      ::v-deep.sp-uploader__upload {
         width: 140px;
         height: 140px;
         background: #ffffff;
@@ -493,21 +493,21 @@ export default {
           color: #999999;
         }
       }
-      /deep/.sp-uploader__preview-image {
+      ::v-deep.sp-uploader__preview-image {
         width: 140px;
         height: 140px;
         border-radius: 8px;
       }
-      /deep/.sp-uploader__preview {
+      ::v-deep.sp-uploader__preview {
         margin: 0 32px 20px 0;
       }
-      /deep/.sp-uploader__preview-delete-icon {
+      ::v-deep.sp-uploader__preview-delete-icon {
         font-size: 40px;
         font-weight: 500;
         top: -4px;
         right: -4px;
       }
-      /deep/.sp-uploader__preview-delete {
+      ::v-deep.sp-uploader__preview-delete {
         width: 32px;
         height: 32px;
         top: -12px;
@@ -518,7 +518,7 @@ export default {
       }
     }
   }
-  /deep/.sp-bottombar {
+  ::v-deep.sp-bottombar {
     height: 96px;
     padding: 32px 40px;
     &-button {

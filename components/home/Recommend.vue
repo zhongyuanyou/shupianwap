@@ -395,10 +395,10 @@ export default {
   }
 }
 .my-swipe {
-  /deep/ .sp-skeleton {
+  ::v-deep .sp-skeleton {
     padding: 32px 0;
   }
-  /deep/ .sp-skeleton__content {
+  ::v-deep .sp-skeleton__content {
     padding-top: 0;
   }
 }

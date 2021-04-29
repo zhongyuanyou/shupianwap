@@ -272,7 +272,7 @@ export default {
     border: none;
     color: #4974f5;
     padding: 0 12px;
-    /deep/ .sp-button__text {
+    ::v-deep .sp-button__text {
       font-weight: 700;
     }
   }

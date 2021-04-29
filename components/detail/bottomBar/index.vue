@@ -341,7 +341,7 @@ export default {
     }
     &-handle {
       display: flex;
-      /deep/ button {
+      ::v-deep button {
         height: 96px;
         line-height: 96px;
         border-radius: 8px;
