@@ -559,6 +559,7 @@ export default {
         background: #fc4e41;
         border-radius: 4px;
         color: white;
+        font-weight: 700;
       }
     }
     .goods-slogan {
@@ -727,7 +728,7 @@ export default {
       }
       span {
         font-family: PingFang SC;
-        font-weight: bold;
+        // font-weight: bold;
         color: rgba(153, 153, 153, 1);
         font-size: 32px;
         line-height: 32px;
