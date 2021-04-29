@@ -158,7 +158,7 @@ export default {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 24px 40px 0 40px;
+    padding: 24px 20px 0 20px;
     li {
       width: 20%;
       a {

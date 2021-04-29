@@ -313,8 +313,12 @@ export default {
     }
   }
   .serch-area {
-    .input-box {
+    background: #fff !important;
+    /deep/.input-box {
+      height: 100px;
       background: #f5f5f5;
+      border-radius: 24px;
+      border: none;
     }
   }
 }

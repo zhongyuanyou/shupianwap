@@ -465,8 +465,8 @@ export default {
   overflow: hidden;
   .goods-lable-img {
     position: relative;
-    width: 180px;
-    height: 180px;
+    width: 220px;
+    height: 220px;
     border-radius: 8px;
     overflow: hidden;
     margin-right: 22px;
@@ -509,11 +509,11 @@ export default {
     display: flex;
     flex-direction: column;
     .goods-name {
-      font-size: 28px;
-      font-family: PingFang SC;
-      font-weight: bold;
+      font-size: 32px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
       color: #222222;
-      line-height: 36px;
+      line-height: 42px;
       margin-top: -3px;
       .textOverflow(2);
       .pro-lable {
@@ -541,7 +541,7 @@ export default {
       }
     }
     .goods-tag {
-      margin: 4px 0 4px 0;
+      margin-top: 12px;
       .textOverflow(1);
       .tag-item {
         display: inline-block;
@@ -567,6 +567,7 @@ export default {
     }
     .goods-slogan1 {
       .textOverflow(1);
+      margin-top: 14px;
     }
     .goods-slogan2 {
       .textOverflow(2);
@@ -624,7 +625,7 @@ export default {
       line-height: 36px;
       align-items: flex-end;
       vertical-align: middle;
-      margin-bottom: 5px;
+      // margin-bottom: 5px;
       .sales-proce {
         display: flex;
         align-items: baseline;
