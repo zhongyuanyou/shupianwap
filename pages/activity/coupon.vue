@@ -174,10 +174,10 @@ export default {
       this.$router.back(-1)
     },
     operation_coupon(item) {
-      if (item.status === 1) {
+      if (item.couponStatus === 0) {
         this.setCouponStatus(item)
       } else {
-        this.$router.push('/')
+        Toast('无法领取')
       }
     },
     async setCouponStatus(item) {
