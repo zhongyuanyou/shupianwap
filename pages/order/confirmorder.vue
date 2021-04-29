@@ -592,7 +592,7 @@ export default {
 .PlaceOrder {
   background: #f8f8f8;
   height: 100vh;
-  /deep/.sp-skeleton__row,
+  ::v-deep.sp-skeleton__row,
   .sp-skeleton__title {
     background: #fff;
   }
@@ -694,7 +694,7 @@ export default {
         }
       }
       > .inpbox {
-        /deep/.sp-field {
+        ::v-deep.sp-field {
           padding: 20px 0;
         }
       }
@@ -702,10 +702,10 @@ export default {
     > .news-content {
       margin-top: 24px;
       background: #fff;
-      /deep/.sp-cell::after {
+      ::v-deep.sp-cell::after {
         display: none;
       }
-      /deep/.sp-hairline--top-bottom::after {
+      ::v-deep.sp-hairline--top-bottom::after {
         display: none;
       }
       .black {

@@ -383,7 +383,7 @@ export default {
 .activeItem2 {
   color: rgba(73, 116, 245, 1);
 }
-/deep/.sp-cell {
+::v-deep.sp-cell {
   padding: 16px 32px;
   .sp-checkbox__icon {
     .sp-icon {

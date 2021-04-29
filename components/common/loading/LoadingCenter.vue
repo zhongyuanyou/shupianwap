@@ -49,7 +49,7 @@ export default {
     box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.3);
     opacity: 0.9;
     border-radius: 8px;
-    /deep/ .sp-loading__text {
+    ::v-deep .sp-loading__text {
       font-size: 32px;
       font-family: PingFang SC;
       font-weight: bold;

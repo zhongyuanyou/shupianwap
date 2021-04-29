@@ -392,7 +392,7 @@ export default {
         height: 180px;
         border-radius: 8px;
         overflow: hidden;
-        /deep/ .sp-image__img {
+        ::v-deep .sp-image__img {
           border-radius: 8px;
         }
         .swipe_img {

@@ -406,25 +406,25 @@ export default {
 
 <style lang="less" scoped>
 .serveGoods {
-  /deep/.dropdownItem {
+  ::v-deep.dropdownItem {
     &.active {
       font-weight: bold;
       color: #4974f5;
     }
   }
-  /deep/.sp-dropdown-item {
+  ::v-deep.sp-dropdown-item {
     z-index: 30 !important;
   }
   /*height: calc(100% - 200px);*/
-  /deep/.sp-dropdown-item__content {
+  ::v-deep.sp-dropdown-item__content {
     max-height: 100%;
   }
-  /deep/.sp-dropdown-menu__bar {
+  ::v-deep.sp-dropdown-menu__bar {
     height: 80px;
     box-shadow: none;
     padding: 0 40px;
   }
-  /deep/.sp-dropdown-menu__item {
+  ::v-deep.sp-dropdown-menu__item {
     margin-right: 80px;
     &:last-child {
       margin-right: 0;
@@ -440,7 +440,7 @@ export default {
     }
   }
   /*E排序选择框*/
-  /deep/.sp-cell {
+  ::v-deep.sp-cell {
     padding: 18px 40px;
     &::after {
       display: none;
@@ -449,14 +449,14 @@ export default {
       margin-bottom: 40px;
     }
   }
-  /deep/.sp-dropdown-menu__title--active {
+  ::v-deep.sp-dropdown-menu__title--active {
     font-weight: bold;
   }
   .goods-content {
     overflow-x: hidden;
     overflow-y: scroll;
   }
-  /deep/.sp-tree-select {
+  ::v-deep.sp-tree-select {
     min-height: 600px;
     max-height: 600px;
     height: auto !important;
@@ -464,10 +464,10 @@ export default {
       padding: 30px 0 30px 40px;
     }
   }
-  /deep/.fixed-half-opacity {
+  ::v-deep.fixed-half-opacity {
     border-bottom: 1px solid #cdcdcd;
   }
-  /deep/.sp-dropdown-item__option--active {
+  ::v-deep.sp-dropdown-item__option--active {
     font-size: 28px;
     font-family: PingFang SC;
     font-weight: bold;

@@ -368,14 +368,14 @@ export default {
       }
     }
   }
-  /deep/.sp-bottombar {
+  ::v-deep.sp-bottombar {
     border-top: 1px solid #f4f4f4;
     display: flex;
     align-items: center;
     padding-right: 32px;
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
-    /deep/.sp-cell {
+    ::v-deep.sp-cell {
       width: 610px;
     }
     .sp-cell::after {

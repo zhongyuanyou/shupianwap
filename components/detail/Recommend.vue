@@ -114,7 +114,7 @@ export default {
   background-color: #fff;
   padding: 48px 0 28px 0;
   border-bottom: 24px solid #f8f8f8;
-  /deep/.sp-skeleton {
+  ::v-deep.sp-skeleton {
     width: 591px;
     margin-top: 12px;
   }
@@ -144,11 +144,11 @@ export default {
       }
     }
   }
-  /deep/ .sp-swipe {
+  ::v-deep .sp-swipe {
     margin-top: 39px;
     padding-right: 40px;
   }
-  /deep/ .sp-swipe-item {
+  ::v-deep .sp-swipe-item {
     width: 100%;
     height: 224px;
     display: flex;

@@ -78,7 +78,7 @@ export default {
 <style lang="less" scoped>
 .goods-popup {
   &__container {
-    /deep/.sp-center-popup__containerConfirm {
+    ::v-deep.sp-center-popup__containerConfirm {
       width: 540px;
       .sp-center-popup__title {
         margin: 64px 10px 50px !important;

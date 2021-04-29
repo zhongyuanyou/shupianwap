@@ -89,7 +89,7 @@ export default {
     &-item {
       padding: 30px 40px;
     }
-    /deep/.sp-cell__label {
+    ::v-deep.sp-cell__label {
       color: #ec5330 !important;
     }
   }

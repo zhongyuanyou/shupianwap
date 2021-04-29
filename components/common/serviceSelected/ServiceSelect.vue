@@ -277,7 +277,7 @@ export default {
   background: #fff;
   display: flex;
   flex-direction: column;
-  /deep/.sp-tree-select {
+  ::v-deep.sp-tree-select {
     min-height: 200px;
     max-height: 400px;
     flex: 1 1;

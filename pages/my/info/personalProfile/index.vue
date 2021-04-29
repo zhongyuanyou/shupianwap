@@ -68,19 +68,19 @@ export default {
 .personal_profile {
   height: 100%;
   background-color: #f8f8f8;
-  /deep/ .sp-top-nav-bar {
+  ::v-deep .sp-top-nav-bar {
     height: 88px;
   }
   .textarea {
     padding-top: 112px;
-    /deep/ .sp-cell {
+    ::v-deep .sp-cell {
       padding: 40px 40px 24px;
     }
-    /deep/ .sp-field__control {
+    ::v-deep .sp-field__control {
       color: #222222;
       font-size: 32px;
     }
-    /deep/ .sp-field__word-limit {
+    ::v-deep .sp-field__word-limit {
       color: #cccccc;
       font-size: 24px;
     }

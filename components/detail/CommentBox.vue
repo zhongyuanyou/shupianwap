@@ -80,13 +80,13 @@ export default {
     color: #1a1a1a;
     line-height: 40px;
   }
-  /deep/.sp-swipe__indicator {
+  ::v-deep.sp-swipe__indicator {
     background: #cccccc;
   }
-  /deep/.sp-swipe__indicator--active {
+  ::v-deep.sp-swipe__indicator--active {
     background: #4974f5 !important;
   }
-  /deep/.sp-swipe__indicators {
+  ::v-deep.sp-swipe__indicators {
     bottom: 0;
   }
   > .my-swipe {

@@ -298,7 +298,7 @@ export default {
         }
       }
     }
-    /deep/ .sp-button--primary {
+    ::v-deep .sp-button--primary {
       width: 100%;
       margin-top: 84px;
       background-color: rgba(73, 116, 245, 0.1);

@@ -88,7 +88,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/deep/.sp-cell {
+::v-deep.sp-cell {
   padding: 18px 40px 36px 32px;
   font-size: 40px;
   .sp-field__word-limit {

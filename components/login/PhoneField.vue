@@ -213,7 +213,7 @@ export default {
   }
 }
 
-/deep/.sp-field__clear {
+::v-deep.sp-field__clear {
   padding: 0 16px !important;
   margin-right: 0 !important;
   line-height: inherit;

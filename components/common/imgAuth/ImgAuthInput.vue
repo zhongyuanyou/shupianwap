@@ -119,7 +119,7 @@ export default {
   }
   &__field {
     padding: 8px 8px 8px 16px;
-    /deep/.sp-field__control {
+    ::v-deep.sp-field__control {
       font-size: 22px;
     }
   }

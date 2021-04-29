@@ -222,10 +222,10 @@ export default {
     background: #fff;
     .sp-dropdown-menu {
       .sp-dropdown-menu__bar {
-        /deep/.sp-dropdown-menu__item {
+        ::v-deep.sp-dropdown-menu__item {
           text-align: center;
         }
-        /deep/.sp-dropdown-menu__title:after {
+        ::v-deep.sp-dropdown-menu__title:after {
           right: 35px;
         }
       }

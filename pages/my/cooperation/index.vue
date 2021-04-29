@@ -270,20 +270,20 @@ export default {
       color: #1a1a1a;
       margin-bottom: 24px;
     }
-    /deep/.sp-cell {
+    ::v-deep.sp-cell {
       padding: 36px 0px;
       &::after {
         left: 0;
         right: 0;
       }
     }
-    /deep/.sp-field__label {
+    ::v-deep.sp-field__label {
       font-size: 32px;
       font-family: PingFang SC;
       font-weight: bold;
       color: #1a1a1a;
     }
-    /deep/.sp-field__control {
+    ::v-deep.sp-field__control {
       font-size: 28px;
       font-family: PingFang SC;
       font-weight: 400;
@@ -331,7 +331,7 @@ export default {
       }
     }
   }
-  /deep/.sp-bottombar {
+  ::v-deep.sp-bottombar {
     height: 96px;
     padding: 32px 40px;
     z-index: 999;

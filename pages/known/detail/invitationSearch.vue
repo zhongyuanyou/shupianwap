@@ -271,7 +271,7 @@ export default {
       font-weight: bold;
       color: #1a1a1a;
     }
-    // /deep/.sp-sticky {
+    // ::v-deep.sp-sticky {
     //   border-bottom: 1px solid #f4f4f4;
     //   .search-content {
     //     padding: 0 24px;
