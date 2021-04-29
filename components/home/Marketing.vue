@@ -176,9 +176,10 @@ export default {
   .sp-goods-title {
     font-size: 32px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
     color: #222222;
     line-height: 32px;
+    margin-bottom: 14px;
+    font-weight: 700;
     .title-bar {
       display: inline-block;
       width: auto;
@@ -210,40 +211,45 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(153, 153, 153, 1);
-    line-height: 32px;
+    line-height: 26px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    margin-bottom: 10px;
   }
   .sp-goods-des {
     font-size: 26px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(153, 153, 153, 1);
-    line-height: 32px;
+    line-height: 26px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-  p {
-    margin-bottom: 10px;
-  }
+  // p {
+  //   margin-bottom: 10px;
+  // }
   .imgs {
     width: 315px;
     height: 162px;
     overflow: hidden;
     display: flex;
     justify-content: space-between;
+    position: absolute;
+    bottom: 24px;
     img {
       width: auto;
       border-radius: 12px;
     }
   }
   .bd-imgs {
-    width: 100%;
+    position: absolute;
+    // width: 100%;
     height: 162px;
+    bottom: 28px;
     img {
-      width: 100%;
+      width: 315px;
     }
   }
   .sp-goods-btn {
