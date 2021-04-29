@@ -96,22 +96,39 @@ export default {
       }
       // 超过10个，改变前10个的排列顺序
       const newRollNav = JSON.parse(JSON.stringify(rollNav))
+      const newRollNav1 = JSON.parse(JSON.stringify(newRollNav))
+      let length = newRollNav.length
+      length = Math.ceil(length / 2)
+      let star = []
+      star = newRollNav.splice(0, length)
+      const end = newRollNav1.splice(length)
+      const arr = []
+      star.forEach((i, a) => {
+        arr.push(star[a])
+        if (end[a]) {
+          console.log(a)
+          arr.push(end[a])
+        }
+      })
+      console.log(arr)
+      // const oddNavArr =
       // 取前10个中的奇数项
-      const oddNavArr = rollNav.filter((item, index) => {
-        return (index + 1) % 2 !== 0 && index < 10
-      })
-      // 取前10个的偶数项
-      const evenNavArr = rollNav.filter((item, index) => {
-        return (index + 1) % 2 === 0 && index < 10
-      })
-      newRollNav.splice(0, 10, ...oddNavArr.concat(evenNavArr))
-      return newRollNav
+      // const oddNavArr = rollNav.filter((item, index) => {
+      //   return (index + 1) % 2 !== 0 && index < 10
+      // })
+      // // 取前10个的偶数项
+      // const evenNavArr = rollNav.filter((item, index) => {
+      //   return (index + 1) % 2 === 0 && index < 10
+      // })
+      // newRollNav.splice(0, 10, ...oddNavArr.concat(evenNavArr))
+      return arr
     },
   },
   mounted() {
     const scrollWidth = this.$refs.refScroll.scrollWidth // 容器文档总宽
     const clientWidth = this.$refs.refScroll.clientWidth // 容器可视宽度
     this.canScrollWidth = scrollWidth - clientWidth // 容器可滚动宽度
+    // console.log(this.rollNav, 11111)
   },
   methods: {
     scrollHandle() {
