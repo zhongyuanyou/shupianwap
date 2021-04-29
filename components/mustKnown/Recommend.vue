@@ -75,7 +75,6 @@ export default {
           this.finished = true
         }
       } else {
-        console.log(message)
         this.loading = false
         this.finished = true
       }
