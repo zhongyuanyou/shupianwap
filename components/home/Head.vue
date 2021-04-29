@@ -175,7 +175,7 @@ export default {
     span {
       display: inline-block;
       font-size: 30px;
-      font-weight: 600;
+      font-weight: bold;
     }
     .logo {
       width: 40px;
@@ -195,7 +195,7 @@ export default {
       height: 36px;
       font-size: 36px;
       font-family: PingFangSC-Semibold, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #ffffff;
       line-height: 36px;
     }
@@ -204,14 +204,14 @@ export default {
       height: 36px;
       font-size: 36px;
       font-family: PingFangSC-Semibold, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       line-height: 36px;
     }
     .span-4 {
       height: 36px;
       font-size: 36px;
       font-family: PingFangSC-Semibold, PingFang SC;
-      font-weight: 600;
+      font-weight: bold;
       color: #ffffff;
       line-height: 36px;
     }
