@@ -363,21 +363,10 @@ export default {
             this.nodeTotalMoney = this.regFenToYuan(this.nodeTotalMoney)
             this.nodeNumber = this.nodeList.length
             // 对支付列表进行排序
-            const sortArr = []
-            for (let i = 0, l = nodeList.length; i < l; i++) {
-              // 处理金额
-              nodeList[i].money = this.regFenToYuan(nodeList[i].money)
-              // 将本期应付的批次排在前面
-              if (nodeList[i].alreadyPayment === 'ORDER_BATCH_PAYMENT_PAY_1') {
-                sortArr.splice(0, 0, nodeList[i])
-              } else {
-                sortArr.push(nodeList[i])
-              }
-            }
-            sortArr.forEach((item) => {
+            nodeList.forEach((item) => {
               item.batchIndex = Number(item.batchNumber) + 1
             })
-            this.nodeList = sortArr
+            this.nodeList = nodeList
           } else {
             // 当前订单的分批支付信息 订单详情页
             // 筛选对应订单的支付列表
