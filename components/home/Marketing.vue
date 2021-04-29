@@ -180,6 +180,8 @@ export default {
     line-height: 32px;
     margin-bottom: 14px;
     font-weight: 700;
+    display: flex;
+    align-items: center;
     .title-bar {
       display: inline-block;
       width: auto;
@@ -192,6 +194,7 @@ export default {
       border-radius: 4px;
       line-height: 24px;
       position: relative;
+      margin-left: 6px;
       &::before {
         position: absolute;
         content: '';
@@ -262,10 +265,13 @@ export default {
     border-radius: 8px;
     font-size: 24px;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: 700;
     border: none;
     color: #4974f5;
     padding: 0 12px;
+    /deep/ .sp-button__text {
+      font-weight: 700;
+    }
   }
   .bd-img {
     width: 100%;

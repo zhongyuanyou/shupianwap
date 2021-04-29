@@ -510,11 +510,10 @@ export default {
     flex-direction: column;
     .goods-name {
       font-size: 32px;
-      font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
+      font-family: PingFang SC;
+      font-weight: bold;
       color: #222222;
       line-height: 42px;
-      margin-top: -3px;
       .textOverflow(2);
       .pro-lable {
         display: inline-block;
@@ -560,6 +559,7 @@ export default {
         background: #fc4e41;
         border-radius: 4px;
         color: white;
+        font-weight: 700;
       }
     }
     .goods-slogan {
@@ -729,7 +729,7 @@ export default {
       }
       span {
         font-family: PingFang SC;
-        font-weight: bold;
+        // font-weight: bold;
         color: rgba(153, 153, 153, 1);
         font-size: 32px;
         line-height: 32px;
