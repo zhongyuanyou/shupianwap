@@ -196,7 +196,8 @@ export default {
               paramJsonStr: {
                 productName: msgParams.productName, // 产品名称
                 productContent: msgParams.productContent, // 产品信息
-                price: msgParams.price, // 价格
+                // eslint-disable-next-line eqeqeq
+                price: msgParams.price == '0.00元' ? '面议' : msgParams.price, // 价格
                 forwardAbstract: msgParams.forwardAbstract, // 摘要信息，可与显示内容保持一致
                 routerId: msgParams.routerId, // 路由ID
               },
@@ -205,7 +206,9 @@ export default {
               // 带图片的模板消息
               case 0:
                 tepMsgParams.paramJsonStr.imageUrl = msgParams.imageUrl // 产品图片
-                tepMsgParams.paramJsonStr.unit = msgParams.unit // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
+                tepMsgParams.paramJsonStr.unit =
+                  // eslint-disable-next-line eqeqeq
+                  msgParams.price == '0.00元' ? '' : msgParams.unit // 小数点后面带单位的字符串（示例：20.20元，就需要传入20元）
                 tepMsgParams.templateId = '5fcef0aec24ddd00065a8c93' // 模板id
                 break
               // 不带图片的模板消息
