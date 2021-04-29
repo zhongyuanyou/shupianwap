@@ -135,7 +135,6 @@ export default {
         width: 100%;
         height: 100%;
         background: none;
-        color: rgba(73, 116, 245, 1);
         display: block;
         float: left;
         font-size: 30px;

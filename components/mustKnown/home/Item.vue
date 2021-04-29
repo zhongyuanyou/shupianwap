@@ -267,7 +267,7 @@ export default {
       margin-right: 24px;
       min-width: 100px;
       i {
-        margin-right: 16px;
+        margin-right: 8px;
       }
     }
   }
