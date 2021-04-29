@@ -96,7 +96,9 @@ export default {
       try {
         const params = {
           // id: this.userId,
-          id: this.$store.state.user.userId || this.$cookies.get('userId'),
+          id:
+            this.$store.state.user.userId ||
+            this.$cookies.get('userId', { path: '/' }),
         }
         const res = await this.$axios.get(userinfoApi.info, { params })
         this.loading = false
