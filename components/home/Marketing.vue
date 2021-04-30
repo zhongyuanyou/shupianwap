@@ -119,6 +119,13 @@ export default {
         return []
       },
     },
+    // 帮找服务
+    helpBannerData: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
   },
   data() {
     return {
