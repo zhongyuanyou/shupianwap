@@ -119,9 +119,9 @@
                   </div>
                   <div class="right-content">
                     <div class="rc-top">
-                      <span class="tag">好品</span>
-                      <span class="tag">千万补贴</span>
-                      <span class="title"> {{ item.skuName }}</span>
+                      <span class="span1">好品</span>
+                      <span class="span2">千万补贴</span>
+                      <span class="span3"> {{ item.skuName }}</span>
                     </div>
                     <div v-show="item.tags" class="rc-middle">
                       <div
@@ -134,9 +134,20 @@
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
-                        <div class="rc-bottom-lf-my">
-                          <div>{{ item.specialPrice }}</div>
-                          <div>元</div>
+                        <div
+                          v-if="parsePrice(item.specialPrice) !== '面议'"
+                          class="rc-bottom-lf-my"
+                        >
+                          <div>
+                            {{ parsePrice(item.specialPrice).yuan }}.
+                            <span class="rc-bottom-lf-my-cent">
+                              {{ parsePrice(item.specialPrice).jiao }}
+                            </span>
+                            <span class="rc-bottom-lf-my-unit">元</span>
+                          </div>
+                        </div>
+                        <div v-else class="rc-bottom-lf-my">
+                          <div>面议</div>
                         </div>
                         <div class="bf-my">{{ item.skuPrice }}元</div>
                       </div>
@@ -389,8 +400,9 @@ export default {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      height: 88px;
-      padding: 0 20px;
+      // height: 88px;
+      // padding: 0 20px;
+      padding: 28px 20px;
       &.sp-sticky--fixed {
         border-radius: 0;
       }
@@ -434,7 +446,7 @@ export default {
         white-space: nowrap;
         font-size: 32px;
         font-family: PingFangSC-Medium, PingFang SC;
-        font-weight: 500;
+        font-weight: bold;
         color: #555555;
         line-height: 56px;
         height: 56px;
@@ -456,7 +468,7 @@ export default {
     .body-content {
       .line {
         height: 1px;
-        background: #dcdcdc;
+        background: #f4f4f4;
       }
       .body-content-items {
         height: 284px;
@@ -477,27 +489,31 @@ export default {
         position: relative;
         flex: 1;
         .rc-top {
-          font-family: PingFangSC-Medium, PingFang SC;
-          // line-height: 32px;
-          .tag {
-            display: inline-block;
+          font-weight: 500;
+          width: 395px;
+          font-size: 32px;
+          .span1,
+          .span2 {
             background: #ec5330;
             border-radius: 4px;
             padding: 0 8px;
-            margin: 5px 0;
             font-size: 20px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #ffffff;
             line-height: 32px;
             height: 32px;
-            font-weight: bold;
-            color: #ffffff;
+            float: left;
+            margin: 4px 8px 0 0;
           }
-          .title {
-            line-height: 42px;
-            font-size: 32px;
-            font-weight: bold;
+          .span3 {
             color: #222222;
+            font-weight: bold;
+            font-family: PingFangSC-Medium, PingFang SC;
+            line-height: 42px;
           }
         }
+
         .rc-middle {
           margin-top: 12px;
           display: flex;
@@ -556,6 +572,14 @@ export default {
               line-height: 22px;
               margin-left: 2px;
             }
+            .rc-bottom-lf-my-cent {
+              font-size: 28px;
+              display: inline-block;
+              margin-left: -10px;
+            }
+            .rc-bottom-lf-my-unit {
+              font-size: 22px;
+            }
           }
           .rc-bottom-rt {
             width: 200px;
@@ -572,7 +596,7 @@ export default {
               font-weight: bold;
               color: #ffffff;
               line-height: 32px;
-              padding: 0 8px 0 16px;
+              padding: 1px 8px 0 16px;
             }
             :nth-last-child(1) {
               height: 32px;

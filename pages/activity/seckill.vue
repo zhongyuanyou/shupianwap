@@ -395,7 +395,8 @@ export default {
         .down-time {
           .block {
             padding: 6px;
-            width: 36px;
+            min-width: 36px;
+            white-space: normal;
             height: 36px;
             font-size: 24px;
             font-weight: bold;

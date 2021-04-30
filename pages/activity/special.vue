@@ -267,7 +267,6 @@ export default {
       margin-right: 20px;
       flex: 1;
       height: 88px;
-      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
       border-radius: 8px;
       background: #000000;
       border-radius: 8px;
@@ -278,15 +277,16 @@ export default {
         margin: 29px 12px 28px 32px;
       }
       input {
+        display: block;
+        position: relative;
+        top: 1.5px;
         border: none;
         font-size: 32px;
         font-weight: bold;
         color: #ffffff;
         line-height: 32px;
         background: transparent;
-        display: flex;
         align-items: center;
-
         font-family: PingFangSC-Medium, PingFang SC;
 
         &::placeholder {
@@ -354,7 +354,8 @@ export default {
           display: flex;
           align-items: center;
           span {
-            // width: 36px;
+            min-width: 36px;
+            white-space: normal;
             height: 36px;
             padding: 6px 4px;
             background: #ffffff;

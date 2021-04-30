@@ -264,7 +264,7 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             if (res.data.endTime) {
-              this.activeTimer(res.data.endTime)
+              this.activeTimer(res.data.endTime.replace(/-/g, '/'))
             }
             if (res.data.specCode) {
               this.specCode = res.data.specCode
@@ -310,13 +310,13 @@ export default {
     // 获取产品
     async getProductList() {
       if (
-        this.activityTypeOptions.length > 0 &&
-        this.specType !== 'HDZT_ZTTYPE_XSQG'
+        this.activityTypeOptions.length > 0
+        // && this.specType !== 'HDZT_ZTTYPE_XSQG'
       ) {
         const params = {
           specCode: this.specCode,
           page: this.page,
-          limit: 10,
+          limit: 15,
           terminalCode: this.terminalCode,
         }
         if (this.hasCity) {
@@ -355,13 +355,22 @@ export default {
             }
           } else {
             this.loading = false
-            Toast.fail({
-              duration: 2000,
-              message: '服务异常，请刷新重试！',
-              forbidClick: true,
-              className: 'my-toast-style',
-            })
+            throw new Error('服务异常，请刷新重试！')
+            // Toast.fail({
+            //   duration: 2000,
+            //   message: '服务异常，请刷新重试！',
+            //   forbidClick: true,
+            //   className: 'my-toast-style',
+            // })
           }
+        })
+        .catch((err) => {
+          Toast.fail({
+            duration: 2000,
+            message: err.message,
+            forbidClick: true,
+            className: 'my-toast-style',
+          })
         })
         .finally(() => {
           this.refreshing = false
@@ -373,7 +382,7 @@ export default {
           specCode: this.specCode,
           isReco: 1,
           page: 1,
-          limit: 100000,
+          limit: 10000,
           terminalCode: this.terminalCode,
         }
 
@@ -532,6 +541,16 @@ export default {
     convert2vw(px) {
       px = parseFloat(px)
       return (px / this.screenWidth) * 100
+    },
+    parsePrice(priceStr) {
+      if (priceStr > 0) {
+        return {
+          yuan: priceStr.split('.')[0],
+          jiao: priceStr.split('.')[1],
+        }
+      } else {
+        return '面议'
+      }
     },
   },
 }
