@@ -199,6 +199,10 @@ export default {
           this.formatGoodsStatusData
         )
       }
+      console.log(
+        '++++++++++++++++++++++++!!this.commodityData.shopIsSelected',
+        !!this.commodityData.shopIsSelected
+      )
       return (
         !!this.commodityData.shopIsSelected || this.commodityData.stock === '0'
       )

@@ -166,16 +166,29 @@ export default {
       return this.skuStatus === 'open'
     },
   },
+  // watch: {
+  //   currentSelectedCartIds: {
+  //     handler(newVal, oldVal) {
+  //       console.log('newVal:', newVal)
+
+  //       // const list = this.list.filter(
+  //       //   (item) => item.status !== 'PRO_STATUS_SOLD_OUT' && item.stock !== '0'
+  //       // )
+  //       // console.log('list', list)
+  //       if (newVal.length && newVal.length === list.length) {
+  //         return (this.bottomData.selectAll = true)
+  //       }
+  //       return (this.bottomData.selectAll = false)
+  //     },
+  //     immediate: true,
+  //   },
+  // },
   watch: {
     currentSelectedCartIds: {
       handler(newVal, oldVal) {
         console.log('newVal:', newVal)
-
-        const list = this.list.filter(
-          (item) => item.status !== 'PRO_STATUS_SOLD_OUT' && item.stock !== '0'
-        )
-        console.log('list', list)
-        if (newVal.length && newVal.length === list.length) {
+        console.log('this.list:', this.list.length)
+        if (newVal.length && newVal.length === this.list.length) {
           return (this.bottomData.selectAll = true)
         }
         return (this.bottomData.selectAll = false)
@@ -183,7 +196,6 @@ export default {
       immediate: true,
     },
   },
-
   mounted() {
     // 注册一个方法，app里面使用
     if (this.isInApp) {
@@ -411,10 +423,18 @@ export default {
     attentionItem(cartId, data) {},
     // 全选
     selectAll(data) {
-      const cartIdArray = this.list.map((item) => {
-        if (item.status === 'PRO_STATUS_PUT_AWAY' && item.stock !== '0')
+      console.log('all++++++++', data)
+      let cartIdArray = []
+      if (this.shoppingCarStatus === 'completed') {
+        cartIdArray = this.list.map((item) => {
+          if (item.status === 'PRO_STATUS_PUT_AWAY' && item.stock !== '0')
+            return item.cartId
+        })
+      } else {
+        cartIdArray = this.list.map((item) => {
           return item.cartId
-      })
+        })
+      }
       const cartId = cartIdArray.filter((item) => item).join()
       this.selectItem(cartId, data).catch((error) => {
         this.$xToast.show({
