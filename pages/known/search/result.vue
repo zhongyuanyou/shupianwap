@@ -147,7 +147,7 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: (state) => state.user.userInfo, // 登录的用户信息
+      userInfo: (state) => state.user, // 登录的用户信息
       userId: (state) => state.user.userId, // userId 用于判断登录
     }),
     appInfo() {
