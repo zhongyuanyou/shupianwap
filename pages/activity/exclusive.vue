@@ -1,5 +1,6 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
+    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
     <!-- <sp-sticky></sp-sticky> -->
     <!-- S search -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
@@ -33,7 +34,7 @@
       <!-- S countdown -->
       <div class="countdown">
         <div class="special-price"></div>
-        <div class="count-down">
+        <div v-if="isTimerShow" class="count-down">
           <p class="down-time">
             距本场结束还剩
             <span>{{ time.day }}</span
@@ -240,6 +241,7 @@ export default {
           price: '998',
         },
       ],
+      hasCity: false,
     }
   },
   mounted() {
@@ -304,7 +306,7 @@ export default {
       input {
         border: none;
         font-size: 32px;
-        font-weight: 500;
+        font-weight: bold;
         color: #ffffff;
         line-height: 32px;
         background: transparent;
@@ -347,7 +349,7 @@ export default {
         align-items: center;
         :nth-of-type(1) {
           font-size: 24px;
-          font-weight: 500;
+          font-weight: bold;
           color: #ffedcb;
           line-height: 24px;
           margin-right: 15px;
@@ -355,20 +357,20 @@ export default {
         .down-time {
           font-size: 24px;
           font-family: PingFangSC-Medium, PingFang SC;
-          font-weight: 500;
+          font-weight: bold;
           color: #fefffe;
           line-height: 24px;
           display: flex;
           align-items: center;
           span {
-            width: 36px;
+            // width: 36px;
             height: 36px;
             padding: 6px 4px;
             background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
             border-radius: 4px;
             font-size: 24px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
+            font-weight: bold;
             color: #835436;
             line-height: 24px;
             margin: 0 6px;
@@ -414,7 +416,7 @@ export default {
         }
         .content {
           font-size: 26px;
-          font-weight: 500;
+          font-weight: bold;
           color: #222222;
           line-height: 34px;
           margin: 16px 24px 12px 20px;
@@ -436,13 +438,13 @@ export default {
           justify-content: flex-start;
 
           font-size: 28px;
-          font-weight: 500;
+          font-weight: bold;
           color: #ffffff;
           line-height: 28px;
           .money {
             font-size: 28px;
             font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
+            font-weight: bold;
             color: #835436;
             margin: 0;
             position: relative;
@@ -492,7 +494,7 @@ export default {
             background: #f5f5f5;
             border-radius: 32px;
             font-size: 26px;
-            font-weight: 500;
+            font-weight: bold;
             color: #222222;
             line-height: 26px;
             margin-right: 16px;
@@ -500,7 +502,7 @@ export default {
           .active {
             // padding: 17px 42px;
             // font-size: 30px;
-            // font-weight: 500;
+            // font-weight: bold;
             color: #835436;
             background: #ec5330;
             background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
@@ -562,7 +564,7 @@ export default {
           background: url('https://cdn.shupian.cn/sp-pt/wap/7nccpoc61co0000.png');
           background-size: 100% 100%;
           font-size: 20px;
-          font-weight: 500;
+          font-weight: bold;
           color: #ffffff;
           top: -6px;
           left: 0;
@@ -578,7 +580,7 @@ export default {
         .rc-top {
           font-size: 32px;
           // height: 84px;
-          font-weight: 500;
+          font-weight: bold;
           color: #222222;
           line-height: 42px;
 
@@ -587,7 +589,7 @@ export default {
             border-radius: 4px;
             padding: 8px;
             font-size: 20px;
-            font-weight: 500;
+            font-weight: bold;
             color: #ffffff;
             margin-top: 6px;
           }
@@ -626,12 +628,12 @@ export default {
               }
               div:nth-of-type(1) {
                 font-size: 40px;
-                font-weight: 500;
+                font-weight: bold;
                 line-height: 40px;
               }
               div:nth-of-type(2) {
                 font-size: 22px;
-                font-weight: 500;
+                font-weight: bold;
                 margin: 13px 0 0 2px;
                 line-height: 22px;
               }
@@ -654,7 +656,7 @@ export default {
             border-radius: 8px;
             border-radius: 8px;
             font-size: 30px;
-            font-weight: 500;
+            font-weight: bold;
             color: #835436;
             line-height: 30px;
             padding: 25px 28px;

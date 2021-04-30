@@ -172,7 +172,7 @@ export default {
         console.log('newVal:', newVal)
 
         const list = this.list.filter(
-          (item) => item.status !== 'PRO_STATUS_SOLD_OUT' && item.stock !== '0'
+          (item) => item.status !== 'PRO_STATUS_SOLD_OUT'
         )
         console.log('list', list)
         if (newVal.length && newVal.length === list.length) {
