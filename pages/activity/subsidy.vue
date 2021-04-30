@@ -477,22 +477,23 @@ export default {
         position: relative;
         flex: 1;
         .rc-top {
+          font-family: PingFangSC-Medium, PingFang SC;
           // line-height: 32px;
           .tag {
-            height: 32px;
+            display: inline-block;
             background: #ec5330;
             border-radius: 4px;
             padding: 0 8px;
+            margin: 5px 0;
             font-size: 20px;
-            line-height: 28px;
-            font-family: PingFangSC-Medium, PingFang SC;
+            line-height: 32px;
+            height: 32px;
             font-weight: bold;
             color: #ffffff;
           }
           .title {
-            line-height: 32px;
+            line-height: 42px;
             font-size: 32px;
-            height: 84px;
             font-weight: bold;
             color: #222222;
           }
