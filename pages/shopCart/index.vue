@@ -19,7 +19,7 @@
           <span
             v-show="list && list.length"
             class="head__operation"
-            @click="onClickRight"
+            @click="onClickRight(list)"
             >{{ shoppingCarStatus === 'edit' ? '完成' : '管理' }}</span
           >
         </template>
@@ -170,20 +170,43 @@ export default {
     currentSelectedCartIds: {
       handler(newVal, oldVal) {
         console.log('newVal:', newVal)
-
-        const list = this.list.filter(
-          (item) => item.status !== 'PRO_STATUS_SOLD_OUT'
-        )
-        console.log('list', list)
-        if (newVal.length && newVal.length === list.length) {
-          return (this.bottomData.selectAll = true)
+        if (this.shoppingCarStatus === 'completed') {
+          const list = this.list.filter(
+            (item) =>
+              item.status !== 'PRO_STATUS_SOLD_OUT' && item.stock !== '0'
+          )
+          console.log('list', list)
+          console.log(
+            '+++++++++++++++shoppingCarStatus',
+            this.shoppingCarStatus
+          )
+          if (newVal.length && newVal.length === list.length) {
+            return (this.bottomData.selectAll = true)
+          }
+          return (this.bottomData.selectAll = false)
+        } else {
+          if (newVal.length && newVal.length === this.list.length) {
+            return (this.bottomData.selectAll = true)
+          }
+          return (this.bottomData.selectAll = false)
         }
-        return (this.bottomData.selectAll = false)
       },
       immediate: true,
     },
   },
-
+  // watch: {
+  //   currentSelectedCartIds: {
+  //     handler(newVal, oldVal) {
+  //       console.log('newVal:', newVal)
+  //       console.log('this.list:', this.list.length)
+  //       if (newVal.length && newVal.length === this.list.length) {
+  //         return (this.bottomData.selectAll = true)
+  //       }
+  //       return (this.bottomData.selectAll = false)
+  //     },
+  //     immediate: true,
+  //   },
+  // },
   mounted() {
     // 注册一个方法，app里面使用
     if (this.isInApp) {
@@ -266,8 +289,8 @@ export default {
       console.log('nav onClickRight')
       this.shoppingCarStatus =
         this.shoppingCarStatus === 'completed' ? 'edit' : 'completed'
+      this.onRefresh({ type: 'list' })
     },
-
     onLoad() {
       // 获取这个列表数据 初始化
       this.getList()
@@ -411,10 +434,17 @@ export default {
     attentionItem(cartId, data) {},
     // 全选
     selectAll(data) {
-      const cartIdArray = this.list.map((item) => {
-        if (item.status === 'PRO_STATUS_PUT_AWAY' && item.stock !== '0')
+      let cartIdArray = []
+      if (this.shoppingCarStatus === 'completed') {
+        cartIdArray = this.list.map((item) => {
+          if (item.status === 'PRO_STATUS_PUT_AWAY' && item.stock !== '0')
+            return item.cartId
+        })
+      } else {
+        cartIdArray = this.list.map((item) => {
           return item.cartId
-      })
+        })
+      }
       const cartId = cartIdArray.filter((item) => item).join()
       this.selectItem(cartId, data).catch((error) => {
         this.$xToast.show({
@@ -522,32 +552,46 @@ export default {
     async selectItem(cartId, data = {}) {
       cartId = '' + cartId
       const { value } = data
-      try {
-        const data = await this.postUpdate({ cartId, type: 'select', value })
-        const cartArray = cartId.split(',')
-        console.log(' this.currentSelectedCartIds', this.currentSelectedCartIds) // 当前选中的购物车ID
-        if (value) {
-          // 选中
-          cartArray.forEach((item) => {
-            !this.currentSelectedCartIds.includes(item) &&
-              this.currentSelectedCartIds.push(item)
-          })
-        } else {
-          cartArray.forEach((item) => {
-            const index = this.currentSelectedCartIds.indexOf(item)
-            console.log('index', index)
-            index > -1 && this.currentSelectedCartIds.splice(index, 1)
-          })
-        }
-
-        this.list = this.list.map((item) => {
-          let shopIsSelected = item.shopIsSelected
-          cartArray.includes(item.cartId) && (shopIsSelected = value)
-          return { ...item, shopIsSelected }
+      if (this.shoppingCarStatus !== 'completed') {
+        const cartIdArray = this.list.map((item) => {
+          if (item.stock !== '0') return item.cartId
         })
-      } catch (error) {
-        return Promise.reject(error)
+        console.log('cartIdArray', cartIdArray)
+        const cartIds = cartIdArray.filter((item) => item).join() + ''
+        try {
+          await this.postUpdate({ cartId: cartIds, type: 'select', value })
+        } catch (error) {
+          return Promise.reject(error)
+        }
+      } else {
+        try {
+          const data = await this.postUpdate({ cartId, type: 'select', value })
+        } catch (error) {
+          return Promise.reject(error)
+        }
       }
+
+      const cartArray = cartId.split(',')
+      console.log(' this.currentSelectedCartIds', this.currentSelectedCartIds) // 当前选中的购物车ID
+      if (value) {
+        // 选中
+        cartArray.forEach((item) => {
+          !this.currentSelectedCartIds.includes(item) &&
+            this.currentSelectedCartIds.push(item)
+        })
+      } else {
+        cartArray.forEach((item) => {
+          const index = this.currentSelectedCartIds.indexOf(item)
+          console.log('index', index)
+          index > -1 && this.currentSelectedCartIds.splice(index, 1)
+        })
+      }
+
+      this.list = this.list.map((item) => {
+        let shopIsSelected = item.shopIsSelected
+        cartArray.includes(item.cartId) && (shopIsSelected = value)
+        return { ...item, shopIsSelected }
+      })
     },
     // 数量操作
     async countOperation(cartId, data) {

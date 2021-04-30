@@ -27,8 +27,10 @@
             icon-size="0.32rem"
             class="goods-item__check"
             :disabled="
-              formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY' &&
-              shoppingCarStatus === 'completed'
+              (formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY' &&
+                shoppingCarStatus === 'completed') ||
+              (formatGoodsStatusData.stock === '0' &&
+                shoppingCarStatus === 'completed')
             "
             @change="handleAsyncCheckboxChange"
           >
@@ -193,11 +195,14 @@ export default {
       if (this.shoppingCarStatus === 'completed') {
         return (
           this.formatGoodsStatusData.status === 'PRO_STATUS_PUT_AWAY' &&
-          !!this.commodityData.shopIsSelected &&
-          this.formatGoodsStatusData
+          !!this.commodityData.shopIsSelected
         )
+      } else {
+        if (this.commodityData.stock !== '0') {
+          return !!this.commodityData.shopIsSelected
+        }
+        return !!this.commodityData.shopIsSelected
       }
-      return !!this.commodityData.shopIsSelected
     },
     formatSkuData() {
       if (!this.skuData) return { tree: [] }
@@ -319,7 +324,6 @@ export default {
           }
         }
       }
-      console.log('stautsData', stautsData)
       return stautsData
     },
   },

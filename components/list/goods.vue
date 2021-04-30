@@ -247,6 +247,17 @@ export default {
                           this.itemsclass[1].services.push(
                             this.items.typeData[i].children[b]
                           )
+                          if (
+                            this.jyFilterData[0].name ===
+                            this.items.typeData[i].name
+                          ) {
+                            this.jyFilterData[0].name = this.items.typeData[
+                              i
+                            ].children[b].name
+                          } else {
+                            this.jyFilterData[0].name = `${this.jyFilterData[0].name},${this.items.typeData[i].children[b].name}`
+                          }
+                          console.log(this.jyFilterData[0].name)
                         }
                       }
                     }

@@ -363,7 +363,7 @@ export default {
         margin-left: 8px;
       }
 
-      ::v-deep.sp-tag--large {
+      /deep/.sp-tag--large {
         height: 40px;
         padding: 0 16px;
         display: flex;
