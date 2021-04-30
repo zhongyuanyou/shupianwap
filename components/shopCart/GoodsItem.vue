@@ -27,8 +27,10 @@
             icon-size="0.32rem"
             class="goods-item__check"
             :disabled="
-              formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY' &&
-              shoppingCarStatus === 'completed'
+              (formatGoodsStatusData.status !== 'PRO_STATUS_PUT_AWAY' &&
+                shoppingCarStatus === 'completed') ||
+              (formatGoodsStatusData.stock === '0' &&
+                shoppingCarStatus === 'completed')
             "
             @change="handleAsyncCheckboxChange"
           >
@@ -197,7 +199,9 @@ export default {
           this.formatGoodsStatusData
         )
       }
-      return !!this.commodityData.shopIsSelected
+      return (
+        !!this.commodityData.shopIsSelected || this.commodityData.stock === '0'
+      )
     },
     formatSkuData() {
       if (!this.skuData) return { tree: [] }
