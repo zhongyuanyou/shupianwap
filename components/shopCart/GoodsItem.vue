@@ -195,17 +195,14 @@ export default {
       if (this.shoppingCarStatus === 'completed') {
         return (
           this.formatGoodsStatusData.status === 'PRO_STATUS_PUT_AWAY' &&
-          !!this.commodityData.shopIsSelected &&
-          this.formatGoodsStatusData
+          !!this.commodityData.shopIsSelected
         )
+      } else {
+        if (this.commodityData.stock !== '0') {
+          return !!this.commodityData.shopIsSelected
+        }
+        return !!this.commodityData.shopIsSelected
       }
-      console.log(
-        '++++++++++++++++++++++++!!this.commodityData.shopIsSelected',
-        !!this.commodityData.shopIsSelected
-      )
-      return (
-        !!this.commodityData.shopIsSelected || this.commodityData.stock === '0'
-      )
     },
     formatSkuData() {
       if (!this.skuData) return { tree: [] }
@@ -327,7 +324,6 @@ export default {
           }
         }
       }
-      console.log('stautsData', stautsData)
       return stautsData
     },
   },
