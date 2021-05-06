@@ -363,7 +363,8 @@ export default {
           display: flex;
           align-items: center;
           span {
-            // width: 36px;
+            min-width: 36px;
+            white-space: normal;
             height: 36px;
             padding: 6px 4px;
             background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);

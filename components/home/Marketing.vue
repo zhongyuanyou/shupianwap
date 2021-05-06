@@ -73,7 +73,18 @@
           />
         </div>
         <sp-button
-          v-if="item.buttonText"
+          v-if="item.buttonText && index === 2"
+          type="primary"
+          class="sp-goods-btn"
+          @click="
+            adJumpHandleMixin(
+              (helpBannerData[0] && helpBannerData[0].materialList[0]) || item
+            )
+          "
+          >{{ item.buttonText }}</sp-button
+        >
+        <sp-button
+          v-else-if="item.buttonText"
           type="primary"
           class="sp-goods-btn"
           @click="adJumpHandleMixin(item)"
@@ -108,6 +119,13 @@ export default {
         return []
       },
     },
+    // 帮找服务
+    helpBannerData: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
   },
   data() {
     return {
@@ -135,7 +153,7 @@ export default {
           type: 'planner',
           titleIcon: '精选规划师',
           linkType: 2,
-          materialLink: 'https://m.shupian.cn/spread/myDemandCard',
+          materialLink: 'https://m.shupian.cn/planner/list',
         },
         {
           productName: '政策补贴',

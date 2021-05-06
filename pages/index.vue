@@ -47,6 +47,7 @@
         ref="showScollHeight"
         :subsidy-data="initData.subsidyData"
         :bd-data="initData.bdData"
+        :help-banner-data="initData.helpBannerData"
       />
       <!-- E 营销入口区域 -->
       <!-- S 推荐服务 -->
@@ -106,9 +107,9 @@ export default {
     // })
     const fiexdAdCode = 'ad100234' // 顶部固定banner的code
     const rollAdCode = 'ad100237' // 导航下方轮播banner code
-    const helpAdCode = 'ad113183' // 帮我找下方banner code(服务榜单)
+    const helpAdCode = 'ad113285' // 帮我找下方banner code(服务榜单)
     const skillCode = 'ad113282' // 秒杀
-    const subsidyCode = 'ad100018' // 千万补贴
+    const subsidyCode = 'ad113284' // 千万补贴 政策补贴
     const bkCode = 'ad100032' // 必懂 直播 code
     // 首屏请求导航和广告的参数
     const initReqParams = {
