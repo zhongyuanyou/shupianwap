@@ -121,9 +121,25 @@
       </div>
     </div>
     <!-- S footer -->
-    <sp-bottombar safe-area-inset-bottom>
+    <!-- <sp-bottombar safe-area-inset-bottom>
       <sp-bottombar-icon icon="phone-o" text="致电" @click="handleTel" />
       <sp-bottombar-button type="primary" text="在线客服" @click="openDggKf" />
+    </sp-bottombar> -->
+    <sp-bottombar safe-area-inset-bottom>
+      <sp-bottombar-icon
+        type="primary"
+        icon="comment-o"
+        text="留言"
+        class="left"
+        @click="gourl()"
+      />
+      <sp-bottombar-button
+        type="info"
+        text="在线客服"
+        class="green"
+        @click="handleIM"
+      />
+      <sp-bottombar-button type="primary" text="电话电话" @click="handleCall" />
     </sp-bottombar>
     <!-- E footer -->
     <div class="empty-box"></div>
@@ -152,6 +168,7 @@ import {
 import { helpApi } from '@/api'
 import LoadingDown from '@/components/common/loading/LoadingDown'
 import Header from '@/components/common/head/header'
+import imHandle from '@/mixins/imHandle'
 export default {
   layout: 'keepAlive',
   name: 'Help',
@@ -169,6 +186,7 @@ export default {
     [swipeItem.name]: swipeItem,
     Header,
   },
+  mixins: [imHandle],
   async asyncData({ store, $axios }) {
     const params = {
       findType: 0, // 查询类型 （0：初始化查询广告+分类+文章 1：查询文章）
@@ -233,6 +251,7 @@ export default {
       isInApp: (state) => state.app.isInApp,
       isPassword: (state) => state.user.userInfo.isPassword || 0,
       isApplets: (state) => state.app.isApplets,
+      userInfo: (state) => state.user.userInfo,
     }),
   },
   mounted() {
@@ -253,6 +272,141 @@ export default {
     ...mapMutations({
       SET_KEEP_ALIVE: 'keepAlive/SET_KEEP_ALIVE',
     }),
+    gourl() {
+      this.$router.push({
+        path: '/my/complain',
+      })
+    },
+    handleIM() {
+      // const isLogin = await this.judgeLoginMixin()
+      // if (isLogin) {
+      this.uPIM({
+        // mchUserId: this.detailData.id,
+        userName: this.userInfo.userName,
+        type: this.userInfo.mchClass,
+      })
+      // } else {
+      //   Toast({
+      //     message: '请先登录账号',
+      //     iconPrefix: 'sp-iconfont',
+      //     icon: 'popup_ic_fail',
+      //   })
+      // }
+    },
+    async uPIM(data = {}) {
+      const { mchUserId, userName, type } = data
+      // 如果当前页面在app中，则调用原生IM的方法
+      if (this.isInApp) {
+        try {
+          // 需要判断登陆没有，没有登录就是调用登录
+          await this.getUserInfo()
+          this.$appFn.dggOpenIM(
+            {
+              name: userName,
+              userId: mchUserId,
+              userType: type || 'MERCHANT_B',
+              requireCode: this.requireCode || '',
+              requireName: this.requireName || '',
+            },
+            (res) => {
+              const { code } = res || {}
+              if (code !== 200)
+                this.$xToast.show({
+                  message: `联系失败`,
+                  duration: 1000,
+                  forbidClick: true,
+                  icon: 'toast_ic_remind',
+                })
+            }
+          )
+        } catch (error) {
+          console.error('uPIM error:', error)
+        }
+      } else {
+        const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
+        const isLogin = await this.judgeLoginMixin()
+        if (isLogin) {
+          this.creatImSessionMixin({
+            imUserId: mchUserId,
+            imUserType,
+            requireCode: this.requireCode || '',
+            requireName: this.requireName || '',
+          })
+        }
+      }
+    },
+    // app获取用户信息
+    getUserInfo() {
+      return new Promise((resolve, reject) => {
+        if (this.userInfo.userId) {
+          resolve(this.userInfo.userId)
+          return
+        }
+        this.$appFn.dggGetUserInfo((res) => {
+          const { code, data } = res || {}
+          // 未登录需要登录
+          if (code !== 200) {
+            this.$appFn.dggLogin((loginRes) => {
+              if (loginRes && loginRes.code === 200) {
+                console.log('loginRes : ', loginRes)
+                let loginResData = {}
+                // 为了兼容 企大顺
+                if (typeof loginRes.data === 'string') {
+                  try {
+                    loginResData = JSON.parse(loginRes.data)
+                  } catch (error) {
+                    console.error(error)
+                  }
+                } else {
+                  loginResData = loginRes.data
+                }
+                if (loginResData && loginResData.userId && loginResData.token) {
+                  this.setUserInfo(loginResData)
+                  resolve(loginResData.userId)
+                  return
+                }
+                reject(new Error('登录后userId或者token缺失'))
+                return
+              }
+              reject(new Error('登录失败'))
+            })
+            return
+          }
+          let userInfo = {}
+          if (typeof data === 'string') {
+            try {
+              userInfo = JSON.parse(data)
+            } catch (error) {
+              console.error(error)
+            }
+          } else {
+            userInfo = data
+          }
+          if (userInfo && userInfo.userId && userInfo.token) {
+            this.setUserInfo(userInfo)
+            resolve(userInfo.userId)
+            return
+          }
+          reject(new Error('用户信息中userId或者token缺失'))
+        })
+      })
+    },
+    handleCall() {
+      // 如果当前页面在app中，则调用原生拨打电话的方法
+      if (this.isInApp) {
+        this.$appFn.dggCallPhone(
+          {
+            phone: '4000-962540',
+          },
+          (res) => {
+            const { code } = res || {}
+            if (code !== 200) this.$xToast.error('拨号失败！')
+          }
+        )
+      } else {
+        window.location.href = 'tel:4000-962540'
+      }
+    },
     // tab切换
     tabsClickHandle(index) {
       if (!this.tabData[index].articleData.length) {
@@ -582,6 +736,16 @@ export default {
   ::v-deep .sp-bottombar {
     z-index: 3;
     padding: 32px 40px;
+    > .green {
+      background: #24ae68;
+      border: 1px solid #24ae68;
+    }
+    > .left {
+      .sp-icon {
+        font-weight: bold;
+        font-size: 40px;
+      }
+    }
   }
   ::v-deep .sp-icon-phone-o {
     color: #1a1a1a;
