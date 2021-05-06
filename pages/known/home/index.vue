@@ -114,6 +114,7 @@ import CommentList from '@/components/mustKnown/CommentList'
 import Item from '@/components/mustKnown/home/Item'
 import { knownApi } from '~/api'
 import utils from '@/utils/changeBusinessData'
+import { domainUrl } from '~/config/index'
 export default {
   name: 'Collection',
   components: {
@@ -209,13 +210,63 @@ export default {
   },
   methods: {
     adJump(item) {
-      console.log(item)
-      if (item.linkType === 1) {
-        this.$router.push(`/${item.wapLink}`)
-      } else if (item.linkType === 2) {
-        location.href = item.materialLink
-      } else {
-        location.href = item.imgLink
+      if (!this.isInApp) {
+        if (item.linkType === 1) {
+          this.$router.push(`/${item.wapLink}`)
+        } else if (item.linkType === 2) {
+          location.href = item.materialLink
+        } else {
+          location.href = item.imgLink
+        }
+      }
+      if (this.isInApp) {
+        let iosUrl = ''
+        let adUrl = ''
+        let hide = 0
+        switch (item.linkType) {
+          // 跳转内链
+          case 1:
+            hide = 0
+            this.$appFn.dggSetTitle({ title: '' }, () => {})
+            iosUrl = item.iosLink
+            adUrl = item.androidLink
+            break
+          // 跳转外链接
+          case 2:
+            iosUrl = item.materialLink
+            adUrl = item.materialLink
+            hide = 0
+            this.$appFn.dggSetTitle({ title: '' }, () => {})
+            break
+          // 跳转图片链接
+          case 3:
+            iosUrl = item.imgLink
+            adUrl = item.imgLink
+            hide = 0
+            this.$appFn.dggSetTitle({ title: '' }, () => {})
+            break
+        }
+        const iosRouter =
+          '{"path":"CPSCustomer:CPSCustomer/CPSBaseWebViewController///push/animation","parameter":{"urlstr":"' +
+          `${iosUrl}` +
+          '","isHideNav":' +
+          hide +
+          ',"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
+        const adRouter =
+          '{"path":"/common/android/SingleWeb","parameter":{"urlstr":"' +
+          `${adUrl}` +
+          '","isHideNav":' +
+          hide +
+          ',"emptyTitle":"标题"},"isLogin":"0","version":"1.0.0"}'
+        if (this.isInApp) {
+          this.$appFn.dggJumpRoute(
+            {
+              iOSRouter: iosRouter,
+              androidRouter: adRouter,
+            },
+            (res) => {}
+          )
+        }
       }
     },
     toFans() {
