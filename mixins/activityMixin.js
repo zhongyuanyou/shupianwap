@@ -2,7 +2,7 @@ import { mapState, mapActions } from 'vuex'
 import { Toast } from '@chipspc/vant-dgg'
 import { activityApi } from '~/api'
 import imHandle from '@/mixins/imHandle'
-let timer
+let endCountDownTimer, countDownTimer
 
 export default {
   computed: {
@@ -75,7 +75,8 @@ export default {
       specCode: '',
       defaultCityCode: '510100',
       advertCode: 'ad1314', // 广告code
-      diff: 0,
+      endCountDiff: 0,
+      countDownDiff: 0,
       time: '',
       endTime: '',
       recommendProductList: [],
@@ -107,7 +108,8 @@ export default {
     this.screenWidth = window.screen.width
   },
   beforeDestroy() {
-    clearInterval(timer)
+    clearInterval(endCountDownTimer)
+    clearInterval(countDownTimer)
   },
   methods: {
     ...mapActions({
@@ -488,11 +490,11 @@ export default {
       const that = this
       const nowTimeStamp = new Date().getTime()
       // 计算时间差 秒
-      this.diff = (timestamp - nowTimeStamp) / 1000
-      timer = setInterval(() => {
-        let hour = Math.floor(this.diff / 3600)
-        let min = Math.floor((this.diff - hour * 3600) / 60)
-        let sec = Math.floor(this.diff % 60)
+      this.endCountDiff = (timestamp - nowTimeStamp) / 1000
+      endCountDownTimer = setInterval(() => {
+        let hour = Math.floor(this.endCountDiff / 3600)
+        let min = Math.floor((this.endCountDiff - hour * 3600) / 60)
+        let sec = Math.floor(this.endCountDiff % 60)
         if (hour < 10) hour = '0' + hour
         if (min < 10) min = '0' + min
         if (sec < 10) sec = '0' + sec
@@ -501,7 +503,7 @@ export default {
           min,
           sec,
         }
-        that.diff--
+        that.endCountDiff--
       }, 1000)
       // 每执行一次定时器就减少一秒
     },
@@ -509,12 +511,12 @@ export default {
       const that = this
       const nowTimeStamp = new Date().getTime()
       // 计算时间差 秒
-      this.diff = (endTimeStamp - nowTimeStamp) / 1000
-      timer = setInterval(() => {
-        let day = Math.floor(this.diff / 86400)
-        let hour = Math.floor((this.diff - day * 86400) / 3600)
-        let min = Math.floor((this.diff - hour * 3600 - day * 86400) / 60)
-        let sec = Math.floor(this.diff % 60)
+      this.countDiff = (endTimeStamp - nowTimeStamp) / 1000
+      countDownTimer = setInterval(() => {
+        let day = Math.floor(this.countDiff / 86400)
+        let hour = Math.floor((this.countDiff - day * 86400) / 3600)
+        let min = Math.floor((this.countDiff - hour * 3600 - day * 86400) / 60)
+        let sec = Math.floor(this.countDiff % 60)
         if (day < 10) day = '0' + day
         if (hour < 10) hour = '0' + hour
         if (min < 10) min = '0' + min
@@ -525,7 +527,7 @@ export default {
           min,
           sec,
         }
-        that.diff--
+        that.countDiff--
       }, 1000)
       // 每执行一次定时器就减少一秒
     },
