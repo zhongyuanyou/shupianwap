@@ -511,14 +511,14 @@ export default {
       // 计算时间差 秒
       this.diff = (endTimeStamp - nowTimeStamp) / 1000
       timer = setInterval(() => {
-        const day = Math.floor(this.diff / 86400)
-        const hour = Math.floor((this.diff - day * 86400) / 3600)
-        const min = Math.floor((this.diff - hour * 3600 - day * 86400) / 60)
-        const sec = Math.floor(this.diff % 60)
-        // if (day < 10) day = '0' + day
-        // if (hour < 10) hour = '0' + hour
-        // if (min < 10) min = '0' + min
-        // if (sec < 10) sec = '0' + sec
+        let day = Math.floor(this.diff / 86400)
+        let hour = Math.floor((this.diff - day * 86400) / 3600)
+        let min = Math.floor((this.diff - hour * 3600 - day * 86400) / 60)
+        let sec = Math.floor(this.diff % 60)
+        if (day < 10) day = '0' + day
+        if (hour < 10) hour = '0' + hour
+        if (min < 10) min = '0' + min
+        if (sec < 10) sec = '0' + sec
         that.time = {
           day,
           hour,
