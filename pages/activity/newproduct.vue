@@ -26,7 +26,7 @@
                 :style="{ marginLeft: iconLeft + 'rem' }"
               ></my-icon>
               <input
-                placeholder="搜索首发商品"
+                placeholder="搜索商品"
                 readonly
                 @click="clickInputHandle"
               />

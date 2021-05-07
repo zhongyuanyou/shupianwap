@@ -27,11 +27,7 @@
             color="#FFFFFF"
             :style="{ marginLeft: iconLeft + 'rem' }"
           ></my-icon>
-          <input
-            placeholder="搜索补贴商品"
-            readonly
-            @click="clickInputHandle"
-          />
+          <input placeholder="搜索商品" readonly @click="clickInputHandle" />
         </div>
       </div>
     </sp-sticky>
@@ -134,22 +130,30 @@
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
-                        <div
-                          v-if="parsePrice(item.specialPrice) !== '面议'"
-                          class="rc-bottom-lf-my"
-                        >
-                          <div>
-                            {{ parsePrice(item.specialPrice).yuan }}.
-                            <span class="rc-bottom-lf-my-cent">
-                              {{ parsePrice(item.specialPrice).jiao }}
-                            </span>
-                            <span class="rc-bottom-lf-my-unit">元</span>
+                        <template>
+                          <div
+                            v-if="parsePrice(item.specialPrice) !== '面议'"
+                            class="rc-bottom-lf-my"
+                          >
+                            <div>
+                              {{ parsePrice(item.specialPrice).yuan }}.
+                              <span class="rc-bottom-lf-my-cent">
+                                {{ parsePrice(item.specialPrice).jiao }}
+                              </span>
+                              <span class="rc-bottom-lf-my-unit">元</span>
+                            </div>
                           </div>
+                          <div v-else class="rc-bottom-lf-my">
+                            <div>面议</div>
+                          </div>
+                        </template>
+                        <div
+                          v-if="parsePrice(item.skuPrice) !== '面议'"
+                          class="bf-my"
+                        >
+                          {{ item.skuPrice }}
+                          <span>元</span>
                         </div>
-                        <div v-else class="rc-bottom-lf-my">
-                          <div>面议</div>
-                        </div>
-                        <div class="bf-my">{{ item.skuPrice }}元</div>
                       </div>
                       <div class="rc-bottom-rt">
                         <div>立即购买</div>
@@ -226,6 +230,14 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+.multiRowOverflowDot {
+  //width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; //行数
+  -webkit-box-orient: vertical;
 }
 .container {
   position: relative;
@@ -492,6 +504,7 @@ export default {
           font-weight: 500;
           width: 395px;
           font-size: 32px;
+          .multiRowOverflowDot();
           .span1,
           .span2 {
             background: #ec5330;

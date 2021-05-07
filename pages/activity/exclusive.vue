@@ -21,11 +21,7 @@
             color="#FFFFFF"
             :style="{ marginLeft: iconLeft + 'rem' }"
           ></my-icon>
-          <input
-            placeholder="搜索独家商品"
-            readonly
-            @click="clickInputHandle"
-          />
+          <input placeholder="搜索商品" readonly @click="clickInputHandle" />
         </div>
       </div>
     </sp-sticky>
@@ -134,11 +130,24 @@
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
-                        <div class="rc-bottom-lf-my">
-                          <div>{{ item.specialPrice }}</div>
-                          <div>元</div>
+                        <template>
+                          <div
+                            v-if="parsePrice(item.specialPrice) !== '面议'"
+                            class="rc-bottom-lf-my"
+                          >
+                            <div>{{ item.specialPrice }}</div>
+                            <div>元</div>
+                          </div>
+                          <div v-else class="rc-bottom-lf-my">
+                            <div>面议</div>
+                          </div>
+                        </template>
+                        <div
+                          v-if="parsePrice(item.specialPrice) !== '面议'"
+                          class="bf-my"
+                        >
+                          原价{{ item.skuPrice }}元
                         </div>
-                        <div class="bf-my">原价{{ item.skuPrice }}元</div>
                       </div>
                       <div class="rc-bottom-rt">去抢购</div>
                     </div>
@@ -251,6 +260,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.multiRowOverflowDot {
+  //width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; //行数
+  -webkit-box-orient: vertical;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
@@ -584,6 +601,7 @@ export default {
           font-weight: bold;
           color: #222222;
           line-height: 42px;
+          .multiRowOverflowDot();
 
           span {
             background: #ec5330;
