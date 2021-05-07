@@ -8,7 +8,7 @@
  */
 
 import { auth } from '@/api'
-import { AVATAR, DOMAIN } from '~/config/constant'
+import { AVATAR } from '~/config/constant'
 
 export const state = () => ({
   userInfo: {},
@@ -26,12 +26,12 @@ export const mutations = {
     this.$cookies.set('token', String(data.token), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: DOMAIN,
+      domain: 'shupian.cn',
     })
     this.$cookies.set('userId', String(data.userId), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 过期时间
-      domain: DOMAIN,
+      domain: 'shupian.cn',
     })
     this.$cookies.set('userType', String(data.userType || data.type), {
       path: '/',
