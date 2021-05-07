@@ -40,29 +40,13 @@ export default {
     [SwipeItem.name]: SwipeItem,
     [Rate.name]: Rate,
   },
-  data() {
-    return {
-      list: [
-        {
-          phone: '180****1234',
-          img:
-            'https://cdn.shupian.cn/ed1155394e5843b283731c2a6de5c0ae1612509469370.jpeg',
-          date: '2021.04.13',
-          tit:
-            '服务态度很好。这里是评价内容，这里是评价内容这里是评价内容这里是评价内容这里是评价。',
-          val: 95,
-        },
-        {
-          phone: '180****4321',
-          img:
-            'https://cdn.shupian.cn/ed1155394e5843b283731c2a6de5c0ae1612509469370.jpeg',
-          date: '2021.04.13',
-          tit:
-            '服务态度很好。这里是评价内容，这里是评价内容这里是评价内容这里是评价内容这里是评价。',
-          val: 95,
-        },
-      ],
-    }
+  props: {
+    list: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
 }
 </script>
