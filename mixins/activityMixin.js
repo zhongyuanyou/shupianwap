@@ -33,7 +33,9 @@ export default {
       }
     },
     terminalCode() {
-      return this.isInApp ? 'COMDIC_TERMINAL_APP' : 'COMDIC_TERMINAL_WAP'
+      // return this.isInApp ? 'COMDIC_TERMINAL_APP' : 'COMDIC_TERMINAL_WAP'
+      // 只有app有图片
+      return 'COMDIC_TERMINAL_APP'
     },
     isTimerShow() {
       return this.recommendProductList.length || this.activityProductList.length
@@ -93,15 +95,15 @@ export default {
       })
     }
 
-    // this.getAdvertisingData()
-    await this.getMenuTabs().then(this.getRecommendProductList)
+    await this.getMenuTabs()
+    await this.getRecommendProductList()
   },
   mounted() {
     if (this.isInApp) {
       this.safeTop = this.appInfo.statusBarHeight
     }
     this.headerHeight = this.$refs.header_sticky.height
-    // this.chii()
+    this.chii()
     this.screenWidth = window.screen.width
   },
   beforeDestroy() {
@@ -248,9 +250,11 @@ export default {
         specType: this.specType,
         platformCode: this.platformCode,
       }
-      if (this.hasCity) {
-        params.cityCodes = this.cityCode || this.defaultCityCode
-      }
+      // if (this.hasCity) {
+      //   params.cityCodes = this.cityCode || this.defaultCityCode
+      // }
+      // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
+      params.cityCodes = this.cityCode || this.defaultCityCode
       // if (this.specType !== 'HDZT_ZTTYPE_XSQG') {
       //   Object.assign(params, {
       //     // cityCodes: this.cityCode || this.defaultCityCode,
@@ -263,6 +267,14 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
+            this.activityTypeOptions = res.data.settingVOList || []
+            if (
+              (this.activityTypeOptions.length === 0 &&
+                this.specType !== 'HDZT_ZTTYPE_XSQG') ||
+              !res.data.specCode
+            ) {
+              throw new Error('无活动数据')
+            }
             if (res.data.endTime) {
               this.activeTimer(res.data.endTime.replace(/-/g, '/'))
             }
@@ -270,13 +282,6 @@ export default {
               this.specCode = res.data.specCode
             }
             this.productType = res.data.productType || ''
-            this.activityTypeOptions = res.data.settingVOList || []
-            if (
-              this.activityTypeOptions.length === 0 &&
-              this.specType !== 'HDZT_ZTTYPE_XSQG'
-            ) {
-              throw new Error('无分类数据')
-            }
             this.activityTypeOptions.unshift({
               cityCode: this.cityCode,
               cityName: this.cityName,
@@ -319,9 +324,11 @@ export default {
           limit: 15,
           terminalCode: this.terminalCode,
         }
-        if (this.hasCity) {
-          params.cityCode = this.cityCode
-        }
+        // if (this.hasCity) {
+        //   params.cityCode = this.cityCode
+        // }
+        // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
+        params.cityCode = this.cityCode
         if (this.currentTab.id !== '') {
           params.labelId = this.currentTab.id
         }
@@ -339,9 +346,6 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            res.data.rows.forEach((v) => {
-              v.tags = 'asdsad,asdasdas,fdsgdfg,dfhgfhfg,sdrfwegergerher,'
-            })
             this.activityProductList = this.activityProductList.concat(
               res.data.rows
             )
@@ -386,9 +390,11 @@ export default {
           terminalCode: this.terminalCode,
         }
 
-        if (this.hasCity) {
-          params.cityCode = this.cityCode
-        }
+        // if (this.hasCity) {
+        //   params.cityCode = this.cityCode
+        // }
+        // 前端放开，后台校验城市，如果是交易产品后台就不带城市查询
+        params.cityCode = this.cityCode
 
         this.$axios
           .get(activityApi.activityProductList, { params })

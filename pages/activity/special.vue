@@ -20,11 +20,7 @@
             color="#FFFFFF"
             :style="{ marginLeft: iconLeft + 'rem' }"
           ></my-icon>
-          <input
-            placeholder="搜索特卖商品"
-            readonly
-            @click="clickInputHandle"
-          />
+          <input placeholder="搜索商品" readonly @click="clickInputHandle" />
         </div>
       </div>
     </sp-sticky>
@@ -240,6 +236,15 @@ export default {
     color: #222222;
     font-size: 28px;
   }
+}
+
+.multiRowOverflowDot {
+  //width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; //行数
+  -webkit-box-orient: vertical;
 }
 .container {
   position: relative;
@@ -572,6 +577,7 @@ export default {
           white-space: normal;
           height: 84px;
           line-height: 42px;
+          .multiRowOverflowDot();
           .rc-span {
             display: inline-flex;
             align-items: center;

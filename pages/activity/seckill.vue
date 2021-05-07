@@ -294,6 +294,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.multiRowOverflowDot {
+  //width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; //行数
+  -webkit-box-orient: vertical;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
@@ -628,6 +636,7 @@ export default {
           font-weight: bold;
           color: #222222;
           line-height: 0.42rem;
+          .multiRowOverflowDot();
           span {
             margin-right: 8px;
             background: #ec5330;
