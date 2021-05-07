@@ -134,12 +134,13 @@
         @click="gourl()"
       />
       <sp-bottombar-button
+        v-if="isInApp"
         type="info"
         text="在线客服"
         class="green"
         @click="handleIM"
       />
-      <sp-bottombar-button type="primary" text="电话电话" @click="handleCall" />
+      <sp-bottombar-button type="primary" text="电话客服" @click="handleCall" />
     </sp-bottombar>
     <!-- E footer -->
     <div class="empty-box"></div>
@@ -281,9 +282,7 @@ export default {
       // const isLogin = await this.judgeLoginMixin()
       // if (isLogin) {
       this.uPIM({
-        // mchUserId: this.detailData.id,
-        userName: this.userInfo.userName,
-        type: this.userInfo.mchClass,
+        entranceId: 'STAFF_HELP_CENTER_CODE',
       })
       // } else {
       //   Toast({
@@ -293,20 +292,16 @@ export default {
       //   })
       // }
     },
-    async uPIM(data = {}) {
-      const { mchUserId, userName, type } = data
+    uPIM(data = {}) {
+      // const { mchUserId, userName, type } = data
       // 如果当前页面在app中，则调用原生IM的方法
       if (this.isInApp) {
         try {
           // 需要判断登陆没有，没有登录就是调用登录
-          await this.getUserInfo()
-          this.$appFn.dggOpenIM(
+          // await this.getUserInfo()
+          this.$appFn.dggOpenOnlineServiceIM(
             {
-              name: userName,
-              userId: mchUserId,
-              userType: type || 'MERCHANT_B',
-              requireCode: this.requireCode || '',
-              requireName: this.requireName || '',
+              entranceId: 'STAFF_HELP_CENTER_CODE',
             },
             (res) => {
               const { code } = res || {}
@@ -321,17 +316,6 @@ export default {
           )
         } catch (error) {
           console.error('uPIM error:', error)
-        }
-      } else {
-        const imUserType = type || 'MERCHANT_B' // 用户类型: ORDINARY_USER 普通用户|MERCHANT_USER 商户用户
-        const isLogin = await this.judgeLoginMixin()
-        if (isLogin) {
-          this.creatImSessionMixin({
-            imUserId: mchUserId,
-            imUserType,
-            requireCode: this.requireCode || '',
-            requireName: this.requireName || '',
-          })
         }
       }
     },
