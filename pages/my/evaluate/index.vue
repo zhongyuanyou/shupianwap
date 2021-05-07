@@ -1,5 +1,5 @@
 <template>
-  <div class="m-comment list">
+  <div class="m-evaluate list">
     <Header title="评价中心" :fixed="true" />
     <sp-tabs v-model="active" @change="changeTab">
       <sp-tab title="待评价">
@@ -12,7 +12,7 @@
           error-text="请求失败，点击重新加载"
           @load="onLoad"
         >
-          <comment-list
+          <evaluate-list
             v-for="(item, index) in orderList"
             :key="index"
             :item="item"
@@ -29,7 +29,7 @@
           error-text="请求失败，点击重新加载"
           @load="onLoad"
         >
-          <comment-list
+          <evaluate-list
             v-for="(item, index) in orderList"
             :key="index"
             :item="item"
@@ -42,7 +42,7 @@
 <script>
 import { Tab, Tabs, List } from '@chipspc/vant-dgg'
 import Header from '@/components/common/head/header'
-import CommentList from '@/components/my/comment/CommentList'
+import EvaluateList from '@/components/my/evaluate/EvaluateList'
 
 // mock data
 // commentFlag: 1 已评价; commentFlag: 0 未评价
@@ -175,13 +175,13 @@ const mockOrderListFlag0 = [
 ]
 
 export default {
-  name: 'Comment',
+  name: 'Evaluate',
   components: {
     Header,
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
     [List.name]: List,
-    CommentList,
+    EvaluateList,
   },
   data() {
     return {
@@ -221,7 +221,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.m-comment.list {
+.m-evaluate.list {
   ::v-deep.sp-tabs {
     .sp-tabs__wrap {
       height: 72px;

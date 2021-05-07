@@ -1,5 +1,5 @@
 <template>
-  <div class="m-commonent list">
+  <div class="m-evaluate list">
     <div class="item">
       <div class="item-info">
         <sp-image round class="img" fit="cover" :src="item.avatar || ''" />
@@ -24,7 +24,7 @@
 import { Image } from '@chipspc/vant-dgg'
 
 export default {
-  name: 'CommentList',
+  name: 'EvaluateList',
   components: {
     [Image.name]: Image,
   },
@@ -39,7 +39,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.m-comment.list {
+.m-evaluate.list {
   .item {
     padding: 32px 40px;
     &-info {
