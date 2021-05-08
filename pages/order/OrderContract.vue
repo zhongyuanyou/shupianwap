@@ -4,7 +4,7 @@
     <div class="listbox">
       <div v-for="(item, index) in list" :key="index" class="list">
         <div class="head">
-          <h1>{{ item.name }}</h1>
+          <h1>{{ item.contractName }}</h1>
           <p v-if="item.contractStatus == 'STRUTS_YWC'">已完成</p>
           <p
             v-if="item.contractStatus == 'STRUTS_CG'"
@@ -23,33 +23,45 @@
           >
             签署中
           </p>
+          <p v-if="item.contractStatus == 'STRUTS_DSH'">待审核</p>
           <p v-if="item.contractStatus == 'STRUTS_YJQ'">已拒签</p>
           <p v-if="item.contractStatus == 'STRUTS_YYQ'">已逾期</p>
           <p v-if="item.contractStatus == 'STRUTS_YZF'">已作废</p>
         </div>
         <div class="body">
           <div class="cell">
-            <p class="title">合同编号: {{ item.id }}：</p>
+            <p class="title">合同编号：{{ item.contractNo }}</p>
           </div>
           <div class="cell">
-            <p class="title">合同金额：{{ item.id }}</p>
+            <p class="title">合同金额：￥{{ item.contractMoney }}</p>
           </div>
           <div class="cell">
-            <p class="title">合同类型：{{ item.id }}</p>
+            <p class="title">
+              合同类型：{{
+                item.isAppendixContract == 0 ? '通用合同' : '产品附件'
+              }}
+            </p>
           </div>
           <div class="cell">
-            <p class="title">签署时间：{{ item.id }}</p>
+            <p class="title">签署时间：{{ item.updateTime }}</p>
           </div>
         </div>
         <div
           v-if="
             item.contractStatus == 'STRUTS_YWC' ||
             item.contractStatus == 'STRUTS_QSZ' ||
-            item.contractStatus == 'STRUTS_CG'
+            item.contractStatus == 'STRUTS_CG' ||
+            item.contractStatus == 'STRUTS_DSH'
           "
           class="btn"
+          @click="goPreview(item)"
         >
-          {{ item.contractStatus == 'STRUTS_YWC' ? '查看合同' : '签署合同' }}
+          {{
+            item.contractStatus == 'STRUTS_CG' ||
+            item.contractStatus == 'STRUTS_QSZ'
+              ? '签署合同'
+              : '查看合同'
+          }}
         </div>
       </div>
     </div>
@@ -66,17 +78,58 @@ export default {
   },
   data() {
     return {
-      list: [
-        {
-          name: '这是个合同的名称',
-          contractStatus: 'STRUTS_QSZ',
-          id: 'HT-202010102365',
-          money: '5000.00',
-          type: '通用合同',
-          time: '2020-12-12 09:30:56',
-        },
-      ],
+      list: [],
+      order: this.$route.query,
     }
+  },
+  mounted() {
+    this.getorder()
+  },
+  methods: {
+    getorder() {
+      orderApi
+        .getDetailByOrderId(
+          { axios: this.axios },
+          { id: this.order.orderId, cusOrderId: this.order.cusOrderId }
+        )
+        .then((res) => {
+          this.list = res.contractVo2s
+        })
+        .catch((err) => {
+          this.skeletonLoading = false
+          this.$xToast.error(err.message || '查询失败，请稍后重试')
+          const that = this
+          setTimeout(function () {
+            that.$router.back(-1)
+          }, 2000)
+        })
+    },
+    goPreview(item) {
+      if (item.contractStatus === 'STRUTS_DSH') {
+        this.$xToast.error('合同正在审核中，请稍后~')
+      } else if (item.contractStatus === 'STRUTS_YWC') {
+        this.$router.push({
+          path: '/contract/preview',
+          query: {
+            contractUrl: item.contractUrl,
+            type: 'yl',
+          },
+        })
+      } else {
+        this.$router.push({
+          path: '/contract/preview',
+          query: {
+            contractUrl: item.contractUrl,
+            contractId: item.contractId,
+            contractNo: item.contractNo,
+            signerName: item.contractFirstContacts,
+            contactWay: item.contractFirstPhone,
+            type: 'qs',
+            go: '-1',
+          },
+        })
+      }
+    },
   },
 }
 </script>

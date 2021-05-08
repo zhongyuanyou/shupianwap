@@ -90,6 +90,7 @@ export default {
     } else {
       this.pdf = this.contract.contractUrl
     }
+    console.log(this.contract, 111)
   },
   mounted() {},
   methods: {
