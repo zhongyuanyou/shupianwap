@@ -30,7 +30,7 @@
               alt=""
             /> -->
           </div>
-          <div class="low-money">近15天全网底价</div>
+          <div class="low-money">近15天全网低价</div>
         </div>
         <div v-if="isTimerShow" class="count-down">
           <div class="end-time">距本场结束还剩</div>
@@ -298,6 +298,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+html::-webkit-scrollbar {
+  display: none;
+}
 .multiRowOverflowDot {
   //width: 100px;
   overflow: hidden;

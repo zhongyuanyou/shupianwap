@@ -262,6 +262,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+html::-webkit-scrollbar {
+  display: none;
+}
 .multiRowOverflowDot {
   //width: 100px;
   overflow: hidden;
@@ -550,7 +553,7 @@ export default {
         margin: 0 20px;
       }
       ::v-deep .sp-list {
-        > div:first-child .body-content-items {
+        > div > div:first-child .body-content-items {
           margin-top: 0;
         }
       }
@@ -671,7 +674,7 @@ export default {
             }
           }
           .rc-bottom-rt {
-            width: 176px;
+            //width: 176px;
             height: 80px;
             background: linear-gradient(139deg, #ffe1ab 0%, #fac46e 100%);
             border-radius: 8px;
@@ -682,6 +685,7 @@ export default {
             line-height: 30px;
             padding: 25px 28px;
             text-align: center;
+            white-space: nowrap;
           }
         }
       }

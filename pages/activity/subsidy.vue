@@ -221,6 +221,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+html::-webkit-scrollbar {
+  display: none;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
