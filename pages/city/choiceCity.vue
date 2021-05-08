@@ -284,6 +284,8 @@ export default {
 
 <style lang="less" scoped>
 .city-page {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
   background-color: #f8f8f8;
   .cloose-icon {
     margin-right: 35px;

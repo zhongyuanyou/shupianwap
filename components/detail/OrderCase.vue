@@ -526,8 +526,10 @@ export default {
           font-weight: 400;
           color: #222222;
           line-height: 26px;
+          width: 130px;
         }
         > .box {
+          max-width: calc(100% - 140px);
           > .item {
             padding: 0 0 80px 60px;
             position: relative;
@@ -558,6 +560,7 @@ export default {
                 font-family: PingFangSC-Medium, PingFang SC;
                 font-weight: 600;
                 color: #4974f5;
+                line-height: 34px;
               }
               > p {
                 font-size: 26px;
