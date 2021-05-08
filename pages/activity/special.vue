@@ -170,15 +170,7 @@
                           原价{{ item.skuPrice }}元
                         </div>
                       </div>
-                      <div class="rc-bottom-rt">
-                        <div>去抢购</div>
-                        <div>
-                          已成交{{
-                            item.specialInventory -
-                            item.specialResidueInventory
-                          }}单
-                        </div>
-                      </div>
+                      <div class="rc-bottom-rt">去抢购</div>
                     </div>
                   </div>
                 </div>
@@ -682,28 +674,33 @@ export default {
           }
           .rc-bottom-rt {
             width: 100px;
-            height: 100px;
+            //height: 100px;
             background: yellow;
             width: 176px;
-            height: 80px;
+            //height: 80px;
             font-family: PingFangSC-Medium, PingFang SC;
             background: linear-gradient(139deg, #fe525d 0%, #fd3543 100%);
             border-radius: 8px;
-            div:nth-of-type(1) {
-              padding: 12px 0 4px 0;
-              text-align: center;
-              font-size: 30px;
-              font-weight: bold;
-              color: #ffffff;
-              line-height: 30px;
-            }
-            div:nth-of-type(2) {
-              font-size: 22px;
-              font-weight: 400;
-              color: #ffffff;
-              line-height: 22px;
-              text-align: center;
-            }
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #ffffff;
+            line-height: 80px;
+            //div:nth-of-type(1) {
+            //  padding: 12px 0 4px 0;
+            //  text-align: center;
+            //  font-size: 30px;
+            //  font-weight: bold;
+            //  color: #ffffff;
+            //  line-height: 30px;
+            //}
+            //div:nth-of-type(2) {
+            //  font-size: 22px;
+            //  font-weight: 400;
+            //  color: #ffffff;
+            //  line-height: 22px;
+            //  text-align: center;
+            //}
           }
         }
       }
