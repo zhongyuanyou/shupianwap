@@ -49,11 +49,7 @@ export default {
   mounted() {},
   methods: {
     jump(val) {
-      console.log(val)
-      if (
-        val.contractStatus === 'STRUTS_YWC' ||
-        val.contractStatus === 'STRUTS_QSZ'
-      ) {
+      if (val.contractStatus === 'STRUTS_YWC') {
         this.$router.push({
           path: '/contract/preview',
           query: {
