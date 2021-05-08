@@ -1,0 +1,153 @@
+<template>
+  <div class="evaluate_container">
+    <!--S 头部-->
+    <Header title="评价">
+      <template #left>
+        <div @click="back">
+          <my-icon
+            name="nav_ic_back"
+            class="back_icon"
+            size="0.39rem"
+            color="#1A1A1A"
+          ></my-icon>
+        </div>
+      </template>
+    </Header>
+    <!--E 头部-->
+    <div class="middle_container">
+      <!--S 规划师-->
+      <div class="planer_container">
+        <div class="planer_left">
+          <img
+            src="https://cdn.shupian.cn/sp-pt/wap/images/amy4chmsb0c0000.jpg"
+            alt=""
+          />
+        </div>
+        <div class="planer_name">吴月茹</div>
+        <div class="planer_right">已对规划师匿名</div>
+      </div>
+      <!--E 规划师-->
+      <!--S 评分-->
+      <EvaluateStar />
+      <!--E 评分-->
+    </div>
+
+    <div class="btn">
+      <div class="evaluate_btn">发布评价</div>
+    </div>
+  </div>
+</template>
+
+<script>
+import Header from '@/components/common/head/header'
+import EvaluateStar from '@/components/evaluate/EvaluateStar'
+
+export default {
+  layout: 'keepAlive',
+  name: 'Evaluate',
+  components: {
+    Header,
+    EvaluateStar,
+  },
+  // async asyncData({ store, $axios }) {
+  //   try {
+  //     let homeData = {}
+  //     const params = {
+  //       platformCode: store.state.app.isInApp
+  //         ? store.state.app.appInfo.platformCode
+  //         : 'COMDIC_PLATFORM_CRISPS',
+  //       terminalCode: store.state.app.isInApp
+  //         ? 'COMDIC_TERMINAL_APP'
+  //         : 'COMDIC_TERMINAL_WAP',
+  //     }
+  //     const res = await $axios.get(foundApi.initRequest, { params })
+  //     if (res.code === 200) {
+  //       homeData = res.data || {}
+  //     }
+  //     return {
+  //       homeData,
+  //     }
+  //   } catch (err) {}
+  // },
+  data() {
+    return {}
+  },
+  computed: {},
+  mounted() {},
+  methods: {
+    back() {
+      console.log('back')
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped>
+.evaluate_container {
+  position: relative;
+  height: 100%;
+  .back_icon {
+    margin-left: 32px;
+  }
+  .middle_container {
+    height: calc(100vh - 88px - 112px);
+    overflow: auto;
+    .planer_container {
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      border-top: 1px solid #f4f4f4;
+      .planer_left {
+        width: 80px;
+        height: 80px;
+        background: #d8d8d8;
+        border-radius: 50%;
+        margin-right: 24px;
+        img {
+          width: 100%;
+          height: 100%;
+          display: block;
+          border-radius: 50%;
+        }
+      }
+      .planer_name {
+        height: 34px;
+        font-size: 34px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #1a1a1a;
+        line-height: 34px;
+        margin-right: 16px;
+      }
+      .planer_right {
+        background: #ffffff;
+        border-radius: 4px;
+        border: 1px solid #dddddd;
+        font-size: 24px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #999999;
+        line-height: 24px;
+        padding: 10px 12px;
+      }
+    }
+  }
+
+  .btn {
+    padding: 0 40px;
+
+    width: 100%;
+    .evaluate_btn {
+      height: 88px;
+      background: #4974f5;
+      border-radius: 8px;
+      font-size: 32px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 700;
+      color: #ffffff;
+      text-align: center;
+      line-height: 88px;
+    }
+  }
+}
+</style>
