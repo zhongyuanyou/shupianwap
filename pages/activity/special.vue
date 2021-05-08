@@ -64,10 +64,11 @@
           <div class="content">{{ item.skuName }}</div>
           <div class="background">
             <div class="bg-img"></div>
-            <div class="money">
+            <div v-if="parsePrice(item.specialPrice) !== '面议'" class="money">
               <span>{{ item.specialPrice }}</span
               ><span>元</span>
             </div>
+            <div v-else class="money">面议</div>
           </div>
         </div>
       </div>
@@ -147,11 +148,23 @@
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
-                        <div class="rc-bottom-lf-my">
+                        <div
+                          v-if="parsePrice(item.specialPrice) !== '面议'"
+                          class="rc-bottom-lf-my"
+                        >
                           <div>{{ item.specialPrice }}</div>
                           <div>元</div>
                         </div>
-                        <div class="bf-my">原价{{ item.skuPrice }}元</div>
+                        <div v-else class="rc-bottom-lf-my">
+                          <div>面议</div>
+                        </div>
+
+                        <div
+                          v-if="parsePrice(item.specialPrice) !== '面议'"
+                          class="bf-my"
+                        >
+                          原价{{ item.skuPrice }}元
+                        </div>
                       </div>
                       <div class="rc-bottom-rt">
                         <div>去抢购</div>

@@ -423,6 +423,7 @@ export default {
     }
     .wrapper {
       display: flex;
+      justify-content: flex-start;
       overflow: auto;
       &::-webkit-scrollbar {
         width: 0 !important;

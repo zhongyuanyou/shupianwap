@@ -56,10 +56,16 @@
           </div>
           <div class="advert_item-title">
             <div class="advert_item-title-name">{{ item.skuName }}</div>
-            <div class="advert_item-title-price">
+            <div
+              v-if="parsePrice(item.specialPrice) !== '面议'"
+              class="advert_item-title-price"
+            >
               低至
               <span class="advert_item-title-num">{{ item.specialPrice }}</span>
               元
+            </div>
+            <div v-else class="advert_item-title-price">
+              <span class="advert_item-title-num">面议</span>
             </div>
           </div>
         </div>
@@ -327,7 +333,7 @@ export default {
     }
     .advert_box {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       padding: 0 20px;
       .advert_item {
         width: 30vw;
