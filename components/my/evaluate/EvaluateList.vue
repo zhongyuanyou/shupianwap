@@ -2,17 +2,17 @@
   <div class="m-evaluate list">
     <div class="item">
       <div class="item-info">
-        <sp-image class="img" fit="cover" :src="item.avatar || ''" />
+        <sp-image class="img" fit="cover" :src="orderInfo.avatar || ''" />
         <div class="desc">
-          <div class="desc-name">{{ item.name || '' }}</div>
-          <div class="desc-content">{{ item.desc || '' }}</div>
+          <div class="desc-name">{{ orderInfo.name || '' }}</div>
+          <div class="desc-content">{{ orderInfo.desc || '' }}</div>
         </div>
       </div>
-      <template v-if="item.commentFlag === 1">
-        <div class="item-button">写评价</div>
+      <template v-if="orderInfo.commentFlag === 1">
+        <div class="item-button" @click="linkWrite">写评价</div>
       </template>
       <template v-else>
-        <div class="item-button read">查看评价</div>
+        <div class="item-button read" @click="linkDetail">查看评价</div>
       </template>
       <div class="item-clear"></div>
     </div>
@@ -34,6 +34,19 @@ export default {
       default: () => {
         return {}
       },
+    },
+  },
+  data() {
+    return {
+      orderInfo: this.item,
+    }
+  },
+  methods: {
+    linkWrite() {
+      this.$router.push({ path: '/my/evaluate/write' })
+    },
+    linkDetail() {
+      this.$router.push({ path: '/my/evaluate/detail' })
     },
   },
 }

@@ -228,11 +228,8 @@ export default {
       padding-bottom: 8px;
       border-bottom: 1px solid #f4f4f4;
       .sp-tab {
-        font-size: 30px;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
+        font: 400 30px/30px PingFangSC-Regular, PingFang SC;
         color: #999999;
-        line-height: 30px;
       }
       .sp-tab--active {
         color: #222222;
