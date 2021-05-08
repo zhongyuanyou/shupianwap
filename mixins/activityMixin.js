@@ -2,7 +2,6 @@ import { mapState, mapActions } from 'vuex'
 import { Toast } from '@chipspc/vant-dgg'
 import { activityApi } from '~/api'
 import imHandle from '@/mixins/imHandle'
-let timer
 
 export default {
   computed: {
@@ -47,6 +46,8 @@ export default {
   mixins: [imHandle],
   data() {
     return {
+      endCountDownTimer: null,
+      countDownTimer: null,
       defaultData: {
         index: 0,
         sort: -1, // 倒序
@@ -54,6 +55,7 @@ export default {
       iconLeft: 0.35,
       loading: false,
       finished: false,
+      refreshDisabled: false,
       refreshing: false,
       activityTypeOptions: [],
       activityProductList: [],
@@ -75,7 +77,8 @@ export default {
       specCode: '',
       defaultCityCode: '510100',
       advertCode: 'ad1314', // 广告code
-      diff: 0,
+      endCountDiff: 0,
+      countDownDiff: 0,
       time: '',
       endTime: '',
       recommendProductList: [],
@@ -107,7 +110,8 @@ export default {
     this.screenWidth = window.screen.width
   },
   beforeDestroy() {
-    clearInterval(timer)
+    clearInterval(this.endCountDownTimer)
+    clearInterval(this.countDownTimer)
   },
   methods: {
     ...mapActions({
@@ -273,7 +277,11 @@ export default {
                 this.specType !== 'HDZT_ZTTYPE_XSQG') ||
               !res.data.specCode
             ) {
-              throw new Error('无活动数据')
+              // throw new Error('无活动数据')
+              this.loading = false
+              this.finished = true
+              this.refreshDisabled = true
+              return
             }
             if (res.data.endTime) {
               this.activeTimer(res.data.endTime.replace(/-/g, '/'))
@@ -304,6 +312,7 @@ export default {
         .catch((error) => {
           this.loading = false
           this.finished = true
+          this.refreshDisabled = true
           Toast.fail({
             duration: 2000,
             message: error.message,
@@ -488,11 +497,11 @@ export default {
       const that = this
       const nowTimeStamp = new Date().getTime()
       // 计算时间差 秒
-      this.diff = (timestamp - nowTimeStamp) / 1000
-      timer = setInterval(() => {
-        let hour = Math.floor(this.diff / 3600)
-        let min = Math.floor((this.diff - hour * 3600) / 60)
-        let sec = Math.floor(this.diff % 60)
+      this.endCountDiff = (timestamp - nowTimeStamp) / 1000
+      this.endCountDownTimer = setInterval(() => {
+        let hour = Math.floor(that.endCountDiff / 3600)
+        let min = Math.floor((that.endCountDiff - hour * 3600) / 60)
+        let sec = Math.floor(that.endCountDiff % 60)
         if (hour < 10) hour = '0' + hour
         if (min < 10) min = '0' + min
         if (sec < 10) sec = '0' + sec
@@ -501,7 +510,7 @@ export default {
           min,
           sec,
         }
-        that.diff--
+        that.endCountDiff--
       }, 1000)
       // 每执行一次定时器就减少一秒
     },
@@ -509,23 +518,23 @@ export default {
       const that = this
       const nowTimeStamp = new Date().getTime()
       // 计算时间差 秒
-      this.diff = (endTimeStamp - nowTimeStamp) / 1000
-      timer = setInterval(() => {
-        const day = Math.floor(this.diff / 86400)
-        const hour = Math.floor((this.diff - day * 86400) / 3600)
-        const min = Math.floor((this.diff - hour * 3600 - day * 86400) / 60)
-        const sec = Math.floor(this.diff % 60)
-        // if (day < 10) day = '0' + day
-        // if (hour < 10) hour = '0' + hour
-        // if (min < 10) min = '0' + min
-        // if (sec < 10) sec = '0' + sec
+      this.countDiff = (endTimeStamp - nowTimeStamp) / 1000
+      this.countDownTimer = setInterval(() => {
+        let day = Math.floor(that.countDiff / 86400)
+        let hour = Math.floor((that.countDiff - day * 86400) / 3600)
+        let min = Math.floor((that.countDiff - hour * 3600 - day * 86400) / 60)
+        let sec = Math.floor(that.countDiff % 60)
+        if (day < 10) day = '0' + day
+        if (hour < 10) hour = '0' + hour
+        if (min < 10) min = '0' + min
+        if (sec < 10) sec = '0' + sec
         that.time = {
           day,
           hour,
           min,
           sec,
         }
-        that.diff--
+        that.countDiff--
       }, 1000)
       // 每执行一次定时器就减少一秒
     },

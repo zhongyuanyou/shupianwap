@@ -63,10 +63,11 @@
           <div class="content">{{ item.skuName }}</div>
           <div class="background">
             <div class="bg-img"></div>
-            <div class="money">
+            <div v-if="parsePrice(item.specialPrice) !== '面议'" class="money">
               <span>{{ item.specialPrice }}</span
               ><span>元</span>
             </div>
+            <div v-else class="money">面议</div>
           </div>
         </div>
       </div>
@@ -94,7 +95,11 @@
       </sp-sticky>
 
       <div class="body-content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <sp-pull-refresh
+          v-model="refreshing"
+          :disabled="refreshDisabled"
+          @refresh="onRefresh"
+        >
           <sp-list
             v-model="loading"
             :finished="finished"
@@ -149,7 +154,7 @@
                           原价{{ item.skuPrice }}元
                         </div>
                       </div>
-                      <div class="rc-bottom-rt">去抢购</div>
+                      <div class="rc-bottom-rt">立即抢购</div>
                     </div>
                   </div>
                 </div>
@@ -252,9 +257,6 @@ export default {
       ],
       hasCity: false,
     }
-  },
-  mounted() {
-    this.countDown(new Date().getTime() + 60 * 60 * 24 * 1000)
   },
 }
 </script>
@@ -399,7 +401,7 @@ export default {
     }
     .avtars {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       margin-bottom: 40px;
       overflow-x: scroll;
       &::-webkit-scrollbar {

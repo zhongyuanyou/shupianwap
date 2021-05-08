@@ -121,7 +121,11 @@
         </div>
       </sp-sticky>
       <div class="body-content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <sp-pull-refresh
+          v-model="refreshing"
+          :disabled="refreshDisabled"
+          @refresh="onRefresh"
+        >
           <sp-list
             v-model="loading"
             :finished="finished"
@@ -423,6 +427,7 @@ export default {
     }
     .wrapper {
       display: flex;
+      justify-content: flex-start;
       overflow: auto;
       &::-webkit-scrollbar {
         width: 0 !important;
