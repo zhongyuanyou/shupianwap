@@ -72,7 +72,13 @@ export default {
       avatarSize: '0.8rem',
       name,
       starLevel: 3, // 星级
-      stars: [{ flag: 0 }, { flag: 0 }, { flag: 0 }, { flag: 0 }, { flag: 0 }], // flag 0: 未点亮; 1: 点亮
+      stars: [
+        { flag: false },
+        { flag: false },
+        { flag: false },
+        { flag: false },
+        { flag: false },
+      ], // flag 图标是否点亮
     }
   },
   mounted() {
