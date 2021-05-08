@@ -55,6 +55,7 @@ export default {
       iconLeft: 0.35,
       loading: false,
       finished: false,
+      refreshDisabled: false,
       refreshing: false,
       activityTypeOptions: [],
       activityProductList: [],
@@ -276,7 +277,11 @@ export default {
                 this.specType !== 'HDZT_ZTTYPE_XSQG') ||
               !res.data.specCode
             ) {
-              throw new Error('无活动数据')
+              // throw new Error('无活动数据')
+              this.loading = false
+              this.finished = true
+              this.refreshDisabled = true
+              return
             }
             if (res.data.endTime) {
               this.activeTimer(res.data.endTime.replace(/-/g, '/'))
@@ -307,6 +312,7 @@ export default {
         .catch((error) => {
           this.loading = false
           this.finished = true
+          this.refreshDisabled = true
           Toast.fail({
             duration: 2000,
             message: error.message,
