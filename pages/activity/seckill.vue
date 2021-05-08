@@ -1,6 +1,12 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
-    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
+    <sp-sticky
+      :style="safeTopStyle"
+      style="
+        background: url('https://cdn.shupian.cn/sp-pt/wap/60qzygy1qt80000.png');
+      "
+      offset-top="0"
+    />
     <!-- Sheader -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="header">

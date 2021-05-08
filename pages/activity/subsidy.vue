@@ -7,7 +7,13 @@
     >
       规则
     </div>
-    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
+    <sp-sticky
+      :style="safeTopStyle"
+      style="
+        background: url('https://cdn.shupian.cn/sp-pt/wap/1s1ki8z86vfk000.png');
+      "
+      offset-top="0"
+    />
     <!-- S search -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="search">

@@ -1,6 +1,12 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
-    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
+    <sp-sticky
+      :style="safeTopStyle"
+      style="
+        background: url('https://cdn.shupian.cn/sp-pt/wap/2z5tsl5cs4q0000.png');
+      "
+      offset-top="0"
+    />
     <!-- <sp-sticky></sp-sticky> -->
     <!-- S search -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
