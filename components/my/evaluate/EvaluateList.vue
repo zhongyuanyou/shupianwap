@@ -2,7 +2,7 @@
   <div class="m-evaluate list">
     <div class="item">
       <div class="item-info">
-        <sp-image round class="img" fit="cover" :src="item.avatar || ''" />
+        <sp-image class="img" fit="cover" :src="item.avatar || ''" />
         <div class="desc">
           <div class="desc-name">{{ item.name || '' }}</div>
           <div class="desc-content">{{ item.desc || '' }}</div>
@@ -40,13 +40,34 @@ export default {
 </script>
 <style lang="less" scoped>
 .m-evaluate.list {
+  @font: PingFangSC-Medium, PingFang SC;
+  @item-padding: 32px 40px;
+  @item-img-size: 130px;
+
+  .mixin-fontellipsis {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+  }
+  .mixin-font2linellipsis {
+    text-overflow: -o-ellipsis-lastline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
   .item {
-    padding: 32px 40px;
+    padding: @item-padding;
+    font-family: @font;
     &-info {
       display: flex;
       .img {
-        width: 130px;
-        height: 130px;
+        width: @item-img-size;
+        height: @item-img-size;
         border-radius: 0;
         background: #f4f4f4;
         margin-right: 24px;
@@ -54,31 +75,20 @@ export default {
       .desc {
         width: 516px;
         &-name {
-          font-family: PingFangSC-Medium, PingFang SC;
           font-weight: bold;
           font-size: 28px;
           color: #222222;
           line-height: 36px;
-          text-overflow: -o-ellipsis-lastline;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          line-clamp: 2;
-          -webkit-box-orient: vertical;
           margin-bottom: 20px;
+          .mixin-font2linellipsis();
         }
         &-content {
           height: 24px;
           line-height: 24px;
           font-size: 24px;
-          font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
           color: #999999;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          word-break: break-all;
+          .mixin-fontellipsis();
         }
       }
     }
