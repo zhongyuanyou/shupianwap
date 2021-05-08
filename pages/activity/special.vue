@@ -92,7 +92,11 @@
     </sp-sticky>
     <div class="container-body">
       <div class="body-content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <sp-pull-refresh
+          v-model="refreshing"
+          :disabled="refreshDisabled"
+          @refresh="onRefresh"
+        >
           <sp-list
             v-model="loading"
             :finished="finished"

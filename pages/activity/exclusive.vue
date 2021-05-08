@@ -95,7 +95,11 @@
       </sp-sticky>
 
       <div class="body-content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <sp-pull-refresh
+          v-model="refreshing"
+          :disabled="refreshDisabled"
+          @refresh="onRefresh"
+        >
           <sp-list
             v-model="loading"
             :finished="finished"
@@ -253,9 +257,6 @@ export default {
       ],
       hasCity: false,
     }
-  },
-  mounted() {
-    this.countDown(new Date().getTime() + 60 * 60 * 24 * 1000)
   },
 }
 </script>
