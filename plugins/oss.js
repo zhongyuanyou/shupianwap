@@ -30,4 +30,27 @@ const ossImgSet = (width, heigt, imgName = null) => {
     },limit_0`
   }
 }
+
+/*
+ * @Author: majinghe
+ * @Date: 2021-05-08
+ * @Description: ossImgSetV2 把设置参数自定义,扩展ossImgSet.
+ *               图片配置参见: https://www.alibabacloud.com/help/zh/doc-detail/183902.htm?spm=a2c63.p38356.b99.166.698f2520aAXUM1
+ */
+
+const ossImgSetV2 = (imgName = null, config = '') => {
+  if (imgName) {
+    let imgPath = `${ossBaseUrl}/sp-pt/wap/images/${imgName}`
+    if (config) {
+      imgPath += `?${config}`
+    }
+    return imgPath
+  } else {
+    if (config) {
+      return `?${config}`
+    }
+    return `?x-oss-process=image/resize,m_fill,w_10,h_10,limit_0`
+  }
+}
 Vue.prototype.$ossImgSet = ossImgSet
+Vue.prototype.$ossImgSetV2 = ossImgSetV2
