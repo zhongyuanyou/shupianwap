@@ -2,7 +2,6 @@ import { mapState, mapActions } from 'vuex'
 import { Toast } from '@chipspc/vant-dgg'
 import { activityApi } from '~/api'
 import imHandle from '@/mixins/imHandle'
-let endCountDownTimer, countDownTimer
 
 export default {
   computed: {
@@ -47,6 +46,8 @@ export default {
   mixins: [imHandle],
   data() {
     return {
+      endCountDownTimer: null,
+      countDownTimer: null,
       defaultData: {
         index: 0,
         sort: -1, // 倒序
@@ -108,8 +109,8 @@ export default {
     this.screenWidth = window.screen.width
   },
   beforeDestroy() {
-    clearInterval(endCountDownTimer)
-    clearInterval(countDownTimer)
+    clearInterval(this.endCountDownTimer)
+    clearInterval(this.countDownTimer)
   },
   methods: {
     ...mapActions({
@@ -491,10 +492,10 @@ export default {
       const nowTimeStamp = new Date().getTime()
       // 计算时间差 秒
       this.endCountDiff = (timestamp - nowTimeStamp) / 1000
-      endCountDownTimer = setInterval(() => {
-        let hour = Math.floor(this.endCountDiff / 3600)
-        let min = Math.floor((this.endCountDiff - hour * 3600) / 60)
-        let sec = Math.floor(this.endCountDiff % 60)
+      this.endCountDownTimer = setInterval(() => {
+        let hour = Math.floor(that.endCountDiff / 3600)
+        let min = Math.floor((that.endCountDiff - hour * 3600) / 60)
+        let sec = Math.floor(that.endCountDiff % 60)
         if (hour < 10) hour = '0' + hour
         if (min < 10) min = '0' + min
         if (sec < 10) sec = '0' + sec
@@ -512,11 +513,11 @@ export default {
       const nowTimeStamp = new Date().getTime()
       // 计算时间差 秒
       this.countDiff = (endTimeStamp - nowTimeStamp) / 1000
-      countDownTimer = setInterval(() => {
-        let day = Math.floor(this.countDiff / 86400)
-        let hour = Math.floor((this.countDiff - day * 86400) / 3600)
-        let min = Math.floor((this.countDiff - hour * 3600 - day * 86400) / 60)
-        let sec = Math.floor(this.countDiff % 60)
+      this.countDownTimer = setInterval(() => {
+        let day = Math.floor(that.countDiff / 86400)
+        let hour = Math.floor((that.countDiff - day * 86400) / 3600)
+        let min = Math.floor((that.countDiff - hour * 3600 - day * 86400) / 60)
+        let sec = Math.floor(that.countDiff % 60)
         if (day < 10) day = '0' + day
         if (hour < 10) hour = '0' + hour
         if (min < 10) min = '0' + min

@@ -254,9 +254,6 @@ export default {
       hasCity: false,
     }
   },
-  mounted() {
-    this.countDown(new Date().getTime() + 60 * 60 * 24 * 1000)
-  },
 }
 </script>
 
