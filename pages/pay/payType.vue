@@ -56,7 +56,6 @@
         <span class="btn-item"> 元</span>
       </sp-button>
     </div>
-    <LoadingCenter v-show="loading" />
     <sp-dialog
       v-model="showMydialog"
       :show-cancel-button="true"
@@ -74,6 +73,11 @@
       v-if="!closeAppOpen"
       @handleDialogClosed="handleDialogClosed"
     />
+    <div v-show="loading || resultLoading" class="loading-area">
+      <sp-loading size="24px">{{
+        resultLoading ? '正在查询支付结果' : '加载中'
+      }}</sp-loading>
+    </div>
     <!-- E 下载app弹框 -->
   </div>
 </template>
@@ -86,15 +90,15 @@ import {
   Cell,
   Checkbox,
   Dialog,
+  Loading,
 } from '@chipspc/vant-dgg'
-import LoadingCenter from '@/components/common/loading/LoadingCenter'
 import Header from '@/components/common/head/header'
 import DownloadApp from '@/components/common/app/DownloadApp'
 import { pay, auth } from '@/api'
-import changeMoney from '@/utils/changeMoney'
 // 支付倒计时定时器
 let timer
-let time
+// 支付结果回调定时器
+let payResultTimer
 export default {
   components: {
     [Button.name]: Button,
@@ -102,9 +106,9 @@ export default {
     [Radio.name]: Radio,
     [Cell.name]: Cell,
     [Dialog.Component.name]: Dialog.Component,
+    [Loading.name]: Loading,
     Header,
     Checkbox,
-    LoadingCenter,
     DownloadApp,
   },
   data() {
@@ -113,6 +117,8 @@ export default {
       showMydialog: false,
       protocoTitle: '', // 协议标题
       number: 0,
+      resultLoading: false,
+      loadingText: '正在查询支付结果',
       payCallBackData: {
         cusOrderId: 0,
         serialNumber: 0, // dgg流水号
@@ -165,48 +171,51 @@ export default {
   computed: {},
   beforeDestroy() {
     if (timer) clearInterval(timer)
-    if (time) clearInterval(time)
+    if (payResultTimer) clearInterval(payResultTimer)
   },
   mounted() {
     // 获取协议
     this.getProtocol('protocol100008')
-
     // 如果没有cusOrderId，batchIds 回退
     if (this.$route.query.cusOrderId) {
       this.formData.cusOrderId = this.$route.query.cusOrderId
       this.formData.batchIds = this.$route.query.batchIds
       this.getPayParamsFormData.cusOrderId = this.$route.query.cusOrderId
       this.payCallBackData.cusOrderId = this.$route.query.cusOrderId // cusOrderId获取
-
       this.enablePayMoney()
     } else {
       this.goBack()
     }
-    // const startTime = localStorage.getItem('startTime')
-    // if (
-    //   localStorage.getItem('cusOrderId') &&
-    //   localStorage.getItem('serialNumber')
-    // ) {
-    // if (startTime) {
-    //   const nowTime = this.getNowTime()
-    //   console.log('nowTime - startTime', nowTime - startTime)
-    //   if (nowTime - startTime > 3000) {
-    //     time = setInterval(() => {
-    //       this.number++
-    //       this.getPayResult()
-    //     }, 2000)
-    //   }
-    // else {
-    //   this.$router.push({
-    //     path: '/pay/payResult',
-    //     query: {
-    //       payStatus: false,
-    //     },
-    //   })
-    // this.clearLocalStorage()
-    // }
-    // }
-    // }
+    const startTime = localStorage.getItem('startTime')
+    if (
+      localStorage.getItem('cusOrderId') &&
+      localStorage.getItem('serialNumber')
+    ) {
+      if (startTime) {
+        const nowTime = this.getNowTime()
+        console.log('startTime', startTime)
+        console.log('nowTime', nowTime)
+        console.log('diff', nowTime - startTime)
+        if (nowTime - startTime < 3 * 60 * 1000) {
+          this.resultLoading = true
+          payResultTimer = setInterval(() => {
+            this.number++
+            this.getPayResult()
+          }, 2000)
+        } else {
+          this.clearLocalStorage()
+          // this.$router.replace({
+          //   path: '/pay/payResult',
+          //   query: {
+          //     payStatus: 2,
+          //     orderId: this.$route.query.orderId,
+          //     cusOrderId: this.formData.cusOrderId,
+          //     batchIds: this.$route.query.batchIds,
+          //   },
+          // })
+        }
+      }
+    }
   },
 
   methods: {
@@ -248,7 +257,6 @@ export default {
         this.loading = true
         const data = await auth.protocol(params)
         console.log('data++++', data)
-
         if (data.rows.length > 0) {
           this.protocoTitle = data.rows[0].title
         }
@@ -336,24 +344,33 @@ export default {
       pay
         .getPayResult(this.payCallBackData)
         .then((result) => {
-          console.log('result', result.data)
           if (result.data === 1) {
-            this.$router.push({
+            this.resultLoading = false
+            this.$router.replace({
               path: '/pay/payResult',
               query: {
-                payStatus: true,
+                payStatus: 1,
+                orderId: this.$route.query.orderId,
+                cusOrderId: this.formData.cusOrderId,
+                batchIds: this.$route.query.batchIds,
+                payMoney: this.responseData.currentPayMoney,
               },
             })
-            clearInterval(time)
+            clearInterval(payResultTimer)
           } else if (this.number > 5) {
-            clearInterval(time)
-            this.$xToast.show({
-              message: '支付失败',
-              duration: 1000,
-              forbidClick: true,
-            })
+            this.resultLoading = false
+            clearInterval(payResultTimer)
             this.clearLocalStorage()
-            this.$router.push({ path: '/order' })
+            this.$router.replace({
+              path: '/pay/payResult',
+              query: {
+                payStatus: 2,
+                orderId: this.$route.query.orderId,
+                cusOrderId: this.formData.cusOrderId,
+                batchIds: this.$route.query.batchIds,
+                payMoney: this.responseData.currentPayMoney,
+              },
+            })
           }
         })
         .catch((e) => {
@@ -364,7 +381,6 @@ export default {
     },
     // 客户单付款
     getPayParams() {
-      console.log('this.raido', this.radio)
       if (!this.radio) {
         this.$xToast.show({
           message: '请先阅读薯片平台订单协议',
@@ -376,12 +392,10 @@ export default {
         pay
           .getPayParams(this.getPayParamsFormData)
           .then((result) => {
-            this.responseData = result
-            console.log(this.responseData.payParam)
-            if (this.responseData.code === '0') {
-              const payUrl = this.responseData.payParam
+            if (result.code === '0') {
+              const payUrl = result.payParam
               // window.location.href = payUrl
-              this.payCallBackData.serialNumber = this.responseData.guaguaPayPartyNo
+              this.payCallBackData.serialNumber = result.guaguaPayPartyNo
               localStorage.setItem(
                 'serialNumber',
                 this.payCallBackData.serialNumber
@@ -389,12 +403,13 @@ export default {
               localStorage.setItem('startTime', new Date().getTime())
               window.location.href = payUrl
             } else {
+              this.$xToast.error('支付发起失败，请稍后重试。')
             }
           })
           .catch((e) => {
             if (e.code !== 200) {
               console.log(e)
-              this.$xToast.error(e.data.error || '请求失败')
+              this.$xToast.error(e.data.error || '支付发起失败，请稍后重试。')
             }
           })
       }
@@ -403,6 +418,7 @@ export default {
     clearLocalStorage() {
       localStorage.removeItem('cusOrderId')
       localStorage.removeItem('serialNumber')
+      localStorage.removeItem('startTime')
     },
   },
 }
@@ -516,6 +532,21 @@ export default {
   padding: 20px 40px;
   span {
     color: #4f90f6;
+  }
+}
+.loading-area {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /deep/ .sp-loading {
+    padding: 2px 16px;
+    border-radius: 16px;
+    color: #999;
   }
 }
 </style>
