@@ -365,7 +365,6 @@ export default {
             // 对支付列表进行排序
             nodeList.forEach((item) => {
               item.batchIndex = Number(item.batchNumber) + 1
-              item.money = this.regFenToYuan(item.money)
             })
             this.nodeList = nodeList
           } else {
@@ -786,7 +785,7 @@ export default {
       if (arr2.length) {
         for (let j = 0, len = arr2.length; j < len; j++) {
           // 商品售价
-          if (arr2[j].skuPrice && !arr2[j].skuPrice.match('.')) {
+          if (arr2[j].skuPrice) {
             arr2[j].skuPrice = this.regFenToYuan(arr2[j].skuPrice)
           }
         }
