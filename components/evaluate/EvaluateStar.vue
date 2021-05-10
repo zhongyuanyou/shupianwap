@@ -427,8 +427,6 @@ export default {
 
   ::v-deep .sp-bottombar {
     padding: 0 40px 24px;
-    padding-bottom: constant(safe-area-inset-bottom);
-    padding-bottom: env(safe-area-inset-bottom);
     height: 88px;
     .sp-button {
       font: bold 32px/45px @fontf-pfsc-med;
