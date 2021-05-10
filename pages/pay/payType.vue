@@ -95,10 +95,10 @@ import {
 import Header from '@/components/common/head/header'
 import DownloadApp from '@/components/common/app/DownloadApp'
 import { pay, auth } from '@/api'
-import changeMoney from '@/utils/changeMoney'
 // 支付倒计时定时器
 let timer
-let time
+// 支付结果回调定时器
+let payResultTimer
 export default {
   components: {
     [Button.name]: Button,
@@ -171,7 +171,7 @@ export default {
   computed: {},
   beforeDestroy() {
     if (timer) clearInterval(timer)
-    if (time) clearInterval(time)
+    if (payResultTimer) clearInterval(payResultTimer)
   },
   mounted() {
     // 获取协议
@@ -193,9 +193,12 @@ export default {
     ) {
       if (startTime) {
         const nowTime = this.getNowTime()
-        this.resultLoading = true
-        if (nowTime - startTime > 3000) {
-          time = setInterval(() => {
+        console.log('startTime', startTime)
+        console.log('nowTime', nowTime)
+        console.log('diff', nowTime - startTime)
+        if (nowTime - startTime < 3 * 60 * 1000) {
+          this.resultLoading = true
+          payResultTimer = setInterval(() => {
             this.number++
             this.getPayResult()
           }, 2000)
@@ -254,7 +257,6 @@ export default {
         this.loading = true
         const data = await auth.protocol(params)
         console.log('data++++', data)
-
         if (data.rows.length > 0) {
           this.protocoTitle = data.rows[0].title
         }
@@ -354,12 +356,11 @@ export default {
                 payMoney: this.responseData.currentPayMoney,
               },
             })
-            clearInterval(time)
+            clearInterval(payResultTimer)
           } else if (this.number > 5) {
             this.resultLoading = false
-            clearInterval(time)
+            clearInterval(payResultTimer)
             this.clearLocalStorage()
-            this.$xToast.error('支付失败，请稍后重试!')
             this.$router.replace({
               path: '/pay/payResult',
               query: {
@@ -417,6 +418,7 @@ export default {
     clearLocalStorage() {
       localStorage.removeItem('cusOrderId')
       localStorage.removeItem('serialNumber')
+      localStorage.removeItem('startTime')
     },
   },
 }
