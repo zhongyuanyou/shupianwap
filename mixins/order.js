@@ -365,6 +365,7 @@ export default {
             // 对支付列表进行排序
             nodeList.forEach((item) => {
               item.batchIndex = Number(item.batchNumber) + 1
+              item.money = this.regFenToYuan(item.money)
             })
             this.nodeList = nodeList
           } else {
