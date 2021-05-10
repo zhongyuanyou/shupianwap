@@ -1,6 +1,12 @@
 <template>
   <div class="container" :style="{ marginTop: safeTop + 'px' }">
-    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
+    <sp-sticky
+      :style="safeTopStyle"
+      style="
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/8sq7h20ttpo0000.png');
+      "
+      offset-top="0"
+    />
     <!-- Sheader -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="header">
@@ -30,7 +36,7 @@
               alt=""
             /> -->
           </div>
-          <div class="low-money">近15天全网底价</div>
+          <div class="low-money">近15天全网低价</div>
         </div>
         <div v-if="isTimerShow" class="count-down">
           <div class="end-time">距本场结束还剩</div>
@@ -121,7 +127,11 @@
         </div>
       </sp-sticky>
       <div class="body-content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <sp-pull-refresh
+          v-model="refreshing"
+          :disabled="refreshDisabled"
+          @refresh="onRefresh"
+        >
           <sp-list
             v-model="loading"
             :finished="finished"
@@ -294,6 +304,17 @@ export default {
 </script>
 
 <style lang="less" scoped>
+html::-webkit-scrollbar {
+  display: none;
+}
+.multiRowOverflowDot {
+  //width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; //行数
+  -webkit-box-orient: vertical;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
@@ -415,7 +436,9 @@ export default {
     }
     .wrapper {
       display: flex;
-      overflow: auto;
+      justify-content: flex-start;
+      overflow-x: scroll;
+      overflow-y: hidden;
       &::-webkit-scrollbar {
         width: 0 !important;
       }
@@ -628,6 +651,7 @@ export default {
           font-weight: bold;
           color: #222222;
           line-height: 0.42rem;
+          .multiRowOverflowDot();
           span {
             margin-right: 8px;
             background: #ec5330;
@@ -643,7 +667,7 @@ export default {
           display: flex;
           // justify-content: space-between;
           align-content: flex-start;
-          margin-top: 12px;
+          //margin-top: 12px;
           .reduce-price {
             padding: 4px 8px;
             border-radius: 4px;

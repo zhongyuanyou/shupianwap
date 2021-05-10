@@ -8,91 +8,160 @@
 -->
 <template>
   <div class="city-page">
-    <sp-sticky>
-      <Search
-        ref="searchRef"
-        :disabled="true"
-        :icon-left="0.35"
-        placeholder="请输入城市名称"
-        @clickInputHandle="clickInputHandle"
-      >
-        <template v-slot:left>
-          <my-icon
-            class="cloose-icon"
-            name="bubb_ic_close"
-            size="0.33rem"
-            color="#1A1A1A"
-            @click.native="clooseHandle"
-          ></my-icon>
-        </template>
-      </Search>
-    </sp-sticky>
-    <!-- S 当前选择的城市 -->
-    <div class="current-city">
-      <strong>{{ currentCity }}</strong>
-      <span>当前选择</span>
-    </div>
-    <!-- S 当前定位城市 -->
-    <div v-if="!isInApp" class="position-city">
-      <div v-if="!positionStatus" class="no-position">
+    <div v-if="isInApp" class="gd"></div>
+    <!-- <sp-sticky :offset-top="20"> -->
+    <Search
+      ref="searchRef"
+      :disabled="true"
+      :icon-left="0.35"
+      placeholder="请输入城市名称"
+      @clickInputHandle="clickInputHandle"
+    >
+      <template v-slot:left>
         <my-icon
-          name="toast_ic_remind"
-          size="0.32rem"
-          color="#cccccc"
+          class="cloose-icon"
+          name="bubb_ic_close"
+          size="0.33rem"
+          color="#1A1A1A"
+          @click.native="clooseHandle"
         ></my-icon>
-        <span>无法定位到当前城市</span>
+      </template>
+    </Search>
+    <!-- </sp-sticky> -->
+    <!-- S 当前选择的城市 -->
+    <div class="box">
+      <div class="current-city">
+        <strong>{{ currentCity }}</strong>
+        <span>当前选择</span>
       </div>
-      <div v-else class="position-success">
-        <strong @click="choosePositionCity(positionCityName)">{{
-          positionCityName
-        }}</strong>
-        <span>GPS定位</span>
-        <p v-if="positionStatus === 1">未开通服务</p>
+      <!-- S 当前定位城市 -->
+      <div v-if="!isInApp" class="position-city">
+        <div v-if="!positionStatus" class="no-position">
+          <my-icon
+            name="toast_ic_remind"
+            size="0.32rem"
+            color="#cccccc"
+          ></my-icon>
+          <span>无法定位到当前城市</span>
+        </div>
+        <div v-else class="position-success">
+          <strong @click="choosePositionCity(positionCityName)">{{
+            positionCityName
+          }}</strong>
+          <span>GPS定位</span>
+          <p v-if="positionStatus === 1">未开通服务</p>
+        </div>
+        <a href="javascript:void(0);" @click="positionCity">重新定位</a>
       </div>
-      <a href="javascript:void(0);" @click="positionCity">重新定位</a>
-    </div>
-    <!-- S 城市列表 -->
-    <div>
-      <div v-if="cityHistory.length" class="city-btn-list">
-        <span>历史选择</span>
-        <ul>
-          <li
-            v-for="(item, index) in cityHistory"
-            :key="index"
-            @click="chooseCity(item)"
-          >
-            {{ item.cityName }}
-          </li>
-        </ul>
-      </div>
-      <sp-index-bar
-        :sticky-offset-top="searchDomHeight"
-        highlight-color="#4974F5"
-        :index-list="indexList"
-      >
-        <div v-if="false" class="city-btn-list">
-          <sp-index-anchor index="热">热门城市</sp-index-anchor>
+      <!-- S 城市列表 -->
+      <div>
+        <div v-if="cityHistory.length" class="city-btn-list">
+          <span>历史选择</span>
           <ul>
-            <li>成都</li>
-            <li>洛阳</li>
-            <li>杭州</li>
-            <li>杭州</li>
-            <li>杭州</li>
+            <li
+              v-for="(item, index) in cityHistory"
+              :key="index"
+              @click="chooseCity(item)"
+            >
+              {{ item.cityName }}
+            </li>
           </ul>
         </div>
-        <div v-for="(item, index) in nweCityList" :key="index">
-          <sp-index-anchor :index="item.letter">{{
-            item.letter
-          }}</sp-index-anchor>
-          <sp-cell
-            v-for="(key, val) in item.data"
-            :key="val"
-            :title="key.cityName"
-            @click="chooseCity(key)"
-          />
+        <sp-index-bar
+          :sticky-offset-top="searchDomHeight"
+          highlight-color="#4974F5"
+          :index-list="indexList"
+        >
+          <div v-if="false" class="city-btn-list">
+            <sp-index-anchor index="热">热门城市</sp-index-anchor>
+            <ul>
+              <li>成都</li>
+              <li>洛阳</li>
+              <li>杭州</li>
+              <li>杭州</li>
+              <li>杭州</li>
+            </ul>
+          </div>
+          <div v-for="(item, index) in nweCityList" :key="index">
+            <sp-index-anchor :index="item.letter">{{
+              item.letter
+            }}</sp-index-anchor>
+            <sp-cell
+              v-for="(key, val) in item.data"
+              :key="val"
+              :title="key.cityName"
+              @click="chooseCity(key)"
+            />
+          </div>
+        </sp-index-bar>
+      </div>
+      <div class="current-city">
+        <strong>{{ currentCity }}</strong>
+        <span>当前选择</span>
+      </div>
+      <!-- S 当前定位城市 -->
+      <div v-if="!isInApp" class="position-city">
+        <div v-if="!positionStatus" class="no-position">
+          <my-icon
+            name="toast_ic_remind"
+            size="0.32rem"
+            color="#cccccc"
+          ></my-icon>
+          <span>无法定位到当前城市</span>
         </div>
-      </sp-index-bar>
+        <div v-else class="position-success">
+          <strong @click="choosePositionCity(positionCityName)">{{
+            positionCityName
+          }}</strong>
+          <span>GPS定位</span>
+          <p v-if="positionStatus === 1">未开通服务</p>
+        </div>
+        <a href="javascript:void(0);" @click="positionCity">重新定位</a>
+      </div>
+      <!-- S 城市列表 -->
+      <div>
+        <div v-if="cityHistory.length" class="city-btn-list">
+          <span>历史选择</span>
+          <ul>
+            <li
+              v-for="(item, index) in cityHistory"
+              :key="index"
+              @click="chooseCity(item)"
+            >
+              {{ item.cityName }}
+            </li>
+          </ul>
+        </div>
+        <sp-index-bar
+          :sticky-offset-top="searchDomHeight"
+          highlight-color="#4974F5"
+          :index-list="indexList"
+        >
+          <div v-if="false" class="city-btn-list">
+            <sp-index-anchor index="热">热门城市</sp-index-anchor>
+            <ul>
+              <li>成都</li>
+              <li>洛阳</li>
+              <li>杭州</li>
+              <li>杭州</li>
+              <li>杭州</li>
+            </ul>
+          </div>
+          <div v-for="(item, index) in nweCityList" :key="index">
+            <sp-index-anchor :index="item.letter">{{
+              item.letter
+            }}</sp-index-anchor>
+            <sp-cell
+              v-for="(key, val) in item.data"
+              :key="val"
+              :title="key.cityName"
+              @click="chooseCity(key)"
+            />
+          </div>
+        </sp-index-bar>
+      </div>
     </div>
+
     <Loading-center v-show="loading" title="加载中" />
   </div>
 </template>
@@ -125,6 +194,7 @@ export default {
   },
   computed: {
     ...mapState({
+      appInfo: (state) => state.app.appInfo, // app信息
       currentCity: (state) => state.city.currentCity.name, // 当前选择的城市
       positionCityName: (state) => state.city.positionCityName, // 当前定位城市
       positionStatus: (state) => state.city.positionStatus, // 定位状态（0：定位失败 1：定位成功但未开通该城市服务 2：定位成功且有对应的城市服务）
@@ -162,7 +232,7 @@ export default {
   },
   mounted() {
     try {
-      this.searchDomHeight = this.$refs.searchRef.$el.clientHeight
+      // this.searchDomHeight = this.$refs.searchRef.$el.clientHeight
       // 获取历史选择
       this.cityHistory = this.$cookies.get('cityHistory')
         ? this.$cookies.get('cityHistory')
@@ -281,15 +351,26 @@ export default {
   },
 }
 </script>
-
 <style lang="less" scoped>
 .city-page {
   padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top);
   background-color: #f8f8f8;
+  max-height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
+  .gd {
+    height: 40px;
+    width: 100%;
+    background: #fff;
+  }
   .cloose-icon {
     margin-right: 35px;
     margin-left: -4px;
+  }
+  .box {
+    height: calc(100vh - 128px);
+    overflow: auto;
   }
   .current-city {
     display: flex;

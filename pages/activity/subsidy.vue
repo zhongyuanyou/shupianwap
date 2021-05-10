@@ -7,7 +7,13 @@
     >
       规则
     </div>
-    <sp-sticky :style="safeTopStyle" offset-top="0"></sp-sticky>
+    <sp-sticky
+      :style="safeTopStyle"
+      style="
+        background: url('https://cdn.shupian.cn/sp-pt/wap/images/5xaor0rxs3g0000.png');
+      "
+      offset-top="0"
+    />
     <!-- S search -->
     <sp-sticky ref="header_sticky" :offset-top="safeTop">
       <div class="search">
@@ -27,11 +33,7 @@
             color="#FFFFFF"
             :style="{ marginLeft: iconLeft + 'rem' }"
           ></my-icon>
-          <input
-            placeholder="搜索补贴商品"
-            readonly
-            @click="clickInputHandle"
-          />
+          <input placeholder="搜索商品" readonly @click="clickInputHandle" />
         </div>
       </div>
     </sp-sticky>
@@ -60,10 +62,16 @@
           </div>
           <div class="advert_item-title">
             <div class="advert_item-title-name">{{ item.skuName }}</div>
-            <div class="advert_item-title-price">
+            <div
+              v-if="parsePrice(item.specialPrice) !== '面议'"
+              class="advert_item-title-price"
+            >
               低至
               <span class="advert_item-title-num">{{ item.specialPrice }}</span>
               元
+            </div>
+            <div v-else class="advert_item-title-price">
+              <span class="advert_item-title-num">面议</span>
             </div>
           </div>
         </div>
@@ -92,7 +100,11 @@
     </sp-sticky>
     <div class="container-body">
       <div class="body-content">
-        <sp-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <sp-pull-refresh
+          v-model="refreshing"
+          :disabled="refreshDisabled"
+          @refresh="onRefresh"
+        >
           <sp-list
             v-model="loading"
             :finished="finished"
@@ -119,9 +131,11 @@
                   </div>
                   <div class="right-content">
                     <div class="rc-top">
-                      <span class="span1">好品</span>
-                      <span class="span2">千万补贴</span>
-                      <span class="span3"> {{ item.skuName }}</span>
+                      <div style="display: inline-block">
+                        <span class="span1">好品</span>
+                        <span class="span2">千万补贴</span>
+                      </div>
+                      <span class="span3">{{ item.skuName }}</span>
                     </div>
                     <div v-show="item.tags" class="rc-middle">
                       <div
@@ -134,22 +148,30 @@
                     </div>
                     <div class="rc-bottom">
                       <div class="rc-bottom-lf">
-                        <div
-                          v-if="parsePrice(item.specialPrice) !== '面议'"
-                          class="rc-bottom-lf-my"
-                        >
-                          <div>
-                            {{ parsePrice(item.specialPrice).yuan }}.
-                            <span class="rc-bottom-lf-my-cent">
-                              {{ parsePrice(item.specialPrice).jiao }}
-                            </span>
-                            <span class="rc-bottom-lf-my-unit">元</span>
+                        <template>
+                          <div
+                            v-if="parsePrice(item.specialPrice) !== '面议'"
+                            class="rc-bottom-lf-my"
+                          >
+                            <div>
+                              {{ parsePrice(item.specialPrice).yuan }}.
+                              <span class="rc-bottom-lf-my-cent">
+                                {{ parsePrice(item.specialPrice).jiao }}
+                              </span>
+                              <span class="rc-bottom-lf-my-unit">元</span>
+                            </div>
                           </div>
+                          <div v-else class="rc-bottom-lf-my">
+                            <div>面议</div>
+                          </div>
+                        </template>
+                        <div
+                          v-if="parsePrice(item.skuPrice) !== '面议'"
+                          class="bf-my"
+                        >
+                          {{ item.skuPrice }}
+                          <span>元</span>
                         </div>
-                        <div v-else class="rc-bottom-lf-my">
-                          <div>面议</div>
-                        </div>
-                        <div class="bf-my">{{ item.skuPrice }}元</div>
                       </div>
                       <div class="rc-bottom-rt">
                         <div>立即购买</div>
@@ -207,6 +229,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+html::-webkit-scrollbar {
+  display: none;
+}
 .no-data {
   text-align: center;
   padding-top: 10px;
@@ -226,6 +251,13 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+.multiRowOverflowDot {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; //行数
+  -webkit-box-orient: vertical;
 }
 .container {
   position: relative;
@@ -315,8 +347,10 @@ export default {
     }
     .advert_box {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       padding: 0 20px;
+      overflow-x: scroll;
+      overflow-y: hidden;
       .advert_item {
         width: 30vw;
         height: 38.4vw;
@@ -492,6 +526,7 @@ export default {
           font-weight: 500;
           width: 395px;
           font-size: 32px;
+          .multiRowOverflowDot();
           .span1,
           .span2 {
             background: #ec5330;
@@ -597,10 +632,12 @@ export default {
               color: #ffffff;
               line-height: 32px;
               padding: 1px 8px 0 16px;
+              white-space: nowrap;
             }
-            :nth-last-child(1) {
+            div:nth-last-child(1) {
               height: 32px;
               width: 32px;
+              margin-right: 16px;
               background: url('https://cdn.shupian.cn/sp-pt/wap/g76q42107k00000.png');
               background-size: 100% 100%;
               -moz-background-size: 100% 100%;
