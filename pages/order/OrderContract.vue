@@ -116,6 +116,14 @@ export default {
           },
         })
       } else {
+        if (item.isAppendixContract === 1) {
+          for (let i = 0; i < this.list.length; i++) {
+            if (this.list[i].isAppendixContract === 0) {
+              item.contractFirstContacts = this.list[i].contractFirstContacts
+              item.contractFirstPhone = this.list[i].contractFirstPhone
+            }
+          }
+        }
         this.$router.push({
           path: '/contract/preview',
           query: {
